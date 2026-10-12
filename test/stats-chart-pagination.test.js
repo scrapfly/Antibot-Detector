@@ -77,6 +77,8 @@ async function app(items, preferences = {}) {
     StatsCharts: Object.fromEntries(['line', 'bars', 'donut', 'heatmap', 'matrix', 'scatter', 'stacked'].map(key => [key, (...args) => { args[0].replaceChildren(); chartCalls.push({ key, args }); }])),
     StatsExport: { download: async (...args) => { downloads.push(args); return { filename: 'test.json' }; } }
   });
+  vm.runInContext(read('utils/format-utils.js'), context);
+  context.FormatUtils = context.FormatUtils || (context.self && context.self.FormatUtils) || context.window.FormatUtils;
   vm.runInContext(read('modules/core/storage-manager.js'), context);
   vm.runInContext(read('sections/stats/stats.js'), context);
   await init();

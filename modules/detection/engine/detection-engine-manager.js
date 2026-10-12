@@ -13,7 +13,7 @@ function acquireDetectionStorageLock() {
 }
 
 class DetectionEngineManager {
-    static DEFAULT_EXPIRY_HOURS = 12;
+    static DEFAULT_EXPIRY_HOURS = 7 * 24; // 7 days
     // Longer js_hooks targets are dropped before they reach the page (no real API path is this long)
     static MAX_HOOK_TARGET_LENGTH = 200;
     // Tuning config last sent to the MAIN world (null until the first install)
@@ -201,19 +201,20 @@ class DetectionEngineManager {
                 return;
             }
 
-            // Extract hook definitions from fingerprint detectors
+            // Extract hook definitions (all categories)
             const hookDefinitions = [];
-            const fingerprintDetectors = detectorsData.detectors.fingerprint || {};
-            for (const [detectorKey, detector] of Object.entries(fingerprintDetectors)) {
-                if (detector.enabled === false) continue;
-                if (!detector.detection?.js_hooks || detector.detection.js_hooks.length === 0) continue;
+            for (const [category, categoryDetectors] of Object.entries(detectorsData.detectors)) {
+                for (const [detectorKey, detector] of Object.entries(categoryDetectors || {})) {
+                    if (detector.enabled === false) continue;
+                    if (!detector.detection?.js_hooks || detector.detection.js_hooks.length === 0) continue;
 
-                hookDefinitions.push({
-                    id: detector.id || detectorKey,
-                    name: detector.name,
-                    category: 'fingerprint',
-                    hooks: detector.detection.js_hooks.map(normalizeHook).filter(Boolean)
-                });
+                    hookDefinitions.push({
+                        id: detector.id || detectorKey,
+                        name: detector.name,
+                        category: category,
+                        hooks: detector.detection.js_hooks.map(normalizeHook).filter(Boolean)
+                    });
+                }
             }
 
             // Extract window properties (all categories)

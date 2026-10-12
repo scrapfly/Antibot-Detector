@@ -20,7 +20,7 @@
   position: relative;
   min-width: 176px;
   background: var(--bg-secondary);
-  border: 1px solid #424242;
+  border: 1px solid var(--g-424242);
   border-radius: 8px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   overflow: hidden;

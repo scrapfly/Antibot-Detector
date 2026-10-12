@@ -48,7 +48,6 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
      * Setup Shape Security specific tool listeners
      */
 ShapeSecurityAdvanced.prototype.setupToolListeners = function() {
-        Logger.network('[ShapeSecurity] Setting up tool listeners...');
 
         this.bindToolActions([
             { id: 'shapesecurityCheckVersion', method: () => this.checkVersion() },
@@ -309,7 +308,6 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
                     return;
                 }
 
-                Logger.network('[ShapeSecurity] Calling displayExportCodeModal...');
                 try {
                     this.displayExportCodeModal(scripts);
                     Logger.network('[ShapeSecurity] displayExportCodeModal called successfully');

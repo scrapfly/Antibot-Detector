@@ -2,7 +2,6 @@
  * HCaptchaAdvanced - hCaptcha Module (simplified version)
  */
 
-Logger.network('[HCaptchaAdvanced] Loading...');
 
 class HCaptchaAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {

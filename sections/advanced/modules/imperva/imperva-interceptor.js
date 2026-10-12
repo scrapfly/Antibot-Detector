@@ -450,7 +450,6 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
 
     try {
         // Get tab info
-        Logger.network('[IMPERVA-CAPTURE] Step 1: Getting tab info...');
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
             Logger.error('NETWORK', '[IMPERVA-CAPTURE] Tab not found or no URL');
@@ -485,7 +484,6 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         });
 
         // Create capture data
-        Logger.network('[IMPERVA-CAPTURE] Step 3: Creating capture data object...');
         const captureData = {
             type: 'imperva',
             // Cookie requirements
@@ -504,7 +502,6 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         Logger.network('[IMPERVA-CAPTURE] Capture data created successfully');
 
         // Save to history using helper
-        Logger.network('[IMPERVA-CAPTURE] Step 4: Saving to history using helper...');
         const newCapture = await saveToHistory(tabId, captureData, {
             type: 'incapsula',
             expiryMinutes: 30
@@ -563,7 +560,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
         }
 
         // Notify popup (if open)
-        Logger.network('[IMPERVA-CAPTURE] Step 8: Notifying popup (if open)...');
+        Logger.debug('NETWORK', '[IMPERVA-CAPTURE] Step 8: Notifying popup (if open)');
         chrome.runtime.sendMessage({
             type: 'IMPERVA_CAPTURE_COMPLETED',
             captureData: newCapture
@@ -777,7 +774,7 @@ function setupImpervaInterceptor() {
                         impervaCaptureStateRef.set(details.tabId, state);
 
                         // Auto-complete extraction when we have challenge data
-                        Logger.network('[IMPERVA-EXTRACT] Challenge data captured, completing extraction...');
+                        Logger.network('[IMPERVA-EXTRACT] Challenge data captured, completing extraction');
                         setTimeout(() => {
                             const currentState = (typeof getCaptureState === 'function')
                                 ? getCaptureState(impervaCaptureStateRef, details.tabId)

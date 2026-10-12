@@ -42,6 +42,12 @@ class ScrapflyPopup {
       if (!this.detectorManager.initialized) {
         await this.detectorManager.initialize();
       }
+      // Rule texts in the UI language: the shipped file, then translations saved in rules
+      if (typeof RuleI18n !== 'undefined') {
+        await RuleI18n.load();
+        RuleI18n.indexRules(this.detectorManager.detectors);
+        this.detectorManager.addChangeListener(() => RuleI18n.indexRules(this.detectorManager.detectors));
+      }
 
       await this.initializeSections();
 

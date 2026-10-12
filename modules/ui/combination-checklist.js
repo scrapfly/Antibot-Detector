@@ -20,6 +20,9 @@
     window: 'path', js_hooks: 'target'
   };
 
+  // Rule texts in the UI language (RuleI18n), else as written
+  const rootI18n = () => (typeof RuleI18n !== 'undefined' ? RuleI18n : root.RuleI18n);
+  const ruleText = (text, map) => (text && rootI18n() ? rootI18n().pick(text, map) : text);
   const tr = (key, fallback) => {
     const text = (typeof I18n !== 'undefined' && I18n && typeof I18n.get === 'function') ? I18n.get(key) : '';
     return text || fallback;
@@ -88,7 +91,7 @@
         const card = {
           id: combo.id || '',
           // History may have lost the name with the rule: its id says more than a number
-          name: oneLine(combo.name) || oneLine(defined?.name)
+          name: ruleText(oneLine(combo.name) || oneLine(defined?.name), defined?.nameI18n)
             || (input.fromHistory && combo.id) || fmt('combinationDefaultNameFmt', 'Combination {0}', index + 1),
           confidence,
           auto: Boolean(defined) && !(Number(defined.confidence) > 0),
@@ -162,7 +165,7 @@
       const found = seen.patterns.has(id);
       const method = defined?.method || C.methodOf(match?.type) || '';
       const text = defined ? patternText(defined.method, defined.pattern) : oneLine(match?.pattern || '');
-      const description = oneLine(defined?.pattern?.description || match?.description || '');
+      const description = ruleText(oneLine(defined?.pattern?.description || match?.description || ''), defined?.pattern?.descriptionI18n);
       return {
         kind: 'pattern', id, method, negative, found, met: negative ? !found : found,
         description, text: text || id, value: found ? matchedValue(match) : ''
@@ -243,9 +246,6 @@
           <h5 class="match-combo-name" dir="auto">${esc(card.name)}</h5>
           ${confidence(card.confidence, card)}
         </div>`;
-      const score = card.setsScore
-        ? `<p class="match-combo-score" dir="auto"><span aria-hidden="true">★</span> ${esc(tr('combinationSetsScore', 'Sets the detection score'))}</p>`
-        : '';
       let body;
       if (card.unavailable === 'notSaved') {
         body = '';
@@ -257,7 +257,7 @@
         body = `<p class="match-combo-lead" id="${leadId}" dir="auto">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
           <ul class="match-combo-rows" aria-labelledby="${leadId}">${found.map(item => rowHtml(item, options, false)).join('')}${absent.map(item => rowHtml(item, options, true)).join('')}</ul>`;
       }
-      return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}${score}${body}</article>`;
+      return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}${body}</article>`;
     }).join('');
   }
 

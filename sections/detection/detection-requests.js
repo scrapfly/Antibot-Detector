@@ -91,7 +91,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
           // Let badge check determine state when response is null
           if (!response) {
-            if (this.debugMode) Logger.debug('UI', 'Detection: No response yet, continuing to badge check...');
+            if (this.debugMode) Logger.debug('UI', 'Detection: No response yet, continuing to badge check');
             // Don't return - let badge check handle state
           }
 

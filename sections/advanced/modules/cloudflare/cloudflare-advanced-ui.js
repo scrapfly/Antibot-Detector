@@ -47,7 +47,6 @@ CloudflareAdvanced.prototype.cloudflareTypeLabel = function(type) {
 
 
 CloudflareAdvanced.prototype.setupToolListeners = function() {
-        Logger.network('[Cloudflare] Setting up tool listeners...');
         this.bindToolActions([
             { id: 'cloudflareCheckCookies', handler: () => this.checkCookies() },
             { id: 'cloudflareExtractSiteKey', handler: () => this.extractSiteKey() },

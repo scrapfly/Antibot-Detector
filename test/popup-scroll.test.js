@@ -147,10 +147,19 @@ function sizingHarness() {
     children: [],
     classList: { toggle() {} },
     getBoundingClientRect() { return { width: this.width, height: this.height }; },
+    headerHeight: 0,
+    // One child per detection item; an item that opens a category adds the header's height
     set innerHTML(value) {
-      this.children = [...value.matchAll(/data-height="(\d+)"/g)].map(match => ({
-        getBoundingClientRect: () => ({ height: Number(match[1]) })
-      }));
+      this.html = value;
+      this.children = value.split('<div class="detection-item">').slice(1).map(item => {
+        const card = Number((item.match(/data-height="(\d+)"/) || [])[1]);
+        const head = item.includes('detection-group-head') ? this.headerHeight : 0;
+        return { getBoundingClientRect: () => ({ height: card + head }) };
+      });
+    },
+    querySelector(selector) {
+      return selector === '.detection-group-head' && this.html && this.html.includes('detection-group-head')
+        ? { getBoundingClientRect: () => ({ height: this.headerHeight }) } : null;
     }
   };
   const frames = [];
@@ -167,7 +176,10 @@ function sizingHarness() {
     ResizeObserver,
     requestAnimationFrame: callback => { frames.push(callback); return frames.length; }
   };
-  vm.runInNewContext(read('sections/detection/detection-ui.js'), context);
+  vm.createContext(context);
+  vm.runInContext(read('utils/format-utils.js'), context);
+  context.FormatUtils = context.self.FormatUtils;
+  vm.runInContext(read('sections/detection/detection-ui.js'), context);
   const ui = context.self.DetectionUI;
   ui.buildDetectionCardHtml = item => `<div data-height="${item.height}"></div>`;
   const items = Array.from({ length: 10 }, () => ({ height: 100 }));
@@ -321,4 +333,24 @@ test('detection pagination sits at the bottom of the popup even on a short last 
   assert.equal(results.at(-1)[1].flex, '1 0 auto', 'results fill the tab height');
   const footer = read('modules/styles/detection.css');
   assert.match(footer, /#detectionResults > #detectionPagination\s*\{\s*margin-top:\s*auto;/, 'spare height goes above the footer');
+});
+
+test('Detection pages count each category header, and repeat it on a page that starts inside a group', () => {
+  const h = sizingHarness();
+  h.list.headerHeight = 20;
+  // 3 anti-bot then 3 captcha cards of 100px; viewport budget 380px, gap 8px
+  const items = [...Array(3).fill('antibot'), ...Array(3).fill('captcha')].map(category => ({ height: 100, category }));
+  // Budget 380 (400 - padding), gap 8. Page 1: 120 + 100 + 100, then the captcha
+  // header + card crosses the budget and closes the page (as a crossing card always has).
+  // Page 2 starts inside the captcha group, so it is packed with a repeated header: 120 + 100.
+  assert.deepEqual(Array.from(h.ui.measurePageStarts.call(h.state, items)), [0, 4]);
+  assert.equal(h.list.html.match(/detection-group-head/g).length, 2, 'one header per category in the measured list');
+  h.list.headerHeight = 0;
+  assert.deepEqual(Array.from(h.ui.measurePageStarts.call(h.state, items)), [0, 4], 'same packing without header height');
+  h.list.headerHeight = 200;
+  // Header 200: 300 + 100 crosses at card 2; pages starting inside a group reserve the header (100 + 200)
+  assert.deepEqual(Array.from(h.ui.measurePageStarts.call(h.state, items)), [0, 2, 4]);
+  h.state.sortBy = 'confidence';
+  h.ui.measurePageStarts.call(h.state, items);
+  assert.ok(!h.list.html.includes('detection-group-head'), 'no headers when the highest confidence comes first');
 });

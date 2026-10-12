@@ -2,7 +2,6 @@
  * FunCaptchaAdvanced - FunCaptcha Module (simplified version)
  */
 
-Logger.network('[FunCaptchaAdvanced] Loading...');
 
 class FunCaptchaAdvanced extends BaseAdvancedModule {
     constructor(detection, tabInfo) {

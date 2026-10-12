@@ -31,7 +31,7 @@ function load(local, github, state = { version: '2.8.3' }) {
   const ctx = {
     console, setTimeout, clearTimeout, Promise, JSON, Date, Math, Set, Map, Object, Array, Error, AbortController,
     Logger: new Proxy({}, { get: () => () => {} }),
-    Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_CACHE_EXPIRY_HOURS: 12, UPDATE_FETCH_TIMEOUT: 5000 },
+    Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12, UPDATE_FETCH_TIMEOUT: 5000 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
       normalizeStoredValue: async (_k, v) => (typeof v === 'string' ? JSON.parse(v) : v),
@@ -84,8 +84,23 @@ test('the check reads the latest release tag, never main', async () => {
   assert.strictEqual(check.error, null);
   assert.strictEqual(check.release, 'v2.8.4');
   assert.deepStrictEqual(plain(check.updates.map(u => [u.id, u.remoteVersion, u.tag])), [['detect-akamai', '2.1.0', 'v2.8.4']]);
-  assert.deepStrictEqual(requests, [API, `${RAW}/v2.8.4/detectors/index.json`, `${RAW}/v2.8.4/detectors/antibot/detect-akamai.json`]);
+  assert.deepStrictEqual(requests.slice(0, 3), [API, `${RAW}/v2.8.4/detectors/index.json`, `${RAW}/v2.8.4/detectors/antibot/detect-akamai.json`]);
+  // Then the rule translations of the same release (none in this one: nothing stored)
+  assert.ok(requests.slice(3).every(u => u.startsWith(`${RAW}/v2.8.4/detectors/i18n/`)), requests.slice(3).join(' '));
   assert.ok(!requests.some(u => u.includes('/main/')));
+  assert.strictEqual(local.scrapfly_rule_i18n, undefined);
+});
+
+test('rule translations come from the release, once per tag', async () => {
+  const local = installedWith({}, ['detect-akamai', '2.0.0']);
+  const files = release({ 'detect-akamai': official('detect-akamai', '2.0.0') });
+  files['i18n/es'] = { 'Bot Manager session cookie': 'Cookie de sesión de Bot Manager' };
+  const { UM, requests } = load(local, { latest: 'v2.9.0', releases: { 'v2.9.0': files } });
+  await UM.checkForUpdates(true);
+  assert.deepStrictEqual(plain(local.scrapfly_rule_i18n), { tag: 'v2.9.0', dicts: { es: { 'Bot Manager session cookie': 'Cookie de sesión de Bot Manager' } } });
+  const before = requests.length;
+  await UM.checkForUpdates(true);
+  assert.ok(!requests.slice(before).some(u => u.includes('/i18n/')), 'not downloaded again for the same release');
 });
 
 test('an install fetches the release it was checked against, even if a newer one is out by then', async () => {

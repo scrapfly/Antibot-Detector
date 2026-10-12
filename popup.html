@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scrapfly Antibot Detector</title>
+  <script src="modules/core/theme.js"></script>
   <link rel="stylesheet" href="modules/styles/common.css">
   <link rel="stylesheet" href="modules/styles/popup.css">
   <link rel="stylesheet" href="modules/styles/detection.css">
@@ -14,6 +15,7 @@
   <link rel="stylesheet" href="modules/styles/settings.css">
   <link rel="stylesheet" href="modules/styles/settings-language.css">
   <link rel="stylesheet" href="modules/styles/color-picker.css">
+  <link rel="stylesheet" href="modules/styles/theme-light.css">
   <link rel="stylesheet" href="modules/styles/popup-scroll.css">
 </head>
 <body>
@@ -94,14 +96,17 @@
             </div>
             <ul class="detection-scan-checks" role="list">
               <li class="detection-scan-check">
+                <span class="category-icon" data-scan-icon="antibot" aria-hidden="true"></span>
                 <span data-i18n="categoryAntibot">Anti-bot</span>
               </li>
               <li class="detection-scan-check">
                 <span class="detection-scan-separator" aria-hidden="true">·</span>
+                <span class="category-icon" data-scan-icon="captcha" aria-hidden="true"></span>
                 <span data-i18n="categoryCaptcha">Captcha</span>
               </li>
               <li class="detection-scan-check">
                 <span class="detection-scan-separator" aria-hidden="true">·</span>
+                <span class="category-icon" data-scan-icon="fingerprint" aria-hidden="true"></span>
                 <span data-i18n="categoryFingerprint">Fingerprint</span>
               </li>
             </ul>
@@ -136,6 +141,7 @@
   <!-- Scripts -->
   <!-- Core modules (foundation - must load first) -->
   <script src="modules/core/i18n.js"></script>
+  <script src="modules/core/rule-i18n.js"></script>
   <script src="modules/core/logger.js"></script>
   <script src="modules/core/badge-constants.js"></script>
   <script src="modules/core/constants.js"></script>
@@ -186,9 +192,12 @@
   <script src="sections/rules/rules-formatters.js"></script>
   <script src="sections/rules/rules-condition-ui.js"></script>
   <script src="sections/rules/rules-method-settings.js"></script>
+  <script src="sections/rules/rules-translations-ui.js"></script>
   <script src="sections/rules/rules-editor-modal.js"></script>
   <script src="sections/rules/rules-editor.js"></script>
   <script src="sections/rules/rules-combinations.js"></script>
+  <script src="sections/rules/rule-history-check.js"></script>
+  <script src="sections/rules/rules-history-check-ui.js"></script>
   <script src="sections/rules/rules-handlers.js"></script>
   <script src="sections/rules/rules-display.js"></script>
   <script src="sections/rules/helpers/helper-kit.js"></script>

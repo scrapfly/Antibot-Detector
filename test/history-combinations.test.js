@@ -61,7 +61,7 @@ test('a saved scan shows its checklist in History details, above the methods', (
   const methods = html.indexOf('history-modal-detection-methods');
   assert.ok(combos > 0 && combos < methods, 'checklist above the methods');
   assert.match(html, /Official SDK, configured widget and compatible API/);
-  assert.match(html, /Sets the detection score/);
+  assert.ok(!html.includes('Sets the detection score'));
   assert.strictEqual((html.match(/aria-label="Found"><svg/g) || []).length, 3, 'SDK, widget and the render API');
   assert.ok(!html.includes('Execute API'), 'the alternative that was not needed is not listed');
   assert.ok(!/match-combo-copy/.test(html), 'no Copy button');

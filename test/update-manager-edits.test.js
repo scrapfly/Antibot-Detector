@@ -21,7 +21,7 @@ function load(local, { remote = {}, bundled = {}, bundledIndex = null } = {}) {
   const ctx = {
     console, setTimeout, clearTimeout, Promise, JSON, Date, Math, Set, Map, Object, Array, Error,
     Logger: new Proxy({}, { get: () => () => {} }),
-    Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_CACHE_EXPIRY_HOURS: 12 },
+    Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
       normalizeStoredValue: async (_k, v) => (typeof v === 'string' ? JSON.parse(v) : v),
@@ -337,5 +337,72 @@ test('the pre-2.8.2 ratings table only lists shipped detectors that were re-rate
     assert.ok(['Low', 'Medium', 'High'].includes(previous), id);
     const current = JSON.parse(fs.readFileSync(path.join(root, 'detectors', where[id], `${id}.json`), 'utf8')).difficulty;
     assert.notStrictEqual(current, previous, `${id}: listed as re-rated but still ${current}`);
+  }
+});
+
+// ------------------------------------------------- saves racing an update
+test('an edit saved while an update downloads is kept, and the update still installs', async () => {
+  const local = { scrapfly_detectors: { detectors: { antibot: {
+    'detect-akamai': official('detect-akamai', '2.0.0'),
+    'detect-cloudflare': official('detect-cloudflare', '1.0.0')
+  } } }, scrapfly_pending_updates: [{ id: 'detect-cloudflare', category: 'antibot', remoteVersion: '1.1.0' }] };
+  const { UM } = load(local, { remote: { 'detect-cloudflare': official('detect-cloudflare', '1.1.0') } });
+  let release;
+  const fetched = UM.fetchUpdateSource.bind(UM);
+  UM.fetchUpdateSource = async (u) => { await new Promise(r => { release = r; }); return fetched(u); };
+  const running = UM.applyUpdates();
+  await new Promise(r => setImmediate(r));
+  // The Rules tab saves while the download is in flight: disables Akamai, adds a custom rule
+  const now = JSON.parse(JSON.stringify(local.scrapfly_detectors));
+  now.detectors.antibot['detect-akamai'].enabled = false;
+  now.detectors.antibot['my-rule'] = { id: 'my-rule', name: 'Mine', author: 'me', detection: {} };
+  local.scrapfly_detectors = now;
+  release();
+  const result = await running;
+  assert.strictEqual(result.count, 1);
+  assert.strictEqual(stored(local)['detect-cloudflare'].version, '1.1.0', 'update installed');
+  assert.strictEqual(stored(local)['detect-akamai'].enabled, false, 'the edit made during the download is kept');
+  assert.ok(stored(local)['my-rule'], 'the rule added during the download is kept');
+});
+
+test('a rule edited during its own download stays pending instead of being overwritten', async () => {
+  const local = { scrapfly_detectors: { detectors: { antibot: { 'detect-cloudflare': official('detect-cloudflare', '1.0.0') } } },
+    scrapfly_pending_updates: [{ id: 'detect-cloudflare', category: 'antibot', remoteVersion: '1.1.0' }] };
+  const { UM } = load(local, { remote: { 'detect-cloudflare': official('detect-cloudflare', '1.1.0') } });
+  let release;
+  const fetched = UM.fetchUpdateSource.bind(UM);
+  UM.fetchUpdateSource = async (u) => { await new Promise(r => { release = r; }); return fetched(u); };
+  const running = UM.applyUpdates();
+  await new Promise(r => setImmediate(r));
+  const now = JSON.parse(JSON.stringify(local.scrapfly_detectors));
+  now.detectors.antibot['detect-cloudflare'] = DetectorManager.markUserEdited(
+    { ...official('detect-cloudflare', '1.0.0'), detection: { cookie: [{ name: 'mine' }] } }, official('detect-cloudflare', '1.0.0'));
+  local.scrapfly_detectors = now;
+  release();
+  const result = await running;
+  assert.strictEqual(result.count, 0);
+  assert.deepStrictEqual(stored(local)['detect-cloudflare'].detection, { cookie: [{ name: 'mine' }] }, 'edit kept');
+  assert.deepStrictEqual(plain(result.needsDecision.map(u => u.id)), ['detect-cloudflare'], 'offered as a decision');
+});
+
+test('the popup copy reloads when another context saves the rules, but not on its own saves', async () => {
+  const listeners = [];
+  global.chrome = { storage: { onChanged: { addListener: fn => listeners.push(fn) } } };
+  global.StorageManager = { parseStoredValue: v => (typeof v === 'string' ? JSON.parse(v) : v) };
+  try {
+    const dm = new DetectorManager({});
+    dm.initialized = true;
+    let reloads = 0, rerenders = 0;
+    dm.loadFromStorage = async () => { reloads++; return true; };
+    dm.onExternalChange = () => { rerenders++; };
+    const fire = async (value) => { listeners.forEach(fn => fn({ scrapfly_detectors: { newValue: value } }, 'local')); await new Promise(r => setImmediate(r)); };
+    await fire(JSON.stringify({ detectors: {}, writer: dm.writerId }));
+    assert.strictEqual(reloads, 0, 'own save ignored');
+    await fire({ detectors: {} });
+    assert.strictEqual(reloads, 1, 'a save from the update runner reloads');
+    assert.strictEqual(rerenders, 1, 'and the Rules list re-renders');
+  } finally {
+    delete global.chrome;
+    delete global.StorageManager;
   }
 });

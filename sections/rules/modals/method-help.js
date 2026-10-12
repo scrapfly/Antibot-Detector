@@ -101,7 +101,6 @@ const METHOD_HELP = {
       ['detect-kasada', 'kpsdk-object'], ['detect-perimeterx', 'px-appid-variable']]
   },
   js_hooks: {
-    warning: ['mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.'],
     intro: ['mhJsHooksIntro', 'Records when the page calls a browser API, such as `HTMLCanvasElement.prototype.toDataURL`, a sign of fingerprinting.'],
     howTitle: ['mhWriteTitle', 'What you can write'],
     how: [

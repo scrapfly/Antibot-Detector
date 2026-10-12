@@ -1,27 +1,3 @@
-// Fingerprint SVG icons mapping for history modal
-const FINGERPRINT_ICONS = {
-  'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
-  'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
-  'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
-  'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
-  'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
-  'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
-  'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
-  'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><path d="M15 10v4M13 12h4"/></svg>',
-  'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
-  'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>',
-  'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
-  'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,8 16,11 10,14" fill="currentColor"/></svg>',
-  'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="none"/></svg>',
-  'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>',
-  'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg>',
-  'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
-  'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M4 20v-3h16v3M4 7v10h16V7"/><path d="M4 11h16M4 15h16"/><circle cx="7" cy="9" r="1" fill="currentColor"/></svg>',
-  'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
-  'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M6 12v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/></svg>',
-  'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
-  'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
-};
 
 class History {
   constructor(detectorManager) {
@@ -204,7 +180,7 @@ class History {
           </div>
           <div class="history-item-bottom">
             <div class="history-detections">
-              ${this.renderHistoryDetections(item.detections || [], item.id)}
+              ${this.renderHistorySummary(cardDetections)}
             </div>
             <span class="history-timestamp" data-tip="${FormatUtils.escapeAttr(FormatUtils.formatDateTime(item.timestamp))}">${FormatUtils.escapeHtml(timeAgo)}</span>
           </div>
@@ -275,7 +251,40 @@ class History {
    * @param {Array} detections - Array of detections
    * @returns {string} HTML string for detection tags
    */
-  renderHistoryDetections(detections, itemId) {
+  /**
+   * A card's protections as one total per category (anti-bot, captcha,
+   * fingerprint, in the Settings order) with the category icons; the
+   * card's details list each protection
+   * @param {Array} detections
+   * @returns {string} HTML
+   */
+  renderHistorySummary(detections) {
+    if (!detections || detections.length === 0) {
+      const noDetections = FormatUtils.t('historyNoDetections', 'No detections');
+      return `<span class="history-detection-tag">${FormatUtils.escapeHtml(noDetections)}</span>`;
+    }
+    const keys = ['antibot', 'captcha', 'fingerprint'];
+    const order = (this.detectionSort?.categoryOrder || keys).filter(key => keys.includes(key));
+    keys.forEach(key => { if (!order.includes(key)) order.push(key); });
+    const sorted = DetectionUtils.sortDetections(detections, this.detectionSort);
+    const parts = order.map(key => {
+      const inCategory = sorted.filter(d => FormatUtils.categoryKey(d) === key);
+      const colour = this.detectorManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
+      // Hover: which protections, with their confidence
+      const rows = inCategory.slice(0, 8).map(d => {
+        const value = Math.round(Number(d.confidence) || 0);
+        return { label: FormatUtils.detectorName(d) || FormatUtils.t('timeUnknown', 'Unknown'), value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
+      });
+      if (inCategory.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', inCategory.length - 8) });
+      return `<span class="history-cat-count${inCategory.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(`${FormatUtils.categoryLabel(key)}: ${inCategory.length}`, '', rows)}>`
+        + `<span class="category-icon" style="color:${colour}" aria-hidden="true">${FormatUtils.categoryIconSvg(key)}</span>`
+        + `<span class="history-cat-value">${inCategory.length}</span></span>`;
+    });
+    // A click goes to the card, which opens the details with each protection
+    return `<span class="history-summary">${parts.join('')}</span>`;
+  }
+
+  renderHistoryDetections(detections, itemId, maxTags = 4) {
     if (!detections || detections.length === 0) {
       const noDetections = FormatUtils.t('historyNoDetections', 'No detections');
       return `<span class="history-detection-tag">${FormatUtils.escapeHtml(noDetections)}</span>`;
@@ -283,7 +292,6 @@ class History {
     const unknownName = FormatUtils.t('timeUnknown', 'Unknown');
 
     let tagsHtml = '';
-    const maxTags = 4; // 4 icons + "+N" leave room for the detections / confidence metrics
 
     // Same order as the detail dialog and the Detection tab (Settings → Show first)
     const sortedDetections = DetectionUtils.sortDetections(detections, this.detectionSort);
@@ -298,7 +306,7 @@ class History {
     };
 
     sortedDetections.slice(0, maxTags).forEach(detection => {
-      const rawName = detection.detector?.name || detection.detector || '';
+      const rawName = FormatUtils.detectorName(detection);
       const name = rawName || unknownName;
       const category = detection.category || '';
       const categoryColor = getCategoryColor(category);
@@ -342,8 +350,8 @@ class History {
       if (detectorObj && detectorObj.icon) {
         const iconName = detectorObj.icon.toLowerCase();
         // Check if it's a fingerprint SVG icon
-        if (FINGERPRINT_ICONS[iconName]) {
-          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell">${FINGERPRINT_ICONS[iconName]}</div>`;
+        if (FormatUtils.FINGERPRINT_ICONS[iconName]) {
+          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell">${FormatUtils.FINGERPRINT_ICONS[iconName]}</div>`;
           isFingerprint = true;
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
@@ -376,7 +384,7 @@ class History {
       const rows = hiddenDetections.slice(0, 8).map(d => {
         const key = FormatUtils.categoryKey(d);
         const value = Math.round(Number(d.confidence) || 0);
-        return { label: d.detector?.name || d.detector || unknownName, dot: `cat-${key}`, value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
+        return { label: FormatUtils.detectorName(d) || unknownName, dot: `cat-${key}`, value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
       });
       if (hiddenDetections.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', hiddenDetections.length - 8) });
       const tooltipAttr = ` ${FormatUtils.tipAttrs(FormatUtils.t('tipMoreFmt', '+{0} more', hiddenDetections.length), '', rows)}`;
@@ -639,7 +647,7 @@ class History {
       const url = (item.url || '').toLowerCase();
       const title = (item.title || '').toLowerCase();
       const detectionNames = (item.detections || [])
-        .map(d => (d.detector?.name || d.detector || '').toLowerCase())
+        .map(d => FormatUtils.detectorName(d).toLowerCase())
         .join(' ');
 
       return url.includes(this.searchQuery) ||
@@ -808,7 +816,7 @@ class History {
 
     const unknownValue = L('detectionUiUnknownValue', 'unknown');
     (historyItem.detections || []).forEach((detection, index) => {
-      const name = detection.detector?.name || detection.detector || L('timeUnknown', 'Unknown');
+      const name = FormatUtils.detectorName(detection) || L('timeUnknown', 'Unknown');
       const category = detection.category || '';
       const confidence = detection.confidence || 0;
 
@@ -960,9 +968,13 @@ class History {
         return;
       }
 
-      settings.detection.blacklistedDomains.push(domain);
-      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.saveSettings === 'function'
-        ? await StorageManager.saveSettings(settings)
+      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.updateSettings === 'function'
+        ? await StorageManager.updateSettings((fresh) => {
+          fresh.detection = fresh.detection || {};
+          const list = Array.isArray(fresh.detection.blacklistedDomains) ? fresh.detection.blacklistedDomains : [];
+          if (list.includes(domain)) return false;
+          fresh.detection.blacklistedDomains = [...list, domain];
+        })
         : false;
       if (!saved) {
         throw new Error('Failed to save settings');
@@ -1042,7 +1054,7 @@ class History {
       detections.map((detection, index) => ({ detection, index })), this.detectionSort, entry => entry.detection);
 
     return ordered.map(({ detection, index }) => {
-      const rawName = detection.detector?.name || detection.detector || '';
+      const rawName = FormatUtils.detectorName(detection);
       const name = rawName || _tr('unknownDetection', 'Unknown Detection');
       const safeName = FormatUtils.escapeHtml(name);
       const category = detection.category || '';
@@ -1066,8 +1078,8 @@ class History {
       let detectorIconHtml = '';
       if (detectorObj && detectorObj.icon) {
         const iconName = detectorObj.icon.toLowerCase();
-        if (FINGERPRINT_ICONS[iconName]) {
-          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell">${FINGERPRINT_ICONS[iconName]}</div>`;
+        if (FormatUtils.FINGERPRINT_ICONS[iconName]) {
+          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell">${FormatUtils.FINGERPRINT_ICONS[iconName]}</div>`;
         } else {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
           detectorIconHtml = isFingerprintCategory

@@ -17,8 +17,19 @@ DetectionUI.showUnavailableState = function() {
     return false;
 };
 
+/** Category icons on the scanning screen ("Anti-bot · Captcha · Fingerprint"), in each category's colour. */
+DetectionUI.paintScanIcons = function() {
+    if (typeof document === 'undefined' || typeof FormatUtils === 'undefined') return;
+    document.querySelectorAll('[data-scan-icon]').forEach((el) => {
+      const key = el.dataset.scanIcon;
+      if (!el.firstChild) el.innerHTML = FormatUtils.categoryIconSvg(key);
+      el.style.color = DetectionUI.categoryColor.call(this, key);
+    });
+};
+
 DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
     if (DetectionUI.showUnavailableState.call(this)) return;
+    DetectionUI.paintScanIcons.call(this);
     this.isShowingResults = false;
     if (this.uiStateMachine) {
       if (this.uiStateMachine.getState() !== this.uiStates.ANALYZING) {
@@ -112,7 +123,7 @@ DetectionUI.handleLoadingTimeout = function() {
 
                 if (isNumericBadge) {
                   // Badge shows completion but no data yet - retry instead of showing interrupted
-                  if (this.debugMode) Logger.debug('UI', '[Detection] Timeout but badge shows completion - retrying fetch...');
+                  if (this.debugMode) Logger.debug('UI', '[Detection] Timeout but badge shows completion - retrying fetch');
                   await this.refreshAnalysis();
                 } else {
                   // Truly stuck/no data - normalize to empty state
@@ -612,65 +623,44 @@ DetectionUI.updateCacheInfo = function() {
       return;
     }
 
-    // Update cache expiry time
-    const expiryTile = cacheExpiry.closest('.stat-inline');
-    const tipText = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
-    if (this.cacheMetadata && this.cacheMetadata.expiry) {
-      const expiryDate = new Date(this.cacheMetadata.expiry);
-      const now = new Date();
-      const diff = expiryDate - now;
-
-      if (diff > 0) {
-        cacheExpiry.textContent = this.formatExpiryRemaining(diff);
-      } else {
-        cacheExpiry.textContent = (typeof I18n !== 'undefined')
-          ? I18n.tr('cacheExpiredLabel', 'Expired')
-          : 'Expired';
-      }
-      // When it was saved and when it runs out, as dates
-      const rows = [];
-      if (this.cacheMetadata.timestamp) {
-        rows.push({ label: tipText('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(this.cacheMetadata.timestamp) });
-      }
-      // The title carries the fixed expiry date, so it never shows a stale countdown
-      FormatUtils.setTip(expiryTile,
-        tipText('clipboardCacheExpirationFmt', 'Cache Expiration: {0}', FormatUtils.formatDateTime(this.cacheMetadata.expiry)),
-        tipText('detectionTipCacheExpiration', 'Time remaining before these cached detection results expire.'), rows);
+    // One "Cache" tile: which pages reuse the results, and for how long
+    const tile = cacheExpiry.closest('.stat-inline');
+    const tr = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const meta = this.cacheMetadata || null;
+    if (meta && meta.expiry) {
+      const diff = new Date(meta.expiry) - new Date();
+      cacheExpiry.textContent = diff > 0 ? this.formatExpiryRemaining(diff) : tr('cacheExpiredLabel', 'Expired');
     } else {
       cacheExpiry.textContent = '-';
-      FormatUtils.setTip(expiryTile, tipText('detectionTipCacheExpiration', 'Time remaining before these cached detection results expire.'));
     }
 
-    // Update cache scope display (the stat tiles are display-only, not copyable)
-    if (cacheScopeDisplay) {
-      const scopeTr = (key, fallback) => (
-        typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback
-      );
-      const scopeDisplayNames = {
-        'domain': scopeTr('scopeDomain', 'Domain'),
-        'path': scopeTr('scopePath', 'Path'),
-        'full': scopeTr('scopeFullUrl', 'Full URL')
-      };
-      // Title is the scope; the detail says which pages reuse the results
-      const scopeHints = {
-        'domain': scopeTr('tipScopeDomain', 'Results are reused for every page on this domain.'),
-        'path': scopeTr('tipScopePath', 'Results are reused for this exact path, whatever the query.'),
-        'full': scopeTr('tipScopeFullUrl', 'Results are reused only for this exact URL, including the query.')
-      };
-      const scopeTile = cacheScopeDisplay.closest('.stat-inline');
-      const showScope = (scope) => {
-        const key = scopeDisplayNames[scope] ? scope : 'path';
-        cacheScopeDisplay.textContent = scopeDisplayNames[key];
-        FormatUtils.setTip(scopeTile, `${scopeTr('statCacheScope', 'Cache Scope')}: ${scopeDisplayNames[key]}`, scopeHints[key]);
-      };
-      if (this.cacheMetadata && this.cacheMetadata.cacheScope) {
-        showScope(this.cacheMetadata.cacheScope);
-      } else {
-        // Fallback: read current setting from storage
-        Utils.getSettings().then((settings) => {
-          showScope(settings.cacheScope || settings.detection?.cacheScope || 'path');
-        }).catch(() => {});
-      }
+    const scopeNames = {
+      domain: tr('scopeDomain', 'Domain'),
+      path: tr('scopePath', 'Path'),
+      full: tr('scopeFullUrl', 'Full URL')
+    };
+    const scopeHints = {
+      domain: tr('tipScopeDomain', 'Results are reused for every page on this domain.'),
+      path: tr('tipScopePath', 'Results are reused for this exact path, whatever the query.'),
+      full: tr('tipScopeFullUrl', 'Results are reused only for this exact URL, including the query.')
+    };
+    // The tip carries fixed dates, so it never shows a stale countdown
+    const showScope = (scope) => {
+      const key = scopeNames[scope] ? scope : 'path';
+      if (cacheScopeDisplay) cacheScopeDisplay.textContent = scopeNames[key];
+      const rows = [];
+      if (meta && meta.timestamp) rows.push({ label: tr('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(meta.timestamp) });
+      if (meta && meta.expiry) rows.push({ label: tr('tipCacheExpires', 'Expires'), value: FormatUtils.formatDateTime(meta.expiry) });
+      FormatUtils.setTip(tile, `${tr('statCacheScope', 'Cache Scope')}: ${scopeNames[key]}`, scopeHints[key], rows);
+    };
+    if (meta && meta.cacheScope) {
+      showScope(meta.cacheScope);
+    } else {
+      showScope('path');
+      // Fallback: read current setting from storage
+      Utils.getSettings().then((settings) => {
+        showScope(settings.cacheScope || settings.detection?.cacheScope || 'path');
+      }).catch(() => {});
     }
 };
 
@@ -875,12 +865,9 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
     const confidence = detection.confidence || 0;
 
     const detectorIcon = this.getDetectorIcon(detection);
-    const detectorName = detection.detector?.name || detection.detector
+    const detectorName = FormatUtils.detectorName(detection)
       || ((typeof I18n !== 'undefined' && I18n.get('timeUnknown')) || 'Unknown');
     const safeDetectorName = FormatUtils.escapeHtml(detectorName);
-
-    // Get category badges (plain on the list cards: the whole card opens the detail modal)
-    const categoryBadges = this.getCategoryBadges(detection, { copyable: false });
 
     const globalIndex = this.getGlobalDetectionIndex(detection, index);
 
@@ -899,7 +886,7 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
       ? combos.map((combo, index) => ({ combo, index }))
         .sort((a, b) => ((Number(b.combo.confidence) || 0) - (Number(a.combo.confidence) || 0)) || (a.index - b.index))
         .slice(0, 3).map(({ combo, index }) => ({
-          label: combo.name || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', index + 1),
+          label: FormatUtils.ruleText(combo.name) || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', index + 1),
           value: `${Math.round(Number(combo.confidence) || 0)}%`, tone: FormatUtils.confidenceTone(combo.confidence)
         }))
       : matchList.slice().sort((a, b) => (Number(b.baseConfidence ?? b.confidence) || 0) - (Number(a.baseConfidence ?? a.confidence) || 0))
@@ -925,25 +912,128 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
         : FormatUtils.t('tipDifficultyFromCategoryFmt', 'Default for {0}', FormatUtils.categoryLabel(FormatUtils.categoryKey(detection)))
     };
 
+    // One line under the name: how sure (neutral, the confidence tip on hover)
+    // and what was found; the category moves here when the list is not grouped
+    const t = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const categoryKey = DetectionUI.categoryKeyOf(detection);
+    const categoryColor = DetectionUI.categoryColor.call(this, categoryKey);
+    const inlineCategory = DetectionUI.showsGroups.call(this) ? ''
+      : `<span class="card-meta-category"><span class="category-icon" style="color:${categoryColor}" aria-hidden="true">${FormatUtils.categoryIconSvg(categoryKey)}</span>${FormatUtils.escapeHtml(DetectionUI.categoryLabel(detection.category || categoryKey))}</span><span class="card-meta-sep" aria-hidden="true">·</span>`;
+    const sure = Math.max(0, Math.min(100, Math.round(Number(confidence) || 0)));
+    // Every method, wrapping to a second line when it does not fit; the tip counts each
+    const evidence = DetectionUI.evidenceSummary(matchList, combos.length > 0, DetectionUI.METHOD_ORDER.length);
+    const evidenceTip = DetectionUI.evidenceRows(matchList);
+
     return `
-      <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}">
+      <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}" style="--conf:${sure}%;--cat-color:${categoryColor}">
         <div class="card-header">
           <div class="card-icon-section">
             ${detectorIcon}
           </div>
           <div class="card-info">
-            <h3 class="detector-name">${safeDetectorName}</h3>
-            <div class="category-badges">
-              ${categoryBadges}
+            <div class="card-row-main">
+              <h3 class="detector-name" title="${FormatUtils.escapeAttr(detectorName)}">${safeDetectorName}</h3>
+              ${FormatUtils.difficultyHtml(difficulty, difficultyText, 'card-difficulty', difficultyTip)}
             </div>
-          </div>
-          <div class="card-actions">
-            ${FormatUtils.confidenceHtml(confidence, 'card-confidence', confidenceTip)}
-            ${FormatUtils.difficultyHtml(difficulty, difficultyText, 'card-difficulty', difficultyTip)}
+            <p class="card-row-meta">${inlineCategory}<span class="card-sure" ${FormatUtils.tipAttrs(confidenceTip.title, confidenceTip.detail, confidenceTip.rows)}>${FormatUtils.escapeHtml(t('detectionCardSureFmt', '{0}% sure', sure))}</span>${evidence ? `<span class="card-meta-sep" aria-hidden="true">·</span><span class="card-evidence" ${FormatUtils.tipAttrs(matchList.length === 1 ? t('historyOneMatch', '1 match') : t('historyMatchCountFmt', '{0} matches', matchList.length), '', evidenceTip)}>${FormatUtils.escapeHtml(evidence)}</span>` : ''}</p>
           </div>
         </div>
+        <div class="card-conf-bar" aria-hidden="true"></div>
       </div>
     `;
+};
+
+/** Methods in the order the rule editor lists them (ties in the evidence line). */
+DetectionUI.METHOD_ORDER = ['cookie', 'header', 'url', 'content', 'dom', 'window', 'js_hooks', 'payload'];
+
+/**
+ * The evidence line of a card: matched methods, most matches first, with a
+ * count above one ("Cookies, Headers 2, URL 2 +1"), led by "Combination"
+ * when a combination decided the detection.
+ */
+DetectionUI.evidenceSummary = function(matches, combined = false, max = 3) {
+    const aliases = { cookies: 'cookie', headers: 'header', urls: 'url' };
+    const counts = new Map();
+    (Array.isArray(matches) ? matches : []).forEach(match => {
+      const raw = String(match?.type || '').toLowerCase();
+      if (!raw) return;
+      const type = aliases[raw] || raw;
+      counts.set(type, (counts.get(type) || 0) + 1);
+    });
+    const rank = type => { const i = DetectionUI.METHOD_ORDER.indexOf(type); return i === -1 ? 99 : i; };
+    const ordered = [...counts.entries()].sort((a, b) => (b[1] - a[1]) || (rank(a[0]) - rank(b[0])));
+    const shown = ordered.slice(0, max).map(([type, count]) => {
+      const label = DetectionUI.getMethodLabel(type);
+      return count > 1 ? `${label} ${count}` : label;
+    });
+    const rest = ordered.length - shown.length;
+    let text = shown.join(', ');
+    if (rest > 0) text += ' ' + FormatUtils.t('detectionCardMoreFmt', '+{0}', rest);
+    if (combined) {
+      const word = FormatUtils.t('detectionCardCombination', 'Combination');
+      text = text ? `${word} · ${text}` : word;
+    }
+    return text;
+};
+
+/** Tooltip rows of the evidence line: each matched method and how many matches it has. */
+DetectionUI.evidenceRows = function(matches) {
+    const aliases = { cookies: 'cookie', headers: 'header', urls: 'url' };
+    const counts = new Map();
+    (Array.isArray(matches) ? matches : []).forEach(match => {
+      const raw = String(match?.type || '').toLowerCase();
+      if (raw) counts.set(aliases[raw] || raw, (counts.get(aliases[raw] || raw) || 0) + 1);
+    });
+    const rank = type => { const i = DetectionUI.METHOD_ORDER.indexOf(type); return i === -1 ? 99 : i; };
+    return [...counts.entries()].sort((a, b) => (b[1] - a[1]) || (rank(a[0]) - rank(b[0])))
+      .map(([type, count]) => ({ label: DetectionUI.getMethodLabel(type), value: String(count) }));
+};
+
+/** Grouped under category headers unless Settings → Detection order puts the highest confidence first. */
+DetectionUI.showsGroups = function() {
+    const byConfidence = typeof DetectionUtils !== 'undefined' ? DetectionUtils.SORT_BY_CONFIDENCE : 'confidence';
+    return this?.sortBy !== byConfidence;
+};
+
+/** antibot / captcha / fingerprint (or the raw lowercase name) of a detection. */
+DetectionUI.categoryKeyOf = function(detection) {
+    const raw = detection?.category || detection?.detector?.category || '';
+    if (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.categoryKey === 'function') return DetectionUtils.categoryKey(raw);
+    return String(raw).toLowerCase().replace(/[^a-z]/g, '');
+};
+
+DetectionUI.categoryColor = function(categoryKey) {
+    const info = this?.detectorManager?.getCategoryInfo?.(categoryKey);
+    const color = info?.colour;
+    if (typeof color === 'string' && /^#[0-9a-f]{3,8}$/i.test(color)) return color;
+    return (typeof FormatUtils !== 'undefined' && FormatUtils.DEFAULT_CATEGORY_COLORS[categoryKey]) || '#6b7280';
+};
+
+/** A category header: category icon in its colour, translated name and how many of the listed protections it has. */
+DetectionUI.groupHeaderHtml = function(categoryKey, count) {
+    const label = DetectionUI.categoryLabel(categoryKey);
+    const color = DetectionUI.categoryColor.call(this, categoryKey);
+    const text = FormatUtils.t('detectionGroupCountFmt', '{0} · {1}', label, count);
+    return `<div class="detection-group-head" role="heading" aria-level="3"><span class="category-icon" style="color:${color}" aria-hidden="true">${FormatUtils.categoryIconSvg(categoryKey)}</span>${FormatUtils.escapeHtml(text)}</div>`;
+};
+
+/**
+ * Cards of one page, each wrapped with the header of its category when it
+ * starts a group on this page (and on the first card of every page).
+ */
+DetectionUI.buildPageItemsHtml = function(detections, buildCard, pageStartHeaders = true) {
+    const groups = DetectionUI.showsGroups.call(this);
+    const all = this.paginationManager?.filteredItems || detections;
+    const totals = new Map();
+    if (groups) all.forEach(item => { const key = DetectionUI.categoryKeyOf(item); totals.set(key, (totals.get(key) || 0) + 1); });
+    let previous = null;
+    return detections.map((detection, index) => {
+      const key = groups ? DetectionUI.categoryKeyOf(detection) : null;
+      const head = groups && ((index === 0 && pageStartHeaders) || (index > 0 && key !== previous))
+        ? DetectionUI.groupHeaderHtml.call(this, key, totals.get(key) || 0) : '';
+      previous = key;
+      return `<div class="detection-item">${head}${buildCard(detection, index)}</div>`;
+    }).join('');
 };
 
 DetectionUI.renderDetectionsPage = function(detections) {
@@ -953,7 +1043,6 @@ DetectionUI.renderDetectionsPage = function(detections) {
       Logger.error('UI', '[renderDetectionsPage] resultsList not found!');
       return;
     }
-    Logger.debug('UI', '[renderDetectionsPage] resultsList found, rendering...');
 
     const totalItems = this.paginationManager?.filteredItems?.length ?? detections.length;
     const shouldUseExpandedLayout = totalItems === 2;
@@ -996,11 +1085,7 @@ DetectionUI.renderDetectionsPage = function(detections) {
     resultsList.scrollTop = 0;
 
     if (!shouldBatchRender) {
-      let resultsHtml = '';
-      detections.forEach((detection, index) => {
-        resultsHtml += buildCardHtml(detection, index);
-      });
-      resultsList.innerHTML = resultsHtml;
+      resultsList.innerHTML = DetectionUI.buildPageItemsHtml.call(this, detections, buildCardHtml);
       finalizeRender();
       return;
     }
@@ -1014,12 +1099,12 @@ DetectionUI.renderDetectionsPage = function(detections) {
         return;
       }
 
+      // Batches continue one page: a header only where the category changes
       const slice = detections.slice(offset, offset + batchSize);
-      let batchHtml = '';
-      slice.forEach((detection, index) => {
-        batchHtml += buildCardHtml(detection, offset + index);
-      });
-      resultsList.insertAdjacentHTML('beforeend', batchHtml);
+      const lastKey = offset > 0 ? DetectionUI.categoryKeyOf(detections[offset - 1]) : null;
+      const html = DetectionUI.buildPageItemsHtml.call(this, slice, (detection, index) => buildCardHtml(detection, offset + index),
+        offset === 0 || DetectionUI.categoryKeyOf(slice[0]) !== lastKey);
+      resultsList.insertAdjacentHTML('beforeend', html);
       offset += batchSize;
 
       if (offset < detections.length) {
@@ -1059,10 +1144,15 @@ DetectionUI.measurePageStarts = function(items) {
     const gap = parseFloat(listStyle.rowGap) || 0;
 
     // Cards share the main scrollbar gutter and measure at their final list width.
-    resultsList.innerHTML = items
-      .map((detection, index) => DetectionUI.buildDetectionCardHtml.call(this, detection, index))
-      .join('');
+    // Measured as rendered: each item carries the header of a category change
+    resultsList.innerHTML = DetectionUI.buildPageItemsHtml.call(this, items,
+      (detection, index) => DetectionUI.buildDetectionCardHtml.call(this, detection, index));
     const heights = Array.from(resultsList.children, card => card.getBoundingClientRect().height);
+    // A page that starts inside a group repeats that group's header
+    const headerEl = typeof resultsList.querySelector === 'function' ? resultsList.querySelector('.detection-group-head') : null;
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+    const startsGroup = items.map((item, index) => index === 0
+      || DetectionUI.categoryKeyOf(item) !== DetectionUI.categoryKeyOf(items[index - 1]));
     this._detectionListHeight = available;
 
     // Include the card crossing the viewport budget, then start the next page.
@@ -1070,11 +1160,12 @@ DetectionUI.measurePageStarts = function(items) {
     const starts = [0];
     let used = 0;
     heights.forEach((height, index) => {
+      const pageStartHeight = height + (startsGroup[index] ? 0 : headerHeight);
       if (index === starts[starts.length - 1]) {
-        used = height;
+        used = pageStartHeight;
       } else if (used + gap >= available) {
         starts.push(index);
-        used = height;
+        used = pageStartHeight;
       } else {
         used += gap + height;
       }
@@ -1134,28 +1225,9 @@ DetectionUI.categoryLabel = function(category) {
     return typeof I18n !== 'undefined' ? I18n.tr(entry[0], entry[1]) : entry[1];
 };
 
-// Human-readable, localized names for the detection method chips on each card
-DetectionUI.METHOD_LABELS = {
-    js_hooks: ['detectionMethodJsHooks', 'JavaScript hooks'],
-    content: ['detectionMethodContent', 'Content'],
-    window: ['detectionMethodWindow', 'Window properties'],
-    dom: ['detectionMethodDom', 'Dom'],
-    header: ['detectionMethodHeaders', 'Headers'],
-    headers: ['detectionMethodHeaders', 'Headers'],
-    cookie: ['detectionMethodCookies', 'Cookies'],
-    cookies: ['detectionMethodCookies', 'Cookies'],
-    url: ['detectionMethodUrl', 'Url'],
-    urls: ['detectionMethodUrl', 'Url'],
-    payload: ['detectionMethodPayload', 'Payload'],
-    unknown: ['timeUnknown', 'Unknown']
-};
-
+// Human-readable, localized names for the detection method chips (shared map: FormatUtils.METHOD_LABELS)
 DetectionUI.getMethodLabel = function(typeName) {
-    const entry = DetectionUI.METHOD_LABELS[typeName];
-    if (!entry) {
-      return typeName.replace(/_/g, ' ').toUpperCase();
-    }
-    return typeof I18n !== 'undefined' ? I18n.tr(entry[0], entry[1]) : entry[1];
+    return FormatUtils.methodLabel(typeName);
 };
 
 DetectionUI.getCategoryBadges = function(detection, { copyable = true } = {}) {
@@ -1319,9 +1391,11 @@ DetectionUI.getFilteredResults = function() {
     if (!this.searchQuery) return this.currentResults;
 
     const filtered = this.currentResults.filter(detection => {
-      const name = (detection.detector?.name || detection.detector || '').toLowerCase();
+      const name = FormatUtils.detectorName(detection).toLowerCase();
       const category = (detection.category || '').toLowerCase();
-      const description = (detection.detector?.description || '').toLowerCase();
+      // Search finds the description in English and in the UI language
+      const english = detection.detector?.description || '';
+      const description = `${english} ${FormatUtils.ruleText(english)}`.toLowerCase();
 
       return name.includes(this.searchQuery) ||
              category.includes(this.searchQuery) ||
@@ -1344,10 +1418,11 @@ DetectionUI.sortDetectionsByCategory = function(detections) {
 DetectionUI.handleSearch = function(query) {
     this.searchQuery = query.toLowerCase().trim();
 
-    // Filter items if search query exists
+    // Filtered, or the whole list again when the search is cleared: both in
+    // the Settings order (clearing showed the results unsorted, fingerprints first)
     const itemsToShow = this.searchQuery
       ? this.getFilteredResults()
-      : this.currentResults;
+      : this.sortDetectionsByCategory(this.currentResults || []);
 
     // Update pagination with filtered results
     if (this.paginationManager) {
@@ -1363,30 +1438,7 @@ DetectionUI.getDetectorIcon = function(detection) {
       .replace(/[^a-z]/g, '');
     const isFingerprintCategory = normalizedCategory === 'fingerprint' || normalizedCategory.includes('fingerprint');
 
-    // Fingerprint SVG icons mapping
-    const fingerprintIcons = {
-      'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
-      'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
-      'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
-      'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
-      'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
-      'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
-      'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
-      'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><path d="M15 10v4M13 12h4"/></svg>',
-      'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
-      'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>',
-      'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
-      'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,8 16,11 10,14" fill="currentColor"/></svg>',
-      'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="none"/></svg>',
-      'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>',
-      'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg>',
-      'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
-      'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M4 20v-3h16v3M4 7v10h16V7"/><path d="M4 11h16M4 15h16"/><circle cx="7" cy="9" r="1" fill="currentColor"/></svg>',
-      'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
-      'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M6 12v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/></svg>',
-      'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
-      'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
-    };
+    const fingerprintIcons = FormatUtils.FINGERPRINT_ICONS;
 
     const wrapFingerprintImage = (src, alt, sourceType) => (
       `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${FormatUtils.escapeAttr(src)}" alt="${alt}" class="detector-icon fingerprint-icon-image fingerprint-icon-image--${sourceType}" /></div>`
@@ -1469,4 +1521,10 @@ DetectionUI.getDifficultyInfo = function(detections = [], avgConfidence = 0) {
 
 if (typeof self !== 'undefined') {
     self.DetectionUI = DetectionUI;
+}
+
+// The popup opens on the scanning screen: paint its icons before any detection state arrives
+if (typeof document !== 'undefined' && document.addEventListener) {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => DetectionUI.paintScanIcons());
+  else DetectionUI.paintScanIcons();
 }

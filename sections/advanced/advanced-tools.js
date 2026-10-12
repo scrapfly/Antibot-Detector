@@ -15,9 +15,8 @@ Advanced.prototype.renderAdvancedInterface = async function() {
 
       // Keep the initial loading state (or the previously rendered view)
       // until tools/empty content and its navigation visibility are ready.
-      Logger.debug('UI', '[Advanced] Fetching detection modules...');
       const detectionTools = await this.getDetectionModules();
-      Logger.debug('UI', '[Advanced] Fetching complete:', detectionTools.length, 'tools available');
+      Logger.debug('UI', '[Advanced] Detection modules fetched:', detectionTools.length, 'tools available');
       this.availableDetectionTools = detectionTools;
 
       // Supported protections get direct tool cards; with none, a bare
@@ -91,14 +90,13 @@ Advanced.prototype.renderAdvancedInterface = async function() {
       advancedContent.classList.toggle('is-no-tools', noTools);
 
       // Inject into tools panel instead of entire content
-      Logger.debug('UI', '[Advanced] Injecting HTML into toolsPanel...');
       toolsPanel.innerHTML = noTools
         ? `<div class="captcha-tools-section captcha-tools-section--empty">${this.renderNoToolsState(_atr)}</div>`
         : captchaToolsHtml;
       Logger.debug('UI', '[Advanced] ✓ HTML injected successfully');
 
       // Setup sub-tab listeners
-      Logger.debug('UI', '[Advanced] Setting up listeners...');
+      Logger.debug('UI', '[Advanced] Setting up listeners');
       this.setupSubTabListeners();
 
       const loading = document.querySelector('#advancedLoadingState');

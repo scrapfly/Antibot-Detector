@@ -104,9 +104,6 @@
   "noDetectionsFound": {
     "message": "未发现检测"
   },
-  "analyzingPage": {
-    "message": "正在分析页面"
-  },
   "detectionScanningTitle": {
     "message": "正在扫描此页面"
   },
@@ -300,7 +297,7 @@
     "message": "调试模式"
   },
   "settingsCardDebugDesc": {
-    "message": "在 Service Worker 控制台中为每个扫描的页面输出一份易读的报告"
+    "message": "为每个扫描的页面在扩展控制台中写入一份易读的报告。"
   },
   "settingsRowLogCollector": {
     "message": "日志收集器"
@@ -398,14 +395,8 @@
   "advancedEmptyCapturesHint": {
     "message": "使用“工具”选项卡从检测到的系统中捕获数据"
   },
-  "advancedCapturesStoredNote": {
-    "message": "捕获内容会保存 30 分钟"
-  },
   "advancedNoResultsTitle": {
     "message": "未找到捕获"
-  },
-  "advancedNoResultsHint": {
-    "message": "尝试调整过滤器或搜索查询"
   },
   "advancedBtnResetFilters": {
     "message": "重置所有过滤器"
@@ -991,9 +982,6 @@
   "failedDeleteDetector": {
     "message": "删除检测器失败"
   },
-  "detectorNotFoundFmt": {
-    "message": "未找到检测器:{0}"
-  },
   "failedViewCaptureDetails": {
     "message": "查看捕获详情失败"
   },
@@ -1390,12 +1378,6 @@
   "detectionStatDifficulty": {
     "message": "难度"
   },
-  "detectionStatCacheScope": {
-    "message": "缓存范围"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "缓存过期时间"
-  },
   "detectionSearchPlaceholder": {
     "message": "搜索检测结果..."
   },
@@ -1621,29 +1603,14 @@
   "advancedToolsSubtitle": {
     "message": "选择防护系统以打开其工具。"
   },
-  "advancedToolsStepSelect": {
-    "message": "选择检测"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "选择一个检测..."
-  },
   "advancedToolsLoadTools": {
     "message": "打开工具"
-  },
-  "advancedToolsClearAll": {
-    "message": "全部清除"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "清除所有工具"
   },
   "advancedToolsLearnMore": {
     "message": "了解高级工具"
   },
   "advancedToolsChange": {
     "message": "更改"
-  },
-  "advancedToolsDetectionName": {
-    "message": "检测名称"
   },
   "settingsLanguageTitle": {
     "message": "语言"
@@ -1680,9 +1647,6 @@
   },
   "rulesMoreActions": {
     "message": "更多操作"
-  },
-  "advancedToolsNoDetections": {
-    "message": "此页面没有受支持的检测"
   },
   "advancedToolsEmptyTitle": {
     "message": "暂无可用工具"
@@ -2388,9 +2352,6 @@
   },
   "mhWindowLimit2": {
     "message": "以 Symbol 命名的属性无法写成路径。"
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "只有指纹识别规则使用钩子：反机器人和验证码规则会忽略它们。"
   },
   "mhJsHooksIntro": {
     "message": "记录页面调用浏览器 API 的情况，例如 `HTMLCanvasElement.prototype.toDataURL`，这是指纹识别的迹象。"
@@ -3247,9 +3208,6 @@
   "advGeetestNoVersion": {
     "message": "未检测到 Geetest 版本"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "解析代码已复制到剪贴板！"
-  },
   "advGeetestTabNotFound": {
     "message": "未找到标签页"
   },
@@ -3276,9 +3234,6 @@
   },
   "advPanelCheckConsole": {
     "message": "请查看控制台了解详情"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "请先选择一个检测"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "加载捕获时出错：{0}"
@@ -3526,9 +3481,6 @@
   "clipboardDifficultyFmt": {
     "message": "难度:{0}"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "缓存过期时间:{0}"
-  },
   "clipboardCopyFailed": {
     "message": "复制到剪贴板失败"
   },
@@ -3685,9 +3637,6 @@
   "combinationAutoTip": {
     "message": "自动：触发它的模式中最高的置信度"
   },
-  "combinationSetsScore": {
-    "message": "决定检测分数"
-  },
   "combinationInvalidNoPattern": {
     "message": "请至少添加一个必须找到的模式。"
   },
@@ -3805,6 +3754,9 @@
   "combinationAddPattern": {
     "message": "添加模式"
   },
+  "combinationAddDescription": {
+    "message": "添加描述"
+  },
   "combinationAnyPattern": {
     "message": "任意模式"
   },
@@ -3861,12 +3813,6 @@
   },
   "detectionTipDifficulty": {
     "message": "绕过已检测防护的预估难度。"
-  },
-  "detectionTipCacheScope": {
-    "message": "哪些页面可以复用这些缓存的检测结果。"
-  },
-  "detectionTipCacheExpiration": {
-    "message": "这些缓存的检测结果过期前的剩余时间。"
   },
   "tipCachedAt": {
     "message": "保存于"
@@ -4405,5 +4351,575 @@
   "scrapflyExportNoPage": {
     "message": "请先打开一个网页，再用 Scrapfly 抓取",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} 次捕获"
+  },
+  "statsFirstSeen": {
+    "message": "本期新增"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "本时间段首次保存了 {0} 个防护和 {1} 个域名。"
+  },
+  "statsFirstSeenAllTip": {
+    "message": "选择 7、30 或 90 天以查看新增内容。"
+  },
+  "statsMostProtectedDomain": {
+    "message": "防护最多的域名"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{1} 次访问中出现 {0} 种防护。"
+  },
+  "statsFoundTogether": {
+    "message": "同时出现的防护"
+  },
+  "statsMethods": {
+    "message": "检测方法"
+  },
+  "statsMatchesUnit": {
+    "message": "匹配"
+  },
+  "statsMethodsByCategory": {
+    "message": "按类别的方法"
+  },
+  "statsWeakEvidence": {
+    "message": "最弱的证据"
+  },
+  "statsSignalColumn": {
+    "message": "信号"
+  },
+  "statsMethodColumn": {
+    "message": "方法"
+  },
+  "statsTopSignals": {
+    "message": "最常匹配的信号"
+  },
+  "statsDecidedSingle": {
+    "message": "单个模式"
+  },
+  "statsDecidedCombination": {
+    "message": "组合"
+  },
+  "statsDecidedBy": {
+    "message": "检测的判定方式"
+  },
+  "statsCombinationGain": {
+    "message": "按判定方式的置信度"
+  },
+  "statsCombinationColumn": {
+    "message": "组合"
+  },
+  "statsTopCombinations": {
+    "message": "触发的组合"
+  },
+  "statsNoCombinations": {
+    "message": "本时间段没有由组合判定的检测。"
+  },
+  "statsRulesMostActive": {
+    "message": "最活跃的规则"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} 个模式"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "按方法的模式"
+  },
+  "statsRulesOfficial": {
+    "message": "官方"
+  },
+  "statsRulesCustom": {
+    "message": "自定义"
+  },
+  "statsRuleColumn": {
+    "message": "规则"
+  },
+  "statsRuleKindColumn": {
+    "message": "类型"
+  },
+  "statsPatternsUnit": {
+    "message": "模式"
+  },
+  "statsRulesNeverMatched": {
+    "message": "本时间段未发现"
+  },
+  "statsRulesAllMatched": {
+    "message": "每条已启用的规则在本时间段都有发现。"
+  },
+  "statsMissingColumn": {
+    "message": "无描述"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "没有描述的模式"
+  },
+  "statsRulesAllDescribed": {
+    "message": "每个模式都有描述。"
+  },
+  "statsRuleVersionColumn": {
+    "message": "规则版本"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "需要的扩展版本"
+  },
+  "statsRulesWaiting": {
+    "message": "等待更新的扩展"
+  },
+  "statsToolsByVendor": {
+    "message": "按厂商的捕获"
+  },
+  "statsToolsCapture": {
+    "message": "捕获"
+  },
+  "statsToolsByTool": {
+    "message": "最常用的工具"
+  },
+  "statsToolsOverTime": {
+    "message": "捕获趋势"
+  },
+  "statsChangeColumn": {
+    "message": "变化"
+  },
+  "statsDateColumn": {
+    "message": "日期"
+  },
+  "statsDomainChanges": {
+    "message": "防护变化"
+  },
+  "statsNoChanges": {
+    "message": "本时间段内没有域名在已保存的访问之间改变防护。"
+  },
+  "statsNothingNew": {
+    "message": "没有新增：所有防护在本时间段之前已在历史记录中。"
+  },
+  "statsSectionSignals": {
+    "message": "信号"
+  },
+  "statsSectionCombinations": {
+    "message": "组合"
+  },
+  "statsSectionRules": {
+    "message": "规则"
+  },
+  "statsSectionTools": {
+    "message": "工具"
+  },
+  "statsDomainChangesHint": {
+    "message": "在两次已保存的访问之间检测到的防护发生变化的域名。"
+  },
+  "statsFirstSeenHint": {
+    "message": "本时间段首次保存的防护和域名。"
+  },
+  "statsSignalsNote": {
+    "message": "每次已保存检测所匹配的证据类型：Cookie 和请求头名称、URL、页面元素、脚本和 JavaScript 钩子。"
+  },
+  "statsWeakEvidenceHint": {
+    "message": "匹配模式平均置信度最低的防护。它们的规则可能需要更强的模式。"
+  },
+  "statsCombinationsNote": {
+    "message": "只有同时发现多个模式时，组合才会检测到防护。"
+  },
+  "statsRulesNote": {
+    "message": "你的规则库与本时间段历史记录中的发现对比。"
+  },
+  "statsRulesTotal": {
+    "message": "规则"
+  },
+  "statsRulesModified": {
+    "message": "已编辑的官方规则"
+  },
+  "statsRulesDisabled": {
+    "message": "已停用"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "在本时间段保存的页面上没有任何发现的已启用规则。"
+  },
+  "statsRulesMissingHint": {
+    "message": "描述会显示在检测详情、历史记录和组合中。请在规则编辑器中添加。"
+  },
+  "statsToolsNote": {
+    "message": "保存在此设备上的高级捕获和工具结果。"
+  },
+  "statsCapturesUnit": {
+    "message": "捕获"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0}% 确定"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "组合"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "缓存"
+  },
+  "detectionTipCache": {
+    "message": "哪些页面会复用这些缓存结果，以及复用多久。"
+  },
+  "tipCacheExpires": {
+    "message": "过期时间"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "用历史记录检查"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "查看每个模式和组合在多少个已保存页面上匹配。未保存的修改也会计入。"
+  },
+  "ruleHistoryCheckRun": {
+    "message": "检查"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} 个已保存页面 · 此规则在 {1} 个页面上被发现"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{1} 个页面中的 {0} 个"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} 个其他页面"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "历史记录为空：请先浏览一些页面。"
+  },
+  "ruleHistoryCheckNote": {
+    "message": "估算值：历史记录保存的是匹配到的值，而不是整个页面。"
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "在 {0} 个页面上触发"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "添加模式以检查它们。"
+  },
+  "settingsThemeTitle": {
+    "message": "主题"
+  },
+  "settingsThemeDesc": {
+    "message": "深色，或 Scrapfly 配色的浅色。系统选项跟随浏览器。"
+  },
+  "themeDark": {
+    "message": "深色"
+  },
+  "themeLight": {
+    "message": "浅色"
+  },
+  "themeSystem": {
+    "message": "跟随系统"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "打开控制台"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "在 chrome://extensions 中打开此扩展：点击“service worker”查看日志。"
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "将日志保存在这里而不是控制台，以便导出为 JSON 或文本"
+  },
+  "ruleTranslationsTitle": {
+    "message": "翻译"
+  },
+  "ruleTranslationsHint": {
+    "message": "扩展使用该语言时，显示此文字代替描述。留空则显示描述。"
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} / {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "自动翻译"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "自动翻译需要 Chrome 138 或更高版本。"
+  },
+  "ruleTranslateNeedsText": {
+    "message": "请先填写描述。"
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "正在翻译：{0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "已填写 {0} 种语言。保存前请检查。"
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "已填写 {0} 种；{1} 种无法在此翻译。"
+  },
+  "sfxOptRenderingWait": {
+    "message": "加载后等待"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "等待元素"
+  },
+  "sfxOptRenderingStage": {
+    "message": "页面就绪于"
+  },
+  "sfxOptAutoScroll": {
+    "message": "滚动到底部"
+  },
+  "sfxOptJs": {
+    "message": "运行 JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "浏览器操作"
+  },
+  "sfxOptScreenshot": {
+    "message": "截图"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "元素"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "截图选项"
+  },
+  "sfxOptLang": {
+    "message": "语言"
+  },
+  "sfxOptOs": {
+    "message": "操作系统"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "浏览器"
+  },
+  "sfxOptGeolocation": {
+    "message": "地理位置"
+  },
+  "sfxOptHeaders": {
+    "message": "请求头"
+  },
+  "sfxOptTimeout": {
+    "message": "超时"
+  },
+  "sfxOptRetry": {
+    "message": "出错时重试"
+  },
+  "sfxOptCostBudget": {
+    "message": "额度上限"
+  },
+  "sfxOptFormatOptions": {
+    "message": "去除"
+  },
+  "sfxOptProxified": {
+    "message": "返回网站原始响应"
+  },
+  "sfxOptExtraction": {
+    "message": "提取数据"
+  },
+  "sfxOptExtractionModel": {
+    "message": "模型"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "提示词"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "已保存的模板"
+  },
+  "sfxOptCache": {
+    "message": "缓存"
+  },
+  "sfxOptCacheTtl": {
+    "message": "保留时长"
+  },
+  "sfxOptCacheClear": {
+    "message": "刷新缓存"
+  },
+  "sfxOptSession": {
+    "message": "会话"
+  },
+  "sfxOptSticky": {
+    "message": "会话使用同一代理"
+  },
+  "sfxOptDebug": {
+    "message": "调试"
+  },
+  "sfxOptCorrelationId": {
+    "message": "关联 ID"
+  },
+  "sfxOptTags": {
+    "message": "标签"
+  },
+  "sfxOptDns": {
+    "message": "DNS 详情"
+  },
+  "sfxOptSsl": {
+    "message": "SSL 证书"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "启动"
+  },
+  "sfxOptTargetUrl": {
+    "message": "声明此页面"
+  },
+  "sfxOptBrowserLang": {
+    "message": "语言"
+  },
+  "sfxOptAutoClose": {
+    "message": "断开时关闭"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "会话时长"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "解封时限"
+  },
+  "sfxOptBlockImages": {
+    "message": "屏蔽图片"
+  },
+  "sfxOptBlockStyles": {
+    "message": "屏蔽样式表"
+  },
+  "sfxOptBlockFonts": {
+    "message": "屏蔽字体"
+  },
+  "sfxOptBlockMedia": {
+    "message": "屏蔽视频和音频"
+  },
+  "sfxOptBlacklist": {
+    "message": "屏蔽跟踪器"
+  },
+  "sfxOptBrowserCache": {
+    "message": "缓存静态文件"
+  },
+  "sfxOptRecord": {
+    "message": "录制会话"
+  },
+  "sfxOptMcp": {
+    "message": "MCP 端点"
+  },
+  "sfxValAuto": {
+    "message": "自动"
+  },
+  "sfxValCleanHtml": {
+    "message": "精简 HTML"
+  },
+  "sfxValComplete": {
+    "message": "完全加载"
+  },
+  "sfxValDomReady": {
+    "message": "DOM 就绪"
+  },
+  "sfxValFullPage": {
+    "message": "整页"
+  },
+  "sfxValElement": {
+    "message": "元素"
+  },
+  "sfxValLoadImages": {
+    "message": "加载图片"
+  },
+  "sfxValDarkMode": {
+    "message": "深色模式"
+  },
+  "sfxValBlockBanners": {
+    "message": "隐藏横幅"
+  },
+  "sfxValHighQuality": {
+    "message": "高质量"
+  },
+  "sfxValPrint": {
+    "message": "打印样式"
+  },
+  "sfxValNoLinks": {
+    "message": "链接"
+  },
+  "sfxValNoImages": {
+    "message": "图片"
+  },
+  "sfxValOnlyContent": {
+    "message": "除正文外的全部"
+  },
+  "sfxValModel": {
+    "message": "AI 模型"
+  },
+  "sfxValTemplate": {
+    "message": "模板"
+  },
+  "sfxValConnect": {
+    "message": "打开浏览器"
+  },
+  "sfxValUnblock": {
+    "message": "先解封"
+  },
+  "sfxGroupRender": {
+    "message": "浏览器渲染"
+  },
+  "sfxGroupLocation": {
+    "message": "位置与指纹"
+  },
+  "sfxGroupRequest": {
+    "message": "请求"
+  },
+  "sfxGroupOutput": {
+    "message": "输出"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI 提取"
+  },
+  "sfxGroupCache": {
+    "message": "缓存与会话"
+  },
+  "sfxGroupTracking": {
+    "message": "调试与跟踪"
+  },
+  "sfxGroupFingerprint": {
+    "message": "指纹与语言"
+  },
+  "sfxGroupSession": {
+    "message": "会话"
+  },
+  "sfxGroupBlocking": {
+    "message": "屏蔽与缓存"
+  },
+  "sfxGroupTools": {
+    "message": "调试与 MCP"
+  },
+  "sfxWhyRender": {
+    "message": "需要开启 JavaScript 渲染"
+  },
+  "sfxWhyUnblocker": {
+    "message": "需要 Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "仅限 Markdown 或文本输出"
+  },
+  "sfxWhyCache": {
+    "message": "请先开启缓存"
+  },
+  "sfxWhySession": {
+    "message": "请先设置会话"
+  },
+  "sfxWhySticky": {
+    "message": "使用 Unblocker 时始终开启"
+  },
+  "sfxWhyJson": {
+    "message": "不是 JSON 步骤列表：已忽略"
+  },
+  "sfxWhyGeo": {
+    "message": "请填写纬度,经度：已忽略"
+  },
+  "sfxWhyBrandOs": {
+    "message": "该浏览器不支持此系统：已忽略"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge 需要 Windows：已忽略"
+  },
+  "sfxHintHeaders": {
+    "message": "每行一个：Name: value。不会保存。"
+  },
+  "sfxHintScenario": {
+    "message": "JSON 列表：click、fill、wait、scroll、execute、wait_for_selector、wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "用逗号分隔"
+  },
+  "sfxHintLanguages": {
+    "message": "用逗号分隔，最多 3 个"
+  },
+  "sfxHintUnblock": {
+    "message": "“先解封”会返回已通过反机器人拦截的浏览器"
+  },
+  "sfxValOff": {
+    "message": "关闭"
   }
 }

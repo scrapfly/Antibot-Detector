@@ -61,6 +61,6 @@ test('the facts that were wrong before stay corrected', () => {
   assert.match(all('cookie'), /prefix/, 'a plain cookie name is a prefix match');
   assert.match(all('header'), /Request means headers the browser sent/, 'request headers are captured');
   assert.doesNotMatch(all('url'), /\/\\\/v/, 'no regex written with / delimiters');
-  assert.match(METHOD_HELP.js_hooks.warning[1], /Only Fingerprint rules/);
+  assert.equal(METHOD_HELP.js_hooks.warning, undefined, 'hooks are installed for every category, so no Fingerprint-only warning');
   assert.match(all('js_hooks'), /Navigator\.prototype\.webdriver`, not `navigator\.webdriver/);
 });

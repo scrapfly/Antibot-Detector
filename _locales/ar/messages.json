@@ -104,9 +104,6 @@
   "noDetectionsFound": {
     "message": "لم يتم العثور على كشوفات"
   },
-  "analyzingPage": {
-    "message": "جارٍ تحليل الصفحة"
-  },
   "detectionScanningTitle": {
     "message": "جارٍ فحص الصفحة"
   },
@@ -300,7 +297,7 @@
     "message": "وضع التصحيح"
   },
   "settingsCardDebugDesc": {
-    "message": "تقرير واحد سهل القراءة لكل صفحة تم فحصها في وحدة تحكم عامل الخدمة"
+    "message": "يكتب تقريرًا مقروءًا لكل صفحة تم فحصها في وحدة تحكم الإضافة."
   },
   "settingsRowLogCollector": {
     "message": "جامع السجلات"
@@ -398,14 +395,8 @@
   "advancedEmptyCapturesHint": {
     "message": "استخدم علامة تبويب الأدوات لالتقاط البيانات من الأنظمة المكتشفة"
   },
-  "advancedCapturesStoredNote": {
-    "message": "يتم تخزين الالتقاطات لمدة 30 دقيقة"
-  },
   "advancedNoResultsTitle": {
     "message": "لم يتم العثور على التقاطات"
-  },
-  "advancedNoResultsHint": {
-    "message": "حاول تعديل المرشحات أو استعلام البحث"
   },
   "advancedBtnResetFilters": {
     "message": "إعادة تعيين جميع المرشحات"
@@ -991,9 +982,6 @@
   "failedDeleteDetector": {
     "message": "تعذَّر حذف الكاشف"
   },
-  "detectorNotFoundFmt": {
-    "message": "لم يُعثر على الكاشف: {0}"
-  },
   "failedViewCaptureDetails": {
     "message": "تعذَّر عرض تفاصيل الالتقاط"
   },
@@ -1390,12 +1378,6 @@
   "detectionStatDifficulty": {
     "message": "الصعوبة"
   },
-  "detectionStatCacheScope": {
-    "message": "نطاق التخزين المؤقت"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "انتهاء صلاحية التخزين المؤقت"
-  },
   "detectionSearchPlaceholder": {
     "message": "البحث في الاكتشافات..."
   },
@@ -1621,29 +1603,14 @@
   "advancedToolsSubtitle": {
     "message": "اختر نظام حماية لفتح أدواته."
   },
-  "advancedToolsStepSelect": {
-    "message": "اختر الكشف"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "اختر كشفًا..."
-  },
   "advancedToolsLoadTools": {
     "message": "فتح الأدوات"
-  },
-  "advancedToolsClearAll": {
-    "message": "مسح الكل"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "مسح جميع الأدوات"
   },
   "advancedToolsLearnMore": {
     "message": "تعرّف على الأدوات المتقدمة"
   },
   "advancedToolsChange": {
     "message": "تغيير"
-  },
-  "advancedToolsDetectionName": {
-    "message": "اسم الكشف"
   },
   "settingsLanguageTitle": {
     "message": "اللغة"
@@ -1680,9 +1647,6 @@
   },
   "rulesMoreActions": {
     "message": "إجراءات إضافية"
-  },
-  "advancedToolsNoDetections": {
-    "message": "لا توجد اكتشافات مدعومة في هذه الصفحة"
   },
   "advancedToolsEmptyTitle": {
     "message": "لا توجد أدوات متاحة"
@@ -2388,9 +2352,6 @@
   },
   "mhWindowLimit2": {
     "message": "لا يمكن كتابة الخصائص المسماة بـ Symbol كمسار."
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "قواعد البصمة وحدها تستخدم الخطافات: قواعد مكافحة الروبوتات وCaptcha تتجاهلها."
   },
   "mhJsHooksIntro": {
     "message": "يسجّل استدعاء الصفحة لواجهة برمجة في المتصفح، مثل `HTMLCanvasElement.prototype.toDataURL`، وهي علامة على أخذ البصمة."
@@ -3247,9 +3208,6 @@
   "advGeetestNoVersion": {
     "message": "لم يتم اكتشاف أي إصدار من Geetest"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "تم نسخ رمز التحليل إلى الحافظة!"
-  },
   "advGeetestTabNotFound": {
     "message": "لم يتم العثور على علامة التبويب"
   },
@@ -3276,9 +3234,6 @@
   },
   "advPanelCheckConsole": {
     "message": "تحقق من وحدة التحكم لمعرفة التفاصيل"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "يرجى اختيار كشف أولًا"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "خطأ في تحميل الالتقاطات: {0}"
@@ -3526,9 +3481,6 @@
   "clipboardDifficultyFmt": {
     "message": "الصعوبة: {0}"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "انتهاء صلاحية التخزين المؤقت: {0}"
-  },
   "clipboardCopyFailed": {
     "message": "تعذَّر النسخ إلى الحافظة"
   },
@@ -3685,9 +3637,6 @@
   "combinationAutoTip": {
     "message": "تلقائي: أعلى ثقة بين الأنماط التي فعّلتها"
   },
-  "combinationSetsScore": {
-    "message": "يحدد نتيجة الكشف"
-  },
   "combinationInvalidNoPattern": {
     "message": "أضف نمطًا واحدًا على الأقل يجب أن يوجد."
   },
@@ -3805,6 +3754,9 @@
   "combinationAddPattern": {
     "message": "إضافة نمط"
   },
+  "combinationAddDescription": {
+    "message": "أضف وصفًا"
+  },
   "combinationAnyPattern": {
     "message": "أي نمط"
   },
@@ -3861,12 +3813,6 @@
   },
   "detectionTipDifficulty": {
     "message": "الصعوبة المقدّرة لتجاوز أنظمة الحماية المكتشفة."
-  },
-  "detectionTipCacheScope": {
-    "message": "الصفحات التي يمكنها إعادة استخدام نتائج الكشف المخزنة مؤقتًا."
-  },
-  "detectionTipCacheExpiration": {
-    "message": "الوقت المتبقي حتى انتهاء صلاحية نتائج الكشف المخزنة مؤقتًا."
   },
   "tipCachedAt": {
     "message": "حُفظ"
@@ -4405,5 +4351,575 @@
   "scrapflyExportNoPage": {
     "message": "افتح صفحة ويب لاستخراجها باستخدام Scrapfly",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} عمليات التقاط"
+  },
+  "statsFirstSeen": {
+    "message": "جديد في هذه الفترة"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "{0} حماية و{1} نطاق حُفظت لأول مرة في هذه الفترة."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "اختر 7 أو 30 أو 90 يومًا لرؤية الجديد."
+  },
+  "statsMostProtectedDomain": {
+    "message": "النطاق الأكثر حماية"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{0} حمايات مختلفة خلال {1} زيارة."
+  },
+  "statsFoundTogether": {
+    "message": "حمايات وُجدت معًا"
+  },
+  "statsMethods": {
+    "message": "طرق الاكتشاف"
+  },
+  "statsMatchesUnit": {
+    "message": "تطابقات"
+  },
+  "statsMethodsByCategory": {
+    "message": "الطرق حسب الفئة"
+  },
+  "statsWeakEvidence": {
+    "message": "أضعف الأدلة"
+  },
+  "statsSignalColumn": {
+    "message": "إشارة"
+  },
+  "statsMethodColumn": {
+    "message": "الطريقة"
+  },
+  "statsTopSignals": {
+    "message": "الإشارات الأكثر تطابقًا"
+  },
+  "statsDecidedSingle": {
+    "message": "نمط واحد"
+  },
+  "statsDecidedCombination": {
+    "message": "تركيبة"
+  },
+  "statsDecidedBy": {
+    "message": "كيف تقررت الاكتشافات"
+  },
+  "statsCombinationGain": {
+    "message": "الثقة حسب القرار"
+  },
+  "statsCombinationColumn": {
+    "message": "تركيبة"
+  },
+  "statsTopCombinations": {
+    "message": "التركيبات التي تحققت"
+  },
+  "statsNoCombinations": {
+    "message": "لم يتقرر أي اكتشاف في هذه الفترة بواسطة تركيبة."
+  },
+  "statsRulesMostActive": {
+    "message": "القواعد الأكثر نشاطًا"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} أنماط"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "الأنماط حسب الطريقة"
+  },
+  "statsRulesOfficial": {
+    "message": "رسمية"
+  },
+  "statsRulesCustom": {
+    "message": "مخصصة"
+  },
+  "statsRuleColumn": {
+    "message": "القاعدة"
+  },
+  "statsRuleKindColumn": {
+    "message": "النوع"
+  },
+  "statsPatternsUnit": {
+    "message": "أنماط"
+  },
+  "statsRulesNeverMatched": {
+    "message": "لم يُعثر عليها في هذه الفترة"
+  },
+  "statsRulesAllMatched": {
+    "message": "وجدت كل قاعدة مفعّلة شيئًا في هذه الفترة."
+  },
+  "statsMissingColumn": {
+    "message": "بلا وصف"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "أنماط بلا وصف"
+  },
+  "statsRulesAllDescribed": {
+    "message": "لكل نمط وصف."
+  },
+  "statsRuleVersionColumn": {
+    "message": "إصدار القاعدة"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "يتطلب الإضافة"
+  },
+  "statsRulesWaiting": {
+    "message": "بانتظار إضافة أحدث"
+  },
+  "statsToolsByVendor": {
+    "message": "عمليات الالتقاط حسب المزوّد"
+  },
+  "statsToolsCapture": {
+    "message": "التقاط"
+  },
+  "statsToolsByTool": {
+    "message": "الأدوات الأكثر استخدامًا"
+  },
+  "statsToolsOverTime": {
+    "message": "عمليات الالتقاط عبر الوقت"
+  },
+  "statsChangeColumn": {
+    "message": "التغيير"
+  },
+  "statsDateColumn": {
+    "message": "التاريخ"
+  },
+  "statsDomainChanges": {
+    "message": "تغييرات الحماية"
+  },
+  "statsNoChanges": {
+    "message": "لم يغيّر أي نطاق حماياته بين الزيارات المحفوظة في هذه الفترة."
+  },
+  "statsNothingNew": {
+    "message": "لا جديد: كانت كل حماية هنا في السجل قبل هذه الفترة."
+  },
+  "statsSectionSignals": {
+    "message": "الإشارات"
+  },
+  "statsSectionCombinations": {
+    "message": "التركيبات"
+  },
+  "statsSectionRules": {
+    "message": "القواعد"
+  },
+  "statsSectionTools": {
+    "message": "الأدوات"
+  },
+  "statsDomainChangesHint": {
+    "message": "النطاقات التي تغيّرت حماياتها المكتشفة بين زيارتين محفوظتين."
+  },
+  "statsFirstSeenHint": {
+    "message": "الحمايات والنطاقات المحفوظة لأول مرة في هذه الفترة."
+  },
+  "statsSignalsNote": {
+    "message": "نوع الدليل الذي طابقه كل اكتشاف محفوظ: أسماء ملفات تعريف الارتباط والترويسات وعناوين URL وعناصر الصفحة والسكربتات وخطافات JavaScript."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "حمايات لأنماطها المطابقة أدنى متوسط ثقة. قد تحتاج قواعدها إلى نمط أقوى."
+  },
+  "statsCombinationsNote": {
+    "message": "لا تكتشف التركيبة الحماية إلا عند العثور على عدة أنماط معًا."
+  },
+  "statsRulesNote": {
+    "message": "مكتبة قواعدك مقارنةً بما وجده السجل في هذه الفترة."
+  },
+  "statsRulesTotal": {
+    "message": "القواعد"
+  },
+  "statsRulesModified": {
+    "message": "رسمية معدّلة"
+  },
+  "statsRulesDisabled": {
+    "message": "معطّلة"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "قواعد مفعّلة لم تجد شيئًا في الصفحات المحفوظة في هذه الفترة."
+  },
+  "statsRulesMissingHint": {
+    "message": "تظهر الأوصاف في تفاصيل الاكتشاف والسجل والتركيبات. أضفها في محرر القواعد."
+  },
+  "statsToolsNote": {
+    "message": "عمليات الالتقاط المتقدمة ونتائج الأدوات المحفوظة على هذا الجهاز."
+  },
+  "statsCapturesUnit": {
+    "message": "عمليات التقاط"
+  },
+  "detectionCardSureFmt": {
+    "message": "متأكد بنسبة {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "تركيبة"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "ذاكرة التخزين المؤقت"
+  },
+  "detectionTipCache": {
+    "message": "الصفحات التي تعيد استخدام هذه النتائج المخزنة مؤقتًا، ولأي مدة."
+  },
+  "tipCacheExpires": {
+    "message": "تنتهي"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "التحقق مقابل السجل"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "اعرف على كم صفحة محفوظة يتطابق كل نمط وكل تركيبة. التعديلات غير المحفوظة محسوبة."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "تحقق"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} صفحة محفوظة · وُجدت هذه القاعدة في {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0} من {1} صفحة"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} صفحات أخرى"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "السجل فارغ: تصفح بعض الصفحات أولًا."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "تقدير: يحفظ السجل القيم المطابقة، لا الصفحات كاملة."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "تتحقق في {0} صفحة"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "أضف أنماطًا للتحقق منها."
+  },
+  "settingsThemeTitle": {
+    "message": "المظهر"
+  },
+  "settingsThemeDesc": {
+    "message": "داكن، أو فاتح بألوان Scrapfly. خيار النظام يتبع متصفحك."
+  },
+  "themeDark": {
+    "message": "داكن"
+  },
+  "themeLight": {
+    "message": "فاتح"
+  },
+  "themeSystem": {
+    "message": "النظام"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "فتح وحدة التحكم"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "يفتح هذه الإضافة في chrome://extensions: انقر على \"service worker\" لرؤية السجلات."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "احتفظ بالسجلات هنا بدلًا من وحدة التحكم لتصديرها كـ JSON أو نص"
+  },
+  "ruleTranslationsTitle": {
+    "message": "الترجمات"
+  },
+  "ruleTranslationsHint": {
+    "message": "تظهر بدلًا من الوصف عندما تكون الإضافة بتلك اللغة. فارغة: يظهر الوصف."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} من {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "ترجمة تلقائية"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "تتطلب الترجمة التلقائية Chrome 138 أو أحدث."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "اكتب الوصف أولًا."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "جارٍ الترجمة: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "تم ملء {0} لغات. راجعها قبل الحفظ."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "تم ملء {0}؛ تعذرت ترجمة {1} هنا."
+  },
+  "sfxOptRenderingWait": {
+    "message": "الانتظار بعد التحميل"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "انتظار عنصر"
+  },
+  "sfxOptRenderingStage": {
+    "message": "الصفحة جاهزة عند"
+  },
+  "sfxOptAutoScroll": {
+    "message": "التمرير إلى الأسفل"
+  },
+  "sfxOptJs": {
+    "message": "تشغيل JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "إجراءات المتصفح"
+  },
+  "sfxOptScreenshot": {
+    "message": "لقطة شاشة"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "العنصر"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "خيارات لقطة الشاشة"
+  },
+  "sfxOptLang": {
+    "message": "اللغات"
+  },
+  "sfxOptOs": {
+    "message": "نظام التشغيل"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "المتصفح"
+  },
+  "sfxOptGeolocation": {
+    "message": "الموقع الجغرافي"
+  },
+  "sfxOptHeaders": {
+    "message": "الترويسات"
+  },
+  "sfxOptTimeout": {
+    "message": "المهلة"
+  },
+  "sfxOptRetry": {
+    "message": "إعادة المحاولة عند الأخطاء"
+  },
+  "sfxOptCostBudget": {
+    "message": "حد الرصيد"
+  },
+  "sfxOptFormatOptions": {
+    "message": "استبعاد"
+  },
+  "sfxOptProxified": {
+    "message": "إرجاع استجابة الموقع"
+  },
+  "sfxOptExtraction": {
+    "message": "استخراج البيانات"
+  },
+  "sfxOptExtractionModel": {
+    "message": "النموذج"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "الطلب"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "قالب محفوظ"
+  },
+  "sfxOptCache": {
+    "message": "ذاكرة التخزين المؤقت"
+  },
+  "sfxOptCacheTtl": {
+    "message": "الاحتفاظ لمدة"
+  },
+  "sfxOptCacheClear": {
+    "message": "تحديث الذاكرة المؤقتة"
+  },
+  "sfxOptSession": {
+    "message": "الجلسة"
+  },
+  "sfxOptSticky": {
+    "message": "الوكيل نفسه طوال الجلسة"
+  },
+  "sfxOptDebug": {
+    "message": "التصحيح"
+  },
+  "sfxOptCorrelationId": {
+    "message": "معرّف الربط"
+  },
+  "sfxOptTags": {
+    "message": "الوسوم"
+  },
+  "sfxOptDns": {
+    "message": "تفاصيل DNS"
+  },
+  "sfxOptSsl": {
+    "message": "شهادة SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "البدء"
+  },
+  "sfxOptTargetUrl": {
+    "message": "الإعلان عن هذه الصفحة"
+  },
+  "sfxOptBrowserLang": {
+    "message": "اللغة"
+  },
+  "sfxOptAutoClose": {
+    "message": "الإغلاق عند قطع الاتصال"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "مدة الجلسة"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "مهلة فك الحظر"
+  },
+  "sfxOptBlockImages": {
+    "message": "حظر الصور"
+  },
+  "sfxOptBlockStyles": {
+    "message": "حظر أوراق الأنماط"
+  },
+  "sfxOptBlockFonts": {
+    "message": "حظر الخطوط"
+  },
+  "sfxOptBlockMedia": {
+    "message": "حظر الفيديو والصوت"
+  },
+  "sfxOptBlacklist": {
+    "message": "حظر أدوات التتبع"
+  },
+  "sfxOptBrowserCache": {
+    "message": "تخزين الملفات الثابتة مؤقتًا"
+  },
+  "sfxOptRecord": {
+    "message": "تسجيل الجلسة"
+  },
+  "sfxOptMcp": {
+    "message": "نقطة MCP"
+  },
+  "sfxValAuto": {
+    "message": "تلقائي"
+  },
+  "sfxValCleanHtml": {
+    "message": "HTML نظيف"
+  },
+  "sfxValComplete": {
+    "message": "تحميل كامل"
+  },
+  "sfxValDomReady": {
+    "message": "DOM جاهز"
+  },
+  "sfxValFullPage": {
+    "message": "الصفحة كاملة"
+  },
+  "sfxValElement": {
+    "message": "عنصر"
+  },
+  "sfxValLoadImages": {
+    "message": "تحميل الصور"
+  },
+  "sfxValDarkMode": {
+    "message": "الوضع الداكن"
+  },
+  "sfxValBlockBanners": {
+    "message": "إخفاء الشعارات المنبثقة"
+  },
+  "sfxValHighQuality": {
+    "message": "جودة عالية"
+  },
+  "sfxValPrint": {
+    "message": "نمط الطباعة"
+  },
+  "sfxValNoLinks": {
+    "message": "الروابط"
+  },
+  "sfxValNoImages": {
+    "message": "الصور"
+  },
+  "sfxValOnlyContent": {
+    "message": "كل شيء عدا المحتوى الرئيسي"
+  },
+  "sfxValModel": {
+    "message": "نموذج ذكاء اصطناعي"
+  },
+  "sfxValTemplate": {
+    "message": "قالب"
+  },
+  "sfxValConnect": {
+    "message": "فتح متصفح"
+  },
+  "sfxValUnblock": {
+    "message": "فك الحظر أولًا"
+  },
+  "sfxGroupRender": {
+    "message": "عرض المتصفح"
+  },
+  "sfxGroupLocation": {
+    "message": "الموقع والبصمة"
+  },
+  "sfxGroupRequest": {
+    "message": "الطلب"
+  },
+  "sfxGroupOutput": {
+    "message": "المخرجات"
+  },
+  "sfxGroupExtraction": {
+    "message": "الاستخراج بالذكاء الاصطناعي"
+  },
+  "sfxGroupCache": {
+    "message": "الذاكرة المؤقتة والجلسة"
+  },
+  "sfxGroupTracking": {
+    "message": "التصحيح والتتبع"
+  },
+  "sfxGroupFingerprint": {
+    "message": "البصمة واللغة"
+  },
+  "sfxGroupSession": {
+    "message": "الجلسة"
+  },
+  "sfxGroupBlocking": {
+    "message": "الحظر والذاكرة المؤقتة"
+  },
+  "sfxGroupTools": {
+    "message": "التصحيح وMCP"
+  },
+  "sfxWhyRender": {
+    "message": "يتطلب عرض JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "يتطلب Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "لمخرجات Markdown أو النص فقط"
+  },
+  "sfxWhyCache": {
+    "message": "فعّل الذاكرة المؤقتة أولًا"
+  },
+  "sfxWhySession": {
+    "message": "حدّد جلسة أولًا"
+  },
+  "sfxWhySticky": {
+    "message": "مفعّل دائمًا مع Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "ليس قائمة خطوات JSON: لم يُضف"
+  },
+  "sfxWhyGeo": {
+    "message": "استخدم خط العرض,خط الطول: لم يُضف"
+  },
+  "sfxWhyBrandOs": {
+    "message": "هذا المتصفح لا يعمل على هذا النظام: لم يُضف"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge يتطلب Windows: لم يُضف"
+  },
+  "sfxHintHeaders": {
+    "message": "سطر لكل ترويسة: الاسم: القيمة. لا تُحفظ."
+  },
+  "sfxHintScenario": {
+    "message": "قائمة JSON: click وfill وwait وscroll وexecute وwait_for_selector وwait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "مفصولة بفواصل"
+  },
+  "sfxHintLanguages": {
+    "message": "مفصولة بفواصل، حتى 3"
+  },
+  "sfxHintUnblock": {
+    "message": "«فك الحظر أولًا» يعيد متصفحًا تجاوز حماية مكافحة الروبوتات بالفعل"
+  },
+  "sfxValOff": {
+    "message": "إيقاف"
   }
 }

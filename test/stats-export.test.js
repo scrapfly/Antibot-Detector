@@ -16,7 +16,7 @@ test('exports only normalized allowlisted fields without mutating input', () => 
   const payload = StatsExport.build(input, options);
   assert.equal(JSON.stringify(input), before);
   assert.deepEqual(payload.entries[0], { timestamp: new Date(now).toISOString(), hostname: 'example.com', difficulty: 'High',
-    detections: [{ name: '防护', category: 'captcha', confidence: 95 }] });
+    detections: [{ name: '防护', category: 'captcha', confidence: 95, methods: [], combinations: [] }] });
   assert.equal(payload.schemaVersion, 1);
   assert.equal(payload.generatedAt, new Date(now).toISOString());
   assert.ok(!StatsExport.toJSON(payload).includes('SECRET'));
@@ -38,7 +38,7 @@ test('range dates and membership agree with analytics, empty range has header on
   assert.equal(payload.range.end, new Date(now).toISOString());
   assert.equal(payload.entries.length, HistoryStats.filterByRange(input, 30, now).length);
   assert.deepEqual(payload.entries.map((row) => row.timestamp), [start.toISOString(), new Date(now).toISOString()]);
-  assert.equal(StatsExport.toCSV(StatsExport.build([], options)), 'timestamp,hostname,difficulty,detector,category,confidence\r\n');
+  assert.equal(StatsExport.toCSV(StatsExport.build([], options)), 'timestamp,hostname,difficulty,detector,category,confidence,methods,combinations\r\n');
   assert.equal(StatsExport.build([visit({ timestamp: 'invalid' })], { days: 0, now }).entries[0].timestamp, null);
   assert.equal(StatsExport.build([], { days: 0, now }).range.start, null);
 });
@@ -47,7 +47,7 @@ test('invalid confidence is null, valid numeric zero and decimals stay accurate'
   const scores = [null, undefined, '', '  ', false, true, NaN, Infinity, -1, 101, {}, 0, 100, 92.5, '80'];
   const payload = StatsExport.build([visit({ detections: scores.map((confidence) => ({ name: 'Detector', confidence })) })], options);
   assert.deepEqual(payload.entries[0].detections.map((d) => d.confidence), [null, null, null, null, null, null, null, null, null, null, null, 0, 100, 92.5, null]);
-  assert.match(StatsExport.toCSV(payload), /Detector,other,92\.5\r\n/);
+  assert.match(StatsExport.toCSV(payload), /Detector,other,92\.5,,\r\n/);
 });
 
 test('CSV flattens visits, preserves Unicode and quotes commas, newlines and double quotes', () => {
@@ -55,9 +55,9 @@ test('CSV flattens visits, preserves Unicode and quotes commas, newlines and dou
     { name: 'A,"B"\n防护', category: 'captcha', confidence: 0 }, { name: 'Second', confidence: 100 }
   ] }), visit({ hostname: 'empty.example' })], options);
   const csv = StatsExport.toCSV(payload);
-  assert.ok(csv.includes('例子.com,High,"A,""B""\n防护",captcha,0\r\n'));
-  assert.ok(csv.includes('例子.com,High,Second,other,100\r\n'));
-  assert.ok(csv.endsWith('empty.example,None,,,\r\n'));
+  assert.ok(csv.includes('例子.com,High,"A,""B""\n防护",captcha,0,,\r\n'));
+  assert.ok(csv.includes('例子.com,High,Second,other,100,,\r\n'));
+  assert.ok(csv.endsWith('empty.example,None,,,,,\r\n'));
 });
 
 test('CSV neutralizes formulas after whitespace, tabs and newline prefixes', () => {
@@ -65,7 +65,7 @@ test('CSV neutralizes formulas after whitespace, tabs and newline prefixes', () 
     const payload = { entries: [{ timestamp: null, hostname: text, difficulty: 'Medium', detections: [{ name: text, category: 'other', confidence: 75 }] }] };
     const csv = StatsExport.toCSV(payload);
     assert.ok(csv.includes("'" + text), text);
-    assert.ok(csv.endsWith(',other,75\r\n'));
+    assert.ok(csv.endsWith(',other,75,,\r\n'));
     assert.equal(payload.entries[0].hostname, text);
   }
 });
@@ -87,7 +87,7 @@ test('malformed rows and sensitive hostname paths never leak into exports', () =
   assert.equal(payload.entries.length, 2);
   assert.equal(payload.entries[0].hostname, 'example.com');
   assert.equal(payload.entries[1].hostname, 'example.org');
-  assert.deepEqual(payload.entries[0].detections, [{ name: 'nested-id', category: 'fingerprint', confidence: 88 }]);
+  assert.deepEqual(payload.entries[0].detections, [{ name: 'nested-id', category: 'fingerprint', confidence: 88, methods: [], combinations: [] }]);
   assert.ok(!StatsExport.toJSON(payload).includes('SECRET'));
   assert.ok(!StatsExport.toJSON(payload).includes('https://'));
 });
@@ -120,7 +120,7 @@ test('production DetectionUtils custom difficulty matches dashboard in entries, 
   assert.ok(csv.includes('low.example,Low,Custom captcha,captcha,40'));
   const json = context.StatsExport.toJSON(payload);
   assert.ok(!json.includes('SECRET'));
-  assert.deepEqual(Object.keys(JSON.parse(json).entries[0].detections[0]), ['name', 'category', 'confidence']);
+  assert.deepEqual(Object.keys(JSON.parse(json).entries[0].detections[0]), ['name', 'category', 'confidence', 'methods', 'combinations']);
   assert.equal(JSON.stringify(input), before);
 });
 
@@ -168,4 +168,15 @@ test('mock Chrome JSON downloads and errors reject gracefully and still revoke',
   const missing = browserExport((args, callback) => callback());
   await assert.rejects(missing.api.download('csv', [], options), /not started/);
   await assert.rejects(StatsExport.download('csv', [], options), /unavailable/);
+});
+
+test('exports name the methods and combinations of each detection, never the matched values', () => {
+  const payload = StatsExport.build([{ timestamp: Date.now() - 1000, hostname: 'a.com', detections: [{ name: 'Cloudflare', category: 'antibot', confidence: 90,
+    matches: [{ type: 'cookie', value: 'cf_clearance=SECRET' }, { type: 'url', fullUrl: 'https://a.com/?t=SECRET' }, { type: 'cookie', value: 'x=SECRET' }],
+    combinations: [{ id: 'c1', confidence: 90 }, 'junk'] }] }], { days: 30, now: Date.now() });
+  assert.deepEqual(JSON.parse(JSON.stringify(payload.entries[0].detections[0])), { name: 'Cloudflare', category: 'antibot', confidence: 90, methods: ['cookie', 'url'], combinations: ['c1'] });
+  assert.equal(payload.summary.decided.combination.detections, 1);
+  assert.ok(!('signalMetrics' in payload.summary));
+  assert.ok(!StatsExport.toJSON(payload).includes('SECRET'));
+  assert.match(StatsExport.toCSV(payload), /,90,cookie;url,c1\r\n$/);
 });

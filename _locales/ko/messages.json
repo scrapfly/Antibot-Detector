@@ -104,9 +104,6 @@
   "noDetectionsFound": {
     "message": "탐지된 항목 없음"
   },
-  "analyzingPage": {
-    "message": "페이지 분석 중"
-  },
   "detectionScanningTitle": {
     "message": "페이지 검사 중"
   },
@@ -300,7 +297,7 @@
     "message": "디버그 모드"
   },
   "settingsCardDebugDesc": {
-    "message": "검사한 페이지마다 읽기 쉬운 보고서를 서비스 워커 콘솔에 출력"
+    "message": "스캔한 페이지마다 읽기 쉬운 보고서를 확장 프로그램 콘솔에 기록합니다."
   },
   "settingsRowLogCollector": {
     "message": "로그 수집기"
@@ -398,14 +395,8 @@
   "advancedEmptyCapturesHint": {
     "message": "도구 탭을 사용하여 탐지된 시스템에서 데이터를 캡처하세요"
   },
-  "advancedCapturesStoredNote": {
-    "message": "캡처는 30분 동안 저장됩니다"
-  },
   "advancedNoResultsTitle": {
     "message": "캡처를 찾을 수 없음"
-  },
-  "advancedNoResultsHint": {
-    "message": "필터 또는 검색어를 조정해 보세요"
   },
   "advancedBtnResetFilters": {
     "message": "모든 필터 재설정"
@@ -991,9 +982,6 @@
   "failedDeleteDetector": {
     "message": "감지기를 삭제하지 못했습니다"
   },
-  "detectorNotFoundFmt": {
-    "message": "감지기를 찾을 수 없습니다: {0}"
-  },
   "failedViewCaptureDetails": {
     "message": "캡처 세부 정보를 표시하지 못했습니다"
   },
@@ -1390,12 +1378,6 @@
   "detectionStatDifficulty": {
     "message": "난이도"
   },
-  "detectionStatCacheScope": {
-    "message": "캐시 범위"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "캐시 만료"
-  },
   "detectionSearchPlaceholder": {
     "message": "감지 검색..."
   },
@@ -1621,29 +1603,14 @@
   "advancedToolsSubtitle": {
     "message": "보호 시스템을 선택하여 도구를 여세요."
   },
-  "advancedToolsStepSelect": {
-    "message": "탐지 선택"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "탐지를 선택하세요..."
-  },
   "advancedToolsLoadTools": {
     "message": "도구 열기"
-  },
-  "advancedToolsClearAll": {
-    "message": "모두 지우기"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "모든 도구 지우기"
   },
   "advancedToolsLearnMore": {
     "message": "고급 도구에 대해 알아보기"
   },
   "advancedToolsChange": {
     "message": "변경"
-  },
-  "advancedToolsDetectionName": {
-    "message": "탐지 이름"
   },
   "settingsLanguageTitle": {
     "message": "언어"
@@ -1680,9 +1647,6 @@
   },
   "rulesMoreActions": {
     "message": "추가 작업"
-  },
-  "advancedToolsNoDetections": {
-    "message": "이 페이지에 지원되는 탐지가 없습니다"
   },
   "advancedToolsEmptyTitle": {
     "message": "사용 가능한 도구 없음"
@@ -2388,9 +2352,6 @@
   },
   "mhWindowLimit2": {
     "message": "Symbol 이름의 속성은 경로로 쓸 수 없습니다."
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "후크는 핑거프린트 규칙에서만 쓰입니다. 안티봇과 Captcha 규칙에서는 무시됩니다."
   },
   "mhJsHooksIntro": {
     "message": "페이지가 브라우저 API(예: `HTMLCanvasElement.prototype.toDataURL`)를 호출하면 기록합니다. 핑거프린팅의 신호입니다."
@@ -3247,9 +3208,6 @@
   "advGeetestNoVersion": {
     "message": "Geetest 버전이 감지되지 않았습니다"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "파싱 코드가 클립보드에 복사되었습니다!"
-  },
   "advGeetestTabNotFound": {
     "message": "탭을 찾을 수 없습니다"
   },
@@ -3276,9 +3234,6 @@
   },
   "advPanelCheckConsole": {
     "message": "자세한 내용은 콘솔을 확인하세요"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "먼저 탐지를 선택하세요"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "캡처를 불러오는 중 오류 발생: {0}"
@@ -3526,9 +3481,6 @@
   "clipboardDifficultyFmt": {
     "message": "난이도: {0}"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "캐시 만료: {0}"
-  },
   "clipboardCopyFailed": {
     "message": "클립보드에 복사하지 못했습니다"
   },
@@ -3685,9 +3637,6 @@
   "combinationAutoTip": {
     "message": "자동: 조합을 발동시킨 패턴 중 가장 높은 신뢰도"
   },
-  "combinationSetsScore": {
-    "message": "감지 점수를 결정함"
-  },
   "combinationInvalidNoPattern": {
     "message": "발견되어야 하는 패턴을 하나 이상 추가하세요."
   },
@@ -3805,6 +3754,9 @@
   "combinationAddPattern": {
     "message": "패턴 추가"
   },
+  "combinationAddDescription": {
+    "message": "설명 추가"
+  },
   "combinationAnyPattern": {
     "message": "아무 패턴"
   },
@@ -3861,12 +3813,6 @@
   },
   "detectionTipDifficulty": {
     "message": "감지된 보호 기능을 우회하는 데 필요한 예상 난이도입니다."
-  },
-  "detectionTipCacheScope": {
-    "message": "캐시된 감지 결과를 재사용할 수 있는 페이지 범위입니다."
-  },
-  "detectionTipCacheExpiration": {
-    "message": "캐시된 감지 결과가 만료될 때까지 남은 시간입니다."
   },
   "tipCachedAt": {
     "message": "저장됨"
@@ -4405,5 +4351,575 @@
   "scrapflyExportNoPage": {
     "message": "Scrapfly로 스크래핑하려면 웹 페이지를 여세요",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "캡처 {0}개"
+  },
+  "statsFirstSeen": {
+    "message": "이 기간의 새 항목"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "이 기간에 처음 저장된 보호 {0}개, 도메인 {1}개."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "새 항목을 보려면 7, 30, 90일을 선택하세요."
+  },
+  "statsMostProtectedDomain": {
+    "message": "가장 많이 보호된 도메인"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "방문 {1}회에서 서로 다른 보호 {0}개."
+  },
+  "statsFoundTogether": {
+    "message": "함께 발견된 보호"
+  },
+  "statsMethods": {
+    "message": "탐지 방법"
+  },
+  "statsMatchesUnit": {
+    "message": "일치"
+  },
+  "statsMethodsByCategory": {
+    "message": "카테고리별 방법"
+  },
+  "statsWeakEvidence": {
+    "message": "가장 약한 근거"
+  },
+  "statsSignalColumn": {
+    "message": "신호"
+  },
+  "statsMethodColumn": {
+    "message": "방법"
+  },
+  "statsTopSignals": {
+    "message": "가장 많이 일치한 신호"
+  },
+  "statsDecidedSingle": {
+    "message": "단일 패턴"
+  },
+  "statsDecidedCombination": {
+    "message": "조합"
+  },
+  "statsDecidedBy": {
+    "message": "탐지 판정 방식"
+  },
+  "statsCombinationGain": {
+    "message": "판정별 신뢰도"
+  },
+  "statsCombinationColumn": {
+    "message": "조합"
+  },
+  "statsTopCombinations": {
+    "message": "발동한 조합"
+  },
+  "statsNoCombinations": {
+    "message": "이 기간에 조합으로 판정된 탐지가 없습니다."
+  },
+  "statsRulesMostActive": {
+    "message": "가장 활발한 규칙"
+  },
+  "statsTipPatternsFmt": {
+    "message": "패턴 {0}개"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "방법별 패턴"
+  },
+  "statsRulesOfficial": {
+    "message": "공식"
+  },
+  "statsRulesCustom": {
+    "message": "사용자 지정"
+  },
+  "statsRuleColumn": {
+    "message": "규칙"
+  },
+  "statsRuleKindColumn": {
+    "message": "유형"
+  },
+  "statsPatternsUnit": {
+    "message": "패턴"
+  },
+  "statsRulesNeverMatched": {
+    "message": "이 기간에 발견되지 않음"
+  },
+  "statsRulesAllMatched": {
+    "message": "활성화된 모든 규칙이 이 기간에 무언가를 발견했습니다."
+  },
+  "statsMissingColumn": {
+    "message": "설명 없음"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "설명이 없는 패턴"
+  },
+  "statsRulesAllDescribed": {
+    "message": "모든 패턴에 설명이 있습니다."
+  },
+  "statsRuleVersionColumn": {
+    "message": "규칙 버전"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "필요한 확장 프로그램"
+  },
+  "statsRulesWaiting": {
+    "message": "새 확장 프로그램 대기 중"
+  },
+  "statsToolsByVendor": {
+    "message": "공급업체별 캡처"
+  },
+  "statsToolsCapture": {
+    "message": "캡처"
+  },
+  "statsToolsByTool": {
+    "message": "가장 많이 쓴 도구"
+  },
+  "statsToolsOverTime": {
+    "message": "시간별 캡처"
+  },
+  "statsChangeColumn": {
+    "message": "변경"
+  },
+  "statsDateColumn": {
+    "message": "날짜"
+  },
+  "statsDomainChanges": {
+    "message": "보호 변경"
+  },
+  "statsNoChanges": {
+    "message": "이 기간에 저장된 방문 사이에 보호가 바뀐 도메인이 없습니다."
+  },
+  "statsNothingNew": {
+    "message": "새 항목 없음: 모든 보호가 이 기간 전에 이미 기록에 있었습니다."
+  },
+  "statsSectionSignals": {
+    "message": "신호"
+  },
+  "statsSectionCombinations": {
+    "message": "조합"
+  },
+  "statsSectionRules": {
+    "message": "규칙"
+  },
+  "statsSectionTools": {
+    "message": "도구"
+  },
+  "statsDomainChangesHint": {
+    "message": "저장된 두 방문 사이에 탐지된 보호가 바뀐 도메인."
+  },
+  "statsFirstSeenHint": {
+    "message": "이 기간에 처음 저장된 보호와 도메인."
+  },
+  "statsSignalsNote": {
+    "message": "저장된 각 탐지가 일치한 근거의 종류: 쿠키와 헤더 이름, URL, 페이지 요소, 스크립트, JavaScript 훅."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "일치한 패턴의 평균 신뢰도가 가장 낮은 보호입니다. 해당 규칙에 더 강한 패턴이 필요할 수 있습니다."
+  },
+  "statsCombinationsNote": {
+    "message": "조합은 여러 패턴이 함께 발견될 때만 보호를 탐지합니다."
+  },
+  "statsRulesNote": {
+    "message": "규칙 라이브러리와 이 기간에 기록에서 발견된 내용의 비교."
+  },
+  "statsRulesTotal": {
+    "message": "규칙"
+  },
+  "statsRulesModified": {
+    "message": "수정한 공식 규칙"
+  },
+  "statsRulesDisabled": {
+    "message": "비활성화"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "이 기간에 저장된 페이지에서 아무것도 발견하지 못한 활성 규칙."
+  },
+  "statsRulesMissingHint": {
+    "message": "설명은 탐지 세부 정보, 기록, 조합에 표시됩니다. 규칙 편집기에서 추가하세요."
+  },
+  "statsToolsNote": {
+    "message": "이 기기에 저장된 고급 캡처와 도구 결과."
+  },
+  "statsCapturesUnit": {
+    "message": "캡처"
+  },
+  "detectionCardSureFmt": {
+    "message": "확신도 {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "조합"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "캐시"
+  },
+  "detectionTipCache": {
+    "message": "이 캐시 결과를 재사용하는 페이지와 기간."
+  },
+  "tipCacheExpires": {
+    "message": "만료"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "기록으로 확인"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "각 패턴과 조합이 저장된 페이지 중 몇 개에서 일치하는지 확인합니다. 저장하지 않은 편집도 포함됩니다."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "확인"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "저장된 페이지 {0}개 · 이 규칙은 {1}개에서 발견됨"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{1}개 중 {0}개 페이지"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+다른 페이지 {0}개"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "기록이 비어 있습니다. 먼저 몇 페이지를 방문하세요."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "추정치입니다. 기록은 일치한 값만 저장하며 페이지 전체를 저장하지 않습니다."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "{0}개 페이지에서 발동"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "확인할 패턴을 추가하세요."
+  },
+  "settingsThemeTitle": {
+    "message": "테마"
+  },
+  "settingsThemeDesc": {
+    "message": "다크 또는 Scrapfly 색상의 라이트. 시스템은 브라우저 설정을 따릅니다."
+  },
+  "themeDark": {
+    "message": "다크"
+  },
+  "themeLight": {
+    "message": "라이트"
+  },
+  "themeSystem": {
+    "message": "시스템"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "콘솔 열기"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "chrome://extensions에서 이 확장 프로그램을 엽니다. \"service worker\"를 클릭하면 로그가 보입니다."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "로그를 콘솔 대신 여기에 보관하여 JSON 또는 텍스트로 내보냅니다"
+  },
+  "ruleTranslationsTitle": {
+    "message": "번역"
+  },
+  "ruleTranslationsHint": {
+    "message": "확장 프로그램이 해당 언어일 때 설명 대신 표시됩니다. 비어 있으면 설명이 표시됩니다."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{1}개 중 {0}개"
+  },
+  "ruleTranslateAuto": {
+    "message": "자동 번역"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "자동 번역에는 Chrome 138 이상이 필요합니다."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "먼저 설명을 작성하세요."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "번역 중: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "{0}개 언어를 채웠습니다. 저장 전에 확인하세요."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "{0}개 채움, {1}개는 여기서 번역할 수 없습니다."
+  },
+  "sfxOptRenderingWait": {
+    "message": "로드 후 대기"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "요소 대기"
+  },
+  "sfxOptRenderingStage": {
+    "message": "페이지 준비 시점"
+  },
+  "sfxOptAutoScroll": {
+    "message": "맨 아래까지 스크롤"
+  },
+  "sfxOptJs": {
+    "message": "JavaScript 실행"
+  },
+  "sfxOptJsScenario": {
+    "message": "브라우저 동작"
+  },
+  "sfxOptScreenshot": {
+    "message": "스크린샷"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "요소"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "스크린샷 옵션"
+  },
+  "sfxOptLang": {
+    "message": "언어"
+  },
+  "sfxOptOs": {
+    "message": "운영체제"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "브라우저"
+  },
+  "sfxOptGeolocation": {
+    "message": "위치"
+  },
+  "sfxOptHeaders": {
+    "message": "헤더"
+  },
+  "sfxOptTimeout": {
+    "message": "시간 제한"
+  },
+  "sfxOptRetry": {
+    "message": "오류 시 재시도"
+  },
+  "sfxOptCostBudget": {
+    "message": "크레딧 한도"
+  },
+  "sfxOptFormatOptions": {
+    "message": "제외"
+  },
+  "sfxOptProxified": {
+    "message": "사이트 응답 그대로 반환"
+  },
+  "sfxOptExtraction": {
+    "message": "데이터 추출"
+  },
+  "sfxOptExtractionModel": {
+    "message": "모델"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "프롬프트"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "저장된 템플릿"
+  },
+  "sfxOptCache": {
+    "message": "캐시"
+  },
+  "sfxOptCacheTtl": {
+    "message": "보관 기간"
+  },
+  "sfxOptCacheClear": {
+    "message": "캐시 새로 고침"
+  },
+  "sfxOptSession": {
+    "message": "세션"
+  },
+  "sfxOptSticky": {
+    "message": "세션 동안 같은 프록시"
+  },
+  "sfxOptDebug": {
+    "message": "디버그"
+  },
+  "sfxOptCorrelationId": {
+    "message": "상관 ID"
+  },
+  "sfxOptTags": {
+    "message": "태그"
+  },
+  "sfxOptDns": {
+    "message": "DNS 정보"
+  },
+  "sfxOptSsl": {
+    "message": "SSL 인증서"
+  },
+  "sfxOptWebhook": {
+    "message": "웹훅"
+  },
+  "sfxOptMode": {
+    "message": "시작"
+  },
+  "sfxOptTargetUrl": {
+    "message": "이 페이지 지정"
+  },
+  "sfxOptBrowserLang": {
+    "message": "언어"
+  },
+  "sfxOptAutoClose": {
+    "message": "연결 끊기면 종료"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "세션 길이"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Unblock 시간 제한"
+  },
+  "sfxOptBlockImages": {
+    "message": "이미지 차단"
+  },
+  "sfxOptBlockStyles": {
+    "message": "스타일시트 차단"
+  },
+  "sfxOptBlockFonts": {
+    "message": "글꼴 차단"
+  },
+  "sfxOptBlockMedia": {
+    "message": "동영상·오디오 차단"
+  },
+  "sfxOptBlacklist": {
+    "message": "트래커 차단"
+  },
+  "sfxOptBrowserCache": {
+    "message": "정적 파일 캐시"
+  },
+  "sfxOptRecord": {
+    "message": "세션 녹화"
+  },
+  "sfxOptMcp": {
+    "message": "MCP 엔드포인트"
+  },
+  "sfxValAuto": {
+    "message": "자동"
+  },
+  "sfxValCleanHtml": {
+    "message": "정리된 HTML"
+  },
+  "sfxValComplete": {
+    "message": "전체 로드"
+  },
+  "sfxValDomReady": {
+    "message": "DOM 준비"
+  },
+  "sfxValFullPage": {
+    "message": "전체 페이지"
+  },
+  "sfxValElement": {
+    "message": "요소"
+  },
+  "sfxValLoadImages": {
+    "message": "이미지 로드"
+  },
+  "sfxValDarkMode": {
+    "message": "다크 모드"
+  },
+  "sfxValBlockBanners": {
+    "message": "배너 숨기기"
+  },
+  "sfxValHighQuality": {
+    "message": "고화질"
+  },
+  "sfxValPrint": {
+    "message": "인쇄 스타일"
+  },
+  "sfxValNoLinks": {
+    "message": "링크"
+  },
+  "sfxValNoImages": {
+    "message": "이미지"
+  },
+  "sfxValOnlyContent": {
+    "message": "본문 외 전부"
+  },
+  "sfxValModel": {
+    "message": "AI 모델"
+  },
+  "sfxValTemplate": {
+    "message": "템플릿"
+  },
+  "sfxValConnect": {
+    "message": "브라우저 열기"
+  },
+  "sfxValUnblock": {
+    "message": "먼저 차단 해제"
+  },
+  "sfxGroupRender": {
+    "message": "브라우저 렌더링"
+  },
+  "sfxGroupLocation": {
+    "message": "위치 및 핑거프린트"
+  },
+  "sfxGroupRequest": {
+    "message": "요청"
+  },
+  "sfxGroupOutput": {
+    "message": "출력"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI 추출"
+  },
+  "sfxGroupCache": {
+    "message": "캐시 및 세션"
+  },
+  "sfxGroupTracking": {
+    "message": "디버그 및 추적"
+  },
+  "sfxGroupFingerprint": {
+    "message": "핑거프린트 및 언어"
+  },
+  "sfxGroupSession": {
+    "message": "세션"
+  },
+  "sfxGroupBlocking": {
+    "message": "차단 및 캐시"
+  },
+  "sfxGroupTools": {
+    "message": "디버그 및 MCP"
+  },
+  "sfxWhyRender": {
+    "message": "JavaScript 렌더링 필요"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Unblocker 필요"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Markdown 또는 텍스트 출력만"
+  },
+  "sfxWhyCache": {
+    "message": "먼저 캐시를 켜세요"
+  },
+  "sfxWhySession": {
+    "message": "먼저 세션을 지정하세요"
+  },
+  "sfxWhySticky": {
+    "message": "Unblocker 사용 시 항상 켜짐"
+  },
+  "sfxWhyJson": {
+    "message": "JSON 단계 목록이 아니어서 제외됨"
+  },
+  "sfxWhyGeo": {
+    "message": "위도,경도로 입력: 제외됨"
+  },
+  "sfxWhyBrandOs": {
+    "message": "이 브라우저는 해당 시스템에서 실행되지 않아 제외됨"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge는 Windows 필요: 제외됨"
+  },
+  "sfxHintHeaders": {
+    "message": "한 줄에 하나씩: Name: value. 저장되지 않음."
+  },
+  "sfxHintScenario": {
+    "message": "JSON 목록: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "쉼표로 구분"
+  },
+  "sfxHintLanguages": {
+    "message": "쉼표로 구분, 최대 3개"
+  },
+  "sfxHintUnblock": {
+    "message": "‘먼저 차단 해제’는 안티봇 차단을 이미 통과한 브라우저를 돌려줍니다"
+  },
+  "sfxValOff": {
+    "message": "끄기"
   }
 }

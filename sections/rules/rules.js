@@ -9,6 +9,8 @@ function normalizeCookieHeaderScope(scope, fallback) {
 class Rules {
   constructor(detectorManager) {
     this.detectorManager = detectorManager;
+    // Rules changed elsewhere (an update in the background): show them
+    detectorManager.onExternalChange = () => { if (this.initialized) this.displayRules(); };
     this.categoryManager = detectorManager.getCategoryManager();
     this.initialized = false;
     this.eventListenersSetup = false;

@@ -171,7 +171,7 @@ body {
 .settings-btn {
   background: none;
   border: none;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -193,7 +193,7 @@ body {
   display: flex;
   gap: 3px;
   padding: 3px;
-  background: #323232;
+  background: var(--g-323232);
   border: 1px solid var(--border);
   border-radius: 10px;
 }
@@ -208,7 +208,7 @@ body {
   padding: 0 4px;
   background: none;
   border: 1px solid transparent;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   cursor: pointer;
   border-radius: 7px;
   font-size: 12.5px;
@@ -249,7 +249,7 @@ body {
 .tab-btn.active {
   background: rgba(59, 130, 246, 0.16);
   border-color: rgba(59, 130, 246, 0.37);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
 }
 
 .tab-btn svg {

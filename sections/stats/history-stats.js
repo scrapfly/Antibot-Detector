@@ -99,6 +99,91 @@ const HistoryStats = {
     if (categories.includes('captcha')) return 'High';
     return categories.every((c) => c === 'fingerprint') ? 'Low' : 'Medium';
   },
+  /** Detection methods in the order the rule editor lists them; anything else is 'other'. */
+  METHODS: ['cookie', 'header', 'url', 'content', 'dom', 'window', 'js_hooks', 'payload'],
+  methodOf(match) {
+    const type = String(HistoryStats.isRecord(match) ? match.type || '' : '').toLowerCase();
+    const aliases = { cookies: 'cookie', headers: 'header', urls: 'url', hooks: 'js_hooks', jshooks: 'js_hooks' };
+    const key = aliases[type] || type;
+    return HistoryStats.METHODS.includes(key) ? key : 'other';
+  },
+  /**
+   * What a match is, without the private part History keeps for display:
+   * a cookie or header name (never its value), a selector, a hook target, a
+   * URL path (never the query) or the pattern text.
+   */
+  signalLabel(match) {
+    if (!HistoryStats.isRecord(match)) return '';
+    const method = HistoryStats.methodOf(match);
+    const str = (value) => (typeof value === 'string' || typeof value === 'number') ? String(value).trim() : '';
+    const before = (value, sep) => { const text = str(value); const at = text.indexOf(sep); return at > 0 ? text.slice(0, at).trim() : text; };
+    let label = '';
+    if (method === 'cookie') label = str(match.name) || before(match.value, '=');
+    else if (method === 'header') label = str(match.name) || before(match.value, ':');
+    else if (method === 'dom') {
+      // History keeps "selector=text"; an attribute selector has its own "=" inside [ ]
+      label = str(match.selector);
+      if (!label) {
+        const text = str(match.value);
+        let depth = 0, at = -1;
+        for (let i = 0; i < text.length; i++) {
+          if (text[i] === '[') depth++;
+          else if (text[i] === ']') depth = Math.max(0, depth - 1);
+          else if (text[i] === '=' && depth === 0) { at = i; break; }
+        }
+        label = (at > 0 ? text.slice(0, at) : text).trim();
+      }
+    }
+    else if (method === 'js_hooks') label = str(match.target) || str(match.pattern) || str(match.value);
+    else if (method === 'url') {
+      label = str(match.pattern);
+      if (!label) {
+        const raw = str(match.fullUrl) || str(match.value);
+        try { const u = new URL(raw); label = u.hostname + u.pathname; } catch (_) { label = raw.split(/[?#]/)[0]; }
+      }
+    } else if (method === 'payload') label = str(match.pattern);
+    else label = str(match.pattern) || str(match.value) || str(match.name);
+    return label.length > 120 ? label.slice(0, 120) + '…' : label;
+  },
+  /** Start of a positive range (local midnight), or null for "All". */
+  rangeStart(days, now = Date.now()) {
+    const count = HistoryStats.rangeDays(days);
+    if (!count) return null;
+    const start = new Date(HistoryStats.referenceTime(now));
+    start.setHours(0, 0, 0, 0);
+    start.setDate(start.getDate() - count + 1);
+    return start.getTime();
+  },
+  /** Protections and domains whose first saved entry (in all of History) falls at or after `since`. */
+  firstSeen(allItems, since, now = Date.now()) {
+    const out = { protections: [], domains: [] };
+    if (typeof since !== 'number' || !Number.isFinite(since)) return out;
+    const end = HistoryStats.referenceTime(now);
+    const protections = new Map(), domains = new Map();
+    for (const item of Array.isArray(allItems) ? allItems : []) {
+      if (!HistoryStats.isRecord(item)) continue;
+      const ts = HistoryStats.getTimestamp(item);
+      if (ts === null || ts > end) continue;
+      const hostname = HistoryStats.hostOf(item);
+      if (hostname) {
+        const d = domains.get(hostname);
+        if (!d || ts < d.ts) domains.set(hostname, { hostname, ts });
+      }
+      for (const detection of Array.isArray(item.detections) ? item.detections : []) {
+        const name = HistoryStats.detectionName(detection);
+        if (!name) continue;
+        const key = name.toLowerCase(), p = protections.get(key);
+        if (!p || ts < p.ts) protections.set(key, { name, category: HistoryStats.detectionCategory(detection), ts, hostname });
+      }
+    }
+    const recent = (list) => Array.from(list.values()).filter((row) => row.ts >= since).sort((a, b) => b.ts - a.ts);
+    out.protections = recent(protections);
+    out.domains = recent(domains);
+    return out;
+  },
+  hostOf(item) {
+    return (typeof item.hostname === 'string' && item.hostname.trim() ? item.hostname.trim() : HistoryStats.hostnameFromUrl(item.url)).toLowerCase();
+  },
   /**
    * Aggregates every valid record passed in. Call filterByRange first for ranged totals.
    * Duplicate detection rows contribute scores/counts, but page metrics deduplicate names
@@ -126,6 +211,13 @@ const HistoryStats = {
     const confidenceBuckets = [0, 20, 40, 60, 80].map((min) => ({ label: `${min}-${min === 80 ? 100 : min + 19}`, min, max: min === 80 ? 100 : min + 19, count: 0 }));
     const categoryConfidence = keys.map((category) => ({ category, detections: 0, withConfidence: 0, sum: 0 }));
     const categoryOverlap = Object.fromEntries(keys.map((key) => [key, emptyCategories()]));
+    const methodKeys = [...HistoryStats.METHODS, 'other'];
+    const emptyMethods = () => Object.fromEntries(methodKeys.map((key) => [key, 0]));
+    const methods = emptyMethods();
+    const methodsByCategory = Object.fromEntries(keys.map((key) => [key, emptyMethods()]));
+    const signals = new Map(), combos = new Map(), pairs = new Map(), visitsByDomain = new Map();
+    const decided = { single: { detections: 0, sum: 0, count: 0 }, combination: { detections: 0, sum: 0, count: 0 } };
+    let totalMatches = 0;
     let totalDetections = 0, entriesWithDetections = 0, confidenceSum = 0, confidenceCount = 0, first = null, last = null;
     const addBucket = (b, detections, hostname) => {
       b.entries++;
@@ -152,7 +244,7 @@ const HistoryStats = {
         domain.detections += detections.length;
         domains.set(hostname, domain);
       }
-      const seen = new Set(), pageCategories = new Set();
+      const seen = new Set(), pageCategories = new Set(), pageNames = new Map();
       for (const detection of detections) {
         const name = HistoryStats.detectionName(detection);
         const category = HistoryStats.detectionCategory(detection);
@@ -170,11 +262,66 @@ const HistoryStats = {
         if (!name) continue;
         const key = name.toLowerCase();
         if (domain) domain.names.add(key);
-        const entry = detectors.get(key) || { name, category, pages: 0, domains: new Set(), sum: 0, count: 0 };
+        const entry = detectors.get(key) || { name, category, id: '', pages: 0, domains: new Set(), sum: 0, count: 0, matchSum: 0, matchCount: 0 };
         if (!seen.has(key)) { entry.pages++; seen.add(key); }
         if (hostname) entry.domains.add(hostname);
         if (score !== null) { entry.sum += score; entry.count++; }
+        if (!entry.id) {
+          const nested = HistoryStats.isRecord(detection.detector) ? detection.detector : {};
+          const id = nested.id || detection.id;
+          if (typeof id === 'string' && id) entry.id = id;
+        }
         detectors.set(key, entry);
+        pageNames.set(key, name);
+        // Evidence: each match's method and what it matched
+        const matches = Array.isArray(detection.matches) ? detection.matches.filter(HistoryStats.isRecord) : [];
+        const pageSignals = new Set();
+        for (const match of matches) {
+          const method = HistoryStats.methodOf(match);
+          methods[method]++;
+          methodsByCategory[category][method]++;
+          totalMatches++;
+          const matchScore = typeof match.confidence === 'number' && Number.isFinite(match.confidence) ? match.confidence : null;
+          if (matchScore !== null) { entry.matchSum += matchScore; entry.matchCount++; }
+          const label = HistoryStats.signalLabel(match);
+          if (!label) continue;
+          const signalKey = key + '|' + method + '|' + (method === 'cookie' || method === 'header' ? label.toLowerCase() : label);
+          const signal = signals.get(signalKey) || { detector: name, detectorId: entry.id || '', category, method, label, pages: 0, matches: 0, sum: 0, count: 0 };
+          signal.matches++;
+          if (!pageSignals.has(signalKey)) { signal.pages++; pageSignals.add(signalKey); }
+          if (matchScore !== null) { signal.sum += matchScore; signal.count++; }
+          signals.set(signalKey, signal);
+        }
+        // Decided by a combination, or by patterns on their own
+        const fired = Array.isArray(detection.combinations) ? detection.combinations.filter(HistoryStats.isRecord) : [];
+        const bucketOf = decided[fired.length ? 'combination' : 'single'];
+        bucketOf.detections++;
+        if (score !== null) { bucketOf.sum += score; bucketOf.count++; }
+        for (const combo of fired) {
+          const id = typeof combo.id === 'string' && combo.id ? combo.id : (typeof combo.name === 'string' ? combo.name : '');
+          if (!id) continue;
+          const comboKey = key + '|' + id;
+          const row = combos.get(comboKey) || { detector: name, detectorId: entry.id || '', category, id, name: typeof combo.name === 'string' ? combo.name : '', pages: 0, sum: 0, count: 0 };
+          row.pages++;
+          if (typeof combo.confidence === 'number' && Number.isFinite(combo.confidence)) { row.sum += combo.confidence; row.count++; }
+          combos.set(comboKey, row);
+        }
+      }
+      // Protections found on the same page, each pair once
+      const pageKeys = [...pageNames.keys()].sort();
+      for (let i = 0; i < pageKeys.length; i++) {
+        for (let j = i + 1; j < pageKeys.length; j++) {
+          const pairKey = pageKeys[i] + '\n' + pageKeys[j];
+          const pair = pairs.get(pairKey) || { a: pageNames.get(pageKeys[i]), b: pageNames.get(pageKeys[j]), pages: 0 };
+          pair.pages++;
+          pairs.set(pairKey, pair);
+        }
+      }
+      // What each saved visit of a domain found, to spot changes between visits
+      if (hostname && ts !== null && pageKeys.length) {
+        const visits = visitsByDomain.get(hostname) || [];
+        visits.push({ ts, keys: pageKeys, names: new Map(pageNames) });
+        visitsByDomain.set(hostname, visits);
       }
       for (const a of pageCategories) for (const b of pageCategories) categoryOverlap[a][b]++;
       if (ts !== null) {
@@ -209,7 +356,28 @@ const HistoryStats = {
       timeline.push({ date: key, ...outputBucket(timelineBuckets.get(key) || bucket()) });
     }
     const byCount = (field) => (a, b) => b[field] - a[field] || String(a.name || a.hostname).localeCompare(String(b.name || b.hostname));
-    const detectorMetrics = Array.from(detectors.values(), (d) => ({ name: d.name, category: d.category, pages: d.pages, domains: d.domains.size, avgConfidence: average(d.sum, d.count) })).sort(byCount('pages'));
+    const detectorMetrics = Array.from(detectors.values(), (d) => ({ name: d.name, id: d.id, category: d.category, pages: d.pages, domains: d.domains.size, avgConfidence: average(d.sum, d.count),
+      matches: d.matchCount, avgMatchConfidence: average(d.matchSum, d.matchCount) })).sort(byCount('pages'));
+    const signalMetrics = Array.from(signals.values(), (row) => ({ detector: row.detector, detectorId: row.detectorId, category: row.category, method: row.method, label: row.label,
+      pages: row.pages, matches: row.matches, avgConfidence: average(row.sum, row.count) }))
+      .sort((a, b) => b.pages - a.pages || b.matches - a.matches || a.label.localeCompare(b.label));
+    const weakEvidence = detectorMetrics.filter((row) => row.avgMatchConfidence !== null && row.avgMatchConfidence < 60)
+      .sort((a, b) => a.avgMatchConfidence - b.avgMatchConfidence || b.pages - a.pages).slice(0, 12);
+    const combinationMetrics = Array.from(combos.values(), (row) => ({ detector: row.detector, detectorId: row.detectorId, category: row.category, id: row.id, name: row.name,
+      pages: row.pages, avgConfidence: average(row.sum, row.count) })).sort((a, b) => b.pages - a.pages || a.detector.localeCompare(b.detector));
+    const togetherMetrics = Array.from(pairs.values()).sort((a, b) => b.pages - a.pages || a.a.localeCompare(b.a)).slice(0, 50);
+    const domainChanges = [];
+    for (const [hostname, visits] of visitsByDomain) {
+      visits.sort((a, b) => a.ts - b.ts);
+      for (let i = 1; i < visits.length; i++) {
+        const before = new Set(visits[i - 1].keys), now = new Set(visits[i].keys);
+        const added = visits[i].keys.filter((k) => !before.has(k)).map((k) => visits[i].names.get(k));
+        const removed = visits[i - 1].keys.filter((k) => !now.has(k)).map((k) => visits[i - 1].names.get(k));
+        if (added.length || removed.length) domainChanges.push({ hostname, timestamp: visits[i].ts, previous: visits[i - 1].ts, added, removed });
+      }
+    }
+    domainChanges.sort((a, b) => b.timestamp - a.timestamp || a.hostname.localeCompare(b.hostname));
+    const decidedOut = (b) => ({ detections: b.detections, avgConfidence: average(b.sum, b.count) });
     const domainMetrics = Array.from(domains.values(), (d) => ({ hostname: d.hostname, visits: d.visits, detections: d.detections, uniqueDetectors: d.names.size, avgConfidence: average(d.sum, d.count) })).sort(byCount('visits'));
     return {
       totals: { entries: list.length, uniqueDomains: domains.size, detections: totalDetections, uniqueDetectors: detectors.size, entriesWithDetections,
@@ -223,7 +391,10 @@ const HistoryStats = {
       weekdays: weekdays.map((b, weekday) => ({ weekday, ...outputBucket(b) })),
       confidenceBuckets,
       categoryConfidence: categoryConfidence.map(({ category, detections, withConfidence, sum }) => ({ category, detections, withConfidence, avgConfidence: average(sum, withConfidence) })),
-      categoryOverlap, detectorMetrics, domainMetrics
+      categoryOverlap, detectorMetrics, domainMetrics,
+      methods, methodsByCategory, totalMatches, signalMetrics, weakEvidence,
+      decided: { single: decidedOut(decided.single), combination: decidedOut(decided.combination) },
+      combinationMetrics, togetherMetrics, domainChanges: domainChanges.slice(0, 200), domainChangeCount: domainChanges.length
     };
   },
   hostnameFromUrl(url) {

@@ -30,7 +30,9 @@ test('detection search retains its input identity and localized accessible name'
 
 test('search is a plain field like Rules and History (no icon)', () => {
   assert.match(html, /<div class="search-container detection-search">\s*<input[^>]*id="detectionSearch"/);
-  assert.match(html, /id="detectionSearch"[^>]*>\s*<\/div>\s*<div id="resultsList"/);
+  // The last strip of the page summary card, under the cache line
+  const overview = html.slice(html.indexOf('id="detectionOverview"'), html.indexOf('id="resultsList"'));
+  assert.ok(overview.indexOf('cache-expiry-line') < overview.indexOf('id="detectionSearch"'), 'inside the summary card, after the cache line');
   assert.doesNotMatch(html, /detection-search-icon/);
 });
 
@@ -38,7 +40,7 @@ test('search field uses the same look as the Rules and History search', () => {
   const field = block('#detectionResults .detection-search .search-input');
   const rules = read('modules/styles/rules.css');
   const rulesField = rules.slice(rules.indexOf('.rules-header .search-input {'), rules.indexOf('}', rules.indexOf('.rules-header .search-input {')));
-  for (const rule of [/height:\s*34px/, /padding:\s*0 11px/, /font-size:\s*11\.5px/, /border:\s*1px solid #4b4b4b/,
+  for (const rule of [/height:\s*34px/, /padding:\s*0 11px/, /font-size:\s*11\.5px/, /border:\s*1px solid (#4b4b4b|var\(--g-4b4b4b\))/,
     /border-radius:\s*8px/, /background:\s*var\(--bg-secondary\)/]) {
     assert.match(field, rule);
     assert.match(rulesField, rule);
@@ -60,6 +62,8 @@ test('existing input handler still filters and clearing restores all results', (
   assert.match(source, /querySelector\('#detectionSearch'\)/);
   assert.match(source, /searchInput\.addEventListener\('input', \(e\) => \{\s*this\.handleSearch\(e\.target\.value\)/);
   const sandbox = vm.createContext({ self: {} });
+  vm.runInContext(read('utils/format-utils.js'), sandbox);
+  sandbox.FormatUtils = sandbox.self.FormatUtils;
   vm.runInContext(read('utils/detection-utils.js'), sandbox);
   vm.runInContext(read('sections/detection/detection-ui.js'), sandbox);
   const ui = sandbox.self.DetectionUI;
@@ -78,5 +82,6 @@ test('existing input handler still filters and clearing restores all results', (
   ui.handleSearch.call(context, 'no-match');
   assert.equal(shown.length, 0);
   ui.handleSearch.call(context, '');
-  assert.equal(shown, results);
+  // All results again, in the category order (a sorted copy)
+  assert.deepEqual(shown, results);
 });

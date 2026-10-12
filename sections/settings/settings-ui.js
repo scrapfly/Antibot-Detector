@@ -112,6 +112,10 @@ SettingsUI.loadSettings = async function() {
       if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
         Utils.applyDebugMode(this.settings);
       }
+      // What the form started from: saving merges only what it changed since
+      this.settingsBaseline = JSON.parse(JSON.stringify(this.settings));
+      const themeChoice = document.querySelector('#themeChoice');
+      if (themeChoice && typeof ScrapflyTheme !== 'undefined') themeChoice.value = ScrapflyTheme.get();
 
       // Apply current language override (stored separately from main settings
       // so it can be loaded at popup boot before settings UI initializes).
@@ -196,12 +200,14 @@ SettingsUI.saveSettings = async function(options = {}) {
     try {
       const shouldNotify = options.notify !== false;
       let oldCacheScope = null;
+      let storedNow = null;
       try {
         const result = await chrome.storage.local.get(['scrapfly_settings']);
         if (result.scrapfly_settings) {
           const loadedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
             ? StorageManager.normalizeSettings(result.scrapfly_settings)
             : {};
+          storedNow = loadedSettings;
           oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
         }
       } catch (error) {
@@ -217,6 +223,16 @@ SettingsUI.saveSettings = async function(options = {}) {
       delete this.settings.cacheHours;
       delete this.settings.blacklistedDomains;
 
+      // Keep what other tabs saved since the form loaded (a domain blocked from
+      // Detection or History, the last update check): only this form's changes win
+      if (storedNow && this.settingsBaseline && typeof StorageManager !== 'undefined'
+          && typeof StorageManager.mergeSettingsChanges === 'function') {
+        this.settings = StorageManager.mergeSettingsChanges(this.settingsBaseline, this.settings, storedNow);
+        for (const key of ['hooksConfig', 'reliabilityConfig', 'cacheDuration', 'cacheUnit', 'cacheScope', 'cacheHours', 'blacklistedDomains']) {
+          delete this.settings[key];
+        }
+      }
+
       const settingsData = {
         timestamp: new Date().toISOString(),
         settings: this.settings
@@ -225,6 +241,7 @@ SettingsUI.saveSettings = async function(options = {}) {
       await chrome.storage.local.set({
         'scrapfly_settings': JSON.stringify(settingsData, null, 2)
       });
+      this.settingsBaseline = JSON.parse(JSON.stringify(this.settings));
 
       if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
         Utils.applyDebugMode(this.settings);
@@ -347,13 +364,13 @@ SettingsUI.updateSettingsUI = function() {
     // Category Colors
     if (this.settings.categoryColors) {
       const colorAntibot = document.querySelector('#colorAntibot');
-      if (colorAntibot) colorAntibot.value = this.settings.categoryColors.antibot || '#FF5733';
+      if (colorAntibot) colorAntibot.value = this.settings.categoryColors.antibot || FormatUtils.DEFAULT_CATEGORY_COLORS.antibot;
 
       const colorCaptcha = document.querySelector('#colorCaptcha');
-      if (colorCaptcha) colorCaptcha.value = this.settings.categoryColors.captcha || '#33C3FF';
+      if (colorCaptcha) colorCaptcha.value = this.settings.categoryColors.captcha || FormatUtils.DEFAULT_CATEGORY_COLORS.captcha;
 
       const colorFingerprint = document.querySelector('#colorFingerprint');
-      if (colorFingerprint) colorFingerprint.value = this.settings.categoryColors.fingerprint || '#3b82f6';
+      if (colorFingerprint) colorFingerprint.value = this.settings.categoryColors.fingerprint || FormatUtils.DEFAULT_CATEGORY_COLORS.fingerprint;
     }
 
     // Tag Colors
@@ -549,7 +566,7 @@ SettingsUI.updateSettingsUI = function() {
 
     const checkIntervalSelect = document.querySelector('#checkIntervalHours');
     if (checkIntervalSelect) {
-      checkIntervalSelect.value = this.settings.updates?.checkIntervalHours ?? 12;
+      checkIntervalSelect.value = this.settings.updates?.checkIntervalHours ?? Constants.DEFAULT_UPDATE_CHECK_INTERVAL_HOURS;
     }
 
     const updateIntervalGroup = document.querySelector('#updateIntervalGroup');
@@ -601,9 +618,9 @@ SettingsUI.getSettingsFromUI = function() {
 
     // Category Colors
     settings.categoryColors = {
-      antibot: document.querySelector('#colorAntibot')?.value ?? this.settings.categoryColors?.antibot ?? '#FF5733',
-      captcha: document.querySelector('#colorCaptcha')?.value ?? this.settings.categoryColors?.captcha ?? '#33C3FF',
-      fingerprint: document.querySelector('#colorFingerprint')?.value ?? this.settings.categoryColors?.fingerprint ?? '#3b82f6'
+      antibot: document.querySelector('#colorAntibot')?.value ?? this.settings.categoryColors?.antibot ?? FormatUtils.DEFAULT_CATEGORY_COLORS.antibot,
+      captcha: document.querySelector('#colorCaptcha')?.value ?? this.settings.categoryColors?.captcha ?? FormatUtils.DEFAULT_CATEGORY_COLORS.captcha,
+      fingerprint: document.querySelector('#colorFingerprint')?.value ?? this.settings.categoryColors?.fingerprint ?? FormatUtils.DEFAULT_CATEGORY_COLORS.fingerprint
     };
 
     // Tag Colors
@@ -676,7 +693,7 @@ SettingsUI.getSettingsFromUI = function() {
     // Update Settings
     settings.updates = {
       autoUpdate: document.querySelector('#autoUpdate')?.checked ?? this.settings.updates?.autoUpdate ?? false,
-      checkIntervalHours: parseInt(document.querySelector('#checkIntervalHours')?.value ?? this.settings.updates?.checkIntervalHours ?? 12),
+      checkIntervalHours: parseInt(document.querySelector('#checkIntervalHours')?.value ?? this.settings.updates?.checkIntervalHours ?? Constants.DEFAULT_UPDATE_CHECK_INTERVAL_HOURS),
       lastCheckTimestamp: this.settings.updates?.lastCheckTimestamp ?? 0 // Preserve timestamp, don't reset on save
     };
 
@@ -744,6 +761,21 @@ SettingsUI.validateSettings = function(settings) {
 SettingsUI.setupEventListeners = function() {
     if (this.listenersAttached) return;
     this.listenersAttached = true;
+    // Debug Mode → Open console: this extension's card in chrome://extensions,
+    // where "service worker" opens the console the logs go to
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest || !event.target.closest('#openDebugConsoleBtn')) return;
+      const url = `chrome://extensions/?id=${chrome.runtime.id}`;
+      chrome.tabs.create({ url }).catch(() => {
+        if (typeof NotificationHelper !== 'undefined') NotificationHelper.info(url);
+      });
+    });
+    // Theme applies at once, like the language (its own key, not the Save button)
+    document.addEventListener('change', (event) => {
+      if (event.target && event.target.id === 'themeChoice' && typeof ScrapflyTheme !== 'undefined') {
+        ScrapflyTheme.set(event.target.value);
+      }
+    });
     const settingsBtn = document.querySelector('#settingsBtn');
     if (settingsBtn) {
       settingsBtn.addEventListener('click', () => this.showSettings());
@@ -1034,19 +1066,15 @@ SettingsUI.populateCategoryOrder = function(detectionSettings, colors = {}) {
     fingerprint: tr('categoryFingerprint', 'Fingerprint')
   };
   const dot = {
-    antibot: colors?.antibot || '#FF5733',
-    captcha: colors?.captcha || '#33C3FF',
-    fingerprint: colors?.fingerprint || '#3b82f6'
+    antibot: colors?.antibot || FormatUtils.DEFAULT_CATEGORY_COLORS.antibot,
+    captcha: colors?.captcha || FormatUtils.DEFAULT_CATEGORY_COLORS.captcha,
+    fingerprint: colors?.fingerprint || FormatUtils.DEFAULT_CATEGORY_COLORS.fingerprint
   };
   const sort = DetectionUtils.detectionSortOf(detectionSettings);
   if (toggle) toggle.checked = sort.sortBy === DetectionUtils.SORT_BY_CONFIDENCE;
 
   // Icon tile per category, tinted with its colour
-  const icon = {
-    antibot: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
-    captcha: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 12.5l2.8 2.8L16.5 9"/></svg>',
-    fingerprint: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5a8 8 0 0 1 11 0"/><path d="M5 12a7 7 0 0 1 14 0v1"/><path d="M8.5 20c-.6-1.6-.9-3.4-.9-5.3V12a4.4 4.4 0 0 1 8.8 0v2"/><path d="M12 11.5v3.2c0 2.2.5 4.2 1.4 5.8"/><path d="M16.4 17.5c.2 1 .5 1.9.9 2.7"/></svg>'
-  };
+  const icon = { antibot: FormatUtils.categoryIconSvg('antibot'), captcha: FormatUtils.categoryIconSvg('captcha'), fingerprint: FormatUtils.categoryIconSvg('fingerprint') };
   const handle = '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
   const arrow = (d) => `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
 

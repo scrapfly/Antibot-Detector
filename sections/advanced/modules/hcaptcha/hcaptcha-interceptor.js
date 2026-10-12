@@ -295,7 +295,7 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
         }
 
         // Notify popup to update UI (if open)
-        Logger.network('[hCaptcha-Capture] Notifying popup (if open)...');
+        Logger.debug('NETWORK', '[hCaptcha-Capture] Notifying popup (if open)');
         chrome.runtime.sendMessage({
             type: 'HCAPTCHA_CAPTURE_COMPLETED',
             captureData: {
@@ -308,7 +308,7 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
         });
 
         // Show success notification in page
-        Logger.network('[hCaptcha-Capture] Showing success notification...');
+        Logger.debug('NETWORK', '[hCaptcha-Capture] Showing success notification');
         if (showNotification) {
             await showNotification(tabId, {
                 module: 'hCaptcha',
@@ -512,7 +512,7 @@ function hcaptchaCheckVersion(tabId) {
         }, 15000);
 
         resolve({ status: 'started' });
-        Logger.network('[hCaptcha] Listeners added, waiting for network requests...');
+        Logger.network('[hCaptcha] Listeners added, waiting for network requests');
     });
 }
 

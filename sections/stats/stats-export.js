@@ -46,10 +46,17 @@
         const validDetections = (Array.isArray(item.detections) ? item.detections : []).filter((detection) =>
           detection && typeof detection === 'object' && !Array.isArray(detection));
         const detections = validDetections.map((d) => {
+          // How it was found (method names only, never matched values) and the combinations that decided it
+          const matches = Array.isArray(d.matches) ? d.matches : [];
+          const methods = [...new Set(matches.map((m) => stats.methodOf(m)))].sort();
+          const combinations = (Array.isArray(d.combinations) ? d.combinations : [])
+            .map((c) => c && typeof c === 'object' && typeof c.id === 'string' ? c.id : '').filter(Boolean);
           return {
             name: stats.detectionName(d),
             category: stats.detectionCategory(d),
-            confidence: stats.confidenceOf(d)
+            confidence: stats.confidenceOf(d),
+            methods,
+            combinations
           };
         });
         const rawHostname = typeof item.hostname === 'string' ? item.hostname.trim() : '';
@@ -69,7 +76,10 @@
         start = date.toISOString();
       }
       const count = entries.reduce((sum, entry) => sum + entry.detections.length, 0);
-      const summary = JSON.parse(JSON.stringify(stats.compute(entries, { days, now, top: Math.max(1, entries.length, count) })));
+      const forSummary = entries.map((entry) => ({ ...entry, detections: entry.detections.map((d) => ({ ...d, combinations: d.combinations.map((id) => ({ id })) })) }));
+      const summary = JSON.parse(JSON.stringify(stats.compute(forSummary, { days, now, top: Math.max(1, entries.length, count) })));
+      // Match-level figures need the matched values, which exports leave out
+      for (const key of ['methods', 'methodsByCategory', 'totalMatches', 'signalMetrics', 'weakEvidence']) delete summary[key];
       // Preserve production custom difficulty without exporting detector rules/metadata.
       summary.difficulty = { High: 0, Medium: 0, Low: 0, None: 0 };
       entries.forEach((entry) => {
@@ -84,11 +94,12 @@
       return JSON.stringify(payload, null, 2) + '\n';
     },
     toCSV(payload) {
-      const rows = [['timestamp', 'hostname', 'difficulty', 'detector', 'category', 'confidence']];
+      const rows = [['timestamp', 'hostname', 'difficulty', 'detector', 'category', 'confidence', 'methods', 'combinations']];
       for (const entry of payload.entries) {
-        const detections = entry.detections.length ? entry.detections : [{ name: '', category: '', confidence: null }];
+        const detections = entry.detections.length ? entry.detections : [{ name: '', category: '', confidence: null, methods: [], combinations: [] }];
         for (const detection of detections) {
-          rows.push([entry.timestamp, entry.hostname, entry.difficulty, detection.name, detection.category, detection.confidence]);
+          rows.push([entry.timestamp, entry.hostname, entry.difficulty, detection.name, detection.category, detection.confidence,
+            (detection.methods || []).join(';'), (detection.combinations || []).join(';')]);
         }
       }
       return rows.map((row) => row.map(cell).join(',')).join('\r\n') + '\r\n';

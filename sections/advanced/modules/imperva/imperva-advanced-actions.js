@@ -69,7 +69,6 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
 ImpervaAdvanced.prototype.extractScripts = async function() {
         Logger.network('[IMPERVA-EXTRACT] ========== STARTING EXTRACTION ==========');
         try {
-            Logger.network('[IMPERVA-EXTRACT] Step 1: Getting current tab...');
 
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -81,7 +80,6 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
             Logger.network('[IMPERVA-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Delete Imperva-related cookies to force regeneration
-            Logger.network('[IMPERVA-EXTRACT] Step 2: Deleting Imperva cookies...');
             const cookiesToDelete = ['reese84', 'utmvc', 'incap_ses', 'nlbi', 'visid_incap'];
             let deletedCount = 0;
 
@@ -110,7 +108,6 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
             Logger.network(`[IMPERVA-EXTRACT] Deleted ${deletedCount} cookies total`);
 
             // Send message to start extraction mode
-            Logger.network('[IMPERVA-EXTRACT] Step 3: Sending message to background to start extraction...');
             const response = await chrome.runtime.sendMessage({
                 type: 'IMPERVA_EXTRACT_SCRIPTS',
                 tabId: tab.id
@@ -122,7 +119,6 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
 
             if (response && response.status === 'success') {
                 Logger.network('[IMPERVA-EXTRACT] Extraction mode enabled successfully');
-                Logger.network('[IMPERVA-EXTRACT] Step 5: Reloading page...');
 
                 // Reload the page to trigger Imperva scripts
                 await chrome.tabs.reload(tab.id);

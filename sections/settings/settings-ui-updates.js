@@ -8,11 +8,9 @@ SettingsUI.handleSaveSettings = async function() {
   const _fmt = (key, fallback, ...args) => (_t && _t.format(key, ...args)) || fallback;
 
   try {
-    Logger.debug('UI', 'Getting settings from UI...');
     const newSettings = this.getSettingsFromUI();
     Logger.debug('UI', 'Settings from UI:', SettingsUI.withoutShareSecrets(newSettings));
 
-    Logger.debug('UI', 'Validating settings...');
     const validation = this.validateSettings(newSettings);
     Logger.debug('UI', 'Validation result:', validation);
 
@@ -24,15 +22,12 @@ SettingsUI.handleSaveSettings = async function() {
       return;
     }
 
-    Logger.debug('UI', 'Merging settings...');
     this.settings = this.deepMerge(this.settings, newSettings);
     Logger.debug('UI', 'Settings merged:', SettingsUI.withoutShareSecrets(this.settings));
 
-    Logger.debug('UI', 'Saving settings to storage...');
     await this.saveSettings();
     Logger.debug('UI', 'Settings saved successfully');
 
-    Logger.debug('UI', 'Closing modal...');
     this.hideSettings();
     Logger.debug('UI', 'Modal closed');
 

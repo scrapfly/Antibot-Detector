@@ -43,7 +43,7 @@
   height: 34px;
   padding: 0 11px;
   font-size: 11.5px;
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 8px;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -100,7 +100,7 @@
 .rules-toolbar .check-updates-btn {
   background: #1d232d;
   border: 1px solid #2f4563;
-  color: #93c5fd;
+  color: var(--p-93c5fd);
 }
 
 .rules-toolbar .check-updates-btn:hover {
@@ -125,7 +125,7 @@
   border: 1px solid rgba(245, 158, 11, 0.4);
   border-radius: 7px;
   background: rgba(245, 158, 11, 0.08);
-  color: #fcd34d;
+  color: var(--p-fcd34d);
   font-size: 11.5px;
   line-height: 1.45;
 }
@@ -165,10 +165,10 @@
   width: 32px;
   height: 32px;
   padding: 0;
-  background: #242424;
-  border: 1px solid #4b4b4b;
+  background: var(--g-242424);
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 7px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -192,7 +192,7 @@
   min-width: 150px;
   padding: 4px;
   background: var(--bg-secondary);
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
@@ -265,7 +265,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   background: rgba(148, 163, 184, 0.18);
-  color: #d1d5db;
+  color: var(--g-d1d5db);
 }
 
 /* Rules List Container */
@@ -317,7 +317,7 @@
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 8px;
   padding: 11px 12px;
   min-height: auto;
@@ -546,7 +546,7 @@
 .detector-card .detector-more-btn {
   width: 28px;
   height: 28px;
-  background: #363636;
+  background: var(--g-363636);
   border-radius: 6px;
 }
 
@@ -630,7 +630,7 @@
   align-items: center;
   margin-top: 7px;
   padding-top: 7px;
-  border-top: 1px solid #3c3c3c;
+  border-top: 1px solid var(--g-3c3c3c);
   gap: 10px;
 }
 
@@ -681,7 +681,7 @@
   display: block;
   font-size: 11.5px;
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
 }
 
 #rulesTab .pagination-info .pagination-count {
@@ -699,7 +699,7 @@
   gap: 4px;
   font-size: 11.5px;
   font-weight: 600;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
 }
 
 #rulesTab .total-pages {
@@ -712,7 +712,7 @@
 
 /* v2.8 chevrons are light grey; disabled ones fade less than the shared 0.5 */
 #rulesTab .pagination-btn {
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
 }
 
 #rulesTab .pagination-btn:disabled {
@@ -779,12 +779,12 @@
 
 .modal-card-header .card-icon.icon-color {
   background: rgba(168, 85, 247, 0.15);
-  color: #a78bfa;
+  color: var(--p-a78bfa);
 }
 
 .modal-card-header .card-icon.icon-search {
   background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
+  color: var(--p-4ade80);
 }
 
 .modal-card-header .card-icon.icon-gauge {
@@ -814,7 +814,7 @@
 
 .modal-card-header .card-icon.icon-edit {
   background: rgba(251, 146, 60, 0.15);
-  color: #fb923c;
+  color: var(--p-fb923c);
 }
 
 /* Keep Rules modal section-header icons aligned with Settings icon style */
@@ -1599,7 +1599,7 @@
 .method-help-btn:hover {
   background: rgba(59, 130, 246, 0.2);
   border-color: rgba(59, 130, 246, 0.45);
-  color: #dbeafe;
+  color: var(--p-dbeafe);
 }
 
 .method-title {
@@ -1687,7 +1687,7 @@
 }
 
 .method-pagination-btn:hover:not(:disabled) {
-  color: #dbeafe;
+  color: var(--p-dbeafe);
   border-color: rgba(59, 130, 246, 0.5);
   background: rgba(59, 130, 246, 0.14);
 }
@@ -2577,7 +2577,7 @@
   white-space: nowrap;
   background: rgba(6, 182, 212, 0.15);
   border-color: rgba(6, 182, 212, 0.35);
-  color: #67e8f9;
+  color: var(--p-67e8f9);
 }
 
 .check-updates-btn svg {
@@ -2592,7 +2592,7 @@
 
 .check-updates-btn:hover {
   background: rgba(6, 182, 212, 0.25);
-  color: #a5f3fc;
+  color: var(--p-a5f3fc);
 }
 
 .check-updates-btn:active {
@@ -2614,12 +2614,12 @@
 .check-updates-btn.has-updates {
   background: rgba(245, 158, 11, 0.2);
   border-color: rgba(245, 158, 11, 0.5);
-  color: #fcd34d;
+  color: var(--p-fcd34d);
 }
 
 .check-updates-btn.has-updates:hover {
   background: rgba(245, 158, 11, 0.3);
-  color: #fde68a;
+  color: var(--p-fde68a);
 }
 
 /* Updates Badge */
@@ -2848,12 +2848,12 @@
    ============================================ */
 #editRuleModal,
 #methodSettingsModal {
-  --re-border: #4b4b4b;
-  --re-card-bg: #323232;
-  --re-field-bg: #262626;
-  --re-btn-bg: #363636;
-  --re-text: #e0e0e0;
-  --re-text-dim: #b3b3b3;
+  --re-border: var(--g-4b4b4b);
+  --re-card-bg: var(--g-323232);
+  --re-field-bg: var(--g-262626);
+  --re-btn-bg: var(--g-363636);
+  --re-text: var(--g-e0e0e0);
+  --re-text-dim: var(--g-b3b3b3);
 }
 
 /* ---------- Shell ---------- */
@@ -3030,7 +3030,7 @@
 
 #editRuleModal .form-input:hover:not(:focus):not(.form-input-readonly),
 #editRuleModal .form-select:hover:not(:focus) {
-  border-color: #5c5c5c;
+  border-color: var(--g-5c5c5c);
 }
 
 #editRuleModal .form-input:focus,
@@ -3313,6 +3313,25 @@
   font-family: var(--font-mono);
 }
 
+/* Description typed while adding a pattern (also in Settings → Description) */
+#editRuleModal .method-description-inline {
+  width: 100%;
+  height: 28px;
+  margin-top: 4px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  background: var(--re-field-bg);
+  border: 1px solid var(--re-border);
+  border-radius: 6px;
+  color: var(--re-text);
+  font-size: 12px;
+}
+
+#editRuleModal .method-description-inline:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 #editRuleModal .method-search-input:focus,
 #editRuleModal .method-input:focus {
   background: var(--re-field-bg);
@@ -3320,14 +3339,14 @@
 }
 
 #editRuleModal .method-input:hover:not(:focus) {
-  border-color: #5c5c5c;
+  border-color: var(--g-5c5c5c);
 }
 
 #editRuleModal .method-input::placeholder,
 #editRuleModal .method-search-input::placeholder {
   font-family: var(--font-sans);
   font-size: 11.5px;
-  color: #8a8a8a;
+  color: var(--g-8a8a8a);
 }
 
 #editRuleModal .method-items {
@@ -3549,41 +3568,6 @@
 }
 
 #methodSettingsModal .ms-pattern-says:empty {
-  display: none;
-}
-
-/* JS hooks section of a non-Fingerprint rule: detection ignores it there.
-   "!" next to the chip, the sentence at the top of the opened section */
-#editRuleModal .method-scope-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  border: 1px solid rgba(245, 158, 11, 0.55);
-  border-radius: 50%;
-  color: var(--warning-light);
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1;
-  cursor: help;
-}
-
-#editRuleModal .method-scope-note {
-  margin: 0 0 8px;
-  padding: 6px 9px;
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  border-radius: 6px;
-  background: rgba(245, 158, 11, 0.08);
-  font-size: 11.5px;
-  line-height: 15px;
-  color: #fcd34d;
-}
-
-#editRuleModal .method-section.collapsed .method-scope-note,
-#editRuleModal[data-category="fingerprint"] .method-scope-tag,
-#editRuleModal[data-category="fingerprint"] .method-scope-note {
   display: none;
 }
 
@@ -3893,23 +3877,33 @@
   vertical-align: 1px;
 }
 
-.combo-item-line > .combo-leaf-text.is-main {
-  display: inline;
-  -webkit-line-clamp: unset;
-}
-
-/* A pattern without a description shows its own text as the main line */
-.combo-leaf-text.is-main {
-  color: var(--text-primary);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
 .combo-item-desc {
   color: var(--text-primary);
   font-size: 12.5px;
   line-height: 1.4;
   overflow-wrap: anywhere;
+}
+
+/* Editable description: looks like text until hovered or focused */
+.combo-item-desc[contenteditable] {
+  border-radius: 4px;
+  outline: 1px solid transparent;
+  outline-offset: 1px;
+  cursor: text;
+}
+
+.combo-item-desc[contenteditable]:hover {
+  outline-color: var(--re-border);
+}
+
+.combo-item-desc[contenteditable]:focus {
+  outline-color: var(--accent);
+}
+
+.combo-item-desc[contenteditable]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 .combo-item-tag {
@@ -4315,7 +4309,7 @@
 .indicator-badge-unused {
   border: 1px solid rgba(245, 158, 11, 0.5);
   background: rgba(245, 158, 11, 0.14);
-  color: #fcd34d;
+  color: var(--p-fcd34d);
   font-family: inherit;
   cursor: pointer;
 }
@@ -4383,4 +4377,167 @@
 
 #methodSettingsModal #descriptionGroup .option-hint {
   margin: 6px 0 0;
+}
+
+/* ============================================
+   Rule editor → Check against History
+   ============================================ */
+#ruleHistoryCheckResults:not(:empty) {
+  margin-bottom: 4px;
+}
+
+.rule-check-summary,
+.rule-check-note,
+.rule-check-empty {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.rule-check-note {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.rule-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rule-check-combos {
+  margin-top: 8px;
+}
+
+.rule-check-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+}
+
+.rule-check-combos .rule-check-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.rule-check-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+
+.rule-check-desc {
+  color: var(--text-primary);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.rule-check-raw {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rule-check-counts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.rule-check-count {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.rule-check-count.is-zero {
+  color: var(--warning);
+}
+
+.rule-check-other {
+  color: var(--text-muted);
+  font-size: 10.5px;
+}
+
+/* ============================================
+   Pattern settings → Description → Translations
+   ============================================ */
+#methodSettingsModal .rule-translations {
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+#methodSettingsModal .rule-translations > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  list-style-position: inside;
+}
+
+#methodSettingsModal .rule-translations-count {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+#methodSettingsModal .rule-translations-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+#methodSettingsModal .rule-translations-status {
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+#methodSettingsModal .rule-translations-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#methodSettingsModal .rule-translation-row {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+#methodSettingsModal .rule-translation-lang {
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#methodSettingsModal .rule-translation-row .rule-translation-input {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  height: 28px;
+  font-size: 12px;
 }

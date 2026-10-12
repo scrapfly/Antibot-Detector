@@ -205,6 +205,40 @@ class Logger {
   }
 
   /** Message and data as one line */
+  // Lead tags that only repeat the origin/area the line already shows
+  static REDUNDANT_TAGS = new Set(['scrapfly', 'background', 'bg', 'popup', 'content', 'contentscript', 'page',
+    'main', 'mainworld', 'detection', 'storage', 'cache', 'ui', 'hooks', 'init', 'scan', 'network', 'tab', 'badge', 'perf']);
+
+  /**
+   * The message without what the line already says: "Scrapfly Background:" or
+   * "[Background]" before a bg/background line, a trailing "...". A tag that
+   * names something else ("[reCAPTCHA]") stays as a short lead: "reCAPTCHA · ".
+   */
+  static tidy(message, category = '') {
+    let text = String(message ?? '');
+    const norm = (s) => String(s).toLowerCase().replace(/^scrapfly\s+/, '').replace(/[^a-z]/g, '');
+    const area = norm(category);
+    const redundant = (tag) => { const n = norm(tag); return !n || n === area || Logger.REDUNDANT_TAGS.has(n); };
+    const kept = [];
+    const before = text;
+    for (let i = 0; i < 3; i++) {
+      const bracket = text.match(/^\s*\[([^\]\n]{1,40})\]\s*/);
+      if (bracket) {
+        if (!redundant(bracket[1])) kept.push(bracket[1].trim());
+        text = text.slice(bracket[0].length);
+        continue;
+      }
+      // "Scrapfly Background: ..." / "Detection: ..." (only when it repeats the area)
+      const colon = text.match(/^\s*((?:Scrapfly\s+)?[A-Z][A-Za-z]*(?:\s[A-Z][A-Za-z]*)?):\s+/);
+      if (colon && redundant(colon[1])) { text = text.slice(colon[0].length); continue; }
+      break;
+    }
+    const stripped = text !== before;
+    text = text.replace(/\s*(?:\.\.\.|…)\s*$/, '');
+    if (stripped && text) text = text.charAt(0).toUpperCase() + text.slice(1);
+    return kept.length ? `${kept.join(' · ')} · ${text}` : text;
+  }
+
   static formatLine(message, data) {
     let text = Logger._cut(String(message ?? ''), Logger.MAX_MESSAGE_LENGTH);
     if (data === null || data === undefined || data === '') return text;
@@ -290,7 +324,7 @@ class Logger {
     if (!Logger._shouldPrint(level)) return;
 
     const now = Date.now();
-    const text = Logger.formatLine(message, data);
+    const text = Logger.formatLine(Logger.tidy(message, category), data);
     const log = { timestamp: now, context: Logger.context, category, level, message: text };
 
     const key = `${category}|${level}|${text}`;
@@ -337,17 +371,30 @@ class Logger {
       return;
     }
 
+    // Console: time dimmed, origin/area in blue, the message plain
+    const styled = Logger.styledRecord(log);
     if (body && typeof console.groupCollapsed === 'function' && !loud) {
-      console.groupCollapsed(line);
+      console.groupCollapsed(...styled);
       console.log(body);
       console.groupEnd();
       return;
     }
-    const text = body ? `${line}\n${body}` : line;
-    if (log.level === Logger.LEVELS.ERROR) console.error(text);
-    else if (log.level === Logger.LEVELS.WARN) console.warn(text);
-    else if (log.level === Logger.LEVELS.DEBUG) (console.debug || console.log)(text);
-    else console.log(text);
+    const args = body ? [styled[0] + '\n' + body.replace(/%/g, '%%'), ...styled.slice(1)] : styled;
+    if (log.level === Logger.LEVELS.ERROR) console.error(...args);
+    else if (log.level === Logger.LEVELS.WARN) console.warn(...args);
+    else if (log.level === Logger.LEVELS.DEBUG) (console.debug || console.log)(...args);
+    else console.log(...args);
+  }
+
+  static STYLE = { time: 'color:#8b8b8b', area: 'color:#4ea8f1;font-weight:600', text: '' };
+
+  /** formatRecord as console arguments with %c colours (the plain line stays for the collector) */
+  static styledRecord(log) {
+    const origin = Logger.ORIGINS[log.context] || log.context || '?';
+    const area = String(log.category || '').toLowerCase();
+    const message = String(log.message ?? '').replace(/%/g, '%%');
+    return [`%c[${Logger._time(log.timestamp || Date.now())}]%c ${origin}/${area}%c  ${message}`,
+      Logger.STYLE.time, Logger.STYLE.area, Logger.STYLE.text];
   }
 
   /** Content script: queue the line, send the queue to the worker once per BATCH_MS */

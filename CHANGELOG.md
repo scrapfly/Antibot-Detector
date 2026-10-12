@@ -5,7 +5,45 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
-## [Unreleased]
+## [2.8.5] - 2026-10-12
+
+### Added
+
+- Detection: Binance Captcha, Prosopo Procaptcha, Basilisk (FaucetPay) captcha, Cloudflare Waiting Room and the Hunt anti-bot used on betting sites.
+- Statistics → Signals: which methods found each protection (cookies, headers, URLs, hooks…), the most matched signals with their descriptions, and the weakest evidence.
+- Statistics → Combinations: how many detections a combination decided, which combinations fired, and their confidence next to single patterns.
+- Statistics → Rules: official, custom, edited and disabled rules, rules that found nothing in the range, and patterns still missing a description.
+- Statistics → Tools: Advanced captures and tool results by vendor, tool and day; the tab appears once something is saved.
+- Statistics → Domains: protection changes between visits, protections new in the range, and protections found together.
+- Rule descriptions and combination names now follow the extension's language (all 12); a pattern's Settings has a Translations section, with automatic translation in Chrome 138+.
+- Settings → Theme: a light theme in Scrapfly's colours, next to Dark (the default) and System, which follows the browser.
+- Scrape with Scrapfly: every Scrape API and Cloud Browser option (rendering, screenshots, browser actions, headers, cache, sessions, AI extraction, blocking, Unblock first…) in folded sections, written correctly for each language.
+- Rules: "Check against History" in the rule editor shows on how many saved pages each pattern and combination matches, unsaved edits included.
+
+### Changed
+
+- Detection: results are cached for 7 days by default instead of 12 hours; a duration already saved in Settings is kept.
+- Settings → Detector updates: the automatic check runs once a week by default instead of every 12 hours; an interval already saved is kept.
+- Detection: cards redesigned, grouped under category headers, with difficulty as the one coloured tag; the evidence line lists every method, wraps when long and counts each on hover; cache scope and expiry share one tile.
+- Detection: the "Scanning this page" categories show their icons.
+- Detection: the search box is part of the page summary card.
+- History: cards show the number of anti-bot, captcha and fingerprint protections with their icons instead of logos cut at "+N"; hover names them.
+- Akamai: the _abck cookie or the Pixel challenge variable alone now mean 100% confidence.
+- Settings → Debug Mode: an "Open console" button and a line saying what Verbose logs and Log Collector do; console lines are shorter, coloured and say each action once.
+- Detection details: the "Sets the detection score" line is gone; the highlighted combination already shows it.
+- Statistics: Overview adds "New this period" and the most protected domain; exports include each detection's methods and combinations.
+- Detection: Scrape with Scrapfly is now the first button in the page toolbar, away from Block this domain.
+- Rule editor: a new pattern has a description field right in its row, and a pattern's description can be edited directly in a combination.
+
+### Fixed
+
+- Rules: an update installed in the background is no longer undone by the next rule edit, and a rule edited while an update downloads keeps the edit.
+- Detection and History: search no longer stops working when a saved protection has no name.
+- Detection: clearing the search shows the results in the Settings order again instead of fingerprints first.
+- Settings: saving no longer undoes a domain blocked from Detection or History while Settings was open.
+- Scrape with Scrapfly: the Go code no longer turns retries off by leaving them out.
+- Detection: requests a page makes after it loads, or through its own service worker, now count, so captcha and anti-bot calls made a second later are no longer missed.
+- Rules: JavaScript hooks now work in Anti-bot and CAPTCHA rules too, not only Fingerprint; the warning saying they were ignored is gone.
 
 ## [2.8.4] - 2026-10-09
 
@@ -290,7 +328,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
-[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.4...HEAD
+[2.8.5]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.1...v2.8.2

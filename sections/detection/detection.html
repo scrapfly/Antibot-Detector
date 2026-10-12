@@ -14,14 +14,17 @@
       </div>
       <ul class="detection-scan-checks" role="list">
         <li class="detection-scan-check">
+          <span class="category-icon" data-scan-icon="antibot" aria-hidden="true"></span>
           <span data-i18n="categoryAntibot">Anti-bot</span>
         </li>
         <li class="detection-scan-check">
           <span class="detection-scan-separator" aria-hidden="true">·</span>
+          <span class="category-icon" data-scan-icon="captcha" aria-hidden="true"></span>
           <span data-i18n="categoryCaptcha">Captcha</span>
         </li>
         <li class="detection-scan-check">
           <span class="detection-scan-separator" aria-hidden="true">·</span>
+          <span class="category-icon" data-scan-icon="fingerprint" aria-hidden="true"></span>
           <span data-i18n="categoryFingerprint">Fingerprint</span>
         </li>
       </ul>
@@ -79,6 +82,9 @@
           </div>
         </div>
         <div class="url-action-buttons">
+          <button id="scrapflyExportBtn" class="url-action-btn scrapfly-export-btn" title="Scrape with Scrapfly" data-i18n-title="scrapflyExportTitle">
+            <img src="icons/icon48.png" alt="" class="scrapfly-export-btn-logo">
+          </button>
           <button id="uploadPasteBtn" class="url-action-btn upload-paste-btn" title="Upload detections (shareable link)" data-i18n-title="detectionTitleUploadPaste">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
@@ -99,9 +105,6 @@
             <svg width="14" height="14" viewBox="0 0 24 24">
               <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
             </svg>
-          </button>
-          <button id="scrapflyExportBtn" class="url-action-btn scrapfly-export-btn" title="Scrape with Scrapfly" data-i18n-title="scrapflyExportTitle">
-            <img src="icons/icon48.png" alt="" class="scrapfly-export-btn-logo">
           </button>
           <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Block this domain" data-i18n-title="detectionTitleBlockDomain">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -157,21 +160,7 @@
       </div>
 
       <div class="cache-expiry-line">
-        <div class="stat-inline cache-scope-stat" tabindex="0" title="Which pages can reuse these cached detection results." data-i18n-title="detectionTipCacheScope">
-          <div class="stat-icon-inline">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M2 12h20" opacity="0.5"/>
-              <path d="M12 2a15 15 0 0 1 0 20" opacity="0.7"/>
-              <path d="M12 2a15 15 0 0 0 0 20" opacity="0.7"/>
-            </svg>
-          </div>
-          <div class="stat-content-inline">
-            <div class="stat-label-inline" data-i18n="detectionStatCacheScope">CACHE SCOPE</div>
-            <div class="stat-value-inline" id="cacheScopeDisplay">Domain</div>
-          </div>
-        </div>
-        <div class="stat-inline cache-expiry-stat" tabindex="0" title="Time remaining before these cached detection results expire." data-i18n-title="detectionTipCacheExpiration">
+        <div class="stat-inline cache-stat" tabindex="0" title="Which pages reuse these cached results, and for how long." data-i18n-title="detectionTipCache">
           <div class="stat-icon-inline">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="10"/>
@@ -179,16 +168,17 @@
             </svg>
           </div>
           <div class="stat-content-inline">
-            <div class="stat-label-inline" data-i18n="detectionStatCacheExpiration">CACHE EXPIRATION</div>
-            <div class="stat-value-inline" id="cacheExpiry">-</div>
+            <div class="stat-label-inline" data-i18n="detectionStatCache">CACHE</div>
+            <div class="stat-value-inline"><span id="cacheScopeDisplay">Domain</span><span class="cache-stat-sep" aria-hidden="true"> · </span><span id="cacheExpiry">-</span></div>
           </div>
         </div>
       </div>
 
-    </div>
+      <!-- Search sits in the summary card, under the stats -->
+      <div class="search-container detection-search">
+        <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
+      </div>
 
-    <div class="search-container detection-search">
-      <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
     </div>
 
     <div id="resultsList" class="results-list"></div>

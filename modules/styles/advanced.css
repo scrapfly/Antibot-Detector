@@ -3,8 +3,8 @@
 /* Ensure Advanced tab fills parent and uses consistent height */
 #advancedTab {
   /* v2.8 Advanced tab palette: hairline borders and soft white text */
-  --adv-line: #424242;
-  --adv-text: #e0e0e0;
+  --adv-line: var(--g-424242);
+  --adv-text: var(--g-e0e0e0);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -136,7 +136,7 @@
 .advanced-sub-tab.active {
   background: rgba(59, 130, 246, 0.16);
   border-color: rgba(59, 130, 246, 0.37);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
 }
 
 .capture-count-badge {
@@ -329,7 +329,7 @@
   transition: background 0.15s, border-color 0.15s;
 }
 
-.advanced-launch-card:hover:not(:disabled) { background: #313131; border-color: var(--accent-dark); }
+.advanced-launch-card:hover:not(:disabled) { background: var(--g-313131); border-color: var(--accent-dark); }
 .advanced-launch-card:active:not(:disabled) { background: #2b2f36; }
 .advanced-launch-card:disabled { cursor: wait; opacity: 0.65; }
 .advanced-launch-card:focus-visible,
@@ -344,10 +344,10 @@
   width: 34px;
   height: 34px;
   padding: 5px;
-  border: 1px solid #404040;
+  border: 1px solid var(--g-404040);
   border-radius: 7px;
   background: #fff;
-  color: #555;
+  color: var(--g-555555);
 }
 
 .advanced-launch-icon img,
@@ -410,7 +410,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   background: rgba(148, 163, 184, 0.18);
-  color: #d1d5db;
+  color: var(--g-d1d5db);
   flex: 1;
 }
 
@@ -1665,7 +1665,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   background: rgba(148, 163, 184, 0.18);
-  color: #d1d5db;
+  color: var(--g-d1d5db);
   flex: 1;
 }
 
@@ -1677,7 +1677,7 @@
   background: rgba(15, 23, 42, 0.65);
   border: 1px solid rgba(148, 163, 184, 0.34);
   border-radius: 10px;
-  color: #e2e8f0;
+  color: var(--g-e2e8f0);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -1692,7 +1692,7 @@
 
 .capture-filter-select:hover {
   background: rgba(15, 23, 42, 0.82);
-  color: #f8fafc;
+  color: var(--g-f8fafc);
   border-color: rgba(96, 165, 250, 0.5);
   transform: none;
 }
@@ -1701,15 +1701,15 @@
   outline: none;
   border-color: rgba(96, 165, 250, 0.8);
   background: rgba(15, 23, 42, 0.85);
-  color: #f8fafc;
+  color: var(--g-f8fafc);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
   transform: none;
 }
 
 /* Select options styling */
 .capture-filter-select option {
-  background: #2a2a2a;
-  color: #d1d5db;
+  background: var(--g-2a2a2a);
+  color: var(--g-d1d5db);
   padding: 8px 12px;
   margin: 4px 0;
 }
@@ -1722,8 +1722,8 @@
 }
 
 .capture-filter-select option:hover {
-  background: #404040;
-  color: #f8fafc;
+  background: var(--g-404040);
+  color: var(--g-f8fafc);
 }
 
 .capture-search-input {
@@ -1733,7 +1733,7 @@
   background: rgba(15, 23, 42, 0.62);
   border: 1px solid rgba(148, 163, 184, 0.3);
   border-radius: 10px;
-  color: #e2e8f0;
+  color: var(--g-e2e8f0);
   font-size: 12px;
   transition: all 0.2s;
 }
@@ -1883,7 +1883,7 @@
   background: rgba(15, 23, 42, 0.62);
   border: 1px solid rgba(148, 163, 184, 0.3);
   border-radius: 8px;
-  color: #dbeafe;
+  color: var(--p-dbeafe);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
@@ -2180,7 +2180,7 @@
   border-radius: 6px;
   background: rgba(59, 130, 246, 0.1);
   border: 1px solid rgba(96, 165, 250, 0.26);
-  color: #93c5fd;
+  color: var(--p-93c5fd);
   font-size: 10.5px;
   font-weight: 600;
   white-space: nowrap;
@@ -2228,7 +2228,7 @@
   padding: 5px;
   border-radius: 7px;
   background: #fff;
-  border: 1px solid #404040;
+  border: 1px solid var(--g-404040);
   object-fit: contain;
 }
 
@@ -2424,7 +2424,7 @@
 }
 
 .history-v2-btn--primary:hover {
-  color: #dbeafe;
+  color: var(--p-dbeafe);
   border-color: rgba(59, 130, 246, 0.5);
   background: rgba(59, 130, 246, 0.2);
 }
@@ -2505,7 +2505,7 @@
   max-width: 376px;
   max-height: calc(100% - 24px);
   background: var(--bg-secondary);
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 12px;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
   overflow: hidden;
@@ -2524,7 +2524,7 @@
   gap: 10px;
   min-height: var(--modal-header-min-height);
   padding: 12px 12px 12px 14px;
-  border-bottom: 1px solid #3a3a3a;
+  border-bottom: 1px solid var(--g-3a3a3a);
 }
 
 .adv-kit-header-icon {
@@ -2588,7 +2588,7 @@
   display: flex;
   gap: 8px;
   padding: 10px 14px 12px;
-  border-top: 1px solid #3a3a3a;
+  border-top: 1px solid var(--g-3a3a3a);
 }
 
 .adv-kit-btn {
@@ -2601,9 +2601,9 @@
   gap: 6px;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   background: transparent;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
@@ -2618,8 +2618,8 @@
 }
 
 .adv-kit-btn:hover {
-  background: #333;
-  border-color: #5a5a5a;
+  background: var(--g-333333);
+  border-color: var(--g-5a5a5a);
 }
 
 .adv-kit-btn--primary {
@@ -2658,8 +2658,8 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  background: #2a2a2a;
-  border: 1px solid #404040;
+  background: var(--g-2a2a2a);
+  border: 1px solid var(--g-404040);
   border-radius: 9px;
 }
 
@@ -2673,7 +2673,7 @@
 }
 
 .adv-kit-fact + .adv-kit-fact {
-  border-top: 1px solid #363636;
+  border-top: 1px solid var(--g-363636);
 }
 
 .adv-kit-fact dt {
@@ -2720,9 +2720,9 @@
   min-width: 18px;
   padding: 0 6px;
   border-radius: 9px;
-  background: #2c2c2c;
-  border: 1px solid #444;
-  color: #c9c9c9;
+  background: var(--g-2c2c2c);
+  border: 1px solid var(--g-444444);
+  color: var(--g-c9c9c9);
   font-size: 10px;
   font-weight: 600;
   line-height: 16px;
@@ -2734,8 +2734,8 @@
   flex-direction: column;
   gap: 8px;
   padding: 10px;
-  background: #2a2a2a;
-  border: 1px solid #404040;
+  background: var(--g-2a2a2a);
+  border: 1px solid var(--g-404040);
   border-radius: 9px;
 }
 
@@ -2763,7 +2763,7 @@
 .adv-kit-chip--green { color: var(--success-light); background: rgba(16, 185, 129, 0.12); border-color: rgba(52, 211, 153, 0.32); }
 .adv-kit-chip--amber { color: var(--warning-light); background: rgba(245, 158, 11, 0.12); border-color: rgba(251, 191, 36, 0.32); }
 .adv-kit-chip--red { color: var(--danger-light); background: rgba(239, 68, 68, 0.12); border-color: rgba(252, 165, 165, 0.32); }
-.adv-kit-chip--neutral { color: var(--text-secondary); background: transparent; border-color: #4b4b4b; }
+.adv-kit-chip--neutral { color: var(--text-secondary); background: transparent; border-color: var(--g-4b4b4b); }
 
 .adv-kit-field {
   display: flex;
@@ -2788,9 +2788,9 @@
   min-height: 30px;
   padding: 6px 8px 6px 10px;
   background: var(--bg-primary);
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 6px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font-family: inherit;
   font-size: 12px;
   line-height: 16px;
@@ -2855,7 +2855,7 @@
 .adv-kit-code {
   display: flex;
   flex-direction: column;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 7px;
   overflow: hidden;
 }
@@ -2866,17 +2866,17 @@
   justify-content: space-between;
   gap: 8px;
   padding: 5px 6px 5px 10px;
-  background: #262626;
-  border-bottom: 1px solid #3d3d3d;
+  background: var(--g-262626);
+  border-bottom: 1px solid var(--g-3d3d3d);
 }
 
 .adv-kit-code-copy {
   height: 22px;
   padding: 0 8px;
   border-radius: 5px;
-  border: 1px solid #4b4b4b;
-  background: #363636;
-  color: #e0e0e0;
+  border: 1px solid var(--g-4b4b4b);
+  background: var(--g-363636);
+  color: var(--g-e0e0e0);
   font-family: inherit;
   font-size: 10.5px;
   font-weight: 600;
@@ -2898,7 +2898,7 @@
   font-family: var(--font-mono);
   font-size: 11px;
   line-height: 1.55;
-  color: #d4d4d4;
+  color: var(--g-d4d4d4);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -2907,7 +2907,7 @@
   margin: 0;
   padding: 10px;
   border-radius: 7px;
-  border: 1px dashed #444;
+  border: 1px dashed var(--g-444444);
   font-size: 12px;
   line-height: 1.45;
   color: var(--text-secondary);
@@ -2924,7 +2924,7 @@
   border-style: solid;
   border-color: rgba(245, 158, 11, 0.4);
   background: rgba(245, 158, 11, 0.08);
-  color: #fcd34d;
+  color: var(--p-fcd34d);
 }
 
 .adv-kit-code pre {
@@ -2951,7 +2951,7 @@
 .scrapfly-export-panel {
   display: flex;
   flex-direction: column;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 8px;
   overflow: hidden;
   background: var(--bg-primary);
@@ -2963,8 +2963,8 @@
   justify-content: space-between;
   gap: 8px;
   padding: 5px 6px 5px 10px;
-  background: #242424;
-  border-bottom: 1px solid #333;
+  background: var(--g-242424);
+  border-bottom: 1px solid var(--g-333333);
 }
 
 .scrapfly-export-file {
@@ -2982,7 +2982,7 @@
   border: 1px solid rgba(139, 92, 246, 0.55);
   border-radius: 6px;
   background: rgba(139, 92, 246, 0.16);
-  color: #ddd6fe;
+  color: var(--p-ddd6fe);
   font-family: inherit;
   font-size: 11px;
   font-weight: 600;
@@ -2999,7 +2999,7 @@
 .scrapfly-export-copy.copy-feedback-active {
   background: rgba(34, 197, 94, 0.18);
   border-color: rgba(34, 197, 94, 0.55);
-  color: #bbf7d0;
+  color: var(--p-bbf7d0);
 }
 
 .scrapfly-export-pre {
@@ -3010,11 +3010,11 @@
   font-family: var(--font-mono);
   font-size: 11px;
   line-height: 1.6;
-  color: #d4d4d4;
+  color: var(--g-d4d4d4);
   white-space: pre;
   tab-size: 4;
   scrollbar-width: thin;
-  scrollbar-color: #4b4b4b transparent;
+  scrollbar-color: var(--g-4b4b4b) transparent;
 }
 
 .scrapfly-export-pre:focus-visible {
@@ -3036,13 +3036,13 @@
 
 .scrapfly-export-pre::-webkit-scrollbar-thumb,
 .scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb {
-  background: #4b4b4b;
+  background: var(--g-4b4b4b);
   border-radius: 3px;
 }
 
 .scrapfly-export-pre::-webkit-scrollbar-thumb:hover,
 .scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb:hover {
-  background: #6b6b6b;
+  background: var(--g-6b6b6b);
 }
 
 .sfx-comment { color: #7d8590; font-style: italic; }
@@ -3089,9 +3089,9 @@
   max-width: 100%;
   height: 26px;
   padding: 0 9px 0 5px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 7px;
-  background: #262626;
+  background: var(--g-262626);
   color: var(--text-primary);
   font-size: 11.5px;
   font-weight: 600;
@@ -3121,7 +3121,7 @@
   display: flex;
   gap: 3px;
   padding: 3px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 8px;
   background: var(--bg-primary);
 }
@@ -3151,7 +3151,7 @@
 .scrapfly-export-tab[aria-selected="true"] {
   background: rgba(59, 130, 246, 0.18);
   border-color: rgba(59, 130, 246, 0.45);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
 }
 
 .scrapfly-export-tab:focus-visible {
@@ -3181,9 +3181,9 @@
   flex-direction: column;
   gap: 8px;
   padding: 10px 10px 11px 12px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 8px;
-  background: #242424;
+  background: var(--g-242424);
 }
 
 
@@ -3206,7 +3206,7 @@
   display: inline-flex;
   gap: 2px;
   padding: 2px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 7px;
   background: var(--bg-primary);
 }
@@ -3233,7 +3233,7 @@
 .scrapfly-export-seg-btn[aria-checked="true"] {
   background: rgba(59, 130, 246, 0.18);
   border-color: rgba(59, 130, 246, 0.45);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
 }
 
 .scrapfly-export-seg-btn:focus-visible,
@@ -3303,6 +3303,208 @@
   transform: translateX(21px) translateY(-50%);
 }
 
+/* Label with the API parameter it sets underneath */
+.scrapfly-export-option-head {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.scrapfly-export-api {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-option {
+  flex-wrap: wrap;
+}
+
+.scrapfly-export-option.is-wide {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+}
+
+.scrapfly-export-option.is-inactive .scrapfly-export-option-head,
+.scrapfly-export-option.is-inactive .scrapfly-export-seg,
+.scrapfly-export-option.is-inactive .scrapfly-export-dd,
+.scrapfly-export-option.is-inactive .scrapfly-export-input,
+.scrapfly-export-option.is-inactive .scrapfly-export-num,
+.scrapfly-export-option.is-inactive .scrapfly-export-multi,
+.scrapfly-export-option.is-inactive .scrapfly-export-toggle-wrap {
+  opacity: 0.45;
+}
+
+/* Why an option is not in the code (needs another option, invalid value) */
+.scrapfly-export-why,
+.scrapfly-export-note {
+  flex-basis: 100%;
+  font-size: 10.5px;
+  line-height: 14px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-why {
+  color: var(--warning);
+}
+
+.scrapfly-export-input {
+  box-sizing: border-box;
+  width: 180px;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  transition: border-color 0.15s;
+}
+
+.scrapfly-export-input::placeholder {
+  color: var(--text-muted);
+}
+
+.scrapfly-export-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.scrapfly-export-area {
+  width: 100%;
+  height: auto;
+  min-height: 52px;
+  padding: 6px 8px;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.scrapfly-export-num {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.scrapfly-export-num .scrapfly-export-input {
+  width: 96px;
+}
+
+.scrapfly-export-unit {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-multi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+
+.scrapfly-export-chk {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 6px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.scrapfly-export-chk input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.scrapfly-export-chk:has(input:checked) {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* More options: one folded section per topic */
+.scrapfly-export-more {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.scrapfly-export-group {
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 8px;
+  background: var(--g-242424);
+}
+
+.scrapfly-export-group > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.scrapfly-export-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.scrapfly-export-group > summary::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-inline-start: auto;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+
+.scrapfly-export-group[open] > summary::after {
+  transform: rotate(-135deg);
+}
+
+.scrapfly-export-group > summary:hover,
+.scrapfly-export-group[open] > summary {
+  color: var(--text-primary);
+}
+
+.scrapfly-export-group > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+
+/* How many options of the section change the code */
+.scrapfly-export-group-count {
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+.scrapfly-export-group-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 10px 11px 12px;
+}
+
 /* Country: a button and a styled list instead of the system dropdown */
 .scrapfly-export-dd-btn {
   display: inline-flex;
@@ -3313,7 +3515,7 @@
   max-width: 180px;
   height: 26px;
   padding: 0 9px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 7px;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -3352,13 +3554,13 @@
   padding: 4px;
   overflow-y: auto;
   list-style: none;
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 8px;
-  background: #262626;
+  background: var(--g-262626);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
   outline: none;
   scrollbar-width: thin;
-  scrollbar-color: #4b4b4b transparent;
+  scrollbar-color: var(--g-4b4b4b) transparent;
 }
 
 .scrapfly-export-dd-list::-webkit-scrollbar {
@@ -3370,7 +3572,7 @@
 }
 
 .scrapfly-export-dd-list::-webkit-scrollbar-thumb {
-  background: #4b4b4b;
+  background: var(--g-4b4b4b);
   border-radius: 3px;
 }
 
@@ -3390,7 +3592,7 @@
 
 .scrapfly-export-dd-item[aria-selected="true"] {
   background: rgba(59, 130, 246, 0.18);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
   font-weight: 600;
 }
 
@@ -3409,7 +3611,7 @@
   border: 1px solid rgba(59, 130, 246, 0.55);
   border-radius: 6px;
   background: rgba(59, 130, 246, 0.16);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
   font-family: inherit;
   font-size: 11px;
   font-weight: 600;
@@ -3427,7 +3629,7 @@
 .scrapfly-export-copy-ai.copy-feedback-active {
   background: rgba(34, 197, 94, 0.18);
   border-color: rgba(34, 197, 94, 0.55);
-  color: #bbf7d0;
+  color: var(--p-bbf7d0);
 }
 
 /* Numbered steps: 1 settings, 2 key command, 3 code, 4 run command */
@@ -3465,7 +3667,7 @@
   height: 18px;
   border-radius: 50%;
   background: rgba(59, 130, 246, 0.18);
-  color: #bfdbfe;
+  color: var(--p-bfdbfe);
   font-size: 10.5px;
   font-weight: 700;
 }
@@ -3483,7 +3685,7 @@
   gap: 8px;
   min-width: 0;
   padding: 6px 8px 6px 10px;
-  border: 1px solid #3d3d3d;
+  border: 1px solid var(--g-3d3d3d);
   border-radius: 7px;
   background: var(--bg-primary);
   color: var(--text-muted);
@@ -3498,12 +3700,12 @@
   white-space: nowrap;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #d4d4d4;
+  color: var(--g-d4d4d4);
 }
 
 .scrapfly-export-step-cmd:hover {
   border-color: rgba(139, 92, 246, 0.55);
-  color: #ddd6fe;
+  color: var(--p-ddd6fe);
 }
 
 /* Shared Tools action rows: readable copy, semantic outlines, and quiet states. */
@@ -3529,7 +3731,7 @@
   min-height: 66px;
   padding: 12px;
   background: var(--bg-secondary);
-  border: 1px solid #424242;
+  border: 1px solid var(--g-424242);
   border-radius: 10px;
   color: var(--text-primary);
   font-family: inherit;
@@ -3540,7 +3742,7 @@
 
 .advanced-tool-card:hover:not(:disabled),
 .recaptcha-tool-btn:hover:not(:disabled) {
-  background: #313131;
+  background: var(--g-313131);
   border-color: var(--accent);
   transform: none;
   box-shadow: none;
@@ -3795,7 +3997,7 @@
   gap: 10px;
   padding: 6px 8px 6px 12px;
   border-bottom: 1px solid var(--border);
-  background: #262626;
+  background: var(--g-262626);
 }
 
 .advanced-code-dialog__code-label { min-width: 0; color: var(--text-secondary); font-size: 11px; line-height: 16px; }
@@ -3829,7 +4031,7 @@
   border: none;
   border-radius: 0;
   background: var(--bg-primary);
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font: 11px/18px var(--font-mono);
   direction: ltr;
   text-align: left;
@@ -3873,7 +4075,7 @@
   gap: 9px;
   padding: 10px 10px 10px 12px;
   background: var(--bg-secondary);
-  border: 1px solid #424242;
+  border: 1px solid var(--g-424242);
   border-radius: 10px;
   box-shadow: none;
   cursor: pointer;
@@ -3887,7 +4089,7 @@
 .capture-card.capture-card--v28:hover,
 .capture-card.capture-card--v28:focus-visible {
   outline: none;
-  background: #313131;
+  background: var(--g-313131);
   border-color: var(--accent);
   transform: none;
   box-shadow: none;
@@ -3907,8 +4109,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #242424;
-  border: 1px solid #404040;
+  background: var(--g-242424);
+  border: 1px solid var(--g-404040);
   border-radius: 7px;
 }
 
@@ -4009,7 +4211,7 @@
   align-items: center;
   gap: 8px;
   padding-top: 8px;
-  border-top: 1px solid #3a3a3a;
+  border-top: 1px solid var(--g-3a3a3a);
 }
 
 /* Module chip: outlined and tinted like the method chips, not a gradient pill */
@@ -4089,7 +4291,7 @@
   height: 32px;
   padding: 0 10px;
   background-color: var(--bg-secondary);
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 8px;
   color: var(--text-primary);
   font-family: inherit;
@@ -4118,9 +4320,9 @@
   height: 30px;
   padding: 0 10px;
   background: transparent;
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 7px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font-family: inherit;
   font-size: 11.5px;
   font-weight: 600;

@@ -52,7 +52,7 @@ const Constants = Object.freeze({
     UPDATE_CHECK_DELAY: 5000,              // initial delay after startup
     UPDATE_FETCH_TIMEOUT: 15000,           // remote fetch timeout
     UPDATE_CHECK_TIMEOUT: 30000,           // overall update check timeout
-    DEFAULT_CACHE_EXPIRY_HOURS: 12,        // detection cache expiry
+    DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 168, // Rules → Update check interval when the setting is missing (the detection cache default is DetectionEngineManager.DEFAULT_EXPIRY_HOURS)
 
     // ─── Notification Timing ─────────────────────────────────────────────────
     NOTIFICATION_DURATION: 3000,           // default toast notification display

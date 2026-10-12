@@ -44,7 +44,7 @@ class FormatUtils {
     const value = Number(duration);
     const sourceUnit = unitMs[unit] ? unit : 'hours';
     if (!Number.isFinite(value) || value <= 0) {
-      return { duration: 12, unit: 'hours', exact: false };
+      return { duration: 7, unit: 'days', exact: false };
     }
     if (Number.isInteger(value) && value >= 1 && value <= max[sourceUnit]) {
       return { duration: value, unit: sourceUnit, exact: true };
@@ -228,6 +228,94 @@ class FormatUtils {
     return FormatUtils.escapeHtml(text)
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  /**
+   * A detection's protection name as a string: detector.name, a plain
+   * detector string, the detection's own name, else the detector id; '' if none.
+   * (detector can be an object with only an id, which must never reach string methods.)
+   */
+  static detectorName(detection) {
+    if (!detection || typeof detection !== 'object') return '';
+    const d = detection.detector;
+    const nested = d && typeof d === 'object' ? d : {};
+    for (const value of [nested.name, typeof d === 'string' ? d : null, detection.name, nested.id, detection.id]) {
+      if ((typeof value === 'string' || typeof value === 'number') && String(value).trim()) return String(value).trim();
+    }
+    return '';
+  }
+
+  /**
+   * A rule text (rule or pattern description, combination name) in the UI
+   * language: its own translations map first, then the shipped translations
+   * (RuleI18n), else the text as written.
+   */
+  static ruleText(text, map) {
+    if (typeof RuleI18n === 'undefined' || !text) return text || '';
+    return RuleI18n.pick(text, map);
+  }
+
+  /** Line icons of the bundled fingerprint detectors, by their icon file name. */
+  static FINGERPRINT_ICONS = Object.freeze({
+    'audio_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M8 6v12M4 9v6M16 6v12M20 9v6"/></svg>',
+    'battery_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 11v2M10 11v2M14 11v2"/></svg>',
+    'canvas_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 12h4l2-3 2 6 2-3h2"/></svg>',
+    'clipboard_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>',
+    'crypto_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1"/></svg>',
+    'css_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 3h16l-1.5 15L12 21l-6.5-3L4 3z"/><path d="M8 8h8M7 12h6"/></svg>',
+    'font_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
+    'gamepads_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><path d="M15 10v4M13 12h4"/></svg>',
+    'geolocation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+    'hardware_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>',
+    'indexeddb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
+    'media_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10,8 16,11 10,14" fill="currentColor"/></svg>',
+    'navigator_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" fill="none"/></svg>',
+    'orientation_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/><path d="M9 6h6"/></svg>',
+    'performance_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2"/></svg>',
+    'screen_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>',
+    'storage_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7V4h16v3M4 20v-3h16v3M4 7v10h16V7"/><path d="M4 11h16M4 15h16"/><circle cx="7" cy="9" r="1" fill="currentColor"/></svg>',
+    'timezone_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>',
+    'usb_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v10M7 7l5 5 5-5"/><circle cx="12" cy="16" r="2"/><path d="M6 12v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/></svg>',
+    'webgl_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+    'webrtc_fingerprint.png': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 10l5-5M20 10V5h-5"/><path d="M9 14l-5 5M4 14v5h5"/><circle cx="12" cy="12" r="3"/></svg>'
+  });
+
+  /** Default category colours (Settings → Category colours starts from these). */
+  static DEFAULT_CATEGORY_COLORS = Object.freeze({ antibot: '#FF5733', captcha: '#33C3FF', fingerprint: '#3b82f6' });
+
+  /** i18n key and English label of each detection method, plural aliases included. */
+  static METHOD_LABELS = Object.freeze({
+    cookie: ['detectionMethodCookies', 'Cookies'], cookies: ['detectionMethodCookies', 'Cookies'],
+    header: ['detectionMethodHeaders', 'Headers'], headers: ['detectionMethodHeaders', 'Headers'],
+    url: ['detectionMethodUrl', 'Url'], urls: ['detectionMethodUrl', 'Url'],
+    content: ['detectionMethodContent', 'Content'],
+    dom: ['detectionMethodDom', 'Dom'],
+    window: ['detectionMethodWindow', 'Window properties'],
+    js_hooks: ['detectionMethodJsHooks', 'JavaScript hooks'],
+    payload: ['detectionMethodPayload', 'Payload'],
+    other: ['statsCategoryOther', 'Other'],
+    unknown: ['timeUnknown', 'Unknown']
+  });
+
+  /** A method's translated label; an unknown key reads as words ("some_method" → "Some method"). */
+  static methodLabel(method) {
+    const key = String(method || '').toLowerCase();
+    const entry = FormatUtils.METHOD_LABELS[key];
+    if (entry) return FormatUtils.t(entry[0], entry[1]);
+    const words = String(method || '').replace(/_/g, ' ').trim();
+    return words.charAt(0).toUpperCase() + words.slice(1);
+  }
+
+  /** Line icons of the three detection categories (robot, brick wall, fingerprint); currentColor, 14px. */
+  static CATEGORY_ICONS = {
+    antibot: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3"/><circle cx="12" cy="2.5" r="0.6" fill="currentColor"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="11.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="15" cy="11.5" r="1.3" fill="currentColor" stroke="none"/><path d="M9.5 15h5"/><path d="M2 11v3M22 11v3"/></svg>',
+    captcha: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9.3h18M3 14.7h18"/><path d="M9 4v5.3M15 4v5.3M6 9.3v5.4M12 9.3v5.4M18 9.3v5.4M9 14.7V20M15 14.7V20"/></svg>',
+    fingerprint: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5a8 8 0 0 1 11 0"/><path d="M5 12a7 7 0 0 1 14 0v1"/><path d="M8.5 20c-.6-1.6-.9-3.4-.9-5.3V12a4.4 4.4 0 0 1 8.8 0v2"/><path d="M12 11.5v3.2c0 2.2.5 4.2 1.4 5.8"/><path d="M16.4 17.5c.2 1 .5 1.9.9 2.7"/></svg>'
+  };
+
+  /** The category's icon, or '' for an unknown category. */
+  static categoryIconSvg(categoryKey) {
+    return FormatUtils.CATEGORY_ICONS[categoryKey] || '';
   }
 
   /**

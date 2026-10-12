@@ -8,7 +8,6 @@
  * NOTE: Many utility functions delegate to Utils.js to avoid duplication.
  */
 
-Logger.debug('UI', '[AdvancedUtils] Loading...');
 
 /** i18n lookups with an inline English fallback (I18n may be absent in tests). */
 const _advUtilsTr = (key, fallback) => (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;

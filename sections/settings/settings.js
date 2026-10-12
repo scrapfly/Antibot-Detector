@@ -88,7 +88,6 @@ class Settings {
    * Initialize settings section
    */
   async initialize() {
-    Logger.debug('UI', 'Settings section initializing...');
     await this.loadDefaults();
     await this.loadHTML();
     this.setupEventListeners();

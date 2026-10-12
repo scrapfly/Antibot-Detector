@@ -51,7 +51,15 @@ test('60 days and 730 days keep their exact length', () => {
   assert.deepStrictEqual(norm(730, 'days'), { duration: 2, unit: 'years', exact: true });
 });
 
-test('garbage falls back to the 12-hour default', () => {
-  assert.deepStrictEqual(norm(0, 'hours'), { duration: 12, unit: 'hours', exact: false });
-  assert.deepStrictEqual(norm('x', 'days'), { duration: 12, unit: 'hours', exact: false });
+test('garbage falls back to the 7-day default', () => {
+  assert.deepStrictEqual(norm(0, 'hours'), { duration: 7, unit: 'days', exact: false });
+  assert.deepStrictEqual(norm('x', 'days'), { duration: 7, unit: 'days', exact: false });
+});
+
+test('a new install caches detections for 7 days', () => {
+  const defaults = JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname, '../sections/settings/default-settings.json'), 'utf8'));
+  const detection = defaults.detection || defaults.settings?.detection;
+  assert.deepStrictEqual([detection.cacheDuration, detection.cacheUnit], [7, 'days']);
+  const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '../modules/detection/engine/detection-engine-manager.js'), 'utf8');
+  assert.match(src, /DEFAULT_EXPIRY_HOURS = 7 \* 24/, 'the engine fallback matches the default');
 });

@@ -135,7 +135,7 @@ async function reCaptchaStartCapture(tabId) {
         // Set up navigation listeners to show loading warning and then ready notification
         const navigationListener = (details) => {
             if (details.tabId === tabId && details.frameId === 0) {
-                Logger.network('[reCAPTCHA] Page navigation started, showing loading warning...');
+                Logger.network('[reCAPTCHA] Page navigation started, showing loading warning');
                 if (showNotification) {
                     showNotification(tabId, {
                         type: 'loading',
@@ -466,7 +466,6 @@ function startRecaptchaInterception() {
         return;
     }
 
-    Logger.network('[reCAPTCHA] Starting request interception...');
 
     recaptchaInterceptionListener = (details) => handleRecaptchaRequest(details);
 
@@ -489,7 +488,6 @@ function startRecaptchaInterception() {
 
 function stopRecaptchaInterception() {
     if (recaptchaInterceptionListener) {
-        Logger.network('[reCAPTCHA] Stopping request interception...');
         chrome.webRequest.onBeforeRequest.removeListener(recaptchaInterceptionListener);
         if (typeof removeManagedListener === 'function') {
             removeManagedListener('global', 'recaptcha-webrequest');
@@ -500,7 +498,7 @@ function stopRecaptchaInterception() {
 }
 
 async function processCaptureData(state) {
-    Logger.network('[reCAPTCHA] Processing capture data...');
+    Logger.debug('NETWORK', '[reCAPTCHA] Processing capture data');
 
     const results = [];
 
@@ -509,7 +507,7 @@ async function processCaptureData(state) {
         return results;
     }
 
-    Logger.network(`[reCAPTCHA] Processing ${state.reloadData.length} reload requests...`);
+    Logger.debug('NETWORK', `[reCAPTCHA] Processing ${state.reloadData.length} reload requests`);
 
     for (let index = 0; index < state.reloadData.length; index++) {
         const reloadItem = state.reloadData[index];

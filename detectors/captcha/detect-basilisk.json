@@ -1,0 +1,97 @@
+{
+  "id": "detect-basilisk",
+  "name": "Basilisk Captcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-12",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://faucetpay.io/",
+  "icon": "basilisk_official.png",
+  "description": "Basilisk, FaucetPay's captcha, used on faucet and crypto reward sites and verified against basiliskcaptcha.com",
+  "detection": {
+    "url": [
+      {
+        "id": "basilisk-check-site",
+        "confidence": 55,
+        "description": "Basilisk check-site request that loads the challenge",
+        "text": "^https://basiliskcaptcha\\.com/challenge/check-site(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "basilisk-vendor-resource",
+        "confidence": 45,
+        "description": "Other Basilisk resource (script, widget or image) from basiliskcaptcha.com",
+        "text": "^https://basiliskcaptcha\\.com/(?!challenge/check-site)[^?#]+",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "basilisk-host-reference",
+        "confidence": 10,
+        "description": "Script reference to basiliskcaptcha.com",
+        "text": "basiliskcaptcha.com",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "basilisk-script-check",
+      "name": "Script reference and check-site request",
+      "when": {
+        "all": [
+          {
+            "pattern": "basilisk-host-reference"
+          },
+          {
+            "pattern": "basilisk-check-site"
+          }
+        ]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "basilisk-resource-check",
+      "name": "Basilisk resource with a check-site request",
+      "when": {
+        "all": [
+          {
+            "pattern": "basilisk-vendor-resource"
+          },
+          {
+            "pattern": "basilisk-check-site"
+          }
+        ]
+      },
+      "confidence": 90
+    },
+    {
+      "id": "basilisk-script-resource",
+      "name": "Script reference with a Basilisk resource",
+      "when": {
+        "all": [
+          {
+            "pattern": "basilisk-host-reference"
+          },
+          {
+            "pattern": "basilisk-vendor-resource"
+          }
+        ]
+      },
+      "confidence": 70
+    }
+  ]
+}

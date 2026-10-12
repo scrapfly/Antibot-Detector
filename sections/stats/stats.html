@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Scrapfly: history statistics</title>
   <link rel="icon" href="../../icons/icon32.png">
+  <script src="../../modules/core/theme.js"></script>
   <link rel="stylesheet" href="../../modules/styles/common.css">
   <link rel="stylesheet" href="../../modules/styles/stats.css">
+  <link rel="stylesheet" href="../../modules/styles/theme-light.css">
 </head>
 <body class="stats-page">
   <header class="stats-header">
@@ -35,6 +37,10 @@
       <button type="button" class="stats-section-btn" id="stats-tab-protections" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-protections" data-section="protections" data-i18n="statsSectionProtections">Protections</button>
       <button type="button" class="stats-section-btn" id="stats-tab-domains" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-domains" data-section="domains" data-i18n="statsSectionDomains">Domains</button>
       <button type="button" class="stats-section-btn" id="stats-tab-confidence" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-confidence" data-section="confidence" data-i18n="statsSectionConfidence">Confidence</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-signals" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-signals" data-section="signals" data-i18n="statsSectionSignals">Signals</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-combinations" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-combinations" data-section="combinations" data-i18n="statsSectionCombinations">Combinations</button>
+      <button type="button" class="stats-section-btn" id="stats-tab-rules" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-rules" data-section="rules" data-i18n="statsSectionRules">Rules</button>
+      <button hidden type="button" class="stats-section-btn" id="stats-tab-tools" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-tools" data-section="tools" data-i18n="statsSectionTools">Tools</button>
     </nav>
   </header>
 
@@ -60,6 +66,8 @@
           <div class="stats-insight"><span data-i18n="statsDetectionRate">Entries with detections</span><strong id="insightRate">0%</strong></div>
           <div class="stats-insight"><span data-i18n="statsActiveDays">Active days</span><strong id="insightDays">0</strong></div>
           <div class="stats-insight"><span data-i18n="statsAverageConfidence">Average confidence</span><strong id="insightConfidence"></strong></div>
+          <div class="stats-insight"><span data-i18n="statsFirstSeen">New this period</span><strong id="insightNew"></strong></div>
+          <div class="stats-insight"><span data-i18n="statsMostProtectedDomain">Most protected domain</span><strong id="insightProtectedDomain" class="stats-insight-text"></strong></div>
         </div>
         <div class="stats-grid">
           <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsOverTime">Detections over time</h2><span class="stats-card-meta" id="timelineMeta"></span></div><div class="stats-chart" id="statsTimeline"></div></section>
@@ -99,6 +107,9 @@
             <div class="stats-table-toolbar"><input type="search" class="stats-search" id="statsDomainSearch" aria-label="Search domains" data-i18n-aria-label="statsDomainSearch" placeholder="Search domains..." data-i18n-placeholder="statsDomainSearch"><select class="stats-sort" id="statsDomainSort" aria-label="Sort domains" data-i18n-aria-label="statsDomainSortLabel"><option value="visits" data-i18n="statsSortVisits">Most visits</option><option value="detections" data-i18n="statsSortDetections">Most detections</option><option value="confidence" data-i18n="statsSortConfidence">Highest confidence</option><option value="name" data-i18n="statsSortName">Domain name</option></select></div>
             <div class="stats-table-wrap" id="statsDomainTable"></div><div class="stats-table-footer"><span id="statsDomainCount"></span><button type="button" class="stats-table-more" id="statsDomainMore" data-i18n="statsTableMore" hidden>Show more</button></div>
           </section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsDomainChanges">Protection changes</h2></div><div class="stats-table-wrap" id="statsChangeTable"></div><div class="stats-table-footer"><span id="statsChangeCount"></span><button type="button" class="stats-table-more" id="statsChangeMore" data-i18n="statsTableMore" hidden>Show more</button></div><p class="stats-card-note" data-i18n="statsDomainChangesHint">Domains whose detected protections changed between two saved visits.</p></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsFirstSeen">New this period</h2></div><div class="stats-table-wrap" id="statsFirstSeenTable"></div><p class="stats-card-note" data-i18n="statsFirstSeenHint">Protections and domains saved for the first time in this range.</p></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsFoundTogether">Protections found together</h2><span class="stats-card-meta" data-i18n="statsPagesUnit">pages</span></div><div class="stats-table-wrap" id="statsTogetherTable"></div></section>
         </div>
       </section>
 
@@ -110,6 +121,52 @@
           <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsConfidenceTrend">Confidence over time</h2></div><div class="stats-chart" id="statsConfidenceTrend"></div></section>
         </div>
       </section>
+
+      <section class="stats-panel" id="stats-panel-signals" role="tabpanel" aria-labelledby="stats-tab-signals" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionSignals">Signals</h2><p data-i18n="statsSignalsNote">The kind of evidence each saved detection matched: cookie and header names, URLs, page elements, scripts and JavaScript hooks.</p></div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsMethods">Detection methods</h2><span class="stats-card-meta" data-i18n="statsMatchesUnit">matches</span></div><div class="stats-chart" id="statsMethods"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsMethodsByCategory">Methods by category</h2></div><div class="stats-chart" id="statsMethodsByCategory"></div><div class="stats-series-legend" id="statsMethodLegend"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsTopSignals">Most matched signals</h2></div><div class="stats-table-wrap" id="statsSignalTable"></div><div class="stats-table-footer"><span id="statsSignalCount"></span><button type="button" class="stats-table-more" id="statsSignalMore" data-i18n="statsTableMore" hidden>Show more</button></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsWeakEvidence">Weakest evidence</h2></div><div class="stats-chart" id="statsWeakEvidence"></div><p class="stats-card-note" data-i18n="statsWeakEvidenceHint">Protections whose matched patterns have the lowest average confidence. Their rules may need a stronger pattern.</p></section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-combinations" role="tabpanel" aria-labelledby="stats-tab-combinations" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionCombinations">Combinations</h2><p data-i18n="statsCombinationsNote">A combination detects a protection only when several patterns are found together.</p></div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsDecidedBy">How detections were decided</h2><span class="stats-card-meta" data-i18n="statsDetectionsUnit">detections</span></div><div class="stats-chart" id="statsDecided"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsCombinationGain">Confidence by decision</h2></div><div class="stats-chart" id="statsCombinationGain"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsTopCombinations">Combinations that fired</h2></div><div class="stats-table-wrap" id="statsCombinationTable"></div><div class="stats-table-footer"><span id="statsCombinationCount"></span><button type="button" class="stats-table-more" id="statsCombinationMore" data-i18n="statsTableMore" hidden>Show more</button></div></section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-rules" role="tabpanel" aria-labelledby="stats-tab-rules" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionRules">Rules</h2><p data-i18n="statsRulesNote">Your rule library, compared with what History found in this range.</p></div>
+        <div class="stats-insights stats-insights--rules">
+          <div class="stats-insight"><span data-i18n="statsRulesTotal">Rules</span><strong id="rulesTotal">0</strong></div>
+          <div class="stats-insight"><span data-i18n="statsRulesOfficial">Official</span><strong id="rulesOfficial">0</strong></div>
+          <div class="stats-insight"><span data-i18n="statsRulesCustom">Custom</span><strong id="rulesCustom">0</strong></div>
+          <div class="stats-insight"><span data-i18n="statsRulesModified">Edited official</span><strong id="rulesModified">0</strong></div>
+          <div class="stats-insight"><span data-i18n="statsRulesDisabled">Disabled</span><strong id="rulesDisabled">0</strong></div>
+        </div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsRulesMostActive">Most active rules</h2><span class="stats-card-meta" data-i18n="statsPagesUnit">pages</span></div><div class="stats-chart" id="statsRuleActive"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsRulesPatternsByMethod">Patterns by method</h2><span class="stats-card-meta" data-i18n="statsPatternsUnit">patterns</span></div><div class="stats-chart" id="statsRulePatterns"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsRulesNeverMatched">Not found in this range</h2></div><div class="stats-table-wrap" id="statsUnusedTable"></div><div class="stats-table-footer"><span id="statsUnusedCount"></span><button type="button" class="stats-table-more" id="statsUnusedMore" data-i18n="statsTableMore" hidden>Show more</button></div><p class="stats-card-note" data-i18n="statsRulesNeverMatchedHint">Enabled rules that found nothing on the pages saved in this range.</p></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsRulesMissingDescriptions">Patterns without a description</h2></div><div class="stats-table-wrap" id="statsMissingTable"></div><div class="stats-table-footer"><span id="statsMissingCount"></span><button type="button" class="stats-table-more" id="statsMissingMore" data-i18n="statsTableMore" hidden>Show more</button></div><p class="stats-card-note" data-i18n="statsRulesMissingHint">Descriptions show in detection details, History and combinations. Add them in the rule editor.</p></section>
+          <section class="stats-card stats-card--wide" id="statsWaitingCard" hidden><div class="stats-card-head"><h2 data-i18n="statsRulesWaiting">Waiting for a newer extension</h2></div><div class="stats-table-wrap" id="statsWaitingTable"></div></section>
+        </div>
+      </section>
+
+      <section class="stats-panel" id="stats-panel-tools" role="tabpanel" aria-labelledby="stats-tab-tools" tabindex="0" hidden>
+        <div class="stats-section-intro"><h2 data-i18n="statsSectionTools">Tools</h2><p data-i18n="statsToolsNote">Advanced captures and tool results saved on this device.</p></div>
+        <div class="stats-grid">
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsToolsByVendor">Captures by vendor</h2><span class="stats-card-meta" data-i18n="statsCapturesUnit">captures</span></div><div class="stats-chart" id="statsToolsVendors"></div></section>
+          <section class="stats-card"><div class="stats-card-head"><h2 data-i18n="statsToolsByTool">Most used tools</h2><span class="stats-card-meta" data-i18n="statsCapturesUnit">captures</span></div><div class="stats-chart" id="statsToolsTools"></div></section>
+          <section class="stats-card stats-card--wide"><div class="stats-card-head"><h2 data-i18n="statsToolsOverTime">Captures over time</h2></div><div class="stats-chart" id="statsToolsTimeline"></div></section>
+        </div>
+      </section>
     </div>
     <p class="stats-export-note" id="statsExportScope"></p>
     <p class="stats-export-note" data-i18n="statsExportPrivacy">Exports contain domains and detection summaries, not cookies, page contents or URL parameters.</p>
@@ -119,9 +176,13 @@
   <script src="../../modules/core/logger.js"></script>
   <script src="../../modules/core/storage-manager.js"></script>
   <script src="../../modules/core/i18n.js"></script>
+  <script src="../../modules/core/rule-i18n.js"></script>
   <script src="../../modules/ui/tooltip.js"></script>
+  <script src="../../utils/format-utils.js"></script>
   <script src="../../utils/detection-utils.js"></script>
   <script src="history-stats.js"></script>
+  <script src="rule-stats.js"></script>
+  <script src="tools-stats.js"></script>
   <script src="stats-charts.js"></script>
   <script src="stats-export.js"></script>
   <script src="stats.js"></script>

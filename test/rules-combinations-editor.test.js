@@ -57,7 +57,7 @@ test('opening and saving every shipped rule keeps its combinations and pattern f
       count++;
     }
   }
-  assert.equal(count, 63);
+  assert.equal(count, 68);
 });
 
 test('renaming preserves nested alternatives, exclusions and thresholds without mutating the source', () => {
@@ -246,9 +246,10 @@ test('rows show the stored description first, but not after the pattern text was
   rules.setComboOpen(rules.combinationsModel[0], true);
   rules.renderCombinations();
   const html = container.innerHTML;
-  assert.match(html, /<span class="combo-item-desc" dir="auto">Official SDK &lt;script><\/span><\/p><span class="combo-leaf-text" dir="ltr" title="\/a">\/a<\/span>/);
+  assert.match(html, /data-pattern="a"[^>]*>Official SDK &lt;script><\/span><\/p><span class="combo-leaf-text" dir="ltr" title="\/a">\/a<\/span>/);
   assert.ok(!html.includes('Old description'), 'an edited pattern shows its new text, not the old description');
-  assert.match(html, /<span class="combo-leaf-text is-main" dir="ltr" title="\/b-edited">\/b-edited<\/span>/);
+  assert.match(html, /data-pattern="b"[^>]*><\/span><\/p><span class="combo-leaf-text" dir="ltr" title="\/b-edited">\/b-edited<\/span>/,
+    'no description: an empty editable line (placeholder) above the pattern text');
   assert.match(html, /class="combo-item-tag">Combinations only</);
   assert.ok(!html.includes('<script>'));
 });
@@ -285,4 +286,22 @@ test('the builder offers group controls with readable, unique names', () => {
   const ids = [...html.matchAll(/ id="([^"]+)"/g)].map(m => m[1]);
   assert.deepEqual(ids, [...new Set(ids)], 'no duplicate ids once groups have their own controls');
   for (const [, id] of html.matchAll(/aria-labelledby="([^"]+)"/g)) assert.ok(ids.includes(id), id);
+});
+
+test('a description typed on a combination row is saved on the pattern and mirrored on its other rows', () => {
+  const { rules, context } = editor(base({ all: [{ pattern: 'a' }, { pattern: 'b' }] }));
+  const row = { dataset: { patternId: 'a', description: '' }, querySelector: () => inline };
+  const inline = { value: '' };
+  const other = { dataset: { pattern: 'a' }, textContent: '' };
+  const typed = { dataset: { comboField: 'description', pattern: 'a' }, textContent: '  Hidden   metadata1 field ',
+    closest: selector => selector === '.combo-card' ? { dataset: { combo: '0' } } : null };
+  rules.getComboPatternRow = id => id === 'a' ? row : null;
+  context.document.querySelectorAll = () => [typed, other];
+  rules.handleCombinationAction({ target: typed }, 'input');
+  assert.equal(row.dataset.description, 'Hidden metadata1 field');
+  assert.equal(inline.value, 'Hidden metadata1 field');
+  assert.equal(other.textContent, 'Hidden metadata1 field');
+  assert.equal(typed.textContent, '  Hidden   metadata1 field ', 'the row being typed in is left alone');
+  const html = rules.renderComboItem({ pattern: 'a' }, 0, new Map([['a', { id: 'a', method: 'url', label: '/a', description: 'Typed' }]]));
+  assert.match(html, /contenteditable="plaintext-only"[^>]*data-combo-field="description"[^>]*>Typed</);
 });

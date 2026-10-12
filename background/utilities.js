@@ -187,11 +187,10 @@ var servicesInitialized = false;
 function initializeServices() {
     if (servicesInitialized) return;
     servicesInitialized = true;
-    Logger.background('Scrapfly Background: Initializing services...');
 
     setupHeaderCapture();
     setupMessageListeners();
     setupTabListeners();
 
-    Logger.background('Scrapfly Background: Services initialization complete');
+    Logger.background('Services initialized');
 }

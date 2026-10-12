@@ -33,9 +33,8 @@ function registerSettingsHandlers(registry, context) {
 
         (async () => {
             try {
-                Logger.background('Scrapfly Background: Syncing category colors from Settings...');
                 const synced = await detectorManager.categoryManager.syncColorsFromSettings();
-                Logger.background('Scrapfly Background: Category colors synced:', synced);
+                Logger.background('Category colours synced from Settings', { ok: synced });
                 sendResponse({ status: 'synced', success: synced });
             } catch (error) {
                 Logger.error('BACKGROUND', 'Scrapfly Background: Error syncing category colors:', error);
@@ -121,7 +120,6 @@ function registerSettingsHandlers(registry, context) {
 
         (async () => {
             try {
-                Logger.background('Scrapfly Background: Reloading detectors from storage...');
 
                 // Clear pattern cache so rule changes take effect immediately
                 if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
@@ -131,7 +129,7 @@ function registerSettingsHandlers(registry, context) {
 
                 detectorManager.initialized = false;
                 await detectorManager.initialize();
-                Logger.background('Scrapfly Background: Detectors reloaded successfully');
+                Logger.background('Detectors reloaded from storage');
                 sendResponse({ status: 'reloaded', detectorCount: detectorManager.getDetectorCount() });
             } catch (error) {
                 Logger.error('BACKGROUND', 'Scrapfly Background: Error reloading detectors:', error);

@@ -14,7 +14,7 @@ function load(local) {
   const ctx = {
     console, setTimeout, clearTimeout, Promise, JSON, Date, Math, Set, Map, Object, Array,
     Logger: new Proxy({}, { get: () => () => {} }),
-    Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_CACHE_EXPIRY_HOURS: 12 },
+    Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
       normalizeStoredValue: async (_k, v) => (typeof v === 'string' ? JSON.parse(v) : v),

@@ -205,7 +205,7 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     if (this.modalElements.name) {
-      this.modalElements.name.textContent = detection.detector?.name || detection.detector || _dmText('unknownDetection', 'Unknown Detection');
+      this.modalElements.name.textContent = FormatUtils.detectorName(detection) || _dmText('unknownDetection', 'Unknown Detection');
     }
 
     if (this.modalElements.categories) {
@@ -295,7 +295,7 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     if (this.modalElements.description) {
-      const description = detection.detector?.description
+      const description = FormatUtils.ruleText(detection.detector?.description)
         || _dmText('detectionUiNoDescription', 'No additional details provided for this detection.');
       this.modalElements.description.textContent = description;
     }
@@ -364,7 +364,7 @@ DetectionModals.combinationTipRows = function(combos, limit) {
       .sort((a, b) => ((Number(b.combo.confidence) || 0) - (Number(a.combo.confidence) || 0)) || (a.index - b.index))
       .slice(0, limit)
       .map(({ combo, index }) => ({
-        label: combo.name || _dmText('combinationDefaultNameFmt', 'Combination {0}', index + 1),
+        label: FormatUtils.ruleText(combo.name) || _dmText('combinationDefaultNameFmt', 'Combination {0}', index + 1),
         value: `${Math.round(Number(combo.confidence) || 0)}%`,
         tone: FormatUtils.confidenceTone(combo.confidence)
       }));

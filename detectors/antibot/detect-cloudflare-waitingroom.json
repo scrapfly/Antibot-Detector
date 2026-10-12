@@ -1,0 +1,103 @@
+{
+  "id": "detect-cloudflare-waitingroom",
+  "name": "Cloudflare Waiting Room",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://developers.cloudflare.com/waiting-room/",
+  "icon": "cloudflare_official.png",
+  "description": "Cloudflare's queue page (\"Waiting Room powered by Cloudflare\") that holds visitors for a few minutes before letting them in",
+  "detection": {
+    "cookie": [
+      {
+        "id": "cf-waitingroom-cookie",
+        "name": "^__cfwaitingroom$",
+        "nameRegex": true,
+        "confidence": 75,
+        "description": "Waiting Room cookie that keeps the visitor's place in the queue",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "id": "cfwr-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^cloudflare$",
+        "valueRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Served through Cloudflare; CDN delivery, not a queue on its own",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "cfwr-ray-header",
+        "name": "^cf-ray$",
+        "nameRegex": true,
+        "value": "^[0-9a-f]{12,20}-[A-Z]{3,4}$",
+        "valueRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Cloudflare request id header; present on any Cloudflare response",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "cfwr-cookie-server",
+      "name": "Queue cookie on a Cloudflare response",
+      "when": {
+        "all": [
+          {
+            "pattern": "cf-waitingroom-cookie"
+          },
+          {
+            "pattern": "cfwr-server-header"
+          }
+        ]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "cfwr-cookie-ray",
+      "name": "Queue cookie with a Cloudflare request id",
+      "when": {
+        "all": [
+          {
+            "pattern": "cf-waitingroom-cookie"
+          },
+          {
+            "pattern": "cfwr-ray-header"
+          }
+        ]
+      },
+      "confidence": 80
+    },
+    {
+      "id": "cfwr-cookie-server-ray",
+      "name": "Queue cookie with Cloudflare server and request id",
+      "when": {
+        "all": [
+          {
+            "pattern": "cf-waitingroom-cookie"
+          },
+          {
+            "pattern": "cfwr-server-header"
+          },
+          {
+            "pattern": "cfwr-ray-header"
+          }
+        ]
+      },
+      "confidence": 92
+    }
+  ]
+}

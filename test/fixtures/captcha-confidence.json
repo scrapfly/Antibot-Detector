@@ -147,5 +147,24 @@
     "mtcaptcha-config": { "runtimeType": "object" },
     "mtcaptcha-render-api": { "runtimeType": "function" },
     "mtcaptcha-challenge-api": { "url": "https://service.mtcaptcha.com/mtcv1/api/getchallenge.json?sk=MTPublic-example&bd=example.com" }
+  },
+  "detect-binance-captcha": {
+    "binance-captcha-sdk": {"url": "https://bin.bnbstatic.com/static/js/se/captcha/v1/captcha.min.js?v=1728600000"},
+    "binance-antibot-api": {"url": "https://accounts.binance.com/bapi/composite/v1/friendly/antibot/coll"},
+    "binance-bcaptcha-reference": {"source": "var captcha = new BCaptcha({ bizId: 'login', validateId: id });"},
+    "binance-validate-id-reference": {"source": "payload.securityCheckResponseValidateId = result.validateId;"},
+    "binance-validateid-reference": {"source": "captcha.show({ validateId: 'ff965ea6216b46f3825fa827ecaf297f' });"},
+    "binance-bcaptcha": {"runtimeType": "function"}
+  },
+  "detect-prosopo": {
+    "prosopo-bundle": {"url": "https://js.prosopo.io/js/procaptcha.bundle.js"},
+    "prosopo-provider-captcha": {"url": "https://pronode1.prosopo.io/v1/prosopo/provider/client/captcha/image"},
+    "prosopo-site-key-reference": {"source": "headers['Prosopo-Site-Key'] = siteKey;"},
+    "prosopo-widget": {"dom": {"tagName": "div", "class": "procaptcha", "attributes": {"class": "procaptcha", "data-sitekey": "5C7bfXYwachNuvmasEFtWi9BMS41uBvo6KpYHVSQmad4nWzw"}}}
+  },
+  "detect-basilisk": {
+    "basilisk-check-site": {"url": "https://basiliskcaptcha.com/challenge/check-site?site_key=0f1a2b3c"},
+    "basilisk-host-reference": {"source": "script.src = 'https://basiliskcaptcha.com/static/basilisk.js';"},
+    "basilisk-vendor-resource": {"url": "https://basiliskcaptcha.com/static/js/basilisk.min.js"}
   }
 }

@@ -1,0 +1,131 @@
+{
+  "id": "detect-binance-captcha",
+  "name": "Binance Captcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-12",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.binance.com/",
+  "icon": "binance_official.png",
+  "description": "Binance's own puzzle captcha, shown on sign-in and registration and checked through its antibot API with a per-challenge validation id",
+  "detection": {
+    "url": [
+      {
+        "id": "binance-captcha-sdk",
+        "confidence": 55,
+        "description": "Binance captcha script (captcha.min.js?v=…)",
+        "text": "^https://[a-z0-9-]+\\.(?:binance|bnbstatic)\\.com/static/js/se/captcha/v1/captcha\\.min\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "binance-antibot-api",
+        "confidence": 55,
+        "description": "Binance antibot API the captcha reports to",
+        "text": "^https://[a-z0-9-]+\\.binance\\.(?:com|info|me|us)/bapi/composite/v1/(?:public|friendly)/antibot(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "binance-bcaptcha-reference",
+        "confidence": 10,
+        "description": "Script reference to the BCaptcha constructor; integration unconfirmed",
+        "text": "BCaptcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      },
+      {
+        "id": "binance-validate-id-reference",
+        "confidence": 10,
+        "description": "Script reference to the captcha's validation id field",
+        "text": "securityCheckResponseValidateId",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      },
+      {
+        "id": "binance-validateid-reference",
+        "confidence": 5,
+        "description": "Script reference to validateId; a common name, weak on its own",
+        "text": "validateId",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "binance-bcaptcha",
+        "path": "BCaptcha",
+        "condition": "typeof function",
+        "confidence": 45,
+        "description": "BCaptcha constructor on the page",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "binance-sdk-api",
+      "name": "Captcha script calling the antibot API",
+      "when": {
+        "all": [
+          {
+            "pattern": "binance-captcha-sdk"
+          },
+          {
+            "pattern": "binance-antibot-api"
+          }
+        ]
+      },
+      "confidence": 90
+    },
+    {
+      "id": "binance-sdk-constructor",
+      "name": "Captcha script with the BCaptcha constructor",
+      "when": {
+        "all": [
+          {
+            "pattern": "binance-captcha-sdk"
+          },
+          {
+            "pattern": "binance-bcaptcha"
+          }
+        ]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "binance-api-validation",
+      "name": "Antibot API with the validation id in page scripts",
+      "when": {
+        "all": [
+          {
+            "pattern": "binance-antibot-api"
+          },
+          {
+            "pattern": "binance-validate-id-reference"
+          }
+        ]
+      },
+      "confidence": 75
+    }
+  ]
+}

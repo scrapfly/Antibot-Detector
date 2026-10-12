@@ -254,6 +254,7 @@ Rules.prototype.populateModalData = function(detector) {
     // Populate detection methods, then the combinations that refer to them
     this.populateDetectionMethods(detector);
     this.initCombinationsEditor(detector);
+    if (typeof this.resetHistoryCheck === 'function') this.resetHistoryCheck();
   };
 
 Rules.prototype.clearAuthorError = function() {

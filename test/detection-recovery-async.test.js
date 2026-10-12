@@ -19,7 +19,7 @@ function harness() {
                 .map(method => [method, async details => { badges.push({ method, ...details }); }]))
         },
         Utils: { getSettings: async () => settings },
-        StorageManager: { saveSettings: async () => true },
+        StorageManager: { saveSettings: async () => true, updateSettings: async (mutate) => { mutate(settings); return true; } },
         CategoryManager: { getBadgeColors: async () => ({}) },
         DetectionUtils: { getBadgeColor: () => '#4caf50' },
         NotificationHelper: { success() {}, error() {} },

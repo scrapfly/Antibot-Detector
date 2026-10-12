@@ -398,11 +398,11 @@ function setupDetectionTriggers() {
 
                 // Ensure Utils is loaded before collecting data
                 if (typeof Utils === 'undefined') {
-                    Logger.error('CONTENT', 'Utils not loaded yet, waiting and retrying...');
+                    Logger.error('CONTENT', 'Utils not loaded yet, waiting and retrying');
                     // Retry after Utils loads
                     setTimeout(() => {
                         if (typeof Utils !== 'undefined') {
-                            Logger.content('Utils now loaded, collecting data...');
+                            Logger.content('Utils now loaded, collecting data');
                             collectAndSendData();
                         } else {
                             Logger.error('CONTENT', 'Utils still not loaded, detection failed');

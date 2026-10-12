@@ -29,7 +29,6 @@ AwsWafAdvanced.prototype.renderTools = function() {
      * Setup tool-specific event listeners
      */
 AwsWafAdvanced.prototype.setupToolListeners = function() {
-        Logger.network('[AwsWaf] Setting up tool listeners...');
         this.bindToolActions([
             { id: 'awswafCheckCookies', handler: () => this.checkCookies() },
             { id: 'awswafAnalyzeScripts', handler: () => this.analyzeScripts() }

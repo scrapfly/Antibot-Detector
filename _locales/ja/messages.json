@@ -104,9 +104,6 @@
   "noDetectionsFound": {
     "message": "検出が見つかりません"
   },
-  "analyzingPage": {
-    "message": "ページを分析中"
-  },
   "detectionScanningTitle": {
     "message": "このページをスキャン中"
   },
@@ -300,7 +297,7 @@
     "message": "デバッグモード"
   },
   "settingsCardDebugDesc": {
-    "message": "チェックしたページごとに読みやすいレポートを Service Worker コンソールに出力"
+    "message": "スキャンしたページごとに読みやすいレポートを拡張機能のコンソールに出力します。"
   },
   "settingsRowLogCollector": {
     "message": "ログコレクター"
@@ -398,14 +395,8 @@
   "advancedEmptyCapturesHint": {
     "message": "ツールタブを使用して、検出されたシステムからデータをキャプチャしてください"
   },
-  "advancedCapturesStoredNote": {
-    "message": "キャプチャは30分間保存されます"
-  },
   "advancedNoResultsTitle": {
     "message": "キャプチャが見つかりません"
-  },
-  "advancedNoResultsHint": {
-    "message": "フィルターや検索クエリの調整をお試しください"
   },
   "advancedBtnResetFilters": {
     "message": "すべてのフィルターをリセット"
@@ -991,9 +982,6 @@
   "failedDeleteDetector": {
     "message": "ディテクターの削除に失敗しました"
   },
-  "detectorNotFoundFmt": {
-    "message": "ディテクターが見つかりません: {0}"
-  },
   "failedViewCaptureDetails": {
     "message": "キャプチャ詳細の表示に失敗しました"
   },
@@ -1390,12 +1378,6 @@
   "detectionStatDifficulty": {
     "message": "難易度"
   },
-  "detectionStatCacheScope": {
-    "message": "キャッシュスコープ"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "キャッシュ有効期限"
-  },
   "detectionSearchPlaceholder": {
     "message": "検出を検索..."
   },
@@ -1621,29 +1603,14 @@
   "advancedToolsSubtitle": {
     "message": "保護システムを選択してツールを開きます。"
   },
-  "advancedToolsStepSelect": {
-    "message": "検出を選択"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "検出を選んでください..."
-  },
   "advancedToolsLoadTools": {
     "message": "ツールを開く"
-  },
-  "advancedToolsClearAll": {
-    "message": "すべてクリア"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "すべてのツールをクリア"
   },
   "advancedToolsLearnMore": {
     "message": "高度なツールについて"
   },
   "advancedToolsChange": {
     "message": "変更"
-  },
-  "advancedToolsDetectionName": {
-    "message": "検出名"
   },
   "settingsLanguageTitle": {
     "message": "言語"
@@ -1680,9 +1647,6 @@
   },
   "rulesMoreActions": {
     "message": "その他の操作"
-  },
-  "advancedToolsNoDetections": {
-    "message": "このページに対応する検出はありません"
   },
   "advancedToolsEmptyTitle": {
     "message": "利用できるツールはありません"
@@ -2388,9 +2352,6 @@
   },
   "mhWindowLimit2": {
     "message": "Symbol で名前を付けたプロパティはパスとして書けません。"
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "フックを使うのはフィンガープリントのルールだけです。アンチボットや Captcha のルールでは無視されます。"
   },
   "mhJsHooksIntro": {
     "message": "ページがブラウザー API (例: `HTMLCanvasElement.prototype.toDataURL`) を呼び出したことを記録します。フィンガープリンティングの兆候です。"
@@ -3247,9 +3208,6 @@
   "advGeetestNoVersion": {
     "message": "Geetest のバージョンが検出されませんでした"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "解析コードをクリップボードにコピーしました"
-  },
   "advGeetestTabNotFound": {
     "message": "タブが見つかりません"
   },
@@ -3276,9 +3234,6 @@
   },
   "advPanelCheckConsole": {
     "message": "詳細はコンソールを確認してください"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "先に検出を選択してください"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "キャプチャの読み込み中にエラーが発生しました: {0}"
@@ -3526,9 +3481,6 @@
   "clipboardDifficultyFmt": {
     "message": "難易度: {0}"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "キャッシュ有効期限: {0}"
-  },
   "clipboardCopyFailed": {
     "message": "クリップボードへのコピーに失敗しました"
   },
@@ -3685,9 +3637,6 @@
   "combinationAutoTip": {
     "message": "自動：一致させたパターンのうち最も高い信頼度"
   },
-  "combinationSetsScore": {
-    "message": "検出スコアを決定"
-  },
   "combinationInvalidNoPattern": {
     "message": "見つかる必要があるパターンを 1 つ以上追加してください。"
   },
@@ -3805,6 +3754,9 @@
   "combinationAddPattern": {
     "message": "パターンを追加"
   },
+  "combinationAddDescription": {
+    "message": "説明を追加"
+  },
   "combinationAnyPattern": {
     "message": "任意のパターン"
   },
@@ -3861,12 +3813,6 @@
   },
   "detectionTipDifficulty": {
     "message": "検出された保護機能を回避する難易度の推定値。"
-  },
-  "detectionTipCacheScope": {
-    "message": "キャッシュされた検出結果を再利用できるページの範囲。"
-  },
-  "detectionTipCacheExpiration": {
-    "message": "キャッシュされた検出結果の有効期限までの残り時間。"
   },
   "tipCachedAt": {
     "message": "保存"
@@ -4405,5 +4351,575 @@
   "scrapflyExportNoPage": {
     "message": "Scrapfly でスクレイピングするには Web ページを開いてください",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} 件のキャプチャ"
+  },
+  "statsFirstSeen": {
+    "message": "この期間の新規"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "この期間に初めて保存された保護 {0} 件、ドメイン {1} 件。"
+  },
+  "statsFirstSeenAllTip": {
+    "message": "新規を見るには 7・30・90 日を選択してください。"
+  },
+  "statsMostProtectedDomain": {
+    "message": "最も保護されたドメイン"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{1} 回の訪問で {0} 種類の保護。"
+  },
+  "statsFoundTogether": {
+    "message": "同時に見つかった保護"
+  },
+  "statsMethods": {
+    "message": "検出方法"
+  },
+  "statsMatchesUnit": {
+    "message": "一致"
+  },
+  "statsMethodsByCategory": {
+    "message": "カテゴリ別の方法"
+  },
+  "statsWeakEvidence": {
+    "message": "最も弱い根拠"
+  },
+  "statsSignalColumn": {
+    "message": "シグナル"
+  },
+  "statsMethodColumn": {
+    "message": "方法"
+  },
+  "statsTopSignals": {
+    "message": "よく一致したシグナル"
+  },
+  "statsDecidedSingle": {
+    "message": "単一パターン"
+  },
+  "statsDecidedCombination": {
+    "message": "組み合わせ"
+  },
+  "statsDecidedBy": {
+    "message": "検出の判定方法"
+  },
+  "statsCombinationGain": {
+    "message": "判定別の信頼度"
+  },
+  "statsCombinationColumn": {
+    "message": "組み合わせ"
+  },
+  "statsTopCombinations": {
+    "message": "発動した組み合わせ"
+  },
+  "statsNoCombinations": {
+    "message": "この期間に組み合わせで判定された検出はありません。"
+  },
+  "statsRulesMostActive": {
+    "message": "最も活発なルール"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} パターン"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "方法別のパターン"
+  },
+  "statsRulesOfficial": {
+    "message": "公式"
+  },
+  "statsRulesCustom": {
+    "message": "カスタム"
+  },
+  "statsRuleColumn": {
+    "message": "ルール"
+  },
+  "statsRuleKindColumn": {
+    "message": "種類"
+  },
+  "statsPatternsUnit": {
+    "message": "パターン"
+  },
+  "statsRulesNeverMatched": {
+    "message": "この期間に未検出"
+  },
+  "statsRulesAllMatched": {
+    "message": "有効なルールはすべてこの期間に何かを検出しました。"
+  },
+  "statsMissingColumn": {
+    "message": "説明なし"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "説明のないパターン"
+  },
+  "statsRulesAllDescribed": {
+    "message": "すべてのパターンに説明があります。"
+  },
+  "statsRuleVersionColumn": {
+    "message": "ルールのバージョン"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "必要な拡張機能"
+  },
+  "statsRulesWaiting": {
+    "message": "新しい拡張機能を待機中"
+  },
+  "statsToolsByVendor": {
+    "message": "ベンダー別キャプチャ"
+  },
+  "statsToolsCapture": {
+    "message": "キャプチャ"
+  },
+  "statsToolsByTool": {
+    "message": "よく使うツール"
+  },
+  "statsToolsOverTime": {
+    "message": "キャプチャの推移"
+  },
+  "statsChangeColumn": {
+    "message": "変化"
+  },
+  "statsDateColumn": {
+    "message": "日付"
+  },
+  "statsDomainChanges": {
+    "message": "保護の変化"
+  },
+  "statsNoChanges": {
+    "message": "この期間に保存された訪問の間で保護が変わったドメインはありません。"
+  },
+  "statsNothingNew": {
+    "message": "新規なし: すべての保護はこの期間より前から履歴にありました。"
+  },
+  "statsSectionSignals": {
+    "message": "シグナル"
+  },
+  "statsSectionCombinations": {
+    "message": "組み合わせ"
+  },
+  "statsSectionRules": {
+    "message": "ルール"
+  },
+  "statsSectionTools": {
+    "message": "ツール"
+  },
+  "statsDomainChangesHint": {
+    "message": "保存された 2 回の訪問の間で検出された保護が変わったドメイン。"
+  },
+  "statsFirstSeenHint": {
+    "message": "この期間に初めて保存された保護とドメイン。"
+  },
+  "statsSignalsNote": {
+    "message": "保存された各検出が一致した根拠の種類: Cookie とヘッダーの名前、URL、ページ要素、スクリプト、JavaScript フック。"
+  },
+  "statsWeakEvidenceHint": {
+    "message": "一致したパターンの平均信頼度が最も低い保護。ルールにより強いパターンが必要かもしれません。"
+  },
+  "statsCombinationsNote": {
+    "message": "組み合わせは、複数のパターンが一緒に見つかった場合にのみ保護を検出します。"
+  },
+  "statsRulesNote": {
+    "message": "ルールライブラリと、この期間に履歴で見つかったものの比較。"
+  },
+  "statsRulesTotal": {
+    "message": "ルール"
+  },
+  "statsRulesModified": {
+    "message": "編集した公式"
+  },
+  "statsRulesDisabled": {
+    "message": "無効"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "この期間に保存されたページで何も検出しなかった有効なルール。"
+  },
+  "statsRulesMissingHint": {
+    "message": "説明は検出の詳細、履歴、組み合わせに表示されます。ルールエディタで追加してください。"
+  },
+  "statsToolsNote": {
+    "message": "このデバイスに保存された Advanced のキャプチャとツールの結果。"
+  },
+  "statsCapturesUnit": {
+    "message": "キャプチャ"
+  },
+  "detectionCardSureFmt": {
+    "message": "確度 {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "組み合わせ"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "キャッシュ"
+  },
+  "detectionTipCache": {
+    "message": "このキャッシュ結果を再利用するページと、その期間。"
+  },
+  "tipCacheExpires": {
+    "message": "有効期限"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "履歴で確認"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "各パターンと組み合わせが保存済みページのいくつで一致するかを確認します。未保存の編集も対象です。"
+  },
+  "ruleHistoryCheckRun": {
+    "message": "確認"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "保存済みページ {0} 件 · このルールは {1} 件で検出"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{1} ページ中 {0}"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+他の {0} ページ"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "履歴が空です。まずいくつかのページを閲覧してください。"
+  },
+  "ruleHistoryCheckNote": {
+    "message": "推定値です。履歴は一致した値を保存しており、ページ全体ではありません。"
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "{0} ページで発動"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "確認するパターンを追加してください。"
+  },
+  "settingsThemeTitle": {
+    "message": "テーマ"
+  },
+  "settingsThemeDesc": {
+    "message": "ダーク、または Scrapfly カラーのライト。システムはブラウザーに従います。"
+  },
+  "themeDark": {
+    "message": "ダーク"
+  },
+  "themeLight": {
+    "message": "ライト"
+  },
+  "themeSystem": {
+    "message": "システム"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "コンソールを開く"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "chrome://extensions でこの拡張機能を開きます。「service worker」をクリックするとログが表示されます。"
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "ログをコンソールではなくここに保存し、JSON またはテキストで書き出します"
+  },
+  "ruleTranslationsTitle": {
+    "message": "翻訳"
+  },
+  "ruleTranslationsHint": {
+    "message": "拡張機能がその言語のとき、説明の代わりに表示されます。空欄の場合は説明が表示されます。"
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{1} 件中 {0} 件"
+  },
+  "ruleTranslateAuto": {
+    "message": "自動翻訳"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "自動翻訳には Chrome 138 以降が必要です。"
+  },
+  "ruleTranslateNeedsText": {
+    "message": "先に説明を入力してください。"
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "翻訳中: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "{0} 言語を入力しました。保存前に確認してください。"
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "{0} 件入力。{1} 件はここでは翻訳できませんでした。"
+  },
+  "sfxOptRenderingWait": {
+    "message": "読み込み後の待機"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "要素を待つ"
+  },
+  "sfxOptRenderingStage": {
+    "message": "ページ完了の基準"
+  },
+  "sfxOptAutoScroll": {
+    "message": "最下部までスクロール"
+  },
+  "sfxOptJs": {
+    "message": "JavaScript を実行"
+  },
+  "sfxOptJsScenario": {
+    "message": "ブラウザ操作"
+  },
+  "sfxOptScreenshot": {
+    "message": "スクリーンショット"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "要素"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "スクリーンショットのオプション"
+  },
+  "sfxOptLang": {
+    "message": "言語"
+  },
+  "sfxOptOs": {
+    "message": "OS"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "ブラウザ"
+  },
+  "sfxOptGeolocation": {
+    "message": "位置情報"
+  },
+  "sfxOptHeaders": {
+    "message": "ヘッダー"
+  },
+  "sfxOptTimeout": {
+    "message": "タイムアウト"
+  },
+  "sfxOptRetry": {
+    "message": "エラー時に再試行"
+  },
+  "sfxOptCostBudget": {
+    "message": "クレジット上限"
+  },
+  "sfxOptFormatOptions": {
+    "message": "除外"
+  },
+  "sfxOptProxified": {
+    "message": "サイトの応答をそのまま返す"
+  },
+  "sfxOptExtraction": {
+    "message": "データ抽出"
+  },
+  "sfxOptExtractionModel": {
+    "message": "モデル"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "プロンプト"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "保存したテンプレート"
+  },
+  "sfxOptCache": {
+    "message": "キャッシュ"
+  },
+  "sfxOptCacheTtl": {
+    "message": "保持期間"
+  },
+  "sfxOptCacheClear": {
+    "message": "キャッシュを更新"
+  },
+  "sfxOptSession": {
+    "message": "セッション"
+  },
+  "sfxOptSticky": {
+    "message": "セッション中は同じプロキシ"
+  },
+  "sfxOptDebug": {
+    "message": "デバッグ"
+  },
+  "sfxOptCorrelationId": {
+    "message": "相関 ID"
+  },
+  "sfxOptTags": {
+    "message": "タグ"
+  },
+  "sfxOptDns": {
+    "message": "DNS の詳細"
+  },
+  "sfxOptSsl": {
+    "message": "SSL 証明書"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "開始方法"
+  },
+  "sfxOptTargetUrl": {
+    "message": "このページを指定"
+  },
+  "sfxOptBrowserLang": {
+    "message": "言語"
+  },
+  "sfxOptAutoClose": {
+    "message": "切断時に閉じる"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "セッションの長さ"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Unblock の制限時間"
+  },
+  "sfxOptBlockImages": {
+    "message": "画像をブロック"
+  },
+  "sfxOptBlockStyles": {
+    "message": "スタイルシートをブロック"
+  },
+  "sfxOptBlockFonts": {
+    "message": "フォントをブロック"
+  },
+  "sfxOptBlockMedia": {
+    "message": "動画と音声をブロック"
+  },
+  "sfxOptBlacklist": {
+    "message": "トラッカーをブロック"
+  },
+  "sfxOptBrowserCache": {
+    "message": "静的ファイルをキャッシュ"
+  },
+  "sfxOptRecord": {
+    "message": "セッションを記録"
+  },
+  "sfxOptMcp": {
+    "message": "MCP エンドポイント"
+  },
+  "sfxValAuto": {
+    "message": "自動"
+  },
+  "sfxValCleanHtml": {
+    "message": "整形済み HTML"
+  },
+  "sfxValComplete": {
+    "message": "読み込み完了"
+  },
+  "sfxValDomReady": {
+    "message": "DOM 準備完了"
+  },
+  "sfxValFullPage": {
+    "message": "ページ全体"
+  },
+  "sfxValElement": {
+    "message": "要素"
+  },
+  "sfxValLoadImages": {
+    "message": "画像を読み込む"
+  },
+  "sfxValDarkMode": {
+    "message": "ダークモード"
+  },
+  "sfxValBlockBanners": {
+    "message": "バナーを隠す"
+  },
+  "sfxValHighQuality": {
+    "message": "高画質"
+  },
+  "sfxValPrint": {
+    "message": "印刷スタイル"
+  },
+  "sfxValNoLinks": {
+    "message": "リンク"
+  },
+  "sfxValNoImages": {
+    "message": "画像"
+  },
+  "sfxValOnlyContent": {
+    "message": "本文以外すべて"
+  },
+  "sfxValModel": {
+    "message": "AI モデル"
+  },
+  "sfxValTemplate": {
+    "message": "テンプレート"
+  },
+  "sfxValConnect": {
+    "message": "ブラウザを開く"
+  },
+  "sfxValUnblock": {
+    "message": "先にブロック解除"
+  },
+  "sfxGroupRender": {
+    "message": "ブラウザでの描画"
+  },
+  "sfxGroupLocation": {
+    "message": "地域とフィンガープリント"
+  },
+  "sfxGroupRequest": {
+    "message": "リクエスト"
+  },
+  "sfxGroupOutput": {
+    "message": "出力"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI 抽出"
+  },
+  "sfxGroupCache": {
+    "message": "キャッシュとセッション"
+  },
+  "sfxGroupTracking": {
+    "message": "デバッグと追跡"
+  },
+  "sfxGroupFingerprint": {
+    "message": "フィンガープリントと言語"
+  },
+  "sfxGroupSession": {
+    "message": "セッション"
+  },
+  "sfxGroupBlocking": {
+    "message": "ブロックとキャッシュ"
+  },
+  "sfxGroupTools": {
+    "message": "デバッグと MCP"
+  },
+  "sfxWhyRender": {
+    "message": "JavaScript 描画が必要"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Unblocker が必要"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Markdown かテキスト出力のみ"
+  },
+  "sfxWhyCache": {
+    "message": "先にキャッシュをオン"
+  },
+  "sfxWhySession": {
+    "message": "先にセッションを指定"
+  },
+  "sfxWhySticky": {
+    "message": "Unblocker では常にオン"
+  },
+  "sfxWhyJson": {
+    "message": "JSON のステップ一覧ではないため除外"
+  },
+  "sfxWhyGeo": {
+    "message": "緯度,経度で入力。除外しました"
+  },
+  "sfxWhyBrandOs": {
+    "message": "このブラウザはその OS で動かないため除外"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge には Windows が必要なため除外"
+  },
+  "sfxHintHeaders": {
+    "message": "1 行に 1 つ（Name: value）。保存されません。"
+  },
+  "sfxHintScenario": {
+    "message": "JSON リスト：click、fill、wait、scroll、execute、wait_for_selector、wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "カンマ区切り"
+  },
+  "sfxHintLanguages": {
+    "message": "カンマ区切り、最大 3 つ"
+  },
+  "sfxHintUnblock": {
+    "message": "「先にブロック解除」はアンチボットの壁を通過済みのブラウザを返します"
+  },
+  "sfxValOff": {
+    "message": "オフ"
   }
 }

@@ -343,22 +343,7 @@ Rules.prototype.getCategoryLabel = function(category) {
  * @returns {string} Method label
  */
 Rules.prototype.getMethodLabel = function(method) {
-  const labelKey = {
-    url: 'detectionMethodUrl', header: 'detectionMethodHeaders', cookie: 'detectionMethodCookies',
-    content: 'detectionMethodContent', dom: 'detectionMethodDom', js_hooks: 'detectionMethodJsHooks',
-    window: 'detectionMethodWindow', payload: 'detectionMethodPayload'
-  };
-  const labelFallback = {
-    url: 'Url', header: 'Headers', cookie: 'Cookies', content: 'Content', dom: 'Dom',
-    js_hooks: 'JavaScript hooks', window: 'Window properties', payload: 'Payload'
-  };
-  const name = method?.toLowerCase();
-  const translated = (labelKey[name] && typeof I18n !== 'undefined') ? I18n.get(labelKey[name]) : null;
-  if (translated) return translated;
-  if (labelFallback[name]) return labelFallback[name];
-  // Unknown method: "some_method" -> "Some method"
-  const words = String(method || '').replace(/_/g, ' ').trim();
-  return words.charAt(0).toUpperCase() + words.slice(1);
+  return FormatUtils.methodLabel(method);
 };
 
 /**

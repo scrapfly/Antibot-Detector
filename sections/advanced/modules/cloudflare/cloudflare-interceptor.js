@@ -54,7 +54,7 @@ function cloudflareStartAnalysis(tabId, url) {
 
     const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            Logger.network('[Cloudflare-Analysis] Page loaded, waiting for all requests to complete...');
+            Logger.network('[Cloudflare-Analysis] Page loaded, waiting for all requests to complete');
 
             setTimeout(async () => {
                 Logger.network('[Cloudflare-Analysis] ========== FINALIZING RESULTS ==========');

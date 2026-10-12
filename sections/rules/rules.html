@@ -230,6 +230,21 @@
             </button>
           </div>
         </div>
+
+        <!-- Check against History: the rule as edited, over the evidence History saved -->
+        <div class="modal-card" id="ruleHistoryCheckCard">
+          <div class="modal-card-header">
+            <span class="card-icon icon-search" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <h3 data-i18n="ruleHistoryCheckTitle">Check against History</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="combinations-hint" data-i18n="ruleHistoryCheckHint">See on how many saved pages each pattern and combination matches. Unsaved edits count.</p>
+            <div id="ruleHistoryCheckResults" aria-live="polite"></div>
+            <button type="button" class="add-combination-btn rule-check-btn" id="ruleHistoryCheckBtn" data-i18n="ruleHistoryCheckRun">Check</button>
+          </div>
+        </div>
       </div>
 
       <div class="rule-modal-footer">
@@ -306,6 +321,18 @@
             <textarea id="methodDescriptionInput" class="method-description-input" rows="2" maxlength="200" dir="auto"
               placeholder="What this pattern means, e.g. Reads browser language preferences" data-i18n-placeholder="ruleDescriptionPlaceholder"></textarea>
             <p class="option-hint" data-i18n="ruleDescriptionHint">Shown in the detection details and in History when this pattern is found.</p>
+            <details class="rule-translations" id="methodDescriptionTranslations">
+              <summary>
+                <span data-i18n="ruleTranslationsTitle">Translations</span>
+                <span class="rule-translations-count" id="methodTranslationsCount"></span>
+              </summary>
+              <p class="option-hint" data-i18n="ruleTranslationsHint">Shown instead of the description when the extension is in that language. Empty: the description is shown.</p>
+              <div class="rule-translations-actions">
+                <button type="button" class="action-btn" id="methodTranslateAutoBtn" data-i18n="ruleTranslateAuto">Translate automatically</button>
+                <span class="rule-translations-status" id="methodTranslateStatus" aria-live="polite"></span>
+              </div>
+              <div class="rule-translations-fields" id="methodTranslationFields"></div>
+            </details>
           </div>
         </div>
 

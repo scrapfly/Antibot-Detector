@@ -270,7 +270,6 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         // For now, we'll directly execute the same logic that was in the AKAMAI_CAPTURE_COMPLETED handler
 
         // Get tab info
-        Logger.network('[AKAMAI-CAPTURE] Step 1: Getting tab info...');
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
             Logger.error('NETWORK', '[AKAMAI-CAPTURE] Tab not found or no URL');
@@ -299,7 +298,6 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         });
 
         // Create capture data with URL monitoring results
-        Logger.network('[AKAMAI-CAPTURE] Step 3: Creating capture data object...');
         const captureData = {
             type: 'akamai',
             // ABCK info - just true/false and level, NO cookie values
@@ -323,7 +321,6 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         });
 
         // Save to history using helper
-        Logger.network('[AKAMAI-CAPTURE] Step 4-6: Saving to history...');
         await saveToHistory(tabId, captureData, { type: 'akamai' });
         Logger.network('[AKAMAI-CAPTURE] Successfully saved capture to history');
 
@@ -360,7 +357,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         }
 
         // Notify popup to update UI with captured data (if open)
-        Logger.network('[AKAMAI-CAPTURE] Step 8: Notifying popup (if open)...');
+        Logger.debug('NETWORK', '[AKAMAI-CAPTURE] Step 8: Notifying popup (if open)');
         chrome.runtime.sendMessage({
             type: 'AKAMAI_CAPTURE_COMPLETED',
             captureData: {
@@ -373,7 +370,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
         });
 
         // Show success notification using helper
-        Logger.network('[AKAMAI-CAPTURE] Step 10: Showing success notification in page...');
+        Logger.debug('NETWORK', '[AKAMAI-CAPTURE] Step 10: Showing success notification in page');
         if (showNotification) {
             await showNotification(tabId, {
                 module: 'Akamai',
@@ -413,7 +410,6 @@ async function akamaiStartExtraction(tabId) {
         Logger.network('[AKAMAI-EXTRACT] Tab ID:', tabId);
 
         // Get current tab URL
-        Logger.network('[AKAMAI-EXTRACT] Step 1: Getting tab info...');
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
             Logger.error('NETWORK', '[AKAMAI-EXTRACT] Unable to get tab URL');
@@ -436,11 +432,11 @@ async function akamaiStartExtraction(tabId) {
         Logger.network('[AKAMAI-EXTRACT] All _abck cookies deleted');
 
         // Enable extraction mode in interceptor
-        Logger.network('[AKAMAI-EXTRACT] Step 3: Enabling extraction mode...');
+        Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step 3: Enabling extraction mode');
 
         // First, ensure the interceptor is set up
         if (!akamaiInterceptionListener) {
-            Logger.network('[AKAMAI-EXTRACT] Setting up Akamai interceptor...');
+            Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting up Akamai interceptor');
             setupAkamaiInterceptor();
         }
 
@@ -450,7 +446,7 @@ async function akamaiStartExtraction(tabId) {
             throw new Error('Capture state not initialized');
         }
 
-        Logger.network('[AKAMAI-EXTRACT] Setting extraction mode in capture state...');
+        Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting extraction mode in capture state');
         akamaiCaptureStateRef.set(tabId, {
             active: true,
             extractMode: true,
@@ -487,7 +483,6 @@ async function akamaiStartExtraction(tabId) {
         Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
 
         // Reload the page
-        Logger.network('[AKAMAI-EXTRACT] Step 4: Reloading page...');
         await chrome.tabs.reload(tabId);
         Logger.network('[AKAMAI-EXTRACT] Page reload initiated');
 
@@ -535,7 +530,7 @@ function setupAkamaiInterceptor() {
 
         // In extraction mode, process immediately without URL monitoring
         if (state.extractMode) {
-            Logger.network('[AKAMAI-INTERCEPT-EXTRACT] Processing in extraction mode...');
+            Logger.debug('NETWORK', '[AKAMAI-INTERCEPT-EXTRACT] Processing in extraction mode');
 
             // Initialize extraction data if not exists
             if (!state.extractedData) {
@@ -612,7 +607,7 @@ function setupAkamaiInterceptor() {
             let sensorData = null;
             let rawBody = null;
 
-            Logger.network('[AKAMAI-CAPTURE] Extracting request body...');
+            Logger.debug('NETWORK', '[AKAMAI-CAPTURE] Extracting request body');
             Logger.network('[AKAMAI-CAPTURE] RequestBody structure:', details.requestBody);
             Logger.network('[AKAMAI-CAPTURE] RequestBody keys:', Object.keys(details.requestBody));
 
@@ -630,7 +625,7 @@ function setupAkamaiInterceptor() {
             // Extract request body
             if (details.requestBody.raw && details.requestBody.raw[0]) {
                 // Binary data
-                Logger.network('[AKAMAI-CAPTURE] Processing raw body data...');
+                Logger.debug('NETWORK', '[AKAMAI-CAPTURE] Processing raw body data');
                 Logger.network('[AKAMAI-CAPTURE] Raw bytes available:', details.requestBody.raw[0].bytes?.length || 0);
                 const decoder = new TextDecoder('utf-8');
                 rawBody = decoder.decode(details.requestBody.raw[0].bytes);
@@ -645,7 +640,7 @@ function setupAkamaiInterceptor() {
                 }
             } else if (details.requestBody.formData) {
                 // Form data
-                Logger.network('[AKAMAI-CAPTURE] Processing form data...');
+                Logger.debug('NETWORK', '[AKAMAI-CAPTURE] Processing form data');
                 const formData = details.requestBody.formData;
                 Logger.network('[AKAMAI-CAPTURE] Form data keys:', Object.keys(formData));
                 if (formData.sensor_data) {
@@ -689,7 +684,7 @@ function setupAkamaiInterceptor() {
 
             // Handle extraction mode for any captured data
             if (state.extractMode && (sensorData || rawBody)) {
-                Logger.network('[AKAMAI-EXTRACT] Processing extracted data...');
+                Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Processing extracted data');
 
                 // Check if this is SBSD data
                 if (url.includes('.well-known/sbsd')) {
@@ -736,10 +731,10 @@ function setupAkamaiInterceptor() {
 
                 // Check if we have enough data to complete extraction
                 if (state.extractedData.sensorData) {
-                    Logger.network('[AKAMAI-EXTRACT] Have sensor_data, completing extraction...');
+                    Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Have sensor_data, completing extraction');
 
                     // Since we're in background context, handle the extraction directly
-                    Logger.network('[AKAMAI-EXTRACT] Handling extraction completion directly...');
+                    Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Handling extraction completion directly');
 
                     // Convert Set to Array for endpoints
                     const extractedDataToSend = {
@@ -800,7 +795,7 @@ function setupAkamaiInterceptor() {
                 }
 
                 // Normal capture mode - process as usual
-                Logger.network('[AKAMAI-CAPTURE] Processing capture completion directly...');
+                Logger.debug('NETWORK', '[AKAMAI-CAPTURE] Processing capture completion directly');
 
                 // Call the handler directly
                 handleAkamaiCaptureCompleted(details.tabId, {

@@ -21,14 +21,14 @@
 
 .rh-modal {
   --rh-border: var(--border);
-  --rh-border-hover: #5c5c5c;
-  --rh-card-bg: #323232;
-  --rh-card-hover: #383838;
-  --rh-field-bg: #262626;
-  --rh-code-bg: #1f1f1f;
-  --rh-text: #e0e0e0;
-  --rh-text-dim: #b3b3b3;
-  --rh-text-muted: #8f8f8f;
+  --rh-border-hover: var(--g-5c5c5c);
+  --rh-card-bg: var(--g-323232);
+  --rh-card-hover: var(--g-383838);
+  --rh-field-bg: var(--g-262626);
+  --rh-code-bg: var(--g-1f1f1f);
+  --rh-text: var(--g-e0e0e0);
+  --rh-text-dim: var(--g-b3b3b3);
+  --rh-text-muted: var(--g-8f8f8f);
   z-index: 1002;
   font-family: var(--font-sans);
 }
@@ -362,7 +362,7 @@
 
 .rh-row.is-active {
   background: var(--rh-card-hover);
-  border-color: #7a7a7a;
+  border-color: var(--g-7a7a7a);
 }
 
 .rh-row[aria-selected="true"] {
@@ -872,13 +872,13 @@
 .pt-note.tone-warning {
   border-color: rgba(245, 158, 11, 0.4);
   background: rgba(245, 158, 11, 0.08);
-  color: #fcd34d;
+  color: var(--p-fcd34d);
 }
 
 .pt-note.tone-danger {
   border-color: rgba(239, 68, 68, 0.4);
   background: rgba(239, 68, 68, 0.08);
-  color: #fca5a5;
+  color: var(--p-fca5a5);
 }
 
 .pt-link {

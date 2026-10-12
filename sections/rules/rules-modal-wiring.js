@@ -19,6 +19,12 @@ Rules.prototype.setupModalEventListeners = function() {
       backdrop.addEventListener('click', () => this.closeEditModal());
     }
 
+    // Check against History
+    const checkBtn = document.querySelector('#ruleHistoryCheckBtn');
+    if (checkBtn) {
+      checkBtn.addEventListener('click', () => this.runHistoryCheck());
+    }
+
     // Save button
     const saveBtn = document.querySelector('#saveRuleEdit');
     if (saveBtn) {
@@ -60,6 +66,13 @@ Rules.prototype.setupModalEventListeners = function() {
         }
       });
     }
+
+    // Description typed on a new pattern row: the same value Settings → Description edits
+    document.addEventListener('input', (event) => {
+      const input = event.target.closest?.('.method-description-inline');
+      const item = input?.closest('.method-item');
+      if (item) item.dataset.description = input.value.replace(/\s+/g, ' ').trim();
+    });
 
     // Method helper modal for all detection types (event delegation)
     document.addEventListener('click', (event) => {

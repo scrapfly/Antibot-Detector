@@ -14,7 +14,6 @@
  * - renderCaptureHistoryItems() - Optional: custom history item rendering
  */
 
-Logger.debug('UI', '[BaseAdvancedModule] Loading...');
 
 class BaseAdvancedModule {
     /** Display name map: moduleName → human-readable name for notifications */

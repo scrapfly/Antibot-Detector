@@ -8,6 +8,44 @@ class DetectorManager {
         this.categoryManager = categoryManager || new CategoryManager();
         this.detectors = {};
         this.initialized = false;
+        // Tags this instance's own saves, so a change from another context
+        // (Rules → Update in the worker, another popup) can be told apart
+        this.writerId = `dm-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+        this.onExternalChange = null;
+        this.changeListeners = [];
+        this.watchStorage();
+    }
+
+    /** Called after the rules change, here (a save) or elsewhere (a reload). */
+    addChangeListener(fn) {
+        if (typeof fn === 'function') this.changeListeners.push(fn);
+    }
+
+    notifyChange() {
+        for (const fn of this.changeListeners) {
+            try { fn(); } catch (error) { Logger.warn('DETECTOR', 'Rules change listener failed', error); }
+        }
+    }
+
+    /**
+     * Reload when another context saves scrapfly_detectors, so this copy's next
+     * save cannot revert that change. `onExternalChange` lets a view re-render.
+     */
+    watchStorage() {
+        if (typeof chrome === 'undefined' || !chrome.storage?.onChanged?.addListener) return;
+        chrome.storage.onChanged.addListener((changes, area) => {
+            if (area !== 'local' || !changes.scrapfly_detectors || !this.initialized) return;
+            const value = typeof StorageManager !== 'undefined'
+                ? StorageManager.parseStoredValue(changes.scrapfly_detectors.newValue, 'scrapfly_detectors')
+                : changes.scrapfly_detectors.newValue;
+            if (value && value.writer === this.writerId) return;
+            this.loadFromStorage()
+                .then(() => {
+                    this.notifyChange();
+                    if (typeof this.onExternalChange === 'function') this.onExternalChange();
+                })
+                .catch(error => Logger.warn('DETECTOR', 'Could not reload detectors after an outside change', error));
+        });
     }
 
     // Remove prefix, join with spaces, capitalize
@@ -492,7 +530,8 @@ class DetectorManager {
             // Use StorageManager for consistent save with metadata
             const success = await StorageManager.saveToStorage('scrapfly_detectors', {
                 detectors: cleanDetectors,
-                totalCount: this.getDetectorCount()
+                totalCount: this.getDetectorCount(),
+                writer: this.writerId
             }, {
                 wrapMetadata: true,
                 countProperty: null // totalCount already included in data
@@ -501,6 +540,7 @@ class DetectorManager {
             if (!success) {
                 throw new Error('StorageManager.saveToStorage returned false');
             }
+            this.notifyChange();
         } catch (error) {
             Logger.error('DETECTOR', 'Failed to save detectors to storage', error);
             throw error;

@@ -35,6 +35,19 @@ test('every detector requires an extension that understands its format (>= 2.8)'
   assert.ok(checked > 0);
 });
 
+// Hooks in Anti-bot and CAPTCHA rules are installed from 2.8.5; older builds
+// only hook Fingerprint rules and would silently drop those patterns.
+test('a non-Fingerprint detector with JavaScript hooks requires 2.8.5', () => {
+  for (const [category, entry] of Object.entries(index)) {
+    if (category === 'fingerprint') continue;
+    for (const id of entry.detectors || []) {
+      const detector = JSON.parse(fs.readFileSync(path.join(root, 'detectors', category, `${id}.json`), 'utf8'));
+      if (!(detector.detection?.js_hooks || []).length) continue;
+      assert.ok(atLeast(detector.minExtensionVersion, '2.8.5'), `${id}: uses js_hooks, needs minExtensionVersion >= 2.8.5`);
+    }
+  }
+});
+
 test('this build accepts every detector it ships', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8'));
   for (const [category, entry] of Object.entries(index)) {

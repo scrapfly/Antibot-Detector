@@ -27,7 +27,6 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
         }
 
         // Check for Akamai cookies to ensure Akamai is present
-        Logger.network('[Akamai] Checking for Akamai cookies before starting capture...');
         const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
 
         const abckCookie = cookies.find(c => c.name === '_abck');
@@ -63,7 +62,6 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
         });
 
         // Delete _abck cookie to force sensor_data regeneration
-        Logger.network('[Akamai] Deleting _abck cookie to force sensor_data regeneration...');
         try {
             await chrome.cookies.remove({
                 url: this.tabInfo.url,

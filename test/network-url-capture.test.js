@@ -11,9 +11,9 @@ const vm = require('node:vm');
 // the cap, low-value request types go before scripts and API calls.
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
-const ctx = vm.createContext({});
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl;', ctx);
-const { recordNetworkUrl } = ctx;
+const ctx = vm.createContext({ URL });
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -37,4 +37,17 @@ test('with only scripts left, the oldest goes first', () => {
   const list = [];
   for (let i = 0; i < 5; i++) recordNetworkUrl(list, req(`https://x.example/${i}.js`, 'script'), 3);
   assert.deepStrictEqual(list.map(r => r.url), ['https://x.example/2.js', 'https://x.example/3.js', 'https://x.example/4.js']);
+});
+
+test('a request from the site\'s own service worker goes to the tab scanning that origin', () => {
+  // Chrome reports requests a page's service worker makes for it with tabId -1
+  // (seen on a betting site whose PWA worker fetched the anti-bot scripts)
+  const sw = { tabId: -1, initiator: 'https://bets.example', url: 'https://bets.example/hd-api/external/verify' };
+  ctx.detectionStates = new Map([[7, { url: 'https://bets.example/en' }], [8, { url: 'https://other.example/' }]]);
+  assert.strictEqual(tabOfWorkerRequest(sw), 7);
+  assert.strictEqual(tabOfWorkerRequest({ ...sw, initiator: 'https://unknown.example' }), -1);
+  assert.strictEqual(tabOfWorkerRequest({ ...sw, initiator: undefined }), -1);
+  // Two tabs scanning the same origin: no guess
+  ctx.detectionStates.set(9, { url: 'https://bets.example/live' });
+  assert.strictEqual(tabOfWorkerRequest(sw), -1);
 });

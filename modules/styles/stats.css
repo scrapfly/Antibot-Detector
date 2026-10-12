@@ -38,8 +38,10 @@ body.stats-page :is(button, input, select, a, [tabindex]):focus-visible {
 .stats-export-btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; max-width: 100%; padding: 7px 12px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent-light); font-size: 12px; font-weight: 600; white-space: normal; text-align: center; }
 .stats-export-btn:hover { background: rgba(59,130,246,.12); }
 .stats-export-btn svg { width: 16px; height: 16px; flex: 0 0 16px; }
-.stats-section-nav { display: flex; flex-wrap: wrap; gap: 6px; max-width: 1280px; margin-inline: auto; padding: 0 24px 14px; }
-.stats-section-btn { flex: 1 1 150px; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 9px 14px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--text-secondary); font-size: 13px; font-weight: 600; text-align: center; white-space: normal; }
+/* Nine tabs: one row that scrolls sideways instead of wrapping */
+.stats-section-nav { display: flex; flex-wrap: nowrap; gap: 6px; max-width: 1280px; margin-inline: auto; padding: 0 24px 14px; overflow-x: auto; scrollbar-width: thin; }
+.stats-section-btn[hidden] { display: none; }
+.stats-section-btn { flex: 1 0 auto; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 9px 14px; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--text-secondary); font-size: 13px; font-weight: 600; text-align: center; white-space: normal; }
 .stats-section-btn svg { width: 17px; height: 17px; flex-shrink: 0; }
 .stats-section-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
 .stats-section-btn.active { background: rgba(59,130,246,.12); color: var(--accent-light); border-color: var(--accent); }
@@ -64,10 +66,20 @@ body.stats-page :is(button, input, select, a, [tabindex]):focus-visible {
 .stats-card-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
 .stats-card-meta { color: var(--text-secondary); font-size: 12px; }
 .stats-card-note { margin: 14px 0 0; color: var(--text-secondary); font-size: 12px; }
-.stats-insights { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-block: 18px; }
+.stats-insights { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 12px; margin-block: 18px; }
 .stats-insight { min-width: 0; padding: 14px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; }
 .stats-insight label, .stats-insight > span, .stats-insight-label { display: block; color: var(--text-secondary); font-size: 12px; }
 .stats-insight strong { display: block; margin-block-start: 5px; font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.stats-insight strong.stats-insight-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+/* Signals: the pattern's description first, the raw pattern below */
+.stats-signal { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.stats-signal-desc { color: var(--text-primary); }
+.stats-signal-raw { color: var(--text-secondary); font-family: var(--font-mono); font-size: 11px; overflow-wrap: anywhere; }
+.stats-signal-raw.is-main { color: var(--text-primary); font-size: 12px; }
+/* Domains: protections that appeared or disappeared between two visits */
+.stats-change { display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.stats-change-added { color: var(--success); }
+.stats-change-removed { color: var(--danger, #ef4444); }
 
 /* Responsive SVG viewBoxes preserve chart proportions and ranking auto-height. */
 .stats-chart { min-width: 0; max-width: 100%; }
@@ -158,7 +170,7 @@ button.stats-heatmap-cell { width: 14px; height: 14px; min-width: 0; padding: 0;
 @media (max-width: 760px) {
   .stats-header-inner { padding: 16px; gap: 10px; }
   .stats-section-nav { padding: 0 16px 12px; gap: 5px; }
-  .stats-section-btn { flex-basis: 100px; padding: 8px; font-size: 12px; }
+  .stats-section-btn { padding: 8px 10px; font-size: 12px; white-space: nowrap; }
   .stats-main { padding: 18px 16px 8px; }
   .stats-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
   .stats-kpi { padding: 14px; }

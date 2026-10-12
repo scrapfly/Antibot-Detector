@@ -28,7 +28,9 @@
         "detect-azurefrontdoor",
         "detect-yundun",
         "detect-radware",
-        "detect-amazon"
+        "detect-amazon",
+        "detect-cloudflare-waitingroom",
+        "detect-hunt"
     ]
 },
 "captcha": {
@@ -49,7 +51,10 @@
         "detect-dingxiang",
         "detect-capy",
         "detect-shumei",
-        "detect-mtcaptcha"
+        "detect-mtcaptcha",
+        "detect-binance-captcha",
+        "detect-prosopo",
+        "detect-basilisk"
     ]
 },
 "fingerprint": {

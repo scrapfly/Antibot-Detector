@@ -104,9 +104,6 @@
   "noDetectionsFound": {
     "message": "कोई जांच नहीं मिली"
   },
-  "analyzingPage": {
-    "message": "पृष्ठ का विश्लेषण किया जा रहा है"
-  },
   "detectionScanningTitle": {
     "message": "इस पृष्ठ की जाँच जारी है"
   },
@@ -300,7 +297,7 @@
     "message": "डीबग मोड"
   },
   "settingsCardDebugDesc": {
-    "message": "सर्विस वर्कर कंसोल में हर स्कैन किए गए पेज की एक पढ़ने योग्य रिपोर्ट"
+    "message": "हर स्कैन किए गए पेज के लिए एक पढ़ने योग्य रिपोर्ट एक्सटेंशन के कंसोल में लिखता है।"
   },
   "settingsRowLogCollector": {
     "message": "लॉग कलेक्टर"
@@ -398,14 +395,8 @@
   "advancedEmptyCapturesHint": {
     "message": "पता लगाई गई प्रणालियों से डेटा कैप्चर करने के लिए टूल टैब का उपयोग करें"
   },
-  "advancedCapturesStoredNote": {
-    "message": "कैप्चर 30 मिनट तक सहेजे जाते हैं"
-  },
   "advancedNoResultsTitle": {
     "message": "कोई कैप्चर नहीं मिला"
-  },
-  "advancedNoResultsHint": {
-    "message": "अपने फ़िल्टर या खोज क्वेरी को समायोजित करने का प्रयास करें"
   },
   "advancedBtnResetFilters": {
     "message": "सभी फ़िल्टर रीसेट करें"
@@ -991,9 +982,6 @@
   "failedDeleteDetector": {
     "message": "डिटेक्टर हटाने में विफल"
   },
-  "detectorNotFoundFmt": {
-    "message": "डिटेक्टर नहीं मिला: {0}"
-  },
   "failedViewCaptureDetails": {
     "message": "कैप्चर विवरण देखने में विफल"
   },
@@ -1390,12 +1378,6 @@
   "detectionStatDifficulty": {
     "message": "कठिनाई"
   },
-  "detectionStatCacheScope": {
-    "message": "कैश स्कोप"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "कैश समाप्ति"
-  },
   "detectionSearchPlaceholder": {
     "message": "डिटेक्शन खोजें..."
   },
@@ -1621,29 +1603,14 @@
   "advancedToolsSubtitle": {
     "message": "टूल खोलने के लिए सुरक्षा प्रणाली चुनें।"
   },
-  "advancedToolsStepSelect": {
-    "message": "डिटेक्शन चुनें"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "एक डिटेक्शन चुनें..."
-  },
   "advancedToolsLoadTools": {
     "message": "टूल खोलें"
-  },
-  "advancedToolsClearAll": {
-    "message": "सभी साफ़ करें"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "सभी टूल्स साफ़ करें"
   },
   "advancedToolsLearnMore": {
     "message": "उन्नत टूल्स के बारे में जानें"
   },
   "advancedToolsChange": {
     "message": "बदलें"
-  },
-  "advancedToolsDetectionName": {
-    "message": "डिटेक्शन का नाम"
   },
   "settingsLanguageTitle": {
     "message": "भाषा"
@@ -1680,9 +1647,6 @@
   },
   "rulesMoreActions": {
     "message": "और कार्रवाइयाँ"
-  },
-  "advancedToolsNoDetections": {
-    "message": "इस पृष्ठ पर कोई समर्थित पहचान नहीं है"
   },
   "advancedToolsEmptyTitle": {
     "message": "कोई टूल उपलब्ध नहीं"
@@ -2388,9 +2352,6 @@
   },
   "mhWindowLimit2": {
     "message": "Symbol नाम वाली प्रॉपर्टी को पथ के रूप में नहीं लिखा जा सकता।"
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "हुक केवल फ़िंगरप्रिंट नियम उपयोग करते हैं: एंटी-बॉट और Captcha नियम उन्हें अनदेखा करते हैं।"
   },
   "mhJsHooksIntro": {
     "message": "रिकॉर्ड करता है कि पेज कब कोई ब्राउज़र API कॉल करता है, जैसे `HTMLCanvasElement.prototype.toDataURL`, जो फ़िंगरप्रिंटिंग का संकेत है।"
@@ -3247,9 +3208,6 @@
   "advGeetestNoVersion": {
     "message": "कोई Geetest संस्करण नहीं मिला"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "पार्सिंग कोड क्लिपबोर्ड पर कॉपी हो गया!"
-  },
   "advGeetestTabNotFound": {
     "message": "टैब नहीं मिला"
   },
@@ -3276,9 +3234,6 @@
   },
   "advPanelCheckConsole": {
     "message": "विवरण के लिए कंसोल देखें"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "कृपया पहले एक डिटेक्शन चुनें"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "कैप्चर लोड करने में त्रुटि: {0}"
@@ -3526,9 +3481,6 @@
   "clipboardDifficultyFmt": {
     "message": "कठिनाई: {0}"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "कैश समाप्ति: {0}"
-  },
   "clipboardCopyFailed": {
     "message": "क्लिपबोर्ड पर कॉपी करने में विफल"
   },
@@ -3685,9 +3637,6 @@
   "combinationAutoTip": {
     "message": "स्वतः: इसे चालू करने वाले पैटर्न में सबसे ऊँचा कॉन्फ़िडेंस"
   },
-  "combinationSetsScore": {
-    "message": "पहचान का स्कोर तय करता है"
-  },
   "combinationInvalidNoPattern": {
     "message": "कम से कम एक ऐसा पैटर्न जोड़ें जो मिलना चाहिए।"
   },
@@ -3805,6 +3754,9 @@
   "combinationAddPattern": {
     "message": "पैटर्न जोड़ें"
   },
+  "combinationAddDescription": {
+    "message": "विवरण जोड़ें"
+  },
   "combinationAnyPattern": {
     "message": "कोई भी पैटर्न"
   },
@@ -3861,12 +3813,6 @@
   },
   "detectionTipDifficulty": {
     "message": "पहचानी गई सुरक्षा प्रणालियों को पार करने की अनुमानित कठिनाई।"
-  },
-  "detectionTipCacheScope": {
-    "message": "कौन से पेज कैश में सहेजे गए इन पहचान परिणामों का दोबारा उपयोग कर सकते हैं।"
-  },
-  "detectionTipCacheExpiration": {
-    "message": "कैश में सहेजे गए इन पहचान परिणामों की समय-सीमा समाप्त होने तक बचा समय।"
   },
   "tipCachedAt": {
     "message": "सहेजा गया"
@@ -4405,5 +4351,575 @@
   "scrapflyExportNoPage": {
     "message": "Scrapfly से स्क्रैप करने के लिए कोई वेब पेज खोलें",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} कैप्चर"
+  },
+  "statsFirstSeen": {
+    "message": "इस अवधि में नया"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "इस अवधि में पहली बार सहेजे गए {0} सुरक्षा और {1} डोमेन।"
+  },
+  "statsFirstSeenAllTip": {
+    "message": "नया देखने के लिए 7, 30 या 90 दिन चुनें।"
+  },
+  "statsMostProtectedDomain": {
+    "message": "सबसे अधिक सुरक्षित डोमेन"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{1} विज़िट में {0} अलग सुरक्षा।"
+  },
+  "statsFoundTogether": {
+    "message": "साथ में मिली सुरक्षाएँ"
+  },
+  "statsMethods": {
+    "message": "पहचान के तरीके"
+  },
+  "statsMatchesUnit": {
+    "message": "मिलान"
+  },
+  "statsMethodsByCategory": {
+    "message": "श्रेणी के अनुसार तरीके"
+  },
+  "statsWeakEvidence": {
+    "message": "सबसे कमज़ोर सबूत"
+  },
+  "statsSignalColumn": {
+    "message": "संकेत"
+  },
+  "statsMethodColumn": {
+    "message": "तरीका"
+  },
+  "statsTopSignals": {
+    "message": "सबसे ज़्यादा मिले संकेत"
+  },
+  "statsDecidedSingle": {
+    "message": "एकल पैटर्न"
+  },
+  "statsDecidedCombination": {
+    "message": "संयोजन"
+  },
+  "statsDecidedBy": {
+    "message": "पहचान कैसे तय हुई"
+  },
+  "statsCombinationGain": {
+    "message": "निर्णय के अनुसार विश्वास"
+  },
+  "statsCombinationColumn": {
+    "message": "संयोजन"
+  },
+  "statsTopCombinations": {
+    "message": "सक्रिय हुए संयोजन"
+  },
+  "statsNoCombinations": {
+    "message": "इस अवधि में कोई पहचान संयोजन से तय नहीं हुई।"
+  },
+  "statsRulesMostActive": {
+    "message": "सबसे सक्रिय नियम"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} पैटर्न"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "तरीके के अनुसार पैटर्न"
+  },
+  "statsRulesOfficial": {
+    "message": "आधिकारिक"
+  },
+  "statsRulesCustom": {
+    "message": "कस्टम"
+  },
+  "statsRuleColumn": {
+    "message": "नियम"
+  },
+  "statsRuleKindColumn": {
+    "message": "प्रकार"
+  },
+  "statsPatternsUnit": {
+    "message": "पैटर्न"
+  },
+  "statsRulesNeverMatched": {
+    "message": "इस अवधि में नहीं मिला"
+  },
+  "statsRulesAllMatched": {
+    "message": "हर सक्षम नियम ने इस अवधि में कुछ पाया।"
+  },
+  "statsMissingColumn": {
+    "message": "बिना विवरण"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "बिना विवरण वाले पैटर्न"
+  },
+  "statsRulesAllDescribed": {
+    "message": "हर पैटर्न का विवरण है।"
+  },
+  "statsRuleVersionColumn": {
+    "message": "नियम संस्करण"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "आवश्यक एक्सटेंशन"
+  },
+  "statsRulesWaiting": {
+    "message": "नए एक्सटेंशन की प्रतीक्षा"
+  },
+  "statsToolsByVendor": {
+    "message": "विक्रेता के अनुसार कैप्चर"
+  },
+  "statsToolsCapture": {
+    "message": "कैप्चर"
+  },
+  "statsToolsByTool": {
+    "message": "सबसे ज़्यादा उपयोग किए गए टूल"
+  },
+  "statsToolsOverTime": {
+    "message": "समय के साथ कैप्चर"
+  },
+  "statsChangeColumn": {
+    "message": "बदलाव"
+  },
+  "statsDateColumn": {
+    "message": "तारीख"
+  },
+  "statsDomainChanges": {
+    "message": "सुरक्षा में बदलाव"
+  },
+  "statsNoChanges": {
+    "message": "इस अवधि में किसी डोमेन ने सहेजी गई विज़िट के बीच अपनी सुरक्षा नहीं बदली।"
+  },
+  "statsNothingNew": {
+    "message": "कुछ नया नहीं: हर सुरक्षा इस अवधि से पहले ही इतिहास में थी।"
+  },
+  "statsSectionSignals": {
+    "message": "संकेत"
+  },
+  "statsSectionCombinations": {
+    "message": "संयोजन"
+  },
+  "statsSectionRules": {
+    "message": "नियम"
+  },
+  "statsSectionTools": {
+    "message": "टूल"
+  },
+  "statsDomainChangesHint": {
+    "message": "वे डोमेन जिनकी पहचानी गई सुरक्षा दो सहेजी गई विज़िट के बीच बदली।"
+  },
+  "statsFirstSeenHint": {
+    "message": "इस अवधि में पहली बार सहेजी गई सुरक्षाएँ और डोमेन।"
+  },
+  "statsSignalsNote": {
+    "message": "हर सहेजी गई पहचान ने किस तरह का सबूत मिलाया: कुकी और हेडर नाम, URL, पेज तत्व, स्क्रिप्ट और JavaScript हुक।"
+  },
+  "statsWeakEvidenceHint": {
+    "message": "वे सुरक्षाएँ जिनके मिले पैटर्न का औसत विश्वास सबसे कम है। उनके नियमों को मज़बूत पैटर्न की ज़रूरत हो सकती है।"
+  },
+  "statsCombinationsNote": {
+    "message": "संयोजन किसी सुरक्षा को तभी पहचानता है जब कई पैटर्न साथ में मिलें।"
+  },
+  "statsRulesNote": {
+    "message": "आपकी नियम लाइब्रेरी, इस अवधि में इतिहास में मिली चीज़ों के साथ तुलना।"
+  },
+  "statsRulesTotal": {
+    "message": "नियम"
+  },
+  "statsRulesModified": {
+    "message": "संपादित आधिकारिक"
+  },
+  "statsRulesDisabled": {
+    "message": "अक्षम"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "सक्षम नियम जिन्होंने इस अवधि में सहेजे गए पेजों पर कुछ नहीं पाया।"
+  },
+  "statsRulesMissingHint": {
+    "message": "विवरण पहचान विवरण, इतिहास और संयोजनों में दिखते हैं। उन्हें नियम संपादक में जोड़ें।"
+  },
+  "statsToolsNote": {
+    "message": "इस डिवाइस पर सहेजे गए उन्नत कैप्चर और टूल परिणाम।"
+  },
+  "statsCapturesUnit": {
+    "message": "कैप्चर"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0}% निश्चित"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "संयोजन"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "कैश"
+  },
+  "detectionTipCache": {
+    "message": "कौन से पेज इन कैश किए गए परिणामों का दोबारा उपयोग करते हैं, और कितने समय तक।"
+  },
+  "tipCacheExpires": {
+    "message": "समाप्ति"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "इतिहास से जाँचें"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "देखें कि हर पैटर्न और संयोजन कितने सहेजे गए पेजों पर मेल खाता है। बिना सहेजे बदलाव भी गिने जाते हैं।"
+  },
+  "ruleHistoryCheckRun": {
+    "message": "जाँचें"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} सहेजे गए पेज · यह नियम {1} पर मिला"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{1} में से {0} पेज"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} अन्य पेज"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "इतिहास खाली है: पहले कुछ पेज देखें।"
+  },
+  "ruleHistoryCheckNote": {
+    "message": "अनुमान: इतिहास मिले हुए मान रखता है, पूरे पेज नहीं।"
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "{0} पेजों पर सक्रिय"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "जाँचने के लिए पैटर्न जोड़ें।"
+  },
+  "settingsThemeTitle": {
+    "message": "थीम"
+  },
+  "settingsThemeDesc": {
+    "message": "डार्क, या Scrapfly रंगों में लाइट। सिस्टम आपके ब्राउज़र का पालन करता है।"
+  },
+  "themeDark": {
+    "message": "डार्क"
+  },
+  "themeLight": {
+    "message": "लाइट"
+  },
+  "themeSystem": {
+    "message": "सिस्टम"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "कंसोल खोलें"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "chrome://extensions में यह एक्सटेंशन खोलता है: लॉग देखने के लिए \"service worker\" पर क्लिक करें।"
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "लॉग को कंसोल के बजाय यहाँ रखें, ताकि उन्हें JSON या टेक्स्ट के रूप में निर्यात कर सकें"
+  },
+  "ruleTranslationsTitle": {
+    "message": "अनुवाद"
+  },
+  "ruleTranslationsHint": {
+    "message": "जब एक्सटेंशन उस भाषा में हो, तो विवरण की जगह दिखाया जाता है। खाली: विवरण दिखाया जाता है।"
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{1} में से {0}"
+  },
+  "ruleTranslateAuto": {
+    "message": "अपने आप अनुवाद करें"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "अपने आप अनुवाद के लिए Chrome 138 या नया चाहिए।"
+  },
+  "ruleTranslateNeedsText": {
+    "message": "पहले विवरण लिखें।"
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "अनुवाद हो रहा है: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "{0} भाषाएँ भरी गईं। सहेजने से पहले जाँच लें।"
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "{0} भरी गईं; {1} का यहाँ अनुवाद नहीं हो सका।"
+  },
+  "sfxOptRenderingWait": {
+    "message": "लोड के बाद प्रतीक्षा"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "एलिमेंट की प्रतीक्षा"
+  },
+  "sfxOptRenderingStage": {
+    "message": "पेज तैयार होने का चरण"
+  },
+  "sfxOptAutoScroll": {
+    "message": "नीचे तक स्क्रॉल करें"
+  },
+  "sfxOptJs": {
+    "message": "JavaScript चलाएँ"
+  },
+  "sfxOptJsScenario": {
+    "message": "ब्राउज़र कार्रवाइयाँ"
+  },
+  "sfxOptScreenshot": {
+    "message": "स्क्रीनशॉट"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "एलिमेंट"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "स्क्रीनशॉट विकल्प"
+  },
+  "sfxOptLang": {
+    "message": "भाषाएँ"
+  },
+  "sfxOptOs": {
+    "message": "ऑपरेटिंग सिस्टम"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "ब्राउज़र"
+  },
+  "sfxOptGeolocation": {
+    "message": "जियोलोकेशन"
+  },
+  "sfxOptHeaders": {
+    "message": "हेडर"
+  },
+  "sfxOptTimeout": {
+    "message": "टाइमआउट"
+  },
+  "sfxOptRetry": {
+    "message": "त्रुटि पर दोबारा प्रयास"
+  },
+  "sfxOptCostBudget": {
+    "message": "क्रेडिट सीमा"
+  },
+  "sfxOptFormatOptions": {
+    "message": "हटाएँ"
+  },
+  "sfxOptProxified": {
+    "message": "साइट का जवाब लौटाएँ"
+  },
+  "sfxOptExtraction": {
+    "message": "डेटा निकालें"
+  },
+  "sfxOptExtractionModel": {
+    "message": "मॉडल"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "प्रॉम्प्ट"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "सहेजा गया टेम्पलेट"
+  },
+  "sfxOptCache": {
+    "message": "कैश"
+  },
+  "sfxOptCacheTtl": {
+    "message": "इतने समय रखें"
+  },
+  "sfxOptCacheClear": {
+    "message": "कैश ताज़ा करें"
+  },
+  "sfxOptSession": {
+    "message": "सेशन"
+  },
+  "sfxOptSticky": {
+    "message": "पूरे सेशन में वही प्रॉक्सी"
+  },
+  "sfxOptDebug": {
+    "message": "डीबग"
+  },
+  "sfxOptCorrelationId": {
+    "message": "कोरिलेशन ID"
+  },
+  "sfxOptTags": {
+    "message": "टैग"
+  },
+  "sfxOptDns": {
+    "message": "DNS विवरण"
+  },
+  "sfxOptSsl": {
+    "message": "SSL प्रमाणपत्र"
+  },
+  "sfxOptWebhook": {
+    "message": "वेबहुक"
+  },
+  "sfxOptMode": {
+    "message": "शुरुआत"
+  },
+  "sfxOptTargetUrl": {
+    "message": "यह पेज बताएँ"
+  },
+  "sfxOptBrowserLang": {
+    "message": "भाषा"
+  },
+  "sfxOptAutoClose": {
+    "message": "डिस्कनेक्ट होने पर बंद करें"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "सेशन की अवधि"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "अनब्लॉक की समय सीमा"
+  },
+  "sfxOptBlockImages": {
+    "message": "इमेज ब्लॉक करें"
+  },
+  "sfxOptBlockStyles": {
+    "message": "स्टाइलशीट ब्लॉक करें"
+  },
+  "sfxOptBlockFonts": {
+    "message": "फ़ॉन्ट ब्लॉक करें"
+  },
+  "sfxOptBlockMedia": {
+    "message": "वीडियो और ऑडियो ब्लॉक करें"
+  },
+  "sfxOptBlacklist": {
+    "message": "ट्रैकर ब्लॉक करें"
+  },
+  "sfxOptBrowserCache": {
+    "message": "स्थिर फ़ाइलें कैश करें"
+  },
+  "sfxOptRecord": {
+    "message": "सेशन रिकॉर्ड करें"
+  },
+  "sfxOptMcp": {
+    "message": "MCP एंडपॉइंट"
+  },
+  "sfxValAuto": {
+    "message": "स्वचालित"
+  },
+  "sfxValCleanHtml": {
+    "message": "साफ़ HTML"
+  },
+  "sfxValComplete": {
+    "message": "पूरा लोड"
+  },
+  "sfxValDomReady": {
+    "message": "DOM तैयार"
+  },
+  "sfxValFullPage": {
+    "message": "पूरा पेज"
+  },
+  "sfxValElement": {
+    "message": "एलिमेंट"
+  },
+  "sfxValLoadImages": {
+    "message": "इमेज लोड करें"
+  },
+  "sfxValDarkMode": {
+    "message": "डार्क मोड"
+  },
+  "sfxValBlockBanners": {
+    "message": "बैनर छिपाएँ"
+  },
+  "sfxValHighQuality": {
+    "message": "उच्च गुणवत्ता"
+  },
+  "sfxValPrint": {
+    "message": "प्रिंट स्टाइल"
+  },
+  "sfxValNoLinks": {
+    "message": "लिंक"
+  },
+  "sfxValNoImages": {
+    "message": "इमेज"
+  },
+  "sfxValOnlyContent": {
+    "message": "मुख्य सामग्री के अलावा सब"
+  },
+  "sfxValModel": {
+    "message": "AI मॉडल"
+  },
+  "sfxValTemplate": {
+    "message": "टेम्पलेट"
+  },
+  "sfxValConnect": {
+    "message": "ब्राउज़र खोलें"
+  },
+  "sfxValUnblock": {
+    "message": "पहले अनब्लॉक करें"
+  },
+  "sfxGroupRender": {
+    "message": "ब्राउज़र रेंडरिंग"
+  },
+  "sfxGroupLocation": {
+    "message": "स्थान और फ़िंगरप्रिंट"
+  },
+  "sfxGroupRequest": {
+    "message": "अनुरोध"
+  },
+  "sfxGroupOutput": {
+    "message": "आउटपुट"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI से निकालना"
+  },
+  "sfxGroupCache": {
+    "message": "कैश और सेशन"
+  },
+  "sfxGroupTracking": {
+    "message": "डीबग और ट्रैकिंग"
+  },
+  "sfxGroupFingerprint": {
+    "message": "फ़िंगरप्रिंट और भाषा"
+  },
+  "sfxGroupSession": {
+    "message": "सेशन"
+  },
+  "sfxGroupBlocking": {
+    "message": "ब्लॉकिंग और कैश"
+  },
+  "sfxGroupTools": {
+    "message": "डीबग और MCP"
+  },
+  "sfxWhyRender": {
+    "message": "JavaScript रेंडर चालू होना चाहिए"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Unblocker चालू होना चाहिए"
+  },
+  "sfxWhyMarkdown": {
+    "message": "केवल Markdown या टेक्स्ट आउटपुट"
+  },
+  "sfxWhyCache": {
+    "message": "पहले कैश चालू करें"
+  },
+  "sfxWhySession": {
+    "message": "पहले सेशन सेट करें"
+  },
+  "sfxWhySticky": {
+    "message": "Unblocker के साथ हमेशा चालू"
+  },
+  "sfxWhyJson": {
+    "message": "JSON स्टेप सूची नहीं है: छोड़ा गया"
+  },
+  "sfxWhyGeo": {
+    "message": "अक्षांश,देशांतर लिखें: छोड़ा गया"
+  },
+  "sfxWhyBrandOs": {
+    "message": "यह ब्राउज़र उस सिस्टम पर नहीं चलता: छोड़ा गया"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge के लिए Windows चाहिए: छोड़ा गया"
+  },
+  "sfxHintHeaders": {
+    "message": "हर लाइन में एक: Name: value. सहेजा नहीं जाता।"
+  },
+  "sfxHintScenario": {
+    "message": "JSON सूची: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "कॉमा से अलग"
+  },
+  "sfxHintLanguages": {
+    "message": "कॉमा से अलग, अधिकतम 3"
+  },
+  "sfxHintUnblock": {
+    "message": "“पहले अनब्लॉक करें” ऐसा ब्राउज़र देता है जो एंटी-बॉट दीवार पार कर चुका है"
+  },
+  "sfxValOff": {
+    "message": "बंद"
   }
 }

@@ -1,0 +1,121 @@
+{
+  "id": "detect-hunt",
+  "name": "Hunt",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "High",
+  "lastUpdated": "2026-10-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://docs.capmonster.cloud/docs/captchas/hunt-task/",
+  "icon": "custom.png",
+  "description": "Hunt anti-bot used on betting platforms: a fingerprint script and verify call under /hd-api/, then puzzle, click or checkbox captchas when it blocks",
+  "detection": {
+    "url": [
+      {
+        "id": "hunt-api-loader",
+        "confidence": 60,
+        "description": "Hunt loader script (hd-api/external/apps/<hash>/api.js) on the site's own host",
+        "text": "^https?://[^/?#]+/hd-api/external/apps/[0-9A-Za-z_-]+/api\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "hunt-fingerprint-script",
+        "confidence": 45,
+        "description": "Hunt fingerprint script (hd-api/external/assets/hdf.js) on the site's own host",
+        "text": "^https?://[^/?#]+/hd-api/external/assets/hdf\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "hunt-verify",
+        "confidence": 50,
+        "description": "Hunt verify request that sends the browser check (hd-api/external/verify)",
+        "text": "^https?://[^/?#]+/hd-api/external/verify(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "hunt-api-reference",
+        "confidence": 15,
+        "description": "Script reference to the Hunt hd-api path",
+        "text": "/hd-api/external/apps/",
+        "textRegex": false,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "hunt-loader-fingerprint",
+      "name": "Hunt loader with its fingerprint script",
+      "when": {
+        "all": [
+          {
+            "pattern": "hunt-api-loader"
+          },
+          {
+            "pattern": "hunt-fingerprint-script"
+          }
+        ]
+      },
+      "confidence": 90
+    },
+    {
+      "id": "hunt-loader-verify",
+      "name": "Hunt loader with a verify request",
+      "when": {
+        "all": [
+          {
+            "pattern": "hunt-api-loader"
+          },
+          {
+            "pattern": "hunt-verify"
+          }
+        ]
+      },
+      "confidence": 90
+    },
+    {
+      "id": "hunt-fingerprint-verify",
+      "name": "Fingerprint script with a verify request",
+      "when": {
+        "all": [
+          {
+            "pattern": "hunt-fingerprint-script"
+          },
+          {
+            "pattern": "hunt-verify"
+          }
+        ]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "hunt-loader-reference",
+      "name": "Hunt loader requested and referenced in page scripts",
+      "when": {
+        "all": [
+          {
+            "pattern": "hunt-api-loader"
+          },
+          {
+            "pattern": "hunt-api-reference"
+          }
+        ]
+      },
+      "confidence": 75
+    }
+  ]
+}

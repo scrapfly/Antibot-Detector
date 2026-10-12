@@ -21,7 +21,7 @@
   min-height: 0;
   height: 36px;
   padding: 0 10px 0 9px;
-  background: #3d3d3d;
+  background: var(--g-3d3d3d);
   border-color: var(--settings-border);
   border-radius: 7px;
   font-size: 10.5px;

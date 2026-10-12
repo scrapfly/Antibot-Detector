@@ -106,9 +106,6 @@
   "noDetectionsFound": {
     "message": "No detections found"
   },
-  "analyzingPage": {
-    "message": "Analyzing Page"
-  },
   "detectionScanningTitle": {
     "message": "Scanning this page"
   },
@@ -302,7 +299,7 @@
     "message": "Debug Mode"
   },
   "settingsCardDebugDesc": {
-    "message": "One readable report per scanned page in the service worker console"
+    "message": "Writes one readable report per scanned page to the extension's console."
   },
   "settingsRowLogCollector": {
     "message": "Log Collector"
@@ -400,14 +397,8 @@
   "advancedEmptyCapturesHint": {
     "message": "Use the Tools tab to capture data from detected systems"
   },
-  "advancedCapturesStoredNote": {
-    "message": "Captures are stored for 30 minutes"
-  },
   "advancedNoResultsTitle": {
     "message": "No captures found"
-  },
-  "advancedNoResultsHint": {
-    "message": "Try adjusting your filters or search query"
   },
   "advancedBtnResetFilters": {
     "message": "Reset All Filters"
@@ -995,9 +986,6 @@
   "failedDeleteDetector": {
     "message": "Failed to delete detector"
   },
-  "detectorNotFoundFmt": {
-    "message": "Detector not found: {0}"
-  },
   "failedViewCaptureDetails": {
     "message": "Failed to view capture details"
   },
@@ -1394,12 +1382,6 @@
   "detectionStatDifficulty": {
     "message": "DIFFICULTY"
   },
-  "detectionStatCacheScope": {
-    "message": "CACHE SCOPE"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "CACHE EXPIRATION"
-  },
   "detectionSearchPlaceholder": {
     "message": "Search detections..."
   },
@@ -1625,29 +1607,14 @@
   "advancedToolsSubtitle": {
     "message": "Choose a protection to open its tools."
   },
-  "advancedToolsStepSelect": {
-    "message": "Select Detection"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "Choose a detection..."
-  },
   "advancedToolsLoadTools": {
     "message": "Open tools"
-  },
-  "advancedToolsClearAll": {
-    "message": "Clear All"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "Clear All Tools"
   },
   "advancedToolsLearnMore": {
     "message": "Learn about Advanced Tools"
   },
   "advancedToolsChange": {
     "message": "Change"
-  },
-  "advancedToolsDetectionName": {
-    "message": "Detection Name"
   },
   "settingsLanguageTitle": {
     "message": "Language"
@@ -1684,9 +1651,6 @@
   },
   "rulesMoreActions": {
     "message": "More actions"
-  },
-  "advancedToolsNoDetections": {
-    "message": "No supported detections on this page"
   },
   "advancedToolsEmptyTitle": {
     "message": "No tools available"
@@ -2392,9 +2356,6 @@
   },
   "mhWindowLimit2": {
     "message": "Properties named with a Symbol cannot be written as a path."
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them."
   },
   "mhJsHooksIntro": {
     "message": "Records when the page calls a browser API, such as `HTMLCanvasElement.prototype.toDataURL`, a sign of fingerprinting."
@@ -3420,9 +3381,6 @@
   "advGeetestNoVersion": {
     "message": "No Geetest version detected"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "Parsing code copied to clipboard!"
-  },
   "advGeetestTabNotFound": {
     "message": "Tab not found",
     "description": "Error: the browser tab no longer exists"
@@ -3455,9 +3413,6 @@
   },
   "advPanelCheckConsole": {
     "message": "Check console for details"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "Please select a detection first"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Error loading captures: {0}",
@@ -3769,10 +3724,6 @@
     "message": "Difficulty: {0}",
     "description": "Line of a copied text report. {0} = Low / Medium / High (already translated)"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "Cache Expiration: {0}",
-    "description": "Line of a copied text report. {0} = remaining time such as \"3h 5m\""
-  },
   "clipboardCopyFailed": {
     "message": "Failed to copy to clipboard"
   },
@@ -3962,9 +3913,6 @@
   "combinationAutoTip": {
     "message": "Auto: the highest confidence of the patterns that made it fire"
   },
-  "combinationSetsScore": {
-    "message": "Sets the detection score"
-  },
   "combinationInvalidNoPattern": {
     "message": "Add at least one pattern that must be found."
   },
@@ -4082,6 +4030,9 @@
   "combinationAddPattern": {
     "message": "Add pattern"
   },
+  "combinationAddDescription": {
+    "message": "Add a description"
+  },
   "combinationAnyPattern": {
     "message": "any pattern"
   },
@@ -4138,12 +4089,6 @@
   },
   "detectionTipDifficulty": {
     "message": "Estimated difficulty of bypassing the detected protections."
-  },
-  "detectionTipCacheScope": {
-    "message": "Which pages can reuse these cached detection results."
-  },
-  "detectionTipCacheExpiration": {
-    "message": "Time remaining before these cached detection results expire."
   },
   "tipCachedAt": {
     "message": "Saved"
@@ -4682,5 +4627,575 @@
   "scrapflyExportNoPage": {
     "message": "Open a web page to scrape it with Scrapfly",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} captures"
+  },
+  "statsFirstSeen": {
+    "message": "New this period"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "{0} protections and {1} domains saved for the first time in this range."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Choose 7, 30 or 90 days to see what is new."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Most protected domain"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{0} distinct protections over {1} visits."
+  },
+  "statsFoundTogether": {
+    "message": "Protections found together"
+  },
+  "statsMethods": {
+    "message": "Detection methods"
+  },
+  "statsMatchesUnit": {
+    "message": "matches"
+  },
+  "statsMethodsByCategory": {
+    "message": "Methods by category"
+  },
+  "statsWeakEvidence": {
+    "message": "Weakest evidence"
+  },
+  "statsSignalColumn": {
+    "message": "Signal"
+  },
+  "statsMethodColumn": {
+    "message": "Method"
+  },
+  "statsTopSignals": {
+    "message": "Most matched signals"
+  },
+  "statsDecidedSingle": {
+    "message": "Single pattern"
+  },
+  "statsDecidedCombination": {
+    "message": "Combination"
+  },
+  "statsDecidedBy": {
+    "message": "How detections were decided"
+  },
+  "statsCombinationGain": {
+    "message": "Confidence by decision"
+  },
+  "statsCombinationColumn": {
+    "message": "Combination"
+  },
+  "statsTopCombinations": {
+    "message": "Combinations that fired"
+  },
+  "statsNoCombinations": {
+    "message": "No detection in this range was decided by a combination."
+  },
+  "statsRulesMostActive": {
+    "message": "Most active rules"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} patterns"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Patterns by method"
+  },
+  "statsRulesOfficial": {
+    "message": "Official"
+  },
+  "statsRulesCustom": {
+    "message": "Custom"
+  },
+  "statsRuleColumn": {
+    "message": "Rule"
+  },
+  "statsRuleKindColumn": {
+    "message": "Type"
+  },
+  "statsPatternsUnit": {
+    "message": "patterns"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Not found in this range"
+  },
+  "statsRulesAllMatched": {
+    "message": "Every enabled rule found something in this range."
+  },
+  "statsMissingColumn": {
+    "message": "Without description"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Patterns without a description"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Every pattern has a description."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Rule version"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Needs extension"
+  },
+  "statsRulesWaiting": {
+    "message": "Waiting for a newer extension"
+  },
+  "statsToolsByVendor": {
+    "message": "Captures by vendor"
+  },
+  "statsToolsCapture": {
+    "message": "Capture"
+  },
+  "statsToolsByTool": {
+    "message": "Most used tools"
+  },
+  "statsToolsOverTime": {
+    "message": "Captures over time"
+  },
+  "statsChangeColumn": {
+    "message": "Change"
+  },
+  "statsDateColumn": {
+    "message": "Date"
+  },
+  "statsDomainChanges": {
+    "message": "Protection changes"
+  },
+  "statsNoChanges": {
+    "message": "No domain changed its protections between saved visits in this range."
+  },
+  "statsNothingNew": {
+    "message": "Nothing new: every protection here was already in History before this range."
+  },
+  "statsSectionSignals": {
+    "message": "Signals"
+  },
+  "statsSectionCombinations": {
+    "message": "Combinations"
+  },
+  "statsSectionRules": {
+    "message": "Rules"
+  },
+  "statsSectionTools": {
+    "message": "Tools"
+  },
+  "statsDomainChangesHint": {
+    "message": "Domains whose detected protections changed between two saved visits."
+  },
+  "statsFirstSeenHint": {
+    "message": "Protections and domains saved for the first time in this range."
+  },
+  "statsSignalsNote": {
+    "message": "The kind of evidence each saved detection matched: cookie and header names, URLs, page elements, scripts and JavaScript hooks."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Protections whose matched patterns have the lowest average confidence. Their rules may need a stronger pattern."
+  },
+  "statsCombinationsNote": {
+    "message": "A combination detects a protection only when several patterns are found together."
+  },
+  "statsRulesNote": {
+    "message": "Your rule library, compared with what History found in this range."
+  },
+  "statsRulesTotal": {
+    "message": "Rules"
+  },
+  "statsRulesModified": {
+    "message": "Edited official"
+  },
+  "statsRulesDisabled": {
+    "message": "Disabled"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Enabled rules that found nothing on the pages saved in this range."
+  },
+  "statsRulesMissingHint": {
+    "message": "Descriptions show in detection details, History and combinations. Add them in the rule editor."
+  },
+  "statsToolsNote": {
+    "message": "Advanced captures and tool results saved on this device."
+  },
+  "statsCapturesUnit": {
+    "message": "captures"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0}% sure"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Combination"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "CACHE"
+  },
+  "detectionTipCache": {
+    "message": "Which pages reuse these cached results, and for how long."
+  },
+  "tipCacheExpires": {
+    "message": "Expires"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Check against History"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "See on how many saved pages each pattern and combination matches. Unsaved edits count."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Check"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} saved pages · this rule was found on {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0} of {1} pages"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} other pages"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "History is empty: browse some pages first."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "An estimate: History keeps the matched values, not whole pages."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "fires on {0} pages"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Add patterns to check them."
+  },
+  "settingsThemeTitle": {
+    "message": "Theme"
+  },
+  "settingsThemeDesc": {
+    "message": "Dark, or light in Scrapfly's colours. System follows your browser."
+  },
+  "themeDark": {
+    "message": "Dark"
+  },
+  "themeLight": {
+    "message": "Light"
+  },
+  "themeSystem": {
+    "message": "System"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Open console"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Opens this extension in chrome://extensions: click \"service worker\" to see the logs."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Keep the logs here instead of the console, to export them as JSON or text"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Translations"
+  },
+  "ruleTranslationsHint": {
+    "message": "Shown instead of the description when the extension is in that language. Empty: the description is shown."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} of {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Translate automatically"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Automatic translation needs Chrome 138 or newer."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Write the description first."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Translating: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Filled {0} languages. Check them before saving."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Filled {0}; {1} could not be translated here."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Wait after load"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Wait for element"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Page ready at"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Scroll to the bottom"
+  },
+  "sfxOptJs": {
+    "message": "Run JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Browser actions"
+  },
+  "sfxOptScreenshot": {
+    "message": "Screenshot"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Element"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Screenshot options"
+  },
+  "sfxOptLang": {
+    "message": "Languages"
+  },
+  "sfxOptOs": {
+    "message": "Operating system"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Browser"
+  },
+  "sfxOptGeolocation": {
+    "message": "Geolocation"
+  },
+  "sfxOptHeaders": {
+    "message": "Headers"
+  },
+  "sfxOptTimeout": {
+    "message": "Timeout"
+  },
+  "sfxOptRetry": {
+    "message": "Retry on errors"
+  },
+  "sfxOptCostBudget": {
+    "message": "Credit limit"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Leave out"
+  },
+  "sfxOptProxified": {
+    "message": "Return the site's response"
+  },
+  "sfxOptExtraction": {
+    "message": "Extract data"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Model"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Prompt"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Saved template"
+  },
+  "sfxOptCache": {
+    "message": "Cache"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Keep for"
+  },
+  "sfxOptCacheClear": {
+    "message": "Refresh the cache"
+  },
+  "sfxOptSession": {
+    "message": "Session"
+  },
+  "sfxOptSticky": {
+    "message": "Same proxy for the session"
+  },
+  "sfxOptDebug": {
+    "message": "Debug"
+  },
+  "sfxOptCorrelationId": {
+    "message": "Correlation ID"
+  },
+  "sfxOptTags": {
+    "message": "Tags"
+  },
+  "sfxOptDns": {
+    "message": "DNS details"
+  },
+  "sfxOptSsl": {
+    "message": "SSL certificate"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Start"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Declare this page"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Language"
+  },
+  "sfxOptAutoClose": {
+    "message": "Close on disconnect"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Session length"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Unblock time limit"
+  },
+  "sfxOptBlockImages": {
+    "message": "Block images"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Block stylesheets"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Block fonts"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Block video and audio"
+  },
+  "sfxOptBlacklist": {
+    "message": "Block trackers"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Cache static files"
+  },
+  "sfxOptRecord": {
+    "message": "Record the session"
+  },
+  "sfxOptMcp": {
+    "message": "MCP endpoint"
+  },
+  "sfxValAuto": {
+    "message": "Automatic"
+  },
+  "sfxValCleanHtml": {
+    "message": "Clean HTML"
+  },
+  "sfxValComplete": {
+    "message": "Full load"
+  },
+  "sfxValDomReady": {
+    "message": "DOM ready"
+  },
+  "sfxValFullPage": {
+    "message": "Full page"
+  },
+  "sfxValElement": {
+    "message": "Element"
+  },
+  "sfxValLoadImages": {
+    "message": "Load images"
+  },
+  "sfxValDarkMode": {
+    "message": "Dark mode"
+  },
+  "sfxValBlockBanners": {
+    "message": "Hide banners"
+  },
+  "sfxValHighQuality": {
+    "message": "High quality"
+  },
+  "sfxValPrint": {
+    "message": "Print style"
+  },
+  "sfxValNoLinks": {
+    "message": "Links"
+  },
+  "sfxValNoImages": {
+    "message": "Images"
+  },
+  "sfxValOnlyContent": {
+    "message": "All but main content"
+  },
+  "sfxValModel": {
+    "message": "AI model"
+  },
+  "sfxValTemplate": {
+    "message": "Template"
+  },
+  "sfxValConnect": {
+    "message": "Open a browser"
+  },
+  "sfxValUnblock": {
+    "message": "Unblock first"
+  },
+  "sfxGroupRender": {
+    "message": "Browser rendering"
+  },
+  "sfxGroupLocation": {
+    "message": "Location and fingerprint"
+  },
+  "sfxGroupRequest": {
+    "message": "Request"
+  },
+  "sfxGroupOutput": {
+    "message": "Output"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI extraction"
+  },
+  "sfxGroupCache": {
+    "message": "Cache and session"
+  },
+  "sfxGroupTracking": {
+    "message": "Debug and tracking"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Fingerprint and language"
+  },
+  "sfxGroupSession": {
+    "message": "Session"
+  },
+  "sfxGroupBlocking": {
+    "message": "Blocking and cache"
+  },
+  "sfxGroupTools": {
+    "message": "Debug and MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Needs Render JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Needs the Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Markdown or Text output only"
+  },
+  "sfxWhyCache": {
+    "message": "Turn on Cache first"
+  },
+  "sfxWhySession": {
+    "message": "Set a session first"
+  },
+  "sfxWhySticky": {
+    "message": "Always on with the Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "Not a JSON list of steps: left out"
+  },
+  "sfxWhyGeo": {
+    "message": "Use latitude,longitude: left out"
+  },
+  "sfxWhyBrandOs": {
+    "message": "This browser doesn't run on that system: left out"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge needs Windows: left out"
+  },
+  "sfxHintHeaders": {
+    "message": "One per line: Name: value. Not saved."
+  },
+  "sfxHintScenario": {
+    "message": "JSON list: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Comma-separated"
+  },
+  "sfxHintLanguages": {
+    "message": "Comma-separated, up to 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Unblock first returns a browser already past the anti-bot wall"
+  },
+  "sfxValOff": {
+    "message": "Off"
   }
 }

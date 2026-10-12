@@ -1603,7 +1603,6 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
         Logger.network('[AKAMAI-EXTRACT] ========== STARTING EXTRACTION ==========');
         NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiExtractingSensor', 'Extracting sensor information…'));
         try {
-            Logger.network('[AKAMAI-EXTRACT] Step 1: Getting current tab...');
 
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -1615,7 +1614,6 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
             Logger.network('[AKAMAI-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Delete Akamai-related cookies to force regeneration
-            Logger.network('[AKAMAI-EXTRACT] Step 2: Deleting Akamai cookies...');
             const cookiesToDelete = ['_abck', 'sbsd', 'sbsd_o', 'ak_bmsc', 'bm_sz', 'bm_sv', 'bm_mi'];
             let deletedCount = 0;
 
@@ -1634,11 +1632,10 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
             Logger.network(`[AKAMAI-EXTRACT] Deleted ${deletedCount}/${cookiesToDelete.length} cookies`);
 
             // Store extraction mode flag
-            Logger.network('[AKAMAI-EXTRACT] Step 3: Setting up extraction mode...');
+            Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step 3: Setting up extraction mode');
             this.isExtracting = true;
 
             // Set up listener for extraction result
-            Logger.network('[AKAMAI-EXTRACT] Step 4: Adding listener for extraction result...');
             const extractionListener = (message) => {
                 Logger.network('[AKAMAI-EXTRACT] Received message:', message.type);
                 if (message.type === 'AKAMAI_EXTRACTION_RESULT') {
@@ -1646,11 +1643,11 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
                     Logger.network('[AKAMAI-EXTRACT] Extracted data:', message.extractedData);
 
                     // Display the sensor data
-                    Logger.network('[AKAMAI-EXTRACT] Step: Displaying sensor data modal...');
+                    Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step: Displaying sensor data modal');
                     this.displaySensorDataModal(message.extractedData);
 
                     // Clean up
-                    Logger.network('[AKAMAI-EXTRACT] Step: Cleaning up...');
+                    Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step: Cleaning up');
                     this.isExtracting = false;
                     chrome.runtime.onMessage.removeListener(extractionListener);
                     Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETE ==========');
@@ -1661,7 +1658,6 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
             Logger.network('[AKAMAI-EXTRACT] Listener added');
 
             // Send message to start extraction mode
-            Logger.network('[AKAMAI-EXTRACT] Step 5: Sending message to background to start extraction...');
             const response = await chrome.runtime.sendMessage({
                 type: 'AKAMAI_EXTRACT_SENSOR',
                 tabId: tab.id
@@ -1673,10 +1669,9 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
                 // No notice on the page itself: the popup already says it is
                 // extracting, and the result opens here
 
-                Logger.network('[AKAMAI-EXTRACT] Step 7: Reloading tab to capture sensor data...');
                 await chrome.tabs.reload(tab.id);
                 Logger.network('[AKAMAI-EXTRACT] Tab reload initiated');
-                Logger.network('[AKAMAI-EXTRACT] Waiting for sensor data capture...');
+                Logger.network('[AKAMAI-EXTRACT] Waiting for sensor data capture');
             } else {
                 Logger.error('NETWORK', '[AKAMAI-EXTRACT] Failed response from background:', response);
                 throw new Error('Failed to start extraction mode');

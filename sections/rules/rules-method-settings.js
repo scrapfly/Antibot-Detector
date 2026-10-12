@@ -352,6 +352,7 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     // Description shown in detection details and History
     const descriptionInput = document.querySelector('#methodDescriptionInput');
     if (descriptionInput) descriptionInput.value = methodItem.dataset.description || '';
+    if (typeof this.renderDescriptionTranslations === 'function') this.renderDescriptionTranslations(methodItem);
 
     // Load current settings from data attributes
     const confidence = methodItem.dataset.confidence || '100';
@@ -672,6 +673,12 @@ Rules.prototype.saveMethodSettings = function() {
       const typed = descriptionInput.value.replace(/\s+/g, ' ').trim();
       const stored = this.currentMethodItem.dataset.description || '';
       if (typed !== stored.replace(/\s+/g, ' ').trim()) this.currentMethodItem.dataset.description = typed;
+      const inline = this.currentMethodItem.querySelector('.method-description-inline');
+      if (inline) inline.value = this.currentMethodItem.dataset.description || '';
+    }
+    if (typeof this.collectDescriptionTranslations === 'function') {
+      const translations = this.collectDescriptionTranslations();
+      this.currentMethodItem.dataset.descriptionI18n = Object.keys(translations).length ? JSON.stringify(translations) : '';
     }
 
     // Get values from modal

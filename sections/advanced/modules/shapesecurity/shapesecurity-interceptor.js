@@ -3,7 +3,6 @@
  * Handles Shape Security request interception and data extraction in service worker context
  */
 
-Logger.network('[ShapeSecurityInterceptor] Loading...');
 
 // Shape Security capture state (initialized via shapeSecurityInitializeInterceptor)
 var shapesecurityCaptureStateRef = shapesecurityCaptureStateRef || null;
@@ -126,13 +125,13 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                                     // V2: Needs both cookie AND headers
                                     // unknown: Version detection still running, don't auto-stop yet
                                     if (captureState.version === 'v1') {
-                                        Logger.network('[ShapeSecurity] V1 detected - cookie captured, auto-stopping...');
+                                        Logger.network('[ShapeSecurity] V1 detected - cookie captured, auto-stopping');
                                         autoStopCapture(tabId, 'complete');
                                     } else if (captureState.version === 'v2' && captureState.headers.length > 0) {
-                                        Logger.network('[ShapeSecurity] V2 detected - both cookie and headers captured! Auto-stopping...');
+                                        Logger.network('[ShapeSecurity] V2 detected - both cookie and headers captured! Auto-stopping');
                                         autoStopCapture(tabId, 'complete');
                                     } else if (captureState.version === 'unknown') {
-                                        Logger.network('[ShapeSecurity] Cookie captured, but version still being detected...');
+                                        Logger.network('[ShapeSecurity] Cookie captured, but version still being detected');
                                     }
                                 }
                             }
@@ -168,7 +167,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                             // V1: Headers not required, won't auto-stop here
                             // V2: Needs both cookie AND headers
                             if (captureState.version === 'v2' && captureState.cookie && captureState.headers.length > 0) {
-                                Logger.network('[ShapeSecurity] V2 - both cookie and headers captured! Auto-stopping...');
+                                Logger.network('[ShapeSecurity] V2 - both cookie and headers captured! Auto-stopping');
                                 autoStopCapture(tabId, 'complete');
                             } else if (captureState.version === 'v1') {
                                 Logger.network('[ShapeSecurity] V1 - headers captured but not required for V1');
@@ -220,7 +219,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Set up listener for page reload to show loading warning first
     const navigationListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            Logger.network('[ShapeSecurity] Page navigation started, showing loading warning...');
+            Logger.network('[ShapeSecurity] Page navigation started, showing loading warning');
 
             // Show loading warning immediately
             if (showNotification) {
@@ -240,7 +239,6 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Set up listener for when page is fully loaded
     const loadCompleteListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            Logger.network('[ShapeSecurity] Page fully loaded, detecting version...');
 
             // Check window.__xr_bmobdb directly in page context
             setTimeout(async () => {
@@ -267,11 +265,11 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
 
                         // Auto-stop based on version
                         if (version === 'v1' && captureState.cookie) {
-                            Logger.network('[ShapeSecurity] V1 + cookie captured! Auto-stopping...');
+                            Logger.network('[ShapeSecurity] V1 + cookie captured! Auto-stopping');
                             autoStopCapture(tabId, 'complete');
                             return;
                         } else if (version === 'v2' && captureState.cookie && captureState.headers.length > 0) {
-                            Logger.network('[ShapeSecurity] V2 + both captured! Auto-stopping...');
+                            Logger.network('[ShapeSecurity] V2 + both captured! Auto-stopping');
                             autoStopCapture(tabId, 'complete');
                             return;
                         }
@@ -603,7 +601,7 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
     // Set up webNavigation listener to inject script after page reload
     const navigationListener = async (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
-            Logger.network('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately...');
+            Logger.network('[ShapeSecurity-EXTRACT] Page loaded, injecting script immediately');
 
             // No notice is drawn on the page; the popup shows the progress
             // No need to show it again here
@@ -642,7 +640,7 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
 
                     // Accumulate scripts (keep best result)
                     if (scripts.length > 0) {
-                        Logger.network('[ShapeSecurity-EXTRACT] Found scripts! Saving to capturedScripts...');
+                        Logger.debug('NETWORK', '[ShapeSecurity-EXTRACT] Found scripts! Saving to capturedScripts');
                         capturedScripts = scripts;
                     }
 
@@ -659,13 +657,12 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
 
             // Also inject after 3 seconds (catch late-loading scripts)
             setTimeout(() => {
-                Logger.network('[ShapeSecurity-EXTRACT] Secondary check after 3 seconds...');
+                Logger.debug('NETWORK', '[ShapeSecurity-EXTRACT] Secondary check after 3 seconds');
                 collectScripts();
             }, 3000);
 
             // After 5 seconds, finalize results
             setTimeout(async () => {
-                Logger.network('[ShapeSecurity-EXTRACT] Finalizing results...');
 
                 const finalScripts = capturedScripts || [];
                 Logger.network('[ShapeSecurity-EXTRACT] Final collected scripts:', finalScripts);

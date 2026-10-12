@@ -1,0 +1,106 @@
+{
+  "id": "detect-prosopo",
+  "name": "Prosopo Procaptcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-12",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://prosopo.io/",
+  "icon": "prosopo_official.png",
+  "description": "Privacy-first Procaptcha widget from Prosopo, with image and proof-of-work challenges served by its provider network",
+  "detection": {
+    "url": [
+      {
+        "id": "prosopo-bundle",
+        "confidence": 60,
+        "description": "Official Procaptcha bundle from the Prosopo script host",
+        "text": "^https://js\\.prosopo\\.io/js/procaptcha\\.bundle\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "prosopo-provider-captcha",
+        "confidence": 55,
+        "description": "Request to a Prosopo provider node (captcha, proof of work or bot check)",
+        "text": "^https://[a-z0-9-]+\\.prosopo\\.io/v1/prosopo/provider/client/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "prosopo-site-key-reference",
+        "confidence": 10,
+        "description": "Script reference to the Prosopo-Site-Key request header",
+        "text": "Prosopo-Site-Key",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true,
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "prosopo-widget",
+        "selector": ".procaptcha[data-sitekey]",
+        "confidence": 40,
+        "description": "Procaptcha widget container with a site key",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "prosopo-bundle-widget",
+      "name": "Official bundle and configured widget",
+      "when": {
+        "all": [
+          {
+            "pattern": "prosopo-bundle"
+          },
+          {
+            "pattern": "prosopo-widget"
+          }
+        ]
+      },
+      "confidence": 85
+    },
+    {
+      "id": "prosopo-bundle-provider",
+      "name": "Official bundle requesting a captcha",
+      "when": {
+        "all": [
+          {
+            "pattern": "prosopo-bundle"
+          },
+          {
+            "pattern": "prosopo-provider-captcha"
+          }
+        ]
+      },
+      "confidence": 90
+    },
+    {
+      "id": "prosopo-widget-provider",
+      "name": "Configured widget with a provider captcha request",
+      "when": {
+        "all": [
+          {
+            "pattern": "prosopo-widget"
+          },
+          {
+            "pattern": "prosopo-provider-captcha"
+          }
+        ]
+      },
+      "confidence": 80
+    }
+  ]
+}

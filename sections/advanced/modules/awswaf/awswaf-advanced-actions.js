@@ -86,7 +86,7 @@ AwsWafAdvanced.prototype.analyzeScripts = async function() {
                             Logger.network('[AwsWaf] Deleted cookie:', cookie.name, 'domain:', cookie.domain);
                         }
 
-                        Logger.network('[AwsWaf] Cookie deletion complete, reloading page...');
+                        Logger.network('[AwsWaf] Cookie deletion complete, reloading page');
                     } catch (cookieError) {
                         Logger.error('NETWORK', '[AwsWaf] Failed to delete cookies:', cookieError);
                     }

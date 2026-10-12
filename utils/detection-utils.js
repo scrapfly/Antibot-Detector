@@ -237,7 +237,9 @@ class DetectionUtils {
     });
 
     const isHighTierName = (d) => {
-      const name = (d?.detector?.name || d?.detector || d?.name || '').toLowerCase();
+      // detector may be an object without a name (only an id), or a plain string
+      const nested = d?.detector && typeof d.detector === 'object' ? d.detector.name : d?.detector;
+      const name = String((typeof nested === 'string' && nested) || d?.name || '').toLowerCase();
       return name.includes('shape security') ||
         name.includes('shapesecurity') ||
         name.includes('hcaptcha') ||

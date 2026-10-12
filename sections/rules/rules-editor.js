@@ -122,12 +122,10 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
               </svg>
               ${this.renderMethodChip(methodType, 'method-title')}
-              ${methodType === 'js_hooks' ? `<span class="method-scope-tag" role="img" title="${rulesEditorText('mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.')}" aria-label="${rulesEditorText('mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.')}">!</span>` : ''}
             </div>
             <span class="method-pattern-count">${patternCountText}</span>
             ${methodHelper}
           </div>
-          ${methodType === 'js_hooks' ? `<p class="method-scope-note">${rulesEditorText('mhJsHooksOnlyFingerprint', 'Only Fingerprint rules use hooks: anti-bot and CAPTCHA rules ignore them.')}</p>` : ''}
           <div class="method-search-row">
             <input
               type="text"
@@ -258,7 +256,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 data-payload-url-regex="${payloadUrlRegex}"
                 data-payload-url-case-sensitive="${payloadUrlCaseSensitive}"
                 data-payload-methods="${FormatUtils.escapeAttr(payloadMethods)}"
-                data-description="${FormatUtils.escapeAttr(method.description || '')}">
+                data-description="${FormatUtils.escapeAttr(method.description || '')}"
+                data-description-i18n="${FormatUtils.escapeAttr(method.descriptionI18n && typeof method.descriptionI18n === 'object' ? JSON.stringify(method.descriptionI18n) : '')}">
                 <div class="method-item-content">
                   <div class="method-item-inputs">
                     <div class="input-with-indicators">
@@ -757,7 +756,8 @@ Rules.prototype.addNewMethodItem = function(button) {
         data-payload-url-regex="false"
         data-payload-url-case-sensitive="false"
         data-payload-methods=""
-        data-description="">
+        data-description=""
+        data-description-i18n="">
         <div class="method-item-content">
           <div class="method-item-inputs">
             <div class="input-with-indicators">
@@ -807,6 +807,9 @@ Rules.prototype.addNewMethodItem = function(button) {
               ${rowTexts.addValue}
             </button>
             ` : ''}
+            <input type="text" class="method-description-inline" maxlength="200" dir="auto"
+              placeholder="${rulesEditorText('ruleDescriptionPlaceholder', 'What this pattern means, e.g. Reads browser language preferences')}"
+              aria-label="${rulesEditorText('ruleDescriptionTitle', 'Description')}">
           </div>
         </div>
       </div>
@@ -865,7 +868,8 @@ Rules.prototype.addNewMethodSection = function() {
             data-value-regex="false"
             data-value-wholeword="false"
             data-value-case="false"
-            data-description="">
+            data-description=""
+            data-description-i18n="">
             <div class="method-item-content">
               <div class="method-item-inputs">
                 <div class="input-with-indicators">
@@ -994,7 +998,7 @@ const RULE_FIELDS_FROM_FORM = {
 function mergeRuleWithForm(original, fromForm, methodType, formHasDescription) {
   if (!original) return fromForm;
   const managed = new Set([...RULE_FIELDS_FROM_FORM.common, ...(RULE_FIELDS_FROM_FORM[methodType] || [])]);
-  if (formHasDescription) managed.add('description');
+  if (formHasDescription) { managed.add('description'); managed.add('descriptionI18n'); }
   const merged = {};
   for (const [key, val] of Object.entries(original)) {
     if (!managed.has(key)) merged[key] = val;
@@ -1125,6 +1129,13 @@ Rules.prototype._collectDetectionFromForm = function() {
           if (describedOnRow) {
             if (item.dataset.description) methodData.description = item.dataset.description;
             else delete methodData.description;
+            // Its translations (Settings → Description → Translations)
+            let translations = null;
+            try { translations = item.dataset.descriptionI18n ? JSON.parse(item.dataset.descriptionI18n) : null; } catch (_) { translations = null; }
+            const kept = translations && typeof translations === 'object'
+              ? Object.fromEntries(Object.entries(translations).filter(([, v]) => typeof v === 'string' && v.trim()).map(([k, v]) => [k, v.trim()]))
+              : {};
+            if (methodData.description && Object.keys(kept).length) methodData.descriptionI18n = kept;
           }
 
           const original = storedRule(methodType, item.dataset.patternId);

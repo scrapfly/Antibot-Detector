@@ -61,7 +61,7 @@ test('the tree keeps every row; the card lists only what was found, flat and in 
   // Shown: the three signals found together; the alternative that was not needed is not
   assert.deepStrictEqual(CC.foundRows(card.tree).found.map(i => i.id), ['sdk', 'widget', 'render']);
   const html = CC.renderHtml([card], { methodLabel: label });
-  const order = ['SDK, widget and an API', 'Sets the detection score', 'Found together on this page:', 'Official SDK script',
+  const order = ['SDK, widget and an API', 'Found together on this page:', 'Official SDK script',
     'Widget with a site key', 'Render API'].map(text => html.indexOf(text));
   assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), order.join(','));
   assert.ok(!html.includes('x.execute'), 'an unneeded alternative is not listed');
@@ -72,7 +72,8 @@ test('HTML: full name, a found mark with a label, method and raw pattern in the 
   const result = scored();
   const html = CC.renderHtml(CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: 90 }), { methodLabel: label });
   assert.match(html, /<h5 class="match-combo-name" dir="auto">SDK, widget and an API<\/h5>/);
-  assert.match(html, /★<\/span> Sets the detection score/);
+  assert.ok(!html.includes('Sets the detection score'), 'no score label: the highlighted card says it');
+  assert.match(html, /class="match-combo sets-score"/);
   assert.match(html, /role="img" aria-label="Found"><svg/);
   assert.ok(!html.includes('aria-label="Not found"'));
   assert.match(html, /data-tip="URL: \^https:\/\/cdn\\\.x\/sdk\\\.js" data-tip-detail="https:\/\/cdn\.x\/sdk\.js\?v=2"/);

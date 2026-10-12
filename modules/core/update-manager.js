@@ -60,20 +60,6 @@ class UpdateManager {
     }
 
     /**
-     * Get incompatible updates count
-     * @returns {Promise<number>}
-     */
-    static async getIncompatibleUpdatesCount() {
-        try {
-            const updates = await this.getIncompatibleUpdates();
-            return updates.length;
-        } catch (error) {
-            Logger.warn('STORAGE', '[UpdateManager] Failed to count incompatible updates:', error);
-            return 0;
-        }
-    }
-
-    /**
      * Check for detector updates in the latest GitHub release
      * @param {boolean} force - Force check regardless of interval
      * @returns {Promise<{available: boolean, updates: Array, incompatibleUpdates: Array, incompatibleCount: number,
@@ -86,7 +72,6 @@ class UpdateManager {
             release: null, error: null, errorCode: null, retryAt: null, ...fields
         });
         try {
-            Logger.storage('UpdateManager: Checking for updates...');
 
             // Check if auto-update is enabled (unless forced)
             if (!force) {
@@ -98,7 +83,7 @@ class UpdateManager {
 
                 // Check interval
                 const lastCheck = settings.updates?.lastCheckTimestamp || 0;
-                const intervalMs = (settings.updates?.checkIntervalHours || Constants.DEFAULT_CACHE_EXPIRY_HOURS) * 3600000;
+                const intervalMs = (settings.updates?.checkIntervalHours || Constants.DEFAULT_UPDATE_CHECK_INTERVAL_HOURS) * 3600000;
                 const now = Date.now();
 
                 if (now - lastCheck < intervalMs) {
@@ -139,6 +124,8 @@ class UpdateManager {
 
             // Update last check timestamp
             await this.updateLastCheckTimestamp();
+            // Rule texts in other languages, from the same release (best effort)
+            await this.refreshRuleTranslations(release.tag);
 
             // The pending list is exactly this check's result: an empty check
             // must not leave the badge showing updates from an older one.
@@ -385,6 +372,18 @@ class UpdateManager {
         }, { wrapMetadata: true });
     }
 
+    /**
+     * Apply changes to the rules as stored right now and save them. `mutate`
+     * edits the fresh copy and returns whether anything changed. Callers that
+     * fetch first must not save a copy read before the fetch: the Rules tab may
+     * have saved in between.
+     */
+    static async commitDetectors(mutate) {
+        const fresh = await this.loadStoredDetectors();
+        if (mutate(fresh)) await this.saveStoredDetectors(fresh);
+        return fresh;
+    }
+
     static async getDeletedOfficialIds() {
         const deletedRes = await chrome.storage.local.get('scrapfly_deleted_official_detectors');
         return new Set(Array.isArray(deletedRes.scrapfly_deleted_official_detectors) ? deletedRes.scrapfly_deleted_official_detectors : []);
@@ -456,6 +455,34 @@ class UpdateManager {
      *   they stay pending until the next check replaces them)
      * @returns {Promise<Object|null>}
      */
+    static RULE_I18N_KEY = 'scrapfly_rule_i18n';
+    static RULE_I18N_LOCALES = ['ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt_BR', 'ru', 'zh_CN'];
+
+    /**
+     * Download detectors/i18n/<locale>.json of a release once per tag and keep
+     * them for RuleI18n, which lays them over the bundled files. Missing files
+     * (older releases) are simply skipped.
+     */
+    static async refreshRuleTranslations(tag) {
+        if (!tag) return false;
+        try {
+            const stored = (await chrome.storage.local.get(this.RULE_I18N_KEY))[this.RULE_I18N_KEY];
+            if (stored && stored.tag === tag) return false;
+            const dicts = {};
+            for (const locale of this.RULE_I18N_LOCALES) {
+                const json = await this.fetchRemoteDetector('i18n', locale, tag);
+                if (json && typeof json === 'object' && !Array.isArray(json)) dicts[locale] = json;
+            }
+            if (!Object.keys(dicts).length) return false;
+            await chrome.storage.local.set({ [this.RULE_I18N_KEY]: { tag, dicts } });
+            Logger.storage(`UpdateManager: Rule translations from ${tag}`, { languages: Object.keys(dicts).length });
+            return true;
+        } catch (error) {
+            Logger.debug('STORAGE', 'UpdateManager: Rule translations not updated', error.message);
+            return false;
+        }
+    }
+
     static async fetchRemoteDetector(category, detectorId, tag) {
         if (!tag) return null;
         try {
@@ -518,7 +545,6 @@ class UpdateManager {
      */
     static async applyUpdates({ ids = null, overwriteModified = false } = {}) {
         try {
-            Logger.storage('UpdateManager: Applying pending updates...');
 
             const pendingUpdates = await this.getPendingUpdates();
             const selected = ids ? pendingUpdates.filter(u => ids.includes(u.id)) : pendingUpdates;
@@ -537,6 +563,7 @@ class UpdateManager {
             const failedUpdates = [];
             const keepPending = [];
             const installedNew = [];
+            const planned = [];
 
             for (const update of selected) {
                 if (deletedOfficial.has(update.id) && !detectors[update.category]?.[update.id]) continue;
@@ -559,10 +586,7 @@ class UpdateManager {
                         continue;
                     }
 
-                    this.installDetector(detectors, update.category, update.id, incoming);
-                    if (current.isNew) installedNew.push(update.id);
-                    installed.push({ id: update.id, name: current.name, remoteVersion: current.remoteVersion, isNew: current.isNew });
-                    Logger.storage(`UpdateManager: Updated ${update.id} to v${current.remoteVersion}`);
+                    planned.push({ update, incoming, current });
 
                 } catch (error) {
                     failedUpdates.push(update);
@@ -570,13 +594,27 @@ class UpdateManager {
                     Logger.error('STORAGE', `UpdateManager: Failed to update ${update.id}`, error);
                 }
             }
+            // The downloads took time: install into the rules as stored now, so an
+            // edit made meanwhile (in the Rules tab) is neither lost nor overwritten
+            if (planned.length > 0) {
+                await this.commitDetectors((fresh) => {
+                    for (const { update, incoming, current } of planned) {
+                        const now = fresh[update.category]?.[update.id];
+                        if (now?.userModified && !current.userModified && !overwriteModified) {
+                            keepPending.push({ ...current, userModified: true });
+                            continue;
+                        }
+                        this.installDetector(fresh, update.category, update.id, incoming);
+                        if (current.isNew) installedNew.push(update.id);
+                        installed.push({ id: update.id, name: current.name, remoteVersion: current.remoteVersion, isNew: current.isNew });
+                        Logger.storage(`UpdateManager: Updated ${update.id} to v${current.remoteVersion}`);
+                    }
+                    return installed.length > 0;
+                });
+                if (installedNew.length > 0) await this.rememberOfficialIds(installedNew);
+            }
             const updatedCount = installed.length;
             const failedCount = failedUpdates.length;
-
-            if (updatedCount > 0) {
-                await this.saveStoredDetectors(detectors);
-                await this.rememberOfficialIds(installedNew);
-            }
 
             const remaining = [...untouched, ...keepPending];
             await this.setPendingUpdates(remaining);
@@ -822,6 +860,7 @@ class UpdateManager {
         if (Object.keys(detectors).length === 0) return { installed: 0, pending: 0, rerated: 0 }; // first install seeds itself
         const deletedOfficial = await this.getDeletedOfficialIds();
         const queued = [];
+        const ops = []; // replayed on the rules as stored when saving
         let installed = 0;
         let rerated = 0;
         let changed = false;
@@ -833,7 +872,10 @@ class UpdateManager {
                 if (deletedOfficial.has(detectorId) && !localDetector) continue;
                 const bundled = await this.fetchBundledDetector(category, detectorId);
                 if (!bundled) continue;
-                if (this.markChosenDifficulty(localDetector, bundled, detectorId)) changed = true;
+                if (this.markChosenDifficulty(localDetector, bundled, detectorId)) {
+                    changed = true;
+                    ops.push((fresh) => { this.markChosenDifficulty(fresh[category]?.[detectorId], bundled, detectorId); });
+                }
                 const update = this.describeUpdate(category, detectorId, bundled, localDetector, 'bundled');
                 if (!update) {
                     if (localDetector && !localDetector.userModified && !localDetector.difficultyChosen
@@ -842,6 +884,10 @@ class UpdateManager {
                         && !this.isNewerVersion(this.localVersionOf(localDetector), bundled.version || '0.0')) {
                         localDetector.difficulty = bundled.difficulty;
                         rerated++;
+                        ops.push((fresh) => {
+                            const now = fresh[category]?.[detectorId];
+                            if (now && !now.userModified && !now.difficultyChosen) now.difficulty = bundled.difficulty;
+                        });
                     }
                     continue;
                 }
@@ -851,10 +897,16 @@ class UpdateManager {
                 }
                 this.installDetector(detectors, category, detectorId, bundled);
                 installed++;
+                ops.push((fresh) => {
+                    if (fresh[category]?.[detectorId]?.userModified) return; // edited meanwhile: keep the edit
+                    this.installDetector(fresh, category, detectorId, bundled);
+                });
             }
         }
 
-        if (installed > 0 || rerated > 0 || changed) await this.saveStoredDetectors(detectors);
+        if (installed > 0 || rerated > 0 || changed) {
+            await this.commitDetectors((fresh) => { ops.forEach(op => op(fresh)); return ops.length > 0; });
+        }
         if (queued.length > 0) {
             await this.setPendingUpdates(this.mergeUpdateLists(await this.getPendingUpdates(), queued));
         }
@@ -877,25 +929,15 @@ class UpdateManager {
     }
 
     /**
-     * Clear pending updates
-     * @returns {Promise<void>}
-     */
-    static async clearPendingUpdates() {
-        await chrome.storage.local.remove(this.STORAGE_KEYS.PENDING_UPDATES);
-    }
-
-    /**
      * Update last check timestamp
      * @returns {Promise<void>}
      */
     static async updateLastCheckTimestamp() {
         try {
-            const settings = await Utils.getSettings();
-            if (!settings.updates) {
-                settings.updates = {};
-            }
-            settings.updates.lastCheckTimestamp = Date.now();
-            await StorageManager.saveSettings(settings);
+            await StorageManager.updateSettings((settings) => {
+                settings.updates = settings.updates || {};
+                settings.updates.lastCheckTimestamp = Date.now();
+            });
         } catch (error) {
             Logger.error('STORAGE', 'UpdateManager: Failed to update timestamp', error);
         }
@@ -939,17 +981,16 @@ class UpdateManager {
         try {
             const settings = await Utils.getSettings();
             if (settings.updates?.autoUpdate) {
-                Logger.background('Auto-update enabled, checking for detector updates...');
                 setTimeout(async () => {
                     try {
                         await this.runAutoUpdate();
-                        Logger.background('Update check completed');
+                        Logger.background('Detector update check completed');
                     } catch (error) {
                         Logger.warn('BACKGROUND', 'Failed to check for updates:', error);
                     }
                 }, Constants.UPDATE_CHECK_DELAY);
 
-                this.setupAlarm(settings.updates.checkIntervalHours || 12);
+                this.setupAlarm(settings.updates.checkIntervalHours || Constants.DEFAULT_UPDATE_CHECK_INTERVAL_HOURS);
             } else {
                 Logger.background('Auto-update disabled, skipping update check');
                 chrome.alarms.clear(this.ALARM_NAME);

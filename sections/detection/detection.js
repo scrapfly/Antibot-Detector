@@ -142,7 +142,7 @@ class Detection {
         // Request the completed detection data and display it
         chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
           if (tabs[0] && tabs[0].id === message.tabId) {
-            if (this.debugMode) Logger.debug('UI', '[Detection] Fetching completed detection data...');
+            if (this.debugMode) Logger.debug('UI', '[Detection] Fetching completed detection data');
 
             chrome.runtime.sendMessage(
               { type: 'GET_DETECTION_DATA', tabId: message.tabId },
@@ -424,6 +424,7 @@ class Detection {
 
     this.initializingPromise = (async () => {
       await this.loadHTML();
+      if (typeof DetectionUI !== 'undefined') DetectionUI.paintScanIcons.call(this);
       this.setupPagination();
       this.setupEventListeners();
       this.initialized = true;

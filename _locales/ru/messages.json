@@ -104,9 +104,6 @@
   "noDetectionsFound": {
     "message": "Обнаружений не найдено"
   },
-  "analyzingPage": {
-    "message": "Анализ страницы"
-  },
   "detectionScanningTitle": {
     "message": "Сканирование страницы"
   },
@@ -300,7 +297,7 @@
     "message": "Режим отладки"
   },
   "settingsCardDebugDesc": {
-    "message": "Один понятный отчёт по каждой проверенной странице в консоли service worker"
+    "message": "Пишет один понятный отчёт на каждую проверенную страницу в консоль расширения."
   },
   "settingsRowLogCollector": {
     "message": "Сборщик логов"
@@ -398,14 +395,8 @@
   "advancedEmptyCapturesHint": {
     "message": "Используйте вкладку Инструменты для захвата данных из обнаруженных систем"
   },
-  "advancedCapturesStoredNote": {
-    "message": "Захваты хранятся 30 минут"
-  },
   "advancedNoResultsTitle": {
     "message": "Захваты не найдены"
-  },
-  "advancedNoResultsHint": {
-    "message": "Попробуйте изменить фильтры или поисковый запрос"
   },
   "advancedBtnResetFilters": {
     "message": "Сбросить все фильтры"
@@ -991,9 +982,6 @@
   "failedDeleteDetector": {
     "message": "Не удалось удалить детектор"
   },
-  "detectorNotFoundFmt": {
-    "message": "Детектор не найден: {0}"
-  },
   "failedViewCaptureDetails": {
     "message": "Не удалось просмотреть сведения о захвате"
   },
@@ -1390,12 +1378,6 @@
   "detectionStatDifficulty": {
     "message": "СЛОЖНОСТЬ"
   },
-  "detectionStatCacheScope": {
-    "message": "ОБЛАСТЬ КЭША"
-  },
-  "detectionStatCacheExpiration": {
-    "message": "СРОК ДЕЙСТВИЯ КЭША"
-  },
   "detectionSearchPlaceholder": {
     "message": "Поиск обнаружений..."
   },
@@ -1621,29 +1603,14 @@
   "advancedToolsSubtitle": {
     "message": "Выберите защиту, чтобы открыть её инструменты."
   },
-  "advancedToolsStepSelect": {
-    "message": "Выберите обнаружение"
-  },
-  "advancedToolsChooseDetection": {
-    "message": "Выберите обнаружение..."
-  },
   "advancedToolsLoadTools": {
     "message": "Открыть инструменты"
-  },
-  "advancedToolsClearAll": {
-    "message": "Очистить всё"
-  },
-  "advancedToolsClearAllFooter": {
-    "message": "Очистить все инструменты"
   },
   "advancedToolsLearnMore": {
     "message": "Узнать о расширенных инструментах"
   },
   "advancedToolsChange": {
     "message": "Изменить"
-  },
-  "advancedToolsDetectionName": {
-    "message": "Название обнаружения"
   },
   "settingsLanguageTitle": {
     "message": "Язык"
@@ -1680,9 +1647,6 @@
   },
   "rulesMoreActions": {
     "message": "Другие действия"
-  },
-  "advancedToolsNoDetections": {
-    "message": "На этой странице нет поддерживаемых обнаружений"
   },
   "advancedToolsEmptyTitle": {
     "message": "Нет доступных инструментов"
@@ -2388,9 +2352,6 @@
   },
   "mhWindowLimit2": {
     "message": "Свойства с именем-Symbol нельзя записать как путь."
-  },
-  "mhJsHooksOnlyFingerprint": {
-    "message": "Перехватчики используют только правила категории «Отпечаток»: правила «Анти-бот» и «Captcha» их игнорируют."
   },
   "mhJsHooksIntro": {
     "message": "Записывает, когда страница вызывает API браузера, например `HTMLCanvasElement.prototype.toDataURL`, — признак снятия отпечатка."
@@ -3247,9 +3208,6 @@
   "advGeetestNoVersion": {
     "message": "Версия Geetest не обнаружена"
   },
-  "advGeetestParsingCodeCopied": {
-    "message": "Код разбора скопирован в буфер обмена!"
-  },
   "advGeetestTabNotFound": {
     "message": "Вкладка не найдена"
   },
@@ -3276,9 +3234,6 @@
   },
   "advPanelCheckConsole": {
     "message": "Подробности смотрите в консоли"
-  },
-  "advPanelSelectDetectionFirst": {
-    "message": "Сначала выберите обнаружение"
   },
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Ошибка загрузки захватов: {0}"
@@ -3526,9 +3481,6 @@
   "clipboardDifficultyFmt": {
     "message": "Сложность: {0}"
   },
-  "clipboardCacheExpirationFmt": {
-    "message": "Срок действия кэша: {0}"
-  },
   "clipboardCopyFailed": {
     "message": "Не удалось скопировать в буфер обмена"
   },
@@ -3685,9 +3637,6 @@
   "combinationAutoTip": {
     "message": "Авто: наибольшая уверенность среди шаблонов, вызвавших срабатывание"
   },
-  "combinationSetsScore": {
-    "message": "Задаёт оценку обнаружения"
-  },
   "combinationInvalidNoPattern": {
     "message": "Добавьте хотя бы один шаблон, который должен быть найден."
   },
@@ -3805,6 +3754,9 @@
   "combinationAddPattern": {
     "message": "Добавить шаблон"
   },
+  "combinationAddDescription": {
+    "message": "Добавить описание"
+  },
   "combinationAnyPattern": {
     "message": "любой шаблон"
   },
@@ -3861,12 +3813,6 @@
   },
   "detectionTipDifficulty": {
     "message": "Оценка сложности обхода обнаруженных защит."
-  },
-  "detectionTipCacheScope": {
-    "message": "Какие страницы могут использовать эти сохранённые результаты обнаружения."
-  },
-  "detectionTipCacheExpiration": {
-    "message": "Время до истечения срока хранения этих результатов обнаружения в кэше."
   },
   "tipCachedAt": {
     "message": "Сохранено"
@@ -4405,5 +4351,575 @@
   "scrapflyExportNoPage": {
     "message": "Откройте веб-страницу, чтобы скрапить её через Scrapfly",
     "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "Записей: {0}"
+  },
+  "statsFirstSeen": {
+    "message": "Новое за период"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "Впервые сохранено за этот период: защит — {0}, доменов — {1}."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Выберите 7, 30 или 90 дней, чтобы увидеть новое."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Самый защищённый домен"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{0} разных защит за {1} посещений."
+  },
+  "statsFoundTogether": {
+    "message": "Защиты, найденные вместе"
+  },
+  "statsMethods": {
+    "message": "Методы обнаружения"
+  },
+  "statsMatchesUnit": {
+    "message": "совпадения"
+  },
+  "statsMethodsByCategory": {
+    "message": "Методы по категориям"
+  },
+  "statsWeakEvidence": {
+    "message": "Самые слабые признаки"
+  },
+  "statsSignalColumn": {
+    "message": "Сигнал"
+  },
+  "statsMethodColumn": {
+    "message": "Метод"
+  },
+  "statsTopSignals": {
+    "message": "Самые частые сигналы"
+  },
+  "statsDecidedSingle": {
+    "message": "Один шаблон"
+  },
+  "statsDecidedCombination": {
+    "message": "Комбинация"
+  },
+  "statsDecidedBy": {
+    "message": "Как принимались решения об обнаружении"
+  },
+  "statsCombinationGain": {
+    "message": "Уверенность по типу решения"
+  },
+  "statsCombinationColumn": {
+    "message": "Комбинация"
+  },
+  "statsTopCombinations": {
+    "message": "Сработавшие комбинации"
+  },
+  "statsNoCombinations": {
+    "message": "Ни одно обнаружение за этот период не было решено комбинацией."
+  },
+  "statsRulesMostActive": {
+    "message": "Самые активные правила"
+  },
+  "statsTipPatternsFmt": {
+    "message": "Шаблонов: {0}"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Шаблоны по методам"
+  },
+  "statsRulesOfficial": {
+    "message": "Официальные"
+  },
+  "statsRulesCustom": {
+    "message": "Пользовательские"
+  },
+  "statsRuleColumn": {
+    "message": "Правило"
+  },
+  "statsRuleKindColumn": {
+    "message": "Тип"
+  },
+  "statsPatternsUnit": {
+    "message": "шаблоны"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Ничего не найдено за период"
+  },
+  "statsRulesAllMatched": {
+    "message": "Каждое включённое правило что-то нашло за этот период."
+  },
+  "statsMissingColumn": {
+    "message": "Без описания"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Шаблоны без описания"
+  },
+  "statsRulesAllDescribed": {
+    "message": "У каждого шаблона есть описание."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Версия правила"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Нужна версия расширения"
+  },
+  "statsRulesWaiting": {
+    "message": "Ожидает более новое расширение"
+  },
+  "statsToolsByVendor": {
+    "message": "Записи по поставщикам"
+  },
+  "statsToolsCapture": {
+    "message": "Запись"
+  },
+  "statsToolsByTool": {
+    "message": "Самые используемые инструменты"
+  },
+  "statsToolsOverTime": {
+    "message": "Записи по времени"
+  },
+  "statsChangeColumn": {
+    "message": "Изменение"
+  },
+  "statsDateColumn": {
+    "message": "Дата"
+  },
+  "statsDomainChanges": {
+    "message": "Изменения защит"
+  },
+  "statsNoChanges": {
+    "message": "Ни один домен не изменил защиты между сохранёнными посещениями за этот период."
+  },
+  "statsNothingNew": {
+    "message": "Ничего нового: все защиты уже были в Истории до этого периода."
+  },
+  "statsSectionSignals": {
+    "message": "Сигналы"
+  },
+  "statsSectionCombinations": {
+    "message": "Комбинации"
+  },
+  "statsSectionRules": {
+    "message": "Правила"
+  },
+  "statsSectionTools": {
+    "message": "Инструменты"
+  },
+  "statsDomainChangesHint": {
+    "message": "Домены, у которых обнаруженные защиты изменились между двумя сохранёнными посещениями."
+  },
+  "statsFirstSeenHint": {
+    "message": "Защиты и домены, впервые сохранённые за этот период."
+  },
+  "statsSignalsNote": {
+    "message": "Какие признаки нашло каждое сохранённое обнаружение: имена cookie и заголовков, URL, элементы страницы, скрипты и JavaScript-хуки."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Защиты, у найденных шаблонов которых самая низкая средняя уверенность. Их правилам может понадобиться более сильный шаблон."
+  },
+  "statsCombinationsNote": {
+    "message": "Комбинация обнаруживает защиту, только когда несколько шаблонов найдены вместе."
+  },
+  "statsRulesNote": {
+    "message": "Ваша библиотека правил в сравнении с тем, что История нашла за этот период."
+  },
+  "statsRulesTotal": {
+    "message": "Правила"
+  },
+  "statsRulesModified": {
+    "message": "Изменённые официальные"
+  },
+  "statsRulesDisabled": {
+    "message": "Отключённые"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Включённые правила, которые ничего не нашли на страницах, сохранённых за этот период."
+  },
+  "statsRulesMissingHint": {
+    "message": "Описания показываются в деталях обнаружения, Истории и комбинациях. Добавьте их в редакторе правил."
+  },
+  "statsToolsNote": {
+    "message": "Расширенные записи и результаты инструментов, сохранённые на этом устройстве."
+  },
+  "statsCapturesUnit": {
+    "message": "записи"
+  },
+  "detectionCardSureFmt": {
+    "message": "Уверенность {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Комбинация"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "КЭШ"
+  },
+  "detectionTipCache": {
+    "message": "Какие страницы повторно используют эти кэшированные результаты и как долго."
+  },
+  "tipCacheExpires": {
+    "message": "Истекает"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Проверить по Истории"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Покажет, на скольких сохранённых страницах совпадает каждый шаблон и комбинация. Несохранённые изменения учитываются."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Проверить"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "Сохранённых страниц: {0} · правило найдено на {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0} из {1} страниц"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} других страниц"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "История пуста: сначала откройте несколько страниц."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Оценка: История хранит найденные значения, а не страницы целиком."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "срабатывает на {0} страницах"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Добавьте шаблоны, чтобы проверить их."
+  },
+  "settingsThemeTitle": {
+    "message": "Тема"
+  },
+  "settingsThemeDesc": {
+    "message": "Тёмная или светлая в цветах Scrapfly. «Системная» следует за браузером."
+  },
+  "themeDark": {
+    "message": "Тёмная"
+  },
+  "themeLight": {
+    "message": "Светлая"
+  },
+  "themeSystem": {
+    "message": "Системная"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Открыть консоль"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Открывает это расширение в chrome://extensions: нажмите «service worker», чтобы увидеть журналы."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Хранить журналы здесь, а не в консоли, чтобы экспортировать их в JSON или текст"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Переводы"
+  },
+  "ruleTranslationsHint": {
+    "message": "Показывается вместо описания, когда расширение на этом языке. Пусто: показывается описание."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} из {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Перевести автоматически"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Для автоматического перевода нужен Chrome 138 или новее."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Сначала напишите описание."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Перевод: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Заполнено языков: {0}. Проверьте перед сохранением."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Заполнено: {0}; не удалось перевести здесь: {1}."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Ждать после загрузки"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Ждать элемент"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Страница готова на"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Прокрутить до конца"
+  },
+  "sfxOptJs": {
+    "message": "Выполнить JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Действия в браузере"
+  },
+  "sfxOptScreenshot": {
+    "message": "Скриншот"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Элемент"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Параметры скриншота"
+  },
+  "sfxOptLang": {
+    "message": "Языки"
+  },
+  "sfxOptOs": {
+    "message": "Операционная система"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Браузер"
+  },
+  "sfxOptGeolocation": {
+    "message": "Геолокация"
+  },
+  "sfxOptHeaders": {
+    "message": "Заголовки"
+  },
+  "sfxOptTimeout": {
+    "message": "Тайм-аут"
+  },
+  "sfxOptRetry": {
+    "message": "Повторять при ошибках"
+  },
+  "sfxOptCostBudget": {
+    "message": "Лимит кредитов"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Убрать"
+  },
+  "sfxOptProxified": {
+    "message": "Вернуть ответ сайта"
+  },
+  "sfxOptExtraction": {
+    "message": "Извлечь данные"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Модель"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Запрос"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Сохранённый шаблон"
+  },
+  "sfxOptCache": {
+    "message": "Кэш"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Хранить"
+  },
+  "sfxOptCacheClear": {
+    "message": "Обновить кэш"
+  },
+  "sfxOptSession": {
+    "message": "Сессия"
+  },
+  "sfxOptSticky": {
+    "message": "Тот же прокси для сессии"
+  },
+  "sfxOptDebug": {
+    "message": "Отладка"
+  },
+  "sfxOptCorrelationId": {
+    "message": "ID корреляции"
+  },
+  "sfxOptTags": {
+    "message": "Теги"
+  },
+  "sfxOptDns": {
+    "message": "Данные DNS"
+  },
+  "sfxOptSsl": {
+    "message": "Сертификат SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Вебхук"
+  },
+  "sfxOptMode": {
+    "message": "Запуск"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Указать эту страницу"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Язык"
+  },
+  "sfxOptAutoClose": {
+    "message": "Закрыть при отключении"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Длительность сессии"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Лимит времени разблокировки"
+  },
+  "sfxOptBlockImages": {
+    "message": "Блокировать изображения"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Блокировать стили"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Блокировать шрифты"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Блокировать видео и аудио"
+  },
+  "sfxOptBlacklist": {
+    "message": "Блокировать трекеры"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Кэшировать статические файлы"
+  },
+  "sfxOptRecord": {
+    "message": "Записать сессию"
+  },
+  "sfxOptMcp": {
+    "message": "Эндпоинт MCP"
+  },
+  "sfxValAuto": {
+    "message": "Автоматически"
+  },
+  "sfxValCleanHtml": {
+    "message": "Чистый HTML"
+  },
+  "sfxValComplete": {
+    "message": "Полная загрузка"
+  },
+  "sfxValDomReady": {
+    "message": "DOM готов"
+  },
+  "sfxValFullPage": {
+    "message": "Вся страница"
+  },
+  "sfxValElement": {
+    "message": "Элемент"
+  },
+  "sfxValLoadImages": {
+    "message": "Загружать изображения"
+  },
+  "sfxValDarkMode": {
+    "message": "Тёмная тема"
+  },
+  "sfxValBlockBanners": {
+    "message": "Скрыть баннеры"
+  },
+  "sfxValHighQuality": {
+    "message": "Высокое качество"
+  },
+  "sfxValPrint": {
+    "message": "Стиль печати"
+  },
+  "sfxValNoLinks": {
+    "message": "Ссылки"
+  },
+  "sfxValNoImages": {
+    "message": "Изображения"
+  },
+  "sfxValOnlyContent": {
+    "message": "Всё, кроме основного содержимого"
+  },
+  "sfxValModel": {
+    "message": "Модель ИИ"
+  },
+  "sfxValTemplate": {
+    "message": "Шаблон"
+  },
+  "sfxValConnect": {
+    "message": "Открыть браузер"
+  },
+  "sfxValUnblock": {
+    "message": "Сначала разблокировать"
+  },
+  "sfxGroupRender": {
+    "message": "Рендеринг в браузере"
+  },
+  "sfxGroupLocation": {
+    "message": "Местоположение и отпечаток"
+  },
+  "sfxGroupRequest": {
+    "message": "Запрос"
+  },
+  "sfxGroupOutput": {
+    "message": "Вывод"
+  },
+  "sfxGroupExtraction": {
+    "message": "Извлечение ИИ"
+  },
+  "sfxGroupCache": {
+    "message": "Кэш и сессия"
+  },
+  "sfxGroupTracking": {
+    "message": "Отладка и отслеживание"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Отпечаток и язык"
+  },
+  "sfxGroupSession": {
+    "message": "Сессия"
+  },
+  "sfxGroupBlocking": {
+    "message": "Блокировка и кэш"
+  },
+  "sfxGroupTools": {
+    "message": "Отладка и MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Нужен рендеринг JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Нужен Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Только для Markdown или текста"
+  },
+  "sfxWhyCache": {
+    "message": "Сначала включите кэш"
+  },
+  "sfxWhySession": {
+    "message": "Сначала задайте сессию"
+  },
+  "sfxWhySticky": {
+    "message": "С Unblocker всегда включено"
+  },
+  "sfxWhyJson": {
+    "message": "Не JSON-список шагов: пропущено"
+  },
+  "sfxWhyGeo": {
+    "message": "Укажите широта,долгота: пропущено"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Этот браузер не работает в этой системе: пропущено"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge нужен Windows: пропущено"
+  },
+  "sfxHintHeaders": {
+    "message": "По одному в строке: Имя: значение. Не сохраняется."
+  },
+  "sfxHintScenario": {
+    "message": "Список JSON: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Через запятую"
+  },
+  "sfxHintLanguages": {
+    "message": "Через запятую, не больше 3"
+  },
+  "sfxHintUnblock": {
+    "message": "«Сначала разблокировать» возвращает браузер, уже прошедший антибот-защиту"
+  },
+  "sfxValOff": {
+    "message": "Выкл."
   }
 }

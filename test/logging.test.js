@@ -14,7 +14,14 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 // A fresh Logger in its own realm, as the service worker sees it
 function loadLogger({ debug = false, verbose = false, collector = null } = {}) {
   const out = [];
-  const record = (kind) => (...args) => out.push({ kind, text: args.join(' ') });
+  // Console colours (%c and their style arguments) are dropped: the text is what is asserted
+  const record = (kind) => (...args) => {
+    if (typeof args[0] === 'string' && args[0].includes('%c')) {
+      const styles = (args[0].match(/%c/g) || []).length;
+      args = [args[0].replace(/%c/g, '').replace(/%%/g, '%'), ...args.slice(1 + styles)];
+    }
+    out.push({ kind, text: args.join(' ') });
+  };
   const context = vm.createContext({
     console: { log: record('log'), warn: record('warn'), error: record('error'), debug: record('debug'),
       groupCollapsed: record('group'), groupEnd() {} },
@@ -273,4 +280,24 @@ test('no per-rule or per-URL logging is left in the scan path', () => {
 test('the page console gets JS API echoes only in Debug mode', () => {
   const main = read('content-main-world.js');
   assert.match(main, /if \(debugMode && typeof console !== 'undefined' && console\) \{\n\s+const label = `\$\{MAIN_WORLD\.JS_API_CONSOLE_LABEL\}/);
+});
+
+test('lines drop what they already say: "Scrapfly Background:", "[Background]", a trailing "..."', () => {
+  const { Logger } = loadLogger();
+  const t = (message, category = 'BACKGROUND') => Logger.tidy(message, category);
+  assert.strictEqual(t('Scrapfly Background: Syncing category colors from Settings...'), 'Syncing category colors from Settings');
+  assert.strictEqual(t('[Background] [init] ready'), 'Ready');
+  assert.strictEqual(t('Detection: 3 found', 'DETECTION'), '3 found');
+  assert.strictEqual(t('[reCAPTCHA] capture started', 'UI'), 'reCAPTCHA · Capture started', 'a tag naming something else stays as a lead');
+  assert.strictEqual(t('Cache hit: key', 'CACHE'), 'Cache hit: key', 'ordinary text with a colon is untouched');
+  assert.strictEqual(t('step 1'), 'step 1');
+  assert.strictEqual(t('Loading…'), 'Loading');
+});
+
+test('the console line is coloured with %c; the collector keeps the plain line', () => {
+  const { Logger } = loadLogger({ debug: true });
+  const args = Logger.styledRecord({ timestamp: Date.now(), context: 'background', category: 'SCAN', message: '100% done' });
+  assert.match(args[0], /^%c\[\d\d:\d\d:\d\d\.\d{3}\]%c bg\/scan%c  100%% done$/);
+  assert.strictEqual(args.length, 4);
+  assert.ok(!Logger.formatRecord({ timestamp: Date.now(), context: 'background', category: 'SCAN', message: 'x' }).includes('%c'));
 });

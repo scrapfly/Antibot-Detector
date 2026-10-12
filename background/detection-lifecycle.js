@@ -167,6 +167,54 @@ function rescoreCombinations(detection) {
     return DetectionCombinations.rescore(definition, detection);
 }
 
+/**
+ * Add one detection to a map of detections by detector id: a detector already
+ * there gains the matches it did not have (and the higher confidence), a new
+ * one is added as is.
+ */
+function mergeDetection(byId, newDetection) {
+    const id = newDetection.detector?.id || newDetection.id;
+    if (!id) return;
+    const existing = byId.get(id);
+    if (!existing) {
+        byId.set(id, newDetection);
+        return;
+    }
+    const existingMatches = existing.matches || [];
+    const matchKeys = new Set(existingMatches.map(generateMatchKey));
+    for (const newMatch of newDetection.matches || []) {
+        const key = generateMatchKey(newMatch);
+        if (!matchKeys.has(key)) {
+            existingMatches.push(newMatch);
+            matchKeys.add(key);
+        }
+    }
+    existing.matches = existingMatches;
+    existing.confidence = Math.max(existing.confidence || 0, newDetection.confidence || 0);
+    existing.detectionMethods = [...new Set([...(existing.detectionMethods || []), ...(newDetection.detectionMethods || [])])];
+}
+
+/**
+ * URL rules against the requests made after the page snapshot: the scan reads
+ * the page right after load, but captcha and anti-bot SDKs often call their
+ * servers a second or more later (a challenge request, a verify call), and
+ * those requests are only in the tab's list by the time the scan finishes.
+ */
+async function matchLateRequests(tabId, state, mergedDetections) {
+    if (typeof detectionEngine === 'undefined' || !detectionEngine || typeof networkUrlsStore === 'undefined') return;
+    const networkUrls = networkUrlsStore.get(tabId);
+    if (!Array.isArray(networkUrls) || networkUrls.length === 0) return;
+    const stats = detectionEngine.lastStats; // the scan report describes the page snapshot
+    try {
+        const late = await detectionEngine.detectOnPage({ url: state.url, networkUrls: networkUrls.slice() }, { includePartial: true });
+        for (const detection of Array.isArray(late) ? late : []) mergeDetection(mergedDetections, detection);
+    } catch (error) {
+        Logger.error('SCAN', 'Late request check failed', error);
+    } finally {
+        detectionEngine.lastStats = stats;
+    }
+}
+
 async function finalizeDetection(tabId, state) {
     // Prevent progress updates from overriding the final badge
     state.finalized = true;
@@ -216,6 +264,8 @@ async function finalizeDetection(tabId, state) {
             mergedDetections.set(detectorId, detector);
         }
     }
+
+    await matchLateRequests(tabId, state, mergedDetections);
 
     let finalResults = Array.from(mergedDetections.values()).filter(rescoreCombinations);
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
@@ -469,7 +519,7 @@ async function processDetectionData(message, sender) {
         const relevantUrls = networkUrlsArray;
 
         if (relevantUrls.length > 0) {
-            pageData.networkUrls = relevantUrls;
+            pageData.networkUrls = relevantUrls.slice();
         }
     }
 
@@ -571,43 +621,7 @@ async function processDetectionData(message, sender) {
         }
 
         // Add/merge main detection results
-        for (const newDetection of detectionResults) {
-            const id = newDetection.detector?.id || newDetection.id;
-            if (id && existingDetections.has(id)) {
-                // Merge: combine matches, but check for duplicates by category
-                const existing = existingDetections.get(id);
-                const existingMatches = existing.matches || [];
-                const newMatches = newDetection.matches || [];
-
-                // O(1) deduplication via Set
-                const matchKeys = new Set();
-                for (const match of existingMatches) {
-                    matchKeys.add(generateMatchKey(match));
-                }
-
-                // Add new matches if not duplicate
-                for (const newMatch of newMatches) {
-                    const key = generateMatchKey(newMatch);
-                    if (!matchKeys.has(key)) {
-                        existingMatches.push(newMatch);
-                        matchKeys.add(key);
-                    }
-                }
-
-                existing.matches = existingMatches;
-
-                // Update confidence to highest
-                existing.confidence = Math.max(existing.confidence || 0, newDetection.confidence || 0);
-
-                // Merge detectionMethods
-                const existingMethods = existing.detectionMethods || [];
-                const newMethods = newDetection.detectionMethods || [];
-                existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
-            } else {
-                // New detector, add it
-                existingDetections.set(id, newDetection);
-            }
-        }
+        for (const newDetection of detectionResults) mergeDetection(existingDetections, newDetection);
 
         // Update state.mainData with merged results
         state.mainData = Array.from(existingDetections.values());

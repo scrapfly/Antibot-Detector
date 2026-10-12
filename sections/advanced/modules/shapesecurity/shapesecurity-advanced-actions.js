@@ -204,7 +204,6 @@ ShapeSecurityAdvanced.prototype.checkCookies = async function() {
 ShapeSecurityAdvanced.prototype.extractScripts = async function() {
         Logger.network('[SHAPESECURITY-EXTRACT] ========== STARTING EXTRACTION ==========');
         try {
-            Logger.network('[SHAPESECURITY-EXTRACT] Step 1: Getting current tab...');
 
             // Get current tab
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -216,11 +215,10 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
             Logger.network('[SHAPESECURITY-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Store extraction mode flag
-            Logger.network('[SHAPESECURITY-EXTRACT] Step 2: Setting up extraction mode...');
+            Logger.debug('NETWORK', '[SHAPESECURITY-EXTRACT] Step 2: Setting up extraction mode');
             this.isExtracting = true;
 
             // Set up listener for extraction result
-            Logger.network('[SHAPESECURITY-EXTRACT] Step 3: Adding listener for extraction result...');
             const extractionListener = (message) => {
                 Logger.network('[SHAPESECURITY-EXTRACT] Received message:', message.type);
                 if (message.type === 'SHAPESECURITY_EXTRACTION_RESULT') {
@@ -228,11 +226,11 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
                     Logger.network('[SHAPESECURITY-EXTRACT] Extracted data:', message.extractedData);
 
                     // Display the script data
-                    Logger.network('[SHAPESECURITY-EXTRACT] Step: Displaying script data modal...');
+                    Logger.debug('NETWORK', '[SHAPESECURITY-EXTRACT] Step: Displaying script data modal');
                     this.displayScriptDataModal(message.extractedData);
 
                     // Clean up
-                    Logger.network('[SHAPESECURITY-EXTRACT] Step: Cleaning up...');
+                    Logger.debug('NETWORK', '[SHAPESECURITY-EXTRACT] Step: Cleaning up');
                     this.isExtracting = false;
                     chrome.runtime.onMessage.removeListener(extractionListener);
                     Logger.network('[SHAPESECURITY-EXTRACT] ========== EXTRACTION COMPLETE ==========');
@@ -243,7 +241,6 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
             Logger.network('[SHAPESECURITY-EXTRACT] Listener added');
 
             // Send message to start extraction mode
-            Logger.network('[SHAPESECURITY-EXTRACT] Step 4: Sending message to background to start extraction...');
             const response = await this.sendMessage({
                 type: 'SHAPESECURITY_START_EXTRACTION',
                 tabId: tab.id
@@ -252,7 +249,6 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
 
             if (response && response.status === 'success') {
                 Logger.network('[SHAPESECURITY-EXTRACT] Extraction mode enabled successfully');
-                Logger.network('[SHAPESECURITY-EXTRACT] Step 6: Reloading page...');
 
                 // Reload the page to trigger Shape Security scripts
                 await chrome.tabs.reload(tab.id);

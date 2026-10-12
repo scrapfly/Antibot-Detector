@@ -173,15 +173,15 @@ test('combination AST rejects malformed and unreachable alternatives', () => {
     assert.throws(() => validate(node, new Set(['a']), 'invalid'));
   }
 });
-test('all sixteen definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
-  assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-aliyun', 'detect-captchaeu', 'detect-capy',
-    'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest', 'detect-hcaptcha',
-    'detect-mtcaptcha', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei', 'detect-smartcaptcha',
-    'detect-turnstile', 'detect-yidun']);
+test('all nineteen definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
+  assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-aliyun', 'detect-basilisk', 'detect-binance-captcha',
+    'detect-captchaeu', 'detect-capy', 'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest',
+    'detect-hcaptcha', 'detect-mtcaptcha', 'detect-prosopo', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei',
+    'detect-smartcaptcha', 'detect-turnstile', 'detect-yidun']);
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-0[3-7]$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-2])$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);
@@ -406,5 +406,35 @@ test('generic sitekeys, routes, query URL copies and lookalike authorities produ
       dom: [{ tagName: 'div', attributes: { 'data-sitekey': 'generic' } },
         { tagName: 'iframe', attributes: { src: url }, src: url }] });
     assert.deepEqual(Array.from(result, item => item.detector.id), [], url);
+  }
+});
+
+test('requests made after the page snapshot still count when the scan finishes', async () => {
+  // Procaptcha calls its provider node about a second after load, after the
+  // scan has read the page: the finalizer matches URL rules once more against
+  // every request the tab made by then
+  const prosopo = captcha['detect-prosopo'];
+  const bundle = { url: 'https://js.prosopo.io/js/procaptcha.bundle.js', type: 'script', method: 'GET' };
+  const provider = { url: 'https://pronode16.prosopo.io/v1/prosopo/provider/client/captcha/frictionless', type: 'xmlhttprequest', method: 'POST' };
+  const engine = new Engine();
+  engine.setDetectors({ captcha: { [prosopo.id]: prosopo } });
+  const run = async (withLateCheck) => {
+    const state = { url: 'https://demo.example/', mainData: await engine.detectOnPage({ url: 'https://demo.example/', networkUrls: [bundle] }, { includePartial: true }),
+      hooksData: new Map(), completedMethods: new Set(['url']) };
+    context.networkUrlsStore.set(1, [bundle, provider]);
+    context.detectionEngine = withLateCheck ? engine : null;
+    context.generateMatchKey = match => `${match.patternId}|${match.type}|${match.value}`;
+    await context.finalizeDetection(1, state);
+    return context.finalizedResults.find(item => item.detector.id === prosopo.id);
+  };
+  try {
+    assert.equal((await run(false)).confidence, 60, 'snapshot alone: the bundle');
+    const late = await run(true);
+    assert.equal(late.confidence, 90);
+    assert.ok(late.combinations.some(combo => combo.id === 'prosopo-bundle-provider'));
+    assert.equal(late.matches.filter(match => match.patternId === 'prosopo-bundle').length, 1, 'the bundle is not counted twice');
+  } finally {
+    context.detectionEngine = undefined;
+    context.networkUrlsStore.clear();
   }
 });

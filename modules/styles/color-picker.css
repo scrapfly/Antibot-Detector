@@ -16,11 +16,11 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #323232;
+  background: var(--g-323232);
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font-family: var(--font-sans);
   user-select: none;
 }
@@ -115,10 +115,10 @@
   width: 100%;
   height: 28px;
   padding: 0 4px;
-  background: #2d2d2d;
+  background: var(--g-2d2d2d);
   border: 1px solid var(--border);
   border-radius: 6px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font-family: var(--font-mono);
   font-size: 12px;
   text-align: center;
@@ -133,7 +133,7 @@
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.04em;
-  color: #b3b3b3;
+  color: var(--g-b3b3b3);
 }
 
 /* Preset swatches (extension palette) */
@@ -161,5 +161,5 @@
 
 .cp-preset:focus-visible,
 .cp-preset[aria-pressed="true"] {
-  box-shadow: 0 0 0 2px #323232, 0 0 0 3px #e0e0e0;
+  box-shadow: 0 0 0 2px var(--g-323232), 0 0 0 3px var(--g-e0e0e0);
 }

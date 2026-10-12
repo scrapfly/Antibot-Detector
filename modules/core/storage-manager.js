@@ -111,6 +111,49 @@ class StorageManager {
     }
 
     /**
+     * Read, change and save the settings in one step, so this write starts from
+     * what is stored now (another tab may have blocked a domain meanwhile).
+     * @param {(settings: Object) => (void|false)} mutator - Return false to skip saving
+     * @returns {Promise<boolean>} Saved (or nothing to save)
+     */
+    static async updateSettings(mutator) {
+        const settings = await StorageManager.getSettings();
+        if (mutator(settings) === false) return true;
+        return StorageManager.saveSettings(settings);
+    }
+
+    /**
+     * Three-way merge for a settings form saving a copy it loaded earlier:
+     * a value the form changed since `base` wins; anything it did not change
+     * keeps what is stored now (`stored`), so writes from other tabs survive.
+     * Arrays are single values. Keys absent from `stored` keep the form's value.
+     */
+    static mergeSettingsChanges(base, mine, stored) {
+        const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+        const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+        if (!isObj(mine)) return mine;
+        const out = {};
+        const keys = new Set([...Object.keys(mine), ...(isObj(stored) ? Object.keys(stored) : [])]);
+        for (const key of keys) {
+            const m = mine[key];
+            const b = isObj(base) ? base[key] : undefined;
+            const s = isObj(stored) ? stored[key] : undefined;
+            const hasMine = Object.prototype.hasOwnProperty.call(mine, key);
+            const hasStored = isObj(stored) && Object.prototype.hasOwnProperty.call(stored, key);
+            if (isObj(m) && (isObj(s) || !hasStored)) {
+                out[key] = StorageManager.mergeSettingsChanges(b, m, s);
+            } else if (hasMine && !same(m, b)) {
+                out[key] = m;                    // changed in the form
+            } else if (hasStored) {
+                out[key] = s;                    // untouched here: keep the stored value
+            } else if (hasMine) {
+                out[key] = m;
+            }
+        }
+        return out;
+    }
+
+    /**
      * Load data from Chrome storage with backward compatibility support
      * Automatically handles:
      * - Legacy key migration (old key → new key)
@@ -348,7 +391,7 @@ class StorageManager {
 
             await chrome.storage.local.set({ [key]: valueToSave });
 
-            Logger.storage('Saved to storage', { key });
+            Logger.debug('STORAGE', 'Saved to storage', { key });
             return true;
 
         } catch (error) {

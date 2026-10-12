@@ -69,7 +69,7 @@
 .detection-pause-card--global .detection-pause-icon {
   border-color: rgba(249, 115, 22, 0.3);
   background: rgba(249, 115, 22, 0.08);
-  color: #fb923c;
+  color: var(--p-fb923c);
 }
 
 /* Global off switch: centred layout, single clear action */
@@ -229,8 +229,8 @@
 /* The favicon sits in the tile's icon box, on a neutral background */
 .site-favicon-box {
   --tone: var(--text-secondary);
-  --tone-bg: #262626;
-  --tone-border: #424242;
+  --tone-bg: var(--g-262626);
+  --tone-border: var(--g-424242);
   overflow: hidden;
 }
 
@@ -290,15 +290,15 @@
   --act-bg-hover: rgba(16, 185, 129, 0.32);
   --act-border: rgba(16, 185, 129, 0.35);
   --act-fg: var(--success-light);
-  --act-fg-hover: #6ee7b7;
+  --act-fg-hover: var(--p-6ee7b7);
 }
 
 .url-action-btn.clear-cache-btn {
   --act-bg: rgba(245, 158, 11, 0.2);
   --act-bg-hover: rgba(245, 158, 11, 0.32);
   --act-border: rgba(245, 158, 11, 0.35);
-  --act-fg: #fcd34d;
-  --act-fg-hover: #fde68a;
+  --act-fg: var(--p-fcd34d);
+  --act-fg-hover: var(--p-fde68a);
 }
 
 .url-action-btn.copy-overview-btn {
@@ -306,7 +306,7 @@
   --act-bg-hover: rgba(139, 92, 246, 0.32);
   --act-border: rgba(139, 92, 246, 0.35);
   --act-fg: var(--purple-light);
-  --act-fg-hover: #ddd6fe;
+  --act-fg-hover: var(--p-ddd6fe);
 }
 
 .url-action-btn.blacklist-btn {
@@ -328,7 +328,7 @@
   --act-bg-hover: rgba(59, 130, 246, 0.32);
   --act-border: rgba(59, 130, 246, 0.35);
   --act-fg: var(--accent-light);
-  --act-fg-hover: #bfdbfe;
+  --act-fg-hover: var(--p-bfdbfe);
 }
 
 .url-action-btn.upload-paste-btn:disabled {
@@ -381,16 +381,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 11px 6px;
-  margin: 0 0 3px;
+  padding: 6px 11px 0;
+  margin: 0;
   background: var(--bg-secondary);
-  border-radius: 0 0 8px 8px;
   border: 1px solid var(--border);
   border-top: none;
+  border-bottom: none;
 }
 
 .cache-expiry-line .stat-inline {
   flex: 1;
+}
+
+.cache-stat-sep {
+  opacity: 0.55;
 }
 
 /* The three stat tiles are tighter than the cache tiles so the labels fit untruncated */
@@ -450,15 +454,15 @@
   gap: 7px;
   flex: 1;
   padding: 6px 9px;
-  background: #323232;
-  border: 1px solid #424242;
+  background: var(--g-323232);
+  border: 1px solid var(--g-424242);
   border-radius: 7px;
   min-width: 0;
   transition: border-color 0.15s ease;
 }
 
 .stat-inline:hover {
-  border-color: #525252;
+  border-color: var(--g-525252);
 }
 
 .stat-inline:focus-visible,
@@ -508,7 +512,7 @@
   font-size: 10px;
   font-weight: 700;
   line-height: 13px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
@@ -526,9 +530,15 @@
 }
 
 /* Search Section: same field as Rules and History */
+/* The summary card's last strip, under the cache line */
 #detectionResults .detection-search {
   position: relative;
-  margin: 6px 0 8px;
+  margin: 0 0 8px;
+  padding: 6px 11px 9px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
   flex-shrink: 0;
   min-width: 0;
 }
@@ -542,7 +552,7 @@
   padding: 0 11px;
   font-family: inherit;
   font-size: 11.5px;
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 8px;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -585,32 +595,68 @@
 
 /* results-list scrollbar inherited from common.css global scrollbar */
 
-/* New Card Design */
+/* Detection cards: grouped under category headers. The difficulty is the one
+   coloured element; confidence and evidence share one neutral line, and a thin
+   bar on the bottom edge shows the confidence in the category colour. */
+
+.detection-item {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.detection-group-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 2px 6px;
+  color: var(--text-secondary);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.detection-item:not(:first-child) .detection-group-head {
+  margin-top: 6px;
+}
+
+/* Category icon (shield, checkbox, fingerprint) in the category colour */
+.detection-item .category-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.detection-item .category-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+.card-meta-category .category-icon svg {
+  width: 12px;
+  height: 12px;
+}
 
 .detection-card {
   position: relative;
   flex-shrink: 0;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-bottom-width: 2px;
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.2s ease;
-  animation: fadeInUp 0.3s ease;
-  min-height: 56px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  animation: fadeInUp 0.25s ease;
   cursor: pointer;
 }
 
 .detection-card:hover {
   border-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -618,17 +664,20 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .detection-card { animation: none; }
+}
+
 .card-header {
   display: flex;
   align-items: center;
-  padding: 9px 10px 10px 12px;
-  background: var(--bg-secondary);
+  gap: 11px;
+  padding: 9px 11px 10px;
 }
 
 .card-icon-section {
-  width: 33px;
-  height: 28px;
-  margin-right: 13px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -638,31 +687,27 @@
 .card-icon-section img {
   width: 100%;
   height: 100%;
-  border-radius: 6px;
+  border-radius: 7px;
   object-fit: contain;
   background: white;
-  padding: 2px;
+  padding: 3px;
 }
 
 /* Fingerprint SVG icons */
 .card-icon-section .detector-icon-svg {
   width: 100%;
   height: 100%;
-  border-radius: 6px;
+  border-radius: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 5px;
 }
 
 /* .fingerprint-icon base gradient now in common.css */
 
 /* Card-scoped so rules.css's 22px fingerprint icon size does not leak in */
-.detection-card .card-icon-section .fingerprint-icon svg {
-  width: 19px;
-  height: 19px;
-}
-
+.detection-card .card-icon-section .fingerprint-icon svg,
 .detection-card .card-icon-section .fingerprint-icon-image {
   width: 19px;
   height: 19px;
@@ -671,72 +716,96 @@
 .card-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.card-row-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
 }
 
 /* Scoped to the card: rules.css also styles a global .detector-name */
 .detection-card .detector-name {
-  font-size: 13.6px;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 13.5px;
   font-weight: 600;
-  line-height: 17px;
-  margin: 0 0 3px 0;
-  padding-top: 1px;
+  line-height: 18px;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.category-badges {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-}
-
-/* Outlined chips: the category keeps its uppercase name, method chips use readable labels */
-.category-badges .badge {
-  height: 20px;
-  padding: 0 8px;
-  border-radius: 5px;
+/* Difficulty: the only coloured part of the card, as a small outlined pill */
+.detection-card .card-difficulty {
+  flex-shrink: 0;
+  padding: 1px 7px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 14px;
 }
 
-.category-badges .badge-method {
-  text-transform: none;
-  /* Readable mixed-case labels need no tracking; keeps CATEGORY + one method on one line in Plex */
-  padding: 0 7px;
-  letter-spacing: 0;
-}
-
-.category-badges .badge-match-count {
-  order: 99;
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  font-weight: 500;
-}
-
-/* Badge system (category + detection method badges) now in common.css */
-
-.card-actions {
+.card-row-meta {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 6px;
-}
-
-/* Dial + % (FormatUtils.confidenceHtml) with the difficulty under it, right-aligned */
-.detection-card .card-actions {
-  align-items: flex-end;
-  gap: 3px;
-}
-
-.detection-card .card-actions .card-confidence {
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
   margin: 0;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  line-height: 16px;
+  white-space: nowrap;
 }
 
-/* .card-difficulty is a .diff-metric (common.css) */
+.card-meta-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.card-sure {
+  flex-shrink: 0;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-meta-sep {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* The evidence wraps under itself instead of being cut off */
+.card-evidence {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Confidence along the bottom edge, in the category colour */
+.card-conf-bar {
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: var(--conf, 0%);
+  height: 2px;
+  background: var(--cat-color, var(--accent));
+  opacity: 0.85;
+}
+
+.single-result .card-header {
+  padding-block: 12px 13px;
+}
 
 .copy-btn {
   padding: 4px;
@@ -979,7 +1048,7 @@
   line-height: 14px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
 }
 
 .detection-modal-methods-list {
@@ -1032,8 +1101,8 @@
   align-items: center;
   gap: 6px;
   padding: 6px 7px 7px;
-  background: #323232;
-  border: 1px solid #474747;
+  background: var(--g-323232);
+  border: 1px solid var(--g-474747);
   border-radius: 7px;
   transition: border-color 0.2s ease, background 0.2s ease;
   cursor: pointer;
@@ -1085,9 +1154,9 @@
   font-family: var(--font-mono);
   font-size: 11px;
   line-height: 20px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   background: var(--bg-primary);
-  border: 1px solid #4b4b4b;
+  border: 1px solid var(--g-4b4b4b);
   border-radius: 5px;
   outline: none;
   cursor: pointer;
@@ -1154,7 +1223,7 @@
 /* "Mostrando 1-2 de 16": light bold text with the numbers inline in blue */
 #detectionTab .pagination-info,
 #detectionTab .page-info {
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font-size: 11.5px;
   font-weight: 600;
 }
@@ -1181,7 +1250,7 @@
 
 /* Light arrows; the disabled one stays readable instead of fading into the bar */
 #detectionTab .pagination-btn {
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
 }
 
 #detectionTab .pagination-btn:disabled {
@@ -1307,6 +1376,18 @@
 .detection-scan-separator {
   flex-shrink: 0;
   opacity: 0.6;
+}
+
+/* Category icon right before its name (half the item gap) */
+.detection-scan-check .category-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-right: -5px;
+}
+
+.detection-scan-check .category-icon svg {
+  width: 12px;
+  height: 12px;
 }
 
 .detection-scan-hint {
@@ -1539,7 +1620,7 @@
 .state-card--blue .state-card-badge {
   background: rgba(59, 130, 246, 0.15);
   border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #93c5fd;
+  color: var(--p-93c5fd);
 }
 
 /* Nothing detected (2.8 bare state): green title, robot logo with a check badge, result chips */
@@ -1564,7 +1645,7 @@
   white-space: nowrap;
   background: rgba(59, 130, 246, 0.12);
   border: 1px solid rgba(96, 165, 250, 0.3);
-  color: #93c5fd;
+  color: var(--p-93c5fd);
 }
 
 /* No cached scan yet: neutral blue title, no all-clear badge */
@@ -1791,8 +1872,8 @@
   flex-direction: column;
   gap: 6px;
   padding: 9px 10px 8px;
-  background: #323232;
-  border: 1px solid #474747;
+  background: var(--g-323232);
+  border: 1px solid var(--g-474747);
   border-radius: 8px;
   box-sizing: border-box;
   min-width: 0;
@@ -1821,13 +1902,6 @@
 
 .match-combo-confidence {
   flex-shrink: 0;
-}
-
-.match-combo-score {
-  margin: -2px 0 0;
-  font-size: 11px;
-  font-weight: 600;
-  color: #93c5fd;
 }
 
 .match-combo-lead {
@@ -1873,7 +1947,7 @@
 .match-combo-text.is-raw {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #d4d4d4;
+  color: var(--g-d4d4d4);
 }
 
 .match-combo-not {

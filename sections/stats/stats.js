@@ -1,16 +1,25 @@
 /** Local history dashboard. Charts, filters and exports share one range snapshot. */
 (function() {
   'use strict';
-  const DEFAULT_COLORS = { antibot: '#FF5733', captcha: '#33C3FF', fingerprint: '#3b82f6', other: '#8b8b8b' };
+  const DEFAULT_COLORS = { ...FormatUtils.DEFAULT_CATEGORY_COLORS, other: '#8b8b8b' };
   const DIFFICULTY_COLORS = { High: '#ef4444', Medium: '#f59e0b', Low: '#22c55e', None: '#6b7280' };
   const CATEGORIES = Object.keys(DEFAULT_COLORS);
-  const SECTIONS = ['overview', 'activity', 'protections', 'domains', 'confidence'];
+  const SECTIONS = ['overview', 'activity', 'protections', 'domains', 'confidence', 'signals', 'combinations', 'rules', 'tools'];
+  // Same order as the rule editor; distinct hues so the donut stays readable
+  const METHOD_COLORS = { cookie: '#f59e0b', header: '#ec4899', url: '#06b6d4', content: '#14b8a6', dom: '#3b82f6',
+    window: '#22c55e', js_hooks: '#8b5cf6', payload: '#f97316', other: '#6b7280' };
   const RANGE_KEY = 'scrapfly_stats_range';
   const SECTION_KEY = 'scrapfly_stats_section';
   const TABLE_PAGE = 50;
+  // Rule lists can hold most of the library: shorter pages
+  const RULE_PAGE = 15;
   const CHART_PAGE_SIZES = { timeline: 30, protections: 12, domains: 12, scatter: 25 };
+  const pageOf = key => key === 'unusedLimit' || key === 'missingLimit' ? RULE_PAGE : TABLE_PAGE;
+  const LIST_LIMITS = ['domainLimit', 'protectionLimit', 'signalLimit', 'combinationLimit', 'unusedLimit', 'missingLimit', 'changeLimit'];
   const state = { items: [], days: 30, section: 'overview', colors: { ...DEFAULT_COLORS }, stats: null,
-    now: 0, exporting: false, domainLimit: TABLE_PAGE, protectionLimit: TABLE_PAGE, loadVersion: 0, chartPages: {} };
+    now: 0, exporting: false, loadVersion: 0, chartPages: {},
+    rules: [], captures: [], incompatible: [], officialIds: new Set(), bundledOfficialIds: [], ruleStats: null, toolStats: null, firstSeen: null, descriptions: new Map(),
+    ...Object.fromEntries(LIST_LIMITS.map(key => [key, pageOf(key)])) };
   const byId = id => document.getElementById(id);
   const tr = (key, fallback) => I18n.tr(key, fallback);
   const fmt = (key, fallback, ...args) => {
@@ -43,10 +52,12 @@
   const pagesTip = value => fmt('statsTipPagesFmt', '{0} pages', num(value));
   const domainsTip = value => fmt('statsTipDomainsFmt', '{0} domains', num(value));
   const visitsTip = value => fmt('statsTipVisitsFmt', '{0} visits', num(value));
+  const capturesTip = value => fmt('statsTipCapturesFmt', '{0} captures', num(value));
   const dayDate = key => { const [year, month, day] = key.split('-').map(Number); return new Date(year, month - 1, day, 12); };
   const dayLabel = (key, full = false) => new Intl.DateTimeFormat(locale(), full ? { dateStyle: 'medium' } : { day: 'numeric', month: 'short' }).format(dayDate(key));
   const dayTip = day => [dayLabel(day.date, true), entriesTip(day.entries), detectionsTip(day.detections), domainsTip(day.uniqueDomains)];
   const domainTip = row => [row.hostname, visitsTip(row.visits), detectionsTip(row.detections), tr('statsDistinctDetectors', 'Distinct protections') + ': ' + num(row.uniqueDetectors), tr('statConfidence', 'Confidence') + ': ' + confidence(row.avgConfidence)];
+  const methodLabel = key => FormatUtils.methodLabel(key);
   const protectionTip = row => [row.name, categoryLabel(row.category), pagesTip(row.pages), domainsTip(row.domains), tr('statConfidence', 'Confidence') + ': ' + confidence(row.avgConfidence)];
 
   let tooltipAnchor = null;
@@ -90,6 +101,8 @@
   }
   function selectSection(section, persist = true) {
     if (!SECTIONS.includes(section)) return;
+    // Tools is only offered when Advanced has saved something
+    if (section === 'tools' && !state.captures.length) section = 'overview';
     state.section = section;
     hideTooltip();
     document.querySelectorAll('[data-section]').forEach(button => {
@@ -104,9 +117,19 @@
   }
   async function loadData(preferences = false) {
     const version = ++state.loadVersion;
-    const stored = await StorageManager.readRaw(['scrapfly_history', 'scrapfly_settings', RANGE_KEY, SECTION_KEY]);
+    const stored = await StorageManager.readRaw(['scrapfly_history', 'scrapfly_settings', RANGE_KEY, SECTION_KEY,
+      'scrapfly_detectors', 'scrapfly_advanced_history', 'scrapfly_incompatible_updates', 'scrapfly_remote_official_ids']);
     if (version !== state.loadVersion) return;
     state.items = HistoryStats.parseStoredHistory(stored.scrapfly_history);
+    if (typeof RuleStats !== 'undefined') {
+      state.rules = RuleStats.parseDetectors(stored.scrapfly_detectors);
+      if (typeof RuleI18n !== 'undefined') RuleI18n.indexRules(state.rules);
+      state.descriptions = RuleStats.descriptions(state.rules);
+    }
+    state.captures = typeof ToolsStats !== 'undefined' ? ToolsStats.parse(stored.scrapfly_advanced_history) : [];
+    state.incompatible = Array.isArray(stored.scrapfly_incompatible_updates) ? stored.scrapfly_incompatible_updates : [];
+    const remote = Array.isArray(stored.scrapfly_remote_official_ids) ? stored.scrapfly_remote_official_ids : [];
+    state.officialIds = new Set([...state.bundledOfficialIds, ...remote].filter(id => typeof id === 'string'));
     if (preferences) {
       if ([0, 7, 30, 90].includes(stored[RANGE_KEY])) state.days = stored[RANGE_KEY];
       if (SECTIONS.includes(stored[SECTION_KEY])) state.section = stored[SECTION_KEY];
@@ -122,6 +145,12 @@
     const selected = HistoryStats.filterByRange(state.items, state.days, state.now);
     const days = HistoryStats.timelineDays(selected, state.days, state.now, 365);
     state.stats = HistoryStats.compute(selected, { now: state.now, days, top: 8 });
+    const since = HistoryStats.rangeStart(state.days, state.now);
+    state.firstSeen = HistoryStats.firstSeen(state.items, since, state.now);
+    state.ruleStats = typeof RuleStats !== 'undefined' ? RuleStats.compute(state.rules, {
+      detectorMetrics: state.stats.detectorMetrics, incompatible: state.incompatible, isOfficial: isOfficialRule }) : null;
+    state.toolStats = typeof ToolsStats !== 'undefined' ? ToolsStats.compute(state.captures, { since, now: state.now, dayKey: HistoryStats.dayKey }) : null;
+    byId('stats-tab-tools').hidden = !state.captures.length;
     const hasEntries = selected.length > 0;
     byId('statsContent').hidden = !hasEntries;
     byId('statsEmpty').hidden = hasEntries;
@@ -155,6 +184,10 @@
     set('insightRate', percent(t.detectionRate));
     set('insightDays', num(t.activeDays));
     set('insightConfidence', confidence(t.validConfidenceCount ? t.avgConfidence : null));
+    const firstSeen = state.firstSeen || { protections: [], domains: [] };
+    set('insightNew', state.days ? num(firstSeen.protections.length) : '–');
+    const protectedDomain = mostProtectedDomain();
+    set('insightProtectedDomain', protectedDomain ? protectedDomain.hostname : '–');
     renderKpiTips();
   }
   /** Hover tips on the summary tiles: what each number counts, with a breakdown. */
@@ -188,8 +221,24 @@
     tip('insightRate', tr('statsDetectionRate', 'Entries with detections'),
       fmt('tipStatsRateFmt', '{0} of {1} entries', num(t.entriesWithDetections), num(t.entries)));
     tip('insightDays', tr('statsActiveDays', 'Active days'), tr('tipStatsActiveDays', 'Days with at least one saved page.'));
+    const firstSeen = state.firstSeen || { protections: [], domains: [] };
+    tip('insightNew', tr('statsFirstSeen', 'New this period'),
+      state.days ? fmt('statsFirstSeenTipFmt', '{0} protections and {1} domains saved for the first time in this range.', num(firstSeen.protections.length), num(firstSeen.domains.length))
+        : tr('statsFirstSeenAllTip', 'Choose 7, 30 or 90 days to see what is new.'),
+      firstSeen.protections.slice(0, 5).map(row => ({ label: row.name, dot: 'cat-' + row.category, value: row.hostname || '' })));
+    const protectedDomain = mostProtectedDomain();
+    tip('insightProtectedDomain', tr('statsMostProtectedDomain', 'Most protected domain'),
+      protectedDomain ? fmt('statsMostProtectedTipFmt', '{0} distinct protections over {1} visits.', num(protectedDomain.uniqueDetectors), num(protectedDomain.visits)) : tr('statsNoData', 'No data in this range'));
     tip('insightConfidence', tr('statsAverageConfidence', 'Average confidence'),
       fmt('statsConfidenceKnownFmt', '{0} detections have confidence values; {1} have no valid score.', num(t.validConfidenceCount), num(t.unknownConfidenceCount)));
+  }
+  function isOfficialRule(detector) {
+    if (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.isOfficialDetector === 'function') return DetectionUtils.isOfficialDetector(detector, state.officialIds);
+    return RuleStats.defaultIsOfficial(state.officialIds)(detector);
+  }
+  function mostProtectedDomain() {
+    return (state.stats ? state.stats.domainMetrics : []).filter(row => row.uniqueDetectors > 0)
+      .slice().sort((a, b) => b.uniqueDetectors - a.uniqueDetectors || b.visits - a.visits || a.hostname.localeCompare(b.hostname))[0] || null;
   }
   function renderRankedList(id, rows, domain = false) {
     const host = byId(id);
@@ -297,6 +346,18 @@
       StatsCharts.scatter(byId('statsDomainScatter'), scatterPage.rows.map(row => ({ label: row.hostname, x: row.visits, y: row.detections, radius: row.uniqueDetectors, tip: domainTip(row) })), chartOptions('statsDomainMap', 'Visits and detections', { xLabel: tr('statsVisitsUnit', 'visits'), yLabel: tr('statsDetectionsUnit', 'detections'), xMax: Math.max(1, ...s.domainMetrics.map(row => row.visits)), yMax: Math.max(1, ...s.domainMetrics.map(row => row.detections)) }));
       chartPagination('statsDomainScatter', 'scatter', scatterPage);
       renderDomainTable();
+      renderChangeTable();
+      renderFirstSeen();
+      table(byId('statsTogetherTable'), [tr('statsProtectionColumn', 'Protection'), tr('statsProtectionColumn', 'Protection'), tr('statsPagesUnit', 'pages')],
+        s.togetherMetrics.slice(0, 10).map(row => [row.a, row.b, num(row.pages)]), tr('statsFoundTogether', 'Protections found together'));
+    } else if (state.section === 'signals') {
+      renderSignals();
+    } else if (state.section === 'combinations') {
+      renderCombinations();
+    } else if (state.section === 'rules') {
+      renderRules();
+    } else if (state.section === 'tools') {
+      renderTools();
     } else {
       const bandLabel = row => num(row.min) + '–' + (row.max === 100 ? num(100) : '<' + num(row.max + 1)) + '%';
       StatsCharts.bars(byId('statsConfidenceHistogram'), s.confidenceBuckets.map(row => ({ label: bandLabel(row), value: row.count, tip: [bandLabel(row), detectionsTip(row.count)] })), chartOptions('statsConfidenceDistribution', 'Confidence distribution', { vertical: true }));
@@ -339,6 +400,133 @@
   function tableCount(prefix, visible, total) {
     set(prefix + 'Count', fmt('statsTableCountFmt', '{0} of {1} rows', num(visible), num(total)));
     byId(prefix + 'More').hidden = visible >= total;
+  }
+  /** A pattern as its rule describes it, with the raw pattern below; just the pattern when undescribed. */
+  function signalCell(signal) {
+    const description = FormatUtils.ruleText(typeof RuleStats !== 'undefined' ? RuleStats.descriptionOf(state.descriptions, signal) : '');
+    const cell = element('div', 'stats-signal');
+    if (description) cell.appendChild(element('span', 'stats-signal-desc', description));
+    const raw = element('code', 'stats-signal-raw' + (description ? '' : ' is-main'), signal.label);
+    raw.setAttribute('dir', 'ltr');
+    cell.appendChild(raw);
+    return cell;
+  }
+  function methodBadge(key) {
+    const badge = element('span', 'stats-category-badge');
+    const dot = element('span', 'stats-legend-swatch');
+    dot.style.backgroundColor = METHOD_COLORS[key] || METHOD_COLORS.other;
+    dot.setAttribute('aria-hidden', 'true');
+    badge.append(dot, document.createTextNode(methodLabel(key)));
+    return badge;
+  }
+  function renderSignals() {
+    const s = state.stats;
+    const keys = Object.keys(METHOD_COLORS);
+    StatsCharts.donut(byId('statsMethods'), keys.map(key => ({ label: methodLabel(key), value: s.methods[key] || 0, color: METHOD_COLORS[key] })),
+      chartOptions('statsMethods', 'Detection methods', { centerValue: num(s.totalMatches), centerLabel: tr('statsMatchesUnit', 'matches') }));
+    const used = keys.filter(key => CATEGORIES.some(category => (s.methodsByCategory[category] || {})[key] > 0));
+    const series = used.map(key => ({ key, label: methodLabel(key), color: METHOD_COLORS[key] }));
+    StatsCharts.stacked(byId('statsMethodsByCategory'), CATEGORIES.filter(category => used.some(key => s.methodsByCategory[category][key] > 0)).map(category => ({
+      label: categoryLabel(category), values: s.methodsByCategory[category],
+      tip: [categoryLabel(category), ...used.filter(key => s.methodsByCategory[category][key] > 0).map(key => methodLabel(key) + ': ' + num(s.methodsByCategory[category][key]))]
+    })), chartOptions('statsMethodsByCategory', 'Methods by category', { series }));
+    byId('statsMethodLegend').replaceChildren(...used.map(methodBadge));
+    renderSignalTable();
+    StatsCharts.bars(byId('statsWeakEvidence'), s.weakEvidence.map(row => ({ label: row.name, value: row.avgMatchConfidence, color: state.colors[row.category],
+      tip: [row.name, categoryLabel(row.category), tr('statConfidence', 'Confidence') + ': ' + confidence(row.avgMatchConfidence), pagesTip(row.pages)] })),
+    chartOptions('statsWeakEvidence', 'Weakest evidence', { fixedMax: 100, formatNumber: value => percent(value) }));
+  }
+  function renderSignalTable() {
+    const all = state.stats.signalMetrics, rows = all.slice(0, state.signalLimit);
+    table(byId('statsSignalTable'), [tr('statsSignalColumn', 'Signal'), tr('statsMethodColumn', 'Method'), tr('statsProtectionColumn', 'Protection'), tr('statsPagesUnit', 'pages'), tr('statsAverageConfidence', 'Average confidence')],
+      rows.map(row => [signalCell(row), methodBadge(row.method), row.detector, num(row.pages), confidence(row.avgConfidence)]), tr('statsTopSignals', 'Most matched signals'));
+    tableCount('statsSignal', rows.length, all.length);
+  }
+  function renderCombinations() {
+    const s = state.stats, d = s.decided;
+    const parts = [
+      { key: 'single', label: tr('statsDecidedSingle', 'Single pattern'), color: '#6b7280' },
+      { key: 'combination', label: tr('statsDecidedCombination', 'Combination'), color: '#8b5cf6' }];
+    StatsCharts.donut(byId('statsDecided'), parts.map(p => ({ label: p.label, value: d[p.key].detections, color: p.color })),
+      chartOptions('statsDecidedBy', 'How detections were decided', { centerValue: num(s.totals.detections), centerLabel: tr('statsDetectionsUnit', 'detections') }));
+    StatsCharts.bars(byId('statsCombinationGain'), parts.filter(p => d[p.key].avgConfidence !== null).map(p => ({ label: p.label, value: d[p.key].avgConfidence, color: p.color,
+      tip: [p.label, confidence(d[p.key].avgConfidence), detectionsTip(d[p.key].detections)] })),
+    chartOptions('statsCombinationGain', 'Confidence by decision', { fixedMax: 100, formatNumber: value => percent(value) }));
+    renderCombinationTable();
+  }
+  function renderCombinationTable() {
+    const all = state.stats.combinationMetrics, rows = all.slice(0, state.combinationLimit);
+    const comboName = row => FormatUtils.ruleText((typeof RuleStats !== 'undefined' && RuleStats.combinationName(state.rules, row.detectorId, row.detector, row.id)) || row.name) || row.id;
+    table(byId('statsCombinationTable'), [tr('statsCombinationColumn', 'Combination'), tr('statsProtectionColumn', 'Protection'), tr('statsPagesUnit', 'pages'), tr('statsAverageConfidence', 'Average confidence')],
+      rows.map(row => [comboName(row), row.detector, num(row.pages), confidence(row.avgConfidence)]), tr('statsTopCombinations', 'Combinations that fired'),
+      tr('statsNoCombinations', 'No detection in this range was decided by a combination.'));
+    tableCount('statsCombination', rows.length, all.length);
+  }
+  function renderRules() {
+    const r = state.ruleStats;
+    if (!r) return;
+    set('rulesTotal', num(r.totals.total));
+    set('rulesOfficial', num(r.totals.official));
+    set('rulesCustom', num(r.totals.custom));
+    set('rulesModified', num(r.totals.modified));
+    set('rulesDisabled', num(r.totals.disabled));
+    StatsCharts.bars(byId('statsRuleActive'), r.active.slice(0, 10).map(row => ({ label: row.name, value: row.pages, color: state.colors[row.category],
+      tip: [row.name, row.official ? tr('tipOfficialDetector', 'Official Scrapfly detector') : tr('tipCustomDetector', 'Custom detector'), pagesTip(row.pages), domainsTip(row.domains)] })),
+    chartOptions('statsRulesMostActive', 'Most active rules'));
+    const methodKeys = Object.keys(r.patternsByMethod).filter(key => r.patternsByMethod[key] > 0);
+    StatsCharts.bars(byId('statsRulePatterns'), methodKeys.map(key => ({ label: methodLabel(key), value: r.patternsByMethod[key], color: METHOD_COLORS[key],
+      tip: [methodLabel(key), fmt('statsTipPatternsFmt', '{0} patterns', num(r.patternsByMethod[key]))] })), chartOptions('statsRulesPatternsByMethod', 'Patterns by method'));
+    const kind = row => row.official ? tr('statsRulesOfficial', 'Official') : tr('statsRulesCustom', 'Custom');
+    const unused = r.neverMatched.slice(0, state.unusedLimit);
+    table(byId('statsUnusedTable'), [tr('statsRuleColumn', 'Rule'), tr('statsCategoryColumn', 'Category'), tr('statsRuleKindColumn', 'Type'), tr('statsPatternsUnit', 'patterns')],
+      unused.map(row => [row.name, categoryBadge(CATEGORIES.includes(row.category) ? row.category : 'other'), kind(row), num(row.patterns)]),
+      tr('statsRulesNeverMatched', 'Not found in this range'), tr('statsRulesAllMatched', 'Every enabled rule found something in this range.'));
+    tableCount('statsUnused', unused.length, r.neverMatched.length);
+    const missing = r.missingDescriptions.slice(0, state.missingLimit);
+    table(byId('statsMissingTable'), [tr('statsRuleColumn', 'Rule'), tr('statsCategoryColumn', 'Category'), tr('statsMissingColumn', 'Without description'), tr('statsPatternsUnit', 'patterns')],
+      missing.map(row => [row.name, categoryBadge(CATEGORIES.includes(row.category) ? row.category : 'other'), num(row.missing), num(row.patterns)]),
+      tr('statsRulesMissingDescriptions', 'Patterns without a description'), tr('statsRulesAllDescribed', 'Every pattern has a description.'));
+    tableCount('statsMissing', missing.length, r.missingDescriptions.length);
+    byId('statsWaitingCard').hidden = !r.waiting.length;
+    table(byId('statsWaitingTable'), [tr('statsRuleColumn', 'Rule'), tr('statsRuleVersionColumn', 'Rule version'), tr('statsNeedsExtensionColumn', 'Needs extension')],
+      r.waiting.map(row => [row.name, row.version || '–', row.minExtensionVersion || '–']), tr('statsRulesWaiting', 'Waiting for a newer extension'));
+  }
+  function renderTools() {
+    const t = state.toolStats;
+    if (!t) return;
+    StatsCharts.bars(byId('statsToolsVendors'), t.byModule.map(row => ({ label: row.name, value: row.count, tip: [row.name, capturesTip(row.count)] })),
+      chartOptions('statsToolsByVendor', 'Captures by vendor'));
+    StatsCharts.bars(byId('statsToolsTools'), t.byTool.slice(0, 10).map(row => {
+      const label = row.capture ? tr('statsToolsCapture', 'Capture') : row.label;
+      return { label, value: row.count, tip: [label, capturesTip(row.count)] };
+    }), chartOptions('statsToolsByTool', 'Most used tools'));
+    const timePage = chartPage('timeline', state.stats.timeline);
+    StatsCharts.line(byId('statsToolsTimeline'), timePage.rows.map(day => ({ label: dayLabel(day.date), value: t.perDay.get(day.date) || 0,
+      tip: [dayLabel(day.date, true), capturesTip(t.perDay.get(day.date) || 0)] })),
+    chartOptions('statsToolsOverTime', 'Captures over time', { fill: true, fixedMax: Math.max(1, ...state.stats.timeline.map(day => t.perDay.get(day.date) || 0)) }));
+    chartPagination('statsToolsTimeline', 'timeline', timePage);
+  }
+  function renderChangeTable() {
+    const s = state.stats, all = s.domainChanges, rows = all.slice(0, state.changeLimit);
+    const when = ts => new Intl.DateTimeFormat(locale(), { dateStyle: 'medium' }).format(new Date(ts));
+    const change = row => {
+      const cell = element('div', 'stats-change');
+      row.added.forEach(name => cell.appendChild(element('span', 'stats-change-added', '+ ' + name)));
+      row.removed.forEach(name => cell.appendChild(element('span', 'stats-change-removed', '− ' + name)));
+      return cell;
+    };
+    table(byId('statsChangeTable'), [tr('statsDomainColumn', 'Domain'), tr('statsChangeColumn', 'Change'), tr('statsDateColumn', 'Date')],
+      rows.map(row => [row.hostname, change(row), when(row.timestamp)]), tr('statsDomainChanges', 'Protection changes'),
+      tr('statsNoChanges', 'No domain changed its protections between saved visits in this range.'));
+    tableCount('statsChange', rows.length, all.length);
+  }
+  function renderFirstSeen() {
+    const firstSeen = state.firstSeen || { protections: [], domains: [] };
+    const when = ts => new Intl.DateTimeFormat(locale(), { dateStyle: 'medium' }).format(new Date(ts));
+    const rows = state.days ? firstSeen.protections.slice(0, 10).map(row => [row.name, categoryBadge(row.category), row.hostname || '–', when(row.ts)]) : [];
+    table(byId('statsFirstSeenTable'), [tr('statsProtectionColumn', 'Protection'), tr('statsCategoryColumn', 'Category'), tr('statsDomainColumn', 'Domain'), tr('statsDateColumn', 'Date')],
+      rows, tr('statsFirstSeen', 'New this period'),
+      state.days ? tr('statsNothingNew', 'Nothing new: every protection here was already in History before this range.') : tr('statsFirstSeenAllTip', 'Choose 7, 30 or 90 days to see what is new.'));
   }
   function renderProtectionTable() {
     const all = state.stats.detectorMetrics, rows = all.slice(0, state.protectionLimit);
@@ -397,7 +585,7 @@
     document.querySelectorAll('[data-days]').forEach(button => button.addEventListener('click', () => {
       state.days = Number(button.dataset.days);
       state.chartPages = {};
-      state.domainLimit = state.protectionLimit = TABLE_PAGE;
+      LIST_LIMITS.forEach(key => { state[key] = pageOf(key); });
       status('');
       render();
       StorageManager.saveToStorage(RANGE_KEY, state.days, { wrapMetadata: false });
@@ -408,6 +596,16 @@
     });
     byId('statsDomainMore').addEventListener('click', () => { state.domainLimit += TABLE_PAGE; renderDomainTable(); });
     byId('statsProtectionMore').addEventListener('click', () => { state.protectionLimit += TABLE_PAGE; renderProtectionTable(); });
+    [['statsSignalMore', 'signalLimit', () => renderSignalTable()], ['statsCombinationMore', 'combinationLimit', () => renderCombinationTable()],
+      ['statsUnusedMore', 'unusedLimit', () => renderRules()], ['statsMissingMore', 'missingLimit', () => renderRules()],
+      ['statsChangeMore', 'changeLimit', () => renderChangeTable()]].forEach(([id, key, again]) => byId(id).addEventListener('click', () => { state[key] += pageOf(key); again(); }));
+    // Official ids of the detectors shipped with this build (Rules → Update adds its own in storage)
+    try {
+      if (typeof fetch === 'function') {
+        const index = await (await fetch('../../detectors/index.json')).json();
+        state.bundledOfficialIds = Object.values(index || {}).flatMap(entry => entry && Array.isArray(entry.detectors) ? entry.detectors : []);
+      }
+    } catch (_) { /* custom vs official falls back to stored ids */ }
     document.addEventListener('keydown', event => { if (event.key === 'Escape') hideTooltip(); });
     window.addEventListener('scroll', hideTooltip, { passive: true });
     let resizeFrame = 0;
@@ -415,12 +613,13 @@
       cancelAnimationFrame(resizeFrame);
       resizeFrame = requestAnimationFrame(() => { if (state.stats && !byId('statsContent').hidden) renderSection(); });
     });
+    if (typeof RuleI18n !== 'undefined') { try { await RuleI18n.load(); } catch (_) { /* English rule texts */ } }
     try { await loadData(true); }
     catch (_) { status(tr('statsLoadFailed', 'Could not load the history. Please reload this page.'), true); }
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== 'local') return;
       if (changes.scrapfly_language_override) { location.reload(); return; }
-      if (changes.scrapfly_history || changes.scrapfly_settings) {
+      if (changes.scrapfly_history || changes.scrapfly_settings || changes.scrapfly_detectors || changes.scrapfly_advanced_history || changes.scrapfly_incompatible_updates) {
         loadData().catch(() => status(tr('statsLoadFailed', 'Could not load the history. Please reload this page.'), true));
       }
     });

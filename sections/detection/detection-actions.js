@@ -164,10 +164,14 @@ DetectionActions.addToBlacklist = async function() {
         return;
       }
 
-      settings.detection.blacklistedDomains.push(domain);
-
-      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.saveSettings === 'function'
-        ? await StorageManager.saveSettings(settings)
+      // Written from a fresh read, so a Settings save in between is not undone
+      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.updateSettings === 'function'
+        ? await StorageManager.updateSettings((fresh) => {
+          fresh.detection = fresh.detection || {};
+          const list = Array.isArray(fresh.detection.blacklistedDomains) ? fresh.detection.blacklistedDomains : [];
+          if (list.includes(domain)) return false;
+          fresh.detection.blacklistedDomains = [...list, domain];
+        })
         : false;
       if (!saved) {
         throw new Error(detectionActionsTr('failedReadSettings', 'Could not save settings'));
@@ -245,10 +249,12 @@ DetectionActions.removeFromBlacklist = async function(domain) {
       const settings = await Utils.getSettings();
 
       if (settings.detection?.blacklistedDomains) {
-        settings.detection.blacklistedDomains = settings.detection.blacklistedDomains.filter(d => d !== domain);
-
-        const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.saveSettings === 'function'
-          ? await StorageManager.saveSettings(settings)
+        const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.updateSettings === 'function'
+          ? await StorageManager.updateSettings((fresh) => {
+            const list = fresh.detection?.blacklistedDomains;
+            if (!Array.isArray(list)) return false;
+            fresh.detection.blacklistedDomains = list.filter(d => d !== domain);
+          })
           : false;
         if (!saved) {
           throw new Error(detectionActionsTr('failedReadSettings', 'Could not save settings'));
@@ -317,7 +323,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
 };
 
 DetectionActions.refreshAnalysis = async function() {
-    if (this.debugMode) Logger.debug('UI', 'Refreshing detection analysis...');
+    if (this.debugMode) Logger.debug('UI', 'Refreshing detection analysis');
 
     try {
       this.showAnalyzingState();

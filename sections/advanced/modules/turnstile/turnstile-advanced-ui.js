@@ -18,7 +18,7 @@ TurnstileAdvanced.prototype.renderTools = function() {
 
 
 TurnstileAdvanced.prototype.setupToolListeners = function() {
-        Logger.network('[Turnstile] Setting up tool listeners...');
+        Logger.debug('NETWORK', '[Turnstile] Setting up tool listeners');
         this.bindToolActions([
             { id: 'turnstileExtractSiteKey', handler: () => this.extractSiteKey() },
             { id: 'turnstileAnalyzeScripts', handler: () => this.analyzeScripts() }

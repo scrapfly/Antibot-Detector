@@ -155,6 +155,12 @@ Rules.prototype.bindCombinationsEditor = function() {
   });
   ['click', 'input', 'change'].forEach(kind => container.addEventListener(kind, event => this.handleCombinationAction(event, kind)));
   container.addEventListener('keydown', event => {
+    // A description is one line: Enter finishes it
+    if (event.key === 'Enter' && event.target.dataset?.comboField === 'description') {
+      event.preventDefault();
+      event.target.blur();
+      return;
+    }
     if (event.key === 'Escape' && this._comboPickerOpen !== null) {
       event.stopPropagation();
       const index = this._comboPickerOpen;
@@ -193,13 +199,27 @@ Rules.prototype.getComboPatternOptions = function() {
     const name = row.querySelector('.method-name')?.value.trim() || '';
     const value = ['cookie', 'header'].includes(method) ? row.querySelector('.method-value')?.value.trim() || '' : '';
     return { id: row.dataset.patternId, method, label: name && value ? `${name} = ${value}` : name,
-      strict: row.dataset.standalone === 'false', confidence: Math.max(0, Math.min(100, Number(row.dataset.confidence) || 100)) };
+      strict: row.dataset.standalone === 'false', confidence: Math.max(0, Math.min(100, Number(row.dataset.confidence) || 100)),
+      ...(row.dataset.description !== undefined ? { description: row.dataset.description.trim() } : {}) };
   }).filter(p => p.method);
 };
-/** The stored description of a pattern, while the row still shows the stored text. */
+/** The row's description (typed or stored), else the stored one while the row still shows the stored text. */
 Rules.prototype.comboDescriptionOf = function(option) {
+  if (option && typeof option.description === 'string') return option.description;
   const stored = option && this._comboStored?.get(option.id);
   return stored && stored.description && stored.text === String(option.label || '').trim() ? stored.description : '';
+};
+/** Description typed on a combination row: saved on the pattern, mirrored where else it shows. */
+Rules.prototype.setComboPatternDescription = function(id, text, source) {
+  const value = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 200);
+  const row = this.getComboPatternRow(id);
+  if (!row) return;
+  row.dataset.description = value;
+  const inline = row.querySelector('.method-description-inline');
+  if (inline) inline.value = value;
+  document.querySelectorAll('#combinationsContainer .combo-item-desc[data-combo-field="description"]').forEach(el => {
+    if (el !== source && el.dataset.pattern === id) el.textContent = value;
+  });
 };
 Rules.prototype.getComboPatternRow = function(id) {
   return [...document.querySelectorAll('#detectionMethodsContainer .method-item[data-pattern-id]')].find(row => row.dataset.patternId === id) || null;
@@ -256,6 +276,10 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
   const combo = card && this.combinationsModel[index];
   if (!combo) return;
   const field = target.dataset.comboField;
+  if (field === 'description') {
+    if (kind === 'input') this.setComboPatternDescription(target.dataset.pattern, target.textContent, target);
+    return;
+  }
   if (field && kind === 'input') {
     if (field === 'name') combo.name = target.value;
     if (field === 'confidence') {
@@ -607,15 +631,17 @@ Rules.prototype.renderComboItem = function(tree, index, labels) {
   const method = node.method || option?.method || '';
   const raw = node.method ? '' : (option?.label || combosText('combinationEmptyPattern', '(empty pattern)'));
   const description = node.method ? combosFormat('combinationAnyOfMethodFmt', 'Any {0} pattern', this.getMethodLabel(method)) : this.comboDescriptionOf(option);
+  // A pattern's description is edited right here (same value as its Settings → Description)
+  const addDescription = combosText('combinationAddDescription', 'Add a description');
   const strict = option?.strict ? `<span class="combo-item-tag">${esc(combosText('patternCombinationsOnlyBadge', 'Combinations only'))}</span>` : '';
   // The method chip starts the first line and the text flows after it, so a
   // wide chip ("Window properties") does not squeeze the description
   return `<div class="combo-item${negative ? ' is-not' : ''}" data-idx="${index}">
     <div class="combo-item-row">
       <div class="combo-item-body">
-        ${description
-          ? `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-item-desc" dir="auto">${esc(description)}</span></p>${raw ? `<span class="combo-leaf-text" dir="ltr" title="${attr(raw)}">${esc(raw)}</span>` : ''}`
-          : `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-leaf-text is-main" dir="ltr" title="${attr(raw)}">${esc(raw)}</span></p>`}
+        ${node.method
+          ? `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-item-desc" dir="auto">${esc(description)}</span></p>`
+          : `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-item-desc" dir="auto" contenteditable="plaintext-only" role="textbox" spellcheck="false" data-combo-field="description" data-pattern="${attr(node.pattern)}" data-placeholder="${attr(addDescription)}" aria-label="${attr(addDescription)}">${esc(description)}</span></p><span class="combo-leaf-text" dir="ltr" title="${attr(raw)}">${esc(raw)}</span>`}
         <div class="combo-item-meta">
           <select data-combo-action="presence" aria-label="${attr(combosText('combinationMatchState', 'Pattern condition'))}">
             <option value="present"${negative ? '' : ' selected'}>${esc(combosText('combinationMustBeFound', 'Must be found'))}</option>

@@ -128,7 +128,7 @@ test('nested variants and duplicate matches count detections but deduplicate pag
   assert.strictEqual(s.totals.detectionRate, 2 / 3 * 100);
   assert.strictEqual(s.topDetectors.length, 1);
   assert.strictEqual(s.detectorMetrics.length, 3);
-  assert.deepStrictEqual(s.detectorMetrics[0], { name: 'Nested', category: 'captcha', pages: 2, domains: 1, avgConfidence: 67 });
+  assert.deepStrictEqual(s.detectorMetrics[0], { name: 'Nested', id: '', category: 'captcha', pages: 2, domains: 1, avgConfidence: 67, matches: 0, avgMatchConfidence: null });
   assert.deepStrictEqual(s.domainMetrics[0], { hostname: 'a.com', visits: 2, detections: 5, uniqueDetectors: 3, avgConfidence: 70 });
   assert.strictEqual(s.categoryOverlap.captcha.antibot, 1);
   assert.strictEqual(s.categoryOverlap.antibot.captcha, 1);

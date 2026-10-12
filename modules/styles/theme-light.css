@@ -1,0 +1,71 @@
+/* ============================================
+   Light theme (Scrapfly style): the few rules the colour tokens cannot reach.
+   Text the dark theme draws white on a plain or lightly tinted surface becomes
+   navy (or blue on hover); white text on solid accent buttons stays white.
+   Loaded last; every rule is scoped to :root[data-theme="light"].
+   ============================================ */
+
+/* Titles and labels on surfaces */
+:root[data-theme="light"] #editRuleModal .modal-card-header h3,
+:root[data-theme="light"] #methodSettingsModal .modal-card-header h3,
+:root[data-theme="light"] #methodSettingsModal .setting-label,
+:root[data-theme="light"] #settingsModal .settings-row-title,
+:root[data-theme="light"] #settingsModal .settings-card-head,
+:root[data-theme="light"] #settingsModal .settings-stats-title,
+:root[data-theme="light"] #settingsModal .data-card-title,
+:root[data-theme="light"] #settingsModal .data-item-title {
+  color: var(--text-primary);
+}
+
+/* Hovers that tint the background blue: blue text instead of white */
+:root[data-theme="light"] .capture-action-btn:hover,
+:root[data-theme="light"] .advanced-no-tools-history:hover,
+:root[data-theme="light"] #capturesPanel .history-v2-btn:hover,
+:root[data-theme="light"] .rh-pager-btn:hover:not(:disabled),
+:root[data-theme="light"] .pt-option[aria-pressed="true"],
+:root[data-theme="light"] .rules-toolbar .check-updates-btn:hover,
+:root[data-theme="light"] .rules-ext-notice-link:hover,
+:root[data-theme="light"] #editRuleModal .method-help-btn:hover,
+:root[data-theme="light"] #editRuleModal .method-pagination-btn:hover:not(:disabled),
+:root[data-theme="light"] #editRuleModal .method-action-btn.settings:hover,
+:root[data-theme="light"] #editRuleModal .add-method-btn:hover,
+:root[data-theme="light"] #methodSettingsModal .ms-test-btn:hover,
+:root[data-theme="light"] #settingsModal .webhook-help-btn:hover,
+:root[data-theme="light"] #settingsModal button.webhook-var-chip:hover,
+:root[data-theme="light"] #settingsModal .webhook-link-btn:hover,
+:root[data-theme="light"] #settingsModal .webhook-vars-copy:hover {
+  color: var(--accent);
+}
+
+:root[data-theme="light"] .pt-sample mark {
+  color: var(--text-primary);
+}
+
+/* Chips coloured by Settings → colours (inline text colour): the pale
+   colours that read on dark are darkened so they read on white */
+:root[data-theme="light"] .badge,
+:root[data-theme="light"] .method-chip,
+:root[data-theme="light"] .combo-chip,
+:root[data-theme="light"] .method-type-badge,
+:root[data-theme="light"] .history-modal-method-badge,
+:root[data-theme="light"] .method-tag {
+  filter: brightness(0.62) saturate(1.4);
+}
+
+/* Shadows: softer on white */
+:root[data-theme="light"] .detection-card:hover,
+:root[data-theme="light"] .rule-modal-content {
+  box-shadow: 0 6px 24px rgba(9, 30, 66, 0.12);
+}
+
+/* Rules → Update: an outlined blue button on white, like Scrapfly's secondary buttons */
+:root[data-theme="light"] .rules-toolbar .check-updates-btn {
+  background: #ffffff;
+  border-color: rgba(26, 115, 199, 0.45);
+  color: var(--accent);
+}
+
+:root[data-theme="light"] .rules-toolbar .check-updates-btn:hover {
+  background: rgba(26, 115, 199, 0.08);
+  border-color: var(--accent);
+}

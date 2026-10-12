@@ -5,6 +5,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const HistoryStats = require('../sections/stats/history-stats.js');
+const RuleStats = require('../sections/stats/rule-stats.js');
+const ToolsStats = require('../sections/stats/tools-stats.js');
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('sections/stats/stats.html');
@@ -50,7 +52,7 @@ async function app(items, preferences = {}, download = async () => ({ filename: 
     createElement: tag => new Node(tag), createTextNode: text => Object.assign(new Node('#text'), { textContent: text }),
     addEventListener: (name, handler) => { if (name === 'DOMContentLoaded') init = handler; }
   };
-  const context = vm.createContext({ document: doc, Node, HistoryStats, Intl, Date, console,
+  const context = vm.createContext({ document: doc, Node, HistoryStats, RuleStats, ToolsStats, Intl, Date, console,
     window: { innerWidth: 1000, innerHeight: 800, addEventListener() {} }, location: { reload() {} },
     requestAnimationFrame: fn => fn(), cancelAnimationFrame() {}, Logger: { storage() {}, error() {} },
     chrome: { storage: { local: { get: async () => ({ ...stored }), set: async data => { Object.assign(stored, data); writes.push(data); } }, onChanged: { addListener: handler => changes.push(handler) } },
@@ -61,6 +63,8 @@ async function app(items, preferences = {}, download = async () => ({ filename: 
     StatsCharts: Object.fromEntries(['line', 'bars', 'donut', 'heatmap', 'matrix', 'scatter', 'stacked'].map(key => [key, (...args) => chartCalls.push({ key, args })])),
     StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); } }
   });
+  vm.runInContext(read('utils/format-utils.js'), context);
+  context.FormatUtils = context.FormatUtils || (context.self && context.self.FormatUtils) || context.window.FormatUtils;
   vm.runInContext(read('modules/core/storage-manager.js'), context);
   vm.runInContext(read('sections/stats/stats.js'), context);
   await init();
@@ -78,7 +82,7 @@ test('statistics standalone load graph has existing unique scripts in dependency
   const scripts = [...html.matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1]);
   assert.equal(new Set(scripts).size, scripts.length);
   scripts.forEach(src => assert.ok(fs.existsSync(path.resolve(root, 'sections/stats', src)), src));
-  for (const dependency of ['history-stats.js', 'stats-charts.js', 'stats-export.js', '../../modules/core/storage-manager.js', '../../modules/core/i18n.js']) {
+  for (const dependency of ['history-stats.js', 'rule-stats.js', 'tools-stats.js', 'stats-charts.js', 'stats-export.js', '../../modules/core/storage-manager.js', '../../modules/core/i18n.js']) {
     assert.ok(scripts.indexOf(dependency) < scripts.indexOf('stats.js'), dependency);
   }
   assert.ok(scripts.indexOf('../../modules/core/logger.js') < scripts.indexOf('../../modules/core/storage-manager.js'));
@@ -176,4 +180,53 @@ test('keyboard tab navigation selects panels and reverses direction for RTL', as
   ui.context.document.documentElement.dir = 'rtl';
   ui.button('section', 'activity').events.keydown(event('ArrowRight'));
   assert.equal(ui.ids.get('stats-panel-overview').hidden, false);
+});
+
+const textOf = node => [node.textContent || '', ...node.children.map(textOf)].join(' ');
+const richEntries = () => [
+  { timestamp: Date.now() - 1000, hostname: 'shop.example', detections: [{ name: 'Turnstile', category: 'captcha', confidence: 90,
+    matches: [{ type: 'cookie', value: 'cf_chl=SECRET', confidence: 90 }], combinations: [{ id: 'c1', confidence: 90 }] }] },
+  { timestamp: Date.now() - 2 * 86400000, hostname: 'shop.example', detections: [{ name: 'reCAPTCHA', category: 'captcha', confidence: 80,
+    matches: [{ type: 'js_hooks', value: 'grecaptcha.render', confidence: 80 }] }] }
+];
+const detectorsStore = { detectors: { captcha: {
+  turnstile: { id: 'turnstile', name: 'Turnstile', author: 'Scrapfly', detection: { cookie: [{ name: 'cf_chl', description: 'Challenge cookie' }] },
+    combinations: [{ id: 'c1', name: 'Cookie and widget' }] },
+  unused: { id: 'unused', name: 'Unused rule', author: 'me', detection: { dom: [{ selector: '#x' }] } } } } };
+
+test('Signals, Combinations and Rules read history and the rule library without writing', async () => {
+  const ui = await app(richEntries(), { scrapfly_detectors: detectorsStore });
+  ui.button('section', 'signals').events.click();
+  assert.equal(ui.ids.get('stats-panel-signals').hidden, false);
+  const methods = ui.chartCalls.find(call => call.args[0].id === 'statsMethods');
+  assert.equal(methods.args[1].find(part => part.color === '#8b5cf6').value, 1, 'one JavaScript hooks match');
+  const signals = textOf(ui.ids.get('statsSignalTable'));
+  assert.match(signals, /Challenge cookie/, 'the rule description is shown');
+  assert.match(signals, /cf_chl/);
+  assert.ok(!signals.includes('SECRET'), 'never a cookie value');
+  ui.button('section', 'combinations').events.click();
+  assert.match(textOf(ui.ids.get('statsCombinationTable')), /Cookie and widget/, 'combination named from the rule');
+  ui.button('section', 'rules').events.click();
+  assert.equal(ui.ids.get('rulesTotal').textContent, '2');
+  assert.equal(ui.ids.get('rulesCustom').textContent, '2', 'no bundled index in the test: nothing counts as official');
+  assert.match(textOf(ui.ids.get('statsUnusedTable')), /Unused rule/);
+  assert.equal(ui.ids.get('statsWaitingCard').hidden, true);
+  assert.ok(ui.writes.every(write => Object.keys(write).every(key => key === 'scrapfly_stats_section')), 'only the chosen tab is saved');
+});
+
+test('Domains shows protection changes; Tools appears only with Advanced captures', async () => {
+  const plain = await app(richEntries());
+  assert.equal(plain.ids.get('stats-tab-tools').hidden, true);
+  plain.button('section', 'domains').events.click();
+  const changes = textOf(plain.ids.get('statsChangeTable'));
+  assert.match(changes, /\+ Turnstile/);
+  assert.match(changes, /− reCAPTCHA/);
+  const ui = await app(richEntries(), { scrapfly_advanced_history: { akamai: [{ timestamp: Date.now() - 1000, data: { tool: 't', label: 'Analyze Scripts' } }] },
+    scrapfly_stats_section: 'tools' });
+  assert.equal(ui.ids.get('stats-tab-tools').hidden, false);
+  assert.equal(ui.ids.get('stats-panel-tools').hidden, false);
+  const vendors = ui.chartCalls.find(call => call.args[0].id === 'statsToolsVendors');
+  assert.deepEqual(vendors.args[1].map(p => [p.label, p.value]), [['Akamai Bot Manager', 1]]);
+  const saved = await app(richEntries(), { scrapfly_stats_section: 'tools' });
+  assert.equal(saved.ids.get('stats-panel-overview').hidden, false, 'a saved Tools tab falls back to Overview when there are no captures');
 });

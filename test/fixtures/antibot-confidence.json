@@ -961,5 +961,39 @@
   "fwcim-command": {
    "source": "window.fwcimCmd = [['profile', 'signIn']];"
   }
+ },
+ "detect-cloudflare-waitingroom": {
+  "cf-waitingroom-cookie": {
+   "cookie": [
+    "__cfwaitingroom",
+    "Ck5mZWF0dXJlc19xdWV1ZRIGd2FpdGluZw"
+   ]
+  },
+  "cfwr-server-header": {
+   "header": [
+    "server",
+    "cloudflare"
+   ]
+  },
+  "cfwr-ray-header": {
+   "header": [
+    "cf-ray",
+    "8d1f2e3a4b5c6d7e-AMS"
+   ]
+  }
+ },
+ "detect-hunt": {
+  "hunt-api-loader": {
+   "url": "https://www.example-bets.com/hd-api/external/apps/a1b2c3d4e5f6/api.js"
+  },
+  "hunt-fingerprint-script": {
+   "url": "https://www.example-bets.com/hd-api/external/assets/hdf.js"
+  },
+  "hunt-verify": {
+   "url": "https://www.example-bets.com/hd-api/external/verify"
+  },
+  "hunt-api-reference": {
+   "source": "s.src = '/hd-api/external/apps/a1b2c3d4e5f6/api.js';"
+  }
  }
 }

@@ -34,3 +34,9 @@ test('no badge setter derives its colour from the detection count', () => {
     assert.ok(!src.includes('getBadgeColorForCount'), `${file} uses the removed count helper`);
   }
 });
+
+test('difficulty does not throw on a detector object without a name', () => {
+  const DU = globalThis.DetectionUtils || require('../utils/detection-utils.js');
+  assert.doesNotThrow(() => DU.getDifficultyLevel([{ detector: { id: 'detect-x' }, name: 'X', category: 'antibot', confidence: 90 }]));
+  assert.strictEqual(DU.getDifficultyLevel([{ detector: { id: 'shape' }, name: 'Shape Security', category: 'antibot', confidence: 90 }]), 'High');
+});

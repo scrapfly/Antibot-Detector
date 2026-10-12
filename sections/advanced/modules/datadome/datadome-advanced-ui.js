@@ -29,7 +29,6 @@ DataDomeAdvanced.prototype.renderTools = function() {
      * Setup tool-specific event listeners
      */
 DataDomeAdvanced.prototype.setupToolListeners = function() {
-        Logger.network('[DataDome] Setting up tool listeners...');
         this.bindToolActions([
             { id: 'datadomeCheckCookies', handler: () => this.checkCookies() },
             { id: 'datadomeAnalyzeScripts', handler: () => this.analyzeScripts() }
@@ -96,7 +95,6 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
                     return;
                 }
 
-                Logger.network('[DataDome] Calling displayExportCodeModal...');
                 try {
                     this.displayExportCodeModal(scripts);
                     Logger.network('[DataDome] displayExportCodeModal called successfully');

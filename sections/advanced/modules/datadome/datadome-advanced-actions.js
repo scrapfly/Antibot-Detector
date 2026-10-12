@@ -67,7 +67,7 @@ DataDomeAdvanced.prototype.analyzeScripts = async function() {
 
                 // Reload page to capture DataDome scripts (keep existing cookie)
                 await new Promise(resolve => setTimeout(resolve, 500));
-                Logger.network('[DataDome] Reloading page to capture scripts (keeping datadome cookie)...');
+                Logger.network('[DataDome] Reloading page to capture scripts (keeping datadome cookie)');
                 // Reload page - Background's webNavigation listener will capture scripts
                 // DataDome cookie is preserved, no deletion occurs
                 await chrome.tabs.reload(this.tabInfo.id);

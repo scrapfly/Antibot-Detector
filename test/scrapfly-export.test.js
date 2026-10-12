@@ -148,8 +148,12 @@ test('the Unblocker and JavaScript rendering are on by default, and each can be 
     assert.equal(readBack[id](off), URL_PLAIN, `${id}: still a valid call`);
   }
   assert.match(ScrapflyExport.snippet('cli', URL_PLAIN, [], { unblocker: false, renderJs: false, proxyPool: 'public_datacenter_pool' }), /^scrapfly scrape '[^']*'$/m);
-  // gofmt: values one space after the longest key that is left
-  assert.match(ScrapflyExport.snippet('go', URL_PLAIN, [], { unblocker: false, renderJs: false, proxyPool: 'public_datacenter_pool' }), /^\t\tURL: "/m);
+  // gofmt: values one space after the longest key that is left; Go's Retry
+  // is a plain bool, so the API default (on) is always written out
+  const goOff = ScrapflyExport.snippet('go', URL_PLAIN, [], { unblocker: false, renderJs: false, proxyPool: 'public_datacenter_pool' });
+  assert.match(goOff, /^\t\tURL:   "/m);
+  assert.match(goOff, /^\t\tRetry: true, \/\/ the API default: Go sends false without it$/m);
+  assert.ok(!/Retry/.test(ScrapflyExport.snippet('go', URL_PLAIN, [], { retry: false })), 'retries off: left out (false)');
 });
 
 test('options use each SDK\'s own names, and defaults add nothing', () => {
@@ -257,7 +261,8 @@ test('Cloud Browser mode: Playwright code with solve_captcha, only the languages
   assert.match(node, /^ {2}solve_captcha: true,/m);
   assert.match(node, /chromium\.connectOverCDP\(wsUrl\)/);
   const wss = ScrapflyExport.snippet('wss', URL_PLAIN, [], o);
-  assert.match(wss, /^echo "wss:\/\/browser\.scrapfly\.io\?api_key=\$SCRAPFLY_API_KEY&proxy_pool=residential&country=us&solve_captcha=true"$/m);
+  // target_url declares the page (helps routing and the fingerprint); percent-encoded
+  assert.match(wss, /^echo "wss:\/\/browser\.scrapfly\.io\?api_key=\$SCRAPFLY_API_KEY&proxy_pool=residential&country=us&target_url=https%3A%2F%2Fshop\.example%2Fp%3Fid%3D1%26ref%3Da&solve_captcha=true"$/m);
   for (const id of ['curl', 'cli', 'go', 'rust']) assert.equal(ScrapflyExport.snippet(id, URL_PLAIN, [], o), '', id);
   assert.equal(ScrapflyExport.snippet('wss', URL_PLAIN), '', 'no URL tab for the Scrape API');
   assert.ok(!ScrapflyExport.snippet('python', URL_PLAIN, [], { product: 'browser', proxyPool: 'public_datacenter_pool' }).includes('"datacenter"'),
@@ -295,4 +300,129 @@ test('residential proxies are the default, written out since the API defaults to
   for (const { id } of SCRAPE) assert.ok(ScrapflyExport.snippet(id, URL_PLAIN).includes(residential[id]), id);
   assert.equal(ScrapflyExport.normalizeOptions({}).proxyPool, 'public_residential_pool');
   assert.equal(ScrapflyExport.normalizeOptions({}).browserProxyPool, 'residential');
+});
+
+// Every Scrape API and Cloud Browser option (docs and SDK sources read
+// 2026-10-12). The full sets below were also run through the published
+// Python and Node SDKs (0.12.0), compiled with go-scrapfly v1.6.0 and checked
+// with gofmt, and the cURL command replayed against a local server: each
+// sends the same parameters.
+const FULL = {
+  unblocker: true, format: 'markdown', proxyPool: 'public_residential_pool', country: 'de', renderJs: true,
+  renderingWait: 2500, waitForSelector: '#price', renderingStage: 'domcontentloaded', autoScroll: true,
+  js: 'return document.title', jsScenario: '[{"click": {"selector": "#ok"}}, {"wait": 1000}]',
+  screenshot: 'fullpage', screenshotFlags: ['load_images', 'dark_mode'], lang: 'de-DE, en-US', os: 'win11', browserBrand: 'edge',
+  geolocation: '52.52, 13.405', headers: 'Referer: https://www.google.com/', timeout: 120000, retry: false, costBudget: 55,
+  formatOptions: ['no_links'], proxifiedResponse: true, extraction: 'model', extractionModel: 'product_listing',
+  cache: true, cacheTtl: 3600, cacheClear: true, session: 's1', debug: true, correlationId: 'run-42', tags: 'a, b',
+  dns: true, ssl: true, webhook: 'hook'
+};
+
+test('every Scrape API option reaches the code, under each SDK\'s own name', () => {
+  const apis = ScrapflyExport.scrapeParams(FULL).map(p => p.api);
+  assert.deepEqual(apis, ['unblocker', 'cost_budget', 'render_js', 'rendering_wait', 'wait_for_selector', 'rendering_stage', 'auto_scroll', 'js',
+    'js_scenario', 'screenshots', 'screenshot_flags', 'proxy_pool', 'country', 'lang', 'os', 'browser_brand', 'geolocation', 'headers', 'timeout',
+    'retry', 'format', 'format_options', 'proxified_response', 'extraction_model', 'cache', 'cache_ttl', 'cache_clear', 'session', 'debug',
+    'correlation_id', 'tags', 'dns', 'ssl', 'webhook_name']);
+  const code = (id) => ScrapflyExport.snippet(id, URL_PLAIN, [], FULL);
+  const python = code('python');
+  for (const line of ['    rendering_wait=2500,', '    js_scenario=[', '        {"click": {"selector": "#ok"}},', '    screenshots={"main": "fullpage"},',
+    '    screenshot_flags=["load_images", "dark_mode"],', '    lang=["de-DE", "en-US"],', '    geolocation="52.52,13.405",', '    retry=False,',
+    '    format_options=["no_links"],', '    extraction_model="product_listing",', '    webhook="hook",', '    headers={"Referer": "https://www.google.com/"},']) {
+    assert.ok(python.split('\n').includes(line), `python: ${line}`);
+  }
+  const node = code('node');
+  assert.match(node, /^ {2}webhook: "hook",$/m, 'webhook_name is "webhook" in the SDKs');
+  assert.match(node, /^ {2}tags: \["a", "b"\],$/m);
+  const go = code('go');
+  for (const re of [/^\tjs_scenario "github\.com\/scrapfly\/go-scrapfly\/scenario"$/m, /^\t\tJSScenario: \[\]js_scenario\.JSScenarioStep\{$/m,
+    /^\t\t\tmap\[string\]any\{"click": map\[string\]any\{"selector": "#ok"\}\},$/m, /ScreenshotFlags: +\[\]scrapfly\.ScreenshotFlag\{scrapfly\.LoadImages, scrapfly\.DarkMode\},/,
+    /FormatOptions: +\[\]scrapfly\.FormatOption\{scrapfly\.NoLinks\},/, /ExtractionModel: +scrapfly\.ExtractionModelProductListing,/, /CacheTTL: +3600,/,
+    /CorrelationID: +"run-42",/, /Webhook: +"hook",/]) assert.match(go, re);
+  assert.ok(!/Retry/.test(go), 'retries off: Go\'s zero value already is');
+  const rust = code('rust');
+  assert.match(rust, /^use scrapfly_sdk::\{Client, ExtractionModel, Format, FormatOption, ProxyPool, ScrapeConfig, ScreenshotFlag\};$/m);
+  for (const call of ['.lang("de-DE")', '.lang("en-US")', '.tag("a")', '.screenshot("main", "fullpage")', '.screenshot_flag(ScreenshotFlag::DarkMode)',
+    '.format_option(FormatOption::NoLinks)', '.extraction_model(ExtractionModel::ProductListing)', '.proxified_response()', '.webhook("hook")', '.retry(false)',
+    '.js_scenario(serde_json::json!([{"click":{"selector":"#ok"}},{"wait":1000}]))']) assert.ok(rust.includes(`        ${call}\n`), `rust: ${call}`);
+  assert.match(rust, /cargo add serde_json/);
+  const cli = code('cli');
+  for (const flag of ['--request-timeout 120000', '--retry=false', '--screenshot', '--screenshot-flag load_images,dark_mode', '--lang de-DE,en-US',
+    '--format-option no_links', '--js-scenario-file scenario.json', '--js-file script.js', '--header \'Referer=https://www.google.com/\'', '--webhook hook', '--tag a,b']) {
+    assert.ok(cli.includes(`  ${flag}`), `cli: ${flag}`);
+  }
+  assert.match(cli, /^cat > script\.js <<'SCRAPFLY_JS'\nreturn document\.title\nSCRAPFLY_JS$/m, 'the CLI reads JavaScript from a file');
+  const curl = code('curl');
+  assert.ok(curl.includes(`-d js=${ScrapflyExport.base64Url('return document.title')}`), 'js goes base64, as the SDKs send it');
+  assert.ok(curl.includes('-d format=markdown:no_links'), 'format options join the format');
+  assert.ok(curl.includes("--data-urlencode 'headers[referer]=https://www.google.com/'"));
+  assert.ok(curl.includes('-d webhook_name=hook'));
+  assert.equal(ScrapflyExport.base64Url('é?>'), 'w6k_Pg', 'URL-safe base64 of UTF-8, no padding');
+});
+
+test('options the API would ignore or refuse are left out, with the reason shown', () => {
+  const apis = (o) => ScrapflyExport.scrapeParams({ ...FULL, ...o }).map(p => p.api);
+  const noRender = apis({ renderJs: false });
+  for (const api of ['rendering_wait', 'wait_for_selector', 'js', 'js_scenario', 'screenshots', 'auto_scroll', 'browser_brand', 'geolocation']) {
+    assert.ok(!noRender.includes(api), `${api} needs render_js`);
+  }
+  const reason = (key, o) => ScrapflyExport.fieldState(ScrapflyExport.field(key), ScrapflyExport.normalizeOptions({ ...FULL, ...o })).why;
+  assert.equal(reason('renderingWait', { renderJs: false }), 'needsRender');
+  assert.ok(!apis({ format: 'json' }).includes('format_options'), 'format options: Markdown and Text only');
+  assert.ok(!apis({ jsScenario: '[{"click": ' }).includes('js_scenario'));
+  assert.equal(reason('jsScenario', { jsScenario: '{"click": {}}' }), 'badJson', 'a list of steps, not an object');
+  assert.ok(!apis({ geolocation: '200,1' }).includes('geolocation'));
+  assert.ok(!apis({ browserBrand: 'edge', os: 'mac' }).includes('browser_brand'), 'Edge: Windows 11 or Android only');
+  assert.ok(!apis({ browserBrand: 'brave', os: 'iphone' }).includes('browser_brand'));
+  assert.ok(!apis({ sessionStickyProxy: false }).includes('session_sticky_proxy'), 'refused (400) with the Unblocker: stays on');
+  assert.ok(apis({ sessionStickyProxy: false, unblocker: false }).includes('session_sticky_proxy'));
+  assert.ok(!apis({ unblocker: false }).includes('cost_budget'), 'cost_budget only limits the Unblocker');
+  assert.deepEqual(apis({ cache: false }).filter(a => a.startsWith('cache')), []);
+  assert.deepEqual(apis({ extraction: 'prompt', extractionPrompt: 'Prices' }).filter(a => a.startsWith('extraction')), ['extraction_prompt'],
+    'one kind of extraction: Go and Rust refuse two');
+  assert.equal(ScrapflyExport.normalizeOptions({ renderingWait: -5, timeout: '9e9', cacheTtl: '60' }).renderingWait, '');
+  assert.equal(ScrapflyExport.normalizeOptions({ cacheTtl: '60' }).cacheTtl, 60);
+});
+
+test('Cloud Browser: every connection option, and Unblock first through /unblock', () => {
+  const o = { product: 'browser', browserProxyPool: 'datacenter', country: 'fr', cbOs: 'windows', cbBrand: 'edge', cbLang: 'fr',
+    cbLanguages: 'fr-FR, fr, en-US, de', cbSession: 's-1', cbAutoClose: false, cbTimeout: 600, cbBlockImages: true, cbBlockStyles: true,
+    cbBlockFonts: true, cbBlockMedia: true, cbBlacklist: true, cbCache: true, cbDebug: true, cbEnableMcp: true };
+  assert.deepEqual(ScrapflyExport.browserParams(o, URL_PLAIN).map(p => p.api), ['proxy_pool', 'country', 'target_url', 'os', 'browser_brand', 'lang',
+    'languages', 'session', 'auto_close', 'timeout', 'block_images', 'block_styles', 'block_fonts', 'block_media', 'blacklist', 'cache', 'debug',
+    'enable_mcp', 'solve_captcha']);
+  assert.deepEqual(ScrapflyExport.browserParams(o, URL_PLAIN).find(p => p.api === 'languages').value, ['fr-FR', 'fr', 'en-US'], 'three at most');
+  assert.ok(!ScrapflyExport.browserParams({ ...o, cbOs: 'macos' }, URL_PLAIN).some(p => p.api === 'browser_brand'), 'Edge needs Windows');
+  const python = ScrapflyExport.snippet('python', URL_PLAIN, [], o);
+  assert.match(python, /^ {4}auto_close=False,$/m);
+  assert.match(python, /^ {4}languages=\["fr-FR", "fr", "en-US"\],$/m);
+  const wss = ScrapflyExport.snippet('wss', URL_PLAIN, [], o);
+  assert.match(wss, /&languages=fr-FR%2Cfr%2Cen-US&/);
+  assert.match(wss, /&auto_close=false&timeout=600&block_images=true&/);
+  const u = { product: 'browser', cbMode: 'unblock', country: 'us', cbSession: 's-2', cbUnblockTimeout: 90, cbTimeout: 1200, cbDebug: true, solveCaptcha: true, cbBlockImages: true };
+  assert.deepEqual(ScrapflyExport.browserParams(u, URL_PLAIN).map(p => p.api), ['url', 'country', 'session', 'timeout', 'browser_timeout', 'debug'],
+    '/unblock takes only these: no pool (always residential), blocking or solver');
+  const pu = ScrapflyExport.snippet('python', URL_PLAIN, [], u);
+  assert.match(pu, /^unblocked = client\.cloud_browser_unblock\($/m);
+  assert.match(pu, /^ {4}browser_timeout=1200,$/m);
+  assert.match(pu, /^ws_url = unblocked\["ws_url"\]$/m);
+  assert.ok(!/Antibot\.|BrowserConfig/.test(pu));
+  assert.match(ScrapflyExport.snippet('node', URL_PLAIN, [], u), /^const \{ ws_url: wsUrl \} = await client\.cloudBrowserUnblock\(\{$/m);
+  const curl = ScrapflyExport.snippet('wss', URL_PLAIN, [], u);
+  assert.match(curl, /^curl -s -X POST "https:\/\/browser\.scrapfly\.io\/unblock\?key=\$SCRAPFLY_API_KEY" \\$/m);
+  assert.deepEqual(JSON.parse(curl.match(/-d '(.*)'$/m)[1]), { url: URL_PLAIN, country: 'us', session: 's-2', timeout: 90, browser_timeout: 1200, debug: true });
+});
+
+test('headers are never saved: they can carry cookies or tokens', () => {
+  const store = {};
+  global.localStorage = { setItem: (k, v) => { store[k] = v; }, getItem: (k) => store[k] ?? null };
+  try {
+    ScrapflyExport.saveOptions({ headers: 'Cookie: session=secret', renderingWait: 2000 });
+    const saved = JSON.parse(store[ScrapflyExport.OPTIONS_STORAGE_KEY]);
+    assert.equal(saved.headers, undefined);
+    assert.equal(saved.renderingWait, 2000);
+    assert.equal(ScrapflyExport.savedOptions().headers, '');
+  } finally {
+    delete global.localStorage;
+  }
 });

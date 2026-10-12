@@ -48,7 +48,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
      * Setup tool-specific event listeners
      */
 ReCaptchaAdvanced.prototype.setupToolListeners = function() {
-        Logger.network('[ReCAPTCHA] Setting up tool listeners...');
+        Logger.debug('NETWORK', '[ReCAPTCHA] Setting up tool listeners');
         Logger.network('[ReCAPTCHA] this.clickRecaptcha exists:', typeof this.clickRecaptcha);
         Logger.network('[ReCAPTCHA] this.extractSiteKey exists:', typeof this.extractSiteKey);
         Logger.network('[ReCAPTCHA] this.captureCallback exists:', typeof this.captureCallback);

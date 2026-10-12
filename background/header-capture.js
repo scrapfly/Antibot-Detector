@@ -37,6 +37,27 @@ function recordNetworkUrl(list, entry, cap) {
     return list;
 }
 
+/**
+ * The tab a service-worker request belongs to. A site's own service worker
+ * (PWAs, offline caches) can make the page's requests itself, and Chrome
+ * reports those with tabId -1: such a request is given to the tab being
+ * scanned on the same origin, when exactly one is.
+ * @returns {number} the tab id, or -1
+ */
+function tabOfWorkerRequest(details) {
+    const origin = details && details.initiator;
+    if (!origin || typeof detectionStates === 'undefined') return -1;
+    let found = -1;
+    for (const [tabId, state] of detectionStates.entries()) {
+        let stateOrigin = '';
+        try { stateOrigin = new URL(state && state.url).origin; } catch (_) { continue; }
+        if (stateOrigin !== origin) continue;
+        if (found !== -1) return -1; // two scans on this origin: not ours to guess
+        found = tabId;
+    }
+    return found;
+}
+
 function setupHeaderCapture() {
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
@@ -202,9 +223,8 @@ function setupHeaderCapture() {
                 return;
             }
 
-            if (tabsUsingCache.has(details.tabId)) return;
-
-            if (details.tabId < 0) return;
+            const tabId = details.tabId >= 0 ? details.tabId : tabOfWorkerRequest(details);
+            if (tabId < 0 || tabsUsingCache.has(tabId)) return;
 
             // Skip heavy static-asset request types that anti-bot / fingerprint URL
             // patterns never meaningfully match, to bound per-tab memory and the
@@ -212,14 +232,14 @@ function setupHeaderCapture() {
             // websocket/image/ping/main_frame/sub_frame (beacons can be images/pings).
             if (details.type === 'font' || details.type === 'media' || details.type === 'stylesheet') return;
 
-            const networkUrls = networkUrlsStore.get(details.tabId) || [];
+            const networkUrls = networkUrlsStore.get(tabId) || [];
             recordNetworkUrl(networkUrls, {
                 url: details.url,
                 type: details.type,        // 'main_frame', 'sub_frame', 'script', 'xhr', 'fetch', etc.
                 method: details.method,     // 'GET', 'POST', etc.
                 timestamp: Date.now()
             }, Constants.MAX_NETWORK_URLS_PER_TAB);
-            networkUrlsStore.set(details.tabId, networkUrls);
+            networkUrlsStore.set(tabId, networkUrls);
         }),
         { urls: ["<all_urls>"] }
     );

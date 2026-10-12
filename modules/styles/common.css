@@ -271,6 +271,163 @@
   --badge-fingerprint: #3b82f6;
 }
 
+/* Pastel text colours (readable on dark), as tokens; darker shades in the light theme */
+:root {
+  --p-4ade80: #4ade80;
+  --p-60a5fa: #60a5fa;
+  --p-67e8f9: #67e8f9;
+  --p-6ee7b7: #6ee7b7;
+  --p-93c5fd: #93c5fd;
+  --p-a5f3fc: #a5f3fc;
+  --p-a78bfa: #a78bfa;
+  --p-bbf7d0: #bbf7d0;
+  --p-bfdbfe: #bfdbfe;
+  --p-dbeafe: #dbeafe;
+  --p-ddd6fe: #ddd6fe;
+  --p-fb923c: #fb923c;
+  --p-fca5a5: #fca5a5;
+  --p-fcd34d: #fcd34d;
+  --p-fde68a: #fde68a;
+}
+
+/* Greys the stylesheets used as literals, as tokens: same values in the dark
+   theme; the light theme (Scrapfly style) maps each to its light counterpart. */
+:root {
+  --g-1f1f1f: #1f1f1f;
+  --g-242424: #242424;
+  --g-262626: #262626;
+  --g-2a2a2a: #2a2a2a;
+  --g-2c2c2c: #2c2c2c;
+  --g-2d2d2d: #2d2d2d;
+  --g-313131: #313131;
+  --g-323232: #323232;
+  --g-333333: #333333;
+  --g-353535: #353535;
+  --g-363636: #363636;
+  --g-383838: #383838;
+  --g-3a3a3a: #3a3a3a;
+  --g-3c3c3c: #3c3c3c;
+  --g-3d3d3d: #3d3d3d;
+  --g-3f3f3f: #3f3f3f;
+  --g-404040: #404040;
+  --g-424242: #424242;
+  --g-444444: #444444;
+  --g-464646: #464646;
+  --g-474747: #474747;
+  --g-4b4b4b: #4b4b4b;
+  --g-525252: #525252;
+  --g-555555: #555555;
+  --g-5a5a5a: #5a5a5a;
+  --g-5c5c5c: #5c5c5c;
+  --g-6b6b6b: #6b6b6b;
+  --g-7a7a7a: #7a7a7a;
+  --g-8a8a8a: #8a8a8a;
+  --g-8b8b8b: #8b8b8b;
+  --g-8f8f8f: #8f8f8f;
+  --g-b3b3b3: #b3b3b3;
+  --g-c8c8c8: #c8c8c8;
+  --g-c9c9c9: #c9c9c9;
+  --g-d1d5db: #d1d5db;
+  --g-d4d4d4: #d4d4d4;
+  --g-e0e0e0: #e0e0e0;
+  --g-e2e8f0: #e2e8f0;
+  --g-f8fafc: #f8fafc;
+}
+
+/* ============================================
+   Light theme: Scrapfly's palette (scrapfly.io): white surfaces, navy text,
+   blue accent. Set by modules/core/theme.js (Settings → Theme).
+   ============================================ */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --p-4ade80: #1f7a3a;
+  --p-60a5fa: #1a73c7;
+  --p-67e8f9: #0e7490;
+  --p-6ee7b7: #1f7a3a;
+  --p-93c5fd: #1a73c7;
+  --p-a5f3fc: #0e7490;
+  --p-a78bfa: #6f42c1;
+  --p-bbf7d0: #1f7a3a;
+  --p-bfdbfe: #1a73c7;
+  --p-dbeafe: #1a73c7;
+  --p-ddd6fe: #6f42c1;
+  --p-fb923c: #c2410c;
+  --p-fca5a5: #c82333;
+  --p-fcd34d: #b45309;
+  --p-fde68a: #b45309;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #091e42;
+  --text-secondary: #595d66;
+  --text-muted: #6c757d;
+  --accent: #1a73c7;
+  --accent-hover: #155ea3;
+  --accent-light: #1a73c7;
+  --accent-dark: #0f4c87;
+  --success: #2da44e;
+  --success-light: #2da44e;
+  --success-dark: #1f7a3a;
+  --warning: #d9650b;
+  --warning-light: #c2570a;
+  --warning-dark: #a84a08;
+  --danger: #dc3545;
+  --danger-light: #c82333;
+  --danger-dark: #a71d2a;
+  --danger-lightest: #f8d7da;
+  --purple: #6f42c1;
+  --purple-light: #6f42c1;
+  --green: #2da44e;
+  --green-dark: #1f7a3a;
+  --border: #dee2e6;
+  --border-light: #e9ecef;
+  --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.08);
+  --modal-btn-quiet-text: #495057;
+  --modal-btn-quiet-border: rgba(9, 30, 66, 0.16);
+  --modal-btn-quiet-border-hover: rgba(9, 30, 66, 0.3);
+  --modal-btn-quiet-bg-hover: rgba(9, 30, 66, 0.05);
+  --modal-btn-primary-shadow: 0 1px 2px rgba(9, 30, 66, 0.18);
+  --g-1f1f1f: #ffffff;
+  --g-242424: #ffffff;
+  --g-262626: #ffffff;
+  --g-2a2a2a: #f8f9fa;
+  --g-2c2c2c: #f8f9fa;
+  --g-2d2d2d: #f8f9fa;
+  --g-313131: #f8f9fa;
+  --g-323232: #f8f9fa;
+  --g-333333: #f8f9fa;
+  --g-353535: #f1f3f5;
+  --g-363636: #f1f3f5;
+  --g-383838: #f1f3f5;
+  --g-3a3a3a: #f1f3f5;
+  --g-3c3c3c: #f1f3f5;
+  --g-3d3d3d: #f1f3f5;
+  --g-3f3f3f: #e9ecef;
+  --g-404040: #e9ecef;
+  --g-424242: #e9ecef;
+  --g-444444: #e9ecef;
+  --g-464646: #e9ecef;
+  --g-474747: #e9ecef;
+  --g-4b4b4b: #dee2e6;
+  --g-525252: #ced4da;
+  --g-555555: #ced4da;
+  --g-5a5a5a: #ced4da;
+  --g-5c5c5c: #ced4da;
+  --g-6b6b6b: #6c757d;
+  --g-7a7a7a: #6c757d;
+  --g-8a8a8a: #6c757d;
+  --g-8b8b8b: #6c757d;
+  --g-8f8f8f: #6c757d;
+  --g-b3b3b3: #595d66;
+  --g-c8c8c8: #595d66;
+  --g-c9c9c9: #595d66;
+  --g-d1d5db: #343a40;
+  --g-d4d4d4: #212529;
+  --g-e0e0e0: #212529;
+  --g-e2e8f0: #343a40;
+  --g-f8fafc: #091e42;
+}
+
 /* Chinese UI (<html lang> is set by I18n) and text tagged with its own
    language, like the names in the language picker. */
 :root:lang(zh) {
@@ -367,7 +524,7 @@ code, kbd, pre, samp {
   --modal-btn-radius: 6px;
   --modal-btn-font-size: 12px;
   --modal-btn-font-weight: 600;
-  --modal-btn-quiet-text: #c8c8c8;
+  --modal-btn-quiet-text: var(--g-c8c8c8);
   --modal-btn-quiet-border: rgba(255, 255, 255, 0.14);
   --modal-btn-quiet-border-hover: rgba(255, 255, 255, 0.28);
   --modal-btn-quiet-bg-hover: rgba(255, 255, 255, 0.06);
@@ -388,10 +545,10 @@ code, kbd, pre, samp {
   height: var(--btn-close-size);
   margin: 0;
   padding: 0;
-  background: #363636;
+  background: var(--g-363636);
   border: 1px solid var(--border);
   border-radius: 8px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   font: inherit;
   line-height: 0;
   cursor: pointer;
@@ -633,7 +790,7 @@ code, kbd, pre, samp {
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 6px;
-  color: #e0e0e0;
+  color: var(--g-e0e0e0);
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -934,8 +1091,8 @@ input:checked + .slider:before {
   white-space: normal;
   overflow-wrap: anywhere;
   padding: 5px 8px;
-  background: #1f1f1f;
-  border: 1px solid #424242;
+  background: var(--g-1f1f1f);
+  border: 1px solid var(--g-424242);
   border-radius: 6px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   font-size: 11px;
@@ -977,7 +1134,7 @@ input:checked + .slider:before {
   gap: 1px;
   margin-top: 4px;
   padding-top: 4px;
-  border-top: 1px solid #383838;
+  border-top: 1px solid var(--g-383838);
 }
 
 .ui-tip-row {
@@ -1010,7 +1167,7 @@ input:checked + .slider:before {
 .ui-tip .cat-antibot { --cat: #ff5733; }
 .ui-tip .cat-captcha { --cat: #33c3ff; }
 .ui-tip .cat-fingerprint { --cat: var(--accent-light); }
-.ui-tip .cat-other { --cat: #8b8b8b; }
+.ui-tip .cat-other { --cat: var(--g-8b8b8b); }
 
 /* ============================================
    DROPDOWN LISTS

@@ -86,10 +86,15 @@ function detect(detector, { page, windowIds = [] }) {
 }
 const matched = (detector, result, id) => result.matches.some(m => Array.from(Combinations.matchPatternIds(detector, m)).includes(id));
 
-test('twenty-six anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+// Signals only one vendor ever produces count as proof on their own (100%):
+// Akamai's _abck cookie and its Pixel challenge variable
+const PROOF = new Set(['detect-akamai/abck-sensor-cookie', 'detect-akamai/abck-cookie-name', 'detect-akamai/pixel-variable']);
+const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
+
+test('twenty-eight anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
-    'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-datadome', 'detect-f5',
-    'detect-fingerprintjs', 'detect-incapsula', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea',
+    'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome', 'detect-f5',
+    'detect-fingerprintjs', 'detect-hunt', 'detect-incapsula', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea',
     'detect-ocule', 'detect-perimeterx', 'detect-radware', 'detect-reblaze', 'detect-ruishu', 'detect-shapesecurity',
     'detect-sucuri', 'detect-threatmetrix', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
@@ -101,6 +106,11 @@ test('twenty-six anti-bot definitions: v2, CRLF, explicit ids, graded combinatio
     assert.equal(ids.size, rules.length, `${d.id}: duplicate ids`);
     assert.deepEqual(Object.keys(fixtures[d.id]).sort(), [...ids].sort(), `${d.id}: one live witness per rule`);
     for (const r of rules) {
+      if (isProof(d, r)) {
+        assert.equal(r.confidence, 100, `${d.id}/${r.id}: proof is 100`);
+        assert.notEqual(r.standalone, false, `${d.id}/${r.id}: proof counts alone`);
+        continue;
+      }
       assert.ok(Number.isInteger(r.confidence) && r.confidence > 0 && r.confidence <= 90, `${d.id}/${r.id}: rule confidence`);
       if (r.method === 'content') {
         assert.ok(r.confidence <= 30, `${d.id}/${r.id}: source text is weak evidence`);
@@ -134,7 +144,8 @@ for (const d of Object.values(definitions)) {
       assert.ok(matched(d, result, r.id), `${r.id}: witness not matched`);
       if (r.standalone === false) assert.equal(result.confidence, 0, `${r.id}: weak signal scored alone`);
       else assert.ok(result.confidence >= r.confidence, `${r.id}: standalone score`);
-      assert.ok(result.confidence <= 90, `${r.id}: one signal never reaches the top tier`);
+      if (isProof(d, r)) assert.equal(result.confidence, 100, `${r.id}: proof alone is 100`);
+      else assert.ok(result.confidence <= 90, `${r.id}: one signal never reaches the top tier`);
     }
   });
 

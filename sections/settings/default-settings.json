@@ -31,8 +31,8 @@
     },
 
     "detection": {
-      "cacheDuration": 12,
-      "cacheUnit": "hours",
+      "cacheDuration": 7,
+      "cacheUnit": "days",
       "cacheScope": "domain",
       "sortBy": "category",
       "categoryOrder": ["antibot", "captcha", "fingerprint"],
@@ -91,7 +91,7 @@
 
     "updates": {
       "autoUpdate": false,
-      "checkIntervalHours": 12,
+      "checkIntervalHours": 168,
       "lastCheckTimestamp": 0
     }
   }

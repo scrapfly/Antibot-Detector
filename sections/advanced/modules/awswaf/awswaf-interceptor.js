@@ -174,7 +174,7 @@ function awsWafStartAnalysis(tabId, url) {
   // Setup navigation listener to finalize results after page loads
   const navigationListener = async (details) => {
     if (details.tabId === tabId && details.frameId === 0) {
-      Logger.network('[AwsWaf-Analysis] Page loaded, waiting for all requests to complete...');
+      Logger.network('[AwsWaf-Analysis] Page loaded, waiting for all requests to complete');
 
       // No notice is drawn on the page; the popup shows the progress
       // No need to show it again here
