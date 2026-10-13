@@ -4933,5 +4933,8 @@
   },
   "sfxValOff": {
     "message": "Desligado"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Todos os idiomas já têm tradução."
   }
 }

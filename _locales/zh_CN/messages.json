@@ -4933,5 +4933,8 @@
   },
   "sfxValOff": {
     "message": "关闭"
+  },
+  "ruleTranslateAllDone": {
+    "message": "所有语言都已有翻译。"
   }
 }

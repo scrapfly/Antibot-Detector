@@ -4933,5 +4933,8 @@
   },
   "sfxValOff": {
     "message": "बंद"
+  },
+  "ruleTranslateAllDone": {
+    "message": "हर भाषा का अनुवाद पहले से है।"
   }
 }

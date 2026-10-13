@@ -21,6 +21,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Rule editor: a pattern's Translations count includes the translations the extension ships, so an official text no longer reads "0 of 11".
+- Rule editor: "Translate automatically" fills every language without a translation in one click, instead of only the first, and leaves shipped translations alone.
+- Rule editor: combination names and pattern descriptions in combinations show in the extension's language; editing one still edits the original text.
 - Detection no longer stops after three strong matches, missing other protections on the same page.
 - Failed and interrupted scans no longer appear as completed scans with no detections.
 - Reloading or switching pages no longer lets an older scan overwrite the current scan’s state.

@@ -4933,5 +4933,8 @@
   },
   "sfxValOff": {
     "message": "オフ"
+  },
+  "ruleTranslateAllDone": {
+    "message": "すべての言語に翻訳があります。"
   }
 }

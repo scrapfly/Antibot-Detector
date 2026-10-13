@@ -5209,5 +5209,8 @@
   },
   "sfxValOff": {
     "message": "Off"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Every language already has a translation."
   }
 }

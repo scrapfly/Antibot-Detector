@@ -4933,5 +4933,8 @@
   },
   "sfxValOff": {
     "message": "إيقاف"
+  },
+  "ruleTranslateAllDone": {
+    "message": "كل اللغات لها ترجمة بالفعل."
   }
 }

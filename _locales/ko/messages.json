@@ -4933,5 +4933,8 @@
   },
   "sfxValOff": {
     "message": "끄기"
+  },
+  "ruleTranslateAllDone": {
+    "message": "모든 언어에 이미 번역이 있습니다."
   }
 }

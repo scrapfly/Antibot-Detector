@@ -124,6 +124,8 @@ Rules.prototype.initCombinationsEditor = function(detector) {
     const when = JSON.parse(JSON.stringify(combo.when || { all: [] }));
     return {
       id: combo.id || `c${i + 1}`, name: combo.name || '',
+      // Kept for the save while the name is not changed (a new name has no translation)
+      nameI18n: combo.nameI18n && typeof combo.nameI18n === 'object' ? combo.nameI18n : null, originalName: combo.name || '',
       confidence: Number.isFinite(Number(combo.confidence)) && Number(combo.confidence) > 0
         ? Math.min(100, Math.round(Number(combo.confidence))) : null,
       when: Rules.comboGroupKey(Rules.comboUnwrap(when).node) ? when : { all: [when] }
@@ -218,7 +220,11 @@ Rules.prototype.setComboPatternDescription = function(id, text, source) {
   const inline = row.querySelector('.method-description-inline');
   if (inline) inline.value = value;
   document.querySelectorAll('#combinationsContainer .combo-item-desc[data-combo-field="description"]').forEach(el => {
-    if (el !== source && el.dataset.pattern === id) el.textContent = value;
+    if (el !== source && el.dataset.pattern === id) {
+      // Another copy of the same description: shows the new text as typed
+      delete el.dataset.i18nSource; delete el.dataset.i18nShown; delete el.dataset.i18nShowing;
+      el.textContent = value;
+    }
   });
 };
 Rules.prototype.getComboPatternRow = function(id) {
@@ -269,6 +275,10 @@ Rules.prototype.addComboItems = function(combo, values, path = '') {
     group[key].push(leaf);
   }
 };
+// A rule text in the UI language while not edited (rules-translations-ui.js); as written without it
+const comboLocalized = (text, map) => (typeof Rules.localizedEditable === 'function'
+  ? Rules.localizedEditable(text, map) : { shown: String(text || ''), attrs: '' });
+
 Rules.prototype.handleCombinationAction = function(event, kind) {
   const target = event.target;
   const card = target.closest('.combo-card');
@@ -396,7 +406,7 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
       ? `${scope} > .combo-items > .combo-item[data-idx="${itemIndex}"] [data-combo-action="remove"]`
       : `${scope} > .combo-group-actions [data-combo-action="open-picker"]`;
   } else if (action === 'delete-combo') {
-    const name = combo.name.trim() || combosFormat('combinationDefaultNameFmt', 'Combination {0}', index + 1);
+    const name = FormatUtils.ruleText(combo.name.trim(), combo.nameI18n) || combosFormat('combinationDefaultNameFmt', 'Combination {0}', index + 1);
     const ask = typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.confirm === 'function'
       ? NotificationHelper.confirm({ title: combosText('combinationDelete', 'Delete combination'),
           message: combosFormat('combinationDeleteConfirmFmt', 'Delete the combination "{0}"? Its patterns stay in the rule.', FormatUtils.escapeHtml(name)),
@@ -520,12 +530,14 @@ Rules.prototype.renderCombinations = function({ focusPicker = false } = {}) {
     const require = refs.length > 0 && refs.every(p => p.strict);
     const mixed = refs.some(p => p.strict) && !require;
     const sentences = this.comboSentences(combo, options);
+    // The name in the UI language while not edited
+    const shownName = comboLocalized(combo.name, combo.nameI18n);
     return `<div class="combo-card${open ? '' : ' collapsed'}" data-combo="${index}">
       <div class="combo-summary">
         <button type="button" class="combo-toggle" data-combo-action="toggle-card" aria-expanded="${open}"
           aria-label="${attr(combosText('combinationEditConditions', 'Edit conditions'))}">${COMBO_ICONS.chevron}</button>
         <div class="combo-summary-main">
-          <input type="text" class="combo-summary-name" data-combo-field="name" value="${attr(combo.name)}" dir="auto"
+          <input type="text" class="combo-summary-name" data-combo-field="name" value="${attr(shownName.shown)}"${shownName.attrs} dir="auto"
             placeholder="${attr(combosFormat('combinationDefaultNameFmt', 'Combination {0}', index + 1))}"
             aria-label="${attr(combosText('ruleFieldName', 'Name'))}">
           <button type="button" class="combo-summary-count" data-combo-action="toggle-card" aria-expanded="${open}">${esc(sentences[0])}</button>
@@ -631,6 +643,10 @@ Rules.prototype.renderComboItem = function(tree, index, labels) {
   const method = node.method || option?.method || '';
   const raw = node.method ? '' : (option?.label || combosText('combinationEmptyPattern', '(empty pattern)'));
   const description = node.method ? combosFormat('combinationAnyOfMethodFmt', 'Any {0} pattern', this.getMethodLabel(method)) : this.comboDescriptionOf(option);
+  // The description in the UI language while not edited (the pattern's own translations first)
+  let ownTranslations = null;
+  try { ownTranslations = node.pattern ? JSON.parse(this.getComboPatternRow(node.pattern)?.dataset.descriptionI18n || 'null') : null; } catch (_) { ownTranslations = null; }
+  const shownDescription = node.method ? { shown: description, attrs: '' } : comboLocalized(description, ownTranslations);
   // A pattern's description is edited right here (same value as its Settings → Description)
   const addDescription = combosText('combinationAddDescription', 'Add a description');
   const strict = option?.strict ? `<span class="combo-item-tag">${esc(combosText('patternCombinationsOnlyBadge', 'Combinations only'))}</span>` : '';
@@ -641,7 +657,7 @@ Rules.prototype.renderComboItem = function(tree, index, labels) {
       <div class="combo-item-body">
         ${node.method
           ? `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-item-desc" dir="auto">${esc(description)}</span></p>`
-          : `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-item-desc" dir="auto" contenteditable="plaintext-only" role="textbox" spellcheck="false" data-combo-field="description" data-pattern="${attr(node.pattern)}" data-placeholder="${attr(addDescription)}" aria-label="${attr(addDescription)}">${esc(description)}</span></p><span class="combo-leaf-text" dir="ltr" title="${attr(raw)}">${esc(raw)}</span>`}
+          : `<p class="combo-item-line">${this.renderMethodChip(method, 'combo-chip')}<span class="combo-item-desc" dir="auto" contenteditable="plaintext-only" role="textbox" spellcheck="false" data-combo-field="description" data-pattern="${attr(node.pattern)}" data-placeholder="${attr(addDescription)}" aria-label="${attr(addDescription)}"${shownDescription.attrs}>${esc(shownDescription.shown)}</span></p><span class="combo-leaf-text" dir="ltr" title="${attr(raw)}">${esc(raw)}</span>`}
         <div class="combo-item-meta">
           <select data-combo-action="presence" aria-label="${attr(combosText('combinationMatchState', 'Pattern condition'))}">
             <option value="present"${negative ? '' : ' selected'}>${esc(combosText('combinationMustBeFound', 'Must be found'))}</option>
@@ -726,7 +742,8 @@ Rules.prototype.buildCombinationsForSave = function(detection, { validate = true
       if (problem) { invalidIndex = index; invalidMessage = problem; }
     }
     const name = combo.name.trim() || combosFormat('combinationDefaultNameFmt', 'Combination {0}', index + 1);
-    return { id: combo.id, name, ...(combo.confidence ? { confidence: combo.confidence } : {}), when };
+    const nameI18n = combo.nameI18n && name === String(combo.originalName || '').trim() ? { nameI18n: combo.nameI18n } : {};
+    return { id: combo.id, name, ...nameI18n, ...(combo.confidence ? { confidence: combo.confidence } : {}), when };
   });
   return { combinations, invalidIndex, invalidMessage };
 };

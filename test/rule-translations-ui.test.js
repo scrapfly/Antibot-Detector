@@ -1,0 +1,76 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+
+// Rule editor translations: "Translate automatically" requests every missing
+// language in the click's own task (Chrome starts a model download only right
+// after a click; asked one by one, only the first got through), skips the
+// languages with a shipped translation, and translated rule texts show in the
+// UI language while the editor keeps their original text.
+
+const root = path.join(__dirname, '..');
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+
+function load({ fields, description, translator }) {
+  const elements = {
+    '#methodDescriptionInput': { value: description },
+    '#methodTranslateStatus': { textContent: '' },
+    '#methodTranslateAutoBtn': { disabled: false },
+    '#methodTranslationsCount': { textContent: '' }
+  };
+  const document = {
+    querySelector: (sel) => elements[sel] || null,
+    querySelectorAll: (sel) => (sel.includes('rule-translation-input') ? fields : [])
+  };
+  const context = vm.createContext({ console, setTimeout, document, Logger: { debug() {} }, Translator: translator, self: {} });
+  context.self = context;
+  vm.runInContext(read('utils/format-utils.js'), context);
+  vm.runInContext(read('modules/core/rule-i18n.js'), context);
+  vm.runInContext('function Rules() {}', context);
+  vm.runInContext(read('sections/rules/rules-translations-ui.js'), context);
+  return { context, elements, rules: new context.Rules() };
+}
+const field = (locale, value = '', placeholder = '') => ({ dataset: { locale }, value, placeholder });
+
+test('Translate automatically asks for every missing language at once, in the click\'s task', async () => {
+  const created = [];
+  let clickTask = true;
+  const translator = { create: ({ targetLanguage }) => { created.push(`${targetLanguage}:${clickTask}`);
+    return new Promise(resolve => setTimeout(() => resolve({ translate: async (t) => `[${targetLanguage}] ${t}`, destroy() {} }), 5)); } };
+  const fields = [field('de'), field('es', '', 'Ya traducido'), field('ja', 'Mine'), field('pt_BR'), field('zh_CN')];
+  const { rules, elements } = load({ fields, description: 'A new text', translator });
+  const done = rules.autoTranslateDescription();
+  clickTask = false;
+  await done;
+  assert.deepEqual(created, ['de:true', 'pt:true', 'zh:true'], 'only languages with no translation, all before anything is awaited');
+  assert.equal(fields[0].value, '[de] A new text');
+  assert.equal(fields[1].value, '', 'a shipped translation is kept as it is');
+  assert.equal(fields[2].value, 'Mine', 'a typed translation is kept');
+  assert.equal(elements['#methodTranslationsCount'].textContent, '5 of 11');
+  assert.match(elements['#methodTranslateStatus'].textContent, /^Filled 3 languages/);
+});
+
+test('with a translation in every language there is nothing to translate', async () => {
+  let calls = 0;
+  const fields = [field('de', '', 'Übersetzt'), field('es', 'Mía')];
+  const { rules, elements } = load({ fields, description: 'Official text', translator: { create: () => { calls++; } } });
+  await rules.autoTranslateDescription();
+  assert.equal(calls, 0);
+  assert.equal(elements['#methodTranslateStatus'].textContent, 'Every language already has a translation.');
+});
+
+test('a translated rule text shows in the UI language and keeps its original for editing', () => {
+  const { context } = load({ fields: [], description: '' });
+  context.RuleI18n.addShipped('es', { 'Sensor cookie with session cookie': 'Cookie de sensor con cookie de sesión' });
+  context.RuleI18n.setLocale('es');
+  const shown = context.Rules.localizedEditable('Sensor cookie with session cookie', null);
+  assert.equal(shown.shown, 'Cookie de sensor con cookie de sesión');
+  assert.match(shown.attrs, /data-i18n-source="Sensor cookie with session cookie"/);
+  assert.match(shown.attrs, /data-i18n-showing="1"/);
+  assert.equal(context.Rules.localizedEditable('Sensor cookie with session cookie', { es: 'Propia' }).shown, 'Propia', 'the rule\'s own translation first');
+  assert.deepEqual({ ...context.Rules.localizedEditable('No translation here', null) }, { shown: 'No translation here', attrs: '' });
+  context.RuleI18n.setLocale(null);
+  assert.equal(context.Rules.localizedEditable('Sensor cookie with session cookie', null).attrs, '', 'English: shown as written');
+});
