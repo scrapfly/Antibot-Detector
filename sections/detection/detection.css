@@ -672,13 +672,19 @@
 .card-header {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 9px 11px 10px;
+  gap: 12px;
+  padding: 15px 13px 16px;
+}
+
+/* A page that starts a second category has two headers: its cards keep the
+   tighter padding so both still fit above the pagination without scrolling */
+.results-list:has(> .detection-item + .detection-item .detection-group-head) .card-header {
+  padding-block: 8px 9px;
 }
 
 .card-icon-section {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -710,8 +716,8 @@
 /* Card-scoped so rules.css's 22px fingerprint icon size does not leak in */
 .detection-card .card-icon-section .fingerprint-icon svg,
 .detection-card .card-icon-section .fingerprint-icon-image {
-  width: 19px;
-  height: 19px;
+  width: 22px;
+  height: 22px;
 }
 
 .card-info {
@@ -719,7 +725,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
 }
 
 .card-row-main {
@@ -734,9 +740,9 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  font-size: 13.5px;
+  font-size: 14.5px;
   font-weight: 600;
-  line-height: 18px;
+  line-height: 19px;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -762,8 +768,8 @@
   min-width: 0;
   margin: 0;
   color: var(--text-secondary);
-  font-size: 11.5px;
-  line-height: 16px;
+  font-size: 12px;
+  line-height: 17px;
   white-space: nowrap;
 }
 
@@ -804,8 +810,8 @@
 
 .card-evidence-item svg {
   flex-shrink: 0;
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   color: var(--method-color, currentColor);
 }
 
@@ -844,7 +850,7 @@
 }
 
 .single-result .card-header {
-  padding-block: 12px 13px;
+  padding-block: 17px 18px;
 }
 
 .copy-btn {
