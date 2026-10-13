@@ -326,6 +326,20 @@ class FormatUtils {
     combination: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.4 8.2l3.4 7.5M16.6 8.2l-3.4 7.5"/></svg>'
   });
 
+  /** Settings → Tag Colors: the saved key of each method and its default colour. */
+  static METHOD_TAG_COLOR_KEYS = Object.freeze({ cookie: 'cookies', header: 'headers', url: 'urls', content: 'content', dom: 'dom', window: 'window', js_hooks: 'js_hooks', payload: 'payload' });
+  static DEFAULT_TAG_COLORS = Object.freeze({ dom: '#8D33FF', headers: '#FF33A8', cookies: '#FFC133', content: '#33FFF3', urls: '#00BCD4', js_hooks: '#00E5FF', window: '#4CAF50', payload: '#9C27B0' });
+
+  /** A method's colour from Settings → Tag Colors (saved, else the default), or '' for an unknown method. */
+  static methodColor(method, tagColors) {
+    const key = String(method || '').toLowerCase();
+    const aliases = { cookies: 'cookie', headers: 'header', urls: 'url' };
+    const tagKey = FormatUtils.METHOD_TAG_COLOR_KEYS[aliases[key] || key];
+    if (!tagKey) return '';
+    const saved = tagColors && tagColors[tagKey];
+    return typeof saved === 'string' && /^#[0-9a-f]{6}$/i.test(saved) ? saved : FormatUtils.DEFAULT_TAG_COLORS[tagKey];
+  }
+
   /** A method's icon (plural aliases included), or '' for an unknown method. */
   static methodIconSvg(method) {
     const key = String(method || '').toLowerCase();

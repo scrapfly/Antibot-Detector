@@ -931,7 +931,7 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
     // Every method as its icon and count (the words go to screen readers); the tip names each
     const evidence = DetectionUI.evidenceSummary(matchList, combos.length > 0, DetectionUI.METHOD_ORDER.length);
     const evidenceTip = DetectionUI.evidenceRows(matchList);
-    const evidenceIcons = DetectionUI.evidenceIconsHtml(matchList, combos.length > 0);
+    const evidenceIcons = DetectionUI.evidenceIconsHtml.call(this, matchList, combos.length > 0);
 
     return `
       <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}" style="--conf:${sure}%;--cat-color:${categoryColor}">
@@ -994,7 +994,10 @@ DetectionUI.evidenceIconsHtml = function(matches, combined = false) {
     const parts = combined ? [`<span class="card-evidence-item is-combination" aria-hidden="true">${FormatUtils.METHOD_ICONS.combination}</span>`] : [];
     for (const row of DetectionUI.evidenceCounts(matches)) {
       const icon = FormatUtils.methodIconSvg(row.type);
-      parts.push(`<span class="card-evidence-item" aria-hidden="true">${icon || `<span class="card-evidence-name">${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(row.type))}</span>`}<span class="card-evidence-count">${row.count}</span></span>`);
+      // Each method in its colour from Settings → Tag Colors
+      const color = icon ? FormatUtils.methodColor(row.type, this?.tagColors) : '';
+      const style = color ? ` style="--method-color:${color}"` : '';
+      parts.push(`<span class="card-evidence-item"${style} aria-hidden="true">${icon || `<span class="card-evidence-name">${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(row.type))}</span>`}<span class="card-evidence-count">${row.count}</span></span>`);
     }
     return parts.join('');
 };

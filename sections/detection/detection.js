@@ -389,9 +389,9 @@ class Detection {
    * re-sort the visible list when it changed.
    * @param {object} [detectionSettings] - settings.detection
    */
-  applyDetectionSort(detectionSettings, { rerender = false } = {}) {
+  applyDetectionSort(detectionSettings, { rerender = false, force = false } = {}) {
     const next = DetectionUtils.detectionSortOf(detectionSettings);
-    const changed = next.sortBy !== this.sortBy || next.categoryOrder.join(',') !== this.categoryOrder.join(',');
+    const changed = force || next.sortBy !== this.sortBy || next.categoryOrder.join(',') !== this.categoryOrder.join(',');
     this.sortBy = next.sortBy;
     this.categoryOrder = next.categoryOrder;
     if (rerender && changed && this.paginationManager && this.currentResults?.length) {
@@ -434,6 +434,7 @@ class Detection {
         const settings = await Utils.getSettings();
         this.debugMode = settings.debugMode || false;
         this.applyDetectionSort(settings.detection);
+        this.tagColors = settings.tagColors || null;
       } catch (e) {
         this.debugMode = false;
       }
@@ -443,7 +444,10 @@ class Detection {
         if (area !== 'local' || !changes.scrapfly_settings) return;
         try {
           const settings = await Utils.getSettings();
-          this.applyDetectionSort(settings.detection, { rerender: true });
+          // New Tag Colors redraw the card icons
+          const colorsChanged = JSON.stringify(settings.tagColors || null) !== JSON.stringify(this.tagColors || null);
+          this.tagColors = settings.tagColors || null;
+          this.applyDetectionSort(settings.detection, { rerender: true, force: colorsChanged });
         } catch (_) { /* keep the current order */ }
       });
 

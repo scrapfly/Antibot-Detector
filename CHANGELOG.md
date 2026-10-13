@@ -12,7 +12,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: detection count, confidence and difficulty now share the lower row with category totals and the timestamp.
 - Settings: changes wait for Save; theme and language clearly indicate when they apply immediately.
 - Keyboard navigation now supports the main tabs and returns focus after closing tool and History dialogs.
-- Detection: a card's evidence shows each method as an icon with its count, plus a mark when a combination decided it; hover names them.
+- Detection: a card's evidence shows each method as an icon with its count, in its Settings → Tag Colors colour, plus a mark when a combination decided it; hover names them.
 - Detection and History: hovering a card tints it light blue instead of outlining it.
 - Settings: cards with a title start folded and open on click, so each tab is shorter.
 - Settings: JS API events are off by default; a choice already saved is kept.

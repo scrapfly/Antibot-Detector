@@ -50,8 +50,12 @@ test('a card shows name, difficulty pill, "NN% sure", evidence and a confidence 
   assert.match(html, /class="card-sure"[^>]*>95% sure</);
   // Every method as its icon and count, most first; the words stay for screen readers
   assert.match(html, /class="card-evidence"[^>]*><span class="visually-hidden">Headers 2, Url 2, Cookies, Content<\/span>/);
-  const counts = [...html.matchAll(/<span class="card-evidence-item" aria-hidden="true"><svg[^]*?<\/svg><span class="card-evidence-count">(\d+)<\/span>/g)].map(m => m[1]);
-  assert.deepEqual(counts, ['2', '2', '1', '1']);
+  const items = [...html.matchAll(/<span class="card-evidence-item" style="--method-color:(#[0-9a-fA-F]{6})" aria-hidden="true"><svg[^]*?<\/svg><span class="card-evidence-count">(\d+)<\/span>/g)].map(m => `${m[1]} ${m[2]}`);
+  // Each in its Settings → Tag Colors default: headers, URLs, cookies, content
+  assert.deepEqual(items, ['#FF33A8 2', '#00BCD4 2', '#FFC133 1', '#33FFF3 1']);
+  const recoloured = card(cloudflare, { tagColors: { headers: '#123456', urls: 'red' } });
+  assert.match(recoloured, /--method-color:#123456/, 'a saved colour is used');
+  assert.match(recoloured, /--method-color:#00BCD4/, 'an invalid saved colour falls back to the default');
   assert.ok(!html.includes('is-combination'), 'no combination decided it: no combination mark');
   const rows = JSON.parse(html.match(/class="card-evidence"[^>]*data-tip-rows="([^"]*)"/)[1].replace(/&quot;/g, '"'));
   assert.deepEqual(rows.map(row => `${row.label} ${row.value}`), ['Headers 2', 'Url 2', 'Cookies 1', 'Content 1']);
