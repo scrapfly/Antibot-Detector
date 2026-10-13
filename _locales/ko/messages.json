@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "모든 언어에 이미 번역이 있습니다."
+  },
+  "combinationTranslationsTitle": {
+    "message": "이름 번역"
+  },
+  "combinationTranslationsHint": {
+    "message": "확장 프로그램이 해당 언어일 때 이름 대신 표시됩니다. 비어 있으면 이름이 표시됩니다."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "먼저 이름을 작성하세요."
   }
 }

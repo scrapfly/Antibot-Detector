@@ -5212,5 +5212,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "Every language already has a translation."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Name translations"
+  },
+  "combinationTranslationsHint": {
+    "message": "Shown instead of the name when the extension is in that language. Empty: the name is shown."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Write the name first."
   }
 }

@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "すべての言語に翻訳があります。"
+  },
+  "combinationTranslationsTitle": {
+    "message": "名前の翻訳"
+  },
+  "combinationTranslationsHint": {
+    "message": "拡張機能がその言語のとき、名前の代わりに表示されます。空欄の場合は名前が表示されます。"
+  },
+  "combinationTranslateNeedsName": {
+    "message": "先に名前を入力してください。"
   }
 }

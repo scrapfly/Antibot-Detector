@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [2.8.6] - 2026-10-13
 
+### Added
+
+- Rule editor: each combination has Name translations with Translate automatically, like a pattern's description, so your own combinations show in every language.
+
 ### Changed
 
 - History: detection count, confidence and difficulty now share the lower row with category totals and the timestamp.

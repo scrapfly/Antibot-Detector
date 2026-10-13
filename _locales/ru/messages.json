@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "Для всех языков перевод уже есть."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Переводы названия"
+  },
+  "combinationTranslationsHint": {
+    "message": "Показывается вместо названия, когда расширение на этом языке. Пусто: показывается название."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Сначала напишите название."
   }
 }

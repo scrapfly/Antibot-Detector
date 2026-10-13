@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "所有语言都已有翻译。"
+  },
+  "combinationTranslationsTitle": {
+    "message": "名称翻译"
+  },
+  "combinationTranslationsHint": {
+    "message": "扩展使用该语言时，显示此文字代替名称。留空则显示名称。"
+  },
+  "combinationTranslateNeedsName": {
+    "message": "请先填写名称。"
   }
 }

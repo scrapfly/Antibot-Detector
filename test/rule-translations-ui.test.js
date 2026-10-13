@@ -13,16 +13,31 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
+/** A Translations panel: its fields, count, status and button, found by class as in the popup. */
+function panel(fields) {
+  const parts = {
+    '.rule-translations-status': { textContent: '' },
+    '[data-rule-translate]': { disabled: false },
+    '.rule-translations-count': { textContent: '' }
+  };
+  return {
+    parts, open: false,
+    querySelector: (sel) => parts[sel] || fields.find(f => sel === `.rule-translation-input[data-locale="${f.dataset.locale}"]`) || null,
+    querySelectorAll: (sel) => (sel === '.rule-translation-input' ? fields : [])
+  };
+}
+
 function load({ fields, description, translator }) {
+  const scope = panel(fields);
   const elements = {
     '#methodDescriptionInput': { value: description },
-    '#methodTranslateStatus': { textContent: '' },
-    '#methodTranslateAutoBtn': { disabled: false },
-    '#methodTranslationsCount': { textContent: '' }
+    '#methodDescriptionTranslations': scope,
+    '#methodTranslateStatus': scope.parts['.rule-translations-status'],
+    '#methodTranslationsCount': scope.parts['.rule-translations-count']
   };
   const document = {
     querySelector: (sel) => elements[sel] || null,
-    querySelectorAll: (sel) => (sel.includes('rule-translation-input') ? fields : [])
+    querySelectorAll: () => []
   };
   const context = vm.createContext({ console, setTimeout, document, Logger: { debug() {} }, Translator: translator, self: {} });
   context.self = context;
@@ -73,4 +88,38 @@ test('a translated rule text shows in the UI language and keeps its original for
   assert.deepEqual({ ...context.Rules.localizedEditable('No translation here', null) }, { shown: 'No translation here', attrs: '' });
   context.RuleI18n.setLocale(null);
   assert.equal(context.Rules.localizedEditable('Sensor cookie with session cookie', null).attrs, '', 'English: shown as written');
+});
+
+test('a combination name has Translations too: filled into the combination, kept when it is redrawn or renamed', async () => {
+  const fields = [field('de'), field('es', '', 'Cookie de cola'), field('fr', 'Le mien')];
+  const scope = { ...panel(fields), dataset: { comboId: 'c1' } };
+  const translator = { create: ({ targetLanguage }) => Promise.resolve({ translate: async (t) => `[${targetLanguage}] ${t}`, destroy() {} }) };
+  const { context, rules } = load({ fields: [], description: '', translator });
+  context.document.querySelectorAll = (sel) => (sel === '#combinationsContainer .combo-translations' ? [scope] : []);
+  context.FormatUtils.escapeHtml = (v) => String(v);
+  vm.runInContext(read('sections/rules/rules-combinations.js'), context);
+  const combo = { id: 'c1', name: 'Queue cookie', nameI18n: { fr: 'Le mien' }, when: { all: [{ pattern: 'a' }] } };
+  rules.combinationsModel = [combo];
+  rules._comboTranslateStatus = new Map();
+  await rules.autoTranslateComboName(combo);
+  assert.deepEqual({ ...combo.nameI18n }, { fr: 'Le mien', de: '[de] Queue cookie' }, 'only the missing language, saved on the combination');
+  assert.equal(fields[0].value, '[de] Queue cookie');
+  assert.match(rules._comboTranslateStatus.get('c1').text, /^Filled 1 languages/);
+  rules.setComboNameTranslation(combo, 'fr', '  ');
+  assert.deepEqual({ ...combo.nameI18n }, { de: '[de] Queue cookie' }, 'an emptied field removes that translation');
+  combo.name = 'Renamed queue cookie';
+  const saved = rules.buildCombinationsForSave(null, { validate: false }).combinations[0];
+  assert.deepEqual({ ...saved.nameI18n }, { de: '[de] Queue cookie' }, 'translations stay with the combination when it is renamed');
+  rules.setComboNameTranslation(combo, 'de', '');
+  assert.equal('nameI18n' in rules.buildCombinationsForSave(null, { validate: false }).combinations[0], false, 'no translations: no nameI18n');
+});
+
+test('a combination without a name asks for one before translating', async () => {
+  const scope = { ...panel([field('de')]), dataset: { comboId: 'c1' } };
+  const { context, rules } = load({ fields: [], description: '', translator: { create: () => { throw new Error('not called'); } } });
+  context.document.querySelectorAll = () => [scope];
+  vm.runInContext(read('sections/rules/rules-combinations.js'), context);
+  rules._comboTranslateStatus = new Map();
+  await rules.autoTranslateComboName({ id: 'c1', name: '  ', when: { all: [] } });
+  assert.equal(scope.parts['.rule-translations-status'].textContent, 'Write the name first.');
 });

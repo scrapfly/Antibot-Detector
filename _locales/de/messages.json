@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "Alle Sprachen haben schon eine Übersetzung."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Übersetzungen des Namens"
+  },
+  "combinationTranslationsHint": {
+    "message": "Wird statt des Namens gezeigt, wenn die Erweiterung in dieser Sprache ist. Leer: der Name wird gezeigt."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Schreibe zuerst den Namen."
   }
 }

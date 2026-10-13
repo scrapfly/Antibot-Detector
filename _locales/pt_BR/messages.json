@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "Todos os idiomas já têm tradução."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Traduções do nome"
+  },
+  "combinationTranslationsHint": {
+    "message": "Mostrada no lugar do nome quando a extensão está nesse idioma. Vazia: o nome é mostrado."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Escreva o nome primeiro."
   }
 }

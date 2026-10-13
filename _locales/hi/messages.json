@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "हर भाषा का अनुवाद पहले से है।"
+  },
+  "combinationTranslationsTitle": {
+    "message": "नाम के अनुवाद"
+  },
+  "combinationTranslationsHint": {
+    "message": "जब एक्सटेंशन उस भाषा में हो, तो नाम की जगह दिखाया जाता है। खाली: नाम दिखाया जाता है।"
+  },
+  "combinationTranslateNeedsName": {
+    "message": "पहले नाम लिखें।"
   }
 }

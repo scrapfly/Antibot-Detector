@@ -4936,5 +4936,14 @@
   },
   "ruleTranslateAllDone": {
     "message": "كل اللغات لها ترجمة بالفعل."
+  },
+  "combinationTranslationsTitle": {
+    "message": "ترجمات الاسم"
+  },
+  "combinationTranslationsHint": {
+    "message": "تظهر بدلًا من الاسم عندما تكون الإضافة بتلك اللغة. فارغة: يظهر الاسم."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "اكتب الاسم أولًا."
   }
 }
