@@ -59,17 +59,29 @@ function paintSpinnerFrame(tabId, text) {
     ]);
 }
 
+// A page load starts the spinner before its scan is registered (the page's
+// data arrives a moment later). Without this grace the first tick found no
+// scan, stopped, and left the first frame frozen until the scan restarted it.
+const BADGE_SPINNER_START_GRACE_MS = 8000;
+
 function startBadgeSpinner(tabId) {
-    stopBadgeSpinner(tabId);
+    // Already turning for this tab (the page load started it and the scan
+    // asks again): keep it going instead of jumping back to the first frame
+    if (badgeSpinnerTimers.has(tabId)) return;
     const frames = BADGE.SPINNER_FRAMES;
     let i = 0;
+    const startedAt = Date.now();
+    let registered = false;
     setPausedIcon(tabId, false);
     paintSpinnerFrame(tabId, frames[0]).catch(() => {});
     const timer = setInterval(() => {
-        // Self-terminate once the tab no longer has an active detection.
+        // Self-terminate once the tab no longer has an active detection (after
+        // the start grace, while the scan has not registered yet).
         const state = (typeof detectionStates !== 'undefined') ? detectionStates.get(tabId) : null;
         const active = (typeof activeDetections !== 'undefined') ? activeDetections.has(tabId) : false;
-        const stillLoading = active || (state && !state.finalized && !state.failed);
+        const running = active || (state && !state.finalized && !state.failed);
+        if (running) registered = true;
+        const stillLoading = running || (!registered && Date.now() - startedAt < BADGE_SPINNER_START_GRACE_MS);
         if (badgeSpinnerTimers.get(tabId) !== timer) return;
         if (!stillLoading) { stopBadgeSpinner(tabId, timer); return; }
         i = (i + 1) % frames.length;

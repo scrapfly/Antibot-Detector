@@ -1285,9 +1285,19 @@ class DetectionEngineManager {
         }
 
 
+        // Matching a heavy page takes hundreds of milliseconds in one go, which
+        // froze the toolbar spinner (its timer could not run): give the event
+        // loop a turn every ~40 ms of matching. Results are unchanged.
+        const canYield = typeof setTimeout === 'function';
+        let sliceStart = Date.now();
+
         // A confident match says nothing about the remaining vendors. Evaluate
         // every enabled detector, including partial evidence for combinations.
         for (const { category, detectorName, detector } of detectorPriorities) {
+            if (canYield && Date.now() - sliceStart > 40) {
+                await new Promise(resolve => setTimeout(resolve, 0));
+                sliceStart = Date.now();
+            }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
             const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
             if (detection.detected || detection.partial) {
