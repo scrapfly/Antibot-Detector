@@ -429,12 +429,6 @@
   color: var(--accent-light);
 }
 
-#editRuleModal .method-action-btn.settings.has-custom-settings {
-  color: var(--accent-light);
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
 #editRuleModal .method-help-btn:hover,
 #editRuleModal .method-pagination-btn:hover:not(:disabled) {
   background: rgba(59, 130, 246, 0.14);

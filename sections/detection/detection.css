@@ -649,8 +649,9 @@
   cursor: pointer;
 }
 
+/* Hover: a light blue tint over the card, the border stays as it is */
 .detection-card:hover {
-  border-color: var(--accent);
+  background-image: linear-gradient(rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.12));
 }
 
 @keyframes fadeInUp {
@@ -785,11 +786,49 @@
   opacity: 0.6;
 }
 
-/* The evidence wraps under itself instead of being cut off */
+/* The evidence as method icons with their counts; wraps when there are many */
 .card-evidence {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 9px;
   min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
+}
+
+.card-evidence-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--text-secondary);
+}
+
+.card-evidence-item svg {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.card-evidence-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.card-evidence-item.is-combination {
+  color: var(--accent-light, var(--accent));
+}
+
+/* Read by screen readers only (the words behind the icons) */
+.card-evidence .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* Confidence along the bottom edge, in the category colour */

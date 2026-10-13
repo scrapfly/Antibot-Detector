@@ -251,9 +251,11 @@
   margin-bottom: 0;
 }
 
+/* Hover: the same light blue tint as the Detection cards, no border colour */
 #historyTab .history-item:hover {
-  background: var(--g-313131);
-  border-color: var(--accent);
+  background-color: var(--bg-secondary);
+  background-image: linear-gradient(rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.12));
+  border-color: var(--g-424242);
 }
 
 .history-item-top {

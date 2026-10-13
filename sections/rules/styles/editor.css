@@ -1187,10 +1187,6 @@
   color: var(--danger);
 }
 
-.method-action-btn.settings.has-custom-settings {
-  background: rgba(59, 130, 246, 0.15);
-}
-
 .method-action-btn.settings:hover {
   background: rgba(59, 130, 246, 0.15);
 }

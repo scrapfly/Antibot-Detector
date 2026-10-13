@@ -42,7 +42,7 @@
     },
 
     "jsApi": {
-      "enableJsApi": true
+      "enableJsApi": false
     },
 
     "webhook": {

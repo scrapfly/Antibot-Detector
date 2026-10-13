@@ -48,8 +48,11 @@ test('a card shows name, difficulty pill, "NN% sure", evidence and a confidence 
   assert.match(html, /class="detector-name"[^>]*>Cloudflare Bot Management</);
   assert.match(html, /diff-metric[^"]*card-difficulty/);
   assert.match(html, /class="card-sure"[^>]*>95% sure</);
-  // Every method on the card (it wraps when long); the tip counts each one
-  assert.match(html, /class="card-evidence"[^>]*>Headers 2, Url 2, Cookies, Content</);
+  // Every method as its icon and count, most first; the words stay for screen readers
+  assert.match(html, /class="card-evidence"[^>]*><span class="visually-hidden">Headers 2, Url 2, Cookies, Content<\/span>/);
+  const counts = [...html.matchAll(/<span class="card-evidence-item" aria-hidden="true"><svg[^]*?<\/svg><span class="card-evidence-count">(\d+)<\/span>/g)].map(m => m[1]);
+  assert.deepEqual(counts, ['2', '2', '1', '1']);
+  assert.ok(!html.includes('is-combination'), 'no combination decided it: no combination mark');
   const rows = JSON.parse(html.match(/class="card-evidence"[^>]*data-tip-rows="([^"]*)"/)[1].replace(/&quot;/g, '"'));
   assert.deepEqual(rows.map(row => `${row.label} ${row.value}`), ['Headers 2', 'Url 2', 'Cookies 1', 'Content 1']);
   assert.match(html, /class="card-evidence" data-tip="6 matches"/);
@@ -108,4 +111,18 @@ test('clearing the search shows the results in category order again, anti-bot fi
   ui.handleSearch.call(view, '');
   assert.deepEqual(shown[0], ['Akamai Bot Manager']);
   assert.deepEqual(shown[1], ['Akamai Bot Manager', 'reCAPTCHA', 'Navigator Fingerprint']);
+});
+
+test('the evidence icons: one per method, a combination mark when one decided, a name when a method has no icon', () => {
+  const { ui } = load();
+  const html = ui.evidenceIconsHtml([{ type: 'cookies' }, { type: 'cookie' }, { type: 'url' }, { type: 'mystery_method' }], true);
+  assert.match(html, /^<span class="card-evidence-item is-combination" aria-hidden="true"><svg/);
+  assert.equal((html.match(/card-evidence-count/g) || []).length, 3, 'cookies and cookie count as one method');
+  assert.match(html, /<span class="card-evidence-name">Mystery method<\/span><span class="card-evidence-count">1<\/span>/);
+  assert.deepEqual(ui.evidenceCounts([{ type: 'url' }, { type: 'header' }, { type: 'header' }]).map(r => `${r.type} ${r.count}`), ['header 2', 'url 1']);
+  const context = vm.createContext({ console, self: {} }); context.self = context;
+  vm.runInContext(read('utils/format-utils.js'), context);
+  for (const method of ['cookie', 'header', 'url', 'content', 'dom', 'window', 'js_hooks', 'payload']) {
+    assert.match(context.FormatUtils.methodIconSvg(method), /^<svg [^>]*aria-hidden="true">/, method);
+  }
 });

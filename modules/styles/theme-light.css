@@ -53,7 +53,6 @@
 }
 
 /* Shadows: softer on white */
-:root[data-theme="light"] .detection-card:hover,
 :root[data-theme="light"] .rule-modal-content {
   box-shadow: 0 6px 24px rgba(9, 30, 66, 0.12);
 }

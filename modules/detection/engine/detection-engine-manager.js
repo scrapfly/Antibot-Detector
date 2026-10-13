@@ -181,7 +181,7 @@ class DetectionEngineManager {
             const debugMode = actualSettings.debugMode || false;
             const debugVerbose = debugMode && actualSettings.debugVerbose === true;
             const logCollectorEnabled = actualSettings.logCollectorEnabled || false;
-            const enableJsApi = actualSettings.jsApi?.enableJsApi ?? true;
+            const enableJsApi = actualSettings.jsApi?.enableJsApi ?? false;
             const hooksConfig = HooksConfig.fromSettings(actualSettings);
 
             const detectorsData = result.scrapfly_detectors;
@@ -257,7 +257,7 @@ class DetectionEngineManager {
                 windowProperties: [],
                 debugMode: false,
                 logCollectorEnabled: false,
-                enableJsApi: true,
+                enableJsApi: false,
                 fingerprintEnabled: true
             });
         }

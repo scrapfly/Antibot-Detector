@@ -280,7 +280,7 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
 SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
     try {
       const settings = await Utils.getSettings();
-      const jsApiEnabled = settings.jsApi?.enableJsApi ?? true;
+      const jsApiEnabled = settings.jsApi?.enableJsApi ?? false;
 
       if (!jsApiEnabled) {
         Logger.debug('UI', `JS API off, ${eventName} not sent`);

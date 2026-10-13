@@ -4,9 +4,53 @@
  */
 const SettingsUI = (typeof self !== 'undefined' && self.SettingsUI) ? self.SettingsUI : {};
 
+// Card heads that are a title (not a switch): the card folds under them
+SettingsUI.CARD_HEAD_SELECTOR = ':scope > .settings-card-head, :scope > .settings-row--head, :scope > .settings-stats-head, :scope > .data-card-head';
+
+/**
+ * Cards topped by a title start folded, showing only that title; clicking it
+ * (or Enter / Space) opens the card. Cards topped by a switch are left as
+ * they are: the switch already shows or hides what is under it.
+ */
+SettingsUI.setupCollapsibleCards = function(root) {
+    if (!root) return;
+    const chevron = '<svg class="settings-card-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    root.querySelectorAll('.settings-card').forEach((card) => {
+      if (card.classList.contains('is-collapsible')) return;
+      const head = card.querySelector(SettingsUI.CARD_HEAD_SELECTOR);
+      if (!head || head.querySelector('input, select, textarea, button')) return;
+      card.classList.add('is-collapsible', 'is-collapsed');
+      head.setAttribute('role', 'button');
+      head.tabIndex = 0;
+      head.setAttribute('aria-expanded', 'false');
+      head.insertAdjacentHTML('beforeend', chevron);
+      const toggle = () => {
+        const open = card.classList.toggle('is-collapsed') === false;
+        head.setAttribute('aria-expanded', String(open));
+      };
+      head.addEventListener('click', toggle);
+      head.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggle();
+      });
+    });
+};
+
+/** Every folding card closed again (each time Settings opens) */
+SettingsUI.collapseCards = function(root) {
+    if (!root) return;
+    SettingsUI.setupCollapsibleCards(root);
+    root.querySelectorAll('.settings-card.is-collapsible').forEach((card) => {
+      card.classList.add('is-collapsed');
+      card.querySelector(SettingsUI.CARD_HEAD_SELECTOR)?.setAttribute('aria-expanded', 'false');
+    });
+};
+
 SettingsUI.showSettings = function() {
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
+      SettingsUI.collapseCards(settingsModal);
       settingsModal.classList.add('is-open');
       this.isModalVisible = true;
       this.loadSettings();
@@ -312,7 +356,7 @@ SettingsUI.updateSettingsUI = function() {
     // JS API Settings
     const enableJsApi = document.querySelector('#enableJsApi');
     const jsApiSettingsContainer = document.querySelector('#jsApiSettings');
-    const jsApiEnabled = this.settings.jsApi?.enableJsApi ?? true;
+    const jsApiEnabled = this.settings.jsApi?.enableJsApi ?? false;
     if (enableJsApi) {
       enableJsApi.checked = jsApiEnabled;
     }
@@ -520,7 +564,7 @@ SettingsUI.getSettingsFromUI = function() {
     };
 
     // JS API Settings
-    const jsApiEnabled = document.querySelector('#enableJsApi')?.checked ?? this.settings.jsApi?.enableJsApi ?? true;
+    const jsApiEnabled = document.querySelector('#enableJsApi')?.checked ?? this.settings.jsApi?.enableJsApi ?? false;
     settings.jsApi = {
       enableJsApi: jsApiEnabled
     };
