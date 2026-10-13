@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - History: detection count, confidence and difficulty now share the lower row with category totals and the timestamp.
+- History: cards show the page's full address instead of only its domain, cut off when long; hover shows all of it.
 - Settings: changes wait for Save; theme and language clearly indicate when they apply immediately.
 - Keyboard navigation now supports the main tabs and returns focus after closing tool and History dialogs.
 - Detection: larger cards with a bigger icon and name; a card's evidence shows each method as an icon with its count, in its Settings → Tag Colors colour, plus a mark when a combination decided it; hover names them.

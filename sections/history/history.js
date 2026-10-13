@@ -135,6 +135,7 @@ class History {
       const rawTitle = (item.title && item.title !== 'Untitled') ? item.title : (domain || untitledLabel);
       const safeTitle = FormatUtils.escapeHtml(rawTitle);
       const safeUrl = FormatUtils.escapeHtml(item.url || '');
+      // The full address on the card (cut off with an ellipsis), the domain when none was saved
       const safeDomain = FormatUtils.escapeHtml(domain);
 
       const faviconSrc = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || item.hostname);
@@ -155,7 +156,7 @@ class History {
             <div class="history-item-content">
               <div class="history-title" title="${safeTitle}">${safeTitle}</div>
               <div class="history-subline">
-                <span class="history-url" title="${safeUrl}">${safeDomain}</span>
+                <span class="history-url" dir="ltr" title="${safeUrl || safeDomain}">${safeUrl || safeDomain}</span>
 
               </div>
             </div>
