@@ -5,9 +5,7 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
-## [Unreleased]
-
-Planned version: 2.8.6.
+## [2.8.6] - 2026-10-13
 
 ### Changed
 
@@ -355,7 +353,7 @@ Planned version: 2.8.6.
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
-[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.5...HEAD
+[2.8.6]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.5...v2.8.6
 [2.8.5]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...v2.8.3
