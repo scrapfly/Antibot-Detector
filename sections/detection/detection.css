@@ -1086,15 +1086,35 @@
   gap: 12px;
 }
 
-/* Section headers as the Settings group titles */
+/* Section headers stand apart from the text under them: accent colour, a
+   bar before and a rule running to the edge */
 .detection-modal-section-header h4 {
-  margin: 0 0 0 1.5px;
-  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font-size: 11px;
   font-weight: 700;
-  line-height: 14px;
-  letter-spacing: 0.5px;
+  line-height: 16px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--g-e0e0e0);
+  color: var(--accent-light);
+}
+
+.detection-modal-section-header h4::before {
+  content: '';
+  flex-shrink: 0;
+  width: 3px;
+  height: 13px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.detection-modal-section-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
 .detection-modal-methods-list {

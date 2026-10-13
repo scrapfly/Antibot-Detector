@@ -329,6 +329,7 @@
 
 .history-timestamp {
   flex-shrink: 0;
+  margin-inline-start: auto;
   white-space: nowrap;
   font-size: 11px;
   line-height: 14px;
@@ -390,10 +391,10 @@
   height: 15px;
 }
 
+/* Detections, confidence, difficulty – category totals, then the time at the far end */
 .history-item-bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   width: 100%;
   padding-top: 9px;
@@ -404,7 +405,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   overflow: hidden;
 }
@@ -517,6 +518,13 @@
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+
+.history-metrics::after {
+  content: '–' / '';
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 14px;
 }
 
 .history-metric {
@@ -1048,22 +1056,37 @@
   gap: 6px;
 }
 
-.history-modal-combos-title {
-  font-size: 9.5px;
+/* Section titles inside a card, as the Detection details headers: accent
+   colour, a bar before and a rule running to the edge */
+.history-modal-combos-title,
+.history-modal-match-count {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10.5px;
   font-weight: 700;
-  line-height: 12px;
-  letter-spacing: 0.5px;
+  line-height: 14px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: var(--accent-light);
 }
 
-.history-modal-match-count {
-  font-size: 9.5px;
-  font-weight: 700;
-  line-height: 12px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-secondary);
+.history-modal-combos-title::before,
+.history-modal-match-count::before {
+  content: '';
+  flex-shrink: 0;
+  width: 3px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.history-modal-combos-title::after,
+.history-modal-match-count::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
 .history-modal-detection-methods {

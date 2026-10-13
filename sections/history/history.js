@@ -170,19 +170,19 @@ class History {
             </button>
           </div>
           <div class="history-item-bottom">
+            <span class="history-metrics">
+              <span class="history-metric" ${detectionsTip
+                ? FormatUtils.tipAttrs(detectionsTip.title, detectionsTip.detail, detectionsTip.rows)
+                : `data-tip="${FormatUtils.escapeAttr(summary.labels.detections)}"`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/></svg>
+                <span class="history-metric-value">${summary.totalDetections}</span>
+              </span>
+              ${FormatUtils.confidenceHtml(summary.avgConfidence, 'history-metric', confidenceTip)}
+              ${FormatUtils.difficultyHtml(summary.difficulty, summary.difficultyDisplay, 'history-difficulty-pill', difficultyTip)}
+            </span>
             <div class="history-detections">
               ${this.renderHistorySummary(cardDetections)}
             </div>
-                <span class="history-metrics">
-                  <span class="history-metric" ${detectionsTip
-                    ? FormatUtils.tipAttrs(detectionsTip.title, detectionsTip.detail, detectionsTip.rows)
-                    : `data-tip="${FormatUtils.escapeAttr(summary.labels.detections)}"`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/></svg>
-                    <span class="history-metric-value">${summary.totalDetections}</span>
-                  </span>
-                  ${FormatUtils.confidenceHtml(summary.avgConfidence, 'history-metric', confidenceTip)}
-                  ${FormatUtils.difficultyHtml(summary.difficulty, summary.difficultyDisplay, 'history-difficulty-pill', difficultyTip)}
-                </span>
             <span class="history-timestamp" data-tip="${FormatUtils.escapeAttr(FormatUtils.formatDateTime(item.timestamp))}">${FormatUtils.escapeHtml(timeAgo)}</span>
           </div>
         </div>

@@ -13,7 +13,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Changed
 
-- History: detection count, confidence and difficulty now share the lower row with category totals and the timestamp.
+- History: a card's lower row reads detections, confidence and difficulty, then the category totals, with the time at the far right.
 - History: cards show the page's full address instead of only its domain, cut off when long; hover shows all of it.
 - Settings: changes wait for Save; theme and language clearly indicate when they apply immediately.
 - Keyboard navigation now supports the main tabs and returns focus after closing tool and History dialogs.
@@ -21,6 +21,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection and History: hovering a card tints it light blue instead of outlining it.
 - Settings: cards with a title start folded and open on click, so each tab is shorter.
 - Detection and History details: matched combinations start folded, showing their name and confidence; a click opens what was found.
+- Detection and History details: section titles such as Description and Matched combinations stand out from the text, in blue with a rule beside them.
 - Settings: JS API events are off by default; a choice already saved is kept.
 - Rule editor: a pattern's settings button no longer gets a coloured background when settings are set; the RX and CS tags already show them.
 
