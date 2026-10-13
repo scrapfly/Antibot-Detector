@@ -695,11 +695,23 @@
   outline-offset: 1px;
 }
 
-/* Score of a combination in its header: "90%" or "Auto" */
+/* The delete button of a combination sits on the name field's row too */
+.combo-summary > .combo-delete {
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+/* Score of a combination in its header: "90%" or "Auto", centred on the
+   32px name field's row (not on the header, which grows with the sentence) */
 .combo-summary-confidence {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
   flex-shrink: 0;
-  align-self: center;
-  padding: 2px 7px;
+  align-self: flex-start;
+  height: 22px;
+  margin-top: 5px;
+  padding: 0 7px;
   border: 1px solid var(--re-border, var(--border));
   border-radius: 999px;
   color: var(--text-primary);

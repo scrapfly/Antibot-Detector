@@ -15,11 +15,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: a card's evidence shows each method as an icon with its count, in its Settings → Tag Colors colour, plus a mark when a combination decided it; hover names them.
 - Detection and History: hovering a card tints it light blue instead of outlining it.
 - Settings: cards with a title start folded and open on click, so each tab is shorter.
+- Detection and History details: matched combinations start folded, showing their name and confidence; a click opens what was found.
 - Settings: JS API events are off by default; a choice already saved is kept.
 - Rule editor: a pattern's settings button no longer gets a coloured background when settings are set; the RX and CS tags already show them.
 
 ### Fixed
 
+- Rule editor: a combination's confidence and delete button line up with its name.
 - Toolbar: the scanning spinner turns from the moment a page loads instead of freezing on its first frame, and keeps turning while the rules run.
 - Rule editor: a pattern's Translations count includes the translations the extension ships, so an official text no longer reads "0 of 11".
 - Rule editor: "Translate automatically" fills every language without a translation in one click, instead of only the first, and leaves shipped translations alone.

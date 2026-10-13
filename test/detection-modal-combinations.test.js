@@ -72,7 +72,7 @@ test('the two storage combinations are told apart: full names, highest first, th
   const first = html.indexOf('Storage read and write calls');
   const second = html.indexOf('Storage read and write references');
   assert.ok(first > 0 && second > first, 'highest confidence first, names never cut');
-  assert.match(html, /class="match-combo sets-score" data-combo-id="calls"/);
+  assert.match(html, /class="match-combo is-collapsible is-collapsed sets-score" data-combo-id="calls"/);
   assert.match(html, /Calls Storage\.setItem/);
   assert.ok(!/describe|AND|method-type-badge/.test(html), 'no one-line rule text any more');
 });

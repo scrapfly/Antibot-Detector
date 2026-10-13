@@ -209,6 +209,7 @@
   }
 
   // Icon for the mark: the ✓ character renders as √ in some UI fonts
+  const CHEVRON_ICON = '<svg class="match-combo-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
   const FOUND_ICON = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.2 8.4l3 3 6.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /** One found signal: its description (or raw text), with method and raw pattern in the tip. */
@@ -242,10 +243,6 @@
       return `<span class="match-combo-confidence">${esc(value)}%</span>`;
     };
     return (Array.isArray(cards) ? cards : []).map((card) => {
-      const head = `<div class="match-combo-head">
-          <h5 class="match-combo-name" dir="auto">${esc(card.name)}</h5>
-          ${confidence(card.confidence, card)}
-        </div>`;
       let body;
       if (card.unavailable === 'notSaved') {
         body = '';
@@ -257,11 +254,43 @@
         body = `<p class="match-combo-lead" id="${leadId}" dir="auto">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
           <ul class="match-combo-rows" aria-labelledby="${leadId}">${found.map(item => rowHtml(item, options, false)).join('')}${absent.map(item => rowHtml(item, options, true)).join('')}</ul>`;
       }
-      return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}${body}</article>`;
+      // Folded by default: the name and confidence show, the head opens the rest
+      if (!body) {
+        const head = `<div class="match-combo-head">
+          <h5 class="match-combo-name" dir="auto">${esc(card.name)}</h5>
+          ${confidence(card.confidence, card)}
+        </div>`;
+        return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}</article>`;
+      }
+      const bodyId = `${nextId()}-body`;
+      const head = `<div class="match-combo-head">
+          <h5 class="match-combo-name" dir="auto"><button type="button" class="match-combo-toggle" aria-expanded="false" aria-controls="${bodyId}">${esc(card.name)}</button></h5>
+          ${confidence(card.confidence, card)}
+          ${CHEVRON_ICON}
+        </div>`;
+      return `<article class="match-combo is-collapsible is-collapsed${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}<div class="match-combo-body" id="${bodyId}" hidden>${body}</div></article>`;
     }).join('');
   }
 
-  const api = Object.freeze({ build, renderHtml, foundRows, patternText });
+  /** Open or close a folded combination card (its head was clicked or its button pressed). */
+  function toggle(article) {
+    const body = article && article.querySelector(':scope > .match-combo-body');
+    const button = article && article.querySelector('.match-combo-toggle');
+    if (!body || !button) return;
+    const open = body.hidden;
+    body.hidden = !open;
+    article.classList.toggle('is-collapsed', !open);
+    button.setAttribute('aria-expanded', String(open));
+  }
+  // One listener for every list the popup draws (Detection and History details)
+  if (typeof document !== 'undefined' && typeof document.addEventListener === 'function') {
+    document.addEventListener('click', (event) => {
+      const head = event.target && event.target.closest ? event.target.closest('.match-combo.is-collapsible > .match-combo-head') : null;
+      if (head) toggle(head.parentElement);
+    });
+  }
+
+  const api = Object.freeze({ build, renderHtml, foundRows, patternText, toggle });
   root.CombinationChecklist = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

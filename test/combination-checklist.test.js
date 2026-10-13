@@ -71,9 +71,13 @@ test('the tree keeps every row; the card lists only what was found, flat and in 
 test('HTML: full name, a found mark with a label, method and raw pattern in the tip, no chips or Copy', () => {
   const result = scored();
   const html = CC.renderHtml(CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: 90 }), { methodLabel: label });
-  assert.match(html, /<h5 class="match-combo-name" dir="auto">SDK, widget and an API<\/h5>/);
+  assert.match(html, /<h5 class="match-combo-name" dir="auto"><button type="button" class="match-combo-toggle" aria-expanded="false" aria-controls="([^"]+)">SDK, widget and an API<\/button><\/h5>/);
+  // Folded by default: the found rows sit in a hidden body the head opens
+  const bodyId = html.match(/aria-controls="([^"]+)"/)[1];
+  assert.match(html, new RegExp(`<div class="match-combo-body" id="${bodyId}" hidden>`));
+  assert.match(html, /class="match-combo is-collapsible is-collapsed/);
   assert.ok(!html.includes('Sets the detection score'), 'no score label: the highlighted card says it');
-  assert.match(html, /class="match-combo sets-score"/);
+  assert.match(html, /class="match-combo is-collapsible is-collapsed sets-score"/);
   assert.match(html, /role="img" aria-label="Found"><svg/);
   assert.ok(!html.includes('aria-label="Not found"'));
   assert.match(html, /data-tip="URL: \^https:\/\/cdn\\\.x\/sdk\\\.js" data-tip-detail="https:\/\/cdn\.x\/sdk\.js\?v=2"/);
@@ -155,4 +159,22 @@ test('pattern text shows cookie and header values', () => {
   assert.strictEqual(CC.patternText('cookie', { name: 'a', value: 'b' }), 'a = b');
   assert.strictEqual(CC.patternText('dom', { selector: '#x' }), '#x');
   assert.strictEqual(CC.patternText('url', null), '');
+});
+
+test('a folded combination opens and closes from its head', () => {
+  const body = { hidden: true };
+  const button = { attrs: {}, setAttribute(name, value) { this.attrs[name] = value; } };
+  const classes = new Set(['match-combo', 'is-collapsible', 'is-collapsed']);
+  const article = {
+    classList: { toggle: (name, on) => (on ? classes.add(name) : classes.delete(name)) },
+    querySelector: (sel) => (sel.includes('match-combo-body') ? body : button)
+  };
+  CC.toggle(article);
+  assert.equal(body.hidden, false);
+  assert.equal(button.attrs['aria-expanded'], 'true');
+  assert.ok(!classes.has('is-collapsed'));
+  CC.toggle(article);
+  assert.equal(body.hidden, true);
+  assert.equal(button.attrs['aria-expanded'], 'false');
+  assert.ok(classes.has('is-collapsed'));
 });
