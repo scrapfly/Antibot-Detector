@@ -284,7 +284,7 @@ function loadRuntime(webhook, calls) {
   };
   sandbox.self = sandbox;
   vm.createContext(sandbox);
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'sections/settings/settings-runtime.js'), 'utf8'), sandbox);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'modules/settings/settings-runtime.js'), 'utf8'), sandbox);
   return sandbox.SettingsRuntime;
 }
 

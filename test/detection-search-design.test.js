@@ -7,7 +7,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('sections/detection/detection.html');
-const css = read('modules/styles/detection.css');
+const css = read('sections/detection/detection.css');
 const input = html.match(/<input\b[^>]*\bid="detectionSearch"[^>]*>/)[0];
 const block = selector => {
   const start = css.indexOf(`${selector} {`);
@@ -38,7 +38,7 @@ test('search is a plain field like Rules and History (no icon)', () => {
 
 test('search field uses the same look as the Rules and History search', () => {
   const field = block('#detectionResults .detection-search .search-input');
-  const rules = read('modules/styles/rules.css');
+  const rules = require('./helpers/feature-css')('rules');
   const rulesField = rules.slice(rules.indexOf('.rules-header .search-input {'), rules.indexOf('}', rules.indexOf('.rules-header .search-input {')));
   for (const rule of [/height:\s*34px/, /padding:\s*0 11px/, /font-size:\s*11\.5px/, /border:\s*1px solid (#4b4b4b|var\(--g-4b4b4b\))/,
     /border-radius:\s*8px/, /background:\s*var\(--bg-secondary\)/]) {

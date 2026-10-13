@@ -34,6 +34,7 @@ function load(local, github, state = { version: '2.8.3' }) {
     Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12, UPDATE_FETCH_TIMEOUT: 5000 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
+      patchSettings: async () => true,
       normalizeStoredValue: async (_k, v) => (typeof v === 'string' ? JSON.parse(v) : v),
       saveToStorage: async (key, value) => { local[key] = JSON.parse(JSON.stringify(value)); return true; },
       saveSettings: async () => true
@@ -60,7 +61,7 @@ function load(local, github, state = { version: '2.8.3' }) {
   ctx.self = ctx;
   ctx.window = {};
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/update-manager.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/rules/update-manager.js'), 'utf8'), ctx);
   return { UM: ctx.UpdateManager, requests, state };
 }
 

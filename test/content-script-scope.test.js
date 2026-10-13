@@ -15,7 +15,7 @@ function contextWith(overrides = {}) {
   });
   for (const file of [
     'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
-    'modules/detection/window-condition-grammar.js',
+    'modules/detection/conditions/window-condition-grammar.js',
     'modules/detection/managers/confidence-manager.js', 'modules/detection/detection-combinations.js',
     ...['analysis', 'extractors', 'matching', 'hooks', 'manager']
       .map(name => `modules/detection/engine/detection-engine-${name}.js`)

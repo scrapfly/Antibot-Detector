@@ -13,7 +13,7 @@ function buildMessageHandlerContext() {
         Utils,
         Settings,
         CategoryManager,
-        History,
+        HistoryRecorder,
         DetectionEngineManager,
         logCollector: typeof logCollector !== 'undefined' ? logCollector : undefined,
         // Live getters: the registry/context may now be built before initialize()

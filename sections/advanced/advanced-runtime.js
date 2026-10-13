@@ -64,62 +64,20 @@ Advanced.prototype.setupCaptureCompletionListener = function() {
     if (this.captureCompletionListener) return; // Already setup
 
     this.captureCompletionListener = async (message) => {
-      if (message.type === 'AKAMAI_CAPTURE_COMPLETED' || message.type === 'RECAPTCHA_CAPTURE_COMPLETED' || message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
-        Logger.debug('UI', '[Advanced] Capture completed, updating captured data display');
-
-        // Don't clear the tools panel, just update the captured data section
-        if (this.activeModule) {
-          // Update capture button state for Akamai
-          if (message.type === 'AKAMAI_CAPTURE_COMPLETED') {
-            const captureBtn = document.querySelector('#akamaiStartCapture');
-            if (captureBtn) {
-              captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = (typeof I18n !== 'undefined')
-                ? I18n.tr('btnStartCapturing', 'Start Capturing')
-                : 'Start Capturing';
-            }
-          }
-
-          // Update capture button state for reCAPTCHA
-          if (message.type === 'RECAPTCHA_CAPTURE_COMPLETED') {
-            const captureBtn = document.querySelector('#recaptchaStartCapture');
-            if (captureBtn) {
-              captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = (typeof I18n !== 'undefined')
-                ? I18n.tr('btnStartCapturing', 'Start Capturing')
-                : 'Start Capturing';
-            }
-          }
-
-          // Update capture button state for hCaptcha
-          if (message.type === 'HCAPTCHA_CAPTURE_COMPLETED') {
-            const captureBtn = document.querySelector('#hcaptchaStartCapture');
-            if (captureBtn) {
-              captureBtn.classList.remove('capturing');
-              captureBtn.querySelector('.tool-btn-label').textContent = (typeof I18n !== 'undefined')
-                ? I18n.tr('btnStartCapturing', 'Start Capturing')
-                : 'Start Capturing';
-            }
-          }
-
-          // Update capture count badge
-          await this.updateCaptureCountBadge();
-
-          // Refresh the active module's capture history display immediately
-          if (this.activeModule && typeof this.activeModule.renderCapturedDataSection === 'function') {
-            await this.activeModule.renderCapturedDataSection();
-          }
-
-          // If on captures tab, also refresh the unified history
-          const capturesPanel = document.querySelector('#capturesPanel');
-          if (capturesPanel && capturesPanel.classList.contains('active')) {
-            await this.renderUnifiedCaptureHistory();
-          }
+      if (!message.type?.endsWith('CAPTURE_COMPLETED')) return;
+      if (message.tabId !== this.currentTab?.id) return;
+      if (this.activeModule && this.activeModule.moduleName === message.vendorId) {
+        if (message.requestId && message.requestId === this.activeModule.captureRequestId) {
+          this.activeModule.updateCaptureButtonState(false);
         }
+        await this.activeModule.renderCapturedDataSection();
+      }
+      await this.updateCaptureCountBadge();
+      if (document.querySelector('#capturesPanel')?.classList.contains('active')) {
+        await this.renderUnifiedCaptureHistory();
       }
     };
-
-    chrome.runtime.onMessage.addListener(this.captureCompletionListener);
+    AdvancedToolClient.subscribe(this.captureCompletionListener);
   };
 
 
@@ -366,4 +324,4 @@ Advanced.prototype.loadDetectionModule = async function(moduleId, detection) {
       Logger.error('UI', `Failed to initialize module ${normalizedId}:`, error);
       return null;
     }
-  };
+  };

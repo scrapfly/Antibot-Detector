@@ -26,7 +26,7 @@ global.StorageManager = {
   saveToStorage: async (key, value) => { saved.push({ key, value: JSON.parse(JSON.stringify(value)) }); return true; }
 };
 
-const DetectorManager = require('../modules/detection/managers/detector-manager.js');
+const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 const index = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'detectors', 'index.json'), 'utf8'));

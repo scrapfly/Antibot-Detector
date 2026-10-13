@@ -4,6 +4,7 @@
  */
 function registerSettingsHandlers(registry, context) {
     void context;
+    SettingsStore.registerHandlers(registry);
 
     const handle_extension_toggle_changed = function({ request, sender, sendResponse, context }) {
         void context;

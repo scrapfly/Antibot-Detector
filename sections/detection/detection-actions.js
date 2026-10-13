@@ -165,13 +165,8 @@ DetectionActions.addToBlacklist = async function() {
       }
 
       // Written from a fresh read, so a Settings save in between is not undone
-      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.updateSettings === 'function'
-        ? await StorageManager.updateSettings((fresh) => {
-          fresh.detection = fresh.detection || {};
-          const list = Array.isArray(fresh.detection.blacklistedDomains) ? fresh.detection.blacklistedDomains : [];
-          if (list.includes(domain)) return false;
-          fresh.detection.blacklistedDomains = [...list, domain];
-        })
+      const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.setDomainExcluded === 'function'
+        ? await StorageManager.setDomainExcluded(domain, true)
         : false;
       if (!saved) {
         throw new Error(detectionActionsTr('failedReadSettings', 'Could not save settings'));
@@ -249,12 +244,8 @@ DetectionActions.removeFromBlacklist = async function(domain) {
       const settings = await Utils.getSettings();
 
       if (settings.detection?.blacklistedDomains) {
-        const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.updateSettings === 'function'
-          ? await StorageManager.updateSettings((fresh) => {
-            const list = fresh.detection?.blacklistedDomains;
-            if (!Array.isArray(list)) return false;
-            fresh.detection.blacklistedDomains = list.filter(d => d !== domain);
-          })
+        const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.setDomainExcluded === 'function'
+          ? await StorageManager.setDomainExcluded(domain, false)
           : false;
         if (!saved) {
           throw new Error(detectionActionsTr('failedReadSettings', 'Could not save settings'));
@@ -339,10 +330,14 @@ DetectionActions.refreshAnalysis = async function() {
           if (chrome.runtime.lastError) {
             Logger.error('UI', 'Detection: Error requesting fresh detection:', chrome.runtime.lastError);
             this.hideLoadingState();
-            this.showEmptyState();
+            this.showEmptyState({ outcome: 'failed' });
             return;
           }
 
+          if (!response || response.status === 'error') {
+            this.showEmptyState({ outcome: 'failed' });
+            return;
+          }
           if (this.debugMode) Logger.debug('UI', 'Detection: Fresh detection requested:', response);
 
           setTimeout(() => {
@@ -352,10 +347,13 @@ DetectionActions.refreshAnalysis = async function() {
                 if (chrome.runtime.lastError) {
                   Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);
                   this.hideLoadingState();
-                  this.showEmptyState();
+                  this.showEmptyState({ outcome: 'failed' });
                   return;
                 }
 
+                if (dataResponse?.status === 'pending' && !dataResponse.data) {
+                  return; // Keep the existing analyzing state and its timeout.
+                }
                 if (dataResponse && dataResponse.data) {
                   await Detection.processDetectionData({
                     detection: this,
@@ -366,7 +364,7 @@ DetectionActions.refreshAnalysis = async function() {
                 } else {
                   if (this.debugMode) Logger.debug('UI', 'Detection: No data received after refresh');
                   this.hideLoadingState();
-                  this.showEmptyState();
+                  this.showEmptyState({ outcome: 'failed' });
                 }
               }
             );
@@ -377,7 +375,7 @@ DetectionActions.refreshAnalysis = async function() {
     } catch (error) {
       Logger.error('UI', 'Failed to refresh analysis:', error);
       this.hideLoadingState();
-      this.showEmptyState();
+      this.showEmptyState({ outcome: 'failed' });
     }
 };
 

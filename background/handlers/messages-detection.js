@@ -1,3 +1,49 @@
+/** Normalize only URL details that do not identify a different document. */
+function normalizeDetectionMessageUrl(url) {
+    try {
+        const parsed = new URL(url);
+        return parsed.origin + parsed.pathname + parsed.search;
+    } catch (_) { return String(url || ''); }
+}
+
+/** Validate the sending document before any state-creating helper can replace a scan. */
+async function resolveDetectionMessageDocument(sender, url) {
+    const tabId = sender.tab?.id;
+    if (!tabId || (sender.frameId !== undefined && sender.frameId !== 0) || !url) return null;
+    const normalized = normalizeDetectionMessageUrl(url);
+    if (sender.url && normalizeDetectionMessageUrl(sender.url) !== normalized) return null;
+    const previousState = detectionStates.get(tabId);
+    let verified = false;
+    if (sender.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
+        try {
+            const frame = await chrome.webNavigation.getFrame({ tabId, frameId: 0 });
+            if (!frame || (frame.documentId && frame.documentId !== sender.documentId) ||
+                (frame.url && normalizeDetectionMessageUrl(frame.url) !== normalized)) return null;
+            verified = frame.documentId === sender.documentId;
+        } catch (_) { return null; } // closed/unavailable frames cannot own a scan
+    }
+    if (!verified && sender.tab.url && normalizeDetectionMessageUrl(sender.tab.url) !== normalized) return null;
+    const state = detectionStates.get(tabId);
+    if (state !== previousState && (!state || normalizeDetectionMessageUrl(state.url) !== normalized ||
+        (sender.documentId && state.documentId && state.documentId !== sender.documentId))) return null;
+    if (!verified && state && (normalizeDetectionMessageUrl(state.url) !== normalized ||
+        (sender.documentId && state.documentId && state.documentId !== sender.documentId))) return null;
+    return { tabId, url, documentId: sender.documentId || null, verified };
+}
+
+function detectionStateForDocument(document) {
+    const { tabId, url, documentId, verified } = document;
+    let current = detectionStates.get(tabId);
+    if (current && verified && documentId && current.documentId && current.documentId !== documentId) {
+        DetectionSessionStore.cancel(tabId, 'document_changed', current);
+        current = null;
+    }
+    const sameUrl = current && normalizeDetectionMessageUrl(current.url) === normalizeDetectionMessageUrl(url);
+    const state = getOrCreateDetectionState(tabId, sameUrl ? current.url : url);
+    if (documentId) state.documentId = documentId;
+    return state;
+}
+
 /**
  * registerDetectionHandlers registration.
  * Extracted from message-router switch cases for maintainability.
@@ -9,29 +55,28 @@ function registerDetectionHandlers(registry, context) {
     const handle_page_load_notification = function({ request, sender, sendResponse, context }) {
         void context;
 
-        // Clear interrupted marker on new page load
-        if (sender.tab?.id) {
-            if (interruptedDetections.has(sender.tab.id)) {
-                Logger.debug('SCAN', `Tab ${sender.tab.id}: new page load clears the interrupted scan`);
-                interruptedDetections.delete(sender.tab.id);
-            }
-        }
-
         (async () => {
             try {
+                const document = await resolveDetectionMessageDocument(sender, request.url);
+                if (!document) { sendResponse({ status: 'url_changed' }); return; }
+                const existing = detectionStates.get(document.tabId);
+                if (existing) detectionStateForDocument(document);
+                interruptedDetections.delete(document.tabId);
                 await ensureDetectorManagerInitialized();
+                if (!await resolveDetectionMessageDocument(sender, request.url)) { sendResponse({ status: 'url_changed' }); return; }
 
-                await DetectionEngineManager.handlePageLoadNotification(request, sender, {
+                const result = await DetectionEngineManager.handlePageLoadNotification(request, sender, {
                     chrome,
                     Settings,
                     CategoryManager,
-                    History,
+                    HistoryRecorder,
+                    isCurrentDocument: async () => !!(await resolveDetectionMessageDocument(sender, request.url)),
                     Utils,
                     categoryManager,
                     recentDetectionRequests
                 });
 
-                sendResponse({ status: 'ok' });
+                sendResponse(result || { status: 'ok' });
             } catch (error) {
                 Logger.error('BACKGROUND', '[Background] Error handling PAGE_LOAD_NOTIFICATION:', error);
                 sendResponse({ status: 'error', error: error.message });
@@ -47,7 +92,15 @@ function registerDetectionHandlers(registry, context) {
         (async () => {
             Logger.debug('SCAN', `Page data from tab ${sender.tab?.id}`);
             try {
-                await processDetectionData(request, sender);
+                const document = await resolveDetectionMessageDocument(sender, request?.data?.url || sender.tab?.url);
+                if (!document) { sendResponse({ status: 'url_changed' }); return; }
+                detectionStateForDocument(document);
+                const processing = processDetectionData(request, sender);
+                // processDetectionData begins its session synchronously before
+                // awaiting collection; preserve its document identity on retries.
+                const state = detectionStates.get(document.tabId);
+                if (state && document.documentId) state.documentId = document.documentId;
+                await processing;
                 sendResponse({ status: 'received', tabId: sender.tab?.id });
             } catch (error) {
                 Logger.error('BACKGROUND', '[DetectionData] ERROR in processDetectionData:', error);
@@ -107,6 +160,9 @@ function registerDetectionHandlers(registry, context) {
                         ? await DetectionEngineManager.getDetectionData(targetTabId)
                         : await getCurrentTabDetectionData();
 
+                    // A failed rescan must not be presented as a successful older cache.
+                    if (detectionStates.get(targetTabId)?.failed) data = null;
+
                     // Completed data wins over stale interrupted markers
                     if (data && interruptedDetections.has(targetTabId)) {
                         Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing interrupted state for tab ${targetTabId} (has cached completed data)`);
@@ -125,7 +181,7 @@ function registerDetectionHandlers(registry, context) {
 
                     if (!data) {
                         const detectionState = detectionStates.get(targetTabId);
-                        const hasActiveState = !!(detectionState && !detectionState.finalized);
+                        const hasActiveState = !!(detectionState && !detectionState.finalized && !detectionState.failed);
                         let activeDetection = activeDetections.get(targetTabId);
                         if (activeDetection?.pendingRequest &&
                             Date.now() - activeDetection.startTime > Constants.REQUEST_DETECTION_PENDING_TIMEOUT) {
@@ -137,7 +193,9 @@ function registerDetectionHandlers(registry, context) {
                         const isRecentlyCleared = recentlyClearedTabs.has(targetTabId);
                         const isInterrupted = interruptedDetections.has(targetTabId);
 
-                        if (isRecentlyCleared) {
+                        if (detectionState?.failed) {
+                            status = 'error';
+                        } else if (isRecentlyCleared) {
                             status = 'ok';
                         } else if (isInterrupted && !hasActiveState && !hasActiveDetection) {
                             status = 'interrupted';
@@ -242,6 +300,8 @@ function registerDetectionHandlers(registry, context) {
             // Process batched JS hook detections
             (async () => {
                 let tabId;
+                let state;
+                let ownsBatch = false;
                 try {
                     if (!sender.tab || !sender.tab.id) {
                         Logger.warn('BACKGROUND', '[hookBatch] No tab info in sender');
@@ -249,11 +309,6 @@ function registerDetectionHandlers(registry, context) {
                     }
 
                     tabId = sender.tab.id;
-
-                    // Early exit if tab is using cache
-                    if (tabsUsingCache.has(tabId)) {
-                        return; // Skip all processing for cached tabs
-                    }
 
                     const detections = request.detections || [];
 
@@ -263,30 +318,35 @@ function registerDetectionHandlers(registry, context) {
                     const url = detections[0]?.url;
                     if (!url) return;
 
-                    // Create state BEFORE cache check so we can set usedCache flag
-                    const state = getOrCreateDetectionState(tabId, url);
+                    const document = await resolveDetectionMessageDocument(sender, url);
+                    if (!document || detections.some(item => normalizeDetectionMessageUrl(item.url) !== normalizeDetectionMessageUrl(url))) return;
+                    state = detectionStateForDocument(document);
+                    // Own the batch across every async lookup so finalization
+                    // cannot overtake already-admitted hook evidence.
+                    state.pendingHookBatches = (state.pendingHookBatches || 0) + 1;
+                    ownsBatch = true;
+                    state.lastHookBatchTime = Date.now();
+                    batchProcessingFlags.set(tabId, true);
 
                     // CACHE CHECK: If cache exists for this URL, skip processing hooks entirely
                     const cachedData = await DetectionEngineManager.getStoredDetection(url);
+                    if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
                     if (cachedData) {
                         // Mark this detection as using cache to suppress misleading warning logs
                         state.usedCache = true;
 
-                        batchProcessingFlags.set(tabId, false);
                         return; // Don't process hooks - we have cached results
                     }
 
-                    // Mark batch processing as active to prevent finalization race
-                    const previousFlag = batchProcessingFlags.get(tabId);
-                    batchProcessingFlags.set(tabId, true);
                     Logger.debug('HOOKS', `Tab ${tabId}: ${detections.length} hook hits`,
                         detections.map(h => `${h.detection?.detectorName}: ${h.detection?.hook?.target}`));
                     await ensureDetectorManagerInitialized();
+                    if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
 
                     // Record batch arrival time for deterministic finalization
                     state.lastHookBatchTime = Date.now();
 
-                    if (state.url !== url) {
+                    if (normalizeDetectionMessageUrl(state.url) !== normalizeDetectionMessageUrl(url)) {
                         Logger.debug('HOOKS', `Tab ${tabId} navigated; hook hits dropped`);
                         return;
                     }
@@ -353,9 +413,10 @@ function registerDetectionHandlers(registry, context) {
                 } catch (error) {
                     Logger.error('BACKGROUND', '[Background] ERROR handling JS hook batch:', error);
                 } finally {
-                    if (tabId) {
-                        batchProcessingFlags.set(tabId, false);
-                        checkAndFinalizeDetection(tabId);
+                    if (ownsBatch) state.pendingHookBatches = Math.max(0, (state.pendingHookBatches || 1) - 1);
+                    if (state && DetectionSessionStore.isCurrent(tabId, state)) {
+                        batchProcessingFlags.set(tabId, (state.pendingHookBatches || 0) > 0);
+                        if (!state.pendingHookBatches) checkAndFinalizeDetection(tabId);
                     }
                 }
             })();
@@ -377,11 +438,7 @@ function registerDetectionHandlers(registry, context) {
 
                 const tabId = sender.tab.id;
 
-                if (tabsUsingCache.has(tabId)) {
-                    return;
-                }
-
-                const url = sender.tab.url;
+                const url = sender.url || sender.tab.url;
                 const { detections, executionTime } = request;
 
                 if (!Array.isArray(detections)) {
@@ -389,10 +446,13 @@ function registerDetectionHandlers(registry, context) {
                     return;
                 }
 
-                const state = getOrCreateDetectionState(tabId, url);
+                const document = await resolveDetectionMessageDocument(sender, url);
+                if (!document) return;
+                const state = detectionStateForDocument(document);
 
                 // Skip if cached results exist for this URL
                 const cachedData = await DetectionEngineManager.getStoredDetection(url);
+                if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
                 if (cachedData) {
                     state.usedCache = true;
                     return;
@@ -409,7 +469,7 @@ function registerDetectionHandlers(registry, context) {
                     return;
                 }
 
-                if (state.url !== url) {
+                if (normalizeDetectionMessageUrl(state.url) !== normalizeDetectionMessageUrl(url)) {
                     Logger.debug('SCAN', `Tab ${tabId} navigated; window properties dropped`);
                     return;
                 }
@@ -498,41 +558,17 @@ function registerDetectionHandlers(registry, context) {
             try {
                 if (!sender.tab || !sender.tab.id) {
                     Logger.warn('BACKGROUND', '[WINDOW_PROPS_COMPLETE] No tab info in sender');
+                    sendResponse({ status: 'url_changed' });
                     return;
                 }
 
                 const tabId = sender.tab.id;
 
-                if (tabsUsingCache.has(tabId)) {
-                    sendResponse({ status: 'cached', message: 'Tab using cached detection' });
-                    return;
-                }
-
                 const url = request.url;
 
-                const state = getOrCreateDetectionState(tabId, url);
-
-                // URL validation with normalization (trailing slashes, hash)
-                const normalizeUrl = (u) => {
-                    try {
-                        const parsed = new URL(u);
-                        return parsed.origin + parsed.pathname.replace(/\/$/, '') + parsed.search;
-                    } catch (e) {
-                        return u;
-                    }
-                };
-
-                const normalizedStateUrl = normalizeUrl(state.url);
-                const normalizedRequestUrl = normalizeUrl(url);
-
-                if (normalizedStateUrl !== normalizedRequestUrl) {
-                    Logger.debug('BACKGROUND', `[WINDOW_PROPS_COMPLETE] URL mismatch, ignoring signal for tab ${tabId}`, {
-                        stateUrl: state.url,
-                        requestUrl: url
-                    });
-                    sendResponse({ status: 'url_changed' });
-                    return;
-                }
+                const document = await resolveDetectionMessageDocument(sender, url);
+                if (!document) { sendResponse({ status: 'url_changed' }); return; }
+                const state = detectionStateForDocument(document);
 
                 state.windowPropertiesComplete = true;
                 state.windowStats = {
@@ -564,34 +600,16 @@ function registerDetectionHandlers(registry, context) {
                 try {
                     if (!sender.tab || !sender.tab.id) {
                         Logger.warn('BACKGROUND', '[JS_HOOKS_COMPLETE] No tab info in sender');
+                        sendResponse({ status: 'url_changed' });
                         return;
                     }
 
                     const tabId = sender.tab.id;
                     const url = request.url;
 
-                    const state = getOrCreateDetectionState(tabId, url);
-
-                    const normalizeUrl = (u) => {
-                        try {
-                            const parsed = new URL(u);
-                            return parsed.origin + parsed.pathname.replace(/\/$/, '') + parsed.search;
-                        } catch (e) {
-                            return u;
-                        }
-                    };
-
-                    const normalizedStateUrl = normalizeUrl(state.url);
-                    const normalizedRequestUrl = normalizeUrl(url);
-
-                    if (normalizedStateUrl !== normalizedRequestUrl) {
-                        Logger.debug('BACKGROUND', `[JS_HOOKS_COMPLETE] URL mismatch, ignoring signal for tab ${tabId}`, {
-                            stateUrl: state.url,
-                            requestUrl: url
-                        });
-                        sendResponse({ status: 'url_changed' });
-                        return;
-                    }
+                    const document = await resolveDetectionMessageDocument(sender, url);
+                    if (!document) { sendResponse({ status: 'url_changed' }); return; }
+                    const state = detectionStateForDocument(document);
 
                     state.hooksComplete = true;
                     state.hooksTimedOut = false;
@@ -608,13 +626,10 @@ function registerDetectionHandlers(registry, context) {
                         checkAndFinalizeDetection(tabId);
                     }
 
-                    // 1s safety retry in case debounce missed the completion
-                    setTimeout(() => {
-                        const currentState = detectionStates.get(tabId);
-                        if (currentState && !currentState.finalized && currentState.completedMethods.has('jsHooks')) {
-                            Logger.debug('BACKGROUND', `[JS_HOOKS_COMPLETE] Retry: not finalized after 1s, forcing check`);
-                            checkAndFinalizeDetection(tabId);
-                        }
+                    // The retry belongs to this document's scan, not whichever
+                    // scan happens to occupy the tab a second later.
+                    DetectionSessionStore.schedule(tabId, state, 'hooks-retry', () => {
+                        if (!state.finalized && state.completedMethods.has('jsHooks')) checkAndFinalizeDetection(tabId);
                     }, 1000);
 
                     sendResponse({ status: 'success' });

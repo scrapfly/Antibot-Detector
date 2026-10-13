@@ -71,13 +71,7 @@ SettingsUI.renderBlacklistUI = function() {
         const domain = btn.getAttribute('data-domain');
         this.settings.detection.blacklistedDomains = this.settings.detection.blacklistedDomains.filter(d => d !== domain);
         this.renderBlacklistUI();
-        const saved = await this.saveSettings({ notify: false });
-        if (!saved) {
-          return;
-        }
-
-        const _tBL = (typeof I18n !== 'undefined') ? I18n : null;
-        NotificationHelper.success((_tBL && _tBL.format('removedDomainFromBlacklistFmt', domain)) || `Removed ${domain} from blacklist`);
+        NotificationHelper.info(FormatUtils.t('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
       });
     });
 };

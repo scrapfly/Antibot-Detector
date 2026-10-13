@@ -25,11 +25,11 @@ const context = vm.createContext({
 context.window = context;
 for (const file of [
   'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
-  'modules/detection/window-condition-grammar.js', 'modules/detection/hooks/window-condition-language.js',
+  'modules/detection/conditions/window-condition-grammar.js', 'modules/detection/conditions/window-condition-evaluator.js',
   'modules/detection/managers/confidence-manager.js', 'modules/detection/detection-combinations.js',
   ...['analysis', 'extractors', 'matching', 'hooks', 'manager']
     .map(name => `modules/detection/engine/detection-engine-${name}.js`),
-  'background/detection-lifecycle.js', 'background/handlers/messages-detection.js'
+  'background/detection-session-store.js', 'background/detection-lifecycle.js', 'background/handlers/messages-detection.js'
 ]) vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: file });
 const Engine = vm.runInContext('DetectionEngineManager', context);
 const Combinations = context.DetectionCombinations;
@@ -37,12 +37,12 @@ context.detectorManager = { findDetectorById: id => captcha[id], getDetector: (_
 context.tabsUsingCache = new Set();
 context.workerKeepaliveManager = null;
 for (const key of ['interruptedDetections', 'activeDetections', 'detectionStates', 'payloadStore',
-  'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore']) context[key] = new Map();
+  'finalizationDebounce', 'batchProcessingFlags', 'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore']) context[key] = new Map();
 context.UrlUtils = { normalizeFaviconForStorage: () => null, getHostnameFromUrl: url => new URL(url).hostname };
 context.setBadgeForDetections = async () => {};
 context.chrome = { runtime: { sendMessage: async () => {} }, tabs: { sendMessage: async () => {} } };
 context.Utils = { getHistorySettings: async () => ({}) };
-context.History = { shouldSaveToHistory: async () => false };
+context.HistoryRecorder = { shouldSaveToHistory: async () => false };
 Engine.storeDetection = async (_, page, results) => {
   context.finalizedResults = results;
   return { ...page, timestamp: 1, expiry: 2 };
@@ -150,6 +150,7 @@ async function detect(detector, profile) {
   });
   tracker._performPollingCheck();
   context.getOrCreateDetectionState = () => state;
+  context.detectionStates.set(1, state);
   registry[context.ScrapflyBridgeProtocol.MESSAGE_TYPES.WINDOW_DETECTIONS]({
     request: { detections: reports, executionTime: 0 }, sender: { tab: { id: 1, url: state.url } }
   });
@@ -159,6 +160,7 @@ async function detect(detector, profile) {
   // Keep raw partial evidence available to per-pattern reachability assertions.
   state.hooksData = new Map();
   state.completedMethods = new Set(['url', 'dom', 'content', 'window']);
+  context.detectionStates.set(1, state);
   await context.finalizeDetection(1, state);
   const finalized = context.finalizedResults.find(item => item.detector.id === detector.id);
   if (result && result.confidence > 0) assert.equal(finalized?.confidence, result.confidence, `${detector.id}: finalization lost evidence`);
@@ -424,7 +426,8 @@ test('requests made after the page snapshot still count when the scan finishes',
     context.networkUrlsStore.set(1, [bundle, provider]);
     context.detectionEngine = withLateCheck ? engine : null;
     context.generateMatchKey = match => `${match.patternId}|${match.type}|${match.value}`;
-    await context.finalizeDetection(1, state);
+    context.detectionStates.set(1, state);
+  await context.finalizeDetection(1, state);
     return context.finalizedResults.find(item => item.detector.id === prosopo.id);
   };
   try {

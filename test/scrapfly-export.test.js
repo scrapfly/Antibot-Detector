@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const ScrapflyExport = require('../sections/detection/scrapfly-export.js');
+const ScrapflyExport = require('./helpers/scrapfly-export.js');
 
 // Detection / Advanced → "Scrape with Scrapfly": the page as ready-to-run
 // code with the Unblocker on. The shapes follow the published SDKs (PyPI and
@@ -10,6 +10,31 @@ const ScrapflyExport = require('../sections/detection/scrapfly-export.js');
 const URL_PLAIN = 'https://shop.example/p?id=1&ref=a';
 const SCRAPE = ScrapflyExport.languagesFor('scrape');
 const URL_NASTY = "https://shop.example/it's?q=\"x\"&v=$HOME\\path";
+
+test('AI export redacts header values in every snippet while ordinary copy keeps them', () => {
+  const options = { headers: 'Authorization: synthetic-sensitive-value\nCookie: synthetic-sensitive-value' };
+  for (const product of ['scrape', 'browser']) {
+    for (const language of ScrapflyExport.languagesFor(product)) {
+      const prompt = ScrapflyExport.aiPrompt({ language: language.id, url: URL_PLAIN, options: { ...options, product } });
+      assert.ok(!prompt.includes('synthetic-sensitive-value'), `${product}/${language.id}`);
+    }
+  }
+  assert.ok(ScrapflyExport.snippet('python', URL_PLAIN, [], options).includes('synthetic-sensitive-value'));
+  assert.ok(options.headers.includes('synthetic-sensitive-value'));
+});
+
+test('CLI embedded scripts choose a delimiter absent from the supplied body', () => {
+  const body = "SCRAPFLY_JS\nSCRAPFLY_JS_\nconsole.log('quoted');";
+  const code = ScrapflyExport.snippet('cli', URL_PLAIN, [], { js: body });
+  assert.ok(code.includes("<<'SCRAPFLY_JS__'\n" + body + '\nSCRAPFLY_JS__'));
+});
+
+test('shell snippets use Bash setup on Windows too', () => {
+  for (const language of ['curl', 'cli', 'wss']) {
+    assert.equal(ScrapflyExport.keyCommand('Win32', language), 'export SCRAPFLY_API_KEY="YOUR_API_KEY"');
+    assert.equal(ScrapflyExport.fileAndRun(language, language === 'wss' ? 'browser' : 'scrape').file, 'Bash / WSL');
+  }
+});
 
 // Read the literal each language passes as the URL back into a string
 const readBack = {

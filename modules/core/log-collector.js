@@ -34,6 +34,14 @@ class LogCollector {
         this.rateCount = 0;
         // Initialize and load from storage
         this.initPromise = this.initializeFromStorage();
+        if (typeof chrome !== 'undefined' && chrome.storage?.onChanged) {
+            chrome.storage.onChanged.addListener(async (changes, area) => {
+                if (area !== 'local' || !changes.scrapfly_settings) return;
+                await this.initPromise;
+                const parsed = this._parseSettingsStorageValue(changes.scrapfly_settings.newValue);
+                if (parsed.settings) this.applySettings(parsed.settings);
+            });
+        }
     }
 
     _parseSettingsStorageValue(rawValue) {
@@ -75,75 +83,34 @@ class LogCollector {
         return result;
     }
 
-    _saveSettingsStorageValue(container, wasString) {
-        try {
-            const valueToSave = wasString ? JSON.stringify(container, null, 2) : container;
-            chrome.storage.local.set({ [this.settingsKey]: valueToSave });
-        } catch (e) {
-            Logger.error('UTIL', '[LogCollector] Failed to persist settings:', e);
+    async _updateSettings(patch, { removeLegacyKeys = [] } = {}) {
+        if (typeof StorageManager === 'undefined') return false;
+        const saved = await StorageManager.patchSettings(patch);
+        if (!saved) return false;
+        if (removeLegacyKeys.length > 0) {
+            try { await chrome.storage.local.remove(removeLegacyKeys); } catch (_) { /* Safe to retry migration later. */ }
         }
+        // Apply the persisted result, including concurrent changes.
+        try {
+            const settings = await StorageManager.readSettingsStrict();
+            this.applySettings(settings);
+        } catch (_) {
+            // The settings change event also applies saved preferences.
+        }
+        return true;
     }
 
-    _updateSettings(patch, { removeLegacyKeys = [] } = {}) {
-        if (typeof chrome === 'undefined' || !chrome.storage) {
-            return;
+    /** Apply a saved snapshot without starting another settings write. */
+    applySettings(settings = {}) {
+        const enabled = settings.logCollectorEnabled === true;
+        if (enabled !== this.enabled) {
+            if (enabled) this.enable({ persist: false });
+            else this.disable({ persist: false });
         }
-
-        try {
-            chrome.storage.local.get([this.settingsKey], (result) => {
-                if (chrome.runtime?.lastError) {
-                    Logger.warn('UTIL', '[LogCollector] Settings update skipped:', chrome.runtime.lastError.message);
-                    return;
-                }
-
-                result = result || {};
-                const parsed = this._parseSettingsStorageValue(result[this.settingsKey]);
-                let container = parsed.container;
-                let settings = parsed.settings;
-                let wrapped = parsed.wrapped;
-                let wasString = parsed.wasString;
-
-                if (!settings || typeof settings !== 'object') {
-                    // Create wrapper by default for consistency with settings UI
-                    container = {
-                        timestamp: new Date().toISOString(),
-                        settings: {}
-                    };
-                    settings = container.settings;
-                    wrapped = true;
-                    wasString = true;
-                }
-
-                for (const [key, value] of Object.entries(patch || {})) {
-                    settings[key] = value;
-                }
-
-                if (wrapped && container && typeof container === 'object') {
-                    container.settings = settings;
-                    container.timestamp = new Date().toISOString();
-                    this._saveSettingsStorageValue(container, wasString);
-                } else {
-                    this._saveSettingsStorageValue(settings, wasString);
-                }
-
-                if (removeLegacyKeys.length > 0) {
-                    try {
-                        chrome.storage.local.remove(removeLegacyKeys);
-                    } catch (e) {
-                        // Ignore removal errors
-                    }
-                }
-
-                // Keep Logger globals in sync if Utils is available
-                if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
-                    Utils.applyDebugMode(settings);
-                } else if (typeof globalThis !== 'undefined') {
-                    globalThis.logCollectorEnabled = !!settings.logCollectorEnabled;
-                }
-            });
-        } catch (e) {
-            Logger.error('UTIL', '[LogCollector] Failed to update settings:', e);
-        }
+        const maxLogs = Math.min(Math.max(Number(settings.logCollectorMaxLogs) || 5000, 100), this.MAX_SAFE_LOGS);
+        if (maxLogs !== this.maxLogs) this.setMaxLogs(maxLogs, { persist: false });
+        if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') Utils.applyDebugMode(settings);
+        else globalThis.logCollectorEnabled = enabled;
     }
 
     _writeEntry(entry) {
@@ -322,7 +289,8 @@ class LogCollector {
     /**
      * Enable log collection
      */
-    enable() {
+    async enable({ persist = true } = {}) {
+        if (persist) return this._updateSettings({ logCollectorEnabled: true }, { removeLegacyKeys: [this.legacyEnabledStateKey] });
         if (this.enabled) {
             return;
         }
@@ -336,14 +304,14 @@ class LogCollector {
             globalThis.logCollectorEnabled = true;
         }
 
-        // Persist enabled state to settings
-        this._updateSettings({ logCollectorEnabled: true }, { removeLegacyKeys: [this.legacyEnabledStateKey] });
+        return true;
     }
 
     /**
      * Disable log collection
      */
-    disable() {
+    async disable({ persist = true } = {}) {
+        if (persist) return this._updateSettings({ logCollectorEnabled: false }, { removeLegacyKeys: [this.legacyEnabledStateKey] });
         if (!this.enabled) {
             return;
         }
@@ -355,8 +323,7 @@ class LogCollector {
             globalThis.logCollectorEnabled = false;
         }
 
-        // Persist disabled state to settings
-        this._updateSettings({ logCollectorEnabled: false }, { removeLegacyKeys: [this.legacyEnabledStateKey] });
+        return true;
 
     }
 
@@ -661,13 +628,14 @@ class LogCollector {
      * Set maximum number of logs (dynamically update buffer size)
      * If current logs exceed new max, keeps the newest logs
      */
-    setMaxLogs(newMax) {
-        if (typeof newMax !== 'number') {
+    async setMaxLogs(newMax, { persist = true } = {}) {
+        if (!Number.isFinite(newMax)) {
             Logger.error('UTIL', '[LogCollector] Invalid max logs value:', newMax);
             return;
         }
 
-        const clamped = Math.min(Math.max(newMax, 100), this.MAX_SAFE_LOGS);
+        const clamped = Math.min(Math.max(Math.round(newMax), 100), this.MAX_SAFE_LOGS);
+        if (persist) return this._updateSettings({ logCollectorMaxLogs: clamped }, { removeLegacyKeys: [this.legacyMaxLogsKey] });
         if (clamped !== newMax) {
             Logger.error('UTIL', '[LogCollector] Invalid max logs value:', newMax);
         }
@@ -676,8 +644,7 @@ class LogCollector {
         this.maxLogs = clamped;
         this._resetFromArray(existing);
 
-        // Save updated max logs setting to settings
-        this._updateSettings({ logCollectorMaxLogs: this.maxLogs }, { removeLegacyKeys: [this.legacyMaxLogsKey] });
+        return true;
     }
 }
 

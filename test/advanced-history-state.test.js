@@ -30,7 +30,8 @@ function fixture() {
     document: { querySelector: selector => selector === '#capturesPanel' ? panel : panel.querySelector(selector) },
     setTimeout, clearTimeout };
   vm.createContext(context);
-  for (const file of ['advanced.js', 'advanced-history.js']) {
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
+  for (const file of ['advanced.js', 'history/controller.js', 'history/view.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced', file), 'utf8'), context);
   }
   const advanced = new context.window.Advanced({}, {});
@@ -126,7 +127,8 @@ test('the History badge follows saved captures without opening the History tab',
     setTimeout, clearTimeout };
   let saved = { recaptcha: [{ id: 'a', timestamp: Date.now(), url: 'https://example.test/' }] };
   vm.createContext(context);
-  for (const file of ['advanced.js', 'advanced-history.js']) {
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
+  for (const file of ['advanced.js', 'history/controller.js', 'history/view.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced', file), 'utf8'), context);
   }
   const advanced = new context.window.Advanced({}, {});

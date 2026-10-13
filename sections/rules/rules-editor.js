@@ -1166,8 +1166,8 @@ Rules.prototype.updateDetectorBadgeColor = function(detectorName, color) {
     this.categoryManager.saveToStorage();
   };
 
-Rules.prototype.saveRule = function() {
-    if (!this.currentEditDetector) return;
+Rules.prototype.saveRule = async function() {
+    if (!this.currentEditDetector || this.savingRule) return false;
 
     this.clearPatternValidationState();
     const patternValidation = this.validatePatternRows();
@@ -1207,6 +1207,10 @@ Rules.prototype.saveRule = function() {
       return;
     }
 
+    const edit = this.currentEditDetector;
+    // Form values belong to this attempt, not the visible rules or the next
+    // retry. A rejected save must not bump the version repeatedly.
+    const draft = JSON.parse(JSON.stringify(edit));
     const nameInput = document.querySelector('#detectorNameInput');
     const categorySelect = document.querySelector('#detectorCategorySelect');
     const difficultySelect = document.querySelector('#detectorDifficultySelect');
@@ -1215,14 +1219,14 @@ Rules.prototype.saveRule = function() {
       // Never stores the English default: an empty field becomes the default
       // name in the UI language, and an untouched legacy "New Detector" keeps
       // its stored name (see resolveDetectorNameForSave in rules-formatters.js)
-      const detectorName = this.resolveDetectorNameForSave(nameInput.value, this.currentEditDetector.detector.name);
-      this.currentEditDetector.detector.name = detectorName;
-      this.currentEditDetector.detector.displayName = detectorName;
+      const detectorName = this.resolveDetectorNameForSave(nameInput.value, draft.detector.name);
+      draft.detector.name = detectorName;
+      draft.detector.displayName = detectorName;
     }
 
     if (categorySelect) {
-      this.currentEditDetector.detector.category = categorySelect.value;
-      this.currentEditDetector.category = categorySelect.value;
+      draft.detector.category = categorySelect.value;
+      draft.category = categorySelect.value;
     }
 
     if (difficultySelect) {
@@ -1230,11 +1234,11 @@ Rules.prototype.saveRule = function() {
         ? DetectionUtils.normalizeDifficulty(difficultySelect.value)
         : null;
       const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
-        ? DetectionUtils.defaultDifficultyForCategory(this.currentEditDetector.category || this.currentEditDetector.detector.category)
+        ? DetectionUtils.defaultDifficultyForCategory(draft.category || draft.detector.category)
         : 'Medium';
       // A difficulty changed here is the user's and survives detector updates
-      DetectorManager.applyDifficultyChoice(this.currentEditDetector.detector,
-        this.currentEditDetector.original, normalizedDifficulty || defaultDifficulty);
+      DetectorManager.applyDifficultyChoice(draft.detector,
+        draft.original, normalizedDifficulty || defaultDifficulty);
     }
 
     // Every detector's author is editable; custom ones may not claim "Scrapfly"
@@ -1244,36 +1248,36 @@ Rules.prototype.saveRule = function() {
     if (authorInput) {
       const author = authorInput.value.trim();
       if (author) {
-        this.currentEditDetector.detector.author = author;
+        draft.detector.author = author;
       } else {
-        delete this.currentEditDetector.detector.author;
+        delete draft.detector.author;
       }
     }
 
-    if (this.currentEditDetector.customIcon) {
-      this.currentEditDetector.detector.customIcon = this.currentEditDetector.customIcon;
+    if (draft.customIcon) {
+      draft.detector.customIcon = draft.customIcon;
     }
 
     const detectionMethods = this._collectDetectionFromForm();
-    if (Object.keys(detectionMethods).length > 0) {
-      this.currentEditDetector.detector.detection = detectionMethods;
-      Logger.debug('UI', 'Updated detection methods:', detectionMethods);
-    }
+    const unknownMethods = Object.fromEntries(Object.entries(draft.detector.detection || {})
+      .filter(([method]) => !Object.prototype.hasOwnProperty.call(RULE_FIELDS_FROM_FORM, method)));
+    draft.detector.detection = { ...unknownMethods, ...detectionMethods };
 
     const combinations = combinationResult.combinations;
     if (combinations.length > 0) {
-      this.currentEditDetector.detector.combinations = combinations;
+      draft.detector.combinations = combinations;
     } else {
-      delete this.currentEditDetector.detector.combinations;
+      delete draft.detector.combinations;
     }
 
-    Logger.debug('UI', 'Saving rule for:', this.currentEditDetector.detector.displayName);
+    Logger.debug('UI', 'Saving rule for:', draft.detector.displayName);
 
-    const originalDetection = this.currentEditDetector.originalDetection || {};
-    const currentDetection = this.currentEditDetector.detector.detection || {};
-    const hasChanges = this.currentEditDetector.isNew ||
-      JSON.stringify(originalDetection) !== JSON.stringify(currentDetection) ||
-      JSON.stringify(this.currentEditDetector.originalCombinations || []) !== JSON.stringify(combinations);
+    const originalDetection = draft.originalDetection || {};
+    const metadataChanged = ['name', 'author', 'customIcon', 'difficulty'].some(field =>
+      draft.detector[field] !== edit.detector[field]) || draft.category !== (edit.originalCategory || edit.category);
+    const hasChanges = draft.isNew || metadataChanged ||
+      JSON.stringify(originalDetection) !== JSON.stringify(detectionMethods) ||
+      JSON.stringify(draft.originalCombinations || []) !== JSON.stringify(combinations);
 
     if (hasChanges) {
       const now = new Date();
@@ -1285,29 +1289,29 @@ Rules.prototype.saveRule = function() {
       const seconds = String(now.getSeconds()).padStart(2, '0');
       const timestamp = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-      this.currentEditDetector.detector.lastUpdated = timestamp;
+      draft.detector.lastUpdated = timestamp;
 
-      if (this.currentEditDetector.isNew) {
-        this.currentEditDetector.detector.version = '1.0';
+      if (draft.isNew) {
+        draft.detector.version = '1.0';
       } else {
-        const original = this.currentEditDetector.original || {};
+        const original = draft.original || {};
         // The original object carries the user-edit fields cleanDetectorCopy
         // drops; read them from the stored detector
-        const stored = this.detectorManager?.getDetector(this.currentEditDetector.category, this.currentEditDetector.detectorName) || {};
-        if (DetectionUtils.isOfficialDetector({ ...original, id: original.id || this.currentEditDetector.detectorName })) {
+        const stored = this.detectorManager?.getDetector(edit.originalCategory || edit.category, edit.detectorName) || {};
+        if (DetectionUtils.isOfficialDetector({ ...original, id: original.id || draft.detectorName })) {
           // Official rule: keep the official version so updates still compare
           // against what Scrapfly shipped, and remember the original so an
           // update asks first and "Reset to official" can restore it
-          DetectorManager.markUserEdited(this.currentEditDetector.detector, {
+          DetectorManager.markUserEdited(draft.detector, {
             ...original,
             userModified: stored.userModified,
             officialSnapshot: stored.officialSnapshot,
             dismissedVersion: stored.dismissedVersion
           });
         } else {
-          const currentVersion = this.currentEditDetector.detector.version || '1.0';
+          const currentVersion = draft.detector.version || '1.0';
           const newVersion = DetectorManager.bumpVersion(currentVersion);
-          this.currentEditDetector.detector.version = newVersion;
+          draft.detector.version = newVersion;
           Logger.debug('UI', `Version incremented: ${currentVersion} → ${newVersion}`);
         }
       }
@@ -1315,58 +1319,52 @@ Rules.prototype.saveRule = function() {
       Logger.debug('UI', 'No changes detected, version and timestamp unchanged');
     }
 
-    if (this.currentEditDetector.isNew) {
-      const detectorName = this.currentEditDetector.detector.name || 'custom';
-      const slugName = detectorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const detectorId = slugName || `custom-${Date.now()}`;
-
-      this.currentEditDetector.detector.id = detectorId;
-
-      this.detectorManager.addDetector(
-        this.currentEditDetector.category,
-        detectorId,
-        this.currentEditDetector.detector
-      ).then(success => {
-        if (success) {
-          Logger.ui('New detector added successfully');
-          chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-            Logger.debug('UI', 'Detectors reloaded in background:', response);
-          });
-          this.displayRules();
-        }
-      });
-
-      this.closeEditModal();
-      return;
-    }
-
-    if (this.detectorManager) {
-      const categoryDetectors = this.detectorManager.detectors[this.currentEditDetector.category];
-      if (categoryDetectors && categoryDetectors[this.currentEditDetector.detectorName]) {
-        const updatedDetector = {
-          ...this.currentEditDetector.detector,
-          customIcon: this.currentEditDetector.detector.customIcon
-        };
-        categoryDetectors[this.currentEditDetector.detectorName] = updatedDetector;
-
-        Logger.debug('UI', 'Detector updated, lastUpdated:', updatedDetector.lastUpdated);
-
-        this.detectorManager.saveDetectorsToStorage().then(() => {
-          Logger.debug('UI', 'Detector saved to storage successfully');
-          chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
-            Logger.debug('UI', 'Detectors reloaded in background:', response);
-          });
-        }).catch(error => {
-          Logger.error('UI', 'Failed to save detector:', error);
-        });
+    const saveButton = document.querySelector('#saveRuleEdit');
+    this.savingRule = true;
+    if (saveButton) saveButton.disabled = true;
+    let saved = false;
+    try {
+      if (!this.detectorManager) throw new Error('Detector manager unavailable');
+      const candidate = JSON.parse(JSON.stringify(this.detectorManager.detectors));
+      const originalCategory = edit.originalCategory || edit.category;
+      let detectorId = edit.detectorName;
+      if (draft.isNew) {
+        const slug = (draft.detector.name || 'custom').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const baseId = DetectorManager.canonicalizeDetectorId(slug || `custom-${Date.now()}`);
+        detectorId = baseId;
+        let suffix = 2;
+        while (Object.values(candidate).some(records => records[detectorId])) detectorId = `${baseId}-${suffix++}`;
+        draft.detector.id = detectorId;
+      } else {
+        if (!candidate[originalCategory]?.[detectorId]) throw new Error('Detector no longer exists');
+        delete candidate[originalCategory][detectorId];
       }
+      if (!candidate[draft.category]) candidate[draft.category] = {};
+      candidate[draft.category][detectorId] = draft.detector;
+      const result = await this.detectorManager.saveDetectorsToStorage(candidate);
+      if (result === false) throw new Error('Detector storage rejected the save');
+      saved = true;
+    } catch (error) {
+      Logger.error('UI', 'Failed to save detector:', error);
+      const message = (typeof I18n !== 'undefined' && I18n.get('rulesUiSaveFailed'))
+        || 'Could not save this rule. Your changes are still here; try again.';
+      if (typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.error === 'function') {
+        NotificationHelper.error(message);
+      } else {
+        alert(message);
+      }
+    } finally {
+      this.savingRule = false;
+      if (saveButton) saveButton.disabled = false;
     }
+    if (!saved) return false;
 
+    chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => { void chrome.runtime.lastError; });
     if (this.categoryManager && this.colorManager) {
       const color = this.colorManager.getColor();
-      this.updateDetectorBadgeColor(this.currentEditDetector.detectorName, color);
+      this.updateDetectorBadgeColor(edit.detectorName, color);
     }
-
     this.closeEditModal();
     this.displayRules();
+    return true;
   };

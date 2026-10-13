@@ -90,45 +90,88 @@ class StorageManager {
         }
     }
 
-    /**
-     * Save normalized extension settings in the canonical JSON-string wrapper format.
-     * @param {Object} settings - Settings object
-     * @returns {Promise<boolean>} Success status
-     */
-    static async saveSettings(settings) {
+    /** A failed read must never become an empty settings replacement. */
+    static async readSettingsStrict() {
+        const result = await chrome.storage.local.get(['scrapfly_settings']);
+        const raw = result && result.scrapfly_settings;
+        if (raw == null) return {};
+        const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        const settings = parsed && Object.prototype.hasOwnProperty.call(parsed, 'settings') ? parsed.settings : parsed;
+        if (!settings || typeof settings !== 'object' || Array.isArray(settings)) {
+            throw new Error('Stored settings are invalid');
+        }
+        return settings;
+    }
+
+    /** The worker is the only writer; clients send serializable mutations. */
+    static async mutateSettings(mutation) {
+        if (StorageManager.settingsWriter) return StorageManager.settingsWriter(mutation);
+        const type = globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES.SETTINGS_MUTATE;
+        const response = await chrome.runtime.sendMessage({ type, mutation });
+        if (!response || response.success !== true) {
+            throw new Error(response?.error || 'Settings could not be saved');
+        }
+        return response;
+    }
+
+    static async commitSettings({ baseline, candidate, languageOverride }) {
+        return StorageManager.mutateSettings({ operation: 'merge', baseline, candidate, languageOverride });
+    }
+
+    /** Compatibility adapter. Returns false on failed reads or writes. */
+    static async saveSettings(settings, baseline) {
         try {
-            await chrome.storage.local.set({
-                scrapfly_settings: JSON.stringify({
-                    timestamp: new Date().toISOString(),
-                    settings: settings || {}
-                }, null, 2)
-            });
+            const base = baseline || await StorageManager.readSettingsStrict();
+            await StorageManager.commitSettings({ baseline: base, candidate: settings || {} });
             return true;
         } catch (error) {
-            Logger.error('STORAGE', 'Failed to save settings', error);
+            Logger.error('STORAGE', 'Failed to save settings');
             return false;
         }
     }
 
-    /**
-     * Read, change and save the settings in one step, so this write starts from
-     * what is stored now (another tab may have blocked a domain meanwhile).
-     * @param {(settings: Object) => (void|false)} mutator - Return false to skip saving
-     * @returns {Promise<boolean>} Saved (or nothing to save)
-     */
+    /** Compatibility for local mutators; the worker still merges atomically. */
     static async updateSettings(mutator) {
-        const settings = await StorageManager.getSettings();
-        if (mutator(settings) === false) return true;
-        return StorageManager.saveSettings(settings);
+        try {
+            const baseline = await StorageManager.readSettingsStrict();
+            const candidate = JSON.parse(JSON.stringify(baseline));
+            if (mutator(candidate) === false) return true;
+            await StorageManager.commitSettings({ baseline, candidate });
+            return true;
+        } catch (error) {
+            Logger.error('STORAGE', 'Failed to update settings');
+            return false;
+        }
+    }
+
+    static async patchSettings(patch) {
+        try {
+            await StorageManager.mutateSettings({ operation: 'patch', patch });
+            return true;
+        } catch (error) {
+            Logger.error('STORAGE', 'Failed to update settings');
+            return false;
+        }
+    }
+
+    static async setDomainExcluded(domain, excluded) {
+        try {
+            await StorageManager.mutateSettings({ operation: 'domain', domain, excluded });
+            return true;
+        } catch (error) {
+            Logger.error('STORAGE', 'Failed to update domain exclusion');
+            return false;
+        }
     }
 
     /**
      * Three-way merge for a settings form saving a copy it loaded earlier:
      * a value the form changed since `base` wins; anything it did not change
      * keeps what is stored now (`stored`), so writes from other tabs survive.
-     * Arrays are single values. Keys absent from `stored` keep the form's value.
+     * Arrays are single values except domain exclusions, which merge additions
+     * and removals. Keys absent from `stored` keep the form's value.
      */
-    static mergeSettingsChanges(base, mine, stored) {
+    static mergeSettingsChanges(base, mine, stored, path = []) {
         const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
         const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
         if (!isObj(mine)) return mine;
@@ -140,8 +183,13 @@ class StorageManager {
             const s = isObj(stored) ? stored[key] : undefined;
             const hasMine = Object.prototype.hasOwnProperty.call(mine, key);
             const hasStored = isObj(stored) && Object.prototype.hasOwnProperty.call(stored, key);
-            if (isObj(m) && (isObj(s) || !hasStored)) {
-                out[key] = StorageManager.mergeSettingsChanges(b, m, s);
+            if (['__proto__', 'constructor', 'prototype'].includes(key)) continue;
+            if (path.length === 1 && path[0] === 'detection' && key === 'blacklistedDomains'
+                && Array.isArray(m) && Array.isArray(b) && Array.isArray(s)) {
+                const removed = new Set(b.filter(domain => !m.includes(domain)));
+                out[key] = [...new Set([...s.filter(domain => !removed.has(domain)), ...m.filter(domain => !b.includes(domain))])];
+            } else if (isObj(m) && (isObj(s) || !hasStored)) {
+                out[key] = StorageManager.mergeSettingsChanges(b, m, s, [...path, key]);
             } else if (hasMine && !same(m, b)) {
                 out[key] = m;                    // changed in the form
             } else if (hasStored) {

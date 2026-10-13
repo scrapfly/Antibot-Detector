@@ -1,0 +1,379 @@
+/* Tools panel header: icon tile, title and subtitle */
+/* No supported detection on this page: the selector card is replaced by the
+   2.8 bare state (shared .state-card--bare from detection.css), blue title,
+   one compact row of chips naming the supported protections. */
+.advanced-no-tools {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 12px;
+}
+
+/* Nothing to use: the empty state alone, centred in the tab like Detection's
+   "Nothing detected"; the switch returns in the History view. */
+.advanced-content.is-no-tools:not(.is-captures-view) .advanced-sub-tabs {
+  display: none;
+}
+
+.advanced-content.is-no-tools:not(.is-captures-view) #toolsPanel.active {
+  flex: 1 0 auto;
+  justify-content: center;
+  padding: 0 0 18px;
+}
+
+.advanced-content.is-no-tools .captcha-tools-section--empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.advanced-no-tools-history {
+  margin-top: 16px;
+  padding: 6px 12px;
+  background: none;
+  border: 1px solid var(--adv-line);
+  border-radius: 6px;
+  color: var(--adv-text);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+}
+
+.advanced-no-tools-history:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.advanced-no-tools-history:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-light);
+}
+
+.advanced-no-tools-card .state-card-title {
+  margin-bottom: 8px;
+}
+
+.advanced-no-tools-card .state-card-title {
+  color: var(--accent-light);
+}
+
+.advanced-no-tools-card .state-card-description {
+  max-width: 300px;
+  margin-bottom: 12px;
+}
+
+.advanced-supported-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  max-width: 340px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.advanced-supported-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 21px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.26);
+  color: var(--p-93c5fd);
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+
+/* Filters Actions Row */
+.filters-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Responsive adjustments for workflow UI */
+@media (max-width: 400px) {
+  .filters-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Loaded tools keep one compact vendor row above their actions. */
+.captcha-tools-section.compact-mode .advanced-tools-heading,
+.captcha-tools-section.compact-mode .advanced-launch-list { display: none; }
+
+.compact-detection-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 8px 8px 8px 10px;
+  margin-bottom: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--adv-line);
+  border-radius: 9px;
+}
+
+.captcha-tools-section.compact-mode .compact-detection-bar { display: flex; }
+.compact-detection-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.compact-detection-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  padding: 5px;
+  border-radius: 7px;
+  background: #fff;
+  border: 1px solid var(--g-404040);
+  object-fit: contain;
+}
+
+.compact-detection-name { font-size: 12.5px; font-weight: 600; color: var(--text-primary); overflow-wrap: anywhere; }
+.compact-change-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-shrink: 0;
+  min-height: 28px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--adv-line);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.compact-change-btn svg { width: 13px; height: 13px; }
+.compact-change-btn:hover { background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--border-light); }
+
+/* ========================================
+   History V2 Redesign
+   ======================================== */
+
+.history-v2-shell {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-v2-controls {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.history-v2-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.history-v2-heading-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+}
+
+.history-v2-heading-icon svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+
+.history-v2-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.history-v2-subtitle {
+  margin: 1px 0 0 0;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+.history-v2-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.history-v2-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* A long option (e.g. "Current site (a-long-domain…)") must not widen its column */
+  min-width: 0;
+}
+
+.history-v2-field > .history-v2-select {
+  width: 100%;
+  min-width: 0;
+}
+
+.history-v2-field--search,
+.history-v2-field--wide {
+  grid-column: 1 / -1;
+}
+
+.history-v2-label {
+  color: var(--text-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+
+.history-v2-select,
+.history-v2-search {
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.history-v2-select {
+  appearance: none;
+  padding: 0 34px 0 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23666666' d='M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.history-v2-search {
+  width: 100%;
+  padding: 0 12px;
+}
+
+.history-v2-search::placeholder {
+  color: var(--text-muted);
+}
+
+.history-v2-select:hover,
+.history-v2-search:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-light);
+}
+
+.history-v2-select:focus,
+.history-v2-search:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18);
+  background: var(--bg-secondary);
+}
+
+.history-v2-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.history-v2-btn {
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.history-v2-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.history-v2-btn--primary {
+  color: var(--accent-light);
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.14);
+}
+
+.history-v2-btn--primary:hover {
+  color: var(--p-dbeafe);
+  border-color: rgba(59, 130, 246, 0.5);
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.history-v2-btn--danger {
+  color: var(--danger-light);
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.history-v2-btn--danger:hover {
+  color: var(--danger-lightest);
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.22);
+}
+
+.history-v2-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 420px) {
+  .history-v2-filters-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .history-v2-field--search {
+    grid-column: 1 / -1;
+  }
+
+  .history-v2-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .history-v2-filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-v2-field--search {
+    grid-column: auto;
+  }
+
+  .history-v2-actions {
+    grid-template-columns: 1fr;
+  }
+}

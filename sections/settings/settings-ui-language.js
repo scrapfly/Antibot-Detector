@@ -369,35 +369,19 @@ SettingsUI._openLanguagePicker = function() {
 
 
 
-SettingsUI._applyLanguageChoice = async function(choice) {
-
-  SettingsUI.setLanguagePickerValue(choice);
-
-  SettingsUI._closeLanguagePicker();
-
-
-
+SettingsUI._applyLanguageChoice = async function(choice, { persist = true } = {}) {
   try {
-
-    await chrome.storage.local.set({ scrapfly_language_override: choice });
-
+    if (persist) await chrome.storage.local.set({ scrapfly_language_override: choice });
   } catch (err) {
-
-    Logger.error('UI', 'Failed to save language override', err);
-
+    Logger.error('UI', 'Failed to save language override');
+    NotificationHelper.error(((typeof I18n !== 'undefined') && I18n.get('settingsWriteFailedToast')) || 'Could not save settings. Your changes have been kept; try again.');
+    return false;
   }
-
-
-
-  // Sections build most of their text in JS, so a partial refresh leaves
-
-  // it in the old language: reload the popup and reopen Settings.
-
+  SettingsUI.setLanguagePickerValue(choice);
+  SettingsUI._closeLanguagePicker();
   SettingsUI.reloadForLanguageChange();
-
+  return true;
 };
-
-
 
 // Reload the popup after a language change, remembering the main tab and
 

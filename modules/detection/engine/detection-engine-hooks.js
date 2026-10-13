@@ -224,7 +224,7 @@ function demMainWorldBootstrapDetail(token) {
         [protocol.FIELDS.TOKEN]: token,
         bindShims: demEarlyBindShims(),
         earlyHooks: demEarlyHooks(),
-        // modules/detection/window-condition-grammar.js, for the MAIN-world evaluator
+        // modules/detection/conditions/window-condition-grammar.js, for the MAIN-world evaluator
         conditionGrammar: globalThis.ScrapflyWindowConditionGrammar
     };
 }

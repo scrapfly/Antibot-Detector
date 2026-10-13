@@ -14,9 +14,9 @@ const root = path.join(__dirname, '..');
 
 global.self = global;
 global.Logger = { ui() {}, debug() {}, error() {}, warn() {}, storage() {} };
-const DetectorManager = require('../modules/detection/managers/detector-manager.js');
+const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 
-function load(local, { remote = {}, bundled = {}, bundledIndex = null } = {}) {
+function load(local, { remote = {}, bundled = {}, bundledIndex = null, saveSucceeds = true } = {}) {
   const messages = [];
   const ctx = {
     console, setTimeout, clearTimeout, Promise, JSON, Date, Math, Set, Map, Object, Array, Error,
@@ -24,8 +24,9 @@ function load(local, { remote = {}, bundled = {}, bundledIndex = null } = {}) {
     Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
+      patchSettings: async () => true,
       normalizeStoredValue: async (_k, v) => (typeof v === 'string' ? JSON.parse(v) : v),
-      saveToStorage: async (key, value) => { local[key] = JSON.parse(JSON.stringify(value)); return true; },
+      saveToStorage: async (key, value) => { if (!saveSucceeds) return false; local[key] = JSON.parse(JSON.stringify(value)); return true; },
       saveSettings: async () => true
     },
     fetch: async (url) => {
@@ -48,7 +49,7 @@ function load(local, { remote = {}, bundled = {}, bundledIndex = null } = {}) {
   ctx.self = ctx;
   ctx.window = {}; // popup context: reloads go through RELOAD_DETECTORS
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/update-manager.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/rules/update-manager.js'), 'utf8'), ctx);
   const UM = ctx.UpdateManager;
   // GitHub stand-in: the latest release and its index (tests may override)
   UM.fetchLatestRelease = async () => ({ tag: 'v9.9.9' });
@@ -405,4 +406,29 @@ test('the popup copy reloads when another context saves the rules, but not on it
     delete global.chrome;
     delete global.StorageManager;
   }
+});
+
+
+test('a rejected update save reports no installs and preserves pending rules for retry', async () => {
+  const original = official('detect-akamai', '1.0.0');
+  const update = { id: 'detect-akamai', category: 'antibot', localVersion: '1.0.0', remoteVersion: '2.0.0', tag: 'v9.9.9' };
+  const local = { scrapfly_detectors: { detectors: { antibot: { 'detect-akamai': original } } }, scrapfly_pending_updates: [update] };
+  const before = plain(local);
+  const { UM, messages } = load(local, { remote: { 'detect-akamai': official('detect-akamai', '2.0.0') }, saveSucceeds: false });
+  const result = await UM.applyUpdates();
+  assert.strictEqual(result.success, false);
+  assert.strictEqual(result.count, 0);
+  assert.deepStrictEqual(plain(result.installed), []);
+  assert.match(result.error, /save detector updates/);
+  assert.deepStrictEqual(local, before);
+  assert.strictEqual(messages.length, 0);
+});
+
+test('keeping edits does not dismiss the pending update when saving the decision fails', async () => {
+  const local = { scrapfly_detectors: { detectors: { antibot: { 'detect-akamai': official('detect-akamai', '1.0.0', { userModified: true }) } } },
+    scrapfly_pending_updates: [{ id: 'detect-akamai', category: 'antibot', remoteVersion: '2.0.0' }] };
+  const before = plain(local);
+  const { UM } = load(local, { saveSucceeds: false });
+  await assert.rejects(UM.keepUserEdits(['detect-akamai']), /save detector updates/);
+  assert.deepStrictEqual(local, before);
 });

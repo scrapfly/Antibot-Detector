@@ -26,7 +26,7 @@ test('badge colour follows the popup difficulty, not the detection count', () =>
 test('no badge setter derives its colour from the detection count', () => {
   const root = path.join(__dirname, '..');
   const files = ['background/utilities.js', 'background/handlers/messages-cache.js',
-    'modules/detection/engine/detection-engine-manager.js', 'sections/settings/settings-runtime.js',
+    'modules/detection/engine/detection-engine-manager.js', 'modules/settings/settings-runtime.js',
     'sections/detection/detection-actions.js', 'sections/detection/detection-ui.js'];
   for (const file of files) {
     const src = fs.readFileSync(path.join(root, file), 'utf8');

@@ -6,8 +6,8 @@ const path = require('node:path');
 // detection-engine-hooks.js reads the bridge protocol at load time.
 require('../modules/core/bridge-protocol.js');
 require('../modules/core/constants.js');
-require('../modules/detection/window-condition-grammar.js');
-require('../modules/detection/hooks/window-condition-language.js');
+require('../modules/detection/conditions/window-condition-grammar.js');
+require('../modules/detection/conditions/window-condition-evaluator.js');
 const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const context = vm.createContext({ globalThis: null, Object, Array, RegExp });

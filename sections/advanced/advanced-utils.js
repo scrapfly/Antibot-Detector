@@ -114,20 +114,7 @@ const AdvancedUtils = {
      * @returns {Promise<object>} Response from background
      */
     async sendMessage(message) {
-        return new Promise((resolve, reject) => {
-            try {
-                chrome.runtime.sendMessage(message, (response) => {
-                    const runtimeError = chrome.runtime.lastError;
-                    if (runtimeError) {
-                        reject(new Error(runtimeError.message));
-                        return;
-                    }
-                    resolve(response);
-                });
-            } catch (error) {
-                reject(error);
-            }
-        });
+        return AdvancedToolClient.send(message);
     },
 
     /**

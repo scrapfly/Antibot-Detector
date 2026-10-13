@@ -26,7 +26,7 @@ const ALLOWED = {
   'content-main-world.js': [P.EVENTS.BRIDGE_INIT]
 };
 
-const MAIN_WORLD_FILES = ['modules/detection/hooks/window-condition-language.js',
+const MAIN_WORLD_FILES = ['modules/detection/conditions/window-condition-evaluator.js',
   'modules/detection/hooks/hook-resilience-manager.js',
   'modules/detection/hooks/window-property-tracker.js', 'content-main-world.js'];
 
@@ -65,7 +65,7 @@ test('the guard scans the files on both ends of the bridge', () => {
   for (const f of ['content-main-world.js', 'content.js', 'popup.js',
     'modules/detection/hooks/window-property-tracker.js', 'modules/detection/hooks/hook-resilience-manager.js',
     'modules/detection/engine/detection-engine-hooks.js', 'modules/detection/engine/detection-engine-manager.js',
-    'sections/settings/settings-runtime.js', 'background/handlers/messages-detection.js',
+    'modules/settings/settings-runtime.js', 'background/handlers/messages-detection.js',
     'background/handlers/messages-logging.js']) {
     assert.ok(files.includes(f), `${f} not scanned`);
   }

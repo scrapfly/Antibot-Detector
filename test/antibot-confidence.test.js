@@ -29,7 +29,7 @@ const context = vm.createContext({
 context.window = context;
 for (const file of [
   'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
-  'modules/detection/window-condition-grammar.js', 'modules/detection/managers/confidence-manager.js',
+  'modules/detection/conditions/window-condition-grammar.js', 'modules/detection/managers/confidence-manager.js',
   'modules/detection/detection-combinations.js',
   ...['analysis', 'extractors', 'matching', 'hooks', 'manager'].map(n => `modules/detection/engine/detection-engine-${n}.js`)
 ]) vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: file });

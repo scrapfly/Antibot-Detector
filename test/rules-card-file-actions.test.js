@@ -12,7 +12,7 @@ global.Logger = { ui() {}, debug() {}, error() {}, warn() {}, storage() {} };
 global.DetectionUtils = require('../utils/detection-utils.js');
 global.StorageManager = { saveToStorage: async () => true };
 global.chrome = { storage: { local: { get: async () => ({}), set: async () => {} } }, runtime: { getURL: p => p } };
-const DetectorManager = require('../modules/detection/managers/detector-manager.js');
+const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 
 function makeManager() {
   const dm = new DetectorManager({ initialized: true });

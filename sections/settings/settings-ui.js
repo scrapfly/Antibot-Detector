@@ -20,6 +20,7 @@ SettingsUI.showSettings = function() {
 };
 
 SettingsUI.hideSettings = function() {
+    if (this.settingsBaseline) this.settings = JSON.parse(JSON.stringify(this.settingsBaseline));
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
       settingsModal.classList.remove('is-open');
@@ -55,97 +56,36 @@ SettingsUI.switchTab = function(tabName) {
 
 SettingsUI.loadSettings = async function() {
     try {
-      const result = await chrome.storage.local.get(['scrapfly_settings']);
-
-      if (result.scrapfly_settings) {
-        // Handle both string and object storage formats
-        const savedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.parseStoredValue === 'function'
-          ? StorageManager.parseStoredValue(result.scrapfly_settings, 'scrapfly_settings')
-          : (typeof result.scrapfly_settings === 'string'
-              ? JSON.parse(result.scrapfly_settings)
-              : result.scrapfly_settings);
-        const loadedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
-          ? StorageManager.normalizeSettings(result.scrapfly_settings)
-          : (savedSettings.settings || savedSettings);
-
-        Logger.debug('UI', 'Settings read', { keys: Object.keys(loadedSettings || {}).length });
-
-        if (typeof loadedSettings === 'object' && loadedSettings !== null) {
-          this.settings = this.deepMerge(this.settings, loadedSettings);
-          const legacyHooksConfig = this.settings.hooksConfig;
-          delete this.settings.hooksConfig;
-          delete this.settings.reliabilityConfig;
-          // Legacy compatibility: migrate flat cache settings to nested structure
-          if (this.settings.detection) {
-            if (this.settings.detection.hooksConfig === undefined &&
-                legacyHooksConfig && typeof legacyHooksConfig === 'object') {
-              this.settings.detection.hooksConfig = legacyHooksConfig;
-            }
-            if (this.settings.detection.cacheDuration === undefined && this.settings.cacheDuration !== undefined) {
-              this.settings.detection.cacheDuration = this.settings.cacheDuration;
-            }
-            if (this.settings.detection.cacheUnit === undefined && this.settings.cacheUnit !== undefined) {
-              this.settings.detection.cacheUnit = this.settings.cacheUnit;
-            }
-            if (this.settings.detection.cacheScope === undefined && this.settings.cacheScope !== undefined) {
-              this.settings.detection.cacheScope = this.settings.cacheScope;
-            }
-            if ((this.settings.detection.blacklistedDomains == null || this.settings.detection.blacklistedDomains.length === 0) &&
-                Array.isArray(this.settings.blacklistedDomains) && this.settings.blacklistedDomains.length > 0) {
-              this.settings.detection.blacklistedDomains = this.settings.blacklistedDomains;
-            }
-            if (this.settings.detection.cacheDuration === undefined && this.settings.cacheHours !== undefined) {
-              this.settings.detection.cacheDuration = this.settings.cacheHours;
-              this.settings.detection.cacheUnit = this.settings.detection.cacheUnit || 'hours';
-            }
-          }
-          delete this.settings.cacheDuration;
-          delete this.settings.cacheUnit;
-          delete this.settings.cacheScope;
-          delete this.settings.cacheHours;
-          delete this.settings.blacklistedDomains;
-        }
-      } else {
-        Logger.debug('UI', 'No saved settings found, using defaults');
+      // Read both before changing the draft or the language picker.
+      const settings = await StorageManager.readSettingsStrict();
+      const language = await chrome.storage.local.get(['scrapfly_language_override']);
+      const loaded = this.deepMerge(this.defaultSettings || {}, settings);
+      const detection = loaded.detection || (loaded.detection = {});
+      for (const key of ['cacheDuration', 'cacheUnit', 'cacheScope', 'blacklistedDomains', 'hooksConfig']) {
+        if (settings[key] !== undefined && settings.detection?.[key] === undefined) detection[key] = settings[key];
       }
-
-      if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
-        Utils.applyDebugMode(this.settings);
+      if (settings.cacheHours !== undefined && settings.detection?.cacheDuration === undefined && settings.cacheDuration === undefined) {
+        detection.cacheDuration = settings.cacheHours;
+        detection.cacheUnit = 'hours';
       }
-      // What the form started from: saving merges only what it changed since
-      this.settingsBaseline = JSON.parse(JSON.stringify(this.settings));
+      for (const key of ['hooksConfig', 'reliabilityConfig', 'cacheDuration', 'cacheUnit', 'cacheScope', 'cacheHours', 'blacklistedDomains']) delete loaded[key];
+      this.settings = loaded;
+      this.settingsBaseline = JSON.parse(JSON.stringify(loaded));
+      if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') Utils.applyDebugMode(loaded);
       const themeChoice = document.querySelector('#themeChoice');
       if (themeChoice && typeof ScrapflyTheme !== 'undefined') themeChoice.value = ScrapflyTheme.get();
-
-      // Apply current language override (stored separately from main settings
-      // so it can be loaded at popup boot before settings UI initializes).
-      try {
-        const langResult = await chrome.storage.local.get(['scrapfly_language_override']);
-        const langValue = langResult.scrapfly_language_override || 'auto';
-        if (typeof SettingsUI.setLanguagePickerValue === 'function') {
-          SettingsUI.setLanguagePickerValue(langValue);
-        } else {
-          const langInput = document.querySelector('#languageOverride');
-          if (langInput) langInput.value = langValue;
-        }
-      } catch (_) {
-        // chrome.storage unavailable (rare; e.g., extension reloading mid-popup).
-        // Dropdown stays at its default 'auto' option — matches the runtime
-        // behavior in popup.js, which also falls back to the browser locale
-        // when storage is unreadable. No user-visible regression.
-      }
-
+      if (typeof SettingsUI.setLanguagePickerValue === 'function') SettingsUI.setLanguagePickerValue(language.scrapfly_language_override || 'auto');
       this.updateSettingsUI();
-      Logger.debug('UI', 'Settings loaded');
-
+      return true;
     } catch (error) {
-      Logger.error('UI', 'Failed to load settings:', error);
-      NotificationHelper.error(((typeof I18n !== 'undefined') && I18n.get('failedLoadSettingsDefault')) || 'Failed to load settings. Using defaults.');
+      Logger.error('UI', 'Failed to load settings');
+      NotificationHelper.error(((typeof I18n !== 'undefined') && I18n.get('settingsReadFailedToast')) || 'Could not load settings. Your current values have been kept.');
+      return false;
     }
 };
 
 SettingsUI.deepMerge = function(target, source) {
-    const result = { ...target };
+    const result = JSON.parse(JSON.stringify(target || {}));
 
     const typeOf = (v) => {
       if (Array.isArray(v)) return 'array';
@@ -154,13 +94,13 @@ SettingsUI.deepMerge = function(target, source) {
     };
 
     for (const key in source) {
-      if (!source.hasOwnProperty(key)) continue;
+      if (!Object.prototype.hasOwnProperty.call(source, key) || ['__proto__', 'constructor', 'prototype'].includes(key)) continue;
       const srcVal = source[key];
       const tgtVal = result[key];
 
       // New key (not in defaults) — allow as-is; can't validate without schema.
       if (tgtVal === undefined) {
-        result[key] = srcVal;
+        result[key] = srcVal === undefined ? undefined : JSON.parse(JSON.stringify(srcVal));
         continue;
       }
 
@@ -171,7 +111,7 @@ SettingsUI.deepMerge = function(target, source) {
       if (typeOf(srcVal) === 'object') {
         result[key] = this.deepMerge(tgtVal, srcVal);
       } else {
-        result[key] = srcVal;
+        result[key] = srcVal === undefined ? undefined : JSON.parse(JSON.stringify(srcVal));
       }
     }
 
@@ -198,105 +138,34 @@ SettingsUI.setToggleControlledVisibility = function(toggleEl, targets = []) {
 
 SettingsUI.saveSettings = async function(options = {}) {
     try {
-      const shouldNotify = options.notify !== false;
-      let oldCacheScope = null;
-      let storedNow = null;
-      try {
-        const result = await chrome.storage.local.get(['scrapfly_settings']);
-        if (result.scrapfly_settings) {
-          const loadedSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
-            ? StorageManager.normalizeSettings(result.scrapfly_settings)
-            : {};
-          storedNow = loadedSettings;
-          oldCacheScope = loadedSettings.cacheScope || loadedSettings.detection?.cacheScope || 'domain';
-        }
-      } catch (error) {
-        Logger.debug('UI', 'Could not read old cache scope:', error);
-      }
-
-      delete this.settings.hooksConfig;
-      delete this.settings.reliabilityConfig;
-      // Legacy compatibility: remove flat cache settings migrated to detection.*
-      delete this.settings.cacheDuration;
-      delete this.settings.cacheUnit;
-      delete this.settings.cacheScope;
-      delete this.settings.cacheHours;
-      delete this.settings.blacklistedDomains;
-
-      // Keep what other tabs saved since the form loaded (a domain blocked from
-      // Detection or History, the last update check): only this form's changes win
-      if (storedNow && this.settingsBaseline && typeof StorageManager !== 'undefined'
-          && typeof StorageManager.mergeSettingsChanges === 'function') {
-        this.settings = StorageManager.mergeSettingsChanges(this.settingsBaseline, this.settings, storedNow);
-        for (const key of ['hooksConfig', 'reliabilityConfig', 'cacheDuration', 'cacheUnit', 'cacheScope', 'cacheHours', 'blacklistedDomains']) {
-          delete this.settings[key];
-        }
-      }
-
-      const settingsData = {
-        timestamp: new Date().toISOString(),
-        settings: this.settings
+      if (!this.settingsBaseline) throw new Error('Load settings before saving');
+      const committed = await StorageManager.commitSettings({
+        baseline: this.settingsBaseline,
+        candidate: options.candidate || this.settings,
+        languageOverride: options.languageOverride
+      });
+      // Do not advance the form/baseline until persistence succeeds.
+      this.settings = committed.settings;
+      this.settingsBaseline = JSON.parse(JSON.stringify(committed.settings));
+      if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') Utils.applyDebugMode(this.settings);
+      Logger.debug('UI', 'Settings saved', SettingsTransfer.diagnostics(this.settings));
+      const oldScope = committed.previous.detection?.cacheScope || committed.previous.cacheScope || 'domain';
+      const newScope = this.settings.detection?.cacheScope || 'domain';
+      const notifyWorker = type => {
+        try { chrome.runtime.sendMessage({ type }).catch(() => {}); } catch (_) { /* Save already succeeded. */ }
       };
-
-      await chrome.storage.local.set({
-        'scrapfly_settings': JSON.stringify(settingsData, null, 2)
-      });
-      this.settingsBaseline = JSON.parse(JSON.stringify(this.settings));
-
-      if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
-        Utils.applyDebugMode(this.settings);
-      }
-
-      Logger.debug('UI', 'Settings saved:', SettingsUI.withoutShareSecrets(this.settings));
-
-      const newCacheScope = this.settings.cacheScope || this.settings.detection?.cacheScope || 'domain';
-      const cacheScopeChanged = oldCacheScope && oldCacheScope !== newCacheScope;
-
-      if (cacheScopeChanged) {
-        Logger.debug('UI', `[Settings] Cache scope changed from "${oldCacheScope}" to "${newCacheScope}" - preserving cache data, invalidating current view`);
-
+      if (oldScope !== newScope) {
         UrlUtils.clearUrlHashCache();
-
-        chrome.runtime.sendMessage({ type: 'CACHE_SCOPE_CHANGED' }, (response) => {
-          if (chrome.runtime.lastError) {
-            Logger.debug('UI', 'Failed to notify background of cache scope change:', chrome.runtime.lastError.message);
-          }
-        });
-
-        chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_CACHE' }, (response) => {
-          if (chrome.runtime.lastError) {
-            Logger.debug('UI', 'Failed to notify Detection tab:', chrome.runtime.lastError.message);
-          }
-        });
+        notifyWorker('CACHE_SCOPE_CHANGED');
+        notifyWorker('DETECTION_CLEAR_CACHE');
       }
-
-      if (shouldNotify) {
-        NotificationHelper.success(((typeof I18n !== 'undefined') && I18n.get('settingsSavedToast')) || 'Settings saved');
-      }
-
-      // Invalidate background settings cache so webhook/background features use updated values
-      chrome.runtime.sendMessage({ type: 'SETTINGS_UPDATED' }, (response) => {
-        if (chrome.runtime.lastError) {
-          Logger.debug('UI', 'Failed to notify background of settings update:', chrome.runtime.lastError.message);
-        } else {
-          Logger.debug('UI', 'Background notified of settings update:', response);
-        }
-      });
-
-      chrome.runtime.sendMessage({ type: 'SYNC_CATEGORY_COLORS' }, (response) => {
-        if (chrome.runtime.lastError) {
-          Logger.debug('UI', 'Failed to sync category colors:', chrome.runtime.lastError.message);
-        } else {
-          Logger.debug('UI', 'Category colors synced:', response);
-        }
-      });
-
+      notifyWorker('SETTINGS_UPDATED');
+      notifyWorker('SYNC_CATEGORY_COLORS');
+      if (options.notify !== false) NotificationHelper.success(((typeof I18n !== 'undefined') && I18n.get('settingsSavedToast')) || 'Settings saved');
       return true;
-
     } catch (error) {
-      Logger.error('UI', 'Failed to save settings:', error);
-      const _tFS = (typeof I18n !== 'undefined') ? I18n : null;
-      NotificationHelper.error((_tFS && _tFS.format('failedSaveSettingsFmt', error.message)) || ('Failed to save settings: ' + error.message));
+      Logger.error('UI', 'Failed to save settings');
+      if (options.notifyError !== false) NotificationHelper.error(((typeof I18n !== 'undefined') && I18n.get('settingsWriteFailedToast')) || 'Could not save settings. Your changes have been kept; try again.');
       return false;
     }
 };
@@ -860,12 +729,7 @@ SettingsUI.setupEventListeners = function() {
 
           this.settings.detection.blacklistedDomains.push(domain);
           this.renderBlacklistUI();
-          const saved = await this.saveSettings({ notify: false });
-          if (!saved) {
-            return;
-          }
-
-          NotificationHelper.success(_fmt2('addedDomainToBlacklistFmt', `Added ${domain} to blacklist`, domain));
+          NotificationHelper.info(_tr2('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
         } catch (error) {
           Logger.error('UI', 'Failed to add domain to blacklist', error);
           NotificationHelper.error(_fmt2('failedAddDomainFmt', 'Failed to add domain: ' + error.message, error.message));
@@ -961,7 +825,6 @@ SettingsUI.setupEventListeners = function() {
         if (updateIntervalGroup) {
           updateIntervalGroup.style.display = isEnabled ? 'flex' : 'none';
         }
-        this.saveSettings();
       });
     }
 
@@ -970,7 +833,6 @@ SettingsUI.setupEventListeners = function() {
       checkIntervalSelect.addEventListener('change', (e) => {
         if (!this.settings.updates) this.settings.updates = {};
         this.settings.updates.checkIntervalHours = parseInt(e.target.value, 10);
-        this.saveSettings();
       });
     }
 

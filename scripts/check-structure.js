@@ -24,20 +24,17 @@ const path = require('path');
 const repoRoot = path.resolve(__dirname, '..');
 const problems = [];
 
+function walk(dir, extension) {
+    if (!fs.existsSync(dir)) return [];
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+        const file = path.join(dir, entry.name);
+        return entry.isDirectory() ? walk(file, extension) : entry.name.endsWith(extension) ? [file] : [];
+    });
+}
+
 // ---- 1. HTML tag balance ------------------------------------------------
 function htmlFiles() {
-    const files = [path.join(repoRoot, 'popup.html')];
-    const sectionsDir = path.join(repoRoot, 'sections');
-    if (fs.existsSync(sectionsDir)) {
-        for (const section of fs.readdirSync(sectionsDir)) {
-            const dir = path.join(sectionsDir, section);
-            if (!fs.statSync(dir).isDirectory()) continue;
-            for (const f of fs.readdirSync(dir)) {
-                if (f.endsWith('.html')) files.push(path.join(dir, f));
-            }
-        }
-    }
-    return files.filter((f) => fs.existsSync(f));
+    return [path.join(repoRoot, 'popup.html'), ...walk(path.join(repoRoot, 'sections'), '.html')];
 }
 
 function checkTagBalance(file, tag) {
@@ -80,9 +77,7 @@ for (const file of jsonFiles()) {
 
 // ---- 3. Modal-header anti-pattern --------------------------------------
 function cssFiles() {
-    const dir = path.join(repoRoot, 'modules', 'styles');
-    if (!fs.existsSync(dir)) return [];
-    return fs.readdirSync(dir).filter((f) => f.endsWith('.css')).map((f) => path.join(dir, f));
+    return ['modules', 'sections'].flatMap(dir => walk(path.join(repoRoot, dir), '.css'));
 }
 
 for (const file of cssFiles()) {

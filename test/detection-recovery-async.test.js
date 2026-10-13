@@ -19,7 +19,7 @@ function harness() {
                 .map(method => [method, async details => { badges.push({ method, ...details }); }]))
         },
         Utils: { getSettings: async () => settings },
-        StorageManager: { saveSettings: async () => true, updateSettings: async (mutate) => { mutate(settings); return true; } },
+        StorageManager: { setDomainExcluded: async (domain, excluded) => { settings.detection.blacklistedDomains = excluded ? [...settings.detection.blacklistedDomains, domain] : settings.detection.blacklistedDomains.filter(d => d !== domain); return true; }, saveSettings: async () => true, updateSettings: async (mutate) => { mutate(settings); return true; } },
         CategoryManager: { getBadgeColors: async () => ({}) },
         DetectionUtils: { getBadgeColor: () => '#4caf50' },
         NotificationHelper: { success() {}, error() {} },
@@ -29,7 +29,7 @@ function harness() {
     context.self = context;
     for (const file of [
         'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
-        'modules/core/badge-constants.js', 'modules/detection/window-condition-grammar.js',
+        'modules/core/badge-constants.js', 'modules/detection/conditions/window-condition-grammar.js',
         'modules/detection/managers/confidence-manager.js', 'modules/detection/detection-combinations.js',
         ...['analysis', 'extractors', 'matching', 'hooks', 'manager']
             .map(name => `modules/detection/engine/detection-engine-${name}.js`),
@@ -48,7 +48,7 @@ function harness() {
         detectionEngine: engine, detectorManager, initialized: true,
         isExtensionEnabled: true, currentResults: [], blacklistedDomain: 'example.test',
         showAnalyzingState() {}, hideLoadingState() {},
-        showEmptyState() { this.currentResults = []; this.emptyCalls = (this.emptyCalls || 0) + 1; },
+        showEmptyState(options = {}) { this.outcome = options.outcome; this.currentResults = []; this.emptyCalls = (this.emptyCalls || 0) + 1; },
         displayResults(results, options) {
             assert.equal(Array.isArray(results), true, 'Only resolved detection arrays reach the renderer');
             this.currentResults = results;
@@ -134,5 +134,24 @@ test('raw-data detection rejection is handled by the shared result pipeline', as
     }, rawData());
     assert.equal(h.rendered.length, 0);
     assert.equal(h.detection.emptyCalls, 1);
+    assert.equal(h.detection.outcome, 'failed', 'an engine failure cannot look like a clean scan');
     assert.ok(h.errors.some(args => args.some(arg => String(arg).includes('Native engine failure'))));
+});
+
+test('refresh keeps a pending worker scan analyzing after the initial poll', async () => {
+    const h = harness();
+    await h.detection.refreshAnalysis();
+    h.messages.shift().callback({ status: 'started' });
+    h.timers.shift()();
+    await h.messages.shift().callback({ status: 'pending' });
+    assert.equal(h.detection.emptyCalls || 0, 0);
+    assert.equal(h.rendered.length, 0);
+});
+
+test('refresh reports failed worker requests without displaying clean results', async () => {
+    const h = harness();
+    await h.detection.refreshAnalysis();
+    h.messages.shift().callback({ status: 'error', error: 'synthetic failure' });
+    assert.equal(h.detection.outcome, 'failed');
+    assert.equal(h.timers.length, 0);
 });

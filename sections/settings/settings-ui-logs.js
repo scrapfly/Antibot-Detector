@@ -54,17 +54,9 @@ SettingsUI._setupLogListeners = function() {
           logCollectorControls.style.display = e.target.checked ? 'block' : 'none';
         }
 
-        if (e.target.checked) {
-          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_ENABLE' }).catch(() => {
-            Logger.debug('UI', 'Failed to enable log collection');
-          });
-          this.startLogCountUpdate();
-        } else {
-          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_DISABLE' }).catch(() => {
-            Logger.debug('UI', 'Failed to disable log collection');
-          });
-          this.stopLogCountUpdate();
-        }
+        // Collection preferences apply with Save, like the other form fields.
+        if (e.target.checked) this.startLogCountUpdate();
+        else this.stopLogCountUpdate();
       });
     }
 
@@ -126,9 +118,6 @@ SettingsUI._setupLogListeners = function() {
         if (logCountMax) {
           logCountMax.textContent = maxLogs;
         }
-        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_SET_MAX_LOGS', maxLogs: maxLogs }).catch(() => {
-          Logger.debug('UI', 'Failed to set max logs');
-        });
       });
     }
 };

@@ -115,20 +115,11 @@ SettingsUI.handleTestWebhook = async function() {
       ctx.favicon = UrlUtils.getFaviconUrl(ctx.hostname, 64);
       ctx.timestamp = new Date().toISOString();
 
-      const webhook = { webhookHeaders: this.settings.webhook?.webhookHeaders || [] };
-      const built = webhookMethod !== 'GET'
-        ? WebhookBody.build(webhookContentType, webhookPayload, ctx)
-        : null;
-      const fetchOptions = {
-        method: webhookMethod,
-        headers: SettingsRuntime._buildWebhookHeaders(webhook, webhookMethod, ctx, built && built.contentType)
+      const webhook = {
+        webhookUrl, webhookMethod, webhookContentType, webhookPayload,
+        webhookHeaders: this.settings.webhook?.webhookHeaders || []
       };
-      if (built) fetchOptions.body = built.body;
-
-      const processedUrl = WebhookBody.substitute(webhookUrl, ctx, 'url');
-      Logger.network('Test webhook:', { url: processedUrl, method: webhookMethod, bodyType: built ? built.kind : 'none' });
-
-      const response = await fetch(processedUrl, fetchOptions);
+      const response = await SettingsRuntime.sendWebhook(webhook, ctx);
 
       const _tW = (typeof I18n !== 'undefined') ? I18n : null;
       if (response.ok) {
@@ -139,7 +130,7 @@ SettingsUI.handleTestWebhook = async function() {
         Logger.warn('NETWORK', 'Test webhook failed:', { status: response.status });
       }
     } catch (error) {
-      Logger.error('NETWORK', 'Test webhook error:', error);
+      Logger.error('NETWORK', 'Test webhook request failed');
       const _tWE = (typeof I18n !== 'undefined') ? I18n : null;
       NotificationHelper.error((_tWE && _tWE.format('webhookTestFailedFmt', error.message)) || ('Webhook test failed: ' + error.message));
     } finally {

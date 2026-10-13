@@ -42,7 +42,7 @@ function makeWorld() {
   sw.self = sw; sw.globalThis = sw;
   vm.createContext(sw);
   vm.runInContext(read('modules/core/history-store.js'), sw);
-  vm.runInContext(read('sections/history/history.js') + '\n;globalThis.History = History;', sw);
+  vm.runInContext(read('background/history-recorder.js') + '\n;globalThis.HistoryRecorder = HistoryRecorder;', sw);
   vm.runInContext(read('background/history-retention.js').replace(/^const HistoryRetention/m, 'globalThis.HistoryRetention'), sw);
   sw.HistoryStore.registerHandlers(registry, storage);
 
@@ -70,7 +70,7 @@ function makeWorld() {
 
   const seed = (ids) => { store.scrapfly_history = JSON.stringify({ items: ids.map((id, i) => ({ id, url: `https://${id}.com`, timestamp: 1000 - i, detections: [] })) }); };
   const ids = () => JSON.parse(store.scrapfly_history || '{"items":[]}').items.map(i => i.id || i.hostname);
-  const saveInWorker = (host) => sw.History.saveDetectionToHistory(1, { url: `https://${host}/`, hostname: host, title: host },
+  const saveInWorker = (host) => sw.HistoryRecorder.saveDetectionToHistory(1, { url: `https://${host}/`, hostname: host, title: host },
     [{ detector: { name: 'X' }, category: 'Anti-Bot', confidence: 90 }], sw.chrome, { source: 'test' });
   return { sw, popup, view, store, registry, writes, seed, ids, saveInWorker };
 }

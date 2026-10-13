@@ -35,7 +35,9 @@ function load({ messages = {}, ready = Promise.resolve() } = {}) {
     }
   });
   context.self = context;
-  vm.runInContext(fs.readFileSync(path.join(root, 'sections/advanced/base-interceptor-helpers.js'), 'utf8'), context);
+  for (const file of ['background/advanced/page-notice.js', 'background/advanced/collector-utils.js']) {
+    vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context);
+  }
   return { context, injected, I18n };
 }
 

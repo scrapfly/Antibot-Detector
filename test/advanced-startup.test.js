@@ -28,6 +28,7 @@ function load(response, settings) {
     setTimeout: (callback, delay) => { if (delay === 500) { retries.push(delay); queueMicrotask(callback); } return 1; }, clearTimeout() {} };
   if (settings !== undefined) context.Utils = { getSettings: async () => settings };
   vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
   for (const file of ['advanced.js', 'advanced-runtime.js', 'advanced-tools.js']) vm.runInContext(read(`sections/advanced/${file}`), context);
   const advanced = new context.window.Advanced({ initialized: true }, { currentResults: [] });
   advanced.currentTab = { id: 12, url: 'https://example.test' };

@@ -1,0 +1,730 @@
+/* Rules Section Specific Styles */
+
+/* Ensure Rules tab fills parent and uses consistent height */
+#rulesTab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Remove bottom padding so pagination sits at the very bottom */
+#rulesTab.tab-content {
+  padding-bottom: 0;
+}
+
+/* Controls do not inherit the page font by default */
+.rules-header button,
+.rules-header input,
+.rules-list button,
+#rulesPagination button,
+#rulesPagination input {
+  font-family: inherit;
+}
+
+/* Rules Header Layout */
+.rules-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 12px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.rules-header .search-container {
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+.rules-header .search-input {
+  width: 100%;
+  height: 34px;
+  padding: 0 11px;
+  font-size: 11.5px;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rules-header .search-input::placeholder {
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
+.rules-header .search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+
+/* Toolbar: Add + Update, then the square "more" menu (Import/Export/Clear) */
+.rules-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
+  gap: 6px;
+  flex-shrink: 0;
+  margin: 6px 0 0;
+}
+
+.rules-toolbar .rules-add-btn,
+.rules-toolbar .check-updates-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.rules-toolbar .rules-add-btn {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: white;
+}
+
+.rules-toolbar .rules-add-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.rules-toolbar .check-updates-btn {
+  background: #1d232d;
+  border: 1px solid #2f4563;
+  color: var(--p-93c5fd);
+}
+
+.rules-toolbar .check-updates-btn:hover {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.6);
+  color: white;
+}
+
+.rules-toolbar .rules-add-btn svg,
+.rules-toolbar .check-updates-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Rule updates waiting for a newer extension, under the toolbar */
+.rules-ext-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 7px;
+  background: rgba(245, 158, 11, 0.08);
+  color: var(--p-fcd34d);
+  font-size: 11.5px;
+  line-height: 1.45;
+}
+
+.rules-ext-notice[hidden] {
+  display: none;
+}
+
+.rules-ext-notice svg {
+  flex-shrink: 0;
+  margin-block-start: 2px;
+}
+
+.rules-ext-notice-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rules-ext-notice-link {
+  flex-shrink: 0;
+  color: var(--warning-light);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rules-ext-notice-link:hover {
+  color: white;
+}
+
+/* Square "more" (…) buttons: toolbar and detector card */
+.rules-more-btn,
+.detector-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--g-242424);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 7px;
+  color: var(--g-e0e0e0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rules-more-btn:hover,
+.detector-more-btn:hover,
+.rules-menu.open .rules-menu-trigger {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+}
+
+/* Dropdown menu (positioned by Rules.openMenu next to its trigger) */
+.rules-menu {
+  position: relative;
+}
+
+.rules-menu-list {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  min-width: 150px;
+  padding: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.rules-menu.open .rules-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rules-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.rules-menu-item svg {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.rules-menu-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.rules-menu-item-danger,
+.rules-menu-item-danger svg {
+  color: var(--danger-light);
+}
+
+.rules-menu-item-danger:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* The card menu's Delete item keeps the .delete-btn hook; drop that button look */
+.rules-menu-item.delete-btn {
+  justify-content: flex-start;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+}
+
+.rules-menu-item.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Import/Export/Clear Button Styles (also used by the History tab) */
+.import-btn-small, .export-btn-small, .clear-btn-small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(148, 163, 184, 0.18);
+  color: var(--g-d1d5db);
+}
+
+/* Rules List Container */
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 0;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 2px 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.rules-list::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Disabled detector state */
+.detector-card.detector-disabled {
+  opacity: 0.6;
+  position: relative;
+}
+
+.detector-card.detector-disabled::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border);
+}
+
+.detector-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 8px;
+  padding: 11px 12px;
+  min-height: auto;
+  height: auto;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+/* No transform on hover: it would re-anchor the fixed-position card menu */
+.detector-card:hover {
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.detector-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+.detector-icon {
+  font-size: 22px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detector-icon-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: contain;
+}
+
+/* Fingerprint SVG icons */
+.detector-icon-svg {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  box-sizing: border-box;
+}
+
+/* .fingerprint-icon base gradient now in common.css */
+
+.detector-icon-svg.fingerprint-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.detector-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detector-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  gap: 8px;
+}
+
+.detector-name {
+  padding-bottom: 2px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  line-height: 1.24;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 2.8 sits the card title 2 px above the centre of the 28 px action row */
+#rulesList .detector-name {
+  position: relative;
+  top: -2px;
+}
+
+.detector-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Detector Scripts Container */
+.detector-scripts {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  width: 100%;
+  margin-top: 13px;
+}
+
+/* Detection Method Tags - Synced with Detection section solid style */
+.detection-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* v2.8: outlined sentence-case chips with human-readable labels */
+.method-tag {
+  font-size: 9.7px; /* matches the 2.8 chip text widths as rendered on Windows */
+  font-weight: 600;
+  height: 20px;
+  line-height: 18px;
+  padding: 0 7px;
+  border-radius: 5px;
+  display: inline-block;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.method-tag.primary {
+  background: rgba(255, 149, 0, 0.2);
+  color: #ff9500;
+  border: 1px solid rgba(255, 149, 0, 0.35);
+}
+
+.method-tag.secondary {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--purple);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+}
+
+.method-tag.antibot {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.method-tag.captcha {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.method-tag.waf {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.method-tag.fingerprint {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--accent);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+/* An official rule the user edited */
+.method-tag.rule-edited-tag {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning-light);
+  border: 1px dashed rgba(245, 158, 11, 0.5);
+}
+
+/* Edit action: a quiet accent tile with a crisp outline pencil. */
+.detector-card .edit-btn {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  border-radius: 8px;
+  padding: 0;
+  color: var(--accent-light);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detector-card .edit-btn svg {
+  flex: none;
+  pointer-events: none;
+}
+
+.detector-card .edit-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(96, 165, 250, 0.6);
+  color: var(--text-primary);
+}
+
+.detector-card .edit-btn:active:not(:disabled) {
+  background: rgba(59, 130, 246, 0.26);
+  border-color: var(--accent-light);
+}
+
+.detector-card .edit-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.detector-card .edit-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Per-card "more" (…) button: same footprint as the edit button */
+.detector-card .detector-more-btn {
+  width: 28px;
+  height: 28px;
+  background: var(--g-363636);
+  border-radius: 6px;
+}
+
+.detector-card .detector-more-btn:hover,
+.detector-card .rules-menu.open .rules-menu-trigger {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+}
+
+/* Delete Button */
+.delete-btn {
+  background: var(--bg-tertiary);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 6px;
+  padding: 5px;
+  color: var(--danger);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--danger);
+}
+
+/* Small Toggle Switch */
+.toggle-switch-small {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.toggle-switch-small input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-slider-small {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-tertiary);
+  transition: all 0.3s ease;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+}
+
+.toggle-slider-small:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 17px;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--text-muted);
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.detector-toggle:checked + .toggle-slider-small {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Scripts Info Section - Bottom area with Last Updated and Toggle */
+/* Footer: "time • version | author" on one line, toggle on the right */
+.scripts-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px solid var(--g-3c3c3c);
+  gap: 10px;
+}
+
+.scripts-info-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  font-size: 11.3px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.last-updated-value {
+  font-weight: 400;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scripts-info-sep {
+  margin: 0 2px 0 -1px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.scripts-info-left .version-author {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.detector-toggle:checked + .toggle-slider-small:before {
+  transform: translateX(21px) translateY(-50%);
+  background-color: white;
+}
+
+/* Pagination base styles now in common.css */
+
+#rulesTab .pagination {
+  margin-top: 2px;
+  padding: 5px 8px;
+}
+
+/* v2.8 footer: "Showing 1-2 of 45" inline with blue numbers */
+/* Block (not flex) so the spaces around the counts are kept */
+#rulesTab .pagination-info {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--g-e0e0e0);
+}
+
+#rulesTab .pagination-info .pagination-count {
+  min-width: 0;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#rulesTab .pagination-controls {
+  gap: 6px;
+}
+
+#rulesTab .page-info {
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--g-e0e0e0);
+}
+
+#rulesTab .total-pages {
+  display: inline-block;
+  min-width: 40px;
+  font-size: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* v2.8 chevrons are light grey; disabled ones fade less than the shared 0.5 */
+#rulesTab .pagination-btn {
+  color: var(--g-e0e0e0);
+}
+
+#rulesTab .pagination-btn:disabled {
+  opacity: 0.65;
+}
+
+/* Rules-specific page-input overrides */
+#rulesTab .page-input {
+  width: 28px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}

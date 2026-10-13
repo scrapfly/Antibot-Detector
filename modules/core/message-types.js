@@ -5,6 +5,8 @@
 
 (function initMessageTypes(globalContext) {
     const AdvancedMessageTypes = Object.freeze({
+        ADVANCED_HISTORY: 'ADVANCED_HISTORY',
+        ADVANCED_PAGE_NOTICE: 'ADVANCED_PAGE_NOTICE',
         // reCAPTCHA
         RECAPTCHA_START_CAPTURE: 'RECAPTCHA_START_CAPTURE',
         RECAPTCHA_STOP_CAPTURE: 'RECAPTCHA_STOP_CAPTURE',

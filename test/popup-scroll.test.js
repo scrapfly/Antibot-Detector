@@ -255,7 +255,7 @@ function tabSwitchHarness(initialized) {
   const main = { scrollTop: 210 };
   const makeElement = () => ({ style: {}, classList: { add() {}, remove() {} } });
   const contents = Object.fromEntries(names.map(name => [name, makeElement()]));
-  const buttons = Object.fromEntries(names.map(name => [name, makeElement()]));
+  const buttons = Object.fromEntries(names.map(name => [name, { ...makeElement(), dataset: { tab: name }, setAttribute() {} }]));
   const context = {
     ScrapflyBridgeProtocol: { MESSAGE_TYPES: {} },
     Logger: { error() { assert.fail('unexpected popup error'); } },
@@ -331,7 +331,7 @@ test('production observer disconnects its predecessor before observing the share
 test('detection pagination sits at the bottom of the popup even on a short last page', () => {
   const results = rules.filter(([selector]) => selector === '#app > .main > #detectionTab > #detectionResults');
   assert.equal(results.at(-1)[1].flex, '1 0 auto', 'results fill the tab height');
-  const footer = read('modules/styles/detection.css');
+  const footer = read('sections/detection/detection.css');
   assert.match(footer, /#detectionResults > #detectionPagination\s*\{\s*margin-top:\s*auto;/, 'spare height goes above the footer');
 });
 

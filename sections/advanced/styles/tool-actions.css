@@ -1,0 +1,686 @@
+/* Shared Tools action rows: readable copy, semantic outlines, and quiet states. */
+.advanced-tool-grid,
+.advanced-tool-grid--2,
+.advanced-tool-grid--3,
+.recaptcha-tools-grid,
+.geetest-tools-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.advanced-tool-card,
+.recaptcha-tool-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 66px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--g-424242);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-family: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.advanced-tool-card:hover:not(:disabled),
+.recaptcha-tool-btn:hover:not(:disabled) {
+  background: var(--g-313131);
+  border-color: var(--accent);
+  transform: none;
+  box-shadow: none;
+}
+
+.advanced-tool-card:focus-visible,
+.recaptcha-tool-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+.advanced-tool-card:active:not(:disabled),
+.recaptcha-tool-btn:active:not(:disabled) {
+  transform: none;
+  background: #272b32;
+}
+
+.advanced-tool-icon,
+.advanced-tool-card:hover .advanced-tool-icon,
+.recaptcha-tool-btn .tool-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+}
+
+.advanced-tool-icon svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+
+.advanced-tool-icon[data-icon-style="outline"] svg,
+.advanced-tool-icon[data-icon-style="outline"] svg * {
+  fill: none;
+}
+
+.advanced-tool-card:hover .advanced-tool-icon--blue { background: rgba(59, 130, 246, 0.14); border-color: rgba(59, 130, 246, 0.35); }
+.advanced-tool-card:hover .advanced-tool-icon--green { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); }
+.advanced-tool-card:hover .advanced-tool-icon--purple { background: rgba(139, 92, 246, 0.12); border-color: rgba(139, 92, 246, 0.35); }
+
+.advanced-tool-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 3px;
+}
+
+.advanced-tool-label,
+.recaptcha-tool-btn .tool-btn-label {
+  display: block;
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+.advanced-tool-hint {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+.advanced-tool-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+}
+
+.advanced-tool-indicator svg { display: block; width: 16px; height: 16px; }
+[dir="rtl"] .advanced-tool-indicator svg { transform: rotate(180deg); }
+.advanced-tool-card:hover .advanced-tool-indicator { color: var(--accent-light); }
+
+/* Start is blue. Stop is a truthful recording state, never a pulsing whole card. */
+.advanced-tool-card[data-tool-kind="capture"] {
+  grid-column: 1 / -1;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.advanced-tool-card[data-tool-kind="capture"]:hover:not(:disabled) {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+.advanced-tool-card[data-tool-kind="capture"] .advanced-tool-icon {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.advanced-tool-card[data-tool-kind="capture"] .advanced-tool-label,
+.advanced-tool-card[data-tool-kind="capture"] .advanced-tool-hint,
+.advanced-tool-card[data-tool-kind="capture"] .advanced-tool-indicator { color: var(--text-primary); }
+
+.advanced-tool-card.capturing,
+.advanced-tool-card[data-tool-kind="capture"].capturing,
+.recaptcha-tool-btn.capturing {
+  animation: none;
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.advanced-tool-card.capturing:hover:not(:disabled) { background: rgba(239, 68, 68, 0.13); border-color: var(--danger-light); }
+.advanced-tool-card.capturing .advanced-tool-label,
+.advanced-tool-card.capturing .advanced-tool-indicator { color: var(--danger-light); }
+.advanced-tool-card.capturing .advanced-tool-hint { color: var(--text-secondary); }
+.advanced-tool-card.capturing .advanced-tool-icon {
+  animation: none;
+  color: var(--danger-light) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.advanced-tool-card:disabled { cursor: not-allowed; opacity: 0.65; }
+.advanced-tool-card.is-working { cursor: wait; }
+.advanced-tool-card.is-working .advanced-tool-indicator svg { display: none; }
+.advanced-tool-card.is-working .advanced-tool-indicator::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: advanced-tool-working 0.8s linear infinite;
+}
+
+@keyframes advanced-tool-working { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .advanced-tool-card.is-working .advanced-tool-indicator::before { animation: none; }
+}
+
+/* One code dialog across every generator, with Copy outside the code viewport. */
+.advanced-code-dialog { padding: 12px; }
+.advanced-code-dialog .advanced-code-dialog__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  height: calc(100vh - 24px);
+  max-height: 660px;
+  min-height: 0;
+  margin: 0;
+  padding: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+}
+
+.advanced-code-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.advanced-code-dialog__title {
+  min-width: 0;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 21px;
+  overflow-wrap: anywhere;
+}
+
+.advanced-code-dialog__header .advanced-modal-close-btn { flex-shrink: 0; margin: 0; }
+.advanced-code-dialog__types {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.advanced-code-dialog__type,
+.advanced-code-dialog__language {
+  min-width: 0;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: 500 12px/18px var(--font-sans);
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+}
+
+.advanced-code-dialog__type { border-color: var(--border); background: var(--bg-primary); }
+.advanced-code-dialog__type.active,
+.advanced-code-dialog__language.active {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(96, 165, 250, 0.45);
+  color: var(--accent-light);
+}
+
+.advanced-code-dialog__type:hover,
+.advanced-code-dialog__language:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.advanced-code-dialog__languages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex-shrink: 0;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.advanced-code-dialog__panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.advanced-code-dialog__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  min-height: 42px;
+  gap: 10px;
+  padding: 6px 8px 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--g-262626);
+}
+
+.advanced-code-dialog__code-label { min-width: 0; color: var(--text-secondary); font-size: 11px; line-height: 16px; }
+.advanced-code-dialog .advanced-code-dialog__copy {
+  position: static;
+  flex-shrink: 0;
+  min-height: 30px;
+  margin: 0;
+  padding: 5px 10px;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-light);
+  font: 600 12px/18px var(--font-sans);
+  cursor: pointer;
+}
+
+.advanced-code-dialog .advanced-code-dialog__copy:hover:not(:disabled) { background: var(--accent-dark); border-color: var(--accent-dark); color: var(--text-primary); }
+.advanced-code-dialog .advanced-code-dialog__copy:disabled { cursor: not-allowed; opacity: 0.6; }
+.advanced-code-dialog__code {
+  display: block;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  resize: none;
+  border: none;
+  border-radius: 0;
+  background: var(--bg-primary);
+  color: var(--g-e0e0e0);
+  font: 11px/18px var(--font-mono);
+  direction: ltr;
+  text-align: left;
+  tab-size: 2;
+  white-space: pre;
+}
+
+.advanced-code-dialog__code:focus-visible { outline: 2px solid var(--accent-light); outline-offset: -2px; }
+.advanced-code-dialog__type:focus-visible,
+.advanced-code-dialog__language:focus-visible,
+.advanced-code-dialog__copy:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 2px; }
+.advanced-code-dialog__description {
+  flex-shrink: 0;
+  max-height: 48px;
+  margin: 0;
+  overflow: auto;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+.advanced-code-dialog__status {
+  flex-shrink: 0;
+  min-height: 16px;
+  color: var(--accent-light);
+  font-size: 11px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+
+
+/* ============================================
+   Advanced capture history cards, 2.8 look (same anatomy as History tab cards)
+   ============================================ */
+.capture-card.capture-card--v28 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 10px 10px 10px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--g-424242);
+  border-radius: 10px;
+  box-shadow: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.capture-card.capture-card--v28::before {
+  display: none;
+}
+
+.capture-card.capture-card--v28:hover,
+.capture-card.capture-card--v28:focus-visible {
+  outline: none;
+  background: var(--g-313131);
+  border-color: var(--accent);
+  transform: none;
+  box-shadow: none;
+}
+
+.capture-card--v28 .capture-card-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.capture-favicon-tile {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--g-242424);
+  border: 1px solid var(--g-404040);
+  border-radius: 7px;
+}
+
+.capture-card--v28 .capture-url-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  object-fit: contain;
+}
+
+.capture-card-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.capture-card-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.capture-card-sub {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--text-secondary);
+}
+
+.capture-card-host {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.capture-card-dot {
+  flex-shrink: 0;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.capture-card--v28 .capture-timestamp {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.capture-card--v28 .capture-card-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.capture-card--v28 .capture-action-btn {
+  width: 28px;
+  height: 28px;
+  min-height: 0;
+  padding: 0;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: var(--text-secondary);
+}
+
+.capture-card--v28 .capture-action-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+  color: var(--text-primary);
+  transform: none;
+}
+
+.capture-card--v28 .capture-action-btn.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--danger-light);
+}
+
+.capture-card-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--g-3a3a3a);
+}
+
+/* Module chip: outlined and tinted like the method chips, not a gradient pill */
+.capture-card--v28 .capture-module-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--accent-light);
+  background: rgba(59, 130, 246, 0.14);
+  border: 1px solid rgba(96, 165, 250, 0.35);
+}
+
+.capture-card--v28 .capture-size {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.capture-card-open {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.capture-card--v28:hover .capture-card-open {
+  color: var(--accent-light);
+}
+
+/* Icon actions stay in one row (an older max-width:500px rule stacks them) */
+.capture-card--v28 .capture-card-actions {
+  flex-direction: row !important;
+}
+
+/* ============================================
+   Capture History controls, 2.8 look: no big boxed header; compact filters
+   and quiet outlined actions, like the History tab toolbar
+   ============================================ */
+#capturesPanel .history-v2-controls {
+  gap: 8px;
+  padding: 0;
+  margin-bottom: 10px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#capturesPanel .history-v2-heading {
+  display: none;
+}
+
+#capturesPanel .history-v2-filters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+#capturesPanel .history-v2-field--search {
+  grid-column: 1 / -1;
+  order: -1;
+}
+
+#capturesPanel .history-v2-label {
+  display: none;
+}
+
+#capturesPanel .history-v2-select,
+#capturesPanel .history-v2-search {
+  height: 32px;
+  padding: 0 10px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  box-shadow: none;
+}
+
+#capturesPanel .history-v2-search {
+  height: 34px;
+}
+
+#capturesPanel .history-v2-select:focus,
+#capturesPanel .history-v2-search:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+#capturesPanel .history-v2-actions {
+  display: flex;
+  gap: 6px;
+}
+
+#capturesPanel .history-v2-btn {
+  flex: 1;
+  height: 30px;
+  padding: 0 10px;
+  background: transparent;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 7px;
+  color: var(--g-e0e0e0);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  box-shadow: none;
+  transform: none;
+}
+
+#capturesPanel .history-v2-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+#capturesPanel .history-v2-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+  color: #fff;
+}
+
+#capturesPanel .history-v2-btn--danger {
+  color: var(--text-secondary);
+}
+
+#capturesPanel .history-v2-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--danger-light);
+}
+
+#capturesPanel .history-v2-grid {
+  gap: 8px;
+}
+
+#capturesPanel .history-v2-select {
+  appearance: none;
+  padding-right: 26px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23b3b3b3' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  text-overflow: ellipsis;
+}
+
+/* History card: which tool button produced a saved result. The chip and
+   View keep their size; the tool name takes the rest and is cut with "…" */
+.capture-tool-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.capture-card--v28 .capture-module-badge,
+.capture-card--v28 .capture-card-open {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.capture-card--v28 .capture-card-sub .capture-timestamp,
+.capture-card--v28 .capture-card-sub .capture-size {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Cookie check: names of the expected cookies that were not found */
+.adv-kit-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

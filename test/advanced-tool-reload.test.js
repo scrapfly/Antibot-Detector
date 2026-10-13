@@ -30,6 +30,7 @@ function fixture(vendor, options = {}) {
     hcaptchaText: txt,
     Logger: { network() {}, error() {} },
     NotificationHelper: { info() {}, error(message) { errors.push(message); } },
+    AdvancedToolClient: { subscribe() {}, unsubscribe() {} },
     AdvancedUtils: {
       async sendMessage(message) {
         calls.push(['message', message]);
@@ -54,7 +55,7 @@ function fixture(vendor, options = {}) {
     },
     setTimeout(callback, delay) { timers.push({ callback, delay }); return timers.length; }
   };
-  const file = path.join(__dirname, '..', 'sections/advanced/modules', vendor, `${vendor}-advanced-actions.js`);
+  const file = path.join(__dirname, '..', 'sections/advanced/vendors', vendor, 'actions.js');
   vm.runInNewContext(fs.readFileSync(file, 'utf8'), context, { filename: file });
   const instance = new Module();
   instance.tabInfo = { id: 17, url: 'https://example.test/' };

@@ -12,7 +12,8 @@ function fixture() {
     NotificationHelper: { error: message => errors.push(message), info: message => errors.push(message) },
     AdvancedHistoryStore: { load: async () => history }, document: { querySelectorAll: () => [] } };
   vm.createContext(context);
-  for (const file of ['advanced.js', 'advanced-runtime.js', 'advanced-history.js']) {
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
+  for (const file of ['advanced.js', 'advanced-runtime.js', 'history/controller.js', 'history/view.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced', file), 'utf8'), context);
   }
   const Advanced = context.window.Advanced;
@@ -139,6 +140,9 @@ test('real generic renderer remains viable without a vendor class or current det
   delete f.context.BaseAdvancedModule;
   f.context.AdvancedUtils = { escapeHtml: value => String(value).replaceAll('<', '&lt;') };
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/base-advanced-module.js'), 'utf8'), f.context);
+  for (const component of ['components/tool-grid', 'components/dialogs', 'components/cookie-results', 'history/module-history']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/' + component + '.js'), 'utf8'), f.context);
+  }
   vm.runInContext('BaseAdvancedModule.prototype.displayCaptureDetailsModal = function(id, content) { window.genericDetails = { id, content }; }', f.context);
   f.advanced.detectorManager = null;
   f.history.akamai = [f.capture];
@@ -170,3 +174,64 @@ test('card pointer and keyboard navigation isolate copy and delete actions', asy
   assert.deepEqual(calls.map(call => call[0]), ['view', 'view', 'view', 'copy', 'delete']);
   assert.ok(calls.every(call => call[1] === 'akamai' && call[2] === 'saved'));
 });
+
+function loadRealHistoryModule(f) {
+  delete f.context.BaseAdvancedModule;
+  f.context.AdvancedUtils = { escapeHtml: value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;') };
+  f.context.setTimeout = () => {};
+  f.context.document.querySelector = () => null;
+  for (const file of ['modules/advanced/result-model.js', 'sections/advanced/base-advanced-module.js', 'sections/advanced/history/module-history.js']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), f.context);
+  }
+  const module = new f.context.window.BaseAdvancedModule({}, { id: 7, url: 'https://example.com' }, 'akamai');
+  module.renderCaptureDetailsContent = () => { throw Error('Tool results must not use the vendor capture renderer'); };
+  module.displayCaptureDetailsModal = (id, content) => f.opened.push({ id, content });
+  f.advanced.loadedModules.akamai = module;
+  return module;
+}
+
+for (const location of ['unified', 'vendor']) {
+  for (const format of ['structured', 'legacy']) {
+    test(`${location} history opens ${format} tool results with the actual text renderer`, async () => {
+      const f = fixture(), module = loadRealHistoryModule(f);
+      const data = format === 'structured'
+        ? { schemaVersion: 1, tool: 'analysis', result: { scripts: ['<script>saved output</script>'] } }
+        : { tool: 'analysis', lines: ['<script>saved output</script>'] };
+      const capture = { ...f.capture, data, captureData: data };
+      f.history.akamai = [capture];
+      module.loadCaptureHistory = async () => [capture];
+      if (location === 'unified') await f.advanced.viewCaptureDetails('akamai', 'saved');
+      else await module.toggleCaptureDetails('saved');
+      assert.equal(f.opened.length, 1);
+      assert.match(f.opened[0].content, /&lt;script>saved output&lt;\/script>/);
+      assert.doesNotMatch(f.opened[0].content, /<script>/);
+      assert.deepEqual(f.errors, []);
+    });
+  }
+}
+
+for (const confirmation of ['start', 'reopened-state']) {
+  test(`${confirmation} confirmation owns the capture button despite late completions`, async () => {
+    const f = fixture(), module = loadRealHistoryModule(f);
+    module.afterCaptureStart = async () => {};
+    module.renderCapturedDataSection = async () => {};
+    module.sendMessage = async () => ({ status: 'started', isCapturing: true, requestId: 'current-job' });
+    if (confirmation === 'start') await module.startCapturing();
+    else await module.checkCaptureState();
+    assert.equal(module.captureRequestId, 'current-job');
+    f.advanced.currentTab = { id: 7 };
+    f.advanced.activeModule = module;
+    let onMessage;
+    f.context.AdvancedToolClient = { subscribe(listener) { onMessage = listener; } };
+    f.advanced.updateCaptureCountBadge = async () => {};
+    f.advanced.setupCaptureCompletionListener();
+    for (const details of [{ requestId: 'old-job' }, { requestId: undefined }, { requestId: 'current-job', tabId: 8 }, { requestId: 'current-job', vendorId: 'imperva' }]) {
+      await onMessage({ type: 'AKAMAI_CAPTURE_COMPLETED', tabId: 7, vendorId: 'akamai', ...details });
+      assert.equal(module.isCapturing, true);
+      assert.equal(module.captureRequestId, 'current-job');
+    }
+    await onMessage({ type: 'AKAMAI_CAPTURE_COMPLETED', tabId: 7, vendorId: 'akamai', requestId: 'current-job' });
+    assert.equal(module.isCapturing, false);
+    assert.equal(module.captureRequestId, null);
+  });
+}

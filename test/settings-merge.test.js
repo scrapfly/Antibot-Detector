@@ -8,6 +8,9 @@ const assert = require('node:assert');
 global.self = global;
 global.Logger = { error() {}, debug() {}, warn() {} };
 require('../modules/core/storage-manager.js');
+require('../modules/settings/settings-store.js');
+global.ScrapflyBridgeProtocol = { MESSAGE_TYPES: { SETTINGS_MUTATE: 'SETTINGS_MUTATE' } };
+global.SettingsStore.registerHandlers({});
 const StorageManager = global.StorageManager;
 const merge = (b, m, s) => JSON.parse(JSON.stringify(StorageManager.mergeSettingsChanges(b, m, s)));
 

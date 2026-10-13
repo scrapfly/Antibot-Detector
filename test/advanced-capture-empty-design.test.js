@@ -4,7 +4,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
-const css = read('modules/styles/advanced.css').replace(/\/\*[\s\S]*?\*\//g, '');
+const css = require('./helpers/feature-css')('advanced').replace(/\/\*[\s\S]*?\*\//g, '');
 const html = read('sections/advanced/advanced.html');
 function rule(selector, source = css) {
   const block = [...source.matchAll(/([^{}]+)\{([^{}]+)\}/g)]

@@ -33,14 +33,14 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
 
     // Ensure detector has detection property before storing
     const detectorWithDetection = {
-      ...detector,
-      detection: detector.detection || {
+      ...JSON.parse(JSON.stringify(detector)),
+      detection: JSON.parse(JSON.stringify(detector.detection || {
         urls: [],
         headers: [],
         cookies: [],
         content: [],
         dom: []
-      }
+      }))
     };
 
     // Store current detector data BEFORE populating modal
@@ -48,10 +48,11 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     this.currentEditDetector = {
       detector: detectorWithDetection,
       category,
+      originalCategory: category,
       detectorName,
       isNew: isNew,
       // The rule as it was before this edit: becomes the official snapshot
-      // when an official detector is edited (the editor's copy is shallow)
+      // when an official detector is edited
       original: isNew || typeof DetectorManager === 'undefined' ? null : DetectorManager.cleanDetectorCopy(detector)
     };
 
@@ -101,6 +102,7 @@ Rules.prototype.getEditorDetectorName = function(detector) {
   };
 
 Rules.prototype.closeEditModal = function() {
+    if (this.savingRule) return;
     const modal = document.querySelector('#editRuleModal');
     if (modal) {
       modal.style.display = 'none';

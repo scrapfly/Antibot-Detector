@@ -22,8 +22,9 @@ function load() {
   vm.runInContext(read('utils/format-utils.js'), context);
   context.FormatUtils = context.self.FormatUtils;
   vm.runInContext(`${read('sections/advanced/base-advanced-module.js')}\nthis.BaseAdvancedModule = BaseAdvancedModule;`, context);
-  vm.runInContext(`${read('sections/advanced/modules/akamai/akamai-advanced.js')}\nthis.AkamaiAdvanced = AkamaiAdvanced;`, context);
-  vm.runInContext(read('sections/advanced/modules/akamai/akamai-advanced-ui.js'), context);
+  for (const file of ['modules/advanced/result-model.js', 'sections/advanced/components/dialogs.js', 'sections/advanced/history/module-history.js']) vm.runInContext(read(file), context);
+  vm.runInContext(`${read('sections/advanced/vendors/akamai/module.js')}\nthis.AkamaiAdvanced = AkamaiAdvanced;`, context);
+  vm.runInContext(read('sections/advanced/vendors/akamai/view.js'), context);
   const module = Object.create(context.AkamaiAdvanced.prototype);
   module.tabInfo = { url: 'https://shop.example.com/men/' };
   const opened = [];

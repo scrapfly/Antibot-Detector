@@ -144,15 +144,16 @@ test('the defaults file and the module agree', () => {
   assert.deepStrictEqual(defaults, { ...ShareProviders.DEFAULTS });
 });
 
-test('settings exports and debug logs leave out the key, token and custom headers', () => {
+test('portable settings leave out the key, token, custom URL and headers', () => {
   const vm = require('node:vm');
   const fs = require('node:fs');
   const path = require('node:path');
   const context = vm.createContext({ SettingsUI: {}, ShareProviders });
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/settings/settings-transfer.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/settings/settings-ui-share.js'), 'utf8'), context);
   const settings = { debugMode: true, share: { provider: 'pastebin', pastebinKey: 'k', githubToken: 't', customHeaders: 'Authorization: Bearer s', customUrl: 'https://x.test/' } };
   const out = context.SettingsUI.withoutShareSecrets(settings);
-  assert.deepStrictEqual(Object.keys(out.share).sort(), ['customUrl', 'provider']);
+  assert.deepStrictEqual(Object.keys(out.share).sort(), ['provider']);
   assert.strictEqual(settings.share.pastebinKey, 'k', 'the stored settings are not modified');
   assert.strictEqual(context.SettingsUI.withoutShareSecrets(null), null);
 });

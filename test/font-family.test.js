@@ -29,7 +29,7 @@ const ALLOWED = new Set(['var(--font-sans)', 'var(--font-mono)', 'inherit']);
 // the injected function as `fontStack`.
 // Every module draws through the one shared renderer (renderPageNotice).
 const INJECTED_PAGE_NOTIFICATION = new Map([
-  ['sections/advanced/base-interceptor-helpers.js', '${fontStack}']
+  ['background/advanced/page-notice.js', '${fontStack}']
 ]);
 
 // Trim a captured value to the declaration: `${…}` placeholders are kept
@@ -149,7 +149,7 @@ test('the tokens lead with IBM Plex, and elements the UA gives another font inhe
 });
 
 test('the in-page notification installs the bundled Plex faces and names them first', () => {
-  const helpers = fs.readFileSync(path.join(root, 'sections/advanced/base-interceptor-helpers.js'), 'utf8');
+  const helpers = fs.readFileSync(path.join(root, 'background/advanced/page-notice.js'), 'utf8');
   assert.match(helpers, /const PAGE_NOTIFICATION_FONT_STACK = `'\$\{PAGE_NOTIFICATION_FONT_FAMILY\}', /);
   const files = [...helpers.matchAll(/\['(assets\/fonts\/IBMPlexSans-[A-Za-z]+\.woff2)'/g)].map(m => m[1]);
   assert.ok(files.length >= 2);

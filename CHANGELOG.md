@@ -5,6 +5,33 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [Unreleased]
+
+Planned version: 2.8.6.
+
+### Changed
+
+- History: detection count, confidence and difficulty now share the lower row with category totals and the timestamp.
+- Settings: changes wait for Save; theme and language clearly indicate when they apply immediately.
+- Keyboard navigation now supports the main tabs and returns focus after closing tool and History dialogs.
+
+### Fixed
+
+- Detection no longer stops after three strong matches, missing other protections on the same page.
+- Failed and interrupted scans no longer appear as completed scans with no detections.
+- Reloading or switching pages no longer lets an older scan overwrite the current scan’s state.
+- Rules: failed saves preserve the draft; invalid imports leave existing rules intact, and updates protect custom patterns and edits.
+- Settings: concurrent saves preserve unrelated changes, and failed imports retain the current settings and language.
+- Advanced: overlapping captures stay separate, analysis jobs have a deadline, and saved tool results survive closing the popup.
+- Advanced: capture history writes no longer overwrite one another, and generated examples run without extension-only helpers.
+- Scrape with Scrapfly: terminal instructions match Bash or WSL, and embedded scripts cannot prematurely end their generated file.
+
+### Security
+
+- Page-facing detection events expose summaries without raw cookie, header or payload evidence.
+- Settings exports omit integration connection details; imports preserve local connections, and webhook requests refuse redirects.
+- Scrape with Scrapfly: Copy for AI removes header values from generated examples as well as their description.
+
 ## [2.8.5] - 2026-10-12
 
 ### Added
@@ -328,6 +355,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.5...HEAD
 [2.8.5]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.2...v2.8.3

@@ -8,7 +8,7 @@
  * pinned "dock" (condition picker / preview) right under the list and a
  * pinned footer.
  * The markup lives in sections/rules/rules.html (class `rh-modal`), the look
- * in modules/styles/rule-helpers.css, and this file owns the behaviour that
+ * in sections/rules/rule-helpers.css, and this file owns the behaviour that
  * all of them share: ranking, row rendering, keyboard navigation, the empty /
  * no-results state and Escape-to-close.
  *

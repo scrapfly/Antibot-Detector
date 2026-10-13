@@ -77,7 +77,8 @@ class Settings {
       const url = chrome.runtime.getURL('sections/settings/default-settings.json');
       const response = await fetch(url);
       const data = await response.json();
-      this.settings = data.settings || data;
+      this.defaultSettings = data.settings || data;
+      this.settings = JSON.parse(JSON.stringify(this.defaultSettings));
     } catch (error) {
       Logger.error('UI', 'Failed to load default-settings.json', error);
       this.settings = {};

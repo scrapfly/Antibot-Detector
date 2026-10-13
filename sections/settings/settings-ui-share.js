@@ -78,15 +78,10 @@ SettingsUI.validateShareSettings = function(share, text) {
   return errors;
 };
 
-// Settings as they may leave the browser (export, debug logs): the service
-// key, token and custom headers are left out, so importing the file later
-// keeps the ones already stored
-SettingsUI.SHARE_SECRET_KEYS = ['pastebinKey', 'githubToken', 'customHeaders'];
+// Compatibility name for callers exporting preferences. Diagnostics use their own
+// minimal projection and never the portable settings payload.
 SettingsUI.withoutShareSecrets = function(settings) {
-  if (!settings || typeof settings !== 'object' || !settings.share) return settings;
-  const share = { ...settings.share };
-  for (const key of SettingsUI.SHARE_SECRET_KEYS) delete share[key];
-  return { ...settings, share };
+  return settings == null ? settings : SettingsTransfer.portable(settings);
 };
 
 SettingsUI._setupShareListeners = function() {

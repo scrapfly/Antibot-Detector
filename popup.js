@@ -85,10 +85,21 @@ class ScrapflyPopup {
 
   setupEventListeners() {
     // Tab navigation
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    const navigationTabs = Array.from(document.querySelectorAll('.tab-btn'));
+    navigationTabs.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const tab = e.currentTarget.dataset.tab;
         this.switchTab(tab);
+      });
+      btn.addEventListener('keydown', event => {
+        const forward = getComputedStyle(btn).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const step = event.key === forward ? 1 : ['ArrowLeft', 'ArrowRight'].includes(event.key) ? -1 : 0;
+        if (!step && !['Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const index = event.key === 'Home' ? 0 : event.key === 'End' ? navigationTabs.length - 1
+          : (navigationTabs.indexOf(btn) + step + navigationTabs.length) % navigationTabs.length;
+        navigationTabs[index].focus();
+        this.switchTab(navigationTabs[index].dataset.tab);
       });
     });
 
@@ -569,6 +580,9 @@ class ScrapflyPopup {
     // Update active tab button
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.classList.remove('active');
+      const selected = btn.dataset.tab === tabName;
+      btn.setAttribute('aria-selected', String(selected));
+      btn.tabIndex = selected ? 0 : -1;
     });
     const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
     if (activeBtn) {

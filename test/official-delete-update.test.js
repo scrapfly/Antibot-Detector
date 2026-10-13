@@ -17,6 +17,7 @@ function load(local) {
     Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
+      patchSettings: async () => true,
       normalizeStoredValue: async (_k, v) => (typeof v === 'string' ? JSON.parse(v) : v),
       saveToStorage: async (key, value) => { local[key] = JSON.parse(JSON.stringify(value)); return true; }
     },
@@ -31,7 +32,7 @@ function load(local) {
   };
   ctx.self = ctx;
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/update-manager.js'), 'utf8'), ctx);
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/rules/update-manager.js'), 'utf8'), ctx);
   const UM = ctx.UpdateManager;
   const remote = {
     'detect-akamai': { id: 'detect-akamai', name: 'Akamai', version: '2.0', author: 'Scrapfly', detection: {} },

@@ -13,13 +13,12 @@ async function initialize(reason = 'startup', previousVersion = null) {
     initializationPromise = (async () => {
         try {
 
-        // Create CategoryManager and DetectorManager instances
-        categoryManager = new CategoryManager();
-        detectorManager = new DetectorManager(categoryManager);
+        // Keepalive is available before the first event can begin a scan.
+        if (!workerKeepaliveManager) workerKeepaliveManager = new WorkerKeepaliveManager();
 
-        // Initialize the detector manager (loads from storage or JSON files)
+        // Startup and event handlers share the same initialization promise.
         const initStartTime = Date.now();
-        await detectorManager.initialize();
+        await ensureDetectorManagerInitialized();
         const initDuration = Date.now() - initStartTime;
 
         let detectorCount = detectorManager.getDetectorCount();
@@ -47,10 +46,6 @@ async function initialize(reason = 'startup', previousVersion = null) {
             Logger.error('BACKGROUND', 'CRITICAL: No detectors loaded - extension will not work. Remove and re-add the extension, then refresh all tabs.');
         }
 
-        // Initialize keepalive manager
-        workerKeepaliveManager = new WorkerKeepaliveManager();
-        Logger.background('[WorkerKeepaliveManager] Initialized');
-
         // Set disabled badge if extension is disabled
         const isEnabled = await isExtensionEnabled();
         const tabs = await chrome.tabs.query({});
@@ -63,6 +58,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
             }
         } else {
             for (const tab of tabs) {
+                if (activeDetections.has(tab.id) || detectionStates.has(tab.id)) continue;
                 chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
             }
         }
@@ -86,7 +82,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
-    detectionStates.clear();
+    for (const tabId of detectionStates.keys()) DetectionSessionStore.cancel(tabId, 'extension_updated');
 
     if (details.reason === 'install' || details.reason === 'update') {
         await initialize(details.reason, details.previousVersion);

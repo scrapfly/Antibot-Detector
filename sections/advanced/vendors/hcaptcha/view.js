@@ -1,0 +1,237 @@
+HCaptchaAdvanced.prototype.renderTools = function() {
+        return this.renderToolGrid([
+            {
+                id: 'hcaptchaCheckVersion',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
+                iconSvg: `
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12.5,7H11V13L16.25,16.15L17.02,14.92L12.5,11.58V7Z"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'hcaptchaStartCapture',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
+                kind: 'capture',
+                iconSvg: `
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M9.5,9.5A1.5,1.5 0 0,1 11,11A1.5,1.5 0 0,1 9.5,12.5A1.5,1.5 0 0,1 8,11A1.5,1.5 0 0,1 9.5,9.5M15,11A1.5,1.5 0 0,0 13.5,9.5A1.5,1.5 0 0,0 12,11A1.5,1.5 0 0,0 13.5,12.5A1.5,1.5 0 0,0 15,11M11,15H13V17H11V15M9,15H10V17H9V15M14,15H15V17H14V15Z"/>
+                    </svg>
+                `
+            },
+            {
+                id: 'hcaptchaAnalyzeScripts',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
+                iconSvg: `
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                    </svg>
+                `
+            }
+        ]);
+    };
+
+
+HCaptchaAdvanced.prototype.setupToolListeners = function() {
+        this.bindToolActions([
+            { id: 'hcaptchaCheckVersion', handler: () => this.checkVersion() },
+            { id: 'hcaptchaStartCapture', handler: () => this.startCapturing() },
+            { id: 'hcaptchaAnalyzeScripts', handler: () => this.analyzeScripts() }
+        ]);
+    };
+
+
+// Header icon of the Check Version dialog (a version tag)
+HCaptchaAdvanced.VERSION_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>';
+
+/**
+ * Check Version result: the mode as a chip, then the version, site key and
+ * page as rows that copy on click. Nothing found: one clear note.
+ */
+HCaptchaAdvanced.prototype.displayVersionModal = function(data) {
+        this.recordStructuredResult('displayVersionModal', data);
+        const K = BaseAdvancedModule;
+        const { version, isEnterprise, websiteKey, websiteURL } = data || {};
+        let host = '';
+        try { host = this.tabInfo?.url ? new URL(this.tabInfo.url).hostname : ''; } catch (_) { host = ''; }
+
+        if (!version && !websiteKey) {
+            this.openKitModal({
+                title: hcaptchaText('advHcaptchaDetectionTitle', 'hCaptcha Detection'),
+                subtitle: host,
+                iconSvg: HCaptchaAdvanced.VERSION_ICON,
+                body: K.kitNote(hcaptchaText('advHcaptchaNotDetected', 'hCaptcha not detected. Please reload the page with hCaptcha loaded.'))
+            });
+            return;
+        }
+
+        const mode = isEnterprise
+            ? K.kitChip(hcaptchaText('advCommonYes', 'Yes'), 'purple')
+            : K.kitChip(hcaptchaText('advHcaptchaNo', 'No'), 'neutral');
+        const facts = K.kitFacts([
+            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode'), value: mode, html: true }
+        ]);
+        const fields = K.kitField(hcaptchaText('ruleFieldVersion', 'Version'), version)
+            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site Key'), websiteKey)
+            + K.kitField(hcaptchaText('advCommonPage', 'Page'), websiteURL, { mono: false, wrap: true });
+
+        this.openKitModal({
+            title: hcaptchaText('advHcaptchaVersionTitle', 'hCaptcha Version'),
+            subtitle: host,
+            iconSvg: HCaptchaAdvanced.VERSION_ICON,
+            body: facts + (fields ? K.kitCard(fields) : ''),
+            copiedMessage: hcaptchaText('copiedNotification', 'Copied')
+        });
+    };
+
+
+    /**
+     * Override: Render hCaptcha capture history items
+     * Shows: Timestamp, Version, Enterprise, Site Key, Website URL
+     */
+HCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
+        if (!historyItems || historyItems.length === 0) {
+            return `<div style="padding: 20px; text-align: center; color: var(--text-secondary);">${hcaptchaText('advHcaptchaNoHistory', 'No capture history yet')}</div>`;
+        }
+
+        const unknownText = hcaptchaText('timeUnknown', 'Unknown');
+        const notAvailable = hcaptchaText('advHcaptchaNotAvailable', 'N/A');
+        const yesText = hcaptchaText('advCommonYes', 'Yes');
+        const noText = hcaptchaText('advHcaptchaNo', 'No');
+
+        return historyItems.map(item => {
+            const timestamp = item.timestamp ? hcaptchaDateTime(item.timestamp) : unknownText;
+            const hostname = item.hostname || (item.websiteURL ? new URL(item.websiteURL).hostname : '');
+            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
+            const version = item.version || notAvailable;
+            const isEnterprise = item.isEnterprise ? yesText : noText;
+            const siteKey = item.websiteKey || notAvailable;
+            const websiteUrl = item.websiteURL || notAvailable;
+
+            return `
+                <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px; margin-bottom: 12px;">
+                    <div style="display: grid; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <img src="${faviconUrl}" alt="${hostname}" style="width: 16px; height: 16px; border-radius: 3px;" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
+                            <span style="color: var(--text-primary); font-size: 13px; font-weight: 500;">${hostname || unknownText}</span>
+                            <span style="color: var(--text-secondary); font-size: 12px; margin-left: auto;">${timestamp}</span>
+                        </div>
+
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('ruleFieldVersion', 'Version')}</div>
+                            <div class="copy-value" data-copy="${version}" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${version}</div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div style="background: var(--bg-primary); padding: 8px; border-radius: 4px; border-left: 3px solid ${item.isEnterprise ? '#ef4444' : '#22c55e'};">
+                                <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('advCommonEnterprise', 'Enterprise')}</div>
+                                <div style="font-weight: 500; color: var(--text-primary);">${isEnterprise}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('advCommonSiteKey', 'Site Key')}</div>
+                            <div class="copy-value" data-copy="${siteKey}" style="font-size: 11px; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${FormatUtils.escapeHtml(siteKey)}</div>
+                        </div>
+
+                        <div>
+                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('advCommonWebsiteUrl', 'Website URL')}</div>
+                            <div class="copy-value" data-copy="${websiteUrl}" style="font-size: 11px; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+
+    /**
+     * Override: Render hCaptcha capture details for modal
+     * Shows all hCaptcha-specific information when user clicks on a capture
+     */
+HCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const data = capture.captureData || capture.data || {};
+        const notAvailable = hcaptchaText('advHcaptchaNotAvailable', 'N/A');
+        const timestamp = hcaptchaDateTime(capture.timestamp);
+        const url = AdvancedUtils.escapeHtml(capture.url || notAvailable);
+
+        const version = data.version || notAvailable;
+        const siteKey = data.websiteKey || notAvailable;
+        const websiteUrl = data.websiteURL || notAvailable;
+        const isEnterprise = data.isEnterprise ? hcaptchaText('advCommonYes', 'Yes') : hcaptchaText('advHcaptchaNo', 'No');
+
+        return `
+            <!-- URL Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">${hcaptchaText('advCommonUrl', 'URL')}</label>
+                <div class="advanced-modal-code-block" data-copy="${url}">${url}</div>
+            </div>
+
+            <!-- Version Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">${hcaptchaText('ruleFieldVersion', 'Version')}</label>
+                <div class="advanced-modal-code-block" data-copy="${version}">${version}</div>
+            </div>
+
+            <!-- Site Key Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">${hcaptchaText('advCommonSiteKey', 'Site Key')}</label>
+                <div class="advanced-modal-code-block" data-copy="${siteKey}" style="word-break: break-all;">${FormatUtils.escapeHtml(siteKey)}</div>
+            </div>
+
+            <!-- Website URL Section -->
+            <div class="advanced-modal-section">
+                <label class="advanced-modal-label">${hcaptchaText('advCommonWebsiteUrl', 'Website URL')}</label>
+                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
+            </div>
+
+            <!-- Enterprise Mode Section -->
+            <div class="advanced-modal-section">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">${hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode')}</span>
+                    <span class="advanced-modal-info-value">${isEnterprise}</span>
+                </div>
+            </div>
+
+            <!-- Timestamp Section (at bottom) -->
+            <div class="advanced-modal-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="advanced-modal-info-row">
+                    <span class="advanced-modal-info-label">${hcaptchaText('advCommonCaptured', 'Captured')}</span>
+                    <span class="advanced-modal-info-value">${timestamp}</span>
+                </div>
+            </div>
+        `;
+    };
+
+
+HCaptchaAdvanced.prototype.displayAnalysisModal = function(data) {
+        this.recordStructuredResult('displayAnalysisModal', data);
+        const scripts = data?.scripts || [];
+
+        const modal = this.createToolModal();
+
+        modal.innerHTML = `
+            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${hcaptchaText('advCommonScriptsTitleFmt', '{0} Scripts ({1})', 'hCaptcha', scripts.length)}</h3>
+                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    ${scripts.map((script, idx) => `
+                        <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-weight: 500;">${hcaptchaText('advHcaptchaScriptNumberFmt', 'Script {0}', idx + 1)}</span>
+                                <span style="background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">hCaptcha</span>
+                            </div>
+                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer;">${script.url}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        this.bindCopyValueHandlers(modal, { defaultMessage: hcaptchaText('advCommonUrlCopied', 'URL copied') });
+        this.bindModalClose(modal);
+        this.showToolModal(modal);
+    };

@@ -16,7 +16,7 @@ const rulesHelperTr = (key, fallback) => RuleHelperKit.tr(key, fallback);
 
 // Canonical condition presets. The runtime list comes from
 // ScrapflyWindowConditionLanguage; this fallback must mirror PRESET_GROUPS in
-// modules/detection/hooks/window-condition-language.js (drift-guarded by
+// modules/detection/conditions/window-condition-evaluator.js (drift-guarded by
 // test/window-condition-fallback-parity.test.js).
 const WINDOW_CONDITION_FALLBACK_GROUPS = [
   { label: 'Type', values: ['typeof object', 'typeof function', 'typeof string', 'typeof number', 'typeof boolean', 'typeof symbol', 'typeof bigint'] },

@@ -1,0 +1,776 @@
+/* Scrape with Scrapfly (sections/detection/scrapfly-export.js): language
+   tabs over the kit code block, then the notes and two links */
+.scrapfly-export-intro {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-code {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* One code block under the tabs: file name + Copy on top, coloured code that
+   keeps its lines (long ones scroll sideways) */
+.scrapfly-export-panel {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
+}
+
+.scrapfly-export-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 6px 5px 10px;
+  background: var(--g-242424);
+  border-bottom: 1px solid var(--g-333333);
+}
+
+.scrapfly-export-file {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(139, 92, 246, 0.55);
+  border-radius: 6px;
+  background: rgba(139, 92, 246, 0.16);
+  color: var(--p-ddd6fe);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-copy:hover {
+  background: #8b5cf6;
+  border-color: #8b5cf6;
+  color: #fff;
+}
+
+.scrapfly-export-copy.copy-feedback-active {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.55);
+  color: var(--p-bbf7d0);
+}
+
+.scrapfly-export-pre {
+  margin: 0;
+  padding: 10px 12px;
+  max-height: 210px;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--g-d4d4d4);
+  white-space: pre;
+  tab-size: 4;
+  scrollbar-width: thin;
+  scrollbar-color: var(--g-4b4b4b) transparent;
+}
+
+.scrapfly-export-pre:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: -2px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-track,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-track,
+.scrapfly-export-pre::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-thumb,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb {
+  background: var(--g-4b4b4b);
+  border-radius: 3px;
+}
+
+.scrapfly-export-pre::-webkit-scrollbar-thumb:hover,
+.scrapfly-export-modal .adv-kit-body::-webkit-scrollbar-thumb:hover {
+  background: var(--g-6b6b6b);
+}
+
+.sfx-comment { color: #7d8590; font-style: italic; }
+.sfx-string { color: #a5d6a7; }
+.sfx-keyword { color: #c4b5fd; }
+.sfx-literal { color: #fdba74; }
+.sfx-flag { color: #93c5fd; }
+
+.adv-kit-header-icon .scrapfly-export-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.advanced-tool-icon .advanced-tool-logo {
+  width: 20px;
+  height: 20px;
+}
+
+.scrapfly-export-detected {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-detected-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.scrapfly-export-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 9px 0 5px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--g-262626);
+  color: var(--text-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.scrapfly-export-chip img {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  object-fit: contain;
+  background: #fff;
+}
+
+.scrapfly-export-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scrapfly-export-chip--more {
+  padding: 0 9px;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.scrapfly-export-tab {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.scrapfly-export-tab[aria-selected="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: var(--p-bfdbfe);
+}
+
+.scrapfly-export-tab:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+.scrapfly-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.scrapfly-export-actions .rule-btn {
+  text-decoration: none;
+}
+
+/* Rows, tabs and texts of the other product (Scrape API / Cloud Browser) */
+.scrapfly-export-modal [hidden] {
+  display: none !important;
+}
+
+/* Scrape with Scrapfly options: one row per option, label left, control right */
+.scrapfly-export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 10px 11px 12px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 8px;
+  background: var(--g-242424);
+}
+
+
+
+.scrapfly-export-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 26px;
+}
+
+.scrapfly-export-option-label {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scrapfly-export-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+}
+
+.scrapfly-export-seg-btn {
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-seg-btn:hover {
+  color: var(--text-primary);
+}
+
+.scrapfly-export-seg-btn[aria-checked="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.45);
+  color: var(--p-bfdbfe);
+}
+
+.scrapfly-export-seg-btn:focus-visible,
+.scrapfly-export-dd-btn:focus-visible,
+.scrapfly-export-copy-ai:focus-visible,
+.scrapfly-export-copy:focus-visible,
+.scrapfly-export-switch:focus-visible,
+.scrapfly-export-step-cmd:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+
+
+.scrapfly-export-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scrapfly-export-cost {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+
+
+
+
+
+/* Same look as the Rules card toggle (rules.css .toggle-switch-small) */
+.scrapfly-export-switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 44px;
+  height: 22px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background-color: var(--bg-tertiary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scrapfly-export-switch::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background-color: var(--text-muted);
+  transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+.scrapfly-export-switch:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.scrapfly-export-switch:checked::before {
+  background-color: #fff;
+  transform: translateX(21px) translateY(-50%);
+}
+
+/* Label with the API parameter it sets underneath */
+.scrapfly-export-option-head {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.scrapfly-export-api {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-option {
+  flex-wrap: wrap;
+}
+
+.scrapfly-export-option.is-wide {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+}
+
+.scrapfly-export-option.is-inactive .scrapfly-export-option-head,
+.scrapfly-export-option.is-inactive .scrapfly-export-seg,
+.scrapfly-export-option.is-inactive .scrapfly-export-dd,
+.scrapfly-export-option.is-inactive .scrapfly-export-input,
+.scrapfly-export-option.is-inactive .scrapfly-export-num,
+.scrapfly-export-option.is-inactive .scrapfly-export-multi,
+.scrapfly-export-option.is-inactive .scrapfly-export-toggle-wrap {
+  opacity: 0.45;
+}
+
+/* Why an option is not in the code (needs another option, invalid value) */
+.scrapfly-export-why,
+.scrapfly-export-note {
+  flex-basis: 100%;
+  font-size: 10.5px;
+  line-height: 14px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-why {
+  color: var(--warning);
+}
+
+.scrapfly-export-input {
+  box-sizing: border-box;
+  width: 180px;
+  max-width: 100%;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  transition: border-color 0.15s;
+}
+
+.scrapfly-export-input::placeholder {
+  color: var(--text-muted);
+}
+
+.scrapfly-export-input:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.scrapfly-export-area {
+  width: 100%;
+  height: auto;
+  min-height: 52px;
+  padding: 6px 8px;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 15px;
+}
+
+.scrapfly-export-num {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.scrapfly-export-num .scrapfly-export-input {
+  width: 96px;
+}
+
+.scrapfly-export-unit {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.scrapfly-export-multi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+
+.scrapfly-export-chk {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 6px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.scrapfly-export-chk input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.scrapfly-export-chk:has(input:checked) {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* More options: one folded section per topic */
+.scrapfly-export-more {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.scrapfly-export-group {
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 8px;
+  background: var(--g-242424);
+}
+
+.scrapfly-export-group > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.scrapfly-export-group > summary::-webkit-details-marker {
+  display: none;
+}
+
+.scrapfly-export-group > summary::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin-inline-start: auto;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.15s;
+}
+
+.scrapfly-export-group[open] > summary::after {
+  transform: rotate(-135deg);
+}
+
+.scrapfly-export-group > summary:hover,
+.scrapfly-export-group[open] > summary {
+  color: var(--text-primary);
+}
+
+.scrapfly-export-group > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: 8px;
+}
+
+/* How many options of the section change the code */
+.scrapfly-export-group-count {
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+.scrapfly-export-group-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 10px 11px 12px;
+}
+
+/* Country: a button and a styled list instead of the system dropdown */
+.scrapfly-export-dd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 130px;
+  max-width: 180px;
+  height: 26px;
+  padding: 0 9px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 11.5px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.scrapfly-export-dd-btn span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scrapfly-export-dd-btn svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.15s;
+}
+
+.scrapfly-export-dd-btn:hover,
+.scrapfly-export-dd-btn[aria-expanded="true"] {
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.scrapfly-export-dd-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.scrapfly-export-dd-list {
+  position: fixed;
+  z-index: 10050;
+  max-height: 200px;
+  margin: 0;
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 8px;
+  background: var(--g-262626);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+  outline: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--g-4b4b4b) transparent;
+}
+
+.scrapfly-export-dd-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrapfly-export-dd-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrapfly-export-dd-list::-webkit-scrollbar-thumb {
+  background: var(--g-4b4b4b);
+  border-radius: 3px;
+}
+
+.scrapfly-export-dd-item {
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.scrapfly-export-dd-item.is-active {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.scrapfly-export-dd-item[aria-selected="true"] {
+  background: rgba(59, 130, 246, 0.18);
+  color: var(--p-bfdbfe);
+  font-weight: 600;
+}
+
+/* Copy for AI (blue) next to Copy (purple) */
+.scrapfly-export-copy-group {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.scrapfly-export-copy-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(59, 130, 246, 0.55);
+  border-radius: 6px;
+  background: rgba(59, 130, 246, 0.16);
+  color: var(--p-bfdbfe);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-copy-ai:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.scrapfly-export-copy-ai.copy-feedback-active {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.55);
+  color: var(--p-bbf7d0);
+}
+
+/* Numbered steps: 1 settings, 2 key command, 3 code, 4 run command */
+.scrapfly-export-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-steps[hidden] {
+  display: none;
+}
+
+.scrapfly-export-step {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.scrapfly-export-step-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scrapfly-export-step[hidden] {
+  display: none;
+}
+
+.scrapfly-export-step-n {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.18);
+  color: var(--p-bfdbfe);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.scrapfly-export-step-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.scrapfly-export-step-cmd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px 6px 10px;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.scrapfly-export-step-cmd code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--g-d4d4d4);
+}
+
+.scrapfly-export-step-cmd:hover {
+  border-color: rgba(139, 92, 246, 0.55);
+  color: var(--p-ddd6fe);
+}

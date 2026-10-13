@@ -1,0 +1,454 @@
+/* ============================================
+   Advanced modal kit (BaseAdvancedModule.openKitModal + kit* helpers)
+   Same shell as the History detail modal: 376px dark card, header with an
+   icon tile, scrolling body, copy rows that copy on click.
+   ============================================ */
+.adv-kit-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.adv-kit-overlay.show {
+  opacity: 1;
+}
+
+.adv-kit-modal {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 24px);
+  max-width: 376px;
+  max-height: calc(100% - 24px);
+  background: var(--bg-secondary);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 12px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transform: translateY(6px) scale(0.99);
+  transition: transform 0.18s ease;
+}
+
+.adv-kit-overlay.show .adv-kit-modal {
+  transform: none;
+}
+
+.adv-kit-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--modal-header-min-height);
+  padding: 12px 12px 12px 14px;
+  border-bottom: 1px solid var(--g-3a3a3a);
+}
+
+.adv-kit-header-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--accent-light);
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+}
+
+.adv-kit-header-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.adv-kit-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.adv-kit-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 17px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adv-kit-subtitle {
+  margin: 2px 0 0;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adv-kit-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Fixed footer for a kit dialog's actions (Copy all, Export code): always
+   visible, the body scrolls above it */
+.adv-kit-footer {
+  flex-shrink: 0;
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--g-3a3a3a);
+}
+
+.adv-kit-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--g-4b4b4b);
+  background: transparent;
+  color: var(--g-e0e0e0);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.adv-kit-btn > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adv-kit-btn:hover {
+  background: var(--g-333333);
+  border-color: var(--g-5a5a5a);
+}
+
+.adv-kit-btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.adv-kit-btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.adv-kit-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.adv-kit-btn-icon {
+  display: inline-flex;
+}
+
+.adv-kit-btn-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.adv-kit-btn.copy-feedback-active {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  color: var(--success-light) !important;
+}
+
+/* Read-only label / value rows (counts, levels) */
+.adv-kit-facts {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--g-2a2a2a);
+  border: 1px solid var(--g-404040);
+  border-radius: 9px;
+}
+
+.adv-kit-fact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 10px;
+}
+
+.adv-kit-fact + .adv-kit-fact {
+  border-top: 1px solid var(--g-363636);
+}
+
+.adv-kit-fact dt {
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.adv-kit-fact dd {
+  margin: 0;
+  flex-shrink: 0;
+  max-width: 60%;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: end;
+  overflow-wrap: anywhere;
+}
+
+.adv-kit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adv-kit-section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adv-kit-section-head h4 {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.adv-kit-count {
+  height: 18px;
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 9px;
+  background: var(--g-2c2c2c);
+  border: 1px solid var(--g-444444);
+  color: var(--g-c9c9c9);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+}
+
+.adv-kit-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--g-2a2a2a);
+  border: 1px solid var(--g-404040);
+  border-radius: 9px;
+}
+
+.adv-kit-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.adv-kit-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.adv-kit-chip--blue { color: var(--accent-light); background: rgba(59, 130, 246, 0.14); border-color: rgba(96, 165, 250, 0.35); }
+.adv-kit-chip--purple { color: var(--purple-light); background: rgba(139, 92, 246, 0.14); border-color: rgba(167, 139, 250, 0.35); }
+.adv-kit-chip--green { color: var(--success-light); background: rgba(16, 185, 129, 0.12); border-color: rgba(52, 211, 153, 0.32); }
+.adv-kit-chip--amber { color: var(--warning-light); background: rgba(245, 158, 11, 0.12); border-color: rgba(251, 191, 36, 0.32); }
+.adv-kit-chip--red { color: var(--danger-light); background: rgba(239, 68, 68, 0.12); border-color: rgba(252, 165, 165, 0.32); }
+.adv-kit-chip--neutral { color: var(--text-secondary); background: transparent; border-color: var(--g-4b4b4b); }
+
+.adv-kit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.adv-kit-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 13px;
+  color: var(--text-secondary);
+}
+
+.adv-kit-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 30px;
+  padding: 6px 8px 6px 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 6px;
+  color: var(--g-e0e0e0);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.adv-kit-value.is-mono {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.adv-kit-value-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adv-kit-value.is-wrap .adv-kit-value-text {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Long values (cookies): three lines, then "…"; the click copies all of it */
+.adv-kit-value.is-clamp .adv-kit-value-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.adv-kit-copy-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.adv-kit-value:hover,
+.adv-kit-value:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.adv-kit-value:hover .adv-kit-copy-icon,
+.adv-kit-value:focus-visible .adv-kit-copy-icon {
+  color: var(--accent-light);
+}
+
+/* Copy feedback: same green flash as the History match rows */
+.adv-kit-value.copy-feedback-active,
+.adv-kit-code-copy.copy-feedback-active {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  color: var(--success-light) !important;
+}
+
+.adv-kit-code {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.adv-kit-code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 6px 5px 10px;
+  background: var(--g-262626);
+  border-bottom: 1px solid var(--g-3d3d3d);
+}
+
+.adv-kit-code-copy {
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 5px;
+  border: 1px solid var(--g-4b4b4b);
+  background: var(--g-363636);
+  color: var(--g-e0e0e0);
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.adv-kit-code-copy:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.adv-kit-code pre {
+  margin: 0;
+  padding: 10px;
+  max-height: 220px;
+  overflow: auto;
+  background: var(--bg-primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--g-d4d4d4);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.adv-kit-note {
+  margin: 0;
+  padding: 10px;
+  border-radius: 7px;
+  border: 1px dashed var(--g-444444);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.adv-kit-note--error {
+  border-style: solid;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--danger-light);
+}
+
+.adv-kit-note--warning {
+  border-style: solid;
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+  color: var(--p-fcd34d);
+}
+
+.adv-kit-code pre {
+  tab-size: 4;
+}

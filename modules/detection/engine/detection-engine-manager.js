@@ -1285,10 +1285,8 @@ class DetectionEngineManager {
         }
 
 
-        let highConfidenceCount = 0;
-        const HIGH_CONFIDENCE_THRESHOLD = 95;
-        const EARLY_EXIT_COUNT = 3;
-
+        // A confident match says nothing about the remaining vendors. Evaluate
+        // every enabled detector, including partial evidence for combinations.
         for (const { category, detectorName, detector } of detectorPriorities) {
             // requestHeaders: request-scope header rules read them (they were dropped here before)
             const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
@@ -1309,14 +1307,6 @@ class DetectionEngineManager {
 
                 detections.push(detectionObj);
 
-                if (detection.detected && detection.confidence >= HIGH_CONFIDENCE_THRESHOLD) {
-                    highConfidenceCount++;
-                }
-
-                if (highConfidenceCount >= EARLY_EXIT_COUNT) {
-                    Logger.debug('DETECTION', `Stopped early: ${highConfidenceCount} detections at 95% or more`);
-                    break;
-                }
             }
         }
 
@@ -1828,7 +1818,9 @@ class DetectionEngineManager {
      * @param {object} dependencies - Required dependencies
      */
     static async handlePageLoadNotification(request, sender, dependencies) {
-        const { chrome, CategoryManager, History, Utils, categoryManager, recentDetectionRequests } = dependencies;
+        const { chrome, CategoryManager, HistoryRecorder, Utils, categoryManager, recentDetectionRequests,
+            isCurrentDocument = async () => true } = dependencies;
+        const ignored = { status: 'url_changed' };
 
         const pageUrl = request.url;
         const tabId = sender.tab?.id;
@@ -1839,11 +1831,15 @@ class DetectionEngineManager {
             return;
         }
 
+        if (!await isCurrentDocument()) return ignored;
+        const targetDocument = sender.documentId ? { documentId: sender.documentId } : { frameId: 0 };
+
         Logger.debug('SCAN', `Page load (${triggerSource}) tab ${tabId}`);
 
         // Check if extension is enabled
         try {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (!await isCurrentDocument()) return ignored;
             if (result.scrapfly_enabled === false) {
                 Logger.debug('SCAN', 'Extension paused, page not scanned');
                 setPausedIcon(tabId, false);
@@ -1858,6 +1854,7 @@ class DetectionEngineManager {
 
         // Check if URL is blacklisted
         const isBlacklisted = await Utils.isUrlBlacklisted(pageUrl);
+        if (!await isCurrentDocument()) return ignored;
         if (isBlacklisted) {
             Logger.detection(`${Logger.hostOf(pageUrl)}: excluded domain, not scanned`);
             setPausedIcon(tabId, true);
@@ -1870,6 +1867,7 @@ class DetectionEngineManager {
 
         // Check cache first
         const storedData = await DetectionEngineManager.getStoredDetection(pageUrl);
+        if (!await isCurrentDocument()) return ignored;
 
         if (storedData) {
             Logger.detection(`${Logger.hostOf(pageUrl)}: ${storedData.detectionCount} detections from cache`);
@@ -1877,6 +1875,7 @@ class DetectionEngineManager {
             // Update badge with cached detection count
             if (storedData.detectionCount > 0) {
                 const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+                if (!await isCurrentDocument()) return ignored;
                 const count = storedData.detectionCount.toString();
                 const color = DetectionUtils.getBadgeColor(storedData.detectionResults || [], badgeColors);
                 chrome.action.setBadgeText({ text: count, tabId: tabId }).catch(() => {});
@@ -1905,14 +1904,17 @@ class DetectionEngineManager {
             chrome.tabs.sendMessage(tabId, {
                 type: globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES.CACHE_HIT_DISABLE_MONITORING,
                 url: pageUrl
-            }).catch(() => {});
+            }, targetDocument).catch(() => {});
 
             // Check if we should save to history on cache hit
             const historySettings = await Utils.getHistorySettings();
+            if (!await isCurrentDocument()) return ignored;
             if (historySettings.historyBypassCache === true && storedData.detectionResults && storedData.detectionResults.length > 0) {
-                const shouldSave = await History.shouldSaveToHistory(pageUrl, historySettings, chrome);
+                const shouldSave = await HistoryRecorder.shouldSaveToHistory(pageUrl, historySettings, chrome);
+                if (!await isCurrentDocument()) return ignored;
                 if (shouldSave) {
                     const tab = await chrome.tabs.get(tabId).catch(() => null);
+                    if (!await isCurrentDocument()) return ignored;
                     if (tab) {
                         const pageData = {
                             url: pageUrl,
@@ -1920,7 +1922,7 @@ class DetectionEngineManager {
                             title: tab.title || 'Untitled',
                             favicon: UrlUtils.normalizeFaviconForStorage(tab.favIconUrl, pageUrl)
                         };
-                        await History.saveDetectionToHistory(tabId, pageData, storedData.detectionResults, chrome, {
+                        await HistoryRecorder.saveDetectionToHistory(tabId, pageData, storedData.detectionResults, chrome, {
                             historySettings,
                             source: 'cache_hit'
                         });
@@ -1951,23 +1953,28 @@ class DetectionEngineManager {
         const maxRetries = 5;
         const retryDelay = 200;
 
-        const sendDataRequest = () => {
-            chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, (response) => {
-                if (chrome.runtime.lastError) {
-                    const errorMsg = chrome.runtime.lastError?.message || '';
-                    if ((errorMsg.includes('Could not establish connection') ||
-                         errorMsg.includes('Receiving end does not exist') ||
-                         errorMsg.includes('No receiving end')) && retryCount < maxRetries) {
-                        retryCount++;
-                        setTimeout(sendDataRequest, retryDelay);
-                    } else {
-                        Logger.warn('DETECTION', `Failed to send data collection request after ${retryCount} retries: ${errorMsg}`);
+        const sendDataRequest = async () => {
+            try {
+                if (!await isCurrentDocument()) return ignored;
+                chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, targetDocument, () => {
+                    if (chrome.runtime.lastError) {
+                        const errorMsg = chrome.runtime.lastError?.message || '';
+                        if ((errorMsg.includes('Could not establish connection') ||
+                             errorMsg.includes('Receiving end does not exist') ||
+                             errorMsg.includes('No receiving end')) && retryCount < maxRetries) {
+                            retryCount++;
+                            setTimeout(sendDataRequest, retryDelay);
+                        } else {
+                            Logger.warn('DETECTION', `Failed to send data collection request after ${retryCount} retries: ${errorMsg}`);
+                        }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                Logger.warn('DETECTION', '[handlePageLoad] Data collection request failed', error);
+            }
         };
 
-        sendDataRequest();
+        return await sendDataRequest();
     }
 
     /**
@@ -2041,7 +2048,20 @@ class DetectionEngineManager {
             return false;
         }
 
-        // Check if extension is enabled
+        // A request may yield while a page-load scan starts. Keep that scan's
+        // active object intact instead of replacing it with a pending marker.
+        const initialActive = activeDetections?.get(tabId);
+        if (initialActive) {
+            sendResponse({ status: 'skipped', reason: 'Detection already active' });
+            return true;
+        }
+        let pendingMarker = null;
+        const ownsSlot = () => !activeDetections || activeDetections.get(tabId) === (pendingMarker || initialActive);
+        const skipSuperseded = () => sendResponse({ status: 'skipped', reason: 'Document or detection changed' });
+        const clearOwnMarker = () => {
+            if (pendingMarker && activeDetections?.get(tabId) === pendingMarker) activeDetections.delete(tabId);
+        };
+
         try {
             const result = await chrome.storage.local.get(['scrapfly_enabled']);
             if (result.scrapfly_enabled === false) {
@@ -2051,107 +2071,108 @@ class DetectionEngineManager {
         } catch (error) {
             Logger.warn('DETECTION', '[requestDetection] Enabled state check failed', error);
         }
+        if (!ownsSlot()) { skipSuperseded(); return true; }
 
         try {
             const tab = await chrome.tabs.get(tabId);
-
+            if (!ownsSlot()) { skipSuperseded(); return true; }
             if (!Utils.isValidContentScriptTab(tab)) {
                 sendResponse({ status: 'error', error: 'Invalid URL for detection' });
                 return true;
             }
 
+            const normalizeUrl = value => {
+                try { const url = new URL(value); url.hash = ''; return url.href; }
+                catch (_) { return value; }
+            };
+            const canReadFrame = typeof chrome.webNavigation?.getFrame === 'function';
+            const frame = canReadFrame
+                ? await chrome.webNavigation.getFrame({ tabId, frameId: 0 })
+                : { url: tab.url };
+            if (!ownsSlot() || !frame || normalizeUrl(frame.url) !== normalizeUrl(tab.url)) {
+                skipSuperseded();
+                return true;
+            }
+            const targetDocument = frame.documentId ? { documentId: frame.documentId } : { frameId: 0 };
+            const isSameDocument = async () => {
+                try {
+                    const current = canReadFrame
+                        ? await chrome.webNavigation.getFrame({ tabId, frameId: 0 })
+                        : await chrome.tabs.get(tabId);
+                    return !!current && normalizeUrl(current.url) === normalizeUrl(frame.url) &&
+                        (!frame.documentId || current.documentId === frame.documentId);
+                } catch (_) { return false; }
+            };
+            const isCurrentRequest = async () => ownsSlot() && await isSameDocument() && ownsSlot();
+
             if (Utils.shouldSkipDetection(tabId, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
                 sendResponse({ status: 'skipped', reason: 'Recent detection exists' });
                 return true;
             }
-
             const isSilent = request.silent === true;
 
-            // Try to ping the content script first
-            let scriptExists = false;
-            try {
-                await new Promise((resolve) => {
-                    chrome.tabs.sendMessage(tabId, { type: 'GET_DETECTION_STATUS' }, (response) => {
-                        if (!chrome.runtime.lastError && response && response.status === 'active') {
-                            scriptExists = true;
-                        }
-                        resolve();
-                    });
+            // Pin both messages to this document so a same-URL reload cannot
+            // receive a request that was admitted for its predecessor.
+            const scriptExists = await new Promise(resolve => {
+                chrome.tabs.sendMessage(tabId, { type: 'GET_DETECTION_STATUS' }, targetDocument, response => {
+                    resolve(!chrome.runtime.lastError && response?.status === 'active');
                 });
-            } catch (e) {
-                // Content script may not be ready
-            }
+            });
+            if (!await isCurrentRequest()) { skipSuperseded(); return true; }
 
             if (!scriptExists) {
                 if (!isSilent) {
-                    try {
-                        await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tabId });
-                    } catch (error) {
+                    await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId }).catch(error => {
                         Logger.warn('DETECTION', '[requestDetection] Empty badge reset failed', error);
-                    }
+                    });
                 }
-
-                Logger.warn('DETECTION', '[requestDetection] Content script unavailable; page reload required', { tabId });
-                sendResponse({
-                    status: 'needs_reload',
-                    reason: 'content_script_unavailable',
-                    message: 'Reload the page to run detection.'
-                });
+                sendResponse({ status: 'needs_reload', reason: 'content_script_unavailable', message: 'Reload the page to run detection.' });
                 return true;
             }
 
-            const requestStartTime = Date.now();
             if (activeDetections) {
-                activeDetections.set(tabId, {
-                    url: tab.url,
-                    startTime: requestStartTime,
-                    abortController: new AbortController(),
-                    pendingRequest: true,
+                pendingMarker = {
+                    url: tab.url, documentId: frame.documentId || null, startTime: Date.now(),
+                    abortController: new AbortController(), pendingRequest: true,
                     source: request.source || 'request_detection'
-                });
-
+                };
+                activeDetections.set(tabId, pendingMarker);
                 setTimeout(() => {
-                    try {
-                        const current = activeDetections.get(tabId);
-                        if (current?.pendingRequest && current.startTime === requestStartTime) {
-                            Logger.warn('DETECTION', `[requestDetection] Pending detection did not produce data for tab ${tabId}; clearing marker`);
-                            activeDetections.delete(tabId);
-                        }
-                    } catch (error) {
-                        Logger.warn('DETECTION', '[requestDetection] Pending marker cleanup failed', error);
-                    }
+                    if (activeDetections.get(tabId) !== pendingMarker) return;
+                    Logger.warn('DETECTION', `[requestDetection] Pending detection did not produce data for tab ${tabId}; clearing marker`);
+                    clearOwnMarker();
                 }, Constants.REQUEST_DETECTION_PENDING_TIMEOUT);
             }
 
             if (!isSilent) {
                 try {
-                    if (typeof startBadgeSpinner === 'function') {
-                        startBadgeSpinner(tabId);
-                    }
+                    if (typeof startBadgeSpinner === 'function') startBadgeSpinner(tabId);
                 } catch (error) {
                     Logger.warn('DETECTION', '[requestDetection] Loading badge failed', error);
                 }
             }
 
-            // Send the detection request
-            chrome.tabs.sendMessage(tabId, {
-                type: 'RUN_DETECTION',
-                silent: isSilent
-            }, (response) => {
-                if (chrome.runtime.lastError) {
-                    Logger.warn('DETECTION', '[requestDetection] Trigger failed:', chrome.runtime.lastError.message);
-                    if (activeDetections) {
-                        const current = activeDetections.get(tabId);
-                        if (current?.pendingRequest && current.startTime === requestStartTime) {
-                            activeDetections.delete(tabId);
-                        }
-                    }
-                    sendResponse({ status: 'error', error: chrome.runtime.lastError.message });
-                } else {
-                    sendResponse({ status: 'requested', response: response });
-                }
+            const response = await new Promise(resolve => {
+                chrome.tabs.sendMessage(tabId, { type: 'RUN_DETECTION', silent: isSilent }, targetDocument, value => {
+                    // runtime.lastError is valid only inside this callback.
+                    resolve({ value, error: chrome.runtime.lastError?.message });
+                });
             });
+            if (!await isSameDocument()) {
+                clearOwnMarker();
+                skipSuperseded();
+            } else if (response.error) {
+                // A newer scan may already have started while this callback
+                // was queued. Its marker and badge belong to that scan.
+                const stillOwned = ownsSlot();
+                clearOwnMarker();
+                if (stillOwned) sendResponse({ status: 'error', error: response.error });
+                else skipSuperseded();
+            } else {
+                sendResponse({ status: 'requested', response: response.value });
+            }
         } catch (error) {
+            clearOwnMarker();
             Logger.error('DETECTION', 'Error in REQUEST_DETECTION:', error);
             sendResponse({ status: 'error', error: error.message });
         }

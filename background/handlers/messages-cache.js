@@ -113,15 +113,8 @@ function registerCacheHandlers(registry, context) {
             await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
 
             if (request.tabId) {
-                if (detectionStates.has(request.tabId)) {
-                    detectionStates.delete(request.tabId);
-                    Logger.debug('BACKGROUND', `[Background] Cleared detectionStates for tab ${request.tabId}`);
-                }
+                DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
 
-                if (activeDetections.has(request.tabId)) {
-                    activeDetections.delete(request.tabId);
-                    Logger.debug('BACKGROUND', `[Background] Cleared activeDetections for tab ${request.tabId}`);
-                }
 
                 headersStore.delete(request.tabId);
                 requestHeadersStore.delete(request.tabId);

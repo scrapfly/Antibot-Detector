@@ -45,7 +45,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab) {
         Logger.error('UI', 'Detection: No active tab found');
-        detection.showEmptyState();
+        detection.showEmptyState({ outcome: 'unscanned' });
         detection.isRequestingDetection = false;
         return;
       }
@@ -85,7 +85,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
           if (chrome.runtime.lastError) {
             Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);
-            detection.showEmptyState();
+            detection.showEmptyState({ outcome: 'failed' });
             return;
           }
 
@@ -158,13 +158,13 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 
           if (response && response.status === 'interrupted') {
             if (this.debugMode) Logger.debug('UI', 'Detection: Detection status interrupted with no data - showing empty state');
-            detection.showEmptyState();
+            detection.showEmptyState({ outcome: 'interrupted' });
             return;
           }
 
           if (response && response.status === 'error') {
             Logger.error('UI', 'Detection: Background reported error fetching detection data:', response.error);
-            detection.showEmptyState();
+            detection.showEmptyState({ outcome: 'failed' });
             return;
           }
 
@@ -207,14 +207,14 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
           // Gray "CLR" badge = cache was cleared; show empty state
           if (badgeStatus.isCleared) {
             if (this.debugMode) Logger.debug('UI', 'Detection: Badge indicates cache cleared, showing empty state');
-            detection.showEmptyState();
+            detection.showEmptyState({ outcome: 'unscanned' });
             return;
           }
 
           // Show interrupted only when no valid data (badge may be stale)
           if (badgeStatus.isInterrupted && (!response || !response.data)) {
             if (this.debugMode) Logger.debug('UI', 'Detection: Badge indicates interruption with no data, showing empty state');
-            detection.showEmptyState();
+            detection.showEmptyState({ outcome: 'interrupted' });
             return;
           }
 
@@ -230,14 +230,14 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               }
             } else {
               if (this.debugMode) Logger.debug('UI', 'Detection: No detection data available');
-              detection.showEmptyState();
+              detection.showEmptyState({ outcome: 'unscanned' });
             }
           }
         }
       );
     } catch (error) {
       Logger.error('UI', 'Detection: Failed to request detection:', error);
-      detection.showEmptyState();
+      detection.showEmptyState({ outcome: 'failed' });
     }
 };
 
@@ -263,7 +263,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         if (detection.debugMode) {
           Logger.debug('UI', '[DEBUG processDetectionData] No detection data provided - showing empty state');
         }
-        detection.showEmptyState();
+        detection.showEmptyState({ outcome: 'unscanned' });
         return;
       }
 
@@ -319,7 +319,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         detections = await detectionEngine.detectOnPage(detectionData.pageData);
       } else {
         if (this.debugMode) Logger.debug('UI', 'Detection: No valid data format in detectionData');
-        detection.showEmptyState();
+        detection.showEmptyState({ outcome: 'unscanned' });
         return;
       }
 
@@ -362,7 +362,7 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
     } catch (error) {
       Logger.error('UI', 'Detection: Failed to process detection data:', error);
       Logger.error('UI', 'Detection: Stack trace:', error.stack);
-      detection.showEmptyState();
+      detection.showEmptyState({ outcome: 'failed' });
     }
 };
 

@@ -178,7 +178,7 @@ test('the tokenizer sees what the guard needs', () => {
 });
 
 test('the guard covers the MAIN-world scripts', () => {
-  assert.deepStrictEqual(MAIN_FILES, ['modules/detection/hooks/window-condition-language.js',
+  assert.deepStrictEqual(MAIN_FILES, ['modules/detection/conditions/window-condition-evaluator.js',
     'modules/detection/hooks/hook-resilience-manager.js', 'modules/detection/hooks/window-property-tracker.js',
     'content-main-world.js']);
 });

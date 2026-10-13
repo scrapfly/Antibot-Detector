@@ -50,7 +50,7 @@ test('scan categories describe coverage without pretending to report measured pr
 });
 
 test('scan categories are quiet wrapping labels rather than boxed controls', () => {
-  const css = read('modules/styles/detection.css');
+  const css = read('sections/detection/detection.css');
   const list = css.match(/\.detection-scan-checks\s*\{([^}]*)\}/)?.[1];
   const item = css.match(/\.detection-scan-check\s*\{([^}]*)\}/)?.[1];
   assert.ok(list);
@@ -78,7 +78,7 @@ test('all scan text has a nonempty translation in every supported locale', () =>
 });
 
 test('scan content is centered without the old badge, card frame or progress track', () => {
-  const css = read('modules/styles/detection.css');
+  const css = read('sections/detection/detection.css');
   assert.match(css, /#detectionTab \.loading-state\s*\{[^}]*flex-direction: column;[^}]*align-items: center;[^}]*justify-content: center;/);
   const layout = css.match(/\.detection-scan-card\s*\{([^}]*)\}/)?.[1];
   assert.ok(layout);
@@ -91,7 +91,7 @@ test('scan content is centered without the old badge, card frame or progress tra
 });
 
 test('scan styles wrap long text and leave all five signal bars static for reduced motion', () => {
-  const css = read('modules/styles/detection.css');
+  const css = read('sections/detection/detection.css');
   for (const selector of ['title', 'description', 'hint']) {
     assert.match(css, new RegExp(`\\.detection-scan-${selector}\\s*\\{[^}]*overflow-wrap: anywhere;`));
   }

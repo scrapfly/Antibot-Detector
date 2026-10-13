@@ -6,6 +6,7 @@
 function setupTabListeners() {
     // Clear all data stores and detection state for closed tab
     chrome.tabs.onRemoved.addListener((tabId) => {
+        DetectionSessionStore.cancel(tabId, 'tab_closed');
         Logger.debug('BACKGROUND', `Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
         headersStore.delete(tabId);
         requestHeadersStore.delete(tabId);
@@ -98,6 +99,17 @@ function setupTabListeners() {
     });
 
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+        // Invalidate the old document synchronously, before enabled/storage
+        // checks can yield to a new scan for this same tab (including reloads).
+        if (changeInfo.status === 'loading' || changeInfo.url) {
+            const state = detectionStates.get(tabId);
+            const active = activeDetections.get(tabId);
+            const nextUrl = changeInfo.url || tab?.url;
+            if ((state || active) && (changeInfo.status === 'loading' || (state?.url || active?.url) !== nextUrl)) {
+                DetectionSessionStore.cancel(tabId, 'url_changed', state);
+                stopBadgeSpinner(tabId);
+            }
+        }
         if (changeInfo.status === 'loading' && !await isExtensionEnabled()) {
             Logger.debug('BACKGROUND', `[TabUpdate] Extension is disabled - setting OFF badge for tab ${tabId}`);
             chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch((error) => {
@@ -120,29 +132,6 @@ function setupTabListeners() {
                 Logger.debug('BACKGROUND', `[TabUpdate] URL changed - cleared cache tracking for tab ${tabId}`);
             }
 
-            if (activeDetections.has(tabId)) {
-                const activeInfo = activeDetections.get(tabId);
-                const oldUrl = activeInfo.url;
-
-                Logger.debug('BACKGROUND', `[TabUpdate] Tab ${tabId} had active detection for ${oldUrl} - ABORTING (navigated to ${newUrl})`);
-
-                if (activeInfo.abortController) {
-                    activeInfo.abortController.abort();
-                    Logger.debug('BACKGROUND', `[TabUpdate] Aborted detection for tab ${tabId} (URL changed)`);
-                }
-
-                activeDetections.delete(tabId);
-                const detectionState = detectionStates.get(tabId);
-                if (detectionState && detectionState.url === oldUrl) {
-                    detectionState.interrupted = true;
-                    detectionState.error = 'url_changed';
-                    Logger.debug('BACKGROUND', `[TabUpdate] Marked detection state as interrupted for tab ${tabId}`);
-                }
-
-                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tabId }).catch((error) => {
-                    Logger.debug('BACKGROUND', `[TabUpdate] Failed to clear badge for tab ${tabId}:`, error.message);
-                });
-            }
 
         }
 
@@ -220,12 +209,14 @@ function setupTabListeners() {
                 activeDetections.delete(newTabId);
                 activeDetection = null;
             }
-            const hasInFlightDetection = !!activeDetection || (detectionState && !detectionState.finalized);
+            const hasInFlightDetection = !!activeDetection || (detectionState && !detectionState.finalized && !detectionState.failed);
 
+            const ownsBadge = () => detectionStates.get(newTabId) === detectionState && activeDetections.get(newTabId) === activeDetection;
             const cachedData = await DetectionEngineManager.getDetectionData(newTabId);
-            if (cachedData) {
+            if (!ownsBadge()) return;
+            if (cachedData && !hasInFlightDetection) {
                 const detectionResults = cachedData.detectionResults || [];
-                await setBadgeForDetections(newTabId, url, detectionResults);
+                await setBadgeForDetections(newTabId, url, detectionResults, ownsBadge);
                 Logger.debug('BACKGROUND', `[TabSwitch] Badge restored for tab ${newTabId}: ${detectionResults.length} detection(s)`);
             } else if (!hasInFlightDetection && !recentlyClearedTabs.has(newTabId)) {
                 const requested = await requestDetectionForTab(newTabId, {

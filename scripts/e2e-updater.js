@@ -95,7 +95,7 @@ const server = http.createServer((req, res) => {
 
   // Extension under test: the working tree, with the update URL redirected
   copyDir(REPO, EXT, new Set(['.git', 'node_modules', '.claude', 'test']));
-  const umPath = path.join(EXT, 'modules/core/update-manager.js');
+  const umPath = path.join(EXT, 'modules/detection/rules/update-manager.js');
   const um = fs.readFileSync(umPath, 'utf8');
   const patched = um
     .replace(/static RELEASES_URL = '[^']+';/, `static RELEASES_URL = 'http://127.0.0.1:${port}/api/latest';`)

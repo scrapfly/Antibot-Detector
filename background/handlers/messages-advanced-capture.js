@@ -192,6 +192,34 @@ function registerAdvancedCaptureHandlers(registry, context) {
         return;
     }
 
+    registry[messageTypes.ADVANCED_PAGE_NOTICE] = ({ request, sender, sendResponse }) => {
+        if (sender?.tab || !Number.isInteger(request.tabId)) {
+            sendResponse({ status: 'error', error: 'Invalid Advanced notice request' });
+            return false;
+        }
+        showNotification(request.tabId, request.options || {})
+            .then(() => sendResponse({ status: 'ok' }))
+            .catch(error => sendResponse({ status: 'error', error: error.message }));
+        return true;
+    };
+
+    registry[messageTypes.ADVANCED_HISTORY] = ({ request, sender, sendResponse }) => {
+        // This channel handles extension UI data, never page/content-script requests.
+        if (sender?.tab) {
+            sendResponse({ status: 'error', error: 'Advanced history is available only to extension pages' });
+            return false;
+        }
+        const methods = ['load', 'getModule', 'appendCapture', 'deleteCapture', 'clear', 'pruneExpired'];
+        if (!methods.includes(request.method) || !Array.isArray(request.args)) {
+            sendResponse({ status: 'error', error: 'Invalid Advanced history operation' });
+            return false;
+        }
+        Promise.resolve().then(() => AdvancedHistoryStore[request.method](...request.args))
+            .then(data => sendResponse({ status: 'ok', data }))
+            .catch(error => sendResponse({ status: 'error', error: error.message }));
+        return true;
+    };
+
     const groupedHandlers = buildAdvancedCaptureRegistryMap({
         recaptcha: handleRecaptcha,
         akamai: handleAkamai,
@@ -206,10 +234,76 @@ function registerAdvancedCaptureHandlers(registry, context) {
         funcaptcha: handleFunCaptcha
     }, messageTypes);
 
+    const captureStores = {
+        recaptcha: () => reCaptchaCaptureState,
+        akamai: () => akamaiCaptureState,
+        imperva: () => impervaCaptureState,
+        shapesecurity: () => shapesecurityCaptureState,
+        hcaptcha: () => hcaptchaCaptureState,
+        funcaptcha: () => funcaptchaCaptureState
+    };
+    const pendingCaptureStarts = new Map();
     groupedHandlers.forEach(({ handler, messageKeys }) => {
         messageKeys.forEach((messageKey) => {
-            registry[messageKey] = handler;
+            registry[messageKey] = args => {
+                const { request, sendResponse } = args;
+                const vendorId = messageKey.split('_')[0].toLowerCase();
+                if (!messageKey.endsWith('_START_CAPTURE') || !captureStores[vendorId]) {
+                    const captureJob = AdvancedJobManager.current(request.tabId, vendorId);
+                    const identity = /CAPTURE/.test(messageKey)
+                        ? AdvancedJobManager.state(request.tabId, vendorId, 'capture') : null;
+                    return handler({ ...args, sendResponse(response) {
+                        if (messageKey.endsWith('_STOP_CAPTURE') && ['stopped', 'not_capturing', 'no_capture'].includes(response?.status)) {
+                            captureJob?.finish('completed');
+                        }
+                        sendResponse({ ...response, ...(identity ? {
+                            requestId: identity.requestId, tabId: identity.tabId,
+                            vendorId: identity.vendorId, operation: identity.operation
+                        } : {}) });
+                    } });
+                }
+                const pendingKey = `${request.tabId}:${vendorId}`;
+                if (pendingCaptureStarts.get(pendingKey)?.finished) {
+                    sendResponse({ status: 'error', error: 'Previous capture is stopping. Retry shortly.' });
+                    return false;
+                }
+                try {
+                    const { job, reused } = AdvancedJobManager.begin({
+                        tabId: request.tabId, vendorId, operation: 'capture', url: request.url,
+                        requestId: request.requestId
+                    });
+                    if (reused) {
+                        sendResponse({ ...AdvancedJobManager.snapshot(job), status: 'already_capturing' });
+                        return false;
+                    }
+                    pendingCaptureStarts.set(pendingKey, job);
+                    return handler({ ...args, sendResponse(response) {
+                        pendingCaptureStarts.delete(pendingKey);
+                        if (response?.status === 'error') job.finish('failed');
+                        const store = captureStores[vendorId]();
+                        const state = store?.get(request.tabId);
+                        if (state) {
+                            job.url = job.url || state.captureUrl;
+                            AdvancedJobManager.bindCaptureState(state, job);
+                            job.addCleanup(() => {
+                                if (store.get(request.tabId) === state) removeCaptureState(store, request.tabId);
+                                cleanupManagedListeners(request.tabId, vendorId);
+                            });
+                        }
+                        if (job.finished && response?.status !== 'error') {
+                            sendResponse({ ...AdvancedJobManager.snapshot(job), status: 'error', error: 'Capture cancelled' });
+                            return;
+                        }
+                        sendResponse({ ...response, requestId: job.requestId, tabId: job.tabId,
+                            vendorId: job.vendorId, operation: job.operation });
+                    } });
+                } catch (error) {
+                    pendingCaptureStarts.delete(pendingKey);
+                    AdvancedJobManager.current(request.tabId, vendorId)?.finish('failed');
+                    sendResponse({ status: 'error', error: error.message });
+                    return false;
+                }
+            };
         });
     });
 }
-

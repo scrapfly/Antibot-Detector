@@ -5,7 +5,7 @@
 
 function markMethodComplete(tabId, methodName) {
     const state = detectionStates.get(tabId);
-    if (!state) {
+    if (!state || state.failed || state.interrupted) {
         Logger.debug('BACKGROUND', `[markMethodComplete] No state for tab ${tabId}, cannot mark ${methodName} complete`);
         return;
     }
@@ -27,131 +27,42 @@ function markMethodComplete(tabId, methodName) {
 
 function checkAndFinalizeDetection(tabId) {
     const state = detectionStates.get(tabId);
-    if (!state) {
-        Logger.debug('BACKGROUND', `[checkAndFinalize] No state for tab ${tabId}, aborting`);
-        return;
-    }
-
-    // Prevent premature finalization on newly created state
-    if (state.startTime && (Date.now() - state.startTime < Constants.MIN_DETECTION_TIME)) {
-        return;
-    }
-
-    // Skip finalization if batch processing is active
-    const batchActive = batchProcessingFlags.get(tabId) === true;
-    if (batchActive) {
-        return;
-    }
-
-    // Debounce finalization checks (400ms = 2 window property polling cycles)
-    if (finalizationDebounce.has(tabId)) {
-        clearTimeout(finalizationDebounce.get(tabId));
-    }
-
-    const timeout = setTimeout(async () => {
-        // Re-check state in case it was deleted during debounce
-        const currentState = detectionStates.get(tabId);
-        if (!currentState) {
-            Logger.debug('BACKGROUND', `[checkAndFinalize] No state for tab ${tabId} after debounce, aborting`);
-            finalizationDebounce.delete(tabId);
+    if (!DetectionSessionStore.isCurrent(tabId, state) || state.finalized || state.finalizing) return;
+    if (batchProcessingFlags.get(tabId) === true) return;
+    const elapsed = Date.now() - (state.startTime || 0);
+    const delay = Math.max(Constants.FINALIZATION_CHECK_DELAY, Constants.MIN_DETECTION_TIME - elapsed);
+    DetectionSessionStore.schedule(tabId, state, 'finalization', async () => {
+        if (state.finalized || state.finalizing || batchProcessingFlags.get(tabId) === true) return;
+        const timeSinceLastBatch = Date.now() - (state.lastHookBatchTime || 0);
+        if (state.lastHookBatchTime > 0 && timeSinceLastBatch < Constants.BATCH_SETTLE_TIME) {
+            DetectionSessionStore.schedule(tabId, state, 'finalization', () => checkAndFinalizeDetection(tabId),
+                Constants.BATCH_SETTLE_TIME - timeSinceLastBatch);
             return;
         }
-
-        const completedMethods = Array.from(currentState.completedMethods || []);
-        const completedCount = completedMethods.length;
-        const totalMethods = 7;
-        const methodOrder = ['cookies', 'headers', 'url', 'dom', 'jsHooks', 'windowProperties', 'payload'];
-        const missingMethods = methodOrder.filter(m => !currentState.completedMethods.has(m));
-
-        if (batchProcessingFlags.get(tabId) === true) {
-            finalizationDebounce.delete(tabId);
-            return;
-        }
-
-        // Wait for batch settle time after last batch arrival
-        const timeSinceLastBatch = Date.now() - (currentState.lastHookBatchTime || 0);
-        if (currentState.lastHookBatchTime > 0 && timeSinceLastBatch < Constants.BATCH_SETTLE_TIME) {
-            const remainingMs = Constants.BATCH_SETTLE_TIME - timeSinceLastBatch;
-            // Reschedule check - don't clear, just set new one
-            const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
-            finalizationDebounce.set(tabId, newTimeout);
-            return;
-        }
-
-        // Ensure minimum 500ms passed since detection started
-        const timeSinceStart = Date.now() - (currentState.startTime || 0);
-        if (currentState.startTime && timeSinceStart < Constants.MIN_DETECTION_TIME && !currentState.hooksComplete) {
-            const remainingMs = Constants.MIN_DETECTION_TIME - timeSinceStart;
-            Logger.debug('SCAN', `Waiting ${remainingMs}ms for the minimum scan time`);
-            const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), remainingMs);
-            finalizationDebounce.set(tabId, newTimeout);
-            return;
-        }
-
-        // Lenient finalization: 5 main methods instead of all 7
-        const REQUIRED_METHODS = 5;
-        const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'payload'].every(m => currentState.completedMethods.has(m));
-
-        // Check if we should finalize
-        const shouldFinalize =
-            // Option 1: All 7 methods complete (ideal case)
-            completedCount >= totalMethods ||
-            // Option 2: Main 5 methods complete (fallback for signal issues)
-            (mainMethodsComplete && completedCount >= REQUIRED_METHODS) ||
-            // Option 3: We have detection data and main methods are done (quick finalization)
-            (mainMethodsComplete && (currentState.mainData?.length > 0 || currentState.hooksData?.size > 0));
-
-        if (shouldFinalize) {
+        const completedCount = state.completedMethods.size;
+        const mainMethodsComplete = ['cookies', 'headers', 'url', 'dom', 'payload'].every(method => state.completedMethods.has(method));
+        if (completedCount >= 7 || mainMethodsComplete) {
+            const hooksDeadline = await ensureHooksDeadline(state);
+            if (!DetectionSessionStore.isCurrent(tabId, state)) return;
             const now = Date.now();
-            const hooksDeadline = await ensureHooksDeadline(currentState);
-
-            if (!currentState.hooksComplete && !currentState.usedCache && now < hooksDeadline) {
-                const remainingMs = hooksDeadline - now;
-                const delay = Math.min(remainingMs, 500);
-                const newTimeout = setTimeout(() => checkAndFinalizeDetection(tabId), delay);
-                finalizationDebounce.set(tabId, newTimeout);
+            if (!state.hooksComplete && !state.usedCache && now < hooksDeadline) {
+                DetectionSessionStore.schedule(tabId, state, 'finalization', () => checkAndFinalizeDetection(tabId), Math.min(hooksDeadline - now, 500));
                 return;
             }
-
-            if (!currentState.hooksComplete && now >= hooksDeadline) {
-                currentState.hooksTimedOut = true;
-                currentState.hooksComplete = true;
-                currentState.hooksCompletionReason = currentState.hooksCompletionReason || 'deadline_timeout';
-                currentState.hooksCompletionTime = currentState.hooksCompletionTime || (now - (currentState.startTime || now));
+            if (!state.hooksComplete && now >= hooksDeadline) {
+                state.hooksTimedOut = true;
+                state.hooksComplete = true;
+                state.hooksCompletionReason ||= 'deadline_timeout';
+                state.hooksCompletionTime ||= now - (state.startTime || now);
                 markMethodComplete(tabId, 'jsHooks');
-                Logger.debug('SCAN', `Tab ${tabId}: hooks deadline reached`);
             }
-
-            // Send final update - use actual completed count for accurate badge
-            sendProgressUpdate(tabId, 'complete', currentState.completedMethods || new Set(), totalMethods);
-            finalizeDetection(tabId, currentState);
-        } else {
-            // Check if this detection is using cached data
-            if (currentState.usedCache) {
-                // Mark as finalized to prevent retry logic from firing
-                currentState.finalized = true;
-
-                finalizationDebounce.delete(tabId);
-                return;
-            }
-
-            // Debug-only: log incomplete methods
-            const percent = Math.round((completedCount / totalMethods) * 100);
-            Logger.debug('BACKGROUND', `[checkAndFinalize] ${completedCount}/${totalMethods} methods (${percent}%)`, {
-                completed: completedMethods,
-                missing: missingMethods,
-                waiting: {
-                    windowProperties: !currentState.windowPropertiesComplete,
-                    mainComplete: !currentState.mainComplete,
-                    hooks: !currentState.hooksComplete
-                }
-            });
+            sendProgressUpdate(tabId, 'complete', state.completedMethods, 7);
+            await finalizeDetection(tabId, state);
+        } else if (state.usedCache) {
+            state.finalized = true;
+            DetectionSessionStore.finish(tabId, state);
         }
-
-        finalizationDebounce.delete(tabId);
-    }, Constants.FINALIZATION_CHECK_DELAY); // 2 window property polling cycles (200ms each)
-
-    finalizationDebounce.set(tabId, timeout);
+    }, delay);
 }
 
 /**
@@ -207,31 +118,21 @@ async function matchLateRequests(tabId, state, mergedDetections) {
     const stats = detectionEngine.lastStats; // the scan report describes the page snapshot
     try {
         const late = await detectionEngine.detectOnPage({ url: state.url, networkUrls: networkUrls.slice() }, { includePartial: true });
+        if (!DetectionSessionStore.isCurrent(tabId, state)) return;
         for (const detection of Array.isArray(late) ? late : []) mergeDetection(mergedDetections, detection);
     } catch (error) {
         Logger.error('SCAN', 'Late request check failed', error);
     } finally {
-        detectionEngine.lastStats = stats;
+        if (DetectionSessionStore.isCurrent(tabId, state)) detectionEngine.lastStats = stats;
     }
 }
 
 async function finalizeDetection(tabId, state) {
-    // Prevent progress updates from overriding the final badge
-    state.finalized = true;
-
-    // End keepalive for this detection
-    if (workerKeepaliveManager) {
-        workerKeepaliveManager.endOperation(`detection-${tabId}`);
-    }
-
-    // Skip finalization if detection was interrupted; clean up to prevent zombie state
-    if (state.interrupted || interruptedDetections.has(tabId)) {
-        detectionStates.delete(tabId);
-        activeDetections.delete(tabId);
-        Logger.debug('SCAN', `Tab ${tabId}: scan interrupted, state cleared`);
+    if (!DetectionSessionStore.isCurrent(tabId, state) || state.finalizing || state.finalized) return;
+    if (interruptedDetections.has(tabId)) {
+        DetectionSessionStore.cancel(tabId, 'interrupted', state);
         return;
     }
-
     // Allow finalization if methods completed, even with empty results
     const hasHooksData = state.hooksData && state.hooksData.size > 0;
     const hasMainData = state.mainData && state.mainData.length > 0;
@@ -241,6 +142,9 @@ async function finalizeDetection(tabId, state) {
         return; // Don't finalize with empty data AND no completed methods
     }
 
+    state.finalizing = true;
+    state.finalized = true; // progress cannot replace the final badge
+    try {
     // Merge hooks and main detection by detectorId
     const mergedDetections = new Map();
 
@@ -266,6 +170,7 @@ async function finalizeDetection(tabId, state) {
     }
 
     await matchLateRequests(tabId, state, mergedDetections);
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
     let finalResults = Array.from(mergedDetections.values()).filter(rescoreCombinations);
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
@@ -278,6 +183,7 @@ async function finalizeDetection(tabId, state) {
     };
 
     const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
     const preservedExistingCache = storedDataWithExpiry?.preservedExisting === true;
 
     if (preservedExistingCache && storedDataWithExpiry.detectionResults?.length > 0) {
@@ -298,7 +204,8 @@ async function finalizeDetection(tabId, state) {
     }
 
     // Update badge with appropriate color
-    await setBadgeForDetections(tabId, state.url, finalResults);
+    await setBadgeForDetections(tabId, state.url, finalResults, () => DetectionSessionStore.isCurrent(tabId, state));
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
     // Notify popup (with the cache fields it shows: expiry, scope, favicon)
     chrome.runtime.sendMessage({
@@ -322,11 +229,13 @@ async function finalizeDetection(tabId, state) {
             detections: finalResults,
             detectionCount: finalResults.length,
             timestamp: new Date().toISOString()
-        });
+        }, state.documentId ? { documentId: state.documentId } : {});
     } catch (error) {
         // Expected: Tab may have been closed or content script not ready
         Logger.debug('SCAN', `Tab ${tabId} closed before the JS API event: ${error.message}`);
     }
+
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
     // Save complete detections (includes hooks/fingerprints) to history
     if (finalResults.length > 0 && !preservedExistingCache) {
@@ -339,10 +248,12 @@ async function finalizeDetection(tabId, state) {
             };
 
             const historySettings = await Utils.getHistorySettings();
-            const shouldSave = await History.shouldSaveToHistory(state.url, historySettings, chrome);
+            if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+            const shouldSave = await HistoryRecorder.shouldSaveToHistory(state.url, historySettings, chrome);
+            if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
             if (shouldSave) {
-                await History.saveDetectionToHistory(tabId, pageData, finalResults, chrome, {
+                await HistoryRecorder.saveDetectionToHistory(tabId, pageData, finalResults, chrome, {
                     historySettings,
                     source: 'finalize'
                 });
@@ -352,44 +263,15 @@ async function finalizeDetection(tabId, state) {
         }
     }
 
-    // Remove from active detections (detection completed successfully)
-    if (activeDetections.has(tabId)) {
-        activeDetections.delete(tabId);
+    DetectionSessionStore.finish(tabId, state);
+    } catch (error) {
+        // A retry starts a new session; a failed write never completes this scan.
+        DetectionSessionStore.fail(tabId, state, error);
+        throw error;
+    } finally {
+        state.finalizing = false;
+        if (!state.failed && !DetectionSessionStore.isCurrent(tabId, state)) DetectionSessionStore.finish(tabId, state);
     }
-
-    // Also remove from interrupted detections if it was marked (user came back to tab)
-    if (interruptedDetections.has(tabId)) {
-        interruptedDetections.delete(tabId);
-    }
-
-    // Eagerly delete state (TTL would clean up eventually)
-    detectionStates.delete(tabId);
-
-    // Clean up payloads after detection completes (they were stored for this detection)
-    if (payloadStore.has(tabId)) {
-        payloadStore.delete(tabId);
-    }
-
-    // Clean up network URLs after detection completes
-    if (networkUrlsStore.has(tabId)) {
-        networkUrlsStore.delete(tabId);
-    }
-
-    // Clean up headers after detection completes (free up memory like payloads)
-    if (headersStore.has(tabId)) {
-        headersStore.delete(tabId);
-    }
-
-    if (requestHeadersStore.has(tabId)) {
-        requestHeadersStore.delete(tabId);
-    }
-
-    // Clean up cookies after detection completes
-    if (responseCookiesStore.has(tabId)) {
-        responseCookiesStore.delete(tabId);
-    }
-
-    // Cache flag persists across F5 to prevent race conditions; cleared on URL change only
 }
 
 function enrichPageDataWithTabInfo(pageData, tab) {
@@ -421,30 +303,15 @@ async function processDetectionData(message, sender) {
         return;
     }
 
-    // Check if extension is enabled
-    if (!await isExtensionEnabled()) {
-        return;
-    }
-
     const tabId = sender.tab.id;
     const pageData = enrichPageDataWithTabInfo(message.data, sender.tab);
-
-    // Show progress indicator in badge and track as active detection
-    try {
-        startBadgeSpinner(tabId);
-
-        // Create AbortController to allow cancellation if tab switch occurs
-        const abortController = new AbortController();
-
-        // Track this tab as having an active detection in progress
-        activeDetections.set(tabId, {
-            url: pageData.url,
-            startTime: Date.now(),
-            abortController: abortController
-        });
-    } catch (error) {
-        Logger.error('BACKGROUND', 'Failed to set loading badge:', error);
+    const state = DetectionSessionStore.begin(tabId, pageData.url);
+    if (!await isExtensionEnabled()) {
+        DetectionSessionStore.cancel(tabId, 'disabled', state);
+        return;
     }
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+    startBadgeSpinner(tabId);
 
     // Attach response headers (backward-compatible as pageData.headers)
     if (headersStore.has(tabId)) {
@@ -545,11 +412,14 @@ async function processDetectionData(message, sender) {
         }
     }
 
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+
     // Run detection analysis immediately
     let detectionResults = [];
     try {
         // Ensure DetectorManager is initialized (handles service worker restarts)
         await ensureDetectorManagerInitialized();
+        if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
         // Create detection engine if not exists
         if (!detectionEngine) {
@@ -565,22 +435,26 @@ async function processDetectionData(message, sender) {
             // Partly matched combinations are kept; finalize decides them
             // once hooks and window properties have arrived
             const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData, { includePartial: true }));
-            const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Detection timeout')), Constants.DETECTION_TIMEOUT)
-            );
-            detectionResults = await Promise.race([detectionPromise, timeoutPromise]);
+            let matchingTimeout;
+            const timeoutPromise = new Promise((_, reject) => {
+                matchingTimeout = setTimeout(() => reject(new Error('Detection timeout')), Constants.DETECTION_TIMEOUT);
+            });
+            try { detectionResults = await Promise.race([detectionPromise, timeoutPromise]); }
+            finally { clearTimeout(matchingTimeout); }
+            if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
             const elapsed = Date.now() - startTime;
             Logger.debug('SCAN', `Matched in ${elapsed}ms: ${detectionResults.length} hits before hooks and window checks`);
 
         } catch (error) {
             const errorType = error.message.includes('timeout') ? 'TIMEOUT' : 'ERROR';
-            Logger.error('SCAN', `Matching ${errorType === 'TIMEOUT' ? 'timed out' : 'failed'} on ${Logger.hostOf(pageData.url)}; keeping hook and window results only`, error);
-            detectionResults = []; // Continue with empty results - JS hooks and window props will still be preserved
+            Logger.error('SCAN', `Matching ${errorType === 'TIMEOUT' ? 'timed out' : 'failed'} on ${Logger.hostOf(pageData.url)}`, error);
+            throw error;
         }
 
-        // Check if detection was aborted (tab switch occurred)
-        const detectionInfo = activeDetections.get(tabId);
+        if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+        // Check the operation captured for this scan, never a replacement.
+        const detectionInfo = state.activeDetection;
         if (detectionInfo && detectionInfo.abortController.signal.aborted) {
             Logger.debug('SCAN', `Tab ${tabId}: scan aborted, results dropped`);
             return; // Don't store results or finalize
@@ -593,7 +467,6 @@ async function processDetectionData(message, sender) {
         }
 
         // Store main detection and check if ready to finalize
-        const state = getOrCreateDetectionState(tabId, pageData.url);
         // Counts and timing for the scan report (background/scan-report.js)
         state.stats = {
             ...(detectionEngine.lastStats || {}),
@@ -638,12 +511,8 @@ async function processDetectionData(message, sender) {
         // Final badge is set in finalizeDetection() after cache write
 
         // 5s safety timeout to force finalization if signals are stuck
-        setTimeout(async () => {
-            const currentState = detectionStates.get(tabId);
-            if (!currentState) {
-                return;
-            }
-
+        DetectionSessionStore.schedule(tabId, state, 'safety', async () => {
+            const currentState = state;
             if (currentState.finalized) {
                 return;
             }
@@ -670,6 +539,7 @@ async function processDetectionData(message, sender) {
 
             if (!currentState.hooksComplete) {
                 const hooksDeadline = await ensureHooksDeadline(currentState);
+                if (!DetectionSessionStore.isCurrent(tabId, state)) return;
                 const now = Date.now();
                 if (now < hooksDeadline) {
                     Logger.debug('BACKGROUND', `[5s safety] Deferring jsHooks force; ${hooksDeadline - now}ms until deadline`);
@@ -684,6 +554,7 @@ async function processDetectionData(message, sender) {
 
             // Check if detection data is already stored
             const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
+            if (!DetectionSessionStore.isCurrent(tabId, state)) return;
             if (storedData) {
                 Logger.debug('SCAN', `Safety timeout: finalizing tab ${tabId}`);
                 await finalizeDetection(tabId, currentState);
@@ -704,12 +575,13 @@ async function processDetectionData(message, sender) {
 
     } catch (error) {
         Logger.error('SCAN', `Scan failed on ${Logger.hostOf(pageData?.url)}`, error);
+        if (DetectionSessionStore.fail(tabId, state, error)) throw error;
     }
 
     // Defer popup notification until finalization with complete results
 
     // Send webhook if enabled
-    if (detectionResults.length > 0) {
+    if (DetectionSessionStore.isCurrent(tabId, state) && detectionResults.length > 0) {
         await Settings.sendWebhookIfEnabled(pageData, detectionResults);
     }
 }

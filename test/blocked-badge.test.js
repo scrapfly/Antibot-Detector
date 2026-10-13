@@ -37,7 +37,7 @@ function harness(textColorMode = 'supported') {
         clearInterval: (id) => timers.delete(id)
     });
     for (const file of ['modules/core/badge-constants.js', 'background/utilities.js',
-        'modules/detection/engine/detection-engine-manager.js', 'sections/settings/settings-runtime.js',
+        'modules/detection/engine/detection-engine-manager.js', 'modules/settings/settings-runtime.js',
         'sections/detection/detection-ui.js']) {
         vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context, { filename: file });
     }

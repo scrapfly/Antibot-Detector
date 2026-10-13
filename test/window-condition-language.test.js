@@ -2,8 +2,8 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 
 // Browser IIFE: requiring it attaches to globalThis.
-require('../modules/detection/window-condition-grammar.js');
-require('../modules/detection/hooks/window-condition-language.js');
+require('../modules/detection/conditions/window-condition-grammar.js');
+require('../modules/detection/conditions/window-condition-evaluator.js');
 const WCL = globalThis.ScrapflyWindowConditionLanguage;
 
 test('exposes the expected public API', () => {
@@ -80,7 +80,7 @@ const GRAMMAR = globalThis.ScrapflyWindowConditionGrammar;
 
 function bareEvaluator() {
   const context = vm.createContext({});
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/detection/hooks/window-condition-language.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/detection/conditions/window-condition-evaluator.js'), 'utf8'), context);
   return context.ScrapflyWindowConditionLanguage;
 }
 

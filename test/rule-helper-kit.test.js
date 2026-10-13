@@ -2,8 +2,8 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 
 const kit = require('../sections/rules/helpers/helper-kit.js');
-require('../modules/detection/window-condition-grammar.js');
-require('../modules/detection/hooks/window-condition-language.js');
+require('../modules/detection/conditions/window-condition-grammar.js');
+require('../modules/detection/conditions/window-condition-evaluator.js');
 
 const items = [
   { value: 'navigator.webdriver', desc: 'WebDriver', chip: 'Automation' },

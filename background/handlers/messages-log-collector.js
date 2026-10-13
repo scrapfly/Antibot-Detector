@@ -5,31 +5,29 @@
 function registerLogCollectorHandlers(registry, context) {
     void context;
 
-    const handle_log_collector_enable = function({ request, sender, sendResponse, context }) {
-        void context;
-
-        if (typeof logCollector !== 'undefined') {
-            logCollector.enable();
-            Logger.storage('[LogCollector] Log collection enabled via settings');
-        }
-        if (typeof globalThis !== 'undefined') {
-            globalThis.logCollectorEnabled = true;
-        }
-        sendResponse({ status: 'success' });
+    const handle_log_collector_enable = function({ request, sendResponse }) {
+        (async () => {
+            try {
+                const saved = typeof logCollector !== 'undefined' && await logCollector.enable();
+                sendResponse(saved ? { status: 'success' } : { status: 'error', message: 'Log settings could not be saved' });
+            } catch (_) {
+                sendResponse({ status: 'error', message: 'Log settings could not be saved' });
+            }
+        })();
+        return true;
     };
     registry['LOG_COLLECTOR_ENABLE'] = handle_log_collector_enable;
 
-    const handle_log_collector_disable = function({ request, sender, sendResponse, context }) {
-        void context;
-
-        if (typeof logCollector !== 'undefined') {
-            logCollector.disable();
-            Logger.storage('[LogCollector] Log collection disabled via settings');
-        }
-        if (typeof globalThis !== 'undefined') {
-            globalThis.logCollectorEnabled = false;
-        }
-        sendResponse({ status: 'success' });
+    const handle_log_collector_disable = function({ request, sendResponse }) {
+        (async () => {
+            try {
+                const saved = typeof logCollector !== 'undefined' && await logCollector.disable();
+                sendResponse(saved ? { status: 'success' } : { status: 'error', message: 'Log settings could not be saved' });
+            } catch (_) {
+                sendResponse({ status: 'error', message: 'Log settings could not be saved' });
+            }
+        })();
+        return true;
     };
     registry['LOG_COLLECTOR_DISABLE'] = handle_log_collector_disable;
 
@@ -93,17 +91,16 @@ function registerLogCollectorHandlers(registry, context) {
     };
     registry['LOG_COLLECTOR_GET_COUNT'] = handle_log_collector_get_count;
 
-    const handle_log_collector_set_max_logs = function({ request, sender, sendResponse, context }) {
-        void context;
-
-        if (typeof logCollector !== 'undefined') {
-            const maxLogs = request.maxLogs;
-            logCollector.setMaxLogs(maxLogs);
-            Logger.storage('[LogCollector] Max logs set to:', maxLogs);
-            sendResponse({ status: 'success', maxLogs: maxLogs });
-        } else {
-            sendResponse({ status: 'error', message: 'LogCollector not available' });
-        }
+    const handle_log_collector_set_max_logs = function({ request, sendResponse }) {
+        (async () => {
+            try {
+                const saved = typeof logCollector !== 'undefined' && await logCollector.setMaxLogs(request.maxLogs);
+                sendResponse(saved ? { status: 'success', maxLogs: logCollector.maxLogs } : { status: 'error', message: 'Log settings could not be saved' });
+            } catch (_) {
+                sendResponse({ status: 'error', message: 'Log settings could not be saved' });
+            }
+        })();
+        return true;
     };
     registry['LOG_COLLECTOR_SET_MAX_LOGS'] = handle_log_collector_set_max_logs;
 

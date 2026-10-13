@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const css = fs.readFileSync(path.join(__dirname, '..', 'modules/styles/detection.css'), 'utf8');
+const css = fs.readFileSync(path.join(__dirname, '..', 'sections/detection/detection.css'), 'utf8');
 const html = fs.readFileSync(path.join(__dirname, '..', 'sections/detection/detection.html'), 'utf8');
 
 function declarations(selector) {

@@ -18,7 +18,7 @@ const HooksConfig = globalThis.HooksConfig;
 const engine = vm.createContext({ globalThis: null, Object, Array, RegExp, JSON });
 engine.globalThis = engine;
 engine.ScrapflyBridgeProtocol = P;
-vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/window-condition-grammar.js'), 'utf8'), engine);
+vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/conditions/window-condition-grammar.js'), 'utf8'), engine);
 vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/engine/detection-engine-hooks.js'), 'utf8'), engine);
 // Structured-clone like a CustomEvent detail crossing into the MAIN world
 const bootstrapDetail = (token) => JSON.parse(JSON.stringify(engine.demMainWorldBootstrapDetail(token)));

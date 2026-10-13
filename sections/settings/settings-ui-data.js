@@ -25,8 +25,8 @@ SettingsUI.exportSettingsFile = async function() {
       const exportData = {
         version: chrome.runtime.getManifest().version,
         timestamp: new Date().toISOString(),
-        // Share-service keys and tokens stay in this browser
-        settings: SettingsUI.withoutShareSecrets(this.settings),
+        // Integration connection details stay in this browser
+        settings: SettingsTransfer.portable(this.settings),
         languageOverride: langResult.scrapfly_language_override || 'auto'
       };
       const date = new Date().toISOString().split('T')[0];
@@ -50,21 +50,32 @@ SettingsUI.importSettingsFile = async function(event) {
       if (!imported || typeof imported !== 'object' || Array.isArray(imported)) {
         throw new Error('Invalid settings file');
       }
-      // deepMerge drops values whose type does not match the current shape.
-      this.settings = this.deepMerge(this.settings, imported);
-      this.updateSettingsUI();
-      await this.saveSettings({ notify: false });
+      // A portable file changes preferences only. Connections already stored in
+      // this browser survive even when an older export includes credentials.
+      const candidate = this.deepMerge(this.settings, SettingsTransfer.portable(imported));
+      const validation = this.validateSettings(candidate);
+      if (!validation.isValid) throw new Error('Invalid settings file');
       const knownLanguage = Array.isArray(SettingsUI.LANGUAGE_OPTIONS)
         && SettingsUI.LANGUAGE_OPTIONS.some((opt) => opt.value === data.languageOverride);
+      const saved = await this.saveSettings({
+        notify: false, notifyError: false, candidate,
+        languageOverride: knownLanguage ? data.languageOverride : undefined
+      });
+      if (!saved) {
+        NotificationHelper.error(_tr('settingsImportSaveFailedToast', 'Could not save imported settings. Your settings and language have been kept.'));
+        return;
+      }
+      this.updateSettingsUI();
       if (knownLanguage && typeof SettingsUI._applyLanguageChoice === 'function') {
-        await SettingsUI._applyLanguageChoice.call(this, data.languageOverride);
+        await SettingsUI._applyLanguageChoice.call(this, data.languageOverride, { persist: false });
       }
       NotificationHelper.success(_tr('settingsImportedToast', 'Settings imported'));
     } catch (error) {
-      Logger.error('UI', 'Failed to import settings:', error);
-      NotificationHelper.error(_tr('settingsImportFailedToast', 'Failed to import settings: invalid file'));
+      Logger.error('UI', 'Failed to import settings');
+      NotificationHelper.error(_tr('settingsImportReadFailedToast', 'Could not read a valid settings file. Nothing was changed.'));
+    } finally {
+      input.value = '';
     }
-    input.value = '';
 };
 
 SettingsUI._csvCell = function(value) {

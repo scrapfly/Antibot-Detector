@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
-const sourcePath = path.join(__dirname, '../sections/advanced/code-generator-dialog.js');
+const sourcePath = path.join(__dirname, '../sections/advanced/components/code-generator-dialog.js');
 
 class Node {
   constructor(tag, document) {
@@ -15,10 +15,20 @@ class Node {
   appendChild(node) { node.parentNode = this; this.children.push(node); return node; }
   setAttribute(key, value) { this.attributes[key] = String(value); }
   getAttribute(key) { return this.attributes[key]; }
+  hasAttribute(key) { return Object.hasOwn(this.attributes, key); }
+  getClientRects() { return this.isConnected ? [{}] : []; }
   addEventListener(key, fn) { (this.listeners[key] ||= []).push(fn); }
   removeEventListener(key, fn) { this.listeners[key] = (this.listeners[key] || []).filter(f => f !== fn); }
-  dispatch(key, event = {}) { for (const fn of this.listeners[key] || []) fn({ target: this, preventDefault() {}, ...event }); }
-  focus() { this.document.activeElement = this; }
+  dispatch(key, event = {}) {
+    let stopped = false;
+    const value = { target: this, preventDefault() {}, stopImmediatePropagation() { stopped = true; }, ...event };
+    for (const fn of [...(this.listeners[key] || [])]) { fn(value); if (stopped) break; }
+  }
+  focus() {
+    if (this.document.activeElement === this) return;
+    this.document.activeElement = this;
+    this.document.dispatch('focusin', { target: this });
+  }
   contains(node) { return node === this || this.children.some(child => child.contains(node)); }
   remove() { this.parentNode.children = this.parentNode.children.filter(n => n !== this); this.parentNode = null; }
   get isConnected() { return !!this.parentNode || this === this.document.body; }
@@ -145,21 +155,27 @@ test('an initial generation error keeps language tabs and can recover on a type 
   assert.equal(dialog.modal.querySelector('.advanced-code-dialog__copy').disabled, false);
 });
 
-test('Geetest opens a JS-only dialog with exact v3/v4 outputs instead of copying on open', () => {
+test('Geetest opens runnable standalone v3/v4 code without copying on open', () => {
   const { context, owner } = fixture(() => { throw Error('must not copy on open'); });
   context.GeetestAdvanced = function() {};
   context.AdvancedCodeDialog = context.window.AdvancedCodeDialog;
   Object.assign(context.GeetestAdvanced.prototype, owner, { _txt: (_, fallback) => fallback });
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/modules/geetest/geetest-advanced-actions.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/vendors/geetest/actions.js'), 'utf8'), context);
   const module = new context.GeetestAdvanced();
-  const hashes = { v3: '8ccdf22248c9069d75dd99643a241470f8b3402a5bf3eb0ec1fac8a60c384088',
-    v4: 'b8303ab690d3f3a586cca235ce7f48f4c89b089d009eb0c8e8aaf775cffeab26' };
   for (const type of ['v3', 'v4']) {
     const dialog = module.exportParsingCode([{ type }]);
     assert.equal(dialog.modal.querySelectorAll('.advanced-code-dialog__language').length, 1);
     assert.equal(dialog.modal.querySelector('.advanced-code-dialog__language').textContent, 'JavaScript');
     const code = dialog.modal.querySelector('.advanced-code-dialog__code').value;
-    assert.equal(require('node:crypto').createHash('sha256').update(code).digest('hex'), hashes[type]);
+    assert.doesNotMatch(code, /\bLogger\./, 'copied code cannot depend on extension globals');
+    const printed = [];
+    vm.runInNewContext(code, {
+      document: { documentElement: { outerHTML: type === 'v4'
+        ? 'initGeetest4({captchaId: "public-key", product: "float"}, callback)'
+        : 'initGeetest({gt: "public-key", challenge: "challenge-test"}, callback)' } },
+      console: { log: (...args) => printed.push(args) }
+    });
+    assert.equal(printed[0][1], 'public-key');
     dialog.close();
   }
 });
@@ -178,8 +194,8 @@ function vendorFixture(vendor) {
   context.shapeSecurityText = Class.fmt;
   Object.assign(Class.prototype, owner, { _txt: Class.fmt, tabInfo: { url: 'https://example.com/', id: 1 } });
   context.AdvancedCodeDialog = context.window.AdvancedCodeDialog;
-  for (const suffix of ['actions', 'ui']) {
-    const file = path.join(__dirname, `../sections/advanced/modules/${vendor}/${vendor}-advanced-${suffix}.js`);
+  for (const suffix of ['actions', 'generators', 'view']) {
+    const file = path.join(__dirname, `../sections/advanced/vendors/${vendor}/${suffix}.js`);
     if (fs.existsSync(file)) vm.runInContext(fs.readFileSync(file, 'utf8'), context);
   }
   return { ...fixtureData, module: new Class() };
@@ -235,11 +251,40 @@ for (const vendor of Object.keys(vendors)) test(`${vendor} shared dialog retains
       else assert.ok(value.includes('example.com'), 'Turnstile output is literal script text');
     }
   }
-  const source = fs.readFileSync(path.join(__dirname, `../sections/advanced/modules/${vendor}/${vendor}-advanced-ui.js`), 'utf8');
+  const source = fs.readFileSync(path.join(__dirname, `../sections/advanced/vendors/${vendor}/view.js`), 'utf8');
   assert.doesNotMatch(source, /(?<!\r)\n/, 'vendor CRLF is preserved');
   if (vendor === 'turnstile') {
     const block = source.match(/        const generateCode = \(language\) => \{[\s\S]*?        \};/)[0];
     assert.equal(require('node:crypto').createHash('sha256').update(block).digest('hex'),
       'ec9f62d81d5a02ac0e3ce364bdb60453cf3df4a66b47c36aad4f564356811a80', 'all six original templates remain byte-identical');
   }
+});
+
+test('code generators join shared focus ownership above a kit dialog', () => {
+  const { api, owner, document, opener, context } = fixture();
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/ui/modal-focus.js'), 'utf8'), context);
+  const parent = document.body.appendChild(document.createElement('div'));
+  parent.className = 'adv-kit-overlay';
+  const parentOpener = parent.appendChild(document.createElement('button'));
+  let parentClosed = false;
+  const releaseParent = context.ModalFocus.activate(parent, { onClose() {
+    parentClosed = true; parent.remove(); releaseParent();
+  } });
+  const child = api.open(owner, { title: 'Code', getCodes: () => ({ javascript: 'output', python: 'output' }) });
+  assert.ok(child.modal.contains(document.activeElement), 'parent trap must allow the new child to focus');
+  opener.focus();
+  assert.ok(child.modal.contains(document.activeElement), 'outside focus stays in the top child');
+  document.dispatch('keydown', { key: 'Tab' });
+  assert.ok(child.modal.contains(document.activeElement));
+  document.dispatch('keydown', { key: 'Escape' });
+  assert.equal(child.modal.parentNode, null);
+  assert.equal(parentClosed, false);
+  assert.equal(document.activeElement, parentOpener);
+  assert.equal(document.listeners.keydown.length, 1);
+  assert.equal(document.listeners.focusin.length, 1);
+  document.dispatch('keydown', { key: 'Escape' });
+  assert.equal(parentClosed, true);
+  assert.equal(document.activeElement, opener);
+  assert.equal(document.listeners.keydown.length, 0);
+  assert.equal(document.listeners.focusin.length, 0);
 });

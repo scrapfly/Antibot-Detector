@@ -44,14 +44,19 @@ function fixture() {
     I18n: { get: key => messages[key]?.message || '', format: (key, ...args) => args.reduce((text, arg, i) => text.replaceAll('{' + i + '}', String(arg)), messages[key]?.message || ''), tr: (key, fallback) => messages[key]?.message || fallback },
     NotificationHelper: { error: value => errors.push(value) }, setTimeout, clearTimeout };
   vm.createContext(context);
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/detection/scrapfly-export.js'), 'utf8'), context);
+  for (const name of ['options', 'parameters', 'codegen', 'ai-export', 'dialog']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/integrations/scrapfly', `${name}.js`), 'utf8'), context);
+  }
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/base-advanced-module.js'), 'utf8'), context);
+  for (const component of ['components/tool-grid', 'components/dialogs', 'components/cookie-results', 'history/module-history']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/' + component + '.js'), 'utf8'), context);
+  }
   for (const [folder] of modules) {
-    for (const suffix of ['advanced', 'advanced-ui']) {
-      vm.runInContext(fs.readFileSync(path.join(__dirname, `../sections/advanced/modules/${folder}/${folder}-${suffix}.js`), 'utf8'), context);
+    for (const suffix of ['module', 'view']) {
+      vm.runInContext(fs.readFileSync(path.join(__dirname, `../sections/advanced/vendors/${folder}/${suffix}.js`), 'utf8'), context);
     }
   }
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/modules/akamai/akamai-advanced-lifecycle.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/vendors/akamai/lifecycle.js'), 'utf8'), context);
   context.window.ImpervaAdvanced.prototype.setupExtractionListener = () => {};
   const instance = new context.window.BaseAdvancedModule({}, { id: 1 }, 'test');
   return { context, nodes, errors, instance };
@@ -276,7 +281,7 @@ test('all method semantics disclose reloads, cookie resets and capture state wit
 });
 
 test('action and code dialog styles use full rows and a separate non-overlapping code toolbar', () => {
-  const css = fs.readFileSync(path.join(__dirname, '../modules/styles/advanced.css'), 'utf8');
+  const css = require('./helpers/feature-css')('advanced');
   assert.match(css, /\.advanced-tool-grid[^{]*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/);
   assert.match(css, /\.advanced-tool-hint\s*\{/);
   assert.match(css, /\.advanced-tool-card\.is-working/);

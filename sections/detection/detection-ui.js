@@ -93,12 +93,12 @@ DetectionUI.handleLoadingTimeout = function() {
               if (chrome.runtime.lastError) {
                 if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for results:', chrome.runtime.lastError);
                 if (!this.isShowingResults || this.currentResults.length === 0) {
-                  this.showEmptyState();
+                  this.showEmptyState({ outcome: 'interrupted' });
                 }
                 return;
               }
 
-              if (response?.data?.detectionResults?.length > 0) {
+              if (Array.isArray(response?.data?.detectionResults)) {
                 // Detection completed! Show results instead of interrupted state
                 if (this.debugMode) Logger.debug('UI', '[Detection] Timeout but results exist - showing results instead of interrupted state');
                 // The tab's own engine and detectors, as every other caller
@@ -129,7 +129,7 @@ DetectionUI.handleLoadingTimeout = function() {
                   // Truly stuck/no data - normalize to empty state
                   if (this.debugMode) Logger.debug('UI', '[Detection] Timeout with no results - showing empty state');
                   if (!this.isShowingResults || this.currentResults.length === 0) {
-                    this.showEmptyState();
+                    this.showEmptyState({ outcome: 'interrupted' });
                   }
                 }
               }
@@ -138,7 +138,7 @@ DetectionUI.handleLoadingTimeout = function() {
         } else {
           // No tab found - normalize to empty state
           if (!this.isShowingResults || this.currentResults.length === 0) {
-            this.showEmptyState();
+            this.showEmptyState({ outcome: 'interrupted' });
           }
         }
       });
@@ -196,8 +196,12 @@ DetectionUI.applyEmptyStateCopy = function(options = {}) {
         emptyStateTitle.textContent = options.title;
         emptyStateTitle.removeAttribute('data-i18n');
       } else {
-        const titleKey = options.noCache ? 'noDetectionsFound' : 'detectionEmptyTitle';
-        const titleFallback = options.noCache ? 'No detections found' : 'Nothing Detected';
+        const titleKey = options.outcome === 'failed' ? 'detectionFailedTitle'
+          : options.outcome === 'interrupted' ? 'detectionInterruptedTitle'
+          : options.noCache ? 'detectionUnscannedTitle' : 'detectionEmptyTitle';
+        const titleFallback = options.outcome === 'failed' ? 'Scan failed'
+          : options.outcome === 'interrupted' ? 'Scan interrupted'
+          : options.noCache ? 'No completed scan' : 'Nothing Detected';
         emptyStateTitle.setAttribute('data-i18n', titleKey);
         emptyStateTitle.textContent = tr(titleKey, titleFallback);
       }
@@ -208,8 +212,10 @@ DetectionUI.applyEmptyStateCopy = function(options = {}) {
         emptyStateText.textContent = options.description;
         emptyStateText.removeAttribute('data-i18n');
       } else {
-        const descKey = options.noCache ? 'detectionNoCachedDataDesc' : 'detectionNoDetectionsDesc';
-        const descFallback = options.noCache
+        const descKey = options.outcome === 'failed' || options.outcome === 'interrupted'
+          ? 'detectionRetryScanDesc' : options.noCache ? 'detectionNoCachedDataDesc' : 'detectionNoDetectionsDesc';
+        const descFallback = options.outcome === 'failed' || options.outcome === 'interrupted'
+          ? 'The scan did not finish. Reload the page to try again.' : options.noCache
           ? 'No cached detection data is available for this page. Reload the page to run a fresh scan.'
           : 'No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.';
         emptyStateText.setAttribute('data-i18n', descKey);
@@ -252,10 +258,12 @@ DetectionUI.applyDisabledStateCopy = function() {
 DetectionUI.showEmptyState = function(options = {}) {
     if (DetectionUI.showUnavailableState.call(this)) return;
 
+    if (options.outcome) options = { ...options, noCache: true, showBadges: false };
+    this.scanOutcome = options.outcome || (options.noCache ? 'unscanned' : 'complete');
     if (this.uiStateMachine) {
       this.uiStateMachine.setState(this.uiStates.EMPTY);
     }
-    this.wasInterrupted = false; // Reset flag when showing successful state
+    this.wasInterrupted = options.outcome === 'interrupted';
     this.isShowingResults = false;
     this.hideLoadingState();
     this.clearLoadingTimeout(); // Clear timeout when showing empty state
@@ -267,7 +275,7 @@ DetectionUI.showEmptyState = function(options = {}) {
     // Reset clear cache button to default state
     this.resetClearCacheButton();
 
-    this.clearBadgeForEmptyState();
+    if (!options.noCache) this.clearBadgeForEmptyState();
 
     const emptyState = document.querySelector('#emptyState');
     const emptyStateIcon = emptyState?.querySelector('.state-card-logo');
@@ -386,7 +394,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
       const isExpired = Date.now() > options.cacheMetadata.expiry;
       if (isExpired) {
         Logger.debug('UI', '[Detection] Cache expired, showing empty state instead of stale data');
-        this.showEmptyState();
+        this.showEmptyState({ outcome: 'unscanned' });
         return;
       }
     }

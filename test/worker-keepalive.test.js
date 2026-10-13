@@ -5,7 +5,7 @@ globalThis.Logger = globalThis.Logger || { background() {}, debug() {}, warn() {
 globalThis.Constants = globalThis.Constants || { KEEPALIVE_PERIOD_MS: 20000, STALE_OPERATION_MS: 120000 };
 globalThis.chrome = globalThis.chrome || { runtime: { getPlatformInfo: async () => ({}) } };
 
-const WorkerKeepaliveManager = require('../modules/detection/hooks/worker-keepalive-manager.js');
+const WorkerKeepaliveManager = require('../background/worker-keepalive-manager.js');
 
 test('stale operations are swept and keepalive stops when none remain', () => {
   const m = new WorkerKeepaliveManager();

@@ -10,11 +10,13 @@ const assert = require('node:assert');
 global.self = global;
 global.Logger = { ui() {}, debug() {}, error() {}, warn() {}, storage() {} };
 
-const DetectorManager = require('../modules/detection/managers/detector-manager.js');
+const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 
 const shapeWithHeaderRules = (names) => ({
   id: 'detect-shapesecurity',
   name: 'Shape Security',
+  author: 'Scrapfly',
+  version: '1.0',
   detection: { header: names.map(name => ({ name, nameRegex: true, confidence: 95 })) }
 });
 
@@ -60,4 +62,34 @@ test('other detectors keep their header rules untouched', () => {
   };
   DetectorManager.applyDetectorFixups(detector, { source: 'storage' });
   assert.strictEqual(detector.detection.header[0].name, 'x-[a-z0-9]{8}-c');
+});
+
+
+test('DataDome migration anchors only shipped literal names, preserving custom expressions', () => {
+  const detector = { id: 'detect-datadome', author: 'Scrapfly', version: '1.0', detection: {
+    cookie: [{ name: 'datadome', nameRegex: false }, { name: '^my-datadome-session$', nameRegex: true }],
+    header: [{ name: 'x-datadome-cid', nameRegex: false }, { name: 'x-custom-datadome-cid', nameRegex: false }]
+  } };
+  DetectorManager.applyDetectorFixups(detector);
+  assert.deepStrictEqual(detector.detection.cookie.map(r => r.name), ['^datadome$', '^my-datadome-session$']);
+  assert.deepStrictEqual(detector.detection.header.map(r => r.name), ['^x-datadome-cid$', 'x-custom-datadome-cid']);
+});
+
+test('explicit edits, custom authors, and newer definitions retain even historical patterns', () => {
+  for (const extra of [{ userModified: true }, { officialSnapshot: { version: '1.0' } }, { author: 'Custom author' }, { version: '2.0.0' }]) {
+    const detector = { ...shapeWithHeaderRules(['x-[a-z0-9]{8}-c']), ...extra };
+    DetectorManager.applyDetectorFixups(detector);
+    assert.strictEqual(detector.detection.header[0].name, 'x-[a-z0-9]{8}-c', JSON.stringify(extra));
+    const datadome = { id: 'detect-datadome', author: 'Scrapfly', version: '1.0', detection: { cookie: [{ name: 'datadome' }] }, ...extra };
+    DetectorManager.applyDetectorFixups(datadome);
+    assert.strictEqual(datadome.detection.cookie[0].name, 'datadome', JSON.stringify(extra));
+  }
+});
+
+test('Shape migration does not widen its historic suffix list or literal matching', () => {
+  const detector = shapeWithHeaderRules(['x-[a-z0-9]{8}-q', 'prefix-x-[a-z0-9]{8}-c']);
+  detector.detection.header.push({ name: 'x-[a-z0-9]{8}-c', nameRegex: false });
+  const before = JSON.parse(JSON.stringify(detector));
+  DetectorManager.applyDetectorFixups(detector);
+  assert.deepStrictEqual(detector, before);
 });
