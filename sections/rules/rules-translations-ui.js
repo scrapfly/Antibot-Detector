@@ -51,6 +51,7 @@ Rules.prototype.renderDescriptionTranslations = function(methodItem) {
       RuleI18n.load(locale).then(() => {
         const shipped = RuleI18n.t(english, locale);
         if (shipped && shipped !== english && !input.placeholder) input.placeholder = shipped;
+        this.updateTranslationsCount();
       }).catch(() => {});
     });
   }
@@ -75,7 +76,10 @@ Rules.prototype.collectDescriptionTranslations = function() {
 Rules.prototype.updateTranslationsCount = function() {
   const count = document.querySelector('#methodTranslationsCount');
   if (!count) return;
-  const filled = Object.keys(this.collectDescriptionTranslations()).length;
+  // A language counts when it has a translation: one typed here, or the one
+  // the extension ships for this text (shown greyed in its field)
+  const filled = [...document.querySelectorAll('#methodTranslationFields .rule-translation-input')]
+    .filter(input => input.value.trim() || input.placeholder).length;
   count.textContent = ruleTranslateText('ruleTranslationsCountFmt', '{0} of {1}', filled, RULE_TRANSLATION_LOCALES.length);
 };
 
