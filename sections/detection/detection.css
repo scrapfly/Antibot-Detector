@@ -333,7 +333,7 @@
 
 .url-action-btn.upload-paste-btn:disabled {
   opacity: 0.55;
-  cursor: progress;
+  cursor: default;
   transform: none;
 }
 

@@ -23,6 +23,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced → Analyze scripts: one results window for every protection, with each script's type and an Export code button; it lists only that protection's requests, not look-alike paths or images.
 - Advanced: the GeeTest, Imperva and Shape Security result windows use the same layout as the others; Cloudflare Check cookies looks for the real Cloudflare cookies.
 - Advanced: with no protection on the page, the supported list shows each protection's logo grouped by Anti-bot and Captcha instead of a long row of names.
+- The mouse pointer no longer turns into the system's spinning wait cursor while a tool or upload works; the button shows its own progress.
 - Advanced → reCAPTCHA: Extract site key reports only reCAPTCHA keys, including v3 keys and keys inside frames; Click says when nothing was found.
 
 ### Fixed

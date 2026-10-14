@@ -164,7 +164,8 @@
 }
 
 .advanced-tool-card:disabled { cursor: not-allowed; opacity: 0.65; }
-.advanced-tool-card.is-working { cursor: wait; }
+/* The card shows its own spinner; no system wait cursor over it */
+.advanced-tool-card.is-working { cursor: default; }
 .advanced-tool-card.is-working .advanced-tool-indicator svg { display: none; }
 .advanced-tool-card.is-working .advanced-tool-indicator::before {
   content: "";
