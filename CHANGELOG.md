@@ -5,6 +5,12 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [2.8.7] - 2026-10-14
+
+### Fixed
+
+- Rules and History: the last card on a page is no longer cut off by the page bar at the bottom; its outline shows in full.
+
 ## [2.8.6] - 2026-10-13
 
 ### Added
@@ -370,6 +376,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[2.8.7]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.6...v2.8.7
 [2.8.6]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.5...v2.8.6
 [2.8.5]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.3...v2.8.4

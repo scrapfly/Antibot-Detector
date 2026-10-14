@@ -83,6 +83,13 @@
   box-shadow: 0 -6px 0 var(--bg-primary);
 }
 
+/* That 6px band covers whatever sits right above the bar: keep at least as
+   much room after the last card, or its bottom border is hidden for good */
+#app > .main > #historyTab > #historyPagination,
+#app > .main > #rulesTab > #rulesPagination {
+  margin-top: 6px;
+}
+
 /* Do not allow an oversized state card to shrink or clip its recovery action.
    The tab fills the viewport, and these states consume its spare space. */
 #app > .main > #detectionTab > .loading-state,
