@@ -426,6 +426,9 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Sort items by category priority before displaying
     itemsToShow = this.sortDetectionsByCategory(itemsToShow);
 
+    // New results fade in (a search only filters them: see handleSearch)
+    DetectionUI.setResultsFiltering(false);
+
     // Use pagination to display results
     // PaginationManager will handle showing/hiding pagination based on whether it's needed
     if (this.paginationManager) {
@@ -1453,6 +1456,13 @@ DetectionUI.sortDetectionsByCategory = function(detections) {
     });
 };
 
+/** While filtering, the result cards are redrawn per keystroke without their fade-in. */
+DetectionUI.setResultsFiltering = function(on) {
+    const list = typeof document !== 'undefined' && typeof document.querySelector === 'function'
+      ? document.querySelector('#resultsList') : null;
+    if (list && list.classList) list.classList.toggle('is-filtering', on);
+};
+
 DetectionUI.handleSearch = function(query) {
     this.searchQuery = query.toLowerCase().trim();
 
@@ -1461,6 +1471,9 @@ DetectionUI.handleSearch = function(query) {
     const itemsToShow = this.searchQuery
       ? this.getFilteredResults()
       : this.sortDetectionsByCategory(this.currentResults || []);
+
+    // Each keystroke redraws the cards: without the fade-in, or they flash while typing
+    DetectionUI.setResultsFiltering(true);
 
     // Update pagination with filtered results
     if (this.paginationManager) {

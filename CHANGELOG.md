@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Rules and History: the last card on a page is no longer cut off by the page bar at the bottom; its outline shows in full.
+- Detection: typing in the search box no longer makes the cards flash; they update in place.
 
 ## [2.8.6] - 2026-10-13
 

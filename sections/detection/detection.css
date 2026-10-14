@@ -669,6 +669,11 @@
   .detection-card { animation: none; }
 }
 
+/* Search results: the same cards filtered as you type, so no entrance */
+#resultsList.is-filtering .detection-card {
+  animation: none;
+}
+
 .card-header {
   display: flex;
   align-items: center;
