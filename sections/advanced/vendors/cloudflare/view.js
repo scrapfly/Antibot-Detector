@@ -203,6 +203,7 @@ CloudflareAdvanced.prototype.displayAnalysisModal = function(data) {
                 </div>
 
                 <div style="display: flex; flex-direction: column;">
+                    ${scripts.length ? '' : BaseAdvancedModule.kitNote(BaseAdvancedModule._fmt('advPanelNoScriptsFmt', 'No Cloudflare scripts found', 'Cloudflare'))}
                     ${scriptHTML}
                 </div>
 

@@ -24,6 +24,7 @@
   "advToolCaptureHint": { "message": "이 페이지의 데이터 기록" },
   "advToolStopCaptureHint": { "message": "이 페이지의 데이터 기록 중지" },
   "advToolWorking": { "message": "처리 중…" },
+  "advToolWaitingReload": { "message": "페이지를 다시 불러와 결과를 수집하는 중입니다. 몇 초 걸립니다…" },
   "advToolActionFailedFmt": { "message": "이 작업을 완료하지 못했습니다: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "차트 이전 페이지" },
   "statsChartNext": { "message": "차트 다음 페이지" },

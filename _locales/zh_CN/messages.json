@@ -24,6 +24,7 @@
   "advToolCaptureHint": { "message": "记录此页面的数据" },
   "advToolStopCaptureHint": { "message": "停止记录此页面的数据" },
   "advToolWorking": { "message": "处理中…" },
+  "advToolWaitingReload": { "message": "正在重新加载页面并收集结果，需要几秒钟…" },
   "advToolActionFailedFmt": { "message": "无法完成此操作：{0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "图表上一页" },
   "statsChartNext": { "message": "图表下一页" },

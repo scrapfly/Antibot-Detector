@@ -24,6 +24,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced → History: the empty "No captures yet" card no longer has a blue strip along its top.
 - Rules editor: "These patterns only count together" can be ticked on a new combination before adding patterns.
 - Advanced → DataDome → Analyze Scripts: now finds the challenge scripts and the CAPTCHA or interstitial page on blocked pages, not only tags.js.
+- Advanced: tools that reload the page (Analyze scripts, version checks, Akamai sensor) now show they are working until the result opens, and an empty result says no scripts were found.
 
 ## [2.8.6] - 2026-10-13
 

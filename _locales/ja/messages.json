@@ -24,6 +24,7 @@
   "advToolCaptureHint": { "message": "このページのデータを記録する" },
   "advToolStopCaptureHint": { "message": "このページのデータ記録を停止する" },
   "advToolWorking": { "message": "処理中…" },
+  "advToolWaitingReload": { "message": "ページを再読み込みして結果を収集しています。数秒かかります…" },
   "advToolActionFailedFmt": { "message": "この操作を完了できませんでした: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "グラフの前のページ" },
   "statsChartNext": { "message": "グラフの次のページ" },

@@ -24,6 +24,7 @@
   "advToolCaptureHint": { "message": "تسجيل البيانات من هذه الصفحة" },
   "advToolStopCaptureHint": { "message": "إيقاف تسجيل البيانات من هذه الصفحة" },
   "advToolWorking": { "message": "جارٍ العمل…" },
+  "advToolWaitingReload": { "message": "جارٍ إعادة تحميل الصفحة وجمع النتائج. يستغرق ذلك بضع ثوانٍ…" },
   "advToolActionFailedFmt": { "message": "تعذر إكمال هذا الإجراء: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "الصفحة السابقة للرسم البياني" },
   "statsChartNext": { "message": "الصفحة التالية للرسم البياني" },

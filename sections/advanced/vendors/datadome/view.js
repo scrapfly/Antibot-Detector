@@ -63,6 +63,7 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
+                    ${scripts.length ? '' : BaseAdvancedModule.kitNote(BaseAdvancedModule._fmt('advPanelNoScriptsFmt', 'No DataDome scripts found', 'DataDome'))}
                     ${scripts.map((script, idx) => {
                         const typeLabel = DATADOME_SCRIPT_LABELS[script.type] || 'DATADOME';
                         const typeColor = 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)';

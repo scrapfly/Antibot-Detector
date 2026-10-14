@@ -325,3 +325,41 @@ test('Scrape with Scrapfly from a CAPTCHA module without a category still counts
   assert.equal(opened[0].detections[0].name, 'reCAPTCHA');
   assert.equal(opened[0].detections[0].category, 'CAPTCHA');
 });
+
+test('a tool that reloads the page stays busy, says so, and frees itself when its result or a notification appears', async () => {
+  const { context, instance, nodes } = fixture();
+  const observers = [];
+  context.MutationObserver = class { constructor(fn) { this.fn = fn; this.on = false; observers.push(this); } observe() { this.on = true; } disconnect() { this.on = false; } };
+  context.document.body = {};
+  const add = className => observers.filter(o => o.on).forEach(o => o.fn([{ addedNodes: [{ nodeType: 1, matches: selector => selector.split(', ').includes('.' + className), querySelector: () => null }] }]));
+  const scripts = element(); scripts.dataset = { toolAction: 'scripts' }; nodes.set('#testAnalyzeScripts', scripts);
+  const cookies = element(); cookies.dataset = { toolAction: 'cookies' }; nodes.set('#testCheckCookies', cookies);
+  const version = element(); version.dataset = { toolAction: 'version' }; nodes.set('#testVersion', version);
+  instance.bindToolActions([
+    // Shows its "page will reload" toast, then returns before the result arrives
+    { id: 'testAnalyzeScripts', handler: async () => { add('notification-toast'); } },
+    { id: 'testCheckCookies', handler: async () => { add('adv-kit-overlay'); } },
+    // Opens its window before returning: nothing to wait for
+    { id: 'testVersion', handler: async () => { add('tool-modal'); } }
+  ]);
+  await scripts.click();
+  assert.equal(scripts.disabled, true);
+  assert.equal(scripts.classList.contains('is-working'), true);
+  assert.equal(scripts.parts['.advanced-tool-hint'].textContent, 'Reloading the page and collecting results. This takes a few seconds…');
+  await scripts.click();
+  add('tool-modal');
+  assert.equal(scripts.disabled, false);
+  assert.equal(scripts.getAttribute('aria-busy'), null);
+  assert.equal(scripts.classList.contains('is-working'), false);
+  assert.equal(observers.some(o => o.on), false, 'stops watching once released');
+  // An error toast after the reload also ends the wait
+  await scripts.click();
+  assert.equal(scripts.disabled, true);
+  add('notification-toast');
+  assert.equal(scripts.disabled, false);
+  // Tools that answer at once never wait
+  await cookies.click();
+  assert.equal(cookies.disabled, false);
+  await version.click();
+  assert.equal(version.disabled, false);
+});

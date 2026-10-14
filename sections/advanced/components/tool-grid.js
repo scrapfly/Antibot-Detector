@@ -121,6 +121,29 @@ class AdvancedToolGrid {
         });
     }
 
+    /**
+     * Watches the popup for an element matching selector being added; calls
+     * onSeen once (then stops). Returns { seen, stop, available }; available
+     * is false where nothing can be watched.
+     */
+    static watchToolOutcome(selector, onSeen) {
+        const state = { seen: false, available: false, stop() {} };
+        if (typeof MutationObserver === 'undefined' || typeof document === 'undefined' || !document.body) return state;
+        const observer = new MutationObserver(records => {
+            if (state.seen) return;
+            const hit = records.some(record => Array.from(record.addedNodes).some(node =>
+                node.nodeType === 1 && (node.matches?.(selector) || node.querySelector?.(selector))));
+            if (!hit) return;
+            state.seen = true;
+            observer.disconnect();
+            if (typeof onSeen === 'function') onSeen();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        state.available = true;
+        state.stop = () => observer.disconnect();
+        return state;
+    }
+
     bindToolActions(actions = []) {
         if (!this.toolActionBindings) this.toolActionBindings = new WeakMap();
         if (!this.pendingToolActions) this.pendingToolActions = new Set();
@@ -150,20 +173,38 @@ class AdvancedToolGrid {
                 btn.classList.add('is-working');
                 btn.setAttribute('aria-busy', 'true');
                 if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWorking', 'Working…');
-                try {
-                    await fn.call(this, event);
-                } catch (error) {
-                    Logger.error('UI', `[${this.moduleName}] Tool action failed:`, error);
-                    const reason = error && error.message ? error.message : String(error);
-                    NotificationHelper.error(BaseAdvancedModule._fmt('advToolActionFailedFmt', `Could not complete this action: ${reason}`, reason));
-                } finally {
+                const release = () => {
                     this.pendingToolActions.delete(id);
                     btn.disabled = false;
                     btn.classList.remove('is-working');
                     btn.removeAttribute('aria-busy');
                     if (hint) hint.textContent = originalHint;
                     if (id === `${this.moduleName}StartCapture`) this.updateCaptureButtonState(this.isCapturing, false);
+                };
+                // Did this click open its result window right away?
+                const opened = BaseAdvancedModule.watchToolOutcome(BaseAdvancedModule.TOOL_RESULT_SELECTOR);
+                let failed = false;
+                try {
+                    await fn.call(this, event);
+                } catch (error) {
+                    failed = true;
+                    Logger.error('UI', `[${this.moduleName}] Tool action failed:`, error);
+                    const reason = error && error.message ? error.message : String(error);
+                    NotificationHelper.error(BaseAdvancedModule._fmt('advToolActionFailedFmt', `Could not complete this action: ${reason}`, reason));
                 }
+                opened.stop();
+                // A tool that reloads the page answers seconds later: stay busy,
+                // and say so, until its window or a notification appears
+                if (!failed && opened.available && !opened.seen && BaseAdvancedModule.TOOL_RELOAD_ACTIONS.includes(btn.dataset?.toolAction)) {
+                    if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWaitingReload', 'Reloading the page and collecting results. This takes a few seconds…');
+                    const outcome = BaseAdvancedModule.watchToolOutcome(`${BaseAdvancedModule.TOOL_RESULT_SELECTOR}, .notification-toast`, () => {
+                        clearTimeout(timer);
+                        release();
+                    });
+                    const timer = setTimeout(() => { outcome.stop(); release(); }, BaseAdvancedModule.TOOL_RELOAD_TIMEOUT_MS);
+                    return;
+                }
+                release();
             };
             this.toolActionBindings.set(btn, listener);
             btn.addEventListener('click', listener);
@@ -173,7 +214,12 @@ class AdvancedToolGrid {
 for (const name of ['resolveToolAction', 'resolveToolTone', 'getToolHint', 'renderToolGrid', 'scrapflyTool', 'openScrapflyExport', 'bindToolActions']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedToolGrid.prototype, name));
 }
-for (const name of ['toolIcon', 'captureLast']) {
+// Result windows a tool opens, the tools that reload the page first, and how long to wait for them
+AdvancedToolGrid.TOOL_RESULT_SELECTOR = '.adv-kit-overlay, .tool-modal, .advanced-code-dialog';
+AdvancedToolGrid.TOOL_RELOAD_ACTIONS = Object.freeze(['scripts', 'version', 'sensor']);
+AdvancedToolGrid.TOOL_RELOAD_TIMEOUT_MS = 40000;
+for (const name of ['TOOL_RESULT_SELECTOR', 'TOOL_RELOAD_ACTIONS', 'TOOL_RELOAD_TIMEOUT_MS']) BaseAdvancedModule[name] = AdvancedToolGrid[name];
+for (const name of ['toolIcon', 'captureLast', 'watchToolOutcome']) {
     Object.defineProperty(BaseAdvancedModule, name, Object.getOwnPropertyDescriptor(AdvancedToolGrid, name));
 }
 })();

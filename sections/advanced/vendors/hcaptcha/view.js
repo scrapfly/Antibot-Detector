@@ -218,6 +218,7 @@ HCaptchaAdvanced.prototype.displayAnalysisModal = function(data) {
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
+                    ${scripts.length ? '' : BaseAdvancedModule.kitNote(BaseAdvancedModule._fmt('advPanelNoScriptsFmt', 'No hCaptcha scripts found', 'hCaptcha'))}
                     ${scripts.map((script, idx) => `
                         <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
                             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">

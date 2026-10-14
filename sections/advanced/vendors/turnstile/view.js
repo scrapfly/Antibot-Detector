@@ -48,6 +48,7 @@ TurnstileAdvanced.prototype.displayAnalysisModal = function(data) {
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
+                    ${scripts.length ? '' : BaseAdvancedModule.kitNote(BaseAdvancedModule._fmt('advPanelNoScriptsFmt', 'No Turnstile scripts found', 'Turnstile'))}
                     ${scripts.map((script, idx) => {
                         const typeColor = 'linear-gradient(135deg, #0074BF 0%, #0061B3 100%)';
                         return `
