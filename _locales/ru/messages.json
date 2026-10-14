@@ -4945,5 +4945,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "Сначала напишите название."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Проверяет cookie и версию проверки и находит ключи сайта Turnstile"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Проверяет cookie DataDome и анализирует его скрипты"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Перехватывает данные браузера (BDA) и анализирует его скрипты"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Определяет версию GeeTest (v3 или v4) и анализирует его скрипты"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Определяет версию hCaptcha и анализирует его скрипты"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Извлекает ключ сайта и анализирует скрипты Turnstile"
   }
 }

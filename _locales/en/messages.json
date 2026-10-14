@@ -5221,5 +5221,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "Write the name first."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Checks the challenge cookies and version, and finds Turnstile site keys"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Checks DataDome cookies and analyzes its scripts"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Captures the browser data (BDA) and analyzes its scripts"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Detects the GeeTest version (v3 or v4) and analyzes its scripts"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Detects the hCaptcha version and analyzes its scripts"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Extracts the site key and analyzes the Turnstile scripts"
   }
 }

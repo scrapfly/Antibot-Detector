@@ -4945,5 +4945,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "اكتب الاسم أولًا."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "يفحص ملفات تعريف الارتباط وإصدار التحدي ويعثر على مفاتيح مواقع Turnstile"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "يفحص ملفات تعريف ارتباط DataDome ويحلل نصوصه البرمجية"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "يلتقط بيانات المتصفح (BDA) ويحلل نصوصه البرمجية"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "يكتشف إصدار GeeTest (v3 أو v4) ويحلل نصوصه البرمجية"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "يكتشف إصدار hCaptcha ويحلل نصوصه البرمجية"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "يستخرج مفتاح الموقع ويحلل نصوص Turnstile البرمجية"
   }
 }

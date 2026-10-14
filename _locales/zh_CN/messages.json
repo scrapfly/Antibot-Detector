@@ -4945,5 +4945,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "请先填写名称。"
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "检查验证 Cookie 和版本，并查找 Turnstile 站点密钥"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "检查 DataDome Cookie 并分析其脚本"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "捕获浏览器数据 (BDA) 并分析其脚本"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "检测 GeeTest 版本（v3 或 v4）并分析其脚本"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "检测 hCaptcha 版本并分析其脚本"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "提取站点密钥并分析 Turnstile 脚本"
   }
 }

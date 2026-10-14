@@ -4945,5 +4945,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "Escreva o nome primeiro."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Verifica os cookies e a versão do desafio e encontra as chaves de site do Turnstile"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Verifica os cookies do DataDome e analisa seus scripts"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Captura os dados do navegador (BDA) e analisa seus scripts"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Detecta a versão do GeeTest (v3 ou v4) e analisa seus scripts"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Detecta a versão do hCaptcha e analisa seus scripts"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Extrai a chave de site e analisa os scripts do Turnstile"
   }
 }

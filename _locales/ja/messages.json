@@ -4945,5 +4945,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "先に名前を入力してください。"
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "チャレンジの Cookie とバージョンを確認し、Turnstile のサイトキーを見つけます"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "DataDome の Cookie を確認し、スクリプトを解析します"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "ブラウザーデータ (BDA) を取得し、スクリプトを解析します"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "GeeTest のバージョン (v3 または v4) を検出し、スクリプトを解析します"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "hCaptcha のバージョンを検出し、スクリプトを解析します"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "サイトキーを抽出し、Turnstile のスクリプトを解析します"
   }
 }

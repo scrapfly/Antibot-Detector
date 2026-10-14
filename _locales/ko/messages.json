@@ -4945,5 +4945,23 @@
   },
   "combinationTranslateNeedsName": {
     "message": "먼저 이름을 작성하세요."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "챌린지 쿠키와 버전을 확인하고 Turnstile 사이트 키를 찾습니다"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "DataDome 쿠키를 확인하고 스크립트를 분석합니다"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "브라우저 데이터(BDA)를 캡처하고 스크립트를 분석합니다"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "GeeTest 버전(v3 또는 v4)을 감지하고 스크립트를 분석합니다"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "hCaptcha 버전을 감지하고 스크립트를 분석합니다"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "사이트 키를 추출하고 Turnstile 스크립트를 분석합니다"
   }
 }
