@@ -305,3 +305,28 @@ test('a description typed on a combination row is saved on the pattern and mirro
   const html = rules.renderComboItem({ pattern: 'a' }, 0, new Map([['a', { id: 'a', method: 'url', label: '/a', description: 'Typed' }]]));
   assert.match(html, /contenteditable="plaintext-only"[^>]*data-combo-field="description"[^>]*>Typed</);
 });
+
+test('"only count together" can be ticked on a new, empty combination and applies to the patterns added', () => {
+  const detector = base({ all: [{ pattern: 'a' }] });
+  detector.detection.url.forEach(p => { p.standalone = true; });
+  const { rules, options, container, act } = editor(detector);
+  rules.combinationsModel = [{ id: 'c2', name: '', confidence: null, when: { all: [] } }];
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  rules.renderCombinations();
+  assert.doesNotMatch(container.innerHTML, /data-combo-action="require"[^>]*disabled/, 'the tick is available before any pattern');
+  act('require', { checked: true });
+  assert.equal(options.every(p => !p.strict), true, 'nothing changes while the combination is empty');
+  assert.match(container.innerHTML, /data-combo-action="require" checked/);
+  rules.addComboItems(rules.combinationsModel[0], ['pattern:b', 'pattern:c']);
+  assert.deepEqual(options.map(p => [p.id, p.strict]), [['a', false], ['b', true], ['c', true]]);
+  assert.equal(rules.combinationsModel[0].pendingStrict, undefined);
+  rules.addComboItems(rules.combinationsModel[0], ['pattern:a']);
+  assert.equal(options.find(p => p.id === 'a').strict, false, 'later additions keep their own flag');
+  assert.equal('pendingStrict' in plain(rules.buildCombinationsForSave(null, { validate: false }).combinations[0]), false);
+  // Unticked before adding anything: the patterns keep counting on their own
+  const combo = rules.combinationsModel[0];
+  combo.when = { all: [] };
+  combo.pendingStrict = true;
+  act('require', { checked: false });
+  assert.equal(combo.pendingStrict, undefined);
+});
