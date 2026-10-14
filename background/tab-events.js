@@ -83,12 +83,6 @@ function setupTabListeners() {
             shapeSecurityExtractionState.delete(tabId);
         }
 
-        if (awsWafCaptureState.has(tabId)) {
-            Logger.debug('BACKGROUND', `[TabCleanup] Tab ${tabId} closed during AWS WAF capture, cleaning up`);
-            clearCaptureTimeout(awsWafCaptureState.get(tabId));
-            awsWafStopCapture(tabId);
-        }
-
         chrome.action.setBadgeText({
             text: BADGE.TEXT.EMPTY,
             tabId: tabId
@@ -144,9 +138,6 @@ function setupTabListeners() {
         }
         if (typeof impervaHandleCaptureTabUpdate === 'function') {
             impervaHandleCaptureTabUpdate(tabId, changeInfo, tab);
-        }
-        if (typeof awsWafHandleCaptureTabUpdate === 'function') {
-            awsWafHandleCaptureTabUpdate(tabId, changeInfo, tab);
         }
         if (typeof awsWafHandleAnalysisTabUpdate === 'function') {
             awsWafHandleAnalysisTabUpdate(tabId, changeInfo, tab);

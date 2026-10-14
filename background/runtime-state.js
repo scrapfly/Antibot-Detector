@@ -24,7 +24,6 @@ const funcaptchaCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants
 const hcaptchaCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
 const shapesecurityCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
 const shapeSecurityExtractionState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
-const awsWafCaptureState = new TTLMap(Constants.CAPTURE_STATE_TTL, Constants.CAPTURE_STATE_MAX_SIZE);
 
 // ─── Detection Tracking ─────────────────────────────────────────────────────
 

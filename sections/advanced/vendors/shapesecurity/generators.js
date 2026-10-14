@@ -18,11 +18,8 @@ ShapeSecurityAdvanced.prototype.generateParsingCode = function(scripts, options)
 
         // Return cached templates if available
         if (ShapeSecurityAdvanced.codeTemplateCache.has(cacheKey)) {
-            console.log('[ShapeSecurityAdvanced] Using cached code templates');
             return ShapeSecurityAdvanced.codeTemplateCache.get(cacheKey);
         }
-
-        console.log('[ShapeSecurityAdvanced] Generating new code templates (not cached)');
 
         const initScripts = scripts.filter(s => s.isInitJs);
         const vendor2Scripts = scripts.filter(s => s.url.includes('vendor2.js'));

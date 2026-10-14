@@ -144,7 +144,7 @@ function registerAdvancedCaptureHandlers(registry, context) {
 
     const handleAwsWaf = function({ request, sender, sendResponse }) {
         if (typeof handleAwsWafMessage === 'function') {
-            return handleAwsWafMessage(request, sender, sendResponse, awsWafCaptureState);
+            return handleAwsWafMessage(request, sender, sendResponse);
         }
         return false;
     };

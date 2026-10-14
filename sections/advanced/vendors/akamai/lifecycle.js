@@ -1,11 +1,4 @@
 
-    /**
-     * Update capture button state
-     * Override from BaseAdvancedModule to add custom styling
-     */
-AkamaiAdvanced.prototype.updateCaptureButtonState = function(isCapturing, confirmed = true) {
-        BaseAdvancedModule.prototype.updateCaptureButtonState.call(this, isCapturing, confirmed);
-    };
 
     /**
      * Start capturing Akamai data

@@ -363,7 +363,6 @@ Advanced.prototype.loadSelectedDetectionTools = async function(detectorId) {
       this.selectedDetection = detectorId;
       moduleInstance.setupEventListeners?.();
       document.querySelector('#changeDetectionBtn')?.focus({ preventScroll: true });
-      await moduleInstance.checkPendingAnalysisResults?.();
       return true;
     } catch (error) {
       Logger.error('UI', '[Advanced] Could not open tools:', error);

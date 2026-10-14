@@ -14,13 +14,6 @@ class ShapeSecurityAdvanced extends BaseAdvancedModule {
 
     constructor(detection, tabInfo) {
         super(detection, tabInfo, 'shapesecurity');
-
-        // Shape Security specific state
-        this.analysisActive = false;
-        this.analysisResults = [];
-        this.analysisListener = null;
-        this.analysisTimer = null;
-        this.listenersSetup = false; // Flag to prevent duplicate listener setup
     }
 }
 
