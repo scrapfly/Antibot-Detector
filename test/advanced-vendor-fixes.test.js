@@ -26,7 +26,7 @@ test('hCaptcha: version, site key and every Enterprise sign come from one parser
   const target = () => ({ version: '', websiteKey: '', websiteURL: '', isEnterprise: false, detectionMethods: [] });
   const config = target();
   const url = 'https://api.hcaptcha.com/checksiteconfig?v=1b0b8a6&host=shop.example&sitekey=a5f74b19-9e45-40e0-b45d-47ff91b7a6c2&sc=1';
-  assert.equal(hcaptchaInspectRequest({ url }, config), null, 'checksiteconfig is read, not fetched again (its features are listed for every site)');
+  assert.equal(hcaptchaInspectRequest({ url }, config), url, 'checksiteconfig is fetched for its Enterprise-only features');
   assert.deepEqual(plain(config), { version: '1b0b8a6', websiteKey: 'a5f74b19-9e45-40e0-b45d-47ff91b7a6c2', websiteURL: 'shop.example', isEnterprise: false, detectionMethods: [] });
   // rqdata: raw bytes (JSON or form text) and formData, the shapes Chrome actually gives
   for (const requestBody of [{ raw: [bytes('{"v":"1","rqdata":"abc"}')] }, { raw: [bytes('v=1&rqdata=abc')] }, { formData: { v: ['1'], rqdata: ['abc'] } }]) {
@@ -44,6 +44,16 @@ test('hCaptcha: version, site key and every Enterprise sign come from one parser
   const none = target();
   hcaptchaInspectRequest({ url: 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=cb' }, none);
   assert.equal(none.isEnterprise, false);
+});
+
+test('hCaptcha: only Enterprise-only checksiteconfig features count (enc_get_req comes back even for an unregistered key)', () => {
+  const { hcaptchaHasEnterpriseFeature } = worker('hcaptcha');
+  // Real responses: an unregistered key, the all-zeros key, hCaptcha's demo key, hCaptcha's test key
+  assert.equal(hcaptchaHasEnterpriseFeature({ features: { enc_get_req: true }, pass: true }), false);
+  assert.equal(hcaptchaHasEnterpriseFeature({ features: {}, pass: true }), false);
+  assert.equal(hcaptchaHasEnterpriseFeature({ features: { enc_get_req: true, andint: true }, pass: true }), false);
+  assert.equal(hcaptchaHasEnterpriseFeature({ features: { custom_theme: true, enc_get_req: true }, pass: true }), true);
+  assert.equal(hcaptchaHasEnterpriseFeature(null), false);
 });
 
 test('FunCaptcha: the public_key POST is read from formData as well as raw bytes', () => {
