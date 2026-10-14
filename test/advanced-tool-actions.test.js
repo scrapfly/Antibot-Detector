@@ -331,14 +331,20 @@ test('a tool that started a background job stays busy, says so, and frees itself
   const observers = [];
   context.MutationObserver = class { constructor(fn) { this.fn = fn; this.on = false; observers.push(this); } observe() { this.on = true; } disconnect() { this.on = false; } };
   context.document.body = {};
-  const add = className => observers.filter(o => o.on).forEach(o => o.fn([{ addedNodes: [{ nodeType: 1, matches: selector => selector.split(', ').includes('.' + className), querySelector: () => null }] }]));
+  // Matches the selectors the watcher uses: '.x' and '.notification-toast:not(.notification-info)'
+  const add = className => observers.filter(o => o.on).forEach(o => o.fn([{ addedNodes: [{ nodeType: 1, querySelector: () => null,
+    matches: selector => selector.split(', ').some(part => {
+      const [base, not] = part.split(':not(');
+      const classes = className.split(' ').map(name => '.' + name);
+      return classes.includes(base) && !(not && classes.includes(not.replace(')', '')));
+    }) }] }]));
   const scripts = element(); scripts.dataset = { toolAction: 'scripts' }; nodes.set('#testAnalyzeScripts', scripts);
   const cookies = element(); cookies.dataset = { toolAction: 'cookies' }; nodes.set('#testCheckCookies', cookies);
   const version = element(); version.dataset = { toolAction: 'version' }; nodes.set('#testVersion', version);
   const toastOnly = element(); toastOnly.dataset = { toolAction: 'scripts' }; nodes.set('#testAnalyzeContent', toastOnly);
   instance.bindToolActions([
     // Shows its "page will reload" toast, then returns before the result arrives
-    { id: 'testAnalyzeScripts', handler: async () => { add('notification-toast'); return { awaitingResult: true }; } },
+    { id: 'testAnalyzeScripts', handler: async () => { add('notification-toast notification-info'); return { awaitingResult: true }; } },
     // Did all its work inside the handler and only showed a toast: nothing to wait for
     { id: 'testAnalyzeContent', handler: async () => { add('notification-toast'); } },
     { id: 'testCheckCookies', handler: async () => { add('adv-kit-overlay'); } },
@@ -355,10 +361,12 @@ test('a tool that started a background job stays busy, says so, and frees itself
   assert.equal(scripts.getAttribute('aria-busy'), null);
   assert.equal(scripts.classList.contains('is-working'), false);
   assert.equal(observers.some(o => o.on), false, 'stops watching once released');
-  // An error toast after the reload also ends the wait
+  // An info note that lands after the handler returned does not end the wait; an error does
   await scripts.click();
   assert.equal(scripts.disabled, true);
-  add('notification-toast');
+  add('notification-toast notification-info');
+  assert.equal(scripts.disabled, true, 'its own "page will reload" note is not a result');
+  add('notification-toast notification-error');
   assert.equal(scripts.disabled, false);
   // Tools that answer at once never wait
   await toastOnly.click();

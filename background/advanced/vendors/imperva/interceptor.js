@@ -4,6 +4,8 @@
 // Guard against re-initialization (use var for service worker reload compatibility)
 var impervaInterceptionListener = impervaInterceptionListener || null;
 var impervaCaptureStateRef = impervaCaptureStateRef || null;
+// Analyze Scripts: how long after the reloaded page loads to wait for late challenge requests
+var IMPERVA_EXTRACT_SETTLE_MS = 8000;
 
 // Destructure helpers from BaseInterceptorHelpers (use var to avoid redeclaration errors)
 var checkCookies = self.BaseInterceptorHelpers?.checkCookies;
@@ -150,6 +152,22 @@ function impervaStartExtraction(tabId, url) {
             scriptUrls: []         // Reese84/_Incapsula_Resource URLs
         }
     });
+
+    // No challenge POST on the page: finish a few seconds after the reloaded page loads,
+    // like the other Analyze Scripts tools, instead of waiting for the 60 s stop
+    const onLoaded = (details) => {
+        if (details.tabId !== tabId || details.frameId !== 0) return;
+        chrome.webNavigation.onCompleted.removeListener(onLoaded);
+        setTimeout(() => {
+            const current = impervaCaptureStateRef.get(tabId);
+            if (current && current.extractMode) {
+                handleImpervaExtractionCompleted(tabId, current).finally(() => impervaRemoveListenerIfIdle());
+            }
+        }, IMPERVA_EXTRACT_SETTLE_MS);
+    };
+    chrome.webNavigation.onCompleted.addListener(onLoaded);
+    const extractionState = impervaCaptureStateRef.get(tabId);
+    if (extractionState) extractionState.removeLoadListener = () => chrome.webNavigation.onCompleted.removeListener(onLoaded);
 
     // Auto-stop after 60 seconds
     const state = (typeof getCaptureState === 'function')
@@ -603,6 +621,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
  * @param {object} extractionState - Extraction state with captured data
  */
 async function handleImpervaExtractionCompleted(tabId, extractionState) {
+    if (extractionState && typeof extractionState.removeLoadListener === 'function') extractionState.removeLoadListener();
     Logger.network('[IMPERVA-EXTRACT] ========== EXTRACTION COMPLETED ==========');
     Logger.network('[IMPERVA-EXTRACT] Tab ID:', tabId);
 

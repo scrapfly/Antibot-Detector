@@ -199,7 +199,8 @@ class AdvancedToolGrid {
                 // answers seconds later: stay busy, and say so, until its window or a notification appears
                 if (!failed && outcome && outcome.awaitingResult === true && opened.available && !opened.seen) {
                     if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWaitingReload', 'Reloading the page and collecting results. This takes a few seconds…');
-                    const outcome = BaseAdvancedModule.watchToolOutcome(`${BaseAdvancedModule.TOOL_RESULT_SELECTOR}, .notification-toast`, () => {
+                    // A result window, or a success / warning / error note; the tool's own "page will reload" info note does not count
+                    const outcome = BaseAdvancedModule.watchToolOutcome(`${BaseAdvancedModule.TOOL_RESULT_SELECTOR}, .notification-toast:not(.notification-info)`, () => {
                         clearTimeout(timer);
                         release();
                     });

@@ -26,7 +26,7 @@ test('hCaptcha: version, site key and every Enterprise sign come from one parser
   const target = () => ({ version: '', websiteKey: '', websiteURL: '', isEnterprise: false, detectionMethods: [] });
   const config = target();
   const url = 'https://api.hcaptcha.com/checksiteconfig?v=1b0b8a6&host=shop.example&sitekey=a5f74b19-9e45-40e0-b45d-47ff91b7a6c2&sc=1';
-  assert.equal(hcaptchaInspectRequest({ url }, config), url, 'checksiteconfig is fetched for its features');
+  assert.equal(hcaptchaInspectRequest({ url }, config), null, 'checksiteconfig is read, not fetched again (its features are listed for every site)');
   assert.deepEqual(plain(config), { version: '1b0b8a6', websiteKey: 'a5f74b19-9e45-40e0-b45d-47ff91b7a6c2', websiteURL: 'shop.example', isEnterprise: false, detectionMethods: [] });
   // rqdata: raw bytes (JSON or form text) and formData, the shapes Chrome actually gives
   for (const requestBody of [{ raw: [bytes('{"v":"1","rqdata":"abc"}')] }, { raw: [bytes('v=1&rqdata=abc')] }, { formData: { v: ['1'], rqdata: ['abc'] } }]) {

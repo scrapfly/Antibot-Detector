@@ -56,8 +56,9 @@ function hcaptchaRequestBodyText(body) {
 
 /**
  * Reads one request into target ({ version, websiteKey, websiteURL, isEnterprise, detectionMethods }).
- * Paths only, so Enterprise custom endpoints count too. Returns the checksiteconfig URL to
- * fetch for its Enterprise features, else null.
+ * Paths only, so Enterprise custom endpoints count too. Enterprise is the rqdata field of the
+ * challenge request or an Enterprise-only api.js parameter; checksiteconfig "features" are not a
+ * sign (hCaptcha lists them for every site key, its own test key included).
  */
 function hcaptchaInspectRequest(details, target) {
     let parsed;
@@ -67,7 +68,7 @@ function hcaptchaInspectRequest(details, target) {
         target.version = target.version || parsed.searchParams.get('v') || '';
         target.websiteURL = target.websiteURL || parsed.searchParams.get('host') || '';
         target.websiteKey = target.websiteKey || parsed.searchParams.get('sitekey') || '';
-        return details.url;
+        return null;
     }
     if (/\/1\/(?:secure-)?api\.js$/.test(path)) {
         const param = HCAPTCHA_ENTERPRISE_API_PARAMS.find(name => parsed.searchParams.has(name));
@@ -78,13 +79,6 @@ function hcaptchaInspectRequest(details, target) {
         hcaptchaMarkEnterprise(target, 'rqdata');
     }
     return null;
-}
-
-/** Whether a checksiteconfig response lists Enterprise features. */
-async function hcaptchaFetchFeatures(configUrl) {
-    const response = await fetch(configUrl);
-    const data = await response.json();
-    return Boolean(data && data.features && Object.keys(data.features).length > 0);
 }
 
 /**
@@ -126,42 +120,11 @@ function hcaptchaStartCapture(tabId, captureUrl) {
         if (!state) return;
 
         // checksiteconfig, api.js and getcaptcha: version, site key, website and Enterprise signs
-        const configUrl = hcaptchaInspectRequest(details, state);
-        if (configUrl) {
-            // Wait for the checksiteconfig response before completing
-            state.waitingForChecksiteconfig = true;
-            hcaptchaFetchFeatures(configUrl)
-                .then(enterprise => {
-                    if (hcaptchaCaptureStateRef.get(tabId) !== state) return;
-                    if (enterprise) hcaptchaMarkEnterprise(state, 'checksiteconfig-features');
-                    state.waitingForChecksiteconfig = false;
-                    if (state.version && state.websiteKey) {
-                        Logger.network('[hCaptcha-Capture] All required data captured (after checksiteconfig fetch)');
-                        if (typeof clearCaptureTimeout === 'function') {
-                            clearCaptureTimeout(state);
-                        } else if (state.timeout) {
-                            clearTimeout(state.timeout);
-                        }
-                        chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-                        handleHCaptchaCaptureCompleted(tabId, {
-                            version: state.version,
-                            websiteKey: state.websiteKey,
-                            websiteURL: state.websiteURL,
-                            isEnterprise: state.isEnterprise,
-                            detectionMethods: state.detectionMethods,
-                            timestamp: state.timestamp
-                        });
-                    }
-                })
-                .catch(err => {
-                    Logger.warn('NETWORK', '[hCaptcha-Capture] Fetch error:', err);
-                    state.waitingForChecksiteconfig = false;
-                });
-        }
+        hcaptchaInspectRequest(details, state);
 
         // Check if we have all required data to complete capture
         // Don't complete if we're still waiting for checksiteconfig response
-        if (state.version && state.websiteKey && !state.waitingForChecksiteconfig) {
+        if (state.version && state.websiteKey) {
             Logger.network('[hCaptcha-Capture] All required data captured!');
             Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
 
@@ -410,12 +373,7 @@ function hcaptchaCheckVersion(tabId) {
 
         const requestListener = (details) => {
             if (details.tabId !== tabId) return;
-            const configUrl = hcaptchaInspectRequest(details, detectedData);
-            if (configUrl) {
-                hcaptchaFetchFeatures(configUrl)
-                    .then(enterprise => { if (enterprise) hcaptchaMarkEnterprise(detectedData, 'checksiteconfig-features'); })
-                    .catch(err => Logger.warn('NETWORK', '[hCaptcha] Fetch error:', err));
-            }
+            hcaptchaInspectRequest(details, detectedData);
         };
 
         const navigationListener = (details) => {

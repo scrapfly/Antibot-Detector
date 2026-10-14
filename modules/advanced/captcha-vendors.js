@@ -272,6 +272,8 @@
             scripts: [{ domains: ['arkoselabs.com', 'funcaptcha.com'], type: 'arkose' }],
             siteKey: {
                 label: 'public key',
+                // Shown as the key's row title instead of "Site key · public key"
+                title: ['advFuncaptchaPublicKey', 'Public Key'],
                 key: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
                 rules: [
                     { type: 'url', url: /^https:\/\/[a-z0-9-]+\.arkoselabs\.com\/v2\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\/api\.js/ },

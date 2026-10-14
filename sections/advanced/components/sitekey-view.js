@@ -31,7 +31,9 @@ AdvancedSiteKeyView.show = function(owner, vendor, result, options = {}) {
     return entry ? tr(entry[0], entry[1]) : String(source || '');
   };
   // The vendor's own name for its key, after the translated "Site key"
-  const keyTitle = /^site[_ ]?key$/i.test(label) ? tr('advCommonSiteKey', 'Site Key') : `${tr('advCommonSiteKey', 'Site Key')} · ${label}`;
+  const ownTitle = vendor.siteKey && vendor.siteKey.title;
+  const keyTitle = ownTitle ? tr(ownTitle[0], ownTitle[1])
+    : /^site[_ ]?key$/i.test(label) ? tr('advCommonSiteKey', 'Site Key') : `${tr('advCommonSiteKey', 'Site Key')} · ${label}`;
   const factRows = Object.keys(facts).map(fact => ({ label: fact, value: facts[fact] }));
   const pageRow = result && result.pageUrl ? K.kitCard(K.kitField(tr('advCommonPage', 'Page'), result.pageUrl, { mono: false, wrap: true })) : '';
 
