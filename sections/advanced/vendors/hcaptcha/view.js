@@ -225,14 +225,25 @@ HCaptchaAdvanced.prototype.displayAnalysisModal = function(data) {
                                 <span style="font-weight: 500;">${hcaptchaText('advHcaptchaScriptNumberFmt', 'Script {0}', idx + 1)}</span>
                                 <span style="background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">hCaptcha</span>
                             </div>
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer;">${script.url}</div>
+                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer;">${AdvancedUtils.escapeHtml(script.url)}</div>
                         </div>
                     `).join('')}
                 </div>
+
+                ${scripts.length > 0 ? `
+                    <button type="button" class="modal-export-code-btn" style="margin-top: 16px; width: 100%; padding: 10px; background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                        ${hcaptchaText('advCommonExportCode', 'Export Code')}
+                    </button>
+                ` : ''}
             </div>
         `;
 
         this.bindCopyValueHandlers(modal, { defaultMessage: hcaptchaText('advCommonUrlCopied', 'URL copied') });
         this.bindModalClose(modal);
+        // Export Code: the script URLs as download code in six languages
+        modal.querySelector('.modal-export-code-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            AdvancedCodeDialog.openScriptUrls(this, 'hCaptcha', scripts);
+        });
         this.showToolModal(modal);
     };

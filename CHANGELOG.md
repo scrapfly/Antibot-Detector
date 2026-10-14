@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Added
 
 - Rules editor: each pattern in a combination has a "Combinations only" button to turn it on or off.
+- Advanced: FunCaptcha and hCaptcha script results have Export Code, like the other protections.
 
 ### Changed
 
@@ -25,6 +26,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: "These patterns only count together" can be ticked on a new combination before adding patterns.
 - Advanced → DataDome → Analyze Scripts: now finds the challenge scripts and the CAPTCHA or interstitial page on blocked pages, not only tags.js.
 - Advanced: tools that reload the page (Analyze scripts, version checks, Akamai sensor) now show they are working until the result opens, and an empty result says no scripts were found.
+- Advanced → Turnstile → Export Code: the JavaScript and Node.js code no longer calls a helper that only exists inside the extension.
 
 ## [2.8.6] - 2026-10-13
 

@@ -95,16 +95,16 @@ TurnstileAdvanced.prototype.displayExportCodeModal = function(scripts) {
 const turnstileScripts = ${JSON.stringify(urls, null, 2)};
 
 turnstileScripts.forEach((url, index) => {
-    Logger.network(\`Script \${index + 1}: \${url}\`);
+    console.log(\`Script \${index + 1}: \${url}\`);
 });
 
 async function fetchTurnstileScripts() {
     for (const url of turnstileScripts) {
         try {
             const response = await fetch(url);
-            Logger.network(\`Fetched: \${url}\`);
+            console.log(\`Fetched: \${url}\`);
         } catch (error) {
-            Logger.error('NETWORK', \`Failed: \${url}\`, error);
+            console.error(\`Failed: \${url}\`, error);
         }
     }
 }
@@ -134,9 +134,9 @@ async function fetchTurnstile() {
     for (const url of turnstileScripts) {
         try {
             await axios.get(url);
-            Logger.network(\`Fetched: \${url}\`);
+            console.log(\`Fetched: \${url}\`);
         } catch (error) {
-            Logger.error('NETWORK', \`Failed: \${url}\`, error.message);
+            console.error(\`Failed: \${url}\`, error.message);
         }
     }
 }

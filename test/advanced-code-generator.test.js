@@ -256,7 +256,8 @@ for (const vendor of Object.keys(vendors)) test(`${vendor} shared dialog retains
   if (vendor === 'turnstile') {
     const block = source.match(/        const generateCode = \(language\) => \{[\s\S]*?        \};/)[0];
     assert.equal(require('node:crypto').createHash('sha256').update(block).digest('hex'),
-      'ec9f62d81d5a02ac0e3ce364bdb60453cf3df4a66b47c36aad4f564356811a80', 'all six original templates remain byte-identical');
+      // 2.8.7: the JavaScript and Node.js templates print with console, not the extension's Logger
+      '4b8b3e00172e251cf131df7ba4551fe02f9a57a50f7b18cfb2b899bc4e3e7a59', 'the six templates change only on purpose');
   }
 });
 

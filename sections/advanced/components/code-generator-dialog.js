@@ -178,5 +178,127 @@
         }
         return { modal, close, selectType, selectLanguage };
     }
-    global.AdvancedCodeDialog = Object.freeze({ open });
+    const SCRIPT_URL_LANGUAGES = ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'];
+    /** Code that downloads a list of script URLs, in one of SCRIPT_URL_LANGUAGES. */
+    function scriptUrlsCode(name, urls, language) {
+        const list = (Array.isArray(urls) ? urls : []).map(String);
+        const ident = String(name || 'scripts').replace(/[^A-Za-z0-9]/g, '').toLowerCase() || 'scripts';
+        const json = JSON.stringify(list, null, 2);
+        const php = list.map(url => `    '${url.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`).join(',\n');
+        const indented = (pad) => list.map(url => `${pad}${JSON.stringify(url)}`).join(',\n');
+        const templates = {
+            'JavaScript': () => `// ${name} script URLs
+const ${ident}Scripts = ${json};
+
+for (const [index, url] of ${ident}Scripts.entries()) {
+    try {
+        const response = await fetch(url);
+        const body = await response.text();
+        console.log(\`Script \${index + 1}: \${url} (\${response.status}, \${body.length} chars)\`);
+    } catch (error) {
+        console.error(\`Failed: \${url}\`, error);
+    }
+}`,
+            'Python': () => `import requests
+
+# ${name} script URLs
+${ident}_scripts = ${json}
+
+for index, url in enumerate(${ident}_scripts, 1):
+    try:
+        response = requests.get(url, timeout=30)
+        print(f'Script {index}: {url} ({response.status_code}, {len(response.text)} chars)')
+    except Exception as error:
+        print(f'Failed: {url}', error)`,
+            'Node.js': () => `const axios = require('axios');
+
+// ${name} script URLs
+const ${ident}Scripts = ${json};
+
+(async () => {
+    for (const [index, url] of ${ident}Scripts.entries()) {
+        try {
+            const response = await axios.get(url, { responseType: 'text' });
+            console.log(\`Script \${index + 1}: \${url} (\${response.status}, \${response.data.length} chars)\`);
+        } catch (error) {
+            console.error(\`Failed: \${url}\`, error.message);
+        }
+    }
+})();`,
+            'PHP': () => `<?php
+// ${name} script URLs
+$scripts = [
+${php}
+];
+
+foreach ($scripts as $index => $url) {
+    $body = @file_get_contents($url);
+    if ($body === false) {
+        echo "Failed: $url\\n";
+        continue;
+    }
+    echo 'Script ' . ($index + 1) . ": $url (" . strlen($body) . " chars)\\n";
+}`,
+            'C#': () => `using System;
+using System.Net.Http;
+
+// ${name} script URLs
+var scripts = new[]
+{
+${indented('    ')}
+};
+
+using var client = new HttpClient();
+for (var i = 0; i < scripts.Length; i++)
+{
+    try
+    {
+        var body = await client.GetStringAsync(scripts[i]);
+        Console.WriteLine($"Script {i + 1}: {scripts[i]} ({body.Length} chars)");
+    }
+    catch (Exception error)
+    {
+        Console.WriteLine($"Failed: {scripts[i]} {error.Message}");
+    }
+}`,
+            'Go': () => `package main
+
+import (
+\t"fmt"
+\t"io"
+\t"net/http"
+)
+
+// ${name} script URLs
+var scripts = []string{
+${indented('\t')},
+}
+
+func main() {
+\tfor i, url := range scripts {
+\t\tresp, err := http.Get(url)
+\t\tif err != nil {
+\t\t\tfmt.Println("Failed:", url, err)
+\t\t\tcontinue
+\t\t}
+\t\tbody, _ := io.ReadAll(resp.Body)
+\t\tresp.Body.Close()
+\t\tfmt.Printf("Script %d: %s (%d, %d bytes)\\n", i+1, url, resp.StatusCode, len(body))
+\t}
+}`
+        };
+        const template = templates[language];
+        if (!template) throw new Error(`Unsupported language: ${language}`);
+        return template();
+    }
+    /** Export Code for a list of captured scripts ({ url }). */
+    function openScriptUrls(owner, name, scripts) {
+        const urls = (Array.isArray(scripts) ? scripts : []).map(script => script && script.url).filter(Boolean);
+        return open(owner, {
+            title: tr('advCommonExportCode', 'Export Code'),
+            languages: SCRIPT_URL_LANGUAGES.map(label => ({ id: label, label })),
+            getCode: (_type, language) => scriptUrlsCode(name, urls, language)
+        });
+    }
+    global.AdvancedCodeDialog = Object.freeze({ open, openScriptUrls, scriptUrlsCode, SCRIPT_URL_LANGUAGES });
 })(window);
