@@ -250,7 +250,8 @@ test('rows show the stored description first, but not after the pattern text was
   assert.ok(!html.includes('Old description'), 'an edited pattern shows its new text, not the old description');
   assert.match(html, /data-pattern="b"[^>]*><\/span><\/p><span class="combo-leaf-text" dir="ltr" title="\/b-edited">\/b-edited<\/span>/,
     'no description: an empty editable line (placeholder) above the pattern text');
-  assert.match(html, /class="combo-item-tag">Combinations only</);
+  assert.match(html, /class="combo-item-tag is-on" data-combo-action="strict" data-pattern="a" aria-pressed="true"/);
+  assert.match(html, /class="combo-item-tag" data-combo-action="strict" data-pattern="b" aria-pressed="false"/);
   assert.ok(!html.includes('<script>'));
 });
 
@@ -329,4 +330,25 @@ test('"only count together" can be ticked on a new, empty combination and applie
   combo.pendingStrict = true;
   act('require', { checked: false });
   assert.equal(combo.pendingStrict, undefined);
+});
+
+test('each pattern row turns its own "Combinations only" on and off', () => {
+  const detector = base({ all: [{ pattern: 'a' }, { pattern: 'b' }, { method: 'url' }] });
+  detector.detection.url.forEach(p => { p.standalone = true; });
+  const { rules, options, container } = editor(detector);
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  rules.renderCombinations();
+  assert.equal((container.innerHTML.match(/data-combo-action="strict"/g) || []).length, 2, 'patterns get the button, an "any pattern" row does not');
+  const press = id => {
+    const button = { dataset: { comboAction: 'strict', pattern: id } };
+    const target = { dataset: {}, closest: s => s === '.combo-card' ? { dataset: { combo: '0' } } : s === '.combo-group' ? { dataset: { path: '' } }
+      : s === '.combo-item' ? { dataset: { idx: '0' } } : s === '[data-combo-action]' ? button : null };
+    button.closest = target.closest;
+    rules.handleCombinationAction({ target }, 'click');
+  };
+  press('a');
+  assert.deepEqual(options.map(p => [p.id, p.strict]), [['a', true], ['b', false], ['c', false]]);
+  assert.match(container.innerHTML, /data-pattern="a" aria-pressed="true"/);
+  press('a');
+  assert.equal(options.every(p => !p.strict), true);
 });

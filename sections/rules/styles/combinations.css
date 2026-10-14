@@ -279,13 +279,30 @@
 }
 
 .combo-item-tag {
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--accent-light);
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+.combo-item-tag:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.combo-item-tag.is-on {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--accent-light);
 }
 
 .combo-remove {

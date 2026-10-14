@@ -431,6 +431,11 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
     else delete combo.pendingStrict;
     refs.forEach(p => this.setComboPatternStrict(p.id, el.checked));
     focus = `.combo-card[data-combo="${index}"] [data-combo-action="require"]`;
+  } else if (action === 'strict' && el.dataset.pattern) {
+    const option = this.getComboPatternOptions().find(p => p.id === el.dataset.pattern);
+    if (!option) return;
+    this.setComboPatternStrict(option.id, !option.strict);
+    focus = `.combo-card[data-combo="${index}"] .combo-group[data-path="${path}"] > .combo-items > .combo-item[data-idx="${itemIndex}"] [data-combo-action="strict"]`;
   } else if (action === 'remove' && children?.[itemIndex]) {
     children.splice(itemIndex, 1);
     this.clampComboThresholds(combo);
@@ -733,7 +738,11 @@ Rules.prototype.renderComboItem = function(tree, index, labels) {
   const shownDescription = node.method ? { shown: description, attrs: '' } : comboLocalized(description, ownTranslations);
   // A pattern's description is edited right here (same value as its Settings → Description)
   const addDescription = combosText('combinationAddDescription', 'Add a description');
-  const strict = option?.strict ? `<span class="combo-item-tag">${esc(combosText('patternCombinationsOnlyBadge', 'Combinations only'))}</span>` : '';
+  // Turns this pattern's "Combinations only" on or off (shared by the whole rule)
+  const strict = !node.method && option
+    ? `<button type="button" class="combo-item-tag${option.strict ? ' is-on' : ''}" data-combo-action="strict" data-pattern="${attr(node.pattern)}" aria-pressed="${option.strict ? 'true' : 'false'}"
+        title="${attr(combosText('combinationOnlyTogetherHint', 'On their own they detect nothing. Applies to these patterns in every combination of this rule.'))}">${esc(combosText('patternCombinationsOnlyBadge', 'Combinations only'))}</button>`
+    : '';
   // The method chip starts the first line and the text flows after it, so a
   // wide chip ("Window properties") does not squeeze the description
   return `<div class="combo-item${negative ? ' is-not' : ''}" data-idx="${index}">
