@@ -154,16 +154,9 @@
   color: var(--text-secondary);
 }
 
-.advanced-info-group-head::before {
-  content: '';
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
+.advanced-info-group-head .category-icon {
+  display: inline-flex;
 }
-
-.advanced-info-group-head.is-antibot::before { background: #FF5733; }
-.advanced-info-group-head.is-captcha::before { background: #33C3FF; }
 
 .advanced-info-group-count {
   padding: 0 6px;
