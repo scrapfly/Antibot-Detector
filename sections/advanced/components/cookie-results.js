@@ -38,12 +38,12 @@ class AdvancedCookieResults {
             + (Array.isArray(result.facts) ? result.facts : []).map(fact => K.kitField(String(fact.label || '').replace(/:\s*$/, ''), fact.value, { mono: false })).join('')
         );
         const cards = cookies.map(cookie => K.kitCard(
-            K.kitField(K.cookieValueLabel(cookie.value), cookie.value, { clamp: true })
+            K.kitField(tr('ruleFieldName', 'Name'), cookie.name)
+            + K.kitField(K.cookieValueLabel(cookie.value), cookie.value, { clamp: true })
             + K.kitField(tr('advCommonDomainLabel', 'Domain:').replace(/:\s*$/, ''), cookie.domain)
             + K.kitField(tr('advCookiePath', 'Path'), cookie.path)
             + K.kitField(tr('advCookieExpires', 'Expires'), cookie.expires ? when(cookie.expires) : tr('advCookieSession', 'Session (deleted when the browser closes)'), { mono: false }),
-            K.kitChip(cookie.name, 'blue')
-            + (cookie.secure ? K.kitChip('Secure', 'green') : '')
+            (cookie.secure ? K.kitChip('Secure', 'green') : '')
             + (cookie.httpOnly ? K.kitChip('HttpOnly', 'purple') : '')
             + (cookie.sameSite ? K.kitChip(`SameSite=${cookie.sameSite}`, 'neutral') : '')
         )).join('');

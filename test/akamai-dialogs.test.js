@@ -100,3 +100,14 @@ test('kitFacts escapes text values and skips empty rows', () => {
   assert.doesNotMatch(html, /Empty/);
   assert.equal(context.BaseAdvancedModule.kitFacts([]), '');
 });
+
+test('Cookie results: each cookie shows its name as a copyable Name row, before the value', () => {
+  const { context } = load();
+  vm.runInContext(read('sections/advanced/components/cookie-results.js'), context);
+  const body = context.BaseAdvancedModule.cookieResultsBody({ vendor: 'DataDome', total: 1,
+    cookies: [{ name: 'datadome', value: 'abc', domain: '.datadome.co', path: '/', expires: null, secure: true, httpOnly: false, sameSite: 'lax' }] });
+  assert.match(body, /adv-kit-label">Name<\/span>\s*<button[^>]*data-copy="datadome"/);
+  assert.ok(body.indexOf('data-copy="datadome"') < body.indexOf('data-copy="abc"'), 'the name comes before the value');
+  assert.doesNotMatch(body, /adv-kit-chip--blue">datadome</, 'no duplicate name chip');
+  assert.match(body, /adv-kit-chip--green">Secure</);
+});
