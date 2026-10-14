@@ -177,101 +177,98 @@
       <button type="button" id="closeAdvancedInfoModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
     <div class="advanced-info-body">
-      <div class="advanced-info-section">
-        <div class="advanced-info-intro">
-          <p data-i18n="advancedModalIntro">Specialized capture tools for deep analysis of anti-bot systems, CAPTCHAs, and fingerprinting technologies. These tools appear automatically when relevant detections are found.</p>
-        </div>
+      <div class="advanced-info-intro">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <p data-i18n="advancedModalIntro">Specialized capture tools for deep analysis of anti-bot systems, CAPTCHAs, and fingerprinting technologies. These tools appear automatically when relevant detections are found.</p>
       </div>
 
       <div class="advanced-info-section">
         <h4 data-i18n="advancedSectionSupported">Currently Supported Systems</h4>
-        <div class="advanced-info-grid">
+        <div class="advanced-info-group">
+          <div class="advanced-info-group-head is-antibot"><span data-i18n="categoryAntibot">Anti-bot</span><span class="advanced-info-group-count">6</span></div>
+          <div class="advanced-info-list">
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/akamai_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/akamai_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">Akamai</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoAkamaiDesc">Intercepts sensor data and extracts version information</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/aws_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/aws_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">AWS WAF</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoAwsWafDesc">Captures challenge endpoints and token details</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/cloudflare_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/cloudflare_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">Cloudflare</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoCloudflareDesc">Checks the challenge cookies and version, and finds Turnstile site keys</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/datadome_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/datadome_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">DataDome</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoDataDomeDesc">Checks DataDome cookies and analyzes its scripts</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/imperva_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/imperva_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title" data-i18n="advancedInfoImpervaTitle">Imperva / Incapsula</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoImpervaDesc">Monitors cookies and protection level changes</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/shape_security_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/shape_security_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">Shape Security</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoShapeSecurityDesc">Analyzes dynamic headers and script parameters</div>
             </div>
           </div>
-
+          </div>
+        </div>
+        <div class="advanced-info-group">
+          <div class="advanced-info-group-head is-captcha"><span data-i18n="categoryCaptcha">Captcha</span><span class="advanced-info-group-count">5</span></div>
+          <div class="advanced-info-list">
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/funcaptcha_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/funcaptcha_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">FunCaptcha</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoFunCaptchaDesc">Captures the browser data (BDA) and analyzes its scripts</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/geetest_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/geetest_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">GeeTest</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoGeetestDesc">Detects the GeeTest version (v3 or v4) and analyzes its scripts</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/hcaptcha_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/hcaptcha_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">hCaptcha</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoHcaptchaDesc">Detects the hCaptcha version and analyzes its scripts</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/recaptcha_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/recaptcha_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">reCAPTCHA</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoRecaptchaDesc">Captures site keys, actions, and configuration parameters</div>
             </div>
           </div>
-
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon"><img src="detectors/icons/cloudflare_official.png" alt="" width="40" height="40"></div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/cloudflare_official.png" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">Cloudflare Turnstile</div>
               <div class="advanced-info-item-desc" data-i18n="advancedInfoTurnstileDesc">Extracts the site key and analyzes the Turnstile scripts</div>
             </div>
+          </div>
           </div>
         </div>
       </div>

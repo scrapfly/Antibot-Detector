@@ -9,7 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Changed
 
-- Advanced: the tools information window is larger, lists all 11 supported protections (adding Cloudflare, DataDome, FunCaptcha, GeeTest, hCaptcha and Turnstile) and shows their real logos.
+- Advanced: the tools information window is redesigned and larger; it lists all 11 supported protections by category, with their real logos (adding Cloudflare, DataDome, FunCaptcha, GeeTest, hCaptcha and Turnstile).
 - Detection details: a matched value is plain text instead of a box that copied it on click.
 
 ### Fixed
