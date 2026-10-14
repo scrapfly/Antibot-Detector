@@ -2441,6 +2441,9 @@
   "advCommonUrlCopied": {
     "message": "URLをコピーしました"
   },
+  "advScriptTypeCollector": { "message": "コレクター" },
+  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA チェック" },
+  "advScriptTypeInterstitial": { "message": "インタースティシャル" },
   "advCommonCaptured": {
     "message": "キャプチャ日時"
   },

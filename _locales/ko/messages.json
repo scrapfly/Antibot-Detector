@@ -2441,6 +2441,9 @@
   "advCommonUrlCopied": {
     "message": "URL이 복사되었습니다"
   },
+  "advScriptTypeCollector": { "message": "수집기" },
+  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA 확인" },
+  "advScriptTypeInterstitial": { "message": "중간 페이지" },
   "advCommonCaptured": {
     "message": "캡처 시각"
   },

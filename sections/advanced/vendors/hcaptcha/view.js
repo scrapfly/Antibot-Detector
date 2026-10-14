@@ -166,45 +166,6 @@ HCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
 
 
 HCaptchaAdvanced.prototype.displayAnalysisModal = function(data) {
-        this.recordStructuredResult('displayAnalysisModal', data);
-        const scripts = data?.scripts || [];
-
-        const modal = this.createToolModal();
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${hcaptchaText('advCommonScriptsTitleFmt', '{0} Scripts ({1})', 'hCaptcha', scripts.length)}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    ${scripts.length ? '' : BaseAdvancedModule.kitNote(BaseAdvancedModule._fmt('advPanelNoScriptsFmt', 'No hCaptcha scripts found', 'hCaptcha'))}
-                    ${scripts.map((script, idx) => `
-                        <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                <span style="font-weight: 500;">${hcaptchaText('advHcaptchaScriptNumberFmt', 'Script {0}', idx + 1)}</span>
-                                <span style="background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px;">hCaptcha</span>
-                            </div>
-                            <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer;">${AdvancedUtils.escapeHtml(script.url)}</div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                ${scripts.length > 0 ? `
-                    <button type="button" class="modal-export-code-btn" style="margin-top: 16px; width: 100%; padding: 10px; background: linear-gradient(135deg, #0074BF 0%, #0061B3 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
-                        ${hcaptchaText('advCommonExportCode', 'Export Code')}
-                    </button>
-                ` : ''}
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: hcaptchaText('advCommonUrlCopied', 'URL copied') });
-        this.bindModalClose(modal);
-        // Export Code: the script URLs as download code in six languages
-        modal.querySelector('.modal-export-code-btn')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            AdvancedCodeDialog.openScriptUrls(this, 'hCaptcha', scripts);
-        });
-        this.showToolModal(modal);
+        const labels = { api: 'api.js', config: 'checksiteconfig', challenge: 'getcaptcha', hsw: 'hsw.js', frame: 'iframe', hcaptcha: 'hCaptcha' };
+        return this.showScriptResults(data, { vendor: 'hCaptcha', label: type => labels[type] });
     };

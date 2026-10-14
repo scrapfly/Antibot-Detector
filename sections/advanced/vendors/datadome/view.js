@@ -1,9 +1,3 @@
-// Badge per captured request type (background/advanced/vendors/datadome/interceptor.js)
-const DATADOME_SCRIPT_LABELS = {
-    tags: 'tags.js', collector: 'api-js /js/', captchaScript: 'c.js', interstitialScript: 'i.js',
-    challengeScript: 'captcha-delivery', captcha: 'CAPTCHA', captchaCheck: 'CAPTCHA check', interstitial: 'Interstitial'
-};
-
     /**
      * Render DataDome-specific tools
      */
@@ -48,86 +42,15 @@ DataDomeAdvanced.prototype.setupToolListeners = function() {
      * Display script analysis results in modal
      */
 DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
-        this.recordStructuredResult('displayAnalysisModal', data);
-        Logger.network('[DataDome] Displaying analysis modal with data:', data);
-
-        const modal = this.createToolModal();
-
-        const scripts = data?.scripts || [];
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 600px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${this._txt('advCommonScriptsTitleFmt', '{0} Scripts ({1})', 'DataDome', scripts.length)}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    ${scripts.length ? '' : BaseAdvancedModule.kitNote(BaseAdvancedModule._fmt('advPanelNoScriptsFmt', 'No DataDome scripts found', 'DataDome'))}
-                    ${scripts.map((script, idx) => {
-                        const typeLabel = DATADOME_SCRIPT_LABELS[script.type] || 'DATADOME';
-                        const typeColor = 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)';
-                        return `
-                            <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                    <span style="font-weight: 500;">${this._txt('advCommonScript', 'Script')} ${idx + 1}</span>
-                                    <span style="background: ${typeColor}; color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">${typeLabel}</span>
-                                </div>
-                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">${this._txt('advCommonUrl', 'URL')}</div>
-                                <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url)}" style="font-size: 12px; color: var(--text-primary); word-break: break-all; font-family: var(--font-mono); background: var(--bg-primary); padding: 8px; border-radius: 4px; cursor: pointer; transition: background 0.2s;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${AdvancedUtils.escapeHtml(script.url)}</div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-
-                ${scripts.length > 0 ? `
-                    <button class="modal-export-code-btn" style="margin-top: 16px; width: 100%; padding: 10px; background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span>${this._txt('advCommonExportCode', 'Export Code')}</span>
-                    </button>
-                ` : ''}
-            </div>
-        `;
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: this._txt('advCommonUrlCopied', 'URL copied') });
-        this.bindModalClose(modal);
-
-        // Export Code button
-        const exportBtn = modal.querySelector('.modal-export-code-btn');
-        if (exportBtn && scripts.length > 0) {
-            exportBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-
-                if (scripts.length === 0) {
-                    Logger.error('NETWORK', '[DataDome] No scripts to export!');
-                    NotificationHelper.warning(this._txt('advCommonNoScriptsToExport', 'No scripts available to export'));
-                    return;
-                }
-
-                try {
-                    this.displayExportCodeModal(scripts);
-                    Logger.network('[DataDome] displayExportCodeModal called successfully');
-                } catch (error) {
-                    Logger.error('NETWORK', '[DataDome] Error calling displayExportCodeModal:', error);
-                    NotificationHelper.error(this._txt('advCommonFailedOpenExportFmt', 'Failed to open export modal: {0}', error.message));
-                }
-            });
-            Logger.network('[DataDome] Click listener added successfully');
-        } else {
-            Logger.error('NETWORK', '[DataDome] Export code button not found in modal!');
-            Logger.error('NETWORK', '[DataDome] Modal HTML:', modal.innerHTML.substring(0, 500));
-        }
-
-        this.showToolModal(modal);
+        // File names stay literal; words are translated
+        const labels = {
+            tags: () => 'tags.js', captchaScript: () => 'c.js', interstitialScript: () => 'i.js',
+            collector: () => this._txt('advScriptTypeCollector', 'Collector'),
+            challengeScript: () => 'captcha-delivery', captcha: () => 'CAPTCHA',
+            captchaCheck: () => this._txt('advScriptTypeCaptchaCheck', 'CAPTCHA check'),
+            interstitial: () => this._txt('advScriptTypeInterstitial', 'Interstitial')
+        };
+        return this.showScriptResults(data, { vendor: 'DataDome', label: type => labels[type]?.() });
     };
 
 
-    /**
-     * Display export code modal with multi-language support
-     */
-DataDomeAdvanced.prototype.displayExportCodeModal = function(scripts) {
-        return AdvancedCodeDialog.open(this, {
-            title: this._txt('advCommonExportCode', 'Export Code'),
-            languages: ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'].map(label => ({ id: label, label })),
-            getCode: (type, language) => this.generateDataDomeParsingCode(scripts, language)
-        });
-    };

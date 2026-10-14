@@ -180,8 +180,9 @@ test('Geetest opens runnable standalone v3/v4 code without copying on open', () 
   }
 });
 
-const vendors = { akamai: 'AkamaiAdvanced', awswaf: 'AwsWafAdvanced', cloudflare: 'CloudflareAdvanced',
-  datadome: 'DataDomeAdvanced', imperva: 'ImpervaAdvanced', shapesecurity: 'ShapeSecurityAdvanced', turnstile: 'TurnstileAdvanced' };
+// Vendors whose Export Code is more than the captured URLs; the URL-only ones
+// use AdvancedCodeDialog.openScriptUrls (test/advanced-script-export.test.js)
+const vendors = { akamai: 'AkamaiAdvanced', imperva: 'ImpervaAdvanced', shapesecurity: 'ShapeSecurityAdvanced' };
 function vendorFixture(vendor) {
   const fixtureData = fixture();
   const { context, owner } = fixtureData;
@@ -232,10 +233,7 @@ for (const vendor of Object.keys(vendors)) test(`${vendor} shared dialog retains
     assert.match(module.generateParsingCode(data, paths).javascript, /e=1700000000000/);
   } else {
     dialog = module.displayExportCodeModal(scripts);
-    if (vendor === 'awswaf') expected = () => module.generateAwsWafParsingCode(scripts);
-    if (vendor === 'shapesecurity') expected = type => module.generateParsingCode(scripts, { hasInitJs: true, hasSeeds: true, scriptType: type });
-    if (vendor === 'cloudflare' || vendor === 'datadome') expected = () => Object.fromEntries(['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'].map(language =>
-      [language, vendor === 'cloudflare' ? module.generateCloudflareParsingCode(scripts.map(s => s.url), language) : module.generateDataDomeParsingCode(scripts, language)]));
+    expected = type => module.generateParsingCode(scripts, { hasInitJs: true, hasSeeds: true, scriptType: type });
   }
   const tabs = dialog.modal.querySelectorAll('.advanced-code-dialog__language');
   assert.equal(tabs.length, vendor === 'shapesecurity' ? 5 : 6);
@@ -247,18 +245,11 @@ for (const vendor of Object.keys(vendors)) test(`${vendor} shared dialog retains
     for (const tab of tabs) {
       dialog.selectLanguage(tab.dataset.lang);
       const value = dialog.modal.querySelector('.advanced-code-dialog__code').value;
-      if (codes) assert.equal(value, codes[tab.dataset.lang]);
-      else assert.ok(value.includes('example.com'), 'Turnstile output is literal script text');
+      assert.equal(value, codes[tab.dataset.lang]);
     }
   }
   const source = fs.readFileSync(path.join(__dirname, `../sections/advanced/vendors/${vendor}/view.js`), 'utf8');
   assert.doesNotMatch(source, /(?<!\r)\n/, 'vendor CRLF is preserved');
-  if (vendor === 'turnstile') {
-    const block = source.match(/        const generateCode = \(language\) => \{[\s\S]*?        \};/)[0];
-    assert.equal(require('node:crypto').createHash('sha256').update(block).digest('hex'),
-      // 2.8.7: the JavaScript and Node.js templates print with console, not the extension's Logger
-      '4b8b3e00172e251cf131df7ba4551fe02f9a57a50f7b18cfb2b899bc4e3e7a59', 'the six templates change only on purpose');
-  }
 });
 
 test('code generators join shared focus ownership above a kit dialog', () => {

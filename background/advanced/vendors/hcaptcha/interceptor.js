@@ -622,9 +622,27 @@ function handleHCaptchaMessage(request, sender, sendResponse, captureState) {
 }
 
 function hcaptchaStartAnalysis(tabId, url, requestId) {
-    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'hcaptcha', classify(requestUrl) {
-        return requestUrl.includes('hcaptcha.com') ? 'hcaptcha' : null;
-    } });
+    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'hcaptcha', classify: hcaptchaClassifyUrl });
+}
+
+/**
+ * Which hCaptcha request a URL is, or null: api.js, checksiteconfig,
+ * getcaptcha, the hsw.js proof-of-work script, the widget frame, and other
+ * hcaptcha.com requests.
+ */
+function hcaptchaClassifyUrl(requestUrl) {
+    let parsed;
+    try { parsed = new URL(requestUrl); } catch (_) { return null; }
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+    const host = parsed.hostname.toLowerCase();
+    const path = parsed.pathname;
+    if (host !== 'hcaptcha.com' && !host.endsWith('.hcaptcha.com')) return null;
+    if (/^\/1\/(?:secure-)?api\.js$/.test(path)) return 'api';
+    if (path.startsWith('/checksiteconfig')) return 'config';
+    if (path.startsWith('/getcaptcha')) return 'challenge';
+    if (path.endsWith('/hsw.js')) return 'hsw';
+    if (path.endsWith('.html')) return 'frame';
+    return 'hcaptcha';
 }
 
 Logger.network('[hCaptcha] Interceptor loaded');

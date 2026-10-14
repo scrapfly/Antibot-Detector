@@ -1,5 +1,6 @@
 /** Common bounded network observation for vendor script analyzers. */
 (function (global) {
+    const SKIPPED_RESOURCE_TYPES = new Set(['image', 'imageset', 'stylesheet', 'font', 'media']);
     function start({ tabId, url, vendorId, requestId, classify }) {
         const captured = new Map();
         const { job, reused } = AdvancedJobManager.begin({ tabId, url, vendorId, requestId,
@@ -23,8 +24,10 @@
         if (reused) return { ...AdvancedJobManager.snapshot(job), status: 'started', reused: true };
         const requestListener = details => {
             if (job.finished || details.tabId !== tabId) return;
-            const type = classify(details.url);
-            if (type) captured.set(details.url, { url: details.url, type, source: 'network' });
+            // Images, fonts, CSS and media are never the scripts this lists
+            if (SKIPPED_RESOURCE_TYPES.has(details.type)) return;
+            const type = classify(details.url, details);
+            if (type) captured.set(details.url, { url: details.url, type, resourceType: details.type || '', source: 'network' });
         };
         let observationStarted = false;
         const navigationListener = details => {

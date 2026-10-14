@@ -2441,6 +2441,9 @@
   "advCommonUrlCopied": {
     "message": "已复制 URL"
   },
+  "advScriptTypeCollector": { "message": "收集器" },
+  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA 校验" },
+  "advScriptTypeInterstitial": { "message": "插页" },
   "advCommonCaptured": {
     "message": "捕获时间"
   },

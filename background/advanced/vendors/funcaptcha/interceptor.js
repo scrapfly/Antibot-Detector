@@ -389,9 +389,27 @@ function handleFunCaptchaMessage(request, sendResponse, captureState) {
  * Start analysis mode (script discovery)
  */
 function funcaptchaStartAnalysis(tabId, url, requestId) {
-    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'funcaptcha', classify(requestUrl) {
-        return requestUrl.includes('arkoselabs.com') || requestUrl.includes('funcaptcha.com') ? 'arkose' : null;
-    } });
+    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'funcaptcha', classify: funcaptchaClassifyUrl });
+}
+
+/**
+ * Which Arkose Labs (FunCaptcha) request a URL is, or null: the api.js loader
+ * with the public key in its path, the enforcement frame, the public_key
+ * session call and the other /fc/ calls.
+ */
+function funcaptchaClassifyUrl(requestUrl) {
+    let parsed;
+    try { parsed = new URL(requestUrl); } catch (_) { return null; }
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+    const host = parsed.hostname.toLowerCase();
+    const path = parsed.pathname;
+    const arkose = host === 'arkoselabs.com' || host.endsWith('.arkoselabs.com') || host === 'funcaptcha.com' || host.endsWith('.funcaptcha.com');
+    if (!arkose) return null;
+    if (/^\/v2\/[^/]+\/api\.js$/.test(path)) return 'api';
+    if (/\/enforcement\.[0-9a-f]+\.html$/i.test(path)) return 'enforcement';
+    if (path.startsWith('/fc/gt2/public_key/')) return 'session';
+    if (path.startsWith('/fc/')) return 'fc';
+    return path.endsWith('.js') ? 'script' : 'arkose';
 }
 
 Logger.network('[FunCaptcha] Interceptor loaded');

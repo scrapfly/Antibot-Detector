@@ -68,52 +68,6 @@ CloudflareAdvanced.prototype.extractSiteKey = async function() {
     };
 
 
-CloudflareAdvanced.prototype.analyzeScripts = async function() {
-        Logger.network('[Cloudflare] ========== ANALYZE SCRIPTS ==========');
-        try {
-            if (!this.tabInfo || !this.tabInfo.id) {
-                throw new Error('Tab information not available');
-            }
-
-            let analysisRequestId = null;
-            const analysisListener = (message) => {
-                if (message.type === 'CLOUDFLARE_ANALYSIS_RESULT' && message.tabId === this.tabInfo.id && (!analysisRequestId || message.requestId === analysisRequestId)) {
-                    if (message.status !== 'completed') {
-                        AdvancedToolClient.unsubscribe(analysisListener);
-                        NotificationHelper.error(message.error || BaseAdvancedModule._tr('advCommonFailedStartAnalysis', 'Failed to start analysis'));
-                        return;
-                    }
-                    message.data._advancedPersisted = true;
-                    Logger.network('[Cloudflare] Analysis result received:', message.data);
-                    this.displayAnalysisModal(message.data);
-                    AdvancedToolClient.unsubscribe(analysisListener);
-                }
-            };
-
-            this._analysisDispose?.();
-            this._analysisDispose = AdvancedToolClient.subscribe(analysisListener);
-
-            const response = await AdvancedUtils.sendMessage({
-                type: 'CLOUDFLARE_START_ANALYSIS',
-                tabId: this.tabInfo.id,
-                url: this.tabInfo.url
-            });
-
-            Logger.network('[Cloudflare] Analysis mode response:', response);
-
-            analysisRequestId = response?.requestId;
-            if (response && response.status === 'started') {
-                NotificationHelper.info(this._txt('advCommonAnalyzingReloadFmt', 'Analyzing {0} scripts... Page will reload', 'Cloudflare'));
-
-                await new Promise(resolve => setTimeout(resolve, 500));
-                await chrome.tabs.reload(this.tabInfo.id);
-            } else {
-                AdvancedToolClient.unsubscribe(analysisListener);
-                NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
-            }
-        } catch (error) {
-            this._analysisDispose?.();
-            Logger.error('NETWORK', '[Cloudflare] Failed to analyze scripts:', error);
-            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
-        }
+CloudflareAdvanced.prototype.analyzeScripts = function() {
+        return this.startScriptAnalysis();
     };

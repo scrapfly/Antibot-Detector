@@ -16,51 +16,6 @@ TurnstileAdvanced.prototype.extractSiteKey = async function() {
     };
 
 
-TurnstileAdvanced.prototype.analyzeScripts = async function() {
-        Logger.network('[Turnstile] ========== ANALYZE SCRIPTS ==========');
-        try {
-            if (!this.tabInfo || !this.tabInfo.id) {
-                throw new Error('Tab information not available');
-            }
-
-            let analysisRequestId = null;
-            const analysisListener = (message) => {
-                if (message.type === 'TURNSTILE_ANALYSIS_RESULT' && message.tabId === this.tabInfo.id && (!analysisRequestId || message.requestId === analysisRequestId)) {
-                    if (message.status !== 'completed') {
-                        AdvancedToolClient.unsubscribe(analysisListener);
-                        NotificationHelper.error(message.error || BaseAdvancedModule._tr('advCommonFailedStartAnalysis', 'Failed to start analysis'));
-                        return;
-                    }
-                    message.data._advancedPersisted = true;
-                    Logger.network('[Turnstile] Analysis result received:', message.data);
-                    this.displayAnalysisModal(message.data);
-                    AdvancedToolClient.unsubscribe(analysisListener);
-                }
-            };
-
-            this._analysisDispose?.();
-            this._analysisDispose = AdvancedToolClient.subscribe(analysisListener);
-
-            const response = await AdvancedUtils.sendMessage({
-                type: 'TURNSTILE_START_ANALYSIS',
-                tabId: this.tabInfo.id,
-                url: this.tabInfo.url
-            });
-
-            analysisRequestId = response?.requestId;
-            if (response && response.status === 'started') {
-                // Turnstile sets no cookies: a plain reload is enough to see its scripts load
-                NotificationHelper.info(this._txt('advTurnstileReloadingScripts', 'Reloading the page to collect the Turnstile scripts'));
-                // Same short wait as the other vendors before the reload
-                await new Promise(resolve => setTimeout(resolve, 500));
-                await chrome.tabs.reload(this.tabInfo.id);
-            } else {
-                AdvancedToolClient.unsubscribe(analysisListener);
-                NotificationHelper.error(this._txt('advCommonFailedStartAnalysis', 'Failed to start analysis'));
-            }
-        } catch (error) {
-            this._analysisDispose?.();
-            Logger.error('NETWORK', '[Turnstile] Failed to analyze scripts:', error);
-            NotificationHelper.error(this._txt('advCommonFailedAnalyzeScriptsFmt', 'Failed to analyze scripts: {0}', error.message));
-        }
+TurnstileAdvanced.prototype.analyzeScripts = function() {
+        return this.startScriptAnalysis();
     };

@@ -23,9 +23,15 @@ function fixture(vendor, options = {}) {
     finishReload = resolve;
     rejectReload = reject;
   });
-  class Module {}
   const txt = (key, fallback, ...args) => fallback.replace(/\{(\d+)\}/g, (_, index) => args[index]);
+  // The shared Analyze Scripts flow lives on BaseAdvancedModule (components/script-results.js)
+  class BaseAdvancedModule {
+    static _tr(key, fallback) { return fallback; }
+    static _fmt(key, fallback, ...args) { return txt(key, fallback, ...args); }
+  }
+  class Module extends BaseAdvancedModule {}
   const context = {
+    BaseAdvancedModule,
     [vendors[vendor]]: Module,
     hcaptchaText: txt,
     Logger: { network() {}, error() {} },
@@ -55,19 +61,24 @@ function fixture(vendor, options = {}) {
     },
     setTimeout(callback, delay) { timers.push({ callback, delay }); return timers.length; }
   };
-  const file = path.join(__dirname, '..', 'sections/advanced/vendors', vendor, 'actions.js');
-  vm.runInNewContext(fs.readFileSync(file, 'utf8'), context, { filename: file });
+  vm.createContext(context);
+  for (const file of [path.join(__dirname, '..', 'sections/advanced/components/script-results.js'),
+    path.join(__dirname, '..', 'sections/advanced/vendors', vendor, 'actions.js')]) {
+    vm.runInContext(fs.readFileSync(file, 'utf8'), context, { filename: file });
+  }
   const instance = new Module();
+  instance.moduleName = vendor;
+  instance.displayName = vendor;
   instance.tabInfo = { id: 17, url: 'https://example.test/' };
   instance._txt = txt;
-  return { instance, timers, calls, errors, finishReload, rejectReload };
+  return { instance, context, timers, calls, errors, finishReload, rejectReload };
 }
 
 for (const vendor of Object.keys(vendors)) {
   test(`${vendor}: analysis promise covers the 500ms delay and pending reload`, async () => {
     const f = fixture(vendor);
     let settled = false;
-    const action = f.instance.analyzeScripts().then(() => { settled = true; });
+    const action = f.instance.analyzeScripts().then(value => { settled = true; return value; });
     await flush();
     assert.equal(settled, false);
     assert.equal(f.timers.length, 1);
@@ -91,21 +102,23 @@ for (const vendor of Object.keys(vendors)) {
     // Analyze Scripts draws nothing on the page: the popup shows the progress
     assert.equal(messages.some(type => /_SHOW_ANALYZING_NOTIFICATION$/.test(type)), false);
     f.finishReload();
-    await action;
+    assert.equal((await action).awaitingResult, true, 'the tool card waits for the result');
     assert.equal(settled, true);
     assert.deepEqual(f.errors, []);
   });
 
-  test(`${vendor}: rejected delayed reload is contained and reported by the action`, async () => {
+  test(`${vendor}: a rejected reload reaches the tool card and drops the result listener`, async () => {
     const f = fixture(vendor);
+    let disposed = 0;
+    f.context.AdvancedToolClient.subscribe = () => () => { disposed++; };
     const action = f.instance.analyzeScripts();
     await flush();
     f.timers.shift().callback();
     await flush();
     f.rejectReload(new Error('reload denied'));
-    await assert.doesNotReject(action);
-    assert.equal(f.errors.length, 1);
-    assert.match(f.errors[0], /reload denied/);
+    // bindToolActions turns this into the card's "Could not complete this action" error
+    await assert.rejects(action, /reload denied/);
+    assert.equal(disposed, 1);
     // A detached rejected timer callback would also fail node:test as an unhandled rejection.
     await new Promise(resolve => setImmediate(resolve));
   });

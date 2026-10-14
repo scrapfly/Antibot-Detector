@@ -2447,6 +2447,9 @@
   "advCommonUrlCopied": {
     "message": "URL copied"
   },
+  "advScriptTypeCollector": { "message": "Collector" },
+  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA check" },
+  "advScriptTypeInterstitial": { "message": "Interstitial" },
   "advCommonCaptured": {
     "message": "Captured",
     "description": "Label before the capture date"

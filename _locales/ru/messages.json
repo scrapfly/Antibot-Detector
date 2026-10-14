@@ -2441,6 +2441,9 @@
   "advCommonUrlCopied": {
     "message": "URL скопирован"
   },
+  "advScriptTypeCollector": { "message": "Сборщик" },
+  "advScriptTypeCaptchaCheck": { "message": "Проверка CAPTCHA" },
+  "advScriptTypeInterstitial": { "message": "Промежуточная страница" },
   "advCommonCaptured": {
     "message": "Захвачено"
   },

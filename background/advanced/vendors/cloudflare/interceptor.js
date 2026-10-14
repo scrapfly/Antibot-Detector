@@ -21,15 +21,29 @@ function handleCloudflareMessage(request, sender, sendResponse) {
 }
 
 function cloudflareStartAnalysis(tabId, url, requestId) {
-    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'cloudflare', classify(requestUrl) {
-        const patterns = [
-            [/challenges\.cloudflare\.com\/turnstile/i, 'Turnstile'], [/turnstile\/v\d+\/api\.js/i, 'Turnstile'],
-            [/cdn-cgi\/challenge-platform/i, 'Challenge'], [/challenges\.cloudflare\.com\/cdn-cgi/i, 'Challenge'],
-            [/cdn-cgi\/scripts/i, 'CDN'], [/cloudflareinsights\.com/i, 'Analytics'],
-            [/cdn-cgi\/bm\/cv/i, 'Bot Management'], [/cloudflare\.com/i, 'Cloudflare']
-        ];
-        return patterns.find(([pattern]) => pattern.test(requestUrl))?.[1];
-    } });
+    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'cloudflare', classify: cloudflareClassifyUrl });
+}
+
+const CLOUDFLARE_CHALLENGE_HOSTS = ['challenges.cloudflare.com', 'challenges.cloudflare-cn.com', 'challenges.fed.cloudflare.com'];
+
+/**
+ * Which Cloudflare request a URL is, or null. Labels stay the stored English
+ * values (CloudflareAdvanced.cloudflareTypeLabel translates them).
+ */
+function cloudflareClassifyUrl(requestUrl) {
+    let parsed;
+    try { parsed = new URL(requestUrl); } catch (_) { return null; }
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+    const host = parsed.hostname.toLowerCase();
+    const path = parsed.pathname;
+    if (CLOUDFLARE_CHALLENGE_HOSTS.includes(host)) return path.includes('/turnstile/') ? 'Turnstile' : 'Challenge';
+    if (host === 'cloudflareinsights.com' || host.endsWith('.cloudflareinsights.com')) return 'Analytics';
+    // The site's own /cdn-cgi/ paths
+    if (path.startsWith('/cdn-cgi/challenge-platform/scripts/jsd/')) return 'Bot Management';
+    if (path.startsWith('/cdn-cgi/challenge-platform/')) return path.includes('/turnstile/') ? 'Turnstile' : 'Challenge';
+    if (path.startsWith('/cdn-cgi/bm/cv')) return 'Bot Management';
+    if (path.startsWith('/cdn-cgi/scripts/')) return 'CDN';
+    return null;
 }
 
 Logger.network('[Cloudflare] Interceptor loaded successfully');

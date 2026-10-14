@@ -18,6 +18,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection details: a matched value is plain text instead of a box that copied it on click.
 - Advanced: cookie results show each cookie's name as its own copyable row, above its value.
 - Advanced → History: capture details for every protection use the same layout as the cookie results, with copyable rows and Copy all data at the bottom.
+- Advanced → Analyze scripts: one results window for every protection, with each script's type and an Export code button; it lists only that protection's requests, not look-alike paths or images.
 
 ### Fixed
 

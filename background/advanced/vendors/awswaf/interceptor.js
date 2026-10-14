@@ -147,9 +147,24 @@ function handleAwsWafMessage(message, sender, sendResponse, captureState) {
  * @returns {Object} Status response
  */
 function awsWafStartAnalysis(tabId, url, requestId) {
-    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'awswaf', classify(requestUrl) {
-        return requestUrl.includes('/challenge.js') ? 'challenge' : requestUrl.includes('/captcha.js') ? 'captcha' : requestUrl.includes('awswaf.com') ? 'awswaf' : null;
-    } });
+    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'awswaf', classify: awsWafClassifyUrl });
+}
+
+/**
+ * Which AWS WAF request a URL is, or null: challenge.js, captcha.js and
+ * jsapi.js, and anything else served from an *.awswaf.com host.
+ */
+function awsWafClassifyUrl(requestUrl) {
+    let parsed;
+    try { parsed = new URL(requestUrl); } catch (_) { return null; }
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+    const host = parsed.hostname.toLowerCase();
+    const path = parsed.pathname;
+    if (host !== 'awswaf.com' && !host.endsWith('.awswaf.com')) return null;
+    if (path.endsWith('/challenge.js')) return 'challenge';
+    if (path.endsWith('/captcha.js')) return 'captcha';
+    if (path.endsWith('/jsapi.js')) return 'jsapi';
+    return 'awswaf';
 }
 
 // ============================================================================

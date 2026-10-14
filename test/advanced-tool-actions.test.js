@@ -326,7 +326,7 @@ test('Scrape with Scrapfly from a CAPTCHA module without a category still counts
   assert.equal(opened[0].detections[0].category, 'CAPTCHA');
 });
 
-test('a tool that reloads the page stays busy, says so, and frees itself when its result or a notification appears', async () => {
+test('a tool that started a background job stays busy, says so, and frees itself when its result or a notification appears', async () => {
   const { context, instance, nodes } = fixture();
   const observers = [];
   context.MutationObserver = class { constructor(fn) { this.fn = fn; this.on = false; observers.push(this); } observe() { this.on = true; } disconnect() { this.on = false; } };
@@ -335,9 +335,12 @@ test('a tool that reloads the page stays busy, says so, and frees itself when it
   const scripts = element(); scripts.dataset = { toolAction: 'scripts' }; nodes.set('#testAnalyzeScripts', scripts);
   const cookies = element(); cookies.dataset = { toolAction: 'cookies' }; nodes.set('#testCheckCookies', cookies);
   const version = element(); version.dataset = { toolAction: 'version' }; nodes.set('#testVersion', version);
+  const toastOnly = element(); toastOnly.dataset = { toolAction: 'scripts' }; nodes.set('#testAnalyzeContent', toastOnly);
   instance.bindToolActions([
     // Shows its "page will reload" toast, then returns before the result arrives
-    { id: 'testAnalyzeScripts', handler: async () => { add('notification-toast'); } },
+    { id: 'testAnalyzeScripts', handler: async () => { add('notification-toast'); return { awaitingResult: true }; } },
+    // Did all its work inside the handler and only showed a toast: nothing to wait for
+    { id: 'testAnalyzeContent', handler: async () => { add('notification-toast'); } },
     { id: 'testCheckCookies', handler: async () => { add('adv-kit-overlay'); } },
     // Opens its window before returning: nothing to wait for
     { id: 'testVersion', handler: async () => { add('tool-modal'); } }
@@ -358,6 +361,8 @@ test('a tool that reloads the page stays busy, says so, and frees itself when it
   add('notification-toast');
   assert.equal(scripts.disabled, false);
   // Tools that answer at once never wait
+  await toastOnly.click();
+  assert.equal(toastOnly.disabled, false, 'a toast-only tool is not left "Reloading…"');
   await cookies.click();
   assert.equal(cookies.disabled, false);
   await version.click();

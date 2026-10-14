@@ -2441,6 +2441,9 @@
   "advCommonUrlCopied": {
     "message": "URL कॉपी हो गया"
   },
+  "advScriptTypeCollector": { "message": "कलेक्टर" },
+  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA जाँच" },
+  "advScriptTypeInterstitial": { "message": "इंटरस्टिशियल" },
   "advCommonCaptured": {
     "message": "कैप्चर किया गया"
   },

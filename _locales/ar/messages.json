@@ -2441,6 +2441,9 @@
   "advCommonUrlCopied": {
     "message": "تم نسخ الرابط"
   },
+  "advScriptTypeCollector": { "message": "المُجمِّع" },
+  "advScriptTypeCaptchaCheck": { "message": "فحص CAPTCHA" },
+  "advScriptTypeInterstitial": { "message": "صفحة اعتراضية" },
   "advCommonCaptured": {
     "message": "وقت الالتقاط"
   },

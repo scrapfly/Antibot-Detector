@@ -184,8 +184,9 @@ class AdvancedToolGrid {
                 // Did this click open its result window right away?
                 const opened = BaseAdvancedModule.watchToolOutcome(BaseAdvancedModule.TOOL_RESULT_SELECTOR);
                 let failed = false;
+                let outcome = null;
                 try {
-                    await fn.call(this, event);
+                    outcome = await fn.call(this, event);
                 } catch (error) {
                     failed = true;
                     Logger.error('UI', `[${this.moduleName}] Tool action failed:`, error);
@@ -193,9 +194,9 @@ class AdvancedToolGrid {
                     NotificationHelper.error(BaseAdvancedModule._fmt('advToolActionFailedFmt', `Could not complete this action: ${reason}`, reason));
                 }
                 opened.stop();
-                // A tool that reloads the page answers seconds later: stay busy,
-                // and say so, until its window or a notification appears
-                if (!failed && opened.available && !opened.seen && BaseAdvancedModule.TOOL_RELOAD_ACTIONS.includes(btn.dataset?.toolAction)) {
+                // A tool that started a background job (it returns { awaitingResult: true })
+                // answers seconds later: stay busy, and say so, until its window or a notification appears
+                if (!failed && outcome && outcome.awaitingResult === true && opened.available && !opened.seen) {
                     if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWaitingReload', 'Reloading the page and collecting results. This takes a few seconds…');
                     const outcome = BaseAdvancedModule.watchToolOutcome(`${BaseAdvancedModule.TOOL_RESULT_SELECTOR}, .notification-toast`, () => {
                         clearTimeout(timer);
@@ -214,11 +215,10 @@ class AdvancedToolGrid {
 for (const name of ['resolveToolAction', 'resolveToolTone', 'getToolHint', 'renderToolGrid', 'scrapflyTool', 'openScrapflyExport', 'bindToolActions']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedToolGrid.prototype, name));
 }
-// Result windows a tool opens, the tools that reload the page first, and how long to wait for them
+// Result windows a tool opens, and how long to wait for a background job's answer
 AdvancedToolGrid.TOOL_RESULT_SELECTOR = '.adv-kit-overlay, .tool-modal, .advanced-code-dialog';
-AdvancedToolGrid.TOOL_RELOAD_ACTIONS = Object.freeze(['scripts', 'version', 'sensor']);
 AdvancedToolGrid.TOOL_RELOAD_TIMEOUT_MS = 40000;
-for (const name of ['TOOL_RESULT_SELECTOR', 'TOOL_RELOAD_ACTIONS', 'TOOL_RELOAD_TIMEOUT_MS']) BaseAdvancedModule[name] = AdvancedToolGrid[name];
+for (const name of ['TOOL_RESULT_SELECTOR', 'TOOL_RELOAD_TIMEOUT_MS']) BaseAdvancedModule[name] = AdvancedToolGrid[name];
 for (const name of ['toolIcon', 'captureLast', 'watchToolOutcome']) {
     Object.defineProperty(BaseAdvancedModule, name, Object.getOwnPropertyDescriptor(AdvancedToolGrid, name));
 }

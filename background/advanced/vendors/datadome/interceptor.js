@@ -47,7 +47,7 @@ function datadomeStartAnalysis(tabId, url, requestId) {
 
 /**
  * Which DataDome request a URL is, or null: the JavaScript tag (js.datadome.co
- * or first-party tags.js), its collector (api-js.datadome.co/js/), and on
+ * or first-party tags.js), its collector (api-js or js.datadome.co/js/), and on
  * captcha-delivery.com the challenge scripts (c.js, i.js) and the CAPTCHA or
  * interstitial page loaded in the block iframe.
  */
@@ -65,7 +65,7 @@ function datadomeClassifyUrl(requestUrl) {
         if (path === '/interstitial/' || path === '/interstitial') return 'interstitial';
         return path.endsWith('.js') ? 'challengeScript' : null;
     }
-    if (host === 'api-js.datadome.co' && path.startsWith('/js/')) return 'collector';
+    if ((host === 'api-js.datadome.co' || host === 'js.datadome.co') && path.startsWith('/js/')) return 'collector';
     if (path.endsWith('/tags.js')) return 'tags';
     return null;
 }
