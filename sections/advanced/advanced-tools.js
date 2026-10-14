@@ -193,10 +193,7 @@ Advanced.prototype.renderNoToolsState = function(tr) {
                     <span class="advanced-supported-count">${group.items.length}</span>
                   </div>
                   <ul class="advanced-supported-logos">
-                    ${group.items.map(item => item.logo === 'custom.png'
-                      // No official logo: its initial, so placeholder tiles do not look like duplicates
-                      ? `<li class="advanced-supported-logo is-initial" title="${esc(item.name)}" aria-label="${esc(item.name)}">${esc(item.name.charAt(0).toUpperCase())}</li>`
-                      : `<li class="advanced-supported-logo" title="${esc(item.name)}"><img src="detectors/icons/${esc(item.logo)}" alt="${esc(item.name)}" width="20" height="20" loading="lazy"></li>`).join('')}
+                    ${group.items.map(item => `<li class="advanced-supported-logo" title="${esc(item.name)}"><img src="detectors/icons/${esc(item.logo)}" alt="${esc(item.name)}" width="20" height="20" loading="lazy"></li>`).join('')}
                   </ul>
                 </div>`).join('');
 

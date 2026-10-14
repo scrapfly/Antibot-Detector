@@ -133,14 +133,6 @@
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
-.advanced-supported-logo.is-initial {
-  background: var(--bg-tertiary);
-  box-shadow: 0 0 0 1px var(--border);
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 700;
-}
-
 .advanced-supported-logo img {
   width: 20px;
   height: 20px;

@@ -33,9 +33,7 @@ Advanced.prototype.fillAdvancedInfoCaptchas = function(modal) {
       const tr = (key, fallback) => (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
       const html = vendors.map(vendor => `
           <div class="advanced-info-item">
-            <div class="advanced-info-item-icon${vendor.logo === 'custom.png' ? ' is-initial' : ''}">${vendor.logo === 'custom.png'
-              ? esc(vendor.productName.charAt(0).toUpperCase())
-              : `<img src="detectors/icons/${esc(vendor.logo)}" alt="" width="32" height="32">`}</div>
+            <div class="advanced-info-item-icon"><img src="detectors/icons/${esc(vendor.logo)}" alt="" width="32" height="32"></div>
             <div class="advanced-info-item-content">
               <div class="advanced-info-item-title">${esc(vendor.productName)}</div>
               <div class="advanced-info-item-desc">${esc(tr(vendor.infoKey, vendor.siteKey ? 'Extracts the site key and analyzes its scripts' : 'Analyzes its scripts'))}</div>

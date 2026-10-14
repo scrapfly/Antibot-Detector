@@ -283,7 +283,7 @@ test('the no-tools screen groups supported protections by category, with logos a
   assert.equal((html.match(/class="advanced-supported-logo[" ]/g) || []).length, 25);
   assert.equal((html.match(/class="advanced-supported-group"/g) || []).length, 2);
   assert.doesNotMatch(html, /advanced-supported-chip/);
-  assert.match(html, /is-initial" title="Friendly Captcha" aria-label="Friendly Captcha">F</, 'no official logo: its initial');
+  assert.match(html, /title="Friendly Captcha"><img src="detectors\/icons\/custom\.png"/, 'no official logo: the Scrapfly default, as in Rules');
   // Nothing detected: the minimum and where to change it
   assert.match(html, /No protection detected/);
   assert.match(html, /above 50% confidence/);
