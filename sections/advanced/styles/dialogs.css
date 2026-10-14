@@ -194,6 +194,16 @@
   flex-shrink: 0;
 }
 
+/* No official logo: the vendor's initial on a plain tile */
+.advanced-info-item-icon.is-initial {
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  box-shadow: 0 0 0 1px var(--border);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 700;
+}
+
 /* The detector's own logo, on a white tile as in the Detection cards */
 .advanced-info-item-icon img {
   width: 100%;

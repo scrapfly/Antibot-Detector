@@ -4850,13 +4850,13 @@
     "message": "DataDome 쿠키를 확인하고 스크립트를 분석합니다"
   },
   "advancedInfoFunCaptchaDesc": {
-    "message": "브라우저 데이터(BDA)를 캡처하고 스크립트를 분석합니다"
+    "message": "공개 키를 찾고 브라우저 데이터(BDA)를 캡처하며 스크립트를 분석합니다"
   },
   "advancedInfoGeetestDesc": {
     "message": "GeeTest 버전(v3 또는 v4)을 감지하고 스크립트를 분석합니다"
   },
   "advancedInfoHcaptchaDesc": {
-    "message": "hCaptcha 버전을 감지하고 스크립트를 분석합니다"
+    "message": "사이트 키를 찾고 hCaptcha 버전을 감지하며 스크립트를 분석합니다"
   },
   "advancedInfoTurnstileDesc": {
     "message": "사이트 키를 추출하고 Turnstile 스크립트를 분석합니다"

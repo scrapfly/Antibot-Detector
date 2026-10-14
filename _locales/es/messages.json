@@ -4850,13 +4850,13 @@
     "message": "Comprueba las cookies de DataDome y analiza sus scripts"
   },
   "advancedInfoFunCaptchaDesc": {
-    "message": "Captura los datos del navegador (BDA) y analiza sus scripts"
+    "message": "Encuentra la clave pública, captura los datos del navegador (BDA) y analiza sus scripts"
   },
   "advancedInfoGeetestDesc": {
     "message": "Detecta la versión de GeeTest (v3 o v4) y analiza sus scripts"
   },
   "advancedInfoHcaptchaDesc": {
-    "message": "Detecta la versión de hCaptcha y analiza sus scripts"
+    "message": "Encuentra la clave de sitio, detecta la versión de hCaptcha y analiza sus scripts"
   },
   "advancedInfoTurnstileDesc": {
     "message": "Extrae la clave de sitio y analiza los scripts de Turnstile"

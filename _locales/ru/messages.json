@@ -4850,13 +4850,13 @@
     "message": "Проверяет cookie DataDome и анализирует его скрипты"
   },
   "advancedInfoFunCaptchaDesc": {
-    "message": "Перехватывает данные браузера (BDA) и анализирует его скрипты"
+    "message": "Находит открытый ключ, перехватывает данные браузера (BDA) и анализирует его скрипты"
   },
   "advancedInfoGeetestDesc": {
     "message": "Определяет версию GeeTest (v3 или v4) и анализирует его скрипты"
   },
   "advancedInfoHcaptchaDesc": {
-    "message": "Определяет версию hCaptcha и анализирует его скрипты"
+    "message": "Находит ключ сайта, определяет версию hCaptcha и анализирует его скрипты"
   },
   "advancedInfoTurnstileDesc": {
     "message": "Извлекает ключ сайта и анализирует скрипты Turnstile"

@@ -4850,13 +4850,13 @@
     "message": "يفحص ملفات تعريف ارتباط DataDome ويحلل نصوصه البرمجية"
   },
   "advancedInfoFunCaptchaDesc": {
-    "message": "يلتقط بيانات المتصفح (BDA) ويحلل نصوصه البرمجية"
+    "message": "يعثر على المفتاح العام ويلتقط بيانات المتصفح (BDA) ويحلل نصوصه البرمجية"
   },
   "advancedInfoGeetestDesc": {
     "message": "يكتشف إصدار GeeTest (v3 أو v4) ويحلل نصوصه البرمجية"
   },
   "advancedInfoHcaptchaDesc": {
-    "message": "يكتشف إصدار hCaptcha ويحلل نصوصه البرمجية"
+    "message": "يعثر على مفتاح الموقع ويكتشف إصدار hCaptcha ويحلل نصوصه البرمجية"
   },
   "advancedInfoTurnstileDesc": {
     "message": "يستخرج مفتاح الموقع ويحلل نصوص Turnstile البرمجية"

@@ -4850,13 +4850,13 @@
     "message": "检查 DataDome Cookie 并分析其脚本"
   },
   "advancedInfoFunCaptchaDesc": {
-    "message": "捕获浏览器数据 (BDA) 并分析其脚本"
+    "message": "查找公钥，捕获浏览器数据 (BDA) 并分析其脚本"
   },
   "advancedInfoGeetestDesc": {
     "message": "检测 GeeTest 版本（v3 或 v4）并分析其脚本"
   },
   "advancedInfoHcaptchaDesc": {
-    "message": "检测 hCaptcha 版本并分析其脚本"
+    "message": "查找站点密钥，检测 hCaptcha 版本并分析其脚本"
   },
   "advancedInfoTurnstileDesc": {
     "message": "提取站点密钥并分析 Turnstile 脚本"

@@ -4850,13 +4850,13 @@
     "message": "Prüft DataDome-Cookies und analysiert seine Skripte"
   },
   "advancedInfoFunCaptchaDesc": {
-    "message": "Erfasst die Browserdaten (BDA) und analysiert seine Skripte"
+    "message": "Findet den öffentlichen Schlüssel, erfasst die Browserdaten (BDA) und analysiert seine Skripte"
   },
   "advancedInfoGeetestDesc": {
     "message": "Erkennt die GeeTest-Version (v3 oder v4) und analysiert seine Skripte"
   },
   "advancedInfoHcaptchaDesc": {
-    "message": "Erkennt die hCaptcha-Version und analysiert seine Skripte"
+    "message": "Findet den Website-Schlüssel, erkennt die hCaptcha-Version und analysiert seine Skripte"
   },
   "advancedInfoTurnstileDesc": {
     "message": "Extrahiert den Site-Key und analysiert die Turnstile-Skripte"
