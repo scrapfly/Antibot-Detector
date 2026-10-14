@@ -43,13 +43,6 @@ DetectionModals.copyDetectionOverview = async function() {
     await FormatUtils.copyToClipboard(content.trim());
 };
 
-DetectionModals.copyMethodValue = function(value, type, triggerElement = null) {
-    const textToCopy = `[${type}] ${value}`;
-    FormatUtils.copyToClipboard(textToCopy, {
-      element: triggerElement
-    });
-};
-
 /**
  * The detector a detection came from, with its author. Results cached before
  * detections carried `detector.author` are completed from the loaded detector
@@ -311,7 +304,6 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     if (this.modalElements.methods) {
       if (detection.matches && detection.matches.length) {
         this.modalElements.methods.innerHTML = this.getMethodBadges(detection.matches);
-        this.attachModalMethodHandlers();
       } else {
         const empty = document.createElement('div');
         empty.className = 'detection-modal-empty';
@@ -368,27 +360,6 @@ DetectionModals.combinationTipRows = function(combos, limit) {
         value: `${Math.round(Number(combo.confidence) || 0)}%`,
         tone: FormatUtils.confidenceTone(combo.confidence)
       }));
-};
-
-DetectionModals.attachModalMethodHandlers = function() {
-    const methodCards = document.querySelectorAll('#detectionModalMethods .method-item-card');
-    methodCards.forEach(card => {
-      const encodedValue = card.getAttribute('data-copy-value') || '';
-      const methodType = card.getAttribute('data-method-type') || 'Unknown';
-      const decodedValue = encodedValue ? decodeURIComponent(encodedValue) : '';
-      const valueButton = card.querySelector('.method-value-btn');
-
-      const handleCopy = (event) => {
-        event.stopPropagation();
-        this.copyMethodValue(decodedValue, methodType, valueButton || card);
-      };
-
-      card.addEventListener('click', handleCopy);
-
-      if (valueButton) {
-        valueButton.addEventListener('click', handleCopy);
-      }
-    });
 };
 
 if (typeof self !== 'undefined') {

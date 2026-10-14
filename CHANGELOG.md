@@ -7,6 +7,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [2.8.7] - 2026-10-14
 
+### Changed
+
+- Advanced: the tools information window is larger and shows each protection's real logo.
+- Detection details: a matched value is plain text instead of a box that copied it on click.
+
 ### Fixed
 
 - Rules and History: the last card on a page is no longer cut off by the page bar at the bottom; its outline shows in full.

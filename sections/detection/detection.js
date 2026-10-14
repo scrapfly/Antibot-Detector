@@ -357,9 +357,6 @@ class Detection {
   async copyDetectionOverview(...args) {
     return await DetectionModals.copyDetectionOverview.apply(this, args);
   }
-  copyMethodValue(...args) {
-    return DetectionModals.copyMethodValue.apply(this, args);
-  }
   getDetectionByIndex(...args) {
     return DetectionModals.getDetectionByIndex.apply(this, args);
   }
@@ -377,9 +374,6 @@ class Detection {
   }
   renderDetectionModalContent(...args) {
     return DetectionModals.renderDetectionModalContent.apply(this, args);
-  }
-  attachModalMethodHandlers(...args) {
-    return DetectionModals.attachModalMethodHandlers.apply(this, args);
   }
   getFilteredResults(...args) {
     return DetectionUI.getFilteredResults.apply(this, args);

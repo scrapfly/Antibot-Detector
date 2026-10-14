@@ -1175,26 +1175,8 @@
   background: var(--g-323232);
   border: 1px solid var(--g-474747);
   border-radius: 7px;
-  transition: border-color 0.2s ease, background 0.2s ease;
-  cursor: pointer;
   width: 100%;
   box-sizing: border-box;
-}
-
-.detection-modal-methods-list .method-item-card:hover,
-.detection-modal-methods-list .method-item-card:focus-within {
-  border-color: var(--accent);
-  opacity: 1;
-}
-
-.method-item-card.copy-feedback {
-  background: rgba(16, 185, 129, 0.2) !important;
-  border-color: rgba(16, 185, 129, 0.6) !important;
-}
-
-.method-item-card.copy-feedback .method-value-btn {
-  color: var(--success-light) !important;
-  font-weight: 600 !important;
 }
 
 .method-type-badge {
@@ -1229,26 +1211,13 @@
   background: var(--bg-primary);
   border: 1px solid var(--g-4b4b4b);
   border-radius: 5px;
-  outline: none;
-  cursor: pointer;
-  user-select: none;
+  /* Read-only text, not a field or a button: nothing happens on click */
+  box-sizing: border-box;
+  cursor: default;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: left;
-  transition: border-color 0.2s ease;
-}
-
-.method-value-btn:hover,
-.method-value-btn:focus-visible {
-  border-color: var(--accent);
-}
-
-.method-value-btn.copy-feedback-active {
-  background: rgba(16, 185, 129, 0.25) !important;
-  border-color: rgba(16, 185, 129, 0.6) !important;
-  color: var(--success-light) !important;
-  font-weight: 600 !important;
 }
 
 /* Dial + % (FormatUtils.confidenceHtml), top right of the method row */
