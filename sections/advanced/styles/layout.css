@@ -195,6 +195,11 @@
   text-align: center;
 }
 
+/* No coloured strip along the top (the shared state-card bar) */
+.advanced-history-empty.state-card::before {
+  content: none;
+}
+
 .advanced-history-empty-icon {
   display: flex;
   align-items: center;
