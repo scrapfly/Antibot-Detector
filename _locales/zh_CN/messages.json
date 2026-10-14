@@ -1675,11 +1675,11 @@
     "message": "更多操作"
   },
   "advancedToolsEmptyTitle": {
-    "message": "暂无可用工具"
+    "message": "未检测到防护"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "此页面未发现受支持的防护。一旦检测到，工具会自动显示在这里。"
-  },
+  "advancedToolsEmptyDescFmt": { "message": "此页面上没有置信度高于 {0}% 的受支持防护。你可以在 设置 → 检测 中更改此最低值。", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "检测到的防护置信度较低" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "已检测到 {0}，置信度为 {1}%。只有高于 {2}% 时才会显示工具。你可以在 设置 → 检测 中调低此最低值。", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "支持的防护"
   },

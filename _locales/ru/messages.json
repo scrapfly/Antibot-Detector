@@ -1675,11 +1675,11 @@
     "message": "Другие действия"
   },
   "advancedToolsEmptyTitle": {
-    "message": "Нет доступных инструментов"
+    "message": "Защита не обнаружена"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "На этой странице не найдено поддерживаемой защиты. Инструменты появятся здесь автоматически, как только она будет обнаружена."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "На этой странице нет поддерживаемой защиты с уверенностью выше {0}%. Этот минимум можно изменить в разделе Настройки → Обнаружение.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "Защита обнаружена с низкой уверенностью" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0} обнаружен с уверенностью {1}%. Инструменты показываются только при уверенности выше {2}%. Этот минимум можно снизить в разделе Настройки → Обнаружение.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "Поддерживаемые системы защиты"
   },

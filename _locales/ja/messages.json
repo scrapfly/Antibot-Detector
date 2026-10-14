@@ -1675,11 +1675,11 @@
     "message": "その他の操作"
   },
   "advancedToolsEmptyTitle": {
-    "message": "利用できるツールはありません"
+    "message": "保護は検出されませんでした"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "このページではサポート対象の保護が見つかりませんでした。検出されると、ここにツールが自動的に表示されます。"
-  },
+  "advancedToolsEmptyDescFmt": { "message": "このページには信頼度 {0}% を超える対応の保護がありません。この最小値は 設定 → 検出 で変更できます。", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "低い信頼度で保護を検出" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0} が信頼度 {1}% で検出されました。ツールは {2}% を超える場合にのみ表示されます。この最小値は 設定 → 検出 で下げられます。", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "サポート対象の保護"
   },

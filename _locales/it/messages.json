@@ -1675,11 +1675,11 @@
     "message": "Altre azioni"
   },
   "advancedToolsEmptyTitle": {
-    "message": "Nessuno strumento disponibile"
+    "message": "Nessuna protezione rilevata"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "Su questa pagina non è stata trovata alcuna protezione supportata. Gli strumenti compariranno qui automaticamente quando ne verrà rilevata una."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "Nessuna protezione supportata supera il {0}% di confidenza in questa pagina. Puoi modificare questo minimo in Impostazioni → Rilevamento.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "Protezione rilevata con bassa confidenza" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0} è stato rilevato con il {1}% di confidenza. Gli strumenti appaiono solo sopra il {2}%. Puoi abbassare questo minimo in Impostazioni → Rilevamento.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "Protezioni supportate"
   },

@@ -1675,11 +1675,11 @@
     "message": "إجراءات إضافية"
   },
   "advancedToolsEmptyTitle": {
-    "message": "لا توجد أدوات متاحة"
+    "message": "لم يُكتشف أي حماية"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "لم يتم العثور على أي حماية مدعومة في هذه الصفحة. ستظهر الأدوات هنا تلقائيًا عند اكتشاف إحداها."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "لا توجد في هذه الصفحة حماية مدعومة بثقة تزيد على {0}%. يمكنك تغيير هذا الحد الأدنى من الإعدادات ← الكشف.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "اكتُشفت حماية بثقة منخفضة" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "اكتُشف {0} بثقة {1}%. لا تظهر الأدوات إلا عند تجاوز {2}%. يمكنك خفض هذا الحد الأدنى من الإعدادات ← الكشف.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "أنظمة الحماية المدعومة"
   },

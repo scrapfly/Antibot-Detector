@@ -1675,11 +1675,11 @@
     "message": "Más acciones"
   },
   "advancedToolsEmptyTitle": {
-    "message": "Sin herramientas disponibles"
+    "message": "No se ha detectado ninguna protección"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "No se ha encontrado ninguna protección compatible en esta página. Las herramientas aparecerán aquí automáticamente cuando se detecte una."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "No hay ninguna protección compatible con más del {0}% de confianza en esta página. Puedes cambiar este mínimo en Ajustes → Detección.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "Protección detectada con poca confianza" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "Se ha detectado {0} con un {1}% de confianza. Las herramientas solo aparecen por encima del {2}%. Puedes bajar este mínimo en Ajustes → Detección.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "Protecciones compatibles"
   },

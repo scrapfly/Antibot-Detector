@@ -243,6 +243,8 @@ Advanced.prototype.getDetectionModules = async function() {
     const detections = await this.getCurrentDetections();
     const minConfidence = await Advanced.readMinToolConfidence();
     const availableTools = [];
+    // Supported protections at or below the minimum: the empty state names them
+    const belowThreshold = [];
 
     Logger.debug('UI', '[Advanced] CHECKING AVAILABLE MODULES');
     Logger.debug('UI', '[Advanced] Total detections to check:', detections.length);
@@ -267,6 +269,7 @@ Advanced.prototype.getDetectionModules = async function() {
       const confidence = Number(detection.confidence) || 0;
       if (detectorId && Advanced.AVAILABLE_MODULES[detectorId] && confidence <= minConfidence) {
         Logger.debug('UI', `[Advanced]   → "${detectorName}" at ${confidence}% is not above ${minConfidence}%, no tools`);
+        belowThreshold.push({ name: Advanced.AVAILABLE_MODULES[detectorId].productName || detectorName || detectorId, confidence });
       } else if (detectorId && Advanced.AVAILABLE_MODULES[detectorId]) {
         Logger.debug('UI', `[Advanced]   → Adding "${detectorName}" to available tools`);
         availableTools.push({
@@ -286,6 +289,8 @@ Advanced.prototype.getDetectionModules = async function() {
       withoutTools: detections.length - availableTools.length
     });
 
+    this.minToolConfidence = minConfidence;
+    this.toolsBelowThreshold = belowThreshold.sort((a, b) => b.confidence - a.confidence);
     return availableTools;
   };
 

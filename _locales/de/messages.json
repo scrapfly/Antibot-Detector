@@ -1675,11 +1675,11 @@
     "message": "Weitere Aktionen"
   },
   "advancedToolsEmptyTitle": {
-    "message": "Keine Tools verfügbar"
+    "message": "Kein Schutz erkannt"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "Auf dieser Seite wurde kein unterstützter Schutz gefunden. Die Tools erscheinen hier automatisch, sobald einer erkannt wird."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "Auf dieser Seite liegt kein unterstützter Schutz über {0} % Konfidenz. Du kannst dieses Minimum unter Einstellungen → Erkennung ändern.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "Schutz mit geringer Konfidenz erkannt" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0} wurde mit {1} % Konfidenz erkannt. Tools erscheinen erst über {2} %. Du kannst dieses Minimum unter Einstellungen → Erkennung senken.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "Unterstützte Schutzsysteme"
   },

@@ -1675,11 +1675,11 @@
     "message": "और कार्रवाइयाँ"
   },
   "advancedToolsEmptyTitle": {
-    "message": "कोई टूल उपलब्ध नहीं"
+    "message": "कोई सुरक्षा नहीं मिली"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "इस पेज पर कोई समर्थित सुरक्षा नहीं मिली। किसी सुरक्षा के पहचाने जाते ही टूल यहाँ अपने-आप दिखेंगे।"
-  },
+  "advancedToolsEmptyDescFmt": { "message": "इस पेज पर {0}% से अधिक विश्वसनीयता वाली कोई समर्थित सुरक्षा नहीं है। आप यह न्यूनतम मान सेटिंग्स → जांच में बदल सकते हैं।", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "कम विश्वसनीयता के साथ सुरक्षा मिली" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0} {1}% विश्वसनीयता के साथ मिला। टूल केवल {2}% से अधिक होने पर दिखते हैं। आप यह न्यूनतम मान सेटिंग्स → जांच में कम कर सकते हैं।", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "समर्थित सुरक्षा प्रणालियाँ"
   },

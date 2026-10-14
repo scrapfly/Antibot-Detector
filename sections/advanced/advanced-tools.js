@@ -166,6 +166,18 @@ Advanced.prototype.renderNoToolsState = function(tr) {
     const esc = (value) => (typeof FormatUtils !== 'undefined' && FormatUtils.escapeHtml)
       ? FormatUtils.escapeHtml(value)
       : String(value).replace(/[&<>"']/g, ch => `&#${ch.charCodeAt(0)};`);
+    // Nothing detected, or a supported protection detected at or below the minimum confidence
+    const fmt = (key, fallback, ...args) => (typeof I18n !== 'undefined' && typeof I18n.format === 'function' && I18n.format(key, ...args))
+      || args.reduce((text, arg, i) => text.split(`{${i}}`).join(String(arg)), fallback);
+    const minimum = [this.minToolConfidence, Advanced.MIN_TOOL_CONFIDENCE].find(Number.isInteger) ?? 50;
+    const low = (this.toolsBelowThreshold || [])[0];
+    const emptyTitle = low
+      ? tr('advancedToolsLowConfidenceTitle', 'Protection detected with low confidence')
+      : tr('advancedToolsEmptyTitle', 'No protection detected');
+    const emptyText = low
+      ? fmt('advancedToolsLowConfidenceDescFmt', '{0} was detected with {1}% confidence. Tools appear only above {2}%. You can lower this minimum in Settings → Detection.', low.name, Math.round(low.confidence), minimum)
+      : fmt('advancedToolsEmptyDescFmt', 'No supported protection on this page is above {0}% confidence. You can change this minimum in Settings → Detection.', minimum);
+
     // One logo per protection (its name on hover), grouped by category like the info window
     const titles = { antibot: tr('categoryAntibot', 'Anti-bot'), captcha: tr('categoryCaptcha', 'Captcha') };
     // Each category's colour from Settings, as in the other views
@@ -194,8 +206,8 @@ Advanced.prototype.renderNoToolsState = function(tr) {
               <div class="state-card-icon">
                 <img src="icons/icon128.png" alt="" width="72" height="72" class="state-card-logo">
               </div>
-              <h3 class="state-card-title">${esc(tr('advancedToolsEmptyTitle', 'No tools available'))}</h3>
-              <p class="state-card-description">${esc(tr('advancedToolsEmptyDesc', 'No supported protection was found on this page. Tools appear here automatically when one is detected.'))}</p>
+              <h3 class="state-card-title">${esc(emptyTitle)}</h3>
+              <p class="state-card-description">${esc(emptyText)}</p>
               <div class="advanced-supported" role="group" aria-label="${esc(tr('advancedToolsSupportedLabel', 'Supported protections'))}">
                 ${groups}
               </div>

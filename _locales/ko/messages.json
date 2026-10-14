@@ -1675,11 +1675,11 @@
     "message": "추가 작업"
   },
   "advancedToolsEmptyTitle": {
-    "message": "사용 가능한 도구 없음"
+    "message": "탐지된 보호 없음"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "이 페이지에서 지원되는 보호 기능을 찾지 못했습니다. 보호 기능이 감지되면 도구가 여기에 자동으로 표시됩니다."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "이 페이지에는 신뢰도 {0}%를 넘는 지원 보호가 없습니다. 이 최솟값은 설정 → 탐지에서 변경할 수 있습니다.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "낮은 신뢰도로 탐지된 보호" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0}이(가) 신뢰도 {1}%로 탐지되었습니다. 도구는 {2}%를 넘을 때만 표시됩니다. 이 최솟값은 설정 → 탐지에서 낮출 수 있습니다.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "지원되는 보호 기능"
   },

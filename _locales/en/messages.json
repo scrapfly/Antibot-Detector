@@ -1679,11 +1679,11 @@
     "message": "More actions"
   },
   "advancedToolsEmptyTitle": {
-    "message": "No tools available"
+    "message": "No protection detected"
   },
-  "advancedToolsEmptyDesc": {
-    "message": "No supported protection was found on this page. Tools appear here automatically when one is detected."
-  },
+  "advancedToolsEmptyDescFmt": { "message": "No supported protection on this page is above {0}% confidence. You can change this minimum in Settings → Detection.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
+  "advancedToolsLowConfidenceTitle": { "message": "Protection detected with low confidence" },
+  "advancedToolsLowConfidenceDescFmt": { "message": "{0} was detected with {1}% confidence. Tools appear only above {2}%. You can lower this minimum in Settings → Detection.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
   "advancedToolsSupportedLabel": {
     "message": "Supported protections"
   },

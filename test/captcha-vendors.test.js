@@ -284,4 +284,12 @@ test('the no-tools screen groups supported protections by category, with logos a
   assert.equal((html.match(/class="advanced-supported-group"/g) || []).length, 2);
   assert.doesNotMatch(html, /advanced-supported-chip/);
   assert.match(html, /is-initial" title="Friendly Captcha" aria-label="Friendly Captcha">F</, 'no official logo: its initial');
+  // Nothing detected: the minimum and where to change it
+  assert.match(html, /No protection detected/);
+  assert.match(html, /above 50% confidence/);
+  // A supported protection at or below the minimum: named, with its confidence
+  const low = Advanced.prototype.renderNoToolsState.call({ detectorManager: null, minToolConfidence: 60,
+    toolsBelowThreshold: [{ name: 'DataDome', confidence: 42.6 }] }, (key, fallback) => fallback);
+  assert.match(low, /Protection detected with low confidence/);
+  assert.match(low, /DataDome was detected with 43% confidence\. Tools appear only above 60%/);
 });
