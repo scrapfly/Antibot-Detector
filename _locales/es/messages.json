@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "Procesando…" },
   "advToolWaitingReload": { "message": "Recargando la página y recogiendo resultados. Tarda unos segundos…" },
   "advToolNoResult": { "message": "Sin resultado: la protección no envió datos. Recarga la página e inténtalo de nuevo." },
+  "advSiteKeyTitleFmt": { "message": "Clave de sitio de {0}" },
+  "advSiteKeyNotFound": { "message": "No se encontró ninguna clave de sitio en esta página. Abre o activa el CAPTCHA e inténtalo de nuevo." },
+  "advSiteKeyFoundIn": { "message": "Encontrada en" },
+  "advSiteKeySourceWidget": { "message": "Widget" },
+  "advSiteKeySourceRequest": { "message": "Solicitud" },
+  "advSiteKeySourceScript": { "message": "Script de la página" },
+  "advSiteKeySourceGlobal": { "message": "Variable de la página" },
+  "advSiteKeyFrame": { "message": "Marco" },
+  "advSiteKeyScriptsOnPage": { "message": "Scripts en esta página" },
+  "advancedInfoCaptchaKeyDesc": { "message": "Extrae la clave de sitio y analiza sus scripts" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "Analiza sus scripts" },
   "advToolActionFailedFmt": { "message": "No se pudo completar esta acción: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "Página anterior del gráfico" },
   "statsChartNext": { "message": "Página siguiente del gráfico" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "Gestión de bots"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Comprobando la versión de Cloudflare… La página se recargará"
-  },
   "advCloudflareNoSitekey": {
     "message": "No se encontró ninguna sitekey en la página"
   },
@@ -4844,7 +4852,7 @@
     "message": "Escribe primero el nombre."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Comprueba las cookies y la versión del desafío y encuentra las claves de sitio de Turnstile"
+    "message": "Comprueba las cookies del desafío, encuentra las claves de sitio de Turnstile y analiza sus scripts"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Comprueba las cookies de DataDome y analiza sus scripts"

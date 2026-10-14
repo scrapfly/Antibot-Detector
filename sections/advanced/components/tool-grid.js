@@ -39,7 +39,7 @@ class AdvancedToolGrid {
         if (action === 'scripts' && ['awswaf', 'imperva'].includes(this.moduleName)) {
             hints.scripts = ['advToolResetScriptsHint', 'Reset protection cookies and reload to analyze scripts'];
         }
-        if (action === 'version' && ['cloudflare', 'hcaptcha', 'geetest'].includes(this.moduleName)) {
+        if (action === 'version' && ['hcaptcha', 'geetest'].includes(this.moduleName)) {
             hints.version = ['advToolReloadVersionHint', 'Reload the page to detect the protection version'];
         }
         if (action === 'capture' && !stopping && this.moduleName === 'akamai') {

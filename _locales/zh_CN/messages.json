@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "处理中…" },
   "advToolWaitingReload": { "message": "正在重新加载页面并收集结果，需要几秒钟…" },
   "advToolNoResult": { "message": "没有结果：防护未发送任何数据。请重新加载页面后重试。" },
+  "advSiteKeyTitleFmt": { "message": "{0} 站点密钥" },
+  "advSiteKeyNotFound": { "message": "此页面未找到站点密钥。请打开或触发验证码后重试。" },
+  "advSiteKeyFoundIn": { "message": "发现位置" },
+  "advSiteKeySourceWidget": { "message": "组件" },
+  "advSiteKeySourceRequest": { "message": "请求" },
+  "advSiteKeySourceScript": { "message": "页面脚本" },
+  "advSiteKeySourceGlobal": { "message": "页面变量" },
+  "advSiteKeyFrame": { "message": "框架" },
+  "advSiteKeyScriptsOnPage": { "message": "此页面上的脚本" },
+  "advancedInfoCaptchaKeyDesc": { "message": "提取站点密钥并分析其脚本" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "分析其脚本" },
   "advToolActionFailedFmt": { "message": "无法完成此操作：{0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "图表上一页" },
   "statsChartNext": { "message": "图表下一页" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "机器人管理"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "正在检查 Cloudflare 版本… 页面将重新加载"
-  },
   "advCloudflareNoSitekey": {
     "message": "页面上未找到 sitekey"
   },
@@ -4844,7 +4852,7 @@
     "message": "请先填写名称。"
   },
   "advancedInfoCloudflareDesc": {
-    "message": "检查验证 Cookie 和版本，并查找 Turnstile 站点密钥"
+    "message": "检查验证 Cookie，查找 Turnstile 站点密钥并分析其脚本"
   },
   "advancedInfoDataDomeDesc": {
     "message": "检查 DataDome Cookie 并分析其脚本"

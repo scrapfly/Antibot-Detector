@@ -39,6 +39,7 @@ importScripts(
     './modules/detection/public-summary.js',
     './modules/settings/settings-runtime.js',
     // Interceptors
+    './modules/advanced/captcha-vendors.js',
     './modules/advanced/vendor-registry.js',
     './modules/advanced/result-model.js',
     './background/advanced/history-store.js',
@@ -59,6 +60,7 @@ importScripts(
     './background/advanced/vendors/turnstile/interceptor.js',
     './background/advanced/vendors/hcaptcha/interceptor.js',
     './background/advanced/vendors/funcaptcha/interceptor.js',
+    './background/advanced/vendors/captcha/interceptor.js',
     // Background runtime modules
     './background/runtime-state.js',
     './background/detection-session-store.js',

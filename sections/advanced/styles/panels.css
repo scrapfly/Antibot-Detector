@@ -63,32 +63,89 @@
   margin-bottom: 12px;
 }
 
-.advanced-supported-chips {
+.advanced-supported {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 340px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-secondary);
+  text-align: start;
+}
+
+.advanced-supported-group + .advanced-supported-group {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.advanced-supported-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.advanced-supported-head .category-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+}
+
+.advanced-supported-head .category-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.advanced-supported-count {
+  margin-inline-start: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 16px;
+}
+
+.advanced-supported-logos {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 5px;
-  max-width: 340px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.advanced-supported-chip {
+/* Logos on white tiles, as in the info window */
+.advanced-supported-logo {
   display: inline-flex;
   align-items: center;
-  height: 21px;
-  padding: 0 8px;
-  border-radius: 6px;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(96, 165, 250, 0.26);
-  color: var(--p-93c5fd);
-  font-size: 10.5px;
-  font-weight: 600;
-  white-space: nowrap;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+.advanced-supported-logo.is-initial {
+  background: var(--bg-tertiary);
+  box-shadow: 0 0 0 1px var(--border);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
 
+.advanced-supported-logo img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
 
 /* Filters Actions Row */
 .filters-actions {

@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "Processando…" },
   "advToolWaitingReload": { "message": "Recarregando a página e coletando os resultados. Isso leva alguns segundos…" },
   "advToolNoResult": { "message": "Sem resultado: a proteção não enviou dados. Recarregue a página e tente novamente." },
+  "advSiteKeyTitleFmt": { "message": "Chave do site do {0}" },
+  "advSiteKeyNotFound": { "message": "Nenhuma chave do site encontrada nesta página. Abra ou acione o CAPTCHA e tente novamente." },
+  "advSiteKeyFoundIn": { "message": "Encontrada em" },
+  "advSiteKeySourceWidget": { "message": "Widget" },
+  "advSiteKeySourceRequest": { "message": "Requisição" },
+  "advSiteKeySourceScript": { "message": "Script da página" },
+  "advSiteKeySourceGlobal": { "message": "Variável da página" },
+  "advSiteKeyFrame": { "message": "Frame" },
+  "advSiteKeyScriptsOnPage": { "message": "Scripts nesta página" },
+  "advancedInfoCaptchaKeyDesc": { "message": "Extrai a chave do site e analisa seus scripts" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "Analisa seus scripts" },
   "advToolActionFailedFmt": { "message": "Não foi possível concluir esta ação: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "Página anterior do gráfico" },
   "statsChartNext": { "message": "Próxima página do gráfico" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "Gerenciamento de bots"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Verificando a versão do Cloudflare… A página será recarregada"
-  },
   "advCloudflareNoSitekey": {
     "message": "Nenhuma sitekey encontrada na página"
   },
@@ -4844,7 +4852,7 @@
     "message": "Escreva o nome primeiro."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Verifica os cookies e a versão do desafio e encontra as chaves de site do Turnstile"
+    "message": "Verifica os cookies do desafio, encontra as chaves de site do Turnstile e analisa seus scripts"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Verifica os cookies do DataDome e analisa seus scripts"

@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "Working…" },
   "advToolWaitingReload": { "message": "Reloading the page and collecting results. This takes a few seconds…" },
   "advToolNoResult": { "message": "No result: the protection sent no data. Reload the page and try again." },
+  "advSiteKeyTitleFmt": { "message": "{0} site key" },
+  "advSiteKeyNotFound": { "message": "No site key found on this page. Open or trigger the CAPTCHA, then try again." },
+  "advSiteKeyFoundIn": { "message": "Found in" },
+  "advSiteKeySourceWidget": { "message": "Widget" },
+  "advSiteKeySourceRequest": { "message": "Request" },
+  "advSiteKeySourceScript": { "message": "Page script" },
+  "advSiteKeySourceGlobal": { "message": "Page variable" },
+  "advSiteKeyFrame": { "message": "Frame" },
+  "advSiteKeyScriptsOnPage": { "message": "Scripts on this page" },
+  "advancedInfoCaptchaKeyDesc": { "message": "Extracts the site key and analyzes its scripts" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "Analyzes its scripts" },
   "advToolActionFailedFmt": { "message": "Could not complete this action: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "Previous chart page" },
   "statsChartNext": { "message": "Next chart page" },
@@ -3183,10 +3194,6 @@
     "message": "Bot Management",
     "description": "Cloudflare script type"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Checking Cloudflare version... Page will reload",
-    "description": "Toast"
-  },
   "advCloudflareNoSitekey": {
     "message": "No sitekey found on page"
   },
@@ -5103,7 +5110,7 @@
     "message": "Write the name first."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Checks the challenge cookies and version, and finds Turnstile site keys"
+    "message": "Checks the challenge cookies, finds Turnstile site keys and analyzes its scripts"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Checks DataDome cookies and analyzes its scripts"

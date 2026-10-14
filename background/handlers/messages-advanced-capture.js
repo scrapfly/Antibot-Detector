@@ -103,7 +103,11 @@ function buildAdvancedCaptureRegistryMap(handlers, messageTypes) {
                 messageTypes.FUNCAPTCHA_GET_CAPTURE_STATE,
                 messageTypes.FUNCAPTCHA_CAPTURE_COMPLETED
             ]
-        }
+        },
+        // CAPTCHA vendors described as data: one Analyze Scripts message each
+        ...((typeof AdvancedCaptchaVendors !== 'undefined' && AdvancedCaptchaVendors.list) || [])
+            .filter(vendor => Array.isArray(vendor.scripts) && messageTypes[`${vendor.vendorId.toUpperCase()}_START_ANALYSIS`])
+            .map(vendor => ({ handler: handlers.captcha, messageKeys: [messageTypes[`${vendor.vendorId.toUpperCase()}_START_ANALYSIS`]] }))
     ];
 }
 
@@ -180,6 +184,13 @@ function registerAdvancedCaptureHandlers(registry, context) {
         return false;
     };
 
+    const handleCaptcha = function({ request, sendResponse }) {
+        if (typeof AdvancedCaptchaAnalysis !== 'undefined') {
+            return AdvancedCaptchaAnalysis.handle(request, sendResponse);
+        }
+        return false;
+    };
+
     const handleFunCaptcha = function({ request, sendResponse }) {
         if (typeof handleFunCaptchaMessage === 'function') {
             return handleFunCaptchaMessage(request, sendResponse, funcaptchaCaptureState);
@@ -231,7 +242,8 @@ function registerAdvancedCaptureHandlers(registry, context) {
         cloudflare: handleCloudflare,
         turnstile: handleTurnstile,
         hcaptcha: handleHCaptcha,
-        funcaptcha: handleFunCaptcha
+        funcaptcha: handleFunCaptcha,
+        captcha: handleCaptcha
     }, messageTypes);
 
     const captureStores = {

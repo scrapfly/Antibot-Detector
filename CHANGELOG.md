@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Advanced: tools for 14 more CAPTCHAs (Prosopo, Friendly Captcha, MTCaptcha, Yandex SmartCaptcha, Captcha.eu, QCloud, NetEase Yidun, Aliyun, Dingxiang, Shumei, Capy, Binance, Basilisk, AliExpress): Extract site key where they have one, Analyze scripts for all.
 - Rules editor: each pattern in a combination has a "Combinations only" button to turn it on or off.
 - Advanced: FunCaptcha and hCaptcha script results have Export Code, like the other protections.
 
@@ -20,6 +21,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced → History: capture details for every protection use the same layout as the cookie results, with copyable rows and Copy all data at the bottom.
 - Advanced → Analyze scripts: one results window for every protection, with each script's type and an Export code button; it lists only that protection's requests, not look-alike paths or images.
 - Advanced: the GeeTest, Imperva and Shape Security result windows use the same layout as the others; Cloudflare Check cookies looks for the real Cloudflare cookies.
+- Advanced: with no protection on the page, the supported list shows each protection's logo grouped by Anti-bot and Captcha instead of a long row of names.
 
 ### Fixed
 

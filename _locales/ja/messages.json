@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "処理中…" },
   "advToolWaitingReload": { "message": "ページを再読み込みして結果を収集しています。数秒かかります…" },
   "advToolNoResult": { "message": "結果がありません：保護機能からデータが送信されませんでした。ページを再読み込みして、もう一度お試しください。" },
+  "advSiteKeyTitleFmt": { "message": "{0} のサイトキー" },
+  "advSiteKeyNotFound": { "message": "このページにサイトキーが見つかりません。CAPTCHA を開くか表示させてから、もう一度お試しください。" },
+  "advSiteKeyFoundIn": { "message": "検出元" },
+  "advSiteKeySourceWidget": { "message": "ウィジェット" },
+  "advSiteKeySourceRequest": { "message": "リクエスト" },
+  "advSiteKeySourceScript": { "message": "ページのスクリプト" },
+  "advSiteKeySourceGlobal": { "message": "ページの変数" },
+  "advSiteKeyFrame": { "message": "フレーム" },
+  "advSiteKeyScriptsOnPage": { "message": "このページのスクリプト" },
+  "advancedInfoCaptchaKeyDesc": { "message": "サイトキーを抽出し、スクリプトを分析します" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "スクリプトを分析します" },
   "advToolActionFailedFmt": { "message": "この操作を完了できませんでした: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "グラフの前のページ" },
   "statsChartNext": { "message": "グラフの次のページ" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "ボット管理"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Cloudflare のバージョンを確認しています… ページを再読み込みします"
-  },
   "advCloudflareNoSitekey": {
     "message": "ページに sitekey が見つかりません"
   },
@@ -4844,7 +4852,7 @@
     "message": "先に名前を入力してください。"
   },
   "advancedInfoCloudflareDesc": {
-    "message": "チャレンジの Cookie とバージョンを確認し、Turnstile のサイトキーを見つけます"
+    "message": "チャレンジの Cookie を確認し、Turnstile のサイトキーを見つけ、スクリプトを分析します"
   },
   "advancedInfoDataDomeDesc": {
     "message": "DataDome の Cookie を確認し、スクリプトを解析します"

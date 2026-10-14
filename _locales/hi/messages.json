@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "कार्य जारी है…" },
   "advToolWaitingReload": { "message": "पेज फिर से लोड हो रहा है और परिणाम जुटाए जा रहे हैं। इसमें कुछ सेकंड लगते हैं…" },
   "advToolNoResult": { "message": "कोई परिणाम नहीं: सुरक्षा ने कोई डेटा नहीं भेजा। पेज फिर से लोड करें और दोबारा कोशिश करें।" },
+  "advSiteKeyTitleFmt": { "message": "{0} साइट की" },
+  "advSiteKeyNotFound": { "message": "इस पेज पर कोई साइट की नहीं मिली। CAPTCHA खोलें या चालू करें, फिर दोबारा कोशिश करें।" },
+  "advSiteKeyFoundIn": { "message": "यहाँ मिली" },
+  "advSiteKeySourceWidget": { "message": "विजेट" },
+  "advSiteKeySourceRequest": { "message": "अनुरोध" },
+  "advSiteKeySourceScript": { "message": "पेज स्क्रिप्ट" },
+  "advSiteKeySourceGlobal": { "message": "पेज वेरिएबल" },
+  "advSiteKeyFrame": { "message": "फ़्रेम" },
+  "advSiteKeyScriptsOnPage": { "message": "इस पेज पर स्क्रिप्ट" },
+  "advancedInfoCaptchaKeyDesc": { "message": "साइट की निकालता है और उसकी स्क्रिप्ट का विश्लेषण करता है" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "उसकी स्क्रिप्ट का विश्लेषण करता है" },
   "advToolActionFailedFmt": { "message": "यह कार्रवाई पूरी नहीं हो सकी: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "चार्ट का पिछला पेज" },
   "statsChartNext": { "message": "चार्ट का अगला पेज" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "बॉट प्रबंधन"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Cloudflare संस्करण जाँचा जा रहा है… पेज फिर से लोड होगा"
-  },
   "advCloudflareNoSitekey": {
     "message": "पेज पर कोई sitekey नहीं मिली"
   },
@@ -4844,7 +4852,7 @@
     "message": "पहले नाम लिखें।"
   },
   "advancedInfoCloudflareDesc": {
-    "message": "चैलेंज कुकीज़ और संस्करण जांचता है और Turnstile साइट कुंजियाँ ढूँढता है"
+    "message": "चैलेंज कुकीज़ जांचता है, Turnstile साइट कुंजियाँ ढूँढता है और उसकी स्क्रिप्ट का विश्लेषण करता है"
   },
   "advancedInfoDataDomeDesc": {
     "message": "DataDome कुकीज़ जांचता है और उसकी स्क्रिप्ट का विश्लेषण करता है"

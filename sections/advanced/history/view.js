@@ -228,8 +228,8 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
    */
 
 Advanced.prototype.getModuleName = function(moduleId) {
-    // History buckets use imperva / awswaf; the module registry incapsula / aws-waf
-    const registryId = moduleId === 'imperva' ? 'incapsula' : moduleId === 'awswaf' ? 'aws-waf' : moduleId;
+    // History buckets use vendor ids (imperva, awswaf, binance); the module registry detector ids
+    const registryId = AdvancedVendorRegistry.registryKey(moduleId);
     const moduleInfo = Advanced.AVAILABLE_MODULES[registryId];
     return moduleInfo ? moduleInfo.productName : moduleId;
   };

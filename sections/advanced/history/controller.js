@@ -322,13 +322,13 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
       // Storage buckets, module registry keys and detector IDs are distinct.
       // Read the exact bucket above to avoid collisions between saved aliases.
       const identity = typeof moduleId === 'string' ? moduleId.replace(/^detect-/, '') : '';
-      const registryId = identity === 'imperva' ? 'incapsula' : identity === 'awswaf' ? 'aws-waf' : identity;
+      const registryId = AdvancedVendorRegistry.registryKey(identity);
       const registry = Advanced.AVAILABLE_MODULES || {};
       if (!Object.hasOwn(registry, registryId)) {
         NotificationHelper.info(_trAH('captureDetailsUnavailable', 'Details view not available for this module'));
         return;
       }
-      const storageIdentity = registryId === 'incapsula' ? 'imperva' : registryId === 'aws-waf' ? 'awswaf' : registryId;
+      const storageIdentity = AdvancedVendorRegistry.canonical(registryId);
       const loaded = this.loadedModules || {};
       let moduleInstance = [registryId, storageIdentity, moduleId]
         .filter(id => Object.hasOwn(loaded, id))

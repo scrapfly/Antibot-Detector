@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "جارٍ العمل…" },
   "advToolWaitingReload": { "message": "جارٍ إعادة تحميل الصفحة وجمع النتائج. يستغرق ذلك بضع ثوانٍ…" },
   "advToolNoResult": { "message": "لا توجد نتيجة: لم ترسل الحماية أي بيانات. أعد تحميل الصفحة وحاول مرة أخرى." },
+  "advSiteKeyTitleFmt": { "message": "مفتاح موقع {0}" },
+  "advSiteKeyNotFound": { "message": "لم يُعثر على مفتاح موقع في هذه الصفحة. افتح CAPTCHA أو شغّله، ثم حاول مرة أخرى." },
+  "advSiteKeyFoundIn": { "message": "عُثر عليه في" },
+  "advSiteKeySourceWidget": { "message": "عنصر الواجهة" },
+  "advSiteKeySourceRequest": { "message": "طلب" },
+  "advSiteKeySourceScript": { "message": "سكربت الصفحة" },
+  "advSiteKeySourceGlobal": { "message": "متغير الصفحة" },
+  "advSiteKeyFrame": { "message": "الإطار" },
+  "advSiteKeyScriptsOnPage": { "message": "السكربتات في هذه الصفحة" },
+  "advancedInfoCaptchaKeyDesc": { "message": "يستخرج مفتاح الموقع ويحلل سكربتاته" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "يحلل سكربتاته" },
   "advToolActionFailedFmt": { "message": "تعذر إكمال هذا الإجراء: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "الصفحة السابقة للرسم البياني" },
   "statsChartNext": { "message": "الصفحة التالية للرسم البياني" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "إدارة الروبوتات"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "جارٍ فحص إصدار Cloudflare… ستُعاد تحميل الصفحة"
-  },
   "advCloudflareNoSitekey": {
     "message": "لم يتم العثور على sitekey في الصفحة"
   },
@@ -4844,7 +4852,7 @@
     "message": "اكتب الاسم أولًا."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "يفحص ملفات تعريف الارتباط وإصدار التحدي ويعثر على مفاتيح مواقع Turnstile"
+    "message": "يفحص ملفات تعريف الارتباط الخاصة بالتحدي ويعثر على مفاتيح مواقع Turnstile ويحلل سكربتاته"
   },
   "advancedInfoDataDomeDesc": {
     "message": "يفحص ملفات تعريف ارتباط DataDome ويحلل نصوصه البرمجية"

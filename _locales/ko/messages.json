@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "처리 중…" },
   "advToolWaitingReload": { "message": "페이지를 다시 불러와 결과를 수집하는 중입니다. 몇 초 걸립니다…" },
   "advToolNoResult": { "message": "결과 없음: 보호 기능이 데이터를 보내지 않았습니다. 페이지를 새로고침한 후 다시 시도하세요." },
+  "advSiteKeyTitleFmt": { "message": "{0} 사이트 키" },
+  "advSiteKeyNotFound": { "message": "이 페이지에서 사이트 키를 찾지 못했습니다. CAPTCHA를 열거나 실행한 후 다시 시도하세요." },
+  "advSiteKeyFoundIn": { "message": "발견 위치" },
+  "advSiteKeySourceWidget": { "message": "위젯" },
+  "advSiteKeySourceRequest": { "message": "요청" },
+  "advSiteKeySourceScript": { "message": "페이지 스크립트" },
+  "advSiteKeySourceGlobal": { "message": "페이지 변수" },
+  "advSiteKeyFrame": { "message": "프레임" },
+  "advSiteKeyScriptsOnPage": { "message": "이 페이지의 스크립트" },
+  "advancedInfoCaptchaKeyDesc": { "message": "사이트 키를 추출하고 스크립트를 분석합니다" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "스크립트를 분석합니다" },
   "advToolActionFailedFmt": { "message": "이 작업을 완료하지 못했습니다: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "차트 이전 페이지" },
   "statsChartNext": { "message": "차트 다음 페이지" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "봇 관리"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Cloudflare 버전을 확인하는 중… 페이지가 새로고침됩니다"
-  },
   "advCloudflareNoSitekey": {
     "message": "페이지에서 sitekey를 찾을 수 없습니다"
   },
@@ -4844,7 +4852,7 @@
     "message": "먼저 이름을 작성하세요."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "챌린지 쿠키와 버전을 확인하고 Turnstile 사이트 키를 찾습니다"
+    "message": "챌린지 쿠키를 확인하고 Turnstile 사이트 키를 찾으며 스크립트를 분석합니다"
   },
   "advancedInfoDataDomeDesc": {
     "message": "DataDome 쿠키를 확인하고 스크립트를 분석합니다"

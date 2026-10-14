@@ -26,6 +26,17 @@
   "advToolWorking": { "message": "Wird verarbeitet…" },
   "advToolWaitingReload": { "message": "Seite wird neu geladen und Ergebnisse werden gesammelt. Das dauert ein paar Sekunden…" },
   "advToolNoResult": { "message": "Kein Ergebnis: Der Schutz hat keine Daten gesendet. Lade die Seite neu und versuche es erneut." },
+  "advSiteKeyTitleFmt": { "message": "{0}-Website-Schlüssel" },
+  "advSiteKeyNotFound": { "message": "Auf dieser Seite wurde kein Website-Schlüssel gefunden. Öffne oder starte das CAPTCHA und versuche es erneut." },
+  "advSiteKeyFoundIn": { "message": "Gefunden in" },
+  "advSiteKeySourceWidget": { "message": "Widget" },
+  "advSiteKeySourceRequest": { "message": "Anfrage" },
+  "advSiteKeySourceScript": { "message": "Seitenskript" },
+  "advSiteKeySourceGlobal": { "message": "Seitenvariable" },
+  "advSiteKeyFrame": { "message": "Frame" },
+  "advSiteKeyScriptsOnPage": { "message": "Skripte auf dieser Seite" },
+  "advancedInfoCaptchaKeyDesc": { "message": "Liest den Website-Schlüssel aus und analysiert die Skripte" },
+  "advancedInfoCaptchaScriptsDesc": { "message": "Analysiert die Skripte" },
   "advToolActionFailedFmt": { "message": "Diese Aktion konnte nicht abgeschlossen werden: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "Vorherige Diagrammseite" },
   "statsChartNext": { "message": "Nächste Diagrammseite" },
@@ -3045,9 +3056,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "Bot-Management"
   },
-  "advCloudflareCheckingVersion": {
-    "message": "Cloudflare-Version wird geprüft … Die Seite wird neu geladen"
-  },
   "advCloudflareNoSitekey": {
     "message": "Kein Sitekey auf der Seite gefunden"
   },
@@ -4844,7 +4852,7 @@
     "message": "Schreibe zuerst den Namen."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Prüft die Challenge-Cookies und -Version und findet Turnstile-Site-Keys"
+    "message": "Prüft die Challenge-Cookies, findet Turnstile-Site-Keys und analysiert die Skripte"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Prüft DataDome-Cookies und analysiert seine Skripte"
