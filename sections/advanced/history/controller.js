@@ -376,7 +376,7 @@ Advanced.prototype.viewCaptureDetails = async function(moduleId, captureId) {
         };
 
         const detailsContent = moduleInstance.renderCaptureDetailsContent(transformedCaptureData);
-        moduleInstance.displayCaptureDetailsModal(captureData.id, detailsContent);
+        moduleInstance.displayCaptureDetailsModal(captureData.id, detailsContent, { copyData: transformedCaptureData.captureData });
       } else {
         NotificationHelper.info(_trAH('captureDetailsUnavailable', 'Details view not available for this module'));
       }

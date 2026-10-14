@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "サイトキーをクリップボードにコピーしました!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "サイトキーをコピーしました"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA のコールバック"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "アクション"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "バージョンをコピーしました"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "アクションをコピーしました"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "API ドメインをコピーしました"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "必須のCookie"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "Cookieをコピーしました"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "検出された機能"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "セッションあり"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "キャプチャ日時:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "クリックに失敗しました: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "AWS WAF スクリプト取得コード"
   },
-  "advAwswafScriptsLabel": {
-    "message": "AWS WAF のスクリプト"
-  },
-  "advAwswafChallengeScript": {
-    "message": "チャレンジスクリプト"
-  },
-  "advAwswafApiScript": {
-    "message": "APIスクリプト (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "問題エンドポイント"
-  },
-  "advAwswafApiKey": {
-    "message": "APIキー"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "APIキーをコピーしました"
-  },
-  "advAwswafToken": {
-    "message": "AWS WAF トークン"
-  },
-  "advAwswafTokenCopied": {
-    "message": "トークンをコピーしました"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "検出の指標"
-  },
-  "advAwswafStatus405": {
-    "message": "ステータス 405"
-  },
-  "advAwswafDetected": {
-    "message": "検出"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "チャレンジエンドポイント"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "Cookie {0} を削除しています… ページを再読み込みします"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Blob データ"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Blob データ（未キャプチャ）"
-  },
-  "advFuncaptchaStatus": {
-    "message": "ステータス"
   },
   "advFuncaptchaNotCaptured": {
     "message": "未キャプチャ"

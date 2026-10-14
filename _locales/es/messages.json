@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "¡Clave del sitio copiada al portapapeles!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "Clave del sitio copiada"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "Callbacks de reCAPTCHA"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "Acción"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "Versión copiada"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "Acción copiada"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "Dominio de la API copiado"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "Cookie obligatoria"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "Cookie copiada"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "Características detectadas"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "Con sesión"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "Capturado:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "No se pudo hacer clic: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "Código para obtener los scripts de AWS WAF"
   },
-  "advAwswafScriptsLabel": {
-    "message": "Scripts de AWS WAF"
-  },
-  "advAwswafChallengeScript": {
-    "message": "Script del challenge"
-  },
-  "advAwswafApiScript": {
-    "message": "Script de la API (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "Endpoint de problema"
-  },
-  "advAwswafApiKey": {
-    "message": "Clave de API"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "Clave de API copiada"
-  },
-  "advAwswafToken": {
-    "message": "Token de AWS WAF"
-  },
-  "advAwswafTokenCopied": {
-    "message": "Token copiado"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "Indicadores de detección"
-  },
-  "advAwswafStatus405": {
-    "message": "Estado 405"
-  },
-  "advAwswafDetected": {
-    "message": "Detectado"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "Endpoint del challenge"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "Eliminando la cookie {0}… La página se recargará"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Datos del blob"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Datos del blob (no capturados)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "Estado"
   },
   "advFuncaptchaNotCaptured": {
     "message": "No capturado"

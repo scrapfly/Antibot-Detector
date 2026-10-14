@@ -2918,9 +2918,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "SiteKey copied to clipboard!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "Site Key copied"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA Callbacks",
     "description": "Modal title"
@@ -2967,21 +2964,9 @@
     "message": "Action",
     "description": "Label: reCAPTCHA action name"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "Version copied"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "Action copied"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "API Domain copied"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "Required Cookie",
     "description": "Label: cookie that must be sent"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "Cookie copied"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "Features Detected",
@@ -2994,10 +2979,6 @@
   "advRecaptchaHasSession": {
     "message": "Has Session",
     "description": "Feature badge: reCAPTCHA runs in session mode"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "Captured:",
-    "description": "Label before the capture date and time"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "Failed to click: {0}",
@@ -3215,47 +3196,6 @@
     "message": "AWS WAF Script Fetching Code",
     "description": "Modal title"
   },
-  "advAwswafScriptsLabel": {
-    "message": "AWS WAF Scripts",
-    "description": "Section label in capture details"
-  },
-  "advAwswafChallengeScript": {
-    "message": "Challenge Script"
-  },
-  "advAwswafApiScript": {
-    "message": "API Script (jsapi.js)",
-    "description": "jsapi.js is a file name (do not translate)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "Problem Endpoint",
-    "description": "AWS WAF \"problem\" endpoint (the endpoint that serves the puzzle)"
-  },
-  "advAwswafApiKey": {
-    "message": "API Key"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "API Key copied"
-  },
-  "advAwswafToken": {
-    "message": "AWS WAF Token"
-  },
-  "advAwswafTokenCopied": {
-    "message": "Token copied"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "Detection Indicators"
-  },
-  "advAwswafStatus405": {
-    "message": "Status 405",
-    "description": "HTTP status code 405 seen"
-  },
-  "advAwswafDetected": {
-    "message": "Detected",
-    "description": "Value next to an indicator"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "Challenge Endpoint"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "Deleting {0} cookie... Page will reload",
     "description": "Toast (AWS WAF and Turnstile). {0} = cookie name (aws-waf-token, cf_clearance)"
@@ -3310,12 +3250,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Blob Data"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Blob Data (Not Captured)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "Status"
   },
   "advFuncaptchaNotCaptured": {
     "message": "Not captured"

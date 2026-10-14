@@ -120,57 +120,26 @@ ShapeSecurityAdvanced.prototype.renderCaptureHistoryItems = function(items) {
      * @returns {string} HTML for modal body content
      */
 ShapeSecurityAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         if (!capture || !capture.captureData) {
-            return `<div class="advanced-modal-section"><span class="advanced-modal-error">${shapeSecurityText('advCommonNoCaptureData', 'No capture data available')}</span></div>`;
+            return K.kitNote(shapeSecurityText('advCommonNoCaptureData', 'No capture data available'));
         }
-
         const data = capture.captureData;
         const headers = data.headers || [];
-        const cookie = data.cookie || null;
-        const version = data.version || 'v2';
-        const timestamp = shapeSecurityDateTime(capture.timestamp);
-        const clickToCopy = AdvancedUtils.escapeHtml(shapeSecurityText('advCommonClickToCopy', 'Click to copy'));
-
-        // Extract unique header patterns (extract middle 8 characters)
-        // e.g., "X-DQ7Hy5L1-z" -> "DQ7Hy5L1"
+        // Unique header patterns: the middle 8 characters ("X-DQ7Hy5L1-z" -> "DQ7Hy5L1")
         const headerPatterns = [...new Set(headers.map(h => {
-            const name = h.name;
-            const match = name.match(/^X-([A-Za-z0-9]{8})-[a-z]$/i);
-            if (match) {
-                return match[1]; // Return the 8 character pattern
-            }
-            return name;
-        }))];
-
-        return `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${shapeSecurityText('advShapeVersionTitle', 'Shape Security Version')}</label>
-                <div class="advanced-modal-code-block" data-copy="${version.toUpperCase()}" style="cursor: pointer;" title="${clickToCopy}">${version.toUpperCase()}</div>
-            </div>
-
-            ${headerPatterns.length > 0 ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${headerPatterns.length > 1 ? shapeSecurityText('advShapeHeaderPatterns', 'Header Patterns') : shapeSecurityText('advShapeHeaderPattern', 'Header Pattern')}</label>
-                ${headerPatterns.map(pattern => `
-                    <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(pattern)}" style="cursor: pointer; margin-bottom: 8px;" title="${clickToCopy}">${AdvancedUtils.escapeHtml(pattern)}</div>
-                `).join('')}
-            </div>
-            ` : ''}
-
-            ${cookie ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${shapeSecurityText('advShapeCookieTitle', 'Shape Cookie')}</label>
-                <div class="advanced-modal-code-block" data-copy="${AdvancedUtils.escapeHtml(cookie.name)}" style="cursor: pointer;" title="${clickToCopy}">${AdvancedUtils.escapeHtml(cookie.name)}</div>
-            </div>
-            ` : ''}
-
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${shapeSecurityText('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+            const match = String(h.name || '').match(/^X-([A-Za-z0-9]{8})-[a-z]$/i);
+            return match ? match[1] : h.name;
+        }))].filter(Boolean);
+        const patternLabel = headerPatterns.length > 1
+            ? shapeSecurityText('advShapeHeaderPatterns', 'Header Patterns') : shapeSecurityText('advShapeHeaderPattern', 'Header Pattern');
+        const facts = K.kitFacts([
+            { label: shapeSecurityText('advCommonCaptured', 'Captured'), value: shapeSecurityDateTime(capture.timestamp) }
+        ]);
+        const fields = K.kitField(shapeSecurityText('advShapeVersionTitle', 'Shape Security Version'), String(data.version || 'v2').toUpperCase())
+            + headerPatterns.map(pattern => K.kitField(patternLabel, pattern)).join('')
+            + K.kitField(shapeSecurityText('advShapeCookieTitle', 'Shape Cookie'), data.cookie && data.cookie.name);
+        return facts + (fields ? K.kitCard(fields) : '');
     };
 
     // ========================================================================

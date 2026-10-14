@@ -232,90 +232,28 @@ ReCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
      * @returns {string} HTML for modal body content
      */
 ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         if (!capture || !capture.captureData) {
-            return `<div class="advanced-modal-section"><span class="advanced-modal-error">${recaptchaText('advCommonNoCaptureData', 'No capture data available')}</span></div>`;
+            return K.kitNote(recaptchaText('advCommonNoCaptureData', 'No capture data available'));
         }
-
         const data = capture.captureData;
-        const siteUrl = AdvancedUtils.escapeHtml(data.siteUrl || capture.url || '');
-        const timestamp = recaptchaDateTime(capture.timestamp);
-        const clickToCopy = AdvancedUtils.escapeHtml(recaptchaText('advCommonClickToCopy', 'Click to copy'));
-        const copiedAttr = (key, fallback) => AdvancedUtils.escapeHtml(recaptchaText(key, fallback));
-
-        // Transform version display: v2 -> reCAPTCHA v2, v3 -> reCAPTCHA v3
-        const versionDisplay = data.version ? `reCAPTCHA ${data.version}` : null;
-
-        // Build features list (only show true/yes features)
-        let features = [];
-        if (data.isEnterprise) features.push(recaptchaText('advCommonEnterprise', 'Enterprise'));
-        if (data.isInvisible) features.push(recaptchaText('advRecaptchaInvisible', 'Invisible'));
-        if (data.isSRequired) features.push(recaptchaText('advRecaptchaSParamRequired', 'S Parameter Required'));
-        if (data.hasSession) features.push(recaptchaText('advRecaptchaHasSession', 'Has Session'));
-
-        return `
-            <div style="display: flex; flex-direction: column; gap: 14px;">
-                <!-- Primary Info Card -->
-                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                    ${versionDisplay ? `
-                    <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('ruleFieldVersion', 'Version')}</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; font-weight: 600;" data-copy="${AdvancedUtils.escapeHtml(data.version)}" data-copy-message="${copiedAttr('advRecaptchaVersionCopied', 'Version copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(versionDisplay)}</div>
-                    </div>
-                    ` : ''}
-                    ${data.action ? `
-                    <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('advRecaptchaAction', 'Action')}</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.action)}" data-copy-message="${copiedAttr('advRecaptchaActionCopied', 'Action copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.action)}</div>
-                    </div>
-                    ` : ''}
-                </div>
-
-                <!-- Site Key Card -->
-                ${data.siteKey ? `
-                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">${recaptchaText('advCommonSiteKey', 'Site Key')}</div>
-                    <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${AdvancedUtils.escapeHtml(data.siteKey)}" data-copy-message="${copiedAttr('advRecaptchaSiteKeyCopiedShort', 'Site Key copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.siteKey)}</div>
-                </div>
-                ` : ''}
-
-                <!-- API Domain & Cookie Card -->
-                ${data.apiDomain || data.requiredCookie ? `
-                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px; display: grid; grid-template-columns: ${data.apiDomain && data.requiredCookie ? '1fr 1fr' : '1fr'}; gap: 14px;">
-                    ${data.apiDomain ? `
-                    <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('advCommonApiDomain', 'API Domain')}</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.apiDomain)}" data-copy-message="${copiedAttr('advRecaptchaApiDomainCopied', 'API Domain copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.apiDomain)}</div>
-                    </div>
-                    ` : ''}
-                    ${data.requiredCookie ? `
-                    <div>
-                        <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px;">${recaptchaText('advRecaptchaRequiredCookie', 'Required Cookie')}</div>
-                        <div class="copy-value" style="color: #4ade80; font-family: var(--font-mono); font-size: 12px; word-break: break-all;" data-copy="${AdvancedUtils.escapeHtml(data.requiredCookie)}" data-copy-message="${copiedAttr('advRecaptchaCookieCopied', 'Cookie copied')}" title="${clickToCopy}">${AdvancedUtils.escapeHtml(data.requiredCookie)}</div>
-                    </div>
-                    ` : ''}
-                </div>
-                ` : ''}
-
-                <!-- Features Card (only if features exist) -->
-                ${features.length > 0 ? `
-                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 10px;">${recaptchaText('advRecaptchaFeaturesDetected', 'Features Detected')}</div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                        ${features.map(f => `<span style="background: rgba(74, 222, 128, 0.15); color: #4ade80; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">${f}</span>`).join('')}
-                    </div>
-                </div>
-                ` : ''}
-
-                <!-- Site URL Card -->
-                <div style="background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 8px;">${recaptchaText('advCommonSiteUrl', 'Site URL')}</div>
-                    <div class="copy-value" style="color: #60a5fa; font-size: 12px; word-break: break-all; padding: 8px;" data-copy="${siteUrl}" data-copy-message="${copiedAttr('advCommonUrlCopied', 'URL copied')}" title="${clickToCopy}">${FormatUtils.escapeHtml(siteUrl)}</div>
-                </div>
-
-                <!-- Metadata Card -->
-                <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 14px;">
-                    <div style="font-size: 10px; color: var(--text-secondary);">${recaptchaText('advRecaptchaCapturedLabel', 'Captured:')} <span style="color: var(--text-primary); font-weight: 600;">${timestamp}</span></div>
-                </div>
-            </div>
-        `;
+        // Only the features that are on, as chips
+        const features = [
+            data.isEnterprise ? recaptchaText('advCommonEnterprise', 'Enterprise') : '',
+            data.isInvisible ? recaptchaText('advRecaptchaInvisible', 'Invisible') : '',
+            data.isSRequired ? recaptchaText('advRecaptchaSParamRequired', 'S Parameter Required') : '',
+            data.hasSession ? recaptchaText('advRecaptchaHasSession', 'Has Session') : ''
+        ].filter(Boolean);
+        const facts = K.kitFacts([
+            data.version ? { label: recaptchaText('ruleFieldVersion', 'Version'), value: `reCAPTCHA ${data.version}` } : null,
+            features.length ? { label: recaptchaText('advRecaptchaFeaturesDetected', 'Features Detected'), html: true,
+                value: `<span class="adv-kit-chips">${features.map(name => K.kitChip(name, 'green')).join('')}</span>` } : null,
+            { label: recaptchaText('advCommonCaptured', 'Captured'), value: recaptchaDateTime(capture.timestamp) }
+        ]);
+        const fields = K.kitField(recaptchaText('advCommonSiteKey', 'Site Key'), data.siteKey, { wrap: true })
+            + K.kitField(recaptchaText('advRecaptchaAction', 'Action'), data.action)
+            + K.kitField(recaptchaText('advCommonApiDomain', 'API Domain'), data.apiDomain)
+            + K.kitField(recaptchaText('advRecaptchaRequiredCookie', 'Required Cookie'), data.requiredCookie)
+            + K.kitField(recaptchaText('advCommonSiteUrl', 'Site URL'), data.siteUrl || capture.url, { mono: false, wrap: true });
+        return facts + (fields ? K.kitCard(fields) : '');
     };

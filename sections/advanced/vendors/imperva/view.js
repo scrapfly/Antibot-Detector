@@ -91,84 +91,32 @@ ImpervaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
      * @returns {string} HTML for modal body content
      */
 ImpervaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         const tr = ImpervaAdvanced.tr;
         const fmt = ImpervaAdvanced.fmt;
         if (!capture || !capture.captureData) {
-            return '<div class="advanced-modal-section"><span class="advanced-modal-error">' + tr('advCommonNoCaptureData', 'No capture data available') + '</span></div>';
+            return K.kitNote(tr('advCommonNoCaptureData', 'No capture data available'));
         }
-        const foundText = tr('advCommonFound', 'Found');
-        const notFoundText = tr('advCommonNotFound', 'Not found');
-
         const data = capture.captureData;
-        const timestamp = new Date(capture.timestamp).toLocaleString();
-        const incapSesCount = (data.incapSesCookies || []).length;
-        const nlbiCount = (data.nlbiCookies || []).length;
-        const visidCount = (data.visidCookies || []).length;
-        const resourceUrlsCount = (data.incapResourceUrls || []).length;
-        const interrogationUrlsCount = (data.interrogationUrls || []).length;
-
-        return `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${tr('advImpervaSecurityComponents', 'Security Components')}</label>
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">reese84</span>
-                    <span class="advanced-modal-info-value">${data.requiresReese84 ? foundText : notFoundText}</span>
-                </div>
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">utmvc</span>
-                    <span class="advanced-modal-info-value">${data.requiresUtmvc ? foundText : notFoundText}</span>
-                </div>
-            </div>
-
-            ${incapSesCount > 0 || nlbiCount > 0 || visidCount > 0 ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${tr('advImpervaSessionCookies', 'Session Cookies')}</label>
-                ${incapSesCount > 0 ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">incap_ses</span>
-                    <span class="advanced-modal-info-value">${fmt('advImpervaCookieCountFmt', 'Cookies: {0}', incapSesCount)}</span>
-                </div>
-                ` : ''}
-                ${nlbiCount > 0 ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">nlbi</span>
-                    <span class="advanced-modal-info-value">${fmt('advImpervaCookieCountFmt', 'Cookies: {0}', nlbiCount)}</span>
-                </div>
-                ` : ''}
-                ${visidCount > 0 ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">visid_incap</span>
-                    <span class="advanced-modal-info-value">${fmt('advImpervaCookieCountFmt', 'Cookies: {0}', visidCount)}</span>
-                </div>
-                ` : ''}
-            </div>
-            ` : ''}
-
-            ${resourceUrlsCount > 0 || interrogationUrlsCount > 0 ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${tr('advImpervaResourceDetection', 'Resource Detection')}</label>
-                ${resourceUrlsCount > 0 ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${tr('advImpervaResourceUrls', 'Resource URLs')}</span>
-                    <span class="advanced-modal-info-value">${resourceUrlsCount}</span>
-                </div>
-                ` : ''}
-                ${interrogationUrlsCount > 0 ? `
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${tr('advImpervaInterrogationUrls', 'Interrogation URLs')}</span>
-                    <span class="advanced-modal-info-value">${interrogationUrlsCount}</span>
-                </div>
-                ` : ''}
-            </div>
-            ` : ''}
-
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${tr('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const state = present => present
+            ? K.kitChip(tr('advCommonFound', 'Found'), 'green') : K.kitChip(tr('advCommonNotFound', 'Not found'), 'neutral');
+        const count = (label, list) => (list || []).length ? { label, value: fmt('advImpervaCookieCountFmt', 'Cookies: {0}', list.length) } : null;
+        const total = (label, list) => (list || []).length ? { label, value: String(list.length) } : null;
+        const components = K.kitFacts([
+            { label: 'reese84', html: true, value: state(data.requiresReese84) },
+            { label: 'utmvc', html: true, value: state(data.requiresUtmvc) },
+            { label: tr('advCommonCaptured', 'Captured'), value: K.kitDateTime(capture.timestamp) }
+        ]);
+        const cookies = K.kitFacts([
+            count('incap_ses', data.incapSesCookies), count('nlbi', data.nlbiCookies), count('visid_incap', data.visidCookies)
+        ]);
+        const resources = K.kitFacts([
+            total(tr('advImpervaResourceUrls', 'Resource URLs'), data.incapResourceUrls),
+            total(tr('advImpervaInterrogationUrls', 'Interrogation URLs'), data.interrogationUrls)
+        ]);
+        return K.kitSection(tr('advImpervaSecurityComponents', 'Security Components'), components)
+            + K.kitSection(tr('advImpervaSessionCookies', 'Session Cookies'), cookies)
+            + K.kitSection(tr('advImpervaResourceDetection', 'Resource Detection'), resources);
     };
 
     // ========================================================================

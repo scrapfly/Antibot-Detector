@@ -91,57 +91,20 @@ CloudflareAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) 
 
 
 CloudflareAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         const data = capture.captureData || capture.data || {};
-        const timestamp = new Date(capture.timestamp).toLocaleString();
-        const url = AdvancedUtils.escapeHtml(capture.url || 'N/A');
-
         const type = data.type || 'Unknown';
-        const cdata = data.cdata || 'N/A';
-        const cAction = data.cAction || 'N/A';
-        const sitekey = data.sitekey || 'N/A';
-        const siteURL = data.siteURL || 'N/A';
-
-        return `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advCommonUrl', 'URL')}</label>
-                <div class="advanced-modal-code-block" data-copy="${url}">${url}</div>
-            </div>
-
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advCloudflareTypeLabel', 'Type')}</label>
-                <div class="advanced-modal-code-block" data-copy="${type}">${this.cloudflareTypeLabel(type)}</div>
-            </div>
-
-            ${type.includes('Turnstile') ? `
-                <div class="advanced-modal-section">
-                    <label class="advanced-modal-label">${this._txt('advCommonSiteKey', 'Site Key')}</label>
-                    <div class="advanced-modal-code-block" data-copy="${sitekey}" style="word-break: break-all;">${FormatUtils.escapeHtml(sitekey)}</div>
-                </div>
-
-                <div class="advanced-modal-section">
-                    <label class="advanced-modal-label">cdata</label>
-                    <div class="advanced-modal-code-block" data-copy="${cdata}" style="word-break: break-all; font-size: 11px;">${cdata === 'N/A' ? cdata : cdata.substring(0, 100) + (cdata.length > 100 ? '...' : '')}</div>
-                </div>
-
-                <div class="advanced-modal-section">
-                    <label class="advanced-modal-label">cAction</label>
-                    <div class="advanced-modal-code-block" data-copy="${cAction}" style="word-break: break-all;">${cAction}</div>
-                </div>
-            ` : ''}
-
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advCommonSiteUrl', 'Site URL')}</label>
-                <div class="advanced-modal-code-block" data-copy="${siteURL}" style="word-break: break-all;">${FormatUtils.escapeHtml(siteURL)}</div>
-            </div>
-
-            <!-- Timestamp Section (at bottom) -->
-            <div class="advanced-modal-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${this._txt('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const turnstile = type.includes('Turnstile');
+        const facts = K.kitFacts([
+            { label: this._txt('advCloudflareTypeLabel', 'Type'), value: this.cloudflareTypeLabel(type) },
+            { label: this._txt('advCommonCaptured', 'Captured'), value: K.kitDateTime(capture.timestamp) }
+        ]);
+        const fields = K.kitField(this._txt('advCommonUrl', 'URL'), capture.url, { mono: false, wrap: true })
+            + (turnstile ? K.kitField(this._txt('advCommonSiteKey', 'Site Key'), data.sitekey, { wrap: true })
+                + K.kitField('cdata', data.cdata, { clamp: true })
+                + K.kitField('cAction', data.cAction, { wrap: true }) : '')
+            + K.kitField(this._txt('advCommonSiteUrl', 'Site URL'), data.siteURL, { mono: false, wrap: true });
+        return facts + (fields ? K.kitCard(fields) : '');
     };
 
 

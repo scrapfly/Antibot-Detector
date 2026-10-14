@@ -77,72 +77,18 @@ FunCaptchaAdvanced.prototype.displayAnalysisModal = function(data) {
 
 
 FunCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         const data = capture.captureData || {};
-        const {
-            websiteUrl = 'N/A',
-            publicKey = 'N/A',
-            bda = null,
-            userAgent = 'N/A',
-            blob = null,
-            isBlobRequired = false,
-            apiDomain = 'N/A'
-        } = data;
-        const timestamp = new Date(capture.timestamp).toLocaleString();
-
-        return `
-            <!-- Public Key Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advFuncaptchaPublicKey', 'Public Key')}</label>
-                <div class="advanced-modal-code-block" data-copy="${publicKey}" style="word-break: break-all;">${publicKey}</div>
-            </div>
-
-            <!-- API Domain Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advCommonApiDomain', 'API Domain')}</label>
-                <div class="advanced-modal-code-block" data-copy="${apiDomain}">${FormatUtils.escapeHtml(apiDomain)}</div>
-            </div>
-
-            <!-- Website URL Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advCommonWebsiteUrl', 'Website URL')}</label>
-                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
-            </div>
-
-            <!-- User Agent Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advFuncaptchaUserAgent', 'User Agent')}</label>
-                <div class="advanced-modal-code-block" data-copy="${userAgent}" style="word-break: break-all;">${userAgent}</div>
-            </div>
-
-            ${bda ? `
-            <!-- BDA Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advFuncaptchaBdaLabel', 'BDA (Browser Data Array)')}</label>
-                <div class="advanced-modal-code-block" data-copy="${bda}" style="word-break: break-all;">${bda}</div>
-            </div>
-            ` : ''}
-
-            ${isBlobRequired ? `
-            <!-- Blob Data Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${blob ? this._txt('advFuncaptchaBlobData', 'Blob Data') : this._txt('advFuncaptchaBlobDataNotCaptured', 'Blob Data (Not Captured)')}</label>
-                ${blob ? `
-                    <div class="advanced-modal-code-block" data-copy="${blob}" style="word-break: break-all;">${blob}</div>
-                ` : `
-                    <div class="advanced-modal-info-row">
-                        <span class="advanced-modal-info-label">${this._txt('advFuncaptchaStatus', 'Status')}</span>
-                        <span class="advanced-modal-info-value">${this._txt('advFuncaptchaNotCaptured', 'Not captured')}</span>
-                    </div>
-                `}
-            </div>
-            ` : ''}
-
-            <!-- Timestamp Section -->
-            <div class="advanced-modal-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${this._txt('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const facts = K.kitFacts([
+            data.isBlobRequired && !data.blob ? { label: this._txt('advFuncaptchaBlobData', 'Blob Data'), html: true,
+                value: K.kitChip(this._txt('advFuncaptchaNotCaptured', 'Not captured'), 'neutral') } : null,
+            { label: this._txt('advCommonCaptured', 'Captured'), value: K.kitDateTime(capture.timestamp) }
+        ]);
+        const fields = K.kitField(this._txt('advFuncaptchaPublicKey', 'Public Key'), data.publicKey, { wrap: true })
+            + K.kitField(this._txt('advCommonApiDomain', 'API Domain'), data.apiDomain)
+            + K.kitField(this._txt('advCommonWebsiteUrl', 'Website URL'), data.websiteUrl, { mono: false, wrap: true })
+            + K.kitField(this._txt('advFuncaptchaUserAgent', 'User Agent'), data.userAgent, { mono: false, wrap: true })
+            + K.kitField(this._txt('advFuncaptchaBdaLabel', 'BDA (Browser Data Array)'), data.bda, { clamp: true })
+            + (data.isBlobRequired ? K.kitField(this._txt('advFuncaptchaBlobData', 'Blob Data'), data.blob, { clamp: true }) : '');
+        return facts + (fields ? K.kitCard(fields) : '');
     };

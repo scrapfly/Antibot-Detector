@@ -226,14 +226,10 @@ class AdvancedModuleHistory {
 
     renderToolResultContent(capture) {
         const data = capture?.data || capture?.captureData || {};
-        const esc = AdvancedUtils.escapeHtml;
-        return `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${esc(data.label || data.tool || '')}</label>
-                ${data.title ? `<div class="advanced-modal-info-value" style="margin-bottom: 6px;">${esc(data.title)}</div>` : ''}
-                <pre class="advanced-modal-code-block" style="white-space: pre-wrap; word-break: break-word; margin: 0;">${esc(AdvancedResultModel.text(data))}</pre>
-            </div>
-        ` + BaseAdvancedModule.prototype.renderCaptureDetailsContent.call(this, capture);
+        const K = BaseAdvancedModule;
+        // The saved result as copyable text, then when and where it was taken
+        const label = [data.label || data.tool || '', data.title && data.title !== data.label ? data.title : ''].filter(Boolean).join(' · ');
+        return K.kitCode(label, AdvancedResultModel.text(data)) + BaseAdvancedModule.prototype.renderCaptureDetailsContent.call(this, capture);
     }
 
     async saveToolResult(data) {
@@ -259,37 +255,29 @@ class AdvancedModuleHistory {
 
     renderCaptureDetailsContent(capture) {
         // Default implementation - shows basic capture info
-        const url = AdvancedUtils.escapeHtml(capture.url || BaseAdvancedModule._tr('advPanelNotAvailable', 'N/A'));
-        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
-        let timestamp;
-        try {
-            timestamp = new Date(capture.timestamp).toLocaleString(uiLocale);
-        } catch (_) {
-            timestamp = new Date(capture.timestamp).toLocaleString();
-        }
-
-        return `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${BaseAdvancedModule._tr('advCommonUrl', 'URL')}</label>
-                <div class="advanced-modal-code-block">${url}</div>
-            </div>
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${BaseAdvancedModule._tr('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const K = BaseAdvancedModule;
+        return K.kitFacts([{ label: K._tr('advCommonCaptured', 'Captured'), value: K.kitDateTime(capture.timestamp) }])
+            + K.kitCard(K.kitField(K._tr('advCommonUrl', 'URL'), capture.url || K._tr('advPanelNotAvailable', 'N/A'), { mono: false, wrap: true }));
     }
 
-    displayCaptureDetailsModal(captureId, detailsContent) {
+    displayCaptureDetailsModal(captureId, detailsContent, { copyData } = {}) {
         const _tCD = (typeof I18n !== 'undefined') ? I18n : null;
+        // "Copy All Data" sits in the window's footer, like the other Advanced windows
+        const actions = copyData === undefined ? [] : [{
+            label: (_tCD && _tCD.get('btnCopyAllData')) || 'Copy All Data',
+            primary: true,
+            iconSvg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>',
+            onClick: () => AdvancedUtils.copyToClipboard(JSON.stringify(copyData, null, 2), null, {
+                notificationMessage: (_tCD && _tCD.get('captureDataCopied')) || 'Capture data copied'
+            })
+        }];
         // detailsContent is pre-sanitized by renderCaptureDetailsContent(); its
         // data-copy values copy on click (kit binding)
         return this.openKitModal({
             title: (_tCD && _tCD.get('advCaptureDetails')) || 'Capture Details',
             iconSvg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/></svg>',
             body: detailsContent,
+            actions,
             copiedMessage: (_tCD && _tCD.get('advValueCopied')) || 'Value copied',
             record: false
         });
@@ -304,36 +292,8 @@ class AdvancedModuleHistory {
         // Render modal content (child classes can override renderCaptureDetailsContent)
         const savedData = capture.data !== undefined ? capture.data : capture.captureData;
         const isToolResult = savedData?.tool && (savedData.schemaVersion === 1 || Array.isArray(savedData.lines));
-        let modalContent = isToolResult ? this.renderToolResultContent(capture) : this.renderCaptureDetailsContent(capture);
-
-        // Add "Copy All Data" button
-        modalContent += `
-            <div class="advanced-modal-section" style="margin-top: 16px;">
-                <button class="advanced-modal-btn-primary" id="copyAllCaptureData" style="width: 100%;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/>
-                    </svg>
-                    ${((typeof I18n !== 'undefined' && I18n.get('btnCopyAllData')) || 'Copy All Data')}
-                </button>
-            </div>
-        `;
-
-        // Display modal
-        this.displayCaptureDetailsModal(captureId, modalContent);
-
-        // Setup copy button listener
-        setTimeout(() => {
-            const copyBtn = document.querySelector('#copyAllCaptureData');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const payload = JSON.stringify(capture.captureData, null, 2);
-                    AdvancedUtils.copyToClipboard(payload, copyBtn, {
-                        notificationMessage: ((typeof I18n !== 'undefined') && I18n.get('captureDataCopied')) || 'Capture data copied'
-                    });
-                });
-            }
-        }, 100);
+        const modalContent = isToolResult ? this.renderToolResultContent(capture) : this.renderCaptureDetailsContent(capture);
+        this.displayCaptureDetailsModal(captureId, modalContent, { copyData: capture.captureData });
     }
 
     showConfirmationModal(title, message, confirmText, cancelText) {

@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "साइट कुंजी क्लिपबोर्ड पर कॉपी हो गई!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "साइट कुंजी कॉपी हो गई"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA कॉलबैक"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "एक्शन"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "संस्करण कॉपी हो गया"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "एक्शन कॉपी हो गया"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "API डोमेन कॉपी हो गया"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "आवश्यक कुकी"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "कुकी कॉपी हो गई"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "पहचानी गई सुविधाएँ"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "सेशन मौजूद"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "कैप्चर किया गया:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "क्लिक नहीं हो सका: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "AWS WAF स्क्रिप्ट प्राप्त करने का कोड"
   },
-  "advAwswafScriptsLabel": {
-    "message": "AWS WAF स्क्रिप्ट"
-  },
-  "advAwswafChallengeScript": {
-    "message": "चैलेंज स्क्रिप्ट"
-  },
-  "advAwswafApiScript": {
-    "message": "API स्क्रिप्ट (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "प्रॉब्लम एंडपॉइंट"
-  },
-  "advAwswafApiKey": {
-    "message": "API कुंजी"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "API कुंजी कॉपी हो गई"
-  },
-  "advAwswafToken": {
-    "message": "AWS WAF टोकन"
-  },
-  "advAwswafTokenCopied": {
-    "message": "टोकन कॉपी हो गया"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "पहचान संकेतक"
-  },
-  "advAwswafStatus405": {
-    "message": "स्टेटस 405"
-  },
-  "advAwswafDetected": {
-    "message": "पहचाना गया"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "चैलेंज एंडपॉइंट"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "{0} कुकी हटाई जा रही है… पेज फिर से लोड होगा"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Blob डेटा"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Blob डेटा (कैप्चर नहीं हुआ)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "स्थिति"
   },
   "advFuncaptchaNotCaptured": {
     "message": "कैप्चर नहीं हुआ"

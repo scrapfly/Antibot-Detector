@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "已将站点密钥复制到剪贴板!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "已复制站点密钥"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA 回调"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "操作"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "已复制版本"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "已复制操作"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "已复制 API 域名"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "必需的 Cookie"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "已复制 Cookie"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "检测到的特性"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "含会话"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "捕获时间:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "点击失败:{0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "AWS WAF 脚本获取代码"
   },
-  "advAwswafScriptsLabel": {
-    "message": "AWS WAF 脚本"
-  },
-  "advAwswafChallengeScript": {
-    "message": "挑战脚本"
-  },
-  "advAwswafApiScript": {
-    "message": "API 脚本 (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "问题端点"
-  },
-  "advAwswafApiKey": {
-    "message": "API 密钥"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "已复制 API 密钥"
-  },
-  "advAwswafToken": {
-    "message": "AWS WAF 令牌"
-  },
-  "advAwswafTokenCopied": {
-    "message": "已复制令牌"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "检测指标"
-  },
-  "advAwswafStatus405": {
-    "message": "状态 405"
-  },
-  "advAwswafDetected": {
-    "message": "已检测到"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "挑战端点"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "正在删除 {0} Cookie… 页面将重新加载"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Blob 数据"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Blob 数据（未捕获）"
-  },
-  "advFuncaptchaStatus": {
-    "message": "状态"
   },
   "advFuncaptchaNotCaptured": {
     "message": "未捕获"

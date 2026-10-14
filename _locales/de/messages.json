@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "Site-Key in die Zwischenablage kopiert!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "Site-Key kopiert"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA-Callbacks"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "Aktion"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "Version kopiert"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "Aktion kopiert"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "API-Domain kopiert"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "Erforderliches Cookie"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "Cookie kopiert"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "Erkannte Merkmale"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "Mit Sitzung"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "Erfasst:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "Klicken fehlgeschlagen: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "Code zum Abrufen der AWS WAF-Skripte"
   },
-  "advAwswafScriptsLabel": {
-    "message": "AWS WAF-Skripte"
-  },
-  "advAwswafChallengeScript": {
-    "message": "Challenge-Skript"
-  },
-  "advAwswafApiScript": {
-    "message": "API-Skript (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "Problem-Endpunkt"
-  },
-  "advAwswafApiKey": {
-    "message": "API-Schlüssel"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "API-Schlüssel kopiert"
-  },
-  "advAwswafToken": {
-    "message": "AWS WAF-Token"
-  },
-  "advAwswafTokenCopied": {
-    "message": "Token kopiert"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "Erkennungsindikatoren"
-  },
-  "advAwswafStatus405": {
-    "message": "Status 405"
-  },
-  "advAwswafDetected": {
-    "message": "Erkannt"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "Challenge-Endpunkt"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "Cookie {0} wird gelöscht … Die Seite wird neu geladen"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Blob-Daten"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Blob-Daten (nicht erfasst)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "Status"
   },
   "advFuncaptchaNotCaptured": {
     "message": "Nicht erfasst"

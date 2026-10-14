@@ -150,57 +150,18 @@ HCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
      * Shows all hCaptcha-specific information when user clicks on a capture
      */
 HCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         const data = capture.captureData || capture.data || {};
-        const notAvailable = hcaptchaText('advHcaptchaNotAvailable', 'N/A');
-        const timestamp = hcaptchaDateTime(capture.timestamp);
-        const url = AdvancedUtils.escapeHtml(capture.url || notAvailable);
-
-        const version = data.version || notAvailable;
-        const siteKey = data.websiteKey || notAvailable;
-        const websiteUrl = data.websiteURL || notAvailable;
-        const isEnterprise = data.isEnterprise ? hcaptchaText('advCommonYes', 'Yes') : hcaptchaText('advHcaptchaNo', 'No');
-
-        return `
-            <!-- URL Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${hcaptchaText('advCommonUrl', 'URL')}</label>
-                <div class="advanced-modal-code-block" data-copy="${url}">${url}</div>
-            </div>
-
-            <!-- Version Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${hcaptchaText('ruleFieldVersion', 'Version')}</label>
-                <div class="advanced-modal-code-block" data-copy="${version}">${version}</div>
-            </div>
-
-            <!-- Site Key Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${hcaptchaText('advCommonSiteKey', 'Site Key')}</label>
-                <div class="advanced-modal-code-block" data-copy="${siteKey}" style="word-break: break-all;">${FormatUtils.escapeHtml(siteKey)}</div>
-            </div>
-
-            <!-- Website URL Section -->
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${hcaptchaText('advCommonWebsiteUrl', 'Website URL')}</label>
-                <div class="advanced-modal-code-block" data-copy="${websiteUrl}" style="word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
-            </div>
-
-            <!-- Enterprise Mode Section -->
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode')}</span>
-                    <span class="advanced-modal-info-value">${isEnterprise}</span>
-                </div>
-            </div>
-
-            <!-- Timestamp Section (at bottom) -->
-            <div class="advanced-modal-section" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${hcaptchaText('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const facts = K.kitFacts([
+            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode'), html: true, value: data.isEnterprise
+                ? K.kitChip(hcaptchaText('advCommonYes', 'Yes'), 'green') : K.kitChip(hcaptchaText('advHcaptchaNo', 'No'), 'neutral') },
+            { label: hcaptchaText('advCommonCaptured', 'Captured'), value: hcaptchaDateTime(capture.timestamp) }
+        ]);
+        const fields = K.kitField(hcaptchaText('advCommonUrl', 'URL'), capture.url, { mono: false, wrap: true })
+            + K.kitField(hcaptchaText('ruleFieldVersion', 'Version'), data.version)
+            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site Key'), data.websiteKey, { wrap: true })
+            + K.kitField(hcaptchaText('advCommonWebsiteUrl', 'Website URL'), data.websiteURL, { mono: false, wrap: true });
+        return facts + (fields ? K.kitCard(fields) : '');
     };
 
 

@@ -113,6 +113,15 @@ class AdvancedDialogs {
             </div>`).join('')}</dl>`;
     }
 
+    /** A timestamp in the UI language (the browser's when that fails). */
+    static kitDateTime(value) {
+        if (value === undefined || value === null || value === '') return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        try { return date.toLocaleString(uiLocale); } catch (_) { return date.toLocaleString(); }
+    }
+
     static kitNote(text, tone = 'muted') {
         return `<p class="adv-kit-note adv-kit-note--${tone}">${FormatUtils.escapeHtml(text)}</p>`;
     }
@@ -216,7 +225,7 @@ class AdvancedDialogs {
 for (const name of ['openKitModal', 'createToolModal', 'showToolModal', 'closeToolModal', 'bindModalClose', 'bindCopyValueHandlers']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedDialogs.prototype, name));
 }
-for (const name of ['kitSection', 'kitCard', 'kitChip', 'kitField', 'kitCode', 'kitFacts', 'kitNote']) {
+for (const name of ['kitSection', 'kitCard', 'kitChip', 'kitField', 'kitCode', 'kitFacts', 'kitNote', 'kitDateTime']) {
     Object.defineProperty(BaseAdvancedModule, name, Object.getOwnPropertyDescriptor(AdvancedDialogs, name));
 }
 })();

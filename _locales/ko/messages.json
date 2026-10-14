@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "사이트 키가 클립보드에 복사되었습니다!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "사이트 키가 복사되었습니다"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA 콜백"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "액션"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "버전이 복사되었습니다"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "액션이 복사되었습니다"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "API 도메인이 복사되었습니다"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "필수 쿠키"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "쿠키가 복사되었습니다"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "감지된 기능"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "세션 있음"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "캡처 시각:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "클릭하지 못했습니다: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "AWS WAF 스크립트 가져오기 코드"
   },
-  "advAwswafScriptsLabel": {
-    "message": "AWS WAF 스크립트"
-  },
-  "advAwswafChallengeScript": {
-    "message": "챌린지 스크립트"
-  },
-  "advAwswafApiScript": {
-    "message": "API 스크립트 (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "문제 엔드포인트"
-  },
-  "advAwswafApiKey": {
-    "message": "API 키"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "API 키가 복사되었습니다"
-  },
-  "advAwswafToken": {
-    "message": "AWS WAF 토큰"
-  },
-  "advAwswafTokenCopied": {
-    "message": "토큰이 복사되었습니다"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "감지 지표"
-  },
-  "advAwswafStatus405": {
-    "message": "상태 405"
-  },
-  "advAwswafDetected": {
-    "message": "감지됨"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "챌린지 엔드포인트"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "{0} 쿠키를 삭제하는 중… 페이지가 새로고침됩니다"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Blob 데이터"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Blob 데이터(캡처되지 않음)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "상태"
   },
   "advFuncaptchaNotCaptured": {
     "message": "캡처되지 않음"

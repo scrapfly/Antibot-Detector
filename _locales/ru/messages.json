@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "Ключ сайта скопирован в буфер обмена!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "Ключ сайта скопирован"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "Callback-функции reCAPTCHA"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "Действие"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "Версия скопирована"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "Действие скопировано"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "Домен API скопирован"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "Обязательный cookie"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "Cookie скопирован"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "Обнаруженные особенности"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "Есть сессия"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "Захвачено:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "Не удалось нажать: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "Код загрузки скриптов AWS WAF"
   },
-  "advAwswafScriptsLabel": {
-    "message": "Скрипты AWS WAF"
-  },
-  "advAwswafChallengeScript": {
-    "message": "Скрипт проверки"
-  },
-  "advAwswafApiScript": {
-    "message": "Скрипт API (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "Эндпоинт задачи"
-  },
-  "advAwswafApiKey": {
-    "message": "Ключ API"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "Ключ API скопирован"
-  },
-  "advAwswafToken": {
-    "message": "Токен AWS WAF"
-  },
-  "advAwswafTokenCopied": {
-    "message": "Токен скопирован"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "Признаки обнаружения"
-  },
-  "advAwswafStatus405": {
-    "message": "Статус 405"
-  },
-  "advAwswafDetected": {
-    "message": "Обнаружено"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "Эндпоинт проверки"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "Удаление куки {0}… Страница будет перезагружена"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Данные blob"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Данные blob (не захвачены)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "Статус"
   },
   "advFuncaptchaNotCaptured": {
     "message": "Не захвачено"

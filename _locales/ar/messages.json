@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "تم نسخ مفتاح الموقع إلى الحافظة!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "تم نسخ مفتاح الموقع"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "دوال رد الاتصال لـ reCAPTCHA"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "الإجراء"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "تم نسخ الإصدار"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "تم نسخ الإجراء"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "تم نسخ نطاق API"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "ملف تعريف الارتباط المطلوب"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "تم نسخ ملف تعريف الارتباط"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "الميزات المكتشفة"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "يتضمن جلسة"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "وقت الالتقاط:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "تعذّر النقر: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "رمز جلب البرامج النصية لـ AWS WAF"
   },
-  "advAwswafScriptsLabel": {
-    "message": "البرامج النصية لـ AWS WAF"
-  },
-  "advAwswafChallengeScript": {
-    "message": "البرنامج النصي للتحدي"
-  },
-  "advAwswafApiScript": {
-    "message": "البرنامج النصي لواجهة API (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "نقطة نهاية المسألة"
-  },
-  "advAwswafApiKey": {
-    "message": "مفتاح API"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "تم نسخ مفتاح API"
-  },
-  "advAwswafToken": {
-    "message": "رمز AWS WAF"
-  },
-  "advAwswafTokenCopied": {
-    "message": "تم نسخ الرمز"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "مؤشرات الاكتشاف"
-  },
-  "advAwswafStatus405": {
-    "message": "الحالة 405"
-  },
-  "advAwswafDetected": {
-    "message": "تم الاكتشاف"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "نقطة نهاية التحدي"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "جارٍ حذف ملف تعريف الارتباط {0}… ستُعاد تحميل الصفحة"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "بيانات Blob"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "بيانات Blob (لم يتم التقاطها)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "الحالة"
   },
   "advFuncaptchaNotCaptured": {
     "message": "لم يتم الالتقاط"

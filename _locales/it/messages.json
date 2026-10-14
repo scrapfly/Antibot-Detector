@@ -2837,9 +2837,6 @@
   "advRecaptchaSiteKeyCopied": {
     "message": "Chiave del sito copiata negli appunti!"
   },
-  "advRecaptchaSiteKeyCopiedShort": {
-    "message": "Chiave del sito copiata"
-  },
   "advRecaptchaCallbacksTitle": {
     "message": "Callback di reCAPTCHA"
   },
@@ -2876,20 +2873,8 @@
   "advRecaptchaAction": {
     "message": "Azione"
   },
-  "advRecaptchaVersionCopied": {
-    "message": "Versione copiata"
-  },
-  "advRecaptchaActionCopied": {
-    "message": "Azione copiata"
-  },
-  "advRecaptchaApiDomainCopied": {
-    "message": "Dominio API copiato"
-  },
   "advRecaptchaRequiredCookie": {
     "message": "Cookie obbligatorio"
-  },
-  "advRecaptchaCookieCopied": {
-    "message": "Cookie copiato"
   },
   "advRecaptchaFeaturesDetected": {
     "message": "Caratteristiche rilevate"
@@ -2899,9 +2884,6 @@
   },
   "advRecaptchaHasSession": {
     "message": "Con sessione"
-  },
-  "advRecaptchaCapturedLabel": {
-    "message": "Acquisito:"
   },
   "advRecaptchaFailedClickFmt": {
     "message": "Clic non riuscito: {0}"
@@ -3074,42 +3056,6 @@
   "advAwswafFetchCodeTitle": {
     "message": "Codice per scaricare gli script AWS WAF"
   },
-  "advAwswafScriptsLabel": {
-    "message": "Script AWS WAF"
-  },
-  "advAwswafChallengeScript": {
-    "message": "Script del challenge"
-  },
-  "advAwswafApiScript": {
-    "message": "Script dell'API (jsapi.js)"
-  },
-  "advAwswafProblemEndpoint": {
-    "message": "Endpoint del problema"
-  },
-  "advAwswafApiKey": {
-    "message": "Chiave API"
-  },
-  "advAwswafApiKeyCopied": {
-    "message": "Chiave API copiata"
-  },
-  "advAwswafToken": {
-    "message": "Token AWS WAF"
-  },
-  "advAwswafTokenCopied": {
-    "message": "Token copiato"
-  },
-  "advAwswafDetectionIndicators": {
-    "message": "Indicatori di rilevamento"
-  },
-  "advAwswafStatus405": {
-    "message": "Stato 405"
-  },
-  "advAwswafDetected": {
-    "message": "Rilevato"
-  },
-  "advAwswafChallengeEndpoint": {
-    "message": "Endpoint del challenge"
-  },
   "advAwswafDeletingCookieFmt": {
     "message": "Eliminazione del cookie {0}… La pagina verrà ricaricata"
   },
@@ -3154,12 +3100,6 @@
   },
   "advFuncaptchaBlobData": {
     "message": "Dati del blob"
-  },
-  "advFuncaptchaBlobDataNotCaptured": {
-    "message": "Dati del blob (non acquisiti)"
-  },
-  "advFuncaptchaStatus": {
-    "message": "Stato"
   },
   "advFuncaptchaNotCaptured": {
     "message": "Non acquisito"

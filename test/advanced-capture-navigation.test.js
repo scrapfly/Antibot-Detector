@@ -139,6 +139,7 @@ test('real generic renderer remains viable without a vendor class or current det
   delete f.context.window.AkamaiAdvanced;
   delete f.context.BaseAdvancedModule;
   f.context.AdvancedUtils = { escapeHtml: value => String(value).replaceAll('<', '&lt;') };
+  f.context.FormatUtils = require('../utils/format-utils');
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/base-advanced-module.js'), 'utf8'), f.context);
   for (const component of ['components/tool-grid', 'components/dialogs', 'components/cookie-results', 'history/module-history']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/' + component + '.js'), 'utf8'), f.context);
@@ -178,9 +179,10 @@ test('card pointer and keyboard navigation isolate copy and delete actions', asy
 function loadRealHistoryModule(f) {
   delete f.context.BaseAdvancedModule;
   f.context.AdvancedUtils = { escapeHtml: value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;') };
+  f.context.FormatUtils = require('../utils/format-utils');
   f.context.setTimeout = () => {};
   f.context.document.querySelector = () => null;
-  for (const file of ['modules/advanced/result-model.js', 'sections/advanced/base-advanced-module.js', 'sections/advanced/history/module-history.js']) {
+  for (const file of ['modules/advanced/result-model.js', 'sections/advanced/base-advanced-module.js', 'sections/advanced/components/dialogs.js', 'sections/advanced/history/module-history.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), f.context);
   }
   const module = new f.context.window.BaseAdvancedModule({}, { id: 7, url: 'https://example.com' }, 'akamai');
@@ -203,7 +205,7 @@ for (const location of ['unified', 'vendor']) {
       if (location === 'unified') await f.advanced.viewCaptureDetails('akamai', 'saved');
       else await module.toggleCaptureDetails('saved');
       assert.equal(f.opened.length, 1);
-      assert.match(f.opened[0].content, /&lt;script>saved output&lt;\/script>/);
+      assert.match(f.opened[0].content, /&lt;script&gt;saved output&lt;\/script&gt;/);
       assert.doesNotMatch(f.opened[0].content, /<script>/);
       assert.deepEqual(f.errors, []);
     });

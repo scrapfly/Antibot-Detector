@@ -160,75 +160,15 @@ AwsWafAdvanced.prototype.displayExportCodeModal = function(scripts) {
      * @returns {string} HTML content for modal
      */
 AwsWafAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
+        const K = BaseAdvancedModule;
         if (!capture || !capture.captureData) {
-            return '<div class="advanced-modal-section"><span class="advanced-modal-error">' + this._txt('advCommonNoCaptureData', 'No capture data available') + '</span></div>';
+            return K.kitNote(this._txt('advCommonNoCaptureData', 'No capture data available'));
         }
-
-        // Handle nested data structure from AWS WAF interceptor
         const captureData = capture.captureData;
         const data = captureData.data || captureData;
-        const flags = captureData.flags || {};
-        const url = AdvancedUtils.escapeHtml(data.websiteURL || capture.url || 'N/A');
-        const timestamp = new Date(captureData.timestamp || capture.timestamp).toLocaleString();
-
-        return `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advCommonWebsiteUrl', 'Website URL')}</label>
-                <div class="advanced-modal-code-block" style="word-break: break-all;">${url}</div>
-            </div>
-
-            ${data.awsChallengeJS || data.awsApiJs || data.awsProblemUrl ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advAwswafScriptsLabel', 'AWS WAF Scripts')}</label>
-                ${data.awsChallengeJS ? `
-                <div style="margin-bottom: 8px;">
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">${this._txt('advAwswafChallengeScript', 'Challenge Script')}</div>
-                    <div class="advanced-modal-code-block copy-value" data-copy="${AdvancedUtils.escapeHtml(data.awsChallengeJS)}" data-copy-message="${this._txt('advCommonUrlCopied', 'URL copied')}" style="word-break: break-all;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${AdvancedUtils.escapeHtml(data.awsChallengeJS)}</div>
-                </div>
-                ` : ''}
-                ${data.awsApiJs ? `
-                <div style="margin-bottom: 8px;">
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">${this._txt('advAwswafApiScript', 'API Script (jsapi.js)')}</div>
-                    <div class="advanced-modal-code-block copy-value" data-copy="${AdvancedUtils.escapeHtml(data.awsApiJs)}" data-copy-message="${this._txt('advCommonUrlCopied', 'URL copied')}" style="word-break: break-all;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${AdvancedUtils.escapeHtml(data.awsApiJs)}</div>
-                </div>
-                ` : ''}
-                ${data.awsProblemUrl ? `
-                <div style="margin-bottom: 8px;">
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px;">${this._txt('advAwswafProblemEndpoint', 'Problem Endpoint')}</div>
-                    <div class="advanced-modal-code-block copy-value" data-copy="${AdvancedUtils.escapeHtml(data.awsProblemUrl)}" data-copy-message="${this._txt('advCommonUrlCopied', 'URL copied')}" style="word-break: break-all;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${AdvancedUtils.escapeHtml(data.awsProblemUrl)}</div>
-                </div>
-                ` : ''}
-            </div>
-            ` : ''}
-
-            ${data.awsApiKey ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advAwswafApiKey', 'API Key')}</label>
-                <div class="advanced-modal-code-block copy-value" data-copy="${AdvancedUtils.escapeHtml(data.awsApiKey)}" data-copy-message="${this._txt('advAwswafApiKeyCopied', 'API Key copied')}" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${AdvancedUtils.escapeHtml(data.awsApiKey)}</div>
-            </div>
-            ` : ''}
-
-            ${data.awsExistingToken ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advAwswafToken', 'AWS WAF Token')}</label>
-                <div class="advanced-modal-code-block copy-value" data-copy="${AdvancedUtils.escapeHtml(data.awsExistingToken)}" data-copy-message="${this._txt('advAwswafTokenCopied', 'Token copied')}" style="word-break: break-all;" title="${this._txt('advCommonClickToCopy', 'Click to copy')}">${data.awsExistingToken.substring(0, 60)}${data.awsExistingToken.length > 60 ? '...' : ''}</div>
-            </div>
-            ` : ''}
-
-            ${flags.hasStatus405 || flags.hasChallengeEndpoint || flags.hasProblemEndpoint ? `
-            <div class="advanced-modal-section">
-                <label class="advanced-modal-label">${this._txt('advAwswafDetectionIndicators', 'Detection Indicators')}</label>
-                ${flags.hasStatus405 ? `<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">${this._txt('advAwswafStatus405', 'Status 405')}</span><span class="advanced-modal-info-value">${this._txt('advAwswafDetected', 'Detected')}</span></div>` : ''}
-                ${flags.hasChallengeEndpoint ? `<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">${this._txt('advAwswafChallengeEndpoint', 'Challenge Endpoint')}</span><span class="advanced-modal-info-value">${this._txt('advCommonFound', 'Found')}</span></div>` : ''}
-                ${flags.hasProblemEndpoint ? `<div class="advanced-modal-info-row"><span class="advanced-modal-info-label">${this._txt('advAwswafProblemEndpoint', 'Problem Endpoint')}</span><span class="advanced-modal-info-value">${this._txt('advCommonFound', 'Found')}</span></div>` : ''}
-            </div>
-            ` : ''}
-
-            <div class="advanced-modal-section">
-                <div class="advanced-modal-info-row">
-                    <span class="advanced-modal-info-label">${this._txt('advCommonCaptured', 'Captured')}</span>
-                    <span class="advanced-modal-info-value">${timestamp}</span>
-                </div>
-            </div>
-        `;
+        const facts = K.kitFacts([
+            { label: this._txt('advCommonCaptured', 'Captured'), value: K.kitDateTime(captureData.timestamp || capture.timestamp) }
+        ]);
+        const fields = K.kitField(this._txt('advCommonWebsiteUrl', 'Website URL'), data.websiteURL || capture.url, { mono: false, wrap: true });
+        return facts + (fields ? K.kitCard(fields) : '');
     };
