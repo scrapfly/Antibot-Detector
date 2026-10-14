@@ -169,6 +169,27 @@ function startFuncaptchaInterception(tabId) {
 }
 
 /**
+ * The POST fields of a public_key request. Chrome gives a form-encoded body as
+ * formData (values are arrays) and anything else as raw bytes.
+ * @returns {URLSearchParams|null}
+ */
+function funcaptchaBodyParams(body) {
+    if (!body) return null;
+    if (body.formData) {
+        const params = new URLSearchParams();
+        for (const [key, values] of Object.entries(body.formData)) {
+            for (const value of [].concat(values)) params.append(key, value);
+        }
+        return params;
+    }
+    if (Array.isArray(body.raw) && body.raw.length) {
+        const text = body.raw.map(part => (part && part.bytes ? new TextDecoder('utf-8').decode(part.bytes) : '')).join('');
+        return new URLSearchParams(text);
+    }
+    return null;
+}
+
+/**
  * Handle FunCaptcha API request - extract capture data
  */
 function handleFuncaptchaRequest(details, tabId) {
@@ -182,15 +203,11 @@ function handleFuncaptchaRequest(details, tabId) {
         Logger.network('[FunCaptcha] Intercepted request:', url);
 
         // Extract POST body
-        if (!details.requestBody || !details.requestBody.raw) {
+        const params = funcaptchaBodyParams(details.requestBody);
+        if (!params) {
             Logger.network('[FunCaptcha] No request body found');
             return;
         }
-
-        const rawBytes = details.requestBody.raw[0].bytes;
-        const decoder = new TextDecoder('utf-8');
-        const postText = decoder.decode(rawBytes);
-        const params = new URLSearchParams(postText);
 
         // Extract data
         const captureData = {

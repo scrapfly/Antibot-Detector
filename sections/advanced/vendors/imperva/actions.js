@@ -7,7 +7,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
                 throw new Error('Tab information not available');
             }
 
-            const patterns = [/reese84/, /utmvc/, /incap_ses_\d+_\d+/, /nlbi_\d+/, /visid_incap_\d+/];
+            const patterns = [/^reese84$/, /^_*utmvc$/, /^incap_ses_\d+_\d+$/, /^nlbi_\d+/, /^visid_incap_\d+$/];
             const cookies = (await chrome.cookies.getAll({ url: this.tabInfo.url }))
                 .filter(cookie => patterns.some(pattern => pattern.test(cookie.name)));
 
@@ -15,7 +15,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
 
             // Determine protection level
             const hasReese84 = cookies.some(c => c.name === 'reese84');
-            const hasUtmvc = cookies.some(c => c.name === 'utmvc');
+            const hasUtmvc = cookies.some(c => /^_*utmvc$/.test(c.name));
             const incapSes = cookies.filter(c => /^incap_ses_/.test(c.name));
             const nlbi = cookies.filter(c => /^nlbi_/.test(c.name));
             const visid = cookies.filter(c => /^visid_incap_/.test(c.name));
@@ -34,7 +34,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
             // Show notification
             const foundCount = cookies.length;
             if (foundCount > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, 7));
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, patterns.length));
             } else {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Imperva'));
             }
@@ -46,7 +46,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
                 'Standard': tr('advCommonStandard', 'Standard'),
                 'Basic (Session)': tr('advImpervaLevelBasicSession', 'Basic (Session)')
             }[protectionLevel] || protectionLevel;
-            this.showCookieResults({ vendor: 'Imperva', expected: ['reese84', 'utmvc', 'incap_ses_*', 'nlbi_*', 'visid_incap_*'], cookies,
+            this.showCookieResults({ vendor: 'Imperva', expected: ['reese84', '___utmvc', 'incap_ses_*', 'nlbi_*', 'visid_incap_*'], cookies,
                 facts: [{ label: tr('advCommonProtectionLevel', 'Protection Level:'), value: levelText }] });
         } catch (error) {
             Logger.error('NETWORK', '[IMPERVA] Failed to check cookies:', error);
@@ -62,17 +62,16 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
         Logger.network('[IMPERVA-EXTRACT] ========== STARTING EXTRACTION ==========');
         try {
 
-            // Get current tab
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!tab) {
-                Logger.error('NETWORK', '[IMPERVA-EXTRACT] No active tab found');
-                throw new Error('No active tab found');
+            // The tab these tools were opened for, not whichever tab is active now
+            const tab = this.tabInfo;
+            if (!tab || !tab.id || !tab.url) {
+                throw new Error('Tab information not available');
             }
 
             Logger.network('[IMPERVA-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
 
             // Delete Imperva-related cookies to force regeneration
-            const cookiesToDelete = ['reese84', 'utmvc', 'incap_ses', 'nlbi', 'visid_incap'];
+            const cookiesToDelete = ['reese84', '___utmvc', 'incap_ses', 'nlbi', 'visid_incap'];
             let deletedCount = 0;
 
             for (const cookieName of cookiesToDelete) {
@@ -118,6 +117,8 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
 
                 // Show success notification
                 NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Imperva'));
+                // The result arrives as IMPERVA_EXTRACTION_COMPLETED: keep the card busy until then
+                return { awaitingResult: true };
             } else {
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Invalid response from background');
                 Logger.error('NETWORK', '[IMPERVA-EXTRACT] Expected: { status: "success" }');

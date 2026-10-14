@@ -25,6 +25,7 @@
   "advToolStopCaptureHint": { "message": "إيقاف تسجيل البيانات من هذه الصفحة" },
   "advToolWorking": { "message": "جارٍ العمل…" },
   "advToolWaitingReload": { "message": "جارٍ إعادة تحميل الصفحة وجمع النتائج. يستغرق ذلك بضع ثوانٍ…" },
+  "advToolNoResult": { "message": "لا توجد نتيجة: لم ترسل الحماية أي بيانات. أعد تحميل الصفحة وحاول مرة أخرى." },
   "advToolActionFailedFmt": { "message": "تعذر إكمال هذا الإجراء: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "الصفحة السابقة للرسم البياني" },
   "statsChartNext": { "message": "الصفحة التالية للرسم البياني" },
@@ -2477,9 +2478,6 @@
   "advCommonFailedStartExtractionFmt": {
     "message": "تعذّر بدء الاستخراج: {0}"
   },
-  "advCommonFailedOpenExportFmt": {
-    "message": "تعذّر فتح نافذة التصدير: {0}"
-  },
   "advCommonNoScriptsToExport": {
     "message": "لا توجد برامج نصية للتصدير"
   },
@@ -2509,9 +2507,6 @@
   },
   "advCommonFoundScriptsFmt": {
     "message": "عدد البرامج النصية ذات الصلة: {0}"
-  },
-  "advCommonScriptAnalysis": {
-    "message": "تحليل البرامج النصية"
   },
   "advCommonTotalScripts": {
     "message": "إجمالي البرامج النصية:"
@@ -2554,9 +2549,6 @@
   },
   "advCodeDescBrowserParseFmt": {
     "message": "رمز لوحدة تحكم المتصفح يعترض البرامج النصية لـ {0} ويحللها"
-  },
-  "advCodeDescBrowserFetchFmt": {
-    "message": "رمز لوحدة تحكم المتصفح يجلب البرامج النصية لـ {0}"
   },
   "advCodeDescPythonBs": {
     "message": "برنامج Python يستخدم requests وBeautifulSoup"
@@ -2774,9 +2766,6 @@
   "advImpervaSensorUrl": {
     "message": "عنوان URL للمستشعر:"
   },
-  "advImpervaScriptsHeading": {
-    "message": "نصوص Imperva البرمجية"
-  },
   "advImpervaScriptTypeFmt": {
     "message": "النص البرمجي {0}"
   },
@@ -2948,9 +2937,6 @@
   "advShapeSeedScriptsLabel": {
     "message": "البرامج النصية ذات seed:"
   },
-  "advShapeScriptsHeading": {
-    "message": "البرامج النصية لـ Shape Security"
-  },
   "advShapeInitJsScript": {
     "message": "البرنامج النصي Init.js"
   },
@@ -2962,9 +2948,6 @@
   },
   "advShapeSeedScripts": {
     "message": "البرامج النصية ذات seed"
-  },
-  "advShapeNoActiveTab": {
-    "message": "لم يُعثر على علامة تبويب نشطة"
   },
   "advShapeErrorFmt": {
     "message": "خطأ: {0}"
@@ -3026,9 +3009,6 @@
   "advHcaptchaNotAvailable": {
     "message": "غير متاح"
   },
-  "advHcaptchaScriptNumberFmt": {
-    "message": "البرنامج النصي {0}"
-  },
   "advHcaptchaCheckingVersionReload": {
     "message": "جارٍ التحقق من إصدار hCaptcha… سيُعاد تحميل الصفحة"
   },
@@ -3044,20 +3024,8 @@
   "advHcaptchaNoticeCaptured": {
     "message": "تم التقاط بيانات hCaptcha بنجاح"
   },
-  "advAwswafNoScripts": {
-    "message": "لم يتم العثور على برامج نصية لـ AWS WAF"
-  },
-  "advAwswafDeleteCookieHint": {
-    "message": "احذف ملف تعريف الارتباط aws-waf-token وأعد التحميل لتشغيل التحدي"
-  },
   "advAwswafTypeChallenge": {
     "message": "تحدٍّ"
-  },
-  "advAwswafClickToCopyUrl": {
-    "message": "انقر لنسخ الرابط"
-  },
-  "advAwswafFetchCodeTitle": {
-    "message": "رمز جلب البرامج النصية لـ AWS WAF"
   },
   "advAwswafDeletingCookieFmt": {
     "message": "جارٍ حذف ملف تعريف الارتباط {0}… ستُعاد تحميل الصفحة"
@@ -3067,12 +3035,6 @@
   },
   "advCloudflareSiteKeyCopied": {
     "message": "تم نسخ Site Key"
-  },
-  "advCloudflareSitekeyLabel": {
-    "message": "Sitekey:"
-  },
-  "advCloudflareUrlLabel": {
-    "message": "الرابط:"
   },
   "advCloudflareTypeChallenge": {
     "message": "تحدٍّ"
@@ -3137,14 +3099,8 @@
   "advGeetestSourceJsonConfig": {
     "message": "إعدادات JSON"
   },
-  "advGeetestSourceLabel": {
-    "message": "المصدر:"
-  },
   "advGeetestExtractedCaptchaId": {
     "message": "captchaId المستخرج"
-  },
-  "advGeetestClickToCopyCaptchaId": {
-    "message": "انقر لنسخ captchaId"
   },
   "advGeetestProductLabel": {
     "message": "المنتج:"
@@ -4105,9 +4061,6 @@
   },
   "advTurnstileSiteKeysTitle": {
     "message": "مفاتيح موقع Turnstile"
-  },
-  "advTurnstileReloadingScripts": {
-    "message": "جارٍ إعادة تحميل الصفحة لجمع سكربتات Turnstile"
   },
   "settingsGroupAdvancedTools": {
     "message": "الأدوات المتقدمة"

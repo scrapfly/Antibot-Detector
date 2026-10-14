@@ -25,6 +25,7 @@
   "advToolStopCaptureHint": { "message": "이 페이지의 데이터 기록 중지" },
   "advToolWorking": { "message": "처리 중…" },
   "advToolWaitingReload": { "message": "페이지를 다시 불러와 결과를 수집하는 중입니다. 몇 초 걸립니다…" },
+  "advToolNoResult": { "message": "결과 없음: 보호 기능이 데이터를 보내지 않았습니다. 페이지를 새로고침한 후 다시 시도하세요." },
   "advToolActionFailedFmt": { "message": "이 작업을 완료하지 못했습니다: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "차트 이전 페이지" },
   "statsChartNext": { "message": "차트 다음 페이지" },
@@ -2477,9 +2478,6 @@
   "advCommonFailedStartExtractionFmt": {
     "message": "추출을 시작하지 못했습니다: {0}"
   },
-  "advCommonFailedOpenExportFmt": {
-    "message": "내보내기 창을 열지 못했습니다: {0}"
-  },
   "advCommonNoScriptsToExport": {
     "message": "내보낼 스크립트가 없습니다"
   },
@@ -2509,9 +2507,6 @@
   },
   "advCommonFoundScriptsFmt": {
     "message": "관련 스크립트 {0}개를 찾았습니다"
-  },
-  "advCommonScriptAnalysis": {
-    "message": "스크립트 분석"
   },
   "advCommonTotalScripts": {
     "message": "전체 스크립트:"
@@ -2554,9 +2549,6 @@
   },
   "advCodeDescBrowserParseFmt": {
     "message": "{0} 스크립트를 가로채 파싱하는 브라우저 콘솔 코드"
-  },
-  "advCodeDescBrowserFetchFmt": {
-    "message": "{0} 스크립트를 가져오는 브라우저 콘솔 코드"
   },
   "advCodeDescPythonBs": {
     "message": "requests와 BeautifulSoup을 사용하는 Python 스크립트"
@@ -2774,9 +2766,6 @@
   "advImpervaSensorUrl": {
     "message": "센서 URL:"
   },
-  "advImpervaScriptsHeading": {
-    "message": "Imperva 스크립트"
-  },
   "advImpervaScriptTypeFmt": {
     "message": "{0} 스크립트"
   },
@@ -2948,9 +2937,6 @@
   "advShapeSeedScriptsLabel": {
     "message": "seed 스크립트:"
   },
-  "advShapeScriptsHeading": {
-    "message": "Shape Security 스크립트"
-  },
   "advShapeInitJsScript": {
     "message": "Init.js 스크립트"
   },
@@ -2962,9 +2948,6 @@
   },
   "advShapeSeedScripts": {
     "message": "seed 스크립트"
-  },
-  "advShapeNoActiveTab": {
-    "message": "활성 탭을 찾을 수 없습니다"
   },
   "advShapeErrorFmt": {
     "message": "오류: {0}"
@@ -3026,9 +3009,6 @@
   "advHcaptchaNotAvailable": {
     "message": "없음"
   },
-  "advHcaptchaScriptNumberFmt": {
-    "message": "스크립트 {0}"
-  },
   "advHcaptchaCheckingVersionReload": {
     "message": "hCaptcha 버전 확인 중… 페이지가 새로고침됩니다"
   },
@@ -3044,20 +3024,8 @@
   "advHcaptchaNoticeCaptured": {
     "message": "hCaptcha 데이터를 캡처했습니다"
   },
-  "advAwswafNoScripts": {
-    "message": "AWS WAF 스크립트를 찾을 수 없습니다"
-  },
-  "advAwswafDeleteCookieHint": {
-    "message": "aws-waf-token 쿠키를 삭제하고 새로고침하면 챌린지가 발생합니다"
-  },
   "advAwswafTypeChallenge": {
     "message": "챌린지"
-  },
-  "advAwswafClickToCopyUrl": {
-    "message": "클릭하여 URL 복사"
-  },
-  "advAwswafFetchCodeTitle": {
-    "message": "AWS WAF 스크립트 가져오기 코드"
   },
   "advAwswafDeletingCookieFmt": {
     "message": "{0} 쿠키를 삭제하는 중… 페이지가 새로고침됩니다"
@@ -3067,12 +3035,6 @@
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key가 복사되었습니다"
-  },
-  "advCloudflareSitekeyLabel": {
-    "message": "Sitekey:"
-  },
-  "advCloudflareUrlLabel": {
-    "message": "URL:"
   },
   "advCloudflareTypeChallenge": {
     "message": "챌린지"
@@ -3137,14 +3099,8 @@
   "advGeetestSourceJsonConfig": {
     "message": "JSON 구성"
   },
-  "advGeetestSourceLabel": {
-    "message": "출처:"
-  },
   "advGeetestExtractedCaptchaId": {
     "message": "추출된 captchaId"
-  },
-  "advGeetestClickToCopyCaptchaId": {
-    "message": "클릭하여 captchaId 복사"
   },
   "advGeetestProductLabel": {
     "message": "제품:"
@@ -4105,9 +4061,6 @@
   },
   "advTurnstileSiteKeysTitle": {
     "message": "Turnstile 사이트 키"
-  },
-  "advTurnstileReloadingScripts": {
-    "message": "Turnstile 스크립트를 수집하기 위해 페이지를 새로고침합니다"
   },
   "settingsGroupAdvancedTools": {
     "message": "고급 도구"

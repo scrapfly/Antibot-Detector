@@ -7,9 +7,8 @@ ImpervaAdvanced.prototype.generateParsingCode = function(extractedData, scriptPa
         const includeReese = exportType === 'all' || exportType === 'reese84';
         const includeUtmvc = exportType === 'all' || exportType === 'utmvc';
 
-        const codes = {
-            javascript: `// JavaScript - Imperva Script Path Parser
-// This code extracts Imperva script paths from HTML
+        // One parser body; JavaScript reads the open page, Node.js fetches it first
+        const parserBody = `
 
 ${includeReese && reeseScriptPath ? `
 // Reese84 Script Detection
@@ -75,7 +74,19 @@ console.log('UTMVC Script Path:', detectedPath);
 ` : ''}
 
 // Detected on: ${hostname}
-// Captured at: ${new Date(extractedData.timestamp).toISOString()}`,
+// Captured at: ${new Date(extractedData.timestamp).toISOString()}`;
+        const pageUrl = extractedData.url || 'https://example.com';
+        const codes = {
+            javascript: `// JavaScript - Imperva Script Path Parser
+// Run in the browser console on the protected page
+const htmlContent = document.documentElement.outerHTML;
+${parserBody}`,
+
+            nodejs: `// Node.js 18+ - Imperva Script Path Parser
+// Fetches the page, then parses its HTML
+fetch(${JSON.stringify(pageUrl)}).then(response => response.text()).then(htmlContent => {
+${parserBody}
+});`,
 
             python: `# Python - Imperva Script Path Parser
 import re

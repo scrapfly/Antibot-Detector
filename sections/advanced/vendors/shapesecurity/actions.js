@@ -5,12 +5,9 @@ ShapeSecurityAdvanced.prototype.checkVersion = async function() {
         try {
             Logger.network('[ShapeSecurity] Check version button clicked');
 
-            // Get current tab
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!tab) {
-                NotificationHelper.error(shapeSecurityText('advShapeNoActiveTab', 'No active tab found'));
-                return;
-            }
+            // The tab these tools were opened for
+            const tab = this.tabInfo;
+            if (!tab || !tab.id) throw new Error('Tab information not available');
 
             // Request version check from background
             Logger.network('[ShapeSecurity] Sending SHAPESECURITY_CHECK_VERSION message');
@@ -145,69 +142,38 @@ ShapeSecurityAdvanced.prototype.checkCookies = async function() {
      * Extract and analyze Shape Security scripts - Reload page and capture URLs
      */
 ShapeSecurityAdvanced.prototype.extractScripts = async function() {
-        Logger.network('[SHAPESECURITY-EXTRACT] ========== STARTING EXTRACTION ==========');
+        // The tab these tools were opened for, not whichever tab is active now
+        const tab = this.tabInfo;
+        if (!tab || !tab.id) throw new Error('Tab information not available');
+        this.isExtracting = true;
+        let timeoutId = null;
+        const stop = () => {
+            clearTimeout(timeoutId);
+            this.isExtracting = false;
+            chrome.runtime.onMessage.removeListener(extractionListener);
+        };
+        // Only this tab's result (older workers sent no tabId)
+        const extractionListener = (message) => {
+            if (message.type !== 'SHAPESECURITY_EXTRACTION_RESULT') return;
+            if (message.tabId !== undefined && message.tabId !== tab.id) return;
+            stop();
+            this.displayScriptDataModal(message.extractedData);
+        };
+        chrome.runtime.onMessage.addListener(extractionListener);
         try {
-
-            // Get current tab
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!tab) {
-                Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] No active tab found');
-                throw new Error('No active tab found');
-            }
-
-            Logger.network('[SHAPESECURITY-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
-
-            // Store extraction mode flag
-            Logger.debug('NETWORK', '[SHAPESECURITY-EXTRACT] Step 2: Setting up extraction mode');
-            this.isExtracting = true;
-
-            // Set up listener for extraction result
-            const extractionListener = (message) => {
-                Logger.network('[SHAPESECURITY-EXTRACT] Received message:', message.type);
-                if (message.type === 'SHAPESECURITY_EXTRACTION_RESULT') {
-                    Logger.network('[SHAPESECURITY-EXTRACT] EXTRACTION RESULT RECEIVED!');
-                    Logger.network('[SHAPESECURITY-EXTRACT] Extracted data:', message.extractedData);
-
-                    // Display the script data
-                    Logger.debug('NETWORK', '[SHAPESECURITY-EXTRACT] Step: Displaying script data modal');
-                    this.displayScriptDataModal(message.extractedData);
-
-                    // Clean up
-                    Logger.debug('NETWORK', '[SHAPESECURITY-EXTRACT] Step: Cleaning up');
-                    this.isExtracting = false;
-                    chrome.runtime.onMessage.removeListener(extractionListener);
-                    Logger.network('[SHAPESECURITY-EXTRACT] ========== EXTRACTION COMPLETE ==========');
-                }
-            };
-
-            chrome.runtime.onMessage.addListener(extractionListener);
-            Logger.network('[SHAPESECURITY-EXTRACT] Listener added');
-
-            // Send message to start extraction mode
-            const response = await this.sendMessage({
-                type: 'SHAPESECURITY_START_EXTRACTION',
-                tabId: tab.id
-            });
-            Logger.network('[SHAPESECURITY-EXTRACT] Background response:', response);
-
-            if (response && response.status === 'success') {
-                Logger.network('[SHAPESECURITY-EXTRACT] Extraction mode enabled successfully');
-
-                // Reload the page to trigger Shape Security scripts
-                await chrome.tabs.reload(tab.id);
-                Logger.network('[SHAPESECURITY-EXTRACT] Page reload initiated');
-
-                // Show success notification
-                NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Shape Security'));
-            } else {
-                throw new Error(response?.error || 'Failed to enable extraction mode');
-            }
-
-            Logger.network('[SHAPESECURITY-EXTRACT] ========== EXTRACTION STARTED ==========');
+            const response = await this.sendMessage({ type: 'SHAPESECURITY_START_EXTRACTION', tabId: tab.id });
+            if (!response || response.status !== 'success') throw new Error(response?.error || 'Failed to enable extraction mode');
+            NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Shape Security'));
+            timeoutId = setTimeout(() => {
+                stop();
+                NotificationHelper.error(shapeSecurityText('advToolNoResult', 'No result: the protection sent no data. Reload the page and try again.'));
+            }, 35000);
+            await chrome.tabs.reload(tab.id);
+            return { awaitingResult: true };
         } catch (error) {
-            Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Failed to start extraction:', error);
-            Logger.error('NETWORK', '[SHAPESECURITY-EXTRACT] Error stack:', error.stack);
+            stop();
             NotificationHelper.error(shapeSecurityText('advCommonFailedStartExtractionFmt', 'Failed to start extraction: {0}', error.message));
+            return { awaitingResult: false };
         }
     };
 

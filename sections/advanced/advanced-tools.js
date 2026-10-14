@@ -366,6 +366,10 @@ Advanced.prototype.clearDetectionToolsPanel = function() {
     this.selectedDetection = null;
     this.activeModule = null;
     this.currentModuleInstance = null;
+    // Modules may hold runtime listeners (Imperva's extraction result, pending analyses)
+    Object.values(this.loadedModules || {}).forEach(module => {
+      try { module?.dispose?.(); } catch (error) { Logger.error('UI', '[Advanced] Module dispose failed:', error); }
+    });
     this.loadedModules = {};
     const selectedButton = [...document.querySelectorAll('.advanced-launch-card')]
       .find(button => button.dataset.detectorId === selectedId);

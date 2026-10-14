@@ -25,6 +25,7 @@
   "advToolStopCaptureHint": { "message": "Остановить запись данных с этой страницы" },
   "advToolWorking": { "message": "Обработка…" },
   "advToolWaitingReload": { "message": "Перезагрузка страницы и сбор результатов. Это займёт несколько секунд…" },
+  "advToolNoResult": { "message": "Нет результата: защита не отправила данных. Перезагрузите страницу и попробуйте снова." },
   "advToolActionFailedFmt": { "message": "Не удалось выполнить это действие: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "Предыдущая страница графика" },
   "statsChartNext": { "message": "Следующая страница графика" },
@@ -2477,9 +2478,6 @@
   "advCommonFailedStartExtractionFmt": {
     "message": "Не удалось начать извлечение: {0}"
   },
-  "advCommonFailedOpenExportFmt": {
-    "message": "Не удалось открыть окно экспорта: {0}"
-  },
   "advCommonNoScriptsToExport": {
     "message": "Нет скриптов для экспорта"
   },
@@ -2509,9 +2507,6 @@
   },
   "advCommonFoundScriptsFmt": {
     "message": "Найдено подходящих скриптов: {0}"
-  },
-  "advCommonScriptAnalysis": {
-    "message": "Анализ скриптов"
   },
   "advCommonTotalScripts": {
     "message": "Всего скриптов:"
@@ -2554,9 +2549,6 @@
   },
   "advCodeDescBrowserParseFmt": {
     "message": "Код для консоли браузера, который перехватывает и разбирает скрипты {0}"
-  },
-  "advCodeDescBrowserFetchFmt": {
-    "message": "Код для консоли браузера, который загружает скрипты {0}"
   },
   "advCodeDescPythonBs": {
     "message": "Скрипт на Python с requests и BeautifulSoup"
@@ -2774,9 +2766,6 @@
   "advImpervaSensorUrl": {
     "message": "URL сенсора:"
   },
-  "advImpervaScriptsHeading": {
-    "message": "Скрипты Imperva"
-  },
   "advImpervaScriptTypeFmt": {
     "message": "Скрипт {0}"
   },
@@ -2948,9 +2937,6 @@
   "advShapeSeedScriptsLabel": {
     "message": "Скрипты с seed:"
   },
-  "advShapeScriptsHeading": {
-    "message": "Скрипты Shape Security"
-  },
   "advShapeInitJsScript": {
     "message": "Скрипт Init.js"
   },
@@ -2962,9 +2948,6 @@
   },
   "advShapeSeedScripts": {
     "message": "Скрипты с seed"
-  },
-  "advShapeNoActiveTab": {
-    "message": "Активная вкладка не найдена"
   },
   "advShapeErrorFmt": {
     "message": "Ошибка: {0}"
@@ -3026,9 +3009,6 @@
   "advHcaptchaNotAvailable": {
     "message": "Н/Д"
   },
-  "advHcaptchaScriptNumberFmt": {
-    "message": "Скрипт {0}"
-  },
   "advHcaptchaCheckingVersionReload": {
     "message": "Проверка версии hCaptcha… Страница будет перезагружена"
   },
@@ -3044,20 +3024,8 @@
   "advHcaptchaNoticeCaptured": {
     "message": "Данные hCaptcha успешно захвачены"
   },
-  "advAwswafNoScripts": {
-    "message": "Скрипты AWS WAF не найдены"
-  },
-  "advAwswafDeleteCookieHint": {
-    "message": "Удалите куки aws-waf-token и перезагрузите страницу, чтобы вызвать проверку"
-  },
   "advAwswafTypeChallenge": {
     "message": "Проверка"
-  },
-  "advAwswafClickToCopyUrl": {
-    "message": "Нажмите, чтобы скопировать URL"
-  },
-  "advAwswafFetchCodeTitle": {
-    "message": "Код загрузки скриптов AWS WAF"
   },
   "advAwswafDeletingCookieFmt": {
     "message": "Удаление куки {0}… Страница будет перезагружена"
@@ -3067,12 +3035,6 @@
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key скопирован"
-  },
-  "advCloudflareSitekeyLabel": {
-    "message": "Sitekey:"
-  },
-  "advCloudflareUrlLabel": {
-    "message": "URL:"
   },
   "advCloudflareTypeChallenge": {
     "message": "Проверка"
@@ -3137,14 +3099,8 @@
   "advGeetestSourceJsonConfig": {
     "message": "Конфигурация JSON"
   },
-  "advGeetestSourceLabel": {
-    "message": "Источник:"
-  },
   "advGeetestExtractedCaptchaId": {
     "message": "Извлечённый captchaId"
-  },
-  "advGeetestClickToCopyCaptchaId": {
-    "message": "Нажмите, чтобы скопировать captchaId"
   },
   "advGeetestProductLabel": {
     "message": "Продукт:"
@@ -4105,9 +4061,6 @@
   },
   "advTurnstileSiteKeysTitle": {
     "message": "Ключи сайта Turnstile"
-  },
-  "advTurnstileReloadingScripts": {
-    "message": "Перезагрузка страницы для сбора скриптов Turnstile"
   },
   "settingsGroupAdvancedTools": {
     "message": "Расширенные инструменты"

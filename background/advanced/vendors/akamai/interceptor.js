@@ -747,6 +747,7 @@ function setupAkamaiInterceptor() {
                     // Send data to popup via runtime message from background context
                     chrome.runtime.sendMessage({
                         type: 'AKAMAI_EXTRACTION_RESULT',
+                        tabId: details.tabId,
                         extractedData: extractedDataToSend
                     }).then(() => {
                         Logger.network('[AKAMAI-EXTRACT] ✓ Extraction data sent to popup successfully');

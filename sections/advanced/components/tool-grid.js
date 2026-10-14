@@ -80,6 +80,7 @@ class AdvancedToolGrid {
         // action is always the last row, for every vendor
         const withScrapfly = [...(Array.isArray(tools) ? tools : []), this.scrapflyTool()];
         const ordered = BaseAdvancedModule.captureLast(withScrapfly, tool => this.resolveToolAction(tool));
+        this.hasCaptureTool = ordered.some(tool => this.resolveToolAction(tool) === 'capture');
         const items = ordered.map(tool => {
             const action = this.resolveToolAction(tool);
             const capture = action === 'capture';

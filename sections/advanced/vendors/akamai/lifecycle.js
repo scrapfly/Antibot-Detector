@@ -65,6 +65,17 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
             abckLength: abckCookie?.value?.length || 0
         });
 
+        // Already capturing: this click stops it, and the cookie stays
+        const stateResponse = await this.sendMessage({
+            type: 'AKAMAI_GET_CAPTURE_STATE',
+            tabId: this.tabInfo.id
+        });
+
+        if (stateResponse && stateResponse.isCapturing) {
+            await this.stopCapturing();
+            return false; // Cancel this capture start
+        }
+
         // Delete _abck cookie to force sensor_data regeneration
         try {
             await chrome.cookies.remove({
@@ -74,17 +85,6 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
             Logger.network('[Akamai] _abck cookie deleted successfully');
         } catch (err) {
             Logger.network('[Akamai] Could not delete _abck cookie:', err);
-        }
-
-        // Check if already capturing - if so, stop it first
-        const stateResponse = await this.sendMessage({
-            type: 'AKAMAI_GET_CAPTURE_STATE',
-            tabId: this.tabInfo.id
-        });
-
-        if (stateResponse && stateResponse.isCapturing) {
-            await this.stopCapturing();
-            return false; // Cancel this capture start
         }
 
         return true; // Proceed with capture

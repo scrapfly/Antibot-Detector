@@ -330,29 +330,12 @@ AkamaiAdvanced.prototype.setupToolListeners = function() {
 AkamaiAdvanced.prototype.renderCaptureHistoryItems = function(items) {
         const tr = AkamaiAdvanced.tr;
         return items.map((item) => {
-            const { captureData, timestamp, hostname } = item;
+            const { captureData, timestamp } = item;
+            const esc = FormatUtils.escapeHtml, attr = FormatUtils.escapeAttr;
+            const hostname = String(item.hostname || '');
+            const id = attr(String(item.id || timestamp || ''));
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
-
-            // Determine display mode and color based on new field names
-            let modeDisplay = '';
-            let modeColor = 'var(--text-primary)';
-
-            if (captureData.abckCookieLevel === 'easy') {
-                modeDisplay = 'Easy Mode';
-                modeColor = 'var(--success)';
-            } else if (captureData.requiresPixel) {
-                modeDisplay = 'Pixel';
-                modeColor = 'var(--danger)';
-            } else if (captureData.requiresSecCpt) {
-                modeDisplay = 'sec_cpt';
-                modeColor = 'var(--danger)';
-            } else if (captureData.requiresSbsd) {
-                modeDisplay = 'SBSD';
-                modeColor = 'var(--danger)';
-            } else {
-                modeDisplay = 'Standard';
-            }
+            const faviconUrl = attr(UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname));
 
             // Add badges for challenges
             const badges = [];
@@ -365,12 +348,12 @@ AkamaiAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                 </div>` : '';
 
             return `
-                <div class="capture-card" data-capture-id="${item.id}">
+                <div class="capture-card" data-capture-id="${id}">
                     <div class="capture-card-top">
-                        <img src="${faviconUrl}" class="capture-favicon" alt="${hostname}">
+                        <img src="${faviconUrl}" class="capture-favicon" alt="${attr(hostname)}">
                         <div class="capture-info">
                             <div class="capture-hostname-row">
-                                <span class="capture-hostname">${hostname}</span>
+                                <span class="capture-hostname">${esc(hostname)}</span>
                                 <span class="capture-time">${timeAgo}</span>
                             </div>
                             <div class="capture-type-row">
@@ -380,12 +363,12 @@ AkamaiAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                             ${captureData.akamaiVersion ? `
                             <div class="capture-type-row">
                                 <span class="capture-type-label">${tr('ruleFieldVersion', 'Version')}</span>
-                                <span class="capture-type-value" style="color: var(--info);">${captureData.akamaiVersion}</span>
+                                <span class="capture-type-value" style="color: var(--info);">${esc(captureData.akamaiVersion)}</span>
                             </div>
                             ` : ''}
                             ${badgesHtml}
                         </div>
-                        <button class="capture-expand" data-capture-id="${item.id}">
+                        <button class="capture-expand" data-capture-id="${id}">
                             <span class="expand-arrow">›</span>
                         </button>
                     </div>

@@ -91,54 +91,36 @@ HCaptchaAdvanced.prototype.displayVersionModal = function(data) {
      */
 HCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
         if (!historyItems || historyItems.length === 0) {
-            return `<div style="padding: 20px; text-align: center; color: var(--text-secondary);">${hcaptchaText('advHcaptchaNoHistory', 'No capture history yet')}</div>`;
+            return `<div style="padding: 20px; text-align: center; color: var(--text-secondary);">${FormatUtils.escapeHtml(hcaptchaText('advHcaptchaNoHistory', 'No capture history yet'))}</div>`;
         }
-
-        const unknownText = hcaptchaText('timeUnknown', 'Unknown');
-        const notAvailable = hcaptchaText('advHcaptchaNotAvailable', 'N/A');
-        const yesText = hcaptchaText('advCommonYes', 'Yes');
-        const noText = hcaptchaText('advHcaptchaNo', 'No');
-
+        const esc = FormatUtils.escapeHtml, attr = FormatUtils.escapeAttr;
+        // Same card as the other vendors: site, time, version (+ Enterprise), site key
         return historyItems.map(item => {
-            const timestamp = item.timestamp ? hcaptchaDateTime(item.timestamp) : unknownText;
-            const hostname = item.hostname || (item.websiteURL ? new URL(item.websiteURL).hostname : '');
-            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
-            const version = item.version || notAvailable;
-            const isEnterprise = item.isEnterprise ? yesText : noText;
-            const siteKey = item.websiteKey || notAvailable;
-            const websiteUrl = item.websiteURL || notAvailable;
-
+            const data = item.captureData || item;
+            const hostname = String(item.hostname || data.websiteURL || '');
+            const id = attr(String(item.id || item.timestamp || ''));
+            const faviconUrl = attr(UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname));
+            const version = [data.version, data.isEnterprise ? hcaptchaText('advCommonEnterprise', 'Enterprise') : ''].filter(Boolean).join(' · ')
+                || hcaptchaText('advHcaptchaNotAvailable', 'N/A');
             return `
-                <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px; margin-bottom: 12px;">
-                    <div style="display: grid; gap: 8px;">
-                        <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                            <img src="${faviconUrl}" alt="${hostname}" style="width: 16px; height: 16px; border-radius: 3px;" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
-                            <span style="color: var(--text-primary); font-size: 13px; font-weight: 500;">${hostname || unknownText}</span>
-                            <span style="color: var(--text-secondary); font-size: 12px; margin-left: auto;">${timestamp}</span>
-                        </div>
-
-                        <div>
-                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('ruleFieldVersion', 'Version')}</div>
-                            <div class="copy-value" data-copy="${version}" style="font-weight: 500; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${version}</div>
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <div style="background: var(--bg-primary); padding: 8px; border-radius: 4px; border-left: 3px solid ${item.isEnterprise ? '#ef4444' : '#22c55e'};">
-                                <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('advCommonEnterprise', 'Enterprise')}</div>
-                                <div style="font-weight: 500; color: var(--text-primary);">${isEnterprise}</div>
+                <div class="capture-card" data-capture-id="${id}">
+                    <div class="capture-card-top">
+                        <img src="${faviconUrl}" class="capture-favicon" alt="${attr(hostname)}" data-fallback="${attr(UrlUtils.getDefaultFaviconUrl())}">
+                        <div class="capture-info">
+                            <div class="capture-hostname-row">
+                                <span class="capture-hostname">${esc(hostname || hcaptchaText('timeUnknown', 'Unknown'))}</span>
+                                <span class="capture-time">${esc(this.getTimeAgo(item.timestamp))}</span>
+                            </div>
+                            <div class="capture-type-row">
+                                <span class="capture-type-label">${esc(hcaptchaText('ruleFieldVersion', 'Version'))}</span>
+                                <span class="capture-type-value">${esc(version)}</span>
                             </div>
                         </div>
-
-                        <div>
-                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('advCommonSiteKey', 'Site Key')}</div>
-                            <div class="copy-value" data-copy="${siteKey}" style="font-size: 11px; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${FormatUtils.escapeHtml(siteKey)}</div>
-                        </div>
-
-                        <div>
-                            <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${hcaptchaText('advCommonWebsiteUrl', 'Website URL')}</div>
-                            <div class="copy-value" data-copy="${websiteUrl}" style="font-size: 11px; color: var(--text-primary); font-family: var(--font-mono); cursor: pointer; background: var(--bg-primary); padding: 6px; border-radius: 4px; word-break: break-all;">${FormatUtils.escapeHtml(websiteUrl)}</div>
-                        </div>
+                        <button class="capture-expand" data-capture-id="${id}">
+                            <span class="expand-arrow">›</span>
+                        </button>
                     </div>
+                    ${data.websiteKey ? `<div class="capture-sitekey-container"><code class="capture-sitekey-code">${esc(data.websiteKey)}</code></div>` : ''}
                 </div>
             `;
         }).join('');

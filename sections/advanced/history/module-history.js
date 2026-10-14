@@ -100,18 +100,21 @@ class AdvancedModuleHistory {
     renderCaptureHistoryItems(items) {
         // Default simple rendering - override in child classes
         return items.map((item) => {
-            const { hostname, timestamp, id } = item;
+            const { timestamp } = item;
+            const esc = FormatUtils.escapeHtml, attr = FormatUtils.escapeAttr;
+            const hostname = String(item.hostname || '');
+            const id = attr(String(item.id || timestamp || ''));
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
+            const faviconUrl = attr(UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname));
 
             return `
                 <div class="capture-card" data-capture-id="${id}">
                     <div class="capture-card-top">
-                        <img src="${faviconUrl}" class="capture-favicon" alt="${hostname}" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
+                        <img src="${faviconUrl}" class="capture-favicon" alt="${attr(hostname)}" data-fallback="${attr(UrlUtils.getDefaultFaviconUrl())}">
                         <div class="capture-info">
                             <div class="capture-hostname-row">
-                                <span class="capture-hostname">${hostname}</span>
-                                <span class="capture-time">${timeAgo}</span>
+                                <span class="capture-hostname">${esc(hostname)}</span>
+                                <span class="capture-time">${esc(timeAgo)}</span>
                             </div>
                         </div>
                         <button class="capture-expand" data-capture-id="${id}">

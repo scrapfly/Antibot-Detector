@@ -276,14 +276,19 @@ class BaseAdvancedModule {
 
     /** Initialize this vendor's tools and history subscriptions. */
     setupEventListeners() {
-        // Check capture state on init
-        this.checkCaptureState();
+        // Only vendors with a capture card ask the worker for capture state
+        if (this.hasCaptureTool) this.checkCaptureState();
 
         // Setup module-specific tool listeners
         this.setupToolListeners();
 
         // Setup capture history listeners
         this.setupCaptureHistoryListeners();
+    }
+
+    /** Called when the tools panel closes: drop listeners this module added. */
+    dispose() {
+        this._analysisDispose?.();
     }
 
 

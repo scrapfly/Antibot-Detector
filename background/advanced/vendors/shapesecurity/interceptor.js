@@ -551,25 +551,19 @@ async function handleShapeSecurityCheckVersion(message, sender, sendResponse) {
             func: () => {
                 const exists = typeof window.__xr_bmobdb !== 'undefined';
                 const type = exists ? typeof window.__xr_bmobdb : null;
-                return { exists, type };
+                // Shape's seeded loaders (seed=..., ssx.mod.js, X-xxxxxxxx--z=q)
+                const loader = Array.from(document.querySelectorAll('script[src]')).some(script =>
+                    /[?&]seed=[A-Za-z0-9_-]{40,}|\/ssx\.mod\.js(?:\?|#|$)|[?&]X-[A-Za-z0-9]{6,10}--z=q/.test(script.src));
+                return { exists, type, loader };
             }
         });
 
         Logger.network('[ShapeSecurity] Check result:', result);
 
-        if (result && result.result) {
-            const checkResult = result.result;
-            const version = checkResult.exists ? 'v1' : 'v2';
-
-            Logger.network('[ShapeSecurity] Detected version:', version);
-
-            // Return result directly
-            sendResponse({ version: version, exists: checkResult.exists, type: checkResult.type });
-        } else {
-            // Default to V2 if check failed
-            Logger.network('[ShapeSecurity] Check failed, defaulting to V2');
-            sendResponse({ version: 'v2', exists: false });
-        }
+        const checkResult = (result && result.result) || {};
+        // v1 has the runtime global; v2 only when Shape's loader is on the page; otherwise none
+        const version = checkResult.exists ? 'v1' : (checkResult.loader ? 'v2' : null);
+        sendResponse({ version, exists: Boolean(checkResult.exists), type: checkResult.type || null });
     } catch (error) {
         Logger.error('NETWORK', '[ShapeSecurity] Error checking version:', error);
         sendResponse({ error: error.message });
@@ -752,6 +746,7 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
     try {
         await chrome.runtime.sendMessage({
             type: 'SHAPESECURITY_EXTRACTION_RESULT',
+            tabId,
             extractedData: extractedData
         });
         Logger.network('[ShapeSecurity-EXTRACT] Result sent to popup');

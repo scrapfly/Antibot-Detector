@@ -25,6 +25,7 @@
   "advToolStopCaptureHint": { "message": "इस पेज से डेटा रिकॉर्ड करना रोकें" },
   "advToolWorking": { "message": "कार्य जारी है…" },
   "advToolWaitingReload": { "message": "पेज फिर से लोड हो रहा है और परिणाम जुटाए जा रहे हैं। इसमें कुछ सेकंड लगते हैं…" },
+  "advToolNoResult": { "message": "कोई परिणाम नहीं: सुरक्षा ने कोई डेटा नहीं भेजा। पेज फिर से लोड करें और दोबारा कोशिश करें।" },
   "advToolActionFailedFmt": { "message": "यह कार्रवाई पूरी नहीं हो सकी: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "चार्ट का पिछला पेज" },
   "statsChartNext": { "message": "चार्ट का अगला पेज" },
@@ -2477,9 +2478,6 @@
   "advCommonFailedStartExtractionFmt": {
     "message": "निष्कर्षण शुरू नहीं हो सका: {0}"
   },
-  "advCommonFailedOpenExportFmt": {
-    "message": "निर्यात विंडो नहीं खुल सकी: {0}"
-  },
   "advCommonNoScriptsToExport": {
     "message": "निर्यात करने के लिए कोई स्क्रिप्ट नहीं है"
   },
@@ -2509,9 +2507,6 @@
   },
   "advCommonFoundScriptsFmt": {
     "message": "{0} संबंधित स्क्रिप्ट मिलीं"
-  },
-  "advCommonScriptAnalysis": {
-    "message": "स्क्रिप्ट विश्लेषण"
   },
   "advCommonTotalScripts": {
     "message": "कुल स्क्रिप्ट:"
@@ -2554,9 +2549,6 @@
   },
   "advCodeDescBrowserParseFmt": {
     "message": "{0} स्क्रिप्ट को इंटरसेप्ट और पार्स करने वाला ब्राउज़र कंसोल कोड"
-  },
-  "advCodeDescBrowserFetchFmt": {
-    "message": "{0} स्क्रिप्ट लाने वाला ब्राउज़र कंसोल कोड"
   },
   "advCodeDescPythonBs": {
     "message": "requests और BeautifulSoup वाली Python स्क्रिप्ट"
@@ -2774,9 +2766,6 @@
   "advImpervaSensorUrl": {
     "message": "सेंसर URL:"
   },
-  "advImpervaScriptsHeading": {
-    "message": "Imperva स्क्रिप्ट"
-  },
   "advImpervaScriptTypeFmt": {
     "message": "{0} स्क्रिप्ट"
   },
@@ -2948,9 +2937,6 @@
   "advShapeSeedScriptsLabel": {
     "message": "seed वाली स्क्रिप्ट:"
   },
-  "advShapeScriptsHeading": {
-    "message": "Shape Security स्क्रिप्ट"
-  },
   "advShapeInitJsScript": {
     "message": "Init.js स्क्रिप्ट"
   },
@@ -2962,9 +2948,6 @@
   },
   "advShapeSeedScripts": {
     "message": "seed वाली स्क्रिप्ट"
-  },
-  "advShapeNoActiveTab": {
-    "message": "कोई सक्रिय टैब नहीं मिला"
   },
   "advShapeErrorFmt": {
     "message": "त्रुटि: {0}"
@@ -3026,9 +3009,6 @@
   "advHcaptchaNotAvailable": {
     "message": "उपलब्ध नहीं"
   },
-  "advHcaptchaScriptNumberFmt": {
-    "message": "स्क्रिप्ट {0}"
-  },
   "advHcaptchaCheckingVersionReload": {
     "message": "hCaptcha संस्करण जाँचा जा रहा है… पेज फिर से लोड होगा"
   },
@@ -3044,20 +3024,8 @@
   "advHcaptchaNoticeCaptured": {
     "message": "hCaptcha डेटा सफलतापूर्वक कैप्चर हुआ"
   },
-  "advAwswafNoScripts": {
-    "message": "कोई AWS WAF स्क्रिप्ट नहीं मिली"
-  },
-  "advAwswafDeleteCookieHint": {
-    "message": "चैलेंज ट्रिगर करने के लिए aws-waf-token कुकी हटाएँ और पेज फिर से लोड करें"
-  },
   "advAwswafTypeChallenge": {
     "message": "चैलेंज"
-  },
-  "advAwswafClickToCopyUrl": {
-    "message": "URL कॉपी करने के लिए क्लिक करें"
-  },
-  "advAwswafFetchCodeTitle": {
-    "message": "AWS WAF स्क्रिप्ट प्राप्त करने का कोड"
   },
   "advAwswafDeletingCookieFmt": {
     "message": "{0} कुकी हटाई जा रही है… पेज फिर से लोड होगा"
@@ -3067,12 +3035,6 @@
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key कॉपी हो गई"
-  },
-  "advCloudflareSitekeyLabel": {
-    "message": "Sitekey:"
-  },
-  "advCloudflareUrlLabel": {
-    "message": "URL:"
   },
   "advCloudflareTypeChallenge": {
     "message": "चैलेंज"
@@ -3137,14 +3099,8 @@
   "advGeetestSourceJsonConfig": {
     "message": "JSON कॉन्फ़िग"
   },
-  "advGeetestSourceLabel": {
-    "message": "स्रोत:"
-  },
   "advGeetestExtractedCaptchaId": {
     "message": "निकाला गया captchaId"
-  },
-  "advGeetestClickToCopyCaptchaId": {
-    "message": "captchaId कॉपी करने के लिए क्लिक करें"
   },
   "advGeetestProductLabel": {
     "message": "प्रोडक्ट:"
@@ -4105,9 +4061,6 @@
   },
   "advTurnstileSiteKeysTitle": {
     "message": "Turnstile साइट कुंजियाँ"
-  },
-  "advTurnstileReloadingScripts": {
-    "message": "Turnstile स्क्रिप्ट एकत्र करने के लिए पेज फिर से लोड हो रहा है"
   },
   "settingsGroupAdvancedTools": {
     "message": "उन्नत टूल"

@@ -25,6 +25,7 @@
   "advToolStopCaptureHint": { "message": "Interrompi la registrazione dei dati di questa pagina" },
   "advToolWorking": { "message": "Elaborazione…" },
   "advToolWaitingReload": { "message": "Ricaricamento della pagina e raccolta dei risultati. Richiede qualche secondo…" },
+  "advToolNoResult": { "message": "Nessun risultato: la protezione non ha inviato dati. Ricarica la pagina e riprova." },
   "advToolActionFailedFmt": { "message": "Impossibile completare questa azione: {0}", "description": "Advanced tool action failure. {0} = error details" },
   "statsChartPrevious": { "message": "Pagina precedente del grafico" },
   "statsChartNext": { "message": "Pagina successiva del grafico" },
@@ -2477,9 +2478,6 @@
   "advCommonFailedStartExtractionFmt": {
     "message": "Impossibile avviare l'estrazione: {0}"
   },
-  "advCommonFailedOpenExportFmt": {
-    "message": "Impossibile aprire la finestra di esportazione: {0}"
-  },
   "advCommonNoScriptsToExport": {
     "message": "Nessuno script da esportare"
   },
@@ -2509,9 +2507,6 @@
   },
   "advCommonFoundScriptsFmt": {
     "message": "Script rilevanti trovati: {0}"
-  },
-  "advCommonScriptAnalysis": {
-    "message": "Analisi degli script"
   },
   "advCommonTotalScripts": {
     "message": "Script totali:"
@@ -2554,9 +2549,6 @@
   },
   "advCodeDescBrowserParseFmt": {
     "message": "Codice per la console del browser che intercetta e analizza gli script di {0}"
-  },
-  "advCodeDescBrowserFetchFmt": {
-    "message": "Codice per la console del browser che scarica gli script di {0}"
   },
   "advCodeDescPythonBs": {
     "message": "Script Python con requests e BeautifulSoup"
@@ -2774,9 +2766,6 @@
   "advImpervaSensorUrl": {
     "message": "URL del sensore:"
   },
-  "advImpervaScriptsHeading": {
-    "message": "Script Imperva"
-  },
   "advImpervaScriptTypeFmt": {
     "message": "Script {0}"
   },
@@ -2948,9 +2937,6 @@
   "advShapeSeedScriptsLabel": {
     "message": "Script con seed:"
   },
-  "advShapeScriptsHeading": {
-    "message": "Script di Shape Security"
-  },
   "advShapeInitJsScript": {
     "message": "Script Init.js"
   },
@@ -2962,9 +2948,6 @@
   },
   "advShapeSeedScripts": {
     "message": "Script con seed"
-  },
-  "advShapeNoActiveTab": {
-    "message": "Nessuna scheda attiva trovata"
   },
   "advShapeErrorFmt": {
     "message": "Errore: {0}"
@@ -3026,9 +3009,6 @@
   "advHcaptchaNotAvailable": {
     "message": "N/D"
   },
-  "advHcaptchaScriptNumberFmt": {
-    "message": "Script {0}"
-  },
   "advHcaptchaCheckingVersionReload": {
     "message": "Verifica della versione di hCaptcha… La pagina verrà ricaricata"
   },
@@ -3044,20 +3024,8 @@
   "advHcaptchaNoticeCaptured": {
     "message": "Dati di hCaptcha acquisiti correttamente"
   },
-  "advAwswafNoScripts": {
-    "message": "Nessuno script AWS WAF trovato"
-  },
-  "advAwswafDeleteCookieHint": {
-    "message": "Elimina il cookie aws-waf-token e ricarica per attivare il challenge"
-  },
   "advAwswafTypeChallenge": {
     "message": "Challenge"
-  },
-  "advAwswafClickToCopyUrl": {
-    "message": "Clicca per copiare l'URL"
-  },
-  "advAwswafFetchCodeTitle": {
-    "message": "Codice per scaricare gli script AWS WAF"
   },
   "advAwswafDeletingCookieFmt": {
     "message": "Eliminazione del cookie {0}… La pagina verrà ricaricata"
@@ -3067,12 +3035,6 @@
   },
   "advCloudflareSiteKeyCopied": {
     "message": "Site Key copiata"
-  },
-  "advCloudflareSitekeyLabel": {
-    "message": "Sitekey:"
-  },
-  "advCloudflareUrlLabel": {
-    "message": "URL:"
   },
   "advCloudflareTypeChallenge": {
     "message": "Challenge"
@@ -3137,14 +3099,8 @@
   "advGeetestSourceJsonConfig": {
     "message": "Configurazione JSON"
   },
-  "advGeetestSourceLabel": {
-    "message": "Origine:"
-  },
   "advGeetestExtractedCaptchaId": {
     "message": "captchaId estratto"
-  },
-  "advGeetestClickToCopyCaptchaId": {
-    "message": "Clicca per copiare il captchaId"
   },
   "advGeetestProductLabel": {
     "message": "Prodotto:"
@@ -4105,9 +4061,6 @@
   },
   "advTurnstileSiteKeysTitle": {
     "message": "Chiavi sito Turnstile"
-  },
-  "advTurnstileReloadingScripts": {
-    "message": "Ricarico la pagina per raccogliere gli script di Turnstile"
   },
   "settingsGroupAdvancedTools": {
     "message": "Strumenti avanzati"

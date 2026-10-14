@@ -1,52 +1,26 @@
 CloudflareAdvanced.prototype.checkCookies = async function() {
-        Logger.network('[Cloudflare] ========== CHECK COOKIES ==========');
         try {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
             }
-
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-            const cfUnderscoreBmCookie = cookies.find(c => c.name === '__cf_bm');
-            const cfBmCookie = cookies.find(c => c.name === 'cf_bm');
-            const cfClearanceCookie = cookies.find(c => c.name === 'cf_clearance');
-            const cfuvIdCookie = cookies.find(c => c.name === '_cfuvid');
-
-            const foundCookies = [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean).length;
-            const totalCookies = 4;
-
-            if (foundCookies > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCookies, totalCookies));
+            // Bot management, clearance, rate limiting, load balancer and challenge-in-progress cookies
+            const expected = ['__cf_bm', 'cf_clearance', '_cfuvid', '__cflb', 'cf_chl_*'];
+            const matches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
+            const cookies = (await chrome.cookies.getAll({ url: this.tabInfo.url }))
+                .filter(cookie => expected.some(pattern => matches(pattern, cookie.name)));
+            const found = expected.filter(pattern => cookies.some(cookie => matches(pattern, cookie.name))).length;
+            if (found > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(found, expected.length));
             } else {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Cloudflare'));
             }
-
-            this.showCookieResults({ vendor: 'Cloudflare', expected: ['__cf_bm', 'cf_bm', 'cf_clearance', '_cfuvid'],
-                cookies: [cfUnderscoreBmCookie, cfBmCookie, cfClearanceCookie, cfuvIdCookie].filter(Boolean) });
+            this.showCookieResults({ vendor: 'Cloudflare', expected, cookies });
         } catch (error) {
             Logger.error('NETWORK', '[Cloudflare] Failed to check cookies:', error);
             NotificationHelper.error(this._txt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));
         }
     };
 
-
-CloudflareAdvanced.prototype.checkVersion = async function() {
-        Logger.network('[Cloudflare] ========== CHECK VERSION ==========');
-        try {
-            if (!this.tabInfo || !this.tabInfo.url || !this.tabInfo.id) {
-                throw new Error('Tab information not available');
-            }
-
-            // Popup notification only; nothing is drawn on the page
-            NotificationHelper.info(this._txt('advCloudflareCheckingVersion', 'Checking Cloudflare version... Page will reload'));
-
-            // Reload page to trigger fresh Cloudflare analysis
-            await chrome.tabs.reload(this.tabInfo.id);
-
-        } catch (error) {
-            Logger.error('NETWORK', '[Cloudflare] Failed to check version:', error);
-            NotificationHelper.error(this._txt('advCommonFailedCheckVersionFmt', 'Failed to check version: {0}', error.message));
-        }
-    };
 
 
 CloudflareAdvanced.prototype.extractSiteKey = async function() {

@@ -1,48 +1,36 @@
 HCaptchaAdvanced.prototype.checkVersion = async function() {
+        if (!this.tabInfo || !this.tabInfo.id) throw new Error('Tab information not available');
+        const tabId = this.tabInfo.id;
+        let timeoutId = null;
+        const stop = () => {
+            clearTimeout(timeoutId);
+            chrome.runtime.onMessage.removeListener(versionListener);
+        };
+        // Only this tab's result; a result clears the timeout so no late "timeout" follows it
+        const versionListener = (message) => {
+            if (message.type !== 'HCAPTCHA_VERSION_RESULT' || message.tabId !== tabId) return;
+            stop();
+            this.displayVersionModal(message.data);
+        };
+        chrome.runtime.onMessage.addListener(versionListener);
         try {
-            if (!this.tabInfo || !this.tabInfo.id) throw new Error('Tab information not available');
-
-            // Set up listener for version detection results BEFORE reloading
-            let timeoutId = null;
-            const versionListener = (message) => {
-                if (message.type === 'HCAPTCHA_VERSION_RESULT') {
-                    Logger.network('[hCaptcha] Version result received:', message.data);
-                    // A result arrived: the timeout must not report a failure later
-                    clearTimeout(timeoutId);
-                    this.displayVersionModal(message.data);
-                    chrome.runtime.onMessage.removeListener(versionListener);
-                }
-            };
-
-            chrome.runtime.onMessage.addListener(versionListener);
-
-            // Start version check monitoring
-            const response = await AdvancedUtils.sendMessage({
-                type: 'HCAPTCHA_CHECK_VERSION',
-                tabId: this.tabInfo.id
-            });
-
-            Logger.network('[hCaptcha] Check version initiated:', response);
-
-            if (response && response.status === 'started') {
-                // The popup says what happens; nothing is drawn on the page
-                NotificationHelper.info(hcaptchaText('advHcaptchaCheckingVersionReload', 'Checking hCaptcha version... Page will reload'));
-
-                // Reload the page to trigger hCaptcha loading
-                await chrome.tabs.reload(this.tabInfo.id);
-
-                // Timeout after 15 seconds
-                timeoutId = setTimeout(() => {
-                    chrome.runtime.onMessage.removeListener(versionListener);
-                    NotificationHelper.error(hcaptchaText('advHcaptchaVersionTimeout', 'hCaptcha version detection timeout'));
-                }, 15000);
-            } else {
+            const response = await AdvancedUtils.sendMessage({ type: 'HCAPTCHA_CHECK_VERSION', tabId });
+            if (!response || response.status !== 'started') {
+                stop();
                 NotificationHelper.error(hcaptchaText('advHcaptchaFailedStartVersionCheck', 'Failed to start version check'));
-                chrome.runtime.onMessage.removeListener(versionListener);
+                return { awaitingResult: false };
             }
+            NotificationHelper.info(hcaptchaText('advHcaptchaCheckingVersionReload', 'Checking hCaptcha version... Page will reload'));
+            // Armed before the reload, so it also covers a reload that never finishes
+            timeoutId = setTimeout(() => {
+                chrome.runtime.onMessage.removeListener(versionListener);
+                NotificationHelper.error(hcaptchaText('advHcaptchaVersionTimeout', 'hCaptcha version detection timeout'));
+            }, 15000);
+            await chrome.tabs.reload(tabId);
+            return { awaitingResult: true };
         } catch (error) {
-            Logger.error('NETWORK', '[hCaptcha] Failed to check version:', error);
-            NotificationHelper.error(hcaptchaText('advCommonFailedCheckVersionFmt', 'Failed to check version: {0}', error.message));
+            stop();
+            throw error;
         }
     };
 

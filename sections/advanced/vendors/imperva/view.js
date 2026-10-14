@@ -52,25 +52,27 @@ ImpervaAdvanced.prototype.setupToolListeners = function() {
      */
 ImpervaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
         const tr = ImpervaAdvanced.tr;
+        const esc = FormatUtils.escapeHtml, attr = FormatUtils.escapeAttr;
         return items.map((item) => {
-            const { hostname, captureData, timestamp, id } = item;
+            const { captureData, timestamp } = item;
+            const hostname = String(item.hostname || '');
+            const id = attr(String(item.id || timestamp || ''));
             const timeAgo = this.getTimeAgo(timestamp);
-            const faviconUrl = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname);
-
-            const incapSesCount = (captureData.incapSesCookies || []).length;
+            const faviconUrl = attr(UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname));
+            const incapSesCount = ((captureData && captureData.incapSesCookies) || []).length;
 
             return `
                 <div class="capture-card" data-capture-id="${id}">
                     <div class="capture-card-top">
-                        <img src="${faviconUrl}" class="capture-favicon" alt="${hostname}">
+                        <img src="${faviconUrl}" class="capture-favicon" alt="${attr(hostname)}">
                         <div class="capture-info">
                             <div class="capture-hostname-row">
-                                <span class="capture-hostname">${hostname}</span>
-                                <span class="capture-time">${timeAgo}</span>
+                                <span class="capture-hostname">${esc(hostname)}</span>
+                                <span class="capture-time">${esc(timeAgo)}</span>
                             </div>
                             ${incapSesCount > 0 ? `
                             <div class="capture-type-row">
-                                <span class="capture-type-label">${tr('advImpervaSessionCookies', 'Session Cookies')}</span>
+                                <span class="capture-type-label">${esc(tr('advImpervaSessionCookies', 'Session Cookies'))}</span>
                                 <span class="capture-type-value" style="color: var(--info);">${incapSesCount}</span>
                             </div>
                             ` : ''}
@@ -129,133 +131,47 @@ ImpervaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
      */
 ImpervaAdvanced.prototype.displayExtractionResults = function(extractedData) {
         this.recordStructuredResult('displayExtractionResults', extractedData);
-        Logger.network('[IMPERVA-EXTRACT] Displaying extraction results:', extractedData);
-
-        const modal = this.createToolModal();
+        const K = BaseAdvancedModule;
         const tr = ImpervaAdvanced.tr;
         const fmt = ImpervaAdvanced.fmt;
-        const clickToCopy = tr('advCommonClickToCopy', 'Click to copy');
-
-        const cookieData = extractedData.cookies || {};
-        const hasCookies = cookieData.reese84 || cookieData.utmvc ||
-                          (cookieData.incap_ses && cookieData.incap_ses.length > 0) ||
-                          (cookieData.nlbi && cookieData.nlbi.length > 0) ||
-                          (cookieData.visid && cookieData.visid.length > 0);
-
-        // Parse script paths
-        const scriptPaths = this.parseScriptPaths(extractedData);
+        const data = extractedData || {};
+        const scriptPaths = this.parseScriptPaths(data);
         const hasScriptPaths = scriptPaths.utmvcScriptPath || scriptPaths.reeseScriptPath;
-
-        // Generate parsing code if we have script paths
-        const parsingCodes = hasScriptPaths ? this.generateParsingCode(extractedData, scriptPaths) : null;
-
-        // Count relevant scripts
-        const totalScripts = (extractedData.scriptUrls || []).length;
-        const impervaScripts = [];
-        const hostname = extractedData.hostname ? 'https://' + extractedData.hostname : '';
-        if (scriptPaths.reeseScriptPath) impervaScripts.push({ type: 'Reese84', path: scriptPaths.reeseScriptPath, url: hostname + scriptPaths.reeseScriptPath });
-        if (scriptPaths.utmvcScriptPath) impervaScripts.push({ type: 'UTMVC', path: scriptPaths.utmvcScriptPath, url: hostname + scriptPaths.utmvcScriptPath });
-
-        modal.innerHTML = `
-            <div class="modal-content" style="background: var(--bg-secondary); border-radius: 8px; padding: 20px; max-width: 700px; max-height: 80vh; overflow-y: auto; width: 90%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="margin: 0; font-size: 16px; color: var(--text-primary);">${tr('advImpervaAnalysisTitle', 'Imperva Analysis')}</h3>
-                    ${CloseButton.html({ className: 'advanced-modal-close-btn' })}
-                </div>
-
-                <!-- Summary Stats -->
-                <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">${tr('advCommonScriptUrl', 'Script URL:')}</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${impervaScripts.length}</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span style="color: var(--text-secondary); font-size: 13px;">${tr('advImpervaSensorUrl', 'Sensor URL:')}</span>
-                        <span style="color: var(--text-primary); font-weight: 500;">${scriptPaths.reeseSensorPath ? 1 : 0}</span>
-                    </div>
-                </div>
-
-                ${impervaScripts.length > 0 ? `
-                    <!-- Imperva Scripts Section -->
-                    <h4 style="font-size: 13px; color: var(--text-secondary); margin: 16px 0 8px 0; text-transform: uppercase;">${tr('advImpervaScriptsHeading', 'Imperva Scripts')}</h4>
-
-                    <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                            <span style="font-weight: 600; color: var(--text-primary); font-size: 14px;">${tr('advCommonScriptAnalysis', 'Script Analysis')}</span>
-                        </div>
-                        <div style="color: var(--text-secondary); font-size: 12px; margin-bottom: 12px;">
-                            ${fmt('advCommonFoundScriptsFmt', 'Found {0} relevant script(s)', impervaScripts.length)}
-                        </div>
-
-                        ${impervaScripts.map((script, idx) => `
-                            <div style="margin-bottom: ${idx < impervaScripts.length - 1 ? '16px' : '0'};">
-                                <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase;">
-                                    ${fmt('advImpervaScriptTypeFmt', '{0} Script', script.type)}
-                                </div>
-                                <div style="margin-bottom: 6px;">
-                                    <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${tr('advCommonScriptUrl', 'Script URL:')}</div>
-                                    <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml(script.url || script.path)}" style="background: var(--bg-primary); border: 1px solid var(--primary); padding: 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--text-primary); word-break: break-all; line-height: 1.6; cursor: pointer; transition: background 0.2s;" title="${clickToCopy}">
-                                        ${script.url || script.path}
-                                    </div>
-                                </div>
-                                ${script.type === 'Reese84' && scriptPaths.reeseSensorPath ? `
-                                    <div>
-                                        <div style="color: var(--text-secondary); font-size: 11px; margin-bottom: 4px;">${tr('advImpervaSensorPath', 'Sensor Path:')}</div>
-                                        <div class="copy-value" data-copy="${AdvancedUtils.escapeHtml((extractedData.hostname ? 'https://' + extractedData.hostname : '') + scriptPaths.reeseSensorPath + '?d=' + extractedData.hostname)}" style="background: var(--bg-primary); border: 1px solid var(--border); padding: 10px; border-radius: 4px; font-family: var(--font-mono); font-size: 11px; color: var(--text-primary); word-break: break-all; line-height: 1.6; cursor: pointer; transition: background 0.2s;" title="${clickToCopy}">
-                                            ${extractedData.hostname ? 'https://' + extractedData.hostname : ''}${scriptPaths.reeseSensorPath}?d=${extractedData.hostname}
-                                        </div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
-
-                ${hasScriptPaths ? `
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
-                        <button class="export-code-btn modal-export-code-btn">
-                            ${tr('advCommonExportCode', 'Export Code')}
-                        </button>
-                    </div>
-                ` : ''}
-
-                ${impervaScripts.length === 0 ? `
-                    <div style="text-align: center; padding: 48px 16px; opacity: 0.7;">
-                        <div style="font-size: 16px; color: var(--text-primary); margin-bottom: 8px;">${tr('advImpervaNoScripts', 'No scripts detected')}</div>
-                        <div style="font-size: 13px; color: var(--text-secondary);">${tr('advImpervaMayNotBePresent', 'Imperva may not be present on this page')}</div>
-                    </div>
-                ` : ''}
-            </div>
-        `;
-
-        this.showToolModal(modal);
-
-        this.bindCopyValueHandlers(modal, { defaultMessage: tr('advValueCopied', 'Value copied') });
-        modal.querySelectorAll('.copy-value').forEach(element => {
-            element.addEventListener('mouseenter', () => {
-                element.style.background = 'rgba(255, 255, 255, 0.1)';
-            });
-
-            element.addEventListener('mouseleave', () => {
-                element.style.background = '';
-            });
+        const parsingCodes = hasScriptPaths ? this.generateParsingCode(data, scriptPaths) : null;
+        const origin = data.hostname ? 'https://' + data.hostname : '';
+        const scripts = [];
+        if (scriptPaths.reeseScriptPath) scripts.push({ type: 'Reese84', url: origin + scriptPaths.reeseScriptPath });
+        if (scriptPaths.utmvcScriptPath) scripts.push({ type: 'UTMVC', url: origin + scriptPaths.utmvcScriptPath });
+        const label = text => String(text).replace(/:\s*$/, '');
+        // One card per script: its URL, and for Reese84 the sensor URL it posts to
+        const cards = scripts.map(script => K.kitCard(
+            K.kitField(label(tr('advCommonScriptUrl', 'Script URL:')), script.url, { clamp: true })
+            + (script.type === 'Reese84' && scriptPaths.reeseSensorPath
+                ? K.kitField(label(tr('advImpervaSensorPath', 'Sensor Path:')), `${origin}${scriptPaths.reeseSensorPath}?d=${data.hostname || ''}`, { clamp: true })
+                : ''),
+            K.kitChip(fmt('advImpervaScriptTypeFmt', '{0} Script', script.type), 'blue')
+        )).join('');
+        const facts = K.kitFacts([
+            { label: label(tr('advCommonScriptUrl', 'Script URL:')), value: String(scripts.length) },
+            { label: label(tr('advImpervaSensorUrl', 'Sensor URL:')), value: String(scriptPaths.reeseSensorPath ? 1 : 0) }
+        ]);
+        const body = scripts.length
+            ? facts + cards
+            : K.kitNote(`${tr('advImpervaNoScripts', 'No scripts detected')}. ${tr('advImpervaMayNotBePresent', 'Imperva may not be present on this page')}`);
+        this.openKitModal({
+            title: tr('advImpervaAnalysisTitle', 'Imperva Analysis'),
+            subtitle: data.hostname || '',
+            iconSvg: K.toolIcon('scripts'),
+            body,
+            copiedMessage: tr('advValueCopied', 'Value copied'),
+            actions: parsingCodes ? [{
+                label: tr('advCommonExportCode', 'Export Code'),
+                primary: true,
+                onClick: () => this.displayExportCodeModal(parsingCodes, scriptPaths, data)
+            }] : [],
+            record: false
         });
-
-        this.bindModalClose(modal);
-
-        // Export Code button
-        if (parsingCodes) {
-            const exportBtn = modal.querySelector('.export-code-btn');
-            if (exportBtn) {
-                exportBtn.addEventListener('click', () => {
-                    this.displayExportCodeModal(parsingCodes, scriptPaths, extractedData);
-                });
-            }
-        }
-
-        // Show success notification
-        const scriptCount = impervaScripts.length;
-        NotificationHelper.success(AdvancedUtils.notifications.analyzeScripts.success(scriptCount));
+        NotificationHelper.success(AdvancedUtils.notifications.analyzeScripts.success(scripts.length));
     };
 
 
@@ -278,7 +194,7 @@ ImpervaAdvanced.prototype.displayExportCodeModal = function(parsingCodes, script
             getCodes: type => {
                 const codes = initial ? parsingCodes : this.generateParsingCode(extractedData, scriptPaths, type);
                 initial = false;
-                return { ...codes, nodejs: codes.javascript };
+                return codes;
             },
             description: fmt('advCodeDescBrowserParseFmt', 'Browser console code for intercepting and parsing {0} scripts', 'Imperva')
         });

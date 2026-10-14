@@ -59,7 +59,8 @@ function fixture(vendor, options = {}) {
         }
       }
     },
-    setTimeout(callback, delay) { timers.push({ callback, delay }); return timers.length; }
+    setTimeout(callback, delay) { timers.push({ callback, delay }); return timers.length; },
+    clearTimeout() {}
   };
   vm.createContext(context);
   for (const file of [path.join(__dirname, '..', 'sections/advanced/components/script-results.js'),
@@ -132,17 +133,21 @@ for (const vendor of Object.keys(vendors)) {
   });
 }
 
-for (const vendor of ['cloudflare', 'hcaptcha']) {
-  test(`${vendor}: existing version reload is awaited and its failure is contained`, async () => {
+// Cloudflare's unused checkVersion was removed in 2.8.7
+for (const vendor of ['hcaptcha']) {
+  test(`${vendor}: version reload is awaited, its timeout is armed first, and a failed reload reaches the tool card`, async () => {
     const f = fixture(vendor);
+    const removed = [];
+    f.context.chrome.runtime.onMessage.removeListener = listener => removed.push(listener);
     let settled = false;
     const action = f.instance.checkVersion().then(() => { settled = true; });
     await flush();
     assert.equal(settled, false);
     assert.equal(f.calls.filter(([kind]) => kind === 'reload').length, 1);
-    assert.equal(f.timers.length, 0, 'version check has no delayed reload timer');
+    assert.deepEqual(f.timers.map(timer => timer.delay), [15000], 'only the result timeout, armed before the reload');
     f.rejectReload(new Error('version reload denied'));
-    await assert.doesNotReject(action);
-    assert.match(f.errors[0], /version reload denied/);
+    // bindToolActions reports it as the card's error
+    await assert.rejects(action, /version reload denied/);
+    assert.equal(removed.length, 1, 'the result listener is removed');
   });
 }

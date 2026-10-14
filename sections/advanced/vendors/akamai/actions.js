@@ -901,88 +901,50 @@ AkamaiAdvanced.prototype.processCapturedData = async function(interceptedData) {
      * Extract Sensor Information - Delete cookies and capture raw sensor data
      */
 AkamaiAdvanced.prototype.extractSensorInformation = async function() {
-        Logger.network('[AKAMAI-EXTRACT] ========== STARTING EXTRACTION ==========');
-        NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiExtractingSensor', 'Extracting sensor information…'));
-        try {
+        const tr = AkamaiAdvanced.tr;
+        // The tab these tools were opened for, not whichever tab is active now
+        const tab = this.tabInfo;
+        if (!tab || !tab.id || !tab.url) throw new Error('Tab information not available');
+        NotificationHelper.info(tr('advAkamaiExtractingSensor', 'Extracting sensor information…'));
 
-            // Get current tab
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!tab) {
-                Logger.error('NETWORK', '[AKAMAI-EXTRACT] No active tab found');
-                throw new Error('No active tab found');
+        // Delete Akamai-related cookies to force regeneration
+        for (const cookieName of ['_abck', 'sbsd', 'sbsd_o', 'ak_bmsc', 'bm_sz', 'bm_sv', 'bm_mi']) {
+            try {
+                await chrome.cookies.remove({ url: tab.url, name: cookieName });
+            } catch (err) {
+                Logger.network(`[AKAMAI-EXTRACT] Could not delete cookie ${cookieName}:`, err.message);
             }
+        }
 
-            Logger.network('[AKAMAI-EXTRACT] Tab found:', { id: tab.id, url: tab.url, title: tab.title });
-
-            // Delete Akamai-related cookies to force regeneration
-            const cookiesToDelete = ['_abck', 'sbsd', 'sbsd_o', 'ak_bmsc', 'bm_sz', 'bm_sv', 'bm_mi'];
-            let deletedCount = 0;
-
-            for (const cookieName of cookiesToDelete) {
-                try {
-                    await chrome.cookies.remove({
-                        url: tab.url,
-                        name: cookieName
-                    });
-                    Logger.network(`[AKAMAI-EXTRACT] Deleted cookie: ${cookieName}`);
-                    deletedCount++;
-                } catch (err) {
-                    Logger.network(`[AKAMAI-EXTRACT] Could not delete cookie ${cookieName}:`, err.message);
-                }
-            }
-            Logger.network(`[AKAMAI-EXTRACT] Deleted ${deletedCount}/${cookiesToDelete.length} cookies`);
-
-            // Store extraction mode flag
-            Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step 3: Setting up extraction mode');
-            this.isExtracting = true;
-
-            // Set up listener for extraction result
-            const extractionListener = (message) => {
-                Logger.network('[AKAMAI-EXTRACT] Received message:', message.type);
-                if (message.type === 'AKAMAI_EXTRACTION_RESULT') {
-                    Logger.network('[AKAMAI-EXTRACT] EXTRACTION RESULT RECEIVED!');
-                    Logger.network('[AKAMAI-EXTRACT] Extracted data:', message.extractedData);
-
-                    // Display the sensor data
-                    Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step: Displaying sensor data modal');
-                    this.displaySensorDataModal(message.extractedData);
-
-                    // Clean up
-                    Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step: Cleaning up');
-                    this.isExtracting = false;
-                    chrome.runtime.onMessage.removeListener(extractionListener);
-                    Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETE ==========');
-                }
-            };
-
-            chrome.runtime.onMessage.addListener(extractionListener);
-            Logger.network('[AKAMAI-EXTRACT] Listener added');
-
-            // Send message to start extraction mode
-            const response = await chrome.runtime.sendMessage({
-                type: 'AKAMAI_EXTRACT_SENSOR',
-                tabId: tab.id
-            });
-            Logger.network('[AKAMAI-EXTRACT] Background response:', response);
-
-            if (response && response.status === 'success') {
-                Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled successfully');
-                // No notice on the page itself: the popup already says it is
-                // extracting, and the result opens here
-
-                await chrome.tabs.reload(tab.id);
-                Logger.network('[AKAMAI-EXTRACT] Tab reload initiated');
-                Logger.network('[AKAMAI-EXTRACT] Waiting for sensor data capture');
-            } else {
-                Logger.error('NETWORK', '[AKAMAI-EXTRACT] Failed response from background:', response);
-                throw new Error('Failed to start extraction mode');
-            }
-        } catch (error) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] ERROR:', error);
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] Stack trace:', error.stack);
-            NotificationHelper.error(AkamaiAdvanced.fmt('advAkamaiExtractSensorFailedFmt', 'Failed to extract sensor information: {0}', error.message));
+        this.isExtracting = true;
+        let timeoutId = null;
+        const stop = () => {
+            clearTimeout(timeoutId);
             this.isExtracting = false;
-            Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION FAILED ==========');
+            chrome.runtime.onMessage.removeListener(extractionListener);
+        };
+        // Only this tab's result (older workers sent no tabId)
+        const extractionListener = (message) => {
+            if (message.type !== 'AKAMAI_EXTRACTION_RESULT') return;
+            if (message.tabId !== undefined && message.tabId !== tab.id) return;
+            stop();
+            this.displaySensorDataModal(message.extractedData);
+        };
+        chrome.runtime.onMessage.addListener(extractionListener);
+        try {
+            const response = await chrome.runtime.sendMessage({ type: 'AKAMAI_EXTRACT_SENSOR', tabId: tab.id });
+            if (!response || response.status !== 'success') throw new Error('Failed to start extraction mode');
+            // The worker gives up after 30 s without a word: say so here
+            timeoutId = setTimeout(() => {
+                stop();
+                NotificationHelper.error(tr('advToolNoResult', 'No result: the protection sent no data. Reload the page and try again.'));
+            }, 35000);
+            await chrome.tabs.reload(tab.id);
+            return { awaitingResult: true };
+        } catch (error) {
+            stop();
+            NotificationHelper.error(AkamaiAdvanced.fmt('advAkamaiExtractSensorFailedFmt', 'Failed to extract sensor information: {0}', error.message));
+            return { awaitingResult: false };
         }
     };
 

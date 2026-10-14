@@ -55,32 +55,24 @@ async function handleGeetestCheckVersion(message, sender, sendResponse) {
                 target: { tabId: tabId },
                 world: 'MAIN',
                 func: () => {
-                    // METHOD 1: Search page HTML for "captchaId" string
-                    const pageContent = document.documentElement.outerHTML;
-                    const hasCaptchaIdString = pageContent.includes('captchaId');
-
-                    // METHOD 2: Check for initGeetest4 function calls in page
-                    const hasInitGeetest4 = pageContent.includes('initGeetest4');
-
-                    // METHOD 3: Check window object for V4 initialization function
-                    const hasV4WindowFunction = typeof window.initGeetest4 !== 'undefined';
-
-                    // METHOD 4: Check for V4 script URLs
-                    const hasV4ScriptUrl = Array.from(document.querySelectorAll('script[src]'))
-                        .some(s => s.src.includes('geetest.com/v4/') || s.src.includes('gcaptcha4.geetest.com'));
-
-                    // V4 if ANY of the 4 methods detects it, otherwise V3
-                    if (hasCaptchaIdString || hasInitGeetest4 || hasV4WindowFunction || hasV4ScriptUrl) {
-                        return 'v4';
-                    } else {
-                        return 'v3';
-                    }
+                    // v4 or v3 from GeeTest's own scripts, globals and init calls; null when there is no GeeTest
+                    const sources = Array.from(document.querySelectorAll('script[src]')).map(script => script.src);
+                    const hostOf = src => { try { return new URL(src).hostname; } catch (_) { return ''; } };
+                    const geetestHost = host => /(?:^|\.)(?:geetest\.com|geevisit\.com|gsensebot\.com)$/.test(host);
+                    const v4Script = sources.some(src => geetestHost(hostOf(src)) && (src.includes('/v4/') || hostOf(src).startsWith('gcaptcha4.')));
+                    const v3Script = sources.some(src => {
+                        const host = hostOf(src);
+                        return (geetestHost(host) && (host.startsWith('api.') || src.includes('/static/js/'))) || /\/gt\.js(?:[?#]|$)/.test(src);
+                    });
+                    const html = document.documentElement.outerHTML;
+                    if (v4Script || typeof window.initGeetest4 === 'function' || html.includes('initGeetest4(')) return 'v4';
+                    if (v3Script || typeof window.initGeetest === 'function' || /initGeetest\s*\(/.test(html)) return 'v3';
+                    return null;
                 }
             }).then(results => {
-                const version = (results && results[0] && results[0].result) || 'v3';
-                sendResponse({ version: version });
+                sendResponse({ version: (results && results[0] && results[0].result) || null });
             }).catch(error => {
-                sendResponse({ version: 'v3', error: error.message });
+                sendResponse({ version: null, error: error.message });
             });
         }, 3000);
 
@@ -222,14 +214,14 @@ async function handleGeetestAnalyzeScripts(message, sender, sendResponse) {
                     const scriptTags = document.querySelectorAll('script[src]');
                     for (const tag of scriptTags) {
                         const src = tag.src;
-                        if (src.includes('geetest.com/v4/') || src.includes('gcaptcha4.geetest.com')) {
+                        if (/(?:geetest|geevisit)\.com\/v4\/|gcaptcha4\.(?:geetest|geevisit|gsensebot)\.com/.test(src)) {
                             results.push({
                                 type: 'v4',
                                 source: 'script-url',
                                 url: src,
                                 snippet: `<script src="${src}">`
                             });
-                        } else if (src.includes('api.geetest.com') || src.includes('/gt.js')) {
+                        } else if (/api\.(?:geetest|geevisit)\.com|static\.(?:geetest|geevisit)\.com\/static\/js\/|\/gt\.js(?:[?#]|$)/.test(src)) {
                             results.push({
                                 type: 'v3',
                                 source: 'script-url',

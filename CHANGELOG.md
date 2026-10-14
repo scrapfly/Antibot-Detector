@@ -19,6 +19,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced: cookie results show each cookie's name as its own copyable row, above its value.
 - Advanced → History: capture details for every protection use the same layout as the cookie results, with copyable rows and Copy all data at the bottom.
 - Advanced → Analyze scripts: one results window for every protection, with each script's type and an Export code button; it lists only that protection's requests, not look-alike paths or images.
+- Advanced: the GeeTest, Imperva and Shape Security result windows use the same layout as the others; Cloudflare Check cookies looks for the real Cloudflare cookies.
 
 ### Fixed
 
@@ -29,6 +30,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced → DataDome → Analyze Scripts: now finds the challenge scripts and the CAPTCHA or interstitial page on blocked pages, not only tags.js.
 - Advanced: tools that reload the page (Analyze scripts, version checks, Akamai sensor) now show they are working until the result opens, and an empty result says no scripts were found.
 - Advanced → Turnstile → Export Code: the JavaScript and Node.js code no longer calls a helper that only exists inside the extension.
+- Advanced → Imperva: the ___utmvc cookie is found and reset, Analyze scripts reports when nothing was captured, and Node.js export code fetches the page.
+- Advanced → hCaptcha: Enterprise sites are detected from the challenge request too, and Check version no longer shows a late timeout after its result.
+- Advanced → FunCaptcha: Start capture also records form-encoded challenge requests.
+- Advanced → GeeTest and Shape Security: Check version no longer reports a version on pages without the protection.
+- Advanced → Akamai: Start capture no longer deletes the _abck cookie when it only stops a running capture; Extract sensor reports when no data arrives.
+- Advanced: results from one tab no longer open in another tab's tools; tools that finish at once no longer stay busy.
 
 ## [2.8.6] - 2026-10-13
 

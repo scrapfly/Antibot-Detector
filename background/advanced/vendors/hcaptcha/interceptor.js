@@ -34,6 +34,59 @@ function hcaptchaInitializeInterceptor(captureState) {
 // Store active version check requests
 const activeVersionChecks = {};
 
+const HCAPTCHA_ENTERPRISE_API_PARAMS = ['custom_theme', 'sentry', 'custom', 'apiEndpoint', 'endpoint', 'reportapi', 'assethost', 'imghost', 'recaptchacompat'];
+
+/** Records an Enterprise sign once. */
+function hcaptchaMarkEnterprise(target, method) {
+    target.isEnterprise = true;
+    if (!target.detectionMethods.includes(method)) target.detectionMethods.push(method);
+}
+
+/** A request body as text: Chrome gives form posts as formData and others as raw bytes. */
+function hcaptchaRequestBodyText(body) {
+    if (!body) return '';
+    if (body.formData) {
+        return Object.entries(body.formData).map(([key, values]) => `${key}=${[].concat(values).join(',')}`).join('&');
+    }
+    if (Array.isArray(body.raw)) {
+        return body.raw.map(part => (part && part.bytes ? new TextDecoder().decode(part.bytes) : '')).join('');
+    }
+    return '';
+}
+
+/**
+ * Reads one request into target ({ version, websiteKey, websiteURL, isEnterprise, detectionMethods }).
+ * Paths only, so Enterprise custom endpoints count too. Returns the checksiteconfig URL to
+ * fetch for its Enterprise features, else null.
+ */
+function hcaptchaInspectRequest(details, target) {
+    let parsed;
+    try { parsed = new URL(details.url); } catch (_) { return null; }
+    const path = parsed.pathname;
+    if (path.includes('/checksiteconfig')) {
+        target.version = target.version || parsed.searchParams.get('v') || '';
+        target.websiteURL = target.websiteURL || parsed.searchParams.get('host') || '';
+        target.websiteKey = target.websiteKey || parsed.searchParams.get('sitekey') || '';
+        return details.url;
+    }
+    if (/\/1\/(?:secure-)?api\.js$/.test(path)) {
+        const param = HCAPTCHA_ENTERPRISE_API_PARAMS.find(name => parsed.searchParams.has(name));
+        if (param) hcaptchaMarkEnterprise(target, 'api-param-' + param);
+        return null;
+    }
+    if (path.includes('/getcaptcha/') && /(?:^|[&{",\s])"?rqdata"?\s*[=:]/.test(hcaptchaRequestBodyText(details.requestBody))) {
+        hcaptchaMarkEnterprise(target, 'rqdata');
+    }
+    return null;
+}
+
+/** Whether a checksiteconfig response lists Enterprise features. */
+async function hcaptchaFetchFeatures(configUrl) {
+    const response = await fetch(configUrl);
+    const data = await response.json();
+    return Boolean(data && data.features && Object.keys(data.features).length > 0);
+}
+
 /**
  * Start capturing hCaptcha data for a specific tab
  * Captures: Version, Enterprise mode, Site Key, Website URL
@@ -67,105 +120,43 @@ function hcaptchaStartCapture(tabId, captureUrl) {
     // Set up network request listener
     const requestListener = (details) => {
         if (details.tabId !== tabId) return;
-        const url = details.url;
         const state = (typeof getCaptureState === 'function')
             ? getCaptureState(hcaptchaCaptureStateRef, tabId)
             : hcaptchaCaptureStateRef.get(tabId);
         if (!state) return;
 
-        // checksiteconfig API - extract version, site key, website URL
-        if (/checksiteconfig/gm.test(url)) {
-            Logger.network('[hCaptcha-Capture] ========== CHECKSITECONFIG DETECTED ==========');
-            Logger.network('[hCaptcha-Capture] Full URL:', url);
-            Logger.network('[hCaptcha-Capture] Request ID:', details.requestId);
-            Logger.network('[hCaptcha-Capture] Tab ID:', details.tabId);
-
-            try {
-                const urlObj = new URL(url);
-                state.version = state.version || urlObj.searchParams.get('v') || null;
-                state.websiteURL = state.websiteURL || urlObj.searchParams.get('host') || null;
-                state.websiteKey = state.websiteKey || urlObj.searchParams.get('sitekey') || null;
-                Logger.network('[hCaptcha-Capture] Extracted - Version:', state.version, 'SiteKey:', state.websiteKey);
-
-                // Mark that we're waiting for checksiteconfig response
-                state.waitingForChecksiteconfig = true;
-
-                // Simple fetch to read response and check for Enterprise mode
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (hcaptchaCaptureStateRef.get(tabId) !== state) return;
-                        Logger.network('[hCaptcha-Capture] checksiteconfig response:', data);
-                        if (data.features && Object.keys(data.features).length > 0) {
-                            state.isEnterprise = true;
-                            if (!state.detectionMethods.includes('checksiteconfig-features')) {
-                                state.detectionMethods.push('checksiteconfig-features');
-                            }
-                            Logger.network('[hCaptcha-Capture] Enterprise detected via checksiteconfig features');
+        // checksiteconfig, api.js and getcaptcha: version, site key, website and Enterprise signs
+        const configUrl = hcaptchaInspectRequest(details, state);
+        if (configUrl) {
+            // Wait for the checksiteconfig response before completing
+            state.waitingForChecksiteconfig = true;
+            hcaptchaFetchFeatures(configUrl)
+                .then(enterprise => {
+                    if (hcaptchaCaptureStateRef.get(tabId) !== state) return;
+                    if (enterprise) hcaptchaMarkEnterprise(state, 'checksiteconfig-features');
+                    state.waitingForChecksiteconfig = false;
+                    if (state.version && state.websiteKey) {
+                        Logger.network('[hCaptcha-Capture] All required data captured (after checksiteconfig fetch)');
+                        if (typeof clearCaptureTimeout === 'function') {
+                            clearCaptureTimeout(state);
+                        } else if (state.timeout) {
+                            clearTimeout(state.timeout);
                         }
-
-                        // Mark fetch as complete
-                        state.waitingForChecksiteconfig = false;
-
-                        // Check if we should complete capture now
-                        if (state.version && state.websiteKey) {
-                            Logger.network('[hCaptcha-Capture] All required data captured (after checksiteconfig fetch)!');
-                            Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
-
-                            // Clear timeout since we got the data
-                            if (typeof clearCaptureTimeout === 'function') {
-                                clearCaptureTimeout(state);
-                            } else if (state.timeout) {
-                                clearTimeout(state.timeout);
-                            }
-
-                            // Remove listener to stop monitoring
-                            chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-
-                            // Call completion handler
-                            handleHCaptchaCaptureCompleted(tabId, {
-                                version: state.version,
-                                websiteKey: state.websiteKey,
-                                websiteURL: state.websiteURL,
-                                isEnterprise: state.isEnterprise,
-                                detectionMethods: state.detectionMethods,
-                                timestamp: state.timestamp
-                            });
-                        }
-                    })
-                    .catch(err => {
-                        Logger.warn('NETWORK', '[hCaptcha-Capture] Fetch error:', err);
-                        state.waitingForChecksiteconfig = false;
-                    });
-            } catch (e) {
-                Logger.error('NETWORK', '[hCaptcha-Capture] URL parse error:', e);
-            }
-        }
-
-        // api.js with enterprise parameters
-        if (/\/1\/api\.js/gm.test(url)) {
-            const enterpriseParams = ['custom_theme', 'sentry', 'custom', 'apiEndpoint', 'endpoint', 'reportapi', 'assethost', 'imghost', 'recaptchacompat'];
-            for (let param of enterpriseParams) {
-                if (url.includes(param)) {
-                    state.isEnterprise = true;
-                    if (!state.detectionMethods.includes('api-param-' + param)) {
-                        state.detectionMethods.push('api-param-' + param);
+                        chrome.webRequest.onBeforeRequest.removeListener(requestListener);
+                        handleHCaptchaCaptureCompleted(tabId, {
+                            version: state.version,
+                            websiteKey: state.websiteKey,
+                            websiteURL: state.websiteURL,
+                            isEnterprise: state.isEnterprise,
+                            detectionMethods: state.detectionMethods,
+                            timestamp: state.timestamp
+                        });
                     }
-                    Logger.network('[hCaptcha-Capture] Enterprise detected via api.js parameter:', param);
-                    break;
-                }
-            }
-        }
-
-        // getcaptcha API - check for rqdata parameter
-        if (/\/getcaptcha\//gm.test(url)) {
-            if (details.requestBody?.raw?.[0]?.string?.includes('rqdata')) {
-                state.isEnterprise = true;
-                if (!state.detectionMethods.includes('rqdata')) {
-                    state.detectionMethods.push('rqdata');
-                }
-                Logger.network('[hCaptcha-Capture] Enterprise detected via rqdata parameter');
-            }
+                })
+                .catch(err => {
+                    Logger.warn('NETWORK', '[hCaptcha-Capture] Fetch error:', err);
+                    state.waitingForChecksiteconfig = false;
+                });
         }
 
         // Check if we have all required data to complete capture
@@ -419,70 +410,11 @@ function hcaptchaCheckVersion(tabId) {
 
         const requestListener = (details) => {
             if (details.tabId !== tabId) return;
-            const url = details.url;
-
-            // Log all hcaptcha-related URLs for debugging
-            if (url.includes('hcaptcha')) {
-                Logger.network('[hCaptcha] Detected hCaptcha URL:', url);
-            }
-
-            // checksiteconfig API - extract version and site key
-            if (/checksiteconfig/gm.test(url)) {
-                Logger.network('[hCaptcha] ========== CHECKSITECONFIG DETECTED ==========');
-                Logger.network('[hCaptcha] Full URL:', url);
-                Logger.network('[hCaptcha] Request ID:', details.requestId);
-                Logger.network('[hCaptcha] Tab ID:', details.tabId);
-
-                try {
-                    const urlObj = new URL(url);
-                    detectedData.version = urlObj.searchParams.get('v') || '';
-                    detectedData.websiteURL = urlObj.searchParams.get('host') || '';
-                    detectedData.websiteKey = urlObj.searchParams.get('sitekey') || '';
-                    Logger.network('[hCaptcha] Extracted - Version:', detectedData.version, 'SiteKey:', detectedData.websiteKey);
-
-                    // Simple fetch to read response and check for Enterprise mode
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            Logger.network('[hCaptcha] checksiteconfig response:', data);
-                            if (data.features && Object.keys(data.features).length > 0) {
-                                detectedData.isEnterprise = true;
-                                if (!detectedData.detectionMethods.includes('checksiteconfig-features')) {
-                                    detectedData.detectionMethods.push('checksiteconfig-features');
-                                }
-                                Logger.network('[hCaptcha] Enterprise detected via checksiteconfig features');
-                            }
-                        })
-                        .catch(err => Logger.warn('NETWORK', '[hCaptcha] Fetch error:', err));
-                } catch (e) {
-                    Logger.error('NETWORK', '[hCaptcha] URL parse error:', e);
-                }
-            }
-
-            // api.js with enterprise parameters
-            if (/\/1\/api\.js/gm.test(url)) {
-                const enterpriseParams = ['custom_theme', 'sentry', 'custom', 'apiEndpoint', 'endpoint', 'reportapi', 'assethost', 'imghost', 'recaptchacompat'];
-                for (let param of enterpriseParams) {
-                    if (url.includes(param)) {
-                        detectedData.isEnterprise = true;
-                        if (!detectedData.detectionMethods.includes('api-param-' + param)) {
-                            detectedData.detectionMethods.push('api-param-' + param);
-                        }
-                        Logger.network('[hCaptcha] Enterprise detected via api.js parameter:', param);
-                        break;
-                    }
-                }
-            }
-
-            // getcaptcha API - check for rqdata parameter
-            if (/\/getcaptcha\//gm.test(url)) {
-                if (details.requestBody?.raw?.[0]?.string?.includes('rqdata')) {
-                    detectedData.isEnterprise = true;
-                    if (!detectedData.detectionMethods.includes('rqdata')) {
-                        detectedData.detectionMethods.push('rqdata');
-                    }
-                    Logger.network('[hCaptcha] Enterprise detected via rqdata parameter');
-                }
+            const configUrl = hcaptchaInspectRequest(details, detectedData);
+            if (configUrl) {
+                hcaptchaFetchFeatures(configUrl)
+                    .then(enterprise => { if (enterprise) hcaptchaMarkEnterprise(detectedData, 'checksiteconfig-features'); })
+                    .catch(err => Logger.warn('NETWORK', '[hCaptcha] Fetch error:', err));
             }
         };
 
@@ -538,6 +470,7 @@ function completeVersionCheck(tabId, requestListener, navigationListener, detect
     try {
         chrome.runtime.sendMessage({
             type: 'HCAPTCHA_VERSION_RESULT',
+            tabId,
             data: detectedData
         }).catch(error => {
             Logger.error('NETWORK', '[hCaptcha] Error sending version result:', error);

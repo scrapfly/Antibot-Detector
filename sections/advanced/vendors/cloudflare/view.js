@@ -58,37 +58,6 @@ CloudflareAdvanced.prototype.setupToolListeners = function() {
     };
 
 
-CloudflareAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
-        const items = Array.isArray(historyItems) ? historyItems : [historyItems];
-        return items.map((item, index) => {
-            const data = item.captureData || item.data || {};
-            const timestamp = new Date(item.timestamp).toLocaleString();
-            const type = data.type || 'Unknown';
-
-            let typeColor = '#6366F1';
-            if (type === 'Turnstile') {
-                typeColor = '#0074BF';
-            } else if (type === 'Challenge') {
-                typeColor = '#F97316';
-            } else if (type === 'Turnstile + Challenge') {
-                typeColor = '#9333EA';
-            }
-
-            return `
-                <div class="history-item" data-id="capture-${index}" style="background: var(--bg-tertiary); padding: 12px; border-radius: 6px; cursor: pointer; transition: background 0.2s; margin-bottom: 8px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="background: linear-gradient(135deg, ${typeColor} 0%, ${typeColor}dd 100%); color: white; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">${this.cloudflareTypeLabel(type)}</span>
-                        </div>
-                        <div style="font-size: 12px; color: var(--text-secondary);">${timestamp}</div>
-                    </div>
-                    ${data.sitekey ? `<div style="font-size: 12px; color: var(--text-secondary);">${this._txt('advCloudflareSitekeyLabel', 'Sitekey:')} ${data.sitekey.substring(0, 30)}${data.sitekey.length > 30 ? '...' : ''}</div>` : ''}
-                    ${data.siteURL ? `<div style="font-size: 12px; color: var(--text-secondary);">${this._txt('advCloudflareUrlLabel', 'URL:')} ${data.siteURL.substring(0, 50)}${data.siteURL.length > 50 ? '...' : ''}</div>` : ''}
-                </div>
-            `;
-        }).join('');
-    };
-
 
 CloudflareAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
         const K = BaseAdvancedModule;

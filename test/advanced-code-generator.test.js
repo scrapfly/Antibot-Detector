@@ -229,7 +229,12 @@ for (const vendor of Object.keys(vendors)) test(`${vendor} shared dialog retains
     const ContextDate = vm.runInContext('Date', context);
     ContextDate.now = () => 1700000000000;
     dialog = module.displayExportCodeModal(module.generateParsingCode(data, paths), paths, data);
-    expected = type => { const codes = module.generateParsingCode(data, paths, type); return { ...codes, nodejs: codes.javascript }; };
+    expected = type => module.generateParsingCode(data, paths, type);
+    const node = module.generateParsingCode({ ...data, url: 'https://example.com/login' }, paths).nodejs;
+    assert.match(node, /^\/\/ Node\.js 18\+/);
+    assert.match(node, /fetch\("https:\/\/example\.com\/login"\)/);
+    assert.notEqual(node, module.generateParsingCode(data, paths).javascript, 'Node.js is its own code, not a copy');
+    new Function(node);
     assert.match(module.generateParsingCode(data, paths).javascript, /e=1700000000000/);
   } else {
     dialog = module.displayExportCodeModal(scripts);
