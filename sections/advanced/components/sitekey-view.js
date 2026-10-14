@@ -82,4 +82,15 @@ AdvancedSiteKeyView.show = function(owner, vendor, result, options = {}) {
   });
 };
 
+/**
+ * Extract Site Key for a module: probe every frame with the vendor's rules,
+ * then show the result. Used by the data-driven CAPTCHAs and by hCaptcha,
+ * FunCaptcha and reCAPTCHA (AdvancedCaptchaVendors.siteKeyOnly).
+ */
+AdvancedSiteKeyView.extractFor = async function(owner, vendor, options = {}) {
+  if (!owner.tabInfo || !owner.tabInfo.id) throw new Error('Tab information not available');
+  const result = await AdvancedSiteKeyProbe.extract(owner.tabInfo.id, AdvancedCaptchaVendors.probeArgs(vendor));
+  return AdvancedSiteKeyView.show(owner, vendor, result, { classify: url => AdvancedCaptchaVendors.classify(vendor, url), ...options });
+};
+
 if (typeof window !== 'undefined') window.AdvancedSiteKeyView = AdvancedSiteKeyView;

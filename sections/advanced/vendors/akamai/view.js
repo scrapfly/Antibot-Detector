@@ -6,84 +6,21 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
             if (!this.tabInfo || !this.tabInfo.url) {
                 throw new Error('Tab information not available');
             }
+            // Bot Manager sensor and session cookies, SBSD, edge and waiting-room cookies
+            const expected = ['_abck', 'bm_sz', 'ak_bmsc', 'bm_sv', 'bm_mi', 'bm_s', 'bm_so', 'bm_lso', 'sbsd', 'sbsd_o', 'AKA_A2', 'akavpau_*'];
+            const matches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
+            const cookies = (await chrome.cookies.getAll({ url: this.tabInfo.url }))
+                .filter(cookie => expected.some(pattern => matches(pattern, cookie.name)));
+            const byName = name => cookies.find(cookie => cookie.name === name);
+            const abck = byName('_abck');
+            const hasSbsd = byName('sbsd') || byName('sbsd_o');
+            const protectionLevel = abck && byName('bm_sz') && hasSbsd ? 'Advanced (SBSD)'
+                : abck && byName('bm_sz') ? 'Standard'
+                    : abck ? 'Basic' : 'None';
 
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
-
-            const akamaiCookies = {
-                _abck: cookies.find(c => c.name === '_abck'),
-                ak_bmsc: cookies.find(c => c.name === 'ak_bmsc'),
-                bm_sz: cookies.find(c => c.name === 'bm_sz'),
-                bm_sv: cookies.find(c => c.name === 'bm_sv'),
-                bm_mi: cookies.find(c => c.name === 'bm_mi'),
-                sbsd: cookies.find(c => c.name === 'sbsd'),
-                sbsd_o: cookies.find(c => c.name === 'sbsd_o')
-            };
-
-            const foundCookies = Object.entries(akamaiCookies)
-                .filter(([name, cookie]) => cookie)
-                .map(([name, cookie]) => ({
-                    name: name,
-                    value: cookie.value,
-                    domain: cookie.domain,
-                    secure: cookie.secure,
-                    httpOnly: cookie.httpOnly
-                }));
-
-            // Debug logs - show all cookies found
-            Logger.debug('NETWORK', '[Akamai Debug] ========== CHECK COOKIES ==========');
-            Logger.debug('NETWORK', '[Akamai Debug] URL:', this.tabInfo.url);
-            Logger.debug('NETWORK', '[Akamai Debug] Cookies Found:', foundCookies.length + '/7');
-
-            Logger.debug('NETWORK', '[Akamai Debug] Cookie Details:');
-            if (akamaiCookies._abck) {
-                const isEasyMode = akamaiCookies._abck.value.includes('~0~');
-                Logger.debug('NETWORK', '[Akamai Debug]   _abck:', {
-                    value: akamaiCookies._abck.value.substring(0, 100) + '...',
-                    length: akamaiCookies._abck.value.length,
-                    domain: akamaiCookies._abck.domain,
-                    easyMode: isEasyMode
-                });
-            } else {
-                Logger.debug('NETWORK', '[Akamai Debug]   _abck: NOT FOUND');
-            }
-
-            if (akamaiCookies.sbsd) {
-                Logger.debug('NETWORK', '[Akamai Debug]   sbsd:', akamaiCookies.sbsd.value.substring(0, 50) + '...');
-            } else {
-                Logger.debug('NETWORK', '[Akamai Debug]   sbsd: NOT FOUND');
-            }
-
-            if (akamaiCookies.sbsd_o) {
-                Logger.debug('NETWORK', '[Akamai Debug]   sbsd_o:', akamaiCookies.sbsd_o.value.substring(0, 50) + '...');
-            } else {
-                Logger.debug('NETWORK', '[Akamai Debug]   sbsd_o: NOT FOUND');
-            }
-
-            Logger.debug('NETWORK', '[Akamai Debug]   ak_bmsc:', akamaiCookies.ak_bmsc ? 'FOUND' : 'NOT FOUND');
-            Logger.debug('NETWORK', '[Akamai Debug]   bm_sz:', akamaiCookies.bm_sz ? 'FOUND' : 'NOT FOUND');
-            Logger.debug('NETWORK', '[Akamai Debug]   bm_sv:', akamaiCookies.bm_sv ? 'FOUND' : 'NOT FOUND');
-            Logger.debug('NETWORK', '[Akamai Debug]   bm_mi:', akamaiCookies.bm_mi ? 'FOUND' : 'NOT FOUND');
-
-            // Determine protection level
-            const hasAbck = akamaiCookies._abck;
-            const hasBmSz = akamaiCookies.bm_sz;
-            const hasSbsd = akamaiCookies.sbsd || akamaiCookies.sbsd_o;
-            let protectionLevel = 'None';
-            if (hasAbck && hasBmSz && hasSbsd) {
-                protectionLevel = 'Advanced (SBSD)';
-            } else if (hasAbck && hasBmSz) {
-                protectionLevel = 'Standard';
-            } else if (hasAbck) {
-                protectionLevel = 'Basic';
-            }
-
-            Logger.debug('NETWORK', '[Akamai Debug] Protection Level:', protectionLevel);
-            Logger.debug('NETWORK', '[Akamai Debug] ========================================');
-
-            // Show notification
-            const foundCount = foundCookies.length;
-            if (foundCount > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, 7));
+            const found = expected.filter(pattern => cookies.some(cookie => matches(pattern, cookie.name))).length;
+            if (found > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(found, expected.length));
             } else {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Akamai'));
             }
@@ -96,11 +33,11 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
                 'None': tr('advCommonNone', 'None')
             }[protectionLevel] || protectionLevel;
             const facts = [{ label: tr('advCommonProtectionLevel', 'Protection Level:'), value: levelText }];
-            if (akamaiCookies._abck) {
+            if (abck) {
                 facts.push({ label: tr('advAkamaiAbckLevelLabel', '_abck level:'),
-                    value: akamaiCookies._abck.value.includes('~0~') ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard') });
+                    value: abck.value.includes('~0~') ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard') });
             }
-            this.showCookieResults({ vendor: 'Akamai', expected: Object.keys(akamaiCookies), cookies: Object.values(akamaiCookies).filter(Boolean), facts });
+            this.showCookieResults({ vendor: 'Akamai', expected, cookies, facts });
         } catch (error) {
             Logger.error('NETWORK', 'Failed to check Akamai cookies:', error);
             NotificationHelper.error(AkamaiAdvanced.fmt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));

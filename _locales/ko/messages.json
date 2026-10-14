@@ -1481,6 +1481,7 @@
   "btnExtractSiteKey": {
     "message": "SiteKey 추출"
   },
+  "btnExtractPublicKey": { "message": "공개 키 추출" },
   "btnObtainSelector": {
     "message": "선택자 가져오기"
   },
@@ -2830,15 +2831,6 @@
   },
   "advRecaptchaExecuteFailedFmt": {
     "message": "grecaptcha.execute() 실패: {0}"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "사이트 키를 찾을 수 없습니다"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "추출된 사이트 키"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "사이트 키가 클립보드에 복사되었습니다!"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA 콜백"

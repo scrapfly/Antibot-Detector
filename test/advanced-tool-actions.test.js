@@ -10,9 +10,9 @@ const modules = [
   ['awswaf', 'AwsWafAdvanced', ['CheckCookies', 'AnalyzeScripts']],
   ['cloudflare', 'CloudflareAdvanced', ['CheckCookies', 'ExtractSiteKey', 'AnalyzeScripts']],
   ['datadome', 'DataDomeAdvanced', ['CheckCookies', 'AnalyzeScripts']],
-  ['funcaptcha', 'FunCaptchaAdvanced', ['AnalyzeScripts', 'StartCapture']],
+  ['funcaptcha', 'FunCaptchaAdvanced', ['ExtractSiteKey', 'AnalyzeScripts', 'StartCapture']],
   ['geetest', 'GeetestAdvanced', ['Version', 'Analyze']],
-  ['hcaptcha', 'HCaptchaAdvanced', ['CheckVersion', 'StartCapture', 'AnalyzeScripts']],
+  ['hcaptcha', 'HCaptchaAdvanced', ['ExtractSiteKey', 'CheckVersion', 'StartCapture', 'AnalyzeScripts']],
   ['imperva', 'ImpervaAdvanced', ['CheckCookies', 'StartCapture', 'AnalyzeScripts']],
   ['recaptcha', 'ReCaptchaAdvanced', ['Click', 'Extract', 'Callback', 'StartCapture']],
   ['shapesecurity', 'ShapeSecurityAdvanced', ['CheckVersion', 'CheckCookies', 'StartCapture', 'AnalyzeScripts']],
@@ -277,7 +277,7 @@ test('all method semantics disclose reloads, cookie resets and capture state wit
       count++;
     }
   }
-  assert.equal(count, 31);
+  assert.equal(count, 33);
 });
 
 test('action and code dialog styles use full rows and a separate non-overlapping code toolbar', () => {

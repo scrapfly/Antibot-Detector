@@ -32,7 +32,11 @@ AdvancedSiteKeyProbe.probe = function(args) {
       if (!match) return null;
     }
     if (rule.param) {
-      try { return new URL(url, location.href).searchParams.get(rule.param); } catch (e) { return null; }
+      // The query first, then the fragment (hCaptcha's frame puts its sitekey after #)
+      try {
+        const parsed = new URL(url, location.href);
+        return parsed.searchParams.get(rule.param) || new URLSearchParams(parsed.hash.slice(1)).get(rule.param);
+      } catch (e) { return null; }
     }
     return match && match[1] !== undefined ? match[1] : null;
   };

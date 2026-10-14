@@ -1481,6 +1481,7 @@
   "btnExtractSiteKey": {
     "message": "提取 SiteKey"
   },
+  "btnExtractPublicKey": { "message": "提取公钥" },
   "btnObtainSelector": {
     "message": "获取选择器"
   },
@@ -2830,15 +2831,6 @@
   },
   "advRecaptchaExecuteFailedFmt": {
     "message": "grecaptcha.execute() 失败:{0}"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "未找到站点密钥"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "提取的站点密钥"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "已将站点密钥复制到剪贴板!"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA 回调"

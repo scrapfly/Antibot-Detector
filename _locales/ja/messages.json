@@ -1481,6 +1481,7 @@
   "btnExtractSiteKey": {
     "message": "SiteKeyを抽出"
   },
+  "btnExtractPublicKey": { "message": "公開鍵を抽出" },
   "btnObtainSelector": {
     "message": "セレクタを取得"
   },
@@ -2830,15 +2831,6 @@
   },
   "advRecaptchaExecuteFailedFmt": {
     "message": "grecaptcha.execute() が失敗しました: {0}"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "サイトキーが見つかりません"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "抽出したサイトキー"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "サイトキーをクリップボードにコピーしました!"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA のコールバック"

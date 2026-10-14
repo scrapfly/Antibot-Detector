@@ -22,19 +22,10 @@ ReCaptchaAdvanced.prototype.clickRecaptcha = async function() {
 
                     for (const selector of selectors) {
                         const element = document.querySelector(selector);
-                        if (element) {
-                            if (element.tagName === 'IFRAME') {
-                                const iframeDoc = element.contentDocument || element.contentWindow.document;
-                                const checkbox = iframeDoc.querySelector('.recaptcha-checkbox') ||
-                                               iframeDoc.querySelector('#recaptcha-anchor');
-                                if (checkbox) {
-                                    checkbox.click();
-                                    return { success: true, method: 'iframe-checkbox', selector };
-                                }
-                            } else {
-                                element.click();
-                                return { success: true, method: 'direct-click', selector };
-                            }
+                        // Google's frame is cross-origin: its checkbox cannot be reached from the page
+                        if (element && element.tagName !== 'IFRAME') {
+                            element.click();
+                            return { success: true, method: 'direct-click', selector };
                         }
                     }
 
@@ -52,12 +43,8 @@ ReCaptchaAdvanced.prototype.clickRecaptcha = async function() {
             });
 
             Logger.network('[ReCAPTCHA] Script execution results:', results);
-            if (results && results[0] && results[0].result) {
-                Logger.network('[ReCAPTCHA] Calling displaySelectorModal with:', results[0].result);
-                this.displaySelectorModal(results[0].result);
-            } else {
-                Logger.network('[ReCAPTCHA] No results from script execution');
-            }
+            // Nothing came back (the page could not be read): say so instead of doing nothing
+            this.displaySelectorModal((results && results[0] && results[0].result) || { success: false, errorKey: 'noElements' });
         } catch (error) {
             Logger.error('NETWORK', '[ReCAPTCHA] Failed to click reCAPTCHA:', error);
             NotificationHelper.error(recaptchaText('advRecaptchaFailedClickFmt', 'Failed to click: {0}', error.message));
@@ -68,70 +55,10 @@ ReCaptchaAdvanced.prototype.clickRecaptcha = async function() {
     /**
      * Extract sitekey from page
      */
-ReCaptchaAdvanced.prototype.extractSiteKey = async function() {
-        Logger.network('[ReCAPTCHA] extractSiteKey() called');
-        try {
-            if (!this.tabInfo || !this.tabInfo.id) {
-                throw new Error('Tab information not available');
-            }
-
-            const results = await chrome.scripting.executeScript({
-                target: { tabId: this.tabInfo.id },
-                world: 'MAIN', // Execute in page context for consistency
-                func: () => {
-                    const extractors = [
-                        () => document.querySelector('[data-sitekey]')?.getAttribute('data-sitekey'),
-                        () => document.querySelector('.g-recaptcha')?.getAttribute('data-sitekey'),
-                        () => {
-                            const iframe = document.querySelector('iframe[src*="recaptcha"]');
-                            if (iframe) {
-                                const match = iframe.src.match(/[?&]k=([^&]+)/);
-                                return match ? match[1] : null;
-                            }
-                            return null;
-                        },
-                        () => {
-                            const scripts = Array.from(document.querySelectorAll('script'));
-                            for (const script of scripts) {
-                                const content = script.textContent;
-                                const match = content.match(/sitekey['":\s]+['"]?([a-zA-Z0-9_-]{40})['"]?/);
-                                if (match) return match[1];
-                            }
-                            return null;
-                        }
-                    ];
-
-                    for (const extractor of extractors) {
-                        const key = extractor();
-                        if (key) {
-                            return { success: true, sitekey: key };
-                        }
-                    }
-
-                    return { success: false, errorKey: 'noSiteKey', error: 'No sitekey found' };
-                }
-            });
-
-            Logger.network('[ReCAPTCHA] Extract script results:', results);
-            if (results && results[0] && results[0].result) {
-                const result = results[0].result;
-                Logger.network('[ReCAPTCHA] Extract result:', result);
-                if (result.success) {
-                    Logger.network('[ReCAPTCHA] Calling displaySiteKeyModal with:', result.sitekey);
-                    this.displaySiteKeyModal(result.sitekey);
-                } else {
-                    Logger.network('[ReCAPTCHA] No sitekey found:', result.error);
-                    NotificationHelper.error(result.errorKey === 'noSiteKey'
-                        ? recaptchaText('advRecaptchaNoSiteKey', 'No sitekey found')
-                        : result.error);
-                }
-            } else {
-                Logger.network('[ReCAPTCHA] No results from extract script');
-            }
-        } catch (error) {
-            Logger.error('NETWORK', '[ReCAPTCHA] Failed to extract sitekey:', error);
-            NotificationHelper.error(recaptchaText('advCommonFailedExtractFmt', 'Failed to extract: {0}', error.message));
-        }
+ReCaptchaAdvanced.prototype.extractSiteKey = function() {
+        // Only reCAPTCHA-shaped keys (6L…), from every frame: widgets, the v3 render= script,
+        // the anchor/challenge frames and inline render/execute calls
+        return AdvancedSiteKeyView.extractFor(this, AdvancedCaptchaVendors.siteKeyOnly.recaptcha);
     };
 
 

@@ -250,6 +250,60 @@
         }
     ];
 
+    // Extract Site Key rules for vendors with their own module (hCaptcha, FunCaptcha, reCAPTCHA)
+    const siteKeyOnly = {
+        hcaptcha: {
+            vendorId: 'hcaptcha', productName: 'hCaptcha',
+            scripts: [{ domains: ['hcaptcha.com'], type: 'hcaptcha' }],
+            siteKey: {
+                label: 'sitekey',
+                key: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+                rules: [
+                    { type: 'attr', selector: '.h-captcha[data-sitekey]', attr: 'data-sitekey', source: 'widget',
+                        fields: { theme: 'data-theme', size: 'data-size', callback: 'data-callback' } },
+                    // checksiteconfig?sitekey= and the widget frame's #...&sitekey=
+                    { type: 'url', url: /^https:\/\/(?:[a-z0-9-]+\.)*hcaptcha\.com\//, param: 'sitekey' },
+                    { type: 'inline', hint: 'sitekey', pattern: /sitekey["']?\s*:\s*["']([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/ }
+                ]
+            }
+        },
+        funcaptcha: {
+            vendorId: 'funcaptcha', productName: 'FunCaptcha',
+            scripts: [{ domains: ['arkoselabs.com', 'funcaptcha.com'], type: 'arkose' }],
+            siteKey: {
+                label: 'public key',
+                key: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+                rules: [
+                    { type: 'url', url: /^https:\/\/[a-z0-9-]+\.arkoselabs\.com\/v2\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\/api\.js/ },
+                    { type: 'url', url: /\/fc\/gt2\/public_key\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/ },
+                    { type: 'attr', selector: '[data-pkey]', attr: 'data-pkey', source: 'widget' },
+                    { type: 'inline', hint: 'public_key', pattern: /public_key["']?\s*[:=]\s*["']([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/ },
+                    { type: 'inline', hint: 'pkey', pattern: /pkey["']?\s*[:=]\s*["']([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/ }
+                ]
+            }
+        },
+        recaptcha: {
+            vendorId: 'recaptcha', productName: 'reCAPTCHA',
+            scripts: [{ hosts: ['www.google.com', 'www.recaptcha.net', 'www.gstatic.com', 'www.gstatic.cn'], path: /^\/recaptcha\//, type: 'recaptcha' }],
+            siteKey: {
+                label: 'sitekey',
+                key: /^6L[0-9A-Za-z_-]{38}$/,
+                rules: [
+                    { type: 'attr', selector: '.g-recaptcha[data-sitekey]', attr: 'data-sitekey', source: 'widget',
+                        fields: { action: 'data-action', size: 'data-size', theme: 'data-theme', callback: 'data-callback' } },
+                    // v3: api.js?render=<key>; v2 and v3: the anchor and challenge frames' k=
+                    { type: 'url', url: /^https:\/\/www\.(?:google\.com|recaptcha\.net)\/recaptcha\/(?:api|enterprise)\.js/, param: 'render' },
+                    { type: 'url', url: /^https:\/\/www\.(?:google\.com|recaptcha\.net)\/recaptcha\/(?:api2|enterprise)\/(?:anchor|bframe)/, param: 'k' },
+                    { type: 'inline', hint: 'grecaptcha', pattern: /(?:render|execute)\([^)]{0,200}?["'](6L[0-9A-Za-z_-]{38})["']/ },
+                    { type: 'inline', hint: '6L', pattern: /sitekey["']?\s*:\s*["'](6L[0-9A-Za-z_-]{38})["']/ },
+                    { type: 'fact', name: 'edition', value: 'Enterprise', url: /^https:\/\/www\.(?:google\.com|recaptcha\.net)\/recaptcha\/enterprise/ },
+                    { type: 'fact', name: 'version', value: 'v3', url: /\/recaptcha\/(?:api|enterprise)\.js\?(?:[^#]*&)?render=6L/ },
+                    { type: 'fact', name: 'version', value: 'v2', selector: '.g-recaptcha[data-sitekey]' }
+                ]
+            }
+        }
+    };
+
     const byVendorId = Object.fromEntries(list.map(vendor => [vendor.vendorId, vendor]));
     const byDetectorId = Object.fromEntries(list.map(vendor => [vendor.detectorId, vendor]));
 
@@ -300,7 +354,7 @@
         };
     }
 
-    const api = Object.freeze({ list: Object.freeze(list), byVendorId, byDetectorId, classify, probeArgs });
+    const api = Object.freeze({ list: Object.freeze(list), byVendorId, byDetectorId, classify, probeArgs, siteKeyOnly: Object.freeze(siteKeyOnly) });
     global.AdvancedCaptchaVendors = api;
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

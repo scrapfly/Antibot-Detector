@@ -1481,6 +1481,7 @@
   "btnExtractSiteKey": {
     "message": "Extraire la SiteKey"
   },
+  "btnExtractPublicKey": { "message": "Extraire la clé publique" },
   "btnObtainSelector": {
     "message": "Obtenir le sélecteur"
   },
@@ -2830,15 +2831,6 @@
   },
   "advRecaptchaExecuteFailedFmt": {
     "message": "Échec de grecaptcha.execute() : {0}"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "Aucune clé de site trouvée"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "Clé de site extraite"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "Clé de site copiée dans le presse-papiers !"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "Callbacks reCAPTCHA"

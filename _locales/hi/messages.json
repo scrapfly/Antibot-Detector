@@ -1481,6 +1481,7 @@
   "btnExtractSiteKey": {
     "message": "SiteKey निकालें"
   },
+  "btnExtractPublicKey": { "message": "पब्लिक की निकालें" },
   "btnObtainSelector": {
     "message": "सेलेक्टर प्राप्त करें"
   },
@@ -2830,15 +2831,6 @@
   },
   "advRecaptchaExecuteFailedFmt": {
     "message": "grecaptcha.execute() विफल: {0}"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "कोई साइट कुंजी नहीं मिली"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "निकाली गई साइट कुंजी"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "साइट कुंजी क्लिपबोर्ड पर कॉपी हो गई!"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA कॉलबैक"

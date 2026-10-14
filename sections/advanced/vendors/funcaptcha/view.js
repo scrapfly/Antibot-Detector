@@ -1,6 +1,10 @@
 FunCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
+                id: 'funcaptchaExtractSiteKey',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractPublicKey')) || 'Extract Public Key')
+            },
+            {
                 id: 'funcaptchaAnalyzeScripts',
                 label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
@@ -25,6 +29,7 @@ FunCaptchaAdvanced.prototype.renderTools = function() {
 
 FunCaptchaAdvanced.prototype.setupToolListeners = function() {
         this.bindToolActions([
+            { id: 'funcaptchaExtractSiteKey', handler: () => this.extractSiteKey() },
             { id: 'funcaptchaAnalyzeScripts', handler: () => this.analyzeScripts() },
             { id: 'funcaptchaStartCapture', handler: () => this.startCapturing() }
         ]);

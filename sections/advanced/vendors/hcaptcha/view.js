@@ -1,6 +1,10 @@
 HCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
+                id: 'hcaptchaExtractSiteKey',
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract Site Key')
+            },
+            {
                 id: 'hcaptchaCheckVersion',
                 label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
                 iconSvg: `
@@ -34,6 +38,7 @@ HCaptchaAdvanced.prototype.renderTools = function() {
 
 HCaptchaAdvanced.prototype.setupToolListeners = function() {
         this.bindToolActions([
+            { id: 'hcaptchaExtractSiteKey', handler: () => this.extractSiteKey() },
             { id: 'hcaptchaCheckVersion', handler: () => this.checkVersion() },
             { id: 'hcaptchaStartCapture', handler: () => this.startCapturing() },
             { id: 'hcaptchaAnalyzeScripts', handler: () => this.analyzeScripts() }

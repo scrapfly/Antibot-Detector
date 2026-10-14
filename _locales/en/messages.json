@@ -1485,6 +1485,7 @@
   "btnExtractSiteKey": {
     "message": "Extract SiteKey"
   },
+  "btnExtractPublicKey": { "message": "Extract Public Key" },
   "btnObtainSelector": {
     "message": "Obtain Selector"
   },
@@ -2907,16 +2908,6 @@
   "advRecaptchaExecuteFailedFmt": {
     "message": "grecaptcha.execute() failed: {0}",
     "description": "{0} = raw error message"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "No sitekey found"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "Extracted SiteKey",
-    "description": "Modal title"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "SiteKey copied to clipboard!"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "reCAPTCHA Callbacks",

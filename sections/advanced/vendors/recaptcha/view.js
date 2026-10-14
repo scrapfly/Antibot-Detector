@@ -98,21 +98,6 @@ ReCaptchaAdvanced.prototype.displaySelectorModal = function(result) {
     };
 
 
-    /**
-     * Display extracted sitekey modal
-     */
-ReCaptchaAdvanced.prototype.displaySiteKeyModal = function(sitekey) {
-        this.recordStructuredResult('displaySiteKeyModal', sitekey);
-        Logger.network('[ReCAPTCHA] displaySiteKeyModal called with:', sitekey);
-        this.openKitModal({
-            title: recaptchaText('advRecaptchaExtractedSiteKey', 'Extracted SiteKey'),
-            subtitle: 'reCAPTCHA',
-            iconSvg: ReCaptchaAdvanced.KIT_ICONS.key,
-            body: BaseAdvancedModule.kitField(recaptchaText('advCommonSiteKey', 'Site Key'), sitekey, { wrap: true }),
-            copiedMessage: recaptchaText('advRecaptchaSiteKeyCopied', 'SiteKey copied to clipboard!')
-        });
-    };
-
 
     /**
      * Display callback functions modal: one card per grecaptcha client

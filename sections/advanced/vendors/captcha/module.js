@@ -27,11 +27,8 @@ class GenericCaptchaAdvanced extends BaseAdvancedModule {
         this.bindToolActions(actions);
     }
 
-    async extractSiteKey() {
-        if (!this.tabInfo || !this.tabInfo.id) throw new Error('Tab information not available');
-        const args = AdvancedCaptchaVendors.probeArgs(this.vendor);
-        const result = await AdvancedSiteKeyProbe.extract(this.tabInfo.id, args);
-        AdvancedSiteKeyView.show(this, this.vendor, result, { classify: url => AdvancedCaptchaVendors.classify(this.vendor, url) });
+    extractSiteKey() {
+        return AdvancedSiteKeyView.extractFor(this, this.vendor);
     }
 
     analyzeScripts() {

@@ -1481,6 +1481,7 @@
   "btnExtractSiteKey": {
     "message": "استخراج SiteKey"
   },
+  "btnExtractPublicKey": { "message": "استخراج المفتاح العام" },
   "btnObtainSelector": {
     "message": "الحصول على المحدِّد"
   },
@@ -2830,15 +2831,6 @@
   },
   "advRecaptchaExecuteFailedFmt": {
     "message": "فشل grecaptcha.execute(): {0}"
-  },
-  "advRecaptchaNoSiteKey": {
-    "message": "لم يُعثر على مفتاح الموقع"
-  },
-  "advRecaptchaExtractedSiteKey": {
-    "message": "مفتاح الموقع المستخرج"
-  },
-  "advRecaptchaSiteKeyCopied": {
-    "message": "تم نسخ مفتاح الموقع إلى الحافظة!"
   },
   "advRecaptchaCallbacksTitle": {
     "message": "دوال رد الاتصال لـ reCAPTCHA"
