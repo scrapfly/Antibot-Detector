@@ -1,3 +1,9 @@
+// Badge per captured request type (background/advanced/vendors/datadome/interceptor.js)
+const DATADOME_SCRIPT_LABELS = {
+    tags: 'tags.js', collector: 'api-js /js/', captchaScript: 'c.js', interstitialScript: 'i.js',
+    challengeScript: 'captcha-delivery', captcha: 'CAPTCHA', captchaCheck: 'CAPTCHA check', interstitial: 'Interstitial'
+};
+
     /**
      * Render DataDome-specific tools
      */
@@ -58,7 +64,7 @@ DataDomeAdvanced.prototype.displayAnalysisModal = function(data) {
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     ${scripts.map((script, idx) => {
-                        const typeLabel = script.type === 'tags' ? 'tags.js' : 'DATADOME';
+                        const typeLabel = DATADOME_SCRIPT_LABELS[script.type] || 'DATADOME';
                         const typeColor = 'linear-gradient(135deg, #22C55E 0%, #16A34A 100%)';
                         return `
                             <div style="background: var(--bg-tertiary); padding: 14px; border-radius: 6px;">

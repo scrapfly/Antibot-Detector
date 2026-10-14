@@ -42,9 +42,32 @@ function handleDataDomeMessage(request, sender, sendResponse) {
  * @returns {Object} Status response
  */
 function datadomeStartAnalysis(tabId, url, requestId) {
-    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'datadome', classify(requestUrl) {
-        return requestUrl.includes('/tags.js') ? 'tags' : null;
-    } });
+    return AdvancedScriptAnalysis.start({ tabId, url, requestId, vendorId: 'datadome', classify: datadomeClassifyUrl });
+}
+
+/**
+ * Which DataDome request a URL is, or null: the JavaScript tag (js.datadome.co
+ * or first-party tags.js), its collector (api-js.datadome.co/js/), and on
+ * captcha-delivery.com the challenge scripts (c.js, i.js) and the CAPTCHA or
+ * interstitial page loaded in the block iframe.
+ */
+function datadomeClassifyUrl(requestUrl) {
+    let parsed;
+    try { parsed = new URL(requestUrl); } catch (_) { return null; }
+    const host = parsed.hostname.toLowerCase();
+    const path = parsed.pathname;
+    if (host === 'captcha-delivery.com' || host.endsWith('.captcha-delivery.com')) {
+        if (path === '/c.js') return 'captchaScript';
+        if (path === '/i.js') return 'interstitialScript';
+        if (path.startsWith('/captcha/check')) return 'captchaCheck';
+        // The pages themselves, not their images, fonts or templates
+        if (path === '/captcha/' || path === '/captcha') return 'captcha';
+        if (path === '/interstitial/' || path === '/interstitial') return 'interstitial';
+        return path.endsWith('.js') ? 'challengeScript' : null;
+    }
+    if (host === 'api-js.datadome.co' && path.startsWith('/js/')) return 'collector';
+    if (path.endsWith('/tags.js')) return 'tags';
+    return null;
 }
 
 // ============================================================================

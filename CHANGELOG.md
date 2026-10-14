@@ -23,6 +23,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: typing in the search box no longer makes the cards flash; they update in place.
 - Advanced → History: the empty "No captures yet" card no longer has a blue strip along its top.
 - Rules editor: "These patterns only count together" can be ticked on a new combination before adding patterns.
+- Advanced → DataDome → Analyze Scripts: now finds the challenge scripts and the CAPTCHA or interstitial page on blocked pages, not only tags.js.
 
 ## [2.8.6] - 2026-10-13
 
