@@ -33,9 +33,11 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 12px;
-  width: 90%;
+  /* Nearly the whole popup: room for the list without much scrolling */
+  width: calc(100% - 20px);
   max-width: 520px;
-  max-height: 85%;
+  height: calc(100% - 20px);
+  max-height: 680px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -71,8 +73,6 @@
   flex: 1 1 auto;
   min-height: 0;
   padding: 20px;
-  height: 400px;
-  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -130,6 +130,17 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+/* The detector's own logo, on a white tile as in the Detection cards */
+.advanced-info-item-icon img {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 4px;
+  border-radius: 8px;
+  background: #ffffff;
+  object-fit: contain;
 }
 
 .advanced-info-item-content {
@@ -219,9 +230,6 @@
 
 /* Responsive */
 @media (max-width: 500px) {
-  .advanced-info-container {
-    width: 95%;
-  }
 
   .advanced-info-body {
     padding: 16px;
