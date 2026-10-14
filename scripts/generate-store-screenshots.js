@@ -1,10 +1,19 @@
-// Chrome Web Store screenshots (1280x800) taken from the real extension.
+// Chrome Web Store screenshots (1280x800) and README close-ups, both taken
+// from the real extension.
 //
 // The unpacked extension is loaded into Chromium, a few made-up demo sites
-// (*.example, served by request interception, no network) are opened so the
-// detectors have something to find, and the real popup is captured per tab.
-// Each capture is then placed next to a headline on the store background, so
-// the images follow every UI change without a hand-drawn copy to keep in sync.
+// (*.example, served by request interception) are opened so the detectors
+// have something to find, and the real popup is captured per tab. The only
+// request let through to the network is the language flag in Settings
+// (flagcdn.com); without a connection that box is simply left empty.
+//
+// Every run writes two sets from the same popup state:
+//   assets/store-screenshots/NN-<tab>-1280x800.png
+//       store banners: the popup at 1x (400x580) placed next to a headline.
+//   assets/readme/<tab>.png  (detection, history, rules, advanced, settings)
+//       the popup alone at 2x (800x1160 px), sharp enough for the README,
+//       where GitHub shrinks a 1280x800 banner until the popup is unreadable.
+// Both follow every UI change, with no hand-drawn copy to keep in sync.
 //
 // Playwright is not a project dependency. Install it anywhere and point at it:
 //   npm i --prefix /tmp/pw playwright && npx --prefix /tmp/pw playwright install chromium
@@ -17,8 +26,11 @@ const { chromium } = require('playwright');
 
 const repoRoot = path.resolve(__dirname, '..');
 const outputDir = path.join(repoRoot, 'assets', 'store-screenshots');
+const closeUpDir = path.join(repoRoot, 'assets', 'readme');
 const viewport = { width: 1280, height: 800 };
 const popupSize = { width: 400, height: 580 };
+// README close-ups: device pixels per CSS pixel.
+const closeUpScale = 2;
 
 // Demo sites. Only *.example hosts and placeholder values: nothing here comes
 // from a real browsing session.
@@ -111,6 +123,27 @@ function demoResponse(site) {
     };
 }
 
+// The Rules list scrolls under a sticky pagination bar, and the first page opens
+// on Akamai, whose method chips take two rows, so the bar covers the second
+// card's version and switch until the list is scrolled. Search for the demo
+// page's vendor instead: real cards, all of them in view.
+const rulesSearch = 'cloudflare';
+
+async function showRulesThatFit(popup) {
+    await popup.fill('#rulesSearch', rulesSearch);
+    await popup.waitForTimeout(800);
+    const hidden = await popup.evaluate(() => {
+        const bar = document.getElementById('rulesPagination');
+        const barTop = bar && bar.offsetParent ? bar.getBoundingClientRect().top : window.innerHeight;
+        return [...document.querySelectorAll('#rulesList .detector-card')]
+            .filter((card) => card.offsetParent && card.getBoundingClientRect().bottom > barTop)
+            .map((card) => card.dataset.detectorId);
+    });
+    if (hidden.length) {
+        throw new Error(`Rules shot: the pagination bar covers ${hidden.join(', ')}; pick another search than "${rulesSearch}"`);
+    }
+}
+
 async function capturePopup(outDir) {
     const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'store-shots-'));
     const context = await chromium.launchPersistentContext(profile, {
@@ -129,6 +162,10 @@ async function capturePopup(outDir) {
             const site = sitesByHost.get(url.hostname);
             if (site && request.resourceType() === 'document') {
                 return route.fulfill(demoResponse(site));
+            }
+            if (url.hostname === 'flagcdn.com') {
+                // The flag beside the language name in Settings.
+                return route.continue().catch(() => {});
             }
             if (/^https?:$/.test(url.protocol)) {
                 // Third-party scripts only need to be requested, not to run.
@@ -180,6 +217,17 @@ async function capturePopup(outDir) {
             };
         }, demoTabId);
 
+        // A persistent context fixes its device scale at launch, so the 2x close-up
+        // switches the scale of this one page through DevTools and back again,
+        // and is captured through DevTools too: page.screenshot() keeps to the
+        // launch scale and would return 400x580.
+        const devtools = await context.newCDPSession(popup);
+        const setScale = async (deviceScaleFactor) => {
+            await devtools.send('Emulation.setDeviceMetricsOverride', { ...popupSize, deviceScaleFactor, mobile: false });
+            await popup.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+            await popup.waitForTimeout(300);
+        };
+
         const captures = {};
         const shoot = async (name) => {
             // Park the pointer where it shows no hover state or tooltip.
@@ -189,6 +237,11 @@ async function capturePopup(outDir) {
             const file = path.join(outDir, `${name}.png`);
             await popup.screenshot({ path: file });
             captures[name] = file;
+
+            await setScale(closeUpScale);
+            const { data } = await devtools.send('Page.captureScreenshot', { format: 'png' });
+            fs.writeFileSync(path.join(closeUpDir, `${name}.png`), Buffer.from(data, 'base64'));
+            await setScale(1);
         };
 
         // The last demo page may still be scanning: reopen the popup until its results are in.
@@ -203,6 +256,7 @@ async function capturePopup(outDir) {
         for (const tab of ['history', 'rules', 'advanced']) {
             await popup.click(`[data-tab="${tab}"]`);
             await popup.waitForTimeout(1500);
+            if (tab === 'rules') await showRulesThatFit(popup);
             await shoot(tab);
         }
 
@@ -293,10 +347,12 @@ function storeHtml(page, captureFile) {
 
 async function main() {
     fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(closeUpDir, { recursive: true });
     const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'store-captures-'));
 
     try {
         const captures = await capturePopup(workDir);
+        for (const name of Object.keys(captures)) console.log(`Wrote assets/readme/${name}.png`);
         const browser = await chromium.launch({ channel: 'chromium', headless: true });
         try {
             for (const page of pages) {

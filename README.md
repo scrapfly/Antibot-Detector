@@ -1,10 +1,10 @@
 <div align="center">
 
-<img src="https://github.com/user-attachments/assets/e36a7a2d-6e49-49f7-91e5-811153b5b6f6" alt="Scrapfly Anti-bot Detector listing the protections found on a page, each with a confidence score" width="880">
+<img src="assets/readme/hero.png" alt="Scrapfly Anti-bot Detector listing the protections found on a page, each with its category and a confidence score" width="880">
 
 # Scrapfly Anti-bot Detector
 
-**See how a website defends itself against bots: which anti-bot system, which CAPTCHA, which fingerprinting scripts, and how sure each match is.**
+**See how a website defends itself against bots: which anti-bot system, which captcha, which fingerprinting scripts, and how sure each match is.**
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/pdpakdgmjhkfimgaihlgaaiijlbilkca?label=Chrome%20Web%20Store&logo=googlechrome&logoColor=white&color=4285F4)](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca)
 [![Users](https://img.shields.io/chrome-web-store/users/pdpakdgmjhkfimgaihlgaaiijlbilkca?color=4285F4)](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca)
@@ -20,7 +20,7 @@
 
 Scrapfly Anti-bot Detector is a free Chrome extension that shows how a website protects itself from automated traffic. Browse as you normally would: the number on the toolbar icon tells you how many protections the page uses, and the popup lists each one with its confidence, its difficulty and the signals that gave it away.
 
-It recognizes 62 technologies out of the box: 25 anti-bot systems, 16 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and rule updates are published in this repository, so the extension can pick them up without waiting for a new release.
+It recognizes 68 technologies out of the box: 28 anti-bot systems, 19 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
 
 We built it at [Scrapfly](https://scrapfly.io) because every scraping project starts with the same question: what is protecting this page? It is just as useful for checking how your own site's bot protection looks from the outside, or for security research.
 
@@ -42,11 +42,11 @@ We built it at [Scrapfly](https://scrapfly.io) because every scraping project st
 
 | Detection | History | Rules |
 | :---: | :---: | :---: |
-| <img src="assets/store-screenshots/01-detection-1280x800.png" alt="Detection tab listing Cloudflare Bot Management, Google reCAPTCHA and Canvas Fingerprint with their confidence and difficulty" width="300"> | <img src="assets/store-screenshots/02-history-1280x800.png" alt="History tab with past scans, each showing the protections found and the page difficulty" width="300"> | <img src="assets/store-screenshots/03-rules-1280x800.png" alt="Rules tab listing built-in detectors with the detection methods each one uses" width="300"> |
+| <img src="assets/readme/detection.png" alt="Detection tab: the page's detections, confidence, difficulty and cache, then cards for Cloudflare Bot Management and Google reCAPTCHA with their confidence and difficulty" width="280"> | <img src="assets/readme/history.png" alt="History tab with three scanned pages, each showing its address, number of protections, confidence, difficulty and count per category" width="280"> | <img src="assets/readme/rules.png" alt="Rules tab with Add and Update buttons and detector cards showing each one's category, detection methods, version and on/off switch" width="280"> |
 
-| Advanced tools | Settings |
+| Advanced | Settings |
 | :---: | :---: |
-| <img src="assets/store-screenshots/04-advanced-tools-1280x800.png" alt="Advanced tab offering capture tools for Cloudflare Bot Management and Google reCAPTCHA" width="300"> | <img src="assets/store-screenshots/05-settings-1280x800.png" alt="Settings with notifications, language, debug mode and detector updates" width="300"> |
+| <img src="assets/readme/advanced.png" alt="Advanced tab offering tools for Cloudflare Bot Management and Google reCAPTCHA, with captures kept for 30 minutes" width="280"> | <img src="assets/readme/settings.png" alt="Settings, General tab: notifications, language, theme, debug mode and detector updates" width="280"> |
 
 ## Install
 
@@ -91,25 +91,25 @@ When a page loads, the extension gathers what the page reveals about itself and 
 
 **Fingerprinting.** The API hooks are in place before the page's own scripts run, and they also cover same-origin iframes, where fingerprinting code often hides. By default they watch for at least 4 seconds, then until the page has been quiet for 2 seconds, and for 8 seconds at most.
 
-**Caching.** A result is reused for 12 hours by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads.
+**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads.
 
 ## What it detects
 
 The lists below are the detectors that ship with the extension. You can switch any of them off, edit them or add your own in the Rules tab.
 
 <details>
-<summary><b>Anti-bot systems (25)</b></summary>
+<summary><b>Anti-bot systems (28)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Anubis · AWS WAF · Azure Front Door · Cheq · Cloudflare Bot Management · DataDome · F5 BIG-IP ASM · FingerprintJS · Google BotGuard · Incapsula (Imperva) · Jiasule (Chuangyu Shield) · Kasada · Meetrics Check · Netacea · Ocule · PerimeterX · Radware Bot Manager · Reblaze · Ruishu · Shape Security · Sucuri WAF · ThreatMetrix · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · F5 BIG-IP ASM · FingerprintJS · Google BotGuard · Hunt · Incapsula (Imperva) · Jiasule (Chuangyu Shield) · Kasada · Meetrics Check · Netacea · Ocule · PerimeterX · Radware Bot Manager · Reblaze · Ruishu · Shape Security · Sucuri WAF · ThreatMetrix · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (16)</b></summary>
+<summary><b>CAPTCHAs (19)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · Capy Puzzle Captcha · Captcha.eu · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · MTCaptcha · NetEase Yidun · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · Basilisk Captcha · Binance Captcha · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -130,22 +130,21 @@ The protections found on the current page, each with its confidence, its difficu
 - **Upload detections** to get a shareable link (dpaste.com by default; see [Share links](#share-links))
 - **Clear Cache**, so the page is scanned again on its next load
 - **Copy overview**, which copies the same summary that the upload shares
-- **Scrape with Scrapfly**, for ready-to-run code that fetches the page with Scrapfly's Unblocker (see [Scrape with Scrapfly](#scrape-with-scrapfly))
 - **Block this domain**, so the extension stops scanning it
 
 ### History
 
-Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, export it as JSON, CSV or plain text, and import a JSON export. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains and confidence) computed locally from your history.
+Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, export it as JSON, CSV or plain text, and import a JSON export. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
 
 ### Rules
 
 All detectors, built-in and your own. Turn each one on or off, open the editor to change its patterns, or add a detector of your own with **Add**. The **More actions** menu (⋯) imports and exports detectors as JSON. Every pattern has its own settings: where to look (the page, scripts or all requests; request or response for cookies and headers), whether it is a regular expression, whole word or case sensitive, and its confidence. The editor also handles combinations and the detector's icon, and a regex helper lets you test a pattern against sample text.
 
-**Update** downloads the latest official detectors from this repository. A built-in detector you have edited is never replaced without asking: you choose between your version and the new one. If you delete a built-in detector, **Restore official detectors** in the same menu brings it back. Detector updates can also run on a schedule (Settings → General).
+**Update** downloads the official detectors of this repository's latest release. A built-in detector you have edited is never replaced without asking: you choose between your version and the new one. If you delete a built-in detector, **Restore official detectors** in the same menu brings it back. Detector updates can also run on a schedule (Settings → General).
 
 ### Advanced
 
-Hands-on tools for the protections a page uses. A protection gets its tools when it is detected above 50% confidence; you can change that limit in Settings → Detection → Advanced tools.
+Hands-on tools for the protections a page uses. A protection gets its tools when it is detected above 50% confidence; you can change that limit in Settings → Detection → Advanced tools. When nothing on the page qualifies, the tab says so, gives that minimum (or names the protection found below it) and shows the 25 supported protections.
 
 | Protection | Tools |
 | --- | --- |
@@ -154,20 +153,22 @@ Hands-on tools for the protections a page uses. A protection gets its tools when
 | Cloudflare Bot Management | Check Cookies · Extract SiteKey · Analyze Scripts |
 | Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
 | DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Analyze Scripts · Start Capturing |
+| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
 | GeeTest | Check Version · Analyze Scripts |
 | Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Check Version · Analyze Scripts · Start Capturing |
+| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
 | Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
 | Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
+| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-Every protection in the list also gets **Scrape with Scrapfly**. Results and captures are kept for 30 minutes in **Advanced → History**, where you can filter them by site, vendor and tool, open them again and export them.
+Results and captures are kept for 30 minutes in **Advanced → History**, where you can filter them by site, vendor and tool, open them again and export them.
 
 ### Settings
 
-- **General:** interface language (12 languages, following your browser by default), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
+- **General:** interface language (12 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, blacklisted domains, JS API events, webhooks and share links.
-- **History:** how many entries to keep (up to 10,000; 0 means no limit), deleting entries after a number of days, skipping duplicates and the default export format.
+- **History:** how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days, skipping duplicates and the default export format.
 - **Data:** open the statistics page, and export or import your settings and your history.
 
 ## Integrations
@@ -196,13 +197,7 @@ on('onDetection', (e) => {
 });
 ```
 
-Because these events reach the page itself, any website you visit can listen for them and learn that the extension is installed. They are on by default; turn them off in Settings → Detection → JS API Events if you would rather not reveal that.
-
-### Scrape with Scrapfly
-
-**Scrape with Scrapfly** on the Detection tab, or in any protection's Advanced tools, shows ready-to-run code that fetches the page through [Scrapfly's Web Scraping API](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) with the Unblocker on (`unblocker=true`). The Unblocker picks the browser, proxies and headers by itself, and costs nothing extra when the site doesn't block.
-
-Pick Python, Node.js, cURL, the Scrapfly CLI, Go or Rust, and copy the code. It reads your API key from the `SCRAPFLY_API_KEY` environment variable ([get one here](https://scrapfly.io/register)), and the extension itself sends nothing. When the page has a CAPTCHA, the dialog says so: the Unblocker avoids or solves it to return the page, but it doesn't fill in CAPTCHAs on forms.
+Because these events reach the page itself, any website you visit can listen for them and learn that the extension is installed. They are off by default; turn them on in Settings → Detection → JS API Events.
 
 ### Webhooks
 
@@ -217,8 +212,8 @@ When a scan finds protections, the extension can send the results to your own en
 Detection runs entirely in your browser. There are no accounts and no analytics, and nothing about the pages you visit is sent to Scrapfly. The extension does make a few network requests, and you should know what they are:
 
 - **Script contents.** To read a script's code, it downloads the page's scripts and stylesheets again, through the browser cache and without cookies.
-- **Detector updates.** **Update**, or the optional schedule, reads detector files from this repository on `raw.githubusercontent.com`.
-- **Site icons.** The popup shows each site's own icon, loaded from the address the site gives. When no usable icon was found, it uses Google's favicon service instead, which receives only the domain. The webhook's `<FAVICON>` variable always points to Google's service.
+- **Detector updates.** **Update**, or the optional schedule, asks `api.github.com` for this repository's latest release, then reads that release's detector files from `raw.githubusercontent.com`.
+- **Site icons.** History and other lists show a site's own favicon, or ask Google's favicon service when the site has none.
 - **Language flags.** The language picker in Settings loads its flags from `flagcdn.com`.
 - **Only when you use them:** webhooks and share links, as described above. JS API events never leave the browser, but the page you visit can read them (see [JavaScript events](#javascript-events)).
 
@@ -254,7 +249,7 @@ content-main-world.js    Page-world hooks, installed before the page's scripts
 modules/                 Detection engine, core services, UI helpers, styles
 popup.html, popup.js     The popup
 sections/                One folder per tab: detection, history, rules, advanced, settings, stats
-detectors/               Detector rules (JSON), index.json and icons
+detectors/               Detector rules (JSON), index.json, icons and rule translations
 _locales/                Translations for the 12 languages
 utils/                   Shared helpers
 scripts/                 Repository checks and browser tests
@@ -268,6 +263,7 @@ npm run verify            # everything below, as CI runs it
 npm run check:syntax      # node --check on every JavaScript file
 npm run check:structure   # HTML tag balance, JSON validity, modal markup
 npm run check:locale      # every language has exactly the keys of English
+npm run check:rule-i18n   # every rule text is translated in detectors/i18n/
 npm test                  # unit tests on Node's built-in test runner
 ```
 
@@ -374,15 +370,16 @@ To add one:
 
 1. Create `detectors/<category>/detect-<name>.json`, where the category is `antibot`, `captcha` or `fingerprint`.
 2. Add its `id` to the matching list in [`detectors/index.json`](detectors/index.json).
-3. Put its logo in `detectors/icons/`, or use `custom.png`.
-4. For anti-bot and CAPTCHA detectors, add a real example of each rule's signal to `test/fixtures/antibot-confidence.json` or `test/fixtures/captcha-confidence.json`. Then run `npm run verify`.
-5. Check it on a live page by adding the site to `scripts/live-sites.json` and running `npm run e2e:live`.
+3. Put its logo in `detectors/icons/`, or use `custom.png` (the Scrapfly logo).
+4. Translate each rule description and combination name in every `detectors/i18n/<locale>.json`. `node scripts/check-rule-i18n.js --missing` lists the texts still missing.
+5. For anti-bot and CAPTCHA detectors, add a real example of each rule's signal to `test/fixtures/antibot-confidence.json` or `test/fixtures/captcha-confidence.json`. Then run `npm run verify`.
+6. Check it on a live page by adding the site to `scripts/live-sites.json` and running `npm run e2e:live`.
 
 A few things to keep in mind:
 
-- **Keep single signals modest.** One anti-bot rule scores at most 90%, and 95% needs two independent signals in a combination. CAPTCHA rules stay between 1% and 60% and reach high confidence through combinations. A rule marked `"standalone": false` only counts inside a combination. The tests check these limits.
+- **Keep single signals modest.** One anti-bot rule scores at most 90%, and 95% needs two independent signals in a combination. The exception is a signal no other vendor produces, such as Akamai's `_abck` cookie, which counts as proof (100%) on its own. CAPTCHA rules stay between 1% and 60% and reach high confidence through combinations. A rule marked `"standalone": false` only counts inside a combination. The tests check these limits.
 - **Raise `version` whenever you change a detector's rules,** or Rules → Update will not offer the new version.
-- **Mind `minExtensionVersion`.** Rules → Update serves detectors from the `main` branch to every installed copy of the extension, so a detector that relies on newer engine features must declare the oldest extension version that understands it. Older copies then skip it.
+- **Mind `minExtensionVersion`.** Rules → Update serves the detectors of the latest release to every installed copy of the extension (2.8.2 and older read the `main` branch instead), so a detector that relies on newer engine features must declare the oldest extension version that understands it. Older copies then skip it, and 2.8.3 and newer list it as waiting for an extension update.
 
 ## Contributing
 

@@ -139,3 +139,5 @@ assets/*
 !assets/store-screenshots/**
 !assets/fonts/
 !assets/fonts/**
+!assets/readme/
+!assets/readme/**
