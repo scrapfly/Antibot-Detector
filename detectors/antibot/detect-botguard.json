@@ -6,7 +6,7 @@
   "category": "Anti-Bot",
   "difficulty": "High",
   "lastUpdated": "2026-10-15",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "minExtensionVersion": "2.8",
   "website": "https://developers.google.com/recaptcha",
   "icon": "custom.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "botguard-interpreter",
-        "confidence": 75,
+        "confidence": 100,
         "description": "BotGuard interpreter script (//www.google.com/js/th/<hash>.js)",
         "text": "^https://www\\.google\\.com/js/th/[A-Za-z0-9_-]{30,60}\\.js(?:[?#]|$)",
         "textRegex": true,

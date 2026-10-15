@@ -89,12 +89,12 @@ const matched = (detector, result, id) => result.matches.some(m => Array.from(Co
 
 // Signals only one vendor ever produces count as proof on their own (100%):
 // Akamai's _abck cookie and its Pixel challenge variable, BotGuard's
-// interpreter script at www.google.com/js/bg/<hash>.js, Cloudflare's
+// interpreter scripts at www.google.com/js/bg/ and /js/th/<hash>.js, Cloudflare's
 // /cdn-cgi/challenge-platform/ challenge and bot-detection requests (not on
 // Turnstile's own host), DeepSeek's create_pow_challenge and ChatGPT's
 // Sentinel chat-requirements endpoints
 const PROOF = new Set(['detect-akamai/abck-sensor-cookie', 'detect-akamai/abck-cookie-name', 'detect-akamai/pixel-variable',
-  'detect-botguard/botguard-bg-interpreter', 'detect-cloudflare/challenge-orchestrator', 'detect-cloudflare/bot-management-script',
+  'detect-botguard/botguard-bg-interpreter', 'detect-botguard/botguard-interpreter', 'detect-cloudflare/challenge-orchestrator', 'detect-cloudflare/bot-management-script',
   'detect-cloudflare/jsd-oneshot', 'detect-deepseek-pow/pow-challenge-endpoint', 'detect-openai-sentinel/chat-requirements']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
@@ -190,7 +190,7 @@ for (const d of Object.values(definitions)) {
 const benign = {
   'detect-akamai': { headers: { server: 'AkamaiGHost' }, cookies: ['AKA_A2', 'bm_s'], urls: ['https://github.com/a/b/blob/main/src/x', 'https://example.test/akamai/13/x.js'] },
   'detect-aws-waf': { urls: ['https://example.test/static/challenge.js', 'https://example.test/api/verify', 'https://example.test/telemetry', 'https://example.test/inputs?client=browser'] },
-  'detect-botguard': { urls: ['https://www.google.com/recaptcha/api.js', 'https://www.google.com/js/bg/abc.js',
+  'detect-botguard': { urls: ['https://www.google.com/recaptcha/api.js', 'https://www.google.com/js/bg/abc.js', 'https://www.google.com/js/th/abc.js',
     'https://mail.google.com/mail/u/0/', 'https://mail.google.com/mail/u/0/?view=waa', 'https://mail.google.com/mail/u/0/waaffle'], sources: ["var mode = 'botguard';"] },
   'detect-cheq': { sources: ["var cheque = 'cheq';"], urls: ['https://example.test/cheq.js'] },
   'detect-cloudflare': { headers: { server: 'cloudflare', 'cf-ray': '8c1-AMS' }, urls: ['https://example.test/cdn-cgi/l/email-protection', 'https://challenges.cloudflare.com/turnstile/v0/api.js',
