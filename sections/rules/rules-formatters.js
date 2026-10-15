@@ -512,6 +512,13 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
       if (isFingerprintCategory) {
         return wrapFingerprintImage(`detectors/icons/${detector.icon}`, namedIconAlt, 'builtin', scrapflyIcon);
       }
+      // Brand logos: the dark theme shows the copy without the icon's white square
+      // (assets/logos-dark/, scripts/generate-dark-logos.js) on a tile; the light theme the original
+      if (/_official\.png$/.test(detector.icon)) {
+        const icon = escAttr(detector.icon);
+        return `<span class="detector-logo"><img src="assets/logos-dark/${icon}" alt="${namedIconAlt}" class="detector-icon-img detector-logo-dark" data-fallback="detectors/icons/${icon}">`
+          + `<img src="detectors/icons/${icon}" alt="" class="detector-icon-img detector-logo-light" data-fallback="${scrapflyIcon}"></span>`;
+      }
       return `<img src="detectors/icons/${detector.icon}" alt="${namedIconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
     // Otherwise return as emoji or text

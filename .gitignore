@@ -141,3 +141,5 @@ assets/*
 !assets/fonts/**
 !assets/readme/
 !assets/readme/**
+!assets/logos-dark/
+!assets/logos-dark/**

@@ -363,6 +363,29 @@
   object-fit: contain;
 }
 
+/* Brand logos on a dark tile, as in Advanced's supported protections: the
+   copy without the icon's white square. The light theme shows the original */
+.detector-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--bg-primary);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.detector-logo .detector-icon-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+}
+
+.detector-logo .detector-logo-light {
+  display: none;
+}
+
 /* Fingerprint SVG icons */
 .detector-icon-svg {
   width: 32px;

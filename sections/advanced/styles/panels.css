@@ -121,7 +121,9 @@
   list-style: none;
 }
 
-/* Logos on white tiles, as in the info window */
+/* Logos on dark tiles: assets/logos-dark/ has each logo without the white
+   square baked into the icon (scripts/generate-dark-logos.js). The light
+   theme shows the original icons on white tiles. */
 .advanced-supported-logo {
   display: inline-flex;
   align-items: center;
@@ -129,14 +131,18 @@
   width: 28px;
   height: 28px;
   border-radius: 7px;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  background: var(--bg-primary);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
 .advanced-supported-logo img {
   width: 20px;
   height: 20px;
   object-fit: contain;
+}
+
+.advanced-supported-logo .advanced-supported-logo-light {
+  display: none;
 }
 
 /* Filters Actions Row */

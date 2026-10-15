@@ -69,3 +69,39 @@
   background: rgba(26, 115, 199, 0.08);
   border-color: var(--accent);
 }
+
+/* Advanced supported protections: the original logos on white tiles */
+:root[data-theme="light"] .advanced-supported-logo {
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .advanced-supported-logo .advanced-supported-logo-dark {
+  display: none;
+}
+
+:root[data-theme="light"] .advanced-supported-logo .advanced-supported-logo-light {
+  display: inline;
+}
+
+/* Rules cards: the original logo, untiled, as before */
+:root[data-theme="light"] .detector-logo {
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+}
+
+:root[data-theme="light"] .detector-logo .detector-icon-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+:root[data-theme="light"] .detector-logo .detector-logo-dark {
+  display: none;
+}
+
+:root[data-theme="light"] .detector-logo .detector-logo-light {
+  display: inline;
+}

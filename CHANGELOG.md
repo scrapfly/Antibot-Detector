@@ -12,6 +12,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: a combination's "Combinations only" row shows how many of its patterns are marked and offers Mark all / Unmark all, instead of a half-ticked checkbox.
 - Advanced → History: every card shows the tool that made it as a tag, Analyze Scripts and captures included, and the tool filter lists Analyze Scripts results under their own name.
 - Detection: Google BotGuard's own script (www.google.com/js/bg/…) is proof on its own, so it shows 100% instead of 75%.
+- Dark theme: protection logos in Rules and in Advanced's supported protections sit on dark tiles instead of white squares; the light theme is unchanged.
 
 ### Removed
 

@@ -331,12 +331,19 @@ test('the no-tools screen groups supported protections by category, with logos a
   const Advanced = context.window.Advanced;
   const groups = Advanced.supportedProtectionGroups();
   assert.deepEqual(plain(groups.map(group => [group.key, group.items.length])), [['antibot', 6], ['captcha', 19]]);
-  for (const group of groups) for (const item of group.items) assert.ok(fs.existsSync(path.join(root, 'detectors/icons', item.logo)), item.logo);
+  for (const group of groups) for (const item of group.items) {
+    assert.ok(fs.existsSync(path.join(root, 'detectors/icons', item.logo)), item.logo);
+    // The dark theme's copy without the white square: node scripts/generate-dark-logos.js
+    assert.ok(fs.existsSync(path.join(root, 'assets/logos-dark', item.logo)), `assets/logos-dark/${item.logo}: run scripts/generate-dark-logos.js`);
+  }
   const html = Advanced.prototype.renderNoToolsState.call({ detectorManager: null }, (key, fallback) => fallback);
   assert.equal((html.match(/class="advanced-supported-logo[" ]/g) || []).length, 25);
   assert.equal((html.match(/class="advanced-supported-group"/g) || []).length, 2);
   assert.doesNotMatch(html, /advanced-supported-chip/);
-  assert.match(html, /title="Friendly Captcha"><img src="detectors\/icons\/custom\.png"/, 'no official logo: the Scrapfly default, as in Rules');
+  assert.match(html, /title="Friendly Captcha"><img class="advanced-supported-logo-dark" src="assets\/logos-dark\/custom\.png"[^>]*><img class="advanced-supported-logo-light" src="detectors\/icons\/custom\.png"/,
+    'no official logo: the Scrapfly default, as in Rules; the dark copy first, the original for the light theme');
+  const light = fs.readFileSync(path.join(root, 'modules/styles/theme-light.css'), 'utf8');
+  assert.match(light, /:root\[data-theme="light"\] \.advanced-supported-logo \.advanced-supported-logo-dark \{\s*display: none;/);
   // Nothing detected: the minimum and where to change it
   assert.match(html, /No protection detected/);
   assert.match(html, /above 50% confidence/);

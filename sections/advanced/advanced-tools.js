@@ -193,7 +193,7 @@ Advanced.prototype.renderNoToolsState = function(tr) {
                     <span class="advanced-supported-count">${group.items.length}</span>
                   </div>
                   <ul class="advanced-supported-logos">
-                    ${group.items.map(item => `<li class="advanced-supported-logo" title="${esc(item.name)}"><img src="detectors/icons/${esc(item.logo)}" alt="${esc(item.name)}" width="20" height="20" loading="lazy"></li>`).join('')}
+                    ${group.items.map(item => `<li class="advanced-supported-logo" title="${esc(item.name)}"><img class="advanced-supported-logo-dark" src="assets/logos-dark/${esc(item.logo)}" alt="${esc(item.name)}" width="20" height="20" loading="lazy"><img class="advanced-supported-logo-light" src="detectors/icons/${esc(item.logo)}" alt="" width="20" height="20" loading="lazy"></li>`).join('')}
                   </ul>
                 </div>`).join('');
 
