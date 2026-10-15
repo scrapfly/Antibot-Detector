@@ -352,9 +352,12 @@
 }
 
 /* Method name: the same readable chip as the Rules/Detection cards (.method-tag);
-   colours come inline from the method's tag colour */
+   colours come inline from the method's tag colour. Unlike the cards' chips it
+   may shrink: a long name ("Interceptores de JavaScript") is cut with "…"
+   instead of running under the pattern count; hovering shows it whole */
 #editRuleModal .method-title {
   display: inline-block;
+  flex-shrink: 1;
   min-width: 0;
   max-width: 100%;
   height: 26px;

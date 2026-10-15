@@ -162,3 +162,16 @@ test('the editor title is one format key with the localised default name', () =>
   english.openEditModal({ name: '' }, 'antibot', 'custom-1', true);
   assert.strictEqual(englishElements['#editRuleModalAction'].textContent, 'Add New detector');
 });
+
+test('a long method name in the rule editor is cut with "…", never drawn under the pattern count', () => {
+  const css = fs.readFileSync(path.join(__dirname, '..', 'sections/rules/styles/method-settings.css'), 'utf8');
+  const rule = css.match(/#editRuleModal \.method-title \{([^}]*)\}/);
+  assert.ok(rule, 'editor method title rule');
+  // .method-tag sets flex-shrink: 0 for the cards; the editor row must let it shrink
+  assert.match(rule[1], /flex-shrink:\s*1;/);
+  assert.match(rule[1], /min-width:\s*0;/);
+  assert.match(rule[1], /overflow:\s*hidden;/);
+  assert.match(rule[1], /text-overflow:\s*ellipsis;/);
+  const editor = fs.readFileSync(path.join(__dirname, '..', 'sections/rules/rules-editor.js'), 'utf8');
+  assert.match(editor, /renderMethodChip\(methodType, 'method-title', \{ title: this\.getMethodLabel\(methodType\) \}\)/, 'hovering shows the whole name');
+});

@@ -20,6 +20,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced: script lists for Captcha.eu, Prosopo, MTCaptcha and Capy no longer include files from the vendor's own website.
 - Cloudflare: detection and Check Cookies now see cf_clearance, a partitioned cookie; Analyze Scripts clears it first so the bot-management scripts load again.
 - Advanced: the Check Cookies notification shows the same count as the cookie window.
+- Rules editor: a long method name, such as "Interceptores de JavaScript", no longer runs into its pattern count; it is cut with "…" and shown whole on hover.
 
 ## [2.8.7] - 2026-10-14
 

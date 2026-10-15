@@ -121,7 +121,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               <svg class="method-collapse-icon" width="16" height="16" viewBox="0 0 24 24">
                 <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
               </svg>
-              ${this.renderMethodChip(methodType, 'method-title')}
+              ${this.renderMethodChip(methodType, 'method-title', { title: this.getMethodLabel(methodType) })}
             </div>
             <span class="method-pattern-count">${patternCountText}</span>
             ${methodHelper}
