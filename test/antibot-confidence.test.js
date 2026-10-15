@@ -87,8 +87,10 @@ function detect(detector, { page, windowIds = [] }) {
 const matched = (detector, result, id) => result.matches.some(m => Array.from(Combinations.matchPatternIds(detector, m)).includes(id));
 
 // Signals only one vendor ever produces count as proof on their own (100%):
-// Akamai's _abck cookie and its Pixel challenge variable
-const PROOF = new Set(['detect-akamai/abck-sensor-cookie', 'detect-akamai/abck-cookie-name', 'detect-akamai/pixel-variable']);
+// Akamai's _abck cookie and its Pixel challenge variable, and BotGuard's
+// interpreter script at www.google.com/js/bg/<hash>.js
+const PROOF = new Set(['detect-akamai/abck-sensor-cookie', 'detect-akamai/abck-cookie-name', 'detect-akamai/pixel-variable',
+  'detect-botguard/botguard-bg-interpreter']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
 test('twenty-eight anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
