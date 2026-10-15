@@ -3030,7 +3030,7 @@
   "advAwswafTypeChallenge": {
     "message": "챌린지"
   },
-  "advAwswafDeletingCookieFmt": {
+  "advCommonDeletingCookieFmt": {
     "message": "{0} 쿠키를 삭제하는 중… 페이지가 새로고침됩니다"
   },
   "advCloudflareTypeLabel": {

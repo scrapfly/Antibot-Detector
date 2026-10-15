@@ -6,11 +6,11 @@ CloudflareAdvanced.prototype.checkCookies = async function() {
             // Bot management, clearance, rate limiting, load balancer and challenge-in-progress cookies
             const expected = ['__cf_bm', 'cf_clearance', '_cfuvid', '__cflb', 'cf_chl_*'];
             const matches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
-            const cookies = (await chrome.cookies.getAll({ url: this.tabInfo.url }))
+            const cookies = (await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id))
                 .filter(cookie => expected.some(pattern => matches(pattern, cookie.name)));
-            const found = expected.filter(pattern => cookies.some(cookie => matches(pattern, cookie.name))).length;
-            if (found > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(found, expected.length));
+            // Same count as the window, which lists every matching cookie
+            if (cookies.length > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(cookies.length, Math.max(expected.length, cookies.length)));
             } else {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Cloudflare'));
             }
@@ -43,5 +43,6 @@ CloudflareAdvanced.prototype.extractSiteKey = async function() {
 
 
 CloudflareAdvanced.prototype.analyzeScripts = function() {
-        return this.startScriptAnalysis();
+        // Cloudflare injects its bot-management scripts only until cf_clearance is set
+        return this.startScriptAnalysis({ clearCookies: ['cf_clearance'] });
     };

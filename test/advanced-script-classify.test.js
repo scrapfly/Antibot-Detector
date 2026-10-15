@@ -26,6 +26,8 @@ const cases = {
     'https://challenges.cloudflare.com/turnstile/v0/api.js': 'Turnstile',
     'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/chl_page/v1': 'Challenge',
     'https://shop.example/cdn-cgi/challenge-platform/scripts/jsd/main.js': 'Bot Management',
+    'https://discord.com/cdn-cgi/challenge-platform/h/g/scripts/jsd/4df4a60fa397/main.js?': 'Bot Management',
+    'https://discord.com/cdn-cgi/challenge-platform/h/g/jsd/oneshot/4df4a60fa397/0.2196043795212944:1792044921:RdFZiIzX/a4acce7e0e674f18': 'Bot Management',
     'https://shop.example/cdn-cgi/challenge-platform/h/g/orchestrate/jsch/v1': 'Challenge',
     'https://shop.example/cdn-cgi/bm/cv/669835187/api.js': 'Bot Management',
     'https://shop.example/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js': 'CDN',

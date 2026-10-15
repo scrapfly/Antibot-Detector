@@ -44,7 +44,7 @@ function harness() {
   for (const key of ['detectionStates', 'activeDetections', 'interruptedDetections', 'finalizationDebounce', 'batchProcessingFlags',
     'payloadStore', 'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore']) context[key] = new Map();
   vm.createContext(context);
-  for (const file of ['modules/core/badge-constants.js', 'background/detection-session-store.js', 'background/utilities.js', 'background/detection-lifecycle.js']) {
+  for (const file of ['modules/core/badge-constants.js', 'utils/page-cookies.js', 'background/detection-session-store.js', 'background/utilities.js', 'background/detection-lifecycle.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const begin = (url = 'https://example.test/') => {

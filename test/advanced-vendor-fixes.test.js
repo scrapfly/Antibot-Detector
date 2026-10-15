@@ -104,6 +104,7 @@ test('Imperva: Check Cookies counts ___utmvc', async () => {
   context.ImpervaAdvanced.tr = (key, fallback) => fallback;
   context.ImpervaAdvanced.fmt = (key, fallback) => fallback;
   vm.createContext(context);
+  vm.runInContext(read('utils/page-cookies.js'), context);
   vm.runInContext(read('sections/advanced/vendors/imperva/actions.js'), context);
   const module = new context.ImpervaAdvanced();
   module.tabInfo = { id: 1, url: 'https://shop.example/' };
@@ -158,6 +159,7 @@ test('Akamai: Start Capture checks for a running capture before deleting _abck',
     chrome: { cookies: { getAll: async () => [{ name: '_abck', value: 'v' }], remove: async query => calls.push(['remove', query.name]) } } };
   context.AkamaiAdvanced.tr = (key, fallback) => fallback;
   vm.createContext(context);
+  vm.runInContext(read('utils/page-cookies.js'), context);
   vm.runInContext(read('sections/advanced/vendors/akamai/lifecycle.js'), context);
   const module = new context.AkamaiAdvanced();
   module.tabInfo = { id: 1, url: 'https://shop.example/' };

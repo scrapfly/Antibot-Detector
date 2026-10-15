@@ -394,7 +394,7 @@ async function checkImpervaCookies(tabId, url) {
             { name: { pattern: 'incap_ses_\\d+_\\d+', regex: true }, returnValue: false },
             { name: { pattern: 'nlbi_\\d+', regex: true }, returnValue: false },
             { name: { pattern: 'visid_incap_\\d+', regex: true }, returnValue: false }
-        ]);
+        ], tabId);
 
         if (impervaCaptureStateRef.get(tabId) !== state) return;
 
@@ -497,7 +497,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
             { name: { pattern: 'incap_ses_\\d+_\\d+', regex: true }, returnValue: false },
             { name: { pattern: 'nlbi_\\d+', regex: true }, returnValue: false },
             { name: { pattern: 'visid_incap_\\d+', regex: true }, returnValue: false }
-        ]);
+        ], tab.id);
         Logger.network('[IMPERVA-CAPTURE] Total Imperva cookies found:', cookies.length);
 
         const hasReese84 = cookies.some(c => c.name === 'reese84');
@@ -640,7 +640,7 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
             { name: { pattern: 'incap_ses_\\d+_\\d+', regex: true }, returnValue: true },
             { name: { pattern: 'nlbi_\\d+', regex: true }, returnValue: true },
             { name: { pattern: 'visid_incap_\\d+', regex: true }, returnValue: true }
-        ]);
+        ], tab.id);
 
         // Organize cookies by type
         const cookieData = {

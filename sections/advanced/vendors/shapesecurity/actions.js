@@ -51,7 +51,7 @@ ShapeSecurityAdvanced.prototype.checkCookies = async function() {
             }
 
             // Get cookies directly without reload (like AWS WAF/Akamai)
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
+            const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
             Logger.network('[ShapeSecurity] Total cookies found:', cookies.length);
             Logger.network('[ShapeSecurity] URL:', this.tabInfo.url);
 

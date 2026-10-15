@@ -3030,7 +3030,7 @@
   "advAwswafTypeChallenge": {
     "message": "挑战"
   },
-  "advAwswafDeletingCookieFmt": {
+  "advCommonDeletingCookieFmt": {
     "message": "正在删除 {0} Cookie… 页面将重新加载"
   },
   "advCloudflareTypeLabel": {

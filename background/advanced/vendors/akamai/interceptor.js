@@ -285,7 +285,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
             { name: { pattern: '_abck' }, returnValue: true },
             { name: { pattern: 'sbsd' }, returnValue: true },
             { name: { pattern: 'sbsd_o' }, returnValue: true }
-        ]);
+        ], tab.id);
         Logger.network('[AKAMAI-CAPTURE] Total cookies found:', cookies.length);
 
         const abckCookie = cookies.find(c => c.name === '_abck');
@@ -421,14 +421,11 @@ async function akamaiStartExtraction(tabId) {
 
         // Delete _abck cookies for the current site
         Logger.network('[AKAMAI-EXTRACT] Step 2: Getting cookies for:', tab.url);
-        const cookies = await chrome.cookies.getAll({ url: tab.url, name: '_abck' });
+        const cookies = await PageCookies.getAll({ url: tab.url, name: '_abck' }, tab.id);
         Logger.network('[AKAMAI-EXTRACT] Found', cookies.length, '_abck cookies');
 
         for (const cookie of cookies) {
-            await chrome.cookies.remove({
-                url: tab.url,
-                name: cookie.name
-            });
+            await PageCookies.remove(tab.url, cookie);
             Logger.network('[AKAMAI-EXTRACT] Deleted cookie:', cookie.name);
         }
         Logger.network('[AKAMAI-EXTRACT] All _abck cookies deleted');

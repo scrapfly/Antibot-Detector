@@ -3030,7 +3030,7 @@
   "advAwswafTypeChallenge": {
     "message": "चैलेंज"
   },
-  "advAwswafDeletingCookieFmt": {
+  "advCommonDeletingCookieFmt": {
     "message": "{0} कुकी हटाई जा रही है… पेज फिर से लोड होगा"
   },
   "advCloudflareTypeLabel": {

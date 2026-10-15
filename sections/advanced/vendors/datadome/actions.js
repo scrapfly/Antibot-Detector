@@ -8,7 +8,7 @@ DataDomeAdvanced.prototype.checkCookies = async function() {
                 throw new Error('Tab information not available');
             }
 
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
+            const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
             Logger.network('[DataDome] Total cookies found:', cookies.length);
 
             const dataDomeCookie = cookies.find(c => c.name === 'datadome');

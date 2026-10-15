@@ -11,9 +11,10 @@ class AdvancedScriptResults {
      * once the page is reloading, so the tool card stays busy until then.
      * @param {object} [options]
      * @param {string} [options.notice] - notification shown before the reload
-     * @param {Function} [options.beforeReload] - e.g. delete a cookie first
+     * @param {string[]} [options.clearCookies] - cookies deleted before the reload: once
+     *   its clearance cookie is set, a protection stops sending its scripts
      */
-    async startScriptAnalysis({ notice, beforeReload } = {}) {
+    async startScriptAnalysis({ notice, clearCookies = [] } = {}) {
         const K = BaseAdvancedModule;
         const tabId = this.tabInfo && this.tabInfo.id;
         if (!tabId) throw new Error('Tab information not available');
@@ -46,11 +47,18 @@ class AdvancedScriptResults {
             NotificationHelper.error(K._tr('advCommonFailedStartAnalysis', 'Failed to start analysis'));
             return { awaitingResult: false };
         }
-        NotificationHelper.info(notice || K._fmt('advCommonAnalyzingReloadFmt', `Analyzing ${this.displayName} scripts... Page will reload`, this.displayName));
+        const cookieNames = clearCookies.join(', ');
+        NotificationHelper.info(notice || (cookieNames
+            ? K._fmt('advCommonDeletingCookieFmt', `Deleting ${cookieNames} cookie... Page will reload`, cookieNames)
+            : K._fmt('advCommonAnalyzingReloadFmt', `Analyzing ${this.displayName} scripts... Page will reload`, this.displayName)));
         try {
             await new Promise(resolve => setTimeout(resolve, 500));
-            if (typeof beforeReload === 'function') {
-                try { await beforeReload(); } catch (error) { Logger.error('NETWORK', `[${this.moduleName}] Before reload failed:`, error); }
+            for (const name of clearCookies) {
+                try {
+                    // Cloudflare's cf_clearance is a partitioned cookie
+                    const cookies = await PageCookies.getAll({ url: this.tabInfo.url, name }, tabId);
+                    for (const cookie of cookies) await PageCookies.remove(this.tabInfo.url, cookie);
+                } catch (error) { Logger.error('NETWORK', `[${this.moduleName}] Could not delete ${name}:`, error); }
             }
             await chrome.tabs.reload(tabId);
         } catch (error) {

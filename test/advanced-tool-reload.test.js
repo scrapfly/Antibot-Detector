@@ -63,7 +63,7 @@ function fixture(vendor, options = {}) {
     clearTimeout() {}
   };
   vm.createContext(context);
-  for (const file of [path.join(__dirname, '..', 'sections/advanced/components/script-results.js'),
+  for (const file of [path.join(__dirname, '..', 'utils/page-cookies.js'), path.join(__dirname, '..', 'sections/advanced/components/script-results.js'),
     path.join(__dirname, '..', 'sections/advanced/vendors', vendor, 'actions.js')]) {
     vm.runInContext(fs.readFileSync(file, 'utf8'), context, { filename: file });
   }
@@ -90,8 +90,8 @@ for (const vendor of Object.keys(vendors)) {
     await flush();
     assert.equal(settled, false, 'reload promise must remain part of the action');
     assert.equal(f.calls.filter(([kind]) => kind === 'reload').length, 1);
-    // Turnstile sets no cookies: its analysis only reloads
-    const resetName = { awswaf: 'aws-waf-token' }[vendor];
+    // AWS WAF and Cloudflare delete their clearance cookie first; the others only reload
+    const resetName = { awswaf: 'aws-waf-token', cloudflare: 'cf_clearance' }[vendor];
     const removals = f.calls.filter(([kind]) => kind === 'remove');
     assert.equal(removals.length, resetName ? 1 : 0);
     if (resetName) {

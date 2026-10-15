@@ -3162,9 +3162,9 @@
     "message": "Challenge",
     "description": "Badge: script type (AWS WAF challenge script)"
   },
-  "advAwswafDeletingCookieFmt": {
+  "advCommonDeletingCookieFmt": {
     "message": "Deleting {0} cookie... Page will reload",
-    "description": "Toast (AWS WAF and Turnstile). {0} = cookie name (aws-waf-token, cf_clearance)"
+    "description": "Toast before Analyze Scripts (AWS WAF, Cloudflare). {0} = cookie name (aws-waf-token, cf_clearance)"
   },
   "advCloudflareTypeLabel": {
     "message": "Type",

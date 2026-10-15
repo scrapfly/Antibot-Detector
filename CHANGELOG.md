@@ -17,6 +17,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced: Analyze Scripts on slow pages lists what loaded within 30 seconds instead of "Failed to start analysis", and no longer lists the page itself.
 - Advanced: Extract site key finds Friendly Captcha v2, older Yandex SmartCaptcha and Captcha.eu keys, and FunCaptcha keys from Arkose's iframe embed.
 - Advanced: script lists for Captcha.eu, Prosopo, MTCaptcha and Capy no longer include files from the vendor's own website.
+- Cloudflare: detection and Check Cookies now see cf_clearance, a partitioned cookie; Analyze Scripts clears it first so the bot-management scripts load again.
+- Advanced: the Check Cookies notification shows the same count as the cookie window.
 
 ## [2.8.7] - 2026-10-14
 

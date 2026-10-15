@@ -72,7 +72,7 @@ async function reCaptchaStartCapture(tabId) {
             const cookies = await checkCookies(tab.url, [
                 { name: { pattern: 'recaptcha-ca-e' }, returnValue: false },
                 { name: { pattern: 'recaptcha-ca-t' }, returnValue: false }
-            ]);
+            ], tab.id);
 
             hasV2Cookie = cookies.length > 0;
             Logger.network(`[reCAPTCHA] v2 cookie detection: ${hasV2Cookie ? 'FOUND' : 'NOT FOUND'}`);

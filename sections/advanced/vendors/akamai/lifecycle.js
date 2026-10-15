@@ -20,7 +20,7 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
         }
 
         // Check for Akamai cookies to ensure Akamai is present
-        const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
+        const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
 
         const abckCookie = cookies.find(c => c.name === '_abck');
         const bmSzCookie = cookies.find(c => c.name === 'bm_sz');

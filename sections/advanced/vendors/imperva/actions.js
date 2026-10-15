@@ -8,7 +8,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
             }
 
             const patterns = [/^reese84$/, /^_*utmvc$/, /^incap_ses_\d+_\d+$/, /^nlbi_\d+/, /^visid_incap_\d+$/];
-            const cookies = (await chrome.cookies.getAll({ url: this.tabInfo.url }))
+            const cookies = (await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id))
                 .filter(cookie => patterns.some(pattern => pattern.test(cookie.name)));
 
             Logger.network('[IMPERVA] Cookies found:', cookies.length);
@@ -32,9 +32,10 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
             Logger.network('[IMPERVA] Protection Level:', protectionLevel);
 
             // Show notification
+            // Same count as the window: a site can set two nlbi_ or incap_ses_ cookies
             const foundCount = cookies.length;
             if (foundCount > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, patterns.length));
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(foundCount, Math.max(patterns.length, foundCount)));
             } else {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Imperva'));
             }
@@ -77,17 +78,14 @@ ImpervaAdvanced.prototype.extractScripts = async function() {
             for (const cookieName of cookiesToDelete) {
                 try {
                     // For pattern-based cookies, get all and delete
-                    const cookies = await chrome.cookies.getAll({ url: tab.url });
+                    const cookies = await PageCookies.getAll({ url: tab.url }, tab.id);
                     const matchingCookies = cookies.filter(c =>
                         c.name === cookieName ||
                         c.name.startsWith(cookieName + '_')
                     );
 
                     for (const cookie of matchingCookies) {
-                        await chrome.cookies.remove({
-                            url: tab.url,
-                            name: cookie.name
-                        });
+                        await PageCookies.remove(tab.url, cookie);
                         Logger.network(`[IMPERVA-EXTRACT] Deleted cookie: ${cookie.name}`);
                         deletedCount++;
                     }

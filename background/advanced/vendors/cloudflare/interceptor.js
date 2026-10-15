@@ -39,7 +39,8 @@ function cloudflareClassifyUrl(requestUrl) {
     if (CLOUDFLARE_CHALLENGE_HOSTS.includes(host)) return path.includes('/turnstile/') ? 'Turnstile' : 'Challenge';
     if (host === 'cloudflareinsights.com' || host.endsWith('.cloudflareinsights.com')) return 'Analytics';
     // The site's own /cdn-cgi/ paths
-    if (path.startsWith('/cdn-cgi/challenge-platform/scripts/jsd/')) return 'Bot Management';
+    // JavaScript detections: scripts/jsd/main.js, its versioned copy under /h/<x>/ and its jsd/oneshot call
+    if (/^\/cdn-cgi\/challenge-platform\/(?:h\/[a-z]\/)?(?:scripts\/)?jsd\//.test(path)) return 'Bot Management';
     if (path.startsWith('/cdn-cgi/challenge-platform/')) return path.includes('/turnstile/') ? 'Turnstile' : 'Challenge';
     if (path.startsWith('/cdn-cgi/bm/cv')) return 'Bot Management';
     if (path.startsWith('/cdn-cgi/scripts/')) return 'CDN';

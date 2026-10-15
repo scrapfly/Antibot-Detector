@@ -9,7 +9,7 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
             // Bot Manager sensor and session cookies, SBSD, edge and waiting-room cookies
             const expected = ['_abck', 'bm_sz', 'ak_bmsc', 'bm_sv', 'bm_mi', 'bm_s', 'bm_so', 'bm_lso', 'sbsd', 'sbsd_o', 'AKA_A2', 'akavpau_*'];
             const matches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
-            const cookies = (await chrome.cookies.getAll({ url: this.tabInfo.url }))
+            const cookies = (await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id))
                 .filter(cookie => expected.some(pattern => matches(pattern, cookie.name)));
             const byName = name => cookies.find(cookie => cookie.name === name);
             const abck = byName('_abck');
@@ -18,9 +18,9 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
                 : abck && byName('bm_sz') ? 'Standard'
                     : abck ? 'Basic' : 'None';
 
-            const found = expected.filter(pattern => cookies.some(cookie => matches(pattern, cookie.name))).length;
-            if (found > 0) {
-                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(found, expected.length));
+            // Same count as the window, which lists every matching cookie
+            if (cookies.length > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.checkCookies.success(cookies.length, Math.max(expected.length, cookies.length)));
             } else {
                 NotificationHelper.info(AdvancedUtils.notifications.checkCookies.none('Akamai'));
             }

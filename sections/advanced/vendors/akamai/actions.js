@@ -16,7 +16,7 @@ AkamaiAdvanced.prototype.analyzeContent = async function() {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             // Get cookies
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
+            const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
             const abckCookie = cookies.find(c => c.name === '_abck');
             const sbsdCookie = cookies.find(c => c.name === 'sbsd');
             const sbsdOCookie = cookies.find(c => c.name === 'sbsd_o');
@@ -293,7 +293,7 @@ AkamaiAdvanced.prototype.analyzeContent = async function() {
 AkamaiAdvanced.prototype.processCapturedData = async function() {
         // History saving is handled by the worker's AKAMAI_CAPTURE_COMPLETED handler
         try {
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
+            const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
             if (!cookies.some(cookie => cookie.name === '_abck')) {
                 NotificationHelper.error(AkamaiAdvanced.tr('advAkamaiNoAbckCookie', 'No _abck cookie found'));
                 return;

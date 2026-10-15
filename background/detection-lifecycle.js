@@ -394,7 +394,8 @@ async function processDetectionData(message, sender) {
 
     // Collect all cookies via chrome.cookies API (includes HttpOnly, Secure, domain-specific)
     try {
-        const allCookies = await chrome.cookies.getAll({ url: pageData.url });
+        // Partitioned cookies too (Cloudflare's cf_clearance is one)
+        const allCookies = await PageCookies.getAll({ url: pageData.url }, tabId);
 
         // Convert to same format as extractCookies() from content script
         pageData.allCookies = allCookies.map(cookie => ({

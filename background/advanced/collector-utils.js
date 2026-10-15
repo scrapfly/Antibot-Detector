@@ -77,16 +77,17 @@ function matchPattern(value, pattern, options = {}) {
  * @param {Array|object} config - Cookie configuration(s)
  *   Single: { name: {pattern, regex, caseSensitive}, value: {...}, returnValue: true }
  *   Array: [{ name: {...}, value: {...} }, ...]
+ * @param {number} [tabId] - the tab, so its partitioned cookies count too
  * @returns {Promise<Array>} Array of matched cookies with metadata
  */
-async function checkCookies(tabUrl, config) {
+async function checkCookies(tabUrl, config, tabId) {
     if (!tabUrl) {
         Logger.warn('UI', '[BaseInterceptor] checkCookies: No URL provided');
         return [];
     }
 
     const configs = Array.isArray(config) ? config : [config];
-    const cookies = await chrome.cookies.getAll({ url: tabUrl });
+    const cookies = await PageCookies.getAll({ url: tabUrl }, tabId);
     const matches = [];
 
     for (const cookieConfig of configs) {

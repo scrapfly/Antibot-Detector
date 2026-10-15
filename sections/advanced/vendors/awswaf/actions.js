@@ -8,7 +8,7 @@ AwsWafAdvanced.prototype.checkCookies = async function() {
                 throw new Error('Tab information not available');
             }
 
-            const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url });
+            const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
             Logger.network('[AwsWaf] Total cookies found:', cookies.length);
 
             const awsWafToken = cookies.find(c => c.name === 'aws-waf-token');
@@ -36,13 +36,7 @@ AwsWafAdvanced.prototype.checkCookies = async function() {
      */
 AwsWafAdvanced.prototype.analyzeScripts = function() {
         // Without the token the reload serves the challenge or CAPTCHA scripts again
-        return this.startScriptAnalysis({
-            notice: this._txt('advAwswafDeletingCookieFmt', 'Deleting {0} cookie... Page will reload', 'aws-waf-token'),
-            beforeReload: async () => {
-                const cookies = await chrome.cookies.getAll({ url: this.tabInfo.url, name: 'aws-waf-token' });
-                for (const cookie of cookies) await chrome.cookies.remove({ url: this.tabInfo.url, name: cookie.name });
-            }
-        });
+        return this.startScriptAnalysis({ clearCookies: ['aws-waf-token'] });
     };
 
 
