@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "Leer lassen für Auto: die höchste Konfidenz der gefundenen Muster."
   },
-  "combinationOnlyTogether": {
-    "message": "Diese Muster zählen nur zusammen"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "Allein erkennen sie nichts. Gilt für diese Muster in jeder Kombination dieser Regel."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "Einige dieser Muster zählen auch allein. Anhaken, damit alle nur in Kombinationen zählen."
-  },
   "combinationModeAny": {
     "message": "Eines davon"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "Nur Kombinationen"
   },
+  "combinationStrictHint": { "message": "Ein Muster mit „Nur Kombinationen“ erkennt allein nichts; es zählt nur in Kombinationen." },
+  "combinationStrictMarkAll": { "message": "Alle markieren" },
+  "combinationStrictUnmarkAll": { "message": "Alle aufheben" },
+  "patternCombinationsOnlyHint": { "message": "Dieses Muster erkennt allein nichts; es zählt nur in Kombinationen, in jeder Kombination dieser Regel." },
   "detectionModalCombinations": {
     "message": "Zutreffende Kombinationen"
   },

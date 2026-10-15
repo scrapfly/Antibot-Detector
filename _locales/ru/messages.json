@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "Оставьте пустым для «Авто»: наибольшая уверенность найденных шаблонов."
   },
-  "combinationOnlyTogether": {
-    "message": "Эти шаблоны учитываются только вместе"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "Сами по себе они ничего не обнаруживают. Действует для этих шаблонов во всех комбинациях правила."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "Некоторые из этих шаблонов учитываются и сами по себе. Отметьте, чтобы все учитывались только в комбинациях."
-  },
   "combinationModeAny": {
     "message": "Одно из этих"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "Только комбинации"
   },
+  "combinationStrictHint": { "message": "Шаблон с пометкой «Только комбинации» сам по себе ничего не обнаруживает и учитывается только в комбинациях." },
+  "combinationStrictMarkAll": { "message": "Отметить все" },
+  "combinationStrictUnmarkAll": { "message": "Снять все" },
+  "patternCombinationsOnlyHint": { "message": "Этот шаблон сам по себе ничего не обнаруживает и учитывается только в комбинациях — во всех комбинациях этого правила." },
   "detectionModalCombinations": {
     "message": "Совпавшие комбинации"
   },

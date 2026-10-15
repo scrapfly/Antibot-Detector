@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "비워 두면 자동: 발견된 패턴 중 가장 높은 신뢰도."
   },
-  "combinationOnlyTogether": {
-    "message": "이 패턴들은 함께일 때만 계산"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "단독으로는 아무것도 감지하지 않습니다. 이 규칙의 모든 조합에서 이 패턴들에 적용됩니다."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "일부 패턴은 단독으로도 계산됩니다. 체크하면 모두 조합에서만 계산됩니다."
-  },
   "combinationModeAny": {
     "message": "다음 중 하나"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "조합 전용"
   },
+  "combinationStrictHint": { "message": "«조합 전용»으로 표시된 패턴은 단독으로는 아무것도 탐지하지 않고 조합 안에서만 계산됩니다." },
+  "combinationStrictMarkAll": { "message": "모두 표시" },
+  "combinationStrictUnmarkAll": { "message": "모두 해제" },
+  "patternCombinationsOnlyHint": { "message": "이 패턴은 단독으로는 아무것도 탐지하지 않으며, 이 규칙의 모든 조합 안에서만 계산됩니다." },
   "detectionModalCombinations": {
     "message": "일치한 조합"
   },

@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "留空为自动：找到的模式中最高的置信度。"
   },
-  "combinationOnlyTogether": {
-    "message": "这些模式仅在一起时计数"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "单独时不检测任何内容。适用于此规则所有组合中的这些模式。"
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "其中一些模式也会单独计数。勾选后它们都只在组合中计数。"
-  },
   "combinationModeAny": {
     "message": "以下任一项"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "仅组合"
   },
+  "combinationStrictHint": { "message": "标记为“仅组合”的模式单独不会检测任何内容，只在组合中计数。" },
+  "combinationStrictMarkAll": { "message": "全部标记" },
+  "combinationStrictUnmarkAll": { "message": "全部取消" },
+  "patternCombinationsOnlyHint": { "message": "此模式单独不会检测任何内容，只在此规则的所有组合中计数。" },
   "detectionModalCombinations": {
     "message": "匹配的组合"
   },

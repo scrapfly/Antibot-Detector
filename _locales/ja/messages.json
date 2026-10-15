@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "空欄で自動：見つかったパターンのうち最も高い信頼度。"
   },
-  "combinationOnlyTogether": {
-    "message": "これらのパターンは組み合わせでのみ有効"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "単独では何も検出しません。このルールのすべての組み合わせでこれらのパターンに適用されます。"
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "一部のパターンは単独でも有効です。チェックするとすべて組み合わせのみになります。"
-  },
   "combinationModeAny": {
     "message": "次のいずれか"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "組み合わせのみ"
   },
+  "combinationStrictHint": { "message": "「組み合わせのみ」のパターンは単独では何も検出せず、組み合わせの中でのみカウントされます。" },
+  "combinationStrictMarkAll": { "message": "すべてオン" },
+  "combinationStrictUnmarkAll": { "message": "すべてオフ" },
+  "patternCombinationsOnlyHint": { "message": "このパターンは単独では何も検出せず、このルールのすべての組み合わせの中でのみカウントされます。" },
   "detectionModalCombinations": {
     "message": "一致した組み合わせ"
   },

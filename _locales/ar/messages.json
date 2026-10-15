@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "اتركه فارغًا للوضع التلقائي: أعلى ثقة بين الأنماط الموجودة."
   },
-  "combinationOnlyTogether": {
-    "message": "هذه الأنماط لا تُحتسب إلا معًا"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "لا تكشف شيئًا بمفردها. ينطبق على هذه الأنماط في كل تركيبات هذه القاعدة."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "بعض هذه الأنماط يُحتسب بمفرده أيضًا. حدّد المربع لتُحتسب كلها في التركيبات فقط."
-  },
   "combinationModeAny": {
     "message": "واحد مما يلي"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "تركيبات فقط"
   },
+  "combinationStrictHint": { "message": "النمط المعلَّم بـ «تركيبات فقط» لا يكتشف شيئًا بمفرده؛ يُحتسب داخل التركيبات فقط." },
+  "combinationStrictMarkAll": { "message": "تعليم الكل" },
+  "combinationStrictUnmarkAll": { "message": "إلغاء تعليم الكل" },
+  "patternCombinationsOnlyHint": { "message": "هذا النمط لا يكتشف شيئًا بمفرده؛ يُحتسب داخل التركيبات فقط، في كل تركيبات هذه القاعدة." },
   "detectionModalCombinations": {
     "message": "التركيبات المتطابقة"
   },

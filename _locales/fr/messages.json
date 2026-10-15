@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "Laissez vide pour Auto : la confiance la plus élevée des motifs trouvés."
   },
-  "combinationOnlyTogether": {
-    "message": "Ces motifs ne comptent qu’ensemble"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "Seuls, ils ne détectent rien. S’applique à ces motifs dans toutes les combinaisons de cette règle."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "Certains de ces motifs comptent aussi seuls. Cochez pour qu’ils ne comptent tous que dans les combinaisons."
-  },
   "combinationModeAny": {
     "message": "L’un de ceux-ci"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "Combinaisons seulement"
   },
+  "combinationStrictHint": { "message": "Un motif marqué « Combinaisons seulement » ne détecte rien seul ; il ne compte que dans les combinaisons." },
+  "combinationStrictMarkAll": { "message": "Tout marquer" },
+  "combinationStrictUnmarkAll": { "message": "Tout démarquer" },
+  "patternCombinationsOnlyHint": { "message": "Ce motif ne détecte rien seul ; il ne compte que dans les combinaisons, dans toutes celles de cette règle." },
   "detectionModalCombinations": {
     "message": "Combinaisons correspondantes"
   },

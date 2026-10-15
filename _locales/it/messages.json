@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "Lascia vuoto per Auto: la confidenza più alta dei pattern trovati."
   },
-  "combinationOnlyTogether": {
-    "message": "Questi pattern contano solo insieme"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "Da soli non rilevano nulla. Vale per questi pattern in tutte le combinazioni di questa regola."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "Alcuni di questi pattern contano anche da soli. Spunta per farli contare tutti solo nelle combinazioni."
-  },
   "combinationModeAny": {
     "message": "Uno di questi"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "Solo combinazioni"
   },
+  "combinationStrictHint": { "message": "Un pattern segnato come «Solo combinazioni» non rileva nulla da solo; conta solo nelle combinazioni." },
+  "combinationStrictMarkAll": { "message": "Segna tutti" },
+  "combinationStrictUnmarkAll": { "message": "Togli tutti" },
+  "patternCombinationsOnlyHint": { "message": "Questo pattern non rileva nulla da solo; conta solo nelle combinazioni, in ogni combinazione di questa regola." },
   "detectionModalCombinations": {
     "message": "Combinazioni corrispondenti"
   },

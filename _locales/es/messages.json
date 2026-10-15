@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "Déjalo vacío para Auto: la confianza más alta de los patrones encontrados."
   },
-  "combinationOnlyTogether": {
-    "message": "Estos patrones solo cuentan juntos"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "Por sí solos no detectan nada. Se aplica a estos patrones en todas las combinaciones de esta regla."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "Algunos de estos patrones también cuentan por sí solos. Márcalo para que todos cuenten solo en combinaciones."
-  },
   "combinationModeAny": {
     "message": "Uno de estos"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "Solo combinaciones"
   },
+  "combinationStrictHint": { "message": "Un patrón con «Solo combinaciones» no detecta nada por sí solo; solo cuenta dentro de combinaciones." },
+  "combinationStrictMarkAll": { "message": "Marcar todos" },
+  "combinationStrictUnmarkAll": { "message": "Desmarcar todos" },
+  "patternCombinationsOnlyHint": { "message": "Este patrón no detecta nada por sí solo; solo cuenta dentro de combinaciones, en todas las combinaciones de esta regla." },
   "detectionModalCombinations": {
     "message": "Combinaciones coincidentes"
   },

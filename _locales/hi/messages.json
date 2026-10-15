@@ -3591,15 +3591,6 @@
   "combinationConfidenceAutoHint": {
     "message": "स्वतः के लिए खाली छोड़ें: मिले पैटर्न में सबसे ऊँचा कॉन्फ़िडेंस।"
   },
-  "combinationOnlyTogether": {
-    "message": "ये पैटर्न सिर्फ़ साथ में गिने जाते हैं"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "अकेले ये कुछ नहीं पहचानते। इस नियम के हर संयोजन में इन पैटर्न पर लागू होता है।"
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "इनमें से कुछ पैटर्न अकेले भी गिने जाते हैं। सभी को सिर्फ़ संयोजनों में गिनने के लिए टिक करें।"
-  },
   "combinationModeAny": {
     "message": "इनमें से एक"
   },
@@ -3678,6 +3669,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "केवल संयोजन"
   },
+  "combinationStrictHint": { "message": "«केवल संयोजन» चिह्नित पैटर्न अकेले कुछ नहीं पहचानता; वह केवल संयोजनों में गिना जाता है।" },
+  "combinationStrictMarkAll": { "message": "सभी चिह्नित करें" },
+  "combinationStrictUnmarkAll": { "message": "सभी हटाएँ" },
+  "patternCombinationsOnlyHint": { "message": "यह पैटर्न अकेले कुछ नहीं पहचानता; यह इस नियम के हर संयोजन में केवल संयोजनों के भीतर गिना जाता है।" },
   "detectionModalCombinations": {
     "message": "मिले संयोजन"
   },

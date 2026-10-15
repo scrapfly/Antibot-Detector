@@ -143,18 +143,21 @@ test('opening a rule shows every combination collapsed; one card opens when togg
 // Redesign (2.8.3): descriptions first, editable groups, plain sentences, and
 // "only count together" never changes behind the user's back.
 
-test('"only count together" changes only when ticked, for method rows and shared patterns too', () => {
+test('"Combinations only" changes only when Mark all / Unmark all is clicked, for method rows and shared patterns too', () => {
   const detector = base({ all: [{ pattern: 'a' }] });
   detector.detection.url.forEach(p => { p.standalone = true; });
   detector.combinations.push({ id: 'c2', name: 'Shared', when: { all: [{ pattern: 'a' }] } });
   const { rules, options, act } = editor(detector);
   rules.addComboItems(rules.combinationsModel[0], ['pattern:b']);
   assert.equal(options.find(p => p.id === 'b').strict, false, 'adding a pattern leaves its flag alone');
-  act('require', { checked: true });
+  act('strict-all', { kind: 'click' });
   assert.deepEqual(options.map(p => [p.id, p.strict]), [['a', true], ['b', true], ['c', false]]);
   assert.equal(rules.comboRequiresTogether(rules.combinationsModel[1]), true, 'the flag is shared by the whole rule');
   rules.addComboItems(rules.combinationsModel[0], ['method:url']);
-  act('require', { checked: false });
+  // Not all marked (c is new): the button marks all, a second click unmarks all
+  act('strict-all', { kind: 'click' });
+  assert.equal(options.every(p => p.strict), true);
+  act('strict-all', { kind: 'click' });
   assert.equal(options.every(p => !p.strict), true);
 });
 
@@ -283,7 +286,7 @@ test('the builder offers group controls with readable, unique names', () => {
   assert.match(html, /<option value="any" selected>One of these<\/option>/);
   assert.match(html, /aria-label="Pattern condition"/);
   assert.match(html, /Must not be found/);
-  assert.match(html, /These patterns only count together/);
+  assert.match(html, /data-combo-action="strict-all"/);
   const ids = [...html.matchAll(/ id="([^"]+)"/g)].map(m => m[1]);
   assert.deepEqual(ids, [...new Set(ids)], 'no duplicate ids once groups have their own controls');
   for (const [, id] of html.matchAll(/aria-labelledby="([^"]+)"/g)) assert.ok(ids.includes(id), id);
@@ -307,28 +310,29 @@ test('a description typed on a combination row is saved on the pattern and mirro
   assert.match(html, /contenteditable="plaintext-only"[^>]*data-combo-field="description"[^>]*>Typed</);
 });
 
-test('"only count together" can be ticked on a new, empty combination and applies to the patterns added', () => {
+test('"Mark all" on a new, empty combination applies to the patterns added', () => {
   const detector = base({ all: [{ pattern: 'a' }] });
   detector.detection.url.forEach(p => { p.standalone = true; });
   const { rules, options, container, act } = editor(detector);
   rules.combinationsModel = [{ id: 'c2', name: '', confidence: null, when: { all: [] } }];
   rules.setComboOpen(rules.combinationsModel[0], true);
   rules.renderCombinations();
-  assert.doesNotMatch(container.innerHTML, /data-combo-action="require"[^>]*disabled/, 'the tick is available before any pattern');
-  act('require', { checked: true });
+  assert.doesNotMatch(container.innerHTML, /data-combo-action="strict-all"[^>]*disabled/, 'the button is available before any pattern');
+  assert.doesNotMatch(container.innerHTML, /combo-strict-count/, 'no count while there are no patterns');
+  act('strict-all', { kind: 'click' });
   assert.equal(options.every(p => !p.strict), true, 'nothing changes while the combination is empty');
-  assert.match(container.innerHTML, /data-combo-action="require" checked/);
+  assert.match(container.innerHTML, /class="combo-strict-all is-on" data-combo-action="strict-all" aria-pressed="true">Unmark all</);
   rules.addComboItems(rules.combinationsModel[0], ['pattern:b', 'pattern:c']);
   assert.deepEqual(options.map(p => [p.id, p.strict]), [['a', false], ['b', true], ['c', true]]);
   assert.equal(rules.combinationsModel[0].pendingStrict, undefined);
   rules.addComboItems(rules.combinationsModel[0], ['pattern:a']);
   assert.equal(options.find(p => p.id === 'a').strict, false, 'later additions keep their own flag');
   assert.equal('pendingStrict' in plain(rules.buildCombinationsForSave(null, { validate: false }).combinations[0]), false);
-  // Unticked before adding anything: the patterns keep counting on their own
+  // Unmarked before adding anything: the patterns keep counting on their own
   const combo = rules.combinationsModel[0];
   combo.when = { all: [] };
   combo.pendingStrict = true;
-  act('require', { checked: false });
+  act('strict-all', { kind: 'click' });
   assert.equal(combo.pendingStrict, undefined);
 });
 
@@ -351,4 +355,18 @@ test('each pattern row turns its own "Combinations only" on and off', () => {
   assert.match(container.innerHTML, /data-pattern="a" aria-pressed="true"/);
   press('a');
   assert.equal(options.every(p => !p.strict), true);
+});
+
+test('the Combinations only row counts the marked patterns and names the one action', () => {
+  const detector = base({ all: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] });
+  detector.detection.url.forEach(p => { p.standalone = true; });
+  detector.detection.url[0].standalone = false;
+  const { rules, container } = editor(detector);
+  rules.setComboOpen(rules.combinationsModel[0], true);
+  rules.renderCombinations();
+  const html = container.innerHTML;
+  // One of three marked: a count, "Mark all", and no half-ticked checkbox
+  assert.match(html, /class="combo-strict-count is-on">1\/3</);
+  assert.match(html, /class="combo-strict-all" data-combo-action="strict-all" aria-pressed="false">Mark all</);
+  assert.doesNotMatch(html, /type="checkbox"[^>]*data-combo-action|indeterminate|data-mixed/);
 });

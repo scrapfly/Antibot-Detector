@@ -3848,15 +3848,6 @@
   "combinationConfidenceAutoHint": {
     "message": "Leave empty for Auto: the highest confidence of the patterns found."
   },
-  "combinationOnlyTogether": {
-    "message": "These patterns only count together"
-  },
-  "combinationOnlyTogetherHint": {
-    "message": "On their own they detect nothing. Applies to these patterns in every combination of this rule."
-  },
-  "combinationOnlyTogetherMixed": {
-    "message": "Some of these patterns also count on their own. Tick to make them all count only in combinations."
-  },
   "combinationModeAny": {
     "message": "One of these"
   },
@@ -3935,6 +3926,10 @@
   "patternCombinationsOnlyBadge": {
     "message": "Combinations only"
   },
+  "combinationStrictHint": { "message": "A pattern marked “Combinations only” detects nothing on its own; it only counts inside combinations." },
+  "combinationStrictMarkAll": { "message": "Mark all" },
+  "combinationStrictUnmarkAll": { "message": "Unmark all" },
+  "patternCombinationsOnlyHint": { "message": "This pattern detects nothing on its own; it only counts inside combinations, in every combination of this rule." },
   "detectionModalCombinations": {
     "message": "Matched combinations"
   },
