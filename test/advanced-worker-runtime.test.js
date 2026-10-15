@@ -104,6 +104,21 @@ test('analysis times out without navigation and disposes network listeners and t
     assert.equal(f.writes.length, 0, 'timeout is not a completed-empty result');
 });
 
+test('a page that reloads but never finishes loading reports the scripts seen by the limit', async () => {
+    const f = fixture();
+    const started = analysis(f, 'turnstile');
+    f.context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, type: 'main_frame', url: 'https://turnstile.example.test/' });
+    f.context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, type: 'script', url: 'https://challenges.turnstile.test/api.js' });
+    await f.tick(30000);
+    assert.equal(f.messages.length, 1);
+    assert.equal(f.messages[0].status, 'completed');
+    assert.equal(f.messages[0].requestId, started.requestId);
+    assert.deepEqual(Array.from(f.messages[0].data.scripts, script => script.url), ['https://challenges.turnstile.test/api.js'],
+        'the reloaded page is not listed as one of its own scripts');
+    assert.equal(f.context.chrome.webRequest.onBeforeRequest.listeners.size, 0);
+    assert.equal(f.timers.size, 0);
+});
+
 test('analysis observes once for five seconds, persists while popup is closed, and reports request identity', async () => {
     const f = fixture();
     const started = analysis(f, 'cloudflare');

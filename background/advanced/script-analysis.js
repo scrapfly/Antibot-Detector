@@ -1,10 +1,11 @@
 /** Common bounded network observation for vendor script analyzers. */
 (function (global) {
     const SKIPPED_RESOURCE_TYPES = new Set(['image', 'imageset', 'stylesheet', 'font', 'media']);
+    const ANALYSIS_LIMIT_MS = 30000;
     function start({ tabId, url, vendorId, requestId, classify }) {
         const captured = new Map();
         const { job, reused } = AdvancedJobManager.begin({ tabId, url, vendorId, requestId,
-            operation: 'analysis', timeoutMs: 30000,
+            operation: 'analysis',
             async onFinish(result) {
                 const scripts = Array.from(captured.values());
                 const data = { scripts, scriptCount: scripts.length };
@@ -22,10 +23,16 @@
             }
         });
         if (reused) return { ...AdvancedJobManager.snapshot(job), status: 'started', reused: true };
+        // A page that reloaded but never fires load (slow ads, long polling) still
+        // reports what it loaded by the limit. No reload at all is a timeout.
+        let reloaded = false;
+        job.setTimer(() => job.finish(reloaded ? 'completed' : 'timeout'), ANALYSIS_LIMIT_MS);
         const requestListener = details => {
             if (job.finished || details.tabId !== tabId) return;
-            // Images, fonts, CSS and media are never the scripts this lists
-            if (SKIPPED_RESOURCE_TYPES.has(details.type)) return;
+            if (details.type === 'main_frame') reloaded = true;
+            // Images, fonts, CSS and media are never the scripts this lists, and the
+            // page itself is not one of its scripts (on a vendor's own site it matches)
+            if (SKIPPED_RESOURCE_TYPES.has(details.type) || details.type === 'main_frame') return;
             const type = classify(details.url, details);
             if (type) captured.set(details.url, { url: details.url, type, resourceType: details.type || '', source: 'network' });
         };

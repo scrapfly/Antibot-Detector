@@ -14,6 +14,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Advanced: hCaptcha Check Version no longer reports Enterprise on standard site keys, such as hCaptcha's own demo page.
+- Advanced: Analyze Scripts on slow pages lists what loaded within 30 seconds instead of "Failed to start analysis", and no longer lists the page itself.
 
 ## [2.8.7] - 2026-10-14
 
