@@ -22,8 +22,8 @@
             productName: 'Prosopo Procaptcha', logo: 'prosopo_official.png', infoKey: 'advancedInfoCaptchaKeyDesc',
             scripts: [
                 { hosts: ['js.prosopo.io'], path: /^\/js\//, type: 'bundle' },
-                { domains: ['prosopo.io'], path: /^\/v1\/prosopo\/provider\//, type: 'provider' },
-                { domains: ['prosopo.io'], type: 'prosopo' }
+                // pronode*.prosopo.io; no catch-all, prosopo.io is also the vendor's own website
+                { domains: ['prosopo.io'], path: /^\/v1\/prosopo\/provider\//, type: 'provider' }
             ],
             siteKey: {
                 label: 'siteKey',
@@ -51,6 +51,8 @@
                     { type: 'attr', selector: '.frc-captcha[data-sitekey]', attr: 'data-sitekey', source: 'widget',
                         fields: { start: 'data-start', lang: 'data-lang', puzzleEndpoint: 'data-puzzle-endpoint', apiEndpoint: 'data-api-endpoint' } },
                     { type: 'url', url: /^https:\/\/(?:api\.friendlycaptcha\.com|eu-api\.friendlycaptcha\.eu)\/api\/v1\/puzzle/, param: 'sitekey' },
+                    // v2 widgets made with createWidget() carry the key only in their frame URL
+                    { type: 'url', url: /^https:\/\/(?:[a-z0-9-]+\.)?frcapi\.com\/api\/v2\/captcha\/widget/, param: 'sitekey' },
                     { type: 'inline', hint: 'riendly', pattern: /sitekey["']?\s*:\s*["']([A-Za-z0-9_-]{8,64})["']/ },
                     { type: 'fact', name: 'version', value: 'v1', selector: 'input[name="frc-captcha-solution"]' },
                     { type: 'fact', name: 'version', value: 'v2', selector: 'input[name="frc-captcha-response"]' },
@@ -65,7 +67,7 @@
             scripts: [
                 { hosts: ['service.mtcaptcha.com', 'service2.mtcaptcha.com'], path: /^\/mtcv1\/client\//, type: 'client' },
                 { hosts: ['service.mtcaptcha.com', 'service2.mtcaptcha.com'], path: /^\/mtcv1\/api\//, type: 'api' },
-                { domains: ['mtcaptcha.com'], type: 'mtcaptcha' }
+                { hosts: ['service.mtcaptcha.com', 'service2.mtcaptcha.com'], type: 'mtcaptcha' }
             ],
             siteKey: {
                 label: 'sitekey',
@@ -89,7 +91,8 @@
             ],
             siteKey: {
                 label: 'sitekey',
-                key: /^ysc1_[A-Za-z0-9]{20,80}$/,
+                // ysc1_ keys, and the older 40-character keys (the vendor's own demo uses one)
+                key: /^(?:ysc1_)?[A-Za-z0-9]{20,80}$/,
                 rules: [
                     { type: 'attr', selector: '.smart-captcha[data-sitekey]', attr: 'data-sitekey', source: 'widget',
                         fields: { hl: 'data-hl', invisible: 'data-invisible', test: 'data-test' } },
@@ -101,16 +104,21 @@
         {
             vendorId: 'captchaeu', detectorId: 'captchaeu', className: 'CaptchaEuAdvanced',
             productName: 'Captcha.eu', logo: 'custom.png', infoKey: 'advancedInfoCaptchaKeyDesc',
+            // www.captcha.eu is also the vendor's own website, so no catch-all rule here
             scripts: [
                 { hosts: ['www.captcha.eu', 'captcha.eu'], path: /^\/sdk\.js$/, type: 'sdk' },
-                { hosts: ['www.captcha.eu', 'captcha.eu'], path: /^\/(?:challenge|validate)/, type: 'challenge' },
-                { hosts: ['www.captcha.eu', 'captcha.eu'], type: 'captcha.eu' }
+                { hosts: ['www.captcha.eu', 'captcha.eu'], path: /^\/(?:challenge|validate)(?:\/|$)/, type: 'challenge' },
+                { hosts: ['www.captcha.eu', 'captcha.eu'], path: /^\/api\/widget\//, type: 'widget' },
+                { hosts: ['b.captcha.eu'], path: /^\/bm$/, type: 'bot check' }
             ],
             siteKey: {
-                label: 'publicKey',
+                label: 'publicSecret',
                 key: /^[A-Za-z0-9_.:-]{8,128}$/,
                 rules: [
-                    { type: 'inline', hint: 'KROT', pattern: /KROT\.setup\(\s*["']([A-Za-z0-9_.:-]{8,128})["']/ }
+                    { type: 'inline', hint: 'KROT', pattern: /KROT\.setup\(\s*["']([A-Za-z0-9_.:-]{8,128})["']/ },
+                    // The SDK sends the key with every challenge and bot check
+                    { type: 'url', url: /^https:\/\/(?:www\.captcha\.eu\/challenge|b\.captcha\.eu\/bm)(?:[/?]|$)/, param: 'publicSecret' },
+                    { type: 'global', path: 'KROT.publicSecret' }
                 ]
             }
         },
@@ -212,7 +220,7 @@
             scripts: [
                 { domains: ['capy.me'], path: /^\/puzzle\/get_js\//, type: 'sdk' },
                 { domains: ['capy.me'], path: /^\/puzzle\//, type: 'puzzle' },
-                { domains: ['capy.me'], type: 'capy' }
+                { hosts: ['api.capy.me', 'jp.api.capy.me'], type: 'capy' }
             ],
             siteKey: {
                 label: 'captchakey',
@@ -278,6 +286,9 @@
                 rules: [
                     { type: 'url', url: /^https:\/\/[a-z0-9-]+\.arkoselabs\.com\/v2\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\/api\.js/ },
                     { type: 'url', url: /\/fc\/gt2\/public_key\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/ },
+                    // The iframe embed: iframe.arkoselabs.com/<key>/index.html, as a frame or a URL in the page's data
+                    { type: 'url', url: /^https:\/\/iframe\.arkoselabs\.com\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\// },
+                    { type: 'inline', hint: 'iframe.arkoselabs.com', pattern: /iframe\.arkoselabs\.com\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})\// },
                     { type: 'attr', selector: '[data-pkey]', attr: 'data-pkey', source: 'widget' },
                     { type: 'inline', hint: 'public_key', pattern: /public_key["']?\s*[:=]\s*["']([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/ },
                     { type: 'inline', hint: 'pkey', pattern: /pkey["']?\s*[:=]\s*["']([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})["']/ }
@@ -330,15 +341,10 @@
     function probeArgs(vendor) {
         const entry = typeof vendor === 'string' ? byVendorId[vendor] : vendor;
         if (!entry || !entry.siteKey) return null;
-        const hosts = new Set(), domains = new Set();
-        (entry.scripts || []).forEach(rule => {
-            (rule.hosts || []).forEach(host => hosts.add(host));
-            (rule.domains || []).forEach(domain => domains.add(domain));
-        });
         return {
             key: regex(entry.siteKey.key),
-            hosts: [...hosts],
-            domains: [...domains],
+            // "Scripts on this page" uses the Analyze Scripts rules, paths included
+            scripts: (entry.scripts || []).map(rule => ({ hosts: rule.hosts || [], domains: rule.domains || [], path: regex(rule.path) })),
             rules: entry.siteKey.rules.map(rule => ({
                 type: rule.type,
                 selector: rule.selector || '',

@@ -15,6 +15,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Advanced: hCaptcha Check Version no longer reports Enterprise on standard site keys, such as hCaptcha's own demo page.
 - Advanced: Analyze Scripts on slow pages lists what loaded within 30 seconds instead of "Failed to start analysis", and no longer lists the page itself.
+- Advanced: Extract site key finds Friendly Captcha v2, older Yandex SmartCaptcha and Captcha.eu keys, and FunCaptcha keys from Arkose's iframe embed.
+- Advanced: script lists for Captcha.eu, Prosopo, MTCaptcha and Capy no longer include files from the vendor's own website.
 
 ## [2.8.7] - 2026-10-14
 

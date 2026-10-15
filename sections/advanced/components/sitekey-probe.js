@@ -40,8 +40,13 @@ AdvancedSiteKeyProbe.probe = function(args) {
     }
     return match && match[1] !== undefined ? match[1] : null;
   };
-  const vendorHost = host => (args.hosts || []).indexOf(host) !== -1
-    || (args.domains || []).some(domain => host === domain || host.slice(-domain.length - 1) === '.' + domain);
+  const scriptRules = (args.scripts || []).map(rule => ({ hosts: rule.hosts || [], domains: rule.domains || [], path: toRegex(rule.path) }));
+  const vendorUrl = parsed => {
+    const host = parsed.hostname.toLowerCase();
+    return scriptRules.some(rule => (rule.hosts.indexOf(host) !== -1
+      || rule.domains.some(domain => host === domain || host.slice(-domain.length - 1) === '.' + domain))
+      && (!rule.path || rule.path.test(parsed.pathname)));
+  };
 
   // Every URL the frame knows: script and frame sources, then its resource timing
   const urls = [];
@@ -59,7 +64,7 @@ AdvancedSiteKeyProbe.probe = function(args) {
     if (seen.has(url) || candidates.length >= 100) continue;
     seen.add(url);
     try {
-      if (vendorHost(new URL(url, location.href).hostname.toLowerCase())) candidates.push(url);
+      if (vendorUrl(new URL(url, location.href))) candidates.push(url);
     } catch (e) { /* not a URL */ }
   }
 
