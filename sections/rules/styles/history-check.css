@@ -97,13 +97,13 @@
    Pattern settings → Description → Translations,
    and a combination's Name translations
    ============================================ */
-:is(#methodSettingsModal, #combinationsContainer) .rule-translations {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations {
   margin-top: 10px;
   border-top: 1px solid var(--border);
   padding-top: 8px;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translations > summary {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -114,12 +114,12 @@
   list-style-position: inside;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translations-count {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-count {
   color: var(--text-secondary);
   font-weight: 400;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translations-actions {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -127,25 +127,25 @@
   margin: 8px 0;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translations-status {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-status {
   color: var(--text-secondary);
   font-size: 11px;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translations-fields {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-fields {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translation-row {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-row {
   display: grid;
   grid-template-columns: 118px minmax(0, 1fr);
   align-items: center;
   gap: 8px;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translation-lang {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-lang {
   color: var(--text-secondary);
   font-size: 11.5px;
   overflow: hidden;
@@ -153,7 +153,7 @@
   white-space: nowrap;
 }
 
-:is(#methodSettingsModal, #combinationsContainer) .rule-translation-row .rule-translation-input {
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-row .rule-translation-input {
   box-sizing: border-box;
   width: 100%;
   max-width: none;

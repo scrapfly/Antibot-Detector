@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "このパターンが見つかったとき、検出の詳細と履歴に表示されます。"
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "この保護の内容。例: ログインと決済ページでのボット検出"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "この保護の検出詳細に表示されます。"
+  },
   "ruleConfidenceLevel": {
     "message": "信頼度"
   },

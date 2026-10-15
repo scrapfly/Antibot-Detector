@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "이 패턴이 발견되면 탐지 세부 정보와 기록에 표시됩니다."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "이 보호가 무엇인지, 예: 로그인 및 결제 페이지의 봇 탐지"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "이 보호의 탐지 세부 정보에 표시됩니다."
+  },
   "ruleConfidenceLevel": {
     "message": "신뢰도 수준"
   },

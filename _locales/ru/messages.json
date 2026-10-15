@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "Показывается в деталях обнаружения и в истории, когда шаблон найден."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Что это за защита, например обнаружение ботов на страницах входа и оплаты"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Показывается в подробностях обнаружения этой защиты."
+  },
   "ruleConfidenceLevel": {
     "message": "Уровень уверенности"
   },

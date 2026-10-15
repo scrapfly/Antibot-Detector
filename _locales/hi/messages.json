@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "यह पैटर्न मिलने पर पहचान विवरण और इतिहास में दिखाया जाता है।"
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "यह सुरक्षा क्या है, जैसे लॉगिन और चेकआउट पेजों पर बॉट पहचान"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "इस सुरक्षा के पहचान विवरण में दिखाया जाता है।"
+  },
   "ruleConfidenceLevel": {
     "message": "विश्वास स्तर"
   },

@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [2.8.9] - 2026-10-15
 
+### Added
+
+- Rules editor: a detector has its own Description, with Translations and Translate automatically, shown in its detection details.
+
 ### Changed
 
 - Detection: Google BotGuard's www.google.com/js/th/… script is proof on its own too, so it shows 100% instead of 75%.

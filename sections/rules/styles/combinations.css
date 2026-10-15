@@ -795,7 +795,8 @@
 }
 
 /* Settings → Description: the text detection details and History show */
-#methodSettingsModal .method-description-input {
+#methodSettingsModal .method-description-input,
+#editRuleModal .detector-description-input {
   box-sizing: border-box;
   display: block;
   width: 100%;
@@ -812,12 +813,14 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-#methodSettingsModal .method-description-input:focus {
+#methodSettingsModal .method-description-input:focus,
+#editRuleModal .detector-description-input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-#methodSettingsModal #descriptionGroup .option-hint {
+#methodSettingsModal #descriptionGroup .option-hint,
+#detectorDescriptionGroup > .option-hint {
   margin: 6px 0 0;
 }

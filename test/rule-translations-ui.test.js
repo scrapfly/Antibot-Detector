@@ -123,3 +123,33 @@ test('a combination without a name asks for one before translating', async () =>
   await rules.autoTranslateComboName({ id: 'c1', name: '  ', when: { all: [] } });
   assert.equal(scope.parts['.rule-translations-status'].textContent, 'Write the name first.');
 });
+
+test('the detector\'s own description has Translations and Translate automatically too', async () => {
+  const fields = [field('de'), field('es', 'Mía'), field('fr')];
+  const scope = panel(fields);
+  const host = { innerHTML: '' };
+  const input = { value: '' };
+  const translator = { create: ({ targetLanguage }) => Promise.resolve({ translate: async (t) => `[${targetLanguage}] ${t}`, destroy() {} }) };
+  const { context, rules } = load({ fields: [], description: '', translator });
+  Object.assign(context.document, { querySelector: (sel) => ({ '#detectorDescriptionInput': input, '#detectorDescriptionTranslations': scope, '#detectorTranslationFields': host })[sel] || null });
+
+  rules.renderDetectorDescription({ description: 'Bot detection on login pages', descriptionI18n: { es: 'Mía', xx: 'ignored' } });
+  assert.equal(input.value, 'Bot detection on login pages');
+  assert.equal(input.maxLength, 300);
+  assert.match(host.innerHTML, /id="detectorTranslation-es"[^>]*maxlength="400"[^>]*value="Mía"/);
+  assert.equal(scope.open, true, 'opens when it has translations of its own');
+
+  await rules.autoTranslateDetectorDescription();
+  assert.deepEqual(fields.map(f => f.value), ['[de] Bot detection on login pages', 'Mía', '[fr] Bot detection on login pages']);
+
+  input.value = '  Bot detection   on login pages ';
+  assert.deepEqual(JSON.parse(JSON.stringify(rules.collectDetectorDescription())), { description: 'Bot detection on login pages',
+    descriptionI18n: { de: '[de] Bot detection on login pages', es: 'Mía', fr: '[fr] Bot detection on login pages' } });
+  input.value = ' ';
+  assert.deepEqual(JSON.parse(JSON.stringify(rules.collectDetectorDescription())), { description: '', descriptionI18n: {} }, 'no translations without a text');
+
+  // A longer stored description is never cut by the field's limit
+  rules.renderDetectorDescription({ description: 'x'.repeat(320) });
+  assert.equal(input.maxLength, 320);
+  assert.equal(scope.open, false);
+});

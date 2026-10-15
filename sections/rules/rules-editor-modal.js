@@ -124,6 +124,11 @@ Rules.prototype.populateModalData = function(detector) {
       nameInput.value = this.getEditorDetectorName(detector);
     }
 
+    // The detector's own description and its translations
+    if (typeof this.renderDetectorDescription === 'function') {
+      this.renderDetectorDescription(detector);
+    }
+
     if (categorySelect) {
       Logger.debug('UI', 'Setting category:', category); // Debug log
       categorySelect.value = category;

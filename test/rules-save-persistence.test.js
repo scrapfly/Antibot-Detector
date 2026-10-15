@@ -149,3 +149,44 @@ test('metadata-only edits to an official rule are protected from automatic repla
   assert.equal(saved.version, '1.0');
   assert.equal(saved.officialSnapshot.name, 'Custom');
 });
+
+test('the detector description and its translations are saved with the rule, and removed with the text', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  state.fields['#detectorDescriptionInput'] = { value: 'Bot detection on login pages' };
+  state.rules.collectDetectorDescription = () => ({ description: 'Bot detection on login pages', descriptionI18n: { es: 'Detección de bots en el login' } });
+  assert.equal(await state.rules.saveRule(), true);
+  let saved = state.dm.detectors.antibot['detect-custom'];
+  assert.equal(saved.description, 'Bot detection on login pages');
+  assert.deepEqual(plain(saved.descriptionI18n), { es: 'Detección de bots en el login' });
+
+  // Emptied: both go
+  const next = editor();
+  next.dm.detectors = { antibot: { 'detect-custom': { ...fixture(), description: 'Old', descriptionI18n: { es: 'Viejo' } } } };
+  next.rules.currentEditDetector.detector = plain(next.dm.detectors.antibot['detect-custom']);
+  next.fields['#detectorDescriptionInput'] = { value: '' };
+  next.rules.collectDetectorDescription = () => ({ description: '', descriptionI18n: {} });
+  assert.equal(await next.rules.saveRule(), true);
+  saved = next.dm.detectors.antibot['detect-custom'];
+  assert.equal(saved.description, undefined);
+  assert.equal(saved.descriptionI18n, undefined);
+});
+
+test('a description-only edit to an official rule counts as an edit', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  DetectionUtils.setOfficialDetectorIds(['detect-custom']);
+  const original = { ...fixture(), author: 'Scrapfly', name: 'Edited custom', description: 'Official text' };
+  state.dm.detectors.antibot['detect-custom'] = original;
+  state.rules.currentEditDetector.detector = plain(original);
+  state.rules.currentEditDetector.original = plain(original);
+  state.rules.currentEditDetector.isOfficial = true;
+  state.fields['#detectorAuthorInput'].value = 'Scrapfly';
+  state.rules._collectDetectionFromForm = () => plain(original.detection);
+  state.fields['#detectorDescriptionInput'] = { value: 'Official text' };
+  state.rules.collectDetectorDescription = () => ({ description: 'Official text', descriptionI18n: { de: 'Offizieller Text' } });
+  assert.equal(await state.rules.saveRule(), true);
+  const saved = state.dm.detectors.antibot['detect-custom'];
+  assert.equal(saved.userModified, true, 'translations alone are a change');
+  assert.deepEqual(plain(saved.descriptionI18n), { de: 'Offizieller Text' });
+});

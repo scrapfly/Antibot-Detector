@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "Se muestra en los detalles de la detección y en el Historial cuando se encuentra este patrón."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Qué es esta protección, p. ej. detección de bots en las páginas de inicio de sesión y pago"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Se muestra en los detalles de detección de esta protección."
+  },
   "ruleConfidenceLevel": {
     "message": "Nivel de confianza"
   },

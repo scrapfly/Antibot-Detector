@@ -601,6 +601,12 @@
   "ruleDescriptionHint": {
     "message": "Shown in the detection details and in History when this pattern is found."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "What this protection is, e.g. Bot detection on login and checkout pages"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Shown in the detection details of this protection."
+  },
   "ruleConfidenceLevel": {
     "message": "Confidence Level"
   },

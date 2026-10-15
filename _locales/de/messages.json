@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "Wird in den Erkennungsdetails und im Verlauf angezeigt, wenn dieses Muster gefunden wird."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Was dieser Schutz ist, z. B. Bot-Erkennung auf Login- und Checkout-Seiten"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Wird in den Erkennungsdetails dieses Schutzes angezeigt."
+  },
   "ruleConfidenceLevel": {
     "message": "Vertrauensstufe"
   },

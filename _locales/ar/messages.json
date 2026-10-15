@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "يظهر في تفاصيل الاكتشاف وفي السجل عند العثور على هذا النمط."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "ما هي هذه الحماية، مثلاً: كشف الروبوتات في صفحات تسجيل الدخول والدفع"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "تظهر في تفاصيل الاكتشاف لهذه الحماية."
+  },
   "ruleConfidenceLevel": {
     "message": "مستوى الثقة"
   },

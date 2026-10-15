@@ -33,7 +33,7 @@ const ruleTranslationClean = (text) => String(text || '').replace(/\s+/g, ' ').t
  * translations, and the one the extension ships greyed as a placeholder.
  * @param {string} idPrefix unique per panel (the inputs are labelled by id)
  */
-Rules.translationRowsHtml = function(english, saved, idPrefix) {
+Rules.translationRowsHtml = function(english, saved, idPrefix, { maxLength = 200 } = {}) {
   const own = saved && typeof saved === 'object' ? saved : {};
   const source = ruleTranslationClean(english);
   return RULE_TRANSLATION_LOCALES.map((locale) => {
@@ -44,7 +44,7 @@ Rules.translationRowsHtml = function(english, saved, idPrefix) {
     const lang = locale.replace('_', '-');
     return `<label class="rule-translation-row" for="${id}">
       <span class="rule-translation-lang" lang="${lang}">${FormatUtils.escapeHtml(ruleTranslationLanguageName(locale))}</span>
-      <input type="text" id="${id}" class="input-field rule-translation-input" data-locale="${locale}" maxlength="200" dir="${locale === 'ar' ? 'rtl' : 'auto'}"
+      <input type="text" id="${id}" class="input-field rule-translation-input" data-locale="${locale}" maxlength="${maxLength}" dir="${locale === 'ar' ? 'rtl' : 'auto'}"
         lang="${lang}" value="${FormatUtils.escapeAttr(value)}" placeholder="${FormatUtils.escapeAttr(placeholder)}">
     </label>`;
   }).join('');
@@ -188,6 +188,47 @@ Rules.prototype.autoTranslateFields = function(getScope, sourceText, { needsText
   });
 };
 
+// The detector's own description (Detector Information → Description):
+// longer than a pattern's, and its translations a little longer still
+const DETECTOR_DESCRIPTION_MAX = 300;
+const DETECTOR_TRANSLATION_MAX = 400;
+const detectorTranslationsScope = () => document.querySelector('#detectorDescriptionTranslations');
+const detectorDescriptionInput = () => document.querySelector('#detectorDescriptionInput');
+
+/** Fill Detector Information → Description and its Translations from a detector. */
+Rules.prototype.renderDetectorDescription = function(detector) {
+  const input = detectorDescriptionInput();
+  const host = document.querySelector('#detectorTranslationFields');
+  if (!input || !host) return;
+  const description = typeof detector?.description === 'string' ? detector.description : '';
+  const saved = detector?.descriptionI18n && typeof detector.descriptionI18n === 'object' && !Array.isArray(detector.descriptionI18n)
+    ? detector.descriptionI18n : {};
+  input.maxLength = Math.max(DETECTOR_DESCRIPTION_MAX, description.length);
+  input.value = description;
+  host.innerHTML = Rules.translationRowsHtml(description, saved, 'detectorTranslation', { maxLength: DETECTOR_TRANSLATION_MAX });
+  const scope = detectorTranslationsScope();
+  this.fillShippedPlaceholders(scope, description, { load: true });
+  const status = scope?.querySelector('.rule-translations-status');
+  if (status) status.textContent = '';
+  if (scope) scope.open = Object.keys(saved).length > 0;
+  this.updateAutoTranslateButton(scope);
+};
+
+/**
+ * The description to save and its translations; translations belong to the
+ * text they translate, so there are none without a description.
+ * @returns {{description: string, descriptionI18n: object}}
+ */
+Rules.prototype.collectDetectorDescription = function() {
+  const description = ruleTranslationClean(detectorDescriptionInput()?.value);
+  return { description, descriptionI18n: description ? Rules.collectTranslations(detectorTranslationsScope()) : {} };
+};
+
+/** Detector Information → Description → Translations → Translate automatically. */
+Rules.prototype.autoTranslateDetectorDescription = function() {
+  return this.autoTranslateFields(detectorTranslationsScope, detectorDescriptionInput()?.value || '');
+};
+
 /** Pattern settings → Description → Translations → Translate automatically. */
 Rules.prototype.autoTranslateDescription = function() {
   return this.autoTranslateFields(methodTranslationsScope, document.querySelector('#methodDescriptionInput')?.value || '');
@@ -222,6 +263,9 @@ if (typeof document !== 'undefined' && document.addEventListener) {
     if (event.target.closest && event.target.closest('[data-rule-translate="description"]') && typeof window !== 'undefined' && window.popupInstance?.rules) {
       window.popupInstance.rules.autoTranslateDescription();
     }
+    if (event.target.closest && event.target.closest('[data-rule-translate="detector-description"]') && typeof window !== 'undefined' && window.popupInstance?.rules) {
+      window.popupInstance.rules.autoTranslateDetectorDescription();
+    }
   });
   document.addEventListener('input', (event) => {
     if (event.target.classList && event.target.classList.contains('rule-translation-input') && typeof window !== 'undefined' && window.popupInstance?.rules) {
@@ -229,6 +273,9 @@ if (typeof document !== 'undefined' && document.addEventListener) {
     }
     if (event.target.id === 'methodDescriptionInput' && typeof window !== 'undefined' && window.popupInstance?.rules) {
       window.popupInstance.rules.refreshShippedPlaceholders();
+    }
+    if (event.target.id === 'detectorDescriptionInput' && typeof window !== 'undefined' && window.popupInstance?.rules) {
+      window.popupInstance.rules.fillShippedPlaceholders(detectorTranslationsScope(), event.target.value);
     }
   });
   // Translated rule texts: the original while editing, the translation again if left unchanged

@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "Mostrata nei dettagli del rilevamento e nella cronologia quando il pattern viene trovato."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Che cos’è questa protezione, ad es. rilevamento dei bot nelle pagine di accesso e di pagamento"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Mostrata nei dettagli di rilevamento di questa protezione."
+  },
   "ruleConfidenceLevel": {
     "message": "Livello di affidabilità"
   },

@@ -122,6 +122,25 @@
               <label class="form-label" for="detectorNameInput" data-i18n="ruleFieldName">Name</label>
               <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name" data-i18n-placeholder="ruleFieldNamePlaceholder">
             </div>
+            <!-- The detector's own description: detection details show it, translated when it has a translation -->
+            <div class="form-group form-group-description" id="detectorDescriptionGroup">
+              <label class="form-label" for="detectorDescriptionInput" data-i18n="ruleDescriptionTitle">Description</label>
+              <textarea id="detectorDescriptionInput" class="detector-description-input" rows="2" maxlength="300" dir="auto"
+                placeholder="What this protection is, e.g. Bot detection on login and checkout pages" data-i18n-placeholder="ruleFieldDescriptionPlaceholder"></textarea>
+              <p class="option-hint" data-i18n="ruleFieldDescriptionHint">Shown in the detection details of this protection.</p>
+              <details class="rule-translations" id="detectorDescriptionTranslations">
+                <summary>
+                  <span data-i18n="ruleTranslationsTitle">Translations</span>
+                  <span class="rule-translations-count"></span>
+                </summary>
+                <p class="option-hint" data-i18n="ruleTranslationsHint">Shown instead of the description when the extension is in that language. Empty: the description is shown.</p>
+                <div class="rule-translations-actions">
+                  <button type="button" class="action-btn" data-rule-translate="detector-description" data-i18n="ruleTranslateAuto">Translate automatically</button>
+                  <span class="rule-translations-status" aria-live="polite"></span>
+                </div>
+                <div class="rule-translations-fields" id="detectorTranslationFields"></div>
+              </details>
+            </div>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="detectorCategorySelect" data-i18n="ruleFieldCategory">Category</label>

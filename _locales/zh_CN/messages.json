@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "找到此模式时，会显示在检测详情和历史记录中。"
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "这是什么防护，例如登录和结账页面上的机器人检测"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "显示在此防护的检测详情中。"
+  },
   "ruleConfidenceLevel": {
     "message": "置信度"
   },

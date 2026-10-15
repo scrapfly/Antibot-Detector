@@ -288,7 +288,8 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     if (this.modalElements.description) {
-      const description = FormatUtils.ruleText(detection.detector?.description)
+      const defined = DetectionModals.findDetectorDefinition.call(this, detection) || {};
+      const description = FormatUtils.ruleText(defined.description || detection.detector?.description, defined.descriptionI18n)
         || _dmText('detectionUiNoDescription', 'No additional details provided for this detection.');
       this.modalElements.description.textContent = description;
     }

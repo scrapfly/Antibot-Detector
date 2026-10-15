@@ -1258,6 +1258,15 @@ Rules.prototype.saveRule = async function() {
       draft.detector.customIcon = draft.customIcon;
     }
 
+    // Detector Information → Description, with its translations
+    if (typeof this.collectDetectorDescription === 'function' && document.querySelector('#detectorDescriptionInput')) {
+      const { description, descriptionI18n } = this.collectDetectorDescription();
+      if (description) draft.detector.description = description;
+      else delete draft.detector.description;
+      if (Object.keys(descriptionI18n).length > 0) draft.detector.descriptionI18n = descriptionI18n;
+      else delete draft.detector.descriptionI18n;
+    }
+
     const detectionMethods = this._collectDetectionFromForm();
     const unknownMethods = Object.fromEntries(Object.entries(draft.detector.detection || {})
       .filter(([method]) => !Object.prototype.hasOwnProperty.call(RULE_FIELDS_FROM_FORM, method)));
@@ -1273,8 +1282,9 @@ Rules.prototype.saveRule = async function() {
     Logger.debug('UI', 'Saving rule for:', draft.detector.displayName);
 
     const originalDetection = draft.originalDetection || {};
-    const metadataChanged = ['name', 'author', 'customIcon', 'difficulty'].some(field =>
-      draft.detector[field] !== edit.detector[field]) || draft.category !== (edit.originalCategory || edit.category);
+    const metadataChanged = ['name', 'author', 'customIcon', 'difficulty', 'description'].some(field =>
+      draft.detector[field] !== edit.detector[field]) || draft.category !== (edit.originalCategory || edit.category)
+      || JSON.stringify(draft.detector.descriptionI18n || null) !== JSON.stringify(edit.detector.descriptionI18n || null);
     const hasChanges = draft.isNew || metadataChanged ||
       JSON.stringify(originalDetection) !== JSON.stringify(detectionMethods) ||
       JSON.stringify(draft.originalCombinations || []) !== JSON.stringify(combinations);

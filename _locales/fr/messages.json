@@ -599,6 +599,12 @@
   "ruleDescriptionHint": {
     "message": "Affichée dans les détails de la détection et dans l’historique quand ce motif est trouvé."
   },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Ce qu’est cette protection, p. ex. détection de bots sur les pages de connexion et de paiement"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Affichée dans les détails de détection de cette protection."
+  },
   "ruleConfidenceLevel": {
     "message": "Niveau de confiance"
   },
