@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "キャプチャ"
   },
+  "advHistoryCaptureTag": { "message": "キャプチャ" },
   "advFilterKindOther": {
     "message": "その他のツール"
   },

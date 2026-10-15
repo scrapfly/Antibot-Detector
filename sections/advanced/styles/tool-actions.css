@@ -655,12 +655,19 @@
   text-overflow: ellipsis;
 }
 
-/* History card: which tool button produced a saved result. The chip and
-   View keep their size; the tool name takes the rest and is cut with "…" */
-.capture-tool-label {
-  flex: 1 1 auto;
+/* History card: a neutral tag naming the tool that made the entry, beside the
+   vendor tag. The vendor tag and View keep their size; a long tool name is
+   cut with "…" */
+.capture-tool-tag {
+  display: inline-block;
   min-width: 0;
-  font-size: 11px;
+  height: 20px;
+  line-height: 18px;
+  padding: 0 7px;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;

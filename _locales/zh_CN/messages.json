@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "捕获"
   },
+  "advHistoryCaptureTag": { "message": "捕获" },
   "advFilterKindOther": {
     "message": "其他工具"
   },

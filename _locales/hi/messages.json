@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "कैप्चर"
   },
+  "advHistoryCaptureTag": { "message": "कैप्चर" },
   "advFilterKindOther": {
     "message": "अन्य टूल"
   },

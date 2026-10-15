@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "Захваты"
   },
+  "advHistoryCaptureTag": { "message": "Захват" },
   "advFilterKindOther": {
     "message": "Другие инструменты"
   },

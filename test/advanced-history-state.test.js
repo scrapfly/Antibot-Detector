@@ -161,3 +161,38 @@ test('the History badge follows saved captures without opening the History tab',
   await wait();
   assert.equal(badge.style.display, 'none', 'cleared history hides the badge');
 });
+
+test('every history card has a tool tag in the current language, Analyze Scripts included', () => {
+  const es = { btnCheckCookies: 'Comprobar cookies', btnAnalyzeScripts: 'Analizar scripts', advHistoryCaptureTag: 'Captura',
+    btnExtractSiteKey: 'Extraer clave del sitio' };
+  const grid = node();
+  grid.querySelectorAll = () => [];
+  const context = { window: {}, URL, Logger: { ui() {}, debug() {}, error(error) { throw error; } },
+    FormatUtils: require('../utils/format-utils'),
+    I18n: { get: key => es[key] || '', format: () => '' },
+    AdvancedUtils: { getTimeAgo: () => 'hace 15 s', formatBytes: () => '630 B', escapeHtml: value => require('../utils/format-utils').escapeHtml(value) },
+    UrlUtils: { resolveDisplayFavicon: () => '', getHostnameFromUrl: url => new URL(url).hostname, getDefaultFaviconUrl: () => '' },
+    document: { querySelectorAll: () => [] } };
+  vm.createContext(context);
+  vm.runInContext('class BaseAdvancedModule { static SCRAPFLY_TOOL_SUFFIX = "ScrapeWithScrapfly"; } this.BaseAdvancedModule = BaseAdvancedModule;', context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/components/tool-grid.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
+  for (const file of ['advanced.js', 'history/controller.js', 'history/view.js']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced', file), 'utf8'), context);
+  }
+  const Advanced = context.window.Advanced;
+  const entry = (id, data) => ({ id, moduleId: 'awswaf', moduleName: 'AWS WAF', url: 'https://coinmarketcap.com/es/', timestamp: Date.now(), data });
+  // As saved: the worker's Analyze Scripts result has no label; Check Cookies kept the label of the language it ran in
+  const captures = [
+    entry('scripts', { schemaVersion: 1, tool: 'analysis', label: '', result: { scripts: [] } }),
+    entry('cookies', { schemaVersion: 1, tool: 'awswafCheckCookies', label: 'Check Cookies', result: {} }),
+    entry('capture', { sensorData: 'x' }),
+    entry('other', { schemaVersion: 1, tool: 'akamaiSomething', label: 'Tool <b>name</b>', result: {} })
+  ];
+  assert.equal(Advanced.captureKind(captures[0]), 'scripts', 'filed under Analyze Scripts, not Other tools');
+  const advanced = new Advanced({}, {});
+  advanced.setupCaptureCardListeners = () => {};
+  advanced.renderCaptureCards(captures, { querySelector: () => grid });
+  const tags = [...grid.innerHTML.matchAll(/<span class="capture-tool-tag" title="[^"]*">([^<]*)<\/span>/g)].map(match => match[1]);
+  assert.deepEqual(tags, ['Analizar scripts', 'Comprobar cookies', 'Captura', 'Tool &lt;b&gt;name&lt;/b&gt;']);
+});

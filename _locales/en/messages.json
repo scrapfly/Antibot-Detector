@@ -4398,6 +4398,7 @@
   "advFilterKindCapture": {
     "message": "Captures"
   },
+  "advHistoryCaptureTag": { "message": "Capture" },
   "advFilterKindOther": {
     "message": "Other tools"
   },

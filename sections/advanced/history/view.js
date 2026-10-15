@@ -38,7 +38,19 @@ Advanced.TOOL_KINDS = {
 Advanced.captureKind = function(capture) {
     const tool = capture?.data?.tool;
     if (!tool) return 'capture';
+    // Analyze Scripts results are saved by the worker as 'analysis'
+    if (tool === 'analysis') return 'scripts';
     return BaseAdvancedModule.prototype.resolveToolAction({ id: String(tool) });
+  };
+
+  /** The tag on a history card: which tool made the entry, in the current language. */
+Advanced.captureToolTag = function(capture) {
+    const kind = Advanced.captureKind(capture);
+    if (kind === 'capture') return _advHistoryTr('advHistoryCaptureTag', 'Capture');
+    const label = capture?.data?.label || '';
+    // "Other tools" is a filter group, not a name: keep the button's own label there
+    const entry = kind === 'inspect' ? null : Advanced.TOOL_KINDS[kind];
+    return entry ? _advHistoryTr(...entry) : (label || _advHistoryTr(...Advanced.TOOL_KINDS.inspect));
   };
 
 
@@ -173,6 +185,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
       // Same anatomy as the History tab cards: favicon tile, title + "host • time",
       // module chip and size below, icon actions on the right
       const hostLabel = (capture.site && capture.site !== 'unknown') ? capture.site : (capture.url ? UrlUtils.getHostnameFromUrl(capture.url) : site);
+      const toolTag = Advanced.captureToolTag(capture);
       return `
         <div class="capture-card capture-card--v28" data-module-id="${capture.moduleId}" data-capture-id="${capture.id}" tabindex="0" role="button" aria-label="${FormatUtils.escapeAttr(`${viewLabel}: ${moduleName} · ${hostLabel}`)}">
           <div class="capture-card-row">
@@ -200,7 +213,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
           </div>
           <div class="capture-card-foot">
             <span class="capture-module-badge ${moduleClass}">${moduleName}</span>
-            ${capture.data && capture.data.tool && capture.data.label ? `<span class="capture-tool-label" title="${FormatUtils.escapeAttr(capture.data.label)}">${FormatUtils.escapeHtml(capture.data.label)}</span>` : ''}
+            <span class="capture-tool-tag" title="${FormatUtils.escapeAttr(toolTag)}">${FormatUtils.escapeHtml(toolTag)}</span>
             <span class="capture-card-open">${FormatUtils.escapeHtml(viewLabel)}
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </span>

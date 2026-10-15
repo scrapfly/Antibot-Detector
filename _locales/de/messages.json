@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "Aufzeichnungen"
   },
+  "advHistoryCaptureTag": { "message": "Aufzeichnung" },
   "advFilterKindOther": {
     "message": "Andere Werkzeuge"
   },

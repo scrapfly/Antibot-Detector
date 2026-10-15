@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "캡처"
   },
+  "advHistoryCaptureTag": { "message": "캡처" },
   "advFilterKindOther": {
     "message": "기타 도구"
   },

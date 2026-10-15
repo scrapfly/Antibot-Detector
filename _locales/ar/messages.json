@@ -4141,6 +4141,7 @@
   "advFilterKindCapture": {
     "message": "الالتقاطات"
   },
+  "advHistoryCaptureTag": { "message": "التقاط" },
   "advFilterKindOther": {
     "message": "أدوات أخرى"
   },

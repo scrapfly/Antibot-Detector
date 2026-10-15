@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Rules editor: a combination's "Combinations only" row shows how many of its patterns are marked and offers Mark all / Unmark all, instead of a half-ticked checkbox.
+- Advanced → History: every card shows the tool that made it as a tag, Analyze Scripts and captures included, and the tool filter lists Analyze Scripts results under their own name.
 
 ### Fixed
 
