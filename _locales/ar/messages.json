@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "إدارة الروبوتات"
   },
-  "advCloudflareNoSitekey": {
-    "message": "لم يتم العثور على sitekey في الصفحة"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "تعذّر استخراج sitekey"
-  },
   "advFuncaptchaPublicKey": {
     "message": "المفتاح العام"
   },
@@ -4840,7 +4834,7 @@
     "message": "اكتب الاسم أولًا."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "يفحص ملفات تعريف الارتباط الخاصة بالتحدي ويعثر على مفاتيح مواقع Turnstile ويحلل سكربتاته"
+    "message": "يفحص ملفات تعريف الارتباط الخاصة بالتحدي ويحلل سكربتاته"
   },
   "advancedInfoDataDomeDesc": {
     "message": "يفحص ملفات تعريف ارتباط DataDome ويحلل نصوصه البرمجية"

@@ -23,25 +23,6 @@ CloudflareAdvanced.prototype.checkCookies = async function() {
 
 
 
-CloudflareAdvanced.prototype.extractSiteKey = async function() {
-        // Cloudflare's CAPTCHA is Turnstile: same keys, same dialog as Advanced → Turnstile
-        try {
-            if (!this.tabInfo || !this.tabInfo.id) {
-                throw new Error('Tab information not available');
-            }
-            const keys = await TurnstileSiteKeys.extract(this.tabInfo.id);
-            if (keys.length === 0) {
-                NotificationHelper.error(this._txt('advCloudflareNoSitekey', 'No sitekey found on page'));
-                return;
-            }
-            CloudflareSiteKeyView.show(this, keys);
-        } catch (error) {
-            Logger.error('NETWORK', '[Cloudflare] Failed to extract the site key:', error);
-            NotificationHelper.error(this._txt('advCloudflareFailedExtractSitekey', 'Failed to extract sitekey'));
-        }
-    };
-
-
 CloudflareAdvanced.prototype.analyzeScripts = function() {
         // Cloudflare injects its bot-management scripts only until cf_clearance is set
         return this.startScriptAnalysis({ clearCookies: ['cf_clearance'] });

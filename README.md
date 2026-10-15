@@ -150,7 +150,7 @@ Hands-on tools for the protections a page uses. A protection gets its tools when
 | --- | --- |
 | Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
 | AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Extract SiteKey · Analyze Scripts |
+| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
 | Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
 | DataDome | Check Cookies · Analyze Scripts |
 | FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |

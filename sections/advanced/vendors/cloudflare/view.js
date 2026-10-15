@@ -10,15 +10,6 @@ CloudflareAdvanced.prototype.renderTools = function() {
                 `
             },
             {
-                id: 'cloudflareExtractSiteKey',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract Site Key'),
-                iconSvg: `
-                    <svg width="20" height="20" viewBox="0 0 24 24">
-                        <path d="M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3M12,17A2,2 0 0,0 10,19A2,2 0 0,0 12,21A2,2 0 0,0 14,19A2,2 0 0,0 12,17Z"/>
-                    </svg>
-                `
-            },
-            {
                 id: 'cloudflareAnalyzeScripts',
                 label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
                 iconSvg: `
@@ -49,11 +40,9 @@ CloudflareAdvanced.prototype.cloudflareTypeLabel = function(type) {
 CloudflareAdvanced.prototype.setupToolListeners = function() {
         this.bindToolActions([
             { id: 'cloudflareCheckCookies', handler: () => this.checkCookies() },
-            { id: 'cloudflareExtractSiteKey', handler: () => this.extractSiteKey() },
             { id: 'cloudflareAnalyzeScripts', handler: () => this.analyzeScripts() }
         ]);
         Logger.network('[Cloudflare] Added listener to Check Cookies button');
-        Logger.network('[Cloudflare] Added listener to Extract Site Key button');
         Logger.network('[Cloudflare] Added listener to Analyze Scripts button');
     };
 

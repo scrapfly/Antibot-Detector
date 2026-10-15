@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "봇 관리"
   },
-  "advCloudflareNoSitekey": {
-    "message": "페이지에서 sitekey를 찾을 수 없습니다"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "sitekey를 추출하지 못했습니다"
-  },
   "advFuncaptchaPublicKey": {
     "message": "공개 키"
   },
@@ -4840,7 +4834,7 @@
     "message": "먼저 이름을 작성하세요."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "챌린지 쿠키를 확인하고 Turnstile 사이트 키를 찾으며 스크립트를 분석합니다"
+    "message": "챌린지 쿠키를 확인하고 스크립트를 분석합니다"
   },
   "advancedInfoDataDomeDesc": {
     "message": "DataDome 쿠키를 확인하고 스크립트를 분석합니다"

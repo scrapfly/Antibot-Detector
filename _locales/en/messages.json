@@ -3185,12 +3185,6 @@
     "message": "Bot Management",
     "description": "Cloudflare script type"
   },
-  "advCloudflareNoSitekey": {
-    "message": "No sitekey found on page"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "Failed to extract sitekey"
-  },
   "advFuncaptchaPublicKey": {
     "message": "Public Key",
     "description": "FunCaptcha public key (site key)"
@@ -5097,7 +5091,7 @@
     "message": "Write the name first."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Checks the challenge cookies, finds Turnstile site keys and analyzes its scripts"
+    "message": "Checks the challenge cookies and analyzes its scripts"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Checks DataDome cookies and analyzes its scripts"

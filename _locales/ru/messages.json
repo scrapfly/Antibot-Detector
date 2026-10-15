@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "Управление ботами"
   },
-  "advCloudflareNoSitekey": {
-    "message": "Sitekey на странице не найден"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "Не удалось извлечь sitekey"
-  },
   "advFuncaptchaPublicKey": {
     "message": "Публичный ключ"
   },
@@ -4840,7 +4834,7 @@
     "message": "Сначала напишите название."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Проверяет cookie проверки, находит ключи сайта Turnstile и анализирует его скрипты"
+    "message": "Проверяет cookie проверки и анализирует его скрипты"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Проверяет cookie DataDome и анализирует его скрипты"

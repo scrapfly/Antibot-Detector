@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "बॉट प्रबंधन"
   },
-  "advCloudflareNoSitekey": {
-    "message": "पेज पर कोई sitekey नहीं मिली"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "sitekey नहीं निकाली जा सकी"
-  },
   "advFuncaptchaPublicKey": {
     "message": "सार्वजनिक कुंजी"
   },
@@ -4840,7 +4834,7 @@
     "message": "पहले नाम लिखें।"
   },
   "advancedInfoCloudflareDesc": {
-    "message": "चैलेंज कुकीज़ जांचता है, Turnstile साइट कुंजियाँ ढूँढता है और उसकी स्क्रिप्ट का विश्लेषण करता है"
+    "message": "चैलेंज कुकीज़ जांचता है और उसकी स्क्रिप्ट का विश्लेषण करता है"
   },
   "advancedInfoDataDomeDesc": {
     "message": "DataDome कुकीज़ जांचता है और उसकी स्क्रिप्ट का विश्लेषण करता है"

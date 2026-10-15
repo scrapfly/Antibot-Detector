@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "ボット管理"
   },
-  "advCloudflareNoSitekey": {
-    "message": "ページに sitekey が見つかりません"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "sitekey を抽出できませんでした"
-  },
   "advFuncaptchaPublicKey": {
     "message": "公開キー"
   },
@@ -4840,7 +4834,7 @@
     "message": "先に名前を入力してください。"
   },
   "advancedInfoCloudflareDesc": {
-    "message": "チャレンジの Cookie を確認し、Turnstile のサイトキーを見つけ、スクリプトを分析します"
+    "message": "チャレンジの Cookie を確認し、スクリプトを分析します"
   },
   "advancedInfoDataDomeDesc": {
     "message": "DataDome の Cookie を確認し、スクリプトを解析します"

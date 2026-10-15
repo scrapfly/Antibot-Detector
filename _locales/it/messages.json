@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "Gestione dei bot"
   },
-  "advCloudflareNoSitekey": {
-    "message": "Nessuna sitekey trovata nella pagina"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "Impossibile estrarre la sitekey"
-  },
   "advFuncaptchaPublicKey": {
     "message": "Chiave pubblica"
   },
@@ -4840,7 +4834,7 @@
     "message": "Scrivi prima il nome."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Controlla i cookie della sfida, trova le chiavi del sito Turnstile e analizza i suoi script"
+    "message": "Controlla i cookie della sfida e analizza i suoi script"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Controlla i cookie di DataDome e ne analizza gli script"

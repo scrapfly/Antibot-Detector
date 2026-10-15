@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "Bot-Management"
   },
-  "advCloudflareNoSitekey": {
-    "message": "Kein Sitekey auf der Seite gefunden"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "Sitekey konnte nicht extrahiert werden"
-  },
   "advFuncaptchaPublicKey": {
     "message": "Öffentlicher Schlüssel"
   },
@@ -4840,7 +4834,7 @@
     "message": "Schreibe zuerst den Namen."
   },
   "advancedInfoCloudflareDesc": {
-    "message": "Prüft die Challenge-Cookies, findet Turnstile-Site-Keys und analysiert die Skripte"
+    "message": "Prüft die Challenge-Cookies und analysiert die Skripte"
   },
   "advancedInfoDataDomeDesc": {
     "message": "Prüft DataDome-Cookies und analysiert seine Skripte"

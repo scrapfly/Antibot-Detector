@@ -8,7 +8,8 @@ const FormatUtils = require('../utils/format-utils');
 const modules = [
   ['akamai', 'AkamaiAdvanced', ['CheckCookies', 'AnalyzeContent', 'StartCapture', 'ExtractSensor']],
   ['awswaf', 'AwsWafAdvanced', ['CheckCookies', 'AnalyzeScripts']],
-  ['cloudflare', 'CloudflareAdvanced', ['CheckCookies', 'ExtractSiteKey', 'AnalyzeScripts']],
+  // The Turnstile site key lives on Advanced → Turnstile only
+  ['cloudflare', 'CloudflareAdvanced', ['CheckCookies', 'AnalyzeScripts']],
   ['datadome', 'DataDomeAdvanced', ['CheckCookies', 'AnalyzeScripts']],
   ['funcaptcha', 'FunCaptchaAdvanced', ['ExtractSiteKey', 'AnalyzeScripts', 'StartCapture']],
   ['geetest', 'GeetestAdvanced', ['Version', 'Analyze']],
@@ -277,7 +278,8 @@ test('all method semantics disclose reloads, cookie resets and capture state wit
       count++;
     }
   }
-  assert.equal(count, 33);
+  // 33 until Cloudflare Bot Management lost Extract Site Key (Turnstile keeps it)
+  assert.equal(count, 32);
 });
 
 test('action and code dialog styles use full rows and a separate non-overlapping code toolbar', () => {

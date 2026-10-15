@@ -3048,12 +3048,6 @@
   "advCloudflareTypeBotManagement": {
     "message": "机器人管理"
   },
-  "advCloudflareNoSitekey": {
-    "message": "页面上未找到 sitekey"
-  },
-  "advCloudflareFailedExtractSitekey": {
-    "message": "无法提取 sitekey"
-  },
   "advFuncaptchaPublicKey": {
     "message": "公钥"
   },
@@ -4840,7 +4834,7 @@
     "message": "请先填写名称。"
   },
   "advancedInfoCloudflareDesc": {
-    "message": "检查验证 Cookie，查找 Turnstile 站点密钥并分析其脚本"
+    "message": "检查验证 Cookie 并分析其脚本"
   },
   "advancedInfoDataDomeDesc": {
     "message": "检查 DataDome Cookie 并分析其脚本"
