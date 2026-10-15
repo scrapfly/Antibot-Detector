@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Detection: Google BotGuard's www.google.com/js/th/… script is proof on its own too, so it shows 100% instead of 75%.
+- Dark theme: protection logos on the Detection tab and in History details also sit on dark tiles instead of white squares; the light theme is unchanged.
 
 ## [2.8.8] - 2026-10-15
 

@@ -360,7 +360,8 @@ class History {
             iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-fingerprint-image"></div>`;
             isFingerprint = true;
           } else {
-            iconHtml = `<img src="${iconUrl}" alt="${safeName}" class="detection-icon">`;
+            // Brand logos: the dark copy in the dark theme, the original in the light one
+            iconHtml = FormatUtils.brandLogoHtml(detectorObj.icon, name, 'detection-icon');
           }
         }
       } else {
@@ -1080,7 +1081,7 @@ class History {
           const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
           detectorIconHtml = isFingerprintCategory
             ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`
-            : `<img src="${iconUrl}" alt="${safeName}" class="modal-detector-icon">`;
+            : FormatUtils.brandLogoHtml(detectorObj.icon, rawName || name, 'modal-detector-icon');
         }
       } else {
         const scrapflyIconUrl = chrome.runtime.getURL('icons/icon128.png');

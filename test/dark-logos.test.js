@@ -46,3 +46,43 @@ test('Rules cards show the dark copy of a brand logo, and the original for the l
   assert.match(light, /:root\[data-theme="light"\] \.detector-logo \.detector-logo-dark \{\s*display: none;/);
   assert.match(light, /:root\[data-theme="light"\] \.detector-logo \.detector-logo-light \{\s*display: inline;/);
 });
+
+test('Detection and History show the dark copy of a brand logo through one helper, the original in the light theme', () => {
+  const context = { chrome: { runtime: { getURL: p => 'chrome-extension://x/' + p } } };
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(root, 'utils/format-utils.js'), 'utf8') + '\nthis.FormatUtils = FormatUtils;', context);
+  const { FormatUtils } = context;
+  const pair = FormatUtils.brandLogoHtml('akamai_official.png', 'Akamai "Bot" Manager', 'detector-icon');
+  assert.equal(pair, '<span class="brand-logo"><img src="chrome-extension://x/assets/logos-dark/akamai_official.png" alt="Akamai &quot;Bot&quot; Manager" class="detector-icon brand-logo-dark">'
+    + '<img src="chrome-extension://x/detectors/icons/akamai_official.png" alt="" class="detector-icon brand-logo-light"></span>');
+  // Other icons, and names that are not plain file names, stay one image
+  assert.equal(FormatUtils.brandLogoHtml('custom.png', 'X', 'detection-icon'), '<img src="chrome-extension://x/detectors/icons/custom.png" alt="X" class="detection-icon">');
+  assert.doesNotMatch(FormatUtils.brandLogoHtml('../x_official.png', 'X', 'a'), /logos-dark/);
+  assert.doesNotMatch(FormatUtils.brandLogoHtml('"><b>_official.png', 'X', 'a'), /<b>/);
+
+  // Detection cards and their details use it; fingerprint glyphs do not
+  const detection = { chrome: context.chrome, FormatUtils, I18n: { get: () => null } };
+  vm.createContext(detection);
+  vm.runInContext(fs.readFileSync(path.join(root, 'sections/detection/detection-ui.js'), 'utf8') + '\nthis.DetectionUI = DetectionUI;', detection);
+  assert.match(detection.DetectionUI.getDetectorIcon({ category: 'antibot', detector: { name: 'Akamai', icon: 'akamai_official.png' } }), /^<span class="brand-logo"><img src="[^"]+logos-dark\/akamai_official\.png"/);
+  assert.doesNotMatch(detection.DetectionUI.getDetectorIcon({ category: 'fingerprint', detector: { name: 'Canvas', icon: 'canvas_fingerprint.png' } }), /brand-logo/);
+  // History cards and their details too
+  const history = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
+  assert.equal((history.match(/FormatUtils\.brandLogoHtml\(detectorObj\.icon, [^,]+, '(?:detection-icon|modal-detector-icon)'\)/g) || []).length, 2);
+
+  // The wrapper makes no box; each theme shows one of the two images
+  const common = fs.readFileSync(path.join(root, 'modules/styles/common.css'), 'utf8');
+  assert.match(common, /\.brand-logo \{\s*display: contents;/);
+  assert.match(common, /\.brand-logo \.brand-logo-light \{\s*display: none;/);
+  const light = fs.readFileSync(path.join(root, 'modules/styles/theme-light.css'), 'utf8');
+  assert.match(light, /:root\[data-theme="light"\] \.brand-logo \.brand-logo-dark \{\s*display: none;/);
+  assert.match(light, /:root\[data-theme="light"\] \.brand-logo \.brand-logo-light \{\s*display: block;/);
+  // The dark copy never sits on the white plate
+  const css = ['sections/detection/detection.css', 'sections/history/history.css'].map(f => fs.readFileSync(path.join(root, f), 'utf8')).join('\n');
+  for (const selector of ['.card-icon-section img.brand-logo-dark', '.detection-modal-icon img.brand-logo-dark',
+    '.history-detection-tag.icon-badge .detection-icon.brand-logo-dark', '.history-modal-detection-icon .modal-detector-icon.brand-logo-dark']) {
+    const rule = css.match(new RegExp(selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' \\{([^}]*)\\}'));
+    assert.ok(rule, selector);
+    assert.doesNotMatch(rule[1], /#fff|white/, selector);
+  }
+});

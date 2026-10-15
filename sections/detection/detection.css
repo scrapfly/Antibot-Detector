@@ -705,6 +705,13 @@
   padding: 3px;
 }
 
+/* Dark theme: the brand logo's dark copy on a dark tile instead of the white plate */
+.card-icon-section img.brand-logo-dark {
+  background: var(--bg-primary);
+  box-shadow: inset 0 0 0 1px var(--border);
+  padding: 5px;
+}
+
 /* Fingerprint SVG icons */
 .card-icon-section .detector-icon-svg {
   width: 100%;
@@ -988,6 +995,11 @@
   background: white;
   padding: 3px;
   border-radius: 9px;
+}
+
+.detection-modal-icon img.brand-logo-dark {
+  background: none;
+  padding: 4px;
 }
 
 .detection-modal-icon .detector-icon-svg {

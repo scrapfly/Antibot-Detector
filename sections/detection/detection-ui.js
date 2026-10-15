@@ -1535,11 +1535,12 @@ DetectionUI.getDetectorIcon = function(detection) {
       }
 
       // It's a file, build path to icon in detectors/icons folder
-      const iconPath = chrome.runtime.getURL(`detectors/icons/${detection.detector.icon}`);
       if (isFingerprintCategory) {
+        const iconPath = chrome.runtime.getURL(`detectors/icons/${detection.detector.icon}`);
         return wrapFingerprintImage(iconPath, escapeAlt(detection.detector.name), 'builtin');
       }
-      return `<img src="${iconPath}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
+      // Brand logos: the dark copy in the dark theme, the original in the light one
+      return FormatUtils.brandLogoHtml(detection.detector.icon, detection.detector.name || iconAlt, 'detector-icon');
     }
 
     // No icon specified, use default custom.png

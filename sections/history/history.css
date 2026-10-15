@@ -491,6 +491,11 @@
   border-radius: 4px;
 }
 
+/* Dark theme: the brand logo's dark copy, without the white plate */
+.history-detection-tag.icon-badge .detection-icon.brand-logo-dark {
+  background: none;
+}
+
 /* Scrapfly fallback mark for detectors without a vendor logo */
 .history-detection-tag.icon-badge .detection-icon--default {
   background: transparent;
@@ -908,7 +913,7 @@
 .history-modal-detection-icon.icon-fingerprint { --cat: #60a5fa; }
 .history-modal-detection-icon.icon-other { --cat: var(--g-8b8b8b); }
 
-.history-modal-detection-icon > .modal-detector-icon {
+.history-modal-detection-icon .modal-detector-icon {
   width: 22px;
   height: 22px;
   padding: 2px;
@@ -917,9 +922,13 @@
   background: #fff;
 }
 
-.history-modal-detection-icon > .modal-detector-icon--default {
+.history-modal-detection-icon .modal-detector-icon--default {
   background: transparent;
   padding: 0;
+}
+
+.history-modal-detection-icon .modal-detector-icon.brand-logo-dark {
+  background: none;
 }
 
 .history-modal-detection-icon .modal-detector-icon-svg {

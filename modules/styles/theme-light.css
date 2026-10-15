@@ -84,6 +84,15 @@
   display: inline;
 }
 
+/* Detection and History: the original logo on its white plate */
+:root[data-theme="light"] .brand-logo .brand-logo-dark {
+  display: none;
+}
+
+:root[data-theme="light"] .brand-logo .brand-logo-light {
+  display: block;
+}
+
 /* Rules cards: the original logo, untiled, as before */
 :root[data-theme="light"] .detector-logo {
   width: auto;

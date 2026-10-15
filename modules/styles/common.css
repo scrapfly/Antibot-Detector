@@ -916,6 +916,20 @@ input:checked + .slider:before {
 }
 
 /* ============================================
+   BRAND LOGOS (FormatUtils.brandLogoHtml)
+   The dark theme shows the copy without the icon's white square
+   (assets/logos-dark/), the light theme the original. The wrapper makes no
+   box: each container sizes the image as before.
+   ============================================ */
+.brand-logo {
+  display: contents;
+}
+
+.brand-logo .brand-logo-light {
+  display: none;
+}
+
+/* ============================================
    FINGERPRINT ICON (shared color layer)
    ============================================ */
 .fingerprint-icon {
