@@ -1,0 +1,137 @@
+{
+  "id": "detect-deepseek-pow",
+  "name": "DeepSeek PoW",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-15",
+  "version": "2.0.1",
+  "minExtensionVersion": "2.8",
+  "website": "https://chat.deepseek.com/",
+  "icon": "deepseek_official.png",
+  "description": "DeepSeek's own proof-of-work anti-bot on chat.deepseek.com: each chat request first needs a solved DeepSeekHashV1 challenge, computed in the browser by a WebAssembly solver",
+  "detection": {
+    "url": [
+      {
+        "id": "pow-challenge-endpoint",
+        "confidence": 100,
+        "description": "Proof-of-work challenge request (/api/v0/chat/create_pow_challenge)",
+        "text": "^https://chat\\.deepseek\\.com/api/v\\d{1,2}/chat/create_pow_challenge(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "pow-solver-wasm",
+        "confidence": 85,
+        "description": "DeepSeekHashV1 WebAssembly solver (sha3_wasm_bg.<hash>.wasm)",
+        "text": "^https://(?:fe-static|chat)\\.deepseek\\.com/(?:chat/)?static/sha3_wasm_bg\\.[0-9a-f]{6,16}\\.wasm(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "pow-protected-completion",
+        "confidence": 40,
+        "standalone": false,
+        "description": "Chat completion request, the path the proof of work is issued for",
+        "text": "^https://chat\\.deepseek\\.com/api/v\\d{1,2}/chat/completion(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      }
+    ],
+    "payload": [
+      {
+        "id": "pow-challenge-payload",
+        "text": "\"target_path\"\\s*:\\s*\"/api/",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 80,
+        "description": "Challenge request naming the path it protects (target_path)",
+        "urlPattern": "^https://chat\\.deepseek\\.com/api/v\\d{1,2}/chat/create_pow_challenge",
+        "urlRegex": true,
+        "methods": [
+          "POST"
+        ]
+      },
+      {
+        "id": "pow-challenge-response",
+        "body": "response",
+        "text": "\"algorithm\"\\s*:\\s*\"DeepSeekHashV1\"",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 90,
+        "description": "Challenge response with the DeepSeekHashV1 proof-of-work algorithm",
+        "urlPattern": "^https://chat\\.deepseek\\.com/api/v\\d{1,2}/chat/create_pow_challenge",
+        "urlRegex": true,
+        "methods": [
+          "POST"
+        ]
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "deepseek-pow-challenge-response",
+      "name": "Challenge requested and answered with a DeepSeekHashV1 challenge",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "pow-challenge-endpoint"
+          },
+          {
+            "pattern": "pow-challenge-response"
+          }
+        ]
+      }
+    },
+    {
+      "id": "deepseek-pow-challenge",
+      "name": "Proof-of-work challenge requested for a protected path",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "pow-challenge-endpoint"
+          },
+          {
+            "pattern": "pow-challenge-payload"
+          }
+        ]
+      }
+    },
+    {
+      "id": "deepseek-pow-solver-challenge",
+      "name": "WebAssembly solver loaded and a challenge requested",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "pow-solver-wasm"
+          },
+          {
+            "pattern": "pow-challenge-endpoint"
+          }
+        ]
+      }
+    },
+    {
+      "id": "deepseek-pow-solved-request",
+      "name": "WebAssembly solver loaded and a protected chat request sent",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "pow-solver-wasm"
+          },
+          {
+            "pattern": "pow-protected-completion"
+          }
+        ]
+      }
+    }
+  ]
+}

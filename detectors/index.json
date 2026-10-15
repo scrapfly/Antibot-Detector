@@ -30,7 +30,9 @@
         "detect-radware",
         "detect-amazon",
         "detect-cloudflare-waitingroom",
-        "detect-hunt"
+        "detect-hunt",
+        "detect-deepseek-pow",
+        "detect-openai-sentinel"
     ]
 },
 "captcha": {

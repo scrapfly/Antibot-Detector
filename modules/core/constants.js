@@ -40,6 +40,10 @@ const Constants = Object.freeze({
     // ─── Performance Limits ────────────────────────────────────────────────────
     COOKIE_VALUE_MAX_LENGTH: 100,          // cookie value substring limit
     MAX_PAYLOADS_PER_TAB: 50,              // payload capture limit
+    MAX_RESPONSES_PER_TAB: 20,             // captured response bodies kept per tab (body: "response" rules)
+    MAX_RESPONSE_BODY_CHARS: 65536,        // a captured response body, after long strings are shortened
+    RESPONSE_LONG_STRING_CHARS: 256,       // JSON strings this long are shortened before leaving the page
+    RESPONSE_STRING_KEEP_CHARS: 32,        // characters a shortened string keeps
     MAX_NETWORK_URLS_PER_TAB: 1000,        // network URL capture limit (unique URLs; low-value types dropped first)
 
     // ─── Tab Management ────────────────────────────────────────────────────────

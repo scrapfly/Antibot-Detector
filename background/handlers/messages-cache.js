@@ -121,6 +121,7 @@ function registerCacheHandlers(registry, context) {
                 responseCookiesStore.delete(request.tabId);
                 payloadStore.delete(request.tabId);
                 networkUrlsStore.delete(request.tabId);
+                if (typeof responseStore !== 'undefined') responseStore.delete(request.tabId);
                 tabsUsingCache.delete(request.tabId);
 
                 recentlyClearedTabs.add(request.tabId);

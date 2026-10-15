@@ -1,0 +1,245 @@
+{
+  "id": "detect-openai-sentinel",
+  "name": "OpenAI Sentinel",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-15",
+  "version": "2.0.1",
+  "minExtensionVersion": "2.8",
+  "website": "https://chatgpt.com/",
+  "icon": "openai_official.png",
+  "description": "OpenAI's own anti-bot on ChatGPT and OpenAI sign-in: before a chat or login request it hands out a proof of work, an obfuscated browser check and a telemetry collector",
+  "detection": {
+    "url": [
+      {
+        "id": "chat-requirements",
+        "confidence": 100,
+        "description": "ChatGPT Sentinel chat-requirements endpoint (prepare or finalize), which hands out the proof of work",
+        "text": "^https://chatgpt\\.com/[a-z0-9-]{3,20}/sentinel/chat-requirements(?:/[a-z]{3,12})?(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "sentinel-sdk-loader",
+        "confidence": 90,
+        "description": "Sentinel SDK loader (/backend-api/sentinel/sdk.js)",
+        "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/backend-api/sentinel/sdk\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "sentinel-sdk-build",
+        "confidence": 85,
+        "description": "Versioned Sentinel SDK (/sentinel/<build>/sdk.js)",
+        "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/sentinel/[0-9a-z]{6,24}/sdk\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "sentinel-frame",
+        "confidence": 85,
+        "description": "Hidden Sentinel frame (/backend-api/sentinel/frame.html)",
+        "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/backend-api/sentinel/frame\\.html(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "sentinel-req",
+        "confidence": 85,
+        "description": "Sentinel token request sent by the SDK (/backend-api/sentinel/req)",
+        "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/backend-api/sentinel/req(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      },
+      {
+        "id": "chatgpt-sentinel-bundle",
+        "confidence": 70,
+        "description": "ChatGPT's own Sentinel scripts (assets/…sentinel…-<hash>.js)",
+        "text": "^https://chatgpt\\.com/(?:[a-z0-9-]{3,20}/)?assets/(?:[a-z]{2,12}-){0,4}sentinel(?:-[a-z]{2,12}){0,3}-[A-Za-z0-9_-]{8}\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      }
+    ],
+    "payload": [
+      {
+        "id": "requirements-token-payload",
+        "text": "\"p\"\\s*:\\s*\"gAAAAAC",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 80,
+        "description": "Sentinel requirements token (p: gAAAAAC…) posted to a Sentinel endpoint",
+        "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/",
+        "urlRegex": true,
+        "methods": [
+          "POST"
+        ]
+      },
+      {
+        "id": "proof-of-work-answer",
+        "text": "\"proofofwork\"\\s*:\\s*\"gAAAAAB",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 85,
+        "description": "Solved proof of work (proofofwork: gAAAAAB…) sent to chat-requirements/finalize",
+        "urlPattern": "^https://chatgpt\\.com/[a-z0-9-]{3,20}/sentinel/chat-requirements/finalize(?:[?#]|$)",
+        "urlRegex": true,
+        "methods": [
+          "POST"
+        ]
+      },
+      {
+        "id": "pow-required-response",
+        "body": "response",
+        "text": "\"proofofwork\"\\s*:\\s*\\{\\s*\"required\"\\s*:\\s*true",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 85,
+        "description": "Sentinel response asking for a proof of work (proofofwork.required: true)",
+        "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/(?:chat-requirements(?:/prepare)?|req)(?:[?#]|$)",
+        "urlRegex": true,
+        "methods": [
+          "POST"
+        ]
+      },
+      {
+        "id": "so-required-response",
+        "body": "response",
+        "text": "\"so\"\\s*:\\s*\\{\\s*\"required\"\\s*:\\s*true",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 70,
+        "description": "Sentinel response asking for session telemetry (so.required: true)",
+        "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/(?:chat-requirements(?:/prepare)?|req)(?:[?#]|$)",
+        "urlRegex": true,
+        "methods": [
+          "POST"
+        ]
+      }
+    ],
+    "window": [
+      {
+        "id": "sentinel-sdk-object",
+        "path": "SentinelSDK",
+        "condition": "typeof object",
+        "confidence": 75,
+        "description": "Sentinel SDK object (window.SentinelSDK)"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "sentinel-chat-requirements",
+      "name": "Chat-requirements request with its requirements token",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "chat-requirements"
+          },
+          {
+            "pattern": "requirements-token-payload"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sentinel-proof-of-work",
+      "name": "Proof of work asked for and answered",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "pow-required-response"
+          },
+          {
+            "pattern": "proof-of-work-answer"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sentinel-sdk-flow",
+      "name": "Sentinel SDK with its frame or token request",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "sentinel-sdk-loader"
+              },
+              {
+                "pattern": "sentinel-sdk-build"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "sentinel-frame"
+              },
+              {
+                "pattern": "sentinel-req"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sentinel-sdk-object-loaded",
+      "name": "Sentinel SDK object with its script",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "sentinel-sdk-object"
+          },
+          {
+            "any": [
+              {
+                "pattern": "sentinel-sdk-loader"
+              },
+              {
+                "pattern": "sentinel-sdk-build"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "chatgpt-sentinel-runtime",
+      "name": "ChatGPT Sentinel scripts with Sentinel traffic",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "chatgpt-sentinel-bundle"
+          },
+          {
+            "any": [
+              {
+                "pattern": "requirements-token-payload"
+              },
+              {
+                "pattern": "proof-of-work-answer"
+              },
+              {
+                "pattern": "pow-required-response"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

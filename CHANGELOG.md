@@ -7,12 +7,19 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [2.8.8] - 2026-10-15
 
+### Added
+
+- Detection: DeepSeek PoW and OpenAI Sentinel (ChatGPT) anti-bots, with their logos, each showing its proof-of-work challenge. The Turnstile check Sentinel asks for shows under Cloudflare Turnstile, marked as OpenAI's own.
+- Detection: a rule can now read the response of the URLs it names, such as a challenge asking for a proof of work. Evidence that comes after the scan, like a challenge sent when you post a message, is added to the page's result.
+
 ### Changed
 
 - Rules editor: a combination's "Combinations only" row shows how many of its patterns are marked and offers Mark all / Unmark all, instead of a half-ticked checkbox.
 - Advanced → History: every card shows the tool that made it as a tag, Analyze Scripts and captures included, and the tool filter lists Analyze Scripts results under their own name.
 - Detection: Google BotGuard's own script (www.google.com/js/bg/…) is proof on its own, so it shows 100% instead of 75%.
 - Dark theme: protection logos in Rules and in Advanced's supported protections sit on dark tiles instead of white squares; the light theme is unchanged.
+- Cloudflare: a /cdn-cgi/challenge-platform/ challenge or bot-detection script on the page is proof (100%), its newer script path included; Turnstile's own frames are not.
+- Detection details: a matched request body shows the text that matched instead of the rule's pattern.
 
 ### Removed
 

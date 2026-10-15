@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-15",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.cloudflare.com/products/turnstile/",
   "icon": "cloudflare_official.png",
@@ -83,6 +83,31 @@
         "description": "Turnstile execute API presence, not execution",
         "standalone": true
       }
+    ],
+    "payload": [
+      {
+        "id": "openai-turnstile-required-response",
+        "body": "response",
+        "text": "\"turnstile\"\\s*:\\s*\\{\\s*\"required\"\\s*:\\s*true",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 60,
+        "description": "OpenAI Sentinel response asking for a Turnstile check (turnstile.required: true); OpenAI's own Turnstile on ChatGPT, not Cloudflare's widget",
+        "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/(?:chat-requirements(?:/prepare)?|req)(?:[?#]|$)",
+        "urlRegex": true,
+        "methods": ["POST"]
+      },
+      {
+        "id": "openai-turnstile-answer",
+        "text": "\"turnstile\"\\s*:\\s*\"(?=[A-Za-z0-9+/=_-]{20})",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "confidence": 50,
+        "description": "Turnstile answer sent to ChatGPT's Sentinel (chat-requirements/finalize); OpenAI's own Turnstile",
+        "urlPattern": "^https://chatgpt\\.com/[a-z0-9-]{3,20}/sentinel/chat-requirements/finalize(?:[?#]|$)",
+        "urlRegex": true,
+        "methods": ["POST"]
+      }
     ]
   },
   "combinations": [
@@ -109,6 +134,12 @@
       "name": "Official API resource, widget frame and response field",
       "when": { "all": [{ "pattern": "turnstile-api-resource" }, { "pattern": "turnstile-widget-frame-url" }, { "pattern": "turnstile-response-field" }] },
       "confidence": 95
+    },
+    {
+      "id": "openai-turnstile-asked-answered",
+      "name": "OpenAI Sentinel asked for a Turnstile check and got its answer",
+      "when": { "all": [{ "pattern": "openai-turnstile-required-response" }, { "pattern": "openai-turnstile-answer" }] },
+      "confidence": 90
     }
   ]
 }

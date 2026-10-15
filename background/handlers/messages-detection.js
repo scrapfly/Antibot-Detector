@@ -550,6 +550,33 @@ function registerDetectionHandlers(registry, context) {
     };
     registry[BRIDGE_TYPES.WINDOW_DETECTIONS] = handle_window_detections;
 
+    // A response body the page read for a body: "response" payload rule
+    // (content.js forwards it from the MAIN world). Top frame only; the page
+    // origin comes from Chrome's sender, not from the message.
+    const handle_response_body = function({ request, sender, sendResponse, context }) {
+        void context; void sendResponse;
+        try {
+            const tabId = sender?.tab?.id;
+            if (!tabId || (sender.frameId !== undefined && sender.frameId !== 0)) return false;
+            if (typeof request?.url !== 'string' || request.url.length > 4096 || typeof request.body !== 'string' || !request.body) return false;
+            let pageOrigin = '';
+            try { pageOrigin = new URL(sender.url || sender.tab.url).origin; } catch (_) { return false; }
+            recordCapturedResponse(tabId, {
+                url: request.url,
+                method: typeof request.method === 'string' ? request.method.slice(0, 16).toUpperCase() : 'GET',
+                status: Number.isFinite(request.status) ? request.status : 0,
+                data: request.body.slice(0, Constants.MAX_RESPONSE_BODY_CHARS),
+                type: 'response',
+                pageOrigin,
+                timestamp: Date.now()
+            });
+        } catch (error) {
+            Logger.error('BACKGROUND', '[RESPONSE_BODY] Failed to record a response:', error);
+        }
+        return false; // No response needed
+    };
+    registry[BRIDGE_TYPES.RESPONSE_BODY] = handle_response_body;
+
     const handle_window_props_complete = function({ request, sender, sendResponse, context }) {
         void context;
 

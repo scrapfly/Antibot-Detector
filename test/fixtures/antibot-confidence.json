@@ -213,7 +213,7 @@
  },
  "detect-cloudflare": {
   "bot-management-script": {
-   "url": "https://www.example-shop.test/cdn-cgi/challenge-platform/scripts/jsd/main.js"
+   "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/b/scripts/jsd/d2d3316b729e/main.js?"
   },
   "cf-bm-cookie": {
    "cookie": [
@@ -250,6 +250,9 @@
   },
   "chl-opt-reference": {
    "source": "window._cf_chl_opt={cvId:'3',cZone:'example-shop.test'};"
+  },
+  "jsd-oneshot": {
+   "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.2576:1792062023:x/a4ae8"
   }
  },
  "detect-datadome": {
@@ -994,6 +997,82 @@
   },
   "hunt-api-reference": {
    "source": "s.src = '/hd-api/external/apps/a1b2c3d4e5f6/api.js';"
+  }
+ },
+ "detect-deepseek-pow": {
+  "pow-challenge-endpoint": {
+   "url": "https://chat.deepseek.com/api/v0/chat/create_pow_challenge"
+  },
+  "pow-solver-wasm": {
+   "url": "https://fe-static.deepseek.com/chat/static/sha3_wasm_bg.7b9ca65ddd.wasm"
+  },
+  "pow-protected-completion": {
+   "url": "https://chat.deepseek.com/api/v0/chat/completion"
+  },
+  "pow-challenge-payload": {
+   "payload": {
+    "method": "POST",
+    "url": "https://chat.deepseek.com/api/v0/chat/create_pow_challenge",
+    "data": "{\"target_path\":\"/api/v0/chat/completion\"}"
+   }
+  },
+  "pow-challenge-response": {
+   "response": {
+    "method": "POST",
+    "url": "https://chat.deepseek.com/api/v0/chat/create_pow_challenge",
+    "data": "{\"code\":0,\"msg\":\"\",\"data\":{\"biz_code\":0,\"biz_msg\":\"\",\"biz_data\":{\"challenge\":{\"algorithm\":\"DeepSeekHashV1\",\"challenge\":\"0000000000000000000000000000000000000000000000000000000000000001\",\"salt\":\"80b85e66612810100627\",\"signature\":\"0000000000000000000000000000000000000000000000000000000000000002\",\"difficulty\":144000,\"expire_at\":1792063881173,\"expire_after\":300000,\"target_path\":\"/api/v0/chat/completion\"}}}}"
+   }
+  }
+ },
+ "detect-openai-sentinel": {
+  "chat-requirements": {
+   "url": "https://chatgpt.com/backend-api/sentinel/chat-requirements/prepare"
+  },
+  "sentinel-sdk-loader": {
+   "url": "https://sentinel.openai.com/backend-api/sentinel/sdk.js"
+  },
+  "sentinel-sdk-build": {
+   "url": "https://sentinel.openai.com/sentinel/20260810913b/sdk.js"
+  },
+  "sentinel-frame": {
+   "url": "https://sentinel.openai.com/backend-api/sentinel/frame.html?sv=20260810913b"
+  },
+  "sentinel-req": {
+   "url": "https://sentinel.openai.com/backend-api/sentinel/req"
+  },
+  "chatgpt-sentinel-bundle": {
+   "url": "https://chatgpt.com/unauth-mweb/assets/native-initial-sentinel-prewarm-C5JImGOj.js"
+  },
+  "requirements-token-payload": {
+   "payload": {
+    "method": "POST",
+    "url": "https://chatgpt.com/backend-api/sentinel/chat-requirements/prepare",
+    "data": "{\"p\":\"gAAAAACexampleRequirementsTokenOnly\"}"
+   }
+  },
+  "proof-of-work-answer": {
+   "payload": {
+    "method": "POST",
+    "url": "https://chatgpt.com/unauth-mweb/sentinel/chat-requirements/finalize",
+    "data": "{\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00\",\"proofofwork\":\"gAAAAABexampleProofOfWorkAnswerOnly\",\"turnstile\":\"TexampleTurnstileAnswerOnly000000000\"}"
+   }
+  },
+  "pow-required-response": {
+   "response": {
+    "method": "POST",
+    "url": "https://chatgpt.com/backend-api/sentinel/chat-requirements/prepare",
+    "data": "{\"persona\":\"chatgpt-paid\",\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00…3768\",\"turnstile\":{\"required\":true,\"dx\":\"PBexampleTurnstileProgramOnly000…15904\"},\"proofofwork\":{\"required\":true,\"seed\":\"0.2823693021564392\",\"difficulty\":\"06243b\"},\"so\":{\"required\":true,\"collector_dx\":\"PBexampleCollectorProgramOnly000…41536\",\"snapshot_dx\":\"PBexampleSnapshotProgramOnly0000…40920\"}}"
+   }
+  },
+  "so-required-response": {
+   "response": {
+    "method": "POST",
+    "url": "https://chatgpt.com/backend-api/sentinel/chat-requirements/prepare",
+    "data": "{\"persona\":\"chatgpt-paid\",\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00…3768\",\"turnstile\":{\"required\":true,\"dx\":\"PBexampleTurnstileProgramOnly000…15904\"},\"proofofwork\":{\"required\":true,\"seed\":\"0.2823693021564392\",\"difficulty\":\"06243b\"},\"so\":{\"required\":true,\"collector_dx\":\"PBexampleCollectorProgramOnly000…41536\",\"snapshot_dx\":\"PBexampleSnapshotProgramOnly0000…40920\"}}"
+   }
+  },
+  "sentinel-sdk-object": {
+   "runtimeType": "object"
   }
  }
 }

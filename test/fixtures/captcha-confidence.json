@@ -89,7 +89,9 @@
     "turnstile-configured-widget": { "dom": { "tagName": "div", "class": "cf-turnstile", "attributes": { "class": "cf-turnstile", "data-sitekey": "1x00000000000000000000AA" } } },
     "turnstile-response-field": { "dom": { "tagName": "input", "attributes": { "type": "hidden", "name": "cf-turnstile-response" } } },
     "turnstile-runtime-render": { "runtimeType": "function" },
-    "turnstile-runtime-execute": { "runtimeType": "function" }
+    "turnstile-runtime-execute": { "runtimeType": "function" },
+    "openai-turnstile-required-response": { "response": { "method": "POST", "url": "https://chatgpt.com/backend-api/sentinel/chat-requirements/prepare", "data": "{\"persona\":\"chatgpt-paid\",\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00…3768\",\"turnstile\":{\"required\":true,\"dx\":\"PBexampleTurnstileProgramOnly000…15904\"},\"proofofwork\":{\"required\":true,\"seed\":\"0.2823693021564392\",\"difficulty\":\"06243b\"}}" } },
+    "openai-turnstile-answer": { "payload": { "method": "POST", "url": "https://chatgpt.com/unauth-mweb/sentinel/chat-requirements/finalize", "data": "{\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00\",\"proofofwork\":\"gAAAAABexample0\",\"turnstile\":\"TexampleTurnstileAnswerOnly000000000\"}" } }
   },
   "detect-yidun": {
     "yidun-sdk-resource": { "url": "https://cstaticdun.126.net/load.min.js" },

@@ -28,6 +28,8 @@ const OPTIONS = {
     // Black marks would vanish on a dark tile: draw them light, as on the vendors' dark sites
     'azurefrontdoor_official.png': { lightenBelow: 60 },
     'imperva_official.png': { lightenBelow: 60 },
+    // A black mark on white: its darkness becomes opacity, drawn white (the gaps inside the knot clear too)
+    'openai_official.png': { whiteMark: true },
     'prosopo_official.png': { lightenBelow: 90 },
     'radware_official.png': { lightenBelow: 60 }
 };
@@ -51,6 +53,15 @@ async function darkCopy({ src, options }) {
     ctx.drawImage(img, 0, 0);
     const image = ctx.getImageData(0, 0, w, h);
     const d = image.data;
+    if (options.whiteMark) {
+        for (let i = 0; i < d.length; i += 4) {
+            const lum = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+            d[i + 3] = Math.round((255 - lum) * d[i + 3] / 255);
+            d[i] = d[i + 1] = d[i + 2] = 255;
+        }
+        ctx.putImageData(image, 0, 0);
+        return canvas.toDataURL('image/png');
+    }
     const nearWhite = i => d[i + 3] > 0 && Math.min(d[i], d[i + 1], d[i + 2]) > 215;
 
     // The white square: transparent or near-white pixels reachable from the edge

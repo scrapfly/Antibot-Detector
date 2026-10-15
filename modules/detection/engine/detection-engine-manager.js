@@ -244,7 +244,8 @@ class DetectionEngineManager {
                 logCollectorEnabled,
                 enableJsApi,
                 hooksConfig,
-                fingerprintEnabled: true
+                fingerprintEnabled: true,
+                responseCapture: demResponseCaptureSpec(detectorsData.detectors, window.location?.hostname)
             });
 
         } catch (error) {
@@ -958,15 +959,20 @@ class DetectionEngineManager {
             }
         }
 
+        // Payload rules read request bodies; a rule with body: "response" reads
+        // instead the response bodies captured for its urlPattern (below)
+        const allPayloadRules = Array.isArray(detector.detection?.payload) ? detector.detection.payload : [];
+        const requestPayloadRules = allPayloadRules.filter(rule => rule && rule.body !== 'response');
+
         // Check payload patterns - handle both single payload and multiple payloads array
         // First check if we have multiple payloads (new format)
-        if (detector.detection?.payload && pageData.payloads && Array.isArray(pageData.payloads)) {
+        if (requestPayloadRules.length > 0 && pageData.payloads && Array.isArray(pageData.payloads)) {
             // Track which patterns have already matched to prevent duplicates
             const matchedPatterns = new Set();
 
             // Check each payload in the array
             for (const payloadItem of pageData.payloads) {
-                for (const payloadPattern of detector.detection.payload) {
+                for (const payloadPattern of requestPayloadRules) {
                     // Skip already-matched patterns
                     const patternKey = payloadPattern.description || payloadPattern.text;
                     if (matchedPatterns.has(patternKey)) {
@@ -1053,8 +1059,12 @@ class DetectionEngineManager {
                                 matchedValue = '...' + matchedValue;
                             }
                         } else {
-                            // Fallback to showing just the pattern found
-                            matchedValue = `${payloadPattern.text} found`;
+                            // A regex rule shows the text it matched (on one line); otherwise the pattern
+                            const captured = matchOptions.regex ? this.matchPatternWithCapture(searchStr, payloadPattern.text, matchOptions) : null;
+                            const oneLine = captured ? captured.replace(/\s+/g, ' ') : '';
+                            matchedValue = oneLine
+                                ? (oneLine.length > 80 ? oneLine.slice(0, 80) + '...' : oneLine)
+                                : `${payloadPattern.text} found`;
                         }
 
                         matches.push({
@@ -1076,8 +1086,8 @@ class DetectionEngineManager {
             }
         }
         // Fallback to single payload for backward compatibility
-        else if (detector.detection?.payload && pageData.payload) {
-            for (const payloadPattern of detector.detection.payload) {
+        else if (requestPayloadRules.length > 0 && pageData.payload) {
+            for (const payloadPattern of requestPayloadRules) {
                 // Match options for pattern matching
                 const matchOptions = {
                     regex: payloadPattern.textRegex === true,
@@ -1155,8 +1165,12 @@ class DetectionEngineManager {
                             matchedValue = '...' + matchedValue;
                         }
                     } else {
-                        // Fallback to showing just the pattern found
-                        matchedValue = `${payloadPattern.text} found`;
+                        // A regex rule shows the text it matched (on one line); otherwise the pattern
+                        const captured = matchOptions.regex ? this.matchPatternWithCapture(searchStr, payloadPattern.text, matchOptions) : null;
+                        const oneLine = captured ? captured.replace(/\s+/g, ' ') : '';
+                        matchedValue = oneLine
+                            ? (oneLine.length > 80 ? oneLine.slice(0, 80) + '...' : oneLine)
+                            : `${payloadPattern.text} found`;
                     }
 
                     matches.push({
@@ -1167,6 +1181,39 @@ class DetectionEngineManager {
                         patternId: DetectionEngineManager.patternIdOf(detector, payloadPattern),
                         description: payloadPattern.description || 'Payload pattern detected'
                     });
+                }
+            }
+        }
+
+        // Response bodies the MAIN world captured (fetch and XHR). Only rules with
+        // a urlPattern take part: the page reads no other response, and a rule
+        // never scans every body the page receives.
+        const responsePayloadRules = allPayloadRules.filter(rule => rule && rule.body === 'response' &&
+            typeof rule.urlPattern === 'string' && rule.urlPattern.trim() !== '');
+        if (responsePayloadRules.length > 0 && Array.isArray(pageData.responses) && pageData.responses.length > 0) {
+            for (const rule of responsePayloadRules) {
+                const urlOptions = { regex: rule.urlRegex === true, wholeWord: rule.urlWholeWord === true, caseSensitive: rule.urlCaseSensitive === true };
+                const textOptions = { regex: rule.textRegex === true, wholeWord: rule.textWholeWord === true, caseSensitive: rule.textCaseSensitive === true };
+                const methods = Array.isArray(rule.methods) ? rule.methods.map(m => String(m).toUpperCase()) : [];
+                for (const response of pageData.responses) {
+                    if (!response || typeof response.url !== 'string' || typeof response.data !== 'string') continue;
+                    if (methods.length > 0 && !methods.includes(String(response.method || 'GET').toUpperCase())) continue;
+                    if (!this.matchPattern(response.url, rule.urlPattern, urlOptions)) continue;
+                    const found = this.matchPatternWithCapture(response.data, rule.text, textOptions);
+                    if (!found) continue;
+                    // The matched text itself (e.g. "proofofwork":{"required":true), on one line
+                    const value = found.replace(/\s+/g, ' ');
+                    matches.push({
+                        type: 'payload',
+                        pattern: rule.text,
+                        value: value.length > 80 ? value.slice(0, 80) + '...' : value,
+                        fullUrl: response.url,
+                        body: 'response',
+                        confidence: rule.confidence || 80,
+                        patternId: DetectionEngineManager.patternIdOf(detector, rule),
+                        description: rule.description || 'Response pattern detected'
+                    });
+                    break; // one match per rule
                 }
             }
         }
@@ -1261,7 +1308,7 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, requestHeaders = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, requestHeaders = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, responses = [], networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
 
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
@@ -1272,7 +1319,8 @@ class DetectionEngineManager {
             scripts: content.length, dom: dom.length,
             cookies: cookiesToMatch.length, headers: Object.keys(headers).length,
             html: pageHTML.length, resources: externalContent.length,
-            requests: networkUrls.length, payloads: Array.isArray(payloads) ? payloads.length : 0
+            requests: networkUrls.length, payloads: Array.isArray(payloads) ? payloads.length : 0,
+            responses: Array.isArray(responses) ? responses.length : 0
         };
 
         // Use pre-computed priorities (saves 50-100ms per detection)
@@ -1299,7 +1347,7 @@ class DetectionEngineManager {
                 sliceStart = Date.now();
             }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, networkUrls, allCookies, responseCookies });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,

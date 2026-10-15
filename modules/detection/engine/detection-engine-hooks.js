@@ -202,6 +202,91 @@ const DEH_CHILD_WINDOW_ACCESSORS = Object.freeze([
 // (the install event normally retires them within tens of milliseconds)
 const DEH_EARLY_RECORD_MAX_MS = 15000;
 
+// API names the MAIN world's response capture uses (that world spells none)
+const DEH_RESPONSE_CAPTURE_API = Object.freeze({
+    fetch: 'fetch',
+    xhr: 'XMLHttpRequest',
+    open: 'open',
+    send: 'send',
+    loadend: 'loadend',
+    contentType: 'content-type',
+    defaultMethod: 'GET',
+    jsonResponseType: 'json',
+    textResponseTypes: Object.freeze(['', 'text']),
+    // Streamed responses (chat answers) are never read
+    streamType: Object.freeze({ source: 'event-stream', flags: 'i' })
+});
+
+/**
+ * Hosts a urlPattern names literally (`^https://chat\.example\.com/…` or
+ * `^https://(?:a\.example|b\.example)/…`), or null when it names none: a
+ * first-party pattern such as `^https?://[^/?#]+/…` applies on any site.
+ * @param {string} source - regex source
+ * @returns {string[]|null}
+ */
+function demPatternHosts(source) {
+    const match = /^\^https\??:\/\/(\(\?:[^()]+\)|[A-Za-z0-9.\\-]+)\//.exec(String(source));
+    if (!match) return null;
+    const list = match[1].startsWith('(?:') ? match[1].slice(3, -1) : match[1];
+    const hosts = list.split('|').map(host => host.replace(/\\\./g, '.').toLowerCase());
+    return hosts.every(host => /^[a-z0-9.-]+$/.test(host)) ? hosts : null;
+}
+
+/** The site of a host name: its last two labels (www.example.com -> example.com) */
+function demSiteOf(hostname) {
+    return String(hostname || '').toLowerCase().split('.').filter(Boolean).slice(-2).join('.');
+}
+
+/**
+ * What the MAIN world needs to read responses on this page: the URL patterns
+ * of enabled payload rules marked body: "response" that can apply to this site
+ * (a pattern naming hosts applies on their sites only, so a page elsewhere has
+ * nothing wrapped), the limits and the API names.
+ * @param {object} detectors - { category: { id: detector } }
+ * @param {string} pageHostname
+ * @returns {{patterns: {source: string, flags: string}[], maxBodyChars: number, keepChars: number,
+ *   marker: string, longString: {source: string, flags: string}, api: object}}
+ */
+function demResponseCaptureSpec(detectors, pageHostname) {
+    const pageSite = demSiteOf(pageHostname);
+    const seen = new Set();
+    const patterns = [];
+    const evil = typeof isLikelyEvilRegex === 'function' ? isLikelyEvilRegex : () => false;
+    for (const categoryDetectors of Object.values(detectors || {})) {
+        for (const detector of Object.values(categoryDetectors || {})) {
+            if (!detector || detector.enabled === false) continue;
+            const rules = Array.isArray(detector.detection?.payload) ? detector.detection.payload : [];
+            for (const rule of rules) {
+                if (!rule || rule.body !== 'response' || rule.enabled === false) continue;
+                if (typeof rule.urlPattern !== 'string' || !rule.urlPattern.trim()) continue;
+                let source;
+                if (rule.urlRegex === true) {
+                    source = rule.urlPattern;
+                    const hosts = demPatternHosts(source);
+                    if (hosts && !hosts.some(host => demSiteOf(host) === pageSite)) continue;
+                    if (evil(source)) continue;
+                } else {
+                    const escaped = rule.urlPattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    source = rule.urlWholeWord === true ? `\\b${escaped}\\b` : escaped;
+                }
+                const flags = rule.urlCaseSensitive === true ? '' : 'i';
+                const key = `${flags}/${source}`;
+                if (seen.has(key)) continue;
+                seen.add(key);
+                patterns.push({ source, flags });
+            }
+        }
+    }
+    return {
+        patterns,
+        maxBodyChars: Constants.MAX_RESPONSE_BODY_CHARS,
+        keepChars: Constants.RESPONSE_STRING_KEEP_CHARS,
+        marker: '…',
+        longString: { source: `"((?:[^"\\\\]|\\\\.){${Constants.RESPONSE_LONG_STRING_CHARS},})"`, flags: 'g' },
+        api: DEH_RESPONSE_CAPTURE_API
+    };
+}
+
 /** Early hook recording as the MAIN world installs it from the bootstrap */
 function demEarlyHooks() {
     return {

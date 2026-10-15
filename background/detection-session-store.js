@@ -108,6 +108,7 @@ class DetectionSessionStore {
         detectionStates.delete(tabId);
         batchProcessingFlags.delete(tabId);
         for (const store of [payloadStore, networkUrlsStore, headersStore, requestHeadersStore, responseCookiesStore]) store.delete(tabId);
+        if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
         return true;
     }
 }

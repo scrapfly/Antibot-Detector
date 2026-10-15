@@ -105,19 +105,43 @@ function mergeDetection(byId, newDetection) {
     existing.detectionMethods = [...new Set([...(existing.detectionMethods || []), ...(newDetection.detectionMethods || [])])];
 }
 
+/** A tab's captured request bodies, as the engine reads them */
+function payloadsForEngine(tabId) {
+    const stored = typeof payloadStore !== 'undefined' ? payloadStore.get(tabId) : null;
+    return Array.isArray(stored)
+        ? stored.map(item => ({ method: item.method, url: item.url, data: item.payload, type: item.type }))
+        : [];
+}
+
 /**
- * URL rules against the requests made after the page snapshot: the scan reads
- * the page right after load, but captcha and anti-bot SDKs often call their
- * servers a second or more later (a challenge request, a verify call), and
- * those requests are only in the tab's list by the time the scan finishes.
+ * A tab's captured response bodies that belong to this page's origin: a tab
+ * that moved to another site never reads the previous site's responses.
+ */
+function responsesForPage(tabId, pageUrl) {
+    const stored = typeof responseStore !== 'undefined' ? responseStore.get(tabId) : null;
+    if (!Array.isArray(stored) || stored.length === 0) return [];
+    let origin = '';
+    try { origin = new URL(pageUrl).origin; } catch (_) { return []; }
+    return stored.filter(item => item && item.pageOrigin === origin);
+}
+
+/**
+ * URL, payload and response rules against what the page sent and received
+ * after the snapshot: the scan reads the page right after load, but captcha
+ * and anti-bot SDKs often call their servers a second or more later (a
+ * challenge request, a verify call), and those requests are only in the tab's
+ * lists by the time the scan finishes.
  */
 async function matchLateRequests(tabId, state, mergedDetections) {
     if (typeof detectionEngine === 'undefined' || !detectionEngine || typeof networkUrlsStore === 'undefined') return;
-    const networkUrls = networkUrlsStore.get(tabId);
-    if (!Array.isArray(networkUrls) || networkUrls.length === 0) return;
+    const storedUrls = networkUrlsStore.get(tabId);
+    const networkUrls = Array.isArray(storedUrls) ? storedUrls.slice() : [];
+    const payloads = payloadsForEngine(tabId);
+    const responses = responsesForPage(tabId, state.url);
+    if (networkUrls.length === 0 && payloads.length === 0 && responses.length === 0) return;
     const stats = detectionEngine.lastStats; // the scan report describes the page snapshot
     try {
-        const late = await detectionEngine.detectOnPage({ url: state.url, networkUrls: networkUrls.slice() }, { includePartial: true });
+        const late = await detectionEngine.detectOnPage({ url: state.url, networkUrls, payloads, responses }, { includePartial: true });
         if (!DetectionSessionStore.isCurrent(tabId, state)) return;
         for (const detection of Array.isArray(late) ? late : []) mergeDetection(mergedDetections, detection);
     } catch (error) {
@@ -125,6 +149,93 @@ async function matchLateRequests(tabId, state, mergedDetections) {
     } finally {
         if (DetectionSessionStore.isCurrent(tabId, state)) detectionEngine.lastStats = stats;
     }
+}
+
+const lateResponseTimers = new Map();
+
+/**
+ * Keep a response body the page captured for a body: "response" rule. A scan
+ * in progress reads it (snapshot or late-request check); after the scan, when
+ * such a response usually comes (a challenge when a message is sent), the
+ * detectors that read responses are matched again and the page's result is
+ * updated (see applyLateResponses).
+ * @param {number} tabId
+ * @param {{url: string, method: string, status: number, data: string, pageOrigin: string, timestamp: number}} response
+ */
+function recordCapturedResponse(tabId, response) {
+    const list = responseStore.get(tabId) || [];
+    list.push(response);
+    if (list.length > Constants.MAX_RESPONSES_PER_TAB) list.shift();
+    responseStore.set(tabId, list);
+    if (detectionStates.has(tabId)) return; // the running scan reads it
+    clearTimeout(lateResponseTimers.get(tabId));
+    lateResponseTimers.set(tabId, setTimeout(() => {
+        lateResponseTimers.delete(tabId);
+        applyLateResponses(tabId).catch(error => Logger.error('SCAN', 'Late response check failed', error));
+    }, 300));
+}
+
+/** Rows that matched a response body (the engine marks them) */
+function hasResponseMatch(detection) {
+    return Array.isArray(detection?.matches) && detection.matches.some(match => match && match.body === 'response');
+}
+
+/**
+ * After the scan: the detectors whose response rules match now (with the
+ * requests the tab made since) are added to the page's stored result, and the
+ * badge and an open popup are updated. Nothing else in the result changes.
+ */
+async function applyLateResponses(tabId) {
+    if (typeof detectionEngine === 'undefined' || !detectionEngine || detectionStates.has(tabId)) return;
+    if (!await isExtensionEnabled()) return;
+    const tab = await chrome.tabs.get(tabId).catch(() => null);
+    const pageUrl = tab && tab.url;
+    if (!pageUrl || detectionStates.has(tabId)) return;
+    const responses = responsesForPage(tabId, pageUrl);
+    if (responses.length === 0) return;
+    const storedUrls = networkUrlsStore.get(tabId);
+    const late = await detectionEngine.detectOnPage({
+        url: pageUrl,
+        networkUrls: Array.isArray(storedUrls) ? storedUrls.slice() : [],
+        payloads: payloadsForEngine(tabId),
+        responses
+    }, { includePartial: true });
+    const evidence = (Array.isArray(late) ? late : []).filter(hasResponseMatch);
+    if (evidence.length === 0 || detectionStates.has(tabId)) return;
+
+    const stored = await DetectionEngineManager.getStoredDetection(pageUrl);
+    if (detectionStates.has(tabId)) return;
+    const byId = new Map();
+    for (const detection of Array.isArray(stored?.detectionResults) ? stored.detectionResults : []) {
+        const id = detection?.detector?.id || detection?.id;
+        if (id) byId.set(id, detection);
+    }
+    const signature = () => Array.from(byId.values()).map(d => `${d.detector?.id || d.id}:${(d.matches || []).length}`).sort().join(',');
+    const before = signature();
+    for (const detection of evidence) mergeDetection(byId, detection);
+    if (signature() === before) return; // already known
+
+    const finalResults = Array.from(byId.values()).filter(rescoreCombinations);
+    const storedData = await DetectionEngineManager.storeDetection(pageUrl, {
+        url: pageUrl,
+        hostname: UrlUtils.getHostnameFromUrl(pageUrl),
+        favicon: stored?.favicon || tab.favIconUrl
+    }, finalResults);
+    if (detectionStates.has(tabId)) return;
+    await setBadgeForDetections(tabId, pageUrl, finalResults);
+    Logger.detection(`${Logger.hostOf(pageUrl)}: added from responses after the scan: ${evidence.map(d => d.detector?.name || d.name).join(', ')}`);
+    chrome.runtime.sendMessage({
+        type: 'NEW_DETECTION_DATA',
+        tabId,
+        url: pageUrl,
+        detectionResults: finalResults,
+        expiry: storedData?.expiry,
+        timestamp: storedData?.timestamp,
+        cacheScope: storedData?.cacheScope,
+        favicon: storedData?.favicon
+    }).catch(() => {
+        // Expected: Popup may not be open
+    });
 }
 
 async function finalizeDetection(tabId, state) {
@@ -376,6 +487,12 @@ async function processDetectionData(message, sender) {
             // Don't delete yet - will delete after detection completes
             // payloadStore.delete(tabId);
         }
+    }
+
+    // Response bodies the page captured for body: "response" payload rules
+    const responses = responsesForPage(tabId, pageData.url);
+    if (responses.length > 0) {
+        pageData.responses = responses;
     }
 
     // Add network request URLs if available (for URL pattern detection)

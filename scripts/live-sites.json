@@ -520,6 +520,32 @@
         "detect-recaptcha",
         "detect-cloudflare"
       ]
+    },
+    {
+      "url": "https://chatgpt.com/",
+      "expect": [
+        {
+          "detector": "detect-openai-sentinel",
+          "min": 90
+        }
+      ],
+      "note": "ChatGPT logged out: Sentinel chat-requirements/prepare on load, its response asks for a proof of work",
+      "waitMs": 15000
+    },
+    {
+      "url": "https://auth.openai.com/log-in",
+      "expect": [
+        {
+          "detector": "detect-openai-sentinel",
+          "min": 90
+        },
+        {
+          "detector": "detect-cloudflare",
+          "min": 100
+        }
+      ],
+      "note": "OpenAI sign-in: Sentinel SDK, frame and token request; Cloudflare JavaScript detections (h/b/scripts/jsd/<hash>/main.js)",
+      "waitMs": 15000
     }
   ]
 }

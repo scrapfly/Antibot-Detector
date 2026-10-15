@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-08",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-15",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.cloudflare.com/products/bot-management/",
   "icon": "cloudflare_official.png",
@@ -60,18 +60,27 @@
     "url": [
       {
         "id": "challenge-orchestrator",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Challenge page orchestrator under /cdn-cgi/challenge-platform/",
-        "text": "^https?://[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
+        "text": "^https?://(?!challenges\\.cloudflare\\.com/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
         "id": "bot-management-script",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Bot Management JavaScript detections script",
-        "text": "^https?://[^/?#]+/cdn-cgi/challenge-platform/scripts/jsd/main\\.js(?:[?#]|$)",
+        "text": "^https?://(?!challenges\\.cloudflare\\.com/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "jsd-oneshot",
+        "confidence": 100,
+        "description": "Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/)",
+        "text": "^https?://(?!challenges\\.cloudflare\\.com/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"

@@ -20,7 +20,7 @@
 
 Scrapfly Anti-bot Detector is a free Chrome extension that shows how a website protects itself from automated traffic. Browse as you normally would: the number on the toolbar icon tells you how many protections the page uses, and the popup lists each one with its confidence, its difficulty and the signals that gave it away.
 
-It recognizes 68 technologies out of the box: 28 anti-bot systems, 19 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
+It recognizes 70 technologies out of the box: 30 anti-bot systems, 19 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
 
 We built it at [Scrapfly](https://scrapfly.io) because every scraping project starts with the same question: what is protecting this page? It is just as useful for checking how your own site's bot protection looks from the outside, or for security research.
 
@@ -85,7 +85,7 @@ When a page loads, the extension gathers what the page reveals about itself and 
 | DOM | Elements matched by a CSS selector | `.cf-turnstile[data-sitekey]` |
 | Window properties | Objects that scripts add to `window` | `grecaptcha.render` |
 | JavaScript hooks | Calls to browser APIs commonly used for fingerprinting | `HTMLCanvasElement.prototype.toDataURL` |
-| Payload | Bodies of POST, PUT and PATCH requests, optionally filtered by URL and method | `sensor_data` (Akamai) |
+| Payload | Bodies of POST, PUT and PATCH requests, optionally filtered by URL and method, and the responses of the URLs a rule names | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
 **Confidence.** One signal rarely proves anything on its own, so each rule has its own confidence and detectors define combinations of rules that score higher together. A script that only mentions a vendor's name scores 5–10%, while the vendor's script together with its cookie or challenge request scores 80–95%. The score shown for each detector is its strongest single rule or combination. The page also gets a difficulty rating (Low, Medium or High), which sets the color of the toolbar badge.
 
@@ -98,10 +98,10 @@ When a page loads, the extension gathers what the page reveals about itself and 
 The lists below are the detectors that ship with the extension. You can switch any of them off, edit them or add your own in the Rules tab.
 
 <details>
-<summary><b>Anti-bot systems (28)</b></summary>
+<summary><b>Anti-bot systems (30)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · F5 BIG-IP ASM · FingerprintJS · Google BotGuard · Hunt · Incapsula (Imperva) · Jiasule (Chuangyu Shield) · Kasada · Meetrics Check · Netacea · Ocule · PerimeterX · Radware Bot Manager · Reblaze · Ruishu · Shape Security · Sucuri WAF · ThreatMetrix · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DeepSeek PoW · F5 BIG-IP ASM · FingerprintJS · Google BotGuard · Hunt · Incapsula (Imperva) · Jiasule (Chuangyu Shield) · Kasada · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · PerimeterX · Radware Bot Manager · Reblaze · Ruishu · Shape Security · Sucuri WAF · ThreatMetrix · Yundun Cloud WAF
 
 </details>
 

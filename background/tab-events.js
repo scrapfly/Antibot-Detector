@@ -13,6 +13,7 @@ function setupTabListeners() {
         responseCookiesStore.delete(tabId);
         payloadStore.delete(tabId);
         networkUrlsStore.delete(tabId);
+        if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
 
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);

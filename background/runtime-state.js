@@ -14,6 +14,8 @@ const requestHeadersStore = new TTLMap(Constants.NETWORK_DATA_TTL);
 const responseCookiesStore = new TTLMap(Constants.NETWORK_DATA_TTL);
 const payloadStore = new TTLMap(Constants.NETWORK_DATA_TTL);
 const networkUrlsStore = new TTLMap(Constants.NETWORK_DATA_TTL);
+// Response bodies payload rules marked body: "response" read, captured in the page
+const responseStore = new TTLMap(Constants.NETWORK_DATA_TTL);
 
 // ─── Advanced Capture States ────────────────────────────────────────────────
 

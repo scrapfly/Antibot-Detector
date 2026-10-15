@@ -788,6 +788,24 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
         return;
     }
 
+    // Response bodies a body: "response" payload rule reads: the worker adds
+    // what they show to this page's result
+    if (data.type === BRIDGE_TYPES.RESPONSE_BODY) {
+        try {
+            chrome.runtime.sendMessage({
+                type: BRIDGE_TYPES.RESPONSE_BODY,
+                url: data.url,
+                method: data.method,
+                status: data.status,
+                body: data.body,
+                timestamp: data.timestamp
+            }).catch(() => {});
+        } catch (e) {
+            // Extension context invalidated - silently ignore
+        }
+        return;
+    }
+
     // Dispatch JS API events for completion signals (before handleHookMessage sends to background with retry)
     if (data.type === BRIDGE_TYPES.JS_HOOKS_COMPLETE) {
         hooksMonitoringComplete = true;

@@ -52,7 +52,7 @@ function witnesses(node) {
 
 /** A page carrying the live witnesses of the given pattern ids */
 function pageFor(detector, ids) {
-  const page = { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: [], responseCookies: [], networkUrls: [], payloads: [] };
+  const page = { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: [], responseCookies: [], networkUrls: [], payloads: [], responses: [] };
   const windowIds = [];
   for (const id of new Set(ids)) {
     const fx = fixtures[detector.id][id];
@@ -64,6 +64,7 @@ function pageFor(detector, ids) {
     else if (fx.source) page.content.push({ type: 'inline', content: fx.source });
     else if (fx.dom) page.dom.push({ ...fx.dom, selector: fx.dom.tagName, id: fx.dom.attributes.id || '', class: fx.dom.attributes.class || '', src: fx.dom.attributes.src });
     else if (fx.payload) page.payloads.push({ ...fx.payload, type: 'text' });
+    else if (fx.response) page.responses.push({ ...fx.response, type: 'response' });
     else if (fx.runtimeType) windowIds.push(id);
     else throw new Error(`${detector.id}/${id}: unknown fixture kind`);
   }
@@ -87,18 +88,22 @@ function detect(detector, { page, windowIds = [] }) {
 const matched = (detector, result, id) => result.matches.some(m => Array.from(Combinations.matchPatternIds(detector, m)).includes(id));
 
 // Signals only one vendor ever produces count as proof on their own (100%):
-// Akamai's _abck cookie and its Pixel challenge variable, and BotGuard's
-// interpreter script at www.google.com/js/bg/<hash>.js
+// Akamai's _abck cookie and its Pixel challenge variable, BotGuard's
+// interpreter script at www.google.com/js/bg/<hash>.js, Cloudflare's
+// /cdn-cgi/challenge-platform/ challenge and bot-detection requests (not on
+// Turnstile's own host), DeepSeek's create_pow_challenge and ChatGPT's
+// Sentinel chat-requirements endpoints
 const PROOF = new Set(['detect-akamai/abck-sensor-cookie', 'detect-akamai/abck-cookie-name', 'detect-akamai/pixel-variable',
-  'detect-botguard/botguard-bg-interpreter']);
+  'detect-botguard/botguard-bg-interpreter', 'detect-cloudflare/challenge-orchestrator', 'detect-cloudflare/bot-management-script',
+  'detect-cloudflare/jsd-oneshot', 'detect-deepseek-pow/pow-challenge-endpoint', 'detect-openai-sentinel/chat-requirements']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('twenty-eight anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+test('thirty anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
-    'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome', 'detect-f5',
-    'detect-fingerprintjs', 'detect-hunt', 'detect-incapsula', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea',
-    'detect-ocule', 'detect-perimeterx', 'detect-radware', 'detect-reblaze', 'detect-ruishu', 'detect-shapesecurity',
-    'detect-sucuri', 'detect-threatmetrix', 'detect-yundun']);
+    'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
+    'detect-deepseek-pow', 'detect-f5', 'detect-fingerprintjs', 'detect-hunt', 'detect-incapsula', 'detect-jiasule', 'detect-kasada',
+    'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel', 'detect-perimeterx', 'detect-radware', 'detect-reblaze',
+    'detect-ruishu', 'detect-shapesecurity', 'detect-sucuri', 'detect-threatmetrix', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
     const raw = antibot[d.id].__raw;
     assert.equal(raw.split('\n').length - 1, (raw.match(/\r\n/g) || []).length, `${d.id}: CRLF throughout`);
@@ -172,7 +177,7 @@ for (const d of Object.values(definitions)) {
         `https://evil.test/?next=${encodeURIComponent(positive.href)}`,
         `https://${positive.host}@evil.test${positive.pathname}`
       ]) {
-        if (/^\^https\?:\/\/\[\^\/\?#\]\+/.test(r.text)) continue; // first-party rules: any host by design
+        if (/^\^https\?:\/\/(?:\(\?![^)]*\))?\[\^\/\?#\]\+/.test(r.text)) continue; // first-party rules: any host by design
         const result = detect(d, { page: { networkUrls: [{ url: bad }], content: [], dom: [], headers: {}, allCookies: [] } });
         assert.ok(!matched(d, result, r.id), `${r.id}: ${bad}`);
       }
@@ -188,7 +193,13 @@ const benign = {
   'detect-botguard': { urls: ['https://www.google.com/recaptcha/api.js', 'https://www.google.com/js/bg/abc.js',
     'https://mail.google.com/mail/u/0/', 'https://mail.google.com/mail/u/0/?view=waa', 'https://mail.google.com/mail/u/0/waaffle'], sources: ["var mode = 'botguard';"] },
   'detect-cheq': { sources: ["var cheque = 'cheq';"], urls: ['https://example.test/cheq.js'] },
-  'detect-cloudflare': { headers: { server: 'cloudflare', 'cf-ray': '8c1-AMS' }, urls: ['https://example.test/cdn-cgi/l/email-protection', 'https://challenges.cloudflare.com/turnstile/v0/api.js'] },
+  'detect-cloudflare': { headers: { server: 'cloudflare', 'cf-ray': '8c1-AMS' }, urls: ['https://example.test/cdn-cgi/l/email-protection', 'https://challenges.cloudflare.com/turnstile/v0/api.js',
+    // A Turnstile widget's own frames: a CAPTCHA, not Bot Management
+    'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/x'] },
+  'detect-deepseek-pow': { urls: ['https://chat.deepseek.com/api/v0/chat/history_messages', 'https://example.test/api/v0/chat/create_pow_challenge',
+    'https://example.test/static/sha3_wasm_bg.7b9ca65ddd.wasm', 'https://www.deepseek.com/'] },
+  'detect-openai-sentinel': { urls: ['https://chatgpt.com/backend-api/conversation', 'https://example.test/backend-api/sentinel/chat-requirements',
+    'https://example.test/backend-api/sentinel/sdk.js', 'https://chatgpt.com/assets/conversation-shared-DYlOMt6E.js'] },
   'detect-datadome': { urls: ['https://example.test/tags.js', 'https://example.test/js/'], sources: ["var dd = {};"] },
   'detect-f5': { cookies: ['TSession', 'TSID', 'TSabc', 'BIGipServerpool_web'] },
   'detect-incapsula': { cookies: ['_impv_routing', 'incap_session'] },

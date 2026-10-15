@@ -105,7 +105,7 @@ async function installed() {
   return events[0].detail;
 }
 function pageFor(detector, ids) {
-  const page = { url: 'https://example.test/', content: [], dom: [], externalContent: [], networkUrls: [] };
+  const page = { url: 'https://example.test/', content: [], dom: [], externalContent: [], networkUrls: [], payloads: [], responses: [] };
   const runtime = {};
   for (const id of new Set(ids)) {
     const fixture = fixtures[detector.id]?.[id];
@@ -129,6 +129,12 @@ function pageFor(detector, ids) {
       let parent = runtime;
       for (const part of parts.slice(0, -1)) parent = parent[part] ||= {};
       parent[parts.at(-1)] = fixture.runtimeType === 'function' ? function captchaAPI() {} : {};
+    } else if (rule.method === 'payload' && rule.body === 'response') {
+      assert.ok(fixture.response?.url && typeof fixture.response.data === 'string', `${id}: captured response required`);
+      page.responses.push({ ...fixture.response, type: 'response' });
+    } else if (rule.method === 'payload') {
+      assert.ok(fixture.payload?.url && typeof fixture.payload.data === 'string', `${id}: request body required`);
+      page.payloads.push({ ...fixture.payload, type: 'raw' });
     } else throw new Error(`${id}: unsupported fixture method ${rule.method}`);
   }
   return { page, runtime };
@@ -183,7 +189,7 @@ test('all nineteen definitions have explicit IDs, conservative standalone eviden
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-2])$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-5])$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);

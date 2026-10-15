@@ -16,12 +16,14 @@
  *
  * Payload shapes (property names are plain, not part of this table):
  *   install event detail: { hookDefinitions, windowProperties, debugMode,
- *     logCollectorEnabled, enableJsApi, fingerprintEnabled, hooksConfig, [FIELDS.TOKEN] }
+ *     logCollectorEnabled, enableJsApi, fingerprintEnabled, hooksConfig,
+ *     responseCapture?: { patterns: [{ source, flags }], maxBodyChars }, [FIELDS.TOKEN] }
  *   WINDOW_DETECTIONS: { detections, timestamp, elapsedMs? }
  *   WINDOW_PROPS_COMPLETE: { url, timestamp, detectedCount, totalChecked?, elapsedMs?, reason? }
  *   JS_HOOK_DETECTION: { detection: { detectorId, detectorName, category, hook, timestamp }, url }
  *   JS_HOOKS_COMPLETE: { url, timestamp, totalDetections, uniqueHooks, completionReason, completionTime, uninstallStats }
  *   HOOK_FAILURE_REPORT: { target, failureType, message, timestamp }
+ *   RESPONSE_BODY: { url, method, status, body, timestamp } (forwarded with pageUrl)
  *   SCRAPFLY_DEBUG_LOG: { level, message, source, timestamp }
  *   SCRAPFLY_JS_API_EVENT: { eventName, detail }
  */
@@ -55,6 +57,8 @@
         JS_HOOKS_COMPLETE: 'JS_HOOKS_COMPLETE',
         WINDOW_PROPS_COMPLETE: 'WINDOW_PROPS_COMPLETE',
         SETTINGS_MUTATE: 'SETTINGS_MUTATE',
+        // A response body whose URL a body: "response" payload rule names
+        RESPONSE_BODY: 'RESPONSE_BODY',
         // ISOLATED <-> background only
         JS_HOOK_DETECTION_BATCH: 'JS_HOOK_DETECTION_BATCH',
         CACHE_HIT_DISABLE_MONITORING: 'CACHE_HIT_DISABLE_MONITORING'
@@ -92,7 +96,7 @@
         // Types the ISOLATED world accepts from the MAIN world
         TO_ISOLATED_TYPES: [
             T.HOOK_FAILURE_REPORT, T.WINDOW_DETECTIONS, T.DEBUG_LOG,
-            T.JS_HOOK_DETECTION, T.JS_HOOKS_COMPLETE, T.WINDOW_PROPS_COMPLETE
+            T.JS_HOOK_DETECTION, T.JS_HOOKS_COMPLETE, T.WINDOW_PROPS_COMPLETE, T.RESPONSE_BODY
         ],
         COMPLETION_REASONS: {
             // JS_HOOKS_COMPLETE.completionReason

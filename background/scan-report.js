@@ -148,6 +148,7 @@ const ScanReport = {
         if (typeof stats.resources === 'number') data.push(`resources=${stats.resources}`);
         if (typeof stats.requests === 'number') data.push(`requests=${stats.requests}`);
         if (stats.payloads) data.push(`payloads=${stats.payloads}`);
+        if (stats.responses) data.push(`responses=${stats.responses}`);
         if (typeof stats.html === 'number') data.push(`html=${Math.round(stats.html / 1024)} KB`);
         if (data.length) lines.push(`${'Data'.padEnd(11)} ${data.join(' ')}`);
 

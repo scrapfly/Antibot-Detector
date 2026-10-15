@@ -925,6 +925,191 @@
     }
   };
 
+  // ---- Response capture ---------------------------------------------------
+  // Payload rules marked body: "response" read the response of the URLs they
+  // name (a challenge endpoint, say). The ISOLATED world sends the patterns that
+  // can apply to this site, with the API names and limits (this world spells
+  // none); fetch and XMLHttpRequest are wrapped once, on the first non-empty
+  // set, and read only responses whose URL matches. The page gets the same
+  // promise and Response as before: the body is read from a clone, and event
+  // streams are never read. Long string values are shortened before anything
+  // leaves the page, so tokens and blobs are never reported: keys, booleans,
+  // numbers and short strings are what the rules look for.
+  let responseCapture = null; // { patterns, maxBodyChars, longString, keepChars, marker, api }
+  let responseCaptureInstalled = false;
+
+  function isRegexSpec(spec) {
+    return !!spec && typeof spec.source === 'string' && typeof spec.flags === 'string';
+  }
+
+  function isResponseCaptureSpec(spec) {
+    const api = spec && spec.api;
+    return !!spec && typeof spec === 'object' && Array.isArray(spec.patterns) && spec.patterns.every(isRegexSpec) &&
+      isNonNegativeNumber(spec.maxBodyChars) && isNonNegativeNumber(spec.keepChars) &&
+      typeof spec.marker === 'string' && isRegexSpec(spec.longString) &&
+      !!api && typeof api === 'object' && isRegexSpec(api.streamType) && Array.isArray(api.textResponseTypes) &&
+      [api.fetch, api.xhr, api.open, api.send, api.loadend, api.contentType, api.defaultMethod, api.jsonResponseType]
+        .every(name => typeof name === 'string' && name !== '');
+  }
+
+  function compileRegex(spec) {
+    try {
+      return new RegExp(spec.source, spec.flags);
+    } catch (e) {
+      return null; // an invalid pattern reads nothing
+    }
+  }
+
+  function configureResponseCapture(spec) {
+    if (!isResponseCaptureSpec(spec)) return;
+    const patterns = spec.patterns.map(compileRegex).filter(Boolean);
+    const longString = compileRegex(spec.longString);
+    const streamType = compileRegex(spec.api.streamType);
+    if (!longString || !streamType) return;
+    responseCapture = {
+      patterns,
+      maxBodyChars: spec.maxBodyChars,
+      keepChars: spec.keepChars,
+      marker: spec.marker,
+      longString,
+      streamType,
+      api: { ...spec.api, textResponseTypes: spec.api.textResponseTypes.slice() }
+    };
+    if (patterns.length > 0 && !responseCaptureInstalled) {
+      responseCaptureInstalled = true;
+      installResponseCapture(responseCapture.api);
+    }
+  }
+
+  function responseUrlMatches(url) {
+    return !!responseCapture && typeof url === 'string' && url !== '' && responseCapture.patterns.some(re => re.test(url));
+  }
+
+  function absoluteUrl(value) {
+    try {
+      return new URL(String(value), window.location.href).href;
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function compactResponseBody(text) {
+    const { longString, keepChars, marker, maxBodyChars } = responseCapture;
+    const shortened = text.replace(longString, (all, inner) => JSON.stringify(inner.slice(0, keepChars) + marker + inner.length));
+    return shortened.length > maxBodyChars ? shortened.slice(0, maxBodyChars) : shortened;
+  }
+
+  function reportResponse(url, method, status, body) {
+    if (!responseCapture || typeof body !== 'string' || body === '') return;
+    postBridgeMessage({
+      type: MESSAGE_TYPES.RESPONSE_BODY,
+      url,
+      method,
+      status,
+      body: compactResponseBody(body),
+      timestamp: Date.now()
+    });
+  }
+
+  function readFetchResponse(response, url, method) {
+    try {
+      if (!response || typeof response.clone !== 'function' || response.bodyUsed) return;
+      const type = (response.headers && response.headers.get(responseCapture.api.contentType)) || '';
+      if (responseCapture.streamType.test(type)) return;
+      response.clone().text().then(text => reportResponse(url, method, response.status, text), () => {});
+    } catch (e) {
+      // Capture never breaks the page's fetch
+    }
+  }
+
+  function xhrResponseText(xhr) {
+    const { textResponseTypes, jsonResponseType } = responseCapture.api;
+    if (textResponseTypes.includes(xhr.responseType)) return xhr.responseText;
+    if (xhr.responseType === jsonResponseType) {
+      try {
+        return JSON.stringify(xhr.response);
+      } catch (e) {
+        return '';
+      }
+    }
+    return null;
+  }
+
+  function installResponseCapture(api) {
+    try {
+      const descriptor = Object.getOwnPropertyDescriptor(window, api.fetch);
+      const originalFetch = descriptor && descriptor.value;
+      if (typeof originalFetch === 'function' && descriptor.configurable) {
+        const { capture } = {
+          capture(input) {
+            const result = Reflect.apply(originalFetch, this, arguments);
+            try {
+              const init = arguments[1];
+              const request = input && typeof input === 'object' && typeof input.url === 'string' ? input : null;
+              const url = absoluteUrl(request ? request.url : input);
+              if (responseUrlMatches(url) && result && typeof result.then === 'function') {
+                const method = String((init && init.method) || (request && request.method) || api.defaultMethod).toUpperCase();
+                result.then(response => readFetchResponse(response, url, method), () => {});
+              }
+            } catch (e) {
+              // Capture never breaks the page's fetch
+            }
+            return result;
+          }
+        };
+        Object.defineProperty(window, api.fetch, { ...descriptor, value: disguiseAs(capture, originalFetch) });
+      }
+    } catch (e) {
+      logWarn('[Response capture] fetch not wrapped:', getErrorMessage(e));
+    }
+
+    try {
+      const proto = window[api.xhr] && window[api.xhr].prototype;
+      const openDescriptor = proto && Object.getOwnPropertyDescriptor(proto, api.open);
+      const sendDescriptor = proto && Object.getOwnPropertyDescriptor(proto, api.send);
+      if (openDescriptor && sendDescriptor && typeof openDescriptor.value === 'function' && typeof sendDescriptor.value === 'function' &&
+          openDescriptor.configurable && sendDescriptor.configurable) {
+        const originalOpen = openDescriptor.value;
+        const originalSend = sendDescriptor.value;
+        const opened = new WeakMap();
+        const { open } = {
+          open(method, url) {
+            try {
+              opened.set(this, { method: String(method || api.defaultMethod).toUpperCase(), url: absoluteUrl(url) });
+            } catch (e) {
+              // Capture never breaks the page's request
+            }
+            return Reflect.apply(originalOpen, this, arguments);
+          }
+        };
+        const { send } = {
+          send() {
+            try {
+              const info = opened.get(this);
+              if (info && responseUrlMatches(info.url)) {
+                const xhr = this;
+                xhr.addEventListener(api.loadend, () => {
+                  try {
+                    reportResponse(info.url, info.method, xhr.status, xhrResponseText(xhr));
+                  } catch (e) {
+                    // Capture never breaks the page's request
+                  }
+                }, { once: true });
+              }
+            } catch (e) {
+              // Capture never breaks the page's request
+            }
+            return Reflect.apply(originalSend, this, arguments);
+          }
+        };
+        Object.defineProperty(proto, api.open, { ...openDescriptor, value: disguiseAs(open, originalOpen) });
+        Object.defineProperty(proto, api.send, { ...sendDescriptor, value: disguiseAs(send, originalSend) });
+      }
+    } catch (e) {
+      logWarn('[Response capture] XMLHttpRequest not wrapped:', getErrorMessage(e));
+    }
+  }
+
   const onInstallHooks = (event) => {
     event.stopImmediatePropagation?.();
     if (event.detail?.[FIELDS.TOKEN] !== bridgeToken) {
@@ -932,6 +1117,10 @@
     }
     // The real hooks resolve the APIs next: take the early recorders off first
     restoreEarlyRecorders();
+    // Independent of the hook cycle and of cache hits: these responses often
+    // come long after the scan (a challenge when a message is sent), and the
+    // worker adds what they show to the page's result when they do
+    configureResponseCapture(event.detail?.responseCapture);
 
     const now = Date.now();
     if (activeHooksConfig && now - lastHooksInstallAt < activeHooksConfig.INSTALL_DEBOUNCE_MS) {
