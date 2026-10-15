@@ -34,7 +34,26 @@ function hcaptchaInitializeInterceptor(captureState) {
 // Store active version check requests
 const activeVersionChecks = {};
 
-const HCAPTCHA_ENTERPRISE_API_PARAMS = ['custom_theme', 'sentry', 'custom', 'apiEndpoint', 'endpoint', 'reportapi', 'assethost', 'imghost', 'recaptchacompat'];
+// api.js parameters only Enterprise site keys can use. recaptchacompat is open to everyone.
+const HCAPTCHA_ENTERPRISE_API_PARAMS = ['custom_theme', 'sentry', 'custom', 'apiEndpoint', 'endpoint', 'reportapi', 'assethost', 'imghost'];
+// Endpoint parameters are Enterprise only when they point away from hCaptcha's own hosts
+const HCAPTCHA_ENDPOINT_PARAMS = ['apiEndpoint', 'endpoint', 'reportapi', 'assethost', 'imghost'];
+
+/** The first api.js parameter that shows an Enterprise site key, or undefined. */
+function hcaptchaEnterpriseParam(searchParams) {
+    return HCAPTCHA_ENTERPRISE_API_PARAMS.find(name => {
+        const value = String(searchParams.get(name) || '').trim();
+        // custom=False, sentry=false and the like switch the feature off
+        if (!value || /^(?:false|0|off|no)$/i.test(value)) return false;
+        if (!HCAPTCHA_ENDPOINT_PARAMS.includes(name)) return true;
+        try {
+            const host = new URL(value, 'https://hcaptcha.com').hostname.toLowerCase();
+            return host !== 'hcaptcha.com' && !host.endsWith('.hcaptcha.com');
+        } catch (_) {
+            return true;
+        }
+    });
+}
 
 /** Records an Enterprise sign once. */
 function hcaptchaMarkEnterprise(target, method) {
@@ -70,7 +89,7 @@ function hcaptchaInspectRequest(details, target) {
         return details.url;
     }
     if (/\/1\/(?:secure-)?api\.js$/.test(path)) {
-        const param = HCAPTCHA_ENTERPRISE_API_PARAMS.find(name => parsed.searchParams.has(name));
+        const param = hcaptchaEnterpriseParam(parsed.searchParams);
         if (param) hcaptchaMarkEnterprise(target, 'api-param-' + param);
         return null;
     }

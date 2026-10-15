@@ -40,7 +40,14 @@ test('hCaptcha: version, site key and every Enterprise sign come from one parser
   assert.equal(plainChallenge.isEnterprise, false, 'the word inside another value is not the rqdata field');
   const api = target();
   hcaptchaInspectRequest({ url: 'https://js.hcaptcha.com/1/api.js?render=explicit&sentry=false&custom=true' }, api);
-  assert.deepEqual(plain(api.detectionMethods), ['api-param-sentry']);
+  assert.deepEqual(plain(api.detectionMethods), ['api-param-custom'], 'sentry=false is off; custom=true counts');
+  // hCaptcha's own demo: custom=False and reportapi on hCaptcha's own host are not Enterprise
+  const demo = target();
+  hcaptchaInspectRequest({ url: 'https://js.hcaptcha.com/1/api.js?reportapi=https%3A%2F%2Faccounts.hcaptcha.com&custom=False&pstissuer=https://pst-issuer.hcaptcha.com' }, demo);
+  assert.equal(demo.isEnterprise, false);
+  const ownEndpoint = target();
+  hcaptchaInspectRequest({ url: 'https://js.hcaptcha.com/1/api.js?endpoint=https%3A%2F%2Fcaptcha.shop.example&recaptchacompat=off' }, ownEndpoint);
+  assert.deepEqual(plain(ownEndpoint.detectionMethods), ['api-param-endpoint'], 'a custom endpoint is Enterprise; recaptchacompat is not');
   const none = target();
   hcaptchaInspectRequest({ url: 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=cb' }, none);
   assert.equal(none.isEnterprise, false);

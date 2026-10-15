@@ -11,6 +11,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Rules editor: a combination's "Combinations only" row shows how many of its patterns are marked and offers Mark all / Unmark all, instead of a half-ticked checkbox.
 
+### Fixed
+
+- Advanced: hCaptcha Check Version no longer reports Enterprise on standard site keys, such as hCaptcha's own demo page.
+
 ## [2.8.7] - 2026-10-14
 
 ### Added
