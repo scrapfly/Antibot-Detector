@@ -28,6 +28,7 @@ const OPTIONS = {
     // Black marks would vanish on a dark tile: draw them light, as on the vendors' dark sites
     'azurefrontdoor_official.png': { lightenBelow: 60 },
     'imperva_official.png': { lightenBelow: 60 },
+    'kasada_official.png': { lightenBelow: 60 },
     // A black mark on white: its darkness becomes opacity, drawn white (the gaps inside the knot clear too)
     'openai_official.png': { whiteMark: true },
     'prosopo_official.png': { lightenBelow: 90 },

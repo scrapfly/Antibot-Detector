@@ -232,9 +232,10 @@ class ScrapflyPopup {
         return;
       }
 
-      // Debounce to prevent spam from rapid calls
+      // Debounce to prevent spam from rapid calls, but never while the scan card
+      // is up: a call skipped then leaves it on "Searching" with no one to settle it
       const now = Date.now();
-      if (this.lastCheckTime && (now - this.lastCheckTime) < 1000) {
+      if (this.lastCheckTime && (now - this.lastCheckTime) < 1000 && this.detection.isShowingResults) {
         return;
       }
       this.lastCheckTime = now;
@@ -308,6 +309,16 @@ class ScrapflyPopup {
    * @param {object} response - The detection response from background
    * @returns {Promise<boolean>} - True if data was processed, false if showing a state
    */
+  /** True while the tab is still loading its page (its scan has not started or is restarting). */
+  async isTabLoading(tabId) {
+    try {
+      const tab = await chrome.tabs.get(tabId);
+      return tab?.status === 'loading';
+    } catch (_) {
+      return false;
+    }
+  }
+
   async handleDetectionResponseAndUpdateUI(tabId, response, requestId = this.detectionViewRequestId) {
     if (!this.isDetectionViewRequestCurrent(requestId)) {
       return false;
@@ -335,13 +346,23 @@ class ScrapflyPopup {
       return false;
     }
 
+    // A page that is still loading has no scan to report yet: show the scan, not
+    // "Nothing Detected" or "Scan interrupted" (Nike reloads itself under Kasada)
+    const tabLoading = await this.isTabLoading(tabId);
+    if (!this.isDetectionViewRequestCurrent(requestId)) {
+      return false;
+    }
+    const showEmptyOrScanning = () => (tabLoading
+      ? this.detection.showAnalyzingState()
+      : this.detection.showEmptyState());
+
     if (!response) {
       if (isLoadingBadgeText(badgeTrimmed)) {
         this.detection.showAnalyzingState();
       } else if (hasVisibleResults) {
         return true;
       } else {
-        this.detection.showEmptyState();
+        showEmptyOrScanning();
       }
       return false;
     }
@@ -355,7 +376,7 @@ class ScrapflyPopup {
     }
 
     if (response.status === 'interrupted') {
-      this.detection.showEmptyState();
+      showEmptyOrScanning();
       return false;
     }
 
@@ -366,7 +387,7 @@ class ScrapflyPopup {
       } else if (hasVisibleResults) {
         return true;
       } else {
-        this.detection.showEmptyState();
+        showEmptyOrScanning();
       }
       return false;
     }
@@ -388,7 +409,7 @@ class ScrapflyPopup {
     } else if (hasVisibleResults) {
       return true;
     } else {
-      this.detection.showEmptyState();
+      showEmptyOrScanning();
     }
     return false;
   }

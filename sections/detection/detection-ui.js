@@ -55,6 +55,20 @@ DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
     if (detectionPagination) detectionPagination.style.display = 'none';
 };
 
+// After the first check, the scan card asks the background again this often,
+// for up to LOADING_REPOLL_MAX asks (about 90 s): Nike's Kasada reloads the page
+// and a heavy page can take far longer than the first 10 s check to load, so a
+// scan that has not finished yet must not end on "interrupted"
+DetectionUI.LOADING_REPOLL_MS = 3000;
+DetectionUI.LOADING_REPOLL_MAX = 30;
+
+DetectionUI.rearmLoadingCheck = function() {
+    this.clearLoadingTimeout();
+    this.loadingTimeout = setTimeout(() => {
+      this.handleLoadingTimeout();
+    }, DetectionUI.LOADING_REPOLL_MS);
+};
+
 // Arm the stuck-detection timeout for the analyzing state
 DetectionUI.startAnalysisProgress = function() {
     this.clearLoadingTimeout();
@@ -90,6 +104,8 @@ DetectionUI.handleLoadingTimeout = function() {
           chrome.runtime.sendMessage(
             { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
             async (response) => {
+              const asks = this.loadingRepolls = (this.loadingRepolls || 0) + 1;
+              const canWait = asks <= DetectionUI.LOADING_REPOLL_MAX;
               if (chrome.runtime.lastError) {
                 if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for results:', chrome.runtime.lastError);
                 if (!this.isShowingResults || this.currentResults.length === 0) {
@@ -112,10 +128,24 @@ DetectionUI.handleLoadingTimeout = function() {
                   },
                   response.data
                 );
-              } else if (response?.status === 'pending') {
+              } else if (response?.status === 'pending' && canWait) {
                 if (!this.wasInterrupted && !this.isShowingResults) {
                   this.showAnalyzingState();
                 }
+                // showAnalyzingState does nothing while the scan card is already
+                // on screen, so ask again here: a completion message the popup
+                // missed would otherwise leave it on "Searching" for good
+                DetectionUI.rearmLoadingCheck.call(this);
+              } else if (canWait && response?.status !== 'error' &&
+                (tabs[0].status === 'loading' || (this.loadingIdleAsks = (this.loadingIdleAsks || 0) + 1) < 2)) {
+                // The page is still loading, so its scan has not started (or was
+                // restarted by a reload), or it has just loaded and its scan is
+                // about to register: keep scanning, and call it interrupted only
+                // when two checks in a row find no scan
+                if (!this.wasInterrupted && !this.isShowingResults) {
+                  this.showAnalyzingState();
+                }
+                DetectionUI.rearmLoadingCheck.call(this);
               } else {
                 // Check badge before showing interrupted - numeric means detection is complete
                 const badgeStatus = await Detection.getBadgeStatus(tabs[0].id);
@@ -154,6 +184,8 @@ DetectionUI.clearLoadingTimeout = function() {
 
 DetectionUI.hideLoadingState = function() {
     this.clearLoadingTimeout(); // Clear timeout when loading completes
+    this.loadingRepolls = 0;
+    this.loadingIdleAsks = 0;
     this.isShowingAnalyzing = false; // Reset flag when hiding analyzing state
     const loadingState = document.querySelector('#loadingState');
     if (loadingState) loadingState.style.display = 'none';

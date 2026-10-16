@@ -26,11 +26,14 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: the changed rule descriptions and combination names are translated into all 11 languages.
 - Fingerprint: ordinary page behaviour (reading localStorage, the CPU count, the pixel ratio or the languages) scores lower, so clean pages show less noise.
 - Dark theme: protection logos on the Detection tab and in History details also sit on dark tiles instead of white squares; the light theme is unchanged.
+- Detection: Kasada shows its official logo on the Detection tab, in History, in Rules and in Advanced, in both themes.
+- Development: tests cover the search screen finishing when its completion message never arrives, and a page that is still loading.
 - Development: the confidence tests now define what 100% means (a proof list, the capped detectors, a top tier of 100%), with a live witness for each changed rule.
 - Development: the live-site check list expects 100% where a site reliably shows its proof, and the README explains what 100% means and how to add a proof rule.
 
 ### Fixed
 
+- Detection: on slow or reloading pages such as Nike, the "Searching protections" screen no longer stays stuck, or flashes "Scan interrupted" or "Nothing Detected", before the result.
 - Detection: long cookie values (Cloudflare, PerimeterX, AWS WAF) were cut before matching, so those cookies never counted; they now do.
 - Detection: Turnstile widgets served from Cloudflare's China or FedRAMP hosts no longer show as Cloudflare Bot Management at 100%.
 

@@ -9,7 +9,7 @@
   "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.kasada.io/",
-  "icon": "custom.png",
+  "icon": "kasada_official.png",
   "description": "Advanced bot detection and mitigation platform using behavioral analysis and threat intelligence",
   "detection": {
     "header": [
