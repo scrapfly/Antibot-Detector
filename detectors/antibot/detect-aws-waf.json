@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-08",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://aws.amazon.com/waf/",
   "icon": "aws_official.png",
@@ -17,10 +17,13 @@
         "id": "aws-waf-token-cookie",
         "name": "^aws-waf-token$",
         "nameRegex": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "AWS WAF token cookie set after a challenge",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}",
+        "valueRegex": true,
+        "valueCaseSensitive": true
       }
     ],
     "header": [
@@ -30,7 +33,7 @@
         "nameRegex": true,
         "value": "^(?:challenge|captcha)$",
         "valueRegex": true,
-        "confidence": 90,
+        "confidence": 100,
         "description": "AWS WAF challenge or captcha action header",
         "nameScope": "response",
         "valueScope": "response"
@@ -49,26 +52,25 @@
     "url": [
       {
         "id": "token-host-script",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Integration SDK from the regional token.awswaf.com host",
-        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/[0-9a-f]{8,16}/[0-9a-f]{8,16}/[0-9a-f]{8,16}/(?:challenge|captcha|jsapi)\\.js(?:[?#]|$)",
+        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge|captcha|jsapi)\\.js(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
         "id": "token-host-endpoint",
-        "confidence": 60,
-        "standalone": false,
+        "confidence": 100,
         "description": "Any request to the regional token.awswaf.com host (inputs, verify, telemetry)",
-        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){3}(?:inputs|verify|telemetry|voucher|mp_verify)(?:[?#/]|$)",
+        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs|verify|telemetry|voucher|mp_verify)(?:[?#/]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
         "id": "captcha-host",
-        "confidence": 80,
+        "confidence": 100,
         "description": "AWS WAF CAPTCHA host",
         "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.captcha\\.awswaf\\.com/",
         "textRegex": true,
@@ -128,7 +130,7 @@
     {
       "id": "aws-waf-challenge-page",
       "name": "Challenge response with its bootstrap",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -160,7 +162,7 @@
     {
       "id": "aws-waf-sdk-session",
       "name": "Integration SDK with token traffic or cookie",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

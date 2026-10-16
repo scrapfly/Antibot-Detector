@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.reblaze.com/",
   "icon": "reblaze_official.png",
@@ -26,7 +26,7 @@
         "id": "rbz-session-cookie",
         "name": "^rbzsessionid$",
         "nameRegex": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Reblaze session cookie",
         "nameScope": "all",
         "valueScope": "all"
@@ -45,7 +45,7 @@
     "url": [
       {
         "id": "reblaze-lib-script",
-        "confidence": 70,
+        "confidence": 100,
         "description": "Reblaze active-challenge library (<name>.ac_v2.lib.js)",
         "text": "^https?://[^/?#]+/[A-Za-z0-9_-]{3,40}\\.ac_v2\\.lib\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -90,7 +90,7 @@
     {
       "id": "reblaze-challenge-runtime",
       "name": "Challenge library with its namespace",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

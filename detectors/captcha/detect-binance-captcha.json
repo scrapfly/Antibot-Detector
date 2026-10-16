@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-12",
-  "version": "1.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.binance.com/",
   "icon": "binance_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "binance-captcha-sdk",
-        "confidence": 55,
+        "confidence": 100,
         "description": "Binance captcha script (captcha.min.js?v=…)",
         "text": "^https://[a-z0-9-]+\\.(?:binance|bnbstatic)\\.com/static/js/se/captcha/v1/captcha\\.min\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -95,7 +95,7 @@
           }
         ]
       },
-      "confidence": 90
+      "confidence": 100
     },
     {
       "id": "binance-sdk-constructor",

@@ -7,8 +7,9 @@ const vm = require('node:vm');
 // Anti-bot definitions v2: every rule has an id and a witness from a live site
 // (fixtures/antibot-confidence.json). Weak signals (CDN headers, short cookie
 // names, generic paths) are standalone:false and only count inside a
-// combination; strong vendor signals score alone, and the 85-95 tiers need two
-// independent observations. Lookalikes from real sites must stay at 0.
+// combination; vendor signals score alone, proof (PROOF below) is 100 on its
+// own, the 85-95 tiers need two independent observations and a detector's top
+// tier (its complete integration) is 100. Lookalikes from real sites stay at 0.
 
 const root = path.join(__dirname, '..');
 const dir = path.join(root, 'detectors/antibot');
@@ -87,15 +88,47 @@ function detect(detector, { page, windowIds = [] }) {
 }
 const matched = (detector, result, id) => result.matches.some(m => Array.from(Combinations.matchPatternIds(detector, m)).includes(id));
 
-// Signals only one vendor ever produces count as proof on their own (100%):
-// Akamai's _abck cookie and its Pixel challenge variable, BotGuard's
-// interpreter scripts at www.google.com/js/bg/ and /js/th/<hash>.js, Cloudflare's
-// /cdn-cgi/challenge-platform/ challenge and bot-detection requests (not on
-// Turnstile's own host), DeepSeek's create_pow_challenge and ChatGPT's
-// Sentinel chat-requirements endpoints
-const PROOF = new Set(['detect-akamai/abck-sensor-cookie', 'detect-akamai/abck-cookie-name', 'detect-akamai/pixel-variable',
-  'detect-botguard/botguard-bg-interpreter', 'detect-botguard/botguard-interpreter', 'detect-cloudflare/challenge-orchestrator', 'detect-cloudflare/bot-management-script',
-  'detect-cloudflare/jsd-oneshot', 'detect-deepseek-pow/pow-challenge-endpoint', 'detect-openai-sentinel/chat-requirements']);
+// Proof: a signal only one vendor's product produces, seen as a request to a
+// host the vendor owns (or a vendor-literal first-party path), a header or
+// cookie with a vendor-coined name (short names also check the value's shape),
+// the vendor endpoint's own body, or a token only the vendor injects. It scores
+// 100 on its own. Markup, source text, window globals and anything shared with
+// another product (CDN edge headers, Turnstile's challenge hosts, BIG-IP LTM
+// cookies) never are.
+const PROOF = new Set([
+  'detect-akamai/abck-cookie-name', 'detect-akamai/abck-sensor-cookie', 'detect-akamai/ak-bmsc-cookie',
+  'detect-akamai/akam-pixel', 'detect-akamai/akam-sensor-script', 'detect-akamai/bm-sz-cookie', 'detect-akamai/pixel-variable',
+  'detect-akamai/sbsd-endpoint', 'detect-akamai/sensor-data-payload', 'detect-aliyunwaf/acw-sc-v2-cookie',
+  'detect-amazon/fwcim-assets-script', 'detect-anubis/anubis-auth-cookie', 'detect-anubis/anubis-endpoint-resource',
+  'detect-anubis/anubis-verification-cookie', 'detect-aws-waf/aws-waf-token-cookie', 'detect-aws-waf/captcha-host',
+  'detect-aws-waf/token-host-endpoint', 'detect-aws-waf/token-host-script', 'detect-aws-waf/waf-action-header',
+  'detect-botguard/botguard-bg-interpreter', 'detect-botguard/botguard-interpreter', 'detect-botguard/gmail-waa',
+  'detect-botguard/waa-create', 'detect-cheq/cheq-first-party-endpoint', 'detect-cheq/cheqzone-host', 'detect-cloudflare-waitingroom/cf-waitingroom-cookie',
+  'detect-cloudflare/bot-management-script', 'detect-cloudflare/cf-bm-cookie', 'detect-cloudflare/cf-clearance-cookie',
+  'detect-cloudflare/cf-mitigated-header', 'detect-cloudflare/challenge-orchestrator', 'detect-cloudflare/jsd-oneshot',
+  'detect-datadome/datadome-captcha', 'detect-datadome/datadome-cid-header', 'detect-datadome/datadome-cookie',
+  'detect-datadome/datadome-protected-header', 'detect-datadome/datadome-server-header', 'detect-datadome/datadome-tag',
+  'detect-deepseek-pow/pow-challenge-endpoint', 'detect-deepseek-pow/pow-challenge-payload', 'detect-deepseek-pow/pow-challenge-response',
+  'detect-deepseek-pow/pow-solver-wasm', 'detect-f5/ts-asm-cookie', 'detect-fingerprintjs/fpcdn-pro-script',
+  'detect-fingerprintjs/fpjs-api-host', 'detect-fingerprintjs/fpnpmcdn-loader', 'detect-fingerprintjs/openfpcdn-oss-script',
+  'detect-fingerprintjs/oss-npm-monitoring', 'detect-incapsula/imperva-cdn-header', 'detect-incapsula/incap-iinfo-header',
+  'detect-incapsula/incap-session-cookie', 'detect-incapsula/incap-visitor-cookie', 'detect-incapsula/incapsula-resource',
+  'detect-incapsula/reese84-cookie', 'detect-incapsula/utmvc-cookie', 'detect-jiasule/jsl-clearance-cookie',
+  'detect-kasada/ips-script', 'detect-kasada/kpsdk-ct-header', 'detect-kasada/tl-endpoint', 'detect-netacea/mitatacaptcha-cookie',
+  'detect-netacea/netacea-captcha-verify', 'detect-openai-sentinel/chat-requirements', 'detect-openai-sentinel/pow-required-response',
+  'detect-openai-sentinel/proof-of-work-answer', 'detect-openai-sentinel/requirements-token-payload', 'detect-openai-sentinel/sentinel-frame',
+  'detect-openai-sentinel/sentinel-req', 'detect-openai-sentinel/sentinel-sdk-build', 'detect-openai-sentinel/sentinel-sdk-loader',
+  'detect-openai-sentinel/so-required-response', 'detect-perimeterx/px-captcha', 'detect-perimeterx/px-client-script',
+  'detect-perimeterx/px-collector', 'detect-perimeterx/px3-cookie', 'detect-perimeterx/pxhd-cookie', 'detect-perimeterx/pxvid-cookie',
+  'detect-radware/radware-stormcaster-script', 'detect-radware/radware-uzm-cookie', 'detect-radware/radware-validate-host',
+  'detect-reblaze/rbz-session-cookie', 'detect-reblaze/reblaze-lib-script', 'detect-ruishu/fssbbi-cookie',
+  'detect-sucuri/sucuri-block-header', 'detect-sucuri/sucuri-cloudproxy-cookie', 'detect-sucuri/sucuri-id-header',
+  'detect-sucuri/sucuri-server-header', 'detect-threatmetrix/tmx-check', 'detect-threatmetrix/tmx-tags'
+]);
+// Detectors whose top tier stays below 100: legacy vendors (Ocule, Meetrics)
+// and edges that prove a CDN rather than protection (Azure Front Door, Yundun);
+// Hunt's /hd-api/ paths could not be shown to be the vendor's alone
+const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
 test('thirty anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
@@ -127,8 +160,11 @@ test('thirty anti-bot definitions: v2, CRLF, explicit ids, graded combinations',
     }
     assert.ok(d.combinations.length >= 3, d.id);
     assert.ok(new Set(d.combinations.map(c => c.confidence)).size >= 2, `${d.id}: graded tiers`);
+    const top = Math.max(...d.combinations.map(c => c.confidence));
+    if (CAPPED.has(d.id)) assert.ok(top < 100, `${d.id}: capped detector`);
+    else assert.equal(top, 100, `${d.id}: complete integration is 100`);
     for (const c of d.combinations) {
-      assert.ok(c.confidence <= 95, c.id);
+      assert.ok(c.confidence <= 95 || c.confidence === 100, c.id);
       for (const branch of witnesses(c.when)) assert.ok(new Set(branch).size >= 2, `${c.id}: needs two signals`);
     }
   }
@@ -177,7 +213,7 @@ for (const d of Object.values(definitions)) {
         `https://evil.test/?next=${encodeURIComponent(positive.href)}`,
         `https://${positive.host}@evil.test${positive.pathname}`
       ]) {
-        if (/^\^https\?:\/\/(?:\(\?![^)]*\))?\[\^\/\?#\]\+/.test(r.text)) continue; // first-party rules: any host by design
+        if (/^\^https\?:\/\/(?:\(\?!.*?\/\))?\[\^\/\?#\]\+/.test(r.text)) continue; // first-party rules: any host by design
         const result = detect(d, { page: { networkUrls: [{ url: bad }], content: [], dom: [], headers: {}, allCookies: [] } });
         assert.ok(!matched(d, result, r.id), `${r.id}: ${bad}`);
       }
@@ -195,7 +231,8 @@ const benign = {
   'detect-cheq': { sources: ["var cheque = 'cheq';"], urls: ['https://example.test/cheq.js'] },
   'detect-cloudflare': { headers: { server: 'cloudflare', 'cf-ray': '8c1-AMS' }, urls: ['https://example.test/cdn-cgi/l/email-protection', 'https://challenges.cloudflare.com/turnstile/v0/api.js',
     // A Turnstile widget's own frames: a CAPTCHA, not Bot Management
-    'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/x'] },
+    'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/x',
+    'https://challenges.cloudflare-cn.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.fed.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1'] },
   'detect-deepseek-pow': { urls: ['https://chat.deepseek.com/api/v0/chat/history_messages', 'https://example.test/api/v0/chat/create_pow_challenge',
     'https://example.test/static/sha3_wasm_bg.7b9ca65ddd.wasm', 'https://www.deepseek.com/'] },
   'detect-openai-sentinel': { urls: ['https://chatgpt.com/backend-api/conversation', 'https://example.test/backend-api/sentinel/chat-requirements',

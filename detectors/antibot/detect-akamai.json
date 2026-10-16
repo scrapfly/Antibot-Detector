@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-12",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.akamai.com/products/bot-manager",
   "icon": "akamai_official.png",
@@ -39,7 +39,7 @@
         "value": "^[0-9A-F]{32}~",
         "valueRegex": true,
         "valueCaseSensitive": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Bot Manager session cookie (hash~token)",
         "nameScope": "all",
         "valueScope": "all"
@@ -48,10 +48,13 @@
         "id": "ak-bmsc-cookie",
         "name": "^ak_bmsc$",
         "nameRegex": true,
-        "confidence": 60,
+        "confidence": 100,
         "description": "Bot Manager edge session cookie",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[0-9A-F]{32}~0{3,}~",
+        "valueRegex": true,
+        "valueCaseSensitive": true
       },
       {
         "id": "bm-family-cookie",
@@ -100,7 +103,7 @@
     "url": [
       {
         "id": "akam-sensor-script",
-        "confidence": 70,
+        "confidence": 100,
         "description": "First-party Bot Manager sensor script under /akam/<version>/",
         "text": "^https?://[^/?#]+/akam/[0-9]{1,3}/[0-9a-f]{6,10}(?:[?#]|$)",
         "textRegex": true,
@@ -109,7 +112,7 @@
       },
       {
         "id": "akam-pixel",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Bot Manager pixel challenge endpoint",
         "text": "^https?://[^/?#]+/akam/[0-9]{1,3}/pixel_[0-9a-f]{6,10}(?:[?#]|$)",
         "textRegex": true,
@@ -118,7 +121,7 @@
       },
       {
         "id": "sbsd-endpoint",
-        "confidence": 65,
+        "confidence": 100,
         "description": "SBSD challenge endpoint",
         "text": "^https?://[^/?#]+/(?:\\.well-known|_sec)/sbsd(?:[/?#]|$)",
         "textRegex": true,
@@ -170,13 +173,15 @@
     "payload": [
       {
         "id": "sensor-data-payload",
-        "text": "sensor_data",
-        "confidence": 80,
+        "text": "\"sensor_data\":\"[0-9]{1,2};[0-9];[0-9];[0-9];[0-9]{6,9};",
+        "confidence": 100,
         "description": "Bot Manager sensor_data POST body",
-        "textWholeWord": true,
+        "textWholeWord": false,
         "methods": [
           "POST"
-        ]
+        ],
+        "textRegex": true,
+        "textCaseSensitive": true
       },
       {
         "id": "sbsd-payload",
@@ -184,7 +189,7 @@
         "confidence": 70,
         "description": "SBSD challenge POST to the sbsd endpoint",
         "textWholeWord": true,
-        "urlPattern": "/(?:\\.well-known|_sec)/sbsd",
+        "urlPattern": "^https?://[^/?#]+/(?:\\.well-known|_sec)/sbsd(?:[/?#]|$)",
         "urlRegex": true,
         "methods": [
           "POST"
@@ -195,7 +200,7 @@
         "text": "jsv=",
         "confidence": 65,
         "description": "Pixel challenge fingerprint POST",
-        "urlPattern": "/akam/[0-9]+/pixel_[0-9a-f]+",
+        "urlPattern": "^https?://[^/?#]+/akam/[0-9]{1,3}/pixel_[0-9a-f]{6,10}(?:[?#]|$)",
         "urlRegex": true,
         "methods": [
           "POST"
@@ -239,7 +244,7 @@
     {
       "id": "akamai-sensor-script",
       "name": "Sensor script or object with a Bot Manager cookie",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

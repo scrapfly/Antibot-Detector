@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2026-10-04",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.hcaptcha.com/",
   "icon": "hcaptcha_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "hcaptcha-api-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official hCaptcha JavaScript API resource, including the legacy hcaptcha.com/1 path",
         "text": "^https://(?:js\\.)?hcaptcha\\.com/1/api\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -25,13 +25,24 @@
       },
       {
         "id": "hcaptcha-challenge-api",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Site configuration or challenge request to the hCaptcha API hosts hard-coded in the SDK",
         "text": "^https://api2?\\.hcaptcha\\.com/(?:checksiteconfig|getcaptcha)(?:[/?#]|$)",
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": true,
         "textScope": "all"
+      },
+      {
+        "id": "hcaptcha-widget-frame-request",
+        "confidence": 100,
+        "description": "hCaptcha widget frame document (checkbox or challenge) requested from the vendor's assets hosts",
+        "text": "^https://(?:newassets|assets)\\.hcaptcha\\.com/captcha/v1/[a-f0-9]+/static/hcaptcha\\.html(?:[?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all",
+        "standalone": true
       }
     ],
     "content": [
@@ -121,7 +132,7 @@
       "id": "hcaptcha-complete-integration",
       "name": "Official API resource, marked widget, frame and compatible runtime API presence",
       "when": { "all": [{ "pattern": "hcaptcha-api-resource" }, { "pattern": "hcaptcha-configured-widget" }, { "pattern": "hcaptcha-widget-frame" }, { "any": [{ "pattern": "hcaptcha-runtime-render" }, { "pattern": "hcaptcha-runtime-execute" }] }] },
-      "confidence": 95
+      "confidence": 100
     }
   ]
 }

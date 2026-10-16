@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.ishumei.com/product/captcha",
   "icon": "shumei_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "shumei-sdk-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official Shumei captcha SDK (smcp.min.js) on the fengkongcloud CDN",
         "text": "^https://castatic\\.fengkongcloud\\.(?:cn|com)/[^?#]*smcp\\.min\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -26,7 +26,7 @@
       },
       {
         "id": "shumei-core-resource",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Versioned Shumei captcha core",
         "text": "^https://castatic\\.fengkongcloud\\.(?:cn|com)/pr/auto-build/v[0-9.]+-\\d+/captcha-sdk\\.min\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -36,7 +36,7 @@
       },
       {
         "id": "shumei-captcha-api",
-        "confidence": 55,
+        "confidence": 100,
         "description": "Shumei captcha configuration, registration and verification API",
         "text": "^https://captcha1?\\.fengkongcloud\\.(?:cn|com)/ca/v[12]/(?:conf|register|verify|fverify)(?:[?#]|$)",
         "textRegex": true,
@@ -116,7 +116,7 @@
     {
       "id": "shumei-complete-integration",
       "name": "Loader, captcha API and rendered widget",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "shumei-sdk-resource" },

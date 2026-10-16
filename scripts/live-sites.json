@@ -5,7 +5,7 @@
       "expect": [
         {
           "detector": "detect-amazon",
-          "min": 90
+          "min": 100
         }
       ],
       "note": "Amazon sign-in: metadata1 field and FWCIM scripts",
@@ -16,7 +16,7 @@
       "expect": [
         {
           "detector": "detect-akamai",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site, Bot Manager on it",
@@ -27,7 +27,7 @@
       "expect": [
         {
           "detector": "detect-akamai",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "Akamai Bot Manager customer",
@@ -38,7 +38,7 @@
       "expect": [
         {
           "detector": "detect-cloudflare",
-          "min": 60
+          "min": 100
         }
       ],
       "note": "Cloudflare Bot Management customer",
@@ -49,10 +49,10 @@
       "expect": [
         {
           "detector": "detect-cloudflare",
-          "min": 40
+          "min": 100
         }
       ],
-      "note": "vendor site, no challenge: weak signals only",
+      "note": "vendor site, no challenge: the __cf_bm cookie alone is proof",
       "waitMs": 12000
     },
     {
@@ -60,7 +60,7 @@
       "expect": [
         {
           "detector": "detect-aws-waf",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "AWS WAF customer",
@@ -71,7 +71,7 @@
       "expect": [
         {
           "detector": "detect-botguard",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "YouTube player runs BotGuard (WAA)",
@@ -82,7 +82,7 @@
       "expect": [
         {
           "detector": "detect-f5",
-          "min": 50
+          "min": 100
         }
       ],
       "note": "BIG-IP ASM TS01 cookie",
@@ -93,7 +93,7 @@
       "expect": [
         {
           "detector": "detect-shapesecurity",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "Shape seeded script + ssx.mod.js (also PerimeterX)",
@@ -104,7 +104,7 @@
       "expect": [
         {
           "detector": "detect-datadome",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -115,7 +115,7 @@
       "expect": [
         {
           "detector": "detect-datadome",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "DataDome customer",
@@ -126,7 +126,7 @@
       "expect": [
         {
           "detector": "detect-incapsula",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -137,7 +137,7 @@
       "expect": [
         {
           "detector": "detect-perimeterx",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "HUMAN/PerimeterX customer (block page)",
@@ -148,7 +148,7 @@
       "expect": [
         {
           "detector": "detect-perimeterx",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "HUMAN/PerimeterX customer",
@@ -159,7 +159,7 @@
       "expect": [
         {
           "detector": "detect-sucuri",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -170,7 +170,7 @@
       "expect": [
         {
           "detector": "detect-reblaze",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -181,7 +181,7 @@
       "expect": [
         {
           "detector": "detect-cheq",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -192,7 +192,7 @@
       "expect": [
         {
           "detector": "detect-kasada",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "Kasada customer",
@@ -203,7 +203,7 @@
       "expect": [
         {
           "detector": "detect-kasada",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "Kasada customer",
@@ -217,7 +217,7 @@
           "min": 80
         }
       ],
-      "note": "Anubis",
+      "note": "Anubis; headless gets the challenge page, which reloads after the proof of work, so the harness often reads the tab before a result exists",
       "waitMs": 12000
     },
     {
@@ -247,10 +247,10 @@
       "expect": [
         {
           "detector": "detect-fingerprintjs",
-          "min": 80
+          "min": 50
         }
       ],
-      "note": "FingerprintJS Pro customer; the page fires load after about 10 s",
+      "note": "self-hosts the open-source library as fp.umd.js (no vendor host); the page fires load after about 10 s",
       "waitMs": 25000
     },
     {
@@ -258,7 +258,7 @@
       "expect": [
         {
           "detector": "detect-fingerprintjs",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -291,7 +291,7 @@
       "expect": [
         {
           "detector": "detect-radware",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "Radware Bot Manager",
@@ -313,7 +313,7 @@
       "expect": [
         {
           "detector": "detect-recaptcha",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "official demo",
@@ -324,7 +324,7 @@
       "expect": [
         {
           "detector": "detect-recaptcha",
-          "min": 70
+          "min": 100
         }
       ],
       "note": "reCAPTCHA v3 demo",
@@ -335,7 +335,7 @@
       "expect": [
         {
           "detector": "detect-hcaptcha",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "official demo",
@@ -346,7 +346,7 @@
       "expect": [
         {
           "detector": "detect-geetest",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "official demo",
@@ -357,7 +357,7 @@
       "expect": [
         {
           "detector": "detect-geetest",
-          "min": 60
+          "min": 100
         }
       ],
       "note": "GeeTest v4 demo",
@@ -379,7 +379,7 @@
       "expect": [
         {
           "detector": "detect-mtcaptcha",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "MTCaptcha demo",
@@ -390,7 +390,7 @@
       "expect": [
         {
           "detector": "detect-captchaeu",
-          "min": 60
+          "min": 100
         }
       ],
       "note": "vendor site",
@@ -401,7 +401,7 @@
       "expect": [
         {
           "detector": "detect-yidun",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "official demo",
@@ -412,7 +412,7 @@
       "expect": [
         {
           "detector": "detect-yidun",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "NetEase Yidun customer",
@@ -423,7 +423,7 @@
       "expect": [
         {
           "detector": "detect-smartcaptcha",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "official demo",
@@ -434,7 +434,7 @@
       "expect": [
         {
           "detector": "detect-dingxiang",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "vendor demo; the page fires load after about 30 s",
@@ -445,7 +445,7 @@
       "expect": [
         {
           "detector": "detect-shumei",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "official demo",
@@ -456,7 +456,7 @@
       "expect": [
         {
           "detector": "detect-perimeterx",
-          "min": 75
+          "min": 100
         }
       ],
       "note": "Microsoft sign-up runs HUMAN from hsprotect.net",
@@ -467,7 +467,7 @@
       "expect": [
         {
           "detector": "detect-qcloud",
-          "min": 60
+          "min": 100
         }
       ],
       "note": "official product page loads TJCaptcha.js",
@@ -478,7 +478,7 @@
       "expect": [
         {
           "detector": "detect-capy",
-          "min": 80
+          "min": 100
         }
       ],
       "note": "Capy puzzle on the vendor sign-in",
@@ -489,10 +489,10 @@
       "expect": [
         {
           "detector": "detect-friendlycaptcha",
-          "min": 15
+          "min": 100
         }
       ],
-      "note": "playground: only the widget container until you interact",
+      "note": "playground: the v2 captcha request to frcapi.com is proof",
       "waitMs": 15000
     },
     {
@@ -526,7 +526,7 @@
       "expect": [
         {
           "detector": "detect-openai-sentinel",
-          "min": 90
+          "min": 100
         }
       ],
       "note": "ChatGPT logged out: Sentinel chat-requirements/prepare on load, its response asks for a proof of work",
@@ -537,7 +537,7 @@
       "expect": [
         {
           "detector": "detect-openai-sentinel",
-          "min": 90
+          "min": 100
         },
         {
           "detector": "detect-cloudflare",

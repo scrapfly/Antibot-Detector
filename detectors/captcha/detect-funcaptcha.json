@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2026-10-04",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.arkoselabs.com/",
   "icon": "funcaptcha_official.png",
@@ -17,8 +17,8 @@
     "url": [
       {
         "id": "arkose-client-api",
-        "confidence": 60,
-        "description": "Official personalized Arkose client API resource; execution unconfirmed",
+        "confidence": 100,
+        "description": "Official personalized Arkose client API, loaded from an Arkose host",
         "text": "^https?://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?-api\\.arkoselabs\\.com/v2/[a-z0-9_-]+/api\\.js(?:[?#]|$)",
         "textRegex": true,
         "textWholeWord": false,
@@ -27,7 +27,7 @@
       },
       {
         "id": "funcaptcha-legacy-api",
-        "confidence": 40,
+        "confidence": 100,
         "description": "Legacy vendor-bound FunCaptcha API resource",
         "text": "^https?://api\\.funcaptcha\\.com/fc/(?:api/nojs/|gt2/)",
         "textRegex": true,
@@ -37,7 +37,7 @@
       },
       {
         "id": "arkose-enforcement-frame",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Versioned enforcement frame document the client API loads from an Arkose host",
         "text": "^https://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?-api\\.arkoselabs\\.com/v2/[0-9]+\\.[0-9]+\\.[0-9]+/enforcement\\.[a-f0-9]+\\.html(?:[?#]|$)",
         "textRegex": true,
@@ -47,7 +47,7 @@
       },
       {
         "id": "arkose-session-request",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Session token request to the gt2 public-key route on an Arkose host",
         "text": "^https://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?-api\\.arkoselabs\\.com/fc/gt2/public_key/[A-Za-z0-9-]+(?:[/?#]|$)",
         "textRegex": true,
@@ -114,7 +114,7 @@
     {
       "id": "arkose-resource-frame-container",
       "name": "Official client API, enforcement frame and session token request",
-      "confidence": 90,
+      "confidence": 100,
       "when": { "all": [{ "pattern": "arkose-client-api" }, { "pattern": "arkose-enforcement-frame" }, { "pattern": "arkose-session-request" }] }
     }
   ]

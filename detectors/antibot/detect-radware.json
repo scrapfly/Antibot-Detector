@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-08",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.radware.com/products/bot-manager/",
   "icon": "radware_official.png",
@@ -61,10 +61,12 @@
         "id": "radware-uzm-cookie",
         "name": "^__uzm[a-f]$",
         "nameRegex": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Radware Bot Manager session cookies (__uzma … __uzmf)",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|7f[0-9a-f]{12}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,14}(?:-[0-9a-f]{8,24}){2}|[0-9]{10,13})$",
+        "valueRegex": true
       },
       {
         "id": "radware-uzm-js-cookie",
@@ -80,7 +82,7 @@
     "url": [
       {
         "id": "radware-stormcaster-script",
-        "confidence": 80,
+        "confidence": 100,
         "description": "First-party Radware Bot Manager script (stormcaster.js)",
         "text": "^https?://[^/?#]+/(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|advanced(?:/ie)?)/stormcaster(?:v\\d+)?\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -89,7 +91,7 @@
       },
       {
         "id": "radware-validate-host",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Radware Bot Manager captcha / validation host",
         "text": "^https://validate\\.perfdrive\\.com/",
         "textRegex": true,
@@ -157,7 +159,7 @@
     {
       "id": "radware-bot-manager-session",
       "name": "Bot Manager cookies with its first-party script",
-      "confidence": 90,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "radware-uzm-cookie" },
@@ -168,7 +170,7 @@
     {
       "id": "radware-connector-profile",
       "name": "Bot Manager cookies, script and connector object",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "radware-uzm-cookie" },
@@ -180,7 +182,7 @@
     {
       "id": "radware-captcha",
       "name": "Bot Manager captcha host with its session cookies",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "radware-validate-host" },

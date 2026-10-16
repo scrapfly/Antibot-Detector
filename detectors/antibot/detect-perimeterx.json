@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-07",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.humansecurity.com/",
   "icon": "perimeterx_official.png",
@@ -17,28 +17,34 @@
         "id": "px3-cookie",
         "name": "^_px[23]$",
         "nameRegex": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "PerimeterX risk token cookie (_px2 or _px3)",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[0-9a-f]{64}:[A-Za-z0-9+/=_-]{20,}",
+        "valueRegex": true
       },
       {
         "id": "pxhd-cookie",
         "name": "^_pxhd$",
         "nameRegex": true,
-        "confidence": 75,
+        "confidence": 100,
         "description": "PerimeterX first-party server cookie",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[A-Za-z0-9+/=_-]{60,120}:[A-Za-z0-9+/=_-]{8,}",
+        "valueRegex": true
       },
       {
         "id": "pxvid-cookie",
         "name": "^_pxvid$",
         "nameRegex": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "PerimeterX visitor ID cookie",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+        "valueRegex": true
       },
       {
         "id": "px-aux-cookie",
@@ -55,7 +61,7 @@
     "url": [
       {
         "id": "px-client-script",
-        "confidence": 75,
+        "confidence": 100,
         "description": "PerimeterX client script on its own hosts, keyed by the PX app ID",
         "text": "^https://client\\.(?:px-cloud\\.net|perimeterx\\.net|hsprotect\\.net)/PX[A-Za-z0-9]{6,10}/main\\.min\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -73,7 +79,7 @@
       },
       {
         "id": "px-collector",
-        "confidence": 80,
+        "confidence": 100,
         "description": "PerimeterX collector endpoint",
         "text": "^https://collector-(?:PX[A-Za-z0-9]{6,10}|[a-z])\\.(?:px-cloud\\.net|perimeterx\\.net|hsprotect\\.net)/",
         "textRegex": true,
@@ -82,7 +88,7 @@
       },
       {
         "id": "px-captcha",
-        "confidence": 80,
+        "confidence": 100,
         "description": "PerimeterX challenge (Press & Hold) script host",
         "text": "^https://captcha\\.px-cdn\\.net/PX[A-Za-z0-9]{6,10}/",
         "textRegex": true,
@@ -134,7 +140,7 @@
     {
       "id": "perimeterx-script-session",
       "name": "PerimeterX script or app ID with its cookies",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -172,7 +178,7 @@
     {
       "id": "perimeterx-cookie-set",
       "name": "Several PerimeterX cookies together",
-      "confidence": 90,
+      "confidence": 100,
       "when": {
         "atLeast": 2,
         "of": [
@@ -194,18 +200,36 @@
     {
       "id": "perimeterx-challenge",
       "name": "PerimeterX challenge with the app ID",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "px-captcha"
+          },
+          {
+            "any": [
+              {
+                "pattern": "px-appid-variable"
+              },
+              {
+                "pattern": "px-appid-reference"
+              },
+              {
+                "pattern": "px-init-function"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "perimeterx-first-party-challenge",
+      "name": "First-party PerimeterX challenge with the app ID",
       "confidence": 95,
       "when": {
         "all": [
           {
-            "any": [
-              {
-                "pattern": "px-captcha"
-              },
-              {
-                "pattern": "px-first-party-captcha"
-              }
-            ]
+            "pattern": "px-first-party-captcha"
           },
           {
             "any": [

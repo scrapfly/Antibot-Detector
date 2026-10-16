@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-06",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://anubis.techaro.nl/",
   "icon": "anubis_official.png",
@@ -17,25 +17,31 @@
         "id": "anubis-auth-cookie",
         "name": "^(?:[\\w.-]+-)?anubis-auth(?:-[0-9a-f]{6,16})?$",
         "nameRegex": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Signed JWT cookie issued after a passed proof-of-work challenge (bare or policy-prefixed name)",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^eyJ[\\w-]+\\.[\\w-]+\\.",
+        "valueRegex": true,
+        "valueCaseSensitive": true
       },
       {
         "id": "anubis-verification-cookie",
         "name": "^(?:[\\w.-]+-)?anubis-cookie-verification(?:-[0-9a-f]{6,16})?$",
         "nameRegex": true,
-        "confidence": 60,
+        "confidence": 100,
         "description": "Anubis cookie-verification cookie set with the challenge (some deployments add a hash suffix)",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        "valueRegex": true,
+        "valueCaseSensitive": true
       }
     ],
     "url": [
       {
         "id": "anubis-endpoint-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Anubis command endpoint serving challenge scripts, images and the pass-challenge API",
         "text": "^https?://[^/?#]+/\\.within\\.website/x/(?:cmd/)?anubis/",
         "textRegex": true,
@@ -101,7 +107,7 @@
     {
       "id": "anubis-verified-session",
       "name": "Auth cookie, challenge script and command endpoint",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "anubis-auth-cookie" },

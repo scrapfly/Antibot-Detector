@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-09",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.amazon.com/",
   "icon": "amazon_official.png",
@@ -23,7 +23,7 @@
     "url": [
       {
         "id": "fwcim-assets-script",
-        "confidence": 75,
+        "confidence": 100,
         "description": "FWCIM fingerprinting bundle loaded on Amazon sign-in pages",
         "text": "^https://m\\.media-amazon\\.com/images/I/[A-Za-z0-9+%._-]+\\.js\\?AUIClients/FWCIMAssets(?:[#&]|$)",
         "textRegex": true,
@@ -50,7 +50,7 @@
     {
       "id": "metadata1-with-fwcim-script",
       "name": "metadata1 field with the FWCIM script loaded",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

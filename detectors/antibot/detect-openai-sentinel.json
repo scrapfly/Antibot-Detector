@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-15",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://chatgpt.com/",
   "icon": "openai_official.png",
@@ -24,7 +24,7 @@
       },
       {
         "id": "sentinel-sdk-loader",
-        "confidence": 90,
+        "confidence": 100,
         "description": "Sentinel SDK loader (/backend-api/sentinel/sdk.js)",
         "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/backend-api/sentinel/sdk\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -33,7 +33,7 @@
       },
       {
         "id": "sentinel-sdk-build",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Versioned Sentinel SDK (/sentinel/<build>/sdk.js)",
         "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/sentinel/[0-9a-z]{6,24}/sdk\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -42,7 +42,7 @@
       },
       {
         "id": "sentinel-frame",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Hidden Sentinel frame (/backend-api/sentinel/frame.html)",
         "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/backend-api/sentinel/frame\\.html(?:[?#]|$)",
         "textRegex": true,
@@ -51,7 +51,7 @@
       },
       {
         "id": "sentinel-req",
-        "confidence": 85,
+        "confidence": 100,
         "description": "Sentinel token request sent by the SDK (/backend-api/sentinel/req)",
         "text": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/backend-api/sentinel/req(?:[?#]|$)",
         "textRegex": true,
@@ -74,7 +74,7 @@
         "text": "\"p\"\\s*:\\s*\"gAAAAAC",
         "textRegex": true,
         "textCaseSensitive": true,
-        "confidence": 80,
+        "confidence": 100,
         "description": "Sentinel requirements token (p: gAAAAAC…) posted to a Sentinel endpoint",
         "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/",
         "urlRegex": true,
@@ -87,7 +87,7 @@
         "text": "\"proofofwork\"\\s*:\\s*\"gAAAAAB",
         "textRegex": true,
         "textCaseSensitive": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "Solved proof of work (proofofwork: gAAAAAB…) sent to chat-requirements/finalize",
         "urlPattern": "^https://chatgpt\\.com/[a-z0-9-]{3,20}/sentinel/chat-requirements/finalize(?:[?#]|$)",
         "urlRegex": true,
@@ -101,7 +101,7 @@
         "text": "\"proofofwork\"\\s*:\\s*\\{\\s*\"required\"\\s*:\\s*true",
         "textRegex": true,
         "textCaseSensitive": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "Sentinel response asking for a proof of work (proofofwork.required: true)",
         "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/(?:chat-requirements(?:/prepare)?|req)(?:[?#]|$)",
         "urlRegex": true,
@@ -115,7 +115,7 @@
         "text": "\"so\"\\s*:\\s*\\{\\s*\"required\"\\s*:\\s*true",
         "textRegex": true,
         "textCaseSensitive": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Sentinel response asking for session telemetry (so.required: true)",
         "urlPattern": "^https://(?:sentinel\\.openai\\.com|chatgpt\\.com)/[a-z0-9-]{3,20}/sentinel/(?:chat-requirements(?:/prepare)?|req)(?:[?#]|$)",
         "urlRegex": true,
@@ -138,7 +138,7 @@
     {
       "id": "sentinel-chat-requirements",
       "name": "Chat-requirements request with its requirements token",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -153,7 +153,7 @@
     {
       "id": "sentinel-proof-of-work",
       "name": "Proof of work asked for and answered",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -168,7 +168,7 @@
     {
       "id": "sentinel-sdk-flow",
       "name": "Sentinel SDK with its frame or token request",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

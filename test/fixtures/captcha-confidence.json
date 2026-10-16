@@ -52,6 +52,7 @@
   "detect-hcaptcha": {
     "hcaptcha-api-resource": { "url": "https://js.hcaptcha.com/1/api.js?render=explicit" },
     "hcaptcha-challenge-api": { "url": "https://api.hcaptcha.com/checksiteconfig?v=05219f0822161da4c4a6f3aed6bf6d6fae1ba8e1&host=example.com&sitekey=10000000-ffff-ffff-ffff-000000000001" },
+    "hcaptcha-widget-frame-request": { "url": "https://newassets.hcaptcha.com/captcha/v1/86591f996c36877668d253e353e36fac021db33b/static/hcaptcha.html" },
     "hcaptcha-script-reference": { "source": "hcaptcha.render(element);" },
     "hcaptcha-configured-widget": { "dom": { "tagName": "div", "class": "h-captcha", "attributes": { "class": "h-captcha", "data-sitekey": "10000000-ffff-ffff-ffff-000000000001" } } },
     "hcaptcha-widget-frame": { "dom": { "tagName": "iframe", "src": "https://newassets.hcaptcha.com/captcha/v1/test/static/hcaptcha.html", "attributes": { "src": "https://newassets.hcaptcha.com/captcha/v1/test/static/hcaptcha.html" } } },

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.1.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://fingerprint.com/",
   "icon": "fingerprintjs_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "fpcdn-pro-script",
-        "confidence": 60,
+        "confidence": 100,
         "description": "FingerprintJS Pro agent loader (v3/v4) on the vendor fpcdn.io host",
         "text": "^https://(?:[a-z0-9-]+\\.){0,2}fpcdn\\.io/v[34](?:[/?#]|$)",
         "textRegex": true,
@@ -24,7 +24,7 @@
       },
       {
         "id": "openfpcdn-oss-script",
-        "confidence": 55,
+        "confidence": 100,
         "description": "FingerprintJS open-source library on the vendor openfpcdn.io host",
         "text": "^https://openfpcdn\\.io/fingerprintjs/v3/",
         "textRegex": true,
@@ -33,7 +33,7 @@
       },
       {
         "id": "fpnpmcdn-loader",
-        "confidence": 60,
+        "confidence": 100,
         "description": "FingerprintJS Pro agent loader fetched by the npm package from fpnpmcdn.net",
         "text": "^https://fpnpmcdn\\.net/v[34]/[A-Za-z0-9]+/loader_v\\d+\\.\\d+\\.\\d+\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -42,7 +42,7 @@
       },
       {
         "id": "fpjs-api-host",
-        "confidence": 60,
+        "confidence": 100,
         "description": "FingerprintJS Pro identification API on the vendor api.fpjs.io host (global or regional)",
         "text": "^https://(?:[a-z0-9-]+\\.)?api\\.fpjs\\.(?:io|sh|pro)(?:[/?#]|$)",
         "textRegex": true,
@@ -62,15 +62,15 @@
       {
         "id": "fp-esm-bundle",
         "confidence": 50,
-        "description": "Open-source library bundled from the npm package: bundlers keep its fp.esm file name (e.g. fingerprint.com's own demo)",
-        "text": "^https?://[^/?#]+/(?:[^?#]*/)?fp\\.esm(?:\\.[A-Za-z0-9_-]{6,})?\\.js(?:[?#]|$)",
+        "description": "Open-source library bundled from the npm package: bundlers keep its fp.esm / fp.umd file name (e.g. fp.esm.<hash>.js), so the host is the site's own",
+        "text": "^https?://[^/?#]+/(?:[^?#]*/)?fp\\.(?:esm|umd|cjs)(?:\\.[A-Za-z0-9_-]{6,})?\\.js(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
       },
       {
         "id": "oss-npm-monitoring",
-        "confidence": 55,
+        "confidence": 100,
         "description": "OSS npm package monitoring ping on the vendor m1.openfpcdn.io host",
         "text": "^https://m1\\.openfpcdn\\.io/fingerprintjs/v\\d+/npm-monitoring$",
         "textRegex": true,
@@ -227,7 +227,7 @@
     {
       "id": "fingerprintjs-complete-integration",
       "name": "Pro agent loader, agent global and script reference",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "fpcdn-pro-script" },

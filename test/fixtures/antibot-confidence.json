@@ -101,7 +101,7 @@
   "aws-waf-token-cookie": {
    "cookie": [
     "aws-waf-token",
-    "d0f5c1b8-1a2b-4c3d-9e8f-0123456789ab:EAoAj"
+    "d0f5c1b8-1a2b-4c3d-9e8f-0123456789ab:EAoAjVKQhY4BAAAA:Q2x1c3RlclZhbHVlRXhhbXBsZTAxMjM0NTY3ODlhYmNkZWY=/ZmluZ2VycHJpbnQxMjM0NTY3ODkwYWJjZGVm"
    ]
   },
   "captcha-host": {
@@ -209,6 +209,9 @@
   },
   "cq-object": {
    "runtimeType": "object"
+  },
+  "cheq-first-party-endpoint": {
+   "url": "https://cheq.ai/__cheq/validate"
   }
  },
  "detect-cloudflare": {
@@ -218,13 +221,13 @@
   "cf-bm-cookie": {
    "cookie": [
     "__cf_bm",
-    "abc.def-1759600000-1.0.1.1-xyz"
+    "k9cCU2HrMT2qW8nXb.V4Jm3Lp0RzYtQe7sHfGaIdCw1-1759600000.0255423-1.0.1.1-Zx3nQ7vLm2Pq9Rt4Yw8Kc1Hb6Jd5Fg0Sa_Ve2Nu7Mi4Ol9Pk3Tr8Wq1Xz6Cy5Bv0An.Df4Gh7Jk2Lz9Xc3Vb6Nm1Qw8Er5Ty0Ui4Op7As2Sd"
    ]
   },
   "cf-clearance-cookie": {
    "cookie": [
     "cf_clearance",
-    "abc-1759600000-1.2.1.1-xyz"
+    "v3Gscaiyet.HqL8mN2pR5tW9zXb1CdF4gJ7kM0nQ3sV-1759600000-1.2.1.1-Hs2Kd8Lf4Mg0Nh6Pj1Qk7Rl3Sm9Tn5Uo2Vp8Wq4Xr0Ys6Zt1Au7Bv3Cw9Dx5Ey2Fz8Ga4Hb0Ic6Jd1Ke7Lf3Mg9Nh5Oi2Pj8Qk4Rl0Sm6Tn1Uo7Vp3Wq9Xr5Ys2Zt8_Au4Bv0Cw.Dx6"
    ]
   },
   "cf-mitigated-header": {
@@ -481,19 +484,19 @@
   "px3-cookie": {
    "cookie": [
     "_px3",
-    "abc:def"
+    "3f0a9c2e7b1d4a6f8c0e2b4d6f8a0c2e4b6d8f0a2c4e6b8d0f2a4c6e8b0d2f4a:Jm9k1dV3Rk5Zx2Qa8Wb4Yc7Ue0Tf6Sg1Hh9Ij3Kl5Mn7Op2Qr4St6Uv8Wx0Yz1Ab3Cd5Ef7Gh9Ij1Kl3Mn==:3c2a:Ab1Cd2Ef3Gh4Ij5Kl6Mn7Op8Qr9St0Uv1Wx2Yz3Ab4Cd5Ef6Gh7Ij8Kl9Mn0Op1Qr2St3Uv4Wx5Yz6Ab7Cd8Ef9Gh0Ij1Kl2Mn3Op4Qr5St6Uv7Wx8Yz9=="
    ]
   },
   "pxhd-cookie": {
    "cookie": [
     "_pxhd",
-    "abc:def"
+    "Qm9vdHN0cmFwRXhhbXBsZVZhbHVlMDEyMzQ1Njc4OWFiY2RlZi1leGFtcGxlLXB4aGQtaGFzaC1zZWdtZW50MDAwMDAwMDA=:ZXhhbXBsZS1zZWNvbmQtc2VnbWVudC1vZi10aGUtcHhoZC1jb29raWUtdmFsdWUtd2l0aC11dWlkLWxpa2UtcGF5bG9hZC0wMDAwMDAwMDAwMDAwMDAwMDAwMA=="
    ]
   },
   "pxvid-cookie": {
    "cookie": [
     "_pxvid",
-    "5c1f3a2e-a12b"
+    "b3a1c2d4-c94e-11f1-8f2a-3d9e7c1b5a60"
    ]
   }
  },
@@ -644,7 +647,7 @@
   "anubis-verification-cookie": {
    "setCookie": [
     "techaro.lol-anubis-cookie-verification-347ddb4a",
-    "exampleValue"
+    "01a14453-5adc-732f-b768-4d8b4f8972a3"
    ]
   }
  },
@@ -926,7 +929,7 @@
   "radware-uzm-cookie": {
    "setCookie": [
     "__uzma",
-    "exampleValue"
+    "9c4e2a7b-1f3d-4e8a-b2c6-5d7f9a0e1b3c"
    ]
   },
   "radware-uzm-js-cookie": {

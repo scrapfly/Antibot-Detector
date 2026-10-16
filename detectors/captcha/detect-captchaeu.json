@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.2.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://captcha.eu/",
   "icon": "custom.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "captchaeu-sdk-url",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Documented Captcha.eu SDK resource",
         "text": "^https://www\\.captcha\\.eu/sdk\\.js(?:[?#].*)?$",
         "textRegex": true,
@@ -26,7 +26,7 @@
       },
       {
         "id": "captchaeu-challenge-request",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Challenge or validation request the KROT SDK sends to the Captcha.eu host",
         "text": "^https://www\\.captcha\\.eu/(?:challenge|validate)(?:[?#]|$)",
         "textRegex": true,
@@ -133,7 +133,7 @@
           { "pattern": "captchaeu-krot-intercept-form" }
         ] }
       ] },
-      "confidence": 95
+      "confidence": 100
     }
   ]
 }

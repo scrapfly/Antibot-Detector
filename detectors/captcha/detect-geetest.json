@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.2.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.geetest.com/",
   "icon": "geetest_official.png",
@@ -17,7 +17,7 @@
     "url": [
       {
         "id": "geetest-v3-resource",
-        "confidence": 60,
+        "confidence": 100,
         "standalone": true,
         "description": "GeeTest v3 loader or challenge library (fullpage, slide, click, beeline, voice) on an official static host",
         "text": "^https?://static\\.(?:geetest|geevisit)\\.com/static/(?:js/(?:gt|fullpage|slide|click|geetest|beeline|voice)(?:\\.[A-Za-z0-9._-]+)?|tools/gt)\\.js(?:[?#]|$)",
@@ -28,7 +28,7 @@
       },
       {
         "id": "geetest-v3-api",
-        "confidence": 50,
+        "confidence": 100,
         "standalone": true,
         "description": "GeeTest v3 API routes bounded to the documented API host",
         "text": "^https?://api\\.geetest\\.com/(?:gettype|get|ajax)\\.php(?:[?#]|$)",
@@ -39,7 +39,7 @@
       },
       {
         "id": "geetest-v4-resource",
-        "confidence": 60,
+        "confidence": 100,
         "standalone": true,
         "description": "GeeTest v4 loader or challenge library on an official static host",
         "text": "^https?://static\\.(?:geetest|geevisit)\\.com/v4/(?:gt4\\.js|static/[A-Za-z0-9._-]+/js/gcaptcha4\\.js)(?:[?#]|$)",
@@ -50,7 +50,7 @@
       },
       {
         "id": "geetest-v4-api",
-        "confidence": 50,
+        "confidence": 100,
         "standalone": true,
         "description": "GeeTest v4 challenge API on loader-defined official hosts",
         "text": "^https?://gcaptcha4\\.(?:geetest\\.com|geevisit\\.com|gsensebot\\.com)/(?:load|verify)(?:[?#]|$)",
@@ -132,9 +132,9 @@
   "combinations": [
     { "id": "geetest-v3-loaded-api", "name": "v3 library and initializer present", "confidence": 70, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-init-runtime" }] } },
     { "id": "geetest-v3-widget-resource", "name": "v3 library and native widget markup", "confidence": 85, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-widget" }] } },
-    { "id": "geetest-v3-integrated", "name": "v3 library, widget and initializer present", "confidence": 95, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-widget" }, { "pattern": "geetest-v3-init-runtime" }] } },
+    { "id": "geetest-v3-integrated", "name": "v3 library, widget and initializer present", "confidence": 100, "when": { "all": [{ "pattern": "geetest-v3-resource" }, { "pattern": "geetest-v3-widget" }, { "pattern": "geetest-v3-init-runtime" }] } },
     { "id": "geetest-v4-loaded-api", "name": "v4 library and initializer present", "confidence": 70, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-init-runtime" }] } },
     { "id": "geetest-v4-widget-resource", "name": "v4 library and native widget markup", "confidence": 85, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-widget" }] } },
-    { "id": "geetest-v4-integrated", "name": "v4 library, widget and initializer present", "confidence": 95, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-widget" }, { "pattern": "geetest-v4-init-runtime" }] } }
+    { "id": "geetest-v4-integrated", "name": "v4 library, widget and initializer present", "confidence": 100, "when": { "all": [{ "pattern": "geetest-v4-resource" }, { "pattern": "geetest-v4-widget" }, { "pattern": "geetest-v4-init-runtime" }] } }
   ]
 }

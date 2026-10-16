@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-08",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.f5.com/",
   "icon": "f5_official.png",
@@ -20,7 +20,7 @@
         "value": "^01[0-9a-f]{40,}$",
         "valueRegex": true,
         "valueCaseSensitive": true,
-        "confidence": 55,
+        "confidence": 100,
         "description": "BIG-IP ASM session cookie (TS01xxxxxx) with its 01-prefixed value",
         "nameScope": "all",
         "valueScope": "all"
@@ -104,24 +104,14 @@
     {
       "id": "f5-asm-block",
       "name": "ASM block page",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
             "pattern": "asm-support-id"
           },
           {
-            "any": [
-              {
-                "pattern": "ts-asm-cookie"
-              },
-              {
-                "pattern": "ts-legacy-cookie"
-              },
-              {
-                "pattern": "bigip-server-cookie"
-              }
-            ]
+            "pattern": "ts-asm-cookie"
           }
         ]
       }
@@ -144,6 +134,28 @@
           },
           {
             "pattern": "f5-avr-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "f5-asm-block-legacy",
+      "name": "ASM block page with a legacy or load-balancer cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "asm-support-id"
+          },
+          {
+            "any": [
+              {
+                "pattern": "ts-legacy-cookie"
+              },
+              {
+                "pattern": "bigip-server-cookie"
+              }
+            ]
           }
         ]
       }

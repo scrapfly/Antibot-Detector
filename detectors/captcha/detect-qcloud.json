@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.2.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://cloud.tencent.com/product/tci",
   "icon": "custom.png",
@@ -15,8 +15,8 @@
     "url": [
       {
         "id": "qcloud-sdk",
-        "confidence": 60,
-        "description": "Official Tencent CAPTCHA SDK resource, including the legacy captcha.qq.com loader; not proof of execution",
+        "confidence": 100,
+        "description": "Official Tencent CAPTCHA SDK from Tencent's captcha hosts, including the legacy captcha.qq.com loader",
         "text": "^https://(?:turing\\.captcha\\.qcloud\\.com/(?:TCaptcha|TJCaptcha)\\.js|ca\\.turing\\.captcha\\.qcloud\\.com/(?:TCaptcha-global|TJNCaptcha-global)\\.js|www\\.tycaptcha\\.com/TJNCaptcha-global\\.js|(?:ssl|t)\\.captcha\\.qq\\.com/TCaptcha\\.js)(?:[?#].*)?$",
         "textRegex": true,
         "textWholeWord": false,
@@ -26,7 +26,7 @@
       },
       {
         "id": "qcloud-prehandle",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Challenge handshake the SDK sends to its own capDomain before showing a challenge",
         "text": "^https://(?:turing\\.captcha\\.qcloud\\.com|ca\\.turing\\.captcha\\.qcloud\\.com|(?:ssl|t)\\.captcha\\.qq\\.com)/cap_union_(?:prehandle|preload)(?:[?#]|$)",
         "textRegex": true,
@@ -116,7 +116,7 @@
       "when": {
         "all": [{ "pattern": "qcloud-sdk" }, { "pattern": "qcloud-challenge-frame" }, { "pattern": "qcloud-constructor" }]
       },
-      "confidence": 95
+      "confidence": 100
     }
   ]
 }

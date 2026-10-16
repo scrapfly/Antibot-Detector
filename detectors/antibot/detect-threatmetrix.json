@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "ANTIBOT",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-08",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.threatmetrix.com/",
   "icon": "custom.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "tmx-tags",
-        "confidence": 85,
+        "confidence": 100,
         "description": "ThreatMetrix profiling tag (fp/tags.js?org_id=...)",
         "text": "^https://(?:h\\.online-metrix\\.net|[a-z0-9-]+\\.online-metrix\\.net)/fp/tags(?:\\.js)?\\?(?:[^#]*&)?org_id=",
         "textRegex": true,
@@ -24,7 +24,7 @@
       },
       {
         "id": "tmx-check",
-        "confidence": 70,
+        "confidence": 100,
         "description": "ThreatMetrix profiling resource (check.js, sym.map, clear.png)",
         "text": "^https://(?:h\\.online-metrix\\.net|[a-z0-9-]+\\.online-metrix\\.net)/fp/(?:check\\.js|clear\\.png|sym\\.map|ls_fp\\.html)",
         "textRegex": true,
@@ -75,7 +75,7 @@
     {
       "id": "tmx-tag-running",
       "name": "Profiling tag with its runtime",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -107,7 +107,7 @@
     {
       "id": "tmx-tag-resources",
       "name": "Profiling tag with its follow-up resources",
-      "confidence": 90,
+      "confidence": 100,
       "when": {
         "all": [
           {

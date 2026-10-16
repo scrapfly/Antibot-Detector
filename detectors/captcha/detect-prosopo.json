@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-12",
-  "version": "1.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://prosopo.io/",
   "icon": "prosopo_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "prosopo-bundle",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official Procaptcha bundle from the Prosopo script host",
         "text": "^https://js\\.prosopo\\.io/js/procaptcha\\.bundle\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -24,7 +24,7 @@
       },
       {
         "id": "prosopo-provider-captcha",
-        "confidence": 55,
+        "confidence": 100,
         "description": "Request to a Prosopo provider node (captcha, proof of work or bot check)",
         "text": "^https://[a-z0-9-]+\\.prosopo\\.io/v1/prosopo/provider/client/",
         "textRegex": true,
@@ -85,7 +85,7 @@
           }
         ]
       },
-      "confidence": 90
+      "confidence": 100
     },
     {
       "id": "prosopo-widget-provider",

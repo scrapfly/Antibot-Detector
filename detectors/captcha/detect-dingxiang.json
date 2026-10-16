@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.dingxiang-inc.com/business/captcha",
   "icon": "dingxiang_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "dingxiang-sdk-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official Dingxiang captcha UI SDK on the vendor CDN",
         "text": "^https://cdn\\.dingxiang-inc\\.com/(?:ctu-group/)?captcha-ui/",
         "textRegex": true,
@@ -26,7 +26,7 @@
       },
       {
         "id": "dingxiang-engine-resource",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Versioned Dingxiang captcha engine",
         "text": "^https://cdn\\.dingxiang-inc\\.com/ctu-group/captcha-js/\\d+\\.\\d+\\.\\d+/",
         "textRegex": true,
@@ -36,7 +36,7 @@
       },
       {
         "id": "dingxiang-captcha-api",
-        "confidence": 55,
+        "confidence": 100,
         "description": "Dingxiang captcha challenge API",
         "text": "^https://cap\\.dingxiang-inc\\.com/api/(?:a|v1)(?:[?#/]|$)",
         "textRegex": true,
@@ -127,7 +127,7 @@
     {
       "id": "dingxiang-complete-integration",
       "name": "UI SDK, challenge API and widget or constructor",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "dingxiang-sdk-resource" },

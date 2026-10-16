@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-15",
-  "version": "2.1.2",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://developers.google.com/recaptcha",
   "icon": "custom.png",
@@ -33,7 +33,7 @@
       },
       {
         "id": "waa-create",
-        "confidence": 80,
+        "confidence": 100,
         "description": "Web Anti-Abuse (BotGuard) attestation RPC",
         "text": "^https://jnn-pa\\.googleapis\\.com/\\$rpc/google\\.internal\\.waa\\.v1\\.Waa/(?:Create|GenerateIT)(?:[?#]|$)",
         "textRegex": true,
@@ -42,7 +42,7 @@
       },
       {
         "id": "gmail-waa",
-        "confidence": 80,
+        "confidence": 100,
         "description": "Gmail's Web Anti-Abuse (BotGuard) endpoint (/mail/u/<account>/waa)",
         "text": "^https://mail\\.google\\.com/mail/u/\\d+/waa(?:[/?#]|$)",
         "textRegex": true,
@@ -88,7 +88,7 @@
     {
       "id": "botguard-attested",
       "name": "Interpreter loaded and attestation sent",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

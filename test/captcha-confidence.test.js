@@ -14,6 +14,32 @@ const captcha = Object.fromEntries(fs.readdirSync(path.join(root, 'detectors/cap
 // These are not generated from regexes or injected matches. Frame paths containing
 // "test" represent markup, not a claim of live vendor challenge verification.
 const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/captcha-confidence.json'), 'utf8'));
+// Proof: a request to a host the vendor owns for this CAPTCHA (its SDK, its
+// challenge API, its widget frame) scores 100 on its own. Markup, source text,
+// window globals (hCaptcha defines grecaptcha.*), public CDN copies and shared
+// hosts (Alibaba's punish page, Cloudflare's challenge frames) never do.
+const PROOF = new Set([
+  'detect-aliyun/aliyun-captcha-api', 'detect-aliyun/aliyun-dynamic-resource', 'detect-aliyun/aliyun-sdk-resource',
+  'detect-basilisk/basilisk-check-site', 'detect-binance-captcha/binance-captcha-sdk', 'detect-captchaeu/captchaeu-challenge-request',
+  'detect-captchaeu/captchaeu-sdk-url', 'detect-capy/capy-image-resource', 'detect-capy/capy-sdk-resource',
+  'detect-dingxiang/dingxiang-captcha-api', 'detect-dingxiang/dingxiang-engine-resource', 'detect-dingxiang/dingxiang-sdk-resource',
+  'detect-friendlycaptcha/frc-v1-puzzle-url', 'detect-friendlycaptcha/frc-v2-captcha-url', 'detect-funcaptcha/arkose-client-api',
+  'detect-funcaptcha/arkose-enforcement-frame', 'detect-funcaptcha/arkose-session-request', 'detect-funcaptcha/funcaptcha-legacy-api',
+  'detect-geetest/geetest-v3-api', 'detect-geetest/geetest-v3-resource', 'detect-geetest/geetest-v4-api',
+  'detect-geetest/geetest-v4-resource', 'detect-hcaptcha/hcaptcha-api-resource', 'detect-hcaptcha/hcaptcha-challenge-api',
+  'detect-hcaptcha/hcaptcha-widget-frame-request', 'detect-mtcaptcha/mtcaptcha-challenge-api', 'detect-mtcaptcha/mtcaptcha-sdk-resource',
+  'detect-prosopo/prosopo-bundle', 'detect-prosopo/prosopo-provider-captcha', 'detect-qcloud/qcloud-prehandle',
+  'detect-qcloud/qcloud-sdk', 'detect-recaptcha/configured-enterprise-sdk', 'detect-recaptcha/configured-sdk',
+  'detect-recaptcha/google-frame-request', 'detect-recaptcha/google-runtime', 'detect-recaptcha/google-sdk',
+  'detect-shumei/shumei-captcha-api', 'detect-shumei/shumei-core-resource', 'detect-shumei/shumei-sdk-resource',
+  'detect-smartcaptcha/smartcaptcha-check-endpoint', 'detect-smartcaptcha/smartcaptcha-sdk-resource', 'detect-yidun/yidun-captcha-api',
+  'detect-yidun/yidun-core-resource', 'detect-yidun/yidun-sdk-resource'
+]);
+const isProof = (detector, rule) => PROOF.has(`${detector.id}/${rule.id}`);
+// Capped top tiers: AliExpress (a punish route is a block page, not necessarily a
+// CAPTCHA) and Turnstile (Cloudflare's own managed-challenge page requests the
+// same api.js and widget frame, so nothing here is the widget's alone)
+const CAPPED = { 'detect-aliexpress': 60, 'detect-turnstile': 95 };
 const context = vm.createContext({
   Constants: { DEFAULT_MATCH_CONFIDENCE: 80, ANALYSIS_CACHE_TTL: 300000,
     PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
@@ -189,7 +215,7 @@ test('all nineteen definitions have explicit IDs, conservative standalone eviden
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-5])$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-6])$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);
@@ -197,7 +223,11 @@ test('all nineteen definitions have explicit IDs, conservative standalone eviden
     for (const rule of rules) {
       assert.ok(typeof rule.id === 'string' && rule.id);
       assert.notEqual(rule.enabled, false, rule.id);
-      assert.ok(Number.isInteger(rule.confidence) && rule.confidence > 0 && rule.confidence <= 60, rule.id);
+      if (isProof(detector, rule)) {
+        assert.equal(rule.confidence, 100, `${rule.id}: proof is 100`);
+        assert.notEqual(rule.standalone, false, `${rule.id}: proof counts alone`);
+        assert.ok(['url', 'payload'].includes(rule.method), `${rule.id}: proof is a request, not markup or a global`);
+      } else assert.ok(Number.isInteger(rule.confidence) && rule.confidence > 0 && rule.confidence <= 60, rule.id);
       if (rule.method === 'content') {
         assert.equal(rule.standalone, true, rule.id);
         assert.ok(rule.confidence >= 5 && rule.confidence <= 10, rule.id);
@@ -210,9 +240,11 @@ test('all nineteen definitions have explicit IDs, conservative standalone eviden
     assert.ok(new Set(detector.combinations.map(combo => combo.confidence)).size >= 3, detector.id);
     assert.equal(new Set(detector.combinations.map(combo => combo.id)).size, detector.combinations.length);
     assert.equal(new Set(detector.combinations.map(combo => JSON.stringify(combo.when))).size, detector.combinations.length);
+    const top = Math.max(...detector.combinations.map(combo => combo.confidence));
+    assert.equal(top, CAPPED[detector.id] || 100, `${detector.id}: complete integration is 100`);
     for (const combo of detector.combinations) {
       assert.deepEqual(Object.keys(combo).sort(), ['confidence', 'id', 'name', 'when']);
-      assert.ok(Number.isInteger(combo.confidence) && combo.confidence > 0 && combo.confidence <= 95);
+      assert.ok(Number.isInteger(combo.confidence) && combo.confidence > 0 && (combo.confidence <= 95 || combo.confidence === 100));
       validate(combo.when, ids, `${detector.id}/${combo.id}`);
       assert.ok(witnesses(combo.when).length);
       assert.equal(Combinations.references(combo.when).methods.size, 0);
@@ -339,7 +371,7 @@ for (const detector of Object.values(captcha)) {
       context.rescoreCombinations(merged);
       assert.equal(merged.confidence, expected(detector, merged.matches));
     }
-    const highest = Math.max(...detector.combinations.map(combo => combo.confidence));
+    const highest = Math.max(...detector.combinations.map(combo => combo.confidence), ...patterns(detector).filter(rule => rule.standalone !== false).map(rule => rule.confidence));
     assert.equal(merged.confidence, highest, detector.id);
     for (let repeat = 0; repeat < 3; repeat++) {
       context.rescoreCombinations(merged);
@@ -389,7 +421,7 @@ test('hCaptcha compatibility APIs and mismatched reCAPTCHA SDK families cannot m
   assert.equal(compatibility?.combinations, undefined);
   for (const ids of [['configured-sdk', 'enterprise-execute-api'], ['configured-enterprise-sdk', 'standard-execute-api']]) {
     const mismatch = await detect(google, pageFor(google, ids));
-    assert.equal(mismatch.confidence, 60, ids.join(','));
+    assert.equal(mismatch.confidence, 100, ids.join(',')); // the official SDK request is proof on its own
     assert.equal(mismatch.combinations, undefined);
   }
 });
@@ -437,9 +469,11 @@ test('requests made after the page snapshot still count when the scan finishes',
     return context.finalizedResults.find(item => item.detector.id === prosopo.id);
   };
   try {
-    assert.equal((await run(false)).confidence, 60, 'snapshot alone: the bundle');
+    const snapshot = await run(false);
+    assert.equal(snapshot.confidence, 100, 'snapshot alone: the bundle is proof');
+    assert.ok(!snapshot.combinations?.some(combo => combo.id === 'prosopo-bundle-provider'), 'the provider request is not in the snapshot');
     const late = await run(true);
-    assert.equal(late.confidence, 90);
+    assert.equal(late.confidence, 100);
     assert.ok(late.combinations.some(combo => combo.id === 'prosopo-bundle-provider'));
     assert.equal(late.matches.filter(match => match.patternId === 'prosopo-bundle').length, 1, 'the bundle is not counted twice');
   } finally {

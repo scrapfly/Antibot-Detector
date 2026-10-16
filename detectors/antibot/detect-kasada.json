@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-05",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.kasada.io/",
   "icon": "custom.png",
@@ -17,7 +17,7 @@
         "id": "kpsdk-ct-header",
         "name": "^x-kpsdk-ct$",
         "nameRegex": true,
-        "confidence": 80,
+        "confidence": 100,
         "description": "Kasada client token header on protected responses",
         "nameScope": "response",
         "valueScope": "response"
@@ -36,7 +36,7 @@
     "url": [
       {
         "id": "ips-script",
-        "confidence": 80,
+        "confidence": 100,
         "description": "Kasada client script on its double-UUID first-party path (ips.js or p.js)",
         "text": "^https?://[^/?#]+/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/(?:ips|p)\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -55,7 +55,7 @@
       },
       {
         "id": "tl-endpoint",
-        "confidence": 75,
+        "confidence": 100,
         "description": "Kasada telemetry or fingerprint endpoint on the double-UUID path",
         "text": "^https?://[^/?#]+/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/(?:tl|fp|mfc)(?:[?#]|$)",
         "textRegex": true,
@@ -98,7 +98,7 @@
     {
       "id": "kasada-script-runtime",
       "name": "Client script with KPSDK running",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -123,7 +123,7 @@
     {
       "id": "kasada-protected-response",
       "name": "Kasada token headers with its script or interstitial",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

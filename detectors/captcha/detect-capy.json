@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://corp.capy.me/",
   "icon": "capy_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "capy-sdk-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Capy puzzle widget loader on the Japanese API host",
         "text": "^https://(?:jp\\.api|www)\\.capy\\.me/puzzle/get_js/\\?k=PUZZLE_",
         "textRegex": true,
@@ -26,7 +26,7 @@
       },
       {
         "id": "capy-image-resource",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Capy puzzle image request",
         "text": "^https://jp\\.api\\.capy\\.me/puzzle/get_image/\\?",
         "textRegex": true,
@@ -120,7 +120,7 @@
     {
       "id": "capy-complete-integration",
       "name": "Loader, puzzle image and widget",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "capy-sdk-resource" },

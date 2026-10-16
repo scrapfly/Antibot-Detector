@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API",
   "icon": "storage_fingerprint.png",
@@ -42,7 +42,7 @@
         "description": "Requests a storage key by index; count, returned key and enumeration intent are unknown",
         "enabled": true,
         "standalone": true,
-        "confidence": 10,
+        "confidence": 5,
         "target": "Storage.prototype.key"
       }
     ],
@@ -125,13 +125,13 @@
     {
       "id": "storage-key-read",
       "name": "Storage key lookup and read calls",
-      "confidence": 20,
+      "confidence": 10,
       "when": { "all": [{ "pattern": "hook-storage-key" }, { "pattern": "js_hooks-2" }] }
     },
     {
       "id": "storage-key-read-write",
       "name": "Storage key lookup with reads and writes",
-      "confidence": 25,
+      "confidence": 15,
       "when": { "all": [{ "pattern": "hook-storage-key" }, { "pattern": "js_hooks-1" }, { "pattern": "js_hooks-2" }] }
     }
   ]

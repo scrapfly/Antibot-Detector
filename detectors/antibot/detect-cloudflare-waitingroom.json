@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-12",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://developers.cloudflare.com/waiting-room/",
   "icon": "cloudflare_official.png",
@@ -17,7 +17,7 @@
         "id": "cf-waitingroom-cookie",
         "name": "^__cfwaitingroom$",
         "nameRegex": true,
-        "confidence": 75,
+        "confidence": 100,
         "description": "Waiting Room cookie that keeps the visitor's place in the queue",
         "nameScope": "all",
         "valueScope": "all"
@@ -97,7 +97,7 @@
           }
         ]
       },
-      "confidence": 92
+      "confidence": 100
     }
   ]
 }

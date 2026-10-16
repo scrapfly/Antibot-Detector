@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.alibabacloud.com/product/waf",
   "icon": "aliyunwaf_official.png",
@@ -17,7 +17,7 @@
         "id": "acw-sc-v2-cookie",
         "name": "^acw_sc__v2$",
         "nameRegex": true,
-        "confidence": 75,
+        "confidence": 100,
         "description": "Alibaba Cloud WAF JavaScript-challenge clearance cookie",
         "nameScope": "all",
         "valueScope": "all"
@@ -166,7 +166,7 @@
     {
       "id": "aliyunwaf-complete-profile",
       "name": "Clearance cookie, session cookie and error-host resource",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "acw-sc-v2-cookie" },

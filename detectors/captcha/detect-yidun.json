@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://dun.163.com/product/captcha",
   "icon": "yidun_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "yidun-sdk-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "NetEase Yidun captcha loader on its static CDN",
         "text": "^https://cstaticdun\\.126\\.net/load\\.min\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -26,7 +26,7 @@
       },
       {
         "id": "yidun-core-resource",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Versioned Yidun captcha core script",
         "text": "^https://cstaticdun\\.126\\.net/\\d+\\.\\d+\\.\\d+/core[a-z-]*\\.[a-z0-9]+\\.v[0-9.]+\\.min\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -36,7 +36,7 @@
       },
       {
         "id": "yidun-captcha-api",
-        "confidence": 55,
+        "confidence": 100,
         "description": "Yidun captcha configuration and challenge API",
         "text": "^https://c(?:-v6)?\\.dun\\.163(?:yun)?\\.com/api/v[23]/(?:getconf|get|check)(?:[?#]|$)",
         "textRegex": true,
@@ -127,7 +127,7 @@
     {
       "id": "yidun-complete-integration",
       "name": "Loader, captcha API and rendered widget",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "yidun-sdk-resource" },

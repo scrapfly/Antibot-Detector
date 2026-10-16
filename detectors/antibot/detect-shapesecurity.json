@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-05",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.shapesecurity.com/products/bot-manager",
   "icon": "shape_security_official.png",
@@ -69,7 +69,7 @@
     {
       "id": "shape-seeded-runtime",
       "name": "Seeded loader with its runtime",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-15",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.cloudflare.com/products/bot-management/",
   "icon": "cloudflare_official.png",
@@ -17,19 +17,25 @@
         "id": "cf-clearance-cookie",
         "name": "^cf_clearance$",
         "nameRegex": true,
-        "confidence": 80,
+        "confidence": 100,
         "description": "Challenge clearance cookie, set after passing a Cloudflare challenge",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[A-Za-z0-9_.-]{43}-[0-9]{10}-1\\.[0-9]\\.[0-9]\\.[0-9]-[A-Za-z0-9_.-]{20,}",
+        "valueRegex": true,
+        "valueCaseSensitive": true
       },
       {
         "id": "cf-bm-cookie",
         "name": "^__cf_bm$",
         "nameRegex": true,
-        "confidence": 50,
-        "description": "Bot Management cookie; Cloudflare sets it on many zones, even without an active challenge",
+        "confidence": 100,
+        "description": "Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode",
         "nameScope": "all",
-        "valueScope": "all"
+        "valueScope": "all",
+        "value": "^[A-Za-z0-9_.-]{43}-[0-9]{10}\\.[0-9]{5,8}-1\\.[0-9]\\.[0-9]\\.[0-9]-[A-Za-z0-9_.-]{20,}",
+        "valueRegex": true,
+        "valueCaseSensitive": true
       }
     ],
     "header": [
@@ -39,7 +45,7 @@
         "nameRegex": true,
         "value": "^challenge$",
         "valueRegex": true,
-        "confidence": 90,
+        "confidence": 100,
         "description": "Response header Cloudflare sends when it served a challenge page",
         "nameScope": "response",
         "valueScope": "response"
@@ -62,7 +68,7 @@
         "id": "challenge-orchestrator",
         "confidence": 100,
         "description": "Challenge page orchestrator under /cdn-cgi/challenge-platform/",
-        "text": "^https?://(?!challenges\\.cloudflare\\.com/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
+        "text": "^https?://(?!challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -71,7 +77,7 @@
         "id": "bot-management-script",
         "confidence": 100,
         "description": "Bot Management JavaScript detections script",
-        "text": "^https?://(?!challenges\\.cloudflare\\.com/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\\.js(?:[?#]|$)",
+        "text": "^https?://(?!challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\\.js(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -80,7 +86,7 @@
         "id": "jsd-oneshot",
         "confidence": 100,
         "description": "Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/)",
-        "text": "^https?://(?!challenges\\.cloudflare\\.com/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/",
+        "text": "^https?://(?!challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -122,7 +128,7 @@
     {
       "id": "cloudflare-challenge-page",
       "name": "Challenge page orchestrator and challenge options object",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

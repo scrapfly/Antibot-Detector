@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-06",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.netacea.com/",
   "icon": "netacea_official.png",
@@ -35,7 +35,7 @@
         "id": "mitatacaptcha-cookie",
         "name": "^_mitatacaptcha$",
         "nameRegex": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Netacea captcha-serving cookie (default name)",
         "nameScope": "all",
         "valueScope": "all"
@@ -44,7 +44,7 @@
     "url": [
       {
         "id": "netacea-captcha-verify",
-        "confidence": 75,
+        "confidence": 100,
         "description": "First-party Netacea captcha verification endpoint (default path in the vendor integrations)",
         "text": "^https?://[^/?#]+/AtaVerifyCaptcha(?:[?#]|$)",
         "textRegex": true,
@@ -68,7 +68,7 @@
     {
       "id": "netacea-captcha-session",
       "name": "Captcha cookie with a mitigation cookie",
-      "confidence": 90,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "mitatacaptcha-cookie" },
@@ -84,7 +84,7 @@
     {
       "id": "netacea-captcha-verified",
       "name": "Captcha verification with a Netacea cookie",
-      "confidence": 90,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "netacea-captcha-verify" },
@@ -101,7 +101,7 @@
     {
       "id": "netacea-complete-profile",
       "name": "Captcha cookie with the mitigation cookie set and echoed",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "mitatacaptcha-cookie" },

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.2.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://friendlycaptcha.com/",
   "icon": "custom.png",
@@ -35,7 +35,7 @@
       },
       {
         "id": "frc-v1-puzzle-url",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official v1 puzzle endpoint resource",
         "text": "^https://(?:api\\.friendlycaptcha\\.com|eu-api\\.friendlycaptcha\\.eu)/api/v1/puzzle(?:[?#]|$)",
         "textRegex": true,
@@ -45,7 +45,7 @@
       },
       {
         "id": "frc-v2-captcha-url",
-        "confidence": 60,
+        "confidence": 100,
         "description": "v2 captcha endpoint on the global or EU host named by the SDK's region map",
         "text": "^https://(?:global|eu)\\.frcapi\\.com/api/v2/captcha(?:/|[?#]|$)",
         "textRegex": true,
@@ -136,15 +136,15 @@
     },
     {
       "id": "frc-v1-configured-resource-runtime",
-      "name": "Heuristic v1 integration: widget attributes, resource and constructor presence",
+      "name": "v1 integration: configured widget, widget resource and constructor",
       "when": { "all": [{ "pattern": "frc-configured-widget" }, { "any": [{ "pattern": "frc-v1-sdk-url" }, { "pattern": "frc-v1-puzzle-url" }] }, { "pattern": "frc-v1-widget-constructor" }] },
-      "confidence": 90
+      "confidence": 100
     },
     {
       "id": "frc-v2-configured-resource-response",
-      "name": "Heuristic v2 integration: widget attributes, resource and response-field presence",
+      "name": "v2 integration: configured widget, SDK resource and response field",
       "when": { "all": [{ "pattern": "frc-configured-widget" }, { "any": [{ "pattern": "frc-v2-sdk-url" }, { "pattern": "frc-v2-captcha-url" }] }, { "pattern": "frc-v2-response-field" }] },
-      "confidence": 90
+      "confidence": 100
     }
   ]
 }

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/navigator/hardwareConcurrency",
   "icon": "hardware_fingerprint.png",
@@ -16,7 +16,7 @@
       {
         "description": "Reads the reported logical CPU count",
         "enabled": true,
-        "confidence": 20,
+        "confidence": 10,
         "target": "Navigator.prototype.hardwareConcurrency",
         "id": "hardware-cpu",
         "standalone": true

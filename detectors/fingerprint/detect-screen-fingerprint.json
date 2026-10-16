@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-08",
-  "version": "1.2.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Screen",
   "icon": "screen_fingerprint.png",
@@ -18,7 +18,7 @@
       { "id": "screen-available", "description": "Reads available screen height", "enabled": true, "confidence": 15, "target": "Screen.prototype.availHeight", "standalone": true },
       { "id": "screen-color", "description": "Reads screen color depth", "enabled": true, "confidence": 20, "target": "Screen.prototype.colorDepth", "standalone": true },
       { "id": "screen-inner-height", "description": "Reads window inner height", "enabled": false, "confidence": 5, "target": "window.innerHeight", "standalone": false },
-      { "id": "screen-pixel-ratio", "description": "Reads device pixel ratio", "enabled": true, "confidence": 10, "target": "window.devicePixelRatio", "standalone": true }
+      { "id": "screen-pixel-ratio", "description": "Reads device pixel ratio", "enabled": true, "confidence": 5, "target": "window.devicePixelRatio", "standalone": true }
     ],
     "content": [
       { "id": "screen-width-source", "text": "screen.width", "scope": "scripts", "checkScripts": true, "description": "Script references screen width; execution and intent unconfirmed", "confidence": 10, "standalone": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },

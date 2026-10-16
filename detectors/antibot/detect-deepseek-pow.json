@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-15",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://chat.deepseek.com/",
   "icon": "deepseek_official.png",
@@ -24,7 +24,7 @@
       },
       {
         "id": "pow-solver-wasm",
-        "confidence": 85,
+        "confidence": 100,
         "description": "DeepSeekHashV1 WebAssembly solver (sha3_wasm_bg.<hash>.wasm)",
         "text": "^https://(?:fe-static|chat)\\.deepseek\\.com/(?:chat/)?static/sha3_wasm_bg\\.[0-9a-f]{6,16}\\.wasm(?:[?#]|$)",
         "textRegex": true,
@@ -48,7 +48,7 @@
         "text": "\"target_path\"\\s*:\\s*\"/api/",
         "textRegex": true,
         "textCaseSensitive": true,
-        "confidence": 80,
+        "confidence": 100,
         "description": "Challenge request naming the path it protects (target_path)",
         "urlPattern": "^https://chat\\.deepseek\\.com/api/v\\d{1,2}/chat/create_pow_challenge",
         "urlRegex": true,
@@ -62,7 +62,7 @@
         "text": "\"algorithm\"\\s*:\\s*\"DeepSeekHashV1\"",
         "textRegex": true,
         "textCaseSensitive": true,
-        "confidence": 90,
+        "confidence": 100,
         "description": "Challenge response with the DeepSeekHashV1 proof-of-work algorithm",
         "urlPattern": "^https://chat\\.deepseek\\.com/api/v\\d{1,2}/chat/create_pow_challenge",
         "urlRegex": true,
@@ -76,7 +76,7 @@
     {
       "id": "deepseek-pow-challenge-response",
       "name": "Challenge requested and answered with a DeepSeekHashV1 challenge",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -91,7 +91,7 @@
     {
       "id": "deepseek-pow-challenge",
       "name": "Proof-of-work challenge requested for a protected path",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -106,7 +106,7 @@
     {
       "id": "deepseek-pow-solver-challenge",
       "name": "WebAssembly solver loaded and a challenge requested",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

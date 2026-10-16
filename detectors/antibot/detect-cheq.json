@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "ANTIBOT",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-05",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://cheq.ai/",
   "icon": "custom.png",
@@ -45,7 +45,7 @@
       },
       {
         "id": "cheqzone-host",
-        "confidence": 70,
+        "confidence": 100,
         "description": "CHEQ ClickTrue host (cheqzone.com)",
         "text": "^https://(?:[a-z0-9-]{1,63}\\.){0,4}cheqzone\\.com/",
         "textRegex": true,
@@ -59,6 +59,17 @@
         "description": "Other cheq.ai service host",
         "text": "^https://(?:[a-z0-9-]{1,63}\\.){0,4}cheq\\.ai/",
         "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "cheq-first-party-endpoint",
+        "confidence": 100,
+        "standalone": true,
+        "description": "CHEQ first-party validation or block endpoint (/__cheq/validate, /__cheq/block)",
+        "text": "^https?://[^/?#]+/__cheq/(?:validate|block)(?:[/?#]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
         "textCaseSensitive": false,
         "textScope": "all"
       }
@@ -121,7 +132,7 @@
     {
       "id": "cheq-tag-runtime",
       "name": "CHEQ tag with its runtime or cookies",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -131,9 +142,6 @@
               },
               {
                 "pattern": "cheq-jsonp-tag"
-              },
-              {
-                "pattern": "cheq-tms-bootstrap"
               },
               {
                 "pattern": "cheqzone-host"
@@ -146,13 +154,7 @@
                 "pattern": "cheq-sdk-object"
               },
               {
-                "pattern": "cq-object"
-              },
-              {
                 "pattern": "cq-id-cookie"
-              },
-              {
-                "pattern": "cq-aux-cookie"
               }
             ]
           }
@@ -207,6 +209,65 @@
               },
               {
                 "pattern": "cq-aux-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cheq-tag-weak-runtime",
+      "name": "CHEQ tag manager or tag with its queue or auxiliary cookies",
+      "confidence": 95,
+      "when": {
+        "any": [
+          {
+            "all": [
+              {
+                "pattern": "cheq-tms-bootstrap"
+              },
+              {
+                "any": [
+                  {
+                    "pattern": "cheq-sdk-object"
+                  },
+                  {
+                    "pattern": "cq-object"
+                  },
+                  {
+                    "pattern": "cq-id-cookie"
+                  },
+                  {
+                    "pattern": "cq-aux-cookie"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "all": [
+              {
+                "any": [
+                  {
+                    "pattern": "clicktrue-tag"
+                  },
+                  {
+                    "pattern": "cheq-jsonp-tag"
+                  },
+                  {
+                    "pattern": "cheqzone-host"
+                  }
+                ]
+              },
+              {
+                "any": [
+                  {
+                    "pattern": "cq-object"
+                  },
+                  {
+                    "pattern": "cq-aux-cookie"
+                  }
+                ]
               }
             ]
           }

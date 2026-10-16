@@ -146,8 +146,10 @@ test('all 21 fingerprint definitions have multiple graded, reachable combination
   for (const detector of Object.values(fingerprint)) {
     // 1.2.0 of 2026-10-03; Canvas got 1.2.1 on 2026-10-07 (difficulty Low → High),
     // Screen and IndexedDB on 2026-10-08 (one combination re-rated)
-    assert.match(detector.version, /^1\.2\.[01]$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-0[378]$/, detector.id);
+    // 1.3.0 of 2026-10-16: ordinary page behaviour (localStorage, CPU count, pixel
+    // ratio, languages, RUM timing) scores lower, so clean pages show less noise
+    assert.match(detector.version, /^1\.(?:2\.[01]|3\.0)$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-(?:0[378]|16)$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate pattern ids`);

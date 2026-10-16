@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://sucuri.net/",
   "icon": "sucuri_official.png",
@@ -17,7 +17,7 @@
         "id": "sucuri-id-header",
         "name": "^x-sucuri-id$",
         "nameRegex": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "Sucuri WAF node id header",
         "nameScope": "response",
         "valueScope": "response"
@@ -26,7 +26,7 @@
         "id": "sucuri-block-header",
         "name": "^x-sucuri-block$",
         "nameRegex": true,
-        "confidence": 90,
+        "confidence": 100,
         "description": "Sucuri block reason header",
         "nameScope": "response",
         "valueScope": "response"
@@ -37,7 +37,7 @@
         "nameRegex": true,
         "value": "^Sucuri/Cloudproxy$",
         "valueRegex": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "Sucuri CloudProxy server header",
         "nameScope": "response",
         "valueScope": "response"
@@ -58,7 +58,7 @@
         "id": "sucuri-cloudproxy-cookie",
         "name": "^sucuri_cloudproxy_uuid_[0-9a-f]{6,12}$",
         "nameRegex": true,
-        "confidence": 85,
+        "confidence": 100,
         "description": "Sucuri CloudProxy JS-challenge cookie",
         "nameScope": "all",
         "valueScope": "all"
@@ -100,7 +100,7 @@
     {
       "id": "sucuri-block-page",
       "name": "Sucuri block page with its headers",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {
@@ -132,7 +132,7 @@
     {
       "id": "sucuri-edge",
       "name": "Sucuri server with node id",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

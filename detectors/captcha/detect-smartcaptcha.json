@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-06",
-  "version": "1.0.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://yandex.cloud/services/smart-captcha",
   "icon": "smartcaptcha_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "smartcaptcha-sdk-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official SmartCaptcha widget script on Yandex Cloud's captcha host",
         "text": "^https://smartcaptcha\\.(?:yandexcloud\\.net|cloud\\.yandex\\.ru)/captcha\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -26,7 +26,7 @@
       },
       {
         "id": "smartcaptcha-check-endpoint",
-        "confidence": 50,
+        "confidence": 100,
         "description": "SmartCaptcha verification request",
         "text": "^https://smartcaptcha\\.(?:yandexcloud\\.net|cloud\\.yandex\\.ru)/check\\?",
         "textRegex": true,
@@ -124,7 +124,7 @@
           { "pattern": "smartcaptcha-runtime" }
         ]
       },
-      "confidence": 95
+      "confidence": 100
     }
   ]
 }

@@ -10,11 +10,29 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Added
 
 - Rules editor: a detector has its own Description, with Translations and Translate automatically, shown in its detection details.
+- Detection: hCaptcha's widget frame, CHEQ's own-domain check endpoint and self-hosted FingerprintJS builds are now recognised.
 
 ### Changed
 
 - Detection: Google BotGuard's www.google.com/js/th/… script is proof on its own too, so it shows 100% instead of 75%.
+- Detection: 78 more anti-bot signals and 44 CAPTCHA signals only one vendor produces (its own script host, cookie, header or challenge request) show 100% on their own; CAPTCHAs could not before.
+- Detection: short cookie names (_px3, _pxhd, _pxvid, ak_bmsc, cf_clearance, __cf_bm, __uzm, aws-waf-token) must also have the right value shape to count as proof.
+- Detection: F5, PerimeterX and CHEQ give 100% only to the branch made of their own signals; the first-party, legacy and tag-manager branches keep 95%.
+- Detection: a vendor's complete integration shows 100% too, except Turnstile, Azure Front Door, Yundun, Hunt and AliExpress, whose signals other products share.
+- Detection: a page's difficulty can rise from Low to Medium when one vendor's script is the only evidence, because that script now scores 100%.
+- Detection: Akamai's sensor, pixel and SBSD requests are matched by their exact path, and Aliyun's captcha no longer counts its device-fingerprint module as the captcha.
+- Detection: AWS WAF's regional token host is recognised with two or three path segments, as o2.co.uk sends it.
+- Rules → Update: 51 detectors have new versions (26 anti-bot, 18 CAPTCHA, 7 fingerprint), so the update offers them.
+- Rules: the changed rule descriptions and combination names are translated into all 11 languages.
+- Fingerprint: ordinary page behaviour (reading localStorage, the CPU count, the pixel ratio or the languages) scores lower, so clean pages show less noise.
 - Dark theme: protection logos on the Detection tab and in History details also sit on dark tiles instead of white squares; the light theme is unchanged.
+- Development: the confidence tests now define what 100% means (a proof list, the capped detectors, a top tier of 100%), with a live witness for each changed rule.
+- Development: the live-site check list expects 100% where a site reliably shows its proof, and the README explains what 100% means and how to add a proof rule.
+
+### Fixed
+
+- Detection: long cookie values (Cloudflare, PerimeterX, AWS WAF) were cut before matching, so those cookies never counted; they now do.
+- Detection: Turnstile widgets served from Cloudflare's China or FedRAMP hosts no longer show as Cloudflare Bot Management at 100%.
 
 ## [2.8.8] - 2026-10-15
 

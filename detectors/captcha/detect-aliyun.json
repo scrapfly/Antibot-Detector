@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "1.0.1",
+  "lastUpdated": "2026-10-16",
+  "version": "1.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.alibabacloud.com/product/captcha",
   "icon": "aliyun_official.png",
@@ -15,7 +15,7 @@
     "url": [
       {
         "id": "aliyun-sdk-resource",
-        "confidence": 60,
+        "confidence": 100,
         "description": "Official Aliyun Captcha 2.0 SDK on the alicdn captcha-frontend path",
         "text": "^https://o\\.alicdn\\.com/captcha-frontend/aliyunCaptcha/AliyunCaptcha\\.js(?:[?#]|$)",
         "textRegex": true,
@@ -37,9 +37,9 @@
       },
       {
         "id": "aliyun-dynamic-resource",
-        "confidence": 55,
+        "confidence": 100,
         "description": "Versioned Aliyun Captcha runtime scripts (also loaded when the site bundles the loader)",
-        "text": "^https://g\\.alicdn\\.com/captcha-frontend/(?:dynamicJS|FeiLin)/\\d+\\.\\d+\\.\\d+/",
+        "text": "^https://g\\.alicdn\\.com/captcha-frontend/dynamicJS/\\d+\\.\\d+\\.\\d+/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all",
@@ -47,7 +47,7 @@
       },
       {
         "id": "aliyun-captcha-api",
-        "confidence": 50,
+        "confidence": 100,
         "description": "Aliyun Captcha 2.0 verification API (per-account prefix)",
         "text": "^https://[a-z0-9]{4,12}\\.captcha-open\\.aliyuncs\\.com/",
         "textRegex": true,
@@ -149,7 +149,7 @@
     {
       "id": "aliyun-complete-integration",
       "name": "Captcha scripts, verification API and rendered widget",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           {

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-16",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
   "icon": "media_fingerprint.png",
@@ -22,7 +22,7 @@
       { "id": "media-codecs", "description": "Checks media codec support", "enabled": true, "confidence": 10, "target": "HTMLMediaElement.prototype.canPlayType", "standalone": true }
     ],
     "content": [
-      { "id": "media-battery-script", "text": "getBattery", "description": "Script reference to battery access; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
+      { "id": "media-battery-script", "text": "getBattery", "description": "Script reference to battery access; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": false },
       { "id": "media-speech-script", "text": "getVoices", "description": "Script reference to voice enumeration; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
       { "id": "media-mimes-script", "text": "navigator.mimeTypes", "description": "Script reference to MIME types; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },
       { "id": "media-plugins-script", "text": "navigator.plugins", "description": "Script reference to plugins; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },

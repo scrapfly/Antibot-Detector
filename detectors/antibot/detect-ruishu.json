@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.1.1",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.riversecurity.com/",
   "icon": "ruishu_official.png",
@@ -17,7 +17,7 @@
         "id": "fssbbi-cookie",
         "name": "^FSSBBIl1UgzbN7N80[TS]$",
         "nameRegex": true,
-        "confidence": 70,
+        "confidence": 100,
         "description": "Ruishu static-cookie generator family (generation 4 name family)",
         "nameScope": "all",
         "valueScope": "all"
@@ -133,7 +133,7 @@
     {
       "id": "ruishu-complete-profile",
       "name": "Challenge state, script marker and a Ruishu cookie",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "ts-global" },

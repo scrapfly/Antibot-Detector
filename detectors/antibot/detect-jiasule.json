@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-08",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-16",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.jiasule.com/",
   "icon": "jiasule_official.png",
@@ -17,7 +17,7 @@
         "id": "jsl-clearance-cookie",
         "name": "^__jsl_clearance_s$",
         "nameRegex": true,
-        "confidence": 75,
+        "confidence": 100,
         "description": "Jiasule JavaScript-challenge clearance cookie",
         "nameScope": "all",
         "valueScope": "all"
@@ -123,7 +123,7 @@
     {
       "id": "jiasule-complete-profile",
       "name": "Edge header, visitor id and passed JS challenge",
-      "confidence": 95,
+      "confidence": 100,
       "when": {
         "all": [
           { "pattern": "x-via-jsl-header" },
