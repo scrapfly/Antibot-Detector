@@ -1,6 +1,25 @@
 /** Pure aggregation of recorded history entries, not a measure of all browsing. */
 const HistoryStats = {
   DAY_MS: 86400000,
+  /** Category keys of a detection, the scope a page can show, and how stacks and chips are ordered. */
+  SCOPE_KEYS: ['antibot', 'captcha', 'fingerprint', 'other'],
+  /** Fingerprinting is API-use telemetry, so it starts hidden. */
+  DEFAULT_SCOPE: ['antibot', 'captcha', 'other'],
+  CATEGORY_ORDER: ['captcha', 'antibot', 'other', 'fingerprint'],
+  DIFFICULTY_RANK: { None: 0, Low: 1, Medium: 2, High: 3 },
+  /** Evidence tiers: strong >= 80, moderate 40 to 79, weak < 40. 100 is a signal only that vendor produces. */
+  STRONG_MIN: 80,
+  MODERATE_MIN: 40,
+  /** A protection moves when it changes by at least this many pages and this share of its previous pages. */
+  MOVER_MIN: 3,
+  MOVER_RATIO: 0.25,
+  /** The previous period needs this share of its days covered by History before it is compared. */
+  COMPARE_MIN_COVERAGE: 0.8,
+  /** Below this previous value a change is shown as an absolute number; below this share it is flat. */
+  DELTA_SMALL_BASE: 10,
+  DELTA_FLAT_RATIO: 0.05,
+  UNCONFIRMED_MIN_PAGES: 3,
+  _categoryCache: new Map(),
   isRecord(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
   parseStoredHistory(raw) {
     let value = raw;
@@ -67,11 +86,16 @@ const HistoryStats = {
     return Math.min(cap, Math.max(1, ordinal(end) - oldest + 1));
   },
   normalizeCategory(category) {
+    const cache = HistoryStats._categoryCache;
+    const text = typeof category === 'string';
+    if (text) { const hit = cache.get(category); if (hit !== undefined) return hit; }
     const normalized = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
-    if (normalized.includes('captcha')) return 'captcha';
-    if (normalized.includes('fingerprint')) return 'fingerprint';
-    if (normalized.includes('antibot') || normalized.includes('bot') || normalized.includes('waf')) return 'antibot';
-    return 'other';
+    let result = 'other';
+    if (normalized.includes('captcha')) result = 'captcha';
+    else if (normalized.includes('fingerprint')) result = 'fingerprint';
+    else if (normalized.includes('antibot') || normalized.includes('bot') || normalized.includes('waf')) result = 'antibot';
+    if (text && cache.size < 256) cache.set(category, result);
+    return result;
   },
   detectionName(detection) {
     if (!HistoryStats.isRecord(detection)) return '';
@@ -154,16 +178,23 @@ const HistoryStats = {
     start.setDate(start.getDate() - count + 1);
     return start.getTime();
   },
-  /** Protections and domains whose first saved entry (in all of History) falls at or after `since`. */
+  /**
+   * Protections and domains whose first saved entry (in all of History) falls at or after `since`.
+   * oldestTs is the oldest saved entry up to now; baselineComplete says History reaches back past
+   * `since`, so "first seen in this range" means new rather than "History starts here".
+   */
   firstSeen(allItems, since, now = Date.now()) {
-    const out = { protections: [], domains: [] };
-    if (typeof since !== 'number' || !Number.isFinite(since)) return out;
+    const out = { protections: [], domains: [], oldestTs: null, baselineComplete: false };
     const end = HistoryStats.referenceTime(now);
+    const track = typeof since === 'number' && Number.isFinite(since);
     const protections = new Map(), domains = new Map();
+    let oldest = null;
     for (const item of Array.isArray(allItems) ? allItems : []) {
       if (!HistoryStats.isRecord(item)) continue;
       const ts = HistoryStats.getTimestamp(item);
       if (ts === null || ts > end) continue;
+      if (oldest === null || ts < oldest) oldest = ts;
+      if (!track) continue;
       const hostname = HistoryStats.hostOf(item);
       if (hostname) {
         const d = domains.get(hostname);
@@ -176,6 +207,9 @@ const HistoryStats = {
         if (!p || ts < p.ts) protections.set(key, { name, category: HistoryStats.detectionCategory(detection), ts, hostname });
       }
     }
+    out.oldestTs = oldest;
+    out.baselineComplete = track && oldest !== null && oldest < since;
+    if (!track) return out;
     const recent = (list) => Array.from(list.values()).filter((row) => row.ts >= since).sort((a, b) => b.ts - a.ts);
     out.protections = recent(protections);
     out.domains = recent(domains);
@@ -191,6 +225,7 @@ const HistoryStats = {
    * distributions only. All-time totals retain future dates, finite timelines do not.
    * New averages are rounded percentages or null. Legacy totals.avgConfidence stays 0
    * when unknown. Numeric confidence bands use [0,20), [20,40), ... [80,100].
+   * It never reads a category scope: call scopeItems first. The result holds no Sets or Maps.
    */
   compute(items, options = {}) {
     options = HistoryStats.isRecord(options) ? options : {};
@@ -201,15 +236,18 @@ const HistoryStats = {
     const keys = ['antibot', 'captcha', 'fingerprint', 'other'];
     const emptyCategories = () => Object.fromEntries(keys.map((key) => [key, 0]));
     const bucket = () => ({ entries: 0, detections: 0, categories: emptyCategories(), domains: new Set(), sum: 0, count: 0 });
+    const dayBucket = () => ({ ...bucket(), names: new Set(), hostNames: new Map() });
     const average = (sum, count) => count ? Math.round(sum / count) : null;
     const outputBucket = (b) => ({ entries: b.entries, detections: b.detections, categories: b.categories, uniqueDomains: b.domains.size, avgConfidence: average(b.sum, b.count) });
     const domains = new Map(), detectors = new Map(), perDay = new Map();
     const categories = emptyCategories();
     const difficulty = { High: 0, Medium: 0, Low: 0, None: 0 };
+    const levelOfRank = ['None', 'Low', 'Medium', 'High'];
     const hourly = Array.from({ length: 24 }, bucket);
     const weekdays = Array.from({ length: 7 }, bucket);
     const confidenceBuckets = [0, 20, 40, 60, 80].map((min) => ({ label: `${min}-${min === 80 ? 100 : min + 19}`, min, max: min === 80 ? 100 : min + 19, count: 0 }));
-    const categoryConfidence = keys.map((category) => ({ category, detections: 0, withConfidence: 0, sum: 0 }));
+    const confidenceByCategory = confidenceBuckets.map(({ min, max }) => ({ min, max, ...emptyCategories() }));
+    const categoryConfidence = keys.map((category) => ({ category, detections: 0, withConfidence: 0, sum: 0, strong: 0 }));
     const categoryOverlap = Object.fromEntries(keys.map((key) => [key, emptyCategories()]));
     const methodKeys = [...HistoryStats.METHODS, 'other'];
     const emptyMethods = () => Object.fromEntries(methodKeys.map((key) => [key, 0]));
@@ -217,6 +255,13 @@ const HistoryStats = {
     const methodsByCategory = Object.fromEntries(keys.map((key) => [key, emptyMethods()]));
     const signals = new Map(), combos = new Map(), pairs = new Map(), visitsByDomain = new Map();
     const decided = { single: { detections: 0, sum: 0, count: 0 }, combination: { detections: 0, sum: 0, count: 0 } };
+    const decidedBy = Object.fromEntries(keys.map((key) => [key, { single: { detections: 0, sum: 0, count: 0 }, combination: { detections: 0, sum: 0, count: 0 } }]));
+    const pageTiers = { both: 0, antibot: 0, captcha: 0, none: 0 };
+    const timelineBuckets = new Map();
+    // The timeline ends at `now`: a future timestamp on today's date must not enter it.
+    const tlStart = HistoryStats.rangeStart(days, now);
+    const timelineStart = Number.isFinite(tlStart) ? tlStart : -8640000000000000;
+    const { STRONG_MIN, CATEGORY_ORDER, DIFFICULTY_RANK } = HistoryStats;
     let totalMatches = 0;
     let totalDetections = 0, entriesWithDetections = 0, confidenceSum = 0, confidenceCount = 0, first = null, last = null;
     const addBucket = (b, detections, hostname) => {
@@ -236,36 +281,50 @@ const HistoryStats = {
       totalDetections += detections.length;
       if (detections.length) entriesWithDetections++;
       const level = HistoryStats.difficultyOf(detections);
-      difficulty[Object.hasOwn(difficulty, level) ? level : 'Medium']++;
+      const safeLevel = Object.hasOwn(difficulty, level) ? level : 'Medium';
+      difficulty[safeLevel]++;
       let domain;
       if (hostname) {
-        domain = domains.get(hostname) || { hostname, visits: 0, detections: 0, names: new Set(), sum: 0, count: 0 };
+        domain = domains.get(hostname) || { hostname, visits: 0, detections: 0, names: new Map(), sum: 0, count: 0, rank: 0, hasCaptcha: false, firstTs: null, lastTs: null, latestTs: 0, latestNames: null, latestCats: null };
         domain.visits++;
         domain.detections += detections.length;
+        const rank = DIFFICULTY_RANK[safeLevel];
+        if (rank > domain.rank) domain.rank = rank;
+        if (ts !== null) {
+          if (domain.firstTs === null || ts < domain.firstTs) domain.firstTs = ts;
+          if (domain.lastTs === null || ts > domain.lastTs) domain.lastTs = ts;
+        }
         domains.set(hostname, domain);
       }
-      const seen = new Set(), pageCategories = new Set(), pageNames = new Map();
+      const seen = new Set(), pageCategories = new Set(), pageNames = new Map(), pageCats = new Map();
       for (const detection of detections) {
         const name = HistoryStats.detectionName(detection);
         const category = HistoryStats.detectionCategory(detection);
         const score = HistoryStats.confidenceOf(detection);
         categories[category]++;
         pageCategories.add(category);
+        if (domain && category === 'captcha') domain.hasCaptcha = true;
         const cc = categoryConfidence[keys.indexOf(category)];
         cc.detections++;
         if (score !== null) {
           confidenceSum += score; confidenceCount++;
           cc.sum += score; cc.withConfidence++;
-          confidenceBuckets[Math.min(4, Math.floor(score / 20))].count++;
+          if (score >= STRONG_MIN) cc.strong++;
+          const band = Math.min(4, Math.floor(score / 20));
+          confidenceBuckets[band].count++;
+          confidenceByCategory[band][category]++;
           if (domain) { domain.sum += score; domain.count++; }
         }
         if (!name) continue;
         const key = name.toLowerCase();
-        if (domain) domain.names.add(key);
-        const entry = detectors.get(key) || { name, category, id: '', pages: 0, domains: new Set(), sum: 0, count: 0, matchSum: 0, matchCount: 0 };
+        if (domain && !domain.names.has(key)) domain.names.set(key, { name, category });
+        const entry = detectors.get(key) || { name, category, id: '', pages: 0, domains: new Set(), sum: 0, count: 0, matchSum: 0, matchCount: 0, strong: 0, moderate: 0, weak: 0 };
         if (!seen.has(key)) { entry.pages++; seen.add(key); }
         if (hostname) entry.domains.add(hostname);
-        if (score !== null) { entry.sum += score; entry.count++; }
+        if (score !== null) {
+          entry.sum += score; entry.count++;
+          entry[HistoryStats.tierOf(score)]++;
+        }
         if (!entry.id) {
           const nested = HistoryStats.isRecord(detection.detector) ? detection.detector : {};
           const id = nested.id || detection.id;
@@ -273,6 +332,7 @@ const HistoryStats = {
         }
         detectors.set(key, entry);
         pageNames.set(key, name);
+        if (!pageCats.has(key)) pageCats.set(key, category);
         // Evidence: each match's method and what it matched
         const matches = Array.isArray(detection.matches) ? detection.matches.filter(HistoryStats.isRecord) : [];
         const pageSignals = new Set();
@@ -294,9 +354,11 @@ const HistoryStats = {
         }
         // Decided by a combination, or by patterns on their own
         const fired = Array.isArray(detection.combinations) ? detection.combinations.filter(HistoryStats.isRecord) : [];
-        const bucketOf = decided[fired.length ? 'combination' : 'single'];
+        const way = fired.length ? 'combination' : 'single';
+        const bucketOf = decided[way], bucketBy = decidedBy[category][way];
         bucketOf.detections++;
-        if (score !== null) { bucketOf.sum += score; bucketOf.count++; }
+        bucketBy.detections++;
+        if (score !== null) { bucketOf.sum += score; bucketOf.count++; bucketBy.sum += score; bucketBy.count++; }
         for (const combo of fired) {
           const id = typeof combo.id === 'string' && combo.id ? combo.id : (typeof combo.name === 'string' ? combo.name : '');
           if (!id) continue;
@@ -323,6 +385,17 @@ const HistoryStats = {
         visits.push({ ts, keys: pageKeys, names: new Map(pageNames) });
         visitsByDomain.set(hostname, visits);
       }
+      // The latest saved entry of a domain says what protects it now; an entry without a date counts as earlier
+      if (domain) {
+        const at = ts === null ? -Infinity : ts;
+        if (domain.latestNames === null || at > domain.latestTs) { domain.latestTs = at; domain.latestNames = pageNames; domain.latestCats = pageCats; }
+      }
+      // How protected the page is: CAPTCHA together with anti-bot, one of them, or neither
+      const hasCaptcha = pageCategories.has('captcha'), hasBot = pageCategories.has('antibot') || pageCategories.has('other');
+      if (hasCaptcha && hasBot) pageTiers.both++;
+      else if (hasBot) pageTiers.antibot++;
+      else if (hasCaptcha) pageTiers.captcha++;
+      else pageTiers.none++;
       for (const a of pageCategories) for (const b of pageCategories) categoryOverlap[a][b]++;
       if (ts !== null) {
         first = first === null ? ts : Math.min(first, ts);
@@ -334,30 +407,38 @@ const HistoryStats = {
         const date = new Date(ts);
         addBucket(hourly[date.getHours()], detections, hostname);
         addBucket(weekdays[date.getDay()], detections, hostname);
+        if (ts >= timelineStart && ts <= now) {
+          const b = timelineBuckets.get(key) || dayBucket();
+          addBucket(b, detections, hostname);
+          for (const name of pageNames.keys()) b.names.add(name);
+          if (hostname) {
+            for (const [name, category] of pageCats) {
+              if (category === 'fingerprint') continue;
+              const set = b.hostNames.get(hostname) || new Set();
+              set.add(name);
+              b.hostNames.set(hostname, set);
+            }
+          }
+          timelineBuckets.set(key, b);
+        }
       }
     }
     const timeline = [];
     const today = new Date(now);
     today.setHours(12, 0, 0, 0);
-    // Filter separately so future timestamps on today's date cannot enter the timeline.
-    const timelineBuckets = new Map();
-    for (const item of HistoryStats.filterByRange(list, days, now)) {
-      const key = HistoryStats.dayKey(HistoryStats.getTimestamp(item));
-      const b = timelineBuckets.get(key) || bucket();
-      const ds = Array.isArray(item.detections) ? item.detections.filter(HistoryStats.isRecord) : [];
-      const host = (typeof item.hostname === 'string' && item.hostname.trim() ? item.hostname.trim() : HistoryStats.hostnameFromUrl(item.url)).toLowerCase();
-      addBucket(b, ds, host);
-      timelineBuckets.set(key, b);
-    }
+    const todayKey = HistoryStats.dayKey(now);
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(today.getDate() - i);
       const key = HistoryStats.dayKey(date.getTime());
-      timeline.push({ date: key, ...outputBucket(timelineBuckets.get(key) || bucket()) });
+      const b = timelineBuckets.get(key) || dayBucket();
+      let layered = 0;
+      for (const names of b.hostNames.values()) if (names.size >= 2) layered++;
+      timeline.push({ date: key, ...outputBucket(b), protections: b.names.size, layeredDomains: layered, partial: key === todayKey });
     }
     const byCount = (field) => (a, b) => b[field] - a[field] || String(a.name || a.hostname).localeCompare(String(b.name || b.hostname));
     const detectorMetrics = Array.from(detectors.values(), (d) => ({ name: d.name, id: d.id, category: d.category, pages: d.pages, domains: d.domains.size, avgConfidence: average(d.sum, d.count),
-      matches: d.matchCount, avgMatchConfidence: average(d.matchSum, d.matchCount) })).sort(byCount('pages'));
+      matches: d.matchCount, avgMatchConfidence: average(d.matchSum, d.matchCount), strong: d.strong, moderate: d.moderate, weak: d.weak })).sort(byCount('pages'));
     const signalMetrics = Array.from(signals.values(), (row) => ({ detector: row.detector, detectorId: row.detectorId, category: row.category, method: row.method, label: row.label,
       pages: row.pages, matches: row.matches, avgConfidence: average(row.sum, row.count) }))
       .sort((a, b) => b.pages - a.pages || b.matches - a.matches || a.label.localeCompare(b.label));
@@ -378,7 +459,44 @@ const HistoryStats = {
     }
     domainChanges.sort((a, b) => b.timestamp - a.timestamp || a.hostname.localeCompare(b.hostname));
     const decidedOut = (b) => ({ detections: b.detections, avgConfidence: average(b.sum, b.count) });
-    const domainMetrics = Array.from(domains.values(), (d) => ({ hostname: d.hostname, visits: d.visits, detections: d.detections, uniqueDetectors: d.names.size, avgConfidence: average(d.sum, d.count) })).sort(byCount('visits'));
+    const byOrder = (a, b) => CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category) || a.name.localeCompare(b.name);
+    const domainMetrics = Array.from(domains.values(), (d) => ({ hostname: d.hostname, visits: d.visits, detections: d.detections, uniqueDetectors: d.names.size, avgConfidence: average(d.sum, d.count),
+      difficulty: levelOfRank[d.rank], hasCaptcha: d.hasCaptcha,
+      stack: Array.from(d.names.values()).sort(byOrder).slice(0, 8).map(({ name, category }) => ({ name, category })), stackTotal: d.names.size,
+      firstTimestamp: d.firstTs, lastTimestamp: d.lastTs })).sort(byCount('visits'));
+    // Protections found often but rarely with strong evidence: text mentions or unused scripts rather than a challenge
+    const unconfirmed = detectorMetrics.filter((row) => {
+      const scored = row.strong + row.moderate + row.weak;
+      return row.category !== 'fingerprint' && row.pages >= HistoryStats.UNCONFIRMED_MIN_PAGES && scored > 0 && row.strong / scored < 0.5;
+    }).sort((a, b) => b.weak - a.weak || b.pages - a.pages || a.name.localeCompare(b.name)).slice(0, 12).map((row) => {
+      const lower = row.name.toLowerCase();
+      let driver = null;
+      for (const signal of signalMetrics) {
+        if (signal.detector.toLowerCase() !== lower || (signal.avgConfidence !== null && signal.avgConfidence >= HistoryStats.MODERATE_MIN)) continue;
+        if (!driver || signal.pages > driver.pages || (signal.pages === driver.pages && (signal.matches > driver.matches || (signal.matches === driver.matches && signal.label.localeCompare(driver.label) < 0)))) driver = signal;
+      }
+      return { name: row.name, id: row.id, category: row.category, pages: row.pages, strong: row.strong, moderate: row.moderate, weak: row.weak,
+        driver: driver ? { method: driver.method, label: driver.label, pages: driver.pages, avgConfidence: driver.avgConfidence, detectorId: driver.detectorId } : null };
+    });
+    // Which anti-bot and CAPTCHA protections sit together on a domain's latest saved page
+    const stackGroups = new Map();
+    for (const d of domains.values()) {
+      if (!d.latestNames) continue;
+      const found = [];
+      for (const [key, name] of d.latestNames) {
+        const category = d.latestCats.get(key);
+        if (category !== 'fingerprint') found.push({ key, name, category });
+      }
+      if (!found.length) continue;
+      const sortedKeys = found.map((row) => row.key).sort();
+      const groupKey = sortedKeys.join('\n');
+      const group = stackGroups.get(groupKey) || { keys: sortedKeys, names: found.sort(byOrder).map((row) => row.name), domains: [] };
+      group.domains.push(d);
+      stackGroups.set(groupKey, group);
+    }
+    const stackMetrics = Array.from(stackGroups.values(), (g) => ({ keys: g.keys, names: g.names, domains: g.domains.length,
+      hostnames: g.domains.sort((a, b) => b.visits - a.visits || a.hostname.localeCompare(b.hostname)).slice(0, 3).map((d) => d.hostname) }))
+      .sort((a, b) => b.domains - a.domains || b.keys.length - a.keys.length || a.names.join('\n').localeCompare(b.names.join('\n'))).slice(0, 20);
     return {
       totals: { entries: list.length, uniqueDomains: domains.size, detections: totalDetections, uniqueDetectors: detectors.size, entriesWithDetections,
         avgDetectionsPerEntry: list.length ? totalDetections / list.length : 0, avgConfidence: average(confidenceSum, confidenceCount) ?? 0,
@@ -386,16 +504,368 @@ const HistoryStats = {
         validConfidenceCount: confidenceCount, unknownConfidenceCount: totalDetections - confidenceCount },
       topDetectors: detectorMetrics.slice(0, top).map(({ name, category, pages, domains }) => ({ name, category, pages, domains })),
       topDomains: domainMetrics.slice(0, top).map(({ hostname, visits, detections }) => ({ hostname, visits, detections })),
-      categories, difficulty, timeline,
+      categories, difficulty, timeline, pageTiers,
       hourly: hourly.map((b, hour) => ({ hour, ...outputBucket(b) })),
       weekdays: weekdays.map((b, weekday) => ({ weekday, ...outputBucket(b) })),
-      confidenceBuckets,
-      categoryConfidence: categoryConfidence.map(({ category, detections, withConfidence, sum }) => ({ category, detections, withConfidence, avgConfidence: average(sum, withConfidence) })),
+      confidenceBuckets, confidenceByCategory,
+      categoryConfidence: categoryConfidence.map(({ category, detections, withConfidence, sum, strong }) => ({ category, detections, withConfidence, avgConfidence: average(sum, withConfidence), strong })),
       categoryOverlap, detectorMetrics, domainMetrics,
       methods, methodsByCategory, totalMatches, signalMetrics, weakEvidence,
       decided: { single: decidedOut(decided.single), combination: decidedOut(decided.combination) },
-      combinationMetrics, togetherMetrics, domainChanges: domainChanges.slice(0, 200), domainChangeCount: domainChanges.length
+      decidedByCategory: Object.fromEntries(keys.map((key) => [key, { single: decidedOut(decidedBy[key].single), combination: decidedOut(decidedBy[key].combination) }])),
+      combinationMetrics, togetherMetrics, domainChanges: domainChanges.slice(0, 200), domainChangeCount: domainChanges.length,
+      unconfirmed, stackMetrics
     };
+  },
+  /** 'strong' (80 and up), 'moderate' (40 to 79), 'weak' (below 40), or 'unknown' when there is no score in 0..100. */
+  tierOf(score) {
+    if (typeof score !== 'number' || !Number.isFinite(score) || score < 0 || score > 100) return 'unknown';
+    return score >= HistoryStats.STRONG_MIN ? 'strong' : score >= HistoryStats.MODERATE_MIN ? 'moderate' : 'weak';
+  },
+  /**
+   * Keeps only the detections whose category is in `scope` (an array or Set of SCOPE_KEYS).
+   * Entries are never dropped, so page and domain counts do not depend on the scope. A scope
+   * holding every category, or none we know, returns the same array at no cost.
+   */
+  scopeItems(items, scope) {
+    if (!Array.isArray(items)) return [];
+    const keep = new Set();
+    for (const key of scope instanceof Set || Array.isArray(scope) ? scope : []) {
+      if (HistoryStats.SCOPE_KEYS.includes(key)) keep.add(key);
+    }
+    if (!keep.size || keep.size === HistoryStats.SCOPE_KEYS.length) return items;
+    return items.map((item) => {
+      if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) return item;
+      const detections = item.detections.filter((d) => HistoryStats.isRecord(d) && keep.has(HistoryStats.detectionCategory(d)));
+      return detections.length === item.detections.length ? item : { ...item, detections };
+    });
+  },
+  /** Detections per category, and the entries that hold at least one fingerprint detection. */
+  categoryCounts(items) {
+    const out = { antibot: 0, captcha: 0, fingerprint: 0, other: 0, total: 0, fingerprintPages: 0 };
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) continue;
+      let fingerprint = false;
+      for (const detection of item.detections) {
+        if (!HistoryStats.isRecord(detection)) continue;
+        const category = HistoryStats.detectionCategory(detection);
+        out[category]++;
+        out.total++;
+        if (category === 'fingerprint') fingerprint = true;
+      }
+      if (fingerprint) out.fingerprintPages++;
+    }
+    return out;
+  },
+  /** One category on its own: pages, detections, distinct techniques, average confidence and the three most common techniques. */
+  categoryProfile(items, category) {
+    const names = new Map();
+    let pages = 0, detections = 0, sum = 0, count = 0;
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) continue;
+      let hit = false;
+      const seen = new Set();
+      for (const detection of item.detections) {
+        if (!HistoryStats.isRecord(detection) || HistoryStats.detectionCategory(detection) !== category) continue;
+        hit = true;
+        detections++;
+        const score = HistoryStats.confidenceOf(detection);
+        if (score !== null) { sum += score; count++; }
+        const name = HistoryStats.detectionName(detection);
+        if (!name) continue;
+        const key = name.toLowerCase();
+        const row = names.get(key) || { name, pages: 0 };
+        if (!seen.has(key)) { row.pages++; seen.add(key); }
+        names.set(key, row);
+      }
+      if (hit) pages++;
+    }
+    const techniques = Array.from(names.values()).sort((a, b) => b.pages - a.pages || a.name.localeCompare(b.name)).slice(0, 3).map(({ name, pages: p }) => ({ name, pages: p }));
+    return { pages, detections, distinct: names.size, avgConfidence: count ? Math.round(sum / count) : null, techniques };
+  },
+  /**
+   * The window of the same number of local calendar days right before the range that starts at
+   * rangeStart(days). null for "All". coverage is the share of that window History reaches back
+   * to; the comparison is usable from COMPARE_MIN_COVERAGE.
+   */
+  previousWindow(items, days, now = Date.now()) {
+    if (typeof days !== 'number' || !Number.isFinite(days) || days <= 0) return null;
+    const count = HistoryStats.rangeDays(days);
+    const current = HistoryStats.rangeStart(count, now);
+    if (current === null || !Number.isFinite(current)) return null;
+    const startDate = new Date(current);
+    startDate.setDate(startDate.getDate() - count);
+    const start = startDate.getTime();
+    const rows = [];
+    let oldest = null;
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item)) continue;
+      const ts = HistoryStats.getTimestamp(item);
+      if (ts === null) continue;
+      if (oldest === null || ts < oldest) oldest = ts;
+      if (ts >= start && ts < current) rows.push(item);
+    }
+    const coverage = oldest === null ? 0 : Math.min(1, Math.max(0, (current - Math.max(start, oldest)) / (current - start)));
+    return { start, end: current - 1, items: rows, oldest, coverage, usable: coverage >= HistoryStats.COMPARE_MIN_COVERAGE };
+  },
+  /** Light single pass over the entries: what the comparison with the previous period needs. */
+  summary(items) {
+    const out = { pages: 0, pagesWithDetections: 0, domains: 0, domainsWithDetections: 0, layeredDomains: 0, captchaDomains: 0, protections: 0, detections: 0 };
+    const hosts = new Map(), names = new Set();
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item)) continue;
+      out.pages++;
+      const host = HistoryStats.hostOf(item);
+      let row = null;
+      if (host) {
+        row = hosts.get(host);
+        if (!row) { row = { found: false, captcha: false, names: new Set() }; hosts.set(host, row); }
+      }
+      let found = false;
+      for (const detection of Array.isArray(item.detections) ? item.detections : []) {
+        if (!HistoryStats.isRecord(detection)) continue;
+        found = true;
+        out.detections++;
+        const category = HistoryStats.detectionCategory(detection);
+        const name = HistoryStats.detectionName(detection);
+        if (name) names.add(name.toLowerCase());
+        if (!row) continue;
+        row.found = true;
+        if (category === 'captcha') row.captcha = true;
+        if (name && category !== 'fingerprint') row.names.add(name.toLowerCase());
+      }
+      if (found) out.pagesWithDetections++;
+    }
+    out.domains = hosts.size;
+    out.protections = names.size;
+    for (const row of hosts.values()) {
+      if (row.found) out.domainsWithDetections++;
+      if (row.names.size >= 2) out.layeredDomains++;
+      if (row.captcha) out.captchaDomains++;
+    }
+    return out;
+  },
+  /** Map of lower-cased protection name to { name, category, pages }: entries that hold it at least once. */
+  protectionIndex(items) {
+    const index = new Map();
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) continue;
+      const seen = new Set();
+      for (const detection of item.detections) {
+        const name = HistoryStats.detectionName(detection);
+        if (!name) continue;
+        const key = name.toLowerCase();
+        const row = index.get(key) || { name, category: HistoryStats.detectionCategory(detection), pages: 0 };
+        if (!seen.has(key)) { row.pages++; seen.add(key); }
+        index.set(key, row);
+      }
+    }
+    return index;
+  },
+  /**
+   * Change between two values, as a neutral kind. Below DELTA_SMALL_BASE the previous value is too
+   * small for a percentage, so ratio is null; under DELTA_FLAT_RATIO of change counts as flat.
+   */
+  delta(cur, prev) {
+    if (typeof cur !== 'number' || typeof prev !== 'number' || !Number.isFinite(cur) || !Number.isFinite(prev)) return null;
+    if (cur === 0 && prev === 0) return null;
+    if (prev === 0) return cur > 0 ? { kind: 'new', diff: cur, ratio: null } : null;
+    const diff = cur - prev;
+    if (prev < HistoryStats.DELTA_SMALL_BASE) return { kind: diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat', diff, ratio: null };
+    const ratio = diff / prev;
+    if (Math.abs(ratio) < HistoryStats.DELTA_FLAT_RATIO) return { kind: 'flat', diff, ratio };
+    return { kind: diff > 0 ? 'up' : 'down', diff, ratio };
+  },
+  /**
+   * Protections that rose, fell or vanished between two protectionIndex() maps. `exclude` holds
+   * lower-cased names first seen in the range: those are new, not rising.
+   */
+  movers(cur, prev, options = {}) {
+    options = HistoryStats.isRecord(options) ? options : {};
+    const min = typeof options.min === 'number' ? options.min : HistoryStats.MOVER_MIN;
+    const ratio = typeof options.ratio === 'number' ? options.ratio : HistoryStats.MOVER_RATIO;
+    const limit = typeof options.limit === 'number' && options.limit >= 0 ? Math.floor(options.limit) : 4;
+    const exclude = options.exclude instanceof Set ? options.exclude : new Set(Array.isArray(options.exclude) ? options.exclude : []);
+    const now = cur instanceof Map ? cur : new Map(), before = prev instanceof Map ? prev : new Map();
+    const rows = [];
+    for (const [key, row] of now) {
+      const old = before.get(key);
+      rows.push({ key, name: row.name, category: row.category, now: row.pages, before: old ? old.pages : 0 });
+    }
+    for (const [key, row] of before) {
+      if (!now.has(key)) rows.push({ key, name: row.name, category: row.category, now: 0, before: row.pages });
+    }
+    const big = (row) => Math.abs(row.diff) >= min && (row.before === 0 || Math.abs(row.diff) / row.before >= ratio);
+    const order = (a, b) => Math.abs(b.diff) - Math.abs(a.diff) || a.name.localeCompare(b.name);
+    const out = { rising: [], falling: [], gone: [] };
+    for (const r of rows) {
+      const row = { name: r.name, category: r.category, now: r.now, before: r.before, diff: r.now - r.before };
+      if (row.diff > 0 && big(row) && !exclude.has(r.key)) out.rising.push(row);
+      else if (row.diff < 0 && row.now > 0 && big(row)) out.falling.push(row);
+      else if (row.now === 0 && row.before >= min) out.gone.push(row);
+    }
+    for (const key of Object.keys(out)) out[key] = out[key].sort(order).slice(0, limit);
+    return out;
+  },
+  /** The domains that are hardest to scrape first: difficulty, then protections, then pages. Same row objects. */
+  hardestDomains(rows, limit) {
+    const rank = (row) => HistoryStats.DIFFICULTY_RANK[row.difficulty] || 0;
+    const list = (Array.isArray(rows) ? rows : []).filter((row) => HistoryStats.isRecord(row) && row.uniqueDetectors > 0)
+      .sort((a, b) => rank(b) - rank(a) || b.uniqueDetectors - a.uniqueDetectors || b.visits - a.visits || String(a.hostname).localeCompare(String(b.hostname)));
+    return typeof limit === 'number' && Number.isFinite(limit) ? list.slice(0, Math.max(0, Math.floor(limit))) : list;
+  },
+  /** A path segment that names one record rather than one page: digits, a UUID or a long opaque token. */
+  isIdSegment(segment) {
+    return /^\d+$/.test(segment) || /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(segment) ||
+      (segment.length >= 20 && /\d/.test(segment) && /^[0-9a-z_-]+$/.test(segment));
+  },
+  /**
+   * The page an entry belongs to: its lower-cased path without trailing slashes, ids replaced by
+   * ':id'. Never the query or the hash. '' when the entry has no usable URL.
+   */
+  pageKey(item) {
+    const raw = typeof item === 'string' ? item : HistoryStats.isRecord(item) ? item.url : null;
+    if (typeof raw !== 'string' || !raw) return '';
+    let path;
+    try { path = new URL(raw).pathname; } catch (_) { return ''; }
+    let key = path.toLowerCase().split('/').map((segment) => HistoryStats.isIdSegment(segment) ? ':id' : segment).join('/').replace(/\/+$/, '');
+    if (key && !key.startsWith('/')) key = '/' + key;
+    return key || '/';
+  },
+  /**
+   * Protections a page gained or lost between two saved copies of the same page (same domain and
+   * pageKey). `items` is all of History, already scoped, so the first copy inside the range is
+   * compared with the last one before it. Rows with a timestamp before `since` are dropped.
+   */
+  protectionChanges(items, options = {}) {
+    options = HistoryStats.isRecord(options) ? options : {};
+    const now = HistoryStats.referenceTime(options.now);
+    const since = typeof options.since === 'number' && Number.isFinite(options.since) ? options.since : null;
+    const groups = new Map(), paths = new Map();
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item)) continue;
+      const ts = HistoryStats.getTimestamp(item);
+      if (ts === null || ts > now) continue;
+      const hostname = HistoryStats.hostOf(item);
+      if (!hostname) continue;
+      let path = typeof item.url === 'string' ? paths.get(item.url) : '';
+      if (path === undefined) { path = HistoryStats.pageKey(item); paths.set(item.url, path); }
+      const groupKey = hostname + '\n' + path;
+      let group = groups.get(groupKey);
+      if (!group) { group = { hostname, path, visits: [] }; groups.set(groupKey, group); }
+      const names = new Map();
+      for (const detection of Array.isArray(item.detections) ? item.detections : []) {
+        const name = HistoryStats.detectionName(detection);
+        if (name && !names.has(name.toLowerCase())) names.set(name.toLowerCase(), { name, category: HistoryStats.detectionCategory(detection) });
+      }
+      group.visits.push({ ts, names, order: group.visits.length });
+    }
+    const { CATEGORY_ORDER } = HistoryStats;
+    const byOrder = (a, b) => CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category) || a.name.localeCompare(b.name);
+    const rows = [];
+    for (const group of groups.values()) {
+      const visits = group.visits;
+      if (visits.length < 2) continue;
+      visits.sort((a, b) => a.ts - b.ts || a.order - b.order);
+      for (let i = 1; i < visits.length; i++) {
+        const current = visits[i], previous = visits[i - 1];
+        if (since !== null && current.ts < since) continue;
+        const added = [], removed = [];
+        for (const [key, row] of current.names) if (!previous.names.has(key)) added.push(row);
+        for (const [key, row] of previous.names) if (!current.names.has(key)) removed.push(row);
+        if (!added.length && !removed.length) continue;
+        rows.push({ hostname: group.hostname, path: group.path, timestamp: current.ts, previous: previous.ts, added: added.sort(byOrder), removed: removed.sort(byOrder),
+          kind: added.length && removed.length ? 'replaced' : added.length ? 'gained' : 'dropped' });
+      }
+    }
+    rows.sort((a, b) => b.timestamp - a.timestamp || a.hostname.localeCompare(b.hostname) || a.path.localeCompare(b.path));
+    return { rows: rows.slice(0, 200), count: rows.length, hostnames: [...new Set(rows.map((row) => row.hostname))] };
+  },
+  /** Light per-protection summary, same values and order as compute().detectorMetrics, for rule statistics. */
+  detectorSummary(items) {
+    const map = new Map();
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) continue;
+      const hostname = HistoryStats.hostOf(item);
+      const seen = new Set();
+      for (const detection of item.detections) {
+        const name = HistoryStats.detectionName(detection);
+        if (!name) continue;
+        const key = name.toLowerCase();
+        const row = map.get(key) || { name, id: '', category: HistoryStats.detectionCategory(detection), pages: 0, domains: new Set(), sum: 0, count: 0 };
+        if (!seen.has(key)) { row.pages++; seen.add(key); }
+        if (hostname) row.domains.add(hostname);
+        const score = HistoryStats.confidenceOf(detection);
+        if (score !== null) { row.sum += score; row.count++; }
+        if (!row.id) {
+          const nested = HistoryStats.isRecord(detection.detector) ? detection.detector : {};
+          const id = nested.id || detection.id;
+          if (typeof id === 'string' && id) row.id = id;
+        }
+        map.set(key, row);
+      }
+    }
+    return Array.from(map.values(), (row) => ({ name: row.name, id: row.id, category: row.category, pages: row.pages, domains: row.domains.size,
+      avgConfidence: row.count ? Math.round(row.sum / row.count) : null })).sort((a, b) => b.pages - a.pages || a.name.localeCompare(b.name));
+  },
+  /** Over all of History: pages and first and last saved date per detector id and per lower-cased name. */
+  detectorSeen(items) {
+    const byId = new Map(), byName = new Map();
+    const touch = (map, key, ts) => {
+      let row = map.get(key);
+      if (!row) { row = { pages: 0, firstTs: null, lastTs: null }; map.set(key, row); }
+      row.pages++;
+      if (ts !== null) {
+        if (row.firstTs === null || ts < row.firstTs) row.firstTs = ts;
+        if (row.lastTs === null || ts > row.lastTs) row.lastTs = ts;
+      }
+    };
+    for (const item of Array.isArray(items) ? items : []) {
+      if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) continue;
+      const ts = HistoryStats.getTimestamp(item);
+      const ids = new Set(), names = new Set();
+      for (const detection of item.detections) {
+        if (!HistoryStats.isRecord(detection)) continue;
+        const nested = HistoryStats.isRecord(detection.detector) ? detection.detector : {};
+        const id = nested.id || detection.id;
+        if (typeof id === 'string' && id) ids.add(id);
+        const name = HistoryStats.detectionName(detection);
+        if (name) names.add(name.toLowerCase());
+      }
+      for (const id of ids) touch(byId, id, ts);
+      for (const name of names) touch(byName, name, ts);
+    }
+    return { byId, byName };
+  },
+  /**
+   * Facts for the activity tab, from compute()'s timeline and hourly. options.from (a YYYY-MM-DD
+   * date key) ignores earlier timeline days, e.g. those before History began.
+   */
+  activityFacts(stats, options = {}) {
+    const timeline = stats && Array.isArray(stats.timeline) ? stats.timeline : [];
+    const hourly = stats && Array.isArray(stats.hourly) ? stats.hourly : [];
+    const from = options && typeof options.from === 'string' ? options.from : null;
+    const count = (row) => typeof row.entries === 'number' && Number.isFinite(row.entries) ? row.entries : 0;
+    let busiest = null, streak = 0, longestStreak = 0, quietDays = 0;
+    for (const row of timeline) {
+      if (!HistoryStats.isRecord(row) || (from && String(row.date) < from)) continue;
+      const entries = count(row);
+      if (entries > 0) {
+        streak++;
+        longestStreak = Math.max(longestStreak, streak);
+        if (!busiest || entries > busiest.entries || (entries === busiest.entries && String(row.date) > busiest.date)) busiest = { date: row.date, entries };
+      } else {
+        streak = 0;
+        if (row.partial !== true) quietDays++;
+      }
+    }
+    let peakHour = null;
+    for (const row of hourly) {
+      if (!HistoryStats.isRecord(row)) continue;
+      const entries = count(row);
+      if (entries > 0 && (!peakHour || entries > peakHour.entries || (entries === peakHour.entries && row.hour < peakHour.hour))) peakHour = { hour: row.hour, entries };
+    }
+    return { busiest, longestStreak, peakHour, quietDays };
   },
   hostnameFromUrl(url) {
     if (typeof url !== 'string' || !url) return '';

@@ -4856,5 +4856,443 @@
   },
   "advancedInfoTurnstileDesc": {
     "message": "サイトキーを抽出し、Turnstile のスクリプトを解析します"
+  },
+  "statsExport": {
+    "message": "エクスポート"
+  },
+  "statsExportAllCategories": {
+    "message": "エクスポートには、このページの表示内容にかかわらず、常にすべてのカテゴリが含まれます。"
+  },
+  "statsScopeLabel": {
+    "message": "表示"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "非表示のフィンガープリント検出: {0}（全体の {1}）"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "フィンガープリントを表示"
+  },
+  "statsScopeKeepOne": {
+    "message": "カテゴリは少なくとも1つ選択したままにしてください。"
+  },
+  "statsScopeRulesNote": {
+    "message": "ルールは常にすべてのカテゴリを対象にします。"
+  },
+  "statsContextFmt": {
+    "message": "ページ: {0} · ドメイン: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "{0} 以降のすべての履歴"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "前の期間（{0}）との比較"
+  },
+  "statsCompareNone": {
+    "message": "前の期間と比較するには、7日間、30日間、90日間のいずれかを選んでください。"
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "履歴は {0} から始まっているため、比較できる前の期間が揃っていません。"
+  },
+  "statsDeltaNew": {
+    "message": "新規"
+  },
+  "statsDeltaFlat": {
+    "message": "前の期間から変化なし"
+  },
+  "statsDeltaUpFmt": {
+    "message": "前の期間より {0} 増加"
+  },
+  "statsDeltaDownFmt": {
+    "message": "前の期間より {0} 減少"
+  },
+  "statsDeltaWasFmt": {
+    "message": "前の期間: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "この期間のページ数が少ない ({0}): 比較やランキングは誤解を招くおそれがあります。"
+  },
+  "statsLoading": {
+    "message": "統計を読み込んでいます..."
+  },
+  "statsEmptyShowAll": {
+    "message": "すべての履歴を表示"
+  },
+  "statsHeadlinesLabel": {
+    "message": "ハイライト"
+  },
+  "statsSectionEvidence": {
+    "message": "根拠"
+  },
+  "statsSubnavLabel": {
+    "message": "根拠の表示"
+  },
+  "statsExportCanceled": {
+    "message": "エクスポートをキャンセルしました"
+  },
+  "statsAllClearTitle": {
+    "message": "この期間にアンチボットやCAPTCHAは見つかりませんでした"
+  },
+  "statsAllClearDescFmt": {
+    "message": "これらのページではフィンガープリントAPIの使用だけが見つかりました。ページ: {0}。"
+  },
+  "statsScopeEmptyTitle": {
+    "message": "これらのカテゴリには表示するものがありません"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "別のカテゴリか、より長い期間を選んでください。"
+  },
+  "statsHeadlineTop": {
+    "message": "最も多い保護機能"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "ページの {0} · ページ: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "最も難しいサイト"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "保護機能: {0} · 難易度: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "最新の保護機能"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "{0} で初めて確認 · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "この期間に新しいものはありません"
+  },
+  "statsHeadlineRiser": {
+    "message": "最も増加"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "ページ {0} → {1}（前の期間比）"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "前の期間が必要です"
+  },
+  "statsKpiPages": {
+    "message": "保存したページ"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "アクティブな日数: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "検出あり {0}（{1}）"
+  },
+  "statsKpiLayered": {
+    "message": "多層防御のサイト"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "CAPTCHAあり {0}"
+  },
+  "statsKpiProtections": {
+    "message": "確認した保護機能"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "この期間の新規 {0}"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "全 {0} ルール中"
+  },
+  "statsTipPages": {
+    "message": "この期間に履歴へ保存されたページです。履歴に残るのは保存された検出結果で、ブラウザの訪問すべてではありません。"
+  },
+  "statsTipLayered": {
+    "message": "2つ以上の異なる保護機能が検出されたドメインです。"
+  },
+  "statsOverTimeProtections": {
+    "message": "時間経過で見つかった保護機能"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "ページの割合 (%)"
+  },
+  "statsAllProtectionsLink": {
+    "message": "すべての保護機能"
+  },
+  "statsPageTiers": {
+    "message": "ページの保護状況"
+  },
+  "statsTiersHint": {
+    "message": "保存した各ページは、見つかった保護の種類ごとに1回だけ数えます。"
+  },
+  "statsTierBoth": {
+    "message": "アンチボットとCAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "アンチボットのみ"
+  },
+  "statsTierCaptcha": {
+    "message": "CAPTCHAのみ"
+  },
+  "statsTierNone": {
+    "message": "アンチボットもCAPTCHAもなし"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "推定難易度"
+  },
+  "statsDifficultyHint": {
+    "message": "見つかった保護機能から出したおおよその推定で、実測ではありません。"
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "保護なし"
+  },
+  "statsHardestSites": {
+    "message": "難しいサイト"
+  },
+  "statsAllDomainsLink": {
+    "message": "すべてのドメイン"
+  },
+  "statsMoreStackFmt": {
+    "message": "ほか +{0}"
+  },
+  "statsWhatChanged": {
+    "message": "変化したこと"
+  },
+  "statsChangedNew": {
+    "message": "新しい保護機能"
+  },
+  "statsChangedMoving": {
+    "message": "増加と減少"
+  },
+  "statsChangedGone": {
+    "message": "見られなくなったもの"
+  },
+  "statsChangedSwitched": {
+    "message": "保護機能を切り替えたサイト"
+  },
+  "statsChangedNothing": {
+    "message": "この期間に変化はありませんでした。"
+  },
+  "statsChangedAllLink": {
+    "message": "すべての変化"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "増加・減少している保護機能を見るには、7日間、30日間、90日間のいずれかを選んでください。"
+  },
+  "statsFingerprintCard": {
+    "message": "フィンガープリント"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "フィンガープリントAPIはページの {0} で実行されました · 手法: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "多いもの: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "ほとんどすべてのページがこれらのAPIを使うため、アンチボットやCAPTCHAの保護とは別に表示しています。"
+  },
+  "statsPagesColumn": {
+    "message": "ページ"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "変化"
+  },
+  "statsStrongColumn": {
+    "message": "強い根拠"
+  },
+  "statsProtectionSortLabel": {
+    "message": "保護機能の並べ替え"
+  },
+  "statsSortMostPages": {
+    "message": "ページ数が多い順"
+  },
+  "statsSortMostDomains": {
+    "message": "ドメイン数が多い順"
+  },
+  "statsSortBiggestChange": {
+    "message": "変化が大きい順"
+  },
+  "statsCommonStacks": {
+    "message": "よくある保護機能の組み合わせ"
+  },
+  "statsCommonStacksHint": {
+    "message": "ドメインの最新の保存ページで一緒に見つかったアンチボットとCAPTCHAの保護機能です。"
+  },
+  "statsDomainSearchAll": {
+    "message": "ドメインや保護機能を検索..."
+  },
+  "statsSortHardest": {
+    "message": "難しい順"
+  },
+  "statsSortLastSeen": {
+    "message": "新しい順"
+  },
+  "statsDifficultyColumn": {
+    "message": "難易度"
+  },
+  "statsStackColumn": {
+    "message": "保護機能"
+  },
+  "statsLastSeenColumn": {
+    "message": "最終確認"
+  },
+  "statsFilterChanged": {
+    "message": "変化あり"
+  },
+  "statsFilterClear": {
+    "message": "フィルタをクリア"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "ドメインを絞り込む"
+  },
+  "statsChangeKindGained": {
+    "message": "追加"
+  },
+  "statsChangeKindDropped": {
+    "message": "削除"
+  },
+  "statsChangeKindReplaced": {
+    "message": "置換"
+  },
+  "statsChangePageColumn": {
+    "message": "ページ"
+  },
+  "statsChangeSinceFmt": {
+    "message": "{0} と比較"
+  },
+  "statsChangeAddedSr": {
+    "message": "追加:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "削除:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "同じページの保存済みコピーを比較します。フィンガープリントを表示しない限り、フィンガープリントの検出は無視されます。"
+  },
+  "statsStrongEvidence": {
+    "message": "強い根拠"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{1} 件の検出のうち {0} 件が80%以上です。"
+  },
+  "statsUnconfirmed": {
+    "message": "言及のみ・未確認"
+  },
+  "statsUnconfirmedHint": {
+    "message": "よく見つかるものの、強い根拠がほとんどない保護機能です。有効なチャレンジではなく、テキスト上の言及や未使用のスクリプトの可能性があります。"
+  },
+  "statsUnconfirmedNone": {
+    "message": "よく見つかる保護機能はすべて強い根拠で確認されています。"
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "主に{0}で検出: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "目立つシグナルはありません。"
+  },
+  "statsTierStrong": {
+    "message": "強い"
+  },
+  "statsTierModerate": {
+    "message": "中程度"
+  },
+  "statsTierWeak": {
+    "message": "弱い"
+  },
+  "statsTierHint": {
+    "message": "強いは80%以上、中程度は40〜79%、弱いは40%未満です。100%は、その保護機能だけが出すシグナルを意味します。"
+  },
+  "statsDecidedByCategory": {
+    "message": "各カテゴリの判定方法"
+  },
+  "statsLiftFmt": {
+    "message": "{0} ポイント"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · 平均 {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "{0}では、組み合わせにより信頼度が {1} から {2} に上がります。"
+  },
+  "statsLess": {
+    "message": "少"
+  },
+  "statsMore": {
+    "message": "多"
+  },
+  "statsBusiestDay": {
+    "message": "最も多かった日"
+  },
+  "statsLongestStreak": {
+    "message": "最長の連続日数"
+  },
+  "statsPeakHour": {
+    "message": "ピークの時間帯"
+  },
+  "statsQuietDays": {
+    "message": "何も保存されなかった日数"
+  },
+  "statsTodayPartial": {
+    "message": "今日（集計中）"
+  },
+  "statsSevenDayAverage": {
+    "message": "線: 7日間の平均"
+  },
+  "statsRulesCoverage": {
+    "message": "カバー率"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "有効な {1} ルールのうち {0} ルールがこの期間に一致しました"
+  },
+  "statsRulesAttention": {
+    "message": "要確認"
+  },
+  "statsRulesAttentionNone": {
+    "message": "確認が必要なものはありません。"
+  },
+  "statsRulesStatusColumn": {
+    "message": "状態"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "期間外"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "履歴になし"
+  },
+  "statsRulesSourceEdited": {
+    "message": "編集済み"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "まだ出会っていないベンダーの公式ルールは反応しません。これは正常です。"
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "判断に使える履歴がまだ少ないため（ページ: {0}）、一度も一致していないルールからは多くを読み取れません。"
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "カスタムルールと編集済みルールのみ表示します。公式ルールの説明はScrapflyが管理しています。"
+  },
+  "statsToolsRetentionNote": {
+    "message": "Advancedはキャプチャを30分間保持するため、このタブは日付範囲を無視します。"
+  },
+  "statsToolsSavedNow": {
+    "message": "現在保存中"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "10分以内に期限切れ"
+  },
+  "statsToolsVendorsCount": {
+    "message": "ベンダー"
+  },
+  "statsToolsStaleFmt": {
+    "message": "削除待ちの期限切れキャプチャ: {0}。Advancedを開いて削除してください。"
+  },
+  "statsToolsSavedCaptures": {
+    "message": "保存されたキャプチャ"
+  },
+  "statsToolsColVendor": {
+    "message": "ベンダー"
+  },
+  "statsToolsColTool": {
+    "message": "ツール"
+  },
+  "statsToolsColSaved": {
+    "message": "保存"
+  },
+  "statsToolsColExpires": {
+    "message": "期限"
+  },
+  "statsToolsNoLive": {
+    "message": "現在保存されているキャプチャはありません。"
   }
 }

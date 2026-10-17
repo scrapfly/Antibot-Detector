@@ -114,3 +114,45 @@
 :root[data-theme="light"] .detector-logo .detector-logo-light {
   display: inline;
 }
+
+/* ============================================
+   Statistics page (sections/stats/stats.css): the light palette. Every
+   colour of that page is a token on body.stats-page; the dark values live in
+   stats.css and its @media print block restates these light ones, so the two
+   lists must stay equal (test/stats-css.test.js checks it).
+   ============================================ */
+:root[data-theme="light"] body.stats-page {
+  color-scheme: light;
+  /* Category colours are darkened by this much to become inks that read on white */
+  --s-ink-darken: 25%;
+  --s-page: #f4f6f9;
+  --s-card: #ffffff;
+  --s-inset: rgba(9, 30, 66, 0.04);
+  --s-inset-strong: rgba(9, 30, 66, 0.07);
+  --s-hair: rgba(9, 30, 66, 0.12);
+  --s-hair-soft: rgba(9, 30, 66, 0.07);
+  --s-hair-strong: rgba(9, 30, 66, 0.25);
+  --s-control-border: #6c757d;
+  --s-track: rgba(9, 30, 66, 0.09);
+  --s-grid: rgba(9, 30, 66, 0.1);
+  --s-empty: rgba(9, 30, 66, 0.06);
+  --s-shadow: 0 1px 2px rgba(9, 30, 66, 0.06), 0 1px 1px rgba(9, 30, 66, 0.03);
+  --s-scroll: rgba(9, 30, 66, 0.3);
+  --s-skel-a: rgba(9, 30, 66, 0.05);
+  --s-skel-b: rgba(9, 30, 66, 0.1);
+  --s-accent-soft: rgba(26, 115, 199, 0.1);
+  --s-accent-text: #155ea3;
+  --s-neutral: #6b7280;
+  --s-ok-text: #1f7a3a;
+  --s-warn-text: #a84a08;
+  --s-danger-text: #c82333;
+  --s-ok-bg: rgba(45, 164, 78, 0.1);
+  --s-warn-bg: rgba(217, 101, 11, 0.1);
+  --s-danger-bg: rgba(220, 53, 69, 0.08);
+  --s-cal-ink-3: #091e42;
+  --s-cal-ink-4: #ffffff;
+  --s-pop: #ffffff;
+  --s-pop-border: rgba(9, 30, 66, 0.16);
+  --s-pop-shadow: 0 8px 24px rgba(9, 30, 66, 0.16);
+  --s-hit-filter: brightness(0.9);
+}

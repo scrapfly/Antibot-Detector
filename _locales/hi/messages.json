@@ -4856,5 +4856,443 @@
   },
   "advancedInfoTurnstileDesc": {
     "message": "साइट कुंजी निकालता है और Turnstile स्क्रिप्ट का विश्लेषण करता है"
+  },
+  "statsExport": {
+    "message": "निर्यात"
+  },
+  "statsExportAllCategories": {
+    "message": "इस पेज पर जो भी दिख रहा हो, निर्यात में हमेशा सभी श्रेणियाँ शामिल होती हैं।"
+  },
+  "statsScopeLabel": {
+    "message": "दिखाएँ"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "छिपे हुए फ़िंगरप्रिंटिंग डिटेक्शन: {0} (कुल का {1})"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "फ़िंगरप्रिंटिंग दिखाएँ"
+  },
+  "statsScopeKeepOne": {
+    "message": "कम से कम एक श्रेणी चुनी हुई रहनी चाहिए।"
+  },
+  "statsScopeRulesNote": {
+    "message": "नियम हमेशा सभी श्रेणियों का उपयोग करते हैं।"
+  },
+  "statsContextFmt": {
+    "message": "पेज: {0} · डोमेन: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "{0} से अब तक का पूरा इतिहास"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "पिछली अवधि ({0}) से तुलना"
+  },
+  "statsCompareNone": {
+    "message": "पिछली अवधि से तुलना करने के लिए 7, 30 या 90 दिन चुनें।"
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "इतिहास {0} से शुरू होता है, इसलिए तुलना के लिए पूरी पिछली अवधि उपलब्ध नहीं है।"
+  },
+  "statsDeltaNew": {
+    "message": "नया"
+  },
+  "statsDeltaFlat": {
+    "message": "पिछली अवधि की तुलना में कोई बदलाव नहीं"
+  },
+  "statsDeltaUpFmt": {
+    "message": "पिछली अवधि की तुलना में {0} बढ़ा"
+  },
+  "statsDeltaDownFmt": {
+    "message": "पिछली अवधि की तुलना में {0} घटा"
+  },
+  "statsDeltaWasFmt": {
+    "message": "पिछली अवधि: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "इस अवधि में पेज कम हैं ({0}): तुलना और रैंकिंग भ्रामक हो सकती हैं।"
+  },
+  "statsLoading": {
+    "message": "आँकड़े लोड हो रहे हैं..."
+  },
+  "statsEmptyShowAll": {
+    "message": "पूरा इतिहास दिखाएँ"
+  },
+  "statsHeadlinesLabel": {
+    "message": "मुख्य बातें"
+  },
+  "statsSectionEvidence": {
+    "message": "साक्ष्य"
+  },
+  "statsSubnavLabel": {
+    "message": "साक्ष्य के व्यू"
+  },
+  "statsExportCanceled": {
+    "message": "निर्यात रद्द किया गया"
+  },
+  "statsAllClearTitle": {
+    "message": "इस अवधि में कोई एंटी-बॉट या CAPTCHA नहीं मिला"
+  },
+  "statsAllClearDescFmt": {
+    "message": "इन पेजों पर केवल फ़िंगरप्रिंटिंग API का उपयोग दिखता है। पेज: {0}।"
+  },
+  "statsScopeEmptyTitle": {
+    "message": "इन श्रेणियों के लिए दिखाने को कुछ नहीं है"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "कोई दूसरी श्रेणी या लंबी अवधि चुनें।"
+  },
+  "statsHeadlineTop": {
+    "message": "सबसे आम सुरक्षा"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "पेजों का {0} · पेज: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "सबसे कठिन साइट"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "सुरक्षा उपाय: {0} · कठिनाई: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "सबसे नई सुरक्षा"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "{0} पर पहली बार दिखी · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "इस अवधि में कुछ नया नहीं"
+  },
+  "statsHeadlineRiser": {
+    "message": "सबसे ज़्यादा बढ़त"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "पेज {0} → {1}, पिछली अवधि की तुलना में"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "पिछली अवधि चाहिए"
+  },
+  "statsKpiPages": {
+    "message": "सहेजे गए पेज"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "सक्रिय दिन: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "डिटेक्शन वाले: {0} ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "परतदार सुरक्षा वाली साइटें"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "CAPTCHA वाले: {0}"
+  },
+  "statsKpiProtections": {
+    "message": "दिखे सुरक्षा उपाय"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "इस अवधि में {0} नए"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "कुल {0} नियमों में से"
+  },
+  "statsTipPages": {
+    "message": "इस अवधि में इतिहास में सहेजे गए पेज। इतिहास में सहेजे गए डिटेक्शन रहते हैं, ब्राउज़र की हर विज़िट नहीं।"
+  },
+  "statsTipLayered": {
+    "message": "ऐसे डोमेन जहाँ दो या अधिक अलग-अलग सुरक्षा उपाय मिले।"
+  },
+  "statsOverTimeProtections": {
+    "message": "समय के साथ मिले सुरक्षा उपाय"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% पेज"
+  },
+  "statsAllProtectionsLink": {
+    "message": "सभी सुरक्षा उपाय"
+  },
+  "statsPageTiers": {
+    "message": "आपके पेज कितने सुरक्षित हैं"
+  },
+  "statsTiersHint": {
+    "message": "हर सहेजा गया पेज एक बार गिना जाता है, उस पर मिली सुरक्षा के प्रकार के अनुसार।"
+  },
+  "statsTierBoth": {
+    "message": "एंटी-बॉट और CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "सिर्फ़ एंटी-बॉट"
+  },
+  "statsTierCaptcha": {
+    "message": "सिर्फ़ CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "न एंटी-बॉट, न CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "अनुमानित कठिनाई"
+  },
+  "statsDifficultyHint": {
+    "message": "मिले सुरक्षा उपायों से लगाया गया मोटा अनुमान, कोई माप नहीं।"
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "कोई सुरक्षा नहीं"
+  },
+  "statsHardestSites": {
+    "message": "सबसे कठिन साइटें"
+  },
+  "statsAllDomainsLink": {
+    "message": "सभी डोमेन"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} और"
+  },
+  "statsWhatChanged": {
+    "message": "क्या बदला"
+  },
+  "statsChangedNew": {
+    "message": "नए सुरक्षा उपाय"
+  },
+  "statsChangedMoving": {
+    "message": "बढ़ते और घटते"
+  },
+  "statsChangedGone": {
+    "message": "अब नहीं दिखते"
+  },
+  "statsChangedSwitched": {
+    "message": "सुरक्षा बदलने वाली साइटें"
+  },
+  "statsChangedNothing": {
+    "message": "इस अवधि में कुछ नहीं बदला।"
+  },
+  "statsChangedAllLink": {
+    "message": "सभी बदलाव"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "बढ़ते और घटते सुरक्षा उपाय देखने के लिए 7, 30 या 90 दिन चुनें।"
+  },
+  "statsFingerprintCard": {
+    "message": "फ़िंगरप्रिंटिंग"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "फ़िंगरप्रिंटिंग API {0} पेजों पर चले · तकनीकें: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "सबसे आम: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "एंटी-बॉट और CAPTCHA सुरक्षा से अलग दिखाया गया है, क्योंकि लगभग हर पेज इन API का उपयोग करता है।"
+  },
+  "statsPagesColumn": {
+    "message": "पेज"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "बदलाव"
+  },
+  "statsStrongColumn": {
+    "message": "मज़बूत साक्ष्य"
+  },
+  "statsProtectionSortLabel": {
+    "message": "सुरक्षा उपाय क्रमबद्ध करें"
+  },
+  "statsSortMostPages": {
+    "message": "सबसे ज़्यादा पेज"
+  },
+  "statsSortMostDomains": {
+    "message": "सबसे ज़्यादा डोमेन"
+  },
+  "statsSortBiggestChange": {
+    "message": "सबसे बड़ा बदलाव"
+  },
+  "statsCommonStacks": {
+    "message": "आम सुरक्षा संयोजन"
+  },
+  "statsCommonStacksHint": {
+    "message": "किसी डोमेन के सबसे ताज़ा सहेजे गए पेज पर साथ मिले एंटी-बॉट और CAPTCHA सुरक्षा उपाय।"
+  },
+  "statsDomainSearchAll": {
+    "message": "डोमेन या सुरक्षा उपाय खोजें..."
+  },
+  "statsSortHardest": {
+    "message": "सबसे कठिन पहले"
+  },
+  "statsSortLastSeen": {
+    "message": "सबसे हाल के"
+  },
+  "statsDifficultyColumn": {
+    "message": "कठिनाई"
+  },
+  "statsStackColumn": {
+    "message": "सुरक्षा उपाय"
+  },
+  "statsLastSeenColumn": {
+    "message": "आख़िरी बार दिखा"
+  },
+  "statsFilterChanged": {
+    "message": "बदले हुए"
+  },
+  "statsFilterClear": {
+    "message": "फ़िल्टर हटाएँ"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "डोमेन फ़िल्टर करें"
+  },
+  "statsChangeKindGained": {
+    "message": "जुड़ा"
+  },
+  "statsChangeKindDropped": {
+    "message": "हटा"
+  },
+  "statsChangeKindReplaced": {
+    "message": "बदला गया"
+  },
+  "statsChangePageColumn": {
+    "message": "पेज"
+  },
+  "statsChangeSinceFmt": {
+    "message": "{0} की तुलना में"
+  },
+  "statsChangeAddedSr": {
+    "message": "जोड़ा गया:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "हटाया गया:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "एक ही पेज की सहेजी गई प्रतियों की तुलना करता है। फ़िंगरप्रिंटिंग दिखाए बिना फ़िंगरप्रिंट डिटेक्शन को अनदेखा किया जाता है।"
+  },
+  "statsStrongEvidence": {
+    "message": "मज़बूत साक्ष्य"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{1} में से {0} डिटेक्शन का स्कोर 80% या उससे ज़्यादा है।"
+  },
+  "statsUnconfirmed": {
+    "message": "ज़िक्र है, पुष्टि नहीं"
+  },
+  "statsUnconfirmedHint": {
+    "message": "ऐसे सुरक्षा उपाय जो अक्सर मिलते हैं लेकिन मज़बूत साक्ष्य के साथ कम ही। ये सक्रिय चुनौती की जगह टेक्स्ट में ज़िक्र या अनुपयोगी स्क्रिप्ट हो सकते हैं।"
+  },
+  "statsUnconfirmedNone": {
+    "message": "हर बार-बार मिलने वाले सुरक्षा उपाय की पुष्टि मज़बूत साक्ष्य से हुई।"
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "ज़्यादातर {0} से मिला: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "कोई एक संकेत अलग से नहीं दिखता।"
+  },
+  "statsTierStrong": {
+    "message": "मज़बूत"
+  },
+  "statsTierModerate": {
+    "message": "मध्यम"
+  },
+  "statsTierWeak": {
+    "message": "कमज़ोर"
+  },
+  "statsTierHint": {
+    "message": "मज़बूत 80% या अधिक, मध्यम 40-79%, कमज़ोर 40% से कम। 100% का मतलब ऐसा संकेत है जिसे सिर्फ़ वही सुरक्षा उपाय पैदा करता है।"
+  },
+  "statsDecidedByCategory": {
+    "message": "हर श्रेणी का निर्धारण कैसे हुआ"
+  },
+  "statsLiftFmt": {
+    "message": "{0} अंक"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · औसत {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "{0} में संयोजन विश्वसनीयता को {1} से बढ़ाकर {2} कर देते हैं।"
+  },
+  "statsLess": {
+    "message": "कम"
+  },
+  "statsMore": {
+    "message": "ज़्यादा"
+  },
+  "statsBusiestDay": {
+    "message": "सबसे व्यस्त दिन"
+  },
+  "statsLongestStreak": {
+    "message": "सबसे लंबी लगातार अवधि"
+  },
+  "statsPeakHour": {
+    "message": "व्यस्ततम घंटा"
+  },
+  "statsQuietDays": {
+    "message": "वे दिन जब कुछ नहीं सहेजा गया"
+  },
+  "statsTodayPartial": {
+    "message": "आज (अभी गिनती जारी है)"
+  },
+  "statsSevenDayAverage": {
+    "message": "रेखा: 7 दिन का औसत"
+  },
+  "statsRulesCoverage": {
+    "message": "कवरेज"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "सक्षम {1} नियमों में से {0} इस अवधि में मेल खाए"
+  },
+  "statsRulesAttention": {
+    "message": "ध्यान देने योग्य"
+  },
+  "statsRulesAttentionNone": {
+    "message": "ध्यान देने योग्य कुछ नहीं है।"
+  },
+  "statsRulesStatusColumn": {
+    "message": "स्थिति"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "अवधि में नहीं"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "इतिहास में नहीं"
+  },
+  "statsRulesSourceEdited": {
+    "message": "संपादित"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "जिन वेंडर से आपका सामना नहीं हुआ, उनके आधिकारिक नियम शांत रहते हैं। यह सामान्य है।"
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "अभी परखने लायक़ इतिहास कम है (पेज: {0}), इसलिए जो नियम कभी मेल नहीं खाया वह ज़्यादा कुछ साबित नहीं करता।"
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "केवल कस्टम और संपादित नियम दिखाए गए हैं। आधिकारिक नियमों के विवरण Scrapfly बनाए रखता है।"
+  },
+  "statsToolsRetentionNote": {
+    "message": "Advanced कैप्चर को 30 मिनट तक रखता है, इसलिए यह टैब तारीख़ की सीमा को अनदेखा करता है।"
+  },
+  "statsToolsSavedNow": {
+    "message": "अभी सहेजे गए"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "10 मिनट में समाप्त होने वाले"
+  },
+  "statsToolsVendorsCount": {
+    "message": "वेंडर"
+  },
+  "statsToolsStaleFmt": {
+    "message": "सफ़ाई की प्रतीक्षा में समाप्त हो चुके कैप्चर: {0}। इन्हें हटाने के लिए Advanced खोलें।"
+  },
+  "statsToolsSavedCaptures": {
+    "message": "सहेजे गए कैप्चर"
+  },
+  "statsToolsColVendor": {
+    "message": "वेंडर"
+  },
+  "statsToolsColTool": {
+    "message": "टूल"
+  },
+  "statsToolsColSaved": {
+    "message": "सहेजा गया"
+  },
+  "statsToolsColExpires": {
+    "message": "समाप्ति"
+  },
+  "statsToolsNoLive": {
+    "message": "अभी कोई कैप्चर सहेजा हुआ नहीं है।"
   }
 }

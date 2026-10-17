@@ -6,6 +6,7 @@ const HistoryStats = require('../sections/stats/history-stats.js');
 const DAY = 24 * 60 * 60 * 1000;
 const NOW = new Date(2026, 8, 29, 15, 0, 0).getTime();
 const det = (name, category, confidence = 90) => ({ name, category, confidence });
+const pick = (object, keys) => Object.fromEntries(keys.map((key) => [key, object[key]]));
 
 const items = [
   { url: 'https://a.com/x', hostname: 'a.com', timestamp: NOW, detections: [det('Cloudflare', 'Anti-Bot'), det('reCAPTCHA', 'CAPTCHA')] },
@@ -128,8 +129,14 @@ test('nested variants and duplicate matches count detections but deduplicate pag
   assert.strictEqual(s.totals.detectionRate, 2 / 3 * 100);
   assert.strictEqual(s.topDetectors.length, 1);
   assert.strictEqual(s.detectorMetrics.length, 3);
-  assert.deepStrictEqual(s.detectorMetrics[0], { name: 'Nested', id: '', category: 'captcha', pages: 2, domains: 1, avgConfidence: 67, matches: 0, avgMatchConfidence: null });
-  assert.deepStrictEqual(s.domainMetrics[0], { hostname: 'a.com', visits: 2, detections: 5, uniqueDetectors: 3, avgConfidence: 70 });
+  // The fields that existed before keep their exact values; what was added is asserted apart.
+  assert.deepStrictEqual(pick(s.detectorMetrics[0], ['name', 'id', 'category', 'pages', 'domains', 'avgConfidence', 'matches', 'avgMatchConfidence']),
+    { name: 'Nested', id: '', category: 'captcha', pages: 2, domains: 1, avgConfidence: 67, matches: 0, avgMatchConfidence: null });
+  assert.deepStrictEqual(pick(s.detectorMetrics[0], ['strong', 'moderate', 'weak']), { strong: 2, moderate: 0, weak: 1 });
+  assert.deepStrictEqual(pick(s.domainMetrics[0], ['hostname', 'visits', 'detections', 'uniqueDetectors', 'avgConfidence']),
+    { hostname: 'a.com', visits: 2, detections: 5, uniqueDetectors: 3, avgConfidence: 70 });
+  assert.deepStrictEqual(pick(s.domainMetrics[0], ['difficulty', 'hasCaptcha', 'stackTotal', 'firstTimestamp', 'lastTimestamp']),
+    { difficulty: 'High', hasCaptcha: true, stackTotal: 3, firstTimestamp: NOW - DAY, lastTimestamp: NOW });
   assert.strictEqual(s.categoryOverlap.captcha.antibot, 1);
   assert.strictEqual(s.categoryOverlap.antibot.captcha, 1);
   assert.strictEqual(s.categoryOverlap.captcha.captcha, 2);

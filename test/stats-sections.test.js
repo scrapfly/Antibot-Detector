@@ -76,7 +76,16 @@ test('first seen compares the range with all of History', () => {
   assert.deepEqual(seen.protections.map(row => [row.name, row.hostname]), [['DataDome', 'new.com']]);
   assert.deepEqual(seen.domains.map(row => row.hostname), ['new.com']);
   assert.equal(HistoryStats.rangeStart(0, NOW), null, '"All" has no first-seen');
-  assert.deepEqual(HistoryStats.firstSeen(items, null, NOW), { protections: [], domains: [] });
+  const none = HistoryStats.firstSeen(items, null, NOW);
+  assert.deepEqual([none.protections, none.domains, none.baselineComplete], [[], [], false]);
+  assert.equal(none.oldestTs, NOW - 40 * DAY, 'the oldest saved entry is reported even without a range');
+  assert.equal(seen.oldestTs, NOW - 40 * DAY);
+  assert.equal(seen.baselineComplete, true, 'History reaches back before the range start');
+  const young = HistoryStats.firstSeen(items.slice(1), since, NOW);
+  assert.equal(young.baselineComplete, false, 'History starts inside the range: first seen means "History starts here"');
+  const edge = (ts) => HistoryStats.firstSeen([{ timestamp: ts, hostname: 'x.com', detections: [] }], since, NOW).baselineComplete;
+  assert.deepEqual([edge(since - 1), edge(since), edge(since + 1)], [true, false, false], 'History must reach before the range start, not merely to it');
+  assert.equal(HistoryStats.firstSeen([{ timestamp: NOW + 1 }, null, 'x'], since, NOW).oldestTs, null, 'future and malformed entries are not the oldest');
 });
 
 const library = () => ({ timestamp: 'x', detectors: {
@@ -98,11 +107,14 @@ test('rule stats split official, custom, edited and disabled, and find unused an
     { name: 'amazon bot protection', id: '', pages: 1, domains: 1, avgConfidence: 95 }];
   const r = RuleStats.compute(rules, { detectorMetrics: metrics, officialIds: ['detect-cloudflare', 'detect-amazon', 'off-rule'],
     incompatible: [{ id: 'detect-new', name: 'New Vendor', remoteVersion: '1.0.0', minExtensionVersion: '2.9' }, 'junk'] });
-  assert.deepEqual(r.totals, { total: 4, official: 3, custom: 1, modified: 1, disabled: 1, withCombinations: 1, patterns: 4, described: 2 });
+  // The counts that existed before keep their values; the new ones are asserted apart
+  assert.deepEqual(r.totals, { total: 4, official: 3, custom: 1, modified: 1, disabled: 1, withCombinations: 1, patterns: 4, described: 2,
+    enabled: 3, matched: 2, attention: 1, waiting: 1 });
   assert.deepEqual(r.patternsByMethod, { cookie: 1, header: 1, url: 1, content: 0, dom: 1, window: 0, js_hooks: 0, payload: 0 });
   assert.deepEqual(r.neverMatched.map(row => row.id), ['my-waf'], 'disabled rules are not "unused"');
   assert.deepEqual(r.active.map(row => [row.id, row.pages]), [['detect-cloudflare', 5], ['detect-amazon', 1]], 'matched by id, else by name');
-  assert.deepEqual(r.missingDescriptions.map(row => [row.id, row.missing]), [['detect-cloudflare', 1], ['my-waf', 1]]);
+  assert.deepEqual(r.missingDescriptions.map(row => [row.id, row.missing, row.kind]), [['my-waf', 1, 'custom']],
+    'official rules are described by Scrapfly, so only custom and edited rules are listed');
   assert.deepEqual(r.waiting, [{ id: 'detect-new', name: 'New Vendor', category: '', version: '1.0.0', minExtensionVersion: '2.9' }]);
 });
 

@@ -25,7 +25,13 @@
     if (typeof days !== 'number' || !Number.isFinite(days) || days < 0 || !Number.isInteger(days)) {
       throw new Error('Invalid export time range');
     }
-    return { days, now };
+    const timeZone = typeof options.timeZone === 'string' && options.timeZone ? options.timeZone : undefined;
+    return { days, now, timeZone };
+  };
+  /** The time zone the dates of the export are meant in: the one asked for, else this browser's. */
+  const zoneOf = (timeZone) => {
+    if (timeZone) return timeZone;
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (_) { return 'UTC'; }
   };
   const formatOf = (format) => {
     if (format !== 'csv' && format !== 'json') throw new Error('Unsupported export format');
@@ -37,10 +43,11 @@
     if (typeof value !== 'number' && /^\s*[=+\-@]/u.test(text)) text = "'" + text;
     return /[",\r\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
   };
+  const rankOf = { None: 0, Low: 1, Medium: 2, High: 3 };
   const StatsExport = {
     build(items, options = {}) {
       const stats = analytics();
-      const { days, now } = settings(options);
+      const { days, now, timeZone } = settings(options);
       const filtered = stats.filterByRange(Array.isArray(items) ? items : [], days, now);
       const entries = filtered.map((item) => {
         const validDetections = (Array.isArray(item.detections) ? item.detections : []).filter((detection) =>
@@ -78,16 +85,20 @@
       const count = entries.reduce((sum, entry) => sum + entry.detections.length, 0);
       const forSummary = entries.map((entry) => ({ ...entry, detections: entry.detections.map((d) => ({ ...d, combinations: d.combinations.map((id) => ({ id })) })) }));
       const summary = JSON.parse(JSON.stringify(stats.compute(forSummary, { days, now, top: Math.max(1, entries.length, count) })));
-      // Match-level figures need the matched values, which exports leave out
-      for (const key of ['methods', 'methodsByCategory', 'totalMatches', 'signalMetrics', 'weakEvidence']) delete summary[key];
+      // Match-level figures need the matched values, which exports leave out; the dashboard-only lists stay out too
+      for (const key of ['methods', 'methodsByCategory', 'totalMatches', 'signalMetrics', 'weakEvidence', 'unconfirmed', 'stackMetrics']) delete summary[key];
       // Preserve production custom difficulty without exporting detector rules/metadata.
       summary.difficulty = { High: 0, Medium: 0, Low: 0, None: 0 };
+      const worst = new Map();
       entries.forEach((entry) => {
         const level = Object.hasOwn(summary.difficulty, entry.difficulty) ? entry.difficulty : 'Medium';
         summary.difficulty[level] += 1;
+        if (entry.hostname && (rankOf[level] > (rankOf[worst.get(entry.hostname)] ?? -1))) worst.set(entry.hostname, level);
       });
+      // Per-domain difficulty comes from the same production levels as the entries, not from the stripped rows
+      for (const row of summary.domainMetrics) if (worst.has(row.hostname)) row.difficulty = worst.get(row.hostname);
       // Analytics must only see normalized rows. Clone its output before freezing.
-      return freeze({ schemaVersion: 1, generatedAt: iso(now), range: { days, start, end: iso(now) },
+      return freeze({ schemaVersion: 1, generatedAt: iso(now), timeZone: zoneOf(timeZone), range: { days, start, end: iso(now) },
         summary, entries });
     },
     toJSON(payload) {
@@ -104,9 +115,10 @@
       }
       return rows.map((row) => row.map(cell).join(',')).join('\r\n') + '\r\n';
     },
+    /** Named after the range and the LOCAL calendar day, e.g. scrapfly-history-statistics-30d-2026-10-03.csv. */
     filename(format, options = {}) {
-      const { now } = settings(options);
-      return `scrapfly-history-statistics-${iso(now).slice(0, 10)}.${formatOf(format)}`;
+      const { days, now } = settings(options);
+      return `scrapfly-history-statistics-${days ? days + 'd' : 'all'}-${analytics().dayKey(now)}.${formatOf(format)}`;
     },
     async download(format, items, options = {}) {
       formatOf(format);
@@ -124,7 +136,12 @@
         const downloadId = await new Promise((resolve, reject) => {
           root.chrome.downloads.download({ url, filename, saveAs: true }, (id) => {
             const error = root.chrome.runtime && root.chrome.runtime.lastError;
-            if (error) reject(new Error(error.message || 'Download failed'));
+            if (error) {
+              const failure = new Error(error.message || 'Download failed');
+              // Dismissing the Save As dialog is a choice, not a failure
+              failure.canceled = /cancel/i.test(String(error.message || ''));
+              reject(failure);
+            }
             else if (typeof id !== 'number') reject(new Error('Download was not started'));
             else resolve(id);
           });

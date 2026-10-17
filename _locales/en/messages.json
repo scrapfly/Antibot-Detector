@@ -5113,5 +5113,443 @@
   },
   "advancedInfoTurnstileDesc": {
     "message": "Extracts the site key and analyzes the Turnstile scripts"
+  },
+  "statsExport": {
+    "message": "Export"
+  },
+  "statsExportAllCategories": {
+    "message": "Exports always include every category, whatever is shown on this page."
+  },
+  "statsScopeLabel": {
+    "message": "Show"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Fingerprinting detections hidden: {0} ({1} of all)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Show fingerprinting"
+  },
+  "statsScopeKeepOne": {
+    "message": "At least one category stays selected."
+  },
+  "statsScopeRulesNote": {
+    "message": "Rules always use every category."
+  },
+  "statsContextFmt": {
+    "message": "Pages: {0} · Domains: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "All history since {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Compared with the previous period ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Choose 7, 30 or 90 days to compare with the previous period."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "History starts on {0}, so there is no full previous period to compare."
+  },
+  "statsDeltaNew": {
+    "message": "new"
+  },
+  "statsDeltaFlat": {
+    "message": "No change compared with the previous period"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Up {0} compared with the previous period"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Down {0} compared with the previous period"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Previous period: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Few pages in this range ({0}): comparisons and rankings may mislead."
+  },
+  "statsLoading": {
+    "message": "Loading statistics..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Show all history"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Headlines"
+  },
+  "statsSectionEvidence": {
+    "message": "Evidence"
+  },
+  "statsSubnavLabel": {
+    "message": "Evidence views"
+  },
+  "statsExportCanceled": {
+    "message": "Export canceled"
+  },
+  "statsAllClearTitle": {
+    "message": "No anti-bot or CAPTCHA found in this range"
+  },
+  "statsAllClearDescFmt": {
+    "message": "These pages only show fingerprinting API use. Pages: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Nothing to show for these categories"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Pick another category or a longer range."
+  },
+  "statsHeadlineTop": {
+    "message": "Most common protection"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} of pages · pages: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Hardest site"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Protections: {0} · Difficulty: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Newest protection"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "First seen on {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Nothing new in this range"
+  },
+  "statsHeadlineRiser": {
+    "message": "Biggest riser"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Pages {0} → {1} vs previous period"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Needs a previous period"
+  },
+  "statsKpiPages": {
+    "message": "Pages saved"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Active days: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} with detections ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Layered sites"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} with a CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Protections seen"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "{0} new this period"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "of {0} rules"
+  },
+  "statsTipPages": {
+    "message": "Pages saved to History in this range. History keeps saved detections, not every browser visit."
+  },
+  "statsTipLayered": {
+    "message": "Domains where two or more different protections were detected."
+  },
+  "statsOverTimeProtections": {
+    "message": "Protections found over time"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% of pages"
+  },
+  "statsAllProtectionsLink": {
+    "message": "All protections"
+  },
+  "statsPageTiers": {
+    "message": "How protected are your pages"
+  },
+  "statsTiersHint": {
+    "message": "Each saved page is counted once, by the kinds of protection found on it."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot and CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Anti-bot only"
+  },
+  "statsTierCaptcha": {
+    "message": "CAPTCHA only"
+  },
+  "statsTierNone": {
+    "message": "No anti-bot or CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Estimated difficulty"
+  },
+  "statsDifficultyHint": {
+    "message": "A rough estimate from the protections found, not a measurement."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "No protection"
+  },
+  "statsHardestSites": {
+    "message": "Hardest sites"
+  },
+  "statsAllDomainsLink": {
+    "message": "All domains"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} more"
+  },
+  "statsWhatChanged": {
+    "message": "What changed"
+  },
+  "statsChangedNew": {
+    "message": "New protections"
+  },
+  "statsChangedMoving": {
+    "message": "Rising and falling"
+  },
+  "statsChangedGone": {
+    "message": "No longer seen"
+  },
+  "statsChangedSwitched": {
+    "message": "Sites that switched protection"
+  },
+  "statsChangedNothing": {
+    "message": "Nothing changed in this range."
+  },
+  "statsChangedAllLink": {
+    "message": "All changes"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Choose 7, 30 or 90 days to see rising and falling protections."
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "Fingerprinting APIs ran on {0} of pages · techniques: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Most common: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Shown apart from anti-bot and CAPTCHA protections because almost every page uses these APIs."
+  },
+  "statsPagesColumn": {
+    "message": "Pages"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Change"
+  },
+  "statsStrongColumn": {
+    "message": "Strong evidence"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Sort protections"
+  },
+  "statsSortMostPages": {
+    "message": "Most pages"
+  },
+  "statsSortMostDomains": {
+    "message": "Most domains"
+  },
+  "statsSortBiggestChange": {
+    "message": "Biggest change"
+  },
+  "statsCommonStacks": {
+    "message": "Common protection stacks"
+  },
+  "statsCommonStacksHint": {
+    "message": "Anti-bot and CAPTCHA protections found together on a domain's latest saved page."
+  },
+  "statsDomainSearchAll": {
+    "message": "Search domains or protections..."
+  },
+  "statsSortHardest": {
+    "message": "Hardest first"
+  },
+  "statsSortLastSeen": {
+    "message": "Most recent"
+  },
+  "statsDifficultyColumn": {
+    "message": "Difficulty"
+  },
+  "statsStackColumn": {
+    "message": "Protections"
+  },
+  "statsLastSeenColumn": {
+    "message": "Last seen"
+  },
+  "statsFilterChanged": {
+    "message": "Changed"
+  },
+  "statsFilterClear": {
+    "message": "Clear filters"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Filter domains"
+  },
+  "statsChangeKindGained": {
+    "message": "Gained"
+  },
+  "statsChangeKindDropped": {
+    "message": "Dropped"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Replaced"
+  },
+  "statsChangePageColumn": {
+    "message": "Page"
+  },
+  "statsChangeSinceFmt": {
+    "message": "vs {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Added:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Removed:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Compares saved copies of the same page. Fingerprint detections are ignored unless you show fingerprinting."
+  },
+  "statsStrongEvidence": {
+    "message": "Strong evidence"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{0} of {1} detections score 80% or more."
+  },
+  "statsUnconfirmed": {
+    "message": "Mentioned, not confirmed"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Protections found often but rarely with strong evidence. They may be text mentions or unused scripts rather than an active challenge."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Every frequent protection was confirmed by strong evidence."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Mostly found through {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "No single signal stands out."
+  },
+  "statsTierStrong": {
+    "message": "Strong"
+  },
+  "statsTierModerate": {
+    "message": "Moderate"
+  },
+  "statsTierWeak": {
+    "message": "Weak"
+  },
+  "statsTierHint": {
+    "message": "Strong is 80% or more, moderate 40-79%, weak below 40%. 100% means a signal only that protection produces."
+  },
+  "statsDecidedByCategory": {
+    "message": "How each category was decided"
+  },
+  "statsLiftFmt": {
+    "message": "{0} pts"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · {2} average"
+  },
+  "statsLiftStrongFmt": {
+    "message": "In {0}, combinations lift confidence from {1} to {2}."
+  },
+  "statsLess": {
+    "message": "Less"
+  },
+  "statsMore": {
+    "message": "More"
+  },
+  "statsBusiestDay": {
+    "message": "Busiest day"
+  },
+  "statsLongestStreak": {
+    "message": "Longest streak"
+  },
+  "statsPeakHour": {
+    "message": "Peak hour"
+  },
+  "statsQuietDays": {
+    "message": "Days with nothing saved"
+  },
+  "statsTodayPartial": {
+    "message": "Today (still counting)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Line: 7-day average"
+  },
+  "statsRulesCoverage": {
+    "message": "Coverage"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "{0} of {1} enabled rules matched in this range"
+  },
+  "statsRulesAttention": {
+    "message": "Needs attention"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Nothing needs attention."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Status"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Not in range"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Not in History"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Edited"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Official rules for vendors you have not met stay quiet. That is normal."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Not much History to judge by yet (pages: {0}), so a rule that never matched proves little."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Only custom and edited rules are listed. Descriptions of official rules are maintained by Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Advanced keeps captures for 30 minutes, so this tab ignores the date range."
+  },
+  "statsToolsSavedNow": {
+    "message": "Saved now"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Expiring within 10 minutes"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Vendors"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Expired captures waiting to be cleaned up: {0}. Open Advanced to remove them."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Saved captures"
+  },
+  "statsToolsColVendor": {
+    "message": "Vendor"
+  },
+  "statsToolsColTool": {
+    "message": "Tool"
+  },
+  "statsToolsColSaved": {
+    "message": "Saved"
+  },
+  "statsToolsColExpires": {
+    "message": "Expires"
+  },
+  "statsToolsNoLive": {
+    "message": "No captures are saved right now."
   }
 }

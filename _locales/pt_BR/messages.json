@@ -4856,5 +4856,443 @@
   },
   "advancedInfoTurnstileDesc": {
     "message": "Extrai a chave de site e analisa os scripts do Turnstile"
+  },
+  "statsExport": {
+    "message": "Exportar"
+  },
+  "statsExportAllCategories": {
+    "message": "As exportações sempre incluem todas as categorias, independentemente do que for exibido nesta página."
+  },
+  "statsScopeLabel": {
+    "message": "Mostrar"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Detecções de fingerprinting ocultas: {0} ({1} do total)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Mostrar fingerprinting"
+  },
+  "statsScopeKeepOne": {
+    "message": "Pelo menos uma categoria permanece selecionada."
+  },
+  "statsScopeRulesNote": {
+    "message": "As regras sempre usam todas as categorias."
+  },
+  "statsContextFmt": {
+    "message": "Páginas: {0} · Domínios: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Todo o histórico desde {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Comparado com o período anterior ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Escolha 7, 30 ou 90 dias para comparar com o período anterior."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "O histórico começa em {0}, então não há um período anterior completo para comparar."
+  },
+  "statsDeltaNew": {
+    "message": "novo"
+  },
+  "statsDeltaFlat": {
+    "message": "Sem mudança em relação ao período anterior"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Alta de {0} em relação ao período anterior"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Queda de {0} em relação ao período anterior"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Período anterior: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Poucas páginas neste período ({0}): comparações e rankings podem enganar."
+  },
+  "statsLoading": {
+    "message": "Carregando estatísticas..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Mostrar todo o histórico"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Destaques"
+  },
+  "statsSectionEvidence": {
+    "message": "Evidências"
+  },
+  "statsSubnavLabel": {
+    "message": "Visões das evidências"
+  },
+  "statsExportCanceled": {
+    "message": "Exportação cancelada"
+  },
+  "statsAllClearTitle": {
+    "message": "Nenhum anti-bot ou CAPTCHA encontrado neste período"
+  },
+  "statsAllClearDescFmt": {
+    "message": "Estas páginas só mostram uso de APIs de fingerprinting. Páginas: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Nada para mostrar nestas categorias"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Escolha outra categoria ou um período mais longo."
+  },
+  "statsHeadlineTop": {
+    "message": "Proteção mais comum"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} das páginas · páginas: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Site mais difícil"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Proteções: {0} · Dificuldade: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Proteção mais recente"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Vista pela primeira vez em {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Nada novo neste período"
+  },
+  "statsHeadlineRiser": {
+    "message": "Maior alta"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Páginas {0} → {1} em relação ao período anterior"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Precisa de um período anterior"
+  },
+  "statsKpiPages": {
+    "message": "Páginas salvas"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Dias ativos: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} com detecções ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Sites com várias camadas"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} com um CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Proteções vistas"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "{0} novas neste período"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "de {0} regras"
+  },
+  "statsTipPages": {
+    "message": "Páginas salvas no Histórico neste período. O Histórico guarda as detecções salvas, não cada visita do navegador."
+  },
+  "statsTipLayered": {
+    "message": "Domínios em que duas ou mais proteções diferentes foram detectadas."
+  },
+  "statsOverTimeProtections": {
+    "message": "Proteções encontradas ao longo do tempo"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% das páginas"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Todas as proteções"
+  },
+  "statsPageTiers": {
+    "message": "Quão protegidas estão suas páginas"
+  },
+  "statsTiersHint": {
+    "message": "Cada página salva é contada uma vez, de acordo com os tipos de proteção encontrados nela."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot e CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Somente anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "Somente CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Sem anti-bot nem CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Dificuldade estimada"
+  },
+  "statsDifficultyHint": {
+    "message": "Uma estimativa aproximada a partir das proteções encontradas, não uma medição."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Sem proteção"
+  },
+  "statsHardestSites": {
+    "message": "Sites mais difíceis"
+  },
+  "statsAllDomainsLink": {
+    "message": "Todos os domínios"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} mais"
+  },
+  "statsWhatChanged": {
+    "message": "O que mudou"
+  },
+  "statsChangedNew": {
+    "message": "Novas proteções"
+  },
+  "statsChangedMoving": {
+    "message": "Em alta e em queda"
+  },
+  "statsChangedGone": {
+    "message": "Não vistas mais"
+  },
+  "statsChangedSwitched": {
+    "message": "Sites que trocaram de proteção"
+  },
+  "statsChangedNothing": {
+    "message": "Nada mudou neste período."
+  },
+  "statsChangedAllLink": {
+    "message": "Todas as mudanças"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Escolha 7, 30 ou 90 dias para ver as proteções em alta e em queda."
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "As APIs de fingerprinting rodaram em {0} das páginas · técnicas: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Mais comuns: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Mostrado separado das proteções anti-bot e CAPTCHA porque quase todas as páginas usam essas APIs."
+  },
+  "statsPagesColumn": {
+    "message": "Páginas"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Variação"
+  },
+  "statsStrongColumn": {
+    "message": "Evidência forte"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Ordenar proteções"
+  },
+  "statsSortMostPages": {
+    "message": "Mais páginas"
+  },
+  "statsSortMostDomains": {
+    "message": "Mais domínios"
+  },
+  "statsSortBiggestChange": {
+    "message": "Maior variação"
+  },
+  "statsCommonStacks": {
+    "message": "Combinações de proteção comuns"
+  },
+  "statsCommonStacksHint": {
+    "message": "Proteções anti-bot e CAPTCHA encontradas juntas na última página salva de um domínio."
+  },
+  "statsDomainSearchAll": {
+    "message": "Pesquisar domínios ou proteções..."
+  },
+  "statsSortHardest": {
+    "message": "Mais difíceis primeiro"
+  },
+  "statsSortLastSeen": {
+    "message": "Mais recentes"
+  },
+  "statsDifficultyColumn": {
+    "message": "Dificuldade"
+  },
+  "statsStackColumn": {
+    "message": "Proteções"
+  },
+  "statsLastSeenColumn": {
+    "message": "Visto por último"
+  },
+  "statsFilterChanged": {
+    "message": "Alterados"
+  },
+  "statsFilterClear": {
+    "message": "Limpar filtros"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Filtrar domínios"
+  },
+  "statsChangeKindGained": {
+    "message": "Adicionada"
+  },
+  "statsChangeKindDropped": {
+    "message": "Removida"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Substituída"
+  },
+  "statsChangePageColumn": {
+    "message": "Página"
+  },
+  "statsChangeSinceFmt": {
+    "message": "vs {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Adicionada:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Removida:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Compara cópias salvas da mesma página. As detecções de fingerprinting são ignoradas, a menos que você mostre o fingerprinting."
+  },
+  "statsStrongEvidence": {
+    "message": "Evidência forte"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{0} de {1} detecções pontuam 80% ou mais."
+  },
+  "statsUnconfirmed": {
+    "message": "Citadas, não confirmadas"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Proteções encontradas com frequência, mas raramente com evidência forte. Podem ser menções em texto ou scripts sem uso, e não um desafio ativo."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Toda proteção frequente foi confirmada por evidência forte."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Encontrada principalmente por {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Nenhum sinal isolado se destaca."
+  },
+  "statsTierStrong": {
+    "message": "Forte"
+  },
+  "statsTierModerate": {
+    "message": "Moderada"
+  },
+  "statsTierWeak": {
+    "message": "Fraca"
+  },
+  "statsTierHint": {
+    "message": "Forte é 80% ou mais, moderada 40-79%, fraca abaixo de 40%. 100% significa um sinal que só essa proteção produz."
+  },
+  "statsDecidedByCategory": {
+    "message": "Como cada categoria foi decidida"
+  },
+  "statsLiftFmt": {
+    "message": "{0} pts"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · média de {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "Em {0}, as combinações elevam a confiança de {1} para {2}."
+  },
+  "statsLess": {
+    "message": "Menos"
+  },
+  "statsMore": {
+    "message": "Mais"
+  },
+  "statsBusiestDay": {
+    "message": "Dia mais movimentado"
+  },
+  "statsLongestStreak": {
+    "message": "Maior sequência"
+  },
+  "statsPeakHour": {
+    "message": "Horário de pico"
+  },
+  "statsQuietDays": {
+    "message": "Dias sem nada salvo"
+  },
+  "statsTodayPartial": {
+    "message": "Hoje (ainda em andamento)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Linha: média de 7 dias"
+  },
+  "statsRulesCoverage": {
+    "message": "Cobertura"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "{0} de {1} regras ativadas encontraram correspondência neste período"
+  },
+  "statsRulesAttention": {
+    "message": "Precisam de atenção"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Nada precisa de atenção."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Status"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Fora do período"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Não está no Histórico"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Editada"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "As regras oficiais de fornecedores que você ainda não encontrou ficam em silêncio. Isso é normal."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Ainda há pouco Histórico para avaliar (páginas: {0}), então uma regra que nunca encontrou correspondência prova pouco."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Somente as regras personalizadas e editadas são listadas. As descrições das regras oficiais são mantidas pela Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "O Advanced mantém as capturas por 30 minutos, então esta aba ignora o intervalo de datas."
+  },
+  "statsToolsSavedNow": {
+    "message": "Salvas agora"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Expirando em até 10 minutos"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Fornecedores"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Capturas expiradas aguardando limpeza: {0}. Abra o Advanced para removê-las."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Capturas salvas"
+  },
+  "statsToolsColVendor": {
+    "message": "Fornecedor"
+  },
+  "statsToolsColTool": {
+    "message": "Ferramenta"
+  },
+  "statsToolsColSaved": {
+    "message": "Salva"
+  },
+  "statsToolsColExpires": {
+    "message": "Expira"
+  },
+  "statsToolsNoLive": {
+    "message": "Nenhuma captura está salva no momento."
   }
 }

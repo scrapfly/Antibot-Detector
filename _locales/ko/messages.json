@@ -4856,5 +4856,443 @@
   },
   "advancedInfoTurnstileDesc": {
     "message": "사이트 키를 추출하고 Turnstile 스크립트를 분석합니다"
+  },
+  "statsExport": {
+    "message": "내보내기"
+  },
+  "statsExportAllCategories": {
+    "message": "이 페이지에 표시된 내용과 관계없이 내보내기에는 항상 모든 카테고리가 포함됩니다."
+  },
+  "statsScopeLabel": {
+    "message": "표시"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "숨겨진 핑거프린팅 탐지: {0}(전체의 {1})"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "핑거프린팅 표시"
+  },
+  "statsScopeKeepOne": {
+    "message": "카테고리는 최소 하나가 선택된 상태로 유지됩니다."
+  },
+  "statsScopeRulesNote": {
+    "message": "규칙은 항상 모든 카테고리를 사용합니다."
+  },
+  "statsContextFmt": {
+    "message": "페이지: {0} · 도메인: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "{0} 이후의 전체 기록"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "이전 기간({0})과 비교"
+  },
+  "statsCompareNone": {
+    "message": "이전 기간과 비교하려면 7일, 30일 또는 90일을 선택하세요."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "기록이 {0}에 시작되어 비교할 수 있는 완전한 이전 기간이 없습니다."
+  },
+  "statsDeltaNew": {
+    "message": "신규"
+  },
+  "statsDeltaFlat": {
+    "message": "이전 기간과 변화 없음"
+  },
+  "statsDeltaUpFmt": {
+    "message": "이전 기간보다 {0} 증가"
+  },
+  "statsDeltaDownFmt": {
+    "message": "이전 기간보다 {0} 감소"
+  },
+  "statsDeltaWasFmt": {
+    "message": "이전 기간: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "이 기간의 페이지가 적습니다({0}). 비교와 순위가 오해를 부를 수 있습니다."
+  },
+  "statsLoading": {
+    "message": "통계를 불러오는 중..."
+  },
+  "statsEmptyShowAll": {
+    "message": "전체 기록 표시"
+  },
+  "statsHeadlinesLabel": {
+    "message": "주요 내용"
+  },
+  "statsSectionEvidence": {
+    "message": "증거"
+  },
+  "statsSubnavLabel": {
+    "message": "증거 보기"
+  },
+  "statsExportCanceled": {
+    "message": "내보내기가 취소되었습니다"
+  },
+  "statsAllClearTitle": {
+    "message": "이 기간에는 안티봇이나 CAPTCHA가 발견되지 않았습니다"
+  },
+  "statsAllClearDescFmt": {
+    "message": "이 페이지들에서는 핑거프린팅 API 사용만 확인됩니다. 페이지: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "이 카테고리에는 표시할 내용이 없습니다"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "다른 카테고리나 더 긴 기간을 선택하세요."
+  },
+  "statsHeadlineTop": {
+    "message": "가장 흔한 보호 기능"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "페이지의 {0} · 페이지: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "가장 까다로운 사이트"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "보호 기능: {0} · 난이도: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "가장 새로운 보호 기능"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "{0}에서 처음 확인됨 · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "이 기간에는 새로운 항목이 없습니다"
+  },
+  "statsHeadlineRiser": {
+    "message": "가장 크게 증가"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "페이지 {0} → {1} (이전 기간 대비)"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "이전 기간이 필요합니다"
+  },
+  "statsKpiPages": {
+    "message": "저장된 페이지"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "활동 일수: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "탐지 있음 {0}({1})"
+  },
+  "statsKpiLayered": {
+    "message": "다중 보호 사이트"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "CAPTCHA 있음 {0}"
+  },
+  "statsKpiProtections": {
+    "message": "확인된 보호 기능"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "이번 기간 신규 {0}"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "전체 규칙 {0}개 중"
+  },
+  "statsTipPages": {
+    "message": "이 기간에 기록에 저장된 페이지입니다. 기록에는 저장된 탐지 결과만 남으며, 브라우저 방문 전체가 기록되지는 않습니다."
+  },
+  "statsTipLayered": {
+    "message": "서로 다른 보호 기능이 둘 이상 탐지된 도메인입니다."
+  },
+  "statsOverTimeProtections": {
+    "message": "시간에 따라 발견된 보호 기능"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "페이지 비율(%)"
+  },
+  "statsAllProtectionsLink": {
+    "message": "모든 보호 기능"
+  },
+  "statsPageTiers": {
+    "message": "페이지 보호 수준"
+  },
+  "statsTiersHint": {
+    "message": "저장된 각 페이지는 발견된 보호 유형에 따라 한 번만 집계됩니다."
+  },
+  "statsTierBoth": {
+    "message": "안티봇 및 CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "안티봇만"
+  },
+  "statsTierCaptcha": {
+    "message": "CAPTCHA만"
+  },
+  "statsTierNone": {
+    "message": "안티봇과 CAPTCHA 모두 없음"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "추정 난이도"
+  },
+  "statsDifficultyHint": {
+    "message": "발견된 보호 기능을 바탕으로 한 대략적인 추정이며 실측값이 아닙니다."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "보호 기능 없음"
+  },
+  "statsHardestSites": {
+    "message": "가장 까다로운 사이트"
+  },
+  "statsAllDomainsLink": {
+    "message": "모든 도메인"
+  },
+  "statsMoreStackFmt": {
+    "message": "외 +{0}"
+  },
+  "statsWhatChanged": {
+    "message": "달라진 점"
+  },
+  "statsChangedNew": {
+    "message": "새 보호 기능"
+  },
+  "statsChangedMoving": {
+    "message": "증가 및 감소"
+  },
+  "statsChangedGone": {
+    "message": "더 이상 보이지 않음"
+  },
+  "statsChangedSwitched": {
+    "message": "보호 기능을 바꾼 사이트"
+  },
+  "statsChangedNothing": {
+    "message": "이 기간에는 달라진 점이 없습니다."
+  },
+  "statsChangedAllLink": {
+    "message": "모든 변경 사항"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "증가 및 감소하는 보호 기능을 보려면 7일, 30일 또는 90일을 선택하세요."
+  },
+  "statsFingerprintCard": {
+    "message": "핑거프린팅"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "핑거프린팅 API가 페이지의 {0}에서 실행됨 · 기법: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "가장 흔한 항목: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "거의 모든 페이지가 이 API를 사용하므로 안티봇 및 CAPTCHA 보호와 따로 표시합니다."
+  },
+  "statsPagesColumn": {
+    "message": "페이지"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "변화"
+  },
+  "statsStrongColumn": {
+    "message": "강한 증거"
+  },
+  "statsProtectionSortLabel": {
+    "message": "보호 기능 정렬"
+  },
+  "statsSortMostPages": {
+    "message": "페이지 많은 순"
+  },
+  "statsSortMostDomains": {
+    "message": "도메인 많은 순"
+  },
+  "statsSortBiggestChange": {
+    "message": "변화가 큰 순"
+  },
+  "statsCommonStacks": {
+    "message": "흔한 보호 기능 조합"
+  },
+  "statsCommonStacksHint": {
+    "message": "도메인의 가장 최근 저장 페이지에서 함께 발견된 안티봇 및 CAPTCHA 보호 기능입니다."
+  },
+  "statsDomainSearchAll": {
+    "message": "도메인 또는 보호 기능 검색..."
+  },
+  "statsSortHardest": {
+    "message": "까다로운 순"
+  },
+  "statsSortLastSeen": {
+    "message": "최근 순"
+  },
+  "statsDifficultyColumn": {
+    "message": "난이도"
+  },
+  "statsStackColumn": {
+    "message": "보호 기능"
+  },
+  "statsLastSeenColumn": {
+    "message": "마지막 확인"
+  },
+  "statsFilterChanged": {
+    "message": "변경됨"
+  },
+  "statsFilterClear": {
+    "message": "필터 지우기"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "도메인 필터"
+  },
+  "statsChangeKindGained": {
+    "message": "추가됨"
+  },
+  "statsChangeKindDropped": {
+    "message": "제거됨"
+  },
+  "statsChangeKindReplaced": {
+    "message": "교체됨"
+  },
+  "statsChangePageColumn": {
+    "message": "페이지"
+  },
+  "statsChangeSinceFmt": {
+    "message": "{0} 대비"
+  },
+  "statsChangeAddedSr": {
+    "message": "추가됨:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "제거됨:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "같은 페이지의 저장된 사본을 비교합니다. 핑거프린팅을 표시하지 않으면 핑거프린팅 탐지는 무시됩니다."
+  },
+  "statsStrongEvidence": {
+    "message": "강한 증거"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "탐지 {1}건 중 {0}건이 80% 이상입니다."
+  },
+  "statsUnconfirmed": {
+    "message": "언급됨, 확인되지 않음"
+  },
+  "statsUnconfirmedHint": {
+    "message": "자주 발견되지만 강한 증거가 드문 보호 기능입니다. 실제로 작동하는 챌린지가 아니라 텍스트상의 언급이나 사용되지 않는 스크립트일 수 있습니다."
+  },
+  "statsUnconfirmedNone": {
+    "message": "자주 발견되는 모든 보호 기능이 강한 증거로 확인되었습니다."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "주로 {0}을(를) 통해 발견됨: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "두드러지는 단일 신호가 없습니다."
+  },
+  "statsTierStrong": {
+    "message": "강함"
+  },
+  "statsTierModerate": {
+    "message": "보통"
+  },
+  "statsTierWeak": {
+    "message": "약함"
+  },
+  "statsTierHint": {
+    "message": "강함은 80% 이상, 보통은 40~79%, 약함은 40% 미만입니다. 100%는 해당 보호 기능만 만들어 내는 신호를 뜻합니다."
+  },
+  "statsDecidedByCategory": {
+    "message": "카테고리별 판정 방식"
+  },
+  "statsLiftFmt": {
+    "message": "{0}%p"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · 평균 {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "{0}에서는 조합이 신뢰도를 {1}에서 {2}(으)로 높입니다."
+  },
+  "statsLess": {
+    "message": "적음"
+  },
+  "statsMore": {
+    "message": "많음"
+  },
+  "statsBusiestDay": {
+    "message": "가장 활발했던 날"
+  },
+  "statsLongestStreak": {
+    "message": "최장 연속 일수"
+  },
+  "statsPeakHour": {
+    "message": "피크 시간대"
+  },
+  "statsQuietDays": {
+    "message": "저장된 항목이 없는 날"
+  },
+  "statsTodayPartial": {
+    "message": "오늘(집계 중)"
+  },
+  "statsSevenDayAverage": {
+    "message": "선: 7일 평균"
+  },
+  "statsRulesCoverage": {
+    "message": "적용 범위"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "활성화된 규칙 {1}개 중 {0}개가 이 기간에 일치했습니다"
+  },
+  "statsRulesAttention": {
+    "message": "확인 필요"
+  },
+  "statsRulesAttentionNone": {
+    "message": "확인할 항목이 없습니다."
+  },
+  "statsRulesStatusColumn": {
+    "message": "상태"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "기간 외"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "기록에 없음"
+  },
+  "statsRulesSourceEdited": {
+    "message": "수정됨"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "아직 만나지 않은 벤더의 공식 규칙은 조용히 있습니다. 정상입니다."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "판단할 기록이 아직 많지 않아(페이지: {0}) 한 번도 일치하지 않은 규칙은 큰 의미가 없습니다."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "사용자 지정 규칙과 수정한 규칙만 표시됩니다. 공식 규칙의 설명은 Scrapfly가 관리합니다."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Advanced는 캡처를 30분 동안 보관하므로 이 탭은 날짜 범위를 무시합니다."
+  },
+  "statsToolsSavedNow": {
+    "message": "현재 저장됨"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "10분 이내 만료"
+  },
+  "statsToolsVendorsCount": {
+    "message": "벤더"
+  },
+  "statsToolsStaleFmt": {
+    "message": "정리를 기다리는 만료된 캡처: {0}. Advanced를 열어 삭제하세요."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "저장된 캡처"
+  },
+  "statsToolsColVendor": {
+    "message": "벤더"
+  },
+  "statsToolsColTool": {
+    "message": "도구"
+  },
+  "statsToolsColSaved": {
+    "message": "저장됨"
+  },
+  "statsToolsColExpires": {
+    "message": "만료"
+  },
+  "statsToolsNoLive": {
+    "message": "현재 저장된 캡처가 없습니다."
   }
 }

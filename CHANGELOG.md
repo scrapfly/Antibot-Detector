@@ -7,6 +7,15 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.0] - 2026-10-17
 
+### Added
+
+- Statistics: anti-bot and CAPTCHA come first; fingerprinting stays hidden until you press Show fingerprinting, and the page says how much it hides.
+- Statistics: a comparison with the previous period, four headline cards and a What changed card (new, rising, no longer seen, switched).
+- Statistics → Overview: layered sites, how protected your pages are, estimated difficulty, and the hardest sites with their protection stacks.
+- Statistics → Protections: strong-evidence share and change for every protection, and the protection stacks found together on a domain.
+- Statistics → Domains: hardest-first list with search by domain or protection and filters for difficulty, CAPTCHA and changed.
+- Statistics → Evidence: strong-evidence share per category, confidence by category, and "Mentioned, not confirmed" for protections found often with weak evidence.
+
 ### Changed
 
 - Detection, History, Rules and Advanced: Google BotGuard, CHEQ, Meetrics, Ocule, ThreatMetrix, AliExpress CAPTCHA, Captcha.eu, Friendly Captcha and QCloud Captcha show their official logos instead of the generic icon, in both themes.
@@ -15,6 +24,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: the ten detectors that got a logo have new versions, so a rule already saved from 2.8.9 shows its logo too.
 - Rules: the list follows the category order chosen in Settings → Detection order, as the Detection list and History do.
 - Rules editor: Translations is a clear row with a chevron and a count badge, each translation is a box that shows the whole text, and Translate automatically is a smaller button.
+- Statistics: Confidence, Signals and Combinations are views of one Evidence tab; the tab bar is slimmer and stays in view while you scroll.
+- Statistics: one Export menu replaces the two buttons, and export file names use your local date and the range.
+- Statistics: protection changes compare saved copies of the same page, not the whole domain.
+- Statistics → Activity: the calendar fills its card, today is drawn as still counting, and daily pages show a 7-day average.
+- Statistics: charts show the whole range instead of pages of 30 days; light-theme colours read on white and the layout follows Arabic.
+- Statistics → Rules: rules that found nothing separate custom rules worth a look from official ones that are normally quiet.
+- Statistics → Tools: only captures that have not expired are listed, with when they expire.
 
 ## [2.8.9] - 2026-10-16
 
