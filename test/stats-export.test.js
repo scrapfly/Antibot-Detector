@@ -93,8 +93,10 @@ test('malformed rows and sensitive hostname paths never leak into exports', () =
 });
 
 test('filename and invalid options are predictable', () => {
-  assert.equal(StatsExport.filename('csv', options), 'scrapfly-history-statistics-2026-10-03.csv');
-  assert.equal(StatsExport.filename('json', options), 'scrapfly-history-statistics-2026-10-03.json');
+  assert.equal(StatsExport.filename('csv', options), 'scrapfly-history-statistics-30d-2026-10-03.csv');
+  assert.equal(StatsExport.filename('json', options), 'scrapfly-history-statistics-30d-2026-10-03.json');
+  assert.equal(StatsExport.filename('csv', { days: 7, now }), 'scrapfly-history-statistics-7d-2026-10-03.csv');
+  assert.equal(StatsExport.filename('json', { days: 0, now }), 'scrapfly-history-statistics-all-2026-10-03.json');
   assert.throws(() => StatsExport.filename('xml', options), /Unsupported/);
   for (const days of [-1, NaN, Infinity, '30', 1.5]) assert.throws(() => StatsExport.build([], { days, now }), /time range/);
   for (const invalid of [null, 'today', Infinity, 9e20]) assert.throws(() => StatsExport.build([], { now: invalid }), /reference time/);
@@ -141,7 +143,7 @@ test('mock Chrome download API uses UTF-8 CSV BOM bytes and delayed revocation',
   const result = await api.download('csv', [visit({ hostname: '例子.com' })], options);
   assert.equal(result.downloadId, 42);
   assert.equal(request.saveAs, true);
-  assert.equal(request.filename, 'scrapfly-history-statistics-2026-10-03.csv');
+  assert.equal(request.filename, 'scrapfly-history-statistics-30d-2026-10-03.csv');
   assert.equal(request.url, 'blob:local-export');
   assert.equal(effects.blobs[0].type, 'text/csv;charset=utf-8');
   assert.equal(await effects.blobs[0].text(), api.toCSV(api.build([visit({ hostname: '例子.com' })], options)));
