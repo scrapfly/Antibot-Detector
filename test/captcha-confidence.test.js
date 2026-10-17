@@ -215,7 +215,7 @@ test('all nineteen definitions have explicit IDs, conservative standalone eviden
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-6])$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-7])$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);
