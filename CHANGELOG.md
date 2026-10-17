@@ -31,6 +31,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics: charts show the whole range instead of pages of 30 days; light-theme colours read on white and the layout follows Arabic.
 - Statistics → Rules: rules that found nothing separate custom rules worth a look from official ones that are normally quiet.
 - Statistics → Tools: only captures that have not expired are listed, with when they expire.
+- Statistics: the Show chips use the Anti-bot, Captcha and Fingerprint icons instead of a coloured dot.
 
 ### Fixed
 

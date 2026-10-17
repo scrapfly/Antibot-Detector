@@ -461,6 +461,10 @@
       await I18n.loadOverride(stored.scrapfly_language_override);
     } catch (_) { /* Browser locale remains available. */ }
     I18n.apply(document);
+    // The category chips carry the same icons as the other tabs
+    if (typeof FormatUtils !== 'undefined') {
+      document.querySelectorAll('[data-category-icon]').forEach(node => { node.innerHTML = FormatUtils.categoryIconSvg(node.dataset.categoryIcon); });
+    }
     document.title = tr('settingsHistoryStatsTitle', 'History statistics') + ' · Scrapfly';
     document.documentElement.lang = U.locale();
     document.documentElement.dir = /^(ar|he|fa|ur)\b/.test(U.locale()) ? 'rtl' : 'ltr';

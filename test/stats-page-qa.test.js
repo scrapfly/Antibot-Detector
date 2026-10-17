@@ -1,7 +1,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { createPage, entry, textOf } = require('./stats-page-harness.js');
+const { createPage, entry, textOf, flatten } = require('./stats-page-harness.js');
 
 // Defects an independent QA pass found on the rebuilt page, kept as regressions.
 
@@ -82,4 +82,16 @@ test('the counts read the same for one item and for many: label first, number af
   const ui = await createPage([entry('a.example', 0, [['Cloudflare', 'antibot', 90]])], { preferences: { scrapfly_stats_section: 'domains' } });
   assert.equal(ui.text('statsDomainCount'), 'Rows: 1 of 1');
   assert.match(ui.text('statsExportScope'), /Entries: 1/);
+});
+
+test('the Show chips carry the anti-bot, CAPTCHA and fingerprint icons instead of a dot', async () => {
+  const ui = await createPage(domainRows());
+  for (const key of ['antibot', 'captcha', 'fingerprint']) {
+    const chip = ui.button('category', key);
+    const nodes = flatten(chip);
+    assert.equal(nodes.some(node => node.classes.has('stats-dot')), false, key + ' chip has no dot');
+    const icon = nodes.find(node => node.dataset.categoryIcon === key);
+    assert.ok(icon, key + ' chip has an icon slot');
+    assert.match(icon.innerHTML, /^<svg /, key + ' icon is filled in');
+  }
 });

@@ -265,8 +265,11 @@ body.stats-page :is(.stats-table-wrap, .stats-section-nav, .stats-chart, .stats-
 .stats-scope-chip[data-category="captcha"] { --c: var(--ink-captcha); }
 .stats-scope-chip[data-category="fingerprint"] { --c: var(--ink-fingerprint); }
 .stats-scope-chip[data-category="other"] { --c: var(--ink-other); }
-/* Off = hollow dot, on = filled dot plus an accent border: never colour alone */
+/* Off = hollow dot (or a faded icon), on = filled dot (or a full icon) plus an accent border: never colour alone */
 .stats-scope-chip .stats-dot { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
+.stats-scope-chip .category-icon { display: inline-flex; flex: 0 0 auto; color: var(--c); opacity: .75; }
+.stats-scope-chip .category-icon svg { inline-size: 14px; block-size: 14px; }
+.stats-scope-chip[aria-pressed="true"] .category-icon { opacity: 1; }
 .stats-scope-chip:hover { color: var(--text-primary); border-color: var(--accent); }
 .stats-scope-chip[aria-pressed="true"] { color: var(--text-primary); border-color: var(--accent); background: var(--s-accent-soft); }
 .stats-scope-chip[aria-pressed="true"] .stats-dot { background: var(--c); }
@@ -818,6 +821,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
     background: Highlight; color: HighlightText; forced-color-adjust: none; border-color: Highlight;
   }
   .stats-scope-chip[aria-pressed="true"] .stats-scope-count, .stats-chip-btn[aria-pressed="true"] .stats-chip-count { color: HighlightText; background: transparent; }
+  .stats-scope-chip .category-icon { color: currentColor; opacity: 1; }
   .stats-rank-track, .stats-rank-track > i, .stats-databar > span, .stats-databar i, .stats-legend-swatch, .stats-dot,
   .stats-cal-swatch, .stats-seg, .stats-seg-track, .stats-cal-cell rect, .stats-spark, .stats-spark * { forced-color-adjust: none; }
   .stats-rank-track, .stats-databar > span { border: 1px solid CanvasText; }
