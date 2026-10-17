@@ -5,6 +5,27 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [Unreleased]
+
+### Added
+
+- Statistics: anti-bot and CAPTCHA come first; fingerprinting stays hidden until you press Show fingerprinting, and the page says how much it hides.
+- Statistics: a comparison with the previous period, four headline cards and a What changed card (new, rising, no longer seen, switched).
+- Statistics → Overview: layered sites, how protected your pages are, estimated difficulty, and the hardest sites with their protection stacks.
+- Statistics → Protections: strong-evidence share and change for every protection, and the protection stacks found together on a domain.
+- Statistics → Domains: hardest-first list with search by domain or protection and filters for difficulty, CAPTCHA and changed.
+- Statistics → Evidence: strong-evidence share per category, confidence by category, and "Mentioned, not confirmed" for protections found often with weak evidence.
+
+### Changed
+
+- Statistics: Confidence, Signals and Combinations are views of one Evidence tab; the tab bar is slimmer and stays in view while you scroll.
+- Statistics: one Export menu replaces the two buttons, and export file names use your local date and the range.
+- Statistics: protection changes compare saved copies of the same page, not the whole domain.
+- Statistics → Activity: the calendar fills its card, today is drawn as still counting, and daily pages show a 7-day average.
+- Statistics: charts show the whole range instead of pages of 30 days; light-theme colours read on white and the layout follows Arabic.
+- Statistics → Rules: rules that found nothing separate custom rules worth a look from official ones that are normally quiet.
+- Statistics → Tools: only captures that have not expired are listed, with when they expire.
+
 ## [2.8.9] - 2026-10-16
 
 ### Added

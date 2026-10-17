@@ -25,3 +25,6 @@ body.stats-page #statsStrongEvidence { grid-template-columns: repeat(auto-fit, m
 .stats-change-kind { color: var(--text-secondary); font-size: var(--fs-2); font-weight: 600; margin-block-end: 2px; }
 .stats-table .stats-category-badge { white-space: nowrap; }
 .stats-table tbody th .stats-stack { flex-wrap: nowrap; gap: var(--sp-2); }
+
+/* A date in "What changed" follows the page direction: Arabic dates carry their own direction marks and break inside a left-to-right box */
+.stats-changed-meta[data-kind="date"] { direction: inherit; unicode-bidi: isolate; }

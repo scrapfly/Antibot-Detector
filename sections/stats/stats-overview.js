@@ -160,12 +160,15 @@
     });
   }
 
-  function changedRow(label, color, meta, delta, ltr) {
+  /** meta is a date or a "38 → 64" pair: a date follows the page direction (Arabic dates carry their own marks), the pair stays left to right. */
+  function changedRow(label, color, meta, delta, ltr, isDate = false) {
     const li = element('li', 'stats-changed-row');
     const name = element('span', 'stats-changed-name', label);
     name.setAttribute('title', label);
     if (ltr) name.setAttribute('dir', 'ltr');
-    li.append(U.dot(color), name, element('span', 'stats-changed-meta', meta));
+    const when = element('span', 'stats-changed-meta', meta);
+    if (isDate) when.setAttribute('data-kind', 'date');
+    li.append(U.dot(color), name, when);
     if (delta) li.appendChild(U.deltaBadge(delta));
     return li;
   }
@@ -188,14 +191,14 @@
     const text = { nothing: tr('statsChangedNothing', 'Nothing changed in this range.'), needs: tr('statsChangedNeedsCompare', 'Choose 7, 30 or 90 days to see rising and falling protections.') };
     const fill = (id, rows, empty) => byId(id).replaceChildren(...(rows.length ? rows : [element('li', 'stats-changed-empty', empty)]));
     const comparison = usable ? text.nothing : text.needs;
-    fill('changedNew', d.newProtections.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), U.dateText(row.ts))), text.nothing);
+    fill('changedNew', d.newProtections.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), U.dateText(row.ts), null, false, true)), text.nothing);
     const m = usable ? d.compare.movers : null;
     const moving = m ? [...m.rising, ...m.falling].sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff) || a.name.localeCompare(b.name)).slice(0, 4)
       .map(row => changedRow(row.name, U.ink(row.category), num(row.before) + ' → ' + num(row.now), U.deltaView(HistoryStats.delta(row.now, row.before), row.before))) : [];
     fill('changedMoving', moving, comparison);
     fill('changedGone', m ? m.gone.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), num(row.before) + ' → ' + num(row.now))) : [], comparison);
     fill('changedSwitched', d.changes.rows.slice(0, 4).map(row => {
-      const li = changedRow(row.hostname, U.ink((row.added[0] || row.removed[0] || {}).category), U.dateText(row.timestamp), null, true);
+      const li = changedRow(row.hostname, U.ink((row.added[0] || row.removed[0] || {}).category), U.dateText(row.timestamp), null, true, true);
       li.appendChild(changeCell(row));
       return li;
     }), text.nothing);
