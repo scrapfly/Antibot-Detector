@@ -9,7 +9,7 @@
   "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.threatmetrix.com/",
-  "icon": "custom.png",
+  "icon": "threatmetrix_official.png",
   "description": "LexisNexis ThreatMetrix fingerprinting service for fraud prevention and device identification",
   "detection": {
     "url": [

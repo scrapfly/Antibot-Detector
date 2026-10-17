@@ -9,7 +9,7 @@
   "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://captcha.eu/",
-  "icon": "custom.png",
+  "icon": "captchaeu_official.png",
   "description": "European GDPR-compliant CAPTCHA service with invisible protection and widget modes",
   "detection": {
     "url": [

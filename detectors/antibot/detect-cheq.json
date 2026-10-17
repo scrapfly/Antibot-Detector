@@ -9,7 +9,7 @@
   "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://cheq.ai/",
-  "icon": "custom.png",
+  "icon": "cheq_official.png",
   "description": "Cheq bot detection and prevention with light obfuscation",
   "detection": {
     "cookie": [

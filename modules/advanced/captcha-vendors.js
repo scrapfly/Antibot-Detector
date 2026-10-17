@@ -37,7 +37,7 @@
         },
         {
             vendorId: 'friendlycaptcha', detectorId: 'friendlycaptcha', className: 'FriendlyCaptchaAdvanced',
-            productName: 'Friendly Captcha', logo: 'custom.png', infoKey: 'advancedInfoCaptchaKeyDesc',
+            productName: 'Friendly Captcha', logo: 'friendlycaptcha_official.png', infoKey: 'advancedInfoCaptchaKeyDesc',
             scripts: [
                 { hosts: ['cdn.jsdelivr.net', 'unpkg.com'], path: /^\/(?:npm\/)?friendly-challenge(?:@[^/]{1,40})?\//, type: 'widget v1' },
                 { hosts: ['cdn.jsdelivr.net', 'unpkg.com'], path: /^\/(?:npm\/)?@friendlycaptcha\/sdk(?:@[^/]{1,40})?\//, type: 'sdk v2' },
@@ -103,7 +103,7 @@
         },
         {
             vendorId: 'captchaeu', detectorId: 'captchaeu', className: 'CaptchaEuAdvanced',
-            productName: 'Captcha.eu', logo: 'custom.png', infoKey: 'advancedInfoCaptchaKeyDesc',
+            productName: 'Captcha.eu', logo: 'captchaeu_official.png', infoKey: 'advancedInfoCaptchaKeyDesc',
             // www.captcha.eu is also the vendor's own website, so no catch-all rule here
             scripts: [
                 { hosts: ['www.captcha.eu', 'captcha.eu'], path: /^\/sdk\.js$/, type: 'sdk' },
@@ -124,7 +124,7 @@
         },
         {
             vendorId: 'qcloud', detectorId: 'qcloud', className: 'QCloudCaptchaAdvanced',
-            productName: 'QCloud Captcha', logo: 'custom.png', infoKey: 'advancedInfoCaptchaKeyDesc',
+            productName: 'QCloud Captcha', logo: 'qcloud_official.png', infoKey: 'advancedInfoCaptchaKeyDesc',
             scripts: [
                 { hosts: ['turing.captcha.qcloud.com', 'ca.turing.captcha.qcloud.com', 'ssl.captcha.qq.com', 't.captcha.qq.com', 'www.tycaptcha.com'], path: /^\/T[A-Za-z]{0,4}Captcha(?:-global)?\.js$/, type: 'sdk' },
                 { hosts: ['turing.captcha.qcloud.com', 'ca.turing.captcha.qcloud.com', 'ssl.captcha.qq.com', 't.captcha.qq.com'], path: /^\/cap_union_/, type: 'api' },
@@ -250,7 +250,7 @@
         },
         {
             vendorId: 'aliexpress', detectorId: 'aliexpress', className: 'AliExpressCaptchaAdvanced',
-            productName: 'AliExpress CAPTCHA', logo: 'custom.png', infoKey: 'advancedInfoCaptchaScriptsDesc',
+            productName: 'AliExpress CAPTCHA', logo: 'aliexpress_official.png', infoKey: 'advancedInfoCaptchaScriptsDesc',
             scripts: [
                 { domains: ['aliexpress.com'], path: /^\/+(?:bx\/)?(?:_____tmd_____\/)?punish/, type: 'punish page' },
                 { hosts: ['g.alicdn.com'], path: /^\/bsop-static\/sufei-punish\//, type: 'punish script' }

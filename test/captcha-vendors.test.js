@@ -340,8 +340,8 @@ test('the no-tools screen groups supported protections by category, with logos a
   assert.equal((html.match(/class="advanced-supported-logo[" ]/g) || []).length, 25);
   assert.equal((html.match(/class="advanced-supported-group"/g) || []).length, 2);
   assert.doesNotMatch(html, /advanced-supported-chip/);
-  assert.match(html, /title="Friendly Captcha"><img class="advanced-supported-logo-dark" src="assets\/logos-dark\/custom\.png"[^>]*><img class="advanced-supported-logo-light" src="detectors\/icons\/custom\.png"/,
-    'no official logo: the Scrapfly default, as in Rules; the dark copy first, the original for the light theme');
+  assert.match(html, /title="Friendly Captcha"><img class="advanced-supported-logo-dark" src="assets\/logos-dark\/friendlycaptcha_official\.png"[^>]*><img class="advanced-supported-logo-light" src="detectors\/icons\/friendlycaptcha_official\.png"/,
+    'the dark copy first, the original for the light theme');
   const light = fs.readFileSync(path.join(root, 'modules/styles/theme-light.css'), 'utf8');
   assert.match(light, /:root\[data-theme="light"\] \.advanced-supported-logo \.advanced-supported-logo-dark \{\s*display: none;/);
   // Nothing detected: the minimum and where to change it

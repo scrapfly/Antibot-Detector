@@ -29,6 +29,9 @@ const OPTIONS = {
     'azurefrontdoor_official.png': { lightenBelow: 60 },
     'imperva_official.png': { lightenBelow: 60 },
     'kasada_official.png': { lightenBelow: 60 },
+    'ocule_official.png': { lightenBelow: 60 },
+    'qcloud_official.png': { clearAllWhite: true },
+    'captchaeu_official.png': { clearAllWhite: true },
     // A black mark on white: its darkness becomes opacity, drawn white (the gaps inside the knot clear too)
     'openai_official.png': { whiteMark: true },
     'prosopo_official.png': { lightenBelow: 90 },
@@ -81,6 +84,12 @@ async function darkCopy({ src, options }) {
         if (x < w - 1) stack.push(k + 1);
         if (y > 0) stack.push(k - w);
         if (y < h - 1) stack.push(k + w);
+    }
+
+    // A mark with no white of its own (a ribbon cloud, a pie): the white left
+    // inside its loops belongs to the square too
+    if (options.clearAllWhite) {
+        for (let k = 0; k < w * h; k++) if (d[k * 4 + 3] < 20 || nearWhite(k * 4)) background[k] = 1;
     }
 
     if (options.keepInsideEllipse) {

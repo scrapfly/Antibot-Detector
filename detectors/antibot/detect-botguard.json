@@ -9,7 +9,7 @@
   "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://developers.google.com/recaptcha",
-  "icon": "custom.png",
+  "icon": "botguard_official.png",
   "description": "Google's proprietary bot detection system used in reCAPTCHA, YouTube, and other Google services",
   "detection": {
     "url": [

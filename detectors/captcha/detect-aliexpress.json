@@ -9,7 +9,7 @@
   "version": "1.1.1",
   "minExtensionVersion": "2.8",
   "website": "https://www.aliexpress.com/",
-  "icon": "custom.png",
+  "icon": "aliexpress_official.png",
   "description": "AliExpress x5sec challenge routing evidence; does not confirm a visible CAPTCHA or successful verification",
   "detection": {
     "url": [

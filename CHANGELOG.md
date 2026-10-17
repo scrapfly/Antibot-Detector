@@ -5,6 +5,13 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.0.0] - 2026-10-17
+
+### Changed
+
+- Detection, History, Rules and Advanced: Google BotGuard, CHEQ, Meetrics, Ocule, ThreatMetrix, AliExpress CAPTCHA, Captcha.eu, Friendly Captcha and QCloud Captcha show their official logos instead of the generic icon, in both themes.
+- Detection and History: the text of matched combinations is soft grey instead of white.
+
 ## [2.8.9] - 2026-10-16
 
 ### Added
@@ -469,6 +476,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.0.0]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.9...v3.0.0
 [2.8.9]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.8...v2.8.9
 [2.8.8]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.7...v2.8.8
 [2.8.7]: https://github.com/scrapfly/Antibot-Detector/compare/v2.8.6...v2.8.7

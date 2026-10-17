@@ -9,7 +9,7 @@
   "version": "2.0.1",
   "minExtensionVersion": "2.8",
   "website": "https://ocule.io/",
-  "icon": "custom.png",
+  "icon": "ocule_official.png",
   "description": "Legacy Ocule bot protection. Ocule joined hCaptcha and its loader host no longer resolves, so only old cached pages still reference it.",
   "detection": {
     "url": [
