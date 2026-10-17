@@ -4856,5 +4856,443 @@
   },
   "advancedInfoTurnstileDesc": {
     "message": "Извлекает ключ сайта и анализирует скрипты Turnstile"
+  },
+  "statsExport": {
+    "message": "Экспорт"
+  },
+  "statsExportAllCategories": {
+    "message": "Экспорт всегда включает все категории, независимо от того, что показано на этой странице."
+  },
+  "statsScopeLabel": {
+    "message": "Показать"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Скрытые обнаружения фингерпринтинга: {0} ({1} от всех)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Показать фингерпринтинг"
+  },
+  "statsScopeKeepOne": {
+    "message": "Хотя бы одна категория должна остаться выбранной."
+  },
+  "statsScopeRulesNote": {
+    "message": "Правила всегда используют все категории."
+  },
+  "statsContextFmt": {
+    "message": "Страницы: {0} · Домены: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Вся история с {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Сравнение с предыдущим периодом ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Выберите 7, 30 или 90 дней, чтобы сравнить с предыдущим периодом."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "История начинается {0}, поэтому полного предыдущего периода для сравнения нет."
+  },
+  "statsDeltaNew": {
+    "message": "новое"
+  },
+  "statsDeltaFlat": {
+    "message": "Без изменений по сравнению с предыдущим периодом"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Рост на {0} по сравнению с предыдущим периодом"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Снижение на {0} по сравнению с предыдущим периодом"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Предыдущий период: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Мало страниц за этот период ({0}): сравнения и рейтинги могут вводить в заблуждение."
+  },
+  "statsLoading": {
+    "message": "Загрузка статистики..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Показать всю историю"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Главное"
+  },
+  "statsSectionEvidence": {
+    "message": "Доказательства"
+  },
+  "statsSubnavLabel": {
+    "message": "Разделы доказательств"
+  },
+  "statsExportCanceled": {
+    "message": "Экспорт отменён"
+  },
+  "statsAllClearTitle": {
+    "message": "За этот период анти-бот и CAPTCHA не найдены"
+  },
+  "statsAllClearDescFmt": {
+    "message": "На этих страницах используются только API фингерпринтинга. Страницы: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Для этих категорий нечего показать"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Выберите другую категорию или более длинный период."
+  },
+  "statsHeadlineTop": {
+    "message": "Самая частая защита"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} страниц · страницы: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Самый сложный сайт"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Защиты: {0} · Сложность: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Новейшая защита"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Впервые замечена на {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "За этот период ничего нового"
+  },
+  "statsHeadlineRiser": {
+    "message": "Самый заметный рост"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Страницы {0} → {1} к предыдущему периоду"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Нужен предыдущий период"
+  },
+  "statsKpiPages": {
+    "message": "Сохранено страниц"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Активные дни: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} с обнаружениями ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Сайты с несколькими уровнями защиты"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} с CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Замечено защит"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "{0} новых за период"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "из {0} правил"
+  },
+  "statsTipPages": {
+    "message": "Страницы, сохранённые в Истории за этот период. История хранит сохранённые обнаружения, а не каждое посещение в браузере."
+  },
+  "statsTipLayered": {
+    "message": "Домены, на которых обнаружены две или больше разных защит."
+  },
+  "statsOverTimeProtections": {
+    "message": "Найденные защиты по времени"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% страниц"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Все защиты"
+  },
+  "statsPageTiers": {
+    "message": "Насколько защищены ваши страницы"
+  },
+  "statsTiersHint": {
+    "message": "Каждая сохранённая страница учитывается один раз, по типам найденной на ней защиты."
+  },
+  "statsTierBoth": {
+    "message": "Анти-бот и CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Только анти-бот"
+  },
+  "statsTierCaptcha": {
+    "message": "Только CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Без анти-бота и CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Оценка сложности"
+  },
+  "statsDifficultyHint": {
+    "message": "Приблизительная оценка по найденным защитам, а не измерение."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Без защиты"
+  },
+  "statsHardestSites": {
+    "message": "Самые сложные сайты"
+  },
+  "statsAllDomainsLink": {
+    "message": "Все домены"
+  },
+  "statsMoreStackFmt": {
+    "message": "ещё +{0}"
+  },
+  "statsWhatChanged": {
+    "message": "Что изменилось"
+  },
+  "statsChangedNew": {
+    "message": "Новые защиты"
+  },
+  "statsChangedMoving": {
+    "message": "Растут и падают"
+  },
+  "statsChangedGone": {
+    "message": "Больше не встречаются"
+  },
+  "statsChangedSwitched": {
+    "message": "Сайты, сменившие защиту"
+  },
+  "statsChangedNothing": {
+    "message": "За этот период ничего не изменилось."
+  },
+  "statsChangedAllLink": {
+    "message": "Все изменения"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Выберите 7, 30 или 90 дней, чтобы увидеть растущие и падающие защиты."
+  },
+  "statsFingerprintCard": {
+    "message": "Фингерпринтинг"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "API фингерпринтинга сработали на {0} страниц · техник: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Самые частые: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Показано отдельно от защит анти-бот и CAPTCHA, потому что эти API использует почти каждая страница."
+  },
+  "statsPagesColumn": {
+    "message": "Страницы"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Изменение"
+  },
+  "statsStrongColumn": {
+    "message": "Сильные доказательства"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Сортировка защит"
+  },
+  "statsSortMostPages": {
+    "message": "Больше страниц"
+  },
+  "statsSortMostDomains": {
+    "message": "Больше доменов"
+  },
+  "statsSortBiggestChange": {
+    "message": "Самое большое изменение"
+  },
+  "statsCommonStacks": {
+    "message": "Частые сочетания защит"
+  },
+  "statsCommonStacksHint": {
+    "message": "Защиты анти-бот и CAPTCHA, найденные вместе на последней сохранённой странице домена."
+  },
+  "statsDomainSearchAll": {
+    "message": "Поиск доменов или защит..."
+  },
+  "statsSortHardest": {
+    "message": "Сначала самые сложные"
+  },
+  "statsSortLastSeen": {
+    "message": "Самые свежие"
+  },
+  "statsDifficultyColumn": {
+    "message": "Сложность"
+  },
+  "statsStackColumn": {
+    "message": "Защиты"
+  },
+  "statsLastSeenColumn": {
+    "message": "Последний раз замечен"
+  },
+  "statsFilterChanged": {
+    "message": "С изменениями"
+  },
+  "statsFilterClear": {
+    "message": "Сбросить фильтры"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Фильтр доменов"
+  },
+  "statsChangeKindGained": {
+    "message": "Добавлена"
+  },
+  "statsChangeKindDropped": {
+    "message": "Убрана"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Заменена"
+  },
+  "statsChangePageColumn": {
+    "message": "Страница"
+  },
+  "statsChangeSinceFmt": {
+    "message": "к {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Добавлено:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Убрано:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Сравнивает сохранённые копии одной и той же страницы. Обнаружения фингерпринтинга игнорируются, пока вы не включите его показ."
+  },
+  "statsStrongEvidence": {
+    "message": "Сильные доказательства"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{0} из {1} обнаружений набирают 80% и выше."
+  },
+  "statsUnconfirmed": {
+    "message": "Упомянуты, но не подтверждены"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Защиты, которые находят часто, но редко с сильными доказательствами. Это могут быть упоминания в тексте или неиспользуемые скрипты, а не активная проверка."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Каждая частая защита подтверждена сильными доказательствами."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Чаще всего найдена через {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Ни один сигнал не выделяется."
+  },
+  "statsTierStrong": {
+    "message": "Сильные"
+  },
+  "statsTierModerate": {
+    "message": "Средние"
+  },
+  "statsTierWeak": {
+    "message": "Слабые"
+  },
+  "statsTierHint": {
+    "message": "Сильные: 80% и выше, средние: 40-79%, слабые: ниже 40%. 100% означает сигнал, который создаёт только эта защита."
+  },
+  "statsDecidedByCategory": {
+    "message": "Как была определена каждая категория"
+  },
+  "statsLiftFmt": {
+    "message": "{0} п. п."
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · в среднем {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "В категории «{0}» комбинации повышают достоверность с {1} до {2}."
+  },
+  "statsLess": {
+    "message": "Меньше"
+  },
+  "statsMore": {
+    "message": "Больше"
+  },
+  "statsBusiestDay": {
+    "message": "Самый активный день"
+  },
+  "statsLongestStreak": {
+    "message": "Самая длинная серия"
+  },
+  "statsPeakHour": {
+    "message": "Час пик"
+  },
+  "statsQuietDays": {
+    "message": "Дни без сохранённого"
+  },
+  "statsTodayPartial": {
+    "message": "Сегодня (ещё не закончился)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Линия: среднее за 7 дней"
+  },
+  "statsRulesCoverage": {
+    "message": "Охват"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "{0} из {1} включённых правил сработали за этот период"
+  },
+  "statsRulesAttention": {
+    "message": "Требуют внимания"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Ничто не требует внимания."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Статус"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Вне периода"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Нет в Истории"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Изменено"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Официальные правила для вендоров, которых вы не встречали, молчат. Это нормально."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Пока мало Истории для выводов (страницы: {0}), поэтому правило, которое ни разу не сработало, мало о чём говорит."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Показаны только пользовательские и изменённые правила. Описания официальных правил поддерживает Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Advanced хранит записи 30 минут, поэтому эта вкладка не учитывает диапазон дат."
+  },
+  "statsToolsSavedNow": {
+    "message": "Сохранено сейчас"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Истекают в течение 10 минут"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Вендоры"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Истёкшие записи, ожидающие очистки: {0}. Откройте Advanced, чтобы удалить их."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Сохранённые записи"
+  },
+  "statsToolsColVendor": {
+    "message": "Вендор"
+  },
+  "statsToolsColTool": {
+    "message": "Инструмент"
+  },
+  "statsToolsColSaved": {
+    "message": "Сохранено"
+  },
+  "statsToolsColExpires": {
+    "message": "Истекает"
+  },
+  "statsToolsNoLive": {
+    "message": "Сейчас нет сохранённых записей."
   }
 }
