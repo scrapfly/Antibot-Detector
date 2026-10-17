@@ -76,21 +76,31 @@ Rules.prototype.displayRules = async function() {
     }
   }
 
-  // Sort by: enabled status, then date (newest first), then category priority
-  const categoryPriority = { antibot: 0, captcha: 1, fingerprint: 2 };
+  // Sort by: enabled status, then the category order chosen in Settings →
+  // Detection order (the one the Detection list and History use), then date
+  // (newest first), then name
+  let categoryOrder = ['antibot', 'captcha', 'fingerprint'];
+  try {
+    const settings = await Utils.getSettings();
+    categoryOrder = DetectionUtils.detectionSortOf(settings && settings.detection).categoryOrder;
+  } catch (_) { /* keep the default order */ }
+  const categoryRank = (category) => {
+    const index = categoryOrder.indexOf(DetectionUtils.categoryKey(category));
+    return index === -1 ? categoryOrder.length : index;
+  };
 
   this.allDetectors.sort((a, b) => {
     const aEnabled = a.detector.enabled !== false;
     const bEnabled = b.detector.enabled !== false;
     if (aEnabled !== bEnabled) return aEnabled ? -1 : 1;
 
+    const aPriority = categoryRank(a.category);
+    const bPriority = categoryRank(b.category);
+    if (aPriority !== bPriority) return aPriority - bPriority;
+
     const aTimestamp = this.getSortTimestamp(a.detector.lastUpdated);
     const bTimestamp = this.getSortTimestamp(b.detector.lastUpdated);
     if (aTimestamp !== bTimestamp) return bTimestamp - aTimestamp;
-
-    const aPriority = categoryPriority[a.category] ?? 99;
-    const bPriority = categoryPriority[b.category] ?? 99;
-    if (aPriority !== bPriority) return aPriority - bPriority;
 
     const aName = (a.detector.displayName || a.detectorName || '').toLowerCase();
     const bName = (b.detector.displayName || b.detectorName || '').toLowerCase();

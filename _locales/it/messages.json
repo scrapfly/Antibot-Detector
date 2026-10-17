@@ -3860,7 +3860,7 @@
     "message": "Ordine dei rilevamenti"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Ordine dei rilevamenti nell’elenco Rilevamento e nella cronologia. Trascina le schede per cambiarlo; in ogni categoria viene prima la confidenza più alta."
+    "message": "Ordine delle categorie nell’elenco Rilevamento, nella cronologia e nelle regole. Trascina le schede per cambiarlo; in ogni categoria i rilevamenti mostrano prima la confidenza più alta."
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "Prima la confidenza più alta"

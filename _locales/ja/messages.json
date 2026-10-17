@@ -3860,7 +3860,7 @@
     "message": "検出の並び順"
   },
   "settingsCategoryOrderHelp": {
-    "message": "検出リストと履歴での検出の並び順。カードをドラッグして変更します。同じカテゴリ内では信頼度の高いものが先に表示されます。"
+    "message": "検出リスト、履歴、ルールでのカテゴリの並び順。カードをドラッグして変更します。同じカテゴリ内では、検出は信頼度の高いものが先に表示されます。"
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "信頼度の高い順を優先"

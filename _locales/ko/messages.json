@@ -3860,7 +3860,7 @@
     "message": "탐지 순서"
   },
   "settingsCategoryOrderHelp": {
-    "message": "탐지 목록과 기록에서의 탐지 순서입니다. 카드를 끌어서 바꾸세요. 같은 카테고리 안에서는 신뢰도가 높은 항목이 먼저 표시됩니다."
+    "message": "탐지 목록, 기록, 규칙에서의 카테고리 순서입니다. 카드를 끌어서 바꾸세요. 같은 카테고리 안에서 탐지는 신뢰도가 높은 항목이 먼저 표시됩니다."
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "신뢰도 높은 순 우선"

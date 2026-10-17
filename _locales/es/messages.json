@@ -3860,7 +3860,7 @@
     "message": "Orden de detecciones"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Orden de las detecciones en la lista de Detección y en el Historial. Arrastra las tarjetas para cambiarlo; dentro de cada categoría va primero la de mayor confianza."
+    "message": "Orden de las categorías en la lista de Detección, en el Historial y en Reglas. Arrastra las tarjetas para cambiarlo; dentro de cada categoría, las detecciones muestran primero la de mayor confianza."
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "Primero la mayor confianza"

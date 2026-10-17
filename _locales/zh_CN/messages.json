@@ -3860,7 +3860,7 @@
     "message": "检测排序"
   },
   "settingsCategoryOrderHelp": {
-    "message": "检测列表和历史记录中检测的顺序。拖动卡片即可调整；同一类别内，置信度最高的排在前面。"
+    "message": "检测列表、历史记录和规则中类别的顺序。拖动卡片即可调整；同一类别内，检测结果按置信度从高到低排列。"
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "置信度最高的优先"

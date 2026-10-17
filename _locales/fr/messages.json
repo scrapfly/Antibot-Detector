@@ -3860,7 +3860,7 @@
     "message": "Ordre des détections"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Ordre des détections dans la liste Détection et dans l’historique. Faites glisser les cartes pour le changer ; dans une catégorie, la confiance la plus élevée vient en premier."
+    "message": "Ordre des catégories dans la liste Détection, dans l’historique et dans les règles. Faites glisser les cartes pour le changer ; dans une catégorie, les détections affichent d’abord la confiance la plus élevée."
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "Confiance la plus élevée d’abord"

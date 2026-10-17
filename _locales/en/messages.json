@@ -4117,7 +4117,7 @@
     "message": "Detection order"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Order of detections in the Detection list and in History. Drag the cards to change it; within a category, the highest confidence comes first."
+    "message": "Order of the categories in the Detection list, in History and in Rules. Drag the cards to change it; within a category, detections show the highest confidence first."
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "Highest confidence first"

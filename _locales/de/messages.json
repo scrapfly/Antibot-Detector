@@ -3860,7 +3860,7 @@
     "message": "Reihenfolge der Erkennungen"
   },
   "settingsCategoryOrderHelp": {
-    "message": "Reihenfolge der Erkennungen in der Erkennungsliste und im Verlauf. Ziehen Sie die Karten, um sie zu ändern; innerhalb einer Kategorie steht die höchste Konfidenz zuerst."
+    "message": "Reihenfolge der Kategorien in der Erkennungsliste, im Verlauf und in den Regeln. Ziehen Sie die Karten, um sie zu ändern; innerhalb einer Kategorie steht bei den Erkennungen die höchste Konfidenz zuerst."
   },
   "settingsOrderHighestConfidenceFirst": {
     "message": "Höchste Konfidenz zuerst"
