@@ -51,7 +51,7 @@ test('timeline days carry protections, layered domains and the day still countin
   assert.equal(timeline.length, 3);
   assert.deepEqual(timeline.map((d) => d.partial), [false, false, true], 'only today is still counting');
   assert.deepEqual(timeline.map((d) => d.protections), [0, 2, 5], 'distinct names per day: Akamai and Shape; then Cloudflare, reCAPTCHA, Canvas, Audio, DataDome');
-  assert.deepEqual(timeline.map((d) => d.layeredDomains), [0, 1, 1], 'a.com is layered across two entries on the same day; fingerprinting never layers a domain');
+  assert.deepEqual(timeline.map((d) => d.layeredDomains), [0, 0, 1], 'only protections together on one page layer a domain (a.com yesterday changed provider between two entries); fingerprinting never layers a domain');
   assert.equal(timeline[2].entries, 4);
   assert.equal(timeline[0].partial, false);
   assert.equal(typeof timeline[1].protections, 'number');
@@ -317,4 +317,18 @@ test('no function reads the clock when it is given a reference time', () => {
     HistoryStats.activityFacts(stats);
     assert.equal(stats.timeline.at(-1).partial, true);
   } finally { Date.now = realNow; }
+});
+
+test('a domain is layered by its richest saved page, not by the union of its pages', () => {
+  const items = [
+    page('migrated.com', [det('Kasada')], NOW - 3 * DAY), page('migrated.com', [det('Cloudflare')], NOW),
+    page('stacked.com', [det('Cloudflare'), det('hCaptcha', 'captcha')], NOW), page('stacked.com', [det('Cloudflare')], NOW - DAY),
+    page('single.com', [det('Akamai')], NOW)
+  ];
+  const { domainMetrics } = HistoryStats.compute(items, { now: NOW, days: 30 });
+  const byHost = Object.fromEntries(domainMetrics.map((d) => [d.hostname, d]));
+  assert.equal(byHost['migrated.com'].maxStack, 1, 'Kasada then Cloudflare: never both on one page');
+  assert.equal(byHost['migrated.com'].stackTotal, 2, 'but both were seen on the domain');
+  assert.equal(byHost['stacked.com'].maxStack, 2);
+  assert.equal(byHost['single.com'].maxStack, 1);
 });

@@ -148,7 +148,7 @@ test('a table is a keyboard region only while it scrolls', async () => {
 test('the footer under a table counts its rows and disappears with them', async () => {
   const { U, page } = await helpers();
   U.tableCount('statsSignal', 50, 120);
-  assert.equal(page.text('statsSignalCount'), '50 of 120 rows');
+  assert.equal(page.text('statsSignalCount'), 'Rows: 50 of 120');
   assert.equal(page.id('statsSignalMore').hidden, false);
   assert.equal(page.id('statsSignalFooter').hidden, false);
   U.tableCount('statsSignal', 120, 120);

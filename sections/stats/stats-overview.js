@@ -23,6 +23,7 @@
     const node = byId('headline' + name), main = byId('headline' + name + 'Name'), dot = byId('headline' + name + 'Dot');
     node.classList.toggle('is-muted', !!view.muted);
     main.textContent = view.text;
+    main.setAttribute('dir', 'auto'); // a Latin protection name keeps its start in a right-to-left page
     main.setAttribute('title', view.text);
     dot.hidden = !view.color;
     if (view.color) U.setVar(dot, '--c', view.color);
@@ -55,9 +56,9 @@
       : { text: usable ? tr('statsChangedNothing', 'Nothing changed in this range.') : tr('statsHeadlineNeedsCompare', 'Needs a previous period'), muted: true });
   }
 
-  /** Layered domains from the domain rows: at least two anti-bot, CAPTCHA or other protections. */
+  /** Layered domains from the domain rows: a saved page with at least two anti-bot, CAPTCHA or other protections together. */
   function layeredRows(rows) {
-    return rows.map(row => ({ row, count: (row.stack || []).filter(item => item.category !== 'fingerprint').length }))
+    return rows.map(row => ({ row, count: row.maxStack || 0 }))
       .filter(item => item.count >= 2).sort((a, b) => b.count - a.count || b.row.visits - a.row.visits || a.row.hostname.localeCompare(b.row.hostname));
   }
   function renderKpis(app) {
@@ -149,13 +150,14 @@
     rows.forEach(row => {
       const li = element('li', 'stats-site');
       li.tabIndex = 0;
+      li.setAttribute('role', 'link');
       const name = element('span', 'stats-site-name', row.hostname);
       name.setAttribute('dir', 'ltr');
       name.setAttribute('title', row.hostname);
       li.append(name, U.pill(row.difficulty), U.stack(row), element('span', 'stats-site-count', tr('statsPagesColumn', 'Pages') + ': ' + num(row.visits)));
       const open = () => app.openDomain(row.hostname);
       li.addEventListener('click', open);
-      li.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); open(); } });
+      li.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); } });
       host.appendChild(li);
     });
   }
@@ -188,7 +190,7 @@
   }
   function renderChanged(app) {
     const { d } = app, usable = d.compare && d.compare.usable;
-    const text = { nothing: tr('statsChangedNothing', 'Nothing changed in this range.'), needs: tr('statsChangedNeedsCompare', 'Choose 7, 30 or 90 days to see rising and falling protections.') };
+    const text = { nothing: tr('statsChangedNothing', 'Nothing changed in this range.'), needs: app.state.days > 0 ? tr('statsChangedNoPrevious', 'No full previous period yet.') : tr('statsChangedNeedsCompare', 'Choose 7, 30 or 90 days to see rising and falling protections.') };
     const fill = (id, rows, empty) => byId(id).replaceChildren(...(rows.length ? rows : [element('li', 'stats-changed-empty', empty)]));
     const comparison = usable ? text.nothing : text.needs;
     fill('changedNew', d.newProtections.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), U.dateText(row.ts), null, false, true)), text.nothing);

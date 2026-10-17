@@ -5032,7 +5032,7 @@
     "message": "推定難易度"
   },
   "statsDifficultyHint": {
-    "message": "見つかった保護機能から出したおおよその推定で、実測ではありません。"
+    "message": "表示中のカテゴリで見つかった保護機能からのおおよその推定で、実測ではありません。"
   },
   "statsDifficultyNoneScoped": {
     "message": "保護なし"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "現在保存されているキャプチャはありません。"
+  },
+  "statsChangedNoPrevious": {
+    "message": "完全な前の期間はまだありません。"
   }
 }

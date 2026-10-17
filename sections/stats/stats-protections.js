@@ -5,6 +5,12 @@
   const { byId, tr, fmt, num, share, element } = U;
   const V = root.StatsViews = root.StatsViews || {};
 
+  /** A control that hid itself after being pressed ("Show more" at the end, "Clear") must not drop the keyboard on the page body. */
+  function refocus(fallback) {
+    const active = document.activeElement;
+    if (fallback && (!active || active === document.body || active.hidden || (active.closest && active.closest('[hidden]')))) fallback.focus();
+  }
+
   /* ---------- Protections ---------- */
   /** Detector rows with their pages in the previous period, sorted by the chosen column. */
   function protectionRows(app) {
@@ -13,6 +19,10 @@
       const before = usable ? (d.compare.prevIndex.get(row.name.toLowerCase()) || { pages: 0 }).pages : 0;
       return { ...row, before, diff: usable ? row.pages - before : 0 };
     });
+    // "Biggest change" needs a previous period: offer it only when there is one
+    const sortSelect = byId('statsProtectionSort'), changeOption = sortSelect && sortSelect.querySelector('option[value="change"]');
+    if (changeOption) changeOption.disabled = !usable;
+    if (!usable && state.protectionSort === 'change') { state.protectionSort = 'pages'; if (sortSelect) sortSelect.value = 'pages'; }
     const by = state.protectionSort;
     if (by === 'domains') rows.sort((a, b) => b.domains - a.domains || b.pages - a.pages || a.name.localeCompare(b.name));
     else if (by === 'change' && usable) rows.sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff) || b.pages - a.pages || a.name.localeCompare(b.name));
@@ -149,7 +159,7 @@
       state.limits.protection = app.PAGE.protection;
       if (state.d) renderProtectionTable(app);
     });
-    byId('statsProtectionMore').addEventListener('click', () => { state.limits.protection += app.PAGE.protection; renderProtectionTable(app); });
+    byId('statsProtectionMore').addEventListener('click', () => { state.limits.protection += app.PAGE.protection; renderProtectionTable(app); refocus(byId('statsProtectionSort')); });
   }
   function initDomains(app) {
     const { state } = app;
@@ -166,8 +176,9 @@
       state.domain.query = ''; state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false;
       byId('statsDomainSearch').value = '';
       reset();
+      refocus(byId('statsDomainSearch'));
     });
-    byId('statsDomainMore').addEventListener('click', () => { state.limits.domain += app.PAGE.domain; renderDomainTable(app); });
+    byId('statsDomainMore').addEventListener('click', () => { state.limits.domain += app.PAGE.domain; renderDomainTable(app); refocus(byId('statsDomainSearch')); });
     byId('statsChangeMore').addEventListener('click', () => { state.limits.change += app.PAGE.change; renderChangeTable(app); });
   }
 

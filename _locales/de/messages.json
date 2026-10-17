@@ -51,7 +51,7 @@
   "statsExportCSV": { "message": "CSV exportieren" },
   "statsExportJSON": { "message": "JSON exportieren" },
   "statsExportPrivacy": { "message": "Exporte enthalten Domains und Erkennungszusammenfassungen, keine Cookies, Seiteninhalte oder URL-Parameter." },
-  "statsExportScopeFmt": { "message": "Ausgewählten Zeitraum exportieren: {0} Einträge" },
+  "statsExportScopeFmt": { "message": "Der Export umfasst den ausgewählten Zeitraum. Einträge: {0}" },
   "statsExportStartedFmt": { "message": "Download gestartet: {0}" },
   "statsExportFailed": { "message": "Die Daten konnten nicht exportiert werden. Bitte versuche es erneut." },
   "statsLoadFailed": { "message": "Der Verlauf konnte nicht geladen werden. Bitte lade diese Seite neu." },
@@ -90,7 +90,7 @@
   "statsProtectionColumn": { "message": "Schutzmaßnahme" },
   "statsCategoryColumn": { "message": "Kategorie" },
   "statsDomainColumn": { "message": "Domain" },
-  "statsTableCountFmt": { "message": "{0} von {1} Zeilen" },
+  "statsTableCountFmt": { "message": "Zeilen: {0} von {1}" },
   "statsTableMore": { "message": "Mehr anzeigen" },
   "statsNoMatchingDomains": { "message": "Keine Domains entsprechen deiner Suche." },
   "statsSelectionNote": { "message": "Diagramme und Exporte verwenden den ausgewählten Zeitraum. Verlaufseinträge stehen für gespeicherte Erkennungen, nicht für jeden Browserbesuch." },
@@ -1843,7 +1843,7 @@
     "message": "Keine Daten in diesem Zeitraum"
   },
   "statsTipPagesFmt": {
-    "message": "{0} Seiten"
+    "message": "Seiten: {0}"
   },
   "statsTipDomainsFmt": {
     "message": "{0} Domains"
@@ -1873,7 +1873,7 @@
     "message": "{0} % durchschnittliche Konfidenz"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} Erkennungen · {1} Tage"
+    "message": "Erkennungen: {0} · Tage: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "Dies ist ein offizieller Scrapfly-Detektor. Updates stellen ihn nicht wieder her; nutze „Offizielle Detektoren wiederherstellen“ im …-Menü."
@@ -5032,7 +5032,7 @@
     "message": "Geschätzte Schwierigkeit"
   },
   "statsDifficultyHint": {
-    "message": "Eine grobe Schätzung anhand der gefundenen Schutzsysteme, keine Messung."
+    "message": "Eine grobe Schätzung anhand der in den angezeigten Kategorien gefundenen Schutzsysteme, keine Messung."
   },
   "statsDifficultyNoneScoped": {
     "message": "Kein Schutz"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "Derzeit sind keine Aufzeichnungen gespeichert."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Noch kein vollständiger Vorzeitraum."
   }
 }

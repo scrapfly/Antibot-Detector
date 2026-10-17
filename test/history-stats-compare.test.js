@@ -116,8 +116,10 @@ test('summary counts pages, domains, layered sites and CAPTCHA domains in one pa
     layeredDomains: 2, captchaDomains: 1, protections: 5, detections: 9 });
   assert.deepEqual(HistoryStats.summary(null), { pages: 0, pagesWithDetections: 0, domains: 0, domainsWithDetections: 0, layeredDomains: 0, captchaDomains: 0, protections: 0, detections: 0 });
   const wide = HistoryStats.summary([page('a.com', [det('Cloudflare')]), page('a.com', [det('DataDome')]), { url: 'https://A.com/x', timestamp: NOW, detections: [det('Akamai')] }]);
-  assert.equal(wide.layeredDomains, 1, 'protections are gathered across all the entries of a domain, hostnames lower-cased and read from the URL');
-  assert.equal(wide.domains, 1);
+  assert.equal(wide.layeredDomains, 0, 'a site that changed provider between saved pages is not layered');
+  assert.equal(wide.domains, 1, 'hostnames are lower-cased and read from the URL');
+  const together = HistoryStats.summary([page('a.com', [det('Cloudflare')]), { url: 'https://A.com/x', timestamp: NOW, detections: [det('Akamai'), det('hCaptcha', 'captcha')] }]);
+  assert.equal(together.layeredDomains, 1, 'two protections together on one saved page layer the domain, whatever the other pages hold');
 });
 
 test('summary ignores fingerprinting for layering but not for the protection count', () => {

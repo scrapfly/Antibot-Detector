@@ -215,6 +215,7 @@
     if (section === 'tools' && !state.captures.length) section = 'overview';
     state.section = section;
     U.hideTooltip();
+    if (state.keepOneShown) { status(''); state.keepOneShown = false; } // the "keep one category" note belongs to the moment it was shown
     showSection(section);
     if (state.d) { renderFilters(); renderActive(); }
     if (save) persist(SECTION_KEY, section);
@@ -230,6 +231,7 @@
   }
   function openDomain(hostname) {
     state.domain.query = hostname;
+    state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false; // a stale chip must not hide the site that was clicked
     byId('statsDomainSearch').value = hostname;
     state.limits.domain = PAGE.domain;
     selectSection('domains');
@@ -285,13 +287,17 @@
     if (on === state.scope.has(key)) return;
     const next = new Set(state.scope);
     if (on) next.add(key); else next.delete(key);
-    if (![...next].some(visibleKey)) { status(tr('statsScopeKeepOne', 'At least one category stays selected.')); return; }
+    if (![...next].some(visibleKey)) { status(tr('statsScopeKeepOne', 'At least one category stays selected.')); state.keepOneShown = true; return; }
     status('');
+    state.keepOneShown = false;
     state.scope = next;
     persist(SCOPE_KEY, [...next]);
     applyScope();
     resetLimits();
     render();
+    // The control that was pressed may be gone now (the "Show fingerprinting" link hides): keep the keyboard on the filter
+    const active = document.activeElement, chip = document.querySelector('[data-category="' + key + '"]');
+    if (chip && (!active || active === document.body || active.hidden || (active.closest && active.closest('[hidden]')))) chip.focus();
   }
 
   /* ---------- Export menu ---------- */
@@ -433,6 +439,7 @@
     document.addEventListener('keydown', event => {
       if (event.key !== 'Escape') return;
       U.hideTooltip();
+      if (typeof Tooltip !== 'undefined' && Tooltip.hide) Tooltip.hide(); // the card tooltips come from the shared tooltip module
       if (menuOpen()) setMenu(false, true);
     });
     document.addEventListener('pointerdown', event => {

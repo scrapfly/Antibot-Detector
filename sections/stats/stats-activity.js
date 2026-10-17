@@ -2,7 +2,7 @@
 (function(root) {
   'use strict';
   const U = StatsUI;
-  const { byId, tr, num, element } = U;
+  const { byId, tr, fmt, num, element } = U;
   const V = root.StatsViews = root.StatsViews || {};
   const CALENDAR_MONTH_WEEKS = 14;
   const nice = max => typeof root.StatsCharts.niceScale === 'function' ? root.StatsCharts.niceScale(max).max : max;
@@ -55,6 +55,9 @@
       U.chartOptions(tr('statsDailyVisits', 'Daily history entries'), { vertical: true, fixedMax: nice(dailyMax), valueLabels: 'auto', average: { window: 7 } }));
     byId('statsActivityLegend').hidden = tl.length < 3;
     U.setText('statsActivityLegend', tr('statsSevenDayAverage', 'Line: 7-day average'));
+    // "All" keeps the latest year on the timeline; the weekday and hour charts still cover everything
+    byId('statsActivityLimit').hidden = !d.clipped;
+    if (d.clipped) U.setText('statsActivityLimit', fmt('statsTimelineLimitFmt', 'The latest {0} days are shown. Totals and exports include the entire selected range.', num(tl.length)));
 
     const labels = Array.from({ length: 7 }, (_, c) => U.weekdayLabel(weekdayAt(weekStart, c)));
     const heatmap = byId('statsHeatmap'), wrap = heatmap.parentNode;

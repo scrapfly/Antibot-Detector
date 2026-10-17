@@ -51,7 +51,7 @@
   "statsExportCSV": { "message": "Exporter en CSV" },
   "statsExportJSON": { "message": "Exporter en JSON" },
   "statsExportPrivacy": { "message": "Les exports contiennent des domaines et des résumés de détection, sans cookies, contenu des pages ni paramètres d’URL." },
-  "statsExportScopeFmt": { "message": "Exporter la période sélectionnée : {0} entrées" },
+  "statsExportScopeFmt": { "message": "L’export couvre la période sélectionnée. Entrées : {0}" },
   "statsExportStartedFmt": { "message": "Téléchargement lancé : {0}" },
   "statsExportFailed": { "message": "Impossible d’exporter les données. Veuillez réessayer." },
   "statsLoadFailed": { "message": "Impossible de charger l’historique. Veuillez recharger cette page." },
@@ -90,7 +90,7 @@
   "statsProtectionColumn": { "message": "Protection" },
   "statsCategoryColumn": { "message": "Catégorie" },
   "statsDomainColumn": { "message": "Domaine" },
-  "statsTableCountFmt": { "message": "{0} lignes sur {1}" },
+  "statsTableCountFmt": { "message": "Lignes : {0} sur {1}" },
   "statsTableMore": { "message": "Afficher plus" },
   "statsNoMatchingDomains": { "message": "Aucun domaine ne correspond à votre recherche." },
   "statsSelectionNote": { "message": "Les graphiques et les exports utilisent la période sélectionnée. Les entrées de l’historique représentent les détections enregistrées, pas chaque visite dans le navigateur." },
@@ -1843,7 +1843,7 @@
     "message": "Aucune donnée sur cette période"
   },
   "statsTipPagesFmt": {
-    "message": "{0} pages"
+    "message": "Pages : {0}"
   },
   "statsTipDomainsFmt": {
     "message": "{0} domaines"
@@ -1873,7 +1873,7 @@
     "message": "{0} % de confiance moyenne"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} détections · {1} jours"
+    "message": "Détections : {0} · Jours : {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "Ceci est un détecteur officiel Scrapfly. Les mises à jour ne le rétabliront pas ; utilisez « Restaurer les détecteurs officiels » dans le menu … pour le récupérer."
@@ -5032,7 +5032,7 @@
     "message": "Difficulté estimée"
   },
   "statsDifficultyHint": {
-    "message": "Une estimation approximative à partir des protections trouvées, pas une mesure."
+    "message": "Une estimation approximative à partir des protections trouvées dans les catégories affichées, pas une mesure."
   },
   "statsDifficultyNoneScoped": {
     "message": "Aucune protection"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "Aucune capture n’est enregistrée pour le moment."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Pas encore de période précédente complète."
   }
 }

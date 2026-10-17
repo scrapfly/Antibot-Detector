@@ -5032,7 +5032,7 @@
     "message": "추정 난이도"
   },
   "statsDifficultyHint": {
-    "message": "발견된 보호 기능을 바탕으로 한 대략적인 추정이며 실측값이 아닙니다."
+    "message": "표시된 카테고리에서 발견된 보호 기능을 바탕으로 한 대략적인 추정이며 실측값이 아닙니다."
   },
   "statsDifficultyNoneScoped": {
     "message": "보호 기능 없음"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "현재 저장된 캡처가 없습니다."
+  },
+  "statsChangedNoPrevious": {
+    "message": "아직 완전한 이전 기간이 없습니다."
   }
 }

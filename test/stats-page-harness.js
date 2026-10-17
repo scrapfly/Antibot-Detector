@@ -48,7 +48,9 @@ class Node {
     this.events[name] = (...args) => this.handlers[name].map(h => h(...args))[0];
   }
   querySelector(selector) {
-    const match = selector.startsWith('.') ? node => node.classes.has(selector.slice(1)) : () => false;
+    const attr = selector.match(/^(\w+)\[([\w-]+)="([^"]*)"\]$/); // tag[attribute="value"]
+    const match = selector.startsWith('.') ? node => node.classes.has(selector.slice(1))
+      : attr ? node => node.tagName === attr[1] && node.attributes[attr[2]] === attr[3] : () => false;
     return flatten(this).slice(1).find(match) || null;
   }
   querySelectorAll(selector) {
@@ -142,6 +144,12 @@ async function createPage(items, options = {}) {
       const match = selector.match(/^\[data-([\w-]+)\]$/);
       assert.ok(match, 'unsupported selector ' + selector);
       return all.filter(node => Object.hasOwn(node.dataset, camel(match[1])));
+    },
+    // Focus is on the page body until a test moves it; the page asks for one chip by its data-category
+    activeElement: body,
+    querySelector: selector => {
+      const match = selector.match(/^\[data-([\w-]+)="([^"]*)"\]$/);
+      return match ? all.find(node => node.dataset[camel(match[1])] === match[2]) || null : null;
     },
     createElement: tag => new Node(tag), createTextNode: text => Object.assign(new Node('#text'), { textContent: text }),
     addEventListener: (name, handler) => { if (name === 'DOMContentLoaded') init = handler; (listeners[name] = listeners[name] || []).push(handler); }

@@ -68,7 +68,9 @@ test('timestamps reject malformed values and overflow but accept legacy strings'
   }
   assert.strictEqual(HistoryStats.getTimestamp({ timestamp: String(NOW) }), NOW);
   assert.strictEqual(HistoryStats.getTimestamp({ timestamp: new Date(NOW).toISOString() }), NOW);
-  assert.strictEqual(HistoryStats.getTimestamp({ timestamp: 0 }), 0);
+  // Before 2000 is not a saved visit: zero, negatives and seconds written instead of milliseconds are unknown, not 1970
+  for (const timestamp of [0, -5, 1760000000, 946684799999]) assert.strictEqual(HistoryStats.getTimestamp({ timestamp }), null);
+  assert.strictEqual(HistoryStats.getTimestamp({ timestamp: 946684800000 }), 946684800000);
 });
 
 test('ranges include local midnight and now, exclude future and unknown dates', () => {
@@ -95,9 +97,13 @@ test('timelineDays derives bounded all-time local-calendar spans', () => {
   assert.strictEqual(HistoryStats.timelineDays([{ timestamp: NOW + DAY }, { timestamp: 1e20 }], 0, NOW), 1);
   const ancient = new Date(0);
   ancient.setFullYear(25, 0, 2);
-  const previous = new Date(ancient);
+  const old = new Date(ancient);
+  old.setDate(old.getDate() - 1);
+  assert.strictEqual(HistoryStats.timelineDays([{ timestamp: old.getTime() }], 0, ancient.getTime()), 1, 'dates before 2000 are not saved visits and do not stretch the span');
+  const base = new Date(2021, 0, 2, 12);
+  const previous = new Date(base);
   previous.setDate(previous.getDate() - 1);
-  assert.strictEqual(HistoryStats.timelineDays([{ timestamp: previous.getTime() }], 0, ancient.getTime()), 2);
+  assert.strictEqual(HistoryStats.timelineDays([{ timestamp: previous.getTime() }], 0, base.getTime()), 2);
 });
 
 test('confidence rejects coercion and out-of-range scores and counts unknowns', () => {

@@ -5032,7 +5032,7 @@
     "message": "估计难度"
   },
   "statsDifficultyHint": {
-    "message": "根据所发现的防护得出的粗略估计，并非实测结果。"
+    "message": "根据所显示类别中发现的防护得出的粗略估计，并非实测结果。"
   },
   "statsDifficultyNoneScoped": {
     "message": "无防护"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "目前没有已保存的捕获。"
+  },
+  "statsChangedNoPrevious": {
+    "message": "还没有完整的上一时间段。"
   }
 }

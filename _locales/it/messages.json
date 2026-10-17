@@ -51,7 +51,7 @@
   "statsExportCSV": { "message": "Esporta CSV" },
   "statsExportJSON": { "message": "Esporta JSON" },
   "statsExportPrivacy": { "message": "Le esportazioni contengono domini e riepiloghi dei rilevamenti, non cookie, contenuti delle pagine o parametri URL." },
-  "statsExportScopeFmt": { "message": "Esporta l’intervallo selezionato: {0} voci" },
+  "statsExportScopeFmt": { "message": "L’esportazione copre l’intervallo selezionato. Voci: {0}" },
   "statsExportStartedFmt": { "message": "Download avviato: {0}" },
   "statsExportFailed": { "message": "Impossibile esportare i dati. Riprova." },
   "statsLoadFailed": { "message": "Impossibile caricare la cronologia. Ricarica questa pagina." },
@@ -90,7 +90,7 @@
   "statsProtectionColumn": { "message": "Protezione" },
   "statsCategoryColumn": { "message": "Categoria" },
   "statsDomainColumn": { "message": "Dominio" },
-  "statsTableCountFmt": { "message": "{0} di {1} righe" },
+  "statsTableCountFmt": { "message": "Righe: {0} di {1}" },
   "statsTableMore": { "message": "Mostra altro" },
   "statsNoMatchingDomains": { "message": "Nessun dominio corrisponde alla ricerca." },
   "statsSelectionNote": { "message": "I grafici e le esportazioni usano l’intervallo di date selezionato. Le voci della cronologia rappresentano i rilevamenti salvati, non ogni visita nel browser." },
@@ -1843,7 +1843,7 @@
     "message": "Nessun dato in questo periodo"
   },
   "statsTipPagesFmt": {
-    "message": "{0} pagine"
+    "message": "Pagine: {0}"
   },
   "statsTipDomainsFmt": {
     "message": "{0} domini"
@@ -1873,7 +1873,7 @@
     "message": "{0}% di affidabilità media"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} rilevamenti · {1} giorni"
+    "message": "Rilevamenti: {0} · Giorni: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "È un rilevatore ufficiale Scrapfly. Gli aggiornamenti non lo ripristineranno; usa «Ripristina rilevatori ufficiali» nel menu … per recuperarlo."
@@ -5032,7 +5032,7 @@
     "message": "Difficoltà stimata"
   },
   "statsDifficultyHint": {
-    "message": "Una stima approssimativa basata sulle protezioni trovate, non una misurazione."
+    "message": "Una stima approssimativa basata sulle protezioni trovate nelle categorie mostrate, non una misurazione."
   },
   "statsDifficultyNoneScoped": {
     "message": "Nessuna protezione"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "Al momento non ci sono acquisizioni salvate."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Ancora nessun periodo precedente completo."
   }
 }

@@ -473,8 +473,8 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
 /* Numbers keep the strong ink once the cell has a tint; on the two darkest levels they follow --s-cal-ink-* */
 .stats-cal-cell:not(.lv0) .stats-cal-day { fill: var(--text-primary); }
 .stats-cal-val.on-fill { fill: var(--s-cal-ink-4); }
-.stats-cal-cell.lv3 :is(.stats-cal-day, .stats-cal-val) { fill: var(--s-cal-ink-3); }
-.stats-cal-cell.lv4 :is(.stats-cal-day, .stats-cal-val) { fill: var(--s-cal-ink-4); }
+.stats-cal-cell.lv3 :is(.stats-cal-day, .stats-cal-val, .stats-cal-month) { fill: var(--s-cal-ink-3); }
+.stats-cal-cell.lv4 :is(.stats-cal-day, .stats-cal-val, .stats-cal-month) { fill: var(--s-cal-ink-4); }
 .stats-cal-legend { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-block-start: var(--sp-3); color: var(--text-secondary); font-size: var(--fs-2); }
 .stats-cal-swatch { display: inline-block; inline-size: 12px; block-size: 12px; border-radius: 3px; background: var(--s-heat); }
 .stats-cal-swatch.lv0 { background: var(--s-empty); }
@@ -598,12 +598,12 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
 .stats-chip-count { padding: 0 6px; border-radius: var(--r-pill); background: var(--s-inset-strong); color: var(--text-secondary); font-size: var(--fs-2); font-variant-numeric: tabular-nums; }
 
 .stats-table-wrap {
-  max-inline-size: 100%; max-block-size: min(72vh, 680px); overflow: auto;
+  position: relative; max-inline-size: 100%; max-block-size: min(72vh, 680px); overflow: auto;
 }
 .stats-table-wrap--flat { max-block-size: none; }
 .stats-table-wrap:focus-visible { outline-offset: 2px; border-radius: var(--r-ctl); }
 .stats-table { inline-size: 100%; border-collapse: separate; border-spacing: 0; font-size: var(--fs-3); text-align: start; }
-.stats-table th, .stats-table td { padding: 9px var(--sp-3); border-block-end: 1px solid var(--s-hair-soft); text-align: start; vertical-align: middle; overflow-wrap: break-word; word-break: normal; }
+.stats-table th, .stats-table td { padding: 9px var(--sp-3); border-block-end: 1px solid var(--s-hair-soft); text-align: start; vertical-align: middle; overflow-wrap: anywhere; word-break: normal; }
 .stats-table thead th {
   position: sticky; inset-block-start: 0; z-index: 1;
   background: var(--s-card); border-block-end-color: var(--s-hair);

@@ -63,7 +63,7 @@ test('lists are capped by what fits the card, and the tables behind them hold ev
   assert.ok(ui.id('statsHardest').children.length <= 6);
   ui.section('protections');
   assert.equal(ui.rows('statsProtectionTable').length, 50);
-  assert.equal(ui.text('statsProtectionCount'), '50 of 70 rows');
+  assert.equal(ui.text('statsProtectionCount'), 'Rows: 50 of 70');
   ui.id('statsProtectionMore').events.click();
   const names = ui.rows('statsProtectionTable').map(node => textOf(node));
   assert.equal(names.length, 70);

@@ -51,7 +51,7 @@
   "statsExportCSV": { "message": "Exportar CSV" },
   "statsExportJSON": { "message": "Exportar JSON" },
   "statsExportPrivacy": { "message": "As exportações contêm domínios e resumos de detecção, não cookies, conteúdo das páginas ou parâmetros de URL." },
-  "statsExportScopeFmt": { "message": "Exportar o período selecionado: {0} registros" },
+  "statsExportScopeFmt": { "message": "A exportação cobre o período selecionado. Registros: {0}" },
   "statsExportStartedFmt": { "message": "Download iniciado: {0}" },
   "statsExportFailed": { "message": "Não foi possível exportar os dados. Tente novamente." },
   "statsLoadFailed": { "message": "Não foi possível carregar o histórico. Recarregue esta página." },
@@ -90,7 +90,7 @@
   "statsProtectionColumn": { "message": "Proteção" },
   "statsCategoryColumn": { "message": "Categoria" },
   "statsDomainColumn": { "message": "Domínio" },
-  "statsTableCountFmt": { "message": "{0} de {1} linhas" },
+  "statsTableCountFmt": { "message": "Linhas: {0} de {1}" },
   "statsTableMore": { "message": "Mostrar mais" },
   "statsNoMatchingDomains": { "message": "Nenhum domínio corresponde à sua pesquisa." },
   "statsSelectionNote": { "message": "Os gráficos e as exportações usam o período selecionado. Os registros do histórico representam detecções salvas, não todas as visitas do navegador." },
@@ -1843,7 +1843,7 @@
     "message": "Sem dados neste período"
   },
   "statsTipPagesFmt": {
-    "message": "{0} páginas"
+    "message": "Páginas: {0}"
   },
   "statsTipDomainsFmt": {
     "message": "{0} domínios"
@@ -1873,7 +1873,7 @@
     "message": "{0}% de confiança média"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} detecções · {1} dias"
+    "message": "Detecções: {0} · Dias: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "Este é um detector oficial da Scrapfly. As atualizações não o trarão de volta; use \"Restaurar detectores oficiais\" no menu … para recuperá-lo."
@@ -5032,7 +5032,7 @@
     "message": "Dificuldade estimada"
   },
   "statsDifficultyHint": {
-    "message": "Uma estimativa aproximada a partir das proteções encontradas, não uma medição."
+    "message": "Uma estimativa aproximada a partir das proteções encontradas nas categorias exibidas, não uma medição."
   },
   "statsDifficultyNoneScoped": {
     "message": "Sem proteção"
@@ -5294,5 +5294,8 @@
   },
   "statsToolsNoLive": {
     "message": "Nenhuma captura está salva no momento."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Ainda não há um período anterior completo."
   }
 }

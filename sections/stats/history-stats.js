@@ -15,6 +15,7 @@ const HistoryStats = {
   MOVER_RATIO: 0.25,
   /** The previous period needs this share of its days covered by History before it is compared. */
   COMPARE_MIN_COVERAGE: 0.8,
+  MIN_TIMESTAMP: 946684800000, // 2000-01-01: earlier dates are not saved visits
   /** Below this previous value a change is shown as an absolute number; below this share it is flat. */
   DELTA_SMALL_BASE: 10,
   DELTA_FLAT_RATIO: 0.05,
@@ -36,7 +37,8 @@ const HistoryStats = {
       ts = Number(value);
       if (!Number.isFinite(ts)) ts = Date.parse(value);
     }
-    return Number.isFinite(ts) && Number.isFinite(new Date(ts).getTime()) ? ts : null;
+    // A date before 2000 is not a saved visit (0, a negative number, seconds instead of milliseconds): unknown, not 1970
+    return Number.isFinite(ts) && Number.isFinite(new Date(ts).getTime()) && ts >= HistoryStats.MIN_TIMESTAMP ? ts : null;
   },
   referenceTime(now) {
     return typeof now === 'number' && Number.isFinite(now) && Number.isFinite(new Date(now).getTime()) ? now : Date.now();
@@ -236,7 +238,7 @@ const HistoryStats = {
     const keys = ['antibot', 'captcha', 'fingerprint', 'other'];
     const emptyCategories = () => Object.fromEntries(keys.map((key) => [key, 0]));
     const bucket = () => ({ entries: 0, detections: 0, categories: emptyCategories(), domains: new Set(), sum: 0, count: 0 });
-    const dayBucket = () => ({ ...bucket(), names: new Set(), hostNames: new Map() });
+    const dayBucket = () => ({ ...bucket(), names: new Set(), layeredHosts: new Set() });
     const average = (sum, count) => count ? Math.round(sum / count) : null;
     const outputBucket = (b) => ({ entries: b.entries, detections: b.detections, categories: b.categories, uniqueDomains: b.domains.size, avgConfidence: average(b.sum, b.count) });
     const domains = new Map(), detectors = new Map(), perDay = new Map();
@@ -285,7 +287,7 @@ const HistoryStats = {
       difficulty[safeLevel]++;
       let domain;
       if (hostname) {
-        domain = domains.get(hostname) || { hostname, visits: 0, detections: 0, names: new Map(), sum: 0, count: 0, rank: 0, hasCaptcha: false, firstTs: null, lastTs: null, latestTs: 0, latestNames: null, latestCats: null };
+        domain = domains.get(hostname) || { hostname, visits: 0, detections: 0, names: new Map(), sum: 0, count: 0, rank: 0, hasCaptcha: false, maxStack: 0, firstTs: null, lastTs: null, latestTs: 0, latestNames: null, latestCats: null };
         domain.visits++;
         domain.detections += detections.length;
         const rank = DIFFICULTY_RANK[safeLevel];
@@ -369,6 +371,10 @@ const HistoryStats = {
           combos.set(comboKey, row);
         }
       }
+      // Layered means protections together on ONE saved page; a site that changed provider is not layered
+      let pageProtections = 0;
+      for (const category of pageCats.values()) if (category !== 'fingerprint') pageProtections++;
+      if (domain && pageProtections > domain.maxStack) domain.maxStack = pageProtections;
       // Protections found on the same page, each pair once
       const pageKeys = [...pageNames.keys()].sort();
       for (let i = 0; i < pageKeys.length; i++) {
@@ -411,14 +417,7 @@ const HistoryStats = {
           const b = timelineBuckets.get(key) || dayBucket();
           addBucket(b, detections, hostname);
           for (const name of pageNames.keys()) b.names.add(name);
-          if (hostname) {
-            for (const [name, category] of pageCats) {
-              if (category === 'fingerprint') continue;
-              const set = b.hostNames.get(hostname) || new Set();
-              set.add(name);
-              b.hostNames.set(hostname, set);
-            }
-          }
+          if (hostname && pageProtections >= 2) b.layeredHosts.add(hostname);
           timelineBuckets.set(key, b);
         }
       }
@@ -432,9 +431,7 @@ const HistoryStats = {
       date.setDate(today.getDate() - i);
       const key = HistoryStats.dayKey(date.getTime());
       const b = timelineBuckets.get(key) || dayBucket();
-      let layered = 0;
-      for (const names of b.hostNames.values()) if (names.size >= 2) layered++;
-      timeline.push({ date: key, ...outputBucket(b), protections: b.names.size, layeredDomains: layered, partial: key === todayKey });
+      timeline.push({ date: key, ...outputBucket(b), protections: b.names.size, layeredDomains: b.layeredHosts.size, partial: key === todayKey });
     }
     const byCount = (field) => (a, b) => b[field] - a[field] || String(a.name || a.hostname).localeCompare(String(b.name || b.hostname));
     const detectorMetrics = Array.from(detectors.values(), (d) => ({ name: d.name, id: d.id, category: d.category, pages: d.pages, domains: d.domains.size, avgConfidence: average(d.sum, d.count),
@@ -462,7 +459,7 @@ const HistoryStats = {
     const byOrder = (a, b) => CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category) || a.name.localeCompare(b.name);
     const domainMetrics = Array.from(domains.values(), (d) => ({ hostname: d.hostname, visits: d.visits, detections: d.detections, uniqueDetectors: d.names.size, avgConfidence: average(d.sum, d.count),
       difficulty: levelOfRank[d.rank], hasCaptcha: d.hasCaptcha,
-      stack: Array.from(d.names.values()).sort(byOrder).slice(0, 8).map(({ name, category }) => ({ name, category })), stackTotal: d.names.size,
+      stack: Array.from(d.names.values()).sort(byOrder).slice(0, 8).map(({ name, category }) => ({ name, category })), stackTotal: d.names.size, maxStack: d.maxStack,
       firstTimestamp: d.firstTs, lastTimestamp: d.lastTs })).sort(byCount('visits'));
     // Protections found often but rarely with strong evidence: text mentions or unused scripts rather than a challenge
     const unconfirmed = detectorMetrics.filter((row) => {
@@ -619,9 +616,10 @@ const HistoryStats = {
       let row = null;
       if (host) {
         row = hosts.get(host);
-        if (!row) { row = { found: false, captcha: false, names: new Set() }; hosts.set(host, row); }
+        if (!row) { row = { found: false, captcha: false, names: new Set(), maxPage: 0 }; hosts.set(host, row); }
       }
       let found = false;
+      const pageProtections = new Set();
       for (const detection of Array.isArray(item.detections) ? item.detections : []) {
         if (!HistoryStats.isRecord(detection)) continue;
         found = true;
@@ -632,15 +630,16 @@ const HistoryStats = {
         if (!row) continue;
         row.found = true;
         if (category === 'captcha') row.captcha = true;
-        if (name && category !== 'fingerprint') row.names.add(name.toLowerCase());
+        if (name && category !== 'fingerprint') { row.names.add(name.toLowerCase()); pageProtections.add(name.toLowerCase()); }
       }
+      if (row && pageProtections.size > row.maxPage) row.maxPage = pageProtections.size;
       if (found) out.pagesWithDetections++;
     }
     out.domains = hosts.size;
     out.protections = names.size;
     for (const row of hosts.values()) {
       if (row.found) out.domainsWithDetections++;
-      if (row.names.size >= 2) out.layeredDomains++;
+      if (row.maxPage >= 2) out.layeredDomains++;
       if (row.captcha) out.captchaDomains++;
     }
     return out;

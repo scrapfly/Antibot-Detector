@@ -32,6 +32,17 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics → Rules: rules that found nothing separate custom rules worth a look from official ones that are normally quiet.
 - Statistics → Tools: only captures that have not expired are listed, with when they expire.
 
+### Fixed
+
+- Statistics: layered sites now means protections found together on one saved page, not a domain that met several over time.
+- Statistics: long hostnames and narrow windows no longer push the page sideways or overlap other columns.
+- Statistics: entries with a missing or impossible date no longer stretch the range or the calendar.
+- Statistics → Domains: opening a domain from another tab clears old filters, and Space opens a row as Enter does.
+- Statistics: Escape also closes tooltips, and focus stays on the chip, search or sort you just used.
+- Statistics: with no earlier history the page says there is no previous period yet, instead of showing a change.
+- Statistics: the difficulty hint names the categories shown, plural counts read correctly in more languages, and Activity says when its list is cut.
+- Statistics → Activity: month colours in the calendar are readable in both themes.
+
 ## [2.8.9] - 2026-10-16
 
 ### Added

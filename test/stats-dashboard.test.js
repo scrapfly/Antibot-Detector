@@ -205,7 +205,7 @@ test('the Export menu opens and closes with its button, Escape and a pointer out
   assert.equal(menu.hidden, false);
   assert.equal(button.attributes['aria-expanded'], 'true');
   assert.equal(ui.button('export', 'csv').focused, true, 'the first item takes focus');
-  assert.match(ui.text('statsExportScope'), /2 entries/);
+  assert.match(ui.text('statsExportScope'), /Entries: 2/);
   button.focused = false;
   ui.dispatch('keydown', { key: 'Escape' });
   assert.equal(menu.hidden, true);
@@ -604,14 +604,14 @@ const pick = (ui, fn) => (fn(), plain(ui.rows('statsDomainTable').map(n => n.tex
 test('domain explorer: search, sort, chips, clear and show more, without touching the export source', async () => {
   const ui = await createPage(domainRows(), { preferences: { scrapfly_stats_section: 'domains' } });
   assert.equal(ui.rows('statsDomainTable').length, 50);
-  assert.equal(ui.text('statsDomainCount'), '50 of 70 rows');
+  assert.equal(ui.text('statsDomainCount'), 'Rows: 50 of 70');
   ui.id('statsDomainMore').events.click();
   assert.equal(ui.rows('statsDomainTable').length, 70);
   assert.equal(ui.id('statsDomainMore').hidden, true);
   assert.deepEqual(pick(ui, () => { ui.id('statsDomainSearch').value = 'DOMAIN69'; ui.id('statsDomainSearch').events.input(); }), ['domain69.example']);
   assert.equal(ui.id('statsDomainClear').hidden, false);
   assert.equal(pick(ui, () => { ui.id('statsDomainSearch').value = 'hcaptcha'; ui.id('statsDomainSearch').events.input(); }).length, 10, 'searches protection names too');
-  assert.equal(ui.text('statsDomainCount'), '10 of 10 rows');
+  assert.equal(ui.text('statsDomainCount'), 'Rows: 10 of 10');
   ui.id('statsDomainClear').events.click();
   assert.equal(ui.id('statsDomainSearch').value, '');
   assert.equal(ui.id('statsDomainClear').hidden, true);

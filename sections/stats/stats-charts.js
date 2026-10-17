@@ -587,7 +587,11 @@
       if (isObject(row.delta)) deltaBadge(li, row.delta);
       const track = node(li, 'span', { class: 'stats-rank-track' }, undefined, false);
       node(track, 'i', {}, undefined, false);
-      const show = event => { if (o.onTooltip) o.onTooltip(event, lines); };
+      // Over the change badge only the badge's own tip shows, not the row's tooltip as well
+      const show = event => {
+        if (event && event.target && typeof event.target.closest === 'function' && event.target.closest('.stats-delta')) { if (o.hideTooltip) o.hideTooltip(); return; }
+        if (o.onTooltip) o.onTooltip(event, lines);
+      };
       li.addEventListener('pointerenter', show);
       li.addEventListener('pointermove', show);
       li.addEventListener('focus', show);

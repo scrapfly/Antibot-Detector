@@ -51,7 +51,7 @@
   "statsExportCSV": { "message": "Export CSV" },
   "statsExportJSON": { "message": "Export JSON" },
   "statsExportPrivacy": { "message": "Exports contain domains and detection summaries, not cookies, page contents or URL parameters." },
-  "statsExportScopeFmt": { "message": "Export the selected range: {0} entries" },
+  "statsExportScopeFmt": { "message": "Export covers the selected range. Entries: {0}" },
   "statsExportStartedFmt": { "message": "Download started: {0}" },
   "statsExportFailed": { "message": "Could not export the data. Please try again." },
   "statsLoadFailed": { "message": "Could not load the history. Please reload this page." },
@@ -90,7 +90,7 @@
   "statsProtectionColumn": { "message": "Protection" },
   "statsCategoryColumn": { "message": "Category" },
   "statsDomainColumn": { "message": "Domain" },
-  "statsTableCountFmt": { "message": "{0} of {1} rows" },
+  "statsTableCountFmt": { "message": "Rows: {0} of {1}" },
   "statsTableMore": { "message": "Show more" },
   "statsNoMatchingDomains": { "message": "No domains match your search." },
   "statsSelectionNote": { "message": "Charts and exports use the selected date range. History entries represent saved detections, not every browser visit." },
@@ -1847,7 +1847,7 @@
     "message": "No data in this range"
   },
   "statsTipPagesFmt": {
-    "message": "{0} pages"
+    "message": "Pages: {0}"
   },
   "statsTipDomainsFmt": {
     "message": "{0} domains"
@@ -1877,7 +1877,7 @@
     "message": "{0}% average confidence"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} detections · {1} days"
+    "message": "Detections: {0} · Days: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "This is an official Scrapfly detector. Updates will not bring it back; use \"Restore official detectors\" in the … menu to get it again."
@@ -5289,7 +5289,7 @@
     "message": "Estimated difficulty"
   },
   "statsDifficultyHint": {
-    "message": "A rough estimate from the protections found, not a measurement."
+    "message": "A rough estimate from the protections found in the categories shown, not a measurement."
   },
   "statsDifficultyNoneScoped": {
     "message": "No protection"
@@ -5551,5 +5551,8 @@
   },
   "statsToolsNoLive": {
     "message": "No captures are saved right now."
+  },
+  "statsChangedNoPrevious": {
+    "message": "No full previous period yet."
   }
 }
