@@ -42,6 +42,11 @@ const RuleStats = {
    * @param options.detectorMetrics HistoryStats detectorMetrics of the selected range
    * @param options.isOfficial      (detector) => boolean
    * @param options.incompatible    stored scrapfly_incompatible_updates
+   * @param options.seen            HistoryStats.detectorSeen() of ALL History: tells a rule that was
+   *                                seen before ('quiet') from one History never saw ('unseen')
+   * @param options.historyEntries  number of entries in all of History; below minHistory a rule
+   *                                that never matched proves little, so nothing needs attention
+   * @param options.minHistory      default 50
    */
   compute(rules, options = {}) {
     const list = Array.isArray(rules) ? rules : [];
@@ -53,7 +58,11 @@ const RuleStats = {
       if (row.name) pagesByName.set(String(row.name).toLowerCase(), row);
     }
     const found = (rule) => pagesById.get(rule.id) || pagesByName.get(rule.name.toLowerCase()) || null;
-    const totals = { total: list.length, official: 0, custom: 0, modified: 0, disabled: 0, withCombinations: 0, patterns: 0, described: 0 };
+    const seen = RuleStats.isRecord(options.seen) ? options.seen : {};
+    const wasSeen = (rule) => (seen.byId instanceof Map && seen.byId.has(rule.id)) || (seen.byName instanceof Map && seen.byName.has(rule.name.toLowerCase()));
+    const historyEntries = typeof options.historyEntries === 'number' && Number.isFinite(options.historyEntries) ? options.historyEntries : 0;
+    const minHistory = typeof options.minHistory === 'number' && Number.isFinite(options.minHistory) ? options.minHistory : 50;
+    const totals = { total: list.length, official: 0, custom: 0, modified: 0, disabled: 0, withCombinations: 0, patterns: 0, described: 0, enabled: 0, matched: 0, attention: 0, waiting: 0 };
     const patternsByMethod = Object.fromEntries(Object.keys(RuleStats.METHOD_FIELDS).map((key) => [key, 0]));
     const neverMatched = [], missingDescriptions = [], active = [];
     for (const rule of list) {
@@ -63,6 +72,7 @@ const RuleStats = {
       if (official && d.userModified) totals.modified++;
       const enabled = d.enabled !== false;
       if (!enabled) totals.disabled++;
+      else totals.enabled++;
       if (Array.isArray(d.combinations) && d.combinations.length) totals.withCombinations++;
       const patterns = RuleStats.patternsOf(d);
       let missing = 0;
@@ -72,11 +82,18 @@ const RuleStats = {
         if (typeof pattern.description === 'string' && pattern.description.trim()) totals.described++;
         else missing++;
       }
-      const base = { id: rule.id, name: rule.name, category: rule.category, official };
-      if (missing) missingDescriptions.push({ ...base, missing, patterns: patterns.length });
+      // Official rules are written and described by Scrapfly; only custom and edited rules are the user's to fix
+      const kind = !official ? 'custom' : d.userModified ? 'edited' : 'official';
+      const base = { id: rule.id, name: rule.name, category: rule.category, official, kind };
+      if (missing && kind !== 'official') missingDescriptions.push({ ...base, missing, patterns: patterns.length });
       const hit = found(rule);
-      if (hit) active.push({ ...base, pages: hit.pages, domains: hit.domains, avgConfidence: hit.avgConfidence });
-      else if (enabled) neverMatched.push({ ...base, patterns: patterns.length });
+      if (hit) {
+        active.push({ ...base, pages: hit.pages, domains: hit.domains, avgConfidence: hit.avgConfidence });
+        if (enabled) totals.matched++;
+      } else if (enabled) {
+        const status = wasSeen(rule) ? 'quiet' : 'unseen';
+        neverMatched.push({ ...base, patterns: patterns.length, status, attention: kind !== 'official' && status === 'unseen' && historyEntries >= minHistory });
+      }
     }
     missingDescriptions.sort((a, b) => b.missing - a.missing || a.name.localeCompare(b.name));
     active.sort((a, b) => b.pages - a.pages || a.name.localeCompare(b.name));
@@ -85,6 +102,10 @@ const RuleStats = {
       category: String(u.category || '').toLowerCase(),
       version: String(u.remoteVersion || ''), minExtensionVersion: String(u.minExtensionVersion || '')
     })).filter((u) => u.name);
+    totals.waiting = waiting.length;
+    totals.attention = neverMatched.filter((row) => row.attention).length + waiting.length;
+    // Rules that need a look come first; the rest keep their name order
+    neverMatched.sort((a, b) => Number(b.attention) - Number(a.attention));
     return { totals, patternsByMethod, neverMatched, missingDescriptions, active, waiting };
   },
   /**
