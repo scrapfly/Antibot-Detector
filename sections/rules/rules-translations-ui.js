@@ -44,8 +44,8 @@ Rules.translationRowsHtml = function(english, saved, idPrefix, { maxLength = 200
     const lang = locale.replace('_', '-');
     return `<label class="rule-translation-row" for="${id}">
       <span class="rule-translation-lang" lang="${lang}">${FormatUtils.escapeHtml(ruleTranslationLanguageName(locale))}</span>
-      <input type="text" id="${id}" class="input-field rule-translation-input" data-locale="${locale}" maxlength="${maxLength}" dir="${locale === 'ar' ? 'rtl' : 'auto'}"
-        lang="${lang}" value="${FormatUtils.escapeAttr(value)}" placeholder="${FormatUtils.escapeAttr(placeholder)}">
+      <textarea id="${id}" class="input-field rule-translation-input" data-locale="${locale}" rows="1" maxlength="${maxLength}" dir="${locale === 'ar' ? 'rtl' : 'auto'}"
+        lang="${lang}" placeholder="${FormatUtils.escapeAttr(placeholder)}">${FormatUtils.escapeHtml(value)}</textarea>
     </label>`;
   }).join('');
 };
@@ -111,6 +111,8 @@ Rules.prototype.updateTranslationsCount = function(scope = methodTranslationsSco
   const filled = [...scope.querySelectorAll('.rule-translation-input')]
     .filter(input => input.value.trim() || input.placeholder).length;
   count.textContent = ruleTranslateText('ruleTranslationsCountFmt', '{0} of {1}', filled, RULE_TRANSLATION_LOCALES.length);
+  count.classList.toggle('is-complete', filled === RULE_TRANSLATION_LOCALES.length);
+  count.classList.toggle('is-empty', filled === 0);
 };
 
 Rules.prototype.updateAutoTranslateButton = function(scope = methodTranslationsScope()) {

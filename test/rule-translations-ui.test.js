@@ -18,7 +18,7 @@ function panel(fields) {
   const parts = {
     '.rule-translations-status': { textContent: '' },
     '[data-rule-translate]': { disabled: false },
-    '.rule-translations-count': { textContent: '' }
+    '.rule-translations-count': { textContent: '', classList: { toggle() {} } }
   };
   return {
     parts, open: false,
@@ -136,7 +136,7 @@ test('the detector\'s own description has Translations and Translate automatical
   rules.renderDetectorDescription({ description: 'Bot detection on login pages', descriptionI18n: { es: 'Mía', xx: 'ignored' } });
   assert.equal(input.value, 'Bot detection on login pages');
   assert.equal(input.maxLength, 300);
-  assert.match(host.innerHTML, /id="detectorTranslation-es"[^>]*maxlength="400"[^>]*value="Mía"/);
+  assert.match(host.innerHTML, /id="detectorTranslation-es"[^>]*maxlength="400"[^>]*>Mía<\/textarea>/);
   assert.equal(scope.open, true, 'opens when it has translations of its own');
 
   await rules.autoTranslateDetectorDescription();

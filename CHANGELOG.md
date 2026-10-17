@@ -14,6 +14,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection and History: the text of matched combinations is soft grey instead of white.
 - Rules: the ten detectors that got a logo have new versions, so a rule already saved from 2.8.9 shows its logo too.
 - Rules: the list follows the category order chosen in Settings → Detection order, as the Detection list and History do.
+- Rules editor: Translations is a clear row with a chevron and a count badge, each translation is a box that shows the whole text, and Translate automatically is a smaller button.
 
 ## [2.8.9] - 2026-10-16
 

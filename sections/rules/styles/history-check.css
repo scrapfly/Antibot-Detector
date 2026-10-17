@@ -99,24 +99,98 @@
    ============================================ */
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations {
   margin-top: 10px;
-  border-top: 1px solid var(--border);
-  padding-top: 8px;
 }
 
+/* A clear, clickable row: the browser's own arrow is hidden by display:flex,
+   so the section read as plain text with a faint count */
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 7px 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   cursor: pointer;
   color: var(--text-primary);
   font-size: 12px;
   font-weight: 600;
-  list-style-position: inside;
+  list-style: none;
+  user-select: none;
 }
 
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary::-webkit-details-marker {
+  display: none;
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary::after {
+  content: '';
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  width: 6px;
+  height: 6px;
+  border-right: 2px solid var(--text-secondary);
+  border-bottom: 2px solid var(--text-secondary);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations[open] > summary::after {
+  transform: translateY(1px) rotate(-135deg);
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary:hover {
+  border-color: var(--accent);
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary:hover::after {
+  border-color: var(--text-primary);
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations[open] > summary {
+  margin-bottom: 8px;
+}
+
+/* How many languages have a text: blue while partial, green when all, grey when none */
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-count {
+  padding: 1px 8px;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.16);
+  color: var(--accent-light);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-count.is-complete {
+  border-color: rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.16);
+  color: var(--success-light);
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-count.is-empty {
+  border-color: var(--border);
+  background: transparent;
   color: var(--text-secondary);
-  font-weight: 400;
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-count:empty {
+  display: none;
+}
+
+/* What the section is for, readable (the generic hint is dim) */
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations > .option-hint {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  line-height: 1.45;
 }
 
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-actions {
@@ -124,12 +198,37 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 8px 0;
+  margin: 0 0 10px;
+}
+
+/* A compact button, not the full-size settings button */
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-actions .action-btn {
+  height: 28px;
+  padding: 0 12px;
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--accent-light);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-actions .action-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.22);
+  color: var(--text-primary);
+}
+
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-actions .action-btn:disabled {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-status {
   color: var(--text-secondary);
-  font-size: 11px;
+  font-size: 11.5px;
 }
 
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translations-fields {
@@ -140,24 +239,39 @@
 
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-row {
   display: grid;
-  grid-template-columns: 118px minmax(0, 1fr);
-  align-items: center;
+  grid-template-columns: 92px minmax(0, 1fr);
+  align-items: start;
   gap: 8px;
 }
 
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-lang {
+  padding-top: 6px;
   color: var(--text-secondary);
   font-size: 11.5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
 }
 
+/* A box that grows with its text, so a long translation is read whole instead
+   of cut off after one line */
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-row .rule-translation-input {
   box-sizing: border-box;
   width: 100%;
   max-width: none;
   min-width: 0;
-  height: 28px;
+  min-height: 30px;
+  padding: 6px 10px;
+  field-sizing: content;
+  overflow: hidden;
+  font-family: inherit;
   font-size: 12px;
+  line-height: 1.4;
+  resize: none;
+}
+
+/* The greyed translation the extension ships for this text */
+:is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-row .rule-translation-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
 }
