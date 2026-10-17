@@ -47,7 +47,7 @@
     const rows = s.unconfirmed.map(row => ({
       label: row.name, value: row.pages, color: U.ink(row.category),
       sub: row.driver ? fmt('statsUnconfirmedDriverFmt', 'Mostly found through {0}: {1}', U.methodLabel(row.driver.method), row.driver.label) : tr('statsUnconfirmedNoDriver', 'No single signal stands out.'),
-      meta: { text: tr('statsTierWeak', 'Weak') + ': ' + num(row.weak), color: U.ink(row.category) },
+      meta: { text: (row.weak ? tr('statsTierWeak', 'Weak') + ': ' + num(row.weak) : tr('statsTierModerate', 'Moderate') + ': ' + num(row.moderate)), color: U.ink(row.category) },
       tip: [row.name, { label: tr('statsPagesColumn', 'Pages'), value: num(row.pages) },
         { label: tr('statsTierStrong', 'Strong'), value: num(row.strong) }, { label: tr('statsTierModerate', 'Moderate'), value: num(row.moderate) }, { label: tr('statsTierWeak', 'Weak'), value: num(row.weak) }] }));
     root.StatsCharts.rank(host, rows, U.chartOptions(tr('statsUnconfirmed', 'Mentioned, not confirmed'), {}));
