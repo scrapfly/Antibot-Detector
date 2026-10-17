@@ -9,7 +9,7 @@
   "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://docs.capmonster.cloud/docs/captchas/hunt-task/",
-  "icon": "custom.png",
+  "icon": "hunt_official.png",
   "description": "Hunt anti-bot used on betting platforms: a fingerprint script and verify call under /hd-api/, then puzzle, click or checkbox captchas when it blocks",
   "detection": {
     "url": [

@@ -30,6 +30,8 @@ const OPTIONS = {
     'imperva_official.png': { lightenBelow: 60 },
     'kasada_official.png': { lightenBelow: 60 },
     'ocule_official.png': { lightenBelow: 60 },
+    // Hunt has no known vendor or logo: this is a neutral target drawn for it, black on white
+    'hunt_official.png': { lightenBelow: 60, clearAllWhite: true },
     'qcloud_official.png': { clearAllWhite: true },
     'captchaeu_official.png': { clearAllWhite: true },
     // A black mark on white: its darkness becomes opacity, drawn white (the gaps inside the knot clear too)
