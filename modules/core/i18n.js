@@ -41,7 +41,9 @@ class I18n {
         }
         try {
             const url = chrome.runtime.getURL('_locales/' + locale + '/messages.json');
-            const res = await fetch(url);
+            // Read the packaged locale fresh: a cached copy from before an update
+            // would miss newly added keys and fall back to English for them.
+            const res = await fetch(url, { cache: 'no-store' });
             if (!res.ok) throw new Error('HTTP ' + res.status);
             I18n._overrideMessages = await res.json();
             I18n._overrideLocale = locale;

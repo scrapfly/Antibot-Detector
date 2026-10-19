@@ -5545,5 +5545,8 @@
   "advancedFooterHintFmt": {
     "message": "キャプチャは{0}保持されます。",
     "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "1分から7日まで。"
   }
 }

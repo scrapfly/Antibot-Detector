@@ -9,7 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
-- Settings → Detection: choose how long Advanced tool captures are kept (15 minutes to 24 hours, default 30); the Advanced footer shows the chosen time.
+- Settings → Detection: set how long Advanced tool captures are kept — any value from 1 minute to 7 days (default 30 minutes); the Advanced footer shows the chosen time.
 - Statistics: anti-bot and CAPTCHA come first; fingerprinting stays hidden until you press Show fingerprinting, and the page says how much it hides.
 - Statistics: a comparison with the previous period, four headline cards and a What changed card (new, rising, no longer seen, switched).
 - Statistics → Overview: layered sites, how protected your pages are, estimated difficulty, and the hardest sites with their protection stacks.
@@ -50,6 +50,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics → Activity: month colours in the calendar are readable in both themes.
 - Settings: the language menu uses the same surface colour as the rest of the settings, instead of a darker panel.
 - Settings: the Data tab icon tiles and the colour field adapt to the light theme instead of staying a dark box, and the accent tiles now share one surface colour.
+- Language: after the extension updates, newly added text appears in your chosen language instead of briefly falling back to English.
 - Detection summary: the Detections icon is purple and the Cache icon is teal, so the four stat cards read apart at a glance (Confidence and Difficulty keep their value colour).
 
 ## [2.8.9] - 2026-10-16

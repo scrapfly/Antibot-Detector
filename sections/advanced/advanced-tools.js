@@ -59,10 +59,20 @@ Advanced.prototype.renderAdvancedInterface = async function() {
         const _m = Number(_s && _s.detection && _s.detection.captureRetentionMinutes);
         if (Number.isFinite(_m) && _m > 0) _retentionMinutes = _m;
       } catch (_) { /* keep the default */ }
+      // Common values read nicely; any other value falls back to "<n> <unit>"
       const _retLabels = { 15: ['settingsCaptureRetention15m', '15 minutes'], 30: ['settingsCaptureRetention30m', '30 minutes'],
         60: ['settingsCaptureRetention1h', '1 hour'], 180: ['settingsCaptureRetention3h', '3 hours'],
         720: ['settingsCaptureRetention12h', '12 hours'], 1440: ['settingsCaptureRetention24h', '24 hours'] };
-      const _retLabel = _retLabels[_retentionMinutes] ? _atr(_retLabels[_retentionMinutes][0], _retLabels[_retentionMinutes][1]) : `${_retentionMinutes} min`;
+      let _retLabel;
+      if (_retLabels[_retentionMinutes]) {
+        _retLabel = _atr(_retLabels[_retentionMinutes][0], _retLabels[_retentionMinutes][1]);
+      } else if (_retentionMinutes % 1440 === 0) {
+        _retLabel = `${_retentionMinutes / 1440} ${_atr('timeUnitDays', 'Days').toLowerCase()}`;
+      } else if (_retentionMinutes % 60 === 0) {
+        _retLabel = `${_retentionMinutes / 60} ${_atr('timeUnitHours', 'Hours').toLowerCase()}`;
+      } else {
+        _retLabel = `${_retentionMinutes} ${_atr('timeUnitMinutes', 'Minutes').toLowerCase()}`;
+      }
       const _retentionHint = _atr('advancedFooterHintFmt', 'Captures are kept for {0}.').replace('{0}', _retLabel);
 
       const captchaToolsHtml = `

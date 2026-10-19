@@ -5545,5 +5545,8 @@
   "advancedFooterHintFmt": {
     "message": "يتم الاحتفاظ باللقطات لمدة {0}.",
     "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "من دقيقة واحدة حتى 7 أيام."
   }
 }

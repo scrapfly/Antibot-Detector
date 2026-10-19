@@ -5545,5 +5545,8 @@
   "advancedFooterHintFmt": {
     "message": "캡처는 {0} 동안 보관됩니다.",
     "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "1분부터 7일까지."
   }
 }

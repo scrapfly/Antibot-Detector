@@ -332,9 +332,16 @@ SettingsUI.updateSettingsUI = function() {
         minToolConfidence.value = this.settings.detection.advancedToolsMinConfidence ?? 50;
       }
 
-      const captureRetention = document.querySelector('#captureRetentionMinutes');
-      if (captureRetention) {
-        captureRetention.value = String(this.settings.detection.captureRetentionMinutes ?? 30);
+      const retentionDuration = document.querySelector('#captureRetentionDuration');
+      const retentionUnit = document.querySelector('#captureRetentionUnit');
+      if (retentionDuration && retentionUnit) {
+        const mins = Math.max(1, Math.min(10080, parseInt(this.settings.detection.captureRetentionMinutes, 10) || 30));
+        let duration = mins, unit = 'minutes';
+        if (mins % 1440 === 0) { duration = mins / 1440; unit = 'days'; }
+        else if (mins % 60 === 0) { duration = mins / 60; unit = 'hours'; }
+        retentionUnit.value = unit;
+        retentionDuration.max = String(unit === 'days' ? 7 : unit === 'hours' ? 168 : 10080);
+        retentionDuration.value = String(duration);
       }
 
       // Values saved before the per-unit ranges existed (e.g. 48 hours) are
@@ -564,8 +571,7 @@ SettingsUI.getSettingsFromUI = function() {
         document.querySelector('#sortByConfidence')?.checked, this.settings.detection),
       advancedToolsMinConfidence: parseInt(document.querySelector('#advancedToolsMinConfidence')?.value
         ?? this.settings.detection?.advancedToolsMinConfidence ?? 50),
-      captureRetentionMinutes: parseInt(document.querySelector('#captureRetentionMinutes')?.value
-        ?? this.settings.detection?.captureRetentionMinutes ?? 30, 10) || 30,
+      captureRetentionMinutes: SettingsUI.readCaptureRetentionMinutes(this.settings.detection?.captureRetentionMinutes),
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
       hooksConfig: this.settings.detection?.hooksConfig || {}
     };
@@ -694,6 +700,18 @@ SettingsUI.setupEventListeners = function() {
     document.addEventListener('change', (event) => {
       if (event.target && event.target.id === 'themeChoice' && typeof ScrapflyTheme !== 'undefined') {
         ScrapflyTheme.set(event.target.value);
+      }
+      // Capture retention: the number's range follows the unit (1 min … 7 days overall)
+      if (event.target && (event.target.id === 'captureRetentionUnit' || event.target.id === 'captureRetentionDuration')) {
+        const dur = document.querySelector('#captureRetentionDuration');
+        const unit = document.querySelector('#captureRetentionUnit');
+        if (dur && unit) {
+          const max = unit.value === 'days' ? 7 : unit.value === 'hours' ? 168 : 10080;
+          dur.max = String(max);
+          const v = parseInt(dur.value, 10);
+          if (!Number.isFinite(v) || v < 1) dur.value = '1';
+          else if (v > max) dur.value = String(max);
+        }
       }
     });
     const settingsBtn = document.querySelector('#settingsBtn');
@@ -916,6 +934,18 @@ SettingsUI.setupEventListeners = function() {
 // stored value exactly as this UI shows it.
 SettingsUI.getCacheDurationDisplay = function(detection = {}) {
     return FormatUtils.normalizeCacheDuration(detection.cacheDuration ?? 12, detection.cacheUnit || 'hours');
+};
+
+/** The capture retention from the number + unit controls, in minutes, clamped to 1 min … 7 days. */
+SettingsUI.readCaptureRetentionMinutes = function(fallback) {
+    const base = Number.isInteger(fallback) && fallback >= 1 ? fallback : 30;
+    const durEl = document.querySelector('#captureRetentionDuration');
+    const unitEl = document.querySelector('#captureRetentionUnit');
+    if (!durEl || !unitEl) return Math.max(1, Math.min(10080, base));
+    const duration = parseInt(durEl.value, 10);
+    if (!Number.isFinite(duration) || duration < 1) return Math.max(1, Math.min(10080, base));
+    const factor = unitEl.value === 'days' ? 1440 : unitEl.value === 'hours' ? 60 : 1;
+    return Math.max(1, Math.min(10080, duration * factor));
 };
 
 SettingsUI.updateCacheDurationHint = function() {

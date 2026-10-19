@@ -5802,5 +5802,8 @@
   "advancedFooterHintFmt": {
     "message": "Captures are kept for {0}.",
     "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "From 1 minute up to 7 days."
   }
 }
