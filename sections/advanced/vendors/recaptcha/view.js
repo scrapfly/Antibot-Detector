@@ -111,8 +111,7 @@ ReCaptchaAdvanced.prototype.displayCallbackModal = function(data) {
         const { clients = [], domCallbacks = [], scriptCallbacks = [] } = data || {};
 
         const clientCards = clients.map((client) => K.kitCard(
-            K.kitField(recaptchaText('advCommonSiteKey', 'Site Key'), client.sitekey)
-            + (client.callback
+            (client.callback
                 ? K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback Function'), client.callback)
                   + K.kitField(recaptchaText('advRecaptchaCallbackPath', 'Callback Path'), client.callbackPath)
                 : K.kitNote(recaptchaText('advRecaptchaNoCallback', 'No callback defined')))
