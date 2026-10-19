@@ -47,6 +47,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics: with no earlier history the page says there is no previous period yet, instead of showing a change.
 - Statistics: the difficulty hint names the categories shown, plural counts read correctly in more languages, and Activity says when its list is cut.
 - Statistics → Activity: month colours in the calendar are readable in both themes.
+- Settings: the language menu uses the same surface colour as the rest of the settings, instead of a darker panel.
 
 ## [2.8.9] - 2026-10-16
 

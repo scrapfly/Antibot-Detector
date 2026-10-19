@@ -161,7 +161,7 @@
   max-height: 260px;
   overflow-y: auto;
   overflow-x: hidden;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
