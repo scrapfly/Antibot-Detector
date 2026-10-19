@@ -397,11 +397,3 @@ For pull requests:
 Released under the [Non-Profit Open Software License 3.0](LICENSE) (NPOSL-3.0).
 
 Copyright © 2026 Scrapfly.
-
----
-
-<div align="center">
-
-Built by [Scrapfly](https://scrapfly.io), the web scraping API.
-
-</div>
