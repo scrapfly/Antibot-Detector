@@ -153,6 +153,42 @@
 }
 
 @font-face {
+  font-family: 'IBM Plex Sans Thai';
+  src: url('../../assets/fonts/IBMPlexSansThai-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0E00-0E7F;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Thai';
+  src: url('../../assets/fonts/IBMPlexSansThai-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0E00-0E7F;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Thai';
+  src: url('../../assets/fonts/IBMPlexSansThai-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0E00-0E7F;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans Thai';
+  src: url('../../assets/fonts/IBMPlexSansThai-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+  unicode-range: U+0E00-0E7F;
+}
+
+@font-face {
   font-family: 'IBM Plex Sans JP';
   src: url('../../assets/fonts/IBMPlexSansJP-Regular.woff2') format('woff2');
   font-weight: 100 500;
@@ -208,15 +244,19 @@
 
 :root {
   /* Typography (matches scrapfly.io) */
-  /* Script order after Latin: Arabic, Devanagari, Japanese, Korean,
+  /* Script order after Latin: Arabic, Devanagari, Thai, Japanese, Korean,
      Simplified Chinese. Han characters take the Japanese glyph forms,
      except in Chinese text, which puts SC before JP. */
-  --font-sans-ja: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --font-sans-zh: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans-ja: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans-zh: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Traditional Chinese: the system's Traditional fonts first (they draw Taiwan's and Hong Kong's glyph
+     forms, which the bundled Simplified font does not), the bundled Han fonts for what they lack */
+  --font-sans-zh-tw: 'IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', 'Noto Sans CJK TC', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-sans: var(--font-sans-ja);
   /* Mono has no non-Latin glyphs either: the same script families follow */
-  --font-mono-ja: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC', 'SF Mono', Consolas, 'Liberation Mono', monospace;
-  --font-mono-zh: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  --font-mono-ja: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  --font-mono-zh: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'SF Mono', Consolas, 'Liberation Mono', monospace;
+  --font-mono-zh-tw: 'IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', 'Noto Sans CJK TC', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'SF Mono', Consolas, 'Liberation Mono', monospace;
   --font-mono: var(--font-mono-ja);
 
   /* Background Colors */
@@ -444,6 +484,17 @@
 
 [lang|="zh"]:not(:root) {
   --font-sans: var(--font-sans-zh);
+  font-family: var(--font-sans);
+}
+
+/* Traditional Chinese (Taiwan, Hong Kong, Macau, the Hant script) overrides the Simplified rules above */
+:root:is(:lang(zh-TW), :lang(zh-HK), :lang(zh-MO), :lang(zh-Hant)) {
+  --font-sans: var(--font-sans-zh-tw);
+  --font-mono: var(--font-mono-zh-tw);
+}
+
+:is([lang="zh-TW"], [lang="zh-HK"], [lang="zh-MO"], [lang|="zh-Hant"]):not(:root) {
+  --font-sans: var(--font-sans-zh-tw);
   font-family: var(--font-sans);
 }
 

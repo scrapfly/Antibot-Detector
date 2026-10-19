@@ -13,7 +13,17 @@ const root = path.join(__dirname, '..');
 test('locale keys follow the _locales folders; English needs none', () => {
   assert.strictEqual(R.localeKey('es-419'), 'es');
   assert.strictEqual(R.localeKey('pt-PT'), 'pt_BR');
-  assert.strictEqual(R.localeKey('zh-TW'), 'zh_CN');
+  // Chinese: Traditional for Taiwan, Hong Kong, Macau and the Hant script; Simplified for every other tag
+  assert.strictEqual(R.localeKey('zh-TW'), 'zh_TW');
+  assert.strictEqual(R.localeKey('zh_TW'), 'zh_TW');
+  assert.strictEqual(R.localeKey('zh-HK'), 'zh_TW');
+  assert.strictEqual(R.localeKey('zh-Hant-TW'), 'zh_TW');
+  assert.strictEqual(R.localeKey('zh-CN'), 'zh_CN');
+  assert.strictEqual(R.localeKey('zh-Hans'), 'zh_CN');
+  assert.strictEqual(R.localeKey('zh'), 'zh_CN');
+  assert.strictEqual(R.localeKey('uk-UA'), 'uk');
+  assert.strictEqual(R.localeKey('th-TH'), 'th');
+  assert.strictEqual(R.localeKey('vi'), 'vi');
   assert.strictEqual(R.localeKey('en-US'), null);
   assert.strictEqual(R.localeKey('xx'), null);
 });

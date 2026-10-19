@@ -55,7 +55,7 @@
             scrapfly_settings: JSON.stringify({ timestamp: new Date().toISOString(), settings })
         };
         if (mutation.languageOverride !== undefined) {
-            if (!['auto', 'en', 'es', 'fr', 'de', 'it', 'pt_BR', 'ru', 'ja', 'ko', 'zh_CN', 'ar', 'hi'].includes(mutation.languageOverride)) {
+            if (!['auto', 'en', 'es', 'fr', 'de', 'it', 'pt_BR', 'ru', 'ja', 'ko', 'zh_CN', 'zh_TW', 'ar', 'hi', 'tr', 'id', 'vi', 'pl', 'uk', 'nl', 'th', 'sv', 'cs'].includes(mutation.languageOverride)) {
                 throw new Error('Invalid language');
             }
             values.scrapfly_language_override = mutation.languageOverride;

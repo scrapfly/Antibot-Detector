@@ -1595,10 +1595,10 @@
     "message": "ERKENNUNGEN"
   },
   "detectionStatConfidence": {
-    "message": "ZUVERLÄSSIGKEIT"
+    "message": "KONFIDENZ"
   },
   "detectionStatDifficulty": {
-    "message": "SCHWIERIGKEIT"
+    "message": "AUFWAND"
   },
   "detectionSearchPlaceholder": {
     "message": "Erkennungen suchen..."

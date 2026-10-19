@@ -7,7 +7,7 @@
  * Translator (Chrome 138+); the text never leaves the browser.
  */
 const RULE_TRANSLATION_LOCALES = (typeof RuleI18n !== 'undefined' && RuleI18n.LOCALES)
-  || ['ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt_BR', 'ru', 'zh_CN'];
+  || ['ar', 'cs', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pl', 'pt_BR', 'ru', 'sv', 'th', 'tr', 'uk', 'vi', 'zh_CN', 'zh_TW'];
 const ruleTranslateText = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
 
 /** "Español", "Deutsch"…: each language in its own name. */
@@ -21,9 +21,9 @@ function ruleTranslationLanguageName(locale) {
   }
 }
 
-/** Language code Chrome's Translator expects ("pt_BR" → "pt", "zh_CN" → "zh"). */
+/** Language code Chrome's Translator expects ("pt_BR" → "pt", "zh_CN" → "zh", "zh_TW" → "zh-Hant"). */
 function ruleTranslatorCode(locale) {
-  return locale === 'pt_BR' ? 'pt' : locale === 'zh_CN' ? 'zh' : locale;
+  return locale === 'pt_BR' ? 'pt' : locale === 'zh_CN' ? 'zh' : locale === 'zh_TW' ? 'zh-Hant' : locale;
 }
 
 const ruleTranslationClean = (text) => String(text || '').replace(/\s+/g, ' ').trim();

@@ -72,7 +72,7 @@ function findViolations(file) {
   while ((m = declaration.exec(text))) {
     const value = clean(m[1]);
     if (ALLOWED.has(value)) continue;
-    if (inFace(m.index) && /^['"]IBM Plex (Sans|Mono)( (Arabic|Devanagari|JP|KR|SC))?['"]$/.test(value)) continue;
+    if (inFace(m.index) && /^['"]IBM Plex (Sans|Mono)( (Arabic|Devanagari|Thai|JP|KR|SC))?['"]$/.test(value)) continue;
     if (INJECTED_PAGE_NOTIFICATION.get(rel) === value) continue;
     found.push(`${rel}:${lineOf(text, m.index)} font-family: ${value}`);
   }
@@ -162,12 +162,13 @@ test('the in-page notification installs the bundled Plex faces and names them fi
   }
 });
 
-// Arabic, Devanagari, Japanese, Korean and Chinese text has no glyphs in IBM
+// Arabic, Devanagari, Thai, Japanese, Korean and Chinese text has no glyphs in IBM
 // Plex Sans: each script gets its IBM Plex family, bundled, fenced by a
 // unicode-range so Latin-only pages never load it.
 const SCRIPT_FACES = {
   Arabic: { weights: ['400', '500', '600', '700'], probe: 0x0627 },
   Devanagari: { weights: ['400', '500', '600', '700'], probe: 0x0939 },
+  Thai: { weights: ['400', '500', '600', '700'], probe: 0x0E01 },
   JP: { weights: ['100 500', '600 900'], probe: 0x3042 },
   KR: { weights: ['100 500', '600 900'], probe: 0xD55C },
   SC: { weights: ['100 500', '600 900'], probe: 0x4E2D }
@@ -211,14 +212,14 @@ test('each non-Latin script has its bundled IBM Plex family, off for Latin text'
   }
   // Plex Sans first, then the scripts; Chinese text puts SC ahead of JP
   const stack = (name) => (css.match(new RegExp(`--${name}:\\s*([^;]+);`)) || [])[1].split(',').map(s => s.trim().replace(/'/g, ''));
-  assert.deepStrictEqual(stack('font-sans-ja').slice(0, 6),
-    ['IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC']);
-  assert.deepStrictEqual(stack('font-sans-zh').slice(0, 6),
-    ['IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR']);
-  assert.deepStrictEqual(stack('font-mono-ja').slice(0, 6),
-    ['IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC']);
-  assert.deepStrictEqual(stack('font-mono-zh').slice(0, 6),
-    ['IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR']);
+  assert.deepStrictEqual(stack('font-sans-ja').slice(0, 7),
+    ['IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC']);
+  assert.deepStrictEqual(stack('font-sans-zh').slice(0, 7),
+    ['IBM Plex Sans', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR']);
+  assert.deepStrictEqual(stack('font-mono-ja').slice(0, 7),
+    ['IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans JP', 'IBM Plex Sans KR', 'IBM Plex Sans SC']);
+  assert.deepStrictEqual(stack('font-mono-zh').slice(0, 7),
+    ['IBM Plex Mono', 'IBM Plex Sans Arabic', 'IBM Plex Sans Devanagari', 'IBM Plex Sans Thai', 'IBM Plex Sans SC', 'IBM Plex Sans JP', 'IBM Plex Sans KR']);
   assert.match(css, /:root:lang\(zh\) \{\s*--font-sans: var\(--font-sans-zh\);\s*--font-mono: var\(--font-mono-zh\);/);
 });
 

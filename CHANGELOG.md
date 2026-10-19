@@ -7,8 +7,15 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.1] - 2026-10-19
 
+### Added
+
+- Ten new interface languages, 22 in total: Traditional Chinese, Turkish, Indonesian, Vietnamese, Polish, Ukrainian, Dutch, Thai, Swedish and Czech. Pick one in Settings → General; rule descriptions and the rule editor's Translations are translated too.
+- Traditional Chinese uses your system's Traditional Chinese fonts, so characters have their Taiwan and Hong Kong forms.
+- Thai is drawn with the bundled IBM Plex Sans Thai font, like the other scripts, instead of whatever font the system has.
+
 ### Changed
 
+- Rules → Update downloads the rule texts of the language you use, not all of them.
 - README: removed the Scrapfly tagline footer.
 
 ## [3.0.0] - 2026-10-19

@@ -17,7 +17,7 @@
 (function(root) {
   'use strict';
 
-  const LOCALES = ['ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt_BR', 'ru', 'zh_CN'];
+  const LOCALES = ['ar', 'cs', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pl', 'pt_BR', 'ru', 'sv', 'th', 'tr', 'uk', 'vi', 'zh_CN', 'zh_TW'];
   const STORAGE_KEY = 'scrapfly_rule_i18n';
   const shipped = {};   // locale -> { english: translation }
   const fromRules = {}; // locale -> { english: translation } (user translations)
@@ -26,12 +26,13 @@
   const isRecord = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
   const clean = (v) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
 
-  /** _locales folder name for a BCP 47 tag ("pt-BR" → pt_BR, "zh-TW" → zh_CN), or null for English. */
+  /** _locales folder name for a BCP 47 tag ("pt-BR" → pt_BR, "zh-TW" → zh_TW, "zh-CN" → zh_CN), or null for English. */
   function localeKey(tag) {
     const t = String(tag || '').replace('_', '-').toLowerCase();
     if (!t || t.startsWith('en')) return null;
     if (t.startsWith('pt')) return 'pt_BR';
-    if (t.startsWith('zh')) return 'zh_CN';
+    // Traditional Chinese: Taiwan, Hong Kong, Macau or the Hant script; every other zh tag is Simplified
+    if (t.startsWith('zh')) return /^zh-(tw|hk|mo|hant)\b/.test(t) ? 'zh_TW' : 'zh_CN';
     const base = t.split('-')[0];
     return LOCALES.includes(base) ? base : null;
   }

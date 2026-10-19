@@ -103,8 +103,8 @@ const pages = [
         filename: '05-settings-1280x800.png',
         capture: 'settings',
         title: 'Make it work your way',
-        subtitle: 'Notifications, 12 languages, history retention, badge colours, webhooks and excluded domains.',
-        bullets: ['12 languages', 'Webhooks', 'Excluded domains']
+        subtitle: 'Notifications, 22 languages, history retention, badge colours, webhooks and excluded domains.',
+        bullets: ['22 languages', 'Webhooks', 'Excluded domains']
     }
 ];
 

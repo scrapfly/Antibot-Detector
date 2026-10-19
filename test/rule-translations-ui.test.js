@@ -54,17 +54,17 @@ test('Translate automatically asks for every missing language at once, in the cl
   let clickTask = true;
   const translator = { create: ({ targetLanguage }) => { created.push(`${targetLanguage}:${clickTask}`);
     return new Promise(resolve => setTimeout(() => resolve({ translate: async (t) => `[${targetLanguage}] ${t}`, destroy() {} }), 5)); } };
-  const fields = [field('de'), field('es', '', 'Ya traducido'), field('ja', 'Mine'), field('pt_BR'), field('zh_CN')];
-  const { rules, elements } = load({ fields, description: 'A new text', translator });
+  const fields = [field('de'), field('es', '', 'Ya traducido'), field('ja', 'Mine'), field('pt_BR'), field('zh_CN'), field('zh_TW')];
+  const { rules, elements, context } = load({ fields, description: 'A new text', translator });
   const done = rules.autoTranslateDescription();
   clickTask = false;
   await done;
-  assert.deepEqual(created, ['de:true', 'pt:true', 'zh:true'], 'only languages with no translation, all before anything is awaited');
+  assert.deepEqual(created, ['de:true', 'pt:true', 'zh:true', 'zh-Hant:true'], 'only languages with no translation, all before anything is awaited; Traditional Chinese is zh-Hant for Chrome\'s Translator');
   assert.equal(fields[0].value, '[de] A new text');
   assert.equal(fields[1].value, '', 'a shipped translation is kept as it is');
   assert.equal(fields[2].value, 'Mine', 'a typed translation is kept');
-  assert.equal(elements['#methodTranslationsCount'].textContent, '5 of 11');
-  assert.match(elements['#methodTranslateStatus'].textContent, /^Filled 3 languages/);
+  assert.equal(elements['#methodTranslationsCount'].textContent, `6 of ${context.RuleI18n.LOCALES.length}`);
+  assert.match(elements['#methodTranslateStatus'].textContent, /^Filled 4 languages/);
 });
 
 test('with a translation in every language there is nothing to translate', async () => {

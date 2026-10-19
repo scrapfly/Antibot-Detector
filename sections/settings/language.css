@@ -10,8 +10,9 @@
 }
 
 #settingsModal .settings-row--language .language-picker {
-  flex: 0 0 118px;
-  width: 118px;
+  /* wide enough for the longest language name ("Português (Brasil)", "Bahasa Indonesia") */
+  flex: 0 0 158px;
+  width: 158px;
   top: 1px;
   margin-right: -1px;
 }
@@ -191,7 +192,6 @@
   flex: 1;
   min-width: 0;
   line-height: 1.35;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* "Use browser language" is long in some languages: wrap it rather than cut it */
+  overflow-wrap: anywhere;
 }

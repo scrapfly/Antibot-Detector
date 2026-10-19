@@ -142,7 +142,8 @@
 }
 
 #editRuleModal .form-row-icon-version-author {
-  grid-template-columns: 32px auto minmax(0, 1fr);
+  /* the icon column is as wide as its label in the language in use (at least the 32px button) */
+  grid-template-columns: minmax(32px, auto) auto minmax(0, 1fr);
   align-items: end;
   gap: 10px;
 }

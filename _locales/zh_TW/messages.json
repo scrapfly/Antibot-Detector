@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "掃描失敗"
+  },
+  "detectionInterruptedTitle": {
+    "message": "掃描已中斷"
+  },
+  "detectionUnscannedTitle": {
+    "message": "尚無完成的掃描"
+  },
+  "detectionRetryScanDesc": {
+    "message": "掃描未完成。請重新載入網頁後再試一次。"
+  },
+  "settingsReadFailedToast": {
+    "message": "無法載入設定。已保留目前的值。"
+  },
+  "settingsWriteFailedToast": {
+    "message": "無法儲存設定。已保留您的變更，請再試一次。"
+  },
+  "settingsDraftPendingToast": {
+    "message": "變更已暫存。請儲存設定以套用。"
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "無法儲存匯入的設定。已保留您目前的設定和語言。"
+  },
+  "settingsAppliesImmediately": {
+    "message": "立即生效。"
+  },
+  "settingsDataPortableDesc": {
+    "message": "匯出或匯入偏好設定。整合連線資訊會保留在此瀏覽器中。"
+  },
+  "settingsImportReadFailedToast": {
+    "message": "無法讀取有效的設定檔。未變更任何內容。"
+  },
+  "rulesUiSaveFailed": {
+    "message": "無法儲存此規則。您的變更仍保留在此，請再試一次。"
+  },
+  "advToolReloadScriptsHint": {
+    "message": "重新載入網頁以分析防護指令碼"
+  },
+  "advToolResetScriptsHint": {
+    "message": "重設防護 Cookie 並重新載入，以分析指令碼"
+  },
+  "advToolReloadVersionHint": {
+    "message": "重新載入網頁以偵測防護版本"
+  },
+  "advToolCaptureResetHint": {
+    "message": "重設防護 Cookie 並開始錄製"
+  },
+  "advToolCookiesHint": {
+    "message": "檢查此防護使用的 Cookie"
+  },
+  "advToolVersionHint": {
+    "message": "讀取可用的版本資訊"
+  },
+  "advToolSiteKeyHint": {
+    "message": "在此網頁上尋找 CAPTCHA 網站金鑰"
+  },
+  "advToolSelectorHint": {
+    "message": "尋找 CAPTCHA 元件的選取器"
+  },
+  "advToolCallbackHint": {
+    "message": "檢查 CAPTCHA 回呼"
+  },
+  "advToolSensorHint": {
+    "message": "重設防護 Cookie 並重新載入，以錄製感測器資料"
+  },
+  "advToolCaptureHint": {
+    "message": "錄製此網頁的資料"
+  },
+  "advToolStopCaptureHint": {
+    "message": "停止錄製此網頁的資料"
+  },
+  "advToolWorking": {
+    "message": "處理中…"
+  },
+  "advToolWaitingReload": {
+    "message": "正在重新載入網頁並收集結果，需要幾秒鐘…"
+  },
+  "advToolNoResult": {
+    "message": "沒有結果：防護未傳送任何資料。請重新載入網頁後再試一次。"
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "{0} 網站金鑰"
+  },
+  "advSiteKeyNotFound": {
+    "message": "此網頁上找不到網站金鑰。請開啟或觸發 CAPTCHA 後再試一次。"
+  },
+  "advSiteKeyFoundIn": {
+    "message": "找到位置"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "元件"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "要求"
+  },
+  "advSiteKeySourceScript": {
+    "message": "網頁指令碼"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "網頁變數"
+  },
+  "advSiteKeyFrame": {
+    "message": "框架"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "此網頁上的指令碼"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "提取網站金鑰並分析其指令碼"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "分析其指令碼"
+  },
+  "advToolActionFailedFmt": {
+    "message": "無法完成此操作：{0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "圖表上一頁"
+  },
+  "statsChartNext": {
+    "message": "圖表下一頁"
+  },
+  "statsChartPage": {
+    "message": "第 {0} 頁，共 {1} 頁"
+  },
+  "statsChartShowing": {
+    "message": "顯示第 {0}–{1} 項，共 {2} 項"
+  },
+  "statsSectionsLabel": {
+    "message": "統計資料區段"
+  },
+  "statsSectionOverview": {
+    "message": "總覽"
+  },
+  "statsSectionActivity": {
+    "message": "活動"
+  },
+  "statsSectionProtections": {
+    "message": "防護"
+  },
+  "statsSectionDomains": {
+    "message": "網域"
+  },
+  "statsSectionConfidence": {
+    "message": "信賴度"
+  },
+  "statsExportCSV": {
+    "message": "匯出 CSV"
+  },
+  "statsExportJSON": {
+    "message": "匯出 JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "匯出內容包含網域和偵測摘要，不包含 Cookie、網頁內容或 URL 參數。"
+  },
+  "statsExportScopeFmt": {
+    "message": "匯出內容涵蓋所選範圍。記錄數：{0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "已開始下載：{0}"
+  },
+  "statsExportFailed": {
+    "message": "無法匯出資料。請再試一次。"
+  },
+  "statsLoadFailed": {
+    "message": "無法載入歷史記錄。請重新載入此頁面。"
+  },
+  "statsRangeEmptyTitle": {
+    "message": "此範圍內沒有記錄"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "請選擇較長的日期範圍，以查看已儲存的歷史記錄。"
+  },
+  "statsDetectionRate": {
+    "message": "含偵測結果的記錄"
+  },
+  "statsActiveDays": {
+    "message": "活躍天數"
+  },
+  "statsAverageConfidence": {
+    "message": "平均信賴度"
+  },
+  "statsDailyVisits": {
+    "message": "每日歷史記錄"
+  },
+  "statsActivityCalendar": {
+    "message": "活動日曆"
+  },
+  "statsActivityCalendarHint": {
+    "message": "每個方格代表本地日曆中的一天。藍色越深，表示儲存的記錄越多。"
+  },
+  "statsHourlyActivity": {
+    "message": "依小時統計的活動"
+  },
+  "statsWeekdayActivity": {
+    "message": "依星期統計的活動"
+  },
+  "statsLocalTimeNote": {
+    "message": "日期和小時採用您的本地時區。"
+  },
+  "statsTimelineLimitFmt": {
+    "message": "顯示最近 {0} 天。總計和匯出內容包含所選範圍內的全部記錄。"
+  },
+  "statsProtectionRanking": {
+    "message": "防護排名"
+  },
+  "statsCategoryTrend": {
+    "message": "類別隨時間的變化"
+  },
+  "statsCategoryOverlap": {
+    "message": "同時偵測到的類別"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "同時包含兩個類別的歷史記錄數量。對角線儲存格顯示包含該類別的記錄。"
+  },
+  "statsProtectionDetails": {
+    "message": "所有防護"
+  },
+  "statsDomainRanking": {
+    "message": "網域排名"
+  },
+  "statsDomainMap": {
+    "message": "造訪與偵測"
+  },
+  "statsDomainMapHint": {
+    "message": "每個點代表一個網域。點越大，表示不同的防護越多。"
+  },
+  "statsDomainDetails": {
+    "message": "所有網域"
+  },
+  "statsDomainSearch": {
+    "message": "搜尋網域..."
+  },
+  "statsDomainSortLabel": {
+    "message": "網域排序"
+  },
+  "statsSortVisits": {
+    "message": "造訪最多"
+  },
+  "statsSortDetections": {
+    "message": "偵測最多"
+  },
+  "statsSortConfidence": {
+    "message": "信賴度最高"
+  },
+  "statsSortName": {
+    "message": "網域名稱"
+  },
+  "statsConfidenceDistribution": {
+    "message": "信賴度分布"
+  },
+  "statsConfidenceTrend": {
+    "message": "信賴度隨時間的變化"
+  },
+  "statsCategoryConfidence": {
+    "message": "各類別的信賴度"
+  },
+  "statsConfidenceNote": {
+    "message": "信賴度代表已儲存偵測證據的強度，並不能證明存在指紋辨識或進行中的挑戰。"
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} 項偵測有信賴度值；{1} 項沒有有效分數。"
+  },
+  "statsProtectionColumn": {
+    "message": "防護"
+  },
+  "statsCategoryColumn": {
+    "message": "類別"
+  },
+  "statsDomainColumn": {
+    "message": "網域"
+  },
+  "statsTableCountFmt": {
+    "message": "{0} / {1} 列"
+  },
+  "statsTableMore": {
+    "message": "顯示更多"
+  },
+  "statsNoMatchingDomains": {
+    "message": "沒有符合搜尋條件的網域。"
+  },
+  "statsSelectionNote": {
+    "message": "圖表和匯出內容採用所選的日期範圍。歷史記錄代表已儲存的偵測結果，而非每一次瀏覽器造訪。"
+  },
+  "extensionName": {
+    "message": "Scrapfly：反機器人偵測器"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly：反機器人偵測器",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": "：反機器人偵測器",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "偵測網站上的 CAPTCHA、反機器人系統和指紋辨識技術"
+  },
+  "tabDetection": {
+    "message": "偵測"
+  },
+  "tabHistory": {
+    "message": "歷史記錄"
+  },
+  "tabRules": {
+    "message": "規則"
+  },
+  "tabAdvanced": {
+    "message": "進階"
+  },
+  "openSettings": {
+    "message": "開啟設定"
+  },
+  "enableOrDisableDetection": {
+    "message": "啟用或停用偵測"
+  },
+  "noDetectionsFound": {
+    "message": "找不到偵測結果"
+  },
+  "detectionScanningTitle": {
+    "message": "正在掃描此網頁"
+  },
+  "detectionScanningDescription": {
+    "message": "正在尋找防護訊號。"
+  },
+  "detectionScanningHint": {
+    "message": "結果準備好後會顯示在這裡。"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "從黑名單中移除"
+  },
+  "statDetections": {
+    "message": "偵測數"
+  },
+  "statConfidence": {
+    "message": "信賴度"
+  },
+  "statDifficulty": {
+    "message": "難度"
+  },
+  "statCacheScope": {
+    "message": "快取範圍"
+  },
+  "scopeDomain": {
+    "message": "網域"
+  },
+  "scopePath": {
+    "message": "路徑"
+  },
+  "scopeFullUrl": {
+    "message": "完整 URL"
+  },
+  "difficultyLow": {
+    "message": "低"
+  },
+  "difficultyMedium": {
+    "message": "中"
+  },
+  "difficultyHigh": {
+    "message": "高"
+  },
+  "searchHistory": {
+    "message": "搜尋歷史記錄..."
+  },
+  "searchDetectors": {
+    "message": "搜尋偵測器..."
+  },
+  "paginationPrev": {
+    "message": "上一頁"
+  },
+  "paginationNext": {
+    "message": "下一頁"
+  },
+  "paginationPage": {
+    "message": "頁"
+  },
+  "paginationOf": {
+    "message": "/"
+  },
+  "paginationNoItems": {
+    "message": "沒有可顯示的項目"
+  },
+  "paginationCurrentPageAria": {
+    "message": "目前的頁碼"
+  },
+  "btnImport": {
+    "message": "匯入"
+  },
+  "btnExport": {
+    "message": "匯出"
+  },
+  "btnClear": {
+    "message": "清除"
+  },
+  "btnAdd": {
+    "message": "新增"
+  },
+  "btnUpdate": {
+    "message": "更新"
+  },
+  "btnClose": {
+    "message": "關閉"
+  },
+  "btnSave": {
+    "message": "儲存"
+  },
+  "btnCancel": {
+    "message": "取消"
+  },
+  "btnDelete": {
+    "message": "刪除"
+  },
+  "historyImportTitle": {
+    "message": "匯入歷史記錄"
+  },
+  "historyExportTitle": {
+    "message": "匯出歷史記錄"
+  },
+  "historyClearTitle": {
+    "message": "清除歷史記錄"
+  },
+  "historyEmptyTitle": {
+    "message": "尚無歷史記錄"
+  },
+  "historyEmptyDescription": {
+    "message": "瀏覽網站時，偵測歷史記錄會顯示在這裡。"
+  },
+  "rulesUpdateTitle": {
+    "message": "從最新的 Scrapfly 發行版本安裝規則更新"
+  },
+  "rulesAddTitle": {
+    "message": "新增偵測器"
+  },
+  "rulesEmptyTitle": {
+    "message": "未載入任何偵測器"
+  },
+  "rulesEmptyDescription": {
+    "message": "從儲存空間和檔案載入後，偵測器會顯示在這裡。"
+  },
+  "ruleModalActionEdit": {
+    "message": "編輯"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "偵測器資訊"
+  },
+  "ruleFieldName": {
+    "message": "名稱"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "偵測器名稱"
+  },
+  "ruleFieldCategory": {
+    "message": "類別"
+  },
+  "categoryAntibot": {
+    "message": "反機器人"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "指紋辨識"
+  },
+  "ruleFieldDifficulty": {
+    "message": "難度"
+  },
+  "ruleFieldIcon": {
+    "message": "圖示"
+  },
+  "ruleFieldVersion": {
+    "message": "版本"
+  },
+  "ruleFieldAuthor": {
+    "message": "作者"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "徽章顏色"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "偵測方法"
+  },
+  "settingsTitle": {
+    "message": "設定"
+  },
+  "settingsSubtitle": {
+    "message": "調整擴充功能的偏好設定"
+  },
+  "settingsTabGeneral": {
+    "message": "一般"
+  },
+  "settingsTabDetection": {
+    "message": "偵測"
+  },
+  "settingsTabHistory": {
+    "message": "歷史記錄"
+  },
+  "settingsTabData": {
+    "message": "資料"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "核心設定"
+  },
+  "settingsCardNotifications": {
+    "message": "通知"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "偵測到安全系統時顯示警示"
+  },
+  "settingsCardDebug": {
+    "message": "偵錯模式"
+  },
+  "settingsCardDebugDesc": {
+    "message": "為每個掃描的網頁在擴充功能的主控台寫入一份易讀的報告。"
+  },
+  "settingsRowLogCollector": {
+    "message": "日誌收集器"
+  },
+  "settingsRowMaxLogs": {
+    "message": "日誌上限"
+  },
+  "settingsRowCollected": {
+    "message": "已收集"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "偵測器更新"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "自動檢查更新"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "自動檢查新的偵測器定義"
+  },
+  "settingsRowCheckInterval": {
+    "message": "檢查間隔"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "永不"
+  },
+  "settingsBtnCheckNow": {
+    "message": "立即檢查"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "需要更新擴充功能"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "更新擴充功能"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "徽章顏色"
+  },
+  "settingsRowLastCheck": {
+    "message": "上次檢查"
+  },
+  "advancedToolsTitle": {
+    "message": "進階擷取工具"
+  },
+  "advancedToolsDescription": {
+    "message": "從偵測到的防護機制中提取 Cookie、權杖和網站金鑰"
+  },
+  "advancedToolsHint": {
+    "message": "造訪受防護的網頁以啟用擷取工具"
+  },
+  "advancedSubtabTools": {
+    "message": "工具"
+  },
+  "advancedSubtabHistory": {
+    "message": "歷史記錄"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "擷取歷史記錄"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "篩選、檢查和匯出已收集的擷取項目"
+  },
+  "advancedFilterSite": {
+    "message": "網站"
+  },
+  "advancedFilterAllSites": {
+    "message": "所有網站"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "目前網站"
+  },
+  "advancedFilterModule": {
+    "message": "模組"
+  },
+  "advancedFilterAllModules": {
+    "message": "所有模組"
+  },
+  "advancedFilterSearch": {
+    "message": "搜尋"
+  },
+  "advancedBtnExport": {
+    "message": "匯出"
+  },
+  "advancedBtnExportTitle": {
+    "message": "匯出擷取項目"
+  },
+  "advancedBtnClearAll": {
+    "message": "全部清除"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "清除所有擷取項目"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "尚無擷取項目"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "使用「工具」分頁從偵測到的系統擷取資料"
+  },
+  "advancedNoResultsTitle": {
+    "message": "找不到擷取項目"
+  },
+  "advancedBtnResetFilters": {
+    "message": "重設所有篩選條件"
+  },
+  "advancedModalTitle": {
+    "message": "進階偵測工具"
+  },
+  "advancedModalIntro": {
+    "message": "專為深入分析反機器人系統、CAPTCHA 和指紋辨識技術而設計的擷取工具。發現相關偵測結果時，這些工具會自動出現。"
+  },
+  "advancedSectionSupported": {
+    "message": "目前支援的系統"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "運作方式"
+  },
+  "advancedStep1Title": {
+    "message": "自動偵測"
+  },
+  "advancedStep1Desc": {
+    "message": "在目前網頁上偵測到相關的反機器人系統時，工具就會出現"
+  },
+  "advancedStep2Title": {
+    "message": "開始擷取"
+  },
+  "advancedStep2Desc": {
+    "message": "工具會自動初始化攔截器並開始監控網路要求"
+  },
+  "advancedStep3Title": {
+    "message": "檢視結果"
+  },
+  "advancedStep3Desc": {
+    "message": "擷取的資料會暫時儲存，並提供完整的匯出功能"
+  },
+  "advancedFooterHint": {
+    "message": "擷取項目會依「設定」中指定的時間保留。"
+  },
+  "settings": {
+    "message": "設定"
+  },
+  "paginationShowingFmt": {
+    "message": "顯示第 {0}-{1} 項，共 {2} 項"
+  },
+  "paginationShowingItems": {
+    "message": "顯示 {0}-{1}，共 {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "未知"
+  },
+  "timeJustNow": {
+    "message": "剛剛"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} 秒前"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} 分鐘前"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} 小時前"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} 天前"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 分鐘前"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} 分鐘前"
+  },
+  "timeOneHourAgo": {
+    "message": "1 小時前"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} 小時前"
+  },
+  "timeOneDayAgo": {
+    "message": "1 天前"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} 天前"
+  },
+  "btnCancelSettings": {
+    "message": "取消"
+  },
+  "btnSaveSettings": {
+    "message": "儲存設定"
+  },
+  "poweredBy": {
+    "message": "技術支援："
+  },
+  "categoryColors": {
+    "message": "類別顏色"
+  },
+  "methodSuffixPatterns": {
+    "message": "個模式"
+  },
+  "btnSaveRule": {
+    "message": "儲存規則"
+  },
+  "tagColors": {
+    "message": "標籤顏色"
+  },
+  "colorPickerTitle": {
+    "message": "顏色選擇器"
+  },
+  "colorPickerArea": {
+    "message": "飽和度與亮度"
+  },
+  "colorPickerSaturation": {
+    "message": "飽和度"
+  },
+  "colorPickerBrightness": {
+    "message": "亮度"
+  },
+  "colorPickerHue": {
+    "message": "色相"
+  },
+  "colorPickerRed": {
+    "message": "紅"
+  },
+  "colorPickerGreen": {
+    "message": "綠"
+  },
+  "colorPickerBlue": {
+    "message": "藍"
+  },
+  "colorPickerPresets": {
+    "message": "預設顏色"
+  },
+  "cacheConfiguration": {
+    "message": "快取設定"
+  },
+  "cacheDuration": {
+    "message": "快取持續時間"
+  },
+  "timeUnitMinutes": {
+    "message": "分鐘"
+  },
+  "timeUnitHours": {
+    "message": "小時"
+  },
+  "timeUnitDays": {
+    "message": "天"
+  },
+  "blacklistedDomains": {
+    "message": "黑名單網域"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "完全略過偵測的網域"
+  },
+  "jsApiEvents": {
+    "message": "JS API 事件"
+  },
+  "jsApiEventsDesc": {
+    "message": "向網頁的 window 派送自訂事件"
+  },
+  "ruleMethodSettings": {
+    "message": "偵測方法設定"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · {1} 設定",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "{0} 設定",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "說明"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "此模式的意義，例如：讀取瀏覽器語言偏好設定"
+  },
+  "ruleDescriptionHint": {
+    "message": "找到此模式時，會顯示在偵測詳細資料和歷史記錄中。"
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "這項防護是什麼，例如：登入與結帳頁面上的機器人偵測"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "顯示在此防護的偵測詳細資料中。"
+  },
+  "ruleConfidenceLevel": {
+    "message": "信賴度"
+  },
+  "ruleConfidencePrefix": {
+    "message": "偵測信賴度："
+  },
+  "detectionName": {
+    "message": "偵測名稱"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 小時"
+  },
+  "interval12Hours": {
+    "message": "12 小時"
+  },
+  "interval24Hours": {
+    "message": "24 小時"
+  },
+  "interval2Days": {
+    "message": "2 天"
+  },
+  "interval1Week": {
+    "message": "1 週"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "標頭"
+  },
+  "methodLabelCookie": {
+    "message": "Cookie"
+  },
+  "methodLabelContent": {
+    "message": "內容"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS 掛鉤"
+  },
+  "methodLabelWindow": {
+    "message": "視窗"
+  },
+  "methodLabelPayload": {
+    "message": "酬載"
+  },
+  "methodOnePattern": {
+    "message": "1 個模式"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} 個模式"
+  },
+  "methodAddPattern": {
+    "message": "新增模式"
+  },
+  "methodSearchPatterns": {
+    "message": "搜尋模式..."
+  },
+  "methodNoPatterns": {
+    "message": "沒有模式"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "沒有符合的模式"
+  },
+  "methodSuffixMatches": {
+    "message": "個符合項目"
+  },
+  "cacheExpiredLabel": {
+    "message": "已過期"
+  },
+  "copiedNotification": {
+    "message": "已複製"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ 已複製！"
+  },
+  "unknownDetection": {
+    "message": "未知的偵測"
+  },
+  "matchPlural": {
+    "message": "符合項目"
+  },
+  "noMatchesRecorded": {
+    "message": "未記錄到符合項目"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "清除快取"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "這會移除此網域的快取偵測資料，並觸發全新的分析。"
+  },
+  "clearCacheConfirmBtn": {
+    "message": "清除快取"
+  },
+  "clearingMsg": {
+    "message": "正在清除..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ 已清除！"
+  },
+  "cacheClearedToast": {
+    "message": "快取已清除"
+  },
+  "failedToClearCacheToast": {
+    "message": "無法清除快取"
+  },
+  "unableGetCurrentPage": {
+    "message": "無法取得目前的網頁"
+  },
+  "invalidDomain": {
+    "message": "無效的網域"
+  },
+  "addBlacklistTitle": {
+    "message": "加入黑名單"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "網域「{0}」將排除在日後所有偵測之外。您之後可以在設定中將它移除。"
+  },
+  "addBlacklistBtn": {
+    "message": "加入黑名單"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "網域「{0}」已在黑名單中"
+  },
+  "addedToBlacklistFmt": {
+    "message": "已將「{0}」加入黑名單"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "無法加入黑名單：{0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "已將「{0}」從黑名單中移除"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "無法從黑名單中移除：{0}"
+  },
+  "historyNoDetections": {
+    "message": "沒有偵測結果"
+  },
+  "historyNoDetectionsFound": {
+    "message": "找不到偵測結果"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} 項符合"
+  },
+  "historyOneMatch": {
+    "message": "1 項符合"
+  },
+  "notificationHistoryCleared": {
+    "message": "歷史記錄已清除"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "無法清除歷史記錄：{0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "歷史記錄項目已匯出"
+  },
+  "notificationCacheCleared": {
+    "message": "快取已清除"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "快取已經清除"
+  },
+  "notificationClearCacheFailed": {
+    "message": "無法清除快取"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "已將「{0}」加入黑名單"
+  },
+  "notificationBlacklistFailed": {
+    "message": "無法加入黑名單"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "歷史記錄項目已刪除"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "無法刪除歷史記錄項目"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "已匯出 {0} 筆歷史記錄"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "已合併 {0} 筆新的歷史記錄"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "已用 {0} 筆記錄取代歷史記錄"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "無法匯入歷史記錄：{0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "清除歷史記錄"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "確定要清除所有歷史記錄嗎？此動作無法復原。"
+  },
+  "buttonClearAll": {
+    "message": "全部清除"
+  },
+  "dialogClearCacheTitle": {
+    "message": "清除快取"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "要清除 {0} 的快取偵測資料嗎？歷史記錄項目會保留。"
+  },
+  "buttonClearCache": {
+    "message": "清除快取"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "刪除歷史記錄項目"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "確定要刪除來自 {0} 的這筆偵測記錄嗎？"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "無法載入設定。改用預設值。"
+  },
+  "settingsSavedToast": {
+    "message": "設定已儲存"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "無法儲存設定：{0}"
+  },
+  "failedExportLogs": {
+    "message": "無法匯出日誌"
+  },
+  "logsCleared": {
+    "message": "日誌已清除"
+  },
+  "failedClearLogs": {
+    "message": "無法清除日誌"
+  },
+  "couldNotGetPageUrl": {
+    "message": "無法取得目前網頁的 URL"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} 已在黑名單中"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "已將 {0} 加入黑名單"
+  },
+  "failedAddDomainFmt": {
+    "message": "無法新增網域：{0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "已將 {0} 從黑名單中移除"
+  },
+  "invalidSettingsFmt": {
+    "message": "設定無效：{0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "請輸入 Webhook URL"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhook 測試成功！狀態：{0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook 傳回狀態：{0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhook 測試失敗：{0}"
+  },
+  "importDetectorsTitle": {
+    "message": "匯入偵測器"
+  },
+  "importDetectorsModeMessage": {
+    "message": "「合併」會將匯入的偵測器新增到您現有的偵測器中。<br>「全部取代」會先刪除您的自訂偵測器；內建偵測器會保留。"
+  },
+  "mergeOption": {
+    "message": "合併"
+  },
+  "replaceAllOption": {
+    "message": "全部取代"
+  },
+  "detectorsImported": {
+    "message": "偵測器已匯入"
+  },
+  "detectorExportedFmt": {
+    "message": "已匯出 {0}"
+  },
+  "failedImportDetectors": {
+    "message": "無法匯入偵測器。請檢查檔案格式。"
+  },
+  "errorReadingFileFmt": {
+    "message": "讀取檔案時發生錯誤：{0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "已更新 {0} 個偵測器"
+  },
+  "detectorDeletedFmt": {
+    "message": "已刪除「{0}」"
+  },
+  "failedClearDetectors": {
+    "message": "無法清除偵測器"
+  },
+  "urlPatternMatching": {
+    "message": "URL 模式比對"
+  },
+  "textWordMatching": {
+    "message": "文字/單字比對"
+  },
+  "payloadTextMatching": {
+    "message": "酬載文字比對"
+  },
+  "nameFieldMatching": {
+    "message": "名稱欄位比對"
+  },
+  "captureNotFound": {
+    "message": "找不到擷取項目"
+  },
+  "captureModuleClassNotFound": {
+    "message": "找不到模組類別"
+  },
+  "captureDetailsUnavailable": {
+    "message": "無法使用詳細資料檢視"
+  },
+  "captureDataCopied": {
+    "message": "已複製擷取資料"
+  },
+  "captureDeleted": {
+    "message": "擷取項目已刪除"
+  },
+  "capturesExportedFmt": {
+    "message": "已匯出 {0} 個擷取項目"
+  },
+  "allCapturesCleared": {
+    "message": "所有擷取項目已清除"
+  },
+  "captureExportFailed": {
+    "message": "擷取項目匯出失敗"
+  },
+  "invalidUrl": {
+    "message": "無效的 URL"
+  },
+  "importHistoryTitle": {
+    "message": "匯入歷史記錄"
+  },
+  "replaceOption": {
+    "message": "取代"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "要匯入 {0} 筆歷史記錄嗎？目前的歷史記錄有 {1} 筆。<br>「合併」會將新項目加入其中，「取代」會先將其刪除。"
+  },
+  "clearLogsTitle": {
+    "message": "清除日誌"
+  },
+  "clearLogsMessage": {
+    "message": "確定要清除所有已收集的日誌嗎？此動作無法復原。"
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "無法檢查更新：{0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "無法從伺服器取得更新"
+  },
+  "updateResultInstalledFmt": {
+    "message": "已從發行版本 {0} 更新規則：{1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "所有規則都已與發行版本 {0} 同步。"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "等待擴充功能 {0} 或更新版本：{1}。Chrome 更新擴充功能後便會安裝。"
+  },
+  "updateResultFailedFmt": {
+    "message": "無法下載：{0}。請稍後再試。"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "您編輯過的規則正等待您在「規則 → 更新」中決定：{0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "無法連線至 GitHub 以檢查規則更新。"
+  },
+  "updateErrorNoRelease": {
+    "message": "在 GitHub 上找不到已發布的 Scrapfly 發行版本。"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub 正在限制更新檢查。請在 {0} 分鐘後再試一次。"
+  },
+  "errorApplyingUpdates": {
+    "message": "套用更新時發生錯誤"
+  },
+  "failedCheckForUpdates": {
+    "message": "無法檢查更新"
+  },
+  "errorCheckingForUpdates": {
+    "message": "檢查更新時發生錯誤"
+  },
+  "updateServiceNotAvailable": {
+    "message": "更新服務無法使用"
+  },
+  "deleteDetectorTitle": {
+    "message": "刪除偵測器"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "確定要刪除「{0}」嗎？"
+  },
+  "detectorNotFound": {
+    "message": "找不到偵測器"
+  },
+  "failedDeleteDetector": {
+    "message": "無法刪除偵測器"
+  },
+  "failedViewCaptureDetails": {
+    "message": "無法檢視擷取項目的詳細資料"
+  },
+  "failedCopyCaptureData": {
+    "message": "無法複製擷取資料"
+  },
+  "failedDeleteCapture": {
+    "message": "無法刪除擷取項目"
+  },
+  "noCapturesToExport": {
+    "message": "沒有可匯出的擷取項目"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "確定要刪除所有擷取項目嗎？此動作無法復原。"
+  },
+  "failedClearCaptures": {
+    "message": "無法清除擷取項目"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook 整合"
+  },
+  "settingsEnableWebhook": {
+    "message": "啟用 Webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "偵測時傳送 HTTP 要求"
+  },
+  "settingsBypassCache": {
+    "message": "每次載入網頁時傳送（略過快取）"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP 方法"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "選取 Webhook 要求使用的 HTTP 方法"
+  },
+  "settingsCustomMethod": {
+    "message": "自訂"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "輸入自訂方法（例如 OPTIONS、HEAD）"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "完整的端點 URL（https://api.example.com/webhook）"
+  },
+  "settingsAvailableVariables": {
+    "message": "可用變數："
+  },
+  "settingsWebhookUrlExample": {
+    "message": "範例：https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP Content-Type 標頭"
+  },
+  "webhookCtHintJson": {
+    "message": "以 JSON 傳送範本，並填入變數。"
+  },
+  "webhookCtHintForm": {
+    "message": "範本欄位以 key=value 組合傳送；巢狀欄位寫成 detections[0][name]。"
+  },
+  "webhookCtHintMultipart": {
+    "message": "範本欄位以 form-data 區段傳送；boundary 由瀏覽器設定。"
+  },
+  "webhookCtHintText": {
+    "message": "原樣傳送範本文字，並填入變數。"
+  },
+  "webhookCtHintXml": {
+    "message": "範本欄位以 <webhook> XML 文件傳送；偵測結果以重複的元素表示。"
+  },
+  "webhookCtHintCsv": {
+    "message": "第一列為標題列，之後每筆偵測結果一列，並重複網頁欄位。"
+  },
+  "webhookCtHintNdjson": {
+    "message": "每行一個 JSON 物件：每筆偵測結果一行，並附上網頁欄位。"
+  },
+  "webhookCtHintCustom": {
+    "message": "您自己的 Content-Type（type/subtype）；內文以 JSON 傳送。"
+  },
+  "webhookCtCustom": {
+    "message": "自訂"
+  },
+  "webhookCtCustomLabel": {
+    "message": "自訂 Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "請輸入 type/subtype，例如 application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "新增標頭"
+  },
+  "webhookNoHeaders": {
+    "message": "未設定自訂標頭"
+  },
+  "webhookHeaderName": {
+    "message": "標頭名稱"
+  },
+  "webhookHeaderValue": {
+    "message": "標頭值"
+  },
+  "webhookRemoveHeader": {
+    "message": "移除標頭"
+  },
+  "webhookSending": {
+    "message": "正在傳送..."
+  },
+  "settingsCustomHeaders": {
+    "message": "自訂標頭"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "為 Webhook 要求新增自訂 HTTP 標頭"
+  },
+  "settingsPayloadTemplate": {
+    "message": "酬載範本"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "隨每個 Webhook 傳送的內文。按一下變數即可插入。"
+  },
+  "webhookVarsTitle": {
+    "message": "範本變數"
+  },
+  "webhookVarsIntro": {
+    "message": "傳送 Webhook 時會替換成網頁的值。"
+  },
+  "webhookVarsInsertLabel": {
+    "message": "插入變數"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "插入 {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "複製 {0}"
+  },
+  "webhookVarsExample": {
+    "message": "範例"
+  },
+  "webhookVarSiteUrl": {
+    "message": "網頁的完整 URL"
+  },
+  "webhookVarHostname": {
+    "message": "網頁的主機名稱"
+  },
+  "webhookVarTitle": {
+    "message": "網頁標題"
+  },
+  "webhookVarFavicon": {
+    "message": "網站的圖示 URL"
+  },
+  "webhookVarDetections": {
+    "message": "偵測結果，格式為 JSON 陣列"
+  },
+  "webhookVarTimestamp": {
+    "message": "偵測時間（ISO 8601）"
+  },
+  "webhookVarDetectionCount": {
+    "message": "偵測數量"
+  },
+  "webhookVarCategories": {
+    "message": "偵測到的類別，以逗號分隔"
+  },
+  "webhookJsonValid": {
+    "message": "JSON 有效"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "JSON 無效（第 {0} 行）"
+  },
+  "webhookResetTemplate": {
+    "message": "重設範本"
+  },
+  "settingsTestWebhook": {
+    "message": "測試 Webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "向您的 Webhook URL 傳送測試要求"
+  },
+  "settingsTestBtn": {
+    "message": "測試"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "歷史記錄設定"
+  },
+  "settingsHistorySettings": {
+    "message": "歷史記錄設定"
+  },
+  "settingsHistoryLimit": {
+    "message": "歷史記錄上限"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "（0 = 安全上限 1,000 筆）"
+  },
+  "settingsExportFormat": {
+    "message": "匯出格式"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "純文字"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "包含時間戳記"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "命中快取時儲存"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "防止重複"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "啟用防止重複"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "在時間區間內封鎖重複的歷史記錄項目"
+  },
+  "settingsDuplicateScope": {
+    "message": "範圍"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "完整 URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "網域"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "路徑"
+  },
+  "settingsTimeWindow": {
+    "message": "時間區間"
+  },
+  "settingsTimeMinutes": {
+    "message": "分鐘"
+  },
+  "settingsTimeHours": {
+    "message": "小時"
+  },
+  "settingsTimeDays": {
+    "message": "天"
+  },
+  "settingsHowItWorks": {
+    "message": "運作方式："
+  },
+  "settingsHowItWorksDesc": {
+    "message": "在時間區間內，防止相同 URL 產生重複的歷史記錄項目。"
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "完整 URL：URL 必須完全相符（包含查詢參數）"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "網域：相同網域（不同路徑視為相同）"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "路徑：相同的網域 + 路徑（忽略查詢參數）"
+  },
+  "settingsCardCacheSettings": {
+    "message": "快取設定"
+  },
+  "settingsCardSkipDomains": {
+    "message": "略過的網域"
+  },
+  "settingsAddCurrentPage": {
+    "message": "新增目前網頁"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "搜尋網域..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "低"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "中"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "高"
+  },
+  "settingsEnableJsApi": {
+    "message": "啟用 JS API 事件"
+  },
+  "settingsDataExportImport": {
+    "message": "匯出與匯入"
+  },
+  "settingsDataManagement": {
+    "message": "資料管理"
+  },
+  "settingsDataManagementDesc": {
+    "message": "匯出或匯入擴充功能資料"
+  },
+  "settingsDataSettingsRow": {
+    "message": "設定"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "匯出或匯入擴充功能設定"
+  },
+  "settingsDataHistoryRow": {
+    "message": "偵測歷史記錄"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "將偵測歷史記錄匯出為 CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "匯出設定"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "匯入設定"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "匯出歷史記錄"
+  },
+  "settingsAvailableEvents": {
+    "message": "可用事件"
+  },
+  "settingsApiEventReady": {
+    "message": "擴充功能已載入並完成初始化"
+  },
+  "settingsApiEventOnStart": {
+    "message": "偵測已開始（未命中快取／手動）"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "偵測進度更新（方法層級）"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "JS 掛鉤監控已完成"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "視窗屬性監控已完成"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "偵測完成並已產生結果"
+  },
+  "settingsApiEventOnError": {
+    "message": "偵測發生錯誤"
+  },
+  "settingsUsageExample": {
+    "message": "使用範例"
+  },
+  "detectionDisabledForDomain": {
+    "message": "已對此網域停用偵測"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "從黑名單中移除"
+  },
+  "detectionBlacklistHint": {
+    "message": "您也可以前往「設定 → 偵測 → 黑名單網域」進行管理。"
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "在此網頁上找不到符合的反機器人、CAPTCHA 或指紋辨識訊號。"
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "此網頁沒有可用的快取偵測資料。請重新載入網頁以執行新的掃描。"
+  },
+  "detectionTitleUploadPaste": {
+    "message": "上傳偵測結果（可分享的連結）"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "連結已複製到剪貼簿"
+  },
+  "failedReadSettings": {
+    "message": "無法讀取設定 — 已取消操作"
+  },
+  "failedRemoveBlacklist": {
+    "message": "無法從黑名單中移除"
+  },
+  "pasteConfirmTitle": {
+    "message": "要上傳偵測結果嗎？"
+  },
+  "pasteConfirmBtn": {
+    "message": "上傳"
+  },
+  "pasteUploadFailedToast": {
+    "message": "上傳失敗"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "沒有可上傳的偵測結果"
+  },
+  "detectionTitleClearCache": {
+    "message": "清除快取"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "複製總覽"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "封鎖此網域"
+  },
+  "detectionStatSite": {
+    "message": "網站"
+  },
+  "detectionStatDetections": {
+    "message": "偵測數"
+  },
+  "detectionStatConfidence": {
+    "message": "信賴度"
+  },
+  "detectionStatDifficulty": {
+    "message": "難度"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "搜尋偵測結果..."
+  },
+  "detectionPaginationPage": {
+    "message": "頁"
+  },
+  "detectionPaginationOf": {
+    "message": "/"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "此網域已列入黑名單"
+  },
+  "detectionModalConfidence": {
+    "message": "信賴度"
+  },
+  "detectionModalDifficulty": {
+    "message": "難度"
+  },
+  "detectionModalAuthor": {
+    "message": "作者"
+  },
+  "detectionModalDescription": {
+    "message": "說明"
+  },
+  "detectionModalNoDescription": {
+    "message": "沒有可用的說明。"
+  },
+  "detectionModalDetectionMethods": {
+    "message": "偵測方法"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "未偵測到任何方法"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "依 URL、模組、網站或內容搜尋..."
+  },
+  "advancedPaginationPage": {
+    "message": "頁"
+  },
+  "advancedPaginationOf": {
+    "message": "/"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "擷取網站金鑰、動作和設定參數"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "攔截感測器資料並提取版本資訊"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "監控 Cookie 和防護等級的變化"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "分析動態標頭和指令碼參數"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "擷取挑戰端點和權杖詳細資料"
+  },
+  "btnStartCapturing": {
+    "message": "開始擷取"
+  },
+  "btnStopCapturing": {
+    "message": "停止擷取"
+  },
+  "btnCheckCookies": {
+    "message": "檢查 Cookie"
+  },
+  "btnCheckVersion": {
+    "message": "檢查版本"
+  },
+  "btnAnalyzeScripts": {
+    "message": "分析指令碼"
+  },
+  "btnExtractSiteKey": {
+    "message": "提取網站金鑰"
+  },
+  "btnExtractPublicKey": {
+    "message": "提取公開金鑰"
+  },
+  "btnObtainSelector": {
+    "message": "取得選取器"
+  },
+  "btnCopyAllData": {
+    "message": "複製所有資料"
+  },
+  "btnClearData": {
+    "message": "清除資料"
+  },
+  "advCapturedDataSection": {
+    "message": "已擷取的資料"
+  },
+  "advNoCapturesYet": {
+    "message": "尚無擷取項目"
+  },
+  "advCaptureDetails": {
+    "message": "擷取項目詳細資料"
+  },
+  "advValueCopied": {
+    "message": "已複製值"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "要清除所有已擷取的資料嗎？"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "這會永久刪除此供應商所有已擷取的資料。"
+  },
+  "rulesColorPickerCancel": {
+    "message": "取消"
+  },
+  "rulesColorPickerOk": {
+    "message": "確定"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "內容搜尋範圍"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "僅檢查指令碼"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "僅搜尋 JavaScript 程式碼（內嵌和已載入的指令碼），不包含網頁文字或檔案名稱"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "範圍設定"
+  },
+  "rulesNameScopeLabel": {
+    "message": "名稱範圍"
+  },
+  "rulesNameScopeHint": {
+    "message": "要在何處檢查名稱/欄位的比對"
+  },
+  "rulesScopeRequest": {
+    "message": "要求"
+  },
+  "rulesScopeResponse": {
+    "message": "回應"
+  },
+  "rulesScopeAll": {
+    "message": "全部"
+  },
+  "rulesValueScopeLabel": {
+    "message": "值範圍"
+  },
+  "rulesValueScopeHint": {
+    "message": "要在何處檢查值的比對"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "URL 範圍設定"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL 範圍"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "網頁"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "指令碼"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "全部（預設）"
+  },
+  "rulesRequestConstraints": {
+    "message": "要求限制條件"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL 模式（選填）"
+  },
+  "rulesUrlRegex": {
+    "message": "URL 正規表示式（Regex）"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL 區分大小寫"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP 方法（擇一）"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "依要求方法篩選（選填）"
+  },
+  "rulesHttpMethodAny": {
+    "message": "任何"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "模式比對選項"
+  },
+  "rulesPatternRegex": {
+    "message": "正規表示式（Regex）"
+  },
+  "rulesPatternWholeWord": {
+    "message": "全字比對"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "區分大小寫"
+  },
+  "rulesValueFieldOptions": {
+    "message": "值欄位選項"
+  },
+  "rulesApplySettings": {
+    "message": "套用設定"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM 選取器輔助工具"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "使用選取器"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "視窗屬性輔助工具"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "確認"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "確定嗎？"
+  },
+  "notifLoadingDefault": {
+    "message": "載入中..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "按一下上方的「開始擷取」，即可開始擷取 {0} 資料"
+  },
+  "advancedToolsHeading": {
+    "message": "擷取工具"
+  },
+  "advancedToolsSubtitle": {
+    "message": "選擇防護以開啟其工具。"
+  },
+  "advancedToolsLoadTools": {
+    "message": "開啟工具"
+  },
+  "advancedToolsLearnMore": {
+    "message": "了解進階工具"
+  },
+  "advancedToolsChange": {
+    "message": "變更"
+  },
+  "settingsLanguageTitle": {
+    "message": "語言"
+  },
+  "settingsLanguageDesc": {
+    "message": "覆寫擴充功能的介面語言。預設會依照瀏覽器語言。"
+  },
+  "settingsLanguageAuto": {
+    "message": "使用瀏覽器語言"
+  },
+  "detectionEmptyTitle": {
+    "message": "未偵測到任何項目"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ 無 CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ 無反機器人"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ 無指紋辨識"
+  },
+  "detectionDisabledTitle": {
+    "message": "偵測已停用"
+  },
+  "detectionDisabledDesc": {
+    "message": "安全偵測目前已關閉。"
+  },
+  "detectionDisabledAction": {
+    "message": "切換頂端的開關即可啟用偵測。"
+  },
+  "rulesModalDetectorLabel": {
+    "message": "偵測規則"
+  },
+  "rulesMoreActions": {
+    "message": "更多動作"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "未偵測到防護"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "此網頁上沒有信賴度高於 {0}% 的受支援防護。您可以在「設定 → 偵測」中變更此最低值。",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "偵測到防護，但信賴度偏低"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "已偵測到 {0}，信賴度為 {1}%。只有高於 {2}% 時才會顯示工具。您可以在「設定 → 偵測」中調低此最低值。",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "支援的防護"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "檢視擷取歷史記錄（{0}）"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript 掛鉤"
+  },
+  "detectionMethodContent": {
+    "message": "內容"
+  },
+  "detectionMethodWindow": {
+    "message": "視窗屬性"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "標頭"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookie"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "酬載"
+  },
+  "detectionEnableBtn": {
+    "message": "啟用偵測"
+  },
+  "historyMoreActions": {
+    "message": "更多動作"
+  },
+  "historyCopyEntryTitle": {
+    "message": "複製資料"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "自動刪除"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "定期移除舊的歷史記錄項目。"
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "刪除早於以下時間的項目"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "允許範圍：1–{0} {1}。較長的時間請選擇較大的單位。"
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "允許範圍：1–{0} {1}。"
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "每月以 30 天計算；每年以 365 天計算。"
+  },
+  "timeUnitMonths": {
+    "message": "個月"
+  },
+  "timeUnitYears": {
+    "message": "年"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "歷史記錄統計資料"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "檢視根據偵測歷史記錄在本機計算的私人統計資料。"
+  },
+  "settingsOpenStats": {
+    "message": "開啟統計資料"
+  },
+  "settingsExportedToast": {
+    "message": "設定已匯出"
+  },
+  "settingsExportFailedToast": {
+    "message": "無法匯出設定"
+  },
+  "settingsImportedToast": {
+    "message": "設定已匯入"
+  },
+  "settingsImportFailedToast": {
+    "message": "無法匯入設定：檔案無效"
+  },
+  "statsPrivacyNote": {
+    "message": "根據您的偵測歷史記錄在本機計算。資料不會離開您的瀏覽器。"
+  },
+  "statsSubtitleFmt": {
+    "message": "根據 {0} 筆歷史記錄在本機計算。資料不會離開您的瀏覽器。"
+  },
+  "statsRangeLabel": {
+    "message": "時間範圍"
+  },
+  "statsRange7": {
+    "message": "7 天"
+  },
+  "statsRange30": {
+    "message": "30 天"
+  },
+  "statsRange90": {
+    "message": "90 天"
+  },
+  "statsRangeAll": {
+    "message": "全部"
+  },
+  "statsEmptyTitle": {
+    "message": "尚無歷史記錄"
+  },
+  "statsEmptyDesc": {
+    "message": "含有偵測結果的網頁儲存到歷史記錄後，統計資料就會顯示在這裡。"
+  },
+  "statsEntries": {
+    "message": "歷史記錄項目"
+  },
+  "statsUniqueDomains": {
+    "message": "不重複網域"
+  },
+  "statsDetections": {
+    "message": "偵測數"
+  },
+  "statsDistinctDetectors": {
+    "message": "不同的防護"
+  },
+  "statsOverTime": {
+    "message": "偵測數隨時間的變化"
+  },
+  "statsTopProtections": {
+    "message": "偵測次數最多的防護"
+  },
+  "statsTopDomains": {
+    "message": "熱門網域"
+  },
+  "statsByCategory": {
+    "message": "依類別"
+  },
+  "statsByDifficulty": {
+    "message": "依難度"
+  },
+  "statsPagesUnit": {
+    "message": "網頁"
+  },
+  "statsVisitsUnit": {
+    "message": "造訪"
+  },
+  "statsDetectionsUnit": {
+    "message": "偵測"
+  },
+  "statsCategoryOther": {
+    "message": "其他"
+  },
+  "statsDifficultyNone": {
+    "message": "無偵測結果"
+  },
+  "statsNoData": {
+    "message": "此範圍內沒有資料"
+  },
+  "statsTipPagesFmt": {
+    "message": "網頁：{0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} 個網域"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} 次造訪"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} 次偵測"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{1} 次偵測中的 {0} 次 · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} 筆記錄"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} 筆含偵測結果"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "每個網域 {0} 次造訪"
+  },
+  "statsPerEntryFmt": {
+    "message": "每筆 {0}"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "平均信賴度 {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "偵測：{0} · 天數：{1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "這是 Scrapfly 官方偵測器。更新不會將它還原；請在 … 選單中使用「還原官方偵測器」將它找回。"
+  },
+  "restoreOfficialDetectors": {
+    "message": "還原官方偵測器"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "已還原 {0} 個官方偵測器"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "無法還原官方偵測器"
+  },
+  "authorReservedError": {
+    "message": "「Scrapfly」保留給官方偵測器使用。請使用其他作者名稱。"
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "您的名字"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "清除自訂偵測器"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "這會移除您所有的自訂偵測器。Scrapfly 官方偵測器會保留（您可以改為停用它們）。確定嗎？"
+  },
+  "clearingCustomDetectors": {
+    "message": "正在清除自訂偵測器..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "已移除 {0} 個自訂偵測器"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "沒有可清除的自訂偵測器"
+  },
+  "rhSuggestions": {
+    "message": "建議"
+  },
+  "rhResults": {
+    "message": "結果"
+  },
+  "rhCustomChip": {
+    "message": "自訂"
+  },
+  "rhUseAsTyped": {
+    "message": "依輸入內容原樣使用"
+  },
+  "rhNoResultsFmt": {
+    "message": "沒有符合「{0}」的結果"
+  },
+  "rhNoResultsHint": {
+    "message": "您仍可將它當作自訂值使用。"
+  },
+  "rhPreview": {
+    "message": "預覽"
+  },
+  "rhSearchWindow": {
+    "message": "搜尋屬性，例如 webdriver、chrome、cdc_"
+  },
+  "rhSearchDom": {
+    "message": "搜尋選取器，例如 captcha、iframe"
+  },
+  "rhCondition": {
+    "message": "條件"
+  },
+  "rhConditionInvalid": {
+    "message": "未知的條件"
+  },
+  "rhAddProperty": {
+    "message": "新增屬性"
+  },
+  "rhChipAutomation": {
+    "message": "自動化"
+  },
+  "rhCondGroupType": {
+    "message": "類型"
+  },
+  "rhCondGroupExistence": {
+    "message": "存在性"
+  },
+  "rhCondGroupCollections": {
+    "message": "集合"
+  },
+  "rhCondGroupNumeric": {
+    "message": "數值"
+  },
+  "rhCondGroupString": {
+    "message": "字串"
+  },
+  "rhCondGroupBoolean": {
+    "message": "布林值"
+  },
+  "rhCondGroupCustom": {
+    "message": "目前的值"
+  },
+  "rhCondTypeObject": {
+    "message": "是物件"
+  },
+  "rhCondTypeFunction": {
+    "message": "是函式"
+  },
+  "rhCondTypeString": {
+    "message": "是字串"
+  },
+  "rhCondTypeNumber": {
+    "message": "是數字"
+  },
+  "rhCondTypeBoolean": {
+    "message": "是布林值"
+  },
+  "rhCondTypeSymbol": {
+    "message": "是 Symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "是 BigInt"
+  },
+  "rhCondExists": {
+    "message": "存在於網頁上"
+  },
+  "rhCondTruthy": {
+    "message": "為真值（truthy）"
+  },
+  "rhCondFalsy": {
+    "message": "為假值（空、0、false 或 null）"
+  },
+  "rhCondNotUndefined": {
+    "message": "不是 undefined"
+  },
+  "rhCondUndefined": {
+    "message": "是 undefined（不存在）"
+  },
+  "rhCondNotNull": {
+    "message": "不是 null"
+  },
+  "rhCondNull": {
+    "message": "是 null"
+  },
+  "rhCondArray": {
+    "message": "是陣列"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "是有項目的陣列"
+  },
+  "rhCondEmptyArray": {
+    "message": "是空陣列"
+  },
+  "rhCondHasLength": {
+    "message": "有長度"
+  },
+  "rhCondHasKeys": {
+    "message": "是具有索引鍵的物件"
+  },
+  "rhCondEmptyObject": {
+    "message": "是空物件"
+  },
+  "rhCondGt0": {
+    "message": "大於 0"
+  },
+  "rhCondGte0": {
+    "message": "大於或等於 0"
+  },
+  "rhCondEq0": {
+    "message": "等於 0"
+  },
+  "rhCondNe0": {
+    "message": "不等於 0"
+  },
+  "rhCondGt1": {
+    "message": "大於 1"
+  },
+  "rhCondGte1": {
+    "message": "大於或等於 1"
+  },
+  "rhCondLenGt0": {
+    "message": "不是空的"
+  },
+  "rhCondLenEq0": {
+    "message": "是空的"
+  },
+  "rhCondTrue": {
+    "message": "為 true"
+  },
+  "rhCondFalse": {
+    "message": "為 false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "符合 {0} {1} 的網頁"
+  },
+  "rhChipTemplate": {
+    "message": "範本"
+  },
+  "rhDomClass": {
+    "message": "類別"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "data 屬性"
+  },
+  "rhDomClassContains": {
+    "message": "類別名稱包含"
+  },
+  "rhDomIdContains": {
+    "message": "ID 包含"
+  },
+  "rhDomTag": {
+    "message": "HTML 標籤"
+  },
+  "rhDomAttr": {
+    "message": "具有屬性"
+  },
+  "rhDomIframe": {
+    "message": "iframe URL 包含"
+  },
+  "rhDomTitle": {
+    "message": "標題包含"
+  },
+  "rhDomAlt": {
+    "message": "替代文字包含"
+  },
+  "rhDomCamel": {
+    "message": "camelCase 類別"
+  },
+  "rhRefAny": {
+    "message": "任一字元"
+  },
+  "rhRefZeroMore": {
+    "message": "0 次或多次"
+  },
+  "rhRefOneMore": {
+    "message": "1 次或多次"
+  },
+  "rhRefOptional": {
+    "message": "選用"
+  },
+  "rhRefStart": {
+    "message": "開頭"
+  },
+  "rhRefEnd": {
+    "message": "結尾"
+  },
+  "rhRefDigit": {
+    "message": "數字"
+  },
+  "rhRefWord": {
+    "message": "字母、數字或 _"
+  },
+  "rhRefSpace": {
+    "message": "空白字元"
+  },
+  "rhRefOr": {
+    "message": "a 或 b"
+  },
+  "rhMatch": {
+    "message": "符合"
+  },
+  "rhNoMatch": {
+    "message": "不符合"
+  },
+  "ptTitle": {
+    "message": "模式測試"
+  },
+  "ptTitleFmt": {
+    "message": "模式測試 · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "網頁內容"
+  },
+  "ptKindCookieName": {
+    "message": "Cookie 名稱"
+  },
+  "ptKindCookieValue": {
+    "message": "Cookie 值"
+  },
+  "ptKindHeaderName": {
+    "message": "標頭名稱"
+  },
+  "ptKindHeaderValue": {
+    "message": "標頭值"
+  },
+  "ptKindPayloadText": {
+    "message": "要求內文"
+  },
+  "ptKindPayloadUrl": {
+    "message": "要求 URL"
+  },
+  "ptPatternLabel": {
+    "message": "模式"
+  },
+  "ptOptionsLabel": {
+    "message": "比對選項"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "測試文字"
+  },
+  "ptExamplesBtn": {
+    "message": "範例"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "每行一個：URL、Cookie 名稱…"
+  },
+  "ptNoSamples": {
+    "message": "在上方輸入或貼上文字（每行一個），即可查看是否符合。"
+  },
+  "ptCheatTitle": {
+    "message": "Regex 速查表"
+  },
+  "ptCheatNote": {
+    "message": "撰寫模式時，前後不要加 /。重複內再重複（例如 (a+)+）會被拒絕，因為可能讓網頁當掉。"
+  },
+  "ptApply": {
+    "message": "套用"
+  },
+  "ptTestBtn": {
+    "message": "測試"
+  },
+  "ptTestTitle": {
+    "message": "用範例文字測試模式"
+  },
+  "ptNoPattern": {
+    "message": "尚無模式"
+  },
+  "ptHintRegex": {
+    "message": "這類模式：^bm_ 或 \\d+，前後不加 /"
+  },
+  "ptHintWholeWord": {
+    "message": "略過較長單字中的比對：_abck 符合，test_abck 不符合"
+  },
+  "ptHintCase": {
+    "message": "Akamai 不再符合 akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "輸入模式即可查看它會比對到什麼。"
+  },
+  "ptSaysRegex": {
+    "message": "比對正規表示式找得到相符項目的文字。"
+  },
+  "ptSaysWordFmt": {
+    "message": "以完整單字比對「{0}」，不比對較長單字中的部分。"
+  },
+  "ptSaysWildcardFmt": {
+    "message": "比對類似「{0}」的名稱，其中 * 代表任何文字。"
+  },
+  "ptSaysPrefixFmt": {
+    "message": "比對以「{0}」開頭的名稱。"
+  },
+  "ptSaysContainsFmt": {
+    "message": "比對包含「{0}」的文字。"
+  },
+  "ptCaseExact": {
+    "message": "大小寫必須完全相符。"
+  },
+  "ptCaseIgnored": {
+    "message": "大小寫視為相同。"
+  },
+  "ptNoteInvalidFmt": {
+    "message": "此正規表示式無效，因此永遠不會符合：{0}"
+  },
+  "ptNoteRejected": {
+    "message": "偵測會拒絕此正規表示式，因為它可能讓網頁當掉（重複內再重複，或超過 1000 個字元），因此永遠不會符合。"
+  },
+  "ptNoteSlashes": {
+    "message": "請去掉前後的 /：它們會被當作文字的一部分來比對。"
+  },
+  "ptNoteLooksRegex": {
+    "message": "這看起來像正規表示式：請開啟 Regex，否則其中的符號會被當作純文字比對。"
+  },
+  "ptNoteWordIgnored": {
+    "message": "開啟 Regex 時，會忽略「全字比對」。"
+  },
+  "ptNoteHeaderCase": {
+    "message": "標頭名稱會以小寫儲存，因此開啟「區分大小寫」時，此模式永遠不會符合。"
+  },
+  "ptNoteWordEdges": {
+    "message": "此模式以符號開頭或結尾，因此「全字比對」要求該符號旁邊緊接字母、數字或 _。"
+  },
+  "rhRefDot": {
+    "message": "實際的句點"
+  },
+  "rhRefSet": {
+    "message": "a、b、c 其中之一"
+  },
+  "rhRefCount": {
+    "message": "2 到 5 次"
+  },
+  "mhExamplesTitle": {
+    "message": "Scrapfly 規則中的範例"
+  },
+  "mhHowTitle": {
+    "message": "比對方式"
+  },
+  "mhWriteTitle": {
+    "message": "可以寫什麼"
+  },
+  "mhLimitsTitle": {
+    "message": "注意事項"
+  },
+  "mhUrlIntro": {
+    "message": "檢查網頁位址，以及網頁要求的 URL：指令碼、XHR 和 fetch 呼叫、圖片、框架和 ping。"
+  },
+  "mhUrlHow1": {
+    "message": "未開啟 Regex 時，URL 必須包含該文字，且不區分大小寫。會檢查完整 URL，包含查詢字串。"
+  },
+  "mhUrlHow2": {
+    "message": "開啟 Regex 時，請去掉前後的 /，並將句點寫成 `\\.`，例如 `^https://js\\.example\\.com/`。"
+  },
+  "mhUrlHow3": {
+    "message": "URL 範圍：「網頁」只檢查網頁位址，「指令碼」會加上指令碼來源，「全部」（預設）會加上每個要求。"
+  },
+  "mhUrlLimit1": {
+    "message": "不會記錄字型、媒體和樣式表要求。"
+  },
+  "mhUrlLimit2": {
+    "message": "只計入掃描前發出的要求；掃描會在網頁載入完成後執行。"
+  },
+  "mhHeaderIntro": {
+    "message": "檢查網頁本身要求和回應的標頭，不包含指令碼、XHR 呼叫或框架的標頭。"
+  },
+  "mhHeaderHow1": {
+    "message": "標頭名稱會以小寫比較，純文字表示「包含」：`server` 也會符合 `server-timing`。若要精確名稱，請使用 Regex `^server$`。"
+  },
+  "mhHeaderHow2": {
+    "message": "會檢查同名標頭上的值；留空則接受任何值。"
+  },
+  "mhHeaderHow3": {
+    "message": "「回應」範圍（預設）指網站傳送的標頭；「要求」指瀏覽器傳送的標頭。"
+  },
+  "mhHeaderLimit1": {
+    "message": "開啟「區分大小寫」時，標頭名稱請以小寫書寫。"
+  },
+  "mhHeaderLimit2": {
+    "message": "不重新載入就變更位址的網頁，會在沒有標頭的情況下重新掃描。"
+  },
+  "mhCookieIntro": {
+    "message": "依名稱（可選擇依值）檢查網頁的 Cookie，包含 HttpOnly 和 Secure 的 Cookie。"
+  },
+  "mhCookieHow1": {
+    "message": "純名稱會以前置詞比對：`_abck` 也會符合 `_abck_2`。"
+  },
+  "mhCookieHow2": {
+    "message": "`*` 代表任何文字：`bm_*` 會符合 `bm_sz` 和 `bm_sv`。"
+  },
+  "mhCookieHow3": {
+    "message": "若要精確名稱，請開啟 Regex 並寫成 `^name$`。值包含該文字即符合。"
+  },
+  "mhCookieLimit1": {
+    "message": "「要求」範圍（預設）讀取瀏覽器為該網頁儲存的 Cookie；「回應」讀取網頁回應所設定的 Cookie。"
+  },
+  "mhCookieLimit2": {
+    "message": "看不到其他網站的 Cookie，例如供應商框架中的 Cookie。過長的值會截斷為 100 個字元。"
+  },
+  "mhContentIntro": {
+    "message": "搜尋網頁的文字：body 的 HTML、內嵌指令碼，以及網頁載入的指令碼和樣式表檔案。"
+  },
+  "mhContentHow1": {
+    "message": "純文字只要內容包含就符合，且不區分大小寫。"
+  },
+  "mhContentHow2": {
+    "message": "「全字比對」會略過較長單字中的比對；模式兩端都必須是字母、數字或 _。"
+  },
+  "mhContentHow3": {
+    "message": "「僅檢查指令碼」只搜尋內嵌指令碼（包含 head）和 JavaScript 檔案，不搜尋 HTML 或 CSS。"
+  },
+  "mhContentLimit1": {
+    "message": "網站不允許其他來源讀取（CORS）或超過 5 MB 的檔案會被略過。"
+  },
+  "mhContentLimit2": {
+    "message": "不會搜尋框架或 Worker 內的程式碼，也不會搜尋掃描後才載入的程式碼。"
+  },
+  "mhDomIntro": {
+    "message": "網頁載入完成後，用 CSS 選取器在網頁 body 中尋找元素。"
+  },
+  "mhDomHow1": {
+    "message": "標籤、`.class`、`#id` 或 `[attribute]`，可單獨或組合使用：`.g-recaptcha[data-sitekey]`。"
+  },
+  "mhDomHow2": {
+    "message": "屬性測試 `=`、`^=`、`$=`、`*=`、`~=` 和 `|=`；在 `]` 前加上 ` i` 可忽略大小寫。"
+  },
+  "mhDomHow3": {
+    "message": "以逗號分隔的多個選取器：符合任何一個即可。"
+  },
+  "mhDomLimit1": {
+    "message": "不支援以下寫法，因此規則永遠不會符合：各部分之間的空格或 `>`、`:pseudo-classes` 和逸出字元。"
+  },
+  "mhDomLimit2": {
+    "message": "不會搜尋 head、框架和 shadow root。不會讀取 `value` 屬性；其他屬性只比較前 100 個字元。"
+  },
+  "mhWindowIntro": {
+    "message": "檢查網頁定義的 JavaScript 全域變數，例如 `grecaptcha.render`。"
+  },
+  "mhWindowHow1": {
+    "message": "從 `window` 開始、以句點分隔的路徑：`KPSDK` 或 `grecaptcha.render`。"
+  },
+  "mhWindowHow2": {
+    "message": "條件，例如 `exists`、`typeof function`、`truthy`、`=== true`、`length > 0` 或 `has keys`。留空表示 truthy。"
+  },
+  "mhWindowHow3": {
+    "message": "偵測無法理解的條件永遠不會符合，因此請從清單中選擇。"
+  },
+  "mhWindowLimit1": {
+    "message": "只會在網頁載入後的前幾秒內檢查；之後才建立的全域變數會被漏掉。"
+  },
+  "mhWindowLimit2": {
+    "message": "以 Symbol 命名的屬性無法寫成路徑。"
+  },
+  "mhJsHooksIntro": {
+    "message": "記錄網頁呼叫瀏覽器 API 的情況，例如 `HTMLCanvasElement.prototype.toDataURL`，這是指紋辨識的跡象。"
+  },
+  "mhJsHooksHow1": {
+    "message": "方法或 getter 的完整路徑：`Navigator.prototype.webdriver`，而不是 `navigator.webdriver`。"
+  },
+  "mhJsHooksHow2": {
+    "message": "任何呼叫都會計入；不會檢查其參數和結果，因此掛鉤只能顯示 API 被使用過，無法顯示原因。"
+  },
+  "mhJsHooksLimit1": {
+    "message": "只計入網頁載入後前幾秒內的呼叫（最多 8 秒）。"
+  },
+  "mhJsHooksLimit2": {
+    "message": "看不到 Worker 或框架中的呼叫，同站框架中的內建目標除外。"
+  },
+  "mhPayloadIntro": {
+    "message": "搜尋網頁從任何框架傳送的 POST、PUT、PATCH 和 DELETE 要求的內文。"
+  },
+  "mhPayloadHow1": {
+    "message": "純文字只要內文包含就符合，且不區分大小寫。表單資料會依 `name=value&…` 讀取。"
+  },
+  "mhPayloadHow2": {
+    "message": "要求 URL（選填）和 HTTP 方法可將範圍限定為符合的要求。"
+  },
+  "mhPayloadLimit1": {
+    "message": "只計入掃描前傳送的要求，每個網頁最多 50 個。"
+  },
+  "mhPayloadLimit2": {
+    "message": "不會讀取 WebSocket 訊息。"
+  },
+  "domCardTitle": {
+    "message": "CSS 選取器"
+  },
+  "domCardBrowse": {
+    "message": "瀏覽"
+  },
+  "domCardHint": {
+    "message": "標籤、.class、#id 或 [attribute] 條件，可單獨或組合使用。不支援各部分之間的空格或 >。"
+  },
+  "windowCardTitle": {
+    "message": "視窗屬性"
+  },
+  "settingsApiEventsDesc": {
+    "message": "擴充功能在網頁上派送的事件"
+  },
+  "settingsApiUsageDesc": {
+    "message": "在您自己的指令碼中接聽這些事件"
+  },
+  "settingsApiCopyCode": {
+    "message": "複製程式碼"
+  },
+  "settingsApiCodeCopied": {
+    "message": "程式碼已複製"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "複製事件名稱"
+  },
+  "advCommonClickToCopy": {
+    "message": "按一下即可複製"
+  },
+  "advCommonDomainLabel": {
+    "message": "網域："
+  },
+  "advCommonCopy": {
+    "message": "複製"
+  },
+  "advCommonPage": {
+    "message": "網頁"
+  },
+  "advCommonExportCode": {
+    "message": "匯出程式碼"
+  },
+  "advCommonUrlCopied": {
+    "message": "已複製 URL"
+  },
+  "advScriptTypeCollector": {
+    "message": "收集器"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA 檢查"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "插頁式"
+  },
+  "advCommonCaptured": {
+    "message": "擷取時間"
+  },
+  "advCommonScript": {
+    "message": "指令碼"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "指令碼 URL："
+  },
+  "advCommonNoCaptureData": {
+    "message": "沒有可用的擷取資料"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "無法檢查 Cookie：{0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "無法分析指令碼：{0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "無法開始分析"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "無法檢查版本：{0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "提取失敗：{0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "無法開始提取：{0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "沒有可匯出的指令碼"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0} Cookie"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "找不到 {0} Cookie"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0} 指令碼（{1}）"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "正在分析 {0} 指令碼... 網頁將重新載入"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "無法產生程式碼"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "指令碼剖析程式碼產生器"
+  },
+  "advCommonExportOptions": {
+    "message": "匯出選項"
+  },
+  "advCommonAllTypes": {
+    "message": "所有類型"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "找到 {0} 個相關指令碼"
+  },
+  "advCommonTotalScripts": {
+    "message": "指令碼總數："
+  },
+  "advCommonProtectionLevel": {
+    "message": "防護等級："
+  },
+  "advCommonCookiesFound": {
+    "message": "找到的 Cookie："
+  },
+  "advCommonSiteKey": {
+    "message": "網站金鑰"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "網站 URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "網站 URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API 網域"
+  },
+  "advCommonFound": {
+    "message": "已找到"
+  },
+  "advCommonNotFound": {
+    "message": "未找到"
+  },
+  "advCommonYes": {
+    "message": "是"
+  },
+  "advCommonEnterprise": {
+    "message": "企業版"
+  },
+  "advCommonStandard": {
+    "message": "標準"
+  },
+  "advCommonNone": {
+    "message": "無"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "用於攔截並剖析 {0} 指令碼的瀏覽器主控台程式碼"
+  },
+  "advCodeDescPythonBs": {
+    "message": "使用 requests 和 BeautifulSoup 的 Python 指令碼"
+  },
+  "advCodeDescPython": {
+    "message": "使用 requests 程式庫的 Python 指令碼"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "使用 axios 和 cheerio 的 Node.js 指令碼"
+  },
+  "advCodeDescNode": {
+    "message": "使用 axios 的 Node.js 指令碼"
+  },
+  "advCodeDescPhpDom": {
+    "message": "使用 cURL 和 DOMDocument 的 PHP 指令碼"
+  },
+  "advCodeDescPhp": {
+    "message": "使用 cURL 的 PHP 指令碼"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "使用 HttpClient 和 HtmlAgilityPack 的 C#"
+  },
+  "advCodeDescCsharp": {
+    "message": "使用 HttpClient 的 C#"
+  },
+  "advCodeDescGoQuery": {
+    "message": "使用 net/http 和 goquery 的 Go"
+  },
+  "advCodeDescGo": {
+    "message": "使用 net/http 的 Go"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "擷取進行中"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "請重新載入網頁以觸發擷取。"
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "{0} 秒後結束"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "重新載入此網頁"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "完成或點選 reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "等待「擷取完成」"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "已開始監控 {0}"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "擷取完成"
+  },
+  "pageNoticePageLoading": {
+    "message": "網頁載入中"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "請等待網頁完全載入..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "此網頁未偵測到 Akamai。沒有 _abck Cookie。"
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "已成功擷取 Akamai 資料！"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "已停止擷取"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "無法停止擷取：{0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "正在重新載入網頁以分析 Akamai 資料…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "無法分析內容：{0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "找不到 _abck Cookie"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "無法處理資料：{0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "正在提取感測器資訊…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "無法提取感測器資訊：{0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "未偵測到 Akamai"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "此網頁上沒有 _abck Cookie。"
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager 在此處未啟用。"
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "重新載入網頁以開始監控感測器資料和要求詳細資料"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "已成功擷取 Akamai sensor_data"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "進階（SBSD）"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "基本"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "簡易"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck 等級："
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai 分析"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai 指令碼："
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "感測器資料 URL 指令碼"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML 變數："
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST URL："
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel 指令碼變數："
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD 指令碼 URL"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "感測器資料 URL"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai 端點"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "感測器"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "已提取的感測器資訊"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "感測器資料（{0} 個字元）"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "未擷取到感測器資料"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD 資料（{0} 個字元）"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "感測器指令碼 URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "將所有資料複製為 JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "提取感測器資訊"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK 等級"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK Cookie"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai 版本"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "所需挑戰"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD 挑戰"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt 挑戰"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel 挑戰"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "無法啟用提取模式。請查看背景主控台以了解詳細資料。"
+  },
+  "advImpervaSessionCookies": {
+    "message": "工作階段 Cookie"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "安全性元件"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookie：{0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "資源偵測"
+  },
+  "advImpervaResourceUrls": {
+    "message": "資源 URL"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "詢問 URL"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva 分析"
+  },
+  "advImpervaSensorUrl": {
+    "message": "感測器 URL："
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0} 指令碼"
+  },
+  "advImpervaSensorPath": {
+    "message": "感測器路徑："
+  },
+  "advImpervaNoScripts": {
+    "message": "未偵測到指令碼"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "此網頁上可能沒有 Imperva"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "僅 {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "進階（reese84 + utmvc）"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "基本（工作階段）"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "重新載入網頁以開始監控 Imperva 要求和 Cookie"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "已擷取 Imperva 資料（項目數：{0}）"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva 擷取完成"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "已成功擷取感測器資料"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA 回呼"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "選取器偵測"
+  },
+  "advRecaptchaMethod": {
+    "message": "方法"
+  },
+  "advRecaptchaSelector": {
+    "message": "選取器"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "已將選取器複製到剪貼簿！"
+  },
+  "advRecaptchaNoElements": {
+    "message": "找不到 reCAPTCHA 元素"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() 失敗：{0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA 回呼"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA 用戶端"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "用戶端 ID：{0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "已複製到剪貼簿！"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "回呼函式"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "回呼路徑"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "未定義回呼"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM 回呼"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "指令碼回呼"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "回呼使用範例"
+  },
+  "advRecaptchaInvisible": {
+    "message": "隱形"
+  },
+  "advRecaptchaAction": {
+    "message": "動作"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "必要的 Cookie"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "偵測到的功能"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "需要 S 參數"
+  },
+  "advRecaptchaHasSession": {
+    "message": "含工作階段"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "點選失敗：{0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "此網頁上找不到 reCAPTCHA 回呼。請確認 reCAPTCHA 已載入。"
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "無法擷取回呼：{0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "重新載入網頁並完成 reCAPTCHA 挑戰以開始監控"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "網頁已就緒"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "現在請完成 reCAPTCHA 挑戰以擷取資料"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "已擷取並解碼的要求：{0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "未擷取到 reCAPTCHA 要求"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "已偵測到 reCAPTCHA"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "完成挑戰後，擷取會自動結束"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "現在請觸發或點選 reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "標頭"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security 版本"
+  },
+  "advShapeHeaderPattern": {
+    "message": "標頭模式"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "標頭模式"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape Cookie"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security 分析"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js 指令碼："
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "帶 seed 的指令碼："
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js 指令碼"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js 指令碼"
+  },
+  "advShapeSeedScript": {
+    "message": "帶 seed 的指令碼"
+  },
+  "advShapeSeedScripts": {
+    "message": "帶 seed 的指令碼"
+  },
+  "advShapeErrorFmt": {
+    "message": "錯誤：{0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "偵測到的版本："
+  },
+  "advShapeCaptureRequirements": {
+    "message": "擷取需求"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + 標頭"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "重新載入網頁以開始監控 Shape Security 標頭和 Cookie"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "請等待網頁完全載入後再執行操作..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "監控中（{0}）"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "執行操作以觸發 Cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "執行操作以觸發標頭和 Cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "逾時（{2}）- Cookie：{0}，標頭：{1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie：{1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie：{1} | 標頭：{2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "已擷取 - Cookie：{0}，標頭：{1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha 偵測"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "未偵測到 hCaptcha。請在載入 hCaptcha 的情況下重新載入網頁。"
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha 版本"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "企業版模式"
+  },
+  "advHcaptchaNo": {
+    "message": "否"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "尚無擷取歷史記錄"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "不適用"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "正在檢查 hCaptcha 版本... 網頁將重新載入"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "hCaptcha 版本偵測逾時"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "無法開始版本檢查"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "重新載入網頁以開始監控 hCaptcha 要求"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "已成功擷取 hCaptcha 資料"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "挑戰"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "正在刪除 {0} Cookie... 網頁將重新載入"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "類型"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "已複製網站金鑰"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "挑戰"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "分析"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "機器人管理"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "公開金鑰"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "使用者代理程式"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA（瀏覽器資料陣列）"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob 資料"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "未擷取"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "重新載入網頁以開始監控，並觸發 FunCaptcha 挑戰（60 秒逾時）"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "網頁載入中，請稍候..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "已成功擷取 FunCaptcha"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "已擷取的挑戰：{0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "擷取逾時"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "未偵測到 FunCaptcha 挑戰（60 秒逾時）"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "內嵌指令碼"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM 屬性"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "指令碼 URL"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON 設定"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "已提取的 captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "產品："
+  },
+  "advGeetestScriptSnippet": {
+    "message": "指令碼片段"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "匯出剖析程式碼"
+  },
+  "advGeetestErrorFmt": {
+    "message": "錯誤：{0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "已偵測到：Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "未偵測到 Geetest 版本"
+  },
+  "advGeetestTabNotFound": {
+    "message": "找不到分頁"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "找不到 Geetest 指令碼"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "正在偵測 Geetest 版本..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "正在重新載入網頁以檢查版本"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "正在分析指令碼..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "正在重新載入網頁以提取指令碼"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0} 工具"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "載入進階工具時發生錯誤"
+  },
+  "advPanelCheckConsole": {
+    "message": "請查看主控台以了解詳細資料"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "載入擷取項目時發生錯誤：{0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "目前網站（{0}）"
+  },
+  "advPanelNoResultsText": {
+    "message": "請嘗試調整篩選條件或搜尋字詞，以找到擷取項目。"
+  },
+  "advPanelNoUrl": {
+    "message": "無 URL"
+  },
+  "advPanelView": {
+    "message": "檢視"
+  },
+  "advPanelBtnOk": {
+    "message": "確定"
+  },
+  "advPanelConfirmAction": {
+    "message": "確認動作"
+  },
+  "advPanelBtnConfirm": {
+    "message": "確認"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "已複製到剪貼簿"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "已載入 {0} 工具"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "找到 {0}/{1} 個 Cookie"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "找到的指令碼：{0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "找不到 {0} 指令碼"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "偵測到 {0} 版本：{1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "未偵測到 {0} 版本"
+  },
+  "advPanelUnknownError": {
+    "message": "未知錯誤"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "無法開始擷取：{0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "無法停止擷取：{0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "擷取項目：{0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "清除所有已擷取的資料"
+  },
+  "advPanelNotAvailable": {
+    "message": "不適用"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "已清除 {0} 的擷取歷史記錄"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "無法清除歷史記錄"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "顯示第 {0}-{1} 個擷取項目，共 {2} 個"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "新偵測器"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "新增 {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "編輯 {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly 圖示"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0} 圖示"
+  },
+  "rulesUiChangeIcon": {
+    "message": "變更圖示"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "變更偵測器圖示"
+  },
+  "rulesUiCustomColor": {
+    "message": "自訂顏色"
+  },
+  "iconPickerTitle": {
+    "message": "選擇圖示"
+  },
+  "iconPickerDefault": {
+    "message": "預設"
+  },
+  "iconPickerUploadCustom": {
+    "message": "上傳自訂圖示"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "圖示檔案必須小於 100 KB"
+  },
+  "iconPickerNoResults": {
+    "message": "沒有符合搜尋的圖示"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "搜尋圖示…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "什麼是 JS 掛鉤？"
+  },
+  "rulesUiHelpWindow": {
+    "message": "什麼是視窗屬性？"
+  },
+  "rulesUiHelpUrl": {
+    "message": "什麼是 URL 偵測？"
+  },
+  "rulesUiHelpHeader": {
+    "message": "什麼是標頭偵測？"
+  },
+  "rulesUiHelpCookie": {
+    "message": "什麼是 Cookie 偵測？"
+  },
+  "rulesUiHelpContent": {
+    "message": "什麼是內容偵測？"
+  },
+  "rulesUiHelpDom": {
+    "message": "什麼是 DOM 偵測？"
+  },
+  "rulesUiHelpPayload": {
+    "message": "什麼是酬載偵測？"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "這是什麼偵測方法？"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "值（選填）"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS 選取器（例如 .class、#id、[attr]）"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "要搜尋的文字或單字"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL 模式"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS 掛鉤目標（例如 Navigator.prototype.webdriver）"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "視窗路徑（例如 grecaptcha、_cf_chl_opt）"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "條件（例如 typeof object、typeof function）"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Cookie 名稱（例如 __cf_bm、session_id）"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Cookie 值模式（選填）"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "文字（例如 sensor_data、challenge_token）"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify 或 challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "名稱設定"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "名稱設定（信賴度：{0}%）"
+  },
+  "rulesUiValueSettings": {
+    "message": "值設定"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "刪除模式"
+  },
+  "rulesUiClearValue": {
+    "message": "清除值"
+  },
+  "rulesUiAddValue": {
+    "message": "新增值"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "第 {0} / {1} 頁"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "請先填寫目前的空白模式，再新增其他模式。"
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "儲存前請填寫所有必填的模式欄位。"
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "輸入偵測方法類型（例如 HEADERS、CONTENT、URLs）："
+  },
+  "rulesUiMethodFallback": {
+    "message": "方法"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "網頁 = 目前 URL | 指令碼 = 網頁 + 指令碼 | 全部 = 所有要求"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "留空即可符合任何 URL"
+  },
+  "ruleConditionGroupOther": {
+    "message": "其他"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL：{0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "標題：{0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "時間戳記：{0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "安全系統：{0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "類別：{0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "信賴度：{0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "偵測方法：{0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "偵測方法："
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "偵測結果（{0}）："
+  },
+  "clipboardDifficultyFmt": {
+    "message": "難度：{0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "無法複製到剪貼簿"
+  },
+  "detectionUiCopyUrl": {
+    "message": "複製 URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "複製 URL：{0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "複製類別"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "複製類別：{0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "複製方法"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "複製方法：{0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "複製值"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "複製值：{0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0}年"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0}個月"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0}天"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0}小時"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0}分鐘"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0}{1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1分鐘"
+  },
+  "detectionUiNoDescription": {
+    "message": "此偵測沒有提供其他詳細資料。"
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "此偵測器沒有記錄任何偵測方法。"
+  },
+  "detectionUiUnknownMethod": {
+    "message": "未知的方法"
+  },
+  "detectionUiUnknownValue": {
+    "message": "未知"
+  },
+  "historyUiUntitled": {
+    "message": "無標題"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "沒有偵測方法"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "歷史記錄檔案格式無效"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly 機器人"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "無法啟用擴充功能：{0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "無法停用擴充功能：{0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "錯誤：{0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "黑名單中沒有網域"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "沒有符合搜尋的網域"
+  },
+  "settingsUiChecking": {
+    "message": "正在檢查..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "歷史記錄上限必須介於 0（不限）和 10000 之間"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "快取持續時間必須介於 1 到 {0} {1} 之間"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "自動刪除天數必須介於 1 到 3650 之間"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "重複持續時間必須介於 1 到 999 之間"
+  },
+  "settingsUiExportJson": {
+    "message": "匯出 JSON"
+  },
+  "settingsUiExportText": {
+    "message": "匯出文字"
+  },
+  "settingsUiLogsText": {
+    "message": "文字"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "需要較新版擴充功能的偵測器更新：{0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0}（需要擴充功能 v{1}）"
+  },
+  "statsUiTotals": {
+    "message": "總計"
+  },
+  "ruleSectionCombinations": {
+    "message": "組合"
+  },
+  "combinationsHint": {
+    "message": "組合只有在同時找到多個模式時，才會偵測此防護。適合用於單獨使用時太弱的模式。"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "每個組合只有在其訊號同時出現時才會觸發；以下是它在此網頁上找到的內容。"
+  },
+  "combinationFoundTogether": {
+    "message": "在此網頁上同時找到："
+  },
+  "combinationNotPresent": {
+    "message": "不存在"
+  },
+  "combinationFound": {
+    "message": "已找到"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "此規則在掃描後已變更或移除，因此只顯示名稱和分數。"
+  },
+  "historyMatchedDetections": {
+    "message": "符合的偵測結果"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "此次掃描是在保留條件之前儲存的，因此只顯示名稱和分數。"
+  },
+  "combinationMustNotBeFound": {
+    "message": "不得找到"
+  },
+  "combinationMustBeFound": {
+    "message": "必須找到"
+  },
+  "combinationAutoTip": {
+    "message": "自動：取觸發此組合的模式中最高的信賴度"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "請至少新增一個必須找到的模式。"
+  },
+  "combinationInvalidOneOf": {
+    "message": "「以下任一項」清單的每個選項都需要一個必須找到的模式。"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "「至少 {0} 項」需要 {0} 個必須找到的模式。"
+  },
+  "combinationSentenceOne": {
+    "message": "符合此條件時觸發。"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "符合全部 {0} 個條件時觸發。"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "符合這 {0} 個條件中的任何一個時觸發。"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "符合這 {1} 個條件中至少 {0} 個時觸發。"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "信賴度：{0}%。"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "信賴度：自動，最高 {0}%。"
+  },
+  "combinationSentenceGroup": {
+    "message": "一個群組算作一個條件。"
+  },
+  "combinationSentenceNot": {
+    "message": "若出現標示為「不得找到」的模式，就不會觸發。"
+  },
+  "combinationSentenceAlone": {
+    "message": "未標示為「僅限組合」的模式，也會以各自的信賴度單獨偵測。"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "找到時的信賴度"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "留空即為自動：取找到的模式中最高的信賴度。"
+  },
+  "combinationModeAny": {
+    "message": "以下任一項"
+  },
+  "combinationModeAll": {
+    "message": "以下全部"
+  },
+  "combinationModeAtLeast": {
+    "message": "以下至少…項"
+  },
+  "combinationModeRootAll": {
+    "message": "以下全部都找到"
+  },
+  "combinationModeRootAny": {
+    "message": "找到以下任一項"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "找到以下至少…項"
+  },
+  "combinationGroupMode": {
+    "message": "群組"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "向此群組新增模式"
+  },
+  "combinationDeleteGroup": {
+    "message": "刪除群組"
+  },
+  "combinationAddGroup": {
+    "message": "新增「任一項」群組"
+  },
+  "patternUnusedBadge": {
+    "message": "不在任何組合中"
+  },
+  "patternUnusedTip": {
+    "message": "沒有組合使用它，因此它永遠不會偵測。按一下即可讓它單獨計算。"
+  },
+  "combinationsEmpty": {
+    "message": "尚無組合。"
+  },
+  "combinationAdd": {
+    "message": "新增組合"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "組合 {0}"
+  },
+  "combinationDelete": {
+    "message": "刪除組合"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "要刪除組合「{0}」嗎？其模式仍會保留在規則中。"
+  },
+  "combinationRemove": {
+    "message": "移除"
+  },
+  "combinationEmptyPattern": {
+    "message": "（空白模式）"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "任一 {0} 模式"
+  },
+  "combinationGroupEmpty": {
+    "message": "請在下方新增模式"
+  },
+  "combinationAddPattern": {
+    "message": "新增模式"
+  },
+  "combinationAddDescription": {
+    "message": "新增說明"
+  },
+  "combinationAnyPattern": {
+    "message": "任一模式"
+  },
+  "combinationPreviewEmpty": {
+    "message": "新增模式以建立此組合"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "僅限組合"
+  },
+  "combinationStrictHint": {
+    "message": "標示為「僅限組合」的模式本身不會偵測任何內容，只會在組合內計入。"
+  },
+  "combinationStrictMarkAll": {
+    "message": "全部標示"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "全部取消標示"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "此模式本身不會偵測任何內容，只會在此規則的每個組合內計入。"
+  },
+  "detectionModalCombinations": {
+    "message": "符合的組合"
+  },
+  "combinationNoPatterns": {
+    "message": "尚未新增模式"
+  },
+  "combinationPickHint": {
+    "message": "勾選要新增的模式"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "新增已選的 {0} 個"
+  },
+  "combinationEditConditions": {
+    "message": "編輯條件"
+  },
+  "combinationAutoConfidence": {
+    "message": "自動"
+  },
+  "combinationDetectWhen": {
+    "message": "偵測條件"
+  },
+  "combinationGroupExcluded": {
+    "message": "這些條件不得符合。"
+  },
+  "combinationMinimum": {
+    "message": "最少符合數"
+  },
+  "combinationMatchState": {
+    "message": "模式條件"
+  },
+  "combinationChoosePatterns": {
+    "message": "選擇模式"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "減少最少符合數"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "增加最少符合數"
+  },
+  "detectionTipDetections": {
+    "message": "此網頁上偵測到的防護數量。"
+  },
+  "detectionTipConfidence": {
+    "message": "已偵測防護的平均信賴度。"
+  },
+  "detectionTipDifficulty": {
+    "message": "繞過已偵測防護的預估難度。"
+  },
+  "tipCachedAt": {
+    "message": "儲存時間"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "{0} 項偵測的平均值，範圍為 {1}% 至 {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "來自符合的組合"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "由最強的單一訊號決定分數"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "自訂偵測器"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "{0} 的預設值"
+  },
+  "tipDifficultyFromRule": {
+    "message": "由此偵測器設定"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "由 {0} 決定"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "因 {0} 項防護同時存在而提高"
+  },
+  "tipLastUpdated": {
+    "message": "更新時間"
+  },
+  "tipMethodContent": {
+    "message": "網頁或其指令碼中的文字相符。"
+  },
+  "tipMethodCookie": {
+    "message": "此網站設定的 Cookie 相符。"
+  },
+  "tipMethodDom": {
+    "message": "網頁上的元素相符。"
+  },
+  "tipMethodHeader": {
+    "message": "網站傳送的回應標頭相符。"
+  },
+  "tipMethodJsHooks": {
+    "message": "網頁呼叫了此偵測器監看的瀏覽器 API。"
+  },
+  "tipMethodPayload": {
+    "message": "網頁在要求中傳送的資料相符。"
+  },
+  "tipMethodUrl": {
+    "message": "網頁或其發出的要求符合已知的位址。"
+  },
+  "tipMethodWindow": {
+    "message": "網頁上的全域 JavaScript 物件相符。"
+  },
+  "tipMoreFmt": {
+    "message": "另外 {0} 項"
+  },
+  "tipOfficialDetector": {
+    "message": "Scrapfly 官方偵測器"
+  },
+  "tipScopeDomain": {
+    "message": "結果會重複用於此網域上的每個網頁。"
+  },
+  "tipScopeFullUrl": {
+    "message": "結果只會重複用於這個完全相同的 URL（包含查詢）。"
+  },
+  "tipScopePath": {
+    "message": "結果會重複用於這個完全相同的路徑，不論查詢為何。"
+  },
+  "tipStatsActiveDays": {
+    "message": "至少儲存過一個網頁的天數。"
+  },
+  "tipStatsDetections": {
+    "message": "所有已儲存網頁中發現的防護，重複項目也計入。"
+  },
+  "tipStatsDetectors": {
+    "message": "出現過的不同防護，每種只計算一次。"
+  },
+  "tipStatsDomains": {
+    "message": "已儲存網頁中的不同網站。"
+  },
+  "tipStatsEntries": {
+    "message": "此範圍內儲存到歷史記錄的網頁。"
+  },
+  "tipStatsRateFmt": {
+    "message": "{1} 筆記錄中的 {0} 筆"
+  },
+  "tipPatterns": {
+    "message": "模式"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "詳細日誌"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "除了每個網頁一份報告外，也會記錄每項規則、掛鉤和訊息"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "您編輯過的規則有更新"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "「{0}」有新的官方版本（{1}）。您編輯過此規則：新版本會取代您的變更。"
+  },
+  "btnDecideLater": {
+    "message": "稍後決定"
+  },
+  "btnKeepMyEdits": {
+    "message": "保留我的編輯"
+  },
+  "btnUseNewVersion": {
+    "message": "使用新版本"
+  },
+  "resetToOfficial": {
+    "message": "重設為官方版本"
+  },
+  "resetToOfficialTitle": {
+    "message": "重設為官方版本"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "要捨棄您對「{0}」的編輯，並還原為 Scrapfly 官方版本嗎？"
+  },
+  "ruleResetToOfficial": {
+    "message": "規則已還原為官方版本"
+  },
+  "ruleEditedTag": {
+    "message": "已編輯"
+  },
+  "tipRuleEdited": {
+    "message": "您編輯過這個官方規則。更新在取代您的變更之前會先詢問。"
+  },
+  "settingsGroupDetectionsList": {
+    "message": "偵測清單"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "偵測順序"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "類別在偵測清單、歷史記錄和規則中的順序。拖曳卡片即可調整；在同一類別內，偵測結果會依信賴度由高到低顯示。"
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "信賴度最高者優先"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "類別順序"
+  },
+  "settingsMoveUpFmt": {
+    "message": "上移 {0}"
+  },
+  "settingsMoveDownFmt": {
+    "message": "下移 {0}"
+  },
+  "settingsCardShareUploads": {
+    "message": "分享上傳"
+  },
+  "settingsShareDestination": {
+    "message": "上傳目的地"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "「偵測 → 上傳偵測結果」傳送摘要並取得分享連結的位置。"
+  },
+  "settingsShareService": {
+    "message": "服務"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com（無需帳號）"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org（無需帳號）"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs（無需帳號）"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin（API 金鑰）"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist（權杖）"
+  },
+  "shareProviderCustom": {
+    "message": "自訂伺服器"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "刪除時間（天）"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "刪除時間"
+  },
+  "shareExpire10M": {
+    "message": "10 分鐘"
+  },
+  "shareExpire1H": {
+    "message": "1 小時"
+  },
+  "shareExpire1D": {
+    "message": "1 天"
+  },
+  "shareExpire1W": {
+    "message": "1 週"
+  },
+  "shareExpire2W": {
+    "message": "2 週"
+  },
+  "shareExpire30D": {
+    "message": "30 天"
+  },
+  "shareExpire1M": {
+    "message": "1 個月"
+  },
+  "shareExpire6M": {
+    "message": "6 個月"
+  },
+  "shareExpire1Y": {
+    "message": "1 年"
+  },
+  "shareExpireOnetime": {
+    "message": "首次檢視後"
+  },
+  "shareExpireNever": {
+    "message": "永不"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs 沒有到期選項：貼上的內容會保留到該服務將其移除為止。"
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API 金鑰"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "您從 pastebin.com/doc_api 取得的開發人員金鑰。貼上的內容不會公開列出。"
+  },
+  "settingsShareSecretNote": {
+    "message": "僅儲存在此瀏覽器中，且不包含在設定匯出內容中。"
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub 權杖"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "具有 Gists 權限的權杖。上傳的內容為私密 Gist 且不會到期；請在 GitHub 上刪除。"
+  },
+  "settingsShareCustomUrl": {
+    "message": "伺服器 URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "公用主機上的 HTTPS。可包含 <EXPIRY_DAYS>。"
+  },
+  "settingsShareCustomBody": {
+    "message": "內文格式"
+  },
+  "shareBodyForm": {
+    "message": "表單欄位"
+  },
+  "shareBodyJson": {
+    "message": "JSON 範本"
+  },
+  "shareBodyRaw": {
+    "message": "純文字"
+  },
+  "settingsShareCustomField": {
+    "message": "表單欄位名稱"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON 範本"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "變數：<CONTENT_JSON>、<TITLE_JSON>、<EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "每行一個，格式為 名稱: 值，例如 Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "分享連結來源"
+  },
+  "shareLinkBody": {
+    "message": "回應內文（純 URL）"
+  },
+  "shareLinkJson": {
+    "message": "JSON 欄位"
+  },
+  "shareLinkLocation": {
+    "message": "Location 標頭"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSON 欄位路徑"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "在表單內文中以 expiry_days 傳送，也可用 <EXPIRY_DAYS>；如何處理由您的伺服器決定。"
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "請先在「設定 → 偵測 → 分享上傳」中設定 {0}"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "這會將此網頁的偵測摘要上傳到 {0}（{1}）。任何擁有連結的人都能檢視。不包含 URL 查詢字串，也不包含 Cookie/標頭的值。"
+  },
+  "shareExpiryDaysFmt": {
+    "message": "{0} 天後刪除"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "{0}後刪除"
+  },
+  "shareExpiryOnetime": {
+    "message": "首次檢視後刪除"
+  },
+  "shareExpiryService": {
+    "message": "保留到服務將其移除為止"
+  },
+  "shareExpiryNever": {
+    "message": "不會到期"
+  },
+  "pasteUnsafeUrl": {
+    "message": "自訂伺服器必須是公用主機上的 HTTPS 位址"
+  },
+  "pasteBadLink": {
+    "message": "該服務未傳回有效的 HTTPS 連結"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "上傳失敗：{0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "自訂上傳伺服器：請使用公用主機上的 HTTPS 位址"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "自訂上傳伺服器：JSON 範本不是有效的 JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} 拒絕了金鑰或權杖（錯誤或已過期）"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub 權杖需要 Gists 權限（讀取和寫入）"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "此網頁上沒有 Turnstile 網站金鑰"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile 網站金鑰"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "進階工具"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "哪些防護會顯示工具"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "信賴度高於此值時顯示工具（%）"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "「進階」只會列出信賴度高於此值的防護。設為 0 則列出所有偵測到的防護。"
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "進階工具的信賴度必須介於 0 到 99 之間"
+  },
+  "advCommonValue": {
+    "message": "值"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} 個字元"
+  },
+  "advCookiePath": {
+    "message": "路徑"
+  },
+  "advCookieExpires": {
+    "message": "到期時間"
+  },
+  "advCookieSession": {
+    "message": "工作階段（關閉瀏覽器時刪除）"
+  },
+  "advCookieNotFound": {
+    "message": "未找到"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "要還原官方偵測器嗎？"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "所有官方偵測器都已安裝，沒有需要還原的項目。"
+  },
+  "restoreOfficialChecking": {
+    "message": "正在檢查 GitHub 上的最新發行版本..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "會從 GitHub 上的發行版本 {0} 重新安裝：{1}。"
+  },
+  "restoreOfficialOffline": {
+    "message": "無法連線至 GitHub，因此改用擴充功能內建的版本。"
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub 目前正在限制要求，因此改用擴充功能內建的版本。"
+  },
+  "restoreOfficialListFmt": {
+    "message": "會從擴充功能內建的版本重新安裝：{0}。"
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "「規則 → 更新」會重新安裝這些項目：{0}。"
+  },
+  "restoreOfficialUnchanged": {
+    "message": "您自己的偵測器，以及您對其他規則的編輯都不會變更。"
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "另外 {0} 個"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "無法還原：{0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "已還原 {0}"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "執行「規則 → 更新」以安裝其餘項目。"
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "還原"
+  },
+  "advancedFilterTool": {
+    "message": "工具"
+  },
+  "advancedFilterAllTools": {
+    "message": "所有工具"
+  },
+  "advFilterKindCapture": {
+    "message": "擷取"
+  },
+  "advHistoryCaptureTag": {
+    "message": "擷取"
+  },
+  "advFilterKindOther": {
+    "message": "其他工具"
+  },
+  "scrapflyExportTitle": {
+    "message": "用 Scrapfly 爬取",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "使用 Unblocker 爬取此網頁的程式碼",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "開啟 Unblocker，透過 Scrapfly 的 API 取得此網頁。它會自行選擇瀏覽器、代理伺服器和標頭，且在網站沒有封鎖時不會額外收費。",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "在此網頁上偵測到",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "程式碼語言",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "此網頁有 CAPTCHA：Unblocker 會避開或解決它以傳回網頁，但不會填寫表單中的 CAPTCHA。",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "選項"
+  },
+  "scrapflyExportProduct": {
+    "message": "使用"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "解決 CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "每次解決收費"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "請使用 Cloud Browser 來解決。"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "在 Scrapfly 的 Cloud Browser 中開啟此網頁，並用 Playwright 控制。Captcha Solver 會在 Turnstile、reCAPTCHA、GeeTest 等出現時自動處理；解決失敗不收費。"
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "繞過反機器人"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "複製給 AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "將網頁、其防護機制、您的設定和程式碼複製為一則訊息，供 ChatGPT、Claude 或任何 AI 助理使用"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "已複製：貼到您的 AI 助理中"
+  },
+  "scrapflyExportFormat": {
+    "message": "輸出"
+  },
+  "scrapflyExportFormatText": {
+    "message": "文字"
+  },
+  "scrapflyExportProxy": {
+    "message": "代理伺服器"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "資料中心"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "住宅"
+  },
+  "scrapflyExportCountry": {
+    "message": "國家/地區"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "任何"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "轉譯 JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 點數"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "選擇您的設定"
+  },
+  "scrapflyExportStepCode": {
+    "message": "複製程式碼"
+  },
+  "scrapflyExportStepKey": {
+    "message": "設定您的 API 金鑰"
+  },
+  "scrapflyExportStepRun": {
+    "message": "執行"
+  },
+  "scrapflyExportGetKey": {
+    "message": "取得 API 金鑰",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "開啟 Playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "程式碼已複製",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "請開啟網頁，再用 Scrapfly 爬取",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} 次擷取"
+  },
+  "statsFirstSeen": {
+    "message": "本期新增"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "在此範圍內，有 {0} 項防護和 {1} 個網域是首次儲存。"
+  },
+  "statsFirstSeenAllTip": {
+    "message": "選擇 7、30 或 90 天即可查看新增項目。"
+  },
+  "statsMostProtectedDomain": {
+    "message": "防護最多的網域"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "在 {1} 次造訪中出現 {0} 種不同的防護。"
+  },
+  "statsFoundTogether": {
+    "message": "同時出現的防護"
+  },
+  "statsMethods": {
+    "message": "偵測方法"
+  },
+  "statsMatchesUnit": {
+    "message": "符合項目"
+  },
+  "statsMethodsByCategory": {
+    "message": "依類別的方法"
+  },
+  "statsWeakEvidence": {
+    "message": "最弱的證據"
+  },
+  "statsSignalColumn": {
+    "message": "訊號"
+  },
+  "statsMethodColumn": {
+    "message": "方法"
+  },
+  "statsTopSignals": {
+    "message": "最常符合的訊號"
+  },
+  "statsDecidedSingle": {
+    "message": "單一模式"
+  },
+  "statsDecidedCombination": {
+    "message": "組合"
+  },
+  "statsDecidedBy": {
+    "message": "偵測的判定方式"
+  },
+  "statsCombinationGain": {
+    "message": "依判定方式的信賴度"
+  },
+  "statsCombinationColumn": {
+    "message": "組合"
+  },
+  "statsTopCombinations": {
+    "message": "已觸發的組合"
+  },
+  "statsNoCombinations": {
+    "message": "此範圍內沒有任何偵測是由組合判定的。"
+  },
+  "statsRulesMostActive": {
+    "message": "最活躍的規則"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} 個模式"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "依方法的模式"
+  },
+  "statsRulesOfficial": {
+    "message": "官方"
+  },
+  "statsRulesCustom": {
+    "message": "自訂"
+  },
+  "statsRuleColumn": {
+    "message": "規則"
+  },
+  "statsRuleKindColumn": {
+    "message": "類型"
+  },
+  "statsPatternsUnit": {
+    "message": "模式"
+  },
+  "statsRulesNeverMatched": {
+    "message": "此範圍內未發現"
+  },
+  "statsRulesAllMatched": {
+    "message": "每項已啟用的規則在此範圍內都有發現。"
+  },
+  "statsMissingColumn": {
+    "message": "無說明"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "沒有說明的模式"
+  },
+  "statsRulesAllDescribed": {
+    "message": "每個模式都有說明。"
+  },
+  "statsRuleVersionColumn": {
+    "message": "規則版本"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "需要的擴充功能版本"
+  },
+  "statsRulesWaiting": {
+    "message": "等待較新的擴充功能"
+  },
+  "statsToolsByVendor": {
+    "message": "依供應商的擷取項目"
+  },
+  "statsToolsCapture": {
+    "message": "擷取"
+  },
+  "statsToolsByTool": {
+    "message": "最常用的工具"
+  },
+  "statsToolsOverTime": {
+    "message": "擷取數隨時間的變化"
+  },
+  "statsChangeColumn": {
+    "message": "變化"
+  },
+  "statsDateColumn": {
+    "message": "日期"
+  },
+  "statsDomainChanges": {
+    "message": "防護變化"
+  },
+  "statsNoChanges": {
+    "message": "此範圍內沒有任何網域在已儲存的造訪之間改變防護。"
+  },
+  "statsNothingNew": {
+    "message": "沒有新增項目：這裡的每項防護在此範圍之前就已在歷史記錄中。"
+  },
+  "statsSectionSignals": {
+    "message": "訊號"
+  },
+  "statsSectionCombinations": {
+    "message": "組合"
+  },
+  "statsSectionRules": {
+    "message": "規則"
+  },
+  "statsSectionTools": {
+    "message": "工具"
+  },
+  "statsDomainChangesHint": {
+    "message": "偵測到的防護在兩次已儲存的造訪之間發生變化的網域。"
+  },
+  "statsFirstSeenHint": {
+    "message": "在此範圍內首次儲存的防護和網域。"
+  },
+  "statsSignalsNote": {
+    "message": "每次已儲存的偵測所符合的證據類型：Cookie 和標頭名稱、URL、網頁元素、指令碼和 JavaScript 掛鉤。"
+  },
+  "statsWeakEvidenceHint": {
+    "message": "符合的模式平均信賴度最低的防護。它們的規則可能需要更強的模式。"
+  },
+  "statsCombinationsNote": {
+    "message": "只有在同時找到多個模式時，組合才會偵測到防護。"
+  },
+  "statsRulesNote": {
+    "message": "您的規則庫，與歷史記錄在此範圍內的發現相比較。"
+  },
+  "statsRulesTotal": {
+    "message": "規則"
+  },
+  "statsRulesModified": {
+    "message": "已編輯的官方規則"
+  },
+  "statsRulesDisabled": {
+    "message": "已停用"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "在此範圍內儲存的網頁上沒有任何發現的已啟用規則。"
+  },
+  "statsRulesMissingHint": {
+    "message": "說明會顯示在偵測詳細資料、歷史記錄和組合中。請在規則編輯器中新增。"
+  },
+  "statsToolsNote": {
+    "message": "儲存在此裝置上的進階擷取項目和工具結果。"
+  },
+  "statsCapturesUnit": {
+    "message": "擷取"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0}% 確定"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "組合"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "快取"
+  },
+  "detectionTipCache": {
+    "message": "哪些網頁會重複使用這些快取結果，以及使用多久。"
+  },
+  "tipCacheExpires": {
+    "message": "到期時間"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "以歷史記錄檢查"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "查看每個模式和組合在多少個已儲存的網頁上相符。未儲存的編輯也會計入。"
+  },
+  "ruleHistoryCheckRun": {
+    "message": "檢查"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} 個已儲存的網頁 · 此規則在其中 {1} 個網頁上被發現"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{1} 個網頁中的 {0} 個"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} 個其他網頁"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "歷史記錄是空的：請先瀏覽一些網頁。"
+  },
+  "ruleHistoryCheckNote": {
+    "message": "這是估計值：歷史記錄保存的是符合的值，而不是整個網頁。"
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "在 {0} 個網頁上觸發"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "新增模式即可檢查。"
+  },
+  "settingsThemeTitle": {
+    "message": "佈景主題"
+  },
+  "settingsThemeDesc": {
+    "message": "深色，或採用 Scrapfly 配色的淺色。「系統」會跟隨瀏覽器。"
+  },
+  "themeDark": {
+    "message": "深色"
+  },
+  "themeLight": {
+    "message": "淺色"
+  },
+  "themeSystem": {
+    "message": "系統"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "開啟主控台"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "在 chrome://extensions 中開啟此擴充功能：按一下「service worker」即可查看日誌。"
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "將日誌保留在這裡而不是主控台，以便匯出為 JSON 或文字"
+  },
+  "ruleTranslationsTitle": {
+    "message": "翻譯"
+  },
+  "ruleTranslationsHint": {
+    "message": "擴充功能使用該語言時，會顯示此文字來取代說明。留空則顯示說明。"
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} / {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "自動翻譯"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "自動翻譯需要 Chrome 138 或更新版本。"
+  },
+  "ruleTranslateNeedsText": {
+    "message": "請先填寫說明。"
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "正在翻譯：{0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "已填入 {0} 種語言。儲存前請檢查。"
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "已填入 {0} 種；有 {1} 種無法在此翻譯。"
+  },
+  "sfxOptRenderingWait": {
+    "message": "載入後等待"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "等待元素"
+  },
+  "sfxOptRenderingStage": {
+    "message": "網頁就緒於"
+  },
+  "sfxOptAutoScroll": {
+    "message": "捲動到底部"
+  },
+  "sfxOptJs": {
+    "message": "執行 JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "瀏覽器動作"
+  },
+  "sfxOptScreenshot": {
+    "message": "螢幕截圖"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "元素"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "螢幕截圖選項"
+  },
+  "sfxOptLang": {
+    "message": "語言"
+  },
+  "sfxOptOs": {
+    "message": "作業系統"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "瀏覽器"
+  },
+  "sfxOptGeolocation": {
+    "message": "地理位置"
+  },
+  "sfxOptHeaders": {
+    "message": "標頭"
+  },
+  "sfxOptTimeout": {
+    "message": "逾時"
+  },
+  "sfxOptRetry": {
+    "message": "發生錯誤時重試"
+  },
+  "sfxOptCostBudget": {
+    "message": "點數上限"
+  },
+  "sfxOptFormatOptions": {
+    "message": "省略"
+  },
+  "sfxOptProxified": {
+    "message": "傳回網站的回應"
+  },
+  "sfxOptExtraction": {
+    "message": "提取資料"
+  },
+  "sfxOptExtractionModel": {
+    "message": "模型"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "提示詞"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "已儲存的範本"
+  },
+  "sfxOptCache": {
+    "message": "快取"
+  },
+  "sfxOptCacheTtl": {
+    "message": "保留時間"
+  },
+  "sfxOptCacheClear": {
+    "message": "重新整理快取"
+  },
+  "sfxOptSession": {
+    "message": "工作階段"
+  },
+  "sfxOptSticky": {
+    "message": "工作階段使用相同代理伺服器"
+  },
+  "sfxOptDebug": {
+    "message": "偵錯"
+  },
+  "sfxOptCorrelationId": {
+    "message": "關聯 ID"
+  },
+  "sfxOptTags": {
+    "message": "標籤"
+  },
+  "sfxOptDns": {
+    "message": "DNS 詳細資料"
+  },
+  "sfxOptSsl": {
+    "message": "SSL 憑證"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "啟動"
+  },
+  "sfxOptTargetUrl": {
+    "message": "宣告此網頁"
+  },
+  "sfxOptBrowserLang": {
+    "message": "語言"
+  },
+  "sfxOptAutoClose": {
+    "message": "中斷連線時關閉"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "工作階段時間長度"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "解除封鎖時限"
+  },
+  "sfxOptBlockImages": {
+    "message": "封鎖圖片"
+  },
+  "sfxOptBlockStyles": {
+    "message": "封鎖樣式表"
+  },
+  "sfxOptBlockFonts": {
+    "message": "封鎖字型"
+  },
+  "sfxOptBlockMedia": {
+    "message": "封鎖影片和音訊"
+  },
+  "sfxOptBlacklist": {
+    "message": "封鎖追蹤器"
+  },
+  "sfxOptBrowserCache": {
+    "message": "快取靜態檔案"
+  },
+  "sfxOptRecord": {
+    "message": "錄製工作階段"
+  },
+  "sfxOptMcp": {
+    "message": "MCP 端點"
+  },
+  "sfxValAuto": {
+    "message": "自動"
+  },
+  "sfxValCleanHtml": {
+    "message": "精簡 HTML"
+  },
+  "sfxValComplete": {
+    "message": "完整載入"
+  },
+  "sfxValDomReady": {
+    "message": "DOM 就緒"
+  },
+  "sfxValFullPage": {
+    "message": "整頁"
+  },
+  "sfxValElement": {
+    "message": "元素"
+  },
+  "sfxValLoadImages": {
+    "message": "載入圖片"
+  },
+  "sfxValDarkMode": {
+    "message": "深色模式"
+  },
+  "sfxValBlockBanners": {
+    "message": "隱藏橫幅"
+  },
+  "sfxValHighQuality": {
+    "message": "高品質"
+  },
+  "sfxValPrint": {
+    "message": "列印樣式"
+  },
+  "sfxValNoLinks": {
+    "message": "連結"
+  },
+  "sfxValNoImages": {
+    "message": "圖片"
+  },
+  "sfxValOnlyContent": {
+    "message": "主要內容以外的全部"
+  },
+  "sfxValModel": {
+    "message": "AI 模型"
+  },
+  "sfxValTemplate": {
+    "message": "範本"
+  },
+  "sfxValConnect": {
+    "message": "開啟瀏覽器"
+  },
+  "sfxValUnblock": {
+    "message": "先解除封鎖"
+  },
+  "sfxGroupRender": {
+    "message": "瀏覽器轉譯"
+  },
+  "sfxGroupLocation": {
+    "message": "位置與指紋"
+  },
+  "sfxGroupRequest": {
+    "message": "要求"
+  },
+  "sfxGroupOutput": {
+    "message": "輸出"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI 提取"
+  },
+  "sfxGroupCache": {
+    "message": "快取與工作階段"
+  },
+  "sfxGroupTracking": {
+    "message": "偵錯與追蹤"
+  },
+  "sfxGroupFingerprint": {
+    "message": "指紋與語言"
+  },
+  "sfxGroupSession": {
+    "message": "工作階段"
+  },
+  "sfxGroupBlocking": {
+    "message": "封鎖與快取"
+  },
+  "sfxGroupTools": {
+    "message": "偵錯與 MCP"
+  },
+  "sfxWhyRender": {
+    "message": "需要啟用轉譯 JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "需要 Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "僅限 Markdown 或文字輸出"
+  },
+  "sfxWhyCache": {
+    "message": "請先開啟快取"
+  },
+  "sfxWhySession": {
+    "message": "請先設定工作階段"
+  },
+  "sfxWhySticky": {
+    "message": "使用 Unblocker 時一律開啟"
+  },
+  "sfxWhyJson": {
+    "message": "不是 JSON 步驟清單：已省略"
+  },
+  "sfxWhyGeo": {
+    "message": "請使用緯度,經度：已省略"
+  },
+  "sfxWhyBrandOs": {
+    "message": "該瀏覽器無法在此系統上執行：已省略"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge 需要 Windows：已省略"
+  },
+  "sfxHintHeaders": {
+    "message": "每行一個：Name: value。不會儲存。"
+  },
+  "sfxHintScenario": {
+    "message": "JSON 清單：click、fill、wait、scroll、execute、wait_for_selector、wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "以逗號分隔"
+  },
+  "sfxHintLanguages": {
+    "message": "以逗號分隔，最多 3 個"
+  },
+  "sfxHintUnblock": {
+    "message": "「先解除封鎖」會傳回已通過反機器人防線的瀏覽器"
+  },
+  "sfxValOff": {
+    "message": "關閉"
+  },
+  "ruleTranslateAllDone": {
+    "message": "每種語言都已有翻譯。"
+  },
+  "combinationTranslationsTitle": {
+    "message": "名稱翻譯"
+  },
+  "combinationTranslationsHint": {
+    "message": "擴充功能使用該語言時，會顯示此文字來取代名稱。留空則顯示名稱。"
+  },
+  "combinationTranslateNeedsName": {
+    "message": "請先填寫名稱。"
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "檢查挑戰 Cookie 並分析其指令碼"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "檢查 DataDome Cookie 並分析其指令碼"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "尋找公開金鑰、擷取瀏覽器資料（BDA）並分析其指令碼"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "偵測 GeeTest 版本（v3 或 v4）並分析其指令碼"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "尋找網站金鑰、偵測 hCaptcha 版本並分析其指令碼"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "提取網站金鑰並分析 Turnstile 指令碼"
+  },
+  "statsExport": {
+    "message": "匯出"
+  },
+  "statsExportAllCategories": {
+    "message": "匯出內容一律包含所有類別，與此頁面顯示的內容無關。"
+  },
+  "statsScopeLabel": {
+    "message": "顯示"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "已隱藏的指紋辨識偵測：{0}（占全部的 {1}）"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "顯示指紋辨識"
+  },
+  "statsScopeKeepOne": {
+    "message": "至少要保留一個已選取的類別。"
+  },
+  "statsScopeRulesNote": {
+    "message": "規則一律使用所有類別。"
+  },
+  "statsContextFmt": {
+    "message": "網頁：{0} · 網域：{1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "自 {0} 起的所有歷史記錄"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "與上一期間（{0}）相比"
+  },
+  "statsCompareNone": {
+    "message": "選擇 7、30 或 90 天，即可與上一期間比較。"
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "歷史記錄從 {0} 開始，因此沒有完整的上一期間可供比較。"
+  },
+  "statsDeltaNew": {
+    "message": "新增"
+  },
+  "statsDeltaFlat": {
+    "message": "與上一期間相比沒有變化"
+  },
+  "statsDeltaUpFmt": {
+    "message": "比上一期間增加 {0}"
+  },
+  "statsDeltaDownFmt": {
+    "message": "比上一期間減少 {0}"
+  },
+  "statsDeltaWasFmt": {
+    "message": "上一期間：{0}"
+  },
+  "statsLowDataFmt": {
+    "message": "此範圍內的網頁很少（{0}）：比較和排名可能會造成誤導。"
+  },
+  "statsLoading": {
+    "message": "正在載入統計資料..."
+  },
+  "statsEmptyShowAll": {
+    "message": "顯示所有歷史記錄"
+  },
+  "statsHeadlinesLabel": {
+    "message": "重點"
+  },
+  "statsSectionEvidence": {
+    "message": "證據"
+  },
+  "statsSubnavLabel": {
+    "message": "證據檢視"
+  },
+  "statsExportCanceled": {
+    "message": "已取消匯出"
+  },
+  "statsAllClearTitle": {
+    "message": "此範圍內未發現反機器人或 CAPTCHA"
+  },
+  "statsAllClearDescFmt": {
+    "message": "這些網頁只使用了指紋辨識 API。網頁：{0}。"
+  },
+  "statsScopeEmptyTitle": {
+    "message": "這些類別沒有可顯示的內容"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "請選擇其他類別或較長的範圍。"
+  },
+  "statsHeadlineTop": {
+    "message": "最常見的防護"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "占網頁的 {0} · 網頁：{1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "最難的網站"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "防護：{0} · 難度：{1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "最新的防護"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "首次出現於 {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "此範圍內沒有新增項目"
+  },
+  "statsHeadlineRiser": {
+    "message": "成長最多"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "網頁 {0} → {1}，與上一期間相比"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "需要上一期間"
+  },
+  "statsKpiPages": {
+    "message": "已儲存的網頁"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "活躍天數：{0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} 個有偵測結果（{1}）"
+  },
+  "statsKpiLayered": {
+    "message": "多層防護網站"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} 個含 CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "出現過的防護"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "本期新增 {0}"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "共 {0} 項規則"
+  },
+  "statsTipPages": {
+    "message": "此範圍內儲存到歷史記錄的網頁。歷史記錄保存的是偵測結果，而非每一次瀏覽器造訪。"
+  },
+  "statsTipLayered": {
+    "message": "偵測到兩種或更多不同防護的網域。"
+  },
+  "statsOverTimeProtections": {
+    "message": "隨時間發現的防護"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% 的網頁"
+  },
+  "statsAllProtectionsLink": {
+    "message": "所有防護"
+  },
+  "statsPageTiers": {
+    "message": "您的網頁受到多少保護"
+  },
+  "statsTiersHint": {
+    "message": "每個已儲存的網頁只計算一次，依其上發現的防護類型分類。"
+  },
+  "statsTierBoth": {
+    "message": "反機器人和 CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "僅反機器人"
+  },
+  "statsTierCaptcha": {
+    "message": "僅 CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "無反機器人或 CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "預估難度"
+  },
+  "statsDifficultyHint": {
+    "message": "根據所顯示類別中發現的防護所做的粗略估計，並非實際測量結果。"
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "無防護"
+  },
+  "statsHardestSites": {
+    "message": "最難的網站"
+  },
+  "statsAllDomainsLink": {
+    "message": "所有網域"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} 個"
+  },
+  "statsWhatChanged": {
+    "message": "有哪些變化"
+  },
+  "statsChangedNew": {
+    "message": "新防護"
+  },
+  "statsChangedMoving": {
+    "message": "上升與下降"
+  },
+  "statsChangedGone": {
+    "message": "不再出現"
+  },
+  "statsChangedSwitched": {
+    "message": "更換了防護的網站"
+  },
+  "statsChangedNothing": {
+    "message": "此範圍內沒有變化。"
+  },
+  "statsChangedAllLink": {
+    "message": "所有變化"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "選擇 7、30 或 90 天，即可查看上升和下降的防護。"
+  },
+  "statsFingerprintCard": {
+    "message": "指紋辨識"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "指紋辨識 API 在 {0} 的網頁上執行 · 技術：{1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "最常見：{0}"
+  },
+  "statsFingerprintNote": {
+    "message": "與反機器人和 CAPTCHA 防護分開顯示，因為幾乎每個網頁都會使用這些 API。"
+  },
+  "statsPagesColumn": {
+    "message": "網頁"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "變化"
+  },
+  "statsStrongColumn": {
+    "message": "強力證據"
+  },
+  "statsProtectionSortLabel": {
+    "message": "防護排序"
+  },
+  "statsSortMostPages": {
+    "message": "網頁最多"
+  },
+  "statsSortMostDomains": {
+    "message": "網域最多"
+  },
+  "statsSortBiggestChange": {
+    "message": "變化最大"
+  },
+  "statsCommonStacks": {
+    "message": "常見的防護堆疊"
+  },
+  "statsCommonStacksHint": {
+    "message": "在某個網域最近儲存的網頁上同時發現的反機器人和 CAPTCHA 防護。"
+  },
+  "statsDomainSearchAll": {
+    "message": "搜尋網域或防護..."
+  },
+  "statsSortHardest": {
+    "message": "最難的優先"
+  },
+  "statsSortLastSeen": {
+    "message": "最近的優先"
+  },
+  "statsDifficultyColumn": {
+    "message": "難度"
+  },
+  "statsStackColumn": {
+    "message": "防護"
+  },
+  "statsLastSeenColumn": {
+    "message": "最近出現"
+  },
+  "statsFilterChanged": {
+    "message": "有變化"
+  },
+  "statsFilterClear": {
+    "message": "清除篩選條件"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "篩選網域"
+  },
+  "statsChangeKindGained": {
+    "message": "新增"
+  },
+  "statsChangeKindDropped": {
+    "message": "移除"
+  },
+  "statsChangeKindReplaced": {
+    "message": "取代"
+  },
+  "statsChangePageColumn": {
+    "message": "網頁"
+  },
+  "statsChangeSinceFmt": {
+    "message": "與 {0} 相比"
+  },
+  "statsChangeAddedSr": {
+    "message": "新增："
+  },
+  "statsChangeRemovedSr": {
+    "message": "移除："
+  },
+  "statsDomainChangesHintPage": {
+    "message": "比較同一網頁的已儲存副本。除非顯示指紋辨識，否則會忽略指紋辨識偵測。"
+  },
+  "statsStrongEvidence": {
+    "message": "強力證據"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{1} 次偵測中，有 {0} 次的分數達 80% 或更高。"
+  },
+  "statsUnconfirmed": {
+    "message": "被提及但未確認"
+  },
+  "statsUnconfirmedHint": {
+    "message": "經常發現、但很少有強力證據的防護。它們可能只是文字中的提及或未使用的指令碼，而不是正在生效的挑戰。"
+  },
+  "statsUnconfirmedNone": {
+    "message": "所有常見的防護都已有強力證據確認。"
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "主要透過 {0} 發現：{1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "沒有哪個訊號特別突出。"
+  },
+  "statsTierStrong": {
+    "message": "強"
+  },
+  "statsTierModerate": {
+    "message": "中"
+  },
+  "statsTierWeak": {
+    "message": "弱"
+  },
+  "statsTierHint": {
+    "message": "強為 80% 以上，中為 40-79%，弱為低於 40%。100% 表示只有該防護才會產生的訊號。"
+  },
+  "statsDecidedByCategory": {
+    "message": "各類別的判定方式"
+  },
+  "statsLiftFmt": {
+    "message": "{0} 個百分點"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}：{1} · 平均 {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "在 {0} 中，組合將信賴度從 {1} 提高到 {2}。"
+  },
+  "statsLess": {
+    "message": "少"
+  },
+  "statsMore": {
+    "message": "多"
+  },
+  "statsBusiestDay": {
+    "message": "最活躍的一天"
+  },
+  "statsLongestStreak": {
+    "message": "最長連續天數"
+  },
+  "statsPeakHour": {
+    "message": "尖峰時段"
+  },
+  "statsQuietDays": {
+    "message": "沒有儲存任何內容的天數"
+  },
+  "statsTodayPartial": {
+    "message": "今天（仍在統計）"
+  },
+  "statsSevenDayAverage": {
+    "message": "折線：7 天平均值"
+  },
+  "statsRulesCoverage": {
+    "message": "涵蓋率"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "在此範圍內，{1} 項已啟用的規則中有 {0} 項符合"
+  },
+  "statsRulesAttention": {
+    "message": "需要注意"
+  },
+  "statsRulesAttentionNone": {
+    "message": "沒有需要注意的項目。"
+  },
+  "statsRulesStatusColumn": {
+    "message": "狀態"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "不在此範圍內"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "不在歷史記錄中"
+  },
+  "statsRulesSourceEdited": {
+    "message": "已編輯"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "針對您尚未遇到的供應商所設的官方規則會保持靜默。這是正常的。"
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "目前歷史記錄還不多（網頁：{0}），因此從未符合的規則說明不了什麼。"
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "只列出自訂規則和已編輯的規則。官方規則的說明由 Scrapfly 維護。"
+  },
+  "statsToolsRetentionNote": {
+    "message": "「進階」會將擷取項目保留 30 分鐘，因此此分頁不受日期範圍影響。"
+  },
+  "statsToolsSavedNow": {
+    "message": "目前已儲存"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "10 分鐘內到期"
+  },
+  "statsToolsVendorsCount": {
+    "message": "供應商"
+  },
+  "statsToolsStaleFmt": {
+    "message": "等待清理的已過期擷取項目：{0}。開啟「進階」即可將其移除。"
+  },
+  "statsToolsSavedCaptures": {
+    "message": "已儲存的擷取項目"
+  },
+  "statsToolsColVendor": {
+    "message": "供應商"
+  },
+  "statsToolsColTool": {
+    "message": "工具"
+  },
+  "statsToolsColSaved": {
+    "message": "儲存時間"
+  },
+  "statsToolsColExpires": {
+    "message": "到期時間"
+  },
+  "statsToolsNoLive": {
+    "message": "目前沒有已儲存的擷取項目。"
+  },
+  "statsChangedNoPrevious": {
+    "message": "還沒有完整的上一期間。"
+  },
+  "settingsCardCaptureRetention": {
+    "message": "擷取項目的保留時間"
+  },
+  "settingsCaptureRetention": {
+    "message": "工具擷取項目保留"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "進階工具的擷取項目（Cookie、指令碼、權杖）會在此時間後刪除。"
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 分鐘"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 分鐘"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 小時"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 小時"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 小時"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 小時"
+  },
+  "advancedFooterHintFmt": {
+    "message": "擷取項目會保留 {0}。",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "從 1 分鐘到 7 天。"
+  }
+}

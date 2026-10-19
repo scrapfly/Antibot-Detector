@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Pemindaian gagal"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Pemindaian terhenti"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Belum ada pemindaian selesai"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Pemindaian tidak selesai. Muat ulang halaman untuk mencoba lagi."
+  },
+  "settingsReadFailedToast": {
+    "message": "Tidak dapat memuat pengaturan. Nilai Anda saat ini tetap dipertahankan."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Tidak dapat menyimpan pengaturan. Perubahan Anda tetap dipertahankan; coba lagi."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Perubahan disiapkan. Simpan pengaturan untuk menerapkannya."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Tidak dapat menyimpan pengaturan yang diimpor. Pengaturan dan bahasa Anda tetap dipertahankan."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Berlaku segera."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Ekspor atau impor preferensi. Koneksi integrasi tetap berada di browser ini."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Tidak dapat membaca file pengaturan yang valid. Tidak ada yang diubah."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Tidak dapat menyimpan aturan ini. Perubahan Anda masih ada; coba lagi."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Muat ulang halaman untuk menganalisis script proteksi"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Setel ulang cookie proteksi dan muat ulang untuk menganalisis script"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Muat ulang halaman untuk mendeteksi versi proteksi"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Setel ulang cookie proteksi dan mulai merekam"
+  },
+  "advToolCookiesHint": {
+    "message": "Periksa cookie yang digunakan proteksi ini"
+  },
+  "advToolVersionHint": {
+    "message": "Baca informasi versi yang tersedia"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Temukan site key CAPTCHA di halaman ini"
+  },
+  "advToolSelectorHint": {
+    "message": "Temukan selector untuk widget CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "Periksa callback CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "Setel ulang cookie proteksi dan muat ulang untuk merekam data sensor"
+  },
+  "advToolCaptureHint": {
+    "message": "Rekam data dari halaman ini"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Hentikan perekaman data dari halaman ini"
+  },
+  "advToolWorking": {
+    "message": "Memproses…"
+  },
+  "advToolWaitingReload": {
+    "message": "Memuat ulang halaman dan mengumpulkan hasil. Ini memerlukan beberapa detik…"
+  },
+  "advToolNoResult": {
+    "message": "Tidak ada hasil: proteksi tidak mengirim data. Muat ulang halaman dan coba lagi."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Site key {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Site key tidak ditemukan di halaman ini. Buka atau picu CAPTCHA, lalu coba lagi."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Ditemukan di"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Permintaan"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Script halaman"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Variabel halaman"
+  },
+  "advSiteKeyFrame": {
+    "message": "Frame"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Script di halaman ini"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Mengekstrak site key dan menganalisis script-nya"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Menganalisis script-nya"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Tidak dapat menyelesaikan tindakan ini: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Halaman grafik sebelumnya"
+  },
+  "statsChartNext": {
+    "message": "Halaman grafik berikutnya"
+  },
+  "statsChartPage": {
+    "message": "Halaman {0} dari {1}"
+  },
+  "statsChartShowing": {
+    "message": "{0}–{1} dari {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Bagian statistik"
+  },
+  "statsSectionOverview": {
+    "message": "Ringkasan"
+  },
+  "statsSectionActivity": {
+    "message": "Aktivitas"
+  },
+  "statsSectionProtections": {
+    "message": "Proteksi"
+  },
+  "statsSectionDomains": {
+    "message": "Domain"
+  },
+  "statsSectionConfidence": {
+    "message": "Kepercayaan"
+  },
+  "statsExportCSV": {
+    "message": "Ekspor CSV"
+  },
+  "statsExportJSON": {
+    "message": "Ekspor JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Ekspor berisi domain dan ringkasan deteksi, bukan cookie, isi halaman, atau parameter URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "Ekspor mencakup rentang yang dipilih. Entri: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Unduhan dimulai: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Tidak dapat mengekspor data. Silakan coba lagi."
+  },
+  "statsLoadFailed": {
+    "message": "Tidak dapat memuat riwayat. Silakan muat ulang halaman ini."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Tidak ada entri dalam rentang ini"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Pilih rentang tanggal yang lebih panjang untuk menjelajahi riwayat tersimpan Anda."
+  },
+  "statsDetectionRate": {
+    "message": "Entri dengan deteksi"
+  },
+  "statsActiveDays": {
+    "message": "Hari aktif"
+  },
+  "statsAverageConfidence": {
+    "message": "Rata-rata kepercayaan"
+  },
+  "statsDailyVisits": {
+    "message": "Entri riwayat harian"
+  },
+  "statsActivityCalendar": {
+    "message": "Kalender aktivitas"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Setiap kotak mewakili satu hari kalender lokal. Biru yang lebih gelap berarti lebih banyak entri tersimpan."
+  },
+  "statsHourlyActivity": {
+    "message": "Aktivitas per jam"
+  },
+  "statsWeekdayActivity": {
+    "message": "Aktivitas per hari dalam seminggu"
+  },
+  "statsLocalTimeNote": {
+    "message": "Tanggal dan jam menggunakan zona waktu lokal Anda."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Menampilkan {0} hari terakhir. Total dan ekspor mencakup seluruh rentang yang dipilih."
+  },
+  "statsProtectionRanking": {
+    "message": "Peringkat proteksi"
+  },
+  "statsCategoryTrend": {
+    "message": "Kategori dari waktu ke waktu"
+  },
+  "statsCategoryOverlap": {
+    "message": "Kategori yang ditemukan bersamaan"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Jumlah entri riwayat dengan kedua kategori. Sel diagonal menampilkan entri dengan kategori tersebut."
+  },
+  "statsProtectionDetails": {
+    "message": "Semua proteksi"
+  },
+  "statsDomainRanking": {
+    "message": "Peringkat domain"
+  },
+  "statsDomainMap": {
+    "message": "Kunjungan dan deteksi"
+  },
+  "statsDomainMapHint": {
+    "message": "Setiap titik adalah satu domain. Titik yang lebih besar memiliki lebih banyak proteksi berbeda."
+  },
+  "statsDomainDetails": {
+    "message": "Semua domain"
+  },
+  "statsDomainSearch": {
+    "message": "Cari domain..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Urutkan domain"
+  },
+  "statsSortVisits": {
+    "message": "Kunjungan terbanyak"
+  },
+  "statsSortDetections": {
+    "message": "Deteksi terbanyak"
+  },
+  "statsSortConfidence": {
+    "message": "Kepercayaan tertinggi"
+  },
+  "statsSortName": {
+    "message": "Nama domain"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Distribusi kepercayaan"
+  },
+  "statsConfidenceTrend": {
+    "message": "Kepercayaan dari waktu ke waktu"
+  },
+  "statsCategoryConfidence": {
+    "message": "Kepercayaan per kategori"
+  },
+  "statsConfidenceNote": {
+    "message": "Kepercayaan menggambarkan kekuatan bukti deteksi yang tersimpan, bukan bukti adanya fingerprinting atau challenge aktif."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} deteksi memiliki nilai kepercayaan; {1} tidak memiliki skor yang valid."
+  },
+  "statsProtectionColumn": {
+    "message": "Proteksi"
+  },
+  "statsCategoryColumn": {
+    "message": "Kategori"
+  },
+  "statsDomainColumn": {
+    "message": "Domain"
+  },
+  "statsTableCountFmt": {
+    "message": "Baris: {0} dari {1}"
+  },
+  "statsTableMore": {
+    "message": "Tampilkan lainnya"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Tidak ada domain yang cocok dengan pencarian Anda."
+  },
+  "statsSelectionNote": {
+    "message": "Grafik dan ekspor menggunakan rentang tanggal yang dipilih. Entri riwayat mewakili deteksi yang tersimpan, bukan setiap kunjungan browser."
+  },
+  "extensionName": {
+    "message": "Scrapfly: detektor anti-bot"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: detektor anti-bot",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": detektor anti-bot",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Mendeteksi CAPTCHA, sistem anti-bot, dan teknologi fingerprinting di situs web"
+  },
+  "tabDetection": {
+    "message": "Deteksi"
+  },
+  "tabHistory": {
+    "message": "Riwayat"
+  },
+  "tabRules": {
+    "message": "Aturan"
+  },
+  "tabAdvanced": {
+    "message": "Lanjutan"
+  },
+  "openSettings": {
+    "message": "Buka pengaturan"
+  },
+  "enableOrDisableDetection": {
+    "message": "Aktifkan atau nonaktifkan deteksi"
+  },
+  "noDetectionsFound": {
+    "message": "Tidak ada deteksi yang ditemukan"
+  },
+  "detectionScanningTitle": {
+    "message": "Memindai halaman ini"
+  },
+  "detectionScanningDescription": {
+    "message": "Mencari sinyal proteksi."
+  },
+  "detectionScanningHint": {
+    "message": "Hasil akan muncul di sini setelah siap."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Hapus dari daftar hitam"
+  },
+  "statDetections": {
+    "message": "Deteksi"
+  },
+  "statConfidence": {
+    "message": "Kepercayaan"
+  },
+  "statDifficulty": {
+    "message": "Kesulitan"
+  },
+  "statCacheScope": {
+    "message": "Cakupan cache"
+  },
+  "scopeDomain": {
+    "message": "Domain"
+  },
+  "scopePath": {
+    "message": "Path"
+  },
+  "scopeFullUrl": {
+    "message": "URL lengkap"
+  },
+  "difficultyLow": {
+    "message": "Rendah"
+  },
+  "difficultyMedium": {
+    "message": "Sedang"
+  },
+  "difficultyHigh": {
+    "message": "Tinggi"
+  },
+  "searchHistory": {
+    "message": "Cari riwayat..."
+  },
+  "searchDetectors": {
+    "message": "Cari detektor..."
+  },
+  "paginationPrev": {
+    "message": "Halaman sebelumnya"
+  },
+  "paginationNext": {
+    "message": "Halaman berikutnya"
+  },
+  "paginationPage": {
+    "message": "Halaman"
+  },
+  "paginationOf": {
+    "message": "dari"
+  },
+  "paginationNoItems": {
+    "message": "Tidak ada item untuk ditampilkan"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Nomor halaman saat ini"
+  },
+  "btnImport": {
+    "message": "Impor"
+  },
+  "btnExport": {
+    "message": "Ekspor"
+  },
+  "btnClear": {
+    "message": "Hapus"
+  },
+  "btnAdd": {
+    "message": "Tambah"
+  },
+  "btnUpdate": {
+    "message": "Perbarui"
+  },
+  "btnClose": {
+    "message": "Tutup"
+  },
+  "btnSave": {
+    "message": "Simpan"
+  },
+  "btnCancel": {
+    "message": "Batal"
+  },
+  "btnDelete": {
+    "message": "Hapus"
+  },
+  "historyImportTitle": {
+    "message": "Impor riwayat"
+  },
+  "historyExportTitle": {
+    "message": "Ekspor riwayat"
+  },
+  "historyClearTitle": {
+    "message": "Hapus riwayat"
+  },
+  "historyEmptyTitle": {
+    "message": "Belum ada riwayat"
+  },
+  "historyEmptyDescription": {
+    "message": "Riwayat deteksi akan muncul di sini saat Anda menjelajahi situs web."
+  },
+  "rulesUpdateTitle": {
+    "message": "Instal pembaruan aturan dari rilis Scrapfly terbaru"
+  },
+  "rulesAddTitle": {
+    "message": "Tambah detektor baru"
+  },
+  "rulesEmptyTitle": {
+    "message": "Belum ada detektor yang dimuat"
+  },
+  "rulesEmptyDescription": {
+    "message": "Detektor akan muncul di sini setelah dimuat dari penyimpanan dan file."
+  },
+  "ruleModalActionEdit": {
+    "message": "Edit"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Informasi detektor"
+  },
+  "ruleFieldName": {
+    "message": "Nama"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Nama detektor"
+  },
+  "ruleFieldCategory": {
+    "message": "Kategori"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprint"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Kesulitan"
+  },
+  "ruleFieldIcon": {
+    "message": "Ikon"
+  },
+  "ruleFieldVersion": {
+    "message": "Versi"
+  },
+  "ruleFieldAuthor": {
+    "message": "Penulis"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Warna badge"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Metode deteksi"
+  },
+  "settingsTitle": {
+    "message": "Pengaturan"
+  },
+  "settingsSubtitle": {
+    "message": "Atur preferensi ekstensi Anda"
+  },
+  "settingsTabGeneral": {
+    "message": "Umum"
+  },
+  "settingsTabDetection": {
+    "message": "Deteksi"
+  },
+  "settingsTabHistory": {
+    "message": "Riwayat"
+  },
+  "settingsTabData": {
+    "message": "Data"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Pengaturan inti"
+  },
+  "settingsCardNotifications": {
+    "message": "Notifikasi"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Tampilkan peringatan saat sistem keamanan terdeteksi"
+  },
+  "settingsCardDebug": {
+    "message": "Mode debug"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Menulis satu laporan yang mudah dibaca per halaman yang dipindai ke konsol ekstensi."
+  },
+  "settingsRowLogCollector": {
+    "message": "Pengumpul log"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Maks. log"
+  },
+  "settingsRowCollected": {
+    "message": "Terkumpul"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Pembaruan detektor"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Periksa pembaruan otomatis"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Periksa definisi detektor baru secara otomatis"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Interval pemeriksaan"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Tidak pernah"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Periksa sekarang"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Pembaruan ekstensi diperlukan"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Perbarui ekstensi"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Warna badge"
+  },
+  "settingsRowLastCheck": {
+    "message": "Pemeriksaan terakhir"
+  },
+  "advancedToolsTitle": {
+    "message": "Alat rekam lanjutan"
+  },
+  "advancedToolsDescription": {
+    "message": "Ekstrak cookie, token, dan site key dari sistem proteksi yang terdeteksi"
+  },
+  "advancedToolsHint": {
+    "message": "Kunjungi halaman yang dilindungi untuk mengaktifkan alat rekam"
+  },
+  "advancedSubtabTools": {
+    "message": "Alat"
+  },
+  "advancedSubtabHistory": {
+    "message": "Riwayat"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Riwayat rekaman"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Filter, periksa, dan ekspor rekaman yang terkumpul"
+  },
+  "advancedFilterSite": {
+    "message": "Situs"
+  },
+  "advancedFilterAllSites": {
+    "message": "Semua situs"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Situs saat ini"
+  },
+  "advancedFilterModule": {
+    "message": "Modul"
+  },
+  "advancedFilterAllModules": {
+    "message": "Semua modul"
+  },
+  "advancedFilterSearch": {
+    "message": "Cari"
+  },
+  "advancedBtnExport": {
+    "message": "Ekspor"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Ekspor rekaman"
+  },
+  "advancedBtnClearAll": {
+    "message": "Hapus semua"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Hapus semua rekaman"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Belum ada rekaman"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Gunakan tab Alat untuk merekam data dari sistem yang terdeteksi"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Rekaman tidak ditemukan"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Setel ulang semua filter"
+  },
+  "advancedModalTitle": {
+    "message": "Alat deteksi lanjutan"
+  },
+  "advancedModalIntro": {
+    "message": "Alat rekam khusus untuk analisis mendalam sistem anti-bot, CAPTCHA, dan teknologi fingerprinting. Alat ini muncul otomatis saat deteksi yang relevan ditemukan."
+  },
+  "advancedSectionSupported": {
+    "message": "Sistem yang saat ini didukung"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Cara kerja"
+  },
+  "advancedStep1Title": {
+    "message": "Deteksi otomatis"
+  },
+  "advancedStep1Desc": {
+    "message": "Alat muncul saat sistem anti-bot yang relevan terdeteksi di halaman saat ini"
+  },
+  "advancedStep2Title": {
+    "message": "Mulai merekam"
+  },
+  "advancedStep2Desc": {
+    "message": "Alat otomatis menginisialisasi interceptor dan mulai memantau permintaan jaringan"
+  },
+  "advancedStep3Title": {
+    "message": "Tinjau hasil"
+  },
+  "advancedStep3Desc": {
+    "message": "Data yang direkam disimpan sementara dengan kemampuan ekspor penuh"
+  },
+  "advancedFooterHint": {
+    "message": "Rekaman disimpan selama waktu yang ditetapkan di Pengaturan."
+  },
+  "settings": {
+    "message": "Pengaturan"
+  },
+  "paginationShowingFmt": {
+    "message": "{0}-{1} dari {2}"
+  },
+  "paginationShowingItems": {
+    "message": "{0}-{1} dari {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Tidak diketahui"
+  },
+  "timeJustNow": {
+    "message": "Baru saja"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} dtk lalu"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} mnt lalu"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} jam lalu"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} hari lalu"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 menit lalu"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} menit lalu"
+  },
+  "timeOneHourAgo": {
+    "message": "1 jam lalu"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} jam lalu"
+  },
+  "timeOneDayAgo": {
+    "message": "1 hari lalu"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} hari lalu"
+  },
+  "btnCancelSettings": {
+    "message": "Batal"
+  },
+  "btnSaveSettings": {
+    "message": "Simpan pengaturan"
+  },
+  "poweredBy": {
+    "message": "Didukung oleh"
+  },
+  "categoryColors": {
+    "message": "WARNA KATEGORI"
+  },
+  "methodSuffixPatterns": {
+    "message": "pola"
+  },
+  "btnSaveRule": {
+    "message": "Simpan aturan"
+  },
+  "tagColors": {
+    "message": "Warna tag"
+  },
+  "colorPickerTitle": {
+    "message": "Pemilih warna"
+  },
+  "colorPickerArea": {
+    "message": "Saturasi dan kecerahan"
+  },
+  "colorPickerSaturation": {
+    "message": "Saturasi"
+  },
+  "colorPickerBrightness": {
+    "message": "Kecerahan"
+  },
+  "colorPickerHue": {
+    "message": "Rona"
+  },
+  "colorPickerRed": {
+    "message": "Merah"
+  },
+  "colorPickerGreen": {
+    "message": "Hijau"
+  },
+  "colorPickerBlue": {
+    "message": "Biru"
+  },
+  "colorPickerPresets": {
+    "message": "Warna preset"
+  },
+  "cacheConfiguration": {
+    "message": "Konfigurasi cache"
+  },
+  "cacheDuration": {
+    "message": "Durasi cache"
+  },
+  "timeUnitMinutes": {
+    "message": "Menit"
+  },
+  "timeUnitHours": {
+    "message": "Jam"
+  },
+  "timeUnitDays": {
+    "message": "Hari"
+  },
+  "blacklistedDomains": {
+    "message": "Domain di daftar hitam"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Domain yang deteksinya dilewati sepenuhnya"
+  },
+  "jsApiEvents": {
+    "message": "Event JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "Kirim event kustom ke window halaman"
+  },
+  "ruleMethodSettings": {
+    "message": "Pengaturan metode deteksi"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Pengaturan {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Pengaturan {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Deskripsi"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Arti pola ini, mis. Membaca preferensi bahasa browser"
+  },
+  "ruleDescriptionHint": {
+    "message": "Ditampilkan di detail deteksi dan di Riwayat saat pola ini ditemukan."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Apa proteksi ini, mis. Deteksi bot di halaman login dan checkout"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Ditampilkan di detail deteksi proteksi ini."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Tingkat kepercayaan"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Kepercayaan deteksi:"
+  },
+  "detectionName": {
+    "message": "Nama deteksi"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 jam"
+  },
+  "interval12Hours": {
+    "message": "12 jam"
+  },
+  "interval24Hours": {
+    "message": "24 jam"
+  },
+  "interval2Days": {
+    "message": "2 hari"
+  },
+  "interval1Week": {
+    "message": "1 minggu"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Header"
+  },
+  "methodLabelCookie": {
+    "message": "Cookie"
+  },
+  "methodLabelContent": {
+    "message": "Konten"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "Hook JS"
+  },
+  "methodLabelWindow": {
+    "message": "Window"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 pola"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} pola"
+  },
+  "methodAddPattern": {
+    "message": "Tambah pola"
+  },
+  "methodSearchPatterns": {
+    "message": "Cari pola..."
+  },
+  "methodNoPatterns": {
+    "message": "Tidak ada pola"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Tidak ada pola yang cocok"
+  },
+  "methodSuffixMatches": {
+    "message": "kecocokan"
+  },
+  "cacheExpiredLabel": {
+    "message": "Kedaluwarsa"
+  },
+  "copiedNotification": {
+    "message": "Disalin"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Disalin!"
+  },
+  "unknownDetection": {
+    "message": "Deteksi tidak dikenal"
+  },
+  "matchPlural": {
+    "message": "kecocokan"
+  },
+  "noMatchesRecorded": {
+    "message": "Tidak ada kecocokan yang tercatat"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Hapus cache"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Ini akan menghapus data deteksi yang di-cache untuk domain ini dan memicu analisis baru."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Hapus cache"
+  },
+  "clearingMsg": {
+    "message": "Menghapus..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Dihapus!"
+  },
+  "cacheClearedToast": {
+    "message": "Cache dihapus"
+  },
+  "failedToClearCacheToast": {
+    "message": "Gagal menghapus cache"
+  },
+  "unableGetCurrentPage": {
+    "message": "Tidak dapat mengambil halaman saat ini"
+  },
+  "invalidDomain": {
+    "message": "Domain tidak valid"
+  },
+  "addBlacklistTitle": {
+    "message": "Tambahkan ke daftar hitam"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Domain \"{0}\" akan dikecualikan dari semua deteksi berikutnya. Anda dapat menghapusnya nanti di Pengaturan."
+  },
+  "addBlacklistBtn": {
+    "message": "Tambahkan ke daftar hitam"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Domain \"{0}\" sudah ada di daftar hitam"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" ditambahkan ke daftar hitam"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Gagal menambahkan ke daftar hitam: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" dihapus dari daftar hitam"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Gagal menghapus dari daftar hitam: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Tidak ada deteksi"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Tidak ada deteksi yang ditemukan"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} kecocokan"
+  },
+  "historyOneMatch": {
+    "message": "1 kecocokan"
+  },
+  "notificationHistoryCleared": {
+    "message": "Riwayat dihapus"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Gagal menghapus riwayat: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Item riwayat diekspor"
+  },
+  "notificationCacheCleared": {
+    "message": "Cache dihapus"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Cache sudah dihapus"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Gagal menghapus cache"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" ditambahkan ke daftar hitam"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Gagal menambahkan ke daftar hitam"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Item riwayat dihapus"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Gagal menghapus item riwayat"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "{0} item riwayat diekspor"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "{0} item riwayat baru digabungkan"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Riwayat diganti dengan {0} item"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Gagal mengimpor riwayat: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Hapus riwayat"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Yakin ingin menghapus semua riwayat? Tindakan ini tidak dapat dibatalkan."
+  },
+  "buttonClearAll": {
+    "message": "Hapus semua"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Hapus cache"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Hapus data deteksi yang di-cache untuk {0}? Entri riwayat akan tetap disimpan."
+  },
+  "buttonClearCache": {
+    "message": "Hapus cache"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Hapus item riwayat"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Yakin ingin menghapus deteksi ini dari {0}?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Gagal memuat pengaturan. Menggunakan nilai default."
+  },
+  "settingsSavedToast": {
+    "message": "Pengaturan disimpan"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Gagal menyimpan pengaturan: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Gagal mengekspor log"
+  },
+  "logsCleared": {
+    "message": "Log dihapus"
+  },
+  "failedClearLogs": {
+    "message": "Gagal menghapus log"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Tidak dapat mengambil URL halaman saat ini"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} sudah ada di daftar hitam"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} ditambahkan ke daftar hitam"
+  },
+  "failedAddDomainFmt": {
+    "message": "Gagal menambahkan domain: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} dihapus dari daftar hitam"
+  },
+  "invalidSettingsFmt": {
+    "message": "Pengaturan tidak valid: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Masukkan URL webhook"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Uji webhook berhasil! Status: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook mengembalikan status: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Uji webhook gagal: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Impor detektor"
+  },
+  "importDetectorsModeMessage": {
+    "message": "Gabungkan menambahkan detektor yang diimpor ke detektor Anda.<br>Ganti semua menghapus detektor kustom Anda terlebih dahulu; detektor bawaan tetap ada."
+  },
+  "mergeOption": {
+    "message": "Gabungkan"
+  },
+  "replaceAllOption": {
+    "message": "Ganti semua"
+  },
+  "detectorsImported": {
+    "message": "Detektor diimpor"
+  },
+  "detectorExportedFmt": {
+    "message": "{0} diekspor"
+  },
+  "failedImportDetectors": {
+    "message": "Gagal mengimpor detektor. Periksa format file."
+  },
+  "errorReadingFileFmt": {
+    "message": "Kesalahan saat membaca file: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "{0} detektor diperbarui"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" dihapus"
+  },
+  "failedClearDetectors": {
+    "message": "Gagal menghapus detektor"
+  },
+  "urlPatternMatching": {
+    "message": "Pencocokan pola URL"
+  },
+  "textWordMatching": {
+    "message": "Pencocokan teks/kata"
+  },
+  "payloadTextMatching": {
+    "message": "Pencocokan teks payload"
+  },
+  "nameFieldMatching": {
+    "message": "Pencocokan kolom nama"
+  },
+  "captureNotFound": {
+    "message": "Rekaman tidak ditemukan"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Kelas modul tidak ditemukan"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Tampilan detail tidak tersedia"
+  },
+  "captureDataCopied": {
+    "message": "Data rekaman disalin"
+  },
+  "captureDeleted": {
+    "message": "Rekaman dihapus"
+  },
+  "capturesExportedFmt": {
+    "message": "{0} rekaman diekspor"
+  },
+  "allCapturesCleared": {
+    "message": "Semua rekaman dihapus"
+  },
+  "captureExportFailed": {
+    "message": "Gagal mengekspor rekaman"
+  },
+  "invalidUrl": {
+    "message": "URL tidak valid"
+  },
+  "importHistoryTitle": {
+    "message": "Impor riwayat"
+  },
+  "replaceOption": {
+    "message": "Ganti"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "Impor {0} item riwayat? Riwayat Anda saat ini berisi {1} item.<br>Gabungkan menambahkan item baru ke dalamnya. Ganti menghapusnya terlebih dahulu."
+  },
+  "clearLogsTitle": {
+    "message": "Hapus log"
+  },
+  "clearLogsMessage": {
+    "message": "Yakin ingin menghapus semua log yang terkumpul? Tindakan ini tidak dapat dibatalkan."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Gagal memeriksa pembaruan: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Tidak dapat mengambil pembaruan dari server"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Aturan diperbarui dari rilis {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Semua aturan sudah mutakhir dengan rilis {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Menunggu ekstensi {0} atau yang lebih baru: {1}. Akan diinstal setelah Chrome memperbarui ekstensi."
+  },
+  "updateResultFailedFmt": {
+    "message": "Tidak dapat mengunduh: {0}. Coba lagi nanti."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Aturan yang Anda edit menunggu keputusan Anda di Aturan → Perbarui: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Tidak dapat menjangkau GitHub untuk memeriksa pembaruan aturan."
+  },
+  "updateErrorNoRelease": {
+    "message": "Tidak ditemukan rilis Scrapfly yang dipublikasikan di GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub membatasi pemeriksaan pembaruan. Coba lagi dalam {0} mnt."
+  },
+  "errorApplyingUpdates": {
+    "message": "Kesalahan saat menerapkan pembaruan"
+  },
+  "failedCheckForUpdates": {
+    "message": "Gagal memeriksa pembaruan"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Kesalahan saat memeriksa pembaruan"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Layanan pembaruan tidak tersedia"
+  },
+  "deleteDetectorTitle": {
+    "message": "Hapus detektor"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Yakin ingin menghapus \"{0}\"?"
+  },
+  "detectorNotFound": {
+    "message": "Detektor tidak ditemukan"
+  },
+  "failedDeleteDetector": {
+    "message": "Gagal menghapus detektor"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Gagal melihat detail rekaman"
+  },
+  "failedCopyCaptureData": {
+    "message": "Gagal menyalin data rekaman"
+  },
+  "failedDeleteCapture": {
+    "message": "Gagal menghapus rekaman"
+  },
+  "noCapturesToExport": {
+    "message": "Tidak ada rekaman untuk diekspor"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Yakin ingin menghapus semua rekaman? Tindakan ini tidak dapat dibatalkan."
+  },
+  "failedClearCaptures": {
+    "message": "Gagal menghapus rekaman"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Integrasi webhook"
+  },
+  "settingsEnableWebhook": {
+    "message": "Aktifkan webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Kirim permintaan HTTP saat ada deteksi"
+  },
+  "settingsBypassCache": {
+    "message": "Kirim pada setiap pemuatan halaman (lewati cache)"
+  },
+  "settingsHttpMethod": {
+    "message": "Metode HTTP"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Pilih metode HTTP untuk permintaan webhook"
+  },
+  "settingsCustomMethod": {
+    "message": "Kustom"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Masukkan metode kustom (mis., OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL webhook"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "URL endpoint lengkap (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Variabel yang tersedia:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Contoh: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "Header content type HTTP"
+  },
+  "webhookCtHintJson": {
+    "message": "Template dalam format JSON, dengan variabel yang sudah terisi."
+  },
+  "webhookCtHintForm": {
+    "message": "Kolom template sebagai pasangan key=value; kolom bersarang sebagai detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Kolom template sebagai bagian form-data; browser menetapkan boundary."
+  },
+  "webhookCtHintText": {
+    "message": "Teks template apa adanya, dengan variabel yang sudah terisi."
+  },
+  "webhookCtHintXml": {
+    "message": "Kolom template sebagai dokumen XML <webhook>; deteksi sebagai elemen berulang."
+  },
+  "webhookCtHintCsv": {
+    "message": "Satu baris header, lalu satu baris per deteksi dengan kolom halaman yang diulang."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Satu objek JSON per baris: satu baris per deteksi, dengan kolom halaman."
+  },
+  "webhookCtHintCustom": {
+    "message": "Content-Type Anda sendiri (type/subtype); body dikirim sebagai JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Kustom"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Content-Type kustom"
+  },
+  "webhookCtInvalid": {
+    "message": "Masukkan type/subtype, mis. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Tambah header"
+  },
+  "webhookNoHeaders": {
+    "message": "Belum ada header kustom yang dikonfigurasi"
+  },
+  "webhookHeaderName": {
+    "message": "Nama header"
+  },
+  "webhookHeaderValue": {
+    "message": "Nilai header"
+  },
+  "webhookRemoveHeader": {
+    "message": "Hapus header"
+  },
+  "webhookSending": {
+    "message": "Mengirim..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Header kustom"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Tambahkan header HTTP kustom ke permintaan webhook"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Template payload"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Body yang dikirim dengan setiap webhook. Klik variabel untuk menyisipkannya."
+  },
+  "webhookVarsTitle": {
+    "message": "Variabel template"
+  },
+  "webhookVarsIntro": {
+    "message": "Diganti dengan nilai halaman saat webhook dikirim."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Sisipkan variabel"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Sisipkan {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Salin {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Contoh"
+  },
+  "webhookVarSiteUrl": {
+    "message": "URL lengkap halaman"
+  },
+  "webhookVarHostname": {
+    "message": "Nama host halaman"
+  },
+  "webhookVarTitle": {
+    "message": "Judul halaman"
+  },
+  "webhookVarFavicon": {
+    "message": "URL favicon situs"
+  },
+  "webhookVarDetections": {
+    "message": "Deteksi sebagai array JSON"
+  },
+  "webhookVarTimestamp": {
+    "message": "Waktu deteksi (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Jumlah deteksi"
+  },
+  "webhookVarCategories": {
+    "message": "Kategori yang terdeteksi, dipisahkan koma"
+  },
+  "webhookJsonValid": {
+    "message": "JSON valid"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "JSON tidak valid (baris {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Setel ulang template"
+  },
+  "settingsTestWebhook": {
+    "message": "Uji webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Kirim permintaan uji ke URL webhook Anda"
+  },
+  "settingsTestBtn": {
+    "message": "Uji"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Konfigurasi riwayat"
+  },
+  "settingsHistorySettings": {
+    "message": "Pengaturan riwayat"
+  },
+  "settingsHistoryLimit": {
+    "message": "Batas riwayat"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = batas pengaman 1.000 entri)"
+  },
+  "settingsExportFormat": {
+    "message": "Format ekspor"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Teks biasa"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Sertakan stempel waktu"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Simpan saat cache hit"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Pencegahan duplikat"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Aktifkan pencegahan duplikat"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Blokir entri riwayat duplikat dalam jangka waktu tertentu"
+  },
+  "settingsDuplicateScope": {
+    "message": "Cakupan"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "URL lengkap"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Domain"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Path"
+  },
+  "settingsTimeWindow": {
+    "message": "Jangka waktu"
+  },
+  "settingsTimeMinutes": {
+    "message": "Menit"
+  },
+  "settingsTimeHours": {
+    "message": "Jam"
+  },
+  "settingsTimeDays": {
+    "message": "Hari"
+  },
+  "settingsHowItWorks": {
+    "message": "Cara kerjanya:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Mencegah entri riwayat duplikat untuk URL yang sama dalam jangka waktu tersebut."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "URL lengkap: URL harus persis sama (termasuk parameter query)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Domain: Domain yang sama (path berbeda dianggap sama)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Path: Domain+path yang sama (mengabaikan parameter query)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Pengaturan cache"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Lewati domain"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Tambah halaman saat ini"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Cari domain..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Rendah"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Sedang"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Tinggi"
+  },
+  "settingsEnableJsApi": {
+    "message": "Aktifkan event JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "Ekspor & Impor"
+  },
+  "settingsDataManagement": {
+    "message": "Manajemen data"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Ekspor atau impor data ekstensi Anda"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Pengaturan"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Ekspor atau impor pengaturan ekstensi"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Riwayat deteksi"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Ekspor riwayat deteksi sebagai CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Ekspor pengaturan"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Impor pengaturan"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Ekspor riwayat"
+  },
+  "settingsAvailableEvents": {
+    "message": "Event yang tersedia"
+  },
+  "settingsApiEventReady": {
+    "message": "Ekstensi dimuat dan diinisialisasi"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Deteksi dimulai (cache miss / manual)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Pembaruan progres deteksi (tingkat metode)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Pemantauan JS hooks selesai"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Pemantauan properti window selesai"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Deteksi selesai dengan hasil"
+  },
+  "settingsApiEventOnError": {
+    "message": "Terjadi kesalahan deteksi"
+  },
+  "settingsUsageExample": {
+    "message": "Contoh penggunaan"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Deteksi dinonaktifkan untuk domain ini"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Hapus dari daftar hitam"
+  },
+  "detectionBlacklistHint": {
+    "message": "Atau buka Pengaturan → Deteksi → Domain di daftar hitam untuk mengelolanya."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Tidak ditemukan sinyal anti-bot, CAPTCHA, atau fingerprinting yang cocok di halaman ini."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Tidak ada data deteksi yang di-cache untuk halaman ini. Muat ulang halaman untuk menjalankan pemindaian baru."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Unggah deteksi (tautan yang dapat dibagikan)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Tautan disalin ke papan klip"
+  },
+  "failedReadSettings": {
+    "message": "Tidak dapat membaca pengaturan — operasi dibatalkan"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Gagal menghapus dari daftar hitam"
+  },
+  "pasteConfirmTitle": {
+    "message": "Unggah deteksi?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Unggah"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Gagal mengunggah"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Tidak ada deteksi untuk diunggah"
+  },
+  "detectionTitleClearCache": {
+    "message": "Hapus cache"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Salin ringkasan"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Blokir domain ini"
+  },
+  "detectionStatSite": {
+    "message": "SITUS"
+  },
+  "detectionStatDetections": {
+    "message": "DETEKSI"
+  },
+  "detectionStatConfidence": {
+    "message": "KEPERCAYAAN"
+  },
+  "detectionStatDifficulty": {
+    "message": "KESULITAN"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Cari deteksi..."
+  },
+  "detectionPaginationPage": {
+    "message": "Halaman"
+  },
+  "detectionPaginationOf": {
+    "message": "dari"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Domain ini masuk daftar hitam"
+  },
+  "detectionModalConfidence": {
+    "message": "Kepercayaan"
+  },
+  "detectionModalDifficulty": {
+    "message": "Kesulitan"
+  },
+  "detectionModalAuthor": {
+    "message": "Penulis"
+  },
+  "detectionModalDescription": {
+    "message": "Deskripsi"
+  },
+  "detectionModalNoDescription": {
+    "message": "Tidak ada deskripsi."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Metode deteksi"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Tidak ada metode yang terdeteksi"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Cari berdasarkan URL, modul, situs, atau konten..."
+  },
+  "advancedPaginationPage": {
+    "message": "Halaman"
+  },
+  "advancedPaginationOf": {
+    "message": "dari"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Merekam site key, action, dan parameter konfigurasi"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Mencegat data sensor dan mengekstrak informasi versi"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Memantau cookie dan perubahan tingkat proteksi"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Menganalisis header dinamis dan parameter script"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Merekam endpoint challenge dan detail token"
+  },
+  "btnStartCapturing": {
+    "message": "Mulai merekam"
+  },
+  "btnStopCapturing": {
+    "message": "Berhenti merekam"
+  },
+  "btnCheckCookies": {
+    "message": "Periksa cookie"
+  },
+  "btnCheckVersion": {
+    "message": "Periksa versi"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Analisis script"
+  },
+  "btnExtractSiteKey": {
+    "message": "Ekstrak site key"
+  },
+  "btnExtractPublicKey": {
+    "message": "Ekstrak public key"
+  },
+  "btnObtainSelector": {
+    "message": "Dapatkan selector"
+  },
+  "btnCopyAllData": {
+    "message": "Salin semua data"
+  },
+  "btnClearData": {
+    "message": "Hapus data"
+  },
+  "advCapturedDataSection": {
+    "message": "Data rekaman"
+  },
+  "advNoCapturesYet": {
+    "message": "Belum ada rekaman"
+  },
+  "advCaptureDetails": {
+    "message": "Detail rekaman"
+  },
+  "advValueCopied": {
+    "message": "Nilai disalin"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Hapus semua data rekaman?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Ini akan menghapus permanen semua data rekaman untuk provider ini."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Batal"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Cakupan pencarian konten"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Hanya periksa script"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Cari hanya di kode JavaScript (script inline dan yang dimuat), bukan teks halaman atau nama file"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Pengaturan cakupan"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Cakupan nama"
+  },
+  "rulesNameScopeHint": {
+    "message": "Tempat memeriksa kecocokan nama/kolom"
+  },
+  "rulesScopeRequest": {
+    "message": "Permintaan"
+  },
+  "rulesScopeResponse": {
+    "message": "Respons"
+  },
+  "rulesScopeAll": {
+    "message": "Semua"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Cakupan nilai"
+  },
+  "rulesValueScopeHint": {
+    "message": "Tempat memeriksa kecocokan nilai"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Pengaturan cakupan URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "Cakupan URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Halaman"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Script"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Semua (default)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Batasan permintaan"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "Pola URL (opsional)"
+  },
+  "rulesUrlRegex": {
+    "message": "Ekspresi reguler URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL peka huruf besar/kecil"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "Metode HTTP (pilih satu)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Filter berdasarkan metode permintaan (opsional)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Apa saja"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Opsi pencocokan pola"
+  },
+  "rulesPatternRegex": {
+    "message": "Ekspresi reguler (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Kata utuh"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Peka huruf besar/kecil"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Opsi kolom nilai"
+  },
+  "rulesApplySettings": {
+    "message": "Terapkan pengaturan"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "Pembantu selector DOM"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Gunakan selector"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Pembantu properti window"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Konfirmasi"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Apakah Anda yakin?"
+  },
+  "notifLoadingDefault": {
+    "message": "Memuat..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Klik \"Mulai merekam\" di atas untuk mulai merekam data {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "Alat rekam"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Pilih proteksi untuk membuka alatnya."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Buka alat"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Pelajari alat lanjutan"
+  },
+  "advancedToolsChange": {
+    "message": "Ubah"
+  },
+  "settingsLanguageTitle": {
+    "message": "Bahasa"
+  },
+  "settingsLanguageDesc": {
+    "message": "Ganti bahasa antarmuka ekstensi. Default mengikuti browser Anda."
+  },
+  "settingsLanguageAuto": {
+    "message": "Gunakan bahasa browser"
+  },
+  "detectionEmptyTitle": {
+    "message": "Tidak ada yang terdeteksi"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Tanpa CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Tanpa anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Tanpa fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "Deteksi dinonaktifkan"
+  },
+  "detectionDisabledDesc": {
+    "message": "Deteksi keamanan sedang dimatikan."
+  },
+  "detectionDisabledAction": {
+    "message": "Geser sakelar di bagian atas untuk mengaktifkan deteksi."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Aturan deteksi"
+  },
+  "rulesMoreActions": {
+    "message": "Tindakan lainnya"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Tidak ada proteksi yang terdeteksi"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Tidak ada proteksi yang didukung di halaman ini dengan tingkat kepercayaan di atas {0}%. Anda dapat mengubah batas minimum ini di Pengaturan → Deteksi.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Proteksi terdeteksi dengan kepercayaan rendah"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} terdeteksi dengan kepercayaan {1}%. Alat hanya muncul di atas {2}%. Anda dapat menurunkan batas minimum ini di Pengaturan → Deteksi.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Proteksi yang didukung"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Lihat riwayat rekaman ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "Hook JavaScript"
+  },
+  "detectionMethodContent": {
+    "message": "Konten"
+  },
+  "detectionMethodWindow": {
+    "message": "Properti window"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Header"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookie"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Aktifkan deteksi"
+  },
+  "historyMoreActions": {
+    "message": "Tindakan lainnya"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Salin data"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Hapus otomatis"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Menghapus entri riwayat lama secara berkala."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Hapus item yang lebih lama dari"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Rentang yang diizinkan: 1–{0} {1}. Pilih satuan yang lebih besar untuk periode yang lebih panjang."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Rentang yang diizinkan: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Bulan dihitung 30 hari; tahun dihitung 365 hari."
+  },
+  "timeUnitMonths": {
+    "message": "Bulan"
+  },
+  "timeUnitYears": {
+    "message": "Tahun"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Statistik riwayat"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Lihat statistik privat yang dihitung secara lokal dari riwayat deteksi Anda."
+  },
+  "settingsOpenStats": {
+    "message": "Buka statistik"
+  },
+  "settingsExportedToast": {
+    "message": "Pengaturan diekspor"
+  },
+  "settingsExportFailedToast": {
+    "message": "Gagal mengekspor pengaturan"
+  },
+  "settingsImportedToast": {
+    "message": "Pengaturan diimpor"
+  },
+  "settingsImportFailedToast": {
+    "message": "Gagal mengimpor pengaturan: file tidak valid"
+  },
+  "statsPrivacyNote": {
+    "message": "Dihitung secara lokal dari riwayat deteksi Anda. Tidak ada yang keluar dari browser Anda."
+  },
+  "statsSubtitleFmt": {
+    "message": "Dihitung secara lokal dari {0} entri riwayat. Tidak ada yang keluar dari browser Anda."
+  },
+  "statsRangeLabel": {
+    "message": "Rentang waktu"
+  },
+  "statsRange7": {
+    "message": "7 hari"
+  },
+  "statsRange30": {
+    "message": "30 hari"
+  },
+  "statsRange90": {
+    "message": "90 hari"
+  },
+  "statsRangeAll": {
+    "message": "Semua"
+  },
+  "statsEmptyTitle": {
+    "message": "Belum ada riwayat"
+  },
+  "statsEmptyDesc": {
+    "message": "Statistik muncul di sini setelah halaman dengan deteksi disimpan ke riwayat."
+  },
+  "statsEntries": {
+    "message": "Entri riwayat"
+  },
+  "statsUniqueDomains": {
+    "message": "Domain unik"
+  },
+  "statsDetections": {
+    "message": "Deteksi"
+  },
+  "statsDistinctDetectors": {
+    "message": "Proteksi berbeda"
+  },
+  "statsOverTime": {
+    "message": "Deteksi dari waktu ke waktu"
+  },
+  "statsTopProtections": {
+    "message": "Proteksi yang paling sering terdeteksi"
+  },
+  "statsTopDomains": {
+    "message": "Domain teratas"
+  },
+  "statsByCategory": {
+    "message": "Menurut kategori"
+  },
+  "statsByDifficulty": {
+    "message": "Menurut kesulitan"
+  },
+  "statsPagesUnit": {
+    "message": "halaman"
+  },
+  "statsVisitsUnit": {
+    "message": "kunjungan"
+  },
+  "statsDetectionsUnit": {
+    "message": "deteksi"
+  },
+  "statsCategoryOther": {
+    "message": "Lainnya"
+  },
+  "statsDifficultyNone": {
+    "message": "Tidak ada deteksi"
+  },
+  "statsNoData": {
+    "message": "Tidak ada data dalam rentang ini"
+  },
+  "statsTipPagesFmt": {
+    "message": "Halaman: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} domain"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} kunjungan"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} deteksi"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} dari {1} deteksi · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} entri"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} dengan deteksi"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "{0} kunjungan per domain"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} per entri"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "Rata-rata kepercayaan {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Deteksi: {0} · Hari: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Ini adalah detektor resmi Scrapfly. Pembaruan tidak akan mengembalikannya; gunakan \"Pulihkan detektor resmi\" di menu … untuk mendapatkannya lagi."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Pulihkan detektor resmi"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "{0} detektor resmi dipulihkan"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Gagal memulihkan detektor resmi"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" dicadangkan untuk detektor resmi. Gunakan nama penulis lain."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Nama Anda"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Hapus detektor kustom"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Ini akan menghapus semua detektor kustom Anda. Detektor resmi Scrapfly tetap dipertahankan (Anda dapat menonaktifkannya). Yakin?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Menghapus detektor kustom..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "{0} detektor kustom dihapus"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Tidak ada detektor kustom untuk dihapus"
+  },
+  "rhSuggestions": {
+    "message": "Saran"
+  },
+  "rhResults": {
+    "message": "Hasil"
+  },
+  "rhCustomChip": {
+    "message": "Kustom"
+  },
+  "rhUseAsTyped": {
+    "message": "Gunakan persis seperti yang diketik"
+  },
+  "rhNoResultsFmt": {
+    "message": "Tidak ada kecocokan untuk “{0}”"
+  },
+  "rhNoResultsHint": {
+    "message": "Anda tetap dapat menggunakannya sebagai nilai kustom."
+  },
+  "rhPreview": {
+    "message": "Pratinjau"
+  },
+  "rhSearchWindow": {
+    "message": "Cari properti, mis. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Cari selector, mis. captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Kondisi"
+  },
+  "rhConditionInvalid": {
+    "message": "Kondisi tidak dikenal"
+  },
+  "rhAddProperty": {
+    "message": "Tambah properti"
+  },
+  "rhChipAutomation": {
+    "message": "Otomatisasi"
+  },
+  "rhCondGroupType": {
+    "message": "Tipe"
+  },
+  "rhCondGroupExistence": {
+    "message": "Keberadaan"
+  },
+  "rhCondGroupCollections": {
+    "message": "Koleksi"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Numerik"
+  },
+  "rhCondGroupString": {
+    "message": "String"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolean"
+  },
+  "rhCondGroupCustom": {
+    "message": "Nilai saat ini"
+  },
+  "rhCondTypeObject": {
+    "message": "adalah objek"
+  },
+  "rhCondTypeFunction": {
+    "message": "adalah fungsi"
+  },
+  "rhCondTypeString": {
+    "message": "adalah string"
+  },
+  "rhCondTypeNumber": {
+    "message": "adalah angka"
+  },
+  "rhCondTypeBoolean": {
+    "message": "adalah boolean"
+  },
+  "rhCondTypeSymbol": {
+    "message": "adalah symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "adalah BigInt"
+  },
+  "rhCondExists": {
+    "message": "ada di halaman"
+  },
+  "rhCondTruthy": {
+    "message": "bernilai truthy"
+  },
+  "rhCondFalsy": {
+    "message": "bernilai falsy (kosong, 0, false, atau null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "bukan undefined"
+  },
+  "rhCondUndefined": {
+    "message": "adalah undefined (tidak ada)"
+  },
+  "rhCondNotNull": {
+    "message": "bukan null"
+  },
+  "rhCondNull": {
+    "message": "adalah null"
+  },
+  "rhCondArray": {
+    "message": "adalah array"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "adalah array berisi item"
+  },
+  "rhCondEmptyArray": {
+    "message": "adalah array kosong"
+  },
+  "rhCondHasLength": {
+    "message": "memiliki panjang"
+  },
+  "rhCondHasKeys": {
+    "message": "adalah objek dengan key"
+  },
+  "rhCondEmptyObject": {
+    "message": "adalah objek kosong"
+  },
+  "rhCondGt0": {
+    "message": "lebih besar dari 0"
+  },
+  "rhCondGte0": {
+    "message": "adalah 0 atau lebih"
+  },
+  "rhCondEq0": {
+    "message": "sama dengan 0"
+  },
+  "rhCondNe0": {
+    "message": "bukan 0"
+  },
+  "rhCondGt1": {
+    "message": "lebih besar dari 1"
+  },
+  "rhCondGte1": {
+    "message": "adalah 1 atau lebih"
+  },
+  "rhCondLenGt0": {
+    "message": "tidak kosong"
+  },
+  "rhCondLenEq0": {
+    "message": "kosong"
+  },
+  "rhCondTrue": {
+    "message": "bernilai true"
+  },
+  "rhCondFalse": {
+    "message": "bernilai false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Cocok dengan halaman tempat {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Template"
+  },
+  "rhDomClass": {
+    "message": "Class"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Atribut data"
+  },
+  "rhDomClassContains": {
+    "message": "Class berisi"
+  },
+  "rhDomIdContains": {
+    "message": "ID berisi"
+  },
+  "rhDomTag": {
+    "message": "Tag HTML"
+  },
+  "rhDomAttr": {
+    "message": "Memiliki atribut"
+  },
+  "rhDomIframe": {
+    "message": "URL iframe berisi"
+  },
+  "rhDomTitle": {
+    "message": "Judul berisi"
+  },
+  "rhDomAlt": {
+    "message": "Teks alt berisi"
+  },
+  "rhDomCamel": {
+    "message": "Class camelCase"
+  },
+  "rhRefAny": {
+    "message": "karakter apa saja"
+  },
+  "rhRefZeroMore": {
+    "message": "0 atau lebih"
+  },
+  "rhRefOneMore": {
+    "message": "1 atau lebih"
+  },
+  "rhRefOptional": {
+    "message": "opsional"
+  },
+  "rhRefStart": {
+    "message": "awal"
+  },
+  "rhRefEnd": {
+    "message": "akhir"
+  },
+  "rhRefDigit": {
+    "message": "digit"
+  },
+  "rhRefWord": {
+    "message": "huruf, digit, atau _"
+  },
+  "rhRefSpace": {
+    "message": "whitespace"
+  },
+  "rhRefOr": {
+    "message": "a atau b"
+  },
+  "rhMatch": {
+    "message": "Cocok"
+  },
+  "rhNoMatch": {
+    "message": "Tidak cocok"
+  },
+  "ptTitle": {
+    "message": "Uji pola"
+  },
+  "ptTitleFmt": {
+    "message": "Uji pola · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Konten halaman"
+  },
+  "ptKindCookieName": {
+    "message": "Nama cookie"
+  },
+  "ptKindCookieValue": {
+    "message": "Nilai cookie"
+  },
+  "ptKindHeaderName": {
+    "message": "Nama header"
+  },
+  "ptKindHeaderValue": {
+    "message": "Nilai header"
+  },
+  "ptKindPayloadText": {
+    "message": "Body permintaan"
+  },
+  "ptKindPayloadUrl": {
+    "message": "URL permintaan"
+  },
+  "ptPatternLabel": {
+    "message": "Pola"
+  },
+  "ptOptionsLabel": {
+    "message": "Opsi pencocokan"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Coba pada"
+  },
+  "ptExamplesBtn": {
+    "message": "Contoh"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "Satu per baris: URL, nama cookie…"
+  },
+  "ptNoSamples": {
+    "message": "Ketik atau tempel teks di atas, satu per baris, untuk melihat apakah cocok."
+  },
+  "ptCheatTitle": {
+    "message": "Panduan singkat regex"
+  },
+  "ptCheatNote": {
+    "message": "Tulis pola tanpa tanda / di sekelilingnya. Pengulangan di dalam pengulangan, seperti (a+)+, ditolak karena dapat membekukan halaman."
+  },
+  "ptApply": {
+    "message": "Terapkan"
+  },
+  "ptTestBtn": {
+    "message": "Uji"
+  },
+  "ptTestTitle": {
+    "message": "Coba pola pada teks contoh"
+  },
+  "ptNoPattern": {
+    "message": "Belum ada pola"
+  },
+  "ptHintRegex": {
+    "message": "Pola seperti ^bm_ atau \\d+, tanpa tanda / di sekelilingnya"
+  },
+  "ptHintWholeWord": {
+    "message": "Melewati kecocokan di dalam kata yang lebih panjang: _abck, bukan test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai tidak lagi cocok dengan akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Ketik pola untuk melihat apa yang dicocokkannya."
+  },
+  "ptSaysRegex": {
+    "message": "Cocok dengan teks tempat regex menemukan kecocokan."
+  },
+  "ptSaysWordFmt": {
+    "message": "Cocok dengan “{0}” sebagai kata utuh, bukan di dalam kata yang lebih panjang."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Cocok dengan nama seperti “{0}”, dengan * mewakili teks apa saja."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Cocok dengan nama yang diawali “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Cocok dengan teks yang berisi “{0}”."
+  },
+  "ptCaseExact": {
+    "message": "Huruf besar dan kecil harus sama persis."
+  },
+  "ptCaseIgnored": {
+    "message": "Huruf besar dan kecil dianggap sama."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Regex ini tidak valid sehingga tidak pernah cocok: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Deteksi menolak regex ini karena dapat membekukan halaman (pengulangan di dalam pengulangan, atau lebih dari 1000 karakter), sehingga tidak pernah cocok."
+  },
+  "ptNoteSlashes": {
+    "message": "Hilangkan tanda / di kedua ujung: tanda itu dicocokkan sebagai bagian dari teks."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Ini tampak seperti regex: aktifkan Regex, jika tidak simbolnya dicocokkan sebagai teks biasa."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Kata utuh diabaikan selama Regex aktif."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Nama header disimpan dalam huruf kecil, sehingga jika Peka huruf besar/kecil aktif, pola ini tidak pernah cocok."
+  },
+  "ptNoteWordEdges": {
+    "message": "Pola ini diawali atau diakhiri dengan simbol, sehingga Kata utuh memerlukan huruf, digit, atau _ tepat di samping simbol itu."
+  },
+  "rhRefDot": {
+    "message": "titik literal"
+  },
+  "rhRefSet": {
+    "message": "salah satu dari a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2 hingga 5 kali"
+  },
+  "mhExamplesTitle": {
+    "message": "Dalam aturan Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Cara pencocokannya"
+  },
+  "mhWriteTitle": {
+    "message": "Yang dapat Anda tulis"
+  },
+  "mhLimitsTitle": {
+    "message": "Perlu diketahui"
+  },
+  "mhUrlIntro": {
+    "message": "Memeriksa alamat halaman dan URL yang diminta halaman: script, panggilan XHR dan fetch, gambar, frame, dan ping."
+  },
+  "mhUrlHow1": {
+    "message": "Tanpa Regex, URL harus berisi teks tersebut, tanpa memperhatikan huruf besar/kecil. Seluruh URL dihitung, termasuk query string."
+  },
+  "mhUrlHow2": {
+    "message": "Dengan Regex, hilangkan tanda / di kedua ujung dan tulis titik sebagai `\\.`, seperti pada `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Cakupan URL: Halaman hanya memeriksa alamat halaman, Script menambahkan sumber script, Semua (default) menambahkan setiap permintaan."
+  },
+  "mhUrlLimit1": {
+    "message": "Permintaan font, media, dan stylesheet tidak dicatat."
+  },
+  "mhUrlLimit2": {
+    "message": "Hanya permintaan yang dibuat sebelum pemindaian yang dihitung; pemindaian berjalan setelah halaman dimuat."
+  },
+  "mhHeaderIntro": {
+    "message": "Memeriksa header dari permintaan dan respons halaman itu sendiri, bukan milik script, panggilan XHR, atau frame."
+  },
+  "mhHeaderHow1": {
+    "message": "Nama header dibandingkan dalam huruf kecil, dan teks biasa berarti “berisi”: `server` juga cocok dengan `server-timing`. Untuk nama yang persis, gunakan Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Nilai diperiksa pada header dengan nama tersebut; kosongkan untuk menerima nilai apa pun."
+  },
+  "mhHeaderHow3": {
+    "message": "Cakupan Respons (default) berarti header yang dikirim situs; Permintaan berarti header yang dikirim browser."
+  },
+  "mhHeaderLimit1": {
+    "message": "Jika Peka huruf besar/kecil aktif, tulis nama header dalam huruf kecil."
+  },
+  "mhHeaderLimit2": {
+    "message": "Halaman yang berganti alamat tanpa dimuat ulang dipindai lagi tanpa header."
+  },
+  "mhCookieIntro": {
+    "message": "Memeriksa cookie halaman berdasarkan nama dan, secara opsional, nilai, termasuk yang HttpOnly dan Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Nama biasa dicocokkan sebagai awalan: `_abck` juga cocok dengan `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` mewakili teks apa saja: `bm_*` cocok dengan `bm_sz` dan `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Untuk nama yang persis, aktifkan Regex dan tulis `^name$`. Nilai cocok jika berisi teks tersebut."
+  },
+  "mhCookieLimit1": {
+    "message": "Cakupan Permintaan (default) membaca cookie browser untuk halaman; Respons membaca cookie yang diatur oleh respons halaman."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookie dari situs lain, seperti frame milik vendor, tidak terlihat. Nilai yang panjang dipotong hingga 100 karakter."
+  },
+  "mhContentIntro": {
+    "message": "Mencari di teks halaman: HTML body-nya, script inline-nya, serta file script dan stylesheet yang dimuatnya."
+  },
+  "mhContentHow1": {
+    "message": "Teks biasa cocok jika konten memuatnya, tanpa memperhatikan huruf besar/kecil."
+  },
+  "mhContentHow2": {
+    "message": "Kata utuh melewati kecocokan di dalam kata yang lebih panjang; memerlukan huruf, digit, atau _ di kedua ujung pola."
+  },
+  "mhContentHow3": {
+    "message": "“Hanya periksa script” hanya mencari di script inline (termasuk head) dan file JavaScript, tanpa HTML atau CSS."
+  },
+  "mhContentLimit1": {
+    "message": "File yang tidak boleh dibaca origin lain oleh situs (CORS), atau lebih dari 5 MB, dilewati."
+  },
+  "mhContentLimit2": {
+    "message": "Kode di dalam frame atau worker, atau yang dimuat setelah pemindaian, tidak dicari."
+  },
+  "mhDomIntro": {
+    "message": "Mencari elemen di body halaman dengan selector CSS, setelah halaman dimuat."
+  },
+  "mhDomHow1": {
+    "message": "Sebuah tag, `.class`, `#id`, atau `[attribute]`, sendiri atau digabungkan: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Uji atribut `=`, `^=`, `$=`, `*=`, `~=`, dan `|=`; tambahkan ` i` sebelum `]` untuk mengabaikan huruf besar/kecil."
+  },
+  "mhDomHow3": {
+    "message": "Beberapa selector dipisahkan koma: cocok jika salah satunya cocok."
+  },
+  "mhDomLimit1": {
+    "message": "Tidak didukung, sehingga aturan tidak pernah cocok: spasi atau `>` di antara bagian, `:pseudo-classes`, dan escape."
+  },
+  "mhDomLimit2": {
+    "message": "Head, frame, dan shadow root tidak dicari. Atribut `value` tidak dibaca; atribut lain dibandingkan pada 100 karakter pertamanya."
+  },
+  "mhWindowIntro": {
+    "message": "Memeriksa variabel global JavaScript yang didefinisikan halaman, seperti `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Path dari `window`, dipisahkan titik: `KPSDK` atau `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Kondisi seperti `exists`, `typeof function`, `truthy`, `=== true`, `length > 0`, atau `has keys`. Kosong berarti truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Kondisi yang tidak dipahami deteksi tidak pernah cocok, jadi pilih salah satu dari daftar."
+  },
+  "mhWindowLimit1": {
+    "message": "Diperiksa selama beberapa detik pertama setelah halaman dimuat; variabel global yang dibuat kemudian terlewat."
+  },
+  "mhWindowLimit2": {
+    "message": "Properti yang diberi nama dengan Symbol tidak dapat ditulis sebagai path."
+  },
+  "mhJsHooksIntro": {
+    "message": "Mencatat saat halaman memanggil API browser, seperti `HTMLCanvasElement.prototype.toDataURL`, tanda fingerprinting."
+  },
+  "mhJsHooksHow1": {
+    "message": "Path lengkap ke method atau getter: `Navigator.prototype.webdriver`, bukan `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Setiap panggilan dihitung; argumen dan hasilnya tidak diperiksa, sehingga hook hanya menunjukkan bahwa sebuah API digunakan, bukan alasannya."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Panggilan dihitung selama beberapa detik pertama setelah halaman dimuat (maksimal 8 detik)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Panggilan di worker atau frame tidak terlihat, kecuali target bawaan di frame situs yang sama."
+  },
+  "mhPayloadIntro": {
+    "message": "Mencari di body permintaan POST, PUT, PATCH, dan DELETE yang dikirim halaman, dari frame mana pun."
+  },
+  "mhPayloadHow1": {
+    "message": "Teks biasa cocok jika body memuatnya, tanpa memperhatikan huruf besar/kecil. Data formulir dibaca sebagai `name=value&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "URL permintaan (opsional) dan metode HTTP membatasinya pada permintaan yang cocok."
+  },
+  "mhPayloadLimit1": {
+    "message": "Hanya permintaan yang dikirim sebelum pemindaian yang dihitung, hingga 50 per halaman."
+  },
+  "mhPayloadLimit2": {
+    "message": "Pesan WebSocket tidak dibaca."
+  },
+  "domCardTitle": {
+    "message": "Selector CSS"
+  },
+  "domCardBrowse": {
+    "message": "Telusuri"
+  },
+  "domCardHint": {
+    "message": "Sebuah tag, .class, #id, atau uji [attribute], sendiri atau digabungkan. Spasi atau > di antara bagian tidak didukung."
+  },
+  "windowCardTitle": {
+    "message": "Properti window"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Event yang dikirim ekstensi ke halaman"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Dengarkan event dari script Anda sendiri"
+  },
+  "settingsApiCopyCode": {
+    "message": "Salin kode"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Kode disalin"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Salin nama event"
+  },
+  "advCommonClickToCopy": {
+    "message": "Klik untuk menyalin"
+  },
+  "advCommonDomainLabel": {
+    "message": "Domain:"
+  },
+  "advCommonCopy": {
+    "message": "Salin"
+  },
+  "advCommonPage": {
+    "message": "Halaman"
+  },
+  "advCommonExportCode": {
+    "message": "Ekspor kode"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL disalin"
+  },
+  "advScriptTypeCollector": {
+    "message": "Collector"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "Pemeriksaan CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Interstitial"
+  },
+  "advCommonCaptured": {
+    "message": "Direkam"
+  },
+  "advCommonScript": {
+    "message": "Script"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL script:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Tidak ada data rekaman"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Gagal memeriksa cookie: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Gagal menganalisis script: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Gagal memulai analisis"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Gagal memeriksa versi: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Gagal mengekstrak: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Gagal memulai ekstraksi: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Tidak ada script untuk diekspor"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "Cookie {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Tidak ada cookie {0} yang ditemukan"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "Script {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Menganalisis script {0}... Halaman akan dimuat ulang"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Pembuatan kode tidak tersedia"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Generator kode parsing script"
+  },
+  "advCommonExportOptions": {
+    "message": "Opsi ekspor"
+  },
+  "advCommonAllTypes": {
+    "message": "Semua tipe"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Ditemukan {0} script yang relevan"
+  },
+  "advCommonTotalScripts": {
+    "message": "Total script:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Tingkat proteksi:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Cookie ditemukan:"
+  },
+  "advCommonSiteKey": {
+    "message": "Site key"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL situs web"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL situs"
+  },
+  "advCommonApiDomain": {
+    "message": "Domain API"
+  },
+  "advCommonFound": {
+    "message": "Ditemukan"
+  },
+  "advCommonNotFound": {
+    "message": "Tidak ditemukan"
+  },
+  "advCommonYes": {
+    "message": "Ya"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Standar"
+  },
+  "advCommonNone": {
+    "message": "Tidak ada"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Kode konsol browser untuk mencegat dan mengurai script {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Script Python dengan requests dan BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Script Python dengan library requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Script Node.js dengan axios dan cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Script Node.js dengan axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "Script PHP dengan cURL dan DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "Script PHP dengan cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# dengan HttpClient dan HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# dengan HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go dengan net/http dan goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go dengan net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Perekaman aktif"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Muat ulang halaman untuk memicu perekaman."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Berakhir dalam {0} dtk"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Muat ulang halaman ini"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Selesaikan atau klik reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Tunggu hingga muncul \"Perekaman selesai\""
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Pemantauan {0} dimulai"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Perekaman selesai"
+  },
+  "pageNoticePageLoading": {
+    "message": "Halaman sedang dimuat"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Harap tunggu hingga halaman dimuat sepenuhnya..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Akamai tidak terdeteksi di halaman ini. Cookie _abck tidak ada."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Data Akamai berhasil direkam!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Perekaman dihentikan"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Gagal menghentikan perekaman: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Memuat ulang halaman untuk menganalisis data Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Gagal menganalisis konten: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Cookie _abck tidak ditemukan"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Gagal memproses data: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Mengekstrak informasi sensor…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Gagal mengekstrak informasi sensor: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai tidak terdeteksi"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Cookie _abck tidak ada di halaman ini."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager tidak aktif di sini."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Muat ulang halaman untuk mulai memantau data sensor dan detail permintaan"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "sensor_data Akamai berhasil direkam"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Lanjutan (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Dasar"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Mudah"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "Tingkat _abck:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Analisis Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Script Akamai:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Script URL data sensor"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Variabel HTML Pixel:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL POST:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Variabel script Pixel:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL script SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL data sensor"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Endpoint Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Sensor"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Informasi sensor yang diekstrak"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Data sensor ({0} karakter)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Tidak ada data sensor yang direkam"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "Data SBSD ({0} karakter)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL script sensor"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Salin semua data sebagai JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Ekstrak informasi sensor"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "Tingkat ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "Cookie ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Versi Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Persyaratan challenge"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Challenge SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Challenge sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Challenge Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Gagal mengaktifkan mode ekstraksi. Periksa konsol latar belakang untuk detailnya."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Cookie sesi"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Komponen keamanan"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookie: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Deteksi resource"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL resource"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL interogasi"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Analisis Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL sensor:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "Script {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "Path sensor:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Tidak ada script yang terdeteksi"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva mungkin tidak ada di halaman ini"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "{0} saja"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Lanjutan (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Dasar (Sesi)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Muat ulang halaman untuk mulai memantau permintaan dan cookie Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Data Imperva direkam (item: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Perekaman Imperva selesai"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Data sensor berhasil direkam"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Callback reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Deteksi selector"
+  },
+  "advRecaptchaMethod": {
+    "message": "Metode"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selector"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Selector disalin ke papan klip!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Elemen reCAPTCHA tidak ditemukan"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() gagal: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Callback reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "Klien reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "Client ID: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Disalin ke papan klip!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Fungsi callback"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Path callback"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Tidak ada callback yang didefinisikan"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Callback DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Callback script"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Contoh penggunaan callback"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Invisible"
+  },
+  "advRecaptchaAction": {
+    "message": "Action"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Cookie wajib"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Fitur terdeteksi"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "Parameter S wajib"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Memiliki sesi"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Gagal mengeklik: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Callback reCAPTCHA tidak ditemukan di halaman ini. Pastikan reCAPTCHA sudah dimuat."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Gagal merekam callback: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Muat ulang halaman dan selesaikan challenge reCAPTCHA untuk mulai memantau"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Halaman siap"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Sekarang selesaikan challenge reCAPTCHA untuk merekam data"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Permintaan yang direkam dan didekode: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Tidak ada permintaan reCAPTCHA yang direkam"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA terdeteksi"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Selesaikan challenge; perekaman selesai dengan sendirinya"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Sekarang picu atau klik reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Header"
+  },
+  "advShapeVersionTitle": {
+    "message": "Versi Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Pola header"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Pola header"
+  },
+  "advShapeCookieTitle": {
+    "message": "Cookie Shape"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Analisis Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Script Init.js:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Script seed:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Script Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Script Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "Script seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "Script seed"
+  },
+  "advShapeErrorFmt": {
+    "message": "Kesalahan: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Versi terdeteksi:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Persyaratan perekaman"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + header"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Muat ulang halaman untuk mulai memantau header dan cookie Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Harap tunggu hingga halaman dimuat sepenuhnya sebelum melakukan tindakan..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Pemantauan aktif ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Lakukan tindakan untuk memicu cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Lakukan tindakan untuk memicu header + cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Waktu habis ({2}) - cookie: {0}, header: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie: {1} | Header: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Direkam - cookie: {0}, header: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "Deteksi hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha tidak terdeteksi. Muat ulang halaman dengan hCaptcha termuat."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "Versi hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Mode Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "Tidak"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Belum ada riwayat rekaman"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "T/A"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Memeriksa versi hCaptcha... Halaman akan dimuat ulang"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Waktu habis saat mendeteksi versi hCaptcha"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Gagal memulai pemeriksaan versi"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Muat ulang halaman untuk mulai memantau permintaan hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "Data hCaptcha berhasil direkam"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Challenge"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "Menghapus cookie {0}... Halaman akan dimuat ulang"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Tipe"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site key disalin"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Challenge"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analytics"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Bot Management"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Public key"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (Array Data Browser)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Data blob"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Tidak direkam"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Muat ulang halaman untuk mulai memantau dan memicu challenge FunCaptcha (batas waktu 60 dtk)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Halaman sedang dimuat, harap tunggu..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha berhasil direkam"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Challenge yang direkam: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Waktu perekaman habis"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Tidak ada challenge FunCaptcha yang terdeteksi (batas waktu 60 dtk)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Script inline"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "Atribut DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL script"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "Konfigurasi JSON"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "captchaId yang diekstrak"
+  },
+  "advGeetestProductLabel": {
+    "message": "Produk:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Cuplikan script"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Ekspor kode parsing"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Kesalahan: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Terdeteksi: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Versi Geetest tidak terdeteksi"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Tab tidak ditemukan"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Script Geetest tidak ditemukan"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Mendeteksi versi Geetest..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Memuat ulang halaman untuk memeriksa versi"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Menganalisis script..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Memuat ulang halaman untuk mengekstrak script"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "Alat {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Kesalahan saat memuat alat lanjutan"
+  },
+  "advPanelCheckConsole": {
+    "message": "Periksa konsol untuk detailnya"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Kesalahan saat memuat rekaman: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Situs saat ini ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Coba sesuaikan filter atau kueri pencarian untuk menemukan rekaman."
+  },
+  "advPanelNoUrl": {
+    "message": "Tanpa URL"
+  },
+  "advPanelView": {
+    "message": "Lihat"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Konfirmasi tindakan"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Konfirmasi"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Disalin ke papan klip"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "Alat {0} dimuat"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Ditemukan {0}/{1} cookie"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Script ditemukan: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Tidak ada script {0} yang ditemukan"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "Versi {0} terdeteksi: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Versi {0} tidak terdeteksi"
+  },
+  "advPanelUnknownError": {
+    "message": "Kesalahan tidak diketahui"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Gagal memulai perekaman: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Gagal menghentikan perekaman: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Rekaman: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Hapus semua data rekaman"
+  },
+  "advPanelNotAvailable": {
+    "message": "T/A"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Riwayat rekaman {0} dihapus"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Gagal menghapus riwayat"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "{0}-{1} dari {2} rekaman"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Detektor baru"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Tambah {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Edit {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Ikon Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "Ikon {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Ubah ikon"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Ubah ikon detektor"
+  },
+  "rulesUiCustomColor": {
+    "message": "Warna kustom"
+  },
+  "iconPickerTitle": {
+    "message": "Pilih ikon"
+  },
+  "iconPickerDefault": {
+    "message": "Default"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Unggah kustom"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Ukuran file ikon harus kurang dari 100KB"
+  },
+  "iconPickerNoResults": {
+    "message": "Tidak ada ikon yang cocok dengan pencarian Anda"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Cari ikon…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Apa itu hook JS?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Apa itu properti Window?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Apa itu deteksi URL?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Apa itu deteksi header?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Apa itu deteksi cookie?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Apa itu deteksi konten?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Apa itu deteksi DOM?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Apa itu deteksi Payload?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Apa itu metode deteksi ini?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Nilai (opsional)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "Selector CSS (mis., .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Teks/kata yang dicari"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "Pola URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "Target hook JS (mis., Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Path window (mis., grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Kondisi (mis., typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Nama cookie (mis., __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Pola nilai cookie (opsional)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Teks (mis., sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify atau challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Pengaturan nama"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Pengaturan nama (Kepercayaan: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Pengaturan nilai"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Hapus metode"
+  },
+  "rulesUiClearValue": {
+    "message": "Kosongkan nilai"
+  },
+  "rulesUiAddValue": {
+    "message": "Tambah nilai"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Halaman {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Lengkapi pola kosong saat ini sebelum menambahkan yang lain."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Isi semua kolom pola yang wajib sebelum menyimpan."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Masukkan tipe metode deteksi (mis., HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Metode"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Halaman = URL saat ini | Script = halaman + script | Semua = semua permintaan"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Kosongkan untuk mencocokkan URL apa pun"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Lainnya"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Judul: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Stempel waktu: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Sistem keamanan: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Kategori: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Kepercayaan: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Metode deteksi: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Metode deteksi:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Deteksi ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Kesulitan: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Gagal menyalin ke papan klip"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Salin URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Salin URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Salin kategori"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Salin kategori: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Salin metode"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Salin metode: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Salin nilai"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Salin nilai: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0}th"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0}bln"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0}hr"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0}j"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0}mnt"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1mnt"
+  },
+  "detectionUiNoDescription": {
+    "message": "Tidak ada detail tambahan untuk deteksi ini."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Tidak ada metode deteksi yang tercatat untuk detektor ini."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Metode tidak dikenal"
+  },
+  "detectionUiUnknownValue": {
+    "message": "tidak diketahui"
+  },
+  "historyUiUntitled": {
+    "message": "Tanpa judul"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Tidak ada metode deteksi"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Format file riwayat tidak valid"
+  },
+  "popupUiLogoAlt": {
+    "message": "Robot Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Gagal mengaktifkan ekstensi: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Gagal menonaktifkan ekstensi: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Kesalahan: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Tidak ada domain di daftar hitam"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Tidak ada domain yang cocok dengan pencarian Anda"
+  },
+  "settingsUiChecking": {
+    "message": "Memeriksa..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Batas riwayat harus antara 0 (tanpa batas) dan 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Durasi cache harus antara 1 dan {0} {1}"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Hapus otomatis harus antara 1 dan 3650 hari"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Durasi duplikat harus antara 1 dan 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Ekspor JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Ekspor teks"
+  },
+  "settingsUiLogsText": {
+    "message": "Teks"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Pembaruan detektor yang memerlukan versi ekstensi lebih baru: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (perlu ekstensi v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Total"
+  },
+  "ruleSectionCombinations": {
+    "message": "Kombinasi"
+  },
+  "combinationsHint": {
+    "message": "Kombinasi mendeteksi proteksi ini hanya jika beberapa pola ditemukan bersamaan. Gunakan untuk pola yang terlalu lemah jika berdiri sendiri."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Setiap kombinasi hanya terpicu jika sinyalnya muncul bersamaan; berikut yang ditemukan di halaman ini."
+  },
+  "combinationFoundTogether": {
+    "message": "Ditemukan bersamaan di halaman ini:"
+  },
+  "combinationNotPresent": {
+    "message": "Tidak ada"
+  },
+  "combinationFound": {
+    "message": "Ditemukan"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Aturan ini berubah atau dihapus setelah pemindaian, jadi hanya nama dan skornya yang ditampilkan."
+  },
+  "historyMatchedDetections": {
+    "message": "Deteksi yang cocok"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Pemindaian ini disimpan sebelum kondisi dicatat, jadi hanya nama dan skor yang ditampilkan."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Tidak boleh ditemukan"
+  },
+  "combinationMustBeFound": {
+    "message": "Harus ditemukan"
+  },
+  "combinationAutoTip": {
+    "message": "Otomatis: kepercayaan tertinggi dari pola yang memicunya"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Tambahkan setidaknya satu pola yang harus ditemukan."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Daftar “Salah satu dari ini” memerlukan pola yang harus ditemukan di setiap opsi."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“Setidaknya {0}” memerlukan {0} pola yang harus ditemukan."
+  },
+  "combinationSentenceOne": {
+    "message": "Terpicu jika kondisi ini terpenuhi."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Terpicu jika semua {0} kondisi terpenuhi."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Terpicu jika salah satu dari {0} kondisi ini terpenuhi."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Terpicu jika setidaknya {0} dari {1} kondisi ini terpenuhi."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Kepercayaan: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Kepercayaan: Otomatis, hingga {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Satu grup dihitung sebagai satu kondisi."
+  },
+  "combinationSentenceNot": {
+    "message": "Tidak terpicu jika ada pola “Tidak boleh ditemukan”."
+  },
+  "combinationSentenceAlone": {
+    "message": "Pola yang tidak ditandai “Hanya kombinasi” juga mendeteksi sendiri, dengan kepercayaannya sendiri."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Kepercayaan saat ditemukan"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Kosongkan untuk Otomatis: kepercayaan tertinggi dari pola yang ditemukan."
+  },
+  "combinationModeAny": {
+    "message": "Salah satu dari ini"
+  },
+  "combinationModeAll": {
+    "message": "Semua ini"
+  },
+  "combinationModeAtLeast": {
+    "message": "Setidaknya… dari ini"
+  },
+  "combinationModeRootAll": {
+    "message": "semua ini ditemukan"
+  },
+  "combinationModeRootAny": {
+    "message": "salah satu ini ditemukan"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "setidaknya… dari ini ditemukan"
+  },
+  "combinationGroupMode": {
+    "message": "Grup"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Tambahkan pola ke grup ini"
+  },
+  "combinationDeleteGroup": {
+    "message": "Hapus grup"
+  },
+  "combinationAddGroup": {
+    "message": "Tambah grup “salah satu dari”"
+  },
+  "patternUnusedBadge": {
+    "message": "Tidak ada di kombinasi mana pun"
+  },
+  "patternUnusedTip": {
+    "message": "Tidak ada kombinasi yang menggunakannya, jadi pola ini tidak pernah mendeteksi. Klik agar dihitung sendiri."
+  },
+  "combinationsEmpty": {
+    "message": "Belum ada kombinasi."
+  },
+  "combinationAdd": {
+    "message": "Tambah kombinasi"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Kombinasi {0}"
+  },
+  "combinationDelete": {
+    "message": "Hapus kombinasi"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Hapus kombinasi \"{0}\"? Pola-polanya tetap ada di aturan."
+  },
+  "combinationRemove": {
+    "message": "Hapus"
+  },
+  "combinationEmptyPattern": {
+    "message": "(pola kosong)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Pola {0} apa pun"
+  },
+  "combinationGroupEmpty": {
+    "message": "Tambahkan pola di bawah"
+  },
+  "combinationAddPattern": {
+    "message": "Tambah pola"
+  },
+  "combinationAddDescription": {
+    "message": "Tambah deskripsi"
+  },
+  "combinationAnyPattern": {
+    "message": "pola apa pun"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Tambahkan pola untuk membuat kombinasi ini"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Hanya kombinasi"
+  },
+  "combinationStrictHint": {
+    "message": "Pola yang ditandai “Hanya kombinasi” tidak mendeteksi apa pun sendiri; pola ini hanya dihitung di dalam kombinasi."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Tandai semua"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Batal tandai semua"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Pola ini tidak mendeteksi apa pun sendiri; hanya dihitung di dalam kombinasi, di setiap kombinasi aturan ini."
+  },
+  "detectionModalCombinations": {
+    "message": "Kombinasi yang cocok"
+  },
+  "combinationNoPatterns": {
+    "message": "Belum ada pola yang ditambahkan"
+  },
+  "combinationPickHint": {
+    "message": "Centang pola yang akan ditambahkan"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Tambah {0} yang dipilih"
+  },
+  "combinationEditConditions": {
+    "message": "Edit kondisi"
+  },
+  "combinationAutoConfidence": {
+    "message": "Otomatis"
+  },
+  "combinationDetectWhen": {
+    "message": "Deteksi saat"
+  },
+  "combinationGroupExcluded": {
+    "message": "Kondisi ini tidak boleh cocok."
+  },
+  "combinationMinimum": {
+    "message": "Kecocokan minimum"
+  },
+  "combinationMatchState": {
+    "message": "Kondisi pola"
+  },
+  "combinationChoosePatterns": {
+    "message": "Pilih pola"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Turunkan kecocokan minimum"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Naikkan kecocokan minimum"
+  },
+  "detectionTipDetections": {
+    "message": "Jumlah proteksi yang terdeteksi di halaman ini."
+  },
+  "detectionTipConfidence": {
+    "message": "Rata-rata kepercayaan dari proteksi yang terdeteksi."
+  },
+  "detectionTipDifficulty": {
+    "message": "Perkiraan tingkat kesulitan melewati proteksi yang terdeteksi."
+  },
+  "tipCachedAt": {
+    "message": "Disimpan"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Rata-rata dari {0} deteksi, dari {1}% hingga {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "Dari kombinasi yang cocok"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Sinyal tunggal terkuat menentukan skor"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "Detektor kustom"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Default untuk {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Ditetapkan oleh detektor ini"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Ditetapkan oleh {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Dinaikkan oleh {0} proteksi sekaligus"
+  },
+  "tipLastUpdated": {
+    "message": "Diperbarui"
+  },
+  "tipMethodContent": {
+    "message": "Teks yang ditemukan di halaman atau script-nya cocok."
+  },
+  "tipMethodCookie": {
+    "message": "Sebuah cookie yang diatur di situs ini cocok."
+  },
+  "tipMethodDom": {
+    "message": "Sebuah elemen di halaman cocok."
+  },
+  "tipMethodHeader": {
+    "message": "Sebuah header respons yang dikirim situs cocok."
+  },
+  "tipMethodJsHooks": {
+    "message": "Halaman memanggil API browser yang dipantau detektor ini."
+  },
+  "tipMethodPayload": {
+    "message": "Data yang dikirim halaman dalam sebuah permintaan cocok."
+  },
+  "tipMethodUrl": {
+    "message": "Halaman atau salah satu permintaannya cocok dengan alamat yang dikenal."
+  },
+  "tipMethodWindow": {
+    "message": "Sebuah objek JavaScript global di halaman cocok."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} lainnya"
+  },
+  "tipOfficialDetector": {
+    "message": "Detektor resmi Scrapfly"
+  },
+  "tipScopeDomain": {
+    "message": "Hasil digunakan ulang untuk setiap halaman di domain ini."
+  },
+  "tipScopeFullUrl": {
+    "message": "Hasil hanya digunakan ulang untuk URL persis ini, termasuk query-nya."
+  },
+  "tipScopePath": {
+    "message": "Hasil digunakan ulang untuk path persis ini, apa pun query-nya."
+  },
+  "tipStatsActiveDays": {
+    "message": "Hari dengan setidaknya satu halaman tersimpan."
+  },
+  "tipStatsDetections": {
+    "message": "Proteksi yang ditemukan di semua halaman tersimpan, termasuk yang berulang."
+  },
+  "tipStatsDetectors": {
+    "message": "Proteksi berbeda yang terlihat, masing-masing dihitung sekali."
+  },
+  "tipStatsDomains": {
+    "message": "Situs berbeda di antara halaman tersimpan."
+  },
+  "tipStatsEntries": {
+    "message": "Halaman yang disimpan ke Riwayat dalam rentang ini."
+  },
+  "tipStatsRateFmt": {
+    "message": "{0} dari {1} entri"
+  },
+  "tipPatterns": {
+    "message": "Pola"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Log terperinci"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Catat juga setiap aturan, hook, dan pesan, bukan hanya satu laporan per halaman"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Pembaruan untuk aturan yang Anda edit"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" memiliki versi resmi baru ({1}). Anda telah mengedit aturan ini: versi baru akan menggantikan perubahan Anda."
+  },
+  "btnDecideLater": {
+    "message": "Putuskan nanti"
+  },
+  "btnKeepMyEdits": {
+    "message": "Pertahankan edit saya"
+  },
+  "btnUseNewVersion": {
+    "message": "Gunakan versi baru"
+  },
+  "resetToOfficial": {
+    "message": "Setel ulang ke resmi"
+  },
+  "resetToOfficialTitle": {
+    "message": "Setel ulang ke versi resmi"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Buang edit Anda pada \"{0}\" dan pulihkan versi resmi Scrapfly?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Aturan dipulihkan ke versi resmi"
+  },
+  "ruleEditedTag": {
+    "message": "Diedit"
+  },
+  "tipRuleEdited": {
+    "message": "Anda telah mengedit aturan resmi ini. Pembaruan akan bertanya sebelum menggantikan perubahan Anda."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Daftar deteksi"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Urutan deteksi"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Urutan kategori di daftar Deteksi, di Riwayat, dan di Aturan. Seret kartu untuk mengubahnya; dalam satu kategori, deteksi menampilkan kepercayaan tertinggi lebih dulu."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Kepercayaan tertinggi lebih dulu"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Urutan kategori"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Pindahkan {0} ke atas"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Pindahkan {0} ke bawah"
+  },
+  "settingsCardShareUploads": {
+    "message": "Bagikan unggahan"
+  },
+  "settingsShareDestination": {
+    "message": "Tujuan unggahan"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Tempat Deteksi → Unggah deteksi mengirim ringkasan dan mendapatkan tautan berbaginya."
+  },
+  "settingsShareService": {
+    "message": "Layanan"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (tanpa akun)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (tanpa akun)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (tanpa akun)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API key)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Server kustom"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Hapus setelah (hari)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Hapus setelah"
+  },
+  "shareExpire10M": {
+    "message": "10 menit"
+  },
+  "shareExpire1H": {
+    "message": "1 jam"
+  },
+  "shareExpire1D": {
+    "message": "1 hari"
+  },
+  "shareExpire1W": {
+    "message": "1 minggu"
+  },
+  "shareExpire2W": {
+    "message": "2 minggu"
+  },
+  "shareExpire30D": {
+    "message": "30 hari"
+  },
+  "shareExpire1M": {
+    "message": "1 bulan"
+  },
+  "shareExpire6M": {
+    "message": "6 bulan"
+  },
+  "shareExpire1Y": {
+    "message": "1 tahun"
+  },
+  "shareExpireOnetime": {
+    "message": "Setelah dilihat pertama kali"
+  },
+  "shareExpireNever": {
+    "message": "Tidak pernah"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs tidak memiliki opsi kedaluwarsa: paste tetap ada hingga layanan menghapusnya."
+  },
+  "settingsSharePastebinKey": {
+    "message": "API key Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Developer key Anda dari pastebin.com/doc_api. Paste tidak dicantumkan secara publik."
+  },
+  "settingsShareSecretNote": {
+    "message": "Disimpan hanya di browser ini dan tidak disertakan dalam ekspor pengaturan."
+  },
+  "settingsShareGithubToken": {
+    "message": "Token GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Token dengan izin Gists. Unggahan berupa gist rahasia dan tidak kedaluwarsa; hapus di GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL server"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS pada host publik. Dapat berisi <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Format body"
+  },
+  "shareBodyForm": {
+    "message": "Kolom formulir"
+  },
+  "shareBodyJson": {
+    "message": "Template JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Teks mentah"
+  },
+  "settingsShareCustomField": {
+    "message": "Nama kolom formulir"
+  },
+  "settingsShareCustomJson": {
+    "message": "Template JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Variabel: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Satu per baris sebagai Nama: nilai, misalnya Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Tautan berbagi dari"
+  },
+  "shareLinkBody": {
+    "message": "Body respons (URL biasa)"
+  },
+  "shareLinkJson": {
+    "message": "Kolom JSON"
+  },
+  "shareLinkLocation": {
+    "message": "Header Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Path kolom JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Dikirim sebagai expiry_days di body formulir dan sebagai <EXPIRY_DAYS>; server Anda yang menentukan penggunaannya."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Siapkan {0} di Pengaturan → Deteksi → Bagikan unggahan terlebih dahulu"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Ini akan mengunggah ringkasan deteksi halaman ini ke {0} ({1}). Siapa pun yang memiliki tautannya dapat melihatnya. Query string URL serta nilai cookie/header tidak disertakan."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "dihapus setelah {0} hari"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "dihapus setelah {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "dihapus setelah dilihat pertama kali"
+  },
+  "shareExpiryService": {
+    "message": "disimpan hingga layanan menghapusnya"
+  },
+  "shareExpiryNever": {
+    "message": "tidak kedaluwarsa"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Server kustom harus berupa alamat HTTPS pada host publik"
+  },
+  "pasteBadLink": {
+    "message": "layanan tidak mengembalikan tautan HTTPS yang valid"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Gagal mengunggah: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Server unggahan kustom: gunakan alamat HTTPS pada host publik"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Server unggahan kustom: template JSON bukan JSON yang valid"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} menolak key atau token (salah atau kedaluwarsa)"
+  },
+  "pasteGistPermission": {
+    "message": "token GitHub memerlukan izin Gists (Read and write)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Tidak ada site key Turnstile di halaman ini"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Site key Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Alat lanjutan"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Proteksi yang mendapat alat"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Tampilkan alat di atas tingkat kepercayaan ini (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Lanjutan hanya menampilkan proteksi jika tingkat kepercayaannya di atas nilai ini. 0 menampilkan semua proteksi yang terdeteksi."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Tingkat kepercayaan alat lanjutan harus antara 0 dan 99"
+  },
+  "advCommonValue": {
+    "message": "Nilai"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} karakter"
+  },
+  "advCookiePath": {
+    "message": "Path"
+  },
+  "advCookieExpires": {
+    "message": "Kedaluwarsa"
+  },
+  "advCookieSession": {
+    "message": "Sesi (dihapus saat browser ditutup)"
+  },
+  "advCookieNotFound": {
+    "message": "Tidak ditemukan"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Pulihkan detektor resmi?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Semua detektor resmi sudah terinstal. Tidak ada yang perlu dipulihkan."
+  },
+  "restoreOfficialChecking": {
+    "message": "Memeriksa rilis terbaru di GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Diinstal ulang dari rilis {0} di GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub tidak dapat dijangkau, jadi versi yang disertakan dalam ekstensi digunakan."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub sedang membatasi permintaan saat ini, jadi versi yang disertakan dalam ekstensi digunakan."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Diinstal ulang dari versi yang disertakan dalam ekstensi: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Aturan → Perbarui menginstal ini lagi: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Detektor Anda sendiri dan edit Anda pada aturan lain tidak diubah."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} lainnya"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Tidak dapat memulihkan: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} dipulihkan"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Jalankan Aturan → Perbarui untuk menginstal sisanya."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Pulihkan"
+  },
+  "advancedFilterTool": {
+    "message": "Alat"
+  },
+  "advancedFilterAllTools": {
+    "message": "Semua alat"
+  },
+  "advFilterKindCapture": {
+    "message": "Rekaman"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Rekaman"
+  },
+  "advFilterKindOther": {
+    "message": "Alat lainnya"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scraping dengan Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Kode untuk scraping halaman ini dengan Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Ambil halaman ini lewat API Scrapfly dengan Unblocker aktif. Unblocker memilih browser, proxy, dan header sendiri, serta tidak dikenai biaya tambahan jika situs tidak memblokir.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Terdeteksi di halaman ini",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Bahasa kode",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Halaman ini memiliki CAPTCHA: Unblocker menghindari atau menyelesaikannya untuk mengembalikan halaman, tetapi tidak mengisi CAPTCHA pada formulir.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Opsi"
+  },
+  "scrapflyExportProduct": {
+    "message": "Gunakan"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Selesaikan CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Berbayar per penyelesaian"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Gunakan Cloud Browser untuk menyelesaikannya."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Buka halaman ini di Cloud Browser Scrapfly dan kendalikan dengan Playwright. Captcha Solver menangani Turnstile, reCAPTCHA, GeeTest, dan lainnya saat muncul; penyelesaian yang gagal tidak dikenai biaya."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Bypass anti-bot"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Salin untuk AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Menyalin halaman, proteksinya, pengaturan Anda, dan kode sebagai satu pesan untuk ChatGPT, Claude, atau asisten AI lainnya"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Disalin: tempel ke asisten AI Anda"
+  },
+  "scrapflyExportFormat": {
+    "message": "Output"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Teks"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxy"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residential"
+  },
+  "scrapflyExportCountry": {
+    "message": "Negara"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Apa saja"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Render JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 kredit"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Pilih pengaturan Anda"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Salin kode"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Atur API key Anda"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Jalankan"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Dapatkan API key",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Buka playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Kode disalin",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Buka halaman web untuk melakukan scraping dengan Scrapfly",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} rekaman"
+  },
+  "statsFirstSeen": {
+    "message": "Baru periode ini"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "{0} proteksi dan {1} domain disimpan untuk pertama kalinya dalam rentang ini."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Pilih 7, 30, atau 90 hari untuk melihat apa yang baru."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Domain paling terlindungi"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{0} proteksi berbeda dalam {1} kunjungan."
+  },
+  "statsFoundTogether": {
+    "message": "Proteksi yang ditemukan bersamaan"
+  },
+  "statsMethods": {
+    "message": "Metode deteksi"
+  },
+  "statsMatchesUnit": {
+    "message": "kecocokan"
+  },
+  "statsMethodsByCategory": {
+    "message": "Metode per kategori"
+  },
+  "statsWeakEvidence": {
+    "message": "Bukti terlemah"
+  },
+  "statsSignalColumn": {
+    "message": "Sinyal"
+  },
+  "statsMethodColumn": {
+    "message": "Metode"
+  },
+  "statsTopSignals": {
+    "message": "Sinyal yang paling sering cocok"
+  },
+  "statsDecidedSingle": {
+    "message": "Pola tunggal"
+  },
+  "statsDecidedCombination": {
+    "message": "Kombinasi"
+  },
+  "statsDecidedBy": {
+    "message": "Cara deteksi diputuskan"
+  },
+  "statsCombinationGain": {
+    "message": "Kepercayaan menurut keputusan"
+  },
+  "statsCombinationColumn": {
+    "message": "Kombinasi"
+  },
+  "statsTopCombinations": {
+    "message": "Kombinasi yang terpicu"
+  },
+  "statsNoCombinations": {
+    "message": "Tidak ada deteksi dalam rentang ini yang diputuskan oleh kombinasi."
+  },
+  "statsRulesMostActive": {
+    "message": "Aturan paling aktif"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} pola"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Pola menurut metode"
+  },
+  "statsRulesOfficial": {
+    "message": "Resmi"
+  },
+  "statsRulesCustom": {
+    "message": "Kustom"
+  },
+  "statsRuleColumn": {
+    "message": "Aturan"
+  },
+  "statsRuleKindColumn": {
+    "message": "Tipe"
+  },
+  "statsPatternsUnit": {
+    "message": "pola"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Tidak ditemukan dalam rentang ini"
+  },
+  "statsRulesAllMatched": {
+    "message": "Setiap aturan yang aktif menemukan sesuatu dalam rentang ini."
+  },
+  "statsMissingColumn": {
+    "message": "Tanpa deskripsi"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Pola tanpa deskripsi"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Setiap pola memiliki deskripsi."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Versi aturan"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Perlu ekstensi"
+  },
+  "statsRulesWaiting": {
+    "message": "Menunggu ekstensi yang lebih baru"
+  },
+  "statsToolsByVendor": {
+    "message": "Rekaman menurut vendor"
+  },
+  "statsToolsCapture": {
+    "message": "Rekaman"
+  },
+  "statsToolsByTool": {
+    "message": "Alat yang paling sering digunakan"
+  },
+  "statsToolsOverTime": {
+    "message": "Rekaman dari waktu ke waktu"
+  },
+  "statsChangeColumn": {
+    "message": "Perubahan"
+  },
+  "statsDateColumn": {
+    "message": "Tanggal"
+  },
+  "statsDomainChanges": {
+    "message": "Perubahan proteksi"
+  },
+  "statsNoChanges": {
+    "message": "Tidak ada domain yang mengubah proteksinya di antara kunjungan tersimpan dalam rentang ini."
+  },
+  "statsNothingNew": {
+    "message": "Tidak ada yang baru: setiap proteksi di sini sudah ada di Riwayat sebelum rentang ini."
+  },
+  "statsSectionSignals": {
+    "message": "Sinyal"
+  },
+  "statsSectionCombinations": {
+    "message": "Kombinasi"
+  },
+  "statsSectionRules": {
+    "message": "Aturan"
+  },
+  "statsSectionTools": {
+    "message": "Alat"
+  },
+  "statsDomainChangesHint": {
+    "message": "Domain yang proteksi terdeteksinya berubah di antara dua kunjungan tersimpan."
+  },
+  "statsFirstSeenHint": {
+    "message": "Proteksi dan domain yang disimpan untuk pertama kalinya dalam rentang ini."
+  },
+  "statsSignalsNote": {
+    "message": "Jenis bukti yang cocok pada setiap deteksi tersimpan: nama cookie dan header, URL, elemen halaman, script, dan hook JavaScript."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Proteksi yang pola cocoknya memiliki rata-rata kepercayaan terendah. Aturannya mungkin memerlukan pola yang lebih kuat."
+  },
+  "statsCombinationsNote": {
+    "message": "Kombinasi mendeteksi proteksi hanya jika beberapa pola ditemukan bersamaan."
+  },
+  "statsRulesNote": {
+    "message": "Pustaka aturan Anda, dibandingkan dengan temuan Riwayat dalam rentang ini."
+  },
+  "statsRulesTotal": {
+    "message": "Aturan"
+  },
+  "statsRulesModified": {
+    "message": "Resmi yang diedit"
+  },
+  "statsRulesDisabled": {
+    "message": "Nonaktif"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Aturan aktif yang tidak menemukan apa pun pada halaman tersimpan dalam rentang ini."
+  },
+  "statsRulesMissingHint": {
+    "message": "Deskripsi ditampilkan di detail deteksi, Riwayat, dan kombinasi. Tambahkan di editor aturan."
+  },
+  "statsToolsNote": {
+    "message": "Rekaman lanjutan dan hasil alat yang disimpan di perangkat ini."
+  },
+  "statsCapturesUnit": {
+    "message": "rekaman"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0}% yakin"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Kombinasi"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "CACHE"
+  },
+  "detectionTipCache": {
+    "message": "Halaman mana yang menggunakan ulang hasil cache ini, dan untuk berapa lama."
+  },
+  "tipCacheExpires": {
+    "message": "Kedaluwarsa"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Periksa terhadap Riwayat"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Lihat pada berapa banyak halaman tersimpan setiap pola dan kombinasi cocok. Edit yang belum disimpan ikut dihitung."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Periksa"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} halaman tersimpan · aturan ini ditemukan pada {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0} dari {1} halaman"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} halaman lain"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Riwayat kosong: jelajahi beberapa halaman terlebih dahulu."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Perkiraan: Riwayat menyimpan nilai yang cocok, bukan seluruh halaman."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "terpicu pada {0} halaman"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Tambahkan pola untuk memeriksanya."
+  },
+  "settingsThemeTitle": {
+    "message": "Tema"
+  },
+  "settingsThemeDesc": {
+    "message": "Gelap, atau terang dengan warna Scrapfly. Sistem mengikuti browser Anda."
+  },
+  "themeDark": {
+    "message": "Gelap"
+  },
+  "themeLight": {
+    "message": "Terang"
+  },
+  "themeSystem": {
+    "message": "Sistem"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Buka konsol"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Membuka ekstensi ini di chrome://extensions: klik \"service worker\" untuk melihat log."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Simpan log di sini, bukan di konsol, agar dapat diekspor sebagai JSON atau teks"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Terjemahan"
+  },
+  "ruleTranslationsHint": {
+    "message": "Ditampilkan sebagai ganti deskripsi saat ekstensi menggunakan bahasa tersebut. Kosong: deskripsi yang ditampilkan."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} dari {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Terjemahkan otomatis"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Terjemahan otomatis memerlukan Chrome 138 atau lebih baru."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Tulis deskripsinya terlebih dahulu."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Menerjemahkan: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "{0} bahasa terisi. Periksa sebelum menyimpan."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "{0} terisi; {1} tidak dapat diterjemahkan di sini."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Tunggu setelah dimuat"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Tunggu elemen"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Halaman siap pada"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Gulir ke bawah"
+  },
+  "sfxOptJs": {
+    "message": "Jalankan JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Aksi browser"
+  },
+  "sfxOptScreenshot": {
+    "message": "Tangkapan layar"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Elemen"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Opsi tangkapan layar"
+  },
+  "sfxOptLang": {
+    "message": "Bahasa"
+  },
+  "sfxOptOs": {
+    "message": "Sistem operasi"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Browser"
+  },
+  "sfxOptGeolocation": {
+    "message": "Geolokasi"
+  },
+  "sfxOptHeaders": {
+    "message": "Header"
+  },
+  "sfxOptTimeout": {
+    "message": "Batas waktu"
+  },
+  "sfxOptRetry": {
+    "message": "Coba lagi saat terjadi kesalahan"
+  },
+  "sfxOptCostBudget": {
+    "message": "Batas kredit"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Kecualikan"
+  },
+  "sfxOptProxified": {
+    "message": "Kembalikan respons situs"
+  },
+  "sfxOptExtraction": {
+    "message": "Ekstrak data"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Model"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Prompt"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Template tersimpan"
+  },
+  "sfxOptCache": {
+    "message": "Cache"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Simpan selama"
+  },
+  "sfxOptCacheClear": {
+    "message": "Segarkan cache"
+  },
+  "sfxOptSession": {
+    "message": "Sesi"
+  },
+  "sfxOptSticky": {
+    "message": "Proxy yang sama selama sesi"
+  },
+  "sfxOptDebug": {
+    "message": "Debug"
+  },
+  "sfxOptCorrelationId": {
+    "message": "Correlation ID"
+  },
+  "sfxOptTags": {
+    "message": "Tag"
+  },
+  "sfxOptDns": {
+    "message": "Detail DNS"
+  },
+  "sfxOptSsl": {
+    "message": "Sertifikat SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Mulai"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Nyatakan halaman ini"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Bahasa"
+  },
+  "sfxOptAutoClose": {
+    "message": "Tutup saat terputus"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Durasi sesi"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Batas waktu unblock"
+  },
+  "sfxOptBlockImages": {
+    "message": "Blokir gambar"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Blokir stylesheet"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Blokir font"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Blokir video dan audio"
+  },
+  "sfxOptBlacklist": {
+    "message": "Blokir tracker"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Cache file statis"
+  },
+  "sfxOptRecord": {
+    "message": "Rekam sesi"
+  },
+  "sfxOptMcp": {
+    "message": "Endpoint MCP"
+  },
+  "sfxValAuto": {
+    "message": "Otomatis"
+  },
+  "sfxValCleanHtml": {
+    "message": "HTML bersih"
+  },
+  "sfxValComplete": {
+    "message": "Pemuatan penuh"
+  },
+  "sfxValDomReady": {
+    "message": "DOM siap"
+  },
+  "sfxValFullPage": {
+    "message": "Halaman penuh"
+  },
+  "sfxValElement": {
+    "message": "Elemen"
+  },
+  "sfxValLoadImages": {
+    "message": "Muat gambar"
+  },
+  "sfxValDarkMode": {
+    "message": "Mode gelap"
+  },
+  "sfxValBlockBanners": {
+    "message": "Sembunyikan banner"
+  },
+  "sfxValHighQuality": {
+    "message": "Kualitas tinggi"
+  },
+  "sfxValPrint": {
+    "message": "Gaya cetak"
+  },
+  "sfxValNoLinks": {
+    "message": "Tautan"
+  },
+  "sfxValNoImages": {
+    "message": "Gambar"
+  },
+  "sfxValOnlyContent": {
+    "message": "Semua kecuali konten utama"
+  },
+  "sfxValModel": {
+    "message": "Model AI"
+  },
+  "sfxValTemplate": {
+    "message": "Template"
+  },
+  "sfxValConnect": {
+    "message": "Buka browser"
+  },
+  "sfxValUnblock": {
+    "message": "Unblock dulu"
+  },
+  "sfxGroupRender": {
+    "message": "Rendering browser"
+  },
+  "sfxGroupLocation": {
+    "message": "Lokasi dan fingerprint"
+  },
+  "sfxGroupRequest": {
+    "message": "Permintaan"
+  },
+  "sfxGroupOutput": {
+    "message": "Output"
+  },
+  "sfxGroupExtraction": {
+    "message": "Ekstraksi AI"
+  },
+  "sfxGroupCache": {
+    "message": "Cache dan sesi"
+  },
+  "sfxGroupTracking": {
+    "message": "Debug dan pelacakan"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Fingerprint dan bahasa"
+  },
+  "sfxGroupSession": {
+    "message": "Sesi"
+  },
+  "sfxGroupBlocking": {
+    "message": "Pemblokiran dan cache"
+  },
+  "sfxGroupTools": {
+    "message": "Debug dan MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Memerlukan Render JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Memerlukan Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Hanya output Markdown atau Teks"
+  },
+  "sfxWhyCache": {
+    "message": "Aktifkan Cache terlebih dahulu"
+  },
+  "sfxWhySession": {
+    "message": "Atur sesi terlebih dahulu"
+  },
+  "sfxWhySticky": {
+    "message": "Selalu aktif dengan Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "Bukan daftar langkah JSON: dihilangkan"
+  },
+  "sfxWhyGeo": {
+    "message": "Gunakan latitude,longitude: dihilangkan"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Browser ini tidak berjalan di sistem itu: dihilangkan"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge memerlukan Windows: dihilangkan"
+  },
+  "sfxHintHeaders": {
+    "message": "Satu per baris: Nama: nilai. Tidak disimpan."
+  },
+  "sfxHintScenario": {
+    "message": "Daftar JSON: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Dipisahkan koma"
+  },
+  "sfxHintLanguages": {
+    "message": "Dipisahkan koma, maksimal 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Unblock dulu mengembalikan browser yang sudah melewati tembok anti-bot"
+  },
+  "sfxValOff": {
+    "message": "Mati"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Setiap bahasa sudah memiliki terjemahan."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Terjemahan nama"
+  },
+  "combinationTranslationsHint": {
+    "message": "Ditampilkan sebagai ganti nama saat ekstensi menggunakan bahasa tersebut. Kosong: nama yang ditampilkan."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Tulis namanya terlebih dahulu."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Memeriksa cookie challenge dan menganalisis script-nya"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Memeriksa cookie DataDome dan menganalisis script-nya"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Menemukan public key, merekam data browser (BDA), dan menganalisis script-nya"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Mendeteksi versi GeeTest (v3 atau v4) dan menganalisis script-nya"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Menemukan site key, mendeteksi versi hCaptcha, dan menganalisis script-nya"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Mengekstrak site key dan menganalisis script Turnstile"
+  },
+  "statsExport": {
+    "message": "Ekspor"
+  },
+  "statsExportAllCategories": {
+    "message": "Ekspor selalu menyertakan setiap kategori, apa pun yang ditampilkan di halaman ini."
+  },
+  "statsScopeLabel": {
+    "message": "Tampilkan"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Deteksi fingerprinting disembunyikan: {0} ({1} dari semua)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Tampilkan fingerprinting"
+  },
+  "statsScopeKeepOne": {
+    "message": "Setidaknya satu kategori tetap dipilih."
+  },
+  "statsScopeRulesNote": {
+    "message": "Aturan selalu menggunakan semua kategori."
+  },
+  "statsContextFmt": {
+    "message": "Halaman: {0} · Domain: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Seluruh riwayat sejak {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Dibandingkan dengan periode sebelumnya ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Pilih 7, 30, atau 90 hari untuk membandingkan dengan periode sebelumnya."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "Riwayat dimulai pada {0}, jadi tidak ada periode sebelumnya yang penuh untuk dibandingkan."
+  },
+  "statsDeltaNew": {
+    "message": "baru"
+  },
+  "statsDeltaFlat": {
+    "message": "Tidak ada perubahan dibandingkan periode sebelumnya"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Naik {0} dibandingkan periode sebelumnya"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Turun {0} dibandingkan periode sebelumnya"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Periode sebelumnya: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Sedikit halaman dalam rentang ini ({0}): perbandingan dan peringkat bisa menyesatkan."
+  },
+  "statsLoading": {
+    "message": "Memuat statistik..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Tampilkan semua riwayat"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Sorotan"
+  },
+  "statsSectionEvidence": {
+    "message": "Bukti"
+  },
+  "statsSubnavLabel": {
+    "message": "Tampilan bukti"
+  },
+  "statsExportCanceled": {
+    "message": "Ekspor dibatalkan"
+  },
+  "statsAllClearTitle": {
+    "message": "Tidak ada anti-bot atau CAPTCHA dalam rentang ini"
+  },
+  "statsAllClearDescFmt": {
+    "message": "Halaman-halaman ini hanya menunjukkan penggunaan API fingerprinting. Halaman: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Tidak ada yang ditampilkan untuk kategori ini"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Pilih kategori lain atau rentang yang lebih panjang."
+  },
+  "statsHeadlineTop": {
+    "message": "Proteksi paling umum"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} dari halaman · halaman: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Situs tersulit"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Proteksi: {0} · Kesulitan: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Proteksi terbaru"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Pertama terlihat pada {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Tidak ada yang baru dalam rentang ini"
+  },
+  "statsHeadlineRiser": {
+    "message": "Kenaikan terbesar"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Halaman {0} → {1} dibanding periode sebelumnya"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Memerlukan periode sebelumnya"
+  },
+  "statsKpiPages": {
+    "message": "Halaman tersimpan"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Hari aktif: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} dengan deteksi ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Situs berlapis"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} dengan CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Proteksi terlihat"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "{0} baru periode ini"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "dari {0} aturan"
+  },
+  "statsTipPages": {
+    "message": "Halaman yang disimpan ke Riwayat dalam rentang ini. Riwayat menyimpan deteksi yang tersimpan, bukan setiap kunjungan browser."
+  },
+  "statsTipLayered": {
+    "message": "Domain tempat dua atau lebih proteksi berbeda terdeteksi."
+  },
+  "statsOverTimeProtections": {
+    "message": "Proteksi yang ditemukan dari waktu ke waktu"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% halaman"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Semua proteksi"
+  },
+  "statsPageTiers": {
+    "message": "Seberapa terlindungi halaman Anda"
+  },
+  "statsTiersHint": {
+    "message": "Setiap halaman tersimpan dihitung sekali, berdasarkan jenis proteksi yang ditemukan di dalamnya."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot dan CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Anti-bot saja"
+  },
+  "statsTierCaptcha": {
+    "message": "CAPTCHA saja"
+  },
+  "statsTierNone": {
+    "message": "Tanpa anti-bot atau CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Perkiraan kesulitan"
+  },
+  "statsDifficultyHint": {
+    "message": "Perkiraan kasar dari proteksi yang ditemukan pada kategori yang ditampilkan, bukan hasil pengukuran."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Tanpa proteksi"
+  },
+  "statsHardestSites": {
+    "message": "Situs tersulit"
+  },
+  "statsAllDomainsLink": {
+    "message": "Semua domain"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} lainnya"
+  },
+  "statsWhatChanged": {
+    "message": "Apa yang berubah"
+  },
+  "statsChangedNew": {
+    "message": "Proteksi baru"
+  },
+  "statsChangedMoving": {
+    "message": "Naik dan turun"
+  },
+  "statsChangedGone": {
+    "message": "Tidak terlihat lagi"
+  },
+  "statsChangedSwitched": {
+    "message": "Situs yang berganti proteksi"
+  },
+  "statsChangedNothing": {
+    "message": "Tidak ada yang berubah dalam rentang ini."
+  },
+  "statsChangedAllLink": {
+    "message": "Semua perubahan"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Pilih 7, 30, atau 90 hari untuk melihat proteksi yang naik dan turun."
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "API fingerprinting berjalan pada {0} dari halaman · teknik: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Paling umum: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Ditampilkan terpisah dari proteksi anti-bot dan CAPTCHA karena hampir setiap halaman menggunakan API ini."
+  },
+  "statsPagesColumn": {
+    "message": "Halaman"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Perubahan"
+  },
+  "statsStrongColumn": {
+    "message": "Bukti kuat"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Urutkan proteksi"
+  },
+  "statsSortMostPages": {
+    "message": "Halaman terbanyak"
+  },
+  "statsSortMostDomains": {
+    "message": "Domain terbanyak"
+  },
+  "statsSortBiggestChange": {
+    "message": "Perubahan terbesar"
+  },
+  "statsCommonStacks": {
+    "message": "Susunan proteksi yang umum"
+  },
+  "statsCommonStacksHint": {
+    "message": "Proteksi anti-bot dan CAPTCHA yang ditemukan bersamaan pada halaman tersimpan terbaru suatu domain."
+  },
+  "statsDomainSearchAll": {
+    "message": "Cari domain atau proteksi..."
+  },
+  "statsSortHardest": {
+    "message": "Tersulit dulu"
+  },
+  "statsSortLastSeen": {
+    "message": "Terbaru"
+  },
+  "statsDifficultyColumn": {
+    "message": "Kesulitan"
+  },
+  "statsStackColumn": {
+    "message": "Proteksi"
+  },
+  "statsLastSeenColumn": {
+    "message": "Terakhir terlihat"
+  },
+  "statsFilterChanged": {
+    "message": "Berubah"
+  },
+  "statsFilterClear": {
+    "message": "Hapus filter"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Filter domain"
+  },
+  "statsChangeKindGained": {
+    "message": "Bertambah"
+  },
+  "statsChangeKindDropped": {
+    "message": "Berkurang"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Diganti"
+  },
+  "statsChangePageColumn": {
+    "message": "Halaman"
+  },
+  "statsChangeSinceFmt": {
+    "message": "vs {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Ditambahkan:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Dihapus:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Membandingkan salinan tersimpan dari halaman yang sama. Deteksi fingerprint diabaikan kecuali Anda menampilkan fingerprinting."
+  },
+  "statsStrongEvidence": {
+    "message": "Bukti kuat"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{0} dari {1} deteksi memiliki skor 80% atau lebih."
+  },
+  "statsUnconfirmed": {
+    "message": "Disebut, tidak terkonfirmasi"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Proteksi yang sering ditemukan tetapi jarang dengan bukti kuat. Bisa jadi hanya sebutan dalam teks atau script yang tidak digunakan, bukan challenge aktif."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Setiap proteksi yang sering muncul dikonfirmasi oleh bukti kuat."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Sebagian besar ditemukan melalui {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Tidak ada sinyal tunggal yang menonjol."
+  },
+  "statsTierStrong": {
+    "message": "Kuat"
+  },
+  "statsTierModerate": {
+    "message": "Sedang"
+  },
+  "statsTierWeak": {
+    "message": "Lemah"
+  },
+  "statsTierHint": {
+    "message": "Kuat adalah 80% atau lebih, sedang 40-79%, lemah di bawah 40%. 100% berarti sinyal yang hanya dihasilkan oleh proteksi itu."
+  },
+  "statsDecidedByCategory": {
+    "message": "Cara setiap kategori diputuskan"
+  },
+  "statsLiftFmt": {
+    "message": "{0} poin"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · rata-rata {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "Pada {0}, kombinasi menaikkan kepercayaan dari {1} menjadi {2}."
+  },
+  "statsLess": {
+    "message": "Sedikit"
+  },
+  "statsMore": {
+    "message": "Banyak"
+  },
+  "statsBusiestDay": {
+    "message": "Hari tersibuk"
+  },
+  "statsLongestStreak": {
+    "message": "Rentetan terpanjang"
+  },
+  "statsPeakHour": {
+    "message": "Jam puncak"
+  },
+  "statsQuietDays": {
+    "message": "Hari tanpa data tersimpan"
+  },
+  "statsTodayPartial": {
+    "message": "Hari ini (masih dihitung)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Garis: rata-rata 7 hari"
+  },
+  "statsRulesCoverage": {
+    "message": "Cakupan"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "{0} dari {1} aturan aktif cocok dalam rentang ini"
+  },
+  "statsRulesAttention": {
+    "message": "Perlu perhatian"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Tidak ada yang perlu diperhatikan."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Status"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Di luar rentang"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Tidak ada di Riwayat"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Diedit"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Aturan resmi untuk vendor yang belum Anda temui tetap diam. Itu normal."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Belum banyak Riwayat untuk dijadikan penilaian (halaman: {0}), jadi aturan yang tidak pernah cocok belum membuktikan banyak hal."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Hanya aturan kustom dan yang diedit yang tercantum. Deskripsi aturan resmi dikelola oleh Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Lanjutan menyimpan rekaman selama 30 menit, jadi tab ini mengabaikan rentang tanggal."
+  },
+  "statsToolsSavedNow": {
+    "message": "Disimpan sekarang"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Kedaluwarsa dalam 10 menit"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Vendor"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Rekaman kedaluwarsa menunggu dibersihkan: {0}. Buka Lanjutan untuk menghapusnya."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Rekaman tersimpan"
+  },
+  "statsToolsColVendor": {
+    "message": "Vendor"
+  },
+  "statsToolsColTool": {
+    "message": "Alat"
+  },
+  "statsToolsColSaved": {
+    "message": "Disimpan"
+  },
+  "statsToolsColExpires": {
+    "message": "Kedaluwarsa"
+  },
+  "statsToolsNoLive": {
+    "message": "Tidak ada rekaman yang tersimpan saat ini."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Belum ada periode sebelumnya yang penuh."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Berapa lama rekaman disimpan"
+  },
+  "settingsCaptureRetention": {
+    "message": "Simpan rekaman alat selama"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Rekaman alat lanjutan (cookie, script, token) dihapus setelah waktu ini."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 menit"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 menit"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 jam"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 jam"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 jam"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 jam"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Rekaman disimpan selama {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "Dari 1 menit hingga 7 hari."
+  }
+}

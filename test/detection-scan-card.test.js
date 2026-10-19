@@ -68,7 +68,7 @@ test('all scan text has a nonempty translation in every supported locale', () =>
   const keys = [...card.matchAll(/data-i18n="([^"]+)"/g)].map(match => match[1]);
   const localeDir = path.join(root, '_locales');
   const locales = fs.readdirSync(localeDir).filter(locale => fs.existsSync(path.join(localeDir, locale, 'messages.json')));
-  assert.equal(locales.length, 12);
+  assert.ok(locales.length >= 22, 'every language folder is checked');
   for (const locale of locales) {
     const messages = JSON.parse(read(`_locales/${locale}/messages.json`));
     for (const key of keys) {

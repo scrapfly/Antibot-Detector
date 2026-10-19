@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Tarama başarısız"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Tarama kesintiye uğradı"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Tamamlanmış tarama yok"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Tarama tamamlanmadı. Yeniden denemek için sayfayı yeniden yükleyin."
+  },
+  "settingsReadFailedToast": {
+    "message": "Ayarlar yüklenemedi. Mevcut değerleriniz korundu."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Ayarlar kaydedilemedi. Değişiklikleriniz korundu; yeniden deneyin."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Değişiklik hazırlandı. Uygulamak için ayarları kaydedin."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "İçe aktarılan ayarlar kaydedilemedi. Ayarlarınız ve diliniz korundu."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Hemen uygulanır."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Tercihleri dışa veya içe aktarın. Entegrasyon bağlantıları bu tarayıcıda kalır."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Geçerli bir ayar dosyası okunamadı. Hiçbir şey değiştirilmedi."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Bu kural kaydedilemedi. Değişiklikleriniz burada duruyor; yeniden deneyin."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Koruma komut dosyalarını analiz etmek için sayfayı yeniden yükleyin"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Komut dosyalarını analiz etmek için koruma çerezlerini sıfırlayın ve sayfayı yeniden yükleyin"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Koruma sürümünü tespit etmek için sayfayı yeniden yükleyin"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Koruma çerezini sıfırlayın ve kaydı başlatın"
+  },
+  "advToolCookiesHint": {
+    "message": "Bu korumanın kullandığı çerezleri inceleyin"
+  },
+  "advToolVersionHint": {
+    "message": "Kullanılabilir sürüm bilgilerini okuyun"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Bu sayfadaki CAPTCHA site anahtarını bulun"
+  },
+  "advToolSelectorHint": {
+    "message": "CAPTCHA widget'ı için bir seçici bulun"
+  },
+  "advToolCallbackHint": {
+    "message": "CAPTCHA callback'lerini inceleyin"
+  },
+  "advToolSensorHint": {
+    "message": "Sensör verilerini kaydetmek için koruma çerezlerini sıfırlayın ve sayfayı yeniden yükleyin"
+  },
+  "advToolCaptureHint": {
+    "message": "Bu sayfadan veri kaydedin"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Bu sayfadan veri kaydetmeyi durdurun"
+  },
+  "advToolWorking": {
+    "message": "Çalışıyor…"
+  },
+  "advToolWaitingReload": {
+    "message": "Sayfa yeniden yükleniyor ve sonuçlar toplanıyor. Bu birkaç saniye sürer…"
+  },
+  "advToolNoResult": {
+    "message": "Sonuç yok: koruma veri göndermedi. Sayfayı yeniden yükleyip tekrar deneyin."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "{0} site anahtarı"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Bu sayfada site anahtarı bulunamadı. CAPTCHA'yı açın veya tetikleyin, ardından tekrar deneyin."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Bulunduğu yer"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "İstek"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Sayfa komut dosyası"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Sayfa değişkeni"
+  },
+  "advSiteKeyFrame": {
+    "message": "Çerçeve"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Bu sayfadaki komut dosyaları"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Site anahtarını çıkarır ve komut dosyalarını analiz eder"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Komut dosyalarını analiz eder"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Bu işlem tamamlanamadı: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Önceki grafik sayfası"
+  },
+  "statsChartNext": {
+    "message": "Sonraki grafik sayfası"
+  },
+  "statsChartPage": {
+    "message": "Sayfa {0} / {1}"
+  },
+  "statsChartShowing": {
+    "message": "{2} içinden {0}–{1} gösteriliyor"
+  },
+  "statsSectionsLabel": {
+    "message": "İstatistik bölümleri"
+  },
+  "statsSectionOverview": {
+    "message": "Genel bakış"
+  },
+  "statsSectionActivity": {
+    "message": "Etkinlik"
+  },
+  "statsSectionProtections": {
+    "message": "Korumalar"
+  },
+  "statsSectionDomains": {
+    "message": "Alan adları"
+  },
+  "statsSectionConfidence": {
+    "message": "Güven"
+  },
+  "statsExportCSV": {
+    "message": "CSV'ye aktar"
+  },
+  "statsExportJSON": {
+    "message": "JSON'a aktar"
+  },
+  "statsExportPrivacy": {
+    "message": "Dışa aktarılanlar alan adlarını ve tespit özetlerini içerir; çerezleri, sayfa içeriğini veya URL parametrelerini içermez."
+  },
+  "statsExportScopeFmt": {
+    "message": "Dışa aktarma seçili aralığı kapsar. Girdi sayısı: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "İndirme başladı: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Veriler dışa aktarılamadı. Lütfen tekrar deneyin."
+  },
+  "statsLoadFailed": {
+    "message": "Geçmiş yüklenemedi. Lütfen bu sayfayı yeniden yükleyin."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Bu aralıkta girdi yok"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Kayıtlı geçmişinizi incelemek için daha uzun bir tarih aralığı seçin."
+  },
+  "statsDetectionRate": {
+    "message": "Tespit içeren girdiler"
+  },
+  "statsActiveDays": {
+    "message": "Etkin günler"
+  },
+  "statsAverageConfidence": {
+    "message": "Ortalama güven"
+  },
+  "statsDailyVisits": {
+    "message": "Günlük geçmiş girdileri"
+  },
+  "statsActivityCalendar": {
+    "message": "Etkinlik takvimi"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Her kare, yerel takvimde bir günü gösterir. Daha koyu mavi, daha fazla kayıtlı girdi demektir."
+  },
+  "statsHourlyActivity": {
+    "message": "Saate göre etkinlik"
+  },
+  "statsWeekdayActivity": {
+    "message": "Haftanın gününe göre etkinlik"
+  },
+  "statsLocalTimeNote": {
+    "message": "Tarihler ve saatler yerel saat diliminizi kullanır."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Son {0} gün gösteriliyor. Toplamlar ve dışa aktarmalar seçili aralığın tamamını kapsar."
+  },
+  "statsProtectionRanking": {
+    "message": "Koruma sıralaması"
+  },
+  "statsCategoryTrend": {
+    "message": "Zaman içinde kategoriler"
+  },
+  "statsCategoryOverlap": {
+    "message": "Birlikte bulunan kategoriler"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Her iki kategoriyi de içeren geçmiş girdilerinin sayısı. Köşegen hücreler, o kategorideki girdileri gösterir."
+  },
+  "statsProtectionDetails": {
+    "message": "Tüm korumalar"
+  },
+  "statsDomainRanking": {
+    "message": "Alan adı sıralaması"
+  },
+  "statsDomainMap": {
+    "message": "Ziyaretler ve tespitler"
+  },
+  "statsDomainMapHint": {
+    "message": "Her nokta bir alan adıdır. Daha büyük noktalar, daha fazla farklı koruma içerir."
+  },
+  "statsDomainDetails": {
+    "message": "Tüm alan adları"
+  },
+  "statsDomainSearch": {
+    "message": "Alan adı ara..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Alan adlarını sırala"
+  },
+  "statsSortVisits": {
+    "message": "En çok ziyaret"
+  },
+  "statsSortDetections": {
+    "message": "En çok tespit"
+  },
+  "statsSortConfidence": {
+    "message": "En yüksek güven"
+  },
+  "statsSortName": {
+    "message": "Alan adı"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Güven dağılımı"
+  },
+  "statsConfidenceTrend": {
+    "message": "Zaman içinde güven"
+  },
+  "statsCategoryConfidence": {
+    "message": "Kategoriye göre güven"
+  },
+  "statsConfidenceNote": {
+    "message": "Güven, kayıtlı tespit kanıtının gücünü ifade eder; parmak izi oluşturmanın veya etkin bir doğrulama sınamasının kanıtı değildir."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} tespitin güven değeri var; {1} tespitin geçerli puanı yok."
+  },
+  "statsProtectionColumn": {
+    "message": "Koruma"
+  },
+  "statsCategoryColumn": {
+    "message": "Kategori"
+  },
+  "statsDomainColumn": {
+    "message": "Alan adı"
+  },
+  "statsTableCountFmt": {
+    "message": "Satır: {0} / {1}"
+  },
+  "statsTableMore": {
+    "message": "Daha fazla göster"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Aramanızla eşleşen alan adı yok."
+  },
+  "statsSelectionNote": {
+    "message": "Grafikler ve dışa aktarmalar seçili tarih aralığını kullanır. Geçmiş girdileri kayıtlı tespitleri temsil eder, her tarayıcı ziyaretini değil."
+  },
+  "extensionName": {
+    "message": "Scrapfly: anti-bot dedektörü"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: anti-bot dedektörü",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": anti-bot dedektörü",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Web sitelerindeki CAPTCHA'ları, anti-bot sistemlerini ve parmak izi teknolojilerini tespit edin"
+  },
+  "tabDetection": {
+    "message": "Tespit"
+  },
+  "tabHistory": {
+    "message": "Geçmiş"
+  },
+  "tabRules": {
+    "message": "Kurallar"
+  },
+  "tabAdvanced": {
+    "message": "Gelişmiş"
+  },
+  "openSettings": {
+    "message": "Ayarları aç"
+  },
+  "enableOrDisableDetection": {
+    "message": "Tespiti etkinleştir veya devre dışı bırak"
+  },
+  "noDetectionsFound": {
+    "message": "Tespit bulunamadı"
+  },
+  "detectionScanningTitle": {
+    "message": "Bu sayfa taranıyor"
+  },
+  "detectionScanningDescription": {
+    "message": "Koruma sinyalleri aranıyor."
+  },
+  "detectionScanningHint": {
+    "message": "Sonuçlar hazır olduğunda burada görünecek."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Kara listeden kaldır"
+  },
+  "statDetections": {
+    "message": "Tespitler"
+  },
+  "statConfidence": {
+    "message": "Güven"
+  },
+  "statDifficulty": {
+    "message": "Zorluk"
+  },
+  "statCacheScope": {
+    "message": "Önbellek kapsamı"
+  },
+  "scopeDomain": {
+    "message": "Alan adı"
+  },
+  "scopePath": {
+    "message": "Yol"
+  },
+  "scopeFullUrl": {
+    "message": "Tam URL"
+  },
+  "difficultyLow": {
+    "message": "Düşük"
+  },
+  "difficultyMedium": {
+    "message": "Orta"
+  },
+  "difficultyHigh": {
+    "message": "Yüksek"
+  },
+  "searchHistory": {
+    "message": "Geçmişte ara..."
+  },
+  "searchDetectors": {
+    "message": "Dedektörlerde ara..."
+  },
+  "paginationPrev": {
+    "message": "Önceki sayfa"
+  },
+  "paginationNext": {
+    "message": "Sonraki sayfa"
+  },
+  "paginationPage": {
+    "message": "Sayfa"
+  },
+  "paginationOf": {
+    "message": "/"
+  },
+  "paginationNoItems": {
+    "message": "Görüntülenecek öğe yok"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Geçerli sayfa numarası"
+  },
+  "btnImport": {
+    "message": "İçe aktar"
+  },
+  "btnExport": {
+    "message": "Dışa aktar"
+  },
+  "btnClear": {
+    "message": "Temizle"
+  },
+  "btnAdd": {
+    "message": "Ekle"
+  },
+  "btnUpdate": {
+    "message": "Güncelle"
+  },
+  "btnClose": {
+    "message": "Kapat"
+  },
+  "btnSave": {
+    "message": "Kaydet"
+  },
+  "btnCancel": {
+    "message": "İptal"
+  },
+  "btnDelete": {
+    "message": "Sil"
+  },
+  "historyImportTitle": {
+    "message": "Geçmişi içe aktar"
+  },
+  "historyExportTitle": {
+    "message": "Geçmişi dışa aktar"
+  },
+  "historyClearTitle": {
+    "message": "Geçmişi temizle"
+  },
+  "historyEmptyTitle": {
+    "message": "Henüz geçmiş yok"
+  },
+  "historyEmptyDescription": {
+    "message": "Web sitelerinde gezindikçe tespit geçmişi burada görünecek."
+  },
+  "rulesUpdateTitle": {
+    "message": "En son Scrapfly sürümündeki kural güncellemelerini yükle"
+  },
+  "rulesAddTitle": {
+    "message": "Yeni dedektör ekle"
+  },
+  "rulesEmptyTitle": {
+    "message": "Yüklü dedektör yok"
+  },
+  "rulesEmptyDescription": {
+    "message": "Dedektörler depolamadan ve dosyalardan yüklendiğinde burada görünecek."
+  },
+  "ruleModalActionEdit": {
+    "message": "Düzenle"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Dedektör bilgileri"
+  },
+  "ruleFieldName": {
+    "message": "Ad"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Dedektör adı"
+  },
+  "ruleFieldCategory": {
+    "message": "Kategori"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Parmak izi"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Zorluk"
+  },
+  "ruleFieldIcon": {
+    "message": "Simge"
+  },
+  "ruleFieldVersion": {
+    "message": "Sürüm"
+  },
+  "ruleFieldAuthor": {
+    "message": "Yazar"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Rozet rengi"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Tespit yöntemleri"
+  },
+  "settingsTitle": {
+    "message": "Ayarlar"
+  },
+  "settingsSubtitle": {
+    "message": "Uzantı tercihlerinizi yapılandırın"
+  },
+  "settingsTabGeneral": {
+    "message": "Genel"
+  },
+  "settingsTabDetection": {
+    "message": "Tespit"
+  },
+  "settingsTabHistory": {
+    "message": "Geçmiş"
+  },
+  "settingsTabData": {
+    "message": "Veri"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Temel ayarlar"
+  },
+  "settingsCardNotifications": {
+    "message": "Bildirimler"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Güvenlik sistemleri tespit edildiğinde uyarı göster"
+  },
+  "settingsCardDebug": {
+    "message": "Hata ayıklama modu"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Taranan her sayfa için uzantının konsoluna okunabilir bir rapor yazar."
+  },
+  "settingsRowLogCollector": {
+    "message": "Günlük toplayıcı"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Maks. günlük"
+  },
+  "settingsRowCollected": {
+    "message": "Toplanan"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Dedektör güncellemeleri"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Güncellemeleri otomatik kontrol et"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Yeni dedektör tanımlarını otomatik olarak kontrol et"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Kontrol aralığı"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Hiçbir zaman"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Şimdi kontrol et"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Uzantı güncellemesi gerekli"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Uzantıyı güncelle"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Rozet renkleri"
+  },
+  "settingsRowLastCheck": {
+    "message": "Son kontrol"
+  },
+  "advancedToolsTitle": {
+    "message": "Gelişmiş yakalama araçları"
+  },
+  "advancedToolsDescription": {
+    "message": "Tespit edilen koruma sistemlerinden çerezleri, token'ları ve site anahtarlarını çıkarın"
+  },
+  "advancedToolsHint": {
+    "message": "Yakalama araçlarını etkinleştirmek için korumalı bir sayfayı ziyaret edin"
+  },
+  "advancedSubtabTools": {
+    "message": "Araçlar"
+  },
+  "advancedSubtabHistory": {
+    "message": "Geçmiş"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Yakalama geçmişi"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Toplanan yakalamaları filtreleyin, inceleyin ve dışa aktarın"
+  },
+  "advancedFilterSite": {
+    "message": "Site"
+  },
+  "advancedFilterAllSites": {
+    "message": "Tüm siteler"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Geçerli site"
+  },
+  "advancedFilterModule": {
+    "message": "Modül"
+  },
+  "advancedFilterAllModules": {
+    "message": "Tüm modüller"
+  },
+  "advancedFilterSearch": {
+    "message": "Ara"
+  },
+  "advancedBtnExport": {
+    "message": "Dışa aktar"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Yakalamaları dışa aktar"
+  },
+  "advancedBtnClearAll": {
+    "message": "Tümünü temizle"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Tüm yakalamaları temizle"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Henüz yakalama yok"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Tespit edilen sistemlerden veri yakalamak için Araçlar sekmesini kullanın"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Yakalama bulunamadı"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Tüm filtreleri sıfırla"
+  },
+  "advancedModalTitle": {
+    "message": "Gelişmiş tespit araçları"
+  },
+  "advancedModalIntro": {
+    "message": "Anti-bot sistemlerinin, CAPTCHA'ların ve parmak izi teknolojilerinin derinlemesine analizi için özel yakalama araçları. İlgili tespitler bulunduğunda bu araçlar otomatik olarak görünür."
+  },
+  "advancedSectionSupported": {
+    "message": "Şu anda desteklenen sistemler"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Nasıl çalışır"
+  },
+  "advancedStep1Title": {
+    "message": "Otomatik tespit"
+  },
+  "advancedStep1Desc": {
+    "message": "Geçerli sayfada ilgili anti-bot sistemleri tespit edildiğinde araçlar görünür"
+  },
+  "advancedStep2Title": {
+    "message": "Yakalamayı başlat"
+  },
+  "advancedStep2Desc": {
+    "message": "Araçlar interceptor'ları otomatik olarak başlatır ve ağ isteklerini izlemeye başlar"
+  },
+  "advancedStep3Title": {
+    "message": "Sonuçları incele"
+  },
+  "advancedStep3Desc": {
+    "message": "Yakalanan veriler geçici olarak saklanır ve tam dışa aktarma desteği sunar"
+  },
+  "advancedFooterHint": {
+    "message": "Yakalamalar, Ayarlar'da belirlenen süre boyunca saklanır."
+  },
+  "settings": {
+    "message": "Ayarlar"
+  },
+  "paginationShowingFmt": {
+    "message": "{2} içinden {0}-{1} gösteriliyor"
+  },
+  "paginationShowingItems": {
+    "message": "{2} {3} içinden {0}-{1} gösteriliyor"
+  },
+  "timeUnknown": {
+    "message": "Bilinmiyor"
+  },
+  "timeJustNow": {
+    "message": "Az önce"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} sn önce"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} dk önce"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} sa önce"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} g önce"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 dakika önce"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} dakika önce"
+  },
+  "timeOneHourAgo": {
+    "message": "1 sa önce"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} sa önce"
+  },
+  "timeOneDayAgo": {
+    "message": "1 gün önce"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} gün önce"
+  },
+  "btnCancelSettings": {
+    "message": "İptal"
+  },
+  "btnSaveSettings": {
+    "message": "Ayarları kaydet"
+  },
+  "poweredBy": {
+    "message": "Destekleyen:"
+  },
+  "categoryColors": {
+    "message": "KATEGORİ RENKLERİ"
+  },
+  "methodSuffixPatterns": {
+    "message": "desen"
+  },
+  "btnSaveRule": {
+    "message": "Kuralı kaydet"
+  },
+  "tagColors": {
+    "message": "Etiket renkleri"
+  },
+  "colorPickerTitle": {
+    "message": "Renk seçici"
+  },
+  "colorPickerArea": {
+    "message": "Doygunluk ve parlaklık"
+  },
+  "colorPickerSaturation": {
+    "message": "Doygunluk"
+  },
+  "colorPickerBrightness": {
+    "message": "Parlaklık"
+  },
+  "colorPickerHue": {
+    "message": "Ton"
+  },
+  "colorPickerRed": {
+    "message": "Kırmızı"
+  },
+  "colorPickerGreen": {
+    "message": "Yeşil"
+  },
+  "colorPickerBlue": {
+    "message": "Mavi"
+  },
+  "colorPickerPresets": {
+    "message": "Hazır renkler"
+  },
+  "cacheConfiguration": {
+    "message": "Önbellek yapılandırması"
+  },
+  "cacheDuration": {
+    "message": "Önbellek süresi"
+  },
+  "timeUnitMinutes": {
+    "message": "Dakika"
+  },
+  "timeUnitHours": {
+    "message": "Saat"
+  },
+  "timeUnitDays": {
+    "message": "Gün"
+  },
+  "blacklistedDomains": {
+    "message": "Kara listedeki alan adları"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Tespitin tamamen atlandığı alan adları"
+  },
+  "jsApiEvents": {
+    "message": "JS API olayları"
+  },
+  "jsApiEventsDesc": {
+    "message": "Sayfa penceresine özel olaylar gönderir"
+  },
+  "ruleMethodSettings": {
+    "message": "Tespit yöntemi ayarları"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · {1} ayarları",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "{0} ayarları",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Açıklama"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Bu desenin ne anlama geldiği, ör. Tarayıcı dil tercihlerini okur"
+  },
+  "ruleDescriptionHint": {
+    "message": "Bu desen bulunduğunda tespit ayrıntılarında ve Geçmiş'te gösterilir."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Bu korumanın ne olduğu, ör. Giriş ve ödeme sayfalarında bot tespiti"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Bu korumanın tespit ayrıntılarında gösterilir."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Güven düzeyi"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Tespit güveni:"
+  },
+  "detectionName": {
+    "message": "Tespit adı"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 saat"
+  },
+  "interval12Hours": {
+    "message": "12 saat"
+  },
+  "interval24Hours": {
+    "message": "24 saat"
+  },
+  "interval2Days": {
+    "message": "2 gün"
+  },
+  "interval1Week": {
+    "message": "1 hafta"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Üstbilgiler"
+  },
+  "methodLabelCookie": {
+    "message": "Çerezler"
+  },
+  "methodLabelContent": {
+    "message": "İçerik"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS hook'ları"
+  },
+  "methodLabelWindow": {
+    "message": "Window"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 desen"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} desen"
+  },
+  "methodAddPattern": {
+    "message": "Desen ekle"
+  },
+  "methodSearchPatterns": {
+    "message": "Desen ara..."
+  },
+  "methodNoPatterns": {
+    "message": "Desen yok"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Eşleşen desen yok"
+  },
+  "methodSuffixMatches": {
+    "message": "eşleşme"
+  },
+  "cacheExpiredLabel": {
+    "message": "Süresi doldu"
+  },
+  "copiedNotification": {
+    "message": "Kopyalandı"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Kopyalandı!"
+  },
+  "unknownDetection": {
+    "message": "Bilinmeyen tespit"
+  },
+  "matchPlural": {
+    "message": "eşleşme"
+  },
+  "noMatchesRecorded": {
+    "message": "Kayıtlı eşleşme yok"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Önbelleği temizle"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Bu alan adının önbelleğe alınmış tespit verileri kaldırılacak ve yeni bir analiz başlatılacak."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Önbelleği temizle"
+  },
+  "clearingMsg": {
+    "message": "Temizleniyor..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Temizlendi!"
+  },
+  "cacheClearedToast": {
+    "message": "Önbellek temizlendi"
+  },
+  "failedToClearCacheToast": {
+    "message": "Önbellek temizlenemedi"
+  },
+  "unableGetCurrentPage": {
+    "message": "Geçerli sayfa alınamadı"
+  },
+  "invalidDomain": {
+    "message": "Geçersiz alan adı"
+  },
+  "addBlacklistTitle": {
+    "message": "Kara listeye ekle"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "\"{0}\" alan adı gelecekteki tüm tespitlerin dışında tutulacak. Daha sonra Ayarlar'dan kaldırabilirsiniz."
+  },
+  "addBlacklistBtn": {
+    "message": "Kara listeye ekle"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "\"{0}\" alan adı zaten kara listede"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" kara listeye eklendi"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Kara listeye eklenemedi: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" kara listeden kaldırıldı"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Kara listeden kaldırılamadı: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Tespit yok"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Tespit bulunamadı"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} eşleşme"
+  },
+  "historyOneMatch": {
+    "message": "1 eşleşme"
+  },
+  "notificationHistoryCleared": {
+    "message": "Geçmiş temizlendi"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Geçmiş temizlenemedi: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Geçmiş öğesi dışa aktarıldı"
+  },
+  "notificationCacheCleared": {
+    "message": "Önbellek temizlendi"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Önbellek zaten temizlendi"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Önbellek temizlenemedi"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" kara listeye eklendi"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Kara listeye eklenemedi"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Geçmiş öğesi silindi"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Geçmiş öğesi silinemedi"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "{0} geçmiş öğesi dışa aktarıldı"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "{0} yeni geçmiş öğesi birleştirildi"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Geçmiş, {0} öğeyle değiştirildi"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Geçmiş içe aktarılamadı: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Geçmişi temizle"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Tüm geçmişi temizlemek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "buttonClearAll": {
+    "message": "Tümünü temizle"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Önbelleği temizle"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "{0} için önbelleğe alınmış tespit verileri temizlensin mi? Geçmiş girdisi korunacak."
+  },
+  "buttonClearCache": {
+    "message": "Önbelleği temizle"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Geçmiş öğesini sil"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "{0} sitesindeki bu tespiti silmek istediğinizden emin misiniz?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Ayarlar yüklenemedi. Varsayılanlar kullanılıyor."
+  },
+  "settingsSavedToast": {
+    "message": "Ayarlar kaydedildi"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Ayarlar kaydedilemedi: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Günlükler dışa aktarılamadı"
+  },
+  "logsCleared": {
+    "message": "Günlükler temizlendi"
+  },
+  "failedClearLogs": {
+    "message": "Günlükler temizlenemedi"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Geçerli sayfa URL'si alınamadı"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} zaten kara listede"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} kara listeye eklendi"
+  },
+  "failedAddDomainFmt": {
+    "message": "Alan adı eklenemedi: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} kara listeden kaldırıldı"
+  },
+  "invalidSettingsFmt": {
+    "message": "Geçersiz ayarlar: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Lütfen bir webhook URL'si girin"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhook testi başarılı! Durum: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook şu durumu döndürdü: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhook testi başarısız: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Dedektörleri içe aktar"
+  },
+  "importDetectorsModeMessage": {
+    "message": "Birleştir, içe aktarılan dedektörleri sizinkilere ekler.<br>Tümünü değiştir, önce özel dedektörlerinizi siler; yerleşik dedektörler kalır."
+  },
+  "mergeOption": {
+    "message": "Birleştir"
+  },
+  "replaceAllOption": {
+    "message": "Tümünü değiştir"
+  },
+  "detectorsImported": {
+    "message": "Dedektörler içe aktarıldı"
+  },
+  "detectorExportedFmt": {
+    "message": "{0} dışa aktarıldı"
+  },
+  "failedImportDetectors": {
+    "message": "Dedektörler içe aktarılamadı. Dosya biçimini kontrol edin."
+  },
+  "errorReadingFileFmt": {
+    "message": "Dosya okunurken hata oluştu: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "{0} dedektör güncellendi"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" silindi"
+  },
+  "failedClearDetectors": {
+    "message": "Dedektörler temizlenemedi"
+  },
+  "urlPatternMatching": {
+    "message": "URL deseni eşleştirme"
+  },
+  "textWordMatching": {
+    "message": "Metin/sözcük eşleştirme"
+  },
+  "payloadTextMatching": {
+    "message": "Payload metni eşleştirme"
+  },
+  "nameFieldMatching": {
+    "message": "Ad alanı eşleştirme"
+  },
+  "captureNotFound": {
+    "message": "Yakalama bulunamadı"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Modül sınıfı bulunamadı"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Ayrıntı görünümü kullanılamıyor"
+  },
+  "captureDataCopied": {
+    "message": "Yakalama verileri kopyalandı"
+  },
+  "captureDeleted": {
+    "message": "Yakalama silindi"
+  },
+  "capturesExportedFmt": {
+    "message": "{0} yakalama dışa aktarıldı"
+  },
+  "allCapturesCleared": {
+    "message": "Tüm yakalamalar temizlendi"
+  },
+  "captureExportFailed": {
+    "message": "Yakalama dışa aktarılamadı"
+  },
+  "invalidUrl": {
+    "message": "Geçersiz URL"
+  },
+  "importHistoryTitle": {
+    "message": "Geçmişi içe aktar"
+  },
+  "replaceOption": {
+    "message": "Değiştir"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "{0} geçmiş öğesi içe aktarılsın mı? Mevcut geçmişinizde {1} öğe var.<br>Birleştir, yeni öğeleri ona ekler. Değiştir, önce onu siler."
+  },
+  "clearLogsTitle": {
+    "message": "Günlükleri temizle"
+  },
+  "clearLogsMessage": {
+    "message": "Toplanan tüm günlükleri temizlemek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Güncellemeler kontrol edilemedi: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Güncellemeler sunucudan alınamadı"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Kurallar {0} sürümünden güncellendi: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Tüm kurallar {0} sürümüyle güncel."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Uzantının {0} veya daha yeni sürümü bekleniyor: {1}. Chrome uzantıyı güncelleyince yüklenecekler."
+  },
+  "updateResultFailedFmt": {
+    "message": "İndirilemedi: {0}. Daha sonra tekrar deneyin."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Düzenlediğiniz kurallar, Kurallar → Güncelle bölümünde kararınızı bekliyor: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Kural güncellemelerini kontrol etmek için GitHub'a ulaşılamadı."
+  },
+  "updateErrorNoRelease": {
+    "message": "GitHub'da yayımlanmış bir Scrapfly sürümü bulunamadı."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub, güncelleme kontrollerini sınırlıyor. {0} dk sonra tekrar deneyin."
+  },
+  "errorApplyingUpdates": {
+    "message": "Güncellemeler uygulanırken hata oluştu"
+  },
+  "failedCheckForUpdates": {
+    "message": "Güncellemeler kontrol edilemedi"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Güncellemeler kontrol edilirken hata oluştu"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Güncelleme hizmeti kullanılamıyor"
+  },
+  "deleteDetectorTitle": {
+    "message": "Dedektörü sil"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "\"{0}\" dedektörünü silmek istediğinizden emin misiniz?"
+  },
+  "detectorNotFound": {
+    "message": "Dedektör bulunamadı"
+  },
+  "failedDeleteDetector": {
+    "message": "Dedektör silinemedi"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Yakalama ayrıntıları görüntülenemedi"
+  },
+  "failedCopyCaptureData": {
+    "message": "Yakalama verileri kopyalanamadı"
+  },
+  "failedDeleteCapture": {
+    "message": "Yakalama silinemedi"
+  },
+  "noCapturesToExport": {
+    "message": "Dışa aktarılacak yakalama yok"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Tüm yakalamaları silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "failedClearCaptures": {
+    "message": "Yakalamalar temizlenemedi"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook entegrasyonu"
+  },
+  "settingsEnableWebhook": {
+    "message": "Webhook'u etkinleştir"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Tespit olduğunda HTTP istekleri gönder"
+  },
+  "settingsBypassCache": {
+    "message": "Her sayfa yüklemesinde gönder (önbelleği atla)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP yöntemi"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Webhook istekleri için HTTP yöntemini seçin"
+  },
+  "settingsCustomMethod": {
+    "message": "Özel"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Özel yöntem girin (ör. OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook URL'si"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Tam uç nokta URL'si (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Kullanılabilir değişkenler:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Örnek: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP içerik türü üstbilgisi"
+  },
+  "webhookCtHintJson": {
+    "message": "Değişkenleri doldurulmuş şablon, JSON olarak."
+  },
+  "webhookCtHintForm": {
+    "message": "Şablon alanları key=value çiftleri olarak; iç içe alanlar detections[0][name] biçiminde."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Şablon alanları form-data parçaları olarak; boundary değerini tarayıcı belirler."
+  },
+  "webhookCtHintText": {
+    "message": "Şablon metni olduğu gibi, değişkenler doldurularak."
+  },
+  "webhookCtHintXml": {
+    "message": "Şablon alanları <webhook> XML belgesi olarak; tespitler yinelenen öğeler olarak."
+  },
+  "webhookCtHintCsv": {
+    "message": "Bir üstbilgi satırı, ardından her tespit için sayfa alanları tekrarlanarak bir satır."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Satır başına bir JSON nesnesi: her tespit için sayfa alanlarıyla birlikte bir satır."
+  },
+  "webhookCtHintCustom": {
+    "message": "Kendi Content-Type değeriniz (type/subtype); gövde JSON olarak gönderilir."
+  },
+  "webhookCtCustom": {
+    "message": "Özel"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Özel Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Bir type/subtype girin, ör. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Üstbilgi ekle"
+  },
+  "webhookNoHeaders": {
+    "message": "Yapılandırılmış özel üstbilgi yok"
+  },
+  "webhookHeaderName": {
+    "message": "Üstbilgi adı"
+  },
+  "webhookHeaderValue": {
+    "message": "Üstbilgi değeri"
+  },
+  "webhookRemoveHeader": {
+    "message": "Üstbilgiyi kaldır"
+  },
+  "webhookSending": {
+    "message": "Gönderiliyor..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Özel üstbilgiler"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Webhook isteğine özel HTTP üstbilgileri ekleyin"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Payload şablonu"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Her webhook ile gönderilen gövde. Eklemek için bir değişkene tıklayın."
+  },
+  "webhookVarsTitle": {
+    "message": "Şablon değişkenleri"
+  },
+  "webhookVarsIntro": {
+    "message": "Webhook gönderilirken sayfa değerleriyle değiştirilir."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Değişken ekle"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "{0} ekle"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "{0} kopyala"
+  },
+  "webhookVarsExample": {
+    "message": "Örnek"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Sayfanın tam URL'si"
+  },
+  "webhookVarHostname": {
+    "message": "Sayfanın ana makine adı"
+  },
+  "webhookVarTitle": {
+    "message": "Sayfa başlığı"
+  },
+  "webhookVarFavicon": {
+    "message": "Sitenin favicon URL'si"
+  },
+  "webhookVarDetections": {
+    "message": "JSON dizisi olarak tespitler"
+  },
+  "webhookVarTimestamp": {
+    "message": "Tespit zamanı (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Tespit sayısı"
+  },
+  "webhookVarCategories": {
+    "message": "Tespit edilen kategoriler, virgülle ayrılmış"
+  },
+  "webhookJsonValid": {
+    "message": "Geçerli JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Geçersiz JSON ({0}. satır)"
+  },
+  "webhookResetTemplate": {
+    "message": "Şablonu sıfırla"
+  },
+  "settingsTestWebhook": {
+    "message": "Webhook'u test et"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Webhook URL'nize bir test isteği gönderin"
+  },
+  "settingsTestBtn": {
+    "message": "Test"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Geçmiş yapılandırması"
+  },
+  "settingsHistorySettings": {
+    "message": "Geçmiş ayarları"
+  },
+  "settingsHistoryLimit": {
+    "message": "Geçmiş sınırı"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = 1.000 girdilik güvenlik sınırı)"
+  },
+  "settingsExportFormat": {
+    "message": "Dışa aktarma biçimi"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Düz metin"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Zaman damgalarını ekle"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Önbellek isabetlerinde kaydet"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Yinelenenleri önleme"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Yinelenenleri önlemeyi etkinleştir"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Bir zaman aralığı içindeki yinelenen geçmiş girdilerini engelle"
+  },
+  "settingsDuplicateScope": {
+    "message": "Kapsam"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Tam URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Alan adı"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Yol"
+  },
+  "settingsTimeWindow": {
+    "message": "Zaman aralığı"
+  },
+  "settingsTimeMinutes": {
+    "message": "Dakika"
+  },
+  "settingsTimeHours": {
+    "message": "Saat"
+  },
+  "settingsTimeDays": {
+    "message": "Gün"
+  },
+  "settingsHowItWorks": {
+    "message": "Nasıl çalışır:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Zaman aralığı içinde aynı URL için yinelenen geçmiş girdilerini önler."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Tam URL: Tam URL eşleşmesi (sorgu parametreleri dahil)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Alan adı: Aynı alan adı (farklı yollar aynı sayılır)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Yol: Aynı alan adı + yol (sorgu parametrelerini yok sayar)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Önbellek ayarları"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Atlanan alan adları"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Geçerli sayfayı ekle"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Alan adı ara..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Düşük"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Orta"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Yüksek"
+  },
+  "settingsEnableJsApi": {
+    "message": "JS API olaylarını etkinleştir"
+  },
+  "settingsDataExportImport": {
+    "message": "Dışa/İçe aktarma"
+  },
+  "settingsDataManagement": {
+    "message": "Veri yönetimi"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Uzantı verilerinizi dışa veya içe aktarın"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Ayarlar"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Uzantı ayarlarını dışa veya içe aktarın"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Tespit geçmişi"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Tespit geçmişini CSV olarak dışa aktarın"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Ayarları dışa aktar"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Ayarları içe aktar"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Geçmişi dışa aktar"
+  },
+  "settingsAvailableEvents": {
+    "message": "Kullanılabilir olaylar"
+  },
+  "settingsApiEventReady": {
+    "message": "Uzantı yüklendi ve başlatıldı"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Tespit başladı (önbellekte yok / manuel)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Tespit ilerleme güncellemeleri (yöntem düzeyinde)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "JS hook izleme tamamlandı"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Window özelliği izleme tamamlandı"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Tespit sonuçlarla tamamlandı"
+  },
+  "settingsApiEventOnError": {
+    "message": "Tespit hatası oluştu"
+  },
+  "settingsUsageExample": {
+    "message": "Kullanım örneği"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Bu alan adı için tespit devre dışı"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Kara listeden kaldır"
+  },
+  "detectionBlacklistHint": {
+    "message": "Veya yönetmek için Ayarlar → Tespit → Kara listedeki alan adları bölümüne gidin."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Bu sayfada eşleşen anti-bot, CAPTCHA veya parmak izi sinyali bulunamadı."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Bu sayfa için önbelleğe alınmış tespit verisi yok. Yeni bir tarama yapmak için sayfayı yeniden yükleyin."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Tespitleri yükle (paylaşılabilir bağlantı)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Bağlantı panoya kopyalandı"
+  },
+  "failedReadSettings": {
+    "message": "Ayarlar okunamadı — işlem iptal edildi"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Kara listeden kaldırılamadı"
+  },
+  "pasteConfirmTitle": {
+    "message": "Tespitler yüklensin mi?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Yükle"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Yükleme başarısız"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Yüklenecek tespit yok"
+  },
+  "detectionTitleClearCache": {
+    "message": "Önbelleği temizle"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Genel bakışı kopyala"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Bu alan adını engelle"
+  },
+  "detectionStatSite": {
+    "message": "SİTE"
+  },
+  "detectionStatDetections": {
+    "message": "TESPİTLER"
+  },
+  "detectionStatConfidence": {
+    "message": "GÜVEN"
+  },
+  "detectionStatDifficulty": {
+    "message": "ZORLUK"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Tespit ara..."
+  },
+  "detectionPaginationPage": {
+    "message": "Sayfa"
+  },
+  "detectionPaginationOf": {
+    "message": "/"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Bu alan adı kara listede"
+  },
+  "detectionModalConfidence": {
+    "message": "Güven"
+  },
+  "detectionModalDifficulty": {
+    "message": "Zorluk"
+  },
+  "detectionModalAuthor": {
+    "message": "Yazar"
+  },
+  "detectionModalDescription": {
+    "message": "Açıklama"
+  },
+  "detectionModalNoDescription": {
+    "message": "Açıklama yok."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Tespit yöntemleri"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Tespit edilen yöntem yok"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "URL, modül, site veya içeriğe göre ara..."
+  },
+  "advancedPaginationPage": {
+    "message": "Sayfa"
+  },
+  "advancedPaginationOf": {
+    "message": "/"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Site anahtarlarını, eylemleri ve yapılandırma parametrelerini yakalar"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Sensör verilerini yakalar ve sürüm bilgisini çıkarır"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Çerezleri ve koruma düzeyi değişikliklerini izler"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Dinamik üstbilgileri ve komut dosyası parametrelerini analiz eder"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Doğrulama sınaması uç noktalarını ve token ayrıntılarını yakalar"
+  },
+  "btnStartCapturing": {
+    "message": "Yakalamayı başlat"
+  },
+  "btnStopCapturing": {
+    "message": "Yakalamayı durdur"
+  },
+  "btnCheckCookies": {
+    "message": "Çerezleri kontrol et"
+  },
+  "btnCheckVersion": {
+    "message": "Sürümü kontrol et"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Komut dosyalarını analiz et"
+  },
+  "btnExtractSiteKey": {
+    "message": "Site anahtarını çıkar"
+  },
+  "btnExtractPublicKey": {
+    "message": "Genel anahtarı çıkar"
+  },
+  "btnObtainSelector": {
+    "message": "Seçiciyi al"
+  },
+  "btnCopyAllData": {
+    "message": "Tüm verileri kopyala"
+  },
+  "btnClearData": {
+    "message": "Verileri temizle"
+  },
+  "advCapturedDataSection": {
+    "message": "Yakalanan veriler"
+  },
+  "advNoCapturesYet": {
+    "message": "Henüz yakalama yok"
+  },
+  "advCaptureDetails": {
+    "message": "Yakalama ayrıntıları"
+  },
+  "advValueCopied": {
+    "message": "Değer kopyalandı"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Tüm yakalanan veriler temizlensin mi?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Bu sağlayıcı için yakalanan tüm veriler kalıcı olarak silinecek."
+  },
+  "rulesColorPickerCancel": {
+    "message": "İptal"
+  },
+  "rulesColorPickerOk": {
+    "message": "Tamam"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "İçerik arama kapsamı"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Yalnızca komut dosyalarını kontrol et"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Yalnızca JavaScript kodunda (satır içi ve yüklenen komut dosyaları) ara; sayfa metninde veya dosya adlarında arama"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Kapsam ayarları"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Ad kapsamı"
+  },
+  "rulesNameScopeHint": {
+    "message": "Ad/alan eşleşmelerinin nerede kontrol edileceği"
+  },
+  "rulesScopeRequest": {
+    "message": "İstek"
+  },
+  "rulesScopeResponse": {
+    "message": "Yanıt"
+  },
+  "rulesScopeAll": {
+    "message": "Tümü"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Değer kapsamı"
+  },
+  "rulesValueScopeHint": {
+    "message": "Değer eşleşmelerinin nerede kontrol edileceği"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "URL kapsamı ayarları"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL kapsamı"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Sayfa"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Komut dosyaları"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Tümü (varsayılan)"
+  },
+  "rulesRequestConstraints": {
+    "message": "İstek kısıtlamaları"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL deseni (isteğe bağlı)"
+  },
+  "rulesUrlRegex": {
+    "message": "URL düzenli ifadesi (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "Büyük/küçük harfe duyarlı URL"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP yöntemi (birini seçin)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "İstek yöntemine göre filtrele (isteğe bağlı)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Herhangi biri"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Desen eşleştirme seçenekleri"
+  },
+  "rulesPatternRegex": {
+    "message": "Düzenli ifade (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Tam sözcük"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Büyük/küçük harfe duyarlı"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Değer alanı seçenekleri"
+  },
+  "rulesApplySettings": {
+    "message": "Ayarları uygula"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM seçici yardımcısı"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Seçiciyi kullan"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Window özellikleri yardımcısı"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Onayla"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Emin misiniz?"
+  },
+  "notifLoadingDefault": {
+    "message": "Yükleniyor..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "{0} verilerini yakalamaya başlamak için yukarıdaki \"Yakalamayı başlat\" düğmesine tıklayın"
+  },
+  "advancedToolsHeading": {
+    "message": "Yakalama araçları"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Araçlarını açmak için bir koruma seçin."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Araçları aç"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Gelişmiş araçlar hakkında bilgi edinin"
+  },
+  "advancedToolsChange": {
+    "message": "Değiştir"
+  },
+  "settingsLanguageTitle": {
+    "message": "Dil"
+  },
+  "settingsLanguageDesc": {
+    "message": "Uzantı arayüz dilini değiştirin. Varsayılan olarak tarayıcı diliniz kullanılır."
+  },
+  "settingsLanguageAuto": {
+    "message": "Tarayıcı dilini kullan"
+  },
+  "detectionEmptyTitle": {
+    "message": "Hiçbir şey tespit edilmedi"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ CAPTCHA yok"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Anti-bot yok"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Parmak izi yok"
+  },
+  "detectionDisabledTitle": {
+    "message": "Tespit devre dışı"
+  },
+  "detectionDisabledDesc": {
+    "message": "Güvenlik tespiti şu anda kapalı."
+  },
+  "detectionDisabledAction": {
+    "message": "Tespiti etkinleştirmek için üstteki anahtarı açın."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Tespit kuralı"
+  },
+  "rulesMoreActions": {
+    "message": "Diğer eylemler"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Koruma tespit edilmedi"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Bu sayfada desteklenen hiçbir koruma %{0} güven düzeyinin üzerinde değil. Bu alt sınırı Ayarlar → Tespit bölümünden değiştirebilirsiniz.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Koruma düşük güvenle tespit edildi"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0}, %{1} güvenle tespit edildi. Araçlar yalnızca %{2} üzerinde görünür. Bu alt sınırı Ayarlar → Tespit bölümünden düşürebilirsiniz.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Desteklenen korumalar"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Yakalama geçmişini görüntüle ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript hook'ları"
+  },
+  "detectionMethodContent": {
+    "message": "İçerik"
+  },
+  "detectionMethodWindow": {
+    "message": "Window özellikleri"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Üstbilgiler"
+  },
+  "detectionMethodCookies": {
+    "message": "Çerezler"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Tespiti etkinleştir"
+  },
+  "historyMoreActions": {
+    "message": "Diğer eylemler"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Verileri kopyala"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Otomatik silme"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Eski geçmiş girdilerini düzenli olarak kaldırır."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Şu süreden eski öğeleri sil"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "İzin verilen aralık: 1–{0} {1}. Daha uzun süreler için daha büyük bir birim seçin."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "İzin verilen aralık: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Aylar 30 gün, yıllar 365 gün sayılır."
+  },
+  "timeUnitMonths": {
+    "message": "Ay"
+  },
+  "timeUnitYears": {
+    "message": "Yıl"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Geçmiş istatistikleri"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Tespit geçmişinizden yerel olarak hesaplanan özel istatistikleri görüntüleyin."
+  },
+  "settingsOpenStats": {
+    "message": "İstatistikleri aç"
+  },
+  "settingsExportedToast": {
+    "message": "Ayarlar dışa aktarıldı"
+  },
+  "settingsExportFailedToast": {
+    "message": "Ayarlar dışa aktarılamadı"
+  },
+  "settingsImportedToast": {
+    "message": "Ayarlar içe aktarıldı"
+  },
+  "settingsImportFailedToast": {
+    "message": "Ayarlar içe aktarılamadı: geçersiz dosya"
+  },
+  "statsPrivacyNote": {
+    "message": "Tespit geçmişinizden yerel olarak hesaplanır. Hiçbir şey tarayıcınızdan çıkmaz."
+  },
+  "statsSubtitleFmt": {
+    "message": "{0} geçmiş girdisinden yerel olarak hesaplanır. Hiçbir şey tarayıcınızdan çıkmaz."
+  },
+  "statsRangeLabel": {
+    "message": "Zaman aralığı"
+  },
+  "statsRange7": {
+    "message": "7 gün"
+  },
+  "statsRange30": {
+    "message": "30 gün"
+  },
+  "statsRange90": {
+    "message": "90 gün"
+  },
+  "statsRangeAll": {
+    "message": "Tümü"
+  },
+  "statsEmptyTitle": {
+    "message": "Henüz geçmiş yok"
+  },
+  "statsEmptyDesc": {
+    "message": "Tespit içeren sayfalar geçmişe kaydedildiğinde istatistikler burada görünür."
+  },
+  "statsEntries": {
+    "message": "Geçmiş girdileri"
+  },
+  "statsUniqueDomains": {
+    "message": "Benzersiz alan adları"
+  },
+  "statsDetections": {
+    "message": "Tespitler"
+  },
+  "statsDistinctDetectors": {
+    "message": "Farklı korumalar"
+  },
+  "statsOverTime": {
+    "message": "Zaman içinde tespitler"
+  },
+  "statsTopProtections": {
+    "message": "En çok tespit edilen korumalar"
+  },
+  "statsTopDomains": {
+    "message": "Önde gelen alan adları"
+  },
+  "statsByCategory": {
+    "message": "Kategoriye göre"
+  },
+  "statsByDifficulty": {
+    "message": "Zorluğa göre"
+  },
+  "statsPagesUnit": {
+    "message": "sayfa"
+  },
+  "statsVisitsUnit": {
+    "message": "ziyaret"
+  },
+  "statsDetectionsUnit": {
+    "message": "tespit"
+  },
+  "statsCategoryOther": {
+    "message": "Diğer"
+  },
+  "statsDifficultyNone": {
+    "message": "Tespit yok"
+  },
+  "statsNoData": {
+    "message": "Bu aralıkta veri yok"
+  },
+  "statsTipPagesFmt": {
+    "message": "Sayfa: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} alan adı"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} ziyaret"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} tespit"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{1} tespitin {0} tanesi · %{2}"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} girdi"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} tespit içeren"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "Alan adı başına {0} ziyaret"
+  },
+  "statsPerEntryFmt": {
+    "message": "Girdi başına {0}"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "Ortalama güven: %{0}"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Tespitler: {0} · Günler: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Bu resmi bir Scrapfly dedektörüdür. Güncellemeler onu geri getirmez; tekrar almak için … menüsündeki \"Resmi dedektörleri geri yükle\" seçeneğini kullanın."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Resmi dedektörleri geri yükle"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "{0} resmi dedektör geri yüklendi"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Resmi dedektörler geri yüklenemedi"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" resmi dedektörler için ayrılmıştır. Farklı bir yazar adı kullanın."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Adınız"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Özel dedektörleri temizle"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Bu işlem tüm özel dedektörlerinizi kaldıracak. Resmi Scrapfly dedektörleri korunur (bunun yerine devre dışı bırakabilirsiniz). Emin misiniz?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Özel dedektörler temizleniyor..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "{0} özel dedektör kaldırıldı"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Temizlenecek özel dedektör yok"
+  },
+  "rhSuggestions": {
+    "message": "Öneriler"
+  },
+  "rhResults": {
+    "message": "Sonuçlar"
+  },
+  "rhCustomChip": {
+    "message": "Özel"
+  },
+  "rhUseAsTyped": {
+    "message": "Yazıldığı gibi kullan"
+  },
+  "rhNoResultsFmt": {
+    "message": "“{0}” için eşleşme yok"
+  },
+  "rhNoResultsHint": {
+    "message": "Yine de özel bir değer olarak kullanabilirsiniz."
+  },
+  "rhPreview": {
+    "message": "Önizleme"
+  },
+  "rhSearchWindow": {
+    "message": "Özellik ara, ör. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Seçici ara, ör. captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Koşul"
+  },
+  "rhConditionInvalid": {
+    "message": "Bilinmeyen koşul"
+  },
+  "rhAddProperty": {
+    "message": "Özellik ekle"
+  },
+  "rhChipAutomation": {
+    "message": "Otomasyon"
+  },
+  "rhCondGroupType": {
+    "message": "Tür"
+  },
+  "rhCondGroupExistence": {
+    "message": "Varlık"
+  },
+  "rhCondGroupCollections": {
+    "message": "Koleksiyonlar"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Sayısal"
+  },
+  "rhCondGroupString": {
+    "message": "Metin"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolean"
+  },
+  "rhCondGroupCustom": {
+    "message": "Geçerli değer"
+  },
+  "rhCondTypeObject": {
+    "message": "bir nesnedir"
+  },
+  "rhCondTypeFunction": {
+    "message": "bir fonksiyondur"
+  },
+  "rhCondTypeString": {
+    "message": "bir metindir"
+  },
+  "rhCondTypeNumber": {
+    "message": "bir sayıdır"
+  },
+  "rhCondTypeBoolean": {
+    "message": "bir boolean'dır"
+  },
+  "rhCondTypeSymbol": {
+    "message": "bir semboldür"
+  },
+  "rhCondTypeBigint": {
+    "message": "bir BigInt'tir"
+  },
+  "rhCondExists": {
+    "message": "sayfada vardır"
+  },
+  "rhCondTruthy": {
+    "message": "truthy'dir"
+  },
+  "rhCondFalsy": {
+    "message": "falsy'dir (boş, 0, false veya null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "undefined değildir"
+  },
+  "rhCondUndefined": {
+    "message": "undefined'dır (eksik)"
+  },
+  "rhCondNotNull": {
+    "message": "null değildir"
+  },
+  "rhCondNull": {
+    "message": "null'dır"
+  },
+  "rhCondArray": {
+    "message": "bir dizidir"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "öğeleri olan bir dizidir"
+  },
+  "rhCondEmptyArray": {
+    "message": "boş bir dizidir"
+  },
+  "rhCondHasLength": {
+    "message": "length değerine sahiptir"
+  },
+  "rhCondHasKeys": {
+    "message": "anahtarları olan bir nesnedir"
+  },
+  "rhCondEmptyObject": {
+    "message": "boş bir nesnedir"
+  },
+  "rhCondGt0": {
+    "message": "0'dan büyüktür"
+  },
+  "rhCondGte0": {
+    "message": "0 veya daha büyüktür"
+  },
+  "rhCondEq0": {
+    "message": "0'a eşittir"
+  },
+  "rhCondNe0": {
+    "message": "0 değildir"
+  },
+  "rhCondGt1": {
+    "message": "1'den büyüktür"
+  },
+  "rhCondGte1": {
+    "message": "1 veya daha büyüktür"
+  },
+  "rhCondLenGt0": {
+    "message": "boş değildir"
+  },
+  "rhCondLenEq0": {
+    "message": "boştur"
+  },
+  "rhCondTrue": {
+    "message": "true'dur"
+  },
+  "rhCondFalse": {
+    "message": "false'tur"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Şu koşulu sağlayan sayfalarla eşleşir: {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Şablon"
+  },
+  "rhDomClass": {
+    "message": "Sınıf"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Veri özniteliği"
+  },
+  "rhDomClassContains": {
+    "message": "Sınıf şunu içerir"
+  },
+  "rhDomIdContains": {
+    "message": "ID şunu içerir"
+  },
+  "rhDomTag": {
+    "message": "HTML etiketi"
+  },
+  "rhDomAttr": {
+    "message": "Özniteliği var"
+  },
+  "rhDomIframe": {
+    "message": "Iframe URL'si şunu içerir"
+  },
+  "rhDomTitle": {
+    "message": "Başlık şunu içerir"
+  },
+  "rhDomAlt": {
+    "message": "Alt metni şunu içerir"
+  },
+  "rhDomCamel": {
+    "message": "camelCase sınıf"
+  },
+  "rhRefAny": {
+    "message": "herhangi bir karakter"
+  },
+  "rhRefZeroMore": {
+    "message": "0 veya daha fazla"
+  },
+  "rhRefOneMore": {
+    "message": "1 veya daha fazla"
+  },
+  "rhRefOptional": {
+    "message": "isteğe bağlı"
+  },
+  "rhRefStart": {
+    "message": "başlangıç"
+  },
+  "rhRefEnd": {
+    "message": "son"
+  },
+  "rhRefDigit": {
+    "message": "rakam"
+  },
+  "rhRefWord": {
+    "message": "harf, rakam veya _"
+  },
+  "rhRefSpace": {
+    "message": "boşluk"
+  },
+  "rhRefOr": {
+    "message": "a veya b"
+  },
+  "rhMatch": {
+    "message": "Eşleşiyor"
+  },
+  "rhNoMatch": {
+    "message": "Eşleşmiyor"
+  },
+  "ptTitle": {
+    "message": "Deseni test et"
+  },
+  "ptTitleFmt": {
+    "message": "Deseni test et · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Sayfa içeriği"
+  },
+  "ptKindCookieName": {
+    "message": "Çerez adı"
+  },
+  "ptKindCookieValue": {
+    "message": "Çerez değeri"
+  },
+  "ptKindHeaderName": {
+    "message": "Üstbilgi adı"
+  },
+  "ptKindHeaderValue": {
+    "message": "Üstbilgi değeri"
+  },
+  "ptKindPayloadText": {
+    "message": "İstek gövdesi"
+  },
+  "ptKindPayloadUrl": {
+    "message": "İstek URL'si"
+  },
+  "ptPatternLabel": {
+    "message": "Desen"
+  },
+  "ptOptionsLabel": {
+    "message": "Eşleştirme seçenekleri"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Üzerinde dene"
+  },
+  "ptExamplesBtn": {
+    "message": "Örnekler"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "Satır başına bir tane: bir URL, bir çerez adı…"
+  },
+  "ptNoSamples": {
+    "message": "Eşleşip eşleşmediğini görmek için yukarıya satır başına bir metin yazın veya yapıştırın."
+  },
+  "ptCheatTitle": {
+    "message": "Regex özet kılavuzu"
+  },
+  "ptCheatNote": {
+    "message": "Deseni etrafında / olmadan yazın. Bir tekrarın içindeki tekrar, örneğin (a+)+, sayfaları dondurabileceği için reddedilir."
+  },
+  "ptApply": {
+    "message": "Uygula"
+  },
+  "ptTestBtn": {
+    "message": "Test et"
+  },
+  "ptTestTitle": {
+    "message": "Deseni örnek metin üzerinde dene"
+  },
+  "ptNoPattern": {
+    "message": "Henüz desen yok"
+  },
+  "ptHintRegex": {
+    "message": "^bm_ veya \\d+ gibi bir desen, etrafında / olmadan"
+  },
+  "ptHintWholeWord": {
+    "message": "Daha uzun bir sözcüğün içindeki eşleşmeleri atlar: _abck, test_abck değil"
+  },
+  "ptHintCase": {
+    "message": "Akamai artık akamai ile eşleşmez"
+  },
+  "ptSaysEmpty": {
+    "message": "Neyle eşleştiğini görmek için bir desen yazın."
+  },
+  "ptSaysRegex": {
+    "message": "Regex'in eşleşme bulduğu metinlerle eşleşir."
+  },
+  "ptSaysWordFmt": {
+    "message": "“{0}” ifadesini tam sözcük olarak eşleştirir, daha uzun bir sözcüğün içinde değil."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "“{0}” gibi adlarla eşleşir; * herhangi bir metni temsil eder."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "“{0}” ile başlayan adlarla eşleşir."
+  },
+  "ptSaysContainsFmt": {
+    "message": "“{0}” içeren metinlerle eşleşir."
+  },
+  "ptCaseExact": {
+    "message": "Büyük ve küçük harfler tam olarak eşleşmelidir."
+  },
+  "ptCaseIgnored": {
+    "message": "Büyük ve küçük harfler aynı kabul edilir."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Bu regex geçerli değil, bu yüzden hiçbir zaman eşleşmez: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Tespit, sayfaları dondurabileceği için bu regex'i reddeder (bir tekrarın içinde tekrar veya 1000 karakterden uzun), bu yüzden hiçbir zaman eşleşmez."
+  },
+  "ptNoteSlashes": {
+    "message": "Her iki uçtaki / karakterini yazmayın: metnin parçası olarak eşleştirilirler."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Bu bir regex'e benziyor: Regex'i açın, aksi takdirde simgeleri düz metin olarak aranır."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Regex açıkken Tam sözcük yok sayılır."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Üstbilgi adları küçük harfle saklanır; bu yüzden Büyük/küçük harfe duyarlı açıkken bu desen hiçbir zaman eşleşmez."
+  },
+  "ptNoteWordEdges": {
+    "message": "Bu desen bir simgeyle başlıyor veya bitiyor; bu yüzden Tam sözcük, o simgenin hemen yanında bir harf, rakam veya _ gerektirir."
+  },
+  "rhRefDot": {
+    "message": "gerçek bir nokta"
+  },
+  "rhRefSet": {
+    "message": "a, b, c'den biri"
+  },
+  "rhRefCount": {
+    "message": "2 ila 5 kez"
+  },
+  "mhExamplesTitle": {
+    "message": "Scrapfly'nin kurallarında"
+  },
+  "mhHowTitle": {
+    "message": "Nasıl eşleşir"
+  },
+  "mhWriteTitle": {
+    "message": "Neler yazabilirsiniz"
+  },
+  "mhLimitsTitle": {
+    "message": "Bilmekte fayda var"
+  },
+  "mhUrlIntro": {
+    "message": "Sayfa adresini ve sayfanın istediği URL'leri kontrol eder: komut dosyaları, XHR ve fetch çağrıları, görseller, çerçeveler ve ping'ler."
+  },
+  "mhUrlHow1": {
+    "message": "Regex olmadan URL, metni büyük/küçük harf fark etmeksizin içermelidir. Sorgu dizesi dahil URL'nin tamamı sayılır."
+  },
+  "mhUrlHow2": {
+    "message": "Regex ile her iki uçtaki / karakterini yazmayın ve noktaları `\\.` olarak yazın, örneğin `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "URL kapsamı: Sayfa yalnızca sayfa adresini kontrol eder, Komut dosyaları komut dosyası kaynaklarını da ekler, Tümü (varsayılan) tüm istekleri ekler."
+  },
+  "mhUrlLimit1": {
+    "message": "Yazı tipi, medya ve stil sayfası istekleri kaydedilmez."
+  },
+  "mhUrlLimit2": {
+    "message": "Yalnızca taramadan önce yapılan istekler sayılır; tarama, sayfa yüklendikten sonra çalışır."
+  },
+  "mhHeaderIntro": {
+    "message": "Sayfanın kendi isteğinin ve yanıtının üstbilgilerini kontrol eder; komut dosyalarının, XHR çağrılarının veya çerçevelerin üstbilgilerini değil."
+  },
+  "mhHeaderHow1": {
+    "message": "Üstbilgi adları küçük harfle karşılaştırılır ve düz metin “içerir” anlamına gelir: `server`, `server-timing` ile de eşleşir. Tam ad için Regex `^server$` kullanın."
+  },
+  "mhHeaderHow2": {
+    "message": "Değer, bu ada sahip üstbilgide kontrol edilir; herhangi bir değeri kabul etmek için boş bırakın."
+  },
+  "mhHeaderHow3": {
+    "message": "Yanıt kapsamı (varsayılan), sitenin gönderdiği üstbilgiler; İstek ise tarayıcının gönderdiği üstbilgiler anlamına gelir."
+  },
+  "mhHeaderLimit1": {
+    "message": "Büyük/küçük harfe duyarlı açıkken üstbilgi adlarını küçük harfle yazın."
+  },
+  "mhHeaderLimit2": {
+    "message": "Yeniden yüklenmeden adresi değişen sayfalar, üstbilgiler olmadan yeniden taranır."
+  },
+  "mhCookieIntro": {
+    "message": "Sayfanın çerezlerini ada ve isteğe bağlı olarak değere göre kontrol eder; HttpOnly ve Secure olanlar dahil."
+  },
+  "mhCookieHow1": {
+    "message": "Düz bir ad önek olarak eşleşir: `_abck`, `_abck_2` ile de eşleşir."
+  },
+  "mhCookieHow2": {
+    "message": "`*` herhangi bir metni temsil eder: `bm_*`, `bm_sz` ve `bm_sv` ile eşleşir."
+  },
+  "mhCookieHow3": {
+    "message": "Tam ad için Regex'i açın ve `^name$` yazın. Değer, metni içerdiğinde eşleşir."
+  },
+  "mhCookieLimit1": {
+    "message": "İstek kapsamı (varsayılan) tarayıcının sayfa için sakladığı çerezleri okur; Yanıt ise sayfanın yanıtının ayarladığı çerezleri okur."
+  },
+  "mhCookieLimit2": {
+    "message": "Bir sağlayıcının çerçevesi gibi diğer sitelerin çerezleri görülmez. Uzun değerler 100 karaktere kısaltılır."
+  },
+  "mhContentIntro": {
+    "message": "Sayfanın metninde arar: gövdesinin HTML'i, satır içi komut dosyaları ve yüklediği komut dosyası ile stil sayfası dosyaları."
+  },
+  "mhContentHow1": {
+    "message": "Düz metin, metni içerdiğinde büyük/küçük harf fark etmeksizin eşleşir."
+  },
+  "mhContentHow2": {
+    "message": "Tam sözcük, daha uzun bir sözcüğün içindeki eşleşmeleri atlar; desenin her iki ucunda bir harf, rakam veya _ gerekir."
+  },
+  "mhContentHow3": {
+    "message": "“Yalnızca komut dosyalarını kontrol et” yalnızca satır içi komut dosyalarında (head dahil) ve JavaScript dosyalarında arar; HTML veya CSS'te aramaz."
+  },
+  "mhContentLimit1": {
+    "message": "Sitenin diğer kaynaklarca okunmasına izin vermediği (CORS) veya 5 MB'ı aşan dosyalar atlanır."
+  },
+  "mhContentLimit2": {
+    "message": "Çerçevelerin veya worker'ların içindeki ya da taramadan sonra yüklenen kod aranmaz."
+  },
+  "mhDomIntro": {
+    "message": "Sayfa yüklendikten sonra, sayfa gövdesinde bir CSS seçiciyle öğe arar."
+  },
+  "mhDomHow1": {
+    "message": "Bir etiket, `.class`, `#id` veya `[attribute]`; tek başına veya birleştirilmiş: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "`=`, `^=`, `$=`, `*=`, `~=` ve `|=` öznitelik testleri; büyük/küçük harfi yok saymak için `]` öncesine ` i` ekleyin."
+  },
+  "mhDomHow3": {
+    "message": "Virgülle ayrılmış birden çok seçici: herhangi biri eşleşir."
+  },
+  "mhDomLimit1": {
+    "message": "Desteklenmez, bu yüzden kural hiçbir zaman eşleşmez: parçalar arasındaki boşluklar veya `>`, `:pseudo-classes` ve kaçış dizileri."
+  },
+  "mhDomLimit2": {
+    "message": "Head, çerçeveler ve shadow root'lar aranmaz. `value` özniteliği okunmaz; diğer öznitelikler ilk 100 karakterleri üzerinden karşılaştırılır."
+  },
+  "mhWindowIntro": {
+    "message": "Sayfanın tanımladığı bir JavaScript global değişkenini kontrol eder, ör. `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "`window` üzerinden nokta ile ayrılmış yol: `KPSDK` veya `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "`exists`, `typeof function`, `truthy`, `=== true`, `length > 0` veya `has keys` gibi bir koşul. Boş bırakılırsa truthy anlamına gelir."
+  },
+  "mhWindowHow3": {
+    "message": "Tespitin anlamadığı bir koşul hiçbir zaman eşleşmez, bu yüzden listeden birini seçin."
+  },
+  "mhWindowLimit1": {
+    "message": "Sayfa yüklendikten sonraki ilk saniyelerde kontrol edilir; daha sonra oluşturulan global değişkenler kaçırılır."
+  },
+  "mhWindowLimit2": {
+    "message": "Symbol ile adlandırılmış özellikler yol olarak yazılamaz."
+  },
+  "mhJsHooksIntro": {
+    "message": "Sayfa bir tarayıcı API'sini çağırdığında bunu kaydeder; örneğin parmak izi oluşturma belirtisi olan `HTMLCanvasElement.prototype.toDataURL`."
+  },
+  "mhJsHooksHow1": {
+    "message": "Bir yönteme veya getter'a giden tam yol: `navigator.webdriver` değil, `Navigator.prototype.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Her çağrı sayılır; bağımsız değişkenleri ve sonucu kontrol edilmez, bu yüzden bir hook bir API'nin kullanıldığını gösterir, nedenini değil."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Çağrılar, sayfa yüklendikten sonraki ilk saniyelerde sayılır (en fazla 8 saniye)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Worker'lardaki veya çerçevelerdeki çağrılar görülmez; aynı site çerçevelerindeki yerleşik hedefler hariç."
+  },
+  "mhPayloadIntro": {
+    "message": "Sayfanın herhangi bir çerçeveden gönderdiği POST, PUT, PATCH ve DELETE isteklerinin gövdelerinde arar."
+  },
+  "mhPayloadHow1": {
+    "message": "Düz metin, gövde metni içerdiğinde büyük/küçük harf fark etmeksizin eşleşir. Form verileri `name=value&…` olarak okunur."
+  },
+  "mhPayloadHow2": {
+    "message": "İstek URL'si (isteğe bağlı) ve HTTP yöntemi, aramayı eşleşen isteklerle sınırlar."
+  },
+  "mhPayloadLimit1": {
+    "message": "Yalnızca taramadan önce gönderilen istekler sayılır, sayfa başına en fazla 50."
+  },
+  "mhPayloadLimit2": {
+    "message": "WebSocket mesajları okunmaz."
+  },
+  "domCardTitle": {
+    "message": "CSS seçici"
+  },
+  "domCardBrowse": {
+    "message": "Gözat"
+  },
+  "domCardHint": {
+    "message": "Bir etiket, .class, #id veya [attribute] testi; tek başına veya birleştirilmiş. Parçalar arasındaki boşluklar veya > desteklenmez."
+  },
+  "windowCardTitle": {
+    "message": "Window özelliği"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Uzantının sayfada gönderdiği olaylar"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Olayları kendi komut dosyanızdan dinleyin"
+  },
+  "settingsApiCopyCode": {
+    "message": "Kodu kopyala"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Kod kopyalandı"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Olay adını kopyala"
+  },
+  "advCommonClickToCopy": {
+    "message": "Kopyalamak için tıklayın"
+  },
+  "advCommonDomainLabel": {
+    "message": "Alan adı:"
+  },
+  "advCommonCopy": {
+    "message": "Kopyala"
+  },
+  "advCommonPage": {
+    "message": "Sayfa"
+  },
+  "advCommonExportCode": {
+    "message": "Kodu dışa aktar"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL kopyalandı"
+  },
+  "advScriptTypeCollector": {
+    "message": "Toplayıcı"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA kontrolü"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Ara sayfa"
+  },
+  "advCommonCaptured": {
+    "message": "Yakalandı"
+  },
+  "advCommonScript": {
+    "message": "Komut dosyası"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "Komut dosyası URL'si:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Yakalama verisi yok"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Çerezler kontrol edilemedi: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Komut dosyaları analiz edilemedi: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Analiz başlatılamadı"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Sürüm kontrol edilemedi: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Çıkarılamadı: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Çıkarma başlatılamadı: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Dışa aktarılacak komut dosyası yok"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0} çerezleri"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "{0} çerezi bulunamadı"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0} komut dosyaları ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "{0} komut dosyaları analiz ediliyor... Sayfa yeniden yüklenecek"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Kod oluşturma kullanılamıyor"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Komut dosyası ayrıştırma kod oluşturucu"
+  },
+  "advCommonExportOptions": {
+    "message": "Dışa aktarma seçenekleri"
+  },
+  "advCommonAllTypes": {
+    "message": "Tüm türler"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "{0} ilgili komut dosyası bulundu"
+  },
+  "advCommonTotalScripts": {
+    "message": "Toplam komut dosyası:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Koruma düzeyi:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Bulunan çerezler:"
+  },
+  "advCommonSiteKey": {
+    "message": "Site anahtarı"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "Web sitesi URL'si"
+  },
+  "advCommonSiteUrl": {
+    "message": "Site URL'si"
+  },
+  "advCommonApiDomain": {
+    "message": "API alan adı"
+  },
+  "advCommonFound": {
+    "message": "Bulundu"
+  },
+  "advCommonNotFound": {
+    "message": "Bulunamadı"
+  },
+  "advCommonYes": {
+    "message": "Evet"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Standart"
+  },
+  "advCommonNone": {
+    "message": "Yok"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "{0} komut dosyalarını yakalamak ve ayrıştırmak için tarayıcı konsolu kodu"
+  },
+  "advCodeDescPythonBs": {
+    "message": "requests ve BeautifulSoup kullanan Python komut dosyası"
+  },
+  "advCodeDescPython": {
+    "message": "requests kitaplığını kullanan Python komut dosyası"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "axios ve cheerio kullanan Node.js komut dosyası"
+  },
+  "advCodeDescNode": {
+    "message": "axios kullanan Node.js komut dosyası"
+  },
+  "advCodeDescPhpDom": {
+    "message": "cURL ve DOMDocument kullanan PHP komut dosyası"
+  },
+  "advCodeDescPhp": {
+    "message": "cURL kullanan PHP komut dosyası"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "HttpClient ve HtmlAgilityPack kullanan C#"
+  },
+  "advCodeDescCsharp": {
+    "message": "HttpClient kullanan C#"
+  },
+  "advCodeDescGoQuery": {
+    "message": "net/http ve goquery kullanan Go"
+  },
+  "advCodeDescGo": {
+    "message": "net/http kullanan Go"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Yakalama etkin"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Yakalamayı tetiklemek için sayfayı yeniden yükleyin."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "{0} sn içinde biter"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Bu sayfayı yeniden yükleyin"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "reCAPTCHA'yı çözün veya tıklayın"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "\"Yakalama tamamlandı\" mesajını bekleyin"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "{0} izleme başladı"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Yakalama tamamlandı"
+  },
+  "pageNoticePageLoading": {
+    "message": "Sayfa yükleniyor"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Lütfen sayfanın tamamen yüklenmesini bekleyin..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Bu sayfada Akamai tespit edilmedi. _abck çerezi yok."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Akamai verileri başarıyla yakalandı!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Yakalama durduruldu"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Yakalama durdurulamadı: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Akamai verilerini analiz etmek için sayfa yeniden yükleniyor…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "İçerik analiz edilemedi: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "_abck çerezi bulunamadı"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Veriler işlenemedi: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Sensör bilgileri çıkarılıyor…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Sensör bilgileri çıkarılamadı: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai tespit edilmedi"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "_abck çerezi bu sayfada yok."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager burada etkin değil."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Sensör verilerini ve istek ayrıntılarını izlemeye başlamak için sayfayı yeniden yükleyin"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Akamai sensor_data başarıyla yakalandı"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Gelişmiş (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Temel"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Kolay"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck düzeyi:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai analizi"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai komut dosyaları:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Sensör verisi URL'sini içeren komut dosyası"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML değişkeni:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST URL'si:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel komut dosyası değişkeni:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD komut dosyası URL'si"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "Sensör verisi URL'leri"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai uç noktası"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Sensör"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Çıkarılan sensör bilgileri"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Sensör verisi ({0} karakter)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Yakalanan sensör verisi yok"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD verisi ({0} karakter)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "Sensör komut dosyası URL'si"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Tüm verileri JSON olarak kopyala"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Sensör bilgilerini çıkar"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK düzeyi"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK çerezi"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai sürümü"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Doğrulama sınaması gereksinimleri"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD doğrulama sınaması"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt doğrulama sınaması"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel doğrulama sınaması"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Çıkarma modu etkinleştirilemedi. Ayrıntılar için arka plan konsolunu kontrol edin."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Oturum çerezleri"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Güvenlik bileşenleri"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Çerezler: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Kaynak tespiti"
+  },
+  "advImpervaResourceUrls": {
+    "message": "Kaynak URL'leri"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "Sorgulama URL'leri"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva analizi"
+  },
+  "advImpervaSensorUrl": {
+    "message": "Sensör URL'si:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0} komut dosyası"
+  },
+  "advImpervaSensorPath": {
+    "message": "Sensör yolu:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Tespit edilen komut dosyası yok"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva bu sayfada olmayabilir"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Yalnızca {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Gelişmiş (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Temel (Oturum)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Imperva isteklerini ve çerezlerini izlemeye başlamak için sayfayı yeniden yükleyin"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Imperva verileri yakalandı (öğe: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva yakalaması tamamlandı"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Sensör verileri başarıyla yakalandı"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA callback'i"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Seçici tespiti"
+  },
+  "advRecaptchaMethod": {
+    "message": "Yöntem"
+  },
+  "advRecaptchaSelector": {
+    "message": "Seçici"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Seçici panoya kopyalandı!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "reCAPTCHA öğesi bulunamadı"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() başarısız oldu: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA callback'leri"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA istemcileri"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "İstemci kimliği: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Panoya kopyalandı!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Callback fonksiyonu"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Callback yolu"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Tanımlı callback yok"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM callback'leri"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Komut dosyası callback'leri"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Callback kullanım örnekleri"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Görünmez"
+  },
+  "advRecaptchaAction": {
+    "message": "Eylem"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Gerekli çerez"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Tespit edilen özellikler"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "S parametresi gerekli"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Oturumlu"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Tıklanamadı: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Bu sayfada reCAPTCHA callback'i bulunamadı. reCAPTCHA'nın yüklendiğinden emin olun."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Callback yakalanamadı: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "İzlemeyi başlatmak için sayfayı yeniden yükleyin ve bir reCAPTCHA doğrulama sınamasını çözün"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Sayfa hazır"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Veri yakalamak için şimdi reCAPTCHA doğrulama sınamasını çözün"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Yakalanan ve kodu çözülen istekler: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Yakalanan reCAPTCHA isteği yok"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA tespit edildi"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Doğrulama sınamasını çözün; yakalama kendiliğinden tamamlanır"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Şimdi reCAPTCHA'yı tetikleyin veya tıklayın"
+  },
+  "advShapeCookieLabel": {
+    "message": "Çerez"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Üstbilgiler"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security sürümü"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Üstbilgi deseni"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Üstbilgi desenleri"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape çerezi"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security analizi"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js komut dosyaları:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Seed komut dosyaları:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js komut dosyası"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js komut dosyaları"
+  },
+  "advShapeSeedScript": {
+    "message": "Seed komut dosyası"
+  },
+  "advShapeSeedScripts": {
+    "message": "Seed komut dosyaları"
+  },
+  "advShapeErrorFmt": {
+    "message": "Hata: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Tespit edilen sürüm:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Yakalama gereksinimleri"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Çerez + üstbilgiler"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Shape Security üstbilgilerini ve çerezlerini izlemeye başlamak için sayfayı yeniden yükleyin"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Eylem gerçekleştirmeden önce lütfen sayfanın tamamen yüklenmesini bekleyin..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "İzleme etkin ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Çerezi tetiklemek için eylemler gerçekleştirin"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Üstbilgileri + çerezi tetiklemek için eylemler gerçekleştirin"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Zaman aşımı ({2}) - çerezler: {0}, üstbilgiler: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Çerez: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Çerez: {1} | Üstbilgiler: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Yakalandı - çerezler: {0}, üstbilgiler: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha tespiti"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha tespit edilmedi. Lütfen sayfayı hCaptcha yüklenmiş şekilde yeniden yükleyin."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha sürümü"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise modu"
+  },
+  "advHcaptchaNo": {
+    "message": "Hayır"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Henüz yakalama geçmişi yok"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "Yok"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "hCaptcha sürümü kontrol ediliyor... Sayfa yeniden yüklenecek"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "hCaptcha sürüm tespiti zaman aşımına uğradı"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Sürüm kontrolü başlatılamadı"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "hCaptcha isteklerini izlemeye başlamak için sayfayı yeniden yükleyin"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "hCaptcha verileri başarıyla yakalandı"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Doğrulama sınaması"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "{0} çerezi siliniyor... Sayfa yeniden yüklenecek"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Tür"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Site anahtarı kopyalandı"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Doğrulama sınaması"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analiz"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Bot yönetimi"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Genel anahtar"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (Tarayıcı veri dizisi)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob verisi"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Yakalanmadı"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "İzlemeyi başlatmak ve bir FunCaptcha doğrulama sınamasını tetiklemek için sayfayı yeniden yükleyin (60 sn zaman aşımı)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Sayfa yükleniyor, lütfen bekleyin..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha başarıyla yakalandı"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Yakalanan doğrulama sınamaları: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Yakalama zaman aşımı"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "FunCaptcha doğrulama sınaması tespit edilmedi (60 sn zaman aşımı)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Satır içi komut dosyası"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM özniteliği"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "Komut dosyası URL'si"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON yapılandırması"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Çıkarılan captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Ürün:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Komut dosyası parçası"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Ayrıştırma kodunu dışa aktar"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Hata: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Tespit edilen: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Geetest sürümü tespit edilmedi"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Sekme bulunamadı"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Geetest komut dosyası bulunamadı"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Geetest sürümü tespit ediliyor..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Sürümü kontrol etmek için sayfa yeniden yükleniyor"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Komut dosyaları analiz ediliyor..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Komut dosyalarını çıkarmak için sayfa yeniden yükleniyor"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0} araçları"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Gelişmiş araçlar yüklenirken hata oluştu"
+  },
+  "advPanelCheckConsole": {
+    "message": "Ayrıntılar için konsolu kontrol edin"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Yakalamalar yüklenirken hata oluştu: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Geçerli site ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Yakalamaları bulmak için filtrelerinizi veya arama sorgunuzu değiştirmeyi deneyin."
+  },
+  "advPanelNoUrl": {
+    "message": "URL yok"
+  },
+  "advPanelView": {
+    "message": "Görüntüle"
+  },
+  "advPanelBtnOk": {
+    "message": "Tamam"
+  },
+  "advPanelConfirmAction": {
+    "message": "Eylemi onayla"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Onayla"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Panoya kopyalandı"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "{0} araçları yüklendi"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "{0}/{1} çerez bulundu"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Bulunan komut dosyaları: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "{0} komut dosyası bulunamadı"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "{0} sürümü tespit edildi: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "{0} sürümü tespit edilmedi"
+  },
+  "advPanelUnknownError": {
+    "message": "Bilinmeyen hata"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Yakalama başlatılamadı: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Yakalama durdurulamadı: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Yakalamalar: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Tüm yakalanan verileri temizle"
+  },
+  "advPanelNotAvailable": {
+    "message": "Yok"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "{0} yakalama geçmişi temizlendi"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Geçmiş temizlenemedi"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "{2} yakalamadan {0}-{1} gösteriliyor"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Yeni dedektör"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "{0} ekle"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "{0} düzenle"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly simgesi"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0} simgesi"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Simgeyi değiştir"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Dedektör simgesini değiştir"
+  },
+  "rulesUiCustomColor": {
+    "message": "Özel renk"
+  },
+  "iconPickerTitle": {
+    "message": "Simge seç"
+  },
+  "iconPickerDefault": {
+    "message": "Varsayılan"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Özel yükle"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Simge dosyası 100 KB'tan küçük olmalıdır"
+  },
+  "iconPickerNoResults": {
+    "message": "Aramanızla eşleşen simge yok"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Simge ara…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "JS hook'ları nedir?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Window özellikleri nedir?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "URL tespiti nedir?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Üstbilgi tespiti nedir?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Çerez tespiti nedir?"
+  },
+  "rulesUiHelpContent": {
+    "message": "İçerik tespiti nedir?"
+  },
+  "rulesUiHelpDom": {
+    "message": "DOM tespiti nedir?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Payload tespiti nedir?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Bu tespit yöntemi nedir?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Değer (isteğe bağlı)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS seçici (ör. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Aranacak metin/sözcük"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL deseni"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS hook hedefi (ör. Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Window yolu (ör. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Koşul (ör. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Çerez adı (ör. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Çerez değeri deseni (isteğe bağlı)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Metin (ör. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify veya challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Ad ayarları"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Ad ayarları (Güven: %{0})"
+  },
+  "rulesUiValueSettings": {
+    "message": "Değer ayarları"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Yöntemi sil"
+  },
+  "rulesUiClearValue": {
+    "message": "Değeri temizle"
+  },
+  "rulesUiAddValue": {
+    "message": "Değer ekle"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Sayfa {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Başka bir tane eklemeden önce mevcut boş deseni tamamlayın."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Kaydetmeden önce lütfen tüm gerekli desen alanlarını doldurun."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Tespit yöntemi türünü girin (ör. HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Yöntem"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Sayfa = geçerli URL | Komut dosyaları = sayfa + komut dosyaları | Tümü = tüm istekler"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Herhangi bir URL ile eşleşmesi için boş bırakın"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Diğer"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Başlık: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Zaman damgası: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Güvenlik sistemi: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Kategori: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Güven: %{0}"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Tespit yöntemleri: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Tespit yöntemleri:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Tespitler ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Zorluk: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Panoya kopyalanamadı"
+  },
+  "detectionUiCopyUrl": {
+    "message": "URL'yi kopyala"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "URL'yi kopyala: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Kategoriyi kopyala"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Kategoriyi kopyala: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Yöntemi kopyala"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Yöntemi kopyala: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Değeri kopyala"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Değeri kopyala: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0}y"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0}ay"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0}g"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0}sa"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0}dk"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1dk"
+  },
+  "detectionUiNoDescription": {
+    "message": "Bu tespit için ek ayrıntı sağlanmadı."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Bu dedektör için kayıtlı tespit yöntemi yok."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Bilinmeyen yöntem"
+  },
+  "detectionUiUnknownValue": {
+    "message": "bilinmiyor"
+  },
+  "historyUiUntitled": {
+    "message": "Başlıksız"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Tespit yöntemi yok"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Geçersiz geçmiş dosyası biçimi"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly robotu"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Uzantı etkinleştirilemedi: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Uzantı devre dışı bırakılamadı: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Hata: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Kara listeye alınmış alan adı yok"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Aramanızla eşleşen alan adı yok"
+  },
+  "settingsUiChecking": {
+    "message": "Kontrol ediliyor..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Geçmiş sınırı 0 (sınırsız) ile 10000 arasında olmalıdır"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Önbellek süresi 1 ile {0} {1} arasında olmalıdır"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Otomatik silme günü 1 ile 3650 arasında olmalıdır"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Yinelenen girdi süresi 1 ile 999 arasında olmalıdır"
+  },
+  "settingsUiExportJson": {
+    "message": "JSON olarak dışa aktar"
+  },
+  "settingsUiExportText": {
+    "message": "Metin olarak dışa aktar"
+  },
+  "settingsUiLogsText": {
+    "message": "Metin"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Daha yeni bir uzantı sürümü gerektiren dedektör güncellemeleri: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (uzantı v{1} gerekir)"
+  },
+  "statsUiTotals": {
+    "message": "Toplamlar"
+  },
+  "ruleSectionCombinations": {
+    "message": "Kombinasyonlar"
+  },
+  "combinationsHint": {
+    "message": "Bir kombinasyon, bu korumayı yalnızca birkaç desen birlikte bulunduğunda tespit eder. Tek başına çok zayıf olan desenler için kullanın."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Her kombinasyon yalnızca sinyalleri birlikte göründüğünde tetiklenir; bu sayfada bulunanlar aşağıda."
+  },
+  "combinationFoundTogether": {
+    "message": "Bu sayfada birlikte bulundu:"
+  },
+  "combinationNotPresent": {
+    "message": "Yok"
+  },
+  "combinationFound": {
+    "message": "Bulundu"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Bu kural taramadan sonra değiştirildi veya kaldırıldı, bu yüzden yalnızca adı ve puanı gösteriliyor."
+  },
+  "historyMatchedDetections": {
+    "message": "Eşleşen tespitler"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Bu tarama koşullar saklanmadan önce kaydedildi, bu yüzden yalnızca adlar ve puanlar gösteriliyor."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Bulunmamalı"
+  },
+  "combinationMustBeFound": {
+    "message": "Bulunmalı"
+  },
+  "combinationAutoTip": {
+    "message": "Otomatik: tetiklenmesini sağlayan desenlerin en yüksek güveni"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Bulunması gereken en az bir desen ekleyin."
+  },
+  "combinationInvalidOneOf": {
+    "message": "“Bunlardan biri” listesinde her seçenek için bulunması gereken bir desen gerekir."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“En az {0}” için bulunması gereken {0} desen gerekir."
+  },
+  "combinationSentenceOne": {
+    "message": "Bu koşul sağlandığında tetiklenir."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Tüm {0} koşul sağlandığında tetiklenir."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Bu {0} koşuldan herhangi biri sağlandığında tetiklenir."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Bu {1} koşuldan en az {0} tanesi sağlandığında tetiklenir."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Güven: %{0}."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Güven: Otomatik, en çok %{0}."
+  },
+  "combinationSentenceGroup": {
+    "message": "Bir grup tek bir koşul sayılır."
+  },
+  "combinationSentenceNot": {
+    "message": "“Bulunmamalı” deseni mevcutsa tetiklenmez."
+  },
+  "combinationSentenceAlone": {
+    "message": "“Yalnızca kombinasyonlar” olarak işaretlenmeyen desenler, kendi güvenleriyle tek başlarına da tespit eder."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Bulunduğunda güven"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Otomatik için boş bırakın: bulunan desenlerin en yüksek güveni."
+  },
+  "combinationModeAny": {
+    "message": "Bunlardan biri"
+  },
+  "combinationModeAll": {
+    "message": "Bunların hepsi"
+  },
+  "combinationModeAtLeast": {
+    "message": "Bunlardan en az…"
+  },
+  "combinationModeRootAll": {
+    "message": "bunların hepsi bulunur"
+  },
+  "combinationModeRootAny": {
+    "message": "bunlardan biri bulunur"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "bunlardan en az … tanesi bulunur"
+  },
+  "combinationGroupMode": {
+    "message": "Grup"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Bu gruba bir desen ekleyin"
+  },
+  "combinationDeleteGroup": {
+    "message": "Grubu sil"
+  },
+  "combinationAddGroup": {
+    "message": "“Bunlardan biri” grubu ekle"
+  },
+  "patternUnusedBadge": {
+    "message": "Hiçbir kombinasyonda yok"
+  },
+  "patternUnusedTip": {
+    "message": "Hiçbir kombinasyon bunu kullanmıyor, bu yüzden hiçbir zaman tespit etmez. Tek başına sayılması için tıklayın."
+  },
+  "combinationsEmpty": {
+    "message": "Henüz kombinasyon yok."
+  },
+  "combinationAdd": {
+    "message": "Kombinasyon ekle"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Kombinasyon {0}"
+  },
+  "combinationDelete": {
+    "message": "Kombinasyonu sil"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "\"{0}\" kombinasyonu silinsin mi? Desenleri kuralda kalır."
+  },
+  "combinationRemove": {
+    "message": "Kaldır"
+  },
+  "combinationEmptyPattern": {
+    "message": "(boş desen)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Herhangi bir {0} deseni"
+  },
+  "combinationGroupEmpty": {
+    "message": "Aşağıya bir desen ekleyin"
+  },
+  "combinationAddPattern": {
+    "message": "Desen ekle"
+  },
+  "combinationAddDescription": {
+    "message": "Açıklama ekle"
+  },
+  "combinationAnyPattern": {
+    "message": "herhangi bir desen"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Bu kombinasyonu oluşturmak için desen ekleyin"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Yalnızca kombinasyonlar"
+  },
+  "combinationStrictHint": {
+    "message": "“Yalnızca kombinasyonlar” olarak işaretlenen bir desen tek başına hiçbir şey tespit etmez; yalnızca kombinasyonların içinde sayılır."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Tümünü işaretle"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Tüm işaretleri kaldır"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Bu desen tek başına hiçbir şey tespit etmez; bu kuralın her kombinasyonunda yalnızca kombinasyonların içinde sayılır."
+  },
+  "detectionModalCombinations": {
+    "message": "Eşleşen kombinasyonlar"
+  },
+  "combinationNoPatterns": {
+    "message": "Eklenen desen yok"
+  },
+  "combinationPickHint": {
+    "message": "Eklenecek desenleri işaretleyin"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Seçilenleri ekle ({0})"
+  },
+  "combinationEditConditions": {
+    "message": "Koşulları düzenle"
+  },
+  "combinationAutoConfidence": {
+    "message": "Otomatik"
+  },
+  "combinationDetectWhen": {
+    "message": "Tespit koşulu"
+  },
+  "combinationGroupExcluded": {
+    "message": "Bu koşullar eşleşmemelidir."
+  },
+  "combinationMinimum": {
+    "message": "Minimum eşleşme"
+  },
+  "combinationMatchState": {
+    "message": "Desen koşulu"
+  },
+  "combinationChoosePatterns": {
+    "message": "Desen seç"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Minimum eşleşmeyi azalt"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Minimum eşleşmeyi artır"
+  },
+  "detectionTipDetections": {
+    "message": "Bu sayfada tespit edilen korumaların sayısı."
+  },
+  "detectionTipConfidence": {
+    "message": "Tespit edilen korumaların ortalama güveni."
+  },
+  "detectionTipDifficulty": {
+    "message": "Tespit edilen korumaları aşmanın tahmini zorluğu."
+  },
+  "tipCachedAt": {
+    "message": "Kaydedildi"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "{0} tespitin ortalaması, %{1} ile %{2} arası"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "Eşleşen kombinasyonlardan"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Puanı en güçlü tek sinyal belirler"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · %{1}"
+  },
+  "tipCustomDetector": {
+    "message": "Özel dedektör"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "{0} için varsayılan"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Bu dedektör tarafından belirlendi"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "{0} tarafından belirlendi"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "{0} korumanın birleşimiyle yükseldi"
+  },
+  "tipLastUpdated": {
+    "message": "Güncellendi"
+  },
+  "tipMethodContent": {
+    "message": "Sayfada veya komut dosyalarında bulunan metin eşleşti."
+  },
+  "tipMethodCookie": {
+    "message": "Bu sitede ayarlanan bir çerez eşleşti."
+  },
+  "tipMethodDom": {
+    "message": "Sayfadaki bir öğe eşleşti."
+  },
+  "tipMethodHeader": {
+    "message": "Sitenin gönderdiği bir yanıt üstbilgisi eşleşti."
+  },
+  "tipMethodJsHooks": {
+    "message": "Sayfa, bu dedektörün izlediği bir tarayıcı API'sini çağırdı."
+  },
+  "tipMethodPayload": {
+    "message": "Sayfanın bir istekte gönderdiği veriler eşleşti."
+  },
+  "tipMethodUrl": {
+    "message": "Sayfa veya yaptığı bir istek, bilinen bir adresle eşleşti."
+  },
+  "tipMethodWindow": {
+    "message": "Sayfadaki global bir JavaScript nesnesi eşleşti."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} daha"
+  },
+  "tipOfficialDetector": {
+    "message": "Resmi Scrapfly dedektörü"
+  },
+  "tipScopeDomain": {
+    "message": "Sonuçlar bu alan adındaki her sayfa için yeniden kullanılır."
+  },
+  "tipScopeFullUrl": {
+    "message": "Sonuçlar yalnızca bu tam URL için, sorgu dahil yeniden kullanılır."
+  },
+  "tipScopePath": {
+    "message": "Sonuçlar, sorgu ne olursa olsun bu tam yol için yeniden kullanılır."
+  },
+  "tipStatsActiveDays": {
+    "message": "En az bir kayıtlı sayfası olan günler."
+  },
+  "tipStatsDetections": {
+    "message": "Tüm kayıtlı sayfalarda bulunan korumalar, tekrarlar dahil."
+  },
+  "tipStatsDetectors": {
+    "message": "Görülen farklı korumalar, her biri bir kez sayılır."
+  },
+  "tipStatsDomains": {
+    "message": "Kayıtlı sayfalar arasındaki farklı siteler."
+  },
+  "tipStatsEntries": {
+    "message": "Bu aralıkta Geçmiş'e kaydedilen sayfalar."
+  },
+  "tipStatsRateFmt": {
+    "message": "{1} girdinin {0} tanesi"
+  },
+  "tipPatterns": {
+    "message": "Desenler"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Ayrıntılı günlükler"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Sayfa başına tek rapor yerine her kuralı, hook'u ve mesajı da günlüğe kaydeder"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Düzenlediğiniz bir kural için güncelleme"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" için yeni bir resmi sürüm ({1}) var. Bu kuralı düzenlediniz: yeni sürüm değişikliklerinizin yerini alır."
+  },
+  "btnDecideLater": {
+    "message": "Sonra karar ver"
+  },
+  "btnKeepMyEdits": {
+    "message": "Düzenlemelerimi koru"
+  },
+  "btnUseNewVersion": {
+    "message": "Yeni sürümü kullan"
+  },
+  "resetToOfficial": {
+    "message": "Resmi sürüme sıfırla"
+  },
+  "resetToOfficialTitle": {
+    "message": "Resmi sürüme sıfırla"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "\"{0}\" için yaptığınız düzenlemeler silinip resmi Scrapfly sürümü geri yüklensin mi?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Kural resmi sürüme geri yüklendi"
+  },
+  "ruleEditedTag": {
+    "message": "Düzenlendi"
+  },
+  "tipRuleEdited": {
+    "message": "Bu resmi kuralı düzenlediniz. Güncellemeler, değişikliklerinizin yerini almadan önce sorar."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Tespit listesi"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Tespit sırası"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Tespit listesindeki, Geçmiş'teki ve Kurallar'daki kategorilerin sırası. Değiştirmek için kartları sürükleyin; bir kategori içinde tespitler önce en yüksek güvenle gösterilir."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Önce en yüksek güven"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Kategori sırası"
+  },
+  "settingsMoveUpFmt": {
+    "message": "{0} öğesini yukarı taşı"
+  },
+  "settingsMoveDownFmt": {
+    "message": "{0} öğesini aşağı taşı"
+  },
+  "settingsCardShareUploads": {
+    "message": "Paylaşım yüklemeleri"
+  },
+  "settingsShareDestination": {
+    "message": "Yükleme hedefi"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Tespit → Tespitleri yükle işleminin özeti gönderdiği ve paylaşım bağlantısını aldığı yer."
+  },
+  "settingsShareService": {
+    "message": "Hizmet"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (hesapsız)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (hesapsız)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (hesapsız)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API anahtarı)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Özel sunucu"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Silinme süresi (gün)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Silinme süresi"
+  },
+  "shareExpire10M": {
+    "message": "10 dakika"
+  },
+  "shareExpire1H": {
+    "message": "1 saat"
+  },
+  "shareExpire1D": {
+    "message": "1 gün"
+  },
+  "shareExpire1W": {
+    "message": "1 hafta"
+  },
+  "shareExpire2W": {
+    "message": "2 hafta"
+  },
+  "shareExpire30D": {
+    "message": "30 gün"
+  },
+  "shareExpire1M": {
+    "message": "1 ay"
+  },
+  "shareExpire6M": {
+    "message": "6 ay"
+  },
+  "shareExpire1Y": {
+    "message": "1 yıl"
+  },
+  "shareExpireOnetime": {
+    "message": "İlk görüntülemeden sonra"
+  },
+  "shareExpireNever": {
+    "message": "Hiçbir zaman"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs'nin süre sonu seçeneği yok: paste, hizmet kaldırana kadar durur."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API anahtarı"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "pastebin.com/doc_api adresindeki geliştirici anahtarınız. Paste'ler listelenmez."
+  },
+  "settingsShareSecretNote": {
+    "message": "Yalnızca bu tarayıcıda saklanır ve ayar dışa aktarmalarına dahil edilmez."
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub token'ı"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Gists izni olan bir token. Yüklemeler gizli gist'lerdir ve süresi dolmaz; bunları GitHub'da silin."
+  },
+  "settingsShareCustomUrl": {
+    "message": "Sunucu URL'si"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "Herkese açık bir ana makinede HTTPS. <EXPIRY_DAYS> içerebilir."
+  },
+  "settingsShareCustomBody": {
+    "message": "Gövde biçimi"
+  },
+  "shareBodyForm": {
+    "message": "Form alanı"
+  },
+  "shareBodyJson": {
+    "message": "JSON şablonu"
+  },
+  "shareBodyRaw": {
+    "message": "Ham metin"
+  },
+  "settingsShareCustomField": {
+    "message": "Form alanı adı"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON şablonu"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Değişkenler: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Satır başına bir tane, Ad: değer biçiminde, örneğin Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Paylaşım bağlantısının alındığı yer"
+  },
+  "shareLinkBody": {
+    "message": "Yanıt gövdesi (düz URL)"
+  },
+  "shareLinkJson": {
+    "message": "JSON alanı"
+  },
+  "shareLinkLocation": {
+    "message": "Location üstbilgisi"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "JSON alan yolu"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Form gövdelerinde expiry_days olarak ve <EXPIRY_DAYS> olarak gönderilir; bununla ne yapılacağına sunucunuz karar verir."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Önce Ayarlar → Tespit → Paylaşım yüklemeleri bölümünde {0} hizmetini ayarlayın"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Bu işlem, bu sayfadaki tespitlerin bir özetini {0} ({1}) hizmetine yükler. Bağlantıya sahip herkes görüntüleyebilir. URL sorgu dizesi ve çerez/üstbilgi değerleri dahil değildir."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "{0} gün sonra silinir"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "{0} sonra silinir"
+  },
+  "shareExpiryOnetime": {
+    "message": "ilk görüntülemeden sonra silinir"
+  },
+  "shareExpiryService": {
+    "message": "hizmet kaldırana kadar saklanır"
+  },
+  "shareExpiryNever": {
+    "message": "süresi dolmaz"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Özel sunucu, herkese açık bir ana makinede HTTPS adresi olmalıdır"
+  },
+  "pasteBadLink": {
+    "message": "hizmet geçerli bir HTTPS bağlantısı döndürmedi"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Yükleme başarısız: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Özel yükleme sunucusu: herkese açık bir ana makinede HTTPS adresi kullanın"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Özel yükleme sunucusu: JSON şablonu geçerli bir JSON değil"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} anahtarı veya token'ı reddetti (yanlış veya süresi dolmuş)"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub token'ının Gists izni (Okuma ve yazma) olması gerekir"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Bu sayfada Turnstile site anahtarı yok"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile site anahtarları"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Gelişmiş araçlar"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Hangi korumalar araç alır"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Araçları bu güvenin üzerinde göster (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Gelişmiş, bir korumayı yalnızca güveni bu değerin üzerindeyse listeler. 0, tespit edilen her korumayı listeler."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Gelişmiş araçlar güveni 0 ile 99 arasında olmalıdır"
+  },
+  "advCommonValue": {
+    "message": "Değer"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} karakter"
+  },
+  "advCookiePath": {
+    "message": "Yol"
+  },
+  "advCookieExpires": {
+    "message": "Sona erme"
+  },
+  "advCookieSession": {
+    "message": "Oturum (tarayıcı kapanınca silinir)"
+  },
+  "advCookieNotFound": {
+    "message": "Bulunamadı"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Resmi dedektörler geri yüklensin mi?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Tüm resmi dedektörler yüklü. Geri yüklenecek bir şey yok."
+  },
+  "restoreOfficialChecking": {
+    "message": "GitHub'daki en son sürüm kontrol ediliyor..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "GitHub'daki {0} sürümünden yeniden yüklendi: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub'a ulaşılamadı, bu yüzden uzantıyla birlikte gelen sürüm kullanılıyor."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub şu anda istekleri sınırlıyor, bu yüzden uzantıyla birlikte gelen sürüm kullanılıyor."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Uzantıyla birlikte gelen sürümden yeniden yüklendi: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Kurallar → Güncelle bunları yeniden yükler: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Kendi dedektörleriniz ve diğer kurallarda yaptığınız düzenlemeler değişmez."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} tane daha"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Geri yüklenemedi: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} geri yüklendi"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Geri kalanını yüklemek için Kurallar → Güncelle'yi çalıştırın."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Geri yükle"
+  },
+  "advancedFilterTool": {
+    "message": "Araç"
+  },
+  "advancedFilterAllTools": {
+    "message": "Tüm araçlar"
+  },
+  "advFilterKindCapture": {
+    "message": "Yakalamalar"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Yakalama"
+  },
+  "advFilterKindOther": {
+    "message": "Diğer araçlar"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrapfly ile scrape et",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Bu sayfayı Unblocker ile scrape etmek için kod",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Bu sayfayı Scrapfly'nin API'si üzerinden Unblocker açıkken getirin. Tarayıcıyı, proxy'leri ve üstbilgileri kendisi seçer; site engellemediğinde ek maliyeti yoktur.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Bu sayfada tespit edilenler",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Kod dili",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Bu sayfada bir CAPTCHA var: Unblocker sayfayı döndürmek için onu atlar veya çözer, ancak formlardaki CAPTCHA'ları doldurmaz.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Seçenekler"
+  },
+  "scrapflyExportProduct": {
+    "message": "Kullan"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHA'ları çöz"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Çözüm başına ücretlendirilir"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Bunları çözmek için Cloud Browser'ı kullanın."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Bu sayfayı Scrapfly'nin Cloud Browser'ında açın ve Playwright ile yönetin. Captcha Solver, Turnstile, reCAPTCHA, GeeTest ve diğerlerini göründükçe halleder; başarısız çözümler ücretsizdir."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Anti-bot aşma"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "AI için kopyala"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Sayfayı, onu koruyan sistemleri, ayarlarınızı ve kodu ChatGPT, Claude veya herhangi bir yapay zekâ asistanı için tek mesaj olarak kopyalar"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Kopyalandı: yapay zekâ asistanınıza yapıştırın"
+  },
+  "scrapflyExportFormat": {
+    "message": "Çıktı"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Metin"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxy'ler"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residential"
+  },
+  "scrapflyExportCountry": {
+    "message": "Ülke"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Herhangi biri"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "JavaScript'i render et"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 kredi"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Ayarlarınızı seçin"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Kodu kopyalayın"
+  },
+  "scrapflyExportStepKey": {
+    "message": "API anahtarınızı ayarlayın"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Çalıştırın"
+  },
+  "scrapflyExportGetKey": {
+    "message": "API anahtarı al",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Playground'u aç",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Kod kopyalandı",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Scrapfly ile scrape etmek için bir web sayfası açın",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} yakalama"
+  },
+  "statsFirstSeen": {
+    "message": "Bu dönemde yeni"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "Bu aralıkta ilk kez kaydedilen {0} koruma ve {1} alan adı."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Nelerin yeni olduğunu görmek için 7, 30 veya 90 gün seçin."
+  },
+  "statsMostProtectedDomain": {
+    "message": "En korumalı alan adı"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{1} ziyarette {0} farklı koruma."
+  },
+  "statsFoundTogether": {
+    "message": "Birlikte bulunan korumalar"
+  },
+  "statsMethods": {
+    "message": "Tespit yöntemleri"
+  },
+  "statsMatchesUnit": {
+    "message": "eşleşme"
+  },
+  "statsMethodsByCategory": {
+    "message": "Kategoriye göre yöntemler"
+  },
+  "statsWeakEvidence": {
+    "message": "En zayıf kanıt"
+  },
+  "statsSignalColumn": {
+    "message": "Sinyal"
+  },
+  "statsMethodColumn": {
+    "message": "Yöntem"
+  },
+  "statsTopSignals": {
+    "message": "En çok eşleşen sinyaller"
+  },
+  "statsDecidedSingle": {
+    "message": "Tek desen"
+  },
+  "statsDecidedCombination": {
+    "message": "Kombinasyon"
+  },
+  "statsDecidedBy": {
+    "message": "Tespitlerin nasıl belirlendiği"
+  },
+  "statsCombinationGain": {
+    "message": "Karara göre güven"
+  },
+  "statsCombinationColumn": {
+    "message": "Kombinasyon"
+  },
+  "statsTopCombinations": {
+    "message": "Tetiklenen kombinasyonlar"
+  },
+  "statsNoCombinations": {
+    "message": "Bu aralıkta hiçbir tespit bir kombinasyonla belirlenmedi."
+  },
+  "statsRulesMostActive": {
+    "message": "En etkin kurallar"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} desen"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Yönteme göre desenler"
+  },
+  "statsRulesOfficial": {
+    "message": "Resmi"
+  },
+  "statsRulesCustom": {
+    "message": "Özel"
+  },
+  "statsRuleColumn": {
+    "message": "Kural"
+  },
+  "statsRuleKindColumn": {
+    "message": "Tür"
+  },
+  "statsPatternsUnit": {
+    "message": "desen"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Bu aralıkta bulunmadı"
+  },
+  "statsRulesAllMatched": {
+    "message": "Etkin her kural bu aralıkta bir şey buldu."
+  },
+  "statsMissingColumn": {
+    "message": "Açıklamasız"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Açıklaması olmayan desenler"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Her desenin bir açıklaması var."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Kural sürümü"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Uzantı gerekir"
+  },
+  "statsRulesWaiting": {
+    "message": "Daha yeni bir uzantı bekleniyor"
+  },
+  "statsToolsByVendor": {
+    "message": "Sağlayıcıya göre yakalamalar"
+  },
+  "statsToolsCapture": {
+    "message": "Yakalama"
+  },
+  "statsToolsByTool": {
+    "message": "En çok kullanılan araçlar"
+  },
+  "statsToolsOverTime": {
+    "message": "Zaman içinde yakalamalar"
+  },
+  "statsChangeColumn": {
+    "message": "Değişiklik"
+  },
+  "statsDateColumn": {
+    "message": "Tarih"
+  },
+  "statsDomainChanges": {
+    "message": "Koruma değişiklikleri"
+  },
+  "statsNoChanges": {
+    "message": "Bu aralıktaki kayıtlı ziyaretler arasında hiçbir alan adı korumalarını değiştirmedi."
+  },
+  "statsNothingNew": {
+    "message": "Yeni bir şey yok: buradaki her koruma bu aralıktan önce de Geçmiş'teydi."
+  },
+  "statsSectionSignals": {
+    "message": "Sinyaller"
+  },
+  "statsSectionCombinations": {
+    "message": "Kombinasyonlar"
+  },
+  "statsSectionRules": {
+    "message": "Kurallar"
+  },
+  "statsSectionTools": {
+    "message": "Araçlar"
+  },
+  "statsDomainChangesHint": {
+    "message": "Tespit edilen korumaları iki kayıtlı ziyaret arasında değişen alan adları."
+  },
+  "statsFirstSeenHint": {
+    "message": "Bu aralıkta ilk kez kaydedilen korumalar ve alan adları."
+  },
+  "statsSignalsNote": {
+    "message": "Kayıtlı her tespitin eşleştiği kanıt türü: çerez ve üstbilgi adları, URL'ler, sayfa öğeleri, komut dosyaları ve JavaScript hook'ları."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Eşleşen desenlerinin ortalama güveni en düşük olan korumalar. Kurallarının daha güçlü bir desene ihtiyacı olabilir."
+  },
+  "statsCombinationsNote": {
+    "message": "Bir kombinasyon, bir korumayı yalnızca birkaç desen birlikte bulunduğunda tespit eder."
+  },
+  "statsRulesNote": {
+    "message": "Kural kitaplığınız, Geçmiş'in bu aralıkta bulduklarıyla karşılaştırılmış hâlde."
+  },
+  "statsRulesTotal": {
+    "message": "Kurallar"
+  },
+  "statsRulesModified": {
+    "message": "Düzenlenen resmi"
+  },
+  "statsRulesDisabled": {
+    "message": "Devre dışı"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Bu aralıkta kaydedilen sayfalarda hiçbir şey bulamayan etkin kurallar."
+  },
+  "statsRulesMissingHint": {
+    "message": "Açıklamalar tespit ayrıntılarında, Geçmiş'te ve kombinasyonlarda görünür. Kural düzenleyicisinde ekleyin."
+  },
+  "statsToolsNote": {
+    "message": "Bu cihazda kayıtlı gelişmiş yakalamalar ve araç sonuçları."
+  },
+  "statsCapturesUnit": {
+    "message": "yakalama"
+  },
+  "detectionCardSureFmt": {
+    "message": "%{0} emin"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Kombinasyon"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "ÖNBELLEK"
+  },
+  "detectionTipCache": {
+    "message": "Bu önbelleğe alınmış sonuçları hangi sayfaların ve ne kadar süreyle yeniden kullandığı."
+  },
+  "tipCacheExpires": {
+    "message": "Sona erer"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Geçmişe karşı kontrol et"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Her desenin ve kombinasyonun kaç kayıtlı sayfada eşleştiğini görün. Kaydedilmemiş düzenlemeler sayılır."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Kontrol et"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} kayıtlı sayfa · bu kural {1} sayfada bulundu"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{1} sayfadan {0}"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} diğer sayfa"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Geçmiş boş: önce birkaç sayfa gezin."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Bir tahmin: Geçmiş eşleşen değerleri saklar, sayfaların tamamını değil."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "{0} sayfada tetiklenir"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Kontrol etmek için desen ekleyin."
+  },
+  "settingsThemeTitle": {
+    "message": "Tema"
+  },
+  "settingsThemeDesc": {
+    "message": "Koyu veya Scrapfly renklerinde açık. Sistem, tarayıcınızı izler."
+  },
+  "themeDark": {
+    "message": "Koyu"
+  },
+  "themeLight": {
+    "message": "Açık"
+  },
+  "themeSystem": {
+    "message": "Sistem"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Konsolu aç"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Bu uzantıyı chrome://extensions içinde açar: günlükleri görmek için \"service worker\"a tıklayın."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Günlükleri konsol yerine burada tutar; JSON veya metin olarak dışa aktarabilirsiniz"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Çeviriler"
+  },
+  "ruleTranslationsHint": {
+    "message": "Uzantı o dildeyken açıklama yerine gösterilir. Boşsa açıklama gösterilir."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} / {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Otomatik çevir"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Otomatik çeviri için Chrome 138 veya daha yeni bir sürüm gerekir."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Önce açıklamayı yazın."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Çevriliyor: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "{0} dil dolduruldu. Kaydetmeden önce kontrol edin."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "{0} dolduruldu; {1} burada çevrilemedi."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Yüklemeden sonra bekle"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Öğeyi bekle"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Sayfa şu aşamada hazır"
+  },
+  "sfxOptAutoScroll": {
+    "message": "En alta kaydır"
+  },
+  "sfxOptJs": {
+    "message": "JavaScript çalıştır"
+  },
+  "sfxOptJsScenario": {
+    "message": "Tarayıcı eylemleri"
+  },
+  "sfxOptScreenshot": {
+    "message": "Ekran görüntüsü"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Öğe"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Ekran görüntüsü seçenekleri"
+  },
+  "sfxOptLang": {
+    "message": "Diller"
+  },
+  "sfxOptOs": {
+    "message": "İşletim sistemi"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Tarayıcı"
+  },
+  "sfxOptGeolocation": {
+    "message": "Coğrafi konum"
+  },
+  "sfxOptHeaders": {
+    "message": "Üstbilgiler"
+  },
+  "sfxOptTimeout": {
+    "message": "Zaman aşımı"
+  },
+  "sfxOptRetry": {
+    "message": "Hatalarda yeniden dene"
+  },
+  "sfxOptCostBudget": {
+    "message": "Kredi sınırı"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Hariç tut"
+  },
+  "sfxOptProxified": {
+    "message": "Sitenin yanıtını döndür"
+  },
+  "sfxOptExtraction": {
+    "message": "Veri çıkar"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Model"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "İstem"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Kayıtlı şablon"
+  },
+  "sfxOptCache": {
+    "message": "Önbellek"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Saklama süresi"
+  },
+  "sfxOptCacheClear": {
+    "message": "Önbelleği yenile"
+  },
+  "sfxOptSession": {
+    "message": "Oturum"
+  },
+  "sfxOptSticky": {
+    "message": "Oturum için aynı proxy"
+  },
+  "sfxOptDebug": {
+    "message": "Hata ayıklama"
+  },
+  "sfxOptCorrelationId": {
+    "message": "Korelasyon kimliği"
+  },
+  "sfxOptTags": {
+    "message": "Etiketler"
+  },
+  "sfxOptDns": {
+    "message": "DNS ayrıntıları"
+  },
+  "sfxOptSsl": {
+    "message": "SSL sertifikası"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Başlat"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Bu sayfayı bildir"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Dil"
+  },
+  "sfxOptAutoClose": {
+    "message": "Bağlantı kesilince kapat"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Oturum süresi"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Engel kaldırma süre sınırı"
+  },
+  "sfxOptBlockImages": {
+    "message": "Görselleri engelle"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Stil sayfalarını engelle"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Yazı tiplerini engelle"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Video ve sesi engelle"
+  },
+  "sfxOptBlacklist": {
+    "message": "İzleyicileri engelle"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Statik dosyaları önbelleğe al"
+  },
+  "sfxOptRecord": {
+    "message": "Oturumu kaydet"
+  },
+  "sfxOptMcp": {
+    "message": "MCP uç noktası"
+  },
+  "sfxValAuto": {
+    "message": "Otomatik"
+  },
+  "sfxValCleanHtml": {
+    "message": "Temiz HTML"
+  },
+  "sfxValComplete": {
+    "message": "Tam yükleme"
+  },
+  "sfxValDomReady": {
+    "message": "DOM hazır"
+  },
+  "sfxValFullPage": {
+    "message": "Tam sayfa"
+  },
+  "sfxValElement": {
+    "message": "Öğe"
+  },
+  "sfxValLoadImages": {
+    "message": "Görselleri yükle"
+  },
+  "sfxValDarkMode": {
+    "message": "Koyu mod"
+  },
+  "sfxValBlockBanners": {
+    "message": "Bannerları gizle"
+  },
+  "sfxValHighQuality": {
+    "message": "Yüksek kalite"
+  },
+  "sfxValPrint": {
+    "message": "Yazdırma stili"
+  },
+  "sfxValNoLinks": {
+    "message": "Bağlantılar"
+  },
+  "sfxValNoImages": {
+    "message": "Görseller"
+  },
+  "sfxValOnlyContent": {
+    "message": "Ana içerik dışındakiler"
+  },
+  "sfxValModel": {
+    "message": "Yapay zekâ modeli"
+  },
+  "sfxValTemplate": {
+    "message": "Şablon"
+  },
+  "sfxValConnect": {
+    "message": "Tarayıcı aç"
+  },
+  "sfxValUnblock": {
+    "message": "Önce engeli kaldır"
+  },
+  "sfxGroupRender": {
+    "message": "Tarayıcıda render etme"
+  },
+  "sfxGroupLocation": {
+    "message": "Konum ve parmak izi"
+  },
+  "sfxGroupRequest": {
+    "message": "İstek"
+  },
+  "sfxGroupOutput": {
+    "message": "Çıktı"
+  },
+  "sfxGroupExtraction": {
+    "message": "Yapay zekâ ile veri çıkarma"
+  },
+  "sfxGroupCache": {
+    "message": "Önbellek ve oturum"
+  },
+  "sfxGroupTracking": {
+    "message": "Hata ayıklama ve izleme"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Parmak izi ve dil"
+  },
+  "sfxGroupSession": {
+    "message": "Oturum"
+  },
+  "sfxGroupBlocking": {
+    "message": "Engelleme ve önbellek"
+  },
+  "sfxGroupTools": {
+    "message": "Hata ayıklama ve MCP"
+  },
+  "sfxWhyRender": {
+    "message": "JavaScript'i render et gerektirir"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Unblocker gerektirir"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Yalnızca Markdown veya Metin çıktısı"
+  },
+  "sfxWhyCache": {
+    "message": "Önce Önbelleği açın"
+  },
+  "sfxWhySession": {
+    "message": "Önce bir oturum ayarlayın"
+  },
+  "sfxWhySticky": {
+    "message": "Unblocker ile her zaman açık"
+  },
+  "sfxWhyJson": {
+    "message": "Adımların JSON listesi değil: dışarıda bırakıldı"
+  },
+  "sfxWhyGeo": {
+    "message": "enlem,boylam kullanın: dışarıda bırakıldı"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Bu tarayıcı o sistemde çalışmaz: dışarıda bırakıldı"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge, Windows gerektirir: dışarıda bırakıldı"
+  },
+  "sfxHintHeaders": {
+    "message": "Satır başına bir tane: Ad: değer. Kaydedilmez."
+  },
+  "sfxHintScenario": {
+    "message": "JSON listesi: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Virgülle ayrılmış"
+  },
+  "sfxHintLanguages": {
+    "message": "Virgülle ayrılmış, en fazla 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Önce engeli kaldır, anti-bot duvarını zaten aşmış bir tarayıcı döndürür"
+  },
+  "sfxValOff": {
+    "message": "Kapalı"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Her dilin zaten bir çevirisi var."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Ad çevirileri"
+  },
+  "combinationTranslationsHint": {
+    "message": "Uzantı o dildeyken ad yerine gösterilir. Boşsa ad gösterilir."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Önce adı yazın."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Doğrulama sınaması çerezlerini kontrol eder ve komut dosyalarını analiz eder"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "DataDome çerezlerini kontrol eder ve komut dosyalarını analiz eder"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Genel anahtarı bulur, tarayıcı verilerini (BDA) yakalar ve komut dosyalarını analiz eder"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "GeeTest sürümünü (v3 veya v4) tespit eder ve komut dosyalarını analiz eder"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Site anahtarını bulur, hCaptcha sürümünü tespit eder ve komut dosyalarını analiz eder"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Site anahtarını çıkarır ve Turnstile komut dosyalarını analiz eder"
+  },
+  "statsExport": {
+    "message": "Dışa aktar"
+  },
+  "statsExportAllCategories": {
+    "message": "Dışa aktarmalar, bu sayfada ne gösterilirse gösterilsin her zaman tüm kategorileri içerir."
+  },
+  "statsScopeLabel": {
+    "message": "Göster"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Gizlenen parmak izi tespitleri: {0} (tümü içinde {1})"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Parmak izini göster"
+  },
+  "statsScopeKeepOne": {
+    "message": "En az bir kategori seçili kalır."
+  },
+  "statsScopeRulesNote": {
+    "message": "Kurallar her zaman tüm kategorileri kullanır."
+  },
+  "statsContextFmt": {
+    "message": "Sayfalar: {0} · Alan adları: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "{0} tarihinden itibaren tüm geçmiş"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Önceki dönemle karşılaştırma ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Önceki dönemle karşılaştırmak için 7, 30 veya 90 gün seçin."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "Geçmiş {0} tarihinde başlıyor, bu yüzden karşılaştırılacak tam bir önceki dönem yok."
+  },
+  "statsDeltaNew": {
+    "message": "yeni"
+  },
+  "statsDeltaFlat": {
+    "message": "Önceki dönemle karşılaştırıldığında değişiklik yok"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Önceki döneme göre {0} artış"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Önceki döneme göre {0} azalış"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Önceki dönem: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Bu aralıkta az sayıda sayfa var ({0}): karşılaştırmalar ve sıralamalar yanıltıcı olabilir."
+  },
+  "statsLoading": {
+    "message": "İstatistikler yükleniyor..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Tüm geçmişi göster"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Öne çıkanlar"
+  },
+  "statsSectionEvidence": {
+    "message": "Kanıt"
+  },
+  "statsSubnavLabel": {
+    "message": "Kanıt görünümleri"
+  },
+  "statsExportCanceled": {
+    "message": "Dışa aktarma iptal edildi"
+  },
+  "statsAllClearTitle": {
+    "message": "Bu aralıkta anti-bot veya CAPTCHA bulunamadı"
+  },
+  "statsAllClearDescFmt": {
+    "message": "Bu sayfalar yalnızca parmak izi API'si kullanımı gösteriyor. Sayfa sayısı: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Bu kategoriler için gösterilecek bir şey yok"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Başka bir kategori veya daha uzun bir aralık seçin."
+  },
+  "statsHeadlineTop": {
+    "message": "En yaygın koruma"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "Sayfalardaki pay: {0} · sayfa: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "En zor site"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Korumalar: {0} · Zorluk: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "En yeni koruma"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "İlk görülme: {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Bu aralıkta yeni bir şey yok"
+  },
+  "statsHeadlineRiser": {
+    "message": "En çok yükselen"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Sayfalar {0} → {1}, önceki döneme göre"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Önceki dönem gerekir"
+  },
+  "statsKpiPages": {
+    "message": "Kayıtlı sayfalar"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Etkin günler: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} tanesinde tespit var ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Katmanlı siteler"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} tanesinde CAPTCHA var"
+  },
+  "statsKpiProtections": {
+    "message": "Görülen korumalar"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "Bu dönemde {0} yeni"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "{0} kuraldan"
+  },
+  "statsTipPages": {
+    "message": "Bu aralıkta Geçmiş'e kaydedilen sayfalar. Geçmiş, her tarayıcı ziyaretini değil, kayıtlı tespitleri saklar."
+  },
+  "statsTipLayered": {
+    "message": "İki veya daha fazla farklı korumanın tespit edildiği alan adları."
+  },
+  "statsOverTimeProtections": {
+    "message": "Zaman içinde bulunan korumalar"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% sayfa"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Tüm korumalar"
+  },
+  "statsPageTiers": {
+    "message": "Sayfalarınız ne kadar korumalı"
+  },
+  "statsTiersHint": {
+    "message": "Her kayıtlı sayfa, üzerinde bulunan koruma türlerine göre bir kez sayılır."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot ve CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Yalnızca anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "Yalnızca CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Anti-bot veya CAPTCHA yok"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Tahmini zorluk"
+  },
+  "statsDifficultyHint": {
+    "message": "Gösterilen kategorilerde bulunan korumalara dayalı kaba bir tahmin; ölçüm değildir."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Koruma yok"
+  },
+  "statsHardestSites": {
+    "message": "En zor siteler"
+  },
+  "statsAllDomainsLink": {
+    "message": "Tüm alan adları"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} daha"
+  },
+  "statsWhatChanged": {
+    "message": "Ne değişti"
+  },
+  "statsChangedNew": {
+    "message": "Yeni korumalar"
+  },
+  "statsChangedMoving": {
+    "message": "Yükselenler ve düşenler"
+  },
+  "statsChangedGone": {
+    "message": "Artık görülmeyenler"
+  },
+  "statsChangedSwitched": {
+    "message": "Koruma değiştiren siteler"
+  },
+  "statsChangedNothing": {
+    "message": "Bu aralıkta hiçbir şey değişmedi."
+  },
+  "statsChangedAllLink": {
+    "message": "Tüm değişiklikler"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Yükselen ve düşen korumaları görmek için 7, 30 veya 90 gün seçin."
+  },
+  "statsFingerprintCard": {
+    "message": "Parmak izi"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "Parmak izi API'leri sayfaların {0} kadarında çalıştı · teknikler: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "En yaygın: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Neredeyse her sayfa bu API'leri kullandığı için anti-bot ve CAPTCHA korumalarından ayrı gösterilir."
+  },
+  "statsPagesColumn": {
+    "message": "Sayfalar"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Değişim"
+  },
+  "statsStrongColumn": {
+    "message": "Güçlü kanıt"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Korumaları sırala"
+  },
+  "statsSortMostPages": {
+    "message": "En çok sayfa"
+  },
+  "statsSortMostDomains": {
+    "message": "En çok alan adı"
+  },
+  "statsSortBiggestChange": {
+    "message": "En büyük değişim"
+  },
+  "statsCommonStacks": {
+    "message": "Yaygın koruma yığınları"
+  },
+  "statsCommonStacksHint": {
+    "message": "Bir alan adının en son kayıtlı sayfasında birlikte bulunan anti-bot ve CAPTCHA korumaları."
+  },
+  "statsDomainSearchAll": {
+    "message": "Alan adı veya koruma ara..."
+  },
+  "statsSortHardest": {
+    "message": "Önce en zoru"
+  },
+  "statsSortLastSeen": {
+    "message": "En yeni"
+  },
+  "statsDifficultyColumn": {
+    "message": "Zorluk"
+  },
+  "statsStackColumn": {
+    "message": "Korumalar"
+  },
+  "statsLastSeenColumn": {
+    "message": "Son görülme"
+  },
+  "statsFilterChanged": {
+    "message": "Değişenler"
+  },
+  "statsFilterClear": {
+    "message": "Filtreleri temizle"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Alan adlarını filtrele"
+  },
+  "statsChangeKindGained": {
+    "message": "Eklendi"
+  },
+  "statsChangeKindDropped": {
+    "message": "Kaldırıldı"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Değiştirildi"
+  },
+  "statsChangePageColumn": {
+    "message": "Sayfa"
+  },
+  "statsChangeSinceFmt": {
+    "message": "{0} tarihine göre"
+  },
+  "statsChangeAddedSr": {
+    "message": "Eklenen:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Kaldırılan:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Aynı sayfanın kayıtlı kopyalarını karşılaştırır. Parmak izi tespitleri, parmak izini göstermediğiniz sürece yok sayılır."
+  },
+  "statsStrongEvidence": {
+    "message": "Güçlü kanıt"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{1} tespitin {0} tanesi %80 veya daha yüksek puan alıyor."
+  },
+  "statsUnconfirmed": {
+    "message": "Anıldı, doğrulanmadı"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Sık bulunan ama nadiren güçlü kanıtla bulunan korumalar. Etkin bir doğrulama sınamasından çok metin anmaları veya kullanılmayan komut dosyaları olabilir."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Sık bulunan her koruma güçlü kanıtla doğrulandı."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Çoğunlukla {0} üzerinden bulundu: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Öne çıkan tek bir sinyal yok."
+  },
+  "statsTierStrong": {
+    "message": "Güçlü"
+  },
+  "statsTierModerate": {
+    "message": "Orta"
+  },
+  "statsTierWeak": {
+    "message": "Zayıf"
+  },
+  "statsTierHint": {
+    "message": "Güçlü %80 veya üzeri, orta %40-79, zayıf %40'ın altıdır. %100, yalnızca o korumanın ürettiği bir sinyal anlamına gelir."
+  },
+  "statsDecidedByCategory": {
+    "message": "Her kategorinin nasıl belirlendiği"
+  },
+  "statsLiftFmt": {
+    "message": "{0} puan"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · ortalama {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "{0} içinde kombinasyonlar güveni {1} değerinden {2} değerine yükseltir."
+  },
+  "statsLess": {
+    "message": "Az"
+  },
+  "statsMore": {
+    "message": "Çok"
+  },
+  "statsBusiestDay": {
+    "message": "En yoğun gün"
+  },
+  "statsLongestStreak": {
+    "message": "En uzun seri"
+  },
+  "statsPeakHour": {
+    "message": "En yoğun saat"
+  },
+  "statsQuietDays": {
+    "message": "Hiçbir şey kaydedilmeyen günler"
+  },
+  "statsTodayPartial": {
+    "message": "Bugün (hâlâ sayılıyor)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Çizgi: 7 günlük ortalama"
+  },
+  "statsRulesCoverage": {
+    "message": "Kapsam"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "Etkin {1} kuraldan {0} tanesi bu aralıkta eşleşti"
+  },
+  "statsRulesAttention": {
+    "message": "Dikkat gerektiren"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Dikkat gerektiren bir şey yok."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Durum"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Aralıkta yok"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Geçmiş'te yok"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Düzenlendi"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Karşılaşmadığınız sağlayıcıların resmi kuralları sessiz kalır. Bu normaldir."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Değerlendirmek için henüz fazla Geçmiş yok (sayfa: {0}), bu yüzden hiç eşleşmeyen bir kural pek bir şey kanıtlamaz."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Yalnızca özel ve düzenlenmiş kurallar listelenir. Resmi kuralların açıklamalarını Scrapfly sürdürür."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Gelişmiş, yakalamaları 30 dakika saklar; bu yüzden bu sekme tarih aralığını yok sayar."
+  },
+  "statsToolsSavedNow": {
+    "message": "Şu anda kayıtlı"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "10 dakika içinde sona erecek"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Sağlayıcılar"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Temizlenmeyi bekleyen süresi dolmuş yakalamalar: {0}. Kaldırmak için Gelişmiş'i açın."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Kayıtlı yakalamalar"
+  },
+  "statsToolsColVendor": {
+    "message": "Sağlayıcı"
+  },
+  "statsToolsColTool": {
+    "message": "Araç"
+  },
+  "statsToolsColSaved": {
+    "message": "Kaydedildi"
+  },
+  "statsToolsColExpires": {
+    "message": "Sona erme"
+  },
+  "statsToolsNoLive": {
+    "message": "Şu anda kayıtlı yakalama yok."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Henüz tam bir önceki dönem yok."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Yakalamaların saklanma süresi"
+  },
+  "settingsCaptureRetention": {
+    "message": "Araç yakalamalarını şu süre sakla"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Gelişmiş araç yakalamaları (çerezler, komut dosyaları, token'lar) bu süreden sonra silinir."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 dakika"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 dakika"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 saat"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 saat"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 saat"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 saat"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Yakalamalar {0} süreyle saklanır.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "1 dakikadan 7 güne kadar."
+  }
+}

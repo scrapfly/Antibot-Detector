@@ -28,9 +28,29 @@ SettingsUI.LANGUAGE_OPTIONS = [
 
   { value: 'zh_CN', label: '简体中文' },
 
+  { value: 'zh_TW', label: '繁體中文' },
+
   { value: 'ar', label: 'العربية' },
 
-  { value: 'hi', label: 'हिन्दी' }
+  { value: 'hi', label: 'हिन्दी' },
+
+  { value: 'tr', label: 'Türkçe' },
+
+  { value: 'id', label: 'Bahasa Indonesia' },
+
+  { value: 'vi', label: 'Tiếng Việt' },
+
+  { value: 'pl', label: 'Polski' },
+
+  { value: 'uk', label: 'Українська' },
+
+  { value: 'nl', label: 'Nederlands' },
+
+  { value: 'th', label: 'ไทย' },
+
+  { value: 'sv', label: 'Svenska' },
+
+  { value: 'cs', label: 'Čeština' }
 
 ];
 

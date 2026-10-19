@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Помилка сканування"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Сканування перервано"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Немає завершеного сканування"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Сканування не завершилося. Перезавантажте сторінку, щоб повторити спробу."
+  },
+  "settingsReadFailedToast": {
+    "message": "Не вдалося завантажити налаштування. Поточні значення залишено без змін."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Не вдалося зберегти налаштування. Ваші зміни не втрачено; повторіть спробу."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Зміну підготовлено. Збережіть налаштування, щоб застосувати її."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Не вдалося зберегти імпортовані налаштування. Ваші налаштування та мову залишено без змін."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Застосовується одразу."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Експортуйте або імпортуйте параметри. Підключення інтеграцій залишаються в цьому браузері."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Не вдалося прочитати дійсний файл налаштувань. Нічого не змінено."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Не вдалося зберегти це правило. Ваші зміни не втрачено; повторіть спробу."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Перезавантажте сторінку, щоб проаналізувати скрипти захисту"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Скинути cookie захисту й перезавантажити, щоб проаналізувати скрипти"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Перезавантажте сторінку, щоб визначити версію захисту"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Скинути cookie захисту й почати запис"
+  },
+  "advToolCookiesHint": {
+    "message": "Переглянути cookie, які використовує цей захист"
+  },
+  "advToolVersionHint": {
+    "message": "Прочитати доступні відомості про версію"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Знайти ключ сайту CAPTCHA на цій сторінці"
+  },
+  "advToolSelectorHint": {
+    "message": "Знайти селектор віджета CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "Переглянути зворотні виклики CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "Скинути cookie захисту й перезавантажити, щоб записати дані сенсора"
+  },
+  "advToolCaptureHint": {
+    "message": "Записати дані з цієї сторінки"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Зупинити запис даних із цієї сторінки"
+  },
+  "advToolWorking": {
+    "message": "Виконується…"
+  },
+  "advToolWaitingReload": {
+    "message": "Перезавантаження сторінки та збір результатів. Це займе кілька секунд…"
+  },
+  "advToolNoResult": {
+    "message": "Немає результату: захист не надіслав жодних даних. Перезавантажте сторінку й повторіть спробу."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Ключ сайту {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "На цій сторінці ключ сайту не знайдено. Відкрийте або запустіть CAPTCHA, а потім повторіть спробу."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Знайдено в"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Віджет"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Запит"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Скрипт сторінки"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Змінна сторінки"
+  },
+  "advSiteKeyFrame": {
+    "message": "Фрейм"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Скрипти на цій сторінці"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Витягує ключ сайту й аналізує скрипти"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Аналізує скрипти"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Не вдалося виконати цю дію: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Попередня сторінка діаграми"
+  },
+  "statsChartNext": {
+    "message": "Наступна сторінка діаграми"
+  },
+  "statsChartPage": {
+    "message": "Сторінка {0} з {1}"
+  },
+  "statsChartShowing": {
+    "message": "Показано {0}–{1} з {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Розділи статистики"
+  },
+  "statsSectionOverview": {
+    "message": "Огляд"
+  },
+  "statsSectionActivity": {
+    "message": "Активність"
+  },
+  "statsSectionProtections": {
+    "message": "Захист"
+  },
+  "statsSectionDomains": {
+    "message": "Домени"
+  },
+  "statsSectionConfidence": {
+    "message": "Впевненість"
+  },
+  "statsExportCSV": {
+    "message": "Експорт CSV"
+  },
+  "statsExportJSON": {
+    "message": "Експорт JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Експорт містить домени та підсумки виявлень, але не cookie, вміст сторінок чи параметри URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "Експорт охоплює вибраний діапазон. Записів: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Завантаження розпочато: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Не вдалося експортувати дані. Повторіть спробу."
+  },
+  "statsLoadFailed": {
+    "message": "Не вдалося завантажити історію. Перезавантажте цю сторінку."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "У цьому діапазоні немає записів"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Виберіть довший діапазон дат, щоб переглянути збережену історію."
+  },
+  "statsDetectionRate": {
+    "message": "Записи з виявленнями"
+  },
+  "statsActiveDays": {
+    "message": "Активні дні"
+  },
+  "statsAverageConfidence": {
+    "message": "Середня впевненість"
+  },
+  "statsDailyVisits": {
+    "message": "Щоденні записи історії"
+  },
+  "statsActivityCalendar": {
+    "message": "Календар активності"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Кожен квадрат — один локальний календарний день. Темніший синій колір означає більше збережених записів."
+  },
+  "statsHourlyActivity": {
+    "message": "Активність за годинами"
+  },
+  "statsWeekdayActivity": {
+    "message": "Активність за днями тижня"
+  },
+  "statsLocalTimeNote": {
+    "message": "Дати й години подано за вашим місцевим часовим поясом."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Показано останні дні: {0}. Підсумки та експорт охоплюють увесь вибраний діапазон."
+  },
+  "statsProtectionRanking": {
+    "message": "Рейтинг захисту"
+  },
+  "statsCategoryTrend": {
+    "message": "Категорії в часі"
+  },
+  "statsCategoryOverlap": {
+    "message": "Категорії, виявлені разом"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Кількість записів історії з обома категоріями. Діагональні клітинки показують записи з цією категорією."
+  },
+  "statsProtectionDetails": {
+    "message": "Увесь захист"
+  },
+  "statsDomainRanking": {
+    "message": "Рейтинг доменів"
+  },
+  "statsDomainMap": {
+    "message": "Відвідування та виявлення"
+  },
+  "statsDomainMapHint": {
+    "message": "Кожна точка — домен. Більші точки мають більше різних видів захисту."
+  },
+  "statsDomainDetails": {
+    "message": "Усі домени"
+  },
+  "statsDomainSearch": {
+    "message": "Пошук доменів..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Сортувати домени"
+  },
+  "statsSortVisits": {
+    "message": "Найбільше відвідувань"
+  },
+  "statsSortDetections": {
+    "message": "Найбільше виявлень"
+  },
+  "statsSortConfidence": {
+    "message": "Найвища впевненість"
+  },
+  "statsSortName": {
+    "message": "Назва домену"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Розподіл впевненості"
+  },
+  "statsConfidenceTrend": {
+    "message": "Впевненість у часі"
+  },
+  "statsCategoryConfidence": {
+    "message": "Впевненість за категоріями"
+  },
+  "statsConfidenceNote": {
+    "message": "Впевненість показує силу збережених доказів виявлення, а не доказ зняття відбитків чи активної перевірки."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "Виявлень зі значенням впевненості: {0}; без дійсної оцінки: {1}."
+  },
+  "statsProtectionColumn": {
+    "message": "Захист"
+  },
+  "statsCategoryColumn": {
+    "message": "Категорія"
+  },
+  "statsDomainColumn": {
+    "message": "Домен"
+  },
+  "statsTableCountFmt": {
+    "message": "Рядків: {0} з {1}"
+  },
+  "statsTableMore": {
+    "message": "Показати більше"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Жоден домен не відповідає пошуку."
+  },
+  "statsSelectionNote": {
+    "message": "Діаграми та експорт використовують вибраний діапазон дат. Записи історії — це збережені виявлення, а не кожне відвідування в браузері."
+  },
+  "extensionName": {
+    "message": "Scrapfly: детектор антиботів"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: детектор антиботів",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": детектор антиботів",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Виявляє CAPTCHA, антибот-системи та технології зняття відбитків на веб-сайтах"
+  },
+  "tabDetection": {
+    "message": "Виявлення"
+  },
+  "tabHistory": {
+    "message": "Історія"
+  },
+  "tabRules": {
+    "message": "Правила"
+  },
+  "tabAdvanced": {
+    "message": "Додатково"
+  },
+  "openSettings": {
+    "message": "Відкрити налаштування"
+  },
+  "enableOrDisableDetection": {
+    "message": "Увімкнути або вимкнути виявлення"
+  },
+  "noDetectionsFound": {
+    "message": "Виявлень не знайдено"
+  },
+  "detectionScanningTitle": {
+    "message": "Сканування цієї сторінки"
+  },
+  "detectionScanningDescription": {
+    "message": "Пошук сигналів захисту."
+  },
+  "detectionScanningHint": {
+    "message": "Результати з’являться тут, коли будуть готові."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Видалити з чорного списку"
+  },
+  "statDetections": {
+    "message": "Виявлення"
+  },
+  "statConfidence": {
+    "message": "Впевненість"
+  },
+  "statDifficulty": {
+    "message": "Складність"
+  },
+  "statCacheScope": {
+    "message": "Область кешу"
+  },
+  "scopeDomain": {
+    "message": "Домен"
+  },
+  "scopePath": {
+    "message": "Шлях"
+  },
+  "scopeFullUrl": {
+    "message": "Повна URL-адреса"
+  },
+  "difficultyLow": {
+    "message": "Низька"
+  },
+  "difficultyMedium": {
+    "message": "Середня"
+  },
+  "difficultyHigh": {
+    "message": "Висока"
+  },
+  "searchHistory": {
+    "message": "Пошук в історії..."
+  },
+  "searchDetectors": {
+    "message": "Пошук детекторів..."
+  },
+  "paginationPrev": {
+    "message": "Попередня сторінка"
+  },
+  "paginationNext": {
+    "message": "Наступна сторінка"
+  },
+  "paginationPage": {
+    "message": "Сторінка"
+  },
+  "paginationOf": {
+    "message": "з"
+  },
+  "paginationNoItems": {
+    "message": "Немає елементів для відображення"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Номер поточної сторінки"
+  },
+  "btnImport": {
+    "message": "Імпорт"
+  },
+  "btnExport": {
+    "message": "Експорт"
+  },
+  "btnClear": {
+    "message": "Очистити"
+  },
+  "btnAdd": {
+    "message": "Додати"
+  },
+  "btnUpdate": {
+    "message": "Оновити"
+  },
+  "btnClose": {
+    "message": "Закрити"
+  },
+  "btnSave": {
+    "message": "Зберегти"
+  },
+  "btnCancel": {
+    "message": "Скасувати"
+  },
+  "btnDelete": {
+    "message": "Видалити"
+  },
+  "historyImportTitle": {
+    "message": "Імпортувати історію"
+  },
+  "historyExportTitle": {
+    "message": "Експортувати історію"
+  },
+  "historyClearTitle": {
+    "message": "Очистити історію"
+  },
+  "historyEmptyTitle": {
+    "message": "Історії ще немає"
+  },
+  "historyEmptyDescription": {
+    "message": "Історія виявлень з’являтиметься тут під час перегляду веб-сайтів."
+  },
+  "rulesUpdateTitle": {
+    "message": "Установити оновлення правил з останнього випуску Scrapfly"
+  },
+  "rulesAddTitle": {
+    "message": "Додати новий детектор"
+  },
+  "rulesEmptyTitle": {
+    "message": "Детектори не завантажено"
+  },
+  "rulesEmptyDescription": {
+    "message": "Детектори з’являться тут після завантаження зі сховища та файлів."
+  },
+  "ruleModalActionEdit": {
+    "message": "Редагувати"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Інформація про детектор"
+  },
+  "ruleFieldName": {
+    "message": "Назва"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Назва детектора"
+  },
+  "ruleFieldCategory": {
+    "message": "Категорія"
+  },
+  "categoryAntibot": {
+    "message": "Антибот"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Відбиток"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Складність"
+  },
+  "ruleFieldIcon": {
+    "message": "Піктограма"
+  },
+  "ruleFieldVersion": {
+    "message": "Версія"
+  },
+  "ruleFieldAuthor": {
+    "message": "Автор"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Колір значка"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Методи виявлення"
+  },
+  "settingsTitle": {
+    "message": "Налаштування"
+  },
+  "settingsSubtitle": {
+    "message": "Налаштуйте параметри розширення"
+  },
+  "settingsTabGeneral": {
+    "message": "Загальні"
+  },
+  "settingsTabDetection": {
+    "message": "Виявлення"
+  },
+  "settingsTabHistory": {
+    "message": "Історія"
+  },
+  "settingsTabData": {
+    "message": "Дані"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Основні налаштування"
+  },
+  "settingsCardNotifications": {
+    "message": "Сповіщення"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Показувати сповіщення, коли виявлено системи захисту"
+  },
+  "settingsCardDebug": {
+    "message": "Режим налагодження"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Записує один зрозумілий звіт про кожну проскановану сторінку в консоль розширення."
+  },
+  "settingsRowLogCollector": {
+    "message": "Збирач журналів"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Макс. журналів"
+  },
+  "settingsRowCollected": {
+    "message": "Зібрано"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Оновлення детекторів"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Автоперевірка оновлень"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Автоматично перевіряти наявність нових визначень детекторів"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Інтервал перевірки"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Ніколи"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Перевірити зараз"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Потрібно оновити розширення"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Оновити розширення"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Кольори значків"
+  },
+  "settingsRowLastCheck": {
+    "message": "Остання перевірка"
+  },
+  "advancedToolsTitle": {
+    "message": "Розширені інструменти захоплення"
+  },
+  "advancedToolsDescription": {
+    "message": "Витягуйте cookie, токени та ключі сайтів із виявлених систем захисту"
+  },
+  "advancedToolsHint": {
+    "message": "Відвідайте захищену сторінку, щоб увімкнути інструменти захоплення"
+  },
+  "advancedSubtabTools": {
+    "message": "Інструменти"
+  },
+  "advancedSubtabHistory": {
+    "message": "Історія"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Історія захоплень"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Фільтруйте, переглядайте й експортуйте зібрані захоплення"
+  },
+  "advancedFilterSite": {
+    "message": "Сайт"
+  },
+  "advancedFilterAllSites": {
+    "message": "Усі сайти"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Поточний сайт"
+  },
+  "advancedFilterModule": {
+    "message": "Модуль"
+  },
+  "advancedFilterAllModules": {
+    "message": "Усі модулі"
+  },
+  "advancedFilterSearch": {
+    "message": "Пошук"
+  },
+  "advancedBtnExport": {
+    "message": "Експорт"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Експортувати захоплення"
+  },
+  "advancedBtnClearAll": {
+    "message": "Очистити все"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Очистити всі захоплення"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Захоплень ще немає"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Використайте вкладку Інструменти, щоб захопити дані з виявлених систем"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Захоплень не знайдено"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Скинути всі фільтри"
+  },
+  "advancedModalTitle": {
+    "message": "Розширені інструменти виявлення"
+  },
+  "advancedModalIntro": {
+    "message": "Спеціалізовані інструменти захоплення для глибокого аналізу антибот-систем, CAPTCHA та технологій зняття відбитків. Ці інструменти з’являються автоматично, коли знайдено відповідні виявлення."
+  },
+  "advancedSectionSupported": {
+    "message": "Системи, що підтримуються"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Як це працює"
+  },
+  "advancedStep1Title": {
+    "message": "Автоматичне виявлення"
+  },
+  "advancedStep1Desc": {
+    "message": "Інструменти з’являються, коли на поточній сторінці виявлено відповідні антибот-системи"
+  },
+  "advancedStep2Title": {
+    "message": "Початок захоплення"
+  },
+  "advancedStep2Desc": {
+    "message": "Інструменти автоматично ініціалізують перехоплювачі та починають відстежувати мережеві запити"
+  },
+  "advancedStep3Title": {
+    "message": "Перегляд результатів"
+  },
+  "advancedStep3Desc": {
+    "message": "Захоплені дані тимчасово зберігаються з повними можливостями експорту"
+  },
+  "advancedFooterHint": {
+    "message": "Захоплення зберігаються протягом часу, заданого в налаштуваннях."
+  },
+  "settings": {
+    "message": "Налаштування"
+  },
+  "paginationShowingFmt": {
+    "message": "Показано {0}-{1} з {2}"
+  },
+  "paginationShowingItems": {
+    "message": "{3}: показано {0}-{1} з {2}"
+  },
+  "timeUnknown": {
+    "message": "Невідомо"
+  },
+  "timeJustNow": {
+    "message": "Щойно"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} с тому"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} хв тому"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} год тому"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} дн. тому"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 хвилину тому"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} хв тому"
+  },
+  "timeOneHourAgo": {
+    "message": "1 год тому"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} год тому"
+  },
+  "timeOneDayAgo": {
+    "message": "1 день тому"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} дн. тому"
+  },
+  "btnCancelSettings": {
+    "message": "Скасувати"
+  },
+  "btnSaveSettings": {
+    "message": "Зберегти налаштування"
+  },
+  "poweredBy": {
+    "message": "Працює на"
+  },
+  "categoryColors": {
+    "message": "КОЛЬОРИ КАТЕГОРІЙ"
+  },
+  "methodSuffixPatterns": {
+    "message": "Шаблони"
+  },
+  "btnSaveRule": {
+    "message": "Зберегти правило"
+  },
+  "tagColors": {
+    "message": "Кольори міток"
+  },
+  "colorPickerTitle": {
+    "message": "Вибір кольору"
+  },
+  "colorPickerArea": {
+    "message": "Насиченість і яскравість"
+  },
+  "colorPickerSaturation": {
+    "message": "Насиченість"
+  },
+  "colorPickerBrightness": {
+    "message": "Яскравість"
+  },
+  "colorPickerHue": {
+    "message": "Відтінок"
+  },
+  "colorPickerRed": {
+    "message": "Червоний"
+  },
+  "colorPickerGreen": {
+    "message": "Зелений"
+  },
+  "colorPickerBlue": {
+    "message": "Синій"
+  },
+  "colorPickerPresets": {
+    "message": "Готові кольори"
+  },
+  "cacheConfiguration": {
+    "message": "Конфігурація кешу"
+  },
+  "cacheDuration": {
+    "message": "Тривалість кешу"
+  },
+  "timeUnitMinutes": {
+    "message": "Хвилини"
+  },
+  "timeUnitHours": {
+    "message": "Години"
+  },
+  "timeUnitDays": {
+    "message": "Дні"
+  },
+  "blacklistedDomains": {
+    "message": "Домени в чорному списку"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Домени, для яких виявлення повністю пропускається"
+  },
+  "jsApiEvents": {
+    "message": "Події JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "Надсилати власні події у window сторінки"
+  },
+  "ruleMethodSettings": {
+    "message": "Налаштування методу виявлення"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Налаштування: {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Налаштування: {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Опис"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Що означає цей шаблон, наприклад «Зчитує мовні налаштування браузера»"
+  },
+  "ruleDescriptionHint": {
+    "message": "Показується в деталях виявлення та в історії, коли знайдено цей шаблон."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Що це за захист, наприклад «Виявлення ботів на сторінках входу й оплати»"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Показується в деталях виявлення цього захисту."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Рівень впевненості"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Впевненість виявлення:"
+  },
+  "detectionName": {
+    "message": "Назва виявлення"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 годин"
+  },
+  "interval12Hours": {
+    "message": "12 годин"
+  },
+  "interval24Hours": {
+    "message": "24 години"
+  },
+  "interval2Days": {
+    "message": "2 дні"
+  },
+  "interval1Week": {
+    "message": "1 тиждень"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Заголовки"
+  },
+  "methodLabelCookie": {
+    "message": "Файли cookie"
+  },
+  "methodLabelContent": {
+    "message": "Вміст"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS-хуки"
+  },
+  "methodLabelWindow": {
+    "message": "Вікно"
+  },
+  "methodLabelPayload": {
+    "message": "Корисне навантаження"
+  },
+  "methodOnePattern": {
+    "message": "1 шаблон"
+  },
+  "methodPatternsFmt": {
+    "message": "Шаблонів: {0}"
+  },
+  "methodAddPattern": {
+    "message": "Додати шаблон"
+  },
+  "methodSearchPatterns": {
+    "message": "Пошук шаблонів..."
+  },
+  "methodNoPatterns": {
+    "message": "Немає шаблонів"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Немає відповідних шаблонів"
+  },
+  "methodSuffixMatches": {
+    "message": "Збіги"
+  },
+  "cacheExpiredLabel": {
+    "message": "Прострочено"
+  },
+  "copiedNotification": {
+    "message": "Скопійовано"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Скопійовано!"
+  },
+  "unknownDetection": {
+    "message": "Невідоме виявлення"
+  },
+  "matchPlural": {
+    "message": "збігів"
+  },
+  "noMatchesRecorded": {
+    "message": "Збігів не записано"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Очистити кеш"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Це видалить кешовані дані виявлення для цього домену й запустить новий аналіз."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Очистити кеш"
+  },
+  "clearingMsg": {
+    "message": "Очищення..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Очищено!"
+  },
+  "cacheClearedToast": {
+    "message": "Кеш очищено"
+  },
+  "failedToClearCacheToast": {
+    "message": "Не вдалося очистити кеш"
+  },
+  "unableGetCurrentPage": {
+    "message": "Не вдалося отримати поточну сторінку"
+  },
+  "invalidDomain": {
+    "message": "Недійсний домен"
+  },
+  "addBlacklistTitle": {
+    "message": "Додати до чорного списку"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Домен «{0}» буде виключено з усіх майбутніх виявлень. Ви можете видалити його пізніше в налаштуваннях."
+  },
+  "addBlacklistBtn": {
+    "message": "Додати до чорного списку"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Домен «{0}» уже в чорному списку"
+  },
+  "addedToBlacklistFmt": {
+    "message": "Домен «{0}» додано до чорного списку"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Не вдалося додати до чорного списку: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "Домен «{0}» видалено з чорного списку"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Не вдалося видалити з чорного списку: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Немає виявлень"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Виявлень не знайдено"
+  },
+  "historyMatchCountFmt": {
+    "message": "Збігів: {0}"
+  },
+  "historyOneMatch": {
+    "message": "1 збіг"
+  },
+  "notificationHistoryCleared": {
+    "message": "Історію очищено"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Не вдалося очистити історію: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Запис історії експортовано"
+  },
+  "notificationCacheCleared": {
+    "message": "Кеш очищено"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Кеш уже очищено"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Не вдалося очистити кеш"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "Домен «{0}» додано до чорного списку"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Не вдалося додати до чорного списку"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Запис історії видалено"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Не вдалося видалити запис історії"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Експортовано записів історії: {0}"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Об’єднано нових записів історії: {0}"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Історію замінено записами: {0}"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Не вдалося імпортувати історію: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Очистити історію"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Ви впевнені, що хочете очистити всю історію? Цю дію не можна скасувати."
+  },
+  "buttonClearAll": {
+    "message": "Очистити все"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Очистити кеш"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Очистити кешовані дані виявлення для {0}? Запис в історії буде збережено."
+  },
+  "buttonClearCache": {
+    "message": "Очистити кеш"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Видалити запис історії"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Ви впевнені, що хочете видалити це виявлення для {0}?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Не вдалося завантажити налаштування. Використовуються значення за замовчуванням."
+  },
+  "settingsSavedToast": {
+    "message": "Налаштування збережено"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Не вдалося зберегти налаштування: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Не вдалося експортувати журнали"
+  },
+  "logsCleared": {
+    "message": "Журнали очищено"
+  },
+  "failedClearLogs": {
+    "message": "Не вдалося очистити журнали"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Не вдалося отримати URL поточної сторінки"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} уже в чорному списку"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} додано до чорного списку"
+  },
+  "failedAddDomainFmt": {
+    "message": "Не вдалося додати домен: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} видалено з чорного списку"
+  },
+  "invalidSettingsFmt": {
+    "message": "Недійсні налаштування: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Введіть URL вебхука"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Перевірку вебхука виконано успішно! Статус: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Вебхук повернув статус: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Перевірка вебхука не вдалася: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Імпорт детекторів"
+  },
+  "importDetectorsModeMessage": {
+    "message": "«Об’єднати» додасть імпортовані детектори до ваших.<br>«Замінити все» спочатку видалить ваші власні детектори; вбудовані залишаться."
+  },
+  "mergeOption": {
+    "message": "Об’єднати"
+  },
+  "replaceAllOption": {
+    "message": "Замінити все"
+  },
+  "detectorsImported": {
+    "message": "Детектори імпортовано"
+  },
+  "detectorExportedFmt": {
+    "message": "Експортовано: {0}"
+  },
+  "failedImportDetectors": {
+    "message": "Не вдалося імпортувати детектори. Перевірте формат файлу."
+  },
+  "errorReadingFileFmt": {
+    "message": "Помилка читання файлу: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "Оновлено детекторів: {0}"
+  },
+  "detectorDeletedFmt": {
+    "message": "Видалено «{0}»"
+  },
+  "failedClearDetectors": {
+    "message": "Не вдалося видалити детектори"
+  },
+  "urlPatternMatching": {
+    "message": "Зіставлення шаблонів URL"
+  },
+  "textWordMatching": {
+    "message": "Зіставлення тексту/слів"
+  },
+  "payloadTextMatching": {
+    "message": "Зіставлення тексту корисного навантаження"
+  },
+  "nameFieldMatching": {
+    "message": "Зіставлення поля назви"
+  },
+  "captureNotFound": {
+    "message": "Захоплення не знайдено"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Клас модуля не знайдено"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Перегляд подробиць недоступний"
+  },
+  "captureDataCopied": {
+    "message": "Дані захоплення скопійовано"
+  },
+  "captureDeleted": {
+    "message": "Захоплення видалено"
+  },
+  "capturesExportedFmt": {
+    "message": "Експортовано захоплень: {0}"
+  },
+  "allCapturesCleared": {
+    "message": "Усі захоплення видалено"
+  },
+  "captureExportFailed": {
+    "message": "Не вдалося експортувати захоплення"
+  },
+  "invalidUrl": {
+    "message": "Недійсний URL"
+  },
+  "importHistoryTitle": {
+    "message": "Імпорт історії"
+  },
+  "replaceOption": {
+    "message": "Замінити"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "Імпортувати записів історії: {0}? Зараз в історії записів: {1}.<br>«Об’єднати» додасть до неї нові записи. «Замінити» спочатку видалить її."
+  },
+  "clearLogsTitle": {
+    "message": "Очистити журнали"
+  },
+  "clearLogsMessage": {
+    "message": "Ви впевнені, що хочете очистити всі зібрані журнали? Цю дію не можна скасувати."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Не вдалося перевірити оновлення: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Не вдалося отримати оновлення із сервера"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Правила оновлено з випуску {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Усі правила відповідають випуску {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Очікують розширення версії {0} або новішої: {1}. Вони встановляться, щойно Chrome оновить розширення."
+  },
+  "updateResultFailedFmt": {
+    "message": "Не вдалося завантажити: {0}. Повторіть спробу пізніше."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Правила, які ви змінили, очікують вашого рішення в розділі Правила → Оновити: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Не вдалося зв’язатися з GitHub для перевірки оновлень правил."
+  },
+  "updateErrorNoRelease": {
+    "message": "На GitHub не знайдено опублікованого випуску Scrapfly."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub обмежує перевірки оновлень. Повторіть спробу через {0} хв."
+  },
+  "errorApplyingUpdates": {
+    "message": "Помилка застосування оновлень"
+  },
+  "failedCheckForUpdates": {
+    "message": "Не вдалося перевірити оновлення"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Помилка під час перевірки оновлень"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Служба оновлень недоступна"
+  },
+  "deleteDetectorTitle": {
+    "message": "Видалити детектор"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Ви впевнені, що хочете видалити «{0}»?"
+  },
+  "detectorNotFound": {
+    "message": "Детектор не знайдено"
+  },
+  "failedDeleteDetector": {
+    "message": "Не вдалося видалити детектор"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Не вдалося переглянути подробиці захоплення"
+  },
+  "failedCopyCaptureData": {
+    "message": "Не вдалося скопіювати дані захоплення"
+  },
+  "failedDeleteCapture": {
+    "message": "Не вдалося видалити захоплення"
+  },
+  "noCapturesToExport": {
+    "message": "Немає захоплень для експорту"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Ви впевнені, що хочете видалити всі захоплення? Цю дію не можна скасувати."
+  },
+  "failedClearCaptures": {
+    "message": "Не вдалося видалити захоплення"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Інтеграція з вебхуком"
+  },
+  "settingsEnableWebhook": {
+    "message": "Увімкнути вебхук"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Надсилати HTTP-запити під час виявлення"
+  },
+  "settingsBypassCache": {
+    "message": "Надсилати під час кожного завантаження сторінки (в обхід кешу)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP-метод"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Виберіть HTTP-метод для запитів вебхука"
+  },
+  "settingsCustomMethod": {
+    "message": "Власний"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Введіть власний метод (наприклад, OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL вебхука"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Повний URL кінцевої точки (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Доступні змінні:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Приклад: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP-заголовок Content-Type"
+  },
+  "webhookCtHintJson": {
+    "message": "Шаблон у форматі JSON із підставленими змінними."
+  },
+  "webhookCtHintForm": {
+    "message": "Поля шаблону як пари ключ=значення; вкладені поля — як detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Поля шаблону як частини form-data; межу (boundary) задає браузер."
+  },
+  "webhookCtHintText": {
+    "message": "Текст шаблону як є, із підставленими змінними."
+  },
+  "webhookCtHintXml": {
+    "message": "Поля шаблону як XML-документ <webhook>; виявлення — повторювані елементи."
+  },
+  "webhookCtHintCsv": {
+    "message": "Рядок заголовків, потім по одному рядку на виявлення з повторенням полів сторінки."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Один об’єкт JSON на рядок: рядок на виявлення, з полями сторінки."
+  },
+  "webhookCtHintCustom": {
+    "message": "Ваш власний Content-Type (тип/підтип); тіло надсилається як JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Власний"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Власний Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Введіть тип/підтип, наприклад application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Додати заголовок"
+  },
+  "webhookNoHeaders": {
+    "message": "Власних заголовків не налаштовано"
+  },
+  "webhookHeaderName": {
+    "message": "Назва заголовка"
+  },
+  "webhookHeaderValue": {
+    "message": "Значення заголовка"
+  },
+  "webhookRemoveHeader": {
+    "message": "Видалити заголовок"
+  },
+  "webhookSending": {
+    "message": "Надсилання..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Власні заголовки"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Додайте власні HTTP-заголовки до запиту вебхука"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Шаблон корисного навантаження"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Тіло, що надсилається з кожним вебхуком. Натисніть змінну, щоб вставити її."
+  },
+  "webhookVarsTitle": {
+    "message": "Змінні шаблону"
+  },
+  "webhookVarsIntro": {
+    "message": "Під час надсилання вебхука замінюються значеннями сторінки."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Вставити змінну"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Вставити {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Копіювати {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Приклад"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Повний URL сторінки"
+  },
+  "webhookVarHostname": {
+    "message": "Ім’я хоста сторінки"
+  },
+  "webhookVarTitle": {
+    "message": "Заголовок сторінки"
+  },
+  "webhookVarFavicon": {
+    "message": "URL піктограми сайту"
+  },
+  "webhookVarDetections": {
+    "message": "Виявлення у вигляді масиву JSON"
+  },
+  "webhookVarTimestamp": {
+    "message": "Час виявлення (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Кількість виявлень"
+  },
+  "webhookVarCategories": {
+    "message": "Виявлені категорії через кому"
+  },
+  "webhookJsonValid": {
+    "message": "Дійсний JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Недійсний JSON (рядок {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Скинути шаблон"
+  },
+  "settingsTestWebhook": {
+    "message": "Перевірити вебхук"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Надіслати тестовий запит на URL вебхука"
+  },
+  "settingsTestBtn": {
+    "message": "Перевірити"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Конфігурація історії"
+  },
+  "settingsHistorySettings": {
+    "message": "Налаштування історії"
+  },
+  "settingsHistoryLimit": {
+    "message": "Ліміт історії"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = захисний ліміт у 1000 записів)"
+  },
+  "settingsExportFormat": {
+    "message": "Формат експорту"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Звичайний текст"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Додавати позначки часу"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Зберігати при влучаннях у кеш"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Захист від дублікатів"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Увімкнути захист від дублікатів"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Блокувати дубльовані записи в історії в межах часового вікна"
+  },
+  "settingsDuplicateScope": {
+    "message": "Область"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Повний URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Домен"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Шлях"
+  },
+  "settingsTimeWindow": {
+    "message": "Часове вікно"
+  },
+  "settingsTimeMinutes": {
+    "message": "Хвилини"
+  },
+  "settingsTimeHours": {
+    "message": "Години"
+  },
+  "settingsTimeDays": {
+    "message": "Дні"
+  },
+  "settingsHowItWorks": {
+    "message": "Як це працює:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Запобігає дубльованим записам в історії для того самого URL у межах часового вікна."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Повний URL: точний збіг URL (враховуючи параметри запиту)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Домен: той самий домен (різні шляхи вважаються однаковими)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Шлях: той самий домен і шлях (без урахування параметрів запиту)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Налаштування кешу"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Пропущені домени"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Додати поточну сторінку"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Пошук доменів..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Низька"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Середня"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Висока"
+  },
+  "settingsEnableJsApi": {
+    "message": "Увімкнути події JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "Експорт та імпорт"
+  },
+  "settingsDataManagement": {
+    "message": "Керування даними"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Експортуйте або імпортуйте дані розширення"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Налаштування"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Експорт або імпорт налаштувань розширення"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Історія виявлень"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Експорт історії виявлень у CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Експорт налаштувань"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Імпорт налаштувань"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Експорт історії"
+  },
+  "settingsAvailableEvents": {
+    "message": "Доступні події"
+  },
+  "settingsApiEventReady": {
+    "message": "Розширення завантажено та ініціалізовано"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Виявлення розпочато (відсутність у кеші / вручну)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Оновлення ходу виявлення (на рівні методів)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Відстеження JS-хуків завершено"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Відстеження властивостей window завершено"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Виявлення завершено з результатами"
+  },
+  "settingsApiEventOnError": {
+    "message": "Сталася помилка виявлення"
+  },
+  "settingsUsageExample": {
+    "message": "Приклад використання"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Виявлення вимкнено для цього домену"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Видалити з чорного списку"
+  },
+  "detectionBlacklistHint": {
+    "message": "Або перейдіть у Налаштування → Виявлення → Домени в чорному списку, щоб керувати ними."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "На цій сторінці не знайдено відповідних сигналів антибот-систем, CAPTCHA чи зняття відбитків."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Для цієї сторінки немає кешованих даних виявлення. Перезавантажте сторінку, щоб запустити нове сканування."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Надіслати виявлення (посилання для спільного доступу)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Посилання скопійовано в буфер обміну"
+  },
+  "failedReadSettings": {
+    "message": "Не вдалося прочитати налаштування — операцію скасовано"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Не вдалося видалити з чорного списку"
+  },
+  "pasteConfirmTitle": {
+    "message": "Надіслати виявлення?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Надіслати"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Не вдалося надіслати"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Немає виявлень для надсилання"
+  },
+  "detectionTitleClearCache": {
+    "message": "Очистити кеш"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Копіювати огляд"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Заблокувати цей домен"
+  },
+  "detectionStatSite": {
+    "message": "САЙТ"
+  },
+  "detectionStatDetections": {
+    "message": "ВИЯВЛЕННЯ"
+  },
+  "detectionStatConfidence": {
+    "message": "ВПЕВНЕНІСТЬ"
+  },
+  "detectionStatDifficulty": {
+    "message": "СКЛАДНІСТЬ"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Пошук виявлень..."
+  },
+  "detectionPaginationPage": {
+    "message": "Сторінка"
+  },
+  "detectionPaginationOf": {
+    "message": "з"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Цей домен у чорному списку"
+  },
+  "detectionModalConfidence": {
+    "message": "Впевненість"
+  },
+  "detectionModalDifficulty": {
+    "message": "Складність"
+  },
+  "detectionModalAuthor": {
+    "message": "Автор"
+  },
+  "detectionModalDescription": {
+    "message": "Опис"
+  },
+  "detectionModalNoDescription": {
+    "message": "Опис відсутній."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Методи виявлення"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Методи не виявлено"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Пошук за URL, модулем, сайтом або вмістом..."
+  },
+  "advancedPaginationPage": {
+    "message": "Сторінка"
+  },
+  "advancedPaginationOf": {
+    "message": "з"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Захоплює ключі сайту, дії та параметри конфігурації"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Перехоплює дані сенсора та витягує відомості про версію"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Відстежує cookie та зміни рівня захисту"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Аналізує динамічні заголовки та параметри скриптів"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Захоплює кінцеві точки перевірок і відомості про токени"
+  },
+  "btnStartCapturing": {
+    "message": "Почати захоплення"
+  },
+  "btnStopCapturing": {
+    "message": "Зупинити захоплення"
+  },
+  "btnCheckCookies": {
+    "message": "Перевірити cookie"
+  },
+  "btnCheckVersion": {
+    "message": "Перевірити версію"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Аналіз скриптів"
+  },
+  "btnExtractSiteKey": {
+    "message": "Витягти ключ сайту"
+  },
+  "btnExtractPublicKey": {
+    "message": "Витягти публічний ключ"
+  },
+  "btnObtainSelector": {
+    "message": "Отримати селектор"
+  },
+  "btnCopyAllData": {
+    "message": "Копіювати всі дані"
+  },
+  "btnClearData": {
+    "message": "Очистити дані"
+  },
+  "advCapturedDataSection": {
+    "message": "Захоплені дані"
+  },
+  "advNoCapturesYet": {
+    "message": "Захоплень ще немає"
+  },
+  "advCaptureDetails": {
+    "message": "Подробиці захоплення"
+  },
+  "advValueCopied": {
+    "message": "Значення скопійовано"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Очистити всі захоплені дані?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Це безповоротно видалить усі захоплені дані цього провайдера."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Скасувати"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Область пошуку за вмістом"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Перевіряти лише скрипти"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Шукати лише в коді JavaScript (вбудовані та завантажені скрипти), а не в тексті сторінки чи назвах файлів"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Налаштування області"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Область назви"
+  },
+  "rulesNameScopeHint": {
+    "message": "Де шукати збіги за назвою/полем"
+  },
+  "rulesScopeRequest": {
+    "message": "Запит"
+  },
+  "rulesScopeResponse": {
+    "message": "Відповідь"
+  },
+  "rulesScopeAll": {
+    "message": "Усі"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Область значення"
+  },
+  "rulesValueScopeHint": {
+    "message": "Де шукати збіги за значенням"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Налаштування області URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "Область URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Сторінка"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Скрипти"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Усі (за замовчуванням)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Обмеження запиту"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "Шаблон URL (необов’язково)"
+  },
+  "rulesUrlRegex": {
+    "message": "Регулярний вираз URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL з урахуванням регістру"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP-метод (виберіть один)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Фільтр за методом запиту (необов’язково)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Будь-який"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Параметри зіставлення шаблонів"
+  },
+  "rulesPatternRegex": {
+    "message": "Регулярний вираз (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Ціле слово"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "З урахуванням регістру"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Параметри поля значення"
+  },
+  "rulesApplySettings": {
+    "message": "Застосувати налаштування"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "Помічник із DOM-селекторів"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Використати селектор"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Помічник із властивостей window"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Підтвердьте"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Ви впевнені?"
+  },
+  "notifLoadingDefault": {
+    "message": "Завантаження..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Натисніть «Почати захоплення» вище, щоб розпочати захоплення даних {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "Інструменти захоплення"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Виберіть захист, щоб відкрити його інструменти."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Відкрити інструменти"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Докладніше про розширені інструменти"
+  },
+  "advancedToolsChange": {
+    "message": "Змінити"
+  },
+  "settingsLanguageTitle": {
+    "message": "Мова"
+  },
+  "settingsLanguageDesc": {
+    "message": "Перевизначає мову інтерфейсу розширення. За замовчуванням використовується мова браузера."
+  },
+  "settingsLanguageAuto": {
+    "message": "Використовувати мову браузера"
+  },
+  "detectionEmptyTitle": {
+    "message": "Нічого не виявлено"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Без CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Без антибота"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Без зняття відбитків"
+  },
+  "detectionDisabledTitle": {
+    "message": "Виявлення вимкнено"
+  },
+  "detectionDisabledDesc": {
+    "message": "Виявлення систем захисту наразі вимкнено."
+  },
+  "detectionDisabledAction": {
+    "message": "Скористайтеся перемикачем угорі, щоб увімкнути виявлення."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Правило виявлення"
+  },
+  "rulesMoreActions": {
+    "message": "Інші дії"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Захист не виявлено"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "На цій сторінці немає підтримуваного захисту з впевненістю понад {0}%. Цей мінімум можна змінити в розділі Налаштування → Виявлення.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Захист виявлено з низькою впевненістю"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} виявлено з впевненістю {1}%. Інструменти з’являються лише за впевненості понад {2}%. Цей мінімум можна знизити в розділі Налаштування → Виявлення.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Підтримувані системи захисту"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Переглянути історію захоплень ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "Хуки JavaScript"
+  },
+  "detectionMethodContent": {
+    "message": "Вміст"
+  },
+  "detectionMethodWindow": {
+    "message": "Властивості window"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Заголовки"
+  },
+  "detectionMethodCookies": {
+    "message": "Файли cookie"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Корисне навантаження"
+  },
+  "detectionEnableBtn": {
+    "message": "Увімкнути виявлення"
+  },
+  "historyMoreActions": {
+    "message": "Інші дії"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Копіювати дані"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Автовидалення"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Періодично видаляє старі записи історії."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Видаляти записи старші за"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Допустимий діапазон ({1}): 1–{0}. Для довших періодів виберіть більшу одиницю."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Допустимий діапазон ({1}): 1–{0}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Місяць дорівнює 30 дням, рік — 365 дням."
+  },
+  "timeUnitMonths": {
+    "message": "Місяці"
+  },
+  "timeUnitYears": {
+    "message": "Роки"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Статистика історії"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Переглядайте приватну статистику, обчислену локально за історією виявлень."
+  },
+  "settingsOpenStats": {
+    "message": "Відкрити статистику"
+  },
+  "settingsExportedToast": {
+    "message": "Налаштування експортовано"
+  },
+  "settingsExportFailedToast": {
+    "message": "Не вдалося експортувати налаштування"
+  },
+  "settingsImportedToast": {
+    "message": "Налаштування імпортовано"
+  },
+  "settingsImportFailedToast": {
+    "message": "Не вдалося імпортувати налаштування: недійсний файл"
+  },
+  "statsPrivacyNote": {
+    "message": "Обчислено локально за вашою історією виявлень. Дані не залишають ваш браузер."
+  },
+  "statsSubtitleFmt": {
+    "message": "Обчислено локально за записами історії: {0}. Дані не залишають ваш браузер."
+  },
+  "statsRangeLabel": {
+    "message": "Період"
+  },
+  "statsRange7": {
+    "message": "7 днів"
+  },
+  "statsRange30": {
+    "message": "30 днів"
+  },
+  "statsRange90": {
+    "message": "90 днів"
+  },
+  "statsRangeAll": {
+    "message": "Усе"
+  },
+  "statsEmptyTitle": {
+    "message": "Історії ще немає"
+  },
+  "statsEmptyDesc": {
+    "message": "Статистика з’явиться тут, коли сторінки з виявленнями буде збережено в історії."
+  },
+  "statsEntries": {
+    "message": "Записи історії"
+  },
+  "statsUniqueDomains": {
+    "message": "Унікальні домени"
+  },
+  "statsDetections": {
+    "message": "Виявлення"
+  },
+  "statsDistinctDetectors": {
+    "message": "Різні системи захисту"
+  },
+  "statsOverTime": {
+    "message": "Виявлення за часом"
+  },
+  "statsTopProtections": {
+    "message": "Найчастіше виявлені системи захисту"
+  },
+  "statsTopDomains": {
+    "message": "Основні домени"
+  },
+  "statsByCategory": {
+    "message": "За категоріями"
+  },
+  "statsByDifficulty": {
+    "message": "За складністю"
+  },
+  "statsPagesUnit": {
+    "message": "сторінок"
+  },
+  "statsVisitsUnit": {
+    "message": "відвідувань"
+  },
+  "statsDetectionsUnit": {
+    "message": "виявлень"
+  },
+  "statsCategoryOther": {
+    "message": "Інше"
+  },
+  "statsDifficultyNone": {
+    "message": "Без виявлень"
+  },
+  "statsNoData": {
+    "message": "Немає даних за цей період"
+  },
+  "statsTipPagesFmt": {
+    "message": "Сторінок: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "Доменів: {0}"
+  },
+  "statsTipVisitsFmt": {
+    "message": "Відвідувань: {0}"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "Виявлень: {0}"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} із {1} виявлень · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "Записів: {0}"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "З виявленнями: {0}"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "Відвідувань на домен: {0}"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} на запис"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "Середня впевненість: {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Виявлень: {0} · Днів: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Це офіційний детектор Scrapfly. Оновлення його не повернуть; скористайтеся пунктом «Відновити офіційні детектори» в меню …, щоб повернути його."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Відновити офіційні детектори"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "Відновлено офіційних детекторів: {0}"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Не вдалося відновити офіційні детектори"
+  },
+  "authorReservedError": {
+    "message": "Назву «Scrapfly» зарезервовано для офіційних детекторів. Вкажіть інше ім’я автора."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Ваше ім’я"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Очистити власні детектори"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Усі ваші власні детектори буде видалено. Офіційні детектори Scrapfly залишаться (натомість їх можна вимкнути). Ви впевнені?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Видалення власних детекторів..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "Видалено власних детекторів: {0}"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Немає власних детекторів для видалення"
+  },
+  "rhSuggestions": {
+    "message": "Пропозиції"
+  },
+  "rhResults": {
+    "message": "Результати"
+  },
+  "rhCustomChip": {
+    "message": "Власне"
+  },
+  "rhUseAsTyped": {
+    "message": "Використати як введено"
+  },
+  "rhNoResultsFmt": {
+    "message": "Немає збігів для «{0}»"
+  },
+  "rhNoResultsHint": {
+    "message": "Його все одно можна використати як власне значення."
+  },
+  "rhPreview": {
+    "message": "Попередній перегляд"
+  },
+  "rhSearchWindow": {
+    "message": "Пошук властивостей, напр. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Пошук селекторів, напр. captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Умова"
+  },
+  "rhConditionInvalid": {
+    "message": "Невідома умова"
+  },
+  "rhAddProperty": {
+    "message": "Додати властивість"
+  },
+  "rhChipAutomation": {
+    "message": "Автоматизація"
+  },
+  "rhCondGroupType": {
+    "message": "Тип"
+  },
+  "rhCondGroupExistence": {
+    "message": "Наявність"
+  },
+  "rhCondGroupCollections": {
+    "message": "Колекції"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Числа"
+  },
+  "rhCondGroupString": {
+    "message": "Рядок"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Логічні"
+  },
+  "rhCondGroupCustom": {
+    "message": "Поточне значення"
+  },
+  "rhCondTypeObject": {
+    "message": "є об’єктом"
+  },
+  "rhCondTypeFunction": {
+    "message": "є функцією"
+  },
+  "rhCondTypeString": {
+    "message": "є рядком"
+  },
+  "rhCondTypeNumber": {
+    "message": "є числом"
+  },
+  "rhCondTypeBoolean": {
+    "message": "є логічним значенням"
+  },
+  "rhCondTypeSymbol": {
+    "message": "є символом"
+  },
+  "rhCondTypeBigint": {
+    "message": "є BigInt"
+  },
+  "rhCondExists": {
+    "message": "існує на сторінці"
+  },
+  "rhCondTruthy": {
+    "message": "має істинне значення (truthy)"
+  },
+  "rhCondFalsy": {
+    "message": "має хибне значення (порожнє, 0, false або null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "не є undefined"
+  },
+  "rhCondUndefined": {
+    "message": "undefined (відсутнє)"
+  },
+  "rhCondNotNull": {
+    "message": "не є null"
+  },
+  "rhCondNull": {
+    "message": "дорівнює null"
+  },
+  "rhCondArray": {
+    "message": "є масивом"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "є масивом з елементами"
+  },
+  "rhCondEmptyArray": {
+    "message": "є порожнім масивом"
+  },
+  "rhCondHasLength": {
+    "message": "має довжину"
+  },
+  "rhCondHasKeys": {
+    "message": "є об’єктом із ключами"
+  },
+  "rhCondEmptyObject": {
+    "message": "є порожнім об’єктом"
+  },
+  "rhCondGt0": {
+    "message": "більше за 0"
+  },
+  "rhCondGte0": {
+    "message": "0 або більше"
+  },
+  "rhCondEq0": {
+    "message": "дорівнює 0"
+  },
+  "rhCondNe0": {
+    "message": "не дорівнює 0"
+  },
+  "rhCondGt1": {
+    "message": "більше за 1"
+  },
+  "rhCondGte1": {
+    "message": "1 або більше"
+  },
+  "rhCondLenGt0": {
+    "message": "не є порожнім"
+  },
+  "rhCondLenEq0": {
+    "message": "є порожнім"
+  },
+  "rhCondTrue": {
+    "message": "дорівнює true"
+  },
+  "rhCondFalse": {
+    "message": "дорівнює false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Збігається зі сторінками, де {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Шаблон"
+  },
+  "rhDomClass": {
+    "message": "Клас"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Атрибут data"
+  },
+  "rhDomClassContains": {
+    "message": "Клас містить"
+  },
+  "rhDomIdContains": {
+    "message": "ID містить"
+  },
+  "rhDomTag": {
+    "message": "HTML-тег"
+  },
+  "rhDomAttr": {
+    "message": "Має атрибут"
+  },
+  "rhDomIframe": {
+    "message": "URL iframe містить"
+  },
+  "rhDomTitle": {
+    "message": "Заголовок (title) містить"
+  },
+  "rhDomAlt": {
+    "message": "Текст alt містить"
+  },
+  "rhDomCamel": {
+    "message": "Клас у camelCase"
+  },
+  "rhRefAny": {
+    "message": "будь-який символ"
+  },
+  "rhRefZeroMore": {
+    "message": "0 або більше"
+  },
+  "rhRefOneMore": {
+    "message": "1 або більше"
+  },
+  "rhRefOptional": {
+    "message": "необов’язково"
+  },
+  "rhRefStart": {
+    "message": "початок"
+  },
+  "rhRefEnd": {
+    "message": "кінець"
+  },
+  "rhRefDigit": {
+    "message": "цифра"
+  },
+  "rhRefWord": {
+    "message": "літера, цифра або _"
+  },
+  "rhRefSpace": {
+    "message": "пробіл"
+  },
+  "rhRefOr": {
+    "message": "a або b"
+  },
+  "rhMatch": {
+    "message": "Збігається"
+  },
+  "rhNoMatch": {
+    "message": "Немає збігу"
+  },
+  "ptTitle": {
+    "message": "Перевірка шаблону"
+  },
+  "ptTitleFmt": {
+    "message": "Перевірка шаблону · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Вміст сторінки"
+  },
+  "ptKindCookieName": {
+    "message": "Назва cookie"
+  },
+  "ptKindCookieValue": {
+    "message": "Значення cookie"
+  },
+  "ptKindHeaderName": {
+    "message": "Назва заголовка"
+  },
+  "ptKindHeaderValue": {
+    "message": "Значення заголовка"
+  },
+  "ptKindPayloadText": {
+    "message": "Тіло запиту"
+  },
+  "ptKindPayloadUrl": {
+    "message": "URL запиту"
+  },
+  "ptPatternLabel": {
+    "message": "Шаблон"
+  },
+  "ptOptionsLabel": {
+    "message": "Параметри збігу"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Перевірити на"
+  },
+  "ptExamplesBtn": {
+    "message": "Приклади"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "По одному в рядку: URL, назва cookie…"
+  },
+  "ptNoSamples": {
+    "message": "Введіть або вставте текст вище, по одному в рядку, щоб побачити, чи є збіг."
+  },
+  "ptCheatTitle": {
+    "message": "Шпаргалка з regex"
+  },
+  "ptCheatNote": {
+    "message": "Пишіть шаблон без / навколо нього. Повтор усередині повтору, наприклад (a+)+, відхиляється, бо може призвести до зависання сторінок."
+  },
+  "ptApply": {
+    "message": "Застосувати"
+  },
+  "ptTestBtn": {
+    "message": "Перевірити"
+  },
+  "ptTestTitle": {
+    "message": "Перевірити шаблон на прикладі тексту"
+  },
+  "ptNoPattern": {
+    "message": "Шаблону ще немає"
+  },
+  "ptHintRegex": {
+    "message": "Шаблон на кшталт ^bm_ або \\d+, без / навколо"
+  },
+  "ptHintWholeWord": {
+    "message": "Пропускає збіги всередині довшого слова: _abck, але не test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai більше не збігається з akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Введіть шаблон, щоб побачити, з чим він збігається."
+  },
+  "ptSaysRegex": {
+    "message": "Збігається з текстом, у якому regex знаходить збіг."
+  },
+  "ptSaysWordFmt": {
+    "message": "Збігається з «{0}» як із цілим словом, а не всередині довшого слова."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Збігається з назвами на кшталт «{0}», де * означає будь-який текст."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Збігається з назвами, що починаються з «{0}»."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Збігається з текстом, що містить «{0}»."
+  },
+  "ptCaseExact": {
+    "message": "Регістр літер має збігатися точно."
+  },
+  "ptCaseIgnored": {
+    "message": "Великі й малі літери не розрізняються."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Цей regex недійсний, тому ніколи не збігається: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Виявлення відхиляє цей regex, бо він може призвести до зависання сторінок (повтор усередині повтору або понад 1000 символів), тому він ніколи не збігається."
+  },
+  "ptNoteSlashes": {
+    "message": "Приберіть / з обох кінців: вони шукаються як частина тексту."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Це схоже на regex: увімкніть Regex, інакше його символи шукатимуться як звичайний текст."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Опція «Ціле слово» не діє, поки ввімкнено Regex."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Назви заголовків зберігаються в нижньому регістрі, тому з увімкненою опцією «З урахуванням регістру» цей шаблон ніколи не збігатиметься."
+  },
+  "ptNoteWordEdges": {
+    "message": "Шаблон починається або закінчується символом, тому для опції «Ціле слово» одразу поруч із цим символом потрібна літера, цифра або _."
+  },
+  "rhRefDot": {
+    "message": "справжня крапка"
+  },
+  "rhRefSet": {
+    "message": "одне з a, b, c"
+  },
+  "rhRefCount": {
+    "message": "від 2 до 5 разів"
+  },
+  "mhExamplesTitle": {
+    "message": "У правилах Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Як визначається збіг"
+  },
+  "mhWriteTitle": {
+    "message": "Що можна написати"
+  },
+  "mhLimitsTitle": {
+    "message": "Корисно знати"
+  },
+  "mhUrlIntro": {
+    "message": "Перевіряє адресу сторінки та URL, які вона запитує: скрипти, виклики XHR і fetch, зображення, фрейми та пінги."
+  },
+  "mhUrlHow1": {
+    "message": "Без Regex URL має містити текст, регістр не враховується. Враховується весь URL разом із рядком запиту."
+  },
+  "mhUrlHow2": {
+    "message": "З Regex приберіть / з обох кінців і пишіть крапки як `\\.`, наприклад `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Область URL: «Сторінка» перевіряє лише адресу сторінки, «Скрипти» додає джерела скриптів, «Усі» (за замовчуванням) додає кожен запит."
+  },
+  "mhUrlLimit1": {
+    "message": "Запити шрифтів, медіа та таблиць стилів не записуються."
+  },
+  "mhUrlLimit2": {
+    "message": "Враховуються лише запити, зроблені до сканування; сканування запускається після завантаження сторінки."
+  },
+  "mhHeaderIntro": {
+    "message": "Перевіряє заголовки запиту й відповіді самої сторінки, а не скриптів, викликів XHR чи фреймів."
+  },
+  "mhHeaderHow1": {
+    "message": "Назви заголовків порівнюються в нижньому регістрі, а звичайний текст означає «містить»: `server` збігається також із `server-timing`. Для точної назви використовуйте Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Значення перевіряється в заголовку з цією назвою; залиште його порожнім, щоб приймати будь-яке значення."
+  },
+  "mhHeaderHow3": {
+    "message": "Область «Відповідь» (за замовчуванням) — заголовки, надіслані сайтом; «Запит» — заголовки, надіслані браузером."
+  },
+  "mhHeaderLimit1": {
+    "message": "З увімкненою опцією «З урахуванням регістру» пишіть назви заголовків у нижньому регістрі."
+  },
+  "mhHeaderLimit2": {
+    "message": "Сторінки, які змінюють адресу без перезавантаження, повторно скануються без заголовків."
+  },
+  "mhCookieIntro": {
+    "message": "Перевіряє cookie сторінки за назвою та, за потреби, за значенням, зокрема HttpOnly і Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Звичайна назва збігається як префікс: `_abck` збігається також із `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` означає будь-який текст: `bm_*` збігається з `bm_sz` і `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Для точної назви увімкніть Regex і напишіть `^назва$`. Значення збігається, якщо містить текст."
+  },
+  "mhCookieLimit1": {
+    "message": "Область «Запит» (за замовчуванням) читає cookie браузера для сторінки; «Відповідь» читає cookie, які встановлює відповідь сторінки."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookie інших сайтів, наприклад у фреймі постачальника, не видно. Довгі значення обрізаються до 100 символів."
+  },
+  "mhContentIntro": {
+    "message": "Шукає в тексті сторінки: у HTML її body, у вбудованих скриптах і в завантажених файлах скриптів та стилів."
+  },
+  "mhContentHow1": {
+    "message": "Звичайний текст збігається, якщо текст його містить; регістр не враховується."
+  },
+  "mhContentHow2": {
+    "message": "«Ціле слово» пропускає збіги всередині довшого слова; на обох кінцях шаблону потрібна літера, цифра або _."
+  },
+  "mhContentHow3": {
+    "message": "«Перевіряти лише скрипти» шукає лише у вбудованих скриптах (разом із head) і файлах JavaScript, без HTML і CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Файли, які сайт не дозволяє читати іншим джерелам (CORS), або більші за 5 МБ пропускаються."
+  },
+  "mhContentLimit2": {
+    "message": "Код у фреймах чи воркерах, а також завантажений після сканування, не переглядається."
+  },
+  "mhDomIntro": {
+    "message": "Шукає елемент у body сторінки за CSS-селектором після завантаження сторінки."
+  },
+  "mhDomHow1": {
+    "message": "Тег, `.клас`, `#id` або `[атрибут]`, окремо чи разом: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Перевірки атрибутів `=`, `^=`, `$=`, `*=`, `~=` і `|=`; додайте ` i` перед `]`, щоб не враховувати регістр."
+  },
+  "mhDomHow3": {
+    "message": "Кілька селекторів через кому: достатньо збігу будь-якого з них."
+  },
+  "mhDomLimit1": {
+    "message": "Не підтримуються, і правило ніколи не збігатиметься: пробіли або `>` між частинами, `:псевдокласи` та екранування."
+  },
+  "mhDomLimit2": {
+    "message": "Head, фрейми й shadow root не переглядаються. Атрибут `value` не читається; інші порівнюються за першими 100 символами."
+  },
+  "mhWindowIntro": {
+    "message": "Перевіряє глобальну змінну JavaScript, яку визначає сторінка, наприклад `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Шлях від `window` через крапку: `KPSDK` або `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Умова на кшталт `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` або `has keys`. Порожня означає truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Умова, яку виявлення не розуміє, ніколи не збігається, тому вибирайте її зі списку."
+  },
+  "mhWindowLimit1": {
+    "message": "Перевіряється в перші секунди після завантаження сторінки; глобальні змінні, створені пізніше, пропускаються."
+  },
+  "mhWindowLimit2": {
+    "message": "Властивості з іменем-Symbol неможливо записати як шлях."
+  },
+  "mhJsHooksIntro": {
+    "message": "Записує, коли сторінка викликає API браузера, наприклад `HTMLCanvasElement.prototype.toDataURL`, — ознака зняття відбитків."
+  },
+  "mhJsHooksHow1": {
+    "message": "Повний шлях до методу або геттера: `Navigator.prototype.webdriver`, а не `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Враховується будь-який виклик; аргументи й результат не перевіряються, тому хук показує, що API використовувався, але не навіщо."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Виклики враховуються в перші секунди після завантаження сторінки (щонайбільше 8 секунд)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Виклики у воркерах чи фреймах не видно, окрім вбудованих цілей у фреймах того самого сайту."
+  },
+  "mhPayloadIntro": {
+    "message": "Шукає в тілах запитів POST, PUT, PATCH і DELETE, які надсилає сторінка, з будь-якого фрейму."
+  },
+  "mhPayloadHow1": {
+    "message": "Звичайний текст збігається, якщо тіло його містить; регістр не враховується. Дані форм читаються як `назва=значення&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "URL запиту (необов’язково) і HTTP-метод обмежують пошук відповідними запитами."
+  },
+  "mhPayloadLimit1": {
+    "message": "Враховуються лише запити, надіслані до сканування, не більше 50 на сторінку."
+  },
+  "mhPayloadLimit2": {
+    "message": "Повідомлення WebSocket не читаються."
+  },
+  "domCardTitle": {
+    "message": "CSS-селектор"
+  },
+  "domCardBrowse": {
+    "message": "Огляд"
+  },
+  "domCardHint": {
+    "message": "Тег, .клас, #id або перевірка [атрибута], окремо чи разом. Пробіли або > між частинами не підтримуються."
+  },
+  "windowCardTitle": {
+    "message": "Властивість window"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Події, які розширення надсилає на сторінку"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Підпишіться на події у власному скрипті"
+  },
+  "settingsApiCopyCode": {
+    "message": "Копіювати код"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Код скопійовано"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Копіювати назву події"
+  },
+  "advCommonClickToCopy": {
+    "message": "Натисніть, щоб скопіювати"
+  },
+  "advCommonDomainLabel": {
+    "message": "Домен:"
+  },
+  "advCommonCopy": {
+    "message": "Копіювати"
+  },
+  "advCommonPage": {
+    "message": "Сторінка"
+  },
+  "advCommonExportCode": {
+    "message": "Експорт коду"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL скопійовано"
+  },
+  "advScriptTypeCollector": {
+    "message": "Збирач"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "Перевірка CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Проміжна сторінка"
+  },
+  "advCommonCaptured": {
+    "message": "Захоплено"
+  },
+  "advCommonScript": {
+    "message": "Скрипт"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL скрипта:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Немає даних захоплення"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Не вдалося перевірити cookie: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Не вдалося проаналізувати скрипти: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Не вдалося почати аналіз"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Не вдалося перевірити версію: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Не вдалося витягти: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Не вдалося почати витягання: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Немає скриптів для експорту"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "Cookie {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Cookie {0} не знайдено"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "Скрипти {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Аналіз скриптів {0}… Сторінку буде перезавантажено"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Генерація коду недоступна"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Генератор коду для розбору скриптів"
+  },
+  "advCommonExportOptions": {
+    "message": "Параметри експорту"
+  },
+  "advCommonAllTypes": {
+    "message": "Усі типи"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Знайдено відповідних скриптів: {0}"
+  },
+  "advCommonTotalScripts": {
+    "message": "Усього скриптів:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Рівень захисту:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Знайдено cookie:"
+  },
+  "advCommonSiteKey": {
+    "message": "Ключ сайту"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL сайту"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL сайту"
+  },
+  "advCommonApiDomain": {
+    "message": "Домен API"
+  },
+  "advCommonFound": {
+    "message": "Знайдено"
+  },
+  "advCommonNotFound": {
+    "message": "Не знайдено"
+  },
+  "advCommonYes": {
+    "message": "Так"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Стандартний"
+  },
+  "advCommonNone": {
+    "message": "Немає"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Код для консолі браузера, що перехоплює й розбирає скрипти {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Скрипт Python із requests і BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Скрипт Python із бібліотекою requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Скрипт Node.js з axios і cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Скрипт Node.js з axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "Скрипт PHP з cURL і DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "Скрипт PHP з cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# з HttpClient і HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# з HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go з net/http і goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go з net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Захоплення активне"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Перезавантажте сторінку, щоб розпочати захоплення."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Завершиться через {0} с"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Перезавантажте сторінку"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Пройдіть reCAPTCHA або натисніть на неї"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Дочекайтеся повідомлення «Захоплення завершено»"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Моніторинг {0} запущено"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Захоплення завершено"
+  },
+  "pageNoticePageLoading": {
+    "message": "Завантаження сторінки"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Зачекайте, поки сторінка повністю завантажиться..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Akamai на цій сторінці не виявлено. Cookie _abck відсутній."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Дані Akamai успішно захоплено!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Захоплення зупинено"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Не вдалося зупинити захоплення: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Перезавантаження сторінки для аналізу даних Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Не вдалося проаналізувати вміст: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Cookie _abck не знайдено"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Не вдалося обробити дані: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Витягання відомостей про сенсор…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Не вдалося витягти відомості про сенсор: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai не виявлено"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Cookie _abck на цій сторінці відсутній."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager тут неактивний."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Перезавантажте сторінку, щоб почати відстеження даних сенсора та відомостей про запити"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "sensor_data Akamai успішно захоплено"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Розширений (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Базовий"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Легкий"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "Рівень _abck:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Аналіз Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Скрипти Akamai:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Скрипт з URL даних сенсора"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "HTML-змінна Pixel:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL для POST:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Змінна скрипта Pixel:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL скрипта SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL даних сенсора"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Кінцева точка Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Сенсор"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Витягнуті відомості про сенсор"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Дані сенсора (символів: {0})"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Дані сенсора не захоплено"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "Дані SBSD (символів: {0})"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL скрипта сенсора"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Копіювати всі дані як JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Витягти відомості про сенсор"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "Рівень ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "Cookie ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Версія Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Потрібні перевірки"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Перевірка SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Перевірка sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Перевірка Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Не вдалося ввімкнути режим витягання. Подробиці дивіться у фоновій консолі."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Сесійні cookie"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Компоненти захисту"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookie: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Виявлення ресурсів"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL ресурсів"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL опитування"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Аналіз Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL сенсора:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "Скрипт {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "Шлях сенсора:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Скрипти не виявлено"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Можливо, Imperva на цій сторінці немає"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Лише {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Розширений (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Базовий (сесія)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Перезавантажте сторінку, щоб почати відстеження запитів і cookie Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Дані Imperva захоплено (елементів: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Захоплення Imperva завершено"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Дані сенсора успішно захоплено"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Зворотний виклик reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Визначення селектора"
+  },
+  "advRecaptchaMethod": {
+    "message": "Метод"
+  },
+  "advRecaptchaSelector": {
+    "message": "Селектор"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Селектор скопійовано в буфер обміну!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Елементи reCAPTCHA не знайдено"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "Помилка grecaptcha.execute(): {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Зворотні виклики reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "Клієнти reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "ID клієнта: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Скопійовано в буфер обміну!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Функція зворотного виклику"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Шлях до зворотного виклику"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Зворотний виклик не задано"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Зворотні виклики в DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Зворотні виклики в скриптах"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Приклади використання зворотного виклику"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Невидима"
+  },
+  "advRecaptchaAction": {
+    "message": "Дія"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Обов’язковий cookie"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Виявлені особливості"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "Потрібен параметр S"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Є сесія"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Не вдалося натиснути: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "На цій сторінці не знайдено зворотних викликів reCAPTCHA. Переконайтеся, що reCAPTCHA завантажено."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Не вдалося захопити зворотний виклик: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Перезавантажте сторінку та пройдіть перевірку reCAPTCHA, щоб почати моніторинг"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Сторінка готова"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Тепер пройдіть перевірку reCAPTCHA, щоб захопити дані"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Захоплено й декодовано запитів: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Запити reCAPTCHA не захоплено"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA виявлено"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Пройдіть перевірку — захоплення завершиться саме"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Тепер запустіть reCAPTCHA або натисніть на неї"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Заголовки"
+  },
+  "advShapeVersionTitle": {
+    "message": "Версія Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Шаблон заголовка"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Шаблони заголовків"
+  },
+  "advShapeCookieTitle": {
+    "message": "Cookie Shape"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Аналіз Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Скрипти Init.js:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Скрипти з seed:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Скрипт Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Скрипти Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "Скрипт із seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "Скрипти з seed"
+  },
+  "advShapeErrorFmt": {
+    "message": "Помилка: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Виявлена версія:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Вимоги до захоплення"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + заголовки"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Перезавантажте сторінку, щоб почати моніторинг заголовків і cookie Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Зачекайте, поки сторінка повністю завантажиться, перш ніж виконувати дії..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Моніторинг активний ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Виконайте дії, щоб отримати cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Виконайте дії, щоб отримати заголовки та cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Час очікування вичерпано ({2}) — cookie: {0}, заголовки: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} — Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} — Cookie: {1} | Заголовки: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Захоплено — cookie: {0}, заголовки: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "Виявлення hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha не виявлено. Перезавантажте сторінку із завантаженою hCaptcha."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "Версія hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Режим Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "Ні"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Історії захоплень ще немає"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "Н/д"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Перевірка версії hCaptcha... Сторінку буде перезавантажено"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Час визначення версії hCaptcha вичерпано"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Не вдалося почати перевірку версії"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Перезавантажте сторінку, щоб почати моніторинг запитів hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "Дані hCaptcha успішно захоплено"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Перевірка"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "Видалення cookie {0}... Сторінку буде перезавантажено"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Тип"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Ключ сайту скопійовано"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Перевірка"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Аналітика"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Керування ботами"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Публічний ключ"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User-Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (масив даних браузера)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Дані blob"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Не захоплено"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Перезавантажте сторінку, щоб почати моніторинг, і викличте перевірку FunCaptcha (тайм-аут 60 с)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Сторінка завантажується, зачекайте..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha успішно захоплено"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Захоплено перевірок: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Час захоплення вичерпано"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Перевірку FunCaptcha не виявлено (тайм-аут 60 с)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Вбудований скрипт"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "Атрибут DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL скрипта"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "Конфігурація JSON"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Витягнутий captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Продукт:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Фрагмент скрипта"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Експорт коду розбору"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Помилка: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Виявлено: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Версію Geetest не виявлено"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Вкладку не знайдено"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Скрипти Geetest не знайдено"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Визначення версії Geetest..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Перезавантаження сторінки для перевірки версії"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Аналіз скриптів..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Перезавантаження сторінки для витягання скриптів"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "Інструменти {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Помилка завантаження розширених інструментів"
+  },
+  "advPanelCheckConsole": {
+    "message": "Подробиці дивіться в консолі"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Помилка завантаження захоплень: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Поточний сайт ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Спробуйте змінити фільтри або пошуковий запит, щоб знайти захоплення."
+  },
+  "advPanelNoUrl": {
+    "message": "Немає URL"
+  },
+  "advPanelView": {
+    "message": "Переглянути"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Підтвердьте дію"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Підтвердити"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Скопійовано в буфер обміну"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "Інструменти {0} завантажено"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Знайдено cookie: {0}/{1}"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Знайдено скриптів: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Скрипти {0} не знайдено"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "Виявлено версію {0}: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Версію {0} не виявлено"
+  },
+  "advPanelUnknownError": {
+    "message": "Невідома помилка"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Не вдалося почати захоплення: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Не вдалося зупинити захоплення: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Захоплень: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Очистити всі захоплені дані"
+  },
+  "advPanelNotAvailable": {
+    "message": "Н/д"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Історію захоплень {0} очищено"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Не вдалося очистити історію"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Захоплення: {0}–{1} з {2}"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Новий детектор"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Додати: {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Редагування: {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Піктограма Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "Піктограма {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Змінити піктограму"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Змінити піктограму детектора"
+  },
+  "rulesUiCustomColor": {
+    "message": "Власний колір"
+  },
+  "iconPickerTitle": {
+    "message": "Вибір піктограми"
+  },
+  "iconPickerDefault": {
+    "message": "За замовчуванням"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Завантажити власну"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Файл піктограми має бути меншим за 100 КБ"
+  },
+  "iconPickerNoResults": {
+    "message": "Немає піктограм за вашим запитом"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Пошук піктограм…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Що таке хуки JS?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Що таке властивості window?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Що таке виявлення за URL?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Що таке виявлення за заголовками?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Що таке виявлення за cookie?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Що таке виявлення за вмістом?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Що таке виявлення за DOM?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Що таке виявлення за корисним навантаженням?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Що це за метод виявлення?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Значення (необов’язково)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS-селектор (напр. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Текст або слово для пошуку"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "Шаблон URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "Ціль хука JS (напр. Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Шлях у window (напр. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Умова (напр. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Назва cookie (напр. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Шаблон значення cookie (необов’язково)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Текст (напр. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify або challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Налаштування назви"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Налаштування назви (впевненість: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Налаштування значення"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Видалити шаблон"
+  },
+  "rulesUiClearValue": {
+    "message": "Очистити значення"
+  },
+  "rulesUiAddValue": {
+    "message": "Додати значення"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Сторінка {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Заповніть порожній шаблон, перш ніж додавати новий."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Перед збереженням заповніть усі обов’язкові поля шаблонів."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Введіть тип методу виявлення (напр. HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Метод"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Сторінка = поточний URL | Скрипти = сторінка + скрипти | Усі = усі запити"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Залиште порожнім, щоб підходив будь-який URL"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Інші"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Заголовок: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Позначка часу: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Система захисту: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Категорія: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Впевненість: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Методи виявлення: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Методи виявлення:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Виявлення ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Складність: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Не вдалося скопіювати в буфер обміну"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Копіювати URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Копіювати URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Копіювати категорію"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Копіювати категорію: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Копіювати метод"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Копіювати метод: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Копіювати значення"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Копіювати значення: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} р."
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} міс."
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} дн."
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} год"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} хв"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 хв"
+  },
+  "detectionUiNoDescription": {
+    "message": "Додаткових відомостей про це виявлення немає."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Для цього детектора не записано методів виявлення."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Невідомий метод"
+  },
+  "detectionUiUnknownValue": {
+    "message": "невідомо"
+  },
+  "historyUiUntitled": {
+    "message": "Без назви"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Немає методів виявлення"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Недійсний формат файлу історії"
+  },
+  "popupUiLogoAlt": {
+    "message": "Робот Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Не вдалося ввімкнути розширення: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Не вдалося вимкнути розширення: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Помилка: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "У чорному списку немає доменів"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Немає доменів, що відповідають запиту"
+  },
+  "settingsUiChecking": {
+    "message": "Перевірка..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Ліміт історії має бути від 0 (без обмежень) до 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Тривалість кешу має бути від 1 до {0} ({1})"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Термін автовидалення має бути від 1 до 3650 днів"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Тривалість для дублікатів має бути від 1 до 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Експорт у JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Експорт у текст"
+  },
+  "settingsUiLogsText": {
+    "message": "Текст"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Оновлення детекторів, що потребують новішої версії розширення: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (потрібне розш. v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Підсумки"
+  },
+  "ruleSectionCombinations": {
+    "message": "Комбінації"
+  },
+  "combinationsHint": {
+    "message": "Комбінація виявляє цей захист, лише коли кілька шаблонів знайдено разом. Використовуйте її для шаблонів, надто слабких поодинці."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Кожна комбінація спрацьовує, лише коли її сигнали з’являються разом; ось що вона знайшла на цій сторінці."
+  },
+  "combinationFoundTogether": {
+    "message": "Знайдено разом на цій сторінці:"
+  },
+  "combinationNotPresent": {
+    "message": "Відсутнє"
+  },
+  "combinationFound": {
+    "message": "Знайдено"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Це правило змінили або видалили після сканування, тому показано лише його назву та оцінку."
+  },
+  "historyMatchedDetections": {
+    "message": "Виявлення зі збігами"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Це сканування збережено до того, як почали зберігатися умови, тому показано лише назви та оцінки."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Не повинно бути знайдено"
+  },
+  "combinationMustBeFound": {
+    "message": "Має бути знайдено"
+  },
+  "combinationAutoTip": {
+    "message": "Авто: найвища впевненість серед шаблонів, які спричинили спрацювання"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Додайте щонайменше один шаблон, який має бути знайдено."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Для списку «Одне з цих» у кожному варіанті потрібен шаблон, який має бути знайдено."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "Для «Щонайменше {0}» потрібні шаблони, які мають бути знайдені (кількість: {0})."
+  },
+  "combinationSentenceOne": {
+    "message": "Спрацьовує, коли виконується ця умова."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Спрацьовує, коли виконуються всі умови ({0})."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Спрацьовує, коли виконується будь-яка з цих умов ({0})."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Спрацьовує, коли виконано умов: щонайменше {0} із {1}."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Впевненість: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Впевненість: Авто, до {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Група вважається однією умовою."
+  },
+  "combinationSentenceNot": {
+    "message": "Не спрацьовує, якщо присутній шаблон «Не повинно бути знайдено»."
+  },
+  "combinationSentenceAlone": {
+    "message": "Шаблони без позначки «Лише в комбінаціях» також виявляють самостійно, зі своєю впевненістю."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Впевненість у разі виявлення"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Залиште порожнім для «Авто»: найвища впевненість знайдених шаблонів."
+  },
+  "combinationModeAny": {
+    "message": "Одне з цих"
+  },
+  "combinationModeAll": {
+    "message": "Усі ці"
+  },
+  "combinationModeAtLeast": {
+    "message": "Щонайменше… з цих"
+  },
+  "combinationModeRootAll": {
+    "message": "усі ці знайдено"
+  },
+  "combinationModeRootAny": {
+    "message": "одне з цих знайдено"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "щонайменше… з цих знайдено"
+  },
+  "combinationGroupMode": {
+    "message": "Група"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Додайте шаблон до цієї групи"
+  },
+  "combinationDeleteGroup": {
+    "message": "Видалити групу"
+  },
+  "combinationAddGroup": {
+    "message": "Додати групу «одне з»"
+  },
+  "patternUnusedBadge": {
+    "message": "Не входить до жодної комбінації"
+  },
+  "patternUnusedTip": {
+    "message": "Жодна комбінація його не використовує, тому він нічого не виявляє. Натисніть, щоб він враховувався самостійно."
+  },
+  "combinationsEmpty": {
+    "message": "Комбінацій ще немає."
+  },
+  "combinationAdd": {
+    "message": "Додати комбінацію"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Комбінація {0}"
+  },
+  "combinationDelete": {
+    "message": "Видалити комбінацію"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Видалити комбінацію «{0}»? Її шаблони залишаться в правилі."
+  },
+  "combinationRemove": {
+    "message": "Прибрати"
+  },
+  "combinationEmptyPattern": {
+    "message": "(порожній шаблон)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Будь-який шаблон: {0}"
+  },
+  "combinationGroupEmpty": {
+    "message": "Додайте шаблон нижче"
+  },
+  "combinationAddPattern": {
+    "message": "Додати шаблон"
+  },
+  "combinationAddDescription": {
+    "message": "Додати опис"
+  },
+  "combinationAnyPattern": {
+    "message": "будь-який шаблон"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Додайте шаблони, щоб створити цю комбінацію"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Лише в комбінаціях"
+  },
+  "combinationStrictHint": {
+    "message": "Шаблон із позначкою «Лише в комбінаціях» сам по собі нічого не виявляє і враховується лише в комбінаціях."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Позначити всі"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Зняти позначки"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Цей шаблон сам по собі нічого не виявляє і враховується лише в комбінаціях — в усіх комбінаціях цього правила."
+  },
+  "detectionModalCombinations": {
+    "message": "Комбінації зі збігами"
+  },
+  "combinationNoPatterns": {
+    "message": "Шаблони не додано"
+  },
+  "combinationPickHint": {
+    "message": "Позначте шаблони для додавання"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Додати вибрані: {0}"
+  },
+  "combinationEditConditions": {
+    "message": "Змінити умови"
+  },
+  "combinationAutoConfidence": {
+    "message": "Авто"
+  },
+  "combinationDetectWhen": {
+    "message": "Виявляти, коли"
+  },
+  "combinationGroupExcluded": {
+    "message": "Ці умови не повинні збігатися."
+  },
+  "combinationMinimum": {
+    "message": "Мінімум збігів"
+  },
+  "combinationMatchState": {
+    "message": "Умова шаблону"
+  },
+  "combinationChoosePatterns": {
+    "message": "Вибрати шаблони"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Зменшити мінімум збігів"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Збільшити мінімум збігів"
+  },
+  "detectionTipDetections": {
+    "message": "Кількість систем захисту, виявлених на цій сторінці."
+  },
+  "detectionTipConfidence": {
+    "message": "Середня впевненість у виявлених системах захисту."
+  },
+  "detectionTipDifficulty": {
+    "message": "Орієнтовна складність обходу виявлених систем захисту."
+  },
+  "tipCachedAt": {
+    "message": "Збережено"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Середнє з виявлень: {0}, від {1}% до {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "За комбінаціями зі збігами"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Оцінку визначає найсильніший окремий сигнал"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "Власний детектор"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "За замовчуванням для категорії {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Задано цим детектором"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Задано системою {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Підвищено спільною дією систем захисту: {0}"
+  },
+  "tipLastUpdated": {
+    "message": "Оновлено"
+  },
+  "tipMethodContent": {
+    "message": "Збігся текст на сторінці або в її скриптах."
+  },
+  "tipMethodCookie": {
+    "message": "Збігся cookie цього сайту."
+  },
+  "tipMethodDom": {
+    "message": "Збігся елемент на сторінці."
+  },
+  "tipMethodHeader": {
+    "message": "Збігся заголовок відповіді, надісланий сайтом."
+  },
+  "tipMethodJsHooks": {
+    "message": "Сторінка викликала API браузера, за яким стежить цей детектор."
+  },
+  "tipMethodPayload": {
+    "message": "Збіглися дані, які сторінка надіслала в запиті."
+  },
+  "tipMethodUrl": {
+    "message": "Адреса сторінки або її запиту збіглася з відомою."
+  },
+  "tipMethodWindow": {
+    "message": "Збігся глобальний об’єкт JavaScript на сторінці."
+  },
+  "tipMoreFmt": {
+    "message": "Ще {0}"
+  },
+  "tipOfficialDetector": {
+    "message": "Офіційний детектор Scrapfly"
+  },
+  "tipScopeDomain": {
+    "message": "Результати повторно використовуються для всіх сторінок цього домену."
+  },
+  "tipScopeFullUrl": {
+    "message": "Результати повторно використовуються лише для цього точного URL разом із запитом."
+  },
+  "tipScopePath": {
+    "message": "Результати повторно використовуються для цього точного шляху за будь-якого запиту."
+  },
+  "tipStatsActiveDays": {
+    "message": "Дні, коли збережено хоча б одну сторінку."
+  },
+  "tipStatsDetections": {
+    "message": "Системи захисту, виявлені на всіх збережених сторінках, з повторами."
+  },
+  "tipStatsDetectors": {
+    "message": "Різні виявлені системи захисту, кожна враховується один раз."
+  },
+  "tipStatsDomains": {
+    "message": "Різні сайти серед збережених сторінок."
+  },
+  "tipStatsEntries": {
+    "message": "Сторінки, збережені в Історії за цей період."
+  },
+  "tipStatsRateFmt": {
+    "message": "Записи: {0} із {1}"
+  },
+  "tipPatterns": {
+    "message": "Шаблони"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Докладні журнали"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Записувати також кожне правило, хук і повідомлення, а не лише один звіт на сторінку"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Оновлення правила, яке ви змінили"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "Для «{0}» вийшла нова офіційна версія ({1}). Ви змінювали це правило: нова версія замінить ваші зміни."
+  },
+  "btnDecideLater": {
+    "message": "Вирішити пізніше"
+  },
+  "btnKeepMyEdits": {
+    "message": "Залишити мої зміни"
+  },
+  "btnUseNewVersion": {
+    "message": "Використати нову версію"
+  },
+  "resetToOfficial": {
+    "message": "Повернути офіційну"
+  },
+  "resetToOfficialTitle": {
+    "message": "Повернути офіційну версію"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Скасувати ваші зміни в «{0}» і відновити офіційну версію Scrapfly?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Правило повернуто до офіційної версії"
+  },
+  "ruleEditedTag": {
+    "message": "Змінено"
+  },
+  "tipRuleEdited": {
+    "message": "Ви змінили це офіційне правило. Перш ніж замінити ваші зміни, оновлення запитає вас."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Список виявлень"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Порядок виявлень"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Порядок категорій у списку виявлень, в Історії та в Правилах. Перетягуйте картки, щоб змінити його; усередині категорії виявлення йдуть від найвищої впевненості до найнижчої."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Спочатку найвища впевненість"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Порядок категорій"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Перемістити «{0}» вище"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Перемістити «{0}» нижче"
+  },
+  "settingsCardShareUploads": {
+    "message": "Надсилання для спільного доступу"
+  },
+  "settingsShareDestination": {
+    "message": "Куди надсилати"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Куди «Виявлення → Надіслати виявлення» надсилає підсумок і звідки бере посилання для спільного доступу."
+  },
+  "settingsShareService": {
+    "message": "Сервіс"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (без облікового запису)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (без облікового запису)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (без облікового запису)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (ключ API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (токен)"
+  },
+  "shareProviderCustom": {
+    "message": "Власний сервер"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Видалити через (днів)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Видалити через"
+  },
+  "shareExpire10M": {
+    "message": "10 хвилин"
+  },
+  "shareExpire1H": {
+    "message": "1 година"
+  },
+  "shareExpire1D": {
+    "message": "1 день"
+  },
+  "shareExpire1W": {
+    "message": "1 тиждень"
+  },
+  "shareExpire2W": {
+    "message": "2 тижні"
+  },
+  "shareExpire30D": {
+    "message": "30 днів"
+  },
+  "shareExpire1M": {
+    "message": "1 місяць"
+  },
+  "shareExpire6M": {
+    "message": "6 місяців"
+  },
+  "shareExpire1Y": {
+    "message": "1 рік"
+  },
+  "shareExpireOnetime": {
+    "message": "Після першого перегляду"
+  },
+  "shareExpireNever": {
+    "message": "Ніколи"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "У paste.rs немає опції терміну зберігання: запис залишається, доки сервіс його не видалить."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Ключ API Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Ваш ключ розробника з pastebin.com/doc_api. Записи не потрапляють до публічних списків."
+  },
+  "settingsShareSecretNote": {
+    "message": "Зберігається лише в цьому браузері та не потрапляє в експорт налаштувань."
+  },
+  "settingsShareGithubToken": {
+    "message": "Токен GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Токен із дозволом Gists. Надіслані дані — секретні gist без терміну дії; видаляйте їх на GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL сервера"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS на публічному хості. Може містити <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Формат тіла"
+  },
+  "shareBodyForm": {
+    "message": "Поле форми"
+  },
+  "shareBodyJson": {
+    "message": "Шаблон JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Звичайний текст"
+  },
+  "settingsShareCustomField": {
+    "message": "Назва поля форми"
+  },
+  "settingsShareCustomJson": {
+    "message": "Шаблон JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Змінні: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "По одному в рядку у форматі Назва: значення, наприклад Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Посилання для спільного доступу з"
+  },
+  "shareLinkBody": {
+    "message": "Тіло відповіді (звичайний URL)"
+  },
+  "shareLinkJson": {
+    "message": "Поле JSON"
+  },
+  "shareLinkLocation": {
+    "message": "Заголовок Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Шлях до поля JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Надсилається як expiry_days у тілах форм і як <EXPIRY_DAYS>; що з цим робити, вирішує ваш сервер."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Спершу налаштуйте {0} у розділі Налаштування → Виявлення → Надсилання для спільного доступу"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Підсумок виявлень цієї сторінки буде надіслано до {0} ({1}). Його зможе переглянути будь-хто, хто має посилання. Рядок запиту URL та значення cookie й заголовків не включаються."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "видаляється через {0} дн."
+  },
+  "shareExpiryAfterFmt": {
+    "message": "видаляється через {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "видаляється після першого перегляду"
+  },
+  "shareExpiryService": {
+    "message": "зберігається, доки сервіс його не видалить"
+  },
+  "shareExpiryNever": {
+    "message": "без терміну дії"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Власний сервер має бути HTTPS-адресою на публічному хості"
+  },
+  "pasteBadLink": {
+    "message": "сервіс не повернув дійсне HTTPS-посилання"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Не вдалося надіслати: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Власний сервер надсилання: використайте HTTPS-адресу на публічному хості"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Власний сервер надсилання: шаблон JSON не є дійсним JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} відхилив ключ або токен (неправильний чи прострочений)"
+  },
+  "pasteGistPermission": {
+    "message": "токену GitHub потрібен дозвіл Gists (читання й запис)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "На цій сторінці немає ключа сайту Turnstile"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Ключі сайту Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Розширені інструменти"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Для яких систем захисту є інструменти"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Показувати інструменти за впевненості вище за це значення (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Розділ «Додатково» показує систему захисту, лише якщо її впевненість вища за це значення. 0 — показувати всі виявлені."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Впевненість для розширених інструментів має бути від 0 до 99"
+  },
+  "advCommonValue": {
+    "message": "Значення"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} симв."
+  },
+  "advCookiePath": {
+    "message": "Шлях"
+  },
+  "advCookieExpires": {
+    "message": "Спливає"
+  },
+  "advCookieSession": {
+    "message": "Сеанс (видаляється під час закриття браузера)"
+  },
+  "advCookieNotFound": {
+    "message": "Не знайдено"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Відновити офіційні детектори?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Усі офіційні детектори встановлено. Відновлювати нічого."
+  },
+  "restoreOfficialChecking": {
+    "message": "Перевірка останнього випуску на GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Повторне встановлення з випуску {0} на GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub недоступний, тому використовується версія з розширення."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub наразі обмежує запити, тому використовується версія з розширення."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Повторне встановлення з версії, що входить до розширення: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Правила → Оновити встановить їх знову: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Ваші власні детектори та ваші зміни в інших правилах не буде змінено."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "ще {0}"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Не вдалося відновити: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "Відновлено: {0}"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Виконайте Правила → Оновити, щоб установити решту."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Відновити"
+  },
+  "advancedFilterTool": {
+    "message": "Інструмент"
+  },
+  "advancedFilterAllTools": {
+    "message": "Усі інструменти"
+  },
+  "advFilterKindCapture": {
+    "message": "Захоплення"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Захоплення"
+  },
+  "advFilterKindOther": {
+    "message": "Інші інструменти"
+  },
+  "scrapflyExportTitle": {
+    "message": "Скрапінг через Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Код для скрапінгу цієї сторінки з Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Отримайте цю сторінку через API Scrapfly з увімкненим Unblocker. Він сам вибирає браузер, проксі та заголовки й нічого не коштує додатково, якщо сайт не блокує.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Виявлено на цій сторінці",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Мова коду",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "На цій сторінці є CAPTCHA: Unblocker обходить або розв’язує її, щоб повернути сторінку, але не заповнює CAPTCHA у формах.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Параметри"
+  },
+  "scrapflyExportProduct": {
+    "message": "Використовувати"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Розв’язувати CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Оплата за кожне розв’язання"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Щоб розв’язувати їх, використайте Cloud Browser."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Відкрийте цю сторінку в Cloud Browser від Scrapfly і керуйте нею через Playwright. Captcha Solver розв’язує Turnstile, reCAPTCHA, GeeTest та інші в міру появи; невдалі спроби безкоштовні."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Обхід антиботів"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Копіювати для ШІ"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Копіює сторінку, її захист, ваші налаштування та код одним повідомленням для ChatGPT, Claude або будь-якого ШІ-помічника"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Скопійовано: вставте в ШІ-помічника"
+  },
+  "scrapflyExportFormat": {
+    "message": "Формат"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Текст"
+  },
+  "scrapflyExportProxy": {
+    "message": "Проксі"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Дата-центр"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Резидентні"
+  },
+  "scrapflyExportCountry": {
+    "message": "Країна"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Будь-яка"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Виконувати JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 кредитів"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Виберіть параметри"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Скопіюйте код"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Вкажіть ключ API"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Запустіть"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Отримати ключ API",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Відкрити Playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Код скопійовано",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Відкрийте веб-сторінку, щоб виконати її скрапінг через Scrapfly",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "Захоплень: {0}"
+  },
+  "statsFirstSeen": {
+    "message": "Нове за період"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "Уперше збережено в цьому діапазоні: систем захисту — {0}, доменів — {1}."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Виберіть 7, 30 або 90 днів, щоб побачити нове."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Найзахищеніший домен"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "Різних систем захисту: {0}, відвідувань: {1}."
+  },
+  "statsFoundTogether": {
+    "message": "Системи захисту, виявлені разом"
+  },
+  "statsMethods": {
+    "message": "Методи виявлення"
+  },
+  "statsMatchesUnit": {
+    "message": "збігів"
+  },
+  "statsMethodsByCategory": {
+    "message": "Методи за категоріями"
+  },
+  "statsWeakEvidence": {
+    "message": "Найслабші докази"
+  },
+  "statsSignalColumn": {
+    "message": "Сигнал"
+  },
+  "statsMethodColumn": {
+    "message": "Метод"
+  },
+  "statsTopSignals": {
+    "message": "Сигнали з найбільшою кількістю збігів"
+  },
+  "statsDecidedSingle": {
+    "message": "Один шаблон"
+  },
+  "statsDecidedCombination": {
+    "message": "Комбінація"
+  },
+  "statsDecidedBy": {
+    "message": "Як ухвалювалися рішення про виявлення"
+  },
+  "statsCombinationGain": {
+    "message": "Впевненість за типом рішення"
+  },
+  "statsCombinationColumn": {
+    "message": "Комбінація"
+  },
+  "statsTopCombinations": {
+    "message": "Комбінації, що спрацювали"
+  },
+  "statsNoCombinations": {
+    "message": "Жодне виявлення за цей період не було ухвалене комбінацією."
+  },
+  "statsRulesMostActive": {
+    "message": "Найактивніші правила"
+  },
+  "statsTipPatternsFmt": {
+    "message": "Шаблонів: {0}"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Шаблони за методами"
+  },
+  "statsRulesOfficial": {
+    "message": "Офіційні"
+  },
+  "statsRulesCustom": {
+    "message": "Власні"
+  },
+  "statsRuleColumn": {
+    "message": "Правило"
+  },
+  "statsRuleKindColumn": {
+    "message": "Тип"
+  },
+  "statsPatternsUnit": {
+    "message": "шаблонів"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Не знайдено в цьому діапазоні"
+  },
+  "statsRulesAllMatched": {
+    "message": "Кожне ввімкнене правило щось знайшло в цьому діапазоні."
+  },
+  "statsMissingColumn": {
+    "message": "Без опису"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Шаблони без опису"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Кожен шаблон має опис."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Версія правила"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Потрібне розширення"
+  },
+  "statsRulesWaiting": {
+    "message": "Очікує новішого розширення"
+  },
+  "statsToolsByVendor": {
+    "message": "Захоплення за постачальниками"
+  },
+  "statsToolsCapture": {
+    "message": "Захоплення"
+  },
+  "statsToolsByTool": {
+    "message": "Найуживаніші інструменти"
+  },
+  "statsToolsOverTime": {
+    "message": "Захоплення в часі"
+  },
+  "statsChangeColumn": {
+    "message": "Зміна"
+  },
+  "statsDateColumn": {
+    "message": "Дата"
+  },
+  "statsDomainChanges": {
+    "message": "Зміни захисту"
+  },
+  "statsNoChanges": {
+    "message": "Жоден домен не змінив систем захисту між збереженими відвідуваннями за цей період."
+  },
+  "statsNothingNew": {
+    "message": "Нічого нового: усі системи захисту тут уже були в Історії до цього періоду."
+  },
+  "statsSectionSignals": {
+    "message": "Сигнали"
+  },
+  "statsSectionCombinations": {
+    "message": "Комбінації"
+  },
+  "statsSectionRules": {
+    "message": "Правила"
+  },
+  "statsSectionTools": {
+    "message": "Інструменти"
+  },
+  "statsDomainChangesHint": {
+    "message": "Домени, у яких виявлені системи захисту змінилися між двома збереженими відвідуваннями."
+  },
+  "statsFirstSeenHint": {
+    "message": "Системи захисту та домени, збережені вперше за цей період."
+  },
+  "statsSignalsNote": {
+    "message": "Які докази знайшло кожне збережене виявлення: назви cookie та заголовків, URL, елементи сторінки, скрипти й хуки JavaScript."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Системи захисту, чиї знайдені шаблони мають найнижчу середню впевненість. Їхнім правилам може знадобитися сильніший шаблон."
+  },
+  "statsCombinationsNote": {
+    "message": "Комбінація виявляє систему захисту, лише коли кілька шаблонів знайдено разом."
+  },
+  "statsRulesNote": {
+    "message": "Ваша бібліотека правил порівняно з тим, що Історія знайшла за цей період."
+  },
+  "statsRulesTotal": {
+    "message": "Правила"
+  },
+  "statsRulesModified": {
+    "message": "Змінені офіційні"
+  },
+  "statsRulesDisabled": {
+    "message": "Вимкнені"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Увімкнені правила, які нічого не знайшли на сторінках, збережених за цей період."
+  },
+  "statsRulesMissingHint": {
+    "message": "Описи показуються в подробицях виявлення, в Історії та в комбінаціях. Додайте їх у редакторі правил."
+  },
+  "statsToolsNote": {
+    "message": "Розширені захоплення та результати інструментів, збережені на цьому пристрої."
+  },
+  "statsCapturesUnit": {
+    "message": "захоплень"
+  },
+  "detectionCardSureFmt": {
+    "message": "Впевненість {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Комбінація"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "КЕШ"
+  },
+  "detectionTipCache": {
+    "message": "Які сторінки повторно використовують ці кешовані результати та як довго."
+  },
+  "tipCacheExpires": {
+    "message": "Спливає"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Перевірити за Історією"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Показує, на скількох збережених сторінках збігається кожен шаблон і комбінація. Незбережені зміни враховуються."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Перевірити"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "Збережених сторінок: {0} · сторінок із цим правилом: {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "Сторінки: {0} із {1}"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "Інші сторінки: +{0}"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Історія порожня: спершу відкрийте кілька сторінок."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Оцінка: Історія зберігає знайдені значення, а не сторінки повністю."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "спрацьовує на сторінках: {0}"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Додайте шаблони, щоб їх перевірити."
+  },
+  "settingsThemeTitle": {
+    "message": "Тема"
+  },
+  "settingsThemeDesc": {
+    "message": "Темна або світла в кольорах Scrapfly. «Системна» використовує тему браузера."
+  },
+  "themeDark": {
+    "message": "Темна"
+  },
+  "themeLight": {
+    "message": "Світла"
+  },
+  "themeSystem": {
+    "message": "Системна"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Відкрити консоль"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Відкриває це розширення в chrome://extensions: натисніть «service worker», щоб побачити журнали."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Зберігати журнали тут, а не в консолі, щоб експортувати їх у JSON або текст"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Переклади"
+  },
+  "ruleTranslationsHint": {
+    "message": "Показується замість опису, коли розширення використовує цю мову. Порожньо: показується опис."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} із {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Перекласти автоматично"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Для автоматичного перекладу потрібен Chrome 138 або новіший."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Спочатку напишіть опис."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Переклад: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Заповнено мов: {0}. Перевірте перед збереженням."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Заповнено: {0}; не вдалося перекласти тут: {1}."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Чекати після завантаження"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Чекати на елемент"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Готовність сторінки на"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Прокрутити до кінця"
+  },
+  "sfxOptJs": {
+    "message": "Виконати JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Дії в браузері"
+  },
+  "sfxOptScreenshot": {
+    "message": "Знімок екрана"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Елемент"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Параметри знімка екрана"
+  },
+  "sfxOptLang": {
+    "message": "Мови"
+  },
+  "sfxOptOs": {
+    "message": "Операційна система"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Браузер"
+  },
+  "sfxOptGeolocation": {
+    "message": "Геолокація"
+  },
+  "sfxOptHeaders": {
+    "message": "Заголовки"
+  },
+  "sfxOptTimeout": {
+    "message": "Тайм-аут"
+  },
+  "sfxOptRetry": {
+    "message": "Повторювати за помилок"
+  },
+  "sfxOptCostBudget": {
+    "message": "Ліміт кредитів"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Виключити"
+  },
+  "sfxOptProxified": {
+    "message": "Повернути відповідь сайту"
+  },
+  "sfxOptExtraction": {
+    "message": "Витягти дані"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Модель"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Запит"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Збережений шаблон"
+  },
+  "sfxOptCache": {
+    "message": "Кеш"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Зберігати"
+  },
+  "sfxOptCacheClear": {
+    "message": "Оновити кеш"
+  },
+  "sfxOptSession": {
+    "message": "Сесія"
+  },
+  "sfxOptSticky": {
+    "message": "Той самий проксі для сесії"
+  },
+  "sfxOptDebug": {
+    "message": "Налагодження"
+  },
+  "sfxOptCorrelationId": {
+    "message": "ID кореляції"
+  },
+  "sfxOptTags": {
+    "message": "Теги"
+  },
+  "sfxOptDns": {
+    "message": "Дані DNS"
+  },
+  "sfxOptSsl": {
+    "message": "Сертифікат SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Вебхук"
+  },
+  "sfxOptMode": {
+    "message": "Запуск"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Вказати цю сторінку"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Мова"
+  },
+  "sfxOptAutoClose": {
+    "message": "Закрити під час відключення"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Тривалість сесії"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Ліміт часу розблокування"
+  },
+  "sfxOptBlockImages": {
+    "message": "Блокувати зображення"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Блокувати таблиці стилів"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Блокувати шрифти"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Блокувати відео й аудіо"
+  },
+  "sfxOptBlacklist": {
+    "message": "Блокувати трекери"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Кешувати статичні файли"
+  },
+  "sfxOptRecord": {
+    "message": "Записати сесію"
+  },
+  "sfxOptMcp": {
+    "message": "Кінцева точка MCP"
+  },
+  "sfxValAuto": {
+    "message": "Автоматично"
+  },
+  "sfxValCleanHtml": {
+    "message": "Чистий HTML"
+  },
+  "sfxValComplete": {
+    "message": "Повне завантаження"
+  },
+  "sfxValDomReady": {
+    "message": "DOM готовий"
+  },
+  "sfxValFullPage": {
+    "message": "Уся сторінка"
+  },
+  "sfxValElement": {
+    "message": "Елемент"
+  },
+  "sfxValLoadImages": {
+    "message": "Завантажувати зображення"
+  },
+  "sfxValDarkMode": {
+    "message": "Темна тема"
+  },
+  "sfxValBlockBanners": {
+    "message": "Приховати банери"
+  },
+  "sfxValHighQuality": {
+    "message": "Висока якість"
+  },
+  "sfxValPrint": {
+    "message": "Стиль друку"
+  },
+  "sfxValNoLinks": {
+    "message": "Посилання"
+  },
+  "sfxValNoImages": {
+    "message": "Зображення"
+  },
+  "sfxValOnlyContent": {
+    "message": "Усе, крім основного вмісту"
+  },
+  "sfxValModel": {
+    "message": "Модель ШІ"
+  },
+  "sfxValTemplate": {
+    "message": "Шаблон"
+  },
+  "sfxValConnect": {
+    "message": "Відкрити браузер"
+  },
+  "sfxValUnblock": {
+    "message": "Спочатку розблокувати"
+  },
+  "sfxGroupRender": {
+    "message": "Рендеринг у браузері"
+  },
+  "sfxGroupLocation": {
+    "message": "Розташування та відбиток"
+  },
+  "sfxGroupRequest": {
+    "message": "Запит"
+  },
+  "sfxGroupOutput": {
+    "message": "Вивід"
+  },
+  "sfxGroupExtraction": {
+    "message": "Витягання за допомогою ШІ"
+  },
+  "sfxGroupCache": {
+    "message": "Кеш і сесія"
+  },
+  "sfxGroupTracking": {
+    "message": "Налагодження й відстеження"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Відбиток і мова"
+  },
+  "sfxGroupSession": {
+    "message": "Сесія"
+  },
+  "sfxGroupBlocking": {
+    "message": "Блокування та кеш"
+  },
+  "sfxGroupTools": {
+    "message": "Налагодження та MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Потрібен рендеринг JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Потрібен Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Лише для виводу Markdown або «Текст»"
+  },
+  "sfxWhyCache": {
+    "message": "Спочатку ввімкніть кеш"
+  },
+  "sfxWhySession": {
+    "message": "Спочатку задайте сесію"
+  },
+  "sfxWhySticky": {
+    "message": "З Unblocker завжди ввімкнено"
+  },
+  "sfxWhyJson": {
+    "message": "Не список кроків JSON: пропущено"
+  },
+  "sfxWhyGeo": {
+    "message": "Вкажіть широту,довготу: пропущено"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Цей браузер не працює в цій системі: пропущено"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge потребує Windows: пропущено"
+  },
+  "sfxHintHeaders": {
+    "message": "По одному в рядку: Назва: значення. Не зберігається."
+  },
+  "sfxHintScenario": {
+    "message": "Список JSON: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Через кому"
+  },
+  "sfxHintLanguages": {
+    "message": "Через кому, не більше 3"
+  },
+  "sfxHintUnblock": {
+    "message": "«Спочатку розблокувати» повертає браузер, який уже пройшов антибот-захист"
+  },
+  "sfxValOff": {
+    "message": "Вимк."
+  },
+  "ruleTranslateAllDone": {
+    "message": "Усі мови вже мають переклад."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Переклади назви"
+  },
+  "combinationTranslationsHint": {
+    "message": "Показується замість назви, коли розширення використовує цю мову. Порожньо: показується назва."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Спочатку напишіть назву."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Перевіряє cookie перевірки та аналізує скрипти"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Перевіряє cookie DataDome та аналізує скрипти"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Знаходить публічний ключ, захоплює дані браузера (BDA) та аналізує скрипти"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Визначає версію GeeTest (v3 або v4) та аналізує скрипти"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Знаходить ключ сайту, визначає версію hCaptcha та аналізує скрипти"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Витягує ключ сайту та аналізує скрипти Turnstile"
+  },
+  "statsExport": {
+    "message": "Експорт"
+  },
+  "statsExportAllCategories": {
+    "message": "Експорт завжди містить усі категорії, незалежно від того, що показано на цій сторінці."
+  },
+  "statsScopeLabel": {
+    "message": "Показати"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Приховано виявлень зняття відбитків: {0} ({1} від усіх)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Показати зняття відбитків"
+  },
+  "statsScopeKeepOne": {
+    "message": "Принаймні одна категорія має залишатися вибраною."
+  },
+  "statsScopeRulesNote": {
+    "message": "Правила завжди використовують усі категорії."
+  },
+  "statsContextFmt": {
+    "message": "Сторінки: {0} · Домени: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Уся історія з {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Порівняно з попереднім періодом ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Виберіть 7, 30 або 90 днів, щоб порівняти з попереднім періодом."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "Історія починається {0}, тому повного попереднього періоду для порівняння немає."
+  },
+  "statsDeltaNew": {
+    "message": "нове"
+  },
+  "statsDeltaFlat": {
+    "message": "Без змін порівняно з попереднім періодом"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Зростання на {0} порівняно з попереднім періодом"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Спад на {0} порівняно з попереднім періодом"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Попередній період: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Мало сторінок за цей період ({0}): порівняння та рейтинги можуть вводити в оману."
+  },
+  "statsLoading": {
+    "message": "Завантаження статистики..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Показати всю історію"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Головне"
+  },
+  "statsSectionEvidence": {
+    "message": "Докази"
+  },
+  "statsSubnavLabel": {
+    "message": "Розділи доказів"
+  },
+  "statsExportCanceled": {
+    "message": "Експорт скасовано"
+  },
+  "statsAllClearTitle": {
+    "message": "За цей період антибот і CAPTCHA не знайдено"
+  },
+  "statsAllClearDescFmt": {
+    "message": "На цих сторінках використовуються лише API зняття відбитків. Сторінки: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Для цих категорій нічого показувати"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Виберіть іншу категорію або довший період."
+  },
+  "statsHeadlineTop": {
+    "message": "Найпоширеніший захист"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} сторінок · кількість: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Найскладніший сайт"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Систем захисту: {0} · Складність: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Найновіший захист"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Уперше виявлено на {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "За цей період нічого нового"
+  },
+  "statsHeadlineRiser": {
+    "message": "Найбільше зростання"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Сторінки {0} → {1} порівняно з попереднім періодом"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Потрібен попередній період"
+  },
+  "statsKpiPages": {
+    "message": "Збережено сторінок"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Активні дні: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} з виявленнями ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Багаторівневий захист"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} з CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Виявлено систем захисту"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "Нових за період: {0}"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "серед правил: {0}"
+  },
+  "statsTipPages": {
+    "message": "Сторінки, збережені в Історії за цей період. Історія зберігає збережені виявлення, а не кожне відвідування в браузері."
+  },
+  "statsTipLayered": {
+    "message": "Домени, на яких виявлено дві або більше різних систем захисту."
+  },
+  "statsOverTimeProtections": {
+    "message": "Знайдені системи захисту в часі"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% сторінок"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Усі системи захисту"
+  },
+  "statsPageTiers": {
+    "message": "Наскільки захищені ваші сторінки"
+  },
+  "statsTiersHint": {
+    "message": "Кожна збережена сторінка враховується один раз, за типами знайденого на ній захисту."
+  },
+  "statsTierBoth": {
+    "message": "Антибот і CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Лише антибот"
+  },
+  "statsTierCaptcha": {
+    "message": "Лише CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Без антибота та CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Оцінка складності"
+  },
+  "statsDifficultyHint": {
+    "message": "Приблизна оцінка за системами захисту, знайденими в показаних категоріях, а не вимірювання."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Без захисту"
+  },
+  "statsHardestSites": {
+    "message": "Найскладніші сайти"
+  },
+  "statsAllDomainsLink": {
+    "message": "Усі домени"
+  },
+  "statsMoreStackFmt": {
+    "message": "Ще {0}"
+  },
+  "statsWhatChanged": {
+    "message": "Що змінилося"
+  },
+  "statsChangedNew": {
+    "message": "Нові системи захисту"
+  },
+  "statsChangedMoving": {
+    "message": "Зростання та спад"
+  },
+  "statsChangedGone": {
+    "message": "Більше не трапляються"
+  },
+  "statsChangedSwitched": {
+    "message": "Сайти, які змінили захист"
+  },
+  "statsChangedNothing": {
+    "message": "За цей період нічого не змінилося."
+  },
+  "statsChangedAllLink": {
+    "message": "Усі зміни"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Виберіть 7, 30 або 90 днів, щоб побачити системи захисту, що зростають і спадають."
+  },
+  "statsFingerprintCard": {
+    "message": "Зняття відбитків"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "API зняття відбитків спрацювали на {0} сторінок · технік: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Найчастіші: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Показано окремо від систем захисту антибот і CAPTCHA, бо ці API використовує майже кожна сторінка."
+  },
+  "statsPagesColumn": {
+    "message": "Сторінки"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Зміна"
+  },
+  "statsStrongColumn": {
+    "message": "Сильні докази"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Сортувати системи захисту"
+  },
+  "statsSortMostPages": {
+    "message": "Найбільше сторінок"
+  },
+  "statsSortMostDomains": {
+    "message": "Найбільше доменів"
+  },
+  "statsSortBiggestChange": {
+    "message": "Найбільша зміна"
+  },
+  "statsCommonStacks": {
+    "message": "Поширені поєднання систем захисту"
+  },
+  "statsCommonStacksHint": {
+    "message": "Системи захисту антибот і CAPTCHA, знайдені разом на останній збереженій сторінці домену."
+  },
+  "statsDomainSearchAll": {
+    "message": "Пошук доменів або систем захисту..."
+  },
+  "statsSortHardest": {
+    "message": "Спочатку найскладніші"
+  },
+  "statsSortLastSeen": {
+    "message": "Найновіші"
+  },
+  "statsDifficultyColumn": {
+    "message": "Складність"
+  },
+  "statsStackColumn": {
+    "message": "Системи захисту"
+  },
+  "statsLastSeenColumn": {
+    "message": "Востаннє виявлено"
+  },
+  "statsFilterChanged": {
+    "message": "Зі змінами"
+  },
+  "statsFilterClear": {
+    "message": "Скинути фільтри"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Фільтр доменів"
+  },
+  "statsChangeKindGained": {
+    "message": "Додано"
+  },
+  "statsChangeKindDropped": {
+    "message": "Прибрано"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Замінено"
+  },
+  "statsChangePageColumn": {
+    "message": "Сторінка"
+  },
+  "statsChangeSinceFmt": {
+    "message": "порівняно з {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Додано:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Прибрано:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Порівнює збережені копії однієї й тієї самої сторінки. Виявлення зняття відбитків ігноруються, доки ви не ввімкнете їх показ."
+  },
+  "statsStrongEvidence": {
+    "message": "Сильні докази"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "Виявлень з оцінкою 80% і вище: {0} із {1}."
+  },
+  "statsUnconfirmed": {
+    "message": "Згадано, але не підтверджено"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Системи захисту, які знаходять часто, але рідко із сильними доказами. Це можуть бути згадки в тексті або невикористані скрипти, а не активна перевірка."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Кожна часта система захисту підтверджена сильними доказами."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Найчастіше знайдено через {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Жоден сигнал не виділяється."
+  },
+  "statsTierStrong": {
+    "message": "Сильні"
+  },
+  "statsTierModerate": {
+    "message": "Середні"
+  },
+  "statsTierWeak": {
+    "message": "Слабкі"
+  },
+  "statsTierHint": {
+    "message": "Сильні: 80% і вище, середні: 40-79%, слабкі: нижче 40%. 100% означає сигнал, який створює лише ця система захисту."
+  },
+  "statsDecidedByCategory": {
+    "message": "Як визначалася кожна категорія"
+  },
+  "statsLiftFmt": {
+    "message": "{0} п. п."
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · у середньому {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "У категорії «{0}» комбінації підвищують впевненість із {1} до {2}."
+  },
+  "statsLess": {
+    "message": "Менше"
+  },
+  "statsMore": {
+    "message": "Більше"
+  },
+  "statsBusiestDay": {
+    "message": "Найактивніший день"
+  },
+  "statsLongestStreak": {
+    "message": "Найдовша серія"
+  },
+  "statsPeakHour": {
+    "message": "Година пік"
+  },
+  "statsQuietDays": {
+    "message": "Дні без збереженого"
+  },
+  "statsTodayPartial": {
+    "message": "Сьогодні (ще триває)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Лінія: середнє за 7 днів"
+  },
+  "statsRulesCoverage": {
+    "message": "Охоплення"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "Спрацювало ввімкнених правил за цей період: {0} із {1}"
+  },
+  "statsRulesAttention": {
+    "message": "Потребують уваги"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Нічого не потребує уваги."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Статус"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Поза періодом"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Немає в Історії"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Змінено"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Офіційні правила для постачальників, яких ви не зустрічали, мовчать. Це нормально."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Поки замало Історії для висновків (сторінки: {0}), тому правило, яке жодного разу не спрацювало, мало про що говорить."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Показано лише власні та змінені правила. Описи офіційних правил підтримує Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "«Додатково» зберігає захоплення 30 хвилин, тому ця вкладка не враховує діапазон дат."
+  },
+  "statsToolsSavedNow": {
+    "message": "Збережено зараз"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Спливають протягом 10 хвилин"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Постачальники"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Прострочені захоплення, що очікують очищення: {0}. Відкрийте «Додатково», щоб видалити їх."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Збережені захоплення"
+  },
+  "statsToolsColVendor": {
+    "message": "Постачальник"
+  },
+  "statsToolsColTool": {
+    "message": "Інструмент"
+  },
+  "statsToolsColSaved": {
+    "message": "Збережено"
+  },
+  "statsToolsColExpires": {
+    "message": "Спливає"
+  },
+  "statsToolsNoLive": {
+    "message": "Наразі немає збережених захоплень."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Повного попереднього періоду поки немає."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Як довго зберігаються захоплення"
+  },
+  "settingsCaptureRetention": {
+    "message": "Зберігати захоплення інструментів"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Захоплення розширених інструментів (cookie, скрипти, токени) видаляються після цього часу."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 хвилин"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 хвилин"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 година"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 години"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 годин"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 години"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Захоплення зберігаються протягом: {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "Від 1 хвилини до 7 днів."
+  }
+}

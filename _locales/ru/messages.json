@@ -1592,7 +1592,7 @@
     "message": "САЙТ"
   },
   "detectionStatDetections": {
-    "message": "ОБНАРУЖЕНИЯ"
+    "message": "НАЙДЕНО"
   },
   "detectionStatConfidence": {
     "message": "УВЕРЕННОСТЬ"

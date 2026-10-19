@@ -3,6 +3,7 @@ importScripts(
     // Core utilities
     './modules/core/logger.js',
     './modules/core/i18n.js',
+    './modules/core/rule-i18n.js',
     './modules/core/constants.js',
     './modules/core/hooks-config.js',
     './modules/core/bridge-protocol.js',

@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Quét không thành công"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Quá trình quét bị gián đoạn"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Chưa có lần quét hoàn tất"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Quá trình quét chưa hoàn tất. Hãy tải lại trang để thử lại."
+  },
+  "settingsReadFailedToast": {
+    "message": "Không thể tải cài đặt. Các giá trị hiện tại vẫn được giữ nguyên."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Không thể lưu cài đặt. Các thay đổi của bạn vẫn được giữ lại; hãy thử lại."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Đã ghi nhận thay đổi. Hãy lưu cài đặt để áp dụng."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Không thể lưu cài đặt đã nhập. Cài đặt và ngôn ngữ của bạn vẫn được giữ nguyên."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Áp dụng ngay."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Xuất hoặc nhập các tùy chọn. Kết nối tích hợp vẫn nằm trong trình duyệt này."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Không thể đọc tệp cài đặt hợp lệ. Chưa có gì bị thay đổi."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Không thể lưu quy tắc này. Các thay đổi của bạn vẫn còn ở đây; hãy thử lại."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Tải lại trang để phân tích các script bảo vệ"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Đặt lại cookie bảo vệ và tải lại để phân tích script"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Tải lại trang để phát hiện phiên bản biện pháp bảo vệ"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Đặt lại cookie bảo vệ và bắt đầu ghi"
+  },
+  "advToolCookiesHint": {
+    "message": "Kiểm tra các cookie mà biện pháp bảo vệ này sử dụng"
+  },
+  "advToolVersionHint": {
+    "message": "Đọc thông tin phiên bản có sẵn"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Tìm site key CAPTCHA trên trang này"
+  },
+  "advToolSelectorHint": {
+    "message": "Tìm selector cho widget CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "Kiểm tra các callback của CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "Đặt lại cookie bảo vệ và tải lại để ghi dữ liệu sensor"
+  },
+  "advToolCaptureHint": {
+    "message": "Ghi dữ liệu từ trang này"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Dừng ghi dữ liệu từ trang này"
+  },
+  "advToolWorking": {
+    "message": "Đang xử lý…"
+  },
+  "advToolWaitingReload": {
+    "message": "Đang tải lại trang và thu thập kết quả. Việc này mất vài giây…"
+  },
+  "advToolNoResult": {
+    "message": "Không có kết quả: biện pháp bảo vệ không gửi dữ liệu nào. Hãy tải lại trang và thử lại."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Site key {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Không tìm thấy site key nào trên trang này. Hãy mở hoặc kích hoạt CAPTCHA rồi thử lại."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Tìm thấy trong"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Yêu cầu"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Script của trang"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Biến của trang"
+  },
+  "advSiteKeyFrame": {
+    "message": "Khung"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Script trên trang này"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Trích xuất site key và phân tích các script của CAPTCHA"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Phân tích các script của CAPTCHA"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Không thể hoàn tất thao tác này: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Trang biểu đồ trước"
+  },
+  "statsChartNext": {
+    "message": "Trang biểu đồ tiếp theo"
+  },
+  "statsChartPage": {
+    "message": "Trang {0}/{1}"
+  },
+  "statsChartShowing": {
+    "message": "Hiển thị {0}–{1} trong {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Các phần thống kê"
+  },
+  "statsSectionOverview": {
+    "message": "Tổng quan"
+  },
+  "statsSectionActivity": {
+    "message": "Hoạt động"
+  },
+  "statsSectionProtections": {
+    "message": "Biện pháp bảo vệ"
+  },
+  "statsSectionDomains": {
+    "message": "Tên miền"
+  },
+  "statsSectionConfidence": {
+    "message": "Độ tin cậy"
+  },
+  "statsExportCSV": {
+    "message": "Xuất CSV"
+  },
+  "statsExportJSON": {
+    "message": "Xuất JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Tệp xuất chứa tên miền và bản tóm tắt phát hiện, không chứa cookie, nội dung trang hay tham số URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "Tệp xuất bao gồm khoảng thời gian đã chọn. Số mục: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Đã bắt đầu tải xuống: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Không thể xuất dữ liệu. Vui lòng thử lại."
+  },
+  "statsLoadFailed": {
+    "message": "Không thể tải lịch sử. Vui lòng tải lại trang này."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Không có mục nào trong khoảng này"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Hãy chọn khoảng thời gian dài hơn để xem lịch sử đã lưu."
+  },
+  "statsDetectionRate": {
+    "message": "Mục có phát hiện"
+  },
+  "statsActiveDays": {
+    "message": "Ngày hoạt động"
+  },
+  "statsAverageConfidence": {
+    "message": "Độ tin cậy trung bình"
+  },
+  "statsDailyVisits": {
+    "message": "Mục lịch sử theo ngày"
+  },
+  "statsActivityCalendar": {
+    "message": "Lịch hoạt động"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Mỗi ô vuông là một ngày theo lịch địa phương. Màu xanh càng đậm thì càng có nhiều mục đã lưu."
+  },
+  "statsHourlyActivity": {
+    "message": "Hoạt động theo giờ"
+  },
+  "statsWeekdayActivity": {
+    "message": "Hoạt động theo thứ trong tuần"
+  },
+  "statsLocalTimeNote": {
+    "message": "Ngày và giờ theo múi giờ địa phương của bạn."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Hiển thị {0} ngày gần nhất. Tổng số và tệp xuất bao gồm toàn bộ khoảng thời gian đã chọn."
+  },
+  "statsProtectionRanking": {
+    "message": "Xếp hạng biện pháp bảo vệ"
+  },
+  "statsCategoryTrend": {
+    "message": "Danh mục theo thời gian"
+  },
+  "statsCategoryOverlap": {
+    "message": "Danh mục xuất hiện cùng nhau"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Số mục lịch sử có cả hai danh mục. Ô nằm trên đường chéo cho biết số mục có danh mục đó."
+  },
+  "statsProtectionDetails": {
+    "message": "Tất cả biện pháp bảo vệ"
+  },
+  "statsDomainRanking": {
+    "message": "Xếp hạng tên miền"
+  },
+  "statsDomainMap": {
+    "message": "Lượt truy cập và phát hiện"
+  },
+  "statsDomainMapHint": {
+    "message": "Mỗi điểm là một tên miền. Điểm càng lớn thì càng có nhiều biện pháp bảo vệ khác nhau."
+  },
+  "statsDomainDetails": {
+    "message": "Tất cả tên miền"
+  },
+  "statsDomainSearch": {
+    "message": "Tìm tên miền..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Sắp xếp tên miền"
+  },
+  "statsSortVisits": {
+    "message": "Nhiều lượt truy cập nhất"
+  },
+  "statsSortDetections": {
+    "message": "Nhiều phát hiện nhất"
+  },
+  "statsSortConfidence": {
+    "message": "Độ tin cậy cao nhất"
+  },
+  "statsSortName": {
+    "message": "Theo tên miền"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Phân bố độ tin cậy"
+  },
+  "statsConfidenceTrend": {
+    "message": "Độ tin cậy theo thời gian"
+  },
+  "statsCategoryConfidence": {
+    "message": "Độ tin cậy theo danh mục"
+  },
+  "statsConfidenceNote": {
+    "message": "Độ tin cậy thể hiện mức độ mạnh của bằng chứng phát hiện đã lưu, không phải bằng chứng xác nhận có thu thập dấu vân tay hay thử thách đang hoạt động."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} phát hiện có giá trị độ tin cậy; {1} không có điểm hợp lệ."
+  },
+  "statsProtectionColumn": {
+    "message": "Biện pháp bảo vệ"
+  },
+  "statsCategoryColumn": {
+    "message": "Danh mục"
+  },
+  "statsDomainColumn": {
+    "message": "Tên miền"
+  },
+  "statsTableCountFmt": {
+    "message": "Hàng: {0}/{1}"
+  },
+  "statsTableMore": {
+    "message": "Hiện thêm"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Không có tên miền nào khớp với tìm kiếm của bạn."
+  },
+  "statsSelectionNote": {
+    "message": "Biểu đồ và tệp xuất dùng khoảng thời gian đã chọn. Mục lịch sử là các phát hiện đã lưu, không phải mọi lượt truy cập của trình duyệt."
+  },
+  "extensionName": {
+    "message": "Scrapfly: trình phát hiện anti-bot"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: trình phát hiện anti-bot",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": trình phát hiện anti-bot",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Phát hiện CAPTCHA, hệ thống anti-bot và công nghệ thu thập dấu vân tay trên trang web"
+  },
+  "tabDetection": {
+    "message": "Phát hiện"
+  },
+  "tabHistory": {
+    "message": "Lịch sử"
+  },
+  "tabRules": {
+    "message": "Quy tắc"
+  },
+  "tabAdvanced": {
+    "message": "Nâng cao"
+  },
+  "openSettings": {
+    "message": "Mở cài đặt"
+  },
+  "enableOrDisableDetection": {
+    "message": "Bật hoặc tắt tính năng phát hiện"
+  },
+  "noDetectionsFound": {
+    "message": "Không tìm thấy phát hiện nào"
+  },
+  "detectionScanningTitle": {
+    "message": "Đang quét trang này"
+  },
+  "detectionScanningDescription": {
+    "message": "Đang tìm các tín hiệu bảo vệ."
+  },
+  "detectionScanningHint": {
+    "message": "Kết quả sẽ xuất hiện tại đây khi sẵn sàng."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Xóa khỏi danh sách chặn"
+  },
+  "statDetections": {
+    "message": "Phát hiện"
+  },
+  "statConfidence": {
+    "message": "Độ tin cậy"
+  },
+  "statDifficulty": {
+    "message": "Độ khó"
+  },
+  "statCacheScope": {
+    "message": "Phạm vi bộ nhớ đệm"
+  },
+  "scopeDomain": {
+    "message": "Tên miền"
+  },
+  "scopePath": {
+    "message": "Đường dẫn"
+  },
+  "scopeFullUrl": {
+    "message": "URL đầy đủ"
+  },
+  "difficultyLow": {
+    "message": "Thấp"
+  },
+  "difficultyMedium": {
+    "message": "Trung bình"
+  },
+  "difficultyHigh": {
+    "message": "Cao"
+  },
+  "searchHistory": {
+    "message": "Tìm trong lịch sử..."
+  },
+  "searchDetectors": {
+    "message": "Tìm trình phát hiện..."
+  },
+  "paginationPrev": {
+    "message": "Trang trước"
+  },
+  "paginationNext": {
+    "message": "Trang sau"
+  },
+  "paginationPage": {
+    "message": "Trang"
+  },
+  "paginationOf": {
+    "message": "trên"
+  },
+  "paginationNoItems": {
+    "message": "Không có mục nào để hiển thị"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Số trang hiện tại"
+  },
+  "btnImport": {
+    "message": "Nhập"
+  },
+  "btnExport": {
+    "message": "Xuất"
+  },
+  "btnClear": {
+    "message": "Xóa"
+  },
+  "btnAdd": {
+    "message": "Thêm"
+  },
+  "btnUpdate": {
+    "message": "Cập nhật"
+  },
+  "btnClose": {
+    "message": "Đóng"
+  },
+  "btnSave": {
+    "message": "Lưu"
+  },
+  "btnCancel": {
+    "message": "Hủy"
+  },
+  "btnDelete": {
+    "message": "Xóa"
+  },
+  "historyImportTitle": {
+    "message": "Nhập lịch sử"
+  },
+  "historyExportTitle": {
+    "message": "Xuất lịch sử"
+  },
+  "historyClearTitle": {
+    "message": "Xóa lịch sử"
+  },
+  "historyEmptyTitle": {
+    "message": "Chưa có lịch sử"
+  },
+  "historyEmptyDescription": {
+    "message": "Lịch sử phát hiện sẽ xuất hiện tại đây khi bạn duyệt các trang web."
+  },
+  "rulesUpdateTitle": {
+    "message": "Cài đặt bản cập nhật quy tắc từ bản phát hành Scrapfly mới nhất"
+  },
+  "rulesAddTitle": {
+    "message": "Thêm trình phát hiện mới"
+  },
+  "rulesEmptyTitle": {
+    "message": "Chưa tải trình phát hiện nào"
+  },
+  "rulesEmptyDescription": {
+    "message": "Các trình phát hiện sẽ xuất hiện tại đây sau khi được tải từ bộ nhớ và tệp."
+  },
+  "ruleModalActionEdit": {
+    "message": "Chỉnh sửa"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Thông tin trình phát hiện"
+  },
+  "ruleFieldName": {
+    "message": "Tên"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Tên trình phát hiện"
+  },
+  "ruleFieldCategory": {
+    "message": "Danh mục"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Dấu vân tay"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Độ khó"
+  },
+  "ruleFieldIcon": {
+    "message": "Biểu tượng"
+  },
+  "ruleFieldVersion": {
+    "message": "Phiên bản"
+  },
+  "ruleFieldAuthor": {
+    "message": "Tác giả"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Màu huy hiệu"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Phương thức phát hiện"
+  },
+  "settingsTitle": {
+    "message": "Cài đặt"
+  },
+  "settingsSubtitle": {
+    "message": "Định cấu hình tùy chọn của tiện ích"
+  },
+  "settingsTabGeneral": {
+    "message": "Chung"
+  },
+  "settingsTabDetection": {
+    "message": "Phát hiện"
+  },
+  "settingsTabHistory": {
+    "message": "Lịch sử"
+  },
+  "settingsTabData": {
+    "message": "Dữ liệu"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Cài đặt cốt lõi"
+  },
+  "settingsCardNotifications": {
+    "message": "Thông báo"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Hiển thị cảnh báo khi phát hiện hệ thống bảo mật"
+  },
+  "settingsCardDebug": {
+    "message": "Chế độ gỡ lỗi"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Ghi một báo cáo dễ đọc cho mỗi trang đã quét vào bảng điều khiển của tiện ích."
+  },
+  "settingsRowLogCollector": {
+    "message": "Trình thu thập nhật ký"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Số nhật ký tối đa"
+  },
+  "settingsRowCollected": {
+    "message": "Đã thu thập"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Cập nhật trình phát hiện"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Tự động kiểm tra bản cập nhật"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Tự động kiểm tra các định nghĩa trình phát hiện mới"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Khoảng thời gian kiểm tra"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Không bao giờ"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Kiểm tra ngay"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Cần cập nhật tiện ích"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Cập nhật tiện ích"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Màu huy hiệu"
+  },
+  "settingsRowLastCheck": {
+    "message": "Lần kiểm tra gần nhất"
+  },
+  "advancedToolsTitle": {
+    "message": "Công cụ ghi dữ liệu nâng cao"
+  },
+  "advancedToolsDescription": {
+    "message": "Trích xuất cookie, token và site key từ các hệ thống bảo vệ đã phát hiện"
+  },
+  "advancedToolsHint": {
+    "message": "Hãy truy cập một trang có biện pháp bảo vệ để bật các công cụ ghi dữ liệu"
+  },
+  "advancedSubtabTools": {
+    "message": "Công cụ"
+  },
+  "advancedSubtabHistory": {
+    "message": "Lịch sử"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Lịch sử bản ghi"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Lọc, kiểm tra và xuất các bản ghi đã thu thập"
+  },
+  "advancedFilterSite": {
+    "message": "Trang web"
+  },
+  "advancedFilterAllSites": {
+    "message": "Tất cả trang web"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Trang web hiện tại"
+  },
+  "advancedFilterModule": {
+    "message": "Mô-đun"
+  },
+  "advancedFilterAllModules": {
+    "message": "Tất cả mô-đun"
+  },
+  "advancedFilterSearch": {
+    "message": "Tìm kiếm"
+  },
+  "advancedBtnExport": {
+    "message": "Xuất"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Xuất bản ghi"
+  },
+  "advancedBtnClearAll": {
+    "message": "Xóa tất cả"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Xóa tất cả bản ghi"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Chưa có bản ghi nào"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Dùng tab Công cụ để ghi dữ liệu từ các hệ thống đã phát hiện"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Không tìm thấy bản ghi nào"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Đặt lại tất cả bộ lọc"
+  },
+  "advancedModalTitle": {
+    "message": "Công cụ phát hiện nâng cao"
+  },
+  "advancedModalIntro": {
+    "message": "Các công cụ ghi dữ liệu chuyên dụng để phân tích sâu các hệ thống anti-bot, CAPTCHA và công nghệ thu thập dấu vân tay. Các công cụ này tự động xuất hiện khi tìm thấy phát hiện liên quan."
+  },
+  "advancedSectionSupported": {
+    "message": "Các hệ thống hiện được hỗ trợ"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Cách hoạt động"
+  },
+  "advancedStep1Title": {
+    "message": "Phát hiện tự động"
+  },
+  "advancedStep1Desc": {
+    "message": "Các công cụ xuất hiện khi phát hiện hệ thống anti-bot liên quan trên trang hiện tại"
+  },
+  "advancedStep2Title": {
+    "message": "Bắt đầu ghi"
+  },
+  "advancedStep2Desc": {
+    "message": "Các công cụ tự động khởi tạo trình chặn và bắt đầu theo dõi các yêu cầu mạng"
+  },
+  "advancedStep3Title": {
+    "message": "Xem lại kết quả"
+  },
+  "advancedStep3Desc": {
+    "message": "Dữ liệu đã ghi được lưu tạm thời, có đầy đủ khả năng xuất"
+  },
+  "advancedFooterHint": {
+    "message": "Bản ghi được giữ trong khoảng thời gian đặt tại Cài đặt."
+  },
+  "settings": {
+    "message": "Cài đặt"
+  },
+  "paginationShowingFmt": {
+    "message": "Hiển thị {0}-{1} trong {2}"
+  },
+  "paginationShowingItems": {
+    "message": "Hiển thị {0}-{1} trong {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Không rõ"
+  },
+  "timeJustNow": {
+    "message": "Vừa xong"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} giây trước"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} phút trước"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} giờ trước"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} ngày trước"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 phút trước"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} phút trước"
+  },
+  "timeOneHourAgo": {
+    "message": "1 giờ trước"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} giờ trước"
+  },
+  "timeOneDayAgo": {
+    "message": "1 ngày trước"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} ngày trước"
+  },
+  "btnCancelSettings": {
+    "message": "Hủy"
+  },
+  "btnSaveSettings": {
+    "message": "Lưu cài đặt"
+  },
+  "poweredBy": {
+    "message": "Cung cấp bởi"
+  },
+  "categoryColors": {
+    "message": "MÀU DANH MỤC"
+  },
+  "methodSuffixPatterns": {
+    "message": "mẫu"
+  },
+  "btnSaveRule": {
+    "message": "Lưu quy tắc"
+  },
+  "tagColors": {
+    "message": "Màu thẻ"
+  },
+  "colorPickerTitle": {
+    "message": "Bộ chọn màu"
+  },
+  "colorPickerArea": {
+    "message": "Độ bão hòa và độ sáng"
+  },
+  "colorPickerSaturation": {
+    "message": "Độ bão hòa"
+  },
+  "colorPickerBrightness": {
+    "message": "Độ sáng"
+  },
+  "colorPickerHue": {
+    "message": "Sắc độ"
+  },
+  "colorPickerRed": {
+    "message": "Đỏ"
+  },
+  "colorPickerGreen": {
+    "message": "Xanh lục"
+  },
+  "colorPickerBlue": {
+    "message": "Xanh lam"
+  },
+  "colorPickerPresets": {
+    "message": "Màu có sẵn"
+  },
+  "cacheConfiguration": {
+    "message": "Cấu hình bộ nhớ đệm"
+  },
+  "cacheDuration": {
+    "message": "Thời hạn bộ nhớ đệm"
+  },
+  "timeUnitMinutes": {
+    "message": "Phút"
+  },
+  "timeUnitHours": {
+    "message": "Giờ"
+  },
+  "timeUnitDays": {
+    "message": "Ngày"
+  },
+  "blacklistedDomains": {
+    "message": "Tên miền trong danh sách chặn"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Các tên miền sẽ bị bỏ qua hoàn toàn khi phát hiện"
+  },
+  "jsApiEvents": {
+    "message": "Sự kiện JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "Gửi sự kiện tùy chỉnh tới cửa sổ của trang"
+  },
+  "ruleMethodSettings": {
+    "message": "Cài đặt phương thức phát hiện"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Cài đặt {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Cài đặt {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Mô tả"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Ý nghĩa của mẫu này, ví dụ: Đọc tùy chọn ngôn ngữ của trình duyệt"
+  },
+  "ruleDescriptionHint": {
+    "message": "Hiển thị trong chi tiết phát hiện và trong Lịch sử khi tìm thấy mẫu này."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Biện pháp bảo vệ này là gì, ví dụ: Phát hiện bot ở trang đăng nhập và thanh toán"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Hiển thị trong chi tiết phát hiện của biện pháp bảo vệ này."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Mức độ tin cậy"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Độ tin cậy phát hiện:"
+  },
+  "detectionName": {
+    "message": "Tên phát hiện"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 giờ"
+  },
+  "interval12Hours": {
+    "message": "12 giờ"
+  },
+  "interval24Hours": {
+    "message": "24 giờ"
+  },
+  "interval2Days": {
+    "message": "2 ngày"
+  },
+  "interval1Week": {
+    "message": "1 tuần"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Header"
+  },
+  "methodLabelCookie": {
+    "message": "Cookie"
+  },
+  "methodLabelContent": {
+    "message": "Nội dung"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS hook"
+  },
+  "methodLabelWindow": {
+    "message": "Window"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 mẫu"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} mẫu"
+  },
+  "methodAddPattern": {
+    "message": "Thêm mẫu"
+  },
+  "methodSearchPatterns": {
+    "message": "Tìm mẫu..."
+  },
+  "methodNoPatterns": {
+    "message": "Không có mẫu"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Không có mẫu nào khớp"
+  },
+  "methodSuffixMatches": {
+    "message": "lượt khớp"
+  },
+  "cacheExpiredLabel": {
+    "message": "Đã hết hạn"
+  },
+  "copiedNotification": {
+    "message": "Đã sao chép"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Đã sao chép!"
+  },
+  "unknownDetection": {
+    "message": "Phát hiện không xác định"
+  },
+  "matchPlural": {
+    "message": "lượt khớp"
+  },
+  "noMatchesRecorded": {
+    "message": "Chưa ghi nhận lượt khớp nào"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Xóa bộ nhớ đệm"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Thao tác này sẽ xóa dữ liệu phát hiện trong bộ nhớ đệm của tên miền này và kích hoạt phân tích mới."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Xóa bộ nhớ đệm"
+  },
+  "clearingMsg": {
+    "message": "Đang xóa..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Đã xóa!"
+  },
+  "cacheClearedToast": {
+    "message": "Đã xóa bộ nhớ đệm"
+  },
+  "failedToClearCacheToast": {
+    "message": "Không thể xóa bộ nhớ đệm"
+  },
+  "unableGetCurrentPage": {
+    "message": "Không thể lấy trang hiện tại"
+  },
+  "invalidDomain": {
+    "message": "Tên miền không hợp lệ"
+  },
+  "addBlacklistTitle": {
+    "message": "Thêm vào danh sách chặn"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Tên miền \"{0}\" sẽ bị loại khỏi mọi lần phát hiện sau này. Bạn có thể xóa tên miền này sau trong Cài đặt."
+  },
+  "addBlacklistBtn": {
+    "message": "Thêm vào danh sách chặn"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Tên miền \"{0}\" đã có trong danh sách chặn"
+  },
+  "addedToBlacklistFmt": {
+    "message": "Đã thêm \"{0}\" vào danh sách chặn"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Không thể thêm vào danh sách chặn: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "Đã xóa \"{0}\" khỏi danh sách chặn"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Không thể xóa khỏi danh sách chặn: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Không có phát hiện"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Không tìm thấy phát hiện nào"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} lượt khớp"
+  },
+  "historyOneMatch": {
+    "message": "1 lượt khớp"
+  },
+  "notificationHistoryCleared": {
+    "message": "Đã xóa lịch sử"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Không thể xóa lịch sử: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Đã xuất mục lịch sử"
+  },
+  "notificationCacheCleared": {
+    "message": "Đã xóa bộ nhớ đệm"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Bộ nhớ đệm đã được xóa"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Không thể xóa bộ nhớ đệm"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "Đã thêm \"{0}\" vào danh sách chặn"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Không thể thêm vào danh sách chặn"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Đã xóa mục lịch sử"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Không thể xóa mục lịch sử"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Đã xuất {0} mục lịch sử"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Đã gộp {0} mục lịch sử mới"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Đã thay lịch sử bằng {0} mục"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Không thể nhập lịch sử: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Xóa lịch sử"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Bạn có chắc muốn xóa toàn bộ lịch sử không? Không thể hoàn tác thao tác này."
+  },
+  "buttonClearAll": {
+    "message": "Xóa tất cả"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Xóa bộ nhớ đệm"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Xóa dữ liệu phát hiện trong bộ nhớ đệm của {0}? Mục lịch sử sẽ được giữ lại."
+  },
+  "buttonClearCache": {
+    "message": "Xóa bộ nhớ đệm"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Xóa mục lịch sử"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Bạn có chắc muốn xóa phát hiện này khỏi {0} không?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Không thể tải cài đặt. Đang dùng giá trị mặc định."
+  },
+  "settingsSavedToast": {
+    "message": "Đã lưu cài đặt"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Không thể lưu cài đặt: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Không thể xuất nhật ký"
+  },
+  "logsCleared": {
+    "message": "Đã xóa nhật ký"
+  },
+  "failedClearLogs": {
+    "message": "Không thể xóa nhật ký"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Không thể lấy URL của trang hiện tại"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} đã có trong danh sách chặn"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "Đã thêm {0} vào danh sách chặn"
+  },
+  "failedAddDomainFmt": {
+    "message": "Không thể thêm tên miền: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "Đã xóa {0} khỏi danh sách chặn"
+  },
+  "invalidSettingsFmt": {
+    "message": "Cài đặt không hợp lệ: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Vui lòng nhập URL webhook"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Kiểm tra webhook thành công! Trạng thái: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook trả về trạng thái: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Kiểm tra webhook không thành công: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Nhập trình phát hiện"
+  },
+  "importDetectorsModeMessage": {
+    "message": "Gộp sẽ thêm các trình phát hiện đã nhập vào danh sách của bạn.<br>Thay thế tất cả sẽ xóa trước các trình phát hiện tùy chỉnh của bạn; các trình phát hiện tích hợp sẵn vẫn được giữ lại."
+  },
+  "mergeOption": {
+    "message": "Gộp"
+  },
+  "replaceAllOption": {
+    "message": "Thay thế tất cả"
+  },
+  "detectorsImported": {
+    "message": "Đã nhập trình phát hiện"
+  },
+  "detectorExportedFmt": {
+    "message": "Đã xuất {0}"
+  },
+  "failedImportDetectors": {
+    "message": "Không thể nhập trình phát hiện. Hãy kiểm tra định dạng tệp."
+  },
+  "errorReadingFileFmt": {
+    "message": "Lỗi khi đọc tệp: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "Đã cập nhật {0} trình phát hiện"
+  },
+  "detectorDeletedFmt": {
+    "message": "Đã xóa \"{0}\""
+  },
+  "failedClearDetectors": {
+    "message": "Không thể xóa trình phát hiện"
+  },
+  "urlPatternMatching": {
+    "message": "Khớp mẫu URL"
+  },
+  "textWordMatching": {
+    "message": "Khớp văn bản/từ"
+  },
+  "payloadTextMatching": {
+    "message": "Khớp văn bản payload"
+  },
+  "nameFieldMatching": {
+    "message": "Khớp trường tên"
+  },
+  "captureNotFound": {
+    "message": "Không tìm thấy bản ghi"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Không tìm thấy lớp mô-đun"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Không có chế độ xem chi tiết"
+  },
+  "captureDataCopied": {
+    "message": "Đã sao chép dữ liệu bản ghi"
+  },
+  "captureDeleted": {
+    "message": "Đã xóa bản ghi"
+  },
+  "capturesExportedFmt": {
+    "message": "Đã xuất {0} bản ghi"
+  },
+  "allCapturesCleared": {
+    "message": "Đã xóa tất cả bản ghi"
+  },
+  "captureExportFailed": {
+    "message": "Không thể xuất bản ghi"
+  },
+  "invalidUrl": {
+    "message": "URL không hợp lệ"
+  },
+  "importHistoryTitle": {
+    "message": "Nhập lịch sử"
+  },
+  "replaceOption": {
+    "message": "Thay thế"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "Nhập {0} mục lịch sử? Lịch sử hiện tại của bạn có {1} mục.<br>Gộp sẽ thêm các mục mới vào đó. Thay thế sẽ xóa lịch sử hiện tại trước."
+  },
+  "clearLogsTitle": {
+    "message": "Xóa nhật ký"
+  },
+  "clearLogsMessage": {
+    "message": "Bạn có chắc muốn xóa tất cả nhật ký đã thu thập không? Không thể hoàn tác thao tác này."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Không thể kiểm tra bản cập nhật: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Không thể tải bản cập nhật từ máy chủ"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Đã cập nhật quy tắc từ bản phát hành {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Tất cả quy tắc đã được cập nhật theo bản phát hành {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Đang chờ tiện ích phiên bản {0} trở lên: {1}. Các quy tắc sẽ được cài đặt khi Chrome cập nhật tiện ích."
+  },
+  "updateResultFailedFmt": {
+    "message": "Không thể tải xuống: {0}. Hãy thử lại sau."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Các quy tắc bạn đã chỉnh sửa đang chờ bạn quyết định trong Quy tắc → Cập nhật: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Không thể kết nối tới GitHub để kiểm tra bản cập nhật quy tắc."
+  },
+  "updateErrorNoRelease": {
+    "message": "Không tìm thấy bản phát hành Scrapfly nào đã xuất bản trên GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub đang giới hạn việc kiểm tra bản cập nhật. Hãy thử lại sau {0} phút."
+  },
+  "errorApplyingUpdates": {
+    "message": "Lỗi khi áp dụng bản cập nhật"
+  },
+  "failedCheckForUpdates": {
+    "message": "Không thể kiểm tra bản cập nhật"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Lỗi khi kiểm tra bản cập nhật"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Dịch vụ cập nhật không khả dụng"
+  },
+  "deleteDetectorTitle": {
+    "message": "Xóa trình phát hiện"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Bạn có chắc muốn xóa \"{0}\" không?"
+  },
+  "detectorNotFound": {
+    "message": "Không tìm thấy trình phát hiện"
+  },
+  "failedDeleteDetector": {
+    "message": "Không thể xóa trình phát hiện"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Không thể xem chi tiết bản ghi"
+  },
+  "failedCopyCaptureData": {
+    "message": "Không thể sao chép dữ liệu bản ghi"
+  },
+  "failedDeleteCapture": {
+    "message": "Không thể xóa bản ghi"
+  },
+  "noCapturesToExport": {
+    "message": "Không có bản ghi nào để xuất"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Bạn có chắc muốn xóa tất cả bản ghi không? Không thể hoàn tác."
+  },
+  "failedClearCaptures": {
+    "message": "Không thể xóa các bản ghi"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Tích hợp webhook"
+  },
+  "settingsEnableWebhook": {
+    "message": "Bật webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Gửi yêu cầu HTTP khi có phát hiện"
+  },
+  "settingsBypassCache": {
+    "message": "Gửi ở mỗi lần tải trang (bỏ qua bộ nhớ đệm)"
+  },
+  "settingsHttpMethod": {
+    "message": "Phương thức HTTP"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Chọn phương thức HTTP cho các yêu cầu webhook"
+  },
+  "settingsCustomMethod": {
+    "message": "Tùy chỉnh"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Nhập phương thức tùy chỉnh (ví dụ: OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL webhook"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "URL endpoint đầy đủ (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Biến khả dụng:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Ví dụ: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "Header loại nội dung HTTP"
+  },
+  "webhookCtHintJson": {
+    "message": "Mẫu ở dạng JSON, với các biến đã được điền giá trị."
+  },
+  "webhookCtHintForm": {
+    "message": "Các trường của mẫu dưới dạng cặp key=value; các trường lồng nhau dưới dạng detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Các trường của mẫu dưới dạng các phần form-data; trình duyệt tự đặt boundary."
+  },
+  "webhookCtHintText": {
+    "message": "Văn bản mẫu được giữ nguyên, với các biến đã được điền giá trị."
+  },
+  "webhookCtHintXml": {
+    "message": "Các trường của mẫu dưới dạng tài liệu XML <webhook>; các phát hiện là các phần tử lặp lại."
+  },
+  "webhookCtHintCsv": {
+    "message": "Một hàng header, sau đó mỗi phát hiện một hàng, các trường của trang được lặp lại."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Mỗi dòng một đối tượng JSON: một dòng cho mỗi phát hiện, kèm các trường của trang."
+  },
+  "webhookCtHintCustom": {
+    "message": "Content-Type riêng của bạn (type/subtype); nội dung được gửi dưới dạng JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Tùy chỉnh"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Content-Type tùy chỉnh"
+  },
+  "webhookCtInvalid": {
+    "message": "Nhập type/subtype, ví dụ: application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Thêm header"
+  },
+  "webhookNoHeaders": {
+    "message": "Chưa cấu hình header tùy chỉnh nào"
+  },
+  "webhookHeaderName": {
+    "message": "Tên header"
+  },
+  "webhookHeaderValue": {
+    "message": "Giá trị header"
+  },
+  "webhookRemoveHeader": {
+    "message": "Xóa header"
+  },
+  "webhookSending": {
+    "message": "Đang gửi..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Header tùy chỉnh"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Thêm header HTTP tùy chỉnh vào yêu cầu webhook"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Mẫu payload"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Nội dung gửi kèm mỗi webhook. Nhấp vào một biến để chèn."
+  },
+  "webhookVarsTitle": {
+    "message": "Biến của mẫu"
+  },
+  "webhookVarsIntro": {
+    "message": "Được thay bằng giá trị của trang khi gửi webhook."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Chèn biến"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Chèn {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Sao chép {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Ví dụ"
+  },
+  "webhookVarSiteUrl": {
+    "message": "URL đầy đủ của trang"
+  },
+  "webhookVarHostname": {
+    "message": "Tên máy chủ của trang"
+  },
+  "webhookVarTitle": {
+    "message": "Tiêu đề trang"
+  },
+  "webhookVarFavicon": {
+    "message": "URL favicon của trang web"
+  },
+  "webhookVarDetections": {
+    "message": "Các phát hiện dưới dạng mảng JSON"
+  },
+  "webhookVarTimestamp": {
+    "message": "Thời điểm phát hiện (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Số lượng phát hiện"
+  },
+  "webhookVarCategories": {
+    "message": "Các danh mục đã phát hiện, phân tách bằng dấu phẩy"
+  },
+  "webhookJsonValid": {
+    "message": "JSON hợp lệ"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "JSON không hợp lệ (dòng {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Đặt lại mẫu"
+  },
+  "settingsTestWebhook": {
+    "message": "Kiểm tra webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Gửi yêu cầu thử tới URL webhook của bạn"
+  },
+  "settingsTestBtn": {
+    "message": "Kiểm tra"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Cấu hình lịch sử"
+  },
+  "settingsHistorySettings": {
+    "message": "Cài đặt lịch sử"
+  },
+  "settingsHistoryLimit": {
+    "message": "Giới hạn lịch sử"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = giới hạn an toàn 1.000 mục)"
+  },
+  "settingsExportFormat": {
+    "message": "Định dạng xuất"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Văn bản thuần"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Bao gồm dấu thời gian"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Lưu khi trúng bộ nhớ đệm"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Ngăn trùng lặp"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Bật ngăn trùng lặp"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Chặn các mục lịch sử trùng lặp trong một khoảng thời gian"
+  },
+  "settingsDuplicateScope": {
+    "message": "Phạm vi"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "URL đầy đủ"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Tên miền"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Đường dẫn"
+  },
+  "settingsTimeWindow": {
+    "message": "Khoảng thời gian"
+  },
+  "settingsTimeMinutes": {
+    "message": "Phút"
+  },
+  "settingsTimeHours": {
+    "message": "Giờ"
+  },
+  "settingsTimeDays": {
+    "message": "Ngày"
+  },
+  "settingsHowItWorks": {
+    "message": "Cách hoạt động:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Ngăn các mục lịch sử trùng lặp cho cùng một URL trong khoảng thời gian đã chọn."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "URL đầy đủ: Khớp chính xác URL (bao gồm tham số truy vấn)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Tên miền: Cùng tên miền (các đường dẫn khác nhau được tính là một)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Đường dẫn: Cùng tên miền và đường dẫn (bỏ qua tham số truy vấn)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Cài đặt bộ nhớ đệm"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Bỏ qua tên miền"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Thêm trang hiện tại"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Tìm tên miền..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Thấp"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Trung bình"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Cao"
+  },
+  "settingsEnableJsApi": {
+    "message": "Bật sự kiện JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "Xuất và nhập"
+  },
+  "settingsDataManagement": {
+    "message": "Quản lý dữ liệu"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Xuất hoặc nhập dữ liệu tiện ích của bạn"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Cài đặt"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Xuất hoặc nhập cài đặt của tiện ích"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Lịch sử phát hiện"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Xuất lịch sử phát hiện dưới dạng CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Xuất cài đặt"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Nhập cài đặt"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Xuất lịch sử"
+  },
+  "settingsAvailableEvents": {
+    "message": "Sự kiện khả dụng"
+  },
+  "settingsApiEventReady": {
+    "message": "Tiện ích đã được tải và khởi tạo"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Bắt đầu phát hiện (không trúng bộ nhớ đệm / thủ công)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Cập nhật tiến trình phát hiện (theo từng phương thức)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Đã hoàn tất theo dõi JS hook"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Đã hoàn tất theo dõi thuộc tính window"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Hoàn tất phát hiện kèm kết quả"
+  },
+  "settingsApiEventOnError": {
+    "message": "Đã xảy ra lỗi phát hiện"
+  },
+  "settingsUsageExample": {
+    "message": "Ví dụ sử dụng"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Đã tắt phát hiện cho tên miền này"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Xóa khỏi danh sách chặn"
+  },
+  "detectionBlacklistHint": {
+    "message": "Hoặc vào Cài đặt → Phát hiện → Tên miền trong danh sách chặn để quản lý."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Không tìm thấy tín hiệu anti-bot, CAPTCHA hoặc thu thập dấu vân tay nào khớp trên trang này."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Không có dữ liệu phát hiện trong bộ nhớ đệm cho trang này. Hãy tải lại trang để quét mới."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Tải lên các phát hiện (liên kết chia sẻ)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Đã sao chép liên kết vào bảng nhớ tạm"
+  },
+  "failedReadSettings": {
+    "message": "Không thể đọc cài đặt — đã hủy thao tác"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Không thể xóa khỏi danh sách chặn"
+  },
+  "pasteConfirmTitle": {
+    "message": "Tải lên các phát hiện?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Tải lên"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Tải lên không thành công"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Không có phát hiện nào để tải lên"
+  },
+  "detectionTitleClearCache": {
+    "message": "Xóa bộ nhớ đệm"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Sao chép tổng quan"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Chặn tên miền này"
+  },
+  "detectionStatSite": {
+    "message": "TRANG WEB"
+  },
+  "detectionStatDetections": {
+    "message": "PHÁT HIỆN"
+  },
+  "detectionStatConfidence": {
+    "message": "ĐỘ TIN CẬY"
+  },
+  "detectionStatDifficulty": {
+    "message": "ĐỘ KHÓ"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Tìm phát hiện..."
+  },
+  "detectionPaginationPage": {
+    "message": "Trang"
+  },
+  "detectionPaginationOf": {
+    "message": "trên"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Tên miền này nằm trong danh sách chặn"
+  },
+  "detectionModalConfidence": {
+    "message": "Độ tin cậy"
+  },
+  "detectionModalDifficulty": {
+    "message": "Độ khó"
+  },
+  "detectionModalAuthor": {
+    "message": "Tác giả"
+  },
+  "detectionModalDescription": {
+    "message": "Mô tả"
+  },
+  "detectionModalNoDescription": {
+    "message": "Không có mô tả."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Phương thức phát hiện"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Không phát hiện phương thức nào"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Tìm theo URL, mô-đun, trang web hoặc nội dung..."
+  },
+  "advancedPaginationPage": {
+    "message": "Trang"
+  },
+  "advancedPaginationOf": {
+    "message": "trên"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Ghi lại site key, action và các tham số cấu hình"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Chặn bắt dữ liệu sensor và trích xuất thông tin phiên bản"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Theo dõi cookie và thay đổi mức bảo vệ"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Phân tích header động và tham số script"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Ghi lại endpoint thử thách và chi tiết token"
+  },
+  "btnStartCapturing": {
+    "message": "Bắt đầu ghi"
+  },
+  "btnStopCapturing": {
+    "message": "Dừng ghi"
+  },
+  "btnCheckCookies": {
+    "message": "Kiểm tra cookie"
+  },
+  "btnCheckVersion": {
+    "message": "Kiểm tra phiên bản"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Phân tích script"
+  },
+  "btnExtractSiteKey": {
+    "message": "Trích xuất site key"
+  },
+  "btnExtractPublicKey": {
+    "message": "Trích xuất khóa công khai"
+  },
+  "btnObtainSelector": {
+    "message": "Lấy selector"
+  },
+  "btnCopyAllData": {
+    "message": "Sao chép tất cả dữ liệu"
+  },
+  "btnClearData": {
+    "message": "Xóa dữ liệu"
+  },
+  "advCapturedDataSection": {
+    "message": "Dữ liệu đã ghi"
+  },
+  "advNoCapturesYet": {
+    "message": "Chưa có bản ghi nào"
+  },
+  "advCaptureDetails": {
+    "message": "Chi tiết bản ghi"
+  },
+  "advValueCopied": {
+    "message": "Đã sao chép giá trị"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Xóa tất cả dữ liệu đã ghi?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Thao tác này sẽ xóa vĩnh viễn tất cả dữ liệu đã ghi của nhà cung cấp này."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Hủy"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Phạm vi tìm kiếm nội dung"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Chỉ kiểm tra script"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Chỉ tìm trong mã JavaScript (script nội tuyến và script đã tải), không tìm trong văn bản trang hoặc tên tệp"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Cài đặt phạm vi"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Phạm vi tên"
+  },
+  "rulesNameScopeHint": {
+    "message": "Nơi kiểm tra các kết quả khớp tên/trường"
+  },
+  "rulesScopeRequest": {
+    "message": "Yêu cầu"
+  },
+  "rulesScopeResponse": {
+    "message": "Phản hồi"
+  },
+  "rulesScopeAll": {
+    "message": "Tất cả"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Phạm vi giá trị"
+  },
+  "rulesValueScopeHint": {
+    "message": "Nơi kiểm tra các kết quả khớp giá trị"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Cài đặt phạm vi URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "Phạm vi URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Trang"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Script"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Tất cả (mặc định)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Ràng buộc yêu cầu"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "Mẫu URL (không bắt buộc)"
+  },
+  "rulesUrlRegex": {
+    "message": "Biểu thức chính quy cho URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL phân biệt chữ hoa/thường"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "Phương thức HTTP (chọn một)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Lọc theo phương thức yêu cầu (không bắt buộc)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Bất kỳ"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Tùy chọn khớp mẫu"
+  },
+  "rulesPatternRegex": {
+    "message": "Biểu thức chính quy (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Toàn bộ từ"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Phân biệt chữ hoa/thường"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Tùy chọn trường giá trị"
+  },
+  "rulesApplySettings": {
+    "message": "Áp dụng cài đặt"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "Trợ giúp chọn selector DOM"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Dùng selector"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Trợ giúp thuộc tính window"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Xác nhận"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Bạn có chắc không?"
+  },
+  "notifLoadingDefault": {
+    "message": "Đang tải..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Nhấp \"Bắt đầu ghi\" ở trên để bắt đầu ghi dữ liệu {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "Công cụ ghi dữ liệu"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Chọn một biện pháp bảo vệ để mở các công cụ của nó."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Mở công cụ"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Tìm hiểu về Công cụ nâng cao"
+  },
+  "advancedToolsChange": {
+    "message": "Thay đổi"
+  },
+  "settingsLanguageTitle": {
+    "message": "Ngôn ngữ"
+  },
+  "settingsLanguageDesc": {
+    "message": "Ghi đè ngôn ngữ giao diện của tiện ích. Mặc định theo ngôn ngữ trình duyệt của bạn."
+  },
+  "settingsLanguageAuto": {
+    "message": "Dùng ngôn ngữ trình duyệt"
+  },
+  "detectionEmptyTitle": {
+    "message": "Không phát hiện gì"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Không có CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Không có anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Không thu thập dấu vân tay"
+  },
+  "detectionDisabledTitle": {
+    "message": "Đã tắt phát hiện"
+  },
+  "detectionDisabledDesc": {
+    "message": "Tính năng phát hiện bảo mật hiện đang tắt."
+  },
+  "detectionDisabledAction": {
+    "message": "Hãy bật công tắc ở trên cùng để bật tính năng phát hiện."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Quy tắc phát hiện"
+  },
+  "rulesMoreActions": {
+    "message": "Thao tác khác"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Không phát hiện biện pháp bảo vệ nào"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Không có biện pháp bảo vệ được hỗ trợ nào trên trang này đạt độ tin cậy trên {0}%. Bạn có thể thay đổi mức tối thiểu này trong Cài đặt → Phát hiện.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Phát hiện biện pháp bảo vệ với độ tin cậy thấp"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} được phát hiện với độ tin cậy {1}%. Các công cụ chỉ xuất hiện khi độ tin cậy trên {2}%. Bạn có thể hạ mức tối thiểu này trong Cài đặt → Phát hiện.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Biện pháp bảo vệ được hỗ trợ"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Xem lịch sử bản ghi ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript hook"
+  },
+  "detectionMethodContent": {
+    "message": "Nội dung"
+  },
+  "detectionMethodWindow": {
+    "message": "Thuộc tính window"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Header"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookie"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Bật phát hiện"
+  },
+  "historyMoreActions": {
+    "message": "Thao tác khác"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Sao chép dữ liệu"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Tự động xóa"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Định kỳ xóa các mục lịch sử cũ."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Xóa các mục cũ hơn"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Phạm vi cho phép: 1–{0} {1}. Chọn đơn vị lớn hơn cho khoảng thời gian dài hơn."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Phạm vi cho phép: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Một tháng được tính là 30 ngày; một năm là 365 ngày."
+  },
+  "timeUnitMonths": {
+    "message": "Tháng"
+  },
+  "timeUnitYears": {
+    "message": "Năm"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Thống kê lịch sử"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Xem thống kê riêng tư được tính cục bộ từ lịch sử phát hiện của bạn."
+  },
+  "settingsOpenStats": {
+    "message": "Mở thống kê"
+  },
+  "settingsExportedToast": {
+    "message": "Đã xuất cài đặt"
+  },
+  "settingsExportFailedToast": {
+    "message": "Không thể xuất cài đặt"
+  },
+  "settingsImportedToast": {
+    "message": "Đã nhập cài đặt"
+  },
+  "settingsImportFailedToast": {
+    "message": "Không thể nhập cài đặt: tệp không hợp lệ"
+  },
+  "statsPrivacyNote": {
+    "message": "Được tính cục bộ từ lịch sử phát hiện của bạn. Không có dữ liệu nào rời khỏi trình duyệt của bạn."
+  },
+  "statsSubtitleFmt": {
+    "message": "Được tính cục bộ từ {0} mục lịch sử. Không có dữ liệu nào rời khỏi trình duyệt của bạn."
+  },
+  "statsRangeLabel": {
+    "message": "Khoảng thời gian"
+  },
+  "statsRange7": {
+    "message": "7 ngày"
+  },
+  "statsRange30": {
+    "message": "30 ngày"
+  },
+  "statsRange90": {
+    "message": "90 ngày"
+  },
+  "statsRangeAll": {
+    "message": "Tất cả"
+  },
+  "statsEmptyTitle": {
+    "message": "Chưa có lịch sử"
+  },
+  "statsEmptyDesc": {
+    "message": "Thống kê sẽ xuất hiện tại đây khi các trang có phát hiện được lưu vào lịch sử."
+  },
+  "statsEntries": {
+    "message": "Mục lịch sử"
+  },
+  "statsUniqueDomains": {
+    "message": "Tên miền duy nhất"
+  },
+  "statsDetections": {
+    "message": "Phát hiện"
+  },
+  "statsDistinctDetectors": {
+    "message": "Biện pháp bảo vệ riêng biệt"
+  },
+  "statsOverTime": {
+    "message": "Phát hiện theo thời gian"
+  },
+  "statsTopProtections": {
+    "message": "Biện pháp bảo vệ được phát hiện nhiều nhất"
+  },
+  "statsTopDomains": {
+    "message": "Tên miền hàng đầu"
+  },
+  "statsByCategory": {
+    "message": "Theo danh mục"
+  },
+  "statsByDifficulty": {
+    "message": "Theo độ khó"
+  },
+  "statsPagesUnit": {
+    "message": "trang"
+  },
+  "statsVisitsUnit": {
+    "message": "lượt truy cập"
+  },
+  "statsDetectionsUnit": {
+    "message": "phát hiện"
+  },
+  "statsCategoryOther": {
+    "message": "Khác"
+  },
+  "statsDifficultyNone": {
+    "message": "Không có phát hiện"
+  },
+  "statsNoData": {
+    "message": "Không có dữ liệu trong khoảng này"
+  },
+  "statsTipPagesFmt": {
+    "message": "Trang: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} tên miền"
+  },
+  "statsTipVisitsFmt": {
+    "message": "{0} lượt truy cập"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "{0} phát hiện"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0}/{1} phát hiện · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} mục"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} có phát hiện"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "{0} lượt truy cập mỗi tên miền"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} mỗi mục"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "Độ tin cậy trung bình {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Phát hiện: {0} · Ngày: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Đây là trình phát hiện chính thức của Scrapfly. Các bản cập nhật sẽ không khôi phục nó; hãy dùng \"Khôi phục trình phát hiện chính thức\" trong menu … để lấy lại."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Khôi phục trình phát hiện chính thức"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "Đã khôi phục {0} trình phát hiện chính thức"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Không thể khôi phục trình phát hiện chính thức"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" được dành riêng cho các trình phát hiện chính thức. Hãy dùng tên tác giả khác."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Tên của bạn"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Xóa trình phát hiện tùy chỉnh"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Thao tác này sẽ xóa tất cả trình phát hiện tùy chỉnh của bạn. Các trình phát hiện Scrapfly chính thức được giữ lại (thay vào đó, bạn có thể tắt chúng). Bạn có chắc không?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Đang xóa trình phát hiện tùy chỉnh..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "Đã xóa {0} trình phát hiện tùy chỉnh"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Không có trình phát hiện tùy chỉnh nào để xóa"
+  },
+  "rhSuggestions": {
+    "message": "Gợi ý"
+  },
+  "rhResults": {
+    "message": "Kết quả"
+  },
+  "rhCustomChip": {
+    "message": "Tùy chỉnh"
+  },
+  "rhUseAsTyped": {
+    "message": "Dùng đúng như đã nhập"
+  },
+  "rhNoResultsFmt": {
+    "message": "Không có kết quả khớp cho “{0}”"
+  },
+  "rhNoResultsHint": {
+    "message": "Bạn vẫn có thể dùng nó làm giá trị tùy chỉnh."
+  },
+  "rhPreview": {
+    "message": "Xem trước"
+  },
+  "rhSearchWindow": {
+    "message": "Tìm thuộc tính, ví dụ: webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Tìm selector, ví dụ: captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Điều kiện"
+  },
+  "rhConditionInvalid": {
+    "message": "Điều kiện không xác định"
+  },
+  "rhAddProperty": {
+    "message": "Thêm thuộc tính"
+  },
+  "rhChipAutomation": {
+    "message": "Tự động hóa"
+  },
+  "rhCondGroupType": {
+    "message": "Kiểu"
+  },
+  "rhCondGroupExistence": {
+    "message": "Sự tồn tại"
+  },
+  "rhCondGroupCollections": {
+    "message": "Tập hợp"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Số"
+  },
+  "rhCondGroupString": {
+    "message": "Chuỗi"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolean"
+  },
+  "rhCondGroupCustom": {
+    "message": "Giá trị hiện tại"
+  },
+  "rhCondTypeObject": {
+    "message": "là một đối tượng"
+  },
+  "rhCondTypeFunction": {
+    "message": "là một hàm"
+  },
+  "rhCondTypeString": {
+    "message": "là một chuỗi"
+  },
+  "rhCondTypeNumber": {
+    "message": "là một số"
+  },
+  "rhCondTypeBoolean": {
+    "message": "là một boolean"
+  },
+  "rhCondTypeSymbol": {
+    "message": "là một symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "là một BigInt"
+  },
+  "rhCondExists": {
+    "message": "tồn tại trên trang"
+  },
+  "rhCondTruthy": {
+    "message": "là truthy"
+  },
+  "rhCondFalsy": {
+    "message": "là falsy (rỗng, 0, false hoặc null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "không phải undefined"
+  },
+  "rhCondUndefined": {
+    "message": "là undefined (không tồn tại)"
+  },
+  "rhCondNotNull": {
+    "message": "không phải null"
+  },
+  "rhCondNull": {
+    "message": "là null"
+  },
+  "rhCondArray": {
+    "message": "là một mảng"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "là một mảng có phần tử"
+  },
+  "rhCondEmptyArray": {
+    "message": "là một mảng rỗng"
+  },
+  "rhCondHasLength": {
+    "message": "có độ dài"
+  },
+  "rhCondHasKeys": {
+    "message": "là một đối tượng có khóa"
+  },
+  "rhCondEmptyObject": {
+    "message": "là một đối tượng rỗng"
+  },
+  "rhCondGt0": {
+    "message": "lớn hơn 0"
+  },
+  "rhCondGte0": {
+    "message": "là 0 hoặc lớn hơn"
+  },
+  "rhCondEq0": {
+    "message": "bằng 0"
+  },
+  "rhCondNe0": {
+    "message": "khác 0"
+  },
+  "rhCondGt1": {
+    "message": "lớn hơn 1"
+  },
+  "rhCondGte1": {
+    "message": "là 1 hoặc lớn hơn"
+  },
+  "rhCondLenGt0": {
+    "message": "không rỗng"
+  },
+  "rhCondLenEq0": {
+    "message": "rỗng"
+  },
+  "rhCondTrue": {
+    "message": "là true"
+  },
+  "rhCondFalse": {
+    "message": "là false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Khớp các trang mà {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Mẫu"
+  },
+  "rhDomClass": {
+    "message": "Class"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Thuộc tính data"
+  },
+  "rhDomClassContains": {
+    "message": "Class chứa"
+  },
+  "rhDomIdContains": {
+    "message": "ID chứa"
+  },
+  "rhDomTag": {
+    "message": "Thẻ HTML"
+  },
+  "rhDomAttr": {
+    "message": "Có thuộc tính"
+  },
+  "rhDomIframe": {
+    "message": "URL iframe chứa"
+  },
+  "rhDomTitle": {
+    "message": "Tiêu đề chứa"
+  },
+  "rhDomAlt": {
+    "message": "Văn bản alt chứa"
+  },
+  "rhDomCamel": {
+    "message": "Class camelCase"
+  },
+  "rhRefAny": {
+    "message": "ký tự bất kỳ"
+  },
+  "rhRefZeroMore": {
+    "message": "0 hoặc nhiều"
+  },
+  "rhRefOneMore": {
+    "message": "1 hoặc nhiều"
+  },
+  "rhRefOptional": {
+    "message": "tùy chọn"
+  },
+  "rhRefStart": {
+    "message": "bắt đầu"
+  },
+  "rhRefEnd": {
+    "message": "kết thúc"
+  },
+  "rhRefDigit": {
+    "message": "chữ số"
+  },
+  "rhRefWord": {
+    "message": "chữ cái, chữ số hoặc _"
+  },
+  "rhRefSpace": {
+    "message": "khoảng trắng"
+  },
+  "rhRefOr": {
+    "message": "a hoặc b"
+  },
+  "rhMatch": {
+    "message": "Khớp"
+  },
+  "rhNoMatch": {
+    "message": "Không khớp"
+  },
+  "ptTitle": {
+    "message": "Kiểm tra mẫu"
+  },
+  "ptTitleFmt": {
+    "message": "Kiểm tra mẫu · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Nội dung trang"
+  },
+  "ptKindCookieName": {
+    "message": "Tên cookie"
+  },
+  "ptKindCookieValue": {
+    "message": "Giá trị cookie"
+  },
+  "ptKindHeaderName": {
+    "message": "Tên header"
+  },
+  "ptKindHeaderValue": {
+    "message": "Giá trị header"
+  },
+  "ptKindPayloadText": {
+    "message": "Nội dung yêu cầu"
+  },
+  "ptKindPayloadUrl": {
+    "message": "URL yêu cầu"
+  },
+  "ptPatternLabel": {
+    "message": "Mẫu"
+  },
+  "ptOptionsLabel": {
+    "message": "Tùy chọn khớp"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Thử trên"
+  },
+  "ptExamplesBtn": {
+    "message": "Ví dụ"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "Mỗi dòng một mục: một URL, một tên cookie…"
+  },
+  "ptNoSamples": {
+    "message": "Nhập hoặc dán văn bản ở trên, mỗi dòng một mục, để xem có khớp hay không."
+  },
+  "ptCheatTitle": {
+    "message": "Bảng tra cứu Regex"
+  },
+  "ptCheatNote": {
+    "message": "Viết mẫu không có dấu / bao quanh. Lặp lồng trong lặp, như (a+)+, bị từ chối vì có thể làm treo trang."
+  },
+  "ptApply": {
+    "message": "Áp dụng"
+  },
+  "ptTestBtn": {
+    "message": "Kiểm tra"
+  },
+  "ptTestTitle": {
+    "message": "Thử mẫu trên văn bản ví dụ"
+  },
+  "ptNoPattern": {
+    "message": "Chưa có mẫu"
+  },
+  "ptHintRegex": {
+    "message": "Một mẫu như ^bm_ hoặc \\d+, không có dấu / bao quanh"
+  },
+  "ptHintWholeWord": {
+    "message": "Bỏ qua các kết quả khớp nằm trong từ dài hơn: _abck, không phải test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai không còn khớp với akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Nhập một mẫu để xem nó khớp với gì."
+  },
+  "ptSaysRegex": {
+    "message": "Khớp văn bản mà regex tìm thấy kết quả khớp."
+  },
+  "ptSaysWordFmt": {
+    "message": "Khớp “{0}” như một từ nguyên vẹn, không khớp bên trong từ dài hơn."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Khớp các tên như “{0}”, trong đó * đại diện cho văn bản bất kỳ."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Khớp các tên bắt đầu bằng “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Khớp văn bản có chứa “{0}”."
+  },
+  "ptCaseExact": {
+    "message": "Chữ hoa và chữ thường phải khớp chính xác."
+  },
+  "ptCaseIgnored": {
+    "message": "Chữ hoa và chữ thường được coi như nhau."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Regex này không hợp lệ nên không bao giờ khớp: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Tính năng phát hiện từ chối regex này vì nó có thể làm treo trang (lặp lồng trong lặp, hoặc dài hơn 1000 ký tự), nên nó không bao giờ khớp."
+  },
+  "ptNoteSlashes": {
+    "message": "Bỏ dấu / ở hai đầu: chúng được khớp như một phần của văn bản."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Mẫu này trông giống regex: hãy bật Regex, nếu không các ký hiệu của nó sẽ được khớp như văn bản thuần."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Toàn bộ từ bị bỏ qua khi Regex đang bật."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Tên header được lưu bằng chữ thường, nên khi bật Phân biệt chữ hoa/thường thì mẫu này không bao giờ khớp."
+  },
+  "ptNoteWordEdges": {
+    "message": "Mẫu này bắt đầu hoặc kết thúc bằng một ký hiệu, nên Toàn bộ từ cần một chữ cái, chữ số hoặc _ ngay cạnh ký hiệu đó."
+  },
+  "rhRefDot": {
+    "message": "dấu chấm thật"
+  },
+  "rhRefSet": {
+    "message": "một trong a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2 đến 5 lần"
+  },
+  "mhExamplesTitle": {
+    "message": "Trong quy tắc của Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Cách khớp"
+  },
+  "mhWriteTitle": {
+    "message": "Bạn có thể viết gì"
+  },
+  "mhLimitsTitle": {
+    "message": "Cần biết"
+  },
+  "mhUrlIntro": {
+    "message": "Kiểm tra địa chỉ trang và các URL mà trang yêu cầu: script, lệnh gọi XHR và fetch, hình ảnh, khung và ping."
+  },
+  "mhUrlHow1": {
+    "message": "Không dùng Regex, URL phải chứa văn bản, không phân biệt chữ hoa/thường. Toàn bộ URL được tính, kể cả chuỗi truy vấn."
+  },
+  "mhUrlHow2": {
+    "message": "Với Regex, bỏ dấu / ở hai đầu và viết dấu chấm là `\\.`, như `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Phạm vi URL: Trang chỉ kiểm tra địa chỉ trang, Script thêm nguồn script, Tất cả (mặc định) thêm mọi yêu cầu."
+  },
+  "mhUrlLimit1": {
+    "message": "Yêu cầu phông chữ, đa phương tiện và stylesheet không được ghi lại."
+  },
+  "mhUrlLimit2": {
+    "message": "Chỉ các yêu cầu được thực hiện trước lần quét mới được tính; quá trình quét chạy sau khi trang đã tải xong."
+  },
+  "mhHeaderIntro": {
+    "message": "Kiểm tra header của yêu cầu và phản hồi của chính trang, không phải của script, lệnh gọi XHR hay khung."
+  },
+  "mhHeaderHow1": {
+    "message": "Tên header được so sánh bằng chữ thường, và văn bản thuần có nghĩa là “chứa”: `server` cũng khớp với `server-timing`. Để khớp chính xác một tên, dùng Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Giá trị được kiểm tra trên header có tên đó; để trống để chấp nhận mọi giá trị."
+  },
+  "mhHeaderHow3": {
+    "message": "Phạm vi Phản hồi (mặc định) là các header do trang web gửi; Yêu cầu là các header do trình duyệt gửi."
+  },
+  "mhHeaderLimit1": {
+    "message": "Khi bật Phân biệt chữ hoa/thường, hãy viết tên header bằng chữ thường."
+  },
+  "mhHeaderLimit2": {
+    "message": "Các trang đổi địa chỉ mà không tải lại sẽ được quét lại mà không có header."
+  },
+  "mhCookieIntro": {
+    "message": "Kiểm tra cookie của trang theo tên và, tùy chọn, theo giá trị, kể cả cookie HttpOnly và Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Một tên thuần khớp theo tiền tố: `_abck` cũng khớp với `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` đại diện cho văn bản bất kỳ: `bm_*` khớp với `bm_sz` và `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Để khớp chính xác một tên, bật Regex và viết `^name$`. Giá trị khớp khi nó chứa văn bản."
+  },
+  "mhCookieLimit1": {
+    "message": "Phạm vi Yêu cầu (mặc định) đọc cookie của trình duyệt cho trang; Phản hồi đọc các cookie mà phản hồi của trang đặt."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookie của các trang web khác, như khung của nhà cung cấp, không được nhìn thấy. Các giá trị dài bị cắt còn 100 ký tự."
+  },
+  "mhContentIntro": {
+    "message": "Tìm trong văn bản của trang: HTML của phần body, các script nội tuyến và các tệp script và stylesheet mà trang tải."
+  },
+  "mhContentHow1": {
+    "message": "Văn bản thuần khớp khi văn bản chứa nó, không phân biệt chữ hoa/thường."
+  },
+  "mhContentHow2": {
+    "message": "Toàn bộ từ bỏ qua các kết quả khớp nằm trong từ dài hơn; nó cần một chữ cái, chữ số hoặc _ ở cả hai đầu của mẫu."
+  },
+  "mhContentHow3": {
+    "message": "“Chỉ kiểm tra script” chỉ tìm trong script nội tuyến (kể cả head) và tệp JavaScript, không tìm trong HTML hay CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Các tệp mà trang web không cho phép nguồn gốc khác đọc (CORS), hoặc lớn hơn 5 MB, sẽ bị bỏ qua."
+  },
+  "mhContentLimit2": {
+    "message": "Mã bên trong khung hoặc worker, hoặc được tải sau lần quét, không được tìm kiếm."
+  },
+  "mhDomIntro": {
+    "message": "Tìm một phần tử trong phần body của trang bằng selector CSS, sau khi trang đã tải xong."
+  },
+  "mhDomHow1": {
+    "message": "Một thẻ, `.class`, `#id` hoặc `[attribute]`, riêng lẻ hoặc kết hợp: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Kiểm tra thuộc tính `=`, `^=`, `$=`, `*=`, `~=` và `|=`; thêm ` i` trước `]` để bỏ qua chữ hoa/thường."
+  },
+  "mhDomHow3": {
+    "message": "Nhiều selector cách nhau bằng dấu phẩy: khớp với bất kỳ selector nào là được."
+  },
+  "mhDomLimit1": {
+    "message": "Không được hỗ trợ, nên quy tắc không bao giờ khớp: khoảng trắng hoặc `>` giữa các phần, `:pseudo-classes` và ký tự thoát."
+  },
+  "mhDomLimit2": {
+    "message": "Phần head, khung và shadow root không được tìm kiếm. Thuộc tính `value` không được đọc; các thuộc tính khác được so sánh theo 100 ký tự đầu tiên."
+  },
+  "mhWindowIntro": {
+    "message": "Kiểm tra một biến toàn cục JavaScript mà trang định nghĩa, như `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Đường dẫn từ `window`, phân tách bằng dấu chấm: `KPSDK` hoặc `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Một điều kiện như `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` hoặc `has keys`. Để trống nghĩa là truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Một điều kiện mà tính năng phát hiện không hiểu sẽ không bao giờ khớp, nên hãy chọn một điều kiện từ danh sách."
+  },
+  "mhWindowLimit1": {
+    "message": "Được kiểm tra trong vài giây đầu sau khi trang tải; các biến toàn cục được tạo sau đó sẽ bị bỏ sót."
+  },
+  "mhWindowLimit2": {
+    "message": "Các thuộc tính được đặt tên bằng Symbol không thể viết dưới dạng đường dẫn."
+  },
+  "mhJsHooksIntro": {
+    "message": "Ghi lại khi trang gọi một API của trình duyệt, như `HTMLCanvasElement.prototype.toDataURL`, một dấu hiệu của việc thu thập dấu vân tay."
+  },
+  "mhJsHooksHow1": {
+    "message": "Đường dẫn đầy đủ tới một phương thức hoặc getter: `Navigator.prototype.webdriver`, không phải `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Mọi lệnh gọi đều được tính; đối số và kết quả của nó không được kiểm tra, nên một hook cho biết API đã được dùng, chứ không cho biết lý do."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Các lệnh gọi được tính trong vài giây đầu sau khi trang tải (tối đa 8 giây)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Các lệnh gọi trong worker hoặc khung không được nhìn thấy, trừ các đích tích hợp sẵn trong khung cùng trang web."
+  },
+  "mhPayloadIntro": {
+    "message": "Tìm trong nội dung của các yêu cầu POST, PUT, PATCH và DELETE mà trang gửi, từ bất kỳ khung nào."
+  },
+  "mhPayloadHow1": {
+    "message": "Văn bản thuần khớp khi nội dung chứa nó, không phân biệt chữ hoa/thường. Dữ liệu biểu mẫu được đọc dưới dạng `name=value&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "URL yêu cầu (không bắt buộc) và phương thức HTTP giới hạn chỉ các yêu cầu khớp."
+  },
+  "mhPayloadLimit1": {
+    "message": "Chỉ các yêu cầu được gửi trước lần quét mới được tính, tối đa 50 mỗi trang."
+  },
+  "mhPayloadLimit2": {
+    "message": "Thông điệp WebSocket không được đọc."
+  },
+  "domCardTitle": {
+    "message": "Selector CSS"
+  },
+  "domCardBrowse": {
+    "message": "Duyệt"
+  },
+  "domCardHint": {
+    "message": "Một thẻ, .class, #id hoặc phép kiểm tra [attribute], riêng lẻ hoặc kết hợp. Không hỗ trợ khoảng trắng hoặc > giữa các phần."
+  },
+  "windowCardTitle": {
+    "message": "Thuộc tính window"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Các sự kiện mà tiện ích gửi tới trang"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Lắng nghe các sự kiện từ script của riêng bạn"
+  },
+  "settingsApiCopyCode": {
+    "message": "Sao chép mã"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Đã sao chép mã"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Sao chép tên sự kiện"
+  },
+  "advCommonClickToCopy": {
+    "message": "Nhấp để sao chép"
+  },
+  "advCommonDomainLabel": {
+    "message": "Tên miền:"
+  },
+  "advCommonCopy": {
+    "message": "Sao chép"
+  },
+  "advCommonPage": {
+    "message": "Trang"
+  },
+  "advCommonExportCode": {
+    "message": "Xuất mã"
+  },
+  "advCommonUrlCopied": {
+    "message": "Đã sao chép URL"
+  },
+  "advScriptTypeCollector": {
+    "message": "Collector"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "Kiểm tra CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Trang trung gian"
+  },
+  "advCommonCaptured": {
+    "message": "Đã ghi"
+  },
+  "advCommonScript": {
+    "message": "Script"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL script:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Không có dữ liệu bản ghi"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Không thể kiểm tra cookie: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Không thể phân tích script: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Không thể bắt đầu phân tích"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Không thể kiểm tra phiên bản: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Không thể trích xuất: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Không thể bắt đầu trích xuất: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Không có script nào để xuất"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "Cookie {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Không tìm thấy cookie {0}"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "Script {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Đang phân tích script {0}... Trang sẽ tải lại"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Không có trình tạo mã"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Trình tạo mã phân tích script"
+  },
+  "advCommonExportOptions": {
+    "message": "Tùy chọn xuất"
+  },
+  "advCommonAllTypes": {
+    "message": "Tất cả loại"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Tìm thấy {0} script liên quan"
+  },
+  "advCommonTotalScripts": {
+    "message": "Tổng số script:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Mức bảo vệ:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Cookie tìm thấy:"
+  },
+  "advCommonSiteKey": {
+    "message": "Site key"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL trang web"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL site"
+  },
+  "advCommonApiDomain": {
+    "message": "Tên miền API"
+  },
+  "advCommonFound": {
+    "message": "Tìm thấy"
+  },
+  "advCommonNotFound": {
+    "message": "Không tìm thấy"
+  },
+  "advCommonYes": {
+    "message": "Có"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Tiêu chuẩn"
+  },
+  "advCommonNone": {
+    "message": "Không có"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Mã console trình duyệt để chặn bắt và phân tích script {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Script Python dùng requests và BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Script Python dùng thư viện requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Script Node.js dùng axios và cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Script Node.js dùng axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "Script PHP dùng cURL và DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "Script PHP dùng cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# dùng HttpClient và HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# dùng HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go dùng net/http và goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go dùng net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Đang ghi dữ liệu"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Hãy tải lại trang để bắt đầu ghi."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Kết thúc sau {0} giây"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Tải lại trang này"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Giải hoặc nhấp vào reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Chờ \"Ghi hoàn tất\""
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Đã bắt đầu theo dõi {0}"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Ghi hoàn tất"
+  },
+  "pageNoticePageLoading": {
+    "message": "Đang tải trang"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Vui lòng chờ trang tải xong hoàn toàn..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Không phát hiện Akamai trên trang này. Cookie _abck không tồn tại."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Đã ghi dữ liệu Akamai thành công!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Đã dừng ghi"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Không thể dừng ghi: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Đang tải lại trang để phân tích dữ liệu Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Không thể phân tích nội dung: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Không tìm thấy cookie _abck"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Không thể xử lý dữ liệu: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Đang trích xuất thông tin sensor…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Không thể trích xuất thông tin sensor: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Không phát hiện Akamai"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Cookie _abck không tồn tại trên trang này."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager không hoạt động ở đây."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Tải lại trang để bắt đầu theo dõi dữ liệu sensor và chi tiết yêu cầu"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Đã ghi sensor_data của Akamai thành công"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Nâng cao (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Cơ bản"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Dễ"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "Mức _abck:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Phân tích Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Script Akamai:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Script URL dữ liệu sensor"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Biến HTML Pixel:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL POST:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Biến script Pixel:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL script SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL dữ liệu sensor"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Endpoint Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Sensor"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Thông tin sensor đã trích xuất"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Dữ liệu sensor ({0} ký tự)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Chưa ghi được dữ liệu sensor"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "Dữ liệu SBSD ({0} ký tự)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL script sensor"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Sao chép tất cả dữ liệu dưới dạng JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Trích xuất thông tin sensor"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "Mức ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "Cookie ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Phiên bản Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Yêu cầu thử thách"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Thử thách SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Thử thách sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Thử thách Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Không thể bật chế độ trích xuất. Hãy kiểm tra bảng điều khiển nền để biết chi tiết."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Cookie phiên"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Thành phần bảo mật"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookie: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Phát hiện tài nguyên"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL tài nguyên"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL interrogation"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Phân tích Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL sensor:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "Script {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "Đường dẫn sensor:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Không phát hiện script nào"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva có thể không có trên trang này"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Chỉ {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Nâng cao (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Cơ bản (Phiên)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Tải lại trang để bắt đầu theo dõi các yêu cầu và cookie của Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Đã ghi dữ liệu Imperva (số mục: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Ghi Imperva hoàn tất"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Đã ghi dữ liệu sensor thành công"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Callback reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Phát hiện selector"
+  },
+  "advRecaptchaMethod": {
+    "message": "Phương thức"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selector"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Đã sao chép selector vào bảng nhớ tạm!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Không tìm thấy phần tử reCAPTCHA nào"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() không thành công: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Callback reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "Client reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "ID client: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Đã sao chép vào bảng nhớ tạm!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Hàm callback"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Đường dẫn callback"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Chưa định nghĩa callback"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Callback DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Callback script"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Ví dụ sử dụng callback"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Ẩn"
+  },
+  "advRecaptchaAction": {
+    "message": "Action"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Cookie bắt buộc"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Tính năng đã phát hiện"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "Cần tham số S"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Có phiên"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Không thể nhấp: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Không tìm thấy callback reCAPTCHA nào trên trang này. Hãy đảm bảo reCAPTCHA đã được tải."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Không thể ghi callback: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Tải lại trang và giải thử thách reCAPTCHA để bắt đầu theo dõi"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Trang đã sẵn sàng"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Bây giờ hãy giải thử thách reCAPTCHA để ghi dữ liệu"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Yêu cầu đã ghi và giải mã: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Chưa ghi yêu cầu reCAPTCHA nào"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "Đã phát hiện reCAPTCHA"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Hãy giải thử thách; quá trình ghi tự kết thúc"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Bây giờ hãy kích hoạt hoặc nhấp vào reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Header"
+  },
+  "advShapeVersionTitle": {
+    "message": "Phiên bản Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Mẫu header"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Mẫu header"
+  },
+  "advShapeCookieTitle": {
+    "message": "Cookie Shape"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Phân tích Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Script Init.js:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Script seed:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Script Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Script Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "Script seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "Script seed"
+  },
+  "advShapeErrorFmt": {
+    "message": "Lỗi: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Phiên bản đã phát hiện:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Yêu cầu ghi"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + Header"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Tải lại trang để bắt đầu theo dõi header và cookie của Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Vui lòng chờ trang tải xong hoàn toàn trước khi thực hiện thao tác..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Đang theo dõi ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Thực hiện thao tác để kích hoạt cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Thực hiện thao tác để kích hoạt header + cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Hết thời gian chờ ({2}) - cookie: {0}, header: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie: {1} | Header: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Đã ghi - cookie: {0}, header: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "Phát hiện hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "Không phát hiện hCaptcha. Vui lòng tải lại trang khi hCaptcha đã được tải."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "Phiên bản hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Chế độ Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "Không"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Chưa có lịch sử ghi"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "N/A"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Đang kiểm tra phiên bản hCaptcha... Trang sẽ tải lại"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Hết thời gian phát hiện phiên bản hCaptcha"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Không thể bắt đầu kiểm tra phiên bản"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Tải lại trang để bắt đầu theo dõi các yêu cầu hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "Đã ghi dữ liệu hCaptcha thành công"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Thử thách"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "Đang xóa cookie {0}... Trang sẽ tải lại"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Loại"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Đã sao chép site key"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Thử thách"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Phân tích"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Bot Management"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Khóa công khai"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (Mảng dữ liệu trình duyệt)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Dữ liệu Blob"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Chưa ghi"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Tải lại trang để bắt đầu theo dõi và kích hoạt thử thách FunCaptcha (hết thời gian sau 60 giây)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Trang đang tải, vui lòng chờ..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "Đã ghi FunCaptcha thành công"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Số thử thách đã ghi: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Hết thời gian ghi"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Không phát hiện thử thách FunCaptcha (hết thời gian sau 60 giây)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Script nội tuyến"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "Thuộc tính DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL script"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "Cấu hình JSON"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Đã trích xuất captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Sản phẩm:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Đoạn script"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Xuất mã phân tích"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Lỗi: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Đã phát hiện: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Không phát hiện phiên bản Geetest"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Không tìm thấy tab"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Không tìm thấy script Geetest nào"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Đang phát hiện phiên bản Geetest..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Đang tải lại trang để kiểm tra phiên bản"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Đang phân tích script..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Đang tải lại trang để trích xuất script"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "Công cụ {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Lỗi khi tải công cụ nâng cao"
+  },
+  "advPanelCheckConsole": {
+    "message": "Xem chi tiết trong bảng điều khiển"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Lỗi khi tải bản ghi: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Trang web hiện tại ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm để tìm bản ghi."
+  },
+  "advPanelNoUrl": {
+    "message": "Không có URL"
+  },
+  "advPanelView": {
+    "message": "Xem"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Xác nhận thao tác"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Xác nhận"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Đã sao chép vào bảng nhớ tạm"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "Đã tải công cụ {0}"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Tìm thấy {0}/{1} cookie"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Script tìm thấy: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Không tìm thấy script {0} nào"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "Đã phát hiện phiên bản {0}: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Không phát hiện phiên bản {0}"
+  },
+  "advPanelUnknownError": {
+    "message": "Lỗi không xác định"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Không thể bắt đầu ghi: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Không thể dừng ghi: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Bản ghi: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Xóa tất cả dữ liệu đã ghi"
+  },
+  "advPanelNotAvailable": {
+    "message": "N/A"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Đã xóa lịch sử bản ghi {0}"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Không thể xóa lịch sử"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Hiển thị {0}-{1} trong {2} bản ghi"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Trình phát hiện mới"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Thêm {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Chỉnh sửa {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Biểu tượng Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "Biểu tượng {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Đổi biểu tượng"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Đổi biểu tượng trình phát hiện"
+  },
+  "rulesUiCustomColor": {
+    "message": "Màu tùy chỉnh"
+  },
+  "iconPickerTitle": {
+    "message": "Chọn biểu tượng"
+  },
+  "iconPickerDefault": {
+    "message": "Mặc định"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Tải lên tùy chỉnh"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Tệp biểu tượng phải nhỏ hơn 100KB"
+  },
+  "iconPickerNoResults": {
+    "message": "Không có biểu tượng nào khớp với tìm kiếm của bạn"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Tìm biểu tượng…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "JS hook là gì?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Thuộc tính Window là gì?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Phát hiện URL là gì?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Phát hiện Header là gì?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Phát hiện Cookie là gì?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Phát hiện Nội dung là gì?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Phát hiện DOM là gì?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Phát hiện Payload là gì?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Phương thức phát hiện này là gì?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Giá trị (không bắt buộc)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "Selector CSS (ví dụ: .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Văn bản/từ cần tìm"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "Mẫu URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "Đích JS hook (ví dụ: Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Đường dẫn window (ví dụ: grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Điều kiện (ví dụ: typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Tên cookie (ví dụ: __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Mẫu giá trị cookie (không bắt buộc)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Văn bản (ví dụ: sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify hoặc challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Cài đặt tên"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Cài đặt tên (Độ tin cậy: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Cài đặt giá trị"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Xóa phương thức"
+  },
+  "rulesUiClearValue": {
+    "message": "Xóa giá trị"
+  },
+  "rulesUiAddValue": {
+    "message": "Thêm giá trị"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Trang {0}/{1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Hãy hoàn thành mẫu trống hiện tại trước khi thêm mẫu khác."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Vui lòng điền tất cả trường mẫu bắt buộc trước khi lưu."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Nhập loại phương thức phát hiện (ví dụ: HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Phương thức"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Trang = URL hiện tại | Script = trang + script | Tất cả = mọi yêu cầu"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Để trống để khớp mọi URL"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Khác"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Tiêu đề: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Dấu thời gian: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Hệ thống bảo mật: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Danh mục: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Độ tin cậy: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Phương thức phát hiện: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Phương thức phát hiện:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Phát hiện ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Độ khó: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Không thể sao chép vào bảng nhớ tạm"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Sao chép URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Sao chép URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Sao chép danh mục"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Sao chép danh mục: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Sao chép phương thức"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Sao chép phương thức: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Sao chép giá trị"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Sao chép giá trị: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} năm"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} tháng"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} ngày"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} giờ"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} phút"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 phút"
+  },
+  "detectionUiNoDescription": {
+    "message": "Không có thông tin chi tiết bổ sung cho phát hiện này."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Chưa ghi nhận phương thức phát hiện nào cho trình phát hiện này."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Phương thức không xác định"
+  },
+  "detectionUiUnknownValue": {
+    "message": "không rõ"
+  },
+  "historyUiUntitled": {
+    "message": "Không có tiêu đề"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Không có phương thức phát hiện"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Định dạng tệp lịch sử không hợp lệ"
+  },
+  "popupUiLogoAlt": {
+    "message": "Robot Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Không thể bật tiện ích: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Không thể tắt tiện ích: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Lỗi: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Không có tên miền nào trong danh sách chặn"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Không có tên miền nào khớp với tìm kiếm của bạn"
+  },
+  "settingsUiChecking": {
+    "message": "Đang kiểm tra..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Giới hạn lịch sử phải nằm trong khoảng 0 (không giới hạn) đến 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Thời hạn bộ nhớ đệm phải nằm trong khoảng 1 đến {0} {1}"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Số ngày tự động xóa phải nằm trong khoảng 1 đến 3650"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Khoảng thời gian trùng lặp phải nằm trong khoảng 1 đến 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Xuất JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Xuất văn bản"
+  },
+  "settingsUiLogsText": {
+    "message": "Văn bản"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Số bản cập nhật trình phát hiện cần phiên bản tiện ích mới hơn: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (cần tiện ích v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Tổng số"
+  },
+  "ruleSectionCombinations": {
+    "message": "Tổ hợp"
+  },
+  "combinationsHint": {
+    "message": "Tổ hợp chỉ phát hiện biện pháp bảo vệ này khi nhiều mẫu được tìm thấy cùng nhau. Dùng cho các mẫu quá yếu khi đứng riêng."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Mỗi tổ hợp chỉ kích hoạt khi các tín hiệu của nó xuất hiện cùng nhau; đây là những gì nó tìm thấy trên trang này."
+  },
+  "combinationFoundTogether": {
+    "message": "Tìm thấy cùng nhau trên trang này:"
+  },
+  "combinationNotPresent": {
+    "message": "Không có"
+  },
+  "combinationFound": {
+    "message": "Tìm thấy"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Quy tắc này đã thay đổi hoặc bị xóa sau lần quét, nên chỉ hiển thị tên và điểm của nó."
+  },
+  "historyMatchedDetections": {
+    "message": "Phát hiện khớp"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Lần quét này được lưu trước khi các điều kiện được giữ lại, nên chỉ hiển thị tên và điểm."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Không được tìm thấy"
+  },
+  "combinationMustBeFound": {
+    "message": "Phải được tìm thấy"
+  },
+  "combinationAutoTip": {
+    "message": "Tự động: độ tin cậy cao nhất của các mẫu đã kích hoạt nó"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Hãy thêm ít nhất một mẫu phải được tìm thấy."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Danh sách “Một trong số này” cần một mẫu phải được tìm thấy trong mỗi tùy chọn."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“Ít nhất {0}” cần {0} mẫu phải được tìm thấy."
+  },
+  "combinationSentenceOne": {
+    "message": "Kích hoạt khi điều kiện này được đáp ứng."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Kích hoạt khi tất cả {0} điều kiện được đáp ứng."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Kích hoạt khi bất kỳ một trong {0} điều kiện này được đáp ứng."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Kích hoạt khi ít nhất {0} trong {1} điều kiện này được đáp ứng."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Độ tin cậy: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Độ tin cậy: Tự động, tối đa {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Một nhóm được tính là một điều kiện."
+  },
+  "combinationSentenceNot": {
+    "message": "Không kích hoạt nếu có mẫu “Không được tìm thấy”."
+  },
+  "combinationSentenceAlone": {
+    "message": "Các mẫu không được đánh dấu “Chỉ trong tổ hợp” vẫn tự phát hiện, theo độ tin cậy riêng của chúng."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Độ tin cậy khi tìm thấy"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Để trống để dùng Tự động: độ tin cậy cao nhất của các mẫu được tìm thấy."
+  },
+  "combinationModeAny": {
+    "message": "Một trong số này"
+  },
+  "combinationModeAll": {
+    "message": "Tất cả những mục này"
+  },
+  "combinationModeAtLeast": {
+    "message": "Ít nhất… trong số này"
+  },
+  "combinationModeRootAll": {
+    "message": "tất cả những mục này được tìm thấy"
+  },
+  "combinationModeRootAny": {
+    "message": "một trong số này được tìm thấy"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "ít nhất… trong số này được tìm thấy"
+  },
+  "combinationGroupMode": {
+    "message": "Nhóm"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Thêm một mẫu vào nhóm này"
+  },
+  "combinationDeleteGroup": {
+    "message": "Xóa nhóm"
+  },
+  "combinationAddGroup": {
+    "message": "Thêm nhóm “một trong số này”"
+  },
+  "patternUnusedBadge": {
+    "message": "Không thuộc tổ hợp nào"
+  },
+  "patternUnusedTip": {
+    "message": "Không tổ hợp nào dùng nó, nên nó không bao giờ phát hiện. Nhấp để cho nó tự được tính."
+  },
+  "combinationsEmpty": {
+    "message": "Chưa có tổ hợp nào."
+  },
+  "combinationAdd": {
+    "message": "Thêm tổ hợp"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Tổ hợp {0}"
+  },
+  "combinationDelete": {
+    "message": "Xóa tổ hợp"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Xóa tổ hợp \"{0}\"? Các mẫu của nó vẫn nằm trong quy tắc."
+  },
+  "combinationRemove": {
+    "message": "Xóa"
+  },
+  "combinationEmptyPattern": {
+    "message": "(mẫu trống)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Bất kỳ mẫu {0} nào"
+  },
+  "combinationGroupEmpty": {
+    "message": "Thêm một mẫu bên dưới"
+  },
+  "combinationAddPattern": {
+    "message": "Thêm mẫu"
+  },
+  "combinationAddDescription": {
+    "message": "Thêm mô tả"
+  },
+  "combinationAnyPattern": {
+    "message": "bất kỳ mẫu nào"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Thêm mẫu để xây dựng tổ hợp này"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Chỉ trong tổ hợp"
+  },
+  "combinationStrictHint": {
+    "message": "Một mẫu được đánh dấu “Chỉ trong tổ hợp” tự nó không phát hiện gì; nó chỉ được tính bên trong các tổ hợp."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Đánh dấu tất cả"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Bỏ đánh dấu tất cả"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Mẫu này tự nó không phát hiện gì; nó chỉ được tính bên trong các tổ hợp, trong mọi tổ hợp của quy tắc này."
+  },
+  "detectionModalCombinations": {
+    "message": "Tổ hợp khớp"
+  },
+  "combinationNoPatterns": {
+    "message": "Chưa thêm mẫu nào"
+  },
+  "combinationPickHint": {
+    "message": "Chọn các mẫu để thêm"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Thêm {0} mục đã chọn"
+  },
+  "combinationEditConditions": {
+    "message": "Chỉnh sửa điều kiện"
+  },
+  "combinationAutoConfidence": {
+    "message": "Tự động"
+  },
+  "combinationDetectWhen": {
+    "message": "Phát hiện khi"
+  },
+  "combinationGroupExcluded": {
+    "message": "Các điều kiện này không được khớp."
+  },
+  "combinationMinimum": {
+    "message": "Số lượt khớp tối thiểu"
+  },
+  "combinationMatchState": {
+    "message": "Điều kiện của mẫu"
+  },
+  "combinationChoosePatterns": {
+    "message": "Chọn mẫu"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Giảm số lượt khớp tối thiểu"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Tăng số lượt khớp tối thiểu"
+  },
+  "detectionTipDetections": {
+    "message": "Số biện pháp bảo vệ được phát hiện trên trang này."
+  },
+  "detectionTipConfidence": {
+    "message": "Độ tin cậy trung bình của các biện pháp bảo vệ được phát hiện."
+  },
+  "detectionTipDifficulty": {
+    "message": "Độ khó ước tính để vượt qua các biện pháp bảo vệ được phát hiện."
+  },
+  "tipCachedAt": {
+    "message": "Đã lưu"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Trung bình của {0} phát hiện, từ {1}% đến {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "Từ các tổ hợp khớp"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Tín hiệu đơn mạnh nhất quyết định điểm"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "Trình phát hiện tùy chỉnh"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Mặc định cho {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Do trình phát hiện này đặt"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Do {0} đặt"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Được nâng lên bởi {0} biện pháp bảo vệ cùng lúc"
+  },
+  "tipLastUpdated": {
+    "message": "Đã cập nhật"
+  },
+  "tipMethodContent": {
+    "message": "Văn bản tìm thấy trong trang hoặc script của trang đã khớp."
+  },
+  "tipMethodCookie": {
+    "message": "Một cookie được đặt trên trang web này đã khớp."
+  },
+  "tipMethodDom": {
+    "message": "Một phần tử trên trang đã khớp."
+  },
+  "tipMethodHeader": {
+    "message": "Một header phản hồi do trang web gửi đã khớp."
+  },
+  "tipMethodJsHooks": {
+    "message": "Trang đã gọi một API trình duyệt mà trình phát hiện này theo dõi."
+  },
+  "tipMethodPayload": {
+    "message": "Dữ liệu trang gửi trong một yêu cầu đã khớp."
+  },
+  "tipMethodUrl": {
+    "message": "Trang hoặc một yêu cầu của nó đã khớp một địa chỉ đã biết."
+  },
+  "tipMethodWindow": {
+    "message": "Một đối tượng JavaScript toàn cục trên trang đã khớp."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} nữa"
+  },
+  "tipOfficialDetector": {
+    "message": "Trình phát hiện Scrapfly chính thức"
+  },
+  "tipScopeDomain": {
+    "message": "Kết quả được dùng lại cho mọi trang trên tên miền này."
+  },
+  "tipScopeFullUrl": {
+    "message": "Kết quả chỉ được dùng lại cho đúng URL này, kể cả chuỗi truy vấn."
+  },
+  "tipScopePath": {
+    "message": "Kết quả được dùng lại cho đúng đường dẫn này, bất kể chuỗi truy vấn."
+  },
+  "tipStatsActiveDays": {
+    "message": "Số ngày có ít nhất một trang đã lưu."
+  },
+  "tipStatsDetections": {
+    "message": "Các biện pháp bảo vệ tìm thấy trên mọi trang đã lưu, tính cả lần lặp lại."
+  },
+  "tipStatsDetectors": {
+    "message": "Các biện pháp bảo vệ khác nhau đã thấy, mỗi loại tính một lần."
+  },
+  "tipStatsDomains": {
+    "message": "Số trang web khác nhau trong các trang đã lưu."
+  },
+  "tipStatsEntries": {
+    "message": "Các trang được lưu vào Lịch sử trong khoảng này."
+  },
+  "tipStatsRateFmt": {
+    "message": "{0}/{1} mục"
+  },
+  "tipPatterns": {
+    "message": "Mẫu"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Nhật ký chi tiết"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Ghi cả từng quy tắc, hook và thông điệp, không chỉ một báo cáo cho mỗi trang"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Cập nhật cho quy tắc bạn đã chỉnh sửa"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" có phiên bản chính thức mới ({1}). Bạn đã chỉnh sửa quy tắc này: phiên bản mới sẽ thay thế các thay đổi của bạn."
+  },
+  "btnDecideLater": {
+    "message": "Quyết định sau"
+  },
+  "btnKeepMyEdits": {
+    "message": "Giữ chỉnh sửa của tôi"
+  },
+  "btnUseNewVersion": {
+    "message": "Dùng phiên bản mới"
+  },
+  "resetToOfficial": {
+    "message": "Đặt lại về bản chính thức"
+  },
+  "resetToOfficialTitle": {
+    "message": "Đặt lại về phiên bản chính thức"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Hủy các chỉnh sửa của bạn cho \"{0}\" và khôi phục phiên bản Scrapfly chính thức?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Đã khôi phục quy tắc về phiên bản chính thức"
+  },
+  "ruleEditedTag": {
+    "message": "Đã chỉnh sửa"
+  },
+  "tipRuleEdited": {
+    "message": "Bạn đã chỉnh sửa quy tắc chính thức này. Các bản cập nhật sẽ hỏi trước khi thay thế các thay đổi của bạn."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Danh sách phát hiện"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Thứ tự phát hiện"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Thứ tự các danh mục trong danh sách Phát hiện, trong Lịch sử và trong Quy tắc. Kéo các thẻ để thay đổi; trong một danh mục, các phát hiện hiển thị độ tin cậy cao nhất trước."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Độ tin cậy cao nhất trước"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Thứ tự danh mục"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Di chuyển {0} lên"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Di chuyển {0} xuống"
+  },
+  "settingsCardShareUploads": {
+    "message": "Chia sẻ tải lên"
+  },
+  "settingsShareDestination": {
+    "message": "Đích tải lên"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Nơi Phát hiện → Tải lên các phát hiện gửi bản tóm tắt và nhận liên kết chia sẻ."
+  },
+  "settingsShareService": {
+    "message": "Dịch vụ"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (không cần tài khoản)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (không cần tài khoản)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (không cần tài khoản)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (khóa API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Máy chủ tùy chỉnh"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Xóa sau (ngày)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Xóa sau"
+  },
+  "shareExpire10M": {
+    "message": "10 phút"
+  },
+  "shareExpire1H": {
+    "message": "1 giờ"
+  },
+  "shareExpire1D": {
+    "message": "1 ngày"
+  },
+  "shareExpire1W": {
+    "message": "1 tuần"
+  },
+  "shareExpire2W": {
+    "message": "2 tuần"
+  },
+  "shareExpire30D": {
+    "message": "30 ngày"
+  },
+  "shareExpire1M": {
+    "message": "1 tháng"
+  },
+  "shareExpire6M": {
+    "message": "6 tháng"
+  },
+  "shareExpire1Y": {
+    "message": "1 năm"
+  },
+  "shareExpireOnetime": {
+    "message": "Sau lần xem đầu tiên"
+  },
+  "shareExpireNever": {
+    "message": "Không bao giờ"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs không có tùy chọn hết hạn: bản dán được giữ cho đến khi dịch vụ xóa nó."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Khóa API Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Khóa nhà phát triển của bạn từ pastebin.com/doc_api. Các bản dán ở chế độ không công khai."
+  },
+  "settingsShareSecretNote": {
+    "message": "Chỉ lưu trong trình duyệt này và không có trong tệp xuất cài đặt."
+  },
+  "settingsShareGithubToken": {
+    "message": "Token GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Token có quyền Gists. Các bản tải lên là gist bí mật và không hết hạn; hãy xóa chúng trên GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL máy chủ"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS trên máy chủ công khai. Có thể chứa <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Định dạng nội dung"
+  },
+  "shareBodyForm": {
+    "message": "Trường biểu mẫu"
+  },
+  "shareBodyJson": {
+    "message": "Mẫu JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Văn bản thô"
+  },
+  "settingsShareCustomField": {
+    "message": "Tên trường biểu mẫu"
+  },
+  "settingsShareCustomJson": {
+    "message": "Mẫu JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Biến: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Mỗi dòng một mục dạng Name: value, ví dụ Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Liên kết chia sẻ lấy từ"
+  },
+  "shareLinkBody": {
+    "message": "Nội dung phản hồi (URL thuần)"
+  },
+  "shareLinkJson": {
+    "message": "Trường JSON"
+  },
+  "shareLinkLocation": {
+    "message": "Header Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Đường dẫn trường JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Được gửi dưới dạng expiry_days trong nội dung biểu mẫu và dưới dạng <EXPIRY_DAYS>; máy chủ của bạn quyết định cách xử lý."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Trước tiên hãy thiết lập {0} trong Cài đặt → Phát hiện → Chia sẻ tải lên"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Thao tác này tải bản tóm tắt các phát hiện của trang này lên {0} ({1}). Bất kỳ ai có liên kết đều có thể xem. Chuỗi truy vấn của URL và giá trị cookie/header không được đưa vào."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "sẽ bị xóa sau {0} ngày"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "sẽ bị xóa sau {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "sẽ bị xóa sau lần xem đầu tiên"
+  },
+  "shareExpiryService": {
+    "message": "được giữ cho đến khi dịch vụ xóa"
+  },
+  "shareExpiryNever": {
+    "message": "không hết hạn"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Máy chủ tùy chỉnh phải là địa chỉ HTTPS trên máy chủ công khai"
+  },
+  "pasteBadLink": {
+    "message": "dịch vụ không trả về liên kết HTTPS hợp lệ"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Tải lên không thành công: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Máy chủ tải lên tùy chỉnh: hãy dùng địa chỉ HTTPS trên máy chủ công khai"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Máy chủ tải lên tùy chỉnh: mẫu JSON không phải JSON hợp lệ"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} đã từ chối khóa hoặc token (sai hoặc hết hạn)"
+  },
+  "pasteGistPermission": {
+    "message": "token GitHub cần quyền Gists (Read and write)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Không có site key Turnstile trên trang này"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Site key Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Công cụ nâng cao"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Biện pháp bảo vệ nào có công cụ"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Hiện công cụ khi độ tin cậy trên mức này (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Nâng cao chỉ liệt kê một biện pháp bảo vệ khi độ tin cậy của nó cao hơn giá trị này. 0 sẽ liệt kê mọi biện pháp bảo vệ đã phát hiện."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Độ tin cậy của công cụ nâng cao phải nằm trong khoảng 0 đến 99"
+  },
+  "advCommonValue": {
+    "message": "Giá trị"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} ký tự"
+  },
+  "advCookiePath": {
+    "message": "Đường dẫn"
+  },
+  "advCookieExpires": {
+    "message": "Hết hạn"
+  },
+  "advCookieSession": {
+    "message": "Phiên (xóa khi đóng trình duyệt)"
+  },
+  "advCookieNotFound": {
+    "message": "Không tìm thấy"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Khôi phục trình phát hiện chính thức?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Tất cả trình phát hiện chính thức đã được cài đặt. Không có gì để khôi phục."
+  },
+  "restoreOfficialChecking": {
+    "message": "Đang kiểm tra bản phát hành mới nhất trên GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Đã cài đặt lại từ bản phát hành {0} trên GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "Không thể kết nối tới GitHub, nên phiên bản đi kèm trong tiện ích được sử dụng."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub hiện đang giới hạn yêu cầu, nên phiên bản đi kèm trong tiện ích được sử dụng."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Đã cài đặt lại từ phiên bản đi kèm trong tiện ích: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Quy tắc → Cập nhật sẽ cài đặt lại các mục này: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Trình phát hiện của riêng bạn và các chỉnh sửa của bạn cho quy tắc khác không bị thay đổi."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} mục khác"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Không thể khôi phục: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "Đã khôi phục {0}"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Chạy Quy tắc → Cập nhật để cài đặt phần còn lại."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Khôi phục"
+  },
+  "advancedFilterTool": {
+    "message": "Công cụ"
+  },
+  "advancedFilterAllTools": {
+    "message": "Tất cả công cụ"
+  },
+  "advFilterKindCapture": {
+    "message": "Bản ghi"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Bản ghi"
+  },
+  "advFilterKindOther": {
+    "message": "Công cụ khác"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrape với Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Mã để scrape trang này bằng Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Lấy trang này qua API của Scrapfly với Unblocker được bật. Unblocker tự chọn trình duyệt, proxy và header, và không tốn thêm chi phí khi trang web không chặn.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Phát hiện trên trang này",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Ngôn ngữ mã",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Trang này có CAPTCHA: Unblocker tránh hoặc giải CAPTCHA để trả về trang, nhưng không điền CAPTCHA trên biểu mẫu.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Tùy chọn"
+  },
+  "scrapflyExportProduct": {
+    "message": "Dùng"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Giải CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Tính phí theo mỗi lần giải"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Dùng Cloud Browser để giải chúng."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Mở trang này trong Cloud Browser của Scrapfly và điều khiển bằng Playwright. Captcha Solver xử lý Turnstile, reCAPTCHA, GeeTest và nhiều loại khác khi chúng xuất hiện; các lần giải không thành công không tốn phí."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Vượt anti-bot"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Sao chép cho AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Sao chép trang, biện pháp bảo vệ của nó, cài đặt của bạn và mã thành một tin nhắn cho ChatGPT, Claude hoặc bất kỳ trợ lý AI nào"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Đã sao chép: hãy dán vào trợ lý AI của bạn"
+  },
+  "scrapflyExportFormat": {
+    "message": "Đầu ra"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Văn bản"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxy"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residential"
+  },
+  "scrapflyExportCountry": {
+    "message": "Quốc gia"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Bất kỳ"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Render JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 credit"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Chọn cài đặt của bạn"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Sao chép mã"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Đặt khóa API của bạn"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Chạy"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Lấy khóa API",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Mở playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Đã sao chép mã",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Hãy mở một trang web để scrape bằng Scrapfly",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "{0} bản ghi"
+  },
+  "statsFirstSeen": {
+    "message": "Mới trong kỳ này"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "{0} biện pháp bảo vệ và {1} tên miền được lưu lần đầu trong khoảng này."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Chọn 7, 30 hoặc 90 ngày để xem điều gì mới."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Tên miền được bảo vệ nhiều nhất"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{0} biện pháp bảo vệ riêng biệt trong {1} lượt truy cập."
+  },
+  "statsFoundTogether": {
+    "message": "Biện pháp bảo vệ xuất hiện cùng nhau"
+  },
+  "statsMethods": {
+    "message": "Phương thức phát hiện"
+  },
+  "statsMatchesUnit": {
+    "message": "lượt khớp"
+  },
+  "statsMethodsByCategory": {
+    "message": "Phương thức theo danh mục"
+  },
+  "statsWeakEvidence": {
+    "message": "Bằng chứng yếu nhất"
+  },
+  "statsSignalColumn": {
+    "message": "Tín hiệu"
+  },
+  "statsMethodColumn": {
+    "message": "Phương thức"
+  },
+  "statsTopSignals": {
+    "message": "Tín hiệu khớp nhiều nhất"
+  },
+  "statsDecidedSingle": {
+    "message": "Mẫu đơn"
+  },
+  "statsDecidedCombination": {
+    "message": "Tổ hợp"
+  },
+  "statsDecidedBy": {
+    "message": "Cách các phát hiện được quyết định"
+  },
+  "statsCombinationGain": {
+    "message": "Độ tin cậy theo quyết định"
+  },
+  "statsCombinationColumn": {
+    "message": "Tổ hợp"
+  },
+  "statsTopCombinations": {
+    "message": "Tổ hợp đã kích hoạt"
+  },
+  "statsNoCombinations": {
+    "message": "Không có phát hiện nào trong khoảng này được quyết định bởi tổ hợp."
+  },
+  "statsRulesMostActive": {
+    "message": "Quy tắc hoạt động nhiều nhất"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} mẫu"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Mẫu theo phương thức"
+  },
+  "statsRulesOfficial": {
+    "message": "Chính thức"
+  },
+  "statsRulesCustom": {
+    "message": "Tùy chỉnh"
+  },
+  "statsRuleColumn": {
+    "message": "Quy tắc"
+  },
+  "statsRuleKindColumn": {
+    "message": "Loại"
+  },
+  "statsPatternsUnit": {
+    "message": "mẫu"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Không tìm thấy trong khoảng này"
+  },
+  "statsRulesAllMatched": {
+    "message": "Mọi quy tắc đã bật đều tìm thấy gì đó trong khoảng này."
+  },
+  "statsMissingColumn": {
+    "message": "Chưa có mô tả"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Mẫu chưa có mô tả"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Mọi mẫu đều có mô tả."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Phiên bản quy tắc"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Cần tiện ích"
+  },
+  "statsRulesWaiting": {
+    "message": "Đang chờ tiện ích mới hơn"
+  },
+  "statsToolsByVendor": {
+    "message": "Bản ghi theo nhà cung cấp"
+  },
+  "statsToolsCapture": {
+    "message": "Bản ghi"
+  },
+  "statsToolsByTool": {
+    "message": "Công cụ dùng nhiều nhất"
+  },
+  "statsToolsOverTime": {
+    "message": "Bản ghi theo thời gian"
+  },
+  "statsChangeColumn": {
+    "message": "Thay đổi"
+  },
+  "statsDateColumn": {
+    "message": "Ngày"
+  },
+  "statsDomainChanges": {
+    "message": "Thay đổi biện pháp bảo vệ"
+  },
+  "statsNoChanges": {
+    "message": "Không có tên miền nào thay đổi biện pháp bảo vệ giữa các lần truy cập đã lưu trong khoảng này."
+  },
+  "statsNothingNew": {
+    "message": "Không có gì mới: mọi biện pháp bảo vệ ở đây đã có trong Lịch sử trước khoảng này."
+  },
+  "statsSectionSignals": {
+    "message": "Tín hiệu"
+  },
+  "statsSectionCombinations": {
+    "message": "Tổ hợp"
+  },
+  "statsSectionRules": {
+    "message": "Quy tắc"
+  },
+  "statsSectionTools": {
+    "message": "Công cụ"
+  },
+  "statsDomainChangesHint": {
+    "message": "Các tên miền có biện pháp bảo vệ được phát hiện thay đổi giữa hai lần truy cập đã lưu."
+  },
+  "statsFirstSeenHint": {
+    "message": "Biện pháp bảo vệ và tên miền được lưu lần đầu trong khoảng này."
+  },
+  "statsSignalsNote": {
+    "message": "Loại bằng chứng mà mỗi phát hiện đã lưu khớp: tên cookie và header, URL, phần tử trang, script và JavaScript hook."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Các biện pháp bảo vệ có mẫu khớp với độ tin cậy trung bình thấp nhất. Quy tắc của chúng có thể cần một mẫu mạnh hơn."
+  },
+  "statsCombinationsNote": {
+    "message": "Tổ hợp chỉ phát hiện một biện pháp bảo vệ khi nhiều mẫu được tìm thấy cùng nhau."
+  },
+  "statsRulesNote": {
+    "message": "Thư viện quy tắc của bạn, so với những gì Lịch sử tìm thấy trong khoảng này."
+  },
+  "statsRulesTotal": {
+    "message": "Quy tắc"
+  },
+  "statsRulesModified": {
+    "message": "Chính thức đã chỉnh sửa"
+  },
+  "statsRulesDisabled": {
+    "message": "Đã tắt"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Các quy tắc đã bật không tìm thấy gì trên các trang đã lưu trong khoảng này."
+  },
+  "statsRulesMissingHint": {
+    "message": "Mô tả hiển thị trong chi tiết phát hiện, Lịch sử và tổ hợp. Thêm chúng trong trình chỉnh sửa quy tắc."
+  },
+  "statsToolsNote": {
+    "message": "Bản ghi nâng cao và kết quả công cụ được lưu trên thiết bị này."
+  },
+  "statsCapturesUnit": {
+    "message": "bản ghi"
+  },
+  "detectionCardSureFmt": {
+    "message": "Chắc chắn {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Tổ hợp"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "BỘ NHỚ ĐỆM"
+  },
+  "detectionTipCache": {
+    "message": "Những trang nào dùng lại các kết quả đã lưu trong bộ nhớ đệm này, và trong bao lâu."
+  },
+  "tipCacheExpires": {
+    "message": "Hết hạn"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Kiểm tra với Lịch sử"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Xem mỗi mẫu và tổ hợp khớp trên bao nhiêu trang đã lưu. Các chỉnh sửa chưa lưu cũng được tính."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Kiểm tra"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "{0} trang đã lưu · quy tắc này được tìm thấy trên {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0}/{1} trang"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+{0} trang khác"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Lịch sử trống: hãy duyệt vài trang trước."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Chỉ là ước tính: Lịch sử giữ các giá trị khớp, không giữ toàn bộ trang."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "kích hoạt trên {0} trang"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Thêm mẫu để kiểm tra."
+  },
+  "settingsThemeTitle": {
+    "message": "Giao diện"
+  },
+  "settingsThemeDesc": {
+    "message": "Tối, hoặc sáng với màu của Scrapfly. Hệ thống theo trình duyệt của bạn."
+  },
+  "themeDark": {
+    "message": "Tối"
+  },
+  "themeLight": {
+    "message": "Sáng"
+  },
+  "themeSystem": {
+    "message": "Hệ thống"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Mở bảng điều khiển"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Mở tiện ích này trong chrome://extensions: nhấp \"service worker\" để xem nhật ký."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Giữ nhật ký tại đây thay vì trong bảng điều khiển, để xuất dưới dạng JSON hoặc văn bản"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Bản dịch"
+  },
+  "ruleTranslationsHint": {
+    "message": "Hiển thị thay cho mô tả khi tiện ích dùng ngôn ngữ đó. Để trống: hiển thị mô tả."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0}/{1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Dịch tự động"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Dịch tự động cần Chrome 138 trở lên."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Hãy viết mô tả trước."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Đang dịch: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Đã điền {0} ngôn ngữ. Hãy kiểm tra trước khi lưu."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Đã điền {0}; {1} không thể dịch tại đây."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Chờ sau khi tải"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Chờ phần tử"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Trang sẵn sàng lúc"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Cuộn xuống cuối trang"
+  },
+  "sfxOptJs": {
+    "message": "Chạy JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Thao tác trình duyệt"
+  },
+  "sfxOptScreenshot": {
+    "message": "Ảnh chụp màn hình"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Phần tử"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Tùy chọn ảnh chụp màn hình"
+  },
+  "sfxOptLang": {
+    "message": "Ngôn ngữ"
+  },
+  "sfxOptOs": {
+    "message": "Hệ điều hành"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Trình duyệt"
+  },
+  "sfxOptGeolocation": {
+    "message": "Vị trí địa lý"
+  },
+  "sfxOptHeaders": {
+    "message": "Header"
+  },
+  "sfxOptTimeout": {
+    "message": "Thời gian chờ"
+  },
+  "sfxOptRetry": {
+    "message": "Thử lại khi có lỗi"
+  },
+  "sfxOptCostBudget": {
+    "message": "Giới hạn credit"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Loại bỏ"
+  },
+  "sfxOptProxified": {
+    "message": "Trả về phản hồi của trang web"
+  },
+  "sfxOptExtraction": {
+    "message": "Trích xuất dữ liệu"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Mô hình"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Prompt"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Mẫu đã lưu"
+  },
+  "sfxOptCache": {
+    "message": "Bộ nhớ đệm"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Lưu trong"
+  },
+  "sfxOptCacheClear": {
+    "message": "Làm mới bộ nhớ đệm"
+  },
+  "sfxOptSession": {
+    "message": "Phiên"
+  },
+  "sfxOptSticky": {
+    "message": "Cùng proxy cho cả phiên"
+  },
+  "sfxOptDebug": {
+    "message": "Gỡ lỗi"
+  },
+  "sfxOptCorrelationId": {
+    "message": "ID tương quan"
+  },
+  "sfxOptTags": {
+    "message": "Thẻ"
+  },
+  "sfxOptDns": {
+    "message": "Chi tiết DNS"
+  },
+  "sfxOptSsl": {
+    "message": "Chứng chỉ SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Bắt đầu"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Khai báo trang này"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Ngôn ngữ"
+  },
+  "sfxOptAutoClose": {
+    "message": "Đóng khi ngắt kết nối"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Thời lượng phiên"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Giới hạn thời gian mở chặn"
+  },
+  "sfxOptBlockImages": {
+    "message": "Chặn hình ảnh"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Chặn stylesheet"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Chặn phông chữ"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Chặn video và âm thanh"
+  },
+  "sfxOptBlacklist": {
+    "message": "Chặn trình theo dõi"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Lưu đệm tệp tĩnh"
+  },
+  "sfxOptRecord": {
+    "message": "Ghi lại phiên"
+  },
+  "sfxOptMcp": {
+    "message": "Endpoint MCP"
+  },
+  "sfxValAuto": {
+    "message": "Tự động"
+  },
+  "sfxValCleanHtml": {
+    "message": "HTML sạch"
+  },
+  "sfxValComplete": {
+    "message": "Tải đầy đủ"
+  },
+  "sfxValDomReady": {
+    "message": "DOM sẵn sàng"
+  },
+  "sfxValFullPage": {
+    "message": "Toàn trang"
+  },
+  "sfxValElement": {
+    "message": "Phần tử"
+  },
+  "sfxValLoadImages": {
+    "message": "Tải hình ảnh"
+  },
+  "sfxValDarkMode": {
+    "message": "Chế độ tối"
+  },
+  "sfxValBlockBanners": {
+    "message": "Ẩn biểu ngữ"
+  },
+  "sfxValHighQuality": {
+    "message": "Chất lượng cao"
+  },
+  "sfxValPrint": {
+    "message": "Kiểu in"
+  },
+  "sfxValNoLinks": {
+    "message": "Liên kết"
+  },
+  "sfxValNoImages": {
+    "message": "Hình ảnh"
+  },
+  "sfxValOnlyContent": {
+    "message": "Tất cả trừ nội dung chính"
+  },
+  "sfxValModel": {
+    "message": "Mô hình AI"
+  },
+  "sfxValTemplate": {
+    "message": "Mẫu"
+  },
+  "sfxValConnect": {
+    "message": "Mở trình duyệt"
+  },
+  "sfxValUnblock": {
+    "message": "Mở chặn trước"
+  },
+  "sfxGroupRender": {
+    "message": "Kết xuất trình duyệt"
+  },
+  "sfxGroupLocation": {
+    "message": "Vị trí và dấu vân tay"
+  },
+  "sfxGroupRequest": {
+    "message": "Yêu cầu"
+  },
+  "sfxGroupOutput": {
+    "message": "Đầu ra"
+  },
+  "sfxGroupExtraction": {
+    "message": "Trích xuất bằng AI"
+  },
+  "sfxGroupCache": {
+    "message": "Bộ nhớ đệm và phiên"
+  },
+  "sfxGroupTracking": {
+    "message": "Gỡ lỗi và theo dõi"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Dấu vân tay và ngôn ngữ"
+  },
+  "sfxGroupSession": {
+    "message": "Phiên"
+  },
+  "sfxGroupBlocking": {
+    "message": "Chặn và bộ nhớ đệm"
+  },
+  "sfxGroupTools": {
+    "message": "Gỡ lỗi và MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Cần Render JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Cần Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Chỉ đầu ra Markdown hoặc Text"
+  },
+  "sfxWhyCache": {
+    "message": "Hãy bật Bộ nhớ đệm trước"
+  },
+  "sfxWhySession": {
+    "message": "Hãy đặt phiên trước"
+  },
+  "sfxWhySticky": {
+    "message": "Luôn bật với Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "Không phải danh sách bước JSON: đã bỏ qua"
+  },
+  "sfxWhyGeo": {
+    "message": "Hãy dùng latitude,longitude: đã bỏ qua"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Trình duyệt này không chạy trên hệ thống đó: đã bỏ qua"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge cần Windows: đã bỏ qua"
+  },
+  "sfxHintHeaders": {
+    "message": "Mỗi dòng một mục: Name: value. Không được lưu."
+  },
+  "sfxHintScenario": {
+    "message": "Danh sách JSON: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Phân tách bằng dấu phẩy"
+  },
+  "sfxHintLanguages": {
+    "message": "Phân tách bằng dấu phẩy, tối đa 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Mở chặn trước trả về một trình duyệt đã vượt qua bức tường anti-bot"
+  },
+  "sfxValOff": {
+    "message": "Tắt"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Mọi ngôn ngữ đều đã có bản dịch."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Bản dịch tên"
+  },
+  "combinationTranslationsHint": {
+    "message": "Hiển thị thay cho tên khi tiện ích dùng ngôn ngữ đó. Để trống: hiển thị tên."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Hãy viết tên trước."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Kiểm tra cookie thử thách và phân tích các script của nó"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Kiểm tra cookie DataDome và phân tích các script của nó"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Tìm khóa công khai, ghi dữ liệu trình duyệt (BDA) và phân tích các script của nó"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Phát hiện phiên bản GeeTest (v3 hoặc v4) và phân tích các script của nó"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Tìm site key, phát hiện phiên bản hCaptcha và phân tích các script của nó"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Trích xuất site key và phân tích các script Turnstile"
+  },
+  "statsExport": {
+    "message": "Xuất"
+  },
+  "statsExportAllCategories": {
+    "message": "Tệp xuất luôn bao gồm mọi danh mục, bất kể trang này đang hiển thị gì."
+  },
+  "statsScopeLabel": {
+    "message": "Hiển thị"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Đã ẩn phát hiện thu thập dấu vân tay: {0} ({1} trên tổng số)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Hiện thu thập dấu vân tay"
+  },
+  "statsScopeKeepOne": {
+    "message": "Phải giữ chọn ít nhất một danh mục."
+  },
+  "statsScopeRulesNote": {
+    "message": "Quy tắc luôn dùng mọi danh mục."
+  },
+  "statsContextFmt": {
+    "message": "Trang: {0} · Tên miền: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Toàn bộ lịch sử từ {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "So với kỳ trước ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Chọn 7, 30 hoặc 90 ngày để so sánh với kỳ trước."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "Lịch sử bắt đầu từ {0}, nên không có kỳ trước đầy đủ để so sánh."
+  },
+  "statsDeltaNew": {
+    "message": "mới"
+  },
+  "statsDeltaFlat": {
+    "message": "Không thay đổi so với kỳ trước"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Tăng {0} so với kỳ trước"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Giảm {0} so với kỳ trước"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Kỳ trước: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Có ít trang trong khoảng này ({0}): các phép so sánh và xếp hạng có thể gây hiểu lầm."
+  },
+  "statsLoading": {
+    "message": "Đang tải thống kê..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Hiện toàn bộ lịch sử"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Điểm nổi bật"
+  },
+  "statsSectionEvidence": {
+    "message": "Bằng chứng"
+  },
+  "statsSubnavLabel": {
+    "message": "Chế độ xem bằng chứng"
+  },
+  "statsExportCanceled": {
+    "message": "Đã hủy xuất"
+  },
+  "statsAllClearTitle": {
+    "message": "Không tìm thấy anti-bot hay CAPTCHA nào trong khoảng này"
+  },
+  "statsAllClearDescFmt": {
+    "message": "Các trang này chỉ cho thấy việc sử dụng API thu thập dấu vân tay. Trang: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Không có gì để hiển thị cho các danh mục này"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Hãy chọn danh mục khác hoặc khoảng thời gian dài hơn."
+  },
+  "statsHeadlineTop": {
+    "message": "Biện pháp bảo vệ phổ biến nhất"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} số trang · trang: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Trang web khó nhất"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Biện pháp bảo vệ: {0} · Độ khó: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Biện pháp bảo vệ mới nhất"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Thấy lần đầu vào {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Không có gì mới trong khoảng này"
+  },
+  "statsHeadlineRiser": {
+    "message": "Tăng mạnh nhất"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Trang {0} → {1} so với kỳ trước"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Cần có kỳ trước"
+  },
+  "statsKpiPages": {
+    "message": "Trang đã lưu"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Ngày hoạt động: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} có phát hiện ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Trang web nhiều lớp"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} có CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Biện pháp bảo vệ đã thấy"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "{0} mới trong kỳ này"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "trên {0} quy tắc"
+  },
+  "statsTipPages": {
+    "message": "Các trang được lưu vào Lịch sử trong khoảng này. Lịch sử giữ các phát hiện đã lưu, không phải mọi lượt truy cập của trình duyệt."
+  },
+  "statsTipLayered": {
+    "message": "Các tên miền có từ hai biện pháp bảo vệ khác nhau trở lên được phát hiện."
+  },
+  "statsOverTimeProtections": {
+    "message": "Biện pháp bảo vệ tìm thấy theo thời gian"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% số trang"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Tất cả biện pháp bảo vệ"
+  },
+  "statsPageTiers": {
+    "message": "Các trang của bạn được bảo vệ đến mức nào"
+  },
+  "statsTiersHint": {
+    "message": "Mỗi trang đã lưu chỉ được tính một lần, theo các loại biện pháp bảo vệ tìm thấy trên đó."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot và CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Chỉ anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "Chỉ CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Không có anti-bot hay CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Độ khó ước tính"
+  },
+  "statsDifficultyHint": {
+    "message": "Ước tính sơ bộ dựa trên các biện pháp bảo vệ tìm thấy trong các danh mục đang hiển thị, không phải số đo."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Không có biện pháp bảo vệ"
+  },
+  "statsHardestSites": {
+    "message": "Các trang web khó nhất"
+  },
+  "statsAllDomainsLink": {
+    "message": "Tất cả tên miền"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} nữa"
+  },
+  "statsWhatChanged": {
+    "message": "Điều gì đã thay đổi"
+  },
+  "statsChangedNew": {
+    "message": "Biện pháp bảo vệ mới"
+  },
+  "statsChangedMoving": {
+    "message": "Tăng và giảm"
+  },
+  "statsChangedGone": {
+    "message": "Không còn thấy"
+  },
+  "statsChangedSwitched": {
+    "message": "Trang web đã đổi biện pháp bảo vệ"
+  },
+  "statsChangedNothing": {
+    "message": "Không có gì thay đổi trong khoảng này."
+  },
+  "statsChangedAllLink": {
+    "message": "Tất cả thay đổi"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Chọn 7, 30 hoặc 90 ngày để xem các biện pháp bảo vệ tăng và giảm."
+  },
+  "statsFingerprintCard": {
+    "message": "Thu thập dấu vân tay"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "API thu thập dấu vân tay chạy trên {0} số trang · kỹ thuật: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Phổ biến nhất: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Hiển thị riêng với các biện pháp bảo vệ anti-bot và CAPTCHA vì hầu hết mọi trang đều dùng các API này."
+  },
+  "statsPagesColumn": {
+    "message": "Trang"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Thay đổi"
+  },
+  "statsStrongColumn": {
+    "message": "Bằng chứng mạnh"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Sắp xếp biện pháp bảo vệ"
+  },
+  "statsSortMostPages": {
+    "message": "Nhiều trang nhất"
+  },
+  "statsSortMostDomains": {
+    "message": "Nhiều tên miền nhất"
+  },
+  "statsSortBiggestChange": {
+    "message": "Thay đổi lớn nhất"
+  },
+  "statsCommonStacks": {
+    "message": "Các bộ biện pháp bảo vệ phổ biến"
+  },
+  "statsCommonStacksHint": {
+    "message": "Các biện pháp bảo vệ anti-bot và CAPTCHA được tìm thấy cùng nhau trên trang đã lưu gần nhất của một tên miền."
+  },
+  "statsDomainSearchAll": {
+    "message": "Tìm tên miền hoặc biện pháp bảo vệ..."
+  },
+  "statsSortHardest": {
+    "message": "Khó nhất trước"
+  },
+  "statsSortLastSeen": {
+    "message": "Gần đây nhất"
+  },
+  "statsDifficultyColumn": {
+    "message": "Độ khó"
+  },
+  "statsStackColumn": {
+    "message": "Biện pháp bảo vệ"
+  },
+  "statsLastSeenColumn": {
+    "message": "Lần thấy gần nhất"
+  },
+  "statsFilterChanged": {
+    "message": "Đã thay đổi"
+  },
+  "statsFilterClear": {
+    "message": "Xóa bộ lọc"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Lọc tên miền"
+  },
+  "statsChangeKindGained": {
+    "message": "Thêm vào"
+  },
+  "statsChangeKindDropped": {
+    "message": "Bị bỏ"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Được thay thế"
+  },
+  "statsChangePageColumn": {
+    "message": "Trang"
+  },
+  "statsChangeSinceFmt": {
+    "message": "so với {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Đã thêm:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Đã xóa:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "So sánh các bản đã lưu của cùng một trang. Các phát hiện về dấu vân tay bị bỏ qua trừ khi bạn hiện thu thập dấu vân tay."
+  },
+  "statsStrongEvidence": {
+    "message": "Bằng chứng mạnh"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{0}/{1} phát hiện đạt điểm từ 80% trở lên."
+  },
+  "statsUnconfirmed": {
+    "message": "Được nhắc đến, chưa xác nhận"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Các biện pháp bảo vệ thường được tìm thấy nhưng hiếm khi có bằng chứng mạnh. Đó có thể là các lần nhắc đến trong văn bản hoặc script không dùng, chứ không phải thử thách đang hoạt động."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Mọi biện pháp bảo vệ thường gặp đều có bằng chứng mạnh xác nhận."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Chủ yếu được tìm thấy qua {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Không có tín hiệu đơn lẻ nào nổi bật."
+  },
+  "statsTierStrong": {
+    "message": "Mạnh"
+  },
+  "statsTierModerate": {
+    "message": "Trung bình"
+  },
+  "statsTierWeak": {
+    "message": "Yếu"
+  },
+  "statsTierHint": {
+    "message": "Mạnh là 80% trở lên, trung bình 40-79%, yếu dưới 40%. 100% nghĩa là một tín hiệu chỉ biện pháp bảo vệ đó mới tạo ra."
+  },
+  "statsDecidedByCategory": {
+    "message": "Cách mỗi danh mục được quyết định"
+  },
+  "statsLiftFmt": {
+    "message": "{0} điểm"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · trung bình {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "Trong {0}, các tổ hợp nâng độ tin cậy từ {1} lên {2}."
+  },
+  "statsLess": {
+    "message": "Ít hơn"
+  },
+  "statsMore": {
+    "message": "Nhiều hơn"
+  },
+  "statsBusiestDay": {
+    "message": "Ngày bận nhất"
+  },
+  "statsLongestStreak": {
+    "message": "Chuỗi dài nhất"
+  },
+  "statsPeakHour": {
+    "message": "Giờ cao điểm"
+  },
+  "statsQuietDays": {
+    "message": "Ngày không có gì được lưu"
+  },
+  "statsTodayPartial": {
+    "message": "Hôm nay (đang tính)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Đường: trung bình 7 ngày"
+  },
+  "statsRulesCoverage": {
+    "message": "Độ phủ"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "{0}/{1} quy tắc đã bật khớp trong khoảng này"
+  },
+  "statsRulesAttention": {
+    "message": "Cần chú ý"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Không có gì cần chú ý."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Trạng thái"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Không có trong khoảng"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Không có trong Lịch sử"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Đã chỉnh sửa"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Các quy tắc chính thức cho nhà cung cấp bạn chưa gặp sẽ im lặng. Điều đó là bình thường."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Chưa có nhiều Lịch sử để đánh giá (trang: {0}), nên một quy tắc chưa từng khớp chưa chứng minh được nhiều."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Chỉ liệt kê các quy tắc tùy chỉnh và đã chỉnh sửa. Mô tả của các quy tắc chính thức do Scrapfly duy trì."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Nâng cao giữ bản ghi trong 30 phút, nên tab này bỏ qua khoảng ngày."
+  },
+  "statsToolsSavedNow": {
+    "message": "Đang lưu"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Sắp hết hạn trong 10 phút"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Nhà cung cấp"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Bản ghi đã hết hạn đang chờ dọn dẹp: {0}. Mở Nâng cao để xóa chúng."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Bản ghi đã lưu"
+  },
+  "statsToolsColVendor": {
+    "message": "Nhà cung cấp"
+  },
+  "statsToolsColTool": {
+    "message": "Công cụ"
+  },
+  "statsToolsColSaved": {
+    "message": "Đã lưu"
+  },
+  "statsToolsColExpires": {
+    "message": "Hết hạn"
+  },
+  "statsToolsNoLive": {
+    "message": "Hiện không có bản ghi nào được lưu."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Chưa có kỳ trước đầy đủ."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Thời gian giữ bản ghi"
+  },
+  "settingsCaptureRetention": {
+    "message": "Giữ bản ghi công cụ trong"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Bản ghi của công cụ nâng cao (cookie, script, token) bị xóa sau khoảng thời gian này."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 phút"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 phút"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 giờ"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 giờ"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 giờ"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 giờ"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Bản ghi được giữ trong {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "Từ 1 phút đến 7 ngày."
+  }
+}

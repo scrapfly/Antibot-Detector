@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Skenování selhalo"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Skenování bylo přerušeno"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Žádné dokončené skenování"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Skenování se nedokončilo. Načtěte stránku znovu a zkuste to znovu."
+  },
+  "settingsReadFailedToast": {
+    "message": "Nastavení se nepodařilo načíst. Aktuální hodnoty zůstaly zachovány."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Nastavení se nepodařilo uložit. Vaše změny zůstaly zachovány; zkuste to znovu."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Změna je připravena. Použijete ji uložením nastavení."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Importované nastavení se nepodařilo uložit. Vaše nastavení a jazyk zůstaly zachovány."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Použije se okamžitě."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Exportujte nebo importujte předvolby. Připojení integrací zůstávají v tomto prohlížeči."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Platný soubor nastavení se nepodařilo načíst. Nic se nezměnilo."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Toto pravidlo se nepodařilo uložit. Vaše změny tu zůstaly; zkuste to znovu."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Načtěte stránku znovu pro analýzu skriptů ochrany"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Resetovat cookies ochrany a načíst stránku znovu pro analýzu skriptů"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Načtěte stránku znovu pro zjištění verze ochrany"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Resetovat cookie ochrany a spustit zachytávání"
+  },
+  "advToolCookiesHint": {
+    "message": "Zobrazit cookies používané touto ochranou"
+  },
+  "advToolVersionHint": {
+    "message": "Načíst dostupné informace o verzi"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Najít klíč webu CAPTCHA na této stránce"
+  },
+  "advToolSelectorHint": {
+    "message": "Najít selektor widgetu CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "Zobrazit zpětná volání CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "Resetovat cookies ochrany a načíst stránku znovu pro zachycení dat senzoru"
+  },
+  "advToolCaptureHint": {
+    "message": "Zachytit data z této stránky"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Zastavit zachytávání dat z této stránky"
+  },
+  "advToolWorking": {
+    "message": "Zpracování…"
+  },
+  "advToolWaitingReload": {
+    "message": "Stránka se znovu načítá a shromažďují se výsledky. Potrvá to několik sekund…"
+  },
+  "advToolNoResult": {
+    "message": "Žádný výsledek: ochrana neodeslala žádná data. Načtěte stránku znovu a zkuste to znovu."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Klíč webu {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Na této stránce nebyl nalezen žádný klíč webu. Otevřete nebo spusťte CAPTCHA a zkuste to znovu."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Nalezeno v"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Požadavek"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Skript stránky"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Proměnná stránky"
+  },
+  "advSiteKeyFrame": {
+    "message": "Rámec"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Skripty na této stránce"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Extrahuje klíč webu a analyzuje skripty"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Analyzuje skripty"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Tuto akci se nepodařilo dokončit: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Předchozí stránka grafu"
+  },
+  "statsChartNext": {
+    "message": "Další stránka grafu"
+  },
+  "statsChartPage": {
+    "message": "Stránka {0} z {1}"
+  },
+  "statsChartShowing": {
+    "message": "Zobrazeno {0}–{1} z {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Sekce statistik"
+  },
+  "statsSectionOverview": {
+    "message": "Přehled"
+  },
+  "statsSectionActivity": {
+    "message": "Aktivita"
+  },
+  "statsSectionProtections": {
+    "message": "Ochrany"
+  },
+  "statsSectionDomains": {
+    "message": "Domény"
+  },
+  "statsSectionConfidence": {
+    "message": "Spolehlivost"
+  },
+  "statsExportCSV": {
+    "message": "Exportovat CSV"
+  },
+  "statsExportJSON": {
+    "message": "Exportovat JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Exporty obsahují domény a souhrny detekcí, nikoli cookies, obsah stránek ani parametry URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "Export zahrnuje vybrané období. Položky: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Stahování zahájeno: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Data se nepodařilo exportovat. Zkuste to prosím znovu."
+  },
+  "statsLoadFailed": {
+    "message": "Historii se nepodařilo načíst. Načtěte prosím tuto stránku znovu."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "V tomto období nejsou žádné položky"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Vyberte delší časové období a prozkoumejte uloženou historii."
+  },
+  "statsDetectionRate": {
+    "message": "Položky s detekcemi"
+  },
+  "statsActiveDays": {
+    "message": "Aktivní dny"
+  },
+  "statsAverageConfidence": {
+    "message": "Průměrná spolehlivost"
+  },
+  "statsDailyVisits": {
+    "message": "Denní položky historie"
+  },
+  "statsActivityCalendar": {
+    "message": "Kalendář aktivity"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Každý čtverec představuje jeden místní kalendářní den. Tmavší modrá znamená více uložených položek."
+  },
+  "statsHourlyActivity": {
+    "message": "Aktivita podle hodin"
+  },
+  "statsWeekdayActivity": {
+    "message": "Aktivita podle dnů v týdnu"
+  },
+  "statsLocalTimeNote": {
+    "message": "Data a hodiny používají vaše místní časové pásmo."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Zobrazeno je posledních dní: {0}. Součty a exporty zahrnují celé vybrané období."
+  },
+  "statsProtectionRanking": {
+    "message": "Žebříček ochran"
+  },
+  "statsCategoryTrend": {
+    "message": "Kategorie v čase"
+  },
+  "statsCategoryOverlap": {
+    "message": "Kategorie nalezené společně"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Počet položek historie s oběma kategoriemi. Buňky na úhlopříčce ukazují položky s danou kategorií."
+  },
+  "statsProtectionDetails": {
+    "message": "Všechny ochrany"
+  },
+  "statsDomainRanking": {
+    "message": "Žebříček domén"
+  },
+  "statsDomainMap": {
+    "message": "Návštěvy a detekce"
+  },
+  "statsDomainMapHint": {
+    "message": "Každý bod je jedna doména. Větší body mají více různých ochran."
+  },
+  "statsDomainDetails": {
+    "message": "Všechny domény"
+  },
+  "statsDomainSearch": {
+    "message": "Hledat domény..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Seřadit domény"
+  },
+  "statsSortVisits": {
+    "message": "Nejvíce návštěv"
+  },
+  "statsSortDetections": {
+    "message": "Nejvíce detekcí"
+  },
+  "statsSortConfidence": {
+    "message": "Nejvyšší spolehlivost"
+  },
+  "statsSortName": {
+    "message": "Název domény"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Rozložení spolehlivosti"
+  },
+  "statsConfidenceTrend": {
+    "message": "Spolehlivost v čase"
+  },
+  "statsCategoryConfidence": {
+    "message": "Spolehlivost podle kategorie"
+  },
+  "statsConfidenceNote": {
+    "message": "Spolehlivost vyjadřuje sílu uložených důkazů detekce, nikoli důkaz fingerprintingu nebo aktivní výzvy."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "Detekce se spolehlivostí: {0}; bez platného skóre: {1}."
+  },
+  "statsProtectionColumn": {
+    "message": "Ochrana"
+  },
+  "statsCategoryColumn": {
+    "message": "Kategorie"
+  },
+  "statsDomainColumn": {
+    "message": "Doména"
+  },
+  "statsTableCountFmt": {
+    "message": "Řádky: {0} z {1}"
+  },
+  "statsTableMore": {
+    "message": "Zobrazit více"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Vašemu hledání neodpovídají žádné domény."
+  },
+  "statsSelectionNote": {
+    "message": "Grafy a exporty používají vybrané časové období. Položky historie představují uložené detekce, nikoli každou návštěvu v prohlížeči."
+  },
+  "extensionName": {
+    "message": "Scrapfly: detektor anti-bot"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: detektor anti-bot",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": detektor anti-bot",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Detekujte CAPTCHA, anti-bot systémy a technologie fingerprintingu na webech"
+  },
+  "tabDetection": {
+    "message": "Detekce"
+  },
+  "tabHistory": {
+    "message": "Historie"
+  },
+  "tabRules": {
+    "message": "Pravidla"
+  },
+  "tabAdvanced": {
+    "message": "Rozšířené"
+  },
+  "openSettings": {
+    "message": "Otevřít nastavení"
+  },
+  "enableOrDisableDetection": {
+    "message": "Zapnout nebo vypnout detekci"
+  },
+  "noDetectionsFound": {
+    "message": "Nebyly nalezeny žádné detekce"
+  },
+  "detectionScanningTitle": {
+    "message": "Skenování této stránky"
+  },
+  "detectionScanningDescription": {
+    "message": "Hledání signálů ochrany."
+  },
+  "detectionScanningHint": {
+    "message": "Výsledky se tu zobrazí, jakmile budou připraveny."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Odebrat ze seznamu blokovaných"
+  },
+  "statDetections": {
+    "message": "Detekce"
+  },
+  "statConfidence": {
+    "message": "Spolehlivost"
+  },
+  "statDifficulty": {
+    "message": "Obtížnost"
+  },
+  "statCacheScope": {
+    "message": "Rozsah mezipaměti"
+  },
+  "scopeDomain": {
+    "message": "Doména"
+  },
+  "scopePath": {
+    "message": "Cesta"
+  },
+  "scopeFullUrl": {
+    "message": "Celá URL"
+  },
+  "difficultyLow": {
+    "message": "Nízká"
+  },
+  "difficultyMedium": {
+    "message": "Střední"
+  },
+  "difficultyHigh": {
+    "message": "Vysoká"
+  },
+  "searchHistory": {
+    "message": "Hledat v historii..."
+  },
+  "searchDetectors": {
+    "message": "Hledat detektory..."
+  },
+  "paginationPrev": {
+    "message": "Předchozí stránka"
+  },
+  "paginationNext": {
+    "message": "Další stránka"
+  },
+  "paginationPage": {
+    "message": "Stránka"
+  },
+  "paginationOf": {
+    "message": "z"
+  },
+  "paginationNoItems": {
+    "message": "Žádné položky k zobrazení"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Číslo aktuální stránky"
+  },
+  "btnImport": {
+    "message": "Importovat"
+  },
+  "btnExport": {
+    "message": "Exportovat"
+  },
+  "btnClear": {
+    "message": "Vymazat"
+  },
+  "btnAdd": {
+    "message": "Přidat"
+  },
+  "btnUpdate": {
+    "message": "Aktualizovat"
+  },
+  "btnClose": {
+    "message": "Zavřít"
+  },
+  "btnSave": {
+    "message": "Uložit"
+  },
+  "btnCancel": {
+    "message": "Zrušit"
+  },
+  "btnDelete": {
+    "message": "Smazat"
+  },
+  "historyImportTitle": {
+    "message": "Importovat historii"
+  },
+  "historyExportTitle": {
+    "message": "Exportovat historii"
+  },
+  "historyClearTitle": {
+    "message": "Vymazat historii"
+  },
+  "historyEmptyTitle": {
+    "message": "Zatím žádná historie"
+  },
+  "historyEmptyDescription": {
+    "message": "Historie detekcí se tu bude zobrazovat při procházení webů."
+  },
+  "rulesUpdateTitle": {
+    "message": "Nainstalovat aktualizace pravidel z nejnovějšího vydání Scrapfly"
+  },
+  "rulesAddTitle": {
+    "message": "Přidat nový detektor"
+  },
+  "rulesEmptyTitle": {
+    "message": "Nejsou načteny žádné detektory"
+  },
+  "rulesEmptyDescription": {
+    "message": "Detektory se tu zobrazí po načtení z úložiště a souborů."
+  },
+  "ruleModalActionEdit": {
+    "message": "Upravit"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Informace o detektoru"
+  },
+  "ruleFieldName": {
+    "message": "Název"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Název detektoru"
+  },
+  "ruleFieldCategory": {
+    "message": "Kategorie"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprint"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Obtížnost"
+  },
+  "ruleFieldIcon": {
+    "message": "Ikona"
+  },
+  "ruleFieldVersion": {
+    "message": "Verze"
+  },
+  "ruleFieldAuthor": {
+    "message": "Autor"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Barva odznaku"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Metody detekce"
+  },
+  "settingsTitle": {
+    "message": "Nastavení"
+  },
+  "settingsSubtitle": {
+    "message": "Nastavte předvolby rozšíření"
+  },
+  "settingsTabGeneral": {
+    "message": "Obecné"
+  },
+  "settingsTabDetection": {
+    "message": "Detekce"
+  },
+  "settingsTabHistory": {
+    "message": "Historie"
+  },
+  "settingsTabData": {
+    "message": "Data"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Základní nastavení"
+  },
+  "settingsCardNotifications": {
+    "message": "Oznámení"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Zobrazovat upozornění při zjištění bezpečnostních systémů"
+  },
+  "settingsCardDebug": {
+    "message": "Režim ladění"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Zapisuje do konzole rozšíření jeden čitelný přehled za každou skenovanou stránku."
+  },
+  "settingsRowLogCollector": {
+    "message": "Sběr protokolů"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Maximum protokolů"
+  },
+  "settingsRowCollected": {
+    "message": "Shromážděno"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Aktualizace detektorů"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Automaticky kontrolovat aktualizace"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Automaticky kontrolovat nové definice detektorů"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Interval kontroly"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Nikdy"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Zkontrolovat nyní"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Vyžadována aktualizace rozšíření"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Aktualizovat rozšíření"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Barvy odznaků"
+  },
+  "settingsRowLastCheck": {
+    "message": "Poslední kontrola"
+  },
+  "advancedToolsTitle": {
+    "message": "Rozšířené nástroje zachytávání"
+  },
+  "advancedToolsDescription": {
+    "message": "Extrahujte cookies, tokeny a klíče webů z detekovaných ochranných systémů"
+  },
+  "advancedToolsHint": {
+    "message": "Navštivte chráněnou stránku a zapněte nástroje zachytávání"
+  },
+  "advancedSubtabTools": {
+    "message": "Nástroje"
+  },
+  "advancedSubtabHistory": {
+    "message": "Historie"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Historie zachycení"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Filtrujte, prohlížejte a exportujte shromážděná zachycení"
+  },
+  "advancedFilterSite": {
+    "message": "Web"
+  },
+  "advancedFilterAllSites": {
+    "message": "Všechny weby"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Aktuální web"
+  },
+  "advancedFilterModule": {
+    "message": "Modul"
+  },
+  "advancedFilterAllModules": {
+    "message": "Všechny moduly"
+  },
+  "advancedFilterSearch": {
+    "message": "Hledat"
+  },
+  "advancedBtnExport": {
+    "message": "Exportovat"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Exportovat zachycení"
+  },
+  "advancedBtnClearAll": {
+    "message": "Vymazat vše"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Vymazat všechna zachycení"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Zatím žádná zachycení"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Na kartě Nástroje zachytávejte data z detekovaných systémů"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Nenalezena žádná zachycení"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Resetovat všechny filtry"
+  },
+  "advancedModalTitle": {
+    "message": "Rozšířené nástroje detekce"
+  },
+  "advancedModalIntro": {
+    "message": "Specializované nástroje pro zachytávání a hloubkovou analýzu anti-bot systémů, CAPTCHA a technologií fingerprintingu. Tyto nástroje se zobrazí automaticky, když se najdou relevantní detekce."
+  },
+  "advancedSectionSupported": {
+    "message": "Aktuálně podporované systémy"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Jak to funguje"
+  },
+  "advancedStep1Title": {
+    "message": "Automatická detekce"
+  },
+  "advancedStep1Desc": {
+    "message": "Nástroje se zobrazí, když se na aktuální stránce zjistí relevantní anti-bot systémy"
+  },
+  "advancedStep2Title": {
+    "message": "Spuštění zachytávání"
+  },
+  "advancedStep2Desc": {
+    "message": "Nástroje automaticky inicializují interceptory a začnou sledovat síťové požadavky"
+  },
+  "advancedStep3Title": {
+    "message": "Kontrola výsledků"
+  },
+  "advancedStep3Desc": {
+    "message": "Zachycená data se dočasně ukládají s plnými možnostmi exportu"
+  },
+  "advancedFooterHint": {
+    "message": "Zachycení se uchovávají po dobu nastavenou v Nastavení."
+  },
+  "settings": {
+    "message": "Nastavení"
+  },
+  "paginationShowingFmt": {
+    "message": "Zobrazeno {0}-{1} z {2}"
+  },
+  "paginationShowingItems": {
+    "message": "Zobrazeno {0}-{1} z {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Neznámé"
+  },
+  "timeJustNow": {
+    "message": "Právě teď"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "před {0} s"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "před {0} min"
+  },
+  "timeHoursAgoFmt": {
+    "message": "před {0} h"
+  },
+  "timeDaysAgoFmt": {
+    "message": "před {0} d"
+  },
+  "timeOneMinuteAgo": {
+    "message": "před 1 minutou"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "před {0} min"
+  },
+  "timeOneHourAgo": {
+    "message": "před 1 h"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "před {0} h"
+  },
+  "timeOneDayAgo": {
+    "message": "před 1 dnem"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "před {0} dny"
+  },
+  "btnCancelSettings": {
+    "message": "Zrušit"
+  },
+  "btnSaveSettings": {
+    "message": "Uložit nastavení"
+  },
+  "poweredBy": {
+    "message": "Poskytuje"
+  },
+  "categoryColors": {
+    "message": "BARVY KATEGORIÍ"
+  },
+  "methodSuffixPatterns": {
+    "message": "vzorů"
+  },
+  "btnSaveRule": {
+    "message": "Uložit pravidlo"
+  },
+  "tagColors": {
+    "message": "Barvy štítků"
+  },
+  "colorPickerTitle": {
+    "message": "Výběr barvy"
+  },
+  "colorPickerArea": {
+    "message": "Sytost a jas"
+  },
+  "colorPickerSaturation": {
+    "message": "Sytost"
+  },
+  "colorPickerBrightness": {
+    "message": "Jas"
+  },
+  "colorPickerHue": {
+    "message": "Odstín"
+  },
+  "colorPickerRed": {
+    "message": "Červená"
+  },
+  "colorPickerGreen": {
+    "message": "Zelená"
+  },
+  "colorPickerBlue": {
+    "message": "Modrá"
+  },
+  "colorPickerPresets": {
+    "message": "Přednastavené barvy"
+  },
+  "cacheConfiguration": {
+    "message": "Konfigurace mezipaměti"
+  },
+  "cacheDuration": {
+    "message": "Doba uložení v mezipaměti"
+  },
+  "timeUnitMinutes": {
+    "message": "Minuty"
+  },
+  "timeUnitHours": {
+    "message": "Hodiny"
+  },
+  "timeUnitDays": {
+    "message": "Dny"
+  },
+  "blacklistedDomains": {
+    "message": "Blokované domény"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Domény, na kterých se detekce zcela přeskakuje"
+  },
+  "jsApiEvents": {
+    "message": "Události JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "Odesílat vlastní události do okna stránky"
+  },
+  "ruleMethodSettings": {
+    "message": "Nastavení metody detekce"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Nastavení: {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Nastavení: {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Popis"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Co tento vzor znamená, např. Čte jazykové předvolby prohlížeče"
+  },
+  "ruleDescriptionHint": {
+    "message": "Zobrazuje se v podrobnostech detekce a v Historii, když se tento vzor najde."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Co tato ochrana je, např. Detekce botů na přihlašovacích a platebních stránkách"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Zobrazuje se v podrobnostech detekce této ochrany."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Úroveň spolehlivosti"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Spolehlivost detekce:"
+  },
+  "detectionName": {
+    "message": "Název detekce"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 hodin"
+  },
+  "interval12Hours": {
+    "message": "12 hodin"
+  },
+  "interval24Hours": {
+    "message": "24 hodin"
+  },
+  "interval2Days": {
+    "message": "2 dny"
+  },
+  "interval1Week": {
+    "message": "1 týden"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Hlavičky"
+  },
+  "methodLabelCookie": {
+    "message": "Cookies"
+  },
+  "methodLabelContent": {
+    "message": "Obsah"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS hooky"
+  },
+  "methodLabelWindow": {
+    "message": "Okno"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 vzor"
+  },
+  "methodPatternsFmt": {
+    "message": "Vzory: {0}"
+  },
+  "methodAddPattern": {
+    "message": "Přidat vzor"
+  },
+  "methodSearchPatterns": {
+    "message": "Hledat vzory..."
+  },
+  "methodNoPatterns": {
+    "message": "Žádné vzory"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Žádné odpovídající vzory"
+  },
+  "methodSuffixMatches": {
+    "message": "shod"
+  },
+  "cacheExpiredLabel": {
+    "message": "Vypršelo"
+  },
+  "copiedNotification": {
+    "message": "Zkopírováno"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Zkopírováno!"
+  },
+  "unknownDetection": {
+    "message": "Neznámá detekce"
+  },
+  "matchPlural": {
+    "message": "Shody"
+  },
+  "noMatchesRecorded": {
+    "message": "Nezaznamenány žádné shody"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Vymazat mezipaměť"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Tím se odstraní data detekce uložená v mezipaměti pro tuto doménu a spustí se nová analýza."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Vymazat mezipaměť"
+  },
+  "clearingMsg": {
+    "message": "Mazání..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Vymazáno!"
+  },
+  "cacheClearedToast": {
+    "message": "Mezipaměť vymazána"
+  },
+  "failedToClearCacheToast": {
+    "message": "Mezipaměť se nepodařilo vymazat"
+  },
+  "unableGetCurrentPage": {
+    "message": "Aktuální stránku se nepodařilo zjistit"
+  },
+  "invalidDomain": {
+    "message": "Neplatná doména"
+  },
+  "addBlacklistTitle": {
+    "message": "Přidat na seznam blokovaných"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Doména „{0}“ bude vyloučena ze všech budoucích detekcí. Můžete ji později odebrat v Nastavení."
+  },
+  "addBlacklistBtn": {
+    "message": "Přidat na seznam blokovaných"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Doména „{0}“ už je na seznamu blokovaných"
+  },
+  "addedToBlacklistFmt": {
+    "message": "Doména „{0}“ přidána na seznam blokovaných"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Přidání na seznam blokovaných se nezdařilo: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "Doména „{0}“ odebrána ze seznamu blokovaných"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Odebrání ze seznamu blokovaných se nezdařilo: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Žádné detekce"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Nebyly nalezeny žádné detekce"
+  },
+  "historyMatchCountFmt": {
+    "message": "Shody: {0}"
+  },
+  "historyOneMatch": {
+    "message": "1 shoda"
+  },
+  "notificationHistoryCleared": {
+    "message": "Historie vymazána"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Historii se nepodařilo vymazat: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Položka historie exportována"
+  },
+  "notificationCacheCleared": {
+    "message": "Mezipaměť vymazána"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Mezipaměť je už vymazána"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Mezipaměť se nepodařilo vymazat"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "Doména „{0}“ přidána na seznam blokovaných"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Přidání na seznam blokovaných se nezdařilo"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Položka historie smazána"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Položku historie se nepodařilo smazat"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Exportováno položek historie: {0}"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Sloučeno nových položek historie: {0}"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Historie nahrazena. Počet položek: {0}"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Historii se nepodařilo importovat: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Vymazat historii"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Opravdu chcete vymazat celou historii? Tuto akci nelze vrátit zpět."
+  },
+  "buttonClearAll": {
+    "message": "Vymazat vše"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Vymazat mezipaměť"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Vymazat data detekce uložená v mezipaměti pro {0}? Položka historie zůstane zachována."
+  },
+  "buttonClearCache": {
+    "message": "Vymazat mezipaměť"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Smazat položku historie"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Opravdu chcete smazat tuto detekci z {0}?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Nastavení se nepodařilo načíst. Používají se výchozí hodnoty."
+  },
+  "settingsSavedToast": {
+    "message": "Nastavení uloženo"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Nastavení se nepodařilo uložit: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Protokoly se nepodařilo exportovat"
+  },
+  "logsCleared": {
+    "message": "Protokoly vymazány"
+  },
+  "failedClearLogs": {
+    "message": "Protokoly se nepodařilo vymazat"
+  },
+  "couldNotGetPageUrl": {
+    "message": "URL aktuální stránky se nepodařilo zjistit"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "Doména už je na seznamu blokovaných: {0}"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "Na seznam blokovaných přidáno: {0}"
+  },
+  "failedAddDomainFmt": {
+    "message": "Doménu se nepodařilo přidat: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "Ze seznamu blokovaných odebráno: {0}"
+  },
+  "invalidSettingsFmt": {
+    "message": "Neplatné nastavení: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Zadejte prosím URL webhooku"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Test webhooku byl úspěšný! Stav: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook vrátil stav: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Test webhooku selhal: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Importovat detektory"
+  },
+  "importDetectorsModeMessage": {
+    "message": "Sloučit přidá importované detektory k vašim.<br>Nahradit vše nejprve smaže vaše vlastní detektory; vestavěné detektory zůstanou."
+  },
+  "mergeOption": {
+    "message": "Sloučit"
+  },
+  "replaceAllOption": {
+    "message": "Nahradit vše"
+  },
+  "detectorsImported": {
+    "message": "Detektory importovány"
+  },
+  "detectorExportedFmt": {
+    "message": "Exportováno: {0}"
+  },
+  "failedImportDetectors": {
+    "message": "Detektory se nepodařilo importovat. Zkontrolujte formát souboru."
+  },
+  "errorReadingFileFmt": {
+    "message": "Chyba při čtení souboru: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "Aktualizováno detektorů: {0}"
+  },
+  "detectorDeletedFmt": {
+    "message": "Smazáno: „{0}“"
+  },
+  "failedClearDetectors": {
+    "message": "Detektory se nepodařilo vymazat"
+  },
+  "urlPatternMatching": {
+    "message": "Shoda vzoru URL"
+  },
+  "textWordMatching": {
+    "message": "Shoda textu nebo slov"
+  },
+  "payloadTextMatching": {
+    "message": "Shoda textu payloadu"
+  },
+  "nameFieldMatching": {
+    "message": "Shoda pole názvu"
+  },
+  "captureNotFound": {
+    "message": "Zachycení nenalezeno"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Třída modulu nenalezena"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Zobrazení podrobností není k dispozici"
+  },
+  "captureDataCopied": {
+    "message": "Data zachycení zkopírována"
+  },
+  "captureDeleted": {
+    "message": "Zachycení smazáno"
+  },
+  "capturesExportedFmt": {
+    "message": "Exportováno zachycení: {0}"
+  },
+  "allCapturesCleared": {
+    "message": "Všechna zachycení vymazána"
+  },
+  "captureExportFailed": {
+    "message": "Export zachycení se nezdařil"
+  },
+  "invalidUrl": {
+    "message": "Neplatná URL"
+  },
+  "importHistoryTitle": {
+    "message": "Importovat historii"
+  },
+  "replaceOption": {
+    "message": "Nahradit"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "Importovat položky historie ({0})? Vaše současná historie jich má {1}.<br>Sloučit k ní přidá nové položky. Nahradit ji nejprve smaže."
+  },
+  "clearLogsTitle": {
+    "message": "Vymazat protokoly"
+  },
+  "clearLogsMessage": {
+    "message": "Opravdu chcete vymazat všechny shromážděné protokoly? Tuto akci nelze vrátit zpět."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Aktualizace se nepodařilo zkontrolovat: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Aktualizace se nepodařilo stáhnout ze serveru"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Pravidla aktualizována z vydání {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Všechna pravidla jsou aktuální podle vydání {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Čeká se na rozšíření ve verzi {0} nebo novější: {1}. Nainstalují se, jakmile Chrome rozšíření aktualizuje."
+  },
+  "updateResultFailedFmt": {
+    "message": "Nepodařilo se stáhnout: {0}. Zkuste to znovu později."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Pravidla, která jste upravili, čekají na vaše rozhodnutí v části Pravidla → Aktualizovat: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Nepodařilo se připojit ke GitHubu a zkontrolovat aktualizace pravidel."
+  },
+  "updateErrorNoRelease": {
+    "message": "Na GitHubu nebylo nalezeno žádné publikované vydání Scrapfly."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub omezuje kontroly aktualizací. Zkuste to znovu za {0} min."
+  },
+  "errorApplyingUpdates": {
+    "message": "Chyba při použití aktualizací"
+  },
+  "failedCheckForUpdates": {
+    "message": "Aktualizace se nepodařilo zkontrolovat"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Chyba při kontrole aktualizací"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Služba aktualizací není k dispozici"
+  },
+  "deleteDetectorTitle": {
+    "message": "Smazat detektor"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Opravdu chcete smazat „{0}“?"
+  },
+  "detectorNotFound": {
+    "message": "Detektor nenalezen"
+  },
+  "failedDeleteDetector": {
+    "message": "Detektor se nepodařilo smazat"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Podrobnosti zachycení se nepodařilo zobrazit"
+  },
+  "failedCopyCaptureData": {
+    "message": "Data zachycení se nepodařilo zkopírovat"
+  },
+  "failedDeleteCapture": {
+    "message": "Zachycení se nepodařilo smazat"
+  },
+  "noCapturesToExport": {
+    "message": "Žádná zachycení k exportu"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Opravdu chcete smazat všechna zachycení? Tuto akci nelze vrátit zpět."
+  },
+  "failedClearCaptures": {
+    "message": "Zachycení se nepodařilo vymazat"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Integrace webhooku"
+  },
+  "settingsEnableWebhook": {
+    "message": "Zapnout webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Při detekci odesílat požadavky HTTP"
+  },
+  "settingsBypassCache": {
+    "message": "Odeslat při každém načtení stránky (obejít mezipaměť)"
+  },
+  "settingsHttpMethod": {
+    "message": "Metoda HTTP"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Vyberte metodu HTTP pro požadavky webhooku"
+  },
+  "settingsCustomMethod": {
+    "message": "Vlastní"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Zadejte vlastní metodu (např. OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL webhooku"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Úplná URL koncového bodu (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Dostupné proměnné:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Příklad: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "Hlavička HTTP Content-Type"
+  },
+  "webhookCtHintJson": {
+    "message": "Šablona jako JSON s vyplněnými proměnnými."
+  },
+  "webhookCtHintForm": {
+    "message": "Pole šablony jako dvojice klíč=hodnota; vnořená pole jako detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Pole šablony jako části form-data; hranici nastaví prohlížeč."
+  },
+  "webhookCtHintText": {
+    "message": "Text šablony beze změny, s vyplněnými proměnnými."
+  },
+  "webhookCtHintXml": {
+    "message": "Pole šablony jako dokument XML <webhook>; detekce jako opakované prvky."
+  },
+  "webhookCtHintCsv": {
+    "message": "Řádek záhlaví, poté jeden řádek na každou detekci s opakovanými poli stránky."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Jeden objekt JSON na řádek: jeden řádek na detekci, s poli stránky."
+  },
+  "webhookCtHintCustom": {
+    "message": "Váš vlastní Content-Type (typ/podtyp); tělo se odešle jako JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Vlastní"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Vlastní Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Zadejte typ/podtyp, např. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Přidat hlavičku"
+  },
+  "webhookNoHeaders": {
+    "message": "Nejsou nastaveny žádné vlastní hlavičky"
+  },
+  "webhookHeaderName": {
+    "message": "Název hlavičky"
+  },
+  "webhookHeaderValue": {
+    "message": "Hodnota hlavičky"
+  },
+  "webhookRemoveHeader": {
+    "message": "Odebrat hlavičku"
+  },
+  "webhookSending": {
+    "message": "Odesílání..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Vlastní hlavičky"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Přidat vlastní hlavičky HTTP do požadavku webhooku"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Šablona payloadu"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Tělo odesílané s každým webhookem. Kliknutím na proměnnou ji vložíte."
+  },
+  "webhookVarsTitle": {
+    "message": "Proměnné šablony"
+  },
+  "webhookVarsIntro": {
+    "message": "Při odeslání webhooku se nahradí hodnotami stránky."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Vložit proměnnou"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Vložit {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Kopírovat {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Příklad"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Úplná URL stránky"
+  },
+  "webhookVarHostname": {
+    "message": "Název hostitele stránky"
+  },
+  "webhookVarTitle": {
+    "message": "Název stránky"
+  },
+  "webhookVarFavicon": {
+    "message": "URL favikony webu"
+  },
+  "webhookVarDetections": {
+    "message": "Detekce jako pole JSON"
+  },
+  "webhookVarTimestamp": {
+    "message": "Čas detekce (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Počet detekcí"
+  },
+  "webhookVarCategories": {
+    "message": "Zjištěné kategorie oddělené čárkami"
+  },
+  "webhookJsonValid": {
+    "message": "Platný JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Neplatný JSON (řádek {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Resetovat šablonu"
+  },
+  "settingsTestWebhook": {
+    "message": "Otestovat webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Odeslat testovací požadavek na URL vašeho webhooku"
+  },
+  "settingsTestBtn": {
+    "message": "Test"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Konfigurace historie"
+  },
+  "settingsHistorySettings": {
+    "message": "Nastavení historie"
+  },
+  "settingsHistoryLimit": {
+    "message": "Limit historie"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = bezpečnostní limit 1000 položek)"
+  },
+  "settingsExportFormat": {
+    "message": "Formát exportu"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Prostý text"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Zahrnout časová razítka"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Ukládat při zásahu mezipaměti"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Prevence duplicit"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Zapnout prevenci duplicit"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Blokovat duplicitní položky historie v rámci časového okna"
+  },
+  "settingsDuplicateScope": {
+    "message": "Rozsah"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Celá URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Doména"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Cesta"
+  },
+  "settingsTimeWindow": {
+    "message": "Časové okno"
+  },
+  "settingsTimeMinutes": {
+    "message": "Minuty"
+  },
+  "settingsTimeHours": {
+    "message": "Hodiny"
+  },
+  "settingsTimeDays": {
+    "message": "Dny"
+  },
+  "settingsHowItWorks": {
+    "message": "Jak to funguje:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Zabraňuje duplicitním položkám historie pro stejnou URL v rámci časového okna."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Celá URL: přesná shoda URL (včetně parametrů dotazu)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Doména: stejná doména (různé cesty se berou jako stejné)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Cesta: stejná doména a cesta (parametry dotazu se ignorují)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Nastavení mezipaměti"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Přeskakované domény"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Přidat aktuální stránku"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Hledat domény..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Nízká"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Střední"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Vysoká"
+  },
+  "settingsEnableJsApi": {
+    "message": "Zapnout události JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "Export a import"
+  },
+  "settingsDataManagement": {
+    "message": "Správa dat"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Exportujte nebo importujte data rozšíření"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Nastavení"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Exportovat nebo importovat nastavení rozšíření"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Historie detekcí"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Exportovat historii detekcí jako CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Exportovat nastavení"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Importovat nastavení"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Exportovat historii"
+  },
+  "settingsAvailableEvents": {
+    "message": "Dostupné události"
+  },
+  "settingsApiEventReady": {
+    "message": "Rozšíření načteno a inicializováno"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Detekce zahájena (mezipaměť nenalezena / ruční spuštění)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Aktualizace průběhu detekce (na úrovni metod)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Sledování JS hooků dokončeno"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Sledování vlastností okna dokončeno"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Detekce dokončena s výsledky"
+  },
+  "settingsApiEventOnError": {
+    "message": "Došlo k chybě detekce"
+  },
+  "settingsUsageExample": {
+    "message": "Příklad použití"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Detekce je pro tuto doménu vypnuta"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Odebrat ze seznamu blokovaných"
+  },
+  "detectionBlacklistHint": {
+    "message": "Nebo ji spravujte v Nastavení → Detekce → Blokované domény."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Na této stránce nebyly nalezeny žádné odpovídající signály anti-bot, CAPTCHA ani fingerprintingu."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Pro tuto stránku nejsou v mezipaměti žádná data detekce. Načtěte stránku znovu a spusťte nové skenování."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Nahrát detekce (odkaz ke sdílení)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Odkaz zkopírován do schránky"
+  },
+  "failedReadSettings": {
+    "message": "Nastavení se nepodařilo načíst — operace zrušena"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Odebrání ze seznamu blokovaných se nezdařilo"
+  },
+  "pasteConfirmTitle": {
+    "message": "Nahrát detekce?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Nahrát"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Nahrání se nezdařilo"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Žádné detekce k nahrání"
+  },
+  "detectionTitleClearCache": {
+    "message": "Vymazat mezipaměť"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Kopírovat přehled"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Blokovat tuto doménu"
+  },
+  "detectionStatSite": {
+    "message": "WEB"
+  },
+  "detectionStatDetections": {
+    "message": "DETEKCE"
+  },
+  "detectionStatConfidence": {
+    "message": "SPOLEHLIVOST"
+  },
+  "detectionStatDifficulty": {
+    "message": "OBTÍŽNOST"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Hledat detekce..."
+  },
+  "detectionPaginationPage": {
+    "message": "Stránka"
+  },
+  "detectionPaginationOf": {
+    "message": "z"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Tato doména je na seznamu blokovaných"
+  },
+  "detectionModalConfidence": {
+    "message": "Spolehlivost"
+  },
+  "detectionModalDifficulty": {
+    "message": "Obtížnost"
+  },
+  "detectionModalAuthor": {
+    "message": "Autor"
+  },
+  "detectionModalDescription": {
+    "message": "Popis"
+  },
+  "detectionModalNoDescription": {
+    "message": "Popis není k dispozici."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Metody detekce"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Nezjištěny žádné metody"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Hledat podle URL, modulu, webu nebo obsahu..."
+  },
+  "advancedPaginationPage": {
+    "message": "Stránka"
+  },
+  "advancedPaginationOf": {
+    "message": "z"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Zachytává klíče webů, akce a konfigurační parametry"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Zachytává data senzoru a extrahuje informace o verzi"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Sleduje cookies a změny úrovně ochrany"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Analyzuje dynamické hlavičky a parametry skriptů"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Zachytává koncové body výzev a podrobnosti tokenů"
+  },
+  "btnStartCapturing": {
+    "message": "Spustit zachytávání"
+  },
+  "btnStopCapturing": {
+    "message": "Zastavit zachytávání"
+  },
+  "btnCheckCookies": {
+    "message": "Zkontrolovat cookies"
+  },
+  "btnCheckVersion": {
+    "message": "Zkontrolovat verzi"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Analyzovat skripty"
+  },
+  "btnExtractSiteKey": {
+    "message": "Extrahovat SiteKey"
+  },
+  "btnExtractPublicKey": {
+    "message": "Extrahovat veřejný klíč"
+  },
+  "btnObtainSelector": {
+    "message": "Získat selektor"
+  },
+  "btnCopyAllData": {
+    "message": "Kopírovat všechna data"
+  },
+  "btnClearData": {
+    "message": "Vymazat data"
+  },
+  "advCapturedDataSection": {
+    "message": "Zachycená data"
+  },
+  "advNoCapturesYet": {
+    "message": "Zatím žádná zachycení"
+  },
+  "advCaptureDetails": {
+    "message": "Podrobnosti zachycení"
+  },
+  "advValueCopied": {
+    "message": "Hodnota zkopírována"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Vymazat všechna zachycená data?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Tím se trvale smažou všechna zachycená data tohoto poskytovatele."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Zrušit"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Rozsah hledání v obsahu"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Kontrolovat pouze skripty"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Hledat pouze v kódu JavaScript (vložené i načtené skripty), nikoli v textu stránky ani názvech souborů"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Nastavení rozsahu"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Rozsah názvu"
+  },
+  "rulesNameScopeHint": {
+    "message": "Kde hledat shody názvů a polí"
+  },
+  "rulesScopeRequest": {
+    "message": "Požadavek"
+  },
+  "rulesScopeResponse": {
+    "message": "Odpověď"
+  },
+  "rulesScopeAll": {
+    "message": "Vše"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Rozsah hodnoty"
+  },
+  "rulesValueScopeHint": {
+    "message": "Kde hledat shody hodnot"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Nastavení rozsahu URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "Rozsah URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Stránka"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Skripty"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Vše (výchozí)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Omezení požadavku"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "Vzor URL (volitelné)"
+  },
+  "rulesUrlRegex": {
+    "message": "Regulární výraz URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL rozlišuje velikost písmen"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "Metoda HTTP (vyberte jednu)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Filtrovat podle metody požadavku (volitelné)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Libovolná"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Možnosti shody vzoru"
+  },
+  "rulesPatternRegex": {
+    "message": "Regulární výraz (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Celé slovo"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Rozlišovat velikost písmen"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Možnosti pole hodnoty"
+  },
+  "rulesApplySettings": {
+    "message": "Použít nastavení"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "Pomocník pro selektory DOM"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Použít selektor"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Pomocník pro vlastnosti okna"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Potvrdit"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Jste si jisti?"
+  },
+  "notifLoadingDefault": {
+    "message": "Načítání..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Kliknutím na „Spustit zachytávání“ výše zahájíte zachytávání dat {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "Nástroje zachytávání"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Vyberte ochranu a otevřete její nástroje."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Otevřít nástroje"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Další informace o rozšířených nástrojích"
+  },
+  "advancedToolsChange": {
+    "message": "Změnit"
+  },
+  "settingsLanguageTitle": {
+    "message": "Jazyk"
+  },
+  "settingsLanguageDesc": {
+    "message": "Přepsat jazyk rozhraní rozšíření. Výchozí nastavení se řídí prohlížečem."
+  },
+  "settingsLanguageAuto": {
+    "message": "Použít jazyk prohlížeče"
+  },
+  "detectionEmptyTitle": {
+    "message": "Nic nezjištěno"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Žádné CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Žádný anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Žádný fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "Detekce vypnuta"
+  },
+  "detectionDisabledDesc": {
+    "message": "Bezpečnostní detekce je momentálně vypnutá."
+  },
+  "detectionDisabledAction": {
+    "message": "Detekci zapnete přepínačem nahoře."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Pravidlo detekce"
+  },
+  "rulesMoreActions": {
+    "message": "Další akce"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Nezjištěna žádná ochrana"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Žádná podporovaná ochrana na této stránce nemá spolehlivost nad {0} %. Toto minimum můžete změnit v Nastavení → Detekce.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Ochrana zjištěna s nízkou spolehlivostí"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "Zjištěná ochrana: {0}, spolehlivost: {1} %. Nástroje se zobrazí jen při spolehlivosti nad {2} %. Toto minimum můžete snížit v Nastavení → Detekce.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Podporované ochrany"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Zobrazit historii zachycení ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScriptové hooky"
+  },
+  "detectionMethodContent": {
+    "message": "Obsah"
+  },
+  "detectionMethodWindow": {
+    "message": "Vlastnosti okna"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Hlavičky"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookies"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Zapnout detekci"
+  },
+  "historyMoreActions": {
+    "message": "Další akce"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Kopírovat data"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Automatické mazání"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Pravidelně odstraňuje staré položky historie."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Smazat položky starší než"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Povolený rozsah: 1–{0}, jednotka: {1}. Pro delší období zvolte větší jednotku."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Povolený rozsah: 1–{0}, jednotka: {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Měsíce se počítají jako 30 dnů, roky jako 365 dnů."
+  },
+  "timeUnitMonths": {
+    "message": "Měsíce"
+  },
+  "timeUnitYears": {
+    "message": "Roky"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Statistiky historie"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Zobrazte soukromé statistiky vypočítané místně z historie detekcí."
+  },
+  "settingsOpenStats": {
+    "message": "Otevřít statistiky"
+  },
+  "settingsExportedToast": {
+    "message": "Nastavení exportováno"
+  },
+  "settingsExportFailedToast": {
+    "message": "Nastavení se nepodařilo exportovat"
+  },
+  "settingsImportedToast": {
+    "message": "Nastavení importováno"
+  },
+  "settingsImportFailedToast": {
+    "message": "Nastavení se nepodařilo importovat: neplatný soubor"
+  },
+  "statsPrivacyNote": {
+    "message": "Vypočítáno místně z historie detekcí. Nic neopouští váš prohlížeč."
+  },
+  "statsSubtitleFmt": {
+    "message": "Vypočítáno místně z položek historie: {0}. Nic neopouští váš prohlížeč."
+  },
+  "statsRangeLabel": {
+    "message": "Časové období"
+  },
+  "statsRange7": {
+    "message": "7 dní"
+  },
+  "statsRange30": {
+    "message": "30 dní"
+  },
+  "statsRange90": {
+    "message": "90 dní"
+  },
+  "statsRangeAll": {
+    "message": "Vše"
+  },
+  "statsEmptyTitle": {
+    "message": "Zatím žádná historie"
+  },
+  "statsEmptyDesc": {
+    "message": "Statistiky se tu zobrazí, jakmile se do historie uloží stránky s detekcemi."
+  },
+  "statsEntries": {
+    "message": "Položky historie"
+  },
+  "statsUniqueDomains": {
+    "message": "Jedinečné domény"
+  },
+  "statsDetections": {
+    "message": "Detekce"
+  },
+  "statsDistinctDetectors": {
+    "message": "Různé ochrany"
+  },
+  "statsOverTime": {
+    "message": "Detekce v čase"
+  },
+  "statsTopProtections": {
+    "message": "Nejčastěji detekované ochrany"
+  },
+  "statsTopDomains": {
+    "message": "Nejčastější domény"
+  },
+  "statsByCategory": {
+    "message": "Podle kategorie"
+  },
+  "statsByDifficulty": {
+    "message": "Podle obtížnosti"
+  },
+  "statsPagesUnit": {
+    "message": "stránek"
+  },
+  "statsVisitsUnit": {
+    "message": "návštěv"
+  },
+  "statsDetectionsUnit": {
+    "message": "detekcí"
+  },
+  "statsCategoryOther": {
+    "message": "Jiné"
+  },
+  "statsDifficultyNone": {
+    "message": "Žádné detekce"
+  },
+  "statsNoData": {
+    "message": "V tomto období nejsou žádná data"
+  },
+  "statsTipPagesFmt": {
+    "message": "Stránky: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "Domény: {0}"
+  },
+  "statsTipVisitsFmt": {
+    "message": "Návštěvy: {0}"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "Detekce: {0}"
+  },
+  "historyCategoryShareFmt": {
+    "message": "Detekce: {0} z {1} · {2} %"
+  },
+  "statsTipEntriesFmt": {
+    "message": "Položky: {0}"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "S detekcemi: {0}"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "Návštěv na doménu: {0}"
+  },
+  "statsPerEntryFmt": {
+    "message": "Na položku: {0}"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "Průměrná spolehlivost: {0} %"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Detekce: {0} · Dny: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Toto je oficiální detektor Scrapfly. Aktualizace ho nevrátí; k jeho obnovení použijte v nabídce … položku „Obnovit oficiální detektory“."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Obnovit oficiální detektory"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "Obnoveno oficiálních detektorů: {0}"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Oficiální detektory se nepodařilo obnovit"
+  },
+  "authorReservedError": {
+    "message": "„Scrapfly“ je vyhrazeno pro oficiální detektory. Použijte jiné jméno autora."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Vaše jméno"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Vymazat vlastní detektory"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Tím se odeberou všechny vaše vlastní detektory. Oficiální detektory Scrapfly zůstanou zachovány (můžete je místo toho vypnout). Opravdu to chcete provést?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Mazání vlastních detektorů..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "Odebráno vlastních detektorů: {0}"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Nejsou žádné vlastní detektory k vymazání"
+  },
+  "rhSuggestions": {
+    "message": "Návrhy"
+  },
+  "rhResults": {
+    "message": "Výsledky"
+  },
+  "rhCustomChip": {
+    "message": "Vlastní"
+  },
+  "rhUseAsTyped": {
+    "message": "Použít přesně tak, jak je zadáno"
+  },
+  "rhNoResultsFmt": {
+    "message": "Žádné shody pro „{0}“"
+  },
+  "rhNoResultsHint": {
+    "message": "Stále to můžete použít jako vlastní hodnotu."
+  },
+  "rhPreview": {
+    "message": "Náhled"
+  },
+  "rhSearchWindow": {
+    "message": "Hledat vlastnosti, např. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Hledat selektory, např. captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Podmínka"
+  },
+  "rhConditionInvalid": {
+    "message": "Neznámá podmínka"
+  },
+  "rhAddProperty": {
+    "message": "Přidat vlastnost"
+  },
+  "rhChipAutomation": {
+    "message": "Automatizace"
+  },
+  "rhCondGroupType": {
+    "message": "Typ"
+  },
+  "rhCondGroupExistence": {
+    "message": "Existence"
+  },
+  "rhCondGroupCollections": {
+    "message": "Kolekce"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Číselné"
+  },
+  "rhCondGroupString": {
+    "message": "Řetězec"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolean"
+  },
+  "rhCondGroupCustom": {
+    "message": "Aktuální hodnota"
+  },
+  "rhCondTypeObject": {
+    "message": "je objekt"
+  },
+  "rhCondTypeFunction": {
+    "message": "je funkce"
+  },
+  "rhCondTypeString": {
+    "message": "je řetězec"
+  },
+  "rhCondTypeNumber": {
+    "message": "je číslo"
+  },
+  "rhCondTypeBoolean": {
+    "message": "je boolean"
+  },
+  "rhCondTypeSymbol": {
+    "message": "je symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "je BigInt"
+  },
+  "rhCondExists": {
+    "message": "existuje na stránce"
+  },
+  "rhCondTruthy": {
+    "message": "je truthy"
+  },
+  "rhCondFalsy": {
+    "message": "je falsy (prázdné, 0, false nebo null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "není undefined"
+  },
+  "rhCondUndefined": {
+    "message": "je undefined (chybí)"
+  },
+  "rhCondNotNull": {
+    "message": "není null"
+  },
+  "rhCondNull": {
+    "message": "je null"
+  },
+  "rhCondArray": {
+    "message": "je pole"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "je pole s položkami"
+  },
+  "rhCondEmptyArray": {
+    "message": "je prázdné pole"
+  },
+  "rhCondHasLength": {
+    "message": "má délku"
+  },
+  "rhCondHasKeys": {
+    "message": "je objekt s klíči"
+  },
+  "rhCondEmptyObject": {
+    "message": "je prázdný objekt"
+  },
+  "rhCondGt0": {
+    "message": "je větší než 0"
+  },
+  "rhCondGte0": {
+    "message": "je 0 nebo více"
+  },
+  "rhCondEq0": {
+    "message": "se rovná 0"
+  },
+  "rhCondNe0": {
+    "message": "není 0"
+  },
+  "rhCondGt1": {
+    "message": "je větší než 1"
+  },
+  "rhCondGte1": {
+    "message": "je 1 nebo více"
+  },
+  "rhCondLenGt0": {
+    "message": "není prázdné"
+  },
+  "rhCondLenEq0": {
+    "message": "je prázdné"
+  },
+  "rhCondTrue": {
+    "message": "je true"
+  },
+  "rhCondFalse": {
+    "message": "je false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Odpovídá stránkám, kde {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Šablona"
+  },
+  "rhDomClass": {
+    "message": "Třída"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Atribut data"
+  },
+  "rhDomClassContains": {
+    "message": "Třída obsahuje"
+  },
+  "rhDomIdContains": {
+    "message": "ID obsahuje"
+  },
+  "rhDomTag": {
+    "message": "Značka HTML"
+  },
+  "rhDomAttr": {
+    "message": "Má atribut"
+  },
+  "rhDomIframe": {
+    "message": "URL iframe obsahuje"
+  },
+  "rhDomTitle": {
+    "message": "Titulek obsahuje"
+  },
+  "rhDomAlt": {
+    "message": "Alt text obsahuje"
+  },
+  "rhDomCamel": {
+    "message": "Třída camelCase"
+  },
+  "rhRefAny": {
+    "message": "libovolný znak"
+  },
+  "rhRefZeroMore": {
+    "message": "0 nebo více"
+  },
+  "rhRefOneMore": {
+    "message": "1 nebo více"
+  },
+  "rhRefOptional": {
+    "message": "volitelné"
+  },
+  "rhRefStart": {
+    "message": "začátek"
+  },
+  "rhRefEnd": {
+    "message": "konec"
+  },
+  "rhRefDigit": {
+    "message": "číslice"
+  },
+  "rhRefWord": {
+    "message": "písmeno, číslice nebo _"
+  },
+  "rhRefSpace": {
+    "message": "bílý znak"
+  },
+  "rhRefOr": {
+    "message": "a nebo b"
+  },
+  "rhMatch": {
+    "message": "Shoda"
+  },
+  "rhNoMatch": {
+    "message": "Žádná shoda"
+  },
+  "ptTitle": {
+    "message": "Test vzoru"
+  },
+  "ptTitleFmt": {
+    "message": "Test vzoru · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Obsah stránky"
+  },
+  "ptKindCookieName": {
+    "message": "Název cookie"
+  },
+  "ptKindCookieValue": {
+    "message": "Hodnota cookie"
+  },
+  "ptKindHeaderName": {
+    "message": "Název hlavičky"
+  },
+  "ptKindHeaderValue": {
+    "message": "Hodnota hlavičky"
+  },
+  "ptKindPayloadText": {
+    "message": "Tělo požadavku"
+  },
+  "ptKindPayloadUrl": {
+    "message": "URL požadavku"
+  },
+  "ptPatternLabel": {
+    "message": "Vzor"
+  },
+  "ptOptionsLabel": {
+    "message": "Možnosti shody"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Vyzkoušet na"
+  },
+  "ptExamplesBtn": {
+    "message": "Příklady"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "Jeden na řádek: URL, název cookie…"
+  },
+  "ptNoSamples": {
+    "message": "Zadejte nebo vložte text výše, jeden na řádek, a uvidíte, zda odpovídá."
+  },
+  "ptCheatTitle": {
+    "message": "Tahák k regulárním výrazům"
+  },
+  "ptCheatNote": {
+    "message": "Zapište vzor bez / kolem něj. Opakování uvnitř opakování, například (a+)+, se odmítne, protože by mohlo způsobit zamrznutí stránek."
+  },
+  "ptApply": {
+    "message": "Použít"
+  },
+  "ptTestBtn": {
+    "message": "Test"
+  },
+  "ptTestTitle": {
+    "message": "Vyzkoušet vzor na ukázkovém textu"
+  },
+  "ptNoPattern": {
+    "message": "Zatím žádný vzor"
+  },
+  "ptHintRegex": {
+    "message": "Vzor jako ^bm_ nebo \\d+, bez / kolem něj"
+  },
+  "ptHintWholeWord": {
+    "message": "Přeskočí shody uvnitř delšího slova: _abck, ne test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai už neodpovídá akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Zadejte vzor a uvidíte, čemu odpovídá."
+  },
+  "ptSaysRegex": {
+    "message": "Odpovídá textu, ve kterém regex najde shodu."
+  },
+  "ptSaysWordFmt": {
+    "message": "Odpovídá „{0}“ jako celému slovu, ne uvnitř delšího slova."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Odpovídá názvům jako „{0}“, kde * zastupuje libovolný text."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Odpovídá názvům, které začínají na „{0}“."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Odpovídá textu, který obsahuje „{0}“."
+  },
+  "ptCaseExact": {
+    "message": "Velká a malá písmena se musí shodovat přesně."
+  },
+  "ptCaseIgnored": {
+    "message": "Velká a malá písmena se nerozlišují."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Tento regex není platný, takže nikdy neodpovídá: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Detekce tento regex odmítá, protože by mohl způsobit zamrznutí stránek (opakování uvnitř opakování nebo více než 1000 znaků), takže nikdy neodpovídá."
+  },
+  "ptNoteSlashes": {
+    "message": "Vynechte / na obou koncích: počítají se jako součást textu."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Vypadá to jako regex: zapněte Regex, jinak se jeho symboly porovnávají jako prostý text."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Celé slovo se ignoruje, dokud je zapnutý Regex."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Názvy hlaviček se ukládají malými písmeny, takže při zapnutém rozlišování velikosti písmen tento vzor nikdy neodpovídá."
+  },
+  "ptNoteWordEdges": {
+    "message": "Tento vzor začíná nebo končí symbolem, takže Celé slovo vyžaduje písmeno, číslici nebo _ hned vedle tohoto symbolu."
+  },
+  "rhRefDot": {
+    "message": "skutečná tečka"
+  },
+  "rhRefSet": {
+    "message": "jedno z a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2 až 5krát"
+  },
+  "mhExamplesTitle": {
+    "message": "V pravidlech Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Jak se porovnává"
+  },
+  "mhWriteTitle": {
+    "message": "Co můžete napsat"
+  },
+  "mhLimitsTitle": {
+    "message": "Dobré vědět"
+  },
+  "mhUrlIntro": {
+    "message": "Kontroluje adresu stránky a adresy URL, které stránka požaduje: skripty, volání XHR a fetch, obrázky, rámce a pingy."
+  },
+  "mhUrlHow1": {
+    "message": "Bez Regexu musí URL obsahovat daný text, bez ohledu na velikost písmen. Počítá se celá URL včetně řetězce dotazu."
+  },
+  "mhUrlHow2": {
+    "message": "S Regexem vynechte / na obou koncích a tečky zapisujte jako `\\.`, například `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "Rozsah URL: Stránka kontroluje jen adresu stránky, Skripty přidají zdroje skriptů, Vše (výchozí) přidá každý požadavek."
+  },
+  "mhUrlLimit1": {
+    "message": "Požadavky na písma, média a šablony stylů se nezaznamenávají."
+  },
+  "mhUrlLimit2": {
+    "message": "Počítají se jen požadavky provedené před skenováním; skenování proběhne po načtení stránky."
+  },
+  "mhHeaderIntro": {
+    "message": "Kontroluje hlavičky vlastního požadavku a odpovědi stránky, nikoli hlavičky skriptů, volání XHR nebo rámců."
+  },
+  "mhHeaderHow1": {
+    "message": "Názvy hlaviček se porovnávají malými písmeny a prostý text znamená „obsahuje“: `server` odpovídá i `server-timing`. Pro přesný název použijte Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Hodnota se kontroluje u hlavičky s tímto názvem; pro libovolnou hodnotu ji nechte prázdnou."
+  },
+  "mhHeaderHow3": {
+    "message": "Rozsah Odpověď (výchozí) znamená hlavičky odeslané webem; Požadavek znamená hlavičky odeslané prohlížečem."
+  },
+  "mhHeaderLimit1": {
+    "message": "Při zapnutém rozlišování velikosti písmen pište názvy hlaviček malými písmeny."
+  },
+  "mhHeaderLimit2": {
+    "message": "Stránky, které mění adresu bez opětovného načtení, se skenují znovu bez hlaviček."
+  },
+  "mhCookieIntro": {
+    "message": "Kontroluje cookies stránky podle názvu a volitelně hodnoty, včetně cookies HttpOnly a Secure."
+  },
+  "mhCookieHow1": {
+    "message": "Prostý název odpovídá jako předpona: `_abck` odpovídá i `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` zastupuje libovolný text: `bm_*` odpovídá `bm_sz` i `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Pro přesný název zapněte Regex a napište `^name$`. Hodnota odpovídá, když obsahuje daný text."
+  },
+  "mhCookieLimit1": {
+    "message": "Rozsah Požadavek (výchozí) čte cookies prohlížeče pro stránku; Odpověď čte cookies nastavené odpovědí stránky."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookies jiných webů, například rámce dodavatele, nejsou vidět. Dlouhé hodnoty se ořezávají na 100 znaků."
+  },
+  "mhContentIntro": {
+    "message": "Prohledává text stránky: HTML jejího těla, vložené skripty a načtené soubory skriptů a šablon stylů."
+  },
+  "mhContentHow1": {
+    "message": "Prostý text odpovídá, když ho text obsahuje, bez ohledu na velikost písmen."
+  },
+  "mhContentHow2": {
+    "message": "Celé slovo přeskakuje shody uvnitř delšího slova; vyžaduje písmeno, číslici nebo _ na obou koncích vzoru."
+  },
+  "mhContentHow3": {
+    "message": "„Kontrolovat pouze skripty“ prohledává jen vložené skripty (včetně head) a soubory JavaScript, bez HTML a CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Soubory, které web nedovoluje číst jiným původům (CORS), nebo větší než 5 MB, se přeskakují."
+  },
+  "mhContentLimit2": {
+    "message": "Kód uvnitř rámců nebo workerů ani kód načtený po skenování se neprohledává."
+  },
+  "mhDomIntro": {
+    "message": "Po načtení stránky hledá v těle stránky element pomocí selektoru CSS."
+  },
+  "mhDomHow1": {
+    "message": "Značka, `.class`, `#id` nebo `[attribute]`, samostatně nebo v kombinaci: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Testy atributů `=`, `^=`, `$=`, `*=`, `~=` a `|=`; přidáním ` i` před `]` se ignoruje velikost písmen."
+  },
+  "mhDomHow3": {
+    "message": "Několik selektorů oddělených čárkami: odpovídá kterýkoli z nich."
+  },
+  "mhDomLimit1": {
+    "message": "Nepodporováno, takže pravidlo nikdy neodpovídá: mezery nebo `>` mezi částmi, `:pseudo-classes` a escape sekvence."
+  },
+  "mhDomLimit2": {
+    "message": "Neprohledává se head, rámce ani shadow rooty. Atribut `value` se nečte; ostatní atributy se porovnávají podle prvních 100 znaků."
+  },
+  "mhWindowIntro": {
+    "message": "Kontroluje globální proměnnou JavaScriptu definovanou stránkou, například `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Cesta od `window` oddělená tečkami: `KPSDK` nebo `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Podmínka jako `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` nebo `has keys`. Prázdná znamená truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Podmínka, které detekce nerozumí, nikdy neodpovídá, proto vyberte jednu ze seznamu."
+  },
+  "mhWindowLimit1": {
+    "message": "Kontroluje se během prvních sekund po načtení stránky; později vytvořené globální proměnné se přehlédnou."
+  },
+  "mhWindowLimit2": {
+    "message": "Vlastnosti pojmenované pomocí Symbolu nelze zapsat jako cestu."
+  },
+  "mhJsHooksIntro": {
+    "message": "Zaznamenává, kdy stránka volá API prohlížeče, například `HTMLCanvasElement.prototype.toDataURL`, což je znak fingerprintingu."
+  },
+  "mhJsHooksHow1": {
+    "message": "Úplná cesta k metodě nebo getteru: `Navigator.prototype.webdriver`, nikoli `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Počítá se jakékoli volání; jeho argumenty a výsledek se nekontrolují, takže hook ukazuje, že bylo API použito, ne proč."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Volání se počítají během prvních sekund po načtení stránky (nejvýše 8 sekund)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Volání ve workerech nebo rámcích nejsou vidět, kromě vestavěných cílů v rámcích ze stejného webu."
+  },
+  "mhPayloadIntro": {
+    "message": "Prohledává těla požadavků POST, PUT, PATCH a DELETE, které stránka odesílá z libovolného rámce."
+  },
+  "mhPayloadHow1": {
+    "message": "Prostý text odpovídá, když ho tělo obsahuje, bez ohledu na velikost písmen. Data formuláře se čtou jako `name=value&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "URL požadavku (volitelné) a metoda HTTP omezují shodu na odpovídající požadavky."
+  },
+  "mhPayloadLimit1": {
+    "message": "Počítají se jen požadavky odeslané před skenováním, nejvýše 50 na stránku."
+  },
+  "mhPayloadLimit2": {
+    "message": "Zprávy WebSocket se nečtou."
+  },
+  "domCardTitle": {
+    "message": "Selektor CSS"
+  },
+  "domCardBrowse": {
+    "message": "Procházet"
+  },
+  "domCardHint": {
+    "message": "Značka, .class, #id nebo test [attribute], samostatně nebo v kombinaci. Mezery nebo > mezi částmi nejsou podporovány."
+  },
+  "windowCardTitle": {
+    "message": "Vlastnost okna"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Události, které rozšíření odesílá na stránku"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Naslouchejte událostem z vlastního skriptu"
+  },
+  "settingsApiCopyCode": {
+    "message": "Kopírovat kód"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Kód zkopírován"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Kopírovat název události"
+  },
+  "advCommonClickToCopy": {
+    "message": "Kliknutím zkopírujete"
+  },
+  "advCommonDomainLabel": {
+    "message": "Doména:"
+  },
+  "advCommonCopy": {
+    "message": "Kopírovat"
+  },
+  "advCommonPage": {
+    "message": "Stránka"
+  },
+  "advCommonExportCode": {
+    "message": "Exportovat kód"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL zkopírována"
+  },
+  "advScriptTypeCollector": {
+    "message": "Kolektor"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "Kontrola CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Mezistránka"
+  },
+  "advCommonCaptured": {
+    "message": "Zachyceno"
+  },
+  "advCommonScript": {
+    "message": "Skript"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL skriptu:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Nejsou k dispozici žádná data zachycení"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Cookies se nepodařilo zkontrolovat: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Skripty se nepodařilo analyzovat: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Analýzu se nepodařilo spustit"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Verzi se nepodařilo zkontrolovat: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Extrakce se nezdařila: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Extrakci se nepodařilo spustit: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Žádné skripty k exportu"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "Cookies {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Nenalezeny žádné cookies {0}"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "Skripty {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Analýza skriptů {0}... Stránka se znovu načte"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Generování kódu není k dispozici"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Generátor kódu pro analýzu skriptů"
+  },
+  "advCommonExportOptions": {
+    "message": "Možnosti exportu"
+  },
+  "advCommonAllTypes": {
+    "message": "Všechny typy"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Nalezené relevantní skripty: {0}"
+  },
+  "advCommonTotalScripts": {
+    "message": "Skripty celkem:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Úroveň ochrany:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Nalezené cookies:"
+  },
+  "advCommonSiteKey": {
+    "message": "Klíč webu"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL webu"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL webu"
+  },
+  "advCommonApiDomain": {
+    "message": "Doména API"
+  },
+  "advCommonFound": {
+    "message": "Nalezeno"
+  },
+  "advCommonNotFound": {
+    "message": "Nenalezeno"
+  },
+  "advCommonYes": {
+    "message": "Ano"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Standardní"
+  },
+  "advCommonNone": {
+    "message": "Žádná"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Kód pro konzoli prohlížeče pro zachytávání a analýzu skriptů {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Skript Pythonu s requests a BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Skript Pythonu s knihovnou requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Skript Node.js s axios a cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Skript Node.js s axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "Skript PHP s cURL a DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "Skript PHP s cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# s HttpClient a HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# s HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go s net/http a goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go s net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Zachytávání aktivní"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Načtěte stránku znovu, aby se spustilo zachytávání."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Skončí za {0} s"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Načtěte tuto stránku znovu"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Vyřešte reCAPTCHA nebo na ni klikněte"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Počkejte na „Zachytávání dokončeno“"
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Sledování {0} zahájeno"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Zachytávání dokončeno"
+  },
+  "pageNoticePageLoading": {
+    "message": "Stránka se načítá"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Počkejte, až se stránka úplně načte..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Na této stránce nebyl zjištěn Akamai. Cookie _abck chybí."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Data Akamai byla úspěšně zachycena!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Zachytávání zastaveno"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Zachytávání se nepodařilo zastavit: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Stránka se znovu načítá kvůli analýze dat Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Obsah se nepodařilo analyzovat: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Cookie _abck nenalezena"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Data se nepodařilo zpracovat: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Extrakce informací o senzoru…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Informace o senzoru se nepodařilo extrahovat: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Akamai nezjištěn"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Cookie _abck na této stránce chybí."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager zde není aktivní."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Načtěte stránku znovu a zahájíte sledování dat senzoru a podrobností požadavků"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Zachycení Akamai sensor_data bylo úspěšné"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Pokročilá (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Základní"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Snadná"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "Úroveň _abck:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Analýza Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Skripty Akamai:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Skript s URL dat senzoru"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Proměnná Pixel HTML:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL POST:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Proměnná Pixel Script:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL skriptu SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL dat senzoru"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Koncový bod Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Senzor"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Extrahované informace o senzoru"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Data senzoru (znaků: {0})"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Nezachycena žádná data senzoru"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "Data SBSD (znaků: {0})"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL skriptu senzoru"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Kopírovat všechna data jako JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Extrahovat informace o senzoru"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "Úroveň ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "Cookie ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Verze Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Požadavky na výzvy"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Výzva SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Výzva sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Výzva Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Režim extrakce se nepodařilo zapnout. Podrobnosti najdete v konzoli na pozadí."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Cookies relace"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Bezpečnostní komponenty"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookies: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Detekce zdrojů"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL zdrojů"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL ověřovacích výzev"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Analýza Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL senzoru:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "Skript {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "Cesta senzoru:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Nezjištěny žádné skripty"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva na této stránce nemusí být přítomna"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Jen {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Pokročilá (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Základní (relace)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Načtěte stránku znovu a zahájíte sledování požadavků a cookies Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Data Imperva zachycena (položek: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Zachytávání Imperva dokončeno"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Data senzoru úspěšně zachycena"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Zpětné volání reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Detekce selektoru"
+  },
+  "advRecaptchaMethod": {
+    "message": "Metoda"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selektor"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Selektor zkopírován do schránky!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Nenalezeny žádné prvky reCAPTCHA"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() selhalo: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Zpětná volání reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "Klienti reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "ID klienta: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Zkopírováno do schránky!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Funkce zpětného volání"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Cesta zpětného volání"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Není definováno žádné zpětné volání"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Zpětná volání DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Zpětná volání skriptů"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Příklady použití zpětného volání"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Neviditelná"
+  },
+  "advRecaptchaAction": {
+    "message": "Akce"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Požadovaná cookie"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Zjištěné funkce"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "Vyžadován parametr S"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Má relaci"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Kliknutí se nezdařilo: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Na této stránce nebyla nalezena žádná zpětná volání reCAPTCHA. Ujistěte se, že je reCAPTCHA načtena."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Zpětné volání se nepodařilo zachytit: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Načtěte stránku znovu a vyřešte výzvu reCAPTCHA, aby se zahájilo sledování"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Stránka připravena"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Nyní vyřešte výzvu reCAPTCHA a zachytíte data"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Zachycené a dekódované požadavky: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Nezachyceny žádné požadavky reCAPTCHA"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA zjištěna"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Vyřešte výzvu; zachytávání se dokončí samo"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Nyní reCAPTCHA spusťte nebo na ni klikněte"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Hlavičky"
+  },
+  "advShapeVersionTitle": {
+    "message": "Verze Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Vzor hlavičky"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Vzory hlaviček"
+  },
+  "advShapeCookieTitle": {
+    "message": "Cookie Shape"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Analýza Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Skripty Init.js:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Skripty Seed:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Skript Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Skripty Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "Skript Seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "Skripty Seed"
+  },
+  "advShapeErrorFmt": {
+    "message": "Chyba: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Zjištěná verze:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Požadavky na zachycení"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + hlavičky"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Načtěte stránku znovu a zahájíte sledování hlaviček a cookies Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Před provedením akcí počkejte, až se stránka úplně načte..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Sledování aktivní ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Proveďte akce, které vyvolají vytvoření cookie"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Proveďte akce, které vyvolají vytvoření hlaviček + cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Vypršel časový limit ({2}) - cookies: {0}, hlavičky: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie: {1} | Hlavičky: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Zachyceno - cookies: {0}, hlavičky: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "Detekce hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha nezjištěna. Načtěte prosím stránku znovu s načtenou hCaptcha."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "Verze hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Režim Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "Ne"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Zatím žádná historie zachycení"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "N/A"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Kontrola verze hCaptcha... Stránka se znovu načte"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Časový limit detekce verze hCaptcha vypršel"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Kontrolu verze se nepodařilo spustit"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Načtěte stránku znovu a zahájíte sledování požadavků hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "Data hCaptcha úspěšně zachycena"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Výzva"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "Mazání cookie {0}... Stránka se znovu načte"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Typ"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Klíč webu zkopírován"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Výzva"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analytika"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Správa botů"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Veřejný klíč"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (pole dat prohlížeče)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Data blobu"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Nezachyceno"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Načtěte stránku znovu, zahájíte sledování a vyvoláte výzvu FunCaptcha (časový limit 60 s)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Stránka se načítá, počkejte prosím..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha úspěšně zachycena"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Zachycené výzvy: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Časový limit zachytávání"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Nezjištěna žádná výzva FunCaptcha (časový limit 60 s)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Vložený skript"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "Atribut DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL skriptu"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "Konfigurace JSON"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Extrahované captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Produkt:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Úryvek skriptu"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Exportovat kód pro analýzu"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Chyba: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Zjištěno: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Nezjištěna žádná verze Geetest"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Karta nenalezena"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Nenalezeny žádné skripty Geetest"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Zjišťování verze Geetest..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Stránka se znovu načítá kvůli kontrole verze"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Analýza skriptů..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Stránka se znovu načítá kvůli extrakci skriptů"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "Nástroje {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Chyba při načítání rozšířených nástrojů"
+  },
+  "advPanelCheckConsole": {
+    "message": "Podrobnosti najdete v konzoli"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Chyba při načítání zachycení: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Aktuální web ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Zkuste upravit filtry nebo hledaný dotaz, abyste našli zachycení."
+  },
+  "advPanelNoUrl": {
+    "message": "Bez URL"
+  },
+  "advPanelView": {
+    "message": "Zobrazit"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Potvrdit akci"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Potvrdit"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Zkopírováno do schránky"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "Nástroje načteny: {0}"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Nalezené cookies: {0}/{1}"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Nalezené skripty: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Nenalezeny žádné skripty {0}"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "Zjištěná verze {0}: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Nezjištěna žádná verze {0}"
+  },
+  "advPanelUnknownError": {
+    "message": "Neznámá chyba"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Zachytávání se nepodařilo spustit: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Zachytávání se nepodařilo zastavit: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Zachycení: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Vymazat všechna zachycená data"
+  },
+  "advPanelNotAvailable": {
+    "message": "N/A"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Historie zachycení {0} vymazána"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Historii se nepodařilo vymazat"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Zobrazeno {0}-{1} z {2} zachycení"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Nový detektor"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Přidat {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Upravit {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Ikona Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "Ikona {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Změnit ikonu"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Změnit ikonu detektoru"
+  },
+  "rulesUiCustomColor": {
+    "message": "Vlastní barva"
+  },
+  "iconPickerTitle": {
+    "message": "Zvolit ikonu"
+  },
+  "iconPickerDefault": {
+    "message": "Výchozí"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Nahrát vlastní"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Soubor ikony musí být menší než 100 KB"
+  },
+  "iconPickerNoResults": {
+    "message": "Hledání neodpovídají žádné ikony"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Hledat ikony…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Co jsou JS hooky?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Co jsou vlastnosti okna?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Co je detekce URL?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Co je detekce hlaviček?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Co je detekce cookies?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Co je detekce obsahu?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Co je detekce DOM?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Co je detekce payloadu?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Co je tato metoda detekce?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Hodnota (volitelné)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "Selektor CSS (např. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Text nebo slovo k hledání"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "Vzor URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "Cíl JS hooku (např. Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Cesta okna (např. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Podmínka (např. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Název cookie (např. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Vzor hodnoty cookie (volitelné)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Text (např. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify nebo challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Nastavení názvu"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Nastavení názvu (spolehlivost: {0} %)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Nastavení hodnoty"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Smazat metodu"
+  },
+  "rulesUiClearValue": {
+    "message": "Vymazat hodnotu"
+  },
+  "rulesUiAddValue": {
+    "message": "Přidat hodnotu"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Stránka {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Před přidáním dalšího vyplňte aktuální prázdný vzor."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Před uložením vyplňte všechna povinná pole vzorů."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Zadejte typ metody detekce (např. HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Metoda"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Stránka = aktuální URL | Skripty = stránka + skripty | Vše = všechny požadavky"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Nechte prázdné pro shodu s libovolnou URL"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Jiné"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Název: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Časové razítko: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Bezpečnostní systém: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Kategorie: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Spolehlivost: {0} %"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Metody detekce: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Metody detekce:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Detekce ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Obtížnost: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Kopírování do schránky se nezdařilo"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Kopírovat URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Kopírovat URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Kopírovat kategorii"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Kopírovat kategorii: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Kopírovat metodu"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Kopírovat metodu: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Kopírovat hodnotu"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Kopírovat hodnotu: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} r"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} měs"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} d"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} h"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} min"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 min"
+  },
+  "detectionUiNoDescription": {
+    "message": "Pro tuto detekci nejsou k dispozici žádné další podrobnosti."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Pro tento detektor nejsou zaznamenány žádné metody detekce."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Neznámá metoda"
+  },
+  "detectionUiUnknownValue": {
+    "message": "neznámé"
+  },
+  "historyUiUntitled": {
+    "message": "Bez názvu"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Žádné metody detekce"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Neplatný formát souboru historie"
+  },
+  "popupUiLogoAlt": {
+    "message": "Robot Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Rozšíření se nepodařilo zapnout: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Rozšíření se nepodařilo vypnout: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Chyba: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Žádné blokované domény"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Vašemu hledání neodpovídají žádné domény"
+  },
+  "settingsUiChecking": {
+    "message": "Kontrola..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Limit historie musí být mezi 0 (neomezeno) a 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Doba uložení v mezipaměti musí být mezi 1 a {0}, jednotka: {1}"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Počet dnů pro automatické mazání musí být mezi 1 a 3650"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Doba pro duplicity musí být mezi 1 a 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Exportovat JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Exportovat text"
+  },
+  "settingsUiLogsText": {
+    "message": "Text"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Aktualizace detektorů vyžadující novější verzi rozšíření: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (vyžaduje rozšíření v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Součty"
+  },
+  "ruleSectionCombinations": {
+    "message": "Kombinace"
+  },
+  "combinationsHint": {
+    "message": "Kombinace detekuje tuto ochranu, jen když se společně najde několik vzorů. Použijte ji pro vzory, které jsou samy o sobě příliš slabé."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Každá kombinace se spustí, jen když se její signály objeví společně; zde je, co našla na této stránce."
+  },
+  "combinationFoundTogether": {
+    "message": "Společně nalezeno na této stránce:"
+  },
+  "combinationNotPresent": {
+    "message": "Nepřítomno"
+  },
+  "combinationFound": {
+    "message": "Nalezeno"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Toto pravidlo se po skenování změnilo nebo bylo odebráno, proto se zobrazuje jen jeho název a skóre."
+  },
+  "historyMatchedDetections": {
+    "message": "Odpovídající detekce"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Toto skenování bylo uloženo dříve, než se začaly uchovávat podmínky, proto se zobrazují jen názvy a skóre."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Nesmí být nalezeno"
+  },
+  "combinationMustBeFound": {
+    "message": "Musí být nalezeno"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: nejvyšší spolehlivost ze vzorů, které kombinaci spustily"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Přidejte alespoň jeden vzor, který musí být nalezen."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Seznam „Jedno z těchto“ potřebuje v každé možnosti vzor, který musí být nalezen."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "„Alespoň {0}“ potřebuje vzory, které musí být nalezeny (počet: {0})."
+  },
+  "combinationSentenceOne": {
+    "message": "Spustí se, když je tato podmínka splněna."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Spustí se, když jsou splněny všechny podmínky (celkem {0})."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Spustí se, když je splněna kterákoli z těchto podmínek (celkem {0})."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Spustí se, když je splněno alespoň {0} z těchto podmínek (celkem {1})."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Spolehlivost: {0} %."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Spolehlivost: Auto, až {0} %."
+  },
+  "combinationSentenceGroup": {
+    "message": "Skupina se počítá jako jedna podmínka."
+  },
+  "combinationSentenceNot": {
+    "message": "Nespustí se, pokud je přítomen vzor „Nesmí být nalezeno“."
+  },
+  "combinationSentenceAlone": {
+    "message": "Vzory neoznačené „Pouze kombinace“ detekují i samostatně, se svou vlastní spolehlivostí."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Spolehlivost při nalezení"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Nechte prázdné pro Auto: nejvyšší spolehlivost z nalezených vzorů."
+  },
+  "combinationModeAny": {
+    "message": "Jedno z těchto"
+  },
+  "combinationModeAll": {
+    "message": "Všechny tyto"
+  },
+  "combinationModeAtLeast": {
+    "message": "Alespoň … z těchto"
+  },
+  "combinationModeRootAll": {
+    "message": "všechny tyto jsou nalezeny"
+  },
+  "combinationModeRootAny": {
+    "message": "jedno z těchto je nalezeno"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "alespoň … z těchto je nalezeno"
+  },
+  "combinationGroupMode": {
+    "message": "Skupina"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Přidejte do této skupiny vzor"
+  },
+  "combinationDeleteGroup": {
+    "message": "Smazat skupinu"
+  },
+  "combinationAddGroup": {
+    "message": "Přidat skupinu „jedno z“"
+  },
+  "patternUnusedBadge": {
+    "message": "V žádné kombinaci"
+  },
+  "patternUnusedTip": {
+    "message": "Žádná kombinace ho nepoužívá, takže nikdy nedetekuje. Kliknutím ho necháte počítat samostatně."
+  },
+  "combinationsEmpty": {
+    "message": "Zatím žádné kombinace."
+  },
+  "combinationAdd": {
+    "message": "Přidat kombinaci"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Kombinace {0}"
+  },
+  "combinationDelete": {
+    "message": "Smazat kombinaci"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Smazat kombinaci „{0}“? Její vzory zůstanou v pravidle."
+  },
+  "combinationRemove": {
+    "message": "Odebrat"
+  },
+  "combinationEmptyPattern": {
+    "message": "(prázdný vzor)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Libovolný vzor: {0}"
+  },
+  "combinationGroupEmpty": {
+    "message": "Níže přidejte vzor"
+  },
+  "combinationAddPattern": {
+    "message": "Přidat vzor"
+  },
+  "combinationAddDescription": {
+    "message": "Přidat popis"
+  },
+  "combinationAnyPattern": {
+    "message": "libovolný vzor"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Přidejte vzory a sestavte tuto kombinaci"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Pouze kombinace"
+  },
+  "combinationStrictHint": {
+    "message": "Vzor označený „Pouze kombinace“ sám nic nedetekuje; počítá se jen uvnitř kombinací."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Označit vše"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Zrušit označení"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Tento vzor sám nic nedetekuje; počítá se jen uvnitř kombinací, v každé kombinaci tohoto pravidla."
+  },
+  "detectionModalCombinations": {
+    "message": "Odpovídající kombinace"
+  },
+  "combinationNoPatterns": {
+    "message": "Nepřidány žádné vzory"
+  },
+  "combinationPickHint": {
+    "message": "Zaškrtněte vzory, které chcete přidat"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Přidat vybrané ({0})"
+  },
+  "combinationEditConditions": {
+    "message": "Upravit podmínky"
+  },
+  "combinationAutoConfidence": {
+    "message": "Auto"
+  },
+  "combinationDetectWhen": {
+    "message": "Detekovat, když"
+  },
+  "combinationGroupExcluded": {
+    "message": "Tyto podmínky nesmí odpovídat."
+  },
+  "combinationMinimum": {
+    "message": "Minimum shod"
+  },
+  "combinationMatchState": {
+    "message": "Podmínka vzoru"
+  },
+  "combinationChoosePatterns": {
+    "message": "Vybrat vzory"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Snížit minimum shod"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Zvýšit minimum shod"
+  },
+  "detectionTipDetections": {
+    "message": "Počet ochran zjištěných na této stránce."
+  },
+  "detectionTipConfidence": {
+    "message": "Průměrná spolehlivost zjištěných ochran."
+  },
+  "detectionTipDifficulty": {
+    "message": "Odhadovaná obtížnost obejití zjištěných ochran."
+  },
+  "tipCachedAt": {
+    "message": "Uloženo"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Průměr z detekcí ({0}), od {1} % do {2} %"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "Z odpovídajících kombinací"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Skóre určuje nejsilnější jednotlivý signál"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1} %"
+  },
+  "tipCustomDetector": {
+    "message": "Vlastní detektor"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Výchozí pro: {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Nastaveno tímto detektorem"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Nastaveno podle: {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Zvýšeno společným působením ochran: {0}"
+  },
+  "tipLastUpdated": {
+    "message": "Aktualizováno"
+  },
+  "tipMethodContent": {
+    "message": "Shoduje se text nalezený na stránce nebo v jejích skriptech."
+  },
+  "tipMethodCookie": {
+    "message": "Shoduje se cookie nastavená na tomto webu."
+  },
+  "tipMethodDom": {
+    "message": "Shoduje se prvek na stránce."
+  },
+  "tipMethodHeader": {
+    "message": "Shoduje se hlavička odpovědi odeslaná webem."
+  },
+  "tipMethodJsHooks": {
+    "message": "Stránka zavolala API prohlížeče, které tento detektor sleduje."
+  },
+  "tipMethodPayload": {
+    "message": "Shodují se data, která stránka odeslala v požadavku."
+  },
+  "tipMethodUrl": {
+    "message": "Shoduje se stránka nebo její požadavek se známou adresou."
+  },
+  "tipMethodWindow": {
+    "message": "Shoduje se globální objekt JavaScriptu na stránce."
+  },
+  "tipMoreFmt": {
+    "message": "Další: +{0}"
+  },
+  "tipOfficialDetector": {
+    "message": "Oficiální detektor Scrapfly"
+  },
+  "tipScopeDomain": {
+    "message": "Výsledky se znovu použijí pro každou stránku v této doméně."
+  },
+  "tipScopeFullUrl": {
+    "message": "Výsledky se znovu použijí jen pro tuto přesnou URL včetně dotazu."
+  },
+  "tipScopePath": {
+    "message": "Výsledky se znovu použijí pro tuto přesnou cestu bez ohledu na dotaz."
+  },
+  "tipStatsActiveDays": {
+    "message": "Dny s alespoň jednou uloženou stránkou."
+  },
+  "tipStatsDetections": {
+    "message": "Ochrany nalezené na všech uložených stránkách včetně opakování."
+  },
+  "tipStatsDetectors": {
+    "message": "Různé zjištěné ochrany, každá započtena jednou."
+  },
+  "tipStatsDomains": {
+    "message": "Různé weby mezi uloženými stránkami."
+  },
+  "tipStatsEntries": {
+    "message": "Stránky uložené do Historie v tomto období."
+  },
+  "tipStatsRateFmt": {
+    "message": "Položky: {0} z {1}"
+  },
+  "tipPatterns": {
+    "message": "Vzory"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Podrobné protokoly"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Protokolovat také každé pravidlo, hook a zprávu, nejen jednu zprávu na stránku"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Aktualizace upraveného pravidla"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "Pravidlo „{0}“ má novou oficiální verzi ({1}). Toto pravidlo jste upravili: nová verze nahradí vaše změny."
+  },
+  "btnDecideLater": {
+    "message": "Rozhodnout později"
+  },
+  "btnKeepMyEdits": {
+    "message": "Ponechat moje úpravy"
+  },
+  "btnUseNewVersion": {
+    "message": "Použít novou verzi"
+  },
+  "resetToOfficial": {
+    "message": "Obnovit oficiální"
+  },
+  "resetToOfficialTitle": {
+    "message": "Obnovit oficiální verzi"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Zahodit vaše úpravy pravidla „{0}“ a obnovit oficiální verzi Scrapfly?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Pravidlo obnoveno na oficiální verzi"
+  },
+  "ruleEditedTag": {
+    "message": "Upraveno"
+  },
+  "tipRuleEdited": {
+    "message": "Toto oficiální pravidlo jste upravili. Aktualizace se před nahrazením vašich změn zeptají."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Seznam detekcí"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Pořadí detekcí"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Pořadí kategorií v seznamu detekcí, v Historii a v Pravidlech. Pořadí změníte přetažením karet; v rámci kategorie se detekce zobrazují od nejvyšší spolehlivosti."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Nejvyšší spolehlivost první"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Pořadí kategorií"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Posunout {0} nahoru"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Posunout {0} dolů"
+  },
+  "settingsCardShareUploads": {
+    "message": "Sdílená nahrání"
+  },
+  "settingsShareDestination": {
+    "message": "Cíl nahrání"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Kam Detekce → Nahrát detekce odešle souhrn a získá odkaz ke sdílení."
+  },
+  "settingsShareService": {
+    "message": "Služba"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (bez účtu)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (bez účtu)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (bez účtu)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (klíč API)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Vlastní server"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Smazat po (dnech)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Smazat po"
+  },
+  "shareExpire10M": {
+    "message": "10 minutách"
+  },
+  "shareExpire1H": {
+    "message": "1 hodině"
+  },
+  "shareExpire1D": {
+    "message": "1 dni"
+  },
+  "shareExpire1W": {
+    "message": "1 týdnu"
+  },
+  "shareExpire2W": {
+    "message": "2 týdnech"
+  },
+  "shareExpire30D": {
+    "message": "30 dnech"
+  },
+  "shareExpire1M": {
+    "message": "1 měsíci"
+  },
+  "shareExpire6M": {
+    "message": "6 měsících"
+  },
+  "shareExpire1Y": {
+    "message": "1 roce"
+  },
+  "shareExpireOnetime": {
+    "message": "Po prvním zobrazení"
+  },
+  "shareExpireNever": {
+    "message": "Nikdy"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs nemá možnost vypršení: vložený text zůstane, dokud ho služba neodstraní."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Klíč API Pastebinu"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Váš vývojářský klíč z pastebin.com/doc_api. Vložené texty se nezobrazují ve veřejném seznamu."
+  },
+  "settingsShareSecretNote": {
+    "message": "Uloženo pouze v tomto prohlížeči a vynecháno z exportů nastavení."
+  },
+  "settingsShareGithubToken": {
+    "message": "Token GitHubu"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Token s oprávněním Gists. Nahrání jsou tajné gisty a nevyprší; smažte je na GitHubu."
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL serveru"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS na veřejném hostiteli. Může obsahovat <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Formát těla"
+  },
+  "shareBodyForm": {
+    "message": "Pole formuláře"
+  },
+  "shareBodyJson": {
+    "message": "Šablona JSON"
+  },
+  "shareBodyRaw": {
+    "message": "Prostý text"
+  },
+  "settingsShareCustomField": {
+    "message": "Název pole formuláře"
+  },
+  "settingsShareCustomJson": {
+    "message": "Šablona JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Proměnné: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Jedna na řádek ve tvaru Název: hodnota, například Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Odkaz ke sdílení z"
+  },
+  "shareLinkBody": {
+    "message": "Tělo odpovědi (prostá URL)"
+  },
+  "shareLinkJson": {
+    "message": "Pole JSON"
+  },
+  "shareLinkLocation": {
+    "message": "Hlavička Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Cesta k poli JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Odesílá se jako expiry_days v tělech formulářů a jako <EXPIRY_DAYS>; co s tím provede, určuje váš server."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Nejprve nastavte {0} v Nastavení → Detekce → Sdílená nahrání"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Tímto se na {0} ({1}) nahraje souhrn detekcí této stránky. Kdokoli s odkazem si jej může zobrazit. Řetězec dotazu URL a hodnoty cookies či hlaviček nejsou zahrnuty."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "smazáno po {0} d"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "smazáno po {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "smazáno po prvním zobrazení"
+  },
+  "shareExpiryService": {
+    "message": "uchováno, dokud ho služba neodstraní"
+  },
+  "shareExpiryNever": {
+    "message": "nevyprší"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Vlastní server musí být adresa HTTPS na veřejném hostiteli"
+  },
+  "pasteBadLink": {
+    "message": "služba nevrátila platný odkaz HTTPS"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Nahrání se nezdařilo: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Vlastní server pro nahrávání: použijte adresu HTTPS na veřejném hostiteli"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Vlastní server pro nahrávání: šablona JSON není platný JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "Služba {0} odmítla klíč nebo token (chybný nebo vypršelý)"
+  },
+  "pasteGistPermission": {
+    "message": "token GitHubu potřebuje oprávnění Gists (čtení a zápis)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Na této stránce není žádný klíč webu Turnstile"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Klíče webu Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Rozšířené nástroje"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Které ochrany získají nástroje"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Zobrazit nástroje nad touto spolehlivostí (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Rozšířené uvádí ochranu, jen když je její spolehlivost nad touto hodnotou. 0 uvádí každou zjištěnou ochranu."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Spolehlivost pro rozšířené nástroje musí být mezi 0 a 99"
+  },
+  "advCommonValue": {
+    "message": "Hodnota"
+  },
+  "advCommonCharsFmt": {
+    "message": "Znaků: {0}"
+  },
+  "advCookiePath": {
+    "message": "Cesta"
+  },
+  "advCookieExpires": {
+    "message": "Vyprší"
+  },
+  "advCookieSession": {
+    "message": "Relace (smaže se po zavření prohlížeče)"
+  },
+  "advCookieNotFound": {
+    "message": "Nenalezeno"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Obnovit oficiální detektory?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Všechny oficiální detektory jsou nainstalovány. Není co obnovovat."
+  },
+  "restoreOfficialChecking": {
+    "message": "Kontrola nejnovějšího vydání na GitHubu..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Znovu nainstalováno z vydání {0} na GitHubu: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub není dostupný, proto se použije verze obsažená v rozšíření."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub právě omezuje požadavky, proto se použije verze obsažená v rozšíření."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Znovu nainstalováno z verze obsažené v rozšíření: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Pravidla → Aktualizovat je znovu nainstaluje: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Vaše vlastní detektory a úpravy ostatních pravidel se nemění."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "Další: {0}"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Obnovení se nezdařilo: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "Obnoveno: {0}"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Zbytek nainstalujete pomocí Pravidla → Aktualizovat."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Obnovit"
+  },
+  "advancedFilterTool": {
+    "message": "Nástroj"
+  },
+  "advancedFilterAllTools": {
+    "message": "Všechny nástroje"
+  },
+  "advFilterKindCapture": {
+    "message": "Zachycení"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Zachycení"
+  },
+  "advFilterKindOther": {
+    "message": "Ostatní nástroje"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrapovat se Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Kód pro scrapování této stránky pomocí Unblockeru",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Načtěte tuto stránku přes API Scrapfly se zapnutým Unblockerem. Prohlížeč, proxy i hlavičky vybere sám a když web neblokuje, nic navíc nestojí.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Zjištěno na této stránce",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Jazyk kódu",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Tato stránka má CAPTCHA: Unblocker se jí vyhne nebo ji vyřeší, aby stránku vrátil, ale CAPTCHA ve formulářích nevyplňuje.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Možnosti"
+  },
+  "scrapflyExportProduct": {
+    "message": "Použít"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Řešit CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Platí se za každé vyřešení"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "K jejich vyřešení použijte Cloud Browser."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Otevřete tuto stránku v Cloud Browseru Scrapfly a ovládejte ji pomocí Playwrightu. Captcha Solver zvládá Turnstile, reCAPTCHA, GeeTest a další, jakmile se objeví; neúspěšná řešení nic nestojí."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Obcházení anti-bot ochrany"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Kopírovat pro AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Zkopíruje stránku, co ji chrání, vaše nastavení a kód jako jednu zprávu pro ChatGPT, Claude nebo jiného AI asistenta"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Zkopírováno: vložte to do svého AI asistenta"
+  },
+  "scrapflyExportFormat": {
+    "message": "Výstup"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Text"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxy"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residential"
+  },
+  "scrapflyExportCountry": {
+    "message": "Země"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Libovolná"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Vykreslit JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 kreditů"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Zvolte nastavení"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Zkopírujte kód"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Nastavte svůj klíč API"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Spusťte ho"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Získat klíč API",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Otevřít playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Kód zkopírován",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Otevřete webovou stránku a scrapujte ji pomocí Scrapfly",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "Zachycení: {0}"
+  },
+  "statsFirstSeen": {
+    "message": "Nové v tomto období"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "Poprvé uloženo v tomto období: ochrany ({0}) a domény ({1})."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Zvolte 7, 30 nebo 90 dní a uvidíte, co je nové."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Nejchráněnější doména"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "Různé ochrany: {0}, návštěvy: {1}."
+  },
+  "statsFoundTogether": {
+    "message": "Společně nalezené ochrany"
+  },
+  "statsMethods": {
+    "message": "Metody detekce"
+  },
+  "statsMatchesUnit": {
+    "message": "shod"
+  },
+  "statsMethodsByCategory": {
+    "message": "Metody podle kategorie"
+  },
+  "statsWeakEvidence": {
+    "message": "Nejslabší důkazy"
+  },
+  "statsSignalColumn": {
+    "message": "Signál"
+  },
+  "statsMethodColumn": {
+    "message": "Metoda"
+  },
+  "statsTopSignals": {
+    "message": "Nejčastěji odpovídající signály"
+  },
+  "statsDecidedSingle": {
+    "message": "Jeden vzor"
+  },
+  "statsDecidedCombination": {
+    "message": "Kombinace"
+  },
+  "statsDecidedBy": {
+    "message": "Jak se o detekcích rozhodlo"
+  },
+  "statsCombinationGain": {
+    "message": "Spolehlivost podle rozhodnutí"
+  },
+  "statsCombinationColumn": {
+    "message": "Kombinace"
+  },
+  "statsTopCombinations": {
+    "message": "Spuštěné kombinace"
+  },
+  "statsNoCombinations": {
+    "message": "O žádné detekci v tomto období nerozhodla kombinace."
+  },
+  "statsRulesMostActive": {
+    "message": "Nejaktivnější pravidla"
+  },
+  "statsTipPatternsFmt": {
+    "message": "Vzory: {0}"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Vzory podle metody"
+  },
+  "statsRulesOfficial": {
+    "message": "Oficiální"
+  },
+  "statsRulesCustom": {
+    "message": "Vlastní"
+  },
+  "statsRuleColumn": {
+    "message": "Pravidlo"
+  },
+  "statsRuleKindColumn": {
+    "message": "Typ"
+  },
+  "statsPatternsUnit": {
+    "message": "vzorů"
+  },
+  "statsRulesNeverMatched": {
+    "message": "V tomto období nenalezeno"
+  },
+  "statsRulesAllMatched": {
+    "message": "Každé zapnuté pravidlo v tomto období něco našlo."
+  },
+  "statsMissingColumn": {
+    "message": "Bez popisu"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Vzory bez popisu"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Každý vzor má popis."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Verze pravidla"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Vyžaduje rozšíření"
+  },
+  "statsRulesWaiting": {
+    "message": "Čeká na novější rozšíření"
+  },
+  "statsToolsByVendor": {
+    "message": "Zachycení podle dodavatele"
+  },
+  "statsToolsCapture": {
+    "message": "Zachycení"
+  },
+  "statsToolsByTool": {
+    "message": "Nejpoužívanější nástroje"
+  },
+  "statsToolsOverTime": {
+    "message": "Zachycení v čase"
+  },
+  "statsChangeColumn": {
+    "message": "Změna"
+  },
+  "statsDateColumn": {
+    "message": "Datum"
+  },
+  "statsDomainChanges": {
+    "message": "Změny ochran"
+  },
+  "statsNoChanges": {
+    "message": "V tomto období žádná doména nezměnila své ochrany mezi uloženými návštěvami."
+  },
+  "statsNothingNew": {
+    "message": "Nic nového: každá ochrana zde už byla v Historii před tímto obdobím."
+  },
+  "statsSectionSignals": {
+    "message": "Signály"
+  },
+  "statsSectionCombinations": {
+    "message": "Kombinace"
+  },
+  "statsSectionRules": {
+    "message": "Pravidla"
+  },
+  "statsSectionTools": {
+    "message": "Nástroje"
+  },
+  "statsDomainChangesHint": {
+    "message": "Domény, jejichž zjištěné ochrany se změnily mezi dvěma uloženými návštěvami."
+  },
+  "statsFirstSeenHint": {
+    "message": "Ochrany a domény uložené v tomto období poprvé."
+  },
+  "statsSignalsNote": {
+    "message": "Druh důkazů, kterým každá uložená detekce odpovídala: názvy cookies a hlaviček, URL, prvky stránky, skripty a hooky JavaScriptu."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Ochrany, jejichž odpovídající vzory mají nejnižší průměrnou spolehlivost. Jejich pravidla mohou potřebovat silnější vzor."
+  },
+  "statsCombinationsNote": {
+    "message": "Kombinace detekuje ochranu, jen když se společně najde několik vzorů."
+  },
+  "statsRulesNote": {
+    "message": "Vaše knihovna pravidel ve srovnání s tím, co Historie v tomto období našla."
+  },
+  "statsRulesTotal": {
+    "message": "Pravidla"
+  },
+  "statsRulesModified": {
+    "message": "Upravená oficiální"
+  },
+  "statsRulesDisabled": {
+    "message": "Vypnutá"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Zapnutá pravidla, která na stránkách uložených v tomto období nic nenašla."
+  },
+  "statsRulesMissingHint": {
+    "message": "Popisy se zobrazují v podrobnostech detekce, v Historii a v kombinacích. Přidejte je v editoru pravidel."
+  },
+  "statsToolsNote": {
+    "message": "Rozšířená zachycení a výsledky nástrojů uložené v tomto zařízení."
+  },
+  "statsCapturesUnit": {
+    "message": "zachycení"
+  },
+  "detectionCardSureFmt": {
+    "message": "Jistota {0} %"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Kombinace"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "MEZIPAMĚŤ"
+  },
+  "detectionTipCache": {
+    "message": "Které stránky znovu používají tyto výsledky z mezipaměti a na jak dlouho."
+  },
+  "tipCacheExpires": {
+    "message": "Vyprší"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Ověřit podle Historie"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Zjistěte, na kolika uložených stránkách se každý vzor a kombinace shoduje. Neuložené úpravy se počítají."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Ověřit"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "Uložené stránky: {0} · toto pravidlo nalezeno na: {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "Stránky: {0} z {1}"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "Další stránky: +{0}"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Historie je prázdná: nejprve si projděte nějaké stránky."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Odhad: Historie uchovává odpovídající hodnoty, ne celé stránky."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "spustí se na stránkách: {0}"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Přidejte vzory, abyste je mohli ověřit."
+  },
+  "settingsThemeTitle": {
+    "message": "Motiv"
+  },
+  "settingsThemeDesc": {
+    "message": "Tmavý, nebo světlý v barvách Scrapfly. Systémový se řídí vaším prohlížečem."
+  },
+  "themeDark": {
+    "message": "Tmavý"
+  },
+  "themeLight": {
+    "message": "Světlý"
+  },
+  "themeSystem": {
+    "message": "Systémový"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Otevřít konzoli"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Otevře toto rozšíření v chrome://extensions: kliknutím na „service worker“ zobrazíte protokoly."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Uchovávat protokoly tady místo v konzoli, aby šly exportovat jako JSON nebo text"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Překlady"
+  },
+  "ruleTranslationsHint": {
+    "message": "Zobrazí se místo popisu, když je rozšíření v daném jazyce. Prázdné: zobrazí se popis."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} z {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Přeložit automaticky"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Automatický překlad vyžaduje Chrome 138 nebo novější."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Nejprve napište popis."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Překládání: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Vyplněné jazyky: {0}. Před uložením je zkontrolujte."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Vyplněno: {0}; nepřeloženo zde: {1}."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Počkat po načtení"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Počkat na prvek"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Stránka připravena při"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Posunout dolů"
+  },
+  "sfxOptJs": {
+    "message": "Spustit JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Akce prohlížeče"
+  },
+  "sfxOptScreenshot": {
+    "message": "Snímek obrazovky"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Prvek"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Možnosti snímku obrazovky"
+  },
+  "sfxOptLang": {
+    "message": "Jazyky"
+  },
+  "sfxOptOs": {
+    "message": "Operační systém"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Prohlížeč"
+  },
+  "sfxOptGeolocation": {
+    "message": "Geolokace"
+  },
+  "sfxOptHeaders": {
+    "message": "Hlavičky"
+  },
+  "sfxOptTimeout": {
+    "message": "Časový limit"
+  },
+  "sfxOptRetry": {
+    "message": "Opakovat při chybách"
+  },
+  "sfxOptCostBudget": {
+    "message": "Limit kreditů"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Vynechat"
+  },
+  "sfxOptProxified": {
+    "message": "Vrátit odpověď webu"
+  },
+  "sfxOptExtraction": {
+    "message": "Extrahovat data"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Model"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Prompt"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Uložená šablona"
+  },
+  "sfxOptCache": {
+    "message": "Mezipaměť"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Uchovávat po dobu"
+  },
+  "sfxOptCacheClear": {
+    "message": "Obnovit mezipaměť"
+  },
+  "sfxOptSession": {
+    "message": "Relace"
+  },
+  "sfxOptSticky": {
+    "message": "Stejná proxy po celou relaci"
+  },
+  "sfxOptDebug": {
+    "message": "Ladění"
+  },
+  "sfxOptCorrelationId": {
+    "message": "ID korelace"
+  },
+  "sfxOptTags": {
+    "message": "Štítky"
+  },
+  "sfxOptDns": {
+    "message": "Podrobnosti DNS"
+  },
+  "sfxOptSsl": {
+    "message": "Certifikát SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Spuštění"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Uvést tuto stránku"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Jazyk"
+  },
+  "sfxOptAutoClose": {
+    "message": "Zavřít při odpojení"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Délka relace"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Časový limit odblokování"
+  },
+  "sfxOptBlockImages": {
+    "message": "Blokovat obrázky"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Blokovat šablony stylů"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Blokovat písma"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Blokovat video a zvuk"
+  },
+  "sfxOptBlacklist": {
+    "message": "Blokovat sledovače"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Ukládat statické soubory do mezipaměti"
+  },
+  "sfxOptRecord": {
+    "message": "Nahrát relaci"
+  },
+  "sfxOptMcp": {
+    "message": "Koncový bod MCP"
+  },
+  "sfxValAuto": {
+    "message": "Automaticky"
+  },
+  "sfxValCleanHtml": {
+    "message": "Čisté HTML"
+  },
+  "sfxValComplete": {
+    "message": "Úplné načtení"
+  },
+  "sfxValDomReady": {
+    "message": "DOM připraven"
+  },
+  "sfxValFullPage": {
+    "message": "Celá stránka"
+  },
+  "sfxValElement": {
+    "message": "Prvek"
+  },
+  "sfxValLoadImages": {
+    "message": "Načíst obrázky"
+  },
+  "sfxValDarkMode": {
+    "message": "Tmavý režim"
+  },
+  "sfxValBlockBanners": {
+    "message": "Skrýt bannery"
+  },
+  "sfxValHighQuality": {
+    "message": "Vysoká kvalita"
+  },
+  "sfxValPrint": {
+    "message": "Styl pro tisk"
+  },
+  "sfxValNoLinks": {
+    "message": "Odkazy"
+  },
+  "sfxValNoImages": {
+    "message": "Obrázky"
+  },
+  "sfxValOnlyContent": {
+    "message": "Vše kromě hlavního obsahu"
+  },
+  "sfxValModel": {
+    "message": "Model AI"
+  },
+  "sfxValTemplate": {
+    "message": "Šablona"
+  },
+  "sfxValConnect": {
+    "message": "Otevřít prohlížeč"
+  },
+  "sfxValUnblock": {
+    "message": "Nejprve odblokovat"
+  },
+  "sfxGroupRender": {
+    "message": "Vykreslování v prohlížeči"
+  },
+  "sfxGroupLocation": {
+    "message": "Poloha a fingerprint"
+  },
+  "sfxGroupRequest": {
+    "message": "Požadavek"
+  },
+  "sfxGroupOutput": {
+    "message": "Výstup"
+  },
+  "sfxGroupExtraction": {
+    "message": "Extrakce pomocí AI"
+  },
+  "sfxGroupCache": {
+    "message": "Mezipaměť a relace"
+  },
+  "sfxGroupTracking": {
+    "message": "Ladění a sledování"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Fingerprint a jazyk"
+  },
+  "sfxGroupSession": {
+    "message": "Relace"
+  },
+  "sfxGroupBlocking": {
+    "message": "Blokování a mezipaměť"
+  },
+  "sfxGroupTools": {
+    "message": "Ladění a MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Vyžaduje Vykreslit JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Vyžaduje Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Pouze výstup Markdown nebo Text"
+  },
+  "sfxWhyCache": {
+    "message": "Nejprve zapněte Mezipaměť"
+  },
+  "sfxWhySession": {
+    "message": "Nejprve nastavte relaci"
+  },
+  "sfxWhySticky": {
+    "message": "S Unblockerem vždy zapnuto"
+  },
+  "sfxWhyJson": {
+    "message": "Není seznam kroků JSON: vynecháno"
+  },
+  "sfxWhyGeo": {
+    "message": "Použijte zeměpisnou šířku,délku: vynecháno"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Tento prohlížeč na tomto systému nefunguje: vynecháno"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge vyžaduje Windows: vynecháno"
+  },
+  "sfxHintHeaders": {
+    "message": "Jedna na řádek: Název: hodnota. Neukládá se."
+  },
+  "sfxHintScenario": {
+    "message": "Seznam JSON: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Oddělené čárkami"
+  },
+  "sfxHintLanguages": {
+    "message": "Oddělené čárkami, nejvýše 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Nejprve odblokovat vrátí prohlížeč, který už je za anti-bot zdí"
+  },
+  "sfxValOff": {
+    "message": "Vypnuto"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Každý jazyk už má překlad."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Překlady názvu"
+  },
+  "combinationTranslationsHint": {
+    "message": "Zobrazí se místo názvu, když je rozšíření v daném jazyce. Prázdné: zobrazí se název."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Nejprve napište název."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Kontroluje cookies výzev a analyzuje skripty"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Kontroluje cookies DataDome a analyzuje skripty"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Najde veřejný klíč, zachytí data prohlížeče (BDA) a analyzuje skripty"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Zjistí verzi GeeTest (v3 nebo v4) a analyzuje skripty"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Najde klíč webu, zjistí verzi hCaptcha a analyzuje skripty"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Extrahuje klíč webu a analyzuje skripty Turnstile"
+  },
+  "statsExport": {
+    "message": "Export"
+  },
+  "statsExportAllCategories": {
+    "message": "Exporty vždy zahrnují všechny kategorie, ať je na této stránce zobrazeno cokoli."
+  },
+  "statsScopeLabel": {
+    "message": "Zobrazit"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Skryté detekce fingerprintingu: {0} ({1} ze všech)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Zobrazit fingerprinting"
+  },
+  "statsScopeKeepOne": {
+    "message": "Alespoň jedna kategorie zůstane vybraná."
+  },
+  "statsScopeRulesNote": {
+    "message": "Pravidla vždy používají všechny kategorie."
+  },
+  "statsContextFmt": {
+    "message": "Stránky: {0} · Domény: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Celá historie od {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Ve srovnání s předchozím obdobím ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Zvolte 7, 30 nebo 90 dní a porovnejte s předchozím obdobím."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "Historie začíná {0}, proto není k dispozici celé předchozí období pro srovnání."
+  },
+  "statsDeltaNew": {
+    "message": "nové"
+  },
+  "statsDeltaFlat": {
+    "message": "Beze změny oproti předchozímu období"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Nárůst o {0} oproti předchozímu období"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Pokles o {0} oproti předchozímu období"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Předchozí období: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "V tomto období je málo stránek ({0}): srovnání a žebříčky mohou být zavádějící."
+  },
+  "statsLoading": {
+    "message": "Načítání statistik..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Zobrazit celou historii"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Hlavní zjištění"
+  },
+  "statsSectionEvidence": {
+    "message": "Důkazy"
+  },
+  "statsSubnavLabel": {
+    "message": "Zobrazení důkazů"
+  },
+  "statsExportCanceled": {
+    "message": "Export zrušen"
+  },
+  "statsAllClearTitle": {
+    "message": "V tomto období nebyl nalezen žádný anti-bot ani CAPTCHA"
+  },
+  "statsAllClearDescFmt": {
+    "message": "Tyto stránky vykazují jen použití API pro fingerprinting. Stránky: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Pro tyto kategorie není co zobrazit"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Vyberte jinou kategorii nebo delší období."
+  },
+  "statsHeadlineTop": {
+    "message": "Nejběžnější ochrana"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "Podíl stránek: {0} · stránky: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Nejobtížnější web"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Ochrany: {0} · Obtížnost: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Nejnovější ochrana"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Poprvé zjištěno {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "V tomto období nic nového"
+  },
+  "statsHeadlineRiser": {
+    "message": "Největší růst"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Stránky {0} → {1} oproti předchozímu období"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Vyžaduje předchozí období"
+  },
+  "statsKpiPages": {
+    "message": "Uložené stránky"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Aktivní dny: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "S detekcemi: {0} ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Vícevrstvé weby"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "S CAPTCHA: {0}"
+  },
+  "statsKpiProtections": {
+    "message": "Zjištěné ochrany"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "Nové v tomto období: {0}"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "z pravidel: {0}"
+  },
+  "statsTipPages": {
+    "message": "Stránky uložené do Historie v tomto období. Historie uchovává uložené detekce, ne každou návštěvu v prohlížeči."
+  },
+  "statsTipLayered": {
+    "message": "Domény, na kterých byly zjištěny dvě nebo více různých ochran."
+  },
+  "statsOverTimeProtections": {
+    "message": "Nalezené ochrany v čase"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% stránek"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Všechny ochrany"
+  },
+  "statsPageTiers": {
+    "message": "Jak jsou vaše stránky chráněné"
+  },
+  "statsTiersHint": {
+    "message": "Každá uložená stránka se počítá jednou, podle druhů ochrany, které na ní byly nalezeny."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot a CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Pouze anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "Pouze CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Žádný anti-bot ani CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Odhadovaná obtížnost"
+  },
+  "statsDifficultyHint": {
+    "message": "Hrubý odhad podle ochran nalezených v zobrazených kategoriích, nikoli měření."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Žádná ochrana"
+  },
+  "statsHardestSites": {
+    "message": "Nejobtížnější weby"
+  },
+  "statsAllDomainsLink": {
+    "message": "Všechny domény"
+  },
+  "statsMoreStackFmt": {
+    "message": "Další: +{0}"
+  },
+  "statsWhatChanged": {
+    "message": "Co se změnilo"
+  },
+  "statsChangedNew": {
+    "message": "Nové ochrany"
+  },
+  "statsChangedMoving": {
+    "message": "Rostoucí a klesající"
+  },
+  "statsChangedGone": {
+    "message": "Již nezjištěné"
+  },
+  "statsChangedSwitched": {
+    "message": "Weby, které změnily ochranu"
+  },
+  "statsChangedNothing": {
+    "message": "V tomto období se nic nezměnilo."
+  },
+  "statsChangedAllLink": {
+    "message": "Všechny změny"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Zvolte 7, 30 nebo 90 dní a uvidíte rostoucí a klesající ochrany."
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "API pro fingerprinting běžela na {0} stránek · techniky: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Nejběžnější: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Zobrazeno odděleně od ochran anti-bot a CAPTCHA, protože tato API používá téměř každá stránka."
+  },
+  "statsPagesColumn": {
+    "message": "Stránky"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Změna"
+  },
+  "statsStrongColumn": {
+    "message": "Silné důkazy"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Seřadit ochrany"
+  },
+  "statsSortMostPages": {
+    "message": "Nejvíce stránek"
+  },
+  "statsSortMostDomains": {
+    "message": "Nejvíce domén"
+  },
+  "statsSortBiggestChange": {
+    "message": "Největší změna"
+  },
+  "statsCommonStacks": {
+    "message": "Běžné kombinace ochran"
+  },
+  "statsCommonStacksHint": {
+    "message": "Ochrany anti-bot a CAPTCHA nalezené společně na poslední uložené stránce domény."
+  },
+  "statsDomainSearchAll": {
+    "message": "Hledat domény nebo ochrany..."
+  },
+  "statsSortHardest": {
+    "message": "Nejobtížnější první"
+  },
+  "statsSortLastSeen": {
+    "message": "Nejnovější"
+  },
+  "statsDifficultyColumn": {
+    "message": "Obtížnost"
+  },
+  "statsStackColumn": {
+    "message": "Ochrany"
+  },
+  "statsLastSeenColumn": {
+    "message": "Naposledy zjištěno"
+  },
+  "statsFilterChanged": {
+    "message": "Změněno"
+  },
+  "statsFilterClear": {
+    "message": "Vymazat filtry"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Filtrovat domény"
+  },
+  "statsChangeKindGained": {
+    "message": "Přibylo"
+  },
+  "statsChangeKindDropped": {
+    "message": "Ubylo"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Nahrazeno"
+  },
+  "statsChangePageColumn": {
+    "message": "Stránka"
+  },
+  "statsChangeSinceFmt": {
+    "message": "oproti {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Přidáno:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Odebráno:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Porovnává uložené kopie téže stránky. Detekce fingerprintingu se ignorují, pokud fingerprinting nezobrazíte."
+  },
+  "statsStrongEvidence": {
+    "message": "Silné důkazy"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "Detekce se skóre 80 % nebo více: {0} z {1}."
+  },
+  "statsUnconfirmed": {
+    "message": "Zmíněno, nepotvrzeno"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Ochrany nalezené často, ale zřídka se silnými důkazy. Může jít o textové zmínky nebo nepoužívané skripty, nikoli o aktivní výzvu."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Každá častá ochrana byla potvrzena silnými důkazy."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Většinou nalezeno přes {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Žádný jednotlivý signál nevyniká."
+  },
+  "statsTierStrong": {
+    "message": "Silné"
+  },
+  "statsTierModerate": {
+    "message": "Střední"
+  },
+  "statsTierWeak": {
+    "message": "Slabé"
+  },
+  "statsTierHint": {
+    "message": "Silné je 80 % a více, střední 40-79 %, slabé pod 40 %. 100 % znamená signál, který vytváří jen daná ochrana."
+  },
+  "statsDecidedByCategory": {
+    "message": "Jak se rozhodlo o každé kategorii"
+  },
+  "statsLiftFmt": {
+    "message": "{0} b."
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · průměr {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "V kategorii {0} kombinace zvyšují spolehlivost z {1} na {2}."
+  },
+  "statsLess": {
+    "message": "Méně"
+  },
+  "statsMore": {
+    "message": "Více"
+  },
+  "statsBusiestDay": {
+    "message": "Nejrušnější den"
+  },
+  "statsLongestStreak": {
+    "message": "Nejdelší série"
+  },
+  "statsPeakHour": {
+    "message": "Špičková hodina"
+  },
+  "statsQuietDays": {
+    "message": "Dny bez uložených dat"
+  },
+  "statsTodayPartial": {
+    "message": "Dnes (stále se počítá)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Čára: 7denní průměr"
+  },
+  "statsRulesCoverage": {
+    "message": "Pokrytí"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "Zapnutá pravidla se shodou v tomto období: {0} z {1}"
+  },
+  "statsRulesAttention": {
+    "message": "Vyžaduje pozornost"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Nic nevyžaduje pozornost."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Stav"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Mimo období"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Není v Historii"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Upraveno"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Oficiální pravidla pro dodavatele, se kterými jste se nesetkali, zůstávají tichá. To je normální."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Historie zatím nestačí k posouzení (stránky: {0}), takže pravidlo, které nikdy nenašlo shodu, nic moc neprokazuje."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Uvedena jsou jen vlastní a upravená pravidla. Popisy oficiálních pravidel spravuje Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Rozšířené uchovává zachycení po dobu 30 minut, proto tato karta ignoruje časové období."
+  },
+  "statsToolsSavedNow": {
+    "message": "Právě uloženo"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Vyprší do 10 minut"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Dodavatelé"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Vypršená zachycení čekající na vyčištění: {0}. Otevřete Rozšířené a odeberte je."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Uložená zachycení"
+  },
+  "statsToolsColVendor": {
+    "message": "Dodavatel"
+  },
+  "statsToolsColTool": {
+    "message": "Nástroj"
+  },
+  "statsToolsColSaved": {
+    "message": "Uloženo"
+  },
+  "statsToolsColExpires": {
+    "message": "Vyprší"
+  },
+  "statsToolsNoLive": {
+    "message": "Právě nejsou uložena žádná zachycení."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Zatím žádné celé předchozí období."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Jak dlouho se zachycení uchovávají"
+  },
+  "settingsCaptureRetention": {
+    "message": "Doba uchování zachycení nástrojů"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Zachycení rozšířených nástrojů (cookies, skripty, tokeny) se po této době smažou."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 minut"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 minut"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 hodina"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 hodiny"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 hodin"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 hodin"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Zachycení se uchovávají po dobu: {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "Od 1 minuty do 7 dní."
+  }
+}

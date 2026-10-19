@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Skanningen misslyckades"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Skanningen avbröts"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Ingen slutförd skanning"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Skanningen slutfördes inte. Läs in sidan igen och försök på nytt."
+  },
+  "settingsReadFailedToast": {
+    "message": "Det gick inte att läsa in inställningarna. Dina nuvarande värden har behållits."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Det gick inte att spara inställningarna. Dina ändringar har behållits; försök igen."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Ändringen är förberedd. Spara inställningarna för att tillämpa den."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Det gick inte att spara de importerade inställningarna. Dina inställningar och ditt språk har behållits."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Tillämpas direkt."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Exportera eller importera inställningar. Anslutningar till integrationer finns kvar i den här webbläsaren."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Det gick inte att läsa någon giltig inställningsfil. Inget har ändrats."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Det gick inte att spara regeln. Dina ändringar finns kvar här; försök igen."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Läs in sidan igen för att analysera skyddets skript"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Återställ skyddets cookies och läs in sidan igen för att analysera skript"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Läs in sidan igen för att identifiera skyddets version"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Återställ skyddets cookie och börja samla in"
+  },
+  "advToolCookiesHint": {
+    "message": "Granska cookies som skyddet använder"
+  },
+  "advToolVersionHint": {
+    "message": "Läs tillgänglig versionsinformation"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Hitta CAPTCHA-webbplatsnyckeln på sidan"
+  },
+  "advToolSelectorHint": {
+    "message": "Hitta en selektor för CAPTCHA-widgeten"
+  },
+  "advToolCallbackHint": {
+    "message": "Granska CAPTCHA-callbacks"
+  },
+  "advToolSensorHint": {
+    "message": "Återställ skyddets cookies och läs in sidan igen för att samla in sensordata"
+  },
+  "advToolCaptureHint": {
+    "message": "Samla in data från sidan"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Sluta samla in data från sidan"
+  },
+  "advToolWorking": {
+    "message": "Arbetar…"
+  },
+  "advToolWaitingReload": {
+    "message": "Läser in sidan igen och samlar in resultat. Det tar några sekunder…"
+  },
+  "advToolNoResult": {
+    "message": "Inget resultat: skyddet skickade inga data. Läs in sidan igen och försök på nytt."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Webbplatsnyckel för {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Ingen webbplatsnyckel hittades på sidan. Öppna eller utlös CAPTCHA-testet och försök igen."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Hittades i"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Begäran"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Sidskript"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Sidvariabel"
+  },
+  "advSiteKeyFrame": {
+    "message": "Ram"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Skript på den här sidan"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Extraherar webbplatsnyckeln och analyserar skripten"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Analyserar skripten"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Det gick inte att slutföra åtgärden: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Föregående diagramsida"
+  },
+  "statsChartNext": {
+    "message": "Nästa diagramsida"
+  },
+  "statsChartPage": {
+    "message": "Sida {0} av {1}"
+  },
+  "statsChartShowing": {
+    "message": "Visar {0}–{1} av {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Statistikavsnitt"
+  },
+  "statsSectionOverview": {
+    "message": "Översikt"
+  },
+  "statsSectionActivity": {
+    "message": "Aktivitet"
+  },
+  "statsSectionProtections": {
+    "message": "Skydd"
+  },
+  "statsSectionDomains": {
+    "message": "Domäner"
+  },
+  "statsSectionConfidence": {
+    "message": "Säkerhet"
+  },
+  "statsExportCSV": {
+    "message": "Exportera CSV"
+  },
+  "statsExportJSON": {
+    "message": "Exportera JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Exporterna innehåller domäner och sammanfattningar av upptäckter, inte cookies, sidinnehåll eller URL-parametrar."
+  },
+  "statsExportScopeFmt": {
+    "message": "Exporten omfattar det valda intervallet. Poster: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Nedladdningen har startat: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Det gick inte att exportera data. Försök igen."
+  },
+  "statsLoadFailed": {
+    "message": "Det gick inte att läsa in historiken. Läs in sidan igen."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Inga poster i det här intervallet"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Välj ett längre datumintervall för att utforska din sparade historik."
+  },
+  "statsDetectionRate": {
+    "message": "Poster med upptäckter"
+  },
+  "statsActiveDays": {
+    "message": "Aktiva dagar"
+  },
+  "statsAverageConfidence": {
+    "message": "Genomsnittlig säkerhet"
+  },
+  "statsDailyVisits": {
+    "message": "Historikposter per dag"
+  },
+  "statsActivityCalendar": {
+    "message": "Aktivitetskalender"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Varje ruta motsvarar en lokal kalenderdag. Mörkare blått betyder fler sparade poster."
+  },
+  "statsHourlyActivity": {
+    "message": "Aktivitet per timme"
+  },
+  "statsWeekdayActivity": {
+    "message": "Aktivitet per veckodag"
+  },
+  "statsLocalTimeNote": {
+    "message": "Datum och tider använder din lokala tidszon."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "De senaste {0} dagarna visas. Summor och exporter omfattar hela det valda intervallet."
+  },
+  "statsProtectionRanking": {
+    "message": "Rangordning av skydd"
+  },
+  "statsCategoryTrend": {
+    "message": "Kategorier över tid"
+  },
+  "statsCategoryOverlap": {
+    "message": "Kategorier som hittats tillsammans"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Antal historikposter med båda kategorierna. Diagonala rutor visar poster med den kategorin."
+  },
+  "statsProtectionDetails": {
+    "message": "Alla skydd"
+  },
+  "statsDomainRanking": {
+    "message": "Rangordning av domäner"
+  },
+  "statsDomainMap": {
+    "message": "Besök och upptäckter"
+  },
+  "statsDomainMapHint": {
+    "message": "Varje punkt är en domän. Större punkter har fler olika skydd."
+  },
+  "statsDomainDetails": {
+    "message": "Alla domäner"
+  },
+  "statsDomainSearch": {
+    "message": "Sök domäner..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Sortera domäner"
+  },
+  "statsSortVisits": {
+    "message": "Flest besök"
+  },
+  "statsSortDetections": {
+    "message": "Flest upptäckter"
+  },
+  "statsSortConfidence": {
+    "message": "Högst säkerhet"
+  },
+  "statsSortName": {
+    "message": "Domännamn"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Fördelning av säkerhet"
+  },
+  "statsConfidenceTrend": {
+    "message": "Säkerhet över tid"
+  },
+  "statsCategoryConfidence": {
+    "message": "Säkerhet per kategori"
+  },
+  "statsConfidenceNote": {
+    "message": "Säkerhet anger hur starka de sparade beläggen för en upptäckt är, inte bevis för fingerprinting eller en aktiv utmaning."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "Upptäckter med säkerhetsvärde: {0}; utan giltigt värde: {1}."
+  },
+  "statsProtectionColumn": {
+    "message": "Skydd"
+  },
+  "statsCategoryColumn": {
+    "message": "Kategori"
+  },
+  "statsDomainColumn": {
+    "message": "Domän"
+  },
+  "statsTableCountFmt": {
+    "message": "Rader: {0} av {1}"
+  },
+  "statsTableMore": {
+    "message": "Visa fler"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Inga domäner matchar din sökning."
+  },
+  "statsSelectionNote": {
+    "message": "Diagram och exporter använder det valda datumintervallet. Historikposter motsvarar sparade upptäckter, inte alla webbläsarbesök."
+  },
+  "extensionName": {
+    "message": "Scrapfly: anti-bot-detektor"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: anti-bot-detektor",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": anti-bot-detektor",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Upptäck CAPTCHA, anti-bot-system och fingerprinting-tekniker på webbplatser"
+  },
+  "tabDetection": {
+    "message": "Upptäckt"
+  },
+  "tabHistory": {
+    "message": "Historik"
+  },
+  "tabRules": {
+    "message": "Regler"
+  },
+  "tabAdvanced": {
+    "message": "Avancerat"
+  },
+  "openSettings": {
+    "message": "Öppna inställningar"
+  },
+  "enableOrDisableDetection": {
+    "message": "Aktivera eller inaktivera upptäckt"
+  },
+  "noDetectionsFound": {
+    "message": "Inga upptäckter hittades"
+  },
+  "detectionScanningTitle": {
+    "message": "Skannar sidan"
+  },
+  "detectionScanningDescription": {
+    "message": "Letar efter skyddssignaler."
+  },
+  "detectionScanningHint": {
+    "message": "Resultaten visas här när de är klara."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Ta bort från svartlistan"
+  },
+  "statDetections": {
+    "message": "Upptäckter"
+  },
+  "statConfidence": {
+    "message": "Säkerhet"
+  },
+  "statDifficulty": {
+    "message": "Svårighet"
+  },
+  "statCacheScope": {
+    "message": "Cacheomfång"
+  },
+  "scopeDomain": {
+    "message": "Domän"
+  },
+  "scopePath": {
+    "message": "Sökväg"
+  },
+  "scopeFullUrl": {
+    "message": "Fullständig URL"
+  },
+  "difficultyLow": {
+    "message": "Låg"
+  },
+  "difficultyMedium": {
+    "message": "Medel"
+  },
+  "difficultyHigh": {
+    "message": "Hög"
+  },
+  "searchHistory": {
+    "message": "Sök i historiken..."
+  },
+  "searchDetectors": {
+    "message": "Sök detektorer..."
+  },
+  "paginationPrev": {
+    "message": "Föregående sida"
+  },
+  "paginationNext": {
+    "message": "Nästa sida"
+  },
+  "paginationPage": {
+    "message": "Sida"
+  },
+  "paginationOf": {
+    "message": "av"
+  },
+  "paginationNoItems": {
+    "message": "Inga objekt att visa"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Aktuellt sidnummer"
+  },
+  "btnImport": {
+    "message": "Importera"
+  },
+  "btnExport": {
+    "message": "Exportera"
+  },
+  "btnClear": {
+    "message": "Rensa"
+  },
+  "btnAdd": {
+    "message": "Lägg till"
+  },
+  "btnUpdate": {
+    "message": "Uppdatera"
+  },
+  "btnClose": {
+    "message": "Stäng"
+  },
+  "btnSave": {
+    "message": "Spara"
+  },
+  "btnCancel": {
+    "message": "Avbryt"
+  },
+  "btnDelete": {
+    "message": "Ta bort"
+  },
+  "historyImportTitle": {
+    "message": "Importera historik"
+  },
+  "historyExportTitle": {
+    "message": "Exportera historik"
+  },
+  "historyClearTitle": {
+    "message": "Rensa historik"
+  },
+  "historyEmptyTitle": {
+    "message": "Ingen historik än"
+  },
+  "historyEmptyDescription": {
+    "message": "Upptäcktshistoriken visas här medan du surfar på webbplatser."
+  },
+  "rulesUpdateTitle": {
+    "message": "Installera regeluppdateringar från den senaste Scrapfly-utgåvan"
+  },
+  "rulesAddTitle": {
+    "message": "Lägg till ny detektor"
+  },
+  "rulesEmptyTitle": {
+    "message": "Inga detektorer inlästa"
+  },
+  "rulesEmptyDescription": {
+    "message": "Detektorer visas här när de har lästs in från lagring och filer."
+  },
+  "ruleModalActionEdit": {
+    "message": "Redigera"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Detektorinformation"
+  },
+  "ruleFieldName": {
+    "message": "Namn"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Detektornamn"
+  },
+  "ruleFieldCategory": {
+    "message": "Kategori"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprinting"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Svårighet"
+  },
+  "ruleFieldIcon": {
+    "message": "Ikon"
+  },
+  "ruleFieldVersion": {
+    "message": "Version"
+  },
+  "ruleFieldAuthor": {
+    "message": "Författare"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Märkesfärg"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Upptäcktsmetoder"
+  },
+  "settingsTitle": {
+    "message": "Inställningar"
+  },
+  "settingsSubtitle": {
+    "message": "Konfigurera tilläggets inställningar"
+  },
+  "settingsTabGeneral": {
+    "message": "Allmänt"
+  },
+  "settingsTabDetection": {
+    "message": "Upptäckt"
+  },
+  "settingsTabHistory": {
+    "message": "Historik"
+  },
+  "settingsTabData": {
+    "message": "Data"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Grundinställningar"
+  },
+  "settingsCardNotifications": {
+    "message": "Aviseringar"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Visa varningar när skyddssystem upptäcks"
+  },
+  "settingsCardDebug": {
+    "message": "Felsökningsläge"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Skriver en läsbar rapport per skannad sida till tilläggets konsol."
+  },
+  "settingsRowLogCollector": {
+    "message": "Loggsamlare"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Max antal loggar"
+  },
+  "settingsRowCollected": {
+    "message": "Insamlade"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Detektoruppdateringar"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Sök efter uppdateringar automatiskt"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Sök automatiskt efter nya detektordefinitioner"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Kontrollintervall"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Aldrig"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Sök nu"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Tillägget måste uppdateras"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Uppdatera tillägget"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Märkesfärger"
+  },
+  "settingsRowLastCheck": {
+    "message": "Senaste kontroll"
+  },
+  "advancedToolsTitle": {
+    "message": "Avancerade insamlingsverktyg"
+  },
+  "advancedToolsDescription": {
+    "message": "Extrahera cookies, tokens och webbplatsnycklar från upptäckta skyddssystem"
+  },
+  "advancedToolsHint": {
+    "message": "Besök en skyddad sida för att aktivera insamlingsverktygen"
+  },
+  "advancedSubtabTools": {
+    "message": "Verktyg"
+  },
+  "advancedSubtabHistory": {
+    "message": "Historik"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Insamlingshistorik"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Filtrera, granska och exportera insamlade data"
+  },
+  "advancedFilterSite": {
+    "message": "Webbplats"
+  },
+  "advancedFilterAllSites": {
+    "message": "Alla webbplatser"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Aktuell webbplats"
+  },
+  "advancedFilterModule": {
+    "message": "Modul"
+  },
+  "advancedFilterAllModules": {
+    "message": "Alla moduler"
+  },
+  "advancedFilterSearch": {
+    "message": "Sök"
+  },
+  "advancedBtnExport": {
+    "message": "Exportera"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Exportera insamlingar"
+  },
+  "advancedBtnClearAll": {
+    "message": "Rensa allt"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Rensa alla insamlingar"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Inga insamlingar än"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Använd fliken Verktyg för att samla in data från upptäckta system"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Inga insamlingar hittades"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Återställ alla filter"
+  },
+  "advancedModalTitle": {
+    "message": "Avancerade upptäcktsverktyg"
+  },
+  "advancedModalIntro": {
+    "message": "Specialiserade insamlingsverktyg för djupanalys av anti-bot-system, CAPTCHA och fingerprinting-tekniker. Verktygen visas automatiskt när relevanta upptäckter görs."
+  },
+  "advancedSectionSupported": {
+    "message": "System som stöds just nu"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Så fungerar det"
+  },
+  "advancedStep1Title": {
+    "message": "Automatisk upptäckt"
+  },
+  "advancedStep1Desc": {
+    "message": "Verktygen visas när relevanta anti-bot-system upptäcks på den aktuella sidan"
+  },
+  "advancedStep2Title": {
+    "message": "Starta insamling"
+  },
+  "advancedStep2Desc": {
+    "message": "Verktygen startar automatiskt interceptorer och börjar övervaka nätverksbegäranden"
+  },
+  "advancedStep3Title": {
+    "message": "Granska resultat"
+  },
+  "advancedStep3Desc": {
+    "message": "Insamlade data lagras tillfälligt och kan exporteras fullt ut"
+  },
+  "advancedFooterHint": {
+    "message": "Insamlingar sparas under den tid som anges i Inställningar."
+  },
+  "settings": {
+    "message": "Inställningar"
+  },
+  "paginationShowingFmt": {
+    "message": "Visar {0}-{1} av {2}"
+  },
+  "paginationShowingItems": {
+    "message": "Visar {0}-{1} av {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Okänd"
+  },
+  "timeJustNow": {
+    "message": "Nyss"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} s sedan"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} min sedan"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} h sedan"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} d sedan"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 minut sedan"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} minuter sedan"
+  },
+  "timeOneHourAgo": {
+    "message": "1 h sedan"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} h sedan"
+  },
+  "timeOneDayAgo": {
+    "message": "1 dag sedan"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} dagar sedan"
+  },
+  "btnCancelSettings": {
+    "message": "Avbryt"
+  },
+  "btnSaveSettings": {
+    "message": "Spara inställningar"
+  },
+  "poweredBy": {
+    "message": "Drivs av"
+  },
+  "categoryColors": {
+    "message": "KATEGORIFÄRGER"
+  },
+  "methodSuffixPatterns": {
+    "message": "mönster"
+  },
+  "btnSaveRule": {
+    "message": "Spara regel"
+  },
+  "tagColors": {
+    "message": "Taggfärger"
+  },
+  "colorPickerTitle": {
+    "message": "Färgväljare"
+  },
+  "colorPickerArea": {
+    "message": "Mättnad och ljusstyrka"
+  },
+  "colorPickerSaturation": {
+    "message": "Mättnad"
+  },
+  "colorPickerBrightness": {
+    "message": "Ljusstyrka"
+  },
+  "colorPickerHue": {
+    "message": "Nyans"
+  },
+  "colorPickerRed": {
+    "message": "Röd"
+  },
+  "colorPickerGreen": {
+    "message": "Grön"
+  },
+  "colorPickerBlue": {
+    "message": "Blå"
+  },
+  "colorPickerPresets": {
+    "message": "Förinställda färger"
+  },
+  "cacheConfiguration": {
+    "message": "Cacheinställningar"
+  },
+  "cacheDuration": {
+    "message": "Cachetid"
+  },
+  "timeUnitMinutes": {
+    "message": "Minuter"
+  },
+  "timeUnitHours": {
+    "message": "Timmar"
+  },
+  "timeUnitDays": {
+    "message": "Dagar"
+  },
+  "blacklistedDomains": {
+    "message": "Svartlistade domäner"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Domäner där upptäckt hoppas över helt"
+  },
+  "jsApiEvents": {
+    "message": "JS API-händelser"
+  },
+  "jsApiEventsDesc": {
+    "message": "Skicka egna händelser till sidans window"
+  },
+  "ruleMethodSettings": {
+    "message": "Inställningar för upptäcktsmetod"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · Inställningar för {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Inställningar för {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Beskrivning"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Vad det här mönstret betyder, t.ex. Läser webbläsarens språkinställningar"
+  },
+  "ruleDescriptionHint": {
+    "message": "Visas i upptäcktsdetaljerna och i Historik när mönstret hittas."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Vad det här skyddet är, t.ex. Botupptäckt på inloggnings- och kassasidor"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Visas i skyddets upptäcktsdetaljer."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Säkerhetsnivå"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Upptäcktssäkerhet:"
+  },
+  "detectionName": {
+    "message": "Upptäcktsnamn"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 timmar"
+  },
+  "interval12Hours": {
+    "message": "12 timmar"
+  },
+  "interval24Hours": {
+    "message": "24 timmar"
+  },
+  "interval2Days": {
+    "message": "2 dagar"
+  },
+  "interval1Week": {
+    "message": "1 vecka"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Headers"
+  },
+  "methodLabelCookie": {
+    "message": "Cookies"
+  },
+  "methodLabelContent": {
+    "message": "Innehåll"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS-hooks"
+  },
+  "methodLabelWindow": {
+    "message": "Window"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 mönster"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} mönster"
+  },
+  "methodAddPattern": {
+    "message": "Lägg till mönster"
+  },
+  "methodSearchPatterns": {
+    "message": "Sök mönster..."
+  },
+  "methodNoPatterns": {
+    "message": "Inga mönster"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Inga matchande mönster"
+  },
+  "methodSuffixMatches": {
+    "message": "träffar"
+  },
+  "cacheExpiredLabel": {
+    "message": "Utgången"
+  },
+  "copiedNotification": {
+    "message": "Kopierat"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Kopierat!"
+  },
+  "unknownDetection": {
+    "message": "Okänd upptäckt"
+  },
+  "matchPlural": {
+    "message": "träffar"
+  },
+  "noMatchesRecorded": {
+    "message": "Inga träffar registrerade"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Rensa cache"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Detta tar bort cachade upptäcktsdata för den här domänen och utlöser en ny analys."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Rensa cache"
+  },
+  "clearingMsg": {
+    "message": "Rensar..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Rensat!"
+  },
+  "cacheClearedToast": {
+    "message": "Cachen rensades"
+  },
+  "failedToClearCacheToast": {
+    "message": "Det gick inte att rensa cachen"
+  },
+  "unableGetCurrentPage": {
+    "message": "Det går inte att hämta den aktuella sidan"
+  },
+  "invalidDomain": {
+    "message": "Ogiltig domän"
+  },
+  "addBlacklistTitle": {
+    "message": "Lägg till på svartlistan"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Domänen \"{0}\" undantas från alla framtida upptäckter. Du kan ta bort den senare i Inställningar."
+  },
+  "addBlacklistBtn": {
+    "message": "Lägg till på svartlistan"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Domänen \"{0}\" finns redan på svartlistan"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" lades till på svartlistan"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Det gick inte att lägga till på svartlistan: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" togs bort från svartlistan"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Det gick inte att ta bort från svartlistan: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Inga upptäckter"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Inga upptäckter hittades"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} träffar"
+  },
+  "historyOneMatch": {
+    "message": "1 träff"
+  },
+  "notificationHistoryCleared": {
+    "message": "Historiken rensades"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Det gick inte att rensa historiken: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Historikposten exporterades"
+  },
+  "notificationCacheCleared": {
+    "message": "Cachen rensades"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Cachen är redan rensad"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Det gick inte att rensa cachen"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" lades till på svartlistan"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Det gick inte att lägga till på svartlistan"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Historikposten togs bort"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Det gick inte att ta bort historikposten"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Exporterade historikposter: {0}"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Sammanfogade nya historikposter: {0}"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Historiken ersattes. Poster: {0}"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Det gick inte att importera historiken: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Rensa historik"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Vill du verkligen rensa all historik? Åtgärden kan inte ångras."
+  },
+  "buttonClearAll": {
+    "message": "Rensa allt"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Rensa cache"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "Rensa cachade upptäcktsdata för {0}? Historikposten behålls."
+  },
+  "buttonClearCache": {
+    "message": "Rensa cache"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Ta bort historikpost"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Vill du verkligen ta bort den här upptäckten från {0}?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Det gick inte att läsa in inställningarna. Standardvärden används."
+  },
+  "settingsSavedToast": {
+    "message": "Inställningarna sparades"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Det gick inte att spara inställningarna: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Det gick inte att exportera loggarna"
+  },
+  "logsCleared": {
+    "message": "Loggarna rensades"
+  },
+  "failedClearLogs": {
+    "message": "Det gick inte att rensa loggarna"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Det gick inte att hämta den aktuella sidans URL"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} finns redan på svartlistan"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} lades till på svartlistan"
+  },
+  "failedAddDomainFmt": {
+    "message": "Det gick inte att lägga till domänen: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} togs bort från svartlistan"
+  },
+  "invalidSettingsFmt": {
+    "message": "Ogiltiga inställningar: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Ange en webhook-URL"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhook-testet lyckades! Status: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhooken returnerade status: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhook-testet misslyckades: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Importera detektorer"
+  },
+  "importDetectorsModeMessage": {
+    "message": "Sammanfoga lägger till de importerade detektorerna till dina.<br>Ersätt allt tar först bort dina egna detektorer; inbyggda detektorer behålls."
+  },
+  "mergeOption": {
+    "message": "Sammanfoga"
+  },
+  "replaceAllOption": {
+    "message": "Ersätt allt"
+  },
+  "detectorsImported": {
+    "message": "Detektorer importerade"
+  },
+  "detectorExportedFmt": {
+    "message": "Exporterade {0}"
+  },
+  "failedImportDetectors": {
+    "message": "Det gick inte att importera detektorerna. Kontrollera filformatet."
+  },
+  "errorReadingFileFmt": {
+    "message": "Fel vid läsning av filen: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "Detektorer uppdaterade: {0}"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" togs bort"
+  },
+  "failedClearDetectors": {
+    "message": "Det gick inte att rensa detektorerna"
+  },
+  "urlPatternMatching": {
+    "message": "Matchning av URL-mönster"
+  },
+  "textWordMatching": {
+    "message": "Text-/ordmatchning"
+  },
+  "payloadTextMatching": {
+    "message": "Matchning av payload-text"
+  },
+  "nameFieldMatching": {
+    "message": "Matchning av namnfält"
+  },
+  "captureNotFound": {
+    "message": "Insamlingen hittades inte"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Modulklassen hittades inte"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Detaljvyn är inte tillgänglig"
+  },
+  "captureDataCopied": {
+    "message": "Insamlade data kopierade"
+  },
+  "captureDeleted": {
+    "message": "Insamlingen togs bort"
+  },
+  "capturesExportedFmt": {
+    "message": "Exporterade insamlingar: {0}"
+  },
+  "allCapturesCleared": {
+    "message": "Alla insamlingar rensades"
+  },
+  "captureExportFailed": {
+    "message": "Insamlingsexporten misslyckades"
+  },
+  "invalidUrl": {
+    "message": "Ogiltig URL"
+  },
+  "importHistoryTitle": {
+    "message": "Importera historik"
+  },
+  "replaceOption": {
+    "message": "Ersätt"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "Importera historikposter ({0})? Poster i din nuvarande historik: {1}.<br>Sammanfoga lägger till de nya posterna. Ersätt tar först bort den."
+  },
+  "clearLogsTitle": {
+    "message": "Rensa loggar"
+  },
+  "clearLogsMessage": {
+    "message": "Vill du verkligen rensa alla insamlade loggar? Åtgärden kan inte ångras."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Det gick inte att söka efter uppdateringar: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Det gick inte att hämta uppdateringar från servern"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Regler uppdaterade från utgåva {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Alla regler är uppdaterade till utgåva {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Väntar på tilläggsversion {0} eller senare: {1}. De installeras när Chrome uppdaterar tillägget."
+  },
+  "updateResultFailedFmt": {
+    "message": "Det gick inte att ladda ned: {0}. Försök igen senare."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Regler som du har redigerat väntar på ditt beslut i Regler → Uppdatera: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Det gick inte att nå GitHub för att söka efter regeluppdateringar."
+  },
+  "updateErrorNoRelease": {
+    "message": "Ingen publicerad Scrapfly-utgåva hittades på GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub begränsar uppdateringskontroller. Försök igen om {0} min."
+  },
+  "errorApplyingUpdates": {
+    "message": "Fel när uppdateringarna skulle tillämpas"
+  },
+  "failedCheckForUpdates": {
+    "message": "Det gick inte att söka efter uppdateringar"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Fel vid sökning efter uppdateringar"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Uppdateringstjänsten är inte tillgänglig"
+  },
+  "deleteDetectorTitle": {
+    "message": "Ta bort detektor"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Vill du verkligen ta bort \"{0}\"?"
+  },
+  "detectorNotFound": {
+    "message": "Detektorn hittades inte"
+  },
+  "failedDeleteDetector": {
+    "message": "Det gick inte att ta bort detektorn"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Det gick inte att visa insamlingsdetaljerna"
+  },
+  "failedCopyCaptureData": {
+    "message": "Det gick inte att kopiera insamlade data"
+  },
+  "failedDeleteCapture": {
+    "message": "Det gick inte att ta bort insamlingen"
+  },
+  "noCapturesToExport": {
+    "message": "Inga insamlingar att exportera"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Vill du verkligen ta bort alla insamlingar? Åtgärden kan inte ångras."
+  },
+  "failedClearCaptures": {
+    "message": "Det gick inte att rensa insamlingarna"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhook-integration"
+  },
+  "settingsEnableWebhook": {
+    "message": "Aktivera webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "Skicka HTTP-begäranden vid upptäckt"
+  },
+  "settingsBypassCache": {
+    "message": "Skicka vid varje sidinläsning (kringgå cache)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP-metod"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Välj HTTP-metod för webhook-begäranden"
+  },
+  "settingsCustomMethod": {
+    "message": "Egen"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Ange egen metod (t.ex. OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook-URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Fullständig endpoint-URL (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Tillgängliga variabler:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Exempel: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP-header för innehållstyp"
+  },
+  "webhookCtHintJson": {
+    "message": "Mallen som JSON, med variablerna ifyllda."
+  },
+  "webhookCtHintForm": {
+    "message": "Mallens fält som nyckel=värde-par; nästlade fält som detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Mallens fält som form-data-delar; webbläsaren anger boundary."
+  },
+  "webhookCtHintText": {
+    "message": "Malltexten som den är, med variablerna ifyllda."
+  },
+  "webhookCtHintXml": {
+    "message": "Mallens fält som ett XML-dokument av typen <webhook>; upptäckter som upprepade element."
+  },
+  "webhookCtHintCsv": {
+    "message": "En rubrikrad, sedan en rad per upptäckt med sidfälten upprepade."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Ett JSON-objekt per rad: en rad per upptäckt, med sidfälten."
+  },
+  "webhookCtHintCustom": {
+    "message": "Din egen Content-Type (typ/undertyp); innehållet skickas som JSON."
+  },
+  "webhookCtCustom": {
+    "message": "Egen"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Egen Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Ange typ/undertyp, t.ex. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Lägg till header"
+  },
+  "webhookNoHeaders": {
+    "message": "Inga egna headers konfigurerade"
+  },
+  "webhookHeaderName": {
+    "message": "Headernamn"
+  },
+  "webhookHeaderValue": {
+    "message": "Headervärde"
+  },
+  "webhookRemoveHeader": {
+    "message": "Ta bort header"
+  },
+  "webhookSending": {
+    "message": "Skickar..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Egna headers"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Lägg till egna HTTP-headers i webhook-begäran"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Payload-mall"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Innehåll som skickas med varje webhook. Klicka på en variabel för att infoga den."
+  },
+  "webhookVarsTitle": {
+    "message": "Mallvariabler"
+  },
+  "webhookVarsIntro": {
+    "message": "Ersätts med sidans värden när webhooken skickas."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Infoga variabel"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "Infoga {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "Kopiera {0}"
+  },
+  "webhookVarsExample": {
+    "message": "Exempel"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Sidans fullständiga URL"
+  },
+  "webhookVarHostname": {
+    "message": "Sidans värdnamn"
+  },
+  "webhookVarTitle": {
+    "message": "Sidans titel"
+  },
+  "webhookVarFavicon": {
+    "message": "Webbplatsens favicon-URL"
+  },
+  "webhookVarDetections": {
+    "message": "Upptäckter som JSON-array"
+  },
+  "webhookVarTimestamp": {
+    "message": "Tidpunkt för upptäckten (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Antal upptäckter"
+  },
+  "webhookVarCategories": {
+    "message": "Upptäckta kategorier, kommaseparerade"
+  },
+  "webhookJsonValid": {
+    "message": "Giltig JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Ogiltig JSON (rad {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Återställ mall"
+  },
+  "settingsTestWebhook": {
+    "message": "Testa webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Skicka en testbegäran till din webhook-URL"
+  },
+  "settingsTestBtn": {
+    "message": "Testa"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Historikinställningar"
+  },
+  "settingsHistorySettings": {
+    "message": "Historikinställningar"
+  },
+  "settingsHistoryLimit": {
+    "message": "Historikgräns"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = säkerhetsgräns på 1 000 poster)"
+  },
+  "settingsExportFormat": {
+    "message": "Exportformat"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Oformaterad text"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Ta med tidsstämplar"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Spara vid cacheträffar"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Dubblettskydd"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Aktivera dubblettskydd"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Blockera dubbla historikposter inom ett tidsfönster"
+  },
+  "settingsDuplicateScope": {
+    "message": "Omfång"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Fullständig URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Domän"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Sökväg"
+  },
+  "settingsTimeWindow": {
+    "message": "Tidsfönster"
+  },
+  "settingsTimeMinutes": {
+    "message": "Minuter"
+  },
+  "settingsTimeHours": {
+    "message": "Timmar"
+  },
+  "settingsTimeDays": {
+    "message": "Dagar"
+  },
+  "settingsHowItWorks": {
+    "message": "Så fungerar det:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Förhindrar dubbla historikposter för samma URL inom tidsfönstret."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Fullständig URL: exakt URL-matchning (inklusive frågeparametrar)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Domän: samma domän (olika sökvägar räknas som samma)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Sökväg: samma domän + sökväg (ignorerar frågeparametrar)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Cacheinställningar"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Domäner som hoppas över"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Lägg till aktuell sida"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Sök domäner..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Låg"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Medel"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Hög"
+  },
+  "settingsEnableJsApi": {
+    "message": "Aktivera JS API-händelser"
+  },
+  "settingsDataExportImport": {
+    "message": "Export och import"
+  },
+  "settingsDataManagement": {
+    "message": "Datahantering"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Exportera eller importera tilläggets data"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Inställningar"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Exportera eller importera tilläggets inställningar"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Upptäcktshistorik"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Exportera upptäcktshistoriken som CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Exportera inställningar"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Importera inställningar"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Exportera historik"
+  },
+  "settingsAvailableEvents": {
+    "message": "Tillgängliga händelser"
+  },
+  "settingsApiEventReady": {
+    "message": "Tillägget har lästs in och initierats"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Upptäckt startad (cachemiss / manuellt)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Förloppsuppdateringar för upptäckt (på metodnivå)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Övervakningen av JS-hooks slutförd"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Övervakningen av window-egenskaper slutförd"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Upptäckt slutförd med resultat"
+  },
+  "settingsApiEventOnError": {
+    "message": "Ett upptäcktsfel inträffade"
+  },
+  "settingsUsageExample": {
+    "message": "Användningsexempel"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Upptäckt är inaktiverad för den här domänen"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Ta bort från svartlistan"
+  },
+  "detectionBlacklistHint": {
+    "message": "Eller gå till Inställningar → Upptäckt → Svartlistade domäner för att hantera."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Inga matchande signaler för anti-bot, CAPTCHA eller fingerprinting hittades på den här sidan."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Det finns inga cachade upptäcktsdata för den här sidan. Läs in sidan igen för att köra en ny skanning."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Ladda upp upptäckter (delbar länk)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Länken kopierades till urklipp"
+  },
+  "failedReadSettings": {
+    "message": "Det gick inte att läsa inställningarna — åtgärden avbröts"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Det gick inte att ta bort från svartlistan"
+  },
+  "pasteConfirmTitle": {
+    "message": "Ladda upp upptäckter?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Ladda upp"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Uppladdningen misslyckades"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Inga upptäckter att ladda upp"
+  },
+  "detectionTitleClearCache": {
+    "message": "Rensa cache"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Kopiera översikt"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Blockera den här domänen"
+  },
+  "detectionStatSite": {
+    "message": "WEBBPLATS"
+  },
+  "detectionStatDetections": {
+    "message": "UPPTÄCKTER"
+  },
+  "detectionStatConfidence": {
+    "message": "SÄKERHET"
+  },
+  "detectionStatDifficulty": {
+    "message": "SVÅRIGHET"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Sök upptäckter..."
+  },
+  "detectionPaginationPage": {
+    "message": "Sida"
+  },
+  "detectionPaginationOf": {
+    "message": "av"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Den här domänen är svartlistad"
+  },
+  "detectionModalConfidence": {
+    "message": "Säkerhet"
+  },
+  "detectionModalDifficulty": {
+    "message": "Svårighet"
+  },
+  "detectionModalAuthor": {
+    "message": "Författare"
+  },
+  "detectionModalDescription": {
+    "message": "Beskrivning"
+  },
+  "detectionModalNoDescription": {
+    "message": "Ingen beskrivning tillgänglig."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Upptäcktsmetoder"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Inga metoder upptäcktes"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Sök på URL, modul, webbplats eller innehåll..."
+  },
+  "advancedPaginationPage": {
+    "message": "Sida"
+  },
+  "advancedPaginationOf": {
+    "message": "av"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Samlar in webbplatsnycklar, åtgärder och konfigurationsparametrar"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Avlyssnar sensordata och extraherar versionsinformation"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Övervakar cookies och ändringar av skyddsnivå"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Analyserar dynamiska headers och skriptparametrar"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Samlar in endpoints för utmaningar och tokeninformation"
+  },
+  "btnStartCapturing": {
+    "message": "Starta insamling"
+  },
+  "btnStopCapturing": {
+    "message": "Stoppa insamling"
+  },
+  "btnCheckCookies": {
+    "message": "Kontrollera cookies"
+  },
+  "btnCheckVersion": {
+    "message": "Kontrollera version"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Analysera skript"
+  },
+  "btnExtractSiteKey": {
+    "message": "Extrahera webbplatsnyckel"
+  },
+  "btnExtractPublicKey": {
+    "message": "Extrahera publik nyckel"
+  },
+  "btnObtainSelector": {
+    "message": "Hämta selektor"
+  },
+  "btnCopyAllData": {
+    "message": "Kopiera alla data"
+  },
+  "btnClearData": {
+    "message": "Rensa data"
+  },
+  "advCapturedDataSection": {
+    "message": "Insamlade data"
+  },
+  "advNoCapturesYet": {
+    "message": "Inga insamlingar än"
+  },
+  "advCaptureDetails": {
+    "message": "Insamlingsdetaljer"
+  },
+  "advValueCopied": {
+    "message": "Värdet kopierades"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Rensa alla insamlade data?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Detta tar permanent bort alla insamlade data för den här leverantören."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Avbryt"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Sökomfång för innehåll"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Kontrollera endast skript"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Sök endast i JavaScript-kod (infogade och inlästa skript), inte i sidtext eller filnamn"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Omfångsinställningar"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Namnomfång"
+  },
+  "rulesNameScopeHint": {
+    "message": "Var namn-/fältträffar ska sökas"
+  },
+  "rulesScopeRequest": {
+    "message": "Begäran"
+  },
+  "rulesScopeResponse": {
+    "message": "Svar"
+  },
+  "rulesScopeAll": {
+    "message": "Alla"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Värdeomfång"
+  },
+  "rulesValueScopeHint": {
+    "message": "Var värdeträffar ska sökas"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Inställningar för URL-omfång"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL-omfång"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Sida"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Skript"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Alla (standard)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Begränsningar för begäran"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL-mönster (valfritt)"
+  },
+  "rulesUrlRegex": {
+    "message": "Reguljärt uttryck för URL (regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL skiftlägeskänslig"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP-metod (välj en)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Filtrera efter begärandemetod (valfritt)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Valfri"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Alternativ för mönstermatchning"
+  },
+  "rulesPatternRegex": {
+    "message": "Reguljärt uttryck (regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Helt ord"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Skiftlägeskänslig"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Alternativ för värdefält"
+  },
+  "rulesApplySettings": {
+    "message": "Tillämpa inställningar"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM-selektorhjälp"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Använd selektor"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Hjälp för window-egenskaper"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Bekräfta"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Är du säker?"
+  },
+  "notifLoadingDefault": {
+    "message": "Läser in..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Klicka på \"Starta insamling\" ovan för att börja samla in {0}-data"
+  },
+  "advancedToolsHeading": {
+    "message": "Insamlingsverktyg"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Välj ett skydd för att öppna dess verktyg."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Öppna verktyg"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Läs om avancerade verktyg"
+  },
+  "advancedToolsChange": {
+    "message": "Ändra"
+  },
+  "settingsLanguageTitle": {
+    "message": "Språk"
+  },
+  "settingsLanguageDesc": {
+    "message": "Åsidosätt tilläggets gränssnittsspråk. Standard följer din webbläsare."
+  },
+  "settingsLanguageAuto": {
+    "message": "Använd webbläsarens språk"
+  },
+  "detectionEmptyTitle": {
+    "message": "Inget upptäckt"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Inga CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Ingen anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Ingen fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "Upptäckt inaktiverad"
+  },
+  "detectionDisabledDesc": {
+    "message": "Skyddsupptäckt är för närvarande avstängd."
+  },
+  "detectionDisabledAction": {
+    "message": "Använd reglaget högst upp för att aktivera upptäckt."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Upptäcktsregel"
+  },
+  "rulesMoreActions": {
+    "message": "Fler åtgärder"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Inget skydd upptäckt"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Inget skydd som stöds på den här sidan har högre säkerhet än {0} %. Du kan ändra minimivärdet i Inställningar → Upptäckt.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Skydd upptäckt med låg säkerhet"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} upptäcktes med {1} % säkerhet. Verktyg visas bara över {2} %. Du kan sänka minimivärdet i Inställningar → Upptäckt.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Skydd som stöds"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Visa insamlingshistorik ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript-hooks"
+  },
+  "detectionMethodContent": {
+    "message": "Innehåll"
+  },
+  "detectionMethodWindow": {
+    "message": "Window-egenskaper"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Headers"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookies"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Aktivera upptäckt"
+  },
+  "historyMoreActions": {
+    "message": "Fler åtgärder"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Kopiera data"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Ta bort automatiskt"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Tar regelbundet bort gamla historikposter."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Ta bort poster äldre än"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Tillåtet intervall: 1–{0} {1}. Välj en större enhet för längre perioder."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Tillåtet intervall: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Månader räknas som 30 dagar; år som 365 dagar."
+  },
+  "timeUnitMonths": {
+    "message": "Månader"
+  },
+  "timeUnitYears": {
+    "message": "År"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Historikstatistik"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Visa privat statistik som beräknas lokalt från din upptäcktshistorik."
+  },
+  "settingsOpenStats": {
+    "message": "Öppna statistik"
+  },
+  "settingsExportedToast": {
+    "message": "Inställningarna exporterades"
+  },
+  "settingsExportFailedToast": {
+    "message": "Det gick inte att exportera inställningarna"
+  },
+  "settingsImportedToast": {
+    "message": "Inställningarna importerades"
+  },
+  "settingsImportFailedToast": {
+    "message": "Det gick inte att importera inställningarna: ogiltig fil"
+  },
+  "statsPrivacyNote": {
+    "message": "Beräknas lokalt från din upptäcktshistorik. Inget lämnar din webbläsare."
+  },
+  "statsSubtitleFmt": {
+    "message": "Beräknas lokalt från historikposter: {0}. Inget lämnar din webbläsare."
+  },
+  "statsRangeLabel": {
+    "message": "Tidsintervall"
+  },
+  "statsRange7": {
+    "message": "7 dagar"
+  },
+  "statsRange30": {
+    "message": "30 dagar"
+  },
+  "statsRange90": {
+    "message": "90 dagar"
+  },
+  "statsRangeAll": {
+    "message": "Alla"
+  },
+  "statsEmptyTitle": {
+    "message": "Ingen historik än"
+  },
+  "statsEmptyDesc": {
+    "message": "Statistik visas här när sidor med upptäckter sparas i historiken."
+  },
+  "statsEntries": {
+    "message": "Historikposter"
+  },
+  "statsUniqueDomains": {
+    "message": "Unika domäner"
+  },
+  "statsDetections": {
+    "message": "Upptäckter"
+  },
+  "statsDistinctDetectors": {
+    "message": "Olika skydd"
+  },
+  "statsOverTime": {
+    "message": "Upptäckter över tid"
+  },
+  "statsTopProtections": {
+    "message": "Mest upptäckta skydd"
+  },
+  "statsTopDomains": {
+    "message": "Toppdomäner"
+  },
+  "statsByCategory": {
+    "message": "Per kategori"
+  },
+  "statsByDifficulty": {
+    "message": "Per svårighet"
+  },
+  "statsPagesUnit": {
+    "message": "sidor"
+  },
+  "statsVisitsUnit": {
+    "message": "besök"
+  },
+  "statsDetectionsUnit": {
+    "message": "upptäckter"
+  },
+  "statsCategoryOther": {
+    "message": "Övrigt"
+  },
+  "statsDifficultyNone": {
+    "message": "Inga upptäckter"
+  },
+  "statsNoData": {
+    "message": "Inga data i det här intervallet"
+  },
+  "statsTipPagesFmt": {
+    "message": "Sidor: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "Domäner: {0}"
+  },
+  "statsTipVisitsFmt": {
+    "message": "Besök: {0}"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "Upptäckter: {0}"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} av {1} upptäckter · {2} %"
+  },
+  "statsTipEntriesFmt": {
+    "message": "Poster: {0}"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} med upptäckter"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "{0} besök per domän"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} per post"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "{0} % genomsnittlig säkerhet"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Upptäckter: {0} · Dagar: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Det här är en officiell Scrapfly-detektor. Uppdateringar återställer den inte; använd \"Återställ officiella detektorer\" i …-menyn för att få tillbaka den."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Återställ officiella detektorer"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "Officiella detektorer återställda: {0}"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Det gick inte att återställa de officiella detektorerna"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" är reserverat för officiella detektorer. Använd ett annat författarnamn."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Ditt namn"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Rensa egna detektorer"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Detta tar bort alla dina egna detektorer. Officiella Scrapfly-detektorer behålls (du kan inaktivera dem i stället). Är du säker?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Rensar egna detektorer..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "Egna detektorer borttagna: {0}"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Det finns inga egna detektorer att rensa"
+  },
+  "rhSuggestions": {
+    "message": "Förslag"
+  },
+  "rhResults": {
+    "message": "Resultat"
+  },
+  "rhCustomChip": {
+    "message": "Egen"
+  },
+  "rhUseAsTyped": {
+    "message": "Använd exakt som skrivet"
+  },
+  "rhNoResultsFmt": {
+    "message": "Inga träffar för “{0}”"
+  },
+  "rhNoResultsHint": {
+    "message": "Du kan fortfarande använda det som ett eget värde."
+  },
+  "rhPreview": {
+    "message": "Förhandsgranskning"
+  },
+  "rhSearchWindow": {
+    "message": "Sök egenskaper, t.ex. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Sök selektorer, t.ex. captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Villkor"
+  },
+  "rhConditionInvalid": {
+    "message": "Okänt villkor"
+  },
+  "rhAddProperty": {
+    "message": "Lägg till egenskap"
+  },
+  "rhChipAutomation": {
+    "message": "Automatisering"
+  },
+  "rhCondGroupType": {
+    "message": "Typ"
+  },
+  "rhCondGroupExistence": {
+    "message": "Förekomst"
+  },
+  "rhCondGroupCollections": {
+    "message": "Samlingar"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Numerisk"
+  },
+  "rhCondGroupString": {
+    "message": "Sträng"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolesk"
+  },
+  "rhCondGroupCustom": {
+    "message": "Aktuellt värde"
+  },
+  "rhCondTypeObject": {
+    "message": "är ett objekt"
+  },
+  "rhCondTypeFunction": {
+    "message": "är en funktion"
+  },
+  "rhCondTypeString": {
+    "message": "är en sträng"
+  },
+  "rhCondTypeNumber": {
+    "message": "är ett tal"
+  },
+  "rhCondTypeBoolean": {
+    "message": "är ett booleskt värde"
+  },
+  "rhCondTypeSymbol": {
+    "message": "är en symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "är en BigInt"
+  },
+  "rhCondExists": {
+    "message": "finns på sidan"
+  },
+  "rhCondTruthy": {
+    "message": "är truthy"
+  },
+  "rhCondFalsy": {
+    "message": "är falsy (tomt, 0, false eller null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "är inte undefined"
+  },
+  "rhCondUndefined": {
+    "message": "är undefined (saknas)"
+  },
+  "rhCondNotNull": {
+    "message": "är inte null"
+  },
+  "rhCondNull": {
+    "message": "är null"
+  },
+  "rhCondArray": {
+    "message": "är en array"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "är en array med element"
+  },
+  "rhCondEmptyArray": {
+    "message": "är en tom array"
+  },
+  "rhCondHasLength": {
+    "message": "har en längd"
+  },
+  "rhCondHasKeys": {
+    "message": "är ett objekt med nycklar"
+  },
+  "rhCondEmptyObject": {
+    "message": "är ett tomt objekt"
+  },
+  "rhCondGt0": {
+    "message": "är större än 0"
+  },
+  "rhCondGte0": {
+    "message": "är 0 eller mer"
+  },
+  "rhCondEq0": {
+    "message": "är lika med 0"
+  },
+  "rhCondNe0": {
+    "message": "är inte 0"
+  },
+  "rhCondGt1": {
+    "message": "är större än 1"
+  },
+  "rhCondGte1": {
+    "message": "är 1 eller mer"
+  },
+  "rhCondLenGt0": {
+    "message": "är inte tom"
+  },
+  "rhCondLenEq0": {
+    "message": "är tom"
+  },
+  "rhCondTrue": {
+    "message": "är true"
+  },
+  "rhCondFalse": {
+    "message": "är false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Matchar sidor där {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Mall"
+  },
+  "rhDomClass": {
+    "message": "Klass"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Dataattribut"
+  },
+  "rhDomClassContains": {
+    "message": "Klassen innehåller"
+  },
+  "rhDomIdContains": {
+    "message": "ID innehåller"
+  },
+  "rhDomTag": {
+    "message": "HTML-tagg"
+  },
+  "rhDomAttr": {
+    "message": "Har attribut"
+  },
+  "rhDomIframe": {
+    "message": "Iframe-URL innehåller"
+  },
+  "rhDomTitle": {
+    "message": "Titeln innehåller"
+  },
+  "rhDomAlt": {
+    "message": "Alt-texten innehåller"
+  },
+  "rhDomCamel": {
+    "message": "camelCase-klass"
+  },
+  "rhRefAny": {
+    "message": "valfritt tecken"
+  },
+  "rhRefZeroMore": {
+    "message": "0 eller fler"
+  },
+  "rhRefOneMore": {
+    "message": "1 eller fler"
+  },
+  "rhRefOptional": {
+    "message": "valfri"
+  },
+  "rhRefStart": {
+    "message": "början"
+  },
+  "rhRefEnd": {
+    "message": "slut"
+  },
+  "rhRefDigit": {
+    "message": "siffra"
+  },
+  "rhRefWord": {
+    "message": "bokstav, siffra eller _"
+  },
+  "rhRefSpace": {
+    "message": "blanksteg"
+  },
+  "rhRefOr": {
+    "message": "a eller b"
+  },
+  "rhMatch": {
+    "message": "Träff"
+  },
+  "rhNoMatch": {
+    "message": "Ingen träff"
+  },
+  "ptTitle": {
+    "message": "Testa mönster"
+  },
+  "ptTitleFmt": {
+    "message": "Testa mönster · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Sidinnehåll"
+  },
+  "ptKindCookieName": {
+    "message": "Cookienamn"
+  },
+  "ptKindCookieValue": {
+    "message": "Cookievärde"
+  },
+  "ptKindHeaderName": {
+    "message": "Headernamn"
+  },
+  "ptKindHeaderValue": {
+    "message": "Headervärde"
+  },
+  "ptKindPayloadText": {
+    "message": "Begärans innehåll"
+  },
+  "ptKindPayloadUrl": {
+    "message": "Begärans URL"
+  },
+  "ptPatternLabel": {
+    "message": "Mönster"
+  },
+  "ptOptionsLabel": {
+    "message": "Matchningsalternativ"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Testa på"
+  },
+  "ptExamplesBtn": {
+    "message": "Exempel"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "Ett per rad: en URL, ett cookienamn…"
+  },
+  "ptNoSamples": {
+    "message": "Skriv eller klistra in text ovan, en per rad, för att se om den matchar."
+  },
+  "ptCheatTitle": {
+    "message": "Regex-fusklapp"
+  },
+  "ptCheatNote": {
+    "message": "Skriv mönstret utan / runt det. En upprepning inuti en upprepning, som (a+)+, avvisas eftersom den kan frysa sidor."
+  },
+  "ptApply": {
+    "message": "Tillämpa"
+  },
+  "ptTestBtn": {
+    "message": "Testa"
+  },
+  "ptTestTitle": {
+    "message": "Testa mönstret på exempeltext"
+  },
+  "ptNoPattern": {
+    "message": "Inget mönster än"
+  },
+  "ptHintRegex": {
+    "message": "Ett mönster som ^bm_ eller \\d+, utan / runt det"
+  },
+  "ptHintWholeWord": {
+    "message": "Hoppar över träffar inuti ett längre ord: _abck, inte test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai matchar inte längre akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Skriv ett mönster för att se vad det matchar."
+  },
+  "ptSaysRegex": {
+    "message": "Matchar text där regexet hittar en träff."
+  },
+  "ptSaysWordFmt": {
+    "message": "Matchar “{0}” som ett helt ord, inte inuti ett längre ord."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Matchar namn som “{0}”, där * står för valfri text."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Matchar namn som börjar med “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Matchar text som innehåller “{0}”."
+  },
+  "ptCaseExact": {
+    "message": "Stora och små bokstäver måste matcha exakt."
+  },
+  "ptCaseIgnored": {
+    "message": "Stora och små bokstäver behandlas lika."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Det här regexet är ogiltigt och matchar därför aldrig: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Upptäckten avvisar det här regexet eftersom det kan frysa sidor (en upprepning inuti en upprepning, eller över 1000 tecken), så det matchar aldrig."
+  },
+  "ptNoteSlashes": {
+    "message": "Utelämna / i båda ändar: de matchas som en del av texten."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Det här ser ut som ett regex: aktivera Regex, annars matchas dess symboler som vanlig text."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Helt ord ignoreras medan Regex är aktivt."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Headernamn lagras med gemener, så med Skiftlägeskänslig aktiverat matchar det här mönstret aldrig."
+  },
+  "ptNoteWordEdges": {
+    "message": "Det här mönstret börjar eller slutar med en symbol, så Helt ord kräver en bokstav, siffra eller _ precis intill symbolen."
+  },
+  "rhRefDot": {
+    "message": "en riktig punkt"
+  },
+  "rhRefSet": {
+    "message": "en av a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2 till 5 gånger"
+  },
+  "mhExamplesTitle": {
+    "message": "I Scrapfly-reglerna"
+  },
+  "mhHowTitle": {
+    "message": "Så matchar det"
+  },
+  "mhWriteTitle": {
+    "message": "Vad du kan skriva"
+  },
+  "mhLimitsTitle": {
+    "message": "Bra att veta"
+  },
+  "mhUrlIntro": {
+    "message": "Kontrollerar sidans adress och de URL:er som sidan begär: skript, XHR- och fetch-anrop, bilder, ramar och pings."
+  },
+  "mhUrlHow1": {
+    "message": "Utan Regex måste URL:en innehålla texten, oavsett skiftläge. Hela URL:en räknas, inklusive frågesträngen."
+  },
+  "mhUrlHow2": {
+    "message": "Med Regex: utelämna / i båda ändar och skriv punkter som `\\.`, som i `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "URL-omfång: Sida kontrollerar bara sidans adress, Skript lägger till skriptkällor, Alla (standard) lägger till alla begäranden."
+  },
+  "mhUrlLimit1": {
+    "message": "Begäranden om typsnitt, media och formatmallar registreras inte."
+  },
+  "mhUrlLimit2": {
+    "message": "Endast begäranden som görs före skanningen räknas; skanningen körs när sidan har lästs in."
+  },
+  "mhHeaderIntro": {
+    "message": "Kontrollerar headers i sidans egen begäran och eget svar, inte de från skript, XHR-anrop eller ramar."
+  },
+  "mhHeaderHow1": {
+    "message": "Headernamn jämförs med gemener, och vanlig text betyder ”innehåller”: `server` matchar även `server-timing`. För ett exakt namn, använd Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "Värdet kontrolleras på headern med det namnet; lämna tomt för att acceptera valfritt värde."
+  },
+  "mhHeaderHow3": {
+    "message": "Omfånget Svar (standard) avser headers som webbplatsen skickade; Begäran avser headers som webbläsaren skickade."
+  },
+  "mhHeaderLimit1": {
+    "message": "Med Skiftlägeskänslig aktiverat ska headernamn skrivas med gemener."
+  },
+  "mhHeaderLimit2": {
+    "message": "Sidor som byter adress utan att läsas in igen skannas på nytt utan headers."
+  },
+  "mhCookieIntro": {
+    "message": "Kontrollerar sidans cookies efter namn och, valfritt, värde, inklusive HttpOnly- och Secure-cookies."
+  },
+  "mhCookieHow1": {
+    "message": "Ett vanligt namn matchar som prefix: `_abck` matchar även `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` står för valfri text: `bm_*` matchar `bm_sz` och `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "För ett exakt namn, aktivera Regex och skriv `^namn$`. Värdet matchar när det innehåller texten."
+  },
+  "mhCookieLimit1": {
+    "message": "Omfånget Begäran (standard) läser webbläsarens cookies för sidan; Svar läser de cookies som sidans svar sätter."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookies från andra webbplatser, som en leverantörs ram, syns inte. Långa värden kapas till 100 tecken."
+  },
+  "mhContentIntro": {
+    "message": "Söker i sidans text: HTML i body, dess infogade skript samt de skript- och formatmallsfiler som läses in."
+  },
+  "mhContentHow1": {
+    "message": "Vanlig text matchar när texten innehåller den, oavsett skiftläge."
+  },
+  "mhContentHow2": {
+    "message": "Helt ord hoppar över träffar inuti ett längre ord; det kräver en bokstav, siffra eller _ i båda ändar av mönstret."
+  },
+  "mhContentHow3": {
+    "message": "”Kontrollera endast skript” söker bara i infogade skript (inklusive head) och JavaScript-filer, inte i HTML eller CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Filer som webbplatsen inte låter andra ursprung läsa (CORS), eller över 5 MB, hoppas över."
+  },
+  "mhContentLimit2": {
+    "message": "Kod i ramar eller workers, eller som läses in efter skanningen, genomsöks inte."
+  },
+  "mhDomIntro": {
+    "message": "Letar efter ett element i sidans body med en CSS-selektor, när sidan har lästs in."
+  },
+  "mhDomHow1": {
+    "message": "En tagg, `.class`, `#id` eller `[attribute]`, ensam eller kombinerad: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Attributtester `=`, `^=`, `$=`, `*=`, `~=` och `|=`; lägg till ` i` före `]` för att ignorera skiftläge."
+  },
+  "mhDomHow3": {
+    "message": "Flera selektorer separerade med kommatecken: vilken som helst av dem matchar."
+  },
+  "mhDomLimit1": {
+    "message": "Stöds inte, så regeln matchar aldrig: mellanslag eller `>` mellan delar, `:pseudo-classes` och escape-sekvenser."
+  },
+  "mhDomLimit2": {
+    "message": "Head, ramar och shadow roots genomsöks inte. Attributet `value` läses inte; andra attribut jämförs på sina första 100 tecken."
+  },
+  "mhWindowIntro": {
+    "message": "Kontrollerar en JavaScript-global som sidan definierar, till exempel `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Sökvägen från `window`, punktseparerad: `KPSDK` eller `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Ett villkor som `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` eller `has keys`. Tomt betyder truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Ett villkor som upptäckten inte förstår matchar aldrig, så välj ett från listan."
+  },
+  "mhWindowLimit1": {
+    "message": "Kontrolleras under de första sekunderna efter att sidan har lästs in; globaler som skapas senare missas."
+  },
+  "mhWindowLimit2": {
+    "message": "Egenskaper med en Symbol som namn kan inte skrivas som sökväg."
+  },
+  "mhJsHooksIntro": {
+    "message": "Registrerar när sidan anropar ett webbläsar-API, till exempel `HTMLCanvasElement.prototype.toDataURL`, ett tecken på fingerprinting."
+  },
+  "mhJsHooksHow1": {
+    "message": "Hela sökvägen till en metod eller getter: `Navigator.prototype.webdriver`, inte `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Alla anrop räknas; argument och resultat kontrolleras inte, så en hook visar att ett API användes, inte varför."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Anrop räknas under de första sekunderna efter att sidan har lästs in (högst 8 sekunder)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Anrop i workers eller ramar syns inte, förutom inbyggda mål i ramar på samma webbplats."
+  },
+  "mhPayloadIntro": {
+    "message": "Söker i innehållet i de POST-, PUT-, PATCH- och DELETE-begäranden som sidan skickar, från vilken ram som helst."
+  },
+  "mhPayloadHow1": {
+    "message": "Vanlig text matchar när innehållet innehåller den, oavsett skiftläge. Formulärdata läses som `name=value&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "Begärans URL (valfri) och HTTP-metoden begränsar sökningen till matchande begäranden."
+  },
+  "mhPayloadLimit1": {
+    "message": "Endast begäranden som skickas före skanningen räknas, upp till 50 per sida."
+  },
+  "mhPayloadLimit2": {
+    "message": "WebSocket-meddelanden läses inte."
+  },
+  "domCardTitle": {
+    "message": "CSS-selektor"
+  },
+  "domCardBrowse": {
+    "message": "Bläddra"
+  },
+  "domCardHint": {
+    "message": "Ett tagg-, .class-, #id- eller [attribute]-test, ensamt eller kombinerat. Mellanslag eller > mellan delar stöds inte."
+  },
+  "windowCardTitle": {
+    "message": "Window-egenskap"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Händelser som tillägget skickar på sidan"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Lyssna på händelserna från ditt eget skript"
+  },
+  "settingsApiCopyCode": {
+    "message": "Kopiera kod"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Koden kopierades"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Kopiera händelsenamn"
+  },
+  "advCommonClickToCopy": {
+    "message": "Klicka för att kopiera"
+  },
+  "advCommonDomainLabel": {
+    "message": "Domän:"
+  },
+  "advCommonCopy": {
+    "message": "Kopiera"
+  },
+  "advCommonPage": {
+    "message": "Sida"
+  },
+  "advCommonExportCode": {
+    "message": "Exportera kod"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL kopierades"
+  },
+  "advScriptTypeCollector": {
+    "message": "Insamlare"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA-kontroll"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Mellansida"
+  },
+  "advCommonCaptured": {
+    "message": "Insamlad"
+  },
+  "advCommonScript": {
+    "message": "Skript"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "Skript-URL:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Inga insamlade data tillgängliga"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Det gick inte att kontrollera cookies: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Det gick inte att analysera skript: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Det gick inte att starta analysen"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Det gick inte att kontrollera versionen: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Det gick inte att extrahera: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Det gick inte att starta extraheringen: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Inga skript att exportera"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0}-cookies"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Inga {0}-cookies hittades"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0}-skript ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "Analyserar {0}-skript... Sidan läses in igen"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Kodgenerering är inte tillgänglig"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Kodgenerator för skriptparsning"
+  },
+  "advCommonExportOptions": {
+    "message": "Exportalternativ"
+  },
+  "advCommonAllTypes": {
+    "message": "Alla typer"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Hittade relevanta skript: {0}"
+  },
+  "advCommonTotalScripts": {
+    "message": "Totalt antal skript:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Skyddsnivå:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Hittade cookies:"
+  },
+  "advCommonSiteKey": {
+    "message": "Webbplatsnyckel"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "Webbplats-URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "Sidans URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API-domän"
+  },
+  "advCommonFound": {
+    "message": "Hittad"
+  },
+  "advCommonNotFound": {
+    "message": "Hittades inte"
+  },
+  "advCommonYes": {
+    "message": "Ja"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Standard"
+  },
+  "advCommonNone": {
+    "message": "Ingen"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Webbläsarkonsolkod för att avlyssna och parsa {0}-skript"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Python-skript med requests och BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Python-skript med biblioteket requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Node.js-skript med axios och cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Node.js-skript med axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "PHP-skript med cURL och DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "PHP-skript med cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# med HttpClient och HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# med HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go med net/http och goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go med net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Insamling aktiv"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Läs in sidan igen för att utlösa insamlingen."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Slutar om {0} s"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Läs in den här sidan igen"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Lös eller klicka på reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Vänta på \"Insamling klar\""
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "{0}: övervakning startad"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Insamling klar"
+  },
+  "pageNoticePageLoading": {
+    "message": "Sidan läses in"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Vänta tills sidan har lästs in helt..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Ingen Akamai upptäcktes på den här sidan. Cookien _abck finns inte."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Akamai-data har samlats in!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Insamlingen stoppades"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Det gick inte att stoppa insamlingen: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Läser in sidan igen för att analysera Akamai-data…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Det gick inte att analysera innehållet: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Ingen _abck-cookie hittades"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Det gick inte att bearbeta data: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Extraherar sensorinformation…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Det gick inte att extrahera sensorinformation: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Ingen Akamai upptäckt"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "Cookien _abck finns inte på den här sidan."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager är inte aktiv här."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Läs in sidan igen för att börja övervaka sensordata och begärandedetaljer"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Akamai sensor_data samlades in"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Avancerad (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Grundläggande"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Enkel"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck-nivå:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai-analys"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai-skript:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Skript med sensordata-URL"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel HTML-variabel:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST-URL:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel-skriptvariabel:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD-skript-URL"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "Sensordata-URL:er"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai-endpoint"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Sensor"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Extraherad sensorinformation"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Sensordata ({0} tecken)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Inga sensordata insamlade"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD-data ({0} tecken)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "Sensorskript-URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Kopiera alla data som JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Extrahera sensorinformation"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK-nivå"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK-cookie"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai-version"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Krav för utmaningar"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD-utmaning"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt-utmaning"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel-utmaning"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Det gick inte att aktivera extraheringsläget. Se bakgrundskonsolen för detaljer."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Sessionscookies"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Säkerhetskomponenter"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookies: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Resursupptäckt"
+  },
+  "advImpervaResourceUrls": {
+    "message": "Resurs-URL:er"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "Interrogation-URL:er"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva-analys"
+  },
+  "advImpervaSensorUrl": {
+    "message": "Sensor-URL:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0}-skript"
+  },
+  "advImpervaSensorPath": {
+    "message": "Sensorsökväg:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Inga skript upptäcktes"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva kanske inte finns på den här sidan"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Endast {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Avancerad (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Grundläggande (session)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Läs in sidan igen för att börja övervaka Imperva-begäranden och -cookies"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Imperva-data insamlade (objekt: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva-insamling klar"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Sensordata samlades in"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA-callback"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Selektorupptäckt"
+  },
+  "advRecaptchaMethod": {
+    "message": "Metod"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selektor"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Selektorn kopierades till urklipp!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Inga reCAPTCHA-element hittades"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() misslyckades: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA-callbacks"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA-klienter"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "Klient-ID: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Kopierat till urklipp!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Callback-funktion"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Callback-sökväg"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Ingen callback definierad"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM-callbacks"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Skript-callbacks"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Exempel på callback-användning"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Osynlig"
+  },
+  "advRecaptchaAction": {
+    "message": "Åtgärd"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Obligatorisk cookie"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Upptäckta funktioner"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "S-parameter krävs"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Har session"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Klicket misslyckades: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Inga reCAPTCHA-callbacks hittades på den här sidan. Kontrollera att reCAPTCHA är inläst."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Det gick inte att samla in callbacken: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Läs in sidan igen och lös en reCAPTCHA-utmaning för att börja övervaka"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Sidan är klar"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Lös nu reCAPTCHA-utmaningen för att samla in data"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Insamlade och avkodade begäranden: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Inga reCAPTCHA-begäranden insamlade"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA upptäcktes"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Lös utmaningen; insamlingen slutförs av sig själv"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Utlös eller klicka nu på reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Headers"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security-version"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Headermönster"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Headermönster"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape-cookie"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security-analys"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js-skript:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Seed-skript:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js-skript"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js-skript"
+  },
+  "advShapeSeedScript": {
+    "message": "Seed-skript"
+  },
+  "advShapeSeedScripts": {
+    "message": "Seed-skript"
+  },
+  "advShapeErrorFmt": {
+    "message": "Fel: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Upptäckt version:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Insamlingskrav"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + headers"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Läs in sidan igen för att börja övervaka headers och cookies för Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Vänta tills sidan har lästs in helt innan du utför åtgärder..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Övervakning aktiv ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Utför åtgärder för att utlösa cookien"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Utför åtgärder för att utlösa headers + cookie"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Tidsgräns ({2}) - cookies: {0}, headers: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie: {1} | Headers: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Insamlat - cookies: {0}, headers: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha-upptäckt"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha upptäcktes inte. Läs in sidan igen med hCaptcha inläst."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha-version"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise-läge"
+  },
+  "advHcaptchaNo": {
+    "message": "Nej"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Ingen insamlingshistorik än"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "Saknas"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "Kontrollerar hCaptcha-version... Sidan läses in igen"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Tidsgränsen för hCaptcha-versionsupptäckt överskreds"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Det gick inte att starta versionskontrollen"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Läs in sidan igen för att börja övervaka hCaptcha-begäranden"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "hCaptcha-data samlades in"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Utmaning"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "Tar bort cookien {0}... Sidan läses in igen"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Typ"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Webbplatsnyckeln kopierades"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Utmaning"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analys"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Bot Management"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Publik nyckel"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (array med webbläsardata)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blob-data"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Ej insamlad"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Läs in sidan igen för att börja övervaka och utlösa en FunCaptcha-utmaning (tidsgräns 60 s)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "Sidan läses in, vänta..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha insamlad"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Insamlade utmaningar: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Tidsgräns för insamling"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Ingen FunCaptcha-utmaning upptäcktes (tidsgräns 60 s)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Infogat skript"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM-attribut"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "Skript-URL"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON-konfiguration"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Extraherat captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Produkt:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Skriptutdrag"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Exportera parsningskod"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Fel: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Upptäckt: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Ingen Geetest-version upptäcktes"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Fliken hittades inte"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Inga Geetest-skript hittades"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Upptäcker Geetest-version..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Läser in sidan igen för att kontrollera versionen"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Analyserar skript..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Läser in sidan igen för att extrahera skript"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0}-verktyg"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Fel vid inläsning av avancerade verktyg"
+  },
+  "advPanelCheckConsole": {
+    "message": "Se konsolen för detaljer"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Fel vid inläsning av insamlingar: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Aktuell webbplats ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Försök justera filtren eller sökfrågan för att hitta insamlingar."
+  },
+  "advPanelNoUrl": {
+    "message": "Ingen URL"
+  },
+  "advPanelView": {
+    "message": "Visa"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Bekräfta åtgärd"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Bekräfta"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Kopierat till urklipp"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "{0}-verktyg inlästa"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "Hittade {0}/{1} cookies"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Hittade skript: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Inga {0}-skript hittades"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "{0}-version upptäckt: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Ingen {0}-version upptäcktes"
+  },
+  "advPanelUnknownError": {
+    "message": "Okänt fel"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Det gick inte att starta insamlingen: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Det gick inte att stoppa insamlingen: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Insamlingar: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Rensa alla insamlade data"
+  },
+  "advPanelNotAvailable": {
+    "message": "Saknas"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Insamlingshistoriken för {0} rensades"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Det gick inte att rensa historiken"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Visar {0}-{1} av {2} insamlingar"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Ny detektor"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "Lägg till {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "Redigera {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly-ikon"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0}-ikon"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Byt ikon"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Byt detektorikon"
+  },
+  "rulesUiCustomColor": {
+    "message": "Egen färg"
+  },
+  "iconPickerTitle": {
+    "message": "Välj ikon"
+  },
+  "iconPickerDefault": {
+    "message": "Standard"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Ladda upp egen"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Ikonfilen måste vara mindre än 100 KB"
+  },
+  "iconPickerNoResults": {
+    "message": "Inga ikoner matchar din sökning"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Sök ikoner…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Vad är JS-hooks?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Vad är Window-egenskaper?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Vad är URL-upptäckt?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Vad är header-upptäckt?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Vad är cookie-upptäckt?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Vad är innehållsupptäckt?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Vad är DOM-upptäckt?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Vad är payload-upptäckt?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Vad är den här upptäcktsmetoden?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Värde (valfritt)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS-selektor (t.ex. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Text/ord att söka efter"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL-mönster"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS-hook-mål (t.ex. Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Window-sökväg (t.ex. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Villkor (t.ex. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Cookienamn (t.ex. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Cookievärdesmönster (valfritt)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Text (t.ex. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify eller challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Namninställningar"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Namninställningar (säkerhet: {0} %)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Värdeinställningar"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Ta bort metod"
+  },
+  "rulesUiClearValue": {
+    "message": "Rensa värde"
+  },
+  "rulesUiAddValue": {
+    "message": "Lägg till värde"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Sida {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Fyll i det tomma mönstret innan du lägger till ett nytt."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Fyll i alla obligatoriska mönsterfält innan du sparar."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Ange typ av upptäcktsmetod (t.ex. HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Metod"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Sida = aktuell URL | Skript = sida + skript | Alla = alla begäranden"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Lämna tomt för att matcha valfri URL"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Övrigt"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Titel: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Tidsstämpel: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Skyddssystem: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Kategori: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Säkerhet: {0} %"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Upptäcktsmetoder: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Upptäcktsmetoder:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Upptäckter ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Svårighet: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Det gick inte att kopiera till urklipp"
+  },
+  "detectionUiCopyUrl": {
+    "message": "Kopiera URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "Kopiera URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Kopiera kategori"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Kopiera kategori: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Kopiera metod"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Kopiera metod: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Kopiera värde"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Kopiera värde: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} år"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} mån"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} d"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} h"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} min"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 min"
+  },
+  "detectionUiNoDescription": {
+    "message": "Inga ytterligare detaljer angavs för den här upptäckten."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Inga upptäcktsmetoder registrerades för den här detektorn."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Okänd metod"
+  },
+  "detectionUiUnknownValue": {
+    "message": "okänt"
+  },
+  "historyUiUntitled": {
+    "message": "Namnlös"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Inga upptäcktsmetoder"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Ogiltigt format på historikfilen"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly-robot"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Det gick inte att aktivera tillägget: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Det gick inte att inaktivera tillägget: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Fel: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Inga domäner på svartlistan"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Inga domäner matchar din sökning"
+  },
+  "settingsUiChecking": {
+    "message": "Kontrollerar..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "Historikgränsen måste vara mellan 0 (obegränsad) och 10 000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "Cachetiden måste vara mellan 1 och {0} {1}"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Antalet dagar för automatisk borttagning måste vara mellan 1 och 3650"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "Dubblettvaraktigheten måste vara mellan 1 och 999"
+  },
+  "settingsUiExportJson": {
+    "message": "Exportera JSON"
+  },
+  "settingsUiExportText": {
+    "message": "Exportera text"
+  },
+  "settingsUiLogsText": {
+    "message": "Text"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Detektoruppdateringar som kräver en nyare tilläggsversion: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (kräver tillägg v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Totalt"
+  },
+  "ruleSectionCombinations": {
+    "message": "Kombinationer"
+  },
+  "combinationsHint": {
+    "message": "En kombination upptäcker det här skyddet bara när flera mönster hittas tillsammans. Använd den för mönster som är för svaga ensamma."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Varje kombination utlöses bara när dess signaler förekommer tillsammans; här är vad den hittade på den här sidan."
+  },
+  "combinationFoundTogether": {
+    "message": "Hittades tillsammans på den här sidan:"
+  },
+  "combinationNotPresent": {
+    "message": "Finns inte"
+  },
+  "combinationFound": {
+    "message": "Hittad"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Den här regeln ändrades eller togs bort efter skanningen, så bara dess namn och poäng visas."
+  },
+  "historyMatchedDetections": {
+    "message": "Matchade upptäckter"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Den här skanningen sparades innan villkoren sparades, så bara namn och poäng visas."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Får inte hittas"
+  },
+  "combinationMustBeFound": {
+    "message": "Måste hittas"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: den högsta säkerheten bland de mönster som utlöste den"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Lägg till minst ett mönster som måste hittas."
+  },
+  "combinationInvalidOneOf": {
+    "message": "En lista av typen ”En av dessa” behöver ett mönster som måste hittas i varje alternativ."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "”Minst {0}” kräver {0} mönster som måste hittas."
+  },
+  "combinationSentenceOne": {
+    "message": "Utlöses när det här villkoret är uppfyllt."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Utlöses när alla {0} villkor är uppfyllda."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Utlöses när något av dessa {0} villkor är uppfyllt."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Utlöses när minst {0} av dessa {1} villkor är uppfyllda."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Säkerhet: {0} %."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Säkerhet: Auto, upp till {0} %."
+  },
+  "combinationSentenceGroup": {
+    "message": "En grupp räknas som ett villkor."
+  },
+  "combinationSentenceNot": {
+    "message": "Den utlöses inte om ett mönster markerat ”Får inte hittas” finns."
+  },
+  "combinationSentenceAlone": {
+    "message": "Mönster som inte är markerade ”Endast kombinationer” upptäcker även på egen hand, med sin egen säkerhet."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Säkerhet när den hittas"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Lämna tomt för Auto: den högsta säkerheten bland de mönster som hittades."
+  },
+  "combinationModeAny": {
+    "message": "En av dessa"
+  },
+  "combinationModeAll": {
+    "message": "Alla dessa"
+  },
+  "combinationModeAtLeast": {
+    "message": "Minst … av dessa"
+  },
+  "combinationModeRootAll": {
+    "message": "alla dessa hittas"
+  },
+  "combinationModeRootAny": {
+    "message": "en av dessa hittas"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "minst … av dessa hittas"
+  },
+  "combinationGroupMode": {
+    "message": "Grupp"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Lägg till ett mönster i den här gruppen"
+  },
+  "combinationDeleteGroup": {
+    "message": "Ta bort grupp"
+  },
+  "combinationAddGroup": {
+    "message": "Lägg till gruppen ”en av”"
+  },
+  "patternUnusedBadge": {
+    "message": "Inte i någon kombination"
+  },
+  "patternUnusedTip": {
+    "message": "Ingen kombination använder det, så det upptäcker aldrig. Klicka för att låta det räknas på egen hand."
+  },
+  "combinationsEmpty": {
+    "message": "Inga kombinationer än."
+  },
+  "combinationAdd": {
+    "message": "Lägg till kombination"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Kombination {0}"
+  },
+  "combinationDelete": {
+    "message": "Ta bort kombination"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "Ta bort kombinationen \"{0}\"? Dess mönster finns kvar i regeln."
+  },
+  "combinationRemove": {
+    "message": "Ta bort"
+  },
+  "combinationEmptyPattern": {
+    "message": "(tomt mönster)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Valfritt {0}-mönster"
+  },
+  "combinationGroupEmpty": {
+    "message": "Lägg till ett mönster nedan"
+  },
+  "combinationAddPattern": {
+    "message": "Lägg till mönster"
+  },
+  "combinationAddDescription": {
+    "message": "Lägg till en beskrivning"
+  },
+  "combinationAnyPattern": {
+    "message": "valfritt mönster"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Lägg till mönster för att bygga den här kombinationen"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Endast kombinationer"
+  },
+  "combinationStrictHint": {
+    "message": "Ett mönster markerat ”Endast kombinationer” upptäcker ingenting på egen hand; det räknas bara inuti kombinationer."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Markera alla"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Avmarkera alla"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Det här mönstret upptäcker ingenting på egen hand; det räknas bara inuti kombinationer, i varje kombination i den här regeln."
+  },
+  "detectionModalCombinations": {
+    "message": "Matchade kombinationer"
+  },
+  "combinationNoPatterns": {
+    "message": "Inga mönster tillagda"
+  },
+  "combinationPickHint": {
+    "message": "Markera de mönster som ska läggas till"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Lägg till markerade ({0})"
+  },
+  "combinationEditConditions": {
+    "message": "Redigera villkor"
+  },
+  "combinationAutoConfidence": {
+    "message": "Auto"
+  },
+  "combinationDetectWhen": {
+    "message": "Upptäck när"
+  },
+  "combinationGroupExcluded": {
+    "message": "Dessa villkor får inte matcha."
+  },
+  "combinationMinimum": {
+    "message": "Minsta antal träffar"
+  },
+  "combinationMatchState": {
+    "message": "Mönstervillkor"
+  },
+  "combinationChoosePatterns": {
+    "message": "Välj mönster"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Minska minsta antal träffar"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Öka minsta antal träffar"
+  },
+  "detectionTipDetections": {
+    "message": "Antal skydd som upptäckts på den här sidan."
+  },
+  "detectionTipConfidence": {
+    "message": "Genomsnittlig säkerhet för de upptäckta skydden."
+  },
+  "detectionTipDifficulty": {
+    "message": "Uppskattad svårighet att kringgå de upptäckta skydden."
+  },
+  "tipCachedAt": {
+    "message": "Sparad"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Genomsnitt av {0} upptäckter, från {1} % till {2} %"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "Från de matchade kombinationerna"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Den starkaste enskilda signalen avgör poängen"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1} %"
+  },
+  "tipCustomDetector": {
+    "message": "Egen detektor"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Standard för {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Anges av den här detektorn"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Anges av {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Höjs av {0} skydd tillsammans"
+  },
+  "tipLastUpdated": {
+    "message": "Uppdaterad"
+  },
+  "tipMethodContent": {
+    "message": "Text i sidan eller dess skript matchade."
+  },
+  "tipMethodCookie": {
+    "message": "En cookie som sattes på den här webbplatsen matchade."
+  },
+  "tipMethodDom": {
+    "message": "Ett element på sidan matchade."
+  },
+  "tipMethodHeader": {
+    "message": "En svarsheader som webbplatsen skickade matchade."
+  },
+  "tipMethodJsHooks": {
+    "message": "Sidan anropade ett webbläsar-API som den här detektorn bevakar."
+  },
+  "tipMethodPayload": {
+    "message": "Data som sidan skickade i en begäran matchade."
+  },
+  "tipMethodUrl": {
+    "message": "Sidan eller en begäran den gjorde matchade en känd adress."
+  },
+  "tipMethodWindow": {
+    "message": "Ett globalt JavaScript-objekt på sidan matchade."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} till"
+  },
+  "tipOfficialDetector": {
+    "message": "Officiell Scrapfly-detektor"
+  },
+  "tipScopeDomain": {
+    "message": "Resultaten återanvänds för varje sida på den här domänen."
+  },
+  "tipScopeFullUrl": {
+    "message": "Resultaten återanvänds bara för exakt den här URL:en, inklusive frågesträngen."
+  },
+  "tipScopePath": {
+    "message": "Resultaten återanvänds för exakt den här sökvägen, oavsett frågesträng."
+  },
+  "tipStatsActiveDays": {
+    "message": "Dagar med minst en sparad sida."
+  },
+  "tipStatsDetections": {
+    "message": "Skydd som hittats på alla sparade sidor, upprepningar inräknade."
+  },
+  "tipStatsDetectors": {
+    "message": "Olika skydd som setts, vart och ett räknat en gång."
+  },
+  "tipStatsDomains": {
+    "message": "Olika webbplatser bland de sparade sidorna."
+  },
+  "tipStatsEntries": {
+    "message": "Sidor som sparats i Historik i det här intervallet."
+  },
+  "tipStatsRateFmt": {
+    "message": "{0} av {1} poster"
+  },
+  "tipPatterns": {
+    "message": "Mönster"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Utförliga loggar"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Logga även varje regel, hook och meddelande, inte bara en rapport per sida"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Uppdatering för en regel som du redigerat"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" har en ny officiell version ({1}). Du har redigerat den här regeln: den nya versionen ersätter dina ändringar."
+  },
+  "btnDecideLater": {
+    "message": "Bestäm senare"
+  },
+  "btnKeepMyEdits": {
+    "message": "Behåll mina ändringar"
+  },
+  "btnUseNewVersion": {
+    "message": "Använd den nya versionen"
+  },
+  "resetToOfficial": {
+    "message": "Återställ till officiell"
+  },
+  "resetToOfficialTitle": {
+    "message": "Återställ till den officiella versionen"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Förkasta dina ändringar av \"{0}\" och återställ den officiella Scrapfly-versionen?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Regeln återställdes till den officiella versionen"
+  },
+  "ruleEditedTag": {
+    "message": "Redigerad"
+  },
+  "tipRuleEdited": {
+    "message": "Du har redigerat den här officiella regeln. Uppdateringar frågar innan dina ändringar ersätts."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Upptäcktslista"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Upptäcktsordning"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Ordningen på kategorierna i upptäcktslistan, i Historik och i Regler. Dra korten för att ändra den; inom en kategori visas upptäckter med högst säkerhet först."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Högst säkerhet först"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Kategoriordning"
+  },
+  "settingsMoveUpFmt": {
+    "message": "Flytta upp {0}"
+  },
+  "settingsMoveDownFmt": {
+    "message": "Flytta ned {0}"
+  },
+  "settingsCardShareUploads": {
+    "message": "Delning av uppladdningar"
+  },
+  "settingsShareDestination": {
+    "message": "Uppladdningsmål"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Dit Upptäckt → Ladda upp upptäckter skickar sammanfattningen och hämtar sin delningslänk."
+  },
+  "settingsShareService": {
+    "message": "Tjänst"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (inget konto)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (inget konto)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (inget konto)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API-nyckel)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Egen server"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Ta bort efter (dagar)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Ta bort efter"
+  },
+  "shareExpire10M": {
+    "message": "10 minuter"
+  },
+  "shareExpire1H": {
+    "message": "1 timme"
+  },
+  "shareExpire1D": {
+    "message": "1 dag"
+  },
+  "shareExpire1W": {
+    "message": "1 vecka"
+  },
+  "shareExpire2W": {
+    "message": "2 veckor"
+  },
+  "shareExpire30D": {
+    "message": "30 dagar"
+  },
+  "shareExpire1M": {
+    "message": "1 månad"
+  },
+  "shareExpire6M": {
+    "message": "6 månader"
+  },
+  "shareExpire1Y": {
+    "message": "1 år"
+  },
+  "shareExpireOnetime": {
+    "message": "Efter första visningen"
+  },
+  "shareExpireNever": {
+    "message": "Aldrig"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs har inget alternativ för utgångstid: texten finns kvar tills tjänsten tar bort den."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API-nyckel"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Din utvecklarnyckel från pastebin.com/doc_api. Uppladdningar är olistade."
+  },
+  "settingsShareSecretNote": {
+    "message": "Lagras bara i den här webbläsaren och ingår inte i inställningsexporter."
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub-token"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "En token med behörigheten Gists. Uppladdningar är hemliga gists och går inte ut; ta bort dem på GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "Server-URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS på en publik värd. Kan innehålla <EXPIRY_DAYS>."
+  },
+  "settingsShareCustomBody": {
+    "message": "Innehållsformat"
+  },
+  "shareBodyForm": {
+    "message": "Formulärfält"
+  },
+  "shareBodyJson": {
+    "message": "JSON-mall"
+  },
+  "shareBodyRaw": {
+    "message": "Rå text"
+  },
+  "settingsShareCustomField": {
+    "message": "Namn på formulärfält"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON-mall"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Variabler: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "En per rad som Namn: värde, till exempel Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Delningslänk från"
+  },
+  "shareLinkBody": {
+    "message": "Svarsinnehåll (ren URL)"
+  },
+  "shareLinkJson": {
+    "message": "JSON-fält"
+  },
+  "shareLinkLocation": {
+    "message": "Location-header"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Sökväg till JSON-fält"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Skickas som expiry_days i formulärinnehåll och som <EXPIRY_DAYS>; din server bestämmer vad den gör med det."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Konfigurera först {0} i Inställningar → Upptäckt → Delning av uppladdningar"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Detta laddar upp en sammanfattning av den här sidans upptäckter till {0} ({1}). Alla som har länken kan se den. URL:ens frågesträng samt cookie- och headervärden ingår inte."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "tas bort efter {0} d"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "tas bort efter {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "tas bort efter första visningen"
+  },
+  "shareExpiryService": {
+    "message": "sparas tills tjänsten tar bort den"
+  },
+  "shareExpiryNever": {
+    "message": "går inte ut"
+  },
+  "pasteUnsafeUrl": {
+    "message": "Den egna servern måste vara en HTTPS-adress på en publik värd"
+  },
+  "pasteBadLink": {
+    "message": "tjänsten returnerade ingen giltig HTTPS-länk"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Uppladdningen misslyckades: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Egen uppladdningsserver: använd en HTTPS-adress på en publik värd"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Egen uppladdningsserver: JSON-mallen är inte giltig JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} avvisade nyckeln eller token (felaktig eller utgången)"
+  },
+  "pasteGistPermission": {
+    "message": "GitHub-tokenen behöver behörigheten Gists (läs och skriv)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Ingen Turnstile-webbplatsnyckel på den här sidan"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile-webbplatsnycklar"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Avancerade verktyg"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Vilka skydd som får verktyg"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Visa verktyg över den här säkerheten (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Avancerat listar ett skydd bara när dess säkerhet ligger över det här värdet. 0 listar alla upptäckta skydd."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "Säkerheten för avancerade verktyg måste vara mellan 0 och 99"
+  },
+  "advCommonValue": {
+    "message": "Värde"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} tecken"
+  },
+  "advCookiePath": {
+    "message": "Sökväg"
+  },
+  "advCookieExpires": {
+    "message": "Upphör"
+  },
+  "advCookieSession": {
+    "message": "Session (tas bort när webbläsaren stängs)"
+  },
+  "advCookieNotFound": {
+    "message": "Hittades inte"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Återställa officiella detektorer?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Alla officiella detektorer är installerade. Det finns inget att återställa."
+  },
+  "restoreOfficialChecking": {
+    "message": "Kontrollerar den senaste utgåvan på GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Installerade igen från utgåva {0} på GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "Det gick inte att nå GitHub, så versionen som ingår i tillägget används."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub begränsar begäranden just nu, så versionen som ingår i tillägget används."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Installerade igen från versionen som ingår i tillägget: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Regler → Uppdatera installerar dessa igen: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Dina egna detektorer och dina ändringar av andra regler påverkas inte."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} till"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Det gick inte att återställa: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} återställd"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Kör Regler → Uppdatera för att installera resten."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Återställ"
+  },
+  "advancedFilterTool": {
+    "message": "Verktyg"
+  },
+  "advancedFilterAllTools": {
+    "message": "Alla verktyg"
+  },
+  "advFilterKindCapture": {
+    "message": "Insamlingar"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Insamling"
+  },
+  "advFilterKindOther": {
+    "message": "Andra verktyg"
+  },
+  "scrapflyExportTitle": {
+    "message": "Skrapa med Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Kod för att skrapa den här sidan med Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Hämta den här sidan via Scrapflys API med Unblocker påslagen. Den väljer webbläsare, proxyservrar och headers själv och kostar inget extra när webbplatsen inte blockerar.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Upptäckt på den här sidan",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Kodspråk",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Den här sidan har ett CAPTCHA-test: Unblocker undviker eller löser det för att returnera sidan, men fyller inte i CAPTCHA-test i formulär.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Alternativ"
+  },
+  "scrapflyExportProduct": {
+    "message": "Använd"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "Lös CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Betalas per lösning"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Använd Cloud Browser för att lösa dem."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Öppna den här sidan i Scrapflys Cloud Browser och styr den med Playwright. Captcha Solver hanterar Turnstile, reCAPTCHA, GeeTest med flera när de dyker upp; misslyckade lösningar kostar ingenting."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Kringgå anti-bot"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Kopiera för AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Kopierar sidan, vad som skyddar den, dina inställningar och koden som ett enda meddelande för ChatGPT, Claude eller valfri AI-assistent"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Kopierat: klistra in det i din AI-assistent"
+  },
+  "scrapflyExportFormat": {
+    "message": "Utdata"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Text"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxyservrar"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residential"
+  },
+  "scrapflyExportCountry": {
+    "message": "Land"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Valfritt"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "Rendera JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 krediter"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Välj dina inställningar"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Kopiera koden"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Ange din API-nyckel"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Kör den"
+  },
+  "scrapflyExportGetKey": {
+    "message": "Skaffa en API-nyckel",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Öppna playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Koden kopierades",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Öppna en webbsida för att skrapa den med Scrapfly",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "Insamlingar: {0}"
+  },
+  "statsFirstSeen": {
+    "message": "Nytt under perioden"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "Sparade för första gången i det här intervallet. Skydd: {0}, domäner: {1}."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Välj 7, 30 eller 90 dagar för att se vad som är nytt."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Mest skyddade domän"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "{0} olika skydd under {1} besök."
+  },
+  "statsFoundTogether": {
+    "message": "Skydd som hittats tillsammans"
+  },
+  "statsMethods": {
+    "message": "Upptäcktsmetoder"
+  },
+  "statsMatchesUnit": {
+    "message": "träffar"
+  },
+  "statsMethodsByCategory": {
+    "message": "Metoder per kategori"
+  },
+  "statsWeakEvidence": {
+    "message": "Svagaste belägg"
+  },
+  "statsSignalColumn": {
+    "message": "Signal"
+  },
+  "statsMethodColumn": {
+    "message": "Metod"
+  },
+  "statsTopSignals": {
+    "message": "Mest matchade signaler"
+  },
+  "statsDecidedSingle": {
+    "message": "Enskilt mönster"
+  },
+  "statsDecidedCombination": {
+    "message": "Kombination"
+  },
+  "statsDecidedBy": {
+    "message": "Hur upptäckterna avgjordes"
+  },
+  "statsCombinationGain": {
+    "message": "Säkerhet per avgörande"
+  },
+  "statsCombinationColumn": {
+    "message": "Kombination"
+  },
+  "statsTopCombinations": {
+    "message": "Kombinationer som utlöstes"
+  },
+  "statsNoCombinations": {
+    "message": "Ingen upptäckt i det här intervallet avgjordes av en kombination."
+  },
+  "statsRulesMostActive": {
+    "message": "Mest aktiva regler"
+  },
+  "statsTipPatternsFmt": {
+    "message": "Mönster: {0}"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Mönster per metod"
+  },
+  "statsRulesOfficial": {
+    "message": "Officiella"
+  },
+  "statsRulesCustom": {
+    "message": "Egna"
+  },
+  "statsRuleColumn": {
+    "message": "Regel"
+  },
+  "statsRuleKindColumn": {
+    "message": "Typ"
+  },
+  "statsPatternsUnit": {
+    "message": "mönster"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Hittades inte i det här intervallet"
+  },
+  "statsRulesAllMatched": {
+    "message": "Varje aktiverad regel hittade något i det här intervallet."
+  },
+  "statsMissingColumn": {
+    "message": "Utan beskrivning"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Mönster utan beskrivning"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Varje mönster har en beskrivning."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Regelversion"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Kräver tillägg"
+  },
+  "statsRulesWaiting": {
+    "message": "Väntar på ett nyare tillägg"
+  },
+  "statsToolsByVendor": {
+    "message": "Insamlingar per leverantör"
+  },
+  "statsToolsCapture": {
+    "message": "Insamling"
+  },
+  "statsToolsByTool": {
+    "message": "Mest använda verktyg"
+  },
+  "statsToolsOverTime": {
+    "message": "Insamlingar över tid"
+  },
+  "statsChangeColumn": {
+    "message": "Ändring"
+  },
+  "statsDateColumn": {
+    "message": "Datum"
+  },
+  "statsDomainChanges": {
+    "message": "Skyddsändringar"
+  },
+  "statsNoChanges": {
+    "message": "Ingen domän ändrade sina skydd mellan sparade besök i det här intervallet."
+  },
+  "statsNothingNew": {
+    "message": "Inget nytt: alla skydd här fanns redan i Historik före det här intervallet."
+  },
+  "statsSectionSignals": {
+    "message": "Signaler"
+  },
+  "statsSectionCombinations": {
+    "message": "Kombinationer"
+  },
+  "statsSectionRules": {
+    "message": "Regler"
+  },
+  "statsSectionTools": {
+    "message": "Verktyg"
+  },
+  "statsDomainChangesHint": {
+    "message": "Domäner vars upptäckta skydd ändrades mellan två sparade besök."
+  },
+  "statsFirstSeenHint": {
+    "message": "Skydd och domäner som sparades för första gången i det här intervallet."
+  },
+  "statsSignalsNote": {
+    "message": "Vilken typ av belägg varje sparad upptäckt matchade: cookie- och headernamn, URL:er, sidelement, skript och JavaScript-hooks."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Skydd vars matchade mönster har lägst genomsnittlig säkerhet. Deras regler kan behöva ett starkare mönster."
+  },
+  "statsCombinationsNote": {
+    "message": "En kombination upptäcker ett skydd bara när flera mönster hittas tillsammans."
+  },
+  "statsRulesNote": {
+    "message": "Ditt regelbibliotek jämfört med vad Historik hittade i det här intervallet."
+  },
+  "statsRulesTotal": {
+    "message": "Regler"
+  },
+  "statsRulesModified": {
+    "message": "Redigerade officiella"
+  },
+  "statsRulesDisabled": {
+    "message": "Inaktiverade"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Aktiverade regler som inte hittade något på de sidor som sparats i det här intervallet."
+  },
+  "statsRulesMissingHint": {
+    "message": "Beskrivningar visas i upptäcktsdetaljer, Historik och kombinationer. Lägg till dem i regelredigeraren."
+  },
+  "statsToolsNote": {
+    "message": "Avancerade insamlingar och verktygsresultat som sparats på den här enheten."
+  },
+  "statsCapturesUnit": {
+    "message": "insamlingar"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0} % säker"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Kombination"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "CACHE"
+  },
+  "detectionTipCache": {
+    "message": "Vilka sidor som återanvänder de här cachade resultaten och hur länge."
+  },
+  "tipCacheExpires": {
+    "message": "Går ut"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Kontrollera mot Historik"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Se på hur många sparade sidor varje mönster och kombination matchar. Osparade ändringar räknas."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Kontrollera"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "Sparade sidor: {0} · den här regeln hittades på {1} av dem"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0} av {1} sidor"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "Andra sidor: +{0}"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Historiken är tom: surfa på några sidor först."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "En uppskattning: Historik sparar de matchade värdena, inte hela sidor."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "utlöses (sidor: {0})"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Lägg till mönster för att kontrollera dem."
+  },
+  "settingsThemeTitle": {
+    "message": "Tema"
+  },
+  "settingsThemeDesc": {
+    "message": "Mörkt, eller ljust i Scrapflys färger. System följer din webbläsare."
+  },
+  "themeDark": {
+    "message": "Mörkt"
+  },
+  "themeLight": {
+    "message": "Ljust"
+  },
+  "themeSystem": {
+    "message": "System"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Öppna konsolen"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Öppnar det här tillägget i chrome://extensions: klicka på \"service worker\" för att se loggarna."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Behåll loggarna här i stället för i konsolen, för att exportera dem som JSON eller text"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Översättningar"
+  },
+  "ruleTranslationsHint": {
+    "message": "Visas i stället för beskrivningen när tillägget har det språket. Tomt: beskrivningen visas."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} av {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Översätt automatiskt"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Automatisk översättning kräver Chrome 138 eller senare."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Skriv beskrivningen först."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Översätter: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Fyllde i {0} språk. Kontrollera dem innan du sparar."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Fyllde i {0}; {1} kunde inte översättas här."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Vänta efter inläsning"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Vänta på element"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Sidan klar vid"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Scrolla till botten"
+  },
+  "sfxOptJs": {
+    "message": "Kör JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "Webbläsaråtgärder"
+  },
+  "sfxOptScreenshot": {
+    "message": "Skärmbild"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Element"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Skärmbildsalternativ"
+  },
+  "sfxOptLang": {
+    "message": "Språk"
+  },
+  "sfxOptOs": {
+    "message": "Operativsystem"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Webbläsare"
+  },
+  "sfxOptGeolocation": {
+    "message": "Geolokalisering"
+  },
+  "sfxOptHeaders": {
+    "message": "Headers"
+  },
+  "sfxOptTimeout": {
+    "message": "Tidsgräns"
+  },
+  "sfxOptRetry": {
+    "message": "Försök igen vid fel"
+  },
+  "sfxOptCostBudget": {
+    "message": "Kreditgräns"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Utelämna"
+  },
+  "sfxOptProxified": {
+    "message": "Returnera webbplatsens svar"
+  },
+  "sfxOptExtraction": {
+    "message": "Extrahera data"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Modell"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Prompt"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Sparad mall"
+  },
+  "sfxOptCache": {
+    "message": "Cache"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Behåll i"
+  },
+  "sfxOptCacheClear": {
+    "message": "Uppdatera cachen"
+  },
+  "sfxOptSession": {
+    "message": "Session"
+  },
+  "sfxOptSticky": {
+    "message": "Samma proxy för sessionen"
+  },
+  "sfxOptDebug": {
+    "message": "Felsökning"
+  },
+  "sfxOptCorrelationId": {
+    "message": "Korrelations-ID"
+  },
+  "sfxOptTags": {
+    "message": "Taggar"
+  },
+  "sfxOptDns": {
+    "message": "DNS-information"
+  },
+  "sfxOptSsl": {
+    "message": "SSL-certifikat"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Start"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Ange den här sidan"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Språk"
+  },
+  "sfxOptAutoClose": {
+    "message": "Stäng vid frånkoppling"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Sessionslängd"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Tidsgräns för avblockering"
+  },
+  "sfxOptBlockImages": {
+    "message": "Blockera bilder"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Blockera formatmallar"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Blockera typsnitt"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Blockera video och ljud"
+  },
+  "sfxOptBlacklist": {
+    "message": "Blockera spårare"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Cacha statiska filer"
+  },
+  "sfxOptRecord": {
+    "message": "Spela in sessionen"
+  },
+  "sfxOptMcp": {
+    "message": "MCP-endpoint"
+  },
+  "sfxValAuto": {
+    "message": "Automatiskt"
+  },
+  "sfxValCleanHtml": {
+    "message": "Rensad HTML"
+  },
+  "sfxValComplete": {
+    "message": "Full inläsning"
+  },
+  "sfxValDomReady": {
+    "message": "DOM klar"
+  },
+  "sfxValFullPage": {
+    "message": "Hela sidan"
+  },
+  "sfxValElement": {
+    "message": "Element"
+  },
+  "sfxValLoadImages": {
+    "message": "Läs in bilder"
+  },
+  "sfxValDarkMode": {
+    "message": "Mörkt läge"
+  },
+  "sfxValBlockBanners": {
+    "message": "Dölj banners"
+  },
+  "sfxValHighQuality": {
+    "message": "Hög kvalitet"
+  },
+  "sfxValPrint": {
+    "message": "Utskriftsstil"
+  },
+  "sfxValNoLinks": {
+    "message": "Länkar"
+  },
+  "sfxValNoImages": {
+    "message": "Bilder"
+  },
+  "sfxValOnlyContent": {
+    "message": "Allt utom huvudinnehållet"
+  },
+  "sfxValModel": {
+    "message": "AI-modell"
+  },
+  "sfxValTemplate": {
+    "message": "Mall"
+  },
+  "sfxValConnect": {
+    "message": "Öppna en webbläsare"
+  },
+  "sfxValUnblock": {
+    "message": "Avblockera först"
+  },
+  "sfxGroupRender": {
+    "message": "Webbläsarrendering"
+  },
+  "sfxGroupLocation": {
+    "message": "Plats och fingeravtryck"
+  },
+  "sfxGroupRequest": {
+    "message": "Begäran"
+  },
+  "sfxGroupOutput": {
+    "message": "Utdata"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI-extrahering"
+  },
+  "sfxGroupCache": {
+    "message": "Cache och session"
+  },
+  "sfxGroupTracking": {
+    "message": "Felsökning och spårning"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Fingeravtryck och språk"
+  },
+  "sfxGroupSession": {
+    "message": "Session"
+  },
+  "sfxGroupBlocking": {
+    "message": "Blockering och cache"
+  },
+  "sfxGroupTools": {
+    "message": "Felsökning och MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Kräver Rendera JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Kräver Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Endast Markdown- eller Text-utdata"
+  },
+  "sfxWhyCache": {
+    "message": "Aktivera Cache först"
+  },
+  "sfxWhySession": {
+    "message": "Ange en session först"
+  },
+  "sfxWhySticky": {
+    "message": "Alltid på med Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "Inte en JSON-lista med steg: utelämnas"
+  },
+  "sfxWhyGeo": {
+    "message": "Använd latitud,longitud: utelämnas"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Den här webbläsaren körs inte på det systemet: utelämnas"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge kräver Windows: utelämnas"
+  },
+  "sfxHintHeaders": {
+    "message": "En per rad: Namn: värde. Sparas inte."
+  },
+  "sfxHintScenario": {
+    "message": "JSON-lista: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Kommaseparerad"
+  },
+  "sfxHintLanguages": {
+    "message": "Kommaseparerade, upp till 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Avblockera först returnerar en webbläsare som redan har passerat anti-bot-skyddet"
+  },
+  "sfxValOff": {
+    "message": "Av"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Varje språk har redan en översättning."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Namnöversättningar"
+  },
+  "combinationTranslationsHint": {
+    "message": "Visas i stället för namnet när tillägget har det språket. Tomt: namnet visas."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Skriv namnet först."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Kontrollerar utmaningscookies och analyserar skripten"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Kontrollerar DataDome-cookies och analyserar skripten"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Hittar den publika nyckeln, samlar in webbläsardata (BDA) och analyserar skripten"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Upptäcker GeeTest-versionen (v3 eller v4) och analyserar skripten"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Hittar webbplatsnyckeln, upptäcker hCaptcha-versionen och analyserar skripten"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Extraherar webbplatsnyckeln och analyserar Turnstile-skripten"
+  },
+  "statsExport": {
+    "message": "Exportera"
+  },
+  "statsExportAllCategories": {
+    "message": "Exporter innehåller alltid alla kategorier, oavsett vad som visas på den här sidan."
+  },
+  "statsScopeLabel": {
+    "message": "Visa"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Dolda fingerprinting-upptäckter: {0} ({1} av alla)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Visa fingerprinting"
+  },
+  "statsScopeKeepOne": {
+    "message": "Minst en kategori förblir markerad."
+  },
+  "statsScopeRulesNote": {
+    "message": "Regler använder alltid alla kategorier."
+  },
+  "statsContextFmt": {
+    "message": "Sidor: {0} · Domäner: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "All historik sedan {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Jämfört med föregående period ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Välj 7, 30 eller 90 dagar för att jämföra med föregående period."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "Historiken börjar den {0}, så det finns ingen hel föregående period att jämföra med."
+  },
+  "statsDeltaNew": {
+    "message": "ny"
+  },
+  "statsDeltaFlat": {
+    "message": "Ingen ändring jämfört med föregående period"
+  },
+  "statsDeltaUpFmt": {
+    "message": "Upp {0} jämfört med föregående period"
+  },
+  "statsDeltaDownFmt": {
+    "message": "Ned {0} jämfört med föregående period"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Föregående period: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Få sidor i det här intervallet ({0}): jämförelser och rangordningar kan vara missvisande."
+  },
+  "statsLoading": {
+    "message": "Läser in statistik..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Visa all historik"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Höjdpunkter"
+  },
+  "statsSectionEvidence": {
+    "message": "Belägg"
+  },
+  "statsSubnavLabel": {
+    "message": "Beläggsvyer"
+  },
+  "statsExportCanceled": {
+    "message": "Exporten avbröts"
+  },
+  "statsAllClearTitle": {
+    "message": "Ingen anti-bot eller CAPTCHA hittades i det här intervallet"
+  },
+  "statsAllClearDescFmt": {
+    "message": "De här sidorna visar bara användning av fingerprinting-API:er. Sidor: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Inget att visa för de här kategorierna"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Välj en annan kategori eller ett längre intervall."
+  },
+  "statsHeadlineTop": {
+    "message": "Vanligaste skyddet"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} av sidorna · sidor: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Svåraste webbplatsen"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Skydd: {0} · Svårighet: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Senaste skyddet"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Sågs först {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Inget nytt i det här intervallet"
+  },
+  "statsHeadlineRiser": {
+    "message": "Största ökningen"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Sidor {0} → {1} jämfört med föregående period"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Kräver en föregående period"
+  },
+  "statsKpiPages": {
+    "message": "Sparade sidor"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Aktiva dagar: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} med upptäckter ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Webbplatser med flera skydd"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} med CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Skydd som setts"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "Nya under perioden: {0}"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "av {0} regler"
+  },
+  "statsTipPages": {
+    "message": "Sidor som sparats i Historik i det här intervallet. Historik sparar upptäckter, inte varje webbläsarbesök."
+  },
+  "statsTipLayered": {
+    "message": "Domäner där två eller fler olika skydd upptäcktes."
+  },
+  "statsOverTimeProtections": {
+    "message": "Skydd som hittats över tid"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% av sidorna"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Alla skydd"
+  },
+  "statsPageTiers": {
+    "message": "Hur skyddade är dina sidor"
+  },
+  "statsTiersHint": {
+    "message": "Varje sparad sida räknas en gång, efter vilka typer av skydd som hittades på den."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot och CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Endast anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "Endast CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Ingen anti-bot eller CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Uppskattad svårighet"
+  },
+  "statsDifficultyHint": {
+    "message": "En grov uppskattning utifrån de skydd som hittats i de visade kategorierna, inte en mätning."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Inget skydd"
+  },
+  "statsHardestSites": {
+    "message": "Svåraste webbplatserna"
+  },
+  "statsAllDomainsLink": {
+    "message": "Alla domäner"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} till"
+  },
+  "statsWhatChanged": {
+    "message": "Vad som ändrats"
+  },
+  "statsChangedNew": {
+    "message": "Nya skydd"
+  },
+  "statsChangedMoving": {
+    "message": "Ökar och minskar"
+  },
+  "statsChangedGone": {
+    "message": "Ses inte längre"
+  },
+  "statsChangedSwitched": {
+    "message": "Webbplatser som bytte skydd"
+  },
+  "statsChangedNothing": {
+    "message": "Inget ändrades i det här intervallet."
+  },
+  "statsChangedAllLink": {
+    "message": "Alla ändringar"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Välj 7, 30 eller 90 dagar för att se skydd som ökar och minskar."
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "Fingerprinting-API:er kördes på {0} av sidorna · tekniker: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Vanligast: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Visas separat från anti-bot- och CAPTCHA-skydd eftersom nästan alla sidor använder de här API:erna."
+  },
+  "statsPagesColumn": {
+    "message": "Sidor"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Ändring"
+  },
+  "statsStrongColumn": {
+    "message": "Starka belägg"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Sortera skydd"
+  },
+  "statsSortMostPages": {
+    "message": "Flest sidor"
+  },
+  "statsSortMostDomains": {
+    "message": "Flest domäner"
+  },
+  "statsSortBiggestChange": {
+    "message": "Största ändring"
+  },
+  "statsCommonStacks": {
+    "message": "Vanliga skyddskombinationer"
+  },
+  "statsCommonStacksHint": {
+    "message": "Anti-bot- och CAPTCHA-skydd som hittats tillsammans på en domäns senast sparade sida."
+  },
+  "statsDomainSearchAll": {
+    "message": "Sök domäner eller skydd..."
+  },
+  "statsSortHardest": {
+    "message": "Svårast först"
+  },
+  "statsSortLastSeen": {
+    "message": "Senast"
+  },
+  "statsDifficultyColumn": {
+    "message": "Svårighet"
+  },
+  "statsStackColumn": {
+    "message": "Skydd"
+  },
+  "statsLastSeenColumn": {
+    "message": "Senast sedd"
+  },
+  "statsFilterChanged": {
+    "message": "Ändrade"
+  },
+  "statsFilterClear": {
+    "message": "Rensa filter"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Filtrera domäner"
+  },
+  "statsChangeKindGained": {
+    "message": "Tillkommit"
+  },
+  "statsChangeKindDropped": {
+    "message": "Försvunnit"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Ersatt"
+  },
+  "statsChangePageColumn": {
+    "message": "Sida"
+  },
+  "statsChangeSinceFmt": {
+    "message": "jämfört med {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Tillagt:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Borttaget:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Jämför sparade kopior av samma sida. Fingerprinting-upptäckter ignoreras om du inte visar fingerprinting."
+  },
+  "statsStrongEvidence": {
+    "message": "Starka belägg"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "{0} av {1} upptäckter har 80 % eller mer i poäng."
+  },
+  "statsUnconfirmed": {
+    "message": "Nämnda, inte bekräftade"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Skydd som hittas ofta men sällan med starka belägg. De kan vara textomnämnanden eller oanvända skript snarare än en aktiv utmaning."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Varje frekvent skydd bekräftades av starka belägg."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Hittas mest via {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Ingen enskild signal sticker ut."
+  },
+  "statsTierStrong": {
+    "message": "Stark"
+  },
+  "statsTierModerate": {
+    "message": "Måttlig"
+  },
+  "statsTierWeak": {
+    "message": "Svag"
+  },
+  "statsTierHint": {
+    "message": "Stark är 80 % eller mer, måttlig 40-79 %, svag under 40 %. 100 % betyder en signal som bara det skyddet ger."
+  },
+  "statsDecidedByCategory": {
+    "message": "Hur varje kategori avgjordes"
+  },
+  "statsLiftFmt": {
+    "message": "{0} poäng"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · {2} i snitt"
+  },
+  "statsLiftStrongFmt": {
+    "message": "I {0} höjer kombinationer säkerheten från {1} till {2}."
+  },
+  "statsLess": {
+    "message": "Mindre"
+  },
+  "statsMore": {
+    "message": "Mer"
+  },
+  "statsBusiestDay": {
+    "message": "Mest aktiva dag"
+  },
+  "statsLongestStreak": {
+    "message": "Längsta svit"
+  },
+  "statsPeakHour": {
+    "message": "Mest aktiva timme"
+  },
+  "statsQuietDays": {
+    "message": "Dagar utan sparade poster"
+  },
+  "statsTodayPartial": {
+    "message": "Idag (räknas fortfarande)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Linje: 7-dagars medelvärde"
+  },
+  "statsRulesCoverage": {
+    "message": "Täckning"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "{0} av {1} aktiverade regler matchade i det här intervallet"
+  },
+  "statsRulesAttention": {
+    "message": "Kräver uppmärksamhet"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Inget kräver uppmärksamhet."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Status"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Inte i intervallet"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Inte i Historik"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Redigerad"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Officiella regler för leverantörer som du inte har stött på förblir tysta. Det är normalt."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Ännu inte mycket Historik att bedöma efter (sidor: {0}), så en regel som aldrig matchat bevisar inte mycket."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Endast egna och redigerade regler listas. Beskrivningar av officiella regler underhålls av Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Avancerat sparar insamlingar i 30 minuter, så den här fliken ignorerar datumintervallet."
+  },
+  "statsToolsSavedNow": {
+    "message": "Sparade nu"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Går ut inom 10 minuter"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Leverantörer"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Utgångna insamlingar som väntar på rensning: {0}. Öppna Avancerat för att ta bort dem."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Sparade insamlingar"
+  },
+  "statsToolsColVendor": {
+    "message": "Leverantör"
+  },
+  "statsToolsColTool": {
+    "message": "Verktyg"
+  },
+  "statsToolsColSaved": {
+    "message": "Sparad"
+  },
+  "statsToolsColExpires": {
+    "message": "Går ut"
+  },
+  "statsToolsNoLive": {
+    "message": "Inga insamlingar är sparade just nu."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Ingen hel föregående period än."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Hur länge insamlingar sparas"
+  },
+  "settingsCaptureRetention": {
+    "message": "Spara verktygsinsamlingar i"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Insamlingar från avancerade verktyg (cookies, skript, tokens) tas bort efter den här tiden."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 minuter"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 minuter"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 timme"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 timmar"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 timmar"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 timmar"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Insamlingar sparas i {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "Från 1 minut upp till 7 dagar."
+  }
+}

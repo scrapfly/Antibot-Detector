@@ -457,7 +457,18 @@ class UpdateManager {
      * @returns {Promise<Object|null>}
      */
     static RULE_I18N_KEY = 'scrapfly_rule_i18n';
-    static RULE_I18N_LOCALES = ['ar', 'de', 'es', 'fr', 'hi', 'it', 'ja', 'ko', 'pt_BR', 'ru', 'zh_CN'];
+    static RULE_I18N_LOCALES = ['ar', 'cs', 'de', 'es', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'nl', 'pl', 'pt_BR', 'ru', 'sv', 'th', 'tr', 'uk', 'vi', 'zh_CN', 'zh_TW'];
+
+    /**
+     * The dictionaries to download: the UI language's only. RuleI18n reads just that one, every language ships
+     * with the extension, and each stored dictionary is ~130 KB of the 10 MB storage quota (21 would be ~2.7 MB).
+     * When the language cannot be told (English reads none), every language is fetched, as before.
+     */
+    static activeRuleI18nLocales() {
+        if (typeof RuleI18n === 'undefined' || typeof I18n === 'undefined' || typeof I18n.locale !== 'function') return this.RULE_I18N_LOCALES;
+        const key = RuleI18n.localeKey(I18n.locale());
+        return key ? [key] : [];
+    }
 
     /**
      * Download detectors/i18n/<locale>.json of a release once per tag and keep
@@ -469,8 +480,10 @@ class UpdateManager {
         try {
             const stored = (await chrome.storage.local.get(this.RULE_I18N_KEY))[this.RULE_I18N_KEY];
             if (stored && stored.tag === tag) return false;
+            // The chosen language may still be loading when the worker has just started
+            if (typeof I18n !== 'undefined' && typeof I18n.ready === 'function') await I18n.ready();
             const dicts = {};
-            for (const locale of this.RULE_I18N_LOCALES) {
+            for (const locale of this.activeRuleI18nLocales()) {
                 const json = await this.fetchRemoteDetector('i18n', locale, tag);
                 if (json && typeof json === 'object' && !Array.isArray(json)) dicts[locale] = json;
             }

@@ -225,6 +225,14 @@ body {
   left: -1px;
 }
 
+/* Russian tab words are the widest of any language: a little smaller, and each tab as wide as its word, so the four tabs fit the popup whole */
+:root:lang(ru) .tab-btn {
+  flex: 1 1 auto;
+  font-size: 11px;
+  letter-spacing: -0.3px;
+  gap: 4px;
+}
+
 .tab-btn:hover {
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-primary);

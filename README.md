@@ -166,7 +166,7 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 
 ### Settings
 
-- **General:** interface language (12 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
+- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, blacklisted domains, JS API events, webhooks and share links.
 - **History:** how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days, skipping duplicates and the default export format.
 - **Data:** open the statistics page, and export or import your settings and your history.
@@ -250,7 +250,7 @@ modules/                 Detection engine, core services, UI helpers, styles
 popup.html, popup.js     The popup
 sections/                One folder per tab: detection, history, rules, advanced, settings, stats
 detectors/               Detector rules (JSON), index.json, icons and rule translations
-_locales/                Translations for the 12 languages
+_locales/                Translations for the 22 languages
 utils/                   Shared helpers
 scripts/                 Repository checks and browser tests
 test/                    Unit tests (node:test)
@@ -263,6 +263,7 @@ npm run verify            # everything below, as CI runs it
 npm run check:syntax      # node --check on every JavaScript file
 npm run check:structure   # HTML tag balance, JSON validity, modal markup
 npm run check:locale      # every language has exactly the keys of English
+npm run check:locale-quality  # placeholders, code, script, fonts and Web Store limits of every translation
 npm run check:rule-i18n   # every rule text is translated in detectors/i18n/
 npm test                  # unit tests on Node's built-in test runner
 ```
@@ -274,6 +275,7 @@ npm run e2e:methods    # every detection method, from URL to JavaScript hooks
 npm run e2e:settings   # every per-pattern setting: scopes, regex, whole word, case
 npm run e2e:editor     # the rule editor saves settings and keeps every field
 npm run e2e:updater    # Rules → Update against a local stand-in for GitHub
+npm run e2e:languages  # every language through the real popup, settings and statistics pages
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json
 ```
 
@@ -284,6 +286,17 @@ CI runs `npm run verify` on every push and pull request. To run it locally befor
 ```bash
 git config core.hooksPath .githooks
 ```
+
+### Adding a language
+
+A language is a folder of translations plus a few registrations, and the checks fail until all of them are done:
+
+1. Create `_locales/<code>/messages.json` with every key of `_locales/en/messages.json` (`{ "key": { "message": "..." } }`, `{0}` placeholders and code in `` `backticks` `` unchanged), using a [code Chrome accepts](https://developer.chrome.com/docs/extensions/reference/api/i18n#locales) (`pt_BR`, `zh_TW`, `uk`...).
+2. Create `detectors/i18n/<code>.json` with the translation of every rule text (`node scripts/check-rule-i18n.js --missing` lists them). Cookie, header and path names stay as written.
+3. Add the language to the picker (`sections/settings/settings-ui-language.js`, in its own name), its flag (`utils/url-utils.js`), the lists in `modules/core/rule-i18n.js`, `modules/detection/rules/update-manager.js`, `modules/settings/settings-store.js` and `sections/rules/rules-translations-ui.js`. `test/locale-registry.test.js` names the one you forgot.
+4. Run `npm run verify`, then `npm run e2e:languages -- --only <code> --shots /tmp/shots` and look at the screenshots: it reports text still in English, raw `{0}` placeholders and labels cut off.
+
+A new script needs its IBM Plex family too (Thai ships `IBMPlexSansThai-*.woff2` in `assets/fonts/`, declared in `modules/styles/common.css` and listed in `test/font-family.test.js`): otherwise the system's font draws it, and `npm run check:locale-quality` lists the characters involved.
 
 ## Writing a detector
 

@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "การสแกนล้มเหลว"
+  },
+  "detectionInterruptedTitle": {
+    "message": "การสแกนถูกขัดจังหวะ"
+  },
+  "detectionUnscannedTitle": {
+    "message": "ไม่มีการสแกนที่เสร็จสมบูรณ์"
+  },
+  "detectionRetryScanDesc": {
+    "message": "การสแกนไม่เสร็จสิ้น โหลดหน้าซ้ำเพื่อลองอีกครั้ง"
+  },
+  "settingsReadFailedToast": {
+    "message": "โหลดการตั้งค่าไม่สำเร็จ คงค่าปัจจุบันของคุณไว้แล้ว"
+  },
+  "settingsWriteFailedToast": {
+    "message": "บันทึกการตั้งค่าไม่สำเร็จ คงการเปลี่ยนแปลงของคุณไว้แล้ว ลองอีกครั้ง"
+  },
+  "settingsDraftPendingToast": {
+    "message": "เตรียมการเปลี่ยนแปลงแล้ว บันทึกการตั้งค่าเพื่อใช้งาน"
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "บันทึกการตั้งค่าที่นำเข้าไม่สำเร็จ คงการตั้งค่าและภาษาของคุณไว้แล้ว"
+  },
+  "settingsAppliesImmediately": {
+    "message": "มีผลทันที"
+  },
+  "settingsDataPortableDesc": {
+    "message": "ส่งออกหรือนำเข้าค่ากำหนด การเชื่อมต่อการผสานรวมจะอยู่ในเบราว์เซอร์นี้"
+  },
+  "settingsImportReadFailedToast": {
+    "message": "อ่านไฟล์การตั้งค่าที่ถูกต้องไม่ได้ ไม่มีการเปลี่ยนแปลง"
+  },
+  "rulesUiSaveFailed": {
+    "message": "บันทึกกฎนี้ไม่สำเร็จ การเปลี่ยนแปลงของคุณยังอยู่ที่นี่ ลองอีกครั้ง"
+  },
+  "advToolReloadScriptsHint": {
+    "message": "โหลดหน้าซ้ำเพื่อวิเคราะห์สคริปต์ของระบบป้องกัน"
+  },
+  "advToolResetScriptsHint": {
+    "message": "รีเซ็ตคุกกี้ของระบบป้องกันและโหลดหน้าซ้ำเพื่อวิเคราะห์สคริปต์"
+  },
+  "advToolReloadVersionHint": {
+    "message": "โหลดหน้าซ้ำเพื่อตรวจหาเวอร์ชันของระบบป้องกัน"
+  },
+  "advToolCaptureResetHint": {
+    "message": "รีเซ็ตคุกกี้ของระบบป้องกันและเริ่มจับข้อมูล"
+  },
+  "advToolCookiesHint": {
+    "message": "ตรวจสอบคุกกี้ที่ระบบป้องกันนี้ใช้"
+  },
+  "advToolVersionHint": {
+    "message": "อ่านข้อมูลเวอร์ชันที่มี"
+  },
+  "advToolSiteKeyHint": {
+    "message": "ค้นหา site key ของ CAPTCHA ในหน้านี้"
+  },
+  "advToolSelectorHint": {
+    "message": "ค้นหา selector ของวิดเจ็ต CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "ตรวจสอบ callback ของ CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "รีเซ็ตคุกกี้ของระบบป้องกันและโหลดหน้าซ้ำเพื่อจับข้อมูลเซนเซอร์"
+  },
+  "advToolCaptureHint": {
+    "message": "จับข้อมูลจากหน้านี้"
+  },
+  "advToolStopCaptureHint": {
+    "message": "หยุดจับข้อมูลจากหน้านี้"
+  },
+  "advToolWorking": {
+    "message": "กำลังทำงาน…"
+  },
+  "advToolWaitingReload": {
+    "message": "กำลังโหลดหน้าซ้ำและรวบรวมผลลัพธ์ ใช้เวลาไม่กี่วินาที…"
+  },
+  "advToolNoResult": {
+    "message": "ไม่มีผลลัพธ์: ระบบป้องกันไม่ได้ส่งข้อมูลมา โหลดหน้าซ้ำแล้วลองอีกครั้ง"
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "site key ของ {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "ไม่พบ site key ในหน้านี้ เปิดหรือทริกเกอร์ CAPTCHA แล้วลองอีกครั้ง"
+  },
+  "advSiteKeyFoundIn": {
+    "message": "พบใน"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "วิดเจ็ต"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "คำขอ"
+  },
+  "advSiteKeySourceScript": {
+    "message": "สคริปต์ของหน้า"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "ตัวแปรของหน้า"
+  },
+  "advSiteKeyFrame": {
+    "message": "เฟรม"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "สคริปต์ในหน้านี้"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "ดึง site key และวิเคราะห์สคริปต์"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "วิเคราะห์สคริปต์"
+  },
+  "advToolActionFailedFmt": {
+    "message": "ดำเนินการนี้ไม่สำเร็จ: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "หน้าแผนภูมิก่อนหน้า"
+  },
+  "statsChartNext": {
+    "message": "หน้าแผนภูมิถัดไป"
+  },
+  "statsChartPage": {
+    "message": "หน้า {0} จาก {1}"
+  },
+  "statsChartShowing": {
+    "message": "แสดง {0}–{1} จาก {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "ส่วนของสถิติ"
+  },
+  "statsSectionOverview": {
+    "message": "ภาพรวม"
+  },
+  "statsSectionActivity": {
+    "message": "กิจกรรม"
+  },
+  "statsSectionProtections": {
+    "message": "ระบบป้องกัน"
+  },
+  "statsSectionDomains": {
+    "message": "โดเมน"
+  },
+  "statsSectionConfidence": {
+    "message": "ความมั่นใจ"
+  },
+  "statsExportCSV": {
+    "message": "ส่งออก CSV"
+  },
+  "statsExportJSON": {
+    "message": "ส่งออก JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "ไฟล์ที่ส่งออกมีโดเมนและสรุปการตรวจจับ ไม่มีคุกกี้ เนื้อหาของหน้า หรือพารามิเตอร์ URL"
+  },
+  "statsExportScopeFmt": {
+    "message": "การส่งออกครอบคลุมช่วงที่เลือก รายการ: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "เริ่มดาวน์โหลดแล้ว: {0}"
+  },
+  "statsExportFailed": {
+    "message": "ส่งออกข้อมูลไม่สำเร็จ โปรดลองอีกครั้ง"
+  },
+  "statsLoadFailed": {
+    "message": "โหลดประวัติไม่สำเร็จ โปรดโหลดหน้านี้ซ้ำ"
+  },
+  "statsRangeEmptyTitle": {
+    "message": "ไม่มีรายการในช่วงนี้"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "เลือกช่วงวันที่ที่ยาวขึ้นเพื่อดูประวัติที่บันทึกไว้"
+  },
+  "statsDetectionRate": {
+    "message": "รายการที่มีการตรวจจับ"
+  },
+  "statsActiveDays": {
+    "message": "วันที่ใช้งาน"
+  },
+  "statsAverageConfidence": {
+    "message": "ความมั่นใจเฉลี่ย"
+  },
+  "statsDailyVisits": {
+    "message": "รายการประวัติรายวัน"
+  },
+  "statsActivityCalendar": {
+    "message": "ปฏิทินกิจกรรม"
+  },
+  "statsActivityCalendarHint": {
+    "message": "แต่ละช่องแทนหนึ่งวันตามปฏิทินท้องถิ่น สีน้ำเงินเข้มขึ้นหมายถึงมีรายการที่บันทึกไว้มากขึ้น"
+  },
+  "statsHourlyActivity": {
+    "message": "กิจกรรมตามชั่วโมง"
+  },
+  "statsWeekdayActivity": {
+    "message": "กิจกรรมตามวันในสัปดาห์"
+  },
+  "statsLocalTimeNote": {
+    "message": "วันที่และเวลาใช้เขตเวลาท้องถิ่นของคุณ"
+  },
+  "statsTimelineLimitFmt": {
+    "message": "แสดง {0} วันล่าสุด ยอดรวมและไฟล์ส่งออกรวมทั้งช่วงที่เลือก"
+  },
+  "statsProtectionRanking": {
+    "message": "อันดับระบบป้องกัน"
+  },
+  "statsCategoryTrend": {
+    "message": "หมวดหมู่ตามช่วงเวลา"
+  },
+  "statsCategoryOverlap": {
+    "message": "หมวดหมู่ที่พบร่วมกัน"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "จำนวนรายการประวัติที่มีทั้งสองหมวดหมู่ ช่องแนวทแยงแสดงรายการที่มีหมวดหมู่นั้น"
+  },
+  "statsProtectionDetails": {
+    "message": "ระบบป้องกันทั้งหมด"
+  },
+  "statsDomainRanking": {
+    "message": "อันดับโดเมน"
+  },
+  "statsDomainMap": {
+    "message": "การเข้าชมและการตรวจจับ"
+  },
+  "statsDomainMapHint": {
+    "message": "แต่ละจุดคือหนึ่งโดเมน จุดที่ใหญ่กว่ามีระบบป้องกันที่แตกต่างกันมากกว่า"
+  },
+  "statsDomainDetails": {
+    "message": "โดเมนทั้งหมด"
+  },
+  "statsDomainSearch": {
+    "message": "ค้นหาโดเมน..."
+  },
+  "statsDomainSortLabel": {
+    "message": "เรียงลำดับโดเมน"
+  },
+  "statsSortVisits": {
+    "message": "เข้าชมมากที่สุด"
+  },
+  "statsSortDetections": {
+    "message": "ตรวจจับมากที่สุด"
+  },
+  "statsSortConfidence": {
+    "message": "ความมั่นใจสูงสุด"
+  },
+  "statsSortName": {
+    "message": "ชื่อโดเมน"
+  },
+  "statsConfidenceDistribution": {
+    "message": "การกระจายของความมั่นใจ"
+  },
+  "statsConfidenceTrend": {
+    "message": "ความมั่นใจตามช่วงเวลา"
+  },
+  "statsCategoryConfidence": {
+    "message": "ความมั่นใจตามหมวดหมู่"
+  },
+  "statsConfidenceNote": {
+    "message": "ความมั่นใจแสดงความหนักแน่นของหลักฐานการตรวจจับที่บันทึกไว้ ไม่ใช่หลักฐานยืนยันว่ามี fingerprinting หรือ challenge ที่ทำงานอยู่"
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "การตรวจจับ {0} รายการมีค่าความมั่นใจ และ {1} รายการไม่มีคะแนนที่ถูกต้อง"
+  },
+  "statsProtectionColumn": {
+    "message": "ระบบป้องกัน"
+  },
+  "statsCategoryColumn": {
+    "message": "หมวดหมู่"
+  },
+  "statsDomainColumn": {
+    "message": "โดเมน"
+  },
+  "statsTableCountFmt": {
+    "message": "แถว: {0} จาก {1}"
+  },
+  "statsTableMore": {
+    "message": "แสดงเพิ่มเติม"
+  },
+  "statsNoMatchingDomains": {
+    "message": "ไม่มีโดเมนที่ตรงกับการค้นหา"
+  },
+  "statsSelectionNote": {
+    "message": "แผนภูมิและไฟล์ส่งออกใช้ช่วงวันที่ที่เลือก รายการประวัติแทนการตรวจจับที่บันทึกไว้ ไม่ใช่ทุกการเข้าชมในเบราว์เซอร์"
+  },
+  "extensionName": {
+    "message": "Scrapfly: ตัวตรวจจับ anti-bot"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: ตัวตรวจจับ anti-bot",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": ตัวตรวจจับ anti-bot",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "ตรวจจับ CAPTCHA ระบบ anti-bot และเทคโนโลยี fingerprinting บนเว็บไซต์"
+  },
+  "tabDetection": {
+    "message": "การตรวจจับ"
+  },
+  "tabHistory": {
+    "message": "ประวัติ"
+  },
+  "tabRules": {
+    "message": "กฎ"
+  },
+  "tabAdvanced": {
+    "message": "ขั้นสูง"
+  },
+  "openSettings": {
+    "message": "เปิดการตั้งค่า"
+  },
+  "enableOrDisableDetection": {
+    "message": "เปิดหรือปิดการตรวจจับ"
+  },
+  "noDetectionsFound": {
+    "message": "ไม่พบการตรวจจับ"
+  },
+  "detectionScanningTitle": {
+    "message": "กำลังสแกนหน้านี้"
+  },
+  "detectionScanningDescription": {
+    "message": "กำลังมองหาสัญญาณของระบบป้องกัน"
+  },
+  "detectionScanningHint": {
+    "message": "ผลลัพธ์จะแสดงที่นี่เมื่อพร้อม"
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "นำออกจากบัญชีดำ"
+  },
+  "statDetections": {
+    "message": "การตรวจจับ"
+  },
+  "statConfidence": {
+    "message": "ความมั่นใจ"
+  },
+  "statDifficulty": {
+    "message": "ความยาก"
+  },
+  "statCacheScope": {
+    "message": "ขอบเขตแคช"
+  },
+  "scopeDomain": {
+    "message": "โดเมน"
+  },
+  "scopePath": {
+    "message": "พาธ"
+  },
+  "scopeFullUrl": {
+    "message": "URL แบบเต็ม"
+  },
+  "difficultyLow": {
+    "message": "ต่ำ"
+  },
+  "difficultyMedium": {
+    "message": "ปานกลาง"
+  },
+  "difficultyHigh": {
+    "message": "สูง"
+  },
+  "searchHistory": {
+    "message": "ค้นหาประวัติ..."
+  },
+  "searchDetectors": {
+    "message": "ค้นหาตัวตรวจจับ..."
+  },
+  "paginationPrev": {
+    "message": "หน้าก่อนหน้า"
+  },
+  "paginationNext": {
+    "message": "หน้าถัดไป"
+  },
+  "paginationPage": {
+    "message": "หน้า"
+  },
+  "paginationOf": {
+    "message": "จาก"
+  },
+  "paginationNoItems": {
+    "message": "ไม่มีรายการที่จะแสดง"
+  },
+  "paginationCurrentPageAria": {
+    "message": "หมายเลขหน้าปัจจุบัน"
+  },
+  "btnImport": {
+    "message": "นำเข้า"
+  },
+  "btnExport": {
+    "message": "ส่งออก"
+  },
+  "btnClear": {
+    "message": "ล้าง"
+  },
+  "btnAdd": {
+    "message": "เพิ่ม"
+  },
+  "btnUpdate": {
+    "message": "อัปเดต"
+  },
+  "btnClose": {
+    "message": "ปิด"
+  },
+  "btnSave": {
+    "message": "บันทึก"
+  },
+  "btnCancel": {
+    "message": "ยกเลิก"
+  },
+  "btnDelete": {
+    "message": "ลบ"
+  },
+  "historyImportTitle": {
+    "message": "นำเข้าประวัติ"
+  },
+  "historyExportTitle": {
+    "message": "ส่งออกประวัติ"
+  },
+  "historyClearTitle": {
+    "message": "ล้างประวัติ"
+  },
+  "historyEmptyTitle": {
+    "message": "ยังไม่มีประวัติ"
+  },
+  "historyEmptyDescription": {
+    "message": "ประวัติการตรวจจับจะแสดงที่นี่เมื่อคุณท่องเว็บไซต์"
+  },
+  "rulesUpdateTitle": {
+    "message": "ติดตั้งการอัปเดตกฎจากรีลีสล่าสุดของ Scrapfly"
+  },
+  "rulesAddTitle": {
+    "message": "เพิ่มตัวตรวจจับใหม่"
+  },
+  "rulesEmptyTitle": {
+    "message": "ไม่ได้โหลดตัวตรวจจับ"
+  },
+  "rulesEmptyDescription": {
+    "message": "ตัวตรวจจับจะแสดงที่นี่เมื่อโหลดจากที่เก็บข้อมูลและไฟล์แล้ว"
+  },
+  "ruleModalActionEdit": {
+    "message": "แก้ไข"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "ข้อมูลตัวตรวจจับ"
+  },
+  "ruleFieldName": {
+    "message": "ชื่อ"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "ชื่อตัวตรวจจับ"
+  },
+  "ruleFieldCategory": {
+    "message": "หมวดหมู่"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprint"
+  },
+  "ruleFieldDifficulty": {
+    "message": "ความยาก"
+  },
+  "ruleFieldIcon": {
+    "message": "ไอคอน"
+  },
+  "ruleFieldVersion": {
+    "message": "เวอร์ชัน"
+  },
+  "ruleFieldAuthor": {
+    "message": "ผู้เขียน"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "สีป้าย"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "วิธีการตรวจจับ"
+  },
+  "settingsTitle": {
+    "message": "การตั้งค่า"
+  },
+  "settingsSubtitle": {
+    "message": "กำหนดการตั้งค่าส่วนขยายของคุณ"
+  },
+  "settingsTabGeneral": {
+    "message": "ทั่วไป"
+  },
+  "settingsTabDetection": {
+    "message": "การตรวจจับ"
+  },
+  "settingsTabHistory": {
+    "message": "ประวัติ"
+  },
+  "settingsTabData": {
+    "message": "ข้อมูล"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "การตั้งค่าหลัก"
+  },
+  "settingsCardNotifications": {
+    "message": "การแจ้งเตือน"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "แสดงการแจ้งเตือนเมื่อตรวจพบระบบรักษาความปลอดภัย"
+  },
+  "settingsCardDebug": {
+    "message": "โหมดดีบัก"
+  },
+  "settingsCardDebugDesc": {
+    "message": "เขียนรายงานที่อ่านง่ายหนึ่งฉบับต่อหน้าที่สแกนลงในคอนโซลของส่วนขยาย"
+  },
+  "settingsRowLogCollector": {
+    "message": "ตัวรวบรวมล็อก"
+  },
+  "settingsRowMaxLogs": {
+    "message": "จำนวนล็อกสูงสุด"
+  },
+  "settingsRowCollected": {
+    "message": "รวบรวมแล้ว"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "การอัปเดตตัวตรวจจับ"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "ตรวจสอบการอัปเดตอัตโนมัติ"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "ตรวจหาคำนิยามตัวตรวจจับใหม่โดยอัตโนมัติ"
+  },
+  "settingsRowCheckInterval": {
+    "message": "ความถี่ในการตรวจสอบ"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "ไม่เคย"
+  },
+  "settingsBtnCheckNow": {
+    "message": "ตรวจสอบตอนนี้"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "ต้องอัปเดตส่วนขยาย"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "อัปเดตส่วนขยาย"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "สีป้าย"
+  },
+  "settingsRowLastCheck": {
+    "message": "ตรวจสอบล่าสุด"
+  },
+  "advancedToolsTitle": {
+    "message": "เครื่องมือจับข้อมูลขั้นสูง"
+  },
+  "advancedToolsDescription": {
+    "message": "ดึงคุกกี้ โทเค็น และ site key จากระบบป้องกันที่ตรวจพบ"
+  },
+  "advancedToolsHint": {
+    "message": "เข้าชมหน้าที่มีระบบป้องกันเพื่อเปิดใช้เครื่องมือจับข้อมูล"
+  },
+  "advancedSubtabTools": {
+    "message": "เครื่องมือ"
+  },
+  "advancedSubtabHistory": {
+    "message": "ประวัติ"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "ประวัติการจับข้อมูล"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "กรอง ตรวจสอบ และส่งออกข้อมูลที่จับได้"
+  },
+  "advancedFilterSite": {
+    "message": "ไซต์"
+  },
+  "advancedFilterAllSites": {
+    "message": "ทุกไซต์"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "ไซต์ปัจจุบัน"
+  },
+  "advancedFilterModule": {
+    "message": "โมดูล"
+  },
+  "advancedFilterAllModules": {
+    "message": "ทุกโมดูล"
+  },
+  "advancedFilterSearch": {
+    "message": "ค้นหา"
+  },
+  "advancedBtnExport": {
+    "message": "ส่งออก"
+  },
+  "advancedBtnExportTitle": {
+    "message": "ส่งออกข้อมูลที่จับ"
+  },
+  "advancedBtnClearAll": {
+    "message": "ล้างทั้งหมด"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "ล้างข้อมูลที่จับทั้งหมด"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "ยังไม่มีข้อมูลที่จับ"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "ใช้แท็บเครื่องมือเพื่อจับข้อมูลจากระบบที่ตรวจพบ"
+  },
+  "advancedNoResultsTitle": {
+    "message": "ไม่พบข้อมูลที่จับ"
+  },
+  "advancedBtnResetFilters": {
+    "message": "รีเซ็ตตัวกรองทั้งหมด"
+  },
+  "advancedModalTitle": {
+    "message": "เครื่องมือตรวจจับขั้นสูง"
+  },
+  "advancedModalIntro": {
+    "message": "เครื่องมือจับข้อมูลเฉพาะทางสำหรับการวิเคราะห์เชิงลึกของระบบ anti-bot, CAPTCHA และเทคโนโลยี fingerprinting เครื่องมือเหล่านี้จะแสดงอัตโนมัติเมื่อพบการตรวจจับที่เกี่ยวข้อง"
+  },
+  "advancedSectionSupported": {
+    "message": "ระบบที่รองรับในปัจจุบัน"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "วิธีการทำงาน"
+  },
+  "advancedStep1Title": {
+    "message": "ตรวจจับอัตโนมัติ"
+  },
+  "advancedStep1Desc": {
+    "message": "เครื่องมือจะแสดงเมื่อพบระบบ anti-bot ที่เกี่ยวข้องในหน้าปัจจุบัน"
+  },
+  "advancedStep2Title": {
+    "message": "เริ่มจับข้อมูล"
+  },
+  "advancedStep2Desc": {
+    "message": "เครื่องมือจะเริ่มต้น interceptor และเริ่มตรวจสอบคำขอเครือข่ายโดยอัตโนมัติ"
+  },
+  "advancedStep3Title": {
+    "message": "ตรวจดูผลลัพธ์"
+  },
+  "advancedStep3Desc": {
+    "message": "ข้อมูลที่จับได้จะถูกเก็บชั่วคราวและส่งออกได้ครบถ้วน"
+  },
+  "advancedFooterHint": {
+    "message": "ข้อมูลที่จับจะถูกเก็บไว้ตามเวลาที่ตั้งไว้ในการตั้งค่า"
+  },
+  "settings": {
+    "message": "การตั้งค่า"
+  },
+  "paginationShowingFmt": {
+    "message": "แสดง {0}-{1} จาก {2}"
+  },
+  "paginationShowingItems": {
+    "message": "แสดง {0}-{1} จาก {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "ไม่ทราบ"
+  },
+  "timeJustNow": {
+    "message": "เมื่อสักครู่"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} วิที่แล้ว"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} นาทีที่แล้ว"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} ชม.ที่แล้ว"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} วันที่แล้ว"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 นาทีที่แล้ว"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} นาทีที่แล้ว"
+  },
+  "timeOneHourAgo": {
+    "message": "1 ชม.ที่แล้ว"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} ชม.ที่แล้ว"
+  },
+  "timeOneDayAgo": {
+    "message": "1 วันที่แล้ว"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} วันที่แล้ว"
+  },
+  "btnCancelSettings": {
+    "message": "ยกเลิก"
+  },
+  "btnSaveSettings": {
+    "message": "บันทึกการตั้งค่า"
+  },
+  "poweredBy": {
+    "message": "ขับเคลื่อนโดย"
+  },
+  "categoryColors": {
+    "message": "สีหมวดหมู่"
+  },
+  "methodSuffixPatterns": {
+    "message": "รูปแบบ"
+  },
+  "btnSaveRule": {
+    "message": "บันทึกกฎ"
+  },
+  "tagColors": {
+    "message": "สีแท็ก"
+  },
+  "colorPickerTitle": {
+    "message": "ตัวเลือกสี"
+  },
+  "colorPickerArea": {
+    "message": "ความอิ่มตัวและความสว่าง"
+  },
+  "colorPickerSaturation": {
+    "message": "ความอิ่มตัว"
+  },
+  "colorPickerBrightness": {
+    "message": "ความสว่าง"
+  },
+  "colorPickerHue": {
+    "message": "เฉดสี"
+  },
+  "colorPickerRed": {
+    "message": "แดง"
+  },
+  "colorPickerGreen": {
+    "message": "เขียว"
+  },
+  "colorPickerBlue": {
+    "message": "น้ำเงิน"
+  },
+  "colorPickerPresets": {
+    "message": "สีที่ตั้งไว้ล่วงหน้า"
+  },
+  "cacheConfiguration": {
+    "message": "การกำหนดค่าแคช"
+  },
+  "cacheDuration": {
+    "message": "ระยะเวลาแคช"
+  },
+  "timeUnitMinutes": {
+    "message": "นาที"
+  },
+  "timeUnitHours": {
+    "message": "ชั่วโมง"
+  },
+  "timeUnitDays": {
+    "message": "วัน"
+  },
+  "blacklistedDomains": {
+    "message": "โดเมนในบัญชีดำ"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "โดเมนที่ข้ามการตรวจจับทั้งหมด"
+  },
+  "jsApiEvents": {
+    "message": "เหตุการณ์ JS API"
+  },
+  "jsApiEventsDesc": {
+    "message": "ส่งเหตุการณ์แบบกำหนดเองไปยัง window ของหน้า"
+  },
+  "ruleMethodSettings": {
+    "message": "การตั้งค่าวิธีการตรวจจับ"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · การตั้งค่า {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "การตั้งค่า {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "คำอธิบาย"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "รูปแบบนี้หมายถึงอะไร เช่น อ่านค่ากำหนดภาษาของเบราว์เซอร์"
+  },
+  "ruleDescriptionHint": {
+    "message": "แสดงในรายละเอียดการตรวจจับและในประวัติเมื่อพบรูปแบบนี้"
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "ระบบป้องกันนี้คืออะไร เช่น การตรวจจับบอทบนหน้าเข้าสู่ระบบและชำระเงิน"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "แสดงในรายละเอียดการตรวจจับของระบบป้องกันนี้"
+  },
+  "ruleConfidenceLevel": {
+    "message": "ระดับความมั่นใจ"
+  },
+  "ruleConfidencePrefix": {
+    "message": "ความมั่นใจในการตรวจจับ:"
+  },
+  "detectionName": {
+    "message": "ชื่อการตรวจจับ"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 ชั่วโมง"
+  },
+  "interval12Hours": {
+    "message": "12 ชั่วโมง"
+  },
+  "interval24Hours": {
+    "message": "24 ชั่วโมง"
+  },
+  "interval2Days": {
+    "message": "2 วัน"
+  },
+  "interval1Week": {
+    "message": "1 สัปดาห์"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "เฮดเดอร์"
+  },
+  "methodLabelCookie": {
+    "message": "คุกกี้"
+  },
+  "methodLabelContent": {
+    "message": "เนื้อหา"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS hooks"
+  },
+  "methodLabelWindow": {
+    "message": "Window"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 รูปแบบ"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} รูปแบบ"
+  },
+  "methodAddPattern": {
+    "message": "เพิ่มรูปแบบ"
+  },
+  "methodSearchPatterns": {
+    "message": "ค้นหารูปแบบ..."
+  },
+  "methodNoPatterns": {
+    "message": "ไม่มีรูปแบบ"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "ไม่มีรูปแบบที่ตรงกัน"
+  },
+  "methodSuffixMatches": {
+    "message": "รายการที่ตรงกัน"
+  },
+  "cacheExpiredLabel": {
+    "message": "หมดอายุ"
+  },
+  "copiedNotification": {
+    "message": "คัดลอกแล้ว"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ คัดลอกแล้ว!"
+  },
+  "unknownDetection": {
+    "message": "การตรวจจับที่ไม่รู้จัก"
+  },
+  "matchPlural": {
+    "message": "รายการที่ตรงกัน"
+  },
+  "noMatchesRecorded": {
+    "message": "ไม่มีการบันทึกรายการที่ตรงกัน"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "ล้างแคช"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "การดำเนินการนี้จะลบข้อมูลการตรวจจับที่แคชไว้ของโดเมนนี้ และเริ่มการวิเคราะห์ใหม่"
+  },
+  "clearCacheConfirmBtn": {
+    "message": "ล้างแคช"
+  },
+  "clearingMsg": {
+    "message": "กำลังล้าง..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ ล้างแล้ว!"
+  },
+  "cacheClearedToast": {
+    "message": "ล้างแคชแล้ว"
+  },
+  "failedToClearCacheToast": {
+    "message": "ล้างแคชไม่สำเร็จ"
+  },
+  "unableGetCurrentPage": {
+    "message": "ไม่สามารถรับข้อมูลหน้าปัจจุบันได้"
+  },
+  "invalidDomain": {
+    "message": "โดเมนไม่ถูกต้อง"
+  },
+  "addBlacklistTitle": {
+    "message": "เพิ่มในบัญชีดำ"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "โดเมน \"{0}\" จะถูกยกเว้นจากการตรวจจับทั้งหมดต่อจากนี้ คุณนำออกได้ภายหลังในการตั้งค่า"
+  },
+  "addBlacklistBtn": {
+    "message": "เพิ่มในบัญชีดำ"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "โดเมน \"{0}\" อยู่ในบัญชีดำแล้ว"
+  },
+  "addedToBlacklistFmt": {
+    "message": "เพิ่ม \"{0}\" ในบัญชีดำแล้ว"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "เพิ่มในบัญชีดำไม่สำเร็จ: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "นำ \"{0}\" ออกจากบัญชีดำแล้ว"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "นำออกจากบัญชีดำไม่สำเร็จ: {0}"
+  },
+  "historyNoDetections": {
+    "message": "ไม่มีการตรวจจับ"
+  },
+  "historyNoDetectionsFound": {
+    "message": "ไม่พบการตรวจจับ"
+  },
+  "historyMatchCountFmt": {
+    "message": "ตรงกัน {0} รายการ"
+  },
+  "historyOneMatch": {
+    "message": "ตรงกัน 1 รายการ"
+  },
+  "notificationHistoryCleared": {
+    "message": "ล้างประวัติแล้ว"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "ล้างประวัติไม่สำเร็จ: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "ส่งออกรายการประวัติแล้ว"
+  },
+  "notificationCacheCleared": {
+    "message": "ล้างแคชแล้ว"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "ล้างแคชไปแล้ว"
+  },
+  "notificationClearCacheFailed": {
+    "message": "ล้างแคชไม่สำเร็จ"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "เพิ่ม \"{0}\" ในบัญชีดำแล้ว"
+  },
+  "notificationBlacklistFailed": {
+    "message": "เพิ่มในบัญชีดำไม่สำเร็จ"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "ลบรายการประวัติแล้ว"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "ลบรายการประวัติไม่สำเร็จ"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "ส่งออกรายการประวัติ {0} รายการแล้ว"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "รวมรายการประวัติใหม่ {0} รายการแล้ว"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "แทนที่ประวัติด้วย {0} รายการแล้ว"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "นำเข้าประวัติไม่สำเร็จ: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "ล้างประวัติ"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "คุณแน่ใจหรือไม่ว่าต้องการล้างประวัติทั้งหมด การดำเนินการนี้ไม่สามารถยกเลิกได้"
+  },
+  "buttonClearAll": {
+    "message": "ล้างทั้งหมด"
+  },
+  "dialogClearCacheTitle": {
+    "message": "ล้างแคช"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "ล้างข้อมูลการตรวจจับที่แคชไว้ของ {0} หรือไม่ รายการประวัติจะยังอยู่"
+  },
+  "buttonClearCache": {
+    "message": "ล้างแคช"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "ลบรายการประวัติ"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "คุณแน่ใจหรือไม่ว่าต้องการลบการตรวจจับนี้จาก {0}"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "โหลดการตั้งค่าไม่สำเร็จ ใช้ค่าเริ่มต้นแทน"
+  },
+  "settingsSavedToast": {
+    "message": "บันทึกการตั้งค่าแล้ว"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "บันทึกการตั้งค่าไม่สำเร็จ: {0}"
+  },
+  "failedExportLogs": {
+    "message": "ส่งออกล็อกไม่สำเร็จ"
+  },
+  "logsCleared": {
+    "message": "ล้างล็อกแล้ว"
+  },
+  "failedClearLogs": {
+    "message": "ล้างล็อกไม่สำเร็จ"
+  },
+  "couldNotGetPageUrl": {
+    "message": "ไม่สามารถรับ URL ของหน้าปัจจุบันได้"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} อยู่ในบัญชีดำแล้ว"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "เพิ่ม {0} ในบัญชีดำแล้ว"
+  },
+  "failedAddDomainFmt": {
+    "message": "เพิ่มโดเมนไม่สำเร็จ: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "นำ {0} ออกจากบัญชีดำแล้ว"
+  },
+  "invalidSettingsFmt": {
+    "message": "การตั้งค่าไม่ถูกต้อง: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "โปรดป้อน URL ของ Webhook"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "ทดสอบ Webhook สำเร็จ! สถานะ: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook ตอบกลับด้วยสถานะ: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "ทดสอบ Webhook ไม่สำเร็จ: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "นำเข้าตัวตรวจจับ"
+  },
+  "importDetectorsModeMessage": {
+    "message": "“รวม” จะเพิ่มตัวตรวจจับที่นำเข้าลงในของคุณ<br>“แทนที่ทั้งหมด” จะลบตัวตรวจจับแบบกำหนดเองของคุณก่อน ตัวตรวจจับในตัวยังคงอยู่"
+  },
+  "mergeOption": {
+    "message": "รวม"
+  },
+  "replaceAllOption": {
+    "message": "แทนที่ทั้งหมด"
+  },
+  "detectorsImported": {
+    "message": "นำเข้าตัวตรวจจับแล้ว"
+  },
+  "detectorExportedFmt": {
+    "message": "ส่งออก {0} แล้ว"
+  },
+  "failedImportDetectors": {
+    "message": "นำเข้าตัวตรวจจับไม่สำเร็จ ตรวจสอบรูปแบบไฟล์"
+  },
+  "errorReadingFileFmt": {
+    "message": "เกิดข้อผิดพลาดในการอ่านไฟล์: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "อัปเดตตัวตรวจจับ {0} รายการแล้ว"
+  },
+  "detectorDeletedFmt": {
+    "message": "ลบ \"{0}\" แล้ว"
+  },
+  "failedClearDetectors": {
+    "message": "ล้างตัวตรวจจับไม่สำเร็จ"
+  },
+  "urlPatternMatching": {
+    "message": "การจับคู่รูปแบบ URL"
+  },
+  "textWordMatching": {
+    "message": "การจับคู่ข้อความ/คำ"
+  },
+  "payloadTextMatching": {
+    "message": "การจับคู่ข้อความ Payload"
+  },
+  "nameFieldMatching": {
+    "message": "การจับคู่ฟิลด์ชื่อ"
+  },
+  "captureNotFound": {
+    "message": "ไม่พบข้อมูลที่จับ"
+  },
+  "captureModuleClassNotFound": {
+    "message": "ไม่พบคลาสของโมดูล"
+  },
+  "captureDetailsUnavailable": {
+    "message": "ไม่มีมุมมองรายละเอียด"
+  },
+  "captureDataCopied": {
+    "message": "คัดลอกข้อมูลที่จับแล้ว"
+  },
+  "captureDeleted": {
+    "message": "ลบข้อมูลที่จับแล้ว"
+  },
+  "capturesExportedFmt": {
+    "message": "ส่งออกข้อมูลที่จับ {0} รายการแล้ว"
+  },
+  "allCapturesCleared": {
+    "message": "ล้างข้อมูลที่จับทั้งหมดแล้ว"
+  },
+  "captureExportFailed": {
+    "message": "ส่งออกข้อมูลที่จับไม่สำเร็จ"
+  },
+  "invalidUrl": {
+    "message": "URL ไม่ถูกต้อง"
+  },
+  "importHistoryTitle": {
+    "message": "นำเข้าประวัติ"
+  },
+  "replaceOption": {
+    "message": "แทนที่"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "นำเข้ารายการประวัติ {0} รายการหรือไม่ ประวัติปัจจุบันของคุณมี {1} รายการ<br>“รวม” จะเพิ่มรายการใหม่เข้าไป “แทนที่” จะลบประวัติเดิมก่อน"
+  },
+  "clearLogsTitle": {
+    "message": "ล้างล็อก"
+  },
+  "clearLogsMessage": {
+    "message": "คุณแน่ใจหรือไม่ว่าต้องการล้างล็อกที่รวบรวมไว้ทั้งหมด การดำเนินการนี้ไม่สามารถยกเลิกได้"
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "ตรวจสอบการอัปเดตไม่สำเร็จ: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "ไม่สามารถดึงการอัปเดตจากเซิร์ฟเวอร์ได้"
+  },
+  "updateResultInstalledFmt": {
+    "message": "อัปเดตกฎจากรีลีส {0} แล้ว: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "กฎทั้งหมดเป็นรุ่นล่าสุดตามรีลีส {0}"
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "รอส่วนขยายเวอร์ชัน {0} ขึ้นไป: {1} จะติดตั้งเมื่อ Chrome อัปเดตส่วนขยาย"
+  },
+  "updateResultFailedFmt": {
+    "message": "ดาวน์โหลดไม่ได้: {0} ลองอีกครั้งในภายหลัง"
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "กฎที่คุณแก้ไขรอการตัดสินใจของคุณใน กฎ → อัปเดต: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "เข้าถึง GitHub เพื่อตรวจสอบการอัปเดตกฎไม่ได้"
+  },
+  "updateErrorNoRelease": {
+    "message": "ไม่พบรีลีสที่เผยแพร่ของ Scrapfly บน GitHub"
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub จำกัดการตรวจสอบการอัปเดต ลองอีกครั้งใน {0} นาที"
+  },
+  "errorApplyingUpdates": {
+    "message": "เกิดข้อผิดพลาดในการใช้การอัปเดต"
+  },
+  "failedCheckForUpdates": {
+    "message": "ตรวจสอบการอัปเดตไม่สำเร็จ"
+  },
+  "errorCheckingForUpdates": {
+    "message": "เกิดข้อผิดพลาดในการตรวจสอบการอัปเดต"
+  },
+  "updateServiceNotAvailable": {
+    "message": "บริการอัปเดตไม่พร้อมใช้งาน"
+  },
+  "deleteDetectorTitle": {
+    "message": "ลบตัวตรวจจับ"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "คุณแน่ใจหรือไม่ว่าต้องการลบ \"{0}\""
+  },
+  "detectorNotFound": {
+    "message": "ไม่พบตัวตรวจจับ"
+  },
+  "failedDeleteDetector": {
+    "message": "ลบตัวตรวจจับไม่สำเร็จ"
+  },
+  "failedViewCaptureDetails": {
+    "message": "ดูรายละเอียดข้อมูลที่จับไม่สำเร็จ"
+  },
+  "failedCopyCaptureData": {
+    "message": "คัดลอกข้อมูลที่จับไม่สำเร็จ"
+  },
+  "failedDeleteCapture": {
+    "message": "ลบข้อมูลที่จับไม่สำเร็จ"
+  },
+  "noCapturesToExport": {
+    "message": "ไม่มีข้อมูลที่จับให้ส่งออก"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลที่จับทั้งหมด การดำเนินการนี้ไม่สามารถยกเลิกได้"
+  },
+  "failedClearCaptures": {
+    "message": "ล้างข้อมูลที่จับไม่สำเร็จ"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "การผสานรวม Webhook"
+  },
+  "settingsEnableWebhook": {
+    "message": "เปิดใช้ Webhook"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "ส่งคำขอ HTTP เมื่อตรวจพบ"
+  },
+  "settingsBypassCache": {
+    "message": "ส่งทุกครั้งที่โหลดหน้า (ข้ามแคช)"
+  },
+  "settingsHttpMethod": {
+    "message": "เมธอด HTTP"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "เลือกเมธอด HTTP สำหรับคำขอ Webhook"
+  },
+  "settingsCustomMethod": {
+    "message": "กำหนดเอง"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "ป้อนเมธอดที่กำหนดเอง (เช่น OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "URL ของ Webhook"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "URL ของ endpoint แบบสมบูรณ์ (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "ตัวแปรที่ใช้ได้:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "ตัวอย่าง: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "เฮดเดอร์ HTTP content type"
+  },
+  "webhookCtHintJson": {
+    "message": "เทมเพลตในรูป JSON โดยเติมค่าตัวแปรแล้ว"
+  },
+  "webhookCtHintForm": {
+    "message": "ฟิลด์ของเทมเพลตเป็นคู่ key=value ฟิลด์ที่ซ้อนกันเป็น detections[0][name]"
+  },
+  "webhookCtHintMultipart": {
+    "message": "ฟิลด์ของเทมเพลตเป็นส่วน form-data เบราว์เซอร์กำหนด boundary เอง"
+  },
+  "webhookCtHintText": {
+    "message": "ข้อความเทมเพลตตามเดิม โดยเติมค่าตัวแปรแล้ว"
+  },
+  "webhookCtHintXml": {
+    "message": "ฟิลด์ของเทมเพลตเป็นเอกสาร XML <webhook> การตรวจจับเป็นองค์ประกอบที่ซ้ำกัน"
+  },
+  "webhookCtHintCsv": {
+    "message": "แถวหัวข้อหนึ่งแถว ตามด้วยหนึ่งแถวต่อการตรวจจับ โดยฟิลด์ของหน้าจะซ้ำในทุกแถว"
+  },
+  "webhookCtHintNdjson": {
+    "message": "ออบเจ็กต์ JSON หนึ่งรายการต่อบรรทัด: หนึ่งบรรทัดต่อการตรวจจับ พร้อมฟิลด์ของหน้า"
+  },
+  "webhookCtHintCustom": {
+    "message": "Content-Type ของคุณเอง (type/subtype) เนื้อหาจะส่งเป็น JSON"
+  },
+  "webhookCtCustom": {
+    "message": "กำหนดเอง"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Content-Type แบบกำหนดเอง"
+  },
+  "webhookCtInvalid": {
+    "message": "ป้อน type/subtype เช่น application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "เพิ่มเฮดเดอร์"
+  },
+  "webhookNoHeaders": {
+    "message": "ไม่ได้กำหนดเฮดเดอร์แบบกำหนดเอง"
+  },
+  "webhookHeaderName": {
+    "message": "ชื่อเฮดเดอร์"
+  },
+  "webhookHeaderValue": {
+    "message": "ค่าเฮดเดอร์"
+  },
+  "webhookRemoveHeader": {
+    "message": "นำเฮดเดอร์ออก"
+  },
+  "webhookSending": {
+    "message": "กำลังส่ง..."
+  },
+  "settingsCustomHeaders": {
+    "message": "เฮดเดอร์แบบกำหนดเอง"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "เพิ่มเฮดเดอร์ HTTP แบบกำหนดเองในคำขอ Webhook"
+  },
+  "settingsPayloadTemplate": {
+    "message": "เทมเพลต Payload"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "เนื้อหาที่ส่งไปกับ Webhook แต่ละครั้ง คลิกตัวแปรเพื่อแทรก"
+  },
+  "webhookVarsTitle": {
+    "message": "ตัวแปรของเทมเพลต"
+  },
+  "webhookVarsIntro": {
+    "message": "ถูกแทนที่ด้วยค่าของหน้าเมื่อส่ง Webhook"
+  },
+  "webhookVarsInsertLabel": {
+    "message": "แทรกตัวแปร"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "แทรก {0}"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "คัดลอก {0}"
+  },
+  "webhookVarsExample": {
+    "message": "ตัวอย่าง"
+  },
+  "webhookVarSiteUrl": {
+    "message": "URL แบบเต็มของหน้า"
+  },
+  "webhookVarHostname": {
+    "message": "ชื่อโฮสต์ของหน้า"
+  },
+  "webhookVarTitle": {
+    "message": "ชื่อของหน้า"
+  },
+  "webhookVarFavicon": {
+    "message": "URL favicon ของไซต์"
+  },
+  "webhookVarDetections": {
+    "message": "การตรวจจับในรูปอาร์เรย์ JSON"
+  },
+  "webhookVarTimestamp": {
+    "message": "เวลาที่ตรวจจับ (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "จำนวนการตรวจจับ"
+  },
+  "webhookVarCategories": {
+    "message": "หมวดหมู่ที่ตรวจพบ คั่นด้วยจุลภาค"
+  },
+  "webhookJsonValid": {
+    "message": "JSON ถูกต้อง"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "JSON ไม่ถูกต้อง (บรรทัด {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "รีเซ็ตเทมเพลต"
+  },
+  "settingsTestWebhook": {
+    "message": "ทดสอบ Webhook"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "ส่งคำขอทดสอบไปยัง URL Webhook ของคุณ"
+  },
+  "settingsTestBtn": {
+    "message": "ทดสอบ"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "การกำหนดค่าประวัติ"
+  },
+  "settingsHistorySettings": {
+    "message": "การตั้งค่าประวัติ"
+  },
+  "settingsHistoryLimit": {
+    "message": "ขีดจำกัดประวัติ"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = ขีดจำกัดความปลอดภัย 1,000 รายการ)"
+  },
+  "settingsExportFormat": {
+    "message": "รูปแบบการส่งออก"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "ข้อความธรรมดา"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "รวมการประทับเวลา"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "บันทึกเมื่อพบในแคช"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "การป้องกันรายการซ้ำ"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "เปิดใช้การป้องกันรายการซ้ำ"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "บล็อกรายการประวัติที่ซ้ำกันภายในช่วงเวลาที่กำหนด"
+  },
+  "settingsDuplicateScope": {
+    "message": "ขอบเขต"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "URL แบบเต็ม"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "โดเมน"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "พาธ"
+  },
+  "settingsTimeWindow": {
+    "message": "ช่วงเวลา"
+  },
+  "settingsTimeMinutes": {
+    "message": "นาที"
+  },
+  "settingsTimeHours": {
+    "message": "ชั่วโมง"
+  },
+  "settingsTimeDays": {
+    "message": "วัน"
+  },
+  "settingsHowItWorks": {
+    "message": "วิธีการทำงาน:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "ป้องกันรายการประวัติซ้ำสำหรับ URL เดียวกันภายในช่วงเวลาที่กำหนด"
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "URL แบบเต็ม: ตรงกับ URL ทุกตัวอักษร (รวมพารามิเตอร์ query)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "โดเมน: โดเมนเดียวกัน (พาธต่างกันนับเป็นรายการเดียวกัน)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "พาธ: โดเมนและพาธเดียวกัน (ไม่สนพารามิเตอร์ query)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "การตั้งค่าแคช"
+  },
+  "settingsCardSkipDomains": {
+    "message": "โดเมนที่ข้าม"
+  },
+  "settingsAddCurrentPage": {
+    "message": "เพิ่มหน้าปัจจุบัน"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "ค้นหาโดเมน..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "ต่ำ"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "ปานกลาง"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "สูง"
+  },
+  "settingsEnableJsApi": {
+    "message": "เปิดใช้เหตุการณ์ JS API"
+  },
+  "settingsDataExportImport": {
+    "message": "ส่งออกและนำเข้า"
+  },
+  "settingsDataManagement": {
+    "message": "การจัดการข้อมูล"
+  },
+  "settingsDataManagementDesc": {
+    "message": "ส่งออกหรือนำเข้าข้อมูลส่วนขยายของคุณ"
+  },
+  "settingsDataSettingsRow": {
+    "message": "การตั้งค่า"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "ส่งออกหรือนำเข้าการตั้งค่าส่วนขยาย"
+  },
+  "settingsDataHistoryRow": {
+    "message": "ประวัติการตรวจจับ"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "ส่งออกประวัติการตรวจจับเป็น CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "ส่งออกการตั้งค่า"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "นำเข้าการตั้งค่า"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "ส่งออกประวัติ"
+  },
+  "settingsAvailableEvents": {
+    "message": "เหตุการณ์ที่ใช้ได้"
+  },
+  "settingsApiEventReady": {
+    "message": "โหลดและเริ่มต้นส่วนขยายแล้ว"
+  },
+  "settingsApiEventOnStart": {
+    "message": "เริ่มการตรวจจับ (แคชไม่พบ / ด้วยตนเอง)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "อัปเดตความคืบหน้าการตรวจจับ (ระดับวิธีการ)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "การตรวจสอบ JS hooks เสร็จสิ้น"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "การตรวจสอบพร็อพเพอร์ตีของ window เสร็จสิ้น"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "การตรวจจับเสร็จสิ้นพร้อมผลลัพธ์"
+  },
+  "settingsApiEventOnError": {
+    "message": "เกิดข้อผิดพลาดในการตรวจจับ"
+  },
+  "settingsUsageExample": {
+    "message": "ตัวอย่างการใช้งาน"
+  },
+  "detectionDisabledForDomain": {
+    "message": "ปิดใช้การตรวจจับสำหรับโดเมนนี้"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "นำออกจากบัญชีดำ"
+  },
+  "detectionBlacklistHint": {
+    "message": "หรือไปที่ การตั้งค่า → การตรวจจับ → โดเมนในบัญชีดำ เพื่อจัดการ"
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "ไม่พบสัญญาณ anti-bot, CAPTCHA หรือ fingerprinting ที่ตรงกันในหน้านี้"
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "ไม่มีข้อมูลการตรวจจับที่แคชไว้สำหรับหน้านี้ โหลดหน้าซ้ำเพื่อสแกนใหม่"
+  },
+  "detectionTitleUploadPaste": {
+    "message": "อัปโหลดการตรวจจับ (ลิงก์ที่แชร์ได้)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว"
+  },
+  "failedReadSettings": {
+    "message": "ไม่สามารถอ่านการตั้งค่าได้ — ยกเลิกการดำเนินการแล้ว"
+  },
+  "failedRemoveBlacklist": {
+    "message": "นำออกจากบัญชีดำไม่สำเร็จ"
+  },
+  "pasteConfirmTitle": {
+    "message": "อัปโหลดการตรวจจับหรือไม่"
+  },
+  "pasteConfirmBtn": {
+    "message": "อัปโหลด"
+  },
+  "pasteUploadFailedToast": {
+    "message": "อัปโหลดไม่สำเร็จ"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "ไม่มีการตรวจจับให้อัปโหลด"
+  },
+  "detectionTitleClearCache": {
+    "message": "ล้างแคช"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "คัดลอกภาพรวม"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "บล็อกโดเมนนี้"
+  },
+  "detectionStatSite": {
+    "message": "ไซต์"
+  },
+  "detectionStatDetections": {
+    "message": "การตรวจจับ"
+  },
+  "detectionStatConfidence": {
+    "message": "ความมั่นใจ"
+  },
+  "detectionStatDifficulty": {
+    "message": "ความยาก"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "ค้นหาการตรวจจับ..."
+  },
+  "detectionPaginationPage": {
+    "message": "หน้า"
+  },
+  "detectionPaginationOf": {
+    "message": "จาก"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "โดเมนนี้อยู่ในบัญชีดำ"
+  },
+  "detectionModalConfidence": {
+    "message": "ความมั่นใจ"
+  },
+  "detectionModalDifficulty": {
+    "message": "ความยาก"
+  },
+  "detectionModalAuthor": {
+    "message": "ผู้เขียน"
+  },
+  "detectionModalDescription": {
+    "message": "คำอธิบาย"
+  },
+  "detectionModalNoDescription": {
+    "message": "ไม่มีคำอธิบาย"
+  },
+  "detectionModalDetectionMethods": {
+    "message": "วิธีการตรวจจับ"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "ไม่พบวิธีการตรวจจับ"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "ค้นหาตาม URL โมดูล ไซต์ หรือเนื้อหา..."
+  },
+  "advancedPaginationPage": {
+    "message": "หน้า"
+  },
+  "advancedPaginationOf": {
+    "message": "จาก"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "จับ site key, action และพารามิเตอร์การกำหนดค่า"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "ดักข้อมูลเซนเซอร์และดึงข้อมูลเวอร์ชัน"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "ตรวจสอบคุกกี้และการเปลี่ยนแปลงระดับการป้องกัน"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "วิเคราะห์เฮดเดอร์แบบไดนามิกและพารามิเตอร์ของสคริปต์"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "จับ endpoint ของ challenge และรายละเอียดโทเค็น"
+  },
+  "btnStartCapturing": {
+    "message": "เริ่มจับข้อมูล"
+  },
+  "btnStopCapturing": {
+    "message": "หยุดจับข้อมูล"
+  },
+  "btnCheckCookies": {
+    "message": "ตรวจสอบคุกกี้"
+  },
+  "btnCheckVersion": {
+    "message": "ตรวจสอบเวอร์ชัน"
+  },
+  "btnAnalyzeScripts": {
+    "message": "วิเคราะห์สคริปต์"
+  },
+  "btnExtractSiteKey": {
+    "message": "ดึง Site Key"
+  },
+  "btnExtractPublicKey": {
+    "message": "ดึง Public Key"
+  },
+  "btnObtainSelector": {
+    "message": "รับ Selector"
+  },
+  "btnCopyAllData": {
+    "message": "คัดลอกข้อมูลทั้งหมด"
+  },
+  "btnClearData": {
+    "message": "ล้างข้อมูล"
+  },
+  "advCapturedDataSection": {
+    "message": "ข้อมูลที่จับ"
+  },
+  "advNoCapturesYet": {
+    "message": "ยังไม่มีข้อมูลที่จับ"
+  },
+  "advCaptureDetails": {
+    "message": "รายละเอียดข้อมูลที่จับ"
+  },
+  "advValueCopied": {
+    "message": "คัดลอกค่าแล้ว"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "ล้างข้อมูลที่จับทั้งหมดหรือไม่"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "การดำเนินการนี้จะลบข้อมูลที่จับทั้งหมดของผู้ให้บริการรายนี้อย่างถาวร"
+  },
+  "rulesColorPickerCancel": {
+    "message": "ยกเลิก"
+  },
+  "rulesColorPickerOk": {
+    "message": "ตกลง"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "ขอบเขตการค้นหาเนื้อหา"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "ตรวจสอบเฉพาะสคริปต์"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "ค้นหาเฉพาะโค้ด JavaScript (ทั้งแบบอินไลน์และที่โหลด) ไม่รวมข้อความของหน้าหรือชื่อไฟล์"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "การตั้งค่าขอบเขต"
+  },
+  "rulesNameScopeLabel": {
+    "message": "ขอบเขตของชื่อ"
+  },
+  "rulesNameScopeHint": {
+    "message": "ตำแหน่งที่ใช้ตรวจสอบการจับคู่ชื่อ/ฟิลด์"
+  },
+  "rulesScopeRequest": {
+    "message": "คำขอ"
+  },
+  "rulesScopeResponse": {
+    "message": "การตอบกลับ"
+  },
+  "rulesScopeAll": {
+    "message": "ทั้งหมด"
+  },
+  "rulesValueScopeLabel": {
+    "message": "ขอบเขตของค่า"
+  },
+  "rulesValueScopeHint": {
+    "message": "ตำแหน่งที่ใช้ตรวจสอบการจับคู่ค่า"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "การตั้งค่าขอบเขต URL"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "ขอบเขต URL"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "หน้า"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "สคริปต์"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "ทั้งหมด (ค่าเริ่มต้น)"
+  },
+  "rulesRequestConstraints": {
+    "message": "ข้อจำกัดของคำขอ"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "รูปแบบ URL (ไม่บังคับ)"
+  },
+  "rulesUrlRegex": {
+    "message": "นิพจน์ทั่วไปของ URL (Regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL คำนึงถึงตัวพิมพ์เล็กใหญ่"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "เมธอด HTTP (เลือกหนึ่งรายการ)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "กรองตามเมธอดของคำขอ (ไม่บังคับ)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "ใดก็ได้"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "ตัวเลือกการจับคู่รูปแบบ"
+  },
+  "rulesPatternRegex": {
+    "message": "นิพจน์ทั่วไป (Regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "ทั้งคำ"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "คำนึงถึงตัวพิมพ์เล็กใหญ่"
+  },
+  "rulesValueFieldOptions": {
+    "message": "ตัวเลือกฟิลด์ค่า"
+  },
+  "rulesApplySettings": {
+    "message": "ใช้การตั้งค่า"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "ตัวช่วย DOM Selector"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "ใช้ Selector"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "ตัวช่วยพร็อพเพอร์ตีของ Window"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "ยืนยัน"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "คุณแน่ใจหรือไม่"
+  },
+  "notifLoadingDefault": {
+    "message": "กำลังโหลด..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "คลิก \"เริ่มจับข้อมูล\" ด้านบนเพื่อเริ่มจับข้อมูล {0}"
+  },
+  "advancedToolsHeading": {
+    "message": "เครื่องมือจับข้อมูล"
+  },
+  "advancedToolsSubtitle": {
+    "message": "เลือกระบบป้องกันเพื่อเปิดเครื่องมือ"
+  },
+  "advancedToolsLoadTools": {
+    "message": "เปิดเครื่องมือ"
+  },
+  "advancedToolsLearnMore": {
+    "message": "เรียนรู้เกี่ยวกับเครื่องมือขั้นสูง"
+  },
+  "advancedToolsChange": {
+    "message": "เปลี่ยน"
+  },
+  "settingsLanguageTitle": {
+    "message": "ภาษา"
+  },
+  "settingsLanguageDesc": {
+    "message": "เลือกภาษาของส่วนขยายเอง ค่าเริ่มต้นจะตามเบราว์เซอร์ของคุณ"
+  },
+  "settingsLanguageAuto": {
+    "message": "ใช้ภาษาของเบราว์เซอร์"
+  },
+  "detectionEmptyTitle": {
+    "message": "ไม่ตรวจพบสิ่งใด"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ ไม่มี CAPTCHA"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ ไม่มี Anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ ไม่มี Fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "ปิดใช้การตรวจจับ"
+  },
+  "detectionDisabledDesc": {
+    "message": "ขณะนี้การตรวจจับความปลอดภัยปิดอยู่"
+  },
+  "detectionDisabledAction": {
+    "message": "เปิดสวิตช์ด้านบนเพื่อเปิดใช้การตรวจจับ"
+  },
+  "rulesModalDetectorLabel": {
+    "message": "กฎการตรวจจับ"
+  },
+  "rulesMoreActions": {
+    "message": "การดำเนินการเพิ่มเติม"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "ไม่พบระบบป้องกัน"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "ไม่มีระบบป้องกันที่รองรับในหน้านี้ที่มีความมั่นใจสูงกว่า {0}% คุณเปลี่ยนค่าต่ำสุดนี้ได้ที่ การตั้งค่า → การตรวจจับ",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "พบระบบป้องกันที่มีความมั่นใจต่ำ"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "ตรวจพบ {0} ด้วยความมั่นใจ {1}% เครื่องมือจะแสดงเมื่อสูงกว่า {2}% เท่านั้น คุณลดค่าต่ำสุดนี้ได้ที่ การตั้งค่า → การตรวจจับ",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "ระบบป้องกันที่รองรับ"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "ดูประวัติการจับข้อมูล ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript hooks"
+  },
+  "detectionMethodContent": {
+    "message": "เนื้อหา"
+  },
+  "detectionMethodWindow": {
+    "message": "พร็อพเพอร์ตีของ window"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "เฮดเดอร์"
+  },
+  "detectionMethodCookies": {
+    "message": "คุกกี้"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "เปิดใช้การตรวจจับ"
+  },
+  "historyMoreActions": {
+    "message": "การดำเนินการเพิ่มเติม"
+  },
+  "historyCopyEntryTitle": {
+    "message": "คัดลอกข้อมูล"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "ลบอัตโนมัติ"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "ลบรายการประวัติเก่าเป็นระยะ"
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "ลบรายการที่เก่ากว่า"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "ช่วงที่อนุญาต: 1–{0} {1} เลือกหน่วยที่ใหญ่ขึ้นสำหรับช่วงเวลาที่นานกว่า"
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "ช่วงที่อนุญาต: 1–{0} {1}"
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "1 เดือนนับเป็น 30 วัน 1 ปีนับเป็น 365 วัน"
+  },
+  "timeUnitMonths": {
+    "message": "เดือน"
+  },
+  "timeUnitYears": {
+    "message": "ปี"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "สถิติประวัติ"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "ดูสถิติส่วนตัวที่คำนวณในเครื่องจากประวัติการตรวจจับของคุณ"
+  },
+  "settingsOpenStats": {
+    "message": "เปิดสถิติ"
+  },
+  "settingsExportedToast": {
+    "message": "ส่งออกการตั้งค่าแล้ว"
+  },
+  "settingsExportFailedToast": {
+    "message": "ส่งออกการตั้งค่าไม่สำเร็จ"
+  },
+  "settingsImportedToast": {
+    "message": "นำเข้าการตั้งค่าแล้ว"
+  },
+  "settingsImportFailedToast": {
+    "message": "นำเข้าการตั้งค่าไม่สำเร็จ: ไฟล์ไม่ถูกต้อง"
+  },
+  "statsPrivacyNote": {
+    "message": "คำนวณในเครื่องจากประวัติการตรวจจับของคุณ ไม่มีข้อมูลออกจากเบราว์เซอร์ของคุณ"
+  },
+  "statsSubtitleFmt": {
+    "message": "คำนวณในเครื่องจากรายการประวัติ {0} รายการ ไม่มีข้อมูลออกจากเบราว์เซอร์ของคุณ"
+  },
+  "statsRangeLabel": {
+    "message": "ช่วงเวลา"
+  },
+  "statsRange7": {
+    "message": "7 วัน"
+  },
+  "statsRange30": {
+    "message": "30 วัน"
+  },
+  "statsRange90": {
+    "message": "90 วัน"
+  },
+  "statsRangeAll": {
+    "message": "ทั้งหมด"
+  },
+  "statsEmptyTitle": {
+    "message": "ยังไม่มีประวัติ"
+  },
+  "statsEmptyDesc": {
+    "message": "สถิติจะแสดงที่นี่เมื่อบันทึกหน้าที่มีการตรวจจับลงในประวัติแล้ว"
+  },
+  "statsEntries": {
+    "message": "รายการประวัติ"
+  },
+  "statsUniqueDomains": {
+    "message": "โดเมนที่ไม่ซ้ำ"
+  },
+  "statsDetections": {
+    "message": "การตรวจจับ"
+  },
+  "statsDistinctDetectors": {
+    "message": "ระบบป้องกันที่แตกต่างกัน"
+  },
+  "statsOverTime": {
+    "message": "การตรวจจับตามช่วงเวลา"
+  },
+  "statsTopProtections": {
+    "message": "ระบบป้องกันที่ตรวจพบมากที่สุด"
+  },
+  "statsTopDomains": {
+    "message": "โดเมนอันดับต้น"
+  },
+  "statsByCategory": {
+    "message": "ตามหมวดหมู่"
+  },
+  "statsByDifficulty": {
+    "message": "ตามความยาก"
+  },
+  "statsPagesUnit": {
+    "message": "หน้า"
+  },
+  "statsVisitsUnit": {
+    "message": "การเข้าชม"
+  },
+  "statsDetectionsUnit": {
+    "message": "การตรวจจับ"
+  },
+  "statsCategoryOther": {
+    "message": "อื่นๆ"
+  },
+  "statsDifficultyNone": {
+    "message": "ไม่มีการตรวจจับ"
+  },
+  "statsNoData": {
+    "message": "ไม่มีข้อมูลในช่วงนี้"
+  },
+  "statsTipPagesFmt": {
+    "message": "หน้า: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "{0} โดเมน"
+  },
+  "statsTipVisitsFmt": {
+    "message": "เข้าชม {0} ครั้ง"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "ตรวจจับ {0} ครั้ง"
+  },
+  "historyCategoryShareFmt": {
+    "message": "{0} จาก {1} การตรวจจับ · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "{0} รายการ"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "{0} รายการที่มีการตรวจจับ"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "เข้าชม {0} ครั้งต่อโดเมน"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} ต่อรายการ"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "ความมั่นใจเฉลี่ย {0}%"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "การตรวจจับ: {0} · วัน: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "นี่เป็นตัวตรวจจับทางการของ Scrapfly การอัปเดตจะไม่นำกลับมา ใช้ \"คืนค่าตัวตรวจจับทางการ\" ในเมนู … เพื่อรับกลับมา"
+  },
+  "restoreOfficialDetectors": {
+    "message": "คืนค่าตัวตรวจจับทางการ"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "คืนค่าตัวตรวจจับทางการ {0} รายการแล้ว"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "คืนค่าตัวตรวจจับทางการไม่สำเร็จ"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" สงวนไว้สำหรับตัวตรวจจับทางการ ใช้ชื่อผู้เขียนอื่น"
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "ชื่อของคุณ"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "ล้างตัวตรวจจับแบบกำหนดเอง"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "การดำเนินการนี้จะลบตัวตรวจจับแบบกำหนดเองทั้งหมดของคุณ ตัวตรวจจับทางการของ Scrapfly จะยังอยู่ (คุณปิดใช้ได้แทน) คุณแน่ใจหรือไม่"
+  },
+  "clearingCustomDetectors": {
+    "message": "กำลังล้างตัวตรวจจับแบบกำหนดเอง..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "ลบตัวตรวจจับแบบกำหนดเอง {0} รายการแล้ว"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "ไม่มีตัวตรวจจับแบบกำหนดเองให้ล้าง"
+  },
+  "rhSuggestions": {
+    "message": "คำแนะนำ"
+  },
+  "rhResults": {
+    "message": "ผลลัพธ์"
+  },
+  "rhCustomChip": {
+    "message": "กำหนดเอง"
+  },
+  "rhUseAsTyped": {
+    "message": "ใช้ตามที่พิมพ์"
+  },
+  "rhNoResultsFmt": {
+    "message": "ไม่พบรายการที่ตรงกับ “{0}”"
+  },
+  "rhNoResultsHint": {
+    "message": "คุณยังใช้เป็นค่าที่กำหนดเองได้"
+  },
+  "rhPreview": {
+    "message": "ตัวอย่าง"
+  },
+  "rhSearchWindow": {
+    "message": "ค้นหาพร็อพเพอร์ตี เช่น webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "ค้นหา selector เช่น captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "เงื่อนไข"
+  },
+  "rhConditionInvalid": {
+    "message": "ไม่รู้จักเงื่อนไข"
+  },
+  "rhAddProperty": {
+    "message": "เพิ่มพร็อพเพอร์ตี"
+  },
+  "rhChipAutomation": {
+    "message": "ระบบอัตโนมัติ"
+  },
+  "rhCondGroupType": {
+    "message": "ประเภท"
+  },
+  "rhCondGroupExistence": {
+    "message": "การมีอยู่"
+  },
+  "rhCondGroupCollections": {
+    "message": "คอลเลกชัน"
+  },
+  "rhCondGroupNumeric": {
+    "message": "ตัวเลข"
+  },
+  "rhCondGroupString": {
+    "message": "สตริง"
+  },
+  "rhCondGroupBoolean": {
+    "message": "บูลีน"
+  },
+  "rhCondGroupCustom": {
+    "message": "ค่าปัจจุบัน"
+  },
+  "rhCondTypeObject": {
+    "message": "เป็นออบเจ็กต์"
+  },
+  "rhCondTypeFunction": {
+    "message": "เป็นฟังก์ชัน"
+  },
+  "rhCondTypeString": {
+    "message": "เป็นสตริง"
+  },
+  "rhCondTypeNumber": {
+    "message": "เป็นตัวเลข"
+  },
+  "rhCondTypeBoolean": {
+    "message": "เป็นบูลีน"
+  },
+  "rhCondTypeSymbol": {
+    "message": "เป็น symbol"
+  },
+  "rhCondTypeBigint": {
+    "message": "เป็น BigInt"
+  },
+  "rhCondExists": {
+    "message": "มีอยู่ในหน้า"
+  },
+  "rhCondTruthy": {
+    "message": "เป็น truthy"
+  },
+  "rhCondFalsy": {
+    "message": "เป็น falsy (ว่าง, 0, false หรือ null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "ไม่ใช่ undefined"
+  },
+  "rhCondUndefined": {
+    "message": "เป็น undefined (ไม่มี)"
+  },
+  "rhCondNotNull": {
+    "message": "ไม่ใช่ null"
+  },
+  "rhCondNull": {
+    "message": "เป็น null"
+  },
+  "rhCondArray": {
+    "message": "เป็นอาร์เรย์"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "เป็นอาร์เรย์ที่มีรายการ"
+  },
+  "rhCondEmptyArray": {
+    "message": "เป็นอาร์เรย์ว่าง"
+  },
+  "rhCondHasLength": {
+    "message": "มีความยาว"
+  },
+  "rhCondHasKeys": {
+    "message": "เป็นออบเจ็กต์ที่มีคีย์"
+  },
+  "rhCondEmptyObject": {
+    "message": "เป็นออบเจ็กต์ว่าง"
+  },
+  "rhCondGt0": {
+    "message": "มากกว่า 0"
+  },
+  "rhCondGte0": {
+    "message": "เป็น 0 หรือมากกว่า"
+  },
+  "rhCondEq0": {
+    "message": "เท่ากับ 0"
+  },
+  "rhCondNe0": {
+    "message": "ไม่เท่ากับ 0"
+  },
+  "rhCondGt1": {
+    "message": "มากกว่า 1"
+  },
+  "rhCondGte1": {
+    "message": "เป็น 1 หรือมากกว่า"
+  },
+  "rhCondLenGt0": {
+    "message": "ไม่ว่าง"
+  },
+  "rhCondLenEq0": {
+    "message": "ว่าง"
+  },
+  "rhCondTrue": {
+    "message": "เป็น true"
+  },
+  "rhCondFalse": {
+    "message": "เป็น false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "ตรงกับหน้าที่ {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "เทมเพลต"
+  },
+  "rhDomClass": {
+    "message": "คลาส"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "แอตทริบิวต์ data"
+  },
+  "rhDomClassContains": {
+    "message": "คลาสมีคำว่า"
+  },
+  "rhDomIdContains": {
+    "message": "ID มีคำว่า"
+  },
+  "rhDomTag": {
+    "message": "แท็ก HTML"
+  },
+  "rhDomAttr": {
+    "message": "มีแอตทริบิวต์"
+  },
+  "rhDomIframe": {
+    "message": "URL ของ iframe มีคำว่า"
+  },
+  "rhDomTitle": {
+    "message": "title มีคำว่า"
+  },
+  "rhDomAlt": {
+    "message": "ข้อความ alt มีคำว่า"
+  },
+  "rhDomCamel": {
+    "message": "คลาสแบบ camelCase"
+  },
+  "rhRefAny": {
+    "message": "อักขระใดก็ได้"
+  },
+  "rhRefZeroMore": {
+    "message": "0 ครั้งขึ้นไป"
+  },
+  "rhRefOneMore": {
+    "message": "1 ครั้งขึ้นไป"
+  },
+  "rhRefOptional": {
+    "message": "ไม่บังคับ"
+  },
+  "rhRefStart": {
+    "message": "จุดเริ่มต้น"
+  },
+  "rhRefEnd": {
+    "message": "จุดสิ้นสุด"
+  },
+  "rhRefDigit": {
+    "message": "ตัวเลข"
+  },
+  "rhRefWord": {
+    "message": "ตัวอักษร ตัวเลข หรือ _"
+  },
+  "rhRefSpace": {
+    "message": "ช่องว่าง"
+  },
+  "rhRefOr": {
+    "message": "a หรือ b"
+  },
+  "rhMatch": {
+    "message": "ตรงกัน"
+  },
+  "rhNoMatch": {
+    "message": "ไม่ตรงกัน"
+  },
+  "ptTitle": {
+    "message": "ทดสอบรูปแบบ"
+  },
+  "ptTitleFmt": {
+    "message": "ทดสอบรูปแบบ · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "เนื้อหาของหน้า"
+  },
+  "ptKindCookieName": {
+    "message": "ชื่อคุกกี้"
+  },
+  "ptKindCookieValue": {
+    "message": "ค่าคุกกี้"
+  },
+  "ptKindHeaderName": {
+    "message": "ชื่อเฮดเดอร์"
+  },
+  "ptKindHeaderValue": {
+    "message": "ค่าเฮดเดอร์"
+  },
+  "ptKindPayloadText": {
+    "message": "เนื้อหาคำขอ"
+  },
+  "ptKindPayloadUrl": {
+    "message": "URL ของคำขอ"
+  },
+  "ptPatternLabel": {
+    "message": "รูปแบบ"
+  },
+  "ptOptionsLabel": {
+    "message": "ตัวเลือกการจับคู่"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "ลองกับ"
+  },
+  "ptExamplesBtn": {
+    "message": "ตัวอย่าง"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "บรรทัดละหนึ่งรายการ: URL ชื่อคุกกี้…"
+  },
+  "ptNoSamples": {
+    "message": "พิมพ์หรือวางข้อความด้านบน บรรทัดละหนึ่งรายการ เพื่อดูว่าตรงกันหรือไม่"
+  },
+  "ptCheatTitle": {
+    "message": "สรุป Regex"
+  },
+  "ptCheatNote": {
+    "message": "เขียนรูปแบบโดยไม่ต้องมี / ล้อมรอบ การทำซ้ำซ้อนกัน เช่น (a+)+ จะถูกปฏิเสธเพราะอาจทำให้หน้าค้าง"
+  },
+  "ptApply": {
+    "message": "ใช้"
+  },
+  "ptTestBtn": {
+    "message": "ทดสอบ"
+  },
+  "ptTestTitle": {
+    "message": "ลองรูปแบบกับข้อความตัวอย่าง"
+  },
+  "ptNoPattern": {
+    "message": "ยังไม่มีรูปแบบ"
+  },
+  "ptHintRegex": {
+    "message": "รูปแบบ เช่น ^bm_ หรือ \\d+ โดยไม่มี / ล้อมรอบ"
+  },
+  "ptHintWholeWord": {
+    "message": "ข้ามการจับคู่ภายในคำที่ยาวกว่า: _abck ไม่ใช่ test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai จะไม่ตรงกับ akamai อีกต่อไป"
+  },
+  "ptSaysEmpty": {
+    "message": "พิมพ์รูปแบบเพื่อดูว่าตรงกับอะไร"
+  },
+  "ptSaysRegex": {
+    "message": "ตรงกับข้อความที่ regex พบการจับคู่"
+  },
+  "ptSaysWordFmt": {
+    "message": "ตรงกับ “{0}” ทั้งคำ ไม่ใช่ภายในคำที่ยาวกว่า"
+  },
+  "ptSaysWildcardFmt": {
+    "message": "ตรงกับชื่อเช่น “{0}” โดย * แทนข้อความใดก็ได้"
+  },
+  "ptSaysPrefixFmt": {
+    "message": "ตรงกับชื่อที่ขึ้นต้นด้วย “{0}”"
+  },
+  "ptSaysContainsFmt": {
+    "message": "ตรงกับข้อความที่มี “{0}”"
+  },
+  "ptCaseExact": {
+    "message": "ตัวพิมพ์ใหญ่และเล็กต้องตรงกันทุกตัว"
+  },
+  "ptCaseIgnored": {
+    "message": "ตัวพิมพ์ใหญ่และเล็กถือว่าเหมือนกัน"
+  },
+  "ptNoteInvalidFmt": {
+    "message": "regex นี้ไม่ถูกต้อง จึงไม่มีทางตรงกัน: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "การตรวจจับปฏิเสธ regex นี้เพราะอาจทำให้หน้าค้าง (การทำซ้ำซ้อนกัน หรือเกิน 1000 อักขระ) จึงไม่มีทางตรงกัน"
+  },
+  "ptNoteSlashes": {
+    "message": "ไม่ต้องใส่ / ที่ปลายทั้งสองด้าน: ระบบจะนับเป็นส่วนหนึ่งของข้อความที่ใช้จับคู่"
+  },
+  "ptNoteLooksRegex": {
+    "message": "ดูเหมือน regex: ให้เปิด Regex ไม่เช่นนั้นสัญลักษณ์จะถูกจับคู่เป็นข้อความธรรมดา"
+  },
+  "ptNoteWordIgnored": {
+    "message": "ตัวเลือกทั้งคำไม่มีผลขณะเปิด Regex"
+  },
+  "ptNoteHeaderCase": {
+    "message": "ชื่อเฮดเดอร์ถูกเก็บเป็นตัวพิมพ์เล็ก ดังนั้นเมื่อเปิดการคำนึงถึงตัวพิมพ์เล็กใหญ่ รูปแบบนี้จะไม่มีทางตรงกัน"
+  },
+  "ptNoteWordEdges": {
+    "message": "รูปแบบนี้ขึ้นต้นหรือลงท้ายด้วยสัญลักษณ์ ดังนั้นตัวเลือกทั้งคำต้องมีตัวอักษร ตัวเลข หรือ _ อยู่ติดกับสัญลักษณ์นั้น"
+  },
+  "rhRefDot": {
+    "message": "จุดจริง"
+  },
+  "rhRefSet": {
+    "message": "หนึ่งใน a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2 ถึง 5 ครั้ง"
+  },
+  "mhExamplesTitle": {
+    "message": "ในกฎของ Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "วิธีจับคู่"
+  },
+  "mhWriteTitle": {
+    "message": "สิ่งที่เขียนได้"
+  },
+  "mhLimitsTitle": {
+    "message": "ควรรู้"
+  },
+  "mhUrlIntro": {
+    "message": "ตรวจสอบที่อยู่ของหน้าและ URL ที่หน้าร้องขอ: สคริปต์ การเรียก XHR และ fetch รูปภาพ เฟรม และ ping"
+  },
+  "mhUrlHow1": {
+    "message": "เมื่อไม่ใช้ Regex URL ต้องมีข้อความนั้นอยู่ โดยไม่สนตัวพิมพ์เล็กใหญ่ นับ URL ทั้งหมดรวมถึง query string"
+  },
+  "mhUrlHow2": {
+    "message": "เมื่อใช้ Regex ไม่ต้องใส่ / ที่ปลายทั้งสองด้าน และเขียนจุดเป็น `\\.` เช่น `^https://js\\.example\\.com/`"
+  },
+  "mhUrlHow3": {
+    "message": "ขอบเขต URL: “หน้า” ตรวจเฉพาะที่อยู่ของหน้า “สคริปต์” เพิ่มแหล่งที่มาของสคริปต์ “ทั้งหมด (ค่าเริ่มต้น)” เพิ่มทุกคำขอ"
+  },
+  "mhUrlLimit1": {
+    "message": "ไม่บันทึกคำขอฟอนต์ สื่อ และสไตล์ชีต"
+  },
+  "mhUrlLimit2": {
+    "message": "นับเฉพาะคำขอที่เกิดก่อนการสแกน การสแกนจะทำงานเมื่อหน้าโหลดเสร็จแล้ว"
+  },
+  "mhHeaderIntro": {
+    "message": "ตรวจสอบเฮดเดอร์ของคำขอและการตอบกลับของหน้าเอง ไม่ใช่ของสคริปต์ การเรียก XHR หรือเฟรม"
+  },
+  "mhHeaderHow1": {
+    "message": "ชื่อเฮดเดอร์จะเปรียบเทียบเป็นตัวพิมพ์เล็ก และข้อความธรรมดาหมายถึง “มีข้อความนี้อยู่”: `server` จะตรงกับ `server-timing` ด้วย หากต้องการชื่อที่ตรงทั้งหมด ให้ใช้ Regex `^server$`"
+  },
+  "mhHeaderHow2": {
+    "message": "ค่าจะถูกตรวจสอบกับเฮดเดอร์ที่มีชื่อนั้น เว้นว่างไว้เพื่อรับค่าใดก็ได้"
+  },
+  "mhHeaderHow3": {
+    "message": "ขอบเขตการตอบกลับ (ค่าเริ่มต้น) หมายถึงเฮดเดอร์ที่ไซต์ส่งมา ส่วนคำขอหมายถึงเฮดเดอร์ที่เบราว์เซอร์ส่ง"
+  },
+  "mhHeaderLimit1": {
+    "message": "เมื่อเปิดการคำนึงถึงตัวพิมพ์เล็กใหญ่ ให้เขียนชื่อเฮดเดอร์เป็นตัวพิมพ์เล็ก"
+  },
+  "mhHeaderLimit2": {
+    "message": "หน้าที่เปลี่ยนที่อยู่โดยไม่โหลดซ้ำจะถูกสแกนอีกครั้งโดยไม่มีเฮดเดอร์"
+  },
+  "mhCookieIntro": {
+    "message": "ตรวจสอบคุกกี้ของหน้าตามชื่อ และตามค่าได้ รวมถึงคุกกี้ HttpOnly และ Secure"
+  },
+  "mhCookieHow1": {
+    "message": "ชื่อธรรมดาจะจับคู่แบบคำนำหน้า: `_abck` จะตรงกับ `_abck_2` ด้วย"
+  },
+  "mhCookieHow2": {
+    "message": "`*` แทนข้อความใดก็ได้: `bm_*` ตรงกับ `bm_sz` และ `bm_sv`"
+  },
+  "mhCookieHow3": {
+    "message": "หากต้องการชื่อที่ตรงทั้งหมด ให้เปิด Regex และเขียน `^name$` ค่าจะตรงกันเมื่อมีข้อความนั้นอยู่"
+  },
+  "mhCookieLimit1": {
+    "message": "ขอบเขตคำขอ (ค่าเริ่มต้น) อ่านคุกกี้ของเบราว์เซอร์สำหรับหน้า ขอบเขตการตอบกลับอ่านคุกกี้ที่การตอบกลับของหน้าตั้งค่า"
+  },
+  "mhCookieLimit2": {
+    "message": "ไม่เห็นคุกกี้ของไซต์อื่น เช่นเฟรมของผู้ให้บริการ ค่าที่ยาวจะถูกตัดเหลือ 100 อักขระ"
+  },
+  "mhContentIntro": {
+    "message": "ค้นหาข้อความของหน้า: HTML ของ body, สคริปต์อินไลน์ และไฟล์สคริปต์และสไตล์ชีตที่โหลด"
+  },
+  "mhContentHow1": {
+    "message": "ข้อความธรรมดาจะตรงกันเมื่อเนื้อหามีข้อความนั้น โดยไม่สนตัวพิมพ์เล็กใหญ่"
+  },
+  "mhContentHow2": {
+    "message": "ตัวเลือกทั้งคำจะข้ามการจับคู่ภายในคำที่ยาวกว่า โดยต้องมีตัวอักษร ตัวเลข หรือ _ ที่ปลายทั้งสองด้านของรูปแบบ"
+  },
+  "mhContentHow3": {
+    "message": "“ตรวจสอบเฉพาะสคริปต์” ค้นหาเฉพาะสคริปต์อินไลน์ (รวม head) และไฟล์ JavaScript โดยไม่รวม HTML หรือ CSS"
+  },
+  "mhContentLimit1": {
+    "message": "ไฟล์ที่ไซต์ไม่อนุญาตให้ origin อื่นอ่าน (CORS) หรือมีขนาดเกิน 5 MB จะถูกข้าม"
+  },
+  "mhContentLimit2": {
+    "message": "ไม่ค้นหาโค้ดภายในเฟรมหรือ worker หรือโค้ดที่โหลดหลังการสแกน"
+  },
+  "mhDomIntro": {
+    "message": "มองหาองค์ประกอบใน body ของหน้าด้วย CSS selector เมื่อหน้าโหลดเสร็จแล้ว"
+  },
+  "mhDomHow1": {
+    "message": "แท็ก `.class` `#id` หรือ `[attribute]` ใช้เดี่ยวหรือรวมกันได้: `.g-recaptcha[data-sitekey]`"
+  },
+  "mhDomHow2": {
+    "message": "การทดสอบแอตทริบิวต์ `=`, `^=`, `$=`, `*=`, `~=` และ `|=` เพิ่ม ` i` ก่อน `]` เพื่อไม่สนตัวพิมพ์เล็กใหญ่"
+  },
+  "mhDomHow3": {
+    "message": "ใส่หลาย selector คั่นด้วยเครื่องหมายจุลภาคได้: ตรงกับตัวใดตัวหนึ่งก็ถือว่าตรงกัน"
+  },
+  "mhDomLimit1": {
+    "message": "ไม่รองรับ จึงไม่มีทางตรงกัน: ช่องว่างหรือ `>` ระหว่างส่วน `:pseudo-classes` และ escape"
+  },
+  "mhDomLimit2": {
+    "message": "ไม่ค้นหาใน head เฟรม และ shadow root ไม่อ่านแอตทริบิวต์ `value` แอตทริบิวต์อื่นเปรียบเทียบจาก 100 อักขระแรก"
+  },
+  "mhWindowIntro": {
+    "message": "ตรวจสอบตัวแปร global ของ JavaScript ที่หน้ากำหนด เช่น `grecaptcha.render`"
+  },
+  "mhWindowHow1": {
+    "message": "พาธจาก `window` คั่นด้วยจุด: `KPSDK` หรือ `grecaptcha.render`"
+  },
+  "mhWindowHow2": {
+    "message": "เงื่อนไข เช่น `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` หรือ `has keys` ถ้าว่างหมายถึง truthy"
+  },
+  "mhWindowHow3": {
+    "message": "เงื่อนไขที่การตรวจจับไม่เข้าใจจะไม่มีทางตรงกัน ดังนั้นให้เลือกจากรายการ"
+  },
+  "mhWindowLimit1": {
+    "message": "ตรวจสอบในไม่กี่วินาทีแรกหลังหน้าโหลด ตัวแปร global ที่สร้างภายหลังจะถูกมองข้าม"
+  },
+  "mhWindowLimit2": {
+    "message": "พร็อพเพอร์ตีที่ตั้งชื่อด้วย Symbol ไม่สามารถเขียนเป็นพาธได้"
+  },
+  "mhJsHooksIntro": {
+    "message": "บันทึกเมื่อหน้าเรียก API ของเบราว์เซอร์ เช่น `HTMLCanvasElement.prototype.toDataURL` ซึ่งเป็นสัญญาณของ fingerprinting"
+  },
+  "mhJsHooksHow1": {
+    "message": "พาธเต็มไปยังเมธอดหรือ getter: `Navigator.prototype.webdriver` ไม่ใช่ `navigator.webdriver`"
+  },
+  "mhJsHooksHow2": {
+    "message": "การเรียกใดๆ ก็นับ ไม่ตรวจสอบอาร์กิวเมนต์และผลลัพธ์ ดังนั้น hook จึงแสดงว่ามีการใช้ API ไม่ได้บอกว่าใช้เพื่ออะไร"
+  },
+  "mhJsHooksLimit1": {
+    "message": "นับการเรียกในไม่กี่วินาทีแรกหลังหน้าโหลด (สูงสุด 8 วินาที)"
+  },
+  "mhJsHooksLimit2": {
+    "message": "ไม่เห็นการเรียกใน worker หรือเฟรม ยกเว้นเป้าหมายในตัวในเฟรมของไซต์เดียวกัน"
+  },
+  "mhPayloadIntro": {
+    "message": "ค้นหาเนื้อหาของคำขอ POST, PUT, PATCH และ DELETE ที่หน้าส่ง จากเฟรมใดก็ได้"
+  },
+  "mhPayloadHow1": {
+    "message": "ข้อความธรรมดาจะตรงกันเมื่อเนื้อหามีข้อความนั้น โดยไม่สนตัวพิมพ์เล็กใหญ่ ข้อมูลฟอร์มจะอ่านเป็น `name=value&…`"
+  },
+  "mhPayloadHow2": {
+    "message": "URL ของคำขอ (ไม่บังคับ) และเมธอด HTTP จำกัดให้เฉพาะคำขอที่ตรงเงื่อนไข"
+  },
+  "mhPayloadLimit1": {
+    "message": "นับเฉพาะคำขอที่ส่งก่อนการสแกน สูงสุด 50 รายการต่อหน้า"
+  },
+  "mhPayloadLimit2": {
+    "message": "ไม่อ่านข้อความ WebSocket"
+  },
+  "domCardTitle": {
+    "message": "CSS selector"
+  },
+  "domCardBrowse": {
+    "message": "เรียกดู"
+  },
+  "domCardHint": {
+    "message": "แท็ก .class #id หรือการทดสอบ [attribute] ใช้เดี่ยวหรือรวมกันได้ ไม่รองรับช่องว่างหรือ > ระหว่างส่วน"
+  },
+  "windowCardTitle": {
+    "message": "พร็อพเพอร์ตีของ window"
+  },
+  "settingsApiEventsDesc": {
+    "message": "เหตุการณ์ที่ส่วนขยายส่งไปยังหน้า"
+  },
+  "settingsApiUsageDesc": {
+    "message": "รับฟังเหตุการณ์จากสคริปต์ของคุณเอง"
+  },
+  "settingsApiCopyCode": {
+    "message": "คัดลอกโค้ด"
+  },
+  "settingsApiCodeCopied": {
+    "message": "คัดลอกโค้ดแล้ว"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "คัดลอกชื่อเหตุการณ์"
+  },
+  "advCommonClickToCopy": {
+    "message": "คลิกเพื่อคัดลอก"
+  },
+  "advCommonDomainLabel": {
+    "message": "โดเมน:"
+  },
+  "advCommonCopy": {
+    "message": "คัดลอก"
+  },
+  "advCommonPage": {
+    "message": "หน้า"
+  },
+  "advCommonExportCode": {
+    "message": "ส่งออกโค้ด"
+  },
+  "advCommonUrlCopied": {
+    "message": "คัดลอก URL แล้ว"
+  },
+  "advScriptTypeCollector": {
+    "message": "Collector"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "การตรวจ CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Interstitial"
+  },
+  "advCommonCaptured": {
+    "message": "จับเมื่อ"
+  },
+  "advCommonScript": {
+    "message": "สคริปต์"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "URL ของสคริปต์:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "ไม่มีข้อมูลที่จับ"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "ตรวจสอบคุกกี้ไม่สำเร็จ: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "วิเคราะห์สคริปต์ไม่สำเร็จ: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "เริ่มการวิเคราะห์ไม่สำเร็จ"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "ตรวจสอบเวอร์ชันไม่สำเร็จ: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "ดึงข้อมูลไม่สำเร็จ: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "เริ่มการดึงข้อมูลไม่สำเร็จ: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "ไม่มีสคริปต์ให้ส่งออก"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "คุกกี้ของ {0}"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "ไม่พบคุกกี้ของ {0}"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "สคริปต์ของ {0} ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "กำลังวิเคราะห์สคริปต์ของ {0}... หน้าจะโหลดซ้ำ"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "ไม่มีตัวสร้างโค้ด"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "ตัวสร้างโค้ดสำหรับแยกวิเคราะห์สคริปต์"
+  },
+  "advCommonExportOptions": {
+    "message": "ตัวเลือกการส่งออก"
+  },
+  "advCommonAllTypes": {
+    "message": "ทุกประเภท"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "พบสคริปต์ที่เกี่ยวข้อง {0} รายการ"
+  },
+  "advCommonTotalScripts": {
+    "message": "สคริปต์ทั้งหมด:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "ระดับการป้องกัน:"
+  },
+  "advCommonCookiesFound": {
+    "message": "คุกกี้ที่พบ:"
+  },
+  "advCommonSiteKey": {
+    "message": "Site Key"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "URL ของเว็บไซต์"
+  },
+  "advCommonSiteUrl": {
+    "message": "URL ของไซต์"
+  },
+  "advCommonApiDomain": {
+    "message": "โดเมน API"
+  },
+  "advCommonFound": {
+    "message": "พบ"
+  },
+  "advCommonNotFound": {
+    "message": "ไม่พบ"
+  },
+  "advCommonYes": {
+    "message": "ใช่"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "มาตรฐาน"
+  },
+  "advCommonNone": {
+    "message": "ไม่มี"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "โค้ดคอนโซลของเบราว์เซอร์สำหรับดักและแยกวิเคราะห์สคริปต์ของ {0}"
+  },
+  "advCodeDescPythonBs": {
+    "message": "สคริปต์ Python ที่ใช้ requests และ BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "สคริปต์ Python ที่ใช้ไลบรารี requests"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "สคริปต์ Node.js ที่ใช้ axios และ cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "สคริปต์ Node.js ที่ใช้ axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "สคริปต์ PHP ที่ใช้ cURL และ DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "สคริปต์ PHP ที่ใช้ cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# ที่ใช้ HttpClient และ HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# ที่ใช้ HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go ที่ใช้ net/http และ goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go ที่ใช้ net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "กำลังจับข้อมูล"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "โหลดหน้าซ้ำเพื่อเริ่มการจับข้อมูล"
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "สิ้นสุดใน {0} วิ"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "โหลดหน้านี้ซ้ำ"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "แก้หรือคลิก reCAPTCHA"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "รอ \"จับข้อมูลเสร็จสิ้น\""
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "เริ่มตรวจสอบ {0} แล้ว"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "จับข้อมูลเสร็จสิ้น"
+  },
+  "pageNoticePageLoading": {
+    "message": "กำลังโหลดหน้า"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "โปรดรอจนหน้าโหลดเสร็จสมบูรณ์..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "ไม่พบ Akamai ในหน้านี้ ไม่มีคุกกี้ _abck"
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "จับข้อมูล Akamai สำเร็จ!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "หยุดจับข้อมูลแล้ว"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "หยุดการจับข้อมูลไม่สำเร็จ: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "กำลังโหลดหน้าซ้ำเพื่อวิเคราะห์ข้อมูล Akamai…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "วิเคราะห์เนื้อหาไม่สำเร็จ: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "ไม่พบคุกกี้ _abck"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "ประมวลผลข้อมูลไม่สำเร็จ: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "กำลังดึงข้อมูลเซนเซอร์…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "ดึงข้อมูลเซนเซอร์ไม่สำเร็จ: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "ไม่พบ Akamai"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "ไม่มีคุกกี้ _abck ในหน้านี้"
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager ไม่ได้ทำงานที่นี่"
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "โหลดหน้าซ้ำเพื่อเริ่มตรวจสอบข้อมูลเซนเซอร์และรายละเอียดคำขอ"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "จับ sensor_data ของ Akamai สำเร็จ"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "ขั้นสูง (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "พื้นฐาน"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "ง่าย"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "ระดับ _abck:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "การวิเคราะห์ Akamai"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "สคริปต์ Akamai:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "สคริปต์ URL ข้อมูลเซนเซอร์"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "ตัวแปร Pixel HTML:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "URL ของ POST:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "ตัวแปรสคริปต์ Pixel:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "URL สคริปต์ SBSD"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "URL ข้อมูลเซนเซอร์"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Endpoint ของ Akamai"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "เซนเซอร์"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "ข้อมูลเซนเซอร์ที่ดึงได้"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "ข้อมูลเซนเซอร์ ({0} อักขระ)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "ไม่ได้จับข้อมูลเซนเซอร์"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "ข้อมูล SBSD ({0} อักขระ)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "URL สคริปต์เซนเซอร์"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "คัดลอกข้อมูลทั้งหมดเป็น JSON"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "ดึงข้อมูลเซนเซอร์"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ระดับ ABCK"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "คุกกี้ ABCK"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "เวอร์ชัน Akamai"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "ข้อกำหนดของ challenge"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "Challenge SBSD"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "Challenge sec_cpt"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Challenge Pixel"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "เปิดโหมดดึงข้อมูลไม่สำเร็จ ดูรายละเอียดในคอนโซลเบื้องหลัง"
+  },
+  "advImpervaSessionCookies": {
+    "message": "คุกกี้เซสชัน"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "ส่วนประกอบด้านความปลอดภัย"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "คุกกี้: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "การตรวจจับทรัพยากร"
+  },
+  "advImpervaResourceUrls": {
+    "message": "URL ทรัพยากร"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "URL Interrogation"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "การวิเคราะห์ Imperva"
+  },
+  "advImpervaSensorUrl": {
+    "message": "URL เซนเซอร์:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "สคริปต์ {0}"
+  },
+  "advImpervaSensorPath": {
+    "message": "พาธเซนเซอร์:"
+  },
+  "advImpervaNoScripts": {
+    "message": "ไม่พบสคริปต์"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "อาจไม่มี Imperva ในหน้านี้"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "เฉพาะ {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "ขั้นสูง (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "พื้นฐาน (เซสชัน)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "โหลดหน้าซ้ำเพื่อเริ่มตรวจสอบคำขอและคุกกี้ของ Imperva"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "จับข้อมูล Imperva แล้ว (รายการ: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "จับข้อมูล Imperva เสร็จสิ้น"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "จับข้อมูลเซนเซอร์สำเร็จ"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "Callback ของ reCAPTCHA"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "การตรวจหา Selector"
+  },
+  "advRecaptchaMethod": {
+    "message": "วิธีการ"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selector"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "คัดลอก selector ไปยังคลิปบอร์ดแล้ว!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "ไม่พบองค์ประกอบ reCAPTCHA"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() ล้มเหลว: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "Callback ของ reCAPTCHA"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "ไคลเอนต์ reCAPTCHA"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "Client ID: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "คัดลอกไปยังคลิปบอร์ดแล้ว!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "ฟังก์ชัน Callback"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "พาธ Callback"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "ไม่ได้กำหนด callback"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "Callback ใน DOM"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Callback ในสคริปต์"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "ตัวอย่างการใช้ Callback"
+  },
+  "advRecaptchaInvisible": {
+    "message": "แบบมองไม่เห็น"
+  },
+  "advRecaptchaAction": {
+    "message": "Action"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "คุกกี้ที่จำเป็น"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "ฟีเจอร์ที่ตรวจพบ"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "ต้องมีพารามิเตอร์ S"
+  },
+  "advRecaptchaHasSession": {
+    "message": "มีเซสชัน"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "คลิกไม่สำเร็จ: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "ไม่พบ callback ของ reCAPTCHA ในหน้านี้ ตรวจสอบว่าโหลด reCAPTCHA แล้ว"
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "จับ callback ไม่สำเร็จ: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "โหลดหน้าซ้ำและแก้ challenge ของ reCAPTCHA เพื่อเริ่มตรวจสอบ"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "หน้าพร้อมแล้ว"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "ตอนนี้แก้ challenge ของ reCAPTCHA เพื่อจับข้อมูล"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "จับและถอดรหัสคำขอแล้ว: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "ไม่ได้จับคำขอ reCAPTCHA"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "ตรวจพบ reCAPTCHA"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "แก้ challenge การจับข้อมูลจะเสร็จเอง"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "ตอนนี้ทริกเกอร์หรือคลิก reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "คุกกี้"
+  },
+  "advShapeHeadersLabel": {
+    "message": "เฮดเดอร์"
+  },
+  "advShapeVersionTitle": {
+    "message": "เวอร์ชัน Shape Security"
+  },
+  "advShapeHeaderPattern": {
+    "message": "รูปแบบเฮดเดอร์"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "รูปแบบเฮดเดอร์"
+  },
+  "advShapeCookieTitle": {
+    "message": "คุกกี้ Shape"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "การวิเคราะห์ Shape Security"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "สคริปต์ Init.js:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "สคริปต์ Seed:"
+  },
+  "advShapeInitJsScript": {
+    "message": "สคริปต์ Init.js"
+  },
+  "advShapeInitJsScripts": {
+    "message": "สคริปต์ Init.js"
+  },
+  "advShapeSeedScript": {
+    "message": "สคริปต์ Seed"
+  },
+  "advShapeSeedScripts": {
+    "message": "สคริปต์ Seed"
+  },
+  "advShapeErrorFmt": {
+    "message": "ข้อผิดพลาด: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "เวอร์ชันที่ตรวจพบ:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "ข้อกำหนดการจับข้อมูล"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "คุกกี้ + เฮดเดอร์"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "โหลดหน้าซ้ำเพื่อเริ่มตรวจสอบเฮดเดอร์และคุกกี้ของ Shape Security"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "โปรดรอจนหน้าโหลดเสร็จสมบูรณ์ก่อนดำเนินการ..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "กำลังตรวจสอบ ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "ใช้งานหน้าเพื่อกระตุ้นให้เกิดคุกกี้"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "ใช้งานหน้าเพื่อกระตุ้นให้เกิดเฮดเดอร์ + คุกกี้"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "หมดเวลา ({2}) - คุกกี้: {0}, เฮดเดอร์: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - คุกกี้: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - คุกกี้: {1} | เฮดเดอร์: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "จับข้อมูลแล้ว - คุกกี้: {0}, เฮดเดอร์: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "การตรวจจับ hCaptcha"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "ไม่พบ hCaptcha โปรดโหลดหน้าซ้ำโดยให้ hCaptcha โหลดอยู่"
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "เวอร์ชัน hCaptcha"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "โหมด Enterprise"
+  },
+  "advHcaptchaNo": {
+    "message": "ไม่ใช่"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "ยังไม่มีประวัติการจับข้อมูล"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "ไม่มีข้อมูล"
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "กำลังตรวจสอบเวอร์ชัน hCaptcha... หน้าจะโหลดซ้ำ"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "การตรวจหาเวอร์ชัน hCaptcha หมดเวลา"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "เริ่มการตรวจสอบเวอร์ชันไม่สำเร็จ"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "โหลดหน้าซ้ำเพื่อเริ่มตรวจสอบคำขอของ hCaptcha"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "จับข้อมูล hCaptcha สำเร็จ"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Challenge"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "กำลังลบคุกกี้ {0}... หน้าจะโหลดซ้ำ"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "ประเภท"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "คัดลอก Site Key แล้ว"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Challenge"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analytics"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Bot Management"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Public Key"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User Agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (อาร์เรย์ข้อมูลเบราว์เซอร์)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "ข้อมูล Blob"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "ไม่ได้จับข้อมูล"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "โหลดหน้าซ้ำเพื่อเริ่มตรวจสอบและกระตุ้น challenge ของ FunCaptcha (หมดเวลาใน 60 วินาที)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "กำลังโหลดหน้า โปรดรอ..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "จับข้อมูล FunCaptcha สำเร็จ"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "challenge ที่จับได้: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "การจับข้อมูลหมดเวลา"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "ไม่พบ challenge ของ FunCaptcha (หมดเวลาใน 60 วินาที)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "สคริปต์อินไลน์"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "แอตทริบิวต์ DOM"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "URL ของสคริปต์"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "การกำหนดค่า JSON"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "captchaId ที่ดึงได้"
+  },
+  "advGeetestProductLabel": {
+    "message": "ผลิตภัณฑ์:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "ส่วนของสคริปต์"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "ส่งออกโค้ดแยกวิเคราะห์"
+  },
+  "advGeetestErrorFmt": {
+    "message": "ข้อผิดพลาด: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "ตรวจพบ: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "ไม่พบเวอร์ชัน Geetest"
+  },
+  "advGeetestTabNotFound": {
+    "message": "ไม่พบแท็บ"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "ไม่พบสคริปต์ Geetest"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "กำลังตรวจหาเวอร์ชัน Geetest..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "กำลังโหลดหน้าซ้ำเพื่อตรวจสอบเวอร์ชัน"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "กำลังวิเคราะห์สคริปต์..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "กำลังโหลดหน้าซ้ำเพื่อดึงสคริปต์"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "เครื่องมือ {0}"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "โหลดเครื่องมือขั้นสูงไม่สำเร็จ"
+  },
+  "advPanelCheckConsole": {
+    "message": "ดูรายละเอียดในคอนโซล"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "โหลดข้อมูลที่จับไม่สำเร็จ: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "ไซต์ปัจจุบัน ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "ลองปรับตัวกรองหรือคำค้นหาเพื่อหาข้อมูลที่จับ"
+  },
+  "advPanelNoUrl": {
+    "message": "ไม่มี URL"
+  },
+  "advPanelView": {
+    "message": "ดู"
+  },
+  "advPanelBtnOk": {
+    "message": "ตกลง"
+  },
+  "advPanelConfirmAction": {
+    "message": "ยืนยันการดำเนินการ"
+  },
+  "advPanelBtnConfirm": {
+    "message": "ยืนยัน"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "คัดลอกไปยังคลิปบอร์ดแล้ว"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "โหลดเครื่องมือ {0} แล้ว"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "พบคุกกี้ {0}/{1}"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "สคริปต์ที่พบ: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "ไม่พบสคริปต์ {0}"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "ตรวจพบเวอร์ชัน {0}: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "ไม่พบเวอร์ชัน {0}"
+  },
+  "advPanelUnknownError": {
+    "message": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "เริ่มจับข้อมูลไม่สำเร็จ: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "หยุดจับข้อมูลไม่สำเร็จ: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "ข้อมูลที่จับ: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "ล้างข้อมูลที่จับทั้งหมด"
+  },
+  "advPanelNotAvailable": {
+    "message": "ไม่มีข้อมูล"
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "ล้างประวัติการจับข้อมูลของ {0} แล้ว"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "ล้างประวัติไม่สำเร็จ"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "แสดง {0}-{1} จากข้อมูลที่จับ {2} รายการ"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "ตัวตรวจจับใหม่"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "เพิ่ม {0}"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "แก้ไข {0}"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "ไอคอน Scrapfly"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "ไอคอน {0}"
+  },
+  "rulesUiChangeIcon": {
+    "message": "เปลี่ยนไอคอน"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "เปลี่ยนไอคอนตัวตรวจจับ"
+  },
+  "rulesUiCustomColor": {
+    "message": "สีที่กำหนดเอง"
+  },
+  "iconPickerTitle": {
+    "message": "เลือกไอคอน"
+  },
+  "iconPickerDefault": {
+    "message": "ค่าเริ่มต้น"
+  },
+  "iconPickerUploadCustom": {
+    "message": "อัปโหลดเอง"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "ขนาดไฟล์ไอคอนต้องน้อยกว่า 100KB"
+  },
+  "iconPickerNoResults": {
+    "message": "ไม่มีไอคอนที่ตรงกับการค้นหา"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "ค้นหาไอคอน…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "JS hooks คืออะไร"
+  },
+  "rulesUiHelpWindow": {
+    "message": "พร็อพเพอร์ตีของ Window คืออะไร"
+  },
+  "rulesUiHelpUrl": {
+    "message": "การตรวจจับ URL คืออะไร"
+  },
+  "rulesUiHelpHeader": {
+    "message": "การตรวจจับเฮดเดอร์คืออะไร"
+  },
+  "rulesUiHelpCookie": {
+    "message": "การตรวจจับคุกกี้คืออะไร"
+  },
+  "rulesUiHelpContent": {
+    "message": "การตรวจจับเนื้อหาคืออะไร"
+  },
+  "rulesUiHelpDom": {
+    "message": "การตรวจจับ DOM คืออะไร"
+  },
+  "rulesUiHelpPayload": {
+    "message": "การตรวจจับ Payload คืออะไร"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "วิธีการตรวจจับนี้คืออะไร"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "ค่า (ไม่บังคับ)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS selector (เช่น .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "ข้อความ/คำที่จะค้นหา"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "รูปแบบ URL"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "เป้าหมายของ JS hook (เช่น Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "พาธของ Window (เช่น grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "เงื่อนไข (เช่น typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "ชื่อคุกกี้ (เช่น __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "รูปแบบค่าคุกกี้ (ไม่บังคับ)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "ข้อความ (เช่น sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify หรือ challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "การตั้งค่าชื่อ"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "การตั้งค่าชื่อ (ความมั่นใจ: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "การตั้งค่าฟิลด์ค่า"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "ลบวิธีการ"
+  },
+  "rulesUiClearValue": {
+    "message": "ล้างค่า"
+  },
+  "rulesUiAddValue": {
+    "message": "เพิ่มค่า"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "หน้า {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "กรอกรูปแบบว่างที่มีอยู่ให้เสร็จก่อนเพิ่มรูปแบบใหม่"
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "โปรดกรอกฟิลด์รูปแบบที่จำเป็นทั้งหมดก่อนบันทึก"
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "ป้อนประเภทวิธีการตรวจจับ (เช่น HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "วิธีการ"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "หน้า = URL ปัจจุบัน | สคริปต์ = หน้า + สคริปต์ | ทั้งหมด = ทุกคำขอ"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "เว้นว่างไว้เพื่อจับคู่ URL ใดก็ได้"
+  },
+  "ruleConditionGroupOther": {
+    "message": "อื่นๆ"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "ชื่อหน้า: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "เวลา: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "ระบบรักษาความปลอดภัย: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "หมวดหมู่: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "ความมั่นใจ: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "วิธีการตรวจจับ: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "วิธีการตรวจจับ:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "การตรวจจับ ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "ความยาก: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "คัดลอกไปยังคลิปบอร์ดไม่สำเร็จ"
+  },
+  "detectionUiCopyUrl": {
+    "message": "คัดลอก URL"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "คัดลอก URL: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "คัดลอกหมวดหมู่"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "คัดลอกหมวดหมู่: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "คัดลอกวิธีการ"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "คัดลอกวิธีการ: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "คัดลอกค่า"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "คัดลอกค่า: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} ปี"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} เดือน"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} วัน"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} ชม."
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} นาที"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 นาที"
+  },
+  "detectionUiNoDescription": {
+    "message": "ไม่มีรายละเอียดเพิ่มเติมสำหรับการตรวจจับนี้"
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "ไม่มีการบันทึกวิธีการตรวจจับสำหรับตัวตรวจจับนี้"
+  },
+  "detectionUiUnknownMethod": {
+    "message": "ไม่ทราบวิธีการ"
+  },
+  "detectionUiUnknownValue": {
+    "message": "ไม่ทราบ"
+  },
+  "historyUiUntitled": {
+    "message": "ไม่มีชื่อ"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "ไม่มีวิธีการตรวจจับ"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "รูปแบบไฟล์ประวัติไม่ถูกต้อง"
+  },
+  "popupUiLogoAlt": {
+    "message": "หุ่นยนต์ Scrapfly"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "เปิดใช้ส่วนขยายไม่สำเร็จ: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "ปิดใช้ส่วนขยายไม่สำเร็จ: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "ข้อผิดพลาด: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "ไม่มีโดเมนในบัญชีดำ"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "ไม่มีโดเมนที่ตรงกับการค้นหา"
+  },
+  "settingsUiChecking": {
+    "message": "กำลังตรวจสอบ..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "ขีดจำกัดประวัติต้องอยู่ระหว่าง 0 (ไม่จำกัด) ถึง 10000"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "ระยะเวลาแคชต้องอยู่ระหว่าง 1 ถึง {0} {1}"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "จำนวนวันของการลบอัตโนมัติต้องอยู่ระหว่าง 1 ถึง 3650"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "ระยะเวลาของรายการซ้ำต้องอยู่ระหว่าง 1 ถึง 999"
+  },
+  "settingsUiExportJson": {
+    "message": "ส่งออก JSON"
+  },
+  "settingsUiExportText": {
+    "message": "ส่งออกข้อความ"
+  },
+  "settingsUiLogsText": {
+    "message": "ข้อความ"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "การอัปเดตตัวตรวจจับที่ต้องใช้ส่วนขยายเวอร์ชันใหม่กว่า: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (ต้องใช้ส่วนขยาย v{1})"
+  },
+  "statsUiTotals": {
+    "message": "ยอดรวม"
+  },
+  "ruleSectionCombinations": {
+    "message": "ชุดค่าผสม"
+  },
+  "combinationsHint": {
+    "message": "ชุดค่าผสมจะตรวจจับระบบป้องกันนี้ก็ต่อเมื่อพบรูปแบบหลายรูปแบบพร้อมกัน ใช้กับรูปแบบที่อ่อนเกินกว่าจะใช้เดี่ยวๆ"
+  },
+  "detectionModalCombinationsHint": {
+    "message": "ชุดค่าผสมแต่ละชุดจะทำงานก็ต่อเมื่อสัญญาณของมันปรากฏพร้อมกัน นี่คือสิ่งที่พบในหน้านี้"
+  },
+  "combinationFoundTogether": {
+    "message": "พบร่วมกันในหน้านี้:"
+  },
+  "combinationNotPresent": {
+    "message": "ไม่พบ"
+  },
+  "combinationFound": {
+    "message": "พบ"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "กฎนี้ถูกเปลี่ยนหรือลบหลังการสแกน จึงแสดงเฉพาะชื่อและคะแนน"
+  },
+  "historyMatchedDetections": {
+    "message": "การตรวจจับที่ตรงกัน"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "การสแกนนี้ถูกบันทึกก่อนที่จะเก็บเงื่อนไข จึงแสดงเฉพาะชื่อและคะแนน"
+  },
+  "combinationMustNotBeFound": {
+    "message": "ต้องไม่พบ"
+  },
+  "combinationMustBeFound": {
+    "message": "ต้องพบ"
+  },
+  "combinationAutoTip": {
+    "message": "อัตโนมัติ: ความมั่นใจสูงสุดของรูปแบบที่ทำให้ทำงาน"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "เพิ่มรูปแบบอย่างน้อยหนึ่งรูปแบบที่ต้องพบ"
+  },
+  "combinationInvalidOneOf": {
+    "message": "รายการ “หนึ่งในนี้” ต้องมีรูปแบบที่ต้องพบในแต่ละตัวเลือก"
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“อย่างน้อย {0}” ต้องมีรูปแบบที่ต้องพบ {0} รูปแบบ"
+  },
+  "combinationSentenceOne": {
+    "message": "ทำงานเมื่อเงื่อนไขนี้เป็นจริง"
+  },
+  "combinationSentenceAllFmt": {
+    "message": "ทำงานเมื่อเงื่อนไขทั้ง {0} ข้อเป็นจริง"
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "ทำงานเมื่อเงื่อนไขข้อใดข้อหนึ่งจาก {0} ข้อเป็นจริง"
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "ทำงานเมื่อเงื่อนไขอย่างน้อย {0} ข้อจาก {1} ข้อเป็นจริง"
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "ความมั่นใจ: {0}%"
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "ความมั่นใจ: อัตโนมัติ สูงสุด {0}%"
+  },
+  "combinationSentenceGroup": {
+    "message": "กลุ่มหนึ่งนับเป็นหนึ่งเงื่อนไข"
+  },
+  "combinationSentenceNot": {
+    "message": "จะไม่ทำงานหากมีรูปแบบ “ต้องไม่พบ” อยู่"
+  },
+  "combinationSentenceAlone": {
+    "message": "รูปแบบที่ไม่ได้ทำเครื่องหมาย “เฉพาะชุดค่าผสม” ยังตรวจจับได้เองด้วยความมั่นใจของตัวมันเอง"
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "ความมั่นใจเมื่อพบ"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "เว้นว่างไว้เพื่อใช้อัตโนมัติ: ความมั่นใจสูงสุดของรูปแบบที่พบ"
+  },
+  "combinationModeAny": {
+    "message": "หนึ่งในนี้"
+  },
+  "combinationModeAll": {
+    "message": "ทั้งหมดนี้"
+  },
+  "combinationModeAtLeast": {
+    "message": "อย่างน้อย… จากนี้"
+  },
+  "combinationModeRootAll": {
+    "message": "พบทั้งหมดนี้"
+  },
+  "combinationModeRootAny": {
+    "message": "พบหนึ่งในนี้"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "พบอย่างน้อย… จากนี้"
+  },
+  "combinationGroupMode": {
+    "message": "กลุ่ม"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "เพิ่มรูปแบบในกลุ่มนี้"
+  },
+  "combinationDeleteGroup": {
+    "message": "ลบกลุ่ม"
+  },
+  "combinationAddGroup": {
+    "message": "เพิ่มกลุ่ม “หนึ่งในนี้”"
+  },
+  "patternUnusedBadge": {
+    "message": "ไม่อยู่ในชุดค่าผสมใด"
+  },
+  "patternUnusedTip": {
+    "message": "ไม่มีชุดค่าผสมใดใช้รูปแบบนี้ จึงไม่มีทางตรวจจับได้ คลิกเพื่อให้นับเป็นการตรวจจับเดี่ยว"
+  },
+  "combinationsEmpty": {
+    "message": "ยังไม่มีชุดค่าผสม"
+  },
+  "combinationAdd": {
+    "message": "เพิ่มชุดค่าผสม"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "ชุดค่าผสม {0}"
+  },
+  "combinationDelete": {
+    "message": "ลบชุดค่าผสม"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "ลบชุดค่าผสม \"{0}\" หรือไม่ รูปแบบของมันจะยังอยู่ในกฎ"
+  },
+  "combinationRemove": {
+    "message": "นำออก"
+  },
+  "combinationEmptyPattern": {
+    "message": "(รูปแบบว่าง)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "รูปแบบ {0} ใดก็ได้"
+  },
+  "combinationGroupEmpty": {
+    "message": "เพิ่มรูปแบบด้านล่าง"
+  },
+  "combinationAddPattern": {
+    "message": "เพิ่มรูปแบบ"
+  },
+  "combinationAddDescription": {
+    "message": "เพิ่มคำอธิบาย"
+  },
+  "combinationAnyPattern": {
+    "message": "รูปแบบใดก็ได้"
+  },
+  "combinationPreviewEmpty": {
+    "message": "เพิ่มรูปแบบเพื่อสร้างชุดค่าผสมนี้"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "เฉพาะชุดค่าผสม"
+  },
+  "combinationStrictHint": {
+    "message": "รูปแบบที่ทำเครื่องหมาย “เฉพาะชุดค่าผสม” จะไม่ตรวจจับอะไรด้วยตัวเอง และนับเฉพาะภายในชุดค่าผสมเท่านั้น"
+  },
+  "combinationStrictMarkAll": {
+    "message": "ทำเครื่องหมายทั้งหมด"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "ยกเลิกเครื่องหมายทั้งหมด"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "รูปแบบนี้ไม่ตรวจจับอะไรด้วยตัวเอง และนับเฉพาะภายในชุดค่าผสม ในทุกชุดค่าผสมของกฎนี้"
+  },
+  "detectionModalCombinations": {
+    "message": "ชุดค่าผสมที่ตรงกัน"
+  },
+  "combinationNoPatterns": {
+    "message": "ยังไม่ได้เพิ่มรูปแบบ"
+  },
+  "combinationPickHint": {
+    "message": "ติ๊กรูปแบบที่จะเพิ่ม"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "เพิ่มที่เลือก {0} รายการ"
+  },
+  "combinationEditConditions": {
+    "message": "แก้ไขเงื่อนไข"
+  },
+  "combinationAutoConfidence": {
+    "message": "อัตโนมัติ"
+  },
+  "combinationDetectWhen": {
+    "message": "ตรวจจับเมื่อ"
+  },
+  "combinationGroupExcluded": {
+    "message": "เงื่อนไขเหล่านี้ต้องไม่ตรงกัน"
+  },
+  "combinationMinimum": {
+    "message": "จำนวนที่ตรงกันขั้นต่ำ"
+  },
+  "combinationMatchState": {
+    "message": "เงื่อนไขของรูปแบบ"
+  },
+  "combinationChoosePatterns": {
+    "message": "เลือกรูปแบบ"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "ลดจำนวนที่ตรงกันขั้นต่ำ"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "เพิ่มจำนวนที่ตรงกันขั้นต่ำ"
+  },
+  "detectionTipDetections": {
+    "message": "จำนวนระบบป้องกันที่ตรวจพบในหน้านี้"
+  },
+  "detectionTipConfidence": {
+    "message": "ความมั่นใจเฉลี่ยของระบบป้องกันที่ตรวจพบ"
+  },
+  "detectionTipDifficulty": {
+    "message": "ความยากโดยประมาณในการข้ามระบบป้องกันที่ตรวจพบ"
+  },
+  "tipCachedAt": {
+    "message": "บันทึกเมื่อ"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "ค่าเฉลี่ยของการตรวจจับ {0} รายการ ตั้งแต่ {1}% ถึง {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "จากชุดค่าผสมที่ตรงกัน"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "สัญญาณเดี่ยวที่แรงที่สุดกำหนดคะแนน"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "ตัวตรวจจับแบบกำหนดเอง"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "ค่าเริ่มต้นของ {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "กำหนดโดยตัวตรวจจับนี้"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "กำหนดโดย {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "เพิ่มขึ้นจากระบบป้องกัน {0} ระบบรวมกัน"
+  },
+  "tipLastUpdated": {
+    "message": "อัปเดตเมื่อ"
+  },
+  "tipMethodContent": {
+    "message": "ข้อความที่พบในหน้าหรือสคริปต์ของหน้าตรงกัน"
+  },
+  "tipMethodCookie": {
+    "message": "คุกกี้ที่ตั้งบนไซต์นี้ตรงกัน"
+  },
+  "tipMethodDom": {
+    "message": "องค์ประกอบบนหน้าตรงกัน"
+  },
+  "tipMethodHeader": {
+    "message": "เฮดเดอร์ของการตอบกลับที่ไซต์ส่งมาตรงกัน"
+  },
+  "tipMethodJsHooks": {
+    "message": "หน้าเรียก API ของเบราว์เซอร์ที่ตัวตรวจจับนี้เฝ้าดู"
+  },
+  "tipMethodPayload": {
+    "message": "ข้อมูลที่หน้าส่งในคำขอตรงกัน"
+  },
+  "tipMethodUrl": {
+    "message": "หน้าหรือคำขอที่หน้าส่งตรงกับที่อยู่ที่รู้จัก"
+  },
+  "tipMethodWindow": {
+    "message": "ออบเจ็กต์ JavaScript แบบ global บนหน้าตรงกัน"
+  },
+  "tipMoreFmt": {
+    "message": "+{0} เพิ่มเติม"
+  },
+  "tipOfficialDetector": {
+    "message": "ตัวตรวจจับทางการของ Scrapfly"
+  },
+  "tipScopeDomain": {
+    "message": "ใช้ผลลัพธ์ซ้ำกับทุกหน้าในโดเมนนี้"
+  },
+  "tipScopeFullUrl": {
+    "message": "ใช้ผลลัพธ์ซ้ำเฉพาะกับ URL นี้ทุกตัวอักษร รวมถึง query"
+  },
+  "tipScopePath": {
+    "message": "ใช้ผลลัพธ์ซ้ำกับพาธนี้ ไม่ว่า query จะเป็นอะไร"
+  },
+  "tipStatsActiveDays": {
+    "message": "วันที่มีหน้าที่บันทึกไว้อย่างน้อยหนึ่งหน้า"
+  },
+  "tipStatsDetections": {
+    "message": "ระบบป้องกันที่พบในทุกหน้าที่บันทึกไว้ นับรวมที่ซ้ำ"
+  },
+  "tipStatsDetectors": {
+    "message": "ระบบป้องกันที่แตกต่างกันที่พบ นับอย่างละหนึ่งครั้ง"
+  },
+  "tipStatsDomains": {
+    "message": "ไซต์ที่แตกต่างกันในหน้าที่บันทึกไว้"
+  },
+  "tipStatsEntries": {
+    "message": "หน้าที่บันทึกในประวัติในช่วงนี้"
+  },
+  "tipStatsRateFmt": {
+    "message": "{0} จาก {1} รายการ"
+  },
+  "tipPatterns": {
+    "message": "รูปแบบ"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "ล็อกแบบละเอียด"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "บันทึกทุกกฎ hook และข้อความด้วย ไม่ใช่แค่หนึ่งรายงานต่อหน้า"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "การอัปเดตสำหรับกฎที่คุณแก้ไข"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" มีเวอร์ชันทางการใหม่ ({1}) คุณแก้ไขกฎนี้ไว้ เวอร์ชันใหม่จะแทนที่การเปลี่ยนแปลงของคุณ"
+  },
+  "btnDecideLater": {
+    "message": "ตัดสินใจภายหลัง"
+  },
+  "btnKeepMyEdits": {
+    "message": "เก็บการแก้ไขของฉัน"
+  },
+  "btnUseNewVersion": {
+    "message": "ใช้เวอร์ชันใหม่"
+  },
+  "resetToOfficial": {
+    "message": "รีเซ็ตเป็นเวอร์ชันทางการ"
+  },
+  "resetToOfficialTitle": {
+    "message": "รีเซ็ตเป็นเวอร์ชันทางการ"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "ละทิ้งการแก้ไขของคุณใน \"{0}\" และคืนค่าเป็นเวอร์ชันทางการของ Scrapfly หรือไม่"
+  },
+  "ruleResetToOfficial": {
+    "message": "คืนค่ากฎเป็นเวอร์ชันทางการแล้ว"
+  },
+  "ruleEditedTag": {
+    "message": "แก้ไขแล้ว"
+  },
+  "tipRuleEdited": {
+    "message": "คุณแก้ไขกฎทางการนี้ การอัปเดตจะถามก่อนแทนที่การเปลี่ยนแปลงของคุณ"
+  },
+  "settingsGroupDetectionsList": {
+    "message": "รายการการตรวจจับ"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "ลำดับการตรวจจับ"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "ลำดับของหมวดหมู่ในรายการการตรวจจับ ในประวัติ และในกฎ ลากการ์ดเพื่อเปลี่ยน ภายในหมวดหมู่ การตรวจจับจะแสดงรายการที่มีความมั่นใจสูงสุดก่อน"
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "ความมั่นใจสูงสุดก่อน"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "ลำดับหมวดหมู่"
+  },
+  "settingsMoveUpFmt": {
+    "message": "เลื่อน {0} ขึ้น"
+  },
+  "settingsMoveDownFmt": {
+    "message": "เลื่อน {0} ลง"
+  },
+  "settingsCardShareUploads": {
+    "message": "การอัปโหลดแบบแชร์"
+  },
+  "settingsShareDestination": {
+    "message": "ปลายทางการอัปโหลด"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "ปลายทางที่ การตรวจจับ → อัปโหลดการตรวจจับ ใช้ส่งสรุปและรับลิงก์แชร์"
+  },
+  "settingsShareService": {
+    "message": "บริการ"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (ไม่ต้องมีบัญชี)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (ไม่ต้องมีบัญชี)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (ไม่ต้องมีบัญชี)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API key)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (โทเค็น)"
+  },
+  "shareProviderCustom": {
+    "message": "เซิร์ฟเวอร์ที่กำหนดเอง"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "ลบหลังจาก (วัน)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "ลบหลังจาก"
+  },
+  "shareExpire10M": {
+    "message": "10 นาที"
+  },
+  "shareExpire1H": {
+    "message": "1 ชั่วโมง"
+  },
+  "shareExpire1D": {
+    "message": "1 วัน"
+  },
+  "shareExpire1W": {
+    "message": "1 สัปดาห์"
+  },
+  "shareExpire2W": {
+    "message": "2 สัปดาห์"
+  },
+  "shareExpire30D": {
+    "message": "30 วัน"
+  },
+  "shareExpire1M": {
+    "message": "1 เดือน"
+  },
+  "shareExpire6M": {
+    "message": "6 เดือน"
+  },
+  "shareExpire1Y": {
+    "message": "1 ปี"
+  },
+  "shareExpireOnetime": {
+    "message": "หลังการเปิดดูครั้งแรก"
+  },
+  "shareExpireNever": {
+    "message": "ไม่เคย"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs ไม่มีตัวเลือกวันหมดอายุ: paste จะอยู่จนกว่าบริการจะลบ"
+  },
+  "settingsSharePastebinKey": {
+    "message": "API key ของ Pastebin"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "developer key ของคุณจาก pastebin.com/doc_api paste ทั้งหมดจะไม่แสดงในรายการสาธารณะ"
+  },
+  "settingsShareSecretNote": {
+    "message": "เก็บไว้ในเบราว์เซอร์นี้เท่านั้น และไม่รวมในไฟล์ส่งออกการตั้งค่า"
+  },
+  "settingsShareGithubToken": {
+    "message": "โทเค็น GitHub"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "โทเค็นที่มีสิทธิ์ Gists การอัปโหลดจะเป็น secret gist และไม่หมดอายุ ลบได้บน GitHub"
+  },
+  "settingsShareCustomUrl": {
+    "message": "URL ของเซิร์ฟเวอร์"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS บนโฮสต์สาธารณะ ใส่ <EXPIRY_DAYS> ได้"
+  },
+  "settingsShareCustomBody": {
+    "message": "รูปแบบเนื้อหา"
+  },
+  "shareBodyForm": {
+    "message": "ฟิลด์ฟอร์ม"
+  },
+  "shareBodyJson": {
+    "message": "เทมเพลต JSON"
+  },
+  "shareBodyRaw": {
+    "message": "ข้อความดิบ"
+  },
+  "settingsShareCustomField": {
+    "message": "ชื่อฟิลด์ฟอร์ม"
+  },
+  "settingsShareCustomJson": {
+    "message": "เทมเพลต JSON"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "ตัวแปร: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "บรรทัดละหนึ่งรายการในรูป Name: value เช่น Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "ลิงก์แชร์จาก"
+  },
+  "shareLinkBody": {
+    "message": "เนื้อหาการตอบกลับ (URL ล้วน)"
+  },
+  "shareLinkJson": {
+    "message": "ฟิลด์ JSON"
+  },
+  "shareLinkLocation": {
+    "message": "เฮดเดอร์ Location"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "พาธฟิลด์ JSON"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "ส่งเป็น expiry_days ในเนื้อหาแบบฟอร์ม และเป็น <EXPIRY_DAYS> เซิร์ฟเวอร์ของคุณเป็นผู้ตัดสินใจว่าจะทำอย่างไรกับค่านี้"
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "ตั้งค่า {0} ใน การตั้งค่า → การตรวจจับ → การอัปโหลดแบบแชร์ ก่อน"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "การดำเนินการนี้จะอัปโหลดสรุปการตรวจจับของหน้านี้ไปยัง {0} ({1}) ทุกคนที่มีลิงก์จะดูได้ ไม่รวม query string ของ URL และค่าคุกกี้/เฮดเดอร์"
+  },
+  "shareExpiryDaysFmt": {
+    "message": "จะถูกลบหลัง {0} วัน"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "จะถูกลบหลัง {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "จะถูกลบหลังเปิดดูครั้งแรก"
+  },
+  "shareExpiryService": {
+    "message": "เก็บไว้จนกว่าบริการจะลบ"
+  },
+  "shareExpiryNever": {
+    "message": "ไม่หมดอายุ"
+  },
+  "pasteUnsafeUrl": {
+    "message": "เซิร์ฟเวอร์ที่กำหนดเองต้องเป็นที่อยู่ HTTPS บนโฮสต์สาธารณะ"
+  },
+  "pasteBadLink": {
+    "message": "บริการไม่ได้ส่งลิงก์ HTTPS ที่ถูกต้องกลับมา"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "อัปโหลดไม่สำเร็จ: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "เซิร์ฟเวอร์อัปโหลดที่กำหนดเอง: ใช้ที่อยู่ HTTPS บนโฮสต์สาธารณะ"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "เซิร์ฟเวอร์อัปโหลดที่กำหนดเอง: เทมเพลต JSON ไม่ใช่ JSON ที่ถูกต้อง"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} ปฏิเสธคีย์หรือโทเค็น (ไม่ถูกต้องหรือหมดอายุ)"
+  },
+  "pasteGistPermission": {
+    "message": "โทเค็น GitHub ต้องมีสิทธิ์ Gists (อ่านและเขียน)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "ไม่มี site key ของ Turnstile ในหน้านี้"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "site key ของ Turnstile"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "เครื่องมือขั้นสูง"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "ระบบป้องกันที่จะมีเครื่องมือ"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "แสดงเครื่องมือเมื่อความมั่นใจสูงกว่า (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "ขั้นสูงจะแสดงระบบป้องกันเฉพาะเมื่อความมั่นใจสูงกว่าค่านี้ 0 จะแสดงทุกระบบป้องกันที่ตรวจพบ"
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "ความมั่นใจของเครื่องมือขั้นสูงต้องอยู่ระหว่าง 0 ถึง 99"
+  },
+  "advCommonValue": {
+    "message": "ค่า"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} อักขระ"
+  },
+  "advCookiePath": {
+    "message": "พาธ"
+  },
+  "advCookieExpires": {
+    "message": "หมดอายุ"
+  },
+  "advCookieSession": {
+    "message": "เซสชัน (ลบเมื่อปิดเบราว์เซอร์)"
+  },
+  "advCookieNotFound": {
+    "message": "ไม่พบ"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "คืนค่าตัวตรวจจับทางการหรือไม่"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "ติดตั้งตัวตรวจจับทางการครบทุกตัวแล้ว ไม่มีอะไรให้คืนค่า"
+  },
+  "restoreOfficialChecking": {
+    "message": "กำลังตรวจสอบรีลีสล่าสุดบน GitHub..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "ติดตั้งอีกครั้งจากรีลีส {0} บน GitHub: {1}"
+  },
+  "restoreOfficialOffline": {
+    "message": "เข้าถึง GitHub ไม่ได้ จึงใช้เวอร์ชันที่มาพร้อมส่วนขยายแทน"
+  },
+  "restoreOfficialRateLimited": {
+    "message": "ขณะนี้ GitHub จำกัดคำขอ จึงใช้เวอร์ชันที่มาพร้อมส่วนขยายแทน"
+  },
+  "restoreOfficialListFmt": {
+    "message": "ติดตั้งอีกครั้งจากเวอร์ชันที่มาพร้อมส่วนขยาย: {0}"
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "กฎ → อัปเดต จะติดตั้งรายการเหล่านี้อีกครั้ง: {0}"
+  },
+  "restoreOfficialUnchanged": {
+    "message": "ตัวตรวจจับของคุณเองและการแก้ไขกฎอื่นของคุณจะไม่เปลี่ยนแปลง"
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "อีก {0} รายการ"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "คืนค่าไม่สำเร็จ: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "คืนค่า {0} แล้ว"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "เรียกใช้ กฎ → อัปเดต เพื่อติดตั้งส่วนที่เหลือ"
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "คืนค่า"
+  },
+  "advancedFilterTool": {
+    "message": "เครื่องมือ"
+  },
+  "advancedFilterAllTools": {
+    "message": "ทุกเครื่องมือ"
+  },
+  "advFilterKindCapture": {
+    "message": "ข้อมูลที่จับ"
+  },
+  "advHistoryCaptureTag": {
+    "message": "การจับข้อมูล"
+  },
+  "advFilterKindOther": {
+    "message": "เครื่องมืออื่น"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrape ด้วย Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "โค้ดสำหรับ scrape หน้านี้ด้วย Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "ดึงหน้านี้ผ่าน API ของ Scrapfly โดยเปิด Unblocker ไว้ ระบบเลือกเบราว์เซอร์ พร็อกซี และเฮดเดอร์ให้เอง และไม่คิดค่าใช้จ่ายเพิ่มเมื่อไซต์ไม่ได้บล็อก",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "ตรวจพบในหน้านี้",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "ภาษาของโค้ด",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "หน้านี้มี CAPTCHA: Unblocker จะหลีกเลี่ยงหรือแก้ CAPTCHA เพื่อส่งหน้ากลับมา แต่จะไม่กรอก CAPTCHA ในฟอร์ม",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "ตัวเลือก"
+  },
+  "scrapflyExportProduct": {
+    "message": "ใช้"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "แก้ CAPTCHA"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "คิดค่าบริการต่อการแก้หนึ่งครั้ง"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "ใช้ Cloud Browser เพื่อแก้"
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "เปิดหน้านี้ใน Cloud Browser ของ Scrapfly และควบคุมด้วย Playwright Captcha Solver จัดการ Turnstile, reCAPTCHA, GeeTest และอื่นๆ เมื่อปรากฏ หากแก้ไม่สำเร็จจะไม่คิดค่าใช้จ่าย"
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "ข้าม anti-bot"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "คัดลอกสำหรับ AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "คัดลอกหน้า สิ่งที่ปกป้องหน้า การตั้งค่าของคุณ และโค้ดเป็นข้อความเดียวสำหรับ ChatGPT, Claude หรือผู้ช่วย AI ใดก็ได้"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "คัดลอกแล้ว: วางลงในผู้ช่วย AI ของคุณ"
+  },
+  "scrapflyExportFormat": {
+    "message": "เอาต์พุต"
+  },
+  "scrapflyExportFormatText": {
+    "message": "ข้อความ"
+  },
+  "scrapflyExportProxy": {
+    "message": "พร็อกซี"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residential"
+  },
+  "scrapflyExportCountry": {
+    "message": "ประเทศ"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "ใดก็ได้"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "เรนเดอร์ JavaScript"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 เครดิต"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "เลือกการตั้งค่าของคุณ"
+  },
+  "scrapflyExportStepCode": {
+    "message": "คัดลอกโค้ด"
+  },
+  "scrapflyExportStepKey": {
+    "message": "ตั้งค่า API key ของคุณ"
+  },
+  "scrapflyExportStepRun": {
+    "message": "รันโค้ด"
+  },
+  "scrapflyExportGetKey": {
+    "message": "รับ API key",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "เปิด playground",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "คัดลอกโค้ดแล้ว",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "เปิดหน้าเว็บเพื่อ scrape ด้วย Scrapfly",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "ข้อมูลที่จับ {0} รายการ"
+  },
+  "statsFirstSeen": {
+    "message": "ใหม่ในช่วงนี้"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "ระบบป้องกัน {0} ระบบและโดเมน {1} โดเมนที่บันทึกเป็นครั้งแรกในช่วงนี้"
+  },
+  "statsFirstSeenAllTip": {
+    "message": "เลือก 7, 30 หรือ 90 วันเพื่อดูสิ่งที่ใหม่"
+  },
+  "statsMostProtectedDomain": {
+    "message": "โดเมนที่มีการป้องกันมากที่สุด"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "ระบบป้องกันที่แตกต่างกัน {0} ระบบจากการเข้าชม {1} ครั้ง"
+  },
+  "statsFoundTogether": {
+    "message": "ระบบป้องกันที่พบร่วมกัน"
+  },
+  "statsMethods": {
+    "message": "วิธีการตรวจจับ"
+  },
+  "statsMatchesUnit": {
+    "message": "รายการที่ตรงกัน"
+  },
+  "statsMethodsByCategory": {
+    "message": "วิธีการตามหมวดหมู่"
+  },
+  "statsWeakEvidence": {
+    "message": "หลักฐานที่อ่อนที่สุด"
+  },
+  "statsSignalColumn": {
+    "message": "สัญญาณ"
+  },
+  "statsMethodColumn": {
+    "message": "วิธีการ"
+  },
+  "statsTopSignals": {
+    "message": "สัญญาณที่ตรงกันมากที่สุด"
+  },
+  "statsDecidedSingle": {
+    "message": "รูปแบบเดี่ยว"
+  },
+  "statsDecidedCombination": {
+    "message": "ชุดค่าผสม"
+  },
+  "statsDecidedBy": {
+    "message": "วิธีที่ใช้ตัดสินการตรวจจับ"
+  },
+  "statsCombinationGain": {
+    "message": "ความมั่นใจตามวิธีตัดสิน"
+  },
+  "statsCombinationColumn": {
+    "message": "ชุดค่าผสม"
+  },
+  "statsTopCombinations": {
+    "message": "ชุดค่าผสมที่ทำงาน"
+  },
+  "statsNoCombinations": {
+    "message": "ไม่มีการตรวจจับในช่วงนี้ที่ตัดสินโดยชุดค่าผสม"
+  },
+  "statsRulesMostActive": {
+    "message": "กฎที่ทำงานมากที่สุด"
+  },
+  "statsTipPatternsFmt": {
+    "message": "{0} รูปแบบ"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "รูปแบบตามวิธีการ"
+  },
+  "statsRulesOfficial": {
+    "message": "ทางการ"
+  },
+  "statsRulesCustom": {
+    "message": "กำหนดเอง"
+  },
+  "statsRuleColumn": {
+    "message": "กฎ"
+  },
+  "statsRuleKindColumn": {
+    "message": "ประเภท"
+  },
+  "statsPatternsUnit": {
+    "message": "รูปแบบ"
+  },
+  "statsRulesNeverMatched": {
+    "message": "ไม่พบในช่วงนี้"
+  },
+  "statsRulesAllMatched": {
+    "message": "กฎที่เปิดใช้ทุกข้อพบสิ่งที่ตรงกันในช่วงนี้"
+  },
+  "statsMissingColumn": {
+    "message": "ไม่มีคำอธิบาย"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "รูปแบบที่ไม่มีคำอธิบาย"
+  },
+  "statsRulesAllDescribed": {
+    "message": "ทุกรูปแบบมีคำอธิบาย"
+  },
+  "statsRuleVersionColumn": {
+    "message": "เวอร์ชันของกฎ"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "ต้องใช้ส่วนขยาย"
+  },
+  "statsRulesWaiting": {
+    "message": "รอส่วนขยายเวอร์ชันใหม่กว่า"
+  },
+  "statsToolsByVendor": {
+    "message": "ข้อมูลที่จับตามผู้ให้บริการ"
+  },
+  "statsToolsCapture": {
+    "message": "จับข้อมูล"
+  },
+  "statsToolsByTool": {
+    "message": "เครื่องมือที่ใช้มากที่สุด"
+  },
+  "statsToolsOverTime": {
+    "message": "ข้อมูลที่จับตามช่วงเวลา"
+  },
+  "statsChangeColumn": {
+    "message": "การเปลี่ยนแปลง"
+  },
+  "statsDateColumn": {
+    "message": "วันที่"
+  },
+  "statsDomainChanges": {
+    "message": "การเปลี่ยนแปลงของระบบป้องกัน"
+  },
+  "statsNoChanges": {
+    "message": "ไม่มีโดเมนที่ระบบป้องกันเปลี่ยนระหว่างการเข้าชมที่บันทึกไว้ในช่วงนี้"
+  },
+  "statsNothingNew": {
+    "message": "ไม่มีอะไรใหม่: ระบบป้องกันทั้งหมดที่นี่เคยอยู่ในประวัติก่อนช่วงนี้แล้ว"
+  },
+  "statsSectionSignals": {
+    "message": "สัญญาณ"
+  },
+  "statsSectionCombinations": {
+    "message": "ชุดค่าผสม"
+  },
+  "statsSectionRules": {
+    "message": "กฎ"
+  },
+  "statsSectionTools": {
+    "message": "เครื่องมือ"
+  },
+  "statsDomainChangesHint": {
+    "message": "โดเมนที่ระบบป้องกันที่ตรวจพบเปลี่ยนไประหว่างการเข้าชมที่บันทึกไว้สองครั้ง"
+  },
+  "statsFirstSeenHint": {
+    "message": "ระบบป้องกันและโดเมนที่บันทึกเป็นครั้งแรกในช่วงนี้"
+  },
+  "statsSignalsNote": {
+    "message": "ประเภทของหลักฐานที่การตรวจจับที่บันทึกไว้แต่ละรายการตรงกัน: ชื่อคุกกี้และเฮดเดอร์ URL องค์ประกอบของหน้า สคริปต์ และ JavaScript hooks"
+  },
+  "statsWeakEvidenceHint": {
+    "message": "ระบบป้องกันที่รูปแบบที่ตรงกันมีความมั่นใจเฉลี่ยต่ำที่สุด กฎของระบบเหล่านี้อาจต้องการรูปแบบที่แข็งแกร่งกว่า"
+  },
+  "statsCombinationsNote": {
+    "message": "ชุดค่าผสมจะตรวจจับระบบป้องกันก็ต่อเมื่อพบรูปแบบหลายรูปแบบพร้อมกัน"
+  },
+  "statsRulesNote": {
+    "message": "คลังกฎของคุณ เทียบกับสิ่งที่ประวัติพบในช่วงนี้"
+  },
+  "statsRulesTotal": {
+    "message": "กฎ"
+  },
+  "statsRulesModified": {
+    "message": "ทางการที่แก้ไขแล้ว"
+  },
+  "statsRulesDisabled": {
+    "message": "ปิดใช้"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "กฎที่เปิดใช้แต่ไม่พบสิ่งใดในหน้าที่บันทึกไว้ในช่วงนี้"
+  },
+  "statsRulesMissingHint": {
+    "message": "คำอธิบายจะแสดงในรายละเอียดการตรวจจับ ประวัติ และชุดค่าผสม เพิ่มได้ในตัวแก้ไขกฎ"
+  },
+  "statsToolsNote": {
+    "message": "ข้อมูลที่จับขั้นสูงและผลลัพธ์ของเครื่องมือที่บันทึกไว้ในอุปกรณ์นี้"
+  },
+  "statsCapturesUnit": {
+    "message": "ข้อมูลที่จับ"
+  },
+  "detectionCardSureFmt": {
+    "message": "มั่นใจ {0}%"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "ชุดค่าผสม"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "แคช"
+  },
+  "detectionTipCache": {
+    "message": "หน้าที่ใช้ผลลัพธ์ที่แคชไว้นี้ซ้ำ และนานเท่าใด"
+  },
+  "tipCacheExpires": {
+    "message": "หมดอายุ"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "ตรวจสอบกับประวัติ"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "ดูว่าแต่ละรูปแบบและชุดค่าผสมตรงกับกี่หน้าที่บันทึกไว้ การแก้ไขที่ยังไม่บันทึกก็นับด้วย"
+  },
+  "ruleHistoryCheckRun": {
+    "message": "ตรวจสอบ"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "หน้าที่บันทึกไว้ {0} หน้า · พบกฎนี้ใน {1} หน้า"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "{0} จาก {1} หน้า"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "+อีก {0} หน้า"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "ประวัติว่างเปล่า: ลองเรียกดูบางหน้าก่อน"
+  },
+  "ruleHistoryCheckNote": {
+    "message": "เป็นค่าประมาณ: ประวัติเก็บค่าที่ตรงกัน ไม่ได้เก็บทั้งหน้า"
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "ทำงานใน {0} หน้า"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "เพิ่มรูปแบบเพื่อตรวจสอบ"
+  },
+  "settingsThemeTitle": {
+    "message": "ธีม"
+  },
+  "settingsThemeDesc": {
+    "message": "มืด หรือสว่างในโทนสีของ Scrapfly โหมดระบบจะตามเบราว์เซอร์ของคุณ"
+  },
+  "themeDark": {
+    "message": "มืด"
+  },
+  "themeLight": {
+    "message": "สว่าง"
+  },
+  "themeSystem": {
+    "message": "ระบบ"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "เปิดคอนโซล"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "เปิดส่วนขยายนี้ใน chrome://extensions: คลิก \"service worker\" เพื่อดูล็อก"
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "เก็บล็อกไว้ที่นี่แทนคอนโซล เพื่อส่งออกเป็น JSON หรือข้อความ"
+  },
+  "ruleTranslationsTitle": {
+    "message": "คำแปล"
+  },
+  "ruleTranslationsHint": {
+    "message": "แสดงแทนคำอธิบายเมื่อส่วนขยายใช้ภาษานั้น ถ้าว่าง จะแสดงคำอธิบาย"
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} จาก {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "แปลอัตโนมัติ"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "การแปลอัตโนมัติต้องใช้ Chrome 138 หรือใหม่กว่า"
+  },
+  "ruleTranslateNeedsText": {
+    "message": "เขียนคำอธิบายก่อน"
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "กำลังแปล: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "เติม {0} ภาษาแล้ว ตรวจสอบก่อนบันทึก"
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "เติมแล้ว {0} ภาษา อีก {1} ภาษาแปลที่นี่ไม่ได้"
+  },
+  "sfxOptRenderingWait": {
+    "message": "รอหลังโหลด"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "รอองค์ประกอบ"
+  },
+  "sfxOptRenderingStage": {
+    "message": "หน้าพร้อมเมื่อ"
+  },
+  "sfxOptAutoScroll": {
+    "message": "เลื่อนไปล่างสุด"
+  },
+  "sfxOptJs": {
+    "message": "รัน JavaScript"
+  },
+  "sfxOptJsScenario": {
+    "message": "การกระทำของเบราว์เซอร์"
+  },
+  "sfxOptScreenshot": {
+    "message": "ภาพหน้าจอ"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "องค์ประกอบ"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "ตัวเลือกภาพหน้าจอ"
+  },
+  "sfxOptLang": {
+    "message": "ภาษา"
+  },
+  "sfxOptOs": {
+    "message": "ระบบปฏิบัติการ"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "เบราว์เซอร์"
+  },
+  "sfxOptGeolocation": {
+    "message": "ตำแหน่งทางภูมิศาสตร์"
+  },
+  "sfxOptHeaders": {
+    "message": "เฮดเดอร์"
+  },
+  "sfxOptTimeout": {
+    "message": "หมดเวลา"
+  },
+  "sfxOptRetry": {
+    "message": "ลองใหม่เมื่อเกิดข้อผิดพลาด"
+  },
+  "sfxOptCostBudget": {
+    "message": "ขีดจำกัดเครดิต"
+  },
+  "sfxOptFormatOptions": {
+    "message": "ไม่รวม"
+  },
+  "sfxOptProxified": {
+    "message": "ส่งการตอบกลับของไซต์กลับมา"
+  },
+  "sfxOptExtraction": {
+    "message": "ดึงข้อมูล"
+  },
+  "sfxOptExtractionModel": {
+    "message": "โมเดล"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "พรอมต์"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "เทมเพลตที่บันทึกไว้"
+  },
+  "sfxOptCache": {
+    "message": "แคช"
+  },
+  "sfxOptCacheTtl": {
+    "message": "เก็บไว้นาน"
+  },
+  "sfxOptCacheClear": {
+    "message": "รีเฟรชแคช"
+  },
+  "sfxOptSession": {
+    "message": "เซสชัน"
+  },
+  "sfxOptSticky": {
+    "message": "พร็อกซีเดิมตลอดเซสชัน"
+  },
+  "sfxOptDebug": {
+    "message": "ดีบัก"
+  },
+  "sfxOptCorrelationId": {
+    "message": "Correlation ID"
+  },
+  "sfxOptTags": {
+    "message": "แท็ก"
+  },
+  "sfxOptDns": {
+    "message": "รายละเอียด DNS"
+  },
+  "sfxOptSsl": {
+    "message": "ใบรับรอง SSL"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "เริ่มต้น"
+  },
+  "sfxOptTargetUrl": {
+    "message": "ระบุหน้านี้"
+  },
+  "sfxOptBrowserLang": {
+    "message": "ภาษา"
+  },
+  "sfxOptAutoClose": {
+    "message": "ปิดเมื่อตัดการเชื่อมต่อ"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "ระยะเวลาเซสชัน"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "ขีดจำกัดเวลาปลดบล็อก"
+  },
+  "sfxOptBlockImages": {
+    "message": "บล็อกรูปภาพ"
+  },
+  "sfxOptBlockStyles": {
+    "message": "บล็อกสไตล์ชีต"
+  },
+  "sfxOptBlockFonts": {
+    "message": "บล็อกฟอนต์"
+  },
+  "sfxOptBlockMedia": {
+    "message": "บล็อกวิดีโอและเสียง"
+  },
+  "sfxOptBlacklist": {
+    "message": "บล็อกตัวติดตาม"
+  },
+  "sfxOptBrowserCache": {
+    "message": "แคชไฟล์สแตติก"
+  },
+  "sfxOptRecord": {
+    "message": "บันทึกเซสชัน"
+  },
+  "sfxOptMcp": {
+    "message": "endpoint ของ MCP"
+  },
+  "sfxValAuto": {
+    "message": "อัตโนมัติ"
+  },
+  "sfxValCleanHtml": {
+    "message": "HTML ที่ทำความสะอาดแล้ว"
+  },
+  "sfxValComplete": {
+    "message": "โหลดครบ"
+  },
+  "sfxValDomReady": {
+    "message": "DOM พร้อม"
+  },
+  "sfxValFullPage": {
+    "message": "ทั้งหน้า"
+  },
+  "sfxValElement": {
+    "message": "องค์ประกอบ"
+  },
+  "sfxValLoadImages": {
+    "message": "โหลดรูปภาพ"
+  },
+  "sfxValDarkMode": {
+    "message": "โหมดมืด"
+  },
+  "sfxValBlockBanners": {
+    "message": "ซ่อนแบนเนอร์"
+  },
+  "sfxValHighQuality": {
+    "message": "คุณภาพสูง"
+  },
+  "sfxValPrint": {
+    "message": "สไตล์สำหรับพิมพ์"
+  },
+  "sfxValNoLinks": {
+    "message": "ลิงก์"
+  },
+  "sfxValNoImages": {
+    "message": "รูปภาพ"
+  },
+  "sfxValOnlyContent": {
+    "message": "ทั้งหมดยกเว้นเนื้อหาหลัก"
+  },
+  "sfxValModel": {
+    "message": "โมเดล AI"
+  },
+  "sfxValTemplate": {
+    "message": "เทมเพลต"
+  },
+  "sfxValConnect": {
+    "message": "เปิดเบราว์เซอร์"
+  },
+  "sfxValUnblock": {
+    "message": "ปลดบล็อกก่อน"
+  },
+  "sfxGroupRender": {
+    "message": "การเรนเดอร์ของเบราว์เซอร์"
+  },
+  "sfxGroupLocation": {
+    "message": "ตำแหน่งและ fingerprint"
+  },
+  "sfxGroupRequest": {
+    "message": "คำขอ"
+  },
+  "sfxGroupOutput": {
+    "message": "เอาต์พุต"
+  },
+  "sfxGroupExtraction": {
+    "message": "การดึงข้อมูลด้วย AI"
+  },
+  "sfxGroupCache": {
+    "message": "แคชและเซสชัน"
+  },
+  "sfxGroupTracking": {
+    "message": "ดีบักและการติดตาม"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Fingerprint และภาษา"
+  },
+  "sfxGroupSession": {
+    "message": "เซสชัน"
+  },
+  "sfxGroupBlocking": {
+    "message": "การบล็อกและแคช"
+  },
+  "sfxGroupTools": {
+    "message": "ดีบักและ MCP"
+  },
+  "sfxWhyRender": {
+    "message": "ต้องเปิด Render JavaScript"
+  },
+  "sfxWhyUnblocker": {
+    "message": "ต้องใช้ Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "ใช้ได้เฉพาะเอาต์พุต Markdown หรือข้อความ"
+  },
+  "sfxWhyCache": {
+    "message": "เปิดแคชก่อน"
+  },
+  "sfxWhySession": {
+    "message": "ตั้งค่าเซสชันก่อน"
+  },
+  "sfxWhySticky": {
+    "message": "เปิดอยู่เสมอเมื่อใช้ Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "ไม่ใช่รายการขั้นตอนแบบ JSON: ไม่ได้ใส่ไว้"
+  },
+  "sfxWhyGeo": {
+    "message": "ใช้ latitude,longitude: ไม่ได้ใส่ไว้"
+  },
+  "sfxWhyBrandOs": {
+    "message": "เบราว์เซอร์นี้ไม่ทำงานบนระบบนั้น: ไม่ได้ใส่ไว้"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge ต้องใช้ Windows: ไม่ได้ใส่ไว้"
+  },
+  "sfxHintHeaders": {
+    "message": "บรรทัดละหนึ่งรายการ: Name: value ไม่ถูกบันทึก"
+  },
+  "sfxHintScenario": {
+    "message": "รายการ JSON: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "คั่นด้วยจุลภาค"
+  },
+  "sfxHintLanguages": {
+    "message": "คั่นด้วยจุลภาค สูงสุด 3 รายการ"
+  },
+  "sfxHintUnblock": {
+    "message": "การปลดบล็อกก่อนจะคืนเบราว์เซอร์ที่ผ่านกำแพง anti-bot ไปแล้ว"
+  },
+  "sfxValOff": {
+    "message": "ปิด"
+  },
+  "ruleTranslateAllDone": {
+    "message": "ทุกภาษามีคำแปลแล้ว"
+  },
+  "combinationTranslationsTitle": {
+    "message": "คำแปลของชื่อ"
+  },
+  "combinationTranslationsHint": {
+    "message": "แสดงแทนชื่อเมื่อส่วนขยายใช้ภาษานั้น ถ้าว่าง จะแสดงชื่อ"
+  },
+  "combinationTranslateNeedsName": {
+    "message": "เขียนชื่อก่อน"
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "ตรวจสอบคุกกี้ของ challenge และวิเคราะห์สคริปต์"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "ตรวจสอบคุกกี้ของ DataDome และวิเคราะห์สคริปต์"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "ค้นหา public key จับข้อมูลเบราว์เซอร์ (BDA) และวิเคราะห์สคริปต์"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "ตรวจหาเวอร์ชัน GeeTest (v3 หรือ v4) และวิเคราะห์สคริปต์"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "ค้นหา site key ตรวจหาเวอร์ชัน hCaptcha และวิเคราะห์สคริปต์"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "ดึง site key และวิเคราะห์สคริปต์ของ Turnstile"
+  },
+  "statsExport": {
+    "message": "ส่งออก"
+  },
+  "statsExportAllCategories": {
+    "message": "ไฟล์ส่งออกจะรวมทุกหมวดหมู่เสมอ ไม่ว่าหน้านี้จะแสดงอะไร"
+  },
+  "statsScopeLabel": {
+    "message": "แสดง"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "ซ่อนการตรวจจับ fingerprinting: {0} ({1} ของทั้งหมด)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "แสดง fingerprinting"
+  },
+  "statsScopeKeepOne": {
+    "message": "ต้องเลือกอย่างน้อยหนึ่งหมวดหมู่"
+  },
+  "statsScopeRulesNote": {
+    "message": "กฎใช้ทุกหมวดหมู่เสมอ"
+  },
+  "statsContextFmt": {
+    "message": "หน้า: {0} · โดเมน: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "ประวัติทั้งหมดตั้งแต่ {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "เทียบกับช่วงก่อนหน้า ({0})"
+  },
+  "statsCompareNone": {
+    "message": "เลือก 7, 30 หรือ 90 วันเพื่อเทียบกับช่วงก่อนหน้า"
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "ประวัติเริ่มเมื่อ {0} จึงไม่มีช่วงก่อนหน้าที่สมบูรณ์ให้เทียบ"
+  },
+  "statsDeltaNew": {
+    "message": "ใหม่"
+  },
+  "statsDeltaFlat": {
+    "message": "ไม่เปลี่ยนแปลงเมื่อเทียบกับช่วงก่อนหน้า"
+  },
+  "statsDeltaUpFmt": {
+    "message": "เพิ่มขึ้น {0} เมื่อเทียบกับช่วงก่อนหน้า"
+  },
+  "statsDeltaDownFmt": {
+    "message": "ลดลง {0} เมื่อเทียบกับช่วงก่อนหน้า"
+  },
+  "statsDeltaWasFmt": {
+    "message": "ช่วงก่อนหน้า: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "มีหน้าน้อยในช่วงนี้ ({0}): การเปรียบเทียบและอันดับอาจทำให้เข้าใจผิด"
+  },
+  "statsLoading": {
+    "message": "กำลังโหลดสถิติ..."
+  },
+  "statsEmptyShowAll": {
+    "message": "แสดงประวัติทั้งหมด"
+  },
+  "statsHeadlinesLabel": {
+    "message": "ประเด็นเด่น"
+  },
+  "statsSectionEvidence": {
+    "message": "หลักฐาน"
+  },
+  "statsSubnavLabel": {
+    "message": "มุมมองหลักฐาน"
+  },
+  "statsExportCanceled": {
+    "message": "ยกเลิกการส่งออกแล้ว"
+  },
+  "statsAllClearTitle": {
+    "message": "ไม่พบ anti-bot หรือ CAPTCHA ในช่วงนี้"
+  },
+  "statsAllClearDescFmt": {
+    "message": "หน้าเหล่านี้แสดงเพียงการใช้ API ของ fingerprinting หน้า: {0}"
+  },
+  "statsScopeEmptyTitle": {
+    "message": "ไม่มีอะไรให้แสดงสำหรับหมวดหมู่เหล่านี้"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "เลือกหมวดหมู่อื่นหรือช่วงที่ยาวขึ้น"
+  },
+  "statsHeadlineTop": {
+    "message": "ระบบป้องกันที่พบบ่อยที่สุด"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} ของหน้า · หน้า: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "ไซต์ที่ยากที่สุด"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "ระบบป้องกัน: {0} · ความยาก: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "ระบบป้องกันใหม่ล่าสุด"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "พบครั้งแรกเมื่อ {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "ไม่มีอะไรใหม่ในช่วงนี้"
+  },
+  "statsHeadlineRiser": {
+    "message": "เพิ่มขึ้นมากที่สุด"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "หน้า {0} → {1} เทียบกับช่วงก่อนหน้า"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "ต้องมีช่วงก่อนหน้า"
+  },
+  "statsKpiPages": {
+    "message": "หน้าที่บันทึก"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "วันที่ใช้งาน: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} มีการตรวจจับ ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "ไซต์ที่ป้องกันหลายชั้น"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} มี CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "ระบบป้องกันที่พบ"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "ใหม่ {0} ในช่วงนี้"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "จาก {0} กฎ"
+  },
+  "statsTipPages": {
+    "message": "หน้าที่บันทึกในประวัติในช่วงนี้ ประวัติเก็บการตรวจจับที่บันทึกไว้ ไม่ใช่ทุกการเข้าชมในเบราว์เซอร์"
+  },
+  "statsTipLayered": {
+    "message": "โดเมนที่ตรวจพบระบบป้องกันที่แตกต่างกันตั้งแต่สองระบบขึ้นไป"
+  },
+  "statsOverTimeProtections": {
+    "message": "ระบบป้องกันที่พบตามช่วงเวลา"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% ของหน้า"
+  },
+  "statsAllProtectionsLink": {
+    "message": "ระบบป้องกันทั้งหมด"
+  },
+  "statsPageTiers": {
+    "message": "หน้าของคุณได้รับการป้องกันมากเพียงใด"
+  },
+  "statsTiersHint": {
+    "message": "แต่ละหน้าที่บันทึกนับหนึ่งครั้ง ตามประเภทของระบบป้องกันที่พบ"
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot และ CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "เฉพาะ anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "เฉพาะ CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "ไม่มี anti-bot หรือ CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "ความยากโดยประมาณ"
+  },
+  "statsDifficultyHint": {
+    "message": "ค่าประมาณคร่าวๆ จากระบบป้องกันที่พบในหมวดหมู่ที่แสดง ไม่ใช่การวัดจริง"
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "ไม่มีระบบป้องกัน"
+  },
+  "statsHardestSites": {
+    "message": "ไซต์ที่ยากที่สุด"
+  },
+  "statsAllDomainsLink": {
+    "message": "โดเมนทั้งหมด"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} เพิ่มเติม"
+  },
+  "statsWhatChanged": {
+    "message": "สิ่งที่เปลี่ยนไป"
+  },
+  "statsChangedNew": {
+    "message": "ระบบป้องกันใหม่"
+  },
+  "statsChangedMoving": {
+    "message": "เพิ่มขึ้นและลดลง"
+  },
+  "statsChangedGone": {
+    "message": "ไม่พบอีกแล้ว"
+  },
+  "statsChangedSwitched": {
+    "message": "ไซต์ที่เปลี่ยนระบบป้องกัน"
+  },
+  "statsChangedNothing": {
+    "message": "ไม่มีอะไรเปลี่ยนแปลงในช่วงนี้"
+  },
+  "statsChangedAllLink": {
+    "message": "การเปลี่ยนแปลงทั้งหมด"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "เลือก 7, 30 หรือ 90 วันเพื่อดูระบบป้องกันที่เพิ่มขึ้นและลดลง"
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "API ของ fingerprinting ทำงานบน {0} ของหน้า · เทคนิค: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "พบบ่อยที่สุด: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "แสดงแยกจากระบบป้องกัน anti-bot และ CAPTCHA เพราะแทบทุกหน้าใช้ API เหล่านี้"
+  },
+  "statsPagesColumn": {
+    "message": "หน้า"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "การเปลี่ยนแปลง"
+  },
+  "statsStrongColumn": {
+    "message": "หลักฐานหนักแน่น"
+  },
+  "statsProtectionSortLabel": {
+    "message": "เรียงลำดับระบบป้องกัน"
+  },
+  "statsSortMostPages": {
+    "message": "หน้ามากที่สุด"
+  },
+  "statsSortMostDomains": {
+    "message": "โดเมนมากที่สุด"
+  },
+  "statsSortBiggestChange": {
+    "message": "เปลี่ยนมากที่สุด"
+  },
+  "statsCommonStacks": {
+    "message": "ชุดระบบป้องกันที่พบบ่อย"
+  },
+  "statsCommonStacksHint": {
+    "message": "ระบบป้องกัน anti-bot และ CAPTCHA ที่พบร่วมกันในหน้าล่าสุดที่บันทึกไว้ของโดเมน"
+  },
+  "statsDomainSearchAll": {
+    "message": "ค้นหาโดเมนหรือระบบป้องกัน..."
+  },
+  "statsSortHardest": {
+    "message": "ยากที่สุดก่อน"
+  },
+  "statsSortLastSeen": {
+    "message": "ล่าสุด"
+  },
+  "statsDifficultyColumn": {
+    "message": "ความยาก"
+  },
+  "statsStackColumn": {
+    "message": "ระบบป้องกัน"
+  },
+  "statsLastSeenColumn": {
+    "message": "พบล่าสุด"
+  },
+  "statsFilterChanged": {
+    "message": "เปลี่ยนแปลง"
+  },
+  "statsFilterClear": {
+    "message": "ล้างตัวกรอง"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "กรองโดเมน"
+  },
+  "statsChangeKindGained": {
+    "message": "เพิ่มมา"
+  },
+  "statsChangeKindDropped": {
+    "message": "หายไป"
+  },
+  "statsChangeKindReplaced": {
+    "message": "ถูกแทนที่"
+  },
+  "statsChangePageColumn": {
+    "message": "หน้า"
+  },
+  "statsChangeSinceFmt": {
+    "message": "เทียบกับ {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "เพิ่ม:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "นำออก:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "เปรียบเทียบสำเนาที่บันทึกไว้ของหน้าเดียวกัน การตรวจจับ fingerprint จะถูกละเว้น เว้นแต่คุณเลือกแสดง fingerprinting"
+  },
+  "statsStrongEvidence": {
+    "message": "หลักฐานหนักแน่น"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "การตรวจจับ {0} จาก {1} รายการได้คะแนน 80% ขึ้นไป"
+  },
+  "statsUnconfirmed": {
+    "message": "มีการกล่าวถึง แต่ยังไม่ยืนยัน"
+  },
+  "statsUnconfirmedHint": {
+    "message": "ระบบป้องกันที่พบบ่อยแต่แทบไม่มีหลักฐานหนักแน่น อาจเป็นเพียงข้อความที่กล่าวถึงหรือสคริปต์ที่ไม่ได้ใช้ ไม่ใช่ challenge ที่ทำงานอยู่"
+  },
+  "statsUnconfirmedNone": {
+    "message": "ระบบป้องกันที่พบบ่อยทุกระบบได้รับการยืนยันด้วยหลักฐานหนักแน่น"
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "ส่วนใหญ่พบผ่าน {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "ไม่มีสัญญาณเดี่ยวที่โดดเด่น"
+  },
+  "statsTierStrong": {
+    "message": "หนักแน่น"
+  },
+  "statsTierModerate": {
+    "message": "ปานกลาง"
+  },
+  "statsTierWeak": {
+    "message": "อ่อน"
+  },
+  "statsTierHint": {
+    "message": "หนักแน่นคือ 80% ขึ้นไป ปานกลาง 40-79% อ่อนต่ำกว่า 40% 100% หมายถึงสัญญาณที่เกิดจากระบบป้องกันนั้นเพียงระบบเดียว"
+  },
+  "statsDecidedByCategory": {
+    "message": "วิธีที่ใช้ตัดสินแต่ละหมวดหมู่"
+  },
+  "statsLiftFmt": {
+    "message": "{0} จุด"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · ค่าเฉลี่ย {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "ใน {0} ชุดค่าผสมช่วยเพิ่มความมั่นใจจาก {1} เป็น {2}"
+  },
+  "statsLess": {
+    "message": "น้อยลง"
+  },
+  "statsMore": {
+    "message": "มากขึ้น"
+  },
+  "statsBusiestDay": {
+    "message": "วันที่ใช้งานมากที่สุด"
+  },
+  "statsLongestStreak": {
+    "message": "ใช้งานต่อเนื่องนานที่สุด"
+  },
+  "statsPeakHour": {
+    "message": "ชั่วโมงที่ใช้งานสูงสุด"
+  },
+  "statsQuietDays": {
+    "message": "วันที่ไม่มีการบันทึก"
+  },
+  "statsTodayPartial": {
+    "message": "วันนี้ (ยังนับอยู่)"
+  },
+  "statsSevenDayAverage": {
+    "message": "เส้น: ค่าเฉลี่ย 7 วัน"
+  },
+  "statsRulesCoverage": {
+    "message": "ความครอบคลุม"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "กฎที่เปิดใช้ {0} จาก {1} ข้อตรงกันในช่วงนี้"
+  },
+  "statsRulesAttention": {
+    "message": "ต้องให้ความสนใจ"
+  },
+  "statsRulesAttentionNone": {
+    "message": "ไม่มีสิ่งที่ต้องให้ความสนใจ"
+  },
+  "statsRulesStatusColumn": {
+    "message": "สถานะ"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "ไม่อยู่ในช่วงนี้"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "ไม่อยู่ในประวัติ"
+  },
+  "statsRulesSourceEdited": {
+    "message": "แก้ไขแล้ว"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "กฎทางการของผู้ให้บริการที่คุณยังไม่เคยพบจะเงียบอยู่ ซึ่งเป็นเรื่องปกติ"
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "ยังมีประวัติให้ตัดสินไม่มาก (หน้า: {0}) กฎที่ไม่เคยตรงกันจึงบอกอะไรได้น้อย"
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "แสดงเฉพาะกฎแบบกำหนดเองและกฎที่แก้ไขแล้ว คำอธิบายของกฎทางการดูแลโดย Scrapfly"
+  },
+  "statsToolsRetentionNote": {
+    "message": "ขั้นสูงเก็บข้อมูลที่จับไว้ 30 นาที แท็บนี้จึงไม่สนใจช่วงวันที่"
+  },
+  "statsToolsSavedNow": {
+    "message": "บันทึกอยู่ตอนนี้"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "หมดอายุภายใน 10 นาที"
+  },
+  "statsToolsVendorsCount": {
+    "message": "ผู้ให้บริการ"
+  },
+  "statsToolsStaleFmt": {
+    "message": "ข้อมูลที่จับที่หมดอายุและรอการล้าง: {0} เปิดขั้นสูงเพื่อนำออก"
+  },
+  "statsToolsSavedCaptures": {
+    "message": "ข้อมูลที่จับที่บันทึกไว้"
+  },
+  "statsToolsColVendor": {
+    "message": "ผู้ให้บริการ"
+  },
+  "statsToolsColTool": {
+    "message": "เครื่องมือ"
+  },
+  "statsToolsColSaved": {
+    "message": "บันทึกเมื่อ"
+  },
+  "statsToolsColExpires": {
+    "message": "หมดอายุ"
+  },
+  "statsToolsNoLive": {
+    "message": "ขณะนี้ไม่มีข้อมูลที่จับที่บันทึกไว้"
+  },
+  "statsChangedNoPrevious": {
+    "message": "ยังไม่มีช่วงก่อนหน้าที่สมบูรณ์"
+  },
+  "settingsCardCaptureRetention": {
+    "message": "ระยะเวลาเก็บข้อมูลที่จับ"
+  },
+  "settingsCaptureRetention": {
+    "message": "เก็บข้อมูลที่จับของเครื่องมือไว้"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "ข้อมูลที่จับของเครื่องมือขั้นสูง (คุกกี้ สคริปต์ โทเค็น) จะถูกลบหลังเวลานี้"
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 นาที"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 นาที"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 ชั่วโมง"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 ชั่วโมง"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 ชั่วโมง"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 ชั่วโมง"
+  },
+  "advancedFooterHintFmt": {
+    "message": "ข้อมูลที่จับจะถูกเก็บไว้ {0}",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "ตั้งแต่ 1 นาทีถึง 7 วัน"
+  }
+}

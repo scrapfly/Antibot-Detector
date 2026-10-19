@@ -403,6 +403,12 @@
   padding: 5px 6px;
 }
 
+/* Long words in some languages ("SPOLEHLIVOST", "MOEILIJKHEID") need those last pixels */
+.stats-line .stat-label-inline {
+  font-size: 9.8px;
+  letter-spacing: -0.1px;
+}
+
 #detectionTab .action-btn {
   display: flex;
   align-items: center;

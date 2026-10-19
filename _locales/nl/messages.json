@@ -1,0 +1,5552 @@
+{
+  "detectionFailedTitle": {
+    "message": "Scan mislukt"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Scan onderbroken"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Geen voltooide scan"
+  },
+  "detectionRetryScanDesc": {
+    "message": "De scan is niet voltooid. Laad de pagina opnieuw om het nog eens te proberen."
+  },
+  "settingsReadFailedToast": {
+    "message": "Kan de instellingen niet laden. Je huidige waarden zijn behouden."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Kan de instellingen niet opslaan. Je wijzigingen zijn behouden; probeer het opnieuw."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Wijziging klaargezet. Sla de instellingen op om deze toe te passen."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Kan de geïmporteerde instellingen niet opslaan. Je instellingen en taal zijn behouden."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Wordt direct toegepast."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Exporteer of importeer voorkeuren. Integratieverbindingen blijven in deze browser."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Kan geen geldig instellingenbestand lezen. Er is niets gewijzigd."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Kan deze regel niet opslaan. Je wijzigingen staan er nog; probeer het opnieuw."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Laad de pagina opnieuw om beveiligingsscripts te analyseren"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Reset beveiligingscookies en laad opnieuw om scripts te analyseren"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Laad de pagina opnieuw om de versie van de beveiliging te detecteren"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Reset de beveiligingscookie en start de opname"
+  },
+  "advToolCookiesHint": {
+    "message": "Bekijk cookies die door deze beveiliging worden gebruikt"
+  },
+  "advToolVersionHint": {
+    "message": "Lees beschikbare versie-informatie"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Zoek de CAPTCHA-sitesleutel op deze pagina"
+  },
+  "advToolSelectorHint": {
+    "message": "Zoek een selector voor de CAPTCHA-widget"
+  },
+  "advToolCallbackHint": {
+    "message": "Bekijk CAPTCHA-callbacks"
+  },
+  "advToolSensorHint": {
+    "message": "Reset beveiligingscookies en laad opnieuw om sensorgegevens op te nemen"
+  },
+  "advToolCaptureHint": {
+    "message": "Neem gegevens van deze pagina op"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Stop met het opnemen van gegevens van deze pagina"
+  },
+  "advToolWorking": {
+    "message": "Bezig…"
+  },
+  "advToolWaitingReload": {
+    "message": "De pagina wordt opnieuw geladen en de resultaten worden verzameld. Dit duurt een paar seconden…"
+  },
+  "advToolNoResult": {
+    "message": "Geen resultaat: de beveiliging heeft geen gegevens verzonden. Laad de pagina opnieuw en probeer het nog eens."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "{0}-sitesleutel"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Geen sitesleutel gevonden op deze pagina. Open of activeer de CAPTCHA en probeer het opnieuw."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Gevonden in"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Verzoek"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Paginascript"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Paginavariabele"
+  },
+  "advSiteKeyFrame": {
+    "message": "Frame"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Scripts op deze pagina"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Haalt de sitesleutel op en analyseert de scripts"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Analyseert de scripts"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Kan deze actie niet voltooien: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Vorige grafiekpagina"
+  },
+  "statsChartNext": {
+    "message": "Volgende grafiekpagina"
+  },
+  "statsChartPage": {
+    "message": "Pagina {0} van {1}"
+  },
+  "statsChartShowing": {
+    "message": "{0}–{1} van {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Statistiekonderdelen"
+  },
+  "statsSectionOverview": {
+    "message": "Overzicht"
+  },
+  "statsSectionActivity": {
+    "message": "Activiteit"
+  },
+  "statsSectionProtections": {
+    "message": "Beveiligingen"
+  },
+  "statsSectionDomains": {
+    "message": "Domeinen"
+  },
+  "statsSectionConfidence": {
+    "message": "Zekerheid"
+  },
+  "statsExportCSV": {
+    "message": "CSV exporteren"
+  },
+  "statsExportJSON": {
+    "message": "JSON exporteren"
+  },
+  "statsExportPrivacy": {
+    "message": "Exports bevatten domeinen en detectieoverzichten, geen cookies, pagina-inhoud of URL-parameters."
+  },
+  "statsExportScopeFmt": {
+    "message": "De export omvat het geselecteerde bereik. Items: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Download gestart: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Kan de gegevens niet exporteren. Probeer het opnieuw."
+  },
+  "statsLoadFailed": {
+    "message": "Kan de geschiedenis niet laden. Laad deze pagina opnieuw."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Geen items in dit bereik"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Kies een langere periode om je opgeslagen geschiedenis te bekijken."
+  },
+  "statsDetectionRate": {
+    "message": "Items met detecties"
+  },
+  "statsActiveDays": {
+    "message": "Actieve dagen"
+  },
+  "statsAverageConfidence": {
+    "message": "Gemiddelde zekerheid"
+  },
+  "statsDailyVisits": {
+    "message": "Geschiedenisitems per dag"
+  },
+  "statsActivityCalendar": {
+    "message": "Activiteitenkalender"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Elk vierkantje staat voor één lokale kalenderdag. Donkerder blauw betekent meer opgeslagen items."
+  },
+  "statsHourlyActivity": {
+    "message": "Activiteit per uur"
+  },
+  "statsWeekdayActivity": {
+    "message": "Activiteit per weekdag"
+  },
+  "statsLocalTimeNote": {
+    "message": "Datums en uren gebruiken je lokale tijdzone."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "De laatste {0} dagen worden getoond. Totalen en exports omvatten het hele geselecteerde bereik."
+  },
+  "statsProtectionRanking": {
+    "message": "Ranglijst van beveiligingen"
+  },
+  "statsCategoryTrend": {
+    "message": "Categorieën in de tijd"
+  },
+  "statsCategoryOverlap": {
+    "message": "Categorieën die samen voorkomen"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Aantal geschiedenisitems met beide categorieën. Diagonale cellen tonen items met die categorie."
+  },
+  "statsProtectionDetails": {
+    "message": "Alle beveiligingen"
+  },
+  "statsDomainRanking": {
+    "message": "Ranglijst van domeinen"
+  },
+  "statsDomainMap": {
+    "message": "Bezoeken en detecties"
+  },
+  "statsDomainMapHint": {
+    "message": "Elk punt is een domein. Grotere punten hebben meer verschillende beveiligingen."
+  },
+  "statsDomainDetails": {
+    "message": "Alle domeinen"
+  },
+  "statsDomainSearch": {
+    "message": "Domeinen zoeken..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Domeinen sorteren"
+  },
+  "statsSortVisits": {
+    "message": "Meeste bezoeken"
+  },
+  "statsSortDetections": {
+    "message": "Meeste detecties"
+  },
+  "statsSortConfidence": {
+    "message": "Hoogste zekerheid"
+  },
+  "statsSortName": {
+    "message": "Domeinnaam"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Verdeling van zekerheid"
+  },
+  "statsConfidenceTrend": {
+    "message": "Zekerheid in de tijd"
+  },
+  "statsCategoryConfidence": {
+    "message": "Zekerheid per categorie"
+  },
+  "statsConfidenceNote": {
+    "message": "Zekerheid geeft de sterkte van het opgeslagen detectiebewijs aan, geen bewijs van fingerprinting of een actieve challenge."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} detecties hebben zekerheidswaarden; {1} hebben geen geldige score."
+  },
+  "statsProtectionColumn": {
+    "message": "Beveiliging"
+  },
+  "statsCategoryColumn": {
+    "message": "Categorie"
+  },
+  "statsDomainColumn": {
+    "message": "Domein"
+  },
+  "statsTableCountFmt": {
+    "message": "Rijen: {0} van {1}"
+  },
+  "statsTableMore": {
+    "message": "Meer tonen"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Geen domeinen komen overeen met je zoekopdracht."
+  },
+  "statsSelectionNote": {
+    "message": "Grafieken en exports gebruiken het geselecteerde bereik. Geschiedenisitems zijn opgeslagen detecties, niet elk browserbezoek."
+  },
+  "extensionName": {
+    "message": "Scrapfly: anti-botdetector"
+  },
+  "headerBrandName": {
+    "message": "ScrapFly: anti-botdetector",
+    "description": "Brand + product name shown in the popup header (extensionName with the ScrapFly logo capitalisation; the manifest/store name stays extensionName)"
+  },
+  "headerBrandSuffix": {
+    "message": ": anti-botdetector",
+    "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
+  },
+  "extensionDescription": {
+    "message": "Detecteer CAPTCHA's, anti-botsystemen en fingerprintingtechnologieën op websites"
+  },
+  "tabDetection": {
+    "message": "Detectie"
+  },
+  "tabHistory": {
+    "message": "Geschiedenis"
+  },
+  "tabRules": {
+    "message": "Regels"
+  },
+  "tabAdvanced": {
+    "message": "Geavanceerd"
+  },
+  "openSettings": {
+    "message": "Instellingen openen"
+  },
+  "enableOrDisableDetection": {
+    "message": "Detectie in- of uitschakelen"
+  },
+  "noDetectionsFound": {
+    "message": "Geen detecties gevonden"
+  },
+  "detectionScanningTitle": {
+    "message": "Deze pagina wordt gescand"
+  },
+  "detectionScanningDescription": {
+    "message": "Zoeken naar beveiligingssignalen."
+  },
+  "detectionScanningHint": {
+    "message": "Resultaten verschijnen hier zodra ze klaar zijn."
+  },
+  "actionRemoveFromBlacklist": {
+    "message": "Verwijderen uit blokkeerlijst"
+  },
+  "statDetections": {
+    "message": "Detecties"
+  },
+  "statConfidence": {
+    "message": "Zekerheid"
+  },
+  "statDifficulty": {
+    "message": "Moeilijkheid"
+  },
+  "statCacheScope": {
+    "message": "Cachebereik"
+  },
+  "scopeDomain": {
+    "message": "Domein"
+  },
+  "scopePath": {
+    "message": "Pad"
+  },
+  "scopeFullUrl": {
+    "message": "Volledige URL"
+  },
+  "difficultyLow": {
+    "message": "Laag"
+  },
+  "difficultyMedium": {
+    "message": "Gemiddeld"
+  },
+  "difficultyHigh": {
+    "message": "Hoog"
+  },
+  "searchHistory": {
+    "message": "Geschiedenis zoeken..."
+  },
+  "searchDetectors": {
+    "message": "Detectors zoeken..."
+  },
+  "paginationPrev": {
+    "message": "Vorige pagina"
+  },
+  "paginationNext": {
+    "message": "Volgende pagina"
+  },
+  "paginationPage": {
+    "message": "Pagina"
+  },
+  "paginationOf": {
+    "message": "van"
+  },
+  "paginationNoItems": {
+    "message": "Geen items om weer te geven"
+  },
+  "paginationCurrentPageAria": {
+    "message": "Huidig paginanummer"
+  },
+  "btnImport": {
+    "message": "Importeren"
+  },
+  "btnExport": {
+    "message": "Exporteren"
+  },
+  "btnClear": {
+    "message": "Wissen"
+  },
+  "btnAdd": {
+    "message": "Toevoegen"
+  },
+  "btnUpdate": {
+    "message": "Bijwerken"
+  },
+  "btnClose": {
+    "message": "Sluiten"
+  },
+  "btnSave": {
+    "message": "Opslaan"
+  },
+  "btnCancel": {
+    "message": "Annuleren"
+  },
+  "btnDelete": {
+    "message": "Verwijderen"
+  },
+  "historyImportTitle": {
+    "message": "Geschiedenis importeren"
+  },
+  "historyExportTitle": {
+    "message": "Geschiedenis exporteren"
+  },
+  "historyClearTitle": {
+    "message": "Geschiedenis wissen"
+  },
+  "historyEmptyTitle": {
+    "message": "Nog geen geschiedenis"
+  },
+  "historyEmptyDescription": {
+    "message": "Detectiegeschiedenis verschijnt hier terwijl je websites bezoekt."
+  },
+  "rulesUpdateTitle": {
+    "message": "Regelupdates installeren uit de nieuwste Scrapfly-release"
+  },
+  "rulesAddTitle": {
+    "message": "Nieuwe detector toevoegen"
+  },
+  "rulesEmptyTitle": {
+    "message": "Geen detectors geladen"
+  },
+  "rulesEmptyDescription": {
+    "message": "Detectors verschijnen hier zodra ze uit opslag en bestanden zijn geladen."
+  },
+  "ruleModalActionEdit": {
+    "message": "Bewerken"
+  },
+  "ruleSectionDetectorInfo": {
+    "message": "Detectorgegevens"
+  },
+  "ruleFieldName": {
+    "message": "Naam"
+  },
+  "ruleFieldNamePlaceholder": {
+    "message": "Naam van detector"
+  },
+  "ruleFieldCategory": {
+    "message": "Categorie"
+  },
+  "categoryAntibot": {
+    "message": "Anti-bot"
+  },
+  "categoryCaptcha": {
+    "message": "CAPTCHA"
+  },
+  "categoryFingerprint": {
+    "message": "Fingerprint"
+  },
+  "ruleFieldDifficulty": {
+    "message": "Moeilijkheid"
+  },
+  "ruleFieldIcon": {
+    "message": "Pictogram"
+  },
+  "ruleFieldVersion": {
+    "message": "Versie"
+  },
+  "ruleFieldAuthor": {
+    "message": "Auteur"
+  },
+  "ruleSectionBadgeColor": {
+    "message": "Badgekleur"
+  },
+  "ruleSectionDetectionMethods": {
+    "message": "Detectiemethoden"
+  },
+  "settingsTitle": {
+    "message": "Instellingen"
+  },
+  "settingsSubtitle": {
+    "message": "Configureer de voorkeuren van je extensie"
+  },
+  "settingsTabGeneral": {
+    "message": "Algemeen"
+  },
+  "settingsTabDetection": {
+    "message": "Detectie"
+  },
+  "settingsTabHistory": {
+    "message": "Geschiedenis"
+  },
+  "settingsTabData": {
+    "message": "Gegevens"
+  },
+  "settingsGroupCoreSettings": {
+    "message": "Basisinstellingen"
+  },
+  "settingsCardNotifications": {
+    "message": "Meldingen"
+  },
+  "settingsCardNotificationsDesc": {
+    "message": "Toon meldingen wanneer beveiligingssystemen worden gedetecteerd"
+  },
+  "settingsCardDebug": {
+    "message": "Debugmodus"
+  },
+  "settingsCardDebugDesc": {
+    "message": "Schrijft één leesbaar rapport per gescande pagina naar de console van de extensie."
+  },
+  "settingsRowLogCollector": {
+    "message": "Logverzamelaar"
+  },
+  "settingsRowMaxLogs": {
+    "message": "Max. logs"
+  },
+  "settingsRowCollected": {
+    "message": "Verzameld"
+  },
+  "settingsGroupDetectorUpdates": {
+    "message": "Detectorupdates"
+  },
+  "settingsCardAutoUpdate": {
+    "message": "Automatisch controleren op updates"
+  },
+  "settingsCardAutoUpdateDesc": {
+    "message": "Controleer automatisch op nieuwe detectordefinities"
+  },
+  "settingsRowCheckInterval": {
+    "message": "Controle-interval"
+  },
+  "settingsCheckIntervalNever": {
+    "message": "Nooit"
+  },
+  "settingsBtnCheckNow": {
+    "message": "Nu controleren"
+  },
+  "settingsExtensionUpdateRequired": {
+    "message": "Extensie-update vereist"
+  },
+  "settingsBtnUpdateExtension": {
+    "message": "Extensie bijwerken"
+  },
+  "settingsGroupBadgeColors": {
+    "message": "Badgekleuren"
+  },
+  "settingsRowLastCheck": {
+    "message": "Laatste controle"
+  },
+  "advancedToolsTitle": {
+    "message": "Geavanceerde opnametools"
+  },
+  "advancedToolsDescription": {
+    "message": "Haal cookies, tokens en sitesleutels op uit gedetecteerde beveiligingssystemen"
+  },
+  "advancedToolsHint": {
+    "message": "Bezoek een beschermde pagina om de opnametools in te schakelen"
+  },
+  "advancedSubtabTools": {
+    "message": "Tools"
+  },
+  "advancedSubtabHistory": {
+    "message": "Geschiedenis"
+  },
+  "advancedCaptureHistoryTitle": {
+    "message": "Opnamegeschiedenis"
+  },
+  "advancedCaptureHistorySubtitle": {
+    "message": "Filter, bekijk en exporteer verzamelde opnamen"
+  },
+  "advancedFilterSite": {
+    "message": "Site"
+  },
+  "advancedFilterAllSites": {
+    "message": "Alle sites"
+  },
+  "advancedFilterCurrentSite": {
+    "message": "Huidige site"
+  },
+  "advancedFilterModule": {
+    "message": "Module"
+  },
+  "advancedFilterAllModules": {
+    "message": "Alle modules"
+  },
+  "advancedFilterSearch": {
+    "message": "Zoeken"
+  },
+  "advancedBtnExport": {
+    "message": "Exporteren"
+  },
+  "advancedBtnExportTitle": {
+    "message": "Opnamen exporteren"
+  },
+  "advancedBtnClearAll": {
+    "message": "Alles wissen"
+  },
+  "advancedBtnClearAllTitle": {
+    "message": "Alle opnamen wissen"
+  },
+  "advancedEmptyCapturesTitle": {
+    "message": "Nog geen opnamen"
+  },
+  "advancedEmptyCapturesHint": {
+    "message": "Gebruik het tabblad Tools om gegevens van gedetecteerde systemen op te nemen"
+  },
+  "advancedNoResultsTitle": {
+    "message": "Geen opnamen gevonden"
+  },
+  "advancedBtnResetFilters": {
+    "message": "Alle filters resetten"
+  },
+  "advancedModalTitle": {
+    "message": "Geavanceerde detectietools"
+  },
+  "advancedModalIntro": {
+    "message": "Gespecialiseerde opnametools voor diepgaande analyse van anti-botsystemen, CAPTCHA's en fingerprintingtechnologieën. Deze tools verschijnen automatisch wanneer relevante detecties worden gevonden."
+  },
+  "advancedSectionSupported": {
+    "message": "Momenteel ondersteunde systemen"
+  },
+  "advancedSectionHowItWorks": {
+    "message": "Zo werkt het"
+  },
+  "advancedStep1Title": {
+    "message": "Automatische detectie"
+  },
+  "advancedStep1Desc": {
+    "message": "Tools verschijnen wanneer relevante anti-botsystemen op de huidige pagina worden gedetecteerd"
+  },
+  "advancedStep2Title": {
+    "message": "Opname starten"
+  },
+  "advancedStep2Desc": {
+    "message": "Tools starten automatisch interceptors en beginnen netwerkverzoeken te volgen"
+  },
+  "advancedStep3Title": {
+    "message": "Resultaten bekijken"
+  },
+  "advancedStep3Desc": {
+    "message": "Opgenomen gegevens worden tijdelijk opgeslagen, met volledige exportmogelijkheden"
+  },
+  "advancedFooterHint": {
+    "message": "Opnamen worden bewaard voor de tijd die in Instellingen is ingesteld."
+  },
+  "settings": {
+    "message": "Instellingen"
+  },
+  "paginationShowingFmt": {
+    "message": "{0}-{1} van {2}"
+  },
+  "paginationShowingItems": {
+    "message": "{0}-{1} van {2} {3}"
+  },
+  "timeUnknown": {
+    "message": "Onbekend"
+  },
+  "timeJustNow": {
+    "message": "Zojuist"
+  },
+  "timeSecondsAgoFmt": {
+    "message": "{0} sec geleden"
+  },
+  "timeMinutesAgoFmt": {
+    "message": "{0} min geleden"
+  },
+  "timeHoursAgoFmt": {
+    "message": "{0} uur geleden"
+  },
+  "timeDaysAgoFmt": {
+    "message": "{0} d geleden"
+  },
+  "timeOneMinuteAgo": {
+    "message": "1 minuut geleden"
+  },
+  "timeMinutesAgoLongFmt": {
+    "message": "{0} minuten geleden"
+  },
+  "timeOneHourAgo": {
+    "message": "1 uur geleden"
+  },
+  "timeHoursAgoLongFmt": {
+    "message": "{0} uur geleden"
+  },
+  "timeOneDayAgo": {
+    "message": "1 dag geleden"
+  },
+  "timeDaysAgoLongFmt": {
+    "message": "{0} dagen geleden"
+  },
+  "btnCancelSettings": {
+    "message": "Annuleren"
+  },
+  "btnSaveSettings": {
+    "message": "Instellingen opslaan"
+  },
+  "poweredBy": {
+    "message": "Mogelijk gemaakt door"
+  },
+  "categoryColors": {
+    "message": "CATEGORIEKLEUREN"
+  },
+  "methodSuffixPatterns": {
+    "message": "patronen"
+  },
+  "btnSaveRule": {
+    "message": "Regel opslaan"
+  },
+  "tagColors": {
+    "message": "Tagkleuren"
+  },
+  "colorPickerTitle": {
+    "message": "Kleurenkiezer"
+  },
+  "colorPickerArea": {
+    "message": "Verzadiging en helderheid"
+  },
+  "colorPickerSaturation": {
+    "message": "Verzadiging"
+  },
+  "colorPickerBrightness": {
+    "message": "Helderheid"
+  },
+  "colorPickerHue": {
+    "message": "Tint"
+  },
+  "colorPickerRed": {
+    "message": "Rood"
+  },
+  "colorPickerGreen": {
+    "message": "Groen"
+  },
+  "colorPickerBlue": {
+    "message": "Blauw"
+  },
+  "colorPickerPresets": {
+    "message": "Vooraf ingestelde kleuren"
+  },
+  "cacheConfiguration": {
+    "message": "Cacheconfiguratie"
+  },
+  "cacheDuration": {
+    "message": "Cacheduur"
+  },
+  "timeUnitMinutes": {
+    "message": "Minuten"
+  },
+  "timeUnitHours": {
+    "message": "Uren"
+  },
+  "timeUnitDays": {
+    "message": "Dagen"
+  },
+  "blacklistedDomains": {
+    "message": "Domeinen op de blokkeerlijst"
+  },
+  "blacklistedDomainsDesc": {
+    "message": "Domeinen waarvoor detectie volledig wordt overgeslagen"
+  },
+  "jsApiEvents": {
+    "message": "JS API-gebeurtenissen"
+  },
+  "jsApiEventsDesc": {
+    "message": "Aangepaste gebeurtenissen naar de window van de pagina sturen"
+  },
+  "ruleMethodSettings": {
+    "message": "Instellingen voor detectiemethode"
+  },
+  "methodSettingsTitleFmt": {
+    "message": "{0} · instellingen voor {1}",
+    "description": "Method Settings modal title. {0} = detector name, {1} = readable detection method name (e.g. Headers)"
+  },
+  "methodSettingsTitleNoDetectorFmt": {
+    "message": "Instellingen voor {0}",
+    "description": "Method Settings modal title when the detector has no name yet. {0} = readable detection method name"
+  },
+  "ruleDescriptionTitle": {
+    "message": "Beschrijving"
+  },
+  "ruleDescriptionPlaceholder": {
+    "message": "Wat dit patroon betekent, bijv. Leest taalvoorkeuren van de browser"
+  },
+  "ruleDescriptionHint": {
+    "message": "Wordt getoond in de detectiedetails en in Geschiedenis wanneer dit patroon wordt gevonden."
+  },
+  "ruleFieldDescriptionPlaceholder": {
+    "message": "Wat deze beveiliging is, bijv. Botdetectie op inlog- en afrekenpagina's"
+  },
+  "ruleFieldDescriptionHint": {
+    "message": "Wordt getoond in de detectiedetails van deze beveiliging."
+  },
+  "ruleConfidenceLevel": {
+    "message": "Zekerheidsniveau"
+  },
+  "ruleConfidencePrefix": {
+    "message": "Detectiezekerheid:"
+  },
+  "detectionName": {
+    "message": "Naam van detectie"
+  },
+  "historyModalUrl": {
+    "message": "URL"
+  },
+  "interval6Hours": {
+    "message": "6 uur"
+  },
+  "interval12Hours": {
+    "message": "12 uur"
+  },
+  "interval24Hours": {
+    "message": "24 uur"
+  },
+  "interval2Days": {
+    "message": "2 dagen"
+  },
+  "interval1Week": {
+    "message": "1 week"
+  },
+  "methodLabelUrl": {
+    "message": "URL"
+  },
+  "methodLabelHeader": {
+    "message": "Headers"
+  },
+  "methodLabelCookie": {
+    "message": "Cookies"
+  },
+  "methodLabelContent": {
+    "message": "Inhoud"
+  },
+  "methodLabelDom": {
+    "message": "DOM"
+  },
+  "methodLabelJsHooks": {
+    "message": "JS-hooks"
+  },
+  "methodLabelWindow": {
+    "message": "Window"
+  },
+  "methodLabelPayload": {
+    "message": "Payload"
+  },
+  "methodOnePattern": {
+    "message": "1 patroon"
+  },
+  "methodPatternsFmt": {
+    "message": "{0} patronen"
+  },
+  "methodAddPattern": {
+    "message": "Patroon toevoegen"
+  },
+  "methodSearchPatterns": {
+    "message": "Patronen zoeken..."
+  },
+  "methodNoPatterns": {
+    "message": "Geen patronen"
+  },
+  "methodNoMatchingPatterns": {
+    "message": "Geen overeenkomende patronen"
+  },
+  "methodSuffixMatches": {
+    "message": "treffers"
+  },
+  "cacheExpiredLabel": {
+    "message": "Verlopen"
+  },
+  "copiedNotification": {
+    "message": "Gekopieerd"
+  },
+  "copiedInlineMsg": {
+    "message": "✓ Gekopieerd!"
+  },
+  "unknownDetection": {
+    "message": "Onbekende detectie"
+  },
+  "matchPlural": {
+    "message": "treffers"
+  },
+  "noMatchesRecorded": {
+    "message": "Geen treffers geregistreerd"
+  },
+  "clearCacheConfirmTitle": {
+    "message": "Cache wissen"
+  },
+  "clearCacheConfirmMsg": {
+    "message": "Hiermee worden de in de cache opgeslagen detectiegegevens voor dit domein verwijderd en wordt een nieuwe analyse gestart."
+  },
+  "clearCacheConfirmBtn": {
+    "message": "Cache wissen"
+  },
+  "clearingMsg": {
+    "message": "Wissen..."
+  },
+  "clearedSuccessMsg": {
+    "message": "✓ Gewist!"
+  },
+  "cacheClearedToast": {
+    "message": "Cache gewist"
+  },
+  "failedToClearCacheToast": {
+    "message": "Cache wissen mislukt"
+  },
+  "unableGetCurrentPage": {
+    "message": "Kan de huidige pagina niet ophalen"
+  },
+  "invalidDomain": {
+    "message": "Ongeldig domein"
+  },
+  "addBlacklistTitle": {
+    "message": "Toevoegen aan blokkeerlijst"
+  },
+  "addBlacklistMsgFmt": {
+    "message": "Domein \"{0}\" wordt uitgesloten van alle toekomstige detecties. Je kunt het later verwijderen in Instellingen."
+  },
+  "addBlacklistBtn": {
+    "message": "Toevoegen aan blokkeerlijst"
+  },
+  "alreadyBlacklistedFmt": {
+    "message": "Domein \"{0}\" staat al op de blokkeerlijst"
+  },
+  "addedToBlacklistFmt": {
+    "message": "\"{0}\" toegevoegd aan blokkeerlijst"
+  },
+  "failedAddBlacklistFmt": {
+    "message": "Toevoegen aan blokkeerlijst mislukt: {0}"
+  },
+  "removedFromBlacklistFmt": {
+    "message": "\"{0}\" verwijderd van de blokkeerlijst"
+  },
+  "failedRemoveBlacklistFmt": {
+    "message": "Verwijderen van de blokkeerlijst mislukt: {0}"
+  },
+  "historyNoDetections": {
+    "message": "Geen detecties"
+  },
+  "historyNoDetectionsFound": {
+    "message": "Geen detecties gevonden"
+  },
+  "historyMatchCountFmt": {
+    "message": "{0} treffers"
+  },
+  "historyOneMatch": {
+    "message": "1 treffer"
+  },
+  "notificationHistoryCleared": {
+    "message": "Geschiedenis gewist"
+  },
+  "notificationClearHistoryFailedFmt": {
+    "message": "Geschiedenis wissen mislukt: {0}"
+  },
+  "notificationHistoryItemExported": {
+    "message": "Geschiedenisitem geëxporteerd"
+  },
+  "notificationCacheCleared": {
+    "message": "Cache gewist"
+  },
+  "notificationCacheAlreadyCleared": {
+    "message": "Cache is al gewist"
+  },
+  "notificationClearCacheFailed": {
+    "message": "Cache wissen mislukt"
+  },
+  "notificationDomainBlacklistedFmt": {
+    "message": "\"{0}\" toegevoegd aan blokkeerlijst"
+  },
+  "notificationBlacklistFailed": {
+    "message": "Toevoegen aan blokkeerlijst mislukt"
+  },
+  "notificationHistoryItemDeleted": {
+    "message": "Geschiedenisitem verwijderd"
+  },
+  "notificationDeleteHistoryItemFailed": {
+    "message": "Geschiedenisitem verwijderen mislukt"
+  },
+  "notificationHistoryExportedFmt": {
+    "message": "Geschiedenisitems geëxporteerd: {0}"
+  },
+  "notificationHistoryMergedFmt": {
+    "message": "Nieuwe geschiedenisitems samengevoegd: {0}"
+  },
+  "notificationHistoryReplacedFmt": {
+    "message": "Geschiedenis vervangen. Items: {0}"
+  },
+  "notificationImportHistoryFailedFmt": {
+    "message": "Geschiedenis importeren mislukt: {0}"
+  },
+  "dialogClearHistoryTitle": {
+    "message": "Geschiedenis wissen"
+  },
+  "dialogClearHistoryMessage": {
+    "message": "Weet je zeker dat je alle geschiedenis wilt wissen? Dit kan niet ongedaan worden gemaakt."
+  },
+  "buttonClearAll": {
+    "message": "Alles wissen"
+  },
+  "dialogClearCacheTitle": {
+    "message": "Cache wissen"
+  },
+  "dialogClearCacheMessageFmt": {
+    "message": "In de cache opgeslagen detectiegegevens voor {0} wissen? Het geschiedenisitem blijft behouden."
+  },
+  "buttonClearCache": {
+    "message": "Cache wissen"
+  },
+  "dialogDeleteHistoryTitle": {
+    "message": "Geschiedenisitem verwijderen"
+  },
+  "dialogDeleteHistoryMessageFmt": {
+    "message": "Weet je zeker dat je deze detectie van {0} wilt verwijderen?"
+  },
+  "failedLoadSettingsDefault": {
+    "message": "Kan de instellingen niet laden. Standaardwaarden worden gebruikt."
+  },
+  "settingsSavedToast": {
+    "message": "Instellingen opgeslagen"
+  },
+  "failedSaveSettingsFmt": {
+    "message": "Instellingen opslaan mislukt: {0}"
+  },
+  "failedExportLogs": {
+    "message": "Logs exporteren mislukt"
+  },
+  "logsCleared": {
+    "message": "Logs gewist"
+  },
+  "failedClearLogs": {
+    "message": "Logs wissen mislukt"
+  },
+  "couldNotGetPageUrl": {
+    "message": "Kan de URL van de huidige pagina niet ophalen"
+  },
+  "domainAlreadyBlacklistedFmt": {
+    "message": "{0} staat al op de blokkeerlijst"
+  },
+  "addedDomainToBlacklistFmt": {
+    "message": "{0} toegevoegd aan blokkeerlijst"
+  },
+  "failedAddDomainFmt": {
+    "message": "Domein toevoegen mislukt: {0}"
+  },
+  "removedDomainFromBlacklistFmt": {
+    "message": "{0} verwijderd van de blokkeerlijst"
+  },
+  "invalidSettingsFmt": {
+    "message": "Ongeldige instellingen: {0}"
+  },
+  "pleaseEnterWebhookUrl": {
+    "message": "Voer een webhook-URL in"
+  },
+  "webhookTestSuccessfulFmt": {
+    "message": "Webhooktest geslaagd! Status: {0}"
+  },
+  "webhookFailedStatusFmt": {
+    "message": "Webhook retourneerde status: {0}"
+  },
+  "webhookTestFailedFmt": {
+    "message": "Webhooktest mislukt: {0}"
+  },
+  "importDetectorsTitle": {
+    "message": "Detectors importeren"
+  },
+  "importDetectorsModeMessage": {
+    "message": "Met Samenvoegen worden de geïmporteerde detectors aan die van jou toegevoegd.<br>Met Alles vervangen worden eerst je aangepaste detectors verwijderd; ingebouwde detectors blijven behouden."
+  },
+  "mergeOption": {
+    "message": "Samenvoegen"
+  },
+  "replaceAllOption": {
+    "message": "Alles vervangen"
+  },
+  "detectorsImported": {
+    "message": "Detectors geïmporteerd"
+  },
+  "detectorExportedFmt": {
+    "message": "{0} geëxporteerd"
+  },
+  "failedImportDetectors": {
+    "message": "Detectors importeren mislukt. Controleer de bestandsindeling."
+  },
+  "errorReadingFileFmt": {
+    "message": "Fout bij het lezen van het bestand: {0}"
+  },
+  "detectorsUpdatedFmt": {
+    "message": "Detectors bijgewerkt: {0}"
+  },
+  "detectorDeletedFmt": {
+    "message": "\"{0}\" verwijderd"
+  },
+  "failedClearDetectors": {
+    "message": "Detectors wissen mislukt"
+  },
+  "urlPatternMatching": {
+    "message": "URL-patroonmatching"
+  },
+  "textWordMatching": {
+    "message": "Tekst-/woordmatching"
+  },
+  "payloadTextMatching": {
+    "message": "Payload-tekstmatching"
+  },
+  "nameFieldMatching": {
+    "message": "Naamveldmatching"
+  },
+  "captureNotFound": {
+    "message": "Opname niet gevonden"
+  },
+  "captureModuleClassNotFound": {
+    "message": "Moduleklasse niet gevonden"
+  },
+  "captureDetailsUnavailable": {
+    "message": "Detailweergave niet beschikbaar"
+  },
+  "captureDataCopied": {
+    "message": "Opnamegegevens gekopieerd"
+  },
+  "captureDeleted": {
+    "message": "Opname verwijderd"
+  },
+  "capturesExportedFmt": {
+    "message": "Opnamen geëxporteerd: {0}"
+  },
+  "allCapturesCleared": {
+    "message": "Alle opnamen gewist"
+  },
+  "captureExportFailed": {
+    "message": "Opname exporteren mislukt"
+  },
+  "invalidUrl": {
+    "message": "Ongeldige URL"
+  },
+  "importHistoryTitle": {
+    "message": "Geschiedenis importeren"
+  },
+  "replaceOption": {
+    "message": "Vervangen"
+  },
+  "importHistoryModeMessageFmt": {
+    "message": "Items in het bestand: {0}. Items in je huidige geschiedenis: {1}.<br>Met Samenvoegen worden de nieuwe items eraan toegevoegd. Met Vervangen wordt de huidige geschiedenis eerst verwijderd."
+  },
+  "clearLogsTitle": {
+    "message": "Logs wissen"
+  },
+  "clearLogsMessage": {
+    "message": "Weet je zeker dat je alle verzamelde logs wilt wissen? Dit kan niet ongedaan worden gemaakt."
+  },
+  "failedCheckForUpdatesFmt": {
+    "message": "Controleren op updates mislukt: {0}"
+  },
+  "couldNotFetchUpdates": {
+    "message": "Kan geen updates ophalen van de server"
+  },
+  "updateResultInstalledFmt": {
+    "message": "Regels bijgewerkt vanuit release {0}: {1}"
+  },
+  "updateResultUpToDateFmt": {
+    "message": "Alle regels zijn up-to-date met release {0}."
+  },
+  "updateResultNeedsExtensionFmt": {
+    "message": "Wacht op extensie {0} of nieuwer: {1}. Ze worden geïnstalleerd zodra Chrome de extensie bijwerkt."
+  },
+  "updateResultFailedFmt": {
+    "message": "Kan niet downloaden: {0}. Probeer het later opnieuw."
+  },
+  "updateResultEditedWaitingFmt": {
+    "message": "Regels die je hebt bewerkt wachten op je beslissing in Regels → Bijwerken: {0}"
+  },
+  "updateErrorUnreachable": {
+    "message": "Kan GitHub niet bereiken om te controleren op regelupdates."
+  },
+  "updateErrorNoRelease": {
+    "message": "Er is geen gepubliceerde Scrapfly-release gevonden op GitHub."
+  },
+  "updateErrorRateLimitedFmt": {
+    "message": "GitHub beperkt het aantal updatecontroles. Probeer het over {0} min opnieuw."
+  },
+  "errorApplyingUpdates": {
+    "message": "Fout bij het toepassen van updates"
+  },
+  "failedCheckForUpdates": {
+    "message": "Controleren op updates mislukt"
+  },
+  "errorCheckingForUpdates": {
+    "message": "Fout bij het controleren op updates"
+  },
+  "updateServiceNotAvailable": {
+    "message": "Updateservice niet beschikbaar"
+  },
+  "deleteDetectorTitle": {
+    "message": "Detector verwijderen"
+  },
+  "deleteDetectorMessageFmt": {
+    "message": "Weet je zeker dat je \"{0}\" wilt verwijderen?"
+  },
+  "detectorNotFound": {
+    "message": "Detector niet gevonden"
+  },
+  "failedDeleteDetector": {
+    "message": "Detector verwijderen mislukt"
+  },
+  "failedViewCaptureDetails": {
+    "message": "Opnamedetails bekijken mislukt"
+  },
+  "failedCopyCaptureData": {
+    "message": "Opnamegegevens kopiëren mislukt"
+  },
+  "failedDeleteCapture": {
+    "message": "Opname verwijderen mislukt"
+  },
+  "noCapturesToExport": {
+    "message": "Geen opnamen om te exporteren"
+  },
+  "clearAllCapturesConfirm": {
+    "message": "Weet je zeker dat je alle opnamen wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
+  },
+  "failedClearCaptures": {
+    "message": "Opnamen wissen mislukt"
+  },
+  "settingsCardWebhookIntegration": {
+    "message": "Webhookintegratie"
+  },
+  "settingsEnableWebhook": {
+    "message": "Webhook inschakelen"
+  },
+  "settingsEnableWebhookDesc": {
+    "message": "HTTP-verzoeken verzenden bij detectie"
+  },
+  "settingsBypassCache": {
+    "message": "Bij elke paginalading verzenden (cache omzeilen)"
+  },
+  "settingsHttpMethod": {
+    "message": "HTTP-methode"
+  },
+  "settingsHttpMethodDesc": {
+    "message": "Selecteer de HTTP-methode voor webhookverzoeken"
+  },
+  "settingsCustomMethod": {
+    "message": "Aangepast"
+  },
+  "settingsCustomMethodPlaceholder": {
+    "message": "Voer een aangepaste methode in (bijv. OPTIONS, HEAD)"
+  },
+  "settingsWebhookUrl": {
+    "message": "Webhook-URL"
+  },
+  "settingsWebhookUrlDesc": {
+    "message": "Volledige endpoint-URL (https://api.example.com/webhook)"
+  },
+  "settingsAvailableVariables": {
+    "message": "Beschikbare variabelen:"
+  },
+  "settingsWebhookUrlExample": {
+    "message": "Voorbeeld: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
+  },
+  "settingsContentType": {
+    "message": "Content-Type"
+  },
+  "settingsContentTypeDesc": {
+    "message": "HTTP-header voor inhoudstype"
+  },
+  "webhookCtHintJson": {
+    "message": "De sjabloon als JSON, met de variabelen ingevuld."
+  },
+  "webhookCtHintForm": {
+    "message": "Sjabloonvelden als key=value-paren; geneste velden als detections[0][name]."
+  },
+  "webhookCtHintMultipart": {
+    "message": "Sjabloonvelden als form-data-onderdelen; de browser stelt de boundary in."
+  },
+  "webhookCtHintText": {
+    "message": "De sjabloontekst ongewijzigd, met de variabelen ingevuld."
+  },
+  "webhookCtHintXml": {
+    "message": "Sjabloonvelden als XML-document met <webhook>; detecties als herhaalde elementen."
+  },
+  "webhookCtHintCsv": {
+    "message": "Een koptekstrij, daarna één rij per detectie met de paginavelden herhaald."
+  },
+  "webhookCtHintNdjson": {
+    "message": "Eén JSON-object per regel: één regel per detectie, met de paginavelden."
+  },
+  "webhookCtHintCustom": {
+    "message": "Je eigen Content-Type (type/subtype); de body wordt als JSON verzonden."
+  },
+  "webhookCtCustom": {
+    "message": "Aangepast"
+  },
+  "webhookCtCustomLabel": {
+    "message": "Aangepast Content-Type"
+  },
+  "webhookCtInvalid": {
+    "message": "Voer een type/subtype in, bijv. application/vnd.example+json"
+  },
+  "webhookAddHeader": {
+    "message": "Header toevoegen"
+  },
+  "webhookNoHeaders": {
+    "message": "Geen aangepaste headers geconfigureerd"
+  },
+  "webhookHeaderName": {
+    "message": "Headernaam"
+  },
+  "webhookHeaderValue": {
+    "message": "Headerwaarde"
+  },
+  "webhookRemoveHeader": {
+    "message": "Header verwijderen"
+  },
+  "webhookSending": {
+    "message": "Verzenden..."
+  },
+  "settingsCustomHeaders": {
+    "message": "Aangepaste headers"
+  },
+  "settingsCustomHeadersDesc": {
+    "message": "Voeg aangepaste HTTP-headers toe aan het webhookverzoek"
+  },
+  "settingsPayloadTemplate": {
+    "message": "Payload-sjabloon"
+  },
+  "settingsPayloadTemplateDesc": {
+    "message": "Body die met elke webhook wordt verzonden. Klik op een variabele om die in te voegen."
+  },
+  "webhookVarsTitle": {
+    "message": "Sjabloonvariabelen"
+  },
+  "webhookVarsIntro": {
+    "message": "Worden vervangen door de paginawaarden wanneer de webhook wordt verzonden."
+  },
+  "webhookVarsInsertLabel": {
+    "message": "Variabele invoegen"
+  },
+  "webhookVarsInsertFmt": {
+    "message": "{0} invoegen"
+  },
+  "webhookVarsCopyFmt": {
+    "message": "{0} kopiëren"
+  },
+  "webhookVarsExample": {
+    "message": "Voorbeeld"
+  },
+  "webhookVarSiteUrl": {
+    "message": "Volledige URL van de pagina"
+  },
+  "webhookVarHostname": {
+    "message": "Hostnaam van de pagina"
+  },
+  "webhookVarTitle": {
+    "message": "Paginatitel"
+  },
+  "webhookVarFavicon": {
+    "message": "Favicon-URL van de site"
+  },
+  "webhookVarDetections": {
+    "message": "Detecties als JSON-array"
+  },
+  "webhookVarTimestamp": {
+    "message": "Tijdstip van de detectie (ISO 8601)"
+  },
+  "webhookVarDetectionCount": {
+    "message": "Aantal detecties"
+  },
+  "webhookVarCategories": {
+    "message": "Gedetecteerde categorieën, gescheiden door komma's"
+  },
+  "webhookJsonValid": {
+    "message": "Geldige JSON"
+  },
+  "webhookJsonInvalidFmt": {
+    "message": "Ongeldige JSON (regel {0})"
+  },
+  "webhookResetTemplate": {
+    "message": "Sjabloon resetten"
+  },
+  "settingsTestWebhook": {
+    "message": "Webhook testen"
+  },
+  "settingsTestWebhookDesc": {
+    "message": "Stuur een testverzoek naar je webhook-URL"
+  },
+  "settingsTestBtn": {
+    "message": "Testen"
+  },
+  "settingsCardHistoryConfig": {
+    "message": "Geschiedenisconfiguratie"
+  },
+  "settingsHistorySettings": {
+    "message": "Geschiedenisinstellingen"
+  },
+  "settingsHistoryLimit": {
+    "message": "Geschiedenislimiet"
+  },
+  "settingsHistoryLimitNote": {
+    "message": "(0 = veiligheidslimiet van 1.000 items)"
+  },
+  "settingsExportFormat": {
+    "message": "Exportindeling"
+  },
+  "settingsExportFormatPlainText": {
+    "message": "Platte tekst"
+  },
+  "settingsIncludeTimestamps": {
+    "message": "Tijdstempels opnemen"
+  },
+  "settingsSaveOnCacheHits": {
+    "message": "Opslaan bij cachetreffers"
+  },
+  "settingsCardDuplicatePrevention": {
+    "message": "Duplicaatpreventie"
+  },
+  "settingsEnableDuplicatePrevention": {
+    "message": "Duplicaatpreventie inschakelen"
+  },
+  "settingsDuplicatePreventionDesc": {
+    "message": "Blokkeer dubbele geschiedenisitems binnen een tijdvenster"
+  },
+  "settingsDuplicateScope": {
+    "message": "Bereik"
+  },
+  "settingsDuplicateScopeFullUrl": {
+    "message": "Volledige URL"
+  },
+  "settingsDuplicateScopeDomain": {
+    "message": "Domein"
+  },
+  "settingsDuplicateScopePath": {
+    "message": "Pad"
+  },
+  "settingsTimeWindow": {
+    "message": "Tijdvenster"
+  },
+  "settingsTimeMinutes": {
+    "message": "Minuten"
+  },
+  "settingsTimeHours": {
+    "message": "Uren"
+  },
+  "settingsTimeDays": {
+    "message": "Dagen"
+  },
+  "settingsHowItWorks": {
+    "message": "Hoe het werkt:"
+  },
+  "settingsHowItWorksDesc": {
+    "message": "Voorkomt dubbele geschiedenisitems voor dezelfde URL binnen het tijdvenster."
+  },
+  "settingsDuplicateFullUrlBullet": {
+    "message": "Volledige URL: exacte URL-overeenkomst (inclusief queryparameters)"
+  },
+  "settingsDuplicateDomainBullet": {
+    "message": "Domein: hetzelfde domein (verschillende paden tellen als gelijk)"
+  },
+  "settingsDuplicatePathBullet": {
+    "message": "Pad: hetzelfde domein+pad (negeert queryparameters)"
+  },
+  "settingsCardCacheSettings": {
+    "message": "Cache-instellingen"
+  },
+  "settingsCardSkipDomains": {
+    "message": "Domeinen overslaan"
+  },
+  "settingsAddCurrentPage": {
+    "message": "Huidige pagina toevoegen"
+  },
+  "settingsSearchDomainsPlaceholder": {
+    "message": "Domeinen zoeken..."
+  },
+  "settingsBadgeColorLow": {
+    "message": "Laag"
+  },
+  "settingsBadgeColorMedium": {
+    "message": "Gemiddeld"
+  },
+  "settingsBadgeColorHigh": {
+    "message": "Hoog"
+  },
+  "settingsEnableJsApi": {
+    "message": "JS API-gebeurtenissen inschakelen"
+  },
+  "settingsDataExportImport": {
+    "message": "Exporteren en importeren"
+  },
+  "settingsDataManagement": {
+    "message": "Gegevensbeheer"
+  },
+  "settingsDataManagementDesc": {
+    "message": "Exporteer of importeer de gegevens van je extensie"
+  },
+  "settingsDataSettingsRow": {
+    "message": "Instellingen"
+  },
+  "settingsDataSettingsRowDesc": {
+    "message": "Exporteer of importeer extensie-instellingen"
+  },
+  "settingsDataHistoryRow": {
+    "message": "Detectiegeschiedenis"
+  },
+  "settingsDataHistoryRowDesc": {
+    "message": "Exporteer de detectiegeschiedenis als CSV"
+  },
+  "settingsDataExportSettingsTitle": {
+    "message": "Instellingen exporteren"
+  },
+  "settingsDataImportSettingsTitle": {
+    "message": "Instellingen importeren"
+  },
+  "settingsDataExportHistoryTitle": {
+    "message": "Geschiedenis exporteren"
+  },
+  "settingsAvailableEvents": {
+    "message": "Beschikbare gebeurtenissen"
+  },
+  "settingsApiEventReady": {
+    "message": "Extensie geladen en geïnitialiseerd"
+  },
+  "settingsApiEventOnStart": {
+    "message": "Detectie gestart (cache-miss / handmatig)"
+  },
+  "settingsApiEventOnProgress": {
+    "message": "Voortgangsupdates van detectie (per methode)"
+  },
+  "settingsApiEventOnHooksComplete": {
+    "message": "Monitoring van JS-hooks voltooid"
+  },
+  "settingsApiEventOnWindowPropsComplete": {
+    "message": "Monitoring van window-eigenschappen voltooid"
+  },
+  "settingsApiEventOnDetection": {
+    "message": "Detectie voltooid met resultaten"
+  },
+  "settingsApiEventOnError": {
+    "message": "Er is een detectiefout opgetreden"
+  },
+  "settingsUsageExample": {
+    "message": "Gebruiksvoorbeeld"
+  },
+  "detectionDisabledForDomain": {
+    "message": "Detectie uitgeschakeld voor dit domein"
+  },
+  "detectionRemoveFromBlacklistBtn": {
+    "message": "Verwijderen uit blokkeerlijst"
+  },
+  "detectionBlacklistHint": {
+    "message": "Of ga naar Instellingen → Detectie → Domeinen op de blokkeerlijst om dit te beheren."
+  },
+  "detectionNoDetectionsDesc": {
+    "message": "Er zijn geen overeenkomende anti-bot-, CAPTCHA- of fingerprintingsignalen gevonden op deze pagina."
+  },
+  "detectionNoCachedDataDesc": {
+    "message": "Er zijn geen in de cache opgeslagen detectiegegevens beschikbaar voor deze pagina. Laad de pagina opnieuw om een nieuwe scan uit te voeren."
+  },
+  "detectionTitleUploadPaste": {
+    "message": "Detecties uploaden (deelbare link)"
+  },
+  "pasteUploadSuccessToast": {
+    "message": "Link gekopieerd naar klembord"
+  },
+  "failedReadSettings": {
+    "message": "Kan de instellingen niet lezen — bewerking geannuleerd"
+  },
+  "failedRemoveBlacklist": {
+    "message": "Verwijderen van de blokkeerlijst mislukt"
+  },
+  "pasteConfirmTitle": {
+    "message": "Detecties uploaden?"
+  },
+  "pasteConfirmBtn": {
+    "message": "Uploaden"
+  },
+  "pasteUploadFailedToast": {
+    "message": "Uploaden mislukt"
+  },
+  "pasteNoDetectionsToast": {
+    "message": "Geen detecties om te uploaden"
+  },
+  "detectionTitleClearCache": {
+    "message": "Cache wissen"
+  },
+  "detectionTitleCopyOverview": {
+    "message": "Overzicht kopiëren"
+  },
+  "detectionTitleBlockDomain": {
+    "message": "Dit domein blokkeren"
+  },
+  "detectionStatSite": {
+    "message": "SITE"
+  },
+  "detectionStatDetections": {
+    "message": "DETECTIES"
+  },
+  "detectionStatConfidence": {
+    "message": "ZEKERHEID"
+  },
+  "detectionStatDifficulty": {
+    "message": "MOEILIJKHEID"
+  },
+  "detectionSearchPlaceholder": {
+    "message": "Detecties zoeken..."
+  },
+  "detectionPaginationPage": {
+    "message": "Pagina"
+  },
+  "detectionPaginationOf": {
+    "message": "van"
+  },
+  "detectionDomainBlacklistedTitle": {
+    "message": "Dit domein staat op de blokkeerlijst"
+  },
+  "detectionModalConfidence": {
+    "message": "Zekerheid"
+  },
+  "detectionModalDifficulty": {
+    "message": "Moeilijkheid"
+  },
+  "detectionModalAuthor": {
+    "message": "Auteur"
+  },
+  "detectionModalDescription": {
+    "message": "Beschrijving"
+  },
+  "detectionModalNoDescription": {
+    "message": "Geen beschrijving beschikbaar."
+  },
+  "detectionModalDetectionMethods": {
+    "message": "Detectiemethoden"
+  },
+  "detectionModalNoMethodsDetected": {
+    "message": "Geen methoden gedetecteerd"
+  },
+  "advancedSearchPlaceholder": {
+    "message": "Zoeken op URL, module, site of inhoud..."
+  },
+  "advancedPaginationPage": {
+    "message": "Pagina"
+  },
+  "advancedPaginationOf": {
+    "message": "van"
+  },
+  "advancedInfoRecaptchaDesc": {
+    "message": "Neemt sitesleutels, acties en configuratieparameters op"
+  },
+  "advancedInfoAkamaiDesc": {
+    "message": "Onderschept sensorgegevens en haalt versie-informatie op"
+  },
+  "advancedInfoImpervaTitle": {
+    "message": "Imperva / Incapsula"
+  },
+  "advancedInfoImpervaDesc": {
+    "message": "Bewaakt cookies en wijzigingen in het beveiligingsniveau"
+  },
+  "advancedInfoShapeSecurityDesc": {
+    "message": "Analyseert dynamische headers en scriptparameters"
+  },
+  "advancedInfoAwsWafDesc": {
+    "message": "Neemt challenge-endpoints en tokendetails op"
+  },
+  "btnStartCapturing": {
+    "message": "Opname starten"
+  },
+  "btnStopCapturing": {
+    "message": "Opname stoppen"
+  },
+  "btnCheckCookies": {
+    "message": "Cookies controleren"
+  },
+  "btnCheckVersion": {
+    "message": "Versie controleren"
+  },
+  "btnAnalyzeScripts": {
+    "message": "Scripts analyseren"
+  },
+  "btnExtractSiteKey": {
+    "message": "Sitesleutel ophalen"
+  },
+  "btnExtractPublicKey": {
+    "message": "Openbare sleutel ophalen"
+  },
+  "btnObtainSelector": {
+    "message": "Selector ophalen"
+  },
+  "btnCopyAllData": {
+    "message": "Alle gegevens kopiëren"
+  },
+  "btnClearData": {
+    "message": "Gegevens wissen"
+  },
+  "advCapturedDataSection": {
+    "message": "Opgenomen gegevens"
+  },
+  "advNoCapturesYet": {
+    "message": "Nog geen opnamen"
+  },
+  "advCaptureDetails": {
+    "message": "Opnamedetails"
+  },
+  "advValueCopied": {
+    "message": "Waarde gekopieerd"
+  },
+  "advConfirmClearAllTitle": {
+    "message": "Alle opgenomen gegevens wissen?"
+  },
+  "advConfirmClearAllMsg": {
+    "message": "Hiermee worden alle opgenomen gegevens van deze aanbieder definitief verwijderd."
+  },
+  "rulesColorPickerCancel": {
+    "message": "Annuleren"
+  },
+  "rulesColorPickerOk": {
+    "message": "OK"
+  },
+  "rulesContentSearchScopeTitle": {
+    "message": "Zoekbereik voor inhoud"
+  },
+  "rulesOnlyCheckScripts": {
+    "message": "Alleen scripts controleren"
+  },
+  "rulesOnlyCheckScriptsHint": {
+    "message": "Doorzoek alleen JavaScript-code (inline en geladen scripts), niet paginatekst of bestandsnamen"
+  },
+  "rulesScopeSettingsTitle": {
+    "message": "Bereikinstellingen"
+  },
+  "rulesNameScopeLabel": {
+    "message": "Naambereik"
+  },
+  "rulesNameScopeHint": {
+    "message": "Waar wordt gezocht naar overeenkomsten met naam/veld"
+  },
+  "rulesScopeRequest": {
+    "message": "Verzoek"
+  },
+  "rulesScopeResponse": {
+    "message": "Respons"
+  },
+  "rulesScopeAll": {
+    "message": "Alles"
+  },
+  "rulesValueScopeLabel": {
+    "message": "Waardebereik"
+  },
+  "rulesValueScopeHint": {
+    "message": "Waar wordt gezocht naar waarde-overeenkomsten"
+  },
+  "rulesUrlScopeSettings": {
+    "message": "Instellingen voor URL-bereik"
+  },
+  "rulesUrlScopeLabel": {
+    "message": "URL-bereik"
+  },
+  "rulesUrlScopePageOnly": {
+    "message": "Pagina"
+  },
+  "rulesUrlScopeScripts": {
+    "message": "Scripts"
+  },
+  "rulesUrlScopeAllDefault": {
+    "message": "Alles (standaard)"
+  },
+  "rulesRequestConstraints": {
+    "message": "Beperkingen voor verzoeken"
+  },
+  "rulesUrlPatternOptional": {
+    "message": "URL-patroon (optioneel)"
+  },
+  "rulesUrlRegex": {
+    "message": "Reguliere expressie voor URL (regex)"
+  },
+  "rulesUrlCaseSensitive": {
+    "message": "URL hoofdlettergevoelig"
+  },
+  "rulesHttpMethodSelect": {
+    "message": "HTTP-methode (kies er één)"
+  },
+  "rulesHttpMethodFilterHint": {
+    "message": "Filter op verzoekmethode (optioneel)"
+  },
+  "rulesHttpMethodAny": {
+    "message": "Alle"
+  },
+  "rulesPatternMatchingOptions": {
+    "message": "Opties voor patroonmatching"
+  },
+  "rulesPatternRegex": {
+    "message": "Reguliere expressie (regex)"
+  },
+  "rulesPatternWholeWord": {
+    "message": "Heel woord"
+  },
+  "rulesPatternCaseSensitive": {
+    "message": "Hoofdlettergevoelig"
+  },
+  "rulesValueFieldOptions": {
+    "message": "Opties voor waardeveld"
+  },
+  "rulesApplySettings": {
+    "message": "Instellingen toepassen"
+  },
+  "rulesDomSelectorHelper": {
+    "message": "DOM-selectorhulp"
+  },
+  "rulesUseSelectorBtn": {
+    "message": "Selector gebruiken"
+  },
+  "rulesWindowPropertiesHelper": {
+    "message": "Hulp voor window-eigenschappen"
+  },
+  "notifConfirmTitleDefault": {
+    "message": "Bevestigen"
+  },
+  "notifConfirmMessageDefault": {
+    "message": "Weet je het zeker?"
+  },
+  "notifLoadingDefault": {
+    "message": "Laden..."
+  },
+  "advNoCapturesHintFmt": {
+    "message": "Klik hierboven op \"Opname starten\" om te beginnen met het opnemen van {0}-gegevens"
+  },
+  "advancedToolsHeading": {
+    "message": "Opnametools"
+  },
+  "advancedToolsSubtitle": {
+    "message": "Kies een beveiliging om de bijbehorende tools te openen."
+  },
+  "advancedToolsLoadTools": {
+    "message": "Tools openen"
+  },
+  "advancedToolsLearnMore": {
+    "message": "Meer over geavanceerde tools"
+  },
+  "advancedToolsChange": {
+    "message": "Wijzigen"
+  },
+  "settingsLanguageTitle": {
+    "message": "Taal"
+  },
+  "settingsLanguageDesc": {
+    "message": "Overschrijf de taal van de extensie. Standaard wordt de taal van je browser gevolgd."
+  },
+  "settingsLanguageAuto": {
+    "message": "Browsertaal gebruiken"
+  },
+  "detectionEmptyTitle": {
+    "message": "Niets gedetecteerd"
+  },
+  "detectionBadgeNoCaptchas": {
+    "message": "✓ Geen CAPTCHA's"
+  },
+  "detectionBadgeNoAntibot": {
+    "message": "✓ Geen anti-bot"
+  },
+  "detectionBadgeNoFingerprint": {
+    "message": "✓ Geen fingerprinting"
+  },
+  "detectionDisabledTitle": {
+    "message": "Detectie uitgeschakeld"
+  },
+  "detectionDisabledDesc": {
+    "message": "Beveiligingsdetectie is momenteel uitgeschakeld."
+  },
+  "detectionDisabledAction": {
+    "message": "Gebruik de schakelaar bovenaan om detectie in te schakelen."
+  },
+  "rulesModalDetectorLabel": {
+    "message": "Detectieregel"
+  },
+  "rulesMoreActions": {
+    "message": "Meer acties"
+  },
+  "advancedToolsEmptyTitle": {
+    "message": "Geen beveiliging gedetecteerd"
+  },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Geen enkele ondersteunde beveiliging op deze pagina heeft een zekerheid boven {0}%. Je kunt dit minimum wijzigen in Instellingen → Detectie.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Beveiliging gedetecteerd met lage zekerheid"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} is gedetecteerd met een zekerheid van {1}%. Tools verschijnen alleen boven {2}%. Je kunt dit minimum verlagen in Instellingen → Detectie.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
+  "advancedToolsSupportedLabel": {
+    "message": "Ondersteunde beveiligingen"
+  },
+  "advancedToolsOpenHistoryFmt": {
+    "message": "Opnamegeschiedenis bekijken ({0})"
+  },
+  "detectionMethodJsHooks": {
+    "message": "JavaScript-hooks"
+  },
+  "detectionMethodContent": {
+    "message": "Inhoud"
+  },
+  "detectionMethodWindow": {
+    "message": "Window-eigenschappen"
+  },
+  "detectionMethodDom": {
+    "message": "DOM"
+  },
+  "detectionMethodHeaders": {
+    "message": "Headers"
+  },
+  "detectionMethodCookies": {
+    "message": "Cookies"
+  },
+  "detectionMethodUrl": {
+    "message": "URL"
+  },
+  "detectionMethodPayload": {
+    "message": "Payload"
+  },
+  "detectionEnableBtn": {
+    "message": "Detectie inschakelen"
+  },
+  "historyMoreActions": {
+    "message": "Meer acties"
+  },
+  "historyCopyEntryTitle": {
+    "message": "Gegevens kopiëren"
+  },
+  "settingsHistoryAutoDelete": {
+    "message": "Automatisch verwijderen"
+  },
+  "settingsHistoryAutoDeleteDesc": {
+    "message": "Verwijdert regelmatig oude geschiedenisitems."
+  },
+  "settingsHistoryAutoDeleteOlderThan": {
+    "message": "Items verwijderen die ouder zijn dan"
+  },
+  "settingsCacheDurationRangeFmt": {
+    "message": "Toegestaan bereik: 1–{0} {1}. Kies een grotere eenheid voor langere perioden."
+  },
+  "settingsCacheDurationRangeMaxFmt": {
+    "message": "Toegestaan bereik: 1–{0} {1}."
+  },
+  "settingsCacheDurationUnitNote": {
+    "message": "Maanden tellen als 30 dagen; jaren als 365 dagen."
+  },
+  "timeUnitMonths": {
+    "message": "Maanden"
+  },
+  "timeUnitYears": {
+    "message": "Jaren"
+  },
+  "settingsHistoryStatsTitle": {
+    "message": "Geschiedenisstatistieken"
+  },
+  "settingsHistoryStatsDesc": {
+    "message": "Bekijk privéstatistieken die lokaal zijn berekend op basis van je detectiegeschiedenis."
+  },
+  "settingsOpenStats": {
+    "message": "Statistieken openen"
+  },
+  "settingsExportedToast": {
+    "message": "Instellingen geëxporteerd"
+  },
+  "settingsExportFailedToast": {
+    "message": "Instellingen exporteren mislukt"
+  },
+  "settingsImportedToast": {
+    "message": "Instellingen geïmporteerd"
+  },
+  "settingsImportFailedToast": {
+    "message": "Instellingen importeren mislukt: ongeldig bestand"
+  },
+  "statsPrivacyNote": {
+    "message": "Lokaal berekend op basis van je detectiegeschiedenis. Er verlaat niets je browser."
+  },
+  "statsSubtitleFmt": {
+    "message": "Lokaal berekend op basis van geschiedenisitems ({0}). Er verlaat niets je browser."
+  },
+  "statsRangeLabel": {
+    "message": "Periode"
+  },
+  "statsRange7": {
+    "message": "7 dagen"
+  },
+  "statsRange30": {
+    "message": "30 dagen"
+  },
+  "statsRange90": {
+    "message": "90 dagen"
+  },
+  "statsRangeAll": {
+    "message": "Alles"
+  },
+  "statsEmptyTitle": {
+    "message": "Nog geen geschiedenis"
+  },
+  "statsEmptyDesc": {
+    "message": "Statistieken verschijnen hier zodra pagina's met detecties in de geschiedenis worden opgeslagen."
+  },
+  "statsEntries": {
+    "message": "Geschiedenisitems"
+  },
+  "statsUniqueDomains": {
+    "message": "Unieke domeinen"
+  },
+  "statsDetections": {
+    "message": "Detecties"
+  },
+  "statsDistinctDetectors": {
+    "message": "Verschillende beveiligingen"
+  },
+  "statsOverTime": {
+    "message": "Detecties in de tijd"
+  },
+  "statsTopProtections": {
+    "message": "Meest gedetecteerde beveiligingen"
+  },
+  "statsTopDomains": {
+    "message": "Topdomeinen"
+  },
+  "statsByCategory": {
+    "message": "Per categorie"
+  },
+  "statsByDifficulty": {
+    "message": "Per moeilijkheid"
+  },
+  "statsPagesUnit": {
+    "message": "pagina's"
+  },
+  "statsVisitsUnit": {
+    "message": "bezoeken"
+  },
+  "statsDetectionsUnit": {
+    "message": "detecties"
+  },
+  "statsCategoryOther": {
+    "message": "Overig"
+  },
+  "statsDifficultyNone": {
+    "message": "Geen detecties"
+  },
+  "statsNoData": {
+    "message": "Geen gegevens in dit bereik"
+  },
+  "statsTipPagesFmt": {
+    "message": "Pagina's: {0}"
+  },
+  "statsTipDomainsFmt": {
+    "message": "Domeinen: {0}"
+  },
+  "statsTipVisitsFmt": {
+    "message": "Bezoeken: {0}"
+  },
+  "statsTipDetectionsFmt": {
+    "message": "Detecties: {0}"
+  },
+  "historyCategoryShareFmt": {
+    "message": "Detecties: {0} van {1} · {2}%"
+  },
+  "statsTipEntriesFmt": {
+    "message": "Items: {0}"
+  },
+  "statsWithDetectionsFmt": {
+    "message": "Met detecties: {0}"
+  },
+  "statsVisitsPerDomainFmt": {
+    "message": "Bezoeken per domein: {0}"
+  },
+  "statsPerEntryFmt": {
+    "message": "{0} per item"
+  },
+  "statsAvgConfidenceFmt": {
+    "message": "{0}% gemiddelde zekerheid"
+  },
+  "statsTimelineMetaFmt": {
+    "message": "Detecties: {0} · Dagen: {1}"
+  },
+  "deleteOfficialDetectorNote": {
+    "message": "Dit is een officiële Scrapfly-detector. Updates brengen hem niet terug; gebruik \"Officiële detectors herstellen\" in het …-menu om hem opnieuw te krijgen."
+  },
+  "restoreOfficialDetectors": {
+    "message": "Officiële detectors herstellen"
+  },
+  "officialDetectorsRestoredFmt": {
+    "message": "Officiële detectors hersteld: {0}"
+  },
+  "failedRestoreOfficialDetectors": {
+    "message": "Officiële detectors herstellen mislukt"
+  },
+  "authorReservedError": {
+    "message": "\"Scrapfly\" is gereserveerd voor officiële detectors. Gebruik een andere auteursnaam."
+  },
+  "ruleFieldAuthorPlaceholder": {
+    "message": "Je naam"
+  },
+  "clearCustomDetectorsTitle": {
+    "message": "Aangepaste detectors wissen"
+  },
+  "clearCustomDetectorsMessage": {
+    "message": "Hiermee worden al je aangepaste detectors verwijderd. Officiële Scrapfly-detectors blijven behouden (je kunt ze in plaats daarvan uitschakelen). Weet je het zeker?"
+  },
+  "clearingCustomDetectors": {
+    "message": "Aangepaste detectors wissen..."
+  },
+  "customDetectorsClearedFmt": {
+    "message": "Aangepaste detectors verwijderd: {0}"
+  },
+  "noCustomDetectorsToClear": {
+    "message": "Er zijn geen aangepaste detectors om te wissen"
+  },
+  "rhSuggestions": {
+    "message": "Suggesties"
+  },
+  "rhResults": {
+    "message": "Resultaten"
+  },
+  "rhCustomChip": {
+    "message": "Aangepast"
+  },
+  "rhUseAsTyped": {
+    "message": "Precies gebruiken zoals getypt"
+  },
+  "rhNoResultsFmt": {
+    "message": "Geen overeenkomsten voor “{0}”"
+  },
+  "rhNoResultsHint": {
+    "message": "Je kunt het nog steeds als aangepaste waarde gebruiken."
+  },
+  "rhPreview": {
+    "message": "Voorbeeld"
+  },
+  "rhSearchWindow": {
+    "message": "Eigenschappen zoeken, bijv. webdriver, chrome, cdc_"
+  },
+  "rhSearchDom": {
+    "message": "Selectors zoeken, bijv. captcha, iframe"
+  },
+  "rhCondition": {
+    "message": "Voorwaarde"
+  },
+  "rhConditionInvalid": {
+    "message": "Onbekende voorwaarde"
+  },
+  "rhAddProperty": {
+    "message": "Eigenschap toevoegen"
+  },
+  "rhChipAutomation": {
+    "message": "Automatisering"
+  },
+  "rhCondGroupType": {
+    "message": "Type"
+  },
+  "rhCondGroupExistence": {
+    "message": "Bestaan"
+  },
+  "rhCondGroupCollections": {
+    "message": "Collecties"
+  },
+  "rhCondGroupNumeric": {
+    "message": "Numeriek"
+  },
+  "rhCondGroupString": {
+    "message": "String"
+  },
+  "rhCondGroupBoolean": {
+    "message": "Boolean"
+  },
+  "rhCondGroupCustom": {
+    "message": "Huidige waarde"
+  },
+  "rhCondTypeObject": {
+    "message": "is een object"
+  },
+  "rhCondTypeFunction": {
+    "message": "is een functie"
+  },
+  "rhCondTypeString": {
+    "message": "is een string"
+  },
+  "rhCondTypeNumber": {
+    "message": "is een getal"
+  },
+  "rhCondTypeBoolean": {
+    "message": "is een boolean"
+  },
+  "rhCondTypeSymbol": {
+    "message": "is een symbool"
+  },
+  "rhCondTypeBigint": {
+    "message": "is een BigInt"
+  },
+  "rhCondExists": {
+    "message": "bestaat op de pagina"
+  },
+  "rhCondTruthy": {
+    "message": "is truthy"
+  },
+  "rhCondFalsy": {
+    "message": "is falsy (leeg, 0, false of null)"
+  },
+  "rhCondNotUndefined": {
+    "message": "is niet undefined"
+  },
+  "rhCondUndefined": {
+    "message": "is undefined (ontbreekt)"
+  },
+  "rhCondNotNull": {
+    "message": "is niet null"
+  },
+  "rhCondNull": {
+    "message": "is null"
+  },
+  "rhCondArray": {
+    "message": "is een array"
+  },
+  "rhCondNonEmptyArray": {
+    "message": "is een array met items"
+  },
+  "rhCondEmptyArray": {
+    "message": "is een lege array"
+  },
+  "rhCondHasLength": {
+    "message": "heeft een lengte"
+  },
+  "rhCondHasKeys": {
+    "message": "is een object met sleutels"
+  },
+  "rhCondEmptyObject": {
+    "message": "is een leeg object"
+  },
+  "rhCondGt0": {
+    "message": "is groter dan 0"
+  },
+  "rhCondGte0": {
+    "message": "is 0 of meer"
+  },
+  "rhCondEq0": {
+    "message": "is gelijk aan 0"
+  },
+  "rhCondNe0": {
+    "message": "is niet 0"
+  },
+  "rhCondGt1": {
+    "message": "is groter dan 1"
+  },
+  "rhCondGte1": {
+    "message": "is 1 of meer"
+  },
+  "rhCondLenGt0": {
+    "message": "is niet leeg"
+  },
+  "rhCondLenEq0": {
+    "message": "is leeg"
+  },
+  "rhCondTrue": {
+    "message": "is true"
+  },
+  "rhCondFalse": {
+    "message": "is false"
+  },
+  "rhWindowSentenceFmt": {
+    "message": "Komt overeen met pagina's waarop geldt: {0} {1}"
+  },
+  "rhChipTemplate": {
+    "message": "Sjabloon"
+  },
+  "rhDomClass": {
+    "message": "Klasse"
+  },
+  "rhDomId": {
+    "message": "ID"
+  },
+  "rhDomData": {
+    "message": "Data-attribuut"
+  },
+  "rhDomClassContains": {
+    "message": "Klasse bevat"
+  },
+  "rhDomIdContains": {
+    "message": "ID bevat"
+  },
+  "rhDomTag": {
+    "message": "HTML-tag"
+  },
+  "rhDomAttr": {
+    "message": "Heeft attribuut"
+  },
+  "rhDomIframe": {
+    "message": "Iframe-URL bevat"
+  },
+  "rhDomTitle": {
+    "message": "Titel bevat"
+  },
+  "rhDomAlt": {
+    "message": "Alt-tekst bevat"
+  },
+  "rhDomCamel": {
+    "message": "camelCase-klasse"
+  },
+  "rhRefAny": {
+    "message": "elk teken"
+  },
+  "rhRefZeroMore": {
+    "message": "0 of meer"
+  },
+  "rhRefOneMore": {
+    "message": "1 of meer"
+  },
+  "rhRefOptional": {
+    "message": "optioneel"
+  },
+  "rhRefStart": {
+    "message": "begin"
+  },
+  "rhRefEnd": {
+    "message": "einde"
+  },
+  "rhRefDigit": {
+    "message": "cijfer"
+  },
+  "rhRefWord": {
+    "message": "letter, cijfer of _"
+  },
+  "rhRefSpace": {
+    "message": "witruimte"
+  },
+  "rhRefOr": {
+    "message": "a of b"
+  },
+  "rhMatch": {
+    "message": "Overeenkomst"
+  },
+  "rhNoMatch": {
+    "message": "Geen overeenkomst"
+  },
+  "ptTitle": {
+    "message": "Patroon testen"
+  },
+  "ptTitleFmt": {
+    "message": "Patroon testen · {0}"
+  },
+  "ptKindUrl": {
+    "message": "URL"
+  },
+  "ptKindContent": {
+    "message": "Pagina-inhoud"
+  },
+  "ptKindCookieName": {
+    "message": "Cookienaam"
+  },
+  "ptKindCookieValue": {
+    "message": "Cookiewaarde"
+  },
+  "ptKindHeaderName": {
+    "message": "Headernaam"
+  },
+  "ptKindHeaderValue": {
+    "message": "Headerwaarde"
+  },
+  "ptKindPayloadText": {
+    "message": "Verzoekbody"
+  },
+  "ptKindPayloadUrl": {
+    "message": "Verzoek-URL"
+  },
+  "ptPatternLabel": {
+    "message": "Patroon"
+  },
+  "ptOptionsLabel": {
+    "message": "Matchingopties"
+  },
+  "ptOptRegex": {
+    "message": "Regex"
+  },
+  "ptTryOn": {
+    "message": "Uitproberen op"
+  },
+  "ptExamplesBtn": {
+    "message": "Voorbeelden"
+  },
+  "ptSamplesPlaceholder": {
+    "message": "Eén per regel: een URL, een cookienaam…"
+  },
+  "ptNoSamples": {
+    "message": "Typ of plak hierboven tekst, één per regel, om te zien of die overeenkomt."
+  },
+  "ptCheatTitle": {
+    "message": "Regex-naslag"
+  },
+  "ptCheatNote": {
+    "message": "Schrijf het patroon zonder / eromheen. Een herhaling binnen een herhaling, zoals (a+)+, wordt geweigerd omdat het pagina's kan laten vastlopen."
+  },
+  "ptApply": {
+    "message": "Toepassen"
+  },
+  "ptTestBtn": {
+    "message": "Testen"
+  },
+  "ptTestTitle": {
+    "message": "Probeer het patroon op voorbeeldtekst"
+  },
+  "ptNoPattern": {
+    "message": "Nog geen patroon"
+  },
+  "ptHintRegex": {
+    "message": "Een patroon zoals ^bm_ of \\d+, zonder / eromheen"
+  },
+  "ptHintWholeWord": {
+    "message": "Slaat overeenkomsten binnen een langer woord over: _abck, niet test_abck"
+  },
+  "ptHintCase": {
+    "message": "Akamai komt niet meer overeen met akamai"
+  },
+  "ptSaysEmpty": {
+    "message": "Typ een patroon om te zien waarmee het overeenkomt."
+  },
+  "ptSaysRegex": {
+    "message": "Komt overeen met tekst waarin de regex een overeenkomst vindt."
+  },
+  "ptSaysWordFmt": {
+    "message": "Komt overeen met “{0}” als heel woord, niet binnen een langer woord."
+  },
+  "ptSaysWildcardFmt": {
+    "message": "Komt overeen met namen zoals “{0}”, waarbij * voor willekeurige tekst staat."
+  },
+  "ptSaysPrefixFmt": {
+    "message": "Komt overeen met namen die beginnen met “{0}”."
+  },
+  "ptSaysContainsFmt": {
+    "message": "Komt overeen met tekst die “{0}” bevat."
+  },
+  "ptCaseExact": {
+    "message": "Hoofdletters en kleine letters moeten exact overeenkomen."
+  },
+  "ptCaseIgnored": {
+    "message": "Hoofdletters en kleine letters worden hetzelfde behandeld."
+  },
+  "ptNoteInvalidFmt": {
+    "message": "Deze regex is ongeldig en komt daarom nooit overeen: {0}"
+  },
+  "ptNoteRejected": {
+    "message": "Detectie weigert deze regex omdat die pagina's kan laten vastlopen (een herhaling binnen een herhaling, of meer dan 1000 tekens), dus hij komt nooit overeen."
+  },
+  "ptNoteSlashes": {
+    "message": "Laat de / aan beide uiteinden weg: ze worden als onderdeel van de tekst vergeleken."
+  },
+  "ptNoteLooksRegex": {
+    "message": "Dit lijkt op een regex: schakel Regex in, anders worden de symbolen als gewone tekst vergeleken."
+  },
+  "ptNoteWordIgnored": {
+    "message": "Heel woord wordt genegeerd zolang Regex aan staat."
+  },
+  "ptNoteHeaderCase": {
+    "message": "Headernamen worden in kleine letters opgeslagen, dus met Hoofdlettergevoelig aan komt dit patroon nooit overeen."
+  },
+  "ptNoteWordEdges": {
+    "message": "Dit patroon begint of eindigt met een symbool, dus Heel woord vereist een letter, cijfer of _ direct naast dat symbool."
+  },
+  "rhRefDot": {
+    "message": "een echte punt"
+  },
+  "rhRefSet": {
+    "message": "een van a, b, c"
+  },
+  "rhRefCount": {
+    "message": "2 tot 5 keer"
+  },
+  "mhExamplesTitle": {
+    "message": "In de regels van Scrapfly"
+  },
+  "mhHowTitle": {
+    "message": "Hoe de matching werkt"
+  },
+  "mhWriteTitle": {
+    "message": "Wat je kunt schrijven"
+  },
+  "mhLimitsTitle": {
+    "message": "Goed om te weten"
+  },
+  "mhUrlIntro": {
+    "message": "Controleert het paginaadres en de URL's die de pagina opvraagt: scripts, XHR- en fetch-aanroepen, afbeeldingen, frames en pings."
+  },
+  "mhUrlHow1": {
+    "message": "Zonder Regex moet de URL de tekst bevatten, ongeacht hoofdletters. De hele URL telt mee, inclusief de querystring."
+  },
+  "mhUrlHow2": {
+    "message": "Laat bij Regex de / aan beide uiteinden weg en schrijf punten als `\\.`, zoals in `^https://js\\.example\\.com/`."
+  },
+  "mhUrlHow3": {
+    "message": "URL-bereik: Pagina controleert alleen het paginaadres, Scripts voegt scriptbronnen toe, Alles (standaard) voegt elk verzoek toe."
+  },
+  "mhUrlLimit1": {
+    "message": "Verzoeken voor lettertypen, media en stylesheets worden niet geregistreerd."
+  },
+  "mhUrlLimit2": {
+    "message": "Alleen verzoeken die vóór de scan zijn gedaan, tellen mee; de scan draait zodra de pagina is geladen."
+  },
+  "mhHeaderIntro": {
+    "message": "Controleert de headers van het eigen verzoek en de eigen respons van de pagina, niet die van scripts, XHR-aanroepen of frames."
+  },
+  "mhHeaderHow1": {
+    "message": "Headernamen worden in kleine letters vergeleken en gewone tekst betekent “bevat”: `server` komt ook overeen met `server-timing`. Gebruik voor een exacte naam Regex `^server$`."
+  },
+  "mhHeaderHow2": {
+    "message": "De waarde wordt gecontroleerd op de header met die naam; laat deze leeg om elke waarde te accepteren."
+  },
+  "mhHeaderHow3": {
+    "message": "Bereik Respons (standaard) betekent headers die de site heeft verzonden; Verzoek betekent headers die de browser heeft verzonden."
+  },
+  "mhHeaderLimit1": {
+    "message": "Schrijf headernamen in kleine letters als Hoofdlettergevoelig aan staat."
+  },
+  "mhHeaderLimit2": {
+    "message": "Pagina's die van adres veranderen zonder opnieuw te laden, worden opnieuw gescand zonder headers."
+  },
+  "mhCookieIntro": {
+    "message": "Controleert de cookies van de pagina op naam en eventueel op waarde, inclusief HttpOnly- en Secure-cookies."
+  },
+  "mhCookieHow1": {
+    "message": "Een gewone naam komt overeen als voorvoegsel: `_abck` komt ook overeen met `_abck_2`."
+  },
+  "mhCookieHow2": {
+    "message": "`*` staat voor willekeurige tekst: `bm_*` komt overeen met `bm_sz` en `bm_sv`."
+  },
+  "mhCookieHow3": {
+    "message": "Schakel voor een exacte naam Regex in en schrijf `^naam$`. De waarde komt overeen als die de tekst bevat."
+  },
+  "mhCookieLimit1": {
+    "message": "Bereik Verzoek (standaard) leest de cookies van de browser voor de pagina; Respons leest de cookies die de respons van de pagina instelt."
+  },
+  "mhCookieLimit2": {
+    "message": "Cookies van andere sites, zoals het frame van een leverancier, worden niet gezien. Lange waarden worden afgekapt tot 100 tekens."
+  },
+  "mhContentIntro": {
+    "message": "Doorzoekt de tekst van de pagina: de HTML van de body, de inline scripts en de script- en stylesheetbestanden die worden geladen."
+  },
+  "mhContentHow1": {
+    "message": "Gewone tekst komt overeen als de tekst die bevat, ongeacht hoofdletters."
+  },
+  "mhContentHow2": {
+    "message": "Heel woord slaat overeenkomsten binnen een langer woord over; er is een letter, cijfer of _ nodig aan beide uiteinden van het patroon."
+  },
+  "mhContentHow3": {
+    "message": "“Alleen scripts controleren” doorzoekt alleen inline scripts (inclusief de head) en JavaScript-bestanden, zonder HTML of CSS."
+  },
+  "mhContentLimit1": {
+    "message": "Bestanden die de site niet door andere origins laat lezen (CORS), of groter dan 5 MB, worden overgeslagen."
+  },
+  "mhContentLimit2": {
+    "message": "Code in frames of workers, of geladen na de scan, wordt niet doorzocht."
+  },
+  "mhDomIntro": {
+    "message": "Zoekt met een CSS-selector naar een element in de body van de pagina, zodra de pagina is geladen."
+  },
+  "mhDomHow1": {
+    "message": "Een tag, `.class`, `#id` of `[attribute]`, alleen of gecombineerd: `.g-recaptcha[data-sitekey]`."
+  },
+  "mhDomHow2": {
+    "message": "Attribuuttests `=`, `^=`, `$=`, `*=`, `~=` en `|=`; voeg ` i` toe vóór `]` om hoofdletters te negeren."
+  },
+  "mhDomHow3": {
+    "message": "Meerdere selectors gescheiden door komma's: elk ervan kan overeenkomen."
+  },
+  "mhDomLimit1": {
+    "message": "Niet ondersteund, dus de regel komt nooit overeen: spaties of `>` tussen delen, `:pseudo-classes` en escapes."
+  },
+  "mhDomLimit2": {
+    "message": "De head, frames en shadow roots worden niet doorzocht. Het attribuut `value` wordt niet gelezen; andere attributen worden vergeleken op hun eerste 100 tekens."
+  },
+  "mhWindowIntro": {
+    "message": "Controleert een globale JavaScript-variabele die de pagina definieert, zoals `grecaptcha.render`."
+  },
+  "mhWindowHow1": {
+    "message": "Het pad vanaf `window`, gescheiden door punten: `KPSDK` of `grecaptcha.render`."
+  },
+  "mhWindowHow2": {
+    "message": "Een voorwaarde zoals `exists`, `typeof function`, `truthy`, `=== true`, `length > 0` of `has keys`. Leeg betekent truthy."
+  },
+  "mhWindowHow3": {
+    "message": "Een voorwaarde die detectie niet begrijpt, komt nooit overeen, dus kies er een uit de lijst."
+  },
+  "mhWindowLimit1": {
+    "message": "Wordt gecontroleerd tijdens de eerste seconden nadat de pagina is geladen; later aangemaakte globals worden gemist."
+  },
+  "mhWindowLimit2": {
+    "message": "Eigenschappen met een Symbol als naam kunnen niet als pad worden geschreven."
+  },
+  "mhJsHooksIntro": {
+    "message": "Registreert wanneer de pagina een browser-API aanroept, zoals `HTMLCanvasElement.prototype.toDataURL`, een teken van fingerprinting."
+  },
+  "mhJsHooksHow1": {
+    "message": "Het volledige pad naar een methode of getter: `Navigator.prototype.webdriver`, niet `navigator.webdriver`."
+  },
+  "mhJsHooksHow2": {
+    "message": "Elke aanroep telt; argumenten en resultaat worden niet gecontroleerd, dus een hook laat zien dat een API is gebruikt, niet waarom."
+  },
+  "mhJsHooksLimit1": {
+    "message": "Aanroepen tellen mee tijdens de eerste seconden nadat de pagina is geladen (maximaal 8 seconden)."
+  },
+  "mhJsHooksLimit2": {
+    "message": "Aanroepen in workers of frames worden niet gezien, behalve ingebouwde doelen in frames van dezelfde site."
+  },
+  "mhPayloadIntro": {
+    "message": "Doorzoekt de bodies van de POST-, PUT-, PATCH- en DELETE-verzoeken die de pagina verzendt, vanuit elk frame."
+  },
+  "mhPayloadHow1": {
+    "message": "Gewone tekst komt overeen als de body die bevat, ongeacht hoofdletters. Formuliergegevens worden gelezen als `name=value&…`."
+  },
+  "mhPayloadHow2": {
+    "message": "De verzoek-URL (optioneel) en de HTTP-methode beperken dit tot overeenkomende verzoeken."
+  },
+  "mhPayloadLimit1": {
+    "message": "Alleen verzoeken die vóór de scan zijn verzonden, tellen mee, tot maximaal 50 per pagina."
+  },
+  "mhPayloadLimit2": {
+    "message": "WebSocket-berichten worden niet gelezen."
+  },
+  "domCardTitle": {
+    "message": "CSS-selector"
+  },
+  "domCardBrowse": {
+    "message": "Bladeren"
+  },
+  "domCardHint": {
+    "message": "Een tag, .class, #id of [attribute]-test, alleen of gecombineerd. Spaties of > tussen delen worden niet ondersteund."
+  },
+  "windowCardTitle": {
+    "message": "Window-eigenschap"
+  },
+  "settingsApiEventsDesc": {
+    "message": "Gebeurtenissen die de extensie op de pagina verzendt"
+  },
+  "settingsApiUsageDesc": {
+    "message": "Luister naar de gebeurtenissen vanuit je eigen script"
+  },
+  "settingsApiCopyCode": {
+    "message": "Code kopiëren"
+  },
+  "settingsApiCodeCopied": {
+    "message": "Code gekopieerd"
+  },
+  "settingsApiEventCopyTitle": {
+    "message": "Gebeurtenisnaam kopiëren"
+  },
+  "advCommonClickToCopy": {
+    "message": "Klik om te kopiëren"
+  },
+  "advCommonDomainLabel": {
+    "message": "Domein:"
+  },
+  "advCommonCopy": {
+    "message": "Kopiëren"
+  },
+  "advCommonPage": {
+    "message": "Pagina"
+  },
+  "advCommonExportCode": {
+    "message": "Code exporteren"
+  },
+  "advCommonUrlCopied": {
+    "message": "URL gekopieerd"
+  },
+  "advScriptTypeCollector": {
+    "message": "Collector"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA-controle"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Interstitial"
+  },
+  "advCommonCaptured": {
+    "message": "Opgenomen"
+  },
+  "advCommonScript": {
+    "message": "Script"
+  },
+  "advCommonUrl": {
+    "message": "URL"
+  },
+  "advCommonScriptUrl": {
+    "message": "Script-URL:"
+  },
+  "advCommonNoCaptureData": {
+    "message": "Geen opnamegegevens beschikbaar"
+  },
+  "advCommonFailedCheckCookiesFmt": {
+    "message": "Cookies controleren mislukt: {0}"
+  },
+  "advCommonFailedAnalyzeScriptsFmt": {
+    "message": "Scripts analyseren mislukt: {0}"
+  },
+  "advCommonFailedStartAnalysis": {
+    "message": "Analyse starten mislukt"
+  },
+  "advCommonFailedCheckVersionFmt": {
+    "message": "Versie controleren mislukt: {0}"
+  },
+  "advCommonFailedExtractFmt": {
+    "message": "Ophalen mislukt: {0}"
+  },
+  "advCommonFailedStartExtractionFmt": {
+    "message": "Ophalen starten mislukt: {0}"
+  },
+  "advCommonNoScriptsToExport": {
+    "message": "Geen scripts beschikbaar om te exporteren"
+  },
+  "advCommonCookiesTitleFmt": {
+    "message": "{0}-cookies"
+  },
+  "advCommonNoCookiesFmt": {
+    "message": "Geen {0}-cookies gevonden"
+  },
+  "advCommonScriptsTitleFmt": {
+    "message": "{0}-scripts ({1})"
+  },
+  "advCommonAnalyzingReloadFmt": {
+    "message": "{0}-scripts worden geanalyseerd... De pagina wordt opnieuw geladen"
+  },
+  "advCommonCodeGenUnavailable": {
+    "message": "Codegeneratie niet beschikbaar"
+  },
+  "advCommonCodeGenTitle": {
+    "message": "Codegenerator voor scriptparsing"
+  },
+  "advCommonExportOptions": {
+    "message": "Exportopties"
+  },
+  "advCommonAllTypes": {
+    "message": "Alle typen"
+  },
+  "advCommonFoundScriptsFmt": {
+    "message": "Relevante scripts gevonden: {0}"
+  },
+  "advCommonTotalScripts": {
+    "message": "Totaal aantal scripts:"
+  },
+  "advCommonProtectionLevel": {
+    "message": "Beveiligingsniveau:"
+  },
+  "advCommonCookiesFound": {
+    "message": "Gevonden cookies:"
+  },
+  "advCommonSiteKey": {
+    "message": "Sitesleutel"
+  },
+  "advCommonWebsiteUrl": {
+    "message": "Website-URL"
+  },
+  "advCommonSiteUrl": {
+    "message": "Site-URL"
+  },
+  "advCommonApiDomain": {
+    "message": "API-domein"
+  },
+  "advCommonFound": {
+    "message": "Gevonden"
+  },
+  "advCommonNotFound": {
+    "message": "Niet gevonden"
+  },
+  "advCommonYes": {
+    "message": "Ja"
+  },
+  "advCommonEnterprise": {
+    "message": "Enterprise"
+  },
+  "advCommonStandard": {
+    "message": "Standaard"
+  },
+  "advCommonNone": {
+    "message": "Geen"
+  },
+  "advCodeDescBrowserParseFmt": {
+    "message": "Browserconsolecode om {0}-scripts te onderscheppen en te parseren"
+  },
+  "advCodeDescPythonBs": {
+    "message": "Python-script met requests en BeautifulSoup"
+  },
+  "advCodeDescPython": {
+    "message": "Python-script met de requests-bibliotheek"
+  },
+  "advCodeDescNodeCheerio": {
+    "message": "Node.js-script met axios en cheerio"
+  },
+  "advCodeDescNode": {
+    "message": "Node.js-script met axios"
+  },
+  "advCodeDescPhpDom": {
+    "message": "PHP-script met cURL en DOMDocument"
+  },
+  "advCodeDescPhp": {
+    "message": "PHP-script met cURL"
+  },
+  "advCodeDescCsharpHap": {
+    "message": "C# met HttpClient en HtmlAgilityPack"
+  },
+  "advCodeDescCsharp": {
+    "message": "C# met HttpClient"
+  },
+  "advCodeDescGoQuery": {
+    "message": "Go met net/http en goquery"
+  },
+  "advCodeDescGo": {
+    "message": "Go met net/http"
+  },
+  "pageNoticeCaptureActive": {
+    "message": "Opname actief"
+  },
+  "pageNoticeReloadToCapture": {
+    "message": "Laad de pagina opnieuw om de opname te starten."
+  },
+  "pageNoticeEndsInFmt": {
+    "message": "Eindigt over {0} s"
+  },
+  "pageNoticeRecaptchaStepReload": {
+    "message": "Laad deze pagina opnieuw"
+  },
+  "pageNoticeRecaptchaStepSolve": {
+    "message": "Los de reCAPTCHA op of klik erop"
+  },
+  "pageNoticeRecaptchaStepWait": {
+    "message": "Wacht op \"Opname voltooid\""
+  },
+  "pageNoticeMonitoringStartedFmt": {
+    "message": "Monitoring van {0} gestart"
+  },
+  "pageNoticeCaptureCompleted": {
+    "message": "Opname voltooid"
+  },
+  "pageNoticePageLoading": {
+    "message": "Pagina wordt geladen"
+  },
+  "pageNoticeWaitForLoad": {
+    "message": "Wacht tot de pagina volledig is geladen..."
+  },
+  "advAkamaiNotDetectedToast": {
+    "message": "Geen Akamai gedetecteerd op deze pagina. De _abck-cookie is niet aanwezig."
+  },
+  "advAkamaiCaptureSuccess": {
+    "message": "Akamai-gegevens succesvol opgenomen!"
+  },
+  "advAkamaiCaptureStopped": {
+    "message": "Opname gestopt"
+  },
+  "advAkamaiStopCaptureFailedFmt": {
+    "message": "Opname stoppen mislukt: {0}"
+  },
+  "advAkamaiReloadingToAnalyze": {
+    "message": "Pagina wordt opnieuw geladen om Akamai-gegevens te analyseren…"
+  },
+  "advAkamaiAnalyzeFailedFmt": {
+    "message": "Inhoud analyseren mislukt: {0}"
+  },
+  "advAkamaiNoAbckCookie": {
+    "message": "Geen _abck-cookie gevonden"
+  },
+  "advAkamaiProcessFailedFmt": {
+    "message": "Gegevens verwerken mislukt: {0}"
+  },
+  "advAkamaiExtractingSensor": {
+    "message": "Sensorinformatie ophalen…"
+  },
+  "advAkamaiExtractSensorFailedFmt": {
+    "message": "Sensorinformatie ophalen mislukt: {0}"
+  },
+  "advAkamaiNoticeNotDetectedTitle": {
+    "message": "Geen Akamai gedetecteerd"
+  },
+  "advAkamaiNoticeNoAbck": {
+    "message": "De _abck-cookie is niet aanwezig op deze pagina."
+  },
+  "advAkamaiNoticeNotActive": {
+    "message": "Akamai Bot Manager is hier niet actief."
+  },
+  "advAkamaiNoticeReloadToMonitor": {
+    "message": "Laad de pagina opnieuw om te beginnen met het volgen van sensorgegevens en verzoekdetails"
+  },
+  "advAkamaiNoticeSensorCaptured": {
+    "message": "Akamai-sensor_data succesvol opgenomen"
+  },
+  "advAkamaiLevelAdvancedSbsd": {
+    "message": "Geavanceerd (SBSD)"
+  },
+  "advAkamaiLevelBasic": {
+    "message": "Basis"
+  },
+  "advAkamaiLevelEasy": {
+    "message": "Eenvoudig"
+  },
+  "advAkamaiAbckLevelLabel": {
+    "message": "_abck-niveau:"
+  },
+  "advAkamaiAnalysisTitle": {
+    "message": "Akamai-analyse"
+  },
+  "advAkamaiScriptsLabel": {
+    "message": "Akamai-scripts:"
+  },
+  "advAkamaiSensorDataUrlScript": {
+    "message": "Script met sensordata-URL"
+  },
+  "advAkamaiPixelHtmlVar": {
+    "message": "Pixel-HTML-variabele:"
+  },
+  "advAkamaiPostUrl": {
+    "message": "POST-URL:"
+  },
+  "advAkamaiPixelScriptVar": {
+    "message": "Pixel-scriptvariabele:"
+  },
+  "advAkamaiSbsdScriptUrl": {
+    "message": "SBSD-script-URL"
+  },
+  "advAkamaiSensorDataUrls": {
+    "message": "Sensordata-URL's"
+  },
+  "advAkamaiEndpoint": {
+    "message": "Akamai-endpoint"
+  },
+  "advAkamaiTypeSensor": {
+    "message": "Sensor"
+  },
+  "advAkamaiExtractedSensorTitle": {
+    "message": "Opgehaalde sensorinformatie"
+  },
+  "advAkamaiSensorDataCharsFmt": {
+    "message": "Sensordata ({0} tekens)"
+  },
+  "advAkamaiNoSensorData": {
+    "message": "Geen sensordata opgenomen"
+  },
+  "advAkamaiSbsdDataCharsFmt": {
+    "message": "SBSD-data ({0} tekens)"
+  },
+  "advAkamaiSensorScriptUrl": {
+    "message": "Sensorscript-URL"
+  },
+  "advAkamaiCopyAllJson": {
+    "message": "Alle gegevens als JSON kopiëren"
+  },
+  "advAkamaiExtractSensorBtn": {
+    "message": "Sensorinformatie ophalen"
+  },
+  "advAkamaiAbckLevel": {
+    "message": "ABCK-niveau"
+  },
+  "advAkamaiAbckCookie": {
+    "message": "ABCK-cookie"
+  },
+  "advAkamaiVersionLabel": {
+    "message": "Akamai-versie"
+  },
+  "advAkamaiChallengeRequirements": {
+    "message": "Challenge-vereisten"
+  },
+  "advAkamaiSbsdChallenge": {
+    "message": "SBSD-challenge"
+  },
+  "advAkamaiSecCptChallenge": {
+    "message": "sec_cpt-challenge"
+  },
+  "advAkamaiPixelChallenge": {
+    "message": "Pixel-challenge"
+  },
+  "advImpervaEnableExtractionFailed": {
+    "message": "Kan de extractiemodus niet inschakelen. Bekijk de achtergrondconsole voor details."
+  },
+  "advImpervaSessionCookies": {
+    "message": "Sessiecookies"
+  },
+  "advImpervaSecurityComponents": {
+    "message": "Beveiligingscomponenten"
+  },
+  "advImpervaCookieCountFmt": {
+    "message": "Cookies: {0}"
+  },
+  "advImpervaResourceDetection": {
+    "message": "Resourcedetectie"
+  },
+  "advImpervaResourceUrls": {
+    "message": "Resource-URL's"
+  },
+  "advImpervaInterrogationUrls": {
+    "message": "Interrogation-URL's"
+  },
+  "advImpervaAnalysisTitle": {
+    "message": "Imperva-analyse"
+  },
+  "advImpervaSensorUrl": {
+    "message": "Sensor-URL:"
+  },
+  "advImpervaScriptTypeFmt": {
+    "message": "{0}-script"
+  },
+  "advImpervaSensorPath": {
+    "message": "Sensorpad:"
+  },
+  "advImpervaNoScripts": {
+    "message": "Geen scripts gedetecteerd"
+  },
+  "advImpervaMayNotBePresent": {
+    "message": "Imperva is mogelijk niet aanwezig op deze pagina"
+  },
+  "advImpervaTypeOnlyFmt": {
+    "message": "Alleen {0}"
+  },
+  "advImpervaLevelAdvanced": {
+    "message": "Geavanceerd (reese84 + utmvc)"
+  },
+  "advImpervaLevelBasicSession": {
+    "message": "Basis (sessie)"
+  },
+  "advImpervaNoticeReloadToMonitor": {
+    "message": "Laad de pagina opnieuw om te beginnen met het volgen van Imperva-verzoeken en -cookies"
+  },
+  "advImpervaNoticeCapturedItemsFmt": {
+    "message": "Imperva-gegevens opgenomen (items: {0})"
+  },
+  "advImpervaNoticeCaptureComplete": {
+    "message": "Imperva-opname voltooid"
+  },
+  "advImpervaNoticeSensorCaptured": {
+    "message": "Sensordata succesvol opgenomen"
+  },
+  "advRecaptchaCallbackTool": {
+    "message": "reCAPTCHA-callback"
+  },
+  "advRecaptchaSelectorDetection": {
+    "message": "Selectordetectie"
+  },
+  "advRecaptchaMethod": {
+    "message": "Methode"
+  },
+  "advRecaptchaSelector": {
+    "message": "Selector"
+  },
+  "advRecaptchaSelectorCopied": {
+    "message": "Selector gekopieerd naar klembord!"
+  },
+  "advRecaptchaNoElements": {
+    "message": "Geen reCAPTCHA-elementen gevonden"
+  },
+  "advRecaptchaExecuteFailedFmt": {
+    "message": "grecaptcha.execute() mislukt: {0}"
+  },
+  "advRecaptchaCallbacksTitle": {
+    "message": "reCAPTCHA-callbacks"
+  },
+  "advRecaptchaClientsTitle": {
+    "message": "reCAPTCHA-clients"
+  },
+  "advRecaptchaClientIdFmt": {
+    "message": "Client-ID: {0}"
+  },
+  "advRecaptchaCopiedToClipboard": {
+    "message": "Gekopieerd naar klembord!"
+  },
+  "advRecaptchaCallbackFunction": {
+    "message": "Callback-functie"
+  },
+  "advRecaptchaCallbackPath": {
+    "message": "Callback-pad"
+  },
+  "advRecaptchaNoCallback": {
+    "message": "Geen callback gedefinieerd"
+  },
+  "advRecaptchaDomCallbacks": {
+    "message": "DOM-callbacks"
+  },
+  "advRecaptchaScriptCallbacks": {
+    "message": "Script-callbacks"
+  },
+  "advRecaptchaCallbackExamples": {
+    "message": "Voorbeelden van callbackgebruik"
+  },
+  "advRecaptchaInvisible": {
+    "message": "Onzichtbaar"
+  },
+  "advRecaptchaAction": {
+    "message": "Actie"
+  },
+  "advRecaptchaRequiredCookie": {
+    "message": "Vereiste cookie"
+  },
+  "advRecaptchaFeaturesDetected": {
+    "message": "Gedetecteerde functies"
+  },
+  "advRecaptchaSParamRequired": {
+    "message": "S-parameter vereist"
+  },
+  "advRecaptchaHasSession": {
+    "message": "Heeft sessie"
+  },
+  "advRecaptchaFailedClickFmt": {
+    "message": "Klikken mislukt: {0}"
+  },
+  "advRecaptchaNoCallbacksFound": {
+    "message": "Geen reCAPTCHA-callbacks gevonden op deze pagina. Zorg dat reCAPTCHA is geladen."
+  },
+  "advRecaptchaFailedCaptureCallbackFmt": {
+    "message": "Callback opnemen mislukt: {0}"
+  },
+  "pageNoticeRecaptchaReloadAndSolve": {
+    "message": "Laad de pagina opnieuw en los een reCAPTCHA-challenge op om te beginnen met volgen"
+  },
+  "pageNoticeRecaptchaPageReady": {
+    "message": "Pagina gereed"
+  },
+  "pageNoticeRecaptchaSolveNow": {
+    "message": "Los nu de reCAPTCHA-challenge op om gegevens op te nemen"
+  },
+  "pageNoticeRecaptchaDecodedFmt": {
+    "message": "Opgenomen en gedecodeerde verzoeken: {0}"
+  },
+  "pageNoticeRecaptchaNoRequests": {
+    "message": "Geen reCAPTCHA-verzoeken opgenomen"
+  },
+  "pageNoticeRecaptchaSeen": {
+    "message": "reCAPTCHA gedetecteerd"
+  },
+  "pageNoticeRecaptchaSolveToFinish": {
+    "message": "Los de challenge op; de opname wordt vanzelf voltooid"
+  },
+  "pageNoticeRecaptchaTriggerNow": {
+    "message": "Activeer of klik nu op de reCAPTCHA"
+  },
+  "advShapeCookieLabel": {
+    "message": "Cookie"
+  },
+  "advShapeHeadersLabel": {
+    "message": "Headers"
+  },
+  "advShapeVersionTitle": {
+    "message": "Shape Security-versie"
+  },
+  "advShapeHeaderPattern": {
+    "message": "Headerpatroon"
+  },
+  "advShapeHeaderPatterns": {
+    "message": "Headerpatronen"
+  },
+  "advShapeCookieTitle": {
+    "message": "Shape-cookie"
+  },
+  "advShapeAnalysisTitle": {
+    "message": "Shape Security-analyse"
+  },
+  "advShapeInitJsScriptsLabel": {
+    "message": "Init.js-scripts:"
+  },
+  "advShapeSeedScriptsLabel": {
+    "message": "Seed-scripts:"
+  },
+  "advShapeInitJsScript": {
+    "message": "Init.js-script"
+  },
+  "advShapeInitJsScripts": {
+    "message": "Init.js-scripts"
+  },
+  "advShapeSeedScript": {
+    "message": "Seed-script"
+  },
+  "advShapeSeedScripts": {
+    "message": "Seed-scripts"
+  },
+  "advShapeErrorFmt": {
+    "message": "Fout: {0}"
+  },
+  "advShapeDetectedVersion": {
+    "message": "Gedetecteerde versie:"
+  },
+  "advShapeCaptureRequirements": {
+    "message": "Opnamevereisten"
+  },
+  "advShapeCookieAndHeaders": {
+    "message": "Cookie + headers"
+  },
+  "advShapeNoticeReloadToMonitor": {
+    "message": "Laad de pagina opnieuw om te beginnen met het volgen van Shape Security-headers en -cookies"
+  },
+  "advShapeNoticeWaitBeforeActions": {
+    "message": "Wacht tot de pagina volledig is geladen voordat je acties uitvoert..."
+  },
+  "advShapeNoticeMonitoringActiveFmt": {
+    "message": "Monitoring actief ({0})"
+  },
+  "advShapeNoticeTriggerCookie": {
+    "message": "Voer acties uit om de cookie te activeren"
+  },
+  "advShapeNoticeTriggerHeadersCookie": {
+    "message": "Voer acties uit om headers + cookie te activeren"
+  },
+  "advShapeNoticeTimeoutFmt": {
+    "message": "Time-out ({2}) - cookies: {0}, headers: {1}"
+  },
+  "advShapeNoticeV1SummaryFmt": {
+    "message": "{0} - Cookie: {1}"
+  },
+  "advShapeNoticeV2SummaryFmt": {
+    "message": "{0} - Cookie: {1} | Headers: {2}"
+  },
+  "advShapeNoticeCapturedFmt": {
+    "message": "Opgenomen - cookies: {0}, headers: {1}"
+  },
+  "advHcaptchaDetectionTitle": {
+    "message": "hCaptcha-detectie"
+  },
+  "advHcaptchaNotDetected": {
+    "message": "hCaptcha niet gedetecteerd. Laad de pagina opnieuw met hCaptcha geladen."
+  },
+  "advHcaptchaVersionTitle": {
+    "message": "hCaptcha-versie"
+  },
+  "advHcaptchaEnterpriseMode": {
+    "message": "Enterprise-modus"
+  },
+  "advHcaptchaNo": {
+    "message": "Nee"
+  },
+  "advHcaptchaNoHistory": {
+    "message": "Nog geen opnamegeschiedenis"
+  },
+  "advHcaptchaNotAvailable": {
+    "message": "n.v.t."
+  },
+  "advHcaptchaCheckingVersionReload": {
+    "message": "hCaptcha-versie controleren... De pagina wordt opnieuw geladen"
+  },
+  "advHcaptchaVersionTimeout": {
+    "message": "Time-out bij detectie van hCaptcha-versie"
+  },
+  "advHcaptchaFailedStartVersionCheck": {
+    "message": "Versiecontrole starten mislukt"
+  },
+  "advHcaptchaNoticeReloadToMonitor": {
+    "message": "Laad de pagina opnieuw om te beginnen met het volgen van hCaptcha-verzoeken"
+  },
+  "advHcaptchaNoticeCaptured": {
+    "message": "hCaptcha-gegevens succesvol opgenomen"
+  },
+  "advAwswafTypeChallenge": {
+    "message": "Challenge"
+  },
+  "advCommonDeletingCookieFmt": {
+    "message": "{0}-cookie wordt verwijderd... De pagina wordt opnieuw geladen"
+  },
+  "advCloudflareTypeLabel": {
+    "message": "Type"
+  },
+  "advCloudflareSiteKeyCopied": {
+    "message": "Sitesleutel gekopieerd"
+  },
+  "advCloudflareTypeChallenge": {
+    "message": "Challenge"
+  },
+  "advCloudflareTypeAnalytics": {
+    "message": "Analytics"
+  },
+  "advCloudflareTypeBotManagement": {
+    "message": "Botbeheer"
+  },
+  "advFuncaptchaPublicKey": {
+    "message": "Openbare sleutel"
+  },
+  "advFuncaptchaUserAgent": {
+    "message": "User-agent"
+  },
+  "advFuncaptchaBdaLabel": {
+    "message": "BDA (browsergegevensarray)"
+  },
+  "advFuncaptchaBlobData": {
+    "message": "Blobdata"
+  },
+  "advFuncaptchaNotCaptured": {
+    "message": "Niet opgenomen"
+  },
+  "advFuncaptchaReloadToMonitor": {
+    "message": "Laad de pagina opnieuw om te beginnen met volgen en een FunCaptcha-challenge te activeren (time-out 60 s)"
+  },
+  "advFuncaptchaPageLoadingMsg": {
+    "message": "De pagina wordt geladen, even wachten..."
+  },
+  "advFuncaptchaCapturedTitle": {
+    "message": "FunCaptcha succesvol opgenomen"
+  },
+  "advFuncaptchaCapturedCountFmt": {
+    "message": "Opgenomen challenges: {0}"
+  },
+  "advFuncaptchaCaptureTimeout": {
+    "message": "Time-out van opname"
+  },
+  "advFuncaptchaNoChallenge": {
+    "message": "Geen FunCaptcha-challenge gedetecteerd (time-out 60 s)"
+  },
+  "advGeetestSourceInlineScript": {
+    "message": "Inline script"
+  },
+  "advGeetestSourceDomAttribute": {
+    "message": "DOM-attribuut"
+  },
+  "advGeetestSourceScriptUrl": {
+    "message": "Script-URL"
+  },
+  "advGeetestSourceJsonConfig": {
+    "message": "JSON-configuratie"
+  },
+  "advGeetestExtractedCaptchaId": {
+    "message": "Opgehaalde captchaId"
+  },
+  "advGeetestProductLabel": {
+    "message": "Product:"
+  },
+  "advGeetestScriptSnippet": {
+    "message": "Scriptfragment"
+  },
+  "advGeetestExportParsingCode": {
+    "message": "Parsingcode exporteren"
+  },
+  "advGeetestErrorFmt": {
+    "message": "Fout: {0}"
+  },
+  "advGeetestDetectedVersionFmt": {
+    "message": "Gedetecteerd: Geetest {0}"
+  },
+  "advGeetestNoVersion": {
+    "message": "Geen Geetest-versie gedetecteerd"
+  },
+  "advGeetestTabNotFound": {
+    "message": "Tabblad niet gevonden"
+  },
+  "advGeetestNoScriptsFound": {
+    "message": "Geen Geetest-scripts gevonden"
+  },
+  "advGeetestDetectingVersion": {
+    "message": "Geetest-versie detecteren..."
+  },
+  "advGeetestReloadCheckVersion": {
+    "message": "Pagina wordt opnieuw geladen om de versie te controleren"
+  },
+  "advGeetestAnalyzingScripts": {
+    "message": "Scripts analyseren..."
+  },
+  "advGeetestReloadExtractScripts": {
+    "message": "Pagina wordt opnieuw geladen om scripts op te halen"
+  },
+  "advPanelToolsNameFmt": {
+    "message": "{0}-tools"
+  },
+  "advPanelErrorLoadingTools": {
+    "message": "Fout bij het laden van geavanceerde tools"
+  },
+  "advPanelCheckConsole": {
+    "message": "Bekijk de console voor details"
+  },
+  "advPanelErrorLoadingCapturesFmt": {
+    "message": "Fout bij het laden van opnamen: {0}"
+  },
+  "advPanelCurrentSiteFmt": {
+    "message": "Huidige site ({0})"
+  },
+  "advPanelNoResultsText": {
+    "message": "Pas je filters of zoekopdracht aan om opnamen te vinden."
+  },
+  "advPanelNoUrl": {
+    "message": "Geen URL"
+  },
+  "advPanelView": {
+    "message": "Bekijken"
+  },
+  "advPanelBtnOk": {
+    "message": "OK"
+  },
+  "advPanelConfirmAction": {
+    "message": "Actie bevestigen"
+  },
+  "advPanelBtnConfirm": {
+    "message": "Bevestigen"
+  },
+  "advPanelCopiedToClipboard": {
+    "message": "Gekopieerd naar klembord"
+  },
+  "advPanelToolsLoadedFmt": {
+    "message": "{0}-tools geladen"
+  },
+  "advPanelCookiesFoundFmt": {
+    "message": "{0}/{1} cookies gevonden"
+  },
+  "advPanelScriptsFoundFmt": {
+    "message": "Gevonden scripts: {0}"
+  },
+  "advPanelNoScriptsFmt": {
+    "message": "Geen {0}-scripts gevonden"
+  },
+  "advPanelVersionDetectedFmt": {
+    "message": "{0}-versie gedetecteerd: {1}"
+  },
+  "advPanelNoVersionFmt": {
+    "message": "Geen {0}-versie gedetecteerd"
+  },
+  "advPanelUnknownError": {
+    "message": "Onbekende fout"
+  },
+  "advPanelFailedStartCaptureFmt": {
+    "message": "Opname starten mislukt: {0}"
+  },
+  "advPanelFailedStopCaptureFmt": {
+    "message": "Opname stoppen mislukt: {0}"
+  },
+  "advPanelCaptureCountFmt": {
+    "message": "Opnamen: {0}"
+  },
+  "advPanelClearCapturedDataTitle": {
+    "message": "Alle opgenomen gegevens wissen"
+  },
+  "advPanelNotAvailable": {
+    "message": "n.v.t."
+  },
+  "advPanelHistoryClearedFmt": {
+    "message": "Opnamegeschiedenis van {0} gewist"
+  },
+  "advPanelFailedClearHistory": {
+    "message": "Geschiedenis wissen mislukt"
+  },
+  "advPanelCapturesPaginationFmt": {
+    "message": "Opnamen: {0}-{1} van {2}"
+  },
+  "rulesUiNewDetectorName": {
+    "message": "Nieuwe detector"
+  },
+  "rulesUiAddDetectorTitleFmt": {
+    "message": "{0} toevoegen"
+  },
+  "rulesUiEditDetectorTitleFmt": {
+    "message": "{0} bewerken"
+  },
+  "rulesUiScrapflyIconAlt": {
+    "message": "Scrapfly-pictogram"
+  },
+  "rulesUiDetectorIconAltFmt": {
+    "message": "{0}-pictogram"
+  },
+  "rulesUiChangeIcon": {
+    "message": "Pictogram wijzigen"
+  },
+  "rulesUiChangeDetectorIcon": {
+    "message": "Detectorpictogram wijzigen"
+  },
+  "rulesUiCustomColor": {
+    "message": "Aangepaste kleur"
+  },
+  "iconPickerTitle": {
+    "message": "Pictogram kiezen"
+  },
+  "iconPickerDefault": {
+    "message": "Standaard"
+  },
+  "iconPickerUploadCustom": {
+    "message": "Eigen uploaden"
+  },
+  "iconPickerFileTooLarge": {
+    "message": "Het pictogrambestand moet kleiner zijn dan 100 kB"
+  },
+  "iconPickerNoResults": {
+    "message": "Geen pictogrammen komen overeen met je zoekopdracht"
+  },
+  "iconPickerSearchPlaceholder": {
+    "message": "Pictogrammen zoeken…"
+  },
+  "rulesUiHelpJsHooks": {
+    "message": "Wat zijn JS-hooks?"
+  },
+  "rulesUiHelpWindow": {
+    "message": "Wat zijn window-eigenschappen?"
+  },
+  "rulesUiHelpUrl": {
+    "message": "Wat is URL-detectie?"
+  },
+  "rulesUiHelpHeader": {
+    "message": "Wat is headerdetectie?"
+  },
+  "rulesUiHelpCookie": {
+    "message": "Wat is cookiedetectie?"
+  },
+  "rulesUiHelpContent": {
+    "message": "Wat is inhoudsdetectie?"
+  },
+  "rulesUiHelpDom": {
+    "message": "Wat is DOM-detectie?"
+  },
+  "rulesUiHelpPayload": {
+    "message": "Wat is payloaddetectie?"
+  },
+  "rulesUiHelpGeneric": {
+    "message": "Wat is deze detectiemethode?"
+  },
+  "rulesUiValueOptionalPlaceholder": {
+    "message": "Waarde (optioneel)"
+  },
+  "rulesUiDomSelectorPlaceholder": {
+    "message": "CSS-selector (bijv. .class, #id, [attr])"
+  },
+  "rulesUiContentTextPlaceholder": {
+    "message": "Te zoeken tekst/woord"
+  },
+  "rulesUiUrlPatternPlaceholder": {
+    "message": "URL-patroon"
+  },
+  "rulesUiJsHookTargetPlaceholder": {
+    "message": "JS-hookdoel (bijv. Navigator.prototype.webdriver)"
+  },
+  "rulesUiWindowPathPlaceholder": {
+    "message": "Window-pad (bijv. grecaptcha, _cf_chl_opt)"
+  },
+  "rulesUiWindowConditionPlaceholder": {
+    "message": "Voorwaarde (bijv. typeof object, typeof function)"
+  },
+  "rulesUiCookieNamePlaceholder": {
+    "message": "Cookienaam (bijv. __cf_bm, session_id)"
+  },
+  "rulesUiCookieValuePlaceholder": {
+    "message": "Patroon voor cookiewaarde (optioneel)"
+  },
+  "rulesUiPayloadTextPlaceholder": {
+    "message": "Tekst (bijv. sensor_data, challenge_token)"
+  },
+  "rulesUiPayloadUrlPlaceholder": {
+    "message": "/api/verify of challenge.php"
+  },
+  "rulesUiNameSettings": {
+    "message": "Naaminstellingen"
+  },
+  "rulesUiNameSettingsConfidenceFmt": {
+    "message": "Naaminstellingen (zekerheid: {0}%)"
+  },
+  "rulesUiValueSettings": {
+    "message": "Waarde-instellingen"
+  },
+  "rulesUiDeleteMethod": {
+    "message": "Methode verwijderen"
+  },
+  "rulesUiClearValue": {
+    "message": "Waarde wissen"
+  },
+  "rulesUiAddValue": {
+    "message": "Waarde toevoegen"
+  },
+  "rulesUiPageOfFmt": {
+    "message": "Pagina {0} / {1}"
+  },
+  "rulesUiCompleteEmptyPattern": {
+    "message": "Vul het huidige lege patroon in voordat je een ander toevoegt."
+  },
+  "rulesUiFillRequiredPatterns": {
+    "message": "Vul alle vereiste patroonvelden in voordat je opslaat."
+  },
+  "rulesUiEnterMethodTypePrompt": {
+    "message": "Voer het type detectiemethode in (bijv. HEADERS, CONTENT, URLs):"
+  },
+  "rulesUiMethodFallback": {
+    "message": "Methode"
+  },
+  "rulesUiUrlScopeHint": {
+    "message": "Pagina = huidige URL | Scripts = pagina + scripts | Alles = alle verzoeken"
+  },
+  "rulesUiLeaveEmptyAnyUrl": {
+    "message": "Leeg laten voor elke URL"
+  },
+  "ruleConditionGroupOther": {
+    "message": "Overig"
+  },
+  "clipboardUrlFmt": {
+    "message": "URL: {0}"
+  },
+  "clipboardTitleFmt": {
+    "message": "Titel: {0}"
+  },
+  "clipboardTimestampFmt": {
+    "message": "Tijdstempel: {0}"
+  },
+  "clipboardSecuritySystemFmt": {
+    "message": "Beveiligingssysteem: {0}"
+  },
+  "clipboardCategoryFmt": {
+    "message": "Categorie: {0}"
+  },
+  "clipboardConfidenceFmt": {
+    "message": "Zekerheid: {0}%"
+  },
+  "clipboardDetectionMethodsFmt": {
+    "message": "Detectiemethoden: {0}"
+  },
+  "clipboardDetectionMethodsHeading": {
+    "message": "Detectiemethoden:"
+  },
+  "clipboardDetectionsListFmt": {
+    "message": "Detecties ({0}):"
+  },
+  "clipboardDifficultyFmt": {
+    "message": "Moeilijkheid: {0}"
+  },
+  "clipboardCopyFailed": {
+    "message": "Kopiëren naar klembord mislukt"
+  },
+  "detectionUiCopyUrl": {
+    "message": "URL kopiëren"
+  },
+  "detectionUiCopyUrlFmt": {
+    "message": "URL kopiëren: {0}"
+  },
+  "detectionUiCopyCategory": {
+    "message": "Categorie kopiëren"
+  },
+  "detectionUiCopyCategoryFmt": {
+    "message": "Categorie kopiëren: {0}"
+  },
+  "detectionUiCopyMethod": {
+    "message": "Methode kopiëren"
+  },
+  "detectionUiCopyMethodFmt": {
+    "message": "Methode kopiëren: {0}"
+  },
+  "detectionUiCopyValue": {
+    "message": "Waarde kopiëren"
+  },
+  "detectionUiCopyValueFmt": {
+    "message": "Waarde kopiëren: {0}"
+  },
+  "detectionUiDurYearsFmt": {
+    "message": "{0} j"
+  },
+  "detectionUiDurMonthsFmt": {
+    "message": "{0} mnd"
+  },
+  "detectionUiDurDaysFmt": {
+    "message": "{0} d"
+  },
+  "detectionUiDurHoursFmt": {
+    "message": "{0} u"
+  },
+  "detectionUiDurMinutesFmt": {
+    "message": "{0} min"
+  },
+  "detectionUiDurPairFmt": {
+    "message": "{0} {1}"
+  },
+  "detectionUiDurUnderMinute": {
+    "message": "<1 min"
+  },
+  "detectionUiNoDescription": {
+    "message": "Geen aanvullende details opgegeven voor deze detectie."
+  },
+  "detectionUiNoMethodsRecorded": {
+    "message": "Geen detectiemethoden geregistreerd voor deze detector."
+  },
+  "detectionUiUnknownMethod": {
+    "message": "Onbekende methode"
+  },
+  "detectionUiUnknownValue": {
+    "message": "onbekend"
+  },
+  "historyUiUntitled": {
+    "message": "Naamloos"
+  },
+  "historyUiNoDetectionMethods": {
+    "message": "Geen detectiemethoden"
+  },
+  "historyUiInvalidFileFormat": {
+    "message": "Ongeldige indeling van geschiedenisbestand"
+  },
+  "popupUiLogoAlt": {
+    "message": "Scrapfly-robot"
+  },
+  "popupUiEnableFailedFmt": {
+    "message": "Extensie inschakelen mislukt: {0}"
+  },
+  "popupUiDisableFailedFmt": {
+    "message": "Extensie uitschakelen mislukt: {0}"
+  },
+  "popupUiNativeErrorFmt": {
+    "message": "Fout: {0}"
+  },
+  "settingsUiBlacklistEmpty": {
+    "message": "Geen domeinen op de blokkeerlijst"
+  },
+  "settingsUiBlacklistNoMatches": {
+    "message": "Geen domeinen komen overeen met je zoekopdracht"
+  },
+  "settingsUiChecking": {
+    "message": "Controleren..."
+  },
+  "settingsUiErrHistoryLimit": {
+    "message": "De geschiedenislimiet moet tussen 0 (onbeperkt) en 10.000 liggen"
+  },
+  "settingsUiErrCacheDurationFmt": {
+    "message": "De cacheduur moet tussen 1 en {0} {1} liggen"
+  },
+  "settingsUiErrAutoDeleteDays": {
+    "message": "Het aantal dagen voor automatisch verwijderen moet tussen 1 en 3.650 liggen"
+  },
+  "settingsUiErrDuplicateDuration": {
+    "message": "De duur voor duplicaten moet tussen 1 en 999 liggen"
+  },
+  "settingsUiExportJson": {
+    "message": "JSON exporteren"
+  },
+  "settingsUiExportText": {
+    "message": "Tekst exporteren"
+  },
+  "settingsUiLogsText": {
+    "message": "Tekst"
+  },
+  "settingsUiIncompatibleCountFmt": {
+    "message": "Detectorupdates die een nieuwere extensieversie nodig hebben: {0}"
+  },
+  "settingsUiNeedsExtVersionFmt": {
+    "message": "v{0} (vereist ext. v{1})"
+  },
+  "statsUiTotals": {
+    "message": "Totalen"
+  },
+  "ruleSectionCombinations": {
+    "message": "Combinaties"
+  },
+  "combinationsHint": {
+    "message": "Een combinatie detecteert deze beveiliging alleen wanneer meerdere patronen samen worden gevonden. Gebruik dit voor patronen die op zichzelf te zwak zijn."
+  },
+  "detectionModalCombinationsHint": {
+    "message": "Elke combinatie wordt alleen geactiveerd wanneer de signalen samen voorkomen; dit is wat er op deze pagina is gevonden."
+  },
+  "combinationFoundTogether": {
+    "message": "Samen gevonden op deze pagina:"
+  },
+  "combinationNotPresent": {
+    "message": "Niet aanwezig"
+  },
+  "combinationFound": {
+    "message": "Gevonden"
+  },
+  "combinationDetailsUnavailable": {
+    "message": "Deze regel is na de scan gewijzigd of verwijderd, dus alleen de naam en de score worden getoond."
+  },
+  "historyMatchedDetections": {
+    "message": "Overeenkomende detecties"
+  },
+  "combinationDetailsNotSavedAll": {
+    "message": "Deze scan is opgeslagen voordat voorwaarden werden bewaard, dus alleen namen en scores worden getoond."
+  },
+  "combinationMustNotBeFound": {
+    "message": "Mag niet worden gevonden"
+  },
+  "combinationMustBeFound": {
+    "message": "Moet worden gevonden"
+  },
+  "combinationAutoTip": {
+    "message": "Auto: de hoogste zekerheid van de patronen die de combinatie hebben geactiveerd"
+  },
+  "combinationInvalidNoPattern": {
+    "message": "Voeg minimaal één patroon toe dat gevonden moet worden."
+  },
+  "combinationInvalidOneOf": {
+    "message": "Een lijst “Een van deze” heeft in elke optie een patroon nodig dat gevonden moet worden."
+  },
+  "combinationInvalidAtLeastFmt": {
+    "message": "“Minstens {0}” vereist patronen die gevonden moeten worden. Aantal: {0}."
+  },
+  "combinationSentenceOne": {
+    "message": "Wordt geactiveerd wanneer aan deze voorwaarde wordt voldaan."
+  },
+  "combinationSentenceAllFmt": {
+    "message": "Wordt geactiveerd wanneer aan alle {0} voorwaarden wordt voldaan."
+  },
+  "combinationSentenceAnyFmt": {
+    "message": "Wordt geactiveerd wanneer aan een van deze {0} voorwaarden wordt voldaan."
+  },
+  "combinationSentenceAtLeastFmt": {
+    "message": "Wordt geactiveerd wanneer aan minstens {0} van deze {1} voorwaarden wordt voldaan."
+  },
+  "combinationSentenceConfidenceFmt": {
+    "message": "Zekerheid: {0}%."
+  },
+  "combinationSentenceAutoFmt": {
+    "message": "Zekerheid: Auto, maximaal {0}%."
+  },
+  "combinationSentenceGroup": {
+    "message": "Een groep telt als één voorwaarde."
+  },
+  "combinationSentenceNot": {
+    "message": "Wordt niet geactiveerd als een patroon met “Mag niet worden gevonden” aanwezig is."
+  },
+  "combinationSentenceAlone": {
+    "message": "Patronen die niet als “Alleen in combinaties” zijn gemarkeerd, detecteren ook zelfstandig, met hun eigen zekerheid."
+  },
+  "combinationConfidenceWhenFound": {
+    "message": "Zekerheid indien gevonden"
+  },
+  "combinationConfidenceAutoHint": {
+    "message": "Laat leeg voor Auto: de hoogste zekerheid van de gevonden patronen."
+  },
+  "combinationModeAny": {
+    "message": "Een van deze"
+  },
+  "combinationModeAll": {
+    "message": "Al deze"
+  },
+  "combinationModeAtLeast": {
+    "message": "Minstens … van deze"
+  },
+  "combinationModeRootAll": {
+    "message": "al deze worden gevonden"
+  },
+  "combinationModeRootAny": {
+    "message": "een van deze wordt gevonden"
+  },
+  "combinationModeRootAtLeast": {
+    "message": "minstens … van deze worden gevonden"
+  },
+  "combinationGroupMode": {
+    "message": "Groep"
+  },
+  "combinationGroupEmptyHint": {
+    "message": "Voeg een patroon toe aan deze groep"
+  },
+  "combinationDeleteGroup": {
+    "message": "Groep verwijderen"
+  },
+  "combinationAddGroup": {
+    "message": "Groep “een van” toevoegen"
+  },
+  "patternUnusedBadge": {
+    "message": "In geen enkele combinatie"
+  },
+  "patternUnusedTip": {
+    "message": "Geen enkele combinatie gebruikt het, dus het detecteert nooit. Klik om het zelfstandig te laten meetellen."
+  },
+  "combinationsEmpty": {
+    "message": "Nog geen combinaties."
+  },
+  "combinationAdd": {
+    "message": "Combinatie toevoegen"
+  },
+  "combinationDefaultNameFmt": {
+    "message": "Combinatie {0}"
+  },
+  "combinationDelete": {
+    "message": "Combinatie verwijderen"
+  },
+  "combinationDeleteConfirmFmt": {
+    "message": "De combinatie \"{0}\" verwijderen? De patronen blijven in de regel."
+  },
+  "combinationRemove": {
+    "message": "Verwijderen"
+  },
+  "combinationEmptyPattern": {
+    "message": "(leeg patroon)"
+  },
+  "combinationAnyOfMethodFmt": {
+    "message": "Elk patroon van {0}"
+  },
+  "combinationGroupEmpty": {
+    "message": "Voeg hieronder een patroon toe"
+  },
+  "combinationAddPattern": {
+    "message": "Patroon toevoegen"
+  },
+  "combinationAddDescription": {
+    "message": "Beschrijving toevoegen"
+  },
+  "combinationAnyPattern": {
+    "message": "elk patroon"
+  },
+  "combinationPreviewEmpty": {
+    "message": "Voeg patronen toe om deze combinatie samen te stellen"
+  },
+  "patternCombinationsOnlyBadge": {
+    "message": "Alleen in combinaties"
+  },
+  "combinationStrictHint": {
+    "message": "Een patroon dat is gemarkeerd als “Alleen in combinaties” detecteert niets op zichzelf; het telt alleen mee binnen combinaties."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Alles markeren"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Markering van alles opheffen"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Dit patroon detecteert niets op zichzelf; het telt alleen mee binnen combinaties, in elke combinatie van deze regel."
+  },
+  "detectionModalCombinations": {
+    "message": "Overeenkomende combinaties"
+  },
+  "combinationNoPatterns": {
+    "message": "Geen patronen toegevoegd"
+  },
+  "combinationPickHint": {
+    "message": "Vink de toe te voegen patronen aan"
+  },
+  "combinationAddSelectedFmt": {
+    "message": "Geselecteerde toevoegen ({0})"
+  },
+  "combinationEditConditions": {
+    "message": "Voorwaarden bewerken"
+  },
+  "combinationAutoConfidence": {
+    "message": "Auto"
+  },
+  "combinationDetectWhen": {
+    "message": "Detecteren wanneer"
+  },
+  "combinationGroupExcluded": {
+    "message": "Deze voorwaarden mogen niet overeenkomen."
+  },
+  "combinationMinimum": {
+    "message": "Minimum aantal treffers"
+  },
+  "combinationMatchState": {
+    "message": "Patroonvoorwaarde"
+  },
+  "combinationChoosePatterns": {
+    "message": "Patronen kiezen"
+  },
+  "combinationDecreaseMinimum": {
+    "message": "Minimum aantal treffers verlagen"
+  },
+  "combinationIncreaseMinimum": {
+    "message": "Minimum aantal treffers verhogen"
+  },
+  "detectionTipDetections": {
+    "message": "Aantal beveiligingen dat op deze pagina is gedetecteerd."
+  },
+  "detectionTipConfidence": {
+    "message": "Gemiddelde zekerheid van de gedetecteerde beveiligingen."
+  },
+  "detectionTipDifficulty": {
+    "message": "Geschatte moeilijkheid om de gedetecteerde beveiligingen te omzeilen."
+  },
+  "tipCachedAt": {
+    "message": "Opgeslagen"
+  },
+  "tipConfidenceAverageFmt": {
+    "message": "Gemiddelde van detecties ({0}), van {1}% tot {2}%"
+  },
+  "tipConfidenceFromCombinations": {
+    "message": "Uit de overeenkomende combinaties"
+  },
+  "tipConfidenceFromSignals": {
+    "message": "Het sterkste afzonderlijke signaal bepaalt de score"
+  },
+  "tipCountShareFmt": {
+    "message": "{0} · {1}%"
+  },
+  "tipCustomDetector": {
+    "message": "Aangepaste detector"
+  },
+  "tipDifficultyFromCategoryFmt": {
+    "message": "Standaard voor {0}"
+  },
+  "tipDifficultyFromRule": {
+    "message": "Bepaald door deze detector"
+  },
+  "tipDifficultyHardestFmt": {
+    "message": "Bepaald door {0}"
+  },
+  "tipDifficultyManyFmt": {
+    "message": "Verhoogd door {0} beveiligingen samen"
+  },
+  "tipLastUpdated": {
+    "message": "Bijgewerkt"
+  },
+  "tipMethodContent": {
+    "message": "Tekst in de pagina of de scripts kwam overeen."
+  },
+  "tipMethodCookie": {
+    "message": "Een cookie die op deze site is ingesteld, kwam overeen."
+  },
+  "tipMethodDom": {
+    "message": "Een element op de pagina kwam overeen."
+  },
+  "tipMethodHeader": {
+    "message": "Een responseheader die de site heeft verzonden, kwam overeen."
+  },
+  "tipMethodJsHooks": {
+    "message": "De pagina heeft een browser-API aangeroepen die deze detector in de gaten houdt."
+  },
+  "tipMethodPayload": {
+    "message": "Gegevens die de pagina in een verzoek verzond, kwamen overeen."
+  },
+  "tipMethodUrl": {
+    "message": "De pagina of een verzoek dat deze deed, kwam overeen met een bekend adres."
+  },
+  "tipMethodWindow": {
+    "message": "Een globaal JavaScript-object op de pagina kwam overeen."
+  },
+  "tipMoreFmt": {
+    "message": "+{0} meer"
+  },
+  "tipOfficialDetector": {
+    "message": "Officiële Scrapfly-detector"
+  },
+  "tipScopeDomain": {
+    "message": "Resultaten worden hergebruikt voor elke pagina op dit domein."
+  },
+  "tipScopeFullUrl": {
+    "message": "Resultaten worden alleen hergebruikt voor exact deze URL, inclusief de query."
+  },
+  "tipScopePath": {
+    "message": "Resultaten worden hergebruikt voor exact dit pad, ongeacht de query."
+  },
+  "tipStatsActiveDays": {
+    "message": "Dagen met minstens één opgeslagen pagina."
+  },
+  "tipStatsDetections": {
+    "message": "Beveiligingen die zijn gevonden op alle opgeslagen pagina's, herhalingen meegeteld."
+  },
+  "tipStatsDetectors": {
+    "message": "Verschillende beveiligingen die zijn gezien, elk één keer geteld."
+  },
+  "tipStatsDomains": {
+    "message": "Verschillende sites onder de opgeslagen pagina's."
+  },
+  "tipStatsEntries": {
+    "message": "Pagina's die in dit bereik in Geschiedenis zijn opgeslagen."
+  },
+  "tipStatsRateFmt": {
+    "message": "Items: {0} van {1}"
+  },
+  "tipPatterns": {
+    "message": "Patronen"
+  },
+  "settingsRowVerboseLogs": {
+    "message": "Uitgebreide logs"
+  },
+  "settingsRowVerboseLogsTip": {
+    "message": "Log ook elke regel, hook en elk bericht, niet alleen één rapport per pagina"
+  },
+  "editedRuleUpdateTitle": {
+    "message": "Update voor een regel die je hebt bewerkt"
+  },
+  "editedRuleUpdateMessageFmt": {
+    "message": "\"{0}\" heeft een nieuwe officiële versie ({1}). Je hebt deze regel bewerkt: de nieuwe versie vervangt je wijzigingen."
+  },
+  "btnDecideLater": {
+    "message": "Later beslissen"
+  },
+  "btnKeepMyEdits": {
+    "message": "Mijn wijzigingen behouden"
+  },
+  "btnUseNewVersion": {
+    "message": "Nieuwe versie gebruiken"
+  },
+  "resetToOfficial": {
+    "message": "Terugzetten naar officieel"
+  },
+  "resetToOfficialTitle": {
+    "message": "Terugzetten naar de officiële versie"
+  },
+  "resetToOfficialMessageFmt": {
+    "message": "Je wijzigingen in \"{0}\" negeren en de officiële Scrapfly-versie herstellen?"
+  },
+  "ruleResetToOfficial": {
+    "message": "Regel hersteld naar de officiële versie"
+  },
+  "ruleEditedTag": {
+    "message": "Bewerkt"
+  },
+  "tipRuleEdited": {
+    "message": "Je hebt deze officiële regel bewerkt. Updates vragen om bevestiging voordat je wijzigingen worden vervangen."
+  },
+  "settingsGroupDetectionsList": {
+    "message": "Detectielijst"
+  },
+  "settingsCardCategoryOrder": {
+    "message": "Detectievolgorde"
+  },
+  "settingsCategoryOrderHelp": {
+    "message": "Volgorde van de categorieën in de detectielijst, in Geschiedenis en in Regels. Sleep de kaarten om deze te wijzigen; binnen een categorie staan detecties met de hoogste zekerheid bovenaan."
+  },
+  "settingsOrderHighestConfidenceFirst": {
+    "message": "Hoogste zekerheid eerst"
+  },
+  "settingsCategoryOrderCardsLabel": {
+    "message": "Categorievolgorde"
+  },
+  "settingsMoveUpFmt": {
+    "message": "{0} omhoog verplaatsen"
+  },
+  "settingsMoveDownFmt": {
+    "message": "{0} omlaag verplaatsen"
+  },
+  "settingsCardShareUploads": {
+    "message": "Uploads delen"
+  },
+  "settingsShareDestination": {
+    "message": "Uploadbestemming"
+  },
+  "settingsShareDestinationDesc": {
+    "message": "Waar Detectie → Detecties uploaden het overzicht naartoe stuurt en de deellink krijgt."
+  },
+  "settingsShareService": {
+    "message": "Service"
+  },
+  "shareProviderDpasteCom": {
+    "message": "dpaste.com (geen account)"
+  },
+  "shareProviderDpasteOrg": {
+    "message": "dpaste.org (geen account)"
+  },
+  "shareProviderPasteRs": {
+    "message": "paste.rs (geen account)"
+  },
+  "shareProviderPastebin": {
+    "message": "Pastebin (API-sleutel)"
+  },
+  "shareProviderGist": {
+    "message": "GitHub Gist (token)"
+  },
+  "shareProviderCustom": {
+    "message": "Aangepaste server"
+  },
+  "settingsShareDeleteAfterDays": {
+    "message": "Verwijderen na (dagen)"
+  },
+  "settingsShareDeleteAfter": {
+    "message": "Verwijderen na"
+  },
+  "shareExpire10M": {
+    "message": "10 minuten"
+  },
+  "shareExpire1H": {
+    "message": "1 uur"
+  },
+  "shareExpire1D": {
+    "message": "1 dag"
+  },
+  "shareExpire1W": {
+    "message": "1 week"
+  },
+  "shareExpire2W": {
+    "message": "2 weken"
+  },
+  "shareExpire30D": {
+    "message": "30 dagen"
+  },
+  "shareExpire1M": {
+    "message": "1 maand"
+  },
+  "shareExpire6M": {
+    "message": "6 maanden"
+  },
+  "shareExpire1Y": {
+    "message": "1 jaar"
+  },
+  "shareExpireOnetime": {
+    "message": "Na de eerste weergave"
+  },
+  "shareExpireNever": {
+    "message": "Nooit"
+  },
+  "shareNoExpiryPasteRs": {
+    "message": "paste.rs heeft geen optie voor een vervaltijd: de paste blijft staan totdat de service hem verwijdert."
+  },
+  "settingsSharePastebinKey": {
+    "message": "Pastebin API-sleutel"
+  },
+  "settingsSharePastebinKeyDesc": {
+    "message": "Je ontwikkelaarssleutel van pastebin.com/doc_api. Pastes worden niet openbaar vermeld."
+  },
+  "settingsShareSecretNote": {
+    "message": "Alleen in deze browser opgeslagen en weggelaten uit instellingsexports."
+  },
+  "settingsShareGithubToken": {
+    "message": "GitHub-token"
+  },
+  "settingsShareGithubTokenDesc": {
+    "message": "Een token met de machtiging Gists. Uploads zijn geheime gists en verlopen niet; verwijder ze op GitHub."
+  },
+  "settingsShareCustomUrl": {
+    "message": "Server-URL"
+  },
+  "settingsShareCustomUrlDesc": {
+    "message": "HTTPS op een openbare host. Mag <EXPIRY_DAYS> bevatten."
+  },
+  "settingsShareCustomBody": {
+    "message": "Bodyindeling"
+  },
+  "shareBodyForm": {
+    "message": "Formulierveld"
+  },
+  "shareBodyJson": {
+    "message": "JSON-sjabloon"
+  },
+  "shareBodyRaw": {
+    "message": "Onbewerkte tekst"
+  },
+  "settingsShareCustomField": {
+    "message": "Naam van formulierveld"
+  },
+  "settingsShareCustomJson": {
+    "message": "JSON-sjabloon"
+  },
+  "settingsShareCustomJsonDesc": {
+    "message": "Variabelen: <CONTENT_JSON>, <TITLE_JSON>, <EXPIRY_DAYS>"
+  },
+  "settingsShareCustomHeadersDesc": {
+    "message": "Eén per regel als Naam: waarde, bijvoorbeeld Authorization: Bearer …"
+  },
+  "settingsShareCustomLink": {
+    "message": "Deellink uit"
+  },
+  "shareLinkBody": {
+    "message": "Responsebody (gewone URL)"
+  },
+  "shareLinkJson": {
+    "message": "JSON-veld"
+  },
+  "shareLinkLocation": {
+    "message": "Location-header"
+  },
+  "settingsShareCustomJsonPath": {
+    "message": "Pad van JSON-veld"
+  },
+  "settingsShareCustomExpiryDesc": {
+    "message": "Verzonden als expiry_days in formulierbodies en als <EXPIRY_DAYS>; je server bepaalt wat ermee gebeurt."
+  },
+  "pasteNeedsSetupFmt": {
+    "message": "Stel eerst {0} in via Instellingen → Detectie → Uploads delen"
+  },
+  "pasteConfirmMsgFmt": {
+    "message": "Hiermee wordt een overzicht van de detecties van deze pagina geüpload naar {0} ({1}). Iedereen met de link kan het bekijken. De querystring van de URL en cookie-/headerwaarden worden niet meegestuurd."
+  },
+  "shareExpiryDaysFmt": {
+    "message": "verwijderd na {0} dag(en)"
+  },
+  "shareExpiryAfterFmt": {
+    "message": "verwijderd na {0}"
+  },
+  "shareExpiryOnetime": {
+    "message": "verwijderd na de eerste weergave"
+  },
+  "shareExpiryService": {
+    "message": "bewaard totdat de service het verwijdert"
+  },
+  "shareExpiryNever": {
+    "message": "verloopt niet"
+  },
+  "pasteUnsafeUrl": {
+    "message": "De aangepaste server moet een HTTPS-adres op een openbare host zijn"
+  },
+  "pasteBadLink": {
+    "message": "de service heeft geen geldige HTTPS-link teruggegeven"
+  },
+  "pasteUploadFailedFmt": {
+    "message": "Uploaden mislukt: {0}"
+  },
+  "settingsUiErrShareCustomUrl": {
+    "message": "Aangepaste uploadserver: gebruik een HTTPS-adres op een openbare host"
+  },
+  "settingsUiErrShareCustomJson": {
+    "message": "Aangepaste uploadserver: het JSON-sjabloon is geen geldige JSON"
+  },
+  "pasteAuthFailedFmt": {
+    "message": "{0} heeft de sleutel of het token geweigerd (onjuist of verlopen)"
+  },
+  "pasteGistPermission": {
+    "message": "het GitHub-token heeft de machtiging Gists nodig (Lezen en schrijven)"
+  },
+  "advTurnstileNoSiteKey": {
+    "message": "Geen Turnstile-sitesleutel op deze pagina"
+  },
+  "advTurnstileSiteKeysTitle": {
+    "message": "Turnstile-sitesleutels"
+  },
+  "settingsGroupAdvancedTools": {
+    "message": "Geavanceerde tools"
+  },
+  "settingsCardAdvancedToolsConfidence": {
+    "message": "Welke beveiligingen tools krijgen"
+  },
+  "settingsAdvancedToolsMinConfidence": {
+    "message": "Tools tonen boven deze zekerheid (%)"
+  },
+  "settingsAdvancedToolsMinConfidenceHelp": {
+    "message": "Geavanceerd toont een beveiliging alleen als de zekerheid boven deze waarde ligt. Bij 0 wordt elke gedetecteerde beveiliging getoond."
+  },
+  "settingsUiErrAdvancedToolsMinConfidence": {
+    "message": "De zekerheid voor geavanceerde tools moet tussen 0 en 99 liggen"
+  },
+  "advCommonValue": {
+    "message": "Waarde"
+  },
+  "advCommonCharsFmt": {
+    "message": "{0} tekens"
+  },
+  "advCookiePath": {
+    "message": "Pad"
+  },
+  "advCookieExpires": {
+    "message": "Verloopt"
+  },
+  "advCookieSession": {
+    "message": "Sessie (verwijderd wanneer de browser wordt gesloten)"
+  },
+  "advCookieNotFound": {
+    "message": "Niet gevonden"
+  },
+  "restoreOfficialDetectorsConfirmTitle": {
+    "message": "Officiële detectors herstellen?"
+  },
+  "allOfficialDetectorsInstalled": {
+    "message": "Alle officiële detectors zijn geïnstalleerd. Er is niets te herstellen."
+  },
+  "restoreOfficialChecking": {
+    "message": "De nieuwste release op GitHub controleren..."
+  },
+  "restoreOfficialFromReleaseFmt": {
+    "message": "Opnieuw geïnstalleerd vanuit release {0} op GitHub: {1}."
+  },
+  "restoreOfficialOffline": {
+    "message": "GitHub kon niet worden bereikt, dus de versie die in de extensie is opgenomen wordt gebruikt."
+  },
+  "restoreOfficialRateLimited": {
+    "message": "GitHub beperkt momenteel verzoeken, dus de versie die in de extensie is opgenomen wordt gebruikt."
+  },
+  "restoreOfficialListFmt": {
+    "message": "Opnieuw geïnstalleerd vanuit de versie die in de extensie is opgenomen: {0}."
+  },
+  "restoreOfficialUpdateOnlyFmt": {
+    "message": "Regels → Bijwerken installeert deze opnieuw: {0}."
+  },
+  "restoreOfficialUnchanged": {
+    "message": "Je eigen detectors en je wijzigingen in andere regels blijven ongewijzigd."
+  },
+  "restoreOfficialMoreFmt": {
+    "message": "{0} meer"
+  },
+  "restoreOfficialFailedFmt": {
+    "message": "Kan niet herstellen: {0}"
+  },
+  "officialDetectorRestoredFmt": {
+    "message": "{0} hersteld"
+  },
+  "restoreOfficialRunUpdate": {
+    "message": "Voer Regels → Bijwerken uit om de rest te installeren."
+  },
+  "restoreOfficialDetectorsConfirmBtn": {
+    "message": "Herstellen"
+  },
+  "advancedFilterTool": {
+    "message": "Tool"
+  },
+  "advancedFilterAllTools": {
+    "message": "Alle tools"
+  },
+  "advFilterKindCapture": {
+    "message": "Opnamen"
+  },
+  "advHistoryCaptureTag": {
+    "message": "Opname"
+  },
+  "advFilterKindOther": {
+    "message": "Overige tools"
+  },
+  "scrapflyExportTitle": {
+    "message": "Scrapen met Scrapfly",
+    "description": "Detection header button and Advanced tool card that open the Scrape with Scrapfly dialog"
+  },
+  "scrapflyExportHint": {
+    "message": "Code om deze pagina te scrapen met de Unblocker",
+    "description": "Advanced tool card hint for Scrape with Scrapfly"
+  },
+  "scrapflyExportIntro": {
+    "message": "Haal deze pagina op via de API van Scrapfly met de Unblocker ingeschakeld. Die kiest zelf de browser, proxy's en headers en kost niets extra als de site niet blokkeert.",
+    "description": "Scrape with Scrapfly dialog: what the code does (Unblocker is a product name)"
+  },
+  "scrapflyExportDetected": {
+    "message": "Gedetecteerd op deze pagina",
+    "description": "Scrape with Scrapfly dialog: label over the detected protections"
+  },
+  "scrapflyExportLanguages": {
+    "message": "Codetaal",
+    "description": "Scrape with Scrapfly dialog: accessible name of the language tabs"
+  },
+  "scrapflyExportCaptchaNote": {
+    "message": "Deze pagina heeft een CAPTCHA: de Unblocker ontwijkt of lost die op om de pagina terug te geven, maar vult geen CAPTCHA's in op formulieren.",
+    "description": "Scrape with Scrapfly dialog: note when the page has a CAPTCHA"
+  },
+  "scrapflyExportOptions": {
+    "message": "Opties"
+  },
+  "scrapflyExportProduct": {
+    "message": "Gebruik"
+  },
+  "scrapflyExportSolveCaptcha": {
+    "message": "CAPTCHA's oplossen"
+  },
+  "scrapflyExportSolveCaptchaHint": {
+    "message": "Betaald per oplossing"
+  },
+  "scrapflyExportCaptchaUseBrowser": {
+    "message": "Gebruik Cloud Browser om ze op te lossen."
+  },
+  "scrapflyExportIntroBrowser": {
+    "message": "Open deze pagina in de Cloud Browser van Scrapfly en bestuur die met Playwright. De Captcha Solver verwerkt Turnstile, reCAPTCHA, GeeTest en meer zodra ze verschijnen; mislukte oplossingen kosten niets."
+  },
+  "scrapflyExportUnblocker": {
+    "message": "Unblocker"
+  },
+  "scrapflyExportUnblockerHint": {
+    "message": "Anti-botbypass"
+  },
+  "scrapflyExportCopyAi": {
+    "message": "Kopiëren voor AI"
+  },
+  "scrapflyExportCopyAiTitle": {
+    "message": "Kopieert de pagina, wat deze beveiligt, je instellingen en de code als één bericht voor ChatGPT, Claude of een andere AI-assistent"
+  },
+  "scrapflyExportAiCopied": {
+    "message": "Gekopieerd: plak het in je AI-assistent"
+  },
+  "scrapflyExportFormat": {
+    "message": "Uitvoer"
+  },
+  "scrapflyExportFormatText": {
+    "message": "Tekst"
+  },
+  "scrapflyExportProxy": {
+    "message": "Proxy's"
+  },
+  "scrapflyExportProxyDatacenter": {
+    "message": "Datacenter"
+  },
+  "scrapflyExportProxyResidential": {
+    "message": "Residentieel"
+  },
+  "scrapflyExportCountry": {
+    "message": "Land"
+  },
+  "scrapflyExportCountryAny": {
+    "message": "Willekeurig"
+  },
+  "scrapflyExportRenderJs": {
+    "message": "JavaScript renderen"
+  },
+  "scrapflyExportRenderJsCost": {
+    "message": "+5 credits"
+  },
+  "scrapflyExportStepSettings": {
+    "message": "Kies je instellingen"
+  },
+  "scrapflyExportStepCode": {
+    "message": "Kopieer de code"
+  },
+  "scrapflyExportStepKey": {
+    "message": "Stel je API-sleutel in"
+  },
+  "scrapflyExportStepRun": {
+    "message": "Voer het uit"
+  },
+  "scrapflyExportGetKey": {
+    "message": "API-sleutel ophalen",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly sign-up"
+  },
+  "scrapflyExportPlayground": {
+    "message": "Playground openen",
+    "description": "Scrape with Scrapfly dialog: link to Scrapfly's web scraping playground"
+  },
+  "scrapflyExportCopied": {
+    "message": "Code gekopieerd",
+    "description": "Toast after copying a Scrape with Scrapfly snippet"
+  },
+  "scrapflyExportNoPage": {
+    "message": "Open een webpagina om deze met Scrapfly te scrapen",
+    "description": "Toast when the tab is not a web page"
+  },
+  "statsTipCapturesFmt": {
+    "message": "Opnamen: {0}"
+  },
+  "statsFirstSeen": {
+    "message": "Nieuw in deze periode"
+  },
+  "statsFirstSeenTipFmt": {
+    "message": "Voor het eerst opgeslagen in dit bereik. Beveiligingen: {0}, domeinen: {1}."
+  },
+  "statsFirstSeenAllTip": {
+    "message": "Kies 7, 30 of 90 dagen om te zien wat nieuw is."
+  },
+  "statsMostProtectedDomain": {
+    "message": "Best beveiligde domein"
+  },
+  "statsMostProtectedTipFmt": {
+    "message": "Verschillende beveiligingen: {0}. Bezoeken: {1}."
+  },
+  "statsFoundTogether": {
+    "message": "Samen gevonden beveiligingen"
+  },
+  "statsMethods": {
+    "message": "Detectiemethoden"
+  },
+  "statsMatchesUnit": {
+    "message": "treffers"
+  },
+  "statsMethodsByCategory": {
+    "message": "Methoden per categorie"
+  },
+  "statsWeakEvidence": {
+    "message": "Zwakste bewijs"
+  },
+  "statsSignalColumn": {
+    "message": "Signaal"
+  },
+  "statsMethodColumn": {
+    "message": "Methode"
+  },
+  "statsTopSignals": {
+    "message": "Signalen met de meeste treffers"
+  },
+  "statsDecidedSingle": {
+    "message": "Enkel patroon"
+  },
+  "statsDecidedCombination": {
+    "message": "Combinatie"
+  },
+  "statsDecidedBy": {
+    "message": "Hoe detecties zijn bepaald"
+  },
+  "statsCombinationGain": {
+    "message": "Zekerheid per beslissing"
+  },
+  "statsCombinationColumn": {
+    "message": "Combinatie"
+  },
+  "statsTopCombinations": {
+    "message": "Combinaties die zijn geactiveerd"
+  },
+  "statsNoCombinations": {
+    "message": "Geen enkele detectie in dit bereik is door een combinatie bepaald."
+  },
+  "statsRulesMostActive": {
+    "message": "Meest actieve regels"
+  },
+  "statsTipPatternsFmt": {
+    "message": "Patronen: {0}"
+  },
+  "statsRulesPatternsByMethod": {
+    "message": "Patronen per methode"
+  },
+  "statsRulesOfficial": {
+    "message": "Officieel"
+  },
+  "statsRulesCustom": {
+    "message": "Aangepast"
+  },
+  "statsRuleColumn": {
+    "message": "Regel"
+  },
+  "statsRuleKindColumn": {
+    "message": "Type"
+  },
+  "statsPatternsUnit": {
+    "message": "patronen"
+  },
+  "statsRulesNeverMatched": {
+    "message": "Niet gevonden in dit bereik"
+  },
+  "statsRulesAllMatched": {
+    "message": "Elke ingeschakelde regel heeft in dit bereik iets gevonden."
+  },
+  "statsMissingColumn": {
+    "message": "Zonder beschrijving"
+  },
+  "statsRulesMissingDescriptions": {
+    "message": "Patronen zonder beschrijving"
+  },
+  "statsRulesAllDescribed": {
+    "message": "Elk patroon heeft een beschrijving."
+  },
+  "statsRuleVersionColumn": {
+    "message": "Regelversie"
+  },
+  "statsNeedsExtensionColumn": {
+    "message": "Vereist extensie"
+  },
+  "statsRulesWaiting": {
+    "message": "Wacht op een nieuwere extensie"
+  },
+  "statsToolsByVendor": {
+    "message": "Opnamen per leverancier"
+  },
+  "statsToolsCapture": {
+    "message": "Opname"
+  },
+  "statsToolsByTool": {
+    "message": "Meest gebruikte tools"
+  },
+  "statsToolsOverTime": {
+    "message": "Opnamen in de tijd"
+  },
+  "statsChangeColumn": {
+    "message": "Wijziging"
+  },
+  "statsDateColumn": {
+    "message": "Datum"
+  },
+  "statsDomainChanges": {
+    "message": "Wijzigingen in beveiligingen"
+  },
+  "statsNoChanges": {
+    "message": "Geen enkel domein heeft in dit bereik zijn beveiligingen gewijzigd tussen opgeslagen bezoeken."
+  },
+  "statsNothingNew": {
+    "message": "Niets nieuws: elke beveiliging hier stond al in Geschiedenis vóór dit bereik."
+  },
+  "statsSectionSignals": {
+    "message": "Signalen"
+  },
+  "statsSectionCombinations": {
+    "message": "Combinaties"
+  },
+  "statsSectionRules": {
+    "message": "Regels"
+  },
+  "statsSectionTools": {
+    "message": "Tools"
+  },
+  "statsDomainChangesHint": {
+    "message": "Domeinen waarvan de gedetecteerde beveiligingen tussen twee opgeslagen bezoeken zijn gewijzigd."
+  },
+  "statsFirstSeenHint": {
+    "message": "Beveiligingen en domeinen die voor het eerst in dit bereik zijn opgeslagen."
+  },
+  "statsSignalsNote": {
+    "message": "Het soort bewijs waarmee elke opgeslagen detectie overeenkwam: cookie- en headernamen, URL's, pagina-elementen, scripts en JavaScript-hooks."
+  },
+  "statsWeakEvidenceHint": {
+    "message": "Beveiligingen waarvan de overeenkomende patronen de laagste gemiddelde zekerheid hebben. Hun regels hebben mogelijk een sterker patroon nodig."
+  },
+  "statsCombinationsNote": {
+    "message": "Een combinatie detecteert een beveiliging alleen wanneer meerdere patronen samen worden gevonden."
+  },
+  "statsRulesNote": {
+    "message": "Je regelbibliotheek, vergeleken met wat Geschiedenis in dit bereik heeft gevonden."
+  },
+  "statsRulesTotal": {
+    "message": "Regels"
+  },
+  "statsRulesModified": {
+    "message": "Bewerkt (officieel)"
+  },
+  "statsRulesDisabled": {
+    "message": "Uitgeschakeld"
+  },
+  "statsRulesNeverMatchedHint": {
+    "message": "Ingeschakelde regels die niets hebben gevonden op de pagina's die in dit bereik zijn opgeslagen."
+  },
+  "statsRulesMissingHint": {
+    "message": "Beschrijvingen verschijnen in detectiedetails, Geschiedenis en combinaties. Voeg ze toe in de regeleditor."
+  },
+  "statsToolsNote": {
+    "message": "Geavanceerde opnamen en toolresultaten die op dit apparaat zijn opgeslagen."
+  },
+  "statsCapturesUnit": {
+    "message": "opnamen"
+  },
+  "detectionCardSureFmt": {
+    "message": "{0}% zeker"
+  },
+  "detectionCardMoreFmt": {
+    "message": "+{0}"
+  },
+  "detectionCardCombination": {
+    "message": "Combinatie"
+  },
+  "detectionGroupCountFmt": {
+    "message": "{0} · {1}"
+  },
+  "detectionStatCache": {
+    "message": "CACHE"
+  },
+  "detectionTipCache": {
+    "message": "Welke pagina's deze in de cache opgeslagen resultaten hergebruiken en hoe lang."
+  },
+  "tipCacheExpires": {
+    "message": "Verloopt"
+  },
+  "ruleHistoryCheckTitle": {
+    "message": "Controleren aan de hand van Geschiedenis"
+  },
+  "ruleHistoryCheckHint": {
+    "message": "Bekijk op hoeveel opgeslagen pagina's elk patroon en elke combinatie overeenkomt. Niet-opgeslagen wijzigingen tellen mee."
+  },
+  "ruleHistoryCheckRun": {
+    "message": "Controleren"
+  },
+  "ruleHistoryCheckSummaryFmt": {
+    "message": "Opgeslagen pagina's: {0} · pagina's met deze regel: {1}"
+  },
+  "ruleHistoryCheckRulePagesFmt": {
+    "message": "Pagina's: {0} van {1}"
+  },
+  "ruleHistoryCheckOtherFmt": {
+    "message": "Andere pagina's: +{0}"
+  },
+  "ruleHistoryCheckNoHistory": {
+    "message": "Geschiedenis is leeg: bezoek eerst een paar pagina's."
+  },
+  "ruleHistoryCheckNote": {
+    "message": "Een schatting: Geschiedenis bewaart de gevonden waarden, niet hele pagina's."
+  },
+  "ruleHistoryCheckCombinationFmt": {
+    "message": "geactiveerd op pagina's: {0}"
+  },
+  "ruleHistoryCheckEmpty": {
+    "message": "Voeg patronen toe om ze te controleren."
+  },
+  "settingsThemeTitle": {
+    "message": "Thema"
+  },
+  "settingsThemeDesc": {
+    "message": "Donker, of licht in de kleuren van Scrapfly. Systeem volgt je browser."
+  },
+  "themeDark": {
+    "message": "Donker"
+  },
+  "themeLight": {
+    "message": "Licht"
+  },
+  "themeSystem": {
+    "message": "Systeem"
+  },
+  "settingsDebugOpenConsole": {
+    "message": "Console openen"
+  },
+  "settingsDebugConsoleHint": {
+    "message": "Opent deze extensie in chrome://extensions: klik op \"service worker\" om de logs te zien."
+  },
+  "settingsRowLogCollectorDesc": {
+    "message": "Bewaar de logs hier in plaats van in de console, om ze als JSON of tekst te exporteren"
+  },
+  "ruleTranslationsTitle": {
+    "message": "Vertalingen"
+  },
+  "ruleTranslationsHint": {
+    "message": "Wordt getoond in plaats van de beschrijving wanneer de extensie in die taal staat. Leeg: de beschrijving wordt getoond."
+  },
+  "ruleTranslationsCountFmt": {
+    "message": "{0} van {1}"
+  },
+  "ruleTranslateAuto": {
+    "message": "Automatisch vertalen"
+  },
+  "ruleTranslateUnavailable": {
+    "message": "Automatisch vertalen vereist Chrome 138 of nieuwer."
+  },
+  "ruleTranslateNeedsText": {
+    "message": "Schrijf eerst de beschrijving."
+  },
+  "ruleTranslateWorkingFmt": {
+    "message": "Vertalen: {0}"
+  },
+  "ruleTranslateDoneFmt": {
+    "message": "Ingevulde talen: {0}. Controleer ze voordat je opslaat."
+  },
+  "ruleTranslateDonePartialFmt": {
+    "message": "Ingevuld: {0}; hier niet vertaald: {1}."
+  },
+  "sfxOptRenderingWait": {
+    "message": "Wachten na laden"
+  },
+  "sfxOptWaitForSelector": {
+    "message": "Wachten op element"
+  },
+  "sfxOptRenderingStage": {
+    "message": "Pagina gereed bij"
+  },
+  "sfxOptAutoScroll": {
+    "message": "Naar beneden scrollen"
+  },
+  "sfxOptJs": {
+    "message": "JavaScript uitvoeren"
+  },
+  "sfxOptJsScenario": {
+    "message": "Browseracties"
+  },
+  "sfxOptScreenshot": {
+    "message": "Screenshot"
+  },
+  "sfxOptScreenshotSelector": {
+    "message": "Element"
+  },
+  "sfxOptScreenshotFlags": {
+    "message": "Screenshotopties"
+  },
+  "sfxOptLang": {
+    "message": "Talen"
+  },
+  "sfxOptOs": {
+    "message": "Besturingssysteem"
+  },
+  "sfxOptBrowserBrand": {
+    "message": "Browser"
+  },
+  "sfxOptGeolocation": {
+    "message": "Geolocatie"
+  },
+  "sfxOptHeaders": {
+    "message": "Headers"
+  },
+  "sfxOptTimeout": {
+    "message": "Time-out"
+  },
+  "sfxOptRetry": {
+    "message": "Opnieuw proberen bij fouten"
+  },
+  "sfxOptCostBudget": {
+    "message": "Creditlimiet"
+  },
+  "sfxOptFormatOptions": {
+    "message": "Weglaten"
+  },
+  "sfxOptProxified": {
+    "message": "De respons van de site retourneren"
+  },
+  "sfxOptExtraction": {
+    "message": "Gegevens extraheren"
+  },
+  "sfxOptExtractionModel": {
+    "message": "Model"
+  },
+  "sfxOptExtractionPrompt": {
+    "message": "Prompt"
+  },
+  "sfxOptExtractionTemplate": {
+    "message": "Opgeslagen sjabloon"
+  },
+  "sfxOptCache": {
+    "message": "Cache"
+  },
+  "sfxOptCacheTtl": {
+    "message": "Bewaren gedurende"
+  },
+  "sfxOptCacheClear": {
+    "message": "Cache vernieuwen"
+  },
+  "sfxOptSession": {
+    "message": "Sessie"
+  },
+  "sfxOptSticky": {
+    "message": "Dezelfde proxy voor de sessie"
+  },
+  "sfxOptDebug": {
+    "message": "Debug"
+  },
+  "sfxOptCorrelationId": {
+    "message": "Correlatie-ID"
+  },
+  "sfxOptTags": {
+    "message": "Tags"
+  },
+  "sfxOptDns": {
+    "message": "DNS-details"
+  },
+  "sfxOptSsl": {
+    "message": "SSL-certificaat"
+  },
+  "sfxOptWebhook": {
+    "message": "Webhook"
+  },
+  "sfxOptMode": {
+    "message": "Start"
+  },
+  "sfxOptTargetUrl": {
+    "message": "Deze pagina opgeven"
+  },
+  "sfxOptBrowserLang": {
+    "message": "Taal"
+  },
+  "sfxOptAutoClose": {
+    "message": "Sluiten bij verbreken van verbinding"
+  },
+  "sfxOptSessionTimeout": {
+    "message": "Sessieduur"
+  },
+  "sfxOptUnblockTimeout": {
+    "message": "Tijdslimiet voor unblocken"
+  },
+  "sfxOptBlockImages": {
+    "message": "Afbeeldingen blokkeren"
+  },
+  "sfxOptBlockStyles": {
+    "message": "Stylesheets blokkeren"
+  },
+  "sfxOptBlockFonts": {
+    "message": "Lettertypen blokkeren"
+  },
+  "sfxOptBlockMedia": {
+    "message": "Video en audio blokkeren"
+  },
+  "sfxOptBlacklist": {
+    "message": "Trackers blokkeren"
+  },
+  "sfxOptBrowserCache": {
+    "message": "Statische bestanden cachen"
+  },
+  "sfxOptRecord": {
+    "message": "De sessie opnemen"
+  },
+  "sfxOptMcp": {
+    "message": "MCP-endpoint"
+  },
+  "sfxValAuto": {
+    "message": "Automatisch"
+  },
+  "sfxValCleanHtml": {
+    "message": "Schone HTML"
+  },
+  "sfxValComplete": {
+    "message": "Volledig geladen"
+  },
+  "sfxValDomReady": {
+    "message": "DOM gereed"
+  },
+  "sfxValFullPage": {
+    "message": "Volledige pagina"
+  },
+  "sfxValElement": {
+    "message": "Element"
+  },
+  "sfxValLoadImages": {
+    "message": "Afbeeldingen laden"
+  },
+  "sfxValDarkMode": {
+    "message": "Donkere modus"
+  },
+  "sfxValBlockBanners": {
+    "message": "Banners verbergen"
+  },
+  "sfxValHighQuality": {
+    "message": "Hoge kwaliteit"
+  },
+  "sfxValPrint": {
+    "message": "Printstijl"
+  },
+  "sfxValNoLinks": {
+    "message": "Koppelingen"
+  },
+  "sfxValNoImages": {
+    "message": "Afbeeldingen"
+  },
+  "sfxValOnlyContent": {
+    "message": "Alles behalve de hoofdinhoud"
+  },
+  "sfxValModel": {
+    "message": "AI-model"
+  },
+  "sfxValTemplate": {
+    "message": "Sjabloon"
+  },
+  "sfxValConnect": {
+    "message": "Een browser openen"
+  },
+  "sfxValUnblock": {
+    "message": "Eerst unblocken"
+  },
+  "sfxGroupRender": {
+    "message": "Browserrendering"
+  },
+  "sfxGroupLocation": {
+    "message": "Locatie en fingerprint"
+  },
+  "sfxGroupRequest": {
+    "message": "Verzoek"
+  },
+  "sfxGroupOutput": {
+    "message": "Uitvoer"
+  },
+  "sfxGroupExtraction": {
+    "message": "AI-extractie"
+  },
+  "sfxGroupCache": {
+    "message": "Cache en sessie"
+  },
+  "sfxGroupTracking": {
+    "message": "Debug en tracking"
+  },
+  "sfxGroupFingerprint": {
+    "message": "Fingerprint en taal"
+  },
+  "sfxGroupSession": {
+    "message": "Sessie"
+  },
+  "sfxGroupBlocking": {
+    "message": "Blokkering en cache"
+  },
+  "sfxGroupTools": {
+    "message": "Debug en MCP"
+  },
+  "sfxWhyRender": {
+    "message": "Vereist JavaScript renderen"
+  },
+  "sfxWhyUnblocker": {
+    "message": "Vereist de Unblocker"
+  },
+  "sfxWhyMarkdown": {
+    "message": "Alleen bij uitvoer in Markdown of tekst"
+  },
+  "sfxWhyCache": {
+    "message": "Schakel eerst Cache in"
+  },
+  "sfxWhySession": {
+    "message": "Stel eerst een sessie in"
+  },
+  "sfxWhySticky": {
+    "message": "Altijd aan bij de Unblocker"
+  },
+  "sfxWhyJson": {
+    "message": "Geen JSON-lijst met stappen: weggelaten"
+  },
+  "sfxWhyGeo": {
+    "message": "Gebruik latitude,longitude: weggelaten"
+  },
+  "sfxWhyBrandOs": {
+    "message": "Deze browser draait niet op dat systeem: weggelaten"
+  },
+  "sfxWhyEdge": {
+    "message": "Edge vereist Windows: weggelaten"
+  },
+  "sfxHintHeaders": {
+    "message": "Eén per regel: Naam: waarde. Niet opgeslagen."
+  },
+  "sfxHintScenario": {
+    "message": "JSON-lijst: click, fill, wait, scroll, execute, wait_for_selector, wait_for_navigation"
+  },
+  "sfxHintList": {
+    "message": "Gescheiden door komma's"
+  },
+  "sfxHintLanguages": {
+    "message": "Gescheiden door komma's, maximaal 3"
+  },
+  "sfxHintUnblock": {
+    "message": "Eerst unblocken geeft een browser terug die al voorbij de anti-botmuur is"
+  },
+  "sfxValOff": {
+    "message": "Uit"
+  },
+  "ruleTranslateAllDone": {
+    "message": "Elke taal heeft al een vertaling."
+  },
+  "combinationTranslationsTitle": {
+    "message": "Naamvertalingen"
+  },
+  "combinationTranslationsHint": {
+    "message": "Wordt getoond in plaats van de naam wanneer de extensie in die taal staat. Leeg: de naam wordt getoond."
+  },
+  "combinationTranslateNeedsName": {
+    "message": "Schrijf eerst de naam."
+  },
+  "advancedInfoCloudflareDesc": {
+    "message": "Controleert de challengecookies en analyseert de scripts"
+  },
+  "advancedInfoDataDomeDesc": {
+    "message": "Controleert DataDome-cookies en analyseert de scripts"
+  },
+  "advancedInfoFunCaptchaDesc": {
+    "message": "Zoekt de openbare sleutel, neemt de browsergegevens (BDA) op en analyseert de scripts"
+  },
+  "advancedInfoGeetestDesc": {
+    "message": "Detecteert de GeeTest-versie (v3 of v4) en analyseert de scripts"
+  },
+  "advancedInfoHcaptchaDesc": {
+    "message": "Zoekt de sitesleutel, detecteert de hCaptcha-versie en analyseert de scripts"
+  },
+  "advancedInfoTurnstileDesc": {
+    "message": "Haalt de sitesleutel op en analyseert de Turnstile-scripts"
+  },
+  "statsExport": {
+    "message": "Exporteren"
+  },
+  "statsExportAllCategories": {
+    "message": "Exports bevatten altijd elke categorie, ongeacht wat op deze pagina wordt getoond."
+  },
+  "statsScopeLabel": {
+    "message": "Tonen"
+  },
+  "statsScopeHiddenFmt": {
+    "message": "Fingerprintingdetecties verborgen: {0} ({1} van alle)"
+  },
+  "statsScopeShowFingerprint": {
+    "message": "Fingerprinting tonen"
+  },
+  "statsScopeKeepOne": {
+    "message": "Minstens één categorie blijft geselecteerd."
+  },
+  "statsScopeRulesNote": {
+    "message": "Regels gebruiken altijd elke categorie."
+  },
+  "statsContextFmt": {
+    "message": "Pagina's: {0} · Domeinen: {1} · {2} · {3}"
+  },
+  "statsRangeSinceFmt": {
+    "message": "Alle geschiedenis sinds {0}"
+  },
+  "statsCompareCaptionFmt": {
+    "message": "Vergeleken met de vorige periode ({0})"
+  },
+  "statsCompareNone": {
+    "message": "Kies 7, 30 of 90 dagen om met de vorige periode te vergelijken."
+  },
+  "statsCompareIncompleteFmt": {
+    "message": "De geschiedenis begint op {0}, dus er is geen volledige vorige periode om mee te vergelijken."
+  },
+  "statsDeltaNew": {
+    "message": "nieuw"
+  },
+  "statsDeltaFlat": {
+    "message": "Geen verandering ten opzichte van de vorige periode"
+  },
+  "statsDeltaUpFmt": {
+    "message": "{0} hoger dan in de vorige periode"
+  },
+  "statsDeltaDownFmt": {
+    "message": "{0} lager dan in de vorige periode"
+  },
+  "statsDeltaWasFmt": {
+    "message": "Vorige periode: {0}"
+  },
+  "statsLowDataFmt": {
+    "message": "Weinig pagina's in dit bereik ({0}): vergelijkingen en ranglijsten kunnen misleidend zijn."
+  },
+  "statsLoading": {
+    "message": "Statistieken laden..."
+  },
+  "statsEmptyShowAll": {
+    "message": "Alle geschiedenis tonen"
+  },
+  "statsHeadlinesLabel": {
+    "message": "Hoogtepunten"
+  },
+  "statsSectionEvidence": {
+    "message": "Bewijs"
+  },
+  "statsSubnavLabel": {
+    "message": "Bewijsweergaven"
+  },
+  "statsExportCanceled": {
+    "message": "Export geannuleerd"
+  },
+  "statsAllClearTitle": {
+    "message": "Geen anti-bot of CAPTCHA gevonden in dit bereik"
+  },
+  "statsAllClearDescFmt": {
+    "message": "Deze pagina's laten alleen gebruik van fingerprinting-API's zien. Pagina's: {0}."
+  },
+  "statsScopeEmptyTitle": {
+    "message": "Niets om te tonen voor deze categorieën"
+  },
+  "statsScopeEmptyDesc": {
+    "message": "Kies een andere categorie of een langer bereik."
+  },
+  "statsHeadlineTop": {
+    "message": "Meest voorkomende beveiliging"
+  },
+  "statsHeadlineTopSubFmt": {
+    "message": "{0} van de pagina's · pagina's: {1}"
+  },
+  "statsHeadlineHardest": {
+    "message": "Moeilijkste site"
+  },
+  "statsHeadlineHardestSubFmt": {
+    "message": "Beveiligingen: {0} · Moeilijkheid: {1}"
+  },
+  "statsHeadlineNewest": {
+    "message": "Nieuwste beveiliging"
+  },
+  "statsHeadlineNewestSubFmt": {
+    "message": "Voor het eerst gezien op {0} · {1}"
+  },
+  "statsHeadlineNothingNew": {
+    "message": "Niets nieuws in dit bereik"
+  },
+  "statsHeadlineRiser": {
+    "message": "Grootste stijger"
+  },
+  "statsHeadlineRiserSubFmt": {
+    "message": "Pagina's {0} → {1} t.o.v. vorige periode"
+  },
+  "statsHeadlineNeedsCompare": {
+    "message": "Vereist een vorige periode"
+  },
+  "statsKpiPages": {
+    "message": "Opgeslagen pagina's"
+  },
+  "statsKpiPagesSubFmt": {
+    "message": "Actieve dagen: {0}"
+  },
+  "statsKpiDomainsSubFmt": {
+    "message": "{0} met detecties ({1})"
+  },
+  "statsKpiLayered": {
+    "message": "Gelaagde sites"
+  },
+  "statsKpiLayeredSubFmt": {
+    "message": "{0} met een CAPTCHA"
+  },
+  "statsKpiProtections": {
+    "message": "Geziene beveiligingen"
+  },
+  "statsKpiProtectionsNewFmt": {
+    "message": "{0} nieuw in deze periode"
+  },
+  "statsKpiProtectionsRulesFmt": {
+    "message": "van {0} regels"
+  },
+  "statsTipPages": {
+    "message": "Pagina's die in dit bereik in Geschiedenis zijn opgeslagen. Geschiedenis bewaart opgeslagen detecties, niet elk browserbezoek."
+  },
+  "statsTipLayered": {
+    "message": "Domeinen waar twee of meer verschillende beveiligingen zijn gedetecteerd."
+  },
+  "statsOverTimeProtections": {
+    "message": "Gevonden beveiligingen in de tijd"
+  },
+  "statsShareOfPagesUnit": {
+    "message": "% van de pagina's"
+  },
+  "statsAllProtectionsLink": {
+    "message": "Alle beveiligingen"
+  },
+  "statsPageTiers": {
+    "message": "Hoe goed zijn je pagina's beveiligd"
+  },
+  "statsTiersHint": {
+    "message": "Elke opgeslagen pagina wordt één keer geteld, op basis van de soorten beveiliging die erop zijn gevonden."
+  },
+  "statsTierBoth": {
+    "message": "Anti-bot en CAPTCHA"
+  },
+  "statsTierAntibot": {
+    "message": "Alleen anti-bot"
+  },
+  "statsTierCaptcha": {
+    "message": "Alleen CAPTCHA"
+  },
+  "statsTierNone": {
+    "message": "Geen anti-bot of CAPTCHA"
+  },
+  "statsEstimatedDifficulty": {
+    "message": "Geschatte moeilijkheid"
+  },
+  "statsDifficultyHint": {
+    "message": "Een ruwe schatting op basis van de beveiligingen in de getoonde categorieën, geen meting."
+  },
+  "statsDifficultyNoneScoped": {
+    "message": "Geen beveiliging"
+  },
+  "statsHardestSites": {
+    "message": "Moeilijkste sites"
+  },
+  "statsAllDomainsLink": {
+    "message": "Alle domeinen"
+  },
+  "statsMoreStackFmt": {
+    "message": "+{0} meer"
+  },
+  "statsWhatChanged": {
+    "message": "Wat is er veranderd"
+  },
+  "statsChangedNew": {
+    "message": "Nieuwe beveiligingen"
+  },
+  "statsChangedMoving": {
+    "message": "Stijgend en dalend"
+  },
+  "statsChangedGone": {
+    "message": "Niet meer gezien"
+  },
+  "statsChangedSwitched": {
+    "message": "Sites die van beveiliging zijn gewisseld"
+  },
+  "statsChangedNothing": {
+    "message": "Er is niets veranderd in dit bereik."
+  },
+  "statsChangedAllLink": {
+    "message": "Alle wijzigingen"
+  },
+  "statsChangedNeedsCompare": {
+    "message": "Kies 7, 30 of 90 dagen om stijgende en dalende beveiligingen te zien."
+  },
+  "statsFingerprintCard": {
+    "message": "Fingerprinting"
+  },
+  "statsFingerprintSummaryFmt": {
+    "message": "Fingerprinting-API's draaiden op {0} van de pagina's · technieken: {1}"
+  },
+  "statsFingerprintTopFmt": {
+    "message": "Meest voorkomend: {0}"
+  },
+  "statsFingerprintNote": {
+    "message": "Apart getoond van anti-bot- en CAPTCHA-beveiligingen, omdat bijna elke pagina deze API's gebruikt."
+  },
+  "statsPagesColumn": {
+    "message": "Pagina's"
+  },
+  "statsChangeVsPrevColumn": {
+    "message": "Wijziging"
+  },
+  "statsStrongColumn": {
+    "message": "Sterk bewijs"
+  },
+  "statsProtectionSortLabel": {
+    "message": "Beveiligingen sorteren"
+  },
+  "statsSortMostPages": {
+    "message": "Meeste pagina's"
+  },
+  "statsSortMostDomains": {
+    "message": "Meeste domeinen"
+  },
+  "statsSortBiggestChange": {
+    "message": "Grootste wijziging"
+  },
+  "statsCommonStacks": {
+    "message": "Veelvoorkomende beveiligingsstacks"
+  },
+  "statsCommonStacksHint": {
+    "message": "Anti-bot- en CAPTCHA-beveiligingen die samen zijn gevonden op de laatst opgeslagen pagina van een domein."
+  },
+  "statsDomainSearchAll": {
+    "message": "Domeinen of beveiligingen zoeken..."
+  },
+  "statsSortHardest": {
+    "message": "Moeilijkste eerst"
+  },
+  "statsSortLastSeen": {
+    "message": "Meest recent"
+  },
+  "statsDifficultyColumn": {
+    "message": "Moeilijkheid"
+  },
+  "statsStackColumn": {
+    "message": "Beveiligingen"
+  },
+  "statsLastSeenColumn": {
+    "message": "Laatst gezien"
+  },
+  "statsFilterChanged": {
+    "message": "Gewijzigd"
+  },
+  "statsFilterClear": {
+    "message": "Filters wissen"
+  },
+  "statsFilterDomainsLabel": {
+    "message": "Domeinen filteren"
+  },
+  "statsChangeKindGained": {
+    "message": "Erbij"
+  },
+  "statsChangeKindDropped": {
+    "message": "Weggevallen"
+  },
+  "statsChangeKindReplaced": {
+    "message": "Vervangen"
+  },
+  "statsChangePageColumn": {
+    "message": "Pagina"
+  },
+  "statsChangeSinceFmt": {
+    "message": "t.o.v. {0}"
+  },
+  "statsChangeAddedSr": {
+    "message": "Toegevoegd:"
+  },
+  "statsChangeRemovedSr": {
+    "message": "Verwijderd:"
+  },
+  "statsDomainChangesHintPage": {
+    "message": "Vergelijkt opgeslagen kopieën van dezelfde pagina. Fingerprintdetecties worden genegeerd, tenzij je fingerprinting toont."
+  },
+  "statsStrongEvidence": {
+    "message": "Sterk bewijs"
+  },
+  "statsStrongEvidenceTipFmt": {
+    "message": "Detecties met een score van 80% of meer: {0} van {1}."
+  },
+  "statsUnconfirmed": {
+    "message": "Genoemd, niet bevestigd"
+  },
+  "statsUnconfirmedHint": {
+    "message": "Beveiligingen die vaak worden gevonden, maar zelden met sterk bewijs. Het kunnen tekstvermeldingen of ongebruikte scripts zijn in plaats van een actieve challenge."
+  },
+  "statsUnconfirmedNone": {
+    "message": "Elke veelvoorkomende beveiliging is bevestigd door sterk bewijs."
+  },
+  "statsUnconfirmedDriverFmt": {
+    "message": "Meestal gevonden via {0}: {1}"
+  },
+  "statsUnconfirmedNoDriver": {
+    "message": "Geen enkel signaal valt op."
+  },
+  "statsTierStrong": {
+    "message": "Sterk"
+  },
+  "statsTierModerate": {
+    "message": "Matig"
+  },
+  "statsTierWeak": {
+    "message": "Zwak"
+  },
+  "statsTierHint": {
+    "message": "Sterk is 80% of meer, matig 40-79%, zwak minder dan 40%. 100% betekent een signaal dat alleen die beveiliging produceert."
+  },
+  "statsDecidedByCategory": {
+    "message": "Hoe elke categorie is bepaald"
+  },
+  "statsLiftFmt": {
+    "message": "{0} pt"
+  },
+  "statsDecidedAvgFmt": {
+    "message": "{0}: {1} · gemiddeld {2}"
+  },
+  "statsLiftStrongFmt": {
+    "message": "In {0} verhogen combinaties de zekerheid van {1} naar {2}."
+  },
+  "statsLess": {
+    "message": "Minder"
+  },
+  "statsMore": {
+    "message": "Meer"
+  },
+  "statsBusiestDay": {
+    "message": "Drukste dag"
+  },
+  "statsLongestStreak": {
+    "message": "Langste reeks"
+  },
+  "statsPeakHour": {
+    "message": "Piekuur"
+  },
+  "statsQuietDays": {
+    "message": "Dagen zonder opgeslagen items"
+  },
+  "statsTodayPartial": {
+    "message": "Vandaag (wordt nog geteld)"
+  },
+  "statsSevenDayAverage": {
+    "message": "Lijn: gemiddelde van 7 dagen"
+  },
+  "statsRulesCoverage": {
+    "message": "Dekking"
+  },
+  "statsRulesCoverageFmt": {
+    "message": "Overeenkomende ingeschakelde regels in dit bereik: {0} van {1}"
+  },
+  "statsRulesAttention": {
+    "message": "Aandacht nodig"
+  },
+  "statsRulesAttentionNone": {
+    "message": "Niets heeft aandacht nodig."
+  },
+  "statsRulesStatusColumn": {
+    "message": "Status"
+  },
+  "statsRuleStatusQuiet": {
+    "message": "Niet in bereik"
+  },
+  "statsRuleStatusUnseen": {
+    "message": "Niet in Geschiedenis"
+  },
+  "statsRulesSourceEdited": {
+    "message": "Bewerkt"
+  },
+  "statsRulesOfficialQuietNote": {
+    "message": "Officiële regels voor leveranciers die je nog niet bent tegengekomen blijven stil. Dat is normaal."
+  },
+  "statsRulesWeakAbsenceFmt": {
+    "message": "Nog weinig geschiedenis om op te beoordelen (pagina's: {0}), dus een regel die nooit overeenkwam zegt weinig."
+  },
+  "statsRulesMissingOwnNote": {
+    "message": "Alleen aangepaste en bewerkte regels worden getoond. Beschrijvingen van officiële regels worden onderhouden door Scrapfly."
+  },
+  "statsToolsRetentionNote": {
+    "message": "Geavanceerd bewaart opnamen 30 minuten, dus dit tabblad negeert het datumbereik."
+  },
+  "statsToolsSavedNow": {
+    "message": "Nu opgeslagen"
+  },
+  "statsToolsExpiringSoon": {
+    "message": "Verloopt binnen 10 minuten"
+  },
+  "statsToolsVendorsCount": {
+    "message": "Leveranciers"
+  },
+  "statsToolsStaleFmt": {
+    "message": "Verlopen opnamen die wachten op opschoning: {0}. Open Geavanceerd om ze te verwijderen."
+  },
+  "statsToolsSavedCaptures": {
+    "message": "Opgeslagen opnamen"
+  },
+  "statsToolsColVendor": {
+    "message": "Leverancier"
+  },
+  "statsToolsColTool": {
+    "message": "Tool"
+  },
+  "statsToolsColSaved": {
+    "message": "Opgeslagen"
+  },
+  "statsToolsColExpires": {
+    "message": "Verloopt"
+  },
+  "statsToolsNoLive": {
+    "message": "Er zijn nu geen opnamen opgeslagen."
+  },
+  "statsChangedNoPrevious": {
+    "message": "Nog geen volledige vorige periode."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Hoe lang opnamen worden bewaard"
+  },
+  "settingsCaptureRetention": {
+    "message": "Toolopnamen bewaren gedurende"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Opnamen van geavanceerde tools (cookies, scripts, tokens) worden na deze tijd verwijderd."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 minuten"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 minuten"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 uur"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 uur"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 uur"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 uur"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Opnamen worden {0} bewaard.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
+  },
+  "settingsCaptureRetentionRange": {
+    "message": "Van 1 minuut tot 7 dagen."
+  }
+}

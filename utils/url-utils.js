@@ -293,8 +293,18 @@ class UrlUtils {
     ja: 'jp',
     ko: 'kr',
     zh_CN: 'cn',
+    zh_TW: 'tw',
     ar: 'sa',
-    hi: 'in'
+    hi: 'in',
+    tr: 'tr',
+    id: 'id',
+    vi: 'vn',
+    pl: 'pl',
+    uk: 'ua',
+    nl: 'nl',
+    th: 'th',
+    sv: 'se',
+    cs: 'cz'
   };
 
   /**
