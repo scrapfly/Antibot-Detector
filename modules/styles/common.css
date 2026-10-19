@@ -249,6 +249,8 @@
   --danger-lightest: #fecaca;
   --purple: #8b5cf6;
   --purple-light: #a78bfa;
+  --teal: #14b8a6;
+  --teal-light: #2dd4bf;
   --green: #22c55e;
   --green-dark: #16a34a;
 
@@ -380,6 +382,8 @@
   --danger-lightest: #f8d7da;
   --purple: #6f42c1;
   --purple-light: #6f42c1;
+  --teal: #0d9488;
+  --teal-light: #0d9488;
   --green: #2da44e;
   --green-dark: #1f7a3a;
   --border: #dee2e6;

@@ -49,6 +49,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics → Activity: month colours in the calendar are readable in both themes.
 - Settings: the language menu uses the same surface colour as the rest of the settings, instead of a darker panel.
 - Settings: the Data tab icon tiles and the colour field adapt to the light theme instead of staying a dark box, and the accent tiles now share one surface colour.
+- Detection summary: the Detections icon is purple and the Cache icon is teal, so the four stat cards read apart at a glance (Confidence and Difficulty keep their value colour).
 
 ## [2.8.9] - 2026-10-16
 
