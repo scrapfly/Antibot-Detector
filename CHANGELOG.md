@@ -34,6 +34,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics: the Show chips use the Anti-bot, Captcha and Fingerprint icons instead of a coloured dot.
 - Statistics: protection chips carry their category's icon instead of a coloured dot, and the Captcha filter uses the Captcha icon.
 - Statistics → Domains: the "+N more" chip is a solid chip that lists the hidden protections on hover, not a dashed outline.
+- Statistics: category badges, chart legends and the chart tooltip use the Anti-bot, Captcha and Fingerprint icons instead of a coloured dot.
+- Statistics: each protection shows its own logo (in the Protections and Domains lists, the headline cards and What changed), with the category icon as a fallback.
 
 ### Fixed
 

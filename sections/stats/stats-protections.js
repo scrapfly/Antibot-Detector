@@ -51,7 +51,7 @@
         { text: tr('statsStrongColumn', 'Strong evidence'), num: true, title: tr('statsTierHint', 'Strong is 80% or more, moderate 40-79%, weak below 40%. 100% means a signal only that protection produces.') }],
       rows: rows.map(row => {
         const name = element('span', 'stats-stack');
-        name.append(U.dot(U.ink(row.category)), document.createTextNode(row.name));
+        name.append(U.brandMark(row.name, row.category, U.ink(row.category)), document.createTextNode(row.name));
         const delta = usable ? U.deltaBadge(U.deltaView(HistoryStats.delta(row.pages, row.before), row.before)) : null;
         return [name, U.categoryBadge(row.category), U.databar(row.pages, max, U.ink(row.category)), num(row.domains), delta || '–', strongCell(row)];
       })

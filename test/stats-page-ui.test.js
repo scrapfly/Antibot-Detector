@@ -163,8 +163,15 @@ test('chips, pills, stacks and badges carry their meaning in text, not only in c
   assert.equal(chip.attributes.title, 'Cloudflare Bot Management', 'the full name is the title when the label is cut');
   assert.equal(chip.style['--c'], 'var(--ink-antibot)');
   assert.equal(chip.children[0].attributes['aria-hidden'], 'true');
-  assert.equal(chip.children[0].className, 'stats-chip-icon', 'the category mark is an icon, not a bare dot');
+  assert.equal(chip.children[0].className, 'stats-chip-icon', 'without a known logo the category icon shows, not a bare dot');
   assert.match(chip.children[0].innerHTML, /^<svg /, 'the category icon is filled in');
+  // When the protection's logo is known it shows instead of the category icon
+  U.setBrandIcons({ 'cloudflare bot management': 'cloudflare_official.png' });
+  const branded = U.chip('Cloudflare Bot Management', 'antibot');
+  assert.equal(branded.children[0].className, 'stats-brand', 'a known logo renders the brand mark');
+  assert.match(branded.children[0].innerHTML, /cloudflare_official\.png/, 'the logo file is used');
+  assert.equal(U.chip('Some Unlisted Protection', 'captcha').children[0].className, 'stats-chip-icon', 'an unknown protection falls back to the category icon');
+  U.setBrandIcons({});
   assert.equal(chip.children[1].textContent, 'Cloudflare Bot Management');
   assert.equal(U.chip('x', null, true).className, 'stats-chip stats-chip--muted');
   assert.equal(U.pill('High').className, 'stats-pill stats-pill--high');

@@ -127,30 +127,45 @@
     if (color) setVar(node, '--c', color);
     return node;
   }
-  /** The category's own icon in its ink, or a plain dot when the category has none (e.g. "other"). */
-  function categoryMark(category) {
+  /**
+   * The category's own icon, or a plain dot when the category has none (e.g. "other").
+   * A colour is set on the mark itself; inside a chip the icon inherits the chip's --c, so omit it there.
+   */
+  function categoryMark(category, color) {
     const svg = category && typeof FormatUtils !== 'undefined' ? FormatUtils.categoryIconSvg(category) : '';
-    if (!svg) return dot();
+    if (!svg) return dot(color);
     const node = element('span', 'stats-chip-icon');
     node.setAttribute('aria-hidden', 'true');
+    if (color) setVar(node, '--c', color);
     node.innerHTML = svg;
     return node;
   }
-  /** A protection as a chip: category icon and name, ellipsised with the full name in the title. */
+  // A protection's own logo by name (the stored rules carry it); render() sets this each pass.
+  let brandIcons = {};
+  function setBrandIcons(map) { brandIcons = map && typeof map === 'object' ? map : {}; }
+  /** The protection's own logo when its icon is known, otherwise the category icon. */
+  function brandMark(name, category, color) {
+    const icon = name ? brandIcons[String(name).toLowerCase()] : '';
+    if (icon && typeof FormatUtils !== 'undefined' && FormatUtils.brandLogoHtml) {
+      const span = element('span', 'stats-brand');
+      span.setAttribute('aria-hidden', 'true');
+      span.innerHTML = FormatUtils.brandLogoHtml(icon, name || '', 'stats-brand-img');
+      return span;
+    }
+    return categoryMark(category, color);
+  }
+  /** A protection as a chip: its logo (or category icon) and name, ellipsised with the full name in the title. */
   function chip(name, category, muted = false) {
     const node = element('span', muted ? 'stats-chip stats-chip--muted' : 'stats-chip');
     node.setAttribute('title', name);
-    if (category) { setVar(node, '--c', ink(category)); node.appendChild(categoryMark(category)); }
+    if (category) { setVar(node, '--c', ink(category)); node.appendChild(brandMark(name, category)); }
     node.appendChild(element('span', 'stats-chip-label', name));
     return node;
   }
   function categoryBadge(key) {
     const badge = element('span', 'stats-category-badge');
     setVar(badge, '--c', ink(key));
-    const swatch = element('span', 'stats-legend-swatch');
-    swatch.setAttribute('aria-hidden', 'true');
-    swatch.style.backgroundColor = 'var(--c)';
-    badge.append(swatch, document.createTextNode(categoryLabel(key)));
+    badge.append(categoryMark(key), document.createTextNode(categoryLabel(key)));
     return badge;
   }
   /** Method names carry their meaning in the label, so the badge stays neutral. */
@@ -292,8 +307,15 @@
     if (tooltipAnchor) tooltipAnchor.setAttribute('aria-describedby', tip.id);
     tip.replaceChildren(...lines.map((line, i) => {
       if (line && typeof line === 'object') {
-        const row = element('div', 'stats-tooltip-row'), label = element('span', '', String(line.label));
-        if (line.color) setVar(label, '--c', line.color);
+        const row = element('div', 'stats-tooltip-row'), label = element('span', '');
+        const mark = line.category ? categoryMark(line.category, line.color || ink(line.category)) : null;
+        if (mark && mark.className === 'stats-chip-icon') {
+          // The category's own icon, coloured; no --c on the label so its dot pseudo-element stays off
+          label.append(mark, document.createTextNode(String(line.label)));
+        } else {
+          if (line.color) setVar(label, '--c', line.color);
+          label.textContent = String(line.label);
+        }
         row.append(label, element('b', '', String(line.value)));
         return row;
       }
@@ -332,6 +354,6 @@
 
   root.StatsUI = { byId, tr, fmt, locale, num, percent, share, signed, days, list, confidence, dateText, dayDate, dayLabel, rangeText, daysAgo, relative,
     hourLabel, weekdayLabel, monthLabel, element, setText, setVar, ink, mixInk, CATEGORY_KEYS, DIFFICULTY_COLORS, activeCategories, categoryLabel, difficultyLabel,
-    methodLabel, dot, chip, categoryBadge, methodBadge, pill, stack, none, deltaView, fillDelta, deltaBadge, rankDelta, databar, setTip, table,
+    methodLabel, dot, categoryMark, setBrandIcons, brandMark, chip, categoryBadge, methodBadge, pill, stack, none, deltaView, fillDelta, deltaBadge, rankDelta, databar, setTip, table,
     tableCount, hideTooltip, hideTooltipOutside, showTooltip, bindTooltip, chartOptions, protectionTip };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

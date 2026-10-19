@@ -79,6 +79,14 @@
       state.rules = RuleStats.parseDetectors(stored.scrapfly_detectors);
       if (typeof RuleI18n !== 'undefined') RuleI18n.indexRules(state.rules);
       state.descriptions = RuleStats.descriptions(state.rules);
+      // A protection's own logo, by its name: the stored rules carry the icon, history does not
+      const icons = {};
+      for (const rule of state.rules) {
+        const icon = rule.detector && typeof rule.detector.icon === 'string' ? rule.detector.icon.trim() : '';
+        if (icon && /\.(png|jpe?g|svg)$/i.test(icon) && rule.name) { const key = rule.name.toLowerCase(); if (!icons[key]) icons[key] = icon; }
+      }
+      state.iconByName = icons;
+      if (typeof U !== 'undefined' && U.setBrandIcons) U.setBrandIcons(icons);
     }
     state.captures = typeof ToolsStats !== 'undefined' ? ToolsStats.parse(stored.scrapfly_advanced_history) : [];
     state.incompatible = Array.isArray(stored.scrapfly_incompatible_updates) ? stored.scrapfly_incompatible_updates : [];

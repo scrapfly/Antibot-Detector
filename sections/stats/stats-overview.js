@@ -25,7 +25,11 @@
     main.textContent = view.text;
     main.setAttribute('dir', 'auto'); // a Latin protection name keeps its start in a right-to-left page
     main.setAttribute('title', view.text);
-    dot.hidden = !view.color;
+    // The protection's own logo (or its category icon); hostname headlines keep the plain colour dot
+    const mark = view.category ? U.brandMark(view.text, view.category, view.color) : null;
+    dot.className = mark ? 'stats-headline-mark ' + mark.className : 'stats-dot';
+    dot.innerHTML = mark ? mark.innerHTML : '';
+    dot.hidden = !mark && !view.color;
     if (view.color) U.setVar(dot, '--c', view.color);
     U.fillDelta(byId('headline' + name + 'Delta'), view.delta || null);
     U.setText('headline' + name + 'Sub', view.sub || '');
@@ -37,7 +41,7 @@
   function renderHeadlines(app) {
     const { d } = app, s = d.stats, t = s.totals;
     const top = s.detectorMetrics[0];
-    setHeadline('Top', top ? { text: top.name, color: U.ink(top.category),
+    setHeadline('Top', top ? { text: top.name, color: U.ink(top.category), category: top.category,
       delta: d.compare && d.compare.usable ? U.deltaView(HistoryStats.delta(top.pages, previousPages(d, top.name)), previousPages(d, top.name)) : null,
       sub: fmt('statsHeadlineTopSubFmt', '{0} of pages · pages: {1}', share(t.entries ? top.pages / t.entries : 0), num(top.pages)) }
       : { text: tr('statsNoData', 'No data in this range'), muted: true });
@@ -46,12 +50,12 @@
       sub: fmt('statsHeadlineHardestSubFmt', 'Protections: {0} · Difficulty: {1}', num(hardest.stackTotal), U.difficultyLabel(hardest.difficulty)) }
       : { text: tr('statsNoData', 'No data in this range'), muted: true });
     const newest = d.newProtections[0];
-    setHeadline('Newest', newest ? { text: newest.name, color: U.ink(newest.category),
+    setHeadline('Newest', newest ? { text: newest.name, color: U.ink(newest.category), category: newest.category,
       sub: fmt('statsHeadlineNewestSubFmt', 'First seen on {0} · {1}', newest.hostname || '–', U.dateText(newest.ts)) }
       : { text: tr('statsHeadlineNothingNew', 'Nothing new in this range'), muted: true });
     const usable = d.compare && d.compare.usable;
     const riser = usable ? d.compare.movers.rising[0] : null;
-    setHeadline('Riser', riser ? { text: riser.name, color: U.ink(riser.category), delta: U.deltaView(HistoryStats.delta(riser.now, riser.before), riser.before),
+    setHeadline('Riser', riser ? { text: riser.name, color: U.ink(riser.category), category: riser.category, delta: U.deltaView(HistoryStats.delta(riser.now, riser.before), riser.before),
       sub: fmt('statsHeadlineRiserSubFmt', 'Pages {0} → {1} vs previous period', num(riser.before), num(riser.now)) }
       : { text: usable ? tr('statsChangedNothing', 'Nothing changed in this range.') : tr('statsHeadlineNeedsCompare', 'Needs a previous period'), muted: true });
   }
@@ -110,7 +114,7 @@
     U.setText('statsTimelineTitle', title);
     U.setText('timelineMeta', meta);
     const rows = tl.map(day => ({ label: U.dayLabel(day.date), values: day.categories, partial: day.partial,
-      tip: [U.dayLabel(day.date, true), ...series.map(item => ({ label: item.label, value: num(day.categories[item.key]), color: item.color })),
+      tip: [U.dayLabel(day.date, true), ...series.map(item => ({ label: item.label, value: num(day.categories[item.key]), color: item.color, category: item.key })),
         ...(day.partial ? [tr('statsTodayPartial', 'Today (still counting)')] : [])] }));
     const max = Math.max(1, ...tl.map(total));
     const nice = typeof root.StatsCharts.niceScale === 'function' ? root.StatsCharts.niceScale(max).max : max;
@@ -163,14 +167,14 @@
   }
 
   /** meta is a date or a "38 → 64" pair: a date follows the page direction (Arabic dates carry their own marks), the pair stays left to right. */
-  function changedRow(label, color, meta, delta, ltr, isDate = false) {
+  function changedRow(label, color, meta, delta, ltr, isDate = false, category = '') {
     const li = element('li', 'stats-changed-row');
     const name = element('span', 'stats-changed-name', label);
     name.setAttribute('title', label);
     if (ltr) name.setAttribute('dir', 'ltr');
     const when = element('span', 'stats-changed-meta', meta);
     if (isDate) when.setAttribute('data-kind', 'date');
-    li.append(U.dot(color), name, when);
+    li.append(category ? U.brandMark(label, category, color) : U.dot(color), name, when);
     if (delta) li.appendChild(U.deltaBadge(delta));
     return li;
   }
@@ -193,14 +197,15 @@
     const text = { nothing: tr('statsChangedNothing', 'Nothing changed in this range.'), needs: app.state.days > 0 ? tr('statsChangedNoPrevious', 'No full previous period yet.') : tr('statsChangedNeedsCompare', 'Choose 7, 30 or 90 days to see rising and falling protections.') };
     const fill = (id, rows, empty) => byId(id).replaceChildren(...(rows.length ? rows : [element('li', 'stats-changed-empty', empty)]));
     const comparison = usable ? text.nothing : text.needs;
-    fill('changedNew', d.newProtections.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), U.dateText(row.ts), null, false, true)), text.nothing);
+    fill('changedNew', d.newProtections.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), U.dateText(row.ts), null, false, true, row.category)), text.nothing);
     const m = usable ? d.compare.movers : null;
     const moving = m ? [...m.rising, ...m.falling].sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff) || a.name.localeCompare(b.name)).slice(0, 4)
-      .map(row => changedRow(row.name, U.ink(row.category), num(row.before) + ' → ' + num(row.now), U.deltaView(HistoryStats.delta(row.now, row.before), row.before))) : [];
+      .map(row => changedRow(row.name, U.ink(row.category), num(row.before) + ' → ' + num(row.now), U.deltaView(HistoryStats.delta(row.now, row.before), row.before), false, false, row.category)) : [];
     fill('changedMoving', moving, comparison);
-    fill('changedGone', m ? m.gone.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), num(row.before) + ' → ' + num(row.now))) : [], comparison);
+    fill('changedGone', m ? m.gone.slice(0, 4).map(row => changedRow(row.name, U.ink(row.category), num(row.before) + ' → ' + num(row.now), null, false, false, row.category)) : [], comparison);
     fill('changedSwitched', d.changes.rows.slice(0, 4).map(row => {
-      const li = changedRow(row.hostname, U.ink((row.added[0] || row.removed[0] || {}).category), U.dateText(row.timestamp), null, true, true);
+      const cat = (row.added[0] || row.removed[0] || {}).category;
+      const li = changedRow(row.hostname, U.ink(cat), U.dateText(row.timestamp), null, true, true, cat);
       li.appendChild(changeCell(row));
       return li;
     }), text.nothing);

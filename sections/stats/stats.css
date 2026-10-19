@@ -333,6 +333,9 @@ body.stats-page :is(.stats-table-wrap, .stats-section-nav, .stats-chart, .stats-
 .stats-headline-line { display: flex; align-items: center; gap: var(--sp-2); min-inline-size: 0; }
 .stats-headline-main { flex: 0 1 auto; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-6); font-weight: 600; line-height: 1.3; }
 .stats-headline-line .stats-dot { inline-size: 10px; block-size: 10px; }
+.stats-headline-mark { display: inline-flex; flex: 0 0 auto; align-items: center; color: var(--c); }
+.stats-headline-mark svg { inline-size: 15px; block-size: 15px; }
+.stats-headline-mark .stats-brand-img { inline-size: 16px; block-size: 16px; }
 .stats-headline-line .stats-delta { flex: 0 0 auto; }
 .stats-headline-sub { color: var(--text-secondary); font-size: var(--fs-2); }
 .stats-headline.is-muted .stats-headline-main { color: var(--text-secondary); font-size: var(--fs-5); font-weight: 500; }
@@ -540,6 +543,8 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
 .stats-dot { display: inline-block; flex: 0 0 8px; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--c, var(--s-neutral)); }
 .stats-chip-icon { display: inline-flex; flex: 0 0 auto; color: var(--c, var(--text-secondary)); }
 .stats-chip-icon svg { inline-size: 12px; block-size: 12px; }
+.stats-brand { display: inline-flex; flex: 0 0 auto; align-items: center; }
+.stats-brand-img { inline-size: 14px; block-size: 14px; object-fit: contain; border-radius: 3px; }
 .stats-chip {
   --c: var(--s-neutral);
   display: inline-flex; align-items: center; gap: 6px; max-inline-size: 100%;

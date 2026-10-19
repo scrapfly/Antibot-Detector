@@ -218,7 +218,7 @@ test('every class the page markup contract names has a rule', () => {
     'stats-cal-head', 'stats-cal-month', 'stats-cal-wd', 'stats-cal-day', 'stats-cal-val', 'stats-cal-legend', 'stats-cal-swatch', 'is-today', 'on-fill', 'stats-facts', 'stats-fact',
     'stats-legend', 'stats-legend-item', 'stats-legend-swatch', 'stats-legend-label', 'stats-legend-value', 'stats-legend-share', 'is-zero', 'stats-series-legend',
     'stats-rank', 'stats-rank-row', 'stats-rank-n', 'stats-rank-name', 'stats-rank-label', 'stats-rank-sub', 'stats-rank-val', 'stats-rank-share', 'stats-rank-track',
-    'stats-chip', 'stats-chip-label', 'stats-chip-icon', 'stats-chip--muted', 'stats-dot', 'stats-pill', 'stats-pill--high', 'stats-pill--medium', 'stats-pill--low', 'stats-pill--none', 'stats-stack',
+    'stats-chip', 'stats-chip-label', 'stats-chip-icon', 'stats-brand', 'stats-brand-img', 'stats-headline-mark', 'stats-chip--muted', 'stats-dot', 'stats-pill', 'stats-pill--high', 'stats-pill--medium', 'stats-pill--low', 'stats-pill--none', 'stats-stack',
     'stats-delta', 'stats-delta--up', 'stats-delta--down', 'stats-delta--flat', 'stats-delta--new', 'stats-delta-arrow', 'stats-databar',
     'stats-table-toolbar', 'stats-search', 'stats-sort', 'stats-chips', 'stats-chip-btn', 'stats-chip-btn-icon', 'has-icon', 'stats-chip-count', 'stats-table-wrap', 'stats-table-wrap--flat', 'stats-table', 'is-stack', 'is-num', 'is-nowrap',
     'stats-table-footer', 'stats-table-more', 'stats-none', 'stats-none--inline', 'stats-none--ok', 'stats-category-badge', 'stats-signal', 'stats-signal-desc', 'stats-signal-raw',
