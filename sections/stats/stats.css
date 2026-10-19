@@ -538,6 +538,8 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
    11. Chips, pills, badges, dots
    -------------------------------------------------------------------------- */
 .stats-dot { display: inline-block; flex: 0 0 8px; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--c, var(--s-neutral)); }
+.stats-chip-icon { display: inline-flex; flex: 0 0 auto; color: var(--c, var(--text-secondary)); }
+.stats-chip-icon svg { inline-size: 12px; block-size: 12px; }
 .stats-chip {
   --c: var(--s-neutral);
   display: inline-flex; align-items: center; gap: 6px; max-inline-size: 100%;
@@ -548,7 +550,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
   .stats-chip { border-color: color-mix(in srgb, var(--c) 38%, var(--s-hair)); background: color-mix(in srgb, var(--c) 12%, transparent); }
 }
 .stats-chip-label { max-inline-size: 18ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; unicode-bidi: plaintext; }
-.stats-chip--muted { border-style: dashed; background: transparent; color: var(--text-secondary); }
+.stats-chip--muted { border-color: var(--s-hair); background: var(--s-inset-strong); color: var(--text-secondary); }
 .stats-stack { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; min-inline-size: 0; }
 .stats-pill {
   display: inline-flex; align-items: center; padding: 1px 10px; border: 1px solid var(--s-hair-strong); border-radius: var(--r-pill);
@@ -591,6 +593,9 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
   background: transparent; color: var(--text-secondary); font-size: var(--fs-3); font-weight: 500;
 }
 .stats-chip-btn::before { content: ""; flex: 0 0 8px; inline-size: 8px; block-size: 8px; border-radius: 50%; background: var(--dot); }
+.stats-chip-btn.has-icon::before { content: none; }
+.stats-chip-btn-icon { display: inline-flex; flex: 0 0 auto; color: var(--ink-captcha); }
+.stats-chip-btn-icon svg { inline-size: 14px; block-size: 14px; }
 .stats-chip-btn[data-difficulty="High"] { --dot: var(--danger); }
 .stats-chip-btn[data-difficulty="Medium"] { --dot: var(--warning); }
 .stats-chip-btn[data-difficulty="Low"] { --dot: var(--success); }

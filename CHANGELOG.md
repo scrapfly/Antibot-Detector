@@ -32,6 +32,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics → Rules: rules that found nothing separate custom rules worth a look from official ones that are normally quiet.
 - Statistics → Tools: only captures that have not expired are listed, with when they expire.
 - Statistics: the Show chips use the Anti-bot, Captcha and Fingerprint icons instead of a coloured dot.
+- Statistics: protection chips carry their category's icon instead of a coloured dot, and the Captcha filter uses the Captcha icon.
+- Statistics → Domains: the "+N more" chip is a solid chip that lists the hidden protections on hover, not a dashed outline.
 
 ### Fixed
 

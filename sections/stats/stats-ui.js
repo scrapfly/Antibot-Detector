@@ -127,11 +127,20 @@
     if (color) setVar(node, '--c', color);
     return node;
   }
-  /** A protection as a chip: category dot and name, ellipsised with the full name in the title. */
+  /** The category's own icon in its ink, or a plain dot when the category has none (e.g. "other"). */
+  function categoryMark(category) {
+    const svg = category && typeof FormatUtils !== 'undefined' ? FormatUtils.categoryIconSvg(category) : '';
+    if (!svg) return dot();
+    const node = element('span', 'stats-chip-icon');
+    node.setAttribute('aria-hidden', 'true');
+    node.innerHTML = svg;
+    return node;
+  }
+  /** A protection as a chip: category icon and name, ellipsised with the full name in the title. */
   function chip(name, category, muted = false) {
     const node = element('span', muted ? 'stats-chip stats-chip--muted' : 'stats-chip');
     node.setAttribute('title', name);
-    if (category) { setVar(node, '--c', ink(category)); node.appendChild(dot()); }
+    if (category) { setVar(node, '--c', ink(category)); node.appendChild(categoryMark(category)); }
     node.appendChild(element('span', 'stats-chip-label', name));
     return node;
   }
@@ -157,7 +166,12 @@
     const names = row.stack || [];
     names.slice(0, limit).forEach(item => wrap.appendChild(chip(item.name, item.category)));
     const more = Math.max(0, (row.stackTotal || names.length) - Math.min(limit, names.length));
-    if (more > 0) wrap.appendChild(element('span', 'stats-chip stats-chip--muted', fmt('statsMoreStackFmt', '+{0} more', num(more))));
+    if (more > 0) {
+      const chipNode = element('span', 'stats-chip stats-chip--muted', fmt('statsMoreStackFmt', '+{0} more', num(more)));
+      const hidden = names.slice(limit).map(item => item.name).filter(Boolean);
+      if (hidden.length) chipNode.setAttribute('title', hidden.join(', '));
+      wrap.appendChild(chipNode);
+    }
     return wrap;
   }
   const none = (text, ok = false) => element('div', ok ? 'stats-none stats-none--inline stats-none--ok' : 'stats-none stats-none--inline', text);

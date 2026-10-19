@@ -163,6 +163,8 @@ test('chips, pills, stacks and badges carry their meaning in text, not only in c
   assert.equal(chip.attributes.title, 'Cloudflare Bot Management', 'the full name is the title when the label is cut');
   assert.equal(chip.style['--c'], 'var(--ink-antibot)');
   assert.equal(chip.children[0].attributes['aria-hidden'], 'true');
+  assert.equal(chip.children[0].className, 'stats-chip-icon', 'the category mark is an icon, not a bare dot');
+  assert.match(chip.children[0].innerHTML, /^<svg /, 'the category icon is filled in');
   assert.equal(chip.children[1].textContent, 'Cloudflare Bot Management');
   assert.equal(U.chip('x', null, true).className, 'stats-chip stats-chip--muted');
   assert.equal(U.pill('High').className, 'stats-pill stats-pill--high');
@@ -171,6 +173,7 @@ test('chips, pills, stacks and badges carry their meaning in text, not only in c
   const stack = U.stack({ stack: [{ name: 'A', category: 'antibot' }, { name: 'B', category: 'captcha' }, { name: 'C', category: 'antibot' }, { name: 'D', category: 'antibot' }], stackTotal: 6 });
   assert.equal(stack.children.length, 4, 'three chips and the rest');
   assert.equal(stack.children[3].textContent, '+3 more');
+  assert.equal(stack.children[3].attributes.title, 'D', 'the "+N more" chip names the protections it hides');
   assert.equal(U.stack({ stack: [{ name: 'A', category: 'antibot' }], stackTotal: 1 }).children.length, 1);
   const badge = U.categoryBadge('captcha');
   assert.equal(badge.style['--c'], 'var(--ink-captcha)');
