@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Settings → Detection: choose how long Advanced tool captures are kept (15 minutes to 24 hours, default 30); the Advanced footer shows the chosen time.
 - Statistics: anti-bot and CAPTCHA come first; fingerprinting stays hidden until you press Show fingerprinting, and the page says how much it hides.
 - Statistics: a comparison with the previous period, four headline cards and a What changed card (new, rising, no longer seen, switched).
 - Statistics → Overview: layered sites, how protected your pages are, estimated difficulty, and the hardest sites with their protection stacks.

@@ -43,6 +43,21 @@
         return Number.isFinite(parsed) ? parsed : fallback;
     }
 
+    const DEFAULT_CAPTURE_RETENTION_MINUTES = 30;
+    // How long a saved capture is kept, from Settings → Detection (default 30 min, clamped 1 min … 1 week).
+    async function captureRetentionMinutes() {
+        try {
+            if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) return DEFAULT_CAPTURE_RETENTION_MINUTES;
+            const stored = await chrome.storage.local.get(['scrapfly_settings']);
+            let value = stored.scrapfly_settings;
+            if (typeof value === 'string') { try { value = JSON.parse(value); } catch (_) { return DEFAULT_CAPTURE_RETENTION_MINUTES; } }
+            const settings = value && value.settings && typeof value.settings === 'object' ? value.settings : (value && typeof value === 'object' ? value : {});
+            const minutes = Number(settings.detection && settings.detection.captureRetentionMinutes);
+            if (Number.isFinite(minutes) && minutes >= 1 && minutes <= 10080) return Math.round(minutes);
+        } catch (_) { /* fall through to the default */ }
+        return DEFAULT_CAPTURE_RETENTION_MINUTES;
+    }
+
     function normalizeCapture(moduleId, rawCapture = {}) {
         if (!rawCapture || typeof rawCapture !== 'object') {
             return null;
@@ -177,14 +192,15 @@
         }
 
         const {
-            expiryMinutes = 30,
             limit = DEFAULT_HISTORY_LIMIT
         } = options;
 
         const history = await load();
         const now = Date.now();
         const historyLimit = normalizeLimit(limit);
-        const expiresAt = now + (expiryMinutes * 60 * 1000);
+        // The retention is one global setting; the per-call expiryMinutes is no longer used
+        // (a capture that needs a specific expiry sets capture.expiresAt directly, which wins below).
+        const expiresAt = now + (await captureRetentionMinutes() * 60 * 1000);
         const normalized = normalizeCapture(moduleId, {
             ...capture,
             type: moduleId,

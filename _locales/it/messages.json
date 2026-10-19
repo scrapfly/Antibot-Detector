@@ -1,99 +1,290 @@
 {
-  "detectionFailedTitle": { "message": "Analisi non riuscita" },
-  "detectionInterruptedTitle": { "message": "Analisi interrotta" },
-  "detectionUnscannedTitle": { "message": "Nessuna analisi completata" },
-  "detectionRetryScanDesc": { "message": "L’analisi non è terminata. Ricarica la pagina per riprovare." },
-  "settingsReadFailedToast": { "message": "Impossibile caricare le impostazioni. I valori attuali sono stati mantenuti." },
-  "settingsWriteFailedToast": { "message": "Impossibile salvare le impostazioni. Le modifiche sono state mantenute; riprova." },
-  "settingsDraftPendingToast": { "message": "Modifica in attesa. Salva le impostazioni per applicarla." },
-  "settingsImportSaveFailedToast": { "message": "Impossibile salvare le impostazioni importate. Le impostazioni e la lingua sono state mantenute." },
-  "settingsAppliesImmediately": { "message": "Si applica subito." },
-  "settingsDataPortableDesc": { "message": "Esporta o importa le preferenze. Le connessioni alle integrazioni restano in questo browser." },
-  "settingsImportReadFailedToast": { "message": "Impossibile leggere un file di impostazioni valido. Nulla è stato modificato." },
-  "rulesUiSaveFailed": { "message": "Impossibile salvare questa regola. Le modifiche sono ancora qui; riprova." },
-  "advToolReloadScriptsHint": { "message": "Ricarica la pagina per analizzare gli script di protezione" },
-  "advToolResetScriptsHint": { "message": "Reimposta i cookie di protezione e ricarica per analizzare gli script" },
-  "advToolReloadVersionHint": { "message": "Ricarica la pagina per rilevare la versione della protezione" },
-  "advToolCaptureResetHint": { "message": "Reimposta il cookie di protezione e avvia la registrazione" },
-  "advToolCookiesHint": { "message": "Esamina i cookie usati da questa protezione" },
-  "advToolVersionHint": { "message": "Leggi le informazioni di versione disponibili" },
-  "advToolSiteKeyHint": { "message": "Trova la chiave del sito CAPTCHA in questa pagina" },
-  "advToolSelectorHint": { "message": "Trova un selettore per il widget CAPTCHA" },
-  "advToolCallbackHint": { "message": "Esamina i callback del CAPTCHA" },
-  "advToolSensorHint": { "message": "Reimposta i cookie di protezione e ricarica per registrare i dati del sensore" },
-  "advToolCaptureHint": { "message": "Registra i dati di questa pagina" },
-  "advToolStopCaptureHint": { "message": "Interrompi la registrazione dei dati di questa pagina" },
-  "advToolWorking": { "message": "Elaborazione…" },
-  "advToolWaitingReload": { "message": "Ricaricamento della pagina e raccolta dei risultati. Richiede qualche secondo…" },
-  "advToolNoResult": { "message": "Nessun risultato: la protezione non ha inviato dati. Ricarica la pagina e riprova." },
-  "advSiteKeyTitleFmt": { "message": "Chiave del sito {0}" },
-  "advSiteKeyNotFound": { "message": "Nessuna chiave del sito trovata in questa pagina. Apri o attiva il CAPTCHA, poi riprova." },
-  "advSiteKeyFoundIn": { "message": "Trovata in" },
-  "advSiteKeySourceWidget": { "message": "Widget" },
-  "advSiteKeySourceRequest": { "message": "Richiesta" },
-  "advSiteKeySourceScript": { "message": "Script della pagina" },
-  "advSiteKeySourceGlobal": { "message": "Variabile della pagina" },
-  "advSiteKeyFrame": { "message": "Frame" },
-  "advSiteKeyScriptsOnPage": { "message": "Script in questa pagina" },
-  "advancedInfoCaptchaKeyDesc": { "message": "Estrae la chiave del sito e analizza i suoi script" },
-  "advancedInfoCaptchaScriptsDesc": { "message": "Analizza i suoi script" },
-  "advToolActionFailedFmt": { "message": "Impossibile completare questa azione: {0}", "description": "Advanced tool action failure. {0} = error details" },
-  "statsChartPrevious": { "message": "Pagina precedente del grafico" },
-  "statsChartNext": { "message": "Pagina successiva del grafico" },
-  "statsChartPage": { "message": "Pagina {0} di {1}" },
-  "statsChartShowing": { "message": "Visualizzazione di {0}–{1} su {2}" },
-  "statsSectionsLabel": { "message": "Sezioni delle statistiche" },
-  "statsSectionOverview": { "message": "Panoramica" },
-  "statsSectionActivity": { "message": "Attività" },
-  "statsSectionProtections": { "message": "Protezioni" },
-  "statsSectionDomains": { "message": "Domini" },
-  "statsSectionConfidence": { "message": "Confidenza" },
-  "statsExportCSV": { "message": "Esporta CSV" },
-  "statsExportJSON": { "message": "Esporta JSON" },
-  "statsExportPrivacy": { "message": "Le esportazioni contengono domini e riepiloghi dei rilevamenti, non cookie, contenuti delle pagine o parametri URL." },
-  "statsExportScopeFmt": { "message": "L’esportazione copre l’intervallo selezionato. Voci: {0}" },
-  "statsExportStartedFmt": { "message": "Download avviato: {0}" },
-  "statsExportFailed": { "message": "Impossibile esportare i dati. Riprova." },
-  "statsLoadFailed": { "message": "Impossibile caricare la cronologia. Ricarica questa pagina." },
-  "statsRangeEmptyTitle": { "message": "Nessuna voce in questo intervallo" },
-  "statsRangeEmptyDesc": { "message": "Scegli un intervallo di date più ampio per esplorare la cronologia salvata." },
-  "statsDetectionRate": { "message": "Voci con rilevamenti" },
-  "statsActiveDays": { "message": "Giorni attivi" },
-  "statsAverageConfidence": { "message": "Confidenza media" },
-  "statsDailyVisits": { "message": "Voci giornaliere della cronologia" },
-  "statsActivityCalendar": { "message": "Calendario delle attività" },
-  "statsActivityCalendarHint": { "message": "Ogni quadrato rappresenta un giorno del calendario locale. Un blu più scuro indica più voci salvate." },
-  "statsHourlyActivity": { "message": "Attività per ora" },
-  "statsWeekdayActivity": { "message": "Attività per giorno della settimana" },
-  "statsLocalTimeNote": { "message": "Le date e le ore usano il tuo fuso orario locale." },
-  "statsTimelineLimitFmt": { "message": "Sono mostrati gli ultimi {0} giorni. I totali e le esportazioni includono l’intero intervallo selezionato." },
-  "statsProtectionRanking": { "message": "Classifica delle protezioni" },
-  "statsCategoryTrend": { "message": "Categorie nel tempo" },
-  "statsCategoryOverlap": { "message": "Categorie rilevate insieme" },
-  "statsCategoryOverlapHint": { "message": "Numero di voci della cronologia con entrambe le categorie. Le celle diagonali mostrano le voci con quella categoria." },
-  "statsProtectionDetails": { "message": "Tutte le protezioni" },
-  "statsDomainRanking": { "message": "Classifica dei domini" },
-  "statsDomainMap": { "message": "Visite e rilevamenti" },
-  "statsDomainMapHint": { "message": "Ogni punto è un dominio. I punti più grandi hanno più protezioni distinte." },
-  "statsDomainDetails": { "message": "Tutti i domini" },
-  "statsDomainSearch": { "message": "Cerca domini..." },
-  "statsDomainSortLabel": { "message": "Ordina domini" },
-  "statsSortVisits": { "message": "Più visite" },
-  "statsSortDetections": { "message": "Più rilevamenti" },
-  "statsSortConfidence": { "message": "Confidenza più alta" },
-  "statsSortName": { "message": "Nome del dominio" },
-  "statsConfidenceDistribution": { "message": "Distribuzione della confidenza" },
-  "statsConfidenceTrend": { "message": "Confidenza nel tempo" },
-  "statsCategoryConfidence": { "message": "Confidenza per categoria" },
-  "statsConfidenceNote": { "message": "La confidenza descrive la solidità degli indizi di rilevamento salvati, ma non dimostra la presenza di fingerprinting o di una verifica attiva." },
-  "statsConfidenceKnownFmt": { "message": "{0} rilevamenti hanno valori di confidenza; {1} non hanno un punteggio valido." },
-  "statsProtectionColumn": { "message": "Protezione" },
-  "statsCategoryColumn": { "message": "Categoria" },
-  "statsDomainColumn": { "message": "Dominio" },
-  "statsTableCountFmt": { "message": "Righe: {0} di {1}" },
-  "statsTableMore": { "message": "Mostra altro" },
-  "statsNoMatchingDomains": { "message": "Nessun dominio corrisponde alla ricerca." },
-  "statsSelectionNote": { "message": "I grafici e le esportazioni usano l’intervallo di date selezionato. Le voci della cronologia rappresentano i rilevamenti salvati, non ogni visita nel browser." },
+  "detectionFailedTitle": {
+    "message": "Analisi non riuscita"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Analisi interrotta"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Nessuna analisi completata"
+  },
+  "detectionRetryScanDesc": {
+    "message": "L’analisi non è terminata. Ricarica la pagina per riprovare."
+  },
+  "settingsReadFailedToast": {
+    "message": "Impossibile caricare le impostazioni. I valori attuali sono stati mantenuti."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Impossibile salvare le impostazioni. Le modifiche sono state mantenute; riprova."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Modifica in attesa. Salva le impostazioni per applicarla."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Impossibile salvare le impostazioni importate. Le impostazioni e la lingua sono state mantenute."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Si applica subito."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Esporta o importa le preferenze. Le connessioni alle integrazioni restano in questo browser."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Impossibile leggere un file di impostazioni valido. Nulla è stato modificato."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Impossibile salvare questa regola. Le modifiche sono ancora qui; riprova."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Ricarica la pagina per analizzare gli script di protezione"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Reimposta i cookie di protezione e ricarica per analizzare gli script"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Ricarica la pagina per rilevare la versione della protezione"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Reimposta il cookie di protezione e avvia la registrazione"
+  },
+  "advToolCookiesHint": {
+    "message": "Esamina i cookie usati da questa protezione"
+  },
+  "advToolVersionHint": {
+    "message": "Leggi le informazioni di versione disponibili"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Trova la chiave del sito CAPTCHA in questa pagina"
+  },
+  "advToolSelectorHint": {
+    "message": "Trova un selettore per il widget CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "Esamina i callback del CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "Reimposta i cookie di protezione e ricarica per registrare i dati del sensore"
+  },
+  "advToolCaptureHint": {
+    "message": "Registra i dati di questa pagina"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Interrompi la registrazione dei dati di questa pagina"
+  },
+  "advToolWorking": {
+    "message": "Elaborazione…"
+  },
+  "advToolWaitingReload": {
+    "message": "Ricaricamento della pagina e raccolta dei risultati. Richiede qualche secondo…"
+  },
+  "advToolNoResult": {
+    "message": "Nessun risultato: la protezione non ha inviato dati. Ricarica la pagina e riprova."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Chiave del sito {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Nessuna chiave del sito trovata in questa pagina. Apri o attiva il CAPTCHA, poi riprova."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Trovata in"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Widget"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Richiesta"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Script della pagina"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Variabile della pagina"
+  },
+  "advSiteKeyFrame": {
+    "message": "Frame"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Script in questa pagina"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Estrae la chiave del sito e analizza i suoi script"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Analizza i suoi script"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Impossibile completare questa azione: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Pagina precedente del grafico"
+  },
+  "statsChartNext": {
+    "message": "Pagina successiva del grafico"
+  },
+  "statsChartPage": {
+    "message": "Pagina {0} di {1}"
+  },
+  "statsChartShowing": {
+    "message": "Visualizzazione di {0}–{1} su {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Sezioni delle statistiche"
+  },
+  "statsSectionOverview": {
+    "message": "Panoramica"
+  },
+  "statsSectionActivity": {
+    "message": "Attività"
+  },
+  "statsSectionProtections": {
+    "message": "Protezioni"
+  },
+  "statsSectionDomains": {
+    "message": "Domini"
+  },
+  "statsSectionConfidence": {
+    "message": "Confidenza"
+  },
+  "statsExportCSV": {
+    "message": "Esporta CSV"
+  },
+  "statsExportJSON": {
+    "message": "Esporta JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Le esportazioni contengono domini e riepiloghi dei rilevamenti, non cookie, contenuti delle pagine o parametri URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "L’esportazione copre l’intervallo selezionato. Voci: {0}"
+  },
+  "statsExportStartedFmt": {
+    "message": "Download avviato: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Impossibile esportare i dati. Riprova."
+  },
+  "statsLoadFailed": {
+    "message": "Impossibile caricare la cronologia. Ricarica questa pagina."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Nessuna voce in questo intervallo"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Scegli un intervallo di date più ampio per esplorare la cronologia salvata."
+  },
+  "statsDetectionRate": {
+    "message": "Voci con rilevamenti"
+  },
+  "statsActiveDays": {
+    "message": "Giorni attivi"
+  },
+  "statsAverageConfidence": {
+    "message": "Confidenza media"
+  },
+  "statsDailyVisits": {
+    "message": "Voci giornaliere della cronologia"
+  },
+  "statsActivityCalendar": {
+    "message": "Calendario delle attività"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Ogni quadrato rappresenta un giorno del calendario locale. Un blu più scuro indica più voci salvate."
+  },
+  "statsHourlyActivity": {
+    "message": "Attività per ora"
+  },
+  "statsWeekdayActivity": {
+    "message": "Attività per giorno della settimana"
+  },
+  "statsLocalTimeNote": {
+    "message": "Le date e le ore usano il tuo fuso orario locale."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Sono mostrati gli ultimi {0} giorni. I totali e le esportazioni includono l’intero intervallo selezionato."
+  },
+  "statsProtectionRanking": {
+    "message": "Classifica delle protezioni"
+  },
+  "statsCategoryTrend": {
+    "message": "Categorie nel tempo"
+  },
+  "statsCategoryOverlap": {
+    "message": "Categorie rilevate insieme"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Numero di voci della cronologia con entrambe le categorie. Le celle diagonali mostrano le voci con quella categoria."
+  },
+  "statsProtectionDetails": {
+    "message": "Tutte le protezioni"
+  },
+  "statsDomainRanking": {
+    "message": "Classifica dei domini"
+  },
+  "statsDomainMap": {
+    "message": "Visite e rilevamenti"
+  },
+  "statsDomainMapHint": {
+    "message": "Ogni punto è un dominio. I punti più grandi hanno più protezioni distinte."
+  },
+  "statsDomainDetails": {
+    "message": "Tutti i domini"
+  },
+  "statsDomainSearch": {
+    "message": "Cerca domini..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Ordina domini"
+  },
+  "statsSortVisits": {
+    "message": "Più visite"
+  },
+  "statsSortDetections": {
+    "message": "Più rilevamenti"
+  },
+  "statsSortConfidence": {
+    "message": "Confidenza più alta"
+  },
+  "statsSortName": {
+    "message": "Nome del dominio"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Distribuzione della confidenza"
+  },
+  "statsConfidenceTrend": {
+    "message": "Confidenza nel tempo"
+  },
+  "statsCategoryConfidence": {
+    "message": "Confidenza per categoria"
+  },
+  "statsConfidenceNote": {
+    "message": "La confidenza descrive la solidità degli indizi di rilevamento salvati, ma non dimostra la presenza di fingerprinting o di una verifica attiva."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} rilevamenti hanno valori di confidenza; {1} non hanno un punteggio valido."
+  },
+  "statsProtectionColumn": {
+    "message": "Protezione"
+  },
+  "statsCategoryColumn": {
+    "message": "Categoria"
+  },
+  "statsDomainColumn": {
+    "message": "Dominio"
+  },
+  "statsTableCountFmt": {
+    "message": "Righe: {0} di {1}"
+  },
+  "statsTableMore": {
+    "message": "Mostra altro"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Nessun dominio corrisponde alla ricerca."
+  },
+  "statsSelectionNote": {
+    "message": "I grafici e le esportazioni usano l’intervallo di date selezionato. Le voci della cronologia rappresentano i rilevamenti salvati, non ogni visita nel browser."
+  },
   "extensionName": {
     "message": "Scrapfly: rilevatore anti-bot"
   },
@@ -454,10 +645,10 @@
     "message": "Rivedi i risultati"
   },
   "advancedStep3Desc": {
-    "message": "I dati acquisiti vengono memorizzati temporaneamente (30 minuti) con capacità di esportazione complete"
+    "message": "I dati acquisiti vengono memorizzati temporaneamente con capacità di esportazione complete"
   },
   "advancedFooterHint": {
-    "message": "Le acquisizioni vengono conservate per 30 minuti."
+    "message": "Le acquisizioni vengono conservate per il tempo impostato nelle Impostazioni."
   },
   "settings": {
     "message": "Impostazioni"
@@ -1487,7 +1678,9 @@
   "btnExtractSiteKey": {
     "message": "Estrai SiteKey"
   },
-  "btnExtractPublicKey": { "message": "Estrai chiave pubblica" },
+  "btnExtractPublicKey": {
+    "message": "Estrai chiave pubblica"
+  },
   "btnObtainSelector": {
     "message": "Ottieni selettore"
   },
@@ -1683,9 +1876,17 @@
   "advancedToolsEmptyTitle": {
     "message": "Nessuna protezione rilevata"
   },
-  "advancedToolsEmptyDescFmt": { "message": "Nessuna protezione supportata supera il {0}% di confidenza in questa pagina. Puoi modificare questo minimo in Impostazioni → Rilevamento.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
-  "advancedToolsLowConfidenceTitle": { "message": "Protezione rilevata con bassa confidenza" },
-  "advancedToolsLowConfidenceDescFmt": { "message": "{0} è stato rilevato con il {1}% di confidenza. Gli strumenti appaiono solo sopra il {2}%. Puoi abbassare questo minimo in Impostazioni → Rilevamento.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
+  "advancedToolsEmptyDescFmt": {
+    "message": "Nessuna protezione supportata supera il {0}% di confidenza in questa pagina. Puoi modificare questo minimo in Impostazioni → Rilevamento.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Protezione rilevata con bassa confidenza"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} è stato rilevato con il {1}% di confidenza. Gli strumenti appaiono solo sopra il {2}%. Puoi abbassare questo minimo in Impostazioni → Rilevamento.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
   "advancedToolsSupportedLabel": {
     "message": "Protezioni supportate"
   },
@@ -2460,9 +2661,15 @@
   "advCommonUrlCopied": {
     "message": "URL copiato"
   },
-  "advScriptTypeCollector": { "message": "Collettore" },
-  "advScriptTypeCaptchaCheck": { "message": "Verifica CAPTCHA" },
-  "advScriptTypeInterstitial": { "message": "Interstitial" },
+  "advScriptTypeCollector": {
+    "message": "Collettore"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "Verifica CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Interstitial"
+  },
   "advCommonCaptured": {
     "message": "Acquisito"
   },
@@ -3669,10 +3876,18 @@
   "patternCombinationsOnlyBadge": {
     "message": "Solo combinazioni"
   },
-  "combinationStrictHint": { "message": "Un pattern segnato come «Solo combinazioni» non rileva nulla da solo; conta solo nelle combinazioni." },
-  "combinationStrictMarkAll": { "message": "Segna tutti" },
-  "combinationStrictUnmarkAll": { "message": "Togli tutti" },
-  "patternCombinationsOnlyHint": { "message": "Questo pattern non rileva nulla da solo; conta solo nelle combinazioni, in ogni combinazione di questa regola." },
+  "combinationStrictHint": {
+    "message": "Un pattern segnato come «Solo combinazioni» non rileva nulla da solo; conta solo nelle combinazioni."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Segna tutti"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Togli tutti"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Questo pattern non rileva nulla da solo; conta solo nelle combinazioni, in ogni combinazione di questa regola."
+  },
   "detectionModalCombinations": {
     "message": "Combinazioni corrispondenti"
   },
@@ -4141,7 +4356,9 @@
   "advFilterKindCapture": {
     "message": "Catture"
   },
-  "advHistoryCaptureTag": { "message": "Cattura" },
+  "advHistoryCaptureTag": {
+    "message": "Cattura"
+  },
   "advFilterKindOther": {
     "message": "Altri strumenti"
   },
@@ -5297,5 +5514,36 @@
   },
   "statsChangedNoPrevious": {
     "message": "Ancora nessun periodo precedente completo."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Per quanto tempo vengono conservate le acquisizioni"
+  },
+  "settingsCaptureRetention": {
+    "message": "Conserva le acquisizioni degli strumenti per"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Le acquisizioni degli strumenti avanzati (cookie, script, token) vengono eliminate dopo questo tempo."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 minuti"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 minuti"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 ora"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 ore"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 ore"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 ore"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Le acquisizioni vengono conservate per {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
   }
 }

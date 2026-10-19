@@ -1,99 +1,290 @@
 {
-  "detectionFailedTitle": { "message": "검사 실패" },
-  "detectionInterruptedTitle": { "message": "검사 중단됨" },
-  "detectionUnscannedTitle": { "message": "완료된 검사 없음" },
-  "detectionRetryScanDesc": { "message": "검사가 완료되지 않았습니다. 페이지를 새로고침하여 다시 시도하세요." },
-  "settingsReadFailedToast": { "message": "설정을 불러올 수 없습니다. 현재 값은 유지되었습니다." },
-  "settingsWriteFailedToast": { "message": "설정을 저장할 수 없습니다. 변경 사항은 유지됩니다. 다시 시도하세요." },
-  "settingsDraftPendingToast": { "message": "변경 사항이 대기 중입니다. 설정을 저장하여 적용하세요." },
-  "settingsImportSaveFailedToast": { "message": "가져온 설정을 저장할 수 없습니다. 현재 설정과 언어는 유지되었습니다." },
-  "settingsAppliesImmediately": { "message": "즉시 적용됩니다." },
-  "settingsDataPortableDesc": { "message": "환경설정을 내보내거나 가져옵니다. 연동 연결 정보는 이 브라우저에 유지됩니다." },
-  "settingsImportReadFailedToast": { "message": "올바른 설정 파일을 읽을 수 없습니다. 변경된 내용이 없습니다." },
-  "rulesUiSaveFailed": { "message": "이 규칙을 저장할 수 없습니다. 변경 사항은 유지됩니다. 다시 시도하세요." },
-  "advToolReloadScriptsHint": { "message": "페이지를 새로고침하여 보호 스크립트 분석" },
-  "advToolResetScriptsHint": { "message": "보호 쿠키를 초기화하고 새로고침하여 스크립트 분석" },
-  "advToolReloadVersionHint": { "message": "페이지를 새로고침하여 보호 기능 버전 감지" },
-  "advToolCaptureResetHint": { "message": "보호 쿠키를 초기화하고 기록 시작" },
-  "advToolCookiesHint": { "message": "이 보호 기능이 사용하는 쿠키 검사" },
-  "advToolVersionHint": { "message": "사용 가능한 버전 정보 확인" },
-  "advToolSiteKeyHint": { "message": "이 페이지의 CAPTCHA 사이트 키 찾기" },
-  "advToolSelectorHint": { "message": "CAPTCHA 위젯의 선택자 찾기" },
-  "advToolCallbackHint": { "message": "CAPTCHA 콜백 검사" },
-  "advToolSensorHint": { "message": "보호 쿠키를 초기화하고 새로고침하여 센서 데이터 기록" },
-  "advToolCaptureHint": { "message": "이 페이지의 데이터 기록" },
-  "advToolStopCaptureHint": { "message": "이 페이지의 데이터 기록 중지" },
-  "advToolWorking": { "message": "처리 중…" },
-  "advToolWaitingReload": { "message": "페이지를 다시 불러와 결과를 수집하는 중입니다. 몇 초 걸립니다…" },
-  "advToolNoResult": { "message": "결과 없음: 보호 기능이 데이터를 보내지 않았습니다. 페이지를 새로고침한 후 다시 시도하세요." },
-  "advSiteKeyTitleFmt": { "message": "{0} 사이트 키" },
-  "advSiteKeyNotFound": { "message": "이 페이지에서 사이트 키를 찾지 못했습니다. CAPTCHA를 열거나 실행한 후 다시 시도하세요." },
-  "advSiteKeyFoundIn": { "message": "발견 위치" },
-  "advSiteKeySourceWidget": { "message": "위젯" },
-  "advSiteKeySourceRequest": { "message": "요청" },
-  "advSiteKeySourceScript": { "message": "페이지 스크립트" },
-  "advSiteKeySourceGlobal": { "message": "페이지 변수" },
-  "advSiteKeyFrame": { "message": "프레임" },
-  "advSiteKeyScriptsOnPage": { "message": "이 페이지의 스크립트" },
-  "advancedInfoCaptchaKeyDesc": { "message": "사이트 키를 추출하고 스크립트를 분석합니다" },
-  "advancedInfoCaptchaScriptsDesc": { "message": "스크립트를 분석합니다" },
-  "advToolActionFailedFmt": { "message": "이 작업을 완료하지 못했습니다: {0}", "description": "Advanced tool action failure. {0} = error details" },
-  "statsChartPrevious": { "message": "차트 이전 페이지" },
-  "statsChartNext": { "message": "차트 다음 페이지" },
-  "statsChartPage": { "message": "전체 {1}페이지 중 {0}페이지" },
-  "statsChartShowing": { "message": "전체 {2}개 중 {0}–{1}개 표시" },
-  "statsSectionsLabel": { "message": "통계 섹션" },
-  "statsSectionOverview": { "message": "개요" },
-  "statsSectionActivity": { "message": "활동" },
-  "statsSectionProtections": { "message": "보호 기능" },
-  "statsSectionDomains": { "message": "도메인" },
-  "statsSectionConfidence": { "message": "신뢰도" },
-  "statsExportCSV": { "message": "CSV 내보내기" },
-  "statsExportJSON": { "message": "JSON 내보내기" },
-  "statsExportPrivacy": { "message": "내보낸 파일에는 도메인과 탐지 요약이 포함되며, 쿠키, 페이지 내용 또는 URL 매개변수는 포함되지 않습니다." },
-  "statsExportScopeFmt": { "message": "선택한 기간 내보내기: 항목 {0}개" },
-  "statsExportStartedFmt": { "message": "다운로드 시작: {0}" },
-  "statsExportFailed": { "message": "데이터를 내보낼 수 없습니다. 다시 시도해 주세요." },
-  "statsLoadFailed": { "message": "기록을 불러올 수 없습니다. 이 페이지를 새로고침해 주세요." },
-  "statsRangeEmptyTitle": { "message": "이 기간에 항목이 없습니다" },
-  "statsRangeEmptyDesc": { "message": "저장된 기록을 살펴보려면 더 긴 기간을 선택하세요." },
-  "statsDetectionRate": { "message": "탐지가 있는 항목" },
-  "statsActiveDays": { "message": "활동 일수" },
-  "statsAverageConfidence": { "message": "평균 신뢰도" },
-  "statsDailyVisits": { "message": "일별 기록 항목" },
-  "statsActivityCalendar": { "message": "활동 달력" },
-  "statsActivityCalendarHint": { "message": "각 사각형은 현지 달력의 하루를 나타냅니다. 파란색이 진할수록 저장된 항목이 많습니다." },
-  "statsHourlyActivity": { "message": "시간대별 활동" },
-  "statsWeekdayActivity": { "message": "요일별 활동" },
-  "statsLocalTimeNote": { "message": "날짜와 시간은 현지 시간대를 사용합니다." },
-  "statsTimelineLimitFmt": { "message": "최근 {0}일이 표시됩니다. 합계와 내보내기에는 선택한 전체 기간이 포함됩니다." },
-  "statsProtectionRanking": { "message": "보호 기능 순위" },
-  "statsCategoryTrend": { "message": "시간에 따른 카테고리 변화" },
-  "statsCategoryOverlap": { "message": "함께 탐지된 카테고리" },
-  "statsCategoryOverlapHint": { "message": "두 카테고리를 모두 포함하는 기록 항목 수입니다. 대각선 셀은 해당 카테고리가 있는 항목을 보여줍니다." },
-  "statsProtectionDetails": { "message": "모든 보호 기능" },
-  "statsDomainRanking": { "message": "도메인 순위" },
-  "statsDomainMap": { "message": "방문 및 탐지" },
-  "statsDomainMapHint": { "message": "각 점은 도메인을 나타냅니다. 점이 클수록 서로 다른 보호 기능이 많습니다." },
-  "statsDomainDetails": { "message": "모든 도메인" },
-  "statsDomainSearch": { "message": "도메인 검색..." },
-  "statsDomainSortLabel": { "message": "도메인 정렬" },
-  "statsSortVisits": { "message": "방문 많은 순" },
-  "statsSortDetections": { "message": "탐지 많은 순" },
-  "statsSortConfidence": { "message": "신뢰도 높은 순" },
-  "statsSortName": { "message": "도메인 이름" },
-  "statsConfidenceDistribution": { "message": "신뢰도 분포" },
-  "statsConfidenceTrend": { "message": "시간에 따른 신뢰도 변화" },
-  "statsCategoryConfidence": { "message": "카테고리별 신뢰도" },
-  "statsConfidenceNote": { "message": "신뢰도는 저장된 탐지 근거의 강도를 나타내며, 핑거프린팅이나 진행 중인 챌린지의 존재를 입증하지는 않습니다." },
-  "statsConfidenceKnownFmt": { "message": "탐지 {0}개에 신뢰도 값이 있으며, {1}개에는 유효한 점수가 없습니다." },
-  "statsProtectionColumn": { "message": "보호 기능" },
-  "statsCategoryColumn": { "message": "카테고리" },
-  "statsDomainColumn": { "message": "도메인" },
-  "statsTableCountFmt": { "message": "전체 {1}행 중 {0}행" },
-  "statsTableMore": { "message": "더 보기" },
-  "statsNoMatchingDomains": { "message": "검색과 일치하는 도메인이 없습니다." },
-  "statsSelectionNote": { "message": "차트와 내보내기는 선택한 기간을 사용합니다. 기록 항목은 저장된 탐지를 나타내며, 모든 브라우저 방문을 나타내지는 않습니다." },
+  "detectionFailedTitle": {
+    "message": "검사 실패"
+  },
+  "detectionInterruptedTitle": {
+    "message": "검사 중단됨"
+  },
+  "detectionUnscannedTitle": {
+    "message": "완료된 검사 없음"
+  },
+  "detectionRetryScanDesc": {
+    "message": "검사가 완료되지 않았습니다. 페이지를 새로고침하여 다시 시도하세요."
+  },
+  "settingsReadFailedToast": {
+    "message": "설정을 불러올 수 없습니다. 현재 값은 유지되었습니다."
+  },
+  "settingsWriteFailedToast": {
+    "message": "설정을 저장할 수 없습니다. 변경 사항은 유지됩니다. 다시 시도하세요."
+  },
+  "settingsDraftPendingToast": {
+    "message": "변경 사항이 대기 중입니다. 설정을 저장하여 적용하세요."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "가져온 설정을 저장할 수 없습니다. 현재 설정과 언어는 유지되었습니다."
+  },
+  "settingsAppliesImmediately": {
+    "message": "즉시 적용됩니다."
+  },
+  "settingsDataPortableDesc": {
+    "message": "환경설정을 내보내거나 가져옵니다. 연동 연결 정보는 이 브라우저에 유지됩니다."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "올바른 설정 파일을 읽을 수 없습니다. 변경된 내용이 없습니다."
+  },
+  "rulesUiSaveFailed": {
+    "message": "이 규칙을 저장할 수 없습니다. 변경 사항은 유지됩니다. 다시 시도하세요."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "페이지를 새로고침하여 보호 스크립트 분석"
+  },
+  "advToolResetScriptsHint": {
+    "message": "보호 쿠키를 초기화하고 새로고침하여 스크립트 분석"
+  },
+  "advToolReloadVersionHint": {
+    "message": "페이지를 새로고침하여 보호 기능 버전 감지"
+  },
+  "advToolCaptureResetHint": {
+    "message": "보호 쿠키를 초기화하고 기록 시작"
+  },
+  "advToolCookiesHint": {
+    "message": "이 보호 기능이 사용하는 쿠키 검사"
+  },
+  "advToolVersionHint": {
+    "message": "사용 가능한 버전 정보 확인"
+  },
+  "advToolSiteKeyHint": {
+    "message": "이 페이지의 CAPTCHA 사이트 키 찾기"
+  },
+  "advToolSelectorHint": {
+    "message": "CAPTCHA 위젯의 선택자 찾기"
+  },
+  "advToolCallbackHint": {
+    "message": "CAPTCHA 콜백 검사"
+  },
+  "advToolSensorHint": {
+    "message": "보호 쿠키를 초기화하고 새로고침하여 센서 데이터 기록"
+  },
+  "advToolCaptureHint": {
+    "message": "이 페이지의 데이터 기록"
+  },
+  "advToolStopCaptureHint": {
+    "message": "이 페이지의 데이터 기록 중지"
+  },
+  "advToolWorking": {
+    "message": "처리 중…"
+  },
+  "advToolWaitingReload": {
+    "message": "페이지를 다시 불러와 결과를 수집하는 중입니다. 몇 초 걸립니다…"
+  },
+  "advToolNoResult": {
+    "message": "결과 없음: 보호 기능이 데이터를 보내지 않았습니다. 페이지를 새로고침한 후 다시 시도하세요."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "{0} 사이트 키"
+  },
+  "advSiteKeyNotFound": {
+    "message": "이 페이지에서 사이트 키를 찾지 못했습니다. CAPTCHA를 열거나 실행한 후 다시 시도하세요."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "발견 위치"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "위젯"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "요청"
+  },
+  "advSiteKeySourceScript": {
+    "message": "페이지 스크립트"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "페이지 변수"
+  },
+  "advSiteKeyFrame": {
+    "message": "프레임"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "이 페이지의 스크립트"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "사이트 키를 추출하고 스크립트를 분석합니다"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "스크립트를 분석합니다"
+  },
+  "advToolActionFailedFmt": {
+    "message": "이 작업을 완료하지 못했습니다: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "차트 이전 페이지"
+  },
+  "statsChartNext": {
+    "message": "차트 다음 페이지"
+  },
+  "statsChartPage": {
+    "message": "전체 {1}페이지 중 {0}페이지"
+  },
+  "statsChartShowing": {
+    "message": "전체 {2}개 중 {0}–{1}개 표시"
+  },
+  "statsSectionsLabel": {
+    "message": "통계 섹션"
+  },
+  "statsSectionOverview": {
+    "message": "개요"
+  },
+  "statsSectionActivity": {
+    "message": "활동"
+  },
+  "statsSectionProtections": {
+    "message": "보호 기능"
+  },
+  "statsSectionDomains": {
+    "message": "도메인"
+  },
+  "statsSectionConfidence": {
+    "message": "신뢰도"
+  },
+  "statsExportCSV": {
+    "message": "CSV 내보내기"
+  },
+  "statsExportJSON": {
+    "message": "JSON 내보내기"
+  },
+  "statsExportPrivacy": {
+    "message": "내보낸 파일에는 도메인과 탐지 요약이 포함되며, 쿠키, 페이지 내용 또는 URL 매개변수는 포함되지 않습니다."
+  },
+  "statsExportScopeFmt": {
+    "message": "선택한 기간 내보내기: 항목 {0}개"
+  },
+  "statsExportStartedFmt": {
+    "message": "다운로드 시작: {0}"
+  },
+  "statsExportFailed": {
+    "message": "데이터를 내보낼 수 없습니다. 다시 시도해 주세요."
+  },
+  "statsLoadFailed": {
+    "message": "기록을 불러올 수 없습니다. 이 페이지를 새로고침해 주세요."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "이 기간에 항목이 없습니다"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "저장된 기록을 살펴보려면 더 긴 기간을 선택하세요."
+  },
+  "statsDetectionRate": {
+    "message": "탐지가 있는 항목"
+  },
+  "statsActiveDays": {
+    "message": "활동 일수"
+  },
+  "statsAverageConfidence": {
+    "message": "평균 신뢰도"
+  },
+  "statsDailyVisits": {
+    "message": "일별 기록 항목"
+  },
+  "statsActivityCalendar": {
+    "message": "활동 달력"
+  },
+  "statsActivityCalendarHint": {
+    "message": "각 사각형은 현지 달력의 하루를 나타냅니다. 파란색이 진할수록 저장된 항목이 많습니다."
+  },
+  "statsHourlyActivity": {
+    "message": "시간대별 활동"
+  },
+  "statsWeekdayActivity": {
+    "message": "요일별 활동"
+  },
+  "statsLocalTimeNote": {
+    "message": "날짜와 시간은 현지 시간대를 사용합니다."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "최근 {0}일이 표시됩니다. 합계와 내보내기에는 선택한 전체 기간이 포함됩니다."
+  },
+  "statsProtectionRanking": {
+    "message": "보호 기능 순위"
+  },
+  "statsCategoryTrend": {
+    "message": "시간에 따른 카테고리 변화"
+  },
+  "statsCategoryOverlap": {
+    "message": "함께 탐지된 카테고리"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "두 카테고리를 모두 포함하는 기록 항목 수입니다. 대각선 셀은 해당 카테고리가 있는 항목을 보여줍니다."
+  },
+  "statsProtectionDetails": {
+    "message": "모든 보호 기능"
+  },
+  "statsDomainRanking": {
+    "message": "도메인 순위"
+  },
+  "statsDomainMap": {
+    "message": "방문 및 탐지"
+  },
+  "statsDomainMapHint": {
+    "message": "각 점은 도메인을 나타냅니다. 점이 클수록 서로 다른 보호 기능이 많습니다."
+  },
+  "statsDomainDetails": {
+    "message": "모든 도메인"
+  },
+  "statsDomainSearch": {
+    "message": "도메인 검색..."
+  },
+  "statsDomainSortLabel": {
+    "message": "도메인 정렬"
+  },
+  "statsSortVisits": {
+    "message": "방문 많은 순"
+  },
+  "statsSortDetections": {
+    "message": "탐지 많은 순"
+  },
+  "statsSortConfidence": {
+    "message": "신뢰도 높은 순"
+  },
+  "statsSortName": {
+    "message": "도메인 이름"
+  },
+  "statsConfidenceDistribution": {
+    "message": "신뢰도 분포"
+  },
+  "statsConfidenceTrend": {
+    "message": "시간에 따른 신뢰도 변화"
+  },
+  "statsCategoryConfidence": {
+    "message": "카테고리별 신뢰도"
+  },
+  "statsConfidenceNote": {
+    "message": "신뢰도는 저장된 탐지 근거의 강도를 나타내며, 핑거프린팅이나 진행 중인 챌린지의 존재를 입증하지는 않습니다."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "탐지 {0}개에 신뢰도 값이 있으며, {1}개에는 유효한 점수가 없습니다."
+  },
+  "statsProtectionColumn": {
+    "message": "보호 기능"
+  },
+  "statsCategoryColumn": {
+    "message": "카테고리"
+  },
+  "statsDomainColumn": {
+    "message": "도메인"
+  },
+  "statsTableCountFmt": {
+    "message": "전체 {1}행 중 {0}행"
+  },
+  "statsTableMore": {
+    "message": "더 보기"
+  },
+  "statsNoMatchingDomains": {
+    "message": "검색과 일치하는 도메인이 없습니다."
+  },
+  "statsSelectionNote": {
+    "message": "차트와 내보내기는 선택한 기간을 사용합니다. 기록 항목은 저장된 탐지를 나타내며, 모든 브라우저 방문을 나타내지는 않습니다."
+  },
   "extensionName": {
     "message": "Scrapfly: 안티봇 탐지기"
   },
@@ -454,10 +645,10 @@
     "message": "결과 검토"
   },
   "advancedStep3Desc": {
-    "message": "캡처된 데이터는 일시적으로(30분) 저장되며 전체 내보내기 기능이 있습니다"
+    "message": "캡처된 데이터는 일시적으로 저장되며 전체 내보내기 기능이 있습니다"
   },
   "advancedFooterHint": {
-    "message": "캡처는 30분 동안 보관됩니다."
+    "message": "캡처는 설정에서 지정한 시간 동안 보관됩니다."
   },
   "settings": {
     "message": "설정"
@@ -1487,7 +1678,9 @@
   "btnExtractSiteKey": {
     "message": "SiteKey 추출"
   },
-  "btnExtractPublicKey": { "message": "공개 키 추출" },
+  "btnExtractPublicKey": {
+    "message": "공개 키 추출"
+  },
   "btnObtainSelector": {
     "message": "선택자 가져오기"
   },
@@ -1683,9 +1876,17 @@
   "advancedToolsEmptyTitle": {
     "message": "탐지된 보호 없음"
   },
-  "advancedToolsEmptyDescFmt": { "message": "이 페이지에는 신뢰도 {0}%를 넘는 지원 보호가 없습니다. 이 최솟값은 설정 → 탐지에서 변경할 수 있습니다.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
-  "advancedToolsLowConfidenceTitle": { "message": "낮은 신뢰도로 탐지된 보호" },
-  "advancedToolsLowConfidenceDescFmt": { "message": "{0}이(가) 신뢰도 {1}%로 탐지되었습니다. 도구는 {2}%를 넘을 때만 표시됩니다. 이 최솟값은 설정 → 탐지에서 낮출 수 있습니다.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
+  "advancedToolsEmptyDescFmt": {
+    "message": "이 페이지에는 신뢰도 {0}%를 넘는 지원 보호가 없습니다. 이 최솟값은 설정 → 탐지에서 변경할 수 있습니다.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "낮은 신뢰도로 탐지된 보호"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0}이(가) 신뢰도 {1}%로 탐지되었습니다. 도구는 {2}%를 넘을 때만 표시됩니다. 이 최솟값은 설정 → 탐지에서 낮출 수 있습니다.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
   "advancedToolsSupportedLabel": {
     "message": "지원되는 보호 기능"
   },
@@ -2460,9 +2661,15 @@
   "advCommonUrlCopied": {
     "message": "URL이 복사되었습니다"
   },
-  "advScriptTypeCollector": { "message": "수집기" },
-  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA 확인" },
-  "advScriptTypeInterstitial": { "message": "중간 페이지" },
+  "advScriptTypeCollector": {
+    "message": "수집기"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA 확인"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "중간 페이지"
+  },
   "advCommonCaptured": {
     "message": "캡처 시각"
   },
@@ -3669,10 +3876,18 @@
   "patternCombinationsOnlyBadge": {
     "message": "조합 전용"
   },
-  "combinationStrictHint": { "message": "«조합 전용»으로 표시된 패턴은 단독으로는 아무것도 탐지하지 않고 조합 안에서만 계산됩니다." },
-  "combinationStrictMarkAll": { "message": "모두 표시" },
-  "combinationStrictUnmarkAll": { "message": "모두 해제" },
-  "patternCombinationsOnlyHint": { "message": "이 패턴은 단독으로는 아무것도 탐지하지 않으며, 이 규칙의 모든 조합 안에서만 계산됩니다." },
+  "combinationStrictHint": {
+    "message": "«조합 전용»으로 표시된 패턴은 단독으로는 아무것도 탐지하지 않고 조합 안에서만 계산됩니다."
+  },
+  "combinationStrictMarkAll": {
+    "message": "모두 표시"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "모두 해제"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "이 패턴은 단독으로는 아무것도 탐지하지 않으며, 이 규칙의 모든 조합 안에서만 계산됩니다."
+  },
   "detectionModalCombinations": {
     "message": "일치한 조합"
   },
@@ -4141,7 +4356,9 @@
   "advFilterKindCapture": {
     "message": "캡처"
   },
-  "advHistoryCaptureTag": { "message": "캡처" },
+  "advHistoryCaptureTag": {
+    "message": "캡처"
+  },
   "advFilterKindOther": {
     "message": "기타 도구"
   },
@@ -5297,5 +5514,36 @@
   },
   "statsChangedNoPrevious": {
     "message": "아직 완전한 이전 기간이 없습니다."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "캡처 보관 기간"
+  },
+  "settingsCaptureRetention": {
+    "message": "도구 캡처 보관 기간"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "고급 도구 캡처(쿠키, 스크립트, 토큰)는 이 시간이 지나면 삭제됩니다."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15분"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30분"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1시간"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3시간"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12시간"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24시간"
+  },
+  "advancedFooterHintFmt": {
+    "message": "캡처는 {0} 동안 보관됩니다.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
   }
 }

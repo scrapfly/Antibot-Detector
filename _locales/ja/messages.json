@@ -1,99 +1,290 @@
 {
-  "detectionFailedTitle": { "message": "スキャンに失敗しました" },
-  "detectionInterruptedTitle": { "message": "スキャンが中断されました" },
-  "detectionUnscannedTitle": { "message": "完了したスキャンはありません" },
-  "detectionRetryScanDesc": { "message": "スキャンが完了しませんでした。ページを再読み込みして再試行してください。" },
-  "settingsReadFailedToast": { "message": "設定を読み込めませんでした。現在の値は保持されています。" },
-  "settingsWriteFailedToast": { "message": "設定を保存できませんでした。変更は保持されています。再試行してください。" },
-  "settingsDraftPendingToast": { "message": "変更は保存待ちです。設定を保存して適用してください。" },
-  "settingsImportSaveFailedToast": { "message": "読み込んだ設定を保存できませんでした。現在の設定と言語は保持されています。" },
-  "settingsAppliesImmediately": { "message": "すぐに適用されます。" },
-  "settingsDataPortableDesc": { "message": "設定をエクスポートまたはインポートします。連携の接続情報はこのブラウザーに保持されます。" },
-  "settingsImportReadFailedToast": { "message": "有効な設定ファイルを読み込めませんでした。変更はありません。" },
-  "rulesUiSaveFailed": { "message": "このルールを保存できませんでした。変更は保持されています。再試行してください。" },
-  "advToolReloadScriptsHint": { "message": "ページを再読み込みして保護スクリプトを解析する" },
-  "advToolResetScriptsHint": { "message": "保護用 Cookie をリセットして再読み込みし、スクリプトを解析する" },
-  "advToolReloadVersionHint": { "message": "ページを再読み込みして保護機能のバージョンを検出する" },
-  "advToolCaptureResetHint": { "message": "保護用 Cookie をリセットして記録を開始する" },
-  "advToolCookiesHint": { "message": "この保護機能が使用する Cookie を調べる" },
-  "advToolVersionHint": { "message": "利用可能なバージョン情報を確認する" },
-  "advToolSiteKeyHint": { "message": "このページの CAPTCHA サイトキーを探す" },
-  "advToolSelectorHint": { "message": "CAPTCHA ウィジェットのセレクターを探す" },
-  "advToolCallbackHint": { "message": "CAPTCHA のコールバックを調べる" },
-  "advToolSensorHint": { "message": "保護用 Cookie をリセットして再読み込みし、センサーデータを記録する" },
-  "advToolCaptureHint": { "message": "このページのデータを記録する" },
-  "advToolStopCaptureHint": { "message": "このページのデータ記録を停止する" },
-  "advToolWorking": { "message": "処理中…" },
-  "advToolWaitingReload": { "message": "ページを再読み込みして結果を収集しています。数秒かかります…" },
-  "advToolNoResult": { "message": "結果がありません：保護機能からデータが送信されませんでした。ページを再読み込みして、もう一度お試しください。" },
-  "advSiteKeyTitleFmt": { "message": "{0} のサイトキー" },
-  "advSiteKeyNotFound": { "message": "このページにサイトキーが見つかりません。CAPTCHA を開くか表示させてから、もう一度お試しください。" },
-  "advSiteKeyFoundIn": { "message": "検出元" },
-  "advSiteKeySourceWidget": { "message": "ウィジェット" },
-  "advSiteKeySourceRequest": { "message": "リクエスト" },
-  "advSiteKeySourceScript": { "message": "ページのスクリプト" },
-  "advSiteKeySourceGlobal": { "message": "ページの変数" },
-  "advSiteKeyFrame": { "message": "フレーム" },
-  "advSiteKeyScriptsOnPage": { "message": "このページのスクリプト" },
-  "advancedInfoCaptchaKeyDesc": { "message": "サイトキーを抽出し、スクリプトを分析します" },
-  "advancedInfoCaptchaScriptsDesc": { "message": "スクリプトを分析します" },
-  "advToolActionFailedFmt": { "message": "この操作を完了できませんでした: {0}", "description": "Advanced tool action failure. {0} = error details" },
-  "statsChartPrevious": { "message": "グラフの前のページ" },
-  "statsChartNext": { "message": "グラフの次のページ" },
-  "statsChartPage": { "message": "{1}ページ中{0}ページ" },
-  "statsChartShowing": { "message": "全{2}件中{0}–{1}件を表示" },
-  "statsSectionsLabel": { "message": "統計セクション" },
-  "statsSectionOverview": { "message": "概要" },
-  "statsSectionActivity": { "message": "アクティビティ" },
-  "statsSectionProtections": { "message": "保護機能" },
-  "statsSectionDomains": { "message": "ドメイン" },
-  "statsSectionConfidence": { "message": "信頼度" },
-  "statsExportCSV": { "message": "CSVをエクスポート" },
-  "statsExportJSON": { "message": "JSONをエクスポート" },
-  "statsExportPrivacy": { "message": "エクスポートにはドメインと検出の概要が含まれます。Cookie、ページの内容、URLパラメータは含まれません。" },
-  "statsExportScopeFmt": { "message": "選択した期間をエクスポート：{0}件" },
-  "statsExportStartedFmt": { "message": "ダウンロードを開始しました：{0}" },
-  "statsExportFailed": { "message": "データをエクスポートできませんでした。もう一度お試しください。" },
-  "statsLoadFailed": { "message": "履歴を読み込めませんでした。このページを再読み込みしてください。" },
-  "statsRangeEmptyTitle": { "message": "この期間の記録はありません" },
-  "statsRangeEmptyDesc": { "message": "保存された履歴を確認するには、より長い期間を選択してください。" },
-  "statsDetectionRate": { "message": "検出のある記録" },
-  "statsActiveDays": { "message": "アクティブな日数" },
-  "statsAverageConfidence": { "message": "平均信頼度" },
-  "statsDailyVisits": { "message": "日別の履歴記録" },
-  "statsActivityCalendar": { "message": "アクティビティカレンダー" },
-  "statsActivityCalendarHint": { "message": "各マスはローカル時間の暦日を表します。青色が濃いほど、保存された記録が多いことを示します。" },
-  "statsHourlyActivity": { "message": "時間帯別のアクティビティ" },
-  "statsWeekdayActivity": { "message": "曜日別のアクティビティ" },
-  "statsLocalTimeNote": { "message": "日付と時刻にはローカルのタイムゾーンを使用します。" },
-  "statsTimelineLimitFmt": { "message": "直近の{0}日間を表示しています。合計とエクスポートには、選択した期間全体が含まれます。" },
-  "statsProtectionRanking": { "message": "保護機能のランキング" },
-  "statsCategoryTrend": { "message": "カテゴリの推移" },
-  "statsCategoryOverlap": { "message": "同時に検出されたカテゴリ" },
-  "statsCategoryOverlapHint": { "message": "両方のカテゴリを含む履歴記録の数です。対角線上のセルは、そのカテゴリを含む記録を示します。" },
-  "statsProtectionDetails": { "message": "すべての保護機能" },
-  "statsDomainRanking": { "message": "ドメインのランキング" },
-  "statsDomainMap": { "message": "訪問と検出" },
-  "statsDomainMapHint": { "message": "各点はドメインを表します。点が大きいほど、異なる保護機能が多くあります。" },
-  "statsDomainDetails": { "message": "すべてのドメイン" },
-  "statsDomainSearch": { "message": "ドメインを検索..." },
-  "statsDomainSortLabel": { "message": "ドメインの並べ替え" },
-  "statsSortVisits": { "message": "訪問数が多い順" },
-  "statsSortDetections": { "message": "検出数が多い順" },
-  "statsSortConfidence": { "message": "信頼度が高い順" },
-  "statsSortName": { "message": "ドメイン名" },
-  "statsConfidenceDistribution": { "message": "信頼度の分布" },
-  "statsConfidenceTrend": { "message": "信頼度の推移" },
-  "statsCategoryConfidence": { "message": "カテゴリ別の信頼度" },
-  "statsConfidenceNote": { "message": "信頼度は、保存された検出の証拠の強さを表すものであり、フィンガープリンティングや実行中のチャレンジの存在を証明するものではありません。" },
-  "statsConfidenceKnownFmt": { "message": "{0}件の検出に信頼度の値があります。{1}件には有効なスコアがありません。" },
-  "statsProtectionColumn": { "message": "保護機能" },
-  "statsCategoryColumn": { "message": "カテゴリ" },
-  "statsDomainColumn": { "message": "ドメイン" },
-  "statsTableCountFmt": { "message": "{1}行中{0}行" },
-  "statsTableMore": { "message": "さらに表示" },
-  "statsNoMatchingDomains": { "message": "検索に一致するドメインはありません。" },
-  "statsSelectionNote": { "message": "グラフとエクスポートには選択した期間を使用します。履歴記録は保存された検出を表しており、ブラウザでのすべての訪問を表すものではありません。" },
+  "detectionFailedTitle": {
+    "message": "スキャンに失敗しました"
+  },
+  "detectionInterruptedTitle": {
+    "message": "スキャンが中断されました"
+  },
+  "detectionUnscannedTitle": {
+    "message": "完了したスキャンはありません"
+  },
+  "detectionRetryScanDesc": {
+    "message": "スキャンが完了しませんでした。ページを再読み込みして再試行してください。"
+  },
+  "settingsReadFailedToast": {
+    "message": "設定を読み込めませんでした。現在の値は保持されています。"
+  },
+  "settingsWriteFailedToast": {
+    "message": "設定を保存できませんでした。変更は保持されています。再試行してください。"
+  },
+  "settingsDraftPendingToast": {
+    "message": "変更は保存待ちです。設定を保存して適用してください。"
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "読み込んだ設定を保存できませんでした。現在の設定と言語は保持されています。"
+  },
+  "settingsAppliesImmediately": {
+    "message": "すぐに適用されます。"
+  },
+  "settingsDataPortableDesc": {
+    "message": "設定をエクスポートまたはインポートします。連携の接続情報はこのブラウザーに保持されます。"
+  },
+  "settingsImportReadFailedToast": {
+    "message": "有効な設定ファイルを読み込めませんでした。変更はありません。"
+  },
+  "rulesUiSaveFailed": {
+    "message": "このルールを保存できませんでした。変更は保持されています。再試行してください。"
+  },
+  "advToolReloadScriptsHint": {
+    "message": "ページを再読み込みして保護スクリプトを解析する"
+  },
+  "advToolResetScriptsHint": {
+    "message": "保護用 Cookie をリセットして再読み込みし、スクリプトを解析する"
+  },
+  "advToolReloadVersionHint": {
+    "message": "ページを再読み込みして保護機能のバージョンを検出する"
+  },
+  "advToolCaptureResetHint": {
+    "message": "保護用 Cookie をリセットして記録を開始する"
+  },
+  "advToolCookiesHint": {
+    "message": "この保護機能が使用する Cookie を調べる"
+  },
+  "advToolVersionHint": {
+    "message": "利用可能なバージョン情報を確認する"
+  },
+  "advToolSiteKeyHint": {
+    "message": "このページの CAPTCHA サイトキーを探す"
+  },
+  "advToolSelectorHint": {
+    "message": "CAPTCHA ウィジェットのセレクターを探す"
+  },
+  "advToolCallbackHint": {
+    "message": "CAPTCHA のコールバックを調べる"
+  },
+  "advToolSensorHint": {
+    "message": "保護用 Cookie をリセットして再読み込みし、センサーデータを記録する"
+  },
+  "advToolCaptureHint": {
+    "message": "このページのデータを記録する"
+  },
+  "advToolStopCaptureHint": {
+    "message": "このページのデータ記録を停止する"
+  },
+  "advToolWorking": {
+    "message": "処理中…"
+  },
+  "advToolWaitingReload": {
+    "message": "ページを再読み込みして結果を収集しています。数秒かかります…"
+  },
+  "advToolNoResult": {
+    "message": "結果がありません：保護機能からデータが送信されませんでした。ページを再読み込みして、もう一度お試しください。"
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "{0} のサイトキー"
+  },
+  "advSiteKeyNotFound": {
+    "message": "このページにサイトキーが見つかりません。CAPTCHA を開くか表示させてから、もう一度お試しください。"
+  },
+  "advSiteKeyFoundIn": {
+    "message": "検出元"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "ウィジェット"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "リクエスト"
+  },
+  "advSiteKeySourceScript": {
+    "message": "ページのスクリプト"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "ページの変数"
+  },
+  "advSiteKeyFrame": {
+    "message": "フレーム"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "このページのスクリプト"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "サイトキーを抽出し、スクリプトを分析します"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "スクリプトを分析します"
+  },
+  "advToolActionFailedFmt": {
+    "message": "この操作を完了できませんでした: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "グラフの前のページ"
+  },
+  "statsChartNext": {
+    "message": "グラフの次のページ"
+  },
+  "statsChartPage": {
+    "message": "{1}ページ中{0}ページ"
+  },
+  "statsChartShowing": {
+    "message": "全{2}件中{0}–{1}件を表示"
+  },
+  "statsSectionsLabel": {
+    "message": "統計セクション"
+  },
+  "statsSectionOverview": {
+    "message": "概要"
+  },
+  "statsSectionActivity": {
+    "message": "アクティビティ"
+  },
+  "statsSectionProtections": {
+    "message": "保護機能"
+  },
+  "statsSectionDomains": {
+    "message": "ドメイン"
+  },
+  "statsSectionConfidence": {
+    "message": "信頼度"
+  },
+  "statsExportCSV": {
+    "message": "CSVをエクスポート"
+  },
+  "statsExportJSON": {
+    "message": "JSONをエクスポート"
+  },
+  "statsExportPrivacy": {
+    "message": "エクスポートにはドメインと検出の概要が含まれます。Cookie、ページの内容、URLパラメータは含まれません。"
+  },
+  "statsExportScopeFmt": {
+    "message": "選択した期間をエクスポート：{0}件"
+  },
+  "statsExportStartedFmt": {
+    "message": "ダウンロードを開始しました：{0}"
+  },
+  "statsExportFailed": {
+    "message": "データをエクスポートできませんでした。もう一度お試しください。"
+  },
+  "statsLoadFailed": {
+    "message": "履歴を読み込めませんでした。このページを再読み込みしてください。"
+  },
+  "statsRangeEmptyTitle": {
+    "message": "この期間の記録はありません"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "保存された履歴を確認するには、より長い期間を選択してください。"
+  },
+  "statsDetectionRate": {
+    "message": "検出のある記録"
+  },
+  "statsActiveDays": {
+    "message": "アクティブな日数"
+  },
+  "statsAverageConfidence": {
+    "message": "平均信頼度"
+  },
+  "statsDailyVisits": {
+    "message": "日別の履歴記録"
+  },
+  "statsActivityCalendar": {
+    "message": "アクティビティカレンダー"
+  },
+  "statsActivityCalendarHint": {
+    "message": "各マスはローカル時間の暦日を表します。青色が濃いほど、保存された記録が多いことを示します。"
+  },
+  "statsHourlyActivity": {
+    "message": "時間帯別のアクティビティ"
+  },
+  "statsWeekdayActivity": {
+    "message": "曜日別のアクティビティ"
+  },
+  "statsLocalTimeNote": {
+    "message": "日付と時刻にはローカルのタイムゾーンを使用します。"
+  },
+  "statsTimelineLimitFmt": {
+    "message": "直近の{0}日間を表示しています。合計とエクスポートには、選択した期間全体が含まれます。"
+  },
+  "statsProtectionRanking": {
+    "message": "保護機能のランキング"
+  },
+  "statsCategoryTrend": {
+    "message": "カテゴリの推移"
+  },
+  "statsCategoryOverlap": {
+    "message": "同時に検出されたカテゴリ"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "両方のカテゴリを含む履歴記録の数です。対角線上のセルは、そのカテゴリを含む記録を示します。"
+  },
+  "statsProtectionDetails": {
+    "message": "すべての保護機能"
+  },
+  "statsDomainRanking": {
+    "message": "ドメインのランキング"
+  },
+  "statsDomainMap": {
+    "message": "訪問と検出"
+  },
+  "statsDomainMapHint": {
+    "message": "各点はドメインを表します。点が大きいほど、異なる保護機能が多くあります。"
+  },
+  "statsDomainDetails": {
+    "message": "すべてのドメイン"
+  },
+  "statsDomainSearch": {
+    "message": "ドメインを検索..."
+  },
+  "statsDomainSortLabel": {
+    "message": "ドメインの並べ替え"
+  },
+  "statsSortVisits": {
+    "message": "訪問数が多い順"
+  },
+  "statsSortDetections": {
+    "message": "検出数が多い順"
+  },
+  "statsSortConfidence": {
+    "message": "信頼度が高い順"
+  },
+  "statsSortName": {
+    "message": "ドメイン名"
+  },
+  "statsConfidenceDistribution": {
+    "message": "信頼度の分布"
+  },
+  "statsConfidenceTrend": {
+    "message": "信頼度の推移"
+  },
+  "statsCategoryConfidence": {
+    "message": "カテゴリ別の信頼度"
+  },
+  "statsConfidenceNote": {
+    "message": "信頼度は、保存された検出の証拠の強さを表すものであり、フィンガープリンティングや実行中のチャレンジの存在を証明するものではありません。"
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0}件の検出に信頼度の値があります。{1}件には有効なスコアがありません。"
+  },
+  "statsProtectionColumn": {
+    "message": "保護機能"
+  },
+  "statsCategoryColumn": {
+    "message": "カテゴリ"
+  },
+  "statsDomainColumn": {
+    "message": "ドメイン"
+  },
+  "statsTableCountFmt": {
+    "message": "{1}行中{0}行"
+  },
+  "statsTableMore": {
+    "message": "さらに表示"
+  },
+  "statsNoMatchingDomains": {
+    "message": "検索に一致するドメインはありません。"
+  },
+  "statsSelectionNote": {
+    "message": "グラフとエクスポートには選択した期間を使用します。履歴記録は保存された検出を表しており、ブラウザでのすべての訪問を表すものではありません。"
+  },
   "extensionName": {
     "message": "Scrapfly:アンチボット検出器"
   },
@@ -454,10 +645,10 @@
     "message": "結果を確認"
   },
   "advancedStep3Desc": {
-    "message": "キャプチャしたデータは一時的に(30分間)保存され、完全なエクスポート機能があります"
+    "message": "キャプチャしたデータは一時的に保存され、完全なエクスポート機能があります"
   },
   "advancedFooterHint": {
-    "message": "キャプチャは30分間保存されます。"
+    "message": "キャプチャは設定で指定した期間だけ保持されます。"
   },
   "settings": {
     "message": "設定"
@@ -1487,7 +1678,9 @@
   "btnExtractSiteKey": {
     "message": "SiteKeyを抽出"
   },
-  "btnExtractPublicKey": { "message": "公開鍵を抽出" },
+  "btnExtractPublicKey": {
+    "message": "公開鍵を抽出"
+  },
   "btnObtainSelector": {
     "message": "セレクタを取得"
   },
@@ -1683,9 +1876,17 @@
   "advancedToolsEmptyTitle": {
     "message": "保護は検出されませんでした"
   },
-  "advancedToolsEmptyDescFmt": { "message": "このページには信頼度 {0}% を超える対応の保護がありません。この最小値は 設定 → 検出 で変更できます。", "description": "{0} = minimum confidence for Advanced tools (percent)" },
-  "advancedToolsLowConfidenceTitle": { "message": "低い信頼度で保護を検出" },
-  "advancedToolsLowConfidenceDescFmt": { "message": "{0} が信頼度 {1}% で検出されました。ツールは {2}% を超える場合にのみ表示されます。この最小値は 設定 → 検出 で下げられます。", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
+  "advancedToolsEmptyDescFmt": {
+    "message": "このページには信頼度 {0}% を超える対応の保護がありません。この最小値は 設定 → 検出 で変更できます。",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "低い信頼度で保護を検出"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} が信頼度 {1}% で検出されました。ツールは {2}% を超える場合にのみ表示されます。この最小値は 設定 → 検出 で下げられます。",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
   "advancedToolsSupportedLabel": {
     "message": "サポート対象の保護"
   },
@@ -2460,9 +2661,15 @@
   "advCommonUrlCopied": {
     "message": "URLをコピーしました"
   },
-  "advScriptTypeCollector": { "message": "コレクター" },
-  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA チェック" },
-  "advScriptTypeInterstitial": { "message": "インタースティシャル" },
+  "advScriptTypeCollector": {
+    "message": "コレクター"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA チェック"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "インタースティシャル"
+  },
   "advCommonCaptured": {
     "message": "キャプチャ日時"
   },
@@ -3669,10 +3876,18 @@
   "patternCombinationsOnlyBadge": {
     "message": "組み合わせのみ"
   },
-  "combinationStrictHint": { "message": "「組み合わせのみ」のパターンは単独では何も検出せず、組み合わせの中でのみカウントされます。" },
-  "combinationStrictMarkAll": { "message": "すべてオン" },
-  "combinationStrictUnmarkAll": { "message": "すべてオフ" },
-  "patternCombinationsOnlyHint": { "message": "このパターンは単独では何も検出せず、このルールのすべての組み合わせの中でのみカウントされます。" },
+  "combinationStrictHint": {
+    "message": "「組み合わせのみ」のパターンは単独では何も検出せず、組み合わせの中でのみカウントされます。"
+  },
+  "combinationStrictMarkAll": {
+    "message": "すべてオン"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "すべてオフ"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "このパターンは単独では何も検出せず、このルールのすべての組み合わせの中でのみカウントされます。"
+  },
   "detectionModalCombinations": {
     "message": "一致した組み合わせ"
   },
@@ -4141,7 +4356,9 @@
   "advFilterKindCapture": {
     "message": "キャプチャ"
   },
-  "advHistoryCaptureTag": { "message": "キャプチャ" },
+  "advHistoryCaptureTag": {
+    "message": "キャプチャ"
+  },
   "advFilterKindOther": {
     "message": "その他のツール"
   },
@@ -5297,5 +5514,36 @@
   },
   "statsChangedNoPrevious": {
     "message": "完全な前の期間はまだありません。"
+  },
+  "settingsCardCaptureRetention": {
+    "message": "キャプチャの保持期間"
+  },
+  "settingsCaptureRetention": {
+    "message": "ツールのキャプチャを保持する期間"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "高度なツールのキャプチャ（Cookie、スクリプト、トークン）は、この時間が経過すると削除されます。"
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15分"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30分"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1時間"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3時間"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12時間"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24時間"
+  },
+  "advancedFooterHintFmt": {
+    "message": "キャプチャは{0}保持されます。",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
   }
 }

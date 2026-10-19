@@ -332,6 +332,11 @@ SettingsUI.updateSettingsUI = function() {
         minToolConfidence.value = this.settings.detection.advancedToolsMinConfidence ?? 50;
       }
 
+      const captureRetention = document.querySelector('#captureRetentionMinutes');
+      if (captureRetention) {
+        captureRetention.value = String(this.settings.detection.captureRetentionMinutes ?? 30);
+      }
+
       // Values saved before the per-unit ranges existed (e.g. 48 hours) are
       // shown and kept in their equivalent in-range form (2 days), so saving
       // never fails on a pre-existing setting.
@@ -559,6 +564,8 @@ SettingsUI.getSettingsFromUI = function() {
         document.querySelector('#sortByConfidence')?.checked, this.settings.detection),
       advancedToolsMinConfidence: parseInt(document.querySelector('#advancedToolsMinConfidence')?.value
         ?? this.settings.detection?.advancedToolsMinConfidence ?? 50),
+      captureRetentionMinutes: parseInt(document.querySelector('#captureRetentionMinutes')?.value
+        ?? this.settings.detection?.captureRetentionMinutes ?? 30, 10) || 30,
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
       hooksConfig: this.settings.detection?.hooksConfig || {}
     };

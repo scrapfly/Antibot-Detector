@@ -52,6 +52,19 @@ Advanced.prototype.renderAdvancedInterface = async function() {
           </button>`;
       }).join('');
 
+      // The footer shows the retention set in Settings → Detection (default 30 minutes)
+      let _retentionMinutes = 30;
+      try {
+        const _s = typeof Utils !== 'undefined' && Utils.getSettings ? await Utils.getSettings() : null;
+        const _m = Number(_s && _s.detection && _s.detection.captureRetentionMinutes);
+        if (Number.isFinite(_m) && _m > 0) _retentionMinutes = _m;
+      } catch (_) { /* keep the default */ }
+      const _retLabels = { 15: ['settingsCaptureRetention15m', '15 minutes'], 30: ['settingsCaptureRetention30m', '30 minutes'],
+        60: ['settingsCaptureRetention1h', '1 hour'], 180: ['settingsCaptureRetention3h', '3 hours'],
+        720: ['settingsCaptureRetention12h', '12 hours'], 1440: ['settingsCaptureRetention24h', '24 hours'] };
+      const _retLabel = _retLabels[_retentionMinutes] ? _atr(_retLabels[_retentionMinutes][0], _retLabels[_retentionMinutes][1]) : `${_retentionMinutes} min`;
+      const _retentionHint = _atr('advancedFooterHintFmt', 'Captures are kept for {0}.').replace('{0}', _retLabel);
+
       const captchaToolsHtml = `
         <div class="captcha-tools-section">
           <div class="advanced-tools-heading">
@@ -79,7 +92,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
           <div id="detectionToolsPanel" class="detection-tools-panel-animated" style="display: none;"></div>
           <p class="advanced-retention-note">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-            <span>${esc(_atr('advancedFooterHint', 'Captures are kept for 30 minutes.'))}</span>
+            <span>${esc(_retentionHint)}</span>
           </p>
         </div>
       `;

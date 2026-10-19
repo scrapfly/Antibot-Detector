@@ -1,99 +1,290 @@
 {
-  "detectionFailedTitle": { "message": "Ошибка сканирования" },
-  "detectionInterruptedTitle": { "message": "Сканирование прервано" },
-  "detectionUnscannedTitle": { "message": "Нет завершённого сканирования" },
-  "detectionRetryScanDesc": { "message": "Сканирование не завершилось. Перезагрузите страницу, чтобы повторить попытку." },
-  "settingsReadFailedToast": { "message": "Не удалось загрузить настройки. Текущие значения сохранены." },
-  "settingsWriteFailedToast": { "message": "Не удалось сохранить настройки. Ваши изменения не потеряны; попробуйте снова." },
-  "settingsDraftPendingToast": { "message": "Изменение ожидает сохранения. Сохраните настройки, чтобы применить его." },
-  "settingsImportSaveFailedToast": { "message": "Не удалось сохранить импортированные настройки. Прежние настройки и язык сохранены." },
-  "settingsAppliesImmediately": { "message": "Применяется сразу." },
-  "settingsDataPortableDesc": { "message": "Экспорт или импорт настроек. Подключения интеграций остаются в этом браузере." },
-  "settingsImportReadFailedToast": { "message": "Не удалось прочитать корректный файл настроек. Ничего не изменено." },
-  "rulesUiSaveFailed": { "message": "Не удалось сохранить правило. Ваши изменения не потеряны; попробуйте снова." },
-  "advToolReloadScriptsHint": { "message": "Перезагрузить страницу для анализа скриптов защиты" },
-  "advToolResetScriptsHint": { "message": "Сбросить файлы cookie защиты и перезагрузить страницу для анализа скриптов" },
-  "advToolReloadVersionHint": { "message": "Перезагрузить страницу для определения версии защиты" },
-  "advToolCaptureResetHint": { "message": "Сбросить файл cookie защиты и начать запись" },
-  "advToolCookiesHint": { "message": "Проверить файлы cookie, используемые этой защитой" },
-  "advToolVersionHint": { "message": "Посмотреть доступную информацию о версии" },
-  "advToolSiteKeyHint": { "message": "Найти ключ сайта CAPTCHA на этой странице" },
-  "advToolSelectorHint": { "message": "Найти селектор виджета CAPTCHA" },
-  "advToolCallbackHint": { "message": "Проверить функции обратного вызова CAPTCHA" },
-  "advToolSensorHint": { "message": "Сбросить файлы cookie защиты и перезагрузить страницу для записи данных сенсора" },
-  "advToolCaptureHint": { "message": "Записать данные с этой страницы" },
-  "advToolStopCaptureHint": { "message": "Остановить запись данных с этой страницы" },
-  "advToolWorking": { "message": "Обработка…" },
-  "advToolWaitingReload": { "message": "Перезагрузка страницы и сбор результатов. Это займёт несколько секунд…" },
-  "advToolNoResult": { "message": "Нет результата: защита не отправила данных. Перезагрузите страницу и попробуйте снова." },
-  "advSiteKeyTitleFmt": { "message": "Ключ сайта {0}" },
-  "advSiteKeyNotFound": { "message": "Ключ сайта на этой странице не найден. Откройте или вызовите CAPTCHA и попробуйте снова." },
-  "advSiteKeyFoundIn": { "message": "Найден в" },
-  "advSiteKeySourceWidget": { "message": "Виджет" },
-  "advSiteKeySourceRequest": { "message": "Запрос" },
-  "advSiteKeySourceScript": { "message": "Скрипт страницы" },
-  "advSiteKeySourceGlobal": { "message": "Переменная страницы" },
-  "advSiteKeyFrame": { "message": "Фрейм" },
-  "advSiteKeyScriptsOnPage": { "message": "Скрипты на этой странице" },
-  "advancedInfoCaptchaKeyDesc": { "message": "Извлекает ключ сайта и анализирует его скрипты" },
-  "advancedInfoCaptchaScriptsDesc": { "message": "Анализирует его скрипты" },
-  "advToolActionFailedFmt": { "message": "Не удалось выполнить это действие: {0}", "description": "Advanced tool action failure. {0} = error details" },
-  "statsChartPrevious": { "message": "Предыдущая страница графика" },
-  "statsChartNext": { "message": "Следующая страница графика" },
-  "statsChartPage": { "message": "Страница {0} из {1}" },
-  "statsChartShowing": { "message": "Показано {0}–{1} из {2}" },
-  "statsSectionsLabel": { "message": "Разделы статистики" },
-  "statsSectionOverview": { "message": "Обзор" },
-  "statsSectionActivity": { "message": "Активность" },
-  "statsSectionProtections": { "message": "Защиты" },
-  "statsSectionDomains": { "message": "Домены" },
-  "statsSectionConfidence": { "message": "Достоверность" },
-  "statsExportCSV": { "message": "Экспорт CSV" },
-  "statsExportJSON": { "message": "Экспорт JSON" },
-  "statsExportPrivacy": { "message": "Экспорт содержит домены и сводки обнаружений, но не файлы cookie, содержимое страниц или параметры URL." },
-  "statsExportScopeFmt": { "message": "Экспорт выбранного периода: {0} записей" },
-  "statsExportStartedFmt": { "message": "Загрузка началась: {0}" },
-  "statsExportFailed": { "message": "Не удалось экспортировать данные. Попробуйте ещё раз." },
-  "statsLoadFailed": { "message": "Не удалось загрузить историю. Обновите эту страницу." },
-  "statsRangeEmptyTitle": { "message": "Нет записей за этот период" },
-  "statsRangeEmptyDesc": { "message": "Выберите более длительный период, чтобы просмотреть сохранённую историю." },
-  "statsDetectionRate": { "message": "Записи с обнаружениями" },
-  "statsActiveDays": { "message": "Активные дни" },
-  "statsAverageConfidence": { "message": "Средняя достоверность" },
-  "statsDailyVisits": { "message": "Записи истории по дням" },
-  "statsActivityCalendar": { "message": "Календарь активности" },
-  "statsActivityCalendarHint": { "message": "Каждый квадрат обозначает один день по местному календарю. Чем темнее синий цвет, тем больше сохранённых записей." },
-  "statsHourlyActivity": { "message": "Активность по часам" },
-  "statsWeekdayActivity": { "message": "Активность по дням недели" },
-  "statsLocalTimeNote": { "message": "Даты и часы указаны в вашем местном часовом поясе." },
-  "statsTimelineLimitFmt": { "message": "Показаны последние {0} дней. Итоги и экспорт включают весь выбранный период." },
-  "statsProtectionRanking": { "message": "Рейтинг защит" },
-  "statsCategoryTrend": { "message": "Категории во времени" },
-  "statsCategoryOverlap": { "message": "Категории, обнаруженные вместе" },
-  "statsCategoryOverlapHint": { "message": "Число записей истории с обеими категориями. Ячейки по диагонали показывают записи с данной категорией." },
-  "statsProtectionDetails": { "message": "Все защиты" },
-  "statsDomainRanking": { "message": "Рейтинг доменов" },
-  "statsDomainMap": { "message": "Посещения и обнаружения" },
-  "statsDomainMapHint": { "message": "Каждая точка обозначает домен. У более крупных точек больше различных защит." },
-  "statsDomainDetails": { "message": "Все домены" },
-  "statsDomainSearch": { "message": "Поиск доменов..." },
-  "statsDomainSortLabel": { "message": "Сортировка доменов" },
-  "statsSortVisits": { "message": "Больше посещений" },
-  "statsSortDetections": { "message": "Больше обнаружений" },
-  "statsSortConfidence": { "message": "Наивысшая достоверность" },
-  "statsSortName": { "message": "Имя домена" },
-  "statsConfidenceDistribution": { "message": "Распределение достоверности" },
-  "statsConfidenceTrend": { "message": "Достоверность во времени" },
-  "statsCategoryConfidence": { "message": "Достоверность по категориям" },
-  "statsConfidenceNote": { "message": "Достоверность описывает убедительность сохранённых признаков обнаружения, но не доказывает наличие цифрового отпечатка или активной проверки." },
-  "statsConfidenceKnownFmt": { "message": "У {0} обнаружений есть значения достоверности; у {1} нет корректной оценки." },
-  "statsProtectionColumn": { "message": "Защита" },
-  "statsCategoryColumn": { "message": "Категория" },
-  "statsDomainColumn": { "message": "Домен" },
-  "statsTableCountFmt": { "message": "{0} из {1} строк" },
-  "statsTableMore": { "message": "Показать ещё" },
-  "statsNoMatchingDomains": { "message": "Нет доменов, соответствующих вашему запросу." },
-  "statsSelectionNote": { "message": "Графики и экспорт используют выбранный период. Записи истории отражают сохранённые обнаружения, а не каждое посещение в браузере." },
+  "detectionFailedTitle": {
+    "message": "Ошибка сканирования"
+  },
+  "detectionInterruptedTitle": {
+    "message": "Сканирование прервано"
+  },
+  "detectionUnscannedTitle": {
+    "message": "Нет завершённого сканирования"
+  },
+  "detectionRetryScanDesc": {
+    "message": "Сканирование не завершилось. Перезагрузите страницу, чтобы повторить попытку."
+  },
+  "settingsReadFailedToast": {
+    "message": "Не удалось загрузить настройки. Текущие значения сохранены."
+  },
+  "settingsWriteFailedToast": {
+    "message": "Не удалось сохранить настройки. Ваши изменения не потеряны; попробуйте снова."
+  },
+  "settingsDraftPendingToast": {
+    "message": "Изменение ожидает сохранения. Сохраните настройки, чтобы применить его."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "Не удалось сохранить импортированные настройки. Прежние настройки и язык сохранены."
+  },
+  "settingsAppliesImmediately": {
+    "message": "Применяется сразу."
+  },
+  "settingsDataPortableDesc": {
+    "message": "Экспорт или импорт настроек. Подключения интеграций остаются в этом браузере."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "Не удалось прочитать корректный файл настроек. Ничего не изменено."
+  },
+  "rulesUiSaveFailed": {
+    "message": "Не удалось сохранить правило. Ваши изменения не потеряны; попробуйте снова."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "Перезагрузить страницу для анализа скриптов защиты"
+  },
+  "advToolResetScriptsHint": {
+    "message": "Сбросить файлы cookie защиты и перезагрузить страницу для анализа скриптов"
+  },
+  "advToolReloadVersionHint": {
+    "message": "Перезагрузить страницу для определения версии защиты"
+  },
+  "advToolCaptureResetHint": {
+    "message": "Сбросить файл cookie защиты и начать запись"
+  },
+  "advToolCookiesHint": {
+    "message": "Проверить файлы cookie, используемые этой защитой"
+  },
+  "advToolVersionHint": {
+    "message": "Посмотреть доступную информацию о версии"
+  },
+  "advToolSiteKeyHint": {
+    "message": "Найти ключ сайта CAPTCHA на этой странице"
+  },
+  "advToolSelectorHint": {
+    "message": "Найти селектор виджета CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "Проверить функции обратного вызова CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "Сбросить файлы cookie защиты и перезагрузить страницу для записи данных сенсора"
+  },
+  "advToolCaptureHint": {
+    "message": "Записать данные с этой страницы"
+  },
+  "advToolStopCaptureHint": {
+    "message": "Остановить запись данных с этой страницы"
+  },
+  "advToolWorking": {
+    "message": "Обработка…"
+  },
+  "advToolWaitingReload": {
+    "message": "Перезагрузка страницы и сбор результатов. Это займёт несколько секунд…"
+  },
+  "advToolNoResult": {
+    "message": "Нет результата: защита не отправила данных. Перезагрузите страницу и попробуйте снова."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "Ключ сайта {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "Ключ сайта на этой странице не найден. Откройте или вызовите CAPTCHA и попробуйте снова."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "Найден в"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "Виджет"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "Запрос"
+  },
+  "advSiteKeySourceScript": {
+    "message": "Скрипт страницы"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "Переменная страницы"
+  },
+  "advSiteKeyFrame": {
+    "message": "Фрейм"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "Скрипты на этой странице"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "Извлекает ключ сайта и анализирует его скрипты"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "Анализирует его скрипты"
+  },
+  "advToolActionFailedFmt": {
+    "message": "Не удалось выполнить это действие: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "Предыдущая страница графика"
+  },
+  "statsChartNext": {
+    "message": "Следующая страница графика"
+  },
+  "statsChartPage": {
+    "message": "Страница {0} из {1}"
+  },
+  "statsChartShowing": {
+    "message": "Показано {0}–{1} из {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "Разделы статистики"
+  },
+  "statsSectionOverview": {
+    "message": "Обзор"
+  },
+  "statsSectionActivity": {
+    "message": "Активность"
+  },
+  "statsSectionProtections": {
+    "message": "Защиты"
+  },
+  "statsSectionDomains": {
+    "message": "Домены"
+  },
+  "statsSectionConfidence": {
+    "message": "Достоверность"
+  },
+  "statsExportCSV": {
+    "message": "Экспорт CSV"
+  },
+  "statsExportJSON": {
+    "message": "Экспорт JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "Экспорт содержит домены и сводки обнаружений, но не файлы cookie, содержимое страниц или параметры URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "Экспорт выбранного периода: {0} записей"
+  },
+  "statsExportStartedFmt": {
+    "message": "Загрузка началась: {0}"
+  },
+  "statsExportFailed": {
+    "message": "Не удалось экспортировать данные. Попробуйте ещё раз."
+  },
+  "statsLoadFailed": {
+    "message": "Не удалось загрузить историю. Обновите эту страницу."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "Нет записей за этот период"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "Выберите более длительный период, чтобы просмотреть сохранённую историю."
+  },
+  "statsDetectionRate": {
+    "message": "Записи с обнаружениями"
+  },
+  "statsActiveDays": {
+    "message": "Активные дни"
+  },
+  "statsAverageConfidence": {
+    "message": "Средняя достоверность"
+  },
+  "statsDailyVisits": {
+    "message": "Записи истории по дням"
+  },
+  "statsActivityCalendar": {
+    "message": "Календарь активности"
+  },
+  "statsActivityCalendarHint": {
+    "message": "Каждый квадрат обозначает один день по местному календарю. Чем темнее синий цвет, тем больше сохранённых записей."
+  },
+  "statsHourlyActivity": {
+    "message": "Активность по часам"
+  },
+  "statsWeekdayActivity": {
+    "message": "Активность по дням недели"
+  },
+  "statsLocalTimeNote": {
+    "message": "Даты и часы указаны в вашем местном часовом поясе."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "Показаны последние {0} дней. Итоги и экспорт включают весь выбранный период."
+  },
+  "statsProtectionRanking": {
+    "message": "Рейтинг защит"
+  },
+  "statsCategoryTrend": {
+    "message": "Категории во времени"
+  },
+  "statsCategoryOverlap": {
+    "message": "Категории, обнаруженные вместе"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "Число записей истории с обеими категориями. Ячейки по диагонали показывают записи с данной категорией."
+  },
+  "statsProtectionDetails": {
+    "message": "Все защиты"
+  },
+  "statsDomainRanking": {
+    "message": "Рейтинг доменов"
+  },
+  "statsDomainMap": {
+    "message": "Посещения и обнаружения"
+  },
+  "statsDomainMapHint": {
+    "message": "Каждая точка обозначает домен. У более крупных точек больше различных защит."
+  },
+  "statsDomainDetails": {
+    "message": "Все домены"
+  },
+  "statsDomainSearch": {
+    "message": "Поиск доменов..."
+  },
+  "statsDomainSortLabel": {
+    "message": "Сортировка доменов"
+  },
+  "statsSortVisits": {
+    "message": "Больше посещений"
+  },
+  "statsSortDetections": {
+    "message": "Больше обнаружений"
+  },
+  "statsSortConfidence": {
+    "message": "Наивысшая достоверность"
+  },
+  "statsSortName": {
+    "message": "Имя домена"
+  },
+  "statsConfidenceDistribution": {
+    "message": "Распределение достоверности"
+  },
+  "statsConfidenceTrend": {
+    "message": "Достоверность во времени"
+  },
+  "statsCategoryConfidence": {
+    "message": "Достоверность по категориям"
+  },
+  "statsConfidenceNote": {
+    "message": "Достоверность описывает убедительность сохранённых признаков обнаружения, но не доказывает наличие цифрового отпечатка или активной проверки."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "У {0} обнаружений есть значения достоверности; у {1} нет корректной оценки."
+  },
+  "statsProtectionColumn": {
+    "message": "Защита"
+  },
+  "statsCategoryColumn": {
+    "message": "Категория"
+  },
+  "statsDomainColumn": {
+    "message": "Домен"
+  },
+  "statsTableCountFmt": {
+    "message": "{0} из {1} строк"
+  },
+  "statsTableMore": {
+    "message": "Показать ещё"
+  },
+  "statsNoMatchingDomains": {
+    "message": "Нет доменов, соответствующих вашему запросу."
+  },
+  "statsSelectionNote": {
+    "message": "Графики и экспорт используют выбранный период. Записи истории отражают сохранённые обнаружения, а не каждое посещение в браузере."
+  },
   "extensionName": {
     "message": "Scrapfly: детектор анти-бот"
   },
@@ -454,10 +645,10 @@
     "message": "Просмотр результатов"
   },
   "advancedStep3Desc": {
-    "message": "Захваченные данные хранятся временно (30 минут) с полными возможностями экспорта"
+    "message": "Захваченные данные хранятся временно с полными возможностями экспорта"
   },
   "advancedFooterHint": {
-    "message": "Захваченные данные хранятся 30 минут."
+    "message": "Захваты хранятся в течение времени, заданного в настройках."
   },
   "settings": {
     "message": "Настройки"
@@ -1487,7 +1678,9 @@
   "btnExtractSiteKey": {
     "message": "Извлечь SiteKey"
   },
-  "btnExtractPublicKey": { "message": "Извлечь открытый ключ" },
+  "btnExtractPublicKey": {
+    "message": "Извлечь открытый ключ"
+  },
   "btnObtainSelector": {
     "message": "Получить селектор"
   },
@@ -1683,9 +1876,17 @@
   "advancedToolsEmptyTitle": {
     "message": "Защита не обнаружена"
   },
-  "advancedToolsEmptyDescFmt": { "message": "На этой странице нет поддерживаемой защиты с уверенностью выше {0}%. Этот минимум можно изменить в разделе Настройки → Обнаружение.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
-  "advancedToolsLowConfidenceTitle": { "message": "Защита обнаружена с низкой уверенностью" },
-  "advancedToolsLowConfidenceDescFmt": { "message": "{0} обнаружен с уверенностью {1}%. Инструменты показываются только при уверенности выше {2}%. Этот минимум можно снизить в разделе Настройки → Обнаружение.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
+  "advancedToolsEmptyDescFmt": {
+    "message": "На этой странице нет поддерживаемой защиты с уверенностью выше {0}%. Этот минимум можно изменить в разделе Настройки → Обнаружение.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "Защита обнаружена с низкой уверенностью"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} обнаружен с уверенностью {1}%. Инструменты показываются только при уверенности выше {2}%. Этот минимум можно снизить в разделе Настройки → Обнаружение.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
   "advancedToolsSupportedLabel": {
     "message": "Поддерживаемые системы защиты"
   },
@@ -2460,9 +2661,15 @@
   "advCommonUrlCopied": {
     "message": "URL скопирован"
   },
-  "advScriptTypeCollector": { "message": "Сборщик" },
-  "advScriptTypeCaptchaCheck": { "message": "Проверка CAPTCHA" },
-  "advScriptTypeInterstitial": { "message": "Промежуточная страница" },
+  "advScriptTypeCollector": {
+    "message": "Сборщик"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "Проверка CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "Промежуточная страница"
+  },
   "advCommonCaptured": {
     "message": "Захвачено"
   },
@@ -3669,10 +3876,18 @@
   "patternCombinationsOnlyBadge": {
     "message": "Только комбинации"
   },
-  "combinationStrictHint": { "message": "Шаблон с пометкой «Только комбинации» сам по себе ничего не обнаруживает и учитывается только в комбинациях." },
-  "combinationStrictMarkAll": { "message": "Отметить все" },
-  "combinationStrictUnmarkAll": { "message": "Снять все" },
-  "patternCombinationsOnlyHint": { "message": "Этот шаблон сам по себе ничего не обнаруживает и учитывается только в комбинациях — во всех комбинациях этого правила." },
+  "combinationStrictHint": {
+    "message": "Шаблон с пометкой «Только комбинации» сам по себе ничего не обнаруживает и учитывается только в комбинациях."
+  },
+  "combinationStrictMarkAll": {
+    "message": "Отметить все"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "Снять все"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "Этот шаблон сам по себе ничего не обнаруживает и учитывается только в комбинациях — во всех комбинациях этого правила."
+  },
   "detectionModalCombinations": {
     "message": "Совпавшие комбинации"
   },
@@ -4141,7 +4356,9 @@
   "advFilterKindCapture": {
     "message": "Захваты"
   },
-  "advHistoryCaptureTag": { "message": "Захват" },
+  "advHistoryCaptureTag": {
+    "message": "Захват"
+  },
   "advFilterKindOther": {
     "message": "Другие инструменты"
   },
@@ -5297,5 +5514,36 @@
   },
   "statsChangedNoPrevious": {
     "message": "Полного предыдущего периода пока нет."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "Как долго хранятся захваты"
+  },
+  "settingsCaptureRetention": {
+    "message": "Хранить захваты инструментов"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "Захваты расширенных инструментов (cookie, скрипты, токены) удаляются по истечении этого времени."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 минут"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 минут"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 час"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 часа"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 часов"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 часа"
+  },
+  "advancedFooterHintFmt": {
+    "message": "Захваты хранятся {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
   }
 }

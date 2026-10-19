@@ -482,6 +482,31 @@
               </div>
             </div>
           </div>
+
+          <div class="settings-card">
+            <div class="settings-card-head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <span data-i18n="settingsCardCaptureRetention">How long captures are kept</span>
+            </div>
+            <div class="settings-card-body">
+              <div class="setting-row">
+                <label class="setting-row-label" for="captureRetentionMinutes" data-i18n="settingsCaptureRetention">Keep tool captures for</label>
+                <div class="setting-row-controls">
+                  <select id="captureRetentionMinutes" class="select-field">
+                    <option value="15" data-i18n="settingsCaptureRetention15m">15 minutes</option>
+                    <option value="30" data-i18n="settingsCaptureRetention30m">30 minutes</option>
+                    <option value="60" data-i18n="settingsCaptureRetention1h">1 hour</option>
+                    <option value="180" data-i18n="settingsCaptureRetention3h">3 hours</option>
+                    <option value="720" data-i18n="settingsCaptureRetention12h">12 hours</option>
+                    <option value="1440" data-i18n="settingsCaptureRetention24h">24 hours</option>
+                  </select>
+                </div>
+                <div class="setting-row-help">
+                  <p data-i18n="settingsCaptureRetentionHelp">Advanced tool captures (cookies, scripts, tokens) are deleted after this time.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Blacklisted Domains Group -->

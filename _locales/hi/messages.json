@@ -1,99 +1,290 @@
 {
-  "detectionFailedTitle": { "message": "स्कैन विफल हुआ" },
-  "detectionInterruptedTitle": { "message": "स्कैन बाधित हुआ" },
-  "detectionUnscannedTitle": { "message": "कोई स्कैन पूरा नहीं हुआ" },
-  "detectionRetryScanDesc": { "message": "स्कैन पूरा नहीं हुआ। फिर से कोशिश करने के लिए पेज रीलोड करें।" },
-  "settingsReadFailedToast": { "message": "सेटिंग लोड नहीं हो सकीं। मौजूदा मान सुरक्षित रखे गए हैं।" },
-  "settingsWriteFailedToast": { "message": "सेटिंग सहेजी नहीं जा सकीं। आपके बदलाव सुरक्षित हैं; फिर से कोशिश करें।" },
-  "settingsDraftPendingToast": { "message": "बदलाव लंबित है। इसे लागू करने के लिए सेटिंग सहेजें।" },
-  "settingsImportSaveFailedToast": { "message": "आयात की गई सेटिंग सहेजी नहीं जा सकीं। आपकी सेटिंग और भाषा सुरक्षित रखी गई हैं।" },
-  "settingsAppliesImmediately": { "message": "तुरंत लागू होता है।" },
-  "settingsDataPortableDesc": { "message": "प्राथमिकताएँ निर्यात या आयात करें। इंटीग्रेशन कनेक्शन इसी ब्राउज़र में रहते हैं।" },
-  "settingsImportReadFailedToast": { "message": "मान्य सेटिंग फ़ाइल पढ़ी नहीं जा सकी। कुछ भी नहीं बदला गया।" },
-  "rulesUiSaveFailed": { "message": "यह नियम सहेजा नहीं जा सका। आपके बदलाव सुरक्षित हैं; फिर से कोशिश करें।" },
-  "advToolReloadScriptsHint": { "message": "सुरक्षा स्क्रिप्ट का विश्लेषण करने के लिए पेज फिर से लोड करें" },
-  "advToolResetScriptsHint": { "message": "स्क्रिप्ट का विश्लेषण करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें" },
-  "advToolReloadVersionHint": { "message": "सुरक्षा का संस्करण पहचानने के लिए पेज फिर से लोड करें" },
-  "advToolCaptureResetHint": { "message": "सुरक्षा कुकी रीसेट करें और रिकॉर्डिंग शुरू करें" },
-  "advToolCookiesHint": { "message": "इस सुरक्षा द्वारा उपयोग की जाने वाली कुकीज़ की जाँच करें" },
-  "advToolVersionHint": { "message": "उपलब्ध संस्करण जानकारी पढ़ें" },
-  "advToolSiteKeyHint": { "message": "इस पेज पर CAPTCHA साइट कुंजी खोजें" },
-  "advToolSelectorHint": { "message": "CAPTCHA विजेट के लिए सेलेक्टर खोजें" },
-  "advToolCallbackHint": { "message": "CAPTCHA कॉलबैक की जाँच करें" },
-  "advToolSensorHint": { "message": "सेंसर डेटा रिकॉर्ड करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें" },
-  "advToolCaptureHint": { "message": "इस पेज से डेटा रिकॉर्ड करें" },
-  "advToolStopCaptureHint": { "message": "इस पेज से डेटा रिकॉर्ड करना रोकें" },
-  "advToolWorking": { "message": "कार्य जारी है…" },
-  "advToolWaitingReload": { "message": "पेज फिर से लोड हो रहा है और परिणाम जुटाए जा रहे हैं। इसमें कुछ सेकंड लगते हैं…" },
-  "advToolNoResult": { "message": "कोई परिणाम नहीं: सुरक्षा ने कोई डेटा नहीं भेजा। पेज फिर से लोड करें और दोबारा कोशिश करें।" },
-  "advSiteKeyTitleFmt": { "message": "{0} साइट की" },
-  "advSiteKeyNotFound": { "message": "इस पेज पर कोई साइट की नहीं मिली। CAPTCHA खोलें या चालू करें, फिर दोबारा कोशिश करें।" },
-  "advSiteKeyFoundIn": { "message": "यहाँ मिली" },
-  "advSiteKeySourceWidget": { "message": "विजेट" },
-  "advSiteKeySourceRequest": { "message": "अनुरोध" },
-  "advSiteKeySourceScript": { "message": "पेज स्क्रिप्ट" },
-  "advSiteKeySourceGlobal": { "message": "पेज वेरिएबल" },
-  "advSiteKeyFrame": { "message": "फ़्रेम" },
-  "advSiteKeyScriptsOnPage": { "message": "इस पेज पर स्क्रिप्ट" },
-  "advancedInfoCaptchaKeyDesc": { "message": "साइट की निकालता है और उसकी स्क्रिप्ट का विश्लेषण करता है" },
-  "advancedInfoCaptchaScriptsDesc": { "message": "उसकी स्क्रिप्ट का विश्लेषण करता है" },
-  "advToolActionFailedFmt": { "message": "यह कार्रवाई पूरी नहीं हो सकी: {0}", "description": "Advanced tool action failure. {0} = error details" },
-  "statsChartPrevious": { "message": "चार्ट का पिछला पेज" },
-  "statsChartNext": { "message": "चार्ट का अगला पेज" },
-  "statsChartPage": { "message": "{1} में से पेज {0}" },
-  "statsChartShowing": { "message": "{2} में से {0}–{1} दिखाए जा रहे हैं" },
-  "statsSectionsLabel": { "message": "आँकड़ों के अनुभाग" },
-  "statsSectionOverview": { "message": "सारांश" },
-  "statsSectionActivity": { "message": "गतिविधि" },
-  "statsSectionProtections": { "message": "सुरक्षा उपाय" },
-  "statsSectionDomains": { "message": "डोमेन" },
-  "statsSectionConfidence": { "message": "विश्वसनीयता" },
-  "statsExportCSV": { "message": "CSV निर्यात करें" },
-  "statsExportJSON": { "message": "JSON निर्यात करें" },
-  "statsExportPrivacy": { "message": "निर्यात में डोमेन और पहचान के सारांश होते हैं, कुकीज़, पेज की सामग्री या URL पैरामीटर नहीं।" },
-  "statsExportScopeFmt": { "message": "चुनी गई अवधि निर्यात करें: {0} प्रविष्टियाँ" },
-  "statsExportStartedFmt": { "message": "डाउनलोड शुरू हुआ: {0}" },
-  "statsExportFailed": { "message": "डेटा निर्यात नहीं हो सका। कृपया फिर से कोशिश करें।" },
-  "statsLoadFailed": { "message": "इतिहास लोड नहीं हो सका। कृपया यह पेज फिर से लोड करें।" },
-  "statsRangeEmptyTitle": { "message": "इस अवधि में कोई प्रविष्टि नहीं है" },
-  "statsRangeEmptyDesc": { "message": "अपना सहेजा गया इतिहास देखने के लिए लंबी तारीख सीमा चुनें।" },
-  "statsDetectionRate": { "message": "पहचान वाली प्रविष्टियाँ" },
-  "statsActiveDays": { "message": "सक्रिय दिन" },
-  "statsAverageConfidence": { "message": "औसत विश्वसनीयता" },
-  "statsDailyVisits": { "message": "इतिहास की दैनिक प्रविष्टियाँ" },
-  "statsActivityCalendar": { "message": "गतिविधि कैलेंडर" },
-  "statsActivityCalendarHint": { "message": "हर वर्ग स्थानीय कैलेंडर का एक दिन दर्शाता है। गहरा नीला रंग अधिक सहेजी गई प्रविष्टियाँ दर्शाता है।" },
-  "statsHourlyActivity": { "message": "घंटे के अनुसार गतिविधि" },
-  "statsWeekdayActivity": { "message": "सप्ताह के दिन के अनुसार गतिविधि" },
-  "statsLocalTimeNote": { "message": "तारीखें और घंटे आपके स्थानीय समय क्षेत्र के अनुसार हैं।" },
-  "statsTimelineLimitFmt": { "message": "पिछले {0} दिन दिखाए गए हैं। कुल आँकड़ों और निर्यात में पूरी चुनी गई अवधि शामिल है।" },
-  "statsProtectionRanking": { "message": "सुरक्षा उपायों की रैंकिंग" },
-  "statsCategoryTrend": { "message": "समय के साथ श्रेणियाँ" },
-  "statsCategoryOverlap": { "message": "एक साथ मिली श्रेणियाँ" },
-  "statsCategoryOverlapHint": { "message": "दोनों श्रेणियों वाली इतिहास प्रविष्टियों की संख्या। विकर्ण खानों में उस श्रेणी वाली प्रविष्टियाँ दिखती हैं।" },
-  "statsProtectionDetails": { "message": "सभी सुरक्षा उपाय" },
-  "statsDomainRanking": { "message": "डोमेन की रैंकिंग" },
-  "statsDomainMap": { "message": "विज़िट और पहचान" },
-  "statsDomainMapHint": { "message": "हर बिंदु एक डोमेन है। बड़े बिंदुओं में अधिक अलग-अलग सुरक्षा उपाय हैं।" },
-  "statsDomainDetails": { "message": "सभी डोमेन" },
-  "statsDomainSearch": { "message": "डोमेन खोजें..." },
-  "statsDomainSortLabel": { "message": "डोमेन क्रमबद्ध करें" },
-  "statsSortVisits": { "message": "सबसे अधिक विज़िट" },
-  "statsSortDetections": { "message": "सबसे अधिक पहचान" },
-  "statsSortConfidence": { "message": "सबसे अधिक विश्वसनीयता" },
-  "statsSortName": { "message": "डोमेन का नाम" },
-  "statsConfidenceDistribution": { "message": "विश्वसनीयता का वितरण" },
-  "statsConfidenceTrend": { "message": "समय के साथ विश्वसनीयता" },
-  "statsCategoryConfidence": { "message": "श्रेणी के अनुसार विश्वसनीयता" },
-  "statsConfidenceNote": { "message": "विश्वसनीयता सहेजे गए पहचान साक्ष्यों की मजबूती बताती है, यह फिंगरप्रिंटिंग या किसी सक्रिय चुनौती का प्रमाण नहीं है।" },
-  "statsConfidenceKnownFmt": { "message": "{0} पहचानों में विश्वसनीयता के मान हैं; {1} में मान्य स्कोर नहीं है।" },
-  "statsProtectionColumn": { "message": "सुरक्षा उपाय" },
-  "statsCategoryColumn": { "message": "श्रेणी" },
-  "statsDomainColumn": { "message": "डोमेन" },
-  "statsTableCountFmt": { "message": "{1} में से {0} पंक्तियाँ" },
-  "statsTableMore": { "message": "और दिखाएँ" },
-  "statsNoMatchingDomains": { "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता।" },
-  "statsSelectionNote": { "message": "चार्ट और निर्यात चुनी गई तारीख सीमा का उपयोग करते हैं। इतिहास की प्रविष्टियाँ सहेजी गई पहचानों को दर्शाती हैं, ब्राउज़र की हर विज़िट को नहीं।" },
+  "detectionFailedTitle": {
+    "message": "स्कैन विफल हुआ"
+  },
+  "detectionInterruptedTitle": {
+    "message": "स्कैन बाधित हुआ"
+  },
+  "detectionUnscannedTitle": {
+    "message": "कोई स्कैन पूरा नहीं हुआ"
+  },
+  "detectionRetryScanDesc": {
+    "message": "स्कैन पूरा नहीं हुआ। फिर से कोशिश करने के लिए पेज रीलोड करें।"
+  },
+  "settingsReadFailedToast": {
+    "message": "सेटिंग लोड नहीं हो सकीं। मौजूदा मान सुरक्षित रखे गए हैं।"
+  },
+  "settingsWriteFailedToast": {
+    "message": "सेटिंग सहेजी नहीं जा सकीं। आपके बदलाव सुरक्षित हैं; फिर से कोशिश करें।"
+  },
+  "settingsDraftPendingToast": {
+    "message": "बदलाव लंबित है। इसे लागू करने के लिए सेटिंग सहेजें।"
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "आयात की गई सेटिंग सहेजी नहीं जा सकीं। आपकी सेटिंग और भाषा सुरक्षित रखी गई हैं।"
+  },
+  "settingsAppliesImmediately": {
+    "message": "तुरंत लागू होता है।"
+  },
+  "settingsDataPortableDesc": {
+    "message": "प्राथमिकताएँ निर्यात या आयात करें। इंटीग्रेशन कनेक्शन इसी ब्राउज़र में रहते हैं।"
+  },
+  "settingsImportReadFailedToast": {
+    "message": "मान्य सेटिंग फ़ाइल पढ़ी नहीं जा सकी। कुछ भी नहीं बदला गया।"
+  },
+  "rulesUiSaveFailed": {
+    "message": "यह नियम सहेजा नहीं जा सका। आपके बदलाव सुरक्षित हैं; फिर से कोशिश करें।"
+  },
+  "advToolReloadScriptsHint": {
+    "message": "सुरक्षा स्क्रिप्ट का विश्लेषण करने के लिए पेज फिर से लोड करें"
+  },
+  "advToolResetScriptsHint": {
+    "message": "स्क्रिप्ट का विश्लेषण करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें"
+  },
+  "advToolReloadVersionHint": {
+    "message": "सुरक्षा का संस्करण पहचानने के लिए पेज फिर से लोड करें"
+  },
+  "advToolCaptureResetHint": {
+    "message": "सुरक्षा कुकी रीसेट करें और रिकॉर्डिंग शुरू करें"
+  },
+  "advToolCookiesHint": {
+    "message": "इस सुरक्षा द्वारा उपयोग की जाने वाली कुकीज़ की जाँच करें"
+  },
+  "advToolVersionHint": {
+    "message": "उपलब्ध संस्करण जानकारी पढ़ें"
+  },
+  "advToolSiteKeyHint": {
+    "message": "इस पेज पर CAPTCHA साइट कुंजी खोजें"
+  },
+  "advToolSelectorHint": {
+    "message": "CAPTCHA विजेट के लिए सेलेक्टर खोजें"
+  },
+  "advToolCallbackHint": {
+    "message": "CAPTCHA कॉलबैक की जाँच करें"
+  },
+  "advToolSensorHint": {
+    "message": "सेंसर डेटा रिकॉर्ड करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें"
+  },
+  "advToolCaptureHint": {
+    "message": "इस पेज से डेटा रिकॉर्ड करें"
+  },
+  "advToolStopCaptureHint": {
+    "message": "इस पेज से डेटा रिकॉर्ड करना रोकें"
+  },
+  "advToolWorking": {
+    "message": "कार्य जारी है…"
+  },
+  "advToolWaitingReload": {
+    "message": "पेज फिर से लोड हो रहा है और परिणाम जुटाए जा रहे हैं। इसमें कुछ सेकंड लगते हैं…"
+  },
+  "advToolNoResult": {
+    "message": "कोई परिणाम नहीं: सुरक्षा ने कोई डेटा नहीं भेजा। पेज फिर से लोड करें और दोबारा कोशिश करें।"
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "{0} साइट की"
+  },
+  "advSiteKeyNotFound": {
+    "message": "इस पेज पर कोई साइट की नहीं मिली। CAPTCHA खोलें या चालू करें, फिर दोबारा कोशिश करें।"
+  },
+  "advSiteKeyFoundIn": {
+    "message": "यहाँ मिली"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "विजेट"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "अनुरोध"
+  },
+  "advSiteKeySourceScript": {
+    "message": "पेज स्क्रिप्ट"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "पेज वेरिएबल"
+  },
+  "advSiteKeyFrame": {
+    "message": "फ़्रेम"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "इस पेज पर स्क्रिप्ट"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "साइट की निकालता है और उसकी स्क्रिप्ट का विश्लेषण करता है"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "उसकी स्क्रिप्ट का विश्लेषण करता है"
+  },
+  "advToolActionFailedFmt": {
+    "message": "यह कार्रवाई पूरी नहीं हो सकी: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "चार्ट का पिछला पेज"
+  },
+  "statsChartNext": {
+    "message": "चार्ट का अगला पेज"
+  },
+  "statsChartPage": {
+    "message": "{1} में से पेज {0}"
+  },
+  "statsChartShowing": {
+    "message": "{2} में से {0}–{1} दिखाए जा रहे हैं"
+  },
+  "statsSectionsLabel": {
+    "message": "आँकड़ों के अनुभाग"
+  },
+  "statsSectionOverview": {
+    "message": "सारांश"
+  },
+  "statsSectionActivity": {
+    "message": "गतिविधि"
+  },
+  "statsSectionProtections": {
+    "message": "सुरक्षा उपाय"
+  },
+  "statsSectionDomains": {
+    "message": "डोमेन"
+  },
+  "statsSectionConfidence": {
+    "message": "विश्वसनीयता"
+  },
+  "statsExportCSV": {
+    "message": "CSV निर्यात करें"
+  },
+  "statsExportJSON": {
+    "message": "JSON निर्यात करें"
+  },
+  "statsExportPrivacy": {
+    "message": "निर्यात में डोमेन और पहचान के सारांश होते हैं, कुकीज़, पेज की सामग्री या URL पैरामीटर नहीं।"
+  },
+  "statsExportScopeFmt": {
+    "message": "चुनी गई अवधि निर्यात करें: {0} प्रविष्टियाँ"
+  },
+  "statsExportStartedFmt": {
+    "message": "डाउनलोड शुरू हुआ: {0}"
+  },
+  "statsExportFailed": {
+    "message": "डेटा निर्यात नहीं हो सका। कृपया फिर से कोशिश करें।"
+  },
+  "statsLoadFailed": {
+    "message": "इतिहास लोड नहीं हो सका। कृपया यह पेज फिर से लोड करें।"
+  },
+  "statsRangeEmptyTitle": {
+    "message": "इस अवधि में कोई प्रविष्टि नहीं है"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "अपना सहेजा गया इतिहास देखने के लिए लंबी तारीख सीमा चुनें।"
+  },
+  "statsDetectionRate": {
+    "message": "पहचान वाली प्रविष्टियाँ"
+  },
+  "statsActiveDays": {
+    "message": "सक्रिय दिन"
+  },
+  "statsAverageConfidence": {
+    "message": "औसत विश्वसनीयता"
+  },
+  "statsDailyVisits": {
+    "message": "इतिहास की दैनिक प्रविष्टियाँ"
+  },
+  "statsActivityCalendar": {
+    "message": "गतिविधि कैलेंडर"
+  },
+  "statsActivityCalendarHint": {
+    "message": "हर वर्ग स्थानीय कैलेंडर का एक दिन दर्शाता है। गहरा नीला रंग अधिक सहेजी गई प्रविष्टियाँ दर्शाता है।"
+  },
+  "statsHourlyActivity": {
+    "message": "घंटे के अनुसार गतिविधि"
+  },
+  "statsWeekdayActivity": {
+    "message": "सप्ताह के दिन के अनुसार गतिविधि"
+  },
+  "statsLocalTimeNote": {
+    "message": "तारीखें और घंटे आपके स्थानीय समय क्षेत्र के अनुसार हैं।"
+  },
+  "statsTimelineLimitFmt": {
+    "message": "पिछले {0} दिन दिखाए गए हैं। कुल आँकड़ों और निर्यात में पूरी चुनी गई अवधि शामिल है।"
+  },
+  "statsProtectionRanking": {
+    "message": "सुरक्षा उपायों की रैंकिंग"
+  },
+  "statsCategoryTrend": {
+    "message": "समय के साथ श्रेणियाँ"
+  },
+  "statsCategoryOverlap": {
+    "message": "एक साथ मिली श्रेणियाँ"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "दोनों श्रेणियों वाली इतिहास प्रविष्टियों की संख्या। विकर्ण खानों में उस श्रेणी वाली प्रविष्टियाँ दिखती हैं।"
+  },
+  "statsProtectionDetails": {
+    "message": "सभी सुरक्षा उपाय"
+  },
+  "statsDomainRanking": {
+    "message": "डोमेन की रैंकिंग"
+  },
+  "statsDomainMap": {
+    "message": "विज़िट और पहचान"
+  },
+  "statsDomainMapHint": {
+    "message": "हर बिंदु एक डोमेन है। बड़े बिंदुओं में अधिक अलग-अलग सुरक्षा उपाय हैं।"
+  },
+  "statsDomainDetails": {
+    "message": "सभी डोमेन"
+  },
+  "statsDomainSearch": {
+    "message": "डोमेन खोजें..."
+  },
+  "statsDomainSortLabel": {
+    "message": "डोमेन क्रमबद्ध करें"
+  },
+  "statsSortVisits": {
+    "message": "सबसे अधिक विज़िट"
+  },
+  "statsSortDetections": {
+    "message": "सबसे अधिक पहचान"
+  },
+  "statsSortConfidence": {
+    "message": "सबसे अधिक विश्वसनीयता"
+  },
+  "statsSortName": {
+    "message": "डोमेन का नाम"
+  },
+  "statsConfidenceDistribution": {
+    "message": "विश्वसनीयता का वितरण"
+  },
+  "statsConfidenceTrend": {
+    "message": "समय के साथ विश्वसनीयता"
+  },
+  "statsCategoryConfidence": {
+    "message": "श्रेणी के अनुसार विश्वसनीयता"
+  },
+  "statsConfidenceNote": {
+    "message": "विश्वसनीयता सहेजे गए पहचान साक्ष्यों की मजबूती बताती है, यह फिंगरप्रिंटिंग या किसी सक्रिय चुनौती का प्रमाण नहीं है।"
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "{0} पहचानों में विश्वसनीयता के मान हैं; {1} में मान्य स्कोर नहीं है।"
+  },
+  "statsProtectionColumn": {
+    "message": "सुरक्षा उपाय"
+  },
+  "statsCategoryColumn": {
+    "message": "श्रेणी"
+  },
+  "statsDomainColumn": {
+    "message": "डोमेन"
+  },
+  "statsTableCountFmt": {
+    "message": "{1} में से {0} पंक्तियाँ"
+  },
+  "statsTableMore": {
+    "message": "और दिखाएँ"
+  },
+  "statsNoMatchingDomains": {
+    "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता।"
+  },
+  "statsSelectionNote": {
+    "message": "चार्ट और निर्यात चुनी गई तारीख सीमा का उपयोग करते हैं। इतिहास की प्रविष्टियाँ सहेजी गई पहचानों को दर्शाती हैं, ब्राउज़र की हर विज़िट को नहीं।"
+  },
   "extensionName": {
     "message": "Scrapfly: एंटी-बॉट डिटेक्टर"
   },
@@ -454,10 +645,10 @@
     "message": "परिणामों की समीक्षा करें"
   },
   "advancedStep3Desc": {
-    "message": "कैप्चर किया गया डेटा अस्थायी रूप से (30 मिनट) पूर्ण निर्यात क्षमताओं के साथ संग्रहीत किया जाता है"
+    "message": "कैप्चर किया गया डेटा अस्थायी रूप से पूर्ण निर्यात क्षमताओं के साथ संग्रहीत किया जाता है"
   },
   "advancedFooterHint": {
-    "message": "कैप्चर 30 मिनट तक रखे जाते हैं।"
+    "message": "कैप्चर सेटिंग्स में तय किए गए समय तक रखे जाते हैं।"
   },
   "settings": {
     "message": "सेटिंग्स"
@@ -1487,7 +1678,9 @@
   "btnExtractSiteKey": {
     "message": "SiteKey निकालें"
   },
-  "btnExtractPublicKey": { "message": "पब्लिक की निकालें" },
+  "btnExtractPublicKey": {
+    "message": "पब्लिक की निकालें"
+  },
   "btnObtainSelector": {
     "message": "सेलेक्टर प्राप्त करें"
   },
@@ -1683,9 +1876,17 @@
   "advancedToolsEmptyTitle": {
     "message": "कोई सुरक्षा नहीं मिली"
   },
-  "advancedToolsEmptyDescFmt": { "message": "इस पेज पर {0}% से अधिक विश्वसनीयता वाली कोई समर्थित सुरक्षा नहीं है। आप यह न्यूनतम मान सेटिंग्स → जांच में बदल सकते हैं।", "description": "{0} = minimum confidence for Advanced tools (percent)" },
-  "advancedToolsLowConfidenceTitle": { "message": "कम विश्वसनीयता के साथ सुरक्षा मिली" },
-  "advancedToolsLowConfidenceDescFmt": { "message": "{0} {1}% विश्वसनीयता के साथ मिला। टूल केवल {2}% से अधिक होने पर दिखते हैं। आप यह न्यूनतम मान सेटिंग्स → जांच में कम कर सकते हैं।", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
+  "advancedToolsEmptyDescFmt": {
+    "message": "इस पेज पर {0}% से अधिक विश्वसनीयता वाली कोई समर्थित सुरक्षा नहीं है। आप यह न्यूनतम मान सेटिंग्स → जांच में बदल सकते हैं।",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "कम विश्वसनीयता के साथ सुरक्षा मिली"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "{0} {1}% विश्वसनीयता के साथ मिला। टूल केवल {2}% से अधिक होने पर दिखते हैं। आप यह न्यूनतम मान सेटिंग्स → जांच में कम कर सकते हैं।",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
   "advancedToolsSupportedLabel": {
     "message": "समर्थित सुरक्षा प्रणालियाँ"
   },
@@ -2460,9 +2661,15 @@
   "advCommonUrlCopied": {
     "message": "URL कॉपी हो गया"
   },
-  "advScriptTypeCollector": { "message": "कलेक्टर" },
-  "advScriptTypeCaptchaCheck": { "message": "CAPTCHA जाँच" },
-  "advScriptTypeInterstitial": { "message": "इंटरस्टिशियल" },
+  "advScriptTypeCollector": {
+    "message": "कलेक्टर"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "CAPTCHA जाँच"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "इंटरस्टिशियल"
+  },
   "advCommonCaptured": {
     "message": "कैप्चर किया गया"
   },
@@ -3669,10 +3876,18 @@
   "patternCombinationsOnlyBadge": {
     "message": "केवल संयोजन"
   },
-  "combinationStrictHint": { "message": "«केवल संयोजन» चिह्नित पैटर्न अकेले कुछ नहीं पहचानता; वह केवल संयोजनों में गिना जाता है।" },
-  "combinationStrictMarkAll": { "message": "सभी चिह्नित करें" },
-  "combinationStrictUnmarkAll": { "message": "सभी हटाएँ" },
-  "patternCombinationsOnlyHint": { "message": "यह पैटर्न अकेले कुछ नहीं पहचानता; यह इस नियम के हर संयोजन में केवल संयोजनों के भीतर गिना जाता है।" },
+  "combinationStrictHint": {
+    "message": "«केवल संयोजन» चिह्नित पैटर्न अकेले कुछ नहीं पहचानता; वह केवल संयोजनों में गिना जाता है।"
+  },
+  "combinationStrictMarkAll": {
+    "message": "सभी चिह्नित करें"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "सभी हटाएँ"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "यह पैटर्न अकेले कुछ नहीं पहचानता; यह इस नियम के हर संयोजन में केवल संयोजनों के भीतर गिना जाता है।"
+  },
   "detectionModalCombinations": {
     "message": "मिले संयोजन"
   },
@@ -4141,7 +4356,9 @@
   "advFilterKindCapture": {
     "message": "कैप्चर"
   },
-  "advHistoryCaptureTag": { "message": "कैप्चर" },
+  "advHistoryCaptureTag": {
+    "message": "कैप्चर"
+  },
   "advFilterKindOther": {
     "message": "अन्य टूल"
   },
@@ -5297,5 +5514,36 @@
   },
   "statsChangedNoPrevious": {
     "message": "अभी पूरी पिछली अवधि नहीं है।"
+  },
+  "settingsCardCaptureRetention": {
+    "message": "कैप्चर कितने समय तक रखे जाते हैं"
+  },
+  "settingsCaptureRetention": {
+    "message": "टूल कैप्चर रखने की अवधि"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "उन्नत टूल के कैप्चर (कुकीज़, स्क्रिप्ट, टोकन) इस समय के बाद हटा दिए जाते हैं।"
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 मिनट"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 मिनट"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "1 घंटा"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 घंटे"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 घंटे"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 घंटे"
+  },
+  "advancedFooterHintFmt": {
+    "message": "कैप्चर {0} तक रखे जाते हैं।",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
   }
 }

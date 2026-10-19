@@ -1,99 +1,290 @@
 {
-  "detectionFailedTitle": { "message": "فشل الفحص" },
-  "detectionInterruptedTitle": { "message": "توقف الفحص" },
-  "detectionUnscannedTitle": { "message": "لا يوجد فحص مكتمل" },
-  "detectionRetryScanDesc": { "message": "لم يكتمل الفحص. أعد تحميل الصفحة للمحاولة مجددًا." },
-  "settingsReadFailedToast": { "message": "تعذر تحميل الإعدادات. تم الاحتفاظ بالقيم الحالية." },
-  "settingsWriteFailedToast": { "message": "تعذر حفظ الإعدادات. تم الاحتفاظ بتغييراتك؛ حاول مجددًا." },
-  "settingsDraftPendingToast": { "message": "التغيير معلق. احفظ الإعدادات لتطبيقه." },
-  "settingsImportSaveFailedToast": { "message": "تعذر حفظ الإعدادات المستوردة. تم الاحتفاظ بإعداداتك ولغتك." },
-  "settingsAppliesImmediately": { "message": "يُطبّق فورًا." },
-  "settingsDataPortableDesc": { "message": "صدّر التفضيلات أو استوردها. تبقى اتصالات التكامل في هذا المتصفح." },
-  "settingsImportReadFailedToast": { "message": "تعذر قراءة ملف إعدادات صالح. لم يتغير شيء." },
-  "rulesUiSaveFailed": { "message": "تعذر حفظ هذه القاعدة. تغييراتك محفوظة؛ حاول مجددًا." },
-  "advToolReloadScriptsHint": { "message": "إعادة تحميل الصفحة لتحليل نصوص الحماية البرمجية" },
-  "advToolResetScriptsHint": { "message": "إعادة تعيين ملفات تعريف الارتباط الخاصة بالحماية وإعادة تحميل الصفحة لتحليل النصوص البرمجية" },
-  "advToolReloadVersionHint": { "message": "إعادة تحميل الصفحة لاكتشاف إصدار الحماية" },
-  "advToolCaptureResetHint": { "message": "إعادة تعيين ملف تعريف الارتباط الخاص بالحماية وبدء التسجيل" },
-  "advToolCookiesHint": { "message": "فحص ملفات تعريف الارتباط التي تستخدمها هذه الحماية" },
-  "advToolVersionHint": { "message": "قراءة معلومات الإصدار المتاحة" },
-  "advToolSiteKeyHint": { "message": "العثور على مفتاح موقع CAPTCHA في هذه الصفحة" },
-  "advToolSelectorHint": { "message": "العثور على محدد لعنصر CAPTCHA" },
-  "advToolCallbackHint": { "message": "فحص دوال رد النداء الخاصة بـ CAPTCHA" },
-  "advToolSensorHint": { "message": "إعادة تعيين ملفات تعريف الارتباط الخاصة بالحماية وإعادة تحميل الصفحة لتسجيل بيانات المستشعر" },
-  "advToolCaptureHint": { "message": "تسجيل البيانات من هذه الصفحة" },
-  "advToolStopCaptureHint": { "message": "إيقاف تسجيل البيانات من هذه الصفحة" },
-  "advToolWorking": { "message": "جارٍ العمل…" },
-  "advToolWaitingReload": { "message": "جارٍ إعادة تحميل الصفحة وجمع النتائج. يستغرق ذلك بضع ثوانٍ…" },
-  "advToolNoResult": { "message": "لا توجد نتيجة: لم ترسل الحماية أي بيانات. أعد تحميل الصفحة وحاول مرة أخرى." },
-  "advSiteKeyTitleFmt": { "message": "مفتاح موقع {0}" },
-  "advSiteKeyNotFound": { "message": "لم يُعثر على مفتاح موقع في هذه الصفحة. افتح CAPTCHA أو شغّله، ثم حاول مرة أخرى." },
-  "advSiteKeyFoundIn": { "message": "عُثر عليه في" },
-  "advSiteKeySourceWidget": { "message": "عنصر الواجهة" },
-  "advSiteKeySourceRequest": { "message": "طلب" },
-  "advSiteKeySourceScript": { "message": "سكربت الصفحة" },
-  "advSiteKeySourceGlobal": { "message": "متغير الصفحة" },
-  "advSiteKeyFrame": { "message": "الإطار" },
-  "advSiteKeyScriptsOnPage": { "message": "السكربتات في هذه الصفحة" },
-  "advancedInfoCaptchaKeyDesc": { "message": "يستخرج مفتاح الموقع ويحلل سكربتاته" },
-  "advancedInfoCaptchaScriptsDesc": { "message": "يحلل سكربتاته" },
-  "advToolActionFailedFmt": { "message": "تعذر إكمال هذا الإجراء: {0}", "description": "Advanced tool action failure. {0} = error details" },
-  "statsChartPrevious": { "message": "الصفحة السابقة للرسم البياني" },
-  "statsChartNext": { "message": "الصفحة التالية للرسم البياني" },
-  "statsChartPage": { "message": "الصفحة {0} من {1}" },
-  "statsChartShowing": { "message": "عرض {0}–{1} من أصل {2}" },
-  "statsSectionsLabel": { "message": "أقسام الإحصاءات" },
-  "statsSectionOverview": { "message": "نظرة عامة" },
-  "statsSectionActivity": { "message": "النشاط" },
-  "statsSectionProtections": { "message": "وسائل الحماية" },
-  "statsSectionDomains": { "message": "النطاقات" },
-  "statsSectionConfidence": { "message": "الثقة" },
-  "statsExportCSV": { "message": "تصدير CSV" },
-  "statsExportJSON": { "message": "تصدير JSON" },
-  "statsExportPrivacy": { "message": "تحتوي الصادرات على النطاقات وملخصات الكشف، وليس ملفات تعريف الارتباط أو محتوى الصفحات أو معلمات عناوين URL." },
-  "statsExportScopeFmt": { "message": "تصدير الفترة المحددة: {0} من السجلات" },
-  "statsExportStartedFmt": { "message": "بدأ التنزيل: {0}" },
-  "statsExportFailed": { "message": "تعذر تصدير البيانات. يرجى المحاولة مرة أخرى." },
-  "statsLoadFailed": { "message": "تعذر تحميل السجل. يرجى إعادة تحميل هذه الصفحة." },
-  "statsRangeEmptyTitle": { "message": "لا توجد سجلات في هذه الفترة" },
-  "statsRangeEmptyDesc": { "message": "اختر فترة زمنية أطول لاستكشاف سجلك المحفوظ." },
-  "statsDetectionRate": { "message": "السجلات التي تتضمن عمليات كشف" },
-  "statsActiveDays": { "message": "أيام النشاط" },
-  "statsAverageConfidence": { "message": "متوسط الثقة" },
-  "statsDailyVisits": { "message": "سجلات التاريخ اليومية" },
-  "statsActivityCalendar": { "message": "تقويم النشاط" },
-  "statsActivityCalendarHint": { "message": "يمثل كل مربع يومًا واحدًا حسب التقويم المحلي. يشير اللون الأزرق الداكن إلى المزيد من السجلات المحفوظة." },
-  "statsHourlyActivity": { "message": "النشاط حسب الساعة" },
-  "statsWeekdayActivity": { "message": "النشاط حسب يوم الأسبوع" },
-  "statsLocalTimeNote": { "message": "تستخدم التواريخ والساعات منطقتك الزمنية المحلية." },
-  "statsTimelineLimitFmt": { "message": "يتم عرض آخر {0} من الأيام. تشمل الإجماليات والصادرات الفترة المحددة بالكامل." },
-  "statsProtectionRanking": { "message": "ترتيب وسائل الحماية" },
-  "statsCategoryTrend": { "message": "الفئات عبر الزمن" },
-  "statsCategoryOverlap": { "message": "الفئات المكتشفة معًا" },
-  "statsCategoryOverlapHint": { "message": "عدد سجلات التاريخ التي تتضمن الفئتين. تعرض الخلايا القطرية السجلات التي تتضمن تلك الفئة." },
-  "statsProtectionDetails": { "message": "جميع وسائل الحماية" },
-  "statsDomainRanking": { "message": "ترتيب النطاقات" },
-  "statsDomainMap": { "message": "الزيارات وعمليات الكشف" },
-  "statsDomainMapHint": { "message": "تمثل كل نقطة نطاقًا. تحتوي النقاط الأكبر على وسائل حماية مختلفة أكثر." },
-  "statsDomainDetails": { "message": "جميع النطاقات" },
-  "statsDomainSearch": { "message": "البحث عن نطاقات..." },
-  "statsDomainSortLabel": { "message": "فرز النطاقات" },
-  "statsSortVisits": { "message": "الأكثر زيارة" },
-  "statsSortDetections": { "message": "الأكثر كشفًا" },
-  "statsSortConfidence": { "message": "الأعلى ثقة" },
-  "statsSortName": { "message": "اسم النطاق" },
-  "statsConfidenceDistribution": { "message": "توزيع الثقة" },
-  "statsConfidenceTrend": { "message": "الثقة عبر الزمن" },
-  "statsCategoryConfidence": { "message": "الثقة حسب الفئة" },
-  "statsConfidenceNote": { "message": "تصف الثقة قوة أدلة الكشف المحفوظة، ولا تثبت وجود بصمة رقمية أو تحدٍّ نشط." },
-  "statsConfidenceKnownFmt": { "message": "تتوفر قيم ثقة لـ {0} من عمليات الكشف؛ ولا تتوفر درجة صالحة لـ {1} منها." },
-  "statsProtectionColumn": { "message": "الحماية" },
-  "statsCategoryColumn": { "message": "الفئة" },
-  "statsDomainColumn": { "message": "النطاق" },
-  "statsTableCountFmt": { "message": "{0} من أصل {1} صفًا" },
-  "statsTableMore": { "message": "عرض المزيد" },
-  "statsNoMatchingDomains": { "message": "لا توجد نطاقات تطابق بحثك." },
-  "statsSelectionNote": { "message": "تستخدم الرسوم البيانية والصادرات الفترة الزمنية المحددة. تمثل سجلات التاريخ عمليات الكشف المحفوظة، وليس كل زيارة في المتصفح." },
+  "detectionFailedTitle": {
+    "message": "فشل الفحص"
+  },
+  "detectionInterruptedTitle": {
+    "message": "توقف الفحص"
+  },
+  "detectionUnscannedTitle": {
+    "message": "لا يوجد فحص مكتمل"
+  },
+  "detectionRetryScanDesc": {
+    "message": "لم يكتمل الفحص. أعد تحميل الصفحة للمحاولة مجددًا."
+  },
+  "settingsReadFailedToast": {
+    "message": "تعذر تحميل الإعدادات. تم الاحتفاظ بالقيم الحالية."
+  },
+  "settingsWriteFailedToast": {
+    "message": "تعذر حفظ الإعدادات. تم الاحتفاظ بتغييراتك؛ حاول مجددًا."
+  },
+  "settingsDraftPendingToast": {
+    "message": "التغيير معلق. احفظ الإعدادات لتطبيقه."
+  },
+  "settingsImportSaveFailedToast": {
+    "message": "تعذر حفظ الإعدادات المستوردة. تم الاحتفاظ بإعداداتك ولغتك."
+  },
+  "settingsAppliesImmediately": {
+    "message": "يُطبّق فورًا."
+  },
+  "settingsDataPortableDesc": {
+    "message": "صدّر التفضيلات أو استوردها. تبقى اتصالات التكامل في هذا المتصفح."
+  },
+  "settingsImportReadFailedToast": {
+    "message": "تعذر قراءة ملف إعدادات صالح. لم يتغير شيء."
+  },
+  "rulesUiSaveFailed": {
+    "message": "تعذر حفظ هذه القاعدة. تغييراتك محفوظة؛ حاول مجددًا."
+  },
+  "advToolReloadScriptsHint": {
+    "message": "إعادة تحميل الصفحة لتحليل نصوص الحماية البرمجية"
+  },
+  "advToolResetScriptsHint": {
+    "message": "إعادة تعيين ملفات تعريف الارتباط الخاصة بالحماية وإعادة تحميل الصفحة لتحليل النصوص البرمجية"
+  },
+  "advToolReloadVersionHint": {
+    "message": "إعادة تحميل الصفحة لاكتشاف إصدار الحماية"
+  },
+  "advToolCaptureResetHint": {
+    "message": "إعادة تعيين ملف تعريف الارتباط الخاص بالحماية وبدء التسجيل"
+  },
+  "advToolCookiesHint": {
+    "message": "فحص ملفات تعريف الارتباط التي تستخدمها هذه الحماية"
+  },
+  "advToolVersionHint": {
+    "message": "قراءة معلومات الإصدار المتاحة"
+  },
+  "advToolSiteKeyHint": {
+    "message": "العثور على مفتاح موقع CAPTCHA في هذه الصفحة"
+  },
+  "advToolSelectorHint": {
+    "message": "العثور على محدد لعنصر CAPTCHA"
+  },
+  "advToolCallbackHint": {
+    "message": "فحص دوال رد النداء الخاصة بـ CAPTCHA"
+  },
+  "advToolSensorHint": {
+    "message": "إعادة تعيين ملفات تعريف الارتباط الخاصة بالحماية وإعادة تحميل الصفحة لتسجيل بيانات المستشعر"
+  },
+  "advToolCaptureHint": {
+    "message": "تسجيل البيانات من هذه الصفحة"
+  },
+  "advToolStopCaptureHint": {
+    "message": "إيقاف تسجيل البيانات من هذه الصفحة"
+  },
+  "advToolWorking": {
+    "message": "جارٍ العمل…"
+  },
+  "advToolWaitingReload": {
+    "message": "جارٍ إعادة تحميل الصفحة وجمع النتائج. يستغرق ذلك بضع ثوانٍ…"
+  },
+  "advToolNoResult": {
+    "message": "لا توجد نتيجة: لم ترسل الحماية أي بيانات. أعد تحميل الصفحة وحاول مرة أخرى."
+  },
+  "advSiteKeyTitleFmt": {
+    "message": "مفتاح موقع {0}"
+  },
+  "advSiteKeyNotFound": {
+    "message": "لم يُعثر على مفتاح موقع في هذه الصفحة. افتح CAPTCHA أو شغّله، ثم حاول مرة أخرى."
+  },
+  "advSiteKeyFoundIn": {
+    "message": "عُثر عليه في"
+  },
+  "advSiteKeySourceWidget": {
+    "message": "عنصر الواجهة"
+  },
+  "advSiteKeySourceRequest": {
+    "message": "طلب"
+  },
+  "advSiteKeySourceScript": {
+    "message": "سكربت الصفحة"
+  },
+  "advSiteKeySourceGlobal": {
+    "message": "متغير الصفحة"
+  },
+  "advSiteKeyFrame": {
+    "message": "الإطار"
+  },
+  "advSiteKeyScriptsOnPage": {
+    "message": "السكربتات في هذه الصفحة"
+  },
+  "advancedInfoCaptchaKeyDesc": {
+    "message": "يستخرج مفتاح الموقع ويحلل سكربتاته"
+  },
+  "advancedInfoCaptchaScriptsDesc": {
+    "message": "يحلل سكربتاته"
+  },
+  "advToolActionFailedFmt": {
+    "message": "تعذر إكمال هذا الإجراء: {0}",
+    "description": "Advanced tool action failure. {0} = error details"
+  },
+  "statsChartPrevious": {
+    "message": "الصفحة السابقة للرسم البياني"
+  },
+  "statsChartNext": {
+    "message": "الصفحة التالية للرسم البياني"
+  },
+  "statsChartPage": {
+    "message": "الصفحة {0} من {1}"
+  },
+  "statsChartShowing": {
+    "message": "عرض {0}–{1} من أصل {2}"
+  },
+  "statsSectionsLabel": {
+    "message": "أقسام الإحصاءات"
+  },
+  "statsSectionOverview": {
+    "message": "نظرة عامة"
+  },
+  "statsSectionActivity": {
+    "message": "النشاط"
+  },
+  "statsSectionProtections": {
+    "message": "وسائل الحماية"
+  },
+  "statsSectionDomains": {
+    "message": "النطاقات"
+  },
+  "statsSectionConfidence": {
+    "message": "الثقة"
+  },
+  "statsExportCSV": {
+    "message": "تصدير CSV"
+  },
+  "statsExportJSON": {
+    "message": "تصدير JSON"
+  },
+  "statsExportPrivacy": {
+    "message": "تحتوي الصادرات على النطاقات وملخصات الكشف، وليس ملفات تعريف الارتباط أو محتوى الصفحات أو معلمات عناوين URL."
+  },
+  "statsExportScopeFmt": {
+    "message": "تصدير الفترة المحددة: {0} من السجلات"
+  },
+  "statsExportStartedFmt": {
+    "message": "بدأ التنزيل: {0}"
+  },
+  "statsExportFailed": {
+    "message": "تعذر تصدير البيانات. يرجى المحاولة مرة أخرى."
+  },
+  "statsLoadFailed": {
+    "message": "تعذر تحميل السجل. يرجى إعادة تحميل هذه الصفحة."
+  },
+  "statsRangeEmptyTitle": {
+    "message": "لا توجد سجلات في هذه الفترة"
+  },
+  "statsRangeEmptyDesc": {
+    "message": "اختر فترة زمنية أطول لاستكشاف سجلك المحفوظ."
+  },
+  "statsDetectionRate": {
+    "message": "السجلات التي تتضمن عمليات كشف"
+  },
+  "statsActiveDays": {
+    "message": "أيام النشاط"
+  },
+  "statsAverageConfidence": {
+    "message": "متوسط الثقة"
+  },
+  "statsDailyVisits": {
+    "message": "سجلات التاريخ اليومية"
+  },
+  "statsActivityCalendar": {
+    "message": "تقويم النشاط"
+  },
+  "statsActivityCalendarHint": {
+    "message": "يمثل كل مربع يومًا واحدًا حسب التقويم المحلي. يشير اللون الأزرق الداكن إلى المزيد من السجلات المحفوظة."
+  },
+  "statsHourlyActivity": {
+    "message": "النشاط حسب الساعة"
+  },
+  "statsWeekdayActivity": {
+    "message": "النشاط حسب يوم الأسبوع"
+  },
+  "statsLocalTimeNote": {
+    "message": "تستخدم التواريخ والساعات منطقتك الزمنية المحلية."
+  },
+  "statsTimelineLimitFmt": {
+    "message": "يتم عرض آخر {0} من الأيام. تشمل الإجماليات والصادرات الفترة المحددة بالكامل."
+  },
+  "statsProtectionRanking": {
+    "message": "ترتيب وسائل الحماية"
+  },
+  "statsCategoryTrend": {
+    "message": "الفئات عبر الزمن"
+  },
+  "statsCategoryOverlap": {
+    "message": "الفئات المكتشفة معًا"
+  },
+  "statsCategoryOverlapHint": {
+    "message": "عدد سجلات التاريخ التي تتضمن الفئتين. تعرض الخلايا القطرية السجلات التي تتضمن تلك الفئة."
+  },
+  "statsProtectionDetails": {
+    "message": "جميع وسائل الحماية"
+  },
+  "statsDomainRanking": {
+    "message": "ترتيب النطاقات"
+  },
+  "statsDomainMap": {
+    "message": "الزيارات وعمليات الكشف"
+  },
+  "statsDomainMapHint": {
+    "message": "تمثل كل نقطة نطاقًا. تحتوي النقاط الأكبر على وسائل حماية مختلفة أكثر."
+  },
+  "statsDomainDetails": {
+    "message": "جميع النطاقات"
+  },
+  "statsDomainSearch": {
+    "message": "البحث عن نطاقات..."
+  },
+  "statsDomainSortLabel": {
+    "message": "فرز النطاقات"
+  },
+  "statsSortVisits": {
+    "message": "الأكثر زيارة"
+  },
+  "statsSortDetections": {
+    "message": "الأكثر كشفًا"
+  },
+  "statsSortConfidence": {
+    "message": "الأعلى ثقة"
+  },
+  "statsSortName": {
+    "message": "اسم النطاق"
+  },
+  "statsConfidenceDistribution": {
+    "message": "توزيع الثقة"
+  },
+  "statsConfidenceTrend": {
+    "message": "الثقة عبر الزمن"
+  },
+  "statsCategoryConfidence": {
+    "message": "الثقة حسب الفئة"
+  },
+  "statsConfidenceNote": {
+    "message": "تصف الثقة قوة أدلة الكشف المحفوظة، ولا تثبت وجود بصمة رقمية أو تحدٍّ نشط."
+  },
+  "statsConfidenceKnownFmt": {
+    "message": "تتوفر قيم ثقة لـ {0} من عمليات الكشف؛ ولا تتوفر درجة صالحة لـ {1} منها."
+  },
+  "statsProtectionColumn": {
+    "message": "الحماية"
+  },
+  "statsCategoryColumn": {
+    "message": "الفئة"
+  },
+  "statsDomainColumn": {
+    "message": "النطاق"
+  },
+  "statsTableCountFmt": {
+    "message": "{0} من أصل {1} صفًا"
+  },
+  "statsTableMore": {
+    "message": "عرض المزيد"
+  },
+  "statsNoMatchingDomains": {
+    "message": "لا توجد نطاقات تطابق بحثك."
+  },
+  "statsSelectionNote": {
+    "message": "تستخدم الرسوم البيانية والصادرات الفترة الزمنية المحددة. تمثل سجلات التاريخ عمليات الكشف المحفوظة، وليس كل زيارة في المتصفح."
+  },
   "extensionName": {
     "message": "Scrapfly: كاشف مكافحة الروبوتات"
   },
@@ -454,10 +645,10 @@
     "message": "مراجعة النتائج"
   },
   "advancedStep3Desc": {
-    "message": "يتم تخزين البيانات الملتقطة مؤقتًا (30 دقيقة) مع إمكانيات تصدير كاملة"
+    "message": "تُخزَّن البيانات الملتقطة مؤقتًا مع إمكانيات تصدير كاملة"
   },
   "advancedFooterHint": {
-    "message": "يتم الاحتفاظ باللقطات لمدة 30 دقيقة."
+    "message": "يتم الاحتفاظ باللقطات للمدة المحددة في الإعدادات."
   },
   "settings": {
     "message": "الإعدادات"
@@ -1487,7 +1678,9 @@
   "btnExtractSiteKey": {
     "message": "استخراج SiteKey"
   },
-  "btnExtractPublicKey": { "message": "استخراج المفتاح العام" },
+  "btnExtractPublicKey": {
+    "message": "استخراج المفتاح العام"
+  },
   "btnObtainSelector": {
     "message": "الحصول على المحدِّد"
   },
@@ -1683,9 +1876,17 @@
   "advancedToolsEmptyTitle": {
     "message": "لم يُكتشف أي حماية"
   },
-  "advancedToolsEmptyDescFmt": { "message": "لا توجد في هذه الصفحة حماية مدعومة بثقة تزيد على {0}%. يمكنك تغيير هذا الحد الأدنى من الإعدادات ← الكشف.", "description": "{0} = minimum confidence for Advanced tools (percent)" },
-  "advancedToolsLowConfidenceTitle": { "message": "اكتُشفت حماية بثقة منخفضة" },
-  "advancedToolsLowConfidenceDescFmt": { "message": "اكتُشف {0} بثقة {1}%. لا تظهر الأدوات إلا عند تجاوز {2}%. يمكنك خفض هذا الحد الأدنى من الإعدادات ← الكشف.", "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)" },
+  "advancedToolsEmptyDescFmt": {
+    "message": "لا توجد في هذه الصفحة حماية مدعومة بثقة تزيد على {0}%. يمكنك تغيير هذا الحد الأدنى من الإعدادات ← الكشف.",
+    "description": "{0} = minimum confidence for Advanced tools (percent)"
+  },
+  "advancedToolsLowConfidenceTitle": {
+    "message": "اكتُشفت حماية بثقة منخفضة"
+  },
+  "advancedToolsLowConfidenceDescFmt": {
+    "message": "اكتُشف {0} بثقة {1}%. لا تظهر الأدوات إلا عند تجاوز {2}%. يمكنك خفض هذا الحد الأدنى من الإعدادات ← الكشف.",
+    "description": "{0} = protection name, {1} = its confidence, {2} = minimum confidence (percent)"
+  },
   "advancedToolsSupportedLabel": {
     "message": "أنظمة الحماية المدعومة"
   },
@@ -2460,9 +2661,15 @@
   "advCommonUrlCopied": {
     "message": "تم نسخ الرابط"
   },
-  "advScriptTypeCollector": { "message": "المُجمِّع" },
-  "advScriptTypeCaptchaCheck": { "message": "فحص CAPTCHA" },
-  "advScriptTypeInterstitial": { "message": "صفحة اعتراضية" },
+  "advScriptTypeCollector": {
+    "message": "المُجمِّع"
+  },
+  "advScriptTypeCaptchaCheck": {
+    "message": "فحص CAPTCHA"
+  },
+  "advScriptTypeInterstitial": {
+    "message": "صفحة اعتراضية"
+  },
   "advCommonCaptured": {
     "message": "وقت الالتقاط"
   },
@@ -3669,10 +3876,18 @@
   "patternCombinationsOnlyBadge": {
     "message": "تركيبات فقط"
   },
-  "combinationStrictHint": { "message": "النمط المعلَّم بـ «تركيبات فقط» لا يكتشف شيئًا بمفرده؛ يُحتسب داخل التركيبات فقط." },
-  "combinationStrictMarkAll": { "message": "تعليم الكل" },
-  "combinationStrictUnmarkAll": { "message": "إلغاء تعليم الكل" },
-  "patternCombinationsOnlyHint": { "message": "هذا النمط لا يكتشف شيئًا بمفرده؛ يُحتسب داخل التركيبات فقط، في كل تركيبات هذه القاعدة." },
+  "combinationStrictHint": {
+    "message": "النمط المعلَّم بـ «تركيبات فقط» لا يكتشف شيئًا بمفرده؛ يُحتسب داخل التركيبات فقط."
+  },
+  "combinationStrictMarkAll": {
+    "message": "تعليم الكل"
+  },
+  "combinationStrictUnmarkAll": {
+    "message": "إلغاء تعليم الكل"
+  },
+  "patternCombinationsOnlyHint": {
+    "message": "هذا النمط لا يكتشف شيئًا بمفرده؛ يُحتسب داخل التركيبات فقط، في كل تركيبات هذه القاعدة."
+  },
   "detectionModalCombinations": {
     "message": "التركيبات المتطابقة"
   },
@@ -4141,7 +4356,9 @@
   "advFilterKindCapture": {
     "message": "الالتقاطات"
   },
-  "advHistoryCaptureTag": { "message": "التقاط" },
+  "advHistoryCaptureTag": {
+    "message": "التقاط"
+  },
   "advFilterKindOther": {
     "message": "أدوات أخرى"
   },
@@ -5297,5 +5514,36 @@
   },
   "statsChangedNoPrevious": {
     "message": "لا توجد فترة سابقة كاملة بعد."
+  },
+  "settingsCardCaptureRetention": {
+    "message": "مدة الاحتفاظ باللقطات"
+  },
+  "settingsCaptureRetention": {
+    "message": "الاحتفاظ بلقطات الأدوات لمدة"
+  },
+  "settingsCaptureRetentionHelp": {
+    "message": "تُحذف لقطات الأدوات المتقدمة (ملفات تعريف الارتباط والنصوص البرمجية والرموز) بعد هذه المدة."
+  },
+  "settingsCaptureRetention15m": {
+    "message": "15 دقيقة"
+  },
+  "settingsCaptureRetention30m": {
+    "message": "30 دقيقة"
+  },
+  "settingsCaptureRetention1h": {
+    "message": "ساعة واحدة"
+  },
+  "settingsCaptureRetention3h": {
+    "message": "3 ساعات"
+  },
+  "settingsCaptureRetention12h": {
+    "message": "12 ساعة"
+  },
+  "settingsCaptureRetention24h": {
+    "message": "24 ساعة"
+  },
+  "advancedFooterHintFmt": {
+    "message": "يتم الاحتفاظ باللقطات لمدة {0}.",
+    "description": "Footer in Advanced tools. {0} = retention duration label (e.g. 30 minutes)"
   }
 }
