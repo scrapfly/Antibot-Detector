@@ -234,6 +234,9 @@
   --accent-hover: #2563eb;
   --accent-light: #60a5fa;
   --accent-dark: #1d4ed8;
+  /* A soft accent chip (icon tiles, subtle buttons): translucent, so it reads on both the dark and the light surface */
+  --accent-soft: rgba(59, 130, 246, 0.14);
+  --accent-soft-border: rgba(59, 130, 246, 0.32);
   --success: #10b981;
   --success-light: #34d399;
   --success-dark: #059669;

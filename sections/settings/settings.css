@@ -1509,7 +1509,7 @@ input[type="file"] {
   width: 46px;
   height: 36px;
   padding: 3px;
-  background: #171718;
+  background: var(--bg-primary);
   border: 1px solid var(--g-353535);
   border-radius: 7px;
 }
@@ -2017,8 +2017,8 @@ input[type="file"] {
   width: 30px;
   height: 30px;
   flex-shrink: 0;
-  background: #353c46;
-  border: 1px solid #425a79;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-soft-border);
   border-radius: 7px;
   color: var(--p-93c5fd);
 }
@@ -2074,8 +2074,8 @@ input[type="file"] {
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  background: #363b43;
-  border: 1px solid #3e5068;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-soft-border);
   border-radius: 7px;
   color: var(--p-93c5fd);
 }
@@ -2165,13 +2165,14 @@ input[type="file"] {
 }
 
 #settingsModal .data-export-btn {
-  background: #363b43;
-  border: 1px solid #435b7a;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-soft-border);
   color: var(--p-bfdbfe);
 }
 
 #settingsModal .data-export-btn:hover {
-  background: rgba(59, 130, 246, 0.14);
+  background: rgba(59, 130, 246, 0.24);
+  border-color: var(--accent);
 }
 
 #settingsModal .data-import-btn {

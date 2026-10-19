@@ -49,7 +49,7 @@
 .advanced-tool-card:active:not(:disabled),
 .recaptcha-tool-btn:active:not(:disabled) {
   transform: none;
-  background: #272b32;
+  background: var(--bg-secondary);
 }
 
 .advanced-tool-icon,
