@@ -1,0 +1,57 @@
+# Scrapfly Anti-bot Detector
+
+> A free Chrome (Manifest V3) extension that shows how a website defends itself against bots: which anti-bot system, which CAPTCHA and which browser-fingerprinting scripts a page uses, each with a confidence score and an estimated bypass difficulty. Built by [Scrapfly](https://scrapfly.io). Everything runs locally in the browser; no page data leaves the machine.
+
+It recognizes 70 technologies out of the box — 30 anti-bot systems, 19 CAPTCHAs and 21 fingerprinting techniques. Each detector is a plain JSON rule you can read, edit or extend, and new rules ship with every GitHub release, so the extension can pick them up without waiting for a Chrome Web Store update.
+
+Use it to answer "what is protecting this page?" before a scraping project, to check how your own site's bot protection looks from the outside, or for security research.
+
+- Chrome Web Store: https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca
+- Source and releases: https://github.com/scrapfly/Antibot-Detector
+- Product page: https://scrapfly.io/products/antibot-detector
+- Changelog: https://github.com/scrapfly/Antibot-Detector/blob/main/CHANGELOG.md
+
+## Install
+
+Three ways, pick one:
+
+- **Chrome Web Store (recommended).** Open the store listing above and click *Add to Chrome*. Chrome keeps it updated automatically. Works in Chrome and Chromium-based browsers (Edge, Brave, Arc, Opera).
+- **From a release zip.** Download the zip attached to any version on the [Releases page](https://github.com/scrapfly/Antibot-Detector/releases) and extract it into a new folder. Open `chrome://extensions`, turn on *Developer mode* (top right), click *Load unpacked*, and choose that folder.
+- **From source (no build step).** `git clone https://github.com/scrapfly/Antibot-Detector.git`, then load the cloned folder with *Load unpacked* as above. After editing a file, press *Reload* on the extension's card in `chrome://extensions` and reload the page you are testing.
+
+There is no account, sign-in or API key. The extension is self-contained.
+
+## How to use it
+
+Browse normally. The number on the toolbar icon is how many protections the current page uses; click the icon to open the popup. The popup has these tabs:
+
+- **Detection.** The protections found on the current page. The top row summarizes the page: number of detections, average confidence, estimated difficulty, and how long the result is cached. Below, one card per protection shows its name and logo, its category (anti-bot, CAPTCHA or fingerprinting), a confidence score (0–100%), and the exact signals that matched (a cookie, a header, a request URL, a script, a DOM node, a JS API call or a window property). A result is cached per page so re-opening is instant; it refreshes when the page changes.
+- **History.** Every page you have scanned, with its address, protection count, confidence, difficulty and a per-category breakdown. Open an entry to see the same detail as the Detection tab. History is stored locally and can be exported (JSON or CSV) or cleared.
+- **Statistics.** A dashboard computed locally from your History: most common protections, hardest sites, how protected your pages are, protection stacks found together, trends over time, and a comparison with the previous period. Anti-bot and CAPTCHA are shown first; fingerprinting is hidden until you ask for it. Nothing leaves the browser.
+- **Rules.** The detector library. Each rule is a card with its category, detection methods, version and an on/off switch. *Add* creates a custom detector; *Update* checks the latest GitHub release and installs new or updated official detectors (your edited rules are kept, never overwritten without asking). This is how new detections arrive between Chrome Web Store updates.
+- **Advanced.** Per-vendor capture tools for supported protections (for example extract a site key, analyze the protection scripts, inspect cookies, or get Scrapfly extraction code for the page). Captures are kept for a configurable time (default 30 minutes; change it in Settings → Detection).
+- **Settings.** Language (12 languages), light/dark theme, notifications, detection cache duration and scope, the order categories are shown in, which protections get Advanced tools, a domain blacklist, JavaScript events and webhooks, capture retention, and data export/import.
+
+## What it detects
+
+- **Anti-bot (30):** Cloudflare Bot Management, Akamai Bot Manager, DataDome, PerimeterX, Imperva/Incapsula, Kasada, F5 BIG-IP ASM, Shape Security, AWS WAF, Google BotGuard, Radware Bot Manager, Reblaze, Sucuri WAF, ThreatMetrix, Netacea, Alibaba Cloud WAF, Azure Front Door, Amazon Bot Protection, FingerprintJS, OpenAI Sentinel, Anubis, Jiasule, Ruishu, Yundun, Cheq, Hunt, DeepSeek PoW, Cloudflare Waiting Room, Meetrics and Ocule.
+- **CAPTCHA (19):** Google reCAPTCHA, Cloudflare Turnstile, hCaptcha, FunCaptcha (Arkose Labs), GeeTest, Capy Puzzle Captcha, MTCaptcha, Friendly Captcha, Yandex SmartCaptcha, QCloud Captcha, NetEase Yidun, Aliyun Captcha, Dingxiang, Shumei, Prosopo Procaptcha, Basilisk, Binance Captcha, Captcha.eu and AliExpress CAPTCHA.
+- **Fingerprinting (21):** canvas, audio, WebGL, font, navigator, screen, WebRTC, battery, hardware, media, clipboard, crypto, CSS, gamepads, geolocation, IndexedDB, Web Storage, timezone/Intl, USB, device orientation and performance.
+
+Scoring: a signal only one vendor produces can read 100% on its own; weaker or shared signals score lower, and a page's difficulty is estimated from the protections found.
+
+## Integrations
+
+- **JavaScript events.** When enabled, the extension dispatches a `CustomEvent` (and calls a `window` callback) with each page's detections, so your own page scripts can react to what was found.
+- **Webhooks.** Optionally POST each page's detections to a URL you configure, with a customizable payload template.
+- **Share links.** Export a detection result to a paste service (dpaste, Pastebin, GitHub Gist or a custom endpoint) and share the link.
+
+## Privacy
+
+The extension analyzes pages locally and stores History and Statistics in the browser only. It sends nothing to Scrapfly or any third party unless you turn on a webhook or create a share link yourself. Detector updates fetch public rule files from this GitHub repository's latest release.
+
+## For contributors
+
+- No build step: it is plain JavaScript loaded unpacked. `npm run verify` runs the checks CI runs (syntax, structure, 12-locale parity, tests).
+- Detectors are data: add one by writing a JSON file under `detectors/<category>/` and listing it in `detectors/index.json` — usually no code. See the "Writing a detector" section of the [README](https://github.com/scrapfly/Antibot-Detector/blob/main/README.md).
+- License: NPOSL-3.0.

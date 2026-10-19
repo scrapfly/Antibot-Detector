@@ -5,10 +5,11 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
-## [3.0.0] - 2026-10-17
+## [3.0.0] - 2026-10-19
 
 ### Added
 
+- An llms.txt at the repository root summarising what the extension is, how to install it and how to use each tab, for language models and quick reference.
 - Settings → Detection: set how long Advanced tool captures are kept — any value from 1 minute to 7 days (default 30 minutes); the Advanced footer shows the chosen time.
 - Statistics: anti-bot and CAPTCHA come first; fingerprinting stays hidden until you press Show fingerprinting, and the page says how much it hides.
 - Statistics: a comparison with the previous period, four headline cards and a What changed card (new, rising, no longer seen, switched).

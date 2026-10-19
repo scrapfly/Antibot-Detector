@@ -12,7 +12,7 @@
 [![CI](https://github.com/scrapfly/Antibot-Detector/actions/workflows/ci.yml/badge.svg)](https://github.com/scrapfly/Antibot-Detector/actions/workflows/ci.yml)
 [![License: NPOSL-3.0](https://img.shields.io/badge/license-NPOSL--3.0-blue)](LICENSE)
 
-[**Add to Chrome**](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca) · [Product page](https://scrapfly.io/products/antibot-detector) · [What's new](CHANGELOG.md) · [Report a problem](https://github.com/scrapfly/Antibot-Detector/issues)
+[**Add to Chrome**](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca) · [Product page](https://scrapfly.io/products/antibot-detector) · [What's new](CHANGELOG.md) · [llms.txt](llms.txt) · [Report a problem](https://github.com/scrapfly/Antibot-Detector/issues)
 
 </div>
 
