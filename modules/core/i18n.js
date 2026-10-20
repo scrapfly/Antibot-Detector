@@ -150,6 +150,11 @@ class I18n {
         return String(raw).replace('_', '-');
     }
 
+    /** Reading direction of the language the UI is shown in: 'rtl' for Arabic (and Hebrew, Persian, Urdu), 'ltr' otherwise. */
+    static dir() {
+        return /^(ar|he|fa|ur)\b/i.test(I18n.locale()) ? 'rtl' : 'ltr';
+    }
+
     /**
      * Tag the page with the UI language so CSS can pick script-specific
      * fonts (Han glyph forms differ between Chinese and Japanese).

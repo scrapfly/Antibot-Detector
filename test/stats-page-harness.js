@@ -89,7 +89,7 @@ function clock() {
 }
 
 // The shared scripts of the page the harness runs for real (the rest of ../../ is stubbed: logger, i18n, tooltip)
-const SHARED_SCRIPTS = ['../../modules/core/storage-manager.js', '../../modules/core/categories.js', '../../modules/advanced/captcha-vendors.js',
+const SHARED_SCRIPTS = ['../../modules/core/storage-manager.js', '../../modules/core/categories.js', '../../modules/core/capture-retention.js', '../../modules/advanced/captcha-vendors.js',
   '../../modules/advanced/vendor-registry.js', '../../utils/format-utils.js'];
 
 /** Scripts of the page that this harness runs for real, in the order stats.html lists them. */
@@ -172,13 +172,13 @@ async function createPage(items, options = {}) {
     ResizeObserver: class { constructor(callback) { observers.push(callback); } observe() {} },
     chrome: { storage: { local: { get: async () => ({ ...stored }), set: async data => { Object.assign(stored, data); writes.push(data); } }, onChanged: { addListener: callback => changes.push(callback) } },
       i18n: { getUILanguage: () => options.language || 'en', getMessage: key => messages[key] && messages[key].message } },
-    I18n: { _overrideLocale: null, loadOverride: async () => {}, apply() {},
+    I18n: { _overrideLocale: null, loadOverride: async () => {}, apply() {}, dir: () => 'ltr',
       tr: (key, fallback) => messages[key] ? messages[key].message : fallback,
       format: (key, ...args) => messages[key] ? args.reduce((s, arg, i) => s.split('{' + i + '}').join(String(arg)), messages[key].message) : null },
     StatsCharts: stubs,
     StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); } } });
   const local = pageScripts().filter(f => f.startsWith('sections/stats/') && !/history-stats|rule-stats|tools-stats/.test(f));
-  for (const file of ['modules/core/storage-manager.js', 'modules/core/categories.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
+  for (const file of ['modules/core/storage-manager.js', 'modules/core/categories.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
     vm.runInContext(read(file), context, { filename: file });
   }
   await init();

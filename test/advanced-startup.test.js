@@ -29,6 +29,7 @@ function load(response, settings) {
   if (settings !== undefined) context.Utils = { getSettings: async () => settings };
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/core/categories.js'), 'utf8'), context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/core/capture-retention.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
   for (const file of ['advanced.js', 'advanced-runtime.js', 'advanced-tools.js']) vm.runInContext(read(`sections/advanced/${file}`), context);
   const advanced = new context.window.Advanced({ initialized: true }, { currentResults: [] });

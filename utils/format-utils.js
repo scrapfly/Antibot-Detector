@@ -31,6 +31,9 @@ class FormatUtils {
     return duration * unitMs;
   }
 
+  /** How long a detection result is cached when nothing says otherwise (Settings → Detection starts from it). */
+  static DEFAULT_CACHE = Object.freeze({ duration: 7, unit: 'days' });
+
   /**
    * Bring a stored cache duration inside the per-unit range without changing
    * its length. Values saved before the ranges existed (e.g. 48 hours) move
@@ -48,7 +51,7 @@ class FormatUtils {
     const value = Number(duration);
     const sourceUnit = unitMs[unit] ? unit : 'hours';
     if (!Number.isFinite(value) || value <= 0) {
-      return { duration: 7, unit: 'days', exact: false };
+      return { ...FormatUtils.DEFAULT_CACHE, exact: false };
     }
     if (Number.isInteger(value) && value >= 1 && value <= max[sourceUnit]) {
       return { duration: value, unit: sourceUnit, exact: true };
@@ -351,6 +354,24 @@ class FormatUtils {
     payload: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>',
     combination: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7.4 8.2l3.4 7.5M16.6 8.2l-3.4 7.5"/></svg>'
   });
+
+  /**
+   * What a detector's icon is, decided once for every view: an uploaded image (customIcon), the Scrapfly logo (no icon,
+   * "default", "custom" or "custom.png"), a fingerprint glyph (FINGERPRINT_ICONS), an emoji or text, or a file of
+   * detectors/icons. Each view draws the answer in its own markup.
+   * @param {{icon?: string, customIcon?: string}} [detector]
+   * @returns {{kind: 'custom'|'default'|'glyph'|'emoji'|'file', value: string}}
+   */
+  static detectorIcon(detector) {
+    const source = detector && typeof detector === 'object' ? detector : {};
+    if (typeof source.customIcon === 'string' && source.customIcon) return { kind: 'custom', value: source.customIcon };
+    const icon = typeof source.icon === 'string' ? source.icon.trim() : '';
+    const lower = icon.toLowerCase();
+    if (!icon || lower === 'default' || lower === 'custom' || lower === 'custom.png') return { kind: 'default', value: '' };
+    if (FormatUtils.FINGERPRINT_ICONS[lower]) return { kind: 'glyph', value: lower };
+    if (!/\.(?:png|jpe?g|svg|gif|webp)\b|https?:/i.test(icon)) return { kind: 'emoji', value: icon };
+    return { kind: 'file', value: icon };
+  }
 
   /** Settings → Tag Colors: the saved key of each method and its default colour. */
   static METHOD_TAG_COLOR_KEYS = Object.freeze({ cookie: 'cookies', header: 'headers', url: 'urls', content: 'content', dom: 'dom', window: 'window', js_hooks: 'js_hooks', payload: 'payload' });

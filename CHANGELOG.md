@@ -20,7 +20,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - A tag colour chosen in Settings now also colours the chips in the detection details, History and Rules, and an open popup follows without being reopened. The DOM tag is purple there, as in Settings.
 - Statistics → Tools names every Advanced vendor like the Advanced tab; the CAPTCHA vendors added in 3.0 showed their internal ids.
 - The cache tile says Domain, the real default scope, for results saved before the scope was recorded; it said Path.
-- The rule editor shows 80 for a pattern with no confidence of its own, the value detection uses; it showed 100.
+- The rule editor shows 80 for a pattern with no confidence of its own (85 for a DOM pattern), the values detection uses; it showed 100.
+- Statistics → Tools says how long captures are kept as set in Settings; it always said 30 minutes.
+- The icon picker shows the same fingerprint icons as the rule cards; twelve of them were drawn differently.
+- History details show a rule's uploaded icon, an emoji icon and the Scrapfly logo like the Detection tab does.
+- Page notices from Advanced tools are laid out right to left in Arabic.
+- Settings starts the cache duration from 7 days, not 12 hours, when a saved or imported file carries none.
 
 ## [3.0.1] - 2026-10-20
 

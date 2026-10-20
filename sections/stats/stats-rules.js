@@ -76,9 +76,11 @@
     root.StatsCharts.rank(byId('statsRulePatterns'), rows, U.chartOptions(tr('statsRulesPatternsByMethod', 'Patterns by method'), { showRank: false }));
   }
 
-  /** Advanced keeps captures for 30 minutes: only those that have not expired, whatever the date range. */
+  /** Advanced keeps captures for the time set in Settings: only those that have not expired, whatever the date range. */
   function renderTools(app, now = Date.now()) {
     const { state } = app, t = ToolsStats.compute(state.captures, { since: null, now, dayKey: HistoryStats.dayKey });
+    U.setText('statsToolsRetention', fmt('statsToolsRetentionNoteFmt', 'Advanced keeps captures for {0}, so this tab ignores the date range.',
+      CaptureRetention.label(state.captureRetention || CaptureRetention.DEFAULT_MINUTES, tr)));
     U.setText('toolsSaved', num(t.total));
     U.setText('toolsExpiring', num(t.expiringSoon));
     U.setText('toolsVendors', num(t.byModule.length));

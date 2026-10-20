@@ -43,19 +43,17 @@
         return Number.isFinite(parsed) ? parsed : fallback;
     }
 
-    const DEFAULT_CAPTURE_RETENTION_MINUTES = 30;
-    // How long a saved capture is kept, from Settings → Detection (default 30 min, clamped 1 min … 1 week).
+    // How long a saved capture is kept, from Settings → Detection (see CaptureRetention for the limits)
     async function captureRetentionMinutes() {
         try {
-            if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) return DEFAULT_CAPTURE_RETENTION_MINUTES;
+            if (typeof chrome === 'undefined' || !chrome.storage || !chrome.storage.local) return CaptureRetention.DEFAULT_MINUTES;
             const stored = await chrome.storage.local.get(['scrapfly_settings']);
             let value = stored.scrapfly_settings;
-            if (typeof value === 'string') { try { value = JSON.parse(value); } catch (_) { return DEFAULT_CAPTURE_RETENTION_MINUTES; } }
+            if (typeof value === 'string') { try { value = JSON.parse(value); } catch (_) { return CaptureRetention.DEFAULT_MINUTES; } }
             const settings = value && value.settings && typeof value.settings === 'object' ? value.settings : (value && typeof value === 'object' ? value : {});
-            const minutes = Number(settings.detection && settings.detection.captureRetentionMinutes);
-            if (Number.isFinite(minutes) && minutes >= 1 && minutes <= 10080) return Math.round(minutes);
+            return CaptureRetention.minutesOf(settings.detection && settings.detection.captureRetentionMinutes);
         } catch (_) { /* fall through to the default */ }
-        return DEFAULT_CAPTURE_RETENTION_MINUTES;
+        return CaptureRetention.DEFAULT_MINUTES;
     }
 
     function normalizeCapture(moduleId, rawCapture = {}) {

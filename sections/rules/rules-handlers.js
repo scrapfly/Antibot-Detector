@@ -539,13 +539,7 @@ Rules.prototype.handleAddDetector = function() {
     color: '#3b82f6',
     description: 'Custom detector',
     lastUpdated: timestamp,
-    detection: {
-      urls: [],
-      headers: [],
-      cookies: [],
-      content: [],
-      dom: []
-    }
+    detection: {}
   };
 
   // Open edit modal with the new detector - pass isNew as true

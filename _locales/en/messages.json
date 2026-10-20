@@ -6095,5 +6095,9 @@
   "historyClearFilters": {
     "message": "Clear filters",
     "description": "Button under the no-matches message in History: turns every chip off and empties the search"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Advanced keeps captures for {0}, so this tab ignores the date range.",
+    "description": "Note on the Tools tab of the statistics page. {0} is how long captures are kept, as set in Settings (for example 30 minutes, 1 hour, 3 days)"
   }
 }

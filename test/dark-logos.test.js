@@ -30,7 +30,7 @@ test('every brand logo has a dark copy of the same size, and nothing else is the
 
 test('Rules cards show the dark copy of a brand logo, and the original for the light theme', () => {
   const context = { Rules: function Rules() {}, I18n: { get: () => null, format: () => null },
-    FormatUtils: { escapeHtml: s => String(s || ''), escapeAttr: s => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;') },
+    FormatUtils: { FINGERPRINT_ICONS: require('../utils/format-utils.js').FINGERPRINT_ICONS, escapeHtml: s => String(s || ''), escapeAttr: s => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;') },
     chrome: { runtime: { getURL: p => 'chrome-extension://x/' + p } } };
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/categories.js'), 'utf8'), context);
@@ -71,7 +71,7 @@ test('Detection and History show the dark copy of a brand logo through one helpe
   assert.doesNotMatch(detection.DetectionUI.getDetectorIcon({ category: 'fingerprint', detector: { name: 'Canvas', icon: 'canvas_fingerprint.png' } }), /brand-logo/);
   // History's detail dialog too (the History cards show a count per category, no logos)
   const history = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
-  assert.equal((history.match(/FormatUtils\.brandLogoHtml\(detectorObj\.icon, [^,]+, 'modal-detector-icon'\)/g) || []).length, 1);
+  assert.equal((history.match(/FormatUtils\.brandLogoHtml\(icon\.value, [^,]+, 'modal-detector-icon'\)/g) || []).length, 1);
   assert.ok(!/brandLogoHtml\([^)]*'detection-icon'\)/.test(history), 'no logo helper call is left from the removed tag renderer');
 
   // The wrapper makes no box; each theme shows one of the two images

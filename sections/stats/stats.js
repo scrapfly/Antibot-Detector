@@ -89,6 +89,7 @@
       if (typeof U !== 'undefined' && U.setBrandIcons) U.setBrandIcons(icons);
     }
     state.captures = typeof ToolsStats !== 'undefined' ? ToolsStats.parse(stored.scrapfly_advanced_history) : [];
+    state.captureRetention = CaptureRetention.minutesOf(StorageManager.normalizeSettings(stored.scrapfly_settings).detection?.captureRetentionMinutes);
     state.incompatible = Array.isArray(stored.scrapfly_incompatible_updates) ? stored.scrapfly_incompatible_updates : [];
     const remote = Array.isArray(stored.scrapfly_remote_official_ids) ? stored.scrapfly_remote_official_ids : [];
     state.officialIds = new Set([...state.bundledOfficialIds, ...remote].filter(id => typeof id === 'string'));
@@ -475,7 +476,7 @@
     }
     document.title = tr('settingsHistoryStatsTitle', 'History statistics') + ' · Scrapfly';
     document.documentElement.lang = U.locale();
-    document.documentElement.dir = /^(ar|he|fa|ur)\b/.test(U.locale()) ? 'rtl' : 'ltr';
+    document.documentElement.dir = I18n.dir();
     wire();
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== 'local') return;

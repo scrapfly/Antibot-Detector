@@ -59,13 +59,7 @@ Rules.prototype.displayRules = async function() {
         ...detector,
         // The legacy English default name shows in the UI language
         displayName: this.getDetectorDisplayName(detector.name) || detectorName,
-        detection: detector.detection || {
-          urls: [],
-          headers: [],
-          cookies: [],
-          content: [],
-          dom: []
-        }
+        detection: detector.detection || {}
       };
 
       this.allDetectors.push({
@@ -293,13 +287,7 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
         if (!e.target.closest('.detector-actions') && !e.target.closest('.method-tag') && !e.target.closest('.toggle-switch-small')) {
           const detectorToEdit = {
             ...detector,
-            detection: detector.detection || {
-              urls: [],
-              headers: [],
-              cookies: [],
-              content: [],
-              dom: []
-            }
+            detection: detector.detection || {}
           };
           this.openEditModal(detectorToEdit, category, detectorName, false);
         }
@@ -317,13 +305,7 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
         e.stopPropagation();
         const detectorToEdit = {
           ...detector,
-          detection: detector.detection || {
-            urls: [],
-            headers: [],
-            cookies: [],
-            content: [],
-            dom: []
-          }
+          detection: detector.detection || {}
         };
         this.openEditModal(detectorToEdit, category, detectorName, false);
       });

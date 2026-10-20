@@ -1232,7 +1232,7 @@ class DetectionEngineManager {
                         type: 'dom',
                         selector: domPattern.selector,
                         value: `${domPattern.selector}=${truncatedText}`,
-                        confidence: domPattern.confidence || 85,
+                        confidence: domPattern.confidence || Constants.DEFAULT_DOM_CONFIDENCE,
                         patternId: DetectionEngineManager.patternIdOf(detector, domPattern),
                         description: domPattern.description
                     });

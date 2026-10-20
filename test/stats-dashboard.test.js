@@ -782,6 +782,10 @@ test('Tools lists live captures only, counts the expired ones apart and refreshe
   assert.equal(ui.text('toolsSaved'), '2');
   assert.equal(ui.text('toolsExpiring'), '1');
   assert.equal(ui.text('toolsVendors'), '1');
+  // The note names the retention set in Settings (30 minutes unless it was changed)
+  assert.equal(ui.text('statsToolsRetention'), msg('statsToolsRetentionNoteFmt', '30 minutes'));
+  const slow = await createPage(basic(), { preferences: { scrapfly_advanced_history: captures, scrapfly_stats_section: 'tools', scrapfly_settings: { detection: { captureRetentionMinutes: 180 } } } });
+  assert.equal(slow.text('statsToolsRetention'), msg('statsToolsRetentionNoteFmt', '3 hours'));
   assert.equal(ui.id('statsToolsStale').hidden, false);
   assert.equal(ui.text('statsToolsStale'), msg('statsToolsStaleFmt', 1));
   const rows = ui.rows('statsCaptureTable');

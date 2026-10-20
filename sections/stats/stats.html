@@ -243,7 +243,7 @@
       <section class="stats-panel" id="stats-panel-tools" role="tabpanel" aria-labelledby="stats-tab-tools" tabindex="0" hidden>
         <h2 class="stats-sr-only" data-i18n="statsSectionTools">Tools</h2>
         <p class="stats-lead" data-i18n="statsToolsNote">Advanced captures and tool results saved on this device.</p>
-        <p class="stats-card-note" id="statsToolsRetention" data-i18n="statsToolsRetentionNote">Advanced keeps captures for 30 minutes, so this tab ignores the date range.</p>
+        <p class="stats-card-note" id="statsToolsRetention">Advanced keeps captures for a limited time, so this tab ignores the date range.</p>
         <div class="stats-kpis stats-kpis--compact">
           <div class="stats-kpi stats-kpi--compact" data-tone="accent"><div class="stats-kpi-label" data-i18n="statsToolsSavedNow">Saved now</div><div class="stats-kpi-row"><div class="stats-kpi-value" id="toolsSaved">0</div></div></div>
           <div class="stats-kpi stats-kpi--compact" data-tone="warning"><div class="stats-kpi-label" data-i18n="statsToolsExpiringSoon">Expiring within 10 minutes</div><div class="stats-kpi-row"><div class="stats-kpi-value" id="toolsExpiring">0</div></div></div>
@@ -264,6 +264,7 @@
   <script src="../../modules/core/rule-i18n.js"></script>
   <script src="../../modules/ui/tooltip.js"></script>
   <script src="../../modules/core/categories.js"></script>
+  <script src="../../modules/core/capture-retention.js"></script>
   <script src="../../utils/format-utils.js"></script>
   <script src="../../utils/detection-utils.js"></script>
   <script src="../../modules/advanced/captcha-vendors.js"></script>

@@ -12,7 +12,7 @@ const root = path.join(__dirname, '..');
 function engineWith(scope, storage) {
   const context = vm.createContext({
     URL, Date, JSON, Math, Map, Set, Promise, console,
-    Constants: { DEFAULT_MATCH_CONFIDENCE: 80, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
+    Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
     Logger: { warn() {}, debug() {}, detection() {}, cache() {}, error() {}, debugMode: false },
     Utils: { getCacheScope: async () => scope },
     chrome: { storage: { local: {

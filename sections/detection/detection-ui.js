@@ -1510,62 +1510,31 @@ DetectionUI.getDetectorIcon = function(detection) {
       `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${FormatUtils.escapeAttr(src)}" alt="${alt}" class="detector-icon fingerprint-icon-image fingerprint-icon-image--${sourceType}" /></div>`
     );
 
-    // Check for custom uploaded icon first
-    if (detection.detector?.customIcon) {
-      if (isFingerprintCategory) {
-        return wrapFingerprintImage(detection.detector.customIcon, escapeAlt(detection.detector.name), 'custom');
+    // The kind of icon is decided in one place (FormatUtils.detectorIcon); this tab draws it
+    const icon = FormatUtils.detectorIcon(detection.detector);
+    const name = detection.detector?.name;
+    switch (icon.kind) {
+      case 'custom':
+        return isFingerprintCategory
+          ? wrapFingerprintImage(icon.value, escapeAlt(name), 'custom')
+          : `<img src="${FormatUtils.escapeAttr(icon.value)}" alt="${escapeAlt(name)}" class="detector-icon" />`;
+      case 'glyph':
+        return `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell">${fingerprintIcons[icon.value]}</div>`;
+      case 'emoji':
+        // An emoji or text, escaped before it lands in innerHTML
+        return FormatUtils.escapeHtml(icon.value);
+      case 'file':
+        if (isFingerprintCategory) return wrapFingerprintImage(chrome.runtime.getURL(`detectors/icons/${icon.value}`), escapeAlt(name), 'builtin');
+        // Brand logos: the dark copy in the dark theme, the original in the light one
+        return FormatUtils.brandLogoHtml(icon.value, name || iconAlt, 'detector-icon');
+      default: {
+        // No icon, or the Scrapfly default
+        const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
+        return isFingerprintCategory
+          ? wrapFingerprintImage(scrapflyIcon, escapeAlt(name), 'default')
+          : `<img src="${scrapflyIcon}" alt="${escapeAlt(name)}" class="detector-icon" />`;
       }
-      return `<img src="${FormatUtils.escapeAttr(detection.detector.customIcon)}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
     }
-
-    // Try to get real icon from detector data
-    if (detection.detector?.icon) {
-      if (typeof detection.detector.icon === 'string') {
-        const lowerIcon = detection.detector.icon.toLowerCase();
-        if (lowerIcon === 'default') {
-          const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
-          if (isFingerprintCategory) {
-            return wrapFingerprintImage(scrapflyIcon, escapeAlt(detection.detector.name), 'default');
-          }
-          return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
-        }
-        if (lowerIcon === 'custom' || lowerIcon === 'custom.png') {
-          const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
-          if (isFingerprintCategory) {
-            return wrapFingerprintImage(scrapflyIcon, escapeAlt(detection.detector.name), 'default');
-          }
-          return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector.name)}" class="detector-icon" />`;
-        }
-
-        // Check for fingerprint SVG icons
-        if (fingerprintIcons[lowerIcon]) {
-          return `<div class="detector-icon detector-icon-svg fingerprint-icon fingerprint-icon-shell">${fingerprintIcons[lowerIcon]}</div>`;
-        }
-      }
-      // Check if it's an emoji (not a file name)
-      if (!detection.detector.icon.includes('.png') &&
-          !detection.detector.icon.includes('.jpg') &&
-          !detection.detector.icon.includes('.svg') &&
-          !detection.detector.icon.includes('http')) {
-        // It's an emoji or text — escape before it lands in innerHTML.
-        return FormatUtils.escapeHtml(detection.detector.icon);
-      }
-
-      // It's a file, build path to icon in detectors/icons folder
-      if (isFingerprintCategory) {
-        const iconPath = chrome.runtime.getURL(`detectors/icons/${detection.detector.icon}`);
-        return wrapFingerprintImage(iconPath, escapeAlt(detection.detector.name), 'builtin');
-      }
-      // Brand logos: the dark copy in the dark theme, the original in the light one
-      return FormatUtils.brandLogoHtml(detection.detector.icon, detection.detector.name || iconAlt, 'detector-icon');
-    }
-
-    // No icon specified, use default custom.png
-    const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
-    if (isFingerprintCategory) {
-      return wrapFingerprintImage(scrapflyIcon, escapeAlt(detection.detector?.name), 'default');
-    }
-    return `<img src="${scrapflyIcon}" alt="${escapeAlt(detection.detector?.name)}" class="detector-icon" />`;
 };
 
 DetectionUI.clearBadgeForEmptyState = async function() {

@@ -32,7 +32,7 @@ function fixture(initial = {}) {
     };
     context.self = context;
     vm.createContext(context);
-    for (const file of ['modules/advanced/vendor-registry.js', 'modules/advanced/result-model.js',
+    for (const file of ['modules/core/capture-retention.js', 'modules/advanced/vendor-registry.js', 'modules/advanced/result-model.js',
         'background/advanced/history-store.js', 'background/advanced/page-notice.js',
         'background/advanced/collector-utils.js', 'background/advanced/job-manager.js', 'background/advanced/script-analysis.js']) {
         vm.runInContext(read(file), context, { filename: file });

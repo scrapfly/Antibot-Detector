@@ -65,3 +65,18 @@ test('the Advanced sections keep no hand-written list of vendor names or CAPTCHA
     assert.ok(!/DISPLAY_NAMES|CAPTCHA_MODULES/.test(read(file)), `${file} mentions a vendor list that the registry replaced`);
   }
 });
+
+test('the worker side of each vendor names it the way the registry does', () => {
+  const folder = path.join(root, 'background/advanced/vendors');
+  let checked = 0;
+  for (const id of fs.readdirSync(folder).filter(name => fs.statSync(path.join(folder, name)).isDirectory())) {
+    const vendor = registry.vendors[registry.canonical(id)];
+    if (!vendor) continue; // the generic CAPTCHA interceptor serves every data-driven vendor
+    const source = read(`background/advanced/vendors/${id}/interceptor.js`);
+    // The page notices ("module: 'Akamai'" above the title, "{0} Monitoring Started") name the vendor
+    const written = new Set([...source.matchAll(/\bmodule: '([^']+)'/g)].map(match => match[1]));
+    for (const name of written) assert.strictEqual(name, vendor.displayName, `${id} writes "${name}"`);
+    checked += written.size ? 1 : 0;
+  }
+  assert.ok(checked >= 6, 'the vendors that name themselves in a page notice are checked');
+});

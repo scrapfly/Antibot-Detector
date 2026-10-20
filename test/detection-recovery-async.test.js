@@ -8,7 +8,7 @@ function harness() {
     const messages = [], timers = [], badges = [], errors = [], rendered = [];
     const settings = { detection: { blacklistedDomains: ['example.test'] } };
     const context = vm.createContext({
-        Constants: { DEFAULT_MATCH_CONFIDENCE: 80, ANALYSIS_CACHE_TTL: 300000,
+        Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000,
             PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000, FETCH_TIMEOUT: 1000 },
         Logger: { debugMode: false, ui() {}, debug() {}, detection() {}, cache() {}, warn() {},
             error(...args) { errors.push(args); } },

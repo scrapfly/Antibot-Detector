@@ -1026,23 +1026,23 @@ class History {
       }
       const isFingerprintCategory = catClass === 'fingerprint';
 
-      // Detector icon: vendor logo on a white plate, fingerprint glyphs tinted blue
-      let detectorIconHtml = '';
-      if (detectorObj && detectorObj.icon) {
-        const iconName = detectorObj.icon.toLowerCase();
-        if (FormatUtils.FINGERPRINT_ICONS[iconName]) {
-          detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell">${FormatUtils.FINGERPRINT_ICONS[iconName]}</div>`;
-        } else {
-          const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-          detectorIconHtml = isFingerprintCategory
-            ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-modal-fingerprint-image"></div>`
-            : FormatUtils.brandLogoHtml(detectorObj.icon, rawName || name, 'modal-detector-icon');
-        }
+      // Detector icon, the same choice as the Detection tab (FormatUtils.detectorIcon): vendor logo on a white plate,
+      // fingerprint glyphs tinted blue, an uploaded image, an emoji, or the Scrapfly logo
+      const icon = FormatUtils.detectorIcon(detectorObj);
+      let detectorIconHtml;
+      if (icon.kind === 'glyph') {
+        detectorIconHtml = `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell">${FormatUtils.FINGERPRINT_ICONS[icon.value]}</div>`;
+      } else if (icon.kind === 'emoji') {
+        detectorIconHtml = FormatUtils.escapeHtml(icon.value);
+      } else if (icon.kind === 'file' && !isFingerprintCategory) {
+        detectorIconHtml = FormatUtils.brandLogoHtml(icon.value, rawName || name, 'modal-detector-icon');
       } else {
-        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon128.png');
+        const [src, source] = icon.kind === 'custom' ? [icon.value, 'custom']
+          : icon.kind === 'file' ? [chrome.runtime.getURL(`detectors/icons/${icon.value}`), 'builtin']
+            : [chrome.runtime.getURL('icons/icon128.png'), 'default'];
         detectorIconHtml = isFingerprintCategory
-          ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-modal-fingerprint-image"></div>`
-          : `<img src="${scrapflyIconUrl}" alt="${safeName}" class="modal-detector-icon modal-detector-icon--default">`;
+          ? `<div class="modal-detector-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${FormatUtils.escapeAttr(src)}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--${source} history-modal-fingerprint-image"></div>`
+          : `<img src="${FormatUtils.escapeAttr(src)}" alt="${safeName}" class="modal-detector-icon${source === 'default' ? ' modal-detector-icon--default' : ''}">`;
       }
 
       const methodsHtml = this.renderDetectionMethods(detection.matches || []);

@@ -410,7 +410,7 @@ For pull requests:
 
 - `npm run verify` must pass.
 - Record user-visible changes in [`CHANGELOG.md`](CHANGELOG.md) under `[Unreleased]`: one short line that describes what changes for the person using the extension.
-- New interface text goes into all 12 files in `_locales/`; `npm run check:locale` checks it.
+- New interface text goes into every folder of `_locales/`; `npm run check:locale` checks it.
 - There is no bundler, so a new script file has to be added, after the files it depends on, everywhere it is loaded: `background.js`, `popup.html` or the `content_scripts` list in `manifest.json`. `test/load-order.test.js` checks the order.
 
 ## License

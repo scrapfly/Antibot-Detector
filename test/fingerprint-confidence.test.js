@@ -15,7 +15,7 @@ const fingerprint = Object.fromEntries(fs.readdirSync(directory)
 
 // Exercise the production installation, matching, and background scoring pipeline.
 const context = vm.createContext({
-  Constants: { DEFAULT_MATCH_CONFIDENCE: 80, ANALYSIS_CACHE_TTL: 300000,
+  Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000,
     PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
   Logger: { warn() {}, debug() {}, detection() {}, cache() {}, debugMode: false,
     error(...args) { throw new Error(args.join(' ')); } },

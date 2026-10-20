@@ -296,7 +296,7 @@ test('the worker routes every vendor\'s Analyze Scripts and reports only that ve
       storage: { local: { async get() { return {}; }, async set() {} } } } };
   context.self = context;
   vm.createContext(context);
-  for (const file of ['modules/core/message-types.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'modules/advanced/result-model.js',
+  for (const file of ['modules/core/message-types.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'modules/advanced/result-model.js',
     'background/advanced/history-store.js', 'background/advanced/page-notice.js', 'background/advanced/collector-utils.js', 'background/advanced/job-manager.js',
     'background/advanced/script-analysis.js', 'background/advanced/vendors/captcha/interceptor.js', 'background/handlers/messages-advanced-capture.js']) {
     vm.runInContext(read(file), context, { filename: file });

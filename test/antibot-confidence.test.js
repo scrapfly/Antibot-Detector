@@ -22,7 +22,7 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/antib
 const { isLikelyEvilRegex } = require('../utils/pattern-cache.js');
 
 const context = vm.createContext({
-  Constants: { DEFAULT_MATCH_CONFIDENCE: 80, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
+  Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
   Logger: new Proxy({}, { get: (_, key) => key === 'debugMode' ? false :
     key === 'error' ? (...args) => { throw new Error(args.join(' ')); } : () => {} }),
   setTimeout, clearTimeout

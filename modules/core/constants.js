@@ -31,6 +31,7 @@ const Constants = Object.freeze({
 
     // ─── Detector Defaults ─────────────────────────────────────────────────────
     DEFAULT_MATCH_CONFIDENCE: 80,          // confidence of a detector entry that declares none
+    DEFAULT_DOM_CONFIDENCE: 85,            // confidence of a DOM pattern that declares none
 
     // ─── Retry Configuration ───────────────────────────────────────────────────
     DETECTOR_LOAD_MAX_RETRIES: 20,         // max retries for detector loading

@@ -49,25 +49,27 @@ test('worker responsibilities never load popup sections', () => {
   assertBefore(workerImports(), 'background/detection-session-store.js', 'background/detection-lifecycle.js');
 });
 
-test('every script that reads the category module loads after it, in the popup, the worker, the stats page and the content script', () => {
+test('every script that reads a shared global module loads after it, in the popup, the worker, the stats page and the content script', () => {
   const stats = [...read('sections/stats/stats.html').matchAll(/<script\s+src="([^"]+)"/g)].map(m => path.posix.join('sections/stats', m[1]));
   const manifest = JSON.parse(read('manifest.json'));
   const contexts = {
     popup: popupScripts(), worker: workerImports(), stats,
     content: manifest.content_scripts.find(entry => entry.world !== 'MAIN').js
   };
-  const MODULE = 'modules/core/categories.js';
-  let readers = 0;
-  for (const [name, graph] of Object.entries(contexts)) {
-    for (const file of graph.filter(entry => entry !== MODULE && /\bCategories\./.test(read(entry)))) {
-      readers++;
-      assertBefore(graph, MODULE, file);
-      assert.ok(name, file);
+  const MODULES = { Categories: 'modules/core/categories.js', CaptureRetention: 'modules/core/capture-retention.js' };
+  const readers = { Categories: 0, CaptureRetention: 0 };
+  for (const [global, module] of Object.entries(MODULES)) {
+    for (const graph of Object.values(contexts)) {
+      for (const file of graph.filter(entry => entry !== module && new RegExp(`\\b${global}\\.`).test(read(entry)))) {
+        readers[global]++;
+        assertBefore(graph, module, file);
+      }
     }
+    // The page's own world shares its globals with the site, so nothing shared is loaded there
+    assert.ok(!manifest.content_scripts.find(entry => entry.world === 'MAIN').js.includes(module));
   }
-  assert.ok(readers >= 20, 'the guard finds the scripts that use the module');
-  // The page's own world shares its globals with the site, so nothing shared is loaded there
-  assert.ok(!manifest.content_scripts.find(entry => entry.world === 'MAIN').js.includes(MODULE));
+  assert.ok(readers.Categories >= 20, 'the guard finds the scripts that use the category module');
+  assert.ok(readers.CaptureRetention >= 4, 'the guard finds the scripts that use the capture retention module');
 });
 
 test('rules and integration graphs load dependencies before their users', () => {

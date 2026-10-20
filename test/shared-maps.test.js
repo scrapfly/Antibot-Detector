@@ -35,6 +35,43 @@ test('the built-in fallback index is detectors/index.json', () => {
   assert.deepStrictEqual(fallback, file, 'update CategoryManager.getPackagedFallbackIndex to the new detectors/index.json');
 });
 
+const extensionScripts = () => {
+  const out = [];
+  const skip = new Set(['node_modules', 'test', 'scripts', '.git', '.claude', 'detectors', '_locales', 'assets', 'icons', 'store']);
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.isDirectory()) { if (!skip.has(entry.name)) walk(path.join(dir, entry.name)); continue; }
+      if (entry.name.endsWith('.js')) out.push(path.relative(path.join(__dirname, '..'), path.join(dir, entry.name)).split(path.sep).join('/'));
+    }
+  };
+  walk(path.join(__dirname, '..'));
+  return out;
+};
+
+test('the fingerprint glyphs are drawn from one map: the Rules cards and the icon picker had copies, and the picker\'s differed', () => {
+  const holders = extensionScripts().filter(file => /_fingerprint\.png':\s*'<svg/.test(read(file)));
+  assert.deepStrictEqual(holders, ['utils/format-utils.js']);
+  for (const file of ['sections/rules/rules-formatters.js', 'sections/rules/modals/icon-picker-modal.js']) {
+    assert.ok(/FormatUtils\.FINGERPRINT_ICONS/.test(read(file)), `${file} reads the shared map`);
+  }
+});
+
+test('a detector\'s icon is classified once for every view', () => {
+  const glyph = Object.keys(FormatUtils.FINGERPRINT_ICONS)[0];
+  const cases = [
+    [{ customIcon: 'data:image/png;base64,AAAA', icon: 'akamai_official.png' }, 'custom', 'data:image/png;base64,AAAA'],
+    [{ icon: 'default' }, 'default', ''], [{ icon: 'Custom' }, 'default', ''], [{ icon: 'custom.png' }, 'default', ''],
+    [{}, 'default', ''], [undefined, 'default', ''], [null, 'default', ''], ['a string', 'default', ''], [{ icon: 5 }, 'default', ''],
+    [{ icon: glyph.toUpperCase() }, 'glyph', glyph],
+    [{ icon: 'akamai_official.png' }, 'file', 'akamai_official.png'], [{ icon: 'LOGO.PNG' }, 'file', 'LOGO.PNG'],
+    [{ icon: 'logo.jpeg' }, 'file', 'logo.jpeg'], [{ icon: 'https://x.test/a' }, 'file', 'https://x.test/a'],
+    [{ icon: '🛡️' }, 'emoji', '🛡️'], [{ icon: 'WAF' }, 'emoji', 'WAF']
+  ];
+  for (const [detector, kind, value] of cases) {
+    assert.deepStrictEqual({ ...FormatUtils.detectorIcon(detector) }, { kind, value }, JSON.stringify(detector));
+  }
+});
+
 test('no view keeps its own copy of the icon, label or colour maps', () => {
   assert.ok(!/_fingerprint\.png':\s*'<svg/.test(read('sections/history/history.js')), 'History');
   assert.ok(!/_fingerprint\.png':\s*'<svg/.test(read('sections/detection/detection-ui.js')), 'Detection');

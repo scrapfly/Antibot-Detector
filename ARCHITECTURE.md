@@ -53,10 +53,11 @@ share a bounded lifecycle. Keep vendor timeouts and stored formats compatible.
 
 Run `npm run verify` after changing the graph. Deterministic Chromium checks are
 `npm run e2e:methods`, `npm run e2e:settings`, `npm run e2e:editor`, and
-`npm run e2e:updater`. Popup regressions are `npm run e2e:refactor` and
-`npm run e2e:settings-modal`. These require Playwright and its Chromium browser.
+`npm run e2e:updater`. Popup regressions are `npm run e2e:refactor`,
+`npm run e2e:settings-modal`, `npm run e2e:history` (every History option) and
+`npm run e2e:languages` (every interface language). These require Playwright
+and its Chromium browser.
 
-The local 2.8.6 candidate is unreleased. Its user-visible changes stay under
-`Unreleased` in `CHANGELOG.md` until publication is authorized. Creating a tag
-triggers release/store workflows, so local preparation must not create or push
-a release tag.
+Work that is not released yet stays in `CHANGELOG.md`, under the version being
+prepared, until publication is authorized. Creating a tag triggers release/store
+workflows, so local preparation must not create or push a release tag.

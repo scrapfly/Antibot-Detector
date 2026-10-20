@@ -34,13 +34,7 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     // Ensure detector has detection property before storing
     const detectorWithDetection = {
       ...JSON.parse(JSON.stringify(detector)),
-      detection: JSON.parse(JSON.stringify(detector.detection || {
-        urls: [],
-        headers: [],
-        cookies: [],
-        content: [],
-        dom: []
-      }))
+      detection: JSON.parse(JSON.stringify(detector.detection || {}))
     };
 
     // Store current detector data BEFORE populating modal

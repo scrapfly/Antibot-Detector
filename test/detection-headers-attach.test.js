@@ -46,7 +46,7 @@ test('the content script still sends no hostname, so the background must derive 
 
 test('request-scope header rules see the request headers in detectOnPage', async () => {
   const ctx = vm.createContext({
-    Constants: { DEFAULT_MATCH_CONFIDENCE: 80, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
+    Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
     Logger: new Proxy({}, { get: (_, k) => (k === 'debugMode' ? false : () => {}) }), setTimeout, clearTimeout, console
   });
   ctx.window = ctx;

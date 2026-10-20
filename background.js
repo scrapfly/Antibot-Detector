@@ -11,6 +11,7 @@ importScripts(
     './modules/core/message-types.js',
     './modules/core/ttl-map.js',
     './modules/core/categories.js',
+    './modules/core/capture-retention.js',
     './utils/format-utils.js',
     './utils/url-utils.js',
     './utils/page-cookies.js',
