@@ -284,7 +284,10 @@ function loadRuntime(webhook, calls) {
   };
   sandbox.self = sandbox;
   vm.createContext(sandbox);
-  vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'modules/settings/settings-runtime.js'), 'utf8'), sandbox);
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/webhook-filter.js', 'modules/core/webhook-log.js',
+    'modules/settings/settings-runtime.js', 'modules/settings/webhook-runtime.js']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), sandbox);
+  }
   return sandbox.SettingsRuntime;
 }
 

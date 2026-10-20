@@ -36,6 +36,10 @@
   const combinationsEngine = () => root.DetectionCombinations
     || (typeof module !== 'undefined' && typeof require === 'function' ? require('../detection/detection-combinations.js') : null);
 
+  // The check that a message comes from an extension page (loaded in the worker; required in Node tests)
+  const messageSender = () => root.MessageSender
+    || (typeof module !== 'undefined' && typeof require === 'function' ? require('./message-sender.js') : null);
+
   // Optional async function the worker registers to free space elsewhere
   // (the detection cache, which rebuilds itself) before history entries go.
   // It must never wait on this store's queue.
@@ -343,17 +347,8 @@
       return true;
     };
     const store = () => storage || (root.chrome && root.chrome.storage && root.chrome.storage.local);
-    // Only extension pages (popup, settings, stats) may change history, never a
-    // content script inside a web page. Decide by the sender's URL: an extension
-    // page opened in a tab also carries sender.tab, so that alone is not enough.
-    const isExtensionPage = (sender) => {
-      if (!sender) return true; // direct in-worker call
-      const runtime = root.chrome && root.chrome.runtime;
-      const base = runtime && typeof runtime.getURL === 'function' ? runtime.getURL('') : '';
-      const url = String(sender.url || sender.origin || '');
-      if (base && url.startsWith(base)) return true;
-      return !sender.tab && !url; // no tab and no URL: another extension context
-    };
+    // Only extension pages (popup, settings, stats) may change history, never a content script inside a web page
+    const isExtensionPage = (sender) => messageSender().isExtensionPage(sender, root.chrome && root.chrome.runtime);
     const guard = (handler) => (args) => {
       if (!isExtensionPage(args.sender)) {
         args.sendResponse({ status: 'error', error: 'History changes are only accepted from extension pages' });

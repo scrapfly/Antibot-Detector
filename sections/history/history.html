@@ -18,10 +18,11 @@
   <!-- Filter chips under the search: Pinned, Changed and the categories (combined with AND, categories with OR) -->
   <div id="historyFilters" class="history-filters" role="group" aria-label="Filter history" data-i18n-aria-label="historyFiltersLabel" hidden>
     <button type="button" class="history-filter-chip" data-filter="pinned" aria-pressed="false">
-      <span class="history-filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5" fill="none"/><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg></span>
+      <span class="history-filter-icon" data-ui-icon="pin" aria-hidden="true"></span>
       <span data-i18n="historyFilterPinned">Pinned</span>
     </button>
     <button type="button" class="history-filter-chip history-filter-chip--changed" data-filter="changed" aria-pressed="false">
+      <span class="history-filter-icon" data-ui-icon="changed" aria-hidden="true"></span>
       <span data-i18n="historyChangedBadge">Changed</span>
     </button>
     <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">

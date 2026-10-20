@@ -6463,5 +6463,93 @@
   "settingsUiErrSiteList": {
     "message": "A list of sites must hold site names only",
     "description": "Error shown when a list of skipped or chosen sites holds something that is not a site name"
+  },
+  "webhookFilterTitle": {
+    "message": "Send only when",
+    "description": "Title of the group in the webhook settings with the conditions a page must meet to be sent"
+  },
+  "webhookFilterDesc": {
+    "message": "A page is sent only if all of these hold. The payload still lists everything found on it.",
+    "description": "Description of the Send only when group of the webhook settings"
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Minimum confidence (%)",
+    "description": "Label of the field that sets the lowest confidence a page's strongest protection needs for the webhook to be sent, in percent"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Categories",
+    "description": "Label of the checkboxes that choose which categories of protection make the webhook send"
+  },
+  "webhookCategoriesHint": {
+    "message": "Leave all unchecked to send for any category.",
+    "description": "Hint under the category checkboxes of the webhook settings"
+  },
+  "webhookDomainsLabel": {
+    "message": "Only these sites",
+    "description": "Label of the field that lists the only sites the webhook is sent for"
+  },
+  "webhookDomainsHint": {
+    "message": "One per line, with their subdomains. Empty means every site.",
+    "description": "Hint under the list of sites of the webhook settings"
+  },
+  "webhookLogTitle": {
+    "message": "Recent deliveries",
+    "description": "Title of the list of the webhook's most recent attempts"
+  },
+  "webhookLogDesc": {
+    "message": "The last 20 attempts: when, which page, what came back. Addresses and payloads are never kept.",
+    "description": "Description of the list of the webhook's most recent attempts"
+  },
+  "webhookLogEmpty": {
+    "message": "Nothing sent yet.",
+    "description": "Shown instead of the list of recent webhook deliveries while it is empty"
+  },
+  "webhookLogClear": {
+    "message": "Clear",
+    "description": "Link that empties the list of recent webhook deliveries"
+  },
+  "webhookLogSent": {
+    "message": "Sent",
+    "description": "Outcome in the list of recent webhook deliveries: the page was sent and the server accepted it"
+  },
+  "webhookLogFailed": {
+    "message": "Failed",
+    "description": "Outcome in the list of recent webhook deliveries: the server refused the request or did not answer"
+  },
+  "webhookLogSkipped": {
+    "message": "Not sent",
+    "description": "Outcome in the list of recent webhook deliveries: the page did not meet the conditions"
+  },
+  "webhookLogReasonSite": {
+    "message": "site not on the list",
+    "description": "Why a page was not sent: its site is not in the list of sites"
+  },
+  "webhookLogReasonCategory": {
+    "message": "category not selected",
+    "description": "Why a page was not sent: none of its protections is in a selected category"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "below the minimum confidence",
+    "description": "Why a page was not sent: its strongest protection is below the minimum confidence"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "no answer",
+    "description": "Why a webhook delivery failed: the server could not be reached"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "address not allowed",
+    "description": "Why a webhook delivery failed: the address is not HTTPS or not a public host"
+  },
+  "webhookLogErrorConfig": {
+    "message": "invalid method",
+    "description": "Why a webhook delivery failed: the HTTP method is not allowed"
+  },
+  "webhookLogTriggerCache": {
+    "message": "cached page",
+    "description": "Marks a webhook delivery that was made for a page whose result came from the cache"
+  },
+  "webhookLogTriggerTest": {
+    "message": "test",
+    "description": "Marks a webhook delivery that was the Test button"
   }
 }

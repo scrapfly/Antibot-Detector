@@ -24,7 +24,7 @@ function harness(webhook) {
     NotificationHelper: { success: text => notifications.push(text), error: text => notifications.push(text) }
   });
   context.self = context;
-  for (const file of ['modules/settings/settings-runtime.js', 'sections/settings/settings-ui-webhook.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/webhook-filter.js', 'modules/core/webhook-log.js', 'modules/settings/settings-runtime.js', 'modules/settings/webhook-runtime.js', 'sections/settings/settings-ui-webhook.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
   return { context, calls, logs, notifications, fields, test: () => context.SettingsUI.handleTestWebhook.call({
     settings: { webhook }, escapeHtml: text => text, getWebhookContentTypeValue: () => webhook.webhookContentType || 'application/json'
   }) };

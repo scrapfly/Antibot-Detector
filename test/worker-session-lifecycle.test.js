@@ -273,3 +273,63 @@ test('late completion cannot emit progress or restart finalization after a faile
   assert.equal(state.completedMethods.size, 0);
   assert.equal(state.timers.size, 0);
 });
+
+test('the webhook gets the finished results of a scan run just now, late requests included, once the cache is written', async () => {
+  const h = harness();
+  const order = [], sent = [];
+  h.ctx.DetectionEngineManager.storeDetection = async (url, page, results) => { order.push('cache'); return { ...page, detectionResults: results }; };
+  h.ctx.Settings.sendWebhookIfEnabled = async (page, results, options) => { order.push('webhook'); sent.push(JSON.parse(JSON.stringify({ page, ids: results.map(result => result.detector.id), options }))); };
+  h.ctx.networkUrlsStore.set(7, [{ url: 'https://example.test/late.js' }]);
+  h.ctx.detectionEngine = { detectOnPage: async () => [{ detector: { id: 'detect-late' }, confidence: 80, matches: [], detectionMethods: ['urls'] }] };
+  const state = h.begin();
+  await h.ctx.finalizeDetection(7, state);
+  assert.deepEqual(order, ['cache', 'webhook']);
+  assert.equal(sent.length, 1);
+  assert.deepEqual(sent[0].ids.sort(), ['detect-demo', 'detect-late']);
+  assert.deepEqual(sent[0].options, { trigger: 'scan' });
+  assert.equal(sent[0].page.hostname, 'example.test');
+  assert.equal(sent[0].page.url, 'https://example.test/');
+});
+
+test('a rescan that found nothing new and kept the cached detections is not sent again', async () => {
+  const h = harness();
+  const sent = [];
+  h.ctx.Settings.sendWebhookIfEnabled = async (...args) => { sent.push(args); };
+  h.ctx.DetectionEngineManager.storeDetection = async () => ({ preservedExisting: true, detectionResults: [{ detector: { id: 'detect-cached' }, confidence: 90, matches: [] }] });
+  await h.ctx.finalizeDetection(7, h.begin());
+  assert.deepEqual(sent, []);
+});
+
+test('a scan with no detections sends nothing', async () => {
+  const h = harness();
+  const sent = [];
+  h.ctx.Settings.sendWebhookIfEnabled = async (...args) => { sent.push(args); };
+  const state = h.begin();
+  state.mainData = [];
+  await h.ctx.finalizeDetection(7, state);
+  assert.deepEqual(sent, []);
+});
+
+test('a webhook step that throws never fails the scan', async () => {
+  const h = harness();
+  h.ctx.Settings.sendWebhookIfEnabled = async () => { throw new Error('synthetic webhook failure'); };
+  const state = h.begin();
+  await h.ctx.finalizeDetection(7, state);
+  assert.notEqual(state.failed, true);
+  assert.equal(h.ctx.detectionStates.has(7), false, 'the scan finished');
+  assert.equal(h.calls.popup.length, 1, 'the popup was told');
+});
+
+test('a scan replaced before the webhook step sends nothing', async () => {
+  const h = harness();
+  const gate = deferred(), arrived = deferred(), sent = [];
+  h.ctx.Settings.sendWebhookIfEnabled = async (...args) => { sent.push(args); };
+  h.ctx.Utils.getHistorySettings = async () => { arrived.resolve(); await gate.promise; return {}; };
+  const old = h.begin();
+  const finishing = h.ctx.finalizeDetection(7, old);
+  await arrived.promise;
+  h.begin();
+  gate.resolve();
+  await finishing;
+  assert.deepEqual(sent, []);
+});

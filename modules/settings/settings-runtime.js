@@ -263,19 +263,7 @@ SettingsRuntime.sendWebhook = async function(webhook, ctx) {
     }
 };
 
-SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults) {
-    try {
-        const settings = await Utils.getSettings();
-        const webhook = settings.webhook || {};
-        if (!webhook.enableWebhook || !webhook.webhookUrl) return;
-        const ctx = SettingsRuntime._buildWebhookContext(pageData, detectionResults);
-        const response = await SettingsRuntime.sendWebhook(webhook, ctx);
-        if (response.ok) Logger.network('Webhook sent successfully', { status: response.status });
-        else Logger.warn('NETWORK', 'Webhook returned non-OK status', { status: response.status });
-    } catch (_) {
-        Logger.error('NETWORK', 'Webhook could not be sent');
-    }
-};
+// Whether a page is sent, and the record of it: modules/settings/webhook-runtime.js (the service worker's side)
 
 SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
     try {

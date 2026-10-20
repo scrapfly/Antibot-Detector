@@ -255,6 +255,35 @@ test('PAGE_LOAD cached notifications target the sending document and record its 
   assert.equal(h.effects.filter(effect => effect.kind === 'history').length, 1);
 });
 
+test('PAGE_LOAD offers a cached page to the webhook as a cache delivery, described by the document that sent it', async () => {
+  const h = pageLoadHarness();
+  const sent = [];
+  h.dependencies.Settings = { sendWebhookIfEnabled: async (page, results, options) => { sent.push(JSON.parse(JSON.stringify({ page, count: results.length, options }))); } };
+  await h.run();
+  assert.equal(sent.length, 1);
+  assert.deepEqual(sent[0].options, { trigger: 'cache' });
+  assert.deepEqual({ url: sent[0].page.url, hostname: sent[0].page.hostname, title: sent[0].page.title, count: sent[0].count }, { url: 'https://example.test/', hostname: 'example.test', title: 'Example', count: 1 });
+});
+
+test('PAGE_LOAD offers nothing to the webhook for a replacement document or a cached page without detections', async () => {
+  const replaced = pageLoadHarness();
+  const gate = deferred();
+  const sent = [];
+  replaced.dependencies.Settings = { sendWebhookIfEnabled: async (...args) => { sent.push(args); } };
+  replaced.context.chrome.tabs.get = () => gate.promise;
+  const result = replaced.run();
+  await flush();
+  replaced.state.current = false;
+  gate.resolve({ title: 'Next document' });
+  assert.equal((await result).status, 'url_changed');
+
+  const empty = pageLoadHarness();
+  empty.dependencies.Settings = { sendWebhookIfEnabled: async (...args) => { sent.push(args); } };
+  empty.context.Engine.getStoredDetection = async () => ({ detectionCount: 0, detectionResults: [] });
+  await empty.run();
+  assert.deepEqual(sent, []);
+});
+
 test('PAGE_LOAD retries stop when their document is replaced', async () => {
   const h = pageLoadHarness();
   h.context.Engine.getStoredDetection = async () => null;

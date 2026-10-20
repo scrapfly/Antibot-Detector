@@ -1,6 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
 
+require('../modules/core/message-sender.js');
 require('../modules/core/history-store.js');
 require('../modules/core/history-export.js');
 const HistoryBackup = require('../background/history-backup.js');

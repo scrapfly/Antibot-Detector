@@ -51,6 +51,9 @@
     "webhook": {
       "enableWebhook": false,
       "webhookOnCache": false,
+      "webhookMinConfidence": 0,
+      "webhookCategories": [],
+      "webhookDomains": [],
       "webhookMethod": "POST",
       "webhookUrl": "",
       "webhookContentType": "application/json",

@@ -818,6 +818,43 @@
                   <span data-i18n="settingsTestBtn">Test</span>
                 </button>
               </div>
+
+              <div class="setting-group setting-group--stacked" id="webhookFilterGroup">
+                <label class="setting-label">
+                  <span data-i18n="webhookFilterTitle">Send only when</span>
+                  <span class="setting-description" data-i18n="webhookFilterDesc">A page is sent only if all of these hold. The payload still lists everything found on it.</span>
+                </label>
+                <div class="setting-row setting-row--inline">
+                  <label class="setting-row-label" for="webhookMinConfidence" data-i18n="webhookMinConfidenceLabel">Minimum confidence (%)</label>
+                  <input type="number" id="webhookMinConfidence" class="input-field input-field--short" min="0" max="100" step="1" value="0">
+                </div>
+                <div class="setting-row webhook-filter-categories" role="group" aria-labelledby="webhookCategoriesLabel">
+                  <span id="webhookCategoriesLabel" class="setting-row-label" data-i18n="webhookCategoriesLabel">Categories</span>
+                  <div class="webhook-category-row">
+                    <label class="webhook-category"><input type="checkbox" data-webhook-category="antibot"><span class="category-icon" aria-hidden="true"></span><span data-i18n="categoryAntibot">Anti-bot</span></label>
+                    <label class="webhook-category"><input type="checkbox" data-webhook-category="captcha"><span class="category-icon" aria-hidden="true"></span><span data-i18n="categoryCaptcha">Captcha</span></label>
+                    <label class="webhook-category"><input type="checkbox" data-webhook-category="fingerprint"><span class="category-icon" aria-hidden="true"></span><span data-i18n="categoryFingerprint">Fingerprint</span></label>
+                  </div>
+                  <p class="setting-row-hint" data-i18n="webhookCategoriesHint">Leave all unchecked to send for any category.</p>
+                </div>
+                <div class="setting-row">
+                  <label class="setting-row-label" for="webhookDomains" data-i18n="webhookDomainsLabel">Only these sites</label>
+                  <textarea id="webhookDomains" class="textarea-field textarea-field--mono" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="shop.example.com" aria-describedby="webhookDomainsHint"></textarea>
+                  <p class="setting-row-hint" id="webhookDomainsHint" data-i18n="webhookDomainsHint">One per line, with their subdomains. Empty means every site.</p>
+                </div>
+              </div>
+
+              <div class="setting-group setting-group--stacked" id="webhookLogGroup">
+                <div class="setting-label">
+                  <span data-i18n="webhookLogTitle">Recent deliveries</span>
+                  <span class="setting-description" data-i18n="webhookLogDesc">The last 20 attempts: when, which page, what came back. Addresses and payloads are never kept.</span>
+                </div>
+                <ul id="webhookLogList" class="webhook-log-list" aria-live="polite"></ul>
+                <div class="webhook-payload-foot">
+                  <span></span>
+                  <button type="button" id="webhookLogClearBtn" class="webhook-link-btn" data-i18n="webhookLogClear">Clear</button>
+                </div>
+              </div>
           </div>
         </div>
 

@@ -46,6 +46,18 @@ function registerSettingsHandlers(registry, context) {
     };
     registry['SYNC_CATEGORY_COLORS'] = handle_sync_category_colors;
 
+    // The record of recent webhook deliveries is written here only: the Settings page asks for the Test line and for Clear
+    registry['WEBHOOK_LOG_ENTRY'] = function({ request, sender, sendResponse }) {
+        if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
+        SettingsRuntime.recordWebhookDelivery(request.entry).then(() => sendResponse({ status: 'ok' }));
+        return true;
+    };
+    registry['WEBHOOK_LOG_CLEAR'] = function({ sender, sendResponse }) {
+        if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
+        SettingsRuntime.clearWebhookLog().then(() => sendResponse({ status: 'ok' }));
+        return true;
+    };
+
     const handle_settings_updated = function({ request, sender, sendResponse, context }) {
         void context;
 

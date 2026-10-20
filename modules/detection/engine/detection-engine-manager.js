@@ -1876,7 +1876,7 @@ class DetectionEngineManager {
      * @param {object} dependencies - Required dependencies
      */
     static async handlePageLoadNotification(request, sender, dependencies) {
-        const { chrome, CategoryManager, HistoryRecorder, Utils, categoryManager, recentDetectionRequests,
+        const { chrome, CategoryManager, HistoryRecorder, Utils, categoryManager, recentDetectionRequests, Settings,
             isCurrentDocument = async () => true } = dependencies;
         const ignored = { status: 'url_changed' };
 
@@ -1963,6 +1963,18 @@ class DetectionEngineManager {
                 type: globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES.CACHE_HIT_DISABLE_MONITORING,
                 url: pageUrl
             }, targetDocument).catch(() => {});
+
+            // The webhook, for people who want it on every page load ("Send on every page load"): the setting is read there
+            if (Settings && typeof Settings.sendWebhookIfEnabled === 'function' && storedData.detectionResults && storedData.detectionResults.length > 0) {
+                const tab = await chrome.tabs.get(tabId).catch(() => null);
+                if (!await isCurrentDocument()) return ignored;
+                await Settings.sendWebhookIfEnabled({
+                    url: pageUrl,
+                    hostname: UrlUtils.getHostnameFromUrl(pageUrl),
+                    title: (tab && tab.title) || 'Untitled',
+                    favicon: UrlUtils.normalizeFaviconForStorage(tab && tab.favIconUrl, pageUrl)
+                }, storedData.detectionResults, { trigger: 'cache' });
+            }
 
             // Check if we should save to history on cache hit
             const historySettings = await Utils.getHistorySettings();

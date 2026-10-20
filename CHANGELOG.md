@@ -15,6 +15,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings → Data → Backup and restore: settings, your own rules and History in one file, restored whole or in parts, merging or replacing. Older exports still import as before.
 - Settings → Data → Presets and reset: a Privacy and a Developer preset that list what they change, and Reset settings, which keeps your site lists, rules, History, language and theme.
 - Settings → Data → Diagnostics: Copy diagnostics puts versions, settings and counts on the clipboard for a bug report, with no sites, addresses or keys.
+- Webhook: send only above a minimum confidence, for chosen categories or sites; Recent deliveries lists the last 20 attempts, with Clear.
 
 ### Fixed
 
@@ -33,6 +34,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings starts the cache duration from 7 days, not 12 hours, when a saved or imported file carries none.
 - Settings → Data → Detection History (CSV) names the protections, which it wrote as [object Object], and is the same file as History → Export.
 - The page buttons of the skipped sites list jumped several pages at a time once Settings had been opened more than once.
+- Webhook: Send on every page load now sends pages answered from the cache; it did nothing before.
+- The webhook receives everything found on a page; it used to miss detections found after the first moments of the scan.
 
 ## [3.0.1] - 2026-10-20
 

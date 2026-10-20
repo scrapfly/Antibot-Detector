@@ -2962,3 +2962,121 @@ input[type="file"] {
   min-height: 64px;
   resize: vertical;
 }
+
+/* ============================================
+   WEBHOOK: send only when, recent deliveries
+   ============================================ */
+
+#settingsModal .webhook-category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-bottom: 8px;
+}
+
+#settingsModal .webhook-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  line-height: 15px;
+  color: var(--settings-text);
+  cursor: pointer;
+}
+
+#settingsModal .webhook-category input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+#settingsModal .webhook-category .category-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+#settingsModal .webhook-category .category-icon:empty {
+  display: none;
+}
+
+#settingsModal .webhook-category .category-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+#settingsModal #webhookDomains {
+  width: 100%;
+  min-height: 64px;
+  resize: vertical;
+}
+
+#settingsModal .webhook-filter-categories .setting-row-hint {
+  margin: 0;
+}
+
+#settingsModal .webhook-log-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  max-height: 176px;
+  overflow-y: auto;
+  border: 1px solid var(--settings-border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+#settingsModal .webhook-log-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1px 10px;
+  padding: 6px 10px;
+  font-size: 10.5px;
+  line-height: 14px;
+}
+
+#settingsModal .webhook-log-item + .webhook-log-item {
+  border-top: 1px solid var(--settings-divider);
+}
+
+#settingsModal .webhook-log-page {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--settings-text);
+}
+
+#settingsModal .webhook-log-when {
+  grid-column: 2;
+  grid-row: 1;
+  white-space: nowrap;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .webhook-log-text {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  overflow-wrap: anywhere;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .webhook-log-item--sent .webhook-log-text {
+  color: var(--success-light);
+}
+
+#settingsModal .webhook-log-item--failed .webhook-log-text {
+  color: var(--danger-light);
+}
+
+#settingsModal .webhook-log-empty {
+  padding: 8px 10px;
+  font-size: 10.5px;
+  line-height: 14px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal #webhookLogClearBtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

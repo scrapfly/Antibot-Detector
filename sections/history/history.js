@@ -142,6 +142,8 @@ class History {
       const key = chip.dataset.filter;
       const on = key === 'pinned' || key === 'changed' ? this.activeChips[key] === true : this.activeChips.categories.includes(key);
       chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      const own = chip.querySelector('[data-ui-icon]');
+      if (own && !own.firstChild) own.innerHTML = FormatUtils.uiIconSvg(own.dataset.uiIcon);
       if (!chip.dataset.category) return;
       const holder = chip.querySelector('.category-icon');
       if (holder && !holder.firstChild) holder.innerHTML = FormatUtils.categoryIconSvg(key);
@@ -197,7 +199,7 @@ class History {
     const unknownLabel = _tr('timeUnknown', 'Unknown');
 
     const pinnedTip = _tr('historyPinnedTip', 'Pinned: kept when History is cleaned up');
-    const PIN_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5" fill="none"/><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg>';
+    const PIN_ICON = FormatUtils.uiIconSvg('pin');
     // "Changed": the page's protections differ from its earlier scan; the hover lists what was added and removed
     const changedBadgeHtml = (item) => {
       const change = item.changed;

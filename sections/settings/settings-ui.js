@@ -347,6 +347,9 @@ SettingsUI.updateSettingsUI = function() {
     const isWebhookEnabled = webhookSettings.enableWebhook ?? false;
     if (enableWebhook) enableWebhook.checked = isWebhookEnabled;
 
+    SettingsUI.populateWebhookFilter.call(this, webhookSettings);
+    SettingsUI.refreshWebhookLog.call(this);
+
     const webhookSettingsContainer = document.querySelector('#webhookSettings');
     const webhookOnCacheGroup = document.querySelector('#webhookOnCacheGroup');
     SettingsUI.setToggleControlledVisibility(enableWebhook, [
@@ -554,7 +557,8 @@ SettingsUI.getSettingsFromUI = function() {
       webhookUrl: document.querySelector('#webhookUrl')?.value ?? this.settings.webhook?.webhookUrl ?? '',
       webhookContentType: this.getWebhookContentTypeValue() ?? this.settings.webhook?.webhookContentType ?? 'application/json',
       webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? '',
-      webhookHeaders: this.settings.webhook?.webhookHeaders || []
+      webhookHeaders: this.settings.webhook?.webhookHeaders || [],
+      ...SettingsUI.readWebhookFilter.call(this)
     };
 
     // Share uploads (Detection → Upload detections)
@@ -947,6 +951,9 @@ SettingsUI.setupEventListeners = function() {
     }
     if (typeof SettingsUI._setupWebhookListeners === 'function') {
       SettingsUI._setupWebhookListeners.call(this);
+    }
+    if (typeof SettingsUI._setupWebhookLogListeners === 'function') {
+      SettingsUI._setupWebhookLogListeners.call(this);
     }
     if (typeof SettingsUI._setupShareListeners === 'function') {
       SettingsUI._setupShareListeners.call(this);

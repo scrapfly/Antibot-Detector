@@ -130,9 +130,7 @@ const HistoryBackup = {
     /** Worker-side handler for "Back up now" (extension pages only, never a web page's content script). */
     registerHandlers(registry) {
         registry[this.Messages.BACKUP_NOW] = ({ sender, sendResponse }) => {
-            const base = chrome.runtime.getURL('');
-            const url = String((sender && (sender.url || sender.origin)) || '');
-            if (sender && !(base && url.startsWith(base)) && (sender.tab || url)) {
+            if (!MessageSender.isExtensionPage(sender)) {
                 sendResponse({ status: 'error', error: 'Backups can only be requested from extension pages' });
                 return false;
             }

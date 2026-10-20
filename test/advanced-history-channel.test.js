@@ -23,7 +23,7 @@ function workerRegistry() {
       storage: { local: { async get(keys) { return Object.fromEntries([].concat(keys).filter(key => key in stored).map(key => [key, stored[key]])); }, async set(values) { Object.assign(stored, values); } } } } };
   context.self = context;
   vm.createContext(context);
-  for (const file of ['modules/core/message-types.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js',
+  for (const file of ['modules/core/message-types.js', 'modules/core/message-sender.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js',
     'modules/advanced/result-model.js', 'background/advanced/history-store.js', 'background/advanced/page-notice.js', 'background/advanced/collector-utils.js',
     'background/advanced/job-manager.js', 'background/advanced/script-analysis.js', 'background/advanced/vendors/captcha/interceptor.js', 'background/handlers/messages-advanced-capture.js']) {
     vm.runInContext(read(file), context, { filename: file });

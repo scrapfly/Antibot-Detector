@@ -374,6 +374,21 @@ async function finalizeDetection(tabId, state) {
         }
     }
 
+    // The webhook gets the finished results (hooks, fingerprints and late requests included) of a page scanned just now
+    // (whatever happens to the webhook never fails the scan)
+    if (finalResults.length > 0 && !preservedExistingCache && DetectionSessionStore.isCurrent(tabId, state)) {
+        try {
+            await Settings.sendWebhookIfEnabled({
+                url: state.url,
+                hostname: UrlUtils.getHostnameFromUrl(state.url),
+                title: state.tabTitle,
+                favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url)
+            }, finalResults, { trigger: 'scan' });
+        } catch (error) {
+            Logger.warn('NETWORK', 'The webhook step failed', error);
+        }
+    }
+
     DetectionSessionStore.finish(tabId, state);
     } catch (error) {
         // A retry starts a new session; a failed write never completes this scan.
@@ -696,10 +711,5 @@ async function processDetectionData(message, sender) {
         if (DetectionSessionStore.fail(tabId, state, error)) throw error;
     }
 
-    // Defer popup notification until finalization with complete results
-
-    // Send webhook if enabled
-    if (DetectionSessionStore.isCurrent(tabId, state) && detectionResults.length > 0) {
-        await Settings.sendWebhookIfEnabled(pageData, detectionResults);
-    }
+    // The popup and the webhook are told at finalization, with the complete results
 }

@@ -29,7 +29,7 @@
         'scrapfly_incompatible_updates', 'scrapfly_pending_updates', 'scrapfly_update_errors', 'scrapfly_last_update_check'] },
     { id: 'settings', labelKey: 'storageSettings', label: 'Settings', clear: null,
       keys: ['scrapfly_settings', 'scrapfly_language_override', 'scrapfly_theme', 'scrapfly_enabled', 'scrapfly_reopen_after_language',
-        'scrapfly_stats_range', 'scrapfly_stats_section', 'scrapfly_stats_sub', 'scrapfly_stats_scope'] },
+        'scrapfly_stats_range', 'scrapfly_stats_section', 'scrapfly_stats_sub', 'scrapfly_stats_scope', 'scrapfly_webhook_log'] },
     { id: 'logs', labelKey: 'storageLogs', label: 'Logs', clear: 'logs',
       keys: ['scrapfly_collected_logs', 'scrapfly_log_collector_enabled', 'scrapfly_log_collector_max'] }
   ].map(group => Object.freeze({ ...group, keys: Object.freeze(group.keys) })));
