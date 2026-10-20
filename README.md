@@ -40,13 +40,18 @@ We built it at [Scrapfly](https://scrapfly.io) because every scraping project st
 
 ## Screenshots
 
-| Detection | History | Rules |
-| :---: | :---: | :---: |
-| <img src="assets/readme/detection.png" alt="Detection tab: the page's detections, confidence, difficulty and cache, then cards for Cloudflare Bot Management and Google reCAPTCHA with their confidence and difficulty" width="280"> | <img src="assets/readme/history.png" alt="History tab with three scanned pages, each showing its address, number of protections, confidence, difficulty and count per category" width="280"> | <img src="assets/readme/rules.png" alt="Rules tab with Add and Update buttons and detector cards showing each one's category, detection methods, version and on/off switch" width="280"> |
+Click an image to see it full size.
 
-| Advanced | Settings |
-| :---: | :---: |
-| <img src="assets/readme/advanced.png" alt="Advanced tab offering tools for Cloudflare Bot Management and Google reCAPTCHA, with captures kept for 30 minutes" width="280"> | <img src="assets/readme/settings.png" alt="Settings, General tab: notifications, language, theme, debug mode and detector updates" width="280"> |
+<table>
+  <tr>
+    <td width="50%"><a href="assets/store-screenshots/en/02-history-1280x800.png"><img src="assets/store-screenshots/en/02-history-1280x800.png" alt="History tab with three scanned pages: the newest is pinned and carries a note and a Changed badge, and every page shows its protections, confidence and difficulty" width="100%"></a></td>
+    <td width="50%"><a href="assets/store-screenshots/en/03-rules-1280x800.png"><img src="assets/store-screenshots/en/03-rules-1280x800.png" alt="Rules tab searching for Cloudflare: detector cards with their category, detection methods, version and on/off switch" width="100%"></a></td>
+  </tr>
+  <tr>
+    <td width="50%"><a href="assets/store-screenshots/en/04-advanced-tools-1280x800.png"><img src="assets/store-screenshots/en/04-advanced-tools-1280x800.png" alt="Advanced tab with the tools for Google reCAPTCHA: obtain a selector, extract the site key and inspect callbacks" width="100%"></a></td>
+    <td width="50%"><a href="assets/store-screenshots/en/05-settings-1280x800.png"><img src="assets/store-screenshots/en/05-settings-1280x800.png" alt="Settings with the language list open, offering the 22 interface languages with their flags" width="100%"></a></td>
+  </tr>
+</table>
 
 ## Install
 
