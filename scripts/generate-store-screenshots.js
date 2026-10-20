@@ -1,19 +1,26 @@
-// Chrome Web Store screenshots (1280x800) and README close-ups, both taken
-// from the real extension.
+// Chrome Web Store screenshots (1280x800), taken from the real extension and shown on the
+// README too.
 //
 // The unpacked extension is loaded into Chromium, a few made-up demo sites
-// (*.example, served by request interception) are opened so the detectors
-// have something to find, and the real popup is captured per tab. The only
+// (*.example, served by request interception) are opened so the detectors have
+// something to find, and the real popup is captured per tab at 2x. The only
 // request let through to the network is the language flag in Settings
 // (flagcdn.com); without a connection that box is simply left empty.
 //
-// Every run writes two sets from the same popup state:
-//   assets/store-screenshots/NN-<tab>-1280x800.png
-//       store banners: the popup at 1x (400x580) placed next to a headline.
-//   assets/readme/<tab>.png  (detection, history, rules, advanced, settings)
-//       the popup alone at 2x (800x1160 px), sharp enough for the README,
-//       where GitHub shrinks a 1280x800 banner until the popup is unreadable.
-// Both follow every UI change, with no hand-drawn copy to keep in sync.
+// A store image is README-style artwork (scripts/lib/store-art.js): a headline,
+// a subtitle and three chips next to either the drawn detection card of the README
+// hero (image 1) or the real popup capture (images 2 to 5), laid out at 640x400 CSS
+// px and rendered at 2x because Chrome shows every screenshot at about 640x400.
+// The copy of each language is store/captions/<code>.json. Every run writes, for each
+// language in --lang:
+//   assets/store-screenshots/<code>/NN-<name>-1280x800.png
+// and follows every UI change, with no hand-drawn copy to keep in sync.
+//
+// Options:
+//   --lang en,es   languages to render (default en; "all" = every folder of _locales)
+//   --extension D  load the extension from D instead of this checkout (a copy on a
+//                  fast disk starts much quicker than a Windows drive seen from WSL)
+//   --out D        where the store images go (default assets/store-screenshots)
 //
 // Playwright is not a project dependency. Install it anywhere and point at it:
 //   npm i --prefix /tmp/pw playwright && npx --prefix /tmp/pw playwright install chromium
@@ -23,14 +30,29 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { chromium } = require('playwright');
+const { storeArtHtml, checkStoreArtLayout, STORE_ART } = require('./lib/store-art.js');
 
 const repoRoot = path.resolve(__dirname, '..');
-const outputDir = path.join(repoRoot, 'assets', 'store-screenshots');
-const closeUpDir = path.join(repoRoot, 'assets', 'readme');
-const viewport = { width: 1280, height: 800 };
+const localesDir = path.join(repoRoot, '_locales');
+const captionsDir = path.join(repoRoot, 'store', 'captions');
 const popupSize = { width: 400, height: 580 };
-// README close-ups: device pixels per CSS pixel.
-const closeUpScale = 2;
+const captureScale = 2;
+
+function parseArgs(argv) {
+    const options = { langs: ['en'], extension: repoRoot, out: path.join(repoRoot, 'assets', 'store-screenshots') };
+    for (let i = 0; i < argv.length; i++) {
+        const arg = argv[i];
+        if (arg === '--lang') options.langs = String(argv[++i] || '').split(',').filter(Boolean);
+        else if (arg === '--extension') options.extension = path.resolve(argv[++i]);
+        else if (arg === '--out') options.out = path.resolve(argv[++i]);
+        else throw new Error(`Unknown option ${arg}`);
+    }
+    if (options.langs.length === 1 && options.langs[0] === 'all') {
+        const folders = fs.readdirSync(localesDir).filter((name) => fs.statSync(path.join(localesDir, name)).isDirectory()).sort();
+        options.langs = ['en', ...folders.filter((name) => name !== 'en')];
+    }
+    return options;
+}
 
 // Demo sites. Only *.example hosts and placeholder values: nothing here comes
 // from a real browsing session.
@@ -70,43 +92,41 @@ const demoSites = [
     }
 ];
 
-const pages = [
-    {
-        filename: '01-detection-1280x800.png',
-        capture: 'detection',
-        title: 'Spot anti-bot protection',
-        subtitle: 'See which anti-bot, CAPTCHA and fingerprinting systems a page uses, with confidence and difficulty for each.',
-        bullets: ['Live scan', 'Confidence score', 'Matched signals']
-    },
-    {
-        filename: '02-history-1280x800.png',
-        capture: 'history',
-        title: 'Keep every scan in view',
-        subtitle: 'Every protected page you visit is saved, searchable and ready to export.',
-        bullets: ['Search history', 'Difficulty at a glance', 'CSV & JSON export']
-    },
-    {
-        filename: '03-rules-1280x800.png',
-        capture: 'rules',
-        title: 'Control every detector rule',
-        subtitle: 'Update the built-in detectors, switch them on or off, and write your own rules.',
-        bullets: ['Built-in detectors', 'Custom rules', 'Import & export']
-    },
-    {
-        filename: '04-advanced-tools-1280x800.png',
-        capture: 'advanced',
-        title: 'Capture tools on demand',
-        subtitle: 'When a supported protection is found, collect sitekeys, cookies and challenge parameters for analysis.',
-        bullets: ['Per-vendor tools', 'Sitekeys & cookies', 'Export captures']
-    },
-    {
-        filename: '05-settings-1280x800.png',
-        capture: 'settings',
-        title: 'Make it work your way',
-        subtitle: 'Notifications, 22 languages, history retention, badge colours, webhooks and excluded domains.',
-        bullets: ['22 languages', 'Webhooks', 'Excluded domains']
-    }
+// The five store images, in the order the store shows them. `capture` is the popup
+// state a popup image shows (none for the drawn hero); `screen` is the key of the
+// language's captions file.
+const storeImages = [
+    { filename: '01-detection-1280x800.png', screen: 'detection', kind: 'hero' },
+    { filename: '02-history-1280x800.png', screen: 'history', kind: 'popup', capture: 'history' },
+    { filename: '03-rules-1280x800.png', screen: 'rules', kind: 'popup', capture: 'rules' },
+    { filename: '04-advanced-tools-1280x800.png', screen: 'advanced', kind: 'popup', capture: 'advanced-tool' },
+    { filename: '05-settings-1280x800.png', screen: 'settings', kind: 'popup', capture: 'settings-languages' }
 ];
+
+function readCaptions(lang) {
+    const file = path.join(captionsDir, `${lang}.json`);
+    if (!fs.existsSync(file)) throw new Error(`store/captions/${lang}.json is missing`);
+    const captions = JSON.parse(fs.readFileSync(file, 'utf8'));
+    for (const { screen } of storeImages) {
+        const copy = captions.screens && captions.screens[screen];
+        if (!copy || !copy.highlight || !copy.subtitle || !(copy.chips === 'categories' || Array.isArray(copy.chips))) {
+            throw new Error(`store/captions/${lang}.json: screens.${screen} needs highlight, subtitle and chips`);
+        }
+    }
+    if (!captions.demo || !captions.demo.note || !String(captions.demo.detected).includes('{0}')) {
+        throw new Error(`store/captions/${lang}.json: demo needs note and detected (with {0})`);
+    }
+    return captions;
+}
+
+function categoryLabels(lang) {
+    const messages = JSON.parse(fs.readFileSync(path.join(localesDir, lang, 'messages.json'), 'utf8'));
+    const label = (key) => {
+        if (!messages[key] || !messages[key].message) throw new Error(`_locales/${lang}: ${key} is missing`);
+        return messages[key].message;
+    };
+    return { antibot: label('categoryAntibot'), captcha: label('categoryCaptcha'), fingerprint: label('categoryFingerprint') };
+}
 
 function demoResponse(site) {
     return {
@@ -144,13 +164,37 @@ async function showRulesThatFit(popup) {
     }
 }
 
-async function capturePopup(outDir) {
+// History as a person would have it after a morning of browsing: scans spread over the
+// day instead of seconds ago, and the newest page pinned with a note and a Changed badge
+// (the 3.0 features), written through the same store the extension uses.
+async function seedHistory(worker, demo) {
+    await worker.evaluate(async ({ note }) => {
+        const now = Date.now();
+        const minutes = (n) => now - n * 60000;
+        await HistoryStore.mutate((items) => {
+            const byHost = (host) => items.find((item) => item.hostname === host);
+            const shop = byHost('shop.example');
+            const news = byHost('news.example');
+            const travel = byHost('travel.example');
+            if (!shop || !news || !travel) throw new Error('A demo page is missing from History');
+            shop.timestamp = minutes(12);
+            news.timestamp = minutes(95);
+            travel.timestamp = minutes(250);
+            shop.pinned = true;
+            shop.note = note;
+            shop.changed = { at: minutes(60), added: ['Google reCAPTCHA'], removed: ['hCaptcha'] };
+            return [shop, news, travel, ...items.filter((item) => ![shop, news, travel].includes(item))];
+        }, chrome.storage.local);
+    }, { note: demo.note });
+}
+
+async function capturePopups({ extensionDir, langs, captionsByLang, workDir }) {
     const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'store-shots-'));
     const context = await chromium.launchPersistentContext(profile, {
         channel: 'chromium',
         headless: true,
-        args: [`--disable-extensions-except=${repoRoot}`, `--load-extension=${repoRoot}`],
-        viewport,
+        args: [`--disable-extensions-except=${extensionDir}`, `--load-extension=${extensionDir}`],
+        viewport: { width: 1280, height: 800 },
         locale: 'en-US'
     });
 
@@ -175,7 +219,7 @@ async function capturePopup(outDir) {
         });
 
         let [worker] = context.serviceWorkers();
-        if (!worker) worker = await context.waitForEvent('serviceworker', { timeout: 20000 });
+        if (!worker) worker = await context.waitForEvent('serviceworker', { timeout: 90000 });
         const extensionId = new URL(worker.url()).host;
 
         // Show each page in front and wait until its scan is saved to History, reloading
@@ -197,6 +241,7 @@ async function capturePopup(outDir) {
             }
             if (!saved) throw new Error(`Demo page ${site.host} was never saved to History`);
         }
+        await seedHistory(worker, captionsByLang[langs[0]].demo);
 
         const demoTabId = await worker.evaluate(async () => {
             const [tab] = await chrome.tabs.query({ url: 'https://shop.example/*' });
@@ -217,10 +262,10 @@ async function capturePopup(outDir) {
             };
         }, demoTabId);
 
-        // A persistent context fixes its device scale at launch, so the 2x close-up
+        // A persistent context fixes its device scale at launch, so the 2x capture
         // switches the scale of this one page through DevTools and back again,
-        // and is captured through DevTools too: page.screenshot() keeps to the
-        // launch scale and would return 400x580.
+        // and is taken through DevTools too: page.screenshot() keeps to the launch
+        // scale and would return 400x580.
         const devtools = await context.newCDPSession(popup);
         const setScale = async (deviceScaleFactor) => {
             await devtools.send('Emulation.setDeviceMetricsOverride', { ...popupSize, deviceScaleFactor, mobile: false });
@@ -229,41 +274,58 @@ async function capturePopup(outDir) {
         };
 
         const captures = {};
-        const shoot = async (name) => {
-            // Park the pointer where it shows no hover state or tooltip.
-            await popup.mouse.move(popupSize.width - 2, popupSize.height - 2);
-            await popup.waitForTimeout(400);
-            await popup.evaluate(() => document.fonts && document.fonts.ready);
-            const file = path.join(outDir, `${name}.png`);
-            await popup.screenshot({ path: file });
-            captures[name] = file;
+        for (const lang of langs) {
+            const langDir = path.join(workDir, lang);
+            fs.mkdirSync(langDir, { recursive: true });
+            captures[lang] = {};
+            // The extension's own language, as Settings → General sets it
+            await worker.evaluate((code) => chrome.storage.local.set({ scrapfly_language_override: code }), lang);
 
-            await setScale(closeUpScale);
-            const { data } = await devtools.send('Page.captureScreenshot', { format: 'png' });
-            fs.writeFileSync(path.join(closeUpDir, `${name}.png`), Buffer.from(data, 'base64'));
-            await setScale(1);
-        };
+            const shoot = async (name) => {
+                // The version under the title would make every image out of date at the next release
+                await popup.evaluate(() => { const version = document.getElementById('appVersion'); if (version) version.style.visibility = 'hidden'; });
+                // Park the pointer where it shows no hover state or tooltip.
+                await popup.mouse.move(popupSize.width - 2, popupSize.height - 2);
+                await popup.waitForTimeout(400);
+                await popup.evaluate(() => document.fonts && document.fonts.ready);
+                await setScale(captureScale);
+                const { data } = await devtools.send('Page.captureScreenshot', { format: 'png' });
+                const file = path.join(langDir, `${name}.png`);
+                fs.writeFileSync(file, Buffer.from(data, 'base64'));
+                captures[lang][name] = file;
+                await setScale(1);
+            };
 
-        // The last demo page may still be scanning: reopen the popup until its results are in.
-        for (let attempt = 0; attempt < 10; attempt++) {
-            await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-            const ready = await popup.waitForSelector('.detection-card', { timeout: 3000 }).catch(() => null);
-            if (ready) break;
-        }
-        await popup.waitForTimeout(1000);
-        await shoot('detection');
+            // The last demo page may still be scanning: reopen the popup until its results are in.
+            for (let attempt = 0; attempt < 10; attempt++) {
+                await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+                const ready = await popup.waitForSelector('.detection-card', { timeout: 3000 }).catch(() => null);
+                if (ready) break;
+            }
+            await popup.waitForTimeout(1000);
 
-        for (const tab of ['history', 'rules', 'advanced']) {
-            await popup.click(`[data-tab="${tab}"]`);
+            for (const tab of ['history', 'rules']) {
+                await popup.click(`[data-tab="${tab}"]`);
+                await popup.waitForTimeout(1500);
+                if (tab === 'rules') await showRulesThatFit(popup);
+                await shoot(tab);
+            }
+
+            // The Advanced image opens the tools of the demo page's CAPTCHA, instead of the mostly empty list
+            await popup.click('[data-tab="advanced"]');
+            await popup.waitForTimeout(800);
+            await popup.locator('.advanced-launch-card', { hasText: 'reCAPTCHA' }).click();
+            await popup.waitForTimeout(2000);
+            await shoot('advanced-tool');
+
+            // The Settings image shows the language list open: 22 names with their flags
+            await popup.click('#settingsBtn');
             await popup.waitForTimeout(1500);
-            if (tab === 'rules') await showRulesThatFit(popup);
-            await shoot(tab);
+            await popup.click('#languagePickerTrigger');
+            await popup.waitForSelector('#languagePickerMenu:not([hidden])', { timeout: 5000 });
+            await popup.waitForTimeout(1500);
+            await shoot('settings-languages');
         }
-
-        await popup.click('#settingsBtn');
-        await popup.waitForTimeout(1500);
-        await shoot('settings');
-
         return captures;
     } finally {
         await context.close();
@@ -271,101 +333,49 @@ async function capturePopup(outDir) {
     }
 }
 
-function storeHtml(page, captureFile) {
-    const data = (file) => `data:image/png;base64,${fs.readFileSync(file).toString('base64')}`;
-    const brandIcon = data(path.join(repoRoot, 'icons', 'icon48.png'));
-    const fontUrl = (file) => `url("data:font/woff2;base64,${fs.readFileSync(path.join(repoRoot, 'assets', 'fonts', file)).toString('base64')}") format("woff2")`;
-
-    return `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <style>
-    @font-face { font-family: "IBM Plex Sans"; font-weight: 400; src: ${fontUrl('IBMPlexSans-Regular.woff2')}; }
-    @font-face { font-family: "IBM Plex Sans"; font-weight: 600; src: ${fontUrl('IBMPlexSans-SemiBold.woff2')}; }
-    @font-face { font-family: "IBM Plex Sans"; font-weight: 700; src: ${fontUrl('IBMPlexSans-Bold.woff2')}; }
-    * { box-sizing: border-box; }
-    html, body { margin: 0; width: ${viewport.width}px; height: ${viewport.height}px; overflow: hidden; }
-    body {
-      font-family: "IBM Plex Sans", system-ui, sans-serif;
-      color: #f8fafc;
-      background:
-        radial-gradient(900px 600px at 82% 50%, rgba(59, 130, 246, 0.22), transparent 65%),
-        linear-gradient(180deg, #11141b 0%, #08090d 100%);
+async function renderStoreImages({ langs, captionsByLang, captures, outDir }) {
+    const browser = await chromium.launch({ channel: 'chromium', headless: true });
+    try {
+        for (const lang of langs) {
+            const copyOf = captionsByLang[lang];
+            const labels = categoryLabels(lang);
+            const langOut = path.join(outDir, lang);
+            fs.mkdirSync(langOut, { recursive: true });
+            for (const image of storeImages) {
+                const html = storeArtHtml({
+                    kind: image.kind,
+                    copy: copyOf.screens[image.screen],
+                    captureFile: image.capture ? captures[lang][image.capture] : undefined,
+                    categoryLabels: labels,
+                    detectedLabel: copyOf.demo.detected
+                });
+                const tab = await browser.newPage({ viewport: { width: STORE_ART.width, height: STORE_ART.height }, deviceScaleFactor: STORE_ART.scale });
+                await tab.setContent(html, { waitUntil: 'load' });
+                await tab.evaluate(async () => {
+                    await document.fonts.ready;
+                    await Promise.all([...document.images].map((img) => img.decode()));
+                });
+                await checkStoreArtLayout(tab, `${lang}/${image.filename}`);
+                await tab.screenshot({ path: path.join(langOut, image.filename) });
+                await tab.close();
+                console.log(`Wrote ${path.relative(repoRoot, path.join(langOut, image.filename))}`);
+            }
+        }
+    } finally {
+        await browser.close();
     }
-    .art {
-      position: relative;
-      height: 100%;
-      display: grid;
-      grid-template-columns: 1fr ${popupSize.width + 40}px;
-      align-items: center;
-      gap: 56px;
-      padding: 0 96px 0 88px;
-    }
-    .art::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: linear-gradient(90deg, #000 0%, rgba(0, 0, 0, 0.6) 50%, transparent 85%);
-    }
-    .copy, .stage { position: relative; }
-    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; color: #93c5fd; font-size: 17px; font-weight: 600; }
-    .brand img { width: 40px; height: 40px; border-radius: 10px; }
-    h1 { margin: 0; font-size: 56px; line-height: 1.05; font-weight: 700; letter-spacing: -0.01em; }
-    p { margin: 22px 0 32px; max-width: 520px; color: #cbd5e1; font-size: 21px; line-height: 1.45; }
-    .chips { display: flex; flex-wrap: wrap; gap: 10px; }
-    .chip {
-      padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #bfdbfe;
-      background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(96, 165, 250, 0.32);
-    }
-    .stage { display: flex; justify-content: center; }
-    .popup {
-      width: ${popupSize.width}px; height: ${popupSize.height}px; border-radius: 14px; overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6), 0 0 0 8px rgba(30, 41, 59, 0.55);
-    }
-    .popup img { display: block; width: 100%; height: 100%; }
-  </style>
-</head>
-<body>
-  <section class="art">
-    <div class="copy">
-      <div class="brand"><img src="${brandIcon}" alt=""><span>Scrapfly Anti-Bot Detector</span></div>
-      <h1>${page.title}</h1>
-      <p>${page.subtitle}</p>
-      <div class="chips">${page.bullets.map((bullet) => `<span class="chip">${bullet}</span>`).join('')}</div>
-    </div>
-    <div class="stage"><div class="popup"><img src="${data(captureFile)}" alt=""></div></div>
-  </section>
-</body>
-</html>`;
 }
 
 async function main() {
-    fs.mkdirSync(outputDir, { recursive: true });
-    fs.mkdirSync(closeUpDir, { recursive: true });
+    const options = parseArgs(process.argv.slice(2));
+    const captionsByLang = Object.fromEntries(options.langs.map((lang) => [lang, readCaptions(lang)]));
+    options.langs.forEach(categoryLabels); // fails early on a language without its category names
+    fs.mkdirSync(options.out, { recursive: true });
     const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'store-captures-'));
 
     try {
-        const captures = await capturePopup(workDir);
-        for (const name of Object.keys(captures)) console.log(`Wrote assets/readme/${name}.png`);
-        const browser = await chromium.launch({ channel: 'chromium', headless: true });
-        try {
-            for (const page of pages) {
-                const tab = await browser.newPage({ viewport, deviceScaleFactor: 1 });
-                await tab.setContent(storeHtml(page, captures[page.capture]), { waitUntil: 'load' });
-                await tab.evaluate(() => document.fonts.ready);
-                await tab.screenshot({ path: path.join(outputDir, page.filename) });
-                await tab.close();
-                console.log(`Wrote assets/store-screenshots/${page.filename}`);
-            }
-        } finally {
-            await browser.close();
-        }
+        const captures = await capturePopups({ extensionDir: options.extension, langs: options.langs, captionsByLang, workDir });
+        await renderStoreImages({ langs: options.langs, captionsByLang, captures, outDir: options.out });
     } finally {
         fs.rmSync(workDir, { recursive: true, force: true });
     }

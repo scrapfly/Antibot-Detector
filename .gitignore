@@ -143,3 +143,6 @@ assets/*
 !assets/readme/**
 !assets/logos-dark/
 !assets/logos-dark/**
+
+# Local review sheets of the store listing (scripts/build-store-preview.js)
+store/preview/

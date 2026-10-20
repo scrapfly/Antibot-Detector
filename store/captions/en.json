@@ -1,0 +1,60 @@
+{
+  "language": "en",
+  "screens": {
+    "detection": {
+      "before": "Detect",
+      "highlight": "Security Systems",
+      "after": "in Real-Time",
+      "subtitle": "Identify CAPTCHAs, anti-bot systems, and fingerprinting technologies on any website. Built for security researchers and developers.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Every scan,",
+      "highlight": "saved and searchable",
+      "after": "",
+      "subtitle": "Pin pages, add notes and see when a site's protections change. Export with filters or back up automatically.",
+      "chips": [
+        "Pins & notes",
+        "Changed badge",
+        "Export & backup"
+      ]
+    },
+    "rules": {
+      "before": "Your detectors,",
+      "highlight": "your rules",
+      "after": "",
+      "subtitle": "Update the built-in detectors, switch them on or off, and write your own rules.",
+      "chips": [
+        "Built-in detectors",
+        "Custom rules",
+        "Import & export"
+      ]
+    },
+    "advanced": {
+      "before": "Capture tools",
+      "highlight": "on demand",
+      "after": "",
+      "subtitle": "When a supported protection is found, collect site keys, cookies and challenge parameters for analysis.",
+      "chips": [
+        "Vendor tools",
+        "Keys & cookies",
+        "Export captures"
+      ]
+    },
+    "settings": {
+      "before": "Speaks",
+      "highlight": "your language",
+      "after": "",
+      "subtitle": "22 interface languages, notifications, webhooks, sites to skip and detector updates.",
+      "chips": [
+        "22 languages",
+        "Webhooks",
+        "Skip sites"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Needs a residential proxy",
+    "detected": "{0} detected"
+  }
+}

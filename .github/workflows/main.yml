@@ -82,7 +82,7 @@ jobs:
             -x ".git/*" ".github/*" ".claude/*" "artifact/*" \
             "CHANGELOG.md" "README.md" "LICENSE" ".gitignore" \
             "CLAUDE.md" "AGENTS.md" "MEMORY.md" \
-            "docs/*" "assets/store-screenshots/*" "assets/readme/*" "scripts/*" \
+            "docs/*" "store/*" "assets/store-screenshots/*" "assets/readme/*" "scripts/*" \
             "test/*" "plans/*" "node_modules/*" "logs/*" \
             "package.json" "package-lock.json" "*.test.js"
 

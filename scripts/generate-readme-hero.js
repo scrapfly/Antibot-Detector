@@ -21,6 +21,9 @@ const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
 const FormatUtils = require('../utils/format-utils.js');
+const {
+    escapeHtml, dataUri, fontSrc, fingerprintIconColor, loadDetection, tileHtml, categoryIcon
+} = require('./lib/store-art.js');
 
 const repoRoot = path.resolve(__dirname, '..');
 const outputFile = path.join(repoRoot, 'assets', 'readme', 'hero.png');
@@ -46,55 +49,6 @@ const detections = [
     { file: 'captcha/detect-recaptcha.json', confidence: 100 },
     { file: 'fingerprint/detect-canvas-fingerprint.json', confidence: 87 }
 ];
-
-const escapeHtml = (text) => String(text)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-
-const dataUri = (file, type) => `data:${type};base64,${fs.readFileSync(file).toString('base64')}`;
-const fontSrc = (file) => `url("${dataUri(path.join(repoRoot, 'assets', 'fonts', file), 'font/woff2')}") format("woff2")`;
-
-// The popup draws fingerprint icons in --accent-light, with no white plate
-// (.fingerprint-icon in modules/styles/common.css). Read the dark theme's value,
-// the theme this artwork uses.
-function fingerprintIconColor() {
-    const css = fs.readFileSync(path.join(repoRoot, 'modules', 'styles', 'common.css'), 'utf8');
-    const darkTheme = /^:root\s*\{([^}]*)\}/m.exec(css);
-    const accent = darkTheme && /--accent-light:\s*([^;]+);/.exec(darkTheme[1]);
-    if (!accent) throw new Error('No --accent-light in the :root block of modules/styles/common.css');
-    return accent[1].trim();
-}
-
-// How the popup's Detection cards, History and Rules show a detector's logo:
-// a built-in fingerprint detector is the line icon from FormatUtils.FINGERPRINT_ICONS,
-// any other fingerprint picture is tinted to the same colour, and everything
-// else is the logo itself on a white tile.
-function loadDetection({ file, confidence }) {
-    const detector = JSON.parse(fs.readFileSync(path.join(repoRoot, 'detectors', file), 'utf8'));
-    const category = FormatUtils.categoryKey(detector.category);
-    const row = { name: detector.name, category, confidence };
-    const svg = FormatUtils.FINGERPRINT_ICONS[String(detector.icon).toLowerCase()];
-    if (svg) return { ...row, svg };
-    const iconFile = path.join(repoRoot, 'detectors', 'icons', detector.icon);
-    if (!fs.existsSync(iconFile)) throw new Error(`${file}: icon ${detector.icon} not found`);
-    return { ...row, icon: dataUri(iconFile, 'image/png'), tinted: category === 'fingerprint' };
-}
-
-function tileHtml(row) {
-    if (row.svg) return `<div class="tile tile-line">${row.svg}</div>`;
-    if (row.tinted) {
-        return `<div class="tile tile-line"><span class="glyph" style="-webkit-mask-image: url('${row.icon}'); mask-image: url('${row.icon}')"></span></div>`;
-    }
-    return `<div class="tile"><img src="${row.icon}" alt=""></div>`;
-}
-
-function categoryIcon(key) {
-    const svg = FormatUtils.categoryIconSvg(key);
-    if (!svg) throw new Error(`No category icon for "${key}"`);
-    return svg;
-}
 
 function heroHtml() {
     const colors = FormatUtils.DEFAULT_CATEGORY_COLORS;
