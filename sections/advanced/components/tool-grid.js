@@ -111,7 +111,7 @@ class AdvancedToolGrid {
 
     openScrapflyExport() {
         const detection = this.detection || {};
-        const isCaptcha = BaseAdvancedModule.CAPTCHA_MODULES.includes(this.moduleName);
+        const isCaptcha = BaseAdvancedModule.isCaptchaModule(this.moduleName);
         ScrapflyExport.open({
             url: this.tabInfo?.url || '',
             detections: [{

@@ -47,8 +47,6 @@ class GenericCaptchaAdvanced extends BaseAdvancedModule {
         const Module = { [vendor.className]: class extends GenericCaptchaAdvanced {
             constructor(detection, tabInfo) { super(detection, tabInfo, vendor); }
         } }[vendor.className];
-        BaseAdvancedModule.DISPLAY_NAMES[vendor.vendorId] = vendor.productName;
-        if (!BaseAdvancedModule.CAPTCHA_MODULES.includes(vendor.vendorId)) BaseAdvancedModule.CAPTCHA_MODULES.push(vendor.vendorId);
         if (typeof window !== 'undefined') window[vendor.className] = Module;
     }
     if (typeof window !== 'undefined') window.GenericCaptchaAdvanced = GenericCaptchaAdvanced;

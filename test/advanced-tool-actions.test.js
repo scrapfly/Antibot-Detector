@@ -48,6 +48,10 @@ function fixture() {
   for (const name of ['options', 'parameters', 'codegen', 'ai-export', 'dialog']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/integrations/scrapfly', `${name}.js`), 'utf8'), context);
   }
+  // The popup loads the vendor registry before the base module: it holds every vendor's name and category
+  for (const file of ['captcha-vendors', 'vendor-registry']) {
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced', file + '.js'), 'utf8'), context);
+  }
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/base-advanced-module.js'), 'utf8'), context);
   for (const component of ['components/tool-grid', 'components/dialogs', 'components/cookie-results', 'history/module-history']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced/' + component + '.js'), 'utf8'), context);

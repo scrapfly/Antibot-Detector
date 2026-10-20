@@ -14,23 +14,26 @@
  */
 
 class BaseAdvancedModule {
-    /** Display name map: moduleName → human-readable name for notifications */
-    static DISPLAY_NAMES = {
-        'akamai': 'Akamai',
-        'awswaf': 'AWS WAF',
-        'cloudflare': 'Cloudflare',
-        'datadome': 'DataDome',
-        'funcaptcha': 'FunCaptcha',
-        'geetest': 'Geetest',
-        'hcaptcha': 'hCaptcha',
-        'imperva': 'Imperva',
-        'recaptcha': 'reCAPTCHA',
-        'shapesecurity': 'Shape Security',
-        'turnstile': 'Turnstile'
-    };
+    /**
+     * The short name notifications and titles use for a module (the vendor id), read from the vendor
+     * registry, which also holds every data-driven CAPTCHA vendor.
+     * @param {string} moduleName
+     * @returns {string}
+     */
+    static displayNameOf(moduleName) {
+        const vendor = (typeof AdvancedVendorRegistry !== 'undefined' && AdvancedVendorRegistry.vendors[moduleName]) || null;
+        return (vendor && (vendor.displayName || vendor.productName)) || moduleName;
+    }
 
-    /** Modules whose protection is a CAPTCHA (Scrape with Scrapfly adds a note) */
-    static CAPTCHA_MODULES = ['funcaptcha', 'geetest', 'hcaptcha', 'recaptcha', 'turnstile'];
+    /**
+     * Whether a module's protection is a CAPTCHA (Scrape with Scrapfly adds a note), by the vendor's category.
+     * @param {string} moduleName
+     * @returns {boolean}
+     */
+    static isCaptchaModule(moduleName) {
+        const vendor = (typeof AdvancedVendorRegistry !== 'undefined' && AdvancedVendorRegistry.vendors[moduleName]) || null;
+        return !!vendor && vendor.category === 'captcha';
+    }
 
     /** Tool id suffix of the "Scrape with Scrapfly" card every protection gets */
     static SCRAPFLY_TOOL_SUFFIX = 'ScrapeWithScrapfly';
@@ -70,7 +73,7 @@ class BaseAdvancedModule {
         this.detection = detection;
         this.tabInfo = tabInfo;
         this.moduleName = moduleName;
-        this.displayName = BaseAdvancedModule.DISPLAY_NAMES[moduleName] || moduleName;
+        this.displayName = BaseAdvancedModule.displayNameOf(moduleName);
         this.captureHistoryPagination = null;
         this.currentCaptureHistory = [];
         this.isCapturing = false;
