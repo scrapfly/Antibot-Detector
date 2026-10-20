@@ -5,7 +5,7 @@ class Detection {
     this.currentResults = [];
     this.searchQuery = '';
     // Settings → Detection → Category order
-    this.categoryOrder = ['antibot', 'captcha', 'fingerprint'];
+    this.categoryOrder = [...Categories.KEYS];
     this.sortBy = 'category';
     this.initialized = false;
     this.initializingPromise = null;

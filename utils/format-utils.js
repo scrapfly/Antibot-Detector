@@ -2,6 +2,10 @@
  * FormatUtils - Pure formatting and display utility functions
  * Time formatting, HTML escaping, clipboard operations
  */
+// The detection categories are described once, in modules/core/categories.js (the popup and the worker load it first)
+if (typeof Categories === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.Categories = require('../modules/core/categories.js');
+}
 class FormatUtils {
 
   // Milliseconds per duration unit. A month counts as 30 days, a year as 365.
@@ -303,7 +307,7 @@ class FormatUtils {
   });
 
   /** Default category colours (Settings → Category colours starts from these). */
-  static DEFAULT_CATEGORY_COLORS = Object.freeze({ antibot: '#FF5733', captcha: '#33C3FF', fingerprint: '#3b82f6' });
+  static DEFAULT_CATEGORY_COLORS = Categories.DEFAULT_COLORS;
 
   /** i18n key and English label of each detection method, plural aliases included. */
   static METHOD_LABELS = Object.freeze({
@@ -458,20 +462,11 @@ class FormatUtils {
 
   /** anti-bot / captcha / fingerprint / other from a detection or category name. */
   static categoryKey(value) {
-    const raw = value && typeof value === 'object' ? (value.category || value.detector?.category) : value;
-    const normalized = String(raw || '').toLowerCase().replace(/[^a-z]/g, '');
-    if (normalized.includes('captcha')) return 'captcha';
-    if (normalized.includes('fingerprint')) return 'fingerprint';
-    if (normalized.includes('antibot') || normalized.includes('bot') || normalized.includes('waf')) return 'antibot';
-    return 'other';
+    return Categories.keyOf(value);
   }
 
   static categoryLabel(key) {
-    const labels = {
-      antibot: ['categoryAntibot', 'Anti-bot'], captcha: ['categoryCaptcha', 'Captcha'],
-      fingerprint: ['categoryFingerprint', 'Fingerprint'], other: ['statsCategoryOther', 'Other']
-    };
-    const [messageKey, fallback] = labels[key] || labels.other;
+    const [messageKey, fallback] = Categories.LABELS[key] || Categories.LABELS.other;
     return FormatUtils.t(messageKey, fallback);
   }
 
@@ -511,8 +506,8 @@ class FormatUtils {
    */
   static detectionBreakdown(detections = []) {
     const list = (Array.isArray(detections) ? detections : []).filter(d => d && typeof d === 'object');
-    const order = ['antibot', 'captcha', 'fingerprint', 'other'];
-    const counts = { antibot: 0, captcha: 0, fingerprint: 0, other: 0 };
+    const order = Categories.KEYS_AND_OTHER;
+    const counts = Object.fromEntries(order.map(key => [key, 0]));
     list.forEach(d => { counts[FormatUtils.categoryKey(d)]++; });
     const total = list.length;
     const categories = order.filter(key => counts[key] > 0)

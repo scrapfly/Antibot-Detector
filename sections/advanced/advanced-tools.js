@@ -202,7 +202,7 @@ Advanced.prototype.renderNoToolsState = function(tr) {
       : fmt('advancedToolsEmptyDescFmt', 'No supported protection on this page is above {0}% confidence. You can change this minimum in Settings → Detection.', minimum);
 
     // One logo per protection (its name on hover), grouped by category like the info window
-    const titles = { antibot: tr('categoryAntibot', 'Anti-bot'), captcha: tr('categoryCaptcha', 'Captcha') };
+    const titleOf = key => (Categories.LABELS[key] ? tr(...Categories.LABELS[key]) : key);
     // Each category's colour from Settings, as in the other views
     const categoryColour = key => {
       const manager = this.detectorManager || (typeof window !== 'undefined' && window.popupInstance?.detectorManager) || null;
@@ -212,7 +212,7 @@ Advanced.prototype.renderNoToolsState = function(tr) {
                 <div class="advanced-supported-group">
                   <div class="advanced-supported-head">
                     <span class="category-icon" aria-hidden="true" style="color: ${esc(categoryColour(group.key))}">${typeof FormatUtils !== 'undefined' && FormatUtils.categoryIconSvg ? FormatUtils.categoryIconSvg(group.key) : ''}</span>
-                    <span class="advanced-supported-title">${esc(titles[group.key] || group.key)}</span>
+                    <span class="advanced-supported-title">${esc(titleOf(group.key))}</span>
                     <span class="advanced-supported-count">${group.items.length}</span>
                   </div>
                   <ul class="advanced-supported-logos">

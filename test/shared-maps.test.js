@@ -12,13 +12,26 @@ const vm = require('node:vm');
 const FormatUtils = global.FormatUtils;
 const read = (file) => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
 
-test('default category colours match the packaged category index', () => {
+const packagedIndex = () => {
   const context = vm.createContext({ window: {} });
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('modules/detection/managers/category-manager.js'), context);
-  const index = context.window.CategoryManager.getPackagedFallbackIndex();
+  return context.window.CategoryManager.getPackagedFallbackIndex();
+};
+
+test('default category colours match the packaged category index', () => {
+  const index = packagedIndex();
   for (const key of ['antibot', 'captcha', 'fingerprint']) {
     assert.strictEqual(FormatUtils.DEFAULT_CATEGORY_COLORS[key].toLowerCase(), String(index[key].colour).toLowerCase(), key);
   }
+});
+
+// The copy the worker falls back to when detectors/index.json cannot be read (it also decides which detectors count as
+// official then) must say what the file says; it had lost 24 detectors.
+test('the built-in fallback index is detectors/index.json', () => {
+  const file = JSON.parse(read('detectors/index.json'));
+  const fallback = JSON.parse(JSON.stringify(packagedIndex()));
+  assert.deepStrictEqual(fallback, file, 'update CategoryManager.getPackagedFallbackIndex to the new detectors/index.json');
 });
 
 test('no view keeps its own copy of the icon, label or colour maps', () => {

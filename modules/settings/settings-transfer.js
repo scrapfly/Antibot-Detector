@@ -4,7 +4,7 @@
     const allowed = {
         root: ['notificationsEnabled', 'debugMode', 'debugVerbose', 'logCollectorEnabled', 'logCollectorMaxLogs', 'defaultTab'],
         badgeColors: ['low', 'medium', 'high'],
-        categoryColors: ['antibot', 'captcha', 'fingerprint'],
+        categoryColors: [...root.Categories.KEYS],
         tagColors: ['dom', 'headers', 'cookies', 'content', 'urls', 'js_hooks', 'window', 'payload'],
         detection: ['cacheDuration', 'cacheUnit', 'cacheScope', 'sortBy', 'categoryOrder', 'advancedToolsMinConfidence', 'captureRetentionMinutes', 'blacklistedDomains', 'hooksConfig'],
         jsApi: ['enableJsApi'],

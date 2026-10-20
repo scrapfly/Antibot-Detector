@@ -149,6 +149,7 @@ test('portable settings leave out the key, token, custom URL and headers', () =>
   const fs = require('node:fs');
   const path = require('node:path');
   const context = vm.createContext({ SettingsUI: {}, ShareProviders });
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/core/categories.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/settings/settings-transfer.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/settings/settings-ui-share.js'), 'utf8'), context);
   const settings = { debugMode: true, share: { provider: 'pastebin', pastebinKey: 'k', githubToken: 't', customHeaders: 'Authorization: Bearer s', customUrl: 'https://x.test/' } };

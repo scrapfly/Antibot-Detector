@@ -13,7 +13,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 function load() {
   const context = vm.createContext({ console, self: {}, encodeURIComponent, decodeURIComponent });
   context.self = context;
-  for (const file of ['utils/format-utils.js', 'modules/detection/detection-combinations.js', 'modules/ui/combination-checklist.js', 'sections/detection/detection-modals.js']) {
+  for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'modules/detection/detection-combinations.js', 'modules/ui/combination-checklist.js', 'sections/detection/detection-modals.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const copied = [];

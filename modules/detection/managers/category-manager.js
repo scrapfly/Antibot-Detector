@@ -9,7 +9,7 @@ class CategoryManager {
         return {
             version: '1.0.0',
             antibot: {
-                colour: '#FF5733',
+                colour: Categories.DEFAULT_COLORS.antibot,
                 detectors: [
                     'detect-akamai',
                     'detect-cloudflare',
@@ -26,11 +26,25 @@ class CategoryManager {
                     'detect-meetrics',
                     'detect-ocule',
                     'detect-cheq',
-                    'detect-kasada'
+                    'detect-kasada',
+                    'detect-anubis',
+                    'detect-aliyunwaf',
+                    'detect-jiasule',
+                    'detect-ruishu',
+                    'detect-fingerprintjs',
+                    'detect-netacea',
+                    'detect-azurefrontdoor',
+                    'detect-yundun',
+                    'detect-radware',
+                    'detect-amazon',
+                    'detect-cloudflare-waitingroom',
+                    'detect-hunt',
+                    'detect-deepseek-pow',
+                    'detect-openai-sentinel'
                 ]
             },
             captcha: {
-                colour: '#33C3FF',
+                colour: Categories.DEFAULT_COLORS.captcha,
                 detectors: [
                     'detect-hcaptcha',
                     'detect-recaptcha',
@@ -40,11 +54,21 @@ class CategoryManager {
                     'detect-aliexpress',
                     'detect-friendlycaptcha',
                     'detect-captchaeu',
-                    'detect-turnstile'
+                    'detect-turnstile',
+                    'detect-yidun',
+                    'detect-aliyun',
+                    'detect-smartcaptcha',
+                    'detect-dingxiang',
+                    'detect-capy',
+                    'detect-shumei',
+                    'detect-mtcaptcha',
+                    'detect-binance-captcha',
+                    'detect-prosopo',
+                    'detect-basilisk'
                 ]
             },
             fingerprint: {
-                colour: '#3b82f6',
+                colour: Categories.DEFAULT_COLORS.fingerprint,
                 detectors: [
                     'detect-audio-fingerprint',
                     'detect-battery-fingerprint',
@@ -289,27 +313,12 @@ class CategoryManager {
      * @returns {string} Formatted display name
      */
     getCategoryDisplayName(categoryName) {
-        const i18nKeyByCategory = {
-            antibot: 'categoryAntibot',
-            captcha: 'categoryCaptcha',
-            fingerprint: 'categoryFingerprint'
-        };
-        const key = i18nKeyByCategory[categoryName?.toLowerCase()];
-        if (key && typeof I18n !== 'undefined') {
-            const translated = I18n.get(key);
-            if (translated) return translated;
+        const known = Categories.labelOf(categoryName);
+        if (known) {
+            const translated = typeof I18n !== 'undefined' ? I18n.get(known[0]) : null;
+            return translated || known[1];
         }
-
-        switch (categoryName?.toLowerCase()) {
-            case 'antibot':
-                return 'Anti-Bot';
-            case 'captcha':
-                return 'Captcha';
-            case 'fingerprint':
-                return 'Fingerprint';
-            default:
-                return categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
-        }
+        return categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
     }
 
     /**
@@ -318,17 +327,7 @@ class CategoryManager {
      * @returns {string} CSS class name for badges
      */
     getCategoryBadgeClass(categoryName) {
-        switch (categoryName?.toLowerCase()) {
-            case 'antibot':
-            case 'anti-bot':
-                return 'antibot';
-            case 'captcha':
-                return 'captcha';
-            case 'fingerprint':
-                return 'fingerprint';
-            default:
-                return 'primary';
-        }
+        return Categories.badgeClass(categoryName);
     }
 
     /**

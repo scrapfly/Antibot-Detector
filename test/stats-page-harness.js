@@ -92,7 +92,7 @@ function clock() {
 function pageScripts() {
   const stubbed = ['stats-charts.js', 'stats-export.js'];
   return [...html.matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1])
-    .filter(src => (!src.startsWith('../') || src === '../../modules/core/storage-manager.js' || src === '../../utils/format-utils.js') && !stubbed.includes(src))
+    .filter(src => (!src.startsWith('../') || src === '../../modules/core/storage-manager.js' || src === '../../modules/core/categories.js' || src === '../../utils/format-utils.js') && !stubbed.includes(src))
     .map(src => path.posix.normalize('sections/stats/' + src));
 }
 const RENDERERS = ['bars', 'line', 'stacked', 'donut', 'heatmap', 'calendar', 'matrix', 'scatter', 'rank', 'segments', 'sparkline'];
@@ -174,7 +174,7 @@ async function createPage(items, options = {}) {
     StatsCharts: stubs,
     StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); } } });
   const local = pageScripts().filter(f => f.startsWith('sections/stats/') && !/history-stats|rule-stats|tools-stats/.test(f));
-  for (const file of ['modules/core/storage-manager.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
+  for (const file of ['modules/core/storage-manager.js', 'modules/core/categories.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
     vm.runInContext(read(file), context, { filename: file });
   }
   await init();

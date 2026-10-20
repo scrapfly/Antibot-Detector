@@ -10,6 +10,7 @@ importScripts(
     './modules/core/badge-constants.js',
     './modules/core/message-types.js',
     './modules/core/ttl-map.js',
+    './modules/core/categories.js',
     './utils/format-utils.js',
     './utils/url-utils.js',
     './utils/page-cookies.js',

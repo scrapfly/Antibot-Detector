@@ -79,7 +79,7 @@ Rules.prototype.displayRules = async function() {
   // Sort by: enabled status, then the category order chosen in Settings →
   // Detection order (the one the Detection list and History use), then date
   // (newest first), then name
-  let categoryOrder = ['antibot', 'captcha', 'fingerprint'];
+  let categoryOrder = [...Categories.KEYS];
   try {
     const settings = await Utils.getSettings();
     categoryOrder = DetectionUtils.detectionSortOf(settings && settings.detection).categoryOrder;

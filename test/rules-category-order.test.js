@@ -15,6 +15,7 @@ function rulesWith(settings) {
   const context = { console, Logger: { debug() {}, error() {}, ui() {} }, Rules: function Rules() {},
     Utils: { getSettings: async () => settings }, document: { querySelector: selector => (selector === '#rulesList' ? {} : selector === '#rulesSearch' ? { value: '' } : { style: {} }) } };
   vm.createContext(context);
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('utils/detection-utils.js') + '\nthis.DetectionUtils = DetectionUtils;', context);
   vm.runInContext(read('sections/rules/rules-display.js'), context);
   const detector = (name, lastUpdated, extra = {}) => ({ name, displayName: name, lastUpdated, enabled: true, ...extra });

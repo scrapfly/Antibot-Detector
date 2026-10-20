@@ -19,6 +19,7 @@ function load() {
     AdvancedUtils: { copyToClipboard: (text, button) => { copied.push({ text, button }); } }
   };
   vm.createContext(context);
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('utils/format-utils.js'), context);
   context.FormatUtils = context.self.FormatUtils;
   vm.runInContext(`${read('sections/advanced/base-advanced-module.js')}\nthis.BaseAdvancedModule = BaseAdvancedModule;`, context);

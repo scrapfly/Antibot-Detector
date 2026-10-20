@@ -1,8 +1,12 @@
 /** Pure aggregation of recorded history entries, not a measure of all browsing. */
+// The detection categories are described once, in modules/core/categories.js (the stats page loads it first)
+if (typeof Categories === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.Categories = require('../../modules/core/categories.js');
+}
 const HistoryStats = {
   DAY_MS: 86400000,
   /** Category keys of a detection, the scope a page can show, and how stacks and chips are ordered. */
-  SCOPE_KEYS: ['antibot', 'captcha', 'fingerprint', 'other'],
+  SCOPE_KEYS: [...Categories.KEYS_AND_OTHER],
   /** Fingerprinting is API-use telemetry, so it starts hidden. */
   DEFAULT_SCOPE: ['antibot', 'captcha', 'other'],
   CATEGORY_ORDER: ['captcha', 'antibot', 'other', 'fingerprint'],
@@ -91,11 +95,7 @@ const HistoryStats = {
     const cache = HistoryStats._categoryCache;
     const text = typeof category === 'string';
     if (text) { const hit = cache.get(category); if (hit !== undefined) return hit; }
-    const normalized = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
-    let result = 'other';
-    if (normalized.includes('captcha')) result = 'captcha';
-    else if (normalized.includes('fingerprint')) result = 'fingerprint';
-    else if (normalized.includes('antibot') || normalized.includes('bot') || normalized.includes('waf')) result = 'antibot';
+    const result = Categories.keyOf(category);
     if (text && cache.size < 256) cache.set(category, result);
     return result;
   },
@@ -235,7 +235,7 @@ const HistoryStats = {
     const days = HistoryStats.timelineDays(items, options.days === undefined ? 30 : options.days, now, options.maxDays);
     const top = typeof options.top === 'number' && Number.isFinite(options.top) ? Math.max(1, Math.floor(options.top)) : 8;
     const list = Array.isArray(items) ? items.filter(HistoryStats.isRecord) : [];
-    const keys = ['antibot', 'captcha', 'fingerprint', 'other'];
+    const keys = HistoryStats.SCOPE_KEYS;
     const emptyCategories = () => Object.fromEntries(keys.map((key) => [key, 0]));
     const bucket = () => ({ entries: 0, detections: 0, categories: emptyCategories(), domains: new Set(), sum: 0, count: 0 });
     const dayBucket = () => ({ ...bucket(), names: new Set(), layeredHosts: new Set() });
@@ -539,7 +539,7 @@ const HistoryStats = {
   },
   /** Detections per category, and the entries that hold at least one fingerprint detection. */
   categoryCounts(items) {
-    const out = { antibot: 0, captcha: 0, fingerprint: 0, other: 0, total: 0, fingerprintPages: 0 };
+    const out = { ...Object.fromEntries(HistoryStats.SCOPE_KEYS.map((key) => [key, 0])), total: 0, fingerprintPages: 0 };
     for (const item of Array.isArray(items) ? items : []) {
       if (!HistoryStats.isRecord(item) || !Array.isArray(item.detections)) continue;
       let fingerprint = false;

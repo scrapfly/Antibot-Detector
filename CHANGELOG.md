@@ -11,6 +11,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - History: filter chips under the search (Pinned, Changed, Anti-bot, Captcha), and the search now also looks in your notes. When nothing matches, a message offers Clear filters.
 
+### Fixed
+
+- A custom detector whose category says "WAF" or "bot" is listed with anti-bot everywhere (Detection, History and its export filter); some screens put it under Other.
+- CHEQ, Meetrics, Ocule and ThreatMetrix are named Anti-Bot in History exports and webhooks, like every other anti-bot detector.
+- Official detectors stay marked official, not custom, when the built-in detector index cannot be read.
+
 ## [3.0.1] - 2026-10-20
 
 ### Added

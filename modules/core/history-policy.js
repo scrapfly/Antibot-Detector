@@ -11,6 +11,9 @@
 (function(root) {
   'use strict';
 
+  // Loaded before this file in the popup and the worker; under Node it sits next to it
+  const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+
   const CHANGE_ALERT_MODES = ['off', 'pinned', 'all'];
   const BACKUP_FREQUENCIES = ['off', 'daily', 'weekly', 'monthly'];
 
@@ -43,8 +46,7 @@
     return normalizeDomains(list).some(entry => host === entry || host.endsWith(`.${entry}`));
   }
 
-  const categoryOf = (detection) => String((detection && (detection.category || (detection.detector && detection.detector.category))) || '').toLowerCase();
-  const isFingerprint = (detection) => categoryOf(detection).includes('fingerprint');
+  const isFingerprint = (detection) => Categories.keyOf(detection) === 'fingerprint';
   const nameOf = (detection) => String((detection && ((detection.detector && detection.detector.name) || detection.name)) || '').trim();
 
   /** The highest confidence among a page's detections (0 when none is scored). */

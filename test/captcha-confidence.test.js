@@ -50,7 +50,7 @@ const context = vm.createContext({
 });
 context.window = context;
 for (const file of [
-  'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
+  'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/categories.js', 'modules/core/hooks-config.js',
   'modules/detection/conditions/window-condition-grammar.js', 'modules/detection/conditions/window-condition-evaluator.js',
   'modules/detection/managers/confidence-manager.js', 'modules/detection/detection-combinations.js',
   ...['analysis', 'extractors', 'matching', 'hooks', 'manager']

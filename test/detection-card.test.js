@@ -13,7 +13,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 function load() {
   const context = vm.createContext({ console, self: {}, encodeURIComponent, decodeURIComponent });
   context.self = context;
-  for (const file of ['utils/format-utils.js', 'utils/detection-utils.js', 'sections/detection/detection-ui.js']) {
+  for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'sections/detection/detection-ui.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const ui = context.DetectionUI;
@@ -125,6 +125,7 @@ test('the evidence icons: one per method, a combination mark when one decided, a
   assert.match(html, /<span class="card-evidence-name">Mystery method<\/span><span class="card-evidence-count">1<\/span>/);
   assert.deepEqual(ui.evidenceCounts([{ type: 'url' }, { type: 'header' }, { type: 'header' }]).map(r => `${r.type} ${r.count}`), ['header 2', 'url 1']);
   const context = vm.createContext({ console, self: {} }); context.self = context;
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('utils/format-utils.js'), context);
   for (const method of ['cookie', 'header', 'url', 'content', 'dom', 'window', 'js_hooks', 'payload']) {
     assert.match(context.FormatUtils.methodIconSvg(method), /^<svg [^>]*aria-hidden="true">/, method);

@@ -154,7 +154,7 @@ const worker = vm.createContext({
   setTimeout, clearTimeout, URL
 });
 worker.window = worker;
-for (const file of ['modules/core/constants.js', 'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
+for (const file of ['modules/core/constants.js', 'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/categories.js', 'modules/core/hooks-config.js',
   'modules/detection/conditions/window-condition-grammar.js', 'modules/detection/managers/confidence-manager.js', 'modules/detection/detection-combinations.js',
   ...['analysis', 'extractors', 'matching', 'hooks', 'manager'].map(name => `modules/detection/engine/detection-engine-${name}.js`),
   'background/detection-session-store.js', 'background/detection-lifecycle.js', 'background/handlers/messages-detection.js'

@@ -52,6 +52,7 @@
         "modules/core/constants.js",
         "modules/core/hooks-config.js",
         "modules/detection/conditions/window-condition-grammar.js",
+        "modules/core/categories.js",
         "utils/format-utils.js",
         "utils/url-utils.js",
         "utils/detection-utils.js",

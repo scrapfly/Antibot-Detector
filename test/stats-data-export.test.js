@@ -71,7 +71,7 @@ test('entries and CSV are exactly what they were', () => {
 test('per-domain difficulty in the summary follows the production levels of the entries', () => {
   const context = { window: {} };
   vm.createContext(context);
-  for (const file of ['../utils/detection-utils.js', '../sections/stats/history-stats.js', '../sections/stats/stats-export.js']) {
+  for (const file of ['../modules/core/categories.js', '../utils/detection-utils.js', '../sections/stats/history-stats.js', '../sections/stats/stats-export.js']) {
     vm.runInContext(fs.readFileSync(require.resolve(file), 'utf8'), context);
   }
   const input = [

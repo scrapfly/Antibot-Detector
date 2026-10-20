@@ -30,7 +30,7 @@ function harness() {
     'payloadStore', 'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore', 'recentDetectionRequests']) context[key] = new Map();
   context.tabsUsingCache = new Set();
   vm.createContext(context);
-  for (const file of ['modules/core/bridge-protocol.js', 'background/detection-session-store.js', 'background/handlers/messages-detection.js']) {
+  for (const file of ['modules/core/bridge-protocol.js', 'modules/core/categories.js', 'background/detection-session-store.js', 'background/handlers/messages-detection.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const registry = {};

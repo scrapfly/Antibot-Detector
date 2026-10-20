@@ -486,7 +486,7 @@ function registerDetectionHandlers(registry, context) {
 
                     let detectionObj = state.mainData.find(d => d && (d.detector?.id === detection.detectorId || d.id === detection.detectorId));
                     if (!detectionObj) {
-                        const categoryKey = detection.category.toLowerCase().replace(/[^a-z0-9]/g, '');
+                        const categoryKey = Categories.normalize(detection.category);
                         const fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
                         const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
                             ? DetectionUtils.normalizeDifficulty(fullDetector?.difficulty)

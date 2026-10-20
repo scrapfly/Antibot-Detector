@@ -10,7 +10,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const ctx = vm.createContext({ console, Logger: new Proxy({}, { get: () => () => {} }) });
 ctx.window = ctx; ctx.self = ctx;
-for (const file of ['utils/detection-utils.js', 'sections/detection/detection-ui.js']) {
+for (const file of ['modules/core/categories.js', 'utils/detection-utils.js', 'sections/detection/detection-ui.js']) {
   vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), ctx, { filename: file });
 }
 vm.runInContext('this.DetectionUtils = DetectionUtils; this.DetectionUI = DetectionUI;', ctx);

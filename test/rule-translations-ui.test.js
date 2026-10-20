@@ -41,6 +41,7 @@ function load({ fields, description, translator }) {
   };
   const context = vm.createContext({ console, setTimeout, document, Logger: { debug() {} }, Translator: translator, self: {} });
   context.self = context;
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('utils/format-utils.js'), context);
   vm.runInContext(read('modules/core/rule-i18n.js'), context);
   vm.runInContext('function Rules() {}', context);

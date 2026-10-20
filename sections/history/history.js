@@ -352,7 +352,7 @@ class History {
       const noDetections = FormatUtils.t('historyNoDetections', 'No detections');
       return `<span class="history-detection-tag">${FormatUtils.escapeHtml(noDetections)}</span>`;
     }
-    const keys = ['antibot', 'captcha', 'fingerprint'];
+    const keys = Categories.KEYS;
     const order = (this.detectionSort?.categoryOrder || keys).filter(key => keys.includes(key));
     keys.forEach(key => { if (!order.includes(key)) order.push(key); });
     const sorted = DetectionUtils.sortDetections(detections, this.detectionSort);
@@ -371,118 +371,6 @@ class History {
     });
     // A click goes to the card, which opens the details with each protection
     return `<span class="history-summary">${parts.join('')}</span>`;
-  }
-
-  renderHistoryDetections(detections, itemId, maxTags = 4) {
-    if (!detections || detections.length === 0) {
-      const noDetections = FormatUtils.t('historyNoDetections', 'No detections');
-      return `<span class="history-detection-tag">${FormatUtils.escapeHtml(noDetections)}</span>`;
-    }
-    const unknownName = FormatUtils.t('timeUnknown', 'Unknown');
-
-    let tagsHtml = '';
-
-    // Same order as the detail dialog and the Detection tab (Settings → Show first)
-    const sortedDetections = DetectionUtils.sortDetections(detections, this.detectionSort);
-
-    // Helper function to get category color
-    const getCategoryColor = (category) => {
-      const cat = category?.toLowerCase() || '';
-      if (cat.includes('antibot') || cat.includes('anti-bot')) return '#FF5733';
-      if (cat.includes('captcha')) return '#33C3FF';
-      if (cat.includes('fingerprint')) return '#3b82f6';
-      return '#666666';
-    };
-
-    sortedDetections.slice(0, maxTags).forEach(detection => {
-      const rawName = FormatUtils.detectorName(detection);
-      const name = rawName || unknownName;
-      const category = detection.category || '';
-      const categoryColor = getCategoryColor(category);
-      const categoryKey = FormatUtils.categoryKey(detection);
-      const confidenceValue = Math.round(Number(detection.confidence) || 0);
-      // Same hover card as elsewhere: name with its category dot, category and confidence
-      const tooltipAttrs = FormatUtils.tipAttrs(name,
-        `${FormatUtils.categoryLabel(categoryKey)} · ${FormatUtils.t('clipboardConfidenceFmt', 'Confidence: {0}%', confidenceValue)}`,
-        [], `cat-${categoryKey}`);
-      const safeName = FormatUtils.escapeHtml(name);
-
-      // Get detector object to retrieve icon
-      let detectorObj = null;
-      let iconHtml = '';
-
-      if (this.detectorManager && category && rawName) {
-        detectorObj = this.detectorManager.getDetectorByName(category, name);
-
-        if (!detectorObj) {
-          // Try with normalized category names
-          const categoryMappings = {
-            'Anti-Bot': 'antibot',
-            'antibot': 'antibot',
-            'CAPTCHA': 'captcha',
-            'captcha': 'captcha',
-            'Fingerprint': 'fingerprint',
-            'fingerprint': 'fingerprint'
-          };
-          const normalizedCategory = categoryMappings[category] || category.toLowerCase().replace(/[^a-z]/g, '');
-          detectorObj = this.detectorManager.getDetectorByName(normalizedCategory, name);
-        }
-      }
-
-      const normalizedCategoryName = String(category || detectorObj?.category || '')
-        .toLowerCase()
-        .replace(/[^a-z]/g, '');
-      const isFingerprintCategory = normalizedCategoryName === 'fingerprint' || normalizedCategoryName.includes('fingerprint');
-
-      // Generate icon HTML
-      let isFingerprint = false;
-      if (detectorObj && detectorObj.icon) {
-        const iconName = detectorObj.icon.toLowerCase();
-        // Check if it's a fingerprint SVG icon
-        if (FormatUtils.FINGERPRINT_ICONS[iconName]) {
-          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell">${FormatUtils.FINGERPRINT_ICONS[iconName]}</div>`;
-          isFingerprint = true;
-        } else {
-          const iconUrl = chrome.runtime.getURL(`detectors/icons/${detectorObj.icon}`);
-          if (isFingerprintCategory) {
-            iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${iconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--builtin history-fingerprint-image"></div>`;
-            isFingerprint = true;
-          } else {
-            // Brand logos: the dark copy in the dark theme, the original in the light one
-            iconHtml = FormatUtils.brandLogoHtml(detectorObj.icon, name, 'detection-icon');
-          }
-        }
-      } else {
-        // Fallback: Use Scrapfly icon for all detectors without official icons
-        const scrapflyIconUrl = chrome.runtime.getURL('icons/icon128.png');
-        if (isFingerprintCategory) {
-          iconHtml = `<div class="detection-icon-svg fingerprint-icon fingerprint-icon-shell"><img src="${scrapflyIconUrl}" alt="${safeName}" class="fingerprint-icon-image fingerprint-icon-image--default history-fingerprint-image"></div>`;
-          isFingerprint = true;
-        } else {
-          // No vendor logo: the Scrapfly mark sits bare on the chip (no white plate)
-          iconHtml = `<img src="${chrome.runtime.getURL('icons/icon128.png')}" alt="${safeName}" class="detection-icon detection-icon--default">`;
-        }
-      }
-
-      const badgeClass = isFingerprint ? 'history-detection-tag icon-badge fingerprint-badge' : 'history-detection-tag icon-badge';
-      tagsHtml += `<span class="${badgeClass}" ${tooltipAttrs} style="border-color: ${categoryColor};">${iconHtml}</span>`;
-    });
-
-    if (sortedDetections.length > maxTags) {
-      const hiddenDetections = sortedDetections.slice(maxTags);
-      // The hidden ones, each with its category dot and confidence
-      const rows = hiddenDetections.slice(0, 8).map(d => {
-        const key = FormatUtils.categoryKey(d);
-        const value = Math.round(Number(d.confidence) || 0);
-        return { label: FormatUtils.detectorName(d) || unknownName, dot: `cat-${key}`, value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
-      });
-      if (hiddenDetections.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', hiddenDetections.length - 8) });
-      const tooltipAttr = ` ${FormatUtils.tipAttrs(FormatUtils.t('tipMoreFmt', '+{0} more', hiddenDetections.length), '', rows)}`;
-
-      tagsHtml += `<span class="history-detection-tag more-detections" data-history-item-id="${itemId}"${tooltipAttr}>+${hiddenDetections.length}</span>`;
-    }
-
-    return tagsHtml;
   }
 
   /**
@@ -539,14 +427,8 @@ class History {
     const difficultyTone = { High: 'red', Medium: 'amber', Low: 'green' }[stats.difficulty] || 'green';
 
     // Per-category counts for the modal breakdown (Anti-bot, Captcha, Fingerprint, other)
-    const categoryCounts = { antibot: 0, captcha: 0, fingerprint: 0, other: 0 };
-    detections.forEach(d => {
-      const cat = String(d.category || '').toLowerCase().replace(/[^a-z]/g, '');
-      if (cat.includes('antibot')) categoryCounts.antibot++;
-      else if (cat.includes('captcha')) categoryCounts.captcha++;
-      else if (cat.includes('fingerprint')) categoryCounts.fingerprint++;
-      else categoryCounts.other++;
-    });
+    const categoryCounts = Object.fromEntries(Categories.KEYS_AND_OTHER.map(key => [key, 0]));
+    detections.forEach(d => { categoryCounts[Categories.keyOf(d)]++; });
 
     return {
       ...stats,
@@ -753,11 +635,9 @@ class History {
   withDetectorIcons(detections) {
     const dm = this.detectorManager;
     if (!dm) return detections;
-    const categories = { 'anti-bot': 'antibot', antibot: 'antibot', captcha: 'captcha', fingerprint: 'fingerprint' };
     return detections.map(detection => {
       const name = detection?.detector?.name || detection?.name;
-      const rawCategory = String(detection?.category || detection?.detector?.category || '');
-      const category = categories[rawCategory.toLowerCase()] || rawCategory.toLowerCase().replace(/[^a-z]/g, '');
+      const category = Categories.normalize(detection);
       const found = (detection?.detector?.id && dm.findDetectorById?.(detection.detector.id))
         || (name && category && dm.getDetectorByName?.(category, name));
       if (!found) return detection;
@@ -1119,18 +999,6 @@ class History {
       return `<div class="history-modal-empty">${_tr('historyNoDetectionsFound', 'No detections found')}</div>`;
     }
 
-    const categoryKeyByValue = {
-      'anti-bot': 'categoryAntibot', 'antibot': 'categoryAntibot',
-      'captcha': 'categoryCaptcha',
-      'fingerprint': 'categoryFingerprint', 'fingerprinting': 'categoryFingerprint'
-    };
-    const categoryClass = (category) => {
-      const cat = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
-      if (cat.includes('antibot')) return 'antibot';
-      if (cat.includes('captcha')) return 'captcha';
-      if (cat.includes('fingerprint')) return 'fingerprint';
-      return 'other';
-    };
     // Settings → Detection → Show first (category order or highest confidence),
     // as in the Detection tab. The original index is kept so
     // data-detection-index still points into the stored array.
@@ -1142,10 +1010,10 @@ class History {
       const name = rawName || _tr('unknownDetection', 'Unknown Detection');
       const safeName = FormatUtils.escapeHtml(name);
       const category = detection.category || '';
-      const categoryKey = categoryKeyByValue[String(category).toLowerCase()] || null;
+      const categoryKey = Categories.labelOf(category)?.[0] || null;
       const translatedCategory = categoryKey ? _tr(categoryKey, category) : category;
       const safeCategory = FormatUtils.escapeHtml(translatedCategory);
-      const catClass = categoryClass(category);
+      const catClass = Categories.keyOf(category);
       const confidence = Math.round(Number(detection.confidence) || 0);
       const hasMethods = detection.matches && detection.matches.length > 0;
 

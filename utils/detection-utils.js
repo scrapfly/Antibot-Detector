@@ -1,6 +1,10 @@
 /**
  * DetectionUtils - Detection confidence scoring and difficulty analysis
  */
+// The detection categories are described once, in modules/core/categories.js (the popup and the worker load it first)
+if (typeof Categories === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.Categories = require('../modules/core/categories.js');
+}
 class DetectionUtils {
 
   /**
@@ -38,7 +42,7 @@ class DetectionUtils {
   }
 
   /** Category order of the Detection list (Settings → Detection → Category order) */
-  static DEFAULT_CATEGORY_ORDER = ['antibot', 'captcha', 'fingerprint'];
+  static DEFAULT_CATEGORY_ORDER = [...Categories.KEYS];
 
   /**
    * A saved category order as a complete order of the three categories:
@@ -52,7 +56,7 @@ class DetectionUtils {
     const known = DetectionUtils.DEFAULT_CATEGORY_ORDER;
     const out = [];
     for (const raw of list) {
-      const category = String(raw || '').trim().toLowerCase().replace(/^anti-bot$/, 'antibot').replace(/^fingerprinting$/, 'fingerprint');
+      const category = Categories.keyOf(String(raw || '').trim());
       if (known.includes(category) && !out.includes(category)) out.push(category);
     }
     for (const category of known) if (!out.includes(category)) out.push(category);
@@ -79,11 +83,7 @@ class DetectionUtils {
 
   /** 'antibot' | 'captcha' | 'fingerprint' | 'other' for any spelling of a category */
   static categoryKey(category) {
-    const cat = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
-    if (cat.includes('antibot')) return 'antibot';
-    if (cat.includes('captcha')) return 'captcha';
-    if (cat.includes('fingerprint')) return 'fingerprint';
-    return 'other';
+    return Categories.keyOf(category);
   }
 
   /**
@@ -174,11 +174,7 @@ class DetectionUtils {
    * @returns {'Low'|'Medium'|'High'}
    */
   static defaultDifficultyForCategory(category) {
-    const normalized = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
-    if (normalized === 'captcha') return 'High';
-    if (normalized === 'fingerprint') return 'Low';
-    if (normalized === 'antibot') return 'Medium';
-    return 'Medium';
+    return Categories.defaultDifficulty(category);
   }
 
   /**
@@ -222,19 +218,12 @@ class DetectionUtils {
       ? avgConfidence
       : DetectionUtils.computeAverageConfidence(detections);
 
-    const normalizedCategories = safeDetections.map((d) => {
-      const category = d?.category ?? d?.detector?.category ?? '';
-      return String(category).toLowerCase();
-    });
+    const categoryKeys = safeDetections.map((d) => Categories.keyOf(d));
 
-    const antiCaptchaCount = normalizedCategories.filter((category) => {
-      return category.includes('anti') || category.includes('captcha');
-    }).length;
+    const antiCaptchaCount = categoryKeys.filter((key) => key === 'antibot' || key === 'captcha').length;
 
     // Fingerprint-only detections (even many of them) shouldn't imply a "hard" page.
-    const fingerprintOnly = totalDetections > 0 && normalizedCategories.every((category) => {
-      return category.includes('fingerprint');
-    });
+    const fingerprintOnly = totalDetections > 0 && categoryKeys.every((key) => key === 'fingerprint');
 
     const isHighTierName = (d) => {
       // detector may be an object without a name (only an id), or a plain string

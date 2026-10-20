@@ -1,4 +1,8 @@
 /** Pure normalization and admission checks for detector definitions. */
+// The detection categories are described once, in modules/core/categories.js (the popup and the worker load it first)
+if (typeof Categories === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.Categories = require('../../core/categories.js');
+}
 class DetectorSchema {
     static METHODS = ['cookie', 'header', 'content', 'dom', 'url', 'window', 'js_hooks', 'payload'];
     static isRecord(value) {
@@ -116,13 +120,7 @@ class DetectorSchema {
 
     // Convert category name to display format
     static categoryDisplayName(categoryName) {
-        const normalized = (categoryName || '').toLowerCase();
-        const map = {
-            antibot: 'Anti-Bot',
-            captcha: 'CAPTCHA',
-            fingerprint: 'Fingerprint'
-        };
-        return map[normalized] || categoryName || 'Unknown';
+        return Categories.NAMES[Categories.normalize(categoryName)] || categoryName || 'Unknown';
     }
 
     /** Return a normalized copy; stored data can be repaired without mutating its caller. */

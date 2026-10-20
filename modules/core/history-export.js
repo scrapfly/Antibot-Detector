@@ -14,16 +14,16 @@
 (function(root) {
   'use strict';
 
+  // Loaded before this file in the popup and the worker; under Node it sits next to it
+  const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+
   const FORMATS = ['json', 'csv', 'txt'];
   const TYPES = { json: 'application/json', csv: 'text/csv', txt: 'text/plain' };
   const DAY_MS = 24 * 60 * 60 * 1000;
 
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
   const detectionCategory = (d) => String((d && (d.category || (d.detector && d.detector.category))) || '').trim();
-  const categoryKey = (d) => {
-    const c = detectionCategory(d).toLowerCase().replace(/[^a-z]/g, '');
-    return c.includes('fingerprint') ? 'fingerprint' : c.includes('captcha') ? 'captcha' : c.includes('antibot') ? 'antibot' : c;
-  };
+  const categoryKey = (d) => Categories.keyOf(d);
   const timeOf = (item) => {
     const ts = item && item.timestamp;
     const n = typeof ts === 'number' ? ts : Date.parse(ts);

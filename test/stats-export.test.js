@@ -105,7 +105,7 @@ test('filename and invalid options are predictable', () => {
 test('production DetectionUtils custom difficulty matches dashboard in entries, CSV and JSON summary', () => {
   const context = { window: {} };
   vm.createContext(context);
-  for (const file of ['../utils/detection-utils.js', '../sections/stats/history-stats.js', '../sections/stats/stats-export.js']) {
+  for (const file of ['../modules/core/categories.js', '../utils/detection-utils.js', '../sections/stats/history-stats.js', '../sections/stats/stats-export.js']) {
     vm.runInContext(fs.readFileSync(require.resolve(file), 'utf8'), context);
   }
   const input = [visit({ hostname: 'high.example', detections: [{ detector: { name: 'Custom fingerprint', category: 'fingerprint',

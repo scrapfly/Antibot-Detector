@@ -14,13 +14,13 @@
 (function(root) {
   'use strict';
 
-  const CATEGORIES = ['antibot', 'captcha', 'fingerprint'];
+  // Loaded before this file in the popup and the worker; under Node it sits next to it
+  const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+
+  const CATEGORIES = Categories.KEYS;
 
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
-  const categoryKey = (d) => {
-    const c = String((d && (d.category || (d.detector && d.detector.category))) || '').toLowerCase().replace(/[^a-z]/g, '');
-    return c.includes('fingerprint') ? 'fingerprint' : c.includes('captcha') ? 'captcha' : c.includes('antibot') ? 'antibot' : c;
-  };
+  const categoryKey = (d) => Categories.keyOf(d);
 
   const isChanged = (item) => {
     const change = item && item.changed;

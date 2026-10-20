@@ -1068,11 +1068,9 @@ DetectionUI.showsGroups = function() {
     return this?.sortBy !== byConfidence;
 };
 
-/** antibot / captcha / fingerprint (or the raw lowercase name) of a detection. */
+/** antibot / captcha / fingerprint / other of a detection. */
 DetectionUI.categoryKeyOf = function(detection) {
-    const raw = detection?.category || detection?.detector?.category || '';
-    if (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.categoryKey === 'function') return DetectionUtils.categoryKey(raw);
-    return String(raw).toLowerCase().replace(/[^a-z]/g, '');
+    return Categories.keyOf(detection);
 };
 
 DetectionUI.categoryColor = function(categoryKey) {
@@ -1282,18 +1280,10 @@ DetectionUI.observeResultsListSize = function() {
     this._resultsListObserver.observe(main);
 };
 
-// Localized category names, shared by the detection cards, History and Rules
-DetectionUI.CATEGORY_LABELS = {
-    antibot: ['categoryAntibot', 'Anti-bot'],
-    'anti-bot': ['categoryAntibot', 'Anti-bot'],
-    captcha: ['categoryCaptcha', 'Captcha'],
-    fingerprint: ['categoryFingerprint', 'Fingerprint'],
-    fingerprinting: ['categoryFingerprint', 'Fingerprint']
-};
-
+// Localized category names, shared by the detection cards, History and Rules (a custom category keeps its own text)
 DetectionUI.categoryLabel = function(category) {
     const raw = String(category || '');
-    const entry = DetectionUI.CATEGORY_LABELS[raw.toLowerCase()];
+    const entry = Categories.labelOf(raw);
     if (!entry) return raw.charAt(0).toUpperCase() + raw.slice(1);
     return typeof I18n !== 'undefined' ? I18n.tr(entry[0], entry[1]) : entry[1];
 };
@@ -1514,10 +1504,7 @@ DetectionUI.handleSearch = function(query) {
 DetectionUI.getDetectorIcon = function(detection) {
     const iconAlt = (typeof I18n !== 'undefined' && I18n.get('ruleFieldIcon')) || 'Icon';
     const escapeAlt = (text) => FormatUtils.escapeAttr(text || iconAlt);
-    const normalizedCategory = String(detection?.category || detection?.detector?.category || '')
-      .toLowerCase()
-      .replace(/[^a-z]/g, '');
-    const isFingerprintCategory = normalizedCategory === 'fingerprint' || normalizedCategory.includes('fingerprint');
+    const isFingerprintCategory = Categories.keyOf(detection) === 'fingerprint';
 
     const fingerprintIcons = FormatUtils.FINGERPRINT_ICONS;
 

@@ -108,15 +108,14 @@
   }
 
   // Colour roles: anti-bot and CAPTCHA carry the saturated inks, fingerprint is quiet, difficulty has its own tokens.
-  const CATEGORY_KEYS = ['antibot', 'captcha', 'fingerprint', 'other'];
+  const CATEGORY_KEYS = Categories.KEYS_AND_OTHER;
   const ink = key => 'var(--ink-' + (CATEGORY_KEYS.includes(key) ? key : 'other') + ')';
   const DIFFICULTY_COLORS = { High: 'var(--danger)', Medium: 'var(--warning)', Low: 'var(--success)', None: 'var(--s-neutral)' };
   /** Anti-bot and CAPTCHA together is its own tier: a violet that neither category ink mixes into, readable on both card colours. */
   const mixInk = () => '#8b5cf6';
   /** The categories a chart stacks, in drawing order: the ones in scope, and "other" only when something was found in it. */
   const activeCategories = (scope, counts) => ['antibot', 'captcha', 'other', 'fingerprint'].filter(key => scope.has(key) && (key !== 'other' || (counts && counts.other > 0)));
-  const categoryLabel = key => ({ antibot: tr('categoryAntibot', 'Anti-bot'), captcha: tr('categoryCaptcha', 'Captcha'),
-    fingerprint: tr('categoryFingerprint', 'Fingerprint'), other: tr('statsCategoryOther', 'Other') }[key] || key);
+  const categoryLabel = key => (Categories.LABELS[key] ? tr(...Categories.LABELS[key]) : key);
   const difficultyLabel = key => ({ High: tr('difficultyHigh', 'High'), Medium: tr('difficultyMedium', 'Medium'),
     Low: tr('difficultyLow', 'Low'), None: tr('statsDifficultyNoneScoped', 'No protection') }[key] || key);
   const methodLabel = key => FormatUtils.methodLabel(key);

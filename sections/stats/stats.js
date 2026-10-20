@@ -19,7 +19,7 @@
   const INERT_SECTIONS = ['rules', 'tools'];
   /** Tabs that compare with the previous period. */
   const COMPARE_SECTIONS = ['overview', 'protections', 'domains'];
-  const CHIP_ORDER = ['antibot', 'captcha', 'fingerprint', 'other'];
+  const CHIP_ORDER = Categories.KEYS_AND_OTHER;
   const WATCHED = ['scrapfly_history', 'scrapfly_settings', 'scrapfly_detectors', 'scrapfly_advanced_history', 'scrapfly_incompatible_updates', 'scrapfly_remote_official_ids'];
   const RELOAD_DELAY = 400;
   const SMALL_HISTORY = 10;

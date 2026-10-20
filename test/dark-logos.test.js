@@ -33,6 +33,7 @@ test('Rules cards show the dark copy of a brand logo, and the original for the l
     FormatUtils: { escapeHtml: s => String(s || ''), escapeAttr: s => String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;') },
     chrome: { runtime: { getURL: p => 'chrome-extension://x/' + p } } };
   vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/categories.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(root, 'sections/rules/rules-formatters.js'), 'utf8'), context);
   const rules = new context.Rules();
   const html = rules.getDetectorIcon({ name: 'Akamai Bot Manager', icon: 'akamai_official.png' }, 'antibot');
@@ -50,6 +51,7 @@ test('Rules cards show the dark copy of a brand logo, and the original for the l
 test('Detection and History show the dark copy of a brand logo through one helper, the original in the light theme', () => {
   const context = { chrome: { runtime: { getURL: p => 'chrome-extension://x/' + p } } };
   vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/categories.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(root, 'utils/format-utils.js'), 'utf8') + '\nthis.FormatUtils = FormatUtils;', context);
   const { FormatUtils } = context;
   const pair = FormatUtils.brandLogoHtml('akamai_official.png', 'Akamai "Bot" Manager', 'detector-icon');
@@ -63,12 +65,14 @@ test('Detection and History show the dark copy of a brand logo through one helpe
   // Detection cards and their details use it; fingerprint glyphs do not
   const detection = { chrome: context.chrome, FormatUtils, I18n: { get: () => null } };
   vm.createContext(detection);
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/categories.js'), 'utf8'), detection);
   vm.runInContext(fs.readFileSync(path.join(root, 'sections/detection/detection-ui.js'), 'utf8') + '\nthis.DetectionUI = DetectionUI;', detection);
   assert.match(detection.DetectionUI.getDetectorIcon({ category: 'antibot', detector: { name: 'Akamai', icon: 'akamai_official.png' } }), /^<span class="brand-logo"><img src="[^"]+logos-dark\/akamai_official\.png"/);
   assert.doesNotMatch(detection.DetectionUI.getDetectorIcon({ category: 'fingerprint', detector: { name: 'Canvas', icon: 'canvas_fingerprint.png' } }), /brand-logo/);
-  // History cards and their details too
+  // History's detail dialog too (the History cards show a count per category, no logos)
   const history = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
-  assert.equal((history.match(/FormatUtils\.brandLogoHtml\(detectorObj\.icon, [^,]+, '(?:detection-icon|modal-detector-icon)'\)/g) || []).length, 2);
+  assert.equal((history.match(/FormatUtils\.brandLogoHtml\(detectorObj\.icon, [^,]+, 'modal-detector-icon'\)/g) || []).length, 1);
+  assert.ok(!/brandLogoHtml\([^)]*'detection-icon'\)/.test(history), 'no logo helper call is left from the removed tag renderer');
 
   // The wrapper makes no box; each theme shows one of the two images
   const common = fs.readFileSync(path.join(root, 'modules/styles/common.css'), 'utf8');

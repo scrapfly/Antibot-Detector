@@ -12,6 +12,10 @@
  * message and network URL). Pure: build() returns { title, lines } from the
  * finalized results and the tab's detection state, so it is unit-tested.
  */
+// The detection categories are described once, in modules/core/categories.js (the popup and the worker load it first)
+if (typeof Categories === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.Categories = require('../modules/core/categories.js');
+}
 const ScanReport = {
     MAX_EVIDENCE: 3,
     MAX_VALUE: 48,
@@ -19,11 +23,7 @@ const ScanReport = {
     MAX_ROW: 220,
 
     categoryLabel(category) {
-        const key = String(category || '').toLowerCase().replace(/[^a-z]/g, '');
-        if (key.includes('captcha')) return 'Captcha';
-        if (key.includes('fingerprint')) return 'Fingerprint';
-        if (key.includes('antibot') || key.includes('bot') || key.includes('waf')) return 'Anti-bot';
-        return 'Other';
+        return Categories.LABELS[Categories.keyOf(category)][1];
     },
 
     short(text, max = ScanReport.MAX_VALUE) {

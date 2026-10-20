@@ -13,6 +13,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const FILES = [
   'modules/core/constants.js',
+  'modules/core/categories.js',
   'utils/format-utils.js',
   'utils/url-utils.js',
   'utils/detection-utils.js',

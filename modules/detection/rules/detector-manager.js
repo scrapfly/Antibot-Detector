@@ -480,19 +480,8 @@ class DetectorManager {
      * @returns {string} Normalized category key (e.g., "antibot", "captcha")
      */
     normalizeCategoryName(category) {
-        if (!category) return '';
-
-        const normalized = category.toLowerCase()
-            .replace(/[^a-z]/g, ''); // Remove spaces, hyphens, etc.
-
-        // Map known variations
-        const categoryMap = {
-            'antibot': 'antibot',
-            'captcha': 'captcha',
-            'fingerprint': 'fingerprint'
-        };
-
-        return categoryMap[normalized] || normalized;
+        // Letters only, so "Anti-Bot" is antibot; a custom category keeps its own key
+        return Categories.normalize(category);
     }
 
     /**

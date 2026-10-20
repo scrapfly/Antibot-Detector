@@ -325,6 +325,7 @@ test('the no-tools screen groups supported protections by category, with logos a
   const context = { window: {}, document: {}, console, FormatUtils, Logger: { ui() {}, debug() {}, error() {} } };
   context.globalThis = context;
   vm.createContext(context);
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('modules/advanced/captcha-vendors.js'), context);
   vm.runInContext(read('modules/advanced/vendor-registry.js'), context);
   for (const file of ['advanced.js', 'advanced-tools.js']) vm.runInContext(read(`sections/advanced/${file}`), context);

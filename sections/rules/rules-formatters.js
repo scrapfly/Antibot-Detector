@@ -326,15 +326,10 @@ Rules.prototype.getCategoryMethod = function(category) {
  * @returns {string} Category label
  */
 Rules.prototype.getCategoryLabel = function(category) {
-  const labelKey = {
-    antibot: 'categoryAntibot',
-    captcha: 'categoryCaptcha',
-    fingerprint: 'categoryFingerprint'
-  };
-  const labelFallback = { antibot: 'Anti-bot', captcha: 'Captcha', fingerprint: 'Fingerprint' };
-  const name = category?.toLowerCase();
-  const translated = (labelKey[name] && typeof I18n !== 'undefined') ? I18n.get(labelKey[name]) : null;
-  return translated || labelFallback[name] || this.getCategoryMethod(category);
+  // A custom category keeps the name its author gave it; only the three built-in ones are translated
+  const [labelKey, labelFallback] = Categories.labelOf(category) || [];
+  const translated = (labelKey && typeof I18n !== 'undefined') ? I18n.get(labelKey) : null;
+  return translated || labelFallback || this.getCategoryMethod(category);
 };
 
 /**
@@ -420,10 +415,7 @@ Rules.prototype.getMethodBadgeClass = function(method) {
 Rules.prototype.getDetectorIcon = function(detector, category = '') {
   // Default Scrapfly icon fallback
   const scrapflyIcon = chrome.runtime.getURL('icons/icon128.png');
-  const normalizedCategory = String(category || detector?.category || '')
-    .toLowerCase()
-    .replace(/[^a-z]/g, '');
-  const isFingerprintCategory = normalizedCategory === 'fingerprint' || normalizedCategory.includes('fingerprint');
+  const isFingerprintCategory = Categories.keyOf(category || detector?.category) === 'fingerprint';
 
   // Fingerprint SVG icons mapping
   const fingerprintIcons = {

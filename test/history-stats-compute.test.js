@@ -165,6 +165,7 @@ test('domainMetrics carry difficulty, CAPTCHA flag, stack and dates without chan
 test('an unknown difficulty level counts as Medium for a domain, as it does in the totals', () => {
   const context = { DetectionUtils: { getDifficultyLevel: () => 'Mystery' } };
   vm.createContext(context);
+  vm.runInContext(fs.readFileSync(require.resolve('../modules/core/categories.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(require.resolve('../sections/stats/history-stats.js'), 'utf8'), context);
   const s = vm.runInContext('HistoryStats', context).compute([page('a.com', [det('X')])], { now: NOW });
   assert.equal(s.difficulty.Medium, 1);

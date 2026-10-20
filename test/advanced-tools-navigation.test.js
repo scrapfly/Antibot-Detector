@@ -32,6 +32,7 @@ function fixture() {
       querySelectorAll: selector => selector === '.advanced-launch-card' ? buttons : [],
       getElementById: id => nodes['#' + id] || null } };
   vm.createContext(context);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/core/categories.js'), 'utf8'), context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
   for (const file of ['advanced.js', 'advanced-tools.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/advanced', file), 'utf8'), context);

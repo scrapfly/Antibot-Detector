@@ -49,6 +49,27 @@ test('worker responsibilities never load popup sections', () => {
   assertBefore(workerImports(), 'background/detection-session-store.js', 'background/detection-lifecycle.js');
 });
 
+test('every script that reads the category module loads after it, in the popup, the worker, the stats page and the content script', () => {
+  const stats = [...read('sections/stats/stats.html').matchAll(/<script\s+src="([^"]+)"/g)].map(m => path.posix.join('sections/stats', m[1]));
+  const manifest = JSON.parse(read('manifest.json'));
+  const contexts = {
+    popup: popupScripts(), worker: workerImports(), stats,
+    content: manifest.content_scripts.find(entry => entry.world !== 'MAIN').js
+  };
+  const MODULE = 'modules/core/categories.js';
+  let readers = 0;
+  for (const [name, graph] of Object.entries(contexts)) {
+    for (const file of graph.filter(entry => entry !== MODULE && /\bCategories\./.test(read(entry)))) {
+      readers++;
+      assertBefore(graph, MODULE, file);
+      assert.ok(name, file);
+    }
+  }
+  assert.ok(readers >= 20, 'the guard finds the scripts that use the module');
+  // The page's own world shares its globals with the site, so nothing shared is loaded there
+  assert.ok(!manifest.content_scripts.find(entry => entry.world === 'MAIN').js.includes(MODULE));
+});
+
 test('rules and integration graphs load dependencies before their users', () => {
   for (const graph of [popupScripts(), workerImports()]) {
     assertBefore(graph, 'modules/detection/rules/detector-schema.js', 'modules/detection/rules/detector-manager.js');

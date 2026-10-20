@@ -56,6 +56,7 @@ function makeWorld(options = {}) {
   sw.self = sw; sw.globalThis = sw;
   vm.createContext(sw);
   vm.runInContext(read('modules/core/history-store.js'), sw);
+  vm.runInContext(read('modules/core/categories.js'), sw);
   vm.runInContext(read('modules/core/history-policy.js'), sw);
   vm.runInContext(read('background/history-recorder.js') + '\n;globalThis.HistoryRecorder = HistoryRecorder;', sw);
 

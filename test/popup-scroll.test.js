@@ -177,6 +177,7 @@ function sizingHarness() {
     requestAnimationFrame: callback => { frames.push(callback); return frames.length; }
   };
   vm.createContext(context);
+  vm.runInContext(read('modules/core/categories.js'), context);
   vm.runInContext(read('utils/format-utils.js'), context);
   context.FormatUtils = context.self.FormatUtils;
   vm.runInContext(read('sections/detection/detection-ui.js'), context);
