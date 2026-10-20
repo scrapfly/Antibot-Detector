@@ -36,6 +36,8 @@ importScripts(
     './modules/detection/rules/update-manager.js',
     './background/worker-keepalive-manager.js',
     './modules/core/history-store.js',
+    './modules/core/history-policy.js',
+    './modules/core/history-export.js',
     './background/history-recorder.js',
     './modules/core/webhook-body.js',
     './modules/detection/public-summary.js',
@@ -81,6 +83,7 @@ importScripts(
     './background/handlers/message-router.js',
     './background/tab-events.js',
     './background/history-retention.js',
+    './background/history-backup.js',
     './background/detection-cache-retention.js',
     './background/init.js'
 );

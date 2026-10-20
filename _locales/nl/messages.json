@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Van 1 minuut tot 7 dagen."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Wat de geschiedenis opslaat"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Vastleggen"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Pagina's opslaan in de geschiedenis"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Schakel uit om te browsen zonder vast te leggen. Detectie blijft werken."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Incognitovensters overslaan"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Pagina's uit incognitovensters worden nooit opgeslagen."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Pagina's met alleen fingerprinting overslaan"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Sla een pagina niet op als er alleen fingerprinting is gevonden."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Minimale zekerheid om op te slaan (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Een pagina wordt alleen opgeslagen als de sterkste detectie deze zekerheid bereikt. Bij 0 wordt elke pagina opgeslagen."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Opgeslagen adressen"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Volledig adres bewaren"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Gevoelige waarden verbergen"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Querystring verwijderen"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Tokens en e-mailadressen in een adres komen terecht in de geschiedenis, in exports en in gedeelde links. Geldt voor pagina's die vanaf nu worden opgeslagen."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Sites die de geschiedenis negeert"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Eén site per regel; subdomeinen zijn inbegrepen. Detectie blijft daarop gewoon draaien."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Geschiedenis wissen bij het sluiten van de browser"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Verwijdert opgeslagen pagina's wanneer het laatste venster wordt gesloten, of bij de volgende start. Vastgezette pagina's blijven behouden."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Waarschuwen wanneer beveiligingen veranderen"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Uit"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Alleen vastgezette pagina's"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Elke pagina"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Een melding wanneer een eerder gescande pagina een beveiliging erbij krijgt of verliest."
+  },
+  "settingsDuplicateAction": {
+    "message": "Wanneer een duplicaat wordt gevonden"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "De nieuwe scan overslaan"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Eerder item bijwerken"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Bijwerken behoudt de datum van de eerste scan, de vastgezette status en de notitie, en markeert het item als gewijzigd wanneer de beveiligingen verschillen."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Opslag en back-up"
+  },
+  "settingsHistoryStorage": {
+    "message": "Gebruikte opslag"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} van {1} gebruikt · Items: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Vastgezet: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "De geschiedenis is leeg."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Bijna vol: de oudste items worden verwijderd om ruimte te maken. Exporteer of zet vast wat je wilt bewaren."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Om binnen de limiet te blijven zijn de oudste items verwijderd (totaal: {0}), voor het laatst op {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Automatische back-up"
+  },
+  "settingsBackupOff": {
+    "message": "Uit"
+  },
+  "settingsBackupDaily": {
+    "message": "Elke dag"
+  },
+  "settingsBackupWeekly": {
+    "message": "Elke week"
+  },
+  "settingsBackupMonthly": {
+    "message": "Elke maand"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Nu back-up maken"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Laatste back-up: {0} (items: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Nog geen back-up."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Back-up gemaakt. Items: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Nog niets om een back-up van te maken"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Back-up van de geschiedenis mislukt"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Controleer of downloads zijn toegestaan en probeer het daarna opnieuw met Nu back-up maken in Instellingen → Geschiedenis."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "De minimale zekerheid moet tussen 0 en 100 liggen"
+  },
+  "historyPin": {
+    "message": "Vastzetten"
+  },
+  "historyUnpin": {
+    "message": "Losmaken"
+  },
+  "historyAddNote": {
+    "message": "Notitie toevoegen"
+  },
+  "historyEditNote": {
+    "message": "Notitie bewerken"
+  },
+  "historyPinnedTip": {
+    "message": "Vastgezet: blijft behouden wanneer de geschiedenis wordt opgeschoond"
+  },
+  "historyChangedBadge": {
+    "message": "Gewijzigd"
+  },
+  "historyNoteTitle": {
+    "message": "Notitie"
+  },
+  "historyNotePlaceholder": {
+    "message": "Een notitie bij deze pagina…"
+  },
+  "historyNoteSaved": {
+    "message": "Notitie opgeslagen"
+  },
+  "historyPinnedNotice": {
+    "message": "Vastgezet"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Losgemaakt"
+  },
+  "historyExportDialogTitle": {
+    "message": "Geschiedenis exporteren"
+  },
+  "historyExportFormat": {
+    "message": "Indeling"
+  },
+  "historyExportCategory": {
+    "message": "Beveiligingen"
+  },
+  "historyExportAll": {
+    "message": "Alle"
+  },
+  "historyExportPeriod": {
+    "message": "Periode"
+  },
+  "historyRangeAll": {
+    "message": "Alle tijd"
+  },
+  "historyRange7": {
+    "message": "Afgelopen 7 dagen"
+  },
+  "historyRange30": {
+    "message": "Afgelopen 30 dagen"
+  },
+  "historyRange90": {
+    "message": "Afgelopen 90 dagen"
+  },
+  "historyExportDomain": {
+    "message": "Site bevat"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Alleen vastgezette pagina's"
+  },
+  "historyExportCountFmt": {
+    "message": "Items die worden geëxporteerd: {0} van {1}"
+  },
+  "historyExportNone": {
+    "message": "Geen items komen overeen met deze filters"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Beveiligingen gewijzigd op {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Toegevoegd: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Verwijderd: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "De geschiedenis is bijna vol"
+  },
+  "historyStorageWarnMessage": {
+    "message": "De oudste items worden verwijderd om ruimte te maken. Exporteer of zet vast wat je wilt bewaren."
   }
 }

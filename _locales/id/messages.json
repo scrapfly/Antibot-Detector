@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Dari 1 menit hingga 7 hari."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Yang disimpan riwayat"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Perekaman"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Simpan halaman ke riwayat"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Matikan untuk menjelajah tanpa merekam. Deteksi tetap berjalan."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Lewati jendela samaran"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Halaman dari jendela samaran tidak pernah disimpan."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Lewati halaman yang hanya berisi fingerprinting"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Jangan simpan halaman jika hanya fingerprinting yang ditemukan."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Kepercayaan minimum untuk menyimpan (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Halaman hanya disimpan jika deteksi terkuatnya mencapai tingkat kepercayaan ini. Nilai 0 menyimpan semua halaman."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Alamat yang disimpan"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Simpan alamat lengkap"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Sembunyikan nilai sensitif"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Hapus query string"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Token dan email di dalam alamat akan masuk ke riwayat, ekspor, dan tautan yang dibagikan. Berlaku untuk halaman yang disimpan mulai sekarang."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Situs yang diabaikan riwayat"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Satu situs per baris; subdomainnya ikut disertakan. Deteksi tetap berjalan di situs tersebut."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Hapus riwayat saat browser ditutup"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Menghapus halaman tersimpan saat jendela terakhir ditutup, atau pada peluncuran berikutnya. Halaman yang disematkan tetap ada."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Beri peringatan saat proteksi berubah"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Nonaktif"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Hanya halaman yang disematkan"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Setiap halaman"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Notifikasi saat halaman yang pernah Anda pindai mendapat atau kehilangan proteksi."
+  },
+  "settingsDuplicateAction": {
+    "message": "Saat duplikat ditemukan"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Lewati pemindaian baru"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Perbarui entri sebelumnya"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Pembaruan mempertahankan tanggal pertama terlihat, sematan, dan catatan, serta menandai entri sebagai berubah jika proteksinya berbeda."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Penyimpanan dan pencadangan"
+  },
+  "settingsHistoryStorage": {
+    "message": "Penyimpanan terpakai"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} dari {1} terpakai · {2} entri"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "{0} disematkan"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Riwayat kosong."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Hampir penuh: entri terlama akan dihapus untuk memberi ruang. Ekspor atau sematkan yang ingin Anda simpan."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "{0} entri terlama dihapus agar tetap dalam batas, terakhir kali pada {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Pencadangan otomatis"
+  },
+  "settingsBackupOff": {
+    "message": "Nonaktif"
+  },
+  "settingsBackupDaily": {
+    "message": "Setiap hari"
+  },
+  "settingsBackupWeekly": {
+    "message": "Setiap minggu"
+  },
+  "settingsBackupMonthly": {
+    "message": "Setiap bulan"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Cadangkan sekarang"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Pencadangan terakhir: {0} ({1} entri)"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Belum ada pencadangan."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "{0} entri dicadangkan"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Belum ada yang bisa dicadangkan"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Pencadangan riwayat gagal"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Pastikan unduhan diizinkan, lalu coba Cadangkan sekarang di Pengaturan → Riwayat."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Kepercayaan minimum harus antara 0 dan 100"
+  },
+  "historyPin": {
+    "message": "Sematkan"
+  },
+  "historyUnpin": {
+    "message": "Lepas sematan"
+  },
+  "historyAddNote": {
+    "message": "Tambah catatan"
+  },
+  "historyEditNote": {
+    "message": "Edit catatan"
+  },
+  "historyPinnedTip": {
+    "message": "Disematkan: tetap ada saat riwayat dibersihkan"
+  },
+  "historyChangedBadge": {
+    "message": "Berubah"
+  },
+  "historyNoteTitle": {
+    "message": "Catatan"
+  },
+  "historyNotePlaceholder": {
+    "message": "Catatan untuk halaman ini…"
+  },
+  "historyNoteSaved": {
+    "message": "Catatan disimpan"
+  },
+  "historyPinnedNotice": {
+    "message": "Disematkan"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Sematan dilepas"
+  },
+  "historyExportDialogTitle": {
+    "message": "Ekspor riwayat"
+  },
+  "historyExportFormat": {
+    "message": "Format"
+  },
+  "historyExportCategory": {
+    "message": "Proteksi"
+  },
+  "historyExportAll": {
+    "message": "Semua"
+  },
+  "historyExportPeriod": {
+    "message": "Periode"
+  },
+  "historyRangeAll": {
+    "message": "Sepanjang waktu"
+  },
+  "historyRange7": {
+    "message": "7 hari terakhir"
+  },
+  "historyRange30": {
+    "message": "30 hari terakhir"
+  },
+  "historyRange90": {
+    "message": "90 hari terakhir"
+  },
+  "historyExportDomain": {
+    "message": "Situs mengandung"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Hanya halaman yang disematkan"
+  },
+  "historyExportCountFmt": {
+    "message": "{0} dari {1} entri akan diekspor"
+  },
+  "historyExportNone": {
+    "message": "Tidak ada entri yang cocok dengan filter ini"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Proteksi berubah di {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Ditambahkan: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Dihapus: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Riwayat hampir penuh"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Entri terlama akan dihapus untuk memberi ruang. Ekspor atau sematkan yang ingin Anda simpan."
   }
 }

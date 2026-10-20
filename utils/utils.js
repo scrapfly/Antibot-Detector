@@ -361,7 +361,19 @@ class Utils {
       duplicateDuration: Number.isFinite(parsedDuplicateDuration) && parsedDuplicateDuration > 0
         ? parsedDuplicateDuration
         : 1,
-      duplicateUnit: duplicatePrevention.duplicateUnit || settings.duplicateUnit || 'hours'
+      duplicateUnit: duplicatePrevention.duplicateUnit || settings.duplicateUnit || 'hours',
+      // Update the earlier entry instead of skipping the new scan
+      duplicateAction: duplicatePrevention.duplicateAction === 'update' ? 'update' : 'skip',
+      // What History records (defaults keep the behaviour of earlier versions; incognito pages are not recorded)
+      historyEnabled: historySettings.historyEnabled !== false,
+      historySkipIncognito: historySettings.historySkipIncognito !== false,
+      historyMinConfidence: Math.min(Math.max(parseInt(historySettings.historyMinConfidence, 10) || 0, 0), 100),
+      historySkipFingerprintOnly: historySettings.historySkipFingerprintOnly === true,
+      historyUrlMode: ['mask', 'path'].includes(historySettings.historyUrlMode) ? historySettings.historyUrlMode : 'full',
+      historyExcludedDomains: Array.isArray(historySettings.historyExcludedDomains) ? historySettings.historyExcludedDomains.filter(d => typeof d === 'string') : [],
+      historyChangeAlerts: ['pinned', 'all'].includes(historySettings.historyChangeAlerts) ? historySettings.historyChangeAlerts : 'off',
+      historyBackup: ['daily', 'weekly', 'monthly'].includes(historySettings.historyBackup) ? historySettings.historyBackup : 'off',
+      historyClearOnClose: historySettings.historyClearOnClose === true
     };
   }
 

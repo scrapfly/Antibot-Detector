@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "De 1 minuto hasta 7 días."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Qué guarda el historial"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Registro"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Guardar páginas en el historial"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Desactívalo para navegar sin registrar. La detección sigue funcionando."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Omitir ventanas de incógnito"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Las páginas de ventanas de incógnito nunca se guardan."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Omitir páginas solo con fingerprinting"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "No guardar una página cuando lo único que se detecta es fingerprinting."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Confianza mínima para guardar (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Una página se guarda solo si su detección más fuerte alcanza esta confianza. Con 0 se guardan todas las páginas."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Direcciones guardadas"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Conservar la dirección completa"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Ocultar valores sensibles"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Quitar la cadena de consulta"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Los tokens y correos de una dirección acaban en el historial, las exportaciones y los enlaces compartidos. Se aplica a las páginas que se guarden a partir de ahora."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Sitios que el historial ignora"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Un sitio por línea; se incluyen sus subdominios. La detección sigue activa en ellos."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Vaciar el historial al cerrar el navegador"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Elimina las páginas guardadas al cerrar la última ventana o en el siguiente inicio. Las páginas fijadas se conservan."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Avisar cuando cambien las protecciones"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Desactivado"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Solo páginas fijadas"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Todas las páginas"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Una notificación cuando una página que ya analizaste gana o pierde una protección."
+  },
+  "settingsDuplicateAction": {
+    "message": "Cuando se encuentra un duplicado"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Omitir el nuevo análisis"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Actualizar la entrada anterior"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Al actualizar se conservan la fecha de la primera vez, la fijación y la nota, y la entrada se marca como cambiada si sus protecciones difieren."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Almacenamiento y copia de seguridad"
+  },
+  "settingsHistoryStorage": {
+    "message": "Almacenamiento usado"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} de {1} usados · Entradas: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Fijadas: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "El historial está vacío."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Casi lleno: se eliminarán las entradas más antiguas para hacer sitio. Exporta o fija lo que quieras conservar."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Entradas antiguas eliminadas para respetar el límite: {0}. La última vez: {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Copia de seguridad automática"
+  },
+  "settingsBackupOff": {
+    "message": "Desactivada"
+  },
+  "settingsBackupDaily": {
+    "message": "Cada día"
+  },
+  "settingsBackupWeekly": {
+    "message": "Cada semana"
+  },
+  "settingsBackupMonthly": {
+    "message": "Cada mes"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Guarda una copia del historial en tu carpeta de Descargas (dentro de una carpeta Scrapfly), con el formato de exportación elegido arriba."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Hacer copia ahora"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Última copia: {0} (entradas: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Aún no hay ninguna copia."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Copia hecha. Entradas: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Aún no hay nada que copiar"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "No se pudo hacer la copia del historial"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Comprueba que las descargas estén permitidas y vuelve a probar con el botón Hacer copia ahora en Ajustes → Historial."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "La confianza mínima debe estar entre 0 y 100"
+  },
+  "historyPin": {
+    "message": "Fijar"
+  },
+  "historyUnpin": {
+    "message": "Desfijar"
+  },
+  "historyAddNote": {
+    "message": "Añadir nota"
+  },
+  "historyEditNote": {
+    "message": "Editar nota"
+  },
+  "historyPinnedTip": {
+    "message": "Fijada: se conserva al limpiar el historial"
+  },
+  "historyChangedBadge": {
+    "message": "Cambiada"
+  },
+  "historyNoteTitle": {
+    "message": "Nota"
+  },
+  "historyNotePlaceholder": {
+    "message": "Una nota para esta página…"
+  },
+  "historyNoteSaved": {
+    "message": "Nota guardada"
+  },
+  "historyPinnedNotice": {
+    "message": "Fijada"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Desfijada"
+  },
+  "historyExportDialogTitle": {
+    "message": "Exportar historial"
+  },
+  "historyExportFormat": {
+    "message": "Formato"
+  },
+  "historyExportCategory": {
+    "message": "Protecciones"
+  },
+  "historyExportAll": {
+    "message": "Todas"
+  },
+  "historyExportPeriod": {
+    "message": "Período"
+  },
+  "historyRangeAll": {
+    "message": "Todo el tiempo"
+  },
+  "historyRange7": {
+    "message": "Últimos 7 días"
+  },
+  "historyRange30": {
+    "message": "Últimos 30 días"
+  },
+  "historyRange90": {
+    "message": "Últimos 90 días"
+  },
+  "historyExportDomain": {
+    "message": "El sitio contiene"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Solo páginas fijadas"
+  },
+  "historyExportCountFmt": {
+    "message": "Entradas que se exportarán: {0} de {1}"
+  },
+  "historyExportNone": {
+    "message": "Ninguna entrada coincide con estos filtros"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Cambiaron las protecciones en {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Añadidas: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Eliminadas: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "El historial está casi lleno"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Se eliminarán las entradas más antiguas para hacer sitio. Exporta o fija lo que quieras conservar."
   }
 }

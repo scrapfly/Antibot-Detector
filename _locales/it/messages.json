@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Da 1 minuto fino a 7 giorni."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Cosa salva la cronologia"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Registrazione"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Salva le pagine nella cronologia"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Disattiva per navigare senza registrare. Il rilevamento continua a funzionare."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Ignora le finestre in incognito"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Le pagine delle finestre in incognito non vengono mai salvate."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Ignora le pagine con solo fingerprinting"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Non salvare una pagina se è stato trovato solo fingerprinting."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Confidenza minima per salvare (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Una pagina viene salvata solo se il suo rilevamento più forte raggiunge questa confidenza. Con 0 si salvano tutte le pagine."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Indirizzi salvati"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Mantieni l'indirizzo completo"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Nascondi i valori sensibili"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Rimuovi la stringa di query"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Token ed email presenti in un indirizzo finiscono nella cronologia, nelle esportazioni e nei link condivisi. Vale per le pagine salvate da ora in poi."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Siti ignorati dalla cronologia"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Un sito per riga; sono inclusi i sottodomini. Il rilevamento continua a essere eseguito su di essi."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Svuota la cronologia alla chiusura del browser"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Rimuove le pagine salvate alla chiusura dell'ultima finestra o al successivo avvio. Le pagine fissate restano."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Avvisa quando le protezioni cambiano"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Disattivato"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Solo pagine fissate"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Ogni pagina"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Una notifica quando una pagina già analizzata acquisisce o perde una protezione."
+  },
+  "settingsDuplicateAction": {
+    "message": "Quando viene trovato un duplicato"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Ignora la nuova analisi"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Aggiorna la voce precedente"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "L'aggiornamento mantiene la data della prima analisi, la nota e lo stato di fissata, e contrassegna la voce come modificata se le protezioni sono diverse."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Archiviazione e backup"
+  },
+  "settingsHistoryStorage": {
+    "message": "Spazio utilizzato"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} di {1} usati · Voci: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Fissate: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "La cronologia è vuota."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Quasi pieno: le voci meno recenti verranno rimosse per fare spazio. Esporta o fissa ciò che vuoi conservare."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Per rispettare il limite sono state rimosse le voci meno recenti (in totale: {0}), l'ultima volta il {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Backup automatico"
+  },
+  "settingsBackupOff": {
+    "message": "Disattivato"
+  },
+  "settingsBackupDaily": {
+    "message": "Ogni giorno"
+  },
+  "settingsBackupWeekly": {
+    "message": "Ogni settimana"
+  },
+  "settingsBackupMonthly": {
+    "message": "Ogni mese"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Esegui backup ora"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Ultimo backup: {0} (voci: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Ancora nessun backup."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Backup completato. Voci: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Ancora nulla da salvare nel backup"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Backup della cronologia non riuscito"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Verifica che i download siano consentiti, poi riprova con «Esegui backup ora» in Impostazioni → Cronologia."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "La confidenza minima deve essere compresa tra 0 e 100"
+  },
+  "historyPin": {
+    "message": "Fissa"
+  },
+  "historyUnpin": {
+    "message": "Sblocca"
+  },
+  "historyAddNote": {
+    "message": "Aggiungi nota"
+  },
+  "historyEditNote": {
+    "message": "Modifica nota"
+  },
+  "historyPinnedTip": {
+    "message": "Fissata: viene conservata quando la cronologia viene ripulita"
+  },
+  "historyChangedBadge": {
+    "message": "Modificata"
+  },
+  "historyNoteTitle": {
+    "message": "Nota"
+  },
+  "historyNotePlaceholder": {
+    "message": "Una nota per questa pagina…"
+  },
+  "historyNoteSaved": {
+    "message": "Nota salvata"
+  },
+  "historyPinnedNotice": {
+    "message": "Fissata"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Sbloccata"
+  },
+  "historyExportDialogTitle": {
+    "message": "Esporta cronologia"
+  },
+  "historyExportFormat": {
+    "message": "Formato"
+  },
+  "historyExportCategory": {
+    "message": "Protezioni"
+  },
+  "historyExportAll": {
+    "message": "Tutte"
+  },
+  "historyExportPeriod": {
+    "message": "Periodo"
+  },
+  "historyRangeAll": {
+    "message": "Tutto il periodo"
+  },
+  "historyRange7": {
+    "message": "Ultimi 7 giorni"
+  },
+  "historyRange30": {
+    "message": "Ultimi 30 giorni"
+  },
+  "historyRange90": {
+    "message": "Ultimi 90 giorni"
+  },
+  "historyExportDomain": {
+    "message": "Il sito contiene"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Solo pagine fissate"
+  },
+  "historyExportCountFmt": {
+    "message": "Voci che verranno esportate: {0} su {1}"
+  },
+  "historyExportNone": {
+    "message": "Nessuna voce corrisponde a questi filtri"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Protezioni cambiate su {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Aggiunte: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Rimosse: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "La cronologia è quasi piena"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Le voci meno recenti verranno rimosse per fare spazio. Esporta o fissa ciò che vuoi conservare."
   }
 }

@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "De 1 minute jusqu'à 7 jours."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Ce que l’historique enregistre"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Enregistrement"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Enregistrer les pages dans l’historique"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Désactivez pour naviguer sans enregistrer. La détection continue de fonctionner."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Ignorer la navigation privée"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Les pages des fenêtres de navigation privée ne sont jamais enregistrées."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Ignorer les pages avec fingerprinting seul"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Ne pas enregistrer une page lorsque le fingerprinting est la seule chose détectée."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Confiance minimale pour enregistrer (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Une page n’est enregistrée que si sa détection la plus forte atteint cette confiance. Avec 0, toutes les pages sont enregistrées."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Adresses enregistrées"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Conserver l’adresse complète"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Masquer les valeurs sensibles"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Supprimer la chaîne de requête"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Les jetons et e-mails d’une adresse se retrouvent dans l’historique, les exports et les liens partagés. S’applique aux pages enregistrées à partir de maintenant."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Sites ignorés par l’historique"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Un site par ligne ; ses sous-domaines sont inclus. La détection reste active sur ces sites."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Vider l’historique à la fermeture du navigateur"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Supprime les pages enregistrées à la fermeture de la dernière fenêtre ou au prochain démarrage. Les pages épinglées sont conservées."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Alerter quand les protections changent"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Désactivé"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Pages épinglées uniquement"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Toutes les pages"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Une notification lorsqu’une page déjà analysée gagne ou perd une protection."
+  },
+  "settingsDuplicateAction": {
+    "message": "Quand un doublon est trouvé"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Ignorer la nouvelle analyse"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Mettre à jour l’entrée précédente"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "La mise à jour conserve la date de première détection, l’épingle et la note, et marque l’entrée comme modifiée quand ses protections diffèrent."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Stockage et sauvegarde"
+  },
+  "settingsHistoryStorage": {
+    "message": "Stockage utilisé"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} sur {1} utilisés · Entrées : {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Épinglées : {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "L’historique est vide."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Presque plein : les entrées les plus anciennes seront supprimées pour faire de la place. Exportez ou épinglez ce que vous voulez garder."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Entrées anciennes supprimées pour respecter la limite : {0}. Dernière fois : {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Sauvegarde automatique"
+  },
+  "settingsBackupOff": {
+    "message": "Désactivée"
+  },
+  "settingsBackupDaily": {
+    "message": "Tous les jours"
+  },
+  "settingsBackupWeekly": {
+    "message": "Toutes les semaines"
+  },
+  "settingsBackupMonthly": {
+    "message": "Tous les mois"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Sauvegarder maintenant"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Dernière sauvegarde : {0} (entrées : {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Aucune sauvegarde pour l’instant."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Sauvegarde effectuée. Entrées : {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Rien à sauvegarder pour l’instant"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Échec de la sauvegarde de l’historique"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Vérifiez que les téléchargements sont autorisés, puis réessayez avec le bouton Sauvegarder maintenant dans Paramètres → Historique."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "La confiance minimale doit être comprise entre 0 et 100"
+  },
+  "historyPin": {
+    "message": "Épingler"
+  },
+  "historyUnpin": {
+    "message": "Désépingler"
+  },
+  "historyAddNote": {
+    "message": "Ajouter une note"
+  },
+  "historyEditNote": {
+    "message": "Modifier la note"
+  },
+  "historyPinnedTip": {
+    "message": "Épinglée : conservée lors du nettoyage de l’historique"
+  },
+  "historyChangedBadge": {
+    "message": "Modifiée"
+  },
+  "historyNoteTitle": {
+    "message": "Note"
+  },
+  "historyNotePlaceholder": {
+    "message": "Une note pour cette page…"
+  },
+  "historyNoteSaved": {
+    "message": "Note enregistrée"
+  },
+  "historyPinnedNotice": {
+    "message": "Épinglée"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Désépinglée"
+  },
+  "historyExportDialogTitle": {
+    "message": "Exporter l’historique"
+  },
+  "historyExportFormat": {
+    "message": "Format"
+  },
+  "historyExportCategory": {
+    "message": "Protections"
+  },
+  "historyExportAll": {
+    "message": "Toutes"
+  },
+  "historyExportPeriod": {
+    "message": "Période"
+  },
+  "historyRangeAll": {
+    "message": "Toute la période"
+  },
+  "historyRange7": {
+    "message": "7 derniers jours"
+  },
+  "historyRange30": {
+    "message": "30 derniers jours"
+  },
+  "historyRange90": {
+    "message": "90 derniers jours"
+  },
+  "historyExportDomain": {
+    "message": "Le site contient"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Pages épinglées uniquement"
+  },
+  "historyExportCountFmt": {
+    "message": "Entrées à exporter : {0} sur {1}"
+  },
+  "historyExportNone": {
+    "message": "Aucune entrée ne correspond à ces filtres"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Protections modifiées sur {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Ajoutées : {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Supprimées : {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "L’historique est presque plein"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Les entrées les plus anciennes seront supprimées pour faire de la place. Exportez ou épinglez ce que vous voulez garder."
   }
 }

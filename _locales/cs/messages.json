@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Od 1 minuty do 7 dní."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Co historie ukládá"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Ukládání"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Ukládat stránky do historie"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Vypněte, pokud chcete procházet bez ukládání. Detekce funguje dál."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Přeskakovat anonymní okna"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Stránky z anonymních oken se nikdy neukládají."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Přeskakovat stránky jen s fingerprintingem"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Neukládat stránku, na které se zjistí pouze fingerprinting."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Minimální spolehlivost pro uložení (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Stránka se uloží, jen když její nejsilnější detekce dosáhne této spolehlivosti. Hodnota 0 uloží každou stránku."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Ukládané adresy"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Zachovat celou adresu"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Skrýt citlivé hodnoty"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Odebrat parametry dotazu"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Tokeny a e-maily v adrese skončí v historii, v exportech i ve sdílených odkazech. Platí pro stránky uložené od nynějška."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Weby, které historie ignoruje"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Jeden web na řádek; zahrnuje i jeho subdomény. Detekce na nich stále běží."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Vymazat historii při zavření prohlížeče"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Odstraní uložené stránky po zavření posledního okna nebo při příštím spuštění. Připnuté stránky zůstanou."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Upozornit při změně ochran"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Vypnuto"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Jen připnuté stránky"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Každá stránka"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Oznámení, když stránka, kterou jste dříve skenovali, získá nebo ztratí ochranu."
+  },
+  "settingsDuplicateAction": {
+    "message": "Když se najde duplicita"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Přeskočit nové skenování"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Aktualizovat dřívější položku"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Aktualizace zachová datum prvního zjištění, připnutí i poznámku a označí položku jako změněnou, pokud se její ochrany liší."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Úložiště a záloha"
+  },
+  "settingsHistoryStorage": {
+    "message": "Využité úložiště"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "Využito {0} z {1} · Položky: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Připnuto: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Historie je prázdná."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Téměř plno: nejstarší položky se odstraní, aby se uvolnilo místo. Exportujte nebo připněte, co chcete zachovat."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Kvůli limitu byly odstraněny nejstarší položky (počet: {0}), naposledy {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Automatická záloha"
+  },
+  "settingsBackupOff": {
+    "message": "Vypnuto"
+  },
+  "settingsBackupDaily": {
+    "message": "Každý den"
+  },
+  "settingsBackupWeekly": {
+    "message": "Každý týden"
+  },
+  "settingsBackupMonthly": {
+    "message": "Každý měsíc"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Zálohovat nyní"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Poslední záloha: {0} (položky: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Zatím žádná záloha."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Zálohováno položek: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Zatím není co zálohovat"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Zálohování historie se nezdařilo"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Zkontrolujte, zda je stahování povoleno, a zkuste to znovu přes Zálohovat nyní v Nastavení → Historie."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Minimální spolehlivost musí být mezi 0 a 100"
+  },
+  "historyPin": {
+    "message": "Připnout"
+  },
+  "historyUnpin": {
+    "message": "Odepnout"
+  },
+  "historyAddNote": {
+    "message": "Přidat poznámku"
+  },
+  "historyEditNote": {
+    "message": "Upravit poznámku"
+  },
+  "historyPinnedTip": {
+    "message": "Připnuto: zachová se při čištění historie"
+  },
+  "historyChangedBadge": {
+    "message": "Změněno"
+  },
+  "historyNoteTitle": {
+    "message": "Poznámka"
+  },
+  "historyNotePlaceholder": {
+    "message": "Poznámka k této stránce…"
+  },
+  "historyNoteSaved": {
+    "message": "Poznámka uložena"
+  },
+  "historyPinnedNotice": {
+    "message": "Připnuto"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Odepnuto"
+  },
+  "historyExportDialogTitle": {
+    "message": "Exportovat historii"
+  },
+  "historyExportFormat": {
+    "message": "Formát"
+  },
+  "historyExportCategory": {
+    "message": "Ochrany"
+  },
+  "historyExportAll": {
+    "message": "Vše"
+  },
+  "historyExportPeriod": {
+    "message": "Období"
+  },
+  "historyRangeAll": {
+    "message": "Celé období"
+  },
+  "historyRange7": {
+    "message": "Posledních 7 dní"
+  },
+  "historyRange30": {
+    "message": "Posledních 30 dní"
+  },
+  "historyRange90": {
+    "message": "Posledních 90 dní"
+  },
+  "historyExportDomain": {
+    "message": "Web obsahuje"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Jen připnuté stránky"
+  },
+  "historyExportCountFmt": {
+    "message": "Bude exportováno položek: {0} z {1}"
+  },
+  "historyExportNone": {
+    "message": "Těmto filtrům neodpovídají žádné položky"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Ochrany se změnily na webu {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Přidáno: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Odebráno: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Historie je téměř plná"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Nejstarší položky se odstraní, aby se uvolnilo místo. Exportujte nebo připněte, co chcete zachovat."
   }
 }

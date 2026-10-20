@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "1 मिनट से 7 दिन तक।"
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "इतिहास क्या सहेजता है"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "रिकॉर्डिंग"
+  },
+  "settingsHistoryEnabled": {
+    "message": "पेज इतिहास में सहेजें"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "बिना रिकॉर्ड किए ब्राउज़ करने के लिए बंद करें। जांच काम करती रहती है।"
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "गुप्त विंडो छोड़ें"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "गुप्त विंडो के पेज कभी सहेजे नहीं जाते।"
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "सिर्फ़ फ़िंगरप्रिंटिंग वाले पेज छोड़ें"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "अगर सिर्फ़ फ़िंगरप्रिंटिंग मिली हो तो पेज न सहेजें।"
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "सहेजने के लिए न्यूनतम विश्वसनीयता (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "पेज तभी सहेजा जाता है जब उसकी सबसे मज़बूत पहचान इस विश्वसनीयता तक पहुँचे। 0 पर हर पेज सहेजा जाता है।"
+  },
+  "settingsHistoryUrlMode": {
+    "message": "सहेजे गए पते"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "पूरा पता रखें"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "संवेदनशील मान छिपाएँ"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "क्वेरी स्ट्रिंग हटाएँ"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "पते में मौजूद टोकन और ईमेल इतिहास, निर्यात और साझा किए गए लिंक में पहुँच जाते हैं। यह अब से सहेजे जाने वाले पेज पर लागू होता है।"
+  },
+  "settingsHistoryExcluded": {
+    "message": "वे साइटें जिन्हें इतिहास अनदेखा करता है"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "हर पंक्ति में एक साइट; उसके सबडोमेन भी शामिल हैं। उन पर जांच फिर भी चलती है।"
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "ब्राउज़र बंद होने पर इतिहास साफ़ करें"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "आख़िरी विंडो बंद होने पर, या अगली शुरुआत पर, सहेजे गए पेज हटा देता है। पिन किए गए पेज बने रहते हैं।"
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "सुरक्षा उपाय बदलने पर अलर्ट करें"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "बंद"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "सिर्फ़ पिन किए गए पेज"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "हर पेज"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "पहले स्कैन किए गए पेज में कोई सुरक्षा जुड़ने या हटने पर सूचना मिलती है।"
+  },
+  "settingsDuplicateAction": {
+    "message": "डुप्लिकेट मिलने पर"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "नया स्कैन छोड़ें"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "पुरानी प्रविष्टि अपडेट करें"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "अपडेट करने पर पहली बार देखे जाने की तारीख, पिन और नोट बने रहते हैं, और सुरक्षा उपाय अलग होने पर प्रविष्टि \"बदली\" चिह्नित हो जाती है।"
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "भंडारण और बैकअप"
+  },
+  "settingsHistoryStorage": {
+    "message": "उपयोग किया गया भंडारण"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{1} में से {0} उपयोग में · प्रविष्टियाँ: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "पिन किए गए: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "इतिहास खाली है।"
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "लगभग भर गया है: जगह बनाने के लिए सबसे पुरानी प्रविष्टियाँ हटा दी जाएँगी। जो रखना चाहते हैं उसे निर्यात करें या पिन करें।"
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "सीमा के भीतर रहने के लिए हटाई गई सबसे पुरानी प्रविष्टियाँ: {0}; आख़िरी बार {1} को।"
+  },
+  "settingsHistoryBackup": {
+    "message": "स्वतः बैकअप"
+  },
+  "settingsBackupOff": {
+    "message": "बंद"
+  },
+  "settingsBackupDaily": {
+    "message": "हर दिन"
+  },
+  "settingsBackupWeekly": {
+    "message": "हर हफ़्ते"
+  },
+  "settingsBackupMonthly": {
+    "message": "हर महीने"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है।"
+  },
+  "settingsHistoryBackupNow": {
+    "message": "अभी बैकअप लें"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "आख़िरी बैकअप: {0} (प्रविष्टियाँ: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "अभी तक कोई बैकअप नहीं।"
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "बैकअप लिया गया। प्रविष्टियाँ: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "बैकअप के लिए अभी कुछ नहीं है"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "इतिहास का बैकअप विफल रहा"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "जाँचें कि डाउनलोड की अनुमति है, फिर सेटिंग्स → इतिहास में \"अभी बैकअप लें\" आज़माएँ।"
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "न्यूनतम विश्वसनीयता 0 से 100 के बीच होनी चाहिए"
+  },
+  "historyPin": {
+    "message": "पिन करें"
+  },
+  "historyUnpin": {
+    "message": "अनपिन करें"
+  },
+  "historyAddNote": {
+    "message": "नोट जोड़ें"
+  },
+  "historyEditNote": {
+    "message": "नोट बदलें"
+  },
+  "historyPinnedTip": {
+    "message": "पिन किया गया: इतिहास साफ़ होने पर भी बना रहता है"
+  },
+  "historyChangedBadge": {
+    "message": "बदला"
+  },
+  "historyNoteTitle": {
+    "message": "नोट"
+  },
+  "historyNotePlaceholder": {
+    "message": "इस पेज के लिए एक नोट…"
+  },
+  "historyNoteSaved": {
+    "message": "नोट सहेजा गया"
+  },
+  "historyPinnedNotice": {
+    "message": "पिन किया गया"
+  },
+  "historyUnpinnedNotice": {
+    "message": "अनपिन किया गया"
+  },
+  "historyExportDialogTitle": {
+    "message": "इतिहास निर्यात करें"
+  },
+  "historyExportFormat": {
+    "message": "फ़ॉर्मेट"
+  },
+  "historyExportCategory": {
+    "message": "सुरक्षा उपाय"
+  },
+  "historyExportAll": {
+    "message": "सभी"
+  },
+  "historyExportPeriod": {
+    "message": "अवधि"
+  },
+  "historyRangeAll": {
+    "message": "पूरा समय"
+  },
+  "historyRange7": {
+    "message": "पिछले 7 दिन"
+  },
+  "historyRange30": {
+    "message": "पिछले 30 दिन"
+  },
+  "historyRange90": {
+    "message": "पिछले 90 दिन"
+  },
+  "historyExportDomain": {
+    "message": "साइट में शामिल"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "सिर्फ़ पिन किए गए पेज"
+  },
+  "historyExportCountFmt": {
+    "message": "{1} में से {0} प्रविष्टियाँ निर्यात होंगी"
+  },
+  "historyExportNone": {
+    "message": "इन फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "{0} पर सुरक्षा उपाय बदल गए"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "जोड़े गए: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "हटाए गए: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "इतिहास लगभग भर गया है"
+  },
+  "historyStorageWarnMessage": {
+    "message": "जगह बनाने के लिए सबसे पुरानी प्रविष्टियाँ हटा दी जाएँगी। जो रखना चाहते हैं उसे निर्यात करें या पिन करें।"
   }
 }

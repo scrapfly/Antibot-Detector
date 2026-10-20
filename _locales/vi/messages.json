@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Từ 1 phút đến 7 ngày."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Những gì Lịch sử lưu"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Ghi lại"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Lưu các trang vào Lịch sử"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Tắt để duyệt web mà không ghi lại. Tính năng phát hiện vẫn hoạt động."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Bỏ qua cửa sổ ẩn danh"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Các trang từ cửa sổ ẩn danh sẽ không bao giờ được lưu."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Bỏ qua trang chỉ có thu thập dấu vân tay"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Không lưu trang khi chỉ phát hiện thu thập dấu vân tay."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Độ tin cậy tối thiểu để lưu (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Trang chỉ được lưu khi phát hiện mạnh nhất của trang đạt độ tin cậy này. Đặt 0 để lưu mọi trang."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "URL đã lưu"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Giữ URL đầy đủ"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Ẩn các giá trị nhạy cảm"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Xóa chuỗi truy vấn"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Token và email trong URL sẽ nằm trong Lịch sử, tệp xuất và liên kết chia sẻ. Chỉ áp dụng cho các trang được lưu từ bây giờ."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Trang web mà Lịch sử bỏ qua"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Mỗi dòng một trang web, bao gồm cả tên miền phụ. Tính năng phát hiện vẫn chạy trên các trang này."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Xóa Lịch sử khi đóng trình duyệt"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Xóa các trang đã lưu khi đóng cửa sổ cuối cùng hoặc ở lần khởi động tiếp theo. Các trang đã ghim sẽ được giữ lại."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Cảnh báo khi biện pháp bảo vệ thay đổi"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Tắt"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Chỉ trang đã ghim"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Mọi trang"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Thông báo khi một trang bạn đã quét trước đây có thêm hoặc mất một biện pháp bảo vệ."
+  },
+  "settingsDuplicateAction": {
+    "message": "Khi phát hiện mục trùng lặp"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Bỏ qua lần quét mới"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Cập nhật mục trước đó"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Cập nhật sẽ giữ nguyên ngày phát hiện đầu tiên, ghim và ghi chú, đồng thời đánh dấu mục là đã thay đổi khi biện pháp bảo vệ khác nhau."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Dung lượng và sao lưu"
+  },
+  "settingsHistoryStorage": {
+    "message": "Dung lượng đã dùng"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "Đã dùng {0}/{1} · {2} mục"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Đã ghim: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Lịch sử trống."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Gần đầy: các mục cũ nhất sẽ bị xóa để lấy chỗ. Hãy xuất hoặc ghim những gì bạn muốn giữ."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Đã xóa {0} mục cũ nhất để giữ trong giới hạn, lần gần nhất vào {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Sao lưu tự động"
+  },
+  "settingsBackupOff": {
+    "message": "Tắt"
+  },
+  "settingsBackupDaily": {
+    "message": "Hằng ngày"
+  },
+  "settingsBackupWeekly": {
+    "message": "Hằng tuần"
+  },
+  "settingsBackupMonthly": {
+    "message": "Hằng tháng"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Sao lưu ngay"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Sao lưu gần nhất: {0} ({1} mục)"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Chưa có bản sao lưu nào."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Đã sao lưu {0} mục"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Chưa có gì để sao lưu"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Không thể sao lưu lịch sử"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Hãy kiểm tra xem việc tải xuống có được cho phép không, rồi thử lại Sao lưu ngay trong Cài đặt → Lịch sử."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Độ tin cậy tối thiểu phải nằm trong khoảng từ 0 đến 100"
+  },
+  "historyPin": {
+    "message": "Ghim"
+  },
+  "historyUnpin": {
+    "message": "Bỏ ghim"
+  },
+  "historyAddNote": {
+    "message": "Thêm ghi chú"
+  },
+  "historyEditNote": {
+    "message": "Sửa ghi chú"
+  },
+  "historyPinnedTip": {
+    "message": "Đã ghim: được giữ lại khi dọn dẹp Lịch sử"
+  },
+  "historyChangedBadge": {
+    "message": "Đã thay đổi"
+  },
+  "historyNoteTitle": {
+    "message": "Ghi chú"
+  },
+  "historyNotePlaceholder": {
+    "message": "Ghi chú cho trang này…"
+  },
+  "historyNoteSaved": {
+    "message": "Đã lưu ghi chú"
+  },
+  "historyPinnedNotice": {
+    "message": "Đã ghim"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Đã bỏ ghim"
+  },
+  "historyExportDialogTitle": {
+    "message": "Xuất lịch sử"
+  },
+  "historyExportFormat": {
+    "message": "Định dạng"
+  },
+  "historyExportCategory": {
+    "message": "Biện pháp bảo vệ"
+  },
+  "historyExportAll": {
+    "message": "Tất cả"
+  },
+  "historyExportPeriod": {
+    "message": "Khoảng thời gian"
+  },
+  "historyRangeAll": {
+    "message": "Mọi lúc"
+  },
+  "historyRange7": {
+    "message": "7 ngày qua"
+  },
+  "historyRange30": {
+    "message": "30 ngày qua"
+  },
+  "historyRange90": {
+    "message": "90 ngày qua"
+  },
+  "historyExportDomain": {
+    "message": "Trang web chứa"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Chỉ trang đã ghim"
+  },
+  "historyExportCountFmt": {
+    "message": "Sẽ xuất {0}/{1} mục"
+  },
+  "historyExportNone": {
+    "message": "Không có mục nào khớp với các bộ lọc này"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Biện pháp bảo vệ trên {0} đã thay đổi"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Đã thêm: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Đã xóa: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Lịch sử gần đầy"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Các mục cũ nhất sẽ bị xóa để lấy chỗ. Hãy xuất hoặc ghim những gì bạn muốn giữ."
   }
 }

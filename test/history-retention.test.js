@@ -44,8 +44,9 @@ test('limit 0 applies the 1,000-entry safety cap, keeping the newest (head)', ()
 test('getConfig reads the settings and clamps the day count to 1-3650', () => {
   assert.deepStrictEqual(
     HistoryRetention.getConfig({ history: { historyAutoDelete: true, historyAutoDeleteDays: 90, historyLimit: 50 } }),
-    { autoDelete: true, days: 90, limit: 50 }
+    { autoDelete: true, days: 90, limit: 50, clearOnClose: false }
   );
+  assert.strictEqual(HistoryRetention.getConfig({ history: { historyClearOnClose: true } }).clearOnClose, true);
   assert.strictEqual(HistoryRetention.getConfig({ history: { historyAutoDeleteDays: 0 } }).days, 1);
   assert.strictEqual(HistoryRetention.getConfig({ history: { historyAutoDeleteDays: 99999 } }).days, 3650);
   assert.strictEqual(HistoryRetention.getConfig({}).autoDelete, false);

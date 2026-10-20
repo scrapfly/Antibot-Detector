@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Od 1 minuty do 7 dni."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Co zapisuje historia"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Zapisywanie"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Zapisuj strony w historii"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Wyłącz, aby przeglądać strony bez zapisywania. Wykrywanie nadal działa."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Pomijaj okna incognito"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Strony z okien incognito nigdy nie są zapisywane."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Pomijaj strony tylko z fingerprintingiem"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Nie zapisuj strony, jeśli wykryto wyłącznie fingerprinting."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Minimalna pewność do zapisania (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Strona jest zapisywana tylko wtedy, gdy pewność jej najsilniejszego wykrycia osiąga tę wartość. Przy 0 zapisywane są wszystkie strony."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Zapisywane adresy"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Zachowaj pełny adres"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Ukryj poufne wartości"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Usuń parametry zapytania"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Tokeny i adresy e-mail zawarte w adresie trafiają do historii, eksportów i udostępnianych linków. Dotyczy stron zapisanych od teraz."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Witryny ignorowane przez historię"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Jedna witryna w wierszu; subdomeny są uwzględnione. Wykrywanie nadal na nich działa."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Czyść historię po zamknięciu przeglądarki"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Usuwa zapisane strony po zamknięciu ostatniego okna lub przy następnym uruchomieniu. Przypięte strony pozostają."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Powiadamiaj o zmianie ochrony"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Wyłączone"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Tylko przypięte strony"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Wszystkie strony"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Powiadomienie, gdy na wcześniej skanowanej stronie pojawi się lub zniknie ochrona."
+  },
+  "settingsDuplicateAction": {
+    "message": "Gdy znaleziono duplikat"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Pomiń nowe skanowanie"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Zaktualizuj wcześniejszy wpis"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Aktualizacja zachowuje datę pierwszego wykrycia, przypięcie i notatkę, a wpis oznacza jako zmieniony, gdy jego ochrony się różnią."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Przechowywanie i kopie zapasowe"
+  },
+  "settingsHistoryStorage": {
+    "message": "Zajęte miejsce"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "Zajęto {0} z {1} · wpisy: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Przypięte: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Historia jest pusta."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Prawie pełne: najstarsze wpisy zostaną usunięte, aby zwolnić miejsce. Wyeksportuj lub przypnij to, co chcesz zachować."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Usunięto najstarsze wpisy, aby zmieścić się w limicie: {0}. Ostatnio: {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Automatyczna kopia zapasowa"
+  },
+  "settingsBackupOff": {
+    "message": "Wyłączone"
+  },
+  "settingsBackupDaily": {
+    "message": "Codziennie"
+  },
+  "settingsBackupWeekly": {
+    "message": "Co tydzień"
+  },
+  "settingsBackupMonthly": {
+    "message": "Co miesiąc"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Zapisuje kopię historii w folderze Pobrane (w folderze Scrapfly) w wybranym powyżej formacie eksportu."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Utwórz kopię teraz"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Ostatnia kopia: {0} (wpisy: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Nie utworzono jeszcze kopii zapasowej."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Utworzono kopię, wpisy: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Nie ma jeszcze nic do skopiowania"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Nie udało się utworzyć kopii zapasowej historii"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Sprawdź, czy pobieranie jest dozwolone, a następnie użyj opcji „Utwórz kopię teraz” w sekcji Ustawienia → Historia."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Minimalna pewność musi mieścić się w zakresie od 0 do 100"
+  },
+  "historyPin": {
+    "message": "Przypnij"
+  },
+  "historyUnpin": {
+    "message": "Odepnij"
+  },
+  "historyAddNote": {
+    "message": "Dodaj notatkę"
+  },
+  "historyEditNote": {
+    "message": "Edytuj notatkę"
+  },
+  "historyPinnedTip": {
+    "message": "Przypięto: zachowane podczas czyszczenia historii"
+  },
+  "historyChangedBadge": {
+    "message": "Zmieniono"
+  },
+  "historyNoteTitle": {
+    "message": "Notatka"
+  },
+  "historyNotePlaceholder": {
+    "message": "Notatka do tej strony…"
+  },
+  "historyNoteSaved": {
+    "message": "Zapisano notatkę"
+  },
+  "historyPinnedNotice": {
+    "message": "Przypięto"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Odpięto"
+  },
+  "historyExportDialogTitle": {
+    "message": "Eksportuj historię"
+  },
+  "historyExportFormat": {
+    "message": "Format"
+  },
+  "historyExportCategory": {
+    "message": "Ochrony"
+  },
+  "historyExportAll": {
+    "message": "Wszystkie"
+  },
+  "historyExportPeriod": {
+    "message": "Okres"
+  },
+  "historyRangeAll": {
+    "message": "Cały czas"
+  },
+  "historyRange7": {
+    "message": "Ostatnie 7 dni"
+  },
+  "historyRange30": {
+    "message": "Ostatnie 30 dni"
+  },
+  "historyRange90": {
+    "message": "Ostatnie 90 dni"
+  },
+  "historyExportDomain": {
+    "message": "Witryna zawiera"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Tylko przypięte strony"
+  },
+  "historyExportCountFmt": {
+    "message": "Do wyeksportowania: {0} z {1} wpisów"
+  },
+  "historyExportNone": {
+    "message": "Brak wpisów pasujących do tych filtrów"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Zmiana ochrony na {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Dodano: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Usunięto: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Historia jest prawie pełna"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Najstarsze wpisy zostaną usunięte, aby zwolnić miejsce. Wyeksportuj lub przypnij to, co chcesz zachować."
   }
 }

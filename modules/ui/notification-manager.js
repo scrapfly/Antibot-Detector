@@ -377,6 +377,33 @@ class NotificationManager {
   }
 
   /**
+   * Show a dialog with form fields in its body — same look as confirm().
+   * Resolves to true for the confirm button (or Enter inside a text field)
+   * and to false for Cancel, ✕, Escape and the backdrop. The caller keeps
+   * the field elements it passed as `content` and reads them after it
+   * resolves.
+   *
+   * @param {Object} options - Same fields as confirm(), plus:
+   * @param {HTMLElement} options.content - Replaces the message in the body
+   * @param {HTMLElement} [options.focus] - Field focused on open
+   * @returns {Promise<boolean>}
+   */
+  form(options = {}) {
+    const settings = this.dialogSettings({ tone: 'info', ...options });
+    return this.openDialog(settings, 'info', {
+      buttons: [
+        { value: false, text: settings.cancelText, className: 'notification-btn-cancel' },
+        { value: true, text: settings.confirmText, className: 'notification-btn-confirm notification-btn-info' }
+      ],
+      cancelValue: false,
+      enterValue: true,
+      focusValue: true,
+      content: options.content,
+      focusElement: options.focus
+    });
+  }
+
+  /**
    * Fill confirm()/choose() options with the localised defaults.
    * @param {Object} options
    * @returns {Object}
@@ -463,11 +490,17 @@ class NotificationManager {
       // Body: plain text; translated messages use <br> for line breaks
       const body = document.createElement('div');
       body.className = 'notification-confirm-body';
-      const message = document.createElement('p');
-      message.className = 'notification-confirm-message';
-      message.id = `${dialogId}-message`;
-      message.textContent = this.normalizeText(settings.message).replace(/<br\s*\/?>/gi, '\n');
-      body.appendChild(message);
+      if (spec.content) {
+        // A form: the caller's fields instead of a message
+        dialog.removeAttribute('aria-describedby');
+        body.appendChild(spec.content);
+      } else {
+        const message = document.createElement('p');
+        message.className = 'notification-confirm-message';
+        message.id = `${dialogId}-message`;
+        message.textContent = this.normalizeText(settings.message).replace(/<br\s*\/?>/gi, '\n');
+        body.appendChild(message);
+      }
 
       // Footer: secondary Cancel first, actions right-aligned after it
       const footer = document.createElement('div');
@@ -485,7 +518,7 @@ class NotificationManager {
         const match = buttons.find(entry => entry.value === value);
         return (match || buttons[0]).button;
       };
-      const focusStart = () => buttonFor(spec.focusValue).focus({ preventScroll: true });
+      const focusStart = () => (spec.focusElement || buttonFor(spec.focusValue)).focus({ preventScroll: true });
 
       dialog.appendChild(header);
       dialog.appendChild(body);
@@ -507,7 +540,7 @@ class NotificationManager {
       focusStart();
 
       let settled = false;
-      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled])'));
+      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])'));
 
       const onKeyDown = (event) => {
         // Only the top-most dialog reacts
@@ -519,9 +552,11 @@ class NotificationManager {
           event.stopImmediatePropagation();
           finish(spec.cancelValue);
         } else if (event.key === 'Enter') {
+          const active = document.activeElement;
+          // A list or a multi-line field uses Enter itself
+          if (active && (active.tagName === 'SELECT' || active.tagName === 'TEXTAREA')) return;
           event.preventDefault();
           event.stopImmediatePropagation();
-          const active = document.activeElement;
           const focused = buttons.find(entry => entry.button === active);
           if (focused) finish(focused.value);
           else if (active === closeButton) finish(spec.cancelValue);
@@ -703,6 +738,19 @@ const NotificationHelper = {
       return await notificationManager.choose(options);
     }
     return options.cancelValue !== undefined ? options.cancelValue : 'cancel';
+  },
+
+  /**
+   * Form dialog (always shown). Resolves to true when confirmed and to false
+   * for every dismissal; without the dialog UI nothing can be asked, so false.
+   * @param {Object} options - See NotificationManager.form()
+   * @returns {Promise<boolean>}
+   */
+  async form(options = {}) {
+    if (notificationManager && typeof notificationManager.form === 'function') {
+      return await notificationManager.form(options);
+    }
+    return false;
   },
 
   /**

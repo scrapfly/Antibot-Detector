@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "من دقيقة واحدة حتى 7 أيام."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "ما يحفظه السجل"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "التسجيل"
+  },
+  "settingsHistoryEnabled": {
+    "message": "حفظ الصفحات في السجل"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "أوقفه للتصفح دون تسجيل. يستمر الكشف في العمل."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "تخطي نوافذ التصفح المتخفي"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "لا تُحفظ صفحات نوافذ التصفح المتخفي أبدًا."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "تخطي الصفحات التي فيها بصمة المتصفح فقط"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "لا تحفظ الصفحة إذا كانت بصمة المتصفح هي الشيء الوحيد المكتشف."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "الحد الأدنى للثقة للحفظ (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "تُحفظ الصفحة فقط عندما تبلغ ثقة أقوى اكتشاف فيها هذه القيمة. القيمة 0 تحفظ كل الصفحات."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "العناوين المحفوظة"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "الاحتفاظ بالعنوان كاملًا"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "إخفاء القيم الحساسة"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "إزالة سلسلة الاستعلام"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "تظهر الرموز وعناوين البريد الإلكتروني الموجودة في العنوان في السجل والصادرات والروابط المشاركة. ينطبق هذا على الصفحات التي تُحفظ من الآن فصاعدًا."
+  },
+  "settingsHistoryExcluded": {
+    "message": "المواقع التي يتجاهلها السجل"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "موقع واحد في كل سطر، وتشمل نطاقاته الفرعية. يستمر الكشف في العمل عليها."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "مسح السجل عند إغلاق المتصفح"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "يزيل الصفحات المحفوظة عند إغلاق آخر نافذة، أو عند التشغيل التالي. تبقى الصفحات المثبّتة."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "التنبيه عند تغيّر وسائل الحماية"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "إيقاف"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "الصفحات المثبّتة فقط"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "كل صفحة"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "إشعار عندما تكتسب صفحة فحصتها من قبل حماية أو تفقدها."
+  },
+  "settingsDuplicateAction": {
+    "message": "عند العثور على تكرار"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "تخطي الفحص الجديد"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "تحديث الإدخال السابق"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "يحافظ التحديث على تاريخ أول ظهور والتثبيت والملاحظة، ويعلّم الإدخال على أنه تغيّر إذا اختلفت وسائل حمايته."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "التخزين والنسخ الاحتياطي"
+  },
+  "settingsHistoryStorage": {
+    "message": "المساحة المستخدمة"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "تم استخدام {0} من {1} · الإدخالات: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "المثبّتة: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "السجل فارغ."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "يكاد يمتلئ: ستُزال أقدم الإدخالات لتوفير مساحة. صدّر ما تريد الاحتفاظ به أو ثبّته."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "عدد أقدم الإدخالات التي أُزيلت للبقاء ضمن الحد: {0}، وكانت آخر مرة في {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "النسخ الاحتياطي التلقائي"
+  },
+  "settingsBackupOff": {
+    "message": "إيقاف"
+  },
+  "settingsBackupDaily": {
+    "message": "كل يوم"
+  },
+  "settingsBackupWeekly": {
+    "message": "كل أسبوع"
+  },
+  "settingsBackupMonthly": {
+    "message": "كل شهر"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "يحفظ نسخة من السجل في مجلد التنزيلات (داخل مجلد Scrapfly)، بتنسيق التصدير المحدد أعلاه."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "نسخ احتياطي الآن"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "آخر نسخة احتياطية: {0} (الإدخالات: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "لا توجد نسخة احتياطية بعد."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "تم النسخ الاحتياطي. الإدخالات: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "لا يوجد شيء لنسخه احتياطيًا بعد"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "فشل النسخ الاحتياطي للسجل"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "تأكد من السماح بالتنزيلات، ثم جرّب «نسخ احتياطي الآن» في الإعدادات ← السجل."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "يجب أن يكون الحد الأدنى للثقة بين 0 و100"
+  },
+  "historyPin": {
+    "message": "تثبيت"
+  },
+  "historyUnpin": {
+    "message": "إلغاء التثبيت"
+  },
+  "historyAddNote": {
+    "message": "إضافة ملاحظة"
+  },
+  "historyEditNote": {
+    "message": "تعديل الملاحظة"
+  },
+  "historyPinnedTip": {
+    "message": "مثبّتة: تبقى عند تنظيف السجل"
+  },
+  "historyChangedBadge": {
+    "message": "تغيّرت"
+  },
+  "historyNoteTitle": {
+    "message": "ملاحظة"
+  },
+  "historyNotePlaceholder": {
+    "message": "ملاحظة لهذه الصفحة…"
+  },
+  "historyNoteSaved": {
+    "message": "تم حفظ الملاحظة"
+  },
+  "historyPinnedNotice": {
+    "message": "تم التثبيت"
+  },
+  "historyUnpinnedNotice": {
+    "message": "تم إلغاء التثبيت"
+  },
+  "historyExportDialogTitle": {
+    "message": "تصدير السجل"
+  },
+  "historyExportFormat": {
+    "message": "التنسيق"
+  },
+  "historyExportCategory": {
+    "message": "وسائل الحماية"
+  },
+  "historyExportAll": {
+    "message": "الكل"
+  },
+  "historyExportPeriod": {
+    "message": "الفترة"
+  },
+  "historyRangeAll": {
+    "message": "كل الفترات"
+  },
+  "historyRange7": {
+    "message": "آخر 7 أيام"
+  },
+  "historyRange30": {
+    "message": "آخر 30 يومًا"
+  },
+  "historyRange90": {
+    "message": "آخر 90 يومًا"
+  },
+  "historyExportDomain": {
+    "message": "يحتوي الموقع على"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "الصفحات المثبّتة فقط"
+  },
+  "historyExportCountFmt": {
+    "message": "سيتم تصدير الإدخالات: {0} من {1}"
+  },
+  "historyExportNone": {
+    "message": "لا توجد إدخالات تطابق عوامل التصفية هذه"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "تغيّرت وسائل الحماية في {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "تمت إضافة: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "تمت إزالة: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "السجل يكاد يمتلئ"
+  },
+  "historyStorageWarnMessage": {
+    "message": "ستُزال أقدم الإدخالات لتوفير مساحة. صدّر ما تريد الاحتفاظ به أو ثبّته."
   }
 }

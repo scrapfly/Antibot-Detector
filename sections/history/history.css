@@ -1322,3 +1322,113 @@
   --tone-bg: rgba(139, 92, 246, 0.125);
   --tone-border: rgba(167, 139, 250, 0.24);
 }
+
+/* ============================================
+   Pinned entries, notes, "Changed" badge, note and export dialogs
+   ============================================ */
+.history-title-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.history-title-row .history-title {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.history-pin {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-light);
+}
+
+.history-pin svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* The page's protections differ from its earlier scan */
+.history-changed-badge {
+  flex: 0 0 auto;
+  padding: 0 6px;
+  border: 1px solid var(--warning-border, rgba(251, 191, 36, 0.34));
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning-light);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 15px;
+  white-space: nowrap;
+}
+
+.history-note {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 14px;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* Dialog fields (the dialog is added to the page body, so no #historyTab here) */
+.history-dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-dialog-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.history-dialog-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.history-dialog-form .history-dialog-input {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-family: inherit;
+}
+
+.history-dialog-form textarea.history-dialog-input {
+  min-height: 64px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.history-dialog-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.history-dialog-check input {
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.history-dialog-count {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.history-dialog-count.is-empty {
+  color: var(--warning-light);
+}

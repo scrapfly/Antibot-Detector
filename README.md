@@ -134,7 +134,7 @@ The protections found on the current page, each with its confidence, its difficu
 
 ### History
 
-Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, export it as JSON, CSV or plain text, and import a JSON export. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
+Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, import a JSON export, and export it as JSON, CSV or plain text, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up) or add a note from its **⋯** menu. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
 
 ### Rules
 
@@ -168,7 +168,9 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 
 - **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, blacklisted domains, JS API events, webhooks and share links.
-- **History:** how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days, skipping duplicates and the default export format.
+- **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages, full, masked or path-only addresses), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
+
+  History is limited to about 6 MB; when it is full the oldest unpinned entries are removed, and Settings → History says how many.
 - **Data:** open the statistics page, and export or import your settings and your history.
 
 ## Integrations

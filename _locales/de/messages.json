@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Von 1 Minute bis zu 7 Tagen."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Was der Verlauf speichert"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Aufzeichnung"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Seiten im Verlauf speichern"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Deaktivieren, um ohne Aufzeichnung zu surfen. Die Erkennung läuft weiter."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Inkognito-Fenster überspringen"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Seiten aus Inkognito-Fenstern werden nie gespeichert."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Seiten nur mit Fingerprinting überspringen"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Eine Seite nicht speichern, wenn nur Fingerprinting gefunden wird."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Mindestkonfidenz zum Speichern (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Eine Seite wird nur gespeichert, wenn ihre stärkste Erkennung diese Konfidenz erreicht. Bei 0 wird jede Seite gespeichert."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Gespeicherte Adressen"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Vollständige Adresse behalten"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Sensible Werte ausblenden"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Query-String entfernen"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Tokens und E-Mail-Adressen in einer Adresse landen im Verlauf, in Exporten und in geteilten Links. Gilt für Seiten, die ab jetzt gespeichert werden."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Sites, die der Verlauf ignoriert"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Eine Site pro Zeile; Subdomains sind eingeschlossen. Die Erkennung läuft dort weiterhin."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Verlauf beim Schließen des Browsers leeren"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Entfernt gespeicherte Seiten, wenn das letzte Fenster geschlossen wird, oder beim nächsten Start. Angeheftete Seiten bleiben erhalten."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Warnen, wenn sich Schutzmaßnahmen ändern"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Aus"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Nur angeheftete Seiten"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Jede Seite"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Eine Benachrichtigung, wenn eine bereits gescannte Seite eine Schutzmaßnahme dazubekommt oder verliert."
+  },
+  "settingsDuplicateAction": {
+    "message": "Wenn ein Duplikat gefunden wird"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Neuen Scan überspringen"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Früheren Eintrag aktualisieren"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Beim Aktualisieren bleiben Datum des ersten Scans, Anheftung und Notiz erhalten; der Eintrag wird als geändert markiert, wenn sich die Schutzmaßnahmen unterscheiden."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Speicher und Sicherung"
+  },
+  "settingsHistoryStorage": {
+    "message": "Belegter Speicher"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} von {1} belegt · Einträge: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Angeheftet: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Der Verlauf ist leer."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Fast voll: Die ältesten Einträge werden entfernt, um Platz zu schaffen. Exportiere oder hefte an, was du behalten möchtest."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Um das Limit einzuhalten, wurden die ältesten Einträge entfernt (insgesamt: {0}), zuletzt am {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Automatische Sicherung"
+  },
+  "settingsBackupOff": {
+    "message": "Aus"
+  },
+  "settingsBackupDaily": {
+    "message": "Täglich"
+  },
+  "settingsBackupWeekly": {
+    "message": "Wöchentlich"
+  },
+  "settingsBackupMonthly": {
+    "message": "Monatlich"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Jetzt sichern"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Letzte Sicherung: {0} (Einträge: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Noch keine Sicherung."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Sicherung abgeschlossen. Einträge: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Noch nichts zu sichern"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Verlaufssicherung fehlgeschlagen"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Prüfe, ob Downloads erlaubt sind, und versuche es dann unter Einstellungen → Verlauf mit „Jetzt sichern“ erneut."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Die Mindestkonfidenz muss zwischen 0 und 100 liegen"
+  },
+  "historyPin": {
+    "message": "Anheften"
+  },
+  "historyUnpin": {
+    "message": "Anheften aufheben"
+  },
+  "historyAddNote": {
+    "message": "Notiz hinzufügen"
+  },
+  "historyEditNote": {
+    "message": "Notiz bearbeiten"
+  },
+  "historyPinnedTip": {
+    "message": "Angeheftet: bleibt beim Aufräumen des Verlaufs erhalten"
+  },
+  "historyChangedBadge": {
+    "message": "Geändert"
+  },
+  "historyNoteTitle": {
+    "message": "Notiz"
+  },
+  "historyNotePlaceholder": {
+    "message": "Eine Notiz zu dieser Seite…"
+  },
+  "historyNoteSaved": {
+    "message": "Notiz gespeichert"
+  },
+  "historyPinnedNotice": {
+    "message": "Angeheftet"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Nicht mehr angeheftet"
+  },
+  "historyExportDialogTitle": {
+    "message": "Verlauf exportieren"
+  },
+  "historyExportFormat": {
+    "message": "Format"
+  },
+  "historyExportCategory": {
+    "message": "Schutzmaßnahmen"
+  },
+  "historyExportAll": {
+    "message": "Alle"
+  },
+  "historyExportPeriod": {
+    "message": "Zeitraum"
+  },
+  "historyRangeAll": {
+    "message": "Gesamte Zeit"
+  },
+  "historyRange7": {
+    "message": "Letzte 7 Tage"
+  },
+  "historyRange30": {
+    "message": "Letzte 30 Tage"
+  },
+  "historyRange90": {
+    "message": "Letzte 90 Tage"
+  },
+  "historyExportDomain": {
+    "message": "Site enthält"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Nur angeheftete Seiten"
+  },
+  "historyExportCountFmt": {
+    "message": "Einträge, die exportiert werden: {0} von {1}"
+  },
+  "historyExportNone": {
+    "message": "Keine Einträge entsprechen diesen Filtern"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Schutzmaßnahmen geändert auf {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Hinzugekommen: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Entfernt: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Der Verlauf ist fast voll"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Die ältesten Einträge werden entfernt, um Platz zu schaffen. Exportiere oder hefte an, was du behalten möchtest."
   }
 }

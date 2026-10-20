@@ -47,7 +47,8 @@
   const Messages = Object.freeze({
     DELETE_ITEMS: 'HISTORY_DELETE_ITEMS',   // { ids: [...] }
     REPLACE_ITEMS: 'HISTORY_REPLACE_ITEMS', // { items: [...], mode: 'merge' | 'replace', limit }
-    CLEAR: 'HISTORY_CLEAR'
+    CLEAR: 'HISTORY_CLEAR',
+    UPDATE_ITEM: 'HISTORY_UPDATE_ITEM'      // { id, patch: { pinned?: boolean, note?: string } }
   });
 
   /**
@@ -173,16 +174,43 @@
    */
   function budgetParts(items, maxBytes = MAX_BYTES, container = null) {
     const list = Array.isArray(items) ? items : [];
+    const json = list.map(item => JSON.stringify(item));
+    const keep = new Array(list.length).fill(false);
     let used = joinParts([], container).length;
-    const parts = [];
-    for (const item of list) {
-      const json = JSON.stringify(item);
-      // Always keep the newest entry, even when it alone is over budget
-      if (parts.length > 0 && used + json.length + 1 > maxBytes) break;
-      used += json.length + 1;
-      parts.push(json);
+    let kept = 0;
+    // Pinned entries first: the size limit takes unpinned ones, oldest first, before any pinned one
+    list.forEach((item, i) => {
+      if (!(item && item.pinned === true)) return;
+      if (kept > 0 && used + json[i].length + 1 > maxBytes) return;
+      used += json[i].length + 1; keep[i] = true; kept++;
+    });
+    // Then the rest, newest first, until the budget is full (always keeping the newest entry, even when it alone is over)
+    for (let i = 0; i < list.length; i++) {
+      if (keep[i] || (list[i] && list[i].pinned === true)) continue;
+      if (kept > 0 && used + json[i].length + 1 > maxBytes) break;
+      used += json[i].length + 1; keep[i] = true; kept++;
     }
-    return { parts, items: list.slice(0, parts.length), dropped: list.length - parts.length };
+    return { parts: json.filter((_, i) => keep[i]), items: list.filter((_, i) => keep[i]), dropped: list.length - kept };
+  }
+
+  /**
+   * The entry limit, newest first: the newest `limit` entries that are not pinned, plus every pinned one.
+   * A limit of 0 (or not a number) keeps everything.
+   */
+  function applyLimit(items, limit) {
+    const list = Array.isArray(items) ? items : [];
+    const max = parseInt(limit, 10);
+    if (!(max > 0)) return list;
+    let unpinned = 0;
+    return list.filter(item => (item && item.pinned === true) || ++unpinned <= max);
+  }
+
+  /** The pinned flag and note of a patch, cleaned (a note is one line of at most 300 characters). */
+  function cleanAnnotation(patch) {
+    const out = {};
+    if (patch && typeof patch.pinned === 'boolean') out.pinned = patch.pinned;
+    if (patch && typeof patch.note === 'string') out.note = patch.note.replace(/\s+/g, ' ').trim().slice(0, 300);
+    return out;
   }
 
   /**
@@ -192,6 +220,23 @@
   function fitToBudget(items, maxBytes = MAX_BYTES, container = null) {
     const { items: kept, dropped } = budgetParts(items, maxBytes, container);
     return { items: kept, dropped };
+  }
+
+  /**
+   * How much of History's share of the storage quota is used.
+   * @returns {Promise<{bytes: number, budget: number, entries: number, pinned: number, trimmed: ({at: number, count: number, total: number}|null)}>}
+   */
+  async function usage(storage = root.chrome && root.chrome.storage && root.chrome.storage.local) {
+    const stored = await storage.get([STORAGE_KEY]);
+    const raw = stored[STORAGE_KEY];
+    const { items, container } = parse(raw);
+    return {
+      bytes: raw === undefined ? 0 : (typeof raw === 'string' ? raw.length : JSON.stringify(raw).length),
+      budget: MAX_BYTES,
+      entries: items.length,
+      pinned: items.filter(item => item && item.pinned === true).length,
+      trimmed: container && container.trimmed ? container.trimmed : null
+    };
   }
 
   const isQuotaError = (error) => /quota/i.test(String(error && (error.message || error)));
@@ -205,8 +250,21 @@
   async function write(storage, items, container = null) {
     let { parts, items: kept, dropped } = budgetParts(items.map(slimEntry), MAX_BYTES, container);
     let relieved = false;
+    // What the size limit removed is kept beside the entries, so Settings can say so
+    const withTrim = () => {
+      if (dropped > 0) {
+        return Object.assign({}, container || {}, { trimmed: { at: Date.now(), count: dropped, total: ((container && container.trimmed && container.trimmed.total) || 0) + dropped } });
+      }
+      // An emptied History has nothing left to report
+      if (!kept.length && container && container.trimmed) {
+        const rest = Object.assign({}, container);
+        delete rest.trimmed;
+        return rest;
+      }
+      return container;
+    };
     for (;;) {
-      const value = joinParts(parts, container);
+      const value = joinParts(parts, withTrim());
       try {
         await storage.set({ [STORAGE_KEY]: value });
         return { items: kept, dropped, bytes: value.length };
@@ -250,7 +308,7 @@
       const result = out && !Array.isArray(out) ? out.result : undefined;
       if (!Array.isArray(next)) return { items, changed: false, result };
       const written = await write(storage, next, container);
-      return { items: written.items, changed: true, result, dropped: written.dropped };
+      return { items: written.items, changed: true, result, dropped: written.dropped, bytes: written.bytes };
     });
     queue = work.catch(() => undefined);
     return work;
@@ -269,8 +327,7 @@
     } else {
       items = imported.slice();
     }
-    const max = parseInt(limit, 10);
-    return Number.isFinite(max) && max > 0 ? items.slice(0, max) : items;
+    return applyLimit(items, limit);
   }
 
   /**
@@ -323,6 +380,26 @@
       }, store()));
     });
 
+    registry[Messages.UPDATE_ITEM] = guard(({ request, sendResponse }) => {
+      const patch = cleanAnnotation(request && request.patch);
+      if (!request || typeof request.id !== 'string' || !Object.keys(patch).length) {
+        sendResponse({ status: 'error', error: 'id and a pinned or note change are required' });
+        return true;
+      }
+      return respond(sendResponse, mutate(items => {
+        let found = false;
+        const next = items.map((item) => {
+          if (!item || item.id !== request.id) return item;
+          found = true;
+          const updated = Object.assign({}, item, patch);
+          if (updated.pinned === false) delete updated.pinned;
+          if (updated.note === '') delete updated.note;
+          return updated;
+        });
+        return found ? { items: next, result: { updated: 1 } } : { result: { updated: 0 } };
+      }, store()));
+    });
+
     registry[Messages.CLEAR] = guard(({ sendResponse }) => respond(sendResponse, mutate(() => [], store())));
   }
 
@@ -352,7 +429,7 @@
 
   const HistoryStore = {
     STORAGE_KEY, MAX_BYTES, Messages, parse, serialize, read, mutate, applyImport, registerHandlers,
-    slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief
+    slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, applyLimit, cleanAnnotation, usage
   };
 
   root.HistoryStore = HistoryStore;

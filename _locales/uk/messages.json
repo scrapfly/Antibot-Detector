@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Від 1 хвилини до 7 днів."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Що зберігає історія"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Збереження"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Зберігати сторінки в історії"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Вимкніть, щоб переглядати сайти без збереження. Виявлення продовжить працювати."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Пропускати вікна інкогніто"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Сторінки з вікон інкогніто ніколи не зберігаються."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Пропускати сторінки лише зі зняттям відбитків"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Не зберігати сторінку, якщо виявлено лише зняття відбитків."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Мінімальна впевненість для збереження (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Сторінка зберігається, лише якщо впевненість її найсильнішого виявлення не нижча за це значення. За 0 зберігаються всі сторінки."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Збережені адреси"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Зберігати повну адресу"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Приховувати конфіденційні значення"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Видаляти параметри запиту"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Токени й адреси електронної пошти з адреси потрапляють в історію, експорт і посилання, якими ви ділитеся. Діє для сторінок, збережених відтепер."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Сайти, які історія ігнорує"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "По одному сайту в рядку; піддомени включено. Виявлення на них і далі працює."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Очищати історію під час закриття браузера"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Видаляє збережені сторінки, коли закривається останнє вікно, або під час наступного запуску. Закріплені сторінки залишаються."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Сповіщати про зміну захисту"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Вимкнено"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Лише закріплені сторінки"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Усі сторінки"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Сповіщення, коли на сторінці, яку ви вже сканували, з’являється або зникає захист."
+  },
+  "settingsDuplicateAction": {
+    "message": "Якщо знайдено дублікат"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Пропустити нове сканування"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Оновити попередній запис"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Під час оновлення зберігаються дата першого виявлення, закріплення й нотатка; якщо захист відрізняється, запис позначається як змінений."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Сховище та резервне копіювання"
+  },
+  "settingsHistoryStorage": {
+    "message": "Зайнято місця"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "Зайнято {0} із {1} · записів: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Закріплено: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Історія порожня."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Майже заповнено: найстаріші записи буде видалено, щоб звільнити місце. Експортуйте або закріпіть те, що хочете зберегти."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Видалено найстаріших записів, щоб вкластися в ліміт: {0}. Востаннє: {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Автоматична резервна копія"
+  },
+  "settingsBackupOff": {
+    "message": "Вимкнено"
+  },
+  "settingsBackupDaily": {
+    "message": "Щодня"
+  },
+  "settingsBackupWeekly": {
+    "message": "Щотижня"
+  },
+  "settingsBackupMonthly": {
+    "message": "Щомісяця"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Створити копію зараз"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Остання копія: {0} (записів: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Копій ще немає."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Копію створено, записів: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Поки що нічого копіювати"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Не вдалося створити резервну копію історії"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Перевірте, що завантаження дозволено, потім натисніть «Створити копію зараз» у розділі Налаштування → Історія."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Мінімальна впевненість має бути від 0 до 100"
+  },
+  "historyPin": {
+    "message": "Закріпити"
+  },
+  "historyUnpin": {
+    "message": "Відкріпити"
+  },
+  "historyAddNote": {
+    "message": "Додати нотатку"
+  },
+  "historyEditNote": {
+    "message": "Редагувати нотатку"
+  },
+  "historyPinnedTip": {
+    "message": "Закріплено: зберігається під час очищення історії"
+  },
+  "historyChangedBadge": {
+    "message": "Змінено"
+  },
+  "historyNoteTitle": {
+    "message": "Нотатка"
+  },
+  "historyNotePlaceholder": {
+    "message": "Нотатка до цієї сторінки…"
+  },
+  "historyNoteSaved": {
+    "message": "Нотатку збережено"
+  },
+  "historyPinnedNotice": {
+    "message": "Закріплено"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Відкріплено"
+  },
+  "historyExportDialogTitle": {
+    "message": "Експортувати історію"
+  },
+  "historyExportFormat": {
+    "message": "Формат"
+  },
+  "historyExportCategory": {
+    "message": "Захист"
+  },
+  "historyExportAll": {
+    "message": "Усі"
+  },
+  "historyExportPeriod": {
+    "message": "Період"
+  },
+  "historyRangeAll": {
+    "message": "Увесь час"
+  },
+  "historyRange7": {
+    "message": "Останні 7 днів"
+  },
+  "historyRange30": {
+    "message": "Останні 30 днів"
+  },
+  "historyRange90": {
+    "message": "Останні 90 днів"
+  },
+  "historyExportDomain": {
+    "message": "Сайт містить"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Лише закріплені сторінки"
+  },
+  "historyExportCountFmt": {
+    "message": "Буде експортовано {0} із {1} записів"
+  },
+  "historyExportNone": {
+    "message": "Немає записів, що відповідають цим фільтрам"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Захист змінився на {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Додано: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Видалено: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Історія майже заповнена"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Найстаріші записи буде видалено, щоб звільнити місце. Експортуйте або закріпіть те, що хочете зберегти."
   }
 }

@@ -96,6 +96,8 @@ SettingsUI.switchTab = function(tabName) {
         content.classList.remove('active');
       }
     });
+    // The storage meter and last backup are read when the tab is opened
+    if (tabName === 'history') SettingsUI.refreshHistoryStorage();
 };
 
 SettingsUI.loadSettings = async function() {
@@ -461,6 +463,20 @@ SettingsUI.updateSettingsUI = function() {
 
       const historyBypassCache = document.querySelector('#historyBypassCache');
       if (historyBypassCache) historyBypassCache.checked = this.settings.history.historyBypassCache ?? false;
+
+      // What History saves, when it clears, alerts and backups
+      const h = this.settings.history;
+      const check = (id, value) => { const el = document.querySelector(`#${id}`); if (el) el.checked = value; };
+      const choose = (id, value) => { const el = document.querySelector(`#${id}`); if (el) el.value = value; };
+      check('historyEnabled', h.historyEnabled !== false);
+      check('historySkipIncognito', h.historySkipIncognito !== false);
+      check('historySkipFingerprintOnly', h.historySkipFingerprintOnly === true);
+      check('historyClearOnClose', h.historyClearOnClose === true);
+      choose('historyMinConfidence', h.historyMinConfidence ?? 0);
+      choose('historyUrlMode', ['mask', 'path'].includes(h.historyUrlMode) ? h.historyUrlMode : 'full');
+      choose('historyChangeAlerts', ['pinned', 'all'].includes(h.historyChangeAlerts) ? h.historyChangeAlerts : 'off');
+      choose('historyBackup', ['daily', 'weekly', 'monthly'].includes(h.historyBackup) ? h.historyBackup : 'off');
+      choose('historyExcludedDomains', (Array.isArray(h.historyExcludedDomains) ? h.historyExcludedDomains : []).join('\n'));
     }
 
     // Duplicate Prevention Settings
@@ -476,6 +492,9 @@ SettingsUI.updateSettingsUI = function() {
 
       const duplicateUnit = document.querySelector('#duplicateUnit');
       if (duplicateUnit) duplicateUnit.value = this.settings.duplicatePrevention.duplicateUnit || 'hours';
+
+      const duplicateAction = document.querySelector('#duplicateAction');
+      if (duplicateAction) duplicateAction.value = this.settings.duplicatePrevention.duplicateAction === 'update' ? 'update' : 'skip';
 
         const duplicateSettingsContainer = document.querySelector('#duplicateSettingsContainer');
       if (duplicateSettingsContainer) {
@@ -605,7 +624,16 @@ SettingsUI.getSettingsFromUI = function() {
       historyAutoDeleteDays: parseInt(document.querySelector('#historyAutoDeleteDays')?.value ?? this.settings.history?.historyAutoDeleteDays ?? 30),
       exportFormat: document.querySelector('#exportFormat')?.value ?? this.settings.history?.exportFormat ?? 'json',
       includeTimestamps: document.querySelector('#includeTimestamps')?.checked ?? this.settings.history?.includeTimestamps ?? true,
-      historyBypassCache: document.querySelector('#historyBypassCache')?.checked ?? this.settings.history?.historyBypassCache ?? false
+      historyBypassCache: document.querySelector('#historyBypassCache')?.checked ?? this.settings.history?.historyBypassCache ?? false,
+      historyEnabled: document.querySelector('#historyEnabled')?.checked ?? this.settings.history?.historyEnabled ?? true,
+      historySkipIncognito: document.querySelector('#historySkipIncognito')?.checked ?? this.settings.history?.historySkipIncognito ?? true,
+      historyMinConfidence: parseInt(document.querySelector('#historyMinConfidence')?.value ?? this.settings.history?.historyMinConfidence ?? 0, 10),
+      historySkipFingerprintOnly: document.querySelector('#historySkipFingerprintOnly')?.checked ?? this.settings.history?.historySkipFingerprintOnly ?? false,
+      historyUrlMode: document.querySelector('#historyUrlMode')?.value ?? this.settings.history?.historyUrlMode ?? 'full',
+      historyExcludedDomains: SettingsUI.readExcludedDomains(this.settings.history?.historyExcludedDomains),
+      historyChangeAlerts: document.querySelector('#historyChangeAlerts')?.value ?? this.settings.history?.historyChangeAlerts ?? 'off',
+      historyBackup: document.querySelector('#historyBackup')?.value ?? this.settings.history?.historyBackup ?? 'off',
+      historyClearOnClose: document.querySelector('#historyClearOnClose')?.checked ?? this.settings.history?.historyClearOnClose ?? false
     };
 
     // Duplicate Prevention Settings
@@ -613,7 +641,8 @@ SettingsUI.getSettingsFromUI = function() {
       preventDuplicates: document.querySelector('#preventDuplicates')?.checked ?? this.settings.duplicatePrevention?.preventDuplicates ?? false,
       duplicateScope: document.querySelector('#duplicateScope')?.value ?? this.settings.duplicatePrevention?.duplicateScope ?? 'full_url',
       duplicateDuration: parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1),
-      duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours'
+      duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours',
+      duplicateAction: document.querySelector('#duplicateAction')?.value ?? this.settings.duplicatePrevention?.duplicateAction ?? 'skip'
     };
 
     // Update Settings
@@ -651,6 +680,13 @@ SettingsUI.validateSettings = function(settings) {
         const unitEntry = UNIT_LABEL_KEYS[cacheUnit];
         const unitLabel = unitEntry ? text(unitEntry[0], unitEntry[1]) : String(cacheUnit);
         errors.push(text('settingsUiErrCacheDurationFmt', 'Cache duration must be between 1 and {0} {1}', max, unitLabel));
+      }
+    }
+
+    if (settings.history && settings.history.historyMinConfidence !== undefined) {
+      const confidence = settings.history.historyMinConfidence;
+      if (!Number.isInteger(confidence) || confidence < 0 || confidence > 100) {
+        errors.push(text('settingsUiErrMinConfidence', 'Minimum confidence must be between 0 and 100'));
       }
     }
 
@@ -861,6 +897,11 @@ SettingsUI.setupEventListeners = function() {
     const historyAutoDeleteToggle = document.querySelector('#historyAutoDelete');
     if (historyAutoDeleteToggle) {
       historyAutoDeleteToggle.addEventListener('change', () => SettingsUI.syncHistoryAutoDeleteRow());
+    }
+
+    const historyBackupNowBtn = document.querySelector('#historyBackupNowBtn');
+    if (historyBackupNowBtn) {
+      historyBackupNowBtn.addEventListener('click', () => SettingsUI.backUpHistoryNow(historyBackupNowBtn));
     }
 
     const openHistoryStatsBtn = document.querySelector('#openHistoryStatsBtn');
@@ -1112,3 +1153,81 @@ SettingsUI.readDetectionSort = function(orderValue, byConfidence, previous) {
 if (typeof self !== 'undefined') {
     self.SettingsUI = SettingsUI;
 }
+
+/** The "Sites History ignores" box as a clean list of hosts (what is already saved when the box is missing). */
+SettingsUI.readExcludedDomains = function(fallback) {
+  const box = document.querySelector('#historyExcludedDomains');
+  if (!box) return Array.isArray(fallback) ? fallback : [];
+  return typeof HistoryPolicy !== 'undefined'
+    ? HistoryPolicy.normalizeDomains(box.value)
+    : box.value.split(/[\s,;]+/).map(d => d.trim().toLowerCase()).filter(Boolean);
+};
+
+/** Bytes as MB with one decimal ("2.1 MB"), KB below that. */
+SettingsUI.formatStorageSize = function(bytes) {
+  return bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+};
+
+/**
+ * The History storage meter and the last backup, read from storage when the History tab opens:
+ * "2.1 MB of 6 MB used", an amber bar from 90% (the oldest entries go next), and what was removed so far.
+ */
+SettingsUI.refreshHistoryStorage = async function() {
+  const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+  const meter = document.querySelector('#historyMeter');
+  const label = document.querySelector('#historyMeterText');
+  if (!meter || !label) return;
+  try {
+    const usage = await HistoryStore.usage(chrome.storage.local);
+    const ratio = usage.budget > 0 ? Math.min(usage.bytes / usage.budget, 1) : 0;
+    const percent = Math.round(ratio * 100);
+    meter.setAttribute('aria-valuenow', String(percent));
+    meter.classList.toggle('is-warn', ratio >= 0.9 && ratio < 0.97);
+    meter.classList.toggle('is-full', ratio >= 0.97);
+    document.querySelector('#historyMeterFill').style.width = `${percent}%`;
+    const pinned = usage.pinned ? ` · ${text('settingsHistoryStoragePinnedFmt', '{0} pinned', usage.pinned)}` : '';
+    label.textContent = usage.entries
+      ? `${text('settingsHistoryStorageUsedFmt', '{0} of {1} used · {2} entries', SettingsUI.formatStorageSize(usage.bytes), SettingsUI.formatStorageSize(usage.budget), usage.entries)}${pinned}`
+      : text('settingsHistoryStorageEmpty', 'History is empty.');
+    const note = document.querySelector('#historyMeterNote');
+    const lines = [];
+    if (ratio >= 0.9) lines.push(text('settingsHistoryStorageNearlyFull', 'Almost full: the oldest entries will be removed to make room. Export or pin what you want to keep.'));
+    if (usage.trimmed && usage.trimmed.count) lines.push(text('settingsHistoryStorageTrimmedFmt', '{0} oldest entries were removed to stay within the limit, the last time on {1}.', usage.trimmed.total || usage.trimmed.count, FormatUtils.formatDateTime(usage.trimmed.at)));
+    if (note) { note.textContent = lines.join(' '); note.hidden = lines.length === 0; }
+  } catch (error) {
+    label.textContent = '';
+  }
+  // The last backup
+  const last = document.querySelector('#historyBackupLast');
+  if (last) {
+    try {
+      const state = (await chrome.storage.local.get('scrapfly_history_backup')).scrapfly_history_backup;
+      if (!state) last.textContent = text('settingsHistoryBackupNever', 'No backup yet.');
+      else if (state.ok === false) last.textContent = text('settingsHistoryBackupFailed', 'History backup failed');
+      else last.textContent = text('settingsHistoryBackupLastFmt', 'Last backup: {0} ({1} entries)', FormatUtils.formatDateTime(state.at), state.entries);
+    } catch (_) {
+      last.textContent = '';
+    }
+  }
+};
+
+/** "Back up now": the worker writes History to Downloads; the result is shown beside the button. */
+SettingsUI.backUpHistoryNow = async function(button) {
+  const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+  if (button) button.disabled = true;
+  try {
+    const result = await chrome.runtime.sendMessage({ type: 'HISTORY_BACKUP_NOW' });
+    if (result && result.status === 'ok') {
+      NotificationHelper.success(result.entries
+        ? text('settingsHistoryBackupDoneFmt', 'Backed up {0} entries', result.entries)
+        : text('settingsHistoryBackupEmpty', 'Nothing to back up yet'));
+    } else {
+      NotificationHelper.error(text('settingsHistoryBackupFailed', 'History backup failed'));
+    }
+  } catch (error) {
+    NotificationHelper.error(text('settingsHistoryBackupFailed', 'History backup failed'));
+  } finally {
+    if (button) button.disabled = false;
+    SettingsUI.refreshHistoryStorage();
+  }
+};

@@ -6,11 +6,13 @@
         badgeColors: ['low', 'medium', 'high'],
         categoryColors: ['antibot', 'captcha', 'fingerprint'],
         tagColors: ['dom', 'headers', 'cookies', 'content', 'urls', 'js_hooks', 'window', 'payload'],
-        detection: ['cacheDuration', 'cacheUnit', 'cacheScope', 'sortBy', 'categoryOrder', 'advancedToolsMinConfidence', 'blacklistedDomains', 'hooksConfig'],
+        detection: ['cacheDuration', 'cacheUnit', 'cacheScope', 'sortBy', 'categoryOrder', 'advancedToolsMinConfidence', 'captureRetentionMinutes', 'blacklistedDomains', 'hooksConfig'],
         jsApi: ['enableJsApi'],
         share: ['provider', 'dpasteComDays', 'dpasteOrgExpires', 'pastebinExpire', 'customExpiryDays'],
-        history: ['historyLimit', 'historyAutoDelete', 'historyAutoDeleteDays', 'exportFormat', 'includeTimestamps', 'historyBypassCache'],
-        duplicatePrevention: ['preventDuplicates', 'duplicateScope', 'duplicateDuration', 'duplicateUnit'],
+        history: ['historyLimit', 'historyAutoDelete', 'historyAutoDeleteDays', 'exportFormat', 'includeTimestamps', 'historyBypassCache',
+            'historyEnabled', 'historySkipIncognito', 'historyMinConfidence', 'historySkipFingerprintOnly', 'historyUrlMode',
+            'historyExcludedDomains', 'historyChangeAlerts', 'historyBackup', 'historyClearOnClose'],
+        duplicatePrevention: ['preventDuplicates', 'duplicateScope', 'duplicateDuration', 'duplicateUnit', 'duplicateAction'],
         updates: ['autoUpdate', 'checkIntervalHours']
     };
     function portable(settings) {

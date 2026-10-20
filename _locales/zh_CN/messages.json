@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "从 1 分钟到 7 天。"
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "历史记录保存的内容"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "保存规则"
+  },
+  "settingsHistoryEnabled": {
+    "message": "将页面保存到历史记录"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "关闭后，浏览时不再记录。检测仍会正常运行。"
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "跳过无痕窗口"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "无痕窗口中的页面永远不会被保存。"
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "跳过仅含指纹识别的页面"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "如果只发现了指纹识别，则不保存该页面。"
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "保存所需的最低置信度（%）"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "仅当页面中最强的检测结果达到此置信度时才会保存。设为 0 则保存所有页面。"
+  },
+  "settingsHistoryUrlMode": {
+    "message": "保存的地址"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "保留完整地址"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "隐藏敏感值"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "删除查询字符串"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "地址中的令牌和电子邮件地址会出现在历史记录、导出文件和分享链接中。仅适用于此后保存的页面。"
+  },
+  "settingsHistoryExcluded": {
+    "message": "历史记录忽略的站点"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "每行一个站点，其子域名也包含在内。这些站点上仍会运行检测。"
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "关闭浏览器时清除历史记录"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "在最后一个窗口关闭时或下次启动时删除已保存的页面。已固定的页面会保留。"
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "防护措施变化时提醒"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "关闭"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "仅已固定的页面"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "所有页面"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "之前扫描过的页面新增或失去某项防护时，发出通知。"
+  },
+  "settingsDuplicateAction": {
+    "message": "发现重复时"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "跳过新的扫描"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "更新之前的条目"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "更新时会保留首次发现的日期、固定状态和备注。如果防护措施有差异，会将该条目标记为“有变化”。"
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "存储和备份"
+  },
+  "settingsHistoryStorage": {
+    "message": "已用存储空间"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "已使用 {0}（上限 {1}）· {2} 条记录"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "已固定 {0} 个"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "历史记录为空。"
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "即将占满：为腾出空间，最早的条目将被删除。请导出或固定要保留的内容。"
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "为保持在上限内，至今已删除最早的 {0} 条记录，最近一次在 {1}。"
+  },
+  "settingsHistoryBackup": {
+    "message": "自动备份"
+  },
+  "settingsBackupOff": {
+    "message": "关闭"
+  },
+  "settingsBackupDaily": {
+    "message": "每天"
+  },
+  "settingsBackupWeekly": {
+    "message": "每周"
+  },
+  "settingsBackupMonthly": {
+    "message": "每月"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "按上方选择的导出格式，将历史记录的副本保存到“下载”文件夹中的 Scrapfly 文件夹。"
+  },
+  "settingsHistoryBackupNow": {
+    "message": "立即备份"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "上次备份：{0}（{1} 条记录）"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "尚无备份。"
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "已备份 {0} 条记录"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "暂无可备份的内容"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "历史记录备份失败"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "请检查是否允许下载，然后在 设置 → 历史记录 中重试“立即备份”。"
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "最低置信度必须在 0 到 100 之间"
+  },
+  "historyPin": {
+    "message": "固定"
+  },
+  "historyUnpin": {
+    "message": "取消固定"
+  },
+  "historyAddNote": {
+    "message": "添加备注"
+  },
+  "historyEditNote": {
+    "message": "编辑备注"
+  },
+  "historyPinnedTip": {
+    "message": "已固定：清理历史记录时会保留"
+  },
+  "historyChangedBadge": {
+    "message": "有变化"
+  },
+  "historyNoteTitle": {
+    "message": "备注"
+  },
+  "historyNotePlaceholder": {
+    "message": "此页面的备注…"
+  },
+  "historyNoteSaved": {
+    "message": "备注已保存"
+  },
+  "historyPinnedNotice": {
+    "message": "已固定"
+  },
+  "historyUnpinnedNotice": {
+    "message": "已取消固定"
+  },
+  "historyExportDialogTitle": {
+    "message": "导出历史记录"
+  },
+  "historyExportFormat": {
+    "message": "格式"
+  },
+  "historyExportCategory": {
+    "message": "防护措施"
+  },
+  "historyExportAll": {
+    "message": "全部"
+  },
+  "historyExportPeriod": {
+    "message": "时间范围"
+  },
+  "historyRangeAll": {
+    "message": "全部时间"
+  },
+  "historyRange7": {
+    "message": "最近 7 天"
+  },
+  "historyRange30": {
+    "message": "最近 30 天"
+  },
+  "historyRange90": {
+    "message": "最近 90 天"
+  },
+  "historyExportDomain": {
+    "message": "站点包含"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "仅已固定的页面"
+  },
+  "historyExportCountFmt": {
+    "message": "将导出 {1} 条记录中的 {0} 条"
+  },
+  "historyExportNone": {
+    "message": "没有符合这些筛选条件的记录"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "{0} 的防护措施已变化"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "新增：{0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "移除：{0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "历史记录存储空间即将占满"
+  },
+  "historyStorageWarnMessage": {
+    "message": "为腾出空间，最早的条目将被删除。请导出或固定要保留的内容。"
   }
 }

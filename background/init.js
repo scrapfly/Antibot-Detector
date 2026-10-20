@@ -108,6 +108,9 @@ UpdateManager.setupAlarmListener();
 // service-worker start.
 HistoryRetention.init();
 
+// Automatic History backup to the Downloads folder (alarm + "Back up now"); its listeners register in the first turn
+HistoryBackup.init();
+
 // When a history write hits the 10 MB storage quota, the detection cache
 // (rebuilt on the next visit) gives up space before any history entry does.
 HistoryStore.setQuotaRelief(() => DetectionEngineManager.shedStoredDetections());

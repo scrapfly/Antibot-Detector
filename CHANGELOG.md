@@ -12,11 +12,26 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Ten new interface languages, 22 in total: Traditional Chinese, Turkish, Indonesian, Vietnamese, Polish, Ukrainian, Dutch, Thai, Swedish and Czech. Pick one in Settings → General; rule descriptions and the rule editor's Translations are translated too.
 - Traditional Chinese uses your system's Traditional Chinese fonts, so characters have their Taiwan and Hong Kong forms.
 - Thai is drawn with the bundled IBM Plex Sans Thai font, like the other scripts, instead of whatever font the system has.
+- Settings → History → What History saves: pause History, skip private-window pages (on by default), ignore sites, set a minimum confidence, skip fingerprint-only pages.
+- Settings → History: save addresses in full, with secrets masked, or without the query string.
+- History: pin an entry and add a note from its … menu. Pinned entries stay when History is cleaned up by age, entry limit, size or clear on close.
+- History: a Changed badge on a page whose protections differ from its last scan, and optional notifications for all pages or only pinned ones.
+- Settings → History: when a page is scanned again, update its earlier entry instead of skipping the scan.
+- Settings → History: a storage meter, a warning when History nears its size limit, and how many old entries were removed.
+- Settings → History: automatic backup to Downloads (daily, weekly or monthly) and Back up now; a large History is split into files that each import on their own.
+- History → Export: choose the format, protections, period, site and pinned pages only; the dialog shows how many entries will be exported.
+- Settings → History: clear History when the browser closes (pinned entries stay).
 
 ### Changed
 
 - Rules → Update downloads the rule texts of the language you use, not all of them.
+- Settings → History: the export format and Include timestamps now apply to exports; JSON always keeps every field so it can be imported again.
 - README: removed the Scrapfly tagline footer.
+
+### Fixed
+
+- Settings export and import now include the Advanced capture time.
+- History no longer drops its oldest entries without telling you.
 
 ## [3.0.0] - 2026-10-19
 

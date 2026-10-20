@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "Från 1 minut upp till 7 dagar."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Vad historiken sparar"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Sparande"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Spara sidor i historiken"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Stäng av för att surfa utan att spara. Upptäckten fungerar som vanligt."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Hoppa över inkognitofönster"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Sidor från inkognitofönster sparas aldrig."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Hoppa över sidor med bara fingerprinting"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Spara inte en sida när fingerprinting är det enda som hittas."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Lägsta säkerhet för att spara (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "En sida sparas bara när dess starkaste upptäckt når den här säkerheten. 0 sparar alla sidor."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Sparade adresser"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Behåll hela adressen"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Dölj känsliga värden"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Ta bort frågesträngen"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Tokens och e-postadresser i en adress hamnar i historiken, i exporter och i delade länkar. Gäller sidor som sparas från och med nu."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Webbplatser som historiken ignorerar"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "En webbplats per rad; underdomäner ingår. Upptäckten körs fortfarande på dem."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Rensa historiken när webbläsaren stängs"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Tar bort sparade sidor när det sista fönstret stängs, eller vid nästa start. Fästa sidor behålls."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Avisera när skydd ändras"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Av"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Endast fästa sidor"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Alla sidor"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "En avisering när en sida du har skannat tidigare får eller förlorar ett skydd."
+  },
+  "settingsDuplicateAction": {
+    "message": "När en dubblett hittas"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Hoppa över den nya skanningen"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Uppdatera den tidigare posten"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Uppdatering behåller datumet för första upptäckten, fästet och anteckningen, och markerar posten som ändrad när dess skydd skiljer sig."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Lagring och säkerhetskopiering"
+  },
+  "settingsHistoryStorage": {
+    "message": "Använd lagring"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} av {1} används · Poster: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Fästa: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Historiken är tom."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Nästan full: de äldsta posterna tas bort för att ge plats. Exportera eller fäst det du vill behålla."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Äldsta poster som tagits bort för att rymmas inom gränsen: {0}. Senast {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Automatisk säkerhetskopiering"
+  },
+  "settingsBackupOff": {
+    "message": "Av"
+  },
+  "settingsBackupDaily": {
+    "message": "Varje dag"
+  },
+  "settingsBackupWeekly": {
+    "message": "Varje vecka"
+  },
+  "settingsBackupMonthly": {
+    "message": "Varje månad"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Säkerhetskopiera nu"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Senaste säkerhetskopia: {0} (poster: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Ingen säkerhetskopia än."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Säkerhetskopierade poster: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Inget att säkerhetskopiera än"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Det gick inte att säkerhetskopiera historiken"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Kontrollera att nedladdningar är tillåtna och försök sedan med Säkerhetskopiera nu i Inställningar → Historik."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Lägsta säkerhet måste vara mellan 0 och 100"
+  },
+  "historyPin": {
+    "message": "Fäst"
+  },
+  "historyUnpin": {
+    "message": "Lossa"
+  },
+  "historyAddNote": {
+    "message": "Lägg till anteckning"
+  },
+  "historyEditNote": {
+    "message": "Redigera anteckning"
+  },
+  "historyPinnedTip": {
+    "message": "Fäst: behålls när historiken rensas"
+  },
+  "historyChangedBadge": {
+    "message": "Ändrad"
+  },
+  "historyNoteTitle": {
+    "message": "Anteckning"
+  },
+  "historyNotePlaceholder": {
+    "message": "En anteckning om den här sidan…"
+  },
+  "historyNoteSaved": {
+    "message": "Anteckningen sparades"
+  },
+  "historyPinnedNotice": {
+    "message": "Fäst"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Lossad"
+  },
+  "historyExportDialogTitle": {
+    "message": "Exportera historik"
+  },
+  "historyExportFormat": {
+    "message": "Format"
+  },
+  "historyExportCategory": {
+    "message": "Skydd"
+  },
+  "historyExportAll": {
+    "message": "Alla"
+  },
+  "historyExportPeriod": {
+    "message": "Period"
+  },
+  "historyRangeAll": {
+    "message": "Alltid"
+  },
+  "historyRange7": {
+    "message": "Senaste 7 dagarna"
+  },
+  "historyRange30": {
+    "message": "Senaste 30 dagarna"
+  },
+  "historyRange90": {
+    "message": "Senaste 90 dagarna"
+  },
+  "historyExportDomain": {
+    "message": "Webbplatsen innehåller"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Endast fästa sidor"
+  },
+  "historyExportCountFmt": {
+    "message": "Poster som exporteras: {0} av {1}"
+  },
+  "historyExportNone": {
+    "message": "Inga poster matchar de här filtren"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Skydden ändrades på {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Tillkommit: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Försvunnit: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Historiken är nästan full"
+  },
+  "historyStorageWarnMessage": {
+    "message": "De äldsta posterna tas bort för att ge plats. Exportera eller fäst det du vill behålla."
   }
 }

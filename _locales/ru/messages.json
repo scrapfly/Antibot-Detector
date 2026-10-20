@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "От 1 минуты до 7 дней."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Что сохраняет история"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Сохранение"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Сохранять страницы в историю"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Отключите, чтобы просматривать сайты без сохранения. Обнаружение продолжит работать."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Пропускать окна инкогнито"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Страницы из окон инкогнито никогда не сохраняются."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Пропускать страницы только с фингерпринтингом"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Не сохранять страницу, если найден только фингерпринтинг."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Минимальная уверенность для сохранения (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Страница сохраняется, только если уверенность её самого сильного обнаружения не ниже этого значения. При 0 сохраняются все страницы."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Сохраняемые адреса"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Сохранять полный адрес"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Скрывать конфиденциальные значения"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Удалять параметры запроса"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Токены и адреса электронной почты из адреса попадают в историю, экспорт и ссылки, которыми вы делитесь. Действует для страниц, сохраняемых с этого момента."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Сайты, которые история игнорирует"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "По одному сайту в строке; поддомены включены. Обнаружение на них по-прежнему работает."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Очищать историю при закрытии браузера"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Удаляет сохранённые страницы при закрытии последнего окна или при следующем запуске. Закреплённые страницы остаются."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Уведомлять об изменении защиты"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Выключено"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Только закреплённые страницы"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Все страницы"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Уведомление, когда на ранее просканированной странице появляется или исчезает защита."
+  },
+  "settingsDuplicateAction": {
+    "message": "Если найден дубликат"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Пропустить новое сканирование"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Обновить прежнюю запись"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "При обновлении сохраняются дата первого обнаружения, закрепление и заметка; если защиты отличаются, запись помечается как изменённая."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Хранилище и резервное копирование"
+  },
+  "settingsHistoryStorage": {
+    "message": "Занято места"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "Занято {0} из {1} · записей: {2}"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "Закреплено: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "История пуста."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Почти заполнено: самые старые записи будут удалены, чтобы освободить место. Экспортируйте или закрепите то, что хотите сохранить."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Удалено самых старых записей, чтобы уложиться в лимит: {0}. Последний раз: {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Автоматическая резервная копия"
+  },
+  "settingsBackupOff": {
+    "message": "Выключено"
+  },
+  "settingsBackupDaily": {
+    "message": "Каждый день"
+  },
+  "settingsBackupWeekly": {
+    "message": "Каждую неделю"
+  },
+  "settingsBackupMonthly": {
+    "message": "Каждый месяц"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Сохраняет копию истории в папке «Загрузки» (в подпапке Scrapfly) в выбранном выше формате экспорта."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Создать копию сейчас"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Последняя копия: {0} (записей: {1})"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Копий пока нет."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Копия создана, записей: {0}"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Пока нечего копировать"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Не удалось создать резервную копию истории"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Проверьте, что загрузки разрешены, затем нажмите «Создать копию сейчас» в разделе Настройки → История."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Минимальная уверенность должна быть от 0 до 100"
+  },
+  "historyPin": {
+    "message": "Закрепить"
+  },
+  "historyUnpin": {
+    "message": "Открепить"
+  },
+  "historyAddNote": {
+    "message": "Добавить заметку"
+  },
+  "historyEditNote": {
+    "message": "Изменить заметку"
+  },
+  "historyPinnedTip": {
+    "message": "Закреплено: сохраняется при очистке истории"
+  },
+  "historyChangedBadge": {
+    "message": "Изменено"
+  },
+  "historyNoteTitle": {
+    "message": "Заметка"
+  },
+  "historyNotePlaceholder": {
+    "message": "Заметка об этой странице…"
+  },
+  "historyNoteSaved": {
+    "message": "Заметка сохранена"
+  },
+  "historyPinnedNotice": {
+    "message": "Закреплено"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Откреплено"
+  },
+  "historyExportDialogTitle": {
+    "message": "Экспортировать историю"
+  },
+  "historyExportFormat": {
+    "message": "Формат"
+  },
+  "historyExportCategory": {
+    "message": "Защиты"
+  },
+  "historyExportAll": {
+    "message": "Все"
+  },
+  "historyExportPeriod": {
+    "message": "Период"
+  },
+  "historyRangeAll": {
+    "message": "Всё время"
+  },
+  "historyRange7": {
+    "message": "Последние 7 дней"
+  },
+  "historyRange30": {
+    "message": "Последние 30 дней"
+  },
+  "historyRange90": {
+    "message": "Последние 90 дней"
+  },
+  "historyExportDomain": {
+    "message": "Сайт содержит"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Только закреплённые страницы"
+  },
+  "historyExportCountFmt": {
+    "message": "Будет экспортировано {0} из {1} записей"
+  },
+  "historyExportNone": {
+    "message": "Нет записей, подходящих под эти фильтры"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Защита изменилась на {0}"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Добавлено: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Удалено: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "История почти заполнена"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Самые старые записи будут удалены, чтобы освободить место. Экспортируйте или закрепите то, что хотите сохранить."
   }
 }

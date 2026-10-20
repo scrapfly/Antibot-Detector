@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "從 1 分鐘到 7 天。"
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "歷史記錄儲存內容"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "記錄"
+  },
+  "settingsHistoryEnabled": {
+    "message": "將網頁儲存到歷史記錄"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "關閉後瀏覽時不會記錄，偵測功能仍會運作。"
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "略過無痕視窗"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "不會儲存來自無痕視窗的網頁。"
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "略過僅有指紋辨識的網頁"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "若只偵測到指紋辨識，就不儲存該網頁。"
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "儲存的最低信賴度 (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "只有在網頁最強的偵測結果達到此信賴度時，才會儲存該網頁。設為 0 則儲存所有網頁。"
+  },
+  "settingsHistoryUrlMode": {
+    "message": "已儲存的 URL"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "保留完整 URL"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "隱藏敏感值"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "移除查詢字串"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "URL 中的權杖和電子郵件地址會出現在歷史記錄、匯出檔案和分享連結中。僅適用於日後儲存的網頁。"
+  },
+  "settingsHistoryExcluded": {
+    "message": "歷史記錄忽略的網站"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "每行一個網站，包含其子網域。仍會在這些網站上執行偵測。"
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "關閉瀏覽器時清除歷史記錄"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "在最後一個視窗關閉時或下次啟動時，移除已儲存的網頁。已釘選的網頁會保留。"
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "防護變更時提醒"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "關閉"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "僅限已釘選的網頁"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "所有網頁"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "當您先前掃描過的網頁新增或失去某項防護時，會顯示通知。"
+  },
+  "settingsDuplicateAction": {
+    "message": "發現重複項目時"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "略過新的掃描"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "更新先前的項目"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "更新會保留首次發現日期、釘選狀態和備註；若防護內容不同，則會將該項目標示為已變更。"
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "儲存空間與備份"
+  },
+  "settingsHistoryStorage": {
+    "message": "已使用的儲存空間"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "已使用 {0} / {1} · {2} 筆項目"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "已釘選：{0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "歷史記錄是空的。"
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "即將額滿：將移除最舊的項目以騰出空間。請匯出或釘選您想保留的項目。"
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "為維持在上限內，已移除最舊的項目，共 {0} 筆，最近一次在 {1}。"
+  },
+  "settingsHistoryBackup": {
+    "message": "自動備份"
+  },
+  "settingsBackupOff": {
+    "message": "關閉"
+  },
+  "settingsBackupDaily": {
+    "message": "每天"
+  },
+  "settingsBackupWeekly": {
+    "message": "每週"
+  },
+  "settingsBackupMonthly": {
+    "message": "每月"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。"
+  },
+  "settingsHistoryBackupNow": {
+    "message": "立即備份"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "上次備份：{0}（{1} 筆項目）"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "尚未備份。"
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "已備份 {0} 筆項目"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "目前沒有可備份的內容"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "歷史記錄備份失敗"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "請確認已允許下載，然後前往「設定」→「歷史記錄」再試一次「立即備份」。"
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "最低信賴度必須介於 0 到 100 之間"
+  },
+  "historyPin": {
+    "message": "釘選"
+  },
+  "historyUnpin": {
+    "message": "取消釘選"
+  },
+  "historyAddNote": {
+    "message": "新增備註"
+  },
+  "historyEditNote": {
+    "message": "編輯備註"
+  },
+  "historyPinnedTip": {
+    "message": "已釘選：清理歷史記錄時會保留"
+  },
+  "historyChangedBadge": {
+    "message": "已變更"
+  },
+  "historyNoteTitle": {
+    "message": "備註"
+  },
+  "historyNotePlaceholder": {
+    "message": "此網頁的備註…"
+  },
+  "historyNoteSaved": {
+    "message": "備註已儲存"
+  },
+  "historyPinnedNotice": {
+    "message": "已釘選"
+  },
+  "historyUnpinnedNotice": {
+    "message": "已取消釘選"
+  },
+  "historyExportDialogTitle": {
+    "message": "匯出歷史記錄"
+  },
+  "historyExportFormat": {
+    "message": "格式"
+  },
+  "historyExportCategory": {
+    "message": "防護"
+  },
+  "historyExportAll": {
+    "message": "全部"
+  },
+  "historyExportPeriod": {
+    "message": "期間"
+  },
+  "historyRangeAll": {
+    "message": "所有時間"
+  },
+  "historyRange7": {
+    "message": "最近 7 天"
+  },
+  "historyRange30": {
+    "message": "最近 30 天"
+  },
+  "historyRange90": {
+    "message": "最近 90 天"
+  },
+  "historyExportDomain": {
+    "message": "網站包含"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "僅限已釘選的網頁"
+  },
+  "historyExportCountFmt": {
+    "message": "將匯出 {1} 筆項目中的 {0} 筆"
+  },
+  "historyExportNone": {
+    "message": "沒有符合這些篩選條件的項目"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "{0} 的防護已變更"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "新增：{0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "移除：{0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "歷史記錄即將額滿"
+  },
+  "historyStorageWarnMessage": {
+    "message": "將移除最舊的項目以騰出空間。請匯出或釘選您想保留的項目。"
   }
 }

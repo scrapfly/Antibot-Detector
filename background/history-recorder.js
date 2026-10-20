@@ -92,8 +92,9 @@ class HistoryRecorder {
    */
   static async shouldSaveToHistory(url, settings, chrome) {
     try {
-      // If duplicate prevention is disabled, always save
-      if (!settings.preventDuplicates) {
+      // If duplicate prevention is disabled, always save. When a duplicate updates the earlier entry
+      // instead of being skipped, the save step finds it, so nothing is blocked here.
+      if (!settings.preventDuplicates || settings.duplicateAction === 'update') {
         return true;
       }
 
@@ -117,7 +118,8 @@ class HistoryRecorder {
 
       const now = Date.now();
       const cutoffTime = now - durationMs;
-      const normalizedKey = this.normalizeDuplicateKey(url, null, duplicateScope);
+      // Compared the way it is stored: cleaned of query strings or secrets when Settings says so
+      const normalizedKey = this.normalizeDuplicateKey(this.storedUrl(url, settings), null, duplicateScope);
       if (!normalizedKey) {
         Logger.debug('UI', `[History] Duplicate pre-check could not normalize key (scope: ${duplicateScope}), allowing save`);
         return true;
@@ -152,6 +154,36 @@ class HistoryRecorder {
     return HistoryRecorder._doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options);
   }
 
+  /**
+   * Was this scan of a private-window tab? A tab that closed before its scan finished cannot be asked:
+   * it counts as private while any private window is open, because it may have been one of its tabs.
+   */
+  static async isIncognitoTab(tabId, chrome) {
+    if (!Number.isInteger(tabId) || tabId < 0) return false;
+    const tab = chrome?.tabs?.get ? await chrome.tabs.get(tabId).catch(() => null) : null;
+    if (tab) return tab.incognito === true;
+    const windows = chrome?.windows?.getAll ? await chrome.windows.getAll().catch(() => []) : [];
+    return (windows || []).some(win => win && win.incognito === true);
+  }
+
+  /** The address as History stores it (Settings → History → Saved addresses). */
+  static storedUrl(url, settings) {
+    return typeof HistoryPolicy !== 'undefined' ? HistoryPolicy.cleanUrl(url, settings && settings.historyUrlMode) : url;
+  }
+
+  /**
+   * The newest entry within the duplicate window for the same page, or -1.
+   * @param {Array} history newest first
+   */
+  static findDuplicateIndex(history, key, cutoffTime, scope) {
+    return history.findIndex((item) => {
+      if (!item) return false;
+      const raw = typeof item.timestamp === 'string' ? new Date(item.timestamp).getTime() : Number(item.timestamp);
+      if ((Number.isFinite(raw) ? raw : 0) < cutoffTime) return false;
+      return this.normalizeDuplicateKey(item.url, item.hostname, scope) === key;
+    });
+  }
+
   static async _doSaveDetectionToHistory(tabId, pageData, detectionResults, chrome, options = {}) {
     const {
       historySettings = null,
@@ -161,6 +193,18 @@ class HistoryRecorder {
     try {
       // Slow lookups first, outside the write queue
       const settings = historySettings || await Utils.getHistorySettings();
+
+      // What History records at all: paused, incognito, ignored sites, fingerprint-only, minimum confidence
+      const hostnameForPolicy = pageData.hostname || UrlUtils.getHostnameFromUrl(pageData.url || '');
+      const incognito = settings.historySkipIncognito !== false && await this.isIncognitoTab(tabId, chrome);
+      const verdict = typeof HistoryPolicy !== 'undefined'
+        ? HistoryPolicy.evaluate({ detections: detectionResults, hostname: hostnameForPolicy, incognito }, settings)
+        : { save: true };
+      if (!verdict.save) {
+        Logger.debug('UI', `[History] Not saved (${verdict.reason}, source: ${source}): ${hostnameForPolicy}`);
+        return false;
+      }
+
       const duplicateScope = settings.duplicateScope || 'full_url';
       const duplicateDuration = Number.isFinite(parseInt(settings.duplicateDuration, 10))
         ? parseInt(settings.duplicateDuration, 10)
@@ -174,45 +218,78 @@ class HistoryRecorder {
         pageData.favicon,
         pageData.url || pageData.hostname
       );
-      const entryUrl = pageData.url || '';
+      const entryUrl = this.storedUrl(pageData.url || '', settings);
       const entryHostname = pageData.hostname || UrlUtils.getHostnameFromUrl(entryUrl);
       const entryTitle = await HistoryRecorder.resolveEntryTitle(tabId, pageData, entryHostname, chrome);
       const duplicateKey = settings.preventDuplicates
-        ? this.normalizeDuplicateKey(pageData.url, pageData.hostname, duplicateScope)
+        ? this.normalizeDuplicateKey(entryUrl, pageData.hostname, duplicateScope)
         : null;
       if (settings.preventDuplicates && !duplicateKey) {
         Logger.debug('UI', `[History] Duplicate save-check could not normalize key (scope: ${duplicateScope}, source: ${source}), allowing save`);
       }
+      // "The same page" for change detection ignores the query string
+      const pageKey = this.normalizeDuplicateKey(entryUrl, entryHostname, 'path');
 
       // One serialized read-modify-write through the shared store
-      const { changed } = await HistoryStore.mutate((history) => {
+      const { changed, bytes, dropped, result } = await HistoryStore.mutate((history) => {
+        const now = Date.now();
+        let duplicateAt = -1;
         if (duplicateKey) {
-          const cutoffTime = Date.now() - FormatUtils.convertToMilliseconds(duplicateDuration, duplicateUnit);
-          if (this.isDuplicateHistoryEntry(history, duplicateKey, cutoffTime, duplicateScope)) {
+          const cutoffTime = now - FormatUtils.convertToMilliseconds(duplicateDuration, duplicateUnit);
+          duplicateAt = this.findDuplicateIndex(history, duplicateKey, cutoffTime, duplicateScope);
+          if (duplicateAt !== -1 && settings.duplicateAction !== 'update') {
             Logger.debug('UI', `History: Skipping duplicate history save within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: ${source}): ${duplicateKey}`);
             return undefined;
           }
         }
 
-        const historyEntry = {
-          id: `detection_${Date.now()}_${tabId}`,
+        // The earlier scan of this page: the duplicate being updated, else the newest entry for the same page
+        const earlier = duplicateAt !== -1
+          ? history[duplicateAt]
+          : (pageKey ? history.find(item => item && this.normalizeDuplicateKey(item.url, item.hostname, 'path') === pageKey) : null);
+        const diff = earlier && typeof HistoryPolicy !== 'undefined'
+          ? HistoryPolicy.diffProtections(earlier.detections, detectionResults)
+          : { added: [], removed: [], changed: false };
+
+        const fresh = {
           url: entryUrl,
           hostname: entryHostname,
           title: entryTitle,
           favicon: normalizedFavicon,
-          timestamp: Date.now(),
+          timestamp: now,
           detections: detectionResults,
           detectionCount: detectionResults.length,
           categories: [...new Set(detectionResults.map(d => d.category))],
           cacheScope: cacheScope
         };
+        // A change since the earlier scan is marked on the entry (the badge in History)
+        if (diff.changed) fresh.changed = { at: now, added: diff.added, removed: diff.removed };
+        const alert = diff.changed && earlier
+          && (settings.historyChangeAlerts === 'all' || (settings.historyChangeAlerts === 'pinned' && earlier.pinned === true))
+          ? { hostname: entryHostname, added: diff.added, removed: diff.removed }
+          : null;
 
-        // Newest first, then the rolling window limit
-        const next = [historyEntry, ...history];
-        return historyLimit > 0 && next.length > historyLimit ? next.slice(0, historyLimit) : next;
+        let next;
+        if (duplicateAt !== -1) {
+          // Update in place: same entry, new scan, moved to the top; the first-seen date, pin and note stay
+          const kept = history[duplicateAt];
+          const updated = Object.assign({}, kept, fresh, { id: kept.id, firstSeen: kept.firstSeen || kept.timestamp });
+          if (!diff.changed) delete updated.changed;
+          next = [updated, ...history.filter((_, i) => i !== duplicateAt)];
+        } else {
+          next = [Object.assign({ id: `detection_${now}_${tabId}` }, fresh), ...history];
+        }
+
+        // Newest first, then the rolling window limit (pinned entries never count against it)
+        return { items: HistoryStore.applyLimit(next, historyLimit), result: { alert } };
       }, chrome.storage.local);
 
-      if (changed) Logger.ui(`History: Saved detection to history for ${pageData.url}`);
+      if (changed) {
+        Logger.ui(`History: Saved detection to history for ${pageData.url}`);
+        // Both run after the write and never fail the save
+        await this.notifyChange(result && result.alert, chrome).catch(() => {});
+        await this.checkStorage(bytes, dropped, chrome).catch(() => {});
+      }
       return changed;
     } catch (error) {
       if (typeof HistoryStore !== 'undefined' && HistoryStore.isQuotaError && HistoryStore.isQuotaError(error)) {
@@ -221,6 +298,56 @@ class HistoryRecorder {
         Logger.error('UI', '[History] Detection save failed', error);
       }
       return false;
+    }
+  }
+
+  /** A notification when a page you scanned before gained or lost a protection (Settings → History). */
+  static async notifyChange(alert, chrome) {
+    if (!alert || !chrome?.notifications?.create) return;
+    const settings = await Utils.getSettings();
+    if (settings.notificationsEnabled === false) return;
+    if (typeof I18n !== 'undefined' && I18n.ready) await I18n.ready();
+    const text = (key, fallback, ...args) => (typeof I18n !== 'undefined' && I18n.format(key, ...args)) || fallback.replace(/\{(\d)\}/g, (_, i) => args[Number(i)]);
+    const parts = [];
+    if (alert.added.length) parts.push(text('historyChangeAlertAddedFmt', 'Added: {0}', alert.added.join(', ')));
+    if (alert.removed.length) parts.push(text('historyChangeAlertRemovedFmt', 'Removed: {0}', alert.removed.join(', ')));
+    chrome.notifications.create(`scrapfly-history-change-${Date.now()}`, {
+      type: 'basic',
+      iconUrl: chrome.runtime.getURL('icons/icon128.png'),
+      title: text('historyChangeAlertTitleFmt', 'Protections changed on {0}', alert.hostname),
+      message: parts.join('. '),
+      priority: 1
+    });
+  }
+
+  /**
+   * History's size limit takes the oldest entries without asking: warn once when the share of storage
+   * it may use is nearly full (or has just removed entries), and again only after it has been emptied below 70%.
+   * @param {number} bytes size of the stored history after this save
+   * @param {number} dropped entries the size limit removed in this save
+   */
+  static async checkStorage(bytes, dropped, chrome) {
+    if (!Number.isFinite(bytes) || typeof HistoryStore === 'undefined') return;
+    const key = 'scrapfly_history_storage_notice';
+    const ratio = bytes / HistoryStore.MAX_BYTES;
+    const state = (await chrome.storage.local.get(key))[key] || {};
+    if (ratio < 0.7 && !dropped) {
+      if (state.warned) await chrome.storage.local.set({ [key]: { warned: false } });
+      return;
+    }
+    if ((ratio >= 0.9 || dropped > 0) && !state.warned) {
+      await chrome.storage.local.set({ [key]: { warned: true, at: Date.now() } });
+      const settings = await Utils.getSettings();
+      if (settings.notificationsEnabled === false || !chrome.notifications?.create) return;
+      if (typeof I18n !== 'undefined' && I18n.ready) await I18n.ready();
+      const text = (k, fallback) => (typeof I18n !== 'undefined' && I18n.get(k)) || fallback;
+      chrome.notifications.create('scrapfly-history-storage', {
+        type: 'basic',
+        iconUrl: chrome.runtime.getURL('icons/icon128.png'),
+        title: text('historyStorageWarnTitle', 'History is almost full'),
+        message: text('historyStorageWarnMessage', 'The oldest entries will be removed to make room. Export or pin what you want to keep.'),
+        priority: 1
+      });
     }
   }
 

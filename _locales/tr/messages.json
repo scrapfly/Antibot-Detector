@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "1 dakikadan 7 güne kadar."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "Geçmiş neleri kaydeder"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Kayıt"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Sayfaları geçmişe kaydet"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Kayıt yapmadan gezinmek için kapatın. Tespit çalışmaya devam eder."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Gizli pencereleri atla"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Gizli pencerelerdeki sayfalar hiçbir zaman kaydedilmez."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Yalnızca parmak izi içeren sayfaları atla"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Bulunan tek şey parmak izi oluşturma ise sayfayı kaydetme."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Kaydetmek için minimum güven (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "Bir sayfa yalnızca en güçlü tespiti bu güven düzeyine ulaştığında kaydedilir. 0, her sayfayı kaydeder."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Kayıtlı adresler"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Tam adresi koru"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Hassas değerleri gizle"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Sorgu dizesini kaldır"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Bir adresteki token'lar ve e-postalar geçmişe, dışa aktarmalara ve paylaşılan bağlantılara girer. Bundan sonra kaydedilen sayfalara uygulanır."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Geçmişin yok saydığı siteler"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "Her satıra bir site; alt alan adları dahildir. Tespit bu sitelerde yine de çalışır."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Tarayıcı kapanınca geçmişi temizle"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Son pencere kapandığında veya bir sonraki açılışta kayıtlı sayfaları kaldırır. Sabitlenen sayfalar kalır."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Korumalar değiştiğinde uyar"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Kapalı"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Yalnızca sabitlenen sayfalar"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Her sayfa"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "Daha önce taradığınız bir sayfa bir koruma kazandığında veya kaybettiğinde bildirim gösterilir."
+  },
+  "settingsDuplicateAction": {
+    "message": "Yinelenen bulunduğunda"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Yeni taramayı atla"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Önceki girdiyi güncelle"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Güncelleme, ilk görülme tarihini, sabitlemeyi ve notu korur; korumalar farklıysa girdiyi değişmiş olarak işaretler."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Depolama ve yedekleme"
+  },
+  "settingsHistoryStorage": {
+    "message": "Kullanılan depolama"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} / {1} kullanıldı · {2} girdi"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "{0} sabitlendi"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "Geçmiş boş."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Neredeyse dolu: yer açmak için en eski girdiler kaldırılacak. Saklamak istediklerinizi dışa aktarın veya sabitleyin."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "Sınırı aşmamak için en eski {0} girdi kaldırıldı; son kaldırma: {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "Otomatik yedekleme"
+  },
+  "settingsBackupOff": {
+    "message": "Kapalı"
+  },
+  "settingsBackupDaily": {
+    "message": "Her gün"
+  },
+  "settingsBackupWeekly": {
+    "message": "Her hafta"
+  },
+  "settingsBackupMonthly": {
+    "message": "Her ay"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Geçmişin bir kopyasını İndirilenler klasörünüze (Scrapfly klasörü içine) yukarıda seçilen dışa aktarma biçiminde kaydeder."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Şimdi yedekle"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Son yedek: {0} ({1} girdi)"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "Henüz yedek yok."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "{0} girdi yedeklendi"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Henüz yedeklenecek bir şey yok"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "Geçmiş yedeklenemedi"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "İndirmelere izin verildiğini kontrol edin, sonra Ayarlar → Geçmiş bölümünde Şimdi yedekle'yi yeniden deneyin."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Minimum güven 0 ile 100 arasında olmalıdır"
+  },
+  "historyPin": {
+    "message": "Sabitle"
+  },
+  "historyUnpin": {
+    "message": "Sabitlemeyi kaldır"
+  },
+  "historyAddNote": {
+    "message": "Not ekle"
+  },
+  "historyEditNote": {
+    "message": "Notu düzenle"
+  },
+  "historyPinnedTip": {
+    "message": "Sabitlendi: geçmiş temizlenirken korunur"
+  },
+  "historyChangedBadge": {
+    "message": "Değişti"
+  },
+  "historyNoteTitle": {
+    "message": "Not"
+  },
+  "historyNotePlaceholder": {
+    "message": "Bu sayfa için bir not…"
+  },
+  "historyNoteSaved": {
+    "message": "Not kaydedildi"
+  },
+  "historyPinnedNotice": {
+    "message": "Sabitlendi"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Sabitleme kaldırıldı"
+  },
+  "historyExportDialogTitle": {
+    "message": "Geçmişi dışa aktar"
+  },
+  "historyExportFormat": {
+    "message": "Biçim"
+  },
+  "historyExportCategory": {
+    "message": "Korumalar"
+  },
+  "historyExportAll": {
+    "message": "Tümü"
+  },
+  "historyExportPeriod": {
+    "message": "Dönem"
+  },
+  "historyRangeAll": {
+    "message": "Tüm zamanlar"
+  },
+  "historyRange7": {
+    "message": "Son 7 gün"
+  },
+  "historyRange30": {
+    "message": "Son 30 gün"
+  },
+  "historyRange90": {
+    "message": "Son 90 gün"
+  },
+  "historyExportDomain": {
+    "message": "Site şunu içerir"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Yalnızca sabitlenen sayfalar"
+  },
+  "historyExportCountFmt": {
+    "message": "{1} girdinin {0} tanesi dışa aktarılacak"
+  },
+  "historyExportNone": {
+    "message": "Bu filtrelerle eşleşen girdi yok"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "{0} sitesinde korumalar değişti"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Eklenen: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Kaldırılan: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "Geçmiş neredeyse dolu"
+  },
+  "historyStorageWarnMessage": {
+    "message": "Yer açmak için en eski girdiler kaldırılacak. Saklamak istediklerinizi dışa aktarın veya sabitleyin."
   }
 }

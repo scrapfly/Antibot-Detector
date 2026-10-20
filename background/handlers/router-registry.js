@@ -26,6 +26,10 @@ function buildMessageHandlerRegistry(context) {
     if (typeof HistoryStore !== 'undefined') {
         HistoryStore.registerHandlers(registry);
     }
+    // "Back up now" from Settings
+    if (typeof HistoryBackup !== 'undefined') {
+        HistoryBackup.registerHandlers(registry);
+    }
 
     return registry;
 }

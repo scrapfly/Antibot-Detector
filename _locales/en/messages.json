@@ -5805,5 +5805,294 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "From 1 minute up to 7 days."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "What History saves",
+    "description": "Group title in Settings → History"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "Recording",
+    "description": "Card title: the rules for which pages History records"
+  },
+  "settingsHistoryEnabled": {
+    "message": "Save pages to History"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "Turn off to browse without recording. Detection keeps working."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "Skip incognito windows"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "Pages from incognito windows are never saved."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "Skip fingerprinting-only pages",
+    "description": "Fingerprinting = browser fingerprinting techniques (canvas, audio...)"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "Don't save a page when fingerprinting is the only thing found."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "Minimum confidence to save (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "A page is saved only when its strongest detection reaches this confidence. 0 saves every page."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "Saved addresses",
+    "description": "How the web address of a saved page is stored"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "Keep the full address",
+    "description": "Option"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "Hide sensitive values",
+    "description": "Option: values of parameters such as token or email are replaced by ***"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "Remove the query string",
+    "description": "Option: everything after the ? in a web address is removed"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "Tokens and emails in an address end up in History, exports and shared links. Applies to pages saved from now on."
+  },
+  "settingsHistoryExcluded": {
+    "message": "Sites History ignores"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "One site per line; its subdomains are included. Detection still runs on them."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "Clear History when the browser closes"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "Removes saved pages when the last window closes, or at the next start. Pinned pages stay."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "Alert when protections change"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "Off",
+    "description": "Option"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "Pinned pages only",
+    "description": "Option: only pages the user pinned in History"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "Every page",
+    "description": "Option"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "A notification when a page you scanned before gains or loses a protection."
+  },
+  "settingsDuplicateAction": {
+    "message": "When a duplicate is found"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "Skip the new scan",
+    "description": "Option"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "Update the earlier entry",
+    "description": "Option"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "Updating keeps the first-seen date, pin and note, and marks the entry as changed when its protections differ."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "Storage and backup",
+    "description": "Group title in Settings → History"
+  },
+  "settingsHistoryStorage": {
+    "message": "Storage used",
+    "description": "Label of a usage bar"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{0} of {1} used · {2} entries",
+    "description": "{0} = size used (2.1 MB), {1} = size limit (6 MB), {2} = number of saved pages"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "{0} pinned",
+    "description": "{0} = number of pinned pages; appended to the usage line"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "History is empty."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "Almost full: the oldest entries will be removed to make room. Export or pin what you want to keep."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "{0} oldest entries were removed to stay within the limit, the last time on {1}.",
+    "description": "{0} = number removed so far, {1} = date and time"
+  },
+  "settingsHistoryBackup": {
+    "message": "Automatic backup"
+  },
+  "settingsBackupOff": {
+    "message": "Off",
+    "description": "Option"
+  },
+  "settingsBackupDaily": {
+    "message": "Every day",
+    "description": "Option"
+  },
+  "settingsBackupWeekly": {
+    "message": "Every week",
+    "description": "Option"
+  },
+  "settingsBackupMonthly": {
+    "message": "Every month",
+    "description": "Option"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "Back up now",
+    "description": "Button"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "Last backup: {0} ({1} entries)",
+    "description": "{0} = date and time, {1} = number of entries"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "No backup yet."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "Backed up {0} entries",
+    "description": "Toast. {0} = number of entries"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "Nothing to back up yet",
+    "description": "Toast"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "History backup failed"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "Check that downloads are allowed, then try Back up now in Settings → History.",
+    "description": "Notification text"
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "Minimum confidence must be between 0 and 100"
+  },
+  "historyPin": {
+    "message": "Pin",
+    "description": "Menu item: keep this page when History is cleaned up"
+  },
+  "historyUnpin": {
+    "message": "Unpin",
+    "description": "Menu item"
+  },
+  "historyAddNote": {
+    "message": "Add note",
+    "description": "Menu item"
+  },
+  "historyEditNote": {
+    "message": "Edit note",
+    "description": "Menu item"
+  },
+  "historyPinnedTip": {
+    "message": "Pinned: kept when History is cleaned up",
+    "description": "Tooltip of the pin icon on a saved page"
+  },
+  "historyChangedBadge": {
+    "message": "Changed",
+    "description": "Badge on a saved page whose protections changed since the earlier scan"
+  },
+  "historyNoteTitle": {
+    "message": "Note",
+    "description": "Dialog title"
+  },
+  "historyNotePlaceholder": {
+    "message": "A note for this page…"
+  },
+  "historyNoteSaved": {
+    "message": "Note saved",
+    "description": "Toast"
+  },
+  "historyPinnedNotice": {
+    "message": "Pinned",
+    "description": "Toast"
+  },
+  "historyUnpinnedNotice": {
+    "message": "Unpinned",
+    "description": "Toast"
+  },
+  "historyExportDialogTitle": {
+    "message": "Export history",
+    "description": "Dialog title"
+  },
+  "historyExportFormat": {
+    "message": "Format"
+  },
+  "historyExportCategory": {
+    "message": "Protections",
+    "description": "Filter label: which kind of protection"
+  },
+  "historyExportAll": {
+    "message": "All",
+    "description": "Filter option"
+  },
+  "historyExportPeriod": {
+    "message": "Period",
+    "description": "Filter label: how far back"
+  },
+  "historyRangeAll": {
+    "message": "All time",
+    "description": "Filter option"
+  },
+  "historyRange7": {
+    "message": "Last 7 days",
+    "description": "Filter option"
+  },
+  "historyRange30": {
+    "message": "Last 30 days",
+    "description": "Filter option"
+  },
+  "historyRange90": {
+    "message": "Last 90 days",
+    "description": "Filter option"
+  },
+  "historyExportDomain": {
+    "message": "Site contains",
+    "description": "Filter label: part of a website address"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "Pinned pages only",
+    "description": "Checkbox"
+  },
+  "historyExportCountFmt": {
+    "message": "{0} of {1} entries will be exported",
+    "description": "{0} = matching entries, {1} = all entries"
+  },
+  "historyExportNone": {
+    "message": "No entries match these filters"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "Protections changed on {0}",
+    "description": "Notification title. {0} = website"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "Added: {0}",
+    "description": "{0} = names of protections found now that were not before"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "Removed: {0}",
+    "description": "{0} = names of protections found before and not now"
+  },
+  "historyStorageWarnTitle": {
+    "message": "History is almost full",
+    "description": "Notification title"
+  },
+  "historyStorageWarnMessage": {
+    "message": "The oldest entries will be removed to make room. Export or pin what you want to keep.",
+    "description": "Notification text"
   }
 }

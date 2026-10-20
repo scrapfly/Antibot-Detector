@@ -80,14 +80,24 @@
       "historyAutoDeleteDays": 30,
       "exportFormat": "json",
       "includeTimestamps": true,
-      "historyBypassCache": false
+      "historyBypassCache": false,
+      "historyEnabled": true,
+      "historySkipIncognito": true,
+      "historyMinConfidence": 0,
+      "historySkipFingerprintOnly": false,
+      "historyUrlMode": "full",
+      "historyExcludedDomains": [],
+      "historyChangeAlerts": "off",
+      "historyBackup": "off",
+      "historyClearOnClose": false
     },
 
     "duplicatePrevention": {
       "preventDuplicates": false,
       "duplicateScope": "full_url",
       "duplicateDuration": 1,
-      "duplicateUnit": "hours"
+      "duplicateUnit": "hours",
+      "duplicateAction": "skip"
     },
 
     "updates": {

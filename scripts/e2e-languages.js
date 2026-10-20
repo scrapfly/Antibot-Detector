@@ -68,12 +68,15 @@ const detections = [
     name: 'Canvas Fingerprint', category: 'fingerprint', confidence: 45, difficulty: 'Low',
     matches: [{ type: 'js_hooks', value: 'HTMLCanvasElement.prototype.toDataURL', baseConfidence: 45, confidence: 45 }] }
 ];
-const historyItem = (id, host, ageDays, names) => ({
+const historyItem = (id, host, ageDays, names, extra = {}) => ({
   id, url: `https://${host}/`, hostname: host, title: `${host} home page`, timestamp: NOW - ageDays * 86400000,
-  detections: names.map(([n, c, conf]) => ({ detector: { id: n.toLowerCase().replace(/\W+/g, '-'), name: n, difficulty: conf > 80 ? 'High' : 'Medium' }, name: n, category: c, confidence: conf, matches: [] }))
+  detections: names.map(([n, c, conf]) => ({ detector: { id: n.toLowerCase().replace(/\W+/g, '-'), name: n, difficulty: conf > 80 ? 'High' : 'Medium' }, name: n, category: c, confidence: conf, matches: [] })),
+  ...extra
 });
 const historySeed = JSON.stringify({ items: [
-  historyItem('h1', 'shop.example.test', 0, [['Cloudflare Bot Management', 'antibot', 100], ['Google reCAPTCHA', 'captcha', 90], ['Canvas Fingerprint', 'fingerprint', 45]]),
+  // Pinned, with a note and a Changed badge: the card shows all three
+  historyItem('h1', 'shop.example.test', 0, [['Cloudflare Bot Management', 'antibot', 100], ['Google reCAPTCHA', 'captcha', 90], ['Canvas Fingerprint', 'fingerprint', 45]],
+    { pinned: true, note: 'Checkout A', changed: { at: NOW - 3600000, added: ['Cloudflare Bot Management'], removed: ['DataDome'] } }),
   historyItem('h2', 'news.example.test', 1, [['Akamai Bot Manager', 'antibot', 95], ['Cloudflare Turnstile', 'captcha', 100]]),
   historyItem('h3', 'bank.example.test', 2, [['PerimeterX', 'antibot', 90], ['hCaptcha', 'captcha', 95]]),
   historyItem('h4', 'docs.example.test', 5, [['Google BotGuard', 'antibot', 80]]),
@@ -232,6 +235,22 @@ async function run() {
       await tab('history'); await audit('history');
       await audit('history-details', async () => { await click('.history-item'); await sleep(500); });
       await closeModals();
+      // The "…" menu (Unpin, Edit note on the pinned first card), the note dialog and the export dialog
+      await audit('history-menu', async () => { await click('.history-item .history-more-btn'); await sleep(300); });
+      await page.keyboard.press('Escape');
+      const closeDialog = async () => { await page.evaluate(() => document.querySelector('.notification-confirm .notification-btn-cancel')?.click()); await sleep(450); };
+      await audit('history-note', async () => {
+        await click('.history-item .history-more-btn'); await sleep(250);
+        await click('#historyItemMenu [data-action="note"]');
+        await page.waitForSelector('.notification-confirm textarea', { timeout: 8000 }); await sleep(450);
+      });
+      await closeDialog();
+      await audit('history-export', async () => {
+        await click('#historyMenuBtn'); await sleep(250);
+        await click('#exportHistoryBtn');
+        await page.waitForSelector('.notification-confirm .history-dialog-form', { timeout: 8000 }); await sleep(450);
+      });
+      await closeDialog();
       await tab('rules'); await audit('rules');
       await audit('rules-editor', async () => { await click('#addDetectorBtn'); await page.waitForSelector('#saveRuleEdit', { state: 'attached', timeout: 8000 }); await sleep(400); });
       await closeModals();

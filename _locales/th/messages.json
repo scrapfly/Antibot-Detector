@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "ตั้งแต่ 1 นาทีถึง 7 วัน"
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "สิ่งที่ประวัติจะบันทึก"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "การบันทึก"
+  },
+  "settingsHistoryEnabled": {
+    "message": "บันทึกหน้าเว็บลงในประวัติ"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "ปิดเพื่อท่องเว็บโดยไม่บันทึก การตรวจจับยังทำงานตามปกติ"
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "ข้ามหน้าต่างที่ไม่ระบุตัวตน"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "จะไม่บันทึกหน้าจากหน้าต่างที่ไม่ระบุตัวตนเลย"
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "ข้ามหน้าที่มีเฉพาะ fingerprinting"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "ไม่บันทึกหน้าเมื่อพบเพียง fingerprinting อย่างเดียว"
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "ความมั่นใจขั้นต่ำเพื่อบันทึก (%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "จะบันทึกหน้าก็ต่อเมื่อการตรวจจับที่มีความมั่นใจสูงสุดของหน้านั้นถึงค่านี้ ตั้งเป็น 0 เพื่อบันทึกทุกหน้า"
+  },
+  "settingsHistoryUrlMode": {
+    "message": "URL ที่บันทึก"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "เก็บ URL แบบเต็ม"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "ซ่อนค่าที่ละเอียดอ่อน"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "ลบ query string"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "โทเค็นและอีเมลใน URL จะไปอยู่ในประวัติ ไฟล์ส่งออก และลิงก์ที่แชร์ ใช้กับหน้าที่บันทึกจากนี้ไปเท่านั้น"
+  },
+  "settingsHistoryExcluded": {
+    "message": "ไซต์ที่ประวัติจะข้าม"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "หนึ่งไซต์ต่อบรรทัด รวมโดเมนย่อยด้วย ยังคงตรวจจับบนไซต์เหล่านี้ตามปกติ"
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "ล้างประวัติเมื่อปิดเบราว์เซอร์"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "ลบหน้าที่บันทึกไว้เมื่อปิดหน้าต่างสุดท้าย หรือเมื่อเปิดเบราว์เซอร์ครั้งถัดไป หน้าที่ปักหมุดจะยังอยู่"
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "แจ้งเตือนเมื่อระบบป้องกันเปลี่ยนแปลง"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "ปิด"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "เฉพาะหน้าที่ปักหมุด"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "ทุกหน้า"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "แจ้งเตือนเมื่อหน้าที่คุณเคยสแกนมีระบบป้องกันเพิ่มขึ้นหรือหายไป"
+  },
+  "settingsDuplicateAction": {
+    "message": "เมื่อพบรายการซ้ำ"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "ข้ามการสแกนใหม่"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "อัปเดตรายการก่อนหน้า"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "การอัปเดตจะเก็บวันที่พบครั้งแรก การปักหมุด และโน้ตไว้ และทำเครื่องหมายรายการว่าเปลี่ยนแปลงเมื่อระบบป้องกันต่างไป"
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "พื้นที่เก็บข้อมูลและการสำรองข้อมูล"
+  },
+  "settingsHistoryStorage": {
+    "message": "พื้นที่ที่ใช้ไป"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "ใช้ไป {0} จาก {1} · {2} รายการ"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "ปักหมุด: {0}"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "ประวัติว่างเปล่า"
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "ใกล้เต็มแล้ว: รายการที่เก่าที่สุดจะถูกลบเพื่อเว้นพื้นที่ ส่งออกหรือปักหมุดรายการที่ต้องการเก็บไว้"
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "ลบรายการที่เก่าที่สุดไปแล้ว {0} รายการเพื่อให้อยู่ในขีดจำกัด ครั้งล่าสุดเมื่อ {1}"
+  },
+  "settingsHistoryBackup": {
+    "message": "สำรองข้อมูลอัตโนมัติ"
+  },
+  "settingsBackupOff": {
+    "message": "ปิด"
+  },
+  "settingsBackupDaily": {
+    "message": "ทุกวัน"
+  },
+  "settingsBackupWeekly": {
+    "message": "ทุกสัปดาห์"
+  },
+  "settingsBackupMonthly": {
+    "message": "ทุกเดือน"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "บันทึกสำเนาของประวัติลงในโฟลเดอร์ดาวน์โหลดของคุณ (ในโฟลเดอร์ Scrapfly) ในรูปแบบการส่งออกที่เลือกไว้ด้านบน"
+  },
+  "settingsHistoryBackupNow": {
+    "message": "สำรองข้อมูลทันที"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "สำรองข้อมูลล่าสุด: {0} ({1} รายการ)"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "ยังไม่เคยสำรองข้อมูล"
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "สำรองข้อมูลแล้ว {0} รายการ"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "ยังไม่มีอะไรให้สำรองข้อมูล"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "สำรองข้อมูลประวัติไม่สำเร็จ"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "ตรวจสอบว่าอนุญาตการดาวน์โหลดแล้ว จากนั้นลองกด \"สำรองข้อมูลทันที\" ในการตั้งค่า → ประวัติ"
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "ความมั่นใจขั้นต่ำต้องอยู่ระหว่าง 0 ถึง 100"
+  },
+  "historyPin": {
+    "message": "ปักหมุด"
+  },
+  "historyUnpin": {
+    "message": "เลิกปักหมุด"
+  },
+  "historyAddNote": {
+    "message": "เพิ่มโน้ต"
+  },
+  "historyEditNote": {
+    "message": "แก้ไขโน้ต"
+  },
+  "historyPinnedTip": {
+    "message": "ปักหมุดแล้ว: จะเก็บไว้เมื่อล้างประวัติ"
+  },
+  "historyChangedBadge": {
+    "message": "เปลี่ยนแปลง"
+  },
+  "historyNoteTitle": {
+    "message": "โน้ต"
+  },
+  "historyNotePlaceholder": {
+    "message": "โน้ตสำหรับหน้านี้…"
+  },
+  "historyNoteSaved": {
+    "message": "บันทึกโน้ตแล้ว"
+  },
+  "historyPinnedNotice": {
+    "message": "ปักหมุดแล้ว"
+  },
+  "historyUnpinnedNotice": {
+    "message": "เลิกปักหมุดแล้ว"
+  },
+  "historyExportDialogTitle": {
+    "message": "ส่งออกประวัติ"
+  },
+  "historyExportFormat": {
+    "message": "รูปแบบ"
+  },
+  "historyExportCategory": {
+    "message": "ระบบป้องกัน"
+  },
+  "historyExportAll": {
+    "message": "ทั้งหมด"
+  },
+  "historyExportPeriod": {
+    "message": "ช่วงเวลา"
+  },
+  "historyRangeAll": {
+    "message": "ทุกช่วงเวลา"
+  },
+  "historyRange7": {
+    "message": "7 วันที่ผ่านมา"
+  },
+  "historyRange30": {
+    "message": "30 วันที่ผ่านมา"
+  },
+  "historyRange90": {
+    "message": "90 วันที่ผ่านมา"
+  },
+  "historyExportDomain": {
+    "message": "ไซต์ที่มีข้อความ"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "เฉพาะหน้าที่ปักหมุด"
+  },
+  "historyExportCountFmt": {
+    "message": "จะส่งออก {0} จาก {1} รายการ"
+  },
+  "historyExportNone": {
+    "message": "ไม่มีรายการที่ตรงกับตัวกรองเหล่านี้"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "ระบบป้องกันของ {0} เปลี่ยนแปลง"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "เพิ่ม: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "นำออก: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "ประวัติใกล้เต็ม"
+  },
+  "historyStorageWarnMessage": {
+    "message": "รายการที่เก่าที่สุดจะถูกลบเพื่อเว้นพื้นที่ ส่งออกหรือปักหมุดรายการที่ต้องการเก็บไว้"
   }
 }

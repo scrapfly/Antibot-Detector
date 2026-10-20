@@ -1003,6 +1003,80 @@
                   <span class="slider"></span>
                 </label>
               </div>
+              <div class="setting-row setting-row--switch-below">
+                <span class="setting-row-label" data-i18n="settingsHistoryClearOnClose">Clear History when the browser closes</span>
+                <p class="setting-row-desc" data-i18n="settingsHistoryClearOnCloseDesc">Removes saved pages when the last window closes, or at the next start. Pinned pages stay.</p>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historyClearOnClose">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyChangeAlerts" data-i18n="settingsHistoryChangeAlerts">Alert when protections change</label>
+                <select id="historyChangeAlerts" class="select-field">
+                  <option value="off" data-i18n="settingsHistoryAlertsOff">Off</option>
+                  <option value="pinned" data-i18n="settingsHistoryAlertsPinned">Pinned pages only</option>
+                  <option value="all" data-i18n="settingsHistoryAlertsAll">Every page</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryChangeAlertsDesc">A notification when a page you scanned before gains or loses a protection.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- What History saves -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title" data-i18n="settingsGroupHistoryRecording">What History saves</div>
+
+          <div class="settings-card">
+            <div class="settings-card-head">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+              <span data-i18n="settingsCardHistoryRecording">Recording</span>
+            </div>
+            <div class="settings-card-body">
+              <div class="setting-row setting-row--switch-below">
+                <span class="setting-row-label" data-i18n="settingsHistoryEnabled">Save pages to History</span>
+                <p class="setting-row-desc" data-i18n="settingsHistoryEnabledDesc">Turn off to browse without recording. Detection keeps working.</p>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historyEnabled" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-row setting-row--switch-below">
+                <span class="setting-row-label" data-i18n="settingsHistorySkipIncognito">Skip incognito windows</span>
+                <p class="setting-row-desc" data-i18n="settingsHistorySkipIncognitoDesc">Pages from incognito windows are never saved.</p>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historySkipIncognito" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-row setting-row--switch-below">
+                <span class="setting-row-label" data-i18n="settingsHistorySkipFingerprintOnly">Skip fingerprinting-only pages</span>
+                <p class="setting-row-desc" data-i18n="settingsHistorySkipFingerprintOnlyDesc">Don't save a page when fingerprinting is the only thing found.</p>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historySkipFingerprintOnly">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyMinConfidence" data-i18n="settingsHistoryMinConfidence">Minimum confidence to save (%)</label>
+                <input type="number" id="historyMinConfidence" class="input-field input-field--short" min="0" max="100" value="0">
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryMinConfidenceDesc">A page is saved only when its strongest detection reaches this confidence. 0 saves every page.</p>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyUrlMode" data-i18n="settingsHistoryUrlMode">Saved addresses</label>
+                <select id="historyUrlMode" class="select-field">
+                  <option value="full" data-i18n="settingsHistoryUrlFull">Keep the full address</option>
+                  <option value="mask" data-i18n="settingsHistoryUrlMask">Hide sensitive values</option>
+                  <option value="path" data-i18n="settingsHistoryUrlPath">Remove the query string</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryUrlModeDesc">Tokens and emails in an address end up in History, exports and shared links. Applies to pages saved from now on.</p>
+              <div class="setting-row">
+                <label class="setting-row-label" for="historyExcludedDomains" data-i18n="settingsHistoryExcluded">Sites History ignores</label>
+                <textarea id="historyExcludedDomains" class="textarea-field textarea-field--mono" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="example.com" aria-describedby="historyExcludedHint"></textarea>
+                <p class="setting-row-hint" id="historyExcludedHint" data-i18n="settingsHistoryExcludedDesc">One site per line; its subdomains are included. Detection still runs on them.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1046,6 +1120,14 @@
                   </select>
                 </div>
               </div>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="duplicateAction" data-i18n="settingsDuplicateAction">When a duplicate is found</label>
+                <select id="duplicateAction" class="select-field">
+                  <option value="skip" data-i18n="settingsDuplicateActionSkip">Skip the new scan</option>
+                  <option value="update" data-i18n="settingsDuplicateActionUpdate">Update the earlier entry</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsDuplicateActionDesc">Updating keeps the first-seen date, pin and note, and marks the entry as changed when its protections differ.</p>
               <div class="duplicate-info-box">
                 <strong data-i18n="settingsHowItWorks">How it works:</strong>
                 <p data-i18n="settingsHowItWorksDesc">Prevents duplicate history entries for the same URL within the time window.</p>
@@ -1054,6 +1136,38 @@
                   <li data-i18n="settingsDuplicateDomainBullet">Domain: Same domain (different paths counted as same)</li>
                   <li data-i18n="settingsDuplicatePathBullet">Path: Same domain+path (ignores query params)</li>
                 </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Storage and backup -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title" data-i18n="settingsGroupHistoryStorage">Storage and backup</div>
+
+          <div class="settings-card" id="historyStorageCard">
+            <div class="settings-card-body">
+              <div class="setting-row">
+                <span class="setting-row-label" data-i18n="settingsHistoryStorage">Storage used</span>
+                <div class="history-meter" id="historyMeter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="historyMeterText">
+                  <span class="history-meter-fill" id="historyMeterFill"></span>
+                </div>
+                <p class="setting-row-hint" id="historyMeterText"></p>
+                <p class="setting-row-hint history-meter-note" id="historyMeterNote" hidden></p>
+              </div>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyBackup" data-i18n="settingsHistoryBackup">Automatic backup</label>
+                <select id="historyBackup" class="select-field">
+                  <option value="off" data-i18n="settingsBackupOff">Off</option>
+                  <option value="daily" data-i18n="settingsBackupDaily">Every day</option>
+                  <option value="weekly" data-i18n="settingsBackupWeekly">Every week</option>
+                  <option value="monthly" data-i18n="settingsBackupMonthly">Every month</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryBackupDesc">Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above.</p>
+              <div class="setting-row setting-row--inline">
+                <span class="setting-row-hint history-backup-last" id="historyBackupLast"></span>
+                <button type="button" id="historyBackupNowBtn" class="action-btn action-btn-outline" data-i18n="settingsHistoryBackupNow">Back up now</button>
               </div>
             </div>
           </div>

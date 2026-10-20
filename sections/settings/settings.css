@@ -2807,3 +2807,62 @@ input[type="file"] {
 #settingsModal .settings-card.is-collapsed > [role="button"] {
   border-bottom-color: transparent;
 }
+
+/* ============================================
+   HISTORY: what it saves, storage meter, backup
+   ============================================ */
+
+/* A hint under a control: same voice as .setting-row-desc, in the flow of the rows */
+#settingsModal .setting-row-hint {
+  margin: -4px 0 10px 0;
+  font-size: 9.5px;
+  line-height: 13px;
+  color: var(--settings-text-dim);
+}
+
+#settingsModal .history-meter {
+  height: 8px;
+  margin: 6px 0 6px;
+  border-radius: 999px;
+  background: var(--bg-primary);
+  border: 1px solid var(--settings-border);
+  overflow: hidden;
+}
+
+#settingsModal .history-meter-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+#settingsModal .history-meter.is-warn .history-meter-fill {
+  background: var(--warning);
+}
+
+#settingsModal .history-meter.is-full .history-meter-fill {
+  background: var(--danger);
+}
+
+#settingsModal .history-meter-note {
+  margin-top: 0;
+  color: var(--warning);
+}
+
+#settingsModal .history-backup-last {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+#settingsModal #historyBackupNowBtn {
+  flex: 0 0 auto;
+}
+
+#settingsModal #historyExcludedDomains {
+  width: 100%;
+  min-height: 64px;
+  resize: vertical;
+}

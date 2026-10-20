@@ -1,0 +1,335 @@
+const { test } = require('node:test');
+const assert = require('node:assert');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+
+// What History records, and how: the rules of Settings → History → "What History saves"
+// (pause, private windows, ignored sites, minimum confidence, fingerprint-only, saved addresses),
+// updating an earlier entry, the "Changed" mark and its alerts, and the storage warning.
+// The real worker files run in a vm context, like the extension's service worker.
+
+const root = path.join(__dirname, '..');
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+
+const HOUR = 3600000;
+const START = Date.UTC(2026, 9, 19, 9, 0, 0);
+
+const antibot = (name, confidence = 90) => ({ detector: { name }, category: 'Anti-Bot', confidence });
+const captcha = (name, confidence = 90) => ({ detector: { name }, category: 'CAPTCHA', confidence });
+const fingerprint = (name, confidence = 40) => ({ detector: { name }, category: 'Fingerprint', confidence });
+
+function makeWorld(options = {}) {
+  const store = {};
+  const notes = [];
+  const clock = { t: START };
+  const tabs = new Map();
+  let windows = [];
+  const storage = {
+    get: async (keys) => Object.fromEntries([].concat(keys).filter(k => k in store).map(k => [k, store[k]])),
+    set: async (obj) => { Object.assign(store, obj); },
+    remove: async (keys) => { for (const k of [].concat(keys)) delete store[k]; }
+  };
+  class FakeDate extends Date {
+    constructor(...args) { if (args.length) super(...args); else super(clock.t); }
+    static now() { return clock.t; }
+  }
+  const settingsState = { notificationsEnabled: true };
+  const sw = {
+    console, setTimeout, clearTimeout, JSON, Promise, Math, Set, Map, URL, Date: FakeDate,
+    Logger: new Proxy({}, { get: () => () => {} }),
+    Utils: {
+      getHistorySettings: async () => ({ historyEnabled: true, historyLimit: 0, preventDuplicates: false, ...options.settings }),
+      getSettings: async () => settingsState,
+      getCacheScope: async () => 'domain'
+    },
+    UrlUtils: { normalizeFaviconForStorage: (f) => f || '', getHostnameFromUrl: (u) => { try { return new URL(u).hostname; } catch (_) { return ''; } } },
+    FormatUtils: { convertToMilliseconds: (n, unit) => n * ({ minutes: 60000, hours: HOUR, days: 24 * HOUR }[unit] || 0) },
+    chrome: {
+      storage: { local: storage },
+      runtime: { getURL: (p) => `chrome-extension://abc/${p}` },
+      tabs: { get: async (id) => { if (!tabs.has(id)) throw new Error('No tab'); return tabs.get(id); } },
+      windows: { getAll: async () => windows },
+      notifications: { create: (id, opts) => notes.push({ id, ...opts }) }
+    }
+  };
+  sw.self = sw; sw.globalThis = sw;
+  vm.createContext(sw);
+  vm.runInContext(read('modules/core/history-store.js'), sw);
+  vm.runInContext(read('modules/core/history-policy.js'), sw);
+  vm.runInContext(read('background/history-recorder.js') + '\n;globalThis.HistoryRecorder = HistoryRecorder;', sw);
+
+  const items = () => JSON.parse(store.scrapfly_history || '{"items":[]}').items;
+  const save = (url, detections, settings = {}, tabId = 1) => {
+    let host = '';
+    try { host = new URL(url).hostname; } catch (_) { /* leave empty */ }
+    if (!tabs.has(tabId) && !options.closedTabs) tabs.set(tabId, { id: tabId, url, title: `Title of ${host}`, incognito: false });
+    return sw.HistoryRecorder.saveDetectionToHistory(tabId, { url, hostname: host, title: host },
+      detections, sw.chrome, { source: 'test', historySettings: { historyEnabled: true, historyLimit: 0, preventDuplicates: false, ...settings } });
+  };
+  return {
+    sw, store, notes, items, save, clock, tabs,
+    advance: (ms) => { clock.t += ms; },
+    setWindows: (w) => { windows = w; },
+    settingsState
+  };
+}
+
+test('a page with detections is recorded with its address, title and protections', async () => {
+  const w = makeWorld();
+  assert.strictEqual(await w.save('https://shop.example.com/a?x=1', [antibot('Cloudflare'), captcha('reCAPTCHA')]), true);
+  const [item] = w.items();
+  assert.strictEqual(item.url, 'https://shop.example.com/a?x=1');
+  assert.strictEqual(item.hostname, 'shop.example.com');
+  assert.strictEqual(item.title, 'Title of shop.example.com');
+  assert.strictEqual(item.detectionCount, 2);
+  assert.deepStrictEqual(item.categories.sort(), ['Anti-Bot', 'CAPTCHA']);
+  assert.ok(item.id.startsWith('detection_'));
+  assert.ok(!('changed' in item) && !('pinned' in item));
+});
+
+test('Pause History: nothing is recorded while the master switch is off', async () => {
+  const w = makeWorld();
+  assert.strictEqual(await w.save('https://a.com/', [antibot('A')], { historyEnabled: false }), false);
+  assert.deepStrictEqual(w.items(), []);
+  assert.strictEqual(await w.save('https://a.com/', [antibot('A')], { historyEnabled: true }), true);
+});
+
+test('private windows are skipped by default and recorded when Settings allows it', async () => {
+  const w = makeWorld();
+  w.tabs.set(7, { id: 7, url: 'https://secret.example/', title: 'S', incognito: true });
+  assert.strictEqual(await w.save('https://secret.example/', [antibot('A')], {}, 7), false);
+  assert.strictEqual(await w.save('https://secret.example/', [antibot('A')], { historySkipIncognito: true }, 7), false);
+  assert.deepStrictEqual(w.items(), []);
+  assert.strictEqual(await w.save('https://secret.example/', [antibot('A')], { historySkipIncognito: false }, 7), true);
+  assert.strictEqual(w.items().length, 1);
+  // A normal tab is always recorded
+  w.tabs.set(8, { id: 8, url: 'https://open.example/', title: 'O', incognito: false });
+  assert.strictEqual(await w.save('https://open.example/', [antibot('A')], { historySkipIncognito: true }, 8), true);
+});
+
+test('a tab that closed mid-scan counts as private only while a private window is open', async () => {
+  const w = makeWorld({ closedTabs: true });
+  w.setWindows([{ id: 1, incognito: false }, { id: 2, incognito: true }]);
+  assert.strictEqual(await w.save('https://gone.example/', [antibot('A')], {}, 99), false, 'it may have been a private tab');
+  w.setWindows([{ id: 1, incognito: false }]);
+  assert.strictEqual(await w.save('https://gone.example/', [antibot('A')], {}, 99), true);
+  w.setWindows([{ id: 2, incognito: true }]);
+  assert.strictEqual(await w.save('https://gone2.example/', [antibot('A')], { historySkipIncognito: false }, 99), true, 'unless private pages are allowed');
+});
+
+test('ignored sites, and their subdomains, are not recorded', async () => {
+  const w = makeWorld();
+  const s = { historyExcludedDomains: ['bank.com', 'intranet.local'] };
+  assert.strictEqual(await w.save('https://bank.com/', [antibot('A')], s), false);
+  assert.strictEqual(await w.save('https://login.bank.com/x', [antibot('A')], s), false);
+  assert.strictEqual(await w.save('https://wiki.intranet.local/', [antibot('A')], s), false);
+  assert.strictEqual(await w.save('https://bank.com.evil.io/', [antibot('A')], s), true);
+  assert.strictEqual(await w.save('https://notbank.com/', [antibot('A')], s), true);
+  assert.deepStrictEqual(w.items().map(i => i.hostname), ['notbank.com', 'bank.com.evil.io']);
+});
+
+test('minimum confidence: a page whose strongest detection is below it is not recorded', async () => {
+  const w = makeWorld();
+  const s = { historyMinConfidence: 60 };
+  assert.strictEqual(await w.save('https://weak.com/', [antibot('A', 30), captcha('C', 59)], s), false);
+  assert.strictEqual(await w.save('https://exact.com/', [antibot('A', 30), captcha('C', 60)], s), true);
+  assert.strictEqual(await w.save('https://strong.com/', [antibot('A', 95)], s), true);
+  assert.deepStrictEqual(w.items().map(i => i.hostname), ['strong.com', 'exact.com']);
+});
+
+test('skip fingerprint-only pages: a page with an anti-bot or CAPTCHA is still recorded', async () => {
+  const w = makeWorld();
+  const s = { historySkipFingerprintOnly: true };
+  assert.strictEqual(await w.save('https://fp.com/', [fingerprint('Canvas'), fingerprint('WebGL')], s), false);
+  assert.strictEqual(await w.save('https://mixed.com/', [fingerprint('Canvas'), captcha('hCaptcha', 20)], s), true);
+  assert.strictEqual(await w.save('https://fp.com/', [fingerprint('Canvas')], {}), true, 'off by default');
+});
+
+test('saved addresses: full, masked or path only', async () => {
+  const w = makeWorld();
+  const url = 'https://user:pw@example.com/cart?q=shoes&token=abc&session_id=9#top';
+  await w.save(url, [antibot('A')], { historyUrlMode: 'full' });
+  await w.save(url, [antibot('A')], { historyUrlMode: 'mask' });
+  await w.save(url, [antibot('A')], { historyUrlMode: 'path' });
+  assert.deepStrictEqual(w.items().map(i => i.url).reverse(), [
+    url,
+    'https://example.com/cart?q=shoes&token=***&session_id=***',
+    'https://example.com/cart'
+  ]);
+  assert.deepStrictEqual([...new Set(w.items().map(i => i.hostname))], ['example.com']);
+});
+
+test('duplicates are compared by the address as it is stored', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours', historyUrlMode: 'mask' };
+  assert.strictEqual(await w.save('https://e.com/p?token=aaa', [antibot('A')], s), true);
+  assert.strictEqual(await w.save('https://e.com/p?token=bbb', [antibot('A')], s), false, 'only the secret differs: same page');
+  assert.strictEqual(await w.save('https://e.com/p?token=ccc&page=2', [antibot('A')], s), true);
+  assert.strictEqual(w.items().length, 2);
+  assert.strictEqual(await w.sw.HistoryRecorder.shouldSaveToHistory('https://e.com/p?token=zzz', s, w.sw.chrome), false);
+});
+
+test('duplicate action "update": the earlier entry is refreshed, moved to the top and keeps its pin and note', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours', duplicateAction: 'update' };
+  await w.save('https://a.com/', [antibot('Cloudflare')], s);
+  w.advance(1000);
+  await w.save('https://b.com/', [antibot('Akamai')], s);
+  const first = w.items()[1];
+  // Pin and annotate the older entry the way the History tab does
+  const stored = JSON.parse(w.store.scrapfly_history);
+  stored.items[1].pinned = true;
+  stored.items[1].note = 'watch this';
+  w.store.scrapfly_history = JSON.stringify(stored);
+
+  w.advance(10 * 60000);
+  assert.strictEqual(await w.sw.HistoryRecorder.shouldSaveToHistory('https://a.com/', s, w.sw.chrome), true, 'not blocked up front');
+  assert.strictEqual(await w.save('https://a.com/', [antibot('Cloudflare'), captcha('Turnstile')], s), true);
+
+  const items = w.items();
+  assert.strictEqual(items.length, 2, 'no second entry for the same page');
+  assert.strictEqual(items[0].hostname, 'a.com', 'moved to the top');
+  assert.strictEqual(items[0].id, first.id);
+  assert.strictEqual(items[0].firstSeen, first.timestamp, 'the first-seen date is kept');
+  assert.strictEqual(items[0].timestamp, START + 1000 + 10 * 60000);
+  assert.strictEqual(items[0].pinned, true);
+  assert.strictEqual(items[0].note, 'watch this');
+  assert.strictEqual(items[0].detections.length, 2, 'the new scan replaced the old one');
+});
+
+test('duplicate action "skip" (the default) leaves the earlier entry untouched', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours', duplicateAction: 'skip' };
+  await w.save('https://a.com/', [antibot('Cloudflare')], s);
+  w.advance(1000);
+  assert.strictEqual(await w.save('https://a.com/', [antibot('Cloudflare'), captcha('Turnstile')], s), false);
+  assert.strictEqual(w.items().length, 1);
+  assert.strictEqual(w.items()[0].detections.length, 1);
+  w.advance(2 * HOUR);
+  assert.strictEqual(await w.save('https://a.com/', [antibot('Cloudflare')], s), true, 'outside the window it is a new entry');
+});
+
+test('an updated entry whose protections differ is marked Changed', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'days', duplicateAction: 'update' };
+  await w.save('https://a.com/', [antibot('Cloudflare'), fingerprint('Canvas')], s);
+  assert.ok(!('changed' in w.items()[0]), 'the first scan has nothing to compare with');
+  w.advance(HOUR);
+  await w.save('https://a.com/', [antibot('Cloudflare'), fingerprint('WebGL')], s);
+  assert.ok(!('changed' in w.items()[0]), 'fingerprinting changes do not count');
+  w.advance(HOUR);
+  await w.save('https://a.com/', [antibot('DataDome'), captcha('reCAPTCHA')], s);
+  assert.deepStrictEqual(w.items()[0].changed, { at: START + 2 * HOUR, added: ['DataDome', 'reCAPTCHA'], removed: ['Cloudflare'] });
+  w.advance(HOUR);
+  await w.save('https://a.com/', [antibot('DataDome'), captcha('reCAPTCHA')], s);
+  assert.ok(!('changed' in w.items()[0]), 'the mark goes when the next scan matches the one before');
+  assert.strictEqual(w.items().length, 1);
+});
+
+test('a new entry for a page seen before is marked Changed too (no duplicate prevention), ignoring the query string', async () => {
+  const w = makeWorld();
+  await w.save('https://a.com/p?v=1', [antibot('Cloudflare')]);
+  w.advance(HOUR);
+  await w.save('https://a.com/p?v=2', [antibot('Akamai')]);
+  const [newest, oldest] = w.items();
+  assert.deepStrictEqual(newest.changed, { at: START + HOUR, added: ['Akamai'], removed: ['Cloudflare'] });
+  assert.ok(!('changed' in oldest));
+  w.advance(HOUR);
+  await w.save('https://other.com/', [antibot('Akamai')]);
+  assert.ok(!('changed' in w.items()[0]), 'another page is not compared');
+});
+
+async function scanTwice(w, settings, { pinFirst = false } = {}) {
+  await w.save('https://watch.example.com/', [antibot('Cloudflare')], settings);
+  if (pinFirst) {
+    const stored = JSON.parse(w.store.scrapfly_history);
+    stored.items[0].pinned = true;
+    w.store.scrapfly_history = JSON.stringify(stored);
+  }
+  w.advance(HOUR);
+  await w.save('https://watch.example.com/', [antibot('DataDome')], settings);
+}
+
+test('change alerts off: no notification', async () => {
+  const w = makeWorld();
+  await scanTwice(w, { historyChangeAlerts: 'off' });
+  assert.deepStrictEqual(w.notes, []);
+});
+
+test('change alerts for all pages: one notification naming the site and what changed', async () => {
+  const w = makeWorld();
+  await scanTwice(w, { historyChangeAlerts: 'all' });
+  assert.strictEqual(w.notes.length, 1);
+  assert.strictEqual(w.notes[0].title, 'Protections changed on watch.example.com');
+  assert.strictEqual(w.notes[0].message, 'Added: DataDome. Removed: Cloudflare');
+  assert.strictEqual(w.notes[0].type, 'basic');
+});
+
+test('change alerts for pinned pages only', async () => {
+  const a = makeWorld();
+  await scanTwice(a, { historyChangeAlerts: 'pinned' });
+  assert.deepStrictEqual(a.notes, [], 'not pinned: silent');
+  const b = makeWorld();
+  await scanTwice(b, { historyChangeAlerts: 'pinned' }, { pinFirst: true });
+  assert.strictEqual(b.notes.length, 1, 'pinned: alert');
+});
+
+test('no alert for a first scan, an unchanged page, or when notifications are off', async () => {
+  const first = makeWorld();
+  await first.save('https://new.example.com/', [antibot('Cloudflare')], { historyChangeAlerts: 'all' });
+  assert.deepStrictEqual(first.notes, []);
+  const same = makeWorld();
+  await same.save('https://same.example.com/', [antibot('Cloudflare')], { historyChangeAlerts: 'all' });
+  same.advance(HOUR);
+  await same.save('https://same.example.com/', [antibot('Cloudflare')], { historyChangeAlerts: 'all' });
+  assert.deepStrictEqual(same.notes, []);
+  const off = makeWorld();
+  off.settingsState.notificationsEnabled = false;
+  await scanTwice(off, { historyChangeAlerts: 'all' });
+  assert.deepStrictEqual(off.notes, []);
+  assert.ok(off.items()[0].changed, 'the Changed mark is still recorded');
+});
+
+test('the entry limit never counts or removes pinned entries', async () => {
+  const w = makeWorld();
+  await w.save('https://pin.com/', [antibot('A')]);
+  const stored = JSON.parse(w.store.scrapfly_history);
+  stored.items[0].pinned = true;
+  w.store.scrapfly_history = JSON.stringify(stored);
+  for (let i = 0; i < 4; i++) { w.advance(1000); await w.save(`https://n${i}.com/`, [antibot('A')], { historyLimit: 2 }); }
+  assert.deepStrictEqual(w.items().map(i => i.hostname), ['n3.com', 'n2.com', 'pin.com']);
+});
+
+test('storage warning: once when History nears its limit, again only after it was emptied', async () => {
+  const w = makeWorld();
+  const R = w.sw.HistoryRecorder;
+  const max = w.sw.HistoryStore.MAX_BYTES;
+  await R.checkStorage(max * 0.5, 0, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 0);
+  await R.checkStorage(max * 0.9, 0, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 1);
+  assert.strictEqual(w.notes[0].id, 'scrapfly-history-storage');
+  assert.strictEqual(w.notes[0].title, 'History is almost full');
+  await R.checkStorage(max * 0.95, 0, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 1, 'already warned');
+  await R.checkStorage(max * 0.8, 0, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 1, 'between 70% and 90% it neither warns nor resets');
+  await R.checkStorage(max * 0.6, 0, w.sw.chrome);
+  await R.checkStorage(max * 0.92, 0, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 2, 'warns again after dropping under 70%');
+});
+
+test('storage warning: entries removed by the size limit warn at once', async () => {
+  const w = makeWorld();
+  await w.sw.HistoryRecorder.checkStorage(1000, 3, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 1);
+});
+
+test('storage warning respects notifications being off but still records that it warned', async () => {
+  const w = makeWorld();
+  w.settingsState.notificationsEnabled = false;
+  await w.sw.HistoryRecorder.checkStorage(w.sw.HistoryStore.MAX_BYTES, 0, w.sw.chrome);
+  assert.strictEqual(w.notes.length, 0);
+  assert.strictEqual(w.store.scrapfly_history_storage_notice.warned, true);
+});

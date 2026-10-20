@@ -1,11 +1,16 @@
 /**
  * History retention (service worker).
  *
- * Applies two rules to `scrapfly_history`:
+ * Applies these rules to `scrapfly_history`:
  *   1. Auto-delete: when settings.history.historyAutoDelete is on, entries older
  *      than historyAutoDeleteDays (1–3650) are removed.
  *   2. Safety cap: a history limit of 0 keeps at most SAFETY_LIMIT entries
  *      (the newest), as the History settings note promises.
+ *   3. Clear on close: with settings.history.historyClearOnClose, every entry
+ *      goes when the last browser window closes, or at the next start if the
+ *      browser was closed too abruptly to run code.
+ * Pinned entries are exempt from all three (and from the size limit in
+ * HistoryStore): the user chose to keep them.
  * Every write also stays under HistoryStore.MAX_BYTES (HistoryStore.write),
  * and on start a history saved by an older build is compacted once.
  *
@@ -42,7 +47,7 @@ const HistoryRetention = {
     /**
      * Retention config from the stored settings object.
      * @param {object} settings - Parsed settings (settings.history.*)
-     * @returns {{autoDelete: boolean, days: number, limit: number}}
+     * @returns {{autoDelete: boolean, days: number, limit: number, clearOnClose: boolean}}
      */
     getConfig(settings) {
         const history = (settings && settings.history) || {};
@@ -51,7 +56,8 @@ const HistoryRetention = {
         return {
             autoDelete: history.historyAutoDelete === true,
             days: this.normalizeDays(history.historyAutoDeleteDays),
-            limit
+            limit,
+            clearOnClose: history.historyClearOnClose === true
         };
     },
 
@@ -87,17 +93,21 @@ const HistoryRetention = {
         if (config && config.autoDelete) {
             const cutoff = now - this.normalizeDays(config.days) * this.DAY_MS;
             kept = kept.filter((item) => {
+                if (item && item.pinned === true) return true;
                 const ts = this.getTimestamp(item);
                 return ts === null || ts >= cutoff;
             });
         }
 
         const limit = config && Number.isFinite(config.limit) && config.limit > 0 ? config.limit : this.SAFETY_LIMIT;
-        if (kept.length > limit) {
-            kept = kept.slice(0, limit);
-        }
+        kept = this.store().applyLimit(kept, limit);
 
         return { items: kept, removed: list.length - kept.length };
+    },
+
+    /** The HistoryStore (a global in the worker, required under Node tests). */
+    store() {
+        return typeof HistoryStore !== 'undefined' ? HistoryStore : require('../modules/core/history-store.js');
     },
 
     /**
@@ -128,9 +138,35 @@ const HistoryRetention = {
      * @param {string} reason - Trigger name, for logging
      * @returns {Promise<number>} Number of removed entries
      */
-    async run(reason = 'manual') {
+    /** The retention config from the stored settings. */
+    async readConfig() {
         const stored = await chrome.storage.local.get(['scrapfly_settings']);
-        const config = this.getConfig(this.parseSettings(stored.scrapfly_settings));
+        return this.getConfig(this.parseSettings(stored.scrapfly_settings));
+    },
+
+    /**
+     * Remove every entry that is not pinned (clear on close).
+     * @returns {Promise<number>} entries removed
+     */
+    async clearUnpinned(reason = 'manual') {
+        const { result: removed } = await HistoryStore.mutate((items) => {
+            const kept = items.filter(item => item && item.pinned === true);
+            return kept.length === items.length ? { result: 0 } : { items: kept, result: items.length - kept.length };
+        }, chrome.storage.local);
+        if (removed > 0) this._log(`[HistoryRetention] Cleared ${removed} history entries (${reason})`);
+        return removed;
+    },
+
+    /** The last normal window closed: clear History if Settings says so. */
+    async onWindowRemoved() {
+        const config = await this.readConfig();
+        if (!config.clearOnClose || !chrome.windows || !chrome.windows.getAll) return 0;
+        const windows = await chrome.windows.getAll({ windowTypes: ['normal'] });
+        return windows.length === 0 ? this.clearUnpinned('last window closed') : 0;
+    },
+
+    async run(reason = 'manual') {
+        const config = await this.readConfig();
 
         // Same serialized writer as detection saves and popup actions (HistoryStore)
         const { result: removed } = await HistoryStore.mutate((items) => {
@@ -185,6 +221,20 @@ const HistoryRetention = {
                 if (alarm && alarm.name === this.ALARM_NAME) {
                     this.run('alarm').catch((error) => this._warn('[HistoryRetention] Run failed:', error));
                 }
+            });
+        }
+
+        // Clear on close: when the last window closes, and at the next start in case the browser was killed
+        if (chrome.windows && chrome.windows.onRemoved) {
+            chrome.windows.onRemoved.addListener(() => {
+                this.onWindowRemoved().catch((error) => this._warn('[HistoryRetention] Clear on close failed:', error));
+            });
+        }
+        if (chrome.runtime && chrome.runtime.onStartup) {
+            chrome.runtime.onStartup.addListener(() => {
+                this.readConfig()
+                    .then((config) => (config.clearOnClose ? this.clearUnpinned('browser start') : 0))
+                    .catch((error) => this._warn('[HistoryRetention] Clear on start failed:', error));
             });
         }
 

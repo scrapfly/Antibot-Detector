@@ -5548,5 +5548,242 @@
   },
   "settingsCaptureRetentionRange": {
     "message": "1분부터 7일까지."
+  },
+  "settingsGroupHistoryRecording": {
+    "message": "기록에 저장할 내용"
+  },
+  "settingsCardHistoryRecording": {
+    "message": "저장 규칙"
+  },
+  "settingsHistoryEnabled": {
+    "message": "페이지를 기록에 저장"
+  },
+  "settingsHistoryEnabledDesc": {
+    "message": "끄면 기록하지 않고 탐색할 수 있습니다. 탐지는 계속 작동합니다."
+  },
+  "settingsHistorySkipIncognito": {
+    "message": "시크릿 창 건너뛰기"
+  },
+  "settingsHistorySkipIncognitoDesc": {
+    "message": "시크릿 창의 페이지는 저장되지 않습니다."
+  },
+  "settingsHistorySkipFingerprintOnly": {
+    "message": "핑거프린팅만 있는 페이지 건너뛰기"
+  },
+  "settingsHistorySkipFingerprintOnlyDesc": {
+    "message": "핑거프린팅만 발견된 페이지는 저장하지 않습니다."
+  },
+  "settingsHistoryMinConfidence": {
+    "message": "저장 최소 신뢰도(%)"
+  },
+  "settingsHistoryMinConfidenceDesc": {
+    "message": "가장 신뢰도가 높은 탐지가 이 신뢰도 이상인 페이지만 저장합니다. 0이면 모든 페이지를 저장합니다."
+  },
+  "settingsHistoryUrlMode": {
+    "message": "저장할 주소"
+  },
+  "settingsHistoryUrlFull": {
+    "message": "전체 주소 유지"
+  },
+  "settingsHistoryUrlMask": {
+    "message": "민감한 값 숨기기"
+  },
+  "settingsHistoryUrlPath": {
+    "message": "쿼리 문자열 제거"
+  },
+  "settingsHistoryUrlModeDesc": {
+    "message": "주소에 포함된 토큰과 이메일은 기록, 내보내기, 공유 링크에 남습니다. 지금부터 저장하는 페이지에 적용됩니다."
+  },
+  "settingsHistoryExcluded": {
+    "message": "기록에서 제외할 사이트"
+  },
+  "settingsHistoryExcludedDesc": {
+    "message": "한 줄에 사이트 하나씩 입력하세요. 하위 도메인도 포함됩니다. 이 사이트에서도 탐지는 계속 실행됩니다."
+  },
+  "settingsHistoryClearOnClose": {
+    "message": "브라우저를 닫을 때 기록 지우기"
+  },
+  "settingsHistoryClearOnCloseDesc": {
+    "message": "마지막 창을 닫을 때 또는 다음 시작 시 저장된 페이지를 삭제합니다. 고정한 페이지는 유지됩니다."
+  },
+  "settingsHistoryChangeAlerts": {
+    "message": "보호 기능이 변경되면 알림"
+  },
+  "settingsHistoryAlertsOff": {
+    "message": "끄기"
+  },
+  "settingsHistoryAlertsPinned": {
+    "message": "고정한 페이지만"
+  },
+  "settingsHistoryAlertsAll": {
+    "message": "모든 페이지"
+  },
+  "settingsHistoryChangeAlertsDesc": {
+    "message": "이전에 스캔한 페이지에서 보호 기능이 추가되거나 사라지면 알려 줍니다."
+  },
+  "settingsDuplicateAction": {
+    "message": "중복이 발견되면"
+  },
+  "settingsDuplicateActionSkip": {
+    "message": "새 스캔 건너뛰기"
+  },
+  "settingsDuplicateActionUpdate": {
+    "message": "이전 항목 업데이트"
+  },
+  "settingsDuplicateActionDesc": {
+    "message": "업데이트해도 처음 확인한 날짜, 고정 여부, 메모는 유지됩니다. 보호 기능이 달라졌다면 해당 항목에 변경됨으로 표시됩니다."
+  },
+  "settingsGroupHistoryStorage": {
+    "message": "저장 공간 및 백업"
+  },
+  "settingsHistoryStorage": {
+    "message": "사용 중인 저장 공간"
+  },
+  "settingsHistoryStorageUsedFmt": {
+    "message": "{1} 중 {0} 사용 · 항목 {2}개"
+  },
+  "settingsHistoryStoragePinnedFmt": {
+    "message": "고정 {0}개"
+  },
+  "settingsHistoryStorageEmpty": {
+    "message": "기록이 비어 있습니다."
+  },
+  "settingsHistoryStorageNearlyFull": {
+    "message": "저장 공간이 거의 가득 찼습니다. 공간을 확보하기 위해 오래된 항목부터 삭제됩니다. 보관하려는 항목은 내보내거나 고정하세요."
+  },
+  "settingsHistoryStorageTrimmedFmt": {
+    "message": "한도를 유지하기 위해 지금까지 오래된 항목 {0}개가 삭제되었습니다. 마지막 삭제: {1}."
+  },
+  "settingsHistoryBackup": {
+    "message": "자동 백업"
+  },
+  "settingsBackupOff": {
+    "message": "끄기"
+  },
+  "settingsBackupDaily": {
+    "message": "매일"
+  },
+  "settingsBackupWeekly": {
+    "message": "매주"
+  },
+  "settingsBackupMonthly": {
+    "message": "매월"
+  },
+  "settingsHistoryBackupDesc": {
+    "message": "위에서 선택한 내보내기 형식으로 기록 사본을 다운로드 폴더의 Scrapfly 폴더에 저장합니다."
+  },
+  "settingsHistoryBackupNow": {
+    "message": "지금 백업"
+  },
+  "settingsHistoryBackupLastFmt": {
+    "message": "마지막 백업: {0}(항목 {1}개)"
+  },
+  "settingsHistoryBackupNever": {
+    "message": "아직 백업이 없습니다."
+  },
+  "settingsHistoryBackupDoneFmt": {
+    "message": "항목 {0}개를 백업했습니다"
+  },
+  "settingsHistoryBackupEmpty": {
+    "message": "아직 백업할 항목이 없습니다"
+  },
+  "settingsHistoryBackupFailed": {
+    "message": "기록 백업에 실패했습니다"
+  },
+  "settingsHistoryBackupFailedHint": {
+    "message": "다운로드가 허용되어 있는지 확인한 다음 설정 → 기록에서 지금 백업을 다시 시도하세요."
+  },
+  "settingsUiErrMinConfidence": {
+    "message": "최소 신뢰도는 0에서 100 사이여야 합니다"
+  },
+  "historyPin": {
+    "message": "고정"
+  },
+  "historyUnpin": {
+    "message": "고정 해제"
+  },
+  "historyAddNote": {
+    "message": "메모 추가"
+  },
+  "historyEditNote": {
+    "message": "메모 편집"
+  },
+  "historyPinnedTip": {
+    "message": "고정됨: 기록을 정리해도 유지됩니다"
+  },
+  "historyChangedBadge": {
+    "message": "변경됨"
+  },
+  "historyNoteTitle": {
+    "message": "메모"
+  },
+  "historyNotePlaceholder": {
+    "message": "이 페이지에 대한 메모…"
+  },
+  "historyNoteSaved": {
+    "message": "메모를 저장했습니다"
+  },
+  "historyPinnedNotice": {
+    "message": "고정했습니다"
+  },
+  "historyUnpinnedNotice": {
+    "message": "고정을 해제했습니다"
+  },
+  "historyExportDialogTitle": {
+    "message": "기록 내보내기"
+  },
+  "historyExportFormat": {
+    "message": "형식"
+  },
+  "historyExportCategory": {
+    "message": "보호 기능"
+  },
+  "historyExportAll": {
+    "message": "전체"
+  },
+  "historyExportPeriod": {
+    "message": "기간"
+  },
+  "historyRangeAll": {
+    "message": "전체 기간"
+  },
+  "historyRange7": {
+    "message": "최근 7일"
+  },
+  "historyRange30": {
+    "message": "최근 30일"
+  },
+  "historyRange90": {
+    "message": "최근 90일"
+  },
+  "historyExportDomain": {
+    "message": "사이트에 포함된 문자열"
+  },
+  "historyExportDomainPlaceholder": {
+    "message": "example.com"
+  },
+  "historyExportPinnedOnly": {
+    "message": "고정한 페이지만"
+  },
+  "historyExportCountFmt": {
+    "message": "전체 {1}개 중 {0}개 항목을 내보냅니다"
+  },
+  "historyExportNone": {
+    "message": "이 필터와 일치하는 항목이 없습니다"
+  },
+  "historyChangeAlertTitleFmt": {
+    "message": "{0}에서 보호 기능이 변경되었습니다"
+  },
+  "historyChangeAlertAddedFmt": {
+    "message": "추가됨: {0}"
+  },
+  "historyChangeAlertRemovedFmt": {
+    "message": "제거됨: {0}"
+  },
+  "historyStorageWarnTitle": {
+    "message": "기록 저장 공간이 거의 가득 찼습니다"
+  },
+  "historyStorageWarnMessage": {
+    "message": "공간을 확보하기 위해 오래된 항목부터 삭제됩니다. 보관하려는 항목은 내보내거나 고정하세요."
   }
 }

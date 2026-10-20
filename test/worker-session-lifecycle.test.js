@@ -196,6 +196,7 @@ test('startup initialization and an early event reuse one detector load', async 
   h.ctx.chrome.tabs.query = async () => [];
   h.ctx.UpdateManager = { setupAlarmListener() {}, scheduleCheck() {} };
   h.ctx.HistoryRetention = { init() {} };
+  h.ctx.HistoryBackup = { init() {} };
   h.ctx.DetectionCacheRetention = { init() {} };
   h.ctx.HistoryStore = { setQuotaRelief() {} };
   h.ctx.I18n = { syncOverrideFromStorage() {} };

@@ -126,6 +126,19 @@ class History {
     const untitledLabel = _tr('historyUiUntitled', 'Untitled');
     const unknownLabel = _tr('timeUnknown', 'Unknown');
 
+    const pinnedTip = _tr('historyPinnedTip', 'Pinned: kept when History is cleaned up');
+    const PIN_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5" fill="none"/><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg>';
+    // "Changed": the page's protections differ from its earlier scan; the hover lists what was added and removed
+    const changedBadgeHtml = (item) => {
+      const change = item.changed;
+      if (!change || (!(change.added || []).length && !(change.removed || []).length)) return '';
+      const rows = [];
+      if ((change.added || []).length) rows.push({ label: FormatUtils.t('historyChangeAlertAddedFmt', 'Added: {0}', change.added.join(', ')), tone: 'green' });
+      if ((change.removed || []).length) rows.push({ label: FormatUtils.t('historyChangeAlertRemovedFmt', 'Removed: {0}', change.removed.join(', ')), tone: 'red' });
+      const when = Number.isFinite(change.at) ? FormatUtils.formatDateTime(change.at) : '';
+      return `<span class="history-changed-badge" ${FormatUtils.tipAttrs(_tr('historyChangedBadge', 'Changed'), when, rows)}>${FormatUtils.escapeHtml(_tr('historyChangedBadge', 'Changed'))}</span>`;
+    };
+
     const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
       // getDomainFromUrl answers 'Unknown' (English, also used in filenames) without a URL
@@ -154,11 +167,16 @@ class History {
               <img src="${faviconSrc}" alt="" class="history-favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
             </span>
             <div class="history-item-content">
-              <div class="history-title" title="${safeTitle}">${safeTitle}</div>
+              <div class="history-title-row">
+                ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(pinnedTip)}>${PIN_ICON}</span>` : ''}
+                <div class="history-title" title="${safeTitle}">${safeTitle}</div>
+                ${changedBadgeHtml(item)}
+              </div>
               <div class="history-subline">
                 <span class="history-url" dir="ltr" title="${safeUrl || safeDomain}">${safeUrl || safeDomain}</span>
 
               </div>
+              ${item.note ? `<div class="history-note" title="${FormatUtils.escapeAttr(item.note)}">${FormatUtils.escapeHtml(item.note)}</div>` : ''}
             </div>
             ${scrapflyLogo && ScrapflyExport.targetUrl(item.url) ? `<button class="history-item-action-btn history-scrapfly-btn" data-action="scrapfly" title="${scrapflyLabel}" aria-label="${scrapflyLabel}">${scrapflyLogo}</button>` : ''}
             <button class="history-item-action-btn history-more-btn" data-action="menu" title="${moreLabel}" aria-label="${moreLabel}" aria-haspopup="menu" aria-expanded="false">
@@ -704,6 +722,7 @@ class History {
           if (this._openMenu && this._openMenu.anchor === e.currentTarget) {
             this.closeMenus();
           } else if (menu) {
+            this.syncItemMenu(menu, item);
             this.openMenu(menu, e.currentTarget);
             this._menuItemId = historyId;
           }
@@ -1443,30 +1462,190 @@ class History {
   }
 
   /**
-   * Export history to JSON file
+   * Label of the pin and note entries of the "…" menu for the entry it opens on
+   * (Pin / Unpin, Add note / Edit note).
+   * @param {HTMLElement} menu - #historyItemMenu
+   * @param {object} item - History entry
    */
-  exportHistory() {
-    const exportData = {
-      version: '1.0',
-      timestamp: new Date().toISOString(),
-      itemsCount: this.historyItems.length,
-      items: this.historyItems
+  syncItemMenu(menu, item) {
+    const label = (name, key, fallback) => {
+      const el = menu.querySelector(`[data-menu-label="${name}"]`);
+      if (el) el.textContent = FormatUtils.t(key, fallback);
+    };
+    label('pin', item.pinned === true ? 'historyUnpin' : 'historyPin', item.pinned === true ? 'Unpin' : 'Pin');
+    label('note', item.note ? 'historyEditNote' : 'historyAddNote', item.note ? 'Edit note' : 'Add note');
+  }
+
+  /**
+   * Save a pin or a note of one entry in the worker (the only History writer) and show it.
+   * @param {object} item - History entry
+   * @param {{pinned?: boolean, note?: string}} patch
+   */
+  async annotateItem(item, patch) {
+    await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEM, id: item.id, patch });
+    // Show it now; a pinned entry's age and the limit no longer apply to it, so the list is read again
+    await this.loadHistoryFromStorage();
+    this.renderHistory();
+  }
+
+  /**
+   * Pin an entry (kept when History is cleaned up) or unpin it.
+   * @param {object} item - History entry
+   */
+  async togglePin(item) {
+    const pin = item.pinned !== true;
+    try {
+      await this.annotateItem(item, { pinned: pin });
+      NotificationHelper.success(FormatUtils.t(pin ? 'historyPinnedNotice' : 'historyUnpinnedNotice', pin ? 'Pinned' : 'Unpinned'));
+    } catch (error) {
+      Logger.warn('UI', '[History] Pin failed', error);
+      NotificationHelper.error(error.message);
+    }
+  }
+
+  /**
+   * Ask for a short note on an entry and save it (an empty note removes it).
+   * @param {object} item - History entry
+   */
+  async editNote(item) {
+    const input = document.createElement('textarea');
+    input.className = 'textarea-field history-dialog-input history-note-input';
+    input.rows = 3;
+    input.maxLength = 300;
+    input.value = item.note || '';
+    input.placeholder = FormatUtils.t('historyNotePlaceholder', 'A note for this page…');
+    input.setAttribute('aria-label', FormatUtils.t('historyNoteTitle', 'Note'));
+    const wrap = document.createElement('div');
+    wrap.className = 'history-dialog-form';
+    wrap.appendChild(input);
+
+    const confirmed = await NotificationHelper.form({
+      title: FormatUtils.t('historyNoteTitle', 'Note'),
+      confirmText: FormatUtils.t('btnSave', 'Save'),
+      cancelText: FormatUtils.t('btnCancel', 'Cancel'),
+      content: wrap,
+      focus: input
+    });
+    if (!confirmed) return;
+    try {
+      await this.annotateItem(item, { note: input.value });
+      NotificationHelper.success(FormatUtils.t('historyNoteSaved', 'Note saved'));
+    } catch (error) {
+      Logger.warn('UI', '[History] Note failed', error);
+      NotificationHelper.error(error.message);
+    }
+  }
+
+  /**
+   * Export History: ask for the format and what to include, then download one file.
+   * The format and timestamps start from Settings → History; JSON always keeps every field.
+   */
+  async exportHistory() {
+    const saved = await Utils.getHistorySettings().catch(() => ({}));
+    const field = (labelKey, labelFallback, control) => {
+      const row = document.createElement('label');
+      row.className = 'history-dialog-field';
+      const text = document.createElement('span');
+      text.className = 'history-dialog-label';
+      text.textContent = FormatUtils.t(labelKey, labelFallback);
+      row.append(text, control);
+      return row;
+    };
+    const select = (options, value) => {
+      const el = document.createElement('select');
+      el.className = 'select-field history-dialog-input';
+      for (const [optionValue, text] of options) {
+        const option = document.createElement('option');
+        option.value = String(optionValue);
+        option.textContent = text;
+        el.appendChild(option);
+      }
+      el.value = String(value);
+      return el;
+    };
+    const check = (labelKey, labelFallback, checked) => {
+      const row = document.createElement('label');
+      row.className = 'history-dialog-check';
+      const box = document.createElement('input');
+      box.type = 'checkbox';
+      box.checked = checked;
+      const text = document.createElement('span');
+      text.textContent = FormatUtils.t(labelKey, labelFallback);
+      row.append(box, text);
+      return { row, box };
     };
 
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: 'application/json'
-    });
+    const format = select(HistoryExport.FORMATS.map(f => [f, f === 'txt' ? 'TXT' : f.toUpperCase()]), HistoryExport.FORMATS.includes(saved.exportFormat) ? saved.exportFormat : 'json');
+    const category = select([
+      ['all', FormatUtils.t('historyExportAll', 'All')],
+      ['antibot', FormatUtils.t('categoryAntibot', 'Anti-bot')],
+      ['captcha', FormatUtils.t('categoryCaptcha', 'CAPTCHA')],
+      ['fingerprint', FormatUtils.t('categoryFingerprint', 'Fingerprint')]
+    ], 'all');
+    const period = select([
+      [0, FormatUtils.t('historyRangeAll', 'All time')],
+      [7, FormatUtils.t('historyRange7', 'Last 7 days')],
+      [30, FormatUtils.t('historyRange30', 'Last 30 days')],
+      [90, FormatUtils.t('historyRange90', 'Last 90 days')]
+    ], 0);
+    const domain = document.createElement('input');
+    domain.type = 'text';
+    domain.className = 'input-field history-dialog-input';
+    domain.placeholder = FormatUtils.t('historyExportDomainPlaceholder', 'example.com');
+    domain.setAttribute('dir', 'ltr');
+    domain.autocomplete = 'off';
+    const pinned = check('historyExportPinnedOnly', 'Pinned pages only', false);
+    const count = document.createElement('div');
+    count.className = 'history-dialog-count';
+    count.setAttribute('role', 'status');
 
+    const filters = () => ({ category: category.value, days: parseInt(period.value, 10), domain: domain.value, pinnedOnly: pinned.box.checked });
+    const matching = () => HistoryExport.filter(this.historyItems, filters());
+    const refresh = () => {
+      const n = matching().length;
+      count.textContent = n
+        ? FormatUtils.t('historyExportCountFmt', '{0} of {1} entries will be exported', n, this.historyItems.length)
+        : FormatUtils.t('historyExportNone', 'No entries match these filters');
+      count.classList.toggle('is-empty', n === 0);
+    };
+    [category, period, domain, pinned.box].forEach(el => el.addEventListener(el === domain ? 'input' : 'change', refresh));
+    refresh();
+
+    const form = document.createElement('div');
+    form.className = 'history-dialog-form';
+    form.append(
+      field('historyExportFormat', 'Format', format),
+      field('historyExportCategory', 'Protections', category),
+      field('historyExportPeriod', 'Period', period),
+      field('historyExportDomain', 'Site contains', domain),
+      pinned.row,
+      count
+    );
+
+    const confirmed = await NotificationHelper.form({
+      title: FormatUtils.t('historyExportDialogTitle', 'Export history'),
+      confirmText: FormatUtils.t('btnExport', 'Export'),
+      cancelText: FormatUtils.t('btnCancel', 'Cancel'),
+      content: form,
+      focus: format
+    });
+    if (!confirmed) return;
+
+    const items = matching();
+    if (!items.length) {
+      NotificationHelper.error(FormatUtils.t('historyExportNone', 'No entries match these filters'));
+      return;
+    }
+    const built = HistoryExport.build(items, { format: format.value, includeTimestamps: saved.includeTimestamps !== false });
+    const blob = new Blob([built.text], { type: built.type });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const timestamp = new Date().toISOString().split('T')[0];
     a.href = url;
-    a.download = `scrapfly-history-${timestamp}.json`;
+    a.download = HistoryExport.fileName(built.format);
     a.click();
 
     URL.revokeObjectURL(url);
-    const _t2 = (typeof I18n !== 'undefined') ? I18n : null;
-    NotificationHelper.success((_t2 && _t2.format('notificationHistoryExportedFmt', this.historyItems.length)) || `Exported ${this.historyItems.length} history items`);
+    NotificationHelper.success(FormatUtils.t('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
   }
 
   /**
@@ -1668,6 +1847,10 @@ class History {
 
         if (action === 'copy') {
           this.copyHistoryItem(item);
+        } else if (action === 'pin') {
+          this.togglePin(item);
+        } else if (action === 'note') {
+          this.editNote(item);
         } else if (action === 'clear-cache') {
           this.clearHistoryItemCache(item);
         } else if (action === 'export') {
