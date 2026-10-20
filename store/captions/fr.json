@@ -1,0 +1,60 @@
+{
+  "language": "fr",
+  "screens": {
+    "detection": {
+      "before": "Détectez les",
+      "highlight": "systèmes de sécurité",
+      "after": "en temps réel",
+      "subtitle": "Identifiez les CAPTCHAs, les systèmes anti-bot et le fingerprinting sur n’importe quel site. Conçu pour les chercheurs en sécurité et développeurs.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Chaque analyse enregistrée,",
+      "highlight": "facile à retrouver",
+      "after": "",
+      "subtitle": "Épinglez des pages, ajoutez des notes et voyez quand les protections d’un site changent. Exportez avec des filtres ou sauvegardez automatiquement.",
+      "chips": [
+        "Épingles/notes",
+        "Badge Modifiée",
+        "Export/sauvegarde"
+      ]
+    },
+    "rules": {
+      "before": "Vos détecteurs,",
+      "highlight": "vos règles",
+      "after": "",
+      "subtitle": "Mettez à jour les détecteurs intégrés, activez-les ou désactivez-les et écrivez vos propres règles.",
+      "chips": [
+        "Détecteurs intégrés",
+        "Règles sur mesure",
+        "Import/export"
+      ]
+    },
+    "advanced": {
+      "before": "Outils de capture",
+      "highlight": "à la demande",
+      "after": "",
+      "subtitle": "Quand une protection prise en charge est détectée, collectez les clés de site, les cookies et les paramètres de défi pour les analyser.",
+      "chips": [
+        "Outils dédiés",
+        "Clés & cookies",
+        "Export des captures"
+      ]
+    },
+    "settings": {
+      "before": "Il parle",
+      "highlight": "votre langue",
+      "after": "",
+      "subtitle": "22 langues d’interface, notifications, webhooks, domaines à ignorer et mises à jour des détecteurs.",
+      "chips": [
+        "22 langues",
+        "Webhooks",
+        "Domaines ignorés"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Besoin d’un proxy résidentiel",
+    "detected": "{0} détectées"
+  }
+}

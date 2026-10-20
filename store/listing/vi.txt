@@ -1,0 +1,26 @@
+Xem bất kỳ trang web nào tự bảo vệ mình trước bot ra sao. Scrapfly trình phát hiện anti-bot cho biết mỗi trang dùng hệ thống anti-bot, CAPTCHA và kỹ thuật thu thập dấu vân tay nào, kèm độ tin cậy của từng kết quả và độ khó vượt qua. Dùng miễn phí.
+
+Bạn sẽ thấy gì
+• Một con số trên biểu tượng ở thanh công cụ cho biết trang dùng bao nhiêu biện pháp bảo vệ.
+• Mỗi biện pháp bảo vệ có một thẻ riêng, hiển thị độ tin cậy, độ khó và các tín hiệu để lộ sự hiện diện của nó: URL, cookie, header, mã nguồn trang, phần tử trên trang, lệnh gọi API của trình duyệt và nội dung yêu cầu.
+• Có sẵn 70 trình phát hiện: 30 hệ thống anti-bot, 19 CAPTCHA và 21 kỹ thuật thu thập dấu vân tay. Mỗi trình phát hiện là một tệp JSON đơn giản mà bạn có thể đọc, chỉnh sửa hoặc mở rộng.
+
+Bên trong popup
+• Phát hiện: những gì trang hiện tại đang dùng, kèm bằng chứng cho từng kết quả.
+• Lịch sử: mọi trang đã quét, có thể tìm kiếm. Ghim trang, thêm ghi chú, xem khi nào biện pháp bảo vệ của một trang web thay đổi, xuất theo bộ lọc (JSON, CSV hoặc văn bản) và sao lưu tự động.
+• Quy tắc: bật hoặc tắt trình phát hiện, cập nhật mà không cần chờ phiên bản mới, chỉnh sửa mẫu và tự viết quy tắc của riêng bạn.
+• Nâng cao: công cụ dùng khi cần cho những biện pháp bảo vệ được hỗ trợ, như trích xuất site key, kiểm tra cookie và phân tích script.
+• Cài đặt: bộ nhớ đệm, bỏ qua tên miền, thông báo, webhook, liên kết chia sẻ, màu sắc và 22 ngôn ngữ giao diện.
+• Thống kê lịch sử (Cài đặt → Dữ liệu → Mở thống kê): biểu đồ riêng tư được tính ngay trên thiết bị của bạn từ lịch sử, chẳng hạn các hệ thống bạn gặp nhiều nhất và những trang web khó nhất.
+
+Dành cho ai
+Lập trình viên web scraping muốn biết điều gì bảo vệ một trang trước khi viết bất kỳ dòng mã nào, nhà nghiên cứu bảo mật, và chủ sở hữu trang web muốn kiểm tra lớp phòng thủ chống bot của mình trông ra sao khi nhìn từ bên ngoài.
+
+Quyền riêng tư
+Quá trình phát hiện diễn ra hoàn toàn trong trình duyệt của bạn. Không có tài khoản, không có công cụ phân tích, và các trang bạn truy cập không bao giờ được gửi tới Scrapfly. Tiện ích chỉ gửi một vài yêu cầu mà bạn có thể thấy: bản cập nhật trình phát hiện từ các bản phát hành GitHub công khai của dự án này, biểu tượng trang web (của chính trang đó, hoặc dịch vụ favicon của Google khi trang không có), cờ của các ngôn ngữ và, chỉ khi bạn bật, webhook hoặc liên kết chia sẻ của riêng bạn. Các bản sao lưu lịch sử tự động (tùy chọn) được lưu vào thư mục Tải xuống của bạn.
+
+Ngôn ngữ
+Giao diện hỗ trợ 22 ngôn ngữ, trong đó có tiếng Tây Ban Nha, Pháp, Đức, Bồ Đào Nha, Nga, Nhật, Hàn, Trung, Ả Rập và Hindi.
+
+Mã nguồn mở
+Toàn bộ mã và mọi trình phát hiện đều là mã nguồn mở trên GitHub (scrapfly/Antibot-Detector): hãy báo cáo sự cố hoặc thêm trình phát hiện tại đó.

@@ -1,0 +1,26 @@
+Bekijk hoe elke website zich beschermt tegen bots. Scrapfly anti-botdetector toont welke anti-botsystemen, CAPTCHA's en fingerprintingtechnieken elke pagina gebruikt, hoe zeker elke treffer is en hoe moeilijk ze te omzeilen zijn. Gratis te gebruiken.
+
+Wat je ziet
+• Een getal op het pictogram in de werkbalk: hoeveel beveiligingen de pagina gebruikt.
+• Eén kaart per beveiliging met de zekerheid, de moeilijkheid en de signalen die haar verraadden: URL's, cookies, headers, paginacode, pagina-elementen, aanroepen van browser-API's en de inhoud van verzoeken.
+• 70 detectors inbegrepen: 30 anti-botsystemen, 19 CAPTCHA's en 21 fingerprintingtechnieken. Elke detector is een gewoon JSON-bestand dat je kunt lezen, bewerken of uitbreiden.
+
+In de pop-up
+• Detectie: wat de huidige pagina gebruikt, met het bewijs voor elke treffer.
+• Geschiedenis: elke gescande pagina, doorzoekbaar. Zet pagina's vast, voeg notities toe, zie wanneer de beveiligingen van een site veranderen, exporteer met filters (JSON, CSV of tekst) en maak automatisch back-ups.
+• Regels: schakel detectors in of uit, werk ze bij zonder op een nieuwe versie te wachten, bewerk patronen en schrijf je eigen regels.
+• Geavanceerd: tools op aanvraag voor ondersteunde beveiligingen, zoals het ophalen van sitesleutels, het controleren van cookies en het analyseren van scripts.
+• Instellingen: caching, sites overslaan, meldingen, webhooks, deellinks, kleuren en 22 interfacetalen.
+• Geschiedenisstatistieken (Instellingen → Gegevens → Statistieken openen): privégrafieken die op je apparaat uit je geschiedenis worden berekend, zoals de systemen die je het vaakst tegenkomt en de moeilijkste sites.
+
+Gemaakt voor
+Ontwikkelaars die aan webscraping doen en willen weten wat een pagina beschermt voordat ze code schrijven, beveiligingsonderzoekers en eigenaren van websites die controleren hoe hun bescherming tegen bots er van buitenaf uitziet.
+
+Privacy
+Detectie draait volledig in je browser. Er zijn geen accounts en geen analytics, en de pagina's die je bezoekt worden nooit naar Scrapfly gestuurd. De extensie doet maar een paar verzoeken die je kunt zien: detectorupdates uit de openbare GitHub-releases van dit project, pictogrammen van sites (die van de site zelf, of de favicondienst van Google als een site er geen heeft), taalvlaggen en, alleen als je ze inschakelt, je eigen webhook of deellink. Optionele automatische back-ups van de geschiedenis worden opgeslagen in je map Downloads.
+
+Talen
+De interface is beschikbaar in 22 talen, waaronder Spaans, Frans, Duits, Portugees, Russisch, Japans, Koreaans, Chinees, Arabisch en Hindi.
+
+Open source
+De code en elke detector zijn open source op GitHub (scrapfly/Antibot-Detector): meld daar een probleem of voeg een detector toe.

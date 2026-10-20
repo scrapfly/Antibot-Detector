@@ -1,0 +1,60 @@
+{
+  "language": "tr",
+  "screens": {
+    "detection": {
+      "before": "",
+      "highlight": "Güvenlik sistemlerini",
+      "after": "anında tespit edin",
+      "subtitle": "Her sitedeki CAPTCHA'ları, anti-bot sistemlerini ve parmak izi tekniklerini belirleyin. Güvenlik araştırmacıları ve geliştiriciler için tasarlandı.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Her tarama",
+      "highlight": "kayıtlı ve aranabilir",
+      "after": "",
+      "subtitle": "Sayfaları sabitleyin, not ekleyin ve bir sitenin korumalarının ne zaman değiştiğini görün. Filtrelerle dışa aktarın veya otomatik yedekleyin.",
+      "chips": [
+        "Sabitleme ve notlar",
+        "Değişiklik",
+        "Dışa aktarma ve yedek"
+      ]
+    },
+    "rules": {
+      "before": "Dedektörler de",
+      "highlight": "kurallar da",
+      "after": "sizin",
+      "subtitle": "Yerleşik dedektörleri güncelleyin, açıp kapatın ve kendi kurallarınızı yazın.",
+      "chips": [
+        "Yerleşik dedektörler",
+        "Özel kurallar",
+        "İçe/dışa aktarma"
+      ]
+    },
+    "advanced": {
+      "before": "Yakalama araçları",
+      "highlight": "ihtiyaç anında",
+      "after": "",
+      "subtitle": "Desteklenen bir koruma bulunduğunda analiz için site anahtarlarını, çerezleri ve doğrulama sınaması parametrelerini toplayın.",
+      "chips": [
+        "Sağlayıcı araçları",
+        "Anahtar ve çerez",
+        "Dışa aktarma"
+      ]
+    },
+    "settings": {
+      "before": "",
+      "highlight": "Dilinizi",
+      "after": "konuşur",
+      "subtitle": "22 arayüz dili, bildirimler, webhook'lar, atlanacak siteler ve dedektör güncellemeleri.",
+      "chips": [
+        "22 dil",
+        "Webhook'lar",
+        "Atlanacak siteler"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Konut proxy'si lazım",
+    "detected": "{0} tespit edildi"
+  }
+}

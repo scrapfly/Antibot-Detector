@@ -1,0 +1,60 @@
+{
+  "language": "cs",
+  "screens": {
+    "detection": {
+      "before": "Detekujte",
+      "highlight": "bezpečnostní systémy",
+      "after": "v reálném čase",
+      "subtitle": "Rozpoznejte CAPTCHA, anti-bot systémy a technologie fingerprintingu na jakémkoli webu. Vytvořeno pro bezpečnostní výzkumníky a vývojáře.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Každé skenování,",
+      "highlight": "uložené a prohledávatelné",
+      "after": "",
+      "subtitle": "Připínejte stránky, přidávejte poznámky a zjistěte, kdy se ochrany webu změnily. Exportujte s filtry nebo zálohujte automaticky.",
+      "chips": [
+        "Připnutí a poznámky",
+        "Odznak Změněno",
+        "Export a záloha"
+      ]
+    },
+    "rules": {
+      "before": "Vaše detektory,",
+      "highlight": "vaše pravidla",
+      "after": "",
+      "subtitle": "Aktualizujte vestavěné detektory, zapínejte a vypínejte je a pište vlastní pravidla.",
+      "chips": [
+        "Vestavěné detektory",
+        "Vlastní pravidla",
+        "Import/export"
+      ]
+    },
+    "advanced": {
+      "before": "Nástroje zachytávání",
+      "highlight": "na vyžádání",
+      "after": "",
+      "subtitle": "Když se najde podporovaná ochrana, získejte klíče webů, cookies a parametry výzev k analýze.",
+      "chips": [
+        "Nástroje dodavatelů",
+        "Klíče a cookies",
+        "Export dat"
+      ]
+    },
+    "settings": {
+      "before": "Mluví",
+      "highlight": "vaším jazykem",
+      "after": "",
+      "subtitle": "22 jazyků rozhraní, oznámení, webhooky, přeskakované weby a aktualizace detektorů.",
+      "chips": [
+        "22 jazyků",
+        "Webhooky",
+        "Přeskakované weby"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Potřebuje rezidenční proxy",
+    "detected": "Detekováno: {0}"
+  }
+}

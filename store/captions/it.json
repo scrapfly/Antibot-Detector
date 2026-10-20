@@ -1,0 +1,60 @@
+{
+  "language": "it",
+  "screens": {
+    "detection": {
+      "before": "Rileva",
+      "highlight": "i sistemi di sicurezza",
+      "after": "in tempo reale",
+      "subtitle": "Identifica CAPTCHA, sistemi anti-bot e tecnologie di fingerprinting su qualsiasi sito web. Pensato per ricercatori di sicurezza e sviluppatori.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Ogni scansione,",
+      "highlight": "salvata e ricercabile",
+      "after": "",
+      "subtitle": "Fissa le pagine, aggiungi note e scopri quando cambiano le protezioni di un sito. Esporta con filtri o fai il backup in automatico.",
+      "chips": [
+        "Pin e note",
+        "Badge Modificata",
+        "Esportazione e backup"
+      ]
+    },
+    "rules": {
+      "before": "I tuoi rilevatori,",
+      "highlight": "le tue regole",
+      "after": "",
+      "subtitle": "Aggiorna i rilevatori integrati, attivali o disattivali e scrivi le tue regole.",
+      "chips": [
+        "Rilevatori integrati",
+        "Regole utente",
+        "Importa/esporta"
+      ]
+    },
+    "advanced": {
+      "before": "Strumenti di acquisizione",
+      "highlight": "su richiesta",
+      "after": "",
+      "subtitle": "Quando viene trovata una protezione supportata, raccogli chiavi del sito, cookie e parametri della sfida per l’analisi.",
+      "chips": [
+        "Per fornitore",
+        "Chiavi e cookie",
+        "Esporta acquisizioni"
+      ]
+    },
+    "settings": {
+      "before": "Parla",
+      "highlight": "la tua lingua",
+      "after": "",
+      "subtitle": "22 lingue dell’interfaccia, notifiche, webhook, domini da ignorare e aggiornamenti dei rilevatori.",
+      "chips": [
+        "22 lingue",
+        "Webhook",
+        "Domini da ignorare"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Serve un proxy residenziale",
+    "detected": "{0} rilevate"
+  }
+}

@@ -1,0 +1,26 @@
+Lihat cara situs web mana pun menangkal bot. Scrapfly detektor anti-bot menampilkan sistem anti-bot, CAPTCHA, dan teknik fingerprinting yang dipakai tiap halaman, seberapa meyakinkan tiap kecocokan, dan seberapa sulit melewatinya. Gratis digunakan.
+
+Yang Anda lihat
+• Angka pada ikon toolbar: jumlah proteksi yang dipakai halaman.
+• Satu kartu per proteksi, lengkap dengan tingkat kepercayaan, tingkat kesulitan, dan sinyal yang mengungkapnya: URL, cookie, header, kode halaman, elemen halaman, panggilan API browser, dan body permintaan.
+• 70 detektor bawaan: 30 sistem anti-bot, 19 CAPTCHA, dan 21 teknik fingerprinting. Masing-masing berupa file JSON biasa yang dapat Anda baca, edit, atau perluas.
+
+Di dalam popup
+• Deteksi: apa yang digunakan halaman saat ini, beserta bukti di balik setiap kecocokan.
+• Riwayat: setiap halaman yang dipindai dapat dicari. Sematkan halaman, tambahkan catatan, lihat kapan proteksi sebuah situs berubah, ekspor dengan filter (JSON, CSV, atau teks), dan cadangkan secara otomatis.
+• Aturan: aktifkan atau nonaktifkan detektor, perbarui tanpa menunggu versi baru, edit pola, dan tulis aturan Anda sendiri.
+• Lanjutan: alat sesuai kebutuhan untuk proteksi yang didukung, seperti mengekstrak site key, memeriksa cookie, dan menganalisis script.
+• Pengaturan: cache, domain yang dilewati, notifikasi, webhook, tautan berbagi, warna, dan 22 bahasa antarmuka.
+• Statistik riwayat (Pengaturan → Data → Buka statistik): grafik privat yang dihitung di perangkat Anda dari riwayat Anda, seperti sistem yang paling sering Anda temui dan situs tersulit.
+
+Dibuat untuk
+Developer web scraping yang ingin tahu apa yang melindungi sebuah halaman sebelum menulis kode apa pun, peneliti keamanan, dan pemilik situs yang ingin memeriksa seperti apa pertahanan bot mereka dari luar.
+
+Privasi
+Deteksi berjalan sepenuhnya di browser Anda. Tidak ada akun dan tidak ada analytics, dan halaman yang Anda kunjungi tidak pernah dikirim ke Scrapfly. Ekstensi hanya membuat beberapa permintaan yang dapat Anda lihat: pembaruan detektor dari rilis GitHub publik proyek ini, ikon situs (milik situs itu sendiri, atau layanan favicon Google jika situs tidak punya), bendera bahasa, dan permintaan ke webhook atau tautan berbagi Anda sendiri (hanya jika Anda mengaktifkannya). Cadangan riwayat otomatis yang opsional disimpan ke folder Unduhan Anda.
+
+Bahasa
+Antarmuka tersedia dalam 22 bahasa, termasuk bahasa Spanyol, Prancis, Jerman, Portugis, Rusia, Jepang, Korea, Tionghoa, Arab, dan Hindi.
+
+Open source
+Kode dan setiap detektor bersifat open source di GitHub (scrapfly/Antibot-Detector): laporkan masalah atau tambahkan detektor di sana.

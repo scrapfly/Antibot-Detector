@@ -1,0 +1,26 @@
+Veja como qualquer site se defende de bots. O detector anti-bot da Scrapfly mostra quais sistemas anti-bot, CAPTCHAs e técnicas de fingerprinting cada página usa, o nível de confiança de cada correspondência e a dificuldade de contorná-los. Gratuito.
+
+O que você vê
+• Um número no ícone da barra de ferramentas: quantas proteções a página usa.
+• Um cartão por proteção, com o nível de confiança, a dificuldade e os sinais que a revelaram: URLs, cookies, cabeçalhos, código e elementos da página, chamadas de API do navegador e corpos de requisições.
+• Inclui 70 detectores: 30 sistemas anti-bot, 19 CAPTCHAs e 21 técnicas de fingerprinting. Cada um é um arquivo JSON simples que você pode ler, editar ou ampliar.
+
+Dentro do popup
+• Detecção: o que a página atual usa, com as evidências por trás de cada correspondência.
+• Histórico: todas as páginas analisadas, com busca. Fixe páginas, adicione notas, veja quando as proteções de um site mudam, exporte com filtros (JSON, CSV ou texto) e faça backups automáticos.
+• Regras: ative ou desative detectores, atualize-os sem esperar uma nova versão, edite padrões e escreva suas próprias regras.
+• Avançado: ferramentas sob demanda para as proteções compatíveis, como extrair chaves do site, verificar cookies e analisar scripts.
+• Configurações: cache, sites para ignorar, notificações, webhooks, links de compartilhamento, cores e 22 idiomas de interface.
+• Estatísticas do histórico (Configurações → Dados → Abrir estatísticas): gráficos privados calculados no seu dispositivo a partir do seu histórico, como os sistemas que você mais encontra e os sites mais difíceis.
+
+Feito para
+Desenvolvedores de web scraping que querem saber o que protege uma página antes de escrever qualquer código, pesquisadores de segurança e donos de sites que verificam como suas defesas contra bots são vistas de fora.
+
+Privacidade
+A detecção roda inteiramente no seu navegador. Não há contas nem analytics, e as páginas que você visita nunca são enviadas à Scrapfly. A extensão faz apenas algumas requisições que você pode ver: atualizações de detectores a partir das versões públicas deste projeto no GitHub, ícones de sites (o do próprio site ou o serviço de favicons do Google quando o site não tem nenhum), bandeiras de idiomas e, só se você ativar, seu próprio webhook ou link de compartilhamento. Os backups automáticos opcionais do histórico são salvos na sua pasta Downloads.
+
+Idiomas
+A interface está disponível em 22 idiomas, incluindo espanhol, francês, alemão, português, russo, japonês, coreano, chinês, árabe e hindi.
+
+Código aberto
+O código e todos os detectores são de código aberto no GitHub (scrapfly/Antibot-Detector): relate um problema ou adicione um detector por lá.

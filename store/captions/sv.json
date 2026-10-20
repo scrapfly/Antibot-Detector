@@ -1,0 +1,60 @@
+{
+  "language": "sv",
+  "screens": {
+    "detection": {
+      "before": "Upptäck",
+      "highlight": "skyddssystem",
+      "after": "i realtid",
+      "subtitle": "Identifiera CAPTCHA, anti-bot-system och fingerprinting-tekniker på vilken webbplats som helst. Byggt för säkerhetsforskare och utvecklare.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Varje skanning,",
+      "highlight": "sparad och sökbar",
+      "after": "",
+      "subtitle": "Fäst sidor, lägg till anteckningar och se när en webbplats skydd ändras. Exportera med filter eller säkerhetskopiera automatiskt.",
+      "chips": [
+        "Fäst & anteckningar",
+        "Märket Ändrad",
+        "Export & backup"
+      ]
+    },
+    "rules": {
+      "before": "Dina detektorer,",
+      "highlight": "dina regler",
+      "after": "",
+      "subtitle": "Uppdatera de inbyggda detektorerna, slå på eller av dem och skriv egna regler.",
+      "chips": [
+        "Inbyggda detektorer",
+        "Egna regler",
+        "Import & export"
+      ]
+    },
+    "advanced": {
+      "before": "Insamlingsverktyg",
+      "highlight": "på begäran",
+      "after": "",
+      "subtitle": "Samla in webbplatsnycklar, cookies och utmaningsparametrar för analys när ett skydd som stöds hittas.",
+      "chips": [
+        "Leverantörsverktyg",
+        "Nycklar & cookies",
+        "Dataexport"
+      ]
+    },
+    "settings": {
+      "before": "Talar",
+      "highlight": "ditt språk",
+      "after": "",
+      "subtitle": "22 gränssnittsspråk, aviseringar, webhooks, webbplatser som hoppas över och detektoruppdateringar.",
+      "chips": [
+        "22 språk",
+        "Webhooks",
+        "Hoppa över webbplatser"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Behöver en residential proxy",
+    "detected": "{0} upptäckta"
+  }
+}

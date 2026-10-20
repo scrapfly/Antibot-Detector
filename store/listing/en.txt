@@ -11,7 +11,7 @@ Inside the popup
 • Rules: switch detectors on or off, update them without waiting for a new version, edit patterns and write your own rules.
 • Advanced: on-demand tools for supported protections, such as extracting site keys, checking cookies and analyzing scripts.
 • Settings: caching, sites to skip, notifications, webhooks, share links, colors and 22 interface languages.
-• Statistics (from Settings → Data): private charts computed on your device from your history, such as the systems you meet most and the hardest sites.
+• History statistics (Settings → Data → Open statistics): private charts computed on your device from your history, such as the systems you meet most and the hardest sites.
 
 Made for
 Web scraping developers who want to know what protects a page before writing any code, security researchers, and site owners checking how their bot defenses look from the outside.

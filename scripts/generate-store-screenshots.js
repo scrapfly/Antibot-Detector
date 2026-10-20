@@ -21,6 +21,14 @@
 //   --extension D  load the extension from D instead of this checkout (a copy on a
 //                  fast disk starts much quicker than a Windows drive seen from WSL)
 //   --out D        where the store images go (default assets/store-screenshots)
+//   --captions-dir D  read the copy of the images from D/<code>.json (default store/captions)
+//   --captures D   keep the popup captures in D/<code>/*.png, and reuse the ones already
+//                  there instead of opening the extension again: after a caption changes,
+//                  only the artwork is drawn again (a few seconds a language)
+//   --fontconfig F a fontconfig file for the browsers, when the machine lacks a font a
+//                  language needs. Traditional Chinese is drawn with the system's
+//                  Traditional font (Microsoft JhengHei, PingFang TC, Noto Sans TC);
+//                  on Linux or WSL point F at a config that adds one (store/README.md)
 //
 // Playwright is not a project dependency. Install it anywhere and point at it:
 //   npm i --prefix /tmp/pw playwright && npx --prefix /tmp/pw playwright install chromium
@@ -30,21 +38,24 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { chromium } = require('playwright');
-const { storeArtHtml, checkStoreArtLayout, STORE_ART } = require('./lib/store-art.js');
+const { storeArtHtml, openStoreArt, checkStoreArtLayout, checkStoreArtFonts, visiblePopupHeight, STORE_ART } = require('./lib/store-art.js');
+const { STORE_IMAGES } = require('./lib/store-images.js');
 
 const repoRoot = path.resolve(__dirname, '..');
 const localesDir = path.join(repoRoot, '_locales');
-const captionsDir = path.join(repoRoot, 'store', 'captions');
 const popupSize = { width: 400, height: 580 };
 const captureScale = 2;
 
 function parseArgs(argv) {
-    const options = { langs: ['en'], extension: repoRoot, out: path.join(repoRoot, 'assets', 'store-screenshots') };
+    const options = { langs: ['en'], extension: repoRoot, out: path.join(repoRoot, 'assets', 'store-screenshots'), captions: path.join(repoRoot, 'store', 'captions'), captures: null, fontconfig: null };
     for (let i = 0; i < argv.length; i++) {
         const arg = argv[i];
         if (arg === '--lang') options.langs = String(argv[++i] || '').split(',').filter(Boolean);
         else if (arg === '--extension') options.extension = path.resolve(argv[++i]);
         else if (arg === '--out') options.out = path.resolve(argv[++i]);
+        else if (arg === '--captions-dir') options.captions = path.resolve(argv[++i]);
+        else if (arg === '--captures') options.captures = path.resolve(argv[++i]);
+        else if (arg === '--fontconfig') options.fontconfig = path.resolve(argv[++i]);
         else throw new Error(`Unknown option ${arg}`);
     }
     if (options.langs.length === 1 && options.langs[0] === 'all') {
@@ -92,29 +103,18 @@ const demoSites = [
     }
 ];
 
-// The five store images, in the order the store shows them. `capture` is the popup
-// state a popup image shows (none for the drawn hero); `screen` is the key of the
-// language's captions file.
-const storeImages = [
-    { filename: '01-detection-1280x800.png', screen: 'detection', kind: 'hero' },
-    { filename: '02-history-1280x800.png', screen: 'history', kind: 'popup', capture: 'history' },
-    { filename: '03-rules-1280x800.png', screen: 'rules', kind: 'popup', capture: 'rules' },
-    { filename: '04-advanced-tools-1280x800.png', screen: 'advanced', kind: 'popup', capture: 'advanced-tool' },
-    { filename: '05-settings-1280x800.png', screen: 'settings', kind: 'popup', capture: 'settings-languages' }
-];
-
-function readCaptions(lang) {
+function readCaptions(captionsDir, lang) {
     const file = path.join(captionsDir, `${lang}.json`);
-    if (!fs.existsSync(file)) throw new Error(`store/captions/${lang}.json is missing`);
+    if (!fs.existsSync(file)) throw new Error(`${path.relative(repoRoot, file)} is missing`);
     const captions = JSON.parse(fs.readFileSync(file, 'utf8'));
-    for (const { screen } of storeImages) {
+    for (const { screen } of STORE_IMAGES) {
         const copy = captions.screens && captions.screens[screen];
         if (!copy || !copy.highlight || !copy.subtitle || !(copy.chips === 'categories' || Array.isArray(copy.chips))) {
-            throw new Error(`store/captions/${lang}.json: screens.${screen} needs highlight, subtitle and chips`);
+            throw new Error(`${path.relative(repoRoot, file)}: screens.${screen} needs highlight, subtitle and chips`);
         }
     }
     if (!captions.demo || !captions.demo.note || !String(captions.demo.detected).includes('{0}')) {
-        throw new Error(`store/captions/${lang}.json: demo needs note and detected (with {0})`);
+        throw new Error(`${path.relative(repoRoot, file)}: demo needs note and detected (with {0})`);
     }
     return captions;
 }
@@ -143,22 +143,24 @@ function demoResponse(site) {
     };
 }
 
-// The Rules list scrolls under a sticky pagination bar, and the first page opens
-// on Akamai, whose method chips take two rows, so the bar covers the second
-// card's version and switch until the list is scrolled. Search for the demo
-// page's vendor instead: real cards, all of them in view.
+// The Rules list scrolls under a sticky pagination bar at the bottom of the popup. A store image
+// shows only the top of the popup (visiblePopupHeight), so a card hidden by the bar matters only
+// when the bar reaches into that part. The first page opens on Akamai, whose method chips take two
+// rows, so its second card is covered early: search for the demo page's vendor instead.
 const rulesSearch = 'cloudflare';
 
 async function showRulesThatFit(popup) {
     await popup.fill('#rulesSearch', rulesSearch);
     await popup.waitForTimeout(800);
-    const hidden = await popup.evaluate(() => {
+    const visible = visiblePopupHeight(popupSize.width);
+    const hidden = await popup.evaluate((limit) => {
         const bar = document.getElementById('rulesPagination');
         const barTop = bar && bar.offsetParent ? bar.getBoundingClientRect().top : window.innerHeight;
+        if (barTop >= limit) return [];
         return [...document.querySelectorAll('#rulesList .detector-card')]
             .filter((card) => card.offsetParent && card.getBoundingClientRect().bottom > barTop)
             .map((card) => card.dataset.detectorId);
-    });
+    }, visible);
     if (hidden.length) {
         throw new Error(`Rules shot: the pagination bar covers ${hidden.join(', ')}; pick another search than "${rulesSearch}"`);
     }
@@ -167,8 +169,8 @@ async function showRulesThatFit(popup) {
 // History as a person would have it after a morning of browsing: scans spread over the
 // day instead of seconds ago, and the newest page pinned with a note and a Changed badge
 // (the 3.0 features), written through the same store the extension uses.
-async function seedHistory(worker, demo) {
-    await worker.evaluate(async ({ note }) => {
+async function seedHistory(worker) {
+    await worker.evaluate(async () => {
         const now = Date.now();
         const minutes = (n) => now - n * 60000;
         await HistoryStore.mutate((items) => {
@@ -181,21 +183,36 @@ async function seedHistory(worker, demo) {
             news.timestamp = minutes(95);
             travel.timestamp = minutes(250);
             shop.pinned = true;
-            shop.note = note;
             shop.changed = { at: minutes(60), added: ['Google reCAPTCHA'], removed: ['hCaptcha'] };
             return [shop, news, travel, ...items.filter((item) => ![shop, news, travel].includes(item))];
         }, chrome.storage.local);
-    }, { note: demo.note });
+    });
 }
 
-async function capturePopups({ extensionDir, langs, captionsByLang, workDir }) {
+// The note on the pinned page is typed by a person, so it is written in each language's own words
+async function setDemoNote(worker, note) {
+    await worker.evaluate(async (text) => {
+        await HistoryStore.mutate((items) => {
+            const shop = items.find((item) => item.hostname === 'shop.example');
+            if (!shop) throw new Error('The demo page is missing from History');
+            shop.note = text;
+            return items;
+        }, chrome.storage.local);
+    }, note);
+}
+
+// The browsers inherit this machine's environment, plus the fontconfig file the options name
+const browserEnv = (fontconfig) => ({ ...process.env, ...(fontconfig ? { FONTCONFIG_FILE: fontconfig } : {}) });
+
+async function capturePopups({ extensionDir, langs, captionsByLang, workDir, fontconfig }) {
     const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'store-shots-'));
     const context = await chromium.launchPersistentContext(profile, {
         channel: 'chromium',
         headless: true,
         args: [`--disable-extensions-except=${extensionDir}`, `--load-extension=${extensionDir}`],
         viewport: { width: 1280, height: 800 },
-        locale: 'en-US'
+        locale: 'en-US',
+        env: browserEnv(fontconfig)
     });
 
     try {
@@ -241,7 +258,7 @@ async function capturePopups({ extensionDir, langs, captionsByLang, workDir }) {
             }
             if (!saved) throw new Error(`Demo page ${site.host} was never saved to History`);
         }
-        await seedHistory(worker, captionsByLang[langs[0]].demo);
+        await seedHistory(worker);
 
         const demoTabId = await worker.evaluate(async () => {
             const [tab] = await chrome.tabs.query({ url: 'https://shop.example/*' });
@@ -305,6 +322,10 @@ async function capturePopups({ extensionDir, langs, captionsByLang, workDir }) {
             await popup.waitForTimeout(1000);
 
             for (const tab of ['history', 'rules']) {
+                if (tab === 'history') {
+                    // The note is read when History renders: write it before the tab opens
+                    await setDemoNote(worker, captionsByLang[lang].demo.note);
+                }
                 await popup.click(`[data-tab="${tab}"]`);
                 await popup.waitForTimeout(1500);
                 if (tab === 'rules') await showRulesThatFit(popup);
@@ -324,6 +345,10 @@ async function capturePopups({ extensionDir, langs, captionsByLang, workDir }) {
             await popup.click('#languagePickerTrigger');
             await popup.waitForSelector('#languagePickerMenu:not([hidden])', { timeout: 5000 });
             await popup.waitForTimeout(1500);
+            // Opening the list scrolls Settings down until the whole list is in view, by an amount that depends on how
+            // many lines the language's own texts take: back to the top, so the first card's title is never cut off
+            await popup.evaluate(() => { document.querySelector('#languagePicker').closest('.modal-body').scrollTop = 0; });
+            await popup.waitForTimeout(300);
             await shoot('settings-languages');
         }
         return captures;
@@ -333,51 +358,86 @@ async function capturePopups({ extensionDir, langs, captionsByLang, workDir }) {
     }
 }
 
-async function renderStoreImages({ langs, captionsByLang, captures, outDir }) {
-    const browser = await chromium.launch({ channel: 'chromium', headless: true });
+async function renderStoreImages({ langs, captionsByLang, captures, outDir, fontconfig }) {
+    const browser = await chromium.launch({ channel: 'chromium', headless: true, env: browserEnv(fontconfig) });
+    const failures = [];
     try {
+        const context = await browser.newContext({ viewport: { width: STORE_ART.width, height: STORE_ART.height }, deviceScaleFactor: STORE_ART.scale });
         for (const lang of langs) {
             const copyOf = captionsByLang[lang];
             const labels = categoryLabels(lang);
             const langOut = path.join(outDir, lang);
             fs.mkdirSync(langOut, { recursive: true });
-            for (const image of storeImages) {
+            const fonts = new Set();
+            for (const image of STORE_IMAGES) {
+                const label = `${lang}/${image.filename}`;
                 const html = storeArtHtml({
+                    lang,
                     kind: image.kind,
                     copy: copyOf.screens[image.screen],
                     captureFile: image.capture ? captures[lang][image.capture] : undefined,
                     categoryLabels: labels,
                     detectedLabel: copyOf.demo.detected
                 });
-                const tab = await browser.newPage({ viewport: { width: STORE_ART.width, height: STORE_ART.height }, deviceScaleFactor: STORE_ART.scale });
-                await tab.setContent(html, { waitUntil: 'load' });
-                await tab.evaluate(async () => {
-                    await document.fonts.ready;
-                    await Promise.all([...document.images].map((img) => img.decode()));
-                });
-                await checkStoreArtLayout(tab, `${lang}/${image.filename}`);
-                await tab.screenshot({ path: path.join(langOut, image.filename) });
-                await tab.close();
-                console.log(`Wrote ${path.relative(repoRoot, path.join(langOut, image.filename))}`);
+                const tab = await openStoreArt(context, html);
+                try {
+                    await checkStoreArtLayout(tab, label);
+                    (await checkStoreArtFonts(tab, label, lang)).forEach((family) => fonts.add(family));
+                    await tab.screenshot({ path: path.join(langOut, image.filename) });
+                    console.log(`Wrote ${path.relative(repoRoot, path.join(langOut, image.filename))}`);
+                } catch (error) {
+                    // Keep going so one run reports every language that needs shorter copy
+                    failures.push(error.message);
+                    fs.rmSync(path.join(langOut, image.filename), { force: true });
+                } finally {
+                    await tab.close();
+                }
             }
+            console.log(`  ${lang}: fonts ${[...fonts].join(', ')}`);
         }
     } finally {
         await browser.close();
     }
+    if (failures.length) throw new Error(`${failures.length} image(s) not written:\n${failures.join('\n')}`);
 }
+
+const captureNames = [...new Set(STORE_IMAGES.filter((image) => image.capture).map((image) => image.capture))];
+const captureFile = (dir, lang, name) => path.join(dir, lang, `${name}.png`);
+
+// A long run now and then loses its browser, so the popup captures are taken a few languages at
+// a time, and a batch that fails is taken again (what it already saved is kept)
+const CAPTURE_BATCH = 5;
+const CAPTURE_FAILURES = 3;
 
 async function main() {
     const options = parseArgs(process.argv.slice(2));
-    const captionsByLang = Object.fromEntries(options.langs.map((lang) => [lang, readCaptions(lang)]));
+    const captionsByLang = Object.fromEntries(options.langs.map((lang) => [lang, readCaptions(options.captions, lang)]));
     options.langs.forEach(categoryLabels); // fails early on a language without its category names
     fs.mkdirSync(options.out, { recursive: true });
-    const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'store-captures-'));
+    const workDir = options.captures || fs.mkdtempSync(path.join(os.tmpdir(), 'store-captures-'));
+    fs.mkdirSync(workDir, { recursive: true });
 
     try {
-        const captures = await capturePopups({ extensionDir: options.extension, langs: options.langs, captionsByLang, workDir });
-        await renderStoreImages({ langs: options.langs, captionsByLang, captures, outDir: options.out });
+        // Captures an earlier run kept (--captures) are reused: delete a language's folder to take them again
+        const missing = () => options.langs.filter((lang) => !captureNames.every((name) => fs.existsSync(captureFile(workDir, lang, name))));
+        let failures = 0;
+        for (let todo = missing(); todo.length; todo = missing()) {
+            const batch = todo.slice(0, CAPTURE_BATCH);
+            try {
+                await capturePopups({ extensionDir: options.extension, langs: batch, captionsByLang, workDir, fontconfig: options.fontconfig });
+                failures = 0;
+            } catch (error) {
+                console.warn(`Capturing ${batch.join(', ')} failed: ${String(error.message).split('\n')[0]}`);
+                if (++failures >= CAPTURE_FAILURES) throw error;
+            }
+        }
+        const captures = Object.fromEntries(options.langs.map((lang) => [
+            lang,
+            Object.fromEntries(captureNames.map((name) => [name, captureFile(workDir, lang, name)]))
+        ]));
+        await renderStoreImages({ langs: options.langs, captionsByLang, captures, outDir: options.out, fontconfig: options.fontconfig });
     } finally {
-        fs.rmSync(workDir, { recursive: true, force: true });
+        if (!options.captures) fs.rmSync(workDir, { recursive: true, force: true });
     }
 }
 

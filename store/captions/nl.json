@@ -1,0 +1,60 @@
+{
+  "language": "nl",
+  "screens": {
+    "detection": {
+      "before": "Detecteer",
+      "highlight": "beveiligingssystemen",
+      "after": "in realtime",
+      "subtitle": "Herken CAPTCHA's, anti-botsystemen en fingerprintingtechnologieën op elke website. Gemaakt voor beveiligingsonderzoekers en ontwikkelaars.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Elke scan,",
+      "highlight": "opgeslagen en doorzoekbaar",
+      "after": "",
+      "subtitle": "Zet pagina's vast, voeg notities toe en zie wanneer de beveiligingen van een site veranderen. Exporteer met filters of maak automatisch back-ups.",
+      "chips": [
+        "Vastzetten & notities",
+        "Wijzigingen",
+        "Export & back-up"
+      ]
+    },
+    "rules": {
+      "before": "Jouw detectors,",
+      "highlight": "jouw regels",
+      "after": "",
+      "subtitle": "Werk de ingebouwde detectors bij, schakel ze in of uit en schrijf je eigen regels.",
+      "chips": [
+        "Ingebouwde detectors",
+        "Eigen regels",
+        "Import & export"
+      ]
+    },
+    "advanced": {
+      "before": "Opnametools",
+      "highlight": "op aanvraag",
+      "after": "",
+      "subtitle": "Zodra een ondersteunde beveiliging is gevonden, verzamel je sitesleutels, cookies en challengeparameters voor analyse.",
+      "chips": [
+        "Leverancierstools",
+        "Sleutels & cookies",
+        "Export"
+      ]
+    },
+    "settings": {
+      "before": "Spreekt",
+      "highlight": "jouw taal",
+      "after": "",
+      "subtitle": "22 interfacetalen, meldingen, webhooks, sites overslaan en detectorupdates.",
+      "chips": [
+        "22 talen",
+        "Webhooks",
+        "Sites overslaan"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Residentiële proxy nodig",
+    "detected": "{0} gedetecteerd"
+  }
+}

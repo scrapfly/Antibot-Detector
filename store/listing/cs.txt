@@ -1,0 +1,26 @@
+Zjistěte, jak se jakýkoli web brání proti botům. Scrapfly detektor anti-bot ukáže, které anti-bot systémy, CAPTCHA a techniky fingerprintingu každá stránka používá, jak spolehlivá je každá shoda a jak obtížné je ochranu obejít. Používání je zdarma.
+
+Co uvidíte
+• Číslo na ikoně v panelu nástrojů: kolik ochran stránka používá.
+• Ke každé ochraně jedna karta se spolehlivostí, obtížností a signály, které ji prozradily: URL, cookies, hlavičky, kód stránky, prvky stránky, volání API prohlížeče a těla požadavků.
+• Součástí je 70 detektorů: 30 anti-bot systémů, 19 CAPTCHA a 21 technik fingerprintingu. Každý z nich je obyčejný soubor JSON, který si můžete přečíst, upravit nebo rozšířit.
+
+V okně rozšíření
+• Detekce: co používá aktuální stránka, s důkazy ke každé shodě.
+• Historie: všechny naskenované stránky s možností vyhledávání. Připínejte stránky, přidávejte poznámky, zjistěte, kdy se ochrany webu změnily, exportujte s filtry (JSON, CSV nebo text) a zálohujte automaticky.
+• Pravidla: zapínejte a vypínejte detektory, aktualizujte je bez čekání na novou verzi, upravujte vzory a pište vlastní pravidla.
+• Rozšířené: nástroje na vyžádání pro podporované ochrany, například extrakce klíčů webu, kontrola cookies a analýza skriptů.
+• Nastavení: mezipaměť, přeskakované weby, oznámení, webhooky, odkazy ke sdílení, barvy a 22 jazyků rozhraní.
+• Statistiky historie (Nastavení → Data → Otevřít statistiky): soukromé grafy vypočítané ve vašem zařízení z vaší historie, například systémy, na které narážíte nejčastěji, a nejobtížnější weby.
+
+Pro koho je určeno
+Pro vývojáře web scrapingu, kteří chtějí vědět, co stránku chrání, dřív než začnou psát kód, pro bezpečnostní výzkumníky a pro majitele webů, kteří kontrolují, jak jejich obrana proti botům vypadá zvenčí.
+
+Soukromí
+Detekce probíhá celá ve vašem prohlížeči. Nejsou tu žádné účty ani analytika a navštívené stránky se nikdy neodesílají společnosti Scrapfly. Rozšíření odesílá jen několik požadavků, které můžete vidět: aktualizace detektorů z veřejných vydání tohoto projektu na GitHubu, ikony webů (vlastní ikona webu, nebo služba Google pro favikony, pokud ji web nemá), vlajky jazyků a, jen pokud je zapnete, váš vlastní webhook nebo odkaz ke sdílení. Volitelné automatické zálohy historie se ukládají do složky Stažené soubory.
+
+Jazyky
+Rozhraní je k dispozici ve 22 jazycích, mimo jiné ve španělštině, francouzštině, němčině, portugalštině, ruštině, japonštině, korejštině, čínštině, arabštině a hindštině.
+
+Open source
+Kód i všechny detektory jsou open source na GitHubu (scrapfly/Antibot-Detector): nahlaste tam problém nebo přidejte detektor.

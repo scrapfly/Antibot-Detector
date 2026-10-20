@@ -1,0 +1,26 @@
+Se hur valfri webbplats försvarar sig mot botar. Scrapfly anti-bot-detektor visar vilka anti-bot-system, CAPTCHA och fingerprinting-tekniker varje sida använder, hur säker varje träff är och hur svårt det är att ta sig förbi. Gratis att använda.
+
+Det här ser du
+• En siffra på ikonen i verktygsfältet: hur många skydd sidan använder.
+• Ett kort per skydd med dess säkerhet, svårighet och de signaler som avslöjade det: URL:er, cookies, headers, sidans kod, sidelement, anrop till webbläsar-API:er och innehållet i begäranden.
+• 70 detektorer ingår: 30 anti-bot-system, 19 CAPTCHA och 21 fingerprinting-tekniker. Var och en är en vanlig JSON-fil som du kan läsa, redigera eller utöka.
+
+I popup-fönstret
+• Upptäckt: vad den aktuella sidan använder, med belägg för varje träff.
+• Historik: alla skannade sidor, sökbara. Fäst sidor, lägg till anteckningar, se när en webbplats skydd ändras, exportera med filter (JSON, CSV eller text) och säkerhetskopiera automatiskt.
+• Regler: slå på eller av detektorer, uppdatera dem utan att vänta på en ny version, redigera mönster och skriv egna regler.
+• Avancerat: verktyg på begäran för skydd som stöds, till exempel att extrahera webbplatsnycklar, kontrollera cookies och analysera skript.
+• Inställningar: cachelagring, webbplatser som hoppas över, aviseringar, webhooks, delningslänkar, färger och 22 gränssnittsspråk.
+• Historikstatistik (Inställningar → Data → Öppna statistik): privata diagram som beräknas på din enhet utifrån din historik, till exempel de system du oftast stöter på och de svåraste webbplatserna.
+
+Gjort för
+Utvecklare som arbetar med webbskrapning och vill veta vad som skyddar en sida innan de skriver någon kod, säkerhetsforskare och webbplatsägare som kontrollerar hur deras botskydd ser ut utifrån.
+
+Integritet
+Upptäckten sker helt i din webbläsare. Det finns inga konton och inga analysverktyg, och sidorna du besöker skickas aldrig till Scrapfly. Tillägget skickar bara några få begäranden som du kan se: detektoruppdateringar från det här projektets offentliga GitHub-utgåvor, webbplatsikoner (webbplatsens egen, eller Googles favicon-tjänst om en webbplats saknar en), språkflaggor och, bara om du slår på dem, din egen webhook eller delningslänk. Valfria automatiska säkerhetskopior av historiken sparas i mappen Nedladdningar.
+
+Språk
+Gränssnittet finns på 22 språk, bland annat spanska, franska, tyska, portugisiska, ryska, japanska, koreanska, kinesiska, arabiska och hindi.
+
+Öppen källkod
+Koden och alla detektorer är öppen källkod på GitHub (scrapfly/Antibot-Detector): rapportera ett problem eller lägg till en detektor där.

@@ -1,0 +1,60 @@
+{
+  "language": "zh_TW",
+  "screens": {
+    "detection": {
+      "before": "即時偵測",
+      "highlight": "安全系統",
+      "after": "",
+      "subtitle": "辨識任何網站上的 CAPTCHA、反機器人系統和指紋辨識技術。專為資安研究人員和開發人員打造。",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "每次掃描，",
+      "highlight": "都有記錄可查",
+      "after": "",
+      "subtitle": "釘選網頁、新增備註，並查看網站的防護何時變更。可依篩選條件匯出，或自動備份。",
+      "chips": [
+        "釘選與備註",
+        "「已變更」標記",
+        "匯出與備份"
+      ]
+    },
+    "rules": {
+      "before": "您的偵測器，",
+      "highlight": "您的規則",
+      "after": "",
+      "subtitle": "更新內建偵測器，啟用或停用它們，還能撰寫您自己的規則。",
+      "chips": [
+        "內建偵測器",
+        "自訂規則",
+        "匯入與匯出"
+      ]
+    },
+    "advanced": {
+      "before": "擷取工具，",
+      "highlight": "依需求使用",
+      "after": "",
+      "subtitle": "偵測到受支援的防護時，即可收集網站金鑰、Cookie 和挑戰參數以供分析。",
+      "chips": [
+        "廠商工具",
+        "金鑰與 Cookie",
+        "匯出擷取項目"
+      ]
+    },
+    "settings": {
+      "before": "",
+      "highlight": "會說您的語言",
+      "after": "",
+      "subtitle": "22 種介面語言、通知、Webhook、略過的網域和偵測器更新。",
+      "chips": [
+        "22 種語言",
+        "Webhook",
+        "略過的網域"
+      ]
+    }
+  },
+  "demo": {
+    "note": "需要住宅代理",
+    "detected": "偵測到 {0} 項"
+  }
+}

@@ -1,0 +1,26 @@
+Her sitenin botlara karşı nasıl korunduğunu görün. Scrapfly anti-bot dedektörü, her sayfanın hangi anti-bot sistemlerini, CAPTCHA'ları ve parmak izi tekniklerini kullandığını, her eşleşmenin güven düzeyini ve aşılma zorluğunu gösterir. Ücretsizdir.
+
+Neler görürsünüz
+• Araç çubuğu simgesinde bir sayı: sayfanın kaç koruma kullandığı.
+• Koruma başına bir kart: güven düzeyi, zorluk derecesi ve onu ele veren sinyaller (URL'ler, çerezler, üstbilgiler, sayfa kodu, sayfa öğeleri, tarayıcı API çağrıları ve istek gövdeleri).
+• 70 dedektör dahil: 30 anti-bot sistemi, 19 CAPTCHA ve 21 parmak izi tekniği. Her biri okuyabileceğiniz, düzenleyebileceğiniz veya genişletebileceğiniz sade bir JSON dosyasıdır.
+
+Açılır pencerede
+• Tespit: geçerli sayfanın neler kullandığı, her eşleşmenin dayandığı kanıtlarla birlikte.
+• Geçmiş: taranan her sayfanın aranabilir kaydı. Sayfaları sabitleyin, not ekleyin, bir sitenin korumalarının ne zaman değiştiğini görün, filtrelerle dışa aktarın (JSON, CSV veya metin) ve otomatik olarak yedekleyin.
+• Kurallar: dedektörleri açın veya kapatın, yeni bir sürüm beklemeden güncelleyin, desenleri düzenleyin ve kendi kurallarınızı yazın.
+• Gelişmiş: desteklenen korumalar için istediğiniz zaman çalıştırabileceğiniz araçlar; site anahtarlarını çıkarma, çerezleri kontrol etme ve komut dosyalarını analiz etme gibi.
+• Ayarlar: önbellek, atlanacak siteler, bildirimler, webhook'lar, paylaşım bağlantıları, renkler ve 22 arayüz dili.
+• Geçmiş istatistikleri (Ayarlar → Veri → İstatistikleri aç): geçmişinizden cihazınızda hesaplanan özel grafikler; örneğin en sık karşılaştığınız sistemler ve en zor siteler.
+
+Kimler için
+Kod yazmadan önce bir sayfayı neyin koruduğunu öğrenmek isteyen web scraping geliştiricileri, güvenlik araştırmacıları ve bot savunmalarının dışarıdan nasıl göründüğünü kontrol eden site sahipleri.
+
+Gizlilik
+Tespit tamamen tarayıcınızda çalışır. Hesap yok, analitik yok; ziyaret ettiğiniz sayfalar da Scrapfly'ye asla gönderilmez. Uzantı yalnızca görebileceğiniz birkaç istek yapar: bu projenin herkese açık GitHub sürümlerinden dedektör güncellemeleri, site simgeleri (sitenin kendi simgesi veya sitede yoksa Google'ın favicon hizmeti), dil bayrakları ve yalnızca siz açarsanız kendi webhook'unuz ya da paylaşım bağlantınız. İsteğe bağlı otomatik geçmiş yedekleri İndirilenler klasörünüze kaydedilir.
+
+Diller
+Arayüz 22 dilde kullanılabilir; aralarında İspanyolca, Fransızca, Almanca, Portekizce, Rusça, Japonca, Korece, Çince, Arapça ve Hintçe de var.
+
+Açık kaynak
+Kodun tamamı ve her dedektör GitHub'da (scrapfly/Antibot-Detector) açık kaynaktır: orada bir sorun bildirebilir veya dedektör ekleyebilirsiniz.

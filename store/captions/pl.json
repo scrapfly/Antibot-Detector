@@ -1,0 +1,60 @@
+{
+  "language": "pl",
+  "screens": {
+    "detection": {
+      "before": "Wykrywaj",
+      "highlight": "systemy ochrony",
+      "after": "w\u00a0czasie rzeczywistym",
+      "subtitle": "Rozpoznawaj CAPTCHA, systemy anti\u2011bot i\u00a0technologie fingerprintingu na dowolnej stronie. Stworzone dla badaczy bezpieczeństwa i\u00a0programistów.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Każdy skan",
+      "highlight": "w\u00a0historii, z\u00a0wyszukiwarką",
+      "after": "",
+      "subtitle": "Przypinaj strony, dodawaj notatki i\u00a0sprawdzaj, kiedy zmieniają się ochrony witryny. Eksportuj z\u00a0filtrami lub twórz kopie zapasowe automatycznie.",
+      "chips": [
+        "Przypinanie i notatki",
+        "Znacznik zmian",
+        "Eksport i kopie"
+      ]
+    },
+    "rules": {
+      "before": "Twoje detektory,",
+      "highlight": "Twoje reguły",
+      "after": "",
+      "subtitle": "Aktualizuj wbudowane detektory, włączaj i\u00a0wyłączaj je oraz pisz własne reguły.",
+      "chips": [
+        "Wbudowane detektory",
+        "Własne reguły",
+        "Import i eksport"
+      ]
+    },
+    "advanced": {
+      "before": "Narzędzia przechwytywania",
+      "highlight": "na żądanie",
+      "after": "",
+      "subtitle": "Gdy wykryto obsługiwaną ochronę, zbieraj klucze witryny, pliki cookie i\u00a0parametry wyzwań do analizy.",
+      "chips": [
+        "Narzędzia dostawców",
+        "Klucze i cookie",
+        "Eksport danych"
+      ]
+    },
+    "settings": {
+      "before": "Mówi",
+      "highlight": "w\u00a0Twoim\u00a0języku",
+      "after": "",
+      "subtitle": "22 języki interfejsu, powiadomienia, webhooki, pomijane witryny i\u00a0aktualizacje detektorów.",
+      "chips": [
+        "22 języki",
+        "Webhooki",
+        "Pomijanie witryn"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Wymaga rezydencyjnego proxy",
+    "detected": "Wykryto: {0}"
+  }
+}

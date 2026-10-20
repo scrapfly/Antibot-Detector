@@ -1,0 +1,60 @@
+{
+  "language": "zh_CN",
+  "screens": {
+    "detection": {
+      "before": "实时检测",
+      "highlight": "安全系统",
+      "after": "",
+      "subtitle": "识别任何网站上的验证码、反机器人系统和指纹识别技术。专为安全研究人员和开发者打造。",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "每次扫描，",
+      "highlight": "都有记录可查",
+      "after": "",
+      "subtitle": "固定页面、添加备注，并查看网站的防护何时发生变化。可按筛选条件导出，或自动备份。",
+      "chips": [
+        "固定与备注",
+        "“有变化”标记",
+        "导出与备份"
+      ]
+    },
+    "rules": {
+      "before": "你的检测器，",
+      "highlight": "你的规则",
+      "after": "",
+      "subtitle": "更新内置检测器，启用或停用它们，还能编写你自己的规则。",
+      "chips": [
+        "内置检测器",
+        "自定义规则",
+        "导入与导出"
+      ]
+    },
+    "advanced": {
+      "before": "采集工具，",
+      "highlight": "按需使用",
+      "after": "",
+      "subtitle": "检测到受支持的防护后，即可收集站点密钥、Cookie 和挑战参数用于分析。",
+      "chips": [
+        "厂商工具",
+        "密钥与 Cookie",
+        "导出捕获"
+      ]
+    },
+    "settings": {
+      "before": "",
+      "highlight": "会说你的语言",
+      "after": "",
+      "subtitle": "22 种界面语言、通知、Webhook、跳过的域名和检测器更新。",
+      "chips": [
+        "22 种语言",
+        "Webhook",
+        "跳过的域名"
+      ]
+    }
+  },
+  "demo": {
+    "note": "需要住宅代理",
+    "detected": "检测到 {0} 项"
+  }
+}

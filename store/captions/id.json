@@ -1,0 +1,60 @@
+{
+  "language": "id",
+  "screens": {
+    "detection": {
+      "before": "Deteksi",
+      "highlight": "sistem keamanan",
+      "after": "secara real-time",
+      "subtitle": "Identifikasi CAPTCHA, sistem anti-bot, dan teknologi fingerprinting di situs web mana pun. Dibuat untuk peneliti keamanan dan developer.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Setiap pemindaian",
+      "highlight": "tersimpan dan dapat dicari",
+      "after": "",
+      "subtitle": "Sematkan halaman, tambahkan catatan, dan lihat kapan proteksi sebuah situs berubah. Ekspor dengan filter atau cadangkan secara otomatis.",
+      "chips": [
+        "Sematan & catatan",
+        "Badge Berubah",
+        "Ekspor & pencadangan"
+      ]
+    },
+    "rules": {
+      "before": "Detektor Anda,",
+      "highlight": "aturan Anda",
+      "after": "",
+      "subtitle": "Perbarui detektor bawaan, aktifkan atau nonaktifkan, dan tulis aturan Anda sendiri.",
+      "chips": [
+        "Detektor bawaan",
+        "Aturan kustom",
+        "Impor & ekspor"
+      ]
+    },
+    "advanced": {
+      "before": "Alat rekam",
+      "highlight": "sesuai kebutuhan",
+      "after": "",
+      "subtitle": "Saat proteksi yang didukung ditemukan, kumpulkan site key, cookie, dan parameter challenge untuk dianalisis.",
+      "chips": [
+        "Alat vendor",
+        "Site key & cookie",
+        "Ekspor rekaman"
+      ]
+    },
+    "settings": {
+      "before": "Berbicara",
+      "highlight": "bahasa Anda",
+      "after": "",
+      "subtitle": "22 bahasa antarmuka, notifikasi, webhook, domain yang dilewati, dan pembaruan detektor.",
+      "chips": [
+        "22 bahasa",
+        "Webhook",
+        "Lewati domain"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Perlu proxy residensial",
+    "detected": "{0} terdeteksi"
+  }
+}

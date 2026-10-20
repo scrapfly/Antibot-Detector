@@ -1,0 +1,60 @@
+{
+  "language": "pt_BR",
+  "screens": {
+    "detection": {
+      "before": "Detecte",
+      "highlight": "sistemas de segurança",
+      "after": "em tempo real",
+      "subtitle": "Identifique CAPTCHAs, sistemas anti-bot e técnicas de fingerprinting em qualquer site. Feito para pesquisadores de segurança e desenvolvedores.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Cada análise,",
+      "highlight": "salva e fácil de buscar",
+      "after": "",
+      "subtitle": "Fixe páginas, adicione notas e veja quando as proteções de um site mudam. Exporte com filtros ou faça backup automático.",
+      "chips": [
+        "Fixar e anotar",
+        "Ver mudanças",
+        "Exportação e backup"
+      ]
+    },
+    "rules": {
+      "before": "Seus detectores,",
+      "highlight": "suas regras",
+      "after": "",
+      "subtitle": "Atualize os detectores integrados, ative ou desative cada um e escreva suas próprias regras.",
+      "chips": [
+        "Integrados",
+        "Regras próprias",
+        "Importar e exportar"
+      ]
+    },
+    "advanced": {
+      "before": "Ferramentas de captura",
+      "highlight": "sob demanda",
+      "after": "",
+      "subtitle": "Quando uma proteção compatível é encontrada, colete chaves do site, cookies e parâmetros do desafio para análise.",
+      "chips": [
+        "Fornecedores",
+        "Chaves e cookies",
+        "Exportar capturas"
+      ]
+    },
+    "settings": {
+      "before": "Fala",
+      "highlight": "o seu idioma",
+      "after": "",
+      "subtitle": "22 idiomas de interface, notificações, webhooks, sites para ignorar e atualizações de detectores.",
+      "chips": [
+        "22 idiomas",
+        "Webhooks",
+        "Ignorar sites"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Precisa de proxy residencial",
+    "detected": "{0} detectadas"
+  }
+}

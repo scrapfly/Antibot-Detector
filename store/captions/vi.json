@@ -1,0 +1,60 @@
+{
+  "language": "vi",
+  "screens": {
+    "detection": {
+      "before": "Phát hiện",
+      "highlight": "hệ thống bảo mật",
+      "after": "tức thì",
+      "subtitle": "Nhận diện CAPTCHA, hệ thống anti-bot và công nghệ thu thập dấu vân tay trên mọi trang web. Dành cho nhà nghiên cứu bảo mật và lập trình viên.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Mọi lần quét đều",
+      "highlight": "được lưu và có thể tìm kiếm",
+      "after": "",
+      "subtitle": "Ghim trang, thêm ghi chú và xem khi nào biện pháp bảo vệ của một trang web thay đổi. Xuất theo bộ lọc hoặc sao lưu tự động.",
+      "chips": [
+        "Ghim & ghi chú",
+        "Nhãn Đã thay đổi",
+        "Xuất & sao lưu"
+      ]
+    },
+    "rules": {
+      "before": "Trình phát hiện và",
+      "highlight": "quy tắc của bạn",
+      "after": "",
+      "subtitle": "Cập nhật các trình phát hiện có sẵn, bật hoặc tắt chúng và tự viết quy tắc của riêng bạn.",
+      "chips": [
+        "Trình phát hiện có sẵn",
+        "Quy tắc tùy chỉnh",
+        "Nhập & xuất"
+      ]
+    },
+    "advanced": {
+      "before": "Công cụ ghi dữ liệu",
+      "highlight": "ngay khi bạn cần",
+      "after": "",
+      "subtitle": "Khi tìm thấy một biện pháp bảo vệ được hỗ trợ, hãy thu thập site key, cookie và tham số thử thách để phân tích.",
+      "chips": [
+        "Công cụ theo hãng",
+        "Site key & cookie",
+        "Xuất bản ghi"
+      ]
+    },
+    "settings": {
+      "before": "Dùng bằng chính",
+      "highlight": "ngôn ngữ của bạn",
+      "after": "",
+      "subtitle": "22 ngôn ngữ giao diện, thông báo, webhook, bỏ qua tên miền và cập nhật trình phát hiện.",
+      "chips": [
+        "22 ngôn ngữ",
+        "Webhook",
+        "Bỏ qua tên miền"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Cần proxy residential",
+    "detected": "Đã phát hiện {0}"
+  }
+}

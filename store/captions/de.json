@@ -1,0 +1,60 @@
+{
+  "language": "de",
+  "screens": {
+    "detection": {
+      "before": "Erkenne",
+      "highlight": "Sicherheitssysteme",
+      "after": "in Echtzeit",
+      "subtitle": "Identifiziere CAPTCHAs, Anti-Bot-Systeme und Fingerprinting-Technologien auf jeder Website. Gemacht für Sicherheitsforscher und Entwickler.",
+      "chips": "categories"
+    },
+    "history": {
+      "before": "Jeder Scan,",
+      "highlight": "gespeichert und durchsuchbar",
+      "after": "",
+      "subtitle": "Seiten anheften, Notizen ergänzen und sehen, wann sich der Schutz einer Website ändert. Mit Filtern exportieren oder automatisch sichern.",
+      "chips": [
+        "Pins & Notizen",
+        "Geändert-Badge",
+        "Export & Sicherung"
+      ]
+    },
+    "rules": {
+      "before": "Deine Detektoren,",
+      "highlight": "deine Regeln",
+      "after": "",
+      "subtitle": "Die integrierten Detektoren aktualisieren, ein- oder ausschalten und eigene Regeln schreiben.",
+      "chips": [
+        "Integrierte Detektoren",
+        "Eigene Regeln",
+        "Import & Export"
+      ]
+    },
+    "advanced": {
+      "before": "Erfassungs-Tools",
+      "highlight": "auf Abruf",
+      "after": "",
+      "subtitle": "Wird ein unterstützter Schutz gefunden, lassen sich Site-Keys, Cookies und Challenge-Parameter zur Analyse sammeln.",
+      "chips": [
+        "Anbieter-Tools",
+        "Keys & Cookies",
+        "Export der Erfassungen"
+      ]
+    },
+    "settings": {
+      "before": "Spricht",
+      "highlight": "deine Sprache",
+      "after": "",
+      "subtitle": "22 Oberflächensprachen, Benachrichtigungen, Webhooks, zu überspringende Domains und Detektor-Updates.",
+      "chips": [
+        "22 Sprachen",
+        "Webhooks",
+        "Domains überspringen"
+      ]
+    }
+  },
+  "demo": {
+    "note": "Residential-Proxy nötig",
+    "detected": "{0} erkannt"
+  }
+}

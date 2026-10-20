@@ -1,0 +1,26 @@
+Scopri come qualsiasi sito web si difende dai bot. Il rilevatore anti-bot Scrapfly mostra quali sistemi anti-bot, CAPTCHA e tecniche di fingerprinting usa ogni pagina, quanto è affidabile ogni rilevamento e quanto è difficile aggirarli. Gratuito.
+
+Cosa vedi
+• Un numero sull’icona nella barra degli strumenti: quante protezioni usa la pagina.
+• Una scheda per ogni protezione, con la sua affidabilità, la sua difficoltà e i segnali che l’hanno rivelata: URL, cookie, intestazioni, codice della pagina, elementi della pagina, chiamate alle API del browser e corpi delle richieste.
+• 70 rilevatori inclusi: 30 sistemi anti-bot, 19 CAPTCHA e 21 tecniche di fingerprinting. Ognuno è un semplice file JSON che puoi leggere, modificare o estendere.
+
+Nel popup
+• Rilevamento: cosa usa la pagina corrente, con le prove a sostegno di ogni corrispondenza.
+• Cronologia: ogni pagina analizzata, ricercabile. Fissa le pagine, aggiungi note, scopri quando cambiano le protezioni di un sito, esporta con filtri (JSON, CSV o testo) ed esegui il backup in automatico.
+• Regole: attiva o disattiva i rilevatori, aggiornali senza aspettare una nuova versione, modifica i pattern e scrivi le tue regole.
+• Avanzate: strumenti su richiesta per le protezioni supportate, ad esempio per estrarre le chiavi del sito, controllare i cookie e analizzare gli script.
+• Impostazioni: cache, domini da ignorare, notifiche, webhook, link di condivisione, colori e 22 lingue dell’interfaccia.
+• Statistiche della cronologia (Impostazioni → Dati → Apri statistiche): grafici privati calcolati sul tuo dispositivo a partire dalla tua cronologia, come i sistemi che incontri più spesso e i siti più difficili.
+
+Pensato per
+Sviluppatori di web scraping che vogliono sapere cosa protegge una pagina prima di scrivere codice, ricercatori di sicurezza e proprietari di siti che controllano come appaiono dall’esterno le loro difese contro i bot.
+
+Privacy
+Il rilevamento avviene interamente nel tuo browser. Non ci sono account né analytics, e le pagine che visiti non vengono mai inviate a Scrapfly. L’estensione effettua solo poche richieste che puoi vedere: gli aggiornamenti dei rilevatori dalle release pubbliche di questo progetto su GitHub, le icone dei siti (quella del sito stesso o il servizio di favicon di Google quando un sito non ne ha una), le bandiere delle lingue e, solo se li attivi, il tuo webhook o link di condivisione. I backup automatici facoltativi della cronologia vengono salvati nella tua cartella Download.
+
+Lingue
+L’interfaccia è disponibile in 22 lingue, tra cui spagnolo, francese, tedesco, portoghese, russo, giapponese, coreano, cinese, arabo e hindi.
+
+Open source
+Il codice e ogni rilevatore sono open source su GitHub (scrapfly/Antibot-Detector): lì puoi segnalare un problema o aggiungere un rilevatore.
