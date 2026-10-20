@@ -557,6 +557,93 @@ async function scenario(name, fn) {
     } finally { await page.close(); }
   });
 
+  await scenario('History tab: the search finds notes, the filter chips combine, and no matches offers a way back', async () => {
+    const now = Date.now();
+    const det = (name, category, confidence) => ({ detector: { name }, category, confidence, difficulty: 'Medium' });
+    await setHistory([
+      { id: 'f1', url: 'https://alpha.example/', hostname: 'alpha.example', title: 'Alpha', timestamp: now, detections: [det('Cloudflare', 'Anti-Bot', 95)], pinned: true, note: 'needs a residential proxy', changed: { at: now - 1000, added: ['DataDome'], removed: [] } },
+      { id: 'f2', url: 'https://beta.example/', hostname: 'beta.example', title: 'Beta', timestamp: now - 1000, detections: [det('hCaptcha', 'CAPTCHA', 80)] },
+      { id: 'f3', url: 'https://gamma.example/', hostname: 'gamma.example', title: 'Gamma', timestamp: now - 2000, detections: [det('Canvas Fingerprint', 'Fingerprint', 40)], pinned: true },
+      { id: 'f4', url: 'https://delta.example/', hostname: 'delta.example', title: 'Delta', timestamp: now - 3000, detections: [det('Akamai', 'Anti-Bot', 70), det('reCAPTCHA', 'CAPTCHA', 60)], changed: { at: now - 2000, added: [], removed: ['PerimeterX'] } }
+    ]);
+    const page = await openExtensionPage();
+    try {
+      await page.$eval('#nav-history', el => el.click());
+      await page.waitForSelector('.history-item');
+      const shown = () => page.$$eval('.history-item', els => els.map(el => el.dataset.historyId));
+      const showsExactly = async (expected, label) => {
+        await page.waitForFunction((count) => document.querySelectorAll('.history-item').length === count, expected.length, { timeout: 8000 });
+        assert.deepEqual(await shown(), expected, label);
+      };
+      const chip = (name) => `#historyFilters [data-filter="${name}"]`;
+      const pressed = (name) => page.$eval(chip(name), el => el.getAttribute('aria-pressed'));
+
+      await showsExactly(['f1', 'f2', 'f3', 'f4'], 'everything at first');
+      assert.equal(await page.$eval('#historyFilters', el => el.hidden), false, 'the chips show once History has entries');
+      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha']);
+      assert.equal(await page.$$eval('#historyFilters .category-icon svg', els => els.length), 2, 'the category chips carry their icons');
+
+      // The search looks in notes too
+      await page.fill('#historySearch', 'RESIDENTIAL');
+      await showsExactly(['f1'], 'a word of the note');
+      await page.fill('#historySearch', '');
+      await showsExactly(['f1', 'f2', 'f3', 'f4'], 'search emptied');
+
+      // One chip at a time, and the pressed state follows
+      await page.click(chip('pinned'));
+      await showsExactly(['f1', 'f3'], 'Pinned');
+      assert.equal(await pressed('pinned'), 'true');
+      await page.click(chip('pinned'));
+      await showsExactly(['f1', 'f2', 'f3', 'f4'], 'Pinned off again');
+      assert.equal(await pressed('pinned'), 'false');
+      await page.click(chip('changed'));
+      await showsExactly(['f1', 'f4'], 'Changed');
+      await page.click(chip('changed'));
+
+      // Categories are "any of": Anti-bot alone, then with CAPTCHA
+      await page.click(chip('antibot'));
+      await showsExactly(['f1', 'f4'], 'Anti-bot');
+      await page.click(chip('captcha'));
+      await showsExactly(['f1', 'f2', 'f4'], 'Anti-bot or CAPTCHA');
+      await page.click(chip('antibot'));
+      await showsExactly(['f2', 'f4'], 'CAPTCHA only');
+      await page.click(chip('captcha'));
+
+      // Different chips are "and", and the search is one more condition
+      await page.click(chip('pinned'));
+      await page.click(chip('antibot'));
+      await showsExactly(['f1'], 'Pinned and Anti-bot');
+      await page.click(chip('changed'));
+      await showsExactly(['f1'], 'Pinned, Changed and Anti-bot');
+      await page.fill('#historySearch', 'gamma');
+      assert.equal(await page.$eval('#historyNoResults', el => el.hidden), false, 'the search and the chips match nothing');
+      assert.equal(await page.$$eval('.history-item', els => els.length), 0);
+      assert.equal(await page.$eval('#historyList', el => el.style.display), 'none', 'no empty list under the message');
+      assert.equal(await page.$eval('#historyPagination', el => el.style.display), 'none', 'no pagination for nothing');
+      assert.equal(await page.$eval('#historyNoResults p', el => el.textContent.trim()), 'No entries match your search or filters.');
+
+      // Clear filters: every chip off, the search empty, every entry back
+      await page.click('#historyClearFilters');
+      await showsExactly(['f1', 'f2', 'f3', 'f4'], 'Clear filters');
+      assert.equal(await page.$eval('#historySearch', el => el.value), '');
+      for (const name of ['pinned', 'changed', 'antibot', 'captcha']) assert.equal(await pressed(name), 'false', `${name} is off`);
+      assert.equal(await page.$eval('#historyNoResults', el => el.hidden), true);
+
+      // The chips stay while the tab is left and opened again
+      await page.click(chip('pinned'));
+      await page.$eval('#nav-detection', el => el.click());
+      await page.$eval('#nav-history', el => el.click());
+      await showsExactly(['f1', 'f3'], 'Pinned kept after leaving the tab');
+      await page.click(chip('pinned'));
+
+      // An empty History hides the chips
+      await resetHistory();
+      await page.$eval('#nav-detection', el => el.click());
+      await page.$eval('#nav-history', el => el.click());
+      await page.waitForFunction(() => document.querySelector('#historyFilters').hidden === true, null, { timeout: 8000 });
+    } finally { await page.close(); }
+  });
+
   await scenario('Pinned entries survive auto-delete and the entry limit; unpinned ones go', async () => {
     const now = Date.now();
     const old = (id, ageDays, extra = {}) => ({ id, url: `https://${id}.example/`, hostname: `${id}.example`, title: id, timestamp: now - ageDays * DAY, detections: [{ detector: { name: 'X' }, category: 'Anti-Bot', confidence: 90 }], ...extra });

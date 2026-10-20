@@ -6079,5 +6079,21 @@
   "workerOutdatedHint": {
     "message": "The extension's background part is out of date. Reload the extension on the extensions page and try again.",
     "description": "Shown when the popup talks to a background worker that still runs an older version of the extension (after an update without reloading it)"
+  },
+  "historyFiltersLabel": {
+    "message": "Filter history",
+    "description": "Accessible name of the row of filter chips under the History search"
+  },
+  "historyFilterPinned": {
+    "message": "Pinned",
+    "description": "Filter chip under the History search: show only pinned pages (an adjective, like the Changed chip)"
+  },
+  "historyNoResults": {
+    "message": "No entries match your search or filters.",
+    "description": "Shown in History when the search and the filter chips leave no entry"
+  },
+  "historyClearFilters": {
+    "message": "Clear filters",
+    "description": "Button under the no-matches message in History: turns every chip off and empties the search"
   }
 }

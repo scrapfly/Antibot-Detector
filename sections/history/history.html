@@ -15,6 +15,25 @@
     <input type="file" id="importHistoryFile" accept=".json" style="display: none;">
   </div>
 
+  <!-- Filter chips under the search: Pinned, Changed and the categories (combined with AND, categories with OR) -->
+  <div id="historyFilters" class="history-filters" role="group" aria-label="Filter history" data-i18n-aria-label="historyFiltersLabel" hidden>
+    <button type="button" class="history-filter-chip" data-filter="pinned" aria-pressed="false">
+      <span class="history-filter-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5" fill="none"/><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg></span>
+      <span data-i18n="historyFilterPinned">Pinned</span>
+    </button>
+    <button type="button" class="history-filter-chip history-filter-chip--changed" data-filter="changed" aria-pressed="false">
+      <span data-i18n="historyChangedBadge">Changed</span>
+    </button>
+    <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">
+      <span class="history-filter-icon category-icon" aria-hidden="true"></span>
+      <span data-i18n="categoryAntibot">Anti-bot</span>
+    </button>
+    <button type="button" class="history-filter-chip" data-filter="captcha" data-category="captcha" aria-pressed="false">
+      <span class="history-filter-icon category-icon" aria-hidden="true"></span>
+      <span data-i18n="categoryCaptcha">Captcha</span>
+    </button>
+  </div>
+
   <!-- Toolbar "…" menu: whole-history actions (import / export / clear) -->
   <div id="historyMenu" class="history-menu" role="menu" hidden>
     <button id="importHistoryBtn" class="history-menu-item" role="menuitem" title="Import history" data-i18n-title="historyImportTitle">
@@ -108,6 +127,12 @@
         </svg>
       </button>
     </div>
+  </div>
+
+  <!-- History has entries but the search and the chips match none -->
+  <div id="historyNoResults" class="empty-state history-no-results" hidden>
+    <p data-i18n="historyNoResults">No entries match your search or filters.</p>
+    <button type="button" id="historyClearFilters" class="history-clear-filters" data-i18n="historyClearFilters">Clear filters</button>
   </div>
 
   <div id="historyEmpty" class="empty-state" style="display: none;">

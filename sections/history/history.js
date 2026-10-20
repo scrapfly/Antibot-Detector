@@ -4,6 +4,8 @@ class History {
     this.detectorManager = detectorManager;
     this.historyItems = [];
     this.searchQuery = '';
+    // The filter chips under the search (HistoryFilter): kept while the popup is open
+    this.activeChips = { pinned: false, changed: false, categories: [] };
     this.initialized = false;
     this.listenersAttached = false;
     this.paginationManager = null;
@@ -108,18 +110,69 @@ class History {
     const historyEmpty = document.querySelector('#historyEmpty');
     if (historyEmpty) historyEmpty.style.display = 'none';
 
-    const itemsToShow = this.searchQuery
-      ? this.getFilteredItems()
-      : this.historyItems;
+    const itemsToShow = this.getFilteredItems();
+    this.syncFilterChips();
 
     if (this.paginationManager) {
       this.paginationManager.setItems(itemsToShow);
     }
 
+    // The search and the chips match nothing: say so, with a way back, instead of an empty list
+    const noResults = itemsToShow.length === 0;
+    const noResultsBlock = document.querySelector('#historyNoResults');
+    if (noResultsBlock) noResultsBlock.hidden = !noResults;
+    const historyList = document.querySelector('#historyList');
+    if (historyList) historyList.style.display = noResults ? 'none' : 'block';
+
     const historyPagination = document.querySelector('#historyPagination');
     if (historyPagination && itemsToShow.length > 0) {
       historyPagination.style.display = 'flex';
     }
+  }
+
+  /**
+   * The chip row follows the entries: hidden while History is empty, each chip shows whether it is on,
+   * and a category chip carries its category icon in the colour chosen in Settings.
+   */
+  syncFilterChips() {
+    const row = document.querySelector('#historyFilters');
+    if (!row) return;
+    row.hidden = this.historyItems.length === 0;
+    row.querySelectorAll('.history-filter-chip').forEach((chip) => {
+      const key = chip.dataset.filter;
+      const on = key === 'pinned' || key === 'changed' ? this.activeChips[key] === true : this.activeChips.categories.includes(key);
+      chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (!chip.dataset.category) return;
+      const holder = chip.querySelector('.category-icon');
+      if (holder && !holder.firstChild) holder.innerHTML = FormatUtils.categoryIconSvg(key);
+      const colour = this.detectorManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
+      if (colour) chip.style.setProperty('--chip-color', colour);
+    });
+  }
+
+  /**
+   * Turn a chip on or off (Pinned, Changed or a category) and show what it leaves.
+   * @param {string} key - 'pinned', 'changed', 'antibot' or 'captcha'
+   */
+  toggleFilterChip(key) {
+    const chips = this.activeChips;
+    if (key === 'pinned' || key === 'changed') {
+      chips[key] = !chips[key];
+    } else if (HistoryFilter.CATEGORIES.includes(key)) {
+      chips.categories = chips.categories.includes(key) ? chips.categories.filter(k => k !== key) : [...chips.categories, key];
+    } else {
+      return;
+    }
+    this.renderHistory();
+  }
+
+  /** Back to the whole History: every chip off and the search emptied. */
+  clearFilters() {
+    this.activeChips = { pinned: false, changed: false, categories: [] };
+    this.searchQuery = '';
+    const searchInput = document.querySelector('#historySearch');
+    if (searchInput) searchInput.value = '';
+    this.renderHistory();
   }
 
   /**
@@ -639,10 +692,14 @@ class History {
     const historyList = document.querySelector('#historyList');
     const historyEmpty = document.querySelector('#historyEmpty');
     const historyPagination = document.querySelector('#historyPagination');
+    const historyFilters = document.querySelector('#historyFilters');
+    const historyNoResults = document.querySelector('#historyNoResults');
 
     if (historyList) historyList.style.display = 'none';
     if (historyEmpty) historyEmpty.style.display = 'flex';
     if (historyPagination) historyPagination.style.display = 'none';
+    if (historyFilters) historyFilters.hidden = true;
+    if (historyNoResults) historyNoResults.hidden = true;
   }
 
   /**
@@ -674,22 +731,16 @@ class History {
   }
 
   /**
-   * Get filtered history items based on search query
+   * The entries the search and the filter chips leave (HistoryFilter): the search looks in the
+   * address, the title, the note and the protections' names
    * @returns {Array} Filtered history items
    */
   getFilteredItems() {
-    if (!this.searchQuery) return this.historyItems;
-
-    return this.historyItems.filter(item => {
-      const url = (item.url || '').toLowerCase();
-      const title = (item.title || '').toLowerCase();
-      const detectionNames = (item.detections || [])
-        .map(d => FormatUtils.detectorName(d).toLowerCase())
-        .join(' ');
-
-      return url.includes(this.searchQuery) ||
-             title.includes(this.searchQuery) ||
-             detectionNames.includes(this.searchQuery);
+    return HistoryFilter.filter(this.historyItems, {
+      query: this.searchQuery,
+      chips: this.activeChips,
+      nameOf: detection => FormatUtils.detectorName(detection),
+      categoryOf: detection => FormatUtils.categoryKey(detection)
     });
   }
 
@@ -1834,6 +1885,17 @@ class History {
         this.handleSearch(e.target.value);
       });
     }
+
+    // Filter chips, and the "Clear filters" button of the no-matches message
+    const filterRow = document.querySelector('#historyFilters');
+    if (filterRow) {
+      filterRow.addEventListener('click', (e) => {
+        const chip = e.target.closest('.history-filter-chip');
+        if (chip) this.toggleFilterChip(chip.dataset.filter);
+      });
+    }
+    const clearFiltersBtn = document.querySelector('#historyClearFilters');
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', () => this.clearFilters());
 
     // Toolbar "…" menu (import / export / clear)
     const menuBtn = document.querySelector('#historyMenuBtn');

@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.2] - 2026-10-20
 
+### Added
+
+- History: filter chips under the search (Pinned, Changed, Anti-bot, Captcha), and the search now also looks in your notes. When nothing matches, a message offers Clear filters.
+
 ## [3.0.1] - 2026-10-20
 
 ### Added
