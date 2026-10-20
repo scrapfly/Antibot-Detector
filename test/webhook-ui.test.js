@@ -53,7 +53,7 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
   });
   context.self = context;
   for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/webhook-filter.js', 'modules/core/webhook-log.js',
-    'modules/settings/settings-runtime.js', 'sections/settings/settings-ui-webhook.js']) {
+    'modules/core/scan-scope.js', 'modules/settings/settings-runtime.js', 'sections/settings/settings-ui.js', 'sections/settings/settings-ui-webhook.js']) {
     vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context, { filename: file });
   }
   context.FormatUtils.DEFAULT_CATEGORY_COLORS = context.Categories.DEFAULT_COLORS;

@@ -6551,5 +6551,29 @@
   "webhookLogTriggerTest": {
     "message": "test",
     "description": "Marks a webhook delivery that was the Test button"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Sites without JS hooks",
+    "description": "Settings → Detection: title of the card where the person lists the sites on which JS hooks are turned off"
+  },
+  "hooksOffLabel": {
+    "message": "Turn JS hooks off on these sites",
+    "description": "Label of the box with one site per line where JS hooks are turned off"
+  },
+  "hooksOffHint": {
+    "message": "JS hooks watch a page's browser API calls to find fingerprinting. Use this for a site that misbehaves with them: its other detections keep working, but fingerprinting is not checked. One site per line, subdomains included; reload the page to apply.",
+    "description": "Hint under the box of sites without JS hooks. JS hooks are the wrappers the extension puts on the page's browser APIs (canvas, audio, navigator) to see which of them a script calls"
+  },
+  "hooksOffNote": {
+    "message": "JS hooks are off on this site, so fingerprinting is not checked.",
+    "description": "Note above the detection results of a site where the person turned JS hooks off"
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting not checked",
+    "description": "Badge on the Nothing Detected screen of a site without JS hooks, in place of ✓ No Fingerprinting"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "No matching anti-bot or CAPTCHA signals were found on this page. JS hooks are off here, so fingerprinting was not checked.",
+    "description": "Description on the Nothing Detected screen of a site without JS hooks"
   }
 }

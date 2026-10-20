@@ -87,7 +87,8 @@
     add(`- Debug mode ${onOff(s.debugMode)}, verbose ${onOff(s.debugVerbose)}; log collector ${onOff(s.logCollectorEnabled)}`);
     add(`- Notifications ${onOff(s.notificationsEnabled)}; JS API ${onOff(s.jsApi && s.jsApi.enableJsApi)}; webhook ${onOff(s.webhook && s.webhook.enableWebhook)}`);
     add(`- Cache: ${detection.cacheDuration == null ? 'default' : `${count(detection.cacheDuration)} ${String(detection.cacheUnit || 'days')}`}, ${String(detection.cacheScope || 'domain')} scope`);
-    add(`- Skipped sites: ${Array.isArray(detection.blacklistedDomains) ? detection.blacklistedDomains.length : 0}`);
+    const listed = (key) => (Array.isArray(detection[key]) ? detection[key].length : 0);
+    add(`- Sites: ${detection.scanMode === 'allowlist' ? `only ${listed('allowedDomains')} chosen` : `${listed('blacklistedDomains')} skipped`}; JS hooks off on ${listed('hooksOffDomains')}`);
     add(`- History: ${onOff(history.historyEnabled !== false)}, limit ${count(history.historyLimit)} entries, backup ${String(history.historyBackup || 'off')}, clear on close ${onOff(history.historyClearOnClose)}`);
     add(`- Detection sort: ${String(detection.sortBy || 'category')}; tools need ${count(detection.advancedToolsMinConfidence)}% confidence`);
     add();

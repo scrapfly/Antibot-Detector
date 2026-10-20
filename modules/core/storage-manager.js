@@ -184,7 +184,7 @@ class StorageManager {
      * Three-way merge for a settings form saving a copy it loaded earlier:
      * a value the form changed since `base` wins; anything it did not change
      * keeps what is stored now (`stored`), so writes from other tabs survive.
-     * Arrays are single values except domain exclusions, which merge additions
+     * Arrays are single values except the lists of sites, which merge additions
      * and removals. Keys absent from `stored` keep the form's value.
      */
     static mergeSettingsChanges(base, mine, stored, path = []) {
@@ -200,7 +200,7 @@ class StorageManager {
             const hasMine = Object.prototype.hasOwnProperty.call(mine, key);
             const hasStored = isObj(stored) && Object.prototype.hasOwnProperty.call(stored, key);
             if (['__proto__', 'constructor', 'prototype'].includes(key)) continue;
-            if (path.length === 1 && path[0] === 'detection' && (key === 'blacklistedDomains' || key === 'allowedDomains')
+            if (path.length === 1 && path[0] === 'detection' && ScanScope.SITE_LIST_KEYS.includes(key)
                 && Array.isArray(m) && Array.isArray(b) && Array.isArray(s)) {
                 const removed = new Set(b.filter(domain => !m.includes(domain)));
                 out[key] = [...new Set([...s.filter(domain => !removed.has(domain)), ...m.filter(domain => !b.includes(domain))])];

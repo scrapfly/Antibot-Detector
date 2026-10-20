@@ -7,6 +7,8 @@ const assert = require('node:assert');
 
 global.self = global;
 global.Logger = { error() {}, debug() {}, warn() {} };
+require('../modules/core/domain-list.js');
+require('../modules/core/scan-scope.js');
 require('../modules/core/storage-manager.js');
 require('../modules/settings/settings-store.js');
 global.ScrapflyBridgeProtocol = { MESSAGE_TYPES: { SETTINGS_MUTATE: 'SETTINGS_MUTATE' } };

@@ -1169,7 +1169,7 @@
     const hookDefinitions = hasHooksConfig ? (event.detail?.hookDefinitions || []) : [];
     const windowProperties = hasHooksConfig ? (event.detail?.windowProperties || []) : [];
 
-    logDebug(`Install: ${hookDefinitions.length} hook detectors, ${windowProperties.length} window checks, fingerprint ${fingerprintEnabled ? 'on' : 'off'}`);
+    logDebug(`Install: ${hookDefinitions.length} hook detectors, ${windowProperties.length} window checks, fingerprint ${fingerprintEnabled ? 'on' : 'off'}${event.detail?.hooksOff === true ? ' (JS hooks are off on this site)' : ''}`);
 
     if (hookResilienceManager) {
       hookResilienceManager.setExpectedTargets(hookDefinitions);

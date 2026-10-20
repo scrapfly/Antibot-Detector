@@ -296,6 +296,11 @@ SettingsUI.updateSettingsUI = function() {
         minToolConfidence.value = this.settings.detection.advancedToolsMinConfidence ?? 50;
       }
 
+      const hooksOffBox = document.querySelector('#hooksOffDomains');
+      if (hooksOffBox) {
+        hooksOffBox.value = (Array.isArray(this.settings.detection.hooksOffDomains) ? this.settings.detection.hooksOffDomains : []).join('\n');
+      }
+
       const retentionDuration = document.querySelector('#captureRetentionDuration');
       const retentionUnit = document.querySelector('#captureRetentionUnit');
       if (retentionDuration && retentionUnit) {
@@ -540,6 +545,7 @@ SettingsUI.getSettingsFromUI = function() {
       scanMode: document.querySelector('#scanMode')?.value ?? this.settings.detection?.scanMode ?? 'blocklist',
       blacklistedDomains: this.settings.detection?.blacklistedDomains || [],
       allowedDomains: this.settings.detection?.allowedDomains || [],
+      hooksOffDomains: SettingsUI.readSiteList('#hooksOffDomains', this.settings.detection?.hooksOffDomains),
       hooksConfig: this.settings.detection?.hooksConfig || {}
     };
 
@@ -578,7 +584,7 @@ SettingsUI.getSettingsFromUI = function() {
       historySkipIncognito: document.querySelector('#historySkipIncognito')?.checked ?? this.settings.history?.historySkipIncognito ?? true,
       historyMinConfidence: parseInt(document.querySelector('#historyMinConfidence')?.value ?? this.settings.history?.historyMinConfidence ?? 0, 10),
       historySkipFingerprintOnly: document.querySelector('#historySkipFingerprintOnly')?.checked ?? this.settings.history?.historySkipFingerprintOnly ?? false,
-      historyExcludedDomains: SettingsUI.readExcludedDomains(this.settings.history?.historyExcludedDomains),
+      historyExcludedDomains: SettingsUI.readSiteList('#historyExcludedDomains', this.settings.history?.historyExcludedDomains),
       historyChangeAlerts: document.querySelector('#historyChangeAlerts')?.value ?? this.settings.history?.historyChangeAlerts ?? 'off',
       historyBackup: document.querySelector('#historyBackup')?.value ?? this.settings.history?.historyBackup ?? 'off',
       historyClearOnClose: document.querySelector('#historyClearOnClose')?.checked ?? this.settings.history?.historyClearOnClose ?? false
@@ -659,7 +665,7 @@ SettingsUI.validateSettings = function(settings) {
     if (settings.detection && settings.detection.scanMode !== undefined && !ScanScope.MODES.includes(settings.detection.scanMode)) {
       errors.push(text('settingsUiErrScanMode', 'Sites to scan must be every site except the skipped ones, or only the chosen sites'));
     }
-    for (const key of ['blacklistedDomains', 'allowedDomains']) {
+    for (const key of ScanScope.SITE_LIST_KEYS) {
       const list = settings.detection && settings.detection[key];
       if (list !== undefined && !(Array.isArray(list) && list.every(site => typeof site === 'string'))) {
         errors.push(text('settingsUiErrSiteList', 'A list of sites must hold site names only'));
@@ -1166,13 +1172,11 @@ if (typeof self !== 'undefined') {
     self.SettingsUI = SettingsUI;
 }
 
-/** The "Sites History ignores" box as a clean list of hosts (what is already saved when the box is missing). */
-SettingsUI.readExcludedDomains = function(fallback) {
-  const box = document.querySelector('#historyExcludedDomains');
+/** A box with one site per line as a clean list of hosts (what is already saved when the box is not on the page). */
+SettingsUI.readSiteList = function(selector, fallback) {
+  const box = document.querySelector(selector);
   if (!box) return Array.isArray(fallback) ? fallback : [];
-  return typeof HistoryPolicy !== 'undefined'
-    ? HistoryPolicy.normalizeDomains(box.value)
-    : box.value.split(/[\s,;]+/).map(d => d.trim().toLowerCase()).filter(Boolean);
+  return DomainList.normalize(box.value);
 };
 
 /** Bytes as MB with one decimal ("2.1 MB"), KB below that. */

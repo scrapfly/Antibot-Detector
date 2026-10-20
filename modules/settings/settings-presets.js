@@ -7,7 +7,7 @@
  *                  message of what the person sees listed before applying)
  *   pending()      the changes of a preset that would actually change something now
  *   patchOf()      those changes as the nested object a settings patch is
- *   KEEP           what a reset never touches: the three site lists and when the rules were last checked
+ *   KEEP           what a reset never touches: the four site lists and when the rules were last checked
  *   CONNECTIONS    the webhook and sharing connection details: kept by a reset unless the person disconnects them
  *   resetKeep()    the dotted paths a reset keeps
  *
@@ -45,7 +45,7 @@
     })
   });
 
-  const KEEP = Object.freeze(['detection.blacklistedDomains', 'detection.allowedDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp']);
+  const KEEP = Object.freeze(['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp']);
   const CONNECTIONS = Object.freeze([
     'webhook.webhookUrl', 'webhook.webhookMethod', 'webhook.webhookContentType', 'webhook.webhookPayload', 'webhook.webhookHeaders',
     'share.pastebinKey', 'share.githubToken', 'share.customUrl', 'share.customMethod', 'share.customBodyFormat', 'share.customFieldName',

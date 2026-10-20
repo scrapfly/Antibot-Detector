@@ -41,6 +41,7 @@
       "scanMode": "blocklist",
       "blacklistedDomains": [],
       "allowedDomains": [],
+      "hooksOffDomains": [],
       "hooksConfig": {}
     },
 

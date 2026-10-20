@@ -16,6 +16,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings → Data → Presets and reset: a Privacy and a Developer preset that list what they change, and Reset settings, which keeps your site lists, rules, History, language and theme.
 - Settings → Data → Diagnostics: Copy diagnostics puts versions, settings and counts on the clipboard for a bug report, with no sites, addresses or keys.
 - Webhook: send only above a minimum confidence, for chosen categories or sites; Recent deliveries lists the last 20 attempts, with Clear.
+- Settings → Detection → Sites without JS hooks: turn the JS hooks off on a site that misbehaves with them; its results say fingerprinting is not checked.
 
 ### Fixed
 

@@ -22,7 +22,7 @@ const context = vm.createContext({
   CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options.detail; } }
 });
 for (const file of [
-  'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/hooks-config.js',
+  'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/core/hooks-config.js',
   'modules/detection/conditions/window-condition-grammar.js',
   'modules/detection/managers/confidence-manager.js', 'modules/detection/detection-combinations.js',
   ...['analysis', 'extractors', 'matching', 'hooks', 'manager']

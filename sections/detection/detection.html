@@ -68,12 +68,17 @@
       <div class="state-card-badges">
         <span class="state-card-badge" data-i18n="detectionBadgeNoCaptchas">✓ No CAPTCHAs</span>
         <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No Anti-Bot</span>
-        <span class="state-card-badge" data-i18n="detectionBadgeNoFingerprint">✓ No Fingerprinting</span>
+        <span class="state-card-badge" data-badge="fingerprint" data-i18n="detectionBadgeNoFingerprint">✓ No Fingerprinting</span>
       </div>
     </div>
   </div>
 
   <div id="detectionResults" class="detection-results" style="display: none;">
+    <!-- A site where JS hooks are off (Settings → Detection → Sites without JS hooks): fingerprinting is not checked -->
+    <div id="hooksOffNote" class="hooks-off-note" role="note" hidden>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 6.1A9.7 9.7 0 0 1 12 6c5 0 8.5 4.2 9.5 6a12.7 12.7 0 0 1-2.4 3"/><path d="M6.6 6.7A12.6 12.6 0 0 0 2.5 12c1 1.8 4.5 6 9.5 6a9.6 9.6 0 0 0 4-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+      <span data-i18n="hooksOffNote">JS hooks are off on this site, so fingerprinting is not checked.</span>
+    </div>
     <div id="detectionOverview" class="detection-overview" style="display: none;">
       <div class="url-display-line">
         <!-- Site tile: same tile as the stats below (icon box, label, value) -->

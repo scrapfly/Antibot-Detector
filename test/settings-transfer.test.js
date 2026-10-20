@@ -16,7 +16,7 @@ function uiHarness() {
     document: { querySelector() { return null; } },
     chrome: { runtime: { sendMessage: async () => ({}) } }
   });
-  for (const file of ['modules/core/categories.js', 'modules/settings/settings-transfer.js', 'sections/settings/settings-ui.js', 'sections/settings/settings-ui-data.js', 'sections/settings/settings-ui-updates.js']) vm.runInContext(read(file), context);
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/settings/settings-transfer.js', 'sections/settings/settings-ui.js', 'sections/settings/settings-ui-data.js', 'sections/settings/settings-ui-updates.js']) vm.runInContext(read(file), context);
   const ui = context.self.SettingsUI;
   // const SettingsUI is lexical, but self exposes the same registry.
   ui.LANGUAGE_OPTIONS = [{ value: 'en' }, { value: 'es' }];

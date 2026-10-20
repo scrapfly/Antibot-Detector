@@ -81,8 +81,7 @@ test('values are normalized: unknown choices fall back, numbers are clamped, lis
 
 test('a settings export carries every History setting and the capture time, and nothing unknown', () => {
   const ctx = vm.createContext({ self: {} });
-  vm.runInContext(read('modules/core/categories.js'), ctx);
-  vm.runInContext(read('modules/settings/settings-transfer.js'), ctx);
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/settings/settings-transfer.js']) vm.runInContext(read(file), ctx);
   const history = {
     historyEnabled: false, historySkipIncognito: true, historyMinConfidence: 40, historySkipFingerprintOnly: true,
     historyExcludedDomains: ['a.com'], historyChangeAlerts: 'all', historyBackup: 'daily', historyClearOnClose: true,

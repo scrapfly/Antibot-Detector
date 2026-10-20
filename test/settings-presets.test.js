@@ -5,6 +5,8 @@ const path = require('node:path');
 
 global.self = global;
 require('../modules/core/categories.js');
+require('../modules/core/domain-list.js');
+require('../modules/core/scan-scope.js');
 const SettingsPresets = require('../modules/settings/settings-presets.js');
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -58,7 +60,7 @@ test('patchOf() is the nested object of the pending changes', () => {
 
 test('a reset keeps the site lists and the rules check time, and the connections unless they are removed', () => {
   const kept = SettingsPresets.resetKeep();
-  assert.deepStrictEqual(kept.slice(0, 4), ['detection.blacklistedDomains', 'detection.allowedDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp']);
+  assert.deepStrictEqual(kept.slice(0, 5), ['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp']);
   assert.ok(kept.includes('webhook.webhookUrl') && kept.includes('share.githubToken'));
   assert.deepStrictEqual(SettingsPresets.resetKeep({ disconnect: true }), [...SettingsPresets.KEEP]);
   for (const keptPath of kept) assert.notStrictEqual(SettingsPresets.getPath(defaults, keptPath), undefined, `${keptPath} is a default setting`);

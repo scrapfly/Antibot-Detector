@@ -183,6 +183,11 @@ class DetectionEngineManager {
             const logCollectorEnabled = actualSettings.logCollectorEnabled || false;
             const enableJsApi = actualSettings.jsApi?.enableJsApi ?? false;
             const hooksConfig = HooksConfig.fromSettings(actualSettings);
+            // A site where JS hooks are off (Settings → Detection → Sites without JS hooks): the install carries no hooks
+            // and no response capture, so nothing of the page is wrapped and the early recorders come off at once. The
+            // window checks stay: they only read the page's globals
+            const hooksOff = ScanScope.hooksOff(actualSettings.detection, window.location?.hostname);
+            if (hooksOff) Logger.debug('DETECTION', 'JS hooks are off on this site');
 
             const detectorsData = result.scrapfly_detectors;
 
@@ -237,7 +242,7 @@ class DetectionEngineManager {
             }
 
             dispatchInstallHooks({
-                hookDefinitions,
+                hookDefinitions: hooksOff ? [] : hookDefinitions,
                 windowProperties,
                 debugMode,
                 debugVerbose,
@@ -245,7 +250,7 @@ class DetectionEngineManager {
                 enableJsApi,
                 hooksConfig,
                 fingerprintEnabled: true,
-                responseCapture: demResponseCaptureSpec(detectorsData.detectors, window.location?.hostname)
+                ...(hooksOff ? { hooksOff: true } : { responseCapture: demResponseCaptureSpec(detectorsData.detectors, window.location?.hostname) })
             });
 
         } catch (error) {
@@ -1466,6 +1471,21 @@ class DetectionEngineManager {
     }
 
     /**
+     * Whether JS hooks are off on this page's site (Settings → Detection → Sites without JS hooks). A cached result
+     * describes one or the other: what a scan finds with the hooks is not what it finds without them.
+     * @param {string} url - Page URL
+     * @returns {Promise<boolean>}
+     */
+    static async hooksOffFor(url) {
+        try {
+            const settings = await Utils.getSettings();
+            return ScanScope.hooksOff(settings && settings.detection, UrlUtils.getHostnameFromUrl(url));
+        } catch (error) {
+            return false; // an unreadable setting never costs a cache lookup
+        }
+    }
+
+    /**
      * Look up cached detection data by URL hash
      * @param {string} url - Page URL
      * @returns {Promise<object|null>} Cached detection data or null
@@ -1475,6 +1495,9 @@ class DetectionEngineManager {
         try { // outer: release the storage lock in finally
         try {
             const cacheScope = await Utils.getCacheScope();
+            const hooksOff = await DetectionEngineManager.hooksOffFor(url);
+            // Only a result found under the same hooks setting answers; the other one is not removed, it ages out
+            const sameHooks = (stored) => (stored.hooksOff === true) === hooksOff;
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
             let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             if (typeof storage === 'string') {
@@ -1501,6 +1524,11 @@ class DetectionEngineManager {
                 if (Date.now() >= stored.expiry) {
                     Logger.debug('CACHE', `Expired (${source}): ${url}`);
                     expiredKeys.push(key);
+                    return null;
+                }
+
+                if (!sameHooks(stored)) {
+                    Logger.debug('CACHE', `Skipped (found with JS hooks ${hooksOff ? 'on' : 'off'}): ${url}`);
                     return null;
                 }
 
@@ -1546,7 +1574,7 @@ class DetectionEngineManager {
                     continue;
                 }
                 const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
-                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname)) {
+                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname) && sameHooks(stored)) {
                     if (!hostnameFallback ||
                         getStoredDetectionCount(stored) > getStoredDetectionCount(hostnameFallback) ||
                         (getStoredDetectionCount(stored) === getStoredDetectionCount(hostnameFallback) && stored.timestamp > hostnameFallback.timestamp)) {
@@ -1625,6 +1653,9 @@ class DetectionEngineManager {
         try { // outer: release the storage lock in finally
         try {
             const cacheScope = await Utils.getCacheScope();
+            // A result found without the hooks is marked, and never stands in for one found with them (or the other way)
+            const hooksOff = await DetectionEngineManager.hooksOffFor(url);
+            const sameHooks = (stored) => (stored.hooksOff === true) === hooksOff;
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
             let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             if (typeof storage === 'string') {
@@ -1642,7 +1673,7 @@ class DetectionEngineManager {
             const existingStoredData = storage[urlHash];
             const existingIsValid = existingStoredData &&
                 (!existingStoredData.cacheScope || existingStoredData.cacheScope === cacheScope) &&
-                Date.now() < existingStoredData.expiry;
+                Date.now() < existingStoredData.expiry && sameHooks(existingStoredData);
             const getStoredDetectionCount = (stored) => (
                 stored?.detectionCount ?? (Array.isArray(stored?.detectionResults) ? stored.detectionResults.length : 0)
             );
@@ -1653,7 +1684,7 @@ class DetectionEngineManager {
             if (detectionResults.length === 0 && !existingPositiveData) {
                 const requestedHostname = UrlUtils.getHostnameFromUrl(url);
                 for (const stored of Object.values(storage)) {
-                    if (!stored || Date.now() >= stored.expiry || getStoredDetectionCount(stored) <= 0) {
+                    if (!stored || Date.now() >= stored.expiry || getStoredDetectionCount(stored) <= 0 || !sameHooks(stored)) {
                         continue;
                     }
 
@@ -1744,7 +1775,8 @@ class DetectionEngineManager {
                 confidence: overallConfidence,
                 detectionCount: detectionResults.length,
                 fromStorage: false,
-                cacheScope: cacheScope
+                cacheScope: cacheScope,
+                ...(hooksOff ? { hooksOff: true } : {})
             };
 
             storage[urlHash] = storedData;

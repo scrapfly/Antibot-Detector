@@ -24,6 +24,7 @@
     "e2e:data": "node scripts/e2e-data.js",
     "e2e:scope": "node scripts/e2e-scope.js",
     "e2e:webhook": "node scripts/e2e-webhook.js",
+    "e2e:hooks": "node scripts/e2e-hooks.js",
     "e2e:live": "node scripts/e2e-live.js"
   }
 }

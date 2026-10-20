@@ -17,7 +17,8 @@
  * Payload shapes (property names are plain, not part of this table):
  *   install event detail: { hookDefinitions, windowProperties, debugMode,
  *     logCollectorEnabled, enableJsApi, fingerprintEnabled, hooksConfig,
- *     responseCapture?: { patterns: [{ source, flags }], maxBodyChars }, [FIELDS.TOKEN] }
+ *     responseCapture?: { patterns: [{ source, flags }], maxBodyChars },
+ *     hooksOff?: true (the person turned JS hooks off on this site: no hookDefinitions, no responseCapture), [FIELDS.TOKEN] }
  *   WINDOW_DETECTIONS: { detections, timestamp, elapsedMs? }
  *   WINDOW_PROPS_COMPLETE: { url, timestamp, detectedCount, totalChecked?, elapsedMs?, reason? }
  *   JS_HOOK_DETECTION: { detection: { detectorId, detectorName, category, hook, timestamp }, url }

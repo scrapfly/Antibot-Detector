@@ -109,13 +109,12 @@ SettingsUI.populateWebhookFilter = function(webhook) {
 SettingsUI.readWebhookFilter = function() {
     const saved = this.settings.webhook || {};
     const confidence = document.querySelector('#webhookMinConfidence');
-    const domains = document.querySelector('#webhookDomains');
     const boxes = [...document.querySelectorAll('[data-webhook-category]')];
     const value = parseInt(confidence && confidence.value, 10);
     return {
       webhookMinConfidence: confidence ? (Number.isFinite(value) ? Math.min(Math.max(value, 0), 100) : 0) : WebhookFilter.settingsOf(saved).minConfidence,
       webhookCategories: boxes.length ? Categories.KEYS.filter(key => boxes.some(box => box.checked && box.dataset.webhookCategory === key)) : WebhookFilter.settingsOf(saved).categories,
-      webhookDomains: domains ? DomainList.normalize(domains.value) : WebhookFilter.settingsOf(saved).domains
+      webhookDomains: SettingsUI.readSiteList('#webhookDomains', WebhookFilter.settingsOf(saved).domains)
     };
 };
 

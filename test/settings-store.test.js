@@ -28,7 +28,7 @@ function harness(settings = {}) {
       Logger: { error() {}, debug() {} },
       ScrapflyBridgeProtocol: { MESSAGE_TYPES: { SETTINGS_MUTATE: 'SETTINGS_MUTATE' } }
     });
-    vm.runInContext(read('modules/core/storage-manager.js'), c);
+    for (const file of ['modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/core/storage-manager.js']) vm.runInContext(read(file), c);
     return c;
   };
   const worker = context();

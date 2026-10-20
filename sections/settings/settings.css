@@ -2957,7 +2957,8 @@ input[type="file"] {
   flex: 0 0 auto;
 }
 
-#settingsModal #historyExcludedDomains {
+/* A box with one site per line (History's ignored sites, the webhook's sites, the sites without JS hooks) */
+#settingsModal .site-list-box {
   width: 100%;
   min-height: 64px;
   resize: vertical;
@@ -3001,12 +3002,6 @@ input[type="file"] {
 #settingsModal .webhook-category .category-icon svg {
   width: 14px;
   height: 14px;
-}
-
-#settingsModal #webhookDomains {
-  width: 100%;
-  min-height: 64px;
-  resize: vertical;
 }
 
 #settingsModal .webhook-filter-categories .setting-row-hint {

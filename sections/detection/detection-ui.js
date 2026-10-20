@@ -287,6 +287,37 @@ DetectionUI.applyDisabledStateCopy = function() {
     }
 };
 
+/**
+ * A site where JS hooks are off is scanned without them, so fingerprinting is not checked: the results say so, and an
+ * empty result does not claim "No Fingerprinting". Best effort: a failed lookup leaves the page as it was.
+ */
+DetectionUI.syncHooksOffNote = async function() {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      const settings = await Utils.getSettings();
+      const off = !!tab && ScanScope.hooksOff(settings && settings.detection, UrlUtils.getHostnameFromUrl(tab.url || ''));
+      const tr = (key, fallback) => (typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback);
+
+      const note = document.querySelector('#hooksOffNote');
+      if (note) note.hidden = !off;
+
+      const badge = document.querySelector('#emptyState [data-badge="fingerprint"]');
+      if (badge) {
+        const key = off ? 'hooksOffBadge' : 'detectionBadgeNoFingerprint';
+        badge.setAttribute('data-i18n', key);
+        badge.textContent = tr(key, off ? 'Fingerprinting not checked' : '✓ No Fingerprinting');
+        badge.classList.toggle('state-card-badge--off', off);
+      }
+      const description = document.querySelector('#emptyState .state-card-description');
+      if (off && description && this.scanOutcome === 'complete') {
+        description.setAttribute('data-i18n', 'hooksOffEmptyDesc');
+        description.textContent = tr('hooksOffEmptyDesc', 'No matching anti-bot or CAPTCHA signals were found on this page. JS hooks are off here, so fingerprinting was not checked.');
+      }
+    } catch (error) {
+      Logger.debug('UI', '[Detection] Could not tell whether JS hooks are off on this site', error);
+    }
+};
+
 DetectionUI.showEmptyState = function(options = {}) {
     if (DetectionUI.showUnavailableState.call(this)) return;
 
@@ -338,6 +369,7 @@ DetectionUI.showEmptyState = function(options = {}) {
     if (blacklistWarning) blacklistWarning.style.display = 'none';
     if (detectionPagination) detectionPagination.style.display = 'none';
     if (interruptedState) interruptedState.style.display = 'none';
+    DetectionUI.syncHooksOffNote.call(this);
 };
 
 DetectionUI.showDisabledState = function(isBlacklisted = !!this.blacklistedDomain) {
@@ -446,6 +478,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
 
     // Update URL display
     this.updateUrlDisplay(options);
+    DetectionUI.syncHooksOffNote.call(this);
 
     // Update stats
     this.updateStats(detections);

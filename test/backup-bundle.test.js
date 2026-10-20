@@ -3,6 +3,8 @@ const assert = require('node:assert');
 
 global.self = global;
 require('../modules/core/categories.js');
+require('../modules/core/domain-list.js');
+require('../modules/core/scan-scope.js');
 require('../modules/settings/settings-transfer.js');
 const B = require('../modules/settings/backup-bundle.js');
 

@@ -1,5 +1,5 @@
 /**
- * Which pages the extension scans (Settings → Detection → Sites). Two modes:
+ * Which pages the extension scans (Settings → Detection → Sites), and where it watches the page's API calls. Two modes:
  *
  *   blocklist  every site except the skipped ones (the default): a skipped site is an exact host
  *   allowlist  only the chosen sites: a site and its subdomains
@@ -11,12 +11,15 @@
  *   MODES, modeOf()   the two modes, and the one a detection-settings object is in
  *   listKeyOf()       the setting that holds the list the person edits in that mode
  *   isExcluded()      true when the page is not scanned because of the mode and its list
+ *   SITE_LIST_KEYS    every list of sites in the detection settings: skipped, chosen, and the sites without JS hooks
+ *   hooksOff()        true when JS hooks are off on a site (a scanned site where the page's API calls are not watched)
  */
 (function(root) {
   'use strict';
 
   const MODES = Object.freeze(['blocklist', 'allowlist']);
   const LIST_KEYS = Object.freeze({ blocklist: 'blacklistedDomains', allowlist: 'allowedDomains' });
+  const SITE_LIST_KEYS = Object.freeze([LIST_KEYS.blocklist, LIST_KEYS.allowlist, 'hooksOffDomains']);
 
   const modeOf = (detection) => (detection && detection.scanMode === 'allowlist' ? 'allowlist' : 'blocklist');
   const listKeyOf = (detection) => LIST_KEYS[modeOf(detection)];
@@ -35,7 +38,12 @@
     return blocked.includes(parsed.hostname);
   }
 
-  const api = { MODES, LIST_KEYS, modeOf, listKeyOf, isExcluded };
+  /** Is `hostname` a site (or a subdomain of one) where JS hooks are off? @param {object} [detection] the detection settings */
+  function hooksOff(detection, hostname) {
+    return root.DomainList.matches(hostname, detection && detection.hooksOffDomains);
+  }
+
+  const api = { MODES, LIST_KEYS, SITE_LIST_KEYS, modeOf, listKeyOf, isExcluded, hooksOff };
   root.ScanScope = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.ScanScope = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
