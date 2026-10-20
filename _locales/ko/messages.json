@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "가장 신뢰도가 높은 탐지가 이 신뢰도 이상인 페이지만 저장합니다. 0이면 모든 페이지를 저장합니다."
   },
-  "settingsHistoryUrlMode": {
-    "message": "저장할 주소"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "전체 주소 유지"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "민감한 값 숨기기"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "쿼리 문자열 제거"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "주소에 포함된 토큰과 이메일은 기록, 내보내기, 공유 링크에 남습니다. 지금부터 저장하는 페이지에 적용됩니다."
-  },
   "settingsHistoryExcluded": {
     "message": "기록에서 제외할 사이트"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "공간을 확보하기 위해 오래된 항목부터 삭제됩니다. 보관하려는 항목은 내보내거나 고정하세요."
+  },
+  "workerOutdatedHint": {
+    "message": "확장 프로그램의 백그라운드 부분이 오래되었습니다. 확장 프로그램 페이지에서 확장 프로그램을 새로고침한 후 다시 시도하세요."
   }
 }

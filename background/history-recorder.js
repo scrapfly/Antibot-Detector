@@ -118,8 +118,7 @@ class HistoryRecorder {
 
       const now = Date.now();
       const cutoffTime = now - durationMs;
-      // Compared the way it is stored: cleaned of query strings or secrets when Settings says so
-      const normalizedKey = this.normalizeDuplicateKey(this.storedUrl(url, settings), null, duplicateScope);
+      const normalizedKey = this.normalizeDuplicateKey(url, null, duplicateScope);
       if (!normalizedKey) {
         Logger.debug('UI', `[History] Duplicate pre-check could not normalize key (scope: ${duplicateScope}), allowing save`);
         return true;
@@ -164,11 +163,6 @@ class HistoryRecorder {
     if (tab) return tab.incognito === true;
     const windows = chrome?.windows?.getAll ? await chrome.windows.getAll().catch(() => []) : [];
     return (windows || []).some(win => win && win.incognito === true);
-  }
-
-  /** The address as History stores it (Settings → History → Saved addresses). */
-  static storedUrl(url, settings) {
-    return typeof HistoryPolicy !== 'undefined' ? HistoryPolicy.cleanUrl(url, settings && settings.historyUrlMode) : url;
   }
 
   /**
@@ -218,7 +212,7 @@ class HistoryRecorder {
         pageData.favicon,
         pageData.url || pageData.hostname
       );
-      const entryUrl = this.storedUrl(pageData.url || '', settings);
+      const entryUrl = pageData.url || '';
       const entryHostname = pageData.hostname || UrlUtils.getHostnameFromUrl(entryUrl);
       const entryTitle = await HistoryRecorder.resolveEntryTitle(tabId, pageData, entryHostname, chrome);
       const duplicateKey = settings.preventDuplicates

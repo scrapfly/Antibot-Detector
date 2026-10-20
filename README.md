@@ -168,7 +168,7 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 
 - **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, blacklisted domains, JS API events, webhooks and share links.
-- **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages, full, masked or path-only addresses), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
+- **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
 
   History is limited to about 6 MB; when it is full the oldest unpinned entries are removed, and Settings → History says how many.
 - **Data:** open the statistics page, and export or import your settings and your history.

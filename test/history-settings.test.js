@@ -25,7 +25,6 @@ test('defaults: History records everything except private windows, keeps full ad
   assert.equal(h.historySkipIncognito, true);
   assert.equal(h.historyMinConfidence, 0);
   assert.equal(h.historySkipFingerprintOnly, false);
-  assert.equal(h.historyUrlMode, 'full');
   assert.deepEqual(h.historyExcludedDomains, []);
   assert.equal(h.historyChangeAlerts, 'off');
   assert.equal(h.historyBackup, 'off');
@@ -47,7 +46,6 @@ test('settings saved by an older version (none of the new keys) get the old beha
   assert.equal(s.historyEnabled, true);
   assert.equal(s.historySkipIncognito, true);
   assert.equal(s.historyMinConfidence, 0);
-  assert.equal(s.historyUrlMode, 'full');
   assert.deepEqual(plain(s.historyExcludedDomains), []);
   assert.equal(s.historyChangeAlerts, 'off');
   assert.equal(s.historyBackup, 'off');
@@ -59,7 +57,7 @@ test('values are normalized: unknown choices fall back, numbers are clamped, lis
   const s = await loadUtils({
     history: {
       historyEnabled: false, historySkipIncognito: false, historyMinConfidence: '250', historySkipFingerprintOnly: true,
-      historyUrlMode: 'everything', historyExcludedDomains: ['a.com', 5, null, 'b.org'], historyChangeAlerts: 'sometimes',
+      historyExcludedDomains: ['a.com', 5, null, 'b.org'], historyChangeAlerts: 'sometimes',
       historyBackup: 'hourly', historyClearOnClose: 'yes'
     },
     duplicatePrevention: { duplicateAction: 'merge' }
@@ -68,15 +66,13 @@ test('values are normalized: unknown choices fall back, numbers are clamped, lis
   assert.equal(s.historySkipIncognito, false);
   assert.equal(s.historyMinConfidence, 100);
   assert.equal(s.historySkipFingerprintOnly, true);
-  assert.equal(s.historyUrlMode, 'full');
   assert.deepEqual(plain(s.historyExcludedDomains), ['a.com', 'b.org']);
   assert.equal(s.historyChangeAlerts, 'off');
   assert.equal(s.historyBackup, 'off');
   assert.equal(s.historyClearOnClose, false, 'only the boolean true switches it on');
   assert.equal(s.duplicateAction, 'skip');
-  const valid = await loadUtils({ history: { historyMinConfidence: -5, historyUrlMode: 'mask', historyChangeAlerts: 'pinned', historyBackup: 'weekly', historyClearOnClose: true }, duplicatePrevention: { duplicateAction: 'update' } }).getHistorySettings();
+  const valid = await loadUtils({ history: { historyMinConfidence: -5, historyChangeAlerts: 'pinned', historyBackup: 'weekly', historyClearOnClose: true }, duplicatePrevention: { duplicateAction: 'update' } }).getHistorySettings();
   assert.equal(valid.historyMinConfidence, 0);
-  assert.equal(valid.historyUrlMode, 'mask');
   assert.equal(valid.historyChangeAlerts, 'pinned');
   assert.equal(valid.historyBackup, 'weekly');
   assert.equal(valid.historyClearOnClose, true);
@@ -87,7 +83,7 @@ test('a settings export carries every History setting and the capture time, and 
   const ctx = vm.createContext({ self: {} });
   vm.runInContext(read('modules/settings/settings-transfer.js'), ctx);
   const history = {
-    historyEnabled: false, historySkipIncognito: true, historyMinConfidence: 40, historySkipFingerprintOnly: true, historyUrlMode: 'mask',
+    historyEnabled: false, historySkipIncognito: true, historyMinConfidence: 40, historySkipFingerprintOnly: true,
     historyExcludedDomains: ['a.com'], historyChangeAlerts: 'all', historyBackup: 'daily', historyClearOnClose: true,
     historyLimit: 10, exportFormat: 'csv', includeTimestamps: false, secretLooking: 'x'
   };

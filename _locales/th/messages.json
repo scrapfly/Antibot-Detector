@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "จะบันทึกหน้าก็ต่อเมื่อการตรวจจับที่มีความมั่นใจสูงสุดของหน้านั้นถึงค่านี้ ตั้งเป็น 0 เพื่อบันทึกทุกหน้า"
   },
-  "settingsHistoryUrlMode": {
-    "message": "URL ที่บันทึก"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "เก็บ URL แบบเต็ม"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "ซ่อนค่าที่ละเอียดอ่อน"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "ลบ query string"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "โทเค็นและอีเมลใน URL จะไปอยู่ในประวัติ ไฟล์ส่งออก และลิงก์ที่แชร์ ใช้กับหน้าที่บันทึกจากนี้ไปเท่านั้น"
-  },
   "settingsHistoryExcluded": {
     "message": "ไซต์ที่ประวัติจะข้าม"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "รายการที่เก่าที่สุดจะถูกลบเพื่อเว้นพื้นที่ ส่งออกหรือปักหมุดรายการที่ต้องการเก็บไว้"
+  },
+  "workerOutdatedHint": {
+    "message": "ส่วนที่ทำงานเบื้องหลังของส่วนขยายล้าสมัย โหลดส่วนขยายใหม่ในหน้าส่วนขยาย แล้วลองอีกครั้ง"
   }
 }

@@ -5839,25 +5839,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "A page is saved only when its strongest detection reaches this confidence. 0 saves every page."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Saved addresses",
-    "description": "How the web address of a saved page is stored"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Keep the full address",
-    "description": "Option"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Hide sensitive values",
-    "description": "Option: values of parameters such as token or email are replaced by ***"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Remove the query string",
-    "description": "Option: everything after the ? in a web address is removed"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Tokens and emails in an address end up in History, exports and shared links. Applies to pages saved from now on."
-  },
   "settingsHistoryExcluded": {
     "message": "Sites History ignores"
   },
@@ -6094,5 +6075,9 @@
   "historyStorageWarnMessage": {
     "message": "The oldest entries will be removed to make room. Export or pin what you want to keep.",
     "description": "Notification text"
+  },
+  "workerOutdatedHint": {
+    "message": "The extension's background part is out of date. Reload the extension on the extensions page and try again.",
+    "description": "Shown when the popup talks to a background worker that still runs an older version of the extension (after an update without reloading it)"
   }
 }

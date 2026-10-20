@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 // What History records, and how: the rules of Settings → History → "What History saves"
-// (pause, private windows, ignored sites, minimum confidence, fingerprint-only, saved addresses),
+// (pause, private windows, ignored sites, minimum confidence, fingerprint-only),
 // updating an earlier entry, the "Changed" mark and its alerts, and the storage warning.
 // The real worker files run in a vm context, like the extension's service worker.
 
@@ -144,30 +144,6 @@ test('skip fingerprint-only pages: a page with an anti-bot or CAPTCHA is still r
   assert.strictEqual(await w.save('https://fp.com/', [fingerprint('Canvas'), fingerprint('WebGL')], s), false);
   assert.strictEqual(await w.save('https://mixed.com/', [fingerprint('Canvas'), captcha('hCaptcha', 20)], s), true);
   assert.strictEqual(await w.save('https://fp.com/', [fingerprint('Canvas')], {}), true, 'off by default');
-});
-
-test('saved addresses: full, masked or path only', async () => {
-  const w = makeWorld();
-  const url = 'https://user:pw@example.com/cart?q=shoes&token=abc&session_id=9#top';
-  await w.save(url, [antibot('A')], { historyUrlMode: 'full' });
-  await w.save(url, [antibot('A')], { historyUrlMode: 'mask' });
-  await w.save(url, [antibot('A')], { historyUrlMode: 'path' });
-  assert.deepStrictEqual(w.items().map(i => i.url).reverse(), [
-    url,
-    'https://example.com/cart?q=shoes&token=***&session_id=***',
-    'https://example.com/cart'
-  ]);
-  assert.deepStrictEqual([...new Set(w.items().map(i => i.hostname))], ['example.com']);
-});
-
-test('duplicates are compared by the address as it is stored', async () => {
-  const w = makeWorld();
-  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours', historyUrlMode: 'mask' };
-  assert.strictEqual(await w.save('https://e.com/p?token=aaa', [antibot('A')], s), true);
-  assert.strictEqual(await w.save('https://e.com/p?token=bbb', [antibot('A')], s), false, 'only the secret differs: same page');
-  assert.strictEqual(await w.save('https://e.com/p?token=ccc&page=2', [antibot('A')], s), true);
-  assert.strictEqual(w.items().length, 2);
-  assert.strictEqual(await w.sw.HistoryRecorder.shouldSaveToHistory('https://e.com/p?token=zzz', s, w.sw.chrome), false);
 });
 
 test('duplicate action "update": the earlier entry is refreshed, moved to the top and keeps its pin and note', async () => {

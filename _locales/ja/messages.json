@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "最も信頼度の高い検出がこの信頼度以上のページだけを保存します。0 にするとすべてのページを保存します。"
   },
-  "settingsHistoryUrlMode": {
-    "message": "保存するアドレス"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "完全なアドレスを保持"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "機密性の高い値を隠す"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "クエリ文字列を削除"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "アドレスに含まれるトークンやメールアドレスは、履歴、エクスポート、共有リンクに残ります。今後保存するページに適用されます。"
-  },
   "settingsHistoryExcluded": {
     "message": "履歴で無視するサイト"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "空き容量を確保するため、古いエントリから削除されます。残したいものはエクスポートするか、ピン留めしてください。"
+  },
+  "workerOutdatedHint": {
+    "message": "拡張機能のバックグラウンド部分が古くなっています。拡張機能のページで拡張機能を再読み込みして、もう一度お試しください。"
   }
 }

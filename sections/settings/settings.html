@@ -1063,15 +1063,6 @@
                 <input type="number" id="historyMinConfidence" class="input-field input-field--short" min="0" max="100" value="0">
               </div>
               <p class="setting-row-hint" data-i18n="settingsHistoryMinConfidenceDesc">A page is saved only when its strongest detection reaches this confidence. 0 saves every page.</p>
-              <div class="setting-row setting-row--inline">
-                <label class="setting-row-label" for="historyUrlMode" data-i18n="settingsHistoryUrlMode">Saved addresses</label>
-                <select id="historyUrlMode" class="select-field">
-                  <option value="full" data-i18n="settingsHistoryUrlFull">Keep the full address</option>
-                  <option value="mask" data-i18n="settingsHistoryUrlMask">Hide sensitive values</option>
-                  <option value="path" data-i18n="settingsHistoryUrlPath">Remove the query string</option>
-                </select>
-              </div>
-              <p class="setting-row-hint" data-i18n="settingsHistoryUrlModeDesc">Tokens and emails in an address end up in History, exports and shared links. Applies to pages saved from now on.</p>
               <div class="setting-row">
                 <label class="setting-row-label" for="historyExcludedDomains" data-i18n="settingsHistoryExcluded">Sites History ignores</label>
                 <textarea id="historyExcludedDomains" class="textarea-field textarea-field--mono" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="example.com" aria-describedby="historyExcludedHint"></textarea>

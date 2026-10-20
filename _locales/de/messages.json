@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "Eine Seite wird nur gespeichert, wenn ihre stärkste Erkennung diese Konfidenz erreicht. Bei 0 wird jede Seite gespeichert."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Gespeicherte Adressen"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Vollständige Adresse behalten"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Sensible Werte ausblenden"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Query-String entfernen"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Tokens und E-Mail-Adressen in einer Adresse landen im Verlauf, in Exporten und in geteilten Links. Gilt für Seiten, die ab jetzt gespeichert werden."
-  },
   "settingsHistoryExcluded": {
     "message": "Sites, die der Verlauf ignoriert"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "Die ältesten Einträge werden entfernt, um Platz zu schaffen. Exportiere oder hefte an, was du behalten möchtest."
+  },
+  "workerOutdatedHint": {
+    "message": "Der Hintergrundteil der Erweiterung ist veraltet. Lade die Erweiterung auf der Erweiterungsseite neu und versuche es erneut."
   }
 }

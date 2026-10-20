@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "只有在網頁最強的偵測結果達到此信賴度時，才會儲存該網頁。設為 0 則儲存所有網頁。"
   },
-  "settingsHistoryUrlMode": {
-    "message": "已儲存的 URL"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "保留完整 URL"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "隱藏敏感值"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "移除查詢字串"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "URL 中的權杖和電子郵件地址會出現在歷史記錄、匯出檔案和分享連結中。僅適用於日後儲存的網頁。"
-  },
   "settingsHistoryExcluded": {
     "message": "歷史記錄忽略的網站"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "將移除最舊的項目以騰出空間。請匯出或釘選您想保留的項目。"
+  },
+  "workerOutdatedHint": {
+    "message": "擴充功能的背景部分已過期。請在擴充功能頁面重新載入該擴充功能，然後再試一次。"
   }
 }

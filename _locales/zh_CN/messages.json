@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "仅当页面中最强的检测结果达到此置信度时才会保存。设为 0 则保存所有页面。"
   },
-  "settingsHistoryUrlMode": {
-    "message": "保存的地址"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "保留完整地址"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "隐藏敏感值"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "删除查询字符串"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "地址中的令牌和电子邮件地址会出现在历史记录、导出文件和分享链接中。仅适用于此后保存的页面。"
-  },
   "settingsHistoryExcluded": {
     "message": "历史记录忽略的站点"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "为腾出空间，最早的条目将被删除。请导出或固定要保留的内容。"
+  },
+  "workerOutdatedHint": {
+    "message": "扩展程序的后台部分已过期。请在扩展程序页面重新加载该扩展程序，然后重试。"
   }
 }

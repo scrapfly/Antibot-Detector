@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "تُحفظ الصفحة فقط عندما تبلغ ثقة أقوى اكتشاف فيها هذه القيمة. القيمة 0 تحفظ كل الصفحات."
   },
-  "settingsHistoryUrlMode": {
-    "message": "العناوين المحفوظة"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "الاحتفاظ بالعنوان كاملًا"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "إخفاء القيم الحساسة"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "إزالة سلسلة الاستعلام"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "تظهر الرموز وعناوين البريد الإلكتروني الموجودة في العنوان في السجل والصادرات والروابط المشاركة. ينطبق هذا على الصفحات التي تُحفظ من الآن فصاعدًا."
-  },
   "settingsHistoryExcluded": {
     "message": "المواقع التي يتجاهلها السجل"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "ستُزال أقدم الإدخالات لتوفير مساحة. صدّر ما تريد الاحتفاظ به أو ثبّته."
+  },
+  "workerOutdatedHint": {
+    "message": "الجزء العامل في الخلفية من الإضافة قديم. أعد تحميل الإضافة من صفحة الإضافات ثم حاول مرة أخرى."
   }
 }

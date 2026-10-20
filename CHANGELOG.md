@@ -5,7 +5,7 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
-## [3.0.1] - 2026-10-19
+## [3.0.1] - 2026-10-20
 
 ### Added
 
@@ -13,12 +13,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Traditional Chinese uses your system's Traditional Chinese fonts, so characters have their Taiwan and Hong Kong forms.
 - Thai is drawn with the bundled IBM Plex Sans Thai font, like the other scripts, instead of whatever font the system has.
 - Settings → History → What History saves: pause History, skip private-window pages (on by default), ignore sites, set a minimum confidence, skip fingerprint-only pages.
-- Settings → History: save addresses in full, with secrets masked, or without the query string.
 - History: pin an entry and add a note from its … menu. Pinned entries stay when History is cleaned up by age, entry limit, size or clear on close.
 - History: a Changed badge on a page whose protections differ from its last scan, and optional notifications for all pages or only pinned ones.
 - Settings → History: when a page is scanned again, update its earlier entry instead of skipping the scan.
 - Settings → History: a storage meter, a warning when History nears its size limit, and how many old entries were removed.
-- Settings → History: automatic backup to Downloads (daily, weekly or monthly) and Back up now; a large History is split into files that each import on their own.
+- Settings → History: automatic backup to Downloads (daily, weekly or monthly) and Back up now; a large History is split into files that each import on their own, and a failed backup says why.
 - History → Export: choose the format, protections, period, site and pinned pages only; the dialog shows how many entries will be exported.
 - Settings → History: clear History when the browser closes (pinned entries stay).
 
@@ -31,6 +30,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Settings export and import now include the Advanced capture time.
+- History: when the extension's background part was not reloaded after an update, Settings → History and the History tab say so instead of failing silently.
 - History no longer drops its oldest entries without telling you.
 
 ## [3.0.0] - 2026-10-19

@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "Trang chỉ được lưu khi phát hiện mạnh nhất của trang đạt độ tin cậy này. Đặt 0 để lưu mọi trang."
   },
-  "settingsHistoryUrlMode": {
-    "message": "URL đã lưu"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Giữ URL đầy đủ"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Ẩn các giá trị nhạy cảm"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Xóa chuỗi truy vấn"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Token và email trong URL sẽ nằm trong Lịch sử, tệp xuất và liên kết chia sẻ. Chỉ áp dụng cho các trang được lưu từ bây giờ."
-  },
   "settingsHistoryExcluded": {
     "message": "Trang web mà Lịch sử bỏ qua"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "Các mục cũ nhất sẽ bị xóa để lấy chỗ. Hãy xuất hoặc ghim những gì bạn muốn giữ."
+  },
+  "workerOutdatedHint": {
+    "message": "Phần chạy nền của tiện ích đã cũ. Hãy tải lại tiện ích trên trang tiện ích rồi thử lại."
   }
 }

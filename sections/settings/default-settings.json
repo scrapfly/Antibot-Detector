@@ -85,7 +85,6 @@
       "historySkipIncognito": true,
       "historyMinConfidence": 0,
       "historySkipFingerprintOnly": false,
-      "historyUrlMode": "full",
       "historyExcludedDomains": [],
       "historyChangeAlerts": "off",
       "historyBackup": "off",

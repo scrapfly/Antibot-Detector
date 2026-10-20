@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "Bir sayfa yalnızca en güçlü tespiti bu güven düzeyine ulaştığında kaydedilir. 0, her sayfayı kaydeder."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Kayıtlı adresler"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Tam adresi koru"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Hassas değerleri gizle"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Sorgu dizesini kaldır"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Bir adresteki token'lar ve e-postalar geçmişe, dışa aktarmalara ve paylaşılan bağlantılara girer. Bundan sonra kaydedilen sayfalara uygulanır."
-  },
   "settingsHistoryExcluded": {
     "message": "Geçmişin yok saydığı siteler"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "Yer açmak için en eski girdiler kaldırılacak. Saklamak istediklerinizi dışa aktarın veya sabitleyin."
+  },
+  "workerOutdatedHint": {
+    "message": "Uzantının arka plan bölümü güncel değil. Uzantıyı uzantılar sayfasından yeniden yükleyin ve tekrar deneyin."
   }
 }

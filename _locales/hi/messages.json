@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "पेज तभी सहेजा जाता है जब उसकी सबसे मज़बूत पहचान इस विश्वसनीयता तक पहुँचे। 0 पर हर पेज सहेजा जाता है।"
   },
-  "settingsHistoryUrlMode": {
-    "message": "सहेजे गए पते"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "पूरा पता रखें"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "संवेदनशील मान छिपाएँ"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "क्वेरी स्ट्रिंग हटाएँ"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "पते में मौजूद टोकन और ईमेल इतिहास, निर्यात और साझा किए गए लिंक में पहुँच जाते हैं। यह अब से सहेजे जाने वाले पेज पर लागू होता है।"
-  },
   "settingsHistoryExcluded": {
     "message": "वे साइटें जिन्हें इतिहास अनदेखा करता है"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "जगह बनाने के लिए सबसे पुरानी प्रविष्टियाँ हटा दी जाएँगी। जो रखना चाहते हैं उसे निर्यात करें या पिन करें।"
+  },
+  "workerOutdatedHint": {
+    "message": "एक्सटेंशन का बैकग्राउंड हिस्सा पुराना हो गया है। एक्सटेंशन पेज पर एक्सटेंशन को रीलोड करें और फिर कोशिश करें।"
   }
 }

@@ -22,6 +22,7 @@ class History {
     }
 
     await this.refreshHistoryLimit();
+    this.warnIfWorkerOutdated().catch(() => {});
 
     try {
       await this.loadHistoryFromStorage();
@@ -57,10 +58,26 @@ class History {
    */
   async sendHistoryChange(message) {
     const response = await chrome.runtime.sendMessage(message);
+    if (response && response.status === 'unknown') {
+      // The worker does not know this request: it still runs the code from before the update
+      throw new Error(FormatUtils.t('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
+    }
     if (!response || response.status !== 'ok') {
       throw new Error((response && response.error) || 'History update failed');
     }
     return response;
+  }
+
+  /** Once per popup: say so when the background worker still runs the code from before an update. */
+  async warnIfWorkerOutdated() {
+    if (this._workerChecked) return;
+    this._workerChecked = true;
+    let current = false;
+    try {
+      const pong = await chrome.runtime.sendMessage({ type: HistoryStore.Messages.PING });
+      current = !!pong && pong.status === 'ok';
+    } catch (_) { /* treated as not current */ }
+    if (!current) NotificationHelper.error(FormatUtils.t('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
   }
 
   /**

@@ -4,7 +4,7 @@
  *
  *   Settings → History  the new controls, their defaults, saving, reloading, validation, the storage meter
  *   What is recorded    pause, private windows, ignored sites (and their subdomains), minimum confidence,
- *                       fingerprint-only pages, saved addresses (full / masked / path only)
+ *                       fingerprint-only pages
  *   Same page again     skip, or update the earlier entry (same id, moved up, pin and note kept)
  *   Changed + alerts    the badge, its hover text, notifications for all / pinned / no pages
  *   Pins and notes      the "…" menu, the note dialog, the pin icon, what survives auto-delete and the entry limit
@@ -141,6 +141,7 @@ async function scenario(name, fn) {
         globalThis.__downloads = [];
         const download = chrome.downloads.download.bind(chrome.downloads);
         chrome.downloads.download = async (options) => {
+          if (globalThis.__failDownloads) throw new Error(globalThis.__failDownloads);
           const id = await download(options);
           __downloads.push({ id, filename: options.filename, saveAs: options.saveAs, conflictAction: options.conflictAction });
           return id;
@@ -239,7 +240,7 @@ async function scenario(name, fn) {
   await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
   await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
-  const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyUrlMode: 'full', historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true };
+  const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true };
   const baseDup = { preventDuplicates: false, duplicateAction: 'skip', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' };
   const resetSettings = async () => { await historySettings(baseline, baseDup); await W(() => { globalThis.__incognitoMatch = ''; }); };
   await resetSettings();
@@ -288,10 +289,10 @@ async function scenario(name, fn) {
     });
     try {
       await open();
-      const defaults = { '#historyEnabled': true, '#historySkipIncognito': true, '#historyMinConfidence': '0', '#historySkipFingerprintOnly': false, '#historyUrlMode': 'full', '#historyExcludedDomains': '', '#historyChangeAlerts': 'off', '#historyBackup': 'off', '#historyClearOnClose': false, '#duplicateAction': 'skip' };
+      const defaults = { '#historyEnabled': true, '#historySkipIncognito': true, '#historyMinConfidence': '0', '#historySkipFingerprintOnly': false, '#historyExcludedDomains': '', '#historyChangeAlerts': 'off', '#historyBackup': 'off', '#historyClearOnClose': false, '#duplicateAction': 'skip' };
       for (const [selector, expected] of Object.entries(defaults)) assert.equal(await read(selector), expected, `default of ${selector}`);
 
-      const wanted = { '#historyEnabled': false, '#historySkipIncognito': false, '#historyMinConfidence': '55', '#historySkipFingerprintOnly': true, '#historyUrlMode': 'mask', '#historyExcludedDomains': 'Bank.com\nhttps://shop.example.org:8443/x, *.cdn.net', '#historyChangeAlerts': 'pinned', '#historyBackup': 'weekly', '#historyClearOnClose': true, '#duplicateAction': 'update' };
+      const wanted = { '#historyEnabled': false, '#historySkipIncognito': false, '#historyMinConfidence': '55', '#historySkipFingerprintOnly': true, '#historyExcludedDomains': 'Bank.com\nhttps://shop.example.org:8443/x, *.cdn.net', '#historyChangeAlerts': 'pinned', '#historyBackup': 'weekly', '#historyClearOnClose': true, '#duplicateAction': 'update' };
       for (const [selector, value] of Object.entries(wanted)) await field(selector, value);
       await click('#saveSettingsBtn');
       await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { timeout: 10000 }).catch(async (error) => {
@@ -307,7 +308,6 @@ async function scenario(name, fn) {
       assert.equal(saved.history.historySkipIncognito, false);
       assert.equal(saved.history.historyMinConfidence, 55);
       assert.equal(saved.history.historySkipFingerprintOnly, true);
-      assert.equal(saved.history.historyUrlMode, 'mask');
       assert.deepEqual(saved.history.historyExcludedDomains, ['bank.com', 'shop.example.org', 'cdn.net']);
       assert.equal(saved.history.historyChangeAlerts, 'pinned');
       assert.equal(saved.history.historyBackup, 'weekly');
@@ -318,7 +318,6 @@ async function scenario(name, fn) {
       await open();
       assert.equal(await read('#historyEnabled'), false);
       assert.equal(await read('#historyMinConfidence'), '55');
-      assert.equal(await read('#historyUrlMode'), 'mask');
       assert.equal(await read('#historyExcludedDomains'), 'bank.com\nshop.example.org\ncdn.net');
       assert.equal(await read('#historyChangeAlerts'), 'pinned');
       assert.equal(await read('#historyBackup'), 'weekly');
@@ -387,24 +386,6 @@ async function scenario(name, fn) {
     assert.deepEqual(names(entry), ['HistProbe Captcha', 'HistProbe Fingerprint']);
     await historySettings({ historySkipFingerprintOnly: false });
     await visitSaved(url(`m=fp&${uniq()}`)); // off: a fingerprint-only page is recorded
-    await resetSettings();
-  });
-
-  await scenario('Saved addresses: full, masked and path only', async () => {
-    await resetHistory();
-    const query = 'm=bot-a&token=SECRET123&q=shoes&session_id=9';
-    await historySettings({ historyUrlMode: 'full' });
-    const full = await visitSaved(`${origin}/p?${query}&v=full#frag`, { match: i => /v=full/.test(i.url) });
-    assert.match(full.url, /token=SECRET123/);
-    await historySettings({ historyUrlMode: 'mask' });
-    const masked = await visitSaved(`${origin}/p?${query}&v=mask#frag`, { match: i => /v=mask/.test(i.url) });
-    assert.match(masked.url, /token=\*\*\*/);
-    assert.match(masked.url, /session_id=\*\*\*/);
-    assert.match(masked.url, /q=shoes/);
-    assert.ok(!/SECRET123|#frag/.test(masked.url), masked.url);
-    await historySettings({ historyUrlMode: 'path' });
-    const path_ = await visitSaved(`${origin}/p?${query}&v=path#frag`, { match: i => i.url === `${origin}/p` });
-    assert.equal(path_.url, `${origin}/p`);
     await resetSettings();
   });
 
@@ -797,6 +778,71 @@ async function scenario(name, fn) {
     assert.equal(state.trigger, 'alarm');
     assert.equal(state.ok, true);
     await W(() => chrome.alarms.clear('scrapfly-history-backup'));
+  });
+
+  // ===============================================================================================
+  const settingsHistoryTab = async (page) => {
+    await page.$eval('#settingsBtn', el => el.click());
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await page.$eval('.settings-tab-btn[data-settings-tab="history"]', el => el.click());
+  };
+  const toastTexts = (page) => page.$$eval('.notification-message', els => els.map(el => el.textContent.trim()).filter(Boolean));
+
+  await scenario('Back up now: a failure says why (the browser refused the download)', async () => {
+    await setHistory(exportSeed());
+    await W(() => { globalThis.__failDownloads = 'Download blocked by policy'; });
+    const page = await openExtensionPage();
+    try {
+      await settingsHistoryTab(page);
+      await page.$eval('#historyBackupNowBtn', el => el.click());
+      await page.waitForFunction(() => [...document.querySelectorAll('.notification-message')].some(el => /History backup failed/.test(el.textContent)), null, { timeout: 8000 });
+      const toasts = await toastTexts(page);
+      assert.ok(toasts.some(t => t === 'History backup failed: Download blocked by policy'), toasts.join(' | '));
+    } finally { await page.close(); await W(() => { globalThis.__failDownloads = ''; }); }
+  });
+
+  await scenario('A background worker that was not reloaded is explained, not just reported as a failure', async () => {
+    await setHistory(exportSeed());
+    // What a worker that still runs the code from before the update does: it does not know the new requests
+    await W(() => {
+      globalThis.__savedHandlers = { ping: __messageHandlerRegistry['HISTORY_PING'], backup: __messageHandlerRegistry['HISTORY_BACKUP_NOW'], update: __messageHandlerRegistry['HISTORY_UPDATE_ITEM'] };
+      delete __messageHandlerRegistry['HISTORY_PING']; delete __messageHandlerRegistry['HISTORY_BACKUP_NOW']; delete __messageHandlerRegistry['HISTORY_UPDATE_ITEM'];
+    });
+    const hint = /background part is out of date/;
+    const page = await openExtensionPage();
+    try {
+      // The History tab says so once it opens
+      await page.$eval('#nav-history', el => el.click());
+      await page.waitForFunction(() => [...document.querySelectorAll('.notification-message')].some(el => /out of date/.test(el.textContent)), null, { timeout: 8000 });
+      // Pinning is refused with the same explanation
+      await page.waitForSelector('.history-item');
+      await page.$eval('.history-item .history-more-btn', el => el.click());
+      await page.waitForSelector('#historyItemMenu:not([hidden])');
+      await page.$eval('#historyItemMenu [data-action="pin"]', el => el.click());
+      await sleep(800);
+      assert.ok((await toastTexts(page)).filter(t => hint.test(t)).length >= 1);
+      assert.deepEqual((await items()).filter(i => i.pinned === true).map(i => i.id), ['x1', 'x4'], 'the pins did not change (x1 is pinned in the seed, so the menu offered Unpin)');
+      // Settings → History: the note under the meter, and Back up now
+      await settingsHistoryTab(page);
+      await page.waitForFunction(() => /background part is out of date/.test(document.querySelector('#historyMeterNote')?.textContent || ''), null, { timeout: 8000 });
+      assert.equal(await page.$eval('#historyMeterNote', el => el.hidden), false);
+      await page.evaluate(() => document.querySelectorAll('.notification-toast, .notification-item').forEach(el => el.remove()));
+      await page.$eval('#historyBackupNowBtn', el => el.click());
+      await sleep(1200);
+      const toasts = await toastTexts(page);
+      assert.ok(toasts.some(t => hint.test(t)), toasts.join(' | '));
+      assert.ok(!toasts.some(t => t === 'History backup failed'), 'not the bare failure message');
+    } finally {
+      await page.close();
+      await W(() => { const s = globalThis.__savedHandlers; __messageHandlerRegistry['HISTORY_PING'] = s.ping; __messageHandlerRegistry['HISTORY_BACKUP_NOW'] = s.backup; __messageHandlerRegistry['HISTORY_UPDATE_ITEM'] = s.update; });
+    }
+    // With the current worker the note is gone and the backup works
+    const page2 = await openExtensionPage();
+    try {
+      await settingsHistoryTab(page2);
+      await sleep(1000);
+      assert.equal(await page2.$eval('#historyMeterNote', el => /out of date/.test(el.textContent)), false, 'no stale-worker note with a current worker');
+    } finally { await page2.close(); }
   });
 
   // ===============================================================================================

@@ -8,39 +8,6 @@ const antibot = (name, confidence = 90) => det(name, 'Anti-Bot', confidence);
 const captcha = (name, confidence = 90) => det(name, 'CAPTCHA', confidence);
 const fingerprint = (name, confidence = 40) => det(name, 'Fingerprint', confidence);
 
-test('cleanUrl: full keeps the address as it is', () => {
-  const url = 'https://user:pw@example.com/a?token=abc&q=1#frag';
-  assert.strictEqual(P.cleanUrl(url, 'full'), url);
-  assert.strictEqual(P.cleanUrl(url, undefined), url);
-  assert.strictEqual(P.cleanUrl(url, 'nonsense'), url);
-});
-
-test('cleanUrl: mask hides credentials, the fragment and the values of sensitive parameters', () => {
-  assert.strictEqual(
-    P.cleanUrl('https://user:pw@example.com/a?q=shoes&token=abc123&page=2#top', 'mask'),
-    'https://example.com/a?q=shoes&token=***&page=2'
-  );
-  // Names are matched by part, case-insensitively, also when percent-encoded
-  assert.strictEqual(P.cleanUrl('https://e.com/?Session_ID=1&access%5Ftoken=2&apikey=3&utm_source=x', 'mask'),
-    'https://e.com/?Session_ID=***&access%5Ftoken=***&apikey=***&utm_source=x');
-  // A valueless sensitive parameter gets a value of ***, a harmless one stays
-  assert.strictEqual(P.cleanUrl('https://e.com/?password&flag', 'mask'), 'https://e.com/?password=***&flag');
-  // Nothing sensitive: the query is unchanged byte for byte
-  assert.strictEqual(P.cleanUrl('https://e.com/p?a=1&b=%20x+y', 'mask'), 'https://e.com/p?a=1&b=%20x+y');
-});
-
-test('cleanUrl: path also drops the query string', () => {
-  assert.strictEqual(P.cleanUrl('https://example.com/a/b?x=1&y=2#z', 'path'), 'https://example.com/a/b');
-  assert.strictEqual(P.cleanUrl('https://u:p@example.com/?x=1', 'path'), 'https://example.com/');
-});
-
-test('cleanUrl: anything that is not an http(s) address is returned unchanged', () => {
-  for (const url of ['chrome://extensions', 'about:blank', 'file:///c:/a?b=1', 'not a url', '', null, undefined]) {
-    assert.strictEqual(P.cleanUrl(url, 'path'), url);
-    assert.strictEqual(P.cleanUrl(url, 'mask'), url);
-  }
-});
-
 test('normalizeDomains accepts text or arrays and reduces entries to bare hosts', () => {
   assert.deepStrictEqual(
     P.normalizeDomains('Example.com\nhttps://user@Shop.Example.org:8443/path?q=1, *.cdn.net;  .dotted.io. example.com'),

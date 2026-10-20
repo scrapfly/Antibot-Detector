@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "Una página se guarda solo si su detección más fuerte alcanza esta confianza. Con 0 se guardan todas las páginas."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Direcciones guardadas"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Conservar la dirección completa"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Ocultar valores sensibles"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Quitar la cadena de consulta"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Los tokens y correos de una dirección acaban en el historial, las exportaciones y los enlaces compartidos. Se aplica a las páginas que se guarden a partir de ahora."
-  },
   "settingsHistoryExcluded": {
     "message": "Sitios que el historial ignora"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "Se eliminarán las entradas más antiguas para hacer sitio. Exporta o fija lo que quieras conservar."
+  },
+  "workerOutdatedHint": {
+    "message": "La parte en segundo plano de la extensión está desactualizada. Recarga la extensión en la página de extensiones e inténtalo de nuevo."
   }
 }

@@ -473,7 +473,6 @@ SettingsUI.updateSettingsUI = function() {
       check('historySkipFingerprintOnly', h.historySkipFingerprintOnly === true);
       check('historyClearOnClose', h.historyClearOnClose === true);
       choose('historyMinConfidence', h.historyMinConfidence ?? 0);
-      choose('historyUrlMode', ['mask', 'path'].includes(h.historyUrlMode) ? h.historyUrlMode : 'full');
       choose('historyChangeAlerts', ['pinned', 'all'].includes(h.historyChangeAlerts) ? h.historyChangeAlerts : 'off');
       choose('historyBackup', ['daily', 'weekly', 'monthly'].includes(h.historyBackup) ? h.historyBackup : 'off');
       choose('historyExcludedDomains', (Array.isArray(h.historyExcludedDomains) ? h.historyExcludedDomains : []).join('\n'));
@@ -629,7 +628,6 @@ SettingsUI.getSettingsFromUI = function() {
       historySkipIncognito: document.querySelector('#historySkipIncognito')?.checked ?? this.settings.history?.historySkipIncognito ?? true,
       historyMinConfidence: parseInt(document.querySelector('#historyMinConfidence')?.value ?? this.settings.history?.historyMinConfidence ?? 0, 10),
       historySkipFingerprintOnly: document.querySelector('#historySkipFingerprintOnly')?.checked ?? this.settings.history?.historySkipFingerprintOnly ?? false,
-      historyUrlMode: document.querySelector('#historyUrlMode')?.value ?? this.settings.history?.historyUrlMode ?? 'full',
       historyExcludedDomains: SettingsUI.readExcludedDomains(this.settings.history?.historyExcludedDomains),
       historyChangeAlerts: document.querySelector('#historyChangeAlerts')?.value ?? this.settings.history?.historyChangeAlerts ?? 'off',
       historyBackup: document.querySelector('#historyBackup')?.value ?? this.settings.history?.historyBackup ?? 'off',
@@ -1168,6 +1166,16 @@ SettingsUI.formatStorageSize = function(bytes) {
   return bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
 };
 
+/** Does the background worker run the code this page was loaded with (it answers the History ping)? */
+SettingsUI.workerIsCurrent = async function() {
+  try {
+    const pong = await chrome.runtime.sendMessage({ type: HistoryStore.Messages.PING });
+    return !!pong && pong.status === 'ok';
+  } catch (_) {
+    return false;
+  }
+};
+
 /**
  * The History storage meter and the last backup, read from storage when the History tab opens:
  * "2.1 MB of 6 MB used", an amber bar from 90% (the oldest entries go next), and what was removed so far.
@@ -1191,6 +1199,8 @@ SettingsUI.refreshHistoryStorage = async function() {
       : text('settingsHistoryStorageEmpty', 'History is empty.');
     const note = document.querySelector('#historyMeterNote');
     const lines = [];
+    // A worker that was not reloaded after an update cannot apply the new History settings: say so here
+    if (!(await SettingsUI.workerIsCurrent())) lines.push(text('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
     if (ratio >= 0.9) lines.push(text('settingsHistoryStorageNearlyFull', 'Almost full: the oldest entries will be removed to make room. Export or pin what you want to keep.'));
     if (usage.trimmed && usage.trimmed.count) lines.push(text('settingsHistoryStorageTrimmedFmt', '{0} oldest entries were removed to stay within the limit, the last time on {1}.', usage.trimmed.total || usage.trimmed.count, FormatUtils.formatDateTime(usage.trimmed.at)));
     if (note) { note.textContent = lines.join(' '); note.hidden = lines.length === 0; }
@@ -1221,11 +1231,17 @@ SettingsUI.backUpHistoryNow = async function(button) {
       NotificationHelper.success(result.entries
         ? text('settingsHistoryBackupDoneFmt', 'Backed up {0} entries', result.entries)
         : text('settingsHistoryBackupEmpty', 'Nothing to back up yet'));
+    } else if (result && result.status === 'unknown') {
+      // The worker does not know this request: it still runs the code from before the update
+      NotificationHelper.error(text('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
     } else {
-      NotificationHelper.error(text('settingsHistoryBackupFailed', 'History backup failed'));
+      // The worker's own reason (for example the browser refusing the download) follows the message
+      const reason = result && result.error ? `: ${String(result.error).slice(0, 160)}` : '';
+      NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
     }
   } catch (error) {
-    NotificationHelper.error(text('settingsHistoryBackupFailed', 'History backup failed'));
+    const reason = error && error.message ? `: ${String(error.message).slice(0, 160)}` : '';
+    NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
   } finally {
     if (button) button.disabled = false;
     SettingsUI.refreshHistoryStorage();

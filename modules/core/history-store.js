@@ -48,7 +48,8 @@
     DELETE_ITEMS: 'HISTORY_DELETE_ITEMS',   // { ids: [...] }
     REPLACE_ITEMS: 'HISTORY_REPLACE_ITEMS', // { items: [...], mode: 'merge' | 'replace', limit }
     CLEAR: 'HISTORY_CLEAR',
-    UPDATE_ITEM: 'HISTORY_UPDATE_ITEM'      // { id, patch: { pinned?: boolean, note?: string } }
+    UPDATE_ITEM: 'HISTORY_UPDATE_ITEM',     // { id, patch: { pinned?: boolean, note?: string } }
+    PING: 'HISTORY_PING'                    // answered { status: 'ok' } by a worker that has these History features
   });
 
   /**
@@ -399,6 +400,9 @@
         return found ? { items: next, result: { updated: 1 } } : { result: { updated: 0 } };
       }, store()));
     });
+
+    // A worker that was not reloaded after an update answers { status: 'unknown' } here: the popup then says so
+    registry[Messages.PING] = ({ sendResponse }) => { sendResponse({ status: 'ok' }); return false; };
 
     registry[Messages.CLEAR] = guard(({ sendResponse }) => respond(sendResponse, mutate(() => [], store())));
   }

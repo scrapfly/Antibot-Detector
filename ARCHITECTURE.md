@@ -20,7 +20,7 @@ Register a new dependency before its consumers in every context that uses it.
 | `sections/` | Popup controllers, templates, rendering, and feature styles |
 | `sections/advanced/vendors/` | Vendor popup actions, views, lifecycle, and code generators |
 | `sections/advanced/vendors/cloudflare/` | Cloudflare tools and shared Turnstile site-key helpers |
-| `vendor/recaptcha/` | Vendored reCAPTCHA decoding libraries |
+| `background/advanced/vendors/recaptcha/lib/` | Vendored reCAPTCHA decoding libraries (worker side, used by the reCAPTCHA interceptor) |
 
 Shared styling stays under `modules/styles/`; feature styles live beside their
 sections. Keep the existing stylesheet order: later theme and scroll rules

@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "Een pagina wordt alleen opgeslagen als de sterkste detectie deze zekerheid bereikt. Bij 0 wordt elke pagina opgeslagen."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Opgeslagen adressen"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Volledig adres bewaren"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Gevoelige waarden verbergen"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Querystring verwijderen"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Tokens en e-mailadressen in een adres komen terecht in de geschiedenis, in exports en in gedeelde links. Geldt voor pagina's die vanaf nu worden opgeslagen."
-  },
   "settingsHistoryExcluded": {
     "message": "Sites die de geschiedenis negeert"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "De oudste items worden verwijderd om ruimte te maken. Exporteer of zet vast wat je wilt bewaren."
+  },
+  "workerOutdatedHint": {
+    "message": "Het achtergronddeel van de extensie is verouderd. Laad de extensie opnieuw op de extensiepagina en probeer het nog eens."
   }
 }

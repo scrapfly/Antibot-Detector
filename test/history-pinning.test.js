@@ -137,3 +137,14 @@ test('UPDATE_ITEM is refused for a content script on a web page', async () => {
     delete global.chrome;
   }
 });
+
+test('PING answers ok, so the popup can tell a worker that has these features from one that was not reloaded', async () => {
+  const registry = {};
+  HistoryStore.registerHandlers(registry, memory());
+  assert.strictEqual(HistoryStore.Messages.PING, 'HISTORY_PING');
+  const answer = await new Promise((resolve) => {
+    const keep = registry[HistoryStore.Messages.PING]({ request: { type: HistoryStore.Messages.PING }, sender: { tab: { id: 1 }, url: 'https://web.example/' }, sendResponse: resolve });
+    assert.strictEqual(keep, false);
+  });
+  assert.deepStrictEqual(answer, { status: 'ok' });
+});

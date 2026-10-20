@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "Strona jest zapisywana tylko wtedy, gdy pewność jej najsilniejszego wykrycia osiąga tę wartość. Przy 0 zapisywane są wszystkie strony."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Zapisywane adresy"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Zachowaj pełny adres"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Ukryj poufne wartości"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Usuń parametry zapytania"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Tokeny i adresy e-mail zawarte w adresie trafiają do historii, eksportów i udostępnianych linków. Dotyczy stron zapisanych od teraz."
-  },
   "settingsHistoryExcluded": {
     "message": "Witryny ignorowane przez historię"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "Najstarsze wpisy zostaną usunięte, aby zwolnić miejsce. Wyeksportuj lub przypnij to, co chcesz zachować."
+  },
+  "workerOutdatedHint": {
+    "message": "Część rozszerzenia działająca w tle jest nieaktualna. Załaduj rozszerzenie ponownie na stronie rozszerzeń i spróbuj jeszcze raz."
   }
 }

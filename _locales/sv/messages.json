@@ -5579,21 +5579,6 @@
   "settingsHistoryMinConfidenceDesc": {
     "message": "En sida sparas bara när dess starkaste upptäckt når den här säkerheten. 0 sparar alla sidor."
   },
-  "settingsHistoryUrlMode": {
-    "message": "Sparade adresser"
-  },
-  "settingsHistoryUrlFull": {
-    "message": "Behåll hela adressen"
-  },
-  "settingsHistoryUrlMask": {
-    "message": "Dölj känsliga värden"
-  },
-  "settingsHistoryUrlPath": {
-    "message": "Ta bort frågesträngen"
-  },
-  "settingsHistoryUrlModeDesc": {
-    "message": "Tokens och e-postadresser i en adress hamnar i historiken, i exporter och i delade länkar. Gäller sidor som sparas från och med nu."
-  },
   "settingsHistoryExcluded": {
     "message": "Webbplatser som historiken ignorerar"
   },
@@ -5785,5 +5770,8 @@
   },
   "historyStorageWarnMessage": {
     "message": "De äldsta posterna tas bort för att ge plats. Exportera eller fäst det du vill behålla."
+  },
+  "workerOutdatedHint": {
+    "message": "Tilläggets bakgrundsdel är föråldrad. Ladda om tillägget på tilläggssidan och försök igen."
   }
 }
