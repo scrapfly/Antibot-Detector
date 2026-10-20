@@ -189,6 +189,16 @@ DetectionActions.addToBlacklist = async function() {
     }
 };
 
+/** The mode of Settings → Detection → Sites to scan: the card of a paused site and the block button say the right thing. */
+DetectionActions.applyScanMode = function(detection) {
+    const mode = ScanScope.modeOf(detection);
+    this.scanMode = mode;
+    for (const element of document.querySelectorAll('#blacklistWarning [data-scan-mode-show]')) element.hidden = element.dataset.scanModeShow !== mode;
+    // "Block this domain" edits the skipped list, which only means something in the mode that reads it
+    const block = document.querySelector('#addToBlacklistBtn');
+    if (block) block.hidden = mode === 'allowlist';
+};
+
 DetectionActions.showBlacklistState = function(domain) {
     this.blacklistedDomain = domain;
     if (!this.isExtensionEnabled) {
@@ -242,21 +252,21 @@ DetectionActions.showBlacklistState = function(domain) {
 DetectionActions.removeFromBlacklist = async function(domain) {
     try {
       const settings = await Utils.getSettings();
+      // In the mode with a list of the only sites to scan, "resume" means the site joins that list
+      const allow = ScanScope.modeOf(settings.detection) === 'allowlist';
 
-      if (settings.detection?.blacklistedDomains) {
-        const saved = typeof StorageManager !== 'undefined' && typeof StorageManager.setDomainExcluded === 'function'
-          ? await StorageManager.setDomainExcluded(domain, false)
+      if (allow || settings.detection?.blacklistedDomains) {
+        const saved = typeof StorageManager !== 'undefined'
+          ? await (allow ? StorageManager.setDomainAllowed(domain, true) : StorageManager.setDomainExcluded(domain, false))
           : false;
         if (!saved) {
           throw new Error(detectionActionsTr('failedReadSettings', 'Could not save settings'));
         }
 
         this.blacklistedDomain = null;
-        NotificationHelper.success(detectionActionsFormat(
-          'removedFromBlacklistFmt',
-          'Removed "{0}" from blacklist',
-          domain
-        ));
+        NotificationHelper.success(allow
+          ? detectionActionsFormat('siteAllowedFmt', 'Added "{0}" to the sites to scan', domain)
+          : detectionActionsFormat('removedFromBlacklistFmt', 'Removed "{0}" from blacklist', domain));
 
         const blacklistWarning = document.querySelector('#blacklistWarning');
         if (blacklistWarning) blacklistWarning.style.display = 'none';

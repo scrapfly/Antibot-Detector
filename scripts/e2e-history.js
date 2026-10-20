@@ -580,8 +580,8 @@ async function scenario(name, fn) {
 
       await showsExactly(['f1', 'f2', 'f3', 'f4'], 'everything at first');
       assert.equal(await page.$eval('#historyFilters', el => el.hidden), false, 'the chips show once History has entries');
-      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha']);
-      assert.equal(await page.$$eval('#historyFilters .category-icon svg', els => els.length), 2, 'the category chips carry their icons');
+      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha', 'Fingerprint']);
+      assert.equal(await page.$$eval('#historyFilters .category-icon svg', els => els.length), 3, 'the category chips carry their icons');
 
       // The search looks in notes too
       await page.fill('#historySearch', 'RESIDENTIAL');
@@ -608,6 +608,18 @@ async function scenario(name, fn) {
       await page.click(chip('antibot'));
       await showsExactly(['f2', 'f4'], 'CAPTCHA only');
       await page.click(chip('captcha'));
+      // Fingerprint is a category like the others: alone, then together with Anti-bot
+      await page.click(chip('fingerprint'));
+      await showsExactly(['f3'], 'Fingerprint');
+      assert.equal(await pressed('fingerprint'), 'true');
+      await page.click(chip('antibot'));
+      await showsExactly(['f1', 'f3', 'f4'], 'Anti-bot or Fingerprint');
+      await page.click(chip('antibot'));
+      await page.click(chip('pinned'));
+      await showsExactly(['f3'], 'Pinned and Fingerprint');
+      await page.click(chip('pinned'));
+      await page.click(chip('fingerprint'));
+      await showsExactly(['f1', 'f2', 'f3', 'f4'], 'Fingerprint off again');
 
       // Different chips are "and", and the search is one more condition
       await page.click(chip('pinned'));
@@ -626,7 +638,7 @@ async function scenario(name, fn) {
       await page.click('#historyClearFilters');
       await showsExactly(['f1', 'f2', 'f3', 'f4'], 'Clear filters');
       assert.equal(await page.$eval('#historySearch', el => el.value), '');
-      for (const name of ['pinned', 'changed', 'antibot', 'captcha']) assert.equal(await pressed(name), 'false', `${name} is off`);
+      for (const name of ['pinned', 'changed', 'antibot', 'captcha', 'fingerprint']) assert.equal(await pressed(name), 'false', `${name} is off`);
       assert.equal(await page.$eval('#historyNoResults', el => el.hidden), true);
 
       // The chips stay while the tab is left and opened again
@@ -1023,12 +1035,27 @@ async function scenario(name, fn) {
     await W(async () => { for (const w of await chrome.windows.getAll()) await chrome.windows.remove(w.id).catch(() => {}); }).catch(() => {});
     await Promise.race([new Promise(r => ctx.once('close', r)), sleep(15000)]);
     await ctx.close().catch(() => {});
-    // A browser started while the old one still holds the profile hands over to it and exits: wait for the lock
+    // A browser started while the old one still holds the profile hands over to it and exits: wait for the lock and for
+    // every process that was started on this profile (the lock goes before the last of them is gone)
     const locked = () => { try { fs.lstatSync(path.join(profile, 'SingletonLock')); return true; } catch (_) { return false; } };
-    for (let waited = 0; locked() && waited < 30000; waited += 250) await sleep(250);
-    await sleep(1000);
-    ctx = await launch();
-    await sleep(6000);
+    const holders = () => fs.readdirSync('/proc').filter(n => /^\d+$/.test(n) && Number(n) !== process.pid)
+      .filter(n => { try { return fs.readFileSync(`/proc/${n}/cmdline`, 'utf8').includes(`--user-data-dir=${profile}`); } catch (_) { return false; } }).length;
+    for (let waited = 0; (locked() || holders() > 0) && waited < 30000; waited += 250) await sleep(250);
+    await sleep(3000);
+    // Even then a start can lose the race to the last bits of the old browser's shutdown: start again once
+    for (let attempt = 1; ; attempt++) {
+      ctx = await launch();
+      await sleep(6000);
+      try {
+        await getWorker(12000);
+        break;
+      } catch (error) {
+        if (attempt >= 2) throw error;
+        console.log(`(the browser did not come up after the restart, starting it again: ${String(error.message).split('\n')[0]})`);
+        await ctx.close().catch(() => {});
+        await sleep(3000);
+      }
+    }
     await scenario('Clear on browser close (restart): after the browser was closed and started again only pinned entries remain', async () => {
       const list = await waitFor(l => !l.some(i => /^gone-/.test(i.id)), 20000);
       assert.ok(list, `unpinned entries are still there: ${JSON.stringify((await items()).map(i => i.id))}`);

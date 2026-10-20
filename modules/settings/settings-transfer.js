@@ -6,7 +6,7 @@
         badgeColors: ['low', 'medium', 'high'],
         categoryColors: [...root.Categories.KEYS],
         tagColors: ['dom', 'headers', 'cookies', 'content', 'urls', 'js_hooks', 'window', 'payload'],
-        detection: ['cacheDuration', 'cacheUnit', 'cacheScope', 'sortBy', 'categoryOrder', 'advancedToolsMinConfidence', 'captureRetentionMinutes', 'blacklistedDomains', 'hooksConfig'],
+        detection: ['cacheDuration', 'cacheUnit', 'cacheScope', 'sortBy', 'categoryOrder', 'advancedToolsMinConfidence', 'captureRetentionMinutes', 'scanMode', 'blacklistedDomains', 'allowedDomains', 'hooksConfig'],
         jsApi: ['enableJsApi'],
         share: ['provider', 'dpasteComDays', 'dpasteOrgExpires', 'pastebinExpire', 'customExpiryDays'],
         history: ['historyLimit', 'historyAutoDelete', 'historyAutoDeleteDays', 'exportFormat', 'includeTimestamps', 'historyBypassCache',

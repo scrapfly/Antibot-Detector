@@ -1,5 +1,27 @@
-// Blacklist UI methods for SettingsUI — extracted from settings-ui.js.
-// Requires settings-ui.js to load first (defines const SettingsUI).
+// Sites list UI methods for SettingsUI — extracted from settings-ui.js.
+// Requires settings-ui.js to load first (defines const SettingsUI) and modules/core/scan-scope.js.
+//
+// One list is shown at a time: the skipped sites (every other site is scanned) or the chosen sites (only those are
+// scanned), whichever Settings → Detection → Sites to scan is set to. The names say "blacklist" from when it was the
+// only list.
+
+/** The setting that holds the list in the current mode, and the list itself. */
+SettingsUI.scanListKey = function() {
+    return ScanScope.listKeyOf(this.settings.detection);
+};
+
+SettingsUI.scanList = function() {
+    const list = this.settings.detection && this.settings.detection[SettingsUI.scanListKey.call(this)];
+    return Array.isArray(list) ? list : [];
+};
+
+/** Shows the titles and the empty text that belong to the mode, and the mode in the choice. */
+SettingsUI.syncScanModeUI = function() {
+    const mode = ScanScope.modeOf(this.settings.detection);
+    const select = document.querySelector('#scanMode');
+    if (select) select.value = mode;
+    for (const element of document.querySelectorAll('[data-scan-mode-show]')) element.hidden = element.dataset.scanModeShow !== mode;
+};
 
 SettingsUI.renderBlacklistUI = function() {
     const container = document.querySelector('#blacklistContainer');
@@ -12,7 +34,9 @@ SettingsUI.renderBlacklistUI = function() {
 
     if (!container) return;
 
-    const allDomains = this.settings.detection?.blacklistedDomains || [];
+    const listKey = SettingsUI.scanListKey.call(this);
+    const allowMode = listKey === 'allowedDomains';
+    const allDomains = SettingsUI.scanList.call(this);
     const itemsPerPage = 3;
 
     if (typeof this.blacklistPage === 'undefined') {
@@ -45,7 +69,7 @@ SettingsUI.renderBlacklistUI = function() {
     if (filteredDomains.length === 0) {
       const emptyText = searchTerm
         ? FormatUtils.t('settingsUiBlacklistNoMatches', 'No domains match your search')
-        : FormatUtils.t('settingsUiBlacklistEmpty', 'No domains blacklisted');
+        : (allowMode ? FormatUtils.t('settingsUiAllowlistEmpty', 'No sites chosen: nothing is scanned yet') : FormatUtils.t('settingsUiBlacklistEmpty', 'No domains blacklisted'));
       container.innerHTML = `<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">${FormatUtils.escapeHtml(emptyText)}</div>`;
       return;
     }
@@ -54,7 +78,7 @@ SettingsUI.renderBlacklistUI = function() {
     const endIndex = startIndex + itemsPerPage;
     const currentDomains = filteredDomains.slice(startIndex, endIndex);
 
-    const removeLabel = FormatUtils.escapeAttr(FormatUtils.t('actionRemoveFromBlacklist', 'Remove from Blacklist'));
+    const removeLabel = FormatUtils.escapeAttr(allowMode ? FormatUtils.t('actionRemoveFromAllowlist', 'Remove from the list') : FormatUtils.t('actionRemoveFromBlacklist', 'Remove from Blacklist'));
     const html = currentDomains.map(domain => `
       <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px;">
         <span style="font-size: 12px; line-height: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${FormatUtils.escapeHtml(domain)}</span>
@@ -69,7 +93,7 @@ SettingsUI.renderBlacklistUI = function() {
     container.querySelectorAll('.remove-blacklist-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const domain = btn.getAttribute('data-domain');
-        this.settings.detection.blacklistedDomains = this.settings.detection.blacklistedDomains.filter(d => d !== domain);
+        this.settings.detection[listKey] = SettingsUI.scanList.call(this).filter(d => d !== domain);
         this.renderBlacklistUI();
         NotificationHelper.info(FormatUtils.t('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
       });
@@ -81,7 +105,14 @@ SettingsUI.setupBlacklistEventListeners = function() {
     const prevBtn = document.querySelector('#blacklistPrevBtn');
     const nextBtn = document.querySelector('#blacklistNextBtn');
 
-    if (searchInput) {
+    // Settings is populated again after a save, an import, a preset or a reset: bind each control once
+    const once = (element) => {
+      if (!element || element.dataset.scopeBound) return null;
+      element.dataset.scopeBound = '1';
+      return element;
+    };
+
+    if (once(searchInput)) {
       searchInput.addEventListener('input', (e) => {
         this.blacklistSearch = e.target.value;
         this.blacklistPage = 1; // Reset to first page on search
@@ -89,7 +120,7 @@ SettingsUI.setupBlacklistEventListeners = function() {
       });
     }
 
-    if (prevBtn) {
+    if (once(prevBtn)) {
       prevBtn.addEventListener('click', () => {
         if (this.blacklistPage > 1) {
           this.blacklistPage--;
@@ -98,9 +129,9 @@ SettingsUI.setupBlacklistEventListeners = function() {
       });
     }
 
-    if (nextBtn) {
+    if (once(nextBtn)) {
       nextBtn.addEventListener('click', () => {
-        const allDomains = this.settings.detection?.blacklistedDomains || [];
+        const allDomains = SettingsUI.scanList.call(this);
         const searchTerm = (this.blacklistSearch || '').toLowerCase().trim();
         const filteredDomains = searchTerm
           ? allDomains.filter(d => d.toLowerCase().includes(searchTerm))

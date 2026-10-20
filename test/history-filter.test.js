@@ -79,3 +79,20 @@ test('detections saved in either shape are read: a name and category on the dete
   const nested = item('n', 'https://nested.example/', [{ detector: { name: 'Nested', category: 'Anti-Bot' } }]);
   assert.deepStrictEqual(ids(F.filter([nested], { chips: { categories: ['antibot'] } })), ['n']);
 });
+
+test('the chip row of the History tab has one chip for Pinned, one for Changed and one for every category, in the category order', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const Categories = require('../modules/core/categories.js');
+  const html = fs.readFileSync(path.join(__dirname, '../sections/history/history.html'), 'utf8');
+  const row = html.slice(html.indexOf('id="historyFilters"'), html.indexOf('<!-- Toolbar'));
+  const chips = [...row.matchAll(/<button[^>]*class="history-filter-chip[^"]*"[^>]*data-filter="([a-z]+)"([^>]*)>([\s\S]*?)<\/button>/g)]
+    .map(match => ({ filter: match[1], category: (match[2].match(/data-category="([a-z]+)"/) || [])[1], label: (match[3].match(/data-i18n="([A-Za-z]+)"/) || [])[1] }));
+  assert.deepStrictEqual(chips.map(chip => chip.filter), ['pinned', 'changed', ...Categories.KEYS]);
+  for (const key of Categories.KEYS) {
+    const chip = chips.find(entry => entry.filter === key);
+    assert.strictEqual(chip.category, key, `${key} carries its category for the icon and the colour`);
+    assert.strictEqual(chip.label, Categories.LABELS[key][0], `${key} is named as the rest of the extension names it`);
+  }
+  assert.ok(F.CATEGORIES.every(key => chips.some(chip => chip.filter === key)), 'every category the filter knows has a chip');
+});

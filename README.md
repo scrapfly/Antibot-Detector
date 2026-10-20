@@ -172,11 +172,11 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 ### Settings
 
 - **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
-- **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, blacklisted domains, JS API events, webhooks and share links.
+- **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, which sites are scanned (every site except the ones you skip, or only the sites you choose), JS API events, webhooks and share links.
 - **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
 
   History is limited to about 6 MB; when it is full the oldest unpinned entries are removed, and Settings → History says how many.
-- **Data:** open the statistics page, and export or import your settings and your history.
+- **Data:** open the statistics page; see how much space each part of the extension uses and clear the detection cache, tool captures, logs or History; back up settings, your own rules and History in one file and restore it; export or import your settings and your history; apply the Privacy or Developer preset or reset every setting; copy a diagnostics summary for a bug report (no sites, addresses or keys).
 
 ## Integrations
 
@@ -282,6 +282,7 @@ npm run e2e:methods    # every detection method, from URL to JavaScript hooks
 npm run e2e:settings   # every per-pattern setting: scopes, regex, whole word, case
 npm run e2e:editor     # the rule editor saves settings and keeps every field
 npm run e2e:updater    # Rules → Update against a local stand-in for GitHub
+npm run e2e:data       # Settings → Data: storage and Clear, backup and restore, presets and reset, diagnostics
 npm run e2e:languages  # every language through the real popup, settings and statistics pages
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json
 ```

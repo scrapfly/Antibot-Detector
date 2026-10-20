@@ -32,6 +32,10 @@
       <span class="history-filter-icon category-icon" aria-hidden="true"></span>
       <span data-i18n="categoryCaptcha">Captcha</span>
     </button>
+    <button type="button" class="history-filter-chip" data-filter="fingerprint" data-category="fingerprint" aria-pressed="false">
+      <span class="history-filter-icon category-icon" aria-hidden="true"></span>
+      <span data-i18n="categoryFingerprint">Fingerprint</span>
+    </button>
   </div>
 
   <!-- Toolbar "…" menu: whole-history actions (import / export / clear) -->
@@ -94,7 +98,8 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/>
       </svg>
-      <span data-i18n="addBlacklistBtn">Add to Blacklist</span>
+      <span data-scan-mode-show="blocklist" data-i18n="addBlacklistBtn">Add to Blacklist</span>
+      <span data-scan-mode-show="allowlist" data-i18n="detectionAllowSiteBtn" hidden>Scan this site</span>
     </button>
     <div class="history-menu-separator" role="separator"></div>
     <button class="history-menu-item history-menu-item-danger" role="menuitem" data-action="delete">

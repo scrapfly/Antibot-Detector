@@ -13,6 +13,9 @@
 
   // Loaded before this file in the popup and the worker; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+  const DomainList = root.DomainList || (typeof require === 'function' ? require('./domain-list.js') : undefined);
+  const normalizeDomains = DomainList.normalize;
+  const matchesDomain = DomainList.matches;
 
   const CHANGE_ALERT_MODES = ['off', 'pinned', 'all'];
   const BACKUP_FREQUENCIES = ['off', 'daily', 'weekly', 'monthly'];
@@ -21,30 +24,6 @@
     const n = parseInt(value, 10);
     return Number.isFinite(n) ? Math.min(Math.max(n, min), max) : fallback;
   };
-
-  /**
-   * The "don't record these sites" list: text (one per line, or separated by commas or spaces) or an array.
-   * Each entry becomes a bare lowercase host: protocol, credentials, port, path and a leading "*." are dropped.
-   * @returns {string[]} unique hosts, in the order written
-   */
-  function normalizeDomains(input) {
-    const raw = Array.isArray(input) ? input.map(String) : String(input == null ? '' : input).split(/[\s,;]+/);
-    const out = [];
-    for (const entry of raw) {
-      let host = entry.trim().toLowerCase();
-      if (!host) continue;
-      host = host.replace(/^[a-z][a-z0-9+.-]*:\/\//, '').replace(/^[^@/]*@/, '').replace(/[/?#].*$/, '').replace(/:\d+$/, '').replace(/^\*\./, '').replace(/^\.+/, '').replace(/\.+$/, '');
-      if (host && /^[a-z0-9._-]+$/.test(host) && !out.includes(host)) out.push(host);
-    }
-    return out;
-  }
-
-  /** Does `hostname` belong to one of the listed sites (the site itself or any subdomain of it)? */
-  function matchesDomain(hostname, list) {
-    const host = String(hostname || '').trim().toLowerCase().replace(/\.$/, '');
-    if (!host) return false;
-    return normalizeDomains(list).some(entry => host === entry || host.endsWith(`.${entry}`));
-  }
 
   const isFingerprint = (detection) => Categories.keyOf(detection) === 'fingerprint';
   const nameOf = (detection) => String((detection && ((detection.detector && detection.detector.name) || detection.name)) || '').trim();

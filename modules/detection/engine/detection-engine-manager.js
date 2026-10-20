@@ -1992,7 +1992,7 @@ class DetectionEngineManager {
         }
 
         // Cache miss - skip if recent detection exists
-        if (Utils.shouldSkipDetection(tabId, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
+        if (Utils.shouldSkipDetection(tabId, Constants.REQUEST_SKIP_THRESHOLD, recentDetectionRequests)) {
             Logger.debug('SCAN', `Duplicate request for tab ${tabId} ignored`);
             return;
         }
@@ -2042,6 +2042,26 @@ class DetectionEngineManager {
      * @param {Set} manuallyClearedCaches - Set to track manually cleared URLs
      * @returns {boolean} True (async response)
      */
+    /** Settings → Data → Storage → Clear: every saved detection result, under the same lock as the stores and the single clear. */
+    static async handleClearAllDetectionCache(sendResponse) {
+        try {
+            const releaseStorageLock = await acquireDetectionStorageLock();
+            let count = 0;
+            try {
+                const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+                count = Object.keys(result[DetectionEngineManager.STORAGE_KEY] || {}).length;
+                await chrome.storage.local.remove([DetectionEngineManager.STORAGE_KEY, 'scrapfly_js_hook_detections']);
+            } finally {
+                releaseStorageLock();
+            }
+            sendResponse({ status: 'cleared', count });
+        } catch (error) {
+            Logger.error('DETECTION', 'Error clearing the whole cache:', error);
+            sendResponse({ status: 'error', error: error.message });
+        }
+        return true;
+    }
+
     static async handleClearDetectionCache(request, sendResponse, manuallyClearedCaches = null) {
         try {
             const requestedScopeRaw = String(request.cacheScope || '').toLowerCase();

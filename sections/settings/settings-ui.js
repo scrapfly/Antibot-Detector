@@ -98,6 +98,7 @@ SettingsUI.switchTab = function(tabName) {
     });
     // The storage meter and last backup are read when the tab is opened
     if (tabName === 'history') SettingsUI.refreshHistoryStorage();
+    if (tabName === 'data') SettingsUI.refreshStorageOverview();
 };
 
 SettingsUI.loadSettings = async function() {
@@ -185,11 +186,13 @@ SettingsUI.setToggleControlledVisibility = function(toggleEl, targets = []) {
 SettingsUI.saveSettings = async function(options = {}) {
     try {
       if (!this.settingsBaseline) throw new Error('Load settings before saving');
-      const committed = await StorageManager.commitSettings({
-        baseline: this.settingsBaseline,
-        candidate: options.candidate || this.settings,
-        languageOverride: options.languageOverride
-      });
+      const committed = options.reset
+        ? await StorageManager.resetSettings(options.reset.defaults, options.reset.keep)
+        : await StorageManager.commitSettings({
+          baseline: this.settingsBaseline,
+          candidate: options.candidate || this.settings,
+          languageOverride: options.languageOverride
+        });
       // Do not advance the form/baseline until persistence succeeds.
       this.settings = committed.settings;
       this.settingsBaseline = JSON.parse(JSON.stringify(committed.settings));
@@ -322,7 +325,8 @@ SettingsUI.updateSettingsUI = function() {
       }
       SettingsUI.updateCacheDurationHint();
 
-        this.renderBlacklistUI();
+      SettingsUI.syncScanModeUI.call(this);
+      this.renderBlacklistUI();
       this.setupBlacklistEventListeners();
     }
 
@@ -529,7 +533,10 @@ SettingsUI.getSettingsFromUI = function() {
       advancedToolsMinConfidence: parseInt(document.querySelector('#advancedToolsMinConfidence')?.value
         ?? this.settings.detection?.advancedToolsMinConfidence ?? 50),
       captureRetentionMinutes: SettingsUI.readCaptureRetentionMinutes(this.settings.detection?.captureRetentionMinutes),
-      blacklistedDomains: this.settings.detection?.blacklistedDomains || [], // This is managed separately by the blacklist UI
+      // Which sites are scanned: the mode is staged in the form, the two lists are managed by the list UI
+      scanMode: document.querySelector('#scanMode')?.value ?? this.settings.detection?.scanMode ?? 'blocklist',
+      blacklistedDomains: this.settings.detection?.blacklistedDomains || [],
+      allowedDomains: this.settings.detection?.allowedDomains || [],
       hooksConfig: this.settings.detection?.hooksConfig || {}
     };
 
@@ -645,6 +652,17 @@ SettingsUI.validateSettings = function(settings) {
       errors.push(...SettingsUI.validateShareSettings(settings.share, text));
     }
 
+    if (settings.detection && settings.detection.scanMode !== undefined && !ScanScope.MODES.includes(settings.detection.scanMode)) {
+      errors.push(text('settingsUiErrScanMode', 'Sites to scan must be every site except the skipped ones, or only the chosen sites'));
+    }
+    for (const key of ['blacklistedDomains', 'allowedDomains']) {
+      const list = settings.detection && settings.detection[key];
+      if (list !== undefined && !(Array.isArray(list) && list.every(site => typeof site === 'string'))) {
+        errors.push(text('settingsUiErrSiteList', 'A list of sites must hold site names only'));
+        break;
+      }
+    }
+
     if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
       if (settings.duplicatePrevention.duplicateDuration < 1 || settings.duplicatePrevention.duplicateDuration > 999) {
         errors.push(text('settingsUiErrDuplicateDuration', 'Duplicate duration must be between 1 and 999'));
@@ -741,6 +759,23 @@ SettingsUI.setupEventListeners = function() {
       }
     });
 
+    // Which sites are scanned: staged like any other setting, saved with the form
+    const scanModeSelect = document.querySelector('#scanMode');
+    if (scanModeSelect && !scanModeSelect.dataset.scopeBound) {
+      scanModeSelect.dataset.scopeBound = '1';
+      scanModeSelect.addEventListener('change', () => {
+        if (!this.settings.detection) this.settings.detection = {};
+        this.settings.detection.scanMode = ScanScope.MODES.includes(scanModeSelect.value) ? scanModeSelect.value : 'blocklist';
+        this.blacklistPage = 1;
+        this.blacklistSearch = '';
+        const search = document.querySelector('#blacklistSearchInput');
+        if (search) search.value = '';
+        SettingsUI.syncScanModeUI.call(this);
+        this.renderBlacklistUI();
+        NotificationHelper.info(FormatUtils.t('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
+      });
+    }
+
     const addCurrentDomainBtn = document.querySelector('#addCurrentDomainBtn');
     if (addCurrentDomainBtn) {
       addCurrentDomainBtn.addEventListener('click', async () => {
@@ -758,18 +793,22 @@ SettingsUI.setupEventListeners = function() {
           const domain = url.hostname;
 
           if (!this.settings.detection) {
-            this.settings.detection = { blacklistedDomains: [] };
+            this.settings.detection = { blacklistedDomains: [], allowedDomains: [] };
           }
-          if (!this.settings.detection.blacklistedDomains) {
-            this.settings.detection.blacklistedDomains = [];
+          // The skipped sites, or the chosen sites: whichever list is on screen
+          const listKey = SettingsUI.scanListKey.call(this);
+          if (!Array.isArray(this.settings.detection[listKey])) {
+            this.settings.detection[listKey] = [];
           }
 
-          if (this.settings.detection.blacklistedDomains.includes(domain)) {
-            NotificationHelper.info(_fmt2('domainAlreadyBlacklistedFmt', `${domain} is already blacklisted`, domain));
+          if (this.settings.detection[listKey].includes(domain)) {
+            NotificationHelper.info(listKey === 'allowedDomains'
+              ? _fmt2('domainAlreadyAllowedFmt', `${domain} is already on the list`, domain)
+              : _fmt2('domainAlreadyBlacklistedFmt', `${domain} is already blacklisted`, domain));
             return;
           }
 
-          this.settings.detection.blacklistedDomains.push(domain);
+          this.settings.detection[listKey].push(domain);
           this.renderBlacklistUI();
           NotificationHelper.info(_tr2('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
         } catch (error) {
@@ -890,6 +929,18 @@ SettingsUI.setupEventListeners = function() {
 
     if (typeof SettingsUI._setupDataListeners === 'function') {
       SettingsUI._setupDataListeners.call(this);
+    }
+    if (typeof SettingsUI._setupStorageListeners === 'function') {
+      SettingsUI._setupStorageListeners.call(this);
+    }
+    if (typeof SettingsUI._setupDiagnosticsListeners === 'function') {
+      SettingsUI._setupDiagnosticsListeners.call(this);
+    }
+    if (typeof SettingsUI._setupPresetListeners === 'function') {
+      SettingsUI._setupPresetListeners.call(this);
+    }
+    if (typeof SettingsUI._setupBackupListeners === 'function') {
+      SettingsUI._setupBackupListeners.call(this);
     }
     if (typeof SettingsUI._setupLogListeners === 'function') {
       SettingsUI._setupLogListeners.call(this);

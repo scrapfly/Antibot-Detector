@@ -912,6 +912,13 @@ class History {
         return;
       }
 
+      // In the mode where the list holds the only sites to scan, the entry's site joins that list (nothing is lost, so no question)
+      if ((this.scanMode || 'blocklist') === 'allowlist') {
+        if (!await StorageManager.setDomainAllowed(domain, true)) throw new Error('Failed to save settings');
+        NotificationHelper.success(_fmt('siteAllowedFmt', `Added "${domain}" to the sites to scan`, domain));
+        return;
+      }
+
       const confirmed = await NotificationHelper.confirm({
         title: _tr('addBlacklistTitle', 'Add to Blacklist'),
         message: _fmt('addBlacklistMsgFmt', `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`, domain),
@@ -1677,9 +1684,11 @@ class History {
     try {
       const settings = await Utils.getSettings();
       this.detectionSort = DetectionUtils.detectionSortOf(settings.detection);
+      this.scanMode = ScanScope.modeOf(settings.detection);
     } catch (error) {
       this.detectionSort = DetectionUtils.detectionSortOf();
     }
+    this.syncScanModeMenu();
   }
 
   registerSettingsListener() {
@@ -1724,6 +1733,12 @@ class History {
   /**
    * Load HTML template into history tab
    */
+  /** The entry menu offers "Add to Blacklist" or "Scan this site", whichever list Settings → Detection → Sites to scan reads. */
+  syncScanModeMenu() {
+    const mode = this.scanMode || 'blocklist';
+    for (const element of document.querySelectorAll('#historyItemMenu [data-scan-mode-show]')) element.hidden = element.dataset.scanModeShow !== mode;
+  }
+
   async loadHTML() {
     try {
       const response = await fetch(chrome.runtime.getURL('sections/history/history.html'));
@@ -1732,6 +1747,7 @@ class History {
       const historyTab = document.querySelector('#historyTab');
       if (historyTab) {
         historyTab.innerHTML = html;
+        this.syncScanModeMenu();
       }
     } catch (error) {
       Logger.error('UI', '[History] HTML load failed', error);

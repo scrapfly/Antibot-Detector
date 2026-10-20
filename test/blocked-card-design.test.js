@@ -40,7 +40,11 @@ test('blocked card preserves the approved surface, domain and full-width recover
     assert.equal(action['min-height'], '44px');
     assert.match(html, /id="blacklistDomain" class="blacklist-domain-text"/);
     assert.match(html, /id="removeFromBlacklistBtn"[^>]*type="button"/);
-    assert.match(html, /class="blacklist-hint" data-i18n="detectionBlacklistHint"/);
+    assert.match(html, /class="blacklist-hint"[^>]*data-i18n="detectionBlacklistHint"/);
+    // The same card serves the mode with a list of the only sites to scan: its own title, button and hint, hidden until that mode
+    assert.match(html, /id="allowSiteBtn"[^>]*type="button"[^>]*data-scan-mode-show="allowlist"[^>]* hidden>/);
+    assert.match(html, /data-scan-mode-show="allowlist" data-i18n="detectionNotOnList" hidden/);
+    assert.match(html, /class="blacklist-hint" data-scan-mode-show="allowlist" data-i18n="detectionAllowlistHint" hidden/);
 });
 
 test('blocked domain field contains only its text, without a globe or replacement icon', () => {

@@ -53,6 +53,8 @@
         "modules/core/hooks-config.js",
         "modules/detection/conditions/window-condition-grammar.js",
         "modules/core/categories.js",
+        "modules/core/domain-list.js",
+        "modules/core/scan-scope.js",
         "utils/format-utils.js",
         "utils/url-utils.js",
         "utils/detection-utils.js",

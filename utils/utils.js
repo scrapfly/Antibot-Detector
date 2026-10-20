@@ -377,18 +377,18 @@ class Utils {
   }
 
   /**
-   * Check if a URL is blacklisted
+   * Is this page left unscanned because of Settings → Detection → Sites? (The name is from when the only mode was a
+   * list of skipped sites; the other mode is a list of the only sites to scan: see ScanScope.)
    * @param {string} url - URL to check
-   * @returns {Promise<boolean>} True if URL's domain is blacklisted
+   * @returns {Promise<boolean>} True if the page is skipped
    */
   static async isUrlBlacklisted(url) {
     if (!url) return false;
 
     try {
       const settings = await this.getSettings();
-      const blacklist = settings.detection?.blacklistedDomains || settings.blacklistedDomains || [];
-      const hostname = UrlUtils.getHostnameFromUrl(url);
-      return blacklist.includes(hostname);
+      const legacy = settings.blacklistedDomains ? { blacklistedDomains: settings.blacklistedDomains } : {};
+      return ScanScope.isExcluded(url, { ...legacy, ...settings.detection });
     } catch (error) {
       Logger.error('UTIL', 'Error checking blacklist:', error);
       return false;

@@ -2141,6 +2141,16 @@ input[type="file"] {
   margin-top: 10px;
 }
 
+#settingsModal .data-item-actions--single {
+  grid-template-columns: 1fr;
+}
+
+#settingsModal .data-item-desc--wrap {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
 #settingsModal .data-btn {
   display: flex;
   align-items: center;
@@ -2175,6 +2185,17 @@ input[type="file"] {
   border-color: var(--accent);
 }
 
+#settingsModal .data-reset-btn {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: var(--danger);
+}
+
+#settingsModal .data-reset-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger);
+}
+
 #settingsModal .data-import-btn {
   background: #285bcb;
   border: 1px solid #4582e3;
@@ -2184,6 +2205,81 @@ input[type="file"] {
 
 #settingsModal .data-import-btn:hover {
   background: var(--accent);
+}
+
+/* The titles and rows of the Detection tab's sites card that belong to the other mode */
+#settingsModal [data-scan-mode-show][hidden] {
+  display: none !important;
+}
+
+/* ---------- Data tab: storage rows ---------- */
+#settingsModal .storage-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#settingsModal .storage-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 64px;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 3px 2px;
+  border-top: 1px solid var(--g-474747);
+}
+
+#settingsModal .storage-row:first-child {
+  border-top: 0;
+}
+
+#settingsModal .storage-row-label {
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--settings-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#settingsModal .storage-row-size {
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--settings-text-dim);
+  white-space: nowrap;
+}
+
+#settingsModal .storage-clear-btn {
+  height: 24px;
+  padding: 0 8px;
+  font-size: 10px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-soft-border);
+  color: var(--p-bfdbfe);
+}
+
+#settingsModal .storage-clear-btn:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.24);
+  border-color: var(--accent);
+}
+
+#settingsModal .storage-clear-btn--danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: var(--danger);
+}
+
+#settingsModal .storage-clear-btn--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger);
+}
+
+#settingsModal .storage-clear-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* ---------- Footer ---------- */

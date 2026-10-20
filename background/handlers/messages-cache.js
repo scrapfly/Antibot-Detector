@@ -150,4 +150,14 @@ function registerCacheHandlers(registry, context) {
     registry['DETECTION_CLEAR_CACHE'] = handle_clear_detection_cache;
     registry['HISTORY_CLEAR_CACHE'] = handle_clear_detection_cache;
 
+    // Settings → Data → Storage → Clear: every saved result; tabs that showed a cached one scan again next time
+    const handle_clear_all_detection_cache = function({ sendResponse }) {
+        (async () => {
+            await DetectionEngineManager.handleClearAllDetectionCache(sendResponse);
+            tabsUsingCache.clear();
+        })();
+        return true; // Async response
+    };
+    registry['DETECTION_CLEAR_ALL_CACHE'] = handle_clear_all_detection_cache;
+
 }

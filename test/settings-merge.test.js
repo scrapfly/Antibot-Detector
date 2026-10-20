@@ -48,3 +48,14 @@ test('updateSettings changes the stored settings in one read-and-write', async (
     delete global.chrome;
   }
 });
+
+test('the list of the only sites to scan merges like the list of skipped sites: additions and removals from both sides survive', () => {
+  const base = { detection: { scanMode: 'allowlist', allowedDomains: ['a.com', 'b.com'], blacklistedDomains: [] } };
+  // The form removed a.com and added c.com; meanwhile the popup added d.com and removed b.com
+  const mine = { detection: { scanMode: 'allowlist', allowedDomains: ['b.com', 'c.com'], blacklistedDomains: [] } };
+  const stored = { detection: { scanMode: 'allowlist', allowedDomains: ['a.com', 'd.com'], blacklistedDomains: [] } };
+  assert.deepStrictEqual(merge(base, mine, stored).detection.allowedDomains, ['d.com', 'c.com']);
+  // A mode chosen in the form wins over the stored one only when the form changed it
+  assert.strictEqual(merge(base, { detection: { ...mine.detection, scanMode: 'blocklist' } }, stored).detection.scanMode, 'blocklist');
+  assert.strictEqual(merge(base, mine, { detection: { ...stored.detection, scanMode: 'blocklist' } }).detection.scanMode, 'blocklist', 'an untouched mode keeps what is stored');
+});

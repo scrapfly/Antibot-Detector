@@ -508,21 +508,31 @@
           </div>
         </div>
 
-        <!-- Blacklisted Domains Group -->
+        <!-- Sites: every site except the skipped ones, or only the chosen sites -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="blacklistedDomains">Blacklisted Domains</div>
+          <div class="settings-card-group-title" data-scan-mode-show="blocklist" data-i18n="blacklistedDomains">Blacklisted Domains</div>
+          <div class="settings-card-group-title" data-scan-mode-show="allowlist" data-i18n="allowedDomainsTitle" hidden>Chosen Sites</div>
 
           <div class="settings-card">
             <div class="settings-row settings-row--head">
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/></svg>
-                  <span data-i18n="settingsCardSkipDomains">Skip Domains</span>
+                  <span data-scan-mode-show="blocklist" data-i18n="settingsCardSkipDomains">Skip Domains</span>
+                  <span data-scan-mode-show="allowlist" data-i18n="settingsCardAllowDomains" hidden>Scan Only These Sites</span>
                 </div>
-                <p class="settings-row-desc" data-i18n="blacklistedDomainsDesc">Domains where detection is completely skipped</p>
+                <p class="settings-row-desc" data-scan-mode-show="blocklist" data-i18n="blacklistedDomainsDesc">Domains where detection is completely skipped</p>
+                <p class="settings-row-desc" data-scan-mode-show="allowlist" data-i18n="allowedDomainsDesc" hidden>Detection runs only on these sites and their subdomains. Everywhere else it is paused.</p>
               </div>
             </div>
             <div class="settings-card-body settings-card-body--blacklist">
+              <div class="setting-row">
+                <label class="setting-row-label" for="scanMode" data-i18n="scanModeTitle">Sites to scan</label>
+                <select id="scanMode" class="select-field">
+                  <option value="blocklist" data-i18n="scanModeBlock">Every site except the ones I skip</option>
+                  <option value="allowlist" data-i18n="scanModeAllow">Only the sites I choose</option>
+                </select>
+              </div>
               <button id="addCurrentDomainBtn" class="action-btn action-btn-block">
                 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
@@ -1180,6 +1190,57 @@
           </div>
         </div>
 
+        <!-- Storage: where the space goes, and what can be cleared -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsStorageTitle">Storage</div>
+          <div class="settings-card settings-card--data">
+            <div class="data-card-head">
+              <span class="data-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
+              </span>
+              <div class="data-card-head-text">
+                <div class="data-card-title" id="storageTotalText">&nbsp;</div>
+                <p class="data-card-desc" data-i18n="settingsStorageDesc">What the extension keeps in this browser. Settings and rules cannot be cleared from here.</p>
+              </div>
+            </div>
+            <div class="data-card-body">
+              <div class="history-meter" id="storageMeter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="storageTotalText"><span class="history-meter-fill" id="storageMeterFill"></span></div>
+              <ul class="storage-rows" id="storageRows"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backup and restore: settings, your own rules and History in one file -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsBackupTitle">Backup and restore</div>
+          <div class="settings-card settings-card--data">
+            <div class="data-card-head">
+              <span class="data-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C12.78,16 13.53,15.93 14.23,15.8C13.92,15.14 13.75,14.4 13.75,13.63C13.75,13.1 13.84,12.58 14,12.09C13.38,12.17 12.71,12.22 12,12.22C7.58,12.22 4,10.43 4,8.22M20,9V12.5C19.3,12.19 18.52,12 17.75,12C17.41,12 17.08,12.04 16.76,12.11C17.29,11.31 18,10.3 18,9.5M4,14V17C4,19.21 7.58,21 12,21C12.79,21 13.55,20.94 14.27,20.83C13.96,20.2 13.78,19.5 13.78,18.75C13.78,18.5 13.8,18.25 13.84,18C13.25,18.07 12.64,18.1 12,18.1C7.58,18.1 4,16.31 4,14.1M18,14L22,18L18,22V19H15V17H18V14Z"/></svg>
+              </span>
+              <div class="data-card-head-text">
+                <div class="data-card-title" data-i18n="settingsBackupItemTitle">Everything</div>
+                <p class="data-card-desc" data-i18n="settingsBackupItemDesc">Settings, your own rules and History in one file. Webhook and sharing details are not included.</p>
+              </div>
+            </div>
+            <div class="data-card-body">
+              <div class="data-item">
+                <div class="data-item-actions">
+                  <button id="backUpEverythingBtn" type="button" class="data-btn data-export-btn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
+                    <span data-i18n="backupMakeBtn">Back up</span>
+                  </button>
+                  <button id="restoreBackupBtn" type="button" class="data-btn data-import-btn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/></svg>
+                    <span data-i18n="backupRestoreBtn">Restore</span>
+                  </button>
+                  <input type="file" id="restoreBackupFile" accept=".json,application/json" hidden>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Export/Import Group -->
         <div class="settings-card-group">
           <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsDataExportImport">Export & Import</div>
@@ -1242,6 +1303,92 @@
                     <span data-i18n="btnImport">Import</span>
                   </button>
                   <input type="file" id="settingsImportHistoryFile" accept=".json,application/json" hidden>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Presets and reset: a few settings changed together, and the way back to the defaults -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsPresetsTitle">Presets and reset</div>
+          <div class="settings-card settings-card--data">
+            <div class="data-card-head">
+              <span class="data-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8,13C6.14,13 4.59,14.28 4.14,16H2V18H4.14C4.59,19.72 6.14,21 8,21C9.86,21 11.41,19.72 11.86,18H22V16H11.86C11.41,14.28 9.86,13 8,13M8,19A2,2 0 0,1 6,17A2,2 0 0,1 8,15A2,2 0 0,1 10,17A2,2 0 0,1 8,19M19.86,6C19.41,4.28 17.86,3 16,3C14.14,3 12.59,4.28 12.14,6H2V8H12.14C12.59,9.72 14.14,11 16,11C17.86,11 19.41,9.72 19.86,8H22V6H19.86M16,9A2,2 0 0,1 14,7A2,2 0 0,1 16,5A2,2 0 0,1 18,7A2,2 0 0,1 16,9Z"/></svg>
+              </span>
+              <div class="data-card-head-text">
+                <div class="data-card-title" data-i18n="settingsDataSettingsRow">Settings</div>
+                <p class="data-card-desc" data-i18n="settingsPresetsDesc">Change several settings at once. Rules, History, site lists, language and theme are never changed.</p>
+              </div>
+            </div>
+            <div class="data-card-body">
+              <div class="data-item">
+                <div class="data-item-head">
+                  <span class="data-item-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,11.99H19C18.47,16.11 15.72,19.78 12,20.93V12H5V6.3L12,3.19V11.99Z"/></svg>
+                  </span>
+                  <div class="data-item-text">
+                    <div class="data-item-title" data-i18n="presetPrivacyName">Privacy</div>
+                    <p class="data-item-desc data-item-desc--wrap" data-i18n="presetPrivacyDesc">Keeps less on this device and sends nothing out.</p>
+                  </div>
+                </div>
+                <div class="data-item-actions data-item-actions--single">
+                  <button type="button" class="data-btn data-export-btn" data-preset="privacy"><span data-i18n="presetApply">Apply</span></button>
+                </div>
+              </div>
+              <div class="data-item">
+                <div class="data-item-head">
+                  <span class="data-item-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.7,16.3L4.4,12L8.7,7.7L7.3,6.3L1.6,12L7.3,17.7L8.7,16.3M15.3,16.3L16.7,17.7L22.4,12L16.7,6.3L15.3,7.7L19.6,12L15.3,16.3Z"/></svg>
+                  </span>
+                  <div class="data-item-text">
+                    <div class="data-item-title" data-i18n="presetDeveloperName">Developer</div>
+                    <p class="data-item-desc data-item-desc--wrap" data-i18n="presetDeveloperDesc">Debug logs and the JS API, for working on rules.</p>
+                  </div>
+                </div>
+                <div class="data-item-actions data-item-actions--single">
+                  <button type="button" class="data-btn data-export-btn" data-preset="developer"><span data-i18n="presetApply">Apply</span></button>
+                </div>
+              </div>
+              <div class="data-item">
+                <div class="data-item-head">
+                  <span class="data-item-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,5V1L7,6L12,11V7A6,6 0 0,1 18,13A6,6 0 0,1 12,19A6,6 0 0,1 6,13H4A8,8 0 0,0 12,21A8,8 0 0,0 20,13A8,8 0 0,0 12,5Z"/></svg>
+                  </span>
+                  <div class="data-item-text">
+                    <div class="data-item-title" data-i18n="settingsResetTitle">Reset settings</div>
+                    <p class="data-item-desc data-item-desc--wrap" data-i18n="settingsResetDesc">Every setting returns to its default. Rules, History, site lists, language and theme are kept.</p>
+                  </div>
+                </div>
+                <div class="data-item-actions data-item-actions--single">
+                  <button type="button" id="resetSettingsBtn" class="data-btn data-reset-btn"><span data-i18n="settingsResetBtn">Reset…</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Support: a summary people can paste into a bug report -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsSupportTitle">Support</div>
+          <div class="settings-card settings-card--data">
+            <div class="data-card-head">
+              <span class="data-card-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7M7.5,13.5L9,12L11,14L15.5,9.5L17,11L11,17L7.5,13.5Z"/></svg>
+              </span>
+              <div class="data-card-head-text">
+                <div class="data-card-title" data-i18n="settingsDiagnosticsTitle">Diagnostics</div>
+                <p class="data-card-desc" data-i18n="settingsDiagnosticsDesc">Copy a summary for a bug report: versions, settings and counts. It has no sites, addresses or keys.</p>
+              </div>
+            </div>
+            <div class="data-card-body">
+              <div class="data-item">
+                <div class="data-item-actions data-item-actions--single">
+                  <button id="copyDiagnosticsBtn" class="data-btn data-export-btn" type="button">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" fill="currentColor"/></svg>
+                    <span data-i18n="settingsCopyDiagnostics">Copy diagnostics</span>
+                  </button>
                 </div>
               </div>
             </div>

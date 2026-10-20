@@ -99,3 +99,63 @@ test('queued mutations retain their original payload and reject invalid operatio
   assert.equal(h.settings().debugMode, true);
   await assert.rejects(h.client().mutateSettings({ operation: 'erase' }));
 });
+
+test('a reset returns every setting to the defaults it is given, keeps the paths it is asked to keep, and drops the rest', async () => {
+  const h = harness({
+    debugMode: true, notificationsEnabled: false, someOldSetting: 7,
+    detection: { cacheDuration: 3, cacheUnit: 'hours', blacklistedDomains: ['keep.example'], hooksConfig: { MAX_DETECTION_MS: 9 } },
+    history: { historyEnabled: false, historyExcludedDomains: ['bank.example'], historyLimit: 40 },
+    webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC', webhookHeaders: [{ name: 'X', value: 'SYNTHETIC' }] },
+    updates: { autoUpdate: true, lastCheckTimestamp: 123 }
+  });
+  const defaults = {
+    debugMode: false, notificationsEnabled: true,
+    detection: { cacheDuration: 7, cacheUnit: 'days', blacklistedDomains: [], hooksConfig: {} },
+    history: { historyEnabled: true, historyExcludedDomains: [], historyLimit: 0 },
+    webhook: { enableWebhook: false, webhookUrl: '', webhookHeaders: [] },
+    updates: { autoUpdate: false, lastCheckTimestamp: 0 }
+  };
+  const keep = ['detection.blacklistedDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp', 'webhook.webhookUrl', 'webhook.webhookHeaders'];
+  const result = await h.client().resetSettings(defaults, keep);
+  assert.equal(result.success, true);
+  assert.deepEqual(h.settings(), {
+    debugMode: false, notificationsEnabled: true,
+    detection: { cacheDuration: 7, cacheUnit: 'days', blacklistedDomains: ['keep.example'], hooksConfig: {} },
+    history: { historyEnabled: true, historyExcludedDomains: ['bank.example'], historyLimit: 0 },
+    webhook: { enableWebhook: false, webhookUrl: 'https://hooks.example/SYNTHETIC', webhookHeaders: [{ name: 'X', value: 'SYNTHETIC' }] },
+    updates: { autoUpdate: false, lastCheckTimestamp: 123 }
+  });
+  assert.equal(result.previous.someOldSetting, 7, 'the caller can still see what was there');
+  // Keeping nothing disconnects everything
+  await h.client().resetSettings(defaults, []);
+  assert.deepEqual(h.settings(), defaults);
+});
+
+test('a reset with a malformed request writes nothing', async () => {
+  const h = harness({ debugMode: true });
+  const client = h.client();
+  for (const [defaults, keep] of [[null, []], [{}, 'x'], [{}, [5]], [[], []], [{}, ['']]]) {
+    assert.equal(await client.resetSettings(defaults, keep).then(() => true, () => false), false, JSON.stringify([defaults, keep]));
+  }
+  assert.equal(h.state.writes, 0);
+  assert.equal(h.settings().debugMode, true);
+  // A path that tries to reach the prototype is ignored
+  await client.resetSettings({ a: 1 }, ['__proto__.polluted', 'constructor.prototype.x']);
+  assert.equal({}.polluted, undefined);
+});
+
+test('sites of the "only scan these sites" list are added and removed in the worker, trimmed and lower-cased, merging with each other', async () => {
+  const h = harness({ detection: { scanMode: 'allowlist', allowedDomains: ['a.example'] } });
+  const results = await Promise.all([
+    h.client().setDomainAllowed(' B.Example ', true),
+    h.client().setDomainAllowed('c.example', true),
+    h.client().setDomainAllowed('a.example', false),
+    h.client().setDomainAllowed('c.example', true)
+  ]);
+  assert.deepEqual(results, [true, true, true, true]);
+  assert.deepEqual(h.settings().detection.allowedDomains, ['b.example', 'c.example']);
+  assert.equal(h.settings().detection.scanMode, 'allowlist', 'the mode is not touched');
+  const writes = h.state.writes;
+  for (const [domain, allowed] of [['', true], ['  ', false], [5, true], ['x.example', 'yes']]) assert.equal(await h.client().setDomainAllowed(domain, allowed), false, JSON.stringify([domain, allowed]));
+  assert.equal(h.state.writes, writes, 'an invalid change writes nothing');
+});

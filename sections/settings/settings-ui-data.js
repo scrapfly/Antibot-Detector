@@ -78,36 +78,15 @@ SettingsUI.importSettingsFile = async function(event) {
     }
 };
 
-SettingsUI._csvCell = function(value) {
-    const text = value === null || value === undefined ? '' : String(value);
-    // Neutralise spreadsheet formulas and quote every cell.
-    const safe = /^[=+\-@]/.test(text) ? `'${text}` : text;
-    return `"${safe.replace(/"/g, '""')}"`;
-};
-
 SettingsUI.exportHistoryCsv = async function() {
     const t = (typeof I18n !== 'undefined') ? I18n : null;
     const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
     try {
       const items = await SettingsUI._readStoredHistoryItems();
-      const header = ['timestamp', 'url', 'hostname', 'title', 'detectionCount', 'categories', 'detections'];
-      const rows = items.map((item) => {
-        const detections = Array.isArray(item.detections) ? item.detections : [];
-        const names = detections.map((d) => d && (d.name || d.detector || d.id)).filter(Boolean);
-        const categories = Array.isArray(item.categories) ? item.categories : [];
-        return [
-          item.timestamp ? new Date(item.timestamp).toISOString() : '',
-          item.url || '',
-          item.hostname || '',
-          item.title || '',
-          item.detectionCount ?? detections.length,
-          categories.join('; '),
-          names.join('; ')
-        ].map(SettingsUI._csvCell).join(',');
-      });
-      const csv = [header.join(','), ...rows].join('\r\n');
-      const date = new Date().toISOString().split('T')[0];
-      SettingsUI._downloadFile(csv, `scrapfly-history-${date}.csv`, 'text/csv');
+      // The same file as History → Export → CSV: one row per protection, with its confidence, pin and note
+      const saved = await Utils.getHistorySettings();
+      const built = HistoryExport.build(items, { format: 'csv', includeTimestamps: saved.includeTimestamps !== false });
+      SettingsUI._downloadFile(built.text, HistoryExport.fileName(built.format), built.type);
       NotificationHelper.success(_fmt('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
     } catch (error) {
       Logger.error('UI', 'Failed to export history:', error);

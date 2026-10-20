@@ -37,12 +37,14 @@ test('a rule that declares no confidence is 80 (85 for a DOM pattern) for detect
   assert.ok(/method\.confidence \|\| \(methodType === 'dom' \? Constants\.DEFAULT_DOM_CONFIDENCE : Constants\.DEFAULT_MATCH_CONFIDENCE\)/.test(read('sections/rules/rules-editor.js')));
 });
 
-test('a duplicate scan request is ignored for the same time on every path', () => {
+test('the two windows in which a repeated scan is skipped are named constants, and the request one stays shorter', () => {
+  // A second navigation in the same tab 1.5 s after the first must still be scanned (the methods e2e does exactly that)
+  assert.strictEqual(Constants.REQUEST_SKIP_THRESHOLD, 1500);
   assert.strictEqual(Constants.DETECTION_SKIP_THRESHOLD, 2000);
-  const engine = read('modules/detection/engine/detection-engine-manager.js');
-  const calls = engine.match(/shouldSkipDetection\([^)]*\)/g);
-  assert.ok(calls.length >= 2, 'the engine skips duplicates on its paths');
-  for (const call of calls) assert.ok(/Constants\.DETECTION_SKIP_THRESHOLD/.test(call), call);
+  assert.ok(Constants.REQUEST_SKIP_THRESHOLD < Constants.DETECTION_SKIP_THRESHOLD);
+  const calls = read('modules/detection/engine/detection-engine-manager.js').match(/shouldSkipDetection\([^)]*\)/g);
+  assert.ok(calls.length >= 2, 'the engine skips repeated scans on its paths');
+  for (const call of calls) assert.ok(/Constants\.(?:REQUEST|DETECTION)_SKIP_THRESHOLD/.test(call), `${call} has no literal window`);
 });
 
 test('a detector without rules has an empty detection object: the Rules tab carries no template with the old plural method names', () => {

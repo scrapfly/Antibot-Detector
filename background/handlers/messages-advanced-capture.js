@@ -215,8 +215,11 @@ function registerAdvancedCaptureHandlers(registry, context) {
     };
 
     registry[messageTypes.ADVANCED_HISTORY] = ({ request, sender, sendResponse }) => {
-        // This channel handles extension UI data, never page/content-script requests.
-        if (sender?.tab) {
+        // This channel handles extension UI data, never page/content-script requests: a content script carries the
+        // page's address, an extension page (the popup, or the popup or stats page opened in a tab) the extension's own.
+        const base = chrome.runtime && chrome.runtime.getURL ? chrome.runtime.getURL('') : '';
+        const origin = String((sender && (sender.url || sender.origin)) || '');
+        if (sender && !(base && origin.startsWith(base)) && (sender.tab || origin)) {
             sendResponse({ status: 'error', error: 'Advanced history is available only to extension pages' });
             return false;
         }

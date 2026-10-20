@@ -20,6 +20,26 @@
         return target;
     }
 
+    function pathValue(source, path) {
+        let value = source;
+        for (const part of path.split('.')) {
+            if (!isObject(value)) return undefined;
+            value = value[part];
+        }
+        return value;
+    }
+
+    function setPathValue(target, path, value) {
+        const parts = path.split('.');
+        if (parts.some(part => ['__proto__', 'constructor', 'prototype'].includes(part))) return;
+        let node = target;
+        for (const part of parts.slice(0, -1)) {
+            if (!isObject(node[part])) node[part] = {};
+            node = node[part];
+        }
+        node[parts[parts.length - 1]] = value;
+    }
+
     async function apply(mutation) {
         const previous = await StorageManager.readSettingsStrict();
         let settings = clone(previous);
@@ -28,6 +48,15 @@
             settings = StorageManager.mergeSettingsChanges(mutation.baseline, mutation.candidate, settings);
         } else if (mutation.operation === 'patch') {
             settings = patchObject(settings, mutation.patch);
+        } else if (mutation.operation === 'reset') {
+            // Every setting returns to the defaults the caller sends, except the dotted paths it asks to keep
+            if (!isObject(mutation.defaults) || !Array.isArray(mutation.keep) || !mutation.keep.every(path => typeof path === 'string' && path)) throw new Error('Invalid settings reset');
+            const next = clone(mutation.defaults);
+            for (const path of mutation.keep) {
+                const kept = pathValue(settings, path);
+                if (kept !== undefined) setPathValue(next, path, clone(kept));
+            }
+            settings = next;
         } else if (mutation.operation === 'domain') {
             if (typeof mutation.domain !== 'string' || !mutation.domain.trim() || typeof mutation.excluded !== 'boolean') {
                 throw new Error('Invalid domain exclusion');
@@ -38,6 +67,16 @@
             settings.detection.blacklistedDomains = mutation.excluded
                 ? [...new Set([...domains, domain])]
                 : domains.filter(value => value !== domain);
+        } else if (mutation.operation === 'allow') {
+            if (typeof mutation.domain !== 'string' || !mutation.domain.trim() || typeof mutation.allowed !== 'boolean') {
+                throw new Error('Invalid site');
+            }
+            const domain = mutation.domain.trim().toLowerCase();
+            settings.detection = isObject(settings.detection) ? settings.detection : {};
+            const sites = Array.isArray(settings.detection.allowedDomains) ? settings.detection.allowedDomains : [];
+            settings.detection.allowedDomains = mutation.allowed
+                ? [...new Set([...sites, domain])]
+                : sites.filter(value => value !== domain);
         } else {
             throw new Error('Unknown settings change');
         }

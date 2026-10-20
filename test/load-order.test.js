@@ -56,8 +56,8 @@ test('every script that reads a shared global module loads after it, in the popu
     popup: popupScripts(), worker: workerImports(), stats,
     content: manifest.content_scripts.find(entry => entry.world !== 'MAIN').js
   };
-  const MODULES = { Categories: 'modules/core/categories.js', CaptureRetention: 'modules/core/capture-retention.js' };
-  const readers = { Categories: 0, CaptureRetention: 0 };
+  const MODULES = { Categories: 'modules/core/categories.js', CaptureRetention: 'modules/core/capture-retention.js', DomainList: 'modules/core/domain-list.js', ScanScope: 'modules/core/scan-scope.js' };
+  const readers = Object.fromEntries(Object.keys(MODULES).map(name => [name, 0]));
   for (const [global, module] of Object.entries(MODULES)) {
     for (const graph of Object.values(contexts)) {
       for (const file of graph.filter(entry => entry !== module && new RegExp(`\\b${global}\\.`).test(read(entry)))) {
@@ -70,6 +70,7 @@ test('every script that reads a shared global module loads after it, in the popu
   }
   assert.ok(readers.Categories >= 20, 'the guard finds the scripts that use the category module');
   assert.ok(readers.CaptureRetention >= 4, 'the guard finds the scripts that use the capture retention module');
+  assert.ok(readers.DomainList >= 2 && readers.ScanScope >= 3, 'the guard finds the scripts that use the site list modules');
 });
 
 test('rules and integration graphs load dependencies before their users', () => {

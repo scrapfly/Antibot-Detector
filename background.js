@@ -12,6 +12,8 @@ importScripts(
     './modules/core/ttl-map.js',
     './modules/core/categories.js',
     './modules/core/capture-retention.js',
+    './modules/core/domain-list.js',
+    './modules/core/scan-scope.js',
     './utils/format-utils.js',
     './utils/url-utils.js',
     './utils/page-cookies.js',

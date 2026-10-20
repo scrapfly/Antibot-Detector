@@ -6099,5 +6099,369 @@
   "statsToolsRetentionNoteFmt": {
     "message": "Advanced keeps captures for {0}, so this tab ignores the date range.",
     "description": "Note on the Tools tab of the statistics page. {0} is how long captures are kept, as set in Settings (for example 30 minutes, 1 hour, 3 days)"
+  },
+  "settingsStorageTitle": {
+    "message": "Storage",
+    "description": "Title of the card in Settings → Data that shows how much space each part of the extension uses"
+  },
+  "settingsStorageDesc": {
+    "message": "What the extension keeps in this browser. Settings and rules cannot be cleared from here.",
+    "description": "Description under the Storage card title in Settings → Data"
+  },
+  "storageCache": {
+    "message": "Detection cache",
+    "description": "Row of the Storage card: saved detection results that make a revisited page load without a new scan"
+  },
+  "storageCaptures": {
+    "message": "Tool captures",
+    "description": "Row of the Storage card: data saved by the Advanced tools (captures and tool results)"
+  },
+  "storageHistory": {
+    "message": "History",
+    "description": "Row of the Storage card: the History entries"
+  },
+  "storageRules": {
+    "message": "Rules and categories",
+    "description": "Row of the Storage card: detection rules (detectors), categories and their translations"
+  },
+  "storageSettings": {
+    "message": "Settings",
+    "description": "Row of the Storage card: the extension's settings and preferences"
+  },
+  "storageLogs": {
+    "message": "Logs",
+    "description": "Row of the Storage card: the debug logs the log collector keeps"
+  },
+  "storageOther": {
+    "message": "Other",
+    "description": "Row of the Storage card: everything else the extension stores"
+  },
+  "storageTotalFmt": {
+    "message": "{0} of {1} used",
+    "description": "Total line of the Storage card. {0} is the space used, {1} the space the browser allows (for example 1.2 MB of 10.0 MB used)"
+  },
+  "storageClearRowFmt": {
+    "message": "Clear {0}",
+    "description": "Accessible name of a Clear button in the Storage card. {0} is the row name, such as Detection cache"
+  },
+  "storageClearCacheTitle": {
+    "message": "Clear the detection cache",
+    "description": "Title of the confirmation that clears the detection cache"
+  },
+  "storageClearCacheMessage": {
+    "message": "Pages are scanned again the next time you open them. History, rules and settings are not touched.",
+    "description": "Message of the confirmation that clears the detection cache"
+  },
+  "storageClearCapturesTitle": {
+    "message": "Delete tool captures",
+    "description": "Title of the confirmation that deletes everything the Advanced tools saved"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Everything the Advanced tools saved is deleted. History, rules and settings are not touched.",
+    "description": "Message of the confirmation that deletes the Advanced tools' captures"
+  },
+  "storageCacheCleared": {
+    "message": "Detection cache cleared",
+    "description": "Toast after the detection cache was cleared"
+  },
+  "storageCapturesCleared": {
+    "message": "Tool captures deleted",
+    "description": "Toast after the Advanced tools' captures were deleted"
+  },
+  "storageClearFailed": {
+    "message": "Could not clear it. Try again.",
+    "description": "Toast when clearing a part of the storage failed"
+  },
+  "settingsSupportTitle": {
+    "message": "Support",
+    "description": "Title of the group in Settings → Data with tools for getting help"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostics",
+    "description": "Title of the card in Settings → Data that copies a summary for a bug report"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Copy a summary for a bug report: versions, settings and counts. It has no sites, addresses or keys.",
+    "description": "Description of the Diagnostics card"
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Copy diagnostics",
+    "description": "Button that copies the diagnostics summary to the clipboard"
+  },
+  "diagnosticsCopied": {
+    "message": "Diagnostics copied",
+    "description": "Toast after the diagnostics summary was copied to the clipboard"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Could not copy the diagnostics",
+    "description": "Toast when copying the diagnostics summary failed"
+  },
+  "settingsPresetsTitle": {
+    "message": "Presets and reset",
+    "description": "Title of the card in Settings → Data with ready-made groups of settings and the way back to the defaults"
+  },
+  "settingsPresetsDesc": {
+    "message": "Change several settings at once. Rules, History, site lists, language and theme are never changed.",
+    "description": "Description of the Presets and reset card"
+  },
+  "presetPrivacyName": {
+    "message": "Privacy",
+    "description": "Name of a preset in Settings → Data: a group of settings that keeps less on this device and sends nothing out"
+  },
+  "presetPrivacyDesc": {
+    "message": "Keeps less on this device and sends nothing out.",
+    "description": "Description of the Privacy preset"
+  },
+  "presetDeveloperName": {
+    "message": "Developer",
+    "description": "Name of a preset in Settings → Data: debug logs and the JS API for people who work on detection rules"
+  },
+  "presetDeveloperDesc": {
+    "message": "Debug logs and the JS API, for working on rules.",
+    "description": "Description of the Developer preset"
+  },
+  "presetApply": {
+    "message": "Apply",
+    "description": "Button that applies a preset"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Apply the {0} preset?",
+    "description": "Title of the confirmation before a preset is applied. {0} is the preset name (Privacy or Developer)"
+  },
+  "presetConfirmIntro": {
+    "message": "These settings will change:",
+    "description": "Line above the list of settings a preset changes"
+  },
+  "presetAlreadySet": {
+    "message": "These settings are already set.",
+    "description": "Shown when a preset would change nothing"
+  },
+  "presetApplied": {
+    "message": "Preset applied",
+    "description": "Toast after a preset was applied"
+  },
+  "presetHistoryOff": {
+    "message": "History is not recorded",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetBackupOff": {
+    "message": "Automatic History backups are off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetClearOnClose": {
+    "message": "History is cleared when the browser closes",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetWebhookOff": {
+    "message": "The webhook is off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetNotificationsOff": {
+    "message": "Notifications are off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetJsApiOff": {
+    "message": "The JS API is off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetDebugOff": {
+    "message": "Debug mode is off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetCollectorOff": {
+    "message": "The log collector is off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "presetDebugOn": {
+    "message": "Debug mode is on",
+    "description": "A line in the list of what the Developer preset changes"
+  },
+  "presetVerboseOn": {
+    "message": "Verbose logging is on",
+    "description": "A line in the list of what the Developer preset changes"
+  },
+  "presetCollectorOn": {
+    "message": "The log collector is on",
+    "description": "A line in the list of what the Developer preset changes"
+  },
+  "presetCollectorMax": {
+    "message": "The log collector keeps up to 5000 lines",
+    "description": "A line in the list of what the Developer preset changes"
+  },
+  "presetJsApiOn": {
+    "message": "The JS API is on",
+    "description": "A line in the list of what the Developer preset changes"
+  },
+  "settingsResetTitle": {
+    "message": "Reset settings",
+    "description": "Title of the item and of the confirmation that return every setting to its default"
+  },
+  "settingsResetDesc": {
+    "message": "Every setting returns to its default. Rules, History, site lists, language and theme are kept.",
+    "description": "Description of the Reset settings item"
+  },
+  "settingsResetBtn": {
+    "message": "Reset…",
+    "description": "Button that opens the Reset settings confirmation"
+  },
+  "settingsResetMessage": {
+    "message": "Every setting returns to its default. Rules, History, site lists, language and theme are not changed. Webhook and sharing details are kept unless you choose to remove them.",
+    "description": "Message of the Reset settings confirmation"
+  },
+  "settingsResetConnections": {
+    "message": "Also remove the webhook and sharing connections",
+    "description": "Checkbox in the Reset settings confirmation: also clear the webhook address and headers and the sharing keys"
+  },
+  "settingsResetConfirm": {
+    "message": "Reset",
+    "description": "Confirm button of the Reset settings confirmation"
+  },
+  "settingsResetDone": {
+    "message": "Settings reset",
+    "description": "Toast after the settings were reset"
+  },
+  "settingsBackupTitle": {
+    "message": "Backup and restore",
+    "description": "Title of the group in Settings → Data that saves everything in one file and restores it"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Everything",
+    "description": "Title of the item that backs up settings, rules and History together"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Settings, your own rules and History in one file. Webhook and sharing details are not included.",
+    "description": "Description of the Everything backup item"
+  },
+  "backupMakeBtn": {
+    "message": "Back up",
+    "description": "Button that saves the backup file (settings, rules and History together)"
+  },
+  "backupRestoreBtn": {
+    "message": "Restore",
+    "description": "Button that chooses a backup file to restore from"
+  },
+  "backupDone": {
+    "message": "Backup saved",
+    "description": "Toast after the backup file was created"
+  },
+  "backupFailed": {
+    "message": "Could not create the backup",
+    "description": "Toast when creating the backup failed"
+  },
+  "restoreTitle": {
+    "message": "Restore a backup",
+    "description": "Title of the dialog that asks what to restore from a backup file"
+  },
+  "restoreHoldsFmt": {
+    "message": "Made with version {0} on {1}. It holds:",
+    "description": "First line of the restore dialog. {0} is the extension version that made the backup, {1} the date and time"
+  },
+  "restorePartSettings": {
+    "message": "Settings",
+    "description": "Checkbox in the restore dialog: restore the settings from the backup"
+  },
+  "restorePartRulesFmt": {
+    "message": "Your rules ({0})",
+    "description": "Checkbox in the restore dialog: restore the person's own detection rules. {0} is how many"
+  },
+  "restorePartHistoryFmt": {
+    "message": "History ({0} entries)",
+    "description": "Checkbox in the restore dialog: restore the History. {0} is how many entries"
+  },
+  "restoreModeLabel": {
+    "message": "Rules and History",
+    "description": "Label above the choice between merging and replacing in the restore dialog"
+  },
+  "restoreModeMerge": {
+    "message": "Merge with what you have",
+    "description": "Option in the restore dialog: add the backup's rules and History to the current ones"
+  },
+  "restoreModeReplace": {
+    "message": "Replace what you have",
+    "description": "Option in the restore dialog: delete the current rules (your own) and History first, then restore the backup's"
+  },
+  "restoreConfirm": {
+    "message": "Restore",
+    "description": "Confirm button of the restore dialog"
+  },
+  "restoreNothing": {
+    "message": "Nothing is selected.",
+    "description": "Toast when Restore was confirmed with no part selected"
+  },
+  "restoreDoneFmt": {
+    "message": "Restored: {0}",
+    "description": "Toast after a restore. {0} is the list of what was restored, such as Settings, Your rules (2), History (120 entries)"
+  },
+  "restorePartFailedFmt": {
+    "message": "{0} could not be restored.",
+    "description": "Toast when one part of a restore failed. {0} is the part, such as Settings or History"
+  },
+  "restoreInvalid": {
+    "message": "This file is not a backup of this extension. Nothing was changed.",
+    "description": "Toast when the chosen file is not a valid backup"
+  },
+  "restoreNewer": {
+    "message": "This backup was made by a newer version of the extension. Update the extension and try again.",
+    "description": "Toast when the backup file format is newer than this extension understands"
+  },
+  "scanModeTitle": {
+    "message": "Sites to scan",
+    "description": "Label of the choice in Settings → Detection between scanning every site except some, or only chosen sites"
+  },
+  "scanModeBlock": {
+    "message": "Every site except the ones I skip",
+    "description": "Option of the Sites to scan choice: detection runs everywhere except on the sites in the skipped list"
+  },
+  "scanModeAllow": {
+    "message": "Only the sites I choose",
+    "description": "Option of the Sites to scan choice: detection runs only on the sites in the chosen list"
+  },
+  "allowedDomainsTitle": {
+    "message": "Chosen Sites",
+    "description": "Title of the group in Settings → Detection that lists the only sites where detection runs"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Scan Only These Sites",
+    "description": "Title of the card with the list of the only sites where detection runs"
+  },
+  "allowedDomainsDesc": {
+    "message": "Detection runs only on these sites and their subdomains. Everywhere else it is paused.",
+    "description": "Description of the list of the only sites where detection runs"
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "No sites chosen: nothing is scanned yet",
+    "description": "Shown instead of the list of chosen sites while it is empty"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Remove from the list",
+    "description": "Tooltip of the button that removes a site from the list of chosen sites"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} is already on the list",
+    "description": "Toast when the current site is already in the list of chosen sites. {0} is the site"
+  },
+  "detectionNotOnList": {
+    "message": "Detection paused: this site is not on your list",
+    "description": "Title of the card in the Detection tab when the sites-to-scan list does not include the current site"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Scan this site",
+    "description": "Button in the Detection tab that adds the current site to the list of sites to scan and scans it"
+  },
+  "detectionAllowlistHint": {
+    "message": "Or go to Settings → Detection → Sites to scan to manage the list.",
+    "description": "Hint under the Scan this site button"
+  },
+  "siteAllowedFmt": {
+    "message": "Added \"{0}\" to the sites to scan",
+    "description": "Toast after the current site was added to the list of sites to scan. {0} is the site"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Sites to scan must be every site except the skipped ones, or only the chosen sites",
+    "description": "Error shown when settings carry an unknown value for the Sites to scan choice"
+  },
+  "settingsUiErrSiteList": {
+    "message": "A list of sites must hold site names only",
+    "description": "Error shown when a list of skipped or chosen sites holds something that is not a site name"
   }
 }

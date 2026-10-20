@@ -21,6 +21,8 @@
     "e2e:refactor": "node scripts/e2e-refactor.js",
     "e2e:languages": "node scripts/e2e-languages.js",
     "e2e:history": "node scripts/e2e-history.js",
+    "e2e:data": "node scripts/e2e-data.js",
+    "e2e:scope": "node scripts/e2e-scope.js",
     "e2e:live": "node scripts/e2e-live.js"
   }
 }

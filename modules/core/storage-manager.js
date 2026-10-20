@@ -144,12 +144,28 @@ class StorageManager {
         }
     }
 
+    /** Every setting back to `defaults`, except the dotted paths in `keep` (the worker applies it as one change). */
+    static async resetSettings(defaults, keep) {
+        return StorageManager.mutateSettings({ operation: 'reset', defaults, keep });
+    }
+
     static async patchSettings(patch) {
         try {
             await StorageManager.mutateSettings({ operation: 'patch', patch });
             return true;
         } catch (error) {
             Logger.error('STORAGE', 'Failed to update settings');
+            return false;
+        }
+    }
+
+    /** Add or remove a site of the "only scan these sites" list; the worker merges it with what is stored now. */
+    static async setDomainAllowed(domain, allowed) {
+        try {
+            await StorageManager.mutateSettings({ operation: 'allow', domain, allowed });
+            return true;
+        } catch (error) {
+            Logger.error('STORAGE', 'Failed to update the list of sites to scan');
             return false;
         }
     }
@@ -184,7 +200,7 @@ class StorageManager {
             const hasMine = Object.prototype.hasOwnProperty.call(mine, key);
             const hasStored = isObj(stored) && Object.prototype.hasOwnProperty.call(stored, key);
             if (['__proto__', 'constructor', 'prototype'].includes(key)) continue;
-            if (path.length === 1 && path[0] === 'detection' && key === 'blacklistedDomains'
+            if (path.length === 1 && path[0] === 'detection' && (key === 'blacklistedDomains' || key === 'allowedDomains')
                 && Array.isArray(m) && Array.isArray(b) && Array.isArray(s)) {
                 const removed = new Set(b.filter(domain => !m.includes(domain)));
                 out[key] = [...new Set([...s.filter(domain => !removed.has(domain)), ...m.filter(domain => !b.includes(domain))])];

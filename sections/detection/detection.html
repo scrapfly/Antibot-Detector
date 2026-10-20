@@ -40,15 +40,20 @@
             <circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>
           </svg>
         </span>
-        <h3 class="state-card-title" data-i18n="detectionDisabledForDomain">Detection disabled for this domain</h3>
+        <h3 class="state-card-title" data-scan-mode-show="blocklist" data-i18n="detectionDisabledForDomain">Detection disabled for this domain</h3>
+        <h3 class="state-card-title" data-scan-mode-show="allowlist" data-i18n="detectionNotOnList" hidden>Detection paused: this site is not on your list</h3>
       </div>
       <div class="detection-pause-site">
         <p id="blacklistDomain" class="blacklist-domain-text"></p>
       </div>
-      <button id="removeFromBlacklistBtn" class="state-card-enable-btn remove-blacklist-btn" type="button">
+      <button id="removeFromBlacklistBtn" class="state-card-enable-btn remove-blacklist-btn" type="button" data-scan-mode-show="blocklist">
         <span data-i18n="detectionRemoveFromBlacklistBtn">Remove from Blacklist</span>
       </button>
-      <p class="blacklist-hint" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
+      <button id="allowSiteBtn" class="state-card-enable-btn remove-blacklist-btn" type="button" data-scan-mode-show="allowlist" hidden>
+        <span data-i18n="detectionAllowSiteBtn">Scan this site</span>
+      </button>
+      <p class="blacklist-hint" data-scan-mode-show="blocklist" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
+      <p class="blacklist-hint" data-scan-mode-show="allowlist" data-i18n="detectionAllowlistHint" hidden>Or go to Settings → Detection → Sites to scan to manage the list.</p>
     </div>
   </div>
 

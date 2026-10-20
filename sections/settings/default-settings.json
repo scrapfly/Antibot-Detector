@@ -38,7 +38,9 @@
       "categoryOrder": ["antibot", "captcha", "fingerprint"],
       "advancedToolsMinConfidence": 50,
       "captureRetentionMinutes": 30,
+      "scanMode": "blocklist",
       "blacklistedDomains": [],
+      "allowedDomains": [],
       "hooksConfig": {}
     },
 

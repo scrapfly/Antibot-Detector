@@ -342,6 +342,9 @@ class Detection {
   async removeFromBlacklist(...args) {
     return await DetectionActions.removeFromBlacklist.apply(this, args);
   }
+  applyScanMode(...args) {
+    return DetectionActions.applyScanMode.apply(this, args);
+  }
   renderDetectionsPage(...args) {
     return DetectionUI.renderDetectionsPage.apply(this, args);
   }
@@ -428,6 +431,7 @@ class Detection {
         const settings = await Utils.getSettings();
         this.debugMode = settings.debugMode || false;
         this.applyDetectionSort(settings.detection);
+        this.applyScanMode(settings.detection);
         this.tagColors = settings.tagColors || null;
       } catch (e) {
         this.debugMode = false;
@@ -442,6 +446,7 @@ class Detection {
           const colorsChanged = JSON.stringify(settings.tagColors || null) !== JSON.stringify(this.tagColors || null);
           this.tagColors = settings.tagColors || null;
           this.applyDetectionSort(settings.detection, { rerender: true, force: colorsChanged });
+          this.applyScanMode(settings.detection);
         } catch (_) { /* keep the current order */ }
       });
 
@@ -605,6 +610,16 @@ class Detection {
     }
 
     // Setup disabled state blacklist button - removes current domain from blacklist
+    // The same action, in the mode where the list holds the only sites to scan: this site joins it
+    const allowSiteBtn = document.querySelector('#allowSiteBtn');
+    if (allowSiteBtn) {
+      allowSiteBtn.addEventListener('click', async () => {
+        const blacklistDomain = document.querySelector('#blacklistDomain');
+        const domain = blacklistDomain ? blacklistDomain.textContent : '';
+        if (domain) await this.removeFromBlacklist(domain);
+      });
+    }
+
     const disabledBlacklistBtn = document.querySelector('#disabledBlacklistBtn');
     if (disabledBlacklistBtn) {
       disabledBlacklistBtn.addEventListener('click', async () => {

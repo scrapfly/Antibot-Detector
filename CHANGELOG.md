@@ -9,7 +9,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
-- History: filter chips under the search (Pinned, Changed, Anti-bot, Captcha), and the search now also looks in your notes. When nothing matches, a message offers Clear filters.
+- History: filter chips under the search (Pinned, Changed, Anti-bot, Captcha, Fingerprint), and the search now also looks in your notes. When nothing matches, a message offers Clear filters.
+- Settings → Detection → Sites to scan: scan every site except the ones you skip (as before), or only the sites you choose; the Detection tab of a site that is not chosen offers Scan this site.
+- Settings → Data → Storage: how much space the detection cache, tool captures, History, rules, settings and logs use, with Clear for the cache, the captures, the logs and History.
+- Settings → Data → Backup and restore: settings, your own rules and History in one file, restored whole or in parts, merging or replacing. Older exports still import as before.
+- Settings → Data → Presets and reset: a Privacy and a Developer preset that list what they change, and Reset settings, which keeps your site lists, rules, History, language and theme.
+- Settings → Data → Diagnostics: Copy diagnostics puts versions, settings and counts on the clipboard for a bug report, with no sites, addresses or keys.
 
 ### Fixed
 
@@ -26,6 +31,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History details show a rule's uploaded icon, an emoji icon and the Scrapfly logo like the Detection tab does.
 - Page notices from Advanced tools are laid out right to left in Arabic.
 - Settings starts the cache duration from 7 days, not 12 hours, when a saved or imported file carries none.
+- Settings → Data → Detection History (CSV) names the protections, which it wrote as [object Object], and is the same file as History → Export.
+- The page buttons of the skipped sites list jumped several pages at a time once Settings had been opened more than once.
 
 ## [3.0.1] - 2026-10-20
 
