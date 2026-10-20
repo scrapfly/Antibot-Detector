@@ -133,7 +133,7 @@ async function setBadgeForDetections(tabId, url, detectionResults, ownsSession =
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId })
             ]);
         } else if (detectionCount > 0) {
-            const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+            const badgeColors = await CategoryManager.getBadgeColors();
             if (!isCurrent()) return false;
             stopBadgeSpinner(tabId);
             const color = DetectionUtils.getBadgeColor(detectionResults, badgeColors);

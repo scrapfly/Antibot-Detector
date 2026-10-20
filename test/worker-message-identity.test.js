@@ -168,7 +168,7 @@ function pageLoadHarness() {
   const timers = [];
   const state = { current: true, retry: false };
   const context = {
-    Promise, Date, Map, Set, PatternCache: class {},
+    Promise, Date, Map, Set, PatternCache: class {}, Constants: { DETECTION_SKIP_THRESHOLD: 2000 },
     Logger: new Proxy({}, { get: () => () => {} }),
     DetectionUtils: { getBadgeColor: () => '#123456' },
     UrlUtils: { getHostnameFromUrl: () => 'example.test', normalizeFaviconForStorage: value => value },

@@ -49,7 +49,7 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
         // In popup context (!hasBackgroundContext), skip — background handles it via EXTENSION_TOGGLE_CHANGED.
         // Without this guard, popup sets all badges to EMPTY which races with background's restore.
         if (hasBackgroundContext) {
-          const badgeColors = await context.CategoryManager.getBadgeColors(context.categoryManager);
+          const badgeColors = await context.CategoryManager.getBadgeColors();
           const tabs = await chrome.tabs.query({});
 
           for (const tab of tabs) {

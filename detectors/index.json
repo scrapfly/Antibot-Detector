@@ -86,7 +86,7 @@
     ]
 },
 "tags":{
-    "dom": {"colour": "#3b82f6"},
+    "dom": {"colour": "#8D33FF"},
     "header": {"colour": "#FF33A8"},
     "cookie": {"colour": "#FFC133"},
     "content": {"colour": "#33FFF3"},
@@ -94,10 +94,5 @@
     "js_hooks": {"colour": "#00E5FF"},
     "window": {"colour": "#4CAF50"},
     "payload": {"colour": "#9C27B0"}
-},
-"badge": {
-    "low": {"colour": "#4CAF50"},
-    "medium": {"colour": "#FFA500"},
-    "high": {"colour": "#FF4444"}
 }
 }

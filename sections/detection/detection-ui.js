@@ -689,7 +689,7 @@ DetectionUI.updateCacheInfo = function() {
     };
     // The tip carries fixed dates, so it never shows a stale countdown
     const showScope = (scope) => {
-      const key = scopeNames[scope] ? scope : 'path';
+      const key = scopeNames[scope] ? scope : 'domain';
       if (cacheScopeDisplay) cacheScopeDisplay.textContent = scopeNames[key];
       const rows = [];
       if (meta && meta.timestamp) rows.push({ label: tr('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(meta.timestamp) });
@@ -699,11 +699,9 @@ DetectionUI.updateCacheInfo = function() {
     if (meta && meta.cacheScope) {
       showScope(meta.cacheScope);
     } else {
-      showScope('path');
-      // Fallback: read current setting from storage
-      Utils.getSettings().then((settings) => {
-        showScope(settings.cacheScope || settings.detection?.cacheScope || 'path');
-      }).catch(() => {});
+      showScope('domain');
+      // An entry saved before the scope was recorded: the scope in Settings is the one it was saved under
+      Utils.getCacheScope().then(showScope).catch(() => {});
     }
 };
 

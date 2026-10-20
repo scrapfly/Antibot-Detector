@@ -264,55 +264,14 @@ SettingsUI.updateSettingsUI = function() {
       this.startLogCountUpdate();
     }
 
-    // Badge Colors (using BADGE constants as defaults)
-    if (this.settings.badgeColors) {
-      const colorBadgeLow = document.querySelector('#colorBadgeLow');
-      if (colorBadgeLow) colorBadgeLow.value = this.settings.badgeColors.low || BADGE.COLORS.LOW;
-
-      const colorBadgeMedium = document.querySelector('#colorBadgeMedium');
-      if (colorBadgeMedium) colorBadgeMedium.value = this.settings.badgeColors.medium || BADGE.COLORS.MEDIUM;
-
-      const colorBadgeHigh = document.querySelector('#colorBadgeHigh');
-      if (colorBadgeHigh) colorBadgeHigh.value = this.settings.badgeColors.high || BADGE.COLORS.HIGH;
-    }
-
-    // Category Colors
-    if (this.settings.categoryColors) {
-      const colorAntibot = document.querySelector('#colorAntibot');
-      if (colorAntibot) colorAntibot.value = this.settings.categoryColors.antibot || FormatUtils.DEFAULT_CATEGORY_COLORS.antibot;
-
-      const colorCaptcha = document.querySelector('#colorCaptcha');
-      if (colorCaptcha) colorCaptcha.value = this.settings.categoryColors.captcha || FormatUtils.DEFAULT_CATEGORY_COLORS.captcha;
-
-      const colorFingerprint = document.querySelector('#colorFingerprint');
-      if (colorFingerprint) colorFingerprint.value = this.settings.categoryColors.fingerprint || FormatUtils.DEFAULT_CATEGORY_COLORS.fingerprint;
-    }
-
-    // Tag Colors
-    if (this.settings.tagColors) {
-      const colorTagDOM = document.querySelector('#colorTagDOM');
-      if (colorTagDOM) colorTagDOM.value = this.settings.tagColors.dom || '#8D33FF';
-
-      const colorTagHeaders = document.querySelector('#colorTagHeaders');
-      if (colorTagHeaders) colorTagHeaders.value = this.settings.tagColors.headers || '#FF33A8';
-
-      const colorTagCookies = document.querySelector('#colorTagCookies');
-      if (colorTagCookies) colorTagCookies.value = this.settings.tagColors.cookies || '#FFC133';
-
-      const colorTagContent = document.querySelector('#colorTagContent');
-      if (colorTagContent) colorTagContent.value = this.settings.tagColors.content || '#33FFF3';
-
-      const colorTagURLs = document.querySelector('#colorTagURLs');
-      if (colorTagURLs) colorTagURLs.value = this.settings.tagColors.urls || '#00BCD4';
-
-      const colorTagJSHooks = document.querySelector('#colorTagJSHooks');
-      if (colorTagJSHooks) colorTagJSHooks.value = this.settings.tagColors.js_hooks || '#00E5FF';
-
-      const colorTagWindow = document.querySelector('#colorTagWindow');
-      if (colorTagWindow) colorTagWindow.value = this.settings.tagColors.window || '#4CAF50';
-
-      const colorTagPayload = document.querySelector('#colorTagPayload');
-      if (colorTagPayload) colorTagPayload.value = this.settings.tagColors.payload || '#9C27B0';
+    // Badge, category and tag colours, each starting from the shared default
+    for (const { group, inputs, defaults } of SettingsUI.colorGroups()) {
+      const saved = this.settings[group];
+      if (!saved) continue;
+      for (const [key, selector] of Object.entries(inputs)) {
+        const input = document.querySelector(selector);
+        if (input) input.value = saved[key] || defaults[key];
+      }
     }
 
     if (typeof SettingsUI.syncColorRowBadges === 'function') {
@@ -552,31 +511,11 @@ SettingsUI.getSettingsFromUI = function() {
     const rawMaxLogs = parseInt(logCollectorMaxLogsInput?.value ?? this.settings.logCollectorMaxLogs ?? 5000);
     settings.logCollectorMaxLogs = Math.min(Math.max(rawMaxLogs, 100), 5000);
 
-    // Badge Colors (using BADGE constants as defaults)
-    settings.badgeColors = {
-      low: document.querySelector('#colorBadgeLow')?.value ?? this.settings.badgeColors?.low ?? BADGE.COLORS.LOW,
-      medium: document.querySelector('#colorBadgeMedium')?.value ?? this.settings.badgeColors?.medium ?? BADGE.COLORS.MEDIUM,
-      high: document.querySelector('#colorBadgeHigh')?.value ?? this.settings.badgeColors?.high ?? BADGE.COLORS.HIGH
-    };
-
-    // Category Colors
-    settings.categoryColors = {
-      antibot: document.querySelector('#colorAntibot')?.value ?? this.settings.categoryColors?.antibot ?? FormatUtils.DEFAULT_CATEGORY_COLORS.antibot,
-      captcha: document.querySelector('#colorCaptcha')?.value ?? this.settings.categoryColors?.captcha ?? FormatUtils.DEFAULT_CATEGORY_COLORS.captcha,
-      fingerprint: document.querySelector('#colorFingerprint')?.value ?? this.settings.categoryColors?.fingerprint ?? FormatUtils.DEFAULT_CATEGORY_COLORS.fingerprint
-    };
-
-    // Tag Colors
-    settings.tagColors = {
-      dom: document.querySelector('#colorTagDOM')?.value ?? this.settings.tagColors?.dom ?? '#8D33FF',
-      headers: document.querySelector('#colorTagHeaders')?.value ?? this.settings.tagColors?.headers ?? '#FF33A8',
-      cookies: document.querySelector('#colorTagCookies')?.value ?? this.settings.tagColors?.cookies ?? '#FFC133',
-      content: document.querySelector('#colorTagContent')?.value ?? this.settings.tagColors?.content ?? '#33FFF3',
-      urls: document.querySelector('#colorTagURLs')?.value ?? this.settings.tagColors?.urls ?? '#00BCD4',
-      js_hooks: document.querySelector('#colorTagJSHooks')?.value ?? this.settings.tagColors?.js_hooks ?? '#00E5FF',
-      window: document.querySelector('#colorTagWindow')?.value ?? this.settings.tagColors?.window ?? '#4CAF50',
-      payload: document.querySelector('#colorTagPayload')?.value ?? this.settings.tagColors?.payload ?? '#9C27B0'
-    };
+    // Badge, category and tag colours
+    for (const { group, inputs, defaults } of SettingsUI.colorGroups()) {
+      settings[group] = Object.fromEntries(Object.entries(inputs).map(([key, selector]) =>
+        [key, document.querySelector(selector)?.value ?? this.settings[group]?.[key] ?? defaults[key]]));
+    }
 
     // ========== DETECTION TAB ==========
     settings.detection = {
@@ -971,6 +910,19 @@ SettingsUI.setupEventListeners = function() {
 // ========== CACHE DURATION UNITS ==========
 // Ranges and conversions live in FormatUtils so the detection engine reads the
 // stored value exactly as this UI shows it.
+/** Settings → Badge, Category and Tag colors: the colour input of each saved key, and the shared default it starts from. */
+SettingsUI.colorGroups = function() {
+  return [
+    { group: 'badgeColors', defaults: { low: BADGE.COLORS.LOW, medium: BADGE.COLORS.MEDIUM, high: BADGE.COLORS.HIGH },
+      inputs: { low: '#colorBadgeLow', medium: '#colorBadgeMedium', high: '#colorBadgeHigh' } },
+    { group: 'categoryColors', defaults: FormatUtils.DEFAULT_CATEGORY_COLORS,
+      inputs: { antibot: '#colorAntibot', captcha: '#colorCaptcha', fingerprint: '#colorFingerprint' } },
+    { group: 'tagColors', defaults: FormatUtils.DEFAULT_TAG_COLORS,
+      inputs: { dom: '#colorTagDOM', headers: '#colorTagHeaders', cookies: '#colorTagCookies', content: '#colorTagContent',
+        urls: '#colorTagURLs', js_hooks: '#colorTagJSHooks', window: '#colorTagWindow', payload: '#colorTagPayload' } }
+  ];
+};
+
 SettingsUI.getCacheDurationDisplay = function(detection = {}) {
     return FormatUtils.normalizeCacheDuration(detection.cacheDuration ?? 12, detection.cacheUnit || 'hours');
 };

@@ -160,7 +160,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               value = method.condition || 'exists';
             }
 
-            const confidence = method.confidence || 100;
+            const confidence = method.confidence || Constants.DEFAULT_MATCH_CONFIDENCE;
             // Stable id combinations refer to, and whether the pattern may fire alone
             const patternId = ((typeof DetectionCombinations !== 'undefined') && DetectionCombinations.idOf(detector, method))
               || `${methodType}-${index + 1}`;

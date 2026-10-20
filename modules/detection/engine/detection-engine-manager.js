@@ -881,7 +881,7 @@ class DetectionEngineManager {
                         type: 'cookie',
                         name: matchingCookie.name,
                         value: `${matchingCookie.name}=${matchingCookie.value || ''}`,
-                        confidence: cookiePattern.confidence || 80,
+                        confidence: cookiePattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                         patternId: DetectionEngineManager.patternIdOf(detector, cookiePattern),
                         description: cookiePattern.description
                     });
@@ -936,7 +936,7 @@ class DetectionEngineManager {
                                     type: 'header',
                                     name: headerPattern.name,
                                     value: `${headerName}: ${valueToCheck}`,
-                                    confidence: headerPattern.confidence || 80,
+                                    confidence: headerPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                                     patternId: DetectionEngineManager.patternIdOf(detector, headerPattern),
                                     description: headerPattern.description
                                 });
@@ -948,7 +948,7 @@ class DetectionEngineManager {
                                 type: 'header',
                                 name: headerPattern.name,
                                 value: `${headerName}: ${headerValue}`,
-                                confidence: headerPattern.confidence || 80,
+                                confidence: headerPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                                 patternId: DetectionEngineManager.patternIdOf(detector, headerPattern),
                                 description: headerPattern.description
                             });
@@ -1071,7 +1071,7 @@ class DetectionEngineManager {
                             type: 'payload',
                             pattern: payloadPattern.text,
                             value: matchedValue,
-                            confidence: payloadPattern.confidence || 80,
+                            confidence: payloadPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                             patternId: DetectionEngineManager.patternIdOf(detector, payloadPattern),
                             description: payloadPattern.description || 'Payload pattern detected'
                         });
@@ -1177,7 +1177,7 @@ class DetectionEngineManager {
                         type: 'payload',
                         pattern: payloadPattern.text,
                         value: matchedValue,
-                        confidence: payloadPattern.confidence || 80,
+                        confidence: payloadPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                         patternId: DetectionEngineManager.patternIdOf(detector, payloadPattern),
                         description: payloadPattern.description || 'Payload pattern detected'
                     });
@@ -1209,7 +1209,7 @@ class DetectionEngineManager {
                         value: value.length > 80 ? value.slice(0, 80) + '...' : value,
                         fullUrl: response.url,
                         body: 'response',
-                        confidence: rule.confidence || 80,
+                        confidence: rule.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                         patternId: DetectionEngineManager.patternIdOf(detector, rule),
                         description: rule.description || 'Response pattern detected'
                     });
@@ -1391,7 +1391,7 @@ class DetectionEngineManager {
                             type: 'js_hooks',
                             target: hookData.target,
                             value: hookData.target,
-                            confidence: hookData.confidence || 80,
+                            confidence: hookData.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                             description: hookData.description || 'JavaScript API hook'
                         });
 
@@ -1411,13 +1411,13 @@ class DetectionEngineManager {
                         const detectorInfo = DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId);
                         detections.push({
                             detected: true,
-                            confidence: hookData.confidence || 80,
+                            confidence: hookData.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                             difficulty: detectorInfo.difficulty,
                             matches: [{
                                 type: 'js_hooks',
                                 target: hookData.target,
                                 value: hookData.target,
-                                confidence: hookData.confidence || 80,
+                                confidence: hookData.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                                 description: hookData.description || 'JavaScript API hook'
                             }],
                             detectionMethods: ['js_hooks'],
@@ -1932,7 +1932,7 @@ class DetectionEngineManager {
 
             // Update badge with cached detection count
             if (storedData.detectionCount > 0) {
-                const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+                const badgeColors = await CategoryManager.getBadgeColors();
                 if (!await isCurrentDocument()) return ignored;
                 const count = storedData.detectionCount.toString();
                 const color = DetectionUtils.getBadgeColor(storedData.detectionResults || [], badgeColors);
@@ -1992,7 +1992,7 @@ class DetectionEngineManager {
         }
 
         // Cache miss - skip if recent detection exists
-        if (Utils.shouldSkipDetection(tabId, 1500, recentDetectionRequests)) {
+        if (Utils.shouldSkipDetection(tabId, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
             Logger.debug('SCAN', `Duplicate request for tab ${tabId} ignored`);
             return;
         }

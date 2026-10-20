@@ -15,6 +15,7 @@ const read = (file) => fs.readFileSync(path.join(__dirname, '..', file), 'utf8')
 const packagedIndex = () => {
   const context = vm.createContext({ window: {} });
   vm.runInContext(read('modules/core/categories.js'), context);
+  vm.runInContext(read('utils/format-utils.js') + '\nthis.FormatUtils = FormatUtils;', context);
   vm.runInContext(read('modules/detection/managers/category-manager.js'), context);
   return context.window.CategoryManager.getPackagedFallbackIndex();
 };

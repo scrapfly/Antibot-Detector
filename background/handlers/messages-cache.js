@@ -61,7 +61,7 @@ function registerCacheHandlers(registry, context) {
                     const detections = Array.isArray(detectionData.detectionResults) ? detectionData.detectionResults : [];
 
                     if (detectionCount > 0) {
-                        const badgeColors = await CategoryManager.getBadgeColors(categoryManager);
+                        const badgeColors = await CategoryManager.getBadgeColors();
                         const count = detectionCount.toString();
                         const color = DetectionUtils.getBadgeColor(detections, badgeColors);
 

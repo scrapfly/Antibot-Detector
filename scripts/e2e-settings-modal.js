@@ -192,8 +192,29 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     assert.equal(current.share.customUrl, 'https://upload.example/SYNTHETIC_EXISTING');
     console.log('PASS successful portable import keeps existing local webhook/share connections');
 
+    // 6. Colours: the toolbar uses the colours the modal shows, and a tag colour chosen there reaches every chip
+    await open();
+    await tab('general');
+    const shown = await page.evaluate(() => ({
+      low: document.querySelector('#colorBadgeLow').value, medium: document.querySelector('#colorBadgeMedium').value, high: document.querySelector('#colorBadgeHigh').value
+    }));
+    assert.deepEqual(await worker.evaluate(() => CategoryManager.getBadgeColors()), shown, 'the toolbar badge starts from the colours Settings shows');
+    assert.equal(await page.evaluate(() => window.popupInstance.detectorManager.categoryManager.getTagColor('dom').toLowerCase()),
+      await page.$eval('#colorTagDOM', input => input.value.toLowerCase()), 'a chip starts from the colour Settings shows for the tag');
+    await page.$eval('#colorTagDOM', input => {
+      input.value = '#123456';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await page.evaluate(() => window.popupInstance.settings.handleSaveSettings());
+    assert.equal((await stored()).tagColors.dom, '#123456');
+    // The worker syncs it into the categories the chips read, and the open popup follows without being reopened
+    await page.waitForFunction(() => window.popupInstance.detectorManager.categoryManager.getTagColor('dom') === '#123456');
+    assert.equal(await worker.evaluate(() => detectorManager.categoryManager.getTagColor('dom')), '#123456');
+    console.log('PASS the toolbar badge and the tag chips use the colours of Settings, a new tag colour reaches the open popup');
+
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
-    console.log('RESULT ALL PASS: 5 modal scenarios, no page errors');
+    console.log('RESULT ALL PASS: 6 modal scenarios, no page errors');
   } finally {
     try {
       if (context) await context.close();

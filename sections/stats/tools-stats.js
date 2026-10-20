@@ -1,14 +1,16 @@
 /** Pure statistics of Advanced captures and tool results (scrapfly_advanced_history). */
+// The vendors and their product names are described once, in the Advanced vendor registry (the stats page loads it first)
+if (typeof AdvancedVendorRegistry === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.AdvancedCaptchaVendors = require('../../modules/advanced/captcha-vendors.js');
+  require('../../modules/advanced/vendor-registry.js');
+}
 const ToolsStats = {
-  /** Product names of the Advanced modules; History buckets use imperva / awswaf. */
-  MODULE_NAMES: {
-    recaptcha: 'reCAPTCHA', akamai: 'Akamai Bot Manager', shapesecurity: 'Shape Security',
-    incapsula: 'Imperva/Incapsula', imperva: 'Imperva/Incapsula', 'aws-waf': 'AWS WAF', awswaf: 'AWS WAF',
-    geetest: 'GeeTest', datadome: 'DataDome', cloudflare: 'Cloudflare', turnstile: 'Turnstile',
-    hcaptcha: 'hCaptcha', funcaptcha: 'FunCaptcha'
-  },
   isRecord(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
-  moduleName(id) { return ToolsStats.MODULE_NAMES[id] || String(id || ''); },
+  /** The product name of an Advanced module (History buckets say imperva / awswaf; the registry knows both spellings). */
+  moduleName(id) {
+    const vendor = AdvancedVendorRegistry.vendors[AdvancedVendorRegistry.canonical(id)];
+    return vendor ? vendor.productName : String(id || '');
+  },
   /** Advanced keeps a capture for 30 minutes; one expiring within this long is about to go. */
   EXPIRING_SOON_MS: 600000,
   /** A finite number from a number or numeric string; null for anything else (null, '', booleans, NaN). */

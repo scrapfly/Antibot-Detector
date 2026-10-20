@@ -16,6 +16,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - A custom detector whose category says "WAF" or "bot" is listed with anti-bot everywhere (Detection, History and its export filter); some screens put it under Other.
 - CHEQ, Meetrics, Ocule and ThreatMetrix are named Anti-Bot in History exports and webhooks, like every other anti-bot detector.
 - Official detectors stay marked official, not custom, when the built-in detector index cannot be read.
+- The toolbar badge uses the colours Settings → Badge colors shows from the start; until the first Save it used slightly different shades.
+- A tag colour chosen in Settings now also colours the chips in the detection details, History and Rules, and an open popup follows without being reopened. The DOM tag is purple there, as in Settings.
+- Statistics → Tools names every Advanced vendor like the Advanced tab; the CAPTCHA vendors added in 3.0 showed their internal ids.
+- The cache tile says Domain, the real default scope, for results saved before the scope was recorded; it said Path.
+- The rule editor shows 80 for a pattern with no confidence of its own, the value detection uses; it showed 100.
 
 ## [3.0.1] - 2026-10-20
 
