@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "URL、モジュール、サイト、またはコンテンツで検索..."
   },
-  "advancedPaginationPage": {
-    "message": "ページ"
-  },
-  "advancedPaginationOf": {
-    "message": "/"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "サイトキー、アクション、構成パラメータをキャプチャします"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "履歴をクリアできませんでした"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "{2} 件中 {0}～{1} 件のキャプチャを表示"
   },
   "rulesUiNewDetectorName": {
     "message": "新しい検出器"

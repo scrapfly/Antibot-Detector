@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "URL, 모듈, 사이트 또는 콘텐츠로 검색..."
   },
-  "advancedPaginationPage": {
-    "message": "페이지"
-  },
-  "advancedPaginationOf": {
-    "message": "/"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "사이트 키, 동작 및 구성 매개변수를 캡처합니다"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "기록을 지우지 못했습니다"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "캡처 {2}개 중 {0}-{1}개 표시"
   },
   "rulesUiNewDetectorName": {
     "message": "새 탐지기"

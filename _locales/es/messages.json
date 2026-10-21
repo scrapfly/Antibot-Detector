@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Buscar por URL, módulo, sitio o contenido..."
   },
-  "advancedPaginationPage": {
-    "message": "Página"
-  },
-  "advancedPaginationOf": {
-    "message": "de"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Captura claves de sitio, acciones y parámetros de configuración"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "No se pudo borrar el historial"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Mostrando {0}-{1} de {2} capturas"
   },
   "rulesUiNewDetectorName": {
     "message": "Nuevo detector"

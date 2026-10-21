@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Cerca per URL, modulo, sito o contenuto..."
   },
-  "advancedPaginationPage": {
-    "message": "Pagina"
-  },
-  "advancedPaginationOf": {
-    "message": "di"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Cattura site key, azioni e parametri di configurazione"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Impossibile cancellare la cronologia"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "{0}-{1} di {2} acquisizioni"
   },
   "rulesUiNewDetectorName": {
     "message": "Nuovo rilevatore"

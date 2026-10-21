@@ -15,8 +15,6 @@ class Advanced {
   constructor(detectorManager, detectionSection) {
     this.detectorManager = detectorManager;
     this.detectionSection = detectionSection;
-    this.analysisResults = null;
-    this.isRunningAnalysis = false;
     this.loadedModules = {};
     this.currentTab = null;
     this.selectedDetection = null;
@@ -32,6 +30,8 @@ class Advanced {
     await this.loadHTML();
     // The History badge follows every change to the saved captures
     if (typeof this.setupCaptureHistoryWatcher === 'function') this.setupCaptureHistoryWatcher();
+    // Once: the template and the document-level listeners are set up here, the tab's content is drawn per open
+    this.initialized = true;
     Logger.debug('UI', 'Advanced section initialized');
   }
 

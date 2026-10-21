@@ -1,5 +1,5 @@
     /**
-     * Check Imperva cookies using BaseInterceptorHelpers
+     * Check Imperva cookies (read through the worker)
      */
 ImpervaAdvanced.prototype.checkCookies = async function() {
         try {
@@ -183,11 +183,3 @@ ImpervaAdvanced.prototype.parseScriptPaths = function(extractedData) {
             reeseSensorPath
         };
     };
-
-
-    /**
-     * Generate parsing code for extracted data
-     * @param {Object} extractedData - Extracted page data
-     * @param {Object} scriptPaths - Script paths (utmvcScriptPath, reeseScriptPath, reeseSensorPath)
-     * @param {String} exportType - Export type: 'all', 'reese84', or 'utmvc'
-     */

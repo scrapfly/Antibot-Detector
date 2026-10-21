@@ -19,8 +19,7 @@ function fixture() {
   let history = {}, panelReplaced = false;
   const elements = Object.fromEntries(['.history-v2-shell', '#captureGrid', '#captureEmptyState',
     '#captureOpenToolsBtn', '#captureSiteFilter', '#captureModuleFilter', '#captureSearchInput',
-    '#exportCapturesBtn', '#clearAllCapturesBtn', '#toolsPanel', '#advancedContent',
-    '#capturePagination'].map(selector => [selector, node()]));
+    '#exportCapturesBtn', '#clearAllCapturesBtn', '#toolsPanel', '#advancedContent'].map(selector => [selector, node()]));
   const panel = node();
   Object.defineProperty(panel, 'innerHTML', { set() { panelReplaced = true; } });
   panel.querySelector = selector => panelReplaced ? null : elements[selector] || null;
@@ -107,11 +106,9 @@ test('only truly empty capture history expands its parent for centered layout', 
   assert.equal(elements['#captureEmptyState'].style.display, 'flex');
 });
 
-test('returning to empty capture history hides any stale pagination', async () => {
+test('returning to empty capture history clears the grid and leaves the filters alone', async () => {
   const { advanced, elements } = fixture();
-  elements['#capturePagination'].style.display = 'flex';
   await advanced.renderUnifiedCaptureHistory();
-  assert.equal(elements['#capturePagination'].style.display, 'none');
   assert.equal(elements['#captureGrid'].innerHTML, '');
   assert.equal(elements['#captureSiteFilter'].value, '', 'empty styling must not mutate filters');
 });

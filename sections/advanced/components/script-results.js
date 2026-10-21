@@ -117,5 +117,4 @@ class AdvancedScriptResults {
 for (const name of ['startScriptAnalysis', 'showScriptResults']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedScriptResults.prototype, name));
 }
-BaseAdvancedModule.SCRIPT_RESOURCE_LABELS = RESOURCE_LABELS;
 })();

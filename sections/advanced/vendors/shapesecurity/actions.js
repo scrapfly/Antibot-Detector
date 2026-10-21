@@ -176,9 +176,3 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
             return { awaitingResult: false };
         }
     };
-
-
-    /**
-     * Generate parsing code for Shape Security script URLs
-     * Template caching for faster repeat exports
-     */

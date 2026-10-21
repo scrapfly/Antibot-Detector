@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "URL, modül, site veya içeriğe göre ara..."
   },
-  "advancedPaginationPage": {
-    "message": "Sayfa"
-  },
-  "advancedPaginationOf": {
-    "message": "/"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Site anahtarlarını, eylemleri ve yapılandırma parametrelerini yakalar"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Geçmiş temizlenemedi"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "{2} yakalamadan {0}-{1} gösteriliyor"
   },
   "rulesUiNewDetectorName": {
     "message": "Yeni dedektör"

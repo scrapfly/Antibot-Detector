@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "依 URL、模組、網站或內容搜尋..."
   },
-  "advancedPaginationPage": {
-    "message": "頁"
-  },
-  "advancedPaginationOf": {
-    "message": "/"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "擷取網站金鑰、動作和設定參數"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "無法清除歷史記錄"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "顯示第 {0}-{1} 個擷取項目，共 {2} 個"
   },
   "rulesUiNewDetectorName": {
     "message": "新偵測器"

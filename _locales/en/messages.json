@@ -1640,12 +1640,6 @@
   "advancedSearchPlaceholder": {
     "message": "Search by URL, module, site, or content..."
   },
-  "advancedPaginationPage": {
-    "message": "Page"
-  },
-  "advancedPaginationOf": {
-    "message": "of"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Captures site keys, actions, and configuration parameters"
   },
@@ -3601,10 +3595,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Failed to clear history"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Showing {0}-{1} of {2} captures",
-    "description": "{0}-{1} = range shown, {2} = total captures"
   },
   "rulesUiNewDetectorName": {
     "message": "New detector",

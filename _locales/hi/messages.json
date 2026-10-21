@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "URL, मॉड्यूल, साइट, या सामग्री द्वारा खोजें..."
   },
-  "advancedPaginationPage": {
-    "message": "पृष्ठ"
-  },
-  "advancedPaginationOf": {
-    "message": "का"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "साइट कीज़, क्रियाएँ, और कॉन्फ़िगरेशन पैरामीटर कैप्चर करता है"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "इतिहास साफ़ करने में विफल"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "{2} में से {0}-{1} कैप्चर दिखाए जा रहे हैं"
   },
   "rulesUiNewDetectorName": {
     "message": "नया डिटेक्टर"

@@ -5,7 +5,7 @@
  * This file provides common functionality for Advanced section modules
  * that run in the popup context (not service worker).
  *
- * NOTE: Many utility functions delegate to Utils.js to avoid duplication.
+ * NOTE: Several helpers only hand over to FormatUtils, AdvancedToolClient or NotificationHelper.
  */
 
 
@@ -25,7 +25,7 @@ const AdvancedUtils = {
 
     /**
      * Load capture history from storage (popup context)
-     * This is a UI-friendly wrapper around BaseInterceptorHelpers.loadHistory
+     * A UI-friendly wrapper around AdvancedHistoryStore (the popup's client of the worker's store)
      * @param {string} type - Module type (e.g., 'akamai', 'recaptcha')
      * @param {string} hostname - Optional hostname filter
      * @returns {Promise<Array>} Array of capture history items
@@ -79,7 +79,7 @@ const AdvancedUtils = {
     },
 
     /**
-     * Format bytes to human-readable size - delegates to Utils
+     * Format bytes to human-readable size
      * @param {number} bytes - Size in bytes
      * @returns {string} Formatted size (e.g., "1.5 KB")
      */
@@ -117,17 +117,6 @@ const AdvancedUtils = {
         return AdvancedToolClient.send(message);
     },
 
-    /**
-     * Truncate string with ellipsis - delegates to Utils
-     * @param {string} str - String to truncate
-     * @param {number} maxLength - Maximum length
-     * @returns {string} Truncated string
-     */
-    truncate(str, maxLength = 50) {
-        if (!str || typeof str !== 'string') return '';
-        if (str.length <= maxLength) return str;
-        return str.substring(0, maxLength - 3) + '...';
-    },
 
     /**
      * Escape HTML to prevent XSS - delegates to Utils
@@ -143,12 +132,6 @@ const AdvancedUtils = {
      * Provides consistent messaging across all advanced modules
      */
     notifications: {
-        /**
-         * Module loaded notification
-         * @param {string} moduleName - Name of the module (e.g., "Shape Security")
-         * @returns {string} Notification message
-         */
-        moduleLoaded: (moduleName) => _advUtilsFmt('advPanelToolsLoadedFmt', `${moduleName} tools loaded`, moduleName),
 
         /**
          * Check cookies operation notifications

@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Cari berdasarkan URL, modul, situs, atau konten..."
   },
-  "advancedPaginationPage": {
-    "message": "Halaman"
-  },
-  "advancedPaginationOf": {
-    "message": "dari"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Merekam site key, action, dan parameter konfigurasi"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Gagal menghapus riwayat"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "{0}-{1} dari {2} rekaman"
   },
   "rulesUiNewDetectorName": {
     "message": "Detektor baru"

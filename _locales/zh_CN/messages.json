@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "按 URL、模块、站点或内容搜索..."
   },
-  "advancedPaginationPage": {
-    "message": "第"
-  },
-  "advancedPaginationOf": {
-    "message": "页 / 共"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "捕获 site key、actions 和配置参数"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "清除历史记录失败"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "显示第 {0}-{1} 条，共 {2} 条捕获"
   },
   "rulesUiNewDetectorName": {
     "message": "新检测器"

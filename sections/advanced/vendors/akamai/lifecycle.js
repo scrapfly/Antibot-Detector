@@ -1,8 +1,5 @@
 
 
-    /**
-     * Start capturing Akamai data
-     */
     // ========================================================================
     // CAPTURE HOOKS - Override from BaseAdvancedModule
     // ========================================================================
@@ -101,8 +98,6 @@ AkamaiAdvanced.prototype.stopCapturing = async function() {
                 throw new Error((response && response.error) || BaseAdvancedModule._tr('advPanelNotAvailable', 'No confirmed response'));
             }
             this.updateCaptureButtonState(false);
-
-            // Notifications are now handled by BaseInterceptorHelpers, no cleanup needed
 
             if (response && response.results && response.results.sensorData) {
                 // Capture completed successfully

@@ -1,9 +1,5 @@
 /* Shared Tools action rows: readable copy, semantic outlines, and quiet states. */
-.advanced-tool-grid,
-.advanced-tool-grid--2,
-.advanced-tool-grid--3,
-.recaptcha-tools-grid,
-.geetest-tools-grid {
+.advanced-tool-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 8px;

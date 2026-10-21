@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Поиск по URL, модулю, сайту или содержимому..."
   },
-  "advancedPaginationPage": {
-    "message": "Страница"
-  },
-  "advancedPaginationOf": {
-    "message": "из"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Захватывает ключи сайта, действия и параметры конфигурации"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Не удалось очистить историю"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Показано {0}–{1} из {2} захватов"
   },
   "rulesUiNewDetectorName": {
     "message": "Новый детектор"

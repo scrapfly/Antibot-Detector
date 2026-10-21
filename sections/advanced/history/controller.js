@@ -253,7 +253,6 @@ Advanced.prototype.setupCaptureCardListeners = function() {
     const cards = document.querySelectorAll('.capture-card');
 
     cards.forEach(card => {
-      const viewBtn = card.querySelector('[data-action="view"]');
       const copyBtn = card.querySelector('[data-action="copy"]');
       const deleteBtn = card.querySelector('[data-action="delete"]');
 
@@ -273,13 +272,6 @@ Advanced.prototype.setupCaptureCardListeners = function() {
           this.viewCaptureDetails(moduleId, captureId);
         }
       });
-
-      if (viewBtn) {
-        viewBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.viewCaptureDetails(moduleId, captureId);
-        });
-      }
 
       if (copyBtn) {
         copyBtn.addEventListener('click', async (e) => {
@@ -635,10 +627,3 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
     }
 
   };
-
-
-  /**
-   * Get module display name from module ID
-   * @param {string} moduleId - Module ID
-   * @returns {string} Module display name
-   */

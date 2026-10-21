@@ -69,15 +69,6 @@ Advanced.prototype.closeAdvancedInfoModal = function() {
    * Setup Advanced Info Modal event listeners
    */
 Advanced.prototype.setupAdvancedInfoModalListeners = function() {
-    // Help icon (? button) in empty state - opens info modal
-    const helpIcon = document.querySelector('.empty-state-help');
-    if (helpIcon) {
-      helpIcon.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.openAdvancedInfoModal();
-      });
-    }
-
     // Close button
     const closeBtn = document.querySelector('#closeAdvancedInfoModal');
     if (closeBtn) {

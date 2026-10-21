@@ -37,8 +37,3 @@ DataDomeAdvanced.prototype.checkCookies = async function() {
 DataDomeAdvanced.prototype.analyzeScripts = function() {
         return this.startScriptAnalysis();
     };
-
-
-    /**
-     * Generate parsing code for DataDome scripts in different languages
-     */

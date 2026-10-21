@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Zoeken op URL, module, site of inhoud..."
   },
-  "advancedPaginationPage": {
-    "message": "Pagina"
-  },
-  "advancedPaginationOf": {
-    "message": "van"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Neemt sitesleutels, acties en configuratieparameters op"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Geschiedenis wissen mislukt"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Opnamen: {0}-{1} van {2}"
   },
   "rulesUiNewDetectorName": {
     "message": "Nieuwe detector"

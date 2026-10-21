@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "البحث حسب URL أو الوحدة أو الموقع أو المحتوى..."
   },
-  "advancedPaginationPage": {
-    "message": "صفحة"
-  },
-  "advancedPaginationOf": {
-    "message": "من"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "يلتقط مفاتيح الموقع والإجراءات ومعلَمات الإعداد"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "تعذَّر مسح السجل"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "عرض {0}-{1} من {2} التقاطات"
   },
   "rulesUiNewDetectorName": {
     "message": "كاشف جديد"

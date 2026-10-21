@@ -169,39 +169,6 @@ class AdvancedDialogs {
         }, 10);
     }
 
-    closeToolModal(modal) {
-        if (!modal) return;
-        modal.style.opacity = '0';
-        setTimeout(() => {
-            if (modal.parentNode) {
-                modal.remove();
-            }
-        }, 200);
-    }
-
-    bindModalClose(modal, options = {}) {
-        if (!modal) return;
-
-        const {
-            closeSelector = '.advanced-modal-close-btn',
-            closeOnOverlay = true
-        } = options;
-
-        const close = () => this.closeToolModal(modal);
-
-        modal.querySelectorAll(closeSelector).forEach((btn) => {
-            btn.addEventListener('click', close);
-        });
-
-        if (closeOnOverlay) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    close();
-                }
-            });
-        }
-    }
-
     bindCopyValueHandlers(container, options = {}) {
         if (!container) return;
 
@@ -222,7 +189,7 @@ class AdvancedDialogs {
         });
     }
 }
-for (const name of ['openKitModal', 'createToolModal', 'showToolModal', 'closeToolModal', 'bindModalClose', 'bindCopyValueHandlers']) {
+for (const name of ['openKitModal', 'createToolModal', 'showToolModal', 'bindCopyValueHandlers']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedDialogs.prototype, name));
 }
 for (const name of ['kitSection', 'kitCard', 'kitChip', 'kitField', 'kitCode', 'kitFacts', 'kitNote', 'kitDateTime']) {

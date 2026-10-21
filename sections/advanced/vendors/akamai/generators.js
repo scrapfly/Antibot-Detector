@@ -689,12 +689,3 @@ func main() {
 
         };
     };
-
-
-
-
-
-
-    /**
-     * Process captured data and save to history
-     */

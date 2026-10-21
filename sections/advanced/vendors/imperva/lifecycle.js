@@ -20,8 +20,3 @@ ImpervaAdvanced.prototype.dispose = function() {
         if (this.extractionListener) chrome.runtime.onMessage.removeListener(this.extractionListener);
         this.extractionListener = null;
     };
-
-
-    // ========================================================================
-    // REQUIRED OVERRIDES
-    // ========================================================================

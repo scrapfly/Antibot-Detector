@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Sök på URL, modul, webbplats eller innehåll..."
   },
-  "advancedPaginationPage": {
-    "message": "Sida"
-  },
-  "advancedPaginationOf": {
-    "message": "av"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Samlar in webbplatsnycklar, åtgärder och konfigurationsparametrar"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Det gick inte att rensa historiken"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Visar {0}-{1} av {2} insamlingar"
   },
   "rulesUiNewDetectorName": {
     "message": "Ny detektor"

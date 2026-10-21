@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Tìm theo URL, mô-đun, trang web hoặc nội dung..."
   },
-  "advancedPaginationPage": {
-    "message": "Trang"
-  },
-  "advancedPaginationOf": {
-    "message": "trên"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Ghi lại site key, action và các tham số cấu hình"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Không thể xóa lịch sử"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Hiển thị {0}-{1} trong {2} bản ghi"
   },
   "rulesUiNewDetectorName": {
     "message": "Trình phát hiện mới"

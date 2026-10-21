@@ -425,21 +425,11 @@
   border-top: 1px solid var(--border);
 }
 
-/* Advanced tools grid (shared renderer + legacy fallback classes) */
-.advanced-tool-grid,
-.recaptcha-tools-grid,
-.geetest-tools-grid {
+/* Advanced tools grid (the shared renderer) */
+.advanced-tool-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-}
-
-.advanced-tool-grid--2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.advanced-tool-grid--3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .advanced-tool-card,

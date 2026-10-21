@@ -38,10 +38,3 @@ AwsWafAdvanced.prototype.analyzeScripts = function() {
         // Without the token the reload serves the challenge or CAPTCHA scripts again
         return this.startScriptAnalysis({ clearCookies: ['aws-waf-token'] });
     };
-
-
-    /**
-     * Generate AWS WAF script fetching code for multiple languages
-     * @param {Array} scripts - Array of script objects with url and type
-     * @returns {Object} Code snippets for each language
-     */

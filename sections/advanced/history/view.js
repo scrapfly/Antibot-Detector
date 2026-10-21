@@ -104,11 +104,9 @@ Advanced.prototype.renderEmptyState = function(container) {
     const shell = container.querySelector('.history-v2-shell');
     const grid = container.querySelector('#captureGrid');
     const emptyState = container.querySelector('#captureEmptyState');
-    const pagination = container.querySelector('#capturePagination');
     if (shell) shell.style.display = 'none';
     if (grid) grid.innerHTML = '';
     if (emptyState) emptyState.style.display = 'flex';
-    if (pagination) pagination.style.display = 'none';
 
     const openTools = container.querySelector('#captureOpenToolsBtn');
     if (openTools && openTools.dataset.bound !== 'true') {

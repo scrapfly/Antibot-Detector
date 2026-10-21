@@ -373,7 +373,7 @@
   flex-grow: 1;
 }
 
-/* JS-built tool modals (sections/advanced/modules/**) build their card with
+/* JS-built tool modals (sections/advanced/vendors/**) build their card with
    inline styles and scroll the whole card. Pin the title row + close button
    to the top edge with a solid background (the card's top padding moves into
    the header) so scrolled content passes underneath it, never over or above

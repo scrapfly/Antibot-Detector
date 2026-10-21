@@ -1636,12 +1636,6 @@
   "advancedSearchPlaceholder": {
     "message": "Пошук за URL, модулем, сайтом або вмістом..."
   },
-  "advancedPaginationPage": {
-    "message": "Сторінка"
-  },
-  "advancedPaginationOf": {
-    "message": "з"
-  },
   "advancedInfoRecaptchaDesc": {
     "message": "Захоплює ключі сайту, дії та параметри конфігурації"
   },
@@ -3422,9 +3416,6 @@
   },
   "advPanelFailedClearHistory": {
     "message": "Не вдалося очистити історію"
-  },
-  "advPanelCapturesPaginationFmt": {
-    "message": "Захоплення: {0}–{1} з {2}"
   },
   "rulesUiNewDetectorName": {
     "message": "Новий детектор"
