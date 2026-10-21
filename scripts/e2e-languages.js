@@ -220,7 +220,7 @@ async function run() {
         await sleep(600);
       };
       const tab = async (name) => { await page.evaluate((n) => window.popupInstance.switchTab(n), name); await sleep(450); };
-      const closeModals = async () => page.evaluate(() => document.querySelectorAll('.modal-close, #closeSettingsModal, .detection-modal-close').forEach(b => { try { b.click(); } catch (_) {} }));
+      const closeModals = async () => page.evaluate(() => document.querySelectorAll('.modal-close, #closeSettingsModal, .detection-modal-close, #closeDetectionModal, #historyModalClose').forEach(b => { try { b.click(); } catch (_) {} }));
 
       await popup();
       // Detection: the empty state, then the results and the details of the first card
@@ -230,8 +230,12 @@ async function run() {
         await d.displayResults(list, { url, cacheMetadata: { scope: 'domain', expiry: Date.now() + 5 * 86400000, timestamp: Date.now() } });
       }, [detections, FIXTURE_URL]);
       await audit('detection-results');
+      // The Copy menu (summary, Markdown, JSON)
+      await audit('detection-copy-menu', async () => { await click('#copyOverviewBtn'); await sleep(300); });
+      await page.keyboard.press('Escape');
       await audit('detection-details', async () => { await click('.detection-card'); await sleep(500); });
       await closeModals();
+      await sleep(400);
       await tab('history'); await audit('history');
       await audit('history-details', async () => { await click('.history-item'); await sleep(500); });
       await closeModals();
@@ -252,6 +256,9 @@ async function run() {
       });
       await closeDialog();
       await tab('rules'); await audit('rules');
+      // A rule card's "…" menu (Duplicate, Export, Delete)
+      await audit('rules-card-menu', async () => { await click('.detector-card .rules-menu-trigger'); await sleep(300); });
+      await page.evaluate(() => document.querySelectorAll('.rules-menu.open').forEach(m => m.classList.remove('open')));
       await audit('rules-editor', async () => { await click('#addDetectorBtn'); await page.waitForSelector('#saveRuleEdit', { state: 'attached', timeout: 8000 }); await sleep(400); });
       await closeModals();
       await popup(); // a clean popup for the remaining tabs
@@ -281,6 +288,8 @@ async function run() {
       for (const s of ['overview', 'protections', 'domains', 'evidence', 'activity', 'rules']) {
         await audit(`stats-${s}`, async () => { await page.evaluate((n) => document.querySelector(`.stats-section-btn[data-section="${n}"]`)?.click(), s); await sleep(500); }, { width: 1100, height: 800 });
       }
+      // The Export menu (CSV, JSON, Markdown)
+      await audit('stats-export-menu', async () => { await page.evaluate(() => document.querySelector('#statsExportBtn')?.click()); await sleep(300); }, { width: 1100, height: 800 });
 
       await page.close();
       if (locale === 'en') baseline = new Set(truncated.map(t => t.replace(/ "[^"]*" \(cut by \d+px\)/, '')));

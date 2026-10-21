@@ -141,6 +141,13 @@ async function scenario(name, fn) {
   /** The tab id Chrome gives a page (looked up by its address). */
   const tabIdOf = (url) => W(async (u) => (await chrome.tabs.query({})).find(t => t.url === u)?.id, url);
   const titleOf = (tabId) => W((id) => chrome.action.getTitle({ tabId: id }), tabId);
+  /** When the page's saved scan result was stored; a fresh scan changes it, a cache hit keeps it. 0 when there is none. */
+  const cacheStamp = (url) => W(async (u) => {
+    let storage = (await chrome.storage.local.get(DetectionEngineManager.STORAGE_KEY))[DetectionEngineManager.STORAGE_KEY] || {};
+    if (typeof storage === 'string') storage = JSON.parse(storage);
+    const entry = storage[UrlUtils.hashUrl(u, 'full')];
+    return (entry && entry.timestamp) || 0;
+  }, url);
   let counter = 0;
   const uniq = () => `${Date.now().toString(36)}${counter++}`;
 
@@ -201,6 +208,22 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('toolbar title: a page answered from the saved result has its hover text too', async () => {
+    const name = `cached-${uniq()}`;
+    const { page, url } = await scanned(name);
+    const tabId = await tabIdOf(url);
+    const first = await until(() => cacheStamp(url), 10000, 'the saved result');
+    await until(async () => /QuickWin Probe \d+%/.test(await titleOf(tabId)), 15000, 'the hover text after the scan');
+    // Navigating to the page again: Chrome drops the tab's title, the saved result answers, the title comes back
+    const loadsBefore = loads[name];
+    await page.goto(`${origin}/p?n=${name}`, { waitUntil: 'commit' });
+    await until(() => loads[name] > loadsBefore, 10000, 'the second visit');
+    await until(async () => /^Scrapfly: QuickWin Probe \d+%$/.test(await titleOf(tabId)), 15000, 'the hover text of a cached page');
+    assert.equal(await cacheStamp(url), first, 'the second visit was a cache hit');
+    await page.close();
+  });
+
+  // ===============================================================================================
   await scenario('Detection copy menu: summary, Markdown and JSON, never a cookie value; Escape closes it', async () => {
     const page = await openExtensionPage();
     await page.$eval('.tab-btn[data-tab="detection"]', el => el.click());
@@ -250,12 +273,22 @@ async function scenario(name, fn) {
 
     const name = `rescan-${uniq()}`;
     const { page: site, url } = await scanned(name);
-    const before = loads[name];
     const tabId = await tabIdOf(url);
+    const first = await until(() => cacheStamp(url), 10000, 'the saved result');
+    // Control: a plain reload is answered from the saved result, which keeps its time
+    let loadsBefore = loads[name];
+    await site.reload({ waitUntil: 'commit' });
+    await until(() => loads[name] > loadsBefore, 10000, 'the plain reload');
+    await sleep(2500);
+    assert.equal(await cacheStamp(url), first, 'a plain reload must be a cache hit (the control)');
+    // The shortcut: the saved result is cleared and the page is scanned from the start
+    loadsBefore = loads[name];
     const outcome = await W(async (id) => Commands.rescan(await chrome.tabs.get(id)), tabId);
     assert.equal(outcome, 'reloaded');
-    await until(() => loads[name] > before, 10000, 'the reload');
-    await until(async () => /QuickWin Probe/.test(await titleOf(tabId)), 20000, 'the new scan');
+    await until(() => loads[name] > loadsBefore, 10000, 'the reload');
+    const second = await until(async () => { const t = await cacheStamp(url); return t > first ? t : 0; }, 25000, 'a new saved result');
+    assert.ok(second > first, 'the rescan produced a fresh scan');
+    await until(async () => /QuickWin Probe \d+%/.test(await titleOf(tabId)), 15000, 'the hover text of the new scan');
     assert.equal(await W(async (id) => Commands.rescan({ id, url: 'chrome://settings' }), tabId), 'unsupported');
     await site.close();
   });
@@ -304,11 +337,14 @@ async function scenario(name, fn) {
     let tab = await next;
     await tab.waitForURL(url, { timeout: 10000 });
     await sleep(1500);
-    // Scan again now: the open tab is reloaded (the server sends the page once more)
+    // Scan again now: the open tab is reloaded and the page is scanned from the start (a fresh saved result)
+    const stampBefore = await cacheStamp(url);
+    assert.ok(stampBefore > 0, 'the page has a saved result');
     const before = loads[name];
     await page.bringToFront();
     await menu('rescan');
     await until(() => loads[name] > before, 10000, 'the page sent again');
+    await until(async () => (await cacheStamp(url)) > stampBefore, 25000, 'a fresh scan after Scan again now');
     await tab.close();
     // Scan again now with no tab showing it: a new tab opens
     next = new Promise(r => ctx.once('page', r));

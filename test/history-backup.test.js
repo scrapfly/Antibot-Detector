@@ -109,6 +109,19 @@ test('run uses the export format and the timestamp choice from Settings', async 
   } finally { cleanup(); }
 });
 
+test('a scheduled backup in the Markdown format writes a .md table', async () => {
+  const w = world({ settings: { exportFormat: 'md', includeTimestamps: false } });
+  try {
+    await withNow(() => fresh().run('manual'));
+    assert.strictEqual(w.downloads[0].filename, 'Scrapfly/scrapfly-history-2026-10-19.md');
+    const file = decode(w.downloads[0].url);
+    assert.strictEqual(file.type, 'text/markdown');
+    assert.ok(file.text.startsWith('# Scrapfly Antibot Detector: History\n'), file.text.split('\n')[0]);
+    assert.ok(file.text.includes('| Page | Address | Protections | Pinned | Note |'), 'no Date column without timestamps');
+    assert.strictEqual(w.store.scrapfly_history_backup.format, 'md');
+  } finally { cleanup(); }
+});
+
 test('run splits a large History into numbered parts that each stay under the limit', async () => {
   const items = Array.from({ length: 30 }, (_, i) => entry(i, { note: 'x'.repeat(300) }));
   const w = world({ items });
