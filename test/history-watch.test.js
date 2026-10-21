@@ -192,6 +192,36 @@ test('skipped sites and sites History ignores are not visited; paused History an
   }
 });
 
+test('the extension\'s own switch: off means no check at all (no tab opened), recorded so Settings can say why', async () => {
+  const w = world({ items: [entry('a', 'https://a.example/')] });
+  w.store.scrapfly_enabled = false;
+  assert.deepEqual(plain(await w.Watch.run('manual')), { ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'off' });
+  assert.equal(w.log.created.length, 0, 'no background tab');
+  assert.equal(w.saved().error, 'off');
+  assert.equal(w.saved().ok, false);
+  // Switched on again: the next check runs
+  w.store.scrapfly_enabled = true;
+  assert.equal((await w.Watch.run('manual')).ok, true);
+  assert.equal(w.log.created.length, 1);
+});
+
+test('a scheduled check within 6 hours of the last one is skipped and leaves the record alone; "Check now" always runs', async () => {
+  const w = world({ items: [entry('a', 'https://a.example/')] });
+  const recent = { at: Date.now() - 60 * 60 * 1000, trigger: 'alarm', ok: true, checked: 1, changed: 0, skipped: 0, failed: 0 };
+  w.store[w.Watch.STATE_KEY] = recent;
+  for (const reason of ['alarm', 'startup']) {
+    assert.deepEqual(plain(await w.Watch.run(reason)), { ok: true, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'recent' }, reason);
+    assert.equal(w.log.created.length, 0, `${reason}: no tab opened`);
+    assert.deepEqual(plain(w.saved()), recent, `${reason}: the last check's record is untouched`);
+  }
+  assert.equal((await w.Watch.run('manual')).checked, 1, 'Check now runs');
+  assert.equal(w.log.created.length, 1);
+  // Long enough ago: the alarm runs
+  w.store[w.Watch.STATE_KEY] = { ...recent, at: Date.now() - 7 * 60 * 60 * 1000 };
+  assert.equal((await w.Watch.run('alarm')).checked, 1);
+  assert.equal(w.log.created.length, 2);
+});
+
 test('at most ten pages are checked, the one checked longest ago first, one at a time with a pause between', async () => {
   const items = Array.from({ length: 13 }, (_, i) => entry(`p${i}`, `https://p${i}.example/`, { watchedAt: 1000 + (i % 2 ? i : 100 - i) }));
   const w = world({ items });

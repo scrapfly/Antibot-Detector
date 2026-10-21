@@ -6765,6 +6765,10 @@
     "message": "History is paused, so nothing is checked.",
     "description": "Error after Check now while History is paused"
   },
+  "settingsHistoryWatchOff": {
+    "message": "The extension is switched off, so nothing is checked.",
+    "description": "The watchlist line in Settings, and the error after Check now, while the extension is switched off with its main toggle"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "The watchlist must be off, daily or weekly",
     "description": "Error when the watchlist setting is not one of the offered choices"

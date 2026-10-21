@@ -1357,6 +1357,7 @@ SettingsUI.refreshHistoryWatch = async function() {
     let outcome;
     if (!state) outcome = text('settingsHistoryWatchNever', 'No check yet.');
     else if (state.error === 'no_window') outcome = text('settingsHistoryWatchNoWindow', 'The last check found no browser window to open pages in.');
+    else if (state.error === 'off') outcome = text('settingsHistoryWatchOff', 'The extension is switched off, so nothing is checked.');
     else if (state.ok === false) outcome = text('settingsHistoryWatchFailed', 'The last check failed.');
     else outcome = text('settingsHistoryWatchLastFmt', 'Last check: {0} · {1} checked, {2} changed', FormatUtils.formatDateTime(state.at), state.checked || 0, state.changed || 0);
     last.textContent = `${count} · ${outcome}`;
@@ -1377,6 +1378,8 @@ SettingsUI.checkWatchNow = async function(button) {
       NotificationHelper.error(text('settingsHistoryWatchNoWindow', 'The last check found no browser window to open pages in.'));
     } else if (result && result.error === 'paused') {
       NotificationHelper.error(text('settingsHistoryWatchPaused', 'History is paused, so nothing is checked.'));
+    } else if (result && result.error === 'off') {
+      NotificationHelper.error(text('settingsHistoryWatchOff', 'The extension is switched off, so nothing is checked.'));
     } else if (result && result.status === 'ok') {
       NotificationHelper.success(result.checked + result.skipped + result.failed === 0
         ? text('settingsHistoryWatchNothing', 'No page is watched yet: pin a page in History and choose Watch for changes.')

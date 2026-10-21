@@ -30,6 +30,7 @@ const HistoryWatch = {
     SCAN_TIMEOUT_MS: 45000,
     JITTER_MS: [2000, 6000],
     STARTUP_DELAY_MINUTES: 2,
+    MIN_GAP_MS: 6 * 60 * 60 * 1000, // a scheduled check never runs within 6 h of the last one ("Check now" always does)
     STATE_KEY: 'scrapfly_history_watch',
     Messages: Object.freeze({ CHECK_NOW: HistoryStore.Messages.WATCH_NOW }),
 
@@ -78,6 +79,8 @@ const HistoryWatch = {
      * Check the watched pages now.
      * @param {string} reason 'alarm' | 'startup' | 'manual'
      * @returns {Promise<{ok: boolean, checked: number, changed: number, skipped: number, failed: number, error?: string}>}
+     *   error: 'off' (the extension is switched off), 'paused' (History is), 'no_window', 'recent' (a scheduled check too
+     *   soon after the last one: skipped, nothing recorded)
      */
     run(reason = 'manual') {
         // One at a time: an alarm that fires during a manual check joins it
@@ -99,6 +102,20 @@ const HistoryWatch = {
         const totals = { ok: true, checked: 0, changed: 0, skipped: 0, failed: 0 };
         const record = (extra = {}) => chrome.storage.local.set({ [this.STATE_KEY]: { at: Date.now(), trigger: reason, ...totals, ...extra } }).catch(() => {});
         try {
+            // Chrome fires an overdue periodic alarm at start-up and the catch-up alarm follows it: the second one, and any
+            // scheduled check that comes too soon after the last, is skipped without touching the record of the last one
+            if (reason !== 'manual') {
+                const last = await this.lastState();
+                if (last && Number.isFinite(last.at) && Date.now() - last.at < this.MIN_GAP_MS) return { ...totals, error: 'recent' };
+            }
+            // The extension's own switch: off means no scanning at all, so no background tabs either (recorded, so the
+            // Settings line says why nothing was checked)
+            const flags = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (flags.scrapfly_enabled === false) {
+                totals.ok = false;
+                await record({ error: 'off' });
+                return { ...totals, error: 'off' };
+            }
             const settings = await Utils.getHistorySettings();
             if (settings.historyEnabled === false) return { ...totals, ok: false, error: 'paused' };
             const watched = HistoryPolicy.watchedOf(await HistoryStore.read(chrome.storage.local));
