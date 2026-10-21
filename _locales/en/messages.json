@@ -6890,5 +6890,13 @@
   "settingsShortcutNotSet": {
     "message": "not set",
     "description": "Settings → General: shown instead of keys when the shortcut has no keys (another extension or the browser uses them, or the person removed them)"
+  },
+  "historyOpenPage": {
+    "message": "Open page",
+    "description": "History entry menu: opens the saved page in a new tab"
+  },
+  "historyScanAgain": {
+    "message": "Scan again now",
+    "description": "History entry menu and details window: clears the page's saved result and scans the page again (reloads the tab that shows it, or opens it in a new tab)"
   }
 }

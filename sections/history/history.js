@@ -813,6 +813,64 @@ class History {
     return raw.trim();
   }
 
+  /** Only web pages are opened from History. */
+  static isOpenableUrl(url) {
+    try {
+      const parsed = new URL(String(url || ''));
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /**
+   * History → … → Open page: the saved address in a new tab, which scans it as
+   * usual (or shows its saved result while that is fresh).
+   * @returns {Promise<boolean>} false for an address that is not a web page
+   */
+  async openHistoryItem(historyItem) {
+    if (!History.isOpenableUrl(historyItem && historyItem.url)) return false;
+    await chrome.tabs.create({ url: historyItem.url, active: true });
+    return true;
+  }
+
+  /**
+   * History → … → Scan again now: the page's saved result is cleared, then the
+   * page is scanned from the start, in the tab that already shows it (reloaded)
+   * or in a new one. No confirmation: asking for a scan is the confirmation.
+   * @returns {Promise<'reloaded'|'opened'|false>}
+   */
+  async rescanHistoryItem(historyItem) {
+    if (!History.isOpenableUrl(historyItem && historyItem.url)) return false;
+    const rawScope = String(historyItem.cacheScope || 'domain').toLowerCase();
+    const mappedScope = rawScope === 'url' ? 'full' : rawScope;
+    const cacheScope = ['domain', 'path', 'full'].includes(mappedScope) ? mappedScope : 'domain';
+    let open = null;
+    try {
+      const tabs = await chrome.tabs.query({ url: historyItem.url.replace(/#.*$/, '') });
+      open = (tabs || []).find(tab => tab && typeof tab.id === 'number' && tab.url === historyItem.url) || (tabs || [])[0] || null;
+    } catch (_) {
+      open = null; // an address chrome.tabs.query cannot match: open a new tab
+    }
+    const request = { type: WorkerMessages.HISTORY_CLEAR_CACHE, url: historyItem.url, cacheScope };
+    if (open) request.tabId = open.id;
+    try {
+      await chrome.runtime.sendMessage(request);
+    } catch (error) {
+      Logger.warn('UI', '[History] Could not clear the saved result before the scan:', error && error.message);
+    }
+    if (open) {
+      await chrome.tabs.reload(open.id);
+      await chrome.tabs.update(open.id, { active: true }).catch(() => {});
+      if (typeof open.windowId === 'number' && chrome.windows && chrome.windows.update) {
+        await chrome.windows.update(open.windowId, { focused: true }).catch(() => {});
+      }
+      return 'reloaded';
+    }
+    await chrome.tabs.create({ url: historyItem.url, active: true });
+    return 'opened';
+  }
+
   /**
    * Format history item as text
    * @param {object} historyItem - History item
@@ -1359,6 +1417,15 @@ class History {
       closeBtn.onclick = closeModal;
     }
 
+    const rescanBtn = document.querySelector('#historyModalRescan');
+    if (rescanBtn) {
+      rescanBtn.onclick = (e) => {
+        e.stopPropagation();
+        const item = this.historyItems.find(h => h.id === this._modalItemId);
+        if (item) this.rescanHistoryItem(item);
+      };
+    }
+
     const copyBtn = document.querySelector('#historyModalCopy');
     if (copyBtn) {
       copyBtn.onclick = (e) => {
@@ -1884,7 +1951,11 @@ class History {
         this.closeMenus();
         if (!item) return;
 
-        if (action === 'copy') {
+        if (action === 'open') {
+          this.openHistoryItem(item);
+        } else if (action === 'rescan') {
+          this.rescanHistoryItem(item);
+        } else if (action === 'copy') {
           this.copyHistoryItem(item);
         } else if (action === 'pin') {
           this.togglePin(item);
