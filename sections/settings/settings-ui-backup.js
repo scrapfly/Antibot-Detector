@@ -101,6 +101,7 @@ SettingsUI.applyBackup = async function(bundle, choice) {
             // The same rules as importing a settings file: only portable preferences, merged over the current ones
             const candidate = this.deepMerge(this.settings, SettingsTransfer.portable(bundle.settings));
             if (!this.validateSettings(candidate).isValid) throw new Error('Invalid settings in the backup');
+            await SettingsUI.confirmHistorySizeFor.call(this, candidate);
             const knownLanguage = Array.isArray(SettingsUI.LANGUAGE_OPTIONS) && SettingsUI.LANGUAGE_OPTIONS.some(option => option.value === bundle.languageOverride);
             const saved = await this.saveSettings({ notify: false, notifyError: false, candidate, languageOverride: knownLanguage ? bundle.languageOverride : undefined });
             if (!saved) throw new Error('The settings could not be saved');

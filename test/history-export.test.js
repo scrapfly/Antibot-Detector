@@ -129,3 +129,15 @@ test('fileName: dated, numbered only when split', () => {
   assert.strictEqual(E.fileName('txt', NOW, 2), 'scrapfly-history-2026-10-19-part-2.txt');
   assert.strictEqual(E.fileName('exe', NOW), 'scrapfly-history-2026-10-19.json');
 });
+
+test('changedOnly keeps the pages marked Changed by their latest scan, and combines with the other filters', () => {
+  const items = [
+    { id: 'c1', url: 'https://a.example/', hostname: 'a.example', timestamp: NOW - 1000, pinned: true, changed: { at: NOW - 1000, added: ['X'], removed: [] }, detections: [{ category: 'Anti-Bot' }] },
+    { id: 'c2', url: 'https://b.example/', hostname: 'b.example', timestamp: NOW - 1000, changed: { at: NOW - 1000, added: [], removed: ['Y'] }, detections: [{ category: 'Captcha' }] },
+    { id: 'n1', url: 'https://c.example/', hostname: 'c.example', timestamp: NOW - 1000, pinned: true, detections: [{ category: 'Anti-Bot' }] }
+  ];
+  assert.deepStrictEqual(E.filter(items, { changedOnly: true }, NOW).map(i => i.id), ['c1', 'c2']);
+  assert.deepStrictEqual(E.filter(items, { changedOnly: false }, NOW).length, 3);
+  assert.deepStrictEqual(E.filter(items, { changedOnly: true, pinnedOnly: true }, NOW).map(i => i.id), ['c1']);
+  assert.deepStrictEqual(E.filter(items, { changedOnly: true, category: 'captcha' }, NOW).map(i => i.id), ['c2']);
+});

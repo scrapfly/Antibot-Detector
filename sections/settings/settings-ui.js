@@ -1284,6 +1284,36 @@ SettingsUI.chooseHistorySize = async function() {
   }
 };
 
+/**
+ * Settings that arrive in a file (an import, a backup) may lower the History size below what History uses, and the
+ * worker then removes the oldest unpinned pages at once. So the same question the size box asks is asked first;
+ * declined (or unanswerable), the candidate keeps the size that applies now and everything else in the file still lands.
+ */
+SettingsUI.confirmHistorySizeFor = async function(candidate) {
+  if (typeof HistoryStore === 'undefined' || !candidate || !candidate.history) return candidate;
+  const wanted = Number(candidate.history.historyMaxMB);
+  const current = Number(this.settings && this.settings.history && this.settings.history.historyMaxMB) || HistoryStore.SIZES_MB[0];
+  if (!Number.isFinite(wanted) || wanted >= current) return candidate;
+  const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+  try {
+    const limit = HistoryStore.budgetFor(wanted, HistoryStore.hasUnlimitedStorage());
+    const usage = await HistoryStore.usage(chrome.storage.local, limit);
+    if (usage.bytes <= limit) return candidate;
+    const size = (bytes) => SettingsUI.formatStorageSize(bytes);
+    const confirmed = await NotificationHelper.confirm({
+      title: text('settingsHistorySizeLowerTitle', 'Lower the History size'),
+      message: text('settingsHistorySizeLowerMessage', 'History uses {0} and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.', size(usage.bytes), size(limit)),
+      type: 'warning', tone: 'danger',
+      confirmText: text('settingsHistorySizeLowerConfirm', 'Lower the size'), cancelText: text('btnCancel', 'Cancel')
+    });
+    if (!confirmed) candidate.history.historyMaxMB = current;
+  } catch (error) {
+    Logger.warn('UI', 'Could not check the History size the file asks for', error);
+    candidate.history.historyMaxMB = current;
+  }
+  return candidate;
+};
+
 /** A box with one name per line (a protection's name) as a clean list (what is already saved when the box is not on the page). */
 SettingsUI.readNameList = function(selector, fallback) {
   const box = document.querySelector(selector);

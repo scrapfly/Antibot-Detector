@@ -1572,11 +1572,12 @@ class History {
     domain.setAttribute('dir', 'ltr');
     domain.autocomplete = 'off';
     const pinned = check('historyExportPinnedOnly', 'Pinned pages only', false);
+    const changed = check('historyExportChangedOnly', 'Changed pages only', false);
     const count = document.createElement('div');
     count.className = 'history-dialog-count';
     count.setAttribute('role', 'status');
 
-    const filters = () => ({ category: category.value, days: parseInt(period.value, 10), domain: domain.value, pinnedOnly: pinned.box.checked });
+    const filters = () => ({ category: category.value, days: parseInt(period.value, 10), domain: domain.value, pinnedOnly: pinned.box.checked, changedOnly: changed.box.checked });
     const matching = () => HistoryExport.filter(this.historyItems, filters());
     const refresh = () => {
       const n = matching().length;
@@ -1585,7 +1586,7 @@ class History {
         : FormatUtils.t('historyExportNone', 'No entries match these filters');
       count.classList.toggle('is-empty', n === 0);
     };
-    [category, period, domain, pinned.box].forEach(el => el.addEventListener(el === domain ? 'input' : 'change', refresh));
+    [category, period, domain, pinned.box, changed.box].forEach(el => el.addEventListener(el === domain ? 'input' : 'change', refresh));
     refresh();
 
     const form = document.createElement('div');
@@ -1596,6 +1597,7 @@ class History {
       field('historyExportPeriod', 'Period', period),
       field('historyExportDomain', 'Site contains', domain),
       pinned.row,
+      changed.row,
       count
     );
 

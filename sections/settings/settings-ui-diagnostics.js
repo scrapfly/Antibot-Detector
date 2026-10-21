@@ -4,12 +4,20 @@
 /** What the report needs from the browser and the extension. The report itself decides what is safe to say. */
 SettingsUI.gatherDiagnostics = async function(settings) {
     const local = chrome.storage.local;
-    const stored = await local.get(['scrapfly_language_override', 'scrapfly_last_update_check', 'scrapfly_collected_logs']);
+    const stored = await local.get(['scrapfly_language_override', 'scrapfly_last_update_check', 'scrapfly_collected_logs',
+        'scrapfly_pending_updates', 'scrapfly_incompatible_updates', 'scrapfly_update_errors']);
     let isBrave = false;
     try { isBrave = !!(navigator.brave && await navigator.brave.isBrave()); } catch (_) { /* not Brave */ }
 
     // Detectors: how many, of which category, which are custom and which official ones were edited
-    const detectors = { total: 0, official: 0, custom: 0, edited: 0, byCategory: {}, lastCheckAt: (settings.updates && settings.updates.lastCheckTimestamp) || stored.scrapfly_last_update_check || 0 };
+    const detectors = { total: 0, official: 0, custom: 0, edited: 0, byCategory: {}, versions: {}, indexVersion: null,
+        lastCheckAt: (settings.updates && settings.updates.lastCheckTimestamp) || stored.scrapfly_last_update_check || 0,
+        // What Rules → Update left waiting: for a newer extension, and failed
+        pending: Array.isArray(stored.scrapfly_pending_updates) ? stored.scrapfly_pending_updates.length : 0,
+        incompatible: Array.isArray(stored.scrapfly_incompatible_updates) ? stored.scrapfly_incompatible_updates.length : 0,
+        failed: Array.isArray(stored.scrapfly_update_errors) ? stored.scrapfly_update_errors.length : 0 };
+    // The version of the bundled rule set (a number, no names)
+    try { detectors.indexVersion = String((await (await fetch(chrome.runtime.getURL('detectors/index.json'))).json()).version || ''); } catch (_) { /* unreadable: left out */ }
     const registry = (window.popupInstance && window.popupInstance.detectorManager && window.popupInstance.detectorManager.detectors) || {};
     for (const [category, group] of Object.entries(registry)) {
         for (const detector of Object.values(group || {})) {
@@ -19,6 +27,9 @@ SettingsUI.gatherDiagnostics = async function(settings) {
             if (DetectionUtils.isOfficialDetector(detector)) {
                 detectors.official++;
                 if (detector.userModified) detectors.edited++;
+                // Which versions of the official rules are installed (tells whether updates landed)
+                const version = String(detector.version || 'unversioned');
+                detectors.versions[version] = (detectors.versions[version] || 0) + 1;
             } else {
                 detectors.custom++;
             }

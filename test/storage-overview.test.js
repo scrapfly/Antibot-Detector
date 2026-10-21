@@ -39,7 +39,7 @@ test('every storage key the extension writes belongs to exactly one part of the 
 
 test('only the caches and the user data that can be rebuilt or confirmed have a Clear button, never settings or rules', () => {
   const clears = Object.fromEntries(StorageOverview.GROUPS.map(group => [group.id, group.clear]));
-  assert.deepStrictEqual(clears, { cache: 'cache', captures: 'captures', history: 'history', rules: null, settings: null, logs: 'logs' });
+  assert.deepStrictEqual(clears, { cache: 'cache', captures: 'captures', history: 'history', rules: null, updates: 'updates', settings: null, logs: 'logs' });
   const english = JSON.parse(fs.readFileSync(path.join(root, '_locales/en/messages.json'), 'utf8'));
   for (const group of StorageOverview.GROUPS) {
     assert.ok(english[group.labelKey], `${group.labelKey} is an English message`);
@@ -48,10 +48,10 @@ test('only the caches and the user data that can be rebuilt or confirmed have a 
 });
 
 test('summarize() keeps the parts in order and puts the rest of the storage under other', () => {
-  const sizes = { cache: 1000, captures: 0, history: 5000, rules: 2000, settings: 300, logs: 40 };
+  const sizes = { cache: 1000, captures: 0, history: 5000, rules: 2000, updates: 0, settings: 300, logs: 40 };
   const summary = StorageOverview.summarize(sizes, 9000);
-  assert.deepStrictEqual(summary.rows.map(row => [row.id, row.bytes]), [['cache', 1000], ['captures', 0], ['history', 5000], ['rules', 2000], ['settings', 300], ['logs', 40]]);
-  assert.deepStrictEqual(summary.rows.map(row => row.empty), [false, true, false, false, false, true], 'an empty container is empty');
+  assert.deepStrictEqual(summary.rows.map(row => [row.id, row.bytes]), [['cache', 1000], ['captures', 0], ['history', 5000], ['rules', 2000], ['updates', 0], ['settings', 300], ['logs', 40]]);
+  assert.deepStrictEqual(summary.rows.map(row => row.empty), [false, true, false, false, true, false, true], 'an empty container is empty');
   assert.strictEqual(summary.other, 660);
   assert.strictEqual(summary.total, 9000);
   assert.strictEqual(summary.quota, 10485760);
@@ -63,7 +63,7 @@ test('summarize() is safe with missing, negative and inconsistent numbers', () =
   assert.deepStrictEqual([empty.total, empty.other, empty.ratio], [0, 0, 0]);
   assert.ok(empty.rows.every(row => row.bytes === 0));
   const odd = StorageOverview.summarize({ cache: -5, history: 'x', rules: 1500.4 }, 100);
-  assert.deepStrictEqual(odd.rows.map(row => row.bytes), [0, 0, 0, 1500, 0, 0]);
+  assert.deepStrictEqual(odd.rows.map(row => row.bytes), [0, 0, 0, 1500, 0, 0, 0]);
   assert.strictEqual(odd.total, 1500, 'the total is never below what the parts add up to');
   assert.strictEqual(odd.other, 0);
   assert.strictEqual(StorageOverview.summarize({}, 20000000).ratio, 1, 'the ratio stops at full');

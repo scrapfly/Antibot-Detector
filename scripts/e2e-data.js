@@ -2,7 +2,7 @@
 /**
  * Settings → Data, end to end, in the real extension (unpacked in Chromium):
  *
- *   Storage          the overview adds up, each Clear button clears only its own part (cache, tool captures, logs,
+ *   Storage          the overview adds up, each Clear button clears only its own part (cache, tool captures, pending rule updates, logs,
  *                    History), and settings and rules are never touched
  *   Diagnostics      Copy diagnostics puts a report on the clipboard that holds no site, address, key or private setting
  *   Backup           Back up writes settings, the person's own rules and History with no secret; Restore brings them back
@@ -72,6 +72,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
         scrapfly_detection_storage: { a1: { url: 'https://a.test/', hostname: 'a.test', timestamp: now, expiry: now + 3.6e6, cacheScope: 'domain', detectionResults: [], filler }, b2: { url: 'https://b.test/', hostname: 'b.test', timestamp: now, expiry: now + 3.6e6, cacheScope: 'domain', detectionResults: [], filler } },
         scrapfly_advanced_history: { akamai: [{ id: 'cap1', timestamp: now, expiresAt: now + 3.6e6, hostname: 'a.test', data: { filler } }] },
         scrapfly_collected_logs: [{ t: now, level: 'info', msg: filler }],
+        // a bundled pending update survives the worker's start-up (GitHub ones are dropped when the release cannot be read)
+        scrapfly_pending_updates: [{ id: 'detect-pending', source: 'bundled', version: '9.9.9', minExtensionVersion: '99.0', filler }],
+        scrapfly_update_errors: [{ id: 'detect-broken', error: 'synthetic', at: now, filler }],
         scrapfly_history: JSON.stringify({ items: [
           { id: 'h1', url: 'https://a.test/', hostname: 'a.test', title: 'A', timestamp: now, detections: [], detectionCount: 0, categories: [] },
           { id: 'h2', url: 'https://b.test/', hostname: 'b.test', title: 'B', timestamp: now - 1000, detections: [], detectionCount: 0, categories: [] }] })
@@ -79,13 +82,13 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       await boot();
       await openData();
       await page.$eval('#storageTotalText', el => el.closest('.data-card-head').click());
-      await page.waitForFunction(() => document.querySelectorAll('#storageRows .storage-row').length === 7);
+      await page.waitForFunction(() => document.querySelectorAll('#storageRows .storage-row').length === 8);
       const rows = () => page.$$eval('#storageRows .storage-row', items => Object.fromEntries(items.map(item => [item.dataset.storage, {
         text: item.querySelector('.storage-row-size').textContent, clear: !!item.querySelector('[data-clear]'), disabled: item.querySelector('[data-clear]') ? item.querySelector('[data-clear]').disabled : null }])));
       const exact = () => page.evaluate(() => SettingsUI.readStorageSizes());
       let overview = await rows();
-      assert.deepEqual(Object.keys(overview), ['cache', 'captures', 'history', 'rules', 'settings', 'logs', 'other']);
-      for (const id of ['cache', 'captures', 'history', 'logs']) assert.equal(overview[id].clear && !overview[id].disabled, true, `${id} can be cleared`);
+      assert.deepEqual(Object.keys(overview), ['cache', 'captures', 'history', 'rules', 'updates', 'settings', 'logs', 'other']);
+      for (const id of ['cache', 'captures', 'history', 'updates', 'logs']) assert.equal(overview[id].clear && !overview[id].disabled, true, `${id} can be cleared: ${JSON.stringify(overview[id])} stored=${JSON.stringify(Object.keys(await get(['scrapfly_pending_updates', 'scrapfly_update_errors', 'scrapfly_incompatible_updates'])))}`);
       for (const id of ['rules', 'settings', 'other']) assert.equal(overview[id].clear, false, `${id} has no Clear button`);
       let summary = await exact();
       assert.ok(summary.rows.find(row => row.id === 'cache').bytes > 8000, 'the cache holds what was seeded');
@@ -119,7 +122,16 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       await page.waitForFunction(() => document.querySelector('[data-storage="logs"] [data-clear]').disabled);
       assert.deepEqual((await get(['scrapfly_collected_logs'])).scrapfly_collected_logs || [], [], 'the logs are gone');
       assert.ok(JSON.parse((await get(['scrapfly_history'])).scrapfly_history).items.length === 2, 'History is still there');
-      console.log('PASS Clear removes the cache, the tool captures and the logs, each on its own');
+      // Pending rule updates: the queues go, the rules stay
+      await page.$eval('[data-clear="updates"]', el => el.click());
+      await page.waitForSelector('.notification-confirm');
+      assert.match(await page.$eval('.notification-confirm', el => el.textContent), /finds them again/);
+      await confirmDialog();
+      await page.waitForFunction(() => document.querySelector('[data-storage="updates"] [data-clear]').disabled);
+      const queues = await get(['scrapfly_pending_updates', 'scrapfly_update_errors', 'scrapfly_incompatible_updates', 'scrapfly_detectors']);
+      assert.deepEqual([queues.scrapfly_pending_updates, queues.scrapfly_update_errors, queues.scrapfly_incompatible_updates], [undefined, undefined, undefined], 'the queues are gone');
+      assert.ok(queues.scrapfly_detectors, 'the rules are still there');
+      console.log('PASS Clear removes the cache, the tool captures, the pending rule updates and the logs, each on its own');
 
       // History keeps its own flow: its confirmation, then the entries are gone
       await page.$eval('[data-clear="history"]', el => el.click());

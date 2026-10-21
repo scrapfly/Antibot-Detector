@@ -81,6 +81,14 @@
     const parts = Object.entries(d.byCategory || {}).filter(([, n]) => count(n) > 0).map(([key, n]) => `${count(n)} ${key}`);
     add(`Detectors: ${count(d.total)} in total${parts.length ? ` (${parts.join(', ')})` : ''}; ${count(d.custom)} custom, ${count(d.edited)} edited`);
     add(`Rules last checked: ${stamp(d.lastCheckAt)}${s.updates ? `; automatic updates ${onOff(s.updates.autoUpdate)}` : ''}`);
+    // The rule set's versions: the bundled index and the official rules, newest first (counts only, never names)
+    const versions = Object.entries(d.versions || {}).filter(([, n]) => count(n) > 0)
+      // numbered versions newest first, then anything else ("unversioned")
+      .sort((a, b) => (/^\d/.test(b[0]) - /^\d/.test(a[0])) || b[0].localeCompare(a[0], undefined, { numeric: true })).map(([version, n]) => `${version} ×${count(n)}`);
+    const waiting = [d.incompatible ? `${count(d.incompatible)} waiting for a newer extension` : '', d.pending ? `${count(d.pending)} pending` : '', d.failed ? `${count(d.failed)} failed` : ''].filter(Boolean);
+    if (d.indexVersion || versions.length || waiting.length) {
+      add(`Rule set: ${d.indexVersion ? `index ${String(d.indexVersion)}` : 'index unknown'}${versions.length ? `; official rules ${versions.join(', ')}` : ''}${waiting.length ? `; updates: ${waiting.join(', ')}` : ''}`);
+    }
     add();
 
     add('Settings');

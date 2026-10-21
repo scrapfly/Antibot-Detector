@@ -87,6 +87,10 @@ SettingsUI.clearStoragePart = async function(part) {
             if (!await confirm(text('storageClearCapturesTitle', 'Delete tool captures'), text('storageClearCapturesMessage', 'Everything the Advanced tools saved is deleted. History, rules and settings are not touched.'))) return;
             await AdvancedHistoryStore.clear();
             NotificationHelper.success(text('storageCapturesCleared', 'Tool captures deleted'));
+        } else if (part === 'updates') {
+            if (!await confirm(text('storageClearUpdatesTitle', 'Clear the pending rule updates'), text('storageClearUpdatesMessage', 'Rule updates that are waiting for a newer extension, and ones that failed, are forgotten; the next Rules → Update finds them again. Rules and settings are not touched.'))) return;
+            await chrome.storage.local.remove([...StorageOverview.GROUPS.find(group => group.id === 'updates').keys]);
+            NotificationHelper.success(text('storageUpdatesCleared', 'Pending rule updates cleared'));
         } else if (part === 'logs') {
             if (!await confirm(text('clearLogsTitle', 'Clear Logs'), text('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'))) return;
             if (!await ask({ type: 'LOG_COLLECTOR_CLEAR' })) throw new Error('The worker did not clear the logs');

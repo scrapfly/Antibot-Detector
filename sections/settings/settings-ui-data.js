@@ -55,6 +55,8 @@ SettingsUI.importSettingsFile = async function(event) {
       const candidate = this.deepMerge(this.settings, SettingsTransfer.portable(imported));
       const validation = this.validateSettings(candidate);
       if (!validation.isValid) throw new Error('Invalid settings file');
+      // A smaller History size than History uses is asked about first (declined, the current size stays)
+      await SettingsUI.confirmHistorySizeFor.call(this, candidate);
       const knownLanguage = Array.isArray(SettingsUI.LANGUAGE_OPTIONS)
         && SettingsUI.LANGUAGE_OPTIONS.some((opt) => opt.value === data.languageOverride);
       const saved = await this.saveSettings({

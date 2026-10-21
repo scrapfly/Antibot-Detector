@@ -104,3 +104,11 @@ test('the report says whether a signing secret is set, and never what it is', ()
   assert.match(D.build(env, off), /webhook off\n/);
   assert.ok(!D.build(env, off).includes('signing secret'), 'nothing about a secret while the webhook is off');
 });
+
+test('the rule set is named by its versions and what is waiting, never by rule names', () => {
+  const withVersions = { ...env, detectors: { ...env.detectors, indexVersion: '1.0.0', versions: { '2.1.0': 17, '1.2.0': 14, '2.3.0': 2, unversioned: 1 }, incompatible: 2, pending: 0, failed: 1 } };
+  const report = D.build(withVersions, settings);
+  assert.match(report, /^Rule set: index 1\.0\.0; official rules 2\.3\.0 ×2, 2\.1\.0 ×17, 1\.2\.0 ×14, unversioned ×1; updates: 2 waiting for a newer extension, 1 failed$/m);
+  const bare = D.build({ ...env, detectors: { total: 3 } }, settings);
+  assert.ok(!/Rule set:/.test(bare), 'nothing to say without versions or queues');
+});

@@ -6046,6 +6046,10 @@
     "message": "Pinned pages only",
     "description": "Checkbox"
   },
+  "historyExportChangedOnly": {
+    "message": "Changed pages only",
+    "description": "Checkbox in the History export dialog: only pages marked Changed (their protections differ from the earlier scan)"
+  },
   "historyExportCountFmt": {
     "message": "{0} of {1} entries will be exported",
     "description": "{0} = matching entries, {1} = all entries"
@@ -6120,6 +6124,22 @@
   "storageRules": {
     "message": "Rules and categories",
     "description": "Row of the Storage card: detection rules (detectors), categories and their translations"
+  },
+  "storageUpdates": {
+    "message": "Pending rule updates",
+    "description": "Row of Settings → Data → Storage: rule updates left waiting by Rules → Update (for a newer extension, or failed)"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Clear the pending rule updates",
+    "description": "Title of the confirmation for the Clear button of that row"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Rule updates that are waiting for a newer extension, and ones that failed, are forgotten; the next Rules → Update finds them again. Rules and settings are not touched.",
+    "description": "Message of that confirmation"
+  },
+  "storageUpdatesCleared": {
+    "message": "Pending rule updates cleared",
+    "description": "Toast after the pending rule updates were cleared"
   },
   "storageSettings": {
     "message": "Settings",

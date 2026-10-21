@@ -9,7 +9,7 @@
  *   summarize()  rows with their sizes, the rest of the storage as "other", and the total against the quota
  *
  * Settings, rules and categories are listed so that people see where the space goes, but they have no Clear button:
- * nothing here can delete a setting or a rule.
+ * nothing here can delete a setting or a rule. The pending rule updates can be cleared: the next check finds them again.
  */
 (function(root) {
   'use strict';
@@ -26,7 +26,10 @@
       keys: ['scrapfly_history', 'scrapfly_history_backup', 'scrapfly_history_storage_notice', 'scrapfly_history_watch'] },
     { id: 'rules', labelKey: 'storageRules', label: 'Rules and categories', clear: null,
       keys: ['scrapfly_detectors', 'scrapfly_categories', 'scrapfly_rule_i18n', 'scrapfly_remote_official_ids', 'scrapfly_deleted_official_detectors',
-        'scrapfly_incompatible_updates', 'scrapfly_pending_updates', 'scrapfly_update_errors', 'scrapfly_last_update_check'] },
+        'scrapfly_last_update_check'] },
+    // What Rules → Update left waiting: updates for a newer extension, and failed ones (found again by the next check)
+    { id: 'updates', labelKey: 'storageUpdates', label: 'Pending rule updates', clear: 'updates',
+      keys: ['scrapfly_pending_updates', 'scrapfly_incompatible_updates', 'scrapfly_update_errors'] },
     { id: 'settings', labelKey: 'storageSettings', label: 'Settings', clear: null,
       keys: ['scrapfly_settings', 'scrapfly_language_override', 'scrapfly_theme', 'scrapfly_enabled', 'scrapfly_reopen_after_language',
         'scrapfly_stats_range', 'scrapfly_stats_section', 'scrapfly_stats_sub', 'scrapfly_stats_scope', 'scrapfly_webhook_log'] },

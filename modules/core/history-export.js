@@ -32,7 +32,7 @@
 
   /**
    * @param {Array<object>} items
-   * @param {{category?: string, days?: number, domain?: string, pinnedOnly?: boolean}} [filters]
+   * @param {{category?: string, days?: number, domain?: string, pinnedOnly?: boolean, changedOnly?: boolean}} [filters]
    *   category: 'all' | 'antibot' | 'captcha' | 'fingerprint'; days: 0 = all time; domain: part of the host or address
    */
   function filter(items, filters = {}, now = Date.now()) {
@@ -44,6 +44,7 @@
     return list.filter((item) => {
       if (!item) return false;
       if (filters.pinnedOnly === true && item.pinned !== true) return false;
+      if (filters.changedOnly === true && !item.changed) return false; // marked Changed by its latest scan
       if (cutoff !== null && timeOf(item) < cutoff) return false;
       if (domain && !`${item.hostname || ''} ${item.url || ''}`.toLowerCase().includes(domain)) return false;
       if (category && !(item.detections || []).some(d => categoryKey(d) === category)) return false;

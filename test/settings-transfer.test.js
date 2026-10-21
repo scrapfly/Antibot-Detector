@@ -97,6 +97,24 @@ test('successful import preserves local connections and only applies language af
   assert.deepEqual(notifications.map(n => n[0]), ['success']);
 });
 
+test('a file that lowers the History size below what History uses asks first; declined, the size that applies stays and the rest still lands', async () => {
+  for (const [answer, usedMB, expected, questions] of [[false, 8, 25, 1], [true, 8, 6, 1], [false, 1, 6, 0]]) {
+    const { context, ui, form } = uiHarness();
+    let saved;
+    context.StorageManager = { commitSettings: async mutation => { saved = plain(mutation); return { settings: mutation.candidate, previous: form.settings }; } };
+    context.HistoryStore = { SIZES_MB: [6, 12, 25], hasUnlimitedStorage: () => true, budgetFor: (mb) => mb * 1024 * 1024, usage: async () => ({ bytes: usedMB * 1024 * 1024 }) };
+    context.FormatUtils = { t: (key, fallback) => fallback };
+    context.chrome.storage = { local: {} };
+    const asked = [];
+    context.NotificationHelper.confirm = async (options) => { asked.push(options.title); return answer; };
+    form.settings.history = { historyMaxMB: 25, historyLimit: 0 };
+    await ui.importSettingsFile.call(form, { target: { files: [{ text: async () => JSON.stringify({ settings: { debugMode: true, history: { historyMaxMB: 6 } } }) }] } });
+    assert.equal(asked.length, questions, `${usedMB} MB used, answer ${answer}`);
+    assert.equal(saved.candidate.history.historyMaxMB, expected);
+    assert.equal(saved.candidate.debugMode, true, 'the rest of the file lands either way');
+  }
+});
+
 test('Cancel discards staged exclusions, update preferences and header changes', () => {
   const { ui, form } = uiHarness();
   form.settingsBaseline = { updates: { autoUpdate: false }, detection: { blacklistedDomains: [] }, webhook: { webhookHeaders: [] } };

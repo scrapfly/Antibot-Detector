@@ -1143,7 +1143,10 @@ async function scenario(name, fn) {
     if (choices.category) await set(1, choices.category);
     if (choices.days !== undefined) await set(2, String(choices.days));
     if (choices.domain !== undefined) await set(3, choices.domain);
-    if (choices.pinnedOnly !== undefined) await page.$eval('.notification-confirm .history-dialog-check input', (el, v) => { el.checked = v; el.dispatchEvent(new Event('change', { bubbles: true })); }, choices.pinnedOnly);
+    // the two checkboxes, in order: pinned pages only, changed pages only
+    const tick = (index, value) => page.$$eval('.notification-confirm .history-dialog-check input', (els, [i, v]) => { els[i].checked = v; els[i].dispatchEvent(new Event('change', { bubbles: true })); }, [index, value]);
+    if (choices.pinnedOnly !== undefined) await tick(0, choices.pinnedOnly);
+    if (choices.changedOnly !== undefined) await tick(1, choices.changedOnly);
     const count = await page.$eval('.history-dialog-count', el => el.textContent);
     if (choices.cancel) { await page.$eval('.notification-btn-cancel', el => el.click()); await dialogsGone(page); return { count }; }
     const downloadPromise = page.waitForEvent('download', { timeout: choices.expectNone ? 2500 : 10000 }).catch(() => null);
@@ -1180,6 +1183,11 @@ async function scenario(name, fn) {
       assert.equal(lines.length, 3, 'two pinned entries, one detection each');
       assert.ok(lines[1].includes('"a ""quoted"", note"'), lines[1]);
       assert.ok(!/\d{4}-\d{2}-\d{2}T/.test(out.text), 'no timestamps');
+
+      // Changed pages only: the count follows the entries marked Changed by their latest scan
+      const changedExpected = exportSeed().filter(item => item.changed).length;
+      out = await exportVia(page, { changedOnly: true, cancel: true });
+      assert.match(out.count, changedExpected ? new RegExp(`^${changedExpected} of `) : /No entries match/i, `changed pages only: ${out.count}`);
 
       // The count text follows the filters
       await page.$eval('#historyMenuBtn', el => el.click());

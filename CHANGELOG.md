@@ -9,17 +9,17 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
-- History: filter chips under the search (Pinned, Changed, Anti-bot, Captcha, Fingerprint), and the search now also looks in your notes. When nothing matches, a message offers Clear filters.
+- History: filter chips under the search (Pinned, Changed, Anti-bot, Captcha, Fingerprint), and the search now also looks in your notes. When nothing matches, a message offers Clear filters. The export dialog can keep to changed pages only.
 - Settings → Detection → Sites to scan: scan every site except the ones you skip (as before), or only the sites you choose; the Detection tab of a site that is not chosen offers Scan this site.
-- Settings → Data → Storage: how much space the detection cache, tool captures, History, rules, settings and logs use, with Clear for the cache, the captures, the logs and History.
+- Settings → Data → Storage: how much space the detection cache, tool captures, History, rules, pending rule updates, settings and logs use, with Clear for the cache, the captures, the pending updates, the logs and History.
 - Settings → Data → Backup and restore: settings, your own rules and History in one file, restored whole or in parts, merging or replacing. Older exports still import as before.
 - Settings → Data → Presets and reset: a Privacy and a Developer preset that list what they change, and Reset settings, which keeps your site lists, rules, History, language and theme.
-- Settings → Data → Diagnostics: Copy diagnostics puts versions, settings and counts on the clipboard for a bug report, with no sites, addresses or keys.
+- Settings → Data → Diagnostics: Copy diagnostics puts versions (the extension, the rule set, the installed rules), settings, counts and the pending rule updates on the clipboard for a bug report, with no sites, addresses or keys.
 - Webhook: send only above a minimum confidence, for chosen categories or sites; sign each request with a secret (Scrapfly's own signature headers); Recent deliveries lists the last 20 attempts, with Clear.
-- Settings → Detection → Sites without JS hooks: turn the JS hooks off on a site that misbehaves with them; its results say fingerprinting is not checked.
+- Settings → Detection → Sites without JS hooks: turn the JS hooks off on a site that misbehaves with them; nothing of the page or its frames stays wrapped, and its results say fingerprinting is not checked.
 - Settings → History → Pin pages automatically: pages with a hard protection, or one you name, pin themselves (up to 50); a page you unpin stays unpinned.
 - Settings → History: delete fingerprinting-only pages after a number of days of their own.
-- Settings → History → Storage: choose a History size of 6, 12 or 25 MB (the extension now has the unlimited storage permission; History stays at 6 MB unless you choose more).
+- Settings → History → Storage: choose a History size of 6, 12 or 25 MB (the extension now has the unlimited storage permission; History stays at 6 MB unless you choose more). A smaller size than History uses asks first, also when it comes from an imported settings file or a restored backup.
 - History watchlist: pin a page and choose Watch for changes, and the extension scans it again every day or week in a background tab, marking it Changed (with a notification) when its protections change. Settings → History → Watch pinned pages.
 - Rules editor: a bar notices the texts of a rule that are not translated into every language and one button translates them all, with Chrome's on-device translator.
 
