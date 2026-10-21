@@ -15,7 +15,7 @@ function registerLoggingHandlers(registry, context) {
             if (log && typeof log === 'object') Logger._outputToConsole({ ...log, context: 'content' });
         }
     };
-    registry['LOG'] = handle_log;
+    registry[WorkerMessages.LOG] = handle_log;
 
     // MAIN-world lines. The MAIN world only sends them in Debug mode; the
     // worker's own Logger flags (refreshed on start and on every settings

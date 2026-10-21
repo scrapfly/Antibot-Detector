@@ -102,7 +102,7 @@ DetectionUI.handleLoadingTimeout = function() {
           }
 
           chrome.runtime.sendMessage(
-            { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
+            { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
             async (response) => {
               const asks = this.loadingRepolls = (this.loadingRepolls || 0) + 1;
               const canWait = asks <= DetectionUI.LOADING_REPOLL_MAX;

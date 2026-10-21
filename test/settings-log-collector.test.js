@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
@@ -8,7 +9,7 @@ const read = name => fs.readFileSync(path.join(__dirname, '..', name), 'utf8');
 function harness() {
   const state = { settings: { logCollectorEnabled: false, logCollectorMaxLogs: 5000 }, fail: false, writes: 0, removed: [], listeners: [] };
   const noop = () => {};
-  const ctx = vm.createContext({
+  const ctx = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
     Constants: { LOG_COLLECTOR_MAX_LOGS: 5000, LOG_COLLECTOR_MAX_PERSISTED: 500, LOG_COLLECTOR_RATE_LIMIT: 100 },
     Logger: { error: noop, debug: noop, warn: noop },
     console: { log: noop, warn: noop, error: noop, info: noop, debug: noop },

@@ -868,7 +868,7 @@ class History {
       const cacheScope = ['domain', 'path', 'full'].includes(mappedScope) ? mappedScope : 'domain';
 
       const request = {
-        type: 'HISTORY_CLEAR_CACHE',
+        type: WorkerMessages.HISTORY_CLEAR_CACHE,
         url: historyItem.url,
         cacheScope
       };
@@ -1740,7 +1740,7 @@ class History {
         .catch(error => Logger.warn('UI', '[History] Re-sort after settings change failed', error));
     });
     chrome.runtime.onMessage.addListener((message) => {
-      if (!message || message.type !== 'SETTINGS_UPDATED') {
+      if (!message || message.type !== WorkerMessages.SETTINGS_UPDATED) {
         return;
       }
 

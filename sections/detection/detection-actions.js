@@ -61,7 +61,7 @@ DetectionActions.clearCache = async function() {
       const url = tabs[0].url;
 
       await chrome.runtime.sendMessage({
-        type: 'DETECTION_CLEAR_CACHE',
+        type: WorkerMessages.DETECTION_CLEAR_CACHE,
         url: url,
         tabId: tabs[0].id
       });
@@ -277,7 +277,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
           this.showAnalyzingState();
 
           chrome.runtime.sendMessage(
-            { type: 'GET_DETECTION_DATA', tabId: tab.id },
+            { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
             async (response) => {
               if (chrome.runtime.lastError) {
                 Logger.error('UI', 'Detection: Error getting cached data:', chrome.runtime.lastError);
@@ -335,7 +335,7 @@ DetectionActions.refreshAnalysis = async function() {
       }
 
       chrome.runtime.sendMessage(
-        { type: 'REQUEST_DETECTION', tabId: tab.id },
+        { type: WorkerMessages.REQUEST_DETECTION, tabId: tab.id },
         (response) => {
           if (chrome.runtime.lastError) {
             Logger.error('UI', 'Detection: Error requesting fresh detection:', chrome.runtime.lastError);
@@ -352,7 +352,7 @@ DetectionActions.refreshAnalysis = async function() {
 
           setTimeout(() => {
             chrome.runtime.sendMessage(
-              { type: 'GET_DETECTION_DATA', tabId: tab.id },
+              { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
               async (dataResponse) => {
                 if (chrome.runtime.lastError) {
                   Logger.error('UI', 'Detection: Error getting detection data:', chrome.runtime.lastError);

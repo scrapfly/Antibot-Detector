@@ -413,7 +413,7 @@ class Logger {
     if (!logs.length || typeof chrome === 'undefined' || !chrome.runtime) return;
     try {
       if (!chrome.runtime.id) return; // extension reloaded: this page's script is orphaned
-      const sent = chrome.runtime.sendMessage({ type: 'LOG', logs });
+      const sent = chrome.runtime.sendMessage({ type: WorkerMessages.LOG, logs });
       if (sent && typeof sent.catch === 'function') sent.catch(() => {});
     } catch (e) {
       // Worker unavailable or context invalidated

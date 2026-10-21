@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -117,6 +118,7 @@ test('waiting for a scan has an end: after the last ask the usual outcome applie
 function popup() {
   const calls = { analyzing: 0, empty: 0, processed: [] };
   const context = {
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     ScrapflyBridgeProtocol: { MESSAGE_TYPES: {} },
     Logger: { error() {} },
     BADGE: { TEXT: { INTERRUPTED: '!', CLEARED: '-' } },

@@ -225,7 +225,7 @@ async function applyLateResponses(tabId) {
     await setBadgeForDetections(tabId, pageUrl, finalResults);
     Logger.detection(`${Logger.hostOf(pageUrl)}: added from responses after the scan: ${evidence.map(d => d.detector?.name || d.name).join(', ')}`);
     chrome.runtime.sendMessage({
-        type: 'NEW_DETECTION_DATA',
+        type: WorkerMessages.NEW_DETECTION_DATA,
         tabId,
         url: pageUrl,
         detectionResults: finalResults,
@@ -337,7 +337,7 @@ async function finalizeDetection(tabId, state) {
 
     // Notify popup (with the cache fields it shows: expiry, scope, favicon)
     chrome.runtime.sendMessage({
-        type: 'NEW_DETECTION_DATA',
+        type: WorkerMessages.NEW_DETECTION_DATA,
         tabId: tabId,
         url: state.url,
         detectionResults: finalResults,
@@ -352,7 +352,7 @@ async function finalizeDetection(tabId, state) {
     // Notify content script for JS API event dispatch (onDetection)
     try {
         await chrome.tabs.sendMessage(tabId, {
-            type: 'DETECTION_COMPLETE',
+            type: WorkerMessages.DETECTION_COMPLETE,
             url: state.url,
             detections: finalResults,
             detectionCount: finalResults.length,

@@ -172,7 +172,7 @@ function sendProgressUpdate(tabId, methodName, completedMethods) {
         }
 
         const progressMessage = {
-            type: 'DETECTION_PROGRESS',
+            type: WorkerMessages.DETECTION_PROGRESS,
             tabId: tabId,
             progress: {
                 method: methodName,

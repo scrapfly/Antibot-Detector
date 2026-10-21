@@ -83,7 +83,7 @@ class Detection {
 
     // Listen for real-time detection progress
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === 'EXTENSION_TOGGLE_CHANGED') {
+      if (message.type === WorkerMessages.EXTENSION_TOGGLE_CHANGED) {
         this.setExtensionEnabled(message.enabled !== false);
         if (!this.isExtensionEnabled) {
           this.showDisabledState();
@@ -91,7 +91,7 @@ class Detection {
         return false;
       }
 
-      if (message.type === 'DETECTION_PROGRESS') {
+      if (message.type === WorkerMessages.DETECTION_PROGRESS) {
         if (!this.isExtensionEnabled) {
           return false;
         }
@@ -111,7 +111,7 @@ class Detection {
       }
 
       // Listen for detection completion
-      if (message.type === 'NEW_DETECTION_DATA') {
+      if (message.type === WorkerMessages.NEW_DETECTION_DATA) {
         if (!this.isExtensionEnabled) {
           return false;
         }
@@ -145,7 +145,7 @@ class Detection {
             if (this.debugMode) Logger.debug('UI', '[Detection] Fetching completed detection data');
 
             chrome.runtime.sendMessage(
-              { type: 'GET_DETECTION_DATA', tabId: message.tabId },
+              { type: WorkerMessages.GET_DETECTION_DATA, tabId: message.tabId },
               async (response) => {
                 if (chrome.runtime.lastError) {
                   Logger.error('UI', '[Detection] Error fetching completed data:', chrome.runtime.lastError);
@@ -179,7 +179,7 @@ class Detection {
       }
 
       // Listen for cache scope changes from Settings
-      if (message.type === 'DETECTION_CLEAR_CACHE') {
+      if (message.type === WorkerMessages.DETECTION_CLEAR_CACHE) {
         (async () => {
           Logger.debug('UI', '[Detection] Cache scope changed - checking for cached data with new scope');
 
@@ -211,7 +211,7 @@ class Detection {
 
             // Request detection data with new cache scope
             chrome.runtime.sendMessage(
-              { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
+              { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
               async (response) => {
                 if (chrome.runtime.lastError) {
                   Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');

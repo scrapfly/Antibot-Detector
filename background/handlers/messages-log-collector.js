@@ -16,7 +16,7 @@ function registerLogCollectorHandlers(registry, context) {
         })();
         return true;
     };
-    registry['LOG_COLLECTOR_ENABLE'] = handle_log_collector_enable;
+    registry[WorkerMessages.LOG_COLLECTOR_ENABLE] = handle_log_collector_enable;
 
     const handle_log_collector_disable = function({ request, sendResponse }) {
         (async () => {
@@ -29,7 +29,7 @@ function registerLogCollectorHandlers(registry, context) {
         })();
         return true;
     };
-    registry['LOG_COLLECTOR_DISABLE'] = handle_log_collector_disable;
+    registry[WorkerMessages.LOG_COLLECTOR_DISABLE] = handle_log_collector_disable;
 
     const handle_log_collector_clear = function({ request, sender, sendResponse, context }) {
         void context;
@@ -43,7 +43,7 @@ function registerLogCollectorHandlers(registry, context) {
         }
         return true; // Keep message channel open for response
     };
-    registry['LOG_COLLECTOR_CLEAR'] = handle_log_collector_clear;
+    registry[WorkerMessages.LOG_COLLECTOR_CLEAR] = handle_log_collector_clear;
 
     const handle_log_collector_export_json = function({ request, sender, sendResponse, context }) {
         void context;
@@ -57,7 +57,7 @@ function registerLogCollectorHandlers(registry, context) {
         }
         return true; // Keep message channel open for response
     };
-    registry['LOG_COLLECTOR_EXPORT_JSON'] = handle_log_collector_export_json;
+    registry[WorkerMessages.LOG_COLLECTOR_EXPORT_JSON] = handle_log_collector_export_json;
 
     const handle_log_collector_export_text = function({ request, sender, sendResponse, context }) {
         void context;
@@ -71,7 +71,7 @@ function registerLogCollectorHandlers(registry, context) {
         }
         return true; // Keep message channel open for response
     };
-    registry['LOG_COLLECTOR_EXPORT_TEXT'] = handle_log_collector_export_text;
+    registry[WorkerMessages.LOG_COLLECTOR_EXPORT_TEXT] = handle_log_collector_export_text;
 
     const handle_log_collector_get_count = function({ request, sender, sendResponse, context }) {
         void context;
@@ -89,7 +89,7 @@ function registerLogCollectorHandlers(registry, context) {
             sendResponse({ status: 'error', message: 'LogCollector not available', count: 0 });
         }
     };
-    registry['LOG_COLLECTOR_GET_COUNT'] = handle_log_collector_get_count;
+    registry[WorkerMessages.LOG_COLLECTOR_GET_COUNT] = handle_log_collector_get_count;
 
     const handle_log_collector_set_max_logs = function({ request, sendResponse }) {
         (async () => {
@@ -102,6 +102,6 @@ function registerLogCollectorHandlers(registry, context) {
         })();
         return true;
     };
-    registry['LOG_COLLECTOR_SET_MAX_LOGS'] = handle_log_collector_set_max_logs;
+    registry[WorkerMessages.LOG_COLLECTOR_SET_MAX_LOGS] = handle_log_collector_set_max_logs;
 
 }

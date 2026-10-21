@@ -227,7 +227,7 @@ SettingsUI._setupWebhookLogListeners = function() {
     const clear = document.querySelector('#webhookLogClearBtn');
     if (clear && !clear.dataset.bound) {
       clear.dataset.bound = '1';
-      clear.addEventListener('click', () => { chrome.runtime.sendMessage({ type: 'WEBHOOK_LOG_CLEAR' }, () => { void chrome.runtime.lastError; }); });
+      clear.addEventListener('click', () => { chrome.runtime.sendMessage({ type: WorkerMessages.WEBHOOK_LOG_CLEAR }, () => { void chrome.runtime.lastError; }); });
     }
 };
 
@@ -300,7 +300,7 @@ SettingsUI.handleTestWebhook = async function() {
 
 /** The Test button leaves a line in the record, written by the worker like every other. */
 SettingsUI.recordWebhookTest = function(entry) {
-    try { chrome.runtime.sendMessage({ type: 'WEBHOOK_LOG_ENTRY', entry: { ...entry, trigger: 'test' } }, () => { void chrome.runtime.lastError; }); } catch (_) { /* the record is a convenience */ }
+    try { chrome.runtime.sendMessage({ type: WorkerMessages.WEBHOOK_LOG_ENTRY, entry: { ...entry, trigger: 'test' } }, () => { void chrome.runtime.lastError; }); } catch (_) { /* the record is a convenience */ }
 };
 
 SettingsUI._whTr = function(key, fallback) {

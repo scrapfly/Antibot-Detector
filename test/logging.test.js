@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -22,7 +23,7 @@ function loadLogger({ debug = false, verbose = false, collector = null } = {}) {
     }
     out.push({ kind, text: args.join(' ') });
   };
-  const context = vm.createContext({
+  const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
     console: { log: record('log'), warn: record('warn'), error: record('error'), debug: record('debug'),
       groupCollapsed: record('group'), groupEnd() {} },
     Date, Math, JSON, Object, Array, Map, Set, String, Number, Error, TypeError, RegExp, URL,
@@ -137,7 +138,7 @@ test('with the Log Collector on, info goes to the collector only and warnings st
 
 test('content-script lines reach the worker in one batched message', async () => {
   const sent = [];
-  const context = vm.createContext({
+  const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
     console, Date, Math, JSON, Object, Array, Map, Set, String, Number, Error, RegExp, URL, setTimeout, clearTimeout,
     debugMode: true, debugVerbose: false,
     chrome: { runtime: { id: 'ext', sendMessage: (msg) => { sent.push(msg); return Promise.resolve(); } } },
@@ -157,7 +158,7 @@ test('content-script lines reach the worker in one batched message', async () =>
 });
 
 test('extension pages are their own context, not "content"', () => {
-  const context = vm.createContext({ console, Date, Math, JSON, Object, Array, Map, Set, String, Number, Error, RegExp, URL,
+  const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'),  console, Date, Math, JSON, Object, Array, Map, Set, String, Number, Error, RegExp, URL,
     setTimeout, clearTimeout, chrome: { runtime: { id: 'ext' } }, location: { protocol: 'chrome-extension:' } });
   context.globalThis = context;
   context.self = context;
@@ -168,7 +169,7 @@ test('extension pages are their own context, not "content"', () => {
 test('the worker prints relayed content-script batches as page lines', () => {
   const printed = [];
   const registry = {};
-  const context = vm.createContext({
+  const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
     Logger: { MAX_BATCH: 50, _outputToConsole: (log) => printed.push(log) },
     globalThis: null
   });

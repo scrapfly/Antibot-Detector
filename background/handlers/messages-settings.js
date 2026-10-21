@@ -27,7 +27,7 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Async response
     };
-    registry['EXTENSION_TOGGLE_CHANGED'] = handle_extension_toggle_changed;
+    registry[WorkerMessages.EXTENSION_TOGGLE_CHANGED] = handle_extension_toggle_changed;
 
     const handle_sync_category_colors = function({ request, sender, sendResponse, context }) {
         void context;
@@ -44,15 +44,15 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry['SYNC_CATEGORY_COLORS'] = handle_sync_category_colors;
+    registry[WorkerMessages.SYNC_CATEGORY_COLORS] = handle_sync_category_colors;
 
     // The record of recent webhook deliveries is written here only: the Settings page asks for the Test line and for Clear
-    registry['WEBHOOK_LOG_ENTRY'] = function({ request, sender, sendResponse }) {
+    registry[WorkerMessages.WEBHOOK_LOG_ENTRY] = function({ request, sender, sendResponse }) {
         if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
         SettingsRuntime.recordWebhookDelivery(request.entry).then(() => sendResponse({ status: 'ok' }));
         return true;
     };
-    registry['WEBHOOK_LOG_CLEAR'] = function({ sender, sendResponse }) {
+    registry[WorkerMessages.WEBHOOK_LOG_CLEAR] = function({ sender, sendResponse }) {
         if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
         SettingsRuntime.clearWebhookLog().then(() => sendResponse({ status: 'ok' }));
         return true;
@@ -70,7 +70,7 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry['SETTINGS_UPDATED'] = handle_settings_updated;
+    registry[WorkerMessages.SETTINGS_UPDATED] = handle_settings_updated;
 
     const handle_cache_scope_changed = function({ request, sender, sendResponse, context }) {
         void context;
@@ -126,7 +126,7 @@ function registerSettingsHandlers(registry, context) {
 
         return true; // Async response
     };
-    registry['CACHE_SCOPE_CHANGED'] = handle_cache_scope_changed;
+    registry[WorkerMessages.CACHE_SCOPE_CHANGED] = handle_cache_scope_changed;
 
     const handle_reload_detectors = function({ request, sender, sendResponse, context }) {
         void context;
@@ -151,6 +151,6 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry['RELOAD_DETECTORS'] = handle_reload_detectors;
+    registry[WorkerMessages.RELOAD_DETECTORS] = handle_reload_detectors;
 
 }

@@ -49,6 +49,7 @@
       "matches": ["http://*/*", "https://*/*"],
       "js": [
         "modules/core/bridge-protocol.js",
+        "modules/core/worker-messages.js",
         "modules/core/logger.js",
         "modules/core/constants.js",
         "modules/core/hooks-config.js",

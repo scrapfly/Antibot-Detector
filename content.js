@@ -356,9 +356,9 @@ function setupDetectionTriggers() {
             }
 
             // Progress messages are covered by the JS API event lines
-            if (request.type !== 'DETECTION_PROGRESS') Logger.debug('CONTENT', `Message: ${request.type}`);
+            if (request.type !== WorkerMessages.DETECTION_PROGRESS) Logger.debug('CONTENT', `Message: ${request.type}`);
 
-            if (request.type === 'REQUEST_PAGE_DATA') {
+            if (request.type === WorkerMessages.REQUEST_PAGE_DATA) {
                 // Background requests data collection (cache miss)
 
                 // JS API: Notify page that detection is starting (cache miss)
@@ -385,7 +385,7 @@ function setupDetectionTriggers() {
                 }
 
                 sendResponse({ status: 'collecting_data' });
-            } else if (request.type === 'RUN_DETECTION') {
+            } else if (request.type === WorkerMessages.RUN_DETECTION) {
                 // Manual detection request from popup (force bypass cache)
                 Logger.content('RUN_DETECTION received - starting manual detection');
 
@@ -413,14 +413,14 @@ function setupDetectionTriggers() {
                 }
 
                 sendResponse({ status: 'detection_started' });
-            } else if (request.type === 'GET_DETECTION_STATUS') {
+            } else if (request.type === WorkerMessages.GET_DETECTION_STATUS) {
                 // Return current detection status
                 sendResponse({
                     status: 'active',
                     lastDetection: detectionEngine ? detectionEngine.lastDetectionTime : null,
                     hasData: detectionEngine ? detectionEngine.detectionData !== null : false
                 });
-            } else if (request.type === 'DETECTION_COMPLETE') {
+            } else if (request.type === WorkerMessages.DETECTION_COMPLETE) {
                 // Detection completed - dispatch JS API event
                 detectionFinalized = true;
                 hooksMonitoringComplete = true;
@@ -441,7 +441,7 @@ function setupDetectionTriggers() {
                 sendToMainWorld({ type: BRIDGE_TYPES.STOP_WINDOW_POLLING, reason: SCRAPFLY_PROTOCOL.CONTROL_REASONS.DETECTION_COMPLETE });
 
                 sendResponse({ status: 'event_dispatched' });
-            } else if (request.type === 'DETECTION_PROGRESS') {
+            } else if (request.type === WorkerMessages.DETECTION_PROGRESS) {
                 // Detection progress updates (method-level)
                 const progress = request.progress || {};
                 dispatchJsApiEvent('onProgress', {
@@ -453,7 +453,7 @@ function setupDetectionTriggers() {
                 }).catch(() => {});
 
                 sendResponse({ status: 'progress_event_dispatched' });
-            } else if (request.type === 'DETECTION_ERROR') {
+            } else if (request.type === WorkerMessages.DETECTION_ERROR) {
                 // Detection error - dispatch JS API error event
                 dispatchJsApiEvent('onError', {
                     url: request.url || window.location.href,
@@ -530,7 +530,7 @@ async function initialize() {
         }
 
         try {
-            const detectorsResponse = await safeSendMessage({ type: 'GET_DETECTORS' });
+            const detectorsResponse = await safeSendMessage({ type: WorkerMessages.GET_DETECTORS });
 
             if (!detectorsResponse) {
                 // Context invalid, already handled by safeSendMessage
@@ -595,7 +595,7 @@ async function initialize() {
     // Early cache check - skip all detection work if cached
     try {
         const cacheCheckResponse = await chrome.runtime.sendMessage({
-            type: 'CHECK_CACHE_EARLY',
+            type: WorkerMessages.CHECK_CACHE_EARLY,
             url: window.location.href
         });
 
@@ -631,7 +631,7 @@ async function initialize() {
             // This ensures the badge is updated with detection count immediately
             try {
                 chrome.runtime.sendMessage({
-                    type: 'CACHE_HIT_EARLY_EXIT',
+                    type: WorkerMessages.CACHE_HIT_EARLY_EXIT,
                     url: window.location.href,
                     detectionData: cacheCheckResponse.detectionData  // Include cached data for badge update
                 }).catch(() => {});
@@ -663,7 +663,7 @@ async function initialize() {
     if (isExtensionContextValid()) {
         try {
             chrome.runtime.sendMessage({
-                type: 'CONTENT_SCRIPT_READY',
+                type: WorkerMessages.CONTENT_SCRIPT_READY,
                 url: window.location.href
             }, (response) => {
                 if (chrome.runtime.lastError) {

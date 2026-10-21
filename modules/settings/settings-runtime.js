@@ -38,7 +38,7 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
 
       if (!hasBackgroundContext) {
         chrome.runtime.sendMessage({
-          type: 'EXTENSION_TOGGLE_CHANGED',
+          type: WorkerMessages.EXTENSION_TOGGLE_CHANGED,
           enabled: enabled
         }).catch(() => {});
       }

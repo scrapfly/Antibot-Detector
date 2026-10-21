@@ -159,7 +159,7 @@ Advanced.prototype.getCurrentDetections = async function() {
           }, 3000);
 
           chrome.runtime.sendMessage({
-            type: 'GET_DETECTION_DATA',
+            type: WorkerMessages.GET_DETECTION_DATA,
             tabId: this.currentTab.id
           }, (response) => {
             clearTimeout(timeout);

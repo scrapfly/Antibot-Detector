@@ -181,7 +181,7 @@ class ScrapflyPopup {
           chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0] && this.isDetectionViewRequestCurrent(requestId)) {
               chrome.runtime.sendMessage(
-                { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
+                { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
                 async (response) => {
                   if (!this.isDetectionViewRequestCurrent(requestId)) {
                     return;
@@ -267,7 +267,7 @@ class ScrapflyPopup {
 
       // Get existing detection data (cache or completed detection)
       chrome.runtime.sendMessage(
-        { type: 'GET_DETECTION_DATA', tabId: tab.id },
+        { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
         async (response) => {
           if (!this.isDetectionViewRequestCurrent(requestId)) {
             return;
@@ -504,7 +504,7 @@ class ScrapflyPopup {
               chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (tabs[0] && this.isDetectionViewRequestCurrent(requestId)) {
                   chrome.runtime.sendMessage(
-                    { type: 'GET_DETECTION_DATA', tabId: tabs[0].id },
+                    { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
                     async (response) => {
                       if (!this.isDetectionViewRequestCurrent(requestId)) {
                         return;

@@ -1363,7 +1363,7 @@ Rules.prototype.saveRule = async function() {
     }
     if (!saved) return false;
 
-    chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => { void chrome.runtime.lastError; });
+    chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
     if (this.categoryManager && this.colorManager) {
       const color = this.colorManager.getColor();
       this.updateDetectorBadgeColor(edit.detectorName, color);

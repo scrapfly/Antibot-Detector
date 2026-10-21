@@ -244,7 +244,7 @@ class Rules {
 
         // CRITICAL: Notify background.js to reload detectors
         // This ensures JS hooks use the updated enabled state on next page load
-        chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
+        chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
           Logger.debug('UI', `Detectors reloaded in background after ${enabled ? 'enabling' : 'disabling'} ${detectorName}:`, response);
         });
 

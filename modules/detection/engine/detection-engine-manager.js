@@ -2003,7 +2003,7 @@ class DetectionEngineManager {
 
             // Notify popup if open
             chrome.runtime.sendMessage({
-                type: 'NEW_DETECTION_DATA',
+                type: WorkerMessages.NEW_DETECTION_DATA,
                 tabId: tabId,
                 url: pageUrl,
                 detectionResults: storedData.detectionResults,
@@ -2090,7 +2090,7 @@ class DetectionEngineManager {
         const sendDataRequest = async () => {
             try {
                 if (!await isCurrentDocument()) return ignored;
-                chrome.tabs.sendMessage(tabId, { type: 'REQUEST_PAGE_DATA' }, targetDocument, () => {
+                chrome.tabs.sendMessage(tabId, { type: WorkerMessages.REQUEST_PAGE_DATA }, targetDocument, () => {
                     if (chrome.runtime.lastError) {
                         const errorMsg = chrome.runtime.lastError?.message || '';
                         if ((errorMsg.includes('Could not establish connection') ||
@@ -2276,7 +2276,7 @@ class DetectionEngineManager {
             // Pin both messages to this document so a same-URL reload cannot
             // receive a request that was admitted for its predecessor.
             const scriptExists = await new Promise(resolve => {
-                chrome.tabs.sendMessage(tabId, { type: 'GET_DETECTION_STATUS' }, targetDocument, response => {
+                chrome.tabs.sendMessage(tabId, { type: WorkerMessages.GET_DETECTION_STATUS }, targetDocument, response => {
                     resolve(!chrome.runtime.lastError && response?.status === 'active');
                 });
             });
@@ -2315,7 +2315,7 @@ class DetectionEngineManager {
             }
 
             const response = await new Promise(resolve => {
-                chrome.tabs.sendMessage(tabId, { type: 'RUN_DETECTION', silent: isSilent }, targetDocument, value => {
+                chrome.tabs.sendMessage(tabId, { type: WorkerMessages.RUN_DETECTION, silent: isSilent }, targetDocument, value => {
                     // runtime.lastError is valid only inside this callback.
                     resolve({ value, error: chrome.runtime.lastError?.message });
                 });

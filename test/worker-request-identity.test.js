@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -13,6 +14,7 @@ function harness() {
   const timers = [];
   const current = { url: 'https://example.test/', documentId: 'doc-first' };
   const context = {
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     URL, Promise, Map, Set, Date, AbortController, PatternCache: class {},
     Constants: { REQUEST_DETECTION_PENDING_TIMEOUT: 10000, DETECTION_SKIP_THRESHOLD: 1500 },
     Logger: new Proxy({}, { get: () => () => {} }),

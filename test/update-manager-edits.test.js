@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -19,6 +20,7 @@ const DetectorManager = require('../modules/detection/rules/detector-manager.js'
 function load(local, { remote = {}, bundled = {}, bundledIndex = null, saveSucceeds = true } = {}) {
   const messages = [];
   const ctx = {
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     console, setTimeout, clearTimeout, Promise, JSON, Date, Math, Set, Map, Object, Array, Error,
     Logger: new Proxy({}, { get: () => () => {} }),
     Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12 },

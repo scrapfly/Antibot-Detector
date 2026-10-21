@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -82,7 +83,7 @@ function makeDom() {
 
 function loadDialogs() {
   const dom = makeDom();
-  const context = vm.createContext({
+  const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
     document: dom.doc,
     requestAnimationFrame: (fn) => fn(),
     setTimeout: (fn) => fn(),

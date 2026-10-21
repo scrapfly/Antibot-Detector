@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -21,7 +22,7 @@ const cloudflare = readDetector('antibot', 'detect-cloudflare');
 const turnstile = readDetector('captcha', 'detect-turnstile');
 
 // The ISOLATED-side module that builds the capture spec, with the real constants
-const isolated = vm.createContext({});
+const isolated = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), });
 isolated.globalThis = isolated;
 for (const file of ['modules/core/bridge-protocol.js', 'modules/core/constants.js', 'utils/pattern-cache.js', 'modules/detection/engine/detection-engine-hooks.js']) {
   vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), isolated, { filename: file });
@@ -149,7 +150,7 @@ test('XMLHttpRequest responses are read on loadend for matching URLs', async () 
 
 const Logger = new Proxy({}, { get: (_, key) => key === 'debugMode' ? false : key === 'hostOf' ? (url) => new URL(url).hostname
   : key === 'error' ? (...args) => { throw new Error(args.join(' ')); } : () => {} });
-const worker = vm.createContext({
+const worker = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
   Logger, CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options.detail; } },
   setTimeout, clearTimeout, URL
 });

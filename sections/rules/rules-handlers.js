@@ -45,7 +45,7 @@ Rules.prototype.handleImport = async function(event) {
 
     const success = await this.detectorManager.importDetectors(data, mode === 'merge');
     if (success) {
-      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
+      chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
         Logger.ui('Detectors reloaded in background after import:', response);
       });
       NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
@@ -275,7 +275,7 @@ Rules.prototype.handleResetToOfficial = async function(category, detectorName, d
   try {
     this.detectorManager.detectors[category][detectorName] = restored;
     await this.detectorManager.saveDetectorsToStorage();
-    chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => { void chrome.runtime.lastError; });
+    chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
     NotificationHelper.success(_tr('ruleResetToOfficial', 'Rule restored to the official version'));
     await this.displayRules();
   } catch (error) {
@@ -332,7 +332,7 @@ Rules.prototype.handleClear = async function() {
     const removed = await this.detectorManager.clearCustomDetectors();
     loader.close();
     if (removed > 0) {
-      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
+      chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
         Logger.ui('Detectors reloaded in background after clear:', response);
       });
       NotificationHelper.success(_fmt('customDetectorsClearedFmt', `${removed} custom detectors removed`, removed));
@@ -444,7 +444,7 @@ Rules.prototype.handleRestoreOfficial = async function() {
   try {
     const { restored, failed, updateOnly } = await this.detectorManager.restoreOfficialDetectors(found, { fetchReleased });
     if (restored.length > 0) {
-      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => {});
+      chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => {});
       this.displayRules();
     }
     if (failed.length > 0) {
@@ -495,7 +495,7 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
   try {
     const result = await this.detectorManager.deleteDetector(category, detectorName);
     if (result.deleted) {
-      chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, (response) => {
+      chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
         Logger.ui('Detectors reloaded in background after delete:', response);
       });
 

@@ -84,7 +84,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Keep SW alive until badge/cache work completes
     };
-    registry['PAGE_LOAD_NOTIFICATION'] = handle_page_load_notification;
+    registry[WorkerMessages.PAGE_LOAD_NOTIFICATION] = handle_page_load_notification;
 
     const handle_detection_data = function({ request, sender, sendResponse, context }) {
         void context;
@@ -109,7 +109,7 @@ function registerDetectionHandlers(registry, context) {
                     const tabId = sender.tab?.id;
                     if (tabId) {
                         chrome.tabs.sendMessage(tabId, {
-                            type: 'DETECTION_ERROR',
+                            type: WorkerMessages.DETECTION_ERROR,
                             url: request?.data?.url || sender.tab?.url,
                             error: error?.message || String(error),
                             stage: 'processDetectionData',
@@ -126,7 +126,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Async response
     };
-    registry['DETECTION_DATA'] = handle_detection_data;
+    registry[WorkerMessages.DETECTION_DATA] = handle_detection_data;
 
     const handle_content_script_ready = function({ request, sender, sendResponse, context }) {
         void context;
@@ -134,7 +134,7 @@ function registerDetectionHandlers(registry, context) {
         Logger.debug('SCAN', `Content script ready: ${request.url}`);
         sendResponse({ status: 'acknowledged' });
     };
-    registry['CONTENT_SCRIPT_READY'] = handle_content_script_ready;
+    registry[WorkerMessages.CONTENT_SCRIPT_READY] = handle_content_script_ready;
 
     const handle_get_detection_data = function({ request, sender, sendResponse, context }) {
         void context;
@@ -262,7 +262,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry['GET_DETECTION_DATA'] = handle_get_detection_data;
+    registry[WorkerMessages.GET_DETECTION_DATA] = handle_get_detection_data;
 
     const handle_request_detection = function({ request, sender, sendResponse, context }) {
         void context;
@@ -292,7 +292,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry['REQUEST_DETECTION'] = handle_request_detection;
+    registry[WorkerMessages.REQUEST_DETECTION] = handle_request_detection;
 
     const handle_js_hook_detection_batch = function({ request, sender, sendResponse, context }) {
         void context;
@@ -773,6 +773,6 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry['GET_DETECTORS'] = handle_get_detectors;
+    registry[WorkerMessages.GET_DETECTORS] = handle_get_detectors;
 
 }

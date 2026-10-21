@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -18,7 +19,7 @@ function harness(textColorMode = 'supported') {
     if (textColorMode === 'missing') delete action.setBadgeTextColor;
     if (textColorMode === 'rejected') action.setBadgeTextColor = async () => { throw new Error('unsupported'); };
     if (textColorMode === 'throws') action.setBadgeTextColor = () => { throw new Error('closed tab'); };
-    const context = vm.createContext({
+    const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
         chrome: { action, storage: { local: {
             get: async () => ({ scrapfly_enabled: state.enabled }),
             set: async (details) => { state.enabled = details.scrapfly_enabled; }

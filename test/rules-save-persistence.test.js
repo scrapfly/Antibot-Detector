@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -22,7 +23,7 @@ function editor({ isNew = false } = {}) {
     '#detectorDifficultySelect': { value: 'Low' }, '#detectorAuthorInput': { value: 'Tester' },
     '#saveRuleEdit': saveButton, '#editRuleModal': modal
   };
-  const ctx = { Rules: function() {}, DetectorManager, DetectionUtils, Logger, JSON, Date, console,
+  const ctx = { WorkerMessages: require('../modules/core/worker-messages.js'), Rules: function() {}, DetectorManager, DetectionUtils, Logger, JSON, Date, console,
     document: { querySelector: key => fields[key] || null, body: { style: { overflow: 'hidden' } } },
     chrome: { runtime: { sendMessage: (message, cb) => { messages.push(message); cb?.(); }, getURL: value => value } },
     NotificationHelper: { error: value => errors.push(value) } };

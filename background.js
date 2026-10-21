@@ -1,6 +1,7 @@
 /** Service worker bootstrap: dependency graph, then synchronous listeners. */
 importScripts(
     // Core utilities
+    './modules/core/worker-messages.js',
     './modules/core/logger.js',
     './modules/core/i18n.js',
     './modules/core/rule-i18n.js',

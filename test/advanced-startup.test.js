@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -19,7 +20,7 @@ function load(response, settings) {
     '#noAdvancedState': { style: { display: 'none' } }, '#advancedLoadingState': { style: { display: 'flex' } } };
   const requests = [];
   const retries = [];
-  const context = { window: {}, Logger: { ui() {}, debug() {}, error() {} },
+  const context = { WorkerMessages: require('../modules/core/worker-messages.js'), window: {}, Logger: { ui() {}, debug() {}, error() {} },
     FormatUtils: require('../utils/format-utils'),
     document: { querySelector: selector => elements[selector] || null },
     chrome: { runtime: { getURL: p => p, sendMessage: (message, callback) => {

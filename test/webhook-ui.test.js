@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -33,7 +34,7 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
   const copied = [];
   const icons = ['antibot', 'captcha', 'fingerprint'].map(() => ({ innerHTML: '', style: {} }));
   const boxes = ['antibot', 'captcha', 'fingerprint'].map((key, i) => ({ checked: false, dataset: { webhookCategory: key }, parentElement: { querySelector: selector => (selector === '.category-icon' ? icons[i] : null) } }));
-  const context = vm.createContext({
+  const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
     WebhookBody, URL, URLSearchParams, FormData,
     Logger: Object.fromEntries(['network', 'warn', 'error', 'debug'].map(k => [k, () => {}])),
     UrlUtils: { getFaviconUrl: () => '' },

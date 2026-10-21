@@ -78,7 +78,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
       detection.blacklistedDomain = null;
       // Request detection data from background
       chrome.runtime.sendMessage(
-        { type: 'GET_DETECTION_DATA', tabId: tab.id },
+        { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
         async (response) => {
           // Clear the request flag
           detection.isRequestingDetection = false;
@@ -115,7 +115,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               await new Promise(resolve => setTimeout(resolve, 500));
               const retryResponse = await new Promise((resolve) => {
                 chrome.runtime.sendMessage(
-                  { type: 'GET_DETECTION_DATA', tabId: tab.id },
+                  { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
                   resolve
                 );
               });
@@ -130,7 +130,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
               await new Promise(resolve => setTimeout(resolve, 1000));
               const retryResponse2 = await new Promise((resolve) => {
                 chrome.runtime.sendMessage(
-                  { type: 'GET_DETECTION_DATA', tabId: tab.id },
+                  { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
                   resolve
                 );
               });
@@ -177,7 +177,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
             // Badge shows loading - but check cache first in case detection completed
             // and we're in a race condition where badge wasn't updated yet
             chrome.runtime.sendMessage(
-              { type: 'GET_DETECTION_DATA', tabId: tab.id },
+              { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
               async (response) => {
                 if (chrome.runtime.lastError) {
                   Logger.error('UI', 'Detection: Error checking cache:', chrome.runtime.lastError);

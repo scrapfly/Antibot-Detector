@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -12,6 +13,7 @@ function harness() {
   const timers = new Map();
   const current = { url: 'https://example.test/', documentId: 'doc-current' };
   const context = {
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     URL, Map, Set, Date, Promise, AbortController, console,
     Logger: new Proxy({}, { get: () => () => {} }),
     cachedHooksConfig: { MAX_DETECTION_MS: 100 }, getHooksDeadline: now => now + 100,
@@ -168,6 +170,7 @@ function pageLoadHarness() {
   const timers = [];
   const state = { current: true, retry: false };
   const context = {
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     Promise, Date, Map, Set, PatternCache: class {}, Constants: { DETECTION_SKIP_THRESHOLD: 2000 },
     Logger: new Proxy({}, { get: () => () => {} }),
     DetectionUtils: { getBadgeColor: () => '#123456' },

@@ -777,7 +777,7 @@ class UpdateManager {
                 return;
             }
             if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.sendMessage === 'function') {
-                chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => {
+                chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => {
                     void chrome.runtime.lastError;
                 });
             }

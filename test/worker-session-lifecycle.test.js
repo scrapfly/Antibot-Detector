@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -11,6 +12,7 @@ function harness() {
   const timers = new Map();
   const calls = { badge: [], popup: [], page: [], history: [], ended: [], started: [] };
   const context = {
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     Map, Set, Date, Promise, AbortController, console,
     Constants: { FINALIZATION_CHECK_DELAY: 10, MIN_DETECTION_TIME: 0, BATCH_SETTLE_TIME: 0, SAFETY_TIMEOUT: 50,
       DETECTION_TIMEOUT: 20, COOKIE_VALUE_MAX_LENGTH: 128 },

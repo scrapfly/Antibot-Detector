@@ -81,7 +81,7 @@ SettingsUI.clearStoragePart = async function(part) {
     try {
         if (part === 'cache') {
             if (!await confirm(text('storageClearCacheTitle', 'Clear the detection cache'), text('storageClearCacheMessage', 'Pages are scanned again the next time you open them. History, rules and settings are not touched.'))) return;
-            if (!await ask({ type: 'DETECTION_CLEAR_ALL_CACHE' })) throw new Error('The worker did not clear the cache');
+            if (!await ask({ type: WorkerMessages.DETECTION_CLEAR_ALL_CACHE })) throw new Error('The worker did not clear the cache');
             NotificationHelper.success(text('storageCacheCleared', 'Detection cache cleared'));
         } else if (part === 'captures') {
             if (!await confirm(text('storageClearCapturesTitle', 'Delete tool captures'), text('storageClearCapturesMessage', 'Everything the Advanced tools saved is deleted. History, rules and settings are not touched.'))) return;
@@ -93,7 +93,7 @@ SettingsUI.clearStoragePart = async function(part) {
             NotificationHelper.success(text('storageUpdatesCleared', 'Pending rule updates cleared'));
         } else if (part === 'logs') {
             if (!await confirm(text('clearLogsTitle', 'Clear Logs'), text('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'))) return;
-            if (!await ask({ type: 'LOG_COLLECTOR_CLEAR' })) throw new Error('The worker did not clear the logs');
+            if (!await ask({ type: WorkerMessages.LOG_COLLECTOR_CLEAR })) throw new Error('The worker did not clear the logs');
             NotificationHelper.success(text('logsCleared', 'Logs cleared'));
         } else if (part === 'history') {
             // The History tab's own question and answer: the same words, and clearHistory() for the rest

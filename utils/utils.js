@@ -185,7 +185,7 @@ class Utils {
 
     try {
       chrome.runtime.sendMessage({
-        type: 'PAGE_LOAD_NOTIFICATION',
+        type: WorkerMessages.PAGE_LOAD_NOTIFICATION,
         url: window.location.href,
         timestamp: Date.now(),
         triggerSource: triggerSource
@@ -246,7 +246,7 @@ class Utils {
 
       try {
         chrome.runtime.sendMessage({
-          type: 'DETECTION_DATA',
+          type: WorkerMessages.DETECTION_DATA,
           data: plainPageData,
           tabId: null,
           timestamp: Date.now()

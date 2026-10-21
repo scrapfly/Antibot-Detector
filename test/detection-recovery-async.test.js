@@ -1,4 +1,5 @@
 const { test } = require('node:test');
+global.WorkerMessages = require('../modules/core/worker-messages.js');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -7,7 +8,7 @@ const vm = require('node:vm');
 function harness() {
     const messages = [], timers = [], badges = [], errors = [], rendered = [];
     const settings = { detection: { blacklistedDomains: ['example.test'] } };
-    const context = vm.createContext({
+    const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
         Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000,
             PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000, FETCH_TIMEOUT: 1000 },
         Logger: { debugMode: false, ui() {}, debug() {}, detection() {}, cache() {}, warn() {},

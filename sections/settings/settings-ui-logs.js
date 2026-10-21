@@ -23,7 +23,7 @@ SettingsUI.stopLogCountUpdate = function() {
 };
 
 SettingsUI.updateLogCount = function() {
-    chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_GET_COUNT' }).then((response) => {
+    chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_GET_COUNT }).then((response) => {
       if (response && typeof response.count === 'number') {
         const logCountValue = document.querySelector('#logCountValue');
         if (logCountValue) {
@@ -66,7 +66,7 @@ SettingsUI._setupLogListeners = function() {
     const exportLogsJsonBtn = document.querySelector('#exportLogsJsonBtn');
     if (exportLogsJsonBtn) {
       exportLogsJsonBtn.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_EXPORT_JSON' }).catch(() => {
+        chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_EXPORT_JSON }).catch(() => {
           NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
         });
       });
@@ -75,7 +75,7 @@ SettingsUI._setupLogListeners = function() {
     const exportLogsTextBtn = document.querySelector('#exportLogsTextBtn');
     if (exportLogsTextBtn) {
       exportLogsTextBtn.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_EXPORT_TEXT' }).catch(() => {
+        chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_EXPORT_TEXT }).catch(() => {
           NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
         });
       });
@@ -94,7 +94,7 @@ SettingsUI._setupLogListeners = function() {
         });
 
         if (confirmed) {
-          chrome.runtime.sendMessage({ type: 'LOG_COLLECTOR_CLEAR' }).then(() => {
+          chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_CLEAR }).then(() => {
             const logCountValue = document.querySelector('#logCountValue');
             if (logCountValue) {
               logCountValue.textContent = '0';
