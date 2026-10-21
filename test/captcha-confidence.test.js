@@ -67,7 +67,7 @@ for (const key of ['interruptedDetections', 'activeDetections', 'detectionStates
 context.UrlUtils = { normalizeFaviconForStorage: () => null, getHostnameFromUrl: url => new URL(url).hostname };
 context.setBadgeForDetections = async () => {};
 context.chrome = { runtime: { sendMessage: async () => {} }, tabs: { sendMessage: async () => {} } };
-context.Utils = { getHistorySettings: async () => ({}) };
+context.Utils = { getHistorySettings: async () => ({}), isUrlBlacklisted: async () => false };
 context.HistoryRecorder = { shouldSaveToHistory: async () => false };
 Engine.storeDetection = async (_, page, results) => {
   context.finalizedResults = results;

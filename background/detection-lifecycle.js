@@ -284,6 +284,18 @@ async function finalizeDetection(tabId, state) {
     if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
     let finalResults = Array.from(mergedDetections.values()).filter(rescoreCombinations);
+
+    // A site that is skipped, or left out in "only these sites" mode, keeps nothing from a scan (one that began
+    // before it was excluded, or a request that got past the checks): no cache entry, History, webhook or page
+    // event, and its badge says it is paused. A watchlist check only opens pages that pass the same test.
+    const watchTab = typeof HistoryWatch !== 'undefined' && HistoryWatch.isWatchTab(tabId);
+    if (!watchTab && await Utils.isUrlBlacklisted(state.url)) {
+        if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+        Logger.detection(`${Logger.hostOf(state.url)}: excluded domain, scan results not kept`);
+        await setBadgeForDetections(tabId, state.url, [], () => DetectionSessionStore.isCurrent(tabId, state));
+        if (DetectionSessionStore.isCurrent(tabId, state)) DetectionSessionStore.finish(tabId, state);
+        return;
+    }
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
 
     // Store to cache

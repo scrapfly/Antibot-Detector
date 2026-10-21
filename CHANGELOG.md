@@ -30,6 +30,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- A site you skip is no longer scanned, cached or saved to History when you come back to its tab.
 - A custom detector whose category says "WAF" or "bot" is listed with anti-bot everywhere (Detection, History and its export filter); some screens put it under Other.
 - CHEQ, Meetrics, Ocule and ThreatMetrix are named Anti-Bot in History exports and webhooks, like every other anti-bot detector.
 - Official detectors stay marked official, not custom, when the built-in detector index cannot be read.

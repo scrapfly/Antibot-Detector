@@ -172,7 +172,7 @@ worker.tabsUsingCache = new Set();
 for (const key of ['interruptedDetections', 'activeDetections', 'detectionStates', 'payloadStore', 'finalizationDebounce', 'batchProcessingFlags',
   'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore', 'responseStore']) worker[key] = new Map();
 worker.UrlUtils = { normalizeFaviconForStorage: () => null, getHostnameFromUrl: url => new URL(url).hostname };
-worker.Utils = { getHistorySettings: async () => ({}) };
+worker.Utils = { getHistorySettings: async () => ({}), isUrlBlacklisted: async () => false };
 worker.HistoryRecorder = { shouldSaveToHistory: async () => false };
 worker.isExtensionEnabled = async () => true;
 const registry = {};

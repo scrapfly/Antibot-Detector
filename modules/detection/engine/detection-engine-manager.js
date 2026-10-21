@@ -2225,6 +2225,14 @@ class DetectionEngineManager {
                 sendResponse({ status: 'error', error: 'Invalid URL for detection' });
                 return true;
             }
+            // A skipped site, or one left out in "only these sites" mode, is never scanned on request:
+            // its page load stored nothing, so returning to its tab would otherwise ask for a scan here
+            const excluded = await Utils.isUrlBlacklisted(tab.url);
+            if (!ownsSlot()) { skipSuperseded(); return true; }
+            if (excluded) {
+                sendResponse({ status: 'skipped', reason: 'excluded' });
+                return true;
+            }
 
             const normalizeUrl = value => {
                 try { const url = new URL(value); url.hash = ''; return url.href; }

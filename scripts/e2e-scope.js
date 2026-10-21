@@ -8,6 +8,8 @@
  *   Paused card     the Detection tab of a paused site offers "Scan this site" (and hides "Block this domain"),
  *                   which adds the site and scans it; the History menu offers the same
  *   Back            switching back to the skipped sites keeps both lists
+ *   Tab switch      returning to the tab of a skipped (or not chosen) site scans nothing, also after the worker was
+ *                   restarted: nothing was cached for it, so the tab switch used to ask for a scan that stored and recorded it
  *
  * One local server answers on 127.0.0.1, localhost and a.localhost, so a site is told apart by its host. A probe rule
  * (a marker in the page) makes a real scan leave a result in the detection cache: a scanned page has an entry there, a
@@ -92,6 +94,29 @@ const PROBE = {
       return { page, tab };
     };
 
+    // Open a paused site in one tab and a scanned one in another, then return to the paused tab: nothing may be
+    // scanned, cached or recorded for it, and its badge stays the paused one
+    const PAUSED_BADGE = [30, 41, 59, 255]; // BADGE.COLORS.BLACKLISTED, #1e293b
+    const returnToTab = async (pausedHost, otherHost, query) => {
+      const count = (host) => worker.evaluate(async (h) => ({
+        cached: Object.values((await chrome.storage.local.get('scrapfly_detection_storage')).scrapfly_detection_storage || {})
+          .filter(entry => new URL(entry.url).hostname === h).length,
+        history: (await HistoryStore.read(chrome.storage.local)).filter(entry => entry && entry.hostname === h).length
+      }), host);
+      const before = await count(pausedHost);
+      const paused = await visit(at(pausedHost, query));
+      const other = await visit(at(otherHost, query));
+      // As after Chrome stops the idle worker and starts it again: its in-memory scan sessions are gone, only storage
+      // remains (while the worker stays up, the page's unfinished hook session happens to block the request)
+      await worker.evaluate(() => { detectionStates.clear(); activeDetections.clear(); });
+      await paused.page.bringToFront();
+      await sleep(6000);
+      const after = await count(pausedHost);
+      const badge = paused.tab ? await worker.evaluate((id) => chrome.action.getBadgeBackgroundColor({ tabId: id }), paused.tab.id) : null;
+      await paused.page.close(); await other.page.close();
+      return { before, after, badge };
+    };
+
     // Setup: the probe rule, results cached per full address, a known state
     const admin = await popupPage();
     await admin.evaluate(async (rule) => { await window.popupInstance.detectorManager.addDetector('antibot', rule.id, rule); await new Promise(r => chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => r())); }, PROBE);
@@ -106,6 +131,12 @@ const PROBE = {
     page = (await visit(at('127.0.0.1', '?s=1'))).page; await page.close();
     assert.ok(await entries('127.0.0.1') >= 1, 'every other site is scanned');
     console.log('PASS Skipped sites: the listed host is not scanned, every other host is');
+
+    // 1b. Returning to the tab of a skipped site scans nothing
+    let back = await returnToTab('localhost', '127.0.0.1', '?t=1');
+    assert.deepEqual(back.after, back.before, 'returning to the tab of a skipped site scans, caches and records nothing');
+    assert.deepEqual(back.badge, PAUSED_BADGE, 'and its badge stays paused');
+    console.log('PASS Tab switch: returning to the tab of a skipped site scans nothing');
 
     // 2. Chosen sites, through Settings: the mode, the empty list, Add Current Page, Save
     await admin.reload();
@@ -153,6 +184,12 @@ const PROBE = {
     page = (await visit(at('a.localhost', '?c=1'))).page; await page.close();
     assert.ok(await entries('a.localhost') >= 1, 'a subdomain of a chosen site is scanned');
     console.log('PASS Chosen sites: the site and its subdomains are scanned, any other site is not');
+
+    // 3b. Returning to the tab of a site that is not chosen scans nothing either
+    back = await returnToTab('127.0.0.1', 'localhost', '?t=2');
+    assert.deepEqual(back.after, back.before, 'returning to the tab of a site that is not chosen scans, caches and records nothing');
+    assert.deepEqual(back.badge, PAUSED_BADGE, 'and its badge stays paused');
+    console.log('PASS Tab switch: returning to the tab of a site that is not chosen scans nothing');
 
     // 4. The paused card of a site that is not chosen: its own words, no "Block this domain", and "Scan this site" works
     const blocked = await visit(at('127.0.0.1', '?c=2'));

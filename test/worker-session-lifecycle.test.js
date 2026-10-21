@@ -58,7 +58,7 @@ function harness() {
   return { ctx: context, calls, timers, begin };
 }
 
-for (const boundary of ['late requests', 'cache write', 'badge settings', 'history settings']) {
+for (const boundary of ['late requests', 'site list', 'cache write', 'badge settings', 'history settings']) {
   test(`a superseded finalizer cannot repaint or delete its replacement after ${boundary}`, async () => {
     const h = harness();
     const gate = deferred();
@@ -68,6 +68,7 @@ for (const boundary of ['late requests', 'cache write', 'badge settings', 'histo
       h.ctx.networkUrlsStore.set(7, [{ url: 'https://example.test/sdk' }]);
       h.ctx.detectionEngine = { detectOnPage: () => wait([]) };
     }
+    if (boundary === 'site list') h.ctx.Utils.isUrlBlacklisted = () => wait(false);
     if (boundary === 'cache write') h.ctx.DetectionEngineManager.storeDetection = () => wait({});
     if (boundary === 'badge settings') h.ctx.CategoryManager.getBadgeColors = () => wait({});
     if (boundary === 'history settings') h.ctx.Utils.getHistorySettings = () => wait({});
@@ -91,6 +92,29 @@ for (const boundary of ['late requests', 'cache write', 'badge settings', 'histo
     assert.ok(!h.calls.ended.includes(replacement.keepaliveId));
   });
 }
+
+test('a page excluded while it was being scanned keeps nothing: no cache, History, webhook or page event', async () => {
+  const h = harness();
+  let writes = 0;
+  let sent = 0;
+  const asked = [];
+  h.ctx.DetectionEngineManager.storeDetection = async () => { writes++; return {}; };
+  h.ctx.Settings.sendWebhookIfEnabled = async () => { sent++; };
+  h.ctx.Utils.isUrlBlacklisted = async (url) => { asked.push(url); return true; };
+  const colors = [];
+  h.ctx.chrome.action.setBadgeBackgroundColor = async value => colors.push(value.color);
+  const state = h.begin();
+  await h.ctx.finalizeDetection(7, state);
+  assert.ok(asked.includes('https://example.test/'));
+  assert.equal(writes, 0);
+  assert.equal(sent, 0);
+  assert.equal(h.calls.history.length, 0);
+  assert.equal(h.calls.popup.length, 0);
+  assert.equal(h.calls.page.length, 0);
+  assert.ok(colors.includes(h.ctx.BADGE.COLORS.BLACKLISTED), 'the badge says the site is paused');
+  assert.equal(h.ctx.detectionStates.has(7), false);
+  assert.equal(h.ctx.activeDetections.has(7), false);
+});
 
 test('finalization is idempotent while persisting and cleans only its own successful session', async () => {
   const h = harness();
