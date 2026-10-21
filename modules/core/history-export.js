@@ -17,8 +17,8 @@
   // Loaded before this file in the popup and the worker; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
 
-  const FORMATS = ['json', 'csv', 'txt'];
-  const TYPES = { json: 'application/json', csv: 'text/csv', txt: 'text/plain' };
+  const FORMATS = ['json', 'csv', 'txt', 'md'];
+  const TYPES = { json: 'application/json', csv: 'text/csv', txt: 'text/plain', md: 'text/markdown' };
   const DAY_MS = 24 * 60 * 60 * 1000;
 
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
@@ -89,6 +89,19 @@
     }).join('\n\n---\n\n').concat(items.length ? '\n' : '');
   }
 
+  /** A Markdown table, one row per page; a pipe or line break in a cell cannot break it. */
+  const mdCell = (value) => String(value == null ? '' : value).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+  function buildMarkdown(items, includeTimestamps) {
+    const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note'];
+    const lines = ['# Scrapfly Antibot Detector: History', '', `| ${header.join(' | ')} |`, `| ${header.map(() => '---').join(' | ')} |`];
+    for (const item of items) {
+      const found = (item.detections || []).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
+      lines.push(`| ${[item.title || item.hostname || '', item.url || '', ...(includeTimestamps ? [isoOf(item)] : []),
+        found.length ? found.join('; ') : '-', item.pinned === true ? 'yes' : '', item.note || ''].map(mdCell).join(' | ')} |`);
+    }
+    return `${lines.join('\n')}\n`;
+  }
+
   /**
    * @param {Array<object>} items
    * @param {{format?: string, includeTimestamps?: boolean, now?: number}} [options]
@@ -101,6 +114,7 @@
     let text;
     if (format === 'csv') text = buildCsv(list, includeTimestamps);
     else if (format === 'txt') text = buildText(list, includeTimestamps);
+    else if (format === 'md') text = buildMarkdown(list, includeTimestamps);
     else text = JSON.stringify({ version: '1.0', timestamp: new Date(options.now || Date.now()).toISOString(), itemsCount: list.length, items: list }, null, 2);
     return { text, type: TYPES[format], extension: format, format };
   }

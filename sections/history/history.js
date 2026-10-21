@@ -1659,7 +1659,7 @@ class History {
       return { row, box };
     };
 
-    const format = select(HistoryExport.FORMATS.map(f => [f, f === 'txt' ? 'TXT' : f.toUpperCase()]), HistoryExport.FORMATS.includes(saved.exportFormat) ? saved.exportFormat : 'json');
+    const format = select(HistoryExport.FORMATS.map(f => [f, f === 'txt' ? 'TXT' : f === 'md' ? 'Markdown' : f.toUpperCase()]), HistoryExport.FORMATS.includes(saved.exportFormat) ? saved.exportFormat : 'json');
     const category = select([
       ['all', FormatUtils.t('historyExportAll', 'All')],
       ['antibot', FormatUtils.t('categoryAntibot', 'Anti-bot')],
