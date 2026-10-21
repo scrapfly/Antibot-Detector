@@ -2019,6 +2019,14 @@ class DetectionEngineManager {
                 url: pageUrl
             }, targetDocument).catch(() => {});
 
+            // A watchlist check's tab that landed on a cached page (its watched address redirected there): the check gets
+            // the cached result as the scan's outcome and judges the address itself; the webhook and History are the
+            // check's business, never this tab's
+            if (typeof HistoryWatch !== 'undefined' && HistoryWatch.isWatchTab(tabId)) {
+                HistoryWatch.scanFinished(tabId, pageUrl, storedData.detectionResults || []);
+                return;
+            }
+
             // The webhook, for people who want it on every page load ("Send on every page load"): the setting is read there
             if (Settings && typeof Settings.sendWebhookIfEnabled === 'function' && storedData.detectionResults && storedData.detectionResults.length > 0) {
                 const tab = await chrome.tabs.get(tabId).catch(() => null);

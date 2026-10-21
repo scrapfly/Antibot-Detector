@@ -284,6 +284,21 @@ test('PAGE_LOAD offers nothing to the webhook for a replacement document or a ca
   assert.deepEqual(sent, []);
 });
 
+test('PAGE_LOAD on a watchlist tab that landed on a cached page hands the result to the check, and sends and records nothing', async () => {
+  const h = pageLoadHarness();
+  const sent = [];
+  const finished = [];
+  h.dependencies.Settings = { sendWebhookIfEnabled: async (...args) => { sent.push(args); } };
+  h.context.HistoryWatch = { isWatchTab: () => true, scanFinished: (tabId, url, results) => finished.push({ tabId, url, count: results.length }) };
+  await h.run();
+  assert.deepEqual(sent, [], 'no cache delivery to the webhook');
+  assert.equal(h.effects.filter(effect => effect.kind === 'history').length, 0, 'no History entry of this tab\'s own');
+  assert.equal(finished.length, 1);
+  assert.equal(finished[0].url, 'https://example.test/');
+  assert.equal(finished[0].count, 1);
+  assert.equal(h.effects.find(effect => effect.kind === 'badge').data.text, '1', 'the badge still shows the cached result');
+});
+
 test('PAGE_LOAD retries stop when their document is replaced', async () => {
   const h = pageLoadHarness();
   h.context.Engine.getStoredDetection = async () => null;
