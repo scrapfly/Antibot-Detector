@@ -6898,5 +6898,13 @@
   "historyScanAgain": {
     "message": "Scan again now",
     "description": "History entry menu and details window: clears the page's saved result and scans the page again (reloads the tab that shows it, or opens it in a new tab)"
+  },
+  "rulesDuplicate": {
+    "message": "Duplicate",
+    "description": "Rule card menu: opens the editor on a copy of this rule, as a new custom rule (the original is not changed)"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (copy)",
+    "description": "Name given to a duplicated rule. {0} = the original rule's name"
   }
 }

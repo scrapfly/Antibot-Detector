@@ -14,6 +14,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection tab: Copy offers the uploaded summary, a Markdown table for tickets and chats, or JSON; none of them includes cookie or header values.
 - Keyboard shortcut Alt+Shift+S (Control+Shift+S on Mac) scans the current page again; Settings → General shows it and opens the browser's shortcut settings to change it.
 - History: Open page and Scan again now in an entry's … menu, and Scan again now in its details; the scan reloads the tab that shows the page, or opens it.
+- Rules: Duplicate in a rule's … menu opens the editor on a copy, saved as a new custom rule; the original, official or not, is left as it is.
 
 ### Fixed
 

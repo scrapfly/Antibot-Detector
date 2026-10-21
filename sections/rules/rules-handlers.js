@@ -80,6 +80,49 @@ Rules.prototype.handleExport = function() {
 };
 
 /**
+ * The copy a card's "Duplicate" starts from: the same patterns, combinations,
+ * icon and texts as a new custom rule with an id of its own, named
+ * "<name> (copy)". Nothing of the original's official or edited state comes
+ * along, and the Scrapfly author stays with the original.
+ * @param {object} detector - the rule to copy
+ * @param {object} [options] - { now: Date, name: (base) => text }
+ * @returns {object}
+ */
+Rules.duplicateOf = function(detector, options = {}) {
+  const now = options.now instanceof Date ? options.now : new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const copy = typeof DetectorManager !== 'undefined' && DetectorManager.cleanDetectorCopy
+    ? DetectorManager.cleanDetectorCopy(detector)
+    : JSON.parse(JSON.stringify(detector || {}));
+  for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion', 'minExtensionVersion', 'source', 'official']) delete copy[field];
+  const base = String((detector && (detector.name || detector.displayName || detector.id)) || '').trim();
+  copy.id = `custom-${now.getTime()}`;
+  copy.name = typeof options.name === 'function' ? options.name(base) : `${base} (copy)`;
+  copy.displayName = copy.name;
+  copy.author = DetectionUtils.isReservedAuthor(copy.author) ? '' : (copy.author || '');
+  copy.version = '1.0';
+  copy.enabled = true;
+  copy.detection = copy.detection && typeof copy.detection === 'object' ? copy.detection : {};
+  copy.lastUpdated = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  return copy;
+};
+
+/**
+ * A card's "Duplicate": opens the editor on a copy (see Rules.duplicateOf).
+ * Nothing is saved until Save; Cancel leaves the rules as they were.
+ */
+Rules.prototype.handleDuplicateDetector = function(category, detectorName) {
+  const original = this.detectorManager.getDetector(category, detectorName);
+  if (!original) return null;
+  const t = (typeof I18n !== 'undefined') ? I18n : null;
+  const copy = Rules.duplicateOf(original, {
+    name: (base) => (t && t.format('rulesDuplicateNameFmt', base)) || `${base} (copy)`
+  });
+  this.openEditModal(copy, category, copy.id, true);
+  return copy;
+};
+
+/**
  * A card's "Export": download only that detector
  * @param {string} category
  * @param {string} detectorName - detector id

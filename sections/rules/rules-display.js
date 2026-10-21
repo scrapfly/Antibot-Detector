@@ -136,6 +136,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
   const deleteLabel = FormatUtils.escapeHtml(_tr('btnDelete', 'Delete'));
   const deleteTitle = FormatUtils.escapeAttr(_tr('deleteDetectorTitle', 'Delete detector'));
   const exportLabel = FormatUtils.escapeHtml(_tr('btnExport', 'Export'));
+  const duplicateLabel = FormatUtils.escapeHtml(_tr('rulesDuplicate', 'Duplicate'));
 
   detectors.forEach(({ category, detectorName, detector }) => {
     const detectorIcon = this.getDetectorIcon(detector, category);
@@ -185,7 +186,11 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
                       <span>${FormatUtils.escapeHtml(_tr('resetToOfficial', 'Reset to official'))}</span>
                     </button>`
       : '';
-    const fileItems = `<button class="rules-menu-item export-detector-btn" role="menuitem" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
+    const fileItems = `<button class="rules-menu-item duplicate-detector-btn" role="menuitem" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+                      <span>${duplicateLabel}</span>
+                    </button>
+                    <button class="rules-menu-item export-detector-btn" role="menuitem" data-detector-id="${FormatUtils.escapeAttr(detectorName)}" data-category="${FormatUtils.escapeAttr(category)}">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
                       <span>${exportLabel}</span>
                     </button>`;
@@ -319,6 +324,13 @@ Rules.prototype.setupDetectorCardListeners = function(detectors) {
       const detectorName = btn.dataset.detectorId;
       const entry = detectors.find(d => d.category === category && d.detectorName === detectorName);
       await this.handleResetToOfficial(category, detectorName, entry?.detector?.displayName || detectorName);
+    });
+  });
+
+  rulesList.querySelectorAll('.duplicate-detector-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.handleDuplicateDetector(btn.dataset.category, btn.dataset.detectorId);
     });
   });
 
