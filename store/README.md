@@ -97,3 +97,10 @@ NODE_PATH=/tmp/pw/node_modules node scripts/generate-store-screenshots.js --lang
 ```
 
 The README hero (`assets/readme/hero.png`) comes from `scripts/generate-readme-hero.js`; both scripts share `scripts/lib/store-art.js`.
+
+## Permission justifications (Privacy practices tab)
+
+The dashboard asks why the extension needs each permission when a version that adds one is submitted. 3.0.2 adds `unlimitedStorage`
+(Chrome does not allow it as an optional permission). Suggested text: "Lets the History feature keep more pages when the person chooses a
+size of 12 or 25 MB in Settings → History (it stays at 6 MB unless they choose more). Everything stays on the device." The other
+permissions are unchanged since 3.0.0 (the table is in the README, "Why the extension needs each permission").
