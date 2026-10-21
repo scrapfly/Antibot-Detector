@@ -112,10 +112,13 @@ class History {
 
     const itemsToShow = this.getFilteredItems();
     this.syncFilterChips();
+    // Select mode: what a search or a chip hides is unselected, so an action never reaches an entry nobody sees
+    if (this.selectMode) this.pruneSelection(itemsToShow);
 
     if (this.paginationManager) {
       this.paginationManager.setItems(itemsToShow);
     }
+    if (this.selectMode) this.syncSelectBar();
 
     // The search and the chips match nothing: say so, with a way back, instead of an empty list
     const noResults = itemsToShow.length === 0;
@@ -235,9 +238,15 @@ class History {
       const confidenceTip = hasCardDetections ? FormatUtils.confidenceTip(cardDetections, `${summary.labels.confidence}: ${summary.avgConfidence}%`) : null;
       const difficultyTip = hasCardDetections ? FormatUtils.difficultyTip(cardDetections, summary.difficulty, `${summary.labels.difficulty}: ${summary.difficultyDisplay}`) : null;
 
+      // Select mode (history-select.js): a checkbox first on the card, the card marked when it is selected
+      const selecting = this.selectMode === true;
+      const selected = selecting && this.selectedIds instanceof Set && this.selectedIds.has(item.id);
+      const selectLabel = FormatUtils.escapeAttr(FormatUtils.t('historySelectCheckboxFmt', 'Select {0}', rawTitle));
+
       return `
-        <div class="history-item" data-history-id="${item.id}">
+        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${item.id}">
           <div class="history-item-top">
+            ${selecting ? `<input type="checkbox" class="history-select-input" aria-label="${selectLabel}"${selected ? ' checked' : ''}>` : ''}
             <span class="history-favicon-tile">
               <img src="${faviconSrc}" alt="" class="history-favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
             </span>
@@ -688,6 +697,11 @@ class History {
     document.querySelectorAll('.history-item').forEach(item => {
       item.addEventListener('click', (e) => {
         const historyId = e.currentTarget.dataset.historyId;
+        // Select mode: the card selects instead of opening its details
+        if (this.selectMode) {
+          this.onSelectClick(e, historyId);
+          return;
+        }
         const historyItem = this.historyItems.find(h => h.id === historyId);
 
         if (historyItem) {
@@ -2038,6 +2052,9 @@ class History {
     }
     const clearFiltersBtn = document.querySelector('#historyClearFilters');
     if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', () => this.clearFilters());
+
+    // Select entries: the toolbar item and the bar (history-select.js)
+    if (typeof this.setupSelectListeners === 'function') this.setupSelectListeners();
 
     // Toolbar "…" menu (import / export / clear)
     const menuBtn = document.querySelector('#historyMenuBtn');

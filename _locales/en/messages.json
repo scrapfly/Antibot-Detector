@@ -6990,5 +6990,73 @@
   "historyCompareMdHeadingFmt": {
     "message": "Compare scans: {0}",
     "description": "Heading of the copied Markdown comparison. {0} = the site's host name"
+  },
+  "historySelect": {
+    "message": "Select entries",
+    "description": "History toolbar menu: turns on selection, so several entries can be pinned, watched, exported or deleted together"
+  },
+  "historySelectBarLabel": {
+    "message": "Selected entries",
+    "description": "Accessible name of the bar that holds the actions for the selected History entries"
+  },
+  "historySelectDone": {
+    "message": "Done",
+    "description": "History selection bar: leaves selection mode"
+  },
+  "historySelectAll": {
+    "message": "Select all",
+    "description": "History selection bar: selects every entry the list shows (all pages)"
+  },
+  "historySelectNone": {
+    "message": "Select none",
+    "description": "History selection bar: unselects everything (shown when every entry is selected)"
+  },
+  "historySelectedFmt": {
+    "message": "{0} selected",
+    "description": "History selection bar: how many entries are selected. {0} = a number"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Select {0}",
+    "description": "Accessible name of the checkbox on a History card in selection mode. {0} = the page's title"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Pinned: {0}",
+    "description": "Notice after pinning the selected History entries. {0} = how many were pinned"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Unpinned: {0}",
+    "description": "Notice after unpinning the selected History entries. {0} = how many were unpinned"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Watching: {0}",
+    "description": "Notice after the selected History entries were set to be watched for changes. {0} = how many"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Watching: {0}. Not added: {1} (you can watch up to {2} pages).",
+    "description": "Notice when the watchlist had room for only some of the selected entries. {0} = how many are now watched, {1} = how many were left out, {2} = the most pages that can be watched"
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Stopped watching: {0}",
+    "description": "Notice after the selected History entries stopped being watched. {0} = how many"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Delete selected entries",
+    "description": "Title of the confirmation before deleting the selected History entries"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Delete the selected entries ({0}) from History? This cannot be undone.",
+    "description": "Confirmation before deleting the selected History entries. {0} = how many are selected (a number)"
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Pinned among them: {0}.",
+    "description": "Added to the delete confirmation when some selected entries are pinned. {0} = how many of them are pinned"
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Deleted: {0}",
+    "description": "Notice after deleting the selected History entries. {0} = how many were deleted"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Watching: {0}. Turn on Watch pinned pages in Settings → History for them to be checked.",
+    "description": "Notice after the selected History entries were set to be watched, while Settings → History → Watch pinned pages is off, so no check will run yet. {0} = how many pages. Keep the names of the settings as they are in the interface"
   }
 }

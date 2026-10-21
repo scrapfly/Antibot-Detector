@@ -88,6 +88,7 @@
     REPLACE_ITEMS: 'HISTORY_REPLACE_ITEMS', // { items: [...], mode: 'merge' | 'replace', limit }
     CLEAR: 'HISTORY_CLEAR',
     UPDATE_ITEM: 'HISTORY_UPDATE_ITEM',     // { id, patch: { pinned?: boolean, note?: string } }
+    UPDATE_ITEMS: 'HISTORY_UPDATE_ITEMS',   // { ids: [...], patch: { pinned?: boolean, watch?: boolean } }: Select in History; no notes
     WATCH_NOW: 'HISTORY_WATCH_NOW',         // check the watched pages now (answered by background/history-watch.js)
     PING: 'HISTORY_PING'                    // answered { status: 'ok' } by a worker that has these History features
   });
@@ -469,6 +470,35 @@
           return annotate(item, patch);
         });
         return found ? { items: next, result: { updated: 1 } } : { result: { updated: 0 } };
+      }, store()));
+    });
+
+    // Several entries at once (History → Select): the same pin or watch change for each id, one write.
+    // A note is one entry's own text, so it is never applied to a selection.
+    registry[Messages.UPDATE_ITEMS] = guard(({ request, sendResponse }) => {
+      const ids = new Set((Array.isArray(request && request.ids) ? request.ids : []).filter(id => typeof id === 'string'));
+      const patch = cleanAnnotation(request && request.patch);
+      delete patch.note;
+      if (!ids.size || !Object.keys(patch).length) {
+        sendResponse({ status: 'error', error: 'ids and a pinned or watch change are required' });
+        return true;
+      }
+      return respond(sendResponse, mutate(items => {
+        // The watchlist is short: the pages beyond its room are left as they were, newest first get the room
+        const limit = policy().MAX_WATCHED;
+        let room = patch.watch === true ? limit - items.filter(item => item && item.watch === true).length : Infinity;
+        let updated = 0, skipped = 0;
+        const next = items.map((item) => {
+          if (!item || !ids.has(item.id)) return item;
+          if (patch.watch === true && item.watch !== true) {
+            if (room <= 0) { skipped++; return item; }
+            room--;
+          }
+          updated++;
+          return annotate(item, patch);
+        });
+        const result = { updated, skipped, ...(patch.watch === true ? { limit } : {}) };
+        return updated ? { items: next, result } : { result };
       }, store()));
     });
 

@@ -11,6 +11,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Statistics: a protection's name in the Protections table shows the domains that have it, and a site's name in Domains or Protection changes opens that site's History in a new tab.
 - History: Compare with… in an entry's … menu shows what changed between two saved scans of the same page (protections added, removed, changed in confidence or evidence) and copies it as Markdown.
+- History: Select entries in the toolbar's … menu lets you tick several entries and pin, watch, export or delete them together; a search or a filter that hides an entry also unselects it.
 
 ## [3.0.3] - 2026-10-22
 

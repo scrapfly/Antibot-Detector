@@ -4,6 +4,8 @@
  *
  *   Statistics        a protection's name shows the domains that have it; a site's name opens its History in a new tab,
  *                     already narrowed to that site (popup.html?tab=history&search=...)
+ *   Select entries    History → … → Select entries: checkboxes, the bar, Select all, a search that unselects what it hides,
+ *                     Pin, Watch, Export (a real file) and Delete (asks first), Done and Escape
  *   Compare scans     History → … → Compare with…: the dialog lists the page's other scans, shows what was added, removed
  *                     and changed, copies it as Markdown, and the item is disabled when there is nothing to compare with
  *
@@ -60,7 +62,7 @@ const SEED = [
 (async () => {
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-v304-'));
   const ctx = await chromium.launchPersistentContext(profile, {
-    headless: true, channel: 'chromium', viewport: { width: 420, height: 650 },
+    headless: true, channel: 'chromium', viewport: { width: 420, height: 650 }, acceptDownloads: true,
     args: [`--disable-extensions-except=${REPO}`, `--load-extension=${REPO}`]
   });
   let extId;
@@ -182,6 +184,106 @@ const SEED = [
     assert.ok(md.includes('### Added\n- DataDome (Anti-bot, 80%)\n- Canvas Fingerprint (Fingerprint, 30%)'), md);
     assert.ok(md.includes('### Changed\n- Cloudflare (Anti-bot): 70% → 95% (+25) · New evidence: Headers'), md);
     assert.ok(!md.includes('### Removed'), md);
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('History → Select entries: select, Select all, search prunes, Pin, Watch, Export, Delete, Done', async () => {
+    await seed(SEED);
+    const stored = async () => JSON.parse((await W(() => chrome.storage.local.get('scrapfly_history'))).scrapfly_history).items;
+    const page = await openExtensionPage();
+    await page.$eval('#nav-history', el => el.click());
+    await page.waitForSelector('.history-item', { timeout: 20000 });
+    const count = () => page.$eval('#historySelectCount', el => el.textContent.trim());
+    const checked = () => page.$$eval('.history-item.is-selected', els => els.map(el => el.dataset.historyId).sort());
+    const card = (id) => `.history-item[data-history-id="${id}"]`;
+
+    // Not selecting: no checkboxes, no bar
+    assert.equal(await page.$eval('#historySelectBar', el => el.hidden), true);
+    assert.equal(await page.$$eval('.history-select-input', els => els.length), 0);
+    await page.$eval('#historyMenuBtn', el => el.click());
+    await page.$eval('#selectHistoryBtn', el => el.click());
+    await page.waitForSelector('#historySelectBar:not([hidden])');
+    assert.equal(await page.$$eval('.history-select-input', els => els.length), 5, 'a checkbox on every card');
+    assert.equal(await count(), '0 selected');
+    for (const id of ['historySelectPin', 'historySelectWatch', 'historySelectExport', 'historySelectDelete']) {
+      assert.equal(await page.$eval(`#${id}`, el => el.disabled), true, `${id} needs a selection`);
+    }
+
+    // A click anywhere on a card selects it; the box and the card agree
+    await page.$eval(`${card('c3')} .history-title`, el => el.click());
+    await page.$eval(`${card('n1')} .history-select-input`, el => el.click());
+    assert.deepEqual(await checked(), ['c3', 'n1']);
+    assert.equal(await count(), '2 selected');
+    assert.equal(await page.$eval(`${card('c3')} .history-select-input`, el => el.checked), true);
+    assert.equal(await page.$eval('#historyList .history-item-action-btn', el => getComputedStyle(el).display), 'none', 'the card buttons step aside');
+    await page.$eval(`${card('n1')} .history-title`, el => el.click());
+    assert.deepEqual(await checked(), ['c3']);
+
+    // Select all, then a search hides some: they are unselected, so an action cannot reach them
+    await page.$eval('#historySelectAll', el => el.click());
+    assert.equal(await count(), '5 selected');
+    assert.equal(await page.$eval('#historySelectAll', el => el.textContent.trim()), 'Select none');
+    if (shotsDir) { fs.mkdirSync(shotsDir, { recursive: true }); await page.screenshot({ path: path.join(shotsDir, 'select-mode.png') }); }
+    await page.fill('#historySearch', 'shop.example');
+    await until(async () => (await count()) === '3 selected', 5000, 'the selection follows the search');
+    assert.deepEqual(await checked(), ['c1', 'c2', 'c3']);
+    await page.fill('#historySearch', '');
+    await until(async () => (await page.$$eval('.history-item', els => els.length)) === 5, 5000, 'the full list');
+    assert.equal(await count(), '3 selected', 'what the search hid stays unselected');
+
+    // Pin: the three shop pages; the button then offers Unpin
+    assert.equal(await page.$eval('#historySelectPin span', el => el.textContent.trim()), 'Pin');
+    await page.$eval('#historySelectPin', el => el.click());
+    await until(async () => (await stored()).filter(i => i.pinned === true).length === 3, 8000, 'three pinned entries');
+    assert.deepEqual((await stored()).filter(i => i.pinned).map(i => i.id).sort(), ['c1', 'c2', 'c3']);
+    await until(async () => (await page.$eval('#historySelectPin span', el => el.textContent.trim())) === 'Unpin', 5000, 'the Unpin label');
+    assert.equal(await count(), '3 selected', 'the selection survives the change');
+
+    // Watch: watching pins and flags them
+    await page.$eval('#historySelectWatch', el => el.click());
+    await until(async () => (await stored()).filter(i => i.watch === true).length === 3, 8000, 'three watched entries');
+    assert.equal(await page.$eval('#historySelectWatch span', el => el.textContent.trim()), 'Stop watching');
+    await page.$eval('#historySelectWatch', el => el.click());
+    await until(async () => (await stored()).filter(i => i.watch === true).length === 0, 8000, 'watching stopped');
+
+    // Export the three as one file, in the format Settings holds (JSON)
+    const download = page.waitForEvent('download', { timeout: 10000 });
+    await page.$eval('#historySelectExport', el => el.click());
+    const file = await download;
+    assert.match(file.suggestedFilename(), /^scrapfly-history-\d{4}-\d{2}-\d{2}\.json$/);
+    const exported = JSON.parse(fs.readFileSync(await file.path(), 'utf8'));
+    assert.deepEqual(exported.items.map(i => i.id).sort(), ['c1', 'c2', 'c3']);
+    assert.equal(exported.itemsCount, 3);
+
+    // Delete: it asks first, names the count and how many are pinned, and only then removes
+    await page.$eval('#historySelectAll', el => el.click()); // three of five are selected: all five now
+    assert.equal(await count(), '5 selected');
+    await page.$eval(`${card('c3')} .history-title`, el => el.click()); // unselect c3 (pinned)
+    assert.equal(await count(), '4 selected');
+    await page.$eval('#historySelectDelete', el => el.click());
+    await page.waitForSelector('.notification-confirm', { timeout: 8000 });
+    const message = await page.$eval('.notification-confirm', el => el.innerText.replace(/\s+/g, ' '));
+    assert.ok(/Delete selected entries/.test(message) && /\(4\)/.test(message) && /Pinned among them: 2\./.test(message), message);
+    await page.$eval('.notification-confirm .notification-btn-cancel', el => el.click());
+    await sleep(500);
+    assert.equal((await stored()).length, 5, 'Cancel deletes nothing');
+    await page.$eval('#historySelectDelete', el => el.click());
+    await page.waitForSelector('.notification-confirm', { timeout: 8000 });
+    await page.$eval('.notification-confirm .notification-btn-confirm', el => el.click());
+    await until(async () => (await stored()).length === 1, 8000, 'four entries deleted');
+    assert.deepEqual((await stored()).map(i => i.id), ['c3']);
+
+    // Escape and Done leave Select mode: no bar, no checkboxes
+    await until(async () => (await page.$$eval('.history-item', els => els.length)) === 1, 5000, 'the list after deleting');
+    await page.keyboard.press('Escape');
+    await until(() => page.$eval('#historySelectBar', el => el.hidden), 5000, 'Escape leaves Select mode');
+    assert.equal(await page.$$eval('.history-select-input', els => els.length), 0);
+    await page.$eval('#historyMenuBtn', el => el.click());
+    await page.$eval('#selectHistoryBtn', el => el.click());
+    await page.waitForSelector('#historySelectBar:not([hidden])');
+    await page.$eval('#historySelectDone', el => el.click());
+    assert.equal(await page.$eval('#historySelectBar', el => el.hidden), true);
     await page.close();
   });
 
