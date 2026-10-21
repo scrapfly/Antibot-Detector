@@ -454,13 +454,15 @@ test('Copy entry names what matched and never copies a cookie, header, query or 
   const view = Object.create(context.History.prototype);
   view.detectorManager = null;
   const entry = fullEntry(1, 1, true);
+  entry.url = 'https://site1.example/checkout?session=SECRETURLQUERY#SECRETFRAG';
   entry.detections[0].matches.push(
     { type: 'cookie', name: 'datadome', value: 'datadome=SECRETCOOKIEVALUE', confidence: 90 },
     { type: 'payload', pattern: 'sensor_data', value: '{"sensor_data":"SECRETPAYLOAD"}', confidence: 80 },
     { type: 'url', fullUrl: 'https://c.example/tags.js?token=SECRETQUERY#frag', confidence: 50 }
   );
   const text = view.formatHistoryItemText(entry);
-  for (const secret of ['SECRETCOOKIEVALUE', 'SECRETPAYLOAD', 'SECRETQUERY', '09Ax', 'yyyy']) {
+  assert.ok(text.startsWith('URL: https://site1.example/checkout\n'), text.slice(0, 80));
+  for (const secret of ['SECRETCOOKIEVALUE', 'SECRETPAYLOAD', 'SECRETQUERY', 'SECRETURLQUERY', 'SECRETFRAG', '09Ax', 'yyyy']) {
     assert.ok(!text.includes(secret), `copied ${secret}`);
   }
   for (const label of ['COOKIE: _GRECAPTCHA', 'COOKIE: datadome', 'HEADER: x-long', 'DOM: .g-recaptcha[data-sitekey]',

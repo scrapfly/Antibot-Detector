@@ -19,7 +19,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
-- History → Copy entry names the cookies, headers and addresses that matched without their values, like every other copy; it used to copy live tokens.
+- History → Copy entry names the cookies, headers and addresses that matched without their values, and copies the page address without its query, like every other copy; it used to copy live tokens.
 
 ## [3.0.2] - 2026-10-20
 

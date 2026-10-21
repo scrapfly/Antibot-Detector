@@ -154,3 +154,11 @@ test('Markdown export: a table with one escaped row per page, dated when timesta
   assert.ok(!HistoryExportMd.build(items, { format: 'md', includeTimestamps: false }).text.includes('Date'));
   assert.strictEqual(HistoryExportMd.fileName('md', 0), 'scrapfly-history-1970-01-01.md');
 });
+
+test('Markdown export: a page title cannot become an image, a link, HTML or a new row', () => {
+  const HistoryExportMd = require('../modules/core/history-export.js');
+  const text = HistoryExportMd.build([{ url: 'https://a.example/', title: '![x](https://t.example/p.gif) <img src=x> [l](u) *b* `c`', detections: [] }], { format: 'md' }).text;
+  const row = text.split('\n')[4];
+  assert.ok(row.includes('!\\[x\\](https://t.example/p.gif) \\<img src=x\\> \\[l\\](u) \\*b\\* \\`c\\`'), row);
+  assert.strictEqual((row.match(/(?<!\\)\|/g) || []).length, 7, 'six cells, no extra column');
+});

@@ -613,6 +613,8 @@ class Detection {
         const items = Array.from(copyOverviewMenu.querySelectorAll('[data-copy-format]'));
         const at = items.indexOf(document.activeElement);
         if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeCopyMenu(true); }
+        else if (e.key === 'Tab') closeCopyMenu();
+        else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); items[e.key === 'Home' ? 0 : items.length - 1].focus(); }
         else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
           const step = e.key === 'ArrowDown' ? 1 : -1;

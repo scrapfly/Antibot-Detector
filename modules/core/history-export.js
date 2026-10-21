@@ -90,7 +90,8 @@
   }
 
   /** A Markdown table, one row per page; a pipe or line break in a cell cannot break it. */
-  const mdCell = (value) => String(value == null ? '' : value).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+  // Markdown and HTML characters are escaped: a page title must not become an image, a link or a new row when pasted
+  const mdCell = (value) => String(value == null ? '' : value).replace(/[\\`*_[\]<>|~]/g, (c) => `\\${c}`).replace(/[\r\n]+/g, ' ').trim();
   function buildMarkdown(items, includeTimestamps) {
     const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note'];
     const lines = ['# Scrapfly Antibot Detector: History', '', `| ${header.join(' | ')} |`, `| ${header.map(() => '---').join(' | ')} |`];

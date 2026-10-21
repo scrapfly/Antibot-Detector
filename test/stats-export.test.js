@@ -201,3 +201,9 @@ test('Markdown statistics: range, totals, protections and sites, escaped, from t
   assert.strictEqual(SE.filename('md', { days: 7, now }).endsWith('.md'), true);
   assert.throws(() => SE.filename('xml', { days: 7, now }), /Unsupported/);
 });
+
+test('Markdown statistics: the range is written in calendar days of the time zone it names', () => {
+  const SE = require('../sections/stats/stats-export.js');
+  const payload = { timeZone: 'Asia/Tokyo', range: { start: '2026-10-14T15:00:00.000Z', end: '2026-10-20T16:30:00.000Z' }, summary: { totals: {} } };
+  assert.ok(SE.toMarkdown(payload).includes('Range: 2026-10-15 to 2026-10-21 (Asia/Tokyo)'));
+});

@@ -9,14 +9,14 @@ const vm = require('vm');
 const root = path.join(__dirname, '..');
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
-function load(openTabs = []) {
+function load(openTabs = [], { reloadFails = false } = {}) {
   const calls = { created: [], reloaded: [], messages: [], activated: [], focused: [] };
   const chrome = {
     runtime: { getURL: p => p, async sendMessage(m) { calls.messages.push(m); return { status: 'cleared' }; } },
     tabs: {
       async create(o) { calls.created.push(o); return { id: 99 }; },
       async query(q) { calls.query = q; return openTabs; },
-      async reload(id) { calls.reloaded.push(id); },
+      async reload(id) { if (reloadFails) throw new Error('No tab with id'); calls.reloaded.push(id); },
       async update(id, o) { calls.activated.push([id, o]); }
     },
     windows: { async update(id, o) { calls.focused.push([id, o]); } }
@@ -76,4 +76,10 @@ test('the menu and the details window offer both, wired to these methods', () =>
   const js = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
   assert.ok(js.includes("action === 'open'") && js.includes('this.openHistoryItem(item)'));
   assert.ok(js.includes("action === 'rescan'") && js.includes('this.rescanHistoryItem(item)'));
+});
+
+test('Scan again opens the page when the tab that showed it closed in between', async () => {
+  const { view, calls } = load([{ id: 5, windowId: 2, url: item.url }], { reloadFails: true });
+  assert.strictEqual(await view.rescanHistoryItem(item), 'opened');
+  assert.deepStrictEqual(plain(calls).created, [{ url: item.url, active: true }]);
 });

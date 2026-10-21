@@ -66,9 +66,15 @@
         },
 
         /** Sets the title of a tab; never throws (a closed tab or an old browser). */
+        /** tabId -> number of the latest apply/reset: a call that waited for the texts and was overtaken sets nothing */
+        _turns: new Map(),
+
         async apply(chromeApi, tabId, state, detections) {
             if (!chromeApi || !chromeApi.action || typeof chromeApi.action.setTitle !== 'function') return null;
+            const turn = (this._turns.get(tabId) || 0) + 1;
+            this._turns.set(tabId, turn);
             if (root.I18n && typeof root.I18n.ready === 'function') await root.I18n.ready().catch(() => {});
+            if (this._turns.get(tabId) !== turn) return null;
             const title = this.text(state, detections, this.workerTr());
             try { await chromeApi.action.setTitle({ tabId, title }); } catch (_) { return null; }
             return title;
@@ -77,6 +83,8 @@
         /** Back to the manifest's title, as before a scan. */
         async reset(chromeApi, tabId) {
             if (!chromeApi || !chromeApi.action || typeof chromeApi.action.setTitle !== 'function') return;
+            this._turns.set(tabId, (this._turns.get(tabId) || 0) + 1);
+            if (this._turns.size > 500) this._turns.clear();
             try { await chromeApi.action.setTitle({ tabId, title: this.DEFAULT }); } catch (_) { /* closed tab */ }
         }
     };

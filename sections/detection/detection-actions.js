@@ -478,7 +478,8 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
  * @returns {string}
  */
 DetectionActions.buildDetectionsMarkdown = function(payload, format = detectionActionsFormat) {
-    const cell = (value) => String(value == null ? '' : value).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+    // Markdown and HTML characters are escaped, so no name or address turns into a link, an image or a new row
+    const cell = (value) => String(value == null ? '' : value).replace(/[\\`*_[\]<>|~]/g, (c) => `\\${c}`).replace(/[\r\n]+/g, ' ').trim();
     const p = payload && typeof payload === 'object' ? payload : {};
     const list = Array.isArray(p.detections) ? p.detections : [];
     const summary = p.summary || {};

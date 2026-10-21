@@ -73,3 +73,20 @@ test('every place that paints a skipped, clean, off or count badge also sets the
     assert.ok(titles >= badges, `${file}: ${badges} badge states, ${titles} hover texts`);
   }
 });
+
+test('an apply that waited for the texts and was overtaken by a newer scan sets nothing', async () => {
+  const calls = [];
+  let release;
+  const saved = globalThis.I18n;
+  globalThis.I18n = { ready: () => new Promise(r => { release = r; }), format: () => null };
+  try {
+    const chrome = { action: { async setTitle(opts) { calls.push(opts.title); } } };
+    const late = ToolbarTitle.apply(chrome, 3, 'clean');
+    await ToolbarTitle.reset(chrome, 3);
+    release();
+    assert.strictEqual(await late, null);
+    assert.deepStrictEqual(calls, [ToolbarTitle.DEFAULT]);
+  } finally {
+    globalThis.I18n = saved;
+  }
+});

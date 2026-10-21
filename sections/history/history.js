@@ -860,7 +860,13 @@ class History {
       Logger.warn('UI', '[History] Could not clear the saved result before the scan:', error && error.message);
     }
     if (open) {
-      await chrome.tabs.reload(open.id);
+      try {
+        await chrome.tabs.reload(open.id);
+      } catch (_) {
+        // The tab closed in between: open the page instead
+        await chrome.tabs.create({ url: historyItem.url, active: true });
+        return 'opened';
+      }
       await chrome.tabs.update(open.id, { active: true }).catch(() => {});
       if (typeof open.windowId === 'number' && chrome.windows && chrome.windows.update) {
         await chrome.windows.update(open.windowId, { focused: true }).catch(() => {});
@@ -881,7 +887,8 @@ class History {
     const title = (historyItem.title && historyItem.title !== 'Untitled')
       ? historyItem.title
       : L('historyUiUntitled', 'Untitled');
-    let text = L('clipboardUrlFmt', 'URL: {0}', historyItem.url) + '\n';
+    // The address without its query and fragment: they can hold session tokens (like the Detection tab's copies)
+    let text = L('clipboardUrlFmt', 'URL: {0}', String(historyItem.url || '').replace(/[?#].*$/s, '')) + '\n';
     text += L('clipboardTitleFmt', 'Title: {0}', title) + '\n';
     text += L('clipboardTimestampFmt', 'Timestamp: {0}', FormatUtils.formatDateTime(historyItem.timestamp)) + '\n';
     text += '\n' + L('clipboardDetectionsListFmt', 'Detections ({0}):', historyItem.detections?.length || 0) + '\n';

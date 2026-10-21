@@ -122,12 +122,17 @@
      */
     toMarkdown(payload) {
       const md = (value) => String(value === null || value === undefined ? '' : value)
-        .replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+        .replace(/[\\`*_[\]<>|~]/g, (c) => `\\${c}`).replace(/[\r\n]+/g, ' ').trim();
       const summary = payload.summary || {};
       const totals = summary.totals || {};
       const range = payload.range || {};
-      const from = range.start ? String(range.start).slice(0, 10) : 'all time';
-      const to = range.end ? String(range.end).slice(0, 10) : '';
+      // Calendar days in the time zone the export names (the ISO strings are UTC)
+      const day = (value) => {
+        try { return new Intl.DateTimeFormat('en-CA', { timeZone: payload.timeZone || 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value)); }
+        catch (_) { return String(value).slice(0, 10); }
+      };
+      const from = range.start ? day(range.start) : 'all time';
+      const to = range.end ? day(range.end) : '';
       const lines = ['# Scrapfly Antibot Detector: statistics', '',
         `Range: ${md(from)}${to ? ` to ${md(to)}` : ''} (${md(payload.timeZone)})`, '',
         `- Pages: ${Number(totals.entries) || 0}`,
