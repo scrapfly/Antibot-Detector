@@ -45,6 +45,7 @@ importScripts(
     './modules/core/history-policy.js',
     './modules/core/history-export.js',
     './background/history-recorder.js',
+    './background/notification-clicks.js',
     './modules/core/webhook-body.js',
     './modules/detection/public-summary.js',
     './modules/core/webhook-filter.js',

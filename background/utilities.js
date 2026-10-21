@@ -219,6 +219,7 @@ function initializeServices() {
     setupHeaderCapture();
     setupMessageListeners();
     setupTabListeners();
+    if (typeof NotificationClicks !== 'undefined') NotificationClicks.register();
 
     Logger.background('Services initialized');
 }

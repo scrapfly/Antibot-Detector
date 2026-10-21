@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.3] - 2026-10-21
 
+### Added
+
+- Clicking a "Protections changed" notification opens that page; the backup-failed and History-full notices open Settings → History.
+
 ### Fixed
 
 - History → Copy entry names the cookies, headers and addresses that matched without their values, like every other copy; it used to copy live tokens.

@@ -274,7 +274,7 @@ class HistoryRecorder {
         if (diff.changed) fresh.changed = { at: now, added: diff.added, removed: diff.removed };
         const alert = diff.changed && earlier
           && (settings.historyChangeAlerts === 'all' || (settings.historyChangeAlerts === 'pinned' && earlier.pinned === true))
-          ? { hostname: entryHostname, added: diff.added, removed: diff.removed }
+          ? { hostname: entryHostname, url: fresh.url, added: diff.added, removed: diff.removed }
           : null;
 
         let next;
@@ -340,7 +340,7 @@ class HistoryRecorder {
         changed: { at: now, added: diff.added, removed: diff.removed }
       });
       const alert = settings.historyChangeAlerts === 'all' || settings.historyChangeAlerts === 'pinned'
-        ? { hostname: entry.hostname, added: diff.added, removed: diff.removed }
+        ? { hostname: entry.hostname, url: updated.url || entry.url, added: diff.added, removed: diff.removed }
         : null;
       return { items: [updated, ...history.filter((_, i) => i !== index)], result: { found: true, changed: true, added: diff.added, removed: diff.removed, alert } };
     }, chrome.storage.local);
@@ -358,7 +358,10 @@ class HistoryRecorder {
     const parts = [];
     if (alert.added.length) parts.push(text('historyChangeAlertAddedFmt', 'Added: {0}', alert.added.join(', ')));
     if (alert.removed.length) parts.push(text('historyChangeAlertRemovedFmt', 'Removed: {0}', alert.removed.join(', ')));
-    chrome.notifications.create(`scrapfly-history-change-${Date.now()}`, {
+    const id = `scrapfly-history-change-${Date.now()}`;
+    // A click opens the page (background/notification-clicks.js)
+    if (typeof NotificationClicks !== 'undefined') await NotificationClicks.remember(id, alert.url, chrome).catch(() => {});
+    chrome.notifications.create(id, {
       type: 'basic',
       iconUrl: chrome.runtime.getURL('icons/icon128.png'),
       title: text('historyChangeAlertTitleFmt', 'Protections changed on {0}', alert.hostname),

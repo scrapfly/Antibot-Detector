@@ -52,7 +52,7 @@ class ScrapflyPopup {
       await this.initializeSections();
 
       // Back where the user was after a language change, else the default tab
-      if (!(await this.restoreAfterLanguageChange())) {
+      if (!(await this.restoreAfterLanguageChange()) && !(await this.openFromAddress())) {
         await this.loadAndApplyDefaultTab();
       }
 
@@ -139,6 +139,38 @@ class ScrapflyPopup {
     await this.switchTab(tabs.includes(state.tab) ? state.tab : 'detection');
     this.settings.showSettings();
     if (state.settingsTab) this.settings.switchTab(state.settingsTab);
+    return true;
+  }
+
+  /**
+   * `popup.html?tab=history&settings=history`, as a notification click opens it
+   * (background/notification-clicks.js): that tab, and Settings on that sub-tab.
+   * @param {string} search - location.search
+   * @returns {{tab: string|null, settingsTab: string|null}}
+   */
+  static routeFrom(search) {
+    let params;
+    try { params = new URLSearchParams(String(search || '')); } catch (_) { return { tab: null, settingsTab: null }; }
+    const tabs = ['detection', 'history', 'rules', 'advanced'];
+    const settingsTabs = ['general', 'detection', 'history', 'data'];
+    const tab = params.get('tab');
+    const settingsTab = params.get('settings');
+    return {
+      tab: tabs.includes(tab) ? tab : null,
+      settingsTab: settingsTabs.includes(settingsTab) ? settingsTab : null
+    };
+  }
+
+  /** Opens what the page address asks for; false when it asks for nothing. */
+  async openFromAddress() {
+    const route = ScrapflyPopup.routeFrom(typeof location !== 'undefined' ? location.search : '');
+    if (!route.tab && !route.settingsTab) return false;
+    if (route.tab) await this.switchTab(route.tab);
+    else await this.loadAndApplyDefaultTab();
+    if (route.settingsTab) {
+      this.settings.showSettings();
+      this.settings.switchTab(route.settingsTab);
+    }
     return true;
   }
 
