@@ -38,6 +38,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 // The canvas calls are spelled in pieces, so no rule that reads the page's text can find them: only the JS hooks can
 const PAGE = (marker) => `<!doctype html><html><head><title>Hooks probe</title></head><body><p>${marker}</p>
 <canvas id="c" width="20" height="20"></canvas>
+<iframe id="f" src="/frame"></iframe>
 <script>
   const word = (...parts) => parts.join('');
   const c = document.getElementById('c'); const g = c.getContext('2d');
@@ -45,6 +46,7 @@ const PAGE = (marker) => `<!doctype html><html><head><title>Hooks probe</title><
 </script></body></html>`;
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
+  if (url.pathname === '/frame') { res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' }); return res.end('<!doctype html><html><head><title>Frame</title></head><body><p>frame</p></body></html>'); }
   if (url.pathname === '/canvas') { res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' }); return res.end(PAGE('hooks-probe-marker')); }
   if (url.pathname === '/clean') { res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' }); return res.end('<!doctype html><html><head><title>Clean</title></head><body><p>nothing here</p></body></html>'); }
   res.writeHead(404); res.end();
@@ -119,6 +121,17 @@ const PROBE = {
       return { entry, page, tab };
     };
     const hasCanvas = (entry) => entry.names.some(name => /canvas/i.test(name || ''));
+    // Which of the page's and its frame's methods carry a wrapper of ours: a wrapper is given its own toString (so it
+    // reads as native), a native method has none of its own
+    const wrappedIn = (page) => page.evaluate(async () => {
+      const frame = document.getElementById('f');
+      if (!frame.contentDocument || frame.contentDocument.readyState !== 'complete') await new Promise(resolve => frame.addEventListener('load', resolve, { once: true }));
+      const wrapped = (fn) => typeof fn === 'function' && Object.prototype.hasOwnProperty.call(fn, 'toString');
+      const win = frame.contentWindow;
+      const accessor = (w) => Object.getOwnPropertyDescriptor(w.HTMLIFrameElement.prototype, 'contentWindow').get;
+      return { topCanvas: wrapped(HTMLCanvasElement.prototype.toDataURL), frameCanvas: wrapped(win.HTMLCanvasElement.prototype.toDataURL),
+        topAccessor: wrapped(accessor(window)), frameAccessor: wrapped(accessor(win)) };
+    });
 
     // Setup: the probe rule, results cached per full address, English, no hooks off
     const admin = await popupPage();
@@ -129,7 +142,13 @@ const PROBE = {
 
     // 1. Hooks on
     const canvasUrl = at('127.0.0.1', '/canvas', '?h=1');
-    let { entry } = await scan(canvasUrl);
+    const on = await scan(canvasUrl, { keepOpen: true });
+    let entry = on.entry;
+    // With the hooks on: the page's own hooks are taken off when the scan ends, the frame's early recorders and the
+    // frame accessors stay (they route a frame's later calls to the next install)
+    const onState = await wrappedIn(on.page);
+    assert.deepEqual(onState, { topCanvas: false, frameCanvas: true, topAccessor: true, frameAccessor: true }, `with the hooks on, the frame stays watched after the scan: ${JSON.stringify(onState)}`);
+    await on.page.close();
     assert.ok(entry.names.includes('Hooks Probe'), 'the content probe is found');
     assert.ok(hasCanvas(entry), `the canvas calls are watched: ${JSON.stringify(entry.evidence)}`);
     assert.ok(Object.entries(entry.evidence).some(([name, types]) => /canvas/i.test(name) && types.includes('js_hooks')), 'and it is the JS hooks that found them');
@@ -144,7 +163,9 @@ const PROBE = {
     assert.ok(entry.names.includes('Hooks Probe'), 'the content probe is still found');
     assert.ok(!hasCanvas(entry), `the canvas calls are not watched: ${JSON.stringify(entry.evidence)}`);
     assert.equal(entry.hooksOff, true, 'the result is marked as found without the hooks');
-    console.log('PASS Hooks off: the same address is scanned again (the result found with hooks was not reused), the probe is found, Canvas Fingerprint is not, the result is marked');
+    const offState = await wrappedIn(off.page);
+    assert.deepEqual(offState, { topCanvas: false, frameCanvas: false, topAccessor: false, frameAccessor: false }, `with the hooks off, nothing of the page or its frame is wrapped: ${JSON.stringify(offState)}`);
+    console.log('PASS Hooks off: the same address is scanned again (the result found with hooks was not reused), the probe is found, Canvas Fingerprint is not, the result is marked, nothing in the page or its frame is wrapped');
 
     // 3. The popup of that site says fingerprinting is not checked
     let popup = await popupPage(off.tab);

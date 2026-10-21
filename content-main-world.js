@@ -422,6 +422,11 @@
   let earlyRetireTimer = null;
   let activeHookReporter = null;    // the current install's reporter, for calls after it
   const instrumentedDocuments = new WeakSet();
+  // What the early phase put into child frames (recorders, frame accessors, frame observers): the real hooks
+  // leave these in place (frame calls route to the current install), a hooks-off install takes them off
+  const frameRecorders = [];   // {obj, propertyName, originalDescriptor, replacement} in child windows
+  const frameAccessors = [];   // {obj, propertyName, descriptor, replacement} contentWindow-like getters
+  const frameObservers = [];   // MutationObservers watching for new frames
   // Taken before any page script can replace it
   const NativeMutationObserver = typeof window.MutationObserver === 'function' ? window.MutationObserver : null;
 
@@ -522,7 +527,8 @@
     instrumentedDocuments.add(doc);
     for (const { target } of earlyTargets) {
       try {
-        wrapWithRecorder(win, target);
+        const wrapped = wrapWithRecorder(win, target);
+        if (wrapped) frameRecorders.push(wrapped);
       } catch (e) {
         // Not hookable in this window
       }
@@ -561,6 +567,7 @@
     try {
       const observer = new NativeMutationObserver(() => instrumentFramesOf(win, accessors));
       observer.observe(doc, { childList: true, subtree: true });
+      frameObservers.push(observer);
     } catch (e) {
       // No frame watching in this document
     }
@@ -587,7 +594,9 @@
             return result;
           }
         };
-        Object.defineProperty(obj, propertyName, { ...descriptor, get: disguiseAs(getter, original) });
+        const replacement = disguiseAs(getter, original);
+        Object.defineProperty(obj, propertyName, { ...descriptor, get: replacement });
+        frameAccessors.push({ obj, propertyName, descriptor, replacement });
       } catch (e) {
         // Accessor missing in this browser
       }
@@ -630,6 +639,33 @@
       }
     }
     earlyRecorders.clear();
+  }
+
+  // A site with the JS hooks off gets no wrappers at all: the recorders put into its frames, the frame accessors
+  // and the frame observers go too (unless the page replaced them since). The bind shims stay: they only keep
+  // the page's own calls working. Frames seen later start over, so a frame is never instrumented twice
+  function retireFrameInstrumentation() {
+    for (const observer of frameObservers.splice(0)) {
+      try { observer.disconnect(); } catch (e) { /* already gone with its document */ }
+    }
+    for (const { obj, propertyName, originalDescriptor, replacement } of frameRecorders.splice(0)) {
+      try {
+        const current = Object.getOwnPropertyDescriptor(obj, propertyName);
+        if (current && current.get === replacement.get && current.value === replacement.value) {
+          Object.defineProperty(obj, propertyName, originalDescriptor);
+        }
+      } catch (e) {
+        // The frame is gone or cross-origin now: nothing to restore
+      }
+    }
+    for (const { obj, propertyName, descriptor, replacement } of frameAccessors.splice(0)) {
+      try {
+        const current = Object.getOwnPropertyDescriptor(obj, propertyName);
+        if (current && current.get === replacement) Object.defineProperty(obj, propertyName, descriptor);
+      } catch (e) {
+        // Stays wrapped
+      }
+    }
   }
 
   // The targets called before the first install event; recording stops here
@@ -1117,6 +1153,8 @@
     }
     // The real hooks resolve the APIs next: take the early recorders off first
     restoreEarlyRecorders();
+    // JS hooks off on this site (Settings → Detection): nothing stays wrapped, in the page or in its frames
+    if (event.detail?.hooksOff === true) retireFrameInstrumentation();
     // Independent of the hook cycle and of cache hits: these responses often
     // come long after the scan (a challenge when a message is sent), and the
     // worker adds what they show to the page's result when they do

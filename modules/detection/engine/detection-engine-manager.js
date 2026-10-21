@@ -184,8 +184,9 @@ class DetectionEngineManager {
             const enableJsApi = actualSettings.jsApi?.enableJsApi ?? false;
             const hooksConfig = HooksConfig.fromSettings(actualSettings);
             // A site where JS hooks are off (Settings → Detection → Sites without JS hooks): the install carries no hooks
-            // and no response capture, so nothing of the page is wrapped and the early recorders come off at once. The
-            // window checks stay: they only read the page's globals
+            // and no response capture; the MAIN world takes its early recorders off the page and its frames, along with
+            // the frame accessors (only the bind shims stay, which keep the page's own calls working). The window checks
+            // stay: they only read the page's globals
             const hooksOff = ScanScope.hooksOff(actualSettings.detection, window.location?.hostname);
             if (hooksOff) Logger.debug('DETECTION', 'JS hooks are off on this site');
 
