@@ -99,7 +99,8 @@
       "historyAutoPinHard": false,
       "historyAutoPinVendors": [],
       "historyAutoPinMinConfidence": 80,
-      "historyMaxMB": 6
+      "historyMaxMB": 6,
+      "historyWatch": "off"
     },
 
     "duplicatePrevention": {

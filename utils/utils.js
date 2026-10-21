@@ -378,7 +378,9 @@ class Utils {
       historyAutoPinVendors: Array.isArray(historySettings.historyAutoPinVendors) ? historySettings.historyAutoPinVendors.filter(name => typeof name === 'string') : [],
       historyAutoPinMinConfidence: historySettings.historyAutoPinMinConfidence,
       // The size History may take (HistoryStore.budgetFor reads it; larger than 6 MB needs the unlimitedStorage permission)
-      historyMaxMB: historySettings.historyMaxMB
+      historyMaxMB: historySettings.historyMaxMB,
+      // The watchlist (HistoryPolicy.watchModeOf reads it: off, daily or weekly)
+      historyWatch: historySettings.historyWatch
     };
   }
 

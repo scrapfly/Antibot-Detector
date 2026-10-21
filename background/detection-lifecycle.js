@@ -302,6 +302,11 @@ async function finalizeDetection(tabId, state) {
         Logger.detection(`${Logger.hostOf(state.url)}: rescan found nothing, kept the cached detections`);
     }
 
+    // A watchlist check is waiting for this scan: it gets the finished results, and the scan leaves no History entry
+    // of its own (the check updates the page it watches) and sends nothing to the webhook
+    const watching = typeof HistoryWatch !== 'undefined' && HistoryWatch.isWatchTab(tabId);
+    if (watching) HistoryWatch.scanFinished(tabId, state.url, finalResults);
+
     // Update state with expiry info for immediate popup queries
     if (storedDataWithExpiry) {
         state.expiry = storedDataWithExpiry.expiry;
@@ -349,7 +354,7 @@ async function finalizeDetection(tabId, state) {
     if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
     // Save complete detections (includes hooks/fingerprints) to history
-    if (finalResults.length > 0 && !preservedExistingCache) {
+    if (finalResults.length > 0 && !preservedExistingCache && !watching) {
         try {
             const pageData = {
                 url: state.url,
@@ -376,7 +381,7 @@ async function finalizeDetection(tabId, state) {
 
     // The webhook gets the finished results (hooks, fingerprints and late requests included) of a page scanned just now
     // (whatever happens to the webhook never fails the scan)
-    if (finalResults.length > 0 && !preservedExistingCache && DetectionSessionStore.isCurrent(tabId, state)) {
+    if (finalResults.length > 0 && !preservedExistingCache && !watching && DetectionSessionStore.isCurrent(tabId, state)) {
         try {
             await Settings.sendWebhookIfEnabled({
                 url: state.url,

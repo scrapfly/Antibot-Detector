@@ -302,6 +302,44 @@ class HistoryRecorder {
     }
   }
 
+  /**
+   * The result of a watchlist check, applied to the page that was watched: never a new entry.
+   * Unchanged: only the time of the check is kept. Changed: the entry takes the new scan (same id; its pin, note and
+   * watch stay), moves to the top, carries the Changed mark, and a notification says what changed (as for any page
+   * whose protections change, when Settings → History alerts for pinned pages or for all).
+   * @param {string} entryId
+   * @param {Array} detectionResults  the finished results of the check
+   * @returns {Promise<{found: boolean, changed: boolean, added?: string[], removed?: string[]}>}
+   */
+  static async applyWatchResult(entryId, detectionResults, chrome, now = Date.now()) {
+    const settings = await Utils.getHistorySettings();
+    const { result } = await HistoryStore.mutate((history) => {
+      const index = history.findIndex(item => item && item.id === entryId && item.pinned === true && item.watch === true);
+      if (index === -1) return { result: { found: false, changed: false } };
+      const entry = history[index];
+      const diff = HistoryPolicy.diffProtections(entry.detections, detectionResults);
+      if (!diff.changed) {
+        const next = history.slice();
+        next[index] = Object.assign({}, entry, { watchedAt: now });
+        return { items: next, result: { found: true, changed: false } };
+      }
+      const updated = Object.assign({}, entry, {
+        timestamp: now,
+        watchedAt: now,
+        detections: detectionResults,
+        detectionCount: detectionResults.length,
+        categories: [...new Set(detectionResults.map(d => d.category))],
+        changed: { at: now, added: diff.added, removed: diff.removed }
+      });
+      const alert = settings.historyChangeAlerts === 'all' || settings.historyChangeAlerts === 'pinned'
+        ? { hostname: entry.hostname, added: diff.added, removed: diff.removed }
+        : null;
+      return { items: [updated, ...history.filter((_, i) => i !== index)], result: { found: true, changed: true, added: diff.added, removed: diff.removed, alert } };
+    }, chrome.storage.local);
+    await this.notifyChange(result && result.alert, chrome).catch(() => {});
+    return { found: !!(result && result.found), changed: !!(result && result.changed), added: result && result.added, removed: result && result.removed };
+  }
+
   /** A notification when a page you scanned before gained or lost a protection (Settings → History). */
   static async notifyChange(alert, chrome) {
     if (!alert || !chrome?.notifications?.create) return;

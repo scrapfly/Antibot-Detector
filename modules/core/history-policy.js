@@ -8,6 +8,7 @@
  *   diffProtections()   which protections a page gained or lost since its last scan
  *   shouldAutoPin()     does this page pin itself? (a hard protection, or one the person named)
  *   countAutoPins()     how many entries were pinned automatically (they are capped by MAX_AUTO_PINS)
+ *   watchModeOf()       the watchlist setting (off, daily or weekly); watchedOf() the entries it checks (at most MAX_WATCHED)
  *   normalizeDomains()  the "don't record these sites" list, from text or an array
  */
 (function(root) {
@@ -26,6 +27,9 @@
   const MAX_AUTO_PINS = 50;
   // A detection weaker than this does not pin a page (the engine's own default match confidence)
   const AUTO_PIN_MIN_CONFIDENCE = 80;
+  // The watchlist re-scans pinned pages in the background: how often, and how many pages at most
+  const WATCH_MODES = Object.freeze(['off', 'daily', 'weekly']);
+  const MAX_WATCHED = 10;
 
   const clampInt = (value, min, max, fallback) => {
     const n = parseInt(value, 10);
@@ -114,8 +118,22 @@
     return (Array.isArray(items) ? items : []).filter(item => item && item.pinned === true && item.autoPinned === true).length;
   }
 
+  /** The watchlist setting: 'daily' or 'weekly', anything else is off. */
+  function watchModeOf(settings) {
+    const mode = settings && settings.historyWatch;
+    return WATCH_MODES.includes(mode) ? mode : 'off';
+  }
+
+  /** The entries the watchlist checks: pinned and marked to watch, the one checked longest ago first, at most MAX_WATCHED. */
+  function watchedOf(items) {
+    return (Array.isArray(items) ? items : [])
+      .filter(item => item && item.pinned === true && item.watch === true && typeof item.url === 'string' && item.url)
+      .sort((a, b) => (Number(a.watchedAt) || 0) - (Number(b.watchedAt) || 0))
+      .slice(0, MAX_WATCHED);
+  }
+
   const api = {
-    CHANGE_ALERT_MODES, BACKUP_FREQUENCIES, MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE,
+    CHANGE_ALERT_MODES, BACKUP_FREQUENCIES, MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE, WATCH_MODES, MAX_WATCHED, watchModeOf, watchedOf,
     clampInt, normalizeDomains, matchesDomain, strongest, isFingerprintOnly, evaluate,
     diffProtections, shouldAutoPin, countAutoPins
   };

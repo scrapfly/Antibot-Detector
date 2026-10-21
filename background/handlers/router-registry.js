@@ -30,6 +30,10 @@ function buildMessageHandlerRegistry(context) {
     if (typeof HistoryBackup !== 'undefined') {
         HistoryBackup.registerHandlers(registry);
     }
+    // "Check now" for the watchlist from Settings
+    if (typeof HistoryWatch !== 'undefined') {
+        HistoryWatch.registerHandlers(registry);
+    }
 
     return registry;
 }

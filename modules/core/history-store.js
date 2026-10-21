@@ -37,6 +37,10 @@
   const combinationsEngine = () => root.DetectionCombinations
     || (typeof module !== 'undefined' && typeof require === 'function' ? require('../detection/detection-combinations.js') : null);
 
+  // The History policy: the watchlist's size limit (loaded in the worker; required in Node tests)
+  const policy = () => root.HistoryPolicy
+    || (typeof module !== 'undefined' && typeof require === 'function' ? require('./history-policy.js') : null);
+
   // The check that a message comes from an extension page (loaded in the worker; required in Node tests)
   const messageSender = () => root.MessageSender
     || (typeof module !== 'undefined' && typeof require === 'function' ? require('./message-sender.js') : null);
@@ -241,10 +245,11 @@
     return list.filter(item => (item && item.pinned === true) || ++unpinned <= max);
   }
 
-  /** The pinned flag and note of a patch, cleaned (a note is one line of at most 300 characters). */
+  /** The pinned and watch flags and the note of a patch, cleaned (a note is one line of at most 300 characters). */
   function cleanAnnotation(patch) {
     const out = {};
     if (patch && typeof patch.pinned === 'boolean') out.pinned = patch.pinned;
+    if (patch && typeof patch.watch === 'boolean') out.watch = patch.watch;
     if (patch && typeof patch.note === 'string') out.note = patch.note.replace(/\s+/g, ' ').trim().slice(0, 300);
     return out;
   }
@@ -252,7 +257,7 @@
   /**
    * An entry with a cleaned annotation applied. Unpinning a pinned entry marks it `unpinned`, so a later scan of the
    * page never pins it again by itself; pinning it again (the person's own pin) removes the mark. Either way the entry
-   * is no longer one that pinned itself (`autoPinned`).
+   * is no longer one that pinned itself (`autoPinned`). Watching a page pins it; unpinning it stops the watching.
    */
   function annotate(item, patch) {
     const updated = Object.assign({}, item, patch);
@@ -263,6 +268,16 @@
       if (item.pinned === true) updated.unpinned = true;
       delete updated.pinned;
       delete updated.autoPinned;
+      delete updated.watch; // only a pinned page is watched
+    }
+    // Watching a page pins it, as the person's own pin; the watchlist's bookkeeping goes when it stops
+    if (patch.watch === true) {
+      updated.pinned = true;
+      delete updated.unpinned;
+      delete updated.autoPinned;
+    } else if (patch.watch === false) {
+      delete updated.watch;
+      delete updated.watchedAt;
     }
     if (updated.note === '') delete updated.note;
     return updated;
@@ -437,6 +452,14 @@
         return true;
       }
       return respond(sendResponse, mutate(items => {
+        // The watchlist is short: another page cannot join a full one
+        if (patch.watch === true) {
+          const limit = policy().MAX_WATCHED;
+          const target = items.find(item => item && item.id === request.id);
+          if (target && target.watch !== true && items.filter(item => item && item.watch === true).length >= limit) {
+            return { result: { updated: 0, limit } };
+          }
+        }
         let found = false;
         const next = items.map((item) => {
           if (!item || item.id !== request.id) return item;

@@ -92,6 +92,7 @@ importScripts(
     './background/tab-events.js',
     './background/history-retention.js',
     './background/history-backup.js',
+    './background/history-watch.js',
     './background/detection-cache-retention.js',
     './background/init.js'
 );

@@ -1470,6 +1470,26 @@ class DetectionEngineManager {
         return demHandleHookMessage.apply(this, arguments);
     }
 
+    // Pages a watchlist check is scanning right now, by address without its query: their cached result must not answer
+    // (nothing would be scanned) nor stand in for the new one (a page that lost its protections must say so)
+    static _cacheBypass = new Map();
+
+    static bypassCache(url) {
+        const key = UrlUtils.hashUrl(url, 'path');
+        DetectionEngineManager._cacheBypass.set(key, (DetectionEngineManager._cacheBypass.get(key) || 0) + 1);
+    }
+
+    static restoreCache(url) {
+        const key = UrlUtils.hashUrl(url, 'path');
+        const left = (DetectionEngineManager._cacheBypass.get(key) || 0) - 1;
+        if (left > 0) DetectionEngineManager._cacheBypass.set(key, left);
+        else DetectionEngineManager._cacheBypass.delete(key);
+    }
+
+    static isCacheBypassed(url) {
+        return DetectionEngineManager._cacheBypass.size > 0 && DetectionEngineManager._cacheBypass.has(UrlUtils.hashUrl(url, 'path'));
+    }
+
     /**
      * Whether JS hooks are off on this page's site (Settings → Detection → Sites without JS hooks). A cached result
      * describes one or the other: what a scan finds with the hooks is not what it finds without them.
@@ -1491,6 +1511,7 @@ class DetectionEngineManager {
      * @returns {Promise<object|null>} Cached detection data or null
      */
     static async getStoredDetection(url) {
+        if (DetectionEngineManager.isCacheBypassed(url)) return null;
         const releaseStorageLock = await acquireDetectionStorageLock();
         try { // outer: release the storage lock in finally
         try {
@@ -1677,11 +1698,13 @@ class DetectionEngineManager {
             const getStoredDetectionCount = (stored) => (
                 stored?.detectionCount ?? (Array.isArray(stored?.detectionResults) ? stored.detectionResults.length : 0)
             );
-            let existingPositiveData = existingIsValid && getStoredDetectionCount(existingStoredData) > 0
+            // A watchlist check keeps no earlier result: it exists to say what the page shows now
+            const fresh = DetectionEngineManager.isCacheBypassed(url);
+            let existingPositiveData = !fresh && existingIsValid && getStoredDetectionCount(existingStoredData) > 0
                 ? existingStoredData
                 : null;
 
-            if (detectionResults.length === 0 && !existingPositiveData) {
+            if (detectionResults.length === 0 && !existingPositiveData && !fresh) {
                 const requestedHostname = UrlUtils.getHostnameFromUrl(url);
                 for (const stored of Object.values(storage)) {
                     if (!stored || Date.now() >= stored.expiry || getStoredDetectionCount(stored) <= 0 || !sameHooks(stored)) {
