@@ -774,6 +774,46 @@ class History {
   }
 
   /**
+   * What "Copy entry" writes for one match: what was matched, never its value.
+   * A cookie or header keeps its name, an address loses its query and hash, a
+   * payload keeps its rule pattern: those values carry live tokens
+   * (__cf_bm, datadome, reese84…), which every other copy leaves out too.
+   * @param {object} match - A saved match
+   * @returns {string} The label, '' when there is nothing safe to show
+   */
+  static copyLabel(match) {
+    if (!match || typeof match !== 'object') return '';
+    const type = String(match.type || '').toLowerCase();
+    const text = (v) => (typeof v === 'string' ? v.trim() : '');
+    const before = (value, sep) => {
+      const raw = text(value);
+      const at = raw.indexOf(sep);
+      return at > 0 ? raw.slice(0, at).trim() : '';
+    };
+    const noQuery = (value) => text(value).replace(/[?#].*$/s, '');
+    if (type === 'cookie' || type === 'cookies') return before(match.value, '=') || text(match.name) || text(match.pattern);
+    if (type === 'header' || type === 'headers') return before(match.value, ':') || text(match.name) || text(match.pattern);
+    if (type === 'dom') return History.domSelectorOf(match.value) || text(match.selector) || text(match.pattern);
+    if (type === 'payload') return text(match.pattern) || text(match.name);
+    if (match.fullUrl) return noQuery(match.fullUrl);
+    if (type === 'url' || type === 'urls') return noQuery(match.value) || text(match.pattern) || text(match.name);
+    // Window properties, hook targets, script text: what matched is the value itself
+    return text(match.value) || text(match.name) || text(match.selector) || text(match.pattern);
+  }
+
+  /** "selector=text" as History keeps a DOM match: the selector, "=" inside [ ] kept. */
+  static domSelectorOf(value) {
+    const raw = typeof value === 'string' ? value : '';
+    let depth = 0;
+    for (let i = 0; i < raw.length; i++) {
+      if (raw[i] === '[') depth++;
+      else if (raw[i] === ']') depth = Math.max(0, depth - 1);
+      else if (raw[i] === '=' && depth === 0) return raw.slice(0, i).trim();
+    }
+    return raw.trim();
+  }
+
+  /**
    * Format history item as text
    * @param {object} historyItem - History item
    * @returns {string} Formatted text
@@ -803,7 +843,7 @@ class History {
         text += '   ' + L('clipboardDetectionMethodsHeading', 'Detection Methods:') + '\n';
         detection.matches.forEach(match => {
           const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
-          const value = match.fullUrl || match.value || match.name || match.selector || match.pattern || unknownValue;
+          const value = History.copyLabel(match) || unknownValue;
           text += `     - ${methodType}: ${value} (${match.confidence || 0}%)\n`;
         });
       }

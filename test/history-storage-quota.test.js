@@ -441,3 +441,32 @@ test('usage() reports the limit it is given, and 6 MB by default', async () => {
   assert.strictEqual((await HistoryStore.usage(storage)).budget, 6 * MB);
   assert.strictEqual((await HistoryStore.usage(storage, 25 * MB)).budget, 25 * MB);
 });
+
+test('Copy entry names what matched and never copies a cookie, header, query or payload value', () => {
+  const context = vm.createContext({
+    console, Date, JSON, Math, Set, Map, URL, Intl,
+    Logger: new Proxy({}, { get: () => () => {} }),
+    FormatUtils: require('../utils/format-utils.js'),
+    chrome: { runtime: { getURL: p => p } }
+  });
+  context.self = context; context.globalThis = context;
+  vm.runInContext(fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8') + '\n;globalThis.History = History;', context);
+  const view = Object.create(context.History.prototype);
+  view.detectorManager = null;
+  const entry = fullEntry(1, 1, true);
+  entry.detections[0].matches.push(
+    { type: 'cookie', name: 'datadome', value: 'datadome=SECRETCOOKIEVALUE', confidence: 90 },
+    { type: 'payload', pattern: 'sensor_data', value: '{"sensor_data":"SECRETPAYLOAD"}', confidence: 80 },
+    { type: 'url', fullUrl: 'https://c.example/tags.js?token=SECRETQUERY#frag', confidence: 50 }
+  );
+  const text = view.formatHistoryItemText(entry);
+  for (const secret of ['SECRETCOOKIEVALUE', 'SECRETPAYLOAD', 'SECRETQUERY', '09Ax', 'yyyy']) {
+    assert.ok(!text.includes(secret), `copied ${secret}`);
+  }
+  for (const label of ['COOKIE: _GRECAPTCHA', 'COOKIE: datadome', 'HEADER: x-long', 'DOM: .g-recaptcha[data-sitekey]',
+    'PAYLOAD: sensor_data', 'URL: https://c.example/tags.js (', 'https://www.google.com/recaptcha/api.js (']) {
+    assert.ok(text.includes(label), `missing ${label}`);
+  }
+  assert.strictEqual(context.History.copyLabel(null), '');
+  assert.strictEqual(context.History.copyLabel({ type: 'header', name: '^x-a$' }), '^x-a$');
+});
