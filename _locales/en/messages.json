@@ -6822,5 +6822,45 @@
   "toolbarTitleMoreFmt": {
     "message": "+{0} more",
     "description": "Hover text of the toolbar icon, after the first three protections found: {0} = how many more were found"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Summary (as uploaded)",
+    "description": "Copy menu on the Detection tab: copies the same text Upload detections shares (a banner and a JSON summary)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown table",
+    "description": "Copy menu on the Detection tab: copies the results as a Markdown heading and table, for tickets, pull requests and chats"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON",
+    "description": "Copy menu on the Detection tab: copies the results as JSON. Usually kept as JSON."
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Protections on {0}",
+    "description": "Heading of the copied Markdown summary. {0} = the site's host name"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Detections: {0} · Confidence: {1}% · Difficulty: {2}",
+    "description": "Summary line of the copied Markdown. {0} = number of protections, {1} = average confidence (a number), {2} = difficulty (Low, Medium, High…)"
+  },
+  "detectionMdColProtection": {
+    "message": "Protection",
+    "description": "Column heading in the copied Markdown table: the name of the anti-bot, CAPTCHA or fingerprinting system"
+  },
+  "detectionMdColCategory": {
+    "message": "Category",
+    "description": "Column heading in the copied Markdown table"
+  },
+  "detectionMdColConfidence": {
+    "message": "Confidence",
+    "description": "Column heading in the copied Markdown table (a percentage)"
+  },
+  "detectionMdColMethods": {
+    "message": "Found by",
+    "description": "Column heading in the copied Markdown table: the kinds of evidence (cookie, header, url…)"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Scanned with Scrapfly Antibot Detector on {0}",
+    "description": "Last line of the copied Markdown. {0} = the date (YYYY-MM-DD). Keep the product name as written"
   }
 }

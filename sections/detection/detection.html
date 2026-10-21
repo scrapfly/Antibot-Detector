@@ -111,7 +111,7 @@
               <path d="M14 11v6"/>
             </svg>
           </button>
-          <button id="copyOverviewBtn" class="url-action-btn copy-overview-btn" title="Copy overview" data-i18n-title="detectionTitleCopyOverview">
+          <button id="copyOverviewBtn" class="url-action-btn copy-overview-btn" title="Copy overview" data-i18n-title="detectionTitleCopyOverview" aria-haspopup="menu" aria-expanded="false" aria-controls="copyOverviewMenu">
             <svg width="14" height="14" viewBox="0 0 24 24">
               <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
             </svg>
@@ -122,6 +122,12 @@
               <path d="M4.93 4.93l14.14 14.14"/>
             </svg>
           </button>
+        </div>
+        <!-- Copy menu: what Upload shares, a Markdown table or JSON; never cookie or header values -->
+        <div id="copyOverviewMenu" class="history-menu copy-overview-menu" role="menu" hidden>
+          <button class="history-menu-item" role="menuitem" data-copy-format="overview" data-i18n="detectionCopyMenuSummary">Summary (as uploaded)</button>
+          <button class="history-menu-item" role="menuitem" data-copy-format="markdown" data-i18n="detectionCopyMenuMarkdown">Markdown table</button>
+          <button class="history-menu-item" role="menuitem" data-copy-format="json" data-i18n="detectionCopyMenuJson">JSON</button>
         </div>
       </div>
       <div class="stats-line">

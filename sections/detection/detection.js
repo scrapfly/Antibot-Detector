@@ -569,11 +569,58 @@ class Detection {
     }
 
     // Setup copy overview button
+    // Copy opens a small menu: the uploaded summary, a Markdown table or JSON
     const copyOverviewBtn = document.querySelector('#copyOverviewBtn');
-    if (copyOverviewBtn) {
-      copyOverviewBtn.addEventListener('click', async (e) => {
+    const copyOverviewMenu = document.querySelector('#copyOverviewMenu');
+    if (copyOverviewBtn && copyOverviewMenu) {
+      const closeCopyMenu = (focusButton = false) => {
+        if (copyOverviewMenu.hidden) return;
+        copyOverviewMenu.hidden = true;
+        copyOverviewBtn.setAttribute('aria-expanded', 'false');
+        copyOverviewBtn.classList.remove('active');
+        if (focusButton) copyOverviewBtn.focus();
+      };
+      const openCopyMenu = () => {
+        copyOverviewMenu.hidden = false;
+        const anchor = copyOverviewBtn.getBoundingClientRect();
+        const box = copyOverviewMenu.getBoundingClientRect();
+        const width = document.documentElement.clientWidth;
+        const height = document.documentElement.clientHeight;
+        let top = anchor.bottom + 4;
+        if (top + box.height > height - 4) top = Math.max(4, anchor.top - 4 - box.height);
+        const left = Math.min(Math.max(4, anchor.right - box.width), width - box.width - 4);
+        copyOverviewMenu.style.top = `${top}px`;
+        copyOverviewMenu.style.left = `${left}px`;
+        copyOverviewBtn.setAttribute('aria-expanded', 'true');
+        copyOverviewBtn.classList.add('active');
+        const first = copyOverviewMenu.querySelector('[data-copy-format]');
+        if (first) first.focus();
+      };
+      copyOverviewBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        await this.copyDetectionOverview();
+        if (copyOverviewMenu.hidden) openCopyMenu();
+        else closeCopyMenu();
+      });
+      copyOverviewMenu.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const item = e.target.closest('[data-copy-format]');
+        if (!item) return;
+        closeCopyMenu(true);
+        const pageUrl = await DetectionActions.currentPageUrl();
+        await DetectionActions.copyDetectionsAs.call(this, item.dataset.copyFormat, pageUrl);
+      });
+      copyOverviewMenu.addEventListener('keydown', (e) => {
+        const items = Array.from(copyOverviewMenu.querySelectorAll('[data-copy-format]'));
+        const at = items.indexOf(document.activeElement);
+        if (e.key === 'Escape') { e.preventDefault(); closeCopyMenu(true); }
+        else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const step = e.key === 'ArrowDown' ? 1 : -1;
+          items[(at + step + items.length) % items.length].focus();
+        }
+      });
+      document.addEventListener('click', (e) => {
+        if (!copyOverviewMenu.contains(e.target) && e.target !== copyOverviewBtn) closeCopyMenu();
       });
     }
 

@@ -466,7 +466,60 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
     };
 
     const content = `${DetectionActions.PASTE_BANNER}\n\n${JSON.stringify(payload, null, 2)}\n`;
-    return { content, count: detections.length };
+    return { content, count: detections.length, payload };
+};
+
+/**
+ * The same summary as a Markdown block for a ticket, a pull request or a chat:
+ * a heading, one summary line and a table. Built from the paste payload, so it
+ * carries the same things (no cookie or header values, no query string).
+ * @param {object} payload - buildDetectionsPasteContent().payload
+ * @param {Function} [format] - (key, fallback, ...args) => text
+ * @returns {string}
+ */
+DetectionActions.buildDetectionsMarkdown = function(payload, format = detectionActionsFormat) {
+    const cell = (value) => String(value == null ? '' : value).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+    const p = payload && typeof payload === 'object' ? payload : {};
+    const list = Array.isArray(p.detections) ? p.detections : [];
+    const summary = p.summary || {};
+    const lines = [];
+    lines.push(`## ${cell(format('detectionMdHeadingFmt', 'Protections on {0}', p.host || p.url || '?'))}`);
+    lines.push('');
+    if (p.url) lines.push(cell(p.url));
+    lines.push(cell(format('detectionMdSummaryFmt', 'Detections: {0} · Confidence: {1}% · Difficulty: {2}',
+      Number(summary.detections) || list.length, Math.round(Number(summary.confidence) || 0), summary.difficulty || '-')));
+    lines.push('');
+    if (list.length) {
+      lines.push(`| ${[
+        format('detectionMdColProtection', 'Protection'),
+        format('detectionMdColCategory', 'Category'),
+        format('detectionMdColConfidence', 'Confidence'),
+        format('detectionMdColMethods', 'Found by')
+      ].map(cell).join(' | ')} |`);
+      lines.push('| --- | --- | ---: | --- |');
+      for (const d of list) {
+        const methods = Object.entries(d && d.methods && typeof d.methods === 'object' ? d.methods : {})
+          .map(([type, n]) => (n > 1 ? `${type} ×${n}` : type)).join(', ');
+        const confidence = typeof d?.confidence === 'number' ? `${Math.round(d.confidence)}%` : '-';
+        lines.push(`| ${[d?.name || '?', d?.category || '-', confidence, methods || '-'].map(cell).join(' | ')} |`);
+      }
+      lines.push('');
+    }
+    const when = p.generatedAt ? String(p.generatedAt).slice(0, 10) : '';
+    lines.push(`_${cell(format('detectionMdFooterFmt', 'Scanned with Scrapfly Antibot Detector on {0}', when))}_`);
+    return lines.join('\n') + '\n';
+};
+
+/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown' or 'json'. */
+DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
+    const { content, payload } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
+    const text = kind === 'markdown'
+      ? DetectionActions.buildDetectionsMarkdown(payload)
+      : kind === 'json'
+        ? `${JSON.stringify(payload, null, 2)}\n`
+        : content;
+    await FormatUtils.copyToClipboard(text.trim());
+    return text;
 };
 
 /**
