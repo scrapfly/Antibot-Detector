@@ -88,6 +88,7 @@
     REPLACE_ITEMS: 'HISTORY_REPLACE_ITEMS', // { items: [...], mode: 'merge' | 'replace', limit }
     CLEAR: 'HISTORY_CLEAR',
     UPDATE_ITEM: 'HISTORY_UPDATE_ITEM',     // { id, patch: { pinned?: boolean, note?: string } }
+    WATCH_NOW: 'HISTORY_WATCH_NOW',         // check the watched pages now (answered by background/history-watch.js)
     PING: 'HISTORY_PING'                    // answered { status: 'ok' } by a worker that has these History features
   });
 
@@ -269,6 +270,7 @@
       delete updated.pinned;
       delete updated.autoPinned;
       delete updated.watch; // only a pinned page is watched
+      delete updated.watchedAt;
     }
     // Watching a page pins it, as the person's own pin; the watchlist's bookkeeping goes when it stops
     if (patch.watch === true) {

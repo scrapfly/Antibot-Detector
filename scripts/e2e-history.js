@@ -12,6 +12,9 @@
  *                       page is scanned again), at most 50 pages pin themselves, the pin says it came by itself
  *   Fingerprint clock   fingerprinting-only pages go after their own number of days, pinned and other pages stay, the alarm follows
  *   History size       12 MB keeps what 6 MB would cut, the meter and the Data tab follow, lowering the size asks first and trims at Save
+ *   Watchlist          a pinned page marked to watch is scanned again in a background tab and its entry updated in place (same
+ *                      id, pin and note kept, Changed mark and notification), a page that flips between two scans or ends
+ *                      somewhere else is not reported, skipped sites are not visited, tabs are closed, the menu and Settings
  *   Export              the dialog (format, protections, period, site, pinned only), the real file for each format
  *   Backup              Back up now and the alarm write real files to Downloads, in parts when large; the schedule
  *   Storage             the warning near the limit and the record of what was removed
@@ -45,15 +48,18 @@ const DAY = 24 * 60 * 60 * 1000;
 
 // ---- Local site ---------------------------------------------------------------------------------
 const MARKERS = { 'bot-a': 'hist-marker-bot-a', 'bot-b': 'hist-marker-bot-b', captcha: 'hist-marker-captcha', fp: 'hist-marker-fp', hard: 'hist-marker-hard' };
-const dyn = {}; // id -> markers the page shows now (changed by the test between two scans)
+const dyn = {}; // id -> markers the page shows now (changed by the test between two scans), or a function called for every load
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
   if (url.pathname === '/p') {
-    const list = url.searchParams.get('dyn') ? (dyn[url.searchParams.get('dyn')] || []) : (url.searchParams.get('m') || '').split(',').filter(Boolean);
+    const shown = url.searchParams.get('dyn') ? dyn[url.searchParams.get('dyn')] : null;
+    const list = url.searchParams.get('dyn') ? ((typeof shown === 'function' ? shown() : shown) || []) : (url.searchParams.get('m') || '').split(',').filter(Boolean);
     const body = `<!doctype html><html><head><title>Probe ${url.searchParams.get('n') || url.searchParams.get('dyn') || 'page'}</title></head><body>${list.map(m => `<p>${MARKERS[m] || ''}</p>`).join('')}<p>probe page</p></body></html>`;
     res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
     return res.end(body);
   }
+  // A page that sends the visitor somewhere else (a login, a block page)
+  if (url.pathname === '/r') { res.writeHead(302, { location: '/p?m=captcha&n=landed' }); return res.end(); }
   res.writeHead(404); res.end();
 });
 
@@ -165,7 +171,7 @@ async function scenario(name, fn) {
   const HistoryStore_usage = () => W(async () => HistoryStore.usage(chrome.storage.local, 99 * 1024 * 1024));
   const readHistory = async () => JSON.parse((await W(() => chrome.storage.local.get('scrapfly_history'))).scrapfly_history || '{"items":[]}');
   const items = async () => (await readHistory()).items;
-  const resetHistory = () => W(() => chrome.storage.local.remove(['scrapfly_history', 'scrapfly_history_storage_notice', 'scrapfly_history_backup']));
+  const resetHistory = () => W(() => chrome.storage.local.remove(['scrapfly_history', 'scrapfly_history_storage_notice', 'scrapfly_history_backup', 'scrapfly_history_watch']));
   const setHistory = (list, container = {}) => W((value) => chrome.storage.local.set({ scrapfly_history: JSON.stringify(value) }), { items: list, ...container });
   const notes = () => W(() => globalThis.__notes.slice());
   const clearNotes = () => W(() => { globalThis.__notes = []; });
@@ -247,7 +253,7 @@ async function scenario(name, fn) {
   await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
   const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true,
-    historyFingerprintDays: 0, historyAutoPinHard: false, historyAutoPinVendors: [], historyAutoPinMinConfidence: 80, historyMaxMB: 6 };
+    historyFingerprintDays: 0, historyAutoPinHard: false, historyAutoPinVendors: [], historyAutoPinMinConfidence: 80, historyMaxMB: 6, historyWatch: 'off' };
   const baseDup = { preventDuplicates: false, duplicateAction: 'skip', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' };
   const resetSettings = async () => { await historySettings(baseline, baseDup); await W(() => { globalThis.__incognitoMatch = ''; }); };
   await resetSettings();
@@ -927,6 +933,178 @@ async function scenario(name, fn) {
       assert.equal(list[0].id, 'big0', 'the newest page stays');
       assert.ok(usage.trimmed && usage.trimmed.count > 0, 'Settings can say what was removed');
     } finally { await page.close(); }
+    await resetSettings();
+    await resetHistory();
+  });
+
+  // ===============================================================================================
+  await scenario('Watchlist: a watched page is scanned again in a background tab and its entry is updated in place; flips and redirects are not reported', async () => {
+    await resetHistory();
+    await resetSettings();
+    await clearNotes();
+    await historySettings({ historyWatch: 'daily', historyChangeAlerts: 'pinned', historyBypassCache: true });
+    await W(() => {
+      globalThis.__watchTabs = [];
+      if (!globalThis.__watchListener) {
+        globalThis.__watchListener = (tab) => globalThis.__watchTabs.push({ active: tab.active, url: tab.pendingUrl || tab.url });
+        chrome.tabs.onCreated.addListener(globalThis.__watchListener);
+      }
+    });
+    const openTabs = () => W(() => chrome.tabs.query({}).then(tabs => tabs.filter(tab => /\/p\?|\/r\?/.test(tab.url || '')).length));
+    const cacheTime = (address) => W(async (u) => {
+      const stored = (await chrome.storage.local.get('scrapfly_detection_storage')).scrapfly_detection_storage || {};
+      return Math.max(0, ...Object.values(stored).filter(entry => entry && entry.url === u).map(entry => entry.timestamp));
+    }, address);
+    const watch = async (id, patch = { watch: true, note: 'check me' }) => {
+      const popup = await openExtensionPage();
+      await popup.evaluate(([entryId, change]) => chrome.runtime.sendMessage({ type: HistoryStore.Messages.UPDATE_ITEM, id: entryId, patch: change }), [id, patch]);
+      await popup.close();
+    };
+    const state = () => W(async () => (await chrome.storage.local.get('scrapfly_history_watch')).scrapfly_history_watch);
+
+    // One page, watched: pinned and marked
+    dyn.watch1 = ['bot-a'];
+    const pageUrl = url(`dyn=watch1&${uniq()}`);
+    const first = await visitSaved(pageUrl);
+    assert.deepEqual(names(first), ['HistProbe Bot A']);
+    await visitSaved(url(`m=captcha&other=1&${uniq()}`)); // another page on top, so a moved entry is noticed
+    await watch(first.id);
+    let entry = (await items()).find(i => i.id === first.id);
+    assert.equal(entry.pinned, true, 'watching pins it');
+    assert.equal(entry.watch, true);
+    const before = (await items()).length;
+
+    // 1. Unchanged: scanned for real (the cache was set aside), recorded in place, nothing else created, the tab gone
+    const scannedAt = await cacheTime(pageUrl);
+    const unchanged = await W(() => HistoryWatch.run('manual'));
+    assert.equal(unchanged.checked, 1, JSON.stringify(unchanged));
+    assert.equal(unchanged.changed, 0);
+    assert.equal(unchanged.failed, 0);
+    assert.ok(await cacheTime(pageUrl) > scannedAt, 'the page was really scanned again');
+    let list = await items();
+    assert.equal(list.length, before, 'no entry of its own');
+    entry = list.find(i => i.id === first.id);
+    assert.ok(entry.watchedAt > 0);
+    assert.equal(entry.note, 'check me');
+    assert.equal(entry.pinned, true);
+    assert.ok(!entry.changed, 'nothing changed');
+    assert.equal(list.findIndex(i => i.id === first.id), 1, 'not moved');
+    const tabs = await W(() => globalThis.__watchTabs.slice());
+    assert.ok(tabs.some(tab => tab.url === pageUrl && tab.active === false), 'it was opened in a background tab');
+    assert.equal(await openTabs(), 0, 'and the tab is closed');
+    assert.equal((await state()).checked, 1);
+    assert.equal(await W(() => HistoryWatch.isWatchTab(1)), false);
+
+    // 2. Changed: the page gained a protection; the second scan agrees; same entry, moved up, Changed, notified
+    dyn.watch1 = ['bot-a', 'bot-b'];
+    const changed = await W(() => HistoryWatch.run('manual'));
+    assert.equal(changed.changed, 1, JSON.stringify(changed));
+    list = await items();
+    assert.equal(list.length, before);
+    assert.equal(list[0].id, first.id, 'moved to the top');
+    assert.deepEqual(names(list[0]), ['HistProbe Bot A', 'HistProbe Bot B']);
+    assert.deepEqual(list[0].changed.added, ['HistProbe Bot B']);
+    assert.equal(list[0].note, 'check me');
+    assert.equal(list[0].pinned, true);
+    assert.equal(list[0].watch, true);
+    assert.equal((await swNoteFor('127.0.0.1')).length, 1, 'a notification says what changed');
+    assert.equal(await openTabs(), 0);
+
+    // 3. A page that is different every time it loads is not reported: the second scan does not agree
+    let loads = 0;
+    dyn.flaky = () => (loads++ % 2 === 0 ? ['bot-a'] : ['bot-a', 'bot-b']);
+    const flakyUrl = url(`dyn=flaky&${uniq()}`);
+    const flaky = await visitSaved(flakyUrl);
+    assert.deepEqual(names(flaky), ['HistProbe Bot A']);
+    await watch(flaky.id, { watch: true });
+    await clearNotes(); // (saving the page just above may have alerted, as it was compared with the page before it)
+    const unstable = await W(() => HistoryWatch.run('manual'));
+    assert.equal(unstable.changed, 0, JSON.stringify(unstable));
+    assert.equal(unstable.failed, 1, 'it counts as a check that did not settle');
+    const kept = (await items()).find(i => i.id === flaky.id);
+    assert.deepEqual(names(kept), ['HistProbe Bot A']);
+    // (every probe page is /p, and a page's change is judged against the newest entry with the same path, so the entry
+    // may already carry a Changed mark from being compared with the page above: what matters is that the check added none)
+    assert.equal(JSON.stringify(kept.changed), JSON.stringify(flaky.changed), 'no Changed mark from the check');
+    assert.equal(kept.watchedAt, undefined, 'and it was not recorded as checked: it never settled');
+    assert.equal((await swNoteFor('127.0.0.1')).length, 0, 'no notification for a flip');
+    assert.equal(await openTabs(), 0);
+    await watch(flaky.id, { watch: false });
+
+    // 4. A page that ends somewhere else says nothing about the page
+    const redirected = `${origin}/r?${uniq()}`;
+    const now = Date.now();
+    await setHistory([{ id: 'redir', url: redirected, hostname: '127.0.0.1', title: 'Redirects', timestamp: now, pinned: true, watch: true, detections: [{ detector: { name: 'HistProbe Bot A' }, category: 'Anti-Bot', confidence: 90 }] }]);
+    const away = await W(() => HistoryWatch.run('manual'));
+    assert.equal(away.failed, 1, JSON.stringify(away));
+    assert.equal(away.changed, 0);
+    assert.deepEqual(names((await items())[0]), ['HistProbe Bot A'], 'the entry is as it was');
+    assert.equal(await openTabs(), 0);
+
+    // 5. Skipped sites are not visited at all
+    const skippedUrl = `${origin.replace('127.0.0.1', 'localhost')}/p?m=bot-a&${uniq()}`;
+    await setHistory([{ id: 'skipped', url: skippedUrl, hostname: 'localhost', title: 'Skipped', timestamp: now, pinned: true, watch: true, detections: [] }]);
+    await patchSettings({ detection: { blacklistedDomains: ['localhost'] } });
+    await W(() => { globalThis.__watchTabs = []; });
+    const skipped = await W(() => HistoryWatch.run('manual'));
+    assert.equal(skipped.skipped, 1, JSON.stringify(skipped));
+    assert.equal((await W(() => globalThis.__watchTabs.length)), 0, 'no tab was opened');
+    await patchSettings({ detection: { blacklistedDomains: [] } });
+    await resetSettings();
+    await resetHistory();
+  });
+
+  await scenario('Watchlist: the entry menu watches a page, the card shows it, and Settings → History checks now and shows the result', async () => {
+    await resetHistory();
+    await resetSettings();
+    await historySettings({ historyWatch: 'daily' });
+    dyn.watch2 = ['bot-a'];
+    const pageUrl = url(`dyn=watch2&${uniq()}`);
+    await visitSaved(pageUrl);
+    const popup = await openExtensionPage();
+    const click = (selector) => popup.$eval(selector, el => el.click());
+    try {
+      await click('#nav-history');
+      await popup.waitForSelector('.history-item');
+      assert.equal(await popup.$$eval('.history-watch', els => els.length), 0);
+      await popup.$$eval('.history-item .history-more-btn', els => els[0].click());
+      await popup.waitForSelector('#historyItemMenu:not([hidden])');
+      assert.equal(await popup.$eval('#historyItemMenu [data-menu-label="watch"]', el => el.textContent), 'Watch for changes');
+      await click('#historyItemMenu [data-action="watch"]');
+      await waitFor(l => l[0] && l[0].watch === true, 8000);
+      assert.equal((await items())[0].pinned, true, 'watching pins the page');
+      await popup.waitForFunction(() => document.querySelectorAll('.history-watch').length === 1 && document.querySelectorAll('.history-pin').length === 1);
+      assert.equal(await popup.$eval('.history-watch', el => el.getAttribute('data-tip')), 'Watching for changes');
+      assert.equal(await popup.$eval('.history-watch', el => el.getAttribute('data-tip-detail')), 'Not checked yet');
+      await popup.$$eval('.history-item .history-more-btn', els => els[0].click());
+      await popup.waitForSelector('#historyItemMenu:not([hidden])');
+      assert.equal(await popup.$eval('#historyItemMenu [data-menu-label="watch"]', el => el.textContent), 'Stop watching');
+      await popup.keyboard.press('Escape');
+
+      // Settings: Check now
+      await click('#settingsBtn');
+      await popup.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await popup.evaluate(() => window.popupInstance.settings.loadSettings());
+      await click('.settings-tab-btn[data-settings-tab="history"]');
+      await popup.waitForFunction(() => /1 of 10 pages watched · No check yet\./.test(document.querySelector('#historyWatchLast').textContent), null, { timeout: 8000 });
+      assert.equal(await popup.$eval('#historyWatch', el => el.value), 'daily');
+      await click('#historyWatchNowBtn');
+      await popup.waitForFunction(() => /Last check: .* · 1 checked, 0 changed/.test(document.querySelector('#historyWatchLast').textContent), null, { timeout: 60000 });
+      assert.equal(await popup.$eval('#historyWatchNowBtn', el => el.disabled), false);
+      await click('#cancelSettingsBtn');
+      await popup.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'));
+      // The card now says when it was checked
+      await popup.evaluate(() => window.popupInstance.history.loadHistoryFromStorage().then(() => window.popupInstance.history.renderHistory()));
+      assert.match(await popup.$eval('.history-watch', el => el.getAttribute('data-tip-detail')), /^Last checked /);
+
+      // Stop watching: the eye goes, the pin stays
+      await popup.$$eval('.history-item .history-more-btn', els => els[0].click());
+      await popup.waitForSelector('#historyItemMenu:not([hidden])');
+      await click('#historyItemMenu [data-action="watch"]');
+      await waitFor(l => l[0] && !l[0].watch, 8000);
+      assert.equal((await items())[0].pinned, true);
+      await popup.waitForFunction(() => document.querySelectorAll('.history-watch').length === 0);
+    } finally { await popup.close(); }
     await resetSettings();
     await resetHistory();
   });

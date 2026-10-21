@@ -98,6 +98,7 @@ SettingsUI.switchTab = function(tabName) {
     });
     // The storage meter and last backup are read when the tab is opened
     if (tabName === 'history') SettingsUI.refreshHistoryStorage.call(this);
+    if (tabName === 'history') SettingsUI.refreshHistoryWatch.call(this);
     if (tabName === 'data') SettingsUI.refreshStorageOverview();
 };
 
@@ -445,6 +446,7 @@ SettingsUI.updateSettingsUI = function() {
       check('historyClearOnClose', h.historyClearOnClose === true);
       choose('historyMinConfidence', h.historyMinConfidence ?? 0);
       choose('historyFingerprintDays', h.historyFingerprintDays ?? 0);
+      choose('historyWatch', HistoryPolicy.watchModeOf(h));
       SettingsUI.populateHistorySize.call(this, h.historyMaxMB);
       check('historyAutoPinHard', h.historyAutoPinHard === true);
       choose('historyAutoPinVendors', (Array.isArray(h.historyAutoPinVendors) ? h.historyAutoPinVendors : []).join('\n'));
@@ -594,6 +596,7 @@ SettingsUI.getSettingsFromUI = function() {
       historySkipIncognito: document.querySelector('#historySkipIncognito')?.checked ?? this.settings.history?.historySkipIncognito ?? true,
       historyMinConfidence: parseInt(document.querySelector('#historyMinConfidence')?.value ?? this.settings.history?.historyMinConfidence ?? 0, 10),
       historyFingerprintDays: parseInt(document.querySelector('#historyFingerprintDays')?.value ?? this.settings.history?.historyFingerprintDays ?? 0, 10),
+      historyWatch: document.querySelector('#historyWatch')?.value ?? this.settings.history?.historyWatch ?? 'off',
       historyMaxMB: parseInt(document.querySelector('#historyMaxMB')?.value ?? this.settings.history?.historyMaxMB ?? HistoryStore.SIZES_MB[0], 10),
       historyAutoPinHard: document.querySelector('#historyAutoPinHard')?.checked ?? this.settings.history?.historyAutoPinHard ?? false,
       historyAutoPinVendors: SettingsUI.readNameList('#historyAutoPinVendors', this.settings.history?.historyAutoPinVendors),
@@ -668,6 +671,10 @@ SettingsUI.validateSettings = function(settings) {
 
     if (settings.history && settings.history.historyMaxMB !== undefined && !HistoryStore.SIZES_MB.includes(settings.history.historyMaxMB)) {
       errors.push(text('settingsUiErrHistorySizeFmt', 'History size must be one of {0} MB', HistoryStore.SIZES_MB.join(', ')));
+    }
+
+    if (settings.history && settings.history.historyWatch !== undefined && !HistoryPolicy.WATCH_MODES.includes(settings.history.historyWatch)) {
+      errors.push(text('settingsUiErrHistoryWatch', 'The watchlist must be off, daily or weekly'));
     }
 
     if (settings.history && settings.history.historyFingerprintDays !== undefined) {
@@ -920,6 +927,9 @@ SettingsUI.setupEventListeners = function() {
 
     const historyMaxMB = document.querySelector('#historyMaxMB');
     if (historyMaxMB) historyMaxMB.addEventListener('change', () => SettingsUI.chooseHistorySize.call(this));
+
+    const historyWatchNowBtn = document.querySelector('#historyWatchNowBtn');
+    if (historyWatchNowBtn) historyWatchNowBtn.addEventListener('click', () => SettingsUI.checkWatchNow.call(this, historyWatchNowBtn));
 
     const historyBackupNowBtn = document.querySelector('#historyBackupNowBtn');
     if (historyBackupNowBtn) {
@@ -1331,6 +1341,54 @@ SettingsUI.refreshHistoryStorage = async function() {
     } catch (_) {
       last.textContent = '';
     }
+  }
+};
+
+/** The watchlist's last check and how many pages are watched, read when the History tab opens and after "Check now". */
+SettingsUI.refreshHistoryWatch = async function() {
+  const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+  const last = document.querySelector('#historyWatchLast');
+  if (!last) return;
+  try {
+    const stored = await chrome.storage.local.get(['scrapfly_history_watch', 'scrapfly_history']);
+    const watched = HistoryStore.parse(stored.scrapfly_history).items.filter(item => item && item.watch === true && item.pinned === true).length;
+    const state = stored.scrapfly_history_watch;
+    const count = text('settingsHistoryWatchCountFmt', '{0} of {1} pages watched', watched, HistoryPolicy.MAX_WATCHED);
+    let outcome;
+    if (!state) outcome = text('settingsHistoryWatchNever', 'No check yet.');
+    else if (state.error === 'no_window') outcome = text('settingsHistoryWatchNoWindow', 'The last check found no browser window to open pages in.');
+    else if (state.ok === false) outcome = text('settingsHistoryWatchFailed', 'The last check failed.');
+    else outcome = text('settingsHistoryWatchLastFmt', 'Last check: {0} · {1} checked, {2} changed', FormatUtils.formatDateTime(state.at), state.checked || 0, state.changed || 0);
+    last.textContent = `${count} · ${outcome}`;
+  } catch (_) {
+    last.textContent = '';
+  }
+};
+
+/** "Check now": the worker scans the watched pages in background tabs; the result is shown beside the button. */
+SettingsUI.checkWatchNow = async function(button) {
+  const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+  if (button) button.disabled = true;
+  try {
+    const result = await chrome.runtime.sendMessage({ type: HistoryStore.Messages.WATCH_NOW });
+    if (result && result.status === 'unknown') {
+      NotificationHelper.error(text('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
+    } else if (result && result.error === 'no_window') {
+      NotificationHelper.error(text('settingsHistoryWatchNoWindow', 'The last check found no browser window to open pages in.'));
+    } else if (result && result.error === 'paused') {
+      NotificationHelper.error(text('settingsHistoryWatchPaused', 'History is paused, so nothing is checked.'));
+    } else if (result && result.status === 'ok') {
+      NotificationHelper.success(result.checked + result.skipped + result.failed === 0
+        ? text('settingsHistoryWatchNothing', 'No page is watched yet: pin a page in History and choose Watch for changes.')
+        : text('settingsHistoryWatchDoneFmt', 'Checked {0} pages, {1} changed', result.checked, result.changed));
+    } else {
+      NotificationHelper.error(text('settingsHistoryWatchFailed', 'The last check failed.'));
+    }
+  } catch (error) {
+    NotificationHelper.error(text('settingsHistoryWatchFailed', 'The last check failed.'));
+  } finally {
+    if (button) button.disabled = false;
+    SettingsUI.refreshHistoryWatch.call(this);
   }
 };
 

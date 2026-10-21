@@ -1442,14 +1442,16 @@
   min-width: 0;
 }
 
-.history-pin {
+.history-pin,
+.history-watch {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   color: var(--accent-light);
 }
 
-.history-pin svg {
+.history-pin svg,
+.history-watch svg {
   width: 12px;
   height: 12px;
 }

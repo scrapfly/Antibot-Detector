@@ -31,7 +31,7 @@ const HistoryWatch = {
     JITTER_MS: [2000, 6000],
     STARTUP_DELAY_MINUTES: 2,
     STATE_KEY: 'scrapfly_history_watch',
-    Messages: Object.freeze({ CHECK_NOW: 'HISTORY_WATCH_NOW' }),
+    Messages: Object.freeze({ CHECK_NOW: HistoryStore.Messages.WATCH_NOW }),
 
     _initialized: false,
     _running: null,

@@ -201,6 +201,8 @@ class History {
     const pinnedTip = _tr('historyPinnedTip', 'Pinned: kept when History is cleaned up');
     const autoPinnedTip = _tr('historyAutoPinnedTip', 'Pinned automatically: kept when History is cleaned up. Unpin it and it is never pinned again by itself.');
     const PIN_ICON = FormatUtils.uiIconSvg('pin');
+    const WATCH_ICON = FormatUtils.uiIconSvg('watch');
+    const watchTip = _tr('historyWatchTip', 'Watching for changes');
     // "Changed": the page's protections differ from its earlier scan; the hover lists what was added and removed
     const changedBadgeHtml = (item) => {
       const change = item.changed;
@@ -242,6 +244,7 @@ class History {
             <div class="history-item-content">
               <div class="history-title-row">
                 ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
+                ${item.watch === true ? `<span class="history-watch" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
                 <div class="history-title" title="${safeTitle}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>
@@ -1419,6 +1422,7 @@ class History {
       if (el) el.textContent = FormatUtils.t(key, fallback);
     };
     label('pin', item.pinned === true ? 'historyUnpin' : 'historyPin', item.pinned === true ? 'Unpin' : 'Pin');
+    label('watch', item.watch === true ? 'historyUnwatch' : 'historyWatch', item.watch === true ? 'Stop watching' : 'Watch for changes');
     label('note', item.note ? 'historyEditNote' : 'historyAddNote', item.note ? 'Edit note' : 'Add note');
   }
 
@@ -1428,10 +1432,37 @@ class History {
    * @param {{pinned?: boolean, note?: string}} patch
    */
   async annotateItem(item, patch) {
-    await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEM, id: item.id, patch });
+    const response = await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEM, id: item.id, patch });
     // Show it now; a pinned entry's age and the limit no longer apply to it, so the list is read again
     await this.loadHistoryFromStorage();
     this.renderHistory();
+    return response;
+  }
+
+  /**
+   * Watch an entry for changes (the watchlist re-scans it in the background; watching pins it) or stop watching it.
+   * @param {object} item - History entry
+   */
+  async toggleWatch(item) {
+    const watch = item.watch !== true;
+    try {
+      const response = await this.annotateItem(item, { watch });
+      if (watch && response.updated === 0 && response.limit) {
+        NotificationHelper.error(FormatUtils.t('historyWatchLimitFmt', 'You can watch up to {0} pages. Stop watching one first.', response.limit));
+        return;
+      }
+      if (!watch) {
+        NotificationHelper.success(FormatUtils.t('historyWatchStoppedNotice', 'No longer watching this page'));
+        return;
+      }
+      const settings = await Utils.getHistorySettings();
+      NotificationHelper.success(HistoryPolicy.watchModeOf(settings) === 'off'
+        ? FormatUtils.t('historyWatchStartedOffNotice', 'Watching this page. Turn on Watch pinned pages in Settings → History for it to be checked.')
+        : FormatUtils.t('historyWatchStartedNotice', 'Watching this page'));
+    } catch (error) {
+      Logger.warn('UI', '[History] Watch failed', error);
+      NotificationHelper.error(error.message);
+    }
   }
 
   /**
@@ -1815,6 +1846,8 @@ class History {
           this.copyHistoryItem(item);
         } else if (action === 'pin') {
           this.togglePin(item);
+        } else if (action === 'watch') {
+          this.toggleWatch(item);
         } else if (action === 'note') {
           this.editNote(item);
         } else if (action === 'clear-cache') {

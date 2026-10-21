@@ -70,3 +70,14 @@ test('the icons are written once: no other script or page spells the pin or the 
   assert.deepEqual(spelled('M8 3 4 7l4 4'), ['utils/format-utils.js'], 'the changed icon');
   assert.deepEqual(spelled('M6.5 6.5a8 8 0 0 1 11 0'), ['utils/format-utils.js'], 'the fingerprint icon');
 });
+
+test('a watched page has its own icon, in the card and in the entry menu', () => {
+  const FormatUtils = sandbox();
+  const svg = FormatUtils.uiIconSvg('watch');
+  assert.match(svg, /^<svg [^>]*viewBox="0 0 24 24"/);
+  assert.match(svg, /aria-hidden="true"/);
+  assert.notEqual(svg, FormatUtils.uiIconSvg('pin'));
+  const history = read('sections/history/history.js');
+  assert.ok(history.includes("FormatUtils.uiIconSvg('watch')"), 'the card draws it from the shared icons');
+  assert.match(read('sections/history/history.html'), /data-action="watch"[\s\S]*?data-menu-label="watch" data-i18n="historyWatch"/);
+});

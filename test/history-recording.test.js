@@ -405,3 +405,64 @@ test('storage warning: the share is of the limit the save was written under, not
   await other.sw.HistoryRecorder.checkStorage(5.8 * MB, 0, other.sw.chrome);
   assert.strictEqual(other.notes.length, 1, 'no limit given: 6 MB');
 });
+
+// ---- A watchlist check updates the page it watches
+
+const watched = (id, extra = {}) => ({ id, url: `https://${id}.example/`, hostname: `${id}.example`, title: id, timestamp: START - 5 * HOUR, detections: [antibot('Cloudflare')], pinned: true, watch: true, note: 'keep', ...extra });
+function watchWorld(items, settings) {
+  const w = makeWorld({ settings });
+  w.store.scrapfly_history = JSON.stringify({ items });
+  return w;
+}
+
+test('an unchanged page only has the time of its check recorded: same entry, same place, nothing else touched', async () => {
+  const w = watchWorld([watched('a'), watched('b')], { historyChangeAlerts: 'all' });
+  const result = await w.sw.HistoryRecorder.applyWatchResult('b', [antibot('Cloudflare'), fingerprint('Canvas')], w.sw.chrome, START);
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(result)), { found: true, changed: false });
+  const [a, b] = w.items();
+  assert.deepStrictEqual(a, watched('a'));
+  assert.deepStrictEqual(b, watched('b', { watchedAt: START }), 'fingerprinting is never a change');
+  assert.strictEqual(w.notes.length, 0);
+});
+
+test('a page that changed takes the new scan in the same entry, moves to the top, is marked Changed and notifies', async () => {
+  const w = watchWorld([watched('a'), watched('b', { pinned: true })], { historyChangeAlerts: 'pinned' });
+  const fresh = [antibot('DataDome'), antibot('Cloudflare')];
+  const result = await w.sw.HistoryRecorder.applyWatchResult('b', fresh, w.sw.chrome, START);
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(result)), { found: true, changed: true, added: ['DataDome'], removed: [] });
+  const items = w.items();
+  assert.deepStrictEqual(items.map(i => i.id), ['b', 'a'], 'moved to the top');
+  const b = items[0];
+  assert.strictEqual(b.timestamp, START);
+  assert.strictEqual(b.watchedAt, START);
+  assert.strictEqual(b.detectionCount, 2);
+  assert.deepStrictEqual(b.categories, ['Anti-Bot']);
+  assert.deepStrictEqual({ pinned: b.pinned, watch: b.watch, note: b.note, id: b.id, url: b.url }, { pinned: true, watch: true, note: 'keep', id: 'b', url: 'https://b.example/' }, 'pin, watch and note stay');
+  assert.deepStrictEqual(b.changed, { at: START, added: ['DataDome'], removed: [] });
+  assert.strictEqual(w.items().length, 2, 'no new entry');
+  assert.strictEqual(w.notes.length, 1);
+  assert.strictEqual(w.notes[0].title, 'Protections changed on b.example');
+});
+
+test('a lost protection is a change too, and alerts follow Settings: off sends nothing but the Changed mark stays', async () => {
+  const off = watchWorld([watched('a')], { historyChangeAlerts: 'off' });
+  const result = await off.sw.HistoryRecorder.applyWatchResult('a', [], off.sw.chrome, START);
+  assert.strictEqual(result.changed, true);
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(result.removed)), ['Cloudflare']);
+  assert.strictEqual(off.notes.length, 0);
+  assert.deepStrictEqual(off.items()[0].changed.removed, ['Cloudflare']);
+  const all = watchWorld([watched('a')], { historyChangeAlerts: 'all' });
+  await all.sw.HistoryRecorder.applyWatchResult('a', [], all.sw.chrome, START);
+  assert.strictEqual(all.notes.length, 1);
+});
+
+test('a page that is no longer pinned or watched, or no longer there, is left alone', async () => {
+  const w = watchWorld([watched('a', { watch: false }), watched('b', { pinned: false })], { historyChangeAlerts: 'all' });
+  for (const id of ['a', 'b', 'gone']) {
+    const result = await w.sw.HistoryRecorder.applyWatchResult(id, [antibot('Other')], w.sw.chrome, START);
+    assert.deepStrictEqual(JSON.parse(JSON.stringify(result)), { found: false, changed: false }, id);
+  }
+  assert.deepStrictEqual(w.items().map(i => i.id), ['a', 'b']);
+  assert.strictEqual(w.items()[0].watchedAt, undefined);
+  assert.strictEqual(w.notes.length, 0);
+});

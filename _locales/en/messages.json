@@ -6683,5 +6683,93 @@
   "ruleHistoryCheckCombinations": {
     "message": "Combinations",
     "description": "Rules → editor → Check against History: heading of the list of the rule's combinations with the pages each fires on"
+  },
+  "historyWatch": {
+    "message": "Watch for changes",
+    "description": "History \"…\" menu: watch this page (it is pinned and scanned again in the background; the watchlist is in Settings → History)"
+  },
+  "historyUnwatch": {
+    "message": "Stop watching",
+    "description": "History \"…\" menu: stop watching this page"
+  },
+  "historyWatchTip": {
+    "message": "Watching for changes",
+    "description": "Hover text of the eye on a History entry that is on the watchlist"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Last checked {0}",
+    "description": "Second line of the hover text of a watched entry; {0} is how long ago, like 3h ago"
+  },
+  "historyWatchNever": {
+    "message": "Not checked yet",
+    "description": "Second line of the hover text of a watched entry that the watchlist has not checked yet"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Watching this page",
+    "description": "Toast after choosing Watch for changes"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Watching this page. Turn on Watch pinned pages in Settings → History for it to be checked.",
+    "description": "Toast after choosing Watch for changes while the watchlist is off"
+  },
+  "historyWatchStoppedNotice": {
+    "message": "No longer watching this page",
+    "description": "Toast after choosing Stop watching"
+  },
+  "historyWatchLimitFmt": {
+    "message": "You can watch up to {0} pages. Stop watching one first.",
+    "description": "Error when the watchlist is full; {0} is the most pages it holds"
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Watch pinned pages",
+    "description": "Settings → History: title of the card of the watchlist (pinned pages that are scanned again in the background)"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Check them",
+    "description": "Label of the choice of how often the watched pages are checked (Off, Every day, Every week)"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Pages you pin and choose Watch for changes on are opened again in a background tab, one at a time (up to 10), and scanned. A page that gains or loses an anti-bot or CAPTCHA protection is marked Changed, with a notification when alerts are on. Each check is a real visit with your browser's cookies, so a signed-in page is visited as you, and a browser window must be open.",
+    "description": "Explains the watchlist: what it opens, how many pages, what it reports, and that the visit uses the browser cookies"
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Check now",
+    "description": "Button that checks the watched pages now"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{0} of {1} pages watched",
+    "description": "How many pages are on the watchlist; {1} is the most it holds"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "No check yet.",
+    "description": "The watchlist has not checked anything yet"
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "The last check found no browser window to open pages in.",
+    "description": "The watchlist needs an open browser window for its background tabs and found none"
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "The last check failed.",
+    "description": "The last watchlist check failed"
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Last check: {0} · {1} checked, {2} changed",
+    "description": "The last watchlist check; {0} is a date and time, {1} how many pages were checked, {2} how many had changed"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Checked {0} pages, {1} changed",
+    "description": "Toast after Check now; {0} is how many pages were checked, {1} how many had changed"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "No page is watched yet: pin a page in History and choose Watch for changes.",
+    "description": "Toast after Check now when no page is on the watchlist"
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "History is paused, so nothing is checked.",
+    "description": "Error after Check now while History is paused"
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "The watchlist must be off, daily or weekly",
+    "description": "Error when the watchlist setting is not one of the offered choices"
   }
 }

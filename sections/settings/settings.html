@@ -1170,6 +1170,29 @@
           </div>
         </div>
 
+        <!-- The watchlist: pinned pages marked to watch are scanned again in the background -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title" data-i18n="settingsGroupHistoryWatch">Watch pinned pages</div>
+
+          <div class="settings-card">
+            <div class="settings-card-body">
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyWatch" data-i18n="settingsHistoryWatchFrequency">Check them</label>
+                <select id="historyWatch" class="select-field">
+                  <option value="off" data-i18n="settingsBackupOff">Off</option>
+                  <option value="daily" data-i18n="settingsBackupDaily">Every day</option>
+                  <option value="weekly" data-i18n="settingsBackupWeekly">Every week</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryWatchHint">Pages you pin and choose Watch for changes on are opened again in a background tab, one at a time (up to 10), and scanned. A page that gains or loses an anti-bot or CAPTCHA protection is marked Changed, with a notification when alerts are on. Each check is a real visit with your browser's cookies, so a signed-in page is visited as you, and a browser window must be open.</p>
+              <div class="setting-row setting-row--inline">
+                <span class="setting-row-hint history-backup-last" id="historyWatchLast"></span>
+                <button type="button" id="historyWatchNowBtn" class="action-btn action-btn-outline" data-i18n="settingsHistoryWatchNow">Check now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Duplicate Prevention Group -->
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="settingsCardDuplicatePrevention">Duplicate Prevention</div>

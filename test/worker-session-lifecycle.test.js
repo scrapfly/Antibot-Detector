@@ -334,3 +334,28 @@ test('a scan replaced before the webhook step sends nothing', async () => {
   await finishing;
   assert.deepEqual(sent, []);
 });
+
+test('a scan of a watchlist tab hands its finished results to the check, and leaves no History entry and no webhook delivery', async () => {
+  const h = harness();
+  const finished = [], sent = [];
+  h.ctx.HistoryWatch = { isWatchTab: id => id === 7, scanFinished: (...args) => finished.push(JSON.parse(JSON.stringify(args))) };
+  h.ctx.Settings.sendWebhookIfEnabled = async (...args) => { sent.push(args); };
+  const state = h.begin();
+  await h.ctx.finalizeDetection(7, state);
+  assert.equal(finished.length, 1);
+  assert.deepEqual([finished[0][0], finished[0][1], finished[0][2].map(result => result.detector.id)], [7, 'https://example.test/', ['detect-demo']]);
+  assert.equal(h.calls.history.length, 0, 'the check updates the page it watches instead');
+  assert.deepEqual(sent, []);
+  assert.equal(h.ctx.detectionStates.has(7), false, 'the scan itself finished normally');
+});
+
+test('every other tab is recorded and sent as before, with the watchlist loaded', async () => {
+  const h = harness();
+  const finished = [], sent = [];
+  h.ctx.HistoryWatch = { isWatchTab: () => false, scanFinished: (...args) => finished.push(args) };
+  h.ctx.Settings.sendWebhookIfEnabled = async (...args) => { sent.push(args); };
+  await h.ctx.finalizeDetection(7, h.begin());
+  assert.deepEqual(finished, []);
+  assert.equal(h.calls.history.length, 1);
+  assert.equal(sent.length, 1);
+});

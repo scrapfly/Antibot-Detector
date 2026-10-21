@@ -181,3 +181,26 @@ test('the default settings agree with the policy', () => {
   assert.strictEqual(history.historyAutoPinMinConfidence, P.AUTO_PIN_MIN_CONFIDENCE);
   assert.strictEqual(history.historyFingerprintDays, 0);
 });
+
+// ---- The watchlist
+
+test('the watchlist is daily or weekly; anything else is off', () => {
+  assert.deepStrictEqual([...P.WATCH_MODES], ['off', 'daily', 'weekly']);
+  for (const mode of ['daily', 'weekly']) assert.strictEqual(P.watchModeOf({ historyWatch: mode }), mode);
+  for (const junk of [undefined, null, {}, { historyWatch: 'hourly' }, { historyWatch: 'DAILY' }, { historyWatch: 5 }, { historyWatch: 'off' }]) assert.strictEqual(P.watchModeOf(junk), 'off');
+});
+
+test('the pages that are watched: pinned and marked, the one checked longest ago first, at most ten', () => {
+  const page = (id, extra = {}) => ({ id, url: `https://${id}.example/`, pinned: true, watch: true, ...extra });
+  const items = [
+    page('checked-late', { watchedAt: 900 }), page('never-checked'), page('checked-early', { watchedAt: 100 }),
+    page('not-pinned', { pinned: false }), page('not-marked', { watch: false }), page('no-address', { url: '' }), null, { id: 'x' }
+  ];
+  assert.deepStrictEqual(P.watchedOf(items).map(i => i.id), ['never-checked', 'checked-early', 'checked-late']);
+  const many = Array.from({ length: 14 }, (_, i) => page(`p${i}`, { watchedAt: 1000 - i }));
+  const chosen = P.watchedOf(many);
+  assert.strictEqual(chosen.length, P.MAX_WATCHED);
+  assert.strictEqual(P.MAX_WATCHED, 10);
+  assert.deepStrictEqual(chosen.map(i => i.id), many.slice(4).reverse().map(i => i.id), 'the ten checked longest ago');
+  assert.deepStrictEqual(P.watchedOf(undefined), []);
+});
