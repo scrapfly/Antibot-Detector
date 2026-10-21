@@ -169,7 +169,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       assert.match(copied, /Browser: .* on Linux/);
       assert.match(copied, /Detectors: \d+ in total \(\d+ antibot, \d+ captcha, \d+ fingerprint\); 0 custom, 0 edited/);
       assert.match(copied, /- Debug mode on, verbose off; log collector on/);
-      assert.match(copied, /- Skipped sites: 2/);
+      assert.match(copied, /- Sites: 2 skipped; JS hooks off on 0/);
       assert.match(copied, /webhook on/);
       assert.match(copied, /Background part: up to date/);
       assert.match(copied, /Recent errors \(2, newest last; addresses, sites and keys removed\)/);

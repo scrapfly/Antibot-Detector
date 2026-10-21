@@ -25,6 +25,30 @@ test('dir() is rtl for the right-to-left languages, whatever the region, and ltr
   assert.strictEqual(override.dir(), 'rtl', 'the language chosen in Settings wins over the browser language');
 });
 
+test('apply() translates the element it is given as well as its descendants (a section is added one top-level element at a time)', () => {
+  const context = vm.createContext({ chrome: { i18n: { getUILanguage: () => 'de', getMessage: (key) => `[${key}]` } }, document: {}, console });
+  vm.runInContext(read('modules/core/i18n.js') + '\nthis.I18n = I18n;', context);
+  // The smallest stand-in for an element: attributes, a text, descendants and the one selector shape apply() uses
+  const element = (attributes, children = []) => {
+    const el = {
+      nodeType: 1, attributes: { ...attributes }, children, textContent: '',
+      getAttribute: (name) => (name in el.attributes ? el.attributes[name] : null),
+      setAttribute: (name, value) => { el.attributes[name] = value; },
+      matches: (selector) => selector.slice(1, -1) in el.attributes,
+      querySelectorAll: (selector) => children.flatMap(child => [...(child.matches(selector) ? [child] : []), ...child.querySelectorAll(selector)])
+    };
+    return el;
+  };
+  const inner = element({ 'data-i18n-title': 'btnClose', title: 'Close' });
+  const row = element({ 'data-i18n-aria-label': 'historyFiltersLabel', 'aria-label': 'Filter history' }, [inner]);
+  context.I18n.apply(row);
+  assert.strictEqual(row.attributes['aria-label'], '[historyFiltersLabel]', 'the element itself');
+  assert.strictEqual(inner.attributes.title, '[btnClose]', 'and what is inside it');
+  const heading = element({ 'data-i18n': 'settingsStorageTitle' });
+  context.I18n.apply(heading);
+  assert.strictEqual(heading.textContent, '[settingsStorageTitle]');
+});
+
 function extensionScripts() {
   const out = [];
   const skip = new Set(['node_modules', 'test', 'scripts', '.git', '.claude', 'detectors', '_locales', 'assets', 'icons', 'store']);

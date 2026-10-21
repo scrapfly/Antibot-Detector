@@ -171,7 +171,14 @@ class I18n {
 
         const scope = (typeof root.querySelectorAll === 'function') ? root : document;
 
-        scope.querySelectorAll('[data-i18n]').forEach((el) => {
+        // The element itself counts too: a section's HTML is added one top-level element at a time, and that element
+        // may carry the attribute (querySelectorAll alone only finds its descendants)
+        const each = (selector, fn) => {
+            if (scope.nodeType === 1 && typeof scope.matches === 'function' && scope.matches(selector)) fn(scope);
+            scope.querySelectorAll(selector).forEach(fn);
+        };
+
+        each('[data-i18n]', (el) => {
             const key = el.getAttribute('data-i18n');
             const value = I18n.get(key);
             if (!value) return;
@@ -182,7 +189,7 @@ class I18n {
         });
 
         // data-i18n-fmt="key" data-i18n-args="a,b,c" → I18n.format(key, a, b, c)
-        scope.querySelectorAll('[data-i18n-fmt]').forEach((el) => {
+        each('[data-i18n-fmt]', (el) => {
             const key = el.getAttribute('data-i18n-fmt');
             const argsAttr = el.getAttribute('data-i18n-args') || '';
             const args = argsAttr ? argsAttr.split(',') : [];
@@ -196,7 +203,7 @@ class I18n {
             ['data-i18n-placeholder', 'placeholder']
         ];
         for (const [src, dst] of attrPairs) {
-            scope.querySelectorAll(`[${src}]`).forEach((el) => {
+            each(`[${src}]`, (el) => {
                 const key = el.getAttribute(src);
                 const value = I18n.get(key);
                 if (value) el.setAttribute(dst, value);

@@ -507,16 +507,16 @@ async function scenario(name, fn) {
       const rows = JSON.parse(cards[0].badgeTip).map(r => r.label);
       assert.deepEqual(rows, ['Added: DataDome', 'Removed: Akamai']);
 
-      // The menu names the action for this entry (Unpin / Edit note on the first, Pin / Add note on the second)
+      // The menu names the action for this entry (Unpin / Watch for changes / Edit note on the first, Pin / Watch for changes / Add note on the second: watching a page pins it)
       const menuLabels = async (index) => {
         await page.$$eval('.history-item .history-more-btn', (els, i) => els[i].click(), index);
         await page.waitForSelector('#historyItemMenu:not([hidden])');
         const labels = await page.$$eval('#historyItemMenu [data-menu-label]', els => els.map(el => el.textContent));
         return labels;
       };
-      assert.deepEqual(await menuLabels(0), ['Unpin', 'Edit note']);
+      assert.deepEqual(await menuLabels(0), ['Unpin', 'Watch for changes', 'Edit note']);
       await page.keyboard.press('Escape');
-      assert.deepEqual(await menuLabels(1), ['Pin', 'Add note']);
+      assert.deepEqual(await menuLabels(1), ['Pin', 'Watch for changes', 'Add note']);
 
       // Pin the second entry
       await page.$eval('#historyItemMenu [data-action="pin"]', el => el.click());
