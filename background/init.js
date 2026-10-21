@@ -115,6 +115,12 @@ HistoryBackup.init();
 // (rebuilt on the next visit) gives up space before any history entry does.
 HistoryStore.setQuotaRelief(() => DetectionEngineManager.shedStoredDetections());
 
+// How much History may take: the size the person chose in Settings (6 MB without the unlimitedStorage permission)
+HistoryStore.setBudget(async () => {
+    const settings = await Utils.getHistorySettings();
+    return HistoryStore.budgetFor(settings.historyMaxMB, HistoryStore.hasUnlimitedStorage());
+});
+
 // In-page notices are drawn by the worker: load the chosen UI language (and
 // follow changes) so their text matches the popup.
 I18n.syncOverrideFromStorage();

@@ -392,3 +392,16 @@ test('a page that is not recorded is not pinned either', async () => {
   assert.strictEqual(await w.save('https://skip.example/', [hard('Akamai')], { ...HARD, historyEnabled: false }), false);
   assert.deepStrictEqual(w.items(), []);
 });
+
+test('storage warning: the share is of the limit the save was written under, not always 6 MB', async () => {
+  const w = makeWorld();
+  const R = w.sw.HistoryRecorder;
+  const MB = 1024 * 1024;
+  await R.checkStorage(10 * MB, 0, w.sw.chrome, 25 * MB);
+  assert.strictEqual(w.notes.length, 0, '10 of 25 MB is not nearly full');
+  await R.checkStorage(23 * MB, 0, w.sw.chrome, 25 * MB);
+  assert.strictEqual(w.notes.length, 1, '23 of 25 MB is');
+  const other = makeWorld();
+  await other.sw.HistoryRecorder.checkStorage(5.8 * MB, 0, other.sw.chrome);
+  assert.strictEqual(other.notes.length, 1, 'no limit given: 6 MB');
+});

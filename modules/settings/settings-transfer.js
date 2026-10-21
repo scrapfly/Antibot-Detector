@@ -12,7 +12,7 @@
         history: ['historyLimit', 'historyAutoDelete', 'historyAutoDeleteDays', 'exportFormat', 'includeTimestamps', 'historyBypassCache',
             'historyEnabled', 'historySkipIncognito', 'historyMinConfidence', 'historySkipFingerprintOnly',
             'historyExcludedDomains', 'historyChangeAlerts', 'historyBackup', 'historyClearOnClose',
-            'historyFingerprintDays', 'historyAutoPinHard', 'historyAutoPinVendors', 'historyAutoPinMinConfidence'],
+            'historyFingerprintDays', 'historyAutoPinHard', 'historyAutoPinVendors', 'historyAutoPinMinConfidence', 'historyMaxMB'],
         duplicatePrevention: ['preventDuplicates', 'duplicateScope', 'duplicateDuration', 'duplicateUnit', 'duplicateAction'],
         updates: ['autoUpdate', 'checkIntervalHours']
     };

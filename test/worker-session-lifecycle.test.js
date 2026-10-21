@@ -198,7 +198,7 @@ test('startup initialization and an early event reuse one detector load', async 
   h.ctx.HistoryRetention = { init() {} };
   h.ctx.HistoryBackup = { init() {} };
   h.ctx.DetectionCacheRetention = { init() {} };
-  h.ctx.HistoryStore = { setQuotaRelief() {} };
+  h.ctx.HistoryStore = { setQuotaRelief() {}, setBudget() {} };
   h.ctx.I18n = { syncOverrideFromStorage() {} };
   vm.runInContext(read('background/init.js'), h.ctx, { filename: 'background/init.js' });
   const lazy = h.ctx.ensureDetectorManagerInitialized();

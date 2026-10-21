@@ -5,7 +5,7 @@
 SettingsUI.readStorageSizes = async function() {
     const local = chrome.storage.local;
     const sizes = Object.fromEntries(await Promise.all(StorageOverview.GROUPS.map(async group => [group.id, await local.getBytesInUse(group.keys)])));
-    return StorageOverview.summarize(sizes, await local.getBytesInUse(null), local.QUOTA_BYTES);
+    return StorageOverview.summarize(sizes, await local.getBytesInUse(null), local.QUOTA_BYTES, HistoryStore.hasUnlimitedStorage());
 };
 
 SettingsUI.refreshStorageOverview = async function() {
@@ -61,7 +61,12 @@ SettingsUI.refreshStorageOverview = async function() {
     const fill = document.querySelector('#storageMeterFill');
     if (fill) fill.style.width = `${percent}%`;
     const total = document.querySelector('#storageTotalText');
-    if (total) total.textContent = text('storageTotalFmt', '{0} of {1} used', size(summary.total), size(summary.quota));
+    if (total) {
+        total.textContent = summary.unlimited
+            ? text('storageTotalUnlimitedFmt', '{0} used, no limit', size(summary.total))
+            : text('storageTotalFmt', '{0} of {1} used', size(summary.total), size(summary.quota));
+    }
+    if (meter) meter.hidden = summary.unlimited;
 };
 
 /** What each Clear button does, after a confirmation. The cache, the captures and the logs go through the worker; History through its own tab. */

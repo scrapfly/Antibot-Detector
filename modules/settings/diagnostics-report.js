@@ -89,13 +89,13 @@
     add(`- Cache: ${detection.cacheDuration == null ? 'default' : `${count(detection.cacheDuration)} ${String(detection.cacheUnit || 'days')}`}, ${String(detection.cacheScope || 'domain')} scope`);
     const listed = (key) => (Array.isArray(detection[key]) ? detection[key].length : 0);
     add(`- Sites: ${detection.scanMode === 'allowlist' ? `only ${listed('allowedDomains')} chosen` : `${listed('blacklistedDomains')} skipped`}; JS hooks off on ${listed('hooksOffDomains')}`);
-    add(`- History: ${onOff(history.historyEnabled !== false)}, limit ${count(history.historyLimit)} entries, backup ${String(history.historyBackup || 'off')}, clear on close ${onOff(history.historyClearOnClose)}`);
+    add(`- History: ${onOff(history.historyEnabled !== false)}, limit ${count(history.historyLimit)} entries, up to ${count(history.historyMaxMB) || 6} MB, backup ${String(history.historyBackup || 'off')}, clear on close ${onOff(history.historyClearOnClose)}`);
     add(`- Detection sort: ${String(detection.sortBy || 'category')}; tools need ${count(detection.advancedToolsMinConfidence)}% confidence`);
     add();
 
     const st = e.storage || {};
     const hs = e.history || {};
-    add(`Storage: ${sizeOf(st.used)} of ${sizeOf(st.quota || 10485760)}${hs.entries != null ? `; History ${count(hs.entries)} entries, ${sizeOf(hs.bytes)}` : ''}`);
+    add(`Storage: ${st.unlimited === true ? `${sizeOf(st.used)} used (unlimited storage allowed)` : `${sizeOf(st.used)} of ${sizeOf(st.quota || 10485760)}`}${hs.entries != null ? `; History ${count(hs.entries)} entries, ${sizeOf(hs.bytes)}` : ''}`);
     add(`Background part: ${e.workerCurrent === true ? 'up to date' : e.workerCurrent === false ? 'OUT OF DATE (reload the extension)' : 'unknown'}`);
     add();
 

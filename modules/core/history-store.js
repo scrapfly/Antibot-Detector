@@ -23,10 +23,11 @@
 
   const STORAGE_KEY = 'scrapfly_history';
 
-  // History's share of the 10 MB quota (the stored JSON string is escaped
-  // again by the browser, about 15% more); the detection cache, detectors and
-  // settings use the rest. About 1,000 typical slim entries fit.
-  const MAX_BYTES = 6 * 1024 * 1024;
+  // The sizes History may take, in MB. 6 MB is History's share of the 10 MB quota (the stored JSON string is escaped
+  // again by the browser, about 15% more); the detection cache, detectors and settings use the rest. About 1,000
+  // typical slim entries fit. A larger size needs the unlimitedStorage permission (manifest.json): without it, the 10 MB quota applies.
+  const SIZES_MB = Object.freeze([6, 12, 25]);
+  const MAX_BYTES = SIZES_MB[0] * 1024 * 1024;
   const MAX_VALUE_LENGTH = 300;
   // Found rows kept per detection for the combination checklist (ids are ~22 characters)
   const MAX_COMBO_FOUND = 32;
@@ -39,6 +40,36 @@
   // The check that a message comes from an extension page (loaded in the worker; required in Node tests)
   const messageSender = () => root.MessageSender
     || (typeof module !== 'undefined' && typeof require === 'function' ? require('./message-sender.js') : null);
+
+  /**
+   * The size limit in bytes for the size the person chose: one of SIZES_MB, and 6 MB whatever was chosen when the
+   * extension does not have unlimited storage (see hasUnlimitedStorage).
+   */
+  /** Does the manifest ask for unlimited storage, so that the 10 MB quota does not apply? */
+  function hasUnlimitedStorage(manifest = root.chrome && root.chrome.runtime && root.chrome.runtime.getManifest && root.chrome.runtime.getManifest()) {
+    return !!manifest && Array.isArray(manifest.permissions) && manifest.permissions.includes('unlimitedStorage');
+  }
+
+  function budgetFor(mb, hasUnlimited) {
+    const size = SIZES_MB.includes(Number(mb)) ? Number(mb) : SIZES_MB[0];
+    return (hasUnlimited === true ? size : SIZES_MB[0]) * 1024 * 1024;
+  }
+
+  // Optional async function the worker registers to say how much History may take now (the person's size and the permission)
+  let budgetProvider = null;
+  function setBudget(provider) {
+    budgetProvider = typeof provider === 'function' ? provider : null;
+  }
+  /** The limit for a write: never below 6 MB, 6 MB when there is no provider or it fails. */
+  async function currentBudget() {
+    if (!budgetProvider) return MAX_BYTES;
+    try {
+      const bytes = Number(await budgetProvider());
+      return Number.isFinite(bytes) && bytes > MAX_BYTES ? bytes : MAX_BYTES;
+    } catch (_) {
+      return MAX_BYTES;
+    }
+  }
 
   // Optional async function the worker registers to free space elsewhere
   // (the detection cache, which rebuilds itself) before history entries go.
@@ -248,15 +279,17 @@
 
   /**
    * How much of History's share of the storage quota is used.
+   * @param {object} [storage]
+   * @param {number} [maxBytes] the limit in force (budgetFor): the popup computes it, the worker's own writes use the provider
    * @returns {Promise<{bytes: number, budget: number, entries: number, pinned: number, trimmed: ({at: number, count: number, total: number}|null)}>}
    */
-  async function usage(storage = root.chrome && root.chrome.storage && root.chrome.storage.local) {
+  async function usage(storage = root.chrome && root.chrome.storage && root.chrome.storage.local, maxBytes = MAX_BYTES) {
     const stored = await storage.get([STORAGE_KEY]);
     const raw = stored[STORAGE_KEY];
     const { items, container } = parse(raw);
     return {
       bytes: raw === undefined ? 0 : (typeof raw === 'string' ? raw.length : JSON.stringify(raw).length),
-      budget: MAX_BYTES,
+      budget: maxBytes,
       entries: items.length,
       pinned: items.filter(item => item && item.pinned === true).length,
       trimmed: container && container.trimmed ? container.trimmed : null
@@ -269,10 +302,12 @@
    * Write items within the budget. If the browser still reports the quota
    * (the rest of storage grew), let the registered relief free space once,
    * then keep the newest half and try again.
-   * @returns {Promise<{items: Array<object>, dropped: number, bytes: number}>}
+   * @param {number} [maxBytes] the limit; the registered budget when not given
+   * @returns {Promise<{items: Array<object>, dropped: number, bytes: number, budget: number}>}
    */
-  async function write(storage, items, container = null) {
-    let { parts, items: kept, dropped } = budgetParts(items.map(slimEntry), MAX_BYTES, container);
+  async function write(storage, items, container = null, maxBytes) {
+    const budget = maxBytes > 0 ? maxBytes : await currentBudget();
+    let { parts, items: kept, dropped } = budgetParts(items.map(slimEntry), budget, container);
     let relieved = false;
     // What the size limit removed is kept beside the entries, so Settings can say so
     const withTrim = () => {
@@ -291,7 +326,7 @@
       const value = joinParts(parts, withTrim());
       try {
         await storage.set({ [STORAGE_KEY]: value });
-        return { items: kept, dropped, bytes: value.length };
+        return { items: kept, dropped, bytes: value.length, budget };
       } catch (error) {
         if (!isQuotaError(error)) throw error;
         if (!relieved && quotaRelief) {
@@ -332,7 +367,7 @@
       const result = out && !Array.isArray(out) ? out.result : undefined;
       if (!Array.isArray(next)) return { items, changed: false, result };
       const written = await write(storage, next, container);
-      return { items: written.items, changed: true, result, dropped: written.dropped, bytes: written.bytes };
+      return { items: written.items, changed: true, result, dropped: written.dropped, bytes: written.bytes, budget: written.budget };
     });
     queue = work.catch(() => undefined);
     return work;
@@ -430,12 +465,13 @@
       if (raw === undefined) return { changed: false, before: 0, after: 0, dropped: 0 };
       const before = typeof raw === 'string' ? raw.length : JSON.stringify(raw).length;
       const { items, container } = parse(raw);
-      const { parts, dropped } = budgetParts(items.map(slimEntry), MAX_BYTES, container);
+      const budget = await currentBudget();
+      const { parts, dropped } = budgetParts(items.map(slimEntry), budget, container);
       // Already slim and compact: only lastUpdated would change
       if (typeof raw === 'string' && dropped === 0 && joinParts(parts, container).length >= before - 64) {
         return { changed: false, before, after: before, dropped: 0 };
       }
-      const written = await write(storage, items, container);
+      const written = await write(storage, items, container, budget);
       return { changed: true, before, after: written.bytes, dropped: written.dropped };
     });
     queue = work.catch(() => undefined);
@@ -443,8 +479,8 @@
   }
 
   const HistoryStore = {
-    STORAGE_KEY, MAX_BYTES, Messages, parse, serialize, read, mutate, applyImport, registerHandlers,
-    slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, applyLimit, cleanAnnotation, annotate, usage
+    STORAGE_KEY, MAX_BYTES, SIZES_MB, budgetFor, hasUnlimitedStorage, Messages, parse, serialize, read, mutate, applyImport, registerHandlers,
+    slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, setBudget, applyLimit, cleanAnnotation, annotate, usage
   };
 
   root.HistoryStore = HistoryStore;

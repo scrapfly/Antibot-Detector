@@ -14,7 +14,7 @@
  *      after that many days, whatever auto-delete says about the others.
  * Pinned entries are exempt from all four (and from the size limit in
  * HistoryStore): the user chose to keep them.
- * Every write also stays under HistoryStore.MAX_BYTES (HistoryStore.write),
+ * Every write also stays under the size History may take (HistoryStore.write: 6 MB, or the size the person chose),
  * and on start a history saved by an older build is compacted once.
  *
  * Runs on service-worker start, whenever settings or history are written, and
@@ -200,6 +200,8 @@ const HistoryRetention = {
 
     async run(reason = 'manual') {
         const config = await this.readConfig();
+        // A saved History size may be below what is stored: fit it now, not at the next save
+        if (reason === 'settings_saved') await this.compactStored();
 
         // Same serialized writer as detection saves and popup actions (HistoryStore)
         const { result: removed } = await HistoryStore.mutate((items) => {

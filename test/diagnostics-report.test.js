@@ -37,7 +37,7 @@ test('the report names the versions, the counts and the switches', () => {
   assert.match(report, /- Notifications on; JS API off; webhook on/);
   assert.match(report, /- Cache: 7 days, domain scope/);
   assert.match(report, /- Sites: 2 skipped; JS hooks off on 0/);
-  assert.match(report, /- History: on, limit 500 entries, backup weekly, clear on close off/);
+  assert.match(report, /- History: on, limit 500 entries, up to 6 MB, backup weekly, clear on close off/);
   assert.match(report, /Storage: 2\.2 MB of 10\.0 MB; History 120 entries, 1\.4 MB/);
   assert.match(report, /Background part: up to date/);
 });

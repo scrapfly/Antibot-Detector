@@ -376,7 +376,9 @@ class Utils {
       // Pages that pin themselves (HistoryPolicy.shouldAutoPin reads and clamps these)
       historyAutoPinHard: historySettings.historyAutoPinHard === true,
       historyAutoPinVendors: Array.isArray(historySettings.historyAutoPinVendors) ? historySettings.historyAutoPinVendors.filter(name => typeof name === 'string') : [],
-      historyAutoPinMinConfidence: historySettings.historyAutoPinMinConfidence
+      historyAutoPinMinConfidence: historySettings.historyAutoPinMinConfidence,
+      // The size History may take (HistoryStore.budgetFor reads it; larger than 6 MB needs the unlimitedStorage permission)
+      historyMaxMB: historySettings.historyMaxMB
     };
   }
 

@@ -160,3 +160,34 @@ test('run() applies the fingerprinting-only rule from the saved settings', async
     delete global.chrome;
   }
 });
+
+// ---- A new History size, or a permission taken away, is applied when Settings are saved
+
+test('saving Settings fits History to the size in force at once; other runs leave a History that fits alone', async () => {
+  const MB = 1024 * 1024;
+  const store = {
+    scrapfly_settings: JSON.stringify({ settings: { history: { historyLimit: 100000 } } })
+  };
+  const big = (id) => ({ id, url: `https://${id}.example/`, hostname: `${id}.example`, title: id, timestamp: NOW, detections: [{ detector: { name: 'X' }, category: 'Anti-Bot', confidence: 90, matches: [{ type: 'content', value: 'v'.repeat(250) }] }], note: 'n'.repeat(250) });
+  const items = Array.from({ length: 30000 }, (_, i) => big(`e${i}`));
+  const HistoryStore = require('../modules/core/history-store.js');
+  global.chrome = { storage: { local: {
+    get: async (keys) => Object.fromEntries([].concat(keys).filter(k => k in store).map((k) => [k, store[k]])),
+    set: async (obj) => { Object.assign(store, obj); }
+  } } };
+  try {
+    HistoryStore.setBudget(async () => 25 * MB);
+    await HistoryStore.mutate(() => items, global.chrome.storage.local);
+    const wide = store.scrapfly_history.length;
+    assert.ok(wide > 6 * MB, `${wide} bytes`);
+    HistoryStore.setBudget(async () => 6 * MB);
+    await HistoryRetention.run('history_write');
+    assert.strictEqual(store.scrapfly_history.length, wide, 'an ordinary run does not rewrite History');
+    await HistoryRetention.run('settings_saved');
+    assert.ok(store.scrapfly_history.length <= 6 * MB, 'saving Settings applies the lower size');
+    assert.ok(JSON.parse(store.scrapfly_history).items.length < items.length);
+  } finally {
+    HistoryStore.setBudget(null);
+    delete global.chrome;
+  }
+});

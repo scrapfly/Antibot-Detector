@@ -69,3 +69,15 @@ test('summarize() is safe with missing, negative and inconsistent numbers', () =
   assert.strictEqual(StorageOverview.summarize({}, 20000000).ratio, 1, 'the ratio stops at full');
   assert.strictEqual(StorageOverview.summarize({}, 10, 0).quota, 10485760, 'no quota means the default one');
 });
+
+test('with unlimited storage there is no quota to fill: the total is shown alone and the meter stays empty', () => {
+  const sizes = { settings: 1000, history: 30 * 1024 * 1024 };
+  const limited = StorageOverview.summarize(sizes, 31 * 1024 * 1024);
+  assert.strictEqual(limited.unlimited, false);
+  assert.strictEqual(limited.ratio, 1, 'over the quota: full');
+  const unlimited = StorageOverview.summarize(sizes, 31 * 1024 * 1024, StorageOverview.QUOTA_BYTES, true);
+  assert.strictEqual(unlimited.unlimited, true);
+  assert.strictEqual(unlimited.ratio, 0);
+  assert.strictEqual(unlimited.total, 31 * 1024 * 1024);
+  assert.strictEqual(unlimited.rows.find(row => row.id === 'history').bytes, 30 * 1024 * 1024, 'the parts are the same');
+});

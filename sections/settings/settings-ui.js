@@ -97,7 +97,7 @@ SettingsUI.switchTab = function(tabName) {
       }
     });
     // The storage meter and last backup are read when the tab is opened
-    if (tabName === 'history') SettingsUI.refreshHistoryStorage();
+    if (tabName === 'history') SettingsUI.refreshHistoryStorage.call(this);
     if (tabName === 'data') SettingsUI.refreshStorageOverview();
 };
 
@@ -445,6 +445,7 @@ SettingsUI.updateSettingsUI = function() {
       check('historyClearOnClose', h.historyClearOnClose === true);
       choose('historyMinConfidence', h.historyMinConfidence ?? 0);
       choose('historyFingerprintDays', h.historyFingerprintDays ?? 0);
+      SettingsUI.populateHistorySize.call(this, h.historyMaxMB);
       check('historyAutoPinHard', h.historyAutoPinHard === true);
       choose('historyAutoPinVendors', (Array.isArray(h.historyAutoPinVendors) ? h.historyAutoPinVendors : []).join('\n'));
       choose('historyAutoPinMinConfidence', h.historyAutoPinMinConfidence ?? HistoryPolicy.AUTO_PIN_MIN_CONFIDENCE);
@@ -593,6 +594,7 @@ SettingsUI.getSettingsFromUI = function() {
       historySkipIncognito: document.querySelector('#historySkipIncognito')?.checked ?? this.settings.history?.historySkipIncognito ?? true,
       historyMinConfidence: parseInt(document.querySelector('#historyMinConfidence')?.value ?? this.settings.history?.historyMinConfidence ?? 0, 10),
       historyFingerprintDays: parseInt(document.querySelector('#historyFingerprintDays')?.value ?? this.settings.history?.historyFingerprintDays ?? 0, 10),
+      historyMaxMB: parseInt(document.querySelector('#historyMaxMB')?.value ?? this.settings.history?.historyMaxMB ?? HistoryStore.SIZES_MB[0], 10),
       historyAutoPinHard: document.querySelector('#historyAutoPinHard')?.checked ?? this.settings.history?.historyAutoPinHard ?? false,
       historyAutoPinVendors: SettingsUI.readNameList('#historyAutoPinVendors', this.settings.history?.historyAutoPinVendors),
       historyAutoPinMinConfidence: parseInt(document.querySelector('#historyAutoPinMinConfidence')?.value ?? this.settings.history?.historyAutoPinMinConfidence ?? HistoryPolicy.AUTO_PIN_MIN_CONFIDENCE, 10),
@@ -662,6 +664,10 @@ SettingsUI.validateSettings = function(settings) {
       if (!Number.isInteger(confidence) || confidence < 0 || confidence > 100) {
         errors.push(text('settingsUiErrAutoPinConfidence', 'Pin confidence must be between 0 and 100'));
       }
+    }
+
+    if (settings.history && settings.history.historyMaxMB !== undefined && !HistoryStore.SIZES_MB.includes(settings.history.historyMaxMB)) {
+      errors.push(text('settingsUiErrHistorySizeFmt', 'History size must be one of {0} MB', HistoryStore.SIZES_MB.join(', ')));
     }
 
     if (settings.history && settings.history.historyFingerprintDays !== undefined) {
@@ -912,9 +918,12 @@ SettingsUI.setupEventListeners = function() {
       historyAutoDeleteToggle.addEventListener('change', () => SettingsUI.syncHistoryAutoDeleteRow());
     }
 
+    const historyMaxMB = document.querySelector('#historyMaxMB');
+    if (historyMaxMB) historyMaxMB.addEventListener('change', () => SettingsUI.chooseHistorySize.call(this));
+
     const historyBackupNowBtn = document.querySelector('#historyBackupNowBtn');
     if (historyBackupNowBtn) {
-      historyBackupNowBtn.addEventListener('click', () => SettingsUI.backUpHistoryNow(historyBackupNowBtn));
+      historyBackupNowBtn.addEventListener('click', () => SettingsUI.backUpHistoryNow.call(this, historyBackupNowBtn));
     }
 
     const openHistoryStatsBtn = document.querySelector('#openHistoryStatsBtn');
@@ -1206,6 +1215,57 @@ SettingsUI.readSiteList = function(selector, fallback) {
   return DomainList.normalize(box.value);
 };
 
+/** How much History may take now: the saved size (6 MB if the extension has no unlimited storage). */
+SettingsUI.historyBudget = function() {
+  const saved = this && this.settings && this.settings.history && this.settings.history.historyMaxMB;
+  return HistoryStore.budgetFor(saved, HistoryStore.hasUnlimitedStorage());
+};
+
+/** The History size box: one choice per size, the saved one selected. Choosing a size is handled by chooseHistorySize. */
+SettingsUI.populateHistorySize = function(saved) {
+  const select = document.querySelector('#historyMaxMB');
+  if (!select) return;
+  select.replaceChildren(...HistoryStore.SIZES_MB.map((mb) => {
+    const option = document.createElement('option');
+    option.value = String(mb);
+    option.textContent = `${mb} MB`;
+    return option;
+  }));
+  const mb = HistoryStore.SIZES_MB.includes(Number(saved)) ? Number(saved) : HistoryStore.SIZES_MB[0];
+  select.value = String(mb);
+  select.dataset.applied = String(mb);
+};
+
+/**
+ * A size was chosen. Below what History already uses, the oldest unpinned pages go when it is saved, so that is
+ * confirmed first; declined, the box goes back to the size that applied.
+ */
+SettingsUI.chooseHistorySize = async function() {
+  const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+  const select = document.querySelector('#historyMaxMB');
+  if (!select) return;
+  const wanted = parseInt(select.value, 10);
+  const back = () => { select.value = select.dataset.applied || String(HistoryStore.SIZES_MB[0]); };
+  try {
+    const limit = HistoryStore.budgetFor(wanted, HistoryStore.hasUnlimitedStorage());
+    const usage = await HistoryStore.usage(chrome.storage.local, limit);
+    if (usage.bytes > limit) {
+      const size = (bytes) => SettingsUI.formatStorageSize(bytes);
+      const confirmed = await NotificationHelper.confirm({
+        title: text('settingsHistorySizeLowerTitle', 'Lower the History size'),
+        message: text('settingsHistorySizeLowerMessage', 'History uses {0} and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.', size(usage.bytes), size(limit)),
+        type: 'warning', tone: 'danger',
+        confirmText: text('settingsHistorySizeLowerConfirm', 'Lower the size'), cancelText: text('btnCancel', 'Cancel')
+      });
+      if (!confirmed) { back(); return; }
+    }
+    select.dataset.applied = String(wanted);
+  } catch (error) {
+    Logger.warn('UI', 'Could not change the History size', error);
+    back();
+  }
+};
+
 /** A box with one name per line (a protection's name) as a clean list (what is already saved when the box is not on the page). */
 SettingsUI.readNameList = function(selector, fallback) {
   const box = document.querySelector(selector);
@@ -1239,7 +1299,7 @@ SettingsUI.refreshHistoryStorage = async function() {
   const label = document.querySelector('#historyMeterText');
   if (!meter || !label) return;
   try {
-    const usage = await HistoryStore.usage(chrome.storage.local);
+    const usage = await HistoryStore.usage(chrome.storage.local, SettingsUI.historyBudget.call(this));
     const ratio = usage.budget > 0 ? Math.min(usage.bytes / usage.budget, 1) : 0;
     const percent = Math.round(ratio * 100);
     meter.setAttribute('aria-valuenow', String(percent));
@@ -1297,6 +1357,6 @@ SettingsUI.backUpHistoryNow = async function(button) {
     NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
   } finally {
     if (button) button.disabled = false;
-    SettingsUI.refreshHistoryStorage();
+    SettingsUI.refreshHistoryStorage.call(this);
   }
 };

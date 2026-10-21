@@ -370,3 +370,74 @@ test('a quota failure that cannot be recovered logs one short warning, not a sta
   assert.match(logs[0][2], /Storage is full/);
   assert.strictEqual(logs[0].length, 3, 'no error object attached');
 });
+
+// ---- The size History may take is the person's choice (6, 12 or 25 MB)
+
+const MB = 1024 * 1024;
+
+test('the sizes are 6, 12 and 25 MB, and above 6 MB they need the permission', () => {
+  assert.deepStrictEqual([...HistoryStore.SIZES_MB], [6, 12, 25]);
+  assert.strictEqual(HistoryStore.MAX_BYTES, 6 * MB);
+  assert.strictEqual(HistoryStore.budgetFor(12, true), 12 * MB);
+  assert.strictEqual(HistoryStore.budgetFor(25, true), 25 * MB);
+  assert.strictEqual(HistoryStore.budgetFor(25, false), 6 * MB, 'without the permission');
+  assert.strictEqual(HistoryStore.budgetFor(25, undefined), 6 * MB);
+  assert.strictEqual(HistoryStore.budgetFor('12', true), 12 * MB, 'a number saved as text');
+  for (const junk of [undefined, null, 0, 7, 100, -12, 'x', NaN]) assert.strictEqual(HistoryStore.budgetFor(junk, true), 6 * MB, String(junk));
+  assert.ok(Object.isFrozen(HistoryStore.SIZES_MB));
+});
+
+test('a write is cut to the size in force: the registered one, 6 MB without one, and never below 6 MB', async () => {
+  const items = Array.from({ length: 1500 }, (_, i) => fullEntry(i, 12, true));
+  try {
+    const small = await HistoryStore.mutate(() => items, memoryStorage());
+    assert.strictEqual(small.budget, 6 * MB);
+    assert.ok(small.dropped > 0);
+
+    HistoryStore.setBudget(async () => 25 * MB);
+    const big = await HistoryStore.mutate(() => items, memoryStorage());
+    assert.strictEqual(big.budget, 25 * MB);
+    assert.ok(big.dropped < small.dropped, `${big.dropped} dropped at 25 MB, ${small.dropped} at 6 MB`);
+    assert.ok(big.bytes > 6 * MB && big.bytes <= 25 * MB, `${big.bytes} bytes`);
+
+    HistoryStore.setBudget(async () => 1000);
+    assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB, 'a provider cannot go below the smallest size');
+    HistoryStore.setBudget(async () => { throw new Error('settings unreadable'); });
+    assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB, 'a provider that fails costs nothing');
+    HistoryStore.setBudget(async () => 'nonsense');
+    assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB);
+  } finally {
+    HistoryStore.setBudget(null);
+  }
+  assert.strictEqual((await HistoryStore.mutate(() => items.slice(0, 3), memoryStorage())).budget, 6 * MB, 'no provider: 6 MB');
+});
+
+test('lowering the size takes the oldest unpinned entries at the next write, and compact() applies it at once', async () => {
+  const storage = memoryStorage();
+  const items = Array.from({ length: 1500 }, (_, i) => ({ ...fullEntry(i, 12, true), ...(i === 1499 ? { pinned: true } : {}) }));
+  try {
+    HistoryStore.setBudget(async () => 25 * MB);
+    const wide = await HistoryStore.mutate(() => items, storage);
+    assert.ok(wide.bytes > 6 * MB, 'History is larger than the smallest size');
+    const before = HistoryStore.parse(storage.store[HistoryStore.STORAGE_KEY]).items.length;
+
+    HistoryStore.setBudget(async () => 6 * MB);
+    const result = await HistoryStore.compact(storage);
+    assert.strictEqual(result.changed, true);
+    assert.ok(result.dropped > 0 && result.after <= 6 * MB, `${result.after} bytes after`);
+    const after = HistoryStore.parse(storage.store[HistoryStore.STORAGE_KEY]).items;
+    assert.ok(after.length < before);
+    assert.strictEqual(after[after.length - 1].id, 'detection_1499', 'the oldest entry is the pinned one: it stays');
+    assert.ok(after.find(i => i.id === 'detection_0'), 'the newest stay');
+    assert.deepStrictEqual((await HistoryStore.compact(storage)).changed, false, 'nothing more to do');
+  } finally {
+    HistoryStore.setBudget(null);
+  }
+});
+
+test('usage() reports the limit it is given, and 6 MB by default', async () => {
+  const storage = memoryStorage();
+  await HistoryStore.mutate(() => [fullEntry(0, 2)], storage);
+  assert.strictEqual((await HistoryStore.usage(storage)).budget, 6 * MB);
+  assert.strictEqual((await HistoryStore.usage(storage, 25 * MB)).budget, 25 * MB);
+});

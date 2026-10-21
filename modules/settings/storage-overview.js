@@ -40,9 +40,10 @@
    * @param {Object<string, number>} sizes  bytes in use per group id
    * @param {number} total                  bytes in use by the whole storage
    * @param {number} [quota]
+   * @param {boolean} [unlimited]           the browser allows unlimited storage (the optional permission): there is no quota to fill
    * @returns {{rows: Array<{id, labelKey, label, bytes, clear, empty}>, other: number, total: number, quota: number, ratio: number}}
    */
-  function summarize(sizes, total, quota = QUOTA_BYTES) {
+  function summarize(sizes, total, quota = QUOTA_BYTES, unlimited = false) {
     const rows = GROUPS.map(group => {
       const used = bytes(sizes && sizes[group.id]);
       return { id: group.id, labelKey: group.labelKey, label: group.label, bytes: used, clear: group.clear, empty: used < EMPTY_BELOW };
@@ -50,7 +51,7 @@
     const known = rows.reduce((sum, row) => sum + row.bytes, 0);
     const all = Math.max(bytes(total), known);
     const limit = bytes(quota) || QUOTA_BYTES;
-    return { rows, other: all - known, total: all, quota: limit, ratio: Math.min(1, all / limit) };
+    return { rows, other: all - known, total: all, quota: limit, unlimited: unlimited === true, ratio: unlimited === true ? 0 : Math.min(1, all / limit) };
   }
 
   const api = { QUOTA_BYTES, EMPTY_BELOW, GROUPS, summarize };

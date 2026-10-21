@@ -98,7 +98,8 @@
       "historyFingerprintDays": 0,
       "historyAutoPinHard": false,
       "historyAutoPinVendors": [],
-      "historyAutoPinMinConfidence": 80
+      "historyAutoPinMinConfidence": 80,
+      "historyMaxMB": 6
     },
 
     "duplicatePrevention": {

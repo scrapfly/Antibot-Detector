@@ -38,7 +38,7 @@ SettingsUI.gatherDiagnostics = async function(settings) {
         languageOverride: stored.scrapfly_language_override || 'auto',
         detectors,
         history: history ? { entries: history.entries, bytes: history.bytes } : undefined,
-        storage: sizes ? { used: sizes.total, quota: sizes.quota } : undefined,
+        storage: sizes ? { used: sizes.total, quota: sizes.quota, unlimited: sizes.unlimited } : undefined,
         workerCurrent: await SettingsUI.workerIsCurrent().catch(() => null),
         logs: { enabled: settings.logCollectorEnabled === true, errors: logs.filter(entry => entry && entry.level === 'error').slice(-DiagnosticsReport.MAX_ERRORS) }
     };

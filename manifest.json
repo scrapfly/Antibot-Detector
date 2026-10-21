@@ -19,7 +19,8 @@
     "cookies",
     "notifications",
     "downloads",
-    "alarms"
+    "alarms",
+    "unlimitedStorage"
   ],
 
   "host_permissions": [

@@ -11,6 +11,7 @@
  *   Pin automatically   a hard or a named protection pins the page, a weak one does not, unpinning is final (also when the
  *                       page is scanned again), at most 50 pages pin themselves, the pin says it came by itself
  *   Fingerprint clock   fingerprinting-only pages go after their own number of days, pinned and other pages stay, the alarm follows
+ *   History size       12 MB keeps what 6 MB would cut, the meter and the Data tab follow, lowering the size asks first and trims at Save
  *   Export              the dialog (format, protections, period, site, pinned only), the real file for each format
  *   Backup              Back up now and the alarm write real files to Downloads, in parts when large; the schedule
  *   Storage             the warning near the limit and the record of what was removed
@@ -161,6 +162,7 @@ async function scenario(name, fn) {
     }
     return sw.evaluate(fn, arg);
   }
+  const HistoryStore_usage = () => W(async () => HistoryStore.usage(chrome.storage.local, 99 * 1024 * 1024));
   const readHistory = async () => JSON.parse((await W(() => chrome.storage.local.get('scrapfly_history'))).scrapfly_history || '{"items":[]}');
   const items = async () => (await readHistory()).items;
   const resetHistory = () => W(() => chrome.storage.local.remove(['scrapfly_history', 'scrapfly_history_storage_notice', 'scrapfly_history_backup']));
@@ -245,7 +247,7 @@ async function scenario(name, fn) {
   await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
   const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true,
-    historyFingerprintDays: 0, historyAutoPinHard: false, historyAutoPinVendors: [], historyAutoPinMinConfidence: 80 };
+    historyFingerprintDays: 0, historyAutoPinHard: false, historyAutoPinVendors: [], historyAutoPinMinConfidence: 80, historyMaxMB: 6 };
   const baseDup = { preventDuplicates: false, duplicateAction: 'skip', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' };
   const resetSettings = async () => { await historySettings(baseline, baseDup); await W(() => { globalThis.__incognitoMatch = ''; }); };
   await resetSettings();
@@ -850,6 +852,83 @@ async function scenario(name, fn) {
       await click('#cancelSettingsBtn');
     } finally { await page.close(); }
     await resetSettings();
+  });
+
+  // ===============================================================================================
+  await scenario('History size: 12 MB keeps what 6 MB would cut, the meter and the Data tab follow, and lowering the size asks first and trims at Save', async () => {
+    await resetHistory();
+    await resetSettings();
+    assert.equal(await W(() => HistoryStore.hasUnlimitedStorage()), true, 'the manifest asks for unlimited storage');
+    await historySettings({ historyLimit: 5000, historyMaxMB: 12 });
+    // About 9 MB of entries: more than 6 MB, less than 12
+    const seeded = await W(async () => {
+      const detection = (k) => ({ detector: { name: `Detector ${k}` }, category: 'Anti-Bot', confidence: 90, matches: [{ type: 'content', value: 'v'.repeat(250) }] });
+      const base = Date.now();
+      const list = Array.from({ length: 2200 }, (_, i) => ({ id: `big${i}`, url: `https://big${i}.example/`, hostname: `big${i}.example`, title: `Big ${i}`, timestamp: base - i * 1000, detections: Array.from({ length: 12 }, (_, k) => detection(k)) }));
+      const result = await HistoryStore.mutate(() => list);
+      return { bytes: result.bytes, dropped: result.dropped, budget: result.budget, kept: result.items.length };
+    });
+    assert.equal(seeded.budget, 12 * 1024 * 1024);
+    assert.equal(seeded.dropped, 0, 'nothing is cut at 12 MB');
+    assert.ok(seeded.bytes > 6 * 1024 * 1024 && seeded.bytes < 12 * 1024 * 1024, `${seeded.bytes} bytes`);
+    assert.equal(seeded.kept, 2200);
+
+    const page = await openExtensionPage();
+    const click = (selector) => page.$eval(selector, el => el.click());
+    const open = async (tab) => {
+      await click('#settingsBtn');
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.evaluate(() => window.popupInstance.settings.loadSettings());
+      await click(`.settings-tab-btn[data-settings-tab="${tab}"]`);
+    };
+    try {
+      await open('history');
+      assert.equal(await page.$eval('#historyMaxMB', el => el.value), '12');
+      assert.deepEqual(await page.$$eval('#historyMaxMB option', els => els.map(el => el.textContent)), ['6 MB', '12 MB', '25 MB']);
+      await page.waitForFunction(() => /of 12\.0 MB used/.test(document.querySelector('#historyMeterText').textContent), null, { timeout: 8000 })
+        .catch(async (error) => { throw new Error(`the History meter says "${await page.$eval('#historyMeterText', el => el.textContent)}" (${error.message.split('\n')[0]})`); });
+      assert.match(await page.$eval('#historyMeterText', el => el.textContent), /^\d+\.\d MB of 12\.0 MB used · 2200 entries$/);
+
+      await click('.settings-tab-btn[data-settings-tab="data"]');
+      await page.waitForFunction(() => /used, no limit/.test(document.querySelector('#storageTotalText').textContent), null, { timeout: 8000 })
+        .catch(async (error) => { throw new Error(`the Data tab says "${await page.$eval('#storageTotalText', el => el.textContent)}" (${error.message.split('\n')[0]})`); });
+      assert.equal(await page.$eval('#storageMeter', el => el.hidden), true, 'with unlimited storage there is no quota to fill');
+
+      // Lowering it asks first; Cancel keeps 12 MB
+      await click('.settings-tab-btn[data-settings-tab="history"]');
+      const choose = (value) => page.$eval('#historyMaxMB', (el, v) => { el.value = v; el.dispatchEvent(new Event('change', { bubbles: true })); }, value);
+      await choose('6');
+      await page.waitForSelector('.notification-confirm');
+      assert.match(await page.$eval('.notification-confirm', el => el.textContent), /History uses \d+\.\d MB and the new limit is 6\.0 MB\. The oldest pages that are not pinned will be removed to fit\./);
+      await click('.notification-btn-cancel');
+      await dialogsGone(page);
+      assert.equal(await page.$eval('#historyMaxMB', el => el.value), '12', 'Cancel keeps the size');
+      assert.equal((await HistoryStore_usage()).entries, 2200, 'nothing was removed');
+
+      // Confirm, then Save: History is cut to 6 MB at once, the newest pages stay
+      await choose('6');
+      await page.waitForSelector('.notification-confirm');
+      await click('.notification-btn-confirm');
+      await dialogsGone(page);
+      assert.equal(await page.$eval('#historyMaxMB', el => el.value), '6');
+      await click('#saveSettingsBtn');
+      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { timeout: 10000 });
+      assert.equal((await settingsNow()).history.historyMaxMB, 6);
+      const end = Date.now() + 20000;
+      let usage;
+      for (;;) {
+        usage = await HistoryStore_usage();
+        if (usage.bytes <= 6 * 1024 * 1024) break;
+        assert.ok(Date.now() < end, `History still ${usage.bytes} bytes`);
+        await sleep(500);
+      }
+      assert.ok(usage.entries > 0 && usage.entries < 2200, `${usage.entries} entries`);
+      const list = await items();
+      assert.equal(list[0].id, 'big0', 'the newest page stays');
+      assert.ok(usage.trimmed && usage.trimmed.count > 0, 'Settings can say what was removed');
+    } finally { await page.close(); }
+    await resetSettings();
+    await resetHistory();
   });
 
   // ===============================================================================================

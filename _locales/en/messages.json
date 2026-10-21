@@ -6623,5 +6623,33 @@
   "settingsUiErrFingerprintDays": {
     "message": "Fingerprinting-only pages must be kept between 0 and 3650 days",
     "description": "Error when the number of days for fingerprinting-only pages is not a whole number from 0 to 3650"
+  },
+  "settingsHistorySize": {
+    "message": "Size limit",
+    "description": "Settings → History → Storage: label of the choice of how much space History may take (6, 12 or 25 MB)"
+  },
+  "settingsHistorySizeHint": {
+    "message": "A larger size keeps more pages and uses more of your disk. Lowering the size removes the oldest pages that are not pinned.",
+    "description": "Hint under the History size choice"
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Lower the History size",
+    "description": "Title of the question asked before History gets a size smaller than what it uses now"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "History uses {0} and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.",
+    "description": "Question before lowering the History size; {0} is how much History uses now, {1} the new limit, both as sizes like 8.2 MB"
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Lower the size",
+    "description": "Confirm button of the question before lowering the History size"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} used, no limit",
+    "description": "Settings → Data → Storage: total in use when the browser allows the extension unlimited storage; {0} is a size like 14.2 MB"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "History size must be one of {0} MB",
+    "description": "Error when the History size is not one of the offered sizes; {0} is the list of sizes, like 6, 12, 25"
   }
 }

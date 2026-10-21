@@ -1236,6 +1236,11 @@
 
           <div class="settings-card" id="historyStorageCard">
             <div class="settings-card-body">
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyMaxMB" data-i18n="settingsHistorySize">Size limit</label>
+                <select id="historyMaxMB" class="select-field"></select>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistorySizeHint">A larger size keeps more pages and uses more of your disk. Lowering the size removes the oldest pages that are not pinned.</p>
               <div class="setting-row">
                 <span class="setting-row-label" data-i18n="settingsHistoryStorage">Storage used</span>
                 <div class="history-meter" id="historyMeter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="historyMeterText">

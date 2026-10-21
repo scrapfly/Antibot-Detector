@@ -144,3 +144,106 @@ test('the History tab declares the boxes the scripts fill', () => {
     assert.ok(ui.includes(`'${key}'`) || ui.includes(`#${key}`), `${key} is shown in the form`);
   }
 });
+
+// ---- The size History may take
+
+test('the History size is saved, exported and 6 MB by default; the manifest has the permission a larger size needs', async () => {
+  const HistoryStore = require('../modules/core/history-store.js');
+  assert.equal(defaults.history.historyMaxMB, HistoryStore.SIZES_MB[0]);
+  assert.equal((await loadUtils({ history: { historyMaxMB: 25 } }).getHistorySettings()).historyMaxMB, 25);
+  assert.equal((await loadUtils({}).getHistorySettings()).historyMaxMB, undefined, 'older settings: the budget falls back to the smallest size');
+  const ctx = vm.createContext({ self: {} });
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/settings/settings-transfer.js']) vm.runInContext(read(file), ctx);
+  assert.equal(plain(ctx.SettingsTransfer.portable({ history: { historyMaxMB: 12 } })).history.historyMaxMB, 12);
+  const manifest = JSON.parse(read('manifest.json'));
+  assert.ok(manifest.permissions.includes('unlimitedStorage'));
+  assert.ok(!manifest.optional_permissions, 'Chrome does not accept unlimitedStorage as an optional permission: it would be dropped and never granted');
+  assert.equal(HistoryStore.hasUnlimitedStorage(manifest), true);
+  assert.equal(HistoryStore.hasUnlimitedStorage({ permissions: ['storage'] }), false);
+  assert.equal(HistoryStore.hasUnlimitedStorage({}), false);
+  assert.equal(HistoryStore.hasUnlimitedStorage(null), false);
+});
+
+function sizeHarness({ unlimited = true, used = 0, confirm = true } = {}) {
+  const state = { confirms: [] };
+  const select = { value: '', dataset: {}, children: [], replaceChildren(...nodes) { this.children = nodes; } };
+  const ctx = vm.createContext({
+    console, self: {},
+    Logger: new Proxy({}, { get: () => () => {} }),
+    FormatUtils: { t: (key, fallback, ...args) => args.reduce((text, arg, i) => text.split('{' + i + '}').join(String(arg)), fallback) },
+    NotificationHelper: { confirm: async (options) => { state.confirms.push(options); return confirm; } },
+    document: {
+      querySelector: selector => (selector === '#historyMaxMB' ? select : null),
+      createElement: () => ({ value: '', textContent: '' })
+    },
+    chrome: {
+      runtime: { getManifest: () => ({ permissions: unlimited ? ['storage', 'unlimitedStorage'] : ['storage'] }) },
+      storage: { local: { get: async () => ({ scrapfly_history: used ? JSON.stringify({ items: [{ id: 'x', pad: 'p'.repeat(used) }] }) : undefined }) } }
+    }
+  });
+  ctx.self = ctx;
+  vm.runInContext(read('modules/core/history-store.js'), ctx, { filename: 'history-store.js' }); // in the page's own context, as in the popup
+  vm.runInContext(read('sections/settings/settings-ui.js'), ctx, { filename: 'settings-ui.js' });
+  const SettingsUI = vm.runInContext('SettingsUI', ctx);
+  SettingsUI.formatStorageSize = (bytes) => `${(bytes / 1048576).toFixed(1)} MB`;
+  return { SettingsUI, state, select };
+}
+const MBYTES = 1024 * 1024;
+
+test('the size box offers each size and selects the saved one, the smallest when it is not an offered size', () => {
+  const h = sizeHarness();
+  h.SettingsUI.populateHistorySize(25);
+  assert.deepEqual(h.select.children.map(o => [o.value, o.textContent]), [['6', '6 MB'], ['12', '12 MB'], ['25', '25 MB']]);
+  assert.equal(h.select.value, '25');
+  assert.equal(h.select.dataset.applied, '25');
+  for (const junk of [undefined, null, 99, 'x']) { h.SettingsUI.populateHistorySize(junk); assert.equal(h.select.value, '6', String(junk)); }
+});
+
+test('lowering the size below what History uses asks first, and Cancel keeps the earlier size', async () => {
+  const used = 8 * MBYTES;
+  const cancel = sizeHarness({ used, confirm: false });
+  cancel.SettingsUI.populateHistorySize(25);
+  cancel.select.value = '6';
+  await cancel.SettingsUI.chooseHistorySize();
+  assert.equal(cancel.state.confirms.length, 1);
+  assert.match(cancel.state.confirms[0].message, /^History uses 8\.0 MB and the new limit is 6\.0 MB\. The oldest pages that are not pinned will be removed to fit\.$/);
+  assert.equal(cancel.select.value, '25');
+  assert.equal(cancel.select.dataset.applied, '25');
+
+  const accept = sizeHarness({ used, confirm: true });
+  accept.SettingsUI.populateHistorySize(25);
+  accept.select.value = '6';
+  await accept.SettingsUI.chooseHistorySize();
+  assert.equal(accept.select.value, '6');
+  assert.equal(accept.select.dataset.applied, '6');
+
+  const fits = sizeHarness({ used: 3 * MBYTES });
+  fits.SettingsUI.populateHistorySize(25);
+  fits.select.value = '12';
+  await fits.SettingsUI.chooseHistorySize();
+  assert.equal(fits.state.confirms.length, 0, 'it still fits: nothing is removed, so nothing is asked');
+  assert.equal(fits.select.value, '12');
+
+  const grow = sizeHarness({ used });
+  grow.SettingsUI.populateHistorySize(6);
+  grow.select.value = '25';
+  await grow.SettingsUI.chooseHistorySize();
+  assert.equal(grow.state.confirms.length, 0, 'a larger size removes nothing');
+  assert.equal(grow.select.dataset.applied, '25');
+});
+
+test('the budget the meter shows is the saved size', () => {
+  const on = sizeHarness();
+  assert.equal(on.SettingsUI.historyBudget.call({ settings: { history: { historyMaxMB: 25 } } }), 25 * MBYTES);
+  assert.equal(on.SettingsUI.historyBudget.call({}), 6 * MBYTES);
+  const off = sizeHarness({ unlimited: false });
+  assert.equal(off.SettingsUI.historyBudget.call({ settings: { history: { historyMaxMB: 25 } } }), 6 * MBYTES, 'a build without the permission is held to the quota');
+});
+
+test('the History tab declares the size box and its hint, and only an offered size is saved', () => {
+  const html = read('sections/settings/settings.html');
+  assert.match(html, /<select id="historyMaxMB" class="select-field"><\/select>/, 'the sizes come from HistoryStore.SIZES_MB, not from the page');
+  assert.ok(html.includes('data-i18n="settingsHistorySizeHint"'));
+  const ui = read('sections/settings/settings-ui.js');
+  assert.match(ui, /HistoryStore\.SIZES_MB\.includes\(settings\.history\.historyMaxMB\)/);
+});

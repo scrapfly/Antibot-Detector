@@ -225,7 +225,7 @@ class HistoryRecorder {
       const pageKey = this.normalizeDuplicateKey(entryUrl, entryHostname, 'path');
 
       // One serialized read-modify-write through the shared store
-      const { changed, bytes, dropped, result } = await HistoryStore.mutate((history) => {
+      const { changed, bytes, dropped, budget, result } = await HistoryStore.mutate((history) => {
         const now = Date.now();
         let duplicateAt = -1;
         if (duplicateKey) {
@@ -289,7 +289,7 @@ class HistoryRecorder {
         Logger.ui(`History: Saved detection to history for ${pageData.url}`);
         // Both run after the write and never fail the save
         await this.notifyChange(result && result.alert, chrome).catch(() => {});
-        await this.checkStorage(bytes, dropped, chrome).catch(() => {});
+        await this.checkStorage(bytes, dropped, chrome, budget).catch(() => {});
       }
       return changed;
     } catch (error) {
@@ -326,11 +326,12 @@ class HistoryRecorder {
    * it may use is nearly full (or has just removed entries), and again only after it has been emptied below 70%.
    * @param {number} bytes size of the stored history after this save
    * @param {number} dropped entries the size limit removed in this save
+   * @param {number} [budget] the size limit this save was written under (6 MB when not given)
    */
-  static async checkStorage(bytes, dropped, chrome) {
+  static async checkStorage(bytes, dropped, chrome, budget) {
     if (!Number.isFinite(bytes) || typeof HistoryStore === 'undefined') return;
     const key = 'scrapfly_history_storage_notice';
-    const ratio = bytes / HistoryStore.MAX_BYTES;
+    const ratio = bytes / (budget > 0 ? budget : HistoryStore.MAX_BYTES);
     const state = (await chrome.storage.local.get(key))[key] || {};
     if (ratio < 0.7 && !dropped) {
       if (state.warned) await chrome.storage.local.set({ [key]: { warned: false } });
