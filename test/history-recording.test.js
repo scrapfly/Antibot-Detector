@@ -381,6 +381,9 @@ test('with duplicates allowed (the default), a page the person unpinned is not p
   // Another page of the same site is not affected
   await w.save('https://guarded.example/b', [hard('Akamai')], settings);
   assert.strictEqual(w.items()[0].pinned, true, 'a different page still pins itself');
+  // And neither is the same path with another query (a different product page, say)
+  await w.save('https://guarded.example/a?item=2', [hard('Akamai')], settings);
+  assert.strictEqual(w.items()[0].pinned, true, 'a sibling address still pins itself');
 });
 
 test('an entry the person pinned keeps its pin, and is not counted as one that pinned itself', async () => {

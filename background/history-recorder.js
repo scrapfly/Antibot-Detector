@@ -246,9 +246,14 @@ class HistoryRecorder {
           : { added: [], removed: [], changed: false };
 
         // Pages that pin themselves (Settings → History): a new entry, or an update of one the person never unpinned,
-        // while there is room (the pinned entries are exempt from the limit and from retention). A page the person
-        // unpinned is never pinned by itself again: the mark sits on its newest entry, and a new entry carries it on
-        const neverAgain = !!(earlier && earlier.unpinned === true);
+        // while there is room (the pinned entries are exempt from the limit and from retention). An address the person
+        // unpinned is never pinned by itself again: the mark sits on its newest entry (the exact address, query included:
+        // one product page unpinned says nothing about its siblings), and a new entry of it carries the mark on
+        const addressKey = this.normalizeDuplicateKey(entryUrl, entryHostname, 'full_url');
+        const sameAddress = duplicateAt !== -1
+          ? history[duplicateAt]
+          : history.find(item => item && this.normalizeDuplicateKey(item.url, item.hostname, 'full_url') === addressKey);
+        const neverAgain = !!(sameAddress && sameAddress.unpinned === true);
         const pinsItself = typeof HistoryPolicy !== 'undefined'
           && !neverAgain
           && HistoryPolicy.shouldAutoPin(detectionResults, settings)
