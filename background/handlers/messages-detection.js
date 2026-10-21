@@ -128,6 +128,16 @@ function registerDetectionHandlers(registry, context) {
     };
     registry[WorkerMessages.DETECTION_DATA] = handle_detection_data;
 
+    // Rules editor → Test on this page: the unsaved rule against the active tab, nothing stored (background/rule-test.js)
+    registry[WorkerMessages.RULE_TEST] = function({ request, sender, sendResponse }) {
+        if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
+        RuleTestRuntime.run(request).then(
+            (result) => sendResponse(result),
+            (error) => { Logger.warn('BACKGROUND', '[RuleTest] failed:', error && error.message); sendResponse({ status: 'error' }); }
+        );
+        return true;
+    };
+
     const handle_content_script_ready = function({ request, sender, sendResponse, context }) {
         void context;
 

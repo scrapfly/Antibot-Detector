@@ -25,6 +25,12 @@ Rules.prototype.setupModalEventListeners = function() {
       checkBtn.addEventListener('click', () => this.runHistoryCheck());
     }
 
+    // Test on this page
+    const liveTestBtn = document.querySelector('#ruleLiveTestBtn');
+    if (liveTestBtn) {
+      liveTestBtn.addEventListener('click', () => this.runLiveTest());
+    }
+
     // Save button
     const saveBtn = document.querySelector('#saveRuleEdit');
     if (saveBtn) {

@@ -404,3 +404,25 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Test on this page: a pattern that matched, and one only a real scan can answer */
+.rule-check-row.is-match {
+  border-color: var(--success-light);
+}
+
+.rule-check-row.is-match .live-test-status {
+  color: var(--success-light);
+}
+
+.rule-check-row.is-untested .live-test-status {
+  color: var(--warning);
+  font-weight: 500;
+}
+
+.rule-check-row.is-untested .rule-check-desc {
+  color: var(--text-secondary);
+}
+
+.live-test-summary:not(.is-zero) .rule-check-summary-text {
+  color: var(--success-light);
+}

@@ -206,6 +206,32 @@ class Utils {
   }
 
   /**
+   * The collected page as plain data (its lazy getters read), what a scan sends to the worker and what
+   * Rules → Test on this page asks for.
+   * @param {Object} pageData - DetectionEngineManager.collectPageData()
+   */
+  static toPlainPageData(pageData) {
+    return {
+      url: pageData.url,
+      title: pageData.title,
+      favicon: pageData.favicon,
+      cookies: pageData.cookies,
+      content: pageData.content,
+      dom: pageData.dom,
+      headers: pageData.headers,
+      jsHooks: pageData.jsHooks,
+      payload: pageData.payload,
+      payloads: pageData.payloads,
+      networkUrls: pageData.networkUrls,
+      externalContent: pageData.externalContent,
+      responseCookies: pageData.responseCookies,
+      requestHeaders: pageData.requestHeaders,
+      pageHTML: pageData.pageHTML,
+      collectMs: pageData.collectMs
+    };
+  }
+
+  /**
    * Collect page data and send to background (called when cache miss)
    * @param {Object} context - Context object with detectionEngine, isExtensionContextValid, cleanupOrphanedScript
    */
@@ -220,24 +246,7 @@ class Utils {
     try {
       const pageData = await detectionEngine.collectPageData();
 
-      const plainPageData = {
-        url: pageData.url,
-        title: pageData.title,
-        favicon: pageData.favicon,
-        cookies: pageData.cookies,
-        content: pageData.content,
-        dom: pageData.dom,
-        headers: pageData.headers,
-        jsHooks: pageData.jsHooks,
-        payload: pageData.payload,
-        payloads: pageData.payloads,
-        networkUrls: pageData.networkUrls,
-        externalContent: pageData.externalContent,
-        responseCookies: pageData.responseCookies,
-        requestHeaders: pageData.requestHeaders,
-        pageHTML: pageData.pageHTML,
-        collectMs: pageData.collectMs
-      };
+      const plainPageData = Utils.toPlainPageData(pageData);
 
       if (!isExtensionContextValid()) {
         cleanupOrphanedScript();

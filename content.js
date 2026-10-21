@@ -413,6 +413,30 @@ function setupDetectionTriggers() {
                 }
 
                 sendResponse({ status: 'detection_started' });
+            } else if (request.type === WorkerMessages.RULE_TEST_COLLECT) {
+                // Rules editor → Test on this page: the page as a scan would collect it, handed back and not scanned
+                (async () => {
+                    let merged = null;
+                    const original = detectionEngine ? detectionEngine.detectors : null;
+                    try {
+                        if (!detectionEngine || typeof Utils === 'undefined') { sendResponse({ status: 'unavailable' }); return; }
+                        // What a collection gathers depends on the rules loaded (which DOM selectors, which kinds of data):
+                        // the rule under test is added for this one collection, so a selector not saved yet is found too.
+                        // The saved rules stay in, so a scan that starts meanwhile still collects everything it needs.
+                        if (request.detector && typeof request.detector === 'object' && request.detector.detection) {
+                            merged = Object.assign({}, original || {}, { 'rule-test': { 'rule-test': Object.assign({}, request.detector, { enabled: true }) } });
+                            detectionEngine.setDetectors(merged);
+                        }
+                        const pageData = await detectionEngine.collectPageData();
+                        sendResponse({ status: 'ok', data: Utils.toPlainPageData(pageData) });
+                    } catch (error) {
+                        Logger.warn('CONTENT', 'Test on this page: the page could not be collected', error);
+                        sendResponse({ status: 'error' });
+                    } finally {
+                        // Put the saved rules back, unless they were replaced by a newer list in the meantime
+                        if (merged && detectionEngine.detectors === merged) detectionEngine.setDetectors(original);
+                    }
+                })();
             } else if (request.type === WorkerMessages.GET_DETECTION_STATUS) {
                 // Return current detection status
                 sendResponse({

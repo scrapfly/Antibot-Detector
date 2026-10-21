@@ -7098,5 +7098,77 @@
   "webhookRetryOff": {
     "message": "Turn the webhook on, with an address, to retry.",
     "description": "Notice when Retry is pressed while the webhook is off or has no address"
+  },
+  "ruleLiveTestTitle": {
+    "message": "Test on this page",
+    "description": "Rule editor: title of the card that runs the rule on the page the popup belongs to"
+  },
+  "ruleLiveTestHint": {
+    "message": "Runs the rule as it is now, unsaved edits included, on the page this popup was opened on. Nothing is saved or sent. Cookies, URLs, content and DOM patterns can be tested; headers, JS hooks, window properties and payloads need a real scan.",
+    "description": "Hint of the Test on this page card. The kinds of patterns (cookies, URLs, content, DOM, headers, JS hooks, window properties, payloads) are named like the editor's own pattern sections"
+  },
+  "ruleLiveTestRun": {
+    "message": "Test",
+    "description": "Button of the Test on this page card: runs the test"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Testing…",
+    "description": "The Test button while the test runs"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "The rule matches {0} (confidence {1}%)",
+    "description": "Result of Test on this page. {0} = the page's host name, {1} = the rule's confidence on it (a number)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "The rule is only partly matched on {0}: a combination needs more evidence",
+    "description": "Result of Test on this page when some patterns matched but no combination is complete. {0} = the page's host name"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "The rule does not match {0}",
+    "description": "Result of Test on this page when nothing matched. {0} = the page's host name"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "{0} found",
+    "description": "Test on this page: how many times a pattern matched on the page. {0} = a number"
+  },
+  "ruleLiveTestNone": {
+    "message": "no match",
+    "description": "Test on this page: a pattern that matched nothing on the page"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "needs a real scan",
+    "description": "Test on this page: a pattern that cannot be tested here (response headers, JS hooks, window properties, payloads): only a normal scan of the page can answer it"
+  },
+  "ruleLiveTestFires": {
+    "message": "fires",
+    "description": "Test on this page: a combination whose patterns were all found on the page"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "does not fire",
+    "description": "Test on this page: a combination that was not completed on the page"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Read {0} scripts, {1} elements, {2} cookies and {3} requests.",
+    "description": "Test on this page: what the page offered to the test. All four are numbers: scripts, page elements, cookies, network requests"
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "The requests the page made are not available now, so URL patterns were checked against its address and scripts only.",
+    "description": "Test on this page: shown when the extension no longer knows the page's network requests"
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Patterns marked \"needs a real scan\" are not part of this test: the answer above covers the others.",
+    "description": "Test on this page: explains the 'needs a real scan' marks. Keep the quoted words exactly like the 'needs a real scan' label"
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Open the popup on a web page to test a rule on it.",
+    "description": "Test on this page: shown when the popup does not belong to a normal web page (a browser page, or the popup opened in its own tab)"
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "The page did not answer. Reload it and try again.",
+    "description": "Test on this page: the page could not be read (it was open before the extension, or it is too slow)"
+  },
+  "ruleLiveTestError": {
+    "message": "The test could not run.",
+    "description": "Test on this page: a failure with no more precise message"
   }
 }

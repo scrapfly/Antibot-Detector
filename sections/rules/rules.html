@@ -272,6 +272,21 @@
             <div id="ruleHistoryCheckResults" aria-live="polite"></div>
           </div>
         </div>
+
+        <!-- Test on this page: the rule as edited, run against the page this popup belongs to -->
+        <div class="modal-card" id="ruleLiveTestCard">
+          <div class="modal-card-header">
+            <span class="card-icon icon-search" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/><path d="M9 2h6"/></svg>
+            </span>
+            <h3 data-i18n="ruleLiveTestTitle">Test on this page</h3>
+          </div>
+          <div class="modal-card-body">
+            <p class="combinations-hint" data-i18n="ruleLiveTestHint">Runs the rule as it is now, unsaved edits included, on the page this popup was opened on. Nothing is saved or sent. Cookies, URLs, content and DOM patterns can be tested; headers, JS hooks, window properties and payloads need a real scan.</p>
+            <button type="button" class="add-combination-btn rule-check-btn" id="ruleLiveTestBtn" data-i18n="ruleLiveTestRun">Test</button>
+            <div id="ruleLiveTestResults" aria-live="polite"></div>
+          </div>
+        </div>
       </div>
 
       <div class="rule-modal-footer">

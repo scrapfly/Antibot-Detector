@@ -8,6 +8,8 @@
  *                     Pin, Watch, Export (a real file) and Delete (asks first), Done and Escape
  *   Webhook retry     a failed delivery is held in memory (storage.session) and logged with an id; Recent deliveries shows
  *                     Retry on it and it delivers; the alarm retries by itself; the switch turns holding off
+ *   Test on this page Rules → editor → Test on this page: an unsaved rule runs against the real page (a cookie, a DOM selector no
+ *                     saved rule uses, script content, a request URL); header and window patterns say "needs a real scan"
  *   Compare scans     History → … → Compare with…: the dialog lists the page's other scans, shows what was added, removed
  *                     and changed, copies it as Markdown, and the item is disabled when there is nothing to compare with
  *
@@ -25,6 +27,7 @@ try {
   process.exit(2);
 }
 const assert = require('node:assert/strict');
+const http = require('node:http');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
@@ -33,6 +36,17 @@ const REPO = path.resolve(process.argv.slice(2).find(a => !a.startsWith('--')) |
 const only = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7);
 const shotsDir = (process.argv.find(a => a.startsWith('--shots=')) || '').slice(8);
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+// A page with known markers for the rule tester: a cookie, an element only the rule under test selects, inline script text and a script request
+const server = http.createServer((req, res) => {
+  const url = new URL(req.url, 'http://x');
+  if (url.pathname === '/tp.js') { res.writeHead(200, { 'content-type': 'text/javascript' }); return res.end('window.tpLoaded = 1;'); }
+  if (url.pathname === '/page') {
+    res.writeHead(200, { 'content-type': 'text/html', 'set-cookie': 'tp_sid=abc123; Path=/', 'cache-control': 'no-store' });
+    return res.end('<!doctype html><html><head><title>Rule test page</title></head><body><div id="tp-box" data-tp-challenge="1">hello</div><script>window.__tpbot = { key: "SECRET_KEY_VALUE" };</script><script src="/tp.js"></script></body></html>');
+  }
+  res.writeHead(404); res.end();
+});
 
 const results = [];
 async function scenario(name, fn) {
@@ -62,6 +76,8 @@ const SEED = [
 ];
 
 (async () => {
+  await new Promise(r => server.listen(0, '127.0.0.1', r));
+  const origin = `http://127.0.0.1:${server.address().port}`;
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'e2e-v304-'));
   const ctx = await chromium.launchPersistentContext(profile, {
     headless: true, channel: 'chromium', viewport: { width: 420, height: 650 }, acceptDownloads: true,
@@ -382,10 +398,67 @@ const SEED = [
     await page.close();
   });
 
+  // ===============================================================================================
+  await scenario('Rules → Test on this page: an unsaved rule runs on the real page', async () => {
+    const site = await ctx.newPage();
+    await site.goto(`${origin}/page`);
+    await site.waitForLoadState('load');
+    await sleep(2500); // the content script is ready, the page's requests were seen
+    const siteTab = await W(async (u) => { const t = (await chrome.tabs.query({})).find(x => x.url === u); return t && { id: t.id, url: t.url }; }, `${origin}/page`);
+    assert.ok(siteTab, 'the site tab');
+    const RULE = { id: 'tp-rule', name: 'TP rule', category: 'antibot', difficulty: 'Medium', description: 'test rule', enabled: true, detection: {
+      cookie: [{ name: 'tp_sid', confidence: 60, description: 'session cookie' }, { name: 'tp_missing', confidence: 40 }],
+      dom: [{ selector: 'div[data-tp-challenge]', confidence: 80, description: 'a selector no saved rule uses' }],
+      content: [{ text: '__tpbot', confidence: 50 }],
+      url: [{ text: '/tp.js', confidence: 70 }],
+      header: [{ name: 'x-tp', confidence: 90 }],
+      window: [{ path: 'tpKey', condition: 'typeof string', confidence: 60 }]
+    } };
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await page.waitForSelector('#rulesSearch', { state: 'visible' });
+    // The popup of a real browser belongs to the site's tab; this page is its own tab, so it is told which one
+    await page.evaluate((tab) => { chrome.tabs.query = async () => [tab]; }, siteTab);
+    await page.evaluate((rule) => window.popupInstance.rules.openEditModal(JSON.parse(JSON.stringify(rule)), 'antibot', rule.id, true), RULE);
+    await page.waitForSelector('#ruleLiveTestBtn', { state: 'visible', timeout: 10000 });
+    assert.equal(await page.$eval('#ruleLiveTestResults', el => el.children.length), 0, 'nothing before the test');
+    await page.$eval('#ruleLiveTestBtn', el => el.click());
+    await page.waitForSelector('#ruleLiveTestResults .rule-check-row', { timeout: 30000 });
+    const rows = await page.$$eval('#ruleLiveTestResults .rule-check-row', els => els.map(el => ({
+      raw: el.querySelector('.rule-check-raw') ? el.querySelector('.rule-check-raw').textContent : '', status: el.querySelector('.live-test-status').textContent.trim(), kind: [...el.classList].filter(c => c.startsWith('is-')).join(' ') })));
+    const byRaw = Object.fromEntries(rows.map(r => [r.raw, r]));
+    assert.equal(byRaw.tp_sid.status, '1 found', JSON.stringify(rows));
+    assert.equal(byRaw.tp_missing.status, 'no match');
+    assert.equal(byRaw['div[data-tp-challenge]'].status, '1 found', 'a selector only this unsaved rule uses is found');
+    assert.equal(byRaw.__tpbot.status, '1 found');
+    assert.equal(byRaw['/tp.js'].status, '1 found');
+    assert.equal(byRaw['x-tp'].status, 'needs a real scan');
+    assert.equal(byRaw.tpKey.status, 'needs a real scan');
+    assert.equal(byRaw['x-tp'].kind, 'is-untested');
+    const summary = await page.$eval('#ruleLiveTestResults .rule-check-summary-text', el => el.textContent.trim());
+    assert.match(summary, /^The rule matches 127\.0\.0\.1 \(confidence \d+%\)$/, summary);
+    const notes = await page.$$eval('#ruleLiveTestResults .rule-check-note', els => els.map(el => el.textContent.trim()));
+    assert.ok(notes.some(n => /^Read \d+ scripts, \d+ elements, \d+ cookies and \d+ requests\.$/.test(n)), notes.join(' | '));
+    assert.ok(notes.some(n => /needs a real scan/.test(n)), 'the note explains the marks');
+    assert.ok(!(await page.$eval('#ruleLiveTestResults', el => el.innerText)).includes('SECRET_KEY_VALUE'), 'no page value is shown');
+    // Nothing came of it: no saved result, no History entry for the site
+    assert.equal(await W(async () => { const items = JSON.parse((await chrome.storage.local.get('scrapfly_history')).scrapfly_history || '{"items":[]}').items; return items.filter(i => /127\.0\.0\.1/.test(i.url || '')).length; }), 0);
+    if (shotsDir) { await page.evaluate(() => document.querySelector('#ruleLiveTestCard').scrollIntoView()); await sleep(400); fs.mkdirSync(shotsDir, { recursive: true }); await page.screenshot({ path: path.join(shotsDir, 'rule-live-test.png') }); }
+
+    // A popup that does not belong to a web page says so instead of failing
+    const ownTab = await W(async (host) => { const t = (await chrome.tabs.query({})).find(x => x.url && x.url.startsWith(`chrome-extension://${host}/popup.html`)); return t && { id: t.id, url: t.url }; }, extId);
+    await page.evaluate((tab) => { chrome.tabs.query = async () => [tab]; }, ownTab);
+    await page.$eval('#ruleLiveTestBtn', el => el.click());
+    await until(async () => /Open the popup on a web page/.test(await page.$eval('#ruleLiveTestResults', el => el.textContent)), 10000, 'the unsupported message');
+    await page.close();
+    await site.close();
+  });
+
   // ---- Report -------------------------------------------------------------------------------------
   const failed = results.filter(r => !r.ok);
   if (pageErrors.length) console.log(`Page errors:\n  ${pageErrors.join('\n  ')}`);
   console.log(`\n${results.length - failed.length} passed, ${failed.length} failed`);
   await ctx.close();
+  server.close();
   process.exit(failed.length || pageErrors.length ? 1 : 0);
 })().catch((error) => { console.error(error); process.exit(1); });
