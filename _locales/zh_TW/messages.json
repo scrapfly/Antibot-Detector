@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "已複製到剪貼簿"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "已載入 {0} 工具"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "找到 {0}/{1} 個 Cookie"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "僅限已釘選的網頁"
   },
+  "historyExportChangedOnly": {
+    "message": "僅限已變更的網頁"
+  },
   "historyExportCountFmt": {
     "message": "將匯出 {1} 筆項目中的 {0} 筆"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "規則與類別"
+  },
+  "storageUpdates": {
+    "message": "待處理的規則更新"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "清除待處理的規則更新"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "等待較新擴充功能的規則更新，以及失敗的更新，都會被捨棄；下次執行「規則 → 更新」時會再次找到這些更新。規則和設定不受影響。"
+  },
+  "storageUpdatesCleared": {
+    "message": "待處理的規則更新已清除"
   },
   "storageSettings": {
     "message": "設定"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "測試"
   },
+  "webhookSecretLabel": {
+    "message": "簽章金鑰"
+  },
+  "webhookSecretDescFmt": {
+    "message": "在 {0} 標頭中加入內文的 HMAC-SHA256。留空則不加簽章；GET、HEAD 和 multipart 要求一律不會簽章。"
+  },
+  "webhookSecretGenerate": {
+    "message": "產生"
+  },
+  "webhookSecretInvalid": {
+    "message": "簽章金鑰：最多 512 個 ASCII 字元（不可含中文、重音符號或表情符號）"
+  },
   "hooksOffGroupTitle": {
     "message": "不使用 JS 掛鉤的網站"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "歷史記錄已暫停，因此不會檢查任何項目。"
+  },
+  "settingsHistoryWatchOff": {
+    "message": "擴充功能已關閉，因此不會檢查任何項目。"
   },
   "settingsUiErrHistoryWatch": {
     "message": "監看功能必須是關閉、每天或每週"

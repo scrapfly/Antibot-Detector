@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Skopiowano do schowka"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "Wczytano narzędzia: {0}"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Znalezione pliki cookie: {0}/{1}"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Tylko przypięte strony"
   },
+  "historyExportChangedOnly": {
+    "message": "Tylko zmienione strony"
+  },
   "historyExportCountFmt": {
     "message": "Do wyeksportowania: {0} z {1} wpisów"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Reguły i kategorie"
+  },
+  "storageUpdates": {
+    "message": "Oczekujące aktualizacje reguł"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Wyczyść oczekujące aktualizacje reguł"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Aktualizacje reguł, które czekają na nowsze rozszerzenie, oraz te, które się nie powiodły, zostaną zapomniane; następne uruchomienie Reguły → Aktualizuj znajdzie je ponownie. Reguły i ustawienia nie zostaną zmienione."
+  },
+  "storageUpdatesCleared": {
+    "message": "Wyczyszczono oczekujące aktualizacje reguł"
   },
   "storageSettings": {
     "message": "Ustawienia"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "test"
   },
+  "webhookSecretLabel": {
+    "message": "Sekret podpisu"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Dodaje HMAC-SHA256 treści żądania w nagłówku {0}. Zostaw puste, aby nie podpisywać; żądania GET, HEAD i multipart nigdy nie są podpisywane."
+  },
+  "webhookSecretGenerate": {
+    "message": "Wygeneruj"
+  },
+  "webhookSecretInvalid": {
+    "message": "Sekret podpisu: do 512 znaków ASCII (bez znaków diakrytycznych i emoji)"
+  },
   "hooksOffGroupTitle": {
     "message": "Witryny bez hooków JS"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "Historia jest wstrzymana, więc nic nie jest sprawdzane."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "Rozszerzenie jest wyłączone, więc nic nie jest sprawdzane."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"

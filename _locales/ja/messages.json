@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "クリップボードにコピーしました"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "{0} ツールを読み込みました"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "{0}/{1} 個の Cookie が見つかりました"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "ピン留めしたページのみ"
   },
+  "historyExportChangedOnly": {
+    "message": "「変化あり」のページのみ"
+  },
   "historyExportCountFmt": {
     "message": "{1} 件中 {0} 件のエントリをエクスポートします"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "ルールとカテゴリ"
+  },
+  "storageUpdates": {
+    "message": "保留中のルールの更新"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "保留中のルールの更新をクリア"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "より新しい拡張機能を待っているルールの更新と、失敗した更新は破棄されます。次回の「ルール」→「更新」で再び見つかります。ルールと設定は変更されません。"
+  },
+  "storageUpdatesCleared": {
+    "message": "保留中のルールの更新をクリアしました"
   },
   "storageSettings": {
     "message": "設定"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "テスト"
   },
+  "webhookSecretLabel": {
+    "message": "署名シークレット"
+  },
+  "webhookSecretDescFmt": {
+    "message": "本文の HMAC-SHA256 を {0} ヘッダーに追加します。空欄の場合は署名しません。GET、HEAD、multipart のリクエストは署名の対象外です。"
+  },
+  "webhookSecretGenerate": {
+    "message": "生成"
+  },
+  "webhookSecretInvalid": {
+    "message": "署名シークレット: 512 文字以内の ASCII 文字のみ（アクセント記号や絵文字は不可）"
+  },
   "hooksOffGroupTitle": {
     "message": "JS フックを使わないサイト"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "履歴が一時停止中のため、何も確認されません。"
+  },
+  "settingsHistoryWatchOff": {
+    "message": "拡張機能がオフになっているため、何も確認されません。"
   },
   "settingsUiErrHistoryWatch": {
     "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"

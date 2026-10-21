@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Disalin ke papan klip"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "Alat {0} dimuat"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Ditemukan {0}/{1} cookie"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Hanya halaman yang disematkan"
   },
+  "historyExportChangedOnly": {
+    "message": "Hanya halaman yang berubah"
+  },
   "historyExportCountFmt": {
     "message": "{0} dari {1} entri akan diekspor"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Aturan dan kategori"
+  },
+  "storageUpdates": {
+    "message": "Pembaruan aturan tertunda"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Hapus pembaruan aturan tertunda"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Pembaruan aturan yang menunggu ekstensi yang lebih baru, dan yang gagal, akan dilupakan; Aturan → Perbarui berikutnya akan menemukannya lagi. Aturan dan pengaturan tidak terpengaruh."
+  },
+  "storageUpdatesCleared": {
+    "message": "Pembaruan aturan tertunda dihapus"
   },
   "storageSettings": {
     "message": "Pengaturan"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "uji"
   },
+  "webhookSecretLabel": {
+    "message": "Rahasia penandatanganan"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Menambahkan HMAC-SHA256 dari body di header {0}. Kosongkan jika tidak ingin ada tanda tangan; permintaan GET, HEAD, dan multipart tidak pernah ditandatangani."
+  },
+  "webhookSecretGenerate": {
+    "message": "Buat"
+  },
+  "webhookSecretInvalid": {
+    "message": "Rahasia penandatanganan: gunakan maksimal 512 karakter ASCII (tanpa aksen atau emoji)"
+  },
   "hooksOffGroupTitle": {
     "message": "Situs tanpa hook JS"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "Riwayat dijeda, jadi tidak ada yang diperiksa."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "Ekstensi dinonaktifkan, jadi tidak ada yang diperiksa."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Pemantauan harus nonaktif, setiap hari, atau setiap minggu"

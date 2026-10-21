@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Скопійовано в буфер обміну"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "Інструменти {0} завантажено"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Знайдено cookie: {0}/{1}"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Лише закріплені сторінки"
   },
+  "historyExportChangedOnly": {
+    "message": "Лише змінені сторінки"
+  },
   "historyExportCountFmt": {
     "message": "Буде експортовано {0} із {1} записів"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Правила й категорії"
+  },
+  "storageUpdates": {
+    "message": "Відкладені оновлення правил"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Очистити відкладені оновлення правил"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Оновлення правил, які очікують новішої версії розширення, і ті, що не вдалося встановити, буде забуто; наступний запуск Правила → Оновити знайде їх знову. Правила й налаштування не зачіпаються."
+  },
+  "storageUpdatesCleared": {
+    "message": "Відкладені оновлення правил очищено"
   },
   "storageSettings": {
     "message": "Налаштування"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "перевірка"
   },
+  "webhookSecretLabel": {
+    "message": "Секрет підпису"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Додає HMAC-SHA256 тіла запиту в заголовок {0}. Залиште порожнім, щоб не підписувати; запити GET, HEAD і multipart ніколи не підписуються."
+  },
+  "webhookSecretGenerate": {
+    "message": "Згенерувати"
+  },
+  "webhookSecretInvalid": {
+    "message": "Секрет підпису: до 512 символів ASCII (без кирилиці, діакритики та емодзі)"
+  },
   "hooksOffGroupTitle": {
     "message": "Сайти без JS-хуків"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "Історію призупинено, тому нічого не перевіряється."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "Розширення вимкнено, тому нічого не перевіряється."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Стеження має бути вимкнене або виконуватися щодня чи щотижня"

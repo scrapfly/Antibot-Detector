@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "已复制到剪贴板"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "已加载 {0} 工具"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "找到 {0}/{1} 个 Cookie"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "仅已固定的页面"
   },
+  "historyExportChangedOnly": {
+    "message": "仅“有变化”的页面"
+  },
   "historyExportCountFmt": {
     "message": "将导出 {1} 条记录中的 {0} 条"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "规则和类别"
+  },
+  "storageUpdates": {
+    "message": "待处理的规则更新"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "清除待处理的规则更新"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "等待更高版本扩展的规则更新和已失败的规则更新将被清除；下次“规则 → 更新”会重新找到它们。规则和设置不受影响。"
+  },
+  "storageUpdatesCleared": {
+    "message": "待处理的规则更新已清除"
   },
   "storageSettings": {
     "message": "设置"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "测试"
   },
+  "webhookSecretLabel": {
+    "message": "签名密钥"
+  },
+  "webhookSecretDescFmt": {
+    "message": "在 {0} 请求头中添加请求体的 HMAC-SHA256。留空则不签名；GET、HEAD 和 multipart 请求一律不签名。"
+  },
+  "webhookSecretGenerate": {
+    "message": "生成"
+  },
+  "webhookSecretInvalid": {
+    "message": "签名密钥：最多 512 个 ASCII 字符（不能包含重音符号或表情符号）"
+  },
   "hooksOffGroupTitle": {
     "message": "不使用 JS 钩子的站点"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "历史记录已暂停，因此不会检查任何内容。"
+  },
+  "settingsHistoryWatchOff": {
+    "message": "扩展已关闭，因此不会检查任何内容。"
   },
   "settingsUiErrHistoryWatch": {
     "message": "监视列表必须为关闭、每天或每周"

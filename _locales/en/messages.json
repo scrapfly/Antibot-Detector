@@ -3542,10 +3542,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Copied to clipboard"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "{0} tools loaded",
-    "description": "{0} = detector / product name"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Found {0}/{1} cookies",
     "description": "{0} = cookies found, {1} = cookies checked"

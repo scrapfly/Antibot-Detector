@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "คัดลอกไปยังคลิปบอร์ดแล้ว"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "โหลดเครื่องมือ {0} แล้ว"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "พบคุกกี้ {0}/{1}"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "เฉพาะหน้าที่ปักหมุด"
   },
+  "historyExportChangedOnly": {
+    "message": "เฉพาะหน้าที่เปลี่ยนแปลง"
+  },
   "historyExportCountFmt": {
     "message": "จะส่งออก {0} จาก {1} รายการ"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "กฎและหมวดหมู่"
+  },
+  "storageUpdates": {
+    "message": "การอัปเดตกฎที่รอดำเนินการ"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "ล้างการอัปเดตกฎที่รอดำเนินการ"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "การอัปเดตกฎที่รอส่วนขยายเวอร์ชันใหม่กว่า และที่ไม่สำเร็จ จะถูกลบออก การเรียกใช้ กฎ → อัปเดต ครั้งถัดไปจะพบรายการเหล่านี้อีกครั้ง กฎและการตั้งค่าจะไม่ได้รับผลกระทบ"
+  },
+  "storageUpdatesCleared": {
+    "message": "ล้างการอัปเดตกฎที่รอดำเนินการแล้ว"
   },
   "storageSettings": {
     "message": "การตั้งค่า"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "ทดสอบ"
   },
+  "webhookSecretLabel": {
+    "message": "คีย์ลับสำหรับลงนาม"
+  },
+  "webhookSecretDescFmt": {
+    "message": "เพิ่ม HMAC-SHA256 ของเนื้อหาในเฮดเดอร์ {0} เว้นว่างไว้หากไม่ต้องการลงนาม ส่วนคำขอ GET, HEAD และ multipart จะไม่ถูกลงนามเลย"
+  },
+  "webhookSecretGenerate": {
+    "message": "สร้าง"
+  },
+  "webhookSecretInvalid": {
+    "message": "คีย์ลับสำหรับลงนาม: ใช้อักขระ ASCII ได้ไม่เกิน 512 ตัว (ห้ามมีอักษรไทย อักษรที่มีเครื่องหมายกำกับ หรืออีโมจิ)"
+  },
   "hooksOffGroupTitle": {
     "message": "ไซต์ที่ไม่ใช้ JS hooks"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "ประวัติหยุดชั่วคราว จึงไม่มีการตรวจสอบ"
+  },
+  "settingsHistoryWatchOff": {
+    "message": "ส่วนขยายปิดอยู่ จึงไม่มีการตรวจสอบ"
   },
   "settingsUiErrHistoryWatch": {
     "message": "การติดตามต้องเป็นปิด รายวัน หรือรายสัปดาห์"

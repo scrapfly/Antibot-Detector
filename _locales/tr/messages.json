@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Panoya kopyalandı"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "{0} araçları yüklendi"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "{0}/{1} çerez bulundu"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Yalnızca sabitlenen sayfalar"
   },
+  "historyExportChangedOnly": {
+    "message": "Yalnızca değişen sayfalar"
+  },
   "historyExportCountFmt": {
     "message": "{1} girdinin {0} tanesi dışa aktarılacak"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Kurallar ve kategoriler"
+  },
+  "storageUpdates": {
+    "message": "Bekleyen kural güncellemeleri"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Bekleyen kural güncellemelerini temizle"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Daha yeni bir uzantı sürümünü bekleyen ve başarısız olan kural güncellemeleri unutulur; bir sonraki Kurallar → Güncelle bunları yeniden bulur. Kurallar ve ayarlar değiştirilmez."
+  },
+  "storageUpdatesCleared": {
+    "message": "Bekleyen kural güncellemeleri temizlendi"
   },
   "storageSettings": {
     "message": "Ayarlar"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "test"
   },
+  "webhookSecretLabel": {
+    "message": "İmzalama anahtarı"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Gövdenin HMAC-SHA256 değerini {0} üstbilgisine ekler. İmza istemiyorsanız boş bırakın; GET, HEAD ve multipart istekleri hiçbir zaman imzalanmaz."
+  },
+  "webhookSecretGenerate": {
+    "message": "Oluştur"
+  },
+  "webhookSecretInvalid": {
+    "message": "İmzalama anahtarı: en fazla 512 ASCII karakter kullanın (Türkçe karakter, aksanlı harf veya emoji olmadan)"
+  },
   "hooksOffGroupTitle": {
     "message": "JS hook'ları olmayan siteler"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "Geçmiş duraklatıldı, bu yüzden hiçbir şey kontrol edilmiyor."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "Uzantı kapalı, bu yüzden hiçbir şey kontrol edilmiyor."
   },
   "settingsUiErrHistoryWatch": {
     "message": "İzleme listesi kapalı, günlük veya haftalık olmalıdır"

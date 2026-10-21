@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Kopierat till urklipp"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "{0}-verktyg inlästa"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Hittade {0}/{1} cookies"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Endast fästa sidor"
   },
+  "historyExportChangedOnly": {
+    "message": "Endast ändrade sidor"
+  },
   "historyExportCountFmt": {
     "message": "Poster som exporteras: {0} av {1}"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Regler och kategorier"
+  },
+  "storageUpdates": {
+    "message": "Väntande regeluppdateringar"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Rensa väntande regeluppdateringar"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Regeluppdateringar som väntar på ett nyare tillägg, och sådana som misslyckades, glöms bort; nästa Regler → Uppdatera hittar dem igen. Regler och inställningar påverkas inte."
+  },
+  "storageUpdatesCleared": {
+    "message": "Väntande regeluppdateringar rensades"
   },
   "storageSettings": {
     "message": "Inställningar"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "test"
   },
+  "webhookSecretLabel": {
+    "message": "Signeringshemlighet"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Lägger till en HMAC-SHA256 av innehållet i headern {0}. Lämna tomt så signeras inget; GET-, HEAD- och multipart-begäranden signeras aldrig."
+  },
+  "webhookSecretGenerate": {
+    "message": "Generera"
+  },
+  "webhookSecretInvalid": {
+    "message": "Signeringshemlighet: använd högst 512 ASCII-tecken (inga accenter eller emojier)"
+  },
   "hooksOffGroupTitle": {
     "message": "Webbplatser utan JS-hooks"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "Historiken är pausad, så inget kontrolleras."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "Tillägget är inaktiverat, så inget kontrolleras."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Bevakningen måste vara av, dagligen eller veckovis"

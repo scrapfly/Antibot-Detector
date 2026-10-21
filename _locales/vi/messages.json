@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Đã sao chép vào bảng nhớ tạm"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "Đã tải công cụ {0}"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Tìm thấy {0}/{1} cookie"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Chỉ trang đã ghim"
   },
+  "historyExportChangedOnly": {
+    "message": "Chỉ trang đã thay đổi"
+  },
   "historyExportCountFmt": {
     "message": "Sẽ xuất {0}/{1} mục"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Quy tắc và danh mục"
+  },
+  "storageUpdates": {
+    "message": "Bản cập nhật quy tắc đang chờ"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Xóa các bản cập nhật quy tắc đang chờ"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Các bản cập nhật quy tắc đang chờ tiện ích mới hơn và các bản đã thất bại sẽ bị loại bỏ; lần chạy Quy tắc → Cập nhật tiếp theo sẽ tìm lại chúng. Quy tắc và cài đặt không bị ảnh hưởng."
+  },
+  "storageUpdatesCleared": {
+    "message": "Đã xóa các bản cập nhật quy tắc đang chờ"
   },
   "storageSettings": {
     "message": "Cài đặt"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "kiểm tra"
   },
+  "webhookSecretLabel": {
+    "message": "Khóa bí mật để ký"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Thêm HMAC-SHA256 của nội dung vào header {0}. Để trống nếu không cần chữ ký; các yêu cầu GET, HEAD và multipart không bao giờ được ký."
+  },
+  "webhookSecretGenerate": {
+    "message": "Tạo"
+  },
+  "webhookSecretInvalid": {
+    "message": "Khóa bí mật để ký: dùng tối đa 512 ký tự ASCII (không dấu, không emoji)"
+  },
   "hooksOffGroupTitle": {
     "message": "Trang web không dùng JS hook"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "Lịch sử đang tạm dừng, nên không có gì được kiểm tra."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "Tiện ích đang tắt, nên không có gì được kiểm tra."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Chức năng theo dõi phải là tắt, hằng ngày hoặc hằng tuần"

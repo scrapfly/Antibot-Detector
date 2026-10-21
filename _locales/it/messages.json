@@ -3375,9 +3375,6 @@
   "advPanelCopiedToClipboard": {
     "message": "Copiato negli appunti"
   },
-  "advPanelToolsLoadedFmt": {
-    "message": "Strumenti {0} caricati"
-  },
   "advPanelCookiesFoundFmt": {
     "message": "Cookie trovati: {0}/{1}"
   },
@@ -5738,6 +5735,9 @@
   "historyExportPinnedOnly": {
     "message": "Solo pagine fissate"
   },
+  "historyExportChangedOnly": {
+    "message": "Solo pagine modificate"
+  },
   "historyExportCountFmt": {
     "message": "Voci che verranno esportate: {0} su {1}"
   },
@@ -5794,6 +5794,18 @@
   },
   "storageRules": {
     "message": "Regole e categorie"
+  },
+  "storageUpdates": {
+    "message": "Aggiornamenti regole in sospeso"
+  },
+  "storageClearUpdatesTitle": {
+    "message": "Elimina gli aggiornamenti delle regole in sospeso"
+  },
+  "storageClearUpdatesMessage": {
+    "message": "Gli aggiornamenti delle regole in attesa di un’estensione più recente e quelli non riusciti vengono dimenticati; Regole → Aggiorna li ritroverà la prossima volta. Regole e impostazioni non vengono toccate."
+  },
+  "storageUpdatesCleared": {
+    "message": "Aggiornamenti delle regole in sospeso eliminati"
   },
   "storageSettings": {
     "message": "Impostazioni"
@@ -6116,6 +6128,18 @@
   "webhookLogTriggerTest": {
     "message": "prova"
   },
+  "webhookSecretLabel": {
+    "message": "Segreto di firma"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Aggiunge un HMAC-SHA256 del corpo nell’header {0}. Lascia vuoto per non firmare; le richieste GET, HEAD e multipart non vengono mai firmate."
+  },
+  "webhookSecretGenerate": {
+    "message": "Genera"
+  },
+  "webhookSecretInvalid": {
+    "message": "Segreto di firma: usa fino a 512 caratteri ASCII (senza accenti né emoji)"
+  },
   "hooksOffGroupTitle": {
     "message": "Siti senza intercettori JS"
   },
@@ -6277,6 +6301,9 @@
   },
   "settingsHistoryWatchPaused": {
     "message": "La cronologia è in pausa, quindi non viene controllato nulla."
+  },
+  "settingsHistoryWatchOff": {
+    "message": "L’estensione è disattivata, quindi non viene controllato nulla."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"
