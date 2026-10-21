@@ -19,7 +19,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings → Detection → Sites without JS hooks: turn the JS hooks off on a site that misbehaves with them; nothing of the page or its frames stays wrapped, and its results say fingerprinting is not checked.
 - Settings → History → Pin pages automatically: pages with a hard protection, or one you name, pin themselves (up to 50); a page you unpin stays unpinned.
 - Settings → History: delete fingerprinting-only pages after a number of days of their own.
-- Settings → History → Storage: choose a History size of 6, 12 or 25 MB (the extension now has the unlimited storage permission; History stays at 6 MB unless you choose more). A smaller size than History uses asks first, also when it comes from an imported settings file or a restored backup.
+- Settings → History → Storage: choose a History size of 6, 12 or 25 MB (the extension now has the unlimited storage permission; History stays at 6 MB unless you choose more). A smaller size, or a lower entry limit, than History uses asks first, also when it comes from an imported settings file or a restored backup.
 - History watchlist: pin a page and choose Watch for changes, and the extension scans it again every day or week in a background tab, marking it Changed (with a notification) when its protections change. Settings → History → Watch pinned pages.
 - Rules editor: a bar notices the texts of a rule that are not translated into every language and one button translates them all, with Chrome's on-device translator.
 

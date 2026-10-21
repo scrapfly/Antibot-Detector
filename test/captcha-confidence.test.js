@@ -170,7 +170,7 @@ async function detect(detector, profile) {
   const engine = new Engine();
   engine.setDetectors({ captcha });
   const state = { url: profile.page.url, mainData: await engine.detectOnPage(profile.page, { includePartial: true }) };
-  const main = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'),  ...profile.runtime, setTimeout, clearTimeout });
+  const main = vm.createContext({ ...profile.runtime, setTimeout, clearTimeout });
   main.window = main;
   main.location = { href: state.url };
   vm.runInContext(fs.readFileSync(path.join(root, 'modules/detection/hooks/window-property-tracker.js'), 'utf8'), main);

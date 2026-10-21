@@ -9,6 +9,7 @@ const plain = value => JSON.parse(JSON.stringify(value));
 function uiHarness() {
   const notifications = [];
   const context = vm.createContext({
+    WorkerMessages: require('../modules/core/worker-messages.js'),
     SettingsUI: {},
     self: {},
     Logger: { error() {}, debug() {}, warn() {} },
@@ -112,6 +113,24 @@ test('a file that lowers the History size below what History uses asks first; de
     assert.equal(asked.length, questions, `${usedMB} MB used, answer ${answer}`);
     assert.equal(saved.candidate.history.historyMaxMB, expected);
     assert.equal(saved.candidate.debugMode, true, 'the rest of the file lands either way');
+  }
+});
+
+test('a file that lowers the entry limit below the pages History holds asks too; declined, the limit that applies stays', async () => {
+  for (const [answer, fileLimit, unpinned, expected, questions] of [[false, 500, 1100, 0, 1], [true, 500, 1100, 500, 1], [false, 1500, 1100, 1500, 0], [false, 500, 300, 500, 0]]) {
+    const { context, ui, form } = uiHarness();
+    let saved;
+    context.StorageManager = { commitSettings: async mutation => { saved = plain(mutation); return { settings: mutation.candidate, previous: form.settings }; } };
+    context.HistoryStore = { SIZES_MB: [6, 12, 25], hasUnlimitedStorage: () => true, budgetFor: (mb) => mb * 1024 * 1024, usage: async () => ({ bytes: 1024, entries: unpinned + 100, pinned: 100 }) };
+    context.FormatUtils = { t: (key, fallback) => fallback };
+    context.chrome.storage = { local: {} };
+    const asked = [];
+    context.NotificationHelper.confirm = async (options) => { asked.push(options.title); return answer; };
+    form.settings.history = { historyMaxMB: 6, historyLimit: 0 };
+    await ui.importSettingsFile.call(form, { target: { files: [{ text: async () => JSON.stringify({ settings: { history: { historyLimit: fileLimit } } }) }] } });
+    assert.equal(asked.length, questions, `limit ${fileLimit}, ${unpinned} unpinned, answer ${answer}`);
+    if (questions) assert.equal(asked[0], 'Lower the History limit');
+    assert.equal(saved.candidate.history.historyLimit, expected);
   }
 });
 

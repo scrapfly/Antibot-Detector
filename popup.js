@@ -450,7 +450,7 @@ class ScrapflyPopup {
       }
 
       switch (request.type) {
-        case 'NEW_DETECTION_DATA':
+        case WorkerMessages.NEW_DETECTION_DATA:
           // New detection data available
           // Check if message is for current active tab
           chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
@@ -492,7 +492,7 @@ class ScrapflyPopup {
           }
           break;
 
-        case 'EXTENSION_TOGGLE_CHANGED': {
+        case WorkerMessages.EXTENSION_TOGGLE_CHANGED: {
           this.detection.setExtensionEnabled(request.enabled !== false);
           const requestId = this.beginDetectionViewRequest();
           // Extension was enabled or disabled
@@ -532,22 +532,22 @@ class ScrapflyPopup {
         case POPUP_BRIDGE_TYPES.WINDOW_DETECTIONS:
         case POPUP_BRIDGE_TYPES.WINDOW_PROPS_COMPLETE:
         case POPUP_BRIDGE_TYPES.DEBUG_LOG:
-        case 'LOG':
+        case WorkerMessages.LOG:
         case POPUP_BRIDGE_TYPES.JS_HOOK_DETECTION_BATCH:
         case POPUP_BRIDGE_TYPES.JS_HOOKS_COMPLETE:
         case POPUP_BRIDGE_TYPES.HOOK_FAILURE_REPORT:
-        case 'GET_DETECTORS':
-        case 'CHECK_CACHE_EARLY':
-        case 'CONTENT_SCRIPT_READY':
-        case 'PAGE_LOAD_NOTIFICATION':
-        case 'DETECTION_DATA':
-        case 'GET_DETECTION_DATA':
-        case 'RELOAD_DETECTORS':
-        case 'CACHE_HIT_EARLY_EXIT':
+        case WorkerMessages.GET_DETECTORS:
+        case WorkerMessages.CHECK_CACHE_EARLY:
+        case WorkerMessages.CONTENT_SCRIPT_READY:
+        case WorkerMessages.PAGE_LOAD_NOTIFICATION:
+        case WorkerMessages.DETECTION_DATA:
+        case WorkerMessages.GET_DETECTION_DATA:
+        case WorkerMessages.RELOAD_DETECTORS:
+        case WorkerMessages.CACHE_HIT_EARLY_EXIT:
           // These are internal messages not meant for popup - ignore silently
           return false;
 
-        case 'DETECTION_PROGRESS':
+        case WorkerMessages.DETECTION_PROGRESS:
           // Progress updates are handled by sections/detection/detection.js directly
           return false;
 

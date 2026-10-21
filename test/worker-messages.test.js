@@ -37,16 +37,19 @@ test('every message type is its own name, frozen, and unique across the registri
   }
 });
 
-test('no extension script spells a worker message type as a string literal', () => {
+test('no extension script spells a worker message type as a string literal, in any quoting or position', () => {
   const names = new Set(Object.keys(WorkerMessages));
   const offenders = [];
-  const patterns = [/registry\['([A-Z_]+)'\]/g, /\btype: '([A-Z_]+)'/g, /\.type (?:===|!==) '([A-Z_]+)'/g];
+  // Any quoted string that is exactly a registry name: a handler key, a sent type, a comparison, a switch case, a
+  // template argument; both quote styles. Comments and docs are not scanned (only .js sources are), so a mention in
+  // prose is fine, and a name inside a longer string is not one of these messages.
+  const literal = /(['"])([A-Z][A-Z_]+)\1/g;
   for (const rel of sources()) {
     const text = fs.readFileSync(path.join(ROOT, rel), 'utf8');
-    for (const pattern of patterns) {
-      for (const match of text.matchAll(pattern)) {
-        if (names.has(match[1])) offenders.push(`${rel}: ${match[0]}`);
-      }
+    for (const match of text.matchAll(literal)) {
+      // a log category or context that happens to share a name (Logger's category 'LOG') is not a message
+      if (/(?:category|context): $/.test(text.slice(Math.max(0, match.index - 12), match.index))) continue;
+      if (names.has(match[2])) offenders.push(`${rel}: ${match[0]}`);
     }
   }
   assert.deepEqual(offenders, [], 'use WorkerMessages.X instead');

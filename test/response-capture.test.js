@@ -239,6 +239,20 @@ test('after the scan, a response adds its detector to the cached result, the bad
   assert.equal(out.stored, null, 'no rewrite when nothing is new');
 });
 
+test('a skipped site keeps nothing from its responses: no cache entry, no badge, no popup update', async () => {
+  const out = fresh({ cached: null });
+  worker.Utils.isUrlBlacklisted = async () => true;
+  try {
+    send({ url: PREPARE, method: 'POST', status: 200, body: compacted(prepareBody) });
+    await sleep(450);
+    assert.equal(out.stored, null, 'nothing stored for a skipped site');
+    assert.equal(out.badge, null, 'the badge is left alone (it says paused)');
+    assert.deepEqual(out.messages.filter(m => m.type === 'NEW_DETECTION_DATA'), [], 'no popup update');
+  } finally {
+    worker.Utils.isUrlBlacklisted = async () => false;
+  }
+});
+
 test('during a scan the scan reads the response; frames, other sites and bad messages are ignored', async () => {
   let out = fresh();
   worker.detectionStates.set(1, { url: 'https://chatgpt.com/' });

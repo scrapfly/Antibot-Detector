@@ -6300,7 +6300,7 @@
     "description": "Title of the item and of the confirmation that return every setting to its default"
   },
   "settingsResetDesc": {
-    "message": "Every setting returns to its default. Rules, History, site lists, language and theme are kept.",
+    "message": "Every setting returns to its default, except how much History may hold. Rules, History, site lists, language and theme are kept.",
     "description": "Description of the Reset settings item"
   },
   "settingsResetBtn": {
@@ -6308,7 +6308,7 @@
     "description": "Button that opens the Reset settings confirmation"
   },
   "settingsResetMessage": {
-    "message": "Every setting returns to its default. Rules, History, site lists, language and theme are not changed. Webhook and sharing details are kept unless you choose to remove them.",
+    "message": "Every setting returns to its default, except how much History may hold. Rules, History, site lists, language and theme are not changed. Webhook and sharing details are kept unless you choose to remove them.",
     "description": "Message of the Reset settings confirmation"
   },
   "settingsResetConnections": {
@@ -6663,6 +6663,18 @@
     "message": "Lower the size",
     "description": "Confirm button of the question before lowering the History size"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Lower the History limit",
+    "description": "Title of the question asked when an imported settings file or a restored backup lowers the number of History entries below what History holds"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "History holds {0} pages and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.",
+    "description": "Message of that question. {0} is the number of pages History holds now, {1} the lower limit the file asks for (both plain numbers)"
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Lower the limit",
+    "description": "Confirm button of that question (Cancel keeps the limit that applies now; the rest of the file still lands)"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} used, no limit",
     "description": "Settings → Data → Storage: total in use when the browser allows the extension unlimited storage; {0} is a size like 14.2 MB"
@@ -6788,8 +6800,8 @@
     "description": "Error after Check now while History is paused"
   },
   "settingsHistoryWatchOff": {
-    "message": "The extension is switched off, so nothing is checked.",
-    "description": "The watchlist line in Settings, and the error after Check now, while the extension is switched off with its main toggle"
+    "message": "The last check found the extension switched off, so nothing was checked.",
+    "description": "The watchlist line in Settings for a check that found the extension switched off with its main toggle (a past event: it may be on again), and the error after Check now"
   },
   "settingsUiErrHistoryWatch": {
     "message": "The watchlist must be off, daily or weekly",

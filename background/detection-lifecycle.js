@@ -191,6 +191,10 @@ async function applyLateResponses(tabId) {
     const tab = await chrome.tabs.get(tabId).catch(() => null);
     const pageUrl = tab && tab.url;
     if (!pageUrl || detectionStates.has(tabId)) return;
+    // A skipped site, or one left out in "only these sites" mode, keeps nothing from its responses either: no cache
+    // entry, no badge count, no popup update (the page-load check refused its scan for the same reason)
+    if (await Utils.isUrlBlacklisted(pageUrl)) return;
+    if (detectionStates.has(tabId)) return;
     const responses = responsesForPage(tabId, pageUrl);
     if (responses.length === 0) return;
     const storedUrls = networkUrlsStore.get(tabId);

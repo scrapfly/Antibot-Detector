@@ -206,11 +206,11 @@ SettingsUI.saveSettings = async function(options = {}) {
       };
       if (oldScope !== newScope) {
         UrlUtils.clearUrlHashCache();
-        notifyWorker('CACHE_SCOPE_CHANGED');
-        notifyWorker('DETECTION_CLEAR_CACHE');
+        notifyWorker(WorkerMessages.CACHE_SCOPE_CHANGED);
+        notifyWorker(WorkerMessages.DETECTION_CLEAR_CACHE);
       }
-      notifyWorker('SETTINGS_UPDATED');
-      notifyWorker('SYNC_CATEGORY_COLORS');
+      notifyWorker(WorkerMessages.SETTINGS_UPDATED);
+      notifyWorker(WorkerMessages.SYNC_CATEGORY_COLORS);
       if (options.notify !== false) NotificationHelper.success(((typeof I18n !== 'undefined') && I18n.get('settingsSavedToast')) || 'Settings saved');
       return true;
     } catch (error) {
@@ -1285,31 +1285,58 @@ SettingsUI.chooseHistorySize = async function() {
 };
 
 /**
- * Settings that arrive in a file (an import, a backup) may lower the History size below what History uses, and the
- * worker then removes the oldest unpinned pages at once. So the same question the size box asks is asked first;
- * declined (or unanswerable), the candidate keeps the size that applies now and everything else in the file still lands.
+ * Settings that arrive in a file (an import, a backup) may lower the History size below what History uses, or its
+ * entry limit below the pages it holds, and the worker then removes the oldest unpinned pages at once. So the same
+ * question the size box asks is asked first (and its twin for the limit); declined (or unanswerable), the candidate
+ * keeps the value that applies now and everything else in the file still lands.
  */
 SettingsUI.confirmHistorySizeFor = async function(candidate) {
   if (typeof HistoryStore === 'undefined' || !candidate || !candidate.history) return candidate;
-  const wanted = Number(candidate.history.historyMaxMB);
-  const current = Number(this.settings && this.settings.history && this.settings.history.historyMaxMB) || HistoryStore.SIZES_MB[0];
-  if (!Number.isFinite(wanted) || wanted >= current) return candidate;
+  const mine = (this.settings && this.settings.history) || {};
   const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
-  try {
-    const limit = HistoryStore.budgetFor(wanted, HistoryStore.hasUnlimitedStorage());
-    const usage = await HistoryStore.usage(chrome.storage.local, limit);
-    if (usage.bytes <= limit) return candidate;
-    const size = (bytes) => SettingsUI.formatStorageSize(bytes);
-    const confirmed = await NotificationHelper.confirm({
-      title: text('settingsHistorySizeLowerTitle', 'Lower the History size'),
-      message: text('settingsHistorySizeLowerMessage', 'History uses {0} and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.', size(usage.bytes), size(limit)),
-      type: 'warning', tone: 'danger',
-      confirmText: text('settingsHistorySizeLowerConfirm', 'Lower the size'), cancelText: text('btnCancel', 'Cancel')
-    });
-    if (!confirmed) candidate.history.historyMaxMB = current;
-  } catch (error) {
-    Logger.warn('UI', 'Could not check the History size the file asks for', error);
-    candidate.history.historyMaxMB = current;
+  const ask = (options) => NotificationHelper.confirm({ type: 'warning', tone: 'danger', cancelText: text('btnCancel', 'Cancel'), ...options });
+  // The size in MB
+  const wanted = Number(candidate.history.historyMaxMB);
+  const current = Number(mine.historyMaxMB) || HistoryStore.SIZES_MB[0];
+  if (Number.isFinite(wanted) && wanted < current) {
+    try {
+      const limit = HistoryStore.budgetFor(wanted, HistoryStore.hasUnlimitedStorage());
+      const usage = await HistoryStore.usage(chrome.storage.local, limit);
+      if (usage.bytes > limit) {
+        const size = (bytes) => SettingsUI.formatStorageSize(bytes);
+        const confirmed = await ask({
+          title: text('settingsHistorySizeLowerTitle', 'Lower the History size'),
+          message: text('settingsHistorySizeLowerMessage', 'History uses {0} and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.', size(usage.bytes), size(limit)),
+          confirmText: text('settingsHistorySizeLowerConfirm', 'Lower the size')
+        });
+        if (!confirmed) candidate.history.historyMaxMB = current;
+      }
+    } catch (error) {
+      Logger.warn('UI', 'Could not check the History size the file asks for', error);
+      candidate.history.historyMaxMB = current;
+    }
+  }
+  // The number of entries (0 means no limit of its own: the worker then keeps 1000 unpinned pages)
+  const SAFETY = 1000;
+  const wantedLimit = parseInt(candidate.history.historyLimit, 10);
+  const currentLimit = parseInt(mine.historyLimit, 10);
+  const effectiveNow = currentLimit > 0 ? currentLimit : SAFETY;
+  if (Number.isFinite(wantedLimit) && wantedLimit > 0 && wantedLimit < effectiveNow) {
+    try {
+      const usage = await HistoryStore.usage(chrome.storage.local);
+      const unpinned = Math.max(0, (usage.entries || 0) - (usage.pinned || 0));
+      if (unpinned > wantedLimit) {
+        const confirmed = await ask({
+          title: text('settingsHistoryLimitLowerTitle', 'Lower the History limit'),
+          message: text('settingsHistoryLimitLowerMessage', 'History holds {0} pages and the new limit is {1}. The oldest pages that are not pinned will be removed to fit.', String(unpinned), String(wantedLimit)),
+          confirmText: text('settingsHistoryLimitLowerConfirm', 'Lower the limit')
+        });
+        if (!confirmed) candidate.history.historyLimit = Number.isFinite(currentLimit) ? currentLimit : 0;
+      }
+    } catch (error) {
+      Logger.warn('UI', 'Could not check the History limit the file asks for', error);
+      candidate.history.historyLimit = Number.isFinite(currentLimit) ? currentLimit : 0;
+    }
   }
   return candidate;
 };

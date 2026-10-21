@@ -12,6 +12,12 @@ function registerCacheHandlers(registry, context) {
             try {
                 const { url } = request;
                 Logger.debug('CACHE', `Early check: ${url}`);
+                // A result saved before the site was skipped (or left out of the chosen sites) is not served to it
+                if (await Utils.isUrlBlacklisted(url)) {
+                    if (sender.tab?.id) tabsUsingCache.delete(sender.tab.id);
+                    sendResponse({ cacheHit: false });
+                    return;
+                }
                 const cachedData = await DetectionEngineManager.getStoredDetection(url);
 
                 if (cachedData) {
