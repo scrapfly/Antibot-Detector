@@ -85,7 +85,10 @@
 
     add('Settings');
     add(`- Debug mode ${onOff(s.debugMode)}, verbose ${onOff(s.debugVerbose)}; log collector ${onOff(s.logCollectorEnabled)}`);
-    add(`- Notifications ${onOff(s.notificationsEnabled)}; JS API ${onOff(s.jsApi && s.jsApi.enableJsApi)}; webhook ${onOff(s.webhook && s.webhook.enableWebhook)}`);
+    // Whether a signing secret is set (yes or no only: never any part of it)
+    const webhookOn = !!(s.webhook && s.webhook.enableWebhook);
+    const signed = webhookOn && typeof s.webhook.webhookSecret === 'string' && s.webhook.webhookSecret.trim() !== '';
+    add(`- Notifications ${onOff(s.notificationsEnabled)}; JS API ${onOff(s.jsApi && s.jsApi.enableJsApi)}; webhook ${onOff(webhookOn)}${signed ? ', signing secret set' : ''}`);
     add(`- Cache: ${detection.cacheDuration == null ? 'default' : `${count(detection.cacheDuration)} ${String(detection.cacheUnit || 'days')}`}, ${String(detection.cacheScope || 'domain')} scope`);
     const listed = (key) => (Array.isArray(detection[key]) ? detection[key].length : 0);
     add(`- Sites: ${detection.scanMode === 'allowlist' ? `only ${listed('allowedDomains')} chosen` : `${listed('blacklistedDomains')} skipped`}; JS hooks off on ${listed('hooksOffDomains')}`);

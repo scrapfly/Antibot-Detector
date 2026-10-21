@@ -55,7 +55,8 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
           enableWebhook: false,
           webhookUrl: 'https://hooks.example/SYNTHETIC_EXISTING',
           webhookHeaders: [{ name: 'X-Test', value: 'SYNTHETIC_EXISTING' }],
-          webhookPayload: 'SYNTHETIC_EXISTING'
+          webhookPayload: 'SYNTHETIC_EXISTING',
+          webhookSecret: 'SYNTHETIC_EXISTING'
         },
         share: {
           provider: 'dpaste_com',
@@ -163,7 +164,8 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
         debugMode: true,
         webhook: {
           webhookUrl: 'https://untrusted.example/replaced',
-          webhookHeaders: [{ name: 'X-Test', value: 'SYNTHETIC_REPLACEMENT' }]
+          webhookHeaders: [{ name: 'X-Test', value: 'SYNTHETIC_REPLACEMENT' }],
+          webhookSecret: 'SYNTHETIC_REPLACEMENT'
         },
         share: { githubToken: 'SYNTHETIC_REPLACEMENT', customUrl: 'https://untrusted.example/replaced' }
       }
@@ -188,6 +190,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     assert.equal(current.debugMode, true);
     assert.equal(current.webhook.webhookUrl, 'https://hooks.example/SYNTHETIC_EXISTING');
     assert.equal(current.webhook.webhookHeaders[0].value, 'SYNTHETIC_EXISTING');
+    assert.equal(current.webhook.webhookSecret, 'SYNTHETIC_EXISTING', 'an imported file never replaces the signing secret');
     assert.equal(current.share.githubToken, 'SYNTHETIC_EXISTING');
     assert.equal(current.share.customUrl, 'https://upload.example/SYNTHETIC_EXISTING');
     console.log('PASS successful portable import keeps existing local webhook/share connections');

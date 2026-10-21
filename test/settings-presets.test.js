@@ -62,6 +62,8 @@ test('a reset keeps the site lists and the rules check time, and the connections
   const kept = SettingsPresets.resetKeep();
   assert.deepStrictEqual(kept.slice(0, 5), ['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp']);
   assert.ok(kept.includes('webhook.webhookUrl') && kept.includes('share.githubToken'));
+  assert.ok(kept.includes('webhook.webhookSecret'), 'the signing secret is a connection: kept unless the connections are removed');
+  assert.ok(!SettingsPresets.resetKeep({ disconnect: true }).includes('webhook.webhookSecret'));
   assert.deepStrictEqual(SettingsPresets.resetKeep({ disconnect: true }), [...SettingsPresets.KEEP]);
   for (const keptPath of kept) assert.notStrictEqual(SettingsPresets.getPath(defaults, keptPath), undefined, `${keptPath} is a default setting`);
 });

@@ -210,6 +210,26 @@ Because these events reach the page itself, any website you visit can listen for
 
 When a scan finds protections, the extension can send the results to your own endpoint. Choose the HTTP method, add headers and write the body as a template with variables such as `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<CATEGORIES>` and `<TIMESTAMP>`. Webhooks only go to HTTPS addresses on public hosts, are off by default, and include a **Test** button. Set them up in Settings → Detection → Webhook Integration.
 
+**Signing.** Set a signing secret (or press **Generate**, then **Copy** it to your server) and each request with a body is signed the way Scrapfly's own webhooks are: `X-Scrapfly-Webhook-Signature` holds the HMAC-SHA256 of the raw body as uppercase hex, keyed with the secret exactly as written (its UTF-8 bytes; a generated secret is not decoded from hex), and `X-Scrapfly-Webhook-Signature-Lowercase` the same value in lowercase. Check it against the raw body before parsing it, with a constant-time comparison. GET, HEAD and `multipart/form-data` requests are not signed, and the URL is never part of the signature. There is no timestamp header; the default template sends `<TIMESTAMP>` in the body, so your server can refuse stale requests. The secret stays in this browser: exports, backups and diagnostics leave it out, and Reset keeps it unless you also remove the connections.
+
+```js
+// Node.js, with the raw body as a Buffer (for example express.raw({ type: '*/*' }))
+const crypto = require('node:crypto');
+function isFromExtension(rawBody, signatureHeader, secret) {
+  const expected = Buffer.from(crypto.createHmac('sha256', secret).update(rawBody).digest('hex'));
+  const received = Buffer.from(String(signatureHeader || '').toLowerCase());
+  return received.length === expected.length && crypto.timingSafeEqual(received, expected);
+}
+// isFromExtension(req.body, req.get('X-Scrapfly-Webhook-Signature'), process.env.WEBHOOK_SECRET)
+```
+
+```python
+import hashlib, hmac
+def is_from_extension(raw_body: bytes, signature_header: str, secret: str) -> bool:
+    expected = hmac.new(secret.encode(), raw_body, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, (signature_header or "").lower())
+```
+
 ### Share links
 
 **Upload detections** on the Detection tab publishes a summary of the page's results, copies the link and opens it in a new tab. The summary contains the page address without its query string or fragment, each protection's name, category and confidence, and which methods matched; never cookie or header values. Choose where it goes, and when it is deleted where the service allows it, in Settings → Detection → Share uploads: dpaste.com (the default), dpaste.org, paste.rs, Pastebin with your API key, a secret GitHub Gist with your token, or your own server.
@@ -285,7 +305,7 @@ npm run e2e:editor     # the rule editor saves settings and keeps every field
 npm run e2e:updater    # Rules → Update against a local stand-in for GitHub
 npm run e2e:data       # Settings → Data: storage and Clear, backup and restore, presets and reset, diagnostics
 npm run e2e:scope      # Settings → Detection → Sites to scan: skipped sites, chosen sites, the paused card
-npm run e2e:webhook    # Settings → Detection → Webhook: filters, cache, failures, Recent deliveries, Test, Clear
+npm run e2e:webhook    # Settings → Detection → Webhook: filters, cache, failures, Recent deliveries, Test, Clear, signing
 npm run e2e:hooks      # Settings → Detection → Sites without JS hooks: hooks on and off, switching, the popup note, the cache
 npm run e2e:translate  # Rules editor → Translate the rule: what is missing, one click, Save
 npm run e2e:languages  # every language through the real popup, settings and statistics pages

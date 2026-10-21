@@ -253,8 +253,31 @@ SettingsRuntime.buildWebhookRequest = function(webhook, ctx) {
     return { url, options };
 };
 
+/**
+ * Sign a built request when a secret is set (WebhookBody: the HMAC-SHA256 of the text body in Scrapfly's two
+ * signature headers). Custom headers named like either one go first, whatever their case: a plain object handed to
+ * fetch would otherwise join them into one "forged, real" header. Nothing is sent when signing fails, and the error
+ * names neither the secret nor the body.
+ */
+SettingsRuntime._signWebhookRequest = async function(options, secret) {
+    if (!WebhookBody.cleanSecret(secret)) return options;
+    const reserved = [WebhookBody.SIGNATURE_HEADER, WebhookBody.SIGNATURE_HEADER_LOWERCASE].map(name => name.toLowerCase());
+    for (const name of Object.keys(options.headers || {})) {
+        if (reserved.includes(name.toLowerCase())) delete options.headers[name];
+    }
+    let digest;
+    try {
+        digest = await WebhookBody.signature(secret, options.body);
+    } catch (_) {
+        throw new Error('Webhook signing failed');
+    }
+    if (digest) options.headers = Object.assign(options.headers || {}, WebhookBody.signatureHeaders(digest));
+    return options;
+};
+
 SettingsRuntime.sendWebhook = async function(webhook, ctx) {
     const { url, options } = SettingsRuntime.buildWebhookRequest(webhook, ctx);
+    await SettingsRuntime._signWebhookRequest(options, webhook.webhookSecret);
     try {
         return await fetch(url, options);
     } catch (_) {

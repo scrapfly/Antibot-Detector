@@ -6549,6 +6549,22 @@
     "message": "test",
     "description": "Marks a webhook delivery that was the Test button"
   },
+  "webhookSecretLabel": {
+    "message": "Signing secret",
+    "description": "Label of the password field holding the secret that signs each webhook request"
+  },
+  "webhookSecretDescFmt": {
+    "message": "Adds an HMAC-SHA256 of the body in the {0} header. Leave empty for no signature; GET, HEAD and multipart requests are never signed.",
+    "description": "Under the signing secret field. {0} is the header name (X-Scrapfly-Webhook-Signature) and stays as it is; keep HMAC-SHA256, GET and HEAD as written"
+  },
+  "webhookSecretGenerate": {
+    "message": "Generate",
+    "description": "Button that fills the signing secret field with a new random secret, applied with Save"
+  },
+  "webhookSecretInvalid": {
+    "message": "Signing secret: use up to 512 ASCII characters (no accents or emoji)",
+    "description": "Shown under the signing secret field, and when Save or Test is refused because of it"
+  },
   "hooksOffGroupTitle": {
     "message": "Sites without JS hooks",
     "description": "Settings → Detection: title of the card where the person lists the sites on which JS hooks are turned off"

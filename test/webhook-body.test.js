@@ -321,3 +321,98 @@ test('GET sends no body and no Content-Type', async () => {
   assert.strictEqual(calls[0].options.body, undefined);
   assert.strictEqual(Object.keys(calls[0].options.headers).length, 0);
 });
+
+// ---------------------------------------------------------------- signing (Settings → Webhook → Signing secret)
+const { createHmac } = require('node:crypto');
+const nodeHmac = (secret, body) => createHmac('sha256', secret).update(body).digest('hex');
+
+test('signature() is the HMAC-SHA256 of the body under the secret, in hex (RFC 4231 test case 2), in Scrapfly\'s two headers', async () => {
+  const hex = await WB.signature('Jefe', 'what do ya want for nothing?');
+  assert.strictEqual(hex, '5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843');
+  assert.deepStrictEqual(WB.signatureHeaders(hex), {
+    'X-Scrapfly-Webhook-Signature': hex.toUpperCase(),
+    'X-Scrapfly-Webhook-Signature-Lowercase': hex
+  });
+  assert.strictEqual(WB.SIGNATURE_HEADER, 'X-Scrapfly-Webhook-Signature');
+  assert.strictEqual(WB.SIGNATURE_HEADER_LOWERCASE, 'X-Scrapfly-Webhook-Signature-Lowercase');
+});
+
+test('signature() signs nothing without a secret or a text body, and never throws for it', async () => {
+  for (const secret of ['', '   ', undefined, null, 42, {}, []]) assert.strictEqual(await WB.signature(secret, 'body'), null, String(secret));
+  for (const body of [undefined, null, 42, new FormData()]) assert.strictEqual(await WB.signature('SYNTHETIC_SECRET', body), null, String(body));
+});
+
+test('signature() keys with the trimmed secret and signs the UTF-8 bytes the browser sends, as a server computes it', async () => {
+  const cases = [
+    ['  SYNTHETIC_SECRET  ', '{"a":1}'],
+    ['k'.repeat(300), 'a key longer than the hash block'],
+    ['SYNTHETIC_SECRET', 'Ünïcödé · 検出 · 🤖 · عربى'],
+    ['SYNTHETIC_SECRET', 'a\uD800b'], // a lone surrogate is sent as EF BF BD by fetch and by Node alike
+    ['SYNTHETIC_SECRET', '']
+  ];
+  for (const [secret, body] of cases) {
+    assert.strictEqual(await WB.signature(secret, body), nodeHmac(secret.trim(), Buffer.from(body, 'utf8')), JSON.stringify([secret.slice(0, 20), body]));
+  }
+  // A secret stored by hand with an accent (the field refuses one) still signs with its UTF-8 bytes
+  assert.strictEqual(await WB.signature('clé', 'x'), nodeHmac(Buffer.from('clé', 'utf8'), 'x'));
+});
+
+test('a secret is valid up to 512 printable ASCII characters once trimmed; empty means unsigned', () => {
+  for (const ok of ['', 'SYNTHETIC_SECRET', 'with inner spaces', `  ${'a'.repeat(512)}  `, '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~']) assert.ok(WB.isValidSecret(ok), ok.slice(0, 20));
+  for (const bad of ['a'.repeat(513), 'clé', 'a​b', 'a\tb', 'a\nb', '🤖']) assert.ok(!WB.isValidSecret(bad), JSON.stringify(bad.slice(0, 20)));
+  assert.strictEqual(WB.cleanSecret('  x  '), 'x');
+  for (const notText of [undefined, null, 42, {}]) assert.strictEqual(WB.cleanSecret(notText), '');
+  assert.strictEqual(WB.SECRET_MAX_LENGTH, 512);
+});
+
+test('newSecret() is 32 random bytes as 64 lowercase hex characters', () => {
+  const a = WB.newSecret();
+  const b = WB.newSecret();
+  assert.match(a, /^[0-9a-f]{64}$/);
+  assert.notStrictEqual(a, b);
+  const fixed = { getRandomValues: (bytes) => bytes.fill(0xab) };
+  assert.strictEqual(WB.newSecret({ crypto: fixed }), 'ab'.repeat(32));
+  assert.ok(WB.isValidSecret(a));
+});
+
+test('the background sender signs every text body, drops custom headers named like the signature, and leaves GET, HEAD and multipart unsigned', async () => {
+  const secret = 'SYNTHETIC_SECRET';
+  const forged = [{ name: 'x-scrapfly-webhook-signature', value: 'forged' }, { name: 'X-SCRAPFLY-WEBHOOK-SIGNATURE-LOWERCASE', value: 'forged' }, { name: 'X-Site', value: '<HOSTNAME>' }];
+  const types = ['application/json', 'application/x-www-form-urlencoded', 'multipart/form-data', 'text/plain', 'application/xml', 'text/csv', 'application/x-ndjson', 'application/vnd.acme+json'];
+  for (const type of types) {
+    const calls = [];
+    const runtime = loadRuntime({
+      enableWebhook: true, webhookUrl: 'https://hooks.example/in', webhookMethod: 'POST', webhookContentType: type,
+      webhookPayload: WB.DEFAULT_TEMPLATE, webhookHeaders: forged, webhookSecret: `  ${secret}  `
+    }, calls);
+    await runtime.sendWebhookIfEnabled({ url: 'https://shop.example/p', title: 'T' }, DETS);
+    assert.strictEqual(calls.length, 1, type);
+    const { options } = calls[0];
+    const headers = new Headers(options.headers); // what fetch sends: names are case-insensitive, duplicates joined
+    assert.strictEqual(headers.get('x-site'), 'shop.example', type);
+    if (type === 'multipart/form-data') {
+      assert.strictEqual(headers.get(WB.SIGNATURE_HEADER), null, type);
+      assert.strictEqual(headers.get(WB.SIGNATURE_HEADER_LOWERCASE), null, type);
+    } else {
+      const expected = nodeHmac(secret, Buffer.from(options.body, 'utf8'));
+      assert.strictEqual(headers.get(WB.SIGNATURE_HEADER), expected.toUpperCase(), type);
+      assert.strictEqual(headers.get(WB.SIGNATURE_HEADER_LOWERCASE), expected, type);
+    }
+    assert.ok(!JSON.stringify(options.headers).includes('forged'), `${type}: a custom header cannot pose as the signature`);
+  }
+  for (const method of ['GET', 'HEAD']) {
+    const calls = [];
+    const runtime = loadRuntime({ enableWebhook: true, webhookUrl: 'https://hooks.example/in', webhookMethod: method, webhookHeaders: forged, webhookSecret: secret }, calls);
+    await runtime.sendWebhookIfEnabled({ url: 'https://shop.example/p' }, DETS);
+    const headers = new Headers(calls[0].options.headers);
+    assert.strictEqual(calls[0].options.body, undefined, method);
+    assert.strictEqual(headers.get(WB.SIGNATURE_HEADER), null, method);
+    assert.ok(!JSON.stringify(calls[0].options.headers).includes('forged'), method);
+  }
+  // Without a secret nothing changes: the custom headers go as written, unsigned
+  const calls = [];
+  const runtime = loadRuntime({ enableWebhook: true, webhookUrl: 'https://hooks.example/in', webhookMethod: 'POST', webhookHeaders: [{ name: 'X-Other', value: 'v' }] }, calls);
+  await runtime.sendWebhookIfEnabled({ url: 'https://shop.example/p' }, DETS);
+  assert.strictEqual(new Headers(calls[0].options.headers).get(WB.SIGNATURE_HEADER), null);
+  assert.strictEqual(calls[0].options.headers['X-Other'], 'v');
+});

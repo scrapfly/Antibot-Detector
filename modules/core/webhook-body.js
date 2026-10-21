@@ -26,6 +26,13 @@
  * Structured types (form, multipart, xml, csv, ndjson) parse the substituted
  * template; when it is empty or not valid JSON they use the default payload.
  *
+ * Signing (optional, Settings → Webhook → Signing secret): the same signature
+ * Scrapfly's own API webhooks carry, the HMAC-SHA256 of the exact body keyed
+ * with the secret as written, in X-Scrapfly-Webhook-Signature (uppercase hex)
+ * and X-Scrapfly-Webhook-Signature-Lowercase. Only a text body is signed: GET
+ * and HEAD send none, and fetch writes multipart itself. All WebCrypto use of
+ * the extension's webhook lives here.
+ *
  * No DOM or chrome.* dependency: loads in the service worker, the popup and
  * node tests (module.exports).
  */
@@ -407,6 +414,51 @@
     return resolveContentType(contentType).kind !== 'text';
   }
 
+  // ------------------------------------------------------------------ signing
+  const SIGNATURE_HEADER = 'X-Scrapfly-Webhook-Signature';
+  const SIGNATURE_HEADER_LOWERCASE = 'X-Scrapfly-Webhook-Signature-Lowercase';
+  const SECRET_MAX_LENGTH = 512;
+
+  /** The secret as it is used: text only, without the spaces around it ('' when there is none). */
+  function cleanSecret(value) {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  /**
+   * A secret a server can store and type too: at most 512 printable ASCII characters once trimmed. An accent, an
+   * emoji or an invisible character could not be seen in the field and would never verify. Empty means unsigned.
+   */
+  function isValidSecret(value) {
+    const secret = cleanSecret(value);
+    return secret.length <= SECRET_MAX_LENGTH && /^[\x20-\x7E]*$/.test(secret);
+  }
+
+  const toHex = (bytes) => Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('');
+
+  /**
+   * The lowercase hex HMAC-SHA256 of a text body under the secret, or null when there is nothing to sign: no secret
+   * (WebCrypto refuses an empty key), or a body that is not text (none for GET/HEAD, FormData for multipart).
+   */
+  async function signature(secret, body, deps = {}) {
+    const key = cleanSecret(secret);
+    if (!key || typeof body !== 'string') return null;
+    const crypto = deps.crypto || root.crypto;
+    const encoder = new TextEncoder();
+    const hmacKey = await crypto.subtle.importKey('raw', encoder.encode(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    return toHex(await crypto.subtle.sign('HMAC', hmacKey, encoder.encode(body)));
+  }
+
+  /** The two headers for a digest: uppercase, as Scrapfly sends it, and the lowercase copy. */
+  function signatureHeaders(hex) {
+    return { [SIGNATURE_HEADER]: String(hex).toUpperCase(), [SIGNATURE_HEADER_LOWERCASE]: String(hex).toLowerCase() };
+  }
+
+  /** A new random secret: 32 bytes as 64 lowercase hex characters. */
+  function newSecret(deps = {}) {
+    const crypto = deps.crypto || root.crypto;
+    return toHex(crypto.getRandomValues(new Uint8Array(32)));
+  }
+
   const api = Object.freeze({
     VARIABLES,
     SAMPLE_DETECTIONS,
@@ -427,7 +479,15 @@
     toCSV,
     toNDJSON,
     build,
-    expectsJsonTemplate
+    expectsJsonTemplate,
+    SIGNATURE_HEADER,
+    SIGNATURE_HEADER_LOWERCASE,
+    SECRET_MAX_LENGTH,
+    cleanSecret,
+    isValidSecret,
+    signature,
+    signatureHeaders,
+    newSecret
   });
 
   root.WebhookBody = api;

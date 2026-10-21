@@ -59,7 +59,8 @@
       "webhookUrl": "",
       "webhookContentType": "application/json",
       "webhookPayload": "{\"url\": \"<SITEURL>\", \"hostname\": \"<HOSTNAME>\", \"title\": \"<TITLE>\", \"favicon\": \"<FAVICON>\", \"detections\": <DETECTIONS>, \"timestamp\": \"<TIMESTAMP>\", \"count\": <DETECTION_COUNT>, \"categories\": \"<CATEGORIES>\"}",
-      "webhookHeaders": []
+      "webhookHeaders": [],
+      "webhookSecret": ""
     },
 
     "share": {

@@ -414,6 +414,7 @@ SettingsUI.updateSettingsUI = function() {
     SettingsUI.setupWebhookPayloadUI.call(this);
 
     this.renderWebhookHeadersUI();
+    SettingsUI.populateWebhookSecret.call(this, webhookSettings);
 
     // ========== HISTORY TAB ==========
     if (this.settings.history) {
@@ -576,6 +577,7 @@ SettingsUI.getSettingsFromUI = function() {
       webhookContentType: this.getWebhookContentTypeValue() ?? this.settings.webhook?.webhookContentType ?? 'application/json',
       webhookPayload: document.querySelector('#webhookPayload')?.value ?? this.settings.webhook?.webhookPayload ?? '',
       webhookHeaders: this.settings.webhook?.webhookHeaders || [],
+      webhookSecret: SettingsUI.readWebhookSecret.call(this),
       ...SettingsUI.readWebhookFilter.call(this)
     };
 
@@ -700,6 +702,12 @@ SettingsUI.validateSettings = function(settings) {
 
     if (typeof SettingsUI.validateShareSettings === 'function') {
       errors.push(...SettingsUI.validateShareSettings(settings.share, text));
+    }
+
+    // A signing secret no server could check (accents, emoji, invisible characters, over 512): the message never repeats it
+    if (settings.webhook && settings.webhook.webhookSecret !== undefined && typeof WebhookBody !== 'undefined'
+      && !WebhookBody.isValidSecret(settings.webhook.webhookSecret)) {
+      errors.push(text('webhookSecretInvalid', 'Signing secret: use up to 512 ASCII characters (no accents or emoji)'));
     }
 
     if (settings.detection && settings.detection.scanMode !== undefined && !ScanScope.MODES.includes(settings.detection.scanMode)) {

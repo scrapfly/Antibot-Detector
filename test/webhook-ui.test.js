@@ -25,8 +25,12 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
     '#testWebhookBtn': { disabled: false, innerHTML: 'Test' },
     '#webhookUrl': { value: webhook.webhookUrl || '' },
     '#webhookMethod': { value: 'POST' },
-    '#webhookPayload': { value: '' }
+    '#webhookPayload': { value: '' },
+    '#webhookSecret': { value: '', attributes: {}, setAttribute(name, value) { this.attributes[name] = value; } },
+    '#webhookSecretError': { hidden: true },
+    '#webhookSecretCopyBtn': { disabled: true }
   };
+  const copied = [];
   const icons = ['antibot', 'captcha', 'fingerprint'].map(() => ({ innerHTML: '', style: {} }));
   const boxes = ['antibot', 'captcha', 'fingerprint'].map((key, i) => ({ checked: false, dataset: { webhookCategory: key }, parentElement: { querySelector: selector => (selector === '.category-icon' ? icons[i] : null) } }));
   const context = vm.createContext({
@@ -35,8 +39,9 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
     UrlUtils: { getFaviconUrl: () => '' },
     Utils: { getSettings: async () => ({ webhook }) },
     SettingsUI: {},
-    FormatUtils: { t: (key, fallback) => translations[key] || fallback, formatDateTime: (time) => `at ${new Date(time).toISOString()}`, categoryIconSvg: key => `<svg data-icon="${key}"></svg>` },
-    NotificationHelper: { success: text => notifications.push(text), error: text => notifications.push(text) },
+    FormatUtils: { t: (key, fallback) => translations[key] || fallback, formatDateTime: (time) => `at ${new Date(time).toISOString()}`, categoryIconSvg: key => `<svg data-icon="${key}"></svg>`,
+      copyToClipboard: async (text, options) => { copied.push({ text, options }); return true; } },
+    NotificationHelper: { success: text => notifications.push(text), error: text => notifications.push(text), info: text => notifications.push(text) },
     document: {
       querySelector: selector => fields[selector] || null,
       querySelectorAll: selector => (selector === '[data-webhook-category]' ? boxes : []),
@@ -59,7 +64,7 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
   context.FormatUtils.DEFAULT_CATEGORY_COLORS = context.Categories.DEFAULT_COLORS;
   const plain = value => JSON.parse(JSON.stringify(value));
   const ui = (settings = { webhook }) => Object.assign(Object.create(context.SettingsUI), { settings, escapeHtml: text => text, getWebhookContentTypeValue: () => 'application/json' });
-  return { context, ui, fields, boxes, icons, sent, listeners, notifications, store, plain, SettingsUI: context.SettingsUI };
+  return { context, ui, fields, boxes, icons, sent, listeners, notifications, store, plain, copied, SettingsUI: context.SettingsUI };
 }
 
 test('the fields are filled from the saved filter, and a webhook saved before filters existed shows the defaults', () => {
@@ -211,7 +216,77 @@ test('the Test button leaves its line through the worker: sent with the status, 
 
 test('the Settings page declares the filter fields and the list the script fills', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'sections/settings/settings.html'), 'utf8');
-  for (const id of ['webhookMinConfidence', 'webhookDomains', 'webhookLogList', 'webhookLogClearBtn']) assert.ok(html.includes(`id="${id}"`), id);
+  for (const id of ['webhookMinConfidence', 'webhookDomains', 'webhookLogList', 'webhookLogClearBtn', 'webhookSecret', 'webhookSecretError', 'webhookSecretGenerateBtn', 'webhookSecretCopyBtn', 'webhookSecretNote']) assert.ok(html.includes(`id="${id}"`), id);
+  // The secret field never autocompletes or spell-checks, and names the header through an argument no translation can change
+  const secretField = html.match(/<input[^>]*id="webhookSecret"[^>]*>/)[0];
+  for (const attr of ['type="password"', 'autocomplete="off"', 'spellcheck="false"']) assert.ok(secretField.includes(attr), attr);
+  assert.ok(html.includes(`data-i18n-fmt="webhookSecretDescFmt" data-i18n-args="${WebhookBody.SIGNATURE_HEADER}"`));
+  assert.ok(html.includes('id="webhookSecretNote" data-i18n="settingsShareSecretNote"'));
+  const en = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '_locales/en/messages.json'), 'utf8'));
+  for (const key of ['webhookSecretLabel', 'webhookSecretDescFmt', 'webhookSecretGenerate', 'webhookSecretInvalid']) assert.ok(en[key] && en[key].message, key);
+  assert.ok(en.webhookSecretDescFmt.message.includes('{0}'));
+  const settingsUi = fs.readFileSync(path.join(__dirname, '..', 'sections/settings/settings-ui.js'), 'utf8');
+  assert.ok(settingsUi.includes('webhookSecret: SettingsUI.readWebhookSecret.call(this)'), 'the form reads the secret');
+  assert.ok(settingsUi.includes('SettingsUI.populateWebhookSecret.call(this, webhookSettings)'), 'the form shows the saved secret');
   const boxes = [...html.matchAll(/data-webhook-category="([a-z]+)"/g)].map(match => match[1]);
   assert.deepEqual(boxes, require('../modules/core/categories.js').KEYS, 'one box per category, in the app\'s order');
+});
+
+// ---------------------------------------------------------------- signing secret
+test('the secret field shows the saved secret, Copy is off while it is empty, and the form reads it trimmed (the saved one without the field)', () => {
+  const h = harness();
+  h.SettingsUI.populateWebhookSecret.call(h.ui(), { webhookSecret: 'SYNTHETIC_SECRET' });
+  assert.equal(h.fields['#webhookSecret'].value, 'SYNTHETIC_SECRET');
+  assert.equal(h.fields['#webhookSecretCopyBtn'].disabled, false);
+  assert.equal(h.fields['#webhookSecretError'].hidden, true);
+  h.SettingsUI.populateWebhookSecret.call(h.ui(), { webhookSecret: 42 });
+  assert.equal(h.fields['#webhookSecret'].value, '', 'a value that is not text counts as none');
+  assert.equal(h.fields['#webhookSecretCopyBtn'].disabled, true);
+  h.fields['#webhookSecret'].value = '  SYNTHETIC_TYPED  ';
+  assert.equal(h.SettingsUI.readWebhookSecret.call(h.ui()), 'SYNTHETIC_TYPED');
+  const noField = harness();
+  delete noField.fields['#webhookSecret'];
+  assert.equal(noField.SettingsUI.readWebhookSecret.call(noField.ui({ webhook: { webhookSecret: ' SYNTHETIC_SAVED ' } })), 'SYNTHETIC_SAVED');
+});
+
+test('Generate stages 64 random hex characters without saving them, and Copy hands exactly the field to the clipboard', () => {
+  const h = harness();
+  const settings = { webhook: { webhookSecret: 'SYNTHETIC_OLD' } };
+  const ui = h.ui(settings);
+  h.SettingsUI.populateWebhookSecret.call(ui, settings.webhook);
+  h.SettingsUI.generateWebhookSecret.call(ui);
+  const generated = h.fields['#webhookSecret'].value;
+  assert.match(generated, /^[0-9a-f]{64}$/);
+  assert.equal(settings.webhook.webhookSecret, 'SYNTHETIC_OLD', 'the model changes only with Save');
+  assert.equal(h.sent.length, 0, 'nothing is sent to the worker');
+  assert.ok(h.notifications.some(text => /Save settings/.test(text)), 'the staged-change toast');
+  assert.equal(h.fields['#webhookSecretCopyBtn'].disabled, false);
+  return h.SettingsUI.copyWebhookSecret.call(ui).then(() => {
+    assert.deepEqual(h.copied, [{ text: generated, options: undefined }], 'copied as is, with no element option (that would swap the field\'s value for "Copied")');
+    h.fields['#webhookSecret'].value = '';
+    h.SettingsUI.refreshWebhookSecretUI.call(ui);
+    assert.equal(h.fields['#webhookSecretCopyBtn'].disabled, true);
+    return h.SettingsUI.copyWebhookSecret.call(ui).then(() => assert.equal(h.copied.length, 1, 'an empty field copies nothing'));
+  });
+});
+
+test('an invalid secret is flagged under the field, blocks Save with its message, and stops Test without a record', async () => {
+  const h = harness({ webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/in' } });
+  const ui = h.ui();
+  h.fields['#webhookSecret'].value = 'clé';
+  h.SettingsUI.refreshWebhookSecretUI.call(ui);
+  assert.equal(h.fields['#webhookSecretError'].hidden, false);
+  assert.equal(h.fields['#webhookSecret'].attributes['aria-invalid'], 'true');
+  const checked = h.SettingsUI.validateSettings({ webhook: { webhookSecret: 'clé' } });
+  assert.equal(checked.isValid, false);
+  assert.ok(checked.errors.some(text => /512 ASCII/.test(text)));
+  assert.ok(!checked.errors.join(' ').includes('clé'), 'the message never repeats the value');
+  assert.equal(h.SettingsUI.validateSettings({ webhook: { webhookSecret: 'SYNTHETIC_FINE' } }).isValid, true);
+  assert.equal(h.SettingsUI.validateSettings({ webhook: {} }).isValid, true, 'no secret field in the form: nothing to check');
+  let fetched = 0;
+  h.context.fetch = async () => { fetched++; return { ok: true, status: 200 }; };
+  await h.SettingsUI.handleTestWebhook.call(ui);
+  assert.equal(fetched, 0);
+  assert.equal(h.sent.length, 0, 'no record line for a Test that did not run');
+  assert.equal(h.fields['#testWebhookBtn'].disabled, false);
 });

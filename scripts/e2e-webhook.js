@@ -10,6 +10,8 @@
  *   Failures   an answer of 500 and no answer at all are recorded as failed, with the kind of error and never its text
  *   Settings   the fields show and save the filter; Recent deliveries shows the record in the page's language, follows it
  *              while Settings is open, has the Test line and Clear
+ *   Signed     a signing secret (saved, or only typed for Test) signs every request with a body the way Scrapfly's own
+ *              webhooks are signed; GET, HEAD and multipart are not; Generate and Copy; nothing about the secret leaks
  *
  * The extension only sends to a public HTTPS address, so the webhook is a made-up one (https://hooks.example/...) whose
  * request is caught where the extension makes it: in the service worker (pages) and in the popup (Test). Pages come from a
@@ -38,6 +40,8 @@ const shotsAt = args.includes('--shots') ? args[args.indexOf('--shots') + 1] : '
 const REPO = path.resolve(args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--shots') || path.join(__dirname, '..'));
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const HOOK = 'https://hooks.example/';
+const { createHmac } = require('node:crypto');
+const hmac = (secret, body) => createHmac('sha256', secret).update(body, 'utf8').digest('hex');
 
 const PAGES = { '/a': 'webhook-antibot-marker', '/c': 'webhook-captcha-marker', '/both': 'webhook-antibot-marker webhook-captcha-marker' };
 const server = http.createServer((req, res) => {
@@ -64,7 +68,8 @@ const CATCH = `(() => {
   globalThis.fetch = async (input, init) => {
     const url = typeof input === 'string' ? input : (input && input.url) || String(input);
     if (!url.startsWith(${JSON.stringify(HOOK)})) return original(input, init);
-    state.calls.push({ url, method: init && init.method, body: init && typeof init.body === 'string' ? init.body : null });
+    state.calls.push({ url, method: init && init.method, body: init && typeof init.body === 'string' ? init.body : null,
+      headers: init && init.headers ? Object.fromEntries(new Headers(init.headers)) : {} });
     if (state.fail) throw new TypeError('Failed to fetch ' + url);
     return { ok: state.status >= 200 && state.status < 300, status: state.status };
   };
@@ -102,7 +107,7 @@ const CATCH = `(() => {
     const clearRecord = () => worker.evaluate(() => SettingsRuntime.clearWebhookLog());
     const webhook = (changes = {}) => ({
       enableWebhook: true, webhookUrl: `${HOOK}hook`, webhookMethod: 'POST', webhookContentType: 'application/json', webhookPayload: '', webhookHeaders: [],
-      webhookOnCache: false, webhookMinConfidence: 0, webhookCategories: [], webhookDomains: [], ...changes
+      webhookOnCache: false, webhookMinConfidence: 0, webhookCategories: [], webhookDomains: [], webhookSecret: '', ...changes
     });
 
     const popupPage = async () => {
@@ -353,6 +358,84 @@ const CATCH = `(() => {
     assert.equal(await admin.$eval('#webhookLogList .webhook-log-empty', el => el.textContent), 'Nothing sent yet.');
     assert.equal(await admin.$eval('#webhookLogClearBtn', el => el.disabled), true);
     console.log('PASS Clear: the record and the list are emptied, and Clear is off until there is something to clear');
+
+    // 7. Signed. Debug and the log collector are on and the popup console is read, so anything logged would show
+    const SIG = 'x-scrapfly-webhook-signature', SIG_LOWER = 'x-scrapfly-webhook-signature-lowercase'; // as recorded: fetch lowercases names
+    const digests = [];
+    const consoleLines = [];
+    admin.on('console', message => consoleLines.push(message.text()));
+    await patch(admin, { debugMode: true, logCollectorEnabled: true, webhook: webhook({ webhookHeaders: [{ name: 'x-scrapfly-webhook-signature', value: 'forged' }] }) });
+    await admin.reload();
+    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+    await admin.evaluate(CATCH);
+    await openSettings();
+    // A secret typed with spaces around it is saved trimmed
+    await admin.fill('#webhookSecret', '  SYNTHETIC_SECRET_SAVED  ');
+    await admin.evaluate(() => window.popupInstance.settings.handleSaveSettings());
+    await waitFor(async () => (await stored(admin)).webhook.webhookSecret === 'SYNTHETIC_SECRET_SAVED', 'the saved secret');
+    // A scanned page is signed with it, in both headers, and the forged custom header is gone
+    const resetCalls = () => worker.evaluate(() => { globalThis.__hook.calls.length = 0; globalThis.__hook.status = 200; globalThis.__hook.fail = false; });
+    await resetCalls();
+    await clearRecord();
+    await scan(at('127.0.0.1', '/a', '?signed=1'), 1);
+    let [signedCall] = await calls();
+    assert.equal(typeof signedCall.body, 'string');
+    digests.push(hmac('SYNTHETIC_SECRET_SAVED', signedCall.body));
+    assert.equal(signedCall.headers[SIG], digests[0].toUpperCase(), 'the uppercase signature, as Scrapfly sends it');
+    assert.equal(signedCall.headers[SIG_LOWER], digests[0], 'and its lowercase copy');
+    assert.ok(!JSON.stringify(signedCall.headers).includes('forged'), 'a custom header cannot pose as the signature');
+    // Test signs with the secret in the field, saved or not; Cancel drops the typed one
+    await openSettings();
+    await admin.fill('#webhookSecret', 'SYNTHETIC_SECRET_UNSAVED');
+    await admin.evaluate(() => { window.__hook.calls.length = 0; window.__hook.status = 200; window.__hook.fail = false; });
+    await admin.$eval('#testWebhookBtn', el => el.click());
+    await waitFor(async () => (await admin.evaluate(() => window.__hook.calls.length)) === 1, 'the Test request');
+    const testCall = await admin.evaluate(() => ({ ...window.__hook.calls[0] }));
+    digests.push(hmac('SYNTHETIC_SECRET_UNSAVED', testCall.body));
+    assert.equal(testCall.headers[SIG_LOWER], digests[1], 'Test signs with the secret in the field, saved or not');
+    await admin.$eval('#cancelSettingsBtn', el => el.click());
+    assert.equal((await stored(admin)).webhook.webhookSecret, 'SYNTHETIC_SECRET_SAVED', 'Cancel keeps the saved secret');
+    // Generate stages 64 hex characters and Copy hands exactly them to the clipboard; neither saves anything
+    await openSettings();
+    assert.equal(await admin.$eval('#webhookSecret', el => el.value), 'SYNTHETIC_SECRET_SAVED', 'the field shows the saved secret again');
+    await admin.evaluate(() => { window.__copied = []; navigator.clipboard.writeText = async (text) => { window.__copied.push(text); }; });
+    await admin.$eval('#webhookSecretGenerateBtn', el => el.click());
+    const generated = await admin.$eval('#webhookSecret', el => el.value);
+    assert.match(generated, /^[0-9a-f]{64}$/, 'Generate fills 64 hex characters');
+    assert.equal(await admin.$eval('#webhookSecretCopyBtn', el => el.disabled), false);
+    await admin.$eval('#webhookSecretCopyBtn', el => el.click());
+    await waitFor(async () => (await admin.evaluate(() => window.__copied.length)) === 1, 'the copy');
+    assert.deepEqual(await admin.evaluate(() => window.__copied), [generated], 'Copy hands exactly the field to the clipboard');
+    assert.equal(await admin.$eval('#webhookSecret', el => el.value), generated, 'the field keeps its value after Copy');
+    assert.equal((await stored(admin)).webhook.webhookSecret, 'SYNTHETIC_SECRET_SAVED', 'neither Generate nor Copy saves anything');
+    // A secret no server could check: the error under the field, and Save is refused
+    await admin.fill('#webhookSecret', 'clé');
+    assert.equal(await admin.$eval('#webhookSecretError', el => el.hidden), false, 'the error shows under the field');
+    assert.equal(await admin.$eval('#webhookSecret', el => el.getAttribute('aria-invalid')), 'true');
+    await admin.evaluate(() => window.popupInstance.settings.handleSaveSettings());
+    await sleep(1500);
+    assert.equal((await stored(admin)).webhook.webhookSecret, 'SYNTHETIC_SECRET_SAVED', 'Save is refused');
+    assert.ok(await admin.evaluate(() => document.querySelector('#settingsModal').classList.contains('is-open')), 'Settings stays open');
+    await admin.$eval('#cancelSettingsBtn', el => el.click());
+    // GET, multipart and an empty secret: not signed
+    const unsigned = [['GET', { webhookMethod: 'GET', webhookSecret: 'SYNTHETIC_SECRET_SAVED' }], ['multipart', { webhookContentType: 'multipart/form-data', webhookSecret: 'SYNTHETIC_SECRET_SAVED' }], ['no secret', { webhookSecret: '' }]];
+    for (let i = 0; i < unsigned.length; i++) {
+      const [what, changes] = unsigned[i];
+      await patch(admin, { webhook: webhook(changes) });
+      await sleep(800);
+      await resetCalls();
+      await clearRecord();
+      await scan(at('127.0.0.1', '/a', `?unsigned=${i}`), 1);
+      [signedCall] = await calls();
+      assert.equal(signedCall.headers[SIG], undefined, `${what}: not signed`);
+      assert.equal(signedCall.headers[SIG_LOWER], undefined, `${what}: not signed`);
+    }
+    // Nothing about the secrets or the signatures reached the record, the worker's collected logs or the popup console
+    const collected = await worker.evaluate(() => logCollector.exportAsText());
+    const everywhere = JSON.stringify([await record(), collected, consoleLines]);
+    for (const secretish of ['SYNTHETIC_SECRET', generated, ...digests, ...digests.map(d => d.toUpperCase())]) assert.ok(!everywhere.includes(secretish), `leaked: ${secretish.slice(0, 12)}…`);
+    await patch(admin, { debugMode: false, logCollectorEnabled: false, webhook: webhook({ enableWebhook: false }) });
+    console.log('PASS Signed: saved and typed secrets sign scans and Test alike, Generate and Copy stage only, an unusable secret is refused, GET/multipart/none stay unsigned, and no secret or signature leaks');
 
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
     console.log('RESULT ALL PASS, no page errors');

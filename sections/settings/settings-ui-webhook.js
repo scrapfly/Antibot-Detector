@@ -118,6 +118,52 @@ SettingsUI.readWebhookFilter = function() {
     };
 };
 
+// ---- Signing secret: a password field, Generate (staged until Save) and Copy. The value is only ever set through
+// .value and read back from it; it is never logged, put in an attribute or sent anywhere but the signature.
+
+/** Show the saved secret in the field (text only; anything else counts as none). */
+SettingsUI.populateWebhookSecret = function(webhook) {
+    const field = document.querySelector('#webhookSecret');
+    if (field) field.value = webhook && typeof webhook.webhookSecret === 'string' ? webhook.webhookSecret : '';
+    SettingsUI.refreshWebhookSecretUI.call(this);
+};
+
+/** The secret as the field says it now, trimmed (the saved one when the field is not on the page). */
+SettingsUI.readWebhookSecret = function() {
+    const field = document.querySelector('#webhookSecret');
+    if (field) return WebhookBody.cleanSecret(field.value);
+    return WebhookBody.cleanSecret(this.settings && this.settings.webhook && this.settings.webhook.webhookSecret);
+};
+
+/** The error under the field when the secret could never verify, and Copy only when there is something to copy. */
+SettingsUI.refreshWebhookSecretUI = function() {
+    const field = document.querySelector('#webhookSecret');
+    if (!field) return;
+    const valid = WebhookBody.isValidSecret(field.value);
+    const error = document.querySelector('#webhookSecretError');
+    if (error) error.hidden = valid;
+    field.setAttribute('aria-invalid', valid ? 'false' : 'true');
+    const copy = document.querySelector('#webhookSecretCopyBtn');
+    if (copy) copy.disabled = !WebhookBody.cleanSecret(field.value);
+};
+
+/** Generate: a new random secret in the field, applied with Save like every other change here (Cancel keeps the old one). */
+SettingsUI.generateWebhookSecret = function() {
+    const field = document.querySelector('#webhookSecret');
+    if (!field) return;
+    field.value = WebhookBody.newSecret();
+    SettingsUI.refreshWebhookSecretUI.call(this);
+    NotificationHelper.info(SettingsUI._whTr('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
+};
+
+/** Copy the secret as it will be used, for the server that checks the signature. */
+SettingsUI.copyWebhookSecret = async function() {
+    const secret = SettingsUI.readWebhookSecret.call(this);
+    if (!secret) return;
+    // No element option: that helper would show "Copied" inside the field's own value for a moment
+    await FormatUtils.copyToClipboard(secret);
+};
+
 /** One line of "Recent deliveries": when, the page, and what came of it. */
 SettingsUI.webhookLogLine = function(entry) {
     const text = (key, fallback) => FormatUtils.t(key, fallback);
@@ -204,9 +250,17 @@ SettingsUI.handleTestWebhook = async function() {
       const webhookMethod = (document.querySelector('#webhookMethod')?.value || 'POST').toUpperCase();
       const webhookContentType = this.getWebhookContentTypeValue() || 'application/json';
       const webhookPayload = document.querySelector('#webhookPayload')?.value || '';
+      const secretField = document.querySelector('#webhookSecret');
+      const webhookSecret = SettingsUI.readWebhookSecret.call(this);
 
       if (!webhookUrl) {
         NotificationHelper.error(SettingsUI._whTr('pleaseEnterWebhookUrl', 'Please enter a webhook URL'));
+        return;
+      }
+      // The same rule as Save: a secret that could never verify is not sent with
+      if (secretField && !WebhookBody.isValidSecret(secretField.value)) {
+        SettingsUI.refreshWebhookSecretUI.call(this);
+        NotificationHelper.error(SettingsUI._whTr('webhookSecretInvalid', 'Signing secret: use up to 512 ASCII characters (no accents or emoji)'));
         return;
       }
 
@@ -218,7 +272,8 @@ SettingsUI.handleTestWebhook = async function() {
 
       const webhook = {
         webhookUrl, webhookMethod, webhookContentType, webhookPayload,
-        webhookHeaders: this.settings.webhook?.webhookHeaders || []
+        webhookHeaders: this.settings.webhook?.webhookHeaders || [],
+        webhookSecret
       };
       const started = Date.now();
       const response = await SettingsRuntime.sendWebhook(webhook, ctx);
@@ -577,6 +632,13 @@ SettingsUI._setupWebhookListeners = function() {
     if (testWebhookBtn) {
       testWebhookBtn.addEventListener('click', () => this.handleTestWebhook());
     }
+
+    const secretField = document.querySelector('#webhookSecret');
+    if (secretField) secretField.addEventListener('input', () => SettingsUI.refreshWebhookSecretUI.call(this));
+    const generateSecretBtn = document.querySelector('#webhookSecretGenerateBtn');
+    if (generateSecretBtn) generateSecretBtn.addEventListener('click', () => SettingsUI.generateWebhookSecret.call(this));
+    const copySecretBtn = document.querySelector('#webhookSecretCopyBtn');
+    if (copySecretBtn) copySecretBtn.addEventListener('click', () => SettingsUI.copyWebhookSecret.call(this));
 };
 
 if (typeof self !== 'undefined') {

@@ -43,7 +43,7 @@ Scoring: a signal only one vendor produces can read 100% on its own; weaker or s
 ## Integrations
 
 - **JavaScript events.** When enabled, the extension dispatches a `CustomEvent` (and calls a `window` callback) with each page's detections, so your own page scripts can react to what was found.
-- **Webhooks.** Optionally POST each page's detections to a URL you configure, with a customizable payload template.
+- **Webhooks.** Optionally POST each page's detections to a URL you configure, with a customizable payload template, filters (minimum confidence, categories, sites), a log of recent deliveries, and an optional signing secret (Scrapfly's own HMAC-SHA256 signature headers).
 - **Share links.** Export a detection result to a paste service (dpaste, Pastebin, GitHub Gist or a custom endpoint) and share the link.
 
 ## Privacy

@@ -123,3 +123,30 @@ test('a record that cannot be written never stops or fails a delivery', async ()
   assert.equal(h.calls.length, 1, 'the page was sent');
   assert.deepEqual(h.log(), []);
 });
+
+// ---------------------------------------------------------------- signing
+const { createHmac } = require('node:crypto');
+
+test('a signed delivery is recorded like any other: the record holds neither the secret nor the signature', async () => {
+  const h = harness({ ...ON, webhookSecret: 'SYNTHETIC_SECRET' });
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  assert.equal(h.calls.length, 1);
+  const digest = createHmac('sha256', 'SYNTHETIC_SECRET').update(h.calls[0].options.body).digest('hex');
+  assert.equal(new Headers(h.calls[0].options.headers).get('X-Scrapfly-Webhook-Signature'), digest.toUpperCase());
+  const record = JSON.stringify(h.log());
+  assert.equal(h.log()[0].outcome, 'sent');
+  for (const secretish of ['SYNTHETIC', digest, digest.toUpperCase()]) assert.ok(!record.includes(secretish));
+});
+
+test('a saved secret is used trimmed; one that is blank or not text sends unsigned', async () => {
+  const trimmed = harness({ ...ON, webhookSecret: '  SYNTHETIC_SECRET \n' });
+  await trimmed.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  const body = trimmed.calls[0].options.body;
+  assert.equal(new Headers(trimmed.calls[0].options.headers).get('X-Scrapfly-Webhook-Signature-Lowercase'), createHmac('sha256', 'SYNTHETIC_SECRET').update(body).digest('hex'));
+  for (const secret of ['   ', 42, {}, null, undefined]) {
+    const h = harness({ ...ON, webhookSecret: secret });
+    await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+    assert.equal(h.calls.length, 1, String(secret));
+    assert.equal(new Headers(h.calls[0].options.headers).get('X-Scrapfly-Webhook-Signature'), null, String(secret));
+  }
+});

@@ -13,7 +13,7 @@ const settings = {
   debugMode: true, notificationsEnabled: false,
   detection: { cacheDuration: 7, cacheUnit: 'days', blacklistedDomains: ['skip.example'], secretish: 'x' },
   history: { historyEnabled: true, historyLimit: 50 },
-  webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN_1', webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_TOKEN_2' }], webhookPayload: 'SYNTHETIC_PAYLOAD' },
+  webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN_1', webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_TOKEN_2' }], webhookPayload: 'SYNTHETIC_PAYLOAD', webhookSecret: 'SYNTHETIC_SECRET_7' },
   share: { provider: 'github_gist', githubToken: 'SYNTHETIC_TOKEN_3', pastebinKey: 'SYNTHETIC_KEY_4', customUrl: 'https://u.example/SYNTHETIC_5', customHeaders: 'X: SYNTHETIC_6' }
 };
 const official = { id: 'detect-akamai', author: 'Scrapfly', name: 'Akamai' };

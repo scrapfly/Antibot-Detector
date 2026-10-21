@@ -9,7 +9,7 @@ const NOW = Date.UTC(2026, 9, 20, 18, 50);
 const settings = {
   debugMode: true, debugVerbose: false, logCollectorEnabled: true, notificationsEnabled: true,
   jsApi: { enableJsApi: false },
-  webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/services/SYNTHETIC_TOKEN_123', webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_TOKEN_456' }], webhookPayload: '{"key":"SYNTHETIC_PAYLOAD"}' },
+  webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/services/SYNTHETIC_TOKEN_123', webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_TOKEN_456' }], webhookPayload: '{"key":"SYNTHETIC_PAYLOAD"}', webhookSecret: 'SYNTHETIC_SIGNING_SECRET' },
   share: { provider: 'github_gist', githubToken: 'SYNTHETIC_TOKEN_789', customUrl: 'https://upload.example/SYNTHETIC_UPLOAD', customHeaders: 'X-Key: SYNTHETIC_HEADER' },
   detection: { cacheDuration: 7, cacheUnit: 'days', cacheScope: 'domain', blacklistedDomains: ['secret-site.example', 'private.example'], sortBy: 'category', advancedToolsMinConfidence: 50 },
   history: { historyEnabled: true, historyLimit: 500, historyBackup: 'weekly', historyClearOnClose: false, historyExcludedDomains: ['bank.example'] },
@@ -93,4 +93,14 @@ test('an empty or hostile input still gives a report', () => {
     assert.match(report, /^Scrapfly Antibot Detector unknown diagnostics/);
     assert.match(report, /Background part: unknown/);
   }
+});
+
+test('the report says whether a signing secret is set, and never what it is', () => {
+  assert.match(D.build(env, settings), /webhook on, signing secret set/);
+  const unsigned = { ...settings, webhook: { ...settings.webhook, webhookSecret: '   ' } };
+  assert.match(D.build(env, unsigned), /webhook on\n/);
+  assert.ok(!D.build(env, unsigned).includes('signing secret'));
+  const off = { ...settings, webhook: { ...settings.webhook, enableWebhook: false } };
+  assert.match(D.build(env, off), /webhook off\n/);
+  assert.ok(!D.build(env, off).includes('signing secret'), 'nothing about a secret while the webhook is off');
 });

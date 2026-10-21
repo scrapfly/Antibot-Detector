@@ -21,7 +21,7 @@ function uiHarness() {
   // const SettingsUI is lexical, but self exposes the same registry.
   ui.LANGUAGE_OPTIONS = [{ value: 'en' }, { value: 'es' }];
   const form = {
-    settings: { debugMode: false, webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN' }, share: { githubToken: 'SYNTHETIC_TOKEN', provider: 'github_gist' } },
+    settings: { debugMode: false, webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookSecret: 'SYNTHETIC_TOKEN' }, share: { githubToken: 'SYNTHETIC_TOKEN', provider: 'github_gist' } },
     settingsBaseline: { debugMode: false },
     deepMerge: (...args) => ui.deepMerge(...args),
     validateSettings: () => ({ isValid: true, errors: [] }),
@@ -37,7 +37,7 @@ test('portable settings exclude all connection data, while diagnostics exclude u
   const source = {
     debugMode: true,
     unknownCredential: 'SYNTHETIC_TOKEN',
-    webhook: { webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookHeaders: [{ name: 'Authorization', value: 'SYNTHETIC_TOKEN' }], webhookPayload: 'SYNTHETIC_TOKEN' },
+    webhook: { webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookHeaders: [{ name: 'Authorization', value: 'SYNTHETIC_TOKEN' }], webhookPayload: 'SYNTHETIC_TOKEN', webhookSecret: 'SYNTHETIC_TOKEN' },
     share: { provider: 'custom', customUrl: 'https://upload.example/SYNTHETIC_TOKEN', customJsonTemplate: 'SYNTHETIC_TOKEN', customHeaders: 'SYNTHETIC_TOKEN', githubToken: 'SYNTHETIC_TOKEN', pastebinKey: 'SYNTHETIC_TOKEN', customExpiryDays: 7 },
     detection: { blacklistedDomains: ['private.example'], cacheDuration: 3 }
   };
@@ -86,10 +86,11 @@ test('successful import preserves local connections and only applies language af
   context.StorageManager = { commitSettings: async mutation => { saved = plain(mutation); return { settings: mutation.candidate, previous: form.settings }; } };
   ui._applyLanguageChoice = async (language, options) => { assert.ok(saved); assert.equal(language, 'es'); assert.equal(options.persist, false); };
   await ui.importSettingsFile.call(form, { target: { files: [{ text: async () => JSON.stringify({ settings: {
-    debugMode: true, webhook: { webhookUrl: 'https://untrusted.example/replacement' }, share: { githubToken: 'untrusted', provider: 'dpaste_com' }
+    debugMode: true, webhook: { webhookUrl: 'https://untrusted.example/replacement', webhookSecret: 'untrusted' }, share: { githubToken: 'untrusted', provider: 'dpaste_com' }
   }, languageOverride: 'es' }) }] } });
   assert.equal(saved.languageOverride, 'es');
   assert.equal(form.settings.webhook.webhookUrl, 'https://hooks.example/SYNTHETIC_TOKEN');
+  assert.equal(form.settings.webhook.webhookSecret, 'SYNTHETIC_TOKEN', 'an imported file never replaces the signing secret');
   assert.equal(form.settings.share.githubToken, 'SYNTHETIC_TOKEN');
   assert.equal(form.settings.share.provider, 'dpaste_com');
   assert.equal(form.settings.debugMode, true);

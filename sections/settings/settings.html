@@ -804,6 +804,25 @@
                 </button>
               </div>
 
+              <div class="setting-group setting-group--stacked" id="webhookSecretGroup">
+                <div class="setting-label">
+                  <span class="webhook-title-row">
+                    <label for="webhookSecret" data-i18n="webhookSecretLabel">Signing secret</label>
+                  </span>
+                  <!-- The header name is an argument, so no translation can change it -->
+                  <span class="setting-description" id="webhookSecretDesc" data-i18n-fmt="webhookSecretDescFmt" data-i18n-args="X-Scrapfly-Webhook-Signature">Adds an HMAC-SHA256 of the body in the X-Scrapfly-Webhook-Signature header. Leave empty for no signature; GET, HEAD and multipart requests are never signed.</span>
+                </div>
+                <input type="password" id="webhookSecret" class="input-field" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="webhookSecretDesc webhookSecretError webhookSecretNote">
+                <div class="webhook-payload-foot">
+                  <p id="webhookSecretError" class="webhook-field-error" data-i18n="webhookSecretInvalid" hidden>Signing secret: use up to 512 ASCII characters (no accents or emoji)</p>
+                  <span class="webhook-secret-actions">
+                    <button type="button" id="webhookSecretGenerateBtn" class="webhook-link-btn" data-i18n="webhookSecretGenerate">Generate</button>
+                    <button type="button" id="webhookSecretCopyBtn" class="webhook-link-btn" data-i18n="advCommonCopy" disabled>Copy</button>
+                  </span>
+                </div>
+                <p class="webhook-ct-hint" id="webhookSecretNote" data-i18n="settingsShareSecretNote">Stored only in this browser and left out of settings exports.</p>
+              </div>
+
               <div class="setting-group setting-group--stacked" id="webhookPayloadGroup">
                 <div class="setting-label">
                   <span class="webhook-title-row">

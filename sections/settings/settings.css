@@ -1797,6 +1797,26 @@ input[type="file"] {
   color: #ffffff;
 }
 
+/* Signing secret: monospace like the other machine values, Generate and Copy on the inline-end side (both in
+   one group, so Arabic mirrors them), the field red while it holds something that would never verify */
+#settingsModal #webhookSecret {
+  font-family: var(--font-mono);
+}
+
+#settingsModal #webhookSecret[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+#settingsModal .webhook-secret-actions {
+  display: inline-flex;
+  gap: 6px;
+  margin-inline-start: auto;
+}
+
+#settingsModal .webhook-secret-actions .webhook-link-btn {
+  margin-left: 0;
+}
+
 /* Variables help: compact modal inside Settings, pinned header */
 #settingsModal .webhook-vars-overlay {
   position: absolute;
@@ -3071,7 +3091,8 @@ input[type="file"] {
   color: var(--settings-text-dim);
 }
 
-#settingsModal #webhookLogClearBtn:disabled {
+#settingsModal #webhookLogClearBtn:disabled,
+#settingsModal #webhookSecretCopyBtn:disabled {
   opacity: 0.45;
   cursor: default;
 }

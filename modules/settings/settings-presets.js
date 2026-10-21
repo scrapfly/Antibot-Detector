@@ -50,7 +50,7 @@
   const KEEP = Object.freeze(['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp',
     'history.historyLimit', 'history.historyMaxMB']);
   const CONNECTIONS = Object.freeze([
-    'webhook.webhookUrl', 'webhook.webhookMethod', 'webhook.webhookContentType', 'webhook.webhookPayload', 'webhook.webhookHeaders',
+    'webhook.webhookUrl', 'webhook.webhookMethod', 'webhook.webhookContentType', 'webhook.webhookPayload', 'webhook.webhookHeaders', 'webhook.webhookSecret',
     'share.pastebinKey', 'share.githubToken', 'share.customUrl', 'share.customMethod', 'share.customBodyFormat', 'share.customFieldName',
     'share.customJsonTemplate', 'share.customHeaders', 'share.customLinkFrom', 'share.customLinkJsonPath'
   ]);

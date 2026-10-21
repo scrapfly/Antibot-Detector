@@ -141,7 +141,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
         const saved = await StorageManager.patchSettings({
           debugMode: true, logCollectorEnabled: true,
           detection: { blacklistedDomains: ['secret-site.example', 'private.example'] },
-          webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/services/SYNTHETIC_TOKEN_123', webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_TOKEN_456' }] },
+          webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/services/SYNTHETIC_TOKEN_123', webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_TOKEN_456' }], webhookSecret: 'SYNTHETIC_SIGNING_SECRET' },
           share: { provider: 'github_gist', githubToken: 'SYNTHETIC_TOKEN_789' }
         });
         if (!saved) throw new Error('fixture failed');
@@ -195,7 +195,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       const dialogText = () => page.$eval('.notification-confirm', el => el.textContent);
 
       await patch({ notificationsEnabled: true, debugMode: false, detection: { blacklistedDomains: ['backup-skip.example'], cacheDuration: 5, cacheUnit: 'days' },
-        webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN_A', webhookHeaders: [{ name: 'X-Key', value: 'SYNTHETIC_KEY_B' }] }, share: { githubToken: 'SYNTHETIC_GITHUB_C' } });
+        webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN_A', webhookHeaders: [{ name: 'X-Key', value: 'SYNTHETIC_KEY_B' }], webhookSecret: 'SYNTHETIC_SECRET_D' }, share: { githubToken: 'SYNTHETIC_GITHUB_C' } });
       await W(({ list }) => chrome.storage.local.set({ scrapfly_language_override: 'fr', scrapfly_history: JSON.stringify({ items: list }) }), { list: [entry('b-one', { pinned: true, note: 'kept by the backup' }), entry('b-two')] });
       await boot();
       await page.evaluate(async (rule) => { const dm = window.popupInstance.detectorManager; await dm.addDetector('antibot', rule.id, rule); }, myRule);
@@ -250,6 +250,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       assert.deepEqual(now2.detection.blacklistedDomains, ['backup-skip.example']);
       assert.equal(now2.detection.cacheDuration, 5);
       assert.equal(now2.webhook.webhookUrl, 'https://hooks.example/SYNTHETIC_TOKEN_A', 'the connection that was never in the file is untouched');
+      assert.equal(now2.webhook.webhookSecret, 'SYNTHETIC_SECRET_D', 'the signing secret, never in the file, is untouched');
       assert.equal((await get(['scrapfly_language_override'])).scrapfly_language_override, 'fr', 'the language came back');
       assert.match(await page.$eval('html', el => el.lang), /^fr/, 'and the popup is shown in it');
       await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
@@ -308,7 +309,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
         notificationsEnabled: true, debugMode: false, debugVerbose: false, logCollectorEnabled: false, jsApi: { enableJsApi: false },
         history: { historyEnabled: true, historyClearOnClose: false, historyBackup: 'off', historyExcludedDomains: ['bank.example'], historyLimit: 5000, historyMaxMB: 25 },
         detection: { cacheDuration: 3, cacheUnit: 'hours', blacklistedDomains: ['keep.example'] },
-        webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookHeaders: [{ name: 'X-Key', value: 'SYNTHETIC_KEY' }] },
+        webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookHeaders: [{ name: 'X-Key', value: 'SYNTHETIC_KEY' }], webhookSecret: 'SYNTHETIC_SECRET' },
         share: { githubToken: 'SYNTHETIC_GITHUB' }
       });
       await W(() => chrome.storage.local.set({ scrapfly_language_override: 'es', scrapfly_theme: 'light' }));
@@ -371,6 +372,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       assert.equal(now.webhook.enableWebhook, false);
       assert.equal(now.webhook.webhookUrl, 'https://hooks.example/SYNTHETIC_TOKEN', 'the webhook connection is kept');
       assert.equal(now.share.githubToken, 'SYNTHETIC_GITHUB', 'the sharing key is kept');
+      assert.equal(now.webhook.webhookSecret, 'SYNTHETIC_SECRET', 'the signing secret is kept');
       assert.deepEqual(now.detection.blacklistedDomains, ['keep.example']);
       assert.deepEqual(now.history.historyExcludedDomains, ['bank.example']);
       const other = await get(['scrapfly_language_override', 'scrapfly_theme', 'scrapfly_detectors']);
@@ -387,8 +389,18 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       now = await stored();
       assert.equal(now.webhook.webhookUrl, '');
       assert.deepEqual(now.webhook.webhookHeaders, []);
+      assert.equal(now.webhook.webhookSecret, '', 'removing the connections removes the signing secret too');
       assert.equal(now.share.githubToken, '');
       assert.deepEqual(now.detection.blacklistedDomains, ['keep.example'], 'the site lists stay even then');
+      // A settings export (the plain one, not the backup) holds no secret either
+      await patch({ webhook: { webhookSecret: 'SYNTHETIC_EXPORT_SECRET', webhookUrl: 'https://hooks.example/SYNTHETIC_EXPORT_URL' } });
+      await reload();
+      await page.$eval('#exportSettingsBtn', el => el.closest('.settings-card').querySelector('.data-card-head').click()); // the card starts collapsed
+      const [exported] = await Promise.all([page.waitForEvent('download'), page.click('#exportSettingsBtn')]);
+      const exportedText = fs.readFileSync(await exported.path(), 'utf8');
+      for (const secret of ['SYNTHETIC_EXPORT', 'hooks.example']) assert.ok(!exportedText.includes(secret), `the settings export leaks ${secret}`);
+      console.log('PASS a settings export holds no connection details and no signing secret');
+      await presetsCard(); // the reload collapsed the presets card again
       // Cancel changes nothing
       await patch({ debugMode: true });
       await page.click('#resetSettingsBtn');
