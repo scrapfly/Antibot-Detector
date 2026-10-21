@@ -693,6 +693,15 @@ async function scenario(name, fn) {
     await resetHistory();
     await resetSettings();
     const tips = (page) => page.$$eval('.history-item .history-pin', els => els.map(el => el.getAttribute('data-tip')));
+    // The card is drawn a moment after the stored entry changes: wait for the tips to be what is expected
+    const tipsAre = async (page, expected) => {
+      const end = Date.now() + 5000;
+      for (;;) {
+        const got = await tips(page);
+        if (JSON.stringify(got) === JSON.stringify(expected) || Date.now() > end) return assert.deepEqual(got, expected);
+        await sleep(100);
+      }
+    };
 
     // Off by default: a hard protection pins nothing
     await visitSaved(url(`m=hard&pin=off&${uniq()}`));
@@ -711,7 +720,7 @@ async function scenario(name, fn) {
     try {
       await popup.$eval('#nav-history', el => el.click());
       await popup.waitForSelector('.history-item');
-      assert.deepEqual(await tips(popup), ['Pinned automatically: kept when History is cleaned up. Unpin it and it is never pinned again by itself.']);
+      await tipsAre(popup, ['Pinned automatically: kept when History is cleaned up. Unpin it and it is never pinned again by itself.']);
 
       // Unpin it by hand: it is final
       const index = await popup.$$eval('.history-item', (els, id) => els.findIndex(el => el.dataset.historyId === id), hard.id);
@@ -722,7 +731,7 @@ async function scenario(name, fn) {
       const unpinned = (await items()).find(i => i.id === hard.id);
       assert.equal(unpinned.unpinned, true, 'marked as unpinned by the person');
       assert.ok(!('autoPinned' in unpinned) && !('pinned' in unpinned));
-      assert.deepEqual(await tips(popup), []);
+      await tipsAre(popup, []);
 
       // Pin it again by hand: it is the person's own pin, not one that pinned itself
       await popup.$$eval('.history-item .history-more-btn', (els, i) => els[i].click(), index);
@@ -731,7 +740,7 @@ async function scenario(name, fn) {
       await waitFor(l => l.find(i => i.id === hard.id)?.pinned === true, 8000);
       const own = (await items()).find(i => i.id === hard.id);
       assert.ok(!('autoPinned' in own) && !('unpinned' in own));
-      assert.deepEqual(await tips(popup), ['Pinned: kept when History is cleaned up']);
+      await tipsAre(popup, ['Pinned: kept when History is cleaned up']);
       // and unpinned once more, for the check below
       await popup.$$eval('.history-item .history-more-btn', (els, i) => els[i].click(), index);
       await popup.waitForSelector('#historyItemMenu:not([hidden])');

@@ -301,6 +301,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       const reload = async () => { await boot(); await openData(); };
       const presetsCard = () => page.$eval('[data-preset="privacy"]', el => el.closest('.settings-card').querySelector('.data-card-head').click());
       const dialogText = () => page.$eval('.notification-confirm', el => el.textContent);
+      // The language is Spanish here (the presets must keep it), so the dialogs are read in Spanish: the wording comes from its locale file
+      const spanish = JSON.parse(fs.readFileSync(path.join(REPO, '_locales', 'es', 'messages.json'), 'utf8'));
+      const es = (key, ...args) => args.reduce((text, arg, i) => text.replace(`{${i}}`, arg), spanish[key].message);
       await patch({
         notificationsEnabled: true, debugMode: false, debugVerbose: false, logCollectorEnabled: false, jsApi: { enableJsApi: false },
         history: { historyEnabled: true, historyClearOnClose: false, historyBackup: 'off', historyExcludedDomains: ['bank.example'], historyLimit: 40 },
@@ -317,9 +320,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       await page.click('[data-preset="privacy"]');
       await page.waitForSelector('.notification-confirm');
       const asked = await dialogText();
-      assert.match(asked, /Apply the Privacy preset\?/);
-      for (const line of ['History is not recorded', 'History is cleared when the browser closes', 'The webhook is off', 'Notifications are off']) assert.match(asked, new RegExp(line));
-      for (const line of ['Debug mode is off', 'The JS API is off', 'Automatic History backups are off', 'The log collector is off']) assert.doesNotMatch(asked, new RegExp(line), `${line} is already so: not listed`);
+      assert.ok(asked.includes(es('presetConfirmTitleFmt', es('presetPrivacyName'))), 'the dialog names the preset');
+      for (const key of ['presetHistoryOff', 'presetClearOnClose', 'presetWebhookOff', 'presetNotificationsOff']) assert.ok(asked.includes(es(key)), `${key} is listed`);
+      for (const key of ['presetDebugOff', 'presetJsApiOff', 'presetBackupOff', 'presetCollectorOff']) assert.ok(!asked.includes(es(key)), `${key} is already so: not listed`);
       await confirmDialog();
       // (the Privacy preset turns notifications off, so no toast is expected: the saved settings are the proof)
       await page.waitForFunction(() => window.popupInstance.settings.settings.history.historyEnabled === false);
@@ -340,7 +343,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       // Developer
       await page.click('[data-preset="developer"]');
       await page.waitForSelector('.notification-confirm');
-      assert.match(await dialogText(), /Verbose logging is on/);
+      assert.ok((await dialogText()).includes(es('presetVerboseOn')), 'the Developer preset lists what it turns on');
       await confirmDialog();
       await page.waitForFunction(() => window.popupInstance.settings.settings.debugVerbose === true);
       now = await stored();
@@ -350,7 +353,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       // Reset: defaults everywhere except the site lists, the connections, the language, the theme and the rules
       await page.click('#resetSettingsBtn');
       await page.waitForSelector('.notification-confirm #resetConnections');
-      assert.match(await dialogText(), /Every setting returns to its default/);
+      assert.ok((await dialogText()).includes(es('settingsResetMessage').split('.')[0]), 'the reset says what it does');
       await confirmDialog();
       await page.waitForFunction(() => window.popupInstance.settings.settings.debugMode === false);
       now = await stored();
