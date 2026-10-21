@@ -5937,13 +5937,13 @@
     "message": "Setel ulang pengaturan"
   },
   "settingsResetDesc": {
-    "message": "Semua pengaturan kembali ke default. Aturan, Riwayat, daftar situs, bahasa, dan tema dipertahankan."
+    "message": "Semua pengaturan kembali ke default, kecuali daya tampung Riwayat. Aturan, Riwayat, daftar situs, bahasa, dan tema dipertahankan."
   },
   "settingsResetBtn": {
     "message": "Setel ulang…"
   },
   "settingsResetMessage": {
-    "message": "Semua pengaturan kembali ke default. Aturan, Riwayat, daftar situs, bahasa, dan tema tidak diubah. Detail webhook dan berbagi dipertahankan kecuali Anda memilih untuk menghapusnya."
+    "message": "Semua pengaturan kembali ke default, kecuali daya tampung Riwayat. Aturan, Riwayat, daftar situs, bahasa, dan tema tidak diubah. Detail webhook dan berbagi dipertahankan kecuali Anda memilih untuk menghapusnya."
   },
   "settingsResetConnections": {
     "message": "Hapus juga koneksi webhook dan berbagi"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Turunkan ukuran"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Turunkan batas Riwayat"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Riwayat berisi {0} halaman dan batas barunya {1}. Halaman terlama yang tidak disematkan akan dihapus agar muat."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Turunkan batas"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} terpakai, tanpa batas"
   },
@@ -6303,7 +6312,7 @@
     "message": "Riwayat dijeda, jadi tidak ada yang diperiksa."
   },
   "settingsHistoryWatchOff": {
-    "message": "Ekstensi dinonaktifkan, jadi tidak ada yang diperiksa."
+    "message": "Pemeriksaan terakhir mendapati ekstensi dinonaktifkan, jadi tidak ada yang diperiksa."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Pemantauan harus nonaktif, setiap hari, atau setiap minggu"

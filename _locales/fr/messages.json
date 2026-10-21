@@ -5937,13 +5937,13 @@
     "message": "Réinitialiser les paramètres"
   },
   "settingsResetDesc": {
-    "message": "Chaque paramètre revient à sa valeur par défaut. Les règles, l’historique, les listes de sites, la langue et le thème sont conservés."
+    "message": "Chaque paramètre revient à sa valeur par défaut, à l’exception de la capacité de l’historique. Les règles, l’historique, les listes de sites, la langue et le thème sont conservés."
   },
   "settingsResetBtn": {
     "message": "Réinitialiser…"
   },
   "settingsResetMessage": {
-    "message": "Chaque paramètre revient à sa valeur par défaut. Les règles, l’historique, les listes de sites, la langue et le thème ne sont pas modifiés. Les informations du webhook et du partage sont conservées, sauf si vous choisissez de les supprimer."
+    "message": "Chaque paramètre revient à sa valeur par défaut, à l’exception de la capacité de l’historique. Les règles, l’historique, les listes de sites, la langue et le thème ne sont pas modifiés. Les informations du webhook et du partage sont conservées, sauf si vous choisissez de les supprimer."
   },
   "settingsResetConnections": {
     "message": "Supprimer aussi les connexions du webhook et du partage"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Réduire la taille"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Réduire la limite de l’historique"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "L’historique contient {0} pages et la nouvelle limite est de {1}. Les pages les plus anciennes qui ne sont pas épinglées seront supprimées pour respecter la limite."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Réduire la limite"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} utilisés, sans limite"
   },
@@ -6303,7 +6312,7 @@
     "message": "L’historique est en pause : rien n’est vérifié."
   },
   "settingsHistoryWatchOff": {
-    "message": "L’extension est désactivée : rien n’est vérifié."
+    "message": "La dernière vérification a trouvé l’extension désactivée : rien n’a été vérifié."
   },
   "settingsUiErrHistoryWatch": {
     "message": "La liste de surveillance doit être désactivée, quotidienne ou hebdomadaire"

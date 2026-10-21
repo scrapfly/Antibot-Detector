@@ -5937,13 +5937,13 @@
     "message": "Reimposta le impostazioni"
   },
   "settingsResetDesc": {
-    "message": "Ogni impostazione torna al valore predefinito. Regole, cronologia, liste di siti, lingua e tema vengono mantenuti."
+    "message": "Ogni impostazione torna al valore predefinito, tranne quanto può contenere la cronologia. Regole, cronologia, liste di siti, lingua e tema vengono mantenuti."
   },
   "settingsResetBtn": {
     "message": "Reimposta…"
   },
   "settingsResetMessage": {
-    "message": "Ogni impostazione torna al valore predefinito. Regole, cronologia, liste di siti, lingua e tema non vengono modificati. I dati del webhook e della condivisione vengono mantenuti, a meno che tu non scelga di rimuoverli."
+    "message": "Ogni impostazione torna al valore predefinito, tranne quanto può contenere la cronologia. Regole, cronologia, liste di siti, lingua e tema non vengono modificati. I dati del webhook e della condivisione vengono mantenuti, a meno che tu non scelga di rimuoverli."
   },
   "settingsResetConnections": {
     "message": "Rimuovi anche le connessioni del webhook e della condivisione"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Riduci la dimensione"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Riduci il limite della cronologia"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "La cronologia contiene {0} pagine e il nuovo limite è {1}. Le pagine meno recenti che non sono fissate verranno rimosse per rientrare nel limite."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Riduci il limite"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} usati, nessun limite"
   },
@@ -6303,7 +6312,7 @@
     "message": "La cronologia è in pausa, quindi non viene controllato nulla."
   },
   "settingsHistoryWatchOff": {
-    "message": "L’estensione è disattivata, quindi non viene controllato nulla."
+    "message": "L’ultimo controllo ha trovato l’estensione disattivata, quindi non è stato controllato nulla."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"

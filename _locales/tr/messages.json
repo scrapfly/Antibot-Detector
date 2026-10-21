@@ -5937,13 +5937,13 @@
     "message": "Ayarları sıfırla"
   },
   "settingsResetDesc": {
-    "message": "Tüm ayarlar varsayılana döner. Kurallar, geçmiş, site listeleri, dil ve tema korunur."
+    "message": "Geçmiş'in ne kadar saklayabileceği dışında tüm ayarlar varsayılana döner. Kurallar, geçmiş, site listeleri, dil ve tema korunur."
   },
   "settingsResetBtn": {
     "message": "Sıfırla…"
   },
   "settingsResetMessage": {
-    "message": "Tüm ayarlar varsayılana döner. Kurallar, geçmiş, site listeleri, dil ve tema değiştirilmez. Webhook ve paylaşım bilgileri, kaldırmayı seçmediğiniz sürece korunur."
+    "message": "Geçmiş'in ne kadar saklayabileceği dışında tüm ayarlar varsayılana döner. Kurallar, geçmiş, site listeleri, dil ve tema değiştirilmez. Webhook ve paylaşım bilgileri, kaldırmayı seçmediğiniz sürece korunur."
   },
   "settingsResetConnections": {
     "message": "Webhook ve paylaşım bağlantılarını da kaldır"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Boyutu düşür"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Geçmiş sınırını düşür"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Geçmiş {0} sayfa tutuyor ve yeni sınır {1}. Sığması için sabitlenmemiş en eski sayfalar kaldırılacak."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Sınırı düşür"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} kullanıldı, sınır yok"
   },
@@ -6303,7 +6312,7 @@
     "message": "Geçmiş duraklatıldı, bu yüzden hiçbir şey kontrol edilmiyor."
   },
   "settingsHistoryWatchOff": {
-    "message": "Uzantı kapalı, bu yüzden hiçbir şey kontrol edilmiyor."
+    "message": "Son kontrolde uzantı kapalıydı, bu yüzden hiçbir şey kontrol edilmedi."
   },
   "settingsUiErrHistoryWatch": {
     "message": "İzleme listesi kapalı, günlük veya haftalık olmalıdır"

@@ -5937,13 +5937,13 @@
     "message": "Resetovat nastavení"
   },
   "settingsResetDesc": {
-    "message": "Všechna nastavení se vrátí na výchozí hodnoty. Pravidla, Historie, seznamy webů, jazyk a motiv zůstanou zachovány."
+    "message": "Všechna nastavení se vrátí na výchozí hodnoty, kromě toho, kolik smí Historie pojmout. Pravidla, Historie, seznamy webů, jazyk a motiv zůstanou zachovány."
   },
   "settingsResetBtn": {
     "message": "Resetovat…"
   },
   "settingsResetMessage": {
-    "message": "Všechna nastavení se vrátí na výchozí hodnoty. Pravidla, Historie, seznamy webů, jazyk a motiv se nezmění. Údaje webhooku a sdílení zůstanou zachovány, pokud se nerozhodnete je odebrat."
+    "message": "Všechna nastavení se vrátí na výchozí hodnoty, kromě toho, kolik smí Historie pojmout. Pravidla, Historie, seznamy webů, jazyk a motiv se nezmění. Údaje webhooku a sdílení zůstanou zachovány, pokud se nerozhodnete je odebrat."
   },
   "settingsResetConnections": {
     "message": "Odebrat také připojení webhooku a sdílení"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Snížit velikost"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Snížit limit historie"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Počet stránek v Historii: {0}, nový limit: {1}. Aby se Historie vešla, odstraní se nejstarší stránky, které nejsou připnuté."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Snížit limit"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "Využito {0}, bez omezení"
   },
@@ -6303,7 +6312,7 @@
     "message": "Historie je pozastavena, proto se nic nekontroluje."
   },
   "settingsHistoryWatchOff": {
-    "message": "Rozšíření je vypnuté, proto se nic nekontroluje."
+    "message": "Při poslední kontrole bylo rozšíření vypnuté, proto se nic nezkontrolovalo."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Sledování musí být vypnuté, denní nebo týdenní"

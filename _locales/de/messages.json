@@ -5937,13 +5937,13 @@
     "message": "Einstellungen zurücksetzen"
   },
   "settingsResetDesc": {
-    "message": "Jede Einstellung kehrt zum Standardwert zurück. Regeln, Verlauf, Site-Listen, Sprache und Design bleiben erhalten."
+    "message": "Jede Einstellung kehrt zum Standardwert zurück, außer den Limits des Verlaufs. Regeln, Verlauf, Site-Listen, Sprache und Design bleiben erhalten."
   },
   "settingsResetBtn": {
     "message": "Zurücksetzen…"
   },
   "settingsResetMessage": {
-    "message": "Jede Einstellung kehrt zum Standardwert zurück. Regeln, Verlauf, Site-Listen, Sprache und Design werden nicht geändert. Webhook-Angaben und Angaben zum Teilen bleiben erhalten, es sei denn, du entfernst sie."
+    "message": "Jede Einstellung kehrt zum Standardwert zurück, außer den Limits des Verlaufs. Regeln, Verlauf, Site-Listen, Sprache und Design werden nicht geändert. Webhook-Angaben und Angaben zum Teilen bleiben erhalten, es sei denn, du entfernst sie."
   },
   "settingsResetConnections": {
     "message": "Auch die Verbindungen für Webhook und Teilen entfernen"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Größe verringern"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Verlaufslimit verringern"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Der Verlauf enthält {0} Seiten, das neue Limit ist {1}. Die ältesten nicht angehefteten Seiten werden entfernt, damit alles passt."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Limit verringern"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} belegt, kein Limit"
   },
@@ -6303,7 +6312,7 @@
     "message": "Der Verlauf ist pausiert, daher wird nichts geprüft."
   },
   "settingsHistoryWatchOff": {
-    "message": "Die Erweiterung ist ausgeschaltet, daher wird nichts geprüft."
+    "message": "Bei der letzten Prüfung war die Erweiterung ausgeschaltet, daher wurde nichts geprüft."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Die Überwachung muss aus, täglich oder wöchentlich sein"

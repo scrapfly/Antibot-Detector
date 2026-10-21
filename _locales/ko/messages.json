@@ -5937,13 +5937,13 @@
     "message": "설정 초기화"
   },
   "settingsResetDesc": {
-    "message": "모든 설정이 기본값으로 돌아갑니다. 규칙, 기록, 사이트 목록, 언어, 테마는 유지됩니다."
+    "message": "기록에 보관할 수 있는 양을 제외한 모든 설정이 기본값으로 돌아갑니다. 규칙, 기록, 사이트 목록, 언어, 테마는 유지됩니다."
   },
   "settingsResetBtn": {
     "message": "초기화…"
   },
   "settingsResetMessage": {
-    "message": "모든 설정이 기본값으로 돌아갑니다. 규칙, 기록, 사이트 목록, 언어, 테마는 변경되지 않습니다. 웹훅 및 공유 정보는 제거를 선택하지 않는 한 유지됩니다."
+    "message": "기록에 보관할 수 있는 양을 제외한 모든 설정이 기본값으로 돌아갑니다. 규칙, 기록, 사이트 목록, 언어, 테마는 변경되지 않습니다. 웹훅 및 공유 정보는 제거를 선택하지 않는 한 유지됩니다."
   },
   "settingsResetConnections": {
     "message": "웹훅과 공유 연결도 함께 제거"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "크기 줄이기"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "기록 제한 낮추기"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "현재 기록에는 {0}개의 페이지가 있으며 새 한도는 {1}개입니다. 맞추기 위해 고정되지 않은 가장 오래된 페이지부터 삭제됩니다."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "제한 낮추기"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} 사용 중, 제한 없음"
   },
@@ -6303,7 +6312,7 @@
     "message": "기록이 일시 중지되어 있어 아무것도 확인하지 않습니다."
   },
   "settingsHistoryWatchOff": {
-    "message": "확장 프로그램이 꺼져 있어 아무것도 확인하지 않습니다."
+    "message": "마지막 확인 때 확장 프로그램이 꺼져 있어 아무것도 확인하지 않았습니다."
   },
   "settingsUiErrHistoryWatch": {
     "message": "감시 목록은 끄기, 매일, 매주 중 하나여야 합니다"

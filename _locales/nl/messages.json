@@ -5937,13 +5937,13 @@
     "message": "Instellingen resetten"
   },
   "settingsResetDesc": {
-    "message": "Elke instelling gaat terug naar de standaardwaarde. Regels, geschiedenis, sitelijsten, taal en thema blijven behouden."
+    "message": "Elke instelling gaat terug naar de standaardwaarde, behalve hoeveel de geschiedenis mag bevatten. Regels, geschiedenis, sitelijsten, taal en thema blijven behouden."
   },
   "settingsResetBtn": {
     "message": "Resetten…"
   },
   "settingsResetMessage": {
-    "message": "Elke instelling gaat terug naar de standaardwaarde. Regels, geschiedenis, sitelijsten, taal en thema worden niet gewijzigd. Webhook- en deelgegevens blijven behouden, tenzij je kiest om ze te verwijderen."
+    "message": "Elke instelling gaat terug naar de standaardwaarde, behalve hoeveel de geschiedenis mag bevatten. Regels, geschiedenis, sitelijsten, taal en thema worden niet gewijzigd. Webhook- en deelgegevens blijven behouden, tenzij je kiest om ze te verwijderen."
   },
   "settingsResetConnections": {
     "message": "Ook de webhook- en deelverbindingen verwijderen"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Grootte verlagen"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "De limiet van de geschiedenis verlagen"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "De geschiedenis bevat {0} pagina's en de nieuwe limiet is {1}. De oudste pagina's die niet zijn vastgezet, worden verwijderd zodat alles past."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Limiet verlagen"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} gebruikt, geen limiet"
   },
@@ -6303,7 +6312,7 @@
     "message": "De geschiedenis is gepauzeerd, dus er wordt niets gecontroleerd."
   },
   "settingsHistoryWatchOff": {
-    "message": "De extensie staat uit, dus er wordt niets gecontroleerd."
+    "message": "Bij de laatste controle stond de extensie uit, dus er is niets gecontroleerd."
   },
   "settingsUiErrHistoryWatch": {
     "message": "De volglijst moet uit, dagelijks of wekelijks staan"

@@ -5937,13 +5937,13 @@
     "message": "Redefinir configurações"
   },
   "settingsResetDesc": {
-    "message": "Todas as configurações voltam ao padrão. Regras, histórico, listas de sites, idioma e tema são mantidos."
+    "message": "Todas as configurações voltam ao padrão, exceto o quanto o histórico pode guardar. Regras, histórico, listas de sites, idioma e tema são mantidos."
   },
   "settingsResetBtn": {
     "message": "Redefinir…"
   },
   "settingsResetMessage": {
-    "message": "Todas as configurações voltam ao padrão. Regras, histórico, listas de sites, idioma e tema não são alterados. Os dados do webhook e de compartilhamento são mantidos, a menos que você escolha removê-los."
+    "message": "Todas as configurações voltam ao padrão, exceto o quanto o histórico pode guardar. Regras, histórico, listas de sites, idioma e tema não são alterados. Os dados do webhook e de compartilhamento são mantidos, a menos que você escolha removê-los."
   },
   "settingsResetConnections": {
     "message": "Remover também as conexões de webhook e de compartilhamento"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Reduzir o tamanho"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Reduzir o limite do histórico"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "O histórico guarda {0} páginas e o novo limite é {1}. As páginas mais antigas que não estão fixadas serão removidas para caber."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Reduzir o limite"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} usados, sem limite"
   },
@@ -6303,7 +6312,7 @@
     "message": "O histórico está pausado, então nada é verificado."
   },
   "settingsHistoryWatchOff": {
-    "message": "A extensão está desativada, então nada é verificado."
+    "message": "A última verificação encontrou a extensão desativada, então nada foi verificado."
   },
   "settingsUiErrHistoryWatch": {
     "message": "A lista de monitoramento deve estar desativada, diária ou semanal"

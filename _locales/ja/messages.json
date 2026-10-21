@@ -5937,13 +5937,13 @@
     "message": "設定をリセット"
   },
   "settingsResetDesc": {
-    "message": "すべての設定が初期値に戻ります。ルール、履歴、サイトの一覧、言語、テーマは保持されます。"
+    "message": "履歴に保存できる量を除き、すべての設定が初期値に戻ります。ルール、履歴、サイトの一覧、言語、テーマは保持されます。"
   },
   "settingsResetBtn": {
     "message": "リセット…"
   },
   "settingsResetMessage": {
-    "message": "すべての設定が初期値に戻ります。ルール、履歴、サイトの一覧、言語、テーマは変更されません。Webhook と共有の情報は、削除を選ばない限り保持されます。"
+    "message": "履歴に保存できる量を除き、すべての設定が初期値に戻ります。ルール、履歴、サイトの一覧、言語、テーマは変更されません。Webhook と共有の情報は、削除を選ばない限り保持されます。"
   },
   "settingsResetConnections": {
     "message": "Webhook と共有の接続も削除する"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "サイズを小さくする"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "履歴の上限を下げる"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "履歴には現在 {0} ページが保存されており、新しい上限は {1} ページです。収めるため、ピン留めされていない古いページから削除されます。"
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "上限を下げる"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} 使用中、上限なし"
   },
@@ -6303,7 +6312,7 @@
     "message": "履歴が一時停止中のため、何も確認されません。"
   },
   "settingsHistoryWatchOff": {
-    "message": "拡張機能がオフになっているため、何も確認されません。"
+    "message": "前回の確認では拡張機能がオフになっていたため、何も確認されませんでした。"
   },
   "settingsUiErrHistoryWatch": {
     "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"

@@ -5937,13 +5937,13 @@
     "message": "Resetuj ustawienia"
   },
   "settingsResetDesc": {
-    "message": "Wszystkie ustawienia wracają do wartości domyślnych. Reguły, historia, listy witryn, język i motyw zostają zachowane."
+    "message": "Wszystkie ustawienia wracają do wartości domyślnych, z wyjątkiem limitów historii. Reguły, historia, listy witryn, język i motyw zostają zachowane."
   },
   "settingsResetBtn": {
     "message": "Resetuj…"
   },
   "settingsResetMessage": {
-    "message": "Wszystkie ustawienia wracają do wartości domyślnych. Reguły, historia, listy witryn, język i motyw nie zostaną zmienione. Dane webhooka i udostępniania zostają zachowane, chyba że zdecydujesz się je usunąć."
+    "message": "Wszystkie ustawienia wracają do wartości domyślnych, z wyjątkiem limitów historii. Reguły, historia, listy witryn, język i motyw nie zostaną zmienione. Dane webhooka i udostępniania zostają zachowane, chyba że zdecydujesz się je usunąć."
   },
   "settingsResetConnections": {
     "message": "Usuń także połączenia webhooka i udostępniania"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Zmniejsz rozmiar"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Zmniejsz limit historii"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Liczba stron w historii: {0}, a nowy limit to {1}. Aby historia się zmieściła, zostaną usunięte najstarsze strony, które nie są przypięte."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Zmniejsz limit"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "Zajęto {0}, bez limitu"
   },
@@ -6303,7 +6312,7 @@
     "message": "Historia jest wstrzymana, więc nic nie jest sprawdzane."
   },
   "settingsHistoryWatchOff": {
-    "message": "Rozszerzenie jest wyłączone, więc nic nie jest sprawdzane."
+    "message": "Podczas ostatniego sprawdzania rozszerzenie było wyłączone, więc nic nie zostało sprawdzone."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"

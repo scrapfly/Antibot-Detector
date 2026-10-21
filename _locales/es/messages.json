@@ -5937,13 +5937,13 @@
     "message": "Restablecer ajustes"
   },
   "settingsResetDesc": {
-    "message": "Cada ajuste vuelve a su valor predeterminado. Se conservan las reglas, el historial, las listas de sitios, el idioma y el tema."
+    "message": "Cada ajuste vuelve a su valor predeterminado, excepto cuánto puede guardar el historial. Se conservan las reglas, el historial, las listas de sitios, el idioma y el tema."
   },
   "settingsResetBtn": {
     "message": "Restablecer…"
   },
   "settingsResetMessage": {
-    "message": "Cada ajuste vuelve a su valor predeterminado. Las reglas, el historial, las listas de sitios, el idioma y el tema no se modifican. Los datos del webhook y de compartir se conservan, salvo que elijas quitarlos."
+    "message": "Cada ajuste vuelve a su valor predeterminado, excepto cuánto puede guardar el historial. Las reglas, el historial, las listas de sitios, el idioma y el tema no se modifican. Los datos del webhook y de compartir se conservan, salvo que elijas quitarlos."
   },
   "settingsResetConnections": {
     "message": "Quitar también las conexiones del webhook y de compartir"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Reducir el tamaño"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Reducir el límite del historial"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "El historial guarda {0} páginas y el nuevo límite es {1}. Se eliminarán las páginas más antiguas que no estén fijadas para ajustarse al límite."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Reducir el límite"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} usados, sin límite"
   },
@@ -6305,7 +6314,7 @@
     "message": "El historial está en pausa, así que no se comprueba nada."
   },
   "settingsHistoryWatchOff": {
-    "message": "La extensión está desactivada, así que no se comprueba nada."
+    "message": "La última comprobación encontró la extensión desactivada, así que no se comprobó nada."
   },
   "settingsUiErrHistoryWatch": {
     "message": "La lista de vigilancia debe estar desactivada, ser diaria o semanal"

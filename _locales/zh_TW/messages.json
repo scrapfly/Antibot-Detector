@@ -5937,13 +5937,13 @@
     "message": "重設設定"
   },
   "settingsResetDesc": {
-    "message": "所有設定都會恢復為預設值。規則、歷史記錄、網站清單、語言和佈景主題會保留。"
+    "message": "所有設定都會恢復為預設值，但歷史記錄的保存上限除外。規則、歷史記錄、網站清單、語言和佈景主題會保留。"
   },
   "settingsResetBtn": {
     "message": "重設…"
   },
   "settingsResetMessage": {
-    "message": "所有設定都會恢復為預設值。規則、歷史記錄、網站清單、語言和佈景主題不會變更。除非您選擇移除，否則 Webhook 和分享的詳細資料會保留。"
+    "message": "所有設定都會恢復為預設值，但歷史記錄的保存上限除外。規則、歷史記錄、網站清單、語言和佈景主題不會變更。除非您選擇移除，否則 Webhook 和分享的詳細資料會保留。"
   },
   "settingsResetConnections": {
     "message": "同時移除 Webhook 和分享連線"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "調低上限"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "調低歷史記錄上限"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "歷史記錄目前有 {0} 個網頁，新的上限是 {1} 個。為符合上限，將移除未釘選的最舊網頁。"
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "調低上限"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "已使用 {0}，無上限"
   },
@@ -6303,7 +6312,7 @@
     "message": "歷史記錄已暫停，因此不會檢查任何項目。"
   },
   "settingsHistoryWatchOff": {
-    "message": "擴充功能已關閉，因此不會檢查任何項目。"
+    "message": "上次檢查時擴充功能已關閉，因此未檢查任何項目。"
   },
   "settingsUiErrHistoryWatch": {
     "message": "監看功能必須是關閉、每天或每週"

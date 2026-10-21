@@ -5937,13 +5937,13 @@
     "message": "Återställ inställningar"
   },
   "settingsResetDesc": {
-    "message": "Alla inställningar går tillbaka till standardvärdet. Regler, historik, webbplatslistor, språk och tema behålls."
+    "message": "Alla inställningar går tillbaka till standardvärdet, utom hur mycket historiken får rymma. Regler, historik, webbplatslistor, språk och tema behålls."
   },
   "settingsResetBtn": {
     "message": "Återställ…"
   },
   "settingsResetMessage": {
-    "message": "Alla inställningar går tillbaka till standardvärdet. Regler, historik, webbplatslistor, språk och tema ändras inte. Uppgifter om webhook och delning behålls om du inte väljer att ta bort dem."
+    "message": "Alla inställningar går tillbaka till standardvärdet, utom hur mycket historiken får rymma. Regler, historik, webbplatslistor, språk och tema ändras inte. Uppgifter om webhook och delning behålls om du inte väljer att ta bort dem."
   },
   "settingsResetConnections": {
     "message": "Ta även bort webhook- och delningsanslutningarna"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Sänk storleken"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Sänk historikgränsen"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Historiken innehåller {0} sidor och den nya gränsen är {1}. De äldsta sidorna som inte är fästa tas bort så att den ryms."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Sänk gränsen"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "{0} används, ingen gräns"
   },
@@ -6303,7 +6312,7 @@
     "message": "Historiken är pausad, så inget kontrolleras."
   },
   "settingsHistoryWatchOff": {
-    "message": "Tillägget är inaktiverat, så inget kontrolleras."
+    "message": "Vid den senaste kontrollen var tillägget inaktiverat, så inget kontrollerades."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Bevakningen måste vara av, dagligen eller veckovis"

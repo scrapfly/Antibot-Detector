@@ -5937,13 +5937,13 @@
     "message": "重置设置"
   },
   "settingsResetDesc": {
-    "message": "所有设置都会恢复为默认值。规则、历史记录、站点列表、语言和主题会保留。"
+    "message": "除历史记录的保存上限外，所有设置都会恢复为默认值。规则、历史记录、站点列表、语言和主题会保留。"
   },
   "settingsResetBtn": {
     "message": "重置…"
   },
   "settingsResetMessage": {
-    "message": "所有设置都会恢复为默认值。规则、历史记录、站点列表、语言和主题不会更改。除非选择移除，否则 Webhook 和分享信息会保留。"
+    "message": "除历史记录的保存上限外，所有设置都会恢复为默认值。规则、历史记录、站点列表、语言和主题不会更改。除非选择移除，否则 Webhook 和分享信息会保留。"
   },
   "settingsResetConnections": {
     "message": "同时移除 Webhook 和分享连接"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "调低上限"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "调低历史记录的数量上限"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "历史记录当前保存了 {0} 个页面，新的上限为 {1} 个。将删除最早且未固定的页面以符合上限。"
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "调低上限"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "已使用 {0}，无上限"
   },
@@ -6303,7 +6312,7 @@
     "message": "历史记录已暂停，因此不会检查任何内容。"
   },
   "settingsHistoryWatchOff": {
-    "message": "扩展已关闭，因此不会检查任何内容。"
+    "message": "上次检查时扩展已关闭，因此没有检查任何内容。"
   },
   "settingsUiErrHistoryWatch": {
     "message": "监视列表必须为关闭、每天或每周"

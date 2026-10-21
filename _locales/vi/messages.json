@@ -5937,13 +5937,13 @@
     "message": "Đặt lại cài đặt"
   },
   "settingsResetDesc": {
-    "message": "Mọi cài đặt trở về mặc định. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện được giữ nguyên."
+    "message": "Mọi cài đặt trở về mặc định, trừ giới hạn lưu trữ của Lịch sử. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện được giữ nguyên."
   },
   "settingsResetBtn": {
     "message": "Đặt lại…"
   },
   "settingsResetMessage": {
-    "message": "Mọi cài đặt trở về mặc định. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện không bị thay đổi. Thông tin webhook và chia sẻ được giữ lại trừ khi bạn chọn xóa."
+    "message": "Mọi cài đặt trở về mặc định, trừ giới hạn lưu trữ của Lịch sử. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện không bị thay đổi. Thông tin webhook và chia sẻ được giữ lại trừ khi bạn chọn xóa."
   },
   "settingsResetConnections": {
     "message": "Xóa cả kết nối webhook và chia sẻ"
@@ -6209,6 +6209,15 @@
   "settingsHistorySizeLowerConfirm": {
     "message": "Hạ giới hạn"
   },
+  "settingsHistoryLimitLowerTitle": {
+    "message": "Hạ giới hạn Lịch sử"
+  },
+  "settingsHistoryLimitLowerMessage": {
+    "message": "Lịch sử đang có {0} trang và giới hạn mới là {1} trang. Các trang cũ nhất chưa được ghim sẽ bị xóa để vừa giới hạn."
+  },
+  "settingsHistoryLimitLowerConfirm": {
+    "message": "Hạ giới hạn"
+  },
   "storageTotalUnlimitedFmt": {
     "message": "Đã dùng {0}, không giới hạn"
   },
@@ -6303,7 +6312,7 @@
     "message": "Lịch sử đang tạm dừng, nên không có gì được kiểm tra."
   },
   "settingsHistoryWatchOff": {
-    "message": "Tiện ích đang tắt, nên không có gì được kiểm tra."
+    "message": "Lần kiểm tra gần nhất thấy tiện ích đang tắt, nên không có gì được kiểm tra."
   },
   "settingsUiErrHistoryWatch": {
     "message": "Chức năng theo dõi phải là tắt, hằng ngày hoặc hằng tuần"
