@@ -107,6 +107,14 @@
       </div>
 
       <div class="rule-modal-body">
+        <!-- Texts of this rule that are not translated into every language (RuleTranslationPlan), and one button for all of them -->
+        <div id="ruleTranslateBar" class="rule-translate-bar" role="status" aria-live="polite" hidden>
+          <span class="rule-translate-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
+          </span>
+          <span id="ruleTranslateText" class="rule-translate-text"></span>
+          <button type="button" id="ruleTranslateAllBtn" class="action-btn" data-i18n="ruleTranslateRule">Translate the rule</button>
+        </div>
         <!-- Detector Information Card -->
         <div class="modal-card">
           <div class="modal-card-header">
@@ -259,9 +267,9 @@
             <h3 data-i18n="ruleHistoryCheckTitle">Check against History</h3>
           </div>
           <div class="modal-card-body">
-            <p class="combinations-hint" data-i18n="ruleHistoryCheckHint">See on how many saved pages each pattern and combination matches. Unsaved edits count.</p>
-            <div id="ruleHistoryCheckResults" aria-live="polite"></div>
+            <p class="combinations-hint" data-i18n="ruleHistoryCheckHint">Shows on how many of your saved pages each pattern and combination matches. Unsaved edits are included.</p>
             <button type="button" class="add-combination-btn rule-check-btn" id="ruleHistoryCheckBtn" data-i18n="ruleHistoryCheckRun">Check</button>
+            <div id="ruleHistoryCheckResults" aria-live="polite"></div>
           </div>
         </div>
       </div>

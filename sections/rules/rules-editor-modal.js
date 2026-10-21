@@ -256,6 +256,10 @@ Rules.prototype.populateModalData = function(detector) {
     this.populateDetectionMethods(detector);
     this.initCombinationsEditor(detector);
     if (typeof this.resetHistoryCheck === 'function') this.resetHistoryCheck();
+    if (typeof this.resetTranslateBar === 'function') {
+      this.resetTranslateBar();
+      this.refreshTranslateBar();
+    }
   };
 
 Rules.prototype.clearAuthorError = function() {

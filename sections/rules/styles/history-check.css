@@ -5,13 +5,73 @@
   margin-bottom: 4px;
 }
 
-.rule-check-summary,
 .rule-check-note,
 .rule-check-empty {
   margin: 0 0 8px;
   color: var(--text-secondary);
   font-size: 12px;
   line-height: 1.5;
+}
+
+/* The answer first: how much of History the rule matches, in words and as a bar */
+.rule-check-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 8px;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.rule-check-summary.is-zero {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.rule-check-summary-text {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.rule-check-meter,
+.rule-check-bar {
+  display: block;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.rule-check-meter > span,
+.rule-check-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+.rule-check-summary.is-zero .rule-check-meter > span {
+  background: var(--warning);
+}
+
+.rule-check-bar {
+  width: 56px;
+  height: 3px;
+  margin-top: 4px;
+}
+
+.rule-check-heading {
+  margin: 12px 0 6px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .rule-check-note {
@@ -86,6 +146,11 @@
 
 .rule-check-count.is-zero {
   color: var(--warning);
+}
+
+/* A pattern or combination that matched nothing on these pages: quieter, the count says why */
+.rule-check-row.is-zero .rule-check-desc {
+  color: var(--text-secondary);
 }
 
 .rule-check-other {
@@ -274,4 +339,68 @@
 :is(#methodSettingsModal, #combinationsContainer, #detectorDescriptionGroup) .rule-translation-row .rule-translation-input::placeholder {
   color: var(--text-secondary);
   opacity: 0.7;
+}
+
+/* Texts of the rule that miss a language, and the one button for all of them: stays in view while the editor scrolls */
+.rule-translate-bar {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.rule-translate-bar[hidden] {
+  display: none;
+}
+
+.rule-translate-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--accent-light);
+}
+
+.rule-translate-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.rule-translate-bar .action-btn {
+  flex: 0 0 auto;
+  height: 28px;
+  padding: 0 12px;
+  border-color: rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--accent-light);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rule-translate-bar .action-btn[hidden] {
+  display: none;
+}
+
+.rule-translate-bar .action-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.22);
+  color: var(--text-primary);
+}
+
+.rule-translate-bar .action-btn:disabled {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  opacity: 0.6;
+  cursor: not-allowed;
 }

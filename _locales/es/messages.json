@@ -4688,13 +4688,13 @@
     "message": "Comprobar con el Historial"
   },
   "ruleHistoryCheckHint": {
-    "message": "Mira en cuántas páginas guardadas coincide cada patrón y combinación. Cuentan los cambios sin guardar."
+    "message": "Muestra en cuántas de tus páginas guardadas coincide cada patrón y combinación. Incluye los cambios sin guardar."
   },
   "ruleHistoryCheckRun": {
     "message": "Comprobar"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} páginas guardadas · esta regla se encontró en {1}"
+    "message": "Esta regla coincide en {1} de {0} páginas guardadas"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} de {1} páginas"
@@ -5773,5 +5773,13 @@
   },
   "workerOutdatedHint": {
     "message": "La parte en segundo plano de la extensión está desactualizada. Recarga la extensión en la página de extensiones e inténtalo de nuevo."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Patrones",
+    "description": "Rules → editor → Check against History: heading of the list of the rule's patterns with the pages each matches"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Combinaciones",
+    "description": "Rules → editor → Check against History: heading of the list of the rule's combinations with the pages each fires on"
   }
 }

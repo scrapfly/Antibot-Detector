@@ -20,6 +20,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings → History → Pin pages automatically: pages with a hard protection, or one you name, pin themselves (up to 50); a page you unpin stays unpinned.
 - Settings → History: delete fingerprinting-only pages after a number of days of their own.
 - Settings → History → Storage: choose a History size of 6, 12 or 25 MB (the extension now has the unlimited storage permission; History stays at 6 MB unless you choose more).
+- Rules editor: a bar notices the texts of a rule that are not translated into every language and one button translates them all, with Chrome's on-device translator.
 
 ### Fixed
 
@@ -40,6 +41,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - The page buttons of the skipped sites list jumped several pages at a time once Settings had been opened more than once.
 - Webhook: Send on every page load now sends pages answered from the cache; it did nothing before.
 - The webhook receives everything found on a page; it used to miss detections found after the first moments of the scan.
+- Rules → Check against History: the answer comes first, with a bar for how many saved pages match, clearer wording, and the Check button above the list.
 
 ## [3.0.1] - 2026-10-20
 

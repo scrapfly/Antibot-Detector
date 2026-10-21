@@ -4945,13 +4945,13 @@
     "message": "Check against History"
   },
   "ruleHistoryCheckHint": {
-    "message": "See on how many saved pages each pattern and combination matches. Unsaved edits count."
+    "message": "Shows on how many of your saved pages each pattern and combination matches. Unsaved edits are included."
   },
   "ruleHistoryCheckRun": {
     "message": "Check"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} saved pages · this rule was found on {1}"
+    "message": "This rule matches {1} of {0} saved pages"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} of {1} pages"
@@ -6651,5 +6651,37 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "History size must be one of {0} MB",
     "description": "Error when the History size is not one of the offered sizes; {0} is the list of sizes, like 6, 12, 25"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Texts not yet translated into every language: {0}",
+    "description": "Rules → editor: shown above the rule when some of its texts (the description, a pattern's description, a combination's name) lack a translation in some language; {0} is how many texts"
+  },
+  "ruleTranslateRule": {
+    "message": "Translate the rule",
+    "description": "Rules → editor: button that translates every text of the rule that is missing a translation, with Chrome's on-device translator"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Fills the missing translations of the description, the patterns and the combinations with Chrome's on-device translator. Check them before saving.",
+    "description": "Hover text of the Translate the rule button"
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Translating {0} texts…",
+    "description": "Shown while Translate the rule works; {0} is how many texts it translates"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Filled {0} translations. Check them before saving.",
+    "description": "Shown after Translate the rule; {0} is how many translations it filled"
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Filled {0}; {1} could not be translated here.",
+    "description": "Shown after Translate the rule when some translations failed; {0} is how many it filled, {1} how many it could not"
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Patterns",
+    "description": "Rules → editor → Check against History: heading of the list of the rule's patterns with the pages each matches"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Combinations",
+    "description": "Rules → editor → Check against History: heading of the list of the rule's combinations with the pages each fires on"
   }
 }

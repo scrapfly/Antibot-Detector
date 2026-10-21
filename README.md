@@ -287,6 +287,7 @@ npm run e2e:data       # Settings → Data: storage and Clear, backup and restor
 npm run e2e:scope      # Settings → Detection → Sites to scan: skipped sites, chosen sites, the paused card
 npm run e2e:webhook    # Settings → Detection → Webhook: filters, cache, failures, Recent deliveries, Test, Clear
 npm run e2e:hooks      # Settings → Detection → Sites without JS hooks: hooks on and off, switching, the popup note, the cache
+npm run e2e:translate  # Rules editor → Translate the rule: what is missing, one click, Save
 npm run e2e:languages  # every language through the real popup, settings and statistics pages
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json
 ```
