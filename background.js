@@ -9,6 +9,7 @@ importScripts(
     './modules/core/hooks-config.js',
     './modules/core/bridge-protocol.js',
     './modules/core/badge-constants.js',
+    './modules/core/toolbar-title.js',
     './modules/core/message-types.js',
     './modules/core/ttl-map.js',
     './modules/core/categories.js',

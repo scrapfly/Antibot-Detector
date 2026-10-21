@@ -6806,5 +6806,21 @@
   "settingsUiErrHistoryWatch": {
     "message": "The watchlist must be off, daily or weekly",
     "description": "Error when the watchlist setting is not one of the offered choices"
+  },
+  "toolbarTitleOff": {
+    "message": "Detection is switched off",
+    "description": "Hover text of the toolbar icon (after 'Scrapfly: ') when the extension's main switch is off"
+  },
+  "toolbarTitleSkipped": {
+    "message": "This site is not scanned",
+    "description": "Hover text of the toolbar icon (after 'Scrapfly: ') on a site the user skips, or one not among the chosen sites"
+  },
+  "toolbarTitleClean": {
+    "message": "No protections found",
+    "description": "Hover text of the toolbar icon (after 'Scrapfly: ') when the page was scanned and nothing was found"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} more",
+    "description": "Hover text of the toolbar icon, after the first three protections found: {0} = how many more were found"
   }
 }

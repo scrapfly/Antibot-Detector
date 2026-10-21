@@ -1960,6 +1960,7 @@ class DetectionEngineManager {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
                 setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED);
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'off');
                 return;
             }
         } catch (error) {

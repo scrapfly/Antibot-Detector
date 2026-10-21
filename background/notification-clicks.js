@@ -13,7 +13,8 @@
     'use strict';
 
     const NotificationClicks = {
-        STORAGE_KEY: 'scrapfly_notification_targets',
+        // storage.session, not storage.local: it is not part of Settings → Data → Storage
+        STORAGE_KEY: 'session_notification_targets',
         MAX: 20,
         CHANGE_PREFIX: 'scrapfly-history-change-',
         SETTINGS_IDS: { 'scrapfly-history-backup-failed': 'history', 'scrapfly-history-storage': 'history' },
@@ -34,7 +35,7 @@
         },
 
         async _area(chromeApi) {
-            return (chromeApi.storage && (chromeApi.storage.session || chromeApi.storage.local)) || null;
+            return (chromeApi.storage && chromeApi.storage.session) || null;
         },
 
         /** Remember the page a change notification is about. */

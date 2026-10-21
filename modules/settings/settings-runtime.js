@@ -94,6 +94,7 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
           chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch((error) => {
             Logger.debug('UI', `[Settings] Failed to set badge color for tab ${tab.id}:`, error.message);
           });
+          if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'off');
         }
       }
     } catch (error) {

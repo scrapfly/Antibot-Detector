@@ -114,6 +114,7 @@ function setupTabListeners() {
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch((error) => {
                 Logger.debug('BACKGROUND', `[TabUpdate] Failed to set badge color for tab ${tabId}:`, error.message);
             });
+            if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'off');
         }
 
         // URL change: abort active detection, clear cache tracking

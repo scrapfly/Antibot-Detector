@@ -60,6 +60,7 @@ class DetectionSessionStore {
         batchProcessingFlags.delete(tabId);
         if (typeof stopBadgeSpinner === 'function') stopBadgeSpinner(tabId);
         chrome.action.setBadgeText({ text: '', tabId }).catch(() => {});
+        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.reset(chrome, tabId);
         return true;
     }
 

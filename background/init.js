@@ -55,6 +55,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tab.id }).catch(() => {});
                 setBadgeTextColor(tab.id, false, BADGE.COLORS.DISABLED);
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tab.id }).catch(() => {});
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'off');
             }
         } else {
             for (const tab of tabs) {

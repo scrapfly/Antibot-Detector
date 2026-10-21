@@ -73,6 +73,8 @@ function startBadgeSpinner(tabId) {
     const startedAt = Date.now();
     let registered = false;
     setPausedIcon(tabId, false);
+    // The last page's text stays out of the new page's scan
+    if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.reset(chrome, tabId);
     paintSpinnerFrame(tabId, frames[0]).catch(() => {});
     const timer = setInterval(() => {
         // Self-terminate once the tab no longer has an active detection (after
@@ -98,6 +100,11 @@ function stopBadgeSpinner(tabId, expectedTimer = badgeSpinnerTimers.get(tabId)) 
     }
 }
 
+// The toolbar icon's hover text (modules/core/toolbar-title.js), next to the badge
+function setToolbarTitle(tabId, state, detections) {
+    return typeof ToolbarTitle !== 'undefined' ? ToolbarTitle.apply(chrome, tabId, state, detections) : Promise.resolve(null);
+}
+
 async function setBadgeForDetections(tabId, url, detectionResults, ownsSession = null) {
     const expectedState = detectionStates.get(tabId);
     const expectedActive = activeDetections.get(tabId);
@@ -115,7 +122,8 @@ async function setBadgeForDetections(tabId, url, detectionResults, ownsSession =
             setPausedIcon(tabId, false),
             setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED),
             chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId }),
-            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId })
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId }),
+            setToolbarTitle(tabId, 'off')
         ]).catch(() => {});
         return;
     }
@@ -130,7 +138,8 @@ async function setBadgeForDetections(tabId, url, detectionResults, ownsSession =
             await Promise.all([
                 setBadgeTextColor(tabId, true),
                 chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId }),
-                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId })
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId }),
+                setToolbarTitle(tabId, 'skipped')
             ]);
         } else if (detectionCount > 0) {
             const badgeColors = await CategoryManager.getBadgeColors();
@@ -140,14 +149,16 @@ async function setBadgeForDetections(tabId, url, detectionResults, ownsSession =
             await Promise.all([
                 setBadgeTextColor(tabId, false, color),
                 chrome.action.setBadgeText({ text: detectionCount.toString(), tabId }),
-                chrome.action.setBadgeBackgroundColor({ color, tabId })
+                chrome.action.setBadgeBackgroundColor({ color, tabId }),
+                setToolbarTitle(tabId, 'found', detectionResults)
             ]);
         } else {
             stopBadgeSpinner(tabId);
             await Promise.all([
                 setBadgeTextColor(tabId),
                 chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId }),
-                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId })
+                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId }),
+                setToolbarTitle(tabId, 'clean')
             ]);
         }
     } catch (error) {
