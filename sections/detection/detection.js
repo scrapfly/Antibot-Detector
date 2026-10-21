@@ -612,7 +612,7 @@ class Detection {
       copyOverviewMenu.addEventListener('keydown', (e) => {
         const items = Array.from(copyOverviewMenu.querySelectorAll('[data-copy-format]'));
         const at = items.indexOf(document.activeElement);
-        if (e.key === 'Escape') { e.preventDefault(); closeCopyMenu(true); }
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); closeCopyMenu(true); }
         else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
           const step = e.key === 'ArrowDown' ? 1 : -1;
@@ -621,6 +621,10 @@ class Detection {
       });
       document.addEventListener('click', (e) => {
         if (!copyOverviewMenu.contains(e.target) && e.target !== copyOverviewBtn) closeCopyMenu();
+      });
+      // Escape closes it wherever the focus is (the menu, its button or the page)
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !copyOverviewMenu.hidden) closeCopyMenu(copyOverviewMenu.contains(document.activeElement));
       });
     }
 

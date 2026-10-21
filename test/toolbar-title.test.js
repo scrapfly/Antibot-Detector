@@ -62,3 +62,14 @@ test('every badge state of setBadgeForDetections sets its title', () => {
     assert.ok(body.includes(`setToolbarTitle(tabId, ${state}`), state);
   }
 });
+
+test('every place that paints a skipped, clean, off or count badge also sets the hover text', () => {
+  const files = ['background/utilities.js', 'background/init.js', 'background/tab-events.js', 'background/handlers/messages-cache.js',
+    'modules/detection/engine/detection-engine-manager.js', 'modules/settings/settings-runtime.js'];
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(root, file), 'utf8');
+    const badges = (source.match(/text: BADGE\.TEXT\.(BLACKLISTED|CLEAN|DISABLED)/g) || []).length;
+    const titles = (source.match(/ToolbarTitle\.apply\(|setToolbarTitle\(tabId/g) || []).length;
+    assert.ok(titles >= badges, `${file}: ${badges} badge states, ${titles} hover texts`);
+  }
+});

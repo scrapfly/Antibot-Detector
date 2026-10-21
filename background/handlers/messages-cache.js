@@ -122,6 +122,7 @@ function registerCacheHandlers(registry, context) {
                             tabId: tabId
                         });
                         Logger.debug('BACKGROUND', `[Background] [Early Cache] Badge updated: ${detectionCount} detections from cache`);
+                        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'found', detections);
                     } else {
                         await setBadgeTextColor(tabId);
                         await chrome.action.setBadgeText({
@@ -133,6 +134,7 @@ function registerCacheHandlers(registry, context) {
                             tabId: tabId
                         });
                         Logger.debug('BACKGROUND', '[Background] [Early Cache] Badge: clean page (no detections)');
+                        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'clean');
                     }
                 }
 

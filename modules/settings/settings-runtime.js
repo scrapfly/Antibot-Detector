@@ -65,6 +65,7 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
                   chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tab.id }),
                   chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tab.id })
                 ]);
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'skipped');
                 continue;
               }
               await setPausedIcon(tab.id, false);
@@ -75,8 +76,10 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
                 await setBadgeTextColor(tab.id, false, color);
                 chrome.action.setBadgeText({ text: storedData.detectionCount.toString(), tabId: tab.id }).catch(() => {});
                 chrome.action.setBadgeBackgroundColor({ color, tabId: tab.id }).catch(() => {});
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'found', detections);
               } else {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.reset(chrome, tab.id);
               }
             } catch (e) {
               // Tab might be closing
@@ -137,6 +140,7 @@ SettingsRuntime.syncPausedIcons = async function() {
             chrome.action.setBadgeText({ text: BADGE.TEXT.BLACKLISTED, tabId: tab.id }),
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tab.id })
           ]).catch(() => {});
+          if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'skipped');
         }
       }
     } catch (error) {
