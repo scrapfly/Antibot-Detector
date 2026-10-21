@@ -738,9 +738,9 @@ class ScrapflyPopup {
       case 'history':
         // Lazy initialize if needed
         if (!this.history.initialized) {
-          this.history.initialize().then(() => {
-            this.history.displayHistory();
-          });
+          // Awaited, so a caller that needs the tab's markup (popup.html?tab=history&search=host) finds it
+          await this.history.initialize();
+          this.history.displayHistory();
         } else {
           // Re-attach event listeners after cleanup (search, clear button, etc.)
           this.history.setupEventListeners();

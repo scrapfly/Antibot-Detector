@@ -59,7 +59,7 @@ test('every script that reads a shared global module loads after it, in the popu
   const MODULES = {
     Categories: 'modules/core/categories.js', CaptureRetention: 'modules/core/capture-retention.js', DomainList: 'modules/core/domain-list.js', ScanScope: 'modules/core/scan-scope.js',
     WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js',
-    WorkerMessages: 'modules/core/worker-messages.js', HistoryFilter: 'modules/core/history-filter.js', RuleTranslationPlan: 'modules/core/rule-translation-plan.js',
+    WorkerMessages: 'modules/core/worker-messages.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js', RuleTranslationPlan: 'modules/core/rule-translation-plan.js',
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js'
   };

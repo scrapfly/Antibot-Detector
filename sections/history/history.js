@@ -813,6 +813,107 @@ class History {
     return raw.trim();
   }
 
+  /**
+   * History → … → Compare with…: a dialog with the entry's other saved scans of the same page to pick from, and what
+   * changed between the two (HistoryCompare): protections added, removed, changed in confidence or evidence, unchanged.
+   * "Copy as Markdown" copies that report; Close leaves.
+   * @param {object} item - History entry
+   * @returns {Promise<boolean>} false when the page has no other scan
+   */
+  async compareHistoryItem(item) {
+    const t = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const candidates = HistoryCompare.others(this.historyItems, item);
+    if (!candidates.length) {
+      NotificationHelper.info(t('historyCompareNone', 'No other saved scan of this page to compare with'));
+      return false;
+    }
+    const categoryLabel = (key) => FormatUtils.categoryLabel(key);
+    const methodLabel = (type) => this.getMethodLabel(String(type).toLowerCase());
+    const dateText = (ms) => FormatUtils.formatDateTime(ms);
+    const where = (entry) => {
+      if (entry.url === item.url) return '';
+      try { const u = new URL(entry.url); return ` · ${(u.pathname + u.search).slice(0, 40)}`; } catch (_) { return ''; }
+    };
+
+    const select = document.createElement('select');
+    select.className = 'select-field history-dialog-input';
+    select.setAttribute('dir', 'ltr');
+    for (const candidate of candidates) {
+      const option = document.createElement('option');
+      option.value = candidate.id;
+      option.textContent = t('historyCompareOptionFmt', '{0} · {1} found', dateText(candidate.timestamp), (candidate.detections || []).length) + where(candidate);
+      select.appendChild(option);
+    }
+    const first = HistoryCompare.pickDefault(candidates, item);
+    select.value = first ? first.id : candidates[0].id;
+
+    const field = document.createElement('label');
+    field.className = 'history-dialog-field';
+    const label = document.createElement('span');
+    label.className = 'history-dialog-label';
+    label.textContent = t('historyCompareWith', 'Compare with');
+    field.append(label, select);
+    const range = document.createElement('div');
+    range.className = 'history-dialog-count';
+    range.setAttribute('role', 'status');
+    const result = document.createElement('div');
+    result.className = 'history-compare-result';
+    const form = document.createElement('div');
+    form.className = 'history-dialog-form history-compare';
+    form.append(field, range, result);
+
+    let current = null;
+    const group = (kind, key, fallback, rows, render) => {
+      if (!rows.length) return;
+      const section = document.createElement('section');
+      section.className = `history-compare-group history-compare-${kind}`;
+      const heading = document.createElement('h4');
+      heading.textContent = `${t(key, fallback)} (${rows.length})`;
+      const list = document.createElement('ul');
+      for (const row of rows) {
+        const li = document.createElement('li');
+        li.textContent = render(row);
+        list.appendChild(li);
+      }
+      section.append(heading, list);
+      result.appendChild(section);
+    };
+    const describe = (row) => `${row.name} · ${categoryLabel(row.category)}${row.confidence === null ? '' : ` · ${row.confidence}%`}`;
+    const refresh = () => {
+      const other = candidates.find(c => c.id === select.value);
+      current = HistoryCompare.compare(item, other);
+      range.textContent = t('historyCompareRangeFmt', 'From {0} to {1}', dateText(current.earlier.timestamp), dateText(current.later.timestamp));
+      result.replaceChildren();
+      if (current.identical) {
+        const same = document.createElement('p');
+        same.className = 'history-compare-identical';
+        same.textContent = t('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.');
+        result.appendChild(same);
+      }
+      group('added', 'historyCompareAdded', 'Added', current.added, describe);
+      group('removed', 'historyCompareRemoved', 'Removed', current.removed, describe);
+      group('changed', 'historyCompareChanged', 'Changed', current.changed, (row) => `${row.name} · ${categoryLabel(row.category)} · ${HistoryCompare.changeText(row, { t, methodLabel })}`);
+      group('same', 'historyCompareUnchanged', 'Unchanged', current.same, describe);
+    };
+    select.addEventListener('change', refresh);
+    refresh();
+
+    const copy = await NotificationHelper.form({
+      title: t('historyCompareTitle', 'Compare scans'),
+      confirmText: t('historyCompareCopy', 'Copy as Markdown'),
+      cancelText: t('btnClose', 'Close'),
+      content: form,
+      focus: select
+    });
+    if (copy && current) {
+      await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
+        host: item.hostname || this.getDomainFromUrl(item.url), address: String(item.url || '').replace(/[?#].*$/s, ''),
+        t, methodLabel, categoryLabel, dateText
+      }));
+    }
+    return true;
+  }
+
   /** Only web pages are opened from History. */
   static isOpenableUrl(url) {
     try {
@@ -1538,6 +1639,13 @@ class History {
     label('pin', item.pinned === true ? 'historyUnpin' : 'historyPin', item.pinned === true ? 'Unpin' : 'Pin');
     label('watch', item.watch === true ? 'historyUnwatch' : 'historyWatch', item.watch === true ? 'Stop watching' : 'Watch for changes');
     label('note', item.note ? 'historyEditNote' : 'historyAddNote', item.note ? 'Edit note' : 'Add note');
+    // Compare needs another saved scan of the same page
+    const compare = menu.querySelector('[data-action="compare"]');
+    if (compare) {
+      const none = HistoryCompare.others(this.historyItems, item).length === 0;
+      compare.disabled = none;
+      compare.title = none ? FormatUtils.t('historyCompareNone', 'No other saved scan of this page to compare with') : '';
+    }
   }
 
   /**
@@ -1962,6 +2070,8 @@ class History {
           this.openHistoryItem(item);
         } else if (action === 'rescan') {
           this.rescanHistoryItem(item);
+        } else if (action === 'compare') {
+          this.compareHistoryItem(item);
         } else if (action === 'copy') {
           this.copyHistoryItem(item);
         } else if (action === 'pin') {

@@ -6926,5 +6926,69 @@
   "statsOpenInHistoryFmt": {
     "message": "Open {0} in History",
     "description": "Statistics → Domains and Protection changes: hover text of a site's name, which opens the History tab (in a new tab) narrowed to that site. {0} = the site's host name"
+  },
+  "historyCompare": {
+    "message": "Compare with…",
+    "description": "History entry menu: opens a dialog that compares this saved scan with another saved scan of the same page"
+  },
+  "historyCompareNone": {
+    "message": "No other saved scan of this page to compare with",
+    "description": "Hover text of the disabled Compare with… menu item, and the message when there is nothing to compare with: History holds only one scan of this page"
+  },
+  "historyCompareTitle": {
+    "message": "Compare scans",
+    "description": "Title of the dialog that compares two saved scans of the same page"
+  },
+  "historyCompareWith": {
+    "message": "Compare with",
+    "description": "Label of the list of other saved scans of the page, in the compare dialog"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · {1} found",
+    "description": "One saved scan in the compare dialog's list. {0} = its date and time, {1} = how many protections it found (a number)"
+  },
+  "historyCompareRangeFmt": {
+    "message": "From {0} to {1}",
+    "description": "Compare dialog: the two scans, earlier then later. {0} = the earlier scan's date and time, {1} = the later one's"
+  },
+  "historyCompareAdded": {
+    "message": "Added",
+    "description": "Compare dialog heading: protections found by the later scan and not by the earlier one"
+  },
+  "historyCompareRemoved": {
+    "message": "Removed",
+    "description": "Compare dialog heading: protections found by the earlier scan and no longer by the later one"
+  },
+  "historyCompareChanged": {
+    "message": "Changed",
+    "description": "Compare dialog heading: protections found by both scans with another confidence or other evidence"
+  },
+  "historyCompareUnchanged": {
+    "message": "Unchanged",
+    "description": "Compare dialog heading: protections found by both scans, the same"
+  },
+  "historyCompareIdentical": {
+    "message": "These two scans found the same protections, with the same confidence and evidence.",
+    "description": "Compare dialog: shown when nothing differs between the two scans"
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})",
+    "description": "Compare dialog: a protection's confidence in the earlier and the later scan. {0} and {1} = percentages (numbers), {2} = the difference with its sign, for example +25 or −30"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "New evidence: {0}",
+    "description": "Compare dialog: kinds of evidence the later scan found and the earlier one did not. {0} = a list such as Cookies, Headers"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Evidence gone: {0}",
+    "description": "Compare dialog: kinds of evidence the earlier scan found and the later one did not. {0} = a list such as Cookies, Headers"
+  },
+  "historyCompareCopy": {
+    "message": "Copy as Markdown",
+    "description": "Compare dialog button: copies the comparison as a Markdown report (for a ticket or a chat). Keep Markdown as written"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Compare scans: {0}",
+    "description": "Heading of the copied Markdown comparison. {0} = the site's host name"
   }
 }
