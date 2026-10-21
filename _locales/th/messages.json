@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "การติดตามต้องเป็นปิด รายวัน หรือรายสัปดาห์"
+  },
+  "toolbarTitleOff": {
+    "message": "ปิดการตรวจจับอยู่"
+  },
+  "toolbarTitleSkipped": {
+    "message": "ไม่สแกนไซต์นี้"
+  },
+  "toolbarTitleClean": {
+    "message": "ไม่พบระบบป้องกัน"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} เพิ่มเติม"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "สรุป (ตามที่อัปโหลด)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "ตาราง Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "ระบบป้องกันบน {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "การตรวจจับ: {0} · ความมั่นใจ: {1}% · ความยาก: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "ระบบป้องกัน"
+  },
+  "detectionMdColCategory": {
+    "message": "หมวดหมู่"
+  },
+  "detectionMdColConfidence": {
+    "message": "ความมั่นใจ"
+  },
+  "detectionMdColMethods": {
+    "message": "พบจาก"
+  },
+  "detectionMdFooterFmt": {
+    "message": "สแกนด้วย Scrapfly Antibot Detector เมื่อ {0}"
+  },
+  "commandRescanTab": {
+    "message": "สแกนหน้านี้อีกครั้ง (โหลดหน้าซ้ำ)"
+  },
+  "commandOpenPopup": {
+    "message": "เปิด Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "แป้นพิมพ์ลัด"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "สแกนหน้านี้อีกครั้ง: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "หน้าจะโหลดซ้ำ จึงเก็บข้อมูลทั้งหมดใหม่ตั้งแต่ต้น"
+  },
+  "settingsShortcutsChange": {
+    "message": "เปลี่ยน"
+  },
+  "settingsShortcutNotSet": {
+    "message": "ยังไม่ได้ตั้ง"
+  },
+  "historyOpenPage": {
+    "message": "เปิดหน้า"
+  },
+  "historyScanAgain": {
+    "message": "สแกนอีกครั้งตอนนี้"
+  },
+  "rulesDuplicate": {
+    "message": "ทำสำเนา"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (สำเนา)"
+  },
+  "statsExportMarkdown": {
+    "message": "ส่งออก Markdown"
   }
 }

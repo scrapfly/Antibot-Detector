@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Стеження має бути вимкнене або виконуватися щодня чи щотижня"
+  },
+  "toolbarTitleOff": {
+    "message": "Виявлення вимкнено"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Цей сайт не сканується"
+  },
+  "toolbarTitleClean": {
+    "message": "Захист не знайдено"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "Ще {0}"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Підсумок (як надсилається)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Таблиця Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Захист на {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Виявлення: {0} · Впевненість: {1}% · Складність: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Захист"
+  },
+  "detectionMdColCategory": {
+    "message": "Категорія"
+  },
+  "detectionMdColConfidence": {
+    "message": "Впевненість"
+  },
+  "detectionMdColMethods": {
+    "message": "Знайдено за"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Проскановано Scrapfly Antibot Detector {0}"
+  },
+  "commandRescanTab": {
+    "message": "Сканувати цю сторінку знову (перезавантажує її)"
+  },
+  "commandOpenPopup": {
+    "message": "Відкрити Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Комбінації клавіш"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Сканувати цю сторінку знову: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Сторінка перезавантажується, тож усе збирається з самого початку."
+  },
+  "settingsShortcutsChange": {
+    "message": "Змінити"
+  },
+  "settingsShortcutNotSet": {
+    "message": "не задано"
+  },
+  "historyOpenPage": {
+    "message": "Відкрити сторінку"
+  },
+  "historyScanAgain": {
+    "message": "Сканувати знову зараз"
+  },
+  "rulesDuplicate": {
+    "message": "Дублювати"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (копія)"
+  },
+  "statsExportMarkdown": {
+    "message": "Експорт Markdown"
   }
 }

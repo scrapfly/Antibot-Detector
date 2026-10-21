@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"
+  },
+  "toolbarTitleOff": {
+    "message": "検出はオフになっています"
+  },
+  "toolbarTitleSkipped": {
+    "message": "このサイトはスキャンされません"
+  },
+  "toolbarTitleClean": {
+    "message": "保護機能は見つかりませんでした"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "ほか {0} 件"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "概要（アップロードと同じ内容）"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown の表"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "{0} の保護機能"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "検出数: {0} · 信頼度: {1}% · 難易度: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "保護機能"
+  },
+  "detectionMdColCategory": {
+    "message": "カテゴリ"
+  },
+  "detectionMdColConfidence": {
+    "message": "信頼度"
+  },
+  "detectionMdColMethods": {
+    "message": "検出方法"
+  },
+  "detectionMdFooterFmt": {
+    "message": "{0} に Scrapfly Antibot Detector でスキャン"
+  },
+  "commandRescanTab": {
+    "message": "このページを再スキャン（再読み込みします）"
+  },
+  "commandOpenPopup": {
+    "message": "Antibot Detector を開く"
+  },
+  "settingsShortcutsTitle": {
+    "message": "キーボードショートカット"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "このページを再スキャン: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "ページを再読み込みするため、すべてを最初から収集します。"
+  },
+  "settingsShortcutsChange": {
+    "message": "変更"
+  },
+  "settingsShortcutNotSet": {
+    "message": "未設定"
+  },
+  "historyOpenPage": {
+    "message": "ページを開く"
+  },
+  "historyScanAgain": {
+    "message": "今すぐ再スキャン"
+  },
+  "rulesDuplicate": {
+    "message": "複製"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0}（コピー）"
+  },
+  "statsExportMarkdown": {
+    "message": "Markdownをエクスポート"
   }
 }

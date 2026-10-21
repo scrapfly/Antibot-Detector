@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "監看功能必須是關閉、每天或每週"
+  },
+  "toolbarTitleOff": {
+    "message": "偵測已關閉"
+  },
+  "toolbarTitleSkipped": {
+    "message": "不會掃描此網站"
+  },
+  "toolbarTitleClean": {
+    "message": "未找到防護"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "另外 {0} 項"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "摘要（與上傳內容相同）"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown 表格"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "{0} 上的防護"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "偵測數：{0} · 信賴度：{1}% · 難度：{2}"
+  },
+  "detectionMdColProtection": {
+    "message": "防護"
+  },
+  "detectionMdColCategory": {
+    "message": "類別"
+  },
+  "detectionMdColConfidence": {
+    "message": "信賴度"
+  },
+  "detectionMdColMethods": {
+    "message": "找到方式"
+  },
+  "detectionMdFooterFmt": {
+    "message": "於 {0} 使用 Scrapfly Antibot Detector 掃描"
+  },
+  "commandRescanTab": {
+    "message": "重新掃描此網頁（會重新載入）"
+  },
+  "commandOpenPopup": {
+    "message": "開啟 Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "鍵盤快速鍵"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "重新掃描此網頁：{0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "網頁會重新載入，從頭收集所有資料。"
+  },
+  "settingsShortcutsChange": {
+    "message": "變更"
+  },
+  "settingsShortcutNotSet": {
+    "message": "未設定"
+  },
+  "historyOpenPage": {
+    "message": "開啟網頁"
+  },
+  "historyScanAgain": {
+    "message": "立即重新掃描"
+  },
+  "rulesDuplicate": {
+    "message": "建立副本"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0}（副本）"
+  },
+  "statsExportMarkdown": {
+    "message": "匯出 Markdown"
   }
 }

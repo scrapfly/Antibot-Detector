@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Pemantauan harus nonaktif, setiap hari, atau setiap minggu"
+  },
+  "toolbarTitleOff": {
+    "message": "Deteksi dimatikan"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Situs ini tidak dipindai"
+  },
+  "toolbarTitleClean": {
+    "message": "Tidak ada proteksi yang ditemukan"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} lainnya"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Ringkasan (seperti yang diunggah)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Tabel Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Proteksi di {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Deteksi: {0} · Kepercayaan: {1}% · Kesulitan: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Proteksi"
+  },
+  "detectionMdColCategory": {
+    "message": "Kategori"
+  },
+  "detectionMdColConfidence": {
+    "message": "Kepercayaan"
+  },
+  "detectionMdColMethods": {
+    "message": "Ditemukan melalui"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Dipindai dengan Scrapfly Antibot Detector pada {0}"
+  },
+  "commandRescanTab": {
+    "message": "Pindai ulang halaman ini (memuat ulang halaman)"
+  },
+  "commandOpenPopup": {
+    "message": "Buka Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Pintasan keyboard"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Pindai ulang halaman ini: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Halaman dimuat ulang, sehingga semuanya dikumpulkan dari awal."
+  },
+  "settingsShortcutsChange": {
+    "message": "Ubah"
+  },
+  "settingsShortcutNotSet": {
+    "message": "belum diatur"
+  },
+  "historyOpenPage": {
+    "message": "Buka halaman"
+  },
+  "historyScanAgain": {
+    "message": "Pindai ulang sekarang"
+  },
+  "rulesDuplicate": {
+    "message": "Duplikasi"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (salinan)"
+  },
+  "statsExportMarkdown": {
+    "message": "Ekspor Markdown"
   }
 }

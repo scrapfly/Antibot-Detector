@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "नज़र रखना बंद, रोज़ाना या साप्ताहिक होना चाहिए"
+  },
+  "toolbarTitleOff": {
+    "message": "जांच बंद है"
+  },
+  "toolbarTitleSkipped": {
+    "message": "इस साइट को स्कैन नहीं किया जाता"
+  },
+  "toolbarTitleClean": {
+    "message": "कोई सुरक्षा उपाय नहीं मिला"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} और"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "सारांश (जैसा अपलोड होता है)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown तालिका"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "{0} पर सुरक्षा उपाय"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "जांच: {0} · विश्वसनीयता: {1}% · कठिनाई: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "सुरक्षा उपाय"
+  },
+  "detectionMdColCategory": {
+    "message": "श्रेणी"
+  },
+  "detectionMdColConfidence": {
+    "message": "विश्वसनीयता"
+  },
+  "detectionMdColMethods": {
+    "message": "किससे मिला"
+  },
+  "detectionMdFooterFmt": {
+    "message": "{0} को Scrapfly Antibot Detector से स्कैन किया गया"
+  },
+  "commandRescanTab": {
+    "message": "इस पेज को फिर से स्कैन करें (पेज रीलोड होगा)"
+  },
+  "commandOpenPopup": {
+    "message": "Antibot Detector खोलें"
+  },
+  "settingsShortcutsTitle": {
+    "message": "कीबोर्ड शॉर्टकट"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "इस पेज को फिर से स्कैन करें: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "पेज रीलोड होता है, ताकि सब कुछ शुरू से इकट्ठा हो।"
+  },
+  "settingsShortcutsChange": {
+    "message": "बदलें"
+  },
+  "settingsShortcutNotSet": {
+    "message": "सेट नहीं"
+  },
+  "historyOpenPage": {
+    "message": "पेज खोलें"
+  },
+  "historyScanAgain": {
+    "message": "अभी फिर से स्कैन करें"
+  },
+  "rulesDuplicate": {
+    "message": "डुप्लिकेट करें"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (कॉपी)"
+  },
+  "statsExportMarkdown": {
+    "message": "Markdown निर्यात करें"
   }
 }

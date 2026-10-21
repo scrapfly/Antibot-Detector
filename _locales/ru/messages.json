@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Слежение должно быть выключено или выполняться ежедневно либо еженедельно"
+  },
+  "toolbarTitleOff": {
+    "message": "Обнаружение выключено"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Этот сайт не сканируется"
+  },
+  "toolbarTitleClean": {
+    "message": "Защиты не найдены"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "Ещё {0}"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Сводка (как при загрузке)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Таблица Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Защиты на {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Обнаружений: {0} · Уверенность: {1}% · Сложность: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Защита"
+  },
+  "detectionMdColCategory": {
+    "message": "Категория"
+  },
+  "detectionMdColConfidence": {
+    "message": "Уверенность"
+  },
+  "detectionMdColMethods": {
+    "message": "Способ обнаружения"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Просканировано Scrapfly Antibot Detector, {0}"
+  },
+  "commandRescanTab": {
+    "message": "Сканировать страницу заново (с перезагрузкой)"
+  },
+  "commandOpenPopup": {
+    "message": "Открыть Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Сочетания клавиш"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Сканировать страницу заново: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Страница перезагружается, поэтому всё собирается с самого начала."
+  },
+  "settingsShortcutsChange": {
+    "message": "Изменить"
+  },
+  "settingsShortcutNotSet": {
+    "message": "не задано"
+  },
+  "historyOpenPage": {
+    "message": "Открыть страницу"
+  },
+  "historyScanAgain": {
+    "message": "Сканировать заново сейчас"
+  },
+  "rulesDuplicate": {
+    "message": "Дублировать"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (копия)"
+  },
+  "statsExportMarkdown": {
+    "message": "Экспорт Markdown"
   }
 }

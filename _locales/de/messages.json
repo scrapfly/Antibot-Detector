@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Die Überwachung muss aus, täglich oder wöchentlich sein"
+  },
+  "toolbarTitleOff": {
+    "message": "Erkennung ist ausgeschaltet"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Diese Site wird nicht gescannt"
+  },
+  "toolbarTitleClean": {
+    "message": "Keine Schutzmaßnahmen gefunden"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} weitere"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Zusammenfassung (wie hochgeladen)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown-Tabelle"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Schutzmaßnahmen auf {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Erkennungen: {0} · Konfidenz: {1}% · Schwierigkeit: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Schutzmaßnahme"
+  },
+  "detectionMdColCategory": {
+    "message": "Kategorie"
+  },
+  "detectionMdColConfidence": {
+    "message": "Konfidenz"
+  },
+  "detectionMdColMethods": {
+    "message": "Gefunden durch"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Gescannt mit Scrapfly Antibot Detector am {0}"
+  },
+  "commandRescanTab": {
+    "message": "Diese Seite erneut scannen (lädt sie neu)"
+  },
+  "commandOpenPopup": {
+    "message": "Antibot Detector öffnen"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Tastenkombinationen"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Diese Seite erneut scannen: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Die Seite wird neu geladen, damit alles von Anfang an erfasst wird."
+  },
+  "settingsShortcutsChange": {
+    "message": "Ändern"
+  },
+  "settingsShortcutNotSet": {
+    "message": "nicht festgelegt"
+  },
+  "historyOpenPage": {
+    "message": "Seite öffnen"
+  },
+  "historyScanAgain": {
+    "message": "Jetzt erneut scannen"
+  },
+  "rulesDuplicate": {
+    "message": "Duplizieren"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (Kopie)"
+  },
+  "statsExportMarkdown": {
+    "message": "Markdown exportieren"
   }
 }

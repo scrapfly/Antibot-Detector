@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "يجب أن تكون المراقبة متوقفة أو يومية أو أسبوعية"
+  },
+  "toolbarTitleOff": {
+    "message": "الكشف معطّل"
+  },
+  "toolbarTitleSkipped": {
+    "message": "لا يُفحص هذا الموقع"
+  },
+  "toolbarTitleClean": {
+    "message": "لم يُعثر على وسائل حماية"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} أخرى"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "الملخص (كما يُرفع)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "جدول Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "وسائل الحماية في {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "الكشوفات: {0} · الثقة: {1}% · الصعوبة: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "الحماية"
+  },
+  "detectionMdColCategory": {
+    "message": "الفئة"
+  },
+  "detectionMdColConfidence": {
+    "message": "الثقة"
+  },
+  "detectionMdColMethods": {
+    "message": "اكتُشفت عبر"
+  },
+  "detectionMdFooterFmt": {
+    "message": "فُحصت باستخدام Scrapfly Antibot Detector في {0}"
+  },
+  "commandRescanTab": {
+    "message": "إعادة فحص هذه الصفحة (يعيد تحميلها)"
+  },
+  "commandOpenPopup": {
+    "message": "فتح Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "اختصارات لوحة المفاتيح"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "إعادة فحص هذه الصفحة: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "يُعاد تحميل الصفحة، فيُجمع كل شيء من البداية."
+  },
+  "settingsShortcutsChange": {
+    "message": "تغيير"
+  },
+  "settingsShortcutNotSet": {
+    "message": "غير معيّن"
+  },
+  "historyOpenPage": {
+    "message": "فتح الصفحة"
+  },
+  "historyScanAgain": {
+    "message": "إعادة الفحص الآن"
+  },
+  "rulesDuplicate": {
+    "message": "إنشاء نسخة"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (نسخة)"
+  },
+  "statsExportMarkdown": {
+    "message": "تصدير Markdown"
   }
 }

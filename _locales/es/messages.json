@@ -6318,5 +6318,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "La lista de vigilancia debe estar desactivada, ser diaria o semanal"
+  },
+  "toolbarTitleOff": {
+    "message": "La detección está desactivada"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Este sitio no se analiza"
+  },
+  "toolbarTitleClean": {
+    "message": "No se encontraron protecciones"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} más"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Resumen (tal como se sube)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Tabla Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Protecciones en {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Detecciones: {0} · Confianza: {1}% · Dificultad: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Protección"
+  },
+  "detectionMdColCategory": {
+    "message": "Categoría"
+  },
+  "detectionMdColConfidence": {
+    "message": "Confianza"
+  },
+  "detectionMdColMethods": {
+    "message": "Detectado por"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Analizado con Scrapfly Antibot Detector el {0}"
+  },
+  "commandRescanTab": {
+    "message": "Volver a analizar esta página (la recarga)"
+  },
+  "commandOpenPopup": {
+    "message": "Abrir Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Atajos de teclado"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Volver a analizar esta página: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "La página se recarga para recopilar todo desde el principio."
+  },
+  "settingsShortcutsChange": {
+    "message": "Cambiar"
+  },
+  "settingsShortcutNotSet": {
+    "message": "sin asignar"
+  },
+  "historyOpenPage": {
+    "message": "Abrir página"
+  },
+  "historyScanAgain": {
+    "message": "Volver a analizar ahora"
+  },
+  "rulesDuplicate": {
+    "message": "Duplicar"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (copia)"
+  },
+  "statsExportMarkdown": {
+    "message": "Exportar Markdown"
   }
 }

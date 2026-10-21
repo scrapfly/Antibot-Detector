@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "De volglijst moet uit, dagelijks of wekelijks staan"
+  },
+  "toolbarTitleOff": {
+    "message": "Detectie is uitgeschakeld"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Deze site wordt niet gescand"
+  },
+  "toolbarTitleClean": {
+    "message": "Geen beveiligingen gevonden"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} meer"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Samenvatting (zoals geüpload)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown-tabel"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Beveiligingen op {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Detecties: {0} · Zekerheid: {1}% · Moeilijkheid: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Beveiliging"
+  },
+  "detectionMdColCategory": {
+    "message": "Categorie"
+  },
+  "detectionMdColConfidence": {
+    "message": "Zekerheid"
+  },
+  "detectionMdColMethods": {
+    "message": "Gevonden via"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Gescand met Scrapfly Antibot Detector op {0}"
+  },
+  "commandRescanTab": {
+    "message": "Deze pagina opnieuw scannen (laadt hem opnieuw)"
+  },
+  "commandOpenPopup": {
+    "message": "Antibot Detector openen"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Sneltoetsen"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Deze pagina opnieuw scannen: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "De pagina wordt opnieuw geladen, zodat alles vanaf het begin wordt verzameld."
+  },
+  "settingsShortcutsChange": {
+    "message": "Wijzigen"
+  },
+  "settingsShortcutNotSet": {
+    "message": "niet ingesteld"
+  },
+  "historyOpenPage": {
+    "message": "Pagina openen"
+  },
+  "historyScanAgain": {
+    "message": "Nu opnieuw scannen"
+  },
+  "rulesDuplicate": {
+    "message": "Dupliceren"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (kopie)"
+  },
+  "statsExportMarkdown": {
+    "message": "Markdown exporteren"
   }
 }

@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "감시 목록은 끄기, 매일, 매주 중 하나여야 합니다"
+  },
+  "toolbarTitleOff": {
+    "message": "탐지가 꺼져 있습니다"
+  },
+  "toolbarTitleSkipped": {
+    "message": "이 사이트는 스캔하지 않습니다"
+  },
+  "toolbarTitleClean": {
+    "message": "보호 기능을 찾지 못했습니다"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "외 {0}개"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "요약 (업로드와 동일)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown 표"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "{0}의 보호 기능"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "탐지: {0} · 신뢰도: {1}% · 난이도: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "보호 기능"
+  },
+  "detectionMdColCategory": {
+    "message": "카테고리"
+  },
+  "detectionMdColConfidence": {
+    "message": "신뢰도"
+  },
+  "detectionMdColMethods": {
+    "message": "탐지 방법"
+  },
+  "detectionMdFooterFmt": {
+    "message": "{0}에 Scrapfly Antibot Detector로 스캔함"
+  },
+  "commandRescanTab": {
+    "message": "이 페이지 다시 스캔 (새로고침)"
+  },
+  "commandOpenPopup": {
+    "message": "Antibot Detector 열기"
+  },
+  "settingsShortcutsTitle": {
+    "message": "키보드 단축키"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "이 페이지 다시 스캔: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "페이지를 새로고침하므로 모든 항목을 처음부터 수집합니다."
+  },
+  "settingsShortcutsChange": {
+    "message": "변경"
+  },
+  "settingsShortcutNotSet": {
+    "message": "설정 안 됨"
+  },
+  "historyOpenPage": {
+    "message": "페이지 열기"
+  },
+  "historyScanAgain": {
+    "message": "지금 다시 스캔"
+  },
+  "rulesDuplicate": {
+    "message": "복제"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (사본)"
+  },
+  "statsExportMarkdown": {
+    "message": "Markdown 내보내기"
   }
 }

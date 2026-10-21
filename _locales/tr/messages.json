@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "İzleme listesi kapalı, günlük veya haftalık olmalıdır"
+  },
+  "toolbarTitleOff": {
+    "message": "Tespit kapalı"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Bu site taranmıyor"
+  },
+  "toolbarTitleClean": {
+    "message": "Koruma bulunamadı"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} daha"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Özet (yüklendiği gibi)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown tablosu"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "{0} üzerindeki korumalar"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Tespitler: {0} · Güven: %{1} · Zorluk: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Koruma"
+  },
+  "detectionMdColCategory": {
+    "message": "Kategori"
+  },
+  "detectionMdColConfidence": {
+    "message": "Güven"
+  },
+  "detectionMdColMethods": {
+    "message": "Bulunma yolu"
+  },
+  "detectionMdFooterFmt": {
+    "message": "{0} tarihinde Scrapfly Antibot Detector ile tarandı"
+  },
+  "commandRescanTab": {
+    "message": "Bu sayfayı yeniden tara (sayfayı yeniden yükler)"
+  },
+  "commandOpenPopup": {
+    "message": "Antibot Detector'ı aç"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Klavye kısayolları"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Bu sayfayı yeniden tara: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Sayfa yeniden yüklenir, böylece her şey baştan toplanır."
+  },
+  "settingsShortcutsChange": {
+    "message": "Değiştir"
+  },
+  "settingsShortcutNotSet": {
+    "message": "ayarlanmadı"
+  },
+  "historyOpenPage": {
+    "message": "Sayfayı aç"
+  },
+  "historyScanAgain": {
+    "message": "Şimdi yeniden tara"
+  },
+  "rulesDuplicate": {
+    "message": "Çoğalt"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (kopya)"
+  },
+  "statsExportMarkdown": {
+    "message": "Markdown'a aktar"
   }
 }

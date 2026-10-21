@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Bevakningen måste vara av, dagligen eller veckovis"
+  },
+  "toolbarTitleOff": {
+    "message": "Upptäckt är avstängd"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Den här webbplatsen skannas inte"
+  },
+  "toolbarTitleClean": {
+    "message": "Inga skydd hittades"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} till"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Sammanfattning (som uppladdad)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown-tabell"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Skydd på {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Upptäckter: {0} · Säkerhet: {1}% · Svårighet: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Skydd"
+  },
+  "detectionMdColCategory": {
+    "message": "Kategori"
+  },
+  "detectionMdColConfidence": {
+    "message": "Säkerhet"
+  },
+  "detectionMdColMethods": {
+    "message": "Hittat via"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Skannad med Scrapfly Antibot Detector den {0}"
+  },
+  "commandRescanTab": {
+    "message": "Skanna den här sidan igen (läser in den igen)"
+  },
+  "commandOpenPopup": {
+    "message": "Öppna Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Kortkommandon"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Skanna den här sidan igen: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Sidan läses in igen, så allt samlas in från början."
+  },
+  "settingsShortcutsChange": {
+    "message": "Ändra"
+  },
+  "settingsShortcutNotSet": {
+    "message": "inte angivet"
+  },
+  "historyOpenPage": {
+    "message": "Öppna sidan"
+  },
+  "historyScanAgain": {
+    "message": "Skanna igen nu"
+  },
+  "rulesDuplicate": {
+    "message": "Duplicera"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (kopia)"
+  },
+  "statsExportMarkdown": {
+    "message": "Exportera Markdown"
   }
 }

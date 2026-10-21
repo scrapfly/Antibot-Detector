@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"
+  },
+  "toolbarTitleOff": {
+    "message": "Il rilevamento è disattivato"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Questo sito non viene analizzato"
+  },
+  "toolbarTitleClean": {
+    "message": "Nessuna protezione trovata"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} altre"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Riepilogo (come caricato)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Tabella Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Protezioni su {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Rilevamenti: {0} · Affidabilità: {1}% · Difficoltà: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Protezione"
+  },
+  "detectionMdColCategory": {
+    "message": "Categoria"
+  },
+  "detectionMdColConfidence": {
+    "message": "Affidabilità"
+  },
+  "detectionMdColMethods": {
+    "message": "Trovata tramite"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Analizzato con Scrapfly Antibot Detector il {0}"
+  },
+  "commandRescanTab": {
+    "message": "Analizza di nuovo questa pagina (la ricarica)"
+  },
+  "commandOpenPopup": {
+    "message": "Apri Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Scorciatoie da tastiera"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Analizza di nuovo questa pagina: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "La pagina viene ricaricata, così tutto viene raccolto dall’inizio."
+  },
+  "settingsShortcutsChange": {
+    "message": "Cambia"
+  },
+  "settingsShortcutNotSet": {
+    "message": "non impostata"
+  },
+  "historyOpenPage": {
+    "message": "Apri pagina"
+  },
+  "historyScanAgain": {
+    "message": "Analizza di nuovo ora"
+  },
+  "rulesDuplicate": {
+    "message": "Duplica"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (copia)"
+  },
+  "statsExportMarkdown": {
+    "message": "Esporta Markdown"
   }
 }

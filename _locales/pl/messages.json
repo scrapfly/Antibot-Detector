@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"
+  },
+  "toolbarTitleOff": {
+    "message": "Wykrywanie jest wyłączone"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Ta witryna nie jest skanowana"
+  },
+  "toolbarTitleClean": {
+    "message": "Nie znaleziono ochron"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} więcej"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Podsumowanie (jak przy przesyłaniu)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Tabela Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Ochrony na {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Wykrycia: {0} · Pewność: {1}% · Trudność: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Ochrona"
+  },
+  "detectionMdColCategory": {
+    "message": "Kategoria"
+  },
+  "detectionMdColConfidence": {
+    "message": "Pewność"
+  },
+  "detectionMdColMethods": {
+    "message": "Wykryto przez"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Zeskanowano przez Scrapfly Antibot Detector, {0}"
+  },
+  "commandRescanTab": {
+    "message": "Skanuj tę stronę ponownie (odświeża ją)"
+  },
+  "commandOpenPopup": {
+    "message": "Otwórz Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Skróty klawiszowe"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Skanuj tę stronę ponownie: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Strona zostaje odświeżona, więc wszystko jest zbierane od początku."
+  },
+  "settingsShortcutsChange": {
+    "message": "Zmień"
+  },
+  "settingsShortcutNotSet": {
+    "message": "nie ustawiono"
+  },
+  "historyOpenPage": {
+    "message": "Otwórz stronę"
+  },
+  "historyScanAgain": {
+    "message": "Skanuj ponownie teraz"
+  },
+  "rulesDuplicate": {
+    "message": "Duplikuj"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (kopia)"
+  },
+  "statsExportMarkdown": {
+    "message": "Eksportuj Markdown"
   }
 }

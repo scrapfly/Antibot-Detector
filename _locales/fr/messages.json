@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "La liste de surveillance doit être désactivée, quotidienne ou hebdomadaire"
+  },
+  "toolbarTitleOff": {
+    "message": "La détection est désactivée"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Ce site n’est pas analysé"
+  },
+  "toolbarTitleClean": {
+    "message": "Aucune protection trouvée"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} de plus"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Résumé (tel que téléversé)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Tableau Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Protections sur {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Détections : {0} · Confiance : {1} % · Difficulté : {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Protection"
+  },
+  "detectionMdColCategory": {
+    "message": "Catégorie"
+  },
+  "detectionMdColConfidence": {
+    "message": "Confiance"
+  },
+  "detectionMdColMethods": {
+    "message": "Détecté par"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Analysé avec Scrapfly Antibot Detector le {0}"
+  },
+  "commandRescanTab": {
+    "message": "Analyser à nouveau cette page (la recharge)"
+  },
+  "commandOpenPopup": {
+    "message": "Ouvrir Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Raccourcis clavier"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Analyser à nouveau cette page : {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "La page se recharge pour tout recueillir depuis le début."
+  },
+  "settingsShortcutsChange": {
+    "message": "Modifier"
+  },
+  "settingsShortcutNotSet": {
+    "message": "non défini"
+  },
+  "historyOpenPage": {
+    "message": "Ouvrir la page"
+  },
+  "historyScanAgain": {
+    "message": "Analyser à nouveau maintenant"
+  },
+  "rulesDuplicate": {
+    "message": "Dupliquer"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (copie)"
+  },
+  "statsExportMarkdown": {
+    "message": "Exporter en Markdown"
   }
 }

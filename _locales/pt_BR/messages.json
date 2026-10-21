@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "A lista de monitoramento deve estar desativada, diária ou semanal"
+  },
+  "toolbarTitleOff": {
+    "message": "A detecção está desativada"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Este site não é analisado"
+  },
+  "toolbarTitleClean": {
+    "message": "Nenhuma proteção encontrada"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} a mais"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Resumo (como enviado)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Tabela Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Proteções em {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Detecções: {0} · Confiança: {1}% · Dificuldade: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Proteção"
+  },
+  "detectionMdColCategory": {
+    "message": "Categoria"
+  },
+  "detectionMdColConfidence": {
+    "message": "Confiança"
+  },
+  "detectionMdColMethods": {
+    "message": "Encontrada por"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Analisado com Scrapfly Antibot Detector em {0}"
+  },
+  "commandRescanTab": {
+    "message": "Analisar esta página novamente (recarrega)"
+  },
+  "commandOpenPopup": {
+    "message": "Abrir Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Atalhos de teclado"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Analisar esta página novamente: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "A página é recarregada, então tudo é coletado desde o início."
+  },
+  "settingsShortcutsChange": {
+    "message": "Alterar"
+  },
+  "settingsShortcutNotSet": {
+    "message": "não definido"
+  },
+  "historyOpenPage": {
+    "message": "Abrir página"
+  },
+  "historyScanAgain": {
+    "message": "Analisar novamente agora"
+  },
+  "rulesDuplicate": {
+    "message": "Duplicar"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (cópia)"
+  },
+  "statsExportMarkdown": {
+    "message": "Exportar Markdown"
   }
 }

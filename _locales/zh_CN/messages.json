@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "监视列表必须为关闭、每天或每周"
+  },
+  "toolbarTitleOff": {
+    "message": "检测已关闭"
+  },
+  "toolbarTitleSkipped": {
+    "message": "此站点不会被扫描"
+  },
+  "toolbarTitleClean": {
+    "message": "未发现防护措施"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "另外 {0} 项"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "摘要（与上传内容相同）"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Markdown 表格"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "{0} 上的防护措施"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "检测数：{0} · 置信度：{1}% · 难度：{2}"
+  },
+  "detectionMdColProtection": {
+    "message": "防护措施"
+  },
+  "detectionMdColCategory": {
+    "message": "类别"
+  },
+  "detectionMdColConfidence": {
+    "message": "置信度"
+  },
+  "detectionMdColMethods": {
+    "message": "发现方式"
+  },
+  "detectionMdFooterFmt": {
+    "message": "使用 Scrapfly Antibot Detector 于 {0} 扫描"
+  },
+  "commandRescanTab": {
+    "message": "重新扫描此页面（会重新加载）"
+  },
+  "commandOpenPopup": {
+    "message": "打开 Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "键盘快捷键"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "重新扫描此页面：{0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "页面会重新加载，从头收集所有数据。"
+  },
+  "settingsShortcutsChange": {
+    "message": "更改"
+  },
+  "settingsShortcutNotSet": {
+    "message": "未设置"
+  },
+  "historyOpenPage": {
+    "message": "打开页面"
+  },
+  "historyScanAgain": {
+    "message": "立即重新扫描"
+  },
+  "rulesDuplicate": {
+    "message": "创建副本"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0}（副本）"
+  },
+  "statsExportMarkdown": {
+    "message": "导出 Markdown"
   }
 }

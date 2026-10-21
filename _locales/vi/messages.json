@@ -6316,5 +6316,83 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Chức năng theo dõi phải là tắt, hằng ngày hoặc hằng tuần"
+  },
+  "toolbarTitleOff": {
+    "message": "Đã tắt phát hiện"
+  },
+  "toolbarTitleSkipped": {
+    "message": "Trang web này không được quét"
+  },
+  "toolbarTitleClean": {
+    "message": "Không tìm thấy biện pháp bảo vệ"
+  },
+  "toolbarTitleMoreFmt": {
+    "message": "+{0} nữa"
+  },
+  "detectionCopyMenuSummary": {
+    "message": "Tóm tắt (như khi tải lên)"
+  },
+  "detectionCopyMenuMarkdown": {
+    "message": "Bảng Markdown"
+  },
+  "detectionCopyMenuJson": {
+    "message": "JSON"
+  },
+  "detectionMdHeadingFmt": {
+    "message": "Biện pháp bảo vệ trên {0}"
+  },
+  "detectionMdSummaryFmt": {
+    "message": "Phát hiện: {0} · Độ tin cậy: {1}% · Độ khó: {2}"
+  },
+  "detectionMdColProtection": {
+    "message": "Biện pháp bảo vệ"
+  },
+  "detectionMdColCategory": {
+    "message": "Danh mục"
+  },
+  "detectionMdColConfidence": {
+    "message": "Độ tin cậy"
+  },
+  "detectionMdColMethods": {
+    "message": "Tìm thấy qua"
+  },
+  "detectionMdFooterFmt": {
+    "message": "Đã quét bằng Scrapfly Antibot Detector vào {0}"
+  },
+  "commandRescanTab": {
+    "message": "Quét lại trang này (tải lại trang)"
+  },
+  "commandOpenPopup": {
+    "message": "Mở Antibot Detector"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Phím tắt"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Quét lại trang này: {0}"
+  },
+  "settingsShortcutsDesc": {
+    "message": "Trang sẽ tải lại để thu thập mọi thứ từ đầu."
+  },
+  "settingsShortcutsChange": {
+    "message": "Thay đổi"
+  },
+  "settingsShortcutNotSet": {
+    "message": "chưa đặt"
+  },
+  "historyOpenPage": {
+    "message": "Mở trang"
+  },
+  "historyScanAgain": {
+    "message": "Quét lại ngay"
+  },
+  "rulesDuplicate": {
+    "message": "Nhân bản"
+  },
+  "rulesDuplicateNameFmt": {
+    "message": "{0} (bản sao)"
+  },
+  "statsExportMarkdown": {
+    "message": "Xuất Markdown"
   }
 }
