@@ -23,6 +23,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History watchlist: pin a page and choose Watch for changes, and the extension scans it again every day or week in a background tab, marking it Changed (with a notification) when its protections change. Settings → History → Watch pinned pages.
 - Rules editor: a bar notices the texts of a rule that are not translated into every language and one button translates them all, with Chrome's on-device translator.
 
+### Changed
+
+- Rules editor: Add combination puts the cursor in the new combination's name; the pattern list opens just below it.
+- Rules → Check against History: the answer comes first, with a bar for how many saved pages match, clearer wording, and the Check button above the list.
+
 ### Fixed
 
 - A custom detector whose category says "WAF" or "bot" is listed with anti-bot everywhere (Detection, History and its export filter); some screens put it under Other.
@@ -42,7 +47,6 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - The page buttons of the skipped sites list jumped several pages at a time once Settings had been opened more than once.
 - Webhook: Send on every page load now sends pages answered from the cache; it did nothing before.
 - The webhook receives everything found on a page; it used to miss detections found after the first moments of the scan.
-- Rules → Check against History: the answer comes first, with a bar for how many saved pages match, clearer wording, and the Check button above the list.
 
 ## [3.0.1] - 2026-10-20
 

@@ -158,7 +158,9 @@ Rules.prototype.bindCombinationsEditor = function() {
     this._comboPickerOpen = this.combinationsModel.length - 1;
     this._comboPickerPath = '';
     this._comboPickerSelected = new Set();
-    this.renderCombinations({ focusPicker: true });
+    this.renderCombinations();
+    // The person names it first: the cursor goes to its name, the pattern list waits just below
+    this.focusComboName(this.combinationsModel.length - 1);
   });
   ['click', 'input', 'change'].forEach(kind => container.addEventListener(kind, event => this.handleCombinationAction(event, kind)));
   // Name translations: stays open across redraws; opening it shows the shipped translations (toggle does not bubble)
@@ -208,6 +210,17 @@ Rules.prototype.focusCombo = function(selector) {
   const el = typeof document !== 'undefined' && document.querySelector ? document.querySelector(selector) : null;
   if (el && typeof el.focus === 'function') el.focus();
   return el;
+};
+/** Scroll a combination's card to the top of the editor and put the cursor in its name. */
+Rules.prototype.focusComboName = function(index) {
+  const card = typeof document !== 'undefined' && document.querySelector
+    ? document.querySelector(`#combinationsContainer .combo-card[data-combo="${index}"]`)
+    : null;
+  const name = card && card.querySelector('.combo-summary-name');
+  if (!name || typeof name.focus !== 'function') return null;
+  if (typeof card.scrollIntoView === 'function') card.scrollIntoView({ block: 'start' });
+  name.focus({ preventScroll: true });
+  return name;
 };
 Rules.prototype.getComboPatternOptions = function() {
   return [...document.querySelectorAll('#detectionMethodsContainer .method-item[data-pattern-id]')].map(row => {

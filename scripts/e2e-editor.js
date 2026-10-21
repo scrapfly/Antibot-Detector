@@ -10,7 +10,8 @@
  *    inside a combination does not count).
  * 3. Combination groups: add a "one of" group to a reCAPTCHA combination,
  *    save, delete it and check the combination is back as shipped; change a
- *    group's mode and back; delete a group and check it is gone.
+ *    group's mode and back; delete a group and check it is gone; + Add
+ *    combination puts the cursor in the new combination's name, on screen.
  * 4. Help: Test pattern opens with the pattern and options being edited,
  *    matches like detection, and its Apply only lands with the settings'
  *    Apply (Cancel keeps the rule); the DOM and Window settings' "Browse"
@@ -242,6 +243,29 @@ const CASES = [
     const deleted = (await stored('captcha', id)).combinations.find(c => c.id === shipped.id);
     const expected = { all: shipped.when.all.filter((_, i) => i !== Number(groupPath)) };
     report(canon(deleted?.when) === canon(expected), 'the group is gone from the saved combination');
+
+    // + Add combination: the cursor goes to the new combination's name (on screen, not under the
+    // editor's header or footer), and its pattern list is open just below. Nothing is saved here:
+    // the next section reopens the popup.
+    await openEditor(id, 'reCAPTCHA');
+    await click('#addCombinationBtn');
+    await sleep(300);
+    const newCombo = await p.evaluate(() => {
+      const cards = document.querySelectorAll('#combinationsContainer .combo-card');
+      const last = cards[cards.length - 1];
+      const name = last && last.querySelector('.combo-summary-name');
+      if (!name) return { focused: false, onScreen: false, pickerOpen: false };
+      const box = name.getBoundingClientRect();
+      const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+      return {
+        focused: document.activeElement === name,
+        onScreen: hit === name,
+        pickerOpen: !!last.querySelector('.combo-picker'),
+        searchFocused: document.activeElement?.classList.contains('combo-picker-search') === true
+      };
+    });
+    report(newCombo.focused && newCombo.onScreen && !newCombo.searchFocused, 'adding a combination puts the cursor in its name, on screen');
+    report(newCombo.pickerOpen, 'and its pattern list is open below the name');
   }
 
   // ------------------------------------------------------------- 4. help
