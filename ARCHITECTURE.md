@@ -10,11 +10,11 @@ modules whose users it traces.
 
 | Directory | Responsibility |
 | --- | --- |
-| `background/` | Worker initialization, tab/document sessions, caches, scan finalization, History recording, retention (auto-delete, clear on close, the fingerprinting-only clock), scheduled backups, the watchlist (`history-watch.js`), the scan report, and message handlers |
+| `background/` | Worker initialization, tab/document sessions, caches, scan finalization, History recording, retention (auto-delete, clear on close, the fingerprinting-only clock), scheduled backups, the watchlist (`history-watch.js`), the scan report, keyboard shortcuts (`commands.js`), notification clicks (`notification-clicks.js`), and message handlers |
 | `background/handlers/` | The worker's message handlers, assembled by `router-registry.js`; History, backups, the watchlist and Settings register their own through `registerHandlers()` |
 | `background/advanced/` | Capture jobs, listeners, deadlines, page notices, script analyses, and the single Advanced history writer |
 | `background/advanced/vendors/` | Vendor-specific capture and extraction implementations (`<vendor>/interceptor.js`) |
-| `modules/core/` | Shared, dependency-light modules used by several contexts: the message registries (`bridge-protocol.js`, `worker-messages.js`, `message-types.js`), categories, logging, i18n, storage and History (`storage-manager.js`, `history-store.js`, `history-policy.js`, `history-export.js`, `history-filter.js`), the site lists (`domain-list.js`, `scan-scope.js`), the webhook (`webhook-body.js`, `webhook-filter.js`, `webhook-log.js`), capture retention, rule translation plans, constants |
+| `modules/core/` | Shared, dependency-light modules used by several contexts: the message registries (`bridge-protocol.js`, `worker-messages.js`, `message-types.js`), categories, logging, i18n, storage and History (`storage-manager.js`, `history-store.js`, `history-policy.js`, `history-export.js`, `history-filter.js`), the site lists (`domain-list.js`, `scan-scope.js`), the webhook (`webhook-body.js`, `webhook-filter.js`, `webhook-log.js`), capture retention, rule translation plans, the toolbar icon's hover text (`toolbar-title.js`, worker; set wherever the badge is), constants |
 | `modules/advanced/` | Vendor identities and names (`vendor-registry.js`), the data-driven CAPTCHA vendors (`captcha-vendors.js`), structured result records, and the popup history client |
 | `modules/detection/conditions/` | Window-condition grammar and evaluator (the evaluator also loads in the page's MAIN world) |
 | `modules/detection/rules/` | Rule validation, historical migrations, detector persistence (`detector-manager.js`), and official updates |
@@ -91,7 +91,7 @@ Run `npm run verify` after changing the graph. The browser checks (Playwright
 and its Chromium) are `npm run e2e:methods`, `e2e:settings`, `e2e:editor`,
 `e2e:updater`, `e2e:refactor`, `e2e:settings-modal`, `e2e:history` (every
 History option), `e2e:languages` (every interface language), `e2e:data`,
-`e2e:scope`, `e2e:webhook`, `e2e:hooks` and `e2e:translate`; `e2e:live` needs
+`e2e:scope`, `e2e:webhook`, `e2e:hooks`, `e2e:translate` and `e2e:quickwins`; `e2e:live` needs
 the network and is not part of the release checks.
 
 Work that is not released yet stays in `CHANGELOG.md`, under the version being

@@ -130,16 +130,16 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### Detection
 
-The protections found on the current page, each with its confidence, its difficulty and the methods that matched. Click a card to see the exact signals behind it. The buttons at the top let you:
+The protections found on the current page, each with its confidence, its difficulty and the methods that matched. Click a card to see the exact signals behind it. Hovering the toolbar icon names them without opening the popup, and **Alt+Shift+S** (Control+Shift+S on Mac; change it in the browser's shortcut settings) scans the current page again. The buttons at the top let you:
 
 - **Upload detections** to get a shareable link (dpaste.com by default; see [Share links](#share-links))
 - **Clear Cache**, so the page is scanned again on its next load
-- **Copy overview**, which copies the same summary that the upload shares
+- **Copy**, a menu: the same summary that the upload shares, a Markdown table for a ticket or a chat, or JSON (none of them holds cookie or header values)
 - **Block this domain**, so the extension stops scanning it
 
 ### History
 
-Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, import a JSON export, and export it as JSON, CSV or plain text, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up) or add a note from its **⋯** menu. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
+Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, import a JSON export, and export it as JSON, CSV, plain text or Markdown, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up), add a note, open the page or scan it again now from its **⋯** menu. Clicking a "Protections changed" notification opens that page. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
 
 ### Rules
 
@@ -308,6 +308,7 @@ npm run e2e:scope      # Settings → Detection → Sites to scan: skipped sites
 npm run e2e:webhook    # Settings → Detection → Webhook: filters, cache, failures, Recent deliveries, Test, Clear, signing
 npm run e2e:hooks      # Settings → Detection → Sites without JS hooks: hooks on and off, switching, the popup note, the cache
 npm run e2e:translate  # Rules editor → Translate the rule: what is missing, one click, Save
+npm run e2e:quickwins  # 3.0.3: toolbar hover text, the copy menu, the rescan shortcut, notification clicks, History open and rescan, Duplicate rule, Markdown exports
 npm run e2e:languages  # every language through the real popup, settings and statistics pages
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json
 ```
