@@ -44,7 +44,7 @@ test('limit 0 applies the 1,000-entry safety cap, keeping the newest (head)', ()
 test('getConfig reads the settings and clamps the day count to 1-3650', () => {
   assert.deepStrictEqual(
     HistoryRetention.getConfig({ history: { historyAutoDelete: true, historyAutoDeleteDays: 90, historyLimit: 50 } }),
-    { autoDelete: true, days: 90, limit: 50, clearOnClose: false }
+    { autoDelete: true, days: 90, fingerprintDays: 0, limit: 50, clearOnClose: false }
   );
   assert.strictEqual(HistoryRetention.getConfig({ history: { historyClearOnClose: true } }).clearOnClose, true);
   assert.strictEqual(HistoryRetention.getConfig({ history: { historyAutoDeleteDays: 0 } }).days, 1);
@@ -80,6 +80,81 @@ test('run() prunes storage and writes only when something was removed', async ()
     assert.deepStrictEqual(JSON.parse(store.scrapfly_history).items.map((i) => i.id), ['new']);
     assert.strictEqual(await HistoryRetention.run('test'), 0);
     assert.strictEqual(writes, 1);
+  } finally {
+    Date.now = realNow;
+    delete global.chrome;
+  }
+});
+
+// ---- Fingerprinting-only pages have a clock of their own
+
+const detection = (category, name = 'X') => ({ category, detector: { name } });
+const fingerprintOnly = (id, ageDays, extra = {}) => ({ id, timestamp: NOW - ageDays * DAY, detections: [detection('fingerprint', 'Canvas'), detection('fingerprint', 'Audio')], ...extra });
+const protectedPage = (id, ageDays, extra = {}) => ({ id, timestamp: NOW - ageDays * DAY, detections: [detection('antibot', 'Cloudflare'), detection('fingerprint', 'Canvas')], ...extra });
+
+test('fingerprinting-only pages are removed after their own number of days, whatever auto-delete says', () => {
+  const items = [fingerprintOnly('fp-new', 2), fingerprintOnly('fp-old', 10), protectedPage('guarded-old', 400), entry('bare-old', 400), fingerprintOnly('fp-fresh', 6.5)];
+  const { items: kept, removed } = HistoryRetention.prune(items, { autoDelete: false, days: 30, fingerprintDays: 7, limit: 0 }, NOW);
+  assert.deepStrictEqual(kept.map(i => i.id), ['fp-new', 'guarded-old', 'bare-old', 'fp-fresh']);
+  assert.strictEqual(removed, 1);
+});
+
+test('a page with an anti-bot or CAPTCHA protection is not fingerprinting-only, and a page with no detections is not either', () => {
+  const items = [protectedPage('a', 100), { id: 'none', timestamp: NOW - 100 * DAY, detections: [] }, { id: 'missing', timestamp: NOW - 100 * DAY }, { id: 'captcha', timestamp: NOW - 100 * DAY, detections: [detection('captcha', 'reCAPTCHA')] }];
+  const { removed } = HistoryRetention.prune(items, { autoDelete: false, days: 30, fingerprintDays: 1, limit: 0 }, NOW);
+  assert.strictEqual(removed, 0);
+});
+
+test('pinned fingerprinting-only pages stay, and a page with no readable date stays', () => {
+  const items = [fingerprintOnly('pinned', 100, { pinned: true }), fingerprintOnly('undated', 0, { timestamp: 'not a date' })];
+  assert.strictEqual(HistoryRetention.prune(items, { autoDelete: false, days: 30, fingerprintDays: 1, limit: 0 }, NOW).removed, 0);
+});
+
+test('0 means fingerprinting-only pages are kept like every other page; the two rules add up when both are on', () => {
+  const items = [fingerprintOnly('fp', 100), protectedPage('guarded', 100)];
+  assert.strictEqual(HistoryRetention.prune(items, { autoDelete: false, days: 30, fingerprintDays: 0, limit: 0 }, NOW).removed, 0);
+  assert.strictEqual(HistoryRetention.prune(items, { autoDelete: true, days: 365, fingerprintDays: 30, limit: 0 }, NOW).removed, 1, 'only the fingerprinting-only page is past its clock');
+  assert.strictEqual(HistoryRetention.prune(items, { autoDelete: true, days: 30, fingerprintDays: 365, limit: 0 }, NOW).removed, 2, 'auto-delete still takes the others');
+});
+
+test('the number of days is a whole number from 0 to 3650', () => {
+  const n = (value) => HistoryRetention.getConfig({ history: { historyFingerprintDays: value } }).fingerprintDays;
+  assert.deepStrictEqual([n(undefined), n(null), n('x'), n(-5), n(0), n('7'), n(7.9), n(99999)], [0, 0, 0, 0, 0, 7, 7, 3650]);
+});
+
+test('the periodic alarm runs for the fingerprinting-only rule alone, and stops when neither rule is on', async () => {
+  const alarms = new Map();
+  global.chrome = { alarms: {
+    get: async (name) => alarms.get(name),
+    create: (name, info) => alarms.set(name, info),
+    clear: async (name) => alarms.delete(name)
+  } };
+  try {
+    await HistoryRetention.syncAlarm({ autoDelete: false, fingerprintDays: 7 });
+    assert.ok(alarms.has(HistoryRetention.ALARM_NAME), 'only the fingerprinting rule is set');
+    await HistoryRetention.syncAlarm({ autoDelete: true, fingerprintDays: 0 });
+    assert.ok(alarms.has(HistoryRetention.ALARM_NAME));
+    await HistoryRetention.syncAlarm({ autoDelete: false, fingerprintDays: 0 });
+    assert.ok(!alarms.has(HistoryRetention.ALARM_NAME));
+  } finally {
+    delete global.chrome;
+  }
+});
+
+test('run() applies the fingerprinting-only rule from the saved settings', async () => {
+  const store = {
+    scrapfly_settings: JSON.stringify({ settings: { history: { historyAutoDelete: false, historyFingerprintDays: 7, historyLimit: 0 } } }),
+    scrapfly_history: JSON.stringify({ items: [fingerprintOnly('fp-old', 20), protectedPage('guarded-old', 20), fingerprintOnly('fp-pinned', 20, { pinned: true })], lastUpdated: 1 })
+  };
+  global.chrome = { storage: { local: {
+    get: async (keys) => Object.fromEntries(keys.map((k) => [k, store[k]])),
+    set: async (obj) => { Object.assign(store, obj); }
+  } } };
+  const realNow = Date.now;
+  Date.now = () => NOW;
+  try {
+    assert.strictEqual(await HistoryRetention.run('test'), 1);
+    assert.deepStrictEqual(JSON.parse(store.scrapfly_history).items.map((i) => i.id), ['guarded-old', 'fp-pinned']);
   } finally {
     Date.now = realNow;
     delete global.chrome;

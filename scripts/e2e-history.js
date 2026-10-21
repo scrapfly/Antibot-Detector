@@ -8,6 +8,9 @@
  *   Same page again     skip, or update the earlier entry (same id, moved up, pin and note kept)
  *   Changed + alerts    the badge, its hover text, notifications for all / pinned / no pages
  *   Pins and notes      the "…" menu, the note dialog, the pin icon, what survives auto-delete and the entry limit
+ *   Pin automatically   a hard or a named protection pins the page, a weak one does not, unpinning is final (also when the
+ *                       page is scanned again), at most 50 pages pin themselves, the pin says it came by itself
+ *   Fingerprint clock   fingerprinting-only pages go after their own number of days, pinned and other pages stay, the alarm follows
  *   Export              the dialog (format, protections, period, site, pinned only), the real file for each format
  *   Backup              Back up now and the alarm write real files to Downloads, in parts when large; the schedule
  *   Storage             the warning near the limit and the record of what was removed
@@ -40,7 +43,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const DAY = 24 * 60 * 60 * 1000;
 
 // ---- Local site ---------------------------------------------------------------------------------
-const MARKERS = { 'bot-a': 'hist-marker-bot-a', 'bot-b': 'hist-marker-bot-b', captcha: 'hist-marker-captcha', fp: 'hist-marker-fp' };
+const MARKERS = { 'bot-a': 'hist-marker-bot-a', 'bot-b': 'hist-marker-bot-b', captcha: 'hist-marker-captcha', fp: 'hist-marker-fp', hard: 'hist-marker-hard' };
 const dyn = {}; // id -> markers the page shows now (changed by the test between two scans)
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
@@ -54,15 +57,16 @@ const server = http.createServer((req, res) => {
 });
 
 const R = (o) => ({ confidence: 90, standalone: true, ...o, description: o.id });
-const probe = (id, name, category, marker, confidence) => ({
-  id, name, author: 'Probe', enabled: true, category, difficulty: 'Medium', version: '1.0.0', lastUpdated: '2026-10-19',
+const probe = (id, name, category, marker, confidence, difficulty = 'Medium') => ({
+  id, name, author: 'Probe', enabled: true, category, difficulty, version: '1.0.0', lastUpdated: '2026-10-19',
   icon: 'custom.png', description: 'History probe', detection: { content: [R({ id: `${id}-marker`, text: marker, confidence })] }
 });
 const PROBES = [
   ['antibot', probe('detect-histprobe-a', 'HistProbe Bot A', 'Anti-Bot', MARKERS['bot-a'], 90)],
   ['antibot', probe('detect-histprobe-b', 'HistProbe Bot B', 'Anti-Bot', MARKERS['bot-b'], 85)],
   ['captcha', probe('detect-histprobe-c', 'HistProbe Captcha', 'CAPTCHA', MARKERS.captcha, 70)],
-  ['fingerprint', probe('detect-histprobe-f', 'HistProbe Fingerprint', 'Fingerprint', MARKERS.fp, 40)]
+  ['fingerprint', probe('detect-histprobe-f', 'HistProbe Fingerprint', 'Fingerprint', MARKERS.fp, 40)],
+  ['antibot', probe('detect-histprobe-h', 'HistProbe Hard', 'Anti-Bot', MARKERS.hard, 90, 'High')]
 ];
 
 // ---- Harness ------------------------------------------------------------------------------------
@@ -240,7 +244,8 @@ async function scenario(name, fn) {
   await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
   await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
-  const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true };
+  const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true,
+    historyFingerprintDays: 0, historyAutoPinHard: false, historyAutoPinVendors: [], historyAutoPinMinConfidence: 80 };
   const baseDup = { preventDuplicates: false, duplicateAction: 'skip', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' };
   const resetSettings = async () => { await historySettings(baseline, baseDup); await W(() => { globalThis.__incognitoMatch = ''; }); };
   await resetSettings();
@@ -672,6 +677,178 @@ async function scenario(name, fn) {
     await historySettings({ historyAutoDelete: false, historyLimit: 1 });
     await W(() => HistoryRetention.run('e2e'));
     assert.deepEqual((await items()).map(i => i.id), ['new1', 'pin-old']);
+    await resetSettings();
+  });
+
+  // ===============================================================================================
+  await scenario('Pin pages automatically: a hard or a named protection pins the page, unpinning is final, at most 50 pin themselves', async () => {
+    await resetHistory();
+    await resetSettings();
+    const tips = (page) => page.$$eval('.history-item .history-pin', els => els.map(el => el.getAttribute('data-tip')));
+
+    // Off by default: a hard protection pins nothing
+    await visitSaved(url(`m=hard&pin=off&${uniq()}`));
+    assert.ok(!(await items())[0].pinned, 'the rule is off by default');
+
+    // A hard protection (High difficulty) pins the page; a Medium one does not
+    await historySettings({ historyAutoPinHard: true });
+    const hard = await visitSaved(url(`m=hard&pin=hard&${uniq()}`));
+    assert.equal(hard.pinned, true);
+    assert.equal(hard.autoPinned, true);
+    const medium = await visitSaved(url(`m=bot-a&pin=medium&${uniq()}`));
+    assert.ok(!medium.pinned && !medium.autoPinned, 'a protection of Medium difficulty does not pin');
+
+    // The History tab shows the pin, and says it came by itself
+    const popup = await openExtensionPage();
+    try {
+      await popup.$eval('#nav-history', el => el.click());
+      await popup.waitForSelector('.history-item');
+      assert.deepEqual(await tips(popup), ['Pinned automatically: kept when History is cleaned up. Unpin it and it is never pinned again by itself.']);
+
+      // Unpin it by hand: it is final
+      const index = await popup.$$eval('.history-item', (els, id) => els.findIndex(el => el.dataset.historyId === id), hard.id);
+      await popup.$$eval('.history-item .history-more-btn', (els, i) => els[i].click(), index);
+      await popup.waitForSelector('#historyItemMenu:not([hidden])');
+      await popup.$eval('#historyItemMenu [data-action="pin"]', el => el.click());
+      await waitFor(l => !l.find(i => i.id === hard.id)?.pinned, 8000);
+      const unpinned = (await items()).find(i => i.id === hard.id);
+      assert.equal(unpinned.unpinned, true, 'marked as unpinned by the person');
+      assert.ok(!('autoPinned' in unpinned) && !('pinned' in unpinned));
+      assert.deepEqual(await tips(popup), []);
+
+      // Pin it again by hand: it is the person's own pin, not one that pinned itself
+      await popup.$$eval('.history-item .history-more-btn', (els, i) => els[i].click(), index);
+      await popup.waitForSelector('#historyItemMenu:not([hidden])');
+      await popup.$eval('#historyItemMenu [data-action="pin"]', el => el.click());
+      await waitFor(l => l.find(i => i.id === hard.id)?.pinned === true, 8000);
+      const own = (await items()).find(i => i.id === hard.id);
+      assert.ok(!('autoPinned' in own) && !('unpinned' in own));
+      assert.deepEqual(await tips(popup), ['Pinned: kept when History is cleaned up']);
+      // and unpinned once more, for the check below
+      await popup.$$eval('.history-item .history-more-btn', (els, i) => els[i].click(), index);
+      await popup.waitForSelector('#historyItemMenu:not([hidden])');
+      await popup.$eval('#historyItemMenu [data-action="pin"]', el => el.click());
+      await waitFor(l => l.find(i => i.id === hard.id)?.unpinned === true, 8000);
+    } finally { await popup.close(); }
+
+    // Scanned again (the same entry is updated), it is never pinned by itself again
+    await historySettings({ historyBypassCache: true }, { preventDuplicates: true, duplicateAction: 'update', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' });
+    const again = await open(hard.url);
+    await waitFor(l => l[0] && l[0].url === hard.url, 20000);
+    await again.close();
+    const kept = (await items()).find(i => i.id === hard.id);
+    assert.ok(kept && !kept.pinned && kept.unpinned === true, 'unpinned stays unpinned');
+    await resetSettings();
+
+    // A protection the person names pins the page, but only from the minimum confidence (the CAPTCHA probe scores 70)
+    await historySettings({ historyAutoPinVendors: ['histprobe captcha'] });
+    const weak = await visitSaved(url(`m=captcha&pin=named-weak&${uniq()}`));
+    assert.ok(!weak.pinned, 'the probe scores 70, under the default 80');
+    await historySettings({ historyAutoPinMinConfidence: 60 });
+    const strong = await visitSaved(url(`m=captcha&pin=named&${uniq()}`));
+    assert.equal(strong.pinned, true);
+    assert.equal(strong.autoPinned, true);
+    const other = await visitSaved(url(`m=bot-b&pin=named-other&${uniq()}`));
+    assert.ok(!other.pinned, 'a protection that is not named does not pin');
+    await resetSettings();
+
+    // At most 50 pages pin themselves: the next hard page is recorded, not pinned
+    const now = Date.now();
+    const pinned = Array.from({ length: 50 }, (_, i) => ({ id: `auto${i}`, url: `https://auto${i}.example/`, hostname: `auto${i}.example`, title: 'auto', timestamp: now - (i + 1) * 1000, detections: [], pinned: true, autoPinned: true }));
+    await setHistory([...pinned, { id: 'mine', url: 'https://mine.example/', hostname: 'mine.example', title: 'mine', timestamp: now - 99000, detections: [], pinned: true }]);
+    await historySettings({ historyAutoPinHard: true });
+    const crowded = await visitSaved(url(`m=hard&pin=cap&${uniq()}`));
+    assert.ok(!crowded.pinned, 'there is no room for another page that pins itself');
+    assert.equal((await items()).filter(i => i.autoPinned).length, 50);
+    await resetSettings();
+    await resetHistory();
+  });
+
+  // ===============================================================================================
+  await scenario('Fingerprinting-only pages go after their own number of days; pinned and other pages stay; the alarm follows', async () => {
+    const now = Date.now();
+    const page = (id, ageDays, detections, extra = {}) => ({ id, url: `https://${id}.example/`, hostname: `${id}.example`, title: id, timestamp: now - ageDays * DAY, detections, ...extra });
+    const fingerprint = [{ detector: { name: 'Canvas' }, category: 'Fingerprint', confidence: 60 }];
+    const protectedBy = [{ detector: { name: 'Cloudflare' }, category: 'Anti-Bot', confidence: 90 }, ...fingerprint];
+    await setHistory([
+      page('fp-fresh', 2, fingerprint), page('fp-old', 20, fingerprint), page('fp-pinned', 40, fingerprint, { pinned: true }),
+      page('guarded-old', 400, protectedBy), page('empty-old', 400, [])
+    ]);
+    await historySettings({ historyAutoDelete: false, historyFingerprintDays: 7 });
+    assert.equal(await W(() => HistoryRetention.run('e2e')), 1);
+    assert.deepEqual((await items()).map(i => i.id), ['fp-fresh', 'fp-pinned', 'guarded-old', 'empty-old']);
+    const alarm = await W(() => chrome.alarms.get(HistoryRetention.ALARM_NAME));
+    assert.ok(alarm && alarm.periodInMinutes === 360, 'the periodic check runs for this rule alone');
+
+    await historySettings({ historyFingerprintDays: 0 });
+    assert.equal(await W(() => HistoryRetention.run('e2e')), 0, 'off: nothing more goes');
+    assert.equal(await W(() => chrome.alarms.get(HistoryRetention.ALARM_NAME)), undefined, 'and the periodic check stops with no time rule left');
+    await resetSettings();
+    await resetHistory();
+  });
+
+  // ===============================================================================================
+  await scenario('Settings → History: the automatic pinning and the fingerprinting-only days show their defaults, save, reload and reject a bad value', async () => {
+    await resetHistory();
+    await resetSettings();
+    const page = await openExtensionPage();
+    const click = (selector) => page.$eval(selector, el => el.click());
+    const field = (selector, value) => page.$eval(selector, (el, v) => {
+      if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }, value);
+    const read = (selector) => page.$eval(selector, el => (el.type === 'checkbox' ? el.checked : el.value));
+    const open = async () => {
+      await click('#settingsBtn');
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.evaluate(() => window.popupInstance.settings.loadSettings());
+      await click('.settings-tab-btn[data-settings-tab="history"]');
+    };
+    await page.evaluate(() => {
+      globalThis.__notices = [];
+      const original = NotificationHelper.error.bind(NotificationHelper);
+      NotificationHelper.error = (...args) => { __notices.push('error'); return original(...args); };
+    });
+    try {
+      await open();
+      assert.equal(await read('#historyFingerprintDays'), '0');
+      assert.equal(await read('#historyAutoPinHard'), false);
+      assert.equal(await read('#historyAutoPinVendors'), '');
+      assert.equal(await read('#historyAutoPinMinConfidence'), '80');
+      assert.equal(await page.$eval('#historyAutoPinNote', el => el.textContent.trim()), 'Up to 50 pages are pinned this way. Unpin one and it is never pinned again by itself.');
+
+      await field('#historyFingerprintDays', '14');
+      await field('#historyAutoPinHard', true);
+      await field('#historyAutoPinVendors', '  Cloudflare \n\ndatadome\nCLOUDFLARE');
+      await field('#historyAutoPinMinConfidence', '90');
+      await click('#saveSettingsBtn');
+      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { timeout: 10000 });
+      const saved = (await settingsNow()).history;
+      assert.equal(saved.historyFingerprintDays, 14);
+      assert.equal(saved.historyAutoPinHard, true);
+      assert.deepEqual(saved.historyAutoPinVendors, ['Cloudflare', 'datadome']);
+      assert.equal(saved.historyAutoPinMinConfidence, 90);
+
+      await open();
+      assert.equal(await read('#historyFingerprintDays'), '14');
+      assert.equal(await read('#historyAutoPinHard'), true);
+      assert.equal(await read('#historyAutoPinVendors'), 'Cloudflare\ndatadome');
+      assert.equal(await read('#historyAutoPinMinConfidence'), '90');
+
+      // Values out of range are refused and nothing is saved
+      for (const [selector, bad, savedKey, savedValue] of [['#historyAutoPinMinConfidence', '150', 'historyAutoPinMinConfidence', 90], ['#historyFingerprintDays', '5000', 'historyFingerprintDays', 14]]) {
+        await field(selector, bad);
+        await page.evaluate(() => { __notices.length = 0; });
+        await click('#saveSettingsBtn');
+        await sleep(800);
+        assert.equal((await settingsNow()).history[savedKey], savedValue, `${selector}: the bad value was not saved`);
+        assert.ok((await page.evaluate(() => __notices)).includes('error'), `${selector}: an error was shown`);
+        assert.ok(await page.$eval('#settingsModal', el => el.classList.contains('is-open')), 'the settings stay open');
+        await field(selector, String(savedValue));
+      }
+      await click('#cancelSettingsBtn');
+    } finally { await page.close(); }
     await resetSettings();
   });
 

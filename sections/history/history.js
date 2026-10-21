@@ -199,6 +199,7 @@ class History {
     const unknownLabel = _tr('timeUnknown', 'Unknown');
 
     const pinnedTip = _tr('historyPinnedTip', 'Pinned: kept when History is cleaned up');
+    const autoPinnedTip = _tr('historyAutoPinnedTip', 'Pinned automatically: kept when History is cleaned up. Unpin it and it is never pinned again by itself.');
     const PIN_ICON = FormatUtils.uiIconSvg('pin');
     // "Changed": the page's protections differ from its earlier scan; the hover lists what was added and removed
     const changedBadgeHtml = (item) => {
@@ -240,7 +241,7 @@ class History {
             </span>
             <div class="history-item-content">
               <div class="history-title-row">
-                ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(pinnedTip)}>${PIN_ICON}</span>` : ''}
+                ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
                 <div class="history-title" title="${safeTitle}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>

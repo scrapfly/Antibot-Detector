@@ -6575,5 +6575,53 @@
   "hooksOffEmptyDesc": {
     "message": "No matching anti-bot or CAPTCHA signals were found on this page. JS hooks are off here, so fingerprinting was not checked.",
     "description": "Description on the Nothing Detected screen of a site without JS hooks"
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Delete fingerprinting-only pages after",
+    "description": "Settings → History: label of the number of days after which pages that only have fingerprinting detections are deleted (the unit, days, is a separate label)"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 keeps them like every other page, so only Auto-delete applies to them. Pinned pages are never deleted.",
+    "description": "Hint under the number of days for fingerprinting-only pages"
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Pin pages automatically",
+    "description": "Settings → History: title of the card where the person chooses which pages pin themselves (a pinned page is kept when History is cleaned up)"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Pages with a hard protection",
+    "description": "Switch: pin pages that have an anti-bot or CAPTCHA protection of High difficulty"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "An anti-bot or CAPTCHA of High difficulty. Fingerprinting never pins a page by its difficulty.",
+    "description": "Explains the switch for pages with a hard protection"
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Pages protected by",
+    "description": "Label of the box where the person lists protections (one name per line); a page with one of them is pinned"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "One protection per line, named as the Detection tab names it.",
+    "description": "Hint under the box of protections that pin a page"
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Only from a confidence of (%)",
+    "description": "Label of the number: a detection must reach this confidence, in percent, to pin a page"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Up to {0} pages are pinned this way. Unpin one and it is never pinned again by itself.",
+    "description": "Note under the automatic pinning settings; {0} is the largest number of pages that pin themselves"
+  },
+  "historyAutoPinnedTip": {
+    "message": "Pinned automatically: kept when History is cleaned up. Unpin it and it is never pinned again by itself.",
+    "description": "Hover text on the pin of a History entry that pinned itself"
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Pin confidence must be between 0 and 100",
+    "description": "Error when the confidence for automatic pinning is not a whole number from 0 to 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Fingerprinting-only pages must be kept between 0 and 3650 days",
+    "description": "Error when the number of days for fingerprinting-only pages is not a whole number from 0 to 3650"
   }
 }

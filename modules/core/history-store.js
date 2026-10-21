@@ -219,6 +219,25 @@
   }
 
   /**
+   * An entry with a cleaned annotation applied. Unpinning a pinned entry marks it `unpinned`, so a later scan of the
+   * page never pins it again by itself; pinning it again (the person's own pin) removes the mark. Either way the entry
+   * is no longer one that pinned itself (`autoPinned`).
+   */
+  function annotate(item, patch) {
+    const updated = Object.assign({}, item, patch);
+    if (patch.pinned === true) {
+      delete updated.unpinned;
+      delete updated.autoPinned;
+    } else if (patch.pinned === false) {
+      if (item.pinned === true) updated.unpinned = true;
+      delete updated.pinned;
+      delete updated.autoPinned;
+    }
+    if (updated.note === '') delete updated.note;
+    return updated;
+  }
+
+  /**
    * Newest entries that fit in `maxBytes` once serialized.
    * @returns {{items: Array<object>, dropped: number}}
    */
@@ -387,10 +406,7 @@
         const next = items.map((item) => {
           if (!item || item.id !== request.id) return item;
           found = true;
-          const updated = Object.assign({}, item, patch);
-          if (updated.pinned === false) delete updated.pinned;
-          if (updated.note === '') delete updated.note;
-          return updated;
+          return annotate(item, patch);
         });
         return found ? { items: next, result: { updated: 1 } } : { result: { updated: 0 } };
       }, store()));
@@ -428,7 +444,7 @@
 
   const HistoryStore = {
     STORAGE_KEY, MAX_BYTES, Messages, parse, serialize, read, mutate, applyImport, registerHandlers,
-    slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, applyLimit, cleanAnnotation, usage
+    slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, applyLimit, cleanAnnotation, annotate, usage
   };
 
   root.HistoryStore = HistoryStore;

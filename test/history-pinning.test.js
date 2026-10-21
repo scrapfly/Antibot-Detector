@@ -148,3 +148,44 @@ test('PING answers ok, so the popup can tell a worker that has these features fr
   });
   assert.deepStrictEqual(answer, { status: 'ok' });
 });
+
+// ---- Pages that pin themselves: unpinning is final
+
+test('unpinning a pinned entry marks it, so a later scan never pins it again; pinning it again clears the mark', () => {
+  const auto = entry('a', { pinned: true, autoPinned: true });
+  const unpinned = HistoryStore.annotate(auto, { pinned: false });
+  assert.deepStrictEqual(unpinned, entry('a', { unpinned: true }));
+  const again = HistoryStore.annotate(unpinned, { pinned: true });
+  assert.deepStrictEqual(again, entry('a', { pinned: true }), 'a pin the person chose is their own: not an automatic one');
+  const own = HistoryStore.annotate(entry('b', { pinned: true }), { pinned: false });
+  assert.deepStrictEqual(own, entry('b', { unpinned: true }), 'a pin the person chose is final too');
+});
+
+test('pinning an automatic pin by hand makes it the person\'s own, and unpinning an entry that was not pinned marks nothing', () => {
+  assert.deepStrictEqual(HistoryStore.annotate(entry('a', { pinned: true, autoPinned: true }), { pinned: true }), entry('a', { pinned: true }));
+  assert.deepStrictEqual(HistoryStore.annotate(entry('a'), { pinned: false }), entry('a'));
+});
+
+test('a note changes nothing about the pin', () => {
+  const auto = entry('a', { pinned: true, autoPinned: true });
+  assert.deepStrictEqual(HistoryStore.annotate(auto, { note: 'x' }), { ...auto, note: 'x' });
+  assert.deepStrictEqual(HistoryStore.annotate(entry('a', { unpinned: true }), { note: 'x' }), entry('a', { unpinned: true, note: 'x' }));
+  assert.ok(!('note' in HistoryStore.annotate(entry('a', { note: 'x' }), { note: '' })));
+});
+
+test('UPDATE_ITEM marks an unpinned entry in the stored history', async () => {
+  const storage = memory(JSON.stringify({ items: [entry('a', { pinned: true, autoPinned: true }), entry('b', { pinned: true })] }));
+  const registry = {};
+  HistoryStore.registerHandlers(registry, storage);
+  global.chrome = { runtime: { getURL: (p) => `chrome-extension://abc/${p}` } };
+  try {
+    const page = { url: 'chrome-extension://abc/popup.html' };
+    await call(registry, HistoryStore.Messages.UPDATE_ITEM, { id: 'a', patch: { pinned: false } }, page);
+    await call(registry, HistoryStore.Messages.UPDATE_ITEM, { id: 'b', patch: { note: 'keep' } }, page);
+    const items = read(storage).items;
+    assert.deepStrictEqual(items[0], entry('a', { unpinned: true }));
+    assert.deepStrictEqual(items[1], entry('b', { pinned: true, note: 'keep' }));
+  } finally {
+    delete global.chrome;
+  }
+});

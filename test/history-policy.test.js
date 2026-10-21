@@ -104,3 +104,80 @@ test('diffProtections reads names from either detection shape', () => {
   const r = P.diffProtections([{ name: 'Imperva', category: 'antibot' }], [{ detector: { name: 'Kasada', category: 'antibot' } }]);
   assert.deepStrictEqual(r, { added: ['Kasada'], removed: ['Imperva'], changed: true });
 });
+
+// ---- Pages that pin themselves
+
+const hard = (name, confidence = 90, category = 'Anti-Bot') => ({ ...det(name, category, confidence), difficulty: 'High' });
+
+test('nothing pins itself until a rule is on', () => {
+  assert.strictEqual(P.shouldAutoPin([hard('Akamai')], undefined), false);
+  assert.strictEqual(P.shouldAutoPin([hard('Akamai')], {}), false);
+  assert.strictEqual(P.shouldAutoPin([hard('Akamai')], { historyAutoPinHard: false, historyAutoPinVendors: [] }), false);
+  assert.strictEqual(P.shouldAutoPin([], { historyAutoPinHard: true }), false);
+  assert.strictEqual(P.shouldAutoPin(null, { historyAutoPinHard: true }), false);
+});
+
+test('"hard protection": a High difficulty anti-bot or CAPTCHA pins, anything else does not', () => {
+  const on = { historyAutoPinHard: true };
+  assert.strictEqual(P.shouldAutoPin([hard('Akamai')], on), true);
+  assert.strictEqual(P.shouldAutoPin([hard('reCAPTCHA', 90, 'CAPTCHA')], on), true);
+  assert.strictEqual(P.shouldAutoPin([{ ...antibot('Easy'), difficulty: 'Medium' }], on), false);
+  assert.strictEqual(P.shouldAutoPin([antibot('No difficulty')], on), false);
+  assert.strictEqual(P.shouldAutoPin([{ ...fingerprint('Canvas', 95), difficulty: 'High' }], on), false, 'fingerprinting never pins by difficulty');
+  assert.strictEqual(P.shouldAutoPin([fingerprint('Canvas'), hard('Akamai')], on), true, 'one hard protection is enough');
+});
+
+test('the difficulty is read from the detection or from its detector, in any case', () => {
+  const on = { historyAutoPinHard: true };
+  assert.strictEqual(P.shouldAutoPin([{ detector: { name: 'A', difficulty: 'HIGH' }, category: 'Anti-Bot', confidence: 90 }], on), true);
+  assert.strictEqual(P.shouldAutoPin([{ detector: { name: 'A' }, category: 'Anti-Bot', difficulty: 'high', confidence: 90 }], on), true);
+  assert.strictEqual(P.shouldAutoPin([{ detector: { name: 'A', difficulty: 'Low' }, category: 'Anti-Bot', difficulty: 'High', confidence: 90 }], on), true, 'the detection wins');
+});
+
+test('the detection must reach the minimum confidence: 80 unless the person chose another', () => {
+  const on = { historyAutoPinHard: true };
+  assert.strictEqual(P.shouldAutoPin([hard('A', 79)], on), false);
+  assert.strictEqual(P.shouldAutoPin([hard('A', 80)], on), true);
+  assert.strictEqual(P.shouldAutoPin([hard('A', 90)], { ...on, historyAutoPinMinConfidence: 95 }), false);
+  assert.strictEqual(P.shouldAutoPin([hard('A', 30)], { ...on, historyAutoPinMinConfidence: 0 }), true);
+  assert.strictEqual(P.shouldAutoPin([hard('A', 99)], { ...on, historyAutoPinMinConfidence: 500 }), false, 'clamped to 100');
+  assert.strictEqual(P.shouldAutoPin([hard('A', 100)], { ...on, historyAutoPinMinConfidence: 500 }), true);
+  assert.strictEqual(P.shouldAutoPin([hard('A', 99)], { ...on, historyAutoPinMinConfidence: 'x' }), true, 'junk is the default');
+  assert.strictEqual(P.shouldAutoPin([{ ...hard('A'), confidence: undefined }], { ...on, historyAutoPinMinConfidence: 0 }), false, 'a detection with no score never pins');
+  assert.strictEqual(P.AUTO_PIN_MIN_CONFIDENCE, 80);
+});
+
+test('"these protections": the names the person gave, case and spaces aside, in any category', () => {
+  const named = { historyAutoPinVendors: ['  cloudflare ', 'Canvas Fingerprint', '', 42] };
+  assert.strictEqual(P.shouldAutoPin([antibot('Cloudflare')], named), true);
+  assert.strictEqual(P.shouldAutoPin([antibot('CLOUDFLARE')], named), true);
+  assert.strictEqual(P.shouldAutoPin([fingerprint('Canvas Fingerprint', 85)], named), true, 'a fingerprinting detector pins when it is named');
+  assert.strictEqual(P.shouldAutoPin([antibot('Cloudflare Bot Management')], named), false, 'whole names only');
+  assert.strictEqual(P.shouldAutoPin([antibot('Cloudflare', 50)], named), false, 'and the confidence still counts');
+  assert.strictEqual(P.shouldAutoPin([antibot('Akamai')], named), false);
+  assert.strictEqual(P.shouldAutoPin([{ name: 'Cloudflare', category: 'Anti-Bot', confidence: 90 }], named), true, 'a name on the detection itself');
+  assert.strictEqual(P.shouldAutoPin([antibot('Akamai')], { historyAutoPinVendors: 'Akamai' }), false, 'a list is a list');
+});
+
+test('both rules can be on: either one pins', () => {
+  const both = { historyAutoPinHard: true, historyAutoPinVendors: ['DataDome'] };
+  assert.strictEqual(P.shouldAutoPin([hard('Akamai')], both), true);
+  assert.strictEqual(P.shouldAutoPin([antibot('DataDome')], both), true);
+  assert.strictEqual(P.shouldAutoPin([antibot('Other')], both), false);
+});
+
+test('the pages that pinned themselves are counted apart from the ones the person pinned, and are capped', () => {
+  const items = [{ pinned: true, autoPinned: true }, { pinned: true }, { autoPinned: true }, { pinned: false, autoPinned: true }, null, { pinned: true, autoPinned: true }];
+  assert.strictEqual(P.countAutoPins(items), 2);
+  assert.strictEqual(P.countAutoPins(undefined), 0);
+  assert.strictEqual(P.MAX_AUTO_PINS, 50);
+});
+
+test('the default settings agree with the policy', () => {
+  const fs = require('node:fs');
+  const history = JSON.parse(fs.readFileSync(require('node:path').join(__dirname, '../sections/settings/default-settings.json'), 'utf8')).settings.history;
+  assert.strictEqual(history.historyAutoPinHard, false);
+  assert.deepStrictEqual(history.historyAutoPinVendors, []);
+  assert.strictEqual(history.historyAutoPinMinConfidence, P.AUTO_PIN_MIN_CONFIDENCE);
+  assert.strictEqual(history.historyFingerprintDays, 0);
+});

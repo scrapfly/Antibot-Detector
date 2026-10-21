@@ -94,7 +94,11 @@
       "historyExcludedDomains": [],
       "historyChangeAlerts": "off",
       "historyBackup": "off",
-      "historyClearOnClose": false
+      "historyClearOnClose": false,
+      "historyFingerprintDays": 0,
+      "historyAutoPinHard": false,
+      "historyAutoPinVendors": [],
+      "historyAutoPinMinConfidence": 80
     },
 
     "duplicatePrevention": {

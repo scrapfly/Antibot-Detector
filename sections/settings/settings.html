@@ -1044,6 +1044,14 @@
                 </div>
               </div>
               <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyFingerprintDays" data-i18n="settingsHistoryFingerprintDays">Delete fingerprinting-only pages after</label>
+                <div class="setting-row-controls setting-row-controls--days">
+                  <input type="number" id="historyFingerprintDays" class="input-field input-field--center" min="0" max="3650" value="0">
+                  <span class="setting-row-unit" data-i18n="timeUnitDays">Days</span>
+                </div>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryFingerprintDaysHint">0 keeps them like every other page, so only Auto-delete applies to them. Pinned pages are never deleted.</p>
+              <div class="setting-row setting-row--inline">
                 <label class="setting-row-label" for="exportFormat" data-i18n="settingsExportFormat">Export Format</label>
                 <select id="exportFormat" class="select-field">
                   <option value="json">JSON</option>
@@ -1130,6 +1138,34 @@
                 <textarea id="historyExcludedDomains" class="textarea-field textarea-field--mono site-list-box" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="example.com" aria-describedby="historyExcludedHint"></textarea>
                 <p class="setting-row-hint" id="historyExcludedHint" data-i18n="settingsHistoryExcludedDesc">One site per line; its subdomains are included. Detection still runs on them.</p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pages that pin themselves: kept when History is cleaned up -->
+        <div class="settings-card-group">
+          <div class="settings-card-group-title" data-i18n="settingsGroupHistoryAutoPin">Pin pages automatically</div>
+
+          <div class="settings-card">
+            <div class="settings-card-body">
+              <div class="setting-row setting-row--inline setting-row--toggle">
+                <span class="setting-row-label" data-i18n="settingsHistoryAutoPinHard">Pages with a hard protection</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="historyAutoPinHard">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <p class="setting-row-hint" data-i18n="settingsHistoryAutoPinHardDesc">An anti-bot or CAPTCHA of High difficulty. Fingerprinting never pins a page by its difficulty.</p>
+              <div class="setting-row">
+                <label class="setting-row-label" for="historyAutoPinVendors" data-i18n="settingsHistoryAutoPinVendors">Pages protected by</label>
+                <textarea id="historyAutoPinVendors" class="textarea-field textarea-field--mono site-list-box" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Cloudflare" aria-describedby="historyAutoPinVendorsHint"></textarea>
+                <p class="setting-row-hint" id="historyAutoPinVendorsHint" data-i18n="settingsHistoryAutoPinVendorsHint">One protection per line, named as the Detection tab names it.</p>
+              </div>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyAutoPinMinConfidence" data-i18n="settingsHistoryAutoPinMinConfidence">Only from a confidence of (%)</label>
+                <input type="number" id="historyAutoPinMinConfidence" class="input-field input-field--short" min="0" max="100" value="80">
+              </div>
+              <p class="setting-row-hint" id="historyAutoPinNote" data-i18n-fmt="settingsHistoryAutoPinNote">Up to {0} pages are pinned this way. Unpin one and it is never pinned again by itself.</p>
             </div>
           </div>
         </div>

@@ -17,6 +17,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings → Data → Diagnostics: Copy diagnostics puts versions, settings and counts on the clipboard for a bug report, with no sites, addresses or keys.
 - Webhook: send only above a minimum confidence, for chosen categories or sites; Recent deliveries lists the last 20 attempts, with Clear.
 - Settings → Detection → Sites without JS hooks: turn the JS hooks off on a site that misbehaves with them; its results say fingerprinting is not checked.
+- Settings → History → Pin pages automatically: pages with a hard protection, or one you name, pin themselves (up to 50); a page you unpin stays unpinned.
+- Settings → History: delete fingerprinting-only pages after a number of days of their own.
 
 ### Fixed
 

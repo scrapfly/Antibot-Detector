@@ -311,3 +311,84 @@ test('storage warning respects notifications being off but still records that it
   assert.strictEqual(w.notes.length, 0);
   assert.strictEqual(w.store.scrapfly_history_storage_notice.warned, true);
 });
+
+// ---- Pages that pin themselves (Settings → History → Pin pages automatically)
+
+const hard = (name, confidence = 90) => ({ ...antibot(name, confidence), difficulty: 'High' });
+const HARD = { historyAutoPinHard: true };
+
+test('a page with a hard protection is recorded pinned, marked as pinned by itself; any other page is not', async () => {
+  const w = makeWorld();
+  await w.save('https://guarded.example/', [hard('Akamai')], HARD);
+  await w.save('https://plain.example/', [antibot('Easy')], HARD);
+  await w.save('https://off.example/', [hard('Akamai')]);
+  const byHost = Object.fromEntries(w.items().map(item => [item.hostname, item]));
+  assert.strictEqual(byHost['guarded.example'].pinned, true);
+  assert.strictEqual(byHost['guarded.example'].autoPinned, true);
+  assert.ok(!('pinned' in byHost['plain.example']) && !('autoPinned' in byHost['plain.example']));
+  assert.ok(!('pinned' in byHost['off.example']), 'the rule is off by default');
+});
+
+test('a protection the person named pins the page', async () => {
+  const w = makeWorld();
+  await w.save('https://dd.example/', [antibot('DataDome'), fingerprint('Canvas')], { historyAutoPinVendors: ['datadome'] });
+  assert.strictEqual(w.items()[0].pinned, true);
+});
+
+test('a scan that updates an entry pins it once, unless the person unpinned it', async () => {
+  const w = makeWorld();
+  const settings = { ...HARD, preventDuplicates: true, duplicateAction: 'update', duplicateScope: 'full_url', duplicateDuration: 99, duplicateUnit: 'days' };
+  await w.save('https://guarded.example/a', [antibot('Easy')], settings);
+  assert.ok(!('pinned' in w.items()[0]));
+  w.advance(HOUR);
+  await w.save('https://guarded.example/a', [hard('Akamai')], settings);
+  assert.strictEqual(w.items().length, 1, 'the same entry');
+  assert.strictEqual(w.items()[0].pinned, true, 'a later scan found a hard protection');
+  assert.strictEqual(w.items()[0].autoPinned, true);
+
+  // The person unpins it: it stays unpinned however hard the page is
+  const [kept] = w.items();
+  w.store.scrapfly_history = JSON.stringify({ items: [{ ...kept, pinned: undefined, autoPinned: undefined, unpinned: true }] });
+  w.advance(HOUR);
+  await w.save('https://guarded.example/a', [hard('Akamai')], settings);
+  assert.ok(!w.items()[0].pinned, 'never pinned again by itself');
+  assert.strictEqual(w.items()[0].unpinned, true);
+});
+
+test('an entry the person pinned keeps its pin, and is not counted as one that pinned itself', async () => {
+  const w = makeWorld();
+  const settings = { ...HARD, preventDuplicates: true, duplicateAction: 'update', duplicateScope: 'full_url', duplicateDuration: 99, duplicateUnit: 'days' };
+  await w.save('https://mine.example/', [antibot('Easy')], settings);
+  const [kept] = w.items();
+  w.store.scrapfly_history = JSON.stringify({ items: [{ ...kept, pinned: true }] });
+  w.advance(HOUR);
+  await w.save('https://mine.example/', [hard('Akamai')], settings);
+  assert.strictEqual(w.items()[0].pinned, true);
+  assert.ok(!('autoPinned' in w.items()[0]), 'still the person\'s own pin');
+});
+
+test('at most 50 pages pin themselves: the next one is recorded unpinned, and a page the person pinned does not count', async () => {
+  const w = makeWorld();
+  const pinned = Array.from({ length: 50 }, (_, i) => ({ id: `old${i}`, url: `https://old${i}.example/`, hostname: `old${i}.example`, title: 'old', timestamp: START - (i + 1) * HOUR, detections: [], pinned: true, autoPinned: true }));
+  const mine = { id: 'mine', url: 'https://mine.example/', hostname: 'mine.example', title: 'mine', timestamp: START - 99 * HOUR, detections: [], pinned: true };
+  w.store.scrapfly_history = JSON.stringify({ items: [...pinned, mine] });
+  assert.strictEqual(w.sw.HistoryPolicy.MAX_AUTO_PINS, 50);
+  await w.save('https://one-too-many.example/', [hard('Akamai')], HARD);
+  const added = w.items().find(item => item.hostname === 'one-too-many.example');
+  assert.ok(added && !('pinned' in added), 'no room: recorded, not pinned');
+
+  // One of them is unpinned: there is room for exactly one more
+  const items = w.items().map(item => (item.id === 'old0' ? (({ pinned, autoPinned, ...rest }) => ({ ...rest, unpinned: true }))(item) : item));
+  w.store.scrapfly_history = JSON.stringify({ items });
+  await w.save('https://room.example/', [hard('Akamai')], HARD);
+  await w.save('https://no-more.example/', [hard('Akamai')], HARD);
+  const byHost = Object.fromEntries(w.items().map(item => [item.hostname, item]));
+  assert.strictEqual(byHost['room.example'].pinned, true);
+  assert.ok(!('pinned' in byHost['no-more.example']));
+});
+
+test('a page that is not recorded is not pinned either', async () => {
+  const w = makeWorld();
+  assert.strictEqual(await w.save('https://skip.example/', [hard('Akamai')], { ...HARD, historyEnabled: false }), false);
+  assert.deepStrictEqual(w.items(), []);
+});

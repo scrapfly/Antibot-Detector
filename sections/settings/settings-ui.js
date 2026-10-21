@@ -444,6 +444,15 @@ SettingsUI.updateSettingsUI = function() {
       check('historySkipFingerprintOnly', h.historySkipFingerprintOnly === true);
       check('historyClearOnClose', h.historyClearOnClose === true);
       choose('historyMinConfidence', h.historyMinConfidence ?? 0);
+      choose('historyFingerprintDays', h.historyFingerprintDays ?? 0);
+      check('historyAutoPinHard', h.historyAutoPinHard === true);
+      choose('historyAutoPinVendors', (Array.isArray(h.historyAutoPinVendors) ? h.historyAutoPinVendors : []).join('\n'));
+      choose('historyAutoPinMinConfidence', h.historyAutoPinMinConfidence ?? HistoryPolicy.AUTO_PIN_MIN_CONFIDENCE);
+      const pinNote = document.querySelector('#historyAutoPinNote');
+      if (pinNote) {
+        pinNote.setAttribute('data-i18n-args', String(HistoryPolicy.MAX_AUTO_PINS));
+        pinNote.textContent = FormatUtils.t('settingsHistoryAutoPinNote', 'Up to {0} pages are pinned this way. Unpin one and it is never pinned again by itself.', HistoryPolicy.MAX_AUTO_PINS);
+      }
       choose('historyChangeAlerts', ['pinned', 'all'].includes(h.historyChangeAlerts) ? h.historyChangeAlerts : 'off');
       choose('historyBackup', ['daily', 'weekly', 'monthly'].includes(h.historyBackup) ? h.historyBackup : 'off');
       choose('historyExcludedDomains', (Array.isArray(h.historyExcludedDomains) ? h.historyExcludedDomains : []).join('\n'));
@@ -583,6 +592,10 @@ SettingsUI.getSettingsFromUI = function() {
       historyEnabled: document.querySelector('#historyEnabled')?.checked ?? this.settings.history?.historyEnabled ?? true,
       historySkipIncognito: document.querySelector('#historySkipIncognito')?.checked ?? this.settings.history?.historySkipIncognito ?? true,
       historyMinConfidence: parseInt(document.querySelector('#historyMinConfidence')?.value ?? this.settings.history?.historyMinConfidence ?? 0, 10),
+      historyFingerprintDays: parseInt(document.querySelector('#historyFingerprintDays')?.value ?? this.settings.history?.historyFingerprintDays ?? 0, 10),
+      historyAutoPinHard: document.querySelector('#historyAutoPinHard')?.checked ?? this.settings.history?.historyAutoPinHard ?? false,
+      historyAutoPinVendors: SettingsUI.readNameList('#historyAutoPinVendors', this.settings.history?.historyAutoPinVendors),
+      historyAutoPinMinConfidence: parseInt(document.querySelector('#historyAutoPinMinConfidence')?.value ?? this.settings.history?.historyAutoPinMinConfidence ?? HistoryPolicy.AUTO_PIN_MIN_CONFIDENCE, 10),
       historySkipFingerprintOnly: document.querySelector('#historySkipFingerprintOnly')?.checked ?? this.settings.history?.historySkipFingerprintOnly ?? false,
       historyExcludedDomains: SettingsUI.readSiteList('#historyExcludedDomains', this.settings.history?.historyExcludedDomains),
       historyChangeAlerts: document.querySelector('#historyChangeAlerts')?.value ?? this.settings.history?.historyChangeAlerts ?? 'off',
@@ -641,6 +654,20 @@ SettingsUI.validateSettings = function(settings) {
       const confidence = settings.history.historyMinConfidence;
       if (!Number.isInteger(confidence) || confidence < 0 || confidence > 100) {
         errors.push(text('settingsUiErrMinConfidence', 'Minimum confidence must be between 0 and 100'));
+      }
+    }
+
+    if (settings.history && settings.history.historyAutoPinMinConfidence !== undefined) {
+      const confidence = settings.history.historyAutoPinMinConfidence;
+      if (!Number.isInteger(confidence) || confidence < 0 || confidence > 100) {
+        errors.push(text('settingsUiErrAutoPinConfidence', 'Pin confidence must be between 0 and 100'));
+      }
+    }
+
+    if (settings.history && settings.history.historyFingerprintDays !== undefined) {
+      const days = settings.history.historyFingerprintDays;
+      if (!Number.isInteger(days) || days < 0 || days > 3650) {
+        errors.push(text('settingsUiErrFingerprintDays', 'Fingerprinting-only pages must be kept between 0 and 3650 days'));
       }
     }
 
@@ -1177,6 +1204,14 @@ SettingsUI.readSiteList = function(selector, fallback) {
   const box = document.querySelector(selector);
   if (!box) return Array.isArray(fallback) ? fallback : [];
   return DomainList.normalize(box.value);
+};
+
+/** A box with one name per line (a protection's name) as a clean list (what is already saved when the box is not on the page). */
+SettingsUI.readNameList = function(selector, fallback) {
+  const box = document.querySelector(selector);
+  if (!box) return Array.isArray(fallback) ? fallback : [];
+  const seen = new Set();
+  return box.value.split(/\r?\n/).map(line => line.replace(/\s+/g, ' ').trim()).filter(name => name && !seen.has(name.toLowerCase()) && seen.add(name.toLowerCase())).slice(0, 100);
 };
 
 /** Bytes as MB with one decimal ("2.1 MB"), KB below that. */

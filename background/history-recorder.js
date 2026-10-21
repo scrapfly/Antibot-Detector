@@ -245,6 +245,12 @@ class HistoryRecorder {
           ? HistoryPolicy.diffProtections(earlier.detections, detectionResults)
           : { added: [], removed: [], changed: false };
 
+        // Pages that pin themselves (Settings → History): a new entry, or an update of one the person never unpinned,
+        // while there is room (the pinned entries are exempt from the limit and from retention)
+        const pinsItself = typeof HistoryPolicy !== 'undefined'
+          && HistoryPolicy.shouldAutoPin(detectionResults, settings)
+          && HistoryPolicy.countAutoPins(history) < HistoryPolicy.MAX_AUTO_PINS;
+
         const fresh = {
           url: entryUrl,
           hostname: entryHostname,
@@ -269,9 +275,10 @@ class HistoryRecorder {
           const kept = history[duplicateAt];
           const updated = Object.assign({}, kept, fresh, { id: kept.id, firstSeen: kept.firstSeen || kept.timestamp });
           if (!diff.changed) delete updated.changed;
+          if (pinsItself && kept.pinned !== true && kept.unpinned !== true) { updated.pinned = true; updated.autoPinned = true; }
           next = [updated, ...history.filter((_, i) => i !== duplicateAt)];
         } else {
-          next = [Object.assign({ id: `detection_${now}_${tabId}` }, fresh), ...history];
+          next = [Object.assign({ id: `detection_${now}_${tabId}` }, fresh, pinsItself ? { pinned: true, autoPinned: true } : {}), ...history];
         }
 
         // Newest first, then the rolling window limit (pinned entries never count against it)

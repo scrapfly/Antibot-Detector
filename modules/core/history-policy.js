@@ -6,6 +6,8 @@
  *   evaluate()          should this page be recorded at all? (paused, incognito,
  *                       excluded domain, fingerprint-only, minimum confidence)
  *   diffProtections()   which protections a page gained or lost since its last scan
+ *   shouldAutoPin()     does this page pin itself? (a hard protection, or one the person named)
+ *   countAutoPins()     how many entries were pinned automatically (they are capped by MAX_AUTO_PINS)
  *   normalizeDomains()  the "don't record these sites" list, from text or an array
  */
 (function(root) {
@@ -19,6 +21,11 @@
 
   const CHANGE_ALERT_MODES = ['off', 'pinned', 'all'];
   const BACKUP_FREQUENCIES = ['off', 'daily', 'weekly', 'monthly'];
+  // Pinned entries are exempt from the limit, from retention and from the size budget, so the pages that pin
+  // themselves are capped: past it a page is recorded unpinned
+  const MAX_AUTO_PINS = 50;
+  // A detection weaker than this does not pin a page (the engine's own default match confidence)
+  const AUTO_PIN_MIN_CONFIDENCE = 80;
 
   const clampInt = (value, min, max, fallback) => {
     const n = parseInt(value, 10);
@@ -80,10 +87,37 @@
     return { added, removed, changed: added.length > 0 || removed.length > 0 };
   }
 
+  /**
+   * Does this page pin itself (Settings → History → Pin pages automatically)? Yes when a detection that reaches the
+   * minimum confidence is
+   *   - a hard protection (difficulty High; anti-bot or CAPTCHA, never fingerprinting), with historyAutoPinHard on, or
+   *   - one of the protections the person named (historyAutoPinVendors, by name, any category).
+   * @param {Array} detections  what was found on the page
+   * @param {object} settings   the history settings
+   */
+  function shouldAutoPin(detections, settings) {
+    const s = settings || {};
+    const hard = s.historyAutoPinHard === true;
+    const named = new Set((Array.isArray(s.historyAutoPinVendors) ? s.historyAutoPinVendors : [])
+      .map(name => String(name).trim().toLowerCase()).filter(Boolean));
+    if (!hard && named.size === 0) return false;
+    const minimum = clampInt(s.historyAutoPinMinConfidence, 0, 100, AUTO_PIN_MIN_CONFIDENCE);
+    return (Array.isArray(detections) ? detections : []).some((d) => {
+      if (!(Number(d && d.confidence) >= minimum)) return false; // a detection with no score never pins
+      const difficulty = String((d && (d.difficulty || (d.detector && d.detector.difficulty))) || '').toLowerCase();
+      return (hard && !isFingerprint(d) && difficulty === 'high') || named.has(nameOf(d).toLowerCase());
+    });
+  }
+
+  /** How many entries pinned themselves (a pin the person chose is not counted). */
+  function countAutoPins(items) {
+    return (Array.isArray(items) ? items : []).filter(item => item && item.pinned === true && item.autoPinned === true).length;
+  }
+
   const api = {
-    CHANGE_ALERT_MODES, BACKUP_FREQUENCIES,
+    CHANGE_ALERT_MODES, BACKUP_FREQUENCIES, MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE,
     clampInt, normalizeDomains, matchesDomain, strongest, isFingerprintOnly, evaluate,
-    diffProtections
+    diffProtections, shouldAutoPin, countAutoPins
   };
   root.HistoryPolicy = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

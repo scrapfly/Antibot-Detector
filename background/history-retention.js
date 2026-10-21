@@ -9,7 +9,10 @@
  *   3. Clear on close: with settings.history.historyClearOnClose, every entry
  *      goes when the last browser window closes, or at the next start if the
  *      browser was closed too abruptly to run code.
- * Pinned entries are exempt from all three (and from the size limit in
+ *   4. Fingerprinting-only pages: with settings.history.historyFingerprintDays
+ *      above 0, an entry whose detections are all fingerprinting techniques goes
+ *      after that many days, whatever auto-delete says about the others.
+ * Pinned entries are exempt from all four (and from the size limit in
  * HistoryStore): the user chose to keep them.
  * Every write also stays under HistoryStore.MAX_BYTES (HistoryStore.write),
  * and on start a history saved by an older build is compacted once.
@@ -27,6 +30,7 @@ const HistoryRetention = {
     DEFAULT_DAYS: 30,
     MIN_DAYS: 1,
     MAX_DAYS: 3650,
+    MAX_FINGERPRINT_DAYS: 3650,
     DAY_MS: 24 * 60 * 60 * 1000,
     DEBOUNCE_MS: 1500,
 
@@ -45,9 +49,20 @@ const HistoryRetention = {
     },
 
     /**
+     * How long fingerprinting-only pages are kept: a whole number of days, or 0 for "like every other page".
+     * @param {*} value
+     * @returns {number}
+     */
+    normalizeFingerprintDays(value) {
+        const days = parseInt(value, 10);
+        if (!Number.isFinite(days) || days <= 0) return 0;
+        return Math.min(days, this.MAX_FINGERPRINT_DAYS);
+    },
+
+    /**
      * Retention config from the stored settings object.
      * @param {object} settings - Parsed settings (settings.history.*)
-     * @returns {{autoDelete: boolean, days: number, limit: number, clearOnClose: boolean}}
+     * @returns {{autoDelete: boolean, days: number, fingerprintDays: number, limit: number, clearOnClose: boolean}}
      */
     getConfig(settings) {
         const history = (settings && settings.history) || {};
@@ -56,6 +71,7 @@ const HistoryRetention = {
         return {
             autoDelete: history.historyAutoDelete === true,
             days: this.normalizeDays(history.historyAutoDeleteDays),
+            fingerprintDays: this.normalizeFingerprintDays(history.historyFingerprintDays),
             limit,
             clearOnClose: history.historyClearOnClose === true
         };
@@ -79,10 +95,10 @@ const HistoryRetention = {
     },
 
     /**
-     * Apply auto-delete and the entry cap. Pure: returns a new array.
+     * Apply auto-delete, the fingerprinting-only rule and the entry cap. Pure: returns a new array.
      * Items are stored newest first, so the cap keeps the head of the list.
      * @param {Array<object>} items
-     * @param {{autoDelete: boolean, days: number, limit: number}} config
+     * @param {{autoDelete: boolean, days: number, fingerprintDays?: number, limit: number}} config
      * @param {number} [now]
      * @returns {{items: Array<object>, removed: number}}
      */
@@ -99,10 +115,27 @@ const HistoryRetention = {
             });
         }
 
+        // Fingerprinting-only pages have a clock of their own, whether or not auto-delete is on
+        const fingerprintDays = this.normalizeFingerprintDays(config && config.fingerprintDays);
+        if (fingerprintDays > 0) {
+            const cutoff = now - fingerprintDays * this.DAY_MS;
+            kept = kept.filter((item) => {
+                if (item && item.pinned === true) return true;
+                if (!this.policy().isFingerprintOnly(item && item.detections)) return true;
+                const ts = this.getTimestamp(item);
+                return ts === null || ts >= cutoff;
+            });
+        }
+
         const limit = config && Number.isFinite(config.limit) && config.limit > 0 ? config.limit : this.SAFETY_LIMIT;
         kept = this.store().applyLimit(kept, limit);
 
         return { items: kept, removed: list.length - kept.length };
+    },
+
+    /** The History policy (a global in the worker, required under Node tests). */
+    policy() {
+        return typeof HistoryPolicy !== 'undefined' ? HistoryPolicy : require('../modules/core/history-policy.js');
     },
 
     /** The HistoryStore (a global in the worker, required under Node tests). */
@@ -188,11 +221,11 @@ const HistoryRetention = {
         }, this.DEBOUNCE_MS);
     },
 
-    /** Keep the periodic alarm in step with the auto-delete toggle. */
+    /** Keep the periodic alarm in step with the rules that depend on time (auto-delete, fingerprinting-only pages). */
     async syncAlarm(config) {
         if (typeof chrome === 'undefined' || !chrome.alarms) return;
         try {
-            if (config.autoDelete) {
+            if (config.autoDelete || config.fingerprintDays > 0) {
                 const existing = await chrome.alarms.get(this.ALARM_NAME);
                 if (!existing) {
                     chrome.alarms.create(this.ALARM_NAME, { periodInMinutes: this.PERIOD_MINUTES });

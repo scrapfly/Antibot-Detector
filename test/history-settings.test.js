@@ -97,3 +97,50 @@ test('a settings export carries every History setting and the capture time, and 
   assert.deepEqual(portable.duplicatePrevention, { preventDuplicates: true, duplicateAction: 'update' });
   assert.equal(portable.detection.captureRetentionMinutes, 15);
 });
+
+// ---- Pages that pin themselves, and the clock of fingerprinting-only pages
+
+test('settings saved before automatic pinning existed pin nothing, and junk in the lists is dropped', async () => {
+  const old = await loadUtils({ history: { historyLimit: 50 } }).getHistorySettings();
+  assert.equal(old.historyAutoPinHard, false);
+  assert.deepEqual(plain(old.historyAutoPinVendors), []);
+  const s = await loadUtils({ history: { historyAutoPinHard: 'yes', historyAutoPinVendors: ['Cloudflare', 5, null, ' DataDome '], historyAutoPinMinConfidence: 95 } }).getHistorySettings();
+  assert.equal(s.historyAutoPinHard, false, 'only the boolean true switches it on');
+  assert.deepEqual(plain(s.historyAutoPinVendors), ['Cloudflare', ' DataDome '], 'the policy trims the names');
+  assert.equal(s.historyAutoPinMinConfidence, 95);
+  const on = await loadUtils({ history: { historyAutoPinHard: true, historyAutoPinVendors: 'Cloudflare' } }).getHistorySettings();
+  assert.equal(on.historyAutoPinHard, true);
+  assert.deepEqual(plain(on.historyAutoPinVendors), [], 'a list is a list');
+});
+
+test('a settings export carries the automatic pinning and the fingerprinting-only days', () => {
+  const ctx = vm.createContext({ self: {} });
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/settings/settings-transfer.js']) vm.runInContext(read(file), ctx);
+  const history = { historyFingerprintDays: 14, historyAutoPinHard: true, historyAutoPinVendors: ['Cloudflare'], historyAutoPinMinConfidence: 90 };
+  assert.deepEqual(plain(ctx.SettingsTransfer.portable({ history })).history, history);
+});
+
+test('Settings reads a box of names as a clean list: trimmed, one spelling of each, at most 100', () => {
+  const lines = (text) => ({ document: { querySelector: selector => (selector === '#box' ? { value: text } : null) } });
+  const load = (text) => {
+    const ctx = vm.createContext({ ...lines(text), self: {}, console });
+    vm.runInContext(read('sections/settings/settings-ui.js'), ctx, { filename: 'settings-ui.js' });
+    return vm.runInContext('SettingsUI', ctx);
+  };
+  assert.deepEqual(plain(load('  Cloudflare \n\ndatadome\r\nCLOUDFLARE\n  Google   reCAPTCHA ').readNameList('#box', ['kept'])), ['Cloudflare', 'datadome', 'Google reCAPTCHA']);
+  assert.deepEqual(plain(load('x').readNameList('#missing', ['kept'])), ['kept'], 'no box on the page: what is saved stays');
+  assert.deepEqual(plain(load('x').readNameList('#missing')), []);
+  assert.equal(load(Array.from({ length: 150 }, (_, i) => `Name ${i}`).join('\n')).readNameList('#box').length, 100);
+});
+
+test('the History tab declares the boxes the scripts fill', () => {
+  const html = read('sections/settings/settings.html');
+  for (const id of ['historyFingerprintDays', 'historyAutoPinHard', 'historyAutoPinVendors', 'historyAutoPinMinConfidence', 'historyAutoPinNote']) assert.ok(html.includes(`id="${id}"`), id);
+  assert.match(html, /id="historyAutoPinNote" data-i18n-fmt="settingsHistoryAutoPinNote"/, 'the cap is filled in by the script, from the policy');
+  assert.match(html, /<textarea id="historyAutoPinVendors"[^>]*site-list-box/);
+  const ui = read('sections/settings/settings-ui.js');
+  for (const key of ['historyFingerprintDays', 'historyAutoPinHard', 'historyAutoPinVendors', 'historyAutoPinMinConfidence']) {
+    assert.ok(ui.includes(`${key}:`), `${key} is read from the form`);
+    assert.ok(ui.includes(`'${key}'`) || ui.includes(`#${key}`), `${key} is shown in the form`);
+  }
+});

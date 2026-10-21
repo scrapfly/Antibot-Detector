@@ -372,7 +372,11 @@ class Utils {
       historyExcludedDomains: Array.isArray(historySettings.historyExcludedDomains) ? historySettings.historyExcludedDomains.filter(d => typeof d === 'string') : [],
       historyChangeAlerts: ['pinned', 'all'].includes(historySettings.historyChangeAlerts) ? historySettings.historyChangeAlerts : 'off',
       historyBackup: ['daily', 'weekly', 'monthly'].includes(historySettings.historyBackup) ? historySettings.historyBackup : 'off',
-      historyClearOnClose: historySettings.historyClearOnClose === true
+      historyClearOnClose: historySettings.historyClearOnClose === true,
+      // Pages that pin themselves (HistoryPolicy.shouldAutoPin reads and clamps these)
+      historyAutoPinHard: historySettings.historyAutoPinHard === true,
+      historyAutoPinVendors: Array.isArray(historySettings.historyAutoPinVendors) ? historySettings.historyAutoPinVendors.filter(name => typeof name === 'string') : [],
+      historyAutoPinMinConfidence: historySettings.historyAutoPinMinConfidence
     };
   }
 
