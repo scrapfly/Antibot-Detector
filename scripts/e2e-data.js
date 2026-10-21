@@ -306,12 +306,17 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       const es = (key, ...args) => args.reduce((text, arg, i) => text.replace(`{${i}}`, arg), spanish[key].message);
       await patch({
         notificationsEnabled: true, debugMode: false, debugVerbose: false, logCollectorEnabled: false, jsApi: { enableJsApi: false },
-        history: { historyEnabled: true, historyClearOnClose: false, historyBackup: 'off', historyExcludedDomains: ['bank.example'], historyLimit: 40 },
+        history: { historyEnabled: true, historyClearOnClose: false, historyBackup: 'off', historyExcludedDomains: ['bank.example'], historyLimit: 5000, historyMaxMB: 25 },
         detection: { cacheDuration: 3, cacheUnit: 'hours', blacklistedDomains: ['keep.example'] },
         webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookHeaders: [{ name: 'X-Key', value: 'SYNTHETIC_KEY' }] },
         share: { githubToken: 'SYNTHETIC_GITHUB' }
       });
       await W(() => chrome.storage.local.set({ scrapfly_language_override: 'es', scrapfly_theme: 'light' }));
+      // A History bigger than the default limit (1000 pages): Reset must not trim it
+      const pages = Array.from({ length: 1200 }, (_, i) => ({ id: `reset-${i}`, url: `https://r${i}.example/`, hostname: `r${i}.example`, title: `r${i}`,
+        timestamp: Date.now() - i * 1000, detections: [{ detector: { name: 'X' }, category: 'Anti-Bot', confidence: 90 }], detectionCount: 1, categories: ['Anti-Bot'] }));
+      await W((items) => chrome.storage.local.set({ scrapfly_history: JSON.stringify({ items }) }), pages);
+      const historyCount = async () => { const raw = (await get(['scrapfly_history'])).scrapfly_history; return raw ? JSON.parse(raw).items.length : 0; };
       await reload();
       await presetsCard();
       const detectorsBefore = (await get(['scrapfly_detectors'])).scrapfly_detectors;
@@ -334,7 +339,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       assert.equal(now.webhook.webhookUrl, 'https://hooks.example/SYNTHETIC_TOKEN', 'the webhook address is still there, only switched off');
       assert.deepEqual(now.detection.blacklistedDomains, ['keep.example']);
       assert.deepEqual(now.history.historyExcludedDomains, ['bank.example']);
-      assert.equal(now.history.historyLimit, 40, 'settings outside the preset keep their value');
+      assert.equal(now.history.historyLimit, 5000, 'settings outside the preset keep their value');
       assert.equal(await page.$eval('#notificationsEnabled', el => el.checked), false, 'the form shows it');
       // Applying it again has nothing to change
       await page.click('[data-preset="privacy"]');
@@ -359,7 +364,10 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       now = await stored();
       assert.deepEqual([now.debugMode, now.debugVerbose, now.logCollectorEnabled, now.jsApi.enableJsApi, now.notificationsEnabled], [false, false, false, false, true], 'the defaults are back');
       assert.deepEqual([now.detection.cacheDuration, now.detection.cacheUnit], [7, 'days']);
-      assert.deepEqual([now.history.historyEnabled, now.history.historyClearOnClose, now.history.historyLimit], [true, false, 0]);
+      assert.deepEqual([now.history.historyEnabled, now.history.historyClearOnClose], [true, false]);
+      assert.deepEqual([now.history.historyLimit, now.history.historyMaxMB], [5000, 25], 'how much History may hold is kept: a reset never deletes pages');
+      await sleep(2500); // History's clean-up runs a moment after settings are saved
+      assert.equal(await historyCount(), 1200, 'no page left History after the reset');
       assert.equal(now.webhook.enableWebhook, false);
       assert.equal(now.webhook.webhookUrl, 'https://hooks.example/SYNTHETIC_TOKEN', 'the webhook connection is kept');
       assert.equal(now.share.githubToken, 'SYNTHETIC_GITHUB', 'the sharing key is kept');

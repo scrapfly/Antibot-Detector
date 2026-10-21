@@ -66,6 +66,16 @@ test('a reset keeps the site lists and the rules check time, and the connections
   for (const keptPath of kept) assert.notStrictEqual(SettingsPresets.getPath(defaults, keptPath), undefined, `${keptPath} is a default setting`);
 });
 
+test('a reset keeps how much History may hold, so it never deletes pages (its limit and its size)', () => {
+  for (const options of [{}, { disconnect: true }]) {
+    const kept = SettingsPresets.resetKeep(options);
+    assert.ok(kept.includes('history.historyLimit') && kept.includes('history.historyMaxMB'), JSON.stringify(options));
+  }
+  // The other History defaults can only keep more, never delete: off switches and no extra clocks
+  const history = defaults.history;
+  assert.deepStrictEqual([history.historyAutoDelete, history.historyClearOnClose, history.historyFingerprintDays], [false, false, 0]);
+});
+
 test('the connection details are exactly the webhook and sharing settings that a settings export leaves out', () => {
   require('../modules/settings/settings-transfer.js');
   const SettingsTransfer = globalThis.SettingsTransfer;

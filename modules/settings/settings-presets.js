@@ -45,7 +45,10 @@
     })
   });
 
-  const KEEP = Object.freeze(['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp']);
+  // What a reset keeps: the site lists, the rules check time, and how much History may hold (a default limit or size
+  // below what History uses would delete pages at once, and Reset promises to leave History alone)
+  const KEEP = Object.freeze(['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp',
+    'history.historyLimit', 'history.historyMaxMB']);
   const CONNECTIONS = Object.freeze([
     'webhook.webhookUrl', 'webhook.webhookMethod', 'webhook.webhookContentType', 'webhook.webhookPayload', 'webhook.webhookHeaders',
     'share.pastebinKey', 'share.githubToken', 'share.customUrl', 'share.customMethod', 'share.customBodyFormat', 'share.customFieldName',
