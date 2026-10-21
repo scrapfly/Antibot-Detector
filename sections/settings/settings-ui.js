@@ -1018,6 +1018,9 @@ SettingsUI.setupEventListeners = function() {
     if (typeof SettingsUI._setupShareListeners === 'function') {
       SettingsUI._setupShareListeners.call(this);
     }
+    if (typeof SettingsUI._setupShortcutListeners === 'function') {
+      SettingsUI._setupShortcutListeners.call(this);
+    }
 
     this.setupColorPagination();
     if (typeof SettingsUI._setupColorListeners === 'function') {

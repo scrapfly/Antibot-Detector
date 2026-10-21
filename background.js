@@ -92,6 +92,7 @@ importScripts(
     './background/handlers/messages-advanced-capture.js',
     './background/handlers/router-registry.js',
     './background/handlers/message-router.js',
+    './background/commands.js',
     './background/tab-events.js',
     './background/history-retention.js',
     './background/history-backup.js',

@@ -6862,5 +6862,33 @@
   "detectionMdFooterFmt": {
     "message": "Scanned with Scrapfly Antibot Detector on {0}",
     "description": "Last line of the copied Markdown. {0} = the date (YYYY-MM-DD). Keep the product name as written"
+  },
+  "commandRescanTab": {
+    "message": "Scan this page again (reloads it)",
+    "description": "Name of the keyboard shortcut in the browser's shortcut settings (chrome://extensions/shortcuts)"
+  },
+  "commandOpenPopup": {
+    "message": "Open Antibot Detector",
+    "description": "Name of the keyboard shortcut that opens the extension's popup, in the browser's shortcut settings. Keep the product name as written"
+  },
+  "settingsShortcutsTitle": {
+    "message": "Keyboard shortcuts",
+    "description": "Settings → General: title of the keyboard shortcuts row"
+  },
+  "settingsShortcutRescanFmt": {
+    "message": "Scan this page again: {0}",
+    "description": "Settings → General: the rescan shortcut. {0} = the keys (for example Alt+Shift+S) or the 'not set' text"
+  },
+  "settingsShortcutsDesc": {
+    "message": "The page reloads, so everything is collected from the start.",
+    "description": "Settings → General: what the rescan shortcut does to the page"
+  },
+  "settingsShortcutsChange": {
+    "message": "Change",
+    "description": "Settings → General: button that opens the browser's keyboard shortcut settings"
+  },
+  "settingsShortcutNotSet": {
+    "message": "not set",
+    "description": "Settings → General: shown instead of keys when the shortcut has no keys (another extension or the browser uses them, or the person removed them)"
   }
 }

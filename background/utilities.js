@@ -231,6 +231,7 @@ function initializeServices() {
     setupMessageListeners();
     setupTabListeners();
     if (typeof NotificationClicks !== 'undefined') NotificationClicks.register();
+    if (typeof Commands !== 'undefined') Commands.register();
 
     Logger.background('Services initialized');
 }

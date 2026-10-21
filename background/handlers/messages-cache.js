@@ -1,4 +1,45 @@
 /**
+ * One page's saved result and everything the worker holds for its tab: what
+ * Detection → Clear Cache, History's Clear cache and the rescan shortcut
+ * (background/commands.js) share. `sendResponse` answers the message, if any.
+ */
+async function clearTabDetectionCache(request, sendResponse = () => {}) {
+    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
+
+    if (request.tabId) {
+        DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
+
+        headersStore.delete(request.tabId);
+        requestHeadersStore.delete(request.tabId);
+        responseCookiesStore.delete(request.tabId);
+        payloadStore.delete(request.tabId);
+        networkUrlsStore.delete(request.tabId);
+        if (typeof responseStore !== 'undefined') responseStore.delete(request.tabId);
+        tabsUsingCache.delete(request.tabId);
+
+        recentlyClearedTabs.add(request.tabId);
+        setTimeout(() => {
+            recentlyClearedTabs.delete(request.tabId);
+            Logger.debug('BACKGROUND', `[Background] Tab ${request.tabId} removed from recently cleared list`);
+        }, Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
+
+        try {
+            await setBadgeTextColor(request.tabId, false, BADGE.COLORS.CLEARED);
+            await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: request.tabId });
+            await chrome.action.setBadgeBackgroundColor({
+                color: BADGE.COLORS.CLEARED,
+                tabId: request.tabId
+            });
+            Logger.debug('BACKGROUND', `[Background] Badge set to CLR for tab ${request.tabId}`);
+        } catch (badgeError) {
+            Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
+        }
+
+        Logger.debug('BACKGROUND', `[Background] Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
+    }
+}
+
+/**
  * registerCacheHandlers registration.
  * Extracted from message-router switch cases for maintainability.
  */
@@ -115,42 +156,7 @@ function registerCacheHandlers(registry, context) {
         void context;
 
         // Clear both storage and in-memory caches
-        (async () => {
-            await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
-
-            if (request.tabId) {
-                DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
-
-
-                headersStore.delete(request.tabId);
-                requestHeadersStore.delete(request.tabId);
-                responseCookiesStore.delete(request.tabId);
-                payloadStore.delete(request.tabId);
-                networkUrlsStore.delete(request.tabId);
-                if (typeof responseStore !== 'undefined') responseStore.delete(request.tabId);
-                tabsUsingCache.delete(request.tabId);
-
-                recentlyClearedTabs.add(request.tabId);
-                setTimeout(() => {
-                    recentlyClearedTabs.delete(request.tabId);
-                    Logger.debug('BACKGROUND', `[Background] Tab ${request.tabId} removed from recently cleared list`);
-                }, Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
-
-                try {
-                    await setBadgeTextColor(request.tabId, false, BADGE.COLORS.CLEARED);
-                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: request.tabId });
-                    await chrome.action.setBadgeBackgroundColor({
-                        color: BADGE.COLORS.CLEARED,
-                        tabId: request.tabId
-                    });
-                    Logger.debug('BACKGROUND', `[Background] Badge set to CLR for tab ${request.tabId}`);
-                } catch (badgeError) {
-                    Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
-                }
-
-                Logger.debug('BACKGROUND', `[Background] Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
-            }
-        })();
+        clearTabDetectionCache(request, sendResponse);
         return true; // Async response
     };
     registry[WorkerMessages.DETECTION_CLEAR_CACHE] = handle_clear_detection_cache;
