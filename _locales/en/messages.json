@@ -6906,5 +6906,9 @@
   "rulesDuplicateNameFmt": {
     "message": "{0} (copy)",
     "description": "Name given to a duplicated rule. {0} = the original rule's name"
+  },
+  "statsExportMarkdown": {
+    "message": "Export Markdown",
+    "description": "Statistics → Export menu: downloads the statistics as a Markdown report (totals, protections, sites)"
   }
 }

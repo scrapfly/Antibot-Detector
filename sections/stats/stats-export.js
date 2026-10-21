@@ -34,7 +34,7 @@
     try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (_) { return 'UTC'; }
   };
   const formatOf = (format) => {
-    if (format !== 'csv' && format !== 'json') throw new Error('Unsupported export format');
+    if (format !== 'csv' && format !== 'json' && format !== 'md') throw new Error('Unsupported export format');
     return format;
   };
   // Prefix spreadsheet expressions before quoting. Numeric values are never altered.
@@ -115,6 +115,39 @@
       }
       return rows.map((row) => row.map(cell).join(',')).join('\r\n') + '\r\n';
     },
+    /**
+     * A Markdown report for a ticket or a wiki page: the range, the totals, the
+     * protections and the sites most seen. Built from the same payload as CSV and
+     * JSON, so it carries the same things (no cookies, page contents or URL parameters).
+     */
+    toMarkdown(payload) {
+      const md = (value) => String(value === null || value === undefined ? '' : value)
+        .replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/[\r\n]+/g, ' ').trim();
+      const summary = payload.summary || {};
+      const totals = summary.totals || {};
+      const range = payload.range || {};
+      const from = range.start ? String(range.start).slice(0, 10) : 'all time';
+      const to = range.end ? String(range.end).slice(0, 10) : '';
+      const lines = ['# Scrapfly Antibot Detector: statistics', '',
+        `Range: ${md(from)}${to ? ` to ${md(to)}` : ''} (${md(payload.timeZone)})`, '',
+        `- Pages: ${Number(totals.entries) || 0}`,
+        `- Sites: ${Number(totals.uniqueDomains) || 0}`,
+        `- Detections: ${Number(totals.detections) || 0}`,
+        `- Protections: ${Number(totals.uniqueDetectors) || 0}`, ''];
+      const protections = Array.isArray(summary.topDetectors) ? summary.topDetectors : [];
+      if (protections.length) {
+        lines.push('## Protections', '', '| Protection | Category | Pages | Sites |', '| --- | --- | ---: | ---: |');
+        for (const row of protections) lines.push(`| ${md(row.name)} | ${md(row.category)} | ${Number(row.pages) || 0} | ${Number(row.domains) || 0} |`);
+        lines.push('');
+      }
+      const domains = Array.isArray(summary.topDomains) ? summary.topDomains.slice(0, 50) : [];
+      if (domains.length) {
+        lines.push('## Sites', '', '| Site | Pages | Detections |', '| --- | ---: | ---: |');
+        for (const row of domains) lines.push(`| ${md(row.hostname)} | ${Number(row.visits) || 0} | ${Number(row.detections) || 0} |`);
+        lines.push('');
+      }
+      return lines.join('\n');
+    },
     /** Named after the range and the LOCAL calendar day, e.g. scrapfly-history-statistics-30d-2026-10-03.csv. */
     filename(format, options = {}) {
       const { days, now } = settings(options);
@@ -129,8 +162,10 @@
           !root.URL || typeof root.URL.createObjectURL !== 'function' || typeof root.Blob !== 'function') {
         throw new Error('Local file downloads are unavailable');
       }
-      const content = format === 'csv' ? '\uFEFF' + StatsExport.toCSV(payload) : StatsExport.toJSON(payload);
-      const blob = new root.Blob([content], { type: format === 'csv' ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8' });
+      const content = format === 'csv' ? '\uFEFF' + StatsExport.toCSV(payload)
+        : format === 'md' ? StatsExport.toMarkdown(payload) : StatsExport.toJSON(payload);
+      const types = { csv: 'text/csv;charset=utf-8', md: 'text/markdown;charset=utf-8', json: 'application/json;charset=utf-8' };
+      const blob = new root.Blob([content], { type: types[format] });
       const url = root.URL.createObjectURL(blob);
       try {
         const downloadId = await new Promise((resolve, reject) => {

@@ -182,3 +182,22 @@ test('exports name the methods and combinations of each detection, never the mat
   assert.ok(!StatsExport.toJSON(payload).includes('SECRET'));
   assert.match(StatsExport.toCSV(payload), /,90,cookie;url,c1\r\n$/);
 });
+
+test('Markdown statistics: range, totals, protections and sites, escaped, from the same payload', () => {
+  const SE = require('../sections/stats/stats-export.js');
+  const now = Date.UTC(2026, 9, 21, 12);
+  const items = [
+    { url: 'https://a.example/?token=SECRET', hostname: 'a.example', timestamp: now - 3600e3, detections: [{ detector: { name: 'Cloud|flare' }, category: 'Anti-Bot', confidence: 95, matches: [{ type: 'cookie', value: '__cf_bm=SECRET' }] }] },
+    { url: 'https://b.example/', hostname: 'b.example', timestamp: now - 7200e3, detections: [] }
+  ];
+  const payload = SE.build(items, { days: 7, now, timeZone: 'UTC' });
+  const md = SE.toMarkdown(payload);
+  assert.ok(md.startsWith('# Scrapfly Antibot Detector: statistics\n'));
+  assert.ok(/Range: \d{4}-\d{2}-\d{2} to 2026-10-21 \(UTC\)/.test(md));
+  assert.ok(md.includes('- Pages: 2') && md.includes('- Sites: 2'));
+  assert.ok(md.includes('| Cloud\\|flare | antibot | 1 | 1 |'));
+  assert.ok(md.includes('| a.example | 1 | 1 |'));
+  assert.ok(!md.includes('SECRET'));
+  assert.strictEqual(SE.filename('md', { days: 7, now }).endsWith('.md'), true);
+  assert.throws(() => SE.filename('xml', { days: 7, now }), /Unsupported/);
+});
