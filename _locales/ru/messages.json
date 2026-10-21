@@ -4688,13 +4688,13 @@
     "message": "Проверить по Истории"
   },
   "ruleHistoryCheckHint": {
-    "message": "Покажет, на скольких сохранённых страницах совпадает каждый шаблон и комбинация. Несохранённые изменения учитываются."
+    "message": "Показывает, на скольких из ваших сохранённых страниц совпадает каждый шаблон и комбинация. Несохранённые изменения учитываются."
   },
   "ruleHistoryCheckRun": {
     "message": "Проверить"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Сохранённых страниц: {0} · правило найдено на {1}"
+    "message": "Это правило совпадает на страницах: {1} из {0} сохранённых"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} из {1} страниц"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Показаны только пользовательские и изменённые правила. Описания официальных правил поддерживает Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Advanced хранит записи 30 минут, поэтому эта вкладка не учитывает диапазон дат."
-  },
   "statsToolsSavedNow": {
     "message": "Сохранено сейчас"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Фоновая часть расширения устарела. Перезагрузите расширение на странице расширений и повторите попытку."
+  },
+  "historyFiltersLabel": {
+    "message": "Фильтр истории"
+  },
+  "historyFilterPinned": {
+    "message": "Закреплённые"
+  },
+  "historyNoResults": {
+    "message": "Нет записей, подходящих под поиск или фильтры."
+  },
+  "historyClearFilters": {
+    "message": "Сбросить фильтры"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Срок хранения захватов в разделе «Расширенно»: {0}, поэтому эта вкладка не учитывает период."
+  },
+  "settingsStorageTitle": {
+    "message": "Хранилище"
+  },
+  "settingsStorageDesc": {
+    "message": "Что расширение хранит в этом браузере. Настройки и правила отсюда очистить нельзя."
+  },
+  "storageCache": {
+    "message": "Кэш обнаружения"
+  },
+  "storageCaptures": {
+    "message": "Захваты инструментов"
+  },
+  "storageHistory": {
+    "message": "История"
+  },
+  "storageRules": {
+    "message": "Правила и категории"
+  },
+  "storageSettings": {
+    "message": "Настройки"
+  },
+  "storageLogs": {
+    "message": "Журналы"
+  },
+  "storageOther": {
+    "message": "Другое"
+  },
+  "storageTotalFmt": {
+    "message": "Занято {0} из {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "Очистить: {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Очистить кэш обнаружения"
+  },
+  "storageClearCacheMessage": {
+    "message": "Страницы будут просканированы заново при следующем открытии. История, правила и настройки не затрагиваются."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Удалить захваты инструментов"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Всё, что сохранили расширенные инструменты, будет удалено. История, правила и настройки не затрагиваются."
+  },
+  "storageCacheCleared": {
+    "message": "Кэш обнаружения очищен"
+  },
+  "storageCapturesCleared": {
+    "message": "Захваты инструментов удалены"
+  },
+  "storageClearFailed": {
+    "message": "Не удалось очистить. Попробуйте ещё раз."
+  },
+  "settingsSupportTitle": {
+    "message": "Поддержка"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Диагностика"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Скопируйте сводку для отчёта об ошибке: версии, настройки и счётчики. В ней нет сайтов, адресов и ключей."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Скопировать диагностику"
+  },
+  "diagnosticsCopied": {
+    "message": "Диагностика скопирована"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Не удалось скопировать диагностику"
+  },
+  "settingsPresetsTitle": {
+    "message": "Наборы настроек и сброс"
+  },
+  "settingsPresetsDesc": {
+    "message": "Меняйте сразу несколько настроек. Правила, История, списки сайтов, язык и тема не меняются никогда."
+  },
+  "presetPrivacyName": {
+    "message": "Конфиденциальность"
+  },
+  "presetPrivacyDesc": {
+    "message": "Хранит меньше данных на устройстве и ничего не отправляет."
+  },
+  "presetDeveloperName": {
+    "message": "Разработчик"
+  },
+  "presetDeveloperDesc": {
+    "message": "Журналы отладки и JS API для работы над правилами."
+  },
+  "presetApply": {
+    "message": "Применить"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Применить набор «{0}»?"
+  },
+  "presetConfirmIntro": {
+    "message": "Будут изменены эти настройки:"
+  },
+  "presetAlreadySet": {
+    "message": "Эти настройки уже установлены."
+  },
+  "presetApplied": {
+    "message": "Набор применён"
+  },
+  "presetHistoryOff": {
+    "message": "История не сохраняется"
+  },
+  "presetBackupOff": {
+    "message": "Автоматические резервные копии истории выключены"
+  },
+  "presetClearOnClose": {
+    "message": "История очищается при закрытии браузера"
+  },
+  "presetWebhookOff": {
+    "message": "Вебхук выключен"
+  },
+  "presetNotificationsOff": {
+    "message": "Уведомления выключены"
+  },
+  "presetJsApiOff": {
+    "message": "JS API выключен"
+  },
+  "presetDebugOff": {
+    "message": "Режим отладки выключен"
+  },
+  "presetCollectorOff": {
+    "message": "Сборщик логов выключен"
+  },
+  "presetDebugOn": {
+    "message": "Режим отладки включён"
+  },
+  "presetVerboseOn": {
+    "message": "Подробные логи включены"
+  },
+  "presetCollectorOn": {
+    "message": "Сборщик логов включён"
+  },
+  "presetCollectorMax": {
+    "message": "Сборщик логов хранит до 5000 строк"
+  },
+  "presetJsApiOn": {
+    "message": "JS API включён"
+  },
+  "settingsResetTitle": {
+    "message": "Сбросить настройки"
+  },
+  "settingsResetDesc": {
+    "message": "Все настройки возвращаются к значениям по умолчанию. Правила, История, списки сайтов, язык и тема сохраняются."
+  },
+  "settingsResetBtn": {
+    "message": "Сбросить…"
+  },
+  "settingsResetMessage": {
+    "message": "Все настройки возвращаются к значениям по умолчанию. Правила, История, списки сайтов, язык и тема не меняются. Данные вебхука и обмена сохраняются, если вы не решите их удалить."
+  },
+  "settingsResetConnections": {
+    "message": "Также удалить подключения вебхука и обмена"
+  },
+  "settingsResetConfirm": {
+    "message": "Сбросить"
+  },
+  "settingsResetDone": {
+    "message": "Настройки сброшены"
+  },
+  "settingsBackupTitle": {
+    "message": "Резервное копирование и восстановление"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Всё"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Настройки, ваши правила и История в одном файле. Данные вебхука и обмена не включаются."
+  },
+  "backupMakeBtn": {
+    "message": "Создать копию"
+  },
+  "backupRestoreBtn": {
+    "message": "Восстановить"
+  },
+  "backupDone": {
+    "message": "Копия сохранена"
+  },
+  "backupFailed": {
+    "message": "Не удалось создать копию"
+  },
+  "restoreTitle": {
+    "message": "Восстановление из копии"
+  },
+  "restoreHoldsFmt": {
+    "message": "Создана в версии {0}, {1}. Содержит:"
+  },
+  "restorePartSettings": {
+    "message": "Настройки"
+  },
+  "restorePartRulesFmt": {
+    "message": "Ваши правила ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "История (записей: {0})"
+  },
+  "restoreModeLabel": {
+    "message": "Правила и История"
+  },
+  "restoreModeMerge": {
+    "message": "Объединить с имеющимся"
+  },
+  "restoreModeReplace": {
+    "message": "Заменить имеющееся"
+  },
+  "restoreConfirm": {
+    "message": "Восстановить"
+  },
+  "restoreNothing": {
+    "message": "Ничего не выбрано."
+  },
+  "restoreDoneFmt": {
+    "message": "Восстановлено: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Не удалось восстановить: {0}."
+  },
+  "restoreInvalid": {
+    "message": "Это не файл резервной копии этого расширения. Ничего не изменено."
+  },
+  "restoreNewer": {
+    "message": "Эта копия создана более новой версией расширения. Обновите расширение и повторите попытку."
+  },
+  "scanModeTitle": {
+    "message": "Сайты для сканирования"
+  },
+  "scanModeBlock": {
+    "message": "Все сайты, кроме тех, что я пропускаю"
+  },
+  "scanModeAllow": {
+    "message": "Только выбранные мной сайты"
+  },
+  "allowedDomainsTitle": {
+    "message": "Выбранные сайты"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Сканировать только эти сайты"
+  },
+  "allowedDomainsDesc": {
+    "message": "Обнаружение работает только на этих сайтах и их поддоменах. На остальных сайтах оно приостановлено."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Сайты не выбраны: пока ничего не сканируется"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Удалить из списка"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} уже в списке"
+  },
+  "detectionNotOnList": {
+    "message": "Обнаружение приостановлено: этого сайта нет в вашем списке"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Сканировать этот сайт"
+  },
+  "detectionAllowlistHint": {
+    "message": "Или перейдите в Настройки → Обнаружение → Сайты для сканирования, чтобы управлять списком."
+  },
+  "siteAllowedFmt": {
+    "message": "Сайт \"{0}\" добавлен в список для сканирования"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Сканировать можно все сайты, кроме пропускаемых, или только выбранные"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Список сайтов должен содержать только имена сайтов"
+  },
+  "webhookFilterTitle": {
+    "message": "Отправлять, только если"
+  },
+  "webhookFilterDesc": {
+    "message": "Страница отправляется, только если выполнено всё перечисленное. В теле запроса по-прежнему указано всё, что на ней найдено."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Минимальная уверенность (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Категории"
+  },
+  "webhookCategoriesHint": {
+    "message": "Если ничего не отмечено, отправка работает для любой категории."
+  },
+  "webhookDomainsLabel": {
+    "message": "Только эти сайты"
+  },
+  "webhookDomainsHint": {
+    "message": "По одному в строке, с поддоменами. Пусто — любые сайты."
+  },
+  "webhookLogTitle": {
+    "message": "Недавние отправки"
+  },
+  "webhookLogDesc": {
+    "message": "Последние 20 попыток: когда, какая страница, что ответил сервер. Адреса и тела запросов не сохраняются."
+  },
+  "webhookLogEmpty": {
+    "message": "Пока ничего не отправлено."
+  },
+  "webhookLogClear": {
+    "message": "Очистить"
+  },
+  "webhookLogSent": {
+    "message": "Отправлено"
+  },
+  "webhookLogFailed": {
+    "message": "Сбой"
+  },
+  "webhookLogSkipped": {
+    "message": "Не отправлено"
+  },
+  "webhookLogReasonSite": {
+    "message": "сайта нет в списке"
+  },
+  "webhookLogReasonCategory": {
+    "message": "категория не выбрана"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "ниже минимальной уверенности"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "нет ответа"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "адрес не разрешён"
+  },
+  "webhookLogErrorConfig": {
+    "message": "недопустимый метод"
+  },
+  "webhookLogTriggerCache": {
+    "message": "страница из кэша"
+  },
+  "webhookLogTriggerTest": {
+    "message": "проверка"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Сайты без JS-хуков"
+  },
+  "hooksOffLabel": {
+    "message": "Отключить JS-хуки на этих сайтах"
+  },
+  "hooksOffHint": {
+    "message": "JS-хуки отслеживают вызовы API браузера на странице, чтобы находить фингерпринтинг. Используйте это для сайта, который с ними работает неправильно: остальные обнаружения продолжат работать, но фингерпринтинг проверяться не будет. По одному сайту в строке, поддомены включены; перезагрузите страницу, чтобы применить."
+  },
+  "hooksOffNote": {
+    "message": "JS-хуки на этом сайте выключены, поэтому фингерпринтинг не проверяется."
+  },
+  "hooksOffBadge": {
+    "message": "Отпечатки не проверены"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "На этой странице не найдено подходящих сигналов анти-бот систем или CAPTCHA. JS-хуки здесь выключены, поэтому фингерпринтинг не проверялся."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Удалять страницы только с фингерпринтингом через"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "При 0 они хранятся как все остальные страницы, поэтому к ним применяется только Автоудаление. Закреплённые страницы никогда не удаляются."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Закреплять страницы автоматически"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Страницы со сложной защитой"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Анти-бот или CAPTCHA высокой сложности. Фингерпринтинг никогда не закрепляет страницу по сложности."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Страницы с защитой"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "По одной защите в строке, с названием как на вкладке «Обнаружение»."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Только при уверенности не ниже (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Так закрепляется до {0} страниц. Если открепить страницу, она больше не будет закрепляться автоматически."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Закреплено автоматически: сохраняется при очистке истории. После открепления автоматически не закрепляется."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Уверенность для закрепления должна быть от 0 до 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Страницы только с фингерпринтингом можно хранить от 0 до 3650 дней"
+  },
+  "settingsHistorySize": {
+    "message": "Лимит размера"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Больший размер хранит больше страниц и занимает больше места на диске. При уменьшении размера удаляются самые старые страницы, которые не закреплены."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Уменьшить размер истории"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "История занимает {0}, а новый лимит — {1}. Чтобы уложиться, будут удалены самые старые незакреплённые страницы."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Уменьшить размер"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "Занято {0}, без ограничений"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Размер истории должен быть одним из: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Тексты, ещё не переведённые на все языки: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Перевести правило"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Заполняет недостающие переводы описания, шаблонов и комбинаций с помощью переводчика Chrome на устройстве. Проверьте их перед сохранением."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Перевод текстов: {0}…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Заполнено переводов: {0}. Проверьте их перед сохранением."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Заполнено: {0}; не удалось перевести здесь: {1}."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Шаблоны"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Комбинации"
+  },
+  "historyWatch": {
+    "message": "Следить за изменениями"
+  },
+  "historyUnwatch": {
+    "message": "Перестать следить"
+  },
+  "historyWatchTip": {
+    "message": "Слежение за изменениями"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Последняя проверка: {0}"
+  },
+  "historyWatchNever": {
+    "message": "Ещё не проверено"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Страница отслеживается"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Страница отслеживается. Чтобы её проверяли, включите «Следить за закреплёнными страницами» в разделе Настройки → История."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Страница больше не отслеживается"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Можно отслеживать до {0} страниц. Сначала отмените слежение за одной из них."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Следить за закреплёнными страницами"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Проверять"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Страницы, которые вы закрепили и для которых выбрали «Следить за изменениями», снова открываются в фоновой вкладке по одной (до 10) и сканируются. Если на странице появляется или исчезает защита анти-бот или CAPTCHA, она помечается как «Изменено», а при включённых уведомлениях вы получаете оповещение. Каждая проверка — это настоящий визит с cookie вашего браузера, поэтому страница, на которой вы вошли в аккаунт, открывается от вашего имени, а окно браузера должно быть открыто."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Проверить сейчас"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "Отслеживается страниц: {0} из {1}"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Проверок ещё не было."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "При последней проверке не нашлось окна браузера, в котором можно открыть страницы."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Последняя проверка не удалась."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Последняя проверка: {0} · проверено: {1}, изменилось: {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Проверено страниц: {0}, изменилось: {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Нет отслеживаемых страниц: закрепите страницу в Истории и выберите «Следить за изменениями»."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "История приостановлена, поэтому ничего не проверяется."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Слежение должно быть выключено или выполняться ежедневно либо еженедельно"
   }
 }

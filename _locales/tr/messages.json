@@ -4688,13 +4688,13 @@
     "message": "Geçmişe karşı kontrol et"
   },
   "ruleHistoryCheckHint": {
-    "message": "Her desenin ve kombinasyonun kaç kayıtlı sayfada eşleştiğini görün. Kaydedilmemiş düzenlemeler sayılır."
+    "message": "Her desenin ve kombinasyonun kayıtlı sayfalarınızdan kaçında eşleştiğini gösterir. Kaydedilmemiş düzenlemeler dahildir."
   },
   "ruleHistoryCheckRun": {
     "message": "Kontrol et"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} kayıtlı sayfa · bu kural {1} sayfada bulundu"
+    "message": "Bu kural, {0} kayıtlı sayfanın {1} tanesiyle eşleşiyor"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{1} sayfadan {0}"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Yalnızca özel ve düzenlenmiş kurallar listelenir. Resmi kuralların açıklamalarını Scrapfly sürdürür."
   },
-  "statsToolsRetentionNote": {
-    "message": "Gelişmiş, yakalamaları 30 dakika saklar; bu yüzden bu sekme tarih aralığını yok sayar."
-  },
   "statsToolsSavedNow": {
     "message": "Şu anda kayıtlı"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Uzantının arka plan bölümü güncel değil. Uzantıyı uzantılar sayfasından yeniden yükleyin ve tekrar deneyin."
+  },
+  "historyFiltersLabel": {
+    "message": "Geçmişi filtrele"
+  },
+  "historyFilterPinned": {
+    "message": "Sabitlenenler"
+  },
+  "historyNoResults": {
+    "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
+  },
+  "historyClearFilters": {
+    "message": "Filtreleri temizle"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Gelişmiş, yakalamaları {0} saklar; bu yüzden bu sekme tarih aralığını yok sayar."
+  },
+  "settingsStorageTitle": {
+    "message": "Depolama"
+  },
+  "settingsStorageDesc": {
+    "message": "Uzantının bu tarayıcıda sakladıkları. Ayarlar ve kurallar buradan temizlenemez."
+  },
+  "storageCache": {
+    "message": "Tespit önbelleği"
+  },
+  "storageCaptures": {
+    "message": "Araç yakalamaları"
+  },
+  "storageHistory": {
+    "message": "Geçmiş"
+  },
+  "storageRules": {
+    "message": "Kurallar ve kategoriler"
+  },
+  "storageSettings": {
+    "message": "Ayarlar"
+  },
+  "storageLogs": {
+    "message": "Günlükler"
+  },
+  "storageOther": {
+    "message": "Diğer"
+  },
+  "storageTotalFmt": {
+    "message": "{0} / {1} kullanıldı"
+  },
+  "storageClearRowFmt": {
+    "message": "Temizle: {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Tespit önbelleğini temizle"
+  },
+  "storageClearCacheMessage": {
+    "message": "Sayfalar bir sonraki açışınızda yeniden taranır. Geçmiş, kurallar ve ayarlar değiştirilmez."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Araç yakalamalarını sil"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Gelişmiş araçların kaydettiği her şey silinir. Geçmiş, kurallar ve ayarlar değiştirilmez."
+  },
+  "storageCacheCleared": {
+    "message": "Tespit önbelleği temizlendi"
+  },
+  "storageCapturesCleared": {
+    "message": "Araç yakalamaları silindi"
+  },
+  "storageClearFailed": {
+    "message": "Temizlenemedi. Yeniden deneyin."
+  },
+  "settingsSupportTitle": {
+    "message": "Destek"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Tanılama"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Hata bildirimi için bir özet kopyalayın: sürümler, ayarlar ve sayılar. Site, adres veya anahtar içermez."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Tanılamayı kopyala"
+  },
+  "diagnosticsCopied": {
+    "message": "Tanılama kopyalandı"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Tanılama kopyalanamadı"
+  },
+  "settingsPresetsTitle": {
+    "message": "Hazır ayarlar ve sıfırlama"
+  },
+  "settingsPresetsDesc": {
+    "message": "Birkaç ayarı tek seferde değiştirin. Kurallar, geçmiş, site listeleri, dil ve tema hiçbir zaman değiştirilmez."
+  },
+  "presetPrivacyName": {
+    "message": "Gizlilik"
+  },
+  "presetPrivacyDesc": {
+    "message": "Bu cihazda daha az veri saklar ve hiçbir şey göndermez."
+  },
+  "presetDeveloperName": {
+    "message": "Geliştirici"
+  },
+  "presetDeveloperDesc": {
+    "message": "Hata ayıklama günlükleri ve JS API, kurallar üzerinde çalışmak için."
+  },
+  "presetApply": {
+    "message": "Uygula"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "{0} hazır ayarı uygulansın mı?"
+  },
+  "presetConfirmIntro": {
+    "message": "Şu ayarlar değişecek:"
+  },
+  "presetAlreadySet": {
+    "message": "Bu ayarlar zaten uygulanmış."
+  },
+  "presetApplied": {
+    "message": "Hazır ayar uygulandı"
+  },
+  "presetHistoryOff": {
+    "message": "Geçmiş kaydedilmez"
+  },
+  "presetBackupOff": {
+    "message": "Otomatik geçmiş yedekleri kapalı"
+  },
+  "presetClearOnClose": {
+    "message": "Tarayıcı kapanınca geçmiş temizlenir"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook kapalı"
+  },
+  "presetNotificationsOff": {
+    "message": "Bildirimler kapalı"
+  },
+  "presetJsApiOff": {
+    "message": "JS API kapalı"
+  },
+  "presetDebugOff": {
+    "message": "Hata ayıklama modu kapalı"
+  },
+  "presetCollectorOff": {
+    "message": "Günlük toplayıcı kapalı"
+  },
+  "presetDebugOn": {
+    "message": "Hata ayıklama modu açık"
+  },
+  "presetVerboseOn": {
+    "message": "Ayrıntılı günlükler açık"
+  },
+  "presetCollectorOn": {
+    "message": "Günlük toplayıcı açık"
+  },
+  "presetCollectorMax": {
+    "message": "Günlük toplayıcı en fazla 5000 satır tutar"
+  },
+  "presetJsApiOn": {
+    "message": "JS API açık"
+  },
+  "settingsResetTitle": {
+    "message": "Ayarları sıfırla"
+  },
+  "settingsResetDesc": {
+    "message": "Tüm ayarlar varsayılana döner. Kurallar, geçmiş, site listeleri, dil ve tema korunur."
+  },
+  "settingsResetBtn": {
+    "message": "Sıfırla…"
+  },
+  "settingsResetMessage": {
+    "message": "Tüm ayarlar varsayılana döner. Kurallar, geçmiş, site listeleri, dil ve tema değiştirilmez. Webhook ve paylaşım bilgileri, kaldırmayı seçmediğiniz sürece korunur."
+  },
+  "settingsResetConnections": {
+    "message": "Webhook ve paylaşım bağlantılarını da kaldır"
+  },
+  "settingsResetConfirm": {
+    "message": "Sıfırla"
+  },
+  "settingsResetDone": {
+    "message": "Ayarlar sıfırlandı"
+  },
+  "settingsBackupTitle": {
+    "message": "Yedekleme ve geri yükleme"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Her şey"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Ayarlar, kendi kurallarınız ve geçmiş tek dosyada. Webhook ve paylaşım bilgileri dahil değildir."
+  },
+  "backupMakeBtn": {
+    "message": "Yedekle"
+  },
+  "backupRestoreBtn": {
+    "message": "Geri yükle"
+  },
+  "backupDone": {
+    "message": "Yedek kaydedildi"
+  },
+  "backupFailed": {
+    "message": "Yedek oluşturulamadı"
+  },
+  "restoreTitle": {
+    "message": "Yedeği geri yükle"
+  },
+  "restoreHoldsFmt": {
+    "message": "{1} tarihinde {0} sürümüyle oluşturuldu. İçeriği:"
+  },
+  "restorePartSettings": {
+    "message": "Ayarlar"
+  },
+  "restorePartRulesFmt": {
+    "message": "Kurallarınız ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Geçmiş ({0} girdi)"
+  },
+  "restoreModeLabel": {
+    "message": "Kurallar ve geçmiş"
+  },
+  "restoreModeMerge": {
+    "message": "Mevcut olanlarla birleştir"
+  },
+  "restoreModeReplace": {
+    "message": "Mevcut olanların yerine koy"
+  },
+  "restoreConfirm": {
+    "message": "Geri yükle"
+  },
+  "restoreNothing": {
+    "message": "Hiçbir şey seçilmedi."
+  },
+  "restoreDoneFmt": {
+    "message": "Geri yüklendi: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "{0} geri yüklenemedi."
+  },
+  "restoreInvalid": {
+    "message": "Bu dosya, bu uzantının bir yedeği değil. Hiçbir şey değiştirilmedi."
+  },
+  "restoreNewer": {
+    "message": "Bu yedek, uzantının daha yeni bir sürümüyle oluşturulmuş. Uzantıyı güncelleyin ve yeniden deneyin."
+  },
+  "scanModeTitle": {
+    "message": "Taranacak siteler"
+  },
+  "scanModeBlock": {
+    "message": "Atladıklarım dışındaki tüm siteler"
+  },
+  "scanModeAllow": {
+    "message": "Yalnızca seçtiğim siteler"
+  },
+  "allowedDomainsTitle": {
+    "message": "Seçilen siteler"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Yalnızca bu siteleri tara"
+  },
+  "allowedDomainsDesc": {
+    "message": "Tespit yalnızca bu sitelerde ve alt alan adlarında çalışır. Diğer her yerde duraklatılır."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Seçili site yok: henüz hiçbir şey taranmıyor"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Listeden kaldır"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} zaten listede"
+  },
+  "detectionNotOnList": {
+    "message": "Tespit duraklatıldı: bu site listenizde değil"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Bu siteyi tara"
+  },
+  "detectionAllowlistHint": {
+    "message": "Veya listeyi yönetmek için Ayarlar → Tespit → Taranacak siteler bölümüne gidin."
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\" taranacak sitelere eklendi"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Taranacak siteler, atlananlar dışındaki tüm siteler veya yalnızca seçilen siteler olmalıdır"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Site listesi yalnızca site adları içermelidir"
+  },
+  "webhookFilterTitle": {
+    "message": "Yalnızca şu durumda gönder"
+  },
+  "webhookFilterDesc": {
+    "message": "Bir sayfa yalnızca bunların hepsi sağlanırsa gönderilir. Payload yine de sayfada bulunan her şeyi listeler."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Minimum güven (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Kategoriler"
+  },
+  "webhookCategoriesHint": {
+    "message": "Herhangi bir kategori için göndermek üzere hepsini işaretsiz bırakın."
+  },
+  "webhookDomainsLabel": {
+    "message": "Yalnızca bu siteler"
+  },
+  "webhookDomainsHint": {
+    "message": "Her satıra bir tane, alt alan adlarıyla birlikte. Boş bırakılırsa her site geçerlidir."
+  },
+  "webhookLogTitle": {
+    "message": "Son gönderimler"
+  },
+  "webhookLogDesc": {
+    "message": "Son 20 deneme: ne zaman, hangi sayfa, ne yanıt geldi. Adresler ve payload'lar asla saklanmaz."
+  },
+  "webhookLogEmpty": {
+    "message": "Henüz bir şey gönderilmedi."
+  },
+  "webhookLogClear": {
+    "message": "Temizle"
+  },
+  "webhookLogSent": {
+    "message": "Gönderildi"
+  },
+  "webhookLogFailed": {
+    "message": "Başarısız"
+  },
+  "webhookLogSkipped": {
+    "message": "Gönderilmedi"
+  },
+  "webhookLogReasonSite": {
+    "message": "site listede değil"
+  },
+  "webhookLogReasonCategory": {
+    "message": "kategori seçilmedi"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "minimum güvenin altında"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "yanıt yok"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "adrese izin verilmiyor"
+  },
+  "webhookLogErrorConfig": {
+    "message": "geçersiz yöntem"
+  },
+  "webhookLogTriggerCache": {
+    "message": "önbellekteki sayfa"
+  },
+  "webhookLogTriggerTest": {
+    "message": "test"
+  },
+  "hooksOffGroupTitle": {
+    "message": "JS hook'ları olmayan siteler"
+  },
+  "hooksOffLabel": {
+    "message": "Bu sitelerde JS hook'larını kapat"
+  },
+  "hooksOffHint": {
+    "message": "JS hook'ları, parmak izi oluşturma girişimlerini bulmak için bir sayfanın tarayıcı API çağrılarını izler. Bunlarla sorun çıkaran bir site için kullanın: diğer tespitler çalışmaya devam eder, ancak parmak izi kontrol edilmez. Her satıra bir site, alt alan adları dahil; uygulamak için sayfayı yeniden yükleyin."
+  },
+  "hooksOffNote": {
+    "message": "Bu sitede JS hook'ları kapalı, bu yüzden parmak izi kontrol edilmiyor."
+  },
+  "hooksOffBadge": {
+    "message": "Parmak izi kontrol edilmedi"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Bu sayfada eşleşen anti-bot veya CAPTCHA sinyali bulunamadı. JS hook'ları burada kapalı, bu yüzden parmak izi kontrol edilmedi."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Yalnızca parmak izi içeren sayfaları şu süre sonra sil"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0, bunları diğer tüm sayfalar gibi saklar; yani yalnızca Otomatik silme geçerli olur. Sabitlenen sayfalar asla silinmez."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Sayfaları otomatik sabitle"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Zor korumalı sayfalar"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Yüksek zorlukta bir anti-bot veya CAPTCHA. Parmak izi, bir sayfayı zorluğuna göre asla sabitlemez."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Şunlarla korunan sayfalar"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Her satıra bir koruma, Tespit sekmesindeki adıyla."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Yalnızca şu güven düzeyinden itibaren (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Bu şekilde en fazla {0} sayfa sabitlenir. Birinin sabitlemesini kaldırırsanız bir daha kendiliğinden sabitlenmez."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Otomatik sabitlendi: geçmiş temizlenirken korunur. Sabitlemesini kaldırırsanız bir daha kendiliğinden sabitlenmez."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Sabitleme güveni 0 ile 100 arasında olmalıdır"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Yalnızca parmak izi içeren sayfalar 0 ile 3650 gün arasında saklanmalıdır"
+  },
+  "settingsHistorySize": {
+    "message": "Boyut sınırı"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Daha büyük bir boyut daha fazla sayfa saklar ve diskinizin daha çoğunu kullanır. Boyutu düşürmek, sabitlenmemiş en eski sayfaları kaldırır."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Geçmiş boyutunu düşür"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Geçmiş {0} kullanıyor ve yeni sınır {1}. Sığması için sabitlenmemiş en eski sayfalar kaldırılacak."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Boyutu düşür"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} kullanıldı, sınır yok"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Geçmiş boyutu şunlardan biri olmalıdır: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Henüz her dile çevrilmemiş metinler: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Kuralı çevir"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Açıklamanın, desenlerin ve kombinasyonların eksik çevirilerini Chrome'un cihaz üzerindeki çevirmeniyle doldurur. Kaydetmeden önce kontrol edin."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "{0} metin çevriliyor…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "{0} çeviri dolduruldu. Kaydetmeden önce kontrol edin."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "{0} dolduruldu; {1} burada çevrilemedi."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Desenler"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Kombinasyonlar"
+  },
+  "historyWatch": {
+    "message": "Değişiklikleri izle"
+  },
+  "historyUnwatch": {
+    "message": "İzlemeyi durdur"
+  },
+  "historyWatchTip": {
+    "message": "Değişiklikler izleniyor"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Son kontrol: {0}"
+  },
+  "historyWatchNever": {
+    "message": "Henüz kontrol edilmedi"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Bu sayfa izleniyor"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Bu sayfa izleniyor. Kontrol edilmesi için Ayarlar → Geçmiş bölümünde Sabitlenen sayfaları izle seçeneğini açın."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Bu sayfa artık izlenmiyor"
+  },
+  "historyWatchLimitFmt": {
+    "message": "En fazla {0} sayfayı izleyebilirsiniz. Önce birinin izlemesini durdurun."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Sabitlenen sayfaları izle"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Kontrol sıklığı"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Sabitleyip Değişiklikleri izle'yi seçtiğiniz sayfalar, arka plan sekmesinde birer birer (en fazla 10) yeniden açılır ve taranır. Bir anti-bot veya CAPTCHA korumasını kazanan ya da kaybeden sayfa Değişti olarak işaretlenir; uyarılar açıksa bildirim de gösterilir. Her kontrol, tarayıcınızın çerezleriyle yapılan gerçek bir ziyarettir; yani oturum açılmış bir sayfa sizmişsiniz gibi ziyaret edilir ve bir tarayıcı penceresi açık olmalıdır."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Şimdi kontrol et"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{1} sayfadan {0} tanesi izleniyor"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Henüz kontrol yok."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Son kontrolde sayfaları açacak bir tarayıcı penceresi bulunamadı."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Son kontrol başarısız oldu."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Son kontrol: {0} · {1} kontrol edildi, {2} değişti"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "{0} sayfa kontrol edildi, {1} değişti"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Henüz izlenen sayfa yok: Geçmiş'te bir sayfayı sabitleyin ve Değişiklikleri izle'yi seçin."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Geçmiş duraklatıldı, bu yüzden hiçbir şey kontrol edilmiyor."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "İzleme listesi kapalı, günlük veya haftalık olmalıdır"
   }
 }

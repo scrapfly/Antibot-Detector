@@ -4688,13 +4688,13 @@
     "message": "기록으로 확인"
   },
   "ruleHistoryCheckHint": {
-    "message": "각 패턴과 조합이 저장된 페이지 중 몇 개에서 일치하는지 확인합니다. 저장하지 않은 편집도 포함됩니다."
+    "message": "각 패턴과 조합이 저장된 페이지 중 몇 개와 일치하는지 보여 줍니다. 저장하지 않은 편집도 포함됩니다."
   },
   "ruleHistoryCheckRun": {
     "message": "확인"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "저장된 페이지 {0}개 · 이 규칙은 {1}개에서 발견됨"
+    "message": "이 규칙은 저장된 페이지 {0}개 중 {1}개와 일치합니다"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{1}개 중 {0}개 페이지"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "사용자 지정 규칙과 수정한 규칙만 표시됩니다. 공식 규칙의 설명은 Scrapfly가 관리합니다."
   },
-  "statsToolsRetentionNote": {
-    "message": "Advanced는 캡처를 30분 동안 보관하므로 이 탭은 날짜 범위를 무시합니다."
-  },
   "statsToolsSavedNow": {
     "message": "현재 저장됨"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "확장 프로그램의 백그라운드 부분이 오래되었습니다. 확장 프로그램 페이지에서 확장 프로그램을 새로고침한 후 다시 시도하세요."
+  },
+  "historyFiltersLabel": {
+    "message": "기록 필터"
+  },
+  "historyFilterPinned": {
+    "message": "고정됨"
+  },
+  "historyNoResults": {
+    "message": "검색어나 필터와 일치하는 항목이 없습니다."
+  },
+  "historyClearFilters": {
+    "message": "필터 지우기"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "고급은 캡처를 {0} 동안 보관하므로 이 탭은 날짜 범위를 무시합니다."
+  },
+  "settingsStorageTitle": {
+    "message": "저장 공간"
+  },
+  "settingsStorageDesc": {
+    "message": "확장 프로그램이 이 브라우저에 보관하는 항목입니다. 설정과 규칙은 여기서 지울 수 없습니다."
+  },
+  "storageCache": {
+    "message": "탐지 캐시"
+  },
+  "storageCaptures": {
+    "message": "도구 캡처"
+  },
+  "storageHistory": {
+    "message": "기록"
+  },
+  "storageRules": {
+    "message": "규칙 및 카테고리"
+  },
+  "storageSettings": {
+    "message": "설정"
+  },
+  "storageLogs": {
+    "message": "로그"
+  },
+  "storageOther": {
+    "message": "기타"
+  },
+  "storageTotalFmt": {
+    "message": "{1} 중 {0} 사용"
+  },
+  "storageClearRowFmt": {
+    "message": "{0} 지우기"
+  },
+  "storageClearCacheTitle": {
+    "message": "탐지 캐시 지우기"
+  },
+  "storageClearCacheMessage": {
+    "message": "다음에 페이지를 열면 다시 스캔합니다. 기록, 규칙, 설정은 그대로 유지됩니다."
+  },
+  "storageClearCapturesTitle": {
+    "message": "도구 캡처 삭제"
+  },
+  "storageClearCapturesMessage": {
+    "message": "고급 도구가 저장한 모든 항목이 삭제됩니다. 기록, 규칙, 설정은 그대로 유지됩니다."
+  },
+  "storageCacheCleared": {
+    "message": "탐지 캐시를 지웠습니다"
+  },
+  "storageCapturesCleared": {
+    "message": "도구 캡처를 삭제했습니다"
+  },
+  "storageClearFailed": {
+    "message": "지우지 못했습니다. 다시 시도하세요."
+  },
+  "settingsSupportTitle": {
+    "message": "지원"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "진단"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "버그 신고용 요약을 복사합니다. 버전, 설정, 개수가 들어 있으며 사이트, 주소, 키는 포함되지 않습니다."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "진단 복사"
+  },
+  "diagnosticsCopied": {
+    "message": "진단을 복사했습니다"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "진단을 복사하지 못했습니다"
+  },
+  "settingsPresetsTitle": {
+    "message": "프리셋 및 초기화"
+  },
+  "settingsPresetsDesc": {
+    "message": "여러 설정을 한 번에 바꿉니다. 규칙, 기록, 사이트 목록, 언어, 테마는 절대 변경되지 않습니다."
+  },
+  "presetPrivacyName": {
+    "message": "개인정보 보호"
+  },
+  "presetPrivacyDesc": {
+    "message": "이 기기에 저장하는 정보를 줄이고 외부로 아무것도 보내지 않습니다."
+  },
+  "presetDeveloperName": {
+    "message": "개발자"
+  },
+  "presetDeveloperDesc": {
+    "message": "디버그 로그와 JS API. 규칙 작업용입니다."
+  },
+  "presetApply": {
+    "message": "적용"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "{0} 프리셋을 적용하시겠습니까?"
+  },
+  "presetConfirmIntro": {
+    "message": "다음 설정이 변경됩니다:"
+  },
+  "presetAlreadySet": {
+    "message": "이 설정은 이미 적용되어 있습니다."
+  },
+  "presetApplied": {
+    "message": "프리셋을 적용했습니다"
+  },
+  "presetHistoryOff": {
+    "message": "기록이 저장되지 않습니다"
+  },
+  "presetBackupOff": {
+    "message": "기록 자동 백업이 꺼져 있습니다"
+  },
+  "presetClearOnClose": {
+    "message": "브라우저를 닫으면 기록이 지워집니다"
+  },
+  "presetWebhookOff": {
+    "message": "웹훅이 꺼져 있습니다"
+  },
+  "presetNotificationsOff": {
+    "message": "알림이 꺼져 있습니다"
+  },
+  "presetJsApiOff": {
+    "message": "JS API가 꺼져 있습니다"
+  },
+  "presetDebugOff": {
+    "message": "디버그 모드가 꺼져 있습니다"
+  },
+  "presetCollectorOff": {
+    "message": "로그 수집기가 꺼져 있습니다"
+  },
+  "presetDebugOn": {
+    "message": "디버그 모드가 켜져 있습니다"
+  },
+  "presetVerboseOn": {
+    "message": "상세 로그가 켜져 있습니다"
+  },
+  "presetCollectorOn": {
+    "message": "로그 수집기가 켜져 있습니다"
+  },
+  "presetCollectorMax": {
+    "message": "로그 수집기가 최대 5000줄을 보관합니다"
+  },
+  "presetJsApiOn": {
+    "message": "JS API가 켜져 있습니다"
+  },
+  "settingsResetTitle": {
+    "message": "설정 초기화"
+  },
+  "settingsResetDesc": {
+    "message": "모든 설정이 기본값으로 돌아갑니다. 규칙, 기록, 사이트 목록, 언어, 테마는 유지됩니다."
+  },
+  "settingsResetBtn": {
+    "message": "초기화…"
+  },
+  "settingsResetMessage": {
+    "message": "모든 설정이 기본값으로 돌아갑니다. 규칙, 기록, 사이트 목록, 언어, 테마는 변경되지 않습니다. 웹훅 및 공유 정보는 제거를 선택하지 않는 한 유지됩니다."
+  },
+  "settingsResetConnections": {
+    "message": "웹훅과 공유 연결도 함께 제거"
+  },
+  "settingsResetConfirm": {
+    "message": "초기화"
+  },
+  "settingsResetDone": {
+    "message": "설정을 초기화했습니다"
+  },
+  "settingsBackupTitle": {
+    "message": "백업 및 복원"
+  },
+  "settingsBackupItemTitle": {
+    "message": "전체"
+  },
+  "settingsBackupItemDesc": {
+    "message": "설정, 직접 만든 규칙, 기록을 한 파일에 담습니다. 웹훅 및 공유 정보는 포함되지 않습니다."
+  },
+  "backupMakeBtn": {
+    "message": "백업"
+  },
+  "backupRestoreBtn": {
+    "message": "복원"
+  },
+  "backupDone": {
+    "message": "백업을 저장했습니다"
+  },
+  "backupFailed": {
+    "message": "백업을 만들지 못했습니다"
+  },
+  "restoreTitle": {
+    "message": "백업 복원"
+  },
+  "restoreHoldsFmt": {
+    "message": "버전 {0}에서 {1}에 만들었습니다. 포함된 항목:"
+  },
+  "restorePartSettings": {
+    "message": "설정"
+  },
+  "restorePartRulesFmt": {
+    "message": "직접 만든 규칙({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "기록(항목 {0}개)"
+  },
+  "restoreModeLabel": {
+    "message": "규칙 및 기록"
+  },
+  "restoreModeMerge": {
+    "message": "현재 항목과 병합"
+  },
+  "restoreModeReplace": {
+    "message": "현재 항목 교체"
+  },
+  "restoreConfirm": {
+    "message": "복원"
+  },
+  "restoreNothing": {
+    "message": "선택한 항목이 없습니다."
+  },
+  "restoreDoneFmt": {
+    "message": "복원함: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "{0}을(를) 복원하지 못했습니다."
+  },
+  "restoreInvalid": {
+    "message": "이 파일은 이 확장 프로그램의 백업이 아닙니다. 아무것도 변경되지 않았습니다."
+  },
+  "restoreNewer": {
+    "message": "이 백업은 더 최신 버전의 확장 프로그램으로 만들어졌습니다. 확장 프로그램을 업데이트한 후 다시 시도하세요."
+  },
+  "scanModeTitle": {
+    "message": "스캔할 사이트"
+  },
+  "scanModeBlock": {
+    "message": "건너뛰도록 한 사이트를 제외한 모든 사이트"
+  },
+  "scanModeAllow": {
+    "message": "내가 선택한 사이트만"
+  },
+  "allowedDomainsTitle": {
+    "message": "선택한 사이트"
+  },
+  "settingsCardAllowDomains": {
+    "message": "이 사이트만 스캔"
+  },
+  "allowedDomainsDesc": {
+    "message": "탐지는 이 사이트와 하위 도메인에서만 실행됩니다. 그 외에는 일시 중지됩니다."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "선택한 사이트 없음: 아직 아무것도 스캔하지 않습니다"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "목록에서 제거"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0}은(는) 이미 목록에 있습니다"
+  },
+  "detectionNotOnList": {
+    "message": "탐지 일시 중지됨: 이 사이트는 목록에 없습니다"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "이 사이트 스캔"
+  },
+  "detectionAllowlistHint": {
+    "message": "또는 설정 → 탐지 → 스캔할 사이트에서 목록을 관리할 수 있습니다."
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\"을(를) 스캔할 사이트에 추가했습니다"
+  },
+  "settingsUiErrScanMode": {
+    "message": "스캔할 사이트는 건너뛴 사이트를 제외한 모든 사이트이거나 선택한 사이트만이어야 합니다"
+  },
+  "settingsUiErrSiteList": {
+    "message": "사이트 목록에는 사이트 이름만 넣을 수 있습니다"
+  },
+  "webhookFilterTitle": {
+    "message": "다음 경우에만 전송"
+  },
+  "webhookFilterDesc": {
+    "message": "모든 조건을 충족하는 페이지만 전송됩니다. 페이로드에는 그 페이지에서 발견된 모든 항목이 그대로 포함됩니다."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "최소 신뢰도(%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "카테고리"
+  },
+  "webhookCategoriesHint": {
+    "message": "모두 선택하지 않으면 모든 카테고리에서 전송합니다."
+  },
+  "webhookDomainsLabel": {
+    "message": "이 사이트만"
+  },
+  "webhookDomainsHint": {
+    "message": "한 줄에 하나씩, 하위 도메인 포함. 비워 두면 모든 사이트가 대상입니다."
+  },
+  "webhookLogTitle": {
+    "message": "최근 전송"
+  },
+  "webhookLogDesc": {
+    "message": "최근 20회 시도: 시각, 페이지, 응답 결과. 주소와 페이로드는 저장되지 않습니다."
+  },
+  "webhookLogEmpty": {
+    "message": "아직 전송한 항목이 없습니다."
+  },
+  "webhookLogClear": {
+    "message": "지우기"
+  },
+  "webhookLogSent": {
+    "message": "전송됨"
+  },
+  "webhookLogFailed": {
+    "message": "실패"
+  },
+  "webhookLogSkipped": {
+    "message": "전송 안 함"
+  },
+  "webhookLogReasonSite": {
+    "message": "사이트가 목록에 없음"
+  },
+  "webhookLogReasonCategory": {
+    "message": "카테고리가 선택되지 않음"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "최소 신뢰도 미만"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "응답 없음"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "허용되지 않는 주소"
+  },
+  "webhookLogErrorConfig": {
+    "message": "잘못된 메서드"
+  },
+  "webhookLogTriggerCache": {
+    "message": "캐시된 페이지"
+  },
+  "webhookLogTriggerTest": {
+    "message": "테스트"
+  },
+  "hooksOffGroupTitle": {
+    "message": "JS 후크를 쓰지 않는 사이트"
+  },
+  "hooksOffLabel": {
+    "message": "이 사이트에서 JS 후크 끄기"
+  },
+  "hooksOffHint": {
+    "message": "JS 후크는 페이지의 브라우저 API 호출을 감시하여 핑거프린팅을 찾아냅니다. 후크 때문에 오작동하는 사이트에 사용하세요. 다른 탐지는 계속 작동하지만 핑거프린팅은 확인하지 않습니다. 한 줄에 사이트 하나씩, 하위 도메인 포함. 적용하려면 페이지를 새로고침하세요."
+  },
+  "hooksOffNote": {
+    "message": "이 사이트에서는 JS 후크가 꺼져 있어 핑거프린팅을 확인하지 않습니다."
+  },
+  "hooksOffBadge": {
+    "message": "핑거프린팅 확인 안 함"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "이 페이지에서 일치하는 안티봇 또는 CAPTCHA 신호를 찾지 못했습니다. 여기서는 JS 후크가 꺼져 있어 핑거프린팅은 확인하지 않았습니다."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "다음보다 오래된 핑거프린팅만 있는 페이지 삭제"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0이면 다른 페이지와 똑같이 보관하며 자동 삭제만 적용됩니다. 고정한 페이지는 삭제되지 않습니다."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "페이지 자동 고정"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "난이도가 높은 보호 기능이 있는 페이지"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "난이도가 높음인 안티봇 또는 CAPTCHA. 핑거프린팅은 난이도를 이유로 페이지를 고정하지 않습니다."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "다음 보호 기능을 사용하는 페이지"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "한 줄에 보호 기능 하나씩, 탐지 탭에 표시되는 이름으로 입력하세요."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "이 신뢰도 이상일 때만(%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "이 방식으로는 최대 {0}개 페이지가 고정됩니다. 고정을 해제한 페이지는 자동으로 다시 고정되지 않습니다."
+  },
+  "historyAutoPinnedTip": {
+    "message": "자동으로 고정됨: 기록을 정리해도 유지됩니다. 고정을 해제하면 자동으로 다시 고정되지 않습니다."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "고정 신뢰도는 0에서 100 사이여야 합니다"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "핑거프린팅만 있는 페이지는 0일에서 3650일 사이로 보관해야 합니다"
+  },
+  "settingsHistorySize": {
+    "message": "크기 제한"
+  },
+  "settingsHistorySizeHint": {
+    "message": "크기를 늘리면 더 많은 페이지를 보관하지만 디스크를 더 많이 사용합니다. 크기를 줄이면 고정되지 않은 가장 오래된 페이지부터 삭제됩니다."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "기록 크기 줄이기"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "현재 기록은 {0}을(를) 사용 중이며 새 한도는 {1}입니다. 맞추기 위해 고정되지 않은 가장 오래된 페이지부터 삭제됩니다."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "크기 줄이기"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} 사용 중, 제한 없음"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "기록 크기는 {0}MB 중 하나여야 합니다"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "아직 모든 언어로 번역되지 않은 텍스트: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "규칙 번역"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "설명, 패턴, 조합에 빠진 번역을 Chrome의 온디바이스 번역기로 채웁니다. 저장하기 전에 확인하세요."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "텍스트 {0}개 번역 중…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "번역 {0}개를 채웠습니다. 저장하기 전에 확인하세요."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "{0}개 채움, {1}개는 여기서 번역할 수 없습니다."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "패턴"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "조합"
+  },
+  "historyWatch": {
+    "message": "변경 사항 감시"
+  },
+  "historyUnwatch": {
+    "message": "감시 중지"
+  },
+  "historyWatchTip": {
+    "message": "변경 사항 감시 중"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "마지막 확인: {0}"
+  },
+  "historyWatchNever": {
+    "message": "아직 확인하지 않음"
+  },
+  "historyWatchStartedNotice": {
+    "message": "이 페이지를 감시합니다"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "이 페이지를 감시합니다. 확인이 이루어지려면 설정 → 기록에서 고정한 페이지 감시를 켜세요."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "더 이상 이 페이지를 감시하지 않습니다"
+  },
+  "historyWatchLimitFmt": {
+    "message": "최대 {0}개 페이지까지 감시할 수 있습니다. 먼저 하나의 감시를 중지하세요."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "고정한 페이지 감시"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "확인 주기"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "고정하고 변경 사항 감시를 선택한 페이지는 백그라운드 탭에서 한 번에 하나씩(최대 10개) 다시 열어 스캔합니다. 안티봇 또는 CAPTCHA 보호 기능이 추가되거나 사라진 페이지는 변경됨으로 표시되며, 알림이 켜져 있으면 알림도 함께 표시됩니다. 각 확인은 브라우저 쿠키를 사용하는 실제 방문이므로 로그인한 페이지도 로그인한 상태로 열리며, 브라우저 창이 열려 있어야 합니다."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "지금 확인"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{1}개 중 {0}개 페이지 감시 중"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "아직 확인하지 않았습니다."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "마지막 확인 때 페이지를 열 브라우저 창을 찾지 못했습니다."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "마지막 확인에 실패했습니다."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "마지막 확인: {0} · {1}개 확인, {2}개 변경됨"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "페이지 {0}개 확인, {1}개 변경됨"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "아직 감시 중인 페이지가 없습니다: 기록에서 페이지를 고정하고 변경 사항 감시를 선택하세요."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "기록이 일시 중지되어 있어 아무것도 확인하지 않습니다."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "감시 목록은 끄기, 매일, 매주 중 하나여야 합니다"
   }
 }

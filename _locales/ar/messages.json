@@ -4688,13 +4688,13 @@
     "message": "التحقق مقابل السجل"
   },
   "ruleHistoryCheckHint": {
-    "message": "اعرف على كم صفحة محفوظة يتطابق كل نمط وكل تركيبة. التعديلات غير المحفوظة محسوبة."
+    "message": "يعرض على كم صفحة محفوظة يتطابق كل نمط وكل تركيبة. تُحسب التعديلات غير المحفوظة أيضًا."
   },
   "ruleHistoryCheckRun": {
     "message": "تحقق"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} صفحة محفوظة · وُجدت هذه القاعدة في {1}"
+    "message": "تتطابق هذه القاعدة مع {1} من {0} صفحة محفوظة"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} من {1} صفحة"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "تُعرض القواعد المخصصة والمعدَّلة فقط. تتولى Scrapfly صيانة أوصاف القواعد الرسمية."
   },
-  "statsToolsRetentionNote": {
-    "message": "يحتفظ Advanced بالعمليات الملتقطة لمدة 30 دقيقة، لذا تتجاهل علامة التبويب هذه النطاق الزمني."
-  },
   "statsToolsSavedNow": {
     "message": "المحفوظة الآن"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "الجزء العامل في الخلفية من الإضافة قديم. أعد تحميل الإضافة من صفحة الإضافات ثم حاول مرة أخرى."
+  },
+  "historyFiltersLabel": {
+    "message": "تصفية السجل"
+  },
+  "historyFilterPinned": {
+    "message": "مثبّتة"
+  },
+  "historyNoResults": {
+    "message": "لا توجد إدخالات تطابق بحثك أو عوامل التصفية."
+  },
+  "historyClearFilters": {
+    "message": "مسح عوامل التصفية"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "يحتفظ «متقدم» باللقطات لمدة {0}، لذا يتجاهل هذا التبويب الفترة الزمنية المحددة."
+  },
+  "settingsStorageTitle": {
+    "message": "التخزين"
+  },
+  "settingsStorageDesc": {
+    "message": "ما تحتفظ به الإضافة في هذا المتصفح. لا يمكن مسح الإعدادات والقواعد من هنا."
+  },
+  "storageCache": {
+    "message": "ذاكرة التخزين المؤقت للكشف"
+  },
+  "storageCaptures": {
+    "message": "لقطات الأدوات"
+  },
+  "storageHistory": {
+    "message": "السجل"
+  },
+  "storageRules": {
+    "message": "القواعد والفئات"
+  },
+  "storageSettings": {
+    "message": "الإعدادات"
+  },
+  "storageLogs": {
+    "message": "السجلات"
+  },
+  "storageOther": {
+    "message": "أخرى"
+  },
+  "storageTotalFmt": {
+    "message": "تم استخدام {0} من {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "مسح {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "مسح ذاكرة التخزين المؤقت للكشف"
+  },
+  "storageClearCacheMessage": {
+    "message": "ستُفحص الصفحات مجددًا عند فتحها في المرة القادمة. لا يتأثر السجل ولا القواعد ولا الإعدادات."
+  },
+  "storageClearCapturesTitle": {
+    "message": "حذف لقطات الأدوات"
+  },
+  "storageClearCapturesMessage": {
+    "message": "يتم حذف كل ما حفظته الأدوات المتقدمة. لا يتأثر السجل ولا القواعد ولا الإعدادات."
+  },
+  "storageCacheCleared": {
+    "message": "تم مسح ذاكرة التخزين المؤقت للكشف"
+  },
+  "storageCapturesCleared": {
+    "message": "تم حذف لقطات الأدوات"
+  },
+  "storageClearFailed": {
+    "message": "تعذّر المسح. حاول مجددًا."
+  },
+  "settingsSupportTitle": {
+    "message": "الدعم"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "التشخيص"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "انسخ ملخصًا لتقرير خطأ: الإصدارات والإعدادات والأعداد. لا يتضمن مواقع أو عناوين أو مفاتيح."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "نسخ التشخيص"
+  },
+  "diagnosticsCopied": {
+    "message": "تم نسخ التشخيص"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "تعذّر نسخ التشخيص"
+  },
+  "settingsPresetsTitle": {
+    "message": "الإعدادات المسبقة وإعادة التعيين"
+  },
+  "settingsPresetsDesc": {
+    "message": "غيّر عدة إعدادات دفعة واحدة. لا تتغير القواعد ولا السجل ولا قوائم المواقع ولا اللغة ولا المظهر أبدًا."
+  },
+  "presetPrivacyName": {
+    "message": "الخصوصية"
+  },
+  "presetPrivacyDesc": {
+    "message": "يحتفظ بأقل قدر على هذا الجهاز ولا يرسل شيئًا إلى الخارج."
+  },
+  "presetDeveloperName": {
+    "message": "المطوّر"
+  },
+  "presetDeveloperDesc": {
+    "message": "سجلات التصحيح وواجهة JS API، للعمل على القواعد."
+  },
+  "presetApply": {
+    "message": "تطبيق"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "تطبيق إعداد {0} المسبق؟"
+  },
+  "presetConfirmIntro": {
+    "message": "ستتغير هذه الإعدادات:"
+  },
+  "presetAlreadySet": {
+    "message": "هذه الإعدادات مضبوطة بالفعل."
+  },
+  "presetApplied": {
+    "message": "تم تطبيق الإعداد المسبق"
+  },
+  "presetHistoryOff": {
+    "message": "لا تُحفظ الصفحات في السجل"
+  },
+  "presetBackupOff": {
+    "message": "النسخ الاحتياطي التلقائي للسجل معطّل"
+  },
+  "presetClearOnClose": {
+    "message": "يُمسح السجل عند إغلاق المتصفح"
+  },
+  "presetWebhookOff": {
+    "message": "الـ webhook معطّل"
+  },
+  "presetNotificationsOff": {
+    "message": "الإشعارات معطّلة"
+  },
+  "presetJsApiOff": {
+    "message": "واجهة JS API معطّلة"
+  },
+  "presetDebugOff": {
+    "message": "وضع التصحيح معطّل"
+  },
+  "presetCollectorOff": {
+    "message": "جامع السجلات معطّل"
+  },
+  "presetDebugOn": {
+    "message": "وضع التصحيح مفعّل"
+  },
+  "presetVerboseOn": {
+    "message": "التسجيل المفصّل مفعّل"
+  },
+  "presetCollectorOn": {
+    "message": "جامع السجلات مفعّل"
+  },
+  "presetCollectorMax": {
+    "message": "يحتفظ جامع السجلات بما يصل إلى 5000 سطر"
+  },
+  "presetJsApiOn": {
+    "message": "واجهة JS API مفعّلة"
+  },
+  "settingsResetTitle": {
+    "message": "إعادة تعيين الإعدادات"
+  },
+  "settingsResetDesc": {
+    "message": "تعود كل الإعدادات إلى قيمها الافتراضية. تبقى القواعد والسجل وقوائم المواقع واللغة والمظهر."
+  },
+  "settingsResetBtn": {
+    "message": "إعادة تعيين…"
+  },
+  "settingsResetMessage": {
+    "message": "تعود كل الإعدادات إلى قيمها الافتراضية. لا تتغير القواعد ولا السجل ولا قوائم المواقع ولا اللغة ولا المظهر. تبقى تفاصيل الـ webhook والمشاركة ما لم تختر إزالتها."
+  },
+  "settingsResetConnections": {
+    "message": "إزالة اتصالات الـ webhook والمشاركة أيضًا"
+  },
+  "settingsResetConfirm": {
+    "message": "إعادة تعيين"
+  },
+  "settingsResetDone": {
+    "message": "تمت إعادة تعيين الإعدادات"
+  },
+  "settingsBackupTitle": {
+    "message": "النسخ الاحتياطي والاستعادة"
+  },
+  "settingsBackupItemTitle": {
+    "message": "كل شيء"
+  },
+  "settingsBackupItemDesc": {
+    "message": "الإعدادات وقواعدك الخاصة والسجل في ملف واحد. لا تتضمن تفاصيل الـ webhook والمشاركة."
+  },
+  "backupMakeBtn": {
+    "message": "نسخ احتياطي"
+  },
+  "backupRestoreBtn": {
+    "message": "استعادة"
+  },
+  "backupDone": {
+    "message": "تم حفظ النسخة الاحتياطية"
+  },
+  "backupFailed": {
+    "message": "تعذّر إنشاء النسخة الاحتياطية"
+  },
+  "restoreTitle": {
+    "message": "استعادة نسخة احتياطية"
+  },
+  "restoreHoldsFmt": {
+    "message": "أُنشئت بالإصدار {0} في {1}. تحتوي على:"
+  },
+  "restorePartSettings": {
+    "message": "الإعدادات"
+  },
+  "restorePartRulesFmt": {
+    "message": "قواعدك ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "السجل (الإدخالات: {0})"
+  },
+  "restoreModeLabel": {
+    "message": "القواعد والسجل"
+  },
+  "restoreModeMerge": {
+    "message": "دمج مع ما لديك"
+  },
+  "restoreModeReplace": {
+    "message": "استبدال ما لديك"
+  },
+  "restoreConfirm": {
+    "message": "استعادة"
+  },
+  "restoreNothing": {
+    "message": "لم يتم تحديد شيء."
+  },
+  "restoreDoneFmt": {
+    "message": "تمت الاستعادة: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "تعذّرت استعادة {0}."
+  },
+  "restoreInvalid": {
+    "message": "هذا الملف ليس نسخة احتياطية لهذه الإضافة. لم يتغير شيء."
+  },
+  "restoreNewer": {
+    "message": "أُنشئت هذه النسخة الاحتياطية بإصدار أحدث من الإضافة. حدّث الإضافة وحاول مجددًا."
+  },
+  "scanModeTitle": {
+    "message": "المواقع المراد فحصها"
+  },
+  "scanModeBlock": {
+    "message": "كل موقع باستثناء المواقع التي أتخطاها"
+  },
+  "scanModeAllow": {
+    "message": "المواقع التي أختارها فقط"
+  },
+  "allowedDomainsTitle": {
+    "message": "المواقع المختارة"
+  },
+  "settingsCardAllowDomains": {
+    "message": "فحص هذه المواقع فقط"
+  },
+  "allowedDomainsDesc": {
+    "message": "يعمل الكشف على هذه المواقع ونطاقاتها الفرعية فقط. وفي أي مكان آخر يكون متوقفًا مؤقتًا."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "لم يتم اختيار أي موقع: لا يُفحص شيء بعد"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "إزالة من القائمة"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} موجود في القائمة بالفعل"
+  },
+  "detectionNotOnList": {
+    "message": "تم إيقاف الكشف مؤقتًا: هذا الموقع ليس في قائمتك"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "فحص هذا الموقع"
+  },
+  "detectionAllowlistHint": {
+    "message": "أو انتقل إلى الإعدادات ← الكشف ← المواقع المراد فحصها لإدارة القائمة."
+  },
+  "siteAllowedFmt": {
+    "message": "تمت إضافة \"{0}\" إلى المواقع المراد فحصها"
+  },
+  "settingsUiErrScanMode": {
+    "message": "يجب أن تكون المواقع المراد فحصها كل موقع باستثناء المتخطّاة، أو المواقع المختارة فقط"
+  },
+  "settingsUiErrSiteList": {
+    "message": "يجب أن تحتوي قائمة المواقع على أسماء مواقع فقط"
+  },
+  "webhookFilterTitle": {
+    "message": "الإرسال فقط عندما"
+  },
+  "webhookFilterDesc": {
+    "message": "تُرسل الصفحة فقط إذا تحققت كل هذه الشروط. وتبقى الحمولة تسرد كل ما وُجد فيها."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "الحد الأدنى للثقة (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "الفئات"
+  },
+  "webhookCategoriesHint": {
+    "message": "اترك الكل غير محدد للإرسال لأي فئة."
+  },
+  "webhookDomainsLabel": {
+    "message": "هذه المواقع فقط"
+  },
+  "webhookDomainsHint": {
+    "message": "موقع واحد في كل سطر، مع نطاقاته الفرعية. الفارغ يعني كل المواقع."
+  },
+  "webhookLogTitle": {
+    "message": "آخر عمليات الإرسال"
+  },
+  "webhookLogDesc": {
+    "message": "آخر 20 محاولة: الوقت والصفحة وما جاء في الرد. لا تُحفظ العناوين ولا الحمولات أبدًا."
+  },
+  "webhookLogEmpty": {
+    "message": "لم يُرسل شيء بعد."
+  },
+  "webhookLogClear": {
+    "message": "مسح"
+  },
+  "webhookLogSent": {
+    "message": "أُرسل"
+  },
+  "webhookLogFailed": {
+    "message": "فشل"
+  },
+  "webhookLogSkipped": {
+    "message": "لم يُرسل"
+  },
+  "webhookLogReasonSite": {
+    "message": "الموقع ليس في القائمة"
+  },
+  "webhookLogReasonCategory": {
+    "message": "الفئة غير محددة"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "أقل من الحد الأدنى للثقة"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "لا يوجد رد"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "العنوان غير مسموح"
+  },
+  "webhookLogErrorConfig": {
+    "message": "طريقة غير صالحة"
+  },
+  "webhookLogTriggerCache": {
+    "message": "صفحة من الذاكرة المؤقتة"
+  },
+  "webhookLogTriggerTest": {
+    "message": "اختبار"
+  },
+  "hooksOffGroupTitle": {
+    "message": "مواقع بلا خطافات JS"
+  },
+  "hooksOffLabel": {
+    "message": "إيقاف خطافات JS على هذه المواقع"
+  },
+  "hooksOffHint": {
+    "message": "تراقب خطافات JS استدعاءات الصفحة لواجهات برمجة المتصفح لاكتشاف أخذ البصمة. استخدم هذا لموقع يتعطل معها: تستمر عمليات الكشف الأخرى في العمل، لكن لا يُفحص أخذ البصمة. موقع واحد في كل سطر مع النطاقات الفرعية؛ أعد تحميل الصفحة للتطبيق."
+  },
+  "hooksOffNote": {
+    "message": "خطافات JS متوقفة على هذا الموقع، لذا لا يُفحص أخذ البصمة."
+  },
+  "hooksOffBadge": {
+    "message": "لم تُفحص البصمة"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "لم يُعثر في هذه الصفحة على إشارات مطابقة لمكافحة الروبوتات أو CAPTCHA. خطافات JS متوقفة هنا، لذا لم تُفحص البصمة."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "حذف الصفحات التي فيها بصمة المتصفح فقط بعد"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "القيمة 0 تُبقيها مثل أي صفحة أخرى، فلا ينطبق عليها إلا «الحذف التلقائي». لا تُحذف الصفحات المثبّتة أبدًا."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "تثبيت الصفحات تلقائيًا"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "الصفحات ذات الحماية الصعبة"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "مكافحة روبوتات أو CAPTCHA بصعوبة عالية. لا تثبّت البصمة صفحة بحسب صعوبتها."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "الصفحات المحمية بواسطة"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "حماية واحدة في كل سطر، بالاسم الذي يستخدمه تبويب الكشف."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "فقط عند ثقة لا تقل عن (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "يُثبَّت بهذه الطريقة ما يصل إلى {0} صفحة. إذا ألغيت تثبيت صفحة فلن تُثبَّت تلقائيًا مرة أخرى."
+  },
+  "historyAutoPinnedTip": {
+    "message": "مثبّتة تلقائيًا: تبقى عند تنظيف السجل. إذا ألغيت تثبيتها فلن تُثبَّت تلقائيًا مرة أخرى."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "يجب أن تكون ثقة التثبيت بين 0 و100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "يجب الاحتفاظ بالصفحات التي فيها بصمة المتصفح فقط بين 0 و3650 يومًا"
+  },
+  "settingsHistorySize": {
+    "message": "حد الحجم"
+  },
+  "settingsHistorySizeHint": {
+    "message": "الحجم الأكبر يحتفظ بصفحات أكثر ويستهلك مساحة أكبر من قرصك. خفض الحجم يزيل أقدم الصفحات غير المثبّتة."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "خفض حجم السجل"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "يستخدم السجل {0} والحد الجديد {1}. ستُزال أقدم الصفحات غير المثبّتة ليتسع."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "خفض الحجم"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} مستخدمة، بلا حد"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "يجب أن يكون حجم السجل أحد هذه القيم: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "نصوص غير مترجمة بعد إلى كل اللغات: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "ترجمة القاعدة"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "يملأ الترجمات الناقصة للوصف والأنماط والتركيبات بمترجم Chrome على الجهاز. راجعها قبل الحفظ."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "جارٍ ترجمة النصوص: {0}…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "تم ملء الترجمات: {0}. راجعها قبل الحفظ."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "تم ملء {0}؛ تعذرت ترجمة {1} هنا."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "الأنماط"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "التركيبات"
+  },
+  "historyWatch": {
+    "message": "مراقبة التغييرات"
+  },
+  "historyUnwatch": {
+    "message": "إيقاف المراقبة"
+  },
+  "historyWatchTip": {
+    "message": "قيد المراقبة بحثًا عن تغييرات"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "آخر فحص: {0}"
+  },
+  "historyWatchNever": {
+    "message": "لم تُفحص بعد"
+  },
+  "historyWatchStartedNotice": {
+    "message": "تتم مراقبة هذه الصفحة"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "تتم مراقبة هذه الصفحة. فعّل «مراقبة الصفحات المثبّتة» في الإعدادات ← السجل ليتم فحصها."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "لم تعد هذه الصفحة تحت المراقبة"
+  },
+  "historyWatchLimitFmt": {
+    "message": "يمكنك مراقبة {0} صفحة كحد أقصى. أوقف مراقبة إحداها أولًا."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "مراقبة الصفحات المثبّتة"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "افحصها"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "تُفتح الصفحات التي تثبّتها وتختار لها «مراقبة التغييرات» من جديد في علامة تبويب خلفية، واحدة تلو الأخرى (حتى 10)، وتُفحص. تُعلَّم الصفحة التي تكتسب حماية مكافحة روبوتات أو CAPTCHA أو تفقدها بـ«تغيّرت»، مع إشعار عند تفعيل التنبيهات. كل فحص زيارة حقيقية بملفات تعريف الارتباط في متصفحك، فتُزار الصفحة المسجَّل الدخول إليها بحسابك، ويجب أن تكون نافذة متصفح مفتوحة."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "افحص الآن"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{0} من {1} صفحة تحت المراقبة"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "لم يُجرَ أي فحص بعد."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "لم يجد آخر فحص نافذة متصفح لفتح الصفحات فيها."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "فشل آخر فحص."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "آخر فحص: {0} · المفحوصة: {1}، المتغيّرة: {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "تم فحص الصفحات: {0}، المتغيّرة: {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "لا توجد صفحة تحت المراقبة بعد: ثبّت صفحة في السجل واختر «مراقبة التغييرات»."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "السجل متوقف مؤقتًا، لذا لا يُفحص شيء."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "يجب أن تكون المراقبة متوقفة أو يومية أو أسبوعية"
   }
 }

@@ -4688,13 +4688,13 @@
     "message": "Kiểm tra với Lịch sử"
   },
   "ruleHistoryCheckHint": {
-    "message": "Xem mỗi mẫu và tổ hợp khớp trên bao nhiêu trang đã lưu. Các chỉnh sửa chưa lưu cũng được tính."
+    "message": "Cho biết mỗi mẫu và tổ hợp khớp trên bao nhiêu trang đã lưu của bạn. Các chỉnh sửa chưa lưu cũng được tính."
   },
   "ruleHistoryCheckRun": {
     "message": "Kiểm tra"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} trang đã lưu · quy tắc này được tìm thấy trên {1}"
+    "message": "Quy tắc này khớp {1} trong {0} trang đã lưu"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0}/{1} trang"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Chỉ liệt kê các quy tắc tùy chỉnh và đã chỉnh sửa. Mô tả của các quy tắc chính thức do Scrapfly duy trì."
   },
-  "statsToolsRetentionNote": {
-    "message": "Nâng cao giữ bản ghi trong 30 phút, nên tab này bỏ qua khoảng ngày."
-  },
   "statsToolsSavedNow": {
     "message": "Đang lưu"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Phần chạy nền của tiện ích đã cũ. Hãy tải lại tiện ích trên trang tiện ích rồi thử lại."
+  },
+  "historyFiltersLabel": {
+    "message": "Lọc lịch sử"
+  },
+  "historyFilterPinned": {
+    "message": "Đã ghim"
+  },
+  "historyNoResults": {
+    "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
+  },
+  "historyClearFilters": {
+    "message": "Xóa bộ lọc"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Tab Nâng cao giữ bản ghi trong {0}, nên tab này bỏ qua khoảng ngày."
+  },
+  "settingsStorageTitle": {
+    "message": "Dung lượng"
+  },
+  "settingsStorageDesc": {
+    "message": "Những gì tiện ích lưu trong trình duyệt này. Không thể xóa cài đặt và quy tắc từ đây."
+  },
+  "storageCache": {
+    "message": "Bộ nhớ đệm phát hiện"
+  },
+  "storageCaptures": {
+    "message": "Bản ghi của công cụ"
+  },
+  "storageHistory": {
+    "message": "Lịch sử"
+  },
+  "storageRules": {
+    "message": "Quy tắc và danh mục"
+  },
+  "storageSettings": {
+    "message": "Cài đặt"
+  },
+  "storageLogs": {
+    "message": "Nhật ký"
+  },
+  "storageOther": {
+    "message": "Khác"
+  },
+  "storageTotalFmt": {
+    "message": "Đã dùng {0}/{1}"
+  },
+  "storageClearRowFmt": {
+    "message": "Xóa {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Xóa bộ nhớ đệm phát hiện"
+  },
+  "storageClearCacheMessage": {
+    "message": "Các trang sẽ được quét lại vào lần tiếp theo bạn mở chúng. Lịch sử, quy tắc và cài đặt không bị ảnh hưởng."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Xóa bản ghi của công cụ"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Mọi thứ mà các công cụ Nâng cao đã lưu sẽ bị xóa. Lịch sử, quy tắc và cài đặt không bị ảnh hưởng."
+  },
+  "storageCacheCleared": {
+    "message": "Đã xóa bộ nhớ đệm phát hiện"
+  },
+  "storageCapturesCleared": {
+    "message": "Đã xóa bản ghi của công cụ"
+  },
+  "storageClearFailed": {
+    "message": "Không thể xóa. Hãy thử lại."
+  },
+  "settingsSupportTitle": {
+    "message": "Hỗ trợ"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Chẩn đoán"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Sao chép bản tóm tắt cho báo cáo lỗi: phiên bản, cài đặt và số lượng. Không chứa trang web, địa chỉ hay khóa nào."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Sao chép chẩn đoán"
+  },
+  "diagnosticsCopied": {
+    "message": "Đã sao chép chẩn đoán"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Không thể sao chép chẩn đoán"
+  },
+  "settingsPresetsTitle": {
+    "message": "Thiết lập sẵn và đặt lại"
+  },
+  "settingsPresetsDesc": {
+    "message": "Thay đổi nhiều cài đặt cùng lúc. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện không bao giờ bị thay đổi."
+  },
+  "presetPrivacyName": {
+    "message": "Quyền riêng tư"
+  },
+  "presetPrivacyDesc": {
+    "message": "Lưu ít dữ liệu hơn trên thiết bị này và không gửi gì ra ngoài."
+  },
+  "presetDeveloperName": {
+    "message": "Nhà phát triển"
+  },
+  "presetDeveloperDesc": {
+    "message": "Nhật ký gỡ lỗi và JS API, để làm việc với quy tắc."
+  },
+  "presetApply": {
+    "message": "Áp dụng"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Áp dụng thiết lập sẵn {0}?"
+  },
+  "presetConfirmIntro": {
+    "message": "Những cài đặt này sẽ thay đổi:"
+  },
+  "presetAlreadySet": {
+    "message": "Những cài đặt này đã được đặt sẵn."
+  },
+  "presetApplied": {
+    "message": "Đã áp dụng thiết lập sẵn"
+  },
+  "presetHistoryOff": {
+    "message": "Lịch sử không được ghi lại"
+  },
+  "presetBackupOff": {
+    "message": "Sao lưu Lịch sử tự động đã tắt"
+  },
+  "presetClearOnClose": {
+    "message": "Lịch sử được xóa khi đóng trình duyệt"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook đã tắt"
+  },
+  "presetNotificationsOff": {
+    "message": "Thông báo đã tắt"
+  },
+  "presetJsApiOff": {
+    "message": "JS API đã tắt"
+  },
+  "presetDebugOff": {
+    "message": "Chế độ gỡ lỗi đã tắt"
+  },
+  "presetCollectorOff": {
+    "message": "Trình thu thập nhật ký đã tắt"
+  },
+  "presetDebugOn": {
+    "message": "Chế độ gỡ lỗi đã bật"
+  },
+  "presetVerboseOn": {
+    "message": "Nhật ký chi tiết đã bật"
+  },
+  "presetCollectorOn": {
+    "message": "Trình thu thập nhật ký đã bật"
+  },
+  "presetCollectorMax": {
+    "message": "Trình thu thập nhật ký giữ tối đa 5000 dòng"
+  },
+  "presetJsApiOn": {
+    "message": "JS API đã bật"
+  },
+  "settingsResetTitle": {
+    "message": "Đặt lại cài đặt"
+  },
+  "settingsResetDesc": {
+    "message": "Mọi cài đặt trở về mặc định. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện được giữ nguyên."
+  },
+  "settingsResetBtn": {
+    "message": "Đặt lại…"
+  },
+  "settingsResetMessage": {
+    "message": "Mọi cài đặt trở về mặc định. Quy tắc, Lịch sử, danh sách trang web, ngôn ngữ và giao diện không bị thay đổi. Thông tin webhook và chia sẻ được giữ lại trừ khi bạn chọn xóa."
+  },
+  "settingsResetConnections": {
+    "message": "Xóa cả kết nối webhook và chia sẻ"
+  },
+  "settingsResetConfirm": {
+    "message": "Đặt lại"
+  },
+  "settingsResetDone": {
+    "message": "Đã đặt lại cài đặt"
+  },
+  "settingsBackupTitle": {
+    "message": "Sao lưu và khôi phục"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Tất cả"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Cài đặt, quy tắc của riêng bạn và Lịch sử trong một tệp. Không bao gồm thông tin webhook và chia sẻ."
+  },
+  "backupMakeBtn": {
+    "message": "Sao lưu"
+  },
+  "backupRestoreBtn": {
+    "message": "Khôi phục"
+  },
+  "backupDone": {
+    "message": "Đã lưu bản sao lưu"
+  },
+  "backupFailed": {
+    "message": "Không thể tạo bản sao lưu"
+  },
+  "restoreTitle": {
+    "message": "Khôi phục bản sao lưu"
+  },
+  "restoreHoldsFmt": {
+    "message": "Được tạo bằng phiên bản {0} vào {1}. Bản sao lưu chứa:"
+  },
+  "restorePartSettings": {
+    "message": "Cài đặt"
+  },
+  "restorePartRulesFmt": {
+    "message": "Quy tắc của bạn ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Lịch sử ({0} mục)"
+  },
+  "restoreModeLabel": {
+    "message": "Quy tắc và Lịch sử"
+  },
+  "restoreModeMerge": {
+    "message": "Gộp với dữ liệu hiện có"
+  },
+  "restoreModeReplace": {
+    "message": "Thay thế dữ liệu hiện có"
+  },
+  "restoreConfirm": {
+    "message": "Khôi phục"
+  },
+  "restoreNothing": {
+    "message": "Chưa chọn gì."
+  },
+  "restoreDoneFmt": {
+    "message": "Đã khôi phục: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Không thể khôi phục {0}."
+  },
+  "restoreInvalid": {
+    "message": "Tệp này không phải bản sao lưu của tiện ích này. Không có gì bị thay đổi."
+  },
+  "restoreNewer": {
+    "message": "Bản sao lưu này được tạo bởi phiên bản tiện ích mới hơn. Hãy cập nhật tiện ích rồi thử lại."
+  },
+  "scanModeTitle": {
+    "message": "Trang web cần quét"
+  },
+  "scanModeBlock": {
+    "message": "Mọi trang web, trừ những trang tôi bỏ qua"
+  },
+  "scanModeAllow": {
+    "message": "Chỉ những trang web tôi chọn"
+  },
+  "allowedDomainsTitle": {
+    "message": "Trang web đã chọn"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Chỉ quét các trang web này"
+  },
+  "allowedDomainsDesc": {
+    "message": "Tính năng phát hiện chỉ chạy trên các trang web này và tên miền phụ của chúng. Ở mọi nơi khác, tính năng này bị tạm dừng."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Chưa chọn trang web nào: chưa quét gì cả"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Xóa khỏi danh sách"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} đã có trong danh sách"
+  },
+  "detectionNotOnList": {
+    "message": "Đã tạm dừng phát hiện: trang web này không có trong danh sách của bạn"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Quét trang web này"
+  },
+  "detectionAllowlistHint": {
+    "message": "Hoặc vào Cài đặt → Phát hiện → Trang web cần quét để quản lý danh sách."
+  },
+  "siteAllowedFmt": {
+    "message": "Đã thêm \"{0}\" vào các trang web cần quét"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Trang web cần quét phải là mọi trang web trừ những trang bị bỏ qua, hoặc chỉ những trang web đã chọn"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Danh sách trang web chỉ được chứa tên trang web"
+  },
+  "webhookFilterTitle": {
+    "message": "Chỉ gửi khi"
+  },
+  "webhookFilterDesc": {
+    "message": "Một trang chỉ được gửi nếu đáp ứng tất cả các điều kiện này. Dữ liệu gửi đi vẫn liệt kê mọi thứ tìm thấy trên trang."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Độ tin cậy tối thiểu (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Danh mục"
+  },
+  "webhookCategoriesHint": {
+    "message": "Bỏ chọn tất cả để gửi cho mọi danh mục."
+  },
+  "webhookDomainsLabel": {
+    "message": "Chỉ các trang web này"
+  },
+  "webhookDomainsHint": {
+    "message": "Mỗi dòng một trang web, kèm tên miền phụ. Để trống nghĩa là mọi trang web."
+  },
+  "webhookLogTitle": {
+    "message": "Các lần gửi gần đây"
+  },
+  "webhookLogDesc": {
+    "message": "20 lần thử gần nhất: lúc nào, trang nào, phản hồi ra sao. Địa chỉ và dữ liệu gửi đi không bao giờ được lưu."
+  },
+  "webhookLogEmpty": {
+    "message": "Chưa gửi gì."
+  },
+  "webhookLogClear": {
+    "message": "Xóa"
+  },
+  "webhookLogSent": {
+    "message": "Đã gửi"
+  },
+  "webhookLogFailed": {
+    "message": "Thất bại"
+  },
+  "webhookLogSkipped": {
+    "message": "Không gửi"
+  },
+  "webhookLogReasonSite": {
+    "message": "trang web không có trong danh sách"
+  },
+  "webhookLogReasonCategory": {
+    "message": "danh mục chưa được chọn"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "thấp hơn độ tin cậy tối thiểu"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "không có phản hồi"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "địa chỉ không được phép"
+  },
+  "webhookLogErrorConfig": {
+    "message": "phương thức không hợp lệ"
+  },
+  "webhookLogTriggerCache": {
+    "message": "trang trong bộ nhớ đệm"
+  },
+  "webhookLogTriggerTest": {
+    "message": "kiểm tra"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Trang web không dùng JS hook"
+  },
+  "hooksOffLabel": {
+    "message": "Tắt JS hook trên các trang web này"
+  },
+  "hooksOffHint": {
+    "message": "JS hook theo dõi các lệnh gọi API trình duyệt của trang để phát hiện việc thu thập dấu vân tay. Hãy dùng cho trang web gặp lỗi khi có chúng: các phát hiện khác vẫn hoạt động, nhưng không kiểm tra thu thập dấu vân tay. Mỗi dòng một trang web, bao gồm tên miền phụ; tải lại trang để áp dụng."
+  },
+  "hooksOffNote": {
+    "message": "JS hook đã tắt trên trang web này, nên không kiểm tra thu thập dấu vân tay."
+  },
+  "hooksOffBadge": {
+    "message": "Chưa kiểm tra thu thập dấu vân tay"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Không tìm thấy tín hiệu anti-bot hoặc CAPTCHA nào khớp trên trang này. JS hook đã tắt ở đây, nên chưa kiểm tra thu thập dấu vân tay."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Xóa trang chỉ có thu thập dấu vân tay sau"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 giữ chúng như mọi trang khác, nên chỉ áp dụng Tự động xóa. Các trang đã ghim không bao giờ bị xóa."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Tự động ghim trang"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Trang có biện pháp bảo vệ khó"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Anti-bot hoặc CAPTCHA có độ khó Cao. Thu thập dấu vân tay không bao giờ khiến trang được ghim theo độ khó."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Trang được bảo vệ bởi"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Mỗi dòng một biện pháp bảo vệ, đặt tên như tab Phát hiện đặt tên."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Chỉ từ độ tin cậy (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Tối đa {0} trang được ghim theo cách này. Bỏ ghim một trang thì nó sẽ không bao giờ tự được ghim lại."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Đã tự động ghim: được giữ lại khi dọn dẹp Lịch sử. Bỏ ghim thì nó sẽ không bao giờ tự được ghim lại."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Độ tin cậy để ghim phải nằm trong khoảng từ 0 đến 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Trang chỉ có thu thập dấu vân tay phải được giữ từ 0 đến 3650 ngày"
+  },
+  "settingsHistorySize": {
+    "message": "Giới hạn dung lượng"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Giới hạn lớn hơn giữ được nhiều trang hơn và dùng nhiều dung lượng ổ đĩa hơn. Hạ giới hạn sẽ xóa các trang cũ nhất chưa được ghim."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Hạ dung lượng Lịch sử"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Lịch sử đang dùng {0} và giới hạn mới là {1}. Các trang cũ nhất chưa được ghim sẽ bị xóa để vừa giới hạn."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Hạ giới hạn"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "Đã dùng {0}, không giới hạn"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Dung lượng Lịch sử phải là một trong các giá trị {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Số văn bản chưa được dịch sang mọi ngôn ngữ: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Dịch quy tắc"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Điền các bản dịch còn thiếu của mô tả, các mẫu và các tổ hợp bằng trình dịch trên thiết bị của Chrome. Hãy kiểm tra trước khi lưu."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Đang dịch {0} văn bản…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Đã điền {0} bản dịch. Hãy kiểm tra trước khi lưu."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Đã điền {0}; {1} không thể dịch tại đây."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Mẫu"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Tổ hợp"
+  },
+  "historyWatch": {
+    "message": "Theo dõi thay đổi"
+  },
+  "historyUnwatch": {
+    "message": "Ngừng theo dõi"
+  },
+  "historyWatchTip": {
+    "message": "Đang theo dõi thay đổi"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Kiểm tra lần cuối {0}"
+  },
+  "historyWatchNever": {
+    "message": "Chưa kiểm tra"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Đang theo dõi trang này"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Đang theo dõi trang này. Hãy bật Theo dõi các trang đã ghim trong Cài đặt → Lịch sử để trang được kiểm tra."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Đã ngừng theo dõi trang này"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Bạn có thể theo dõi tối đa {0} trang. Hãy ngừng theo dõi một trang trước."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Theo dõi các trang đã ghim"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Tần suất kiểm tra"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Các trang bạn ghim và chọn Theo dõi thay đổi sẽ được mở lại trong một tab nền, lần lượt từng trang (tối đa 10), rồi được quét. Trang nào có thêm hoặc mất biện pháp bảo vệ anti-bot hoặc CAPTCHA sẽ được đánh dấu Đã thay đổi, kèm thông báo khi cảnh báo được bật. Mỗi lần kiểm tra là một lượt truy cập thật với cookie của trình duyệt, nên trang đã đăng nhập sẽ được truy cập như chính bạn, và phải có một cửa sổ trình duyệt đang mở."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Kiểm tra ngay"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "Đang theo dõi {0}/{1} trang"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Chưa kiểm tra lần nào."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Lần kiểm tra gần nhất không tìm thấy cửa sổ trình duyệt để mở trang."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Lần kiểm tra gần nhất không thành công."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Lần kiểm tra gần nhất: {0} · đã kiểm tra {1}, thay đổi {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Đã kiểm tra {0} trang, {1} trang thay đổi"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Chưa theo dõi trang nào: hãy ghim một trang trong Lịch sử và chọn Theo dõi thay đổi."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Lịch sử đang tạm dừng, nên không có gì được kiểm tra."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Chức năng theo dõi phải là tắt, hằng ngày hoặc hằng tuần"
   }
 }

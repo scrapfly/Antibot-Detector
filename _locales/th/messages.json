@@ -4688,13 +4688,13 @@
     "message": "ตรวจสอบกับประวัติ"
   },
   "ruleHistoryCheckHint": {
-    "message": "ดูว่าแต่ละรูปแบบและชุดค่าผสมตรงกับกี่หน้าที่บันทึกไว้ การแก้ไขที่ยังไม่บันทึกก็นับด้วย"
+    "message": "แสดงว่าแต่ละรูปแบบและชุดค่าผสมตรงกับกี่หน้าที่บันทึกไว้ รวมการแก้ไขที่ยังไม่บันทึก"
   },
   "ruleHistoryCheckRun": {
     "message": "ตรวจสอบ"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "หน้าที่บันทึกไว้ {0} หน้า · พบกฎนี้ใน {1} หน้า"
+    "message": "กฎนี้ตรงกับ {1} จาก {0} หน้าที่บันทึกไว้"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} จาก {1} หน้า"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "แสดงเฉพาะกฎแบบกำหนดเองและกฎที่แก้ไขแล้ว คำอธิบายของกฎทางการดูแลโดย Scrapfly"
   },
-  "statsToolsRetentionNote": {
-    "message": "ขั้นสูงเก็บข้อมูลที่จับไว้ 30 นาที แท็บนี้จึงไม่สนใจช่วงวันที่"
-  },
   "statsToolsSavedNow": {
     "message": "บันทึกอยู่ตอนนี้"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "ส่วนที่ทำงานเบื้องหลังของส่วนขยายล้าสมัย โหลดส่วนขยายใหม่ในหน้าส่วนขยาย แล้วลองอีกครั้ง"
+  },
+  "historyFiltersLabel": {
+    "message": "กรองประวัติ"
+  },
+  "historyFilterPinned": {
+    "message": "ปักหมุดแล้ว"
+  },
+  "historyNoResults": {
+    "message": "ไม่มีรายการที่ตรงกับการค้นหาหรือตัวกรอง"
+  },
+  "historyClearFilters": {
+    "message": "ล้างตัวกรอง"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "ขั้นสูงเก็บข้อมูลที่จับไว้ {0} ดังนั้นแท็บนี้จึงไม่สนใจช่วงวันที่"
+  },
+  "settingsStorageTitle": {
+    "message": "พื้นที่เก็บข้อมูล"
+  },
+  "settingsStorageDesc": {
+    "message": "สิ่งที่ส่วนขยายเก็บไว้ในเบราว์เซอร์นี้ ไม่สามารถล้างการตั้งค่าและกฎจากที่นี่ได้"
+  },
+  "storageCache": {
+    "message": "แคชการตรวจจับ"
+  },
+  "storageCaptures": {
+    "message": "ข้อมูลที่จับจากเครื่องมือ"
+  },
+  "storageHistory": {
+    "message": "ประวัติ"
+  },
+  "storageRules": {
+    "message": "กฎและหมวดหมู่"
+  },
+  "storageSettings": {
+    "message": "การตั้งค่า"
+  },
+  "storageLogs": {
+    "message": "ล็อก"
+  },
+  "storageOther": {
+    "message": "อื่นๆ"
+  },
+  "storageTotalFmt": {
+    "message": "ใช้ไป {0} จาก {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "ล้าง{0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "ล้างแคชการตรวจจับ"
+  },
+  "storageClearCacheMessage": {
+    "message": "หน้าเว็บจะถูกสแกนใหม่เมื่อคุณเปิดครั้งถัดไป ประวัติ กฎ และการตั้งค่าจะไม่ได้รับผลกระทบ"
+  },
+  "storageClearCapturesTitle": {
+    "message": "ลบข้อมูลที่จับจากเครื่องมือ"
+  },
+  "storageClearCapturesMessage": {
+    "message": "ข้อมูลทั้งหมดที่เครื่องมือขั้นสูงบันทึกไว้จะถูกลบ ประวัติ กฎ และการตั้งค่าจะไม่ได้รับผลกระทบ"
+  },
+  "storageCacheCleared": {
+    "message": "ล้างแคชการตรวจจับแล้ว"
+  },
+  "storageCapturesCleared": {
+    "message": "ลบข้อมูลที่จับจากเครื่องมือแล้ว"
+  },
+  "storageClearFailed": {
+    "message": "ล้างไม่สำเร็จ ลองอีกครั้ง"
+  },
+  "settingsSupportTitle": {
+    "message": "ความช่วยเหลือ"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "การวินิจฉัย"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "คัดลอกสรุปสำหรับรายงานบั๊ก: เวอร์ชัน การตั้งค่า และจำนวน ไม่มีไซต์ ที่อยู่ หรือคีย์"
+  },
+  "settingsCopyDiagnostics": {
+    "message": "คัดลอกข้อมูลการวินิจฉัย"
+  },
+  "diagnosticsCopied": {
+    "message": "คัดลอกข้อมูลการวินิจฉัยแล้ว"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "คัดลอกข้อมูลการวินิจฉัยไม่ได้"
+  },
+  "settingsPresetsTitle": {
+    "message": "ค่าที่ตั้งไว้ล่วงหน้าและการรีเซ็ต"
+  },
+  "settingsPresetsDesc": {
+    "message": "เปลี่ยนหลายการตั้งค่าพร้อมกัน กฎ ประวัติ รายการไซต์ ภาษา และธีมจะไม่ถูกเปลี่ยนเลย"
+  },
+  "presetPrivacyName": {
+    "message": "ความเป็นส่วนตัว"
+  },
+  "presetPrivacyDesc": {
+    "message": "เก็บข้อมูลในอุปกรณ์นี้น้อยลงและไม่ส่งอะไรออกไป"
+  },
+  "presetDeveloperName": {
+    "message": "นักพัฒนา"
+  },
+  "presetDeveloperDesc": {
+    "message": "ล็อกดีบักและ JS API สำหรับทำงานกับกฎ"
+  },
+  "presetApply": {
+    "message": "ใช้"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "ใช้ค่าที่ตั้งไว้ล่วงหน้า {0} หรือไม่"
+  },
+  "presetConfirmIntro": {
+    "message": "การตั้งค่าเหล่านี้จะเปลี่ยน:"
+  },
+  "presetAlreadySet": {
+    "message": "การตั้งค่าเหล่านี้ตั้งไว้แล้ว"
+  },
+  "presetApplied": {
+    "message": "ใช้ค่าที่ตั้งไว้ล่วงหน้าแล้ว"
+  },
+  "presetHistoryOff": {
+    "message": "ไม่บันทึกประวัติ"
+  },
+  "presetBackupOff": {
+    "message": "ปิดการสำรองข้อมูลประวัติอัตโนมัติ"
+  },
+  "presetClearOnClose": {
+    "message": "ล้างประวัติเมื่อปิดเบราว์เซอร์"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook ปิดอยู่"
+  },
+  "presetNotificationsOff": {
+    "message": "การแจ้งเตือนปิดอยู่"
+  },
+  "presetJsApiOff": {
+    "message": "JS API ปิดอยู่"
+  },
+  "presetDebugOff": {
+    "message": "โหมดดีบักปิดอยู่"
+  },
+  "presetCollectorOff": {
+    "message": "ตัวรวบรวมล็อกปิดอยู่"
+  },
+  "presetDebugOn": {
+    "message": "โหมดดีบักเปิดอยู่"
+  },
+  "presetVerboseOn": {
+    "message": "การบันทึกล็อกแบบละเอียดเปิดอยู่"
+  },
+  "presetCollectorOn": {
+    "message": "ตัวรวบรวมล็อกเปิดอยู่"
+  },
+  "presetCollectorMax": {
+    "message": "ตัวรวบรวมล็อกเก็บได้สูงสุด 5000 บรรทัด"
+  },
+  "presetJsApiOn": {
+    "message": "JS API เปิดอยู่"
+  },
+  "settingsResetTitle": {
+    "message": "รีเซ็ตการตั้งค่า"
+  },
+  "settingsResetDesc": {
+    "message": "ทุกการตั้งค่ากลับเป็นค่าเริ่มต้น กฎ ประวัติ รายการไซต์ ภาษา และธีมจะคงไว้"
+  },
+  "settingsResetBtn": {
+    "message": "รีเซ็ต…"
+  },
+  "settingsResetMessage": {
+    "message": "ทุกการตั้งค่ากลับเป็นค่าเริ่มต้น กฎ ประวัติ รายการไซต์ ภาษา และธีมจะไม่เปลี่ยน รายละเอียด Webhook และการแชร์จะคงไว้ เว้นแต่คุณเลือกที่จะลบ"
+  },
+  "settingsResetConnections": {
+    "message": "ลบการเชื่อมต่อ Webhook และการแชร์ด้วย"
+  },
+  "settingsResetConfirm": {
+    "message": "รีเซ็ต"
+  },
+  "settingsResetDone": {
+    "message": "รีเซ็ตการตั้งค่าแล้ว"
+  },
+  "settingsBackupTitle": {
+    "message": "สำรองข้อมูลและคืนค่า"
+  },
+  "settingsBackupItemTitle": {
+    "message": "ทั้งหมด"
+  },
+  "settingsBackupItemDesc": {
+    "message": "การตั้งค่า กฎของคุณเอง และประวัติในไฟล์เดียว ไม่รวมรายละเอียด Webhook และการแชร์"
+  },
+  "backupMakeBtn": {
+    "message": "สำรองข้อมูล"
+  },
+  "backupRestoreBtn": {
+    "message": "คืนค่า"
+  },
+  "backupDone": {
+    "message": "บันทึกข้อมูลสำรองแล้ว"
+  },
+  "backupFailed": {
+    "message": "สร้างข้อมูลสำรองไม่สำเร็จ"
+  },
+  "restoreTitle": {
+    "message": "คืนค่าจากข้อมูลสำรอง"
+  },
+  "restoreHoldsFmt": {
+    "message": "สร้างด้วยเวอร์ชัน {0} เมื่อ {1} มีสิ่งต่อไปนี้:"
+  },
+  "restorePartSettings": {
+    "message": "การตั้งค่า"
+  },
+  "restorePartRulesFmt": {
+    "message": "กฎของคุณ ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "ประวัติ ({0} รายการ)"
+  },
+  "restoreModeLabel": {
+    "message": "กฎและประวัติ"
+  },
+  "restoreModeMerge": {
+    "message": "รวมกับที่คุณมี"
+  },
+  "restoreModeReplace": {
+    "message": "แทนที่สิ่งที่คุณมี"
+  },
+  "restoreConfirm": {
+    "message": "คืนค่า"
+  },
+  "restoreNothing": {
+    "message": "ยังไม่ได้เลือกอะไร"
+  },
+  "restoreDoneFmt": {
+    "message": "คืนค่าแล้ว: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "คืนค่า {0} ไม่สำเร็จ"
+  },
+  "restoreInvalid": {
+    "message": "ไฟล์นี้ไม่ใช่ข้อมูลสำรองของส่วนขยายนี้ ไม่มีการเปลี่ยนแปลง"
+  },
+  "restoreNewer": {
+    "message": "ข้อมูลสำรองนี้สร้างโดยส่วนขยายเวอร์ชันใหม่กว่า อัปเดตส่วนขยายแล้วลองอีกครั้ง"
+  },
+  "scanModeTitle": {
+    "message": "ไซต์ที่จะสแกน"
+  },
+  "scanModeBlock": {
+    "message": "ทุกไซต์ ยกเว้นที่ฉันข้าม"
+  },
+  "scanModeAllow": {
+    "message": "เฉพาะไซต์ที่ฉันเลือก"
+  },
+  "allowedDomainsTitle": {
+    "message": "ไซต์ที่เลือก"
+  },
+  "settingsCardAllowDomains": {
+    "message": "สแกนเฉพาะไซต์เหล่านี้"
+  },
+  "allowedDomainsDesc": {
+    "message": "การตรวจจับทำงานเฉพาะบนไซต์เหล่านี้และโดเมนย่อยของไซต์ ที่อื่นจะหยุดไว้ชั่วคราว"
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "ยังไม่ได้เลือกไซต์: ยังไม่มีการสแกนใดๆ"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "นำออกจากรายการ"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} อยู่ในรายการแล้ว"
+  },
+  "detectionNotOnList": {
+    "message": "หยุดการตรวจจับชั่วคราว: ไซต์นี้ไม่อยู่ในรายการของคุณ"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "สแกนไซต์นี้"
+  },
+  "detectionAllowlistHint": {
+    "message": "หรือไปที่ การตั้งค่า → การตรวจจับ → ไซต์ที่จะสแกน เพื่อจัดการรายการ"
+  },
+  "siteAllowedFmt": {
+    "message": "เพิ่ม \"{0}\" ในไซต์ที่จะสแกนแล้ว"
+  },
+  "settingsUiErrScanMode": {
+    "message": "ไซต์ที่จะสแกนต้องเป็นทุกไซต์ยกเว้นที่ข้าม หรือเฉพาะไซต์ที่เลือก"
+  },
+  "settingsUiErrSiteList": {
+    "message": "รายการไซต์ต้องมีเฉพาะชื่อไซต์"
+  },
+  "webhookFilterTitle": {
+    "message": "ส่งเฉพาะเมื่อ"
+  },
+  "webhookFilterDesc": {
+    "message": "จะส่งหน้าเมื่อเข้าเงื่อนไขทั้งหมดนี้เท่านั้น Payload ยังคงแสดงทุกอย่างที่พบในหน้า"
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "ความมั่นใจขั้นต่ำ (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "หมวดหมู่"
+  },
+  "webhookCategoriesHint": {
+    "message": "ไม่เลือกเลยเพื่อส่งทุกหมวดหมู่"
+  },
+  "webhookDomainsLabel": {
+    "message": "เฉพาะไซต์เหล่านี้"
+  },
+  "webhookDomainsHint": {
+    "message": "หนึ่งไซต์ต่อบรรทัด รวมโดเมนย่อย ว่างไว้หมายถึงทุกไซต์"
+  },
+  "webhookLogTitle": {
+    "message": "การส่งล่าสุด"
+  },
+  "webhookLogDesc": {
+    "message": "20 ครั้งล่าสุด: เมื่อไร หน้าไหน ได้ผลตอบกลับอะไร ที่อยู่และ Payload จะไม่ถูกเก็บไว้เลย"
+  },
+  "webhookLogEmpty": {
+    "message": "ยังไม่ได้ส่งอะไร"
+  },
+  "webhookLogClear": {
+    "message": "ล้าง"
+  },
+  "webhookLogSent": {
+    "message": "ส่งแล้ว"
+  },
+  "webhookLogFailed": {
+    "message": "ไม่สำเร็จ"
+  },
+  "webhookLogSkipped": {
+    "message": "ไม่ได้ส่ง"
+  },
+  "webhookLogReasonSite": {
+    "message": "ไซต์ไม่อยู่ในรายการ"
+  },
+  "webhookLogReasonCategory": {
+    "message": "ไม่ได้เลือกหมวดหมู่"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "ต่ำกว่าความมั่นใจขั้นต่ำ"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "ไม่มีการตอบกลับ"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "ไม่อนุญาตที่อยู่นี้"
+  },
+  "webhookLogErrorConfig": {
+    "message": "เมธอดไม่ถูกต้อง"
+  },
+  "webhookLogTriggerCache": {
+    "message": "หน้าจากแคช"
+  },
+  "webhookLogTriggerTest": {
+    "message": "ทดสอบ"
+  },
+  "hooksOffGroupTitle": {
+    "message": "ไซต์ที่ไม่ใช้ JS hooks"
+  },
+  "hooksOffLabel": {
+    "message": "ปิด JS hooks บนไซต์เหล่านี้"
+  },
+  "hooksOffHint": {
+    "message": "JS hooks คอยดูการเรียก API ของเบราว์เซอร์ในหน้าเพื่อตรวจหา fingerprinting ใช้กับไซต์ที่ทำงานผิดปกติเมื่อมี hooks: การตรวจจับอื่นยังทำงานต่อ แต่จะไม่ตรวจ fingerprinting หนึ่งไซต์ต่อบรรทัด รวมโดเมนย่อย โหลดหน้าซ้ำเพื่อใช้ค่านี้"
+  },
+  "hooksOffNote": {
+    "message": "JS hooks ปิดอยู่บนไซต์นี้ จึงไม่ได้ตรวจ fingerprinting"
+  },
+  "hooksOffBadge": {
+    "message": "ไม่ได้ตรวจ Fingerprinting"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "ไม่พบสัญญาณ Anti-bot หรือ CAPTCHA ที่ตรงกันในหน้านี้ JS hooks ปิดอยู่ที่นี่ จึงไม่ได้ตรวจ fingerprinting"
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "ลบหน้าที่มีเฉพาะ fingerprinting หลังจาก"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "ตั้งเป็น 0 เพื่อเก็บไว้เหมือนหน้าอื่น จึงใช้เพียงการลบอัตโนมัติกับหน้าเหล่านี้ หน้าที่ปักหมุดจะไม่ถูกลบเลย"
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "ปักหมุดหน้าอัตโนมัติ"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "หน้าที่มีระบบป้องกันที่ยาก"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Anti-bot หรือ CAPTCHA ที่มีความยากสูง Fingerprinting จะไม่ปักหมุดหน้าด้วยระดับความยาก"
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "หน้าที่ได้รับการป้องกันโดย"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "หนึ่งระบบป้องกันต่อบรรทัด ตามชื่อที่แท็บการตรวจจับใช้"
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "เฉพาะเมื่อความมั่นใจตั้งแต่ (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "ปักหมุดด้วยวิธีนี้ได้สูงสุด {0} หน้า หากเลิกปักหมุดหน้าใดแล้ว หน้านั้นจะไม่ถูกปักหมุดเองอีก"
+  },
+  "historyAutoPinnedTip": {
+    "message": "ปักหมุดอัตโนมัติ: จะเก็บไว้เมื่อล้างประวัติ หากเลิกปักหมุดแล้ว จะไม่ถูกปักหมุดเองอีก"
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "ความมั่นใจสำหรับการปักหมุดต้องอยู่ระหว่าง 0 ถึง 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "หน้าที่มีเฉพาะ fingerprinting ต้องเก็บไว้ระหว่าง 0 ถึง 3650 วัน"
+  },
+  "settingsHistorySize": {
+    "message": "ขีดจำกัดขนาด"
+  },
+  "settingsHistorySizeHint": {
+    "message": "ขนาดที่ใหญ่ขึ้นเก็บหน้าได้มากขึ้นและใช้พื้นที่ดิสก์มากขึ้น การลดขนาดจะลบหน้าเก่าที่สุดที่ไม่ได้ปักหมุด"
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "ลดขนาดประวัติ"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "ประวัติใช้ {0} และขีดจำกัดใหม่คือ {1} หน้าเก่าที่สุดที่ไม่ได้ปักหมุดจะถูกลบเพื่อให้พอดี"
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "ลดขนาด"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "ใช้ไป {0} ไม่จำกัด"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "ขนาดประวัติต้องเป็นหนึ่งใน {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "ข้อความที่ยังไม่ได้แปลเป็นทุกภาษา: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "แปลกฎ"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "เติมคำแปลที่ขาดของคำอธิบาย รูปแบบ และชุดค่าผสมด้วยตัวแปลบนอุปกรณ์ของ Chrome ตรวจสอบก่อนบันทึก"
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "กำลังแปล {0} ข้อความ…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "เติมคำแปลแล้ว {0} รายการ ตรวจสอบก่อนบันทึก"
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "เติมแล้ว {0} รายการ อีก {1} รายการแปลที่นี่ไม่ได้"
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "รูปแบบ"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "ชุดค่าผสม"
+  },
+  "historyWatch": {
+    "message": "ติดตามการเปลี่ยนแปลง"
+  },
+  "historyUnwatch": {
+    "message": "เลิกติดตาม"
+  },
+  "historyWatchTip": {
+    "message": "กำลังติดตามการเปลี่ยนแปลง"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "ตรวจสอบล่าสุด {0}"
+  },
+  "historyWatchNever": {
+    "message": "ยังไม่ได้ตรวจสอบ"
+  },
+  "historyWatchStartedNotice": {
+    "message": "กำลังติดตามหน้านี้"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "กำลังติดตามหน้านี้ เปิด “ติดตามหน้าที่ปักหมุด” ในการตั้งค่า → ประวัติ เพื่อให้ระบบตรวจสอบ"
+  },
+  "historyWatchStoppedNotice": {
+    "message": "เลิกติดตามหน้านี้แล้ว"
+  },
+  "historyWatchLimitFmt": {
+    "message": "ติดตามได้สูงสุด {0} หน้า เลิกติดตามหน้าใดหน้าหนึ่งก่อน"
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "ติดตามหน้าที่ปักหมุด"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "ตรวจสอบหน้าเหล่านี้"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "หน้าที่คุณปักหมุดและเลือก “ติดตามการเปลี่ยนแปลง” จะถูกเปิดอีกครั้งในแท็บเบื้องหลังทีละหน้า (สูงสุด 10 หน้า) แล้วสแกน หน้าที่มีระบบป้องกัน Anti-bot หรือ CAPTCHA เพิ่มขึ้นหรือหายไปจะถูกทำเครื่องหมายว่าเปลี่ยนแปลง พร้อมการแจ้งเตือนเมื่อเปิดการแจ้งเตือนไว้ การตรวจสอบแต่ละครั้งคือการเข้าชมจริงด้วยคุกกี้ของเบราว์เซอร์ของคุณ หน้าที่ต้องเข้าสู่ระบบจึงถูกเข้าชมในนามของคุณ และต้องเปิดหน้าต่างเบราว์เซอร์ไว้"
+  },
+  "settingsHistoryWatchNow": {
+    "message": "ตรวจสอบตอนนี้"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "ติดตาม {0} จาก {1} หน้า"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "ยังไม่เคยตรวจสอบ"
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "การตรวจสอบครั้งล่าสุดไม่พบหน้าต่างเบราว์เซอร์สำหรับเปิดหน้า"
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "การตรวจสอบครั้งล่าสุดไม่สำเร็จ"
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "ตรวจสอบล่าสุด: {0} · ตรวจแล้ว {1} เปลี่ยนแปลง {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "ตรวจสอบแล้ว {0} หน้า เปลี่ยนแปลง {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "ยังไม่ได้ติดตามหน้าใด: ปักหมุดหน้าในประวัติแล้วเลือก “ติดตามการเปลี่ยนแปลง”"
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "ประวัติหยุดชั่วคราว จึงไม่มีการตรวจสอบ"
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "การติดตามต้องเป็นปิด รายวัน หรือรายสัปดาห์"
   }
 }

@@ -4688,13 +4688,13 @@
     "message": "履歴で確認"
   },
   "ruleHistoryCheckHint": {
-    "message": "各パターンと組み合わせが保存済みページのいくつで一致するかを確認します。未保存の編集も対象です。"
+    "message": "各パターンと組み合わせが、保存済みのページのうちいくつに一致するかを表示します。未保存の編集も含まれます。"
   },
   "ruleHistoryCheckRun": {
     "message": "確認"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "保存済みページ {0} 件 · このルールは {1} 件で検出"
+    "message": "このルールは保存済みの {0} ページのうち {1} ページに一致します"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{1} ページ中 {0}"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "カスタムルールと編集済みルールのみ表示します。公式ルールの説明はScrapflyが管理しています。"
   },
-  "statsToolsRetentionNote": {
-    "message": "Advancedはキャプチャを30分間保持するため、このタブは日付範囲を無視します。"
-  },
   "statsToolsSavedNow": {
     "message": "現在保存中"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "拡張機能のバックグラウンド部分が古くなっています。拡張機能のページで拡張機能を再読み込みして、もう一度お試しください。"
+  },
+  "historyFiltersLabel": {
+    "message": "履歴をフィルター"
+  },
+  "historyFilterPinned": {
+    "message": "ピン留め済み"
+  },
+  "historyNoResults": {
+    "message": "検索条件またはフィルターに一致するエントリはありません。"
+  },
+  "historyClearFilters": {
+    "message": "フィルターをクリア"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "「詳細」のキャプチャの保持期間は {0} のため、このタブは日付範囲を無視します。"
+  },
+  "settingsStorageTitle": {
+    "message": "ストレージ"
+  },
+  "settingsStorageDesc": {
+    "message": "この拡張機能がこのブラウザーに保存しているものです。設定とルールはここからはクリアできません。"
+  },
+  "storageCache": {
+    "message": "検出キャッシュ"
+  },
+  "storageCaptures": {
+    "message": "ツールのキャプチャ"
+  },
+  "storageHistory": {
+    "message": "履歴"
+  },
+  "storageRules": {
+    "message": "ルールとカテゴリ"
+  },
+  "storageSettings": {
+    "message": "設定"
+  },
+  "storageLogs": {
+    "message": "ログ"
+  },
+  "storageOther": {
+    "message": "その他"
+  },
+  "storageTotalFmt": {
+    "message": "{1} のうち {0} を使用"
+  },
+  "storageClearRowFmt": {
+    "message": "{0} をクリア"
+  },
+  "storageClearCacheTitle": {
+    "message": "検出キャッシュをクリア"
+  },
+  "storageClearCacheMessage": {
+    "message": "次回ページを開いたときに、もう一度スキャンされます。履歴、ルール、設定は変更されません。"
+  },
+  "storageClearCapturesTitle": {
+    "message": "ツールのキャプチャを削除"
+  },
+  "storageClearCapturesMessage": {
+    "message": "高度なツールが保存したものはすべて削除されます。履歴、ルール、設定は変更されません。"
+  },
+  "storageCacheCleared": {
+    "message": "検出キャッシュをクリアしました"
+  },
+  "storageCapturesCleared": {
+    "message": "ツールのキャプチャを削除しました"
+  },
+  "storageClearFailed": {
+    "message": "クリアできませんでした。もう一度お試しください。"
+  },
+  "settingsSupportTitle": {
+    "message": "サポート"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "診断"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "バグ報告用の概要をコピーします。バージョン、設定、件数を含み、サイト、アドレス、キーは含まれません。"
+  },
+  "settingsCopyDiagnostics": {
+    "message": "診断をコピー"
+  },
+  "diagnosticsCopied": {
+    "message": "診断をコピーしました"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "診断をコピーできませんでした"
+  },
+  "settingsPresetsTitle": {
+    "message": "プリセットとリセット"
+  },
+  "settingsPresetsDesc": {
+    "message": "複数の設定をまとめて変更します。ルール、履歴、サイトの一覧、言語、テーマは変更されません。"
+  },
+  "presetPrivacyName": {
+    "message": "プライバシー"
+  },
+  "presetPrivacyDesc": {
+    "message": "このデバイスに保存する情報を減らし、外部には何も送信しません。"
+  },
+  "presetDeveloperName": {
+    "message": "開発者"
+  },
+  "presetDeveloperDesc": {
+    "message": "デバッグログと JS API。ルールの開発向けです。"
+  },
+  "presetApply": {
+    "message": "適用"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "{0} プリセットを適用しますか？"
+  },
+  "presetConfirmIntro": {
+    "message": "次の設定が変更されます:"
+  },
+  "presetAlreadySet": {
+    "message": "これらの設定はすでに適用されています。"
+  },
+  "presetApplied": {
+    "message": "プリセットを適用しました"
+  },
+  "presetHistoryOff": {
+    "message": "履歴は記録されません"
+  },
+  "presetBackupOff": {
+    "message": "履歴の自動バックアップはオフです"
+  },
+  "presetClearOnClose": {
+    "message": "ブラウザーを閉じると履歴がクリアされます"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook はオフです"
+  },
+  "presetNotificationsOff": {
+    "message": "通知はオフです"
+  },
+  "presetJsApiOff": {
+    "message": "JS API はオフです"
+  },
+  "presetDebugOff": {
+    "message": "デバッグモードはオフです"
+  },
+  "presetCollectorOff": {
+    "message": "ログコレクターはオフです"
+  },
+  "presetDebugOn": {
+    "message": "デバッグモードはオンです"
+  },
+  "presetVerboseOn": {
+    "message": "詳細ログはオンです"
+  },
+  "presetCollectorOn": {
+    "message": "ログコレクターはオンです"
+  },
+  "presetCollectorMax": {
+    "message": "ログコレクターは最大 5000 行を保持します"
+  },
+  "presetJsApiOn": {
+    "message": "JS API はオンです"
+  },
+  "settingsResetTitle": {
+    "message": "設定をリセット"
+  },
+  "settingsResetDesc": {
+    "message": "すべての設定が初期値に戻ります。ルール、履歴、サイトの一覧、言語、テーマは保持されます。"
+  },
+  "settingsResetBtn": {
+    "message": "リセット…"
+  },
+  "settingsResetMessage": {
+    "message": "すべての設定が初期値に戻ります。ルール、履歴、サイトの一覧、言語、テーマは変更されません。Webhook と共有の情報は、削除を選ばない限り保持されます。"
+  },
+  "settingsResetConnections": {
+    "message": "Webhook と共有の接続も削除する"
+  },
+  "settingsResetConfirm": {
+    "message": "リセット"
+  },
+  "settingsResetDone": {
+    "message": "設定をリセットしました"
+  },
+  "settingsBackupTitle": {
+    "message": "バックアップと復元"
+  },
+  "settingsBackupItemTitle": {
+    "message": "すべて"
+  },
+  "settingsBackupItemDesc": {
+    "message": "設定、独自のルール、履歴を 1 つのファイルにまとめます。Webhook と共有の情報は含まれません。"
+  },
+  "backupMakeBtn": {
+    "message": "バックアップ"
+  },
+  "backupRestoreBtn": {
+    "message": "復元"
+  },
+  "backupDone": {
+    "message": "バックアップを保存しました"
+  },
+  "backupFailed": {
+    "message": "バックアップを作成できませんでした"
+  },
+  "restoreTitle": {
+    "message": "バックアップを復元"
+  },
+  "restoreHoldsFmt": {
+    "message": "バージョン {0} で {1} に作成されました。内容:"
+  },
+  "restorePartSettings": {
+    "message": "設定"
+  },
+  "restorePartRulesFmt": {
+    "message": "独自のルール（{0}）"
+  },
+  "restorePartHistoryFmt": {
+    "message": "履歴（{0} 件）"
+  },
+  "restoreModeLabel": {
+    "message": "ルールと履歴"
+  },
+  "restoreModeMerge": {
+    "message": "現在のものとマージ"
+  },
+  "restoreModeReplace": {
+    "message": "現在のものを置き換え"
+  },
+  "restoreConfirm": {
+    "message": "復元"
+  },
+  "restoreNothing": {
+    "message": "何も選択されていません。"
+  },
+  "restoreDoneFmt": {
+    "message": "復元しました: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "{0} を復元できませんでした。"
+  },
+  "restoreInvalid": {
+    "message": "このファイルはこの拡張機能のバックアップではありません。何も変更されていません。"
+  },
+  "restoreNewer": {
+    "message": "このバックアップは、より新しいバージョンの拡張機能で作成されました。拡張機能を更新して、もう一度お試しください。"
+  },
+  "scanModeTitle": {
+    "message": "スキャンするサイト"
+  },
+  "scanModeBlock": {
+    "message": "スキップするサイト以外のすべてのサイト"
+  },
+  "scanModeAllow": {
+    "message": "選択したサイトのみ"
+  },
+  "allowedDomainsTitle": {
+    "message": "選択したサイト"
+  },
+  "settingsCardAllowDomains": {
+    "message": "これらのサイトのみスキャン"
+  },
+  "allowedDomainsDesc": {
+    "message": "検出はこれらのサイトとそのサブドメインでのみ実行されます。それ以外では一時停止されます。"
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "選択したサイトはありません: まだ何もスキャンされません"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "リストから削除"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} は既にリストにあります"
+  },
+  "detectionNotOnList": {
+    "message": "検出は一時停止中: このサイトはリストにありません"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "このサイトをスキャン"
+  },
+  "detectionAllowlistHint": {
+    "message": "または、設定 → 検出 → スキャンするサイト からリストを管理できます。"
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\" をスキャンするサイトに追加しました"
+  },
+  "settingsUiErrScanMode": {
+    "message": "スキャンするサイトは、スキップしたサイト以外のすべてか、選択したサイトのみのどちらかにしてください"
+  },
+  "settingsUiErrSiteList": {
+    "message": "サイトの一覧にはサイト名のみを入力してください"
+  },
+  "webhookFilterTitle": {
+    "message": "次の場合のみ送信"
+  },
+  "webhookFilterDesc": {
+    "message": "すべての条件を満たしたページだけが送信されます。ペイロードには、そのページで見つかったものがすべて含まれます。"
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "最小信頼度（%）"
+  },
+  "webhookCategoriesLabel": {
+    "message": "カテゴリ"
+  },
+  "webhookCategoriesHint": {
+    "message": "すべてオフのままにすると、どのカテゴリでも送信します。"
+  },
+  "webhookDomainsLabel": {
+    "message": "これらのサイトのみ"
+  },
+  "webhookDomainsHint": {
+    "message": "1 行に 1 つ、サブドメインも含みます。空欄の場合はすべてのサイトが対象です。"
+  },
+  "webhookLogTitle": {
+    "message": "最近の送信"
+  },
+  "webhookLogDesc": {
+    "message": "直近 20 件の試行: 日時、ページ、返ってきた結果。アドレスとペイロードは保存されません。"
+  },
+  "webhookLogEmpty": {
+    "message": "まだ何も送信されていません。"
+  },
+  "webhookLogClear": {
+    "message": "クリア"
+  },
+  "webhookLogSent": {
+    "message": "送信済み"
+  },
+  "webhookLogFailed": {
+    "message": "失敗"
+  },
+  "webhookLogSkipped": {
+    "message": "未送信"
+  },
+  "webhookLogReasonSite": {
+    "message": "サイトがリストにない"
+  },
+  "webhookLogReasonCategory": {
+    "message": "カテゴリが未選択"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "最小信頼度を下回る"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "応答なし"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "アドレスが許可されていません"
+  },
+  "webhookLogErrorConfig": {
+    "message": "無効なメソッド"
+  },
+  "webhookLogTriggerCache": {
+    "message": "キャッシュされたページ"
+  },
+  "webhookLogTriggerTest": {
+    "message": "テスト"
+  },
+  "hooksOffGroupTitle": {
+    "message": "JS フックを使わないサイト"
+  },
+  "hooksOffLabel": {
+    "message": "これらのサイトで JS フックをオフにする"
+  },
+  "hooksOffHint": {
+    "message": "JS フックは、ページのブラウザー API 呼び出しを監視してフィンガープリンティングを見つけます。フックが原因で動作がおかしくなるサイトに使ってください。他の検出は引き続き動作しますが、フィンガープリンティングは確認されません。1 行に 1 サイト、サブドメインも含みます。反映するにはページを再読み込みしてください。"
+  },
+  "hooksOffNote": {
+    "message": "このサイトでは JS フックがオフのため、フィンガープリンティングは確認されません。"
+  },
+  "hooksOffBadge": {
+    "message": "フィンガープリンティング未確認"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "このページでは、一致するアンチボットまたは CAPTCHA のシグナルは見つかりませんでした。ここでは JS フックがオフのため、フィンガープリンティングは確認されていません。"
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "次より古いフィンガープリンティングのみのページを削除"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 にすると他のページと同じ扱いになり、自動削除だけが適用されます。ピン留めしたページは削除されません。"
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "ページを自動でピン留め"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "難易度の高い保護機能があるページ"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "難易度が「高」のアンチボットまたは CAPTCHA。フィンガープリンティングは、難易度を理由にページをピン留めすることはありません。"
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "次の保護機能を使っているページ"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "1 行に 1 つの保護機能。検出タブでの名前で入力してください。"
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "この信頼度以上の場合のみ（%）"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "この方法でピン留めされるのは最大 {0} ページです。ピン留めを解除したページは、自動では二度とピン留めされません。"
+  },
+  "historyAutoPinnedTip": {
+    "message": "自動でピン留め済み: 履歴の整理時も保持されます。ピン留めを解除すると、自動では二度とピン留めされません。"
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "ピン留めの信頼度は 0 から 100 の間で指定してください"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "フィンガープリンティングのみのページの保持日数は 0 から 3650 の間で指定してください"
+  },
+  "settingsHistorySize": {
+    "message": "サイズの上限"
+  },
+  "settingsHistorySizeHint": {
+    "message": "サイズを大きくすると保存できるページが増えますが、ディスクの使用量も増えます。サイズを小さくすると、ピン留めされていない古いページから削除されます。"
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "履歴のサイズを小さくする"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "履歴は現在 {0} を使用しており、新しい上限は {1} です。収めるため、ピン留めされていない古いページから削除されます。"
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "サイズを小さくする"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} 使用中、上限なし"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "履歴のサイズは {0} MB のいずれかにしてください"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "すべての言語に翻訳されていないテキスト: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "ルールを翻訳"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "説明、パターン、組み合わせの足りない翻訳を、Chrome のオンデバイス翻訳で補います。保存する前に確認してください。"
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "{0} 件のテキストを翻訳中…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "{0} 件の翻訳を入力しました。保存する前に確認してください。"
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "{0} 件入力。{1} 件はここでは翻訳できませんでした。"
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "パターン"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "組み合わせ"
+  },
+  "historyWatch": {
+    "message": "変化を監視"
+  },
+  "historyUnwatch": {
+    "message": "監視を停止"
+  },
+  "historyWatchTip": {
+    "message": "変化を監視中"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "最終確認: {0}"
+  },
+  "historyWatchNever": {
+    "message": "まだ確認されていません"
+  },
+  "historyWatchStartedNotice": {
+    "message": "このページを監視中"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "このページを監視します。確認されるには、設定 → 履歴 で「ピン留めしたページを監視」をオンにしてください。"
+  },
+  "historyWatchStoppedNotice": {
+    "message": "このページの監視を停止しました"
+  },
+  "historyWatchLimitFmt": {
+    "message": "監視できるのは最大 {0} ページです。先に 1 つ監視を停止してください。"
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "ピン留めしたページを監視"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "確認の頻度"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "ピン留めして「変化を監視」を選んだページは、バックグラウンドのタブで 1 つずつ（最大 10 ページ）開き直してスキャンします。アンチボットまたは CAPTCHA の保護機能が追加または削除されたページには「変化あり」と表示され、変化の通知がオンの場合は通知も届きます。確認は実際の訪問で、ブラウザーの Cookie を使うため、ログイン済みのページはログインした状態で開かれます。また、ブラウザーのウィンドウを開いておく必要があります。"
+  },
+  "settingsHistoryWatchNow": {
+    "message": "今すぐ確認"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{1} ページ中 {0} ページを監視中"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "まだ確認していません。"
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "前回の確認では、ページを開くブラウザーのウィンドウが見つかりませんでした。"
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "前回の確認に失敗しました。"
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "前回の確認: {0} · {1} 件確認、{2} 件に変化あり"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "{0} ページを確認し、{1} ページに変化がありました"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "監視中のページはまだありません: 履歴でページをピン留めし、「変化を監視」を選んでください。"
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "履歴が一時停止中のため、何も確認されません。"
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"
   }
 }

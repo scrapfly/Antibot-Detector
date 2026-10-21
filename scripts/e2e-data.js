@@ -92,7 +92,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       assert.ok(summary.rows.find(row => row.id === 'rules').bytes > 1000, 'the rules are counted');
       const sum = summary.rows.reduce((total, row) => total + row.bytes, 0) + summary.other;
       assert.equal(sum, summary.total, 'the rows and the rest add up to the total');
-      assert.match(await page.$eval('#storageTotalText', el => el.textContent), /of 10\.0 MB used$/);
+      // The extension has unlimited storage (History can take 12 or 25 MB): there is no quota to fill, so no meter
+      assert.match(await page.$eval('#storageTotalText', el => el.textContent), /^\d+(\.\d)? (KB|MB) used, no limit$/);
+      assert.equal(await page.$eval('#storageMeter', el => el.hidden), true);
       const rulesBefore = JSON.stringify(summary.rows.filter(row => row.id === 'rules' || row.id === 'settings'));
       console.log('PASS the overview lists every part, adds up, and offers Clear only where it is safe');
 

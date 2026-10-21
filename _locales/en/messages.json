@@ -5736,9 +5736,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Only custom and edited rules are listed. Descriptions of official rules are maintained by Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Advanced keeps captures for 30 minutes, so this tab ignores the date range."
-  },
   "statsToolsSavedNow": {
     "message": "Saved now"
   },

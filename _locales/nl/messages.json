@@ -4688,13 +4688,13 @@
     "message": "Controleren aan de hand van Geschiedenis"
   },
   "ruleHistoryCheckHint": {
-    "message": "Bekijk op hoeveel opgeslagen pagina's elk patroon en elke combinatie overeenkomt. Niet-opgeslagen wijzigingen tellen mee."
+    "message": "Laat zien op hoeveel van je opgeslagen pagina's elk patroon en elke combinatie overeenkomt. Niet-opgeslagen wijzigingen tellen mee."
   },
   "ruleHistoryCheckRun": {
     "message": "Controleren"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Opgeslagen pagina's: {0} · pagina's met deze regel: {1}"
+    "message": "Deze regel komt overeen met {1} van de {0} opgeslagen pagina's"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Pagina's: {0} van {1}"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Alleen aangepaste en bewerkte regels worden getoond. Beschrijvingen van officiële regels worden onderhouden door Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Geavanceerd bewaart opnamen 30 minuten, dus dit tabblad negeert het datumbereik."
-  },
   "statsToolsSavedNow": {
     "message": "Nu opgeslagen"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Het achtergronddeel van de extensie is verouderd. Laad de extensie opnieuw op de extensiepagina en probeer het nog eens."
+  },
+  "historyFiltersLabel": {
+    "message": "Geschiedenis filteren"
+  },
+  "historyFilterPinned": {
+    "message": "Vastgezet"
+  },
+  "historyNoResults": {
+    "message": "Geen items komen overeen met je zoekopdracht of filters."
+  },
+  "historyClearFilters": {
+    "message": "Filters wissen"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Geavanceerd bewaart opnamen {0}, dus dit tabblad negeert het datumbereik."
+  },
+  "settingsStorageTitle": {
+    "message": "Opslag"
+  },
+  "settingsStorageDesc": {
+    "message": "Wat de extensie in deze browser bewaart. Instellingen en regels kunnen hier niet worden gewist."
+  },
+  "storageCache": {
+    "message": "Detectiecache"
+  },
+  "storageCaptures": {
+    "message": "Toolopnamen"
+  },
+  "storageHistory": {
+    "message": "Geschiedenis"
+  },
+  "storageRules": {
+    "message": "Regels en categorieën"
+  },
+  "storageSettings": {
+    "message": "Instellingen"
+  },
+  "storageLogs": {
+    "message": "Logs"
+  },
+  "storageOther": {
+    "message": "Overig"
+  },
+  "storageTotalFmt": {
+    "message": "{0} van {1} gebruikt"
+  },
+  "storageClearRowFmt": {
+    "message": "{0} wissen"
+  },
+  "storageClearCacheTitle": {
+    "message": "Detectiecache wissen"
+  },
+  "storageClearCacheMessage": {
+    "message": "Pagina's worden de volgende keer dat je ze opent opnieuw gescand. Geschiedenis, regels en instellingen blijven ongemoeid."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Toolopnamen verwijderen"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Alles wat de geavanceerde tools hebben opgeslagen, wordt verwijderd. Geschiedenis, regels en instellingen blijven ongemoeid."
+  },
+  "storageCacheCleared": {
+    "message": "Detectiecache gewist"
+  },
+  "storageCapturesCleared": {
+    "message": "Toolopnamen verwijderd"
+  },
+  "storageClearFailed": {
+    "message": "Wissen is niet gelukt. Probeer het opnieuw."
+  },
+  "settingsSupportTitle": {
+    "message": "Ondersteuning"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostiek"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Kopieer een samenvatting voor een bugrapport: versies, instellingen en aantallen. Er staan geen sites, adressen of sleutels in."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Diagnostiek kopiëren"
+  },
+  "diagnosticsCopied": {
+    "message": "Diagnostiek gekopieerd"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Diagnostiek kopiëren mislukt"
+  },
+  "settingsPresetsTitle": {
+    "message": "Voorinstellingen en reset"
+  },
+  "settingsPresetsDesc": {
+    "message": "Wijzig meerdere instellingen tegelijk. Regels, geschiedenis, sitelijsten, taal en thema worden nooit gewijzigd."
+  },
+  "presetPrivacyName": {
+    "message": "Privacy"
+  },
+  "presetPrivacyDesc": {
+    "message": "Bewaart minder op dit apparaat en stuurt niets naar buiten."
+  },
+  "presetDeveloperName": {
+    "message": "Ontwikkelaar"
+  },
+  "presetDeveloperDesc": {
+    "message": "Debuglogs en de JS API, om aan regels te werken."
+  },
+  "presetApply": {
+    "message": "Toepassen"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "De voorinstelling {0} toepassen?"
+  },
+  "presetConfirmIntro": {
+    "message": "Deze instellingen worden gewijzigd:"
+  },
+  "presetAlreadySet": {
+    "message": "Deze instellingen staan al zo."
+  },
+  "presetApplied": {
+    "message": "Voorinstelling toegepast"
+  },
+  "presetHistoryOff": {
+    "message": "De geschiedenis wordt niet vastgelegd"
+  },
+  "presetBackupOff": {
+    "message": "Automatische back-ups van de geschiedenis staan uit"
+  },
+  "presetClearOnClose": {
+    "message": "De geschiedenis wordt gewist wanneer de browser sluit"
+  },
+  "presetWebhookOff": {
+    "message": "De webhook staat uit"
+  },
+  "presetNotificationsOff": {
+    "message": "Meldingen staan uit"
+  },
+  "presetJsApiOff": {
+    "message": "De JS API staat uit"
+  },
+  "presetDebugOff": {
+    "message": "De debugmodus staat uit"
+  },
+  "presetCollectorOff": {
+    "message": "De logverzamelaar staat uit"
+  },
+  "presetDebugOn": {
+    "message": "De debugmodus staat aan"
+  },
+  "presetVerboseOn": {
+    "message": "Uitgebreide logs staan aan"
+  },
+  "presetCollectorOn": {
+    "message": "De logverzamelaar staat aan"
+  },
+  "presetCollectorMax": {
+    "message": "De logverzamelaar bewaart maximaal 5000 regels"
+  },
+  "presetJsApiOn": {
+    "message": "De JS API staat aan"
+  },
+  "settingsResetTitle": {
+    "message": "Instellingen resetten"
+  },
+  "settingsResetDesc": {
+    "message": "Elke instelling gaat terug naar de standaardwaarde. Regels, geschiedenis, sitelijsten, taal en thema blijven behouden."
+  },
+  "settingsResetBtn": {
+    "message": "Resetten…"
+  },
+  "settingsResetMessage": {
+    "message": "Elke instelling gaat terug naar de standaardwaarde. Regels, geschiedenis, sitelijsten, taal en thema worden niet gewijzigd. Webhook- en deelgegevens blijven behouden, tenzij je kiest om ze te verwijderen."
+  },
+  "settingsResetConnections": {
+    "message": "Ook de webhook- en deelverbindingen verwijderen"
+  },
+  "settingsResetConfirm": {
+    "message": "Resetten"
+  },
+  "settingsResetDone": {
+    "message": "Instellingen gereset"
+  },
+  "settingsBackupTitle": {
+    "message": "Back-up en herstel"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Alles"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Instellingen, je eigen regels en geschiedenis in één bestand. Webhook- en deelgegevens zijn niet inbegrepen."
+  },
+  "backupMakeBtn": {
+    "message": "Back-up maken"
+  },
+  "backupRestoreBtn": {
+    "message": "Herstellen"
+  },
+  "backupDone": {
+    "message": "Back-up opgeslagen"
+  },
+  "backupFailed": {
+    "message": "Back-up maken is mislukt"
+  },
+  "restoreTitle": {
+    "message": "Een back-up herstellen"
+  },
+  "restoreHoldsFmt": {
+    "message": "Gemaakt met versie {0} op {1}. Dit zit erin:"
+  },
+  "restorePartSettings": {
+    "message": "Instellingen"
+  },
+  "restorePartRulesFmt": {
+    "message": "Je regels ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Geschiedenis ({0} items)"
+  },
+  "restoreModeLabel": {
+    "message": "Regels en geschiedenis"
+  },
+  "restoreModeMerge": {
+    "message": "Samenvoegen met wat je hebt"
+  },
+  "restoreModeReplace": {
+    "message": "Vervangen door de back-up"
+  },
+  "restoreConfirm": {
+    "message": "Herstellen"
+  },
+  "restoreNothing": {
+    "message": "Er is niets geselecteerd."
+  },
+  "restoreDoneFmt": {
+    "message": "Hersteld: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Het herstellen van {0} is mislukt."
+  },
+  "restoreInvalid": {
+    "message": "Dit bestand is geen back-up van deze extensie. Er is niets gewijzigd."
+  },
+  "restoreNewer": {
+    "message": "Deze back-up is gemaakt met een nieuwere versie van de extensie. Werk de extensie bij en probeer het opnieuw."
+  },
+  "scanModeTitle": {
+    "message": "Te scannen sites"
+  },
+  "scanModeBlock": {
+    "message": "Elke site behalve die ik oversla"
+  },
+  "scanModeAllow": {
+    "message": "Alleen de sites die ik kies"
+  },
+  "allowedDomainsTitle": {
+    "message": "Gekozen sites"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Alleen deze sites scannen"
+  },
+  "allowedDomainsDesc": {
+    "message": "Detectie draait alleen op deze sites en hun subdomeinen. Overal elders is ze gepauzeerd."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Geen sites gekozen: er wordt nog niets gescand"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Van de lijst verwijderen"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} staat al op de lijst"
+  },
+  "detectionNotOnList": {
+    "message": "Detectie gepauzeerd: deze site staat niet op je lijst"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Deze site scannen"
+  },
+  "detectionAllowlistHint": {
+    "message": "Of ga naar Instellingen → Detectie → Te scannen sites om de lijst te beheren."
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\" toegevoegd aan de te scannen sites"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Te scannen sites moeten elke site behalve de overgeslagen sites zijn, of alleen de gekozen sites"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Een lijst met sites mag alleen sitenamen bevatten"
+  },
+  "webhookFilterTitle": {
+    "message": "Alleen verzenden als"
+  },
+  "webhookFilterDesc": {
+    "message": "Een pagina wordt alleen verzonden als aan al deze voorwaarden is voldaan. De payload vermeldt nog steeds alles wat erop is gevonden."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Minimale zekerheid (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Categorieën"
+  },
+  "webhookCategoriesHint": {
+    "message": "Laat alles uitgevinkt om voor elke categorie te verzenden."
+  },
+  "webhookDomainsLabel": {
+    "message": "Alleen deze sites"
+  },
+  "webhookDomainsHint": {
+    "message": "Eén per regel, met hun subdomeinen. Leeg betekent elke site."
+  },
+  "webhookLogTitle": {
+    "message": "Recente verzendingen"
+  },
+  "webhookLogDesc": {
+    "message": "De laatste 20 pogingen: wanneer, welke pagina, wat het antwoord was. Adressen en payloads worden nooit bewaard."
+  },
+  "webhookLogEmpty": {
+    "message": "Nog niets verzonden."
+  },
+  "webhookLogClear": {
+    "message": "Wissen"
+  },
+  "webhookLogSent": {
+    "message": "Verzonden"
+  },
+  "webhookLogFailed": {
+    "message": "Mislukt"
+  },
+  "webhookLogSkipped": {
+    "message": "Niet verzonden"
+  },
+  "webhookLogReasonSite": {
+    "message": "site niet op de lijst"
+  },
+  "webhookLogReasonCategory": {
+    "message": "categorie niet geselecteerd"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "onder de minimale zekerheid"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "geen antwoord"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "adres niet toegestaan"
+  },
+  "webhookLogErrorConfig": {
+    "message": "ongeldige methode"
+  },
+  "webhookLogTriggerCache": {
+    "message": "pagina uit de cache"
+  },
+  "webhookLogTriggerTest": {
+    "message": "test"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Sites zonder JS-hooks"
+  },
+  "hooksOffLabel": {
+    "message": "JS-hooks uitzetten op deze sites"
+  },
+  "hooksOffHint": {
+    "message": "JS-hooks volgen de browser-API-aanroepen van een pagina om fingerprinting te vinden. Gebruik dit voor een site die er problemen mee heeft: de andere detecties blijven werken, maar fingerprinting wordt niet gecontroleerd. Eén site per regel, subdomeinen inbegrepen; laad de pagina opnieuw om dit toe te passen."
+  },
+  "hooksOffNote": {
+    "message": "JS-hooks staan uit op deze site, dus fingerprinting wordt niet gecontroleerd."
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting niet gecontroleerd"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Er zijn geen passende anti-bot- of CAPTCHA-signalen op deze pagina gevonden. JS-hooks staan hier uit, dus fingerprinting is niet gecontroleerd."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Pagina's met alleen fingerprinting verwijderen na"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "Bij 0 worden ze net als elke andere pagina behandeld, dus voor hen geldt alleen Automatisch verwijderen. Vastgezette pagina's worden nooit verwijderd."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Pagina's automatisch vastzetten"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Pagina's met een moeilijke beveiliging"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Een anti-bot of CAPTCHA met hoge moeilijkheid. Fingerprinting zet een pagina nooit vast op basis van moeilijkheid."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Pagina's beveiligd door"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Eén beveiliging per regel, zoals het tabblad Detectie ze noemt."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Alleen vanaf een zekerheid van (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Maximaal {0} pagina's worden zo vastgezet. Maak je er een los, dan wordt die nooit meer vanzelf vastgezet."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Automatisch vastgezet: blijft behouden wanneer de geschiedenis wordt opgeschoond. Maak je de pagina los, dan wordt die nooit meer vanzelf vastgezet."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "De zekerheid voor vastzetten moet tussen 0 en 100 liggen"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Pagina's met alleen fingerprinting moeten tussen 0 en 3650 dagen worden bewaard"
+  },
+  "settingsHistorySize": {
+    "message": "Groottelimiet"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Een grotere limiet bewaart meer pagina's en gebruikt meer van je schijf. Bij een lagere limiet worden de oudste pagina's verwijderd die niet zijn vastgezet."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "De grootte van de geschiedenis verlagen"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "De geschiedenis gebruikt {0} en de nieuwe limiet is {1}. De oudste pagina's die niet zijn vastgezet, worden verwijderd zodat alles past."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Grootte verlagen"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} gebruikt, geen limiet"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "De grootte van de geschiedenis moet een van deze waarden zijn: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Teksten die nog niet in elke taal zijn vertaald: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Regel vertalen"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Vult de ontbrekende vertalingen van de beschrijving, de patronen en de combinaties aan met de vertaler op het apparaat van Chrome. Controleer ze voordat je opslaat."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "{0} teksten vertalen…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "{0} vertalingen ingevuld. Controleer ze voordat je opslaat."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Ingevuld: {0}; hier niet vertaald: {1}."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Patronen"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Combinaties"
+  },
+  "historyWatch": {
+    "message": "Wijzigingen volgen"
+  },
+  "historyUnwatch": {
+    "message": "Niet meer volgen"
+  },
+  "historyWatchTip": {
+    "message": "Wijzigingen worden gevolgd"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Laatst gecontroleerd {0}"
+  },
+  "historyWatchNever": {
+    "message": "Nog niet gecontroleerd"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Deze pagina wordt gevolgd"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Deze pagina wordt gevolgd. Zet Vastgezette pagina's volgen aan in Instellingen → Geschiedenis zodat de pagina wordt gecontroleerd."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Deze pagina wordt niet meer gevolgd"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Je kunt maximaal {0} pagina's volgen. Stop eerst met het volgen van een andere pagina."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Vastgezette pagina's volgen"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Controleer ze"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Pagina's die je vastzet en waarvoor je Wijzigingen volgen kiest, worden een voor een (maximaal 10) opnieuw geopend in een achtergrondtabblad en gescand. Een pagina die een anti-bot- of CAPTCHA-beveiliging krijgt of verliest, wordt als Gewijzigd gemarkeerd, met een melding als waarschuwingen aan staan. Elke controle is een echt bezoek met de cookies van je browser, dus een pagina waarop je bent ingelogd wordt als jij bezocht, en er moet een browservenster open zijn."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Nu controleren"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{0} van {1} pagina's gevolgd"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Nog geen controle."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Bij de laatste controle was er geen browservenster om pagina's in te openen."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "De laatste controle is mislukt."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Laatste controle: {0} · {1} gecontroleerd, {2} gewijzigd"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "{0} pagina's gecontroleerd, {1} gewijzigd"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Er wordt nog geen pagina gevolgd: zet een pagina vast in Geschiedenis en kies Wijzigingen volgen."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "De geschiedenis is gepauzeerd, dus er wordt niets gecontroleerd."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "De volglijst moet uit, dagelijks of wekelijks staan"
   }
 }

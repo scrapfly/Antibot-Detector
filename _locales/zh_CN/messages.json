@@ -4688,13 +4688,13 @@
     "message": "用历史记录检查"
   },
   "ruleHistoryCheckHint": {
-    "message": "查看每个模式和组合在多少个已保存页面上匹配。未保存的修改也会计入。"
+    "message": "显示每个模式和组合与多少个已保存页面匹配。未保存的修改也会计入。"
   },
   "ruleHistoryCheckRun": {
     "message": "检查"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} 个已保存页面 · 此规则在 {1} 个页面上被发现"
+    "message": "此规则匹配 {0} 个已保存页面中的 {1} 个"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{1} 个页面中的 {0} 个"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "仅列出自定义规则和已编辑的规则。官方规则的说明由 Scrapfly 维护。"
   },
-  "statsToolsRetentionNote": {
-    "message": "Advanced 会将捕获内容保留 30 分钟，因此此标签页不受日期范围影响。"
-  },
   "statsToolsSavedNow": {
     "message": "当前已保存"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "扩展程序的后台部分已过期。请在扩展程序页面重新加载该扩展程序，然后重试。"
+  },
+  "historyFiltersLabel": {
+    "message": "筛选历史记录"
+  },
+  "historyFilterPinned": {
+    "message": "已固定"
+  },
+  "historyNoResults": {
+    "message": "没有符合搜索或筛选条件的记录。"
+  },
+  "historyClearFilters": {
+    "message": "清除筛选"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "“高级”会将捕获内容保留 {0}，因此此标签页不受日期范围影响。"
+  },
+  "settingsStorageTitle": {
+    "message": "存储"
+  },
+  "settingsStorageDesc": {
+    "message": "扩展在此浏览器中保存的内容。设置和规则无法在此处清除。"
+  },
+  "storageCache": {
+    "message": "检测缓存"
+  },
+  "storageCaptures": {
+    "message": "工具捕获"
+  },
+  "storageHistory": {
+    "message": "历史记录"
+  },
+  "storageRules": {
+    "message": "规则和类别"
+  },
+  "storageSettings": {
+    "message": "设置"
+  },
+  "storageLogs": {
+    "message": "日志"
+  },
+  "storageOther": {
+    "message": "其他"
+  },
+  "storageTotalFmt": {
+    "message": "已使用 {0}（上限 {1}）"
+  },
+  "storageClearRowFmt": {
+    "message": "清除{0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "清除检测缓存"
+  },
+  "storageClearCacheMessage": {
+    "message": "下次打开页面时会重新扫描。历史记录、规则和设置不受影响。"
+  },
+  "storageClearCapturesTitle": {
+    "message": "删除工具捕获"
+  },
+  "storageClearCapturesMessage": {
+    "message": "高级工具保存的所有内容都会被删除。历史记录、规则和设置不受影响。"
+  },
+  "storageCacheCleared": {
+    "message": "检测缓存已清除"
+  },
+  "storageCapturesCleared": {
+    "message": "工具捕获已删除"
+  },
+  "storageClearFailed": {
+    "message": "无法清除。请重试。"
+  },
+  "settingsSupportTitle": {
+    "message": "支持"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "诊断"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "复制用于报告问题的摘要：版本、设置和数量。其中不包含站点、地址或密钥。"
+  },
+  "settingsCopyDiagnostics": {
+    "message": "复制诊断信息"
+  },
+  "diagnosticsCopied": {
+    "message": "诊断信息已复制"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "无法复制诊断信息"
+  },
+  "settingsPresetsTitle": {
+    "message": "预设和重置"
+  },
+  "settingsPresetsDesc": {
+    "message": "一次更改多项设置。规则、历史记录、站点列表、语言和主题永远不会被更改。"
+  },
+  "presetPrivacyName": {
+    "message": "隐私"
+  },
+  "presetPrivacyDesc": {
+    "message": "在此设备上保存更少内容，且不向外发送任何数据。"
+  },
+  "presetDeveloperName": {
+    "message": "开发者"
+  },
+  "presetDeveloperDesc": {
+    "message": "调试日志和 JS API，用于编写规则。"
+  },
+  "presetApply": {
+    "message": "应用"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "要应用{0}预设吗？"
+  },
+  "presetConfirmIntro": {
+    "message": "将更改以下设置："
+  },
+  "presetAlreadySet": {
+    "message": "这些设置已经生效。"
+  },
+  "presetApplied": {
+    "message": "预设已应用"
+  },
+  "presetHistoryOff": {
+    "message": "不记录历史记录"
+  },
+  "presetBackupOff": {
+    "message": "历史记录自动备份已关闭"
+  },
+  "presetClearOnClose": {
+    "message": "关闭浏览器时清除历史记录"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook 已关闭"
+  },
+  "presetNotificationsOff": {
+    "message": "通知已关闭"
+  },
+  "presetJsApiOff": {
+    "message": "JS API 已关闭"
+  },
+  "presetDebugOff": {
+    "message": "调试模式已关闭"
+  },
+  "presetCollectorOff": {
+    "message": "日志收集器已关闭"
+  },
+  "presetDebugOn": {
+    "message": "调试模式已开启"
+  },
+  "presetVerboseOn": {
+    "message": "详细日志已开启"
+  },
+  "presetCollectorOn": {
+    "message": "日志收集器已开启"
+  },
+  "presetCollectorMax": {
+    "message": "日志收集器最多保留 5000 行"
+  },
+  "presetJsApiOn": {
+    "message": "JS API 已开启"
+  },
+  "settingsResetTitle": {
+    "message": "重置设置"
+  },
+  "settingsResetDesc": {
+    "message": "所有设置都会恢复为默认值。规则、历史记录、站点列表、语言和主题会保留。"
+  },
+  "settingsResetBtn": {
+    "message": "重置…"
+  },
+  "settingsResetMessage": {
+    "message": "所有设置都会恢复为默认值。规则、历史记录、站点列表、语言和主题不会更改。除非选择移除，否则 Webhook 和分享信息会保留。"
+  },
+  "settingsResetConnections": {
+    "message": "同时移除 Webhook 和分享连接"
+  },
+  "settingsResetConfirm": {
+    "message": "重置"
+  },
+  "settingsResetDone": {
+    "message": "设置已重置"
+  },
+  "settingsBackupTitle": {
+    "message": "备份和恢复"
+  },
+  "settingsBackupItemTitle": {
+    "message": "全部"
+  },
+  "settingsBackupItemDesc": {
+    "message": "将设置、你自己的规则和历史记录保存到一个文件中。不包含 Webhook 和分享信息。"
+  },
+  "backupMakeBtn": {
+    "message": "备份"
+  },
+  "backupRestoreBtn": {
+    "message": "恢复"
+  },
+  "backupDone": {
+    "message": "备份已保存"
+  },
+  "backupFailed": {
+    "message": "无法创建备份"
+  },
+  "restoreTitle": {
+    "message": "恢复备份"
+  },
+  "restoreHoldsFmt": {
+    "message": "由版本 {0} 于 {1} 创建。包含："
+  },
+  "restorePartSettings": {
+    "message": "设置"
+  },
+  "restorePartRulesFmt": {
+    "message": "你的规则（{0}）"
+  },
+  "restorePartHistoryFmt": {
+    "message": "历史记录（{0} 条）"
+  },
+  "restoreModeLabel": {
+    "message": "规则和历史记录"
+  },
+  "restoreModeMerge": {
+    "message": "与现有内容合并"
+  },
+  "restoreModeReplace": {
+    "message": "替换现有内容"
+  },
+  "restoreConfirm": {
+    "message": "恢复"
+  },
+  "restoreNothing": {
+    "message": "未选择任何内容。"
+  },
+  "restoreDoneFmt": {
+    "message": "已恢复：{0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "无法恢复{0}。"
+  },
+  "restoreInvalid": {
+    "message": "此文件不是本扩展的备份。未做任何更改。"
+  },
+  "restoreNewer": {
+    "message": "此备份由更新版本的扩展创建。请更新扩展后重试。"
+  },
+  "scanModeTitle": {
+    "message": "要扫描的站点"
+  },
+  "scanModeBlock": {
+    "message": "除我跳过的站点外的所有站点"
+  },
+  "scanModeAllow": {
+    "message": "仅我选择的站点"
+  },
+  "allowedDomainsTitle": {
+    "message": "所选站点"
+  },
+  "settingsCardAllowDomains": {
+    "message": "仅扫描这些站点"
+  },
+  "allowedDomainsDesc": {
+    "message": "仅在这些站点及其子域名上运行检测，其他位置均暂停检测。"
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "尚未选择站点：暂不扫描任何内容"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "从列表中移除"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} 已在列表中"
+  },
+  "detectionNotOnList": {
+    "message": "检测已暂停：此站点不在你的列表中"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "扫描此站点"
+  },
+  "detectionAllowlistHint": {
+    "message": "也可前往“设置 → 检测 → 要扫描的站点”管理列表。"
+  },
+  "siteAllowedFmt": {
+    "message": "已将 \"{0}\" 添加到要扫描的站点"
+  },
+  "settingsUiErrScanMode": {
+    "message": "要扫描的站点必须是除已跳过站点外的所有站点，或仅所选站点"
+  },
+  "settingsUiErrSiteList": {
+    "message": "站点列表只能包含站点名称"
+  },
+  "webhookFilterTitle": {
+    "message": "仅在以下情况发送"
+  },
+  "webhookFilterDesc": {
+    "message": "只有满足以下全部条件的页面才会发送。负载中仍会列出页面上发现的所有内容。"
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "最低置信度（%）"
+  },
+  "webhookCategoriesLabel": {
+    "message": "类别"
+  },
+  "webhookCategoriesHint": {
+    "message": "全部不勾选则对任何类别都发送。"
+  },
+  "webhookDomainsLabel": {
+    "message": "仅这些站点"
+  },
+  "webhookDomainsHint": {
+    "message": "每行一个，包含其子域名。留空表示所有站点。"
+  },
+  "webhookLogTitle": {
+    "message": "最近发送记录"
+  },
+  "webhookLogDesc": {
+    "message": "最近 20 次尝试：时间、页面、返回结果。地址和负载不会被保存。"
+  },
+  "webhookLogEmpty": {
+    "message": "尚未发送任何内容。"
+  },
+  "webhookLogClear": {
+    "message": "清除"
+  },
+  "webhookLogSent": {
+    "message": "已发送"
+  },
+  "webhookLogFailed": {
+    "message": "失败"
+  },
+  "webhookLogSkipped": {
+    "message": "未发送"
+  },
+  "webhookLogReasonSite": {
+    "message": "站点不在列表中"
+  },
+  "webhookLogReasonCategory": {
+    "message": "类别未选中"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "低于最低置信度"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "无响应"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "地址不被允许"
+  },
+  "webhookLogErrorConfig": {
+    "message": "无效的方法"
+  },
+  "webhookLogTriggerCache": {
+    "message": "缓存的页面"
+  },
+  "webhookLogTriggerTest": {
+    "message": "测试"
+  },
+  "hooksOffGroupTitle": {
+    "message": "不使用 JS 钩子的站点"
+  },
+  "hooksOffLabel": {
+    "message": "在这些站点上关闭 JS 钩子"
+  },
+  "hooksOffHint": {
+    "message": "JS 钩子会监视页面对浏览器 API 的调用，以发现指纹识别。如果某个站点因钩子而出现异常，可在此关闭：其他检测仍会运行，但不再检查指纹识别。每行一个站点，包含子域名；重新加载页面后生效。"
+  },
+  "hooksOffNote": {
+    "message": "此站点已关闭 JS 钩子，因此不检查指纹识别。"
+  },
+  "hooksOffBadge": {
+    "message": "未检查指纹识别"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "在此页面上未发现匹配的反机器人或验证码信号。此处已关闭 JS 钩子，因此未检查指纹识别。"
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "删除早于以下时间的仅含指纹识别的页面"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "设为 0 时与其他页面一样保留，只适用自动删除。已固定的页面永远不会被删除。"
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "自动固定页面"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "有高难度防护的页面"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "难度为“高”的反机器人或验证码。指纹识别从不因难度而固定页面。"
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "使用以下防护的页面"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "每行一项防护，名称与“检测”标签页中显示的一致。"
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "仅当置信度不低于（%）"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "通过此方式最多固定 {0} 个页面。取消固定的页面不会再被自动固定。"
+  },
+  "historyAutoPinnedTip": {
+    "message": "已自动固定：清理历史记录时会保留。取消固定后不会再被自动固定。"
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "固定的置信度必须介于 0 到 100 之间"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "仅含指纹识别的页面保留天数必须介于 0 到 3650 之间"
+  },
+  "settingsHistorySize": {
+    "message": "大小上限"
+  },
+  "settingsHistorySizeHint": {
+    "message": "上限越大，保留的页面越多，占用的磁盘空间也越多。调低上限会删除最早且未固定的页面。"
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "调低历史记录的大小上限"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "历史记录当前占用 {0}，新的上限为 {1}。将删除最早且未固定的页面以符合上限。"
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "调低上限"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "已使用 {0}，无上限"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "历史记录大小必须是 {0} MB 之一"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "尚未翻译成所有语言的文本：{0}"
+  },
+  "ruleTranslateRule": {
+    "message": "翻译规则"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "使用 Chrome 的设备端翻译器补全说明、模式和组合中缺失的翻译。保存前请检查。"
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "正在翻译 {0} 段文本…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "已填写 {0} 条翻译。保存前请检查。"
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "已填写 {0} 条；{1} 条无法在此翻译。"
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "模式"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "组合"
+  },
+  "historyWatch": {
+    "message": "监视变化"
+  },
+  "historyUnwatch": {
+    "message": "停止监视"
+  },
+  "historyWatchTip": {
+    "message": "正在监视变化"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "上次检查：{0}"
+  },
+  "historyWatchNever": {
+    "message": "尚未检查"
+  },
+  "historyWatchStartedNotice": {
+    "message": "正在监视此页面"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "正在监视此页面。请在 设置 → 历史记录 中开启“监视已固定的页面”，该页面才会被检查。"
+  },
+  "historyWatchStoppedNotice": {
+    "message": "已停止监视此页面"
+  },
+  "historyWatchLimitFmt": {
+    "message": "最多可监视 {0} 个页面。请先停止监视其中一个。"
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "监视已固定的页面"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "检查频率"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "已固定且选择了“监视变化”的页面，会在后台标签页中逐个重新打开（最多 10 个）并扫描。页面新增或失去反机器人或验证码防护时，会标记为“有变化”，开启提醒时还会发送通知。每次检查都是使用浏览器 Cookie 的真实访问，因此已登录的页面会以登录状态被访问，并且必须有浏览器窗口处于打开状态。"
+  },
+  "settingsHistoryWatchNow": {
+    "message": "立即检查"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{1} 个页面中已监视 {0} 个"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "尚未检查。"
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "上次检查时没有找到可用来打开页面的浏览器窗口。"
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "上次检查失败。"
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "上次检查：{0} · 已检查 {1} 个，{2} 个有变化"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "已检查 {0} 个页面，{1} 个有变化"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "尚无监视中的页面：请在历史记录中固定一个页面并选择“监视变化”。"
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "历史记录已暂停，因此不会检查任何内容。"
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "监视列表必须为关闭、每天或每周"
   }
 }

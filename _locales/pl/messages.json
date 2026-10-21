@@ -4688,13 +4688,13 @@
     "message": "Sprawdź względem Historii"
   },
   "ruleHistoryCheckHint": {
-    "message": "Zobacz, na ilu zapisanych stronach pasuje każdy wzorzec i każda kombinacja. Niezapisane zmiany są uwzględniane."
+    "message": "Pokazuje, na ilu z Twoich zapisanych stron pasuje każdy wzorzec i każda kombinacja. Niezapisane zmiany są uwzględniane."
   },
   "ruleHistoryCheckRun": {
     "message": "Sprawdź"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Zapisane strony: {0} · reguła znaleziona na stronach: {1}"
+    "message": "Ta reguła pasuje do {1} z {0} zapisanych stron"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Strony: {0} z {1}"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Wyświetlane są tylko reguły własne i edytowane. Opisy reguł oficjalnych utrzymuje Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Zaawansowane przechowuje przechwycenia przez 30 minut, więc ta karta ignoruje zakres dat."
-  },
   "statsToolsSavedNow": {
     "message": "Zapisane teraz"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Część rozszerzenia działająca w tle jest nieaktualna. Załaduj rozszerzenie ponownie na stronie rozszerzeń i spróbuj jeszcze raz."
+  },
+  "historyFiltersLabel": {
+    "message": "Filtruj historię"
+  },
+  "historyFilterPinned": {
+    "message": "Przypięte"
+  },
+  "historyNoResults": {
+    "message": "Żaden wpis nie pasuje do wyszukiwania ani filtrów."
+  },
+  "historyClearFilters": {
+    "message": "Wyczyść filtry"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Czas przechowywania przechwyceń w karcie Zaawansowane: {0}. Dlatego ta karta ignoruje zakres dat."
+  },
+  "settingsStorageTitle": {
+    "message": "Przechowywanie"
+  },
+  "settingsStorageDesc": {
+    "message": "To, co rozszerzenie przechowuje w tej przeglądarce. Ustawień i reguł nie można stąd wyczyścić."
+  },
+  "storageCache": {
+    "message": "Pamięć podręczna wykryć"
+  },
+  "storageCaptures": {
+    "message": "Przechwycenia narzędzi"
+  },
+  "storageHistory": {
+    "message": "Historia"
+  },
+  "storageRules": {
+    "message": "Reguły i kategorie"
+  },
+  "storageSettings": {
+    "message": "Ustawienia"
+  },
+  "storageLogs": {
+    "message": "Logi"
+  },
+  "storageOther": {
+    "message": "Inne"
+  },
+  "storageTotalFmt": {
+    "message": "Zajęto {0} z {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "Wyczyść: {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Wyczyść pamięć podręczną wykryć"
+  },
+  "storageClearCacheMessage": {
+    "message": "Strony zostaną ponownie przeskanowane przy następnym otwarciu. Historia, reguły i ustawienia nie zostaną zmienione."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Usuń przechwycenia narzędzi"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Wszystko, co zapisały narzędzia zaawansowane, zostanie usunięte. Historia, reguły i ustawienia nie zostaną zmienione."
+  },
+  "storageCacheCleared": {
+    "message": "Wyczyszczono pamięć podręczną wykryć"
+  },
+  "storageCapturesCleared": {
+    "message": "Usunięto przechwycenia narzędzi"
+  },
+  "storageClearFailed": {
+    "message": "Nie udało się wyczyścić. Spróbuj ponownie."
+  },
+  "settingsSupportTitle": {
+    "message": "Pomoc"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostyka"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Skopiuj podsumowanie do zgłoszenia błędu: wersje, ustawienia i liczby. Nie zawiera witryn, adresów ani kluczy."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Kopiuj diagnostykę"
+  },
+  "diagnosticsCopied": {
+    "message": "Skopiowano diagnostykę"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Nie udało się skopiować diagnostyki"
+  },
+  "settingsPresetsTitle": {
+    "message": "Ustawienia predefiniowane i reset"
+  },
+  "settingsPresetsDesc": {
+    "message": "Zmień kilka ustawień naraz. Reguły, historia, listy witryn, język i motyw nigdy nie są zmieniane."
+  },
+  "presetPrivacyName": {
+    "message": "Prywatność"
+  },
+  "presetPrivacyDesc": {
+    "message": "Przechowuje mniej na tym urządzeniu i niczego nie wysyła."
+  },
+  "presetDeveloperName": {
+    "message": "Deweloper"
+  },
+  "presetDeveloperDesc": {
+    "message": "Logi debugowania i JS API do pracy nad regułami."
+  },
+  "presetApply": {
+    "message": "Zastosuj"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Zastosować zestaw ustawień: {0}?"
+  },
+  "presetConfirmIntro": {
+    "message": "Zmienią się te ustawienia:"
+  },
+  "presetAlreadySet": {
+    "message": "Te ustawienia są już zastosowane."
+  },
+  "presetApplied": {
+    "message": "Zastosowano ustawienia predefiniowane"
+  },
+  "presetHistoryOff": {
+    "message": "Historia nie jest zapisywana"
+  },
+  "presetBackupOff": {
+    "message": "Automatyczne kopie zapasowe historii są wyłączone"
+  },
+  "presetClearOnClose": {
+    "message": "Historia jest czyszczona po zamknięciu przeglądarki"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook jest wyłączony"
+  },
+  "presetNotificationsOff": {
+    "message": "Powiadomienia są wyłączone"
+  },
+  "presetJsApiOff": {
+    "message": "JS API jest wyłączone"
+  },
+  "presetDebugOff": {
+    "message": "Tryb debugowania jest wyłączony"
+  },
+  "presetCollectorOff": {
+    "message": "Zbieranie logów jest wyłączone"
+  },
+  "presetDebugOn": {
+    "message": "Tryb debugowania jest włączony"
+  },
+  "presetVerboseOn": {
+    "message": "Szczegółowe logi są włączone"
+  },
+  "presetCollectorOn": {
+    "message": "Zbieranie logów jest włączone"
+  },
+  "presetCollectorMax": {
+    "message": "Zbieranie logów zachowuje do 5000 linii"
+  },
+  "presetJsApiOn": {
+    "message": "JS API jest włączone"
+  },
+  "settingsResetTitle": {
+    "message": "Resetuj ustawienia"
+  },
+  "settingsResetDesc": {
+    "message": "Wszystkie ustawienia wracają do wartości domyślnych. Reguły, historia, listy witryn, język i motyw zostają zachowane."
+  },
+  "settingsResetBtn": {
+    "message": "Resetuj…"
+  },
+  "settingsResetMessage": {
+    "message": "Wszystkie ustawienia wracają do wartości domyślnych. Reguły, historia, listy witryn, język i motyw nie zostaną zmienione. Dane webhooka i udostępniania zostają zachowane, chyba że zdecydujesz się je usunąć."
+  },
+  "settingsResetConnections": {
+    "message": "Usuń także połączenia webhooka i udostępniania"
+  },
+  "settingsResetConfirm": {
+    "message": "Resetuj"
+  },
+  "settingsResetDone": {
+    "message": "Zresetowano ustawienia"
+  },
+  "settingsBackupTitle": {
+    "message": "Kopia zapasowa i przywracanie"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Wszystko"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Ustawienia, Twoje własne reguły i historia w jednym pliku. Dane webhooka i udostępniania nie są uwzględnione."
+  },
+  "backupMakeBtn": {
+    "message": "Utwórz kopię"
+  },
+  "backupRestoreBtn": {
+    "message": "Przywróć"
+  },
+  "backupDone": {
+    "message": "Zapisano kopię zapasową"
+  },
+  "backupFailed": {
+    "message": "Nie udało się utworzyć kopii zapasowej"
+  },
+  "restoreTitle": {
+    "message": "Przywróć kopię zapasową"
+  },
+  "restoreHoldsFmt": {
+    "message": "Utworzona w wersji {0}, {1}. Zawiera:"
+  },
+  "restorePartSettings": {
+    "message": "Ustawienia"
+  },
+  "restorePartRulesFmt": {
+    "message": "Twoje reguły ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Historia (wpisy: {0})"
+  },
+  "restoreModeLabel": {
+    "message": "Reguły i historia"
+  },
+  "restoreModeMerge": {
+    "message": "Scal z tym, co masz"
+  },
+  "restoreModeReplace": {
+    "message": "Zamień to, co masz"
+  },
+  "restoreConfirm": {
+    "message": "Przywróć"
+  },
+  "restoreNothing": {
+    "message": "Nic nie jest zaznaczone."
+  },
+  "restoreDoneFmt": {
+    "message": "Przywrócono: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Nie udało się przywrócić: {0}."
+  },
+  "restoreInvalid": {
+    "message": "Ten plik nie jest kopią zapasową tego rozszerzenia. Nic nie zostało zmienione."
+  },
+  "restoreNewer": {
+    "message": "Ta kopia zapasowa została utworzona w nowszej wersji rozszerzenia. Zaktualizuj rozszerzenie i spróbuj ponownie."
+  },
+  "scanModeTitle": {
+    "message": "Witryny do skanowania"
+  },
+  "scanModeBlock": {
+    "message": "Wszystkie witryny oprócz tych, które pomijam"
+  },
+  "scanModeAllow": {
+    "message": "Tylko witryny, które wybiorę"
+  },
+  "allowedDomainsTitle": {
+    "message": "Wybrane witryny"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Skanuj tylko te witryny"
+  },
+  "allowedDomainsDesc": {
+    "message": "Wykrywanie działa tylko na tych witrynach i ich subdomenach. Wszędzie indziej jest wstrzymane."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Nie wybrano witryn: nic nie jest jeszcze skanowane"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Usuń z listy"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} jest już na liście"
+  },
+  "detectionNotOnList": {
+    "message": "Wykrywanie wstrzymane: tej witryny nie ma na Twojej liście"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Skanuj tę witrynę"
+  },
+  "detectionAllowlistHint": {
+    "message": "Albo przejdź do Ustawienia → Wykrywanie → Witryny do skanowania, aby zarządzać listą."
+  },
+  "siteAllowedFmt": {
+    "message": "Dodano „{0}” do witryn do skanowania"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Witryny do skanowania muszą obejmować wszystkie witryny poza pomijanymi albo tylko wybrane witryny"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Lista witryn może zawierać wyłącznie nazwy witryn"
+  },
+  "webhookFilterTitle": {
+    "message": "Wysyłaj tylko, gdy"
+  },
+  "webhookFilterDesc": {
+    "message": "Strona jest wysyłana tylko wtedy, gdy spełnione są wszystkie te warunki. Payload nadal zawiera wszystko, co na niej znaleziono."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Minimalna pewność (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Kategorie"
+  },
+  "webhookCategoriesHint": {
+    "message": "Pozostaw wszystkie niezaznaczone, aby wysyłać dla dowolnej kategorii."
+  },
+  "webhookDomainsLabel": {
+    "message": "Tylko te witryny"
+  },
+  "webhookDomainsHint": {
+    "message": "Jedna w wierszu, razem z subdomenami. Puste oznacza wszystkie witryny."
+  },
+  "webhookLogTitle": {
+    "message": "Ostatnie wysyłki"
+  },
+  "webhookLogDesc": {
+    "message": "Ostatnie 20 prób: kiedy, jaka strona, jaka odpowiedź. Adresy i payloady nigdy nie są zapisywane."
+  },
+  "webhookLogEmpty": {
+    "message": "Nic jeszcze nie wysłano."
+  },
+  "webhookLogClear": {
+    "message": "Wyczyść"
+  },
+  "webhookLogSent": {
+    "message": "Wysłano"
+  },
+  "webhookLogFailed": {
+    "message": "Niepowodzenie"
+  },
+  "webhookLogSkipped": {
+    "message": "Nie wysłano"
+  },
+  "webhookLogReasonSite": {
+    "message": "witryny nie ma na liście"
+  },
+  "webhookLogReasonCategory": {
+    "message": "kategoria nie jest wybrana"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "poniżej minimalnej pewności"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "brak odpowiedzi"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "adres niedozwolony"
+  },
+  "webhookLogErrorConfig": {
+    "message": "nieprawidłowa metoda"
+  },
+  "webhookLogTriggerCache": {
+    "message": "strona z pamięci podręcznej"
+  },
+  "webhookLogTriggerTest": {
+    "message": "test"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Witryny bez hooków JS"
+  },
+  "hooksOffLabel": {
+    "message": "Wyłącz hooki JS na tych witrynach"
+  },
+  "hooksOffHint": {
+    "message": "Hooki JS monitorują wywołania interfejsów API przeglądarki na stronie, aby wykrywać fingerprinting. Użyj tego dla witryny, która źle z nimi działa: pozostałe wykrycia nadal działają, ale fingerprinting nie jest sprawdzany. Jedna witryna w wierszu, łącznie z subdomenami; odśwież stronę, aby zastosować."
+  },
+  "hooksOffNote": {
+    "message": "Hooki JS są wyłączone na tej witrynie, więc fingerprinting nie jest sprawdzany."
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting nie jest sprawdzany"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Na tej stronie nie znaleziono pasujących sygnałów anti-bot ani CAPTCHA. Hooki JS są tu wyłączone, więc fingerprinting nie był sprawdzany."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Usuń strony tylko z fingerprintingiem po"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 zachowuje je jak każdą inną stronę, więc dotyczy ich tylko Automatyczne usuwanie. Przypięte strony nigdy nie są usuwane."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Przypinaj strony automatycznie"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Strony z trudną ochroną"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Anti-bot lub CAPTCHA o wysokiej trudności. Fingerprinting nigdy nie przypina strony ze względu na trudność."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Strony chronione przez"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Jedna ochrona w wierszu, nazwana tak jak w karcie Wykrywanie."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Tylko od pewności (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Liczba stron przypinanych w ten sposób: maks. {0}. Odepnięta strona nie zostanie już sama przypięta ponownie."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Przypięto automatycznie: zachowane podczas czyszczenia historii. Odepnij ją, a nie zostanie już sama przypięta ponownie."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Pewność przypinania musi mieścić się w zakresie od 0 do 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Strony tylko z fingerprintingiem muszą być przechowywane od 0 do 3650 dni"
+  },
+  "settingsHistorySize": {
+    "message": "Limit rozmiaru"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Większy rozmiar pozwala zachować więcej stron i zajmuje więcej miejsca na dysku. Zmniejszenie rozmiaru usuwa najstarsze strony, które nie są przypięte."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Zmniejsz rozmiar historii"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Historia zajmuje {0}, a nowy limit to {1}. Aby się zmieściła, zostaną usunięte najstarsze strony, które nie są przypięte."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Zmniejsz rozmiar"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "Zajęto {0}, bez limitu"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Rozmiar historii musi być jednym z: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Teksty jeszcze nieprzetłumaczone na wszystkie języki: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Przetłumacz regułę"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Uzupełnia brakujące tłumaczenia opisu, wzorców i kombinacji za pomocą tłumacza Chrome działającego na urządzeniu. Sprawdź je przed zapisaniem."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Tłumaczenie tekstów: {0}…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Uzupełniono tłumaczenia: {0}. Sprawdź je przed zapisaniem."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Uzupełniono: {0}; nie udało się przetłumaczyć tutaj: {1}."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Wzorce"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Kombinacje"
+  },
+  "historyWatch": {
+    "message": "Obserwuj zmiany"
+  },
+  "historyUnwatch": {
+    "message": "Przestań obserwować"
+  },
+  "historyWatchTip": {
+    "message": "Obserwowanie zmian"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Ostatnio sprawdzono: {0}"
+  },
+  "historyWatchNever": {
+    "message": "Jeszcze nie sprawdzono"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Obserwujesz tę stronę"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Obserwujesz tę stronę. Aby była sprawdzana, włącz Obserwuj przypięte strony w Ustawienia → Historia."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Nie obserwujesz już tej strony"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Limit obserwowanych stron: {0}. Najpierw przestań obserwować jedną z nich."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Obserwuj przypięte strony"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Sprawdzaj"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Strony, które przypniesz i dla których wybierzesz Obserwuj zmiany, są ponownie otwierane w karcie w tle, jedna po drugiej (maksymalnie 10), i skanowane. Strona, na której pojawi się lub zniknie ochrona anti-bot albo CAPTCHA, zostaje oznaczona jako Zmieniono, a gdy powiadomienia są włączone, pojawia się też powiadomienie. Każde sprawdzenie to prawdziwa wizyta z plikami cookie Twojej przeglądarki, więc strona wymagająca logowania jest odwiedzana jako Ty, a okno przeglądarki musi być otwarte."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Sprawdź teraz"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "Obserwowane strony: {0} z {1}"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Nie przeprowadzono jeszcze sprawdzenia."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Podczas ostatniego sprawdzania nie znaleziono okna przeglądarki, w którym można otworzyć strony."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Ostatnie sprawdzanie nie powiodło się."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Ostatnie sprawdzenie: {0} · sprawdzono: {1}, zmienione: {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Sprawdzone strony: {0}, zmienione: {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Żadna strona nie jest jeszcze obserwowana: przypnij stronę w Historii i wybierz Obserwuj zmiany."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Historia jest wstrzymana, więc nic nie jest sprawdzane."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"
   }
 }

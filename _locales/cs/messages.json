@@ -4688,13 +4688,13 @@
     "message": "Ověřit podle Historie"
   },
   "ruleHistoryCheckHint": {
-    "message": "Zjistěte, na kolika uložených stránkách se každý vzor a kombinace shoduje. Neuložené úpravy se počítají."
+    "message": "Ukáže, na kolika z vašich uložených stránek se každý vzor a kombinace shoduje. Neuložené úpravy se počítají."
   },
   "ruleHistoryCheckRun": {
     "message": "Ověřit"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Uložené stránky: {0} · toto pravidlo nalezeno na: {1}"
+    "message": "Toto pravidlo se shoduje na stránkách: {1} z {0} uložených"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Stránky: {0} z {1}"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Uvedena jsou jen vlastní a upravená pravidla. Popisy oficiálních pravidel spravuje Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Rozšířené uchovává zachycení po dobu 30 minut, proto tato karta ignoruje časové období."
-  },
   "statsToolsSavedNow": {
     "message": "Právě uloženo"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Součást rozšíření běžící na pozadí je zastaralá. Znovu načtěte rozšíření na stránce rozšíření a zkuste to znovu."
+  },
+  "historyFiltersLabel": {
+    "message": "Filtrovat historii"
+  },
+  "historyFilterPinned": {
+    "message": "Připnuté"
+  },
+  "historyNoResults": {
+    "message": "Hledání ani filtrům neodpovídá žádná položka."
+  },
+  "historyClearFilters": {
+    "message": "Vymazat filtry"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Doba uchování zachycení na kartě Rozšířené: {0}, proto tato karta ignoruje časové období."
+  },
+  "settingsStorageTitle": {
+    "message": "Úložiště"
+  },
+  "settingsStorageDesc": {
+    "message": "Co rozšíření uchovává v tomto prohlížeči. Nastavení a pravidla se odsud vymazat nedají."
+  },
+  "storageCache": {
+    "message": "Mezipaměť detekce"
+  },
+  "storageCaptures": {
+    "message": "Zachycení nástrojů"
+  },
+  "storageHistory": {
+    "message": "Historie"
+  },
+  "storageRules": {
+    "message": "Pravidla a kategorie"
+  },
+  "storageSettings": {
+    "message": "Nastavení"
+  },
+  "storageLogs": {
+    "message": "Protokoly"
+  },
+  "storageOther": {
+    "message": "Jiné"
+  },
+  "storageTotalFmt": {
+    "message": "Využito {0} z {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "Vymazat: {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Vymazat mezipaměť detekce"
+  },
+  "storageClearCacheMessage": {
+    "message": "Stránky se při dalším otevření skenují znovu. Historie, pravidla a nastavení zůstanou beze změny."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Smazat zachycení nástrojů"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Vše, co uložily rozšířené nástroje, se smaže. Historie, pravidla a nastavení zůstanou beze změny."
+  },
+  "storageCacheCleared": {
+    "message": "Mezipaměť detekce vymazána"
+  },
+  "storageCapturesCleared": {
+    "message": "Zachycení nástrojů smazána"
+  },
+  "storageClearFailed": {
+    "message": "Vymazání se nezdařilo. Zkuste to znovu."
+  },
+  "settingsSupportTitle": {
+    "message": "Podpora"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostika"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Zkopírujte souhrn pro hlášení chyby: verze, nastavení a počty. Neobsahuje weby, adresy ani klíče."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Kopírovat diagnostiku"
+  },
+  "diagnosticsCopied": {
+    "message": "Diagnostika zkopírována"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Diagnostiku se nepodařilo zkopírovat"
+  },
+  "settingsPresetsTitle": {
+    "message": "Přednastavení a resetování"
+  },
+  "settingsPresetsDesc": {
+    "message": "Změňte několik nastavení najednou. Pravidla, Historie, seznamy webů, jazyk a motiv se nikdy nemění."
+  },
+  "presetPrivacyName": {
+    "message": "Soukromí"
+  },
+  "presetPrivacyDesc": {
+    "message": "Uchovává méně dat v tomto zařízení a nic neodesílá."
+  },
+  "presetDeveloperName": {
+    "message": "Vývojář"
+  },
+  "presetDeveloperDesc": {
+    "message": "Ladicí protokoly a JS API pro práci na pravidlech."
+  },
+  "presetApply": {
+    "message": "Použít"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Použít přednastavení „{0}“?"
+  },
+  "presetConfirmIntro": {
+    "message": "Tato nastavení se změní:"
+  },
+  "presetAlreadySet": {
+    "message": "Tato nastavení už jsou nastavená."
+  },
+  "presetApplied": {
+    "message": "Přednastavení použito"
+  },
+  "presetHistoryOff": {
+    "message": "Historie se neukládá"
+  },
+  "presetBackupOff": {
+    "message": "Automatické zálohy historie jsou vypnuté"
+  },
+  "presetClearOnClose": {
+    "message": "Historie se při zavření prohlížeče vymaže"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook je vypnutý"
+  },
+  "presetNotificationsOff": {
+    "message": "Oznámení jsou vypnutá"
+  },
+  "presetJsApiOff": {
+    "message": "JS API je vypnuté"
+  },
+  "presetDebugOff": {
+    "message": "Režim ladění je vypnutý"
+  },
+  "presetCollectorOff": {
+    "message": "Sběr protokolů je vypnutý"
+  },
+  "presetDebugOn": {
+    "message": "Režim ladění je zapnutý"
+  },
+  "presetVerboseOn": {
+    "message": "Podrobné protokoly jsou zapnuté"
+  },
+  "presetCollectorOn": {
+    "message": "Sběr protokolů je zapnutý"
+  },
+  "presetCollectorMax": {
+    "message": "Sběr protokolů uchovává až 5000 řádků"
+  },
+  "presetJsApiOn": {
+    "message": "JS API je zapnuté"
+  },
+  "settingsResetTitle": {
+    "message": "Resetovat nastavení"
+  },
+  "settingsResetDesc": {
+    "message": "Všechna nastavení se vrátí na výchozí hodnoty. Pravidla, Historie, seznamy webů, jazyk a motiv zůstanou zachovány."
+  },
+  "settingsResetBtn": {
+    "message": "Resetovat…"
+  },
+  "settingsResetMessage": {
+    "message": "Všechna nastavení se vrátí na výchozí hodnoty. Pravidla, Historie, seznamy webů, jazyk a motiv se nezmění. Údaje webhooku a sdílení zůstanou zachovány, pokud se nerozhodnete je odebrat."
+  },
+  "settingsResetConnections": {
+    "message": "Odebrat také připojení webhooku a sdílení"
+  },
+  "settingsResetConfirm": {
+    "message": "Resetovat"
+  },
+  "settingsResetDone": {
+    "message": "Nastavení bylo resetováno"
+  },
+  "settingsBackupTitle": {
+    "message": "Záloha a obnovení"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Vše"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Nastavení, vaše pravidla a Historie v jednom souboru. Údaje webhooku a sdílení nejsou zahrnuty."
+  },
+  "backupMakeBtn": {
+    "message": "Zálohovat"
+  },
+  "backupRestoreBtn": {
+    "message": "Obnovit"
+  },
+  "backupDone": {
+    "message": "Záloha uložena"
+  },
+  "backupFailed": {
+    "message": "Zálohu se nepodařilo vytvořit"
+  },
+  "restoreTitle": {
+    "message": "Obnovit ze zálohy"
+  },
+  "restoreHoldsFmt": {
+    "message": "Vytvořeno ve verzi {0}, {1}. Obsahuje:"
+  },
+  "restorePartSettings": {
+    "message": "Nastavení"
+  },
+  "restorePartRulesFmt": {
+    "message": "Vaše pravidla ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Historie (položky: {0})"
+  },
+  "restoreModeLabel": {
+    "message": "Pravidla a Historie"
+  },
+  "restoreModeMerge": {
+    "message": "Sloučit s tím, co máte"
+  },
+  "restoreModeReplace": {
+    "message": "Nahradit to, co máte"
+  },
+  "restoreConfirm": {
+    "message": "Obnovit"
+  },
+  "restoreNothing": {
+    "message": "Nic není vybráno."
+  },
+  "restoreDoneFmt": {
+    "message": "Obnoveno: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Nepodařilo se obnovit: {0}."
+  },
+  "restoreInvalid": {
+    "message": "Tento soubor není záloha tohoto rozšíření. Nic se nezměnilo."
+  },
+  "restoreNewer": {
+    "message": "Tuto zálohu vytvořila novější verze rozšíření. Aktualizujte rozšíření a zkuste to znovu."
+  },
+  "scanModeTitle": {
+    "message": "Weby ke skenování"
+  },
+  "scanModeBlock": {
+    "message": "Každý web kromě těch, které přeskakuji"
+  },
+  "scanModeAllow": {
+    "message": "Jen weby, které vyberu"
+  },
+  "allowedDomainsTitle": {
+    "message": "Vybrané weby"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Skenovat jen tyto weby"
+  },
+  "allowedDomainsDesc": {
+    "message": "Detekce běží jen na těchto webech a jejich subdoménách. Všude jinde je pozastavena."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Nejsou vybrány žádné weby: zatím se nic neskenuje"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Odebrat ze seznamu"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} už je na seznamu"
+  },
+  "detectionNotOnList": {
+    "message": "Detekce pozastavena: tento web není na vašem seznamu"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Skenovat tento web"
+  },
+  "detectionAllowlistHint": {
+    "message": "Nebo seznam spravujte v Nastavení → Detekce → Weby ke skenování."
+  },
+  "siteAllowedFmt": {
+    "message": "Web „{0}“ přidán mezi weby ke skenování"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Skenovat lze buď každý web kromě přeskakovaných, nebo jen vybrané weby"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Seznam webů smí obsahovat jen názvy webů"
+  },
+  "webhookFilterTitle": {
+    "message": "Odeslat jen když"
+  },
+  "webhookFilterDesc": {
+    "message": "Stránka se odešle, jen když platí všechny tyto podmínky. Tělo požadavku stále uvádí vše, co na ní bylo nalezeno."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Minimální spolehlivost (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Kategorie"
+  },
+  "webhookCategoriesHint": {
+    "message": "Nechte nic nezaškrtnuté, aby se odesílalo pro libovolnou kategorii."
+  },
+  "webhookDomainsLabel": {
+    "message": "Jen tyto weby"
+  },
+  "webhookDomainsHint": {
+    "message": "Jeden na řádek, včetně subdomén. Prázdné znamená každý web."
+  },
+  "webhookLogTitle": {
+    "message": "Poslední odeslání"
+  },
+  "webhookLogDesc": {
+    "message": "Posledních 20 pokusů: kdy, která stránka, co přišlo zpět. Adresy a těla požadavků se nikdy neukládají."
+  },
+  "webhookLogEmpty": {
+    "message": "Zatím nic odesláno."
+  },
+  "webhookLogClear": {
+    "message": "Vymazat"
+  },
+  "webhookLogSent": {
+    "message": "Odesláno"
+  },
+  "webhookLogFailed": {
+    "message": "Selhalo"
+  },
+  "webhookLogSkipped": {
+    "message": "Neodesláno"
+  },
+  "webhookLogReasonSite": {
+    "message": "web není na seznamu"
+  },
+  "webhookLogReasonCategory": {
+    "message": "kategorie není vybrána"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "pod minimální spolehlivostí"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "žádná odpověď"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "adresa není povolena"
+  },
+  "webhookLogErrorConfig": {
+    "message": "neplatná metoda"
+  },
+  "webhookLogTriggerCache": {
+    "message": "stránka z mezipaměti"
+  },
+  "webhookLogTriggerTest": {
+    "message": "test"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Weby bez JS hooků"
+  },
+  "hooksOffLabel": {
+    "message": "Vypnout JS hooky na těchto webech"
+  },
+  "hooksOffHint": {
+    "message": "JS hooky sledují volání API prohlížeče na stránce, aby odhalily fingerprinting. Tuto volbu použijte u webu, který se s nimi chová špatně: ostatní detekce fungují dál, ale fingerprinting se nekontroluje. Jeden web na řádek, včetně subdomén; změnu uplatníte opětovným načtením stránky."
+  },
+  "hooksOffNote": {
+    "message": "JS hooky jsou na tomto webu vypnuté, proto se fingerprinting nekontroluje."
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting nezkontrolován"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Na této stránce nebyly nalezeny žádné odpovídající signály anti-bot ani CAPTCHA. JS hooky jsou tady vypnuté, proto se fingerprinting nekontroloval."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Smazat stránky jen s fingerprintingem po"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "Hodnota 0 je uchová jako každou jinou stránku, takže se na ně vztahuje jen Automatické mazání. Připnuté stránky se nikdy nemažou."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Připínat stránky automaticky"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Stránky s obtížnou ochranou"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Anti-bot nebo CAPTCHA s vysokou obtížností. Fingerprinting stránku podle obtížnosti nikdy nepřipne."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Stránky s ochranou"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Jedna ochrana na řádek, pojmenovaná tak, jak ji uvádí karta Detekce."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Jen od spolehlivosti (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Tímto způsobem se připne až {0} stránek. Pokud stránku odepnete, už se sama znovu nepřipne."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Připnuto automaticky: zachová se při čištění historie. Po odepnutí se už sama nepřipne."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Spolehlivost pro připnutí musí být mezi 0 a 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Stránky jen s fingerprintingem se musí uchovávat 0 až 3650 dní"
+  },
+  "settingsHistorySize": {
+    "message": "Limit velikosti"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Větší velikost uchová více stránek a zabere více místa na disku. Snížením velikosti se odstraní nejstarší stránky, které nejsou připnuté."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Snížit velikost historie"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Historie zabírá {0} a nový limit je {1}. Aby se vešla, odstraní se nejstarší stránky, které nejsou připnuté."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Snížit velikost"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "Využito {0}, bez omezení"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Velikost historie musí být jedna z hodnot: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Texty dosud nepřeložené do všech jazyků: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Přeložit pravidlo"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Vyplní chybějící překlady popisu, vzorů a kombinací pomocí překladače Chrome přímo v zařízení. Před uložením je zkontrolujte."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Překlad textů: {0}…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Vyplněno překladů: {0}. Před uložením je zkontrolujte."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Vyplněno: {0}; nepřeloženo zde: {1}."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Vzory"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Kombinace"
+  },
+  "historyWatch": {
+    "message": "Sledovat změny"
+  },
+  "historyUnwatch": {
+    "message": "Přestat sledovat"
+  },
+  "historyWatchTip": {
+    "message": "Sledování změn"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Poslední kontrola: {0}"
+  },
+  "historyWatchNever": {
+    "message": "Zatím nezkontrolováno"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Stránka se sleduje"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Stránka se sleduje. Aby se kontrolovala, zapněte „Sledovat připnuté stránky“ v Nastavení → Historie."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Stránka se už nesleduje"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Můžete sledovat nejvýše {0} stránek. Nejprve jednu přestaňte sledovat."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Sledovat připnuté stránky"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Kontrolovat"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Stránky, které připnete a u kterých zvolíte „Sledovat změny“, se znovu otevřou na kartě na pozadí, jedna po druhé (nejvýše 10), a naskenují se. Stránka, která získá nebo ztratí ochranu anti-bot či CAPTCHA, se označí jako „Změněno“ a při zapnutých oznámeních dostanete upozornění. Každá kontrola je skutečná návštěva s cookies vašeho prohlížeče, takže stránku, kde jste přihlášeni, navštíví jako vy, a okno prohlížeče musí být otevřené."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Zkontrolovat nyní"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "Sledováno stránek: {0} z {1}"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Zatím žádná kontrola."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Při poslední kontrole se nenašlo žádné okno prohlížeče, ve kterém by se stránky otevřely."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Poslední kontrola selhala."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Poslední kontrola: {0} · zkontrolováno: {1}, změněno: {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Zkontrolováno stránek: {0}, změněno: {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Zatím se nesleduje žádná stránka: připněte stránku v Historii a zvolte „Sledovat změny“."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Historie je pozastavena, proto se nic nekontroluje."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Sledování musí být vypnuté, denní nebo týdenní"
   }
 }

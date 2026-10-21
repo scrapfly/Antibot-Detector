@@ -4688,13 +4688,13 @@
     "message": "Перевірити за Історією"
   },
   "ruleHistoryCheckHint": {
-    "message": "Показує, на скількох збережених сторінках збігається кожен шаблон і комбінація. Незбережені зміни враховуються."
+    "message": "Показує, на скількох із ваших збережених сторінок збігається кожен шаблон і комбінація. Незбережені зміни враховуються."
   },
   "ruleHistoryCheckRun": {
     "message": "Перевірити"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Збережених сторінок: {0} · сторінок із цим правилом: {1}"
+    "message": "Це правило збігається на сторінках: {1} із {0} збережених"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Сторінки: {0} із {1}"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Показано лише власні та змінені правила. Описи офіційних правил підтримує Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "«Додатково» зберігає захоплення 30 хвилин, тому ця вкладка не враховує діапазон дат."
-  },
   "statsToolsSavedNow": {
     "message": "Збережено зараз"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Фонова частина розширення застаріла. Перезавантажте розширення на сторінці розширень і спробуйте ще раз."
+  },
+  "historyFiltersLabel": {
+    "message": "Фільтр історії"
+  },
+  "historyFilterPinned": {
+    "message": "Закріплені"
+  },
+  "historyNoResults": {
+    "message": "Немає записів, що відповідають пошуку чи фільтрам."
+  },
+  "historyClearFilters": {
+    "message": "Скинути фільтри"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Термін зберігання захоплень у розділі «Додатково»: {0}, тому ця вкладка не враховує діапазон дат."
+  },
+  "settingsStorageTitle": {
+    "message": "Сховище"
+  },
+  "settingsStorageDesc": {
+    "message": "Що розширення зберігає в цьому браузері. Налаштування та правила звідси очистити не можна."
+  },
+  "storageCache": {
+    "message": "Кеш виявлення"
+  },
+  "storageCaptures": {
+    "message": "Захоплення інструментів"
+  },
+  "storageHistory": {
+    "message": "Історія"
+  },
+  "storageRules": {
+    "message": "Правила й категорії"
+  },
+  "storageSettings": {
+    "message": "Налаштування"
+  },
+  "storageLogs": {
+    "message": "Журнали"
+  },
+  "storageOther": {
+    "message": "Інше"
+  },
+  "storageTotalFmt": {
+    "message": "Зайнято {0} із {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "Очистити: {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Очистити кеш виявлення"
+  },
+  "storageClearCacheMessage": {
+    "message": "Сторінки скануватимуться знову, коли ви відкриєте їх наступного разу. Історія, правила й налаштування не зачіпаються."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Видалити захоплення інструментів"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Усе, що зберегли розширені інструменти, буде видалено. Історія, правила й налаштування не зачіпаються."
+  },
+  "storageCacheCleared": {
+    "message": "Кеш виявлення очищено"
+  },
+  "storageCapturesCleared": {
+    "message": "Захоплення інструментів видалено"
+  },
+  "storageClearFailed": {
+    "message": "Не вдалося очистити. Спробуйте ще раз."
+  },
+  "settingsSupportTitle": {
+    "message": "Підтримка"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Діагностика"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Скопіюйте підсумок для звіту про помилку: версії, налаштування та лічильники. У ньому немає сайтів, адрес і ключів."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Копіювати діагностику"
+  },
+  "diagnosticsCopied": {
+    "message": "Діагностику скопійовано"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Не вдалося скопіювати діагностику"
+  },
+  "settingsPresetsTitle": {
+    "message": "Набори налаштувань і скидання"
+  },
+  "settingsPresetsDesc": {
+    "message": "Змінюйте кілька налаштувань одразу. Правила, Історія, списки сайтів, мова й тема ніколи не змінюються."
+  },
+  "presetPrivacyName": {
+    "message": "Конфіденційність"
+  },
+  "presetPrivacyDesc": {
+    "message": "Зберігає менше даних на цьому пристрої й нічого не надсилає."
+  },
+  "presetDeveloperName": {
+    "message": "Розробник"
+  },
+  "presetDeveloperDesc": {
+    "message": "Журнали налагодження та JS API для роботи над правилами."
+  },
+  "presetApply": {
+    "message": "Застосувати"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Застосувати набір «{0}»?"
+  },
+  "presetConfirmIntro": {
+    "message": "Ці налаштування буде змінено:"
+  },
+  "presetAlreadySet": {
+    "message": "Ці налаштування вже встановлено."
+  },
+  "presetApplied": {
+    "message": "Набір застосовано"
+  },
+  "presetHistoryOff": {
+    "message": "Історія не зберігається"
+  },
+  "presetBackupOff": {
+    "message": "Автоматичні резервні копії історії вимкнено"
+  },
+  "presetClearOnClose": {
+    "message": "Історія очищається під час закриття браузера"
+  },
+  "presetWebhookOff": {
+    "message": "Вебхук вимкнено"
+  },
+  "presetNotificationsOff": {
+    "message": "Сповіщення вимкнено"
+  },
+  "presetJsApiOff": {
+    "message": "JS API вимкнено"
+  },
+  "presetDebugOff": {
+    "message": "Режим налагодження вимкнено"
+  },
+  "presetCollectorOff": {
+    "message": "Збирач журналів вимкнено"
+  },
+  "presetDebugOn": {
+    "message": "Режим налагодження увімкнено"
+  },
+  "presetVerboseOn": {
+    "message": "Докладні журнали увімкнено"
+  },
+  "presetCollectorOn": {
+    "message": "Збирач журналів увімкнено"
+  },
+  "presetCollectorMax": {
+    "message": "Збирач журналів зберігає до 5000 рядків"
+  },
+  "presetJsApiOn": {
+    "message": "JS API увімкнено"
+  },
+  "settingsResetTitle": {
+    "message": "Скинути налаштування"
+  },
+  "settingsResetDesc": {
+    "message": "Усі налаштування повертаються до типових. Правила, Історія, списки сайтів, мова й тема зберігаються."
+  },
+  "settingsResetBtn": {
+    "message": "Скинути…"
+  },
+  "settingsResetMessage": {
+    "message": "Усі налаштування повертаються до типових. Правила, Історія, списки сайтів, мова й тема не змінюються. Дані вебхука та спільного доступу зберігаються, якщо ви не вирішите їх видалити."
+  },
+  "settingsResetConnections": {
+    "message": "Також видалити підключення вебхука та спільного доступу"
+  },
+  "settingsResetConfirm": {
+    "message": "Скинути"
+  },
+  "settingsResetDone": {
+    "message": "Налаштування скинуто"
+  },
+  "settingsBackupTitle": {
+    "message": "Резервне копіювання та відновлення"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Усе"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Налаштування, ваші правила й Історія в одному файлі. Дані вебхука та спільного доступу не включаються."
+  },
+  "backupMakeBtn": {
+    "message": "Створити копію"
+  },
+  "backupRestoreBtn": {
+    "message": "Відновити"
+  },
+  "backupDone": {
+    "message": "Копію збережено"
+  },
+  "backupFailed": {
+    "message": "Не вдалося створити копію"
+  },
+  "restoreTitle": {
+    "message": "Відновлення з копії"
+  },
+  "restoreHoldsFmt": {
+    "message": "Створено у версії {0}, {1}. Містить:"
+  },
+  "restorePartSettings": {
+    "message": "Налаштування"
+  },
+  "restorePartRulesFmt": {
+    "message": "Ваші правила ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Історія (записів: {0})"
+  },
+  "restoreModeLabel": {
+    "message": "Правила та Історія"
+  },
+  "restoreModeMerge": {
+    "message": "Об’єднати з наявним"
+  },
+  "restoreModeReplace": {
+    "message": "Замінити наявне"
+  },
+  "restoreConfirm": {
+    "message": "Відновити"
+  },
+  "restoreNothing": {
+    "message": "Нічого не вибрано."
+  },
+  "restoreDoneFmt": {
+    "message": "Відновлено: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Не вдалося відновити: {0}."
+  },
+  "restoreInvalid": {
+    "message": "Це не файл резервної копії цього розширення. Нічого не змінено."
+  },
+  "restoreNewer": {
+    "message": "Цю копію створено новішою версією розширення. Оновіть розширення й спробуйте ще раз."
+  },
+  "scanModeTitle": {
+    "message": "Сайти для сканування"
+  },
+  "scanModeBlock": {
+    "message": "Усі сайти, крім тих, що я пропускаю"
+  },
+  "scanModeAllow": {
+    "message": "Лише вибрані мною сайти"
+  },
+  "allowedDomainsTitle": {
+    "message": "Вибрані сайти"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Сканувати лише ці сайти"
+  },
+  "allowedDomainsDesc": {
+    "message": "Виявлення працює лише на цих сайтах і їхніх піддоменах. Скрізь інде його призупинено."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Сайтів не вибрано: поки що нічого не сканується"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Видалити зі списку"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} уже в списку"
+  },
+  "detectionNotOnList": {
+    "message": "Виявлення призупинено: цього сайту немає у вашому списку"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Сканувати цей сайт"
+  },
+  "detectionAllowlistHint": {
+    "message": "Або перейдіть у Налаштування → Виявлення → Сайти для сканування, щоб керувати списком."
+  },
+  "siteAllowedFmt": {
+    "message": "Сайт «{0}» додано до сайтів для сканування"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Сканувати можна всі сайти, крім пропущених, або лише вибрані"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Список сайтів має містити лише назви сайтів"
+  },
+  "webhookFilterTitle": {
+    "message": "Надсилати, лише якщо"
+  },
+  "webhookFilterDesc": {
+    "message": "Сторінка надсилається, лише якщо виконано все перелічене. У тілі запиту все одно вказано все, що на ній знайдено."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Мінімальна впевненість (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Категорії"
+  },
+  "webhookCategoriesHint": {
+    "message": "Якщо нічого не позначено, надсилання працює для будь-якої категорії."
+  },
+  "webhookDomainsLabel": {
+    "message": "Лише ці сайти"
+  },
+  "webhookDomainsHint": {
+    "message": "По одному в рядку, разом із піддоменами. Порожньо — усі сайти."
+  },
+  "webhookLogTitle": {
+    "message": "Останні надсилання"
+  },
+  "webhookLogDesc": {
+    "message": "Останні 20 спроб: коли, яка сторінка, що відповів сервер. Адреси й тіла запитів не зберігаються."
+  },
+  "webhookLogEmpty": {
+    "message": "Поки що нічого не надіслано."
+  },
+  "webhookLogClear": {
+    "message": "Очистити"
+  },
+  "webhookLogSent": {
+    "message": "Надіслано"
+  },
+  "webhookLogFailed": {
+    "message": "Збій"
+  },
+  "webhookLogSkipped": {
+    "message": "Не надіслано"
+  },
+  "webhookLogReasonSite": {
+    "message": "сайту немає в списку"
+  },
+  "webhookLogReasonCategory": {
+    "message": "категорію не вибрано"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "нижче мінімальної впевненості"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "немає відповіді"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "адресу не дозволено"
+  },
+  "webhookLogErrorConfig": {
+    "message": "недійсний метод"
+  },
+  "webhookLogTriggerCache": {
+    "message": "сторінка з кешу"
+  },
+  "webhookLogTriggerTest": {
+    "message": "перевірка"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Сайти без JS-хуків"
+  },
+  "hooksOffLabel": {
+    "message": "Вимкнути JS-хуки на цих сайтах"
+  },
+  "hooksOffHint": {
+    "message": "JS-хуки стежать за викликами API браузера на сторінці, щоб знаходити зняття відбитків. Користуйтеся цим для сайту, який із ними працює неправильно: решта виявлень працюватиме, але зняття відбитків не перевірятиметься. По одному сайту в рядку, піддомени включено; перезавантажте сторінку, щоб застосувати."
+  },
+  "hooksOffNote": {
+    "message": "JS-хуки на цьому сайті вимкнено, тому зняття відбитків не перевіряється."
+  },
+  "hooksOffBadge": {
+    "message": "Зняття відбитків не перевірено"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "На цій сторінці не знайдено відповідних сигналів антибот-систем чи CAPTCHA. JS-хуки тут вимкнено, тому зняття відбитків не перевірялося."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Видаляти сторінки лише зі зняттям відбитків через"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "За 0 вони зберігаються як усі інші сторінки, тож до них застосовується лише Автовидалення. Закріплені сторінки ніколи не видаляються."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Закріплювати сторінки автоматично"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Сторінки зі складним захистом"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Антибот або CAPTCHA високої складності. Зняття відбитків ніколи не закріплює сторінку за складністю."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Сторінки із захистом"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "По одному захисту в рядку, з назвою, як на вкладці «Виявлення»."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Лише за впевненості не нижче (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Так закріплюється до {0} сторінок. Якщо відкріпити сторінку, вона більше не закріплюватиметься автоматично."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Закріплено автоматично: зберігається під час очищення історії. Після відкріплення автоматично не закріплюється."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Впевненість для закріплення має бути від 0 до 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Сторінки лише зі зняттям відбитків можна зберігати від 0 до 3650 днів"
+  },
+  "settingsHistorySize": {
+    "message": "Ліміт розміру"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Більший розмір зберігає більше сторінок і займає більше місця на диску. Якщо зменшити розмір, буде видалено найстаріші сторінки, які не закріплені."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Зменшити розмір історії"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Історія займає {0}, а новий ліміт — {1}. Щоб вкластися, буде видалено найстаріші незакріплені сторінки."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Зменшити розмір"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "Зайнято {0}, без обмежень"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Розмір історії має бути одним із: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Тексти, ще не перекладені всіма мовами: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Перекласти правило"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Заповнює відсутні переклади опису, шаблонів і комбінацій за допомогою перекладача Chrome на пристрої. Перевірте їх перед збереженням."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Переклад текстів: {0}…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Заповнено перекладів: {0}. Перевірте їх перед збереженням."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Заповнено: {0}; не вдалося перекласти тут: {1}."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Шаблони"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Комбінації"
+  },
+  "historyWatch": {
+    "message": "Стежити за змінами"
+  },
+  "historyUnwatch": {
+    "message": "Припинити стеження"
+  },
+  "historyWatchTip": {
+    "message": "Стеження за змінами"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Остання перевірка: {0}"
+  },
+  "historyWatchNever": {
+    "message": "Ще не перевірено"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Сторінка відстежується"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Сторінка відстежується. Щоб її перевіряли, увімкніть «Стежити за закріпленими сторінками» в розділі Налаштування → Історія."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Сторінка більше не відстежується"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Можна відстежувати до {0} сторінок. Спершу припиніть стеження за однією з них."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Стежити за закріпленими сторінками"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Перевіряти"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Сторінки, які ви закріпили й для яких вибрали «Стежити за змінами», знову відкриваються у фоновій вкладці по одній (до 10) і скануються. Якщо на сторінці з’являється або зникає захист (антибот чи CAPTCHA), її позначено як «Змінено», і, якщо сповіщення ввімкнено, ви отримаєте повідомлення. Кожна перевірка — це справжній візит із cookie вашого браузера, тож сторінку, де ви ввійшли в обліковий запис, відкривають від вашого імені, а вікно браузера має бути відкрите."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Перевірити зараз"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "Відстежується сторінок: {0} із {1}"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Перевірок ще не було."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Під час останньої перевірки не знайшлося вікна браузера, у якому можна відкрити сторінки."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Остання перевірка не вдалася."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Остання перевірка: {0} · перевірено: {1}, змінилося: {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Перевірено сторінок: {0}, змінилося: {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Жодна сторінка не відстежується: закріпіть сторінку в Історії та виберіть «Стежити за змінами»."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Історію призупинено, тому нічого не перевіряється."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Стеження має бути вимкнене або виконуватися щодня чи щотижня"
   }
 }

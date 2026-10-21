@@ -4688,13 +4688,13 @@
     "message": "इतिहास से जाँचें"
   },
   "ruleHistoryCheckHint": {
-    "message": "देखें कि हर पैटर्न और संयोजन कितने सहेजे गए पेजों पर मेल खाता है। बिना सहेजे बदलाव भी गिने जाते हैं।"
+    "message": "दिखाता है कि हर पैटर्न और संयोजन आपके कितने सहेजे गए पेजों पर मेल खाता है। बिना सहेजे बदलाव भी शामिल हैं।"
   },
   "ruleHistoryCheckRun": {
     "message": "जाँचें"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} सहेजे गए पेज · यह नियम {1} पर मिला"
+    "message": "यह नियम {0} सहेजे गए पेजों में से {1} पर मेल खाता है"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{1} में से {0} पेज"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "केवल कस्टम और संपादित नियम दिखाए गए हैं। आधिकारिक नियमों के विवरण Scrapfly बनाए रखता है।"
   },
-  "statsToolsRetentionNote": {
-    "message": "Advanced कैप्चर को 30 मिनट तक रखता है, इसलिए यह टैब तारीख़ की सीमा को अनदेखा करता है।"
-  },
   "statsToolsSavedNow": {
     "message": "अभी सहेजे गए"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "एक्सटेंशन का बैकग्राउंड हिस्सा पुराना हो गया है। एक्सटेंशन पेज पर एक्सटेंशन को रीलोड करें और फिर कोशिश करें।"
+  },
+  "historyFiltersLabel": {
+    "message": "इतिहास फ़िल्टर करें"
+  },
+  "historyFilterPinned": {
+    "message": "पिन किए गए"
+  },
+  "historyNoResults": {
+    "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
+  },
+  "historyClearFilters": {
+    "message": "फ़िल्टर साफ़ करें"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "उन्नत टैब कैप्चर को {0} तक रखता है, इसलिए यह टैब तारीख सीमा को अनदेखा करता है।"
+  },
+  "settingsStorageTitle": {
+    "message": "भंडारण"
+  },
+  "settingsStorageDesc": {
+    "message": "एक्सटेंशन इस ब्राउज़र में क्या रखता है। सेटिंग्स और नियम यहाँ से साफ़ नहीं किए जा सकते।"
+  },
+  "storageCache": {
+    "message": "जांच कैश"
+  },
+  "storageCaptures": {
+    "message": "टूल कैप्चर"
+  },
+  "storageHistory": {
+    "message": "इतिहास"
+  },
+  "storageRules": {
+    "message": "नियम और श्रेणियाँ"
+  },
+  "storageSettings": {
+    "message": "सेटिंग्स"
+  },
+  "storageLogs": {
+    "message": "लॉग"
+  },
+  "storageOther": {
+    "message": "अन्य"
+  },
+  "storageTotalFmt": {
+    "message": "{1} में से {0} उपयोग में"
+  },
+  "storageClearRowFmt": {
+    "message": "{0} साफ़ करें"
+  },
+  "storageClearCacheTitle": {
+    "message": "जांच कैश साफ़ करें"
+  },
+  "storageClearCacheMessage": {
+    "message": "अगली बार खोलने पर पेज फिर से स्कैन किए जाएँगे। इतिहास, नियम और सेटिंग्स को छुआ नहीं जाएगा।"
+  },
+  "storageClearCapturesTitle": {
+    "message": "टूल कैप्चर हटाएँ"
+  },
+  "storageClearCapturesMessage": {
+    "message": "उन्नत टूल ने जो कुछ सहेजा है, वह सब हटा दिया जाएगा। इतिहास, नियम और सेटिंग्स को छुआ नहीं जाएगा।"
+  },
+  "storageCacheCleared": {
+    "message": "जांच कैश साफ़ कर दिया गया"
+  },
+  "storageCapturesCleared": {
+    "message": "टूल कैप्चर हटा दिए गए"
+  },
+  "storageClearFailed": {
+    "message": "साफ़ नहीं हो सका। फिर से कोशिश करें।"
+  },
+  "settingsSupportTitle": {
+    "message": "सहायता"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "डायग्नोस्टिक्स"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "बग रिपोर्ट के लिए सारांश कॉपी करें: संस्करण, सेटिंग्स और गिनती। इसमें साइट, पते या कुंजियाँ नहीं होतीं।"
+  },
+  "settingsCopyDiagnostics": {
+    "message": "डायग्नोस्टिक्स कॉपी करें"
+  },
+  "diagnosticsCopied": {
+    "message": "डायग्नोस्टिक्स कॉपी हो गए"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "डायग्नोस्टिक्स कॉपी नहीं हो सके"
+  },
+  "settingsPresetsTitle": {
+    "message": "प्रीसेट और रीसेट"
+  },
+  "settingsPresetsDesc": {
+    "message": "एक साथ कई सेटिंग्स बदलें। नियम, इतिहास, साइट सूचियाँ, भाषा और थीम कभी नहीं बदलते।"
+  },
+  "presetPrivacyName": {
+    "message": "गोपनीयता"
+  },
+  "presetPrivacyDesc": {
+    "message": "इस डिवाइस पर कम रखता है और बाहर कुछ नहीं भेजता।"
+  },
+  "presetDeveloperName": {
+    "message": "डेवलपर"
+  },
+  "presetDeveloperDesc": {
+    "message": "डीबग लॉग और JS API, नियमों पर काम करने के लिए।"
+  },
+  "presetApply": {
+    "message": "लागू करें"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "{0} प्रीसेट लागू करें?"
+  },
+  "presetConfirmIntro": {
+    "message": "ये सेटिंग्स बदल जाएँगी:"
+  },
+  "presetAlreadySet": {
+    "message": "ये सेटिंग्स पहले से सेट हैं।"
+  },
+  "presetApplied": {
+    "message": "प्रीसेट लागू हो गया"
+  },
+  "presetHistoryOff": {
+    "message": "इतिहास रिकॉर्ड नहीं किया जाता"
+  },
+  "presetBackupOff": {
+    "message": "इतिहास के स्वतः बैकअप बंद हैं"
+  },
+  "presetClearOnClose": {
+    "message": "ब्राउज़र बंद होने पर इतिहास साफ़ हो जाता है"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook बंद है"
+  },
+  "presetNotificationsOff": {
+    "message": "सूचनाएं बंद हैं"
+  },
+  "presetJsApiOff": {
+    "message": "JS API बंद है"
+  },
+  "presetDebugOff": {
+    "message": "डीबग मोड बंद है"
+  },
+  "presetCollectorOff": {
+    "message": "लॉग कलेक्टर बंद है"
+  },
+  "presetDebugOn": {
+    "message": "डीबग मोड चालू है"
+  },
+  "presetVerboseOn": {
+    "message": "विस्तृत लॉगिंग चालू है"
+  },
+  "presetCollectorOn": {
+    "message": "लॉग कलेक्टर चालू है"
+  },
+  "presetCollectorMax": {
+    "message": "लॉग कलेक्टर 5000 पंक्तियों तक रखता है"
+  },
+  "presetJsApiOn": {
+    "message": "JS API चालू है"
+  },
+  "settingsResetTitle": {
+    "message": "सेटिंग्स रीसेट करें"
+  },
+  "settingsResetDesc": {
+    "message": "हर सेटिंग डिफ़ॉल्ट पर लौट आती है। नियम, इतिहास, साइट सूचियाँ, भाषा और थीम बने रहते हैं।"
+  },
+  "settingsResetBtn": {
+    "message": "रीसेट…"
+  },
+  "settingsResetMessage": {
+    "message": "हर सेटिंग डिफ़ॉल्ट पर लौट आती है। नियम, इतिहास, साइट सूचियाँ, भाषा और थीम नहीं बदलते। Webhook और शेयरिंग का ब्योरा तब तक रखा जाता है जब तक आप उसे हटाना न चुनें।"
+  },
+  "settingsResetConnections": {
+    "message": "Webhook और शेयरिंग कनेक्शन भी हटाएँ"
+  },
+  "settingsResetConfirm": {
+    "message": "रीसेट करें"
+  },
+  "settingsResetDone": {
+    "message": "सेटिंग्स रीसेट हो गईं"
+  },
+  "settingsBackupTitle": {
+    "message": "बैकअप और पुनर्स्थापना"
+  },
+  "settingsBackupItemTitle": {
+    "message": "सब कुछ"
+  },
+  "settingsBackupItemDesc": {
+    "message": "सेटिंग्स, आपके अपने नियम और इतिहास एक फ़ाइल में। Webhook और शेयरिंग का ब्योरा शामिल नहीं है।"
+  },
+  "backupMakeBtn": {
+    "message": "बैकअप लें"
+  },
+  "backupRestoreBtn": {
+    "message": "पुनर्स्थापित करें"
+  },
+  "backupDone": {
+    "message": "बैकअप सहेज लिया गया"
+  },
+  "backupFailed": {
+    "message": "बैकअप नहीं बन सका"
+  },
+  "restoreTitle": {
+    "message": "बैकअप पुनर्स्थापित करें"
+  },
+  "restoreHoldsFmt": {
+    "message": "संस्करण {0} से {1} को बनाया गया। इसमें है:"
+  },
+  "restorePartSettings": {
+    "message": "सेटिंग्स"
+  },
+  "restorePartRulesFmt": {
+    "message": "आपके नियम ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "इतिहास ({0} प्रविष्टियाँ)"
+  },
+  "restoreModeLabel": {
+    "message": "नियम और इतिहास"
+  },
+  "restoreModeMerge": {
+    "message": "मौजूदा के साथ मर्ज करें"
+  },
+  "restoreModeReplace": {
+    "message": "मौजूदा को बदलें"
+  },
+  "restoreConfirm": {
+    "message": "पुनर्स्थापित करें"
+  },
+  "restoreNothing": {
+    "message": "कुछ भी चुना नहीं गया है।"
+  },
+  "restoreDoneFmt": {
+    "message": "पुनर्स्थापित किया गया: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "{0} पुनर्स्थापित नहीं हो सका।"
+  },
+  "restoreInvalid": {
+    "message": "यह फ़ाइल इस एक्सटेंशन का बैकअप नहीं है। कुछ भी नहीं बदला गया।"
+  },
+  "restoreNewer": {
+    "message": "यह बैकअप एक्सटेंशन के नए संस्करण से बना था। एक्सटेंशन को अपडेट करें और फिर कोशिश करें।"
+  },
+  "scanModeTitle": {
+    "message": "स्कैन की जाने वाली साइटें"
+  },
+  "scanModeBlock": {
+    "message": "मेरी छोड़ी गई साइटों को छोड़कर हर साइट"
+  },
+  "scanModeAllow": {
+    "message": "सिर्फ़ मेरी चुनी हुई साइटें"
+  },
+  "allowedDomainsTitle": {
+    "message": "चुनी हुई साइटें"
+  },
+  "settingsCardAllowDomains": {
+    "message": "सिर्फ़ इन साइटों को स्कैन करें"
+  },
+  "allowedDomainsDesc": {
+    "message": "जांच सिर्फ़ इन साइटों और उनके सबडोमेन पर चलती है। बाकी जगह यह रुकी रहती है।"
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "कोई साइट चुनी नहीं गई: अभी कुछ स्कैन नहीं होगा"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "सूची से हटाएँ"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} पहले से सूची में है"
+  },
+  "detectionNotOnList": {
+    "message": "जांच रुकी है: यह साइट आपकी सूची में नहीं है"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "इस साइट को स्कैन करें"
+  },
+  "detectionAllowlistHint": {
+    "message": "या सूची प्रबंधित करने के लिए सेटिंग्स → जांच → स्कैन की जाने वाली साइटें पर जाएँ।"
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\" को स्कैन की जाने वाली साइटों में जोड़ा गया"
+  },
+  "settingsUiErrScanMode": {
+    "message": "स्कैन की जाने वाली साइटें या तो छोड़ी गई साइटों को छोड़कर हर साइट होनी चाहिए, या सिर्फ़ चुनी हुई साइटें"
+  },
+  "settingsUiErrSiteList": {
+    "message": "साइटों की सूची में सिर्फ़ साइट के नाम होने चाहिए"
+  },
+  "webhookFilterTitle": {
+    "message": "सिर्फ़ तब भेजें जब"
+  },
+  "webhookFilterDesc": {
+    "message": "पेज तभी भेजा जाता है जब ये सभी शर्तें पूरी हों। पेलोड में फिर भी वह सब सूचीबद्ध रहता है जो उस पर मिला।"
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "न्यूनतम विश्वसनीयता (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "श्रेणियाँ"
+  },
+  "webhookCategoriesHint": {
+    "message": "किसी भी श्रेणी के लिए भेजने हेतु सभी को अनचुना छोड़ दें।"
+  },
+  "webhookDomainsLabel": {
+    "message": "सिर्फ़ ये साइटें"
+  },
+  "webhookDomainsHint": {
+    "message": "हर पंक्ति में एक, उनके सबडोमेन सहित। खाली का मतलब हर साइट।"
+  },
+  "webhookLogTitle": {
+    "message": "हाल की डिलीवरी"
+  },
+  "webhookLogDesc": {
+    "message": "पिछले 20 प्रयास: कब, कौन-सा पेज, क्या जवाब आया। पते और पेलोड कभी नहीं रखे जाते।"
+  },
+  "webhookLogEmpty": {
+    "message": "अभी तक कुछ नहीं भेजा गया।"
+  },
+  "webhookLogClear": {
+    "message": "साफ़ करें"
+  },
+  "webhookLogSent": {
+    "message": "भेजा गया"
+  },
+  "webhookLogFailed": {
+    "message": "विफल"
+  },
+  "webhookLogSkipped": {
+    "message": "नहीं भेजा गया"
+  },
+  "webhookLogReasonSite": {
+    "message": "साइट सूची में नहीं है"
+  },
+  "webhookLogReasonCategory": {
+    "message": "श्रेणी चुनी नहीं गई"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "न्यूनतम विश्वसनीयता से कम"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "कोई जवाब नहीं"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "पता अनुमत नहीं"
+  },
+  "webhookLogErrorConfig": {
+    "message": "अमान्य मेथड"
+  },
+  "webhookLogTriggerCache": {
+    "message": "कैश किया हुआ पेज"
+  },
+  "webhookLogTriggerTest": {
+    "message": "परीक्षण"
+  },
+  "hooksOffGroupTitle": {
+    "message": "बिना JS हुक वाली साइटें"
+  },
+  "hooksOffLabel": {
+    "message": "इन साइटों पर JS हुक बंद करें"
+  },
+  "hooksOffHint": {
+    "message": "JS हुक फ़िंगरप्रिंटिंग पकड़ने के लिए पेज की ब्राउज़र API कॉल पर नज़र रखते हैं। इसे उस साइट के लिए इस्तेमाल करें जो इनके साथ गड़बड़ करती है: उसके बाकी डिटेक्शन काम करते रहते हैं, पर फ़िंगरप्रिंटिंग नहीं जाँची जाती। हर पंक्ति में एक साइट, सबडोमेन सहित; लागू करने के लिए पेज रीलोड करें।"
+  },
+  "hooksOffNote": {
+    "message": "इस साइट पर JS हुक बंद हैं, इसलिए फ़िंगरप्रिंटिंग नहीं जाँची जाती।"
+  },
+  "hooksOffBadge": {
+    "message": "फ़िंगरप्रिंटिंग नहीं जाँची गई"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "इस पेज पर कोई मेल खाता एंटी-बॉट या CAPTCHA संकेत नहीं मिला। यहाँ JS हुक बंद हैं, इसलिए फ़िंगरप्रिंटिंग नहीं जाँची गई।"
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "सिर्फ़ फ़िंगरप्रिंटिंग वाले पेज इतने समय बाद हटाएँ"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 पर इन्हें बाकी पेजों की तरह रखा जाता है, इसलिए इन पर सिर्फ़ स्वतः हटाएँ लागू होता है। पिन किए गए पेज कभी नहीं हटाए जाते।"
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "पेज अपने आप पिन करें"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "कठिन सुरक्षा वाले पेज"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "अधिक कठिनाई वाला एंटी-बॉट या CAPTCHA। फ़िंगरप्रिंटिंग कठिनाई के आधार पर कभी पेज पिन नहीं करती।"
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "इनसे सुरक्षित पेज"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "हर पंक्ति में एक सुरक्षा, उसी नाम से जैसा जांच टैब में दिखता है।"
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "कम से कम इतनी विश्वसनीयता पर (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "इस तरह अधिकतम {0} पेज पिन होते हैं। किसी को अनपिन करें तो वह अपने आप फिर कभी पिन नहीं होता।"
+  },
+  "historyAutoPinnedTip": {
+    "message": "अपने आप पिन किया गया: इतिहास साफ़ होने पर भी बना रहता है। अनपिन करें तो यह अपने आप फिर कभी पिन नहीं होता।"
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "पिन की विश्वसनीयता 0 से 100 के बीच होनी चाहिए"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "सिर्फ़ फ़िंगरप्रिंटिंग वाले पेज 0 से 3650 दिन के बीच रखे जाने चाहिए"
+  },
+  "settingsHistorySize": {
+    "message": "आकार सीमा"
+  },
+  "settingsHistorySizeHint": {
+    "message": "बड़ा आकार ज़्यादा पेज रखता है और आपकी डिस्क का ज़्यादा हिस्सा लेता है। आकार घटाने पर बिना पिन किए सबसे पुराने पेज हटा दिए जाते हैं।"
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "इतिहास का आकार घटाएँ"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "इतिहास {0} इस्तेमाल करता है और नई सीमा {1} है। सीमा में आने के लिए बिना पिन किए सबसे पुराने पेज हटा दिए जाएँगे।"
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "आकार घटाएँ"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} उपयोग में, कोई सीमा नहीं"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "इतिहास का आकार {0} MB में से एक होना चाहिए"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "हर भाषा में अभी अनूदित न हुए टेक्स्ट: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "नियम का अनुवाद करें"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "विवरण, पैटर्न और संयोजनों के छूटे हुए अनुवाद Chrome के ऑन-डिवाइस अनुवादक से भरता है। सहेजने से पहले जाँच लें।"
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "{0} टेक्स्ट का अनुवाद हो रहा है…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "{0} अनुवाद भरे गए। सहेजने से पहले जाँच लें।"
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "{0} भरे गए; {1} का यहाँ अनुवाद नहीं हो सका।"
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "पैटर्न"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "संयोजन"
+  },
+  "historyWatch": {
+    "message": "बदलाव पर नज़र रखें"
+  },
+  "historyUnwatch": {
+    "message": "नज़र रखना बंद करें"
+  },
+  "historyWatchTip": {
+    "message": "बदलावों पर नज़र रखी जा रही है"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "आख़िरी जाँच: {0}"
+  },
+  "historyWatchNever": {
+    "message": "अभी जाँचा नहीं गया"
+  },
+  "historyWatchStartedNotice": {
+    "message": "इस पेज पर नज़र रखी जा रही है"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "इस पेज पर नज़र रखी जा रही है। इसकी जाँच के लिए सेटिंग्स → इतिहास में “पिन किए गए पेजों पर नज़र रखें” चालू करें।"
+  },
+  "historyWatchStoppedNotice": {
+    "message": "अब इस पेज पर नज़र नहीं रखी जा रही"
+  },
+  "historyWatchLimitFmt": {
+    "message": "आप अधिकतम {0} पेजों पर नज़र रख सकते हैं। पहले किसी एक पर नज़र रखना बंद करें।"
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "पिन किए गए पेजों पर नज़र रखें"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "इनकी जाँच करें"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "जिन पेजों को आप पिन करते हैं और “बदलाव पर नज़र रखें” चुनते हैं, वे एक-एक करके (अधिकतम 10) बैकग्राउंड टैब में फिर से खोले जाते हैं और स्कैन किए जाते हैं। जिस पेज में कोई एंटी-बॉट या CAPTCHA सुरक्षा जुड़ती या हटती है, उसे बदला चिह्नित किया जाता है, और अलर्ट चालू होने पर सूचना भी मिलती है। हर जाँच एक असली विज़िट है जिसमें आपके ब्राउज़र की कुकीज़ इस्तेमाल होती हैं, इसलिए साइन-इन वाला पेज आपके रूप में खुलता है, और एक ब्राउज़र विंडो खुली होनी चाहिए।"
+  },
+  "settingsHistoryWatchNow": {
+    "message": "अभी जाँचें"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{1} में से {0} पेजों पर नज़र"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "अभी तक कोई जाँच नहीं हुई।"
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "पिछली जाँच को पेज खोलने के लिए कोई ब्राउज़र विंडो नहीं मिली।"
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "पिछली जाँच विफल रही।"
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "पिछली जाँच: {0} · {1} जाँचे गए, {2} बदले"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "{0} पेज जाँचे गए, {1} बदले"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "अभी किसी पेज पर नज़र नहीं रखी जा रही: इतिहास में कोई पेज पिन करें और “बदलाव पर नज़र रखें” चुनें।"
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "इतिहास रुका हुआ है, इसलिए कुछ नहीं जाँचा जाता।"
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "नज़र रखना बंद, रोज़ाना या साप्ताहिक होना चाहिए"
   }
 }

@@ -4688,13 +4688,13 @@
     "message": "Periksa terhadap Riwayat"
   },
   "ruleHistoryCheckHint": {
-    "message": "Lihat pada berapa banyak halaman tersimpan setiap pola dan kombinasi cocok. Edit yang belum disimpan ikut dihitung."
+    "message": "Menunjukkan pada berapa banyak halaman tersimpan Anda setiap pola dan kombinasi cocok. Edit yang belum disimpan ikut dihitung."
   },
   "ruleHistoryCheckRun": {
     "message": "Periksa"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} halaman tersimpan · aturan ini ditemukan pada {1}"
+    "message": "Aturan ini cocok dengan {1} dari {0} halaman tersimpan"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} dari {1} halaman"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Hanya aturan kustom dan yang diedit yang tercantum. Deskripsi aturan resmi dikelola oleh Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Lanjutan menyimpan rekaman selama 30 menit, jadi tab ini mengabaikan rentang tanggal."
-  },
   "statsToolsSavedNow": {
     "message": "Disimpan sekarang"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Bagian latar belakang ekstensi sudah usang. Muat ulang ekstensi di halaman ekstensi, lalu coba lagi."
+  },
+  "historyFiltersLabel": {
+    "message": "Filter riwayat"
+  },
+  "historyFilterPinned": {
+    "message": "Disematkan"
+  },
+  "historyNoResults": {
+    "message": "Tidak ada entri yang cocok dengan pencarian atau filter Anda."
+  },
+  "historyClearFilters": {
+    "message": "Hapus filter"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Tab Lanjutan menyimpan rekaman selama {0}, jadi tab ini mengabaikan rentang tanggal."
+  },
+  "settingsStorageTitle": {
+    "message": "Penyimpanan"
+  },
+  "settingsStorageDesc": {
+    "message": "Apa yang disimpan ekstensi di browser ini. Pengaturan dan aturan tidak dapat dihapus dari sini."
+  },
+  "storageCache": {
+    "message": "Cache deteksi"
+  },
+  "storageCaptures": {
+    "message": "Rekaman alat"
+  },
+  "storageHistory": {
+    "message": "Riwayat"
+  },
+  "storageRules": {
+    "message": "Aturan dan kategori"
+  },
+  "storageSettings": {
+    "message": "Pengaturan"
+  },
+  "storageLogs": {
+    "message": "Log"
+  },
+  "storageOther": {
+    "message": "Lainnya"
+  },
+  "storageTotalFmt": {
+    "message": "{0} dari {1} terpakai"
+  },
+  "storageClearRowFmt": {
+    "message": "Hapus {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Hapus cache deteksi"
+  },
+  "storageClearCacheMessage": {
+    "message": "Halaman dipindai lagi saat Anda membukanya berikutnya. Riwayat, aturan, dan pengaturan tidak terpengaruh."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Hapus rekaman alat"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Semua yang disimpan alat Lanjutan akan dihapus. Riwayat, aturan, dan pengaturan tidak terpengaruh."
+  },
+  "storageCacheCleared": {
+    "message": "Cache deteksi dihapus"
+  },
+  "storageCapturesCleared": {
+    "message": "Rekaman alat dihapus"
+  },
+  "storageClearFailed": {
+    "message": "Tidak dapat menghapus. Coba lagi."
+  },
+  "settingsSupportTitle": {
+    "message": "Dukungan"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostik"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Salin ringkasan untuk laporan bug: versi, pengaturan, dan jumlah. Tidak berisi situs, alamat, atau kunci."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Salin diagnostik"
+  },
+  "diagnosticsCopied": {
+    "message": "Diagnostik disalin"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Tidak dapat menyalin diagnostik"
+  },
+  "settingsPresetsTitle": {
+    "message": "Preset dan setel ulang"
+  },
+  "settingsPresetsDesc": {
+    "message": "Ubah beberapa pengaturan sekaligus. Aturan, Riwayat, daftar situs, bahasa, dan tema tidak pernah diubah."
+  },
+  "presetPrivacyName": {
+    "message": "Privasi"
+  },
+  "presetPrivacyDesc": {
+    "message": "Menyimpan lebih sedikit di perangkat ini dan tidak mengirim apa pun keluar."
+  },
+  "presetDeveloperName": {
+    "message": "Pengembang"
+  },
+  "presetDeveloperDesc": {
+    "message": "Log debug dan JS API, untuk mengerjakan aturan."
+  },
+  "presetApply": {
+    "message": "Terapkan"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Terapkan preset {0}?"
+  },
+  "presetConfirmIntro": {
+    "message": "Pengaturan ini akan berubah:"
+  },
+  "presetAlreadySet": {
+    "message": "Pengaturan ini sudah diterapkan."
+  },
+  "presetApplied": {
+    "message": "Preset diterapkan"
+  },
+  "presetHistoryOff": {
+    "message": "Riwayat tidak direkam"
+  },
+  "presetBackupOff": {
+    "message": "Pencadangan Riwayat otomatis nonaktif"
+  },
+  "presetClearOnClose": {
+    "message": "Riwayat dihapus saat browser ditutup"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook nonaktif"
+  },
+  "presetNotificationsOff": {
+    "message": "Notifikasi nonaktif"
+  },
+  "presetJsApiOff": {
+    "message": "JS API nonaktif"
+  },
+  "presetDebugOff": {
+    "message": "Mode debug nonaktif"
+  },
+  "presetCollectorOff": {
+    "message": "Pengumpul log nonaktif"
+  },
+  "presetDebugOn": {
+    "message": "Mode debug aktif"
+  },
+  "presetVerboseOn": {
+    "message": "Log terperinci aktif"
+  },
+  "presetCollectorOn": {
+    "message": "Pengumpul log aktif"
+  },
+  "presetCollectorMax": {
+    "message": "Pengumpul log menyimpan hingga 5000 baris"
+  },
+  "presetJsApiOn": {
+    "message": "JS API aktif"
+  },
+  "settingsResetTitle": {
+    "message": "Setel ulang pengaturan"
+  },
+  "settingsResetDesc": {
+    "message": "Semua pengaturan kembali ke default. Aturan, Riwayat, daftar situs, bahasa, dan tema dipertahankan."
+  },
+  "settingsResetBtn": {
+    "message": "Setel ulang…"
+  },
+  "settingsResetMessage": {
+    "message": "Semua pengaturan kembali ke default. Aturan, Riwayat, daftar situs, bahasa, dan tema tidak diubah. Detail webhook dan berbagi dipertahankan kecuali Anda memilih untuk menghapusnya."
+  },
+  "settingsResetConnections": {
+    "message": "Hapus juga koneksi webhook dan berbagi"
+  },
+  "settingsResetConfirm": {
+    "message": "Setel ulang"
+  },
+  "settingsResetDone": {
+    "message": "Pengaturan disetel ulang"
+  },
+  "settingsBackupTitle": {
+    "message": "Pencadangan dan pemulihan"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Semuanya"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Pengaturan, aturan Anda sendiri, dan Riwayat dalam satu file. Detail webhook dan berbagi tidak disertakan."
+  },
+  "backupMakeBtn": {
+    "message": "Cadangkan"
+  },
+  "backupRestoreBtn": {
+    "message": "Pulihkan"
+  },
+  "backupDone": {
+    "message": "Cadangan disimpan"
+  },
+  "backupFailed": {
+    "message": "Tidak dapat membuat cadangan"
+  },
+  "restoreTitle": {
+    "message": "Pulihkan cadangan"
+  },
+  "restoreHoldsFmt": {
+    "message": "Dibuat dengan versi {0} pada {1}. Isinya:"
+  },
+  "restorePartSettings": {
+    "message": "Pengaturan"
+  },
+  "restorePartRulesFmt": {
+    "message": "Aturan Anda ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Riwayat ({0} entri)"
+  },
+  "restoreModeLabel": {
+    "message": "Aturan dan Riwayat"
+  },
+  "restoreModeMerge": {
+    "message": "Gabungkan dengan yang ada"
+  },
+  "restoreModeReplace": {
+    "message": "Ganti yang ada"
+  },
+  "restoreConfirm": {
+    "message": "Pulihkan"
+  },
+  "restoreNothing": {
+    "message": "Tidak ada yang dipilih."
+  },
+  "restoreDoneFmt": {
+    "message": "Dipulihkan: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "{0} tidak dapat dipulihkan."
+  },
+  "restoreInvalid": {
+    "message": "File ini bukan cadangan ekstensi ini. Tidak ada yang diubah."
+  },
+  "restoreNewer": {
+    "message": "Cadangan ini dibuat oleh versi ekstensi yang lebih baru. Perbarui ekstensi lalu coba lagi."
+  },
+  "scanModeTitle": {
+    "message": "Situs yang dipindai"
+  },
+  "scanModeBlock": {
+    "message": "Semua situs kecuali yang saya lewati"
+  },
+  "scanModeAllow": {
+    "message": "Hanya situs yang saya pilih"
+  },
+  "allowedDomainsTitle": {
+    "message": "Situs yang dipilih"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Pindai hanya situs ini"
+  },
+  "allowedDomainsDesc": {
+    "message": "Deteksi hanya berjalan di situs ini dan subdomainnya. Di tempat lain, deteksi dijeda."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Belum ada situs yang dipilih: belum ada yang dipindai"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Hapus dari daftar"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} sudah ada di daftar"
+  },
+  "detectionNotOnList": {
+    "message": "Deteksi dijeda: situs ini tidak ada di daftar Anda"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Pindai situs ini"
+  },
+  "detectionAllowlistHint": {
+    "message": "Atau buka Pengaturan → Deteksi → Situs yang dipindai untuk mengelola daftar."
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\" ditambahkan ke situs yang dipindai"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Situs yang dipindai harus berupa semua situs kecuali yang dilewati, atau hanya situs yang dipilih"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Daftar situs hanya boleh berisi nama situs"
+  },
+  "webhookFilterTitle": {
+    "message": "Kirim hanya jika"
+  },
+  "webhookFilterDesc": {
+    "message": "Halaman hanya dikirim jika semua ketentuan ini terpenuhi. Payload tetap mencantumkan semua yang ditemukan di halaman itu."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Kepercayaan minimum (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Kategori"
+  },
+  "webhookCategoriesHint": {
+    "message": "Biarkan semua tidak dicentang untuk mengirim untuk kategori apa pun."
+  },
+  "webhookDomainsLabel": {
+    "message": "Hanya situs ini"
+  },
+  "webhookDomainsHint": {
+    "message": "Satu per baris, beserta subdomainnya. Kosong berarti semua situs."
+  },
+  "webhookLogTitle": {
+    "message": "Pengiriman terbaru"
+  },
+  "webhookLogDesc": {
+    "message": "20 percobaan terakhir: kapan, halaman mana, apa balasannya. Alamat dan payload tidak pernah disimpan."
+  },
+  "webhookLogEmpty": {
+    "message": "Belum ada yang dikirim."
+  },
+  "webhookLogClear": {
+    "message": "Hapus"
+  },
+  "webhookLogSent": {
+    "message": "Terkirim"
+  },
+  "webhookLogFailed": {
+    "message": "Gagal"
+  },
+  "webhookLogSkipped": {
+    "message": "Tidak dikirim"
+  },
+  "webhookLogReasonSite": {
+    "message": "situs tidak ada di daftar"
+  },
+  "webhookLogReasonCategory": {
+    "message": "kategori tidak dipilih"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "di bawah kepercayaan minimum"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "tidak ada respons"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "alamat tidak diizinkan"
+  },
+  "webhookLogErrorConfig": {
+    "message": "metode tidak valid"
+  },
+  "webhookLogTriggerCache": {
+    "message": "halaman dari cache"
+  },
+  "webhookLogTriggerTest": {
+    "message": "uji"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Situs tanpa hook JS"
+  },
+  "hooksOffLabel": {
+    "message": "Matikan hook JS di situs ini"
+  },
+  "hooksOffHint": {
+    "message": "Hook JS memantau panggilan API browser pada halaman untuk menemukan fingerprinting. Gunakan untuk situs yang bermasalah dengannya: deteksi lainnya tetap berjalan, tetapi fingerprinting tidak diperiksa. Satu situs per baris, termasuk subdomain; muat ulang halaman untuk menerapkan."
+  },
+  "hooksOffNote": {
+    "message": "Hook JS nonaktif di situs ini, jadi fingerprinting tidak diperiksa."
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting tidak diperiksa"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Tidak ditemukan sinyal anti-bot atau CAPTCHA yang cocok di halaman ini. Hook JS nonaktif di sini, jadi fingerprinting tidak diperiksa."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Hapus halaman khusus fingerprinting setelah"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 menyimpannya seperti halaman lain, jadi hanya Hapus otomatis yang berlaku. Halaman yang disematkan tidak pernah dihapus."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Sematkan halaman otomatis"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Halaman dengan proteksi sulit"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Anti-bot atau CAPTCHA dengan kesulitan Tinggi. Fingerprinting tidak pernah menyematkan halaman berdasarkan kesulitannya."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Halaman yang dilindungi oleh"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Satu proteksi per baris, dengan nama seperti di tab Deteksi."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Hanya dari kepercayaan (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Hingga {0} halaman disematkan dengan cara ini. Jika sematan satu halaman dilepas, halaman itu tidak akan pernah disematkan lagi secara otomatis."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Disematkan otomatis: tetap ada saat riwayat dibersihkan. Jika sematannya dilepas, halaman ini tidak akan pernah disematkan lagi secara otomatis."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Kepercayaan penyematan harus antara 0 dan 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Halaman khusus fingerprinting harus disimpan antara 0 dan 3650 hari"
+  },
+  "settingsHistorySize": {
+    "message": "Batas ukuran"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Ukuran yang lebih besar menyimpan lebih banyak halaman dan memakai lebih banyak ruang disk Anda. Menurunkan ukuran akan menghapus halaman terlama yang tidak disematkan."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Turunkan ukuran Riwayat"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Riwayat memakai {0} dan batas barunya {1}. Halaman terlama yang tidak disematkan akan dihapus agar muat."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Turunkan ukuran"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} terpakai, tanpa batas"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Ukuran Riwayat harus salah satu dari {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Teks yang belum diterjemahkan ke semua bahasa: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Terjemahkan aturan"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Mengisi terjemahan yang hilang untuk deskripsi, pola, dan kombinasi dengan penerjemah di perangkat milik Chrome. Periksa sebelum menyimpan."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Menerjemahkan {0} teks…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "{0} terjemahan terisi. Periksa sebelum menyimpan."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "{0} terisi; {1} tidak dapat diterjemahkan di sini."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Pola"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Kombinasi"
+  },
+  "historyWatch": {
+    "message": "Pantau perubahan"
+  },
+  "historyUnwatch": {
+    "message": "Berhenti memantau"
+  },
+  "historyWatchTip": {
+    "message": "Memantau perubahan"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Terakhir diperiksa {0}"
+  },
+  "historyWatchNever": {
+    "message": "Belum diperiksa"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Memantau halaman ini"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Memantau halaman ini. Aktifkan Pantau halaman yang disematkan di Pengaturan → Riwayat agar halaman diperiksa."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Tidak lagi memantau halaman ini"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Anda dapat memantau hingga {0} halaman. Berhenti memantau satu halaman terlebih dahulu."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Pantau halaman yang disematkan"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Frekuensi pemeriksaan"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Halaman yang Anda sematkan dan pilih Pantau perubahan dibuka kembali di tab latar belakang, satu per satu (hingga 10), lalu dipindai. Halaman yang mendapat atau kehilangan proteksi anti-bot atau CAPTCHA ditandai Berubah, dengan notifikasi jika peringatan aktif. Setiap pemeriksaan adalah kunjungan sungguhan dengan cookie browser Anda, jadi halaman yang memerlukan login dikunjungi sebagai Anda, dan jendela browser harus terbuka."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Periksa sekarang"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{0} dari {1} halaman dipantau"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Belum ada pemeriksaan."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Pemeriksaan terakhir tidak menemukan jendela browser untuk membuka halaman."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Pemeriksaan terakhir gagal."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Pemeriksaan terakhir: {0} · {1} diperiksa, {2} berubah"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "{0} halaman diperiksa, {1} berubah"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Belum ada halaman yang dipantau: sematkan halaman di Riwayat dan pilih Pantau perubahan."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Riwayat dijeda, jadi tidak ada yang diperiksa."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Pemantauan harus nonaktif, setiap hari, atau setiap minggu"
   }
 }

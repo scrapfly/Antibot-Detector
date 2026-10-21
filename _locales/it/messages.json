@@ -4688,13 +4688,13 @@
     "message": "Verifica con la Cronologia"
   },
   "ruleHistoryCheckHint": {
-    "message": "Vedi su quante pagine salvate corrisponde ogni pattern e combinazione. Le modifiche non salvate contano."
+    "message": "Mostra su quante delle tue pagine salvate corrisponde ogni pattern e combinazione. Sono incluse le modifiche non salvate."
   },
   "ruleHistoryCheckRun": {
     "message": "Verifica"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} pagine salvate · questa regola è stata trovata su {1}"
+    "message": "Questa regola corrisponde a {1} pagine salvate su {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} di {1} pagine"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Sono elencate solo le regole personalizzate e modificate. Le descrizioni delle regole ufficiali sono gestite da Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Advanced conserva le acquisizioni per 30 minuti, quindi questa scheda ignora l'intervallo di date."
-  },
   "statsToolsSavedNow": {
     "message": "Salvate ora"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "La parte in background dell'estensione non è aggiornata. Ricarica l'estensione nella pagina delle estensioni e riprova."
+  },
+  "historyFiltersLabel": {
+    "message": "Filtra la cronologia"
+  },
+  "historyFilterPinned": {
+    "message": "Fissata"
+  },
+  "historyNoResults": {
+    "message": "Nessuna voce corrisponde alla ricerca o ai filtri."
+  },
+  "historyClearFilters": {
+    "message": "Cancella i filtri"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Gli strumenti avanzati conservano le acquisizioni per {0}, quindi questa scheda ignora l’intervallo di date."
+  },
+  "settingsStorageTitle": {
+    "message": "Archiviazione"
+  },
+  "settingsStorageDesc": {
+    "message": "Ciò che l’estensione conserva in questo browser. Da qui non si possono cancellare impostazioni e regole."
+  },
+  "storageCache": {
+    "message": "Cache di rilevamento"
+  },
+  "storageCaptures": {
+    "message": "Acquisizioni degli strumenti"
+  },
+  "storageHistory": {
+    "message": "Cronologia"
+  },
+  "storageRules": {
+    "message": "Regole e categorie"
+  },
+  "storageSettings": {
+    "message": "Impostazioni"
+  },
+  "storageLogs": {
+    "message": "Log"
+  },
+  "storageOther": {
+    "message": "Altro"
+  },
+  "storageTotalFmt": {
+    "message": "{0} di {1} usati"
+  },
+  "storageClearRowFmt": {
+    "message": "Svuota: {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Svuota la cache di rilevamento"
+  },
+  "storageClearCacheMessage": {
+    "message": "Le pagine vengono analizzate di nuovo alla prossima apertura. Cronologia, regole e impostazioni non vengono toccate."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Elimina le acquisizioni degli strumenti"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Tutto ciò che gli strumenti avanzati hanno salvato viene eliminato. Cronologia, regole e impostazioni non vengono toccate."
+  },
+  "storageCacheCleared": {
+    "message": "Cache di rilevamento svuotata"
+  },
+  "storageCapturesCleared": {
+    "message": "Acquisizioni degli strumenti eliminate"
+  },
+  "storageClearFailed": {
+    "message": "Impossibile svuotarlo. Riprova."
+  },
+  "settingsSupportTitle": {
+    "message": "Assistenza"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostica"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Copia un riepilogo per una segnalazione di bug: versioni, impostazioni e conteggi. Non contiene siti, indirizzi o chiavi."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Copia diagnostica"
+  },
+  "diagnosticsCopied": {
+    "message": "Diagnostica copiata"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Impossibile copiare la diagnostica"
+  },
+  "settingsPresetsTitle": {
+    "message": "Preset e reimpostazione"
+  },
+  "settingsPresetsDesc": {
+    "message": "Cambia più impostazioni in una volta. Regole, cronologia, liste di siti, lingua e tema non vengono mai modificati."
+  },
+  "presetPrivacyName": {
+    "message": "Privacy"
+  },
+  "presetPrivacyDesc": {
+    "message": "Conserva meno dati su questo dispositivo e non invia nulla all’esterno."
+  },
+  "presetDeveloperName": {
+    "message": "Sviluppatore"
+  },
+  "presetDeveloperDesc": {
+    "message": "Log di debug e JS API, per lavorare sulle regole."
+  },
+  "presetApply": {
+    "message": "Applica"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Applicare il preset {0}?"
+  },
+  "presetConfirmIntro": {
+    "message": "Queste impostazioni cambieranno:"
+  },
+  "presetAlreadySet": {
+    "message": "Queste impostazioni sono già attive."
+  },
+  "presetApplied": {
+    "message": "Preset applicato"
+  },
+  "presetHistoryOff": {
+    "message": "La cronologia non viene registrata"
+  },
+  "presetBackupOff": {
+    "message": "I backup automatici della cronologia sono disattivati"
+  },
+  "presetClearOnClose": {
+    "message": "La cronologia viene svuotata alla chiusura del browser"
+  },
+  "presetWebhookOff": {
+    "message": "Il webhook è disattivato"
+  },
+  "presetNotificationsOff": {
+    "message": "Le notifiche sono disattivate"
+  },
+  "presetJsApiOff": {
+    "message": "La JS API è disattivata"
+  },
+  "presetDebugOff": {
+    "message": "La modalità debug è disattivata"
+  },
+  "presetCollectorOff": {
+    "message": "Il raccoglitore log è disattivato"
+  },
+  "presetDebugOn": {
+    "message": "La modalità debug è attiva"
+  },
+  "presetVerboseOn": {
+    "message": "I log dettagliati sono attivi"
+  },
+  "presetCollectorOn": {
+    "message": "Il raccoglitore log è attivo"
+  },
+  "presetCollectorMax": {
+    "message": "Il raccoglitore log conserva fino a 5000 righe"
+  },
+  "presetJsApiOn": {
+    "message": "La JS API è attiva"
+  },
+  "settingsResetTitle": {
+    "message": "Reimposta le impostazioni"
+  },
+  "settingsResetDesc": {
+    "message": "Ogni impostazione torna al valore predefinito. Regole, cronologia, liste di siti, lingua e tema vengono mantenuti."
+  },
+  "settingsResetBtn": {
+    "message": "Reimposta…"
+  },
+  "settingsResetMessage": {
+    "message": "Ogni impostazione torna al valore predefinito. Regole, cronologia, liste di siti, lingua e tema non vengono modificati. I dati del webhook e della condivisione vengono mantenuti, a meno che tu non scelga di rimuoverli."
+  },
+  "settingsResetConnections": {
+    "message": "Rimuovi anche le connessioni del webhook e della condivisione"
+  },
+  "settingsResetConfirm": {
+    "message": "Reimposta"
+  },
+  "settingsResetDone": {
+    "message": "Impostazioni reimpostate"
+  },
+  "settingsBackupTitle": {
+    "message": "Backup e ripristino"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Tutto"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Impostazioni, regole personali e cronologia in un solo file. I dati del webhook e della condivisione non sono inclusi."
+  },
+  "backupMakeBtn": {
+    "message": "Esegui backup"
+  },
+  "backupRestoreBtn": {
+    "message": "Ripristina"
+  },
+  "backupDone": {
+    "message": "Backup salvato"
+  },
+  "backupFailed": {
+    "message": "Impossibile creare il backup"
+  },
+  "restoreTitle": {
+    "message": "Ripristina un backup"
+  },
+  "restoreHoldsFmt": {
+    "message": "Creato con la versione {0} il {1}. Contiene:"
+  },
+  "restorePartSettings": {
+    "message": "Impostazioni"
+  },
+  "restorePartRulesFmt": {
+    "message": "Le tue regole ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Cronologia ({0} voci)"
+  },
+  "restoreModeLabel": {
+    "message": "Regole e cronologia"
+  },
+  "restoreModeMerge": {
+    "message": "Unisci a ciò che hai"
+  },
+  "restoreModeReplace": {
+    "message": "Sostituisci ciò che hai"
+  },
+  "restoreConfirm": {
+    "message": "Ripristina"
+  },
+  "restoreNothing": {
+    "message": "Non è selezionato nulla."
+  },
+  "restoreDoneFmt": {
+    "message": "Ripristinato: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Impossibile ripristinare: {0}."
+  },
+  "restoreInvalid": {
+    "message": "Questo file non è un backup di questa estensione. Non è stato modificato nulla."
+  },
+  "restoreNewer": {
+    "message": "Questo backup è stato creato da una versione più recente dell’estensione. Aggiorna l’estensione e riprova."
+  },
+  "scanModeTitle": {
+    "message": "Siti da analizzare"
+  },
+  "scanModeBlock": {
+    "message": "Tutti i siti tranne quelli che ignoro"
+  },
+  "scanModeAllow": {
+    "message": "Solo i siti che scelgo"
+  },
+  "allowedDomainsTitle": {
+    "message": "Siti scelti"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Analizza solo questi siti"
+  },
+  "allowedDomainsDesc": {
+    "message": "Il rilevamento viene eseguito solo su questi siti e sui loro sottodomini. Ovunque altrove è in pausa."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Nessun sito scelto: per ora non viene analizzato nulla"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Rimuovi dalla lista"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} è già nella lista"
+  },
+  "detectionNotOnList": {
+    "message": "Rilevamento in pausa: questo sito non è nella tua lista"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Analizza questo sito"
+  },
+  "detectionAllowlistHint": {
+    "message": "Oppure vai su Impostazioni → Rilevamento → Siti da analizzare per gestire la lista."
+  },
+  "siteAllowedFmt": {
+    "message": "Aggiunto \"{0}\" ai siti da analizzare"
+  },
+  "settingsUiErrScanMode": {
+    "message": "I siti da analizzare devono essere tutti i siti tranne quelli ignorati, oppure solo i siti scelti"
+  },
+  "settingsUiErrSiteList": {
+    "message": "Una lista di siti deve contenere solo nomi di siti"
+  },
+  "webhookFilterTitle": {
+    "message": "Invia solo quando"
+  },
+  "webhookFilterDesc": {
+    "message": "Una pagina viene inviata solo se si verificano tutte queste condizioni. Il payload elenca comunque tutto ciò che vi è stato trovato."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Confidenza minima (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Categorie"
+  },
+  "webhookCategoriesHint": {
+    "message": "Lasciale tutte deselezionate per inviare per qualsiasi categoria."
+  },
+  "webhookDomainsLabel": {
+    "message": "Solo questi siti"
+  },
+  "webhookDomainsHint": {
+    "message": "Uno per riga, sottodomini inclusi. Vuoto significa tutti i siti."
+  },
+  "webhookLogTitle": {
+    "message": "Invii recenti"
+  },
+  "webhookLogDesc": {
+    "message": "Gli ultimi 20 tentativi: quando, quale pagina, quale risposta. Indirizzi e payload non vengono mai conservati."
+  },
+  "webhookLogEmpty": {
+    "message": "Ancora nulla inviato."
+  },
+  "webhookLogClear": {
+    "message": "Svuota"
+  },
+  "webhookLogSent": {
+    "message": "Inviato"
+  },
+  "webhookLogFailed": {
+    "message": "Non riuscito"
+  },
+  "webhookLogSkipped": {
+    "message": "Non inviato"
+  },
+  "webhookLogReasonSite": {
+    "message": "sito non presente nella lista"
+  },
+  "webhookLogReasonCategory": {
+    "message": "categoria non selezionata"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "sotto la confidenza minima"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "nessuna risposta"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "indirizzo non consentito"
+  },
+  "webhookLogErrorConfig": {
+    "message": "metodo non valido"
+  },
+  "webhookLogTriggerCache": {
+    "message": "pagina in cache"
+  },
+  "webhookLogTriggerTest": {
+    "message": "prova"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Siti senza intercettori JS"
+  },
+  "hooksOffLabel": {
+    "message": "Disattiva gli intercettori JS su questi siti"
+  },
+  "hooksOffHint": {
+    "message": "Gli intercettori JS osservano le chiamate di una pagina alle API del browser per individuare il fingerprinting. Usali per un sito che funziona male con essi: le sue altre rilevazioni continuano a funzionare, ma il fingerprinting non viene controllato. Un sito per riga, sottodomini inclusi; ricarica la pagina per applicare."
+  },
+  "hooksOffNote": {
+    "message": "Gli intercettori JS sono disattivati su questo sito, quindi il fingerprinting non viene controllato."
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting non controllato"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Non è stato trovato nessun segnale anti-bot o CAPTCHA corrispondente su questa pagina. Qui gli intercettori JS sono disattivati, quindi il fingerprinting non è stato controllato."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Elimina le pagine con solo fingerprinting dopo"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "Con 0 vengono trattate come tutte le altre pagine, quindi vale solo l’eliminazione automatica. Le pagine fissate non vengono mai eliminate."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Fissa le pagine automaticamente"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Pagine con una protezione difficile"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Un anti-bot o un CAPTCHA di difficoltà alta. Il fingerprinting non fissa mai una pagina in base alla sua difficoltà."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Pagine protette da"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Una protezione per riga, con il nome che usa la scheda Rilevamento."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Solo da una confidenza di (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "In questo modo vengono fissate fino a {0} pagine. Sbloccane una e non verrà più fissata da sola."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Fissata automaticamente: viene conservata quando la cronologia viene ripulita. Sbloccala e non verrà più fissata da sola."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "La confidenza per fissare deve essere compresa tra 0 e 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Le pagine con solo fingerprinting devono essere conservate tra 0 e 3650 giorni"
+  },
+  "settingsHistorySize": {
+    "message": "Limite di dimensione"
+  },
+  "settingsHistorySizeHint": {
+    "message": "Una dimensione maggiore conserva più pagine e occupa più spazio sul disco. Riducendo la dimensione vengono rimosse le pagine meno recenti che non sono fissate."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Riduci la dimensione della cronologia"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "La cronologia occupa {0} e il nuovo limite è {1}. Le pagine meno recenti che non sono fissate verranno rimosse per rientrare nel limite."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Riduci la dimensione"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} usati, nessun limite"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "La dimensione della cronologia deve essere uno di questi valori: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Testi non ancora tradotti in tutte le lingue: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Traduci la regola"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Compila le traduzioni mancanti di descrizione, pattern e combinazioni con il traduttore di Chrome sul dispositivo. Controllale prima di salvare."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Traduzione di {0} testi…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "{0} traduzioni compilate. Controllale prima di salvare."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "{0} compilate; {1} non è stato possibile tradurle qui."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Pattern"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Combinazioni"
+  },
+  "historyWatch": {
+    "message": "Monitora le modifiche"
+  },
+  "historyUnwatch": {
+    "message": "Smetti di monitorare"
+  },
+  "historyWatchTip": {
+    "message": "Monitoraggio delle modifiche"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Ultimo controllo: {0}"
+  },
+  "historyWatchNever": {
+    "message": "Non ancora controllata"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Pagina in monitoraggio"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Pagina in monitoraggio. Attiva «Monitora le pagine fissate» in Impostazioni → Cronologia perché venga controllata."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Pagina non più monitorata"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Puoi monitorare fino a {0} pagine. Smetti prima di monitorarne una."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Monitora le pagine fissate"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Controllale"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Le pagine che fissi e per cui scegli Monitora le modifiche vengono riaperte in una scheda in background, una alla volta (fino a 10), e analizzate. Una pagina che acquisisce o perde una protezione anti-bot o CAPTCHA viene contrassegnata come Modificata, con una notifica se gli avvisi sono attivi. Ogni controllo è una visita reale con i cookie del tuo browser, quindi una pagina con accesso effettuato viene visitata come te, e deve esserci una finestra del browser aperta."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Controlla ora"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "Pagine monitorate: {0} su {1}"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Ancora nessun controllo."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "L’ultimo controllo non ha trovato nessuna finestra del browser in cui aprire le pagine."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "L’ultimo controllo non è riuscito."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Ultimo controllo: {0} · controllate: {1}, modificate: {2}"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Pagine controllate: {0}, modificate: {1}"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Nessuna pagina è ancora monitorata: fissa una pagina nella cronologia e scegli Monitora le modifiche."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "La cronologia è in pausa, quindi non viene controllato nulla."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"
   }
 }

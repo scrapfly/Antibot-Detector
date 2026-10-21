@@ -4688,13 +4688,13 @@
     "message": "以歷史記錄檢查"
   },
   "ruleHistoryCheckHint": {
-    "message": "查看每個模式和組合在多少個已儲存的網頁上相符。未儲存的編輯也會計入。"
+    "message": "顯示每個模式和組合分別符合您已儲存網頁中的幾個。未儲存的編輯也會計入。"
   },
   "ruleHistoryCheckRun": {
     "message": "檢查"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "{0} 個已儲存的網頁 · 此規則在其中 {1} 個網頁上被發現"
+    "message": "此規則符合 {0} 個已儲存網頁中的 {1} 個"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{1} 個網頁中的 {0} 個"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "只列出自訂規則和已編輯的規則。官方規則的說明由 Scrapfly 維護。"
   },
-  "statsToolsRetentionNote": {
-    "message": "「進階」會將擷取項目保留 30 分鐘，因此此分頁不受日期範圍影響。"
-  },
   "statsToolsSavedNow": {
     "message": "目前已儲存"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "擴充功能的背景部分已過期。請在擴充功能頁面重新載入該擴充功能，然後再試一次。"
+  },
+  "historyFiltersLabel": {
+    "message": "篩選歷史記錄"
+  },
+  "historyFilterPinned": {
+    "message": "已釘選"
+  },
+  "historyNoResults": {
+    "message": "沒有符合搜尋或篩選條件的項目。"
+  },
+  "historyClearFilters": {
+    "message": "清除篩選條件"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "「進階」會將擷取項目保留 {0}，因此此分頁會忽略日期範圍。"
+  },
+  "settingsStorageTitle": {
+    "message": "儲存空間"
+  },
+  "settingsStorageDesc": {
+    "message": "擴充功能在此瀏覽器中保存的內容。設定和規則無法從這裡清除。"
+  },
+  "storageCache": {
+    "message": "偵測快取"
+  },
+  "storageCaptures": {
+    "message": "工具擷取項目"
+  },
+  "storageHistory": {
+    "message": "歷史記錄"
+  },
+  "storageRules": {
+    "message": "規則與類別"
+  },
+  "storageSettings": {
+    "message": "設定"
+  },
+  "storageLogs": {
+    "message": "日誌"
+  },
+  "storageOther": {
+    "message": "其他"
+  },
+  "storageTotalFmt": {
+    "message": "已使用 {0} / {1}"
+  },
+  "storageClearRowFmt": {
+    "message": "清除 {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "清除偵測快取"
+  },
+  "storageClearCacheMessage": {
+    "message": "下次開啟網頁時會重新掃描。歷史記錄、規則和設定不受影響。"
+  },
+  "storageClearCapturesTitle": {
+    "message": "刪除工具擷取項目"
+  },
+  "storageClearCapturesMessage": {
+    "message": "進階工具儲存的所有內容都會被刪除。歷史記錄、規則和設定不受影響。"
+  },
+  "storageCacheCleared": {
+    "message": "偵測快取已清除"
+  },
+  "storageCapturesCleared": {
+    "message": "工具擷取項目已刪除"
+  },
+  "storageClearFailed": {
+    "message": "無法清除。請再試一次。"
+  },
+  "settingsSupportTitle": {
+    "message": "支援"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "診斷資訊"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "複製可附在錯誤回報中的摘要：版本、設定和數量。其中不含網站、位址或金鑰。"
+  },
+  "settingsCopyDiagnostics": {
+    "message": "複製診斷資訊"
+  },
+  "diagnosticsCopied": {
+    "message": "已複製診斷資訊"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "無法複製診斷資訊"
+  },
+  "settingsPresetsTitle": {
+    "message": "預設方案與重設"
+  },
+  "settingsPresetsDesc": {
+    "message": "一次變更多項設定。規則、歷史記錄、網站清單、語言和佈景主題一律不會變更。"
+  },
+  "presetPrivacyName": {
+    "message": "隱私"
+  },
+  "presetPrivacyDesc": {
+    "message": "在此裝置上保存較少資料，且不傳送任何資料。"
+  },
+  "presetDeveloperName": {
+    "message": "開發人員"
+  },
+  "presetDeveloperDesc": {
+    "message": "偵錯日誌和 JS API，供開發規則使用。"
+  },
+  "presetApply": {
+    "message": "套用"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "要套用 {0} 預設方案嗎？"
+  },
+  "presetConfirmIntro": {
+    "message": "這些設定將會變更："
+  },
+  "presetAlreadySet": {
+    "message": "這些設定已經套用。"
+  },
+  "presetApplied": {
+    "message": "已套用預設方案"
+  },
+  "presetHistoryOff": {
+    "message": "不記錄歷史記錄"
+  },
+  "presetBackupOff": {
+    "message": "自動歷史記錄備份已關閉"
+  },
+  "presetClearOnClose": {
+    "message": "關閉瀏覽器時清除歷史記錄"
+  },
+  "presetWebhookOff": {
+    "message": "Webhook 已關閉"
+  },
+  "presetNotificationsOff": {
+    "message": "通知已關閉"
+  },
+  "presetJsApiOff": {
+    "message": "JS API 已關閉"
+  },
+  "presetDebugOff": {
+    "message": "偵錯模式已關閉"
+  },
+  "presetCollectorOff": {
+    "message": "日誌收集器已關閉"
+  },
+  "presetDebugOn": {
+    "message": "偵錯模式已開啟"
+  },
+  "presetVerboseOn": {
+    "message": "詳細日誌已開啟"
+  },
+  "presetCollectorOn": {
+    "message": "日誌收集器已開啟"
+  },
+  "presetCollectorMax": {
+    "message": "日誌收集器最多保留 5000 行"
+  },
+  "presetJsApiOn": {
+    "message": "JS API 已開啟"
+  },
+  "settingsResetTitle": {
+    "message": "重設設定"
+  },
+  "settingsResetDesc": {
+    "message": "所有設定都會恢復為預設值。規則、歷史記錄、網站清單、語言和佈景主題會保留。"
+  },
+  "settingsResetBtn": {
+    "message": "重設…"
+  },
+  "settingsResetMessage": {
+    "message": "所有設定都會恢復為預設值。規則、歷史記錄、網站清單、語言和佈景主題不會變更。除非您選擇移除，否則 Webhook 和分享的詳細資料會保留。"
+  },
+  "settingsResetConnections": {
+    "message": "同時移除 Webhook 和分享連線"
+  },
+  "settingsResetConfirm": {
+    "message": "重設"
+  },
+  "settingsResetDone": {
+    "message": "設定已重設"
+  },
+  "settingsBackupTitle": {
+    "message": "備份與還原"
+  },
+  "settingsBackupItemTitle": {
+    "message": "全部"
+  },
+  "settingsBackupItemDesc": {
+    "message": "將設定、您自己的規則和歷史記錄合併為一個檔案。不包含 Webhook 和分享的詳細資料。"
+  },
+  "backupMakeBtn": {
+    "message": "備份"
+  },
+  "backupRestoreBtn": {
+    "message": "還原"
+  },
+  "backupDone": {
+    "message": "備份已儲存"
+  },
+  "backupFailed": {
+    "message": "無法建立備份"
+  },
+  "restoreTitle": {
+    "message": "還原備份"
+  },
+  "restoreHoldsFmt": {
+    "message": "由版本 {0} 於 {1} 建立。內容包含："
+  },
+  "restorePartSettings": {
+    "message": "設定"
+  },
+  "restorePartRulesFmt": {
+    "message": "您的規則（{0}）"
+  },
+  "restorePartHistoryFmt": {
+    "message": "歷史記錄（{0} 筆項目）"
+  },
+  "restoreModeLabel": {
+    "message": "規則與歷史記錄"
+  },
+  "restoreModeMerge": {
+    "message": "與現有內容合併"
+  },
+  "restoreModeReplace": {
+    "message": "取代現有內容"
+  },
+  "restoreConfirm": {
+    "message": "還原"
+  },
+  "restoreNothing": {
+    "message": "未選取任何項目。"
+  },
+  "restoreDoneFmt": {
+    "message": "已還原：{0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "無法還原 {0}。"
+  },
+  "restoreInvalid": {
+    "message": "此檔案不是這個擴充功能的備份。未變更任何內容。"
+  },
+  "restoreNewer": {
+    "message": "此備份是由較新版本的擴充功能建立的。請更新擴充功能後再試一次。"
+  },
+  "scanModeTitle": {
+    "message": "要掃描的網站"
+  },
+  "scanModeBlock": {
+    "message": "所有網站，但我略過的除外"
+  },
+  "scanModeAllow": {
+    "message": "僅限我選擇的網站"
+  },
+  "allowedDomainsTitle": {
+    "message": "已選擇的網站"
+  },
+  "settingsCardAllowDomains": {
+    "message": "僅掃描這些網站"
+  },
+  "allowedDomainsDesc": {
+    "message": "僅在這些網站及其子網域上執行偵測。其他地方一律暫停。"
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "尚未選擇任何網站：目前不會掃描任何內容"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "從清單中移除"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} 已在清單中"
+  },
+  "detectionNotOnList": {
+    "message": "偵測已暫停：此網站不在您的清單中"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "掃描此網站"
+  },
+  "detectionAllowlistHint": {
+    "message": "或前往「設定 → 偵測 → 要掃描的網站」管理清單。"
+  },
+  "siteAllowedFmt": {
+    "message": "已將 \"{0}\" 加入要掃描的網站"
+  },
+  "settingsUiErrScanMode": {
+    "message": "要掃描的網站必須是所有網站（略過的除外），或僅限已選擇的網站"
+  },
+  "settingsUiErrSiteList": {
+    "message": "網站清單只能包含網站名稱"
+  },
+  "webhookFilterTitle": {
+    "message": "僅在符合以下條件時傳送"
+  },
+  "webhookFilterDesc": {
+    "message": "網頁必須符合以下所有條件才會傳送。傳送的內容仍會列出在該網頁上找到的所有項目。"
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "最低信賴度 (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "類別"
+  },
+  "webhookCategoriesHint": {
+    "message": "全部不勾選表示任何類別都會傳送。"
+  },
+  "webhookDomainsLabel": {
+    "message": "僅限這些網站"
+  },
+  "webhookDomainsHint": {
+    "message": "每行一個，包含其子網域。留空表示所有網站。"
+  },
+  "webhookLogTitle": {
+    "message": "最近的傳送記錄"
+  },
+  "webhookLogDesc": {
+    "message": "最近 20 次嘗試：時間、哪個網頁、收到什麼回應。位址和傳送的內容一律不會保留。"
+  },
+  "webhookLogEmpty": {
+    "message": "尚未傳送任何內容。"
+  },
+  "webhookLogClear": {
+    "message": "清除"
+  },
+  "webhookLogSent": {
+    "message": "已傳送"
+  },
+  "webhookLogFailed": {
+    "message": "失敗"
+  },
+  "webhookLogSkipped": {
+    "message": "未傳送"
+  },
+  "webhookLogReasonSite": {
+    "message": "網站不在清單中"
+  },
+  "webhookLogReasonCategory": {
+    "message": "未選取該類別"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "低於最低信賴度"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "無回應"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "不允許此位址"
+  },
+  "webhookLogErrorConfig": {
+    "message": "方法無效"
+  },
+  "webhookLogTriggerCache": {
+    "message": "快取的網頁"
+  },
+  "webhookLogTriggerTest": {
+    "message": "測試"
+  },
+  "hooksOffGroupTitle": {
+    "message": "不使用 JS 掛鉤的網站"
+  },
+  "hooksOffLabel": {
+    "message": "在這些網站上關閉 JS 掛鉤"
+  },
+  "hooksOffHint": {
+    "message": "JS 掛鉤會監看網頁的瀏覽器 API 呼叫，以找出指紋辨識。若某個網站與它們不相容，請使用此選項：該網站的其他偵測仍會運作，但不會檢查指紋辨識。每行一個網站，包含子網域；重新載入網頁後生效。"
+  },
+  "hooksOffNote": {
+    "message": "此網站已關閉 JS 掛鉤，因此不會檢查指紋辨識。"
+  },
+  "hooksOffBadge": {
+    "message": "未檢查指紋辨識"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "在此網頁上找不到符合的反機器人或 CAPTCHA 訊號。此處已關閉 JS 掛鉤，因此未檢查指紋辨識。"
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "刪除僅有指紋辨識的網頁，超過"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "設為 0 時，這些網頁與其他網頁一樣保留，因此只適用「自動刪除」。已釘選的網頁永遠不會被刪除。"
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "自動釘選網頁"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "具有高難度防護的網頁"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "難度為「高」的反機器人或 CAPTCHA。指紋辨識絕不會因其難度而釘選網頁。"
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "使用以下防護的網頁"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "每行一種防護，名稱與「偵測」分頁中顯示的相同。"
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "僅限信賴度至少為 (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "最多會以這種方式釘選 {0} 個網頁。取消釘選其中一個後，它就不會再自動被釘選。"
+  },
+  "historyAutoPinnedTip": {
+    "message": "已自動釘選：清理歷史記錄時會保留。取消釘選後，它就不會再自動被釘選。"
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "釘選信賴度必須介於 0 到 100 之間"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "僅有指紋辨識的網頁必須保留 0 到 3650 天"
+  },
+  "settingsHistorySize": {
+    "message": "大小上限"
+  },
+  "settingsHistorySizeHint": {
+    "message": "較大的上限可保留更多網頁，但會占用更多磁碟空間。調低上限會移除未釘選的最舊網頁。"
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "調低歷史記錄的大小上限"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "歷史記錄目前使用 {0}，新的上限是 {1}。為符合上限，將移除未釘選的最舊網頁。"
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "調低上限"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "已使用 {0}，無上限"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "歷史記錄大小必須是 {0} MB 其中之一"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "尚未翻譯成所有語言的文字：{0}"
+  },
+  "ruleTranslateRule": {
+    "message": "翻譯規則"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "使用 Chrome 的裝置端翻譯工具，填入說明、模式和組合中缺少的翻譯。儲存前請檢查。"
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "正在翻譯 {0} 段文字…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "已填入 {0} 筆翻譯。儲存前請檢查。"
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "已填入 {0} 筆；有 {1} 筆無法在此翻譯。"
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "模式"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "組合"
+  },
+  "historyWatch": {
+    "message": "監看變更"
+  },
+  "historyUnwatch": {
+    "message": "停止監看"
+  },
+  "historyWatchTip": {
+    "message": "正在監看變更"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "上次檢查：{0}"
+  },
+  "historyWatchNever": {
+    "message": "尚未檢查"
+  },
+  "historyWatchStartedNotice": {
+    "message": "正在監看此網頁"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "正在監看此網頁。請在「設定 → 歷史記錄」中開啟「監看已釘選的網頁」，才會進行檢查。"
+  },
+  "historyWatchStoppedNotice": {
+    "message": "已不再監看此網頁"
+  },
+  "historyWatchLimitFmt": {
+    "message": "最多可監看 {0} 個網頁。請先停止監看其中一個。"
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "監看已釘選的網頁"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "檢查頻率"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "您釘選並選擇「監看變更」的網頁，會一次一個（最多 10 個）在背景分頁中重新開啟並掃描。網頁新增或失去反機器人或 CAPTCHA 防護時，會標示為「已變更」；若已開啟提醒，還會顯示通知。每次檢查都是以您瀏覽器的 Cookie 進行的真實造訪，因此已登入的網頁會以您的身分被造訪，而且必須開啟瀏覽器視窗。"
+  },
+  "settingsHistoryWatchNow": {
+    "message": "立即檢查"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "已監看 {0} / {1} 個網頁"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "尚未檢查。"
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "上次檢查時找不到可用來開啟網頁的瀏覽器視窗。"
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "上次檢查失敗。"
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "上次檢查：{0} · 已檢查 {1} 個，{2} 個有變更"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "已檢查 {0} 個網頁，{1} 個有變更"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "尚未監看任何網頁：請在「歷史記錄」中釘選網頁，然後選擇「監看變更」。"
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "歷史記錄已暫停，因此不會檢查任何項目。"
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "監看功能必須是關閉、每天或每週"
   }
 }

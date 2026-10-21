@@ -4688,13 +4688,13 @@
     "message": "Kontrollera mot Historik"
   },
   "ruleHistoryCheckHint": {
-    "message": "Se på hur många sparade sidor varje mönster och kombination matchar. Osparade ändringar räknas."
+    "message": "Visar på hur många av dina sparade sidor varje mönster och kombination matchar. Osparade ändringar räknas med."
   },
   "ruleHistoryCheckRun": {
     "message": "Kontrollera"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Sparade sidor: {0} · den här regeln hittades på {1} av dem"
+    "message": "Den här regeln matchar {1} av {0} sparade sidor"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "{0} av {1} sidor"
@@ -5479,9 +5479,6 @@
   "statsRulesMissingOwnNote": {
     "message": "Endast egna och redigerade regler listas. Beskrivningar av officiella regler underhålls av Scrapfly."
   },
-  "statsToolsRetentionNote": {
-    "message": "Avancerat sparar insamlingar i 30 minuter, så den här fliken ignorerar datumintervallet."
-  },
   "statsToolsSavedNow": {
     "message": "Sparade nu"
   },
@@ -5773,5 +5770,524 @@
   },
   "workerOutdatedHint": {
     "message": "Tilläggets bakgrundsdel är föråldrad. Ladda om tillägget på tilläggssidan och försök igen."
+  },
+  "historyFiltersLabel": {
+    "message": "Filtrera historik"
+  },
+  "historyFilterPinned": {
+    "message": "Fäst"
+  },
+  "historyNoResults": {
+    "message": "Inga poster matchar din sökning eller dina filter."
+  },
+  "historyClearFilters": {
+    "message": "Rensa filter"
+  },
+  "statsToolsRetentionNoteFmt": {
+    "message": "Avancerat sparar insamlingar i {0}, så den här fliken ignorerar datumintervallet."
+  },
+  "settingsStorageTitle": {
+    "message": "Lagring"
+  },
+  "settingsStorageDesc": {
+    "message": "Det som tillägget sparar i den här webbläsaren. Inställningar och regler kan inte rensas härifrån."
+  },
+  "storageCache": {
+    "message": "Upptäcktscache"
+  },
+  "storageCaptures": {
+    "message": "Verktygsinsamlingar"
+  },
+  "storageHistory": {
+    "message": "Historik"
+  },
+  "storageRules": {
+    "message": "Regler och kategorier"
+  },
+  "storageSettings": {
+    "message": "Inställningar"
+  },
+  "storageLogs": {
+    "message": "Loggar"
+  },
+  "storageOther": {
+    "message": "Övrigt"
+  },
+  "storageTotalFmt": {
+    "message": "{0} av {1} används"
+  },
+  "storageClearRowFmt": {
+    "message": "Rensa {0}"
+  },
+  "storageClearCacheTitle": {
+    "message": "Rensa upptäcktscachen"
+  },
+  "storageClearCacheMessage": {
+    "message": "Sidor skannas på nytt nästa gång du öppnar dem. Historik, regler och inställningar påverkas inte."
+  },
+  "storageClearCapturesTitle": {
+    "message": "Ta bort verktygsinsamlingar"
+  },
+  "storageClearCapturesMessage": {
+    "message": "Allt som de avancerade verktygen har sparat tas bort. Historik, regler och inställningar påverkas inte."
+  },
+  "storageCacheCleared": {
+    "message": "Upptäcktscachen rensades"
+  },
+  "storageCapturesCleared": {
+    "message": "Verktygsinsamlingarna togs bort"
+  },
+  "storageClearFailed": {
+    "message": "Det gick inte att rensa. Försök igen."
+  },
+  "settingsSupportTitle": {
+    "message": "Support"
+  },
+  "settingsDiagnosticsTitle": {
+    "message": "Diagnostik"
+  },
+  "settingsDiagnosticsDesc": {
+    "message": "Kopiera en sammanfattning för en felrapport: versioner, inställningar och antal. Den innehåller inga webbplatser, adresser eller nycklar."
+  },
+  "settingsCopyDiagnostics": {
+    "message": "Kopiera diagnostik"
+  },
+  "diagnosticsCopied": {
+    "message": "Diagnostiken kopierades"
+  },
+  "diagnosticsCopyFailed": {
+    "message": "Det gick inte att kopiera diagnostiken"
+  },
+  "settingsPresetsTitle": {
+    "message": "Förinställningar och återställning"
+  },
+  "settingsPresetsDesc": {
+    "message": "Ändra flera inställningar på en gång. Regler, historik, webbplatslistor, språk och tema ändras aldrig."
+  },
+  "presetPrivacyName": {
+    "message": "Integritet"
+  },
+  "presetPrivacyDesc": {
+    "message": "Sparar mindre på den här enheten och skickar inget utåt."
+  },
+  "presetDeveloperName": {
+    "message": "Utvecklare"
+  },
+  "presetDeveloperDesc": {
+    "message": "Felsökningsloggar och JS API, för arbete med regler."
+  },
+  "presetApply": {
+    "message": "Tillämpa"
+  },
+  "presetConfirmTitleFmt": {
+    "message": "Tillämpa förinställningen {0}?"
+  },
+  "presetConfirmIntro": {
+    "message": "De här inställningarna ändras:"
+  },
+  "presetAlreadySet": {
+    "message": "De här inställningarna är redan satta."
+  },
+  "presetApplied": {
+    "message": "Förinställningen tillämpades"
+  },
+  "presetHistoryOff": {
+    "message": "Historiken sparas inte"
+  },
+  "presetBackupOff": {
+    "message": "Automatiska säkerhetskopior av historiken är av"
+  },
+  "presetClearOnClose": {
+    "message": "Historiken rensas när webbläsaren stängs"
+  },
+  "presetWebhookOff": {
+    "message": "Webhooken är av"
+  },
+  "presetNotificationsOff": {
+    "message": "Aviseringar är av"
+  },
+  "presetJsApiOff": {
+    "message": "JS API är av"
+  },
+  "presetDebugOff": {
+    "message": "Felsökningsläget är av"
+  },
+  "presetCollectorOff": {
+    "message": "Loggsamlaren är av"
+  },
+  "presetDebugOn": {
+    "message": "Felsökningsläget är på"
+  },
+  "presetVerboseOn": {
+    "message": "Utförliga loggar är på"
+  },
+  "presetCollectorOn": {
+    "message": "Loggsamlaren är på"
+  },
+  "presetCollectorMax": {
+    "message": "Loggsamlaren sparar upp till 5000 rader"
+  },
+  "presetJsApiOn": {
+    "message": "JS API är på"
+  },
+  "settingsResetTitle": {
+    "message": "Återställ inställningar"
+  },
+  "settingsResetDesc": {
+    "message": "Alla inställningar går tillbaka till standardvärdet. Regler, historik, webbplatslistor, språk och tema behålls."
+  },
+  "settingsResetBtn": {
+    "message": "Återställ…"
+  },
+  "settingsResetMessage": {
+    "message": "Alla inställningar går tillbaka till standardvärdet. Regler, historik, webbplatslistor, språk och tema ändras inte. Uppgifter om webhook och delning behålls om du inte väljer att ta bort dem."
+  },
+  "settingsResetConnections": {
+    "message": "Ta även bort webhook- och delningsanslutningarna"
+  },
+  "settingsResetConfirm": {
+    "message": "Återställ"
+  },
+  "settingsResetDone": {
+    "message": "Inställningarna återställdes"
+  },
+  "settingsBackupTitle": {
+    "message": "Säkerhetskopiering och återställning"
+  },
+  "settingsBackupItemTitle": {
+    "message": "Allt"
+  },
+  "settingsBackupItemDesc": {
+    "message": "Inställningar, dina egna regler och historik i en fil. Uppgifter om webhook och delning ingår inte."
+  },
+  "backupMakeBtn": {
+    "message": "Säkerhetskopiera"
+  },
+  "backupRestoreBtn": {
+    "message": "Återställ"
+  },
+  "backupDone": {
+    "message": "Säkerhetskopian sparades"
+  },
+  "backupFailed": {
+    "message": "Det gick inte att skapa säkerhetskopian"
+  },
+  "restoreTitle": {
+    "message": "Återställ en säkerhetskopia"
+  },
+  "restoreHoldsFmt": {
+    "message": "Skapad med version {0} den {1}. Den innehåller:"
+  },
+  "restorePartSettings": {
+    "message": "Inställningar"
+  },
+  "restorePartRulesFmt": {
+    "message": "Dina regler ({0})"
+  },
+  "restorePartHistoryFmt": {
+    "message": "Historik ({0} poster)"
+  },
+  "restoreModeLabel": {
+    "message": "Regler och historik"
+  },
+  "restoreModeMerge": {
+    "message": "Sammanfoga med det du har"
+  },
+  "restoreModeReplace": {
+    "message": "Ersätt det du har"
+  },
+  "restoreConfirm": {
+    "message": "Återställ"
+  },
+  "restoreNothing": {
+    "message": "Inget är markerat."
+  },
+  "restoreDoneFmt": {
+    "message": "Återställt: {0}"
+  },
+  "restorePartFailedFmt": {
+    "message": "Det gick inte att återställa {0}."
+  },
+  "restoreInvalid": {
+    "message": "Filen är inte en säkerhetskopia av det här tillägget. Inget har ändrats."
+  },
+  "restoreNewer": {
+    "message": "Säkerhetskopian skapades av en nyare version av tillägget. Uppdatera tillägget och försök igen."
+  },
+  "scanModeTitle": {
+    "message": "Webbplatser att skanna"
+  },
+  "scanModeBlock": {
+    "message": "Alla webbplatser utom de jag hoppar över"
+  },
+  "scanModeAllow": {
+    "message": "Bara de webbplatser jag väljer"
+  },
+  "allowedDomainsTitle": {
+    "message": "Valda webbplatser"
+  },
+  "settingsCardAllowDomains": {
+    "message": "Skanna bara de här webbplatserna"
+  },
+  "allowedDomainsDesc": {
+    "message": "Upptäckten körs bara på de här webbplatserna och deras underdomäner. Överallt annars är den pausad."
+  },
+  "settingsUiAllowlistEmpty": {
+    "message": "Inga webbplatser valda: inget skannas än"
+  },
+  "actionRemoveFromAllowlist": {
+    "message": "Ta bort från listan"
+  },
+  "domainAlreadyAllowedFmt": {
+    "message": "{0} finns redan i listan"
+  },
+  "detectionNotOnList": {
+    "message": "Upptäckten är pausad: webbplatsen finns inte i din lista"
+  },
+  "detectionAllowSiteBtn": {
+    "message": "Skanna den här webbplatsen"
+  },
+  "detectionAllowlistHint": {
+    "message": "Eller gå till Inställningar → Upptäckt → Webbplatser att skanna för att hantera listan."
+  },
+  "siteAllowedFmt": {
+    "message": "\"{0}\" lades till i webbplatserna att skanna"
+  },
+  "settingsUiErrScanMode": {
+    "message": "Webbplatser att skanna måste vara alla webbplatser utom de som hoppas över, eller bara de valda webbplatserna"
+  },
+  "settingsUiErrSiteList": {
+    "message": "En lista med webbplatser får bara innehålla webbplatsnamn"
+  },
+  "webhookFilterTitle": {
+    "message": "Skicka bara när"
+  },
+  "webhookFilterDesc": {
+    "message": "En sida skickas bara om alla dessa villkor är uppfyllda. Payloaden listar fortfarande allt som hittades på den."
+  },
+  "webhookMinConfidenceLabel": {
+    "message": "Lägsta säkerhet (%)"
+  },
+  "webhookCategoriesLabel": {
+    "message": "Kategorier"
+  },
+  "webhookCategoriesHint": {
+    "message": "Lämna alla omarkerade för att skicka för vilken kategori som helst."
+  },
+  "webhookDomainsLabel": {
+    "message": "Bara de här webbplatserna"
+  },
+  "webhookDomainsHint": {
+    "message": "En per rad, med deras underdomäner. Tomt betyder alla webbplatser."
+  },
+  "webhookLogTitle": {
+    "message": "Senaste leveranser"
+  },
+  "webhookLogDesc": {
+    "message": "De senaste 20 försöken: när, vilken sida, vad som kom tillbaka. Adresser och payloads sparas aldrig."
+  },
+  "webhookLogEmpty": {
+    "message": "Inget skickat än."
+  },
+  "webhookLogClear": {
+    "message": "Rensa"
+  },
+  "webhookLogSent": {
+    "message": "Skickades"
+  },
+  "webhookLogFailed": {
+    "message": "Misslyckades"
+  },
+  "webhookLogSkipped": {
+    "message": "Skickades inte"
+  },
+  "webhookLogReasonSite": {
+    "message": "webbplatsen finns inte i listan"
+  },
+  "webhookLogReasonCategory": {
+    "message": "kategorin är inte vald"
+  },
+  "webhookLogReasonConfidence": {
+    "message": "under lägsta säkerhet"
+  },
+  "webhookLogErrorNetwork": {
+    "message": "inget svar"
+  },
+  "webhookLogErrorBlocked": {
+    "message": "adressen är inte tillåten"
+  },
+  "webhookLogErrorConfig": {
+    "message": "ogiltig metod"
+  },
+  "webhookLogTriggerCache": {
+    "message": "cachad sida"
+  },
+  "webhookLogTriggerTest": {
+    "message": "test"
+  },
+  "hooksOffGroupTitle": {
+    "message": "Webbplatser utan JS-hooks"
+  },
+  "hooksOffLabel": {
+    "message": "Stäng av JS-hooks på de här webbplatserna"
+  },
+  "hooksOffHint": {
+    "message": "JS-hooks bevakar en sidas anrop till webbläsarens API:er för att hitta fingerprinting. Använd det för en webbplats som krånglar med dem: dess övriga upptäckter fungerar, men fingerprinting kontrolleras inte. En webbplats per rad, underdomäner ingår; läs in sidan igen för att tillämpa."
+  },
+  "hooksOffNote": {
+    "message": "JS-hooks är av på den här webbplatsen, så fingerprinting kontrolleras inte."
+  },
+  "hooksOffBadge": {
+    "message": "Fingerprinting kontrolleras inte"
+  },
+  "hooksOffEmptyDesc": {
+    "message": "Inga matchande anti-bot- eller CAPTCHA-signaler hittades på den här sidan. JS-hooks är av här, så fingerprinting kontrollerades inte."
+  },
+  "settingsHistoryFingerprintDays": {
+    "message": "Ta bort sidor med bara fingerprinting efter"
+  },
+  "settingsHistoryFingerprintDaysHint": {
+    "message": "0 behåller dem som alla andra sidor, så för dem gäller bara Ta bort automatiskt. Fästa sidor tas aldrig bort."
+  },
+  "settingsGroupHistoryAutoPin": {
+    "message": "Fäst sidor automatiskt"
+  },
+  "settingsHistoryAutoPinHard": {
+    "message": "Sidor med ett svårt skydd"
+  },
+  "settingsHistoryAutoPinHardDesc": {
+    "message": "Ett anti-bot- eller CAPTCHA-skydd med hög svårighet. Fingerprinting fäster aldrig en sida på grund av svårigheten."
+  },
+  "settingsHistoryAutoPinVendors": {
+    "message": "Sidor som skyddas av"
+  },
+  "settingsHistoryAutoPinVendorsHint": {
+    "message": "Ett skydd per rad, med de namn som fliken Upptäckt använder."
+  },
+  "settingsHistoryAutoPinMinConfidence": {
+    "message": "Bara från en säkerhet på (%)"
+  },
+  "settingsHistoryAutoPinNote": {
+    "message": "Upp till {0} sidor fästs på det här sättet. Lossa en sida så fästs den aldrig mer av sig själv."
+  },
+  "historyAutoPinnedTip": {
+    "message": "Fäst automatiskt: behålls när historiken rensas. Lossa sidan så fästs den aldrig mer av sig själv."
+  },
+  "settingsUiErrAutoPinConfidence": {
+    "message": "Säkerheten för att fästa måste vara mellan 0 och 100"
+  },
+  "settingsUiErrFingerprintDays": {
+    "message": "Sidor med bara fingerprinting måste sparas mellan 0 och 3650 dagar"
+  },
+  "settingsHistorySize": {
+    "message": "Storleksgräns"
+  },
+  "settingsHistorySizeHint": {
+    "message": "En större gräns sparar fler sidor och tar mer plats på disken. När du sänker gränsen tas de äldsta sidorna som inte är fästa bort."
+  },
+  "settingsHistorySizeLowerTitle": {
+    "message": "Sänk historikens storlek"
+  },
+  "settingsHistorySizeLowerMessage": {
+    "message": "Historiken använder {0} och den nya gränsen är {1}. De äldsta sidorna som inte är fästa tas bort så att den ryms."
+  },
+  "settingsHistorySizeLowerConfirm": {
+    "message": "Sänk storleken"
+  },
+  "storageTotalUnlimitedFmt": {
+    "message": "{0} används, ingen gräns"
+  },
+  "settingsUiErrHistorySizeFmt": {
+    "message": "Historikens storlek måste vara något av: {0} MB"
+  },
+  "ruleTranslateBarFmt": {
+    "message": "Texter som ännu inte är översatta till alla språk: {0}"
+  },
+  "ruleTranslateRule": {
+    "message": "Översätt regeln"
+  },
+  "ruleTranslateRuleHint": {
+    "message": "Fyller i de översättningar som saknas för beskrivningen, mönstren och kombinationerna med Chromes översättare på enheten. Kontrollera dem innan du sparar."
+  },
+  "ruleTranslateRuleWorkingFmt": {
+    "message": "Översätter {0} texter…"
+  },
+  "ruleTranslateRuleDoneFmt": {
+    "message": "Fyllde i {0} översättningar. Kontrollera dem innan du sparar."
+  },
+  "ruleTranslateRulePartialFmt": {
+    "message": "Fyllde i {0}; {1} kunde inte översättas här."
+  },
+  "ruleHistoryCheckPatterns": {
+    "message": "Mönster"
+  },
+  "ruleHistoryCheckCombinations": {
+    "message": "Kombinationer"
+  },
+  "historyWatch": {
+    "message": "Bevaka ändringar"
+  },
+  "historyUnwatch": {
+    "message": "Sluta bevaka"
+  },
+  "historyWatchTip": {
+    "message": "Bevakas för ändringar"
+  },
+  "historyWatchCheckedFmt": {
+    "message": "Senast kontrollerad {0}"
+  },
+  "historyWatchNever": {
+    "message": "Inte kontrollerad än"
+  },
+  "historyWatchStartedNotice": {
+    "message": "Bevakar den här sidan"
+  },
+  "historyWatchStartedOffNotice": {
+    "message": "Bevakar den här sidan. Slå på Bevaka fästa sidor under Inställningar → Historik för att sidan ska kontrolleras."
+  },
+  "historyWatchStoppedNotice": {
+    "message": "Bevakar inte längre den här sidan"
+  },
+  "historyWatchLimitFmt": {
+    "message": "Du kan bevaka upp till {0} sidor. Sluta först bevaka en annan sida."
+  },
+  "settingsGroupHistoryWatch": {
+    "message": "Bevaka fästa sidor"
+  },
+  "settingsHistoryWatchFrequency": {
+    "message": "Kontrollera dem"
+  },
+  "settingsHistoryWatchHint": {
+    "message": "Sidor som du fäster och markerar med Bevaka ändringar öppnas på nytt i en bakgrundsflik, en i taget (upp till 10), och skannas. En sida som får eller förlorar ett anti-bot- eller CAPTCHA-skydd markeras som Ändrad, med en avisering när varningar är på. Varje kontroll är ett riktigt besök med webbläsarens cookies, så en inloggad sida besöks som du, och ett webbläsarfönster måste vara öppet."
+  },
+  "settingsHistoryWatchNow": {
+    "message": "Kontrollera nu"
+  },
+  "settingsHistoryWatchCountFmt": {
+    "message": "{0} av {1} sidor bevakas"
+  },
+  "settingsHistoryWatchNever": {
+    "message": "Ingen kontroll än."
+  },
+  "settingsHistoryWatchNoWindow": {
+    "message": "Vid den senaste kontrollen fanns inget webbläsarfönster att öppna sidor i."
+  },
+  "settingsHistoryWatchFailed": {
+    "message": "Den senaste kontrollen misslyckades."
+  },
+  "settingsHistoryWatchLastFmt": {
+    "message": "Senaste kontroll: {0} · {1} kontrollerade, {2} ändrade"
+  },
+  "settingsHistoryWatchDoneFmt": {
+    "message": "Kontrollerade {0} sidor, {1} ändrade"
+  },
+  "settingsHistoryWatchNothing": {
+    "message": "Ingen sida bevakas än: fäst en sida i Historik och välj Bevaka ändringar."
+  },
+  "settingsHistoryWatchPaused": {
+    "message": "Historiken är pausad, så inget kontrolleras."
+  },
+  "settingsUiErrHistoryWatch": {
+    "message": "Bevakningen måste vara av, dagligen eller veckovis"
   }
 }
