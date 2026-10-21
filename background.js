@@ -51,6 +51,7 @@ importScripts(
     './modules/detection/public-summary.js',
     './modules/core/webhook-filter.js',
     './modules/core/webhook-log.js',
+    './modules/core/webhook-retry.js',
     './modules/settings/settings-runtime.js',
     './modules/settings/webhook-runtime.js',
     // Interceptors

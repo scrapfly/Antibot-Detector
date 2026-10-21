@@ -52,6 +52,7 @@
     "webhook": {
       "enableWebhook": false,
       "webhookOnCache": false,
+      "webhookRetry": true,
       "webhookMinConfidence": 0,
       "webhookCategories": [],
       "webhookDomains": [],

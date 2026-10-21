@@ -9,13 +9,14 @@ const WebhookBody = require('../modules/core/webhook-body.js');
 // Settings → Detection → Webhooks on the page: the "Send only when" fields, the Recent deliveries list and the line the
 // Test button leaves in it. A small stand-in for the DOM: only what these functions touch.
 class Element {
-  constructor(tag) { this.tag = tag; this.children = []; this.className = ''; this.dataset = {}; this.disabled = false; this._text = ''; }
+  constructor(tag) { this.tag = tag; this.children = []; this.className = ''; this.dataset = {}; this.disabled = false; this._text = ''; this.handlers = []; }
+  addEventListener(type, handler) { this.handlers.push({ type, handler }); }
   append(...nodes) { this.children.push(...nodes); }
   get textContent() { return this._text; }
   set textContent(value) { this._text = value; if (value === '') this.children = []; }
 }
 
-function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {}) {
+function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl, runtimeReply } = {}) {
   const sent = [], listeners = [], notifications = [];
   const store = { ...stored };
   const fields = {
@@ -40,7 +41,7 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
     UrlUtils: { getFaviconUrl: () => '' },
     Utils: { getSettings: async () => ({ webhook }) },
     SettingsUI: {},
-    FormatUtils: { t: (key, fallback) => translations[key] || fallback, formatDateTime: (time) => `at ${new Date(time).toISOString()}`, categoryIconSvg: key => `<svg data-icon="${key}"></svg>`,
+    FormatUtils: { t: (key, fallback, ...args) => (translations[key] || fallback).replace(/\{(\d)\}/g, (_, i) => args[i]), uiLocale: () => 'en', formatDateTime: (time) => `at ${new Date(time).toISOString()}`, categoryIconSvg: key => `<svg data-icon="${key}"></svg>`,
       copyToClipboard: async (text, options) => { copied.push({ text, options }); return true; } },
     NotificationHelper: { success: text => notifications.push(text), error: text => notifications.push(text), info: text => notifications.push(text) },
     document: {
@@ -50,7 +51,7 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
       createTextNode: text => ({ text })
     },
     chrome: {
-      runtime: { sendMessage(message, callback) { sent.push(message); if (callback) callback({ status: 'ok' }); }, lastError: undefined },
+      runtime: { sendMessage(message, callback) { sent.push(message); const answer = runtimeReply ? runtimeReply(message) : { status: 'ok' }; if (callback) { callback(answer); return undefined; } return Promise.resolve(answer); }, lastError: undefined },
       storage: {
         local: { async get(key) { return key in store ? { [key]: store[key] } : {}; } },
         onChanged: { addListener: listener => listeners.push(listener) }
@@ -422,3 +423,81 @@ test('the Settings page puts the mirror behind the template field, hidden from s
   assert.ok(editor, 'the mirror comes first, so the textarea is drawn over it');
 });
 
+// ---- Retry failed deliveries ------------------------------------------------------------------------------------
+
+const failed = (extra = {}) => ({ t: 5, page: 'shop.example', outcome: 'failed', status: 503, trigger: 'scan', ...extra });
+
+test('a retry line says which retry it is, and a planned automatic retry says when', () => {
+  const h = harness();
+  const line = (entry, options) => h.SettingsUI.webhookLogLine(entry, options);
+  assert.equal(line({ t: 0, page: 'a.example', outcome: 'sent', status: 200, trigger: 'retry', attempt: 2 }).text, 'Sent 200 · retry 1');
+  assert.equal(line({ t: 0, page: 'a.example', outcome: 'failed', status: 503, trigger: 'retry', attempt: 4 }).text, 'Failed 503 · retry 3');
+  const now = Date.UTC(2026, 9, 21, 12);
+  assert.match(line(failed({ id: 'abc', retryAt: now + 60000 }), { held: true, now }).text, /^Failed 503 · retrying at /);
+  assert.equal(line(failed({ id: 'abc', retryAt: now + 60000 }), { held: false, now }).text, 'Failed 503', 'no longer held: nothing is planned');
+  assert.equal(line(failed({ id: 'abc', retryAt: now - 1 }), { held: true, now }).text, 'Failed 503', 'the time has passed');
+});
+
+test('Retry is on the newest failed line of each delivery the worker still holds, and nowhere else', () => {
+  const h = harness();
+  const list = h.fields['#webhookLogList'];
+  const entries = [failed({ t: 1, id: 'aaa' }), failed({ t: 2, id: 'bbb' }), { t: 3, page: 'x.example', outcome: 'sent', status: 200, trigger: 'scan' },
+    failed({ t: 4, id: 'aaa', trigger: 'retry', attempt: 2 }), failed({ t: 5, id: 'zzz' }), { t: 6, page: 'y.example', outcome: 'skipped', reason: 'site', trigger: 'scan' }];
+  h.SettingsUI.renderWebhookLog(entries, { aaa: {}, bbb: {} });
+  const rows = list.children.filter(node => node.className.startsWith('webhook-log-item'));
+  const withButton = rows.filter(row => row.children.some(c => c.className.includes('webhook-log-retry')));
+  // newest first: the retry line of aaa has the button, the older aaa line does not; bbb has one; zzz is not held
+  assert.deepEqual(withButton.map(row => row.children.find(c => c.className === 'webhook-log-page').textContent + ':' + row.children.find(c => c.className.includes('webhook-log-retry')).dataset.id), ['shop.example:aaa', 'shop.example:bbb']);
+  assert.ok(withButton.every(row => row.className.includes('has-retry')));
+  const button = withButton[0].children.find(c => c.className.includes('webhook-log-retry'));
+  assert.equal(button.textContent, 'Retry');
+  assert.equal(button.tag, 'button');
+  assert.equal(button.type, 'button');
+});
+
+test('when the worker lets a delivery go, its button goes with it, without the entries being read again', () => {
+  const h = harness();
+  const list = h.fields['#webhookLogList'];
+  h.SettingsUI.renderWebhookLog([failed({ id: 'aaa' })], { aaa: {} });
+  const buttons = () => list.children.flatMap(row => row.children || []).filter(c => (c.className || '').includes('webhook-log-retry')).length;
+  assert.equal(buttons(), 1);
+  h.SettingsUI.renderWebhookHeld({});
+  assert.equal(buttons(), 0);
+  assert.equal(list.children.length, 1, 'the line stays');
+});
+
+test('the held deliveries are read from storage.session when the browser has it, and followed', async () => {
+  const h = harness({ stored: { scrapfly_webhook_log: [failed({ id: 'aaa' })] } });
+  h.context.chrome.storage.session = { async get(key) { return { [key]: { aaa: { id: 'aaa' } } }; } };
+  await h.SettingsUI.refreshWebhookLog();
+  const list = h.fields['#webhookLogList'];
+  const buttons = () => list.children.flatMap(row => row.children || []).filter(c => (c.className || '').includes('webhook-log-retry')).length;
+  assert.equal(buttons(), 1);
+  h.listeners[0]({ session_webhook_held: { newValue: {} } }, 'session');
+  assert.equal(buttons(), 0);
+});
+
+test('the Retry button asks the worker once, and says what came of it', async () => {
+  for (const [outcome, text] of [['sent', 'Delivered'], ['failed', 'Failed again. It stays in the list, so you can retry it.'], ['gone', 'This delivery can no longer be retried.'], ['off', 'Turn the webhook on, with an address, to retry.']]) {
+    const h = harness({ runtimeReply: () => ({ status: 'ok', outcome }) });
+    const button = Object.assign(new Element('button'), { dataset: { id: 'aaa' }, isConnected: true });
+    button.textContent = 'Retry';
+    await h.SettingsUI.retryWebhookDelivery(button);
+    assert.deepEqual(h.plain(h.sent), [{ type: 'WEBHOOK_RETRY', id: 'aaa' }]);
+    assert.deepEqual(h.notifications, [text], outcome);
+    assert.equal(button.disabled, false);
+    assert.equal(button.textContent, 'Retry');
+  }
+  const refused = harness({ runtimeReply: () => ({ status: 'error' }) });
+  const b = Object.assign(new Element('button'), { dataset: { id: 'x' }, isConnected: true });
+  await refused.SettingsUI.retryWebhookDelivery(b);
+  assert.deepEqual(refused.notifications, ['This delivery can no longer be retried.']);
+});
+
+test('one click listener on the list, however often Settings is populated', () => {
+  const h = harness();
+  const list = h.fields['#webhookLogList'];
+  h.SettingsUI._setupWebhookLogListeners.call(h.ui());
+  h.SettingsUI._setupWebhookLogListeners.call(h.ui());
+  assert.equal(list.handlers.filter(x => x.type === 'click').length, 1);
+});

@@ -164,9 +164,19 @@ SettingsUI.copyWebhookSecret = async function() {
     await FormatUtils.copyToClipboard(secret);
 };
 
-/** One line of "Recent deliveries": when, the page, and what came of it. */
-SettingsUI.webhookLogLine = function(entry) {
-    const text = (key, fallback) => FormatUtils.t(key, fallback);
+/** The time of day of an automatic retry, in the UI language. */
+SettingsUI.webhookRetryTime = function(ms) {
+    try {
+      return new Intl.DateTimeFormat(FormatUtils.uiLocale() || undefined, { timeStyle: 'short' }).format(new Date(ms));
+    } catch (_) {
+      return new Date(ms).toLocaleTimeString();
+    }
+};
+
+/** One line of "Recent deliveries": when, the page, and what came of it. `now` and `held` tell whether a retry is still planned. */
+SettingsUI.webhookLogLine = function(entry, options = {}) {
+    const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const now = Number.isFinite(options.now) ? options.now : Date.now();
     const outcome = { sent: text('webhookLogSent', 'Sent'), failed: text('webhookLogFailed', 'Failed'), skipped: text('webhookLogSkipped', 'Not sent') }[entry.outcome];
     const why = entry.reason ? { site: text('webhookLogReasonSite', 'site not on the list'), category: text('webhookLogReasonCategory', 'category not selected'), confidence: text('webhookLogReasonConfidence', 'below the minimum confidence') }[entry.reason]
       : entry.error ? { network: text('webhookLogErrorNetwork', 'no answer'), blocked: text('webhookLogErrorBlocked', 'address not allowed'), config: text('webhookLogErrorConfig', 'invalid method') }[entry.error] : '';
@@ -174,14 +184,37 @@ SettingsUI.webhookLogLine = function(entry) {
     if (entry.ms !== undefined) parts.push(`${entry.ms} ms`);
     if (entry.trigger === 'cache') parts.push(text('webhookLogTriggerCache', 'cached page'));
     if (entry.trigger === 'test') parts.push(text('webhookLogTriggerTest', 'test'));
+    if (entry.trigger === 'retry') parts.push(text('webhookLogTriggerRetryFmt', 'retry {0}', Math.max(1, (entry.attempt || 2) - 1)));
+    // Only while the delivery is still held does the automatic retry still happen
+    if (options.held === true && entry.retryAt && entry.retryAt > now) parts.push(text('webhookLogRetryAtFmt', 'retrying at {0}', SettingsUI.webhookRetryTime(entry.retryAt)));
     return { when: FormatUtils.formatDateTime(entry.t), page: entry.page, outcome: entry.outcome, text: parts.join(' · ') };
 };
 
-SettingsUI.renderWebhookLog = function(entries) {
+SettingsUI.WEBHOOK_HELD_KEY = 'session_webhook_held';
+SettingsUI._webhookLogState = { entries: [], held: {} };
+
+/** The list for these entries (none when the record was cleared). `held`: the deliveries the worker holds; left as it was when omitted. */
+SettingsUI.renderWebhookLog = function(entries, held) {
+    SettingsUI._webhookLogState.entries = entries;
+    if (held !== undefined) SettingsUI._webhookLogState.held = held || {};
+    SettingsUI._drawWebhookLog();
+};
+
+/** A delivery was retried or expired: the same entries, with the new held set. */
+SettingsUI.renderWebhookHeld = function(held) {
+    SettingsUI._webhookLogState.held = held || {};
+    SettingsUI._drawWebhookLog();
+};
+
+SettingsUI._drawWebhookLog = function() {
     const list = document.querySelector('#webhookLogList');
     if (!list) return;
+    const entries = SettingsUI._webhookLogState.entries;
+    const heldIds = SettingsUI._webhookLogState.held;
     list.textContent = '';
     const kept = (Array.isArray(entries) ? entries : []).map(WebhookLog.clean).filter(Boolean).reverse();
+    // Retry belongs to the newest line of a delivery the worker still holds
+    const retryable = new Set();
     if (!kept.length) {
       const empty = document.createElement('li');
       empty.className = 'webhook-log-empty';
@@ -189,9 +222,12 @@ SettingsUI.renderWebhookLog = function(entries) {
       list.append(empty);
     }
     for (const entry of kept) {
-      const line = SettingsUI.webhookLogLine(entry);
+      const isHeld = !!(entry.id && heldIds[entry.id]);
+      const canRetry = entry.outcome === 'failed' && isHeld && !retryable.has(entry.id);
+      if (canRetry) retryable.add(entry.id);
+      const line = SettingsUI.webhookLogLine(entry, { held: canRetry });
       const item = document.createElement('li');
-      item.className = `webhook-log-item webhook-log-item--${line.outcome}`;
+      item.className = `webhook-log-item webhook-log-item--${line.outcome}${canRetry ? ' has-retry' : ''}`;
       const when = document.createElement('span');
       when.className = 'webhook-log-when';
       when.textContent = line.when;
@@ -203,6 +239,14 @@ SettingsUI.renderWebhookLog = function(entries) {
       text.className = 'webhook-log-text';
       text.textContent = line.text;
       item.append(when, page, text);
+      if (canRetry) {
+        const retry = document.createElement('button');
+        retry.type = 'button';
+        retry.className = 'webhook-link-btn webhook-log-retry';
+        retry.dataset.id = entry.id;
+        retry.textContent = FormatUtils.t('webhookLogRetry', 'Retry');
+        item.append(retry);
+      }
       list.append(item);
     }
     const clear = document.querySelector('#webhookLogClearBtn');
@@ -212,18 +256,52 @@ SettingsUI.renderWebhookLog = function(entries) {
 SettingsUI.refreshWebhookLog = async function() {
     try {
       const stored = await chrome.storage.local.get('scrapfly_webhook_log');
-      SettingsUI.renderWebhookLog(stored.scrapfly_webhook_log);
+      // The deliveries the worker still holds for a retry live in memory (storage.session), when this browser has it
+      const heldStored = chrome.storage.session ? await chrome.storage.session.get(SettingsUI.WEBHOOK_HELD_KEY).catch(() => ({})) : {};
+      SettingsUI.renderWebhookLog(stored.scrapfly_webhook_log, heldStored[SettingsUI.WEBHOOK_HELD_KEY] || {});
     } catch (_) { /* the list stays as it was */ }
-    // New lines (a page was sent while Settings is open) show up without reopening
+    // New lines (a page was sent while Settings is open) and held deliveries (retried, expired) show up without reopening
     if (!SettingsUI._webhookLogWatching && chrome.storage && chrome.storage.onChanged) {
       SettingsUI._webhookLogWatching = true;
       chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'local' && changes.scrapfly_webhook_log) SettingsUI.renderWebhookLog(changes.scrapfly_webhook_log.newValue);
+        if (area === 'session' && changes[SettingsUI.WEBHOOK_HELD_KEY]) SettingsUI.renderWebhookHeld(changes[SettingsUI.WEBHOOK_HELD_KEY].newValue || {});
       });
     }
 };
 
+/** The Retry button of a failed delivery: the worker sends it again now, from the current webhook settings. */
+SettingsUI.retryWebhookDelivery = async function(button) {
+    const id = button && button.dataset ? button.dataset.id : '';
+    if (!id) return;
+    const label = button.textContent;
+    button.disabled = true;
+    button.textContent = FormatUtils.t('webhookLogRetrying', 'Retrying…');
+    let outcome = 'error';
+    try {
+      const response = await chrome.runtime.sendMessage({ type: WorkerMessages.WEBHOOK_RETRY, id });
+      outcome = response && response.status === 'ok' ? response.outcome : 'error';
+    } catch (_) { /* reported below */ }
+    const notes = {
+      sent: () => NotificationHelper.success(FormatUtils.t('webhookRetrySent', 'Delivered')),
+      failed: () => NotificationHelper.error(FormatUtils.t('webhookRetryFailed', 'Failed again. It stays in the list, so you can retry it.')),
+      gone: () => NotificationHelper.error(FormatUtils.t('webhookRetryGone', 'This delivery can no longer be retried.')),
+      off: () => NotificationHelper.error(FormatUtils.t('webhookRetryOff', 'Turn the webhook on, with an address, to retry.'))
+    };
+    (notes[outcome] || notes.gone)();
+    // The list is redrawn by the change the retry wrote; a button that is still here is usable again
+    if (button.isConnected) { button.disabled = false; button.textContent = label; }
+};
+
 SettingsUI._setupWebhookLogListeners = function() {
+    const list = document.querySelector('#webhookLogList');
+    if (list && !list.dataset.retryBound) {
+      list.dataset.retryBound = '1';
+      list.addEventListener('click', (event) => {
+        const button = event.target.closest && event.target.closest('.webhook-log-retry');
+        if (button) SettingsUI.retryWebhookDelivery(button);
+      });
+    }
     const clear = document.querySelector('#webhookLogClearBtn');
     if (clear && !clear.dataset.bound) {
       clear.dataset.bound = '1';

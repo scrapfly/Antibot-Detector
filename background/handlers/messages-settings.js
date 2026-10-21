@@ -58,6 +58,18 @@ function registerSettingsHandlers(registry, context) {
         return true;
     };
 
+    // Recent deliveries → Retry: a failed delivery the worker still holds is sent again now, from the current webhook settings
+    registry[WorkerMessages.WEBHOOK_RETRY] = function({ request, sender, sendResponse }) {
+        if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
+        const id = request && typeof request.id === 'string' ? request.id : '';
+        if (!/^[a-z0-9]{1,24}$/.test(id)) { sendResponse({ status: 'error' }); return false; }
+        SettingsRuntime.retryWebhook(id, { manual: true }).then(
+            (result) => sendResponse({ status: 'ok', outcome: result.status }),
+            () => sendResponse({ status: 'error' })
+        );
+        return true;
+    };
+
     const handle_settings_updated = function({ request, sender, sendResponse, context }) {
         void context;
 

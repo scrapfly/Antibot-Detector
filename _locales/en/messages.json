@@ -6508,7 +6508,7 @@
     "description": "Title of the list of the webhook's most recent attempts"
   },
   "webhookLogDesc": {
-    "message": "The last 20 attempts: when, which page, what came back. Addresses and payloads are never kept.",
+    "message": "The last 20 attempts: when, which page, what came back. The list never keeps addresses or payloads.",
     "description": "Description of the list of the webhook's most recent attempts"
   },
   "webhookLogEmpty": {
@@ -7058,5 +7058,45 @@
   "historyBulkWatchOffFmt": {
     "message": "Watching: {0}. Turn on Watch pinned pages in Settings → History for them to be checked.",
     "description": "Notice after the selected History entries were set to be watched, while Settings → History → Watch pinned pages is off, so no check will run yet. {0} = how many pages. Keep the names of the settings as they are in the interface"
+  },
+  "settingsWebhookRetry": {
+    "message": "Retry failed deliveries",
+    "description": "Settings → Detection → Webhook: switch that sends a delivery that failed again by itself, after 1, 5 and 15 minutes"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "After 1, 5 and 15 minutes. The page data of a failed delivery stays in memory for an hour, never on disk, so Retry works in Recent deliveries.",
+    "description": "Hint under the Retry failed deliveries switch. 'Retry' and 'Recent deliveries' name a button and a list in the same screen: keep them like those strings"
+  },
+  "webhookLogRetry": {
+    "message": "Retry",
+    "description": "Button on a failed line of Recent deliveries: sends that delivery again now"
+  },
+  "webhookLogRetrying": {
+    "message": "Retrying…",
+    "description": "The Retry button while the delivery is being sent again"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "retrying at {0}",
+    "description": "Part of a failed delivery's line in Recent deliveries: the time of day of the next automatic retry. {0} = a time such as 12:35"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "retry {0}",
+    "description": "Part of a delivery's line in Recent deliveries: it is a repeat of a failed delivery. {0} = which repeat (1, 2 or 3)"
+  },
+  "webhookRetrySent": {
+    "message": "Delivered",
+    "description": "Notice after Retry in Recent deliveries worked: the webhook answered successfully"
+  },
+  "webhookRetryFailed": {
+    "message": "Failed again. It stays in the list, so you can retry it.",
+    "description": "Notice after Retry in Recent deliveries failed again"
+  },
+  "webhookRetryGone": {
+    "message": "This delivery can no longer be retried.",
+    "description": "Notice when Retry is pressed for a delivery that is no longer held (an hour passed, or the browser was restarted)"
+  },
+  "webhookRetryOff": {
+    "message": "Turn the webhook on, with an address, to retry.",
+    "description": "Notice when Retry is pressed while the webhook is off or has no address"
   }
 }

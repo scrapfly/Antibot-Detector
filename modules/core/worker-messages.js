@@ -49,6 +49,7 @@
     // The webhook's record of recent deliveries
     'WEBHOOK_LOG_ENTRY',
     'WEBHOOK_LOG_CLEAR',
+    'WEBHOOK_RETRY',            // Recent deliveries → Retry: send a failed delivery again now ({ id })
     // Logging and the log collector
     'LOG',
     'LOG_COLLECTOR_ENABLE',

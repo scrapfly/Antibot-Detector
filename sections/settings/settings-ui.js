@@ -365,6 +365,8 @@ SettingsUI.updateSettingsUI = function() {
 
     const webhookOnCache = document.querySelector('#webhookOnCache');
     if (webhookOnCache) webhookOnCache.checked = webhookSettings.webhookOnCache ?? false;
+    const webhookRetry = document.querySelector('#webhookRetry');
+    if (webhookRetry) webhookRetry.checked = webhookSettings.webhookRetry ?? true;
 
     const webhookMethodInput = document.querySelector('#webhookMethod');
     const customContainer = document.querySelector('#webhookCustomMethodContainer');
@@ -572,6 +574,7 @@ SettingsUI.getSettingsFromUI = function() {
     settings.webhook = {
       enableWebhook: document.querySelector('#enableWebhook')?.checked ?? this.settings.webhook?.enableWebhook ?? false,
       webhookOnCache: document.querySelector('#webhookOnCache')?.checked ?? this.settings.webhook?.webhookOnCache ?? false,
+      webhookRetry: document.querySelector('#webhookRetry')?.checked ?? this.settings.webhook?.webhookRetry ?? true,
       webhookMethod: document.querySelector('#webhookMethod')?.value ?? this.settings.webhook?.webhookMethod ?? 'POST',
       webhookUrl: document.querySelector('#webhookUrl')?.value ?? this.settings.webhook?.webhookUrl ?? '',
       webhookContentType: this.getWebhookContentTypeValue() ?? this.settings.webhook?.webhookContentType ?? 'application/json',

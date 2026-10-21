@@ -3238,3 +3238,20 @@ input[type="file"] {
   opacity: 0.45;
   cursor: default;
 }
+
+#settingsModal .webhook-log-item.has-retry .webhook-log-text {
+  grid-column: 1;
+}
+
+#settingsModal .webhook-log-retry {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: start;
+  padding: 0;
+  font-size: 10.5px;
+}
+
+#settingsModal .webhook-log-retry:disabled {
+  opacity: 0.45;
+  cursor: default;
+}

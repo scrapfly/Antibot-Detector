@@ -6,6 +6,8 @@
  *                     already narrowed to that site (popup.html?tab=history&search=...)
  *   Select entries    History → … → Select entries: checkboxes, the bar, Select all, a search that unselects what it hides,
  *                     Pin, Watch, Export (a real file) and Delete (asks first), Done and Escape
+ *   Webhook retry     a failed delivery is held in memory (storage.session) and logged with an id; Recent deliveries shows
+ *                     Retry on it and it delivers; the alarm retries by itself; the switch turns holding off
  *   Compare scans     History → … → Compare with…: the dialog lists the page's other scans, shows what was added, removed
  *                     and changed, copies it as Markdown, and the item is disabled when there is nothing to compare with
  *
@@ -78,6 +80,7 @@ const SEED = [
     }
   }
   const W = async (fn, arg) => (await getWorker()).evaluate(fn, arg);
+  const patchSettings = (patch) => W((p) => SettingsStore.mutate({ operation: 'patch', patch: p }).then(r => r.success === true), patch);
   const seed = (list) => W((value) => chrome.storage.local.set({ scrapfly_history: JSON.stringify({ items: value }) }), list);
   async function openExtensionPage(file = 'popup.html') {
     const page = await ctx.newPage();
@@ -284,6 +287,98 @@ const SEED = [
     await page.waitForSelector('#historySelectBar:not([hidden])');
     await page.$eval('#historySelectDone', el => el.click());
     assert.equal(await page.$eval('#historySelectBar', el => el.hidden), true);
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Webhook retry: held in memory, Retry in Recent deliveries, the alarm, and the switch', async () => {
+    const HOOK = 'https://hooks.example/hook';
+    const sw = await getWorker();
+    await sw.evaluate(`(() => {
+      const state = { calls: [], status: 503 };
+      const original = globalThis.fetch.bind(globalThis);
+      globalThis.__hook = state;
+      globalThis.fetch = async (input, init) => {
+        const url = typeof input === 'string' ? input : (input && input.url) || String(input);
+        if (!url.startsWith('https://hooks.example/')) return original(input, init);
+        state.calls.push({ url, method: init && init.method, body: init && typeof init.body === 'string' ? init.body : null });
+        return { ok: state.status >= 200 && state.status < 300, status: state.status };
+      };
+    })()`);
+    const status = (code) => sw.evaluate((c) => { globalThis.__hook.status = c; }, code);
+    const calls = () => sw.evaluate(() => globalThis.__hook.calls.map(c => ({ ...c })));
+    const log = () => W(async () => (await chrome.storage.local.get('scrapfly_webhook_log')).scrapfly_webhook_log || []);
+    const held = () => W(async () => (await chrome.storage.session.get('session_webhook_held')).session_webhook_held || {});
+    const deliver = (url) => W(async (u) => SettingsRuntime.sendWebhookIfEnabled({ url: u, title: 'Cart' }, [{ detector: { name: 'Cloudflare' }, name: 'Cloudflare', category: 'Anti-Bot', confidence: 90 }]), url);
+    const patchWebhook = (changes) => patchSettings({ webhook: { enableWebhook: true, webhookUrl: HOOK, webhookMethod: 'POST', webhookContentType: 'application/json', webhookPayload: '', webhookHeaders: [], webhookSecret: '', ...changes } });
+    await W(() => SettingsRuntime.clearWebhookLog());
+    await W(() => chrome.storage.session.remove('session_webhook_held'));
+    assert.ok(await patchWebhook({ webhookRetry: true }));
+
+    // A delivery that fails: logged with an id and the time of the next retry, held in memory, an alarm set
+    await status(503);
+    await deliver('https://shop.example/cart?id=1');
+    const [first] = await log();
+    assert.deepEqual([first.outcome, first.status, first.page], ['failed', 503, 'shop.example']);
+    assert.match(first.id, /^[a-z0-9]+$/);
+    assert.ok(first.retryAt > Date.now() && first.retryAt <= Date.now() + 61000, `retryAt ${first.retryAt - Date.now()} ms away`);
+    assert.deepEqual(Object.keys(await held()), [first.id]);
+    assert.ok(!JSON.stringify(await log()).includes('hooks.example') && !JSON.stringify(await held()).includes('hooks.example'), 'neither the record nor the held data names the webhook address');
+    const alarm = await W(() => chrome.alarms.get('scrapfly-webhook-retry'));
+    assert.ok(alarm && alarm.scheduledTime > Date.now(), 'an alarm is set');
+
+    // Settings → Detection → Webhook: the switch is on, and the failed line has Retry and says when
+    const page = await openExtensionPage();
+    await page.$eval('#settingsBtn', el => el.click());
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await page.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
+    await page.waitForSelector('#webhookLogList .webhook-log-item', { state: 'attached', timeout: 10000 });
+    assert.equal(await page.$eval('#webhookRetry', el => el.checked), true, 'on by default');
+    if (shotsDir) { await page.evaluate(() => document.querySelector('#webhookRetry').scrollIntoView({ block: 'center' })); await sleep(400); fs.mkdirSync(shotsDir, { recursive: true }); await page.screenshot({ path: path.join(shotsDir, 'webhook-retry-switch.png') }); }
+    const rows = () => page.$$eval('#webhookLogList .webhook-log-item', items => items.map(item => ({
+      text: item.querySelector('.webhook-log-text').textContent, retry: !!item.querySelector('.webhook-log-retry'), page: item.querySelector('.webhook-log-page').textContent })));
+    let list = await rows();
+    assert.equal(list.length, 1);
+    assert.ok(/^Failed 503 · \d+ ms · retrying at /.test(list[0].text) && list[0].retry, JSON.stringify(list));
+
+    // Retry: the webhook answers now, and the retry is delivered from the settings of this moment
+    await status(200);
+    await page.$eval('#webhookLogList .webhook-log-retry', el => el.click());
+    await until(async () => (await rows()).length === 2, 10000, 'the retry line');
+    list = await rows();
+    assert.equal(list[0].text.startsWith('Sent 200'), true, JSON.stringify(list));
+    assert.ok(/retry 1/.test(list[0].text), list[0].text);
+    assert.ok(list.every(row => !row.retry), 'nothing left to retry');
+    assert.deepEqual(await held(), {});
+    assert.equal(await W(() => chrome.alarms.get('scrapfly-webhook-retry')), undefined);
+    const sent = await calls();
+    assert.equal(sent.length, 2);
+    assert.equal(JSON.parse(sent[1].body).url, 'https://shop.example/cart?id=1', 'the same page data');
+    if (shotsDir) { await page.evaluate(() => document.querySelector('#webhookLogGroup').scrollIntoView()); await sleep(400); fs.mkdirSync(shotsDir, { recursive: true }); await page.screenshot({ path: path.join(shotsDir, 'webhook-retry.png') }); }
+
+    // The alarm: a due retry runs by itself (its due time is moved into the past, the alarm brought forward)
+    await status(502);
+    await deliver('https://news.example/');
+    const id2 = (await log()).at(-1).id;
+    await status(200);
+    await W(async (id) => {
+      const stored = (await chrome.storage.session.get('session_webhook_held')).session_webhook_held;
+      stored[id].due = Date.now() - 1000;
+      await chrome.storage.session.set({ session_webhook_held: stored });
+      chrome.alarms.create('scrapfly-webhook-retry', { when: Date.now() + 500 });
+    }, id2);
+    await until(async () => (await log()).some(e => e.page === 'news.example' && e.trigger === 'retry' && e.outcome === 'sent'), 15000, 'the retry by the alarm');
+    assert.deepEqual(await held(), {});
+
+    // Turned off in Settings: a failure is not held and has no Retry
+    await page.$eval('#webhookRetry', el => { el.checked = false; el.dispatchEvent(new Event('change', { bubbles: true })); });
+    await page.$eval('#saveSettingsBtn', el => el.click());
+    await until(async () => (await W(() => StorageManager.readSettingsStrict())).webhook.webhookRetry === false, 10000, 'the saved switch');
+    await status(503);
+    await deliver('https://off.example/');
+    const last = (await log()).at(-1);
+    assert.deepEqual([last.page, last.outcome, last.id, last.retryAt], ['off.example', 'failed', undefined, undefined]);
+    assert.deepEqual(await held(), {});
     await page.close();
   });
 

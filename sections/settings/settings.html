@@ -710,6 +710,14 @@
                   <span class="slider"></span>
                 </label>
               </div>
+              <div class="setting-row setting-row--inline setting-row--toggle">
+                <span class="setting-row-label" data-i18n="settingsWebhookRetry">Retry failed deliveries</span>
+                <label class="switch switch-sm">
+                  <input type="checkbox" id="webhookRetry" aria-describedby="webhookRetryHint">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <p class="setting-row-hint" id="webhookRetryHint" data-i18n="settingsWebhookRetryHint">After 1, 5 and 15 minutes. The page data of a failed delivery stays in memory for an hour, never on disk, so Retry works in Recent deliveries.</p>
             </div>
           </div>
 
@@ -901,7 +909,7 @@
               <div class="setting-group setting-group--stacked" id="webhookLogGroup">
                 <div class="setting-label">
                   <span data-i18n="webhookLogTitle">Recent deliveries</span>
-                  <span class="setting-description" data-i18n="webhookLogDesc">The last 20 attempts: when, which page, what came back. Addresses and payloads are never kept.</span>
+                  <span class="setting-description" data-i18n="webhookLogDesc">The last 20 attempts: when, which page, what came back. The list never keeps addresses or payloads.</span>
                 </div>
                 <ul id="webhookLogList" class="webhook-log-list" aria-live="polite"></ul>
                 <div class="webhook-payload-foot">
