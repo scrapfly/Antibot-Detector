@@ -246,8 +246,11 @@ class HistoryRecorder {
           : { added: [], removed: [], changed: false };
 
         // Pages that pin themselves (Settings → History): a new entry, or an update of one the person never unpinned,
-        // while there is room (the pinned entries are exempt from the limit and from retention)
+        // while there is room (the pinned entries are exempt from the limit and from retention). A page the person
+        // unpinned is never pinned by itself again: the mark sits on its newest entry, and a new entry carries it on
+        const neverAgain = !!(earlier && earlier.unpinned === true);
         const pinsItself = typeof HistoryPolicy !== 'undefined'
+          && !neverAgain
           && HistoryPolicy.shouldAutoPin(detectionResults, settings)
           && HistoryPolicy.countAutoPins(history) < HistoryPolicy.MAX_AUTO_PINS;
 
@@ -278,7 +281,7 @@ class HistoryRecorder {
           if (pinsItself && kept.pinned !== true && kept.unpinned !== true) { updated.pinned = true; updated.autoPinned = true; }
           next = [updated, ...history.filter((_, i) => i !== duplicateAt)];
         } else {
-          next = [Object.assign({ id: `detection_${now}_${tabId}` }, fresh, pinsItself ? { pinned: true, autoPinned: true } : {}), ...history];
+          next = [Object.assign({ id: `detection_${now}_${tabId}` }, fresh, pinsItself ? { pinned: true, autoPinned: true } : {}, neverAgain ? { unpinned: true } : {}), ...history];
         }
 
         // Newest first, then the rolling window limit (pinned entries never count against it)

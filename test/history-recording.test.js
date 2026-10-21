@@ -355,6 +355,34 @@ test('a scan that updates an entry pins it once, unless the person unpinned it',
   assert.strictEqual(w.items()[0].unpinned, true);
 });
 
+test('with duplicates allowed (the default), a page the person unpinned is not pinned again by its next entries either', async () => {
+  const w = makeWorld();
+  const settings = { ...HARD, preventDuplicates: false };
+  await w.save('https://guarded.example/a', [hard('Akamai')], settings);
+  assert.strictEqual(w.items()[0].pinned, true);
+  assert.strictEqual(w.items()[0].autoPinned, true);
+
+  // The person unpins it; the next scan makes a new entry, which must not pin itself
+  const [kept] = w.items();
+  w.store.scrapfly_history = JSON.stringify({ items: [{ ...kept, pinned: undefined, autoPinned: undefined, unpinned: true }] });
+  w.advance(HOUR);
+  await w.save('https://guarded.example/a', [hard('Akamai')], settings);
+  assert.strictEqual(w.items().length, 2, 'a new entry');
+  assert.ok(!w.items()[0].pinned, 'the new entry is not pinned by itself');
+  assert.strictEqual(w.items()[0].unpinned, true, 'and carries the mark on, as the page\'s newest entry');
+
+  // And the one after it, now that the marked entry is no longer the newest of the page
+  w.advance(HOUR);
+  await w.save('https://guarded.example/a', [hard('Akamai')], settings);
+  assert.strictEqual(w.items().length, 3);
+  assert.ok(!w.items()[0].pinned, 'still never pinned by itself');
+  assert.strictEqual(w.items()[0].unpinned, true);
+
+  // Another page of the same site is not affected
+  await w.save('https://guarded.example/b', [hard('Akamai')], settings);
+  assert.strictEqual(w.items()[0].pinned, true, 'a different page still pins itself');
+});
+
 test('an entry the person pinned keeps its pin, and is not counted as one that pinned itself', async () => {
   const w = makeWorld();
   const settings = { ...HARD, preventDuplicates: true, duplicateAction: 'update', duplicateScope: 'full_url', duplicateDuration: 99, duplicateUnit: 'days' };
