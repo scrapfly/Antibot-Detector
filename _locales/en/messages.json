@@ -6918,5 +6918,13 @@
   "statsExportMarkdown": {
     "message": "Export Markdown",
     "description": "Statistics → Export menu: downloads the statistics as a Markdown report (totals, protections, sites)"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Show the domains with {0}",
+    "description": "Statistics → Protections: hover text of a protection's name, which opens the Domains list narrowed to the domains that have it. {0} = the protection's name"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Open {0} in History",
+    "description": "Statistics → Domains and Protection changes: hover text of a site's name, which opens the History tab (in a new tab) narrowed to that site. {0} = the site's host name"
   }
 }

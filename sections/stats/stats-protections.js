@@ -11,6 +11,16 @@
     if (fallback && (!active || active === document.body || active.hidden || (active.closest && active.closest('[hidden]')))) fallback.focus();
   }
 
+  /** A host name that opens that site's History in a new tab (a button: it works with the keyboard). */
+  function hostLink(app, hostname) {
+    const link = element('button', 'stats-link-btn', hostname);
+    link.type = 'button';
+    link.setAttribute('dir', 'ltr');
+    link.setAttribute('title', fmt('statsOpenInHistoryFmt', 'Open {0} in History', hostname));
+    link.addEventListener('click', () => app.openHistory(hostname));
+    return link;
+  }
+
   /* ---------- Protections ---------- */
   /** Detector rows with their pages in the previous period, sorted by the chosen column. */
   function protectionRows(app) {
@@ -50,8 +60,14 @@
         { text: tr('statsSectionDomains', 'Domains'), num: true }, { text: tr('statsChangeVsPrevColumn', 'Change'), num: true },
         { text: tr('statsStrongColumn', 'Strong evidence'), num: true, title: tr('statsTierHint', 'Strong is 80% or more, moderate 40-79%, weak below 40%. 100% means a signal only that protection produces.') }],
       rows: rows.map(row => {
-        const name = element('span', 'stats-stack');
-        name.append(U.brandMark(row.name, row.category, U.ink(row.category)), document.createTextNode(row.name));
+        const label = element('span', 'stats-stack');
+        label.append(U.brandMark(row.name, row.category, U.ink(row.category)), document.createTextNode(row.name));
+        // A click shows the domains that have this protection
+        const name = element('button', 'stats-cell-link');
+        name.type = 'button';
+        name.setAttribute('title', fmt('statsShowDomainsWithFmt', 'Show the domains with {0}', row.name));
+        name.addEventListener('click', () => app.openProtection(row.name));
+        name.appendChild(label);
         const delta = usable ? U.deltaBadge(U.deltaView(HistoryStats.delta(row.pages, row.before), row.before)) : null;
         return [name, U.categoryBadge(row.category), U.databar(row.pages, max, U.ink(row.category)), num(row.domains), delta || '–', strongCell(row)];
       })
@@ -114,7 +130,7 @@
     U.table(byId('statsDomainTable'), {
       caption: tr('statsDomainDetails', 'All domains'), ltrFirst: true,
       headers: [tr('statsDomainColumn', 'Domain'), tr('statsDifficultyColumn', 'Difficulty'), tr('statsStackColumn', 'Protections'), { text: tr('statsPagesColumn', 'Pages'), num: true }, { text: tr('statsLastSeenColumn', 'Last seen'), nowrap: true }],
-      rows: rows.map(row => [row.hostname, U.pill(row.difficulty), row.stackTotal ? U.stack(row) : '–', num(row.visits), lastSeen(row, d.now)]),
+      rows: rows.map(row => [hostLink(app, row.hostname), U.pill(row.difficulty), row.stackTotal ? U.stack(row) : '–', num(row.visits), lastSeen(row, d.now)]),
       empty: tr('statsNoMatchingDomains', 'No domains match your search.')
     });
     U.tableCount('statsDomain', rows.length, all.length);
@@ -146,7 +162,7 @@
     U.table(byId('statsChangeTable'), {
       caption: tr('statsDomainChanges', 'Protection changes'), ltrFirst: true,
       headers: [tr('statsDomainColumn', 'Domain'), tr('statsChangePageColumn', 'Page'), tr('statsChangeColumn', 'Change'), { text: tr('statsDateColumn', 'Date'), nowrap: true }],
-      rows: rows.map(row => [row.hostname, path(row), change(row), when(row)]),
+      rows: rows.map(row => [hostLink(app, row.hostname), path(row), change(row), when(row)]),
       empty: tr('statsNoChanges', 'No domain changed its protections between saved visits in this range.')
     });
     U.tableCount('statsChange', rows.length, all.length);

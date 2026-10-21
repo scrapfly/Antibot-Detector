@@ -592,14 +592,14 @@ test('hardest sites list its protections as chips and open the domain in Domains
   rows[0].events.click();
   assert.deepEqual(ui.visiblePanel(), ['domains']);
   assert.equal(ui.id('statsDomainSearch').value, 'tough.example');
-  assert.deepEqual(plain(ui.rows('statsDomainTable').map(n => n.textContent)), ['tough.example']);
+  assert.deepEqual(plain(ui.rows('statsDomainTable').map(n => textOf(n))), ['tough.example']);
 });
 
 const domainRows = () => Array.from({ length: 70 }, (_, i) => {
   const host = `domain${String(i).padStart(2, '0')}.example`;
   return entry(host, 0, i < 10 ? [['hCaptcha', 'captcha']] : i < 40 ? [['Cloudflare', 'antibot']] : []);
 });
-const pick = (ui, fn) => (fn(), plain(ui.rows('statsDomainTable').map(n => n.textContent)));
+const pick = (ui, fn) => (fn(), plain(ui.rows('statsDomainTable').map(n => textOf(n))));
 
 test('domain explorer: search, sort, chips, clear and show more, without touching the export source', async () => {
   const ui = await createPage(domainRows(), { preferences: { scrapfly_stats_section: 'domains' } });
@@ -616,7 +616,7 @@ test('domain explorer: search, sort, chips, clear and show more, without touchin
   assert.equal(ui.id('statsDomainSearch').value, '');
   assert.equal(ui.id('statsDomainClear').hidden, true);
   assert.equal(ui.rows('statsDomainTable').length, 50, 'clearing restores the first page');
-  assert.equal(ui.rows('statsDomainTable')[0].textContent, 'domain00.example', 'hardest first: a CAPTCHA domain leads');
+  assert.equal(textOf(ui.rows('statsDomainTable')[0]), 'domain00.example', 'hardest first: a CAPTCHA domain leads');
   const firstRow = ui.id('statsDomainTable').children[0].children[2].children[0];
   assert.match(textOf(firstRow.children[1]), /High/);
   ui.click('difficulty', 'High');
@@ -631,7 +631,7 @@ test('domain explorer: search, sort, chips, clear and show more, without touchin
   ui.id('statsDomainClear').events.click();
   ui.id('statsDomainSort').value = 'name';
   ui.id('statsDomainSort').events.change();
-  assert.equal(ui.rows('statsDomainTable')[0].textContent, 'domain00.example');
+  assert.equal(textOf(ui.rows('statsDomainTable')[0]), 'domain00.example');
   ui.id('statsDomainSort').value = 'visits';
   ui.id('statsDomainSort').events.change();
   assert.equal(ui.rows('statsDomainTable').length, 50);
@@ -659,7 +659,7 @@ test('domain explorer: the Changed chip lists domains whose protection changed o
   ], { preferences: { scrapfly_stats_section: 'domains' } });
   assert.equal(textOf(ui.button('flag', 'changed').children[1]), '1');
   ui.click('flag', 'changed');
-  assert.deepEqual(plain(ui.rows('statsDomainTable').map(n => n.textContent)), ['changed.example']);
+  assert.deepEqual(plain(ui.rows('statsDomainTable').map(n => textOf(n))), ['changed.example']);
   const text = ui.text('statsChangeTable');
   assert.match(text, /Replaced/);
   assert.match(text, /Added:/);

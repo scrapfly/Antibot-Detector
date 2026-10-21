@@ -867,7 +867,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
   .stats-filters > * { margin-block-end: var(--sp-1); }
 }
 
-/* ==========================================================================
+/* ===================================================================
    Page-level additions: the few things the page markup needs that the rules above do not style.
    Tokens only (no colours of its own) and logical properties, so both themes and Arabic follow.
    ========================================================================== */
@@ -897,3 +897,12 @@ body.stats-page #statsStrongEvidence { grid-template-columns: repeat(auto-fit, m
 
 /* A date in "What changed" follows the page direction: Arabic dates carry their own direction marks and break inside a left-to-right box */
 .stats-changed-meta[data-kind="date"] { direction: inherit; unicode-bidi: isolate; }
+=======
+/* A table cell that is a link: the protection name opens the domains that have it */
+.stats-cell-link {
+  display: inline-block; max-inline-size: 100%; padding: 0; border: 0; border-radius: 4px; background: none;
+  color: inherit; font: inherit; text-align: start; cursor: pointer;
+}
+.stats-cell-link:hover .stats-stack, .stats-cell-link:focus-visible .stats-stack {
+  color: var(--s-accent-text); text-decoration: underline; text-underline-offset: 3px;
+}

@@ -93,8 +93,13 @@ test('popup.html?tab=&settings= picks a known tab and Settings sub-tab, nothing 
   context.window = { addEventListener() {} };
   vm.runInContext(fs.readFileSync(path.join(root, 'popup.js'), 'utf8') + '\n;globalThis.ScrapflyPopup = ScrapflyPopup;', context);
   const route = context.ScrapflyPopup.routeFrom;
-  assert.deepStrictEqual({ ...route('?settings=history') }, { tab: null, settingsTab: 'history' });
-  assert.deepStrictEqual({ ...route('?tab=rules&settings=data') }, { tab: 'rules', settingsTab: 'data' });
-  assert.deepStrictEqual({ ...route('?tab=evil&settings=<x>') }, { tab: null, settingsTab: null });
-  assert.deepStrictEqual({ ...route('') }, { tab: null, settingsTab: null });
+  assert.deepStrictEqual({ ...route('?settings=history') }, { tab: null, settingsTab: 'history', search: null });
+  assert.deepStrictEqual({ ...route('?tab=rules&settings=data') }, { tab: 'rules', settingsTab: 'data', search: null });
+  assert.deepStrictEqual({ ...route('?tab=evil&settings=<x>') }, { tab: null, settingsTab: null, search: null });
+  assert.deepStrictEqual({ ...route('') }, { tab: null, settingsTab: null, search: null });
+  // the History search from Statistics: plain text, control characters dropped, 200 characters at most
+  assert.deepStrictEqual({ ...route('?tab=history&search=shop.example') }, { tab: 'history', settingsTab: null, search: 'shop.example' });
+  assert.strictEqual(route('?search=' + encodeURIComponent('a\nb\u0000c')).search, 'a b c');
+  assert.strictEqual(route('?search=' + 'x'.repeat(500)).search.length, 200);
+  assert.strictEqual(route('?search=%20%20').search, null);
 });

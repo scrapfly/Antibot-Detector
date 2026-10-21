@@ -146,18 +146,21 @@ class ScrapflyPopup {
    * `popup.html?tab=history&settings=history`, as a notification click opens it
    * (background/notification-clicks.js): that tab, and Settings on that sub-tab.
    * @param {string} search - location.search
-   * @returns {{tab: string|null, settingsTab: string|null}}
+   * @returns {{tab: string|null, settingsTab: string|null, search: string|null}}
    */
   static routeFrom(search) {
     let params;
-    try { params = new URLSearchParams(String(search || '')); } catch (_) { return { tab: null, settingsTab: null }; }
+    try { params = new URLSearchParams(String(search || '')); } catch (_) { return { tab: null, settingsTab: null, search: null }; }
     const tabs = ['detection', 'history', 'rules', 'advanced'];
     const settingsTabs = ['general', 'detection', 'history', 'data'];
     const tab = params.get('tab');
     const settingsTab = params.get('settings');
+    // Text for the History search (a host name from Statistics): plain text, at most 200 characters
+    const historySearch = (params.get('search') || '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 200);
     return {
       tab: tabs.includes(tab) ? tab : null,
-      settingsTab: settingsTabs.includes(settingsTab) ? settingsTab : null
+      settingsTab: settingsTabs.includes(settingsTab) ? settingsTab : null,
+      search: historySearch || null
     };
   }
 
@@ -167,6 +170,12 @@ class ScrapflyPopup {
     if (!route.tab && !route.settingsTab) return false;
     if (route.tab) await this.switchTab(route.tab);
     else await this.loadAndApplyDefaultTab();
+    // popup.html?tab=history&search=shop.example: the History list already narrowed to that site
+    if (route.tab === 'history' && route.search) {
+      const input = document.querySelector('#historySearch');
+      if (input) input.value = route.search;
+      this.history.handleSearch(route.search);
+    }
     if (route.settingsTab) {
       this.settings.showSettings();
       this.settings.switchTab(route.settingsTab);

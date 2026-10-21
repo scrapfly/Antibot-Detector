@@ -30,7 +30,7 @@
     now: 0, exporting: false, loadVersion: 0, historyVersion: 0, d: null, cache: { key: '', stats: null },
     rules: [], captures: [], incompatible: [], officialIds: new Set(), bundledOfficialIds: [], descriptions: new Map(),
     limits: { ...PAGE }, protectionSort: 'pages', domain: { query: '', sort: 'hardest', difficulty: new Set(), captcha: false, changed: false } };
-  const app = { state, PAGE, go: section => selectSection(section), openDomain, isOfficialRule,
+  const app = { state, PAGE, go: section => selectSection(section), openDomain, openProtection, openHistory, isOfficialRule,
     get d() { return state.d; } };
 
   function isOfficialRule(detector) {
@@ -238,12 +238,25 @@
     if (state.d && state.section === 'evidence') renderActive();
     if (save) persist(SUB_KEY, sub);
   }
-  function openDomain(hostname) {
-    state.domain.query = hostname;
-    state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false; // a stale chip must not hide the site that was clicked
-    byId('statsDomainSearch').value = hostname;
+  /** The Domains list searched for a site or a protection (the search also reads each domain's protections). */
+  function showDomains(query) {
+    state.domain.query = query;
+    state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false; // a stale chip must not hide what was clicked
+    byId('statsDomainSearch').value = query;
     state.limits.domain = PAGE.domain;
     selectSection('domains');
+  }
+  function openDomain(hostname) { showDomains(hostname); }
+  /** A protection of the Protections table: the domains that have it. */
+  function openProtection(name) { showDomains(name); }
+  /** A site's History: the popup page in a tab, on its History tab, searched for the host (popup.js routeFrom). */
+  function openHistory(hostname) {
+    const url = chrome.runtime.getURL('popup.html?tab=history&search=' + encodeURIComponent(String(hostname || '').slice(0, 200)));
+    try {
+      return Promise.resolve(chrome.tabs.create({ url, active: true })).catch(() => {});
+    } catch (_) {
+      return Promise.resolve();
+    }
   }
 
   /* ---------- Filter row ---------- */

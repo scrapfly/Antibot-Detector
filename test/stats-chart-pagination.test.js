@@ -74,7 +74,7 @@ test('lists are capped by what fits the card, and the tables behind them hold ev
   ui.section('domains');
   assert.equal(ui.rows('statsDomainTable').length, 50);
   ui.id('statsDomainMore').events.click();
-  assert.equal(new Set(ui.rows('statsDomainTable').map(node => node.textContent)).size, 70);
+  assert.equal(new Set(ui.rows('statsDomainTable').map(node => textOf(node))).size, 70);
 });
 
 test('a change of range or scope starts the lists again from their first rows', async () => {
