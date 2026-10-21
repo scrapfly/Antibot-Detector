@@ -276,7 +276,7 @@ content.js               Content script (isolated world)
 content-main-world.js    Page-world hooks, installed before the page's scripts
 modules/                 Detection engine, core services, UI helpers, styles
 popup.html, popup.js     The popup
-sections/                One folder per tab: detection, history, rules, advanced, settings, stats
+sections/                One folder per popup tab (detection, history, rules, advanced), plus settings (the Settings modal) and stats (the Statistics page)
 detectors/               Detector rules (JSON), index.json, icons and rule translations
 _locales/                Translations for the 22 languages
 utils/                   Shared helpers
