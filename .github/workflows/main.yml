@@ -81,7 +81,7 @@ jobs:
           zip -r "artifact/antibot-detector-${TAG_NAME}.zip" . \
             -x ".git/*" ".github/*" ".claude/*" "artifact/*" \
             "CHANGELOG.md" "README.md" "LICENSE" ".gitignore" \
-            "CLAUDE.md" "AGENTS.md" "MEMORY.md" \
+            "CLAUDE.md" "AGENTS.md" "MEMORY.md" "ARCHITECTURE.md" "llms.txt" ".githooks/*" \
             "docs/*" "store/*" "assets/store-screenshots/*" "assets/readme/*" "scripts/*" \
             "test/*" "plans/*" "node_modules/*" "logs/*" \
             "package.json" "package-lock.json" "*.test.js"
