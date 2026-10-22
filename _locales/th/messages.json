@@ -6093,7 +6093,7 @@
     "message": "การส่งล่าสุด"
   },
   "webhookLogDesc": {
-    "message": "20 ครั้งล่าสุด: เมื่อไร หน้าไหน ได้ผลตอบกลับอะไร ที่อยู่และ Payload จะไม่ถูกเก็บไว้เลย"
+    "message": "20 ครั้งล่าสุด: เมื่อไร หน้าไหน ได้ผลตอบกลับอะไร รายการนี้ไม่เก็บที่อยู่หรือ Payload ไว้เลย"
   },
   "webhookLogEmpty": {
     "message": "ยังไม่ได้ส่งอะไร"
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "ส่งออก Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "แสดงโดเมนที่มี {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "เปิด {0} ในประวัติ"
+  },
+  "historyCompare": {
+    "message": "เปรียบเทียบกับ…"
+  },
+  "historyCompareNone": {
+    "message": "ไม่มีการสแกนอื่นของหน้านี้ที่บันทึกไว้ให้เปรียบเทียบ"
+  },
+  "historyCompareTitle": {
+    "message": "เปรียบเทียบการสแกน"
+  },
+  "historyCompareWith": {
+    "message": "เปรียบเทียบกับ"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · พบ {1} รายการ"
+  },
+  "historyCompareRangeFmt": {
+    "message": "จาก {0} ถึง {1}"
+  },
+  "historyCompareAdded": {
+    "message": "เพิ่มเข้ามา"
+  },
+  "historyCompareRemoved": {
+    "message": "หายไป"
+  },
+  "historyCompareChanged": {
+    "message": "เปลี่ยนแปลง"
+  },
+  "historyCompareUnchanged": {
+    "message": "ไม่เปลี่ยนแปลง"
+  },
+  "historyCompareIdentical": {
+    "message": "การสแกนทั้งสองครั้งนี้พบระบบป้องกันเดียวกัน ด้วยความมั่นใจและหลักฐานเดียวกัน"
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "หลักฐานใหม่: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "หลักฐานที่หายไป: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "คัดลอกเป็น Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "เปรียบเทียบการสแกน: {0}"
+  },
+  "historySelect": {
+    "message": "เลือกรายการ"
+  },
+  "historySelectBarLabel": {
+    "message": "รายการที่เลือก"
+  },
+  "historySelectDone": {
+    "message": "เสร็จ"
+  },
+  "historySelectAll": {
+    "message": "เลือกทั้งหมด"
+  },
+  "historySelectNone": {
+    "message": "ยกเลิกการเลือก"
+  },
+  "historySelectedFmt": {
+    "message": "เลือกแล้ว: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "เลือก {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "ปักหมุดแล้ว: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "เลิกปักหมุดแล้ว: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "กำลังติดตาม: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "กำลังติดตาม: {0} ไม่ได้เพิ่ม: {1} (ติดตามได้สูงสุด {2} หน้า)"
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "เลิกติดตามแล้ว: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "ลบรายการที่เลือก"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "ลบรายการที่เลือก ({0}) ออกจากประวัติหรือไม่ การดำเนินการนี้ไม่สามารถยกเลิกได้"
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "ในจำนวนนี้ปักหมุดไว้: {0}"
+  },
+  "historyBulkDeletedFmt": {
+    "message": "ลบแล้ว: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "กำลังติดตาม: {0} เปิด “ติดตามหน้าที่ปักหมุด” ในการตั้งค่า → ประวัติ เพื่อให้ระบบตรวจสอบหน้าเหล่านี้"
+  },
+  "settingsWebhookRetry": {
+    "message": "ลองส่งอีกครั้งเมื่อส่งไม่สำเร็จ"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "หลังผ่านไป 1, 5 และ 15 นาที ข้อมูลหน้าของการส่งที่ไม่สำเร็จจะเก็บไว้ในหน่วยความจำหนึ่งชั่วโมงและไม่บันทึกลงดิสก์ ปุ่ม “ลองอีกครั้ง” ใน “การส่งล่าสุด” จึงใช้ได้"
+  },
+  "webhookLogRetry": {
+    "message": "ลองอีกครั้ง"
+  },
+  "webhookLogRetrying": {
+    "message": "กำลังลองอีกครั้ง…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "จะลองอีกครั้งเวลา {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "ส่งซ้ำครั้งที่ {0}"
+  },
+  "webhookRetrySent": {
+    "message": "ส่งสำเร็จ"
+  },
+  "webhookRetryFailed": {
+    "message": "ไม่สำเร็จอีกครั้ง การส่งนี้ยังอยู่ในรายการ จึงลองอีกครั้งได้"
+  },
+  "webhookRetryGone": {
+    "message": "การส่งนี้ลองอีกครั้งไม่ได้แล้ว"
+  },
+  "webhookRetryOff": {
+    "message": "เปิด Webhook และใส่ที่อยู่ก่อน จึงจะลองอีกครั้งได้"
+  },
+  "ruleLiveTestTitle": {
+    "message": "ทดสอบบนหน้านี้"
+  },
+  "ruleLiveTestHint": {
+    "message": "เรียกใช้กฎตามที่เป็นอยู่ตอนนี้ รวมการแก้ไขที่ยังไม่บันทึก บนหน้าที่เปิดป๊อปอัปนี้ ไม่มีการบันทึกหรือส่งข้อมูลใด ๆ ทดสอบรูปแบบคุกกี้ URL เนื้อหา และ DOM ได้ ส่วนเฮดเดอร์ JS hooks พร็อพเพอร์ตีของ window และ Payload ต้องใช้การสแกนจริง"
+  },
+  "ruleLiveTestRun": {
+    "message": "ทดสอบ"
+  },
+  "ruleLiveTestRunning": {
+    "message": "กำลังทดสอบ…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "กฎตรงกับ {0} (ความมั่นใจ {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "กฎตรงกับ {0} เพียงบางส่วน: ชุดค่าผสมยังต้องการหลักฐานเพิ่ม"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "กฎไม่ตรงกับ {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "พบ {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "ไม่ตรง"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "ต้องสแกนจริง"
+  },
+  "ruleLiveTestFires": {
+    "message": "ทำงาน"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "ไม่ทำงาน"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "อ่านสคริปต์ {0} รายการ องค์ประกอบ {1} รายการ คุกกี้ {2} รายการ และคำขอ {3} รายการ"
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "ตอนนี้ไม่มีข้อมูลคำขอที่หน้านี้ส่ง จึงตรวจสอบรูปแบบ URL กับที่อยู่และสคริปต์ของหน้าเท่านั้น"
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "รูปแบบที่มีป้าย “ต้องสแกนจริง” ไม่รวมอยู่ในการทดสอบนี้: ผลด้านบนครอบคลุมรูปแบบอื่น ๆ"
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "เปิดป๊อปอัปบนหน้าเว็บเพื่อทดสอบกฎบนหน้านั้น"
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "หน้าไม่ตอบสนอง โหลดหน้าซ้ำแล้วลองอีกครั้ง"
+  },
+  "ruleLiveTestError": {
+    "message": "เรียกใช้การทดสอบไม่ได้"
   }
 }

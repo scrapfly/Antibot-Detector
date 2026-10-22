@@ -6093,7 +6093,7 @@
     "message": "Envios recentes"
   },
   "webhookLogDesc": {
-    "message": "As últimas 20 tentativas: quando, qual página e qual foi a resposta. Endereços e payloads nunca são guardados."
+    "message": "As últimas 20 tentativas: quando, qual página e qual foi a resposta. A lista nunca guarda endereços nem payloads."
   },
   "webhookLogEmpty": {
     "message": "Nada enviado ainda."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Exportar Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Mostrar os domínios com {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Abrir {0} no Histórico"
+  },
+  "historyCompare": {
+    "message": "Comparar com…"
+  },
+  "historyCompareNone": {
+    "message": "Não há outra análise salva desta página para comparar"
+  },
+  "historyCompareTitle": {
+    "message": "Comparar análises"
+  },
+  "historyCompareWith": {
+    "message": "Comparar com"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · encontradas: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "De {0} a {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Adicionadas"
+  },
+  "historyCompareRemoved": {
+    "message": "Removidas"
+  },
+  "historyCompareChanged": {
+    "message": "Alteradas"
+  },
+  "historyCompareUnchanged": {
+    "message": "Sem alterações"
+  },
+  "historyCompareIdentical": {
+    "message": "As duas análises encontraram as mesmas proteções, com a mesma confiança e as mesmas evidências."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Novas evidências: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Evidências que sumiram: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Copiar como Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Comparação de análises: {0}"
+  },
+  "historySelect": {
+    "message": "Selecionar entradas"
+  },
+  "historySelectBarLabel": {
+    "message": "Entradas selecionadas"
+  },
+  "historySelectDone": {
+    "message": "Concluir"
+  },
+  "historySelectAll": {
+    "message": "Selecionar tudo"
+  },
+  "historySelectNone": {
+    "message": "Desmarcar tudo"
+  },
+  "historySelectedFmt": {
+    "message": "Selecionadas: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Selecionar {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Fixadas: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Desafixadas: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Monitorando: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Monitorando: {0}. Não adicionadas: {1} (você pode monitorar até {2} páginas)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Não mais monitoradas: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Excluir entradas selecionadas"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Excluir do Histórico as entradas selecionadas ({0})? Esta ação não pode ser desfeita."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Fixadas entre elas: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Excluídas: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Monitorando: {0}. Ative Monitorar páginas fixadas em Configurações → Histórico para que elas sejam verificadas."
+  },
+  "settingsWebhookRetry": {
+    "message": "Tentar de novo envios que falharam"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Após 1, 5 e 15 minutos. Os dados da página de um envio que falhou ficam na memória por uma hora, nunca no disco, para que Tentar de novo funcione em Envios recentes."
+  },
+  "webhookLogRetry": {
+    "message": "Tentar de novo"
+  },
+  "webhookLogRetrying": {
+    "message": "Tentando de novo…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "nova tentativa às {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "tentativa {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Entregue"
+  },
+  "webhookRetryFailed": {
+    "message": "Falhou de novo. O envio continua na lista, então você pode tentar de novo."
+  },
+  "webhookRetryGone": {
+    "message": "Não é mais possível tentar este envio de novo."
+  },
+  "webhookRetryOff": {
+    "message": "Ative o webhook, com um endereço, para tentar de novo."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Testar nesta página"
+  },
+  "ruleLiveTestHint": {
+    "message": "Executa a regra como está agora, incluindo as edições não salvas, na página em que este pop-up foi aberto. Nada é salvo nem enviado. Padrões de cookies, URL, conteúdo e DOM podem ser testados; cabeçalhos, hooks JS, propriedades da janela e payloads precisam de uma análise real."
+  },
+  "ruleLiveTestRun": {
+    "message": "Testar"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Testando…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "A regra corresponde a {0} (confiança de {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "A regra corresponde só em parte a {0}: uma combinação precisa de mais evidências"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "A regra não corresponde a {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "encontrados: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "nenhuma correspondência"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "precisa de uma análise real"
+  },
+  "ruleLiveTestFires": {
+    "message": "ativada"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "não ativada"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Lidos: {0} scripts, {1} elementos, {2} cookies e {3} requisições."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "As requisições feitas pela página não estão disponíveis agora, então os padrões de URL foram verificados só no endereço e nos scripts dela."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Os padrões marcados com \"precisa de uma análise real\" não fazem parte deste teste: a resposta acima vale para os outros."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Abra o pop-up em uma página da web para testar uma regra nela."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "A página não respondeu. Recarregue-a e tente de novo."
+  },
+  "ruleLiveTestError": {
+    "message": "Não foi possível executar o teste."
   }
 }

@@ -6093,7 +6093,7 @@
     "message": "Senaste leveranser"
   },
   "webhookLogDesc": {
-    "message": "De senaste 20 försöken: när, vilken sida, vad som kom tillbaka. Adresser och payloads sparas aldrig."
+    "message": "De senaste 20 försöken: när, vilken sida, vad som kom tillbaka. Listan sparar aldrig adresser eller payloads."
   },
   "webhookLogEmpty": {
     "message": "Inget skickat än."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Exportera Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Visa domänerna med {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Öppna {0} i Historik"
+  },
+  "historyCompare": {
+    "message": "Jämför med…"
+  },
+  "historyCompareNone": {
+    "message": "Det finns ingen annan sparad skanning av den här sidan att jämföra med"
+  },
+  "historyCompareTitle": {
+    "message": "Jämför skanningar"
+  },
+  "historyCompareWith": {
+    "message": "Jämför med"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · {1} skydd"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Från {0} till {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Tillagda"
+  },
+  "historyCompareRemoved": {
+    "message": "Borttagna"
+  },
+  "historyCompareChanged": {
+    "message": "Ändrade"
+  },
+  "historyCompareUnchanged": {
+    "message": "Oförändrade"
+  },
+  "historyCompareIdentical": {
+    "message": "De här två skanningarna hittade samma skydd, med samma säkerhet och samma belägg."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0} % → {1} % ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Nya belägg: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Belägg som försvann: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Kopiera som Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Jämför skanningar: {0}"
+  },
+  "historySelect": {
+    "message": "Markera poster"
+  },
+  "historySelectBarLabel": {
+    "message": "Markerade poster"
+  },
+  "historySelectDone": {
+    "message": "Klar"
+  },
+  "historySelectAll": {
+    "message": "Markera alla"
+  },
+  "historySelectNone": {
+    "message": "Avmarkera alla"
+  },
+  "historySelectedFmt": {
+    "message": "Markerade: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Markera {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Fästa: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Lossade: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Bevakas: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Bevakas: {0}. Inte tillagda: {1} (du kan bevaka upp till {2} sidor)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Bevakas inte längre: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Ta bort markerade poster"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Ta bort de markerade posterna ({0}) från Historik? Åtgärden kan inte ångras."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Fästa bland dem: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Borttagna: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Bevakas: {0}. Slå på Bevaka fästa sidor under Inställningar → Historik för att sidorna ska kontrolleras."
+  },
+  "settingsWebhookRetry": {
+    "message": "Skicka misslyckade leveranser igen"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Efter 1, 5 och 15 minuter. Siddata från en misslyckad leverans sparas i minnet i en timme, aldrig på disk, så att Försök igen fungerar i Senaste leveranser."
+  },
+  "webhookLogRetry": {
+    "message": "Försök igen"
+  },
+  "webhookLogRetrying": {
+    "message": "Försöker igen…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "nytt försök kl. {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "nytt försök {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Levererad"
+  },
+  "webhookRetryFailed": {
+    "message": "Misslyckades igen. Leveransen finns kvar i listan, så du kan försöka igen."
+  },
+  "webhookRetryGone": {
+    "message": "Den här leveransen kan inte längre skickas igen."
+  },
+  "webhookRetryOff": {
+    "message": "Slå på webhooken, med en adress, för att försöka igen."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Testa på den här sidan"
+  },
+  "ruleLiveTestHint": {
+    "message": "Kör regeln som den är nu, med osparade ändringar, på sidan där den här popupen öppnades. Inget sparas eller skickas. Mönster för cookies, URL, innehåll och DOM kan testas; headers, JS-hooks, window-egenskaper och payloads kräver en riktig skanning."
+  },
+  "ruleLiveTestRun": {
+    "message": "Testa"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Testar…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Regeln matchar {0} (säkerhet {1} %)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Regeln matchar bara delvis på {0}: en kombination behöver fler belägg"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Regeln matchar inte {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Träffar: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "ingen träff"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "kräver en riktig skanning"
+  },
+  "ruleLiveTestFires": {
+    "message": "utlöses"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "utlöses inte"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Läste skript: {0}, element: {1}, cookies: {2}, begäranden: {3}."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Sidans begäranden är inte tillgängliga nu, så URL-mönster kontrollerades bara mot sidans adress och skript."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Mönster markerade \"kräver en riktig skanning\" ingår inte i testet: svaret ovan gäller de övriga."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Öppna popupen på en webbsida för att testa en regel på den."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Sidan svarade inte. Läs in den igen och försök på nytt."
+  },
+  "ruleLiveTestError": {
+    "message": "Testet kunde inte köras."
   }
 }

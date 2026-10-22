@@ -6093,7 +6093,7 @@
     "message": "Invii recenti"
   },
   "webhookLogDesc": {
-    "message": "Gli ultimi 20 tentativi: quando, quale pagina, quale risposta. Indirizzi e payload non vengono mai conservati."
+    "message": "Gli ultimi 20 tentativi: quando, quale pagina, quale risposta. La lista non conserva mai indirizzi né payload."
   },
   "webhookLogEmpty": {
     "message": "Ancora nulla inviato."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Esporta Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Mostra i domini con {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Apri {0} nella cronologia"
+  },
+  "historyCompare": {
+    "message": "Confronta con…"
+  },
+  "historyCompareNone": {
+    "message": "Nessun’altra analisi salvata di questa pagina con cui confrontarla"
+  },
+  "historyCompareTitle": {
+    "message": "Confronta le analisi"
+  },
+  "historyCompareWith": {
+    "message": "Confronta con"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · trovate: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Da {0} a {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Aggiunte"
+  },
+  "historyCompareRemoved": {
+    "message": "Rimosse"
+  },
+  "historyCompareChanged": {
+    "message": "Modificate"
+  },
+  "historyCompareUnchanged": {
+    "message": "Invariate"
+  },
+  "historyCompareIdentical": {
+    "message": "Queste due analisi hanno trovato le stesse protezioni, con la stessa confidenza e le stesse prove."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Nuove prove: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Prove scomparse: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Copia come Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Confronto delle analisi: {0}"
+  },
+  "historySelect": {
+    "message": "Seleziona voci"
+  },
+  "historySelectBarLabel": {
+    "message": "Voci selezionate"
+  },
+  "historySelectDone": {
+    "message": "Fine"
+  },
+  "historySelectAll": {
+    "message": "Seleziona tutto"
+  },
+  "historySelectNone": {
+    "message": "Deseleziona tutto"
+  },
+  "historySelectedFmt": {
+    "message": "Selezionate: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Seleziona {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Fissate: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Sbloccate: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "In monitoraggio: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "In monitoraggio: {0}. Non aggiunte: {1} (puoi monitorare fino a {2} pagine)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Non più monitorate: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Elimina le voci selezionate"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Eliminare dalla cronologia le voci selezionate ({0})? L’operazione non può essere annullata."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Di cui fissate: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Eliminate: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "In monitoraggio: {0}. Attiva «Monitora le pagine fissate» in Impostazioni → Cronologia perché vengano controllate."
+  },
+  "settingsWebhookRetry": {
+    "message": "Riprova gli invii non riusciti"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Dopo 1, 5 e 15 minuti. I dati della pagina di un invio non riuscito restano in memoria per un’ora, mai su disco, così Riprova funziona in Invii recenti."
+  },
+  "webhookLogRetry": {
+    "message": "Riprova"
+  },
+  "webhookLogRetrying": {
+    "message": "Nuovo tentativo…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "nuovo tentativo alle {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "tentativo {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Consegnato"
+  },
+  "webhookRetryFailed": {
+    "message": "Non riuscito di nuovo. Resta nella lista, così puoi riprovare."
+  },
+  "webhookRetryGone": {
+    "message": "Questo invio non può più essere ripetuto."
+  },
+  "webhookRetryOff": {
+    "message": "Per riprovare, attiva il webhook con un indirizzo."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Prova su questa pagina"
+  },
+  "ruleLiveTestHint": {
+    "message": "Esegue la regola così com'è ora, modifiche non salvate incluse, sulla pagina su cui hai aperto questo popup. Non viene salvato né inviato nulla. Si possono provare i pattern di cookie, URL, contenuto e DOM; intestazioni, hook JS, proprietà della finestra e payload richiedono una vera analisi."
+  },
+  "ruleLiveTestRun": {
+    "message": "Prova"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Prova in corso…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "La regola corrisponde a {0} (confidenza {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "La regola corrisponde solo in parte a {0}: una combinazione richiede altre prove"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "La regola non corrisponde a {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "trovati: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "nessuna corrispondenza"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "serve una vera analisi"
+  },
+  "ruleLiveTestFires": {
+    "message": "si attiva"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "non si attiva"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Letti: {0} script, {1} elementi, {2} cookie e {3} richieste."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Le richieste fatte dalla pagina non sono più disponibili, quindi i pattern URL sono stati verificati solo sul suo indirizzo e sui suoi script."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "I pattern contrassegnati con «serve una vera analisi» non fanno parte di questa prova: la risposta qui sopra riguarda gli altri."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Apri il popup su una pagina web per provarvi una regola."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "La pagina non ha risposto. Ricaricala e riprova."
+  },
+  "ruleLiveTestError": {
+    "message": "Non è stato possibile eseguire la prova."
   }
 }

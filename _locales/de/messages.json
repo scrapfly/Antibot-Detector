@@ -6093,7 +6093,7 @@
     "message": "Letzte Zustellungen"
   },
   "webhookLogDesc": {
-    "message": "Die letzten 20 Versuche: wann, welche Seite, was zurückkam. Adressen und Nutzdaten werden nie gespeichert."
+    "message": "Die letzten 20 Versuche: wann, welche Seite, was zurückkam. Die Liste speichert nie Adressen oder Nutzdaten."
   },
   "webhookLogEmpty": {
     "message": "Noch nichts gesendet."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown exportieren"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Domains mit {0} anzeigen"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "{0} im Verlauf öffnen"
+  },
+  "historyCompare": {
+    "message": "Vergleichen mit…"
+  },
+  "historyCompareNone": {
+    "message": "Kein anderer gespeicherter Scan dieser Seite zum Vergleichen"
+  },
+  "historyCompareTitle": {
+    "message": "Scans vergleichen"
+  },
+  "historyCompareWith": {
+    "message": "Vergleichen mit"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · gefunden: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Von {0} bis {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Hinzugekommen"
+  },
+  "historyCompareRemoved": {
+    "message": "Entfernt"
+  },
+  "historyCompareChanged": {
+    "message": "Geändert"
+  },
+  "historyCompareUnchanged": {
+    "message": "Unverändert"
+  },
+  "historyCompareIdentical": {
+    "message": "Diese beiden Scans fanden dieselben Schutzmaßnahmen, mit derselben Konfidenz und denselben Belegen."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0} % → {1} % ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Neue Belege: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Entfallene Belege: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Als Markdown kopieren"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Scan-Vergleich: {0}"
+  },
+  "historySelect": {
+    "message": "Einträge auswählen"
+  },
+  "historySelectBarLabel": {
+    "message": "Ausgewählte Einträge"
+  },
+  "historySelectDone": {
+    "message": "Fertig"
+  },
+  "historySelectAll": {
+    "message": "Alle auswählen"
+  },
+  "historySelectNone": {
+    "message": "Keine auswählen"
+  },
+  "historySelectedFmt": {
+    "message": "Ausgewählt: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "{0} auswählen"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Angeheftet: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Nicht mehr angeheftet: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Überwacht: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Überwacht: {0}. Nicht hinzugefügt: {1} (du kannst bis zu {2} Seiten überwachen)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Überwachung beendet: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Ausgewählte Einträge löschen"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Die ausgewählten Einträge ({0}) aus dem Verlauf löschen? Das kann nicht rückgängig gemacht werden."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Davon angeheftet: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Gelöscht: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Überwacht: {0}. Schalte „Angeheftete Seiten überwachen“ unter Einstellungen → Verlauf ein, damit sie geprüft werden."
+  },
+  "settingsWebhookRetry": {
+    "message": "Fehlgeschlagene Zustellungen wiederholen"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Nach 1, 5 und 15 Minuten. Die Seitendaten einer fehlgeschlagenen Zustellung bleiben eine Stunde im Arbeitsspeicher, nie auf der Festplatte, damit „Wiederholen“ in „Letzte Zustellungen“ funktioniert."
+  },
+  "webhookLogRetry": {
+    "message": "Wiederholen"
+  },
+  "webhookLogRetrying": {
+    "message": "Wird wiederholt…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "neuer Versuch um {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "Wiederholung {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Zugestellt"
+  },
+  "webhookRetryFailed": {
+    "message": "Erneut fehlgeschlagen. Die Zustellung bleibt in der Liste, damit du sie wiederholen kannst."
+  },
+  "webhookRetryGone": {
+    "message": "Diese Zustellung kann nicht mehr wiederholt werden."
+  },
+  "webhookRetryOff": {
+    "message": "Schalte den Webhook mit einer Adresse ein, um zu wiederholen."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Auf dieser Seite testen"
+  },
+  "ruleLiveTestHint": {
+    "message": "Führt die Regel so aus, wie sie jetzt ist, samt ungespeicherter Änderungen, auf der Seite, auf der dieses Popup geöffnet wurde. Nichts wird gespeichert oder gesendet. Cookie-, URL-, Inhalts- und DOM-Muster lassen sich testen; Header, JavaScript-Hooks, Window-Eigenschaften und Nutzdaten brauchen einen echten Scan."
+  },
+  "ruleLiveTestRun": {
+    "message": "Testen"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Wird getestet…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Die Regel trifft auf {0} zu (Konfidenz {1} %)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Die Regel trifft auf {0} nur teilweise zu: Einer Kombination fehlen noch Belege"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Die Regel trifft nicht auf {0} zu"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Gefunden: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "kein Treffer"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "braucht echten Scan"
+  },
+  "ruleLiveTestFires": {
+    "message": "greift"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "greift nicht"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Gelesen: {0} Skripte, {1} Elemente, {2} Cookies und {3} Anfragen."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Die Anfragen der Seite sind gerade nicht verfügbar, daher wurden URL-Muster nur mit ihrer Adresse und ihren Skripten abgeglichen."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Mit „braucht echten Scan“ markierte Muster sind nicht Teil dieses Tests: Die Antwort oben gilt für die übrigen."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Öffne das Popup auf einer Webseite, um dort eine Regel zu testen."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Die Seite hat nicht geantwortet. Lade sie neu und versuche es erneut."
+  },
+  "ruleLiveTestError": {
+    "message": "Der Test konnte nicht ausgeführt werden."
   }
 }

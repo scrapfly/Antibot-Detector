@@ -6093,7 +6093,7 @@
     "message": "Poslední odeslání"
   },
   "webhookLogDesc": {
-    "message": "Posledních 20 pokusů: kdy, která stránka, co přišlo zpět. Adresy a těla požadavků se nikdy neukládají."
+    "message": "Posledních 20 pokusů: kdy, která stránka, co přišlo zpět. Seznam nikdy neuchovává adresy ani těla požadavků."
   },
   "webhookLogEmpty": {
     "message": "Zatím nic odesláno."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Exportovat Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Zobrazit domény s ochranou {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Otevřít {0} v Historii"
+  },
+  "historyCompare": {
+    "message": "Porovnat s…"
+  },
+  "historyCompareNone": {
+    "message": "Žádné jiné uložené skenování této stránky k porovnání"
+  },
+  "historyCompareTitle": {
+    "message": "Porovnat skenování"
+  },
+  "historyCompareWith": {
+    "message": "Porovnat s"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · nalezeno: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Od {0} do {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Přidáno"
+  },
+  "historyCompareRemoved": {
+    "message": "Odebráno"
+  },
+  "historyCompareChanged": {
+    "message": "Změněno"
+  },
+  "historyCompareUnchanged": {
+    "message": "Beze změny"
+  },
+  "historyCompareIdentical": {
+    "message": "Obě skenování našla stejné ochrany se stejnou spolehlivostí a stejnými důkazy."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0} % → {1} % ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Nové důkazy: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Zmizelé důkazy: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Kopírovat jako Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Porovnání skenování: {0}"
+  },
+  "historySelect": {
+    "message": "Vybrat položky"
+  },
+  "historySelectBarLabel": {
+    "message": "Vybrané položky"
+  },
+  "historySelectDone": {
+    "message": "Hotovo"
+  },
+  "historySelectAll": {
+    "message": "Vybrat vše"
+  },
+  "historySelectNone": {
+    "message": "Zrušit výběr"
+  },
+  "historySelectedFmt": {
+    "message": "Vybráno: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Vybrat {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Připnuto: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Odepnuto: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Sledováno: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Sledováno: {0}. Nepřidáno: {1} (sledovat můžete nejvýše {2} stránek)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Sledování ukončeno: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Smazat vybrané položky"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Smazat vybrané položky ({0}) z Historie? Tuto akci nelze vrátit zpět."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Z toho připnuté: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Smazáno: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Sledováno: {0}. Aby se kontrolovaly, zapněte „Sledovat připnuté stránky“ v Nastavení → Historie."
+  },
+  "settingsWebhookRetry": {
+    "message": "Opakovat neúspěšná odeslání"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Po 1, 5 a 15 minutách. Data stránky neúspěšného odeslání zůstávají hodinu v paměti, nikdy na disku, aby v seznamu „Poslední odeslání“ fungovalo „Opakovat“."
+  },
+  "webhookLogRetry": {
+    "message": "Opakovat"
+  },
+  "webhookLogRetrying": {
+    "message": "Opakuje se…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "další pokus v {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "opakování {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Doručeno"
+  },
+  "webhookRetryFailed": {
+    "message": "Opět selhalo. Odeslání zůstává v seznamu, takže ho můžete zopakovat."
+  },
+  "webhookRetryGone": {
+    "message": "Toto odeslání už nelze opakovat."
+  },
+  "webhookRetryOff": {
+    "message": "Pro opakování zapněte webhook a zadejte adresu."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Otestovat na této stránce"
+  },
+  "ruleLiveTestHint": {
+    "message": "Spustí pravidlo v aktuální podobě, včetně neuložených úprav, na stránce, na které bylo toto okno rozšíření otevřeno. Nic se neukládá ani neodesílá. Testovat lze vzory cookies, URL, obsahu a DOM; hlavičky, JavaScriptové hooky, vlastnosti okna a payload vyžadují skutečné skenování."
+  },
+  "ruleLiveTestRun": {
+    "message": "Test"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Testuje se…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Pravidlo se shoduje na {0} (spolehlivost {1} %)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Pravidlo se na {0} shoduje jen částečně: kombinaci chybí další důkazy"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Pravidlo se na {0} neshoduje"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Nalezeno: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "bez shody"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "vyžaduje skutečné skenování"
+  },
+  "ruleLiveTestFires": {
+    "message": "spustí se"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "nespustí se"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Přečteno – skripty: {0}, prvky: {1}, cookies: {2}, požadavky: {3}."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Požadavky stránky teď nejsou k dispozici, proto se vzory URL porovnaly jen s její adresou a skripty."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Vzory označené „vyžaduje skutečné skenování“ nejsou součástí tohoto testu: odpověď výše platí pro ostatní."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Chcete-li otestovat pravidlo na webové stránce, otevřete na ní okno rozšíření."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Stránka neodpověděla. Načtěte ji znovu a zkuste to ještě jednou."
+  },
+  "ruleLiveTestError": {
+    "message": "Test se nepodařilo spustit."
   }
 }

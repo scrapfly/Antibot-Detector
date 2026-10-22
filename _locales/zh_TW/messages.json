@@ -6093,7 +6093,7 @@
     "message": "最近的傳送記錄"
   },
   "webhookLogDesc": {
-    "message": "最近 20 次嘗試：時間、哪個網頁、收到什麼回應。位址和傳送的內容一律不會保留。"
+    "message": "最近 20 次嘗試：時間、哪個網頁、收到什麼回應。清單一律不會保留位址或傳送的內容。"
   },
   "webhookLogEmpty": {
     "message": "尚未傳送任何內容。"
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "匯出 Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "顯示含有 {0} 的網域"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "在歷史記錄中開啟 {0}"
+  },
+  "historyCompare": {
+    "message": "與…比較"
+  },
+  "historyCompareNone": {
+    "message": "此網頁沒有其他已儲存的掃描可供比較"
+  },
+  "historyCompareTitle": {
+    "message": "比較掃描"
+  },
+  "historyCompareWith": {
+    "message": "比較對象"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · 找到 {1} 個"
+  },
+  "historyCompareRangeFmt": {
+    "message": "從 {0} 到 {1}"
+  },
+  "historyCompareAdded": {
+    "message": "新增"
+  },
+  "historyCompareRemoved": {
+    "message": "消失"
+  },
+  "historyCompareChanged": {
+    "message": "有變更"
+  },
+  "historyCompareUnchanged": {
+    "message": "無變更"
+  },
+  "historyCompareIdentical": {
+    "message": "這兩次掃描找到的防護相同，信賴度和證據也相同。"
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}%（{2}）"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "新增證據：{0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "消失的證據：{0}"
+  },
+  "historyCompareCopy": {
+    "message": "複製為 Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "比較掃描：{0}"
+  },
+  "historySelect": {
+    "message": "選取項目"
+  },
+  "historySelectBarLabel": {
+    "message": "已選取的項目"
+  },
+  "historySelectDone": {
+    "message": "完成"
+  },
+  "historySelectAll": {
+    "message": "全選"
+  },
+  "historySelectNone": {
+    "message": "全部取消選取"
+  },
+  "historySelectedFmt": {
+    "message": "已選取 {0} 筆"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "選取 {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "已釘選 {0} 筆"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "已取消釘選 {0} 筆"
+  },
+  "historyBulkWatchFmt": {
+    "message": "正在監看 {0} 個網頁"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "正在監看 {0} 個網頁，另有 {1} 個未加入（最多可監看 {2} 個網頁）。"
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "已停止監看 {0} 個網頁"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "刪除選取的項目"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "要從歷史記錄中刪除選取的 {0} 筆項目嗎？此動作無法復原。"
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "其中 {0} 筆已釘選。"
+  },
+  "historyBulkDeletedFmt": {
+    "message": "已刪除 {0} 筆"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "正在監看 {0} 個網頁。請在「設定 → 歷史記錄」中開啟「監看已釘選的網頁」，才會檢查這些網頁。"
+  },
+  "settingsWebhookRetry": {
+    "message": "自動重試傳送失敗的項目"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "在 1、5 和 15 分鐘後重試。傳送失敗的網頁資料會在記憶體中保留一小時，絕不寫入磁碟，因此可以在「最近的傳送記錄」中使用「重試」。"
+  },
+  "webhookLogRetry": {
+    "message": "重試"
+  },
+  "webhookLogRetrying": {
+    "message": "正在重試…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "將於 {0} 重試"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "第 {0} 次重試"
+  },
+  "webhookRetrySent": {
+    "message": "已送達"
+  },
+  "webhookRetryFailed": {
+    "message": "再次失敗。它仍會留在清單中，您可以再重試一次。"
+  },
+  "webhookRetryGone": {
+    "message": "這次傳送已無法重試。"
+  },
+  "webhookRetryOff": {
+    "message": "請先啟用 Webhook 並填入位址，才能重試。"
+  },
+  "ruleLiveTestTitle": {
+    "message": "在此網頁上測試"
+  },
+  "ruleLiveTestHint": {
+    "message": "以規則目前的狀態（包含未儲存的編輯），在開啟此彈出式視窗的網頁上執行。不會儲存或傳送任何內容。可以測試 Cookie、URL、內容和 DOM 模式；標頭、JS 掛鉤、視窗屬性和酬載需要實際掃描。"
+  },
+  "ruleLiveTestRun": {
+    "message": "測試"
+  },
+  "ruleLiveTestRunning": {
+    "message": "正在測試…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "規則符合 {0}（信賴度 {1}%）"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "規則在 {0} 上只部分符合：某個組合還需要更多證據"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "規則不符合 {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "找到 {0} 處"
+  },
+  "ruleLiveTestNone": {
+    "message": "沒有符合"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "需要實際掃描"
+  },
+  "ruleLiveTestFires": {
+    "message": "觸發"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "未觸發"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "已讀取 {0} 個指令碼、{1} 個元素、{2} 個 Cookie 和 {3} 個要求。"
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "目前無法取得網頁發出的要求，因此 URL 模式只與網頁的位址和指令碼進行比對。"
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "標示為「需要實際掃描」的模式不在此測試範圍內：上方的結果涵蓋其他模式。"
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "請在網頁上開啟彈出式視窗，才能在該網頁上測試規則。"
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "網頁沒有回應。請重新載入網頁後再試一次。"
+  },
+  "ruleLiveTestError": {
+    "message": "無法執行測試。"
   }
 }

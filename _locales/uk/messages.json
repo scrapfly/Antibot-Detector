@@ -6093,7 +6093,7 @@
     "message": "Останні надсилання"
   },
   "webhookLogDesc": {
-    "message": "Останні 20 спроб: коли, яка сторінка, що відповів сервер. Адреси й тіла запитів не зберігаються."
+    "message": "Останні 20 спроб: коли, яка сторінка, що повернулося. Список ніколи не зберігає адрес і тіл запитів."
   },
   "webhookLogEmpty": {
     "message": "Поки що нічого не надіслано."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Експорт Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Показати домени з {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Відкрити {0} в Історії"
+  },
+  "historyCompare": {
+    "message": "Порівняти з…"
+  },
+  "historyCompareNone": {
+    "message": "Немає іншого збереженого сканування цієї сторінки для порівняння"
+  },
+  "historyCompareTitle": {
+    "message": "Порівняння сканувань"
+  },
+  "historyCompareWith": {
+    "message": "Порівняти з"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · знайдено: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "З {0} до {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Додано"
+  },
+  "historyCompareRemoved": {
+    "message": "Прибрано"
+  },
+  "historyCompareChanged": {
+    "message": "Змінено"
+  },
+  "historyCompareUnchanged": {
+    "message": "Без змін"
+  },
+  "historyCompareIdentical": {
+    "message": "Ці два сканування знайшли той самий захист з тією самою впевненістю й доказами."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Нові докази: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Зниклі докази: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Копіювати як Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Порівняння сканувань: {0}"
+  },
+  "historySelect": {
+    "message": "Вибрати записи"
+  },
+  "historySelectBarLabel": {
+    "message": "Вибрані записи"
+  },
+  "historySelectDone": {
+    "message": "Готово"
+  },
+  "historySelectAll": {
+    "message": "Вибрати всі"
+  },
+  "historySelectNone": {
+    "message": "Зняти вибір"
+  },
+  "historySelectedFmt": {
+    "message": "Вибрано: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Вибрати {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Закріплено: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Відкріплено: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Відстежується: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Відстежується: {0}. Не додано: {1} (можна відстежувати до {2} сторінок)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Стеження припинено: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Видалити вибрані записи"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Видалити вибрані записи ({0}) з Історії? Цю дію не можна скасувати."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Серед них закріплених: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Видалено: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Відстежується: {0}. Щоб їх перевіряли, увімкніть «Стежити за закріпленими сторінками» в розділі Налаштування → Історія."
+  },
+  "settingsWebhookRetry": {
+    "message": "Повторювати невдалі надсилання"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Через 1, 5 і 15 хвилин. Дані сторінки з невдалого надсилання зберігаються в пам’яті протягом години, ніколи на диску, тож кнопка «Повторити» працює у списку «Останні надсилання»."
+  },
+  "webhookLogRetry": {
+    "message": "Повторити"
+  },
+  "webhookLogRetrying": {
+    "message": "Повторна спроба…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "повтор о {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "повтор {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Доставлено"
+  },
+  "webhookRetryFailed": {
+    "message": "Знову не вдалося. Запис лишається в списку, тож його можна повторити."
+  },
+  "webhookRetryGone": {
+    "message": "Це надсилання вже не можна повторити."
+  },
+  "webhookRetryOff": {
+    "message": "Щоб повторити, увімкніть вебхук і вкажіть адресу."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Перевірити на цій сторінці"
+  },
+  "ruleLiveTestHint": {
+    "message": "Запускає правило в поточному вигляді, разом із незбереженими змінами, на сторінці, де відкрито це спливне вікно. Нічого не зберігається й не надсилається. Можна перевірити шаблони файлів cookie, URL, вмісту й DOM; заголовки, JS-хуки, властивості window і корисне навантаження потребують справжнього сканування."
+  },
+  "ruleLiveTestRun": {
+    "message": "Перевірити"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Перевірка…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Правило збігається на {0} (впевненість {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Правило збігається на {0} лише частково: комбінації потрібно більше доказів"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Правило не збігається на {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Знайдено: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "немає збігів"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "потрібне справжнє сканування"
+  },
+  "ruleLiveTestFires": {
+    "message": "спрацьовує"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "не спрацьовує"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Прочитано скриптів: {0}, елементів: {1}, файлів cookie: {2}, запитів: {3}."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Запити, які зробила сторінка, зараз недоступні, тому шаблони URL перевірено лише за її адресою та скриптами."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Шаблони з позначкою «потрібне справжнє сканування» не входять у цю перевірку: відповідь вище стосується решти."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Відкрийте спливне вікно на веб-сторінці, щоб перевірити на ній правило."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Сторінка не відповіла. Перезавантажте її й спробуйте ще раз."
+  },
+  "ruleLiveTestError": {
+    "message": "Не вдалося запустити перевірку."
   }
 }

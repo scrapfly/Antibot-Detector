@@ -6093,7 +6093,7 @@
     "message": "Pengiriman terbaru"
   },
   "webhookLogDesc": {
-    "message": "20 percobaan terakhir: kapan, halaman mana, apa balasannya. Alamat dan payload tidak pernah disimpan."
+    "message": "20 percobaan terakhir: kapan, halaman mana, apa balasannya. Daftar ini tidak pernah menyimpan alamat atau payload."
   },
   "webhookLogEmpty": {
     "message": "Belum ada yang dikirim."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Ekspor Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Tampilkan domain dengan {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Buka {0} di Riwayat"
+  },
+  "historyCompare": {
+    "message": "Bandingkan dengan…"
+  },
+  "historyCompareNone": {
+    "message": "Tidak ada pindaian tersimpan lain dari halaman ini untuk dibandingkan"
+  },
+  "historyCompareTitle": {
+    "message": "Bandingkan pindaian"
+  },
+  "historyCompareWith": {
+    "message": "Bandingkan dengan"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · {1} ditemukan"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Dari {0} hingga {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Ditambahkan"
+  },
+  "historyCompareRemoved": {
+    "message": "Dihapus"
+  },
+  "historyCompareChanged": {
+    "message": "Berubah"
+  },
+  "historyCompareUnchanged": {
+    "message": "Tidak berubah"
+  },
+  "historyCompareIdentical": {
+    "message": "Kedua pindaian ini menemukan proteksi yang sama, dengan kepercayaan dan bukti yang sama."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Bukti baru: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Bukti hilang: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Salin sebagai Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Perbandingan pindaian: {0}"
+  },
+  "historySelect": {
+    "message": "Pilih entri"
+  },
+  "historySelectBarLabel": {
+    "message": "Entri terpilih"
+  },
+  "historySelectDone": {
+    "message": "Selesai"
+  },
+  "historySelectAll": {
+    "message": "Pilih semua"
+  },
+  "historySelectNone": {
+    "message": "Kosongkan pilihan"
+  },
+  "historySelectedFmt": {
+    "message": "{0} dipilih"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Pilih {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Disematkan: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Sematan dilepas: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Dipantau: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Dipantau: {0}. Tidak ditambahkan: {1} (Anda dapat memantau hingga {2} halaman)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Berhenti dipantau: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Hapus entri terpilih"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Hapus entri terpilih ({0}) dari Riwayat? Tindakan ini tidak dapat dibatalkan."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Di antaranya disematkan: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Dihapus: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Dipantau: {0}. Aktifkan “Pantau halaman yang disematkan” di Pengaturan → Riwayat agar halaman tersebut diperiksa."
+  },
+  "settingsWebhookRetry": {
+    "message": "Coba lagi pengiriman yang gagal"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Setelah 1, 5, dan 15 menit. Data halaman dari pengiriman yang gagal disimpan di memori selama satu jam, tidak pernah di disk, sehingga “Coba lagi” berfungsi di “Pengiriman terbaru”."
+  },
+  "webhookLogRetry": {
+    "message": "Coba lagi"
+  },
+  "webhookLogRetrying": {
+    "message": "Mencoba lagi…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "dicoba lagi pukul {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "percobaan ulang {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Berhasil dikirim"
+  },
+  "webhookRetryFailed": {
+    "message": "Gagal lagi. Pengiriman tetap ada di daftar, jadi Anda bisa mencobanya lagi."
+  },
+  "webhookRetryGone": {
+    "message": "Pengiriman ini tidak dapat dicoba lagi."
+  },
+  "webhookRetryOff": {
+    "message": "Aktifkan webhook, dengan sebuah alamat, untuk mencoba lagi."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Uji di halaman ini"
+  },
+  "ruleLiveTestHint": {
+    "message": "Menjalankan aturan apa adanya saat ini, termasuk perubahan yang belum disimpan, di halaman tempat popup ini dibuka. Tidak ada yang disimpan atau dikirim. Pola cookie, URL, konten, dan DOM dapat diuji; header, hook JavaScript, properti window, dan payload memerlukan pemindaian sungguhan."
+  },
+  "ruleLiveTestRun": {
+    "message": "Uji"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Menguji…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Aturan cocok dengan {0} (kepercayaan {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Aturan hanya cocok sebagian di {0}: sebuah kombinasi memerlukan lebih banyak bukti"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Aturan tidak cocok dengan {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "{0} ditemukan"
+  },
+  "ruleLiveTestNone": {
+    "message": "tidak cocok"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "perlu pemindaian sungguhan"
+  },
+  "ruleLiveTestFires": {
+    "message": "terpicu"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "tidak terpicu"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Membaca {0} script, {1} elemen, {2} cookie, dan {3} permintaan."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Permintaan yang dibuat halaman tidak tersedia sekarang, sehingga pola URL hanya dicocokkan dengan alamat dan script-nya."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Pola bertanda “perlu pemindaian sungguhan” tidak termasuk dalam pengujian ini: jawaban di atas mencakup pola lainnya."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Buka popup di halaman web untuk menguji aturan di sana."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Halaman tidak merespons. Muat ulang lalu coba lagi."
+  },
+  "ruleLiveTestError": {
+    "message": "Pengujian tidak dapat dijalankan."
   }
 }

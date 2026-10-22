@@ -6093,7 +6093,7 @@
     "message": "Recente verzendingen"
   },
   "webhookLogDesc": {
-    "message": "De laatste 20 pogingen: wanneer, welke pagina, wat het antwoord was. Adressen en payloads worden nooit bewaard."
+    "message": "De laatste 20 pogingen: wanneer, welke pagina, wat er terugkwam. De lijst bewaart nooit adressen of payloads."
   },
   "webhookLogEmpty": {
     "message": "Nog niets verzonden."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown exporteren"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Domeinen met {0} tonen"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "{0} openen in Geschiedenis"
+  },
+  "historyCompare": {
+    "message": "Vergelijken met…"
+  },
+  "historyCompareNone": {
+    "message": "Geen andere opgeslagen scan van deze pagina om mee te vergelijken"
+  },
+  "historyCompareTitle": {
+    "message": "Scans vergelijken"
+  },
+  "historyCompareWith": {
+    "message": "Vergelijken met"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · gevonden: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Van {0} tot {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Toegevoegd"
+  },
+  "historyCompareRemoved": {
+    "message": "Verdwenen"
+  },
+  "historyCompareChanged": {
+    "message": "Gewijzigd"
+  },
+  "historyCompareUnchanged": {
+    "message": "Ongewijzigd"
+  },
+  "historyCompareIdentical": {
+    "message": "Deze twee scans vonden dezelfde beveiligingen, met dezelfde zekerheid en hetzelfde bewijs."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Nieuw bewijs: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Bewijs verdwenen: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Kopiëren als Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Scans vergelijken: {0}"
+  },
+  "historySelect": {
+    "message": "Items selecteren"
+  },
+  "historySelectBarLabel": {
+    "message": "Geselecteerde items"
+  },
+  "historySelectDone": {
+    "message": "Klaar"
+  },
+  "historySelectAll": {
+    "message": "Alles selecteren"
+  },
+  "historySelectNone": {
+    "message": "Niets selecteren"
+  },
+  "historySelectedFmt": {
+    "message": "Geselecteerd: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "{0} selecteren"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Vastgezet: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Losgemaakt: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Gevolgd: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Gevolgd: {0}. Niet toegevoegd: {1} (je kunt maximaal {2} pagina's volgen)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Niet meer gevolgd: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Geselecteerde items verwijderen"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "De geselecteerde items ({0}) uit Geschiedenis verwijderen? Dit kan niet ongedaan worden gemaakt."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Waarvan vastgezet: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Verwijderd: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Gevolgd: {0}. Zet Vastgezette pagina's volgen aan in Instellingen → Geschiedenis zodat ze worden gecontroleerd."
+  },
+  "settingsWebhookRetry": {
+    "message": "Mislukte verzendingen opnieuw proberen"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Na 1, 5 en 15 minuten. De paginagegevens van een mislukte verzending blijven een uur in het geheugen, nooit op schijf, zodat Opnieuw werkt in Recente verzendingen."
+  },
+  "webhookLogRetry": {
+    "message": "Opnieuw"
+  },
+  "webhookLogRetrying": {
+    "message": "Opnieuw…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "nieuwe poging om {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "poging {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Afgeleverd"
+  },
+  "webhookRetryFailed": {
+    "message": "Opnieuw mislukt. Hij blijft in de lijst, zodat je het nog eens kunt proberen."
+  },
+  "webhookRetryGone": {
+    "message": "Deze verzending kan niet meer opnieuw worden geprobeerd."
+  },
+  "webhookRetryOff": {
+    "message": "Zet de webhook aan, met een adres, om opnieuw te proberen."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Testen op deze pagina"
+  },
+  "ruleLiveTestHint": {
+    "message": "Voert de regel uit zoals hij nu is, inclusief niet-opgeslagen wijzigingen, op de pagina waarop deze pop-up is geopend. Er wordt niets opgeslagen of verzonden. Patronen voor cookies, URL's, inhoud en DOM kunnen worden getest; headers, JS-hooks, window-eigenschappen en payloads hebben een echte scan nodig."
+  },
+  "ruleLiveTestRun": {
+    "message": "Testen"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Testen…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "De regel komt overeen met {0} (zekerheid {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "De regel komt maar gedeeltelijk overeen met {0}: een combinatie heeft meer bewijs nodig"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "De regel komt niet overeen met {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "gevonden: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "geen match"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "echte scan nodig"
+  },
+  "ruleLiveTestFires": {
+    "message": "voldaan"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "niet voldaan"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Gelezen: {0} scripts, {1} elementen, {2} cookies en {3} verzoeken."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "De verzoeken van de pagina zijn nu niet beschikbaar, dus URL-patronen zijn alleen gecontroleerd tegen het adres en de scripts."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Patronen gemarkeerd met “echte scan nodig” horen niet bij deze test: het antwoord hierboven geldt voor de andere."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Open de pop-up op een webpagina om er een regel op te testen."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "De pagina reageerde niet. Laad hem opnieuw en probeer het nog eens."
+  },
+  "ruleLiveTestError": {
+    "message": "De test kon niet worden uitgevoerd."
   }
 }

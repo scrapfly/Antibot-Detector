@@ -6093,7 +6093,7 @@
     "message": "Các lần gửi gần đây"
   },
   "webhookLogDesc": {
-    "message": "20 lần thử gần nhất: lúc nào, trang nào, phản hồi ra sao. Địa chỉ và dữ liệu gửi đi không bao giờ được lưu."
+    "message": "20 lần thử gần nhất: lúc nào, trang nào, phản hồi ra sao. Danh sách không bao giờ lưu địa chỉ hay dữ liệu gửi đi."
   },
   "webhookLogEmpty": {
     "message": "Chưa gửi gì."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Xuất Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Hiện các tên miền có {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Mở {0} trong Lịch sử"
+  },
+  "historyCompare": {
+    "message": "So sánh với…"
+  },
+  "historyCompareNone": {
+    "message": "Không có lần quét đã lưu nào khác của trang này để so sánh"
+  },
+  "historyCompareTitle": {
+    "message": "So sánh các lần quét"
+  },
+  "historyCompareWith": {
+    "message": "So sánh với"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · tìm thấy {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Từ {0} đến {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Mới xuất hiện"
+  },
+  "historyCompareRemoved": {
+    "message": "Đã biến mất"
+  },
+  "historyCompareChanged": {
+    "message": "Đã thay đổi"
+  },
+  "historyCompareUnchanged": {
+    "message": "Không đổi"
+  },
+  "historyCompareIdentical": {
+    "message": "Hai lần quét này tìm thấy cùng các biện pháp bảo vệ, với cùng độ tin cậy và bằng chứng."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Bằng chứng mới: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Bằng chứng đã mất: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Sao chép dạng Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "So sánh các lần quét: {0}"
+  },
+  "historySelect": {
+    "message": "Chọn mục"
+  },
+  "historySelectBarLabel": {
+    "message": "Các mục đã chọn"
+  },
+  "historySelectDone": {
+    "message": "Xong"
+  },
+  "historySelectAll": {
+    "message": "Chọn tất cả"
+  },
+  "historySelectNone": {
+    "message": "Bỏ chọn tất cả"
+  },
+  "historySelectedFmt": {
+    "message": "Đã chọn: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Chọn {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Đã ghim: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Đã bỏ ghim: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Đang theo dõi: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Đang theo dõi: {0}. Chưa thêm: {1} (bạn có thể theo dõi tối đa {2} trang)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Đã ngừng theo dõi: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Xóa các mục đã chọn"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Xóa các mục đã chọn ({0}) khỏi Lịch sử? Không thể hoàn tác thao tác này."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Trong đó đã ghim: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Đã xóa: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Đang theo dõi: {0}. Hãy bật Theo dõi các trang đã ghim trong Cài đặt → Lịch sử để các trang được kiểm tra."
+  },
+  "settingsWebhookRetry": {
+    "message": "Thử lại các lần gửi thất bại"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Sau 1, 5 và 15 phút. Dữ liệu trang của một lần gửi thất bại được giữ trong bộ nhớ một giờ, không bao giờ ghi ra đĩa, nên nút Thử lại dùng được trong Các lần gửi gần đây."
+  },
+  "webhookLogRetry": {
+    "message": "Thử lại"
+  },
+  "webhookLogRetrying": {
+    "message": "Đang thử lại…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "thử lại lúc {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "thử lại lần {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Đã gửi thành công"
+  },
+  "webhookRetryFailed": {
+    "message": "Lại thất bại. Lần gửi vẫn nằm trong danh sách, bạn có thể thử lại."
+  },
+  "webhookRetryGone": {
+    "message": "Không thể thử lại lần gửi này nữa."
+  },
+  "webhookRetryOff": {
+    "message": "Hãy bật webhook và nhập địa chỉ để thử lại."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Kiểm tra trên trang này"
+  },
+  "ruleLiveTestHint": {
+    "message": "Chạy quy tắc ở trạng thái hiện tại, kể cả các chỉnh sửa chưa lưu, trên trang nơi cửa sổ bật lên này được mở. Không có gì được lưu hay gửi đi. Có thể kiểm tra các mẫu cookie, URL, nội dung và DOM; header, JS hook, thuộc tính window và payload cần một lần quét thật."
+  },
+  "ruleLiveTestRun": {
+    "message": "Kiểm tra"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Đang kiểm tra…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Quy tắc khớp với {0} (độ tin cậy {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Quy tắc chỉ khớp một phần trên {0}: một tổ hợp cần thêm bằng chứng"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Quy tắc không khớp với {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Tìm thấy {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "không khớp"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "cần quét thật"
+  },
+  "ruleLiveTestFires": {
+    "message": "kích hoạt"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "không kích hoạt"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Đã đọc {0} script, {1} phần tử, {2} cookie và {3} yêu cầu."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Hiện không có các yêu cầu mà trang đã gửi, nên mẫu URL chỉ được đối chiếu với địa chỉ và script của trang."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Các mẫu được đánh dấu \"cần quét thật\" không thuộc lần kiểm tra này: kết quả ở trên áp dụng cho các mẫu còn lại."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Hãy mở cửa sổ bật lên trên một trang web để kiểm tra quy tắc trên trang đó."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Trang không phản hồi. Hãy tải lại trang và thử lại."
+  },
+  "ruleLiveTestError": {
+    "message": "Không thể chạy kiểm tra."
   }
 }

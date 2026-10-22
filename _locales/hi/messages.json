@@ -6093,7 +6093,7 @@
     "message": "हाल की डिलीवरी"
   },
   "webhookLogDesc": {
-    "message": "पिछले 20 प्रयास: कब, कौन-सा पेज, क्या जवाब आया। पते और पेलोड कभी नहीं रखे जाते।"
+    "message": "पिछले 20 प्रयास: कब, कौन-सा पेज, क्या जवाब आया। सूची में पते और पेलोड कभी नहीं रखे जाते।"
   },
   "webhookLogEmpty": {
     "message": "अभी तक कुछ नहीं भेजा गया।"
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown निर्यात करें"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "{0} वाले डोमेन दिखाएँ"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "{0} को इतिहास में खोलें"
+  },
+  "historyCompare": {
+    "message": "इससे तुलना करें…"
+  },
+  "historyCompareNone": {
+    "message": "तुलना के लिए इस पेज का कोई और सहेजा गया स्कैन नहीं है"
+  },
+  "historyCompareTitle": {
+    "message": "स्कैन की तुलना"
+  },
+  "historyCompareWith": {
+    "message": "इससे तुलना करें"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · मिले: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "{0} से {1} तक"
+  },
+  "historyCompareAdded": {
+    "message": "जोड़े गए"
+  },
+  "historyCompareRemoved": {
+    "message": "हटाए गए"
+  },
+  "historyCompareChanged": {
+    "message": "बदले गए"
+  },
+  "historyCompareUnchanged": {
+    "message": "अपरिवर्तित"
+  },
+  "historyCompareIdentical": {
+    "message": "इन दोनों स्कैन में वही सुरक्षा उपाय मिले, उसी विश्वसनीयता और उन्हीं साक्ष्यों के साथ।"
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "नए साक्ष्य: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "गायब साक्ष्य: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Markdown के रूप में कॉपी करें"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "स्कैन की तुलना: {0}"
+  },
+  "historySelect": {
+    "message": "प्रविष्टियाँ चुनें"
+  },
+  "historySelectBarLabel": {
+    "message": "चुनी गई प्रविष्टियाँ"
+  },
+  "historySelectDone": {
+    "message": "हो गया"
+  },
+  "historySelectAll": {
+    "message": "सभी चुनें"
+  },
+  "historySelectNone": {
+    "message": "चयन हटाएँ"
+  },
+  "historySelectedFmt": {
+    "message": "चुनी गईं: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "{0} चुनें"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "पिन किए गए: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "अनपिन किए गए: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "नज़र रखी जा रही: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "नज़र रखी जा रही: {0}। नहीं जोड़े गए: {1} (आप अधिकतम {2} पेजों पर नज़र रख सकते हैं)।"
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "नज़र रखना बंद: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "चुनी गई प्रविष्टियाँ हटाएं"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "चुनी गई प्रविष्टियाँ ({0}) इतिहास से हटाएं? यह क्रिया वापस नहीं की जा सकती।"
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "इनमें पिन की गई: {0}।"
+  },
+  "historyBulkDeletedFmt": {
+    "message": "हटाई गईं: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "नज़र रखी जा रही: {0}। इनकी जाँच के लिए सेटिंग्स → इतिहास में “पिन किए गए पेजों पर नज़र रखें” चालू करें।"
+  },
+  "settingsWebhookRetry": {
+    "message": "विफल डिलीवरी फिर से भेजें"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "1, 5 और 15 मिनट बाद। विफल डिलीवरी के पेज का डेटा एक घंटे तक मेमोरी में रहता है, डिस्क पर कभी नहीं, ताकि “हाल की डिलीवरी” में “फिर से भेजें” काम करे।"
+  },
+  "webhookLogRetry": {
+    "message": "फिर से भेजें"
+  },
+  "webhookLogRetrying": {
+    "message": "फिर से भेजा जा रहा है…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "{0} पर फिर से कोशिश"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "दोबारा प्रयास {0}"
+  },
+  "webhookRetrySent": {
+    "message": "डिलीवर हुआ"
+  },
+  "webhookRetryFailed": {
+    "message": "फिर से विफल। यह सूची में बनी रहती है, ताकि आप इसे फिर से भेज सकें।"
+  },
+  "webhookRetryGone": {
+    "message": "यह डिलीवरी अब फिर से नहीं भेजी जा सकती।"
+  },
+  "webhookRetryOff": {
+    "message": "फिर से भेजने के लिए Webhook को किसी पते के साथ चालू करें।"
+  },
+  "ruleLiveTestTitle": {
+    "message": "इस पेज पर जाँचें"
+  },
+  "ruleLiveTestHint": {
+    "message": "नियम को अभी जैसा है, बिना सहेजे बदलावों सहित, उस पेज पर चलाता है जिस पर यह पॉपअप खोला गया था। कुछ भी सहेजा या भेजा नहीं जाता। कुकीज़, URL, सामग्री और DOM पैटर्न जाँचे जा सकते हैं; हेडर, JavaScript हुक, विंडो गुण और पेलोड के लिए असली स्कैन चाहिए।"
+  },
+  "ruleLiveTestRun": {
+    "message": "जाँचें"
+  },
+  "ruleLiveTestRunning": {
+    "message": "जाँच हो रही है…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "नियम {0} पर मेल खाता है (विश्वसनीयता {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "नियम {0} पर केवल आंशिक रूप से मेल खाता है: किसी संयोजन को और साक्ष्य चाहिए"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "नियम {0} पर मेल नहीं खाता"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "मिले: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "कोई मिलान नहीं"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "असली स्कैन चाहिए"
+  },
+  "ruleLiveTestFires": {
+    "message": "सक्रिय"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "सक्रिय नहीं"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "पढ़े गए: {0} स्क्रिप्ट, {1} एलिमेंट, {2} कुकीज़ और {3} अनुरोध।"
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "पेज के किए गए अनुरोध अभी उपलब्ध नहीं हैं, इसलिए URL पैटर्न केवल उसके पते और स्क्रिप्ट से मिलाए गए।"
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "“असली स्कैन चाहिए” से चिह्नित पैटर्न इस जाँच का हिस्सा नहीं हैं: ऊपर का परिणाम बाकी पैटर्न पर लागू होता है।"
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "किसी नियम को जाँचने के लिए पॉपअप को किसी वेब पेज पर खोलें।"
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "पेज ने जवाब नहीं दिया। उसे रीलोड करके फिर से कोशिश करें।"
+  },
+  "ruleLiveTestError": {
+    "message": "जाँच नहीं चल सकी।"
   }
 }

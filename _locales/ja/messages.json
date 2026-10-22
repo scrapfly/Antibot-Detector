@@ -6093,7 +6093,7 @@
     "message": "最近の送信"
   },
   "webhookLogDesc": {
-    "message": "直近 20 件の試行: 日時、ページ、返ってきた結果。アドレスとペイロードは保存されません。"
+    "message": "直近 20 件の試行: 日時、ページ、返ってきた結果。このリストにアドレスやペイロードが保存されることはありません。"
   },
   "webhookLogEmpty": {
     "message": "まだ何も送信されていません。"
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Markdownをエクスポート"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "{0} があるドメインを表示"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "{0} を履歴で開く"
+  },
+  "historyCompare": {
+    "message": "ほかのスキャンと比較…"
+  },
+  "historyCompareNone": {
+    "message": "比較できる、このページの保存済みスキャンがほかにありません"
+  },
+  "historyCompareTitle": {
+    "message": "スキャンを比較"
+  },
+  "historyCompareWith": {
+    "message": "比較対象"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · {1} 件検出"
+  },
+  "historyCompareRangeFmt": {
+    "message": "{0} から {1} まで"
+  },
+  "historyCompareAdded": {
+    "message": "追加"
+  },
+  "historyCompareRemoved": {
+    "message": "削除"
+  },
+  "historyCompareChanged": {
+    "message": "変更"
+  },
+  "historyCompareUnchanged": {
+    "message": "変更なし"
+  },
+  "historyCompareIdentical": {
+    "message": "この 2 つのスキャンでは、同じ保護機能が同じ信頼度と根拠で検出されました。"
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}%（{2}）"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "新しい根拠: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "なくなった根拠: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Markdown としてコピー"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "スキャンの比較: {0}"
+  },
+  "historySelect": {
+    "message": "項目を選択"
+  },
+  "historySelectBarLabel": {
+    "message": "選択した項目"
+  },
+  "historySelectDone": {
+    "message": "完了"
+  },
+  "historySelectAll": {
+    "message": "すべて選択"
+  },
+  "historySelectNone": {
+    "message": "選択を解除"
+  },
+  "historySelectedFmt": {
+    "message": "{0} 件を選択中"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "{0} を選択"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "{0} 件をピン留めしました"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "{0} 件のピン留めを解除しました"
+  },
+  "historyBulkWatchFmt": {
+    "message": "{0} 件を監視中"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "{0} 件を監視中。{1} 件は追加されませんでした（監視できるのは最大 {2} ページです）。"
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "{0} 件の監視を停止しました"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "選択した項目を削除"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "選択した {0} 件の項目を履歴から削除しますか?この操作は元に戻せません。"
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "うち {0} 件はピン留め済みです。"
+  },
+  "historyBulkDeletedFmt": {
+    "message": "{0} 件を削除しました"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "{0} 件を監視中。確認されるには、設定 → 履歴 で「ピン留めしたページを監視」をオンにしてください。"
+  },
+  "settingsWebhookRetry": {
+    "message": "失敗した送信を再試行"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "1 分後、5 分後、15 分後に再試行します。失敗した送信のページデータは 1 時間メモリに保持され、ディスクには保存されないため、「最近の送信」で「再試行」を使えます。"
+  },
+  "webhookLogRetry": {
+    "message": "再試行"
+  },
+  "webhookLogRetrying": {
+    "message": "再試行中…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "{0} に再試行"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "再試行 {0}"
+  },
+  "webhookRetrySent": {
+    "message": "送信しました"
+  },
+  "webhookRetryFailed": {
+    "message": "再び失敗しました。リストに残っているので、もう一度再試行できます。"
+  },
+  "webhookRetryGone": {
+    "message": "この送信はもう再試行できません。"
+  },
+  "webhookRetryOff": {
+    "message": "再試行するには、Webhook をオンにしてアドレスを設定してください。"
+  },
+  "ruleLiveTestTitle": {
+    "message": "このページでテスト"
+  },
+  "ruleLiveTestHint": {
+    "message": "未保存の編集も含めた現在のルールを、このポップアップを開いたページで実行します。何も保存・送信されません。Cookie、URL、コンテンツ、DOM のパターンはテストできます。ヘッダー、JSフック、ウィンドウのプロパティ、ペイロードには実際のスキャンが必要です。"
+  },
+  "ruleLiveTestRun": {
+    "message": "テスト"
+  },
+  "ruleLiveTestRunning": {
+    "message": "テスト中…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "ルールは {0} に一致します（信頼度 {1}%）"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "ルールは {0} に部分的にしか一致しません: 組み合わせにはさらに根拠が必要です"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "ルールは {0} に一致しません"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "{0} 件検出"
+  },
+  "ruleLiveTestNone": {
+    "message": "一致なし"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "実際のスキャンが必要"
+  },
+  "ruleLiveTestFires": {
+    "message": "成立"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "不成立"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "スクリプト {0} 件、要素 {1} 件、Cookie {2} 件、リクエスト {3} 件を読み取りました。"
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "ページが行ったリクエストは現在利用できないため、URL パターンはページのアドレスとスクリプトだけで確認しました。"
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "「実際のスキャンが必要」と表示されたパターンはこのテストに含まれません。上の結果はそれ以外のパターンについてのものです。"
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "ルールをテストするには、ウェブページでポップアップを開いてください。"
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "ページが応答しませんでした。再読み込みして、もう一度お試しください。"
+  },
+  "ruleLiveTestError": {
+    "message": "テストを実行できませんでした。"
   }
 }

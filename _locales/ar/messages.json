@@ -6093,7 +6093,7 @@
     "message": "آخر عمليات الإرسال"
   },
   "webhookLogDesc": {
-    "message": "آخر 20 محاولة: الوقت والصفحة وما جاء في الرد. لا تُحفظ العناوين ولا الحمولات أبدًا."
+    "message": "آخر 20 محاولة: الوقت والصفحة وما جاء في الرد. لا تحتفظ القائمة بالعناوين ولا بالحمولات أبدًا."
   },
   "webhookLogEmpty": {
     "message": "لم يُرسل شيء بعد."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "تصدير Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "عرض النطاقات التي فيها {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "فتح {0} في السجل"
+  },
+  "historyCompare": {
+    "message": "مقارنة مع…"
+  },
+  "historyCompareNone": {
+    "message": "لا يوجد فحص محفوظ آخر لهذه الصفحة للمقارنة معه"
+  },
+  "historyCompareTitle": {
+    "message": "مقارنة عمليات الفحص"
+  },
+  "historyCompareWith": {
+    "message": "مقارنة مع"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · العدد: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "من {0} إلى {1}"
+  },
+  "historyCompareAdded": {
+    "message": "أُضيفت"
+  },
+  "historyCompareRemoved": {
+    "message": "أُزيلت"
+  },
+  "historyCompareChanged": {
+    "message": "تغيّرت"
+  },
+  "historyCompareUnchanged": {
+    "message": "لم تتغيّر"
+  },
+  "historyCompareIdentical": {
+    "message": "وجد هذان الفحصان وسائل الحماية نفسها، بدرجة الثقة نفسها والأدلة نفسها."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "أدلة جديدة: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "أدلة اختفت: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "نسخ بتنسيق Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "مقارنة عمليات الفحص: {0}"
+  },
+  "historySelect": {
+    "message": "تحديد إدخالات"
+  },
+  "historySelectBarLabel": {
+    "message": "الإدخالات المحددة"
+  },
+  "historySelectDone": {
+    "message": "تم"
+  },
+  "historySelectAll": {
+    "message": "تحديد الكل"
+  },
+  "historySelectNone": {
+    "message": "إلغاء التحديد"
+  },
+  "historySelectedFmt": {
+    "message": "المحدد: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "تحديد {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "تم التثبيت: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "تم إلغاء التثبيت: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "قيد المراقبة: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "قيد المراقبة: {0}. لم يُضف: {1} (يمكنك مراقبة {2} صفحة كحد أقصى)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "أُوقفت المراقبة: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "حذف الإدخالات المحددة"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "هل تريد حذف الإدخالات المحددة ({0}) من السجل؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "المثبّتة بينها: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "تم الحذف: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "قيد المراقبة: {0}. فعّل «مراقبة الصفحات المثبّتة» في الإعدادات ← السجل حتى يتم فحصها."
+  },
+  "settingsWebhookRetry": {
+    "message": "إعادة محاولة عمليات الإرسال الفاشلة"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "بعد 1 و5 و15 دقيقة. تبقى بيانات الصفحة لعملية الإرسال الفاشلة في الذاكرة لمدة ساعة، ولا تُحفظ على القرص أبدًا، لكي يعمل زر «إعادة المحاولة» في «آخر عمليات الإرسال»."
+  },
+  "webhookLogRetry": {
+    "message": "إعادة المحاولة"
+  },
+  "webhookLogRetrying": {
+    "message": "جارٍ إعادة المحاولة…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "محاولة جديدة عند {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "إعادة رقم {0}"
+  },
+  "webhookRetrySent": {
+    "message": "تم التسليم"
+  },
+  "webhookRetryFailed": {
+    "message": "فشل مجددًا. يبقى في القائمة لتتمكن من إعادة المحاولة."
+  },
+  "webhookRetryGone": {
+    "message": "لم يعد من الممكن إعادة محاولة هذا الإرسال."
+  },
+  "webhookRetryOff": {
+    "message": "فعّل الـ Webhook مع عنوان لإعادة المحاولة."
+  },
+  "ruleLiveTestTitle": {
+    "message": "الاختبار على هذه الصفحة"
+  },
+  "ruleLiveTestHint": {
+    "message": "يشغّل القاعدة كما هي الآن، بما في ذلك التعديلات غير المحفوظة، على الصفحة التي فُتحت عليها هذه النافذة المنبثقة. لا يُحفظ أي شيء ولا يُرسل. يمكن اختبار أنماط ملفات تعريف الارتباط وURL والمحتوى وDOM؛ أما الترويسات وخطافات JavaScript وخصائص النافذة والحمولة فتحتاج إلى فحص فعلي."
+  },
+  "ruleLiveTestRun": {
+    "message": "اختبار"
+  },
+  "ruleLiveTestRunning": {
+    "message": "جارٍ الاختبار…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "تتطابق القاعدة مع {0} (الثقة {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "تتطابق القاعدة جزئيًا فقط مع {0}: تحتاج تركيبة إلى مزيد من الأدلة"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "لا تتطابق القاعدة مع {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "وُجد: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "لا تطابق"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "يحتاج إلى فحص فعلي"
+  },
+  "ruleLiveTestFires": {
+    "message": "تتحقق"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "لا تتحقق"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "تمت القراءة: النصوص البرمجية {0}، العناصر {1}، ملفات تعريف الارتباط {2}، الطلبات {3}."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "الطلبات التي أجرتها الصفحة غير متاحة الآن، لذا فُحصت أنماط URL مقابل عنوانها ونصوصها البرمجية فقط."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "الأنماط الموسومة بـ«يحتاج إلى فحص فعلي» ليست جزءًا من هذا الاختبار: الإجابة أعلاه تخص الأنماط الأخرى."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "افتح النافذة المنبثقة على صفحة ويب لاختبار قاعدة عليها."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "لم تستجب الصفحة. أعد تحميلها وحاول مرة أخرى."
+  },
+  "ruleLiveTestError": {
+    "message": "تعذّر تشغيل الاختبار."
   }
 }

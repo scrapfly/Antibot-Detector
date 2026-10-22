@@ -6093,7 +6093,7 @@
     "message": "Envois récents"
   },
   "webhookLogDesc": {
-    "message": "Les 20 dernières tentatives : quand, quelle page, quelle réponse. Les adresses et les charges utiles ne sont jamais conservées."
+    "message": "Les 20 dernières tentatives : quand, quelle page, quelle réponse. La liste ne conserve jamais les adresses ni les charges utiles."
   },
   "webhookLogEmpty": {
     "message": "Rien n’a encore été envoyé."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Exporter en Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Afficher les domaines avec {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Ouvrir {0} dans l’Historique"
+  },
+  "historyCompare": {
+    "message": "Comparer avec…"
+  },
+  "historyCompareNone": {
+    "message": "Aucune autre analyse enregistrée de cette page avec laquelle comparer"
+  },
+  "historyCompareTitle": {
+    "message": "Comparer les analyses"
+  },
+  "historyCompareWith": {
+    "message": "Comparer avec"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · trouvées : {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Du {0} au {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Ajoutées"
+  },
+  "historyCompareRemoved": {
+    "message": "Supprimées"
+  },
+  "historyCompareChanged": {
+    "message": "Modifiées"
+  },
+  "historyCompareUnchanged": {
+    "message": "Inchangées"
+  },
+  "historyCompareIdentical": {
+    "message": "Ces deux analyses ont trouvé les mêmes protections, avec la même confiance et les mêmes preuves."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0} % → {1} % ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Nouvelles preuves : {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Preuves disparues : {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Copier en Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Comparaison des analyses : {0}"
+  },
+  "historySelect": {
+    "message": "Sélectionner des entrées"
+  },
+  "historySelectBarLabel": {
+    "message": "Entrées sélectionnées"
+  },
+  "historySelectDone": {
+    "message": "Terminé"
+  },
+  "historySelectAll": {
+    "message": "Tout sélectionner"
+  },
+  "historySelectNone": {
+    "message": "Tout désélectionner"
+  },
+  "historySelectedFmt": {
+    "message": "Sélectionnées : {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Sélectionner {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Épinglées : {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Désépinglées : {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Surveillées : {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Surveillées : {0}. Non ajoutées : {1} (vous pouvez surveiller jusqu’à {2} pages)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Surveillance arrêtée : {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Supprimer les entrées sélectionnées"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Supprimer de l’Historique les entrées sélectionnées ({0}) ? Cette action est irréversible."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Dont épinglées : {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Supprimées : {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Surveillées : {0}. Activez « Surveiller les pages épinglées » dans Paramètres → Historique pour qu’elles soient vérifiées."
+  },
+  "settingsWebhookRetry": {
+    "message": "Réessayer les envois échoués"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Après 1, 5 et 15 minutes. Les données de la page d’un envoi échoué restent en mémoire pendant une heure, jamais sur le disque, pour que « Réessayer » fonctionne dans « Envois récents »."
+  },
+  "webhookLogRetry": {
+    "message": "Réessayer"
+  },
+  "webhookLogRetrying": {
+    "message": "Nouvel essai…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "nouvel essai à {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "nouvel essai {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Remis"
+  },
+  "webhookRetryFailed": {
+    "message": "Nouvel échec. L’envoi reste dans la liste pour que vous puissiez le réessayer."
+  },
+  "webhookRetryGone": {
+    "message": "Cet envoi ne peut plus être réessayé."
+  },
+  "webhookRetryOff": {
+    "message": "Activez le webhook, avec une adresse, pour réessayer."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Tester sur cette page"
+  },
+  "ruleLiveTestHint": {
+    "message": "Exécute la règle telle qu’elle est maintenant, modifications non enregistrées comprises, sur la page où cette fenêtre de l’extension a été ouverte. Rien n’est enregistré ni envoyé. Les motifs de cookies, d’URL, de contenu et DOM peuvent être testés. Les en-têtes, les intercepteurs JavaScript, les propriétés de la fenêtre et les charges utiles nécessitent une vraie analyse."
+  },
+  "ruleLiveTestRun": {
+    "message": "Tester"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Test en cours…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "La règle correspond à {0} (confiance {1} %)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "La règle ne correspond que partiellement à {0} : une combinaison nécessite davantage de preuves"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "La règle ne correspond pas à {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Correspondances : {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "aucune correspondance"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "vraie analyse requise"
+  },
+  "ruleLiveTestFires": {
+    "message": "se déclenche"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "ne se déclenche pas"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Lu : {0} scripts, {1} éléments, {2} cookies et {3} requêtes."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Les requêtes de la page ne sont plus disponibles : les motifs d’URL n’ont été vérifiés que sur son adresse et ses scripts."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Les motifs marqués « vraie analyse requise » ne font pas partie de ce test : la réponse ci-dessus couvre les autres."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Ouvrez la fenêtre de l’extension sur une page web pour y tester une règle."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "La page n’a pas répondu. Rechargez-la et réessayez."
+  },
+  "ruleLiveTestError": {
+    "message": "Le test n’a pas pu s’exécuter."
   }
 }

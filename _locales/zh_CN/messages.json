@@ -6093,7 +6093,7 @@
     "message": "最近发送记录"
   },
   "webhookLogDesc": {
-    "message": "最近 20 次尝试：时间、页面、返回结果。地址和负载不会被保存。"
+    "message": "最近 20 次尝试：时间、页面、返回结果。列表从不保存地址或负载。"
   },
   "webhookLogEmpty": {
     "message": "尚未发送任何内容。"
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "导出 Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "显示含有 {0} 的域名"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "在历史记录中打开 {0}"
+  },
+  "historyCompare": {
+    "message": "与…比较"
+  },
+  "historyCompareNone": {
+    "message": "此页面没有其他已保存的扫描可供比较"
+  },
+  "historyCompareTitle": {
+    "message": "比较扫描"
+  },
+  "historyCompareWith": {
+    "message": "比较对象"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · 发现 {1} 个"
+  },
+  "historyCompareRangeFmt": {
+    "message": "从 {0} 到 {1}"
+  },
+  "historyCompareAdded": {
+    "message": "新增"
+  },
+  "historyCompareRemoved": {
+    "message": "消失"
+  },
+  "historyCompareChanged": {
+    "message": "有变化"
+  },
+  "historyCompareUnchanged": {
+    "message": "无变化"
+  },
+  "historyCompareIdentical": {
+    "message": "这两次扫描发现的防护措施相同，置信度和证据也相同。"
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}%（{2}）"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "新增证据：{0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "消失的证据：{0}"
+  },
+  "historyCompareCopy": {
+    "message": "复制为 Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "比较扫描：{0}"
+  },
+  "historySelect": {
+    "message": "选择记录"
+  },
+  "historySelectBarLabel": {
+    "message": "已选记录"
+  },
+  "historySelectDone": {
+    "message": "完成"
+  },
+  "historySelectAll": {
+    "message": "全选"
+  },
+  "historySelectNone": {
+    "message": "全不选"
+  },
+  "historySelectedFmt": {
+    "message": "已选 {0} 条"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "选择 {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "已固定 {0} 条"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "已取消固定 {0} 条"
+  },
+  "historyBulkWatchFmt": {
+    "message": "正在监视 {0} 个页面"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "正在监视 {0} 个页面，另有 {1} 个未添加（最多可监视 {2} 个页面）。"
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "已停止监视 {0} 个页面"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "删除所选记录"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "要从历史记录中删除所选的 {0} 条记录吗？此操作无法撤销。"
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "其中 {0} 条已固定。"
+  },
+  "historyBulkDeletedFmt": {
+    "message": "已删除 {0} 条"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "正在监视 {0} 个页面。请在 设置 → 历史记录 中开启“监视已固定的页面”，这些页面才会被检查。"
+  },
+  "settingsWebhookRetry": {
+    "message": "自动重试失败的发送"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "在 1、5 和 15 分钟后重试。发送失败的页面数据会在内存中保留一小时，绝不写入磁盘，因此可以在“最近发送记录”中使用“重试”。"
+  },
+  "webhookLogRetry": {
+    "message": "重试"
+  },
+  "webhookLogRetrying": {
+    "message": "正在重试…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "将于 {0} 重试"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "第 {0} 次重试"
+  },
+  "webhookRetrySent": {
+    "message": "已送达"
+  },
+  "webhookRetryFailed": {
+    "message": "再次失败。它仍保留在列表中，你可以再次重试。"
+  },
+  "webhookRetryGone": {
+    "message": "此发送已无法重试。"
+  },
+  "webhookRetryOff": {
+    "message": "请先启用 Webhook 并填写地址，才能重试。"
+  },
+  "ruleLiveTestTitle": {
+    "message": "在此页面上测试"
+  },
+  "ruleLiveTestHint": {
+    "message": "按规则的当前状态（包括未保存的修改）在打开此弹出窗口的页面上运行。不会保存或发送任何内容。可以测试 Cookie、URL、内容和 DOM 模式；请求头、JS 钩子、窗口属性和负载需要真实扫描。"
+  },
+  "ruleLiveTestRun": {
+    "message": "测试"
+  },
+  "ruleLiveTestRunning": {
+    "message": "正在测试…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "规则匹配 {0}（置信度 {1}%）"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "规则在 {0} 上仅部分匹配：某个组合还需要更多证据"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "规则不匹配 {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "找到 {0} 处"
+  },
+  "ruleLiveTestNone": {
+    "message": "无匹配"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "需要真实扫描"
+  },
+  "ruleLiveTestFires": {
+    "message": "触发"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "未触发"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "已读取 {0} 个脚本、{1} 个元素、{2} 个 Cookie 和 {3} 个请求。"
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "页面发出的请求目前不可用，因此 URL 模式只与页面地址和脚本进行了比对。"
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "标为“需要真实扫描”的模式不在此测试范围内：上面的结果涵盖其他模式。"
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "请在网页上打开弹出窗口来测试规则。"
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "页面没有响应。请重新加载页面后重试。"
+  },
+  "ruleLiveTestError": {
+    "message": "无法运行测试。"
   }
 }

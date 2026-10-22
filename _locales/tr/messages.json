@@ -6093,7 +6093,7 @@
     "message": "Son gönderimler"
   },
   "webhookLogDesc": {
-    "message": "Son 20 deneme: ne zaman, hangi sayfa, ne yanıt geldi. Adresler ve payload'lar asla saklanmaz."
+    "message": "Son 20 deneme: ne zaman, hangi sayfa, ne yanıt geldi. Liste adresleri veya payload'ları asla saklamaz."
   },
   "webhookLogEmpty": {
     "message": "Henüz bir şey gönderilmedi."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown'a aktar"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "{0} bulunan alan adlarını göster"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "{0} sitesini Geçmiş'te aç"
+  },
+  "historyCompare": {
+    "message": "Şununla karşılaştır…"
+  },
+  "historyCompareNone": {
+    "message": "Bu sayfanın karşılaştırılacak başka kayıtlı taraması yok"
+  },
+  "historyCompareTitle": {
+    "message": "Taramaları karşılaştır"
+  },
+  "historyCompareWith": {
+    "message": "Karşılaştırılacak tarama"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · bulunan: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "{0} ile {1} arası"
+  },
+  "historyCompareAdded": {
+    "message": "Eklenenler"
+  },
+  "historyCompareRemoved": {
+    "message": "Kaldırılanlar"
+  },
+  "historyCompareChanged": {
+    "message": "Değişenler"
+  },
+  "historyCompareUnchanged": {
+    "message": "Değişmeyenler"
+  },
+  "historyCompareIdentical": {
+    "message": "Bu iki tarama aynı korumaları aynı güven ve kanıtla buldu."
+  },
+  "historyCompareChangeFmt": {
+    "message": "%{0} → %{1} ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Yeni kanıt: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Kaybolan kanıt: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Markdown olarak kopyala"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Taramaları karşılaştır: {0}"
+  },
+  "historySelect": {
+    "message": "Girdileri seç"
+  },
+  "historySelectBarLabel": {
+    "message": "Seçili girdiler"
+  },
+  "historySelectDone": {
+    "message": "Bitti"
+  },
+  "historySelectAll": {
+    "message": "Tümünü seç"
+  },
+  "historySelectNone": {
+    "message": "Seçimi kaldır"
+  },
+  "historySelectedFmt": {
+    "message": "Seçili: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Seç: {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Sabitlendi: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Sabitleme kaldırıldı: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "İzleniyor: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "İzleniyor: {0}. Eklenmedi: {1} (en fazla {2} sayfayı izleyebilirsiniz)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "İzleme durduruldu: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Seçili girdileri sil"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Seçili girdiler ({0}) Geçmiş'ten silinsin mi? Bu işlem geri alınamaz."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Bunlardan sabitlenen: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Silindi: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "İzleniyor: {0}. Kontrol edilmeleri için Ayarlar → Geçmiş bölümünde Sabitlenen sayfaları izle seçeneğini açın."
+  },
+  "settingsWebhookRetry": {
+    "message": "Başarısız gönderimleri yeniden dene"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "1, 5 ve 15 dakika sonra. Başarısız bir gönderimin sayfa verileri bir saat boyunca bellekte tutulur, asla diske yazılmaz; böylece Son gönderimler listesinde Yeniden dene çalışır."
+  },
+  "webhookLogRetry": {
+    "message": "Yeniden dene"
+  },
+  "webhookLogRetrying": {
+    "message": "Yeniden deneniyor…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "yeniden deneme: {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "{0}. yeniden deneme"
+  },
+  "webhookRetrySent": {
+    "message": "Teslim edildi"
+  },
+  "webhookRetryFailed": {
+    "message": "Yine başarısız oldu. Listede kalıyor, yeniden deneyebilirsiniz."
+  },
+  "webhookRetryGone": {
+    "message": "Bu gönderim artık yeniden denenemez."
+  },
+  "webhookRetryOff": {
+    "message": "Yeniden denemek için Webhook'u bir adresle birlikte açın."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Bu sayfada test et"
+  },
+  "ruleLiveTestHint": {
+    "message": "Kuralı şu anki haliyle, kaydedilmemiş düzenlemeler dahil, bu açılır pencerenin açıldığı sayfada çalıştırır. Hiçbir şey kaydedilmez veya gönderilmez. Çerez, URL, içerik ve DOM desenleri test edilebilir; üstbilgiler, JS hook'ları, window özellikleri ve payload'lar gerçek bir tarama gerektirir."
+  },
+  "ruleLiveTestRun": {
+    "message": "Test et"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Test ediliyor…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Kural {0} ile eşleşiyor (güven %{1})"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Kural {0} üzerinde yalnızca kısmen eşleşiyor: bir kombinasyon için daha fazla kanıt gerekiyor"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Kural {0} ile eşleşmiyor"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "Bulunan: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "eşleşme yok"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "gerçek tarama gerekir"
+  },
+  "ruleLiveTestFires": {
+    "message": "tetiklenir"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "tetiklenmez"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Okunan: {0} komut dosyası, {1} öğe, {2} çerez ve {3} istek."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Sayfanın yaptığı istekler şu anda kullanılamıyor; bu yüzden URL desenleri yalnızca sayfanın adresine ve komut dosyalarına karşı kontrol edildi."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "\"gerçek tarama gerekir\" olarak işaretlenen desenler bu teste dahil değildir: yukarıdaki yanıt diğerlerini kapsar."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Bir kuralı test etmek için açılır pencereyi bir web sayfasında açın."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Sayfa yanıt vermedi. Sayfayı yeniden yükleyip tekrar deneyin."
+  },
+  "ruleLiveTestError": {
+    "message": "Test çalıştırılamadı."
   }
 }

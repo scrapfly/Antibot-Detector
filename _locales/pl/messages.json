@@ -6093,7 +6093,7 @@
     "message": "Ostatnie wysyłki"
   },
   "webhookLogDesc": {
-    "message": "Ostatnie 20 prób: kiedy, jaka strona, jaka odpowiedź. Adresy i payloady nigdy nie są zapisywane."
+    "message": "Ostatnie 20 prób: kiedy, jaka strona, co wróciło. Lista nigdy nie przechowuje adresów ani payloadów."
   },
   "webhookLogEmpty": {
     "message": "Nic jeszcze nie wysłano."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Eksportuj Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Pokaż domeny z ochroną {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Otwórz {0} w Historii"
+  },
+  "historyCompare": {
+    "message": "Porównaj z…"
+  },
+  "historyCompareNone": {
+    "message": "Brak innego zapisanego skanu tej strony do porównania"
+  },
+  "historyCompareTitle": {
+    "message": "Porównaj skany"
+  },
+  "historyCompareWith": {
+    "message": "Porównaj z"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · znaleziono: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "Od {0} do {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Dodane"
+  },
+  "historyCompareRemoved": {
+    "message": "Usunięte"
+  },
+  "historyCompareChanged": {
+    "message": "Zmienione"
+  },
+  "historyCompareUnchanged": {
+    "message": "Bez zmian"
+  },
+  "historyCompareIdentical": {
+    "message": "Oba skany znalazły te same ochrony, z tą samą pewnością i tymi samymi dowodami."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Nowe dowody: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Zniknęły dowody: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Kopiuj jako Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Porównanie skanów: {0}"
+  },
+  "historySelect": {
+    "message": "Zaznacz wpisy"
+  },
+  "historySelectBarLabel": {
+    "message": "Zaznaczone wpisy"
+  },
+  "historySelectDone": {
+    "message": "Gotowe"
+  },
+  "historySelectAll": {
+    "message": "Zaznacz wszystko"
+  },
+  "historySelectNone": {
+    "message": "Odznacz wszystko"
+  },
+  "historySelectedFmt": {
+    "message": "Zaznaczono: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Zaznacz: {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Przypięto: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Odpięto: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Obserwowane: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Obserwowane: {0}. Nie dodano: {1} (limit obserwowanych stron: {2})."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Przestano obserwować: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Usuń zaznaczone wpisy"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Usunąć zaznaczone wpisy ({0}) z Historii? Tej czynności nie można cofnąć."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "W tym przypiętych: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Usunięto: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Obserwowane: {0}. Aby były sprawdzane, włącz Obserwuj przypięte strony w Ustawienia → Historia."
+  },
+  "settingsWebhookRetry": {
+    "message": "Ponawiaj nieudane wysyłki"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Po 1, 5 i 15 minutach. Dane strony z nieudanej wysyłki są przechowywane w pamięci przez godzinę, nigdy na dysku, dzięki czemu Ponów działa w Ostatnich wysyłkach."
+  },
+  "webhookLogRetry": {
+    "message": "Ponów"
+  },
+  "webhookLogRetrying": {
+    "message": "Ponawianie…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "ponowienie o {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "ponowienie {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Dostarczono"
+  },
+  "webhookRetryFailed": {
+    "message": "Ponownie się nie udało. Wysyłka zostaje na liście, więc możesz ją ponowić."
+  },
+  "webhookRetryGone": {
+    "message": "Tej wysyłki nie można już ponowić."
+  },
+  "webhookRetryOff": {
+    "message": "Aby ponowić, włącz webhook i podaj adres."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Testuj na tej stronie"
+  },
+  "ruleLiveTestHint": {
+    "message": "Uruchamia regułę w obecnej postaci, razem z niezapisanymi zmianami, na stronie, na której otwarto to okienko. Nic nie jest zapisywane ani wysyłane. Można testować wzorce plików cookie, URL, treści i DOM; nagłówki, hooki JS, właściwości window i payloady wymagają prawdziwego skanu."
+  },
+  "ruleLiveTestRun": {
+    "message": "Testuj"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Testowanie…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Reguła pasuje do {0} (pewność {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Reguła pasuje do {0} tylko częściowo: kombinacja wymaga więcej dowodów"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Reguła nie pasuje do {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "znaleziono: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "brak dopasowań"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "wymaga prawdziwego skanu"
+  },
+  "ruleLiveTestFires": {
+    "message": "spełniona"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "niespełniona"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Odczytano skrypty: {0}, elementy: {1}, pliki cookie: {2} i żądania: {3}."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Żądania wykonane przez stronę nie są już dostępne, więc wzorce URL sprawdzono tylko względem jej adresu i skryptów."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Wzorce oznaczone jako „wymaga prawdziwego skanu” nie są objęte tym testem: wynik powyżej dotyczy pozostałych."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Otwórz okienko rozszerzenia na stronie internetowej, aby przetestować na niej regułę."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Strona nie odpowiedziała. Odśwież ją i spróbuj ponownie."
+  },
+  "ruleLiveTestError": {
+    "message": "Nie udało się uruchomić testu."
   }
 }

@@ -6093,7 +6093,7 @@
     "message": "Недавние отправки"
   },
   "webhookLogDesc": {
-    "message": "Последние 20 попыток: когда, какая страница, что ответил сервер. Адреса и тела запросов не сохраняются."
+    "message": "Последние 20 попыток: когда, какая страница, что вернулось. Список никогда не хранит адреса и тела запросов."
   },
   "webhookLogEmpty": {
     "message": "Пока ничего не отправлено."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Экспорт Markdown"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "Показать домены с {0}"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "Открыть {0} в Истории"
+  },
+  "historyCompare": {
+    "message": "Сравнить с…"
+  },
+  "historyCompareNone": {
+    "message": "Нет другого сохранённого сканирования этой страницы для сравнения"
+  },
+  "historyCompareTitle": {
+    "message": "Сравнение сканирований"
+  },
+  "historyCompareWith": {
+    "message": "Сравнить с"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · найдено: {1}"
+  },
+  "historyCompareRangeFmt": {
+    "message": "С {0} по {1}"
+  },
+  "historyCompareAdded": {
+    "message": "Добавлены"
+  },
+  "historyCompareRemoved": {
+    "message": "Исчезли"
+  },
+  "historyCompareChanged": {
+    "message": "Изменились"
+  },
+  "historyCompareUnchanged": {
+    "message": "Без изменений"
+  },
+  "historyCompareIdentical": {
+    "message": "Оба сканирования нашли одни и те же защиты с той же достоверностью и теми же доказательствами."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "Новые доказательства: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "Пропавшие доказательства: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Копировать как Markdown"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "Сравнение сканирований: {0}"
+  },
+  "historySelect": {
+    "message": "Выбрать записи"
+  },
+  "historySelectBarLabel": {
+    "message": "Выбранные записи"
+  },
+  "historySelectDone": {
+    "message": "Готово"
+  },
+  "historySelectAll": {
+    "message": "Выбрать все"
+  },
+  "historySelectNone": {
+    "message": "Снять выбор"
+  },
+  "historySelectedFmt": {
+    "message": "Выбрано: {0}"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "Выбрать {0}"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "Закреплено: {0}"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "Откреплено: {0}"
+  },
+  "historyBulkWatchFmt": {
+    "message": "Отслеживается: {0}"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "Отслеживается: {0}. Не добавлено: {1} (можно отслеживать до {2} страниц)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "Слежение отменено: {0}"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "Удалить выбранные записи"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "Удалить выбранные записи ({0}) из Истории? Это действие нельзя отменить."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "Из них закреплено: {0}."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "Удалено: {0}"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "Отслеживается: {0}. Чтобы их проверяли, включите «Следить за закреплёнными страницами» в разделе Настройки → История."
+  },
+  "settingsWebhookRetry": {
+    "message": "Повторять неудачные отправки"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "Через 1, 5 и 15 минут. Данные страницы неудачной отправки хранятся в памяти в течение часа, никогда не на диске, поэтому в «Недавних отправках» работает кнопка «Повторить»."
+  },
+  "webhookLogRetry": {
+    "message": "Повторить"
+  },
+  "webhookLogRetrying": {
+    "message": "Повтор…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "повтор в {0}"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "повтор {0}"
+  },
+  "webhookRetrySent": {
+    "message": "Доставлено"
+  },
+  "webhookRetryFailed": {
+    "message": "Снова не удалось. Отправка остаётся в списке, её можно повторить."
+  },
+  "webhookRetryGone": {
+    "message": "Эту отправку больше нельзя повторить."
+  },
+  "webhookRetryOff": {
+    "message": "Чтобы повторить, включите вебхук и укажите адрес."
+  },
+  "ruleLiveTestTitle": {
+    "message": "Проверить на этой странице"
+  },
+  "ruleLiveTestHint": {
+    "message": "Запускает правило в текущем виде, включая несохранённые правки, на странице, где открыто это окно расширения. Ничего не сохраняется и не отправляется. Можно проверить шаблоны файлов cookie, URL, содержимого и DOM; заголовкам, JS-хукам, свойствам окна и полезной нагрузке нужно настоящее сканирование."
+  },
+  "ruleLiveTestRun": {
+    "message": "Проверить"
+  },
+  "ruleLiveTestRunning": {
+    "message": "Проверка…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "Правило находит совпадения на {0} (достоверность {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "Правило находит на {0} лишь часть совпадений: комбинации нужно больше доказательств"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "Правило не находит совпадений на {0}"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "найдено: {0}"
+  },
+  "ruleLiveTestNone": {
+    "message": "нет совпадений"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "нужно настоящее сканирование"
+  },
+  "ruleLiveTestFires": {
+    "message": "срабатывает"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "не срабатывает"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "Прочитано: скриптов — {0}, элементов — {1}, файлов cookie — {2}, запросов — {3}."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "Запросы, которые сделала страница, сейчас недоступны, поэтому шаблоны URL проверены только по её адресу и скриптам."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "Шаблоны с пометкой «нужно настоящее сканирование» в эту проверку не входят: ответ выше относится к остальным."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "Откройте окно расширения на веб-странице, чтобы проверить на ней правило."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "Страница не ответила. Перезагрузите её и попробуйте снова."
+  },
+  "ruleLiveTestError": {
+    "message": "Не удалось выполнить проверку."
   }
 }

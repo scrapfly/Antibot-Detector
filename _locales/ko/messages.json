@@ -6093,7 +6093,7 @@
     "message": "최근 전송"
   },
   "webhookLogDesc": {
-    "message": "최근 20회 시도: 시각, 페이지, 응답 결과. 주소와 페이로드는 저장되지 않습니다."
+    "message": "최근 20회 시도: 시각, 페이지, 응답 결과. 이 목록에는 주소나 페이로드가 저장되지 않습니다."
   },
   "webhookLogEmpty": {
     "message": "아직 전송한 항목이 없습니다."
@@ -6400,5 +6400,194 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown 내보내기"
+  },
+  "statsShowDomainsWithFmt": {
+    "message": "{0}이(가) 있는 도메인 보기"
+  },
+  "statsOpenInHistoryFmt": {
+    "message": "기록에서 {0} 열기"
+  },
+  "historyCompare": {
+    "message": "다른 스캔과 비교…"
+  },
+  "historyCompareNone": {
+    "message": "비교할 이 페이지의 다른 저장된 스캔이 없습니다"
+  },
+  "historyCompareTitle": {
+    "message": "스캔 비교"
+  },
+  "historyCompareWith": {
+    "message": "비교 대상"
+  },
+  "historyCompareOptionFmt": {
+    "message": "{0} · {1}개 발견"
+  },
+  "historyCompareRangeFmt": {
+    "message": "{0}부터 {1}까지"
+  },
+  "historyCompareAdded": {
+    "message": "추가됨"
+  },
+  "historyCompareRemoved": {
+    "message": "제거됨"
+  },
+  "historyCompareChanged": {
+    "message": "변경됨"
+  },
+  "historyCompareUnchanged": {
+    "message": "변경 없음"
+  },
+  "historyCompareIdentical": {
+    "message": "두 스캔에서 같은 보호 기능이 같은 신뢰도와 증거로 발견되었습니다."
+  },
+  "historyCompareChangeFmt": {
+    "message": "{0}% → {1}% ({2})"
+  },
+  "historyCompareEvidenceAddedFmt": {
+    "message": "새 증거: {0}"
+  },
+  "historyCompareEvidenceRemovedFmt": {
+    "message": "사라진 증거: {0}"
+  },
+  "historyCompareCopy": {
+    "message": "Markdown으로 복사"
+  },
+  "historyCompareMdHeadingFmt": {
+    "message": "스캔 비교: {0}"
+  },
+  "historySelect": {
+    "message": "항목 선택"
+  },
+  "historySelectBarLabel": {
+    "message": "선택한 항목"
+  },
+  "historySelectDone": {
+    "message": "완료"
+  },
+  "historySelectAll": {
+    "message": "모두 선택"
+  },
+  "historySelectNone": {
+    "message": "선택 해제"
+  },
+  "historySelectedFmt": {
+    "message": "{0}개 선택됨"
+  },
+  "historySelectCheckboxFmt": {
+    "message": "{0} 선택"
+  },
+  "historyBulkPinnedFmt": {
+    "message": "고정함: {0}개"
+  },
+  "historyBulkUnpinnedFmt": {
+    "message": "고정 해제함: {0}개"
+  },
+  "historyBulkWatchFmt": {
+    "message": "감시 중: {0}개"
+  },
+  "historyBulkWatchLimitFmt": {
+    "message": "감시 중: {0}개. 추가되지 않음: {1}개(최대 {2}개 페이지까지 감시할 수 있습니다)."
+  },
+  "historyBulkWatchStoppedFmt": {
+    "message": "감시 중지함: {0}개"
+  },
+  "historyBulkDeleteTitle": {
+    "message": "선택한 항목 삭제"
+  },
+  "historyBulkDeleteMessageFmt": {
+    "message": "선택한 항목({0}개)을 기록에서 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
+  },
+  "historyBulkDeletePinnedFmt": {
+    "message": "그중 고정된 항목: {0}개."
+  },
+  "historyBulkDeletedFmt": {
+    "message": "삭제함: {0}개"
+  },
+  "historyBulkWatchOffFmt": {
+    "message": "감시 중: {0}개. 확인이 이루어지려면 설정 → 기록에서 고정한 페이지 감시를 켜세요."
+  },
+  "settingsWebhookRetry": {
+    "message": "실패한 전송 재시도"
+  },
+  "settingsWebhookRetryHint": {
+    "message": "1분, 5분, 15분 후에 재시도합니다. 실패한 전송의 페이지 데이터는 디스크가 아닌 메모리에만 1시간 동안 보관되므로, 최근 전송에서 재시도를 사용할 수 있습니다."
+  },
+  "webhookLogRetry": {
+    "message": "재시도"
+  },
+  "webhookLogRetrying": {
+    "message": "재시도 중…"
+  },
+  "webhookLogRetryAtFmt": {
+    "message": "{0}에 재시도"
+  },
+  "webhookLogTriggerRetryFmt": {
+    "message": "재시도 {0}"
+  },
+  "webhookRetrySent": {
+    "message": "전송했습니다"
+  },
+  "webhookRetryFailed": {
+    "message": "다시 실패했습니다. 목록에 남아 있으니 다시 재시도할 수 있습니다."
+  },
+  "webhookRetryGone": {
+    "message": "이 전송은 더 이상 재시도할 수 없습니다."
+  },
+  "webhookRetryOff": {
+    "message": "재시도하려면 주소를 입력하고 웹훅을 켜세요."
+  },
+  "ruleLiveTestTitle": {
+    "message": "이 페이지에서 테스트"
+  },
+  "ruleLiveTestHint": {
+    "message": "저장하지 않은 수정 사항을 포함한 현재 규칙을, 이 팝업을 연 페이지에서 실행합니다. 아무것도 저장하거나 전송하지 않습니다. 쿠키, URL, 콘텐츠, DOM 패턴은 테스트할 수 있으며, 헤더, JS 후크, 창 속성, 페이로드는 실제 스캔이 필요합니다."
+  },
+  "ruleLiveTestRun": {
+    "message": "테스트"
+  },
+  "ruleLiveTestRunning": {
+    "message": "테스트 중…"
+  },
+  "ruleLiveTestMatchesFmt": {
+    "message": "규칙이 {0}에서 일치합니다(신뢰도 {1}%)"
+  },
+  "ruleLiveTestPartialFmt": {
+    "message": "규칙이 {0}에서 일부만 일치합니다: 조합에 증거가 더 필요합니다"
+  },
+  "ruleLiveTestNoMatchFmt": {
+    "message": "규칙이 {0}에서 일치하지 않습니다"
+  },
+  "ruleLiveTestCountFmt": {
+    "message": "{0}개 발견"
+  },
+  "ruleLiveTestNone": {
+    "message": "일치 없음"
+  },
+  "ruleLiveTestNeedsScan": {
+    "message": "실제 스캔 필요"
+  },
+  "ruleLiveTestFires": {
+    "message": "충족"
+  },
+  "ruleLiveTestNoFire": {
+    "message": "미충족"
+  },
+  "ruleLiveTestPageFmt": {
+    "message": "스크립트 {0}개, 요소 {1}개, 쿠키 {2}개, 요청 {3}개를 읽었습니다."
+  },
+  "ruleLiveTestNoRequests": {
+    "message": "페이지가 보낸 요청을 지금은 사용할 수 없어, URL 패턴은 페이지 주소와 스크립트로만 확인했습니다."
+  },
+  "ruleLiveTestUntestedNote": {
+    "message": "'실제 스캔 필요'로 표시된 패턴은 이 테스트에 포함되지 않습니다. 위 결과는 나머지 패턴에 대한 것입니다."
+  },
+  "ruleLiveTestUnsupported": {
+    "message": "규칙을 테스트하려면 웹 페이지에서 팝업을 여세요."
+  },
+  "ruleLiveTestUnreachable": {
+    "message": "페이지가 응답하지 않았습니다. 새로고침한 후 다시 시도하세요."
+  },
+  "ruleLiveTestError": {
+    "message": "테스트를 실행할 수 없습니다."
   }
 }
