@@ -12,6 +12,8 @@
  *              while Settings is open, has the Test line and Clear
  *   Signed     a signing secret (saved, or only typed for Test) signs every request with a body the way Scrapfly's own
  *              webhooks are signed; GET, HEAD and multipart are not; Generate and Copy; nothing about the secret leaks
+ *   Template   Validate JSON (valid, invalid with its line selected, empty); the variables in colour line up and scroll with
+ *              the field; the category chips work by keyboard; both themes
  *
  * The extension only sends to a public HTTPS address, so the webhook is a made-up one (https://hooks.example/...) whose
  * request is caught where the extension makes it: in the service worker (pages) and in the popup (Test). Pages come from a
@@ -114,7 +116,8 @@ const CATCH = `(() => {
       const page = await context.newPage();
       page.on('pageerror', error => errors.push(error.message));
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
-      await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+      // A fixed poll, not the default animation frame: a tab the browser counts as hidden gets no frames and the wait never ends
+      await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
       return page;
     };
     const stored = (page) => page.evaluate(() => StorageManager.readSettingsStrict());
@@ -436,6 +439,82 @@ const CATCH = `(() => {
     for (const secretish of ['SYNTHETIC_SECRET', generated, ...digests, ...digests.map(d => d.toUpperCase())]) assert.ok(!everywhere.includes(secretish), `leaked: ${secretish.slice(0, 12)}…`);
     await patch(admin, { debugMode: false, logCollectorEnabled: false, webhook: webhook({ enableWebhook: false }) });
     console.log('PASS Signed: saved and typed secrets sign scans and Test alike, Generate and Copy stage only, an unusable secret is refused, GET/multipart/none stay unsigned, and no secret or signature leaks');
+
+    // Template: Validate JSON, the line it selects, the variables in colour, the chips by keyboard, the light theme
+    await patch(admin, { webhook: webhook({ enableWebhook: true, webhookPayload: '' }) });
+    await sleep(800);
+    await openSettings();
+    const setTemplate = (text) => admin.$eval('#webhookPayload', (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, text);
+    const validate = async () => {
+      await admin.$eval('#webhookPayloadValidateBtn', el => el.click());
+      return admin.$eval('#webhookPayloadStatus', el => ({ shown: !el.hidden, text: el.textContent, valid: el.classList.contains('is-valid'), invalid: el.classList.contains('is-invalid'), neutral: el.classList.contains('is-neutral') }));
+    };
+    assert.equal(await admin.$eval('#webhookPayloadValidateBtn', el => el.hidden), false, 'Validate JSON is there for a JSON body');
+    await setTemplate('{"url": "<SITEURL>", "count": <DETECTION_COUNT>}');
+    assert.deepEqual(await validate(), { shown: true, text: 'Valid JSON', valid: true, invalid: false, neutral: false });
+    await setTemplate('{\n  "a": 1,\n  "b": \n}\n');
+    assert.deepEqual(await validate(), { shown: true, text: 'Invalid JSON (line 4)', valid: false, invalid: true, neutral: false }, 'the line of a token Chrome reports without a position');
+    assert.deepEqual(await admin.$eval('#webhookPayload', el => [document.activeElement === el, el.value.slice(el.selectionStart, el.selectionEnd), el.getAttribute('aria-invalid')]), [true, '}', 'true'], 'the failing line is selected');
+    await setTemplate('{\n  "a": 1,\n  "b": [1, 2\n\n');
+    assert.equal((await validate()).text, 'Invalid JSON (line 3)', 'a template that stops too soon: its last line with content');
+    await setTemplate('');
+    assert.deepEqual(await validate(), { shown: true, text: 'Empty: the default payload is sent', valid: false, invalid: false, neutral: true });
+    // The variables in colour: the mirror holds the same text, wraps and scrolls like the field
+    await admin.$eval('#webhookPayloadResetBtn', el => el.click());
+    const drawn = () => admin.evaluate(() => {
+      const t = document.querySelector('#webhookPayload'), m = document.querySelector('#webhookPayloadMirror');
+      const v = m.querySelector('.template-var');
+      return { vars: [...m.querySelectorAll('.template-var')].map(e => e.textContent), same: m.textContent.replace(/ $/, '') === t.value,
+        heights: [t.scrollHeight, m.scrollHeight], widths: [t.clientWidth, m.clientWidth], scroll: [t.scrollTop, m.scrollTop],
+        fieldText: getComputedStyle(t).color, varColour: v && getComputedStyle(v).color, plainColour: getComputedStyle(m).color };
+    });
+    let look = await drawn();
+    assert.deepEqual(look.vars, await admin.evaluate(() => WebhookBody.VARIABLES.map(v => v.token)), 'every variable of the default template is coloured');
+    assert.ok(look.same && look.heights[0] === look.heights[1] && look.widths[0] === look.widths[1], JSON.stringify(look));
+    assert.equal(look.fieldText, 'rgba(0, 0, 0, 0)', 'the field hides its own letters');
+    assert.notEqual(look.varColour, look.plainColour, 'a variable has its own colour');
+    await setTemplate('{\n' + Array.from({ length: 30 }, (_, i) => `  "k${i}": "<TITLE> ${'x'.repeat(i % 4 * 12)}",`).join('\n') + '\n  "<UNKNOWN>": 1\n}');
+    await admin.$eval('#webhookPayload', el => { el.scrollTop = 150; el.dispatchEvent(new Event('scroll')); });
+    look = await drawn();
+    assert.ok(look.heights[0] === look.heights[1] && look.widths[0] === look.widths[1] && look.scroll[0] > 0 && look.scroll[0] === look.scroll[1], `a long template: ${JSON.stringify(look)}`);
+    assert.ok(look.vars.length === 30 && !look.vars.includes('<UNKNOWN>'), 'an unknown <NAME> stays plain');
+    await admin.selectOption('#webhookContentType', 'text/plain');
+    assert.equal(await admin.$eval('#webhookPayloadValidateBtn', el => el.hidden), true, 'no Validate JSON for a text body');
+    await admin.selectOption('#webhookContentType', 'application/json');
+    // The category chips: Tab reaches the box inside, the chip shows the focus ring, Space ticks it
+    await admin.$eval('[data-webhook-category]', el => el.closest('.webhook-filter-categories').scrollIntoView({ block: 'center' }));
+    await admin.focus('#webhookMinConfidence');
+    await admin.keyboard.press('Tab');
+    const chip = () => admin.evaluate(() => {
+      const box = document.activeElement;
+      const label = box && box.closest('.webhook-category');
+      return { category: box && box.dataset.webhookCategory, checked: box && box.checked, outline: label && getComputedStyle(label).outlineStyle,
+        tick: label && getComputedStyle(label, '::before').content };
+    });
+    const firstChip = await chip();
+    assert.equal(firstChip.category, 'antibot', 'Tab goes from the minimum confidence to the first chip');
+    assert.equal(firstChip.outline, 'solid', 'the focused chip shows the focus ring');
+    const wasChecked = firstChip.checked;
+    await admin.keyboard.press('Space');
+    const toggled = await chip();
+    assert.equal(toggled.checked, !wasChecked, 'Space ticks or unticks the chip');
+    assert.equal(toggled.tick === 'none', !toggled.checked, 'a ticked chip shows its check mark, an unticked one does not');
+    // The light theme: readable chip text and its own variable colour
+    await admin.evaluate(() => document.documentElement.setAttribute('data-theme', 'light'));
+    const light = await admin.evaluate(() => {
+      const label = document.querySelector('.webhook-category:has(input:checked)') || document.querySelector('.webhook-category');
+      return { chipText: getComputedStyle(label).color, varColour: getComputedStyle(document.querySelector('#webhookPayloadMirror .template-var')).color };
+    });
+    assert.notEqual(light.chipText, 'rgb(255, 255, 255)', 'chip text is not white on the light theme');
+    assert.notEqual(light.varColour, look.varColour, 'variables take the light theme\'s colour');
+    await admin.evaluate(() => document.documentElement.removeAttribute('data-theme'));
+    if (shotsAt) {
+      await admin.$eval('#webhookPayloadGroup', el => el.scrollIntoView({ block: 'start' }));
+      await admin.screenshot({ path: path.join(shotsAt, 'webhook-template.png') });
+    }
+    await admin.$eval('#cancelSettingsBtn', el => el.click());
+    await patch(admin, { webhook: webhook({ enableWebhook: false }) });
+    console.log('PASS Template: Validate JSON (valid, invalid with the line selected, empty), the variables in colour line up and scroll with the field, the chips work by keyboard, both themes');
 
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
     console.log('RESULT ALL PASS, no page errors');

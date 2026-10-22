@@ -1172,6 +1172,26 @@ async function scenario(name, fn) {
       await page.waitForSelector('.notification-confirm .history-dialog-form');
       assert.equal(await page.$eval('.notification-confirm .history-dialog-input', el => el.value), 'csv');
       assert.match(await page.$eval('.history-dialog-count', el => el.textContent), /4/);
+      // The tick boxes are drawn like the interface, not as the browser's white square: the accent when ticked, in both themes
+      const tickLook = () => page.$$eval('.notification-confirm .history-dialog-check input', async els => {
+        els[0].checked = true;
+        // The colour fades in (a short transition): read it once that has ended
+        await new Promise(resolve => setTimeout(resolve, 400));
+        const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+        const probe = document.createElement('span'); probe.style.color = accent; document.body.append(probe);
+        const accentRgb = getComputedStyle(probe).color; probe.remove();
+        const out = els.map(el => ({ appearance: getComputedStyle(el).appearance, size: [el.offsetWidth, el.offsetHeight], bg: getComputedStyle(el).backgroundColor, checked: el.checked }));
+        els[0].checked = false;
+        return { out, accentRgb };
+      });
+      for (const theme of ['dark', 'light']) {
+        await page.evaluate((t) => { if (t === 'light') document.documentElement.setAttribute('data-theme', 'light'); else document.documentElement.removeAttribute('data-theme'); }, theme);
+        const { out, accentRgb } = await tickLook();
+        assert.ok(out.length >= 2 && out.every(box => box.appearance === 'none' && box.size[0] === 16 && box.size[1] === 16), `${theme}: ${JSON.stringify(out)}`);
+        assert.equal(out[0].bg, accentRgb, `${theme}: a ticked box fills with the accent`);
+        assert.notEqual(out[1].bg, accentRgb, `${theme}: an unticked box stays empty`);
+      }
+      await page.evaluate(() => document.documentElement.removeAttribute('data-theme'));
       await page.$eval('.notification-btn-cancel', el => el.click());
       await dialogsGone(page);
 
