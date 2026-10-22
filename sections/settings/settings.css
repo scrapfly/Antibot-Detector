@@ -1741,6 +1741,57 @@ input[type="file"] {
   border-color: var(--danger);
 }
 
+/* The template with its variables in colour. A textarea cannot colour part of its text, so the text is drawn twice:
+   the mirror behind shows it coloured, the textarea in front keeps typing, caret and selection and hides its own
+   letters. Both boxes share font, padding, border and wrapping, or the two drawings would drift apart. */
+#settingsModal .template-editor {
+  position: relative;
+  width: 100%;
+  background: var(--settings-input-bg);
+  border-radius: 6px;
+}
+
+#settingsModal .template-editor-mirror {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Same scrollbar width as the textarea's, so the lines wrap in the same places; nothing of it is drawn */
+  scrollbar-color: transparent transparent;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+#settingsModal .template-editor > textarea {
+  position: relative;
+  display: block;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--text-primary);
+}
+
+/* A selection that lets the coloured text behind it show */
+#settingsModal .template-editor > textarea::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: transparent;
+}
+
+#settingsModal .template-var {
+  color: var(--p-93c5fd);
+  background: rgba(59, 130, 246, 0.14);
+  border-radius: 3px;
+}
+
 #settingsModal .webhook-payload-foot {
   display: flex;
   flex-wrap: wrap;

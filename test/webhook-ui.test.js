@@ -46,7 +46,8 @@ function harness({ webhook = {}, stored = {}, translations = {}, fetchImpl } = {
     document: {
       querySelector: selector => fields[selector] || null,
       querySelectorAll: selector => (selector === '[data-webhook-category]' ? boxes : []),
-      createElement: tag => new Element(tag)
+      createElement: tag => new Element(tag),
+      createTextNode: text => ({ text })
     },
     chrome: {
       runtime: { sendMessage(message, callback) { sent.push(message); if (callback) callback({ status: 'ok' }); }, lastError: undefined },
@@ -368,5 +369,56 @@ test('the Settings page has the Validate JSON button beside Reset template, and 
   assert.ok(html.indexOf('id="webhookPayloadValidateBtn"') < html.indexOf('id="webhookPayloadResetBtn"'));
   const code = fs.readFileSync(path.join(__dirname, '../sections/settings/settings-ui-webhook.js'), 'utf8');
   assert.equal(code.split('#webhookPayloadValidateBtn').length - 1, 2, 'one lookup to show or hide it and one to wire it');
+});
+
+// ---- The variables in colour
+function mirrorParts(mirror) {
+  return mirror.children.map(node => (node.className ? ['variable', node.textContent] : ['text', node.text]));
+}
+
+test('the template is drawn again behind the field with the variables Scrapfly fills in colour, an unknown one left plain', () => {
+  const h = payloadHarness();
+  const mirror = h.context.document.createElement('pre');
+  h.fields['#webhookPayloadMirror'] = mirror;
+  h.textarea.value = '{"url": "<SITEURL>", "x": <UNKNOWN>, "n": <DETECTION_COUNT>}\n';
+  h.SettingsUI.renderWebhookPayloadMirror();
+  assert.deepEqual(mirrorParts(mirror), [
+    ['text', '{"url": "'], ['variable', '<SITEURL>'], ['text', '", "x": <UNKNOWN>, "n": '], ['variable', '<DETECTION_COUNT>'],
+    ['text', '}\n'], ['text', ' ']
+  ], 'a last empty line gets a character, so the two boxes keep the same height');
+  assert.ok(mirror.children.filter(node => node.className).every(node => node.className === 'template-var'));
+});
+
+test('every variable of the sender gets its colour, and markup in the template stays text', () => {
+  const h = payloadHarness();
+  const mirror = h.context.document.createElement('pre');
+  h.fields['#webhookPayloadMirror'] = mirror;
+  h.textarea.value = WebhookBody.VARIABLES.map(v => v.token).join(' ');
+  h.SettingsUI.renderWebhookPayloadMirror();
+  assert.deepEqual(mirror.children.filter(node => node.className).map(node => node.textContent), WebhookBody.VARIABLES.map(v => v.token));
+
+  h.textarea.value = '<img src=x onerror=alert(1)> <script>x</script>';
+  h.SettingsUI.renderWebhookPayloadMirror();
+  assert.deepEqual(mirrorParts(mirror), [['text', '<img src=x onerror=alert(1)> <script>x</script>']], 'no element is made from the template');
+});
+
+test('the mirror follows the check and the scroll of the field, and an empty field leaves it empty', () => {
+  const h = payloadHarness();
+  const mirror = Object.assign(h.context.document.createElement('pre'), { scrollTop: 0 });
+  h.fields['#webhookPayloadMirror'] = mirror;
+  h.textarea.value = '{"t": "<TITLE>"}';
+  h.textarea.scrollTop = 40;
+  h.SettingsUI.refreshWebhookPayloadValidation.call(h.view);
+  assert.deepEqual(mirrorParts(mirror), [['text', '{"t": "'], ['variable', '<TITLE>'], ['text', '"}']], 'typing, a variable chip and Reset all end in the check');
+  assert.equal(mirror.scrollTop, 40);
+  h.textarea.value = '';
+  h.SettingsUI.renderWebhookPayloadMirror();
+  assert.deepEqual(mirrorParts(mirror), []);
+});
+
+test('the Settings page puts the mirror behind the template field, hidden from screen readers', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../sections/settings/settings.html'), 'utf8');
+  const editor = /<div class="template-editor">\s*<pre id="webhookPayloadMirror" class="template-editor-mirror" aria-hidden="true"><\/pre>\s*<textarea id="webhookPayload"/.exec(html);
+  assert.ok(editor, 'the mirror comes first, so the textarea is drawn over it');
 });
 

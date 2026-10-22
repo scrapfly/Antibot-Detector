@@ -20,7 +20,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Changed
 
-- Webhook: the JSON check shows an icon, and the Categories filter uses chips like History's; History's export dialog tick boxes match the rest of the interface.
+- Webhook: the payload template shows its variables in colour, and the JSON check under it has an icon.
+- Webhook Categories are chips like History's, and the tick boxes of History's export dialog match the rest of the interface.
 
 ### Fixed
 

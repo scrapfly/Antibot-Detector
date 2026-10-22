@@ -846,7 +846,11 @@
                 </div>
                 <!-- Chips come from WebhookBody.VARIABLES (settings-ui-webhook.js) -->
                 <div id="webhookVariableChips" class="webhook-var-chips" role="toolbar" aria-label="Insert variable" data-i18n-aria-label="webhookVarsInsertLabel"></div>
-                <textarea id="webhookPayload" class="textarea-field textarea-field--mono" rows="6" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-describedby="webhookPayloadStatus"></textarea>
+                <!-- The mirror draws the template again with the variables in colour (settings-ui-webhook.js); the textarea in front keeps typing, caret and selection -->
+                <div class="template-editor">
+                  <pre id="webhookPayloadMirror" class="template-editor-mirror" aria-hidden="true"></pre>
+                  <textarea id="webhookPayload" class="textarea-field textarea-field--mono" rows="6" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-describedby="webhookPayloadStatus"></textarea>
+                </div>
                 <div class="webhook-payload-foot">
                   <span id="webhookPayloadStatus" class="webhook-json-status" role="status" aria-live="polite" hidden></span>
                   <span class="webhook-payload-actions">

@@ -403,6 +403,10 @@ SettingsUI.setupWebhookPayloadUI = function() {
     if (textarea.dataset.bound !== 'true') {
       textarea.dataset.bound = 'true';
       textarea.addEventListener('input', () => SettingsUI.refreshWebhookPayloadValidation.call(this));
+      textarea.addEventListener('scroll', () => {
+        const mirror = document.querySelector('#webhookPayloadMirror');
+        if (mirror) mirror.scrollTop = textarea.scrollTop;
+      });
 
       if (chips) {
         // Keep the caret/selection in the textarea while the chip is pressed
@@ -461,6 +465,7 @@ SettingsUI.refreshWebhookPayloadValidation = function() {
     const textarea = document.querySelector('#webhookPayload');
     const status = document.querySelector('#webhookPayloadStatus');
     if (!textarea || !status || typeof WebhookBody === 'undefined') return;
+    SettingsUI.renderWebhookPayloadMirror();
 
     const contentType = (typeof SettingsUI.getWebhookContentTypeValue === 'function')
       ? SettingsUI.getWebhookContentTypeValue.call(this)
@@ -489,6 +494,33 @@ SettingsUI.refreshWebhookPayloadValidation = function() {
       status.textContent = SettingsUI._whTr('webhookJsonInvalidFmt', 'Invalid JSON (line {0})').split('{0}').join(String(result.line));
       textarea.setAttribute('aria-invalid', 'true');
     }
+};
+
+/**
+ * Draw the template again behind the textarea with every variable (<SITEURL>, <TITLE> …) in colour. Only the
+ * variables WebhookBody knows are coloured: an unknown <NAME> is left plain, because the sender would not fill it.
+ * Built from text nodes and spans, never from markup, so nothing in the template can become HTML.
+ */
+SettingsUI.renderWebhookPayloadMirror = function() {
+    const textarea = document.querySelector('#webhookPayload');
+    const mirror = document.querySelector('#webhookPayloadMirror');
+    if (!textarea || !mirror || typeof WebhookBody === 'undefined') return;
+    const text = String(textarea.value || '');
+    const pattern = new RegExp(WebhookBody.VARIABLES.map(v => v.token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+    mirror.textContent = '';
+    let last = 0;
+    for (const found of text.matchAll(pattern)) {
+      if (found.index > last) mirror.append(document.createTextNode(text.slice(last, found.index)));
+      const span = document.createElement('span');
+      span.className = 'template-var';
+      span.textContent = found[0];
+      mirror.append(span);
+      last = found.index + found[0].length;
+    }
+    if (last < text.length) mirror.append(document.createTextNode(text.slice(last)));
+    // A last empty line has no character to give it height, and the two boxes would scroll differently
+    if (text.endsWith('\n')) mirror.append(document.createTextNode(' '));
+    mirror.scrollTop = textarea.scrollTop;
 };
 
 /**
