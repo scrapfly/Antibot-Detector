@@ -19,7 +19,7 @@
   // Loaded before this file in the popup; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
 
-  const CATEGORY_ORDER = ['antibot', 'captcha', 'fingerprint'];
+  const CATEGORY_ORDER = Categories.KEYS.slice();
   const METHOD_ALIASES = { headers: 'header', cookies: 'cookie', urls: 'url' };
 
   const timeOf = (item) => {
