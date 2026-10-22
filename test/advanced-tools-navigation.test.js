@@ -8,7 +8,8 @@ function element() {
   const attributes = new Map();
   const classes = new Set();
   return { style: {}, innerHTML: '', textContent: '', disabled: false,
-    classList: { add: name => classes.add(name), remove: name => classes.delete(name), contains: name => classes.has(name) },
+    classList: { add: name => classes.add(name), remove: name => classes.delete(name), contains: name => classes.has(name),
+      toggle: (name, on) => (on ? classes.add(name) : classes.delete(name), on) },
     setAttribute: (name, value) => attributes.set(name, String(value)),
     removeAttribute: name => attributes.delete(name),
     getAttribute: name => attributes.get(name),
@@ -91,3 +92,26 @@ test('failed module loading leaves protection cards usable for another attempt',
   advanced.loadDetectionModule = async () => ({ renderTools: () => 'Tools ready' });
   assert.equal(await advanced.loadSelectedDetectionTools('detect-recaptcha'), true);
 });
+
+test('the only protection with tools opens by itself, without Change and without moving focus', async () => {
+  const { advanced, panel, section, change } = fixture();
+  advanced.availableDetectionTools = advanced.availableDetectionTools.slice(0, 1);
+  let loaded;
+  advanced.loadDetectionModule = async id => { loaded = id; return { renderTools: () => '<button>Capture</button>' }; };
+  assert.equal(await advanced.openOnlyProtection(), true);
+  assert.equal(loaded, 'detect-akamai');
+  assert.equal(panel.style.display, 'block');
+  assert.ok(section.classList.contains('compact-mode'));
+  assert.ok(section.classList.contains('is-single'), 'Change is hidden: there is nothing to change to');
+  assert.notEqual(change.focused, true, 'nobody pressed anything, so focus stays where it was');
+});
+
+test('with two protections the list stays to choose from, and a former single view is undone', async () => {
+  const { advanced, panel, section } = fixture();
+  section.classList.add('is-single');
+  advanced.loadDetectionModule = async () => { throw new Error('nothing should load'); };
+  assert.equal(await advanced.openOnlyProtection(), false);
+  assert.equal(section.classList.contains('is-single'), false);
+  assert.notEqual(panel.style.display, 'block');
+});
+

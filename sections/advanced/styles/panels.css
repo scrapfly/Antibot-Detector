@@ -177,6 +177,8 @@
 }
 
 .captcha-tools-section.compact-mode .compact-detection-bar { display: flex; }
+/* The only protection with tools opens by itself: there is nothing to change to */
+.captcha-tools-section.is-single .compact-change-btn { display: none; }
 .compact-detection-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .compact-detection-icon {
   width: 30px;

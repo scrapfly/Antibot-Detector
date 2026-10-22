@@ -22,6 +22,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Webhook: the payload template shows its variables in colour, and the JSON check under it has an icon.
 - Webhook Categories are chips like History's, and the tick boxes of History's export dialog match the rest of the interface.
+- Advanced: when a page has only one protection with tools, its tools open straight away instead of one card to choose.
 
 ### Fixed
 

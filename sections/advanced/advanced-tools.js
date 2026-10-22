@@ -120,6 +120,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
         await this.setupNoToolsHistoryLink();
       } else {
         this.setupDetectionToolsListeners();
+        await this.openOnlyProtection();
       }
       Logger.debug('UI', '[Advanced] renderAdvancedInterface complete!');
 
@@ -343,8 +344,25 @@ Advanced.prototype.setupDetectionToolsListeners = function() {
     document.querySelector('#showAdvancedHelp')?.addEventListener('click', () => this.openAdvancedInfoModal());
   };
 
-/** Open a protection's tools directly from its card. */
-Advanced.prototype.loadSelectedDetectionTools = async function(detectorId) {
+/**
+ * One protection with tools on the page: its tools open at once instead of a list of one card to choose from, and
+ * Change is hidden because there is nothing to change to. Focus stays where it is, since nobody asked for this.
+ * @returns {Promise<boolean>} whether the tools were opened
+ */
+Advanced.prototype.openOnlyProtection = async function() {
+    const section = document.querySelector('.captcha-tools-section');
+    const only = (this.availableDetectionTools || []).length === 1;
+    section?.classList.toggle('is-single', only);
+    if (!only) return false;
+    return this.loadSelectedDetectionTools(this.availableDetectionTools[0].detection.detector?.id, { auto: true });
+  };
+
+/**
+ * Open a protection's tools directly from its card.
+ * @param {string} detectorId
+ * @param {{auto?: boolean}} [options] - auto: opened for the person (one protection), so focus is not moved
+ */
+Advanced.prototype.loadSelectedDetectionTools = async function(detectorId, options = {}) {
     if (this.isLoadingTool) return false;
     const panel = document.querySelector('#detectionToolsPanel');
     const selected = this.availableDetectionTools.find(({ detection }) => detection.detector?.id === detectorId);
@@ -380,7 +398,7 @@ Advanced.prototype.loadSelectedDetectionTools = async function(detectorId) {
       this.currentModuleInstance = moduleInstance;
       this.selectedDetection = detectorId;
       moduleInstance.setupEventListeners?.();
-      document.querySelector('#changeDetectionBtn')?.focus({ preventScroll: true });
+      if (!options.auto) document.querySelector('#changeDetectionBtn')?.focus({ preventScroll: true });
       return true;
     } catch (error) {
       Logger.error('UI', '[Advanced] Could not open tools:', error);
