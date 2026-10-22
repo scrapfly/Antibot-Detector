@@ -286,7 +286,9 @@ SettingsUI.retryWebhookDelivery = async function(button) {
       sent: () => NotificationHelper.success(FormatUtils.t('webhookRetrySent', 'Delivered')),
       failed: () => NotificationHelper.error(FormatUtils.t('webhookRetryFailed', 'Failed again. It stays in the list, so you can retry it.')),
       gone: () => NotificationHelper.error(FormatUtils.t('webhookRetryGone', 'This delivery can no longer be retried.')),
-      off: () => NotificationHelper.error(FormatUtils.t('webhookRetryOff', 'Turn the webhook on, with an address, to retry.'))
+      off: () => NotificationHelper.error(FormatUtils.t('webhookRetryOff', 'Turn the webhook on, with an address, to retry.')),
+      // An automatic retry of it is being sent right now: its line appears in the list by itself
+      busy: () => {}
     };
     (notes[outcome] || notes.gone)();
     // The list is redrawn by the change the retry wrote; a button that is still here is usable again

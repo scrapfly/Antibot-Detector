@@ -87,7 +87,12 @@ SettingsRuntime._webhookAttemptEntry = function(page, result, trigger, extra = {
  * @returns {Promise<{id?: string, retryAt?: number}>} what the log line should carry
  */
 SettingsRuntime._holdFailedWebhook = async function(webhook, ctx, result, held) {
-    if (webhook.webhookRetry === false || !(chrome.storage && chrome.storage.session)) return {};
+    if (!(chrome.storage && chrome.storage.session)) return {};
+    if (webhook.webhookRetry === false) {
+        // Retries were switched off after this delivery was held: it is let go, or its old due time would fire again and again
+        if (held && held.id) await SettingsRuntime._changeHeld((all) => { delete all[held.id]; return all; });
+        return {};
+    }
     const now = Date.now();
     const id = held && held.id ? held.id : WebhookRetry.newId(now);
     const attempts = held ? held.attempts + 1 : 1;
@@ -136,17 +141,36 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
  * @param {{manual?: boolean}} [options] - manual: the person pressed Retry (kept for another try when it fails again)
  * @returns {Promise<{status: 'sent'|'failed'|'gone'|'off'}>}
  */
+/** How long a retry in flight keeps its delivery for itself (longer than any answer takes). */
+SettingsRuntime.WEBHOOK_RETRY_CLAIM_MS = 60 * 1000;
+
 SettingsRuntime.retryWebhook = async function(id, options = {}) {
     const manual = options.manual === true;
-    let item = null;
-    await SettingsRuntime._changeHeld((all) => { item = all[id] || null; return undefined; });
-    if (!item) return { status: 'gone' };
     const settings = await Utils.getSettings();
     const webhook = settings.webhook || {};
     if (!webhook.enableWebhook || !webhook.webhookUrl) {
-        if (!manual) await SettingsRuntime._changeHeld((all) => { delete all[id]; return all; });
-        return { status: 'off' };
+        let known = false;
+        await SettingsRuntime._changeHeld((all) => {
+            known = !!all[id];
+            if (!known || manual) return undefined;
+            delete all[id];
+            return all;
+        });
+        return { status: known ? 'off' : 'gone' };
     }
+    let item = null;
+    let busy = false;
+    // Claimed inside the queue: a Retry press and the alarm can never send the same delivery twice
+    await SettingsRuntime._changeHeld((all) => {
+        const held = all[id];
+        if (!held) return undefined;
+        if (typeof held.sending === 'number' && Date.now() - held.sending < SettingsRuntime.WEBHOOK_RETRY_CLAIM_MS) { busy = true; return undefined; }
+        item = { ...held };
+        all[id] = { ...held, sending: Date.now(), due: null };
+        return all;
+    });
+    if (busy) return { status: 'busy' };
+    if (!item) return { status: 'gone' };
     const result = await SettingsRuntime._deliverWebhook(webhook, item.ctx);
     const page = item.ctx.hostname || '';
     let extra = { attempt: item.attempts + 1 };
@@ -163,6 +187,13 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
 
 /** The alarm: every held delivery whose automatic retry is due, one after the other. */
 SettingsRuntime.runDueWebhookRetries = async function() {
+    const settings = await Utils.getSettings().catch(() => ({}));
+    if ((settings.webhook || {}).webhookRetry === false) {
+        // Switched off: nothing more is retried, and nothing is kept for it
+        await SettingsRuntime._changeHeld(() => ({}));
+        await SettingsRuntime._scheduleWebhookRetries();
+        return;
+    }
     let ids = [];
     await SettingsRuntime._changeHeld((all) => { ids = WebhookRetry.dueIds(all, Date.now()); return undefined; });
     for (const id of ids) {

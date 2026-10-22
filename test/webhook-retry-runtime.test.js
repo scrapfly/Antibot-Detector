@@ -189,3 +189,49 @@ test('two retries that are due run one after the other and the alarm moves to wh
   assert.deepEqual(h.held(), {});
   assert.equal(h.alarms.size, 0);
 });
+
+test('switching Retry failed deliveries off after a delivery is held stops its retries: nothing is sent again', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 503 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  assert.equal(Object.keys(h.held()).length, 1);
+  h.set({ webhookRetry: false });
+  // The alarm fires again and again for an hour: with the switch off it sends nothing and lets the delivery go
+  for (let i = 0; i < 10; i++) { h.advance(MIN); await h.runtime.runDueWebhookRetries(); }
+  assert.equal(h.calls.length, 1, 'only the first delivery reached the endpoint');
+  assert.deepEqual(h.held(), {});
+  assert.equal(h.alarms.has('scrapfly-webhook-retry'), false, 'no alarm is left');
+});
+
+test('a manual Retry that fails while the switch is off lets the delivery go instead of planning another retry', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 503 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  const [id] = Object.keys(h.held());
+  h.set({ webhookRetry: false });
+  assert.equal((await h.runtime.retryWebhook(id, { manual: true })).status, 'failed');
+  assert.deepEqual(h.held(), {});
+  h.advance(30 * MIN);
+  await h.runtime.runDueWebhookRetries();
+  assert.equal(h.calls.length, 2, 'the first delivery and the manual Retry, nothing more');
+});
+
+test('a Retry press while the automatic retry of the same delivery is being sent does not send it twice', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 503 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  const [id] = Object.keys(h.held());
+  h.advance(MIN);
+  let release;
+  h.reply(() => new Promise((resolve) => { release = () => resolve({ ok: true, status: 200 }); }));
+  const automatic = h.runtime.runDueWebhookRetries();
+  for (let i = 0; i < 50 && !release; i++) await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(typeof release, 'function', 'the automatic retry is in flight');
+  assert.equal((await h.runtime.retryWebhook(id, { manual: true })).status, 'busy');
+  release();
+  await automatic;
+  assert.equal(h.calls.length, 2, 'the first delivery and one retry');
+  assert.deepEqual(h.held(), {}, 'the success let it go');
+  assert.equal(h.log().filter((e) => e.trigger === 'retry').length, 1, 'one retry line');
+});
+
