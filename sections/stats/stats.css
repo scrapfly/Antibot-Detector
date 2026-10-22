@@ -866,3 +866,34 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
   .stats-filters { display: block; }
   .stats-filters > * { margin-block-end: var(--sp-1); }
 }
+
+/* ==========================================================================
+   Page-level additions: the few things the page markup needs that the rules above do not style.
+   Tokens only (no colours of its own) and logical properties, so both themes and Arabic follow.
+   ========================================================================== */
+
+/* Ranked lists in a wide card read better in two columns than as one 1400px-long bar per row.
+   The base grid aligns the columns of all rows with subgrid; two columns need each row to lay itself out. */
+body.stats-page :is(#statsMethods, #statsRulePatterns, #statsStacks) .stats-rank {
+  grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--sp-6);
+}
+body.stats-page :is(#statsMethods, #statsRulePatterns, #statsStacks) .stats-rank-row {
+  grid-column: auto; grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+}
+@media (max-width: 899px) {
+  body.stats-page :is(#statsMethods, #statsRulePatterns, #statsStacks) .stats-rank { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Two or three tiles do not need to stretch across the whole row */
+body.stats-page #statsStrongEvidence { grid-template-columns: repeat(auto-fit, minmax(190px, 280px)); }
+@media (max-width: 560px) {
+  body.stats-page #statsStrongEvidence { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Protection changes: the kind of change leads its added and removed chips */
+.stats-change-kind { color: var(--text-secondary); font-size: var(--fs-2); font-weight: 600; margin-block-end: 2px; }
+.stats-table .stats-category-badge { white-space: nowrap; }
+.stats-table tbody th .stats-stack { flex-wrap: nowrap; gap: var(--sp-2); }
+
+/* A date in "What changed" follows the page direction: Arabic dates carry their own direction marks and break inside a left-to-right box */
+.stats-changed-meta[data-kind="date"] { direction: inherit; unicode-bidi: isolate; }
