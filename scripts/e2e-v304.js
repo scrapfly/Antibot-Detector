@@ -102,7 +102,9 @@ const SEED = [
     const page = await ctx.newPage();
     page.on('pageerror', (e) => pageErrors.push(`${file}: ${e.message}`));
     await page.goto(`chrome-extension://${extId}/${file}`);
-    if (file.startsWith('popup.html')) await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 30000 });
+    // The page in front: a tab the browser counts as hidden gets no animation frames, and Playwright's default waits use them
+    await page.bringToFront();
+    if (file.startsWith('popup.html')) await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 30000, polling: 250 });
     return page;
   }
   async function until(check, ms = 15000, what = 'condition') {
@@ -131,7 +133,7 @@ const SEED = [
     assert.ok(names.includes('Turnstile') && names.includes('Cloudflare'), names.join(', '));
     // Turnstile is on shop.example and news.example only
     await page.evaluate(() => [...document.querySelectorAll('#statsProtectionTable .stats-cell-link')].find(el => el.textContent.trim() === 'Turnstile').click());
-    await page.waitForFunction(() => !document.querySelector('#stats-panel-domains').hidden, null, { timeout: 5000 });
+    await page.waitForFunction(() => !document.querySelector('#stats-panel-domains').hidden, null, { timeout: 5000, polling: 250 });
     assert.equal(await page.$eval('#statsDomainSearch', el => el.value), 'Turnstile');
     const hosts = await page.$$eval('#statsDomainTable .stats-link-btn', els => els.map(el => el.textContent.trim()).sort());
     assert.deepEqual(hosts, ['news.example', 'shop.example']);
@@ -346,7 +348,7 @@ const SEED = [
     // Settings → Detection → Webhook: the switch is on, and the failed line has Retry and says when
     const page = await openExtensionPage();
     await page.$eval('#settingsBtn', el => el.click());
-    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     await page.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
     await page.waitForSelector('#webhookLogList .webhook-log-item', { state: 'attached', timeout: 10000 });
     assert.equal(await page.$eval('#webhookRetry', el => el.checked), true, 'on by default');
