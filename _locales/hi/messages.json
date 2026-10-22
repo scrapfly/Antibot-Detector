@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "टेम्पलेट रीसेट करें"
   },
+  "webhookValidateJson": {
+    "message": "JSON जाँचें"
+  },
+  "webhookJsonEmpty": {
+    "message": "खाली: डिफ़ॉल्ट पेलोड भेजा जाता है"
+  },
   "settingsTestWebhook": {
     "message": "Webhook परीक्षण करें"
   },

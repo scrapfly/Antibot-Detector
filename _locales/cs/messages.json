@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Resetovat šablonu"
   },
+  "webhookValidateJson": {
+    "message": "Ověřit JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Prázdné: odešle se výchozí payload"
+  },
   "settingsTestWebhook": {
     "message": "Otestovat webhook"
   },

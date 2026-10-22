@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Resetuj szablon"
   },
+  "webhookValidateJson": {
+    "message": "Sprawdź JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Pusty: wysyłany jest domyślny payload"
+  },
   "settingsTestWebhook": {
     "message": "Testuj Webhook"
   },

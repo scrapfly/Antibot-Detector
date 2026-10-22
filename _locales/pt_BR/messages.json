@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Restaurar modelo"
   },
+  "webhookValidateJson": {
+    "message": "Validar JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Vazio: a carga útil padrão é enviada"
+  },
   "settingsTestWebhook": {
     "message": "Testar Webhook"
   },

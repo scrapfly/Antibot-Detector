@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "重置模板"
   },
+  "webhookValidateJson": {
+    "message": "验证 JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "为空：将发送默认负载"
+  },
   "settingsTestWebhook": {
     "message": "测试 Webhook"
   },

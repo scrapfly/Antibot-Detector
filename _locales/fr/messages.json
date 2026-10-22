@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Réinitialiser le modèle"
   },
+  "webhookValidateJson": {
+    "message": "Valider le JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Vide : la charge utile par défaut est envoyée"
+  },
   "settingsTestWebhook": {
     "message": "Tester le webhook"
   },

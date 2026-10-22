@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Ripristina modello"
   },
+  "webhookValidateJson": {
+    "message": "Convalida JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Vuoto: viene inviato il payload predefinito"
+  },
   "settingsTestWebhook": {
     "message": "Prova webhook"
   },

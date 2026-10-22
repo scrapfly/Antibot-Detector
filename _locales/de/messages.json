@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Vorlage zurücksetzen"
   },
+  "webhookValidateJson": {
+    "message": "JSON prüfen"
+  },
+  "webhookJsonEmpty": {
+    "message": "Leer: Es wird die Standard-Nutzlast gesendet"
+  },
   "settingsTestWebhook": {
     "message": "Webhook testen"
   },

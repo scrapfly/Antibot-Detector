@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "إعادة تعيين القالب"
   },
+  "webhookValidateJson": {
+    "message": "التحقق من JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "فارغ: تُرسل الحمولة الافتراضية"
+  },
   "settingsTestWebhook": {
     "message": "اختبار Webhook"
   },

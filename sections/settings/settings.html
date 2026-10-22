@@ -849,7 +849,10 @@
                 <textarea id="webhookPayload" class="textarea-field textarea-field--mono" rows="6" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-describedby="webhookPayloadStatus"></textarea>
                 <div class="webhook-payload-foot">
                   <span id="webhookPayloadStatus" class="webhook-json-status" role="status" aria-live="polite" hidden></span>
-                  <button type="button" id="webhookPayloadResetBtn" class="webhook-link-btn" data-i18n="webhookResetTemplate">Reset template</button>
+                  <span class="webhook-payload-actions">
+                    <button type="button" id="webhookPayloadValidateBtn" class="webhook-link-btn" data-i18n="webhookValidateJson" hidden>Validate JSON</button>
+                    <button type="button" id="webhookPayloadResetBtn" class="webhook-link-btn" data-i18n="webhookResetTemplate">Reset template</button>
+                  </span>
                 </div>
               </div>
 

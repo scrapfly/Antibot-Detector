@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Restablecer plantilla"
   },
+  "webhookValidateJson": {
+    "message": "Validar JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Vacía: se envía el payload predeterminado"
+  },
   "settingsTestWebhook": {
     "message": "Probar webhook"
   },

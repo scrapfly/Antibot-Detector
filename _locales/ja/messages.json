@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "テンプレートをリセット"
   },
+  "webhookValidateJson": {
+    "message": "JSON を検証"
+  },
+  "webhookJsonEmpty": {
+    "message": "空です。既定のペイロードが送信されます"
+  },
   "settingsTestWebhook": {
     "message": "Webhookをテスト"
   },

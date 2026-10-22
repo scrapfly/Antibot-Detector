@@ -291,3 +291,82 @@ test('an invalid secret is flagged under the field, blocks Save with its message
   assert.equal(h.sent.length, 0, 'no record line for a Test that did not run');
   assert.equal(h.fields['#testWebhookBtn'].disabled, false);
 });
+
+// ---- Validate JSON under the payload template
+function payloadHarness() {
+  const h = harness();
+  const status = { hidden: true, className: '', textContent: '', offsetWidth: 0, flashed: 0, classList: { remove() {}, add(name) { if (name === 'is-checked') status.flashed++; } } };
+  const textarea = Object.assign(h.fields['#webhookPayload'], {
+    focused: false, selection: null, scrollTop: 0, clientHeight: 100, attributes: {},
+    focus() { this.focused = true; }, setSelectionRange(from, to) { this.selection = [from, to]; },
+    setAttribute(name, value) { this.attributes[name] = value; }, removeAttribute(name) { delete this.attributes[name]; }
+  });
+  const button = { hidden: true };
+  h.fields['#webhookPayloadStatus'] = status;
+  h.fields['#webhookPayloadValidateBtn'] = button;
+  return { ...h, status, textarea, button, view: h.ui() };
+}
+
+test('Validate JSON confirms a valid template: a toast, the status flashes, and the field is marked valid', () => {
+  const h = payloadHarness();
+  h.textarea.value = '{"url": "<SITEURL>", "count": <DETECTION_COUNT>}';
+  assert.deepEqual(h.plain(h.SettingsUI.validateWebhookPayloadNow.call(h.view)), { ok: true });
+  assert.equal(h.status.textContent, 'Valid JSON');
+  assert.match(h.status.className, /is-valid/);
+  assert.equal(h.status.flashed, 1);
+  assert.equal(h.textarea.attributes['aria-invalid'], 'false');
+  assert.deepEqual(h.notifications, ['Valid JSON']);
+  assert.equal(h.textarea.selection, null, 'a valid template leaves the caret alone');
+  assert.equal(h.button.hidden, false, 'the button is there for a JSON template');
+});
+
+test('Validate JSON on an empty template says the default payload is sent, and the status is neutral', () => {
+  const h = payloadHarness();
+  h.textarea.value = '  ';
+  const result = h.plain(h.SettingsUI.validateWebhookPayloadNow.call(h.view));
+  assert.equal(result.ok, true);
+  assert.equal(result.empty, true);
+  assert.equal(h.status.hidden, false);
+  assert.match(h.status.className, /is-neutral/);
+  assert.equal(h.status.textContent, 'Empty: the default payload is sent');
+  assert.deepEqual(h.notifications, ['Empty: the default payload is sent']);
+});
+
+test('Validate JSON on an invalid template names the line, selects it and brings it into view', () => {
+  const h = payloadHarness();
+  h.textarea.value = '{\n  "a": 1,\n  "b": \n}\n';
+  const result = h.plain(h.SettingsUI.validateWebhookPayloadNow.call(h.view));
+  assert.equal(result.ok, false);
+  assert.equal(result.line, 4, 'the closing brace after the empty value is where it breaks');
+  const lines = h.textarea.value.split('\n');
+  const start = lines.slice(0, result.line - 1).reduce((sum, line) => sum + line.length + 1, 0);
+  assert.deepEqual(h.textarea.selection, [start, start + lines[result.line - 1].length], 'the whole failing line is selected');
+  assert.equal(h.textarea.focused, true);
+  assert.equal(h.status.textContent, `Invalid JSON (line ${result.line})`);
+  assert.match(h.status.className, /is-invalid/);
+  assert.equal(h.textarea.attributes['aria-invalid'], 'true');
+  assert.deepEqual(h.notifications, [`Invalid JSON (line ${result.line})`]);
+});
+
+test('the line to select stays inside the template, and the button is off for a body that is not JSON', () => {
+  const h = payloadHarness();
+  h.textarea.value = 'a\nb';
+  h.SettingsUI.selectWebhookPayloadLine(h.textarea, 99);
+  assert.deepEqual(h.textarea.selection, [2, 3], 'a line past the end selects the last line');
+  h.SettingsUI.selectWebhookPayloadLine(h.textarea, 0);
+  assert.deepEqual(h.textarea.selection, [0, 1], 'line 0 counts as the first');
+
+  h.fields['#webhookContentType'] = { value: 'text/plain' };
+  h.SettingsUI.refreshWebhookPayloadValidation.call(h.view);
+  assert.equal(h.button.hidden, true);
+  assert.equal(h.status.hidden, true);
+});
+
+test('the Settings page has the Validate JSON button beside Reset template, and the script wires it once', () => {
+  const html = fs.readFileSync(path.join(__dirname, '../sections/settings/settings.html'), 'utf8');
+  assert.match(html, /id="webhookPayloadValidateBtn"[^>]*data-i18n="webhookValidateJson"/);
+  assert.ok(html.indexOf('id="webhookPayloadValidateBtn"') < html.indexOf('id="webhookPayloadResetBtn"'));
+  const code = fs.readFileSync(path.join(__dirname, '../sections/settings/settings-ui-webhook.js'), 'utf8');
+  assert.equal(code.split('#webhookPayloadValidateBtn').length - 1, 2, 'one lookup to show or hide it and one to wire it');
+});
+

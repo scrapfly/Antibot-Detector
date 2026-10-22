@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Återställ mall"
   },
+  "webhookValidateJson": {
+    "message": "Validera JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Tom: standardpayloaden skickas"
+  },
   "settingsTestWebhook": {
     "message": "Testa webhook"
   },

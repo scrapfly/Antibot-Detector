@@ -16,10 +16,16 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: Open page and Scan again now in an entry's … menu, Scan again now in its details; a scan reloads the page's tab or opens one.
 - Rules: Duplicate in a rule's … menu opens the editor on a copy that saves as a new custom rule; the original stays unchanged.
 - Markdown export: History → Export and Settings → History write one row per page; Statistics → Export writes a report of totals, protections and sites.
+- Settings → Detection → Webhook: Validate JSON under the payload template checks it now and selects the line that fails.
+
+### Changed
+
+- Webhook: the JSON check shows an icon, and the Categories filter uses chips like History's; History's export dialog tick boxes match the rest of the interface.
 
 ### Fixed
 
 - History → Copy entry copied cookie and header values and address queries, which can hold live tokens; it now leaves them out, like every other copy.
+- Webhook: the JSON check under the payload template names the right line for a stray bracket or a template that stops too soon; it said line 1.
 
 ## [3.0.2] - 2026-10-20
 

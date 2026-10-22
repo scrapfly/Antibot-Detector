@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Sjabloon resetten"
   },
+  "webhookValidateJson": {
+    "message": "JSON valideren"
+  },
+  "webhookJsonEmpty": {
+    "message": "Leeg: de standaard payload wordt verzonden"
+  },
   "settingsTestWebhook": {
     "message": "Webhook testen"
   },

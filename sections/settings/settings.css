@@ -1743,21 +1743,31 @@ input[type="file"] {
 
 #settingsModal .webhook-payload-foot {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px 8px;
   width: 100%;
   min-height: 22px;
   margin-top: 5px;
 }
 
+/* The answer of the JSON check: an icon, a tint and a border, never colour alone */
 #settingsModal .webhook-json-status {
+  --status-color: var(--settings-text-dim);
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 22px;
+  padding: 3px 9px 3px 7px;
   font-size: 11px;
   font-weight: 600;
   line-height: 15px;
+  color: var(--status-color);
+  background: color-mix(in srgb, var(--status-color) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--status-color) 40%, transparent);
+  border-radius: 11px;
 }
 
 #settingsModal .webhook-json-status[hidden] {
@@ -1766,18 +1776,58 @@ input[type="file"] {
 
 #settingsModal .webhook-json-status::before {
   content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
   background: currentColor;
+  -webkit-mask: var(--status-icon) center / contain no-repeat;
+  mask: var(--status-icon) center / contain no-repeat;
 }
 
 #settingsModal .webhook-json-status.is-valid {
-  color: var(--success-light);
+  --status-color: var(--success-light);
+  --status-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
 }
 
 #settingsModal .webhook-json-status.is-invalid {
-  color: var(--danger-light);
+  --status-color: var(--danger-light);
+  --status-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+}
+
+#settingsModal .webhook-json-status.is-neutral {
+  --status-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");
+}
+
+/* After Validate JSON: the answer flashes once, so a press is seen even when nothing changed */
+#settingsModal .webhook-json-status.is-checked {
+  animation: webhook-json-flash 0.7s ease-out;
+}
+
+@keyframes webhook-json-flash {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--status-color) 55%, transparent); }
+  100% { box-shadow: 0 0 0 7px transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #settingsModal .webhook-json-status.is-checked {
+    animation: none;
+  }
+}
+
+#settingsModal .webhook-payload-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+#settingsModal .webhook-payload-actions [hidden] {
+  display: none;
+}
+
+#settingsModal .webhook-payload-actions .webhook-link-btn {
+  margin-left: 0;
+  white-space: nowrap;
 }
 
 #settingsModal .webhook-link-btn {
@@ -2991,23 +3041,64 @@ input[type="file"] {
 #settingsModal .webhook-category-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 16px;
+  gap: 6px;
   margin-bottom: 8px;
 }
 
+/* One chip per category, like the filter chips of History: the checkbox stays in the page (keyboard, screen readers)
+   but is drawn as the chip. On = an accent border, a tint and a check mark, never colour alone. */
 #settingsModal .webhook-category {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11.5px;
+  gap: 4px;
+  height: 26px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 15px;
-  color: var(--settings-text);
+  color: var(--settings-text-dim);
+  border: 1px solid var(--settings-border);
+  border-radius: 999px;
   cursor: pointer;
+  user-select: none;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
 }
 
 #settingsModal .webhook-category input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   margin: 0;
-  accent-color: var(--accent);
+  opacity: 0;
+  cursor: pointer;
+}
+
+#settingsModal .webhook-category:hover {
+  color: var(--settings-text);
+  border-color: var(--accent);
+}
+
+#settingsModal .webhook-category:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+#settingsModal .webhook-category:has(input:checked) {
+  color: var(--settings-text);
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.16);
+}
+
+#settingsModal .webhook-category:has(input:checked)::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 11px;
+  height: 11px;
+  background: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 #settingsModal .webhook-category .category-icon {

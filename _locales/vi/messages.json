@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Đặt lại mẫu"
   },
+  "webhookValidateJson": {
+    "message": "Kiểm tra JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Trống: payload mặc định sẽ được gửi"
+  },
   "settingsTestWebhook": {
     "message": "Kiểm tra webhook"
   },

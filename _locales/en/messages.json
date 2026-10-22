@@ -1382,6 +1382,14 @@
   "webhookResetTemplate": {
     "message": "Reset template"
   },
+  "webhookValidateJson": {
+    "message": "Validate JSON",
+    "description": "Button under the payload template: checks the template as JSON now and says what is wrong. Keep JSON as written"
+  },
+  "webhookJsonEmpty": {
+    "message": "Empty: the default payload is sent",
+    "description": "Status under the payload template when Validate JSON is pressed with nothing typed: the default payload is sent instead"
+  },
   "settingsTestWebhook": {
     "message": "Test Webhook"
   },

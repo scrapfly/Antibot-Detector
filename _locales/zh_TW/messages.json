@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "重設範本"
   },
+  "webhookValidateJson": {
+    "message": "驗證 JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "為空：將傳送預設酬載"
+  },
   "settingsTestWebhook": {
     "message": "測試 Webhook"
   },

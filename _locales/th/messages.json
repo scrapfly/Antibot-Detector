@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "รีเซ็ตเทมเพลต"
   },
+  "webhookValidateJson": {
+    "message": "ตรวจสอบ JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "ว่างเปล่า: ระบบจะส่ง Payload เริ่มต้น"
+  },
   "settingsTestWebhook": {
     "message": "ทดสอบ Webhook"
   },

@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "템플릿 초기화"
   },
+  "webhookValidateJson": {
+    "message": "JSON 검사"
+  },
+  "webhookJsonEmpty": {
+    "message": "비어 있음: 기본 페이로드가 전송됩니다"
+  },
   "settingsTestWebhook": {
     "message": "웹훅 테스트"
   },

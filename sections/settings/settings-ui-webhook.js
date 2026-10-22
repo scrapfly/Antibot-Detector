@@ -415,6 +415,9 @@ SettingsUI.setupWebhookPayloadUI = function() {
         });
       }
 
+      const validateBtn = document.querySelector('#webhookPayloadValidateBtn');
+      if (validateBtn) validateBtn.addEventListener('click', () => SettingsUI.validateWebhookPayloadNow.call(this));
+
       const resetBtn = document.querySelector('#webhookPayloadResetBtn');
       if (resetBtn) {
         resetBtn.addEventListener('click', () => {
@@ -462,7 +465,11 @@ SettingsUI.refreshWebhookPayloadValidation = function() {
     const contentType = (typeof SettingsUI.getWebhookContentTypeValue === 'function')
       ? SettingsUI.getWebhookContentTypeValue.call(this)
       : 'application/json';
-    const checks = WebhookBody.expectsJsonTemplate(contentType) && textarea.value.trim() !== '';
+    const isJson = WebhookBody.expectsJsonTemplate(contentType);
+    // Validate JSON is there whenever the template is sent as JSON, even before anything is typed
+    const validateBtn = document.querySelector('#webhookPayloadValidateBtn');
+    if (validateBtn) validateBtn.hidden = !isJson;
+    const checks = isJson && textarea.value.trim() !== '';
     if (!checks) {
       status.hidden = true;
       status.textContent = '';
@@ -482,6 +489,54 @@ SettingsUI.refreshWebhookPayloadValidation = function() {
       status.textContent = SettingsUI._whTr('webhookJsonInvalidFmt', 'Invalid JSON (line {0})').split('{0}').join(String(result.line));
       textarea.setAttribute('aria-invalid', 'true');
     }
+};
+
+/**
+ * The Validate JSON button: checks the template as it is now and answers where the person is looking, not only in
+ * the small line under the field. A valid template gets a toast and a flash on the status; an empty one says the
+ * default payload is sent; an invalid one selects the line that fails, scrolled into view.
+ * @returns {{ok: boolean, empty?: boolean, line?: number}|undefined}
+ */
+SettingsUI.validateWebhookPayloadNow = function() {
+    const textarea = document.querySelector('#webhookPayload');
+    const status = document.querySelector('#webhookPayloadStatus');
+    if (!textarea || typeof WebhookBody === 'undefined') return undefined;
+
+    SettingsUI.refreshWebhookPayloadValidation.call(this);
+    const result = WebhookBody.validateTemplate(textarea.value);
+    if (status) {
+      if (result.empty) {
+        status.hidden = false;
+        status.className = 'webhook-json-status is-neutral';
+        status.textContent = SettingsUI._whTr('webhookJsonEmpty', 'Empty: the default payload is sent');
+      }
+      // Restart the flash even when the answer has not changed
+      status.classList.remove('is-checked');
+      void status.offsetWidth;
+      status.classList.add('is-checked');
+    }
+
+    if (result.empty) {
+      NotificationHelper.info(SettingsUI._whTr('webhookJsonEmpty', 'Empty: the default payload is sent'));
+    } else if (result.ok) {
+      NotificationHelper.success(SettingsUI._whTr('webhookJsonValid', 'Valid JSON'));
+    } else {
+      NotificationHelper.error(SettingsUI._whTr('webhookJsonInvalidFmt', 'Invalid JSON (line {0})').split('{0}').join(String(result.line)));
+      SettingsUI.selectWebhookPayloadLine(textarea, result.line);
+    }
+    return result;
+};
+
+/** Select one line of the template (1-based) and scroll it to the middle of the field. */
+SettingsUI.selectWebhookPayloadLine = function(textarea, line) {
+    const lines = String(textarea.value).split('\n');
+    const index = Math.min(Math.max(Number(line) || 1, 1), lines.length) - 1;
+    let start = 0;
+    for (let i = 0; i < index; i++) start += lines[i].length + 1;
+    textarea.focus();
+    textarea.setSelectionRange(start, start + lines[index].length);
+    const lineHeight = parseFloat((typeof getComputedStyle === 'function' ? getComputedStyle(textarea).lineHeight : '') || '') || 17;
+    textarea.scrollTop = Math.max(0, index * lineHeight - (textarea.clientHeight || 0) / 2);
 };
 
 /**

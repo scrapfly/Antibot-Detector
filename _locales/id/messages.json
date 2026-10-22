@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Setel ulang template"
   },
+  "webhookValidateJson": {
+    "message": "Validasi JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Kosong: payload bawaan yang dikirim"
+  },
   "settingsTestWebhook": {
     "message": "Uji webhook"
   },

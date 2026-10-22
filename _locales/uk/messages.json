@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Скинути шаблон"
   },
+  "webhookValidateJson": {
+    "message": "Перевірити JSON"
+  },
+  "webhookJsonEmpty": {
+    "message": "Порожньо: надсилається корисне навантаження за замовчуванням"
+  },
   "settingsTestWebhook": {
     "message": "Перевірити вебхук"
   },

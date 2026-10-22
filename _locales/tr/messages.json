@@ -1378,6 +1378,12 @@
   "webhookResetTemplate": {
     "message": "Şablonu sıfırla"
   },
+  "webhookValidateJson": {
+    "message": "JSON’u doğrula"
+  },
+  "webhookJsonEmpty": {
+    "message": "Boş: varsayılan payload gönderilir"
+  },
   "settingsTestWebhook": {
     "message": "Webhook'u test et"
   },
