@@ -10,6 +10,8 @@
  *                     Retry on it and it delivers; the alarm retries by itself; the switch turns holding off
  *   Test on this page Rules → editor → Test on this page: an unsaved rule runs against the real page (a cookie, a DOM selector no
  *                     saved rule uses, script content, a request URL); header and window patterns say "needs a real scan"
+ *   Folding cards     Rules → editor: Detection methods, Combinations, Check against History and Test on this page start
+ *                     folded with their counts; a click or Enter opens them; Save opens the card it points into
  *   Compare scans     History → … → Compare with…: the dialog lists the page's other scans, shows what was added, removed
  *                     and changed, copies it as Markdown, and the item is disabled when there is nothing to compare with
  *
@@ -422,6 +424,8 @@ const SEED = [
     // The popup of a real browser belongs to the site's tab; this page is its own tab, so it is told which one
     await page.evaluate((tab) => { chrome.tabs.query = async () => [tab]; }, siteTab);
     await page.evaluate((rule) => window.popupInstance.rules.openEditModal(JSON.parse(JSON.stringify(rule)), 'antibot', rule.id, true), RULE);
+    // The card starts folded, like Detection methods, Combinations and Check against History: open it as a person does
+    await page.$eval('#ruleLiveTestCard .card-toggle-btn', el => el.click());
     await page.waitForSelector('#ruleLiveTestBtn', { state: 'visible', timeout: 10000 });
     assert.equal(await page.$eval('#ruleLiveTestResults', el => el.children.length), 0, 'nothing before the test');
     await page.$eval('#ruleLiveTestBtn', el => el.click());
@@ -454,6 +458,53 @@ const SEED = [
     await until(async () => /Open the popup on a web page/.test(await page.$eval('#ruleLiveTestResults', el => el.textContent)), 10000, 'the unsupported message');
     await page.close();
     await site.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Rule editor: Detection methods, Combinations, Check against History and Test on this page start folded', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await page.waitForSelector('#rulesSearch', { state: 'visible' });
+    const open = (rule, isNew) => page.evaluate(([r, n]) => window.popupInstance.rules.openEditModal(JSON.parse(JSON.stringify(r)), 'antibot', r.id, n), [rule, isNew]);
+    const state = () => page.evaluate(() => Object.fromEntries(['detectionMethodsBody', 'combinationsBody', 'ruleHistoryCheckBody', 'ruleLiveTestBody'].map(id => [id, {
+      hidden: document.getElementById(id).hidden,
+      expanded: document.querySelector(`.card-toggle-btn[aria-controls="${id}"]`).getAttribute('aria-expanded')
+    }])));
+    const summaries = () => page.evaluate(() => [document.getElementById('detectionMethodsSummary').textContent, document.getElementById('combinationsSummary').textContent]);
+    const RULE = { id: 'fold-rule', name: 'Fold rule', category: 'antibot', difficulty: 'Medium', enabled: true, detection: {
+      cookie: [{ name: 'fold_a', confidence: 60 }, { name: 'fold_b', confidence: 50 }], content: [{ text: 'fold-marker', confidence: 40 }] },
+      combinations: [{ id: 'c1', name: 'Both cookies', confidence: 90, when: { all: [{ method: 'cookie', index: 0 }, { method: 'cookie', index: 1 }] } }] };
+    await open(RULE, false);
+    let s = await state();
+    assert.ok(Object.values(s).every(card => card.hidden && card.expanded === 'false'), JSON.stringify(s));
+    assert.deepEqual(await summaries(), ['3 patterns', '1'], 'the folded headers say how much they hold');
+    // A click on the header opens a card, and again closes it; the arrow button does the same from the keyboard
+    await page.$eval('#detectionMethodsCard .modal-card-header--toggle h3', el => el.click());
+    s = await state();
+    assert.deepEqual([s.detectionMethodsBody.hidden, s.detectionMethodsBody.expanded], [false, 'true']);
+    await page.$eval('#detectionMethodsCard .modal-card-header--toggle h3', el => el.click());
+    assert.equal((await state()).detectionMethodsBody.hidden, true);
+    await page.focus('#combinationsCard .card-toggle-btn');
+    await page.keyboard.press('Enter');
+    assert.equal((await state()).combinationsBody.hidden, false, 'Enter on the arrow opens Combinations');
+    // Opened again later, a rule starts folded again
+    await page.evaluate(() => document.querySelector('#cancelRuleEdit').click());
+    await sleep(300);
+    await open(RULE, false);
+    assert.equal((await state()).combinationsBody.hidden, true, 'every open starts folded');
+    // Save pointing at an empty pattern opens the card that holds it
+    await page.evaluate(() => { const input = document.querySelector('#detectionMethodsContainer .method-item .method-name'); input.value = ''; input.dispatchEvent(new Event('input', { bubbles: true })); });
+    await page.evaluate(() => document.querySelector('#saveRuleEdit').click());
+    await until(async () => !(await state()).detectionMethodsBody.hidden, 5000, 'Detection methods opened by Save');
+    await page.evaluate(() => document.querySelector('#cancelRuleEdit').click());
+    await sleep(300);
+    // A new rule with no pattern opens on its patterns: there is nothing to hide
+    await open({ id: 'fold-new', name: '', category: 'antibot', detection: {} }, true);
+    s = await state();
+    assert.deepEqual([s.detectionMethodsBody.hidden, s.combinationsBody.hidden], [false, true]);
+    if (shotsDir) { fs.mkdirSync(shotsDir, { recursive: true }); }
+    await page.evaluate(() => document.querySelector('#cancelRuleEdit').click());
+    await page.close();
   });
 
   // ---- Report -------------------------------------------------------------------------------------

@@ -22,7 +22,7 @@ const output = path.join(os.tmpdir(), 'antibot-286-ui');
     page.on('pageerror', error => errors.push(error.message));
     await page.addInitScript(() => Object.defineProperty(navigator, 'platform', { get: () => 'Win32' }));
     await page.goto(`chrome-extension://${extensionId}/popup.html`);
-    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized);
+    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     assert.equal(await page.evaluate(async () => {
       const result = await chrome.runtime.sendMessage({ type: 'GET_DETECTION_DATA', tabId: -1 });
       return typeof result?.status;
@@ -53,7 +53,7 @@ const output = path.join(os.tmpdir(), 'antibot-286-ui');
     await page.screenshot({ path: path.join(output, 'history-dark.png') });
     await page.locator('#nav-history').focus();
     await page.keyboard.press('ArrowRight');
-    await page.waitForFunction(() => window.popupInstance.currentTab === 'rules');
+    await page.waitForFunction(() => window.popupInstance.currentTab === 'rules', null, { polling: 250 });
     assert.equal(await page.locator('#nav-rules').getAttribute('aria-selected'), 'true');
     console.log('PASS lower-row History metrics and keyboard tab navigation');
 

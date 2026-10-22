@@ -137,7 +137,7 @@ const server = http.createServer((req, res) => {
   const openRules = async () => {
     await popup.goto(`chrome-extension://${extId}/popup.html`);
     // The tabs only switch once the popup has started (a click before that is lost)
-    await popup.waitForFunction(() => window.popupInstance, null, { timeout: 15000 });
+    await popup.waitForFunction(() => window.popupInstance, null, { polling: 250, timeout: 15000 });
     await sleep(500);
     await popup.click('.tab-btn[data-tab="rules"]');
     await popup.waitForSelector('#checkUpdatesBtn');
@@ -149,7 +149,7 @@ const server = http.createServer((req, res) => {
     await clearToasts();
     await popup.click('#checkUpdatesBtn');
     await popup.waitForFunction(() => !document.querySelector('#checkUpdatesBtn').classList.contains('checking')
-      || document.querySelector('.notification-confirm'), null, { timeout: 30000 });
+      || document.querySelector('.notification-confirm'), null, { polling: 250, timeout: 30000 });
     await sleep(400);
   };
   const badge = async () => popup.$eval('#updatesBadge', b => (b.style.display === 'none' ? 0 : Number(b.textContent)));
@@ -333,7 +333,7 @@ const server = http.createServer((req, res) => {
   await popup.waitForSelector('#checkUpdatesNowBtn', { state: 'visible', timeout: 10000 });
   await clearToasts();
   await popup.click('#checkUpdatesNowBtn');
-  await popup.waitForFunction(() => !document.querySelector('#checkUpdatesNowBtn').disabled, null, { timeout: 30000 });
+  await popup.waitForFunction(() => !document.querySelector('#checkUpdatesNowBtn').disabled, null, { polling: 250, timeout: 30000 });
   await sleep(500);
   check('9f. Settings → Check now installs and says so', (await storedDetector('antibot', 'detect-incapsula')).version === '9.0.0'
     && (await toasts()).some(t => t.includes('v-e2e-7')), JSON.stringify(await toasts()));

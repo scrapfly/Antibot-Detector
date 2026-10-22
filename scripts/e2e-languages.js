@@ -175,7 +175,7 @@ async function run() {
     // The first load right after the browser starts can lose a startup fetch: open the popup once, unobserved
     const warm = await context.newPage();
     await warm.goto(`${base}/popup.html`);
-    await warm.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 30000 }).catch(() => {});
+    await warm.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 30000 }).catch(() => {});
     await sleep(1500);
     await warm.close();
 
@@ -216,7 +216,7 @@ async function run() {
       const popup = async () => {
         await page.setViewportSize({ width: 400, height: 600 });
         await page.goto(`${base}/popup.html`);
-        await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 20000 });
+        await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 20000 });
         await sleep(600);
       };
       const tab = async (name) => { await page.evaluate((n) => window.popupInstance.switchTab(n), name); await sleep(450); };

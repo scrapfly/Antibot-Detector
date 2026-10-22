@@ -181,7 +181,7 @@ async function scenario(name, fn) {
     const page = await ctx.newPage();
     page.on('pageerror', (e) => pageErrors.push(`${file}: ${e.message}`));
     await page.goto(`chrome-extension://${extId}/${file}`);
-    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized && window.popupInstance?.settings?.settingsBaseline, null, { timeout: 30000 });
+    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized && window.popupInstance?.settings?.settingsBaseline, null, { polling: 250, timeout: 30000 });
     return page;
   }
   // Settings are changed in the worker, not from a page: a second popup page would answer the
@@ -225,7 +225,7 @@ async function scenario(name, fn) {
     assert.equal(JSON.stringify((await items()).map(i => i.id)), before, `History changed for ${urls.join(' ')}`);
   }
   // A closed dialog fades out for a moment: the next one must not be confused with it
-  const dialogsGone = (page) => page.waitForFunction(() => document.querySelectorAll('.notification-confirm').length === 0, null, { timeout: 8000 });
+  const dialogsGone = (page) => page.waitForFunction(() => document.querySelectorAll('.notification-confirm').length === 0, null, { polling: 250, timeout: 8000 });
   const url = (query, base = origin) => `${base}/p?${query}`;
   let counter = 0;
   const uniq = () => `n=${Date.now().toString(36)}${counter++}`;
@@ -236,7 +236,7 @@ async function scenario(name, fn) {
   await sleep(2500);
   const warm = await ctx.newPage();
   await warm.goto(`chrome-extension://${extId}/popup.html`);
-  await warm.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 30000 }).catch(() => {});
+  await warm.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 30000 }).catch(() => {});
   await sleep(1500);
   await warm.close();
 
@@ -282,7 +282,7 @@ async function scenario(name, fn) {
     const read = (selector) => page.$eval(selector, el => (el.type === 'checkbox' ? el.checked : el.value));
     const open = async () => {
       await click('#settingsBtn');
-      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await page.evaluate(() => window.popupInstance.settings.loadSettings());
       await click('.settings-tab-btn[data-settings-tab="history"]');
     };
@@ -308,7 +308,7 @@ async function scenario(name, fn) {
       const wanted = { '#historyEnabled': false, '#historySkipIncognito': false, '#historyMinConfidence': '55', '#historySkipFingerprintOnly': true, '#historyExcludedDomains': 'Bank.com\nhttps://shop.example.org:8443/x, *.cdn.net', '#historyChangeAlerts': 'pinned', '#historyBackup': 'weekly', '#historyClearOnClose': true, '#duplicateAction': 'update' };
       for (const [selector, value] of Object.entries(wanted)) await field(selector, value);
       await click('#saveSettingsBtn');
-      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { timeout: 10000 }).catch(async (error) => {
+      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250, timeout: 10000 }).catch(async (error) => {
         const toasts = await page.$$eval('.notification-message, .notification-toast', els => els.map(el => el.textContent.trim()).filter(Boolean));
         // Replay the same change inside the worker to read the real reason
         const replay = await page.evaluate(() => { const ui = window.popupInstance.settings; return { baseline: ui.settingsBaseline, candidate: ui.deepMerge(ui.settings, ui.getSettingsFromUI()) }; });
@@ -522,7 +522,7 @@ async function scenario(name, fn) {
       await page.$eval('#historyItemMenu [data-action="pin"]', el => el.click());
       await waitFor(l => l.find(i => i.id === 'u2')?.pinned === true, 8000);
       assert.equal((await items()).find(i => i.id === 'u2').pinned, true);
-      await page.waitForFunction(() => document.querySelectorAll('.history-pin').length === 2);
+      await page.waitForFunction(() => document.querySelectorAll('.history-pin').length === 2, null, { polling: 250 });
 
       // Add a note through the dialog
       await page.$$eval('.history-item .history-more-btn', (els) => els[1].click());
@@ -536,7 +536,7 @@ async function scenario(name, fn) {
       await dialogsGone(page);
       await waitFor(l => !!l.find(i => i.id === 'u2')?.note, 8000);
       assert.equal((await items()).find(i => i.id === 'u2').note, 'looks protected by hCaptcha', 'one trimmed line');
-      await page.waitForFunction(() => [...document.querySelectorAll('.history-note')].some(el => el.textContent === 'looks protected by hCaptcha'));
+      await page.waitForFunction(() => [...document.querySelectorAll('.history-note')].some(el => el.textContent === 'looks protected by hCaptcha'), null, { polling: 250 });
 
       // Edit it: the dialog starts with the saved note; Cancel changes nothing, an empty note removes it
       await page.$$eval('.history-item .history-more-btn', (els) => els[1].click());
@@ -585,7 +585,7 @@ async function scenario(name, fn) {
       await page.waitForSelector('.history-item');
       const shown = () => page.$$eval('.history-item', els => els.map(el => el.dataset.historyId));
       const showsExactly = async (expected, label) => {
-        await page.waitForFunction((count) => document.querySelectorAll('.history-item').length === count, expected.length, { timeout: 8000 });
+        await page.waitForFunction((count) => document.querySelectorAll('.history-item').length === count, expected.length, { polling: 250, timeout: 8000 });
         assert.deepEqual(await shown(), expected, label);
       };
       const chip = (name) => `#historyFilters [data-filter="${name}"]`;
@@ -670,7 +670,7 @@ async function scenario(name, fn) {
       await resetHistory();
       await page.$eval('#nav-detection', el => el.click());
       await page.$eval('#nav-history', el => el.click());
-      await page.waitForFunction(() => document.querySelector('#historyFilters').hidden === true, null, { timeout: 8000 });
+      await page.waitForFunction(() => document.querySelector('#historyFilters').hidden === true, null, { polling: 250, timeout: 8000 });
     } finally { await page.close(); }
   });
 
@@ -818,7 +818,7 @@ async function scenario(name, fn) {
     const read = (selector) => page.$eval(selector, el => (el.type === 'checkbox' ? el.checked : el.value));
     const open = async () => {
       await click('#settingsBtn');
-      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await page.evaluate(() => window.popupInstance.settings.loadSettings());
       await click('.settings-tab-btn[data-settings-tab="history"]');
     };
@@ -840,7 +840,7 @@ async function scenario(name, fn) {
       await field('#historyAutoPinVendors', '  Cloudflare \n\ndatadome\nCLOUDFLARE');
       await field('#historyAutoPinMinConfidence', '90');
       await click('#saveSettingsBtn');
-      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { timeout: 10000 });
+      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250, timeout: 10000 });
       const saved = (await settingsNow()).history;
       assert.equal(saved.historyFingerprintDays, 14);
       assert.equal(saved.historyAutoPinHard, true);
@@ -892,7 +892,7 @@ async function scenario(name, fn) {
     const click = (selector) => page.$eval(selector, el => el.click());
     const open = async (tab) => {
       await click('#settingsBtn');
-      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await page.evaluate(() => window.popupInstance.settings.loadSettings());
       await click(`.settings-tab-btn[data-settings-tab="${tab}"]`);
     };
@@ -900,12 +900,12 @@ async function scenario(name, fn) {
       await open('history');
       assert.equal(await page.$eval('#historyMaxMB', el => el.value), '12');
       assert.deepEqual(await page.$$eval('#historyMaxMB option', els => els.map(el => el.textContent)), ['6 MB', '12 MB', '25 MB']);
-      await page.waitForFunction(() => /of 12\.0 MB used/.test(document.querySelector('#historyMeterText').textContent), null, { timeout: 8000 })
+      await page.waitForFunction(() => /of 12\.0 MB used/.test(document.querySelector('#historyMeterText').textContent), null, { polling: 250, timeout: 8000 })
         .catch(async (error) => { throw new Error(`the History meter says "${await page.$eval('#historyMeterText', el => el.textContent)}" (${error.message.split('\n')[0]})`); });
       assert.match(await page.$eval('#historyMeterText', el => el.textContent), /^\d+\.\d MB of 12\.0 MB used · 2200 entries$/);
 
       await click('.settings-tab-btn[data-settings-tab="data"]');
-      await page.waitForFunction(() => /used, no limit/.test(document.querySelector('#storageTotalText').textContent), null, { timeout: 8000 })
+      await page.waitForFunction(() => /used, no limit/.test(document.querySelector('#storageTotalText').textContent), null, { polling: 250, timeout: 8000 })
         .catch(async (error) => { throw new Error(`the Data tab says "${await page.$eval('#storageTotalText', el => el.textContent)}" (${error.message.split('\n')[0]})`); });
       assert.equal(await page.$eval('#storageMeter', el => el.hidden), true, 'with unlimited storage there is no quota to fill');
 
@@ -927,7 +927,7 @@ async function scenario(name, fn) {
       await dialogsGone(page);
       assert.equal(await page.$eval('#historyMaxMB', el => el.value), '6');
       await click('#saveSettingsBtn');
-      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { timeout: 10000 });
+      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250, timeout: 10000 });
       assert.equal((await settingsNow()).history.historyMaxMB, 6);
       const end = Date.now() + 20000;
       let usage;
@@ -1082,7 +1082,7 @@ async function scenario(name, fn) {
       await click('#historyItemMenu [data-action="watch"]');
       await waitFor(l => l[0] && l[0].watch === true, 8000);
       assert.equal((await items())[0].pinned, true, 'watching pins the page');
-      await popup.waitForFunction(() => document.querySelectorAll('.history-watch').length === 1 && document.querySelectorAll('.history-pin').length === 1);
+      await popup.waitForFunction(() => document.querySelectorAll('.history-watch').length === 1 && document.querySelectorAll('.history-pin').length === 1, null, { polling: 250 });
       assert.equal(await popup.$eval('.history-watch', el => el.getAttribute('data-tip')), 'Watching for changes');
       assert.equal(await popup.$eval('.history-watch', el => el.getAttribute('data-tip-detail')), 'Not checked yet');
       await popup.$$eval('.history-item .history-more-btn', els => els[0].click());
@@ -1092,16 +1092,16 @@ async function scenario(name, fn) {
 
       // Settings: Check now
       await click('#settingsBtn');
-      await popup.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await popup.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await popup.evaluate(() => window.popupInstance.settings.loadSettings());
       await click('.settings-tab-btn[data-settings-tab="history"]');
-      await popup.waitForFunction(() => /1 of 10 pages watched · No check yet\./.test(document.querySelector('#historyWatchLast').textContent), null, { timeout: 8000 });
+      await popup.waitForFunction(() => /1 of 10 pages watched · No check yet\./.test(document.querySelector('#historyWatchLast').textContent), null, { polling: 250, timeout: 8000 });
       assert.equal(await popup.$eval('#historyWatch', el => el.value), 'daily');
       await click('#historyWatchNowBtn');
-      await popup.waitForFunction(() => /Last check: .* · 1 checked, 0 changed/.test(document.querySelector('#historyWatchLast').textContent), null, { timeout: 60000 });
+      await popup.waitForFunction(() => /Last check: .* · 1 checked, 0 changed/.test(document.querySelector('#historyWatchLast').textContent), null, { polling: 250, timeout: 60000 });
       assert.equal(await popup.$eval('#historyWatchNowBtn', el => el.disabled), false);
       await click('#cancelSettingsBtn');
-      await popup.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'));
+      await popup.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       // The card now says when it was checked
       await popup.evaluate(() => window.popupInstance.history.loadHistoryFromStorage().then(() => window.popupInstance.history.renderHistory()));
       assert.match(await popup.$eval('.history-watch', el => el.getAttribute('data-tip-detail')), /^Last checked /);
@@ -1112,7 +1112,7 @@ async function scenario(name, fn) {
       await click('#historyItemMenu [data-action="watch"]');
       await waitFor(l => l[0] && !l[0].watch, 8000);
       assert.equal((await items())[0].pinned, true);
-      await popup.waitForFunction(() => document.querySelectorAll('.history-watch').length === 0);
+      await popup.waitForFunction(() => document.querySelectorAll('.history-watch').length === 0, null, { polling: 250 });
     } finally { await popup.close(); }
     await resetSettings();
     await resetHistory();
@@ -1279,9 +1279,9 @@ async function scenario(name, fn) {
     const page = await openExtensionPage();
     try {
       await page.$eval('#settingsBtn', el => el.click());
-      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await page.$eval('.settings-tab-btn[data-settings-tab="history"]', el => el.click());
-      await page.waitForFunction(() => /No backup yet/i.test(document.querySelector('#historyBackupLast')?.textContent || ''), null, { timeout: 8000 });
+      await page.waitForFunction(() => /No backup yet/i.test(document.querySelector('#historyBackupLast')?.textContent || ''), null, { polling: 250, timeout: 8000 });
       await page.$eval('#historyBackupNowBtn', el => el.click());
       const [backup] = await waitDownloads(1);
       assert.match(backup.name, /^Scrapfly\/scrapfly-history-\d{4}-\d{2}-\d{2}\.json$/);
@@ -1290,7 +1290,7 @@ async function scenario(name, fn) {
       const data = JSON.parse(fs.readFileSync(backup.file, 'utf8'));
       assert.equal(data.itemsCount, 4);
       assert.deepEqual(data.items.map(i => i.id), ['x1', 'x2', 'x3', 'x4']);
-      await page.waitForFunction(() => /Last backup/i.test(document.querySelector('#historyBackupLast')?.textContent || ''), null, { timeout: 8000 });
+      await page.waitForFunction(() => /Last backup/i.test(document.querySelector('#historyBackupLast')?.textContent || ''), null, { polling: 250, timeout: 8000 });
       const state = (await W(() => chrome.storage.local.get('scrapfly_history_backup'))).scrapfly_history_backup;
       assert.equal(state.ok, true);
       assert.equal(state.entries, 4);
@@ -1358,7 +1358,7 @@ async function scenario(name, fn) {
   // ===============================================================================================
   const settingsHistoryTab = async (page) => {
     await page.$eval('#settingsBtn', el => el.click());
-    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     await page.$eval('.settings-tab-btn[data-settings-tab="history"]', el => el.click());
   };
   const toastTexts = (page) => page.$$eval('.notification-message', els => els.map(el => el.textContent.trim()).filter(Boolean));
@@ -1370,7 +1370,7 @@ async function scenario(name, fn) {
     try {
       await settingsHistoryTab(page);
       await page.$eval('#historyBackupNowBtn', el => el.click());
-      await page.waitForFunction(() => [...document.querySelectorAll('.notification-message')].some(el => /History backup failed/.test(el.textContent)), null, { timeout: 8000 });
+      await page.waitForFunction(() => [...document.querySelectorAll('.notification-message')].some(el => /History backup failed/.test(el.textContent)), null, { polling: 250, timeout: 8000 });
       const toasts = await toastTexts(page);
       assert.ok(toasts.some(t => t === 'History backup failed: Download blocked by policy'), toasts.join(' | '));
     } finally { await page.close(); await W(() => { globalThis.__failDownloads = ''; }); }
@@ -1388,7 +1388,7 @@ async function scenario(name, fn) {
     try {
       // The History tab says so once it opens
       await page.$eval('#nav-history', el => el.click());
-      await page.waitForFunction(() => [...document.querySelectorAll('.notification-message')].some(el => /out of date/.test(el.textContent)), null, { timeout: 8000 });
+      await page.waitForFunction(() => [...document.querySelectorAll('.notification-message')].some(el => /out of date/.test(el.textContent)), null, { polling: 250, timeout: 8000 });
       // Pinning is refused with the same explanation
       await page.waitForSelector('.history-item');
       await page.$eval('.history-item .history-more-btn', el => el.click());
@@ -1399,7 +1399,7 @@ async function scenario(name, fn) {
       assert.deepEqual((await items()).filter(i => i.pinned === true).map(i => i.id), ['x1', 'x4'], 'the pins did not change (x1 is pinned in the seed, so the menu offered Unpin)');
       // Settings → History: the note under the meter, and Back up now
       await settingsHistoryTab(page);
-      await page.waitForFunction(() => /background part is out of date/.test(document.querySelector('#historyMeterNote')?.textContent || ''), null, { timeout: 8000 });
+      await page.waitForFunction(() => /background part is out of date/.test(document.querySelector('#historyMeterNote')?.textContent || ''), null, { polling: 250, timeout: 8000 });
       assert.equal(await page.$eval('#historyMeterNote', el => el.hidden), false);
       await page.evaluate(() => document.querySelectorAll('.notification-toast, .notification-item').forEach(el => el.remove()));
       await page.$eval('#historyBackupNowBtn', el => el.click());
@@ -1427,7 +1427,7 @@ async function scenario(name, fn) {
     const openHistorySettings = async () => {
       const page = await openExtensionPage();
       await page.$eval('#settingsBtn', el => el.click());
-      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await page.$eval('.settings-tab-btn[data-settings-tab="history"]', el => el.click());
       return page;
     };
@@ -1441,7 +1441,7 @@ async function scenario(name, fn) {
     await clearNotes();
     let page = await openHistorySettings();
     try {
-      await page.waitForFunction(() => /57 entries/.test(document.querySelector('#historyMeterText')?.textContent || ''), null, { timeout: 8000 });
+      await page.waitForFunction(() => /57 entries/.test(document.querySelector('#historyMeterText')?.textContent || ''), null, { polling: 250, timeout: 8000 });
       const meter = await page.evaluate(() => ({ text: document.querySelector('#historyMeterText').textContent, warn: document.querySelector('#historyMeter').classList.contains('is-warn'), now: document.querySelector('#historyMeter').getAttribute('aria-valuenow'), note: document.querySelector('#historyMeterNote').textContent, noteHidden: document.querySelector('#historyMeterNote').hidden }));
       assert.match(meter.text, /MB of .*used/);
       assert.ok(Number(meter.now) >= 90, `meter at ${meter.now}%`);
@@ -1466,7 +1466,7 @@ async function scenario(name, fn) {
     assert.equal((await warnings()).length, 1, JSON.stringify(await notes()));
     page = await openHistorySettings();
     try {
-      await page.waitForFunction(() => /removed to stay within the limit/.test(document.querySelector('#historyMeterNote')?.textContent || ''), null, { timeout: 8000 });
+      await page.waitForFunction(() => /removed to stay within the limit/.test(document.querySelector('#historyMeterNote')?.textContent || ''), null, { polling: 250, timeout: 8000 });
     } finally { await page.close(); }
 
     // Pinned entries are the last to go

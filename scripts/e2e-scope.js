@@ -76,7 +76,7 @@ const PROBE = {
         }, activeTab);
       }
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
-      await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+      await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
       return page;
     };
     const stored = (page) => page.evaluate(() => StorageManager.readSettingsStrict());
@@ -140,9 +140,9 @@ const PROBE = {
 
     // 2. Chosen sites, through Settings: the mode, the empty list, Add Current Page, Save
     await admin.reload();
-    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await admin.$eval('#settingsBtn', el => el.click());
-    await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     await admin.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
     // The card is collapsed until its heading is clicked, like the other cards of the tab
     const expandSites = async () => { await admin.$eval('#scanMode', el => el.closest('.settings-card').querySelector(':scope > .settings-row--head:not([hidden])').click()); await admin.waitForSelector('#scanMode', { state: 'visible' }); };
@@ -161,12 +161,12 @@ const PROBE = {
       chrome.tabs.query = (info, cb) => { const tab = { id: 1, url: `http://localhost:${port}/p` }; if (info && info.active) { if (cb) { cb([tab]); return undefined; } return Promise.resolve([tab]); } return original(info, cb); };
     }, port);
     await admin.$eval('#addCurrentDomainBtn', el => el.click());
-    await admin.waitForFunction(() => /localhost/.test(document.querySelector('#blacklistContainer').textContent));
+    await admin.waitForFunction(() => /localhost/.test(document.querySelector('#blacklistContainer').textContent), null, { polling: 250 });
     assert.equal(await admin.$$eval('#blacklistContainer .blacklist-item', els => els.length), 1);
     await admin.$eval('#addCurrentDomainBtn', el => el.click());   // already there: nothing is added twice
     assert.equal(await admin.$$eval('#blacklistContainer .blacklist-item', els => els.length), 1);
     await admin.evaluate(() => window.popupInstance.settings.handleSaveSettings());
-    await admin.waitForFunction(() => window.popupInstance.settings.settings.detection.scanMode === 'allowlist');
+    await admin.waitForFunction(() => window.popupInstance.settings.settings.detection.scanMode === 'allowlist', null, { polling: 250 });
     let now = await stored(admin);
     assert.equal(now.detection.scanMode, 'allowlist');
     assert.deepEqual(now.detection.allowedDomains, ['localhost']);
@@ -194,7 +194,7 @@ const PROBE = {
     // 4. The paused card of a site that is not chosen: its own words, no "Block this domain", and "Scan this site" works
     const blocked = await visit(at('127.0.0.1', '?c=2'));
     const popup = await popupPage(blocked.tab);
-    await popup.waitForFunction(() => document.querySelector('#blacklistWarning') && getComputedStyle(document.querySelector('#blacklistWarning')).display !== 'none', null, { timeout: 15000 });
+    await popup.waitForFunction(() => document.querySelector('#blacklistWarning') && getComputedStyle(document.querySelector('#blacklistWarning')).display !== 'none', null, { polling: 250, timeout: 15000 });
     const card = await popup.evaluate(() => ({
       visible: [...document.querySelectorAll('#blacklistWarning [data-scan-mode-show]')].filter(el => !el.hidden).map(el => el.textContent.trim().replace(/\s+/g, ' ')),
       blockHidden: document.querySelector('#addToBlacklistBtn').hidden,
@@ -208,7 +208,7 @@ const PROBE = {
     assert.equal(await popup.$eval('#historyItemMenu [data-scan-mode-show="allowlist"]', el => el.hidden), false, 'the History menu offers the action of this mode');
     assert.equal(await popup.$eval('#historyItemMenu [data-scan-mode-show="blocklist"]', el => el.hidden), true);
     await popup.$eval('#allowSiteBtn', el => el.click());
-    await popup.waitForFunction(() => window.popupInstance.settings.settings, null, { timeout: 5000 });
+    await popup.waitForFunction(() => window.popupInstance.settings.settings, null, { polling: 250, timeout: 5000 });
     await sleep(2500);
     now = await stored(popup);
     assert.deepEqual(now.detection.allowedDomains.sort(), ['127.0.0.1', 'localhost'], 'the site joined the list');
@@ -219,9 +219,9 @@ const PROBE = {
 
     // 5. Back to the skipped sites: both lists are as they were
     await admin.reload();
-    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await admin.$eval('#settingsBtn', el => el.click());
-    await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     await admin.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
     await expandSites();
     assert.equal(await admin.$eval('#scanMode', el => el.value), 'allowlist', 'the saved mode is shown');
@@ -229,7 +229,7 @@ const PROBE = {
     await admin.selectOption('#scanMode', 'blocklist');
     assert.equal(await admin.$$eval('#blacklistContainer .blacklist-item', els => els.length), 1, 'the skipped list shows localhost');
     await admin.evaluate(() => window.popupInstance.settings.handleSaveSettings());
-    await admin.waitForFunction(() => window.popupInstance.settings.settings.detection.scanMode === 'blocklist');
+    await admin.waitForFunction(() => window.popupInstance.settings.settings.detection.scanMode === 'blocklist', null, { polling: 250 });
     now = await stored(admin);
     assert.deepEqual([now.detection.scanMode, now.detection.blacklistedDomains, now.detection.allowedDomains.sort()], ['blocklist', ['localhost'], ['127.0.0.1', 'localhost']]);
     await wipeCache();

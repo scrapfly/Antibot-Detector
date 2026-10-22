@@ -112,7 +112,7 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
         };
       }, tab);
       await popup.goto(`chrome-extension://${extId}/popup.html`);
-      await popup.waitForFunction(() => window.popupInstance?.detection?.initialized, null, { timeout: 15000 }).catch(() => {});
+      await popup.waitForFunction(() => window.popupInstance?.detection?.initialized, null, { polling: 250, timeout: 15000 }).catch(() => {});
       await sleep(3000);
       detections = await popup.evaluate(() => (window.popupInstance.detection.currentResults || []).map(d => ({
         id: d.detector?.id || d.id,

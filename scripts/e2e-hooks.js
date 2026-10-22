@@ -102,7 +102,7 @@ const PROBE = {
         }, activeTab);
       }
       await page.goto(`chrome-extension://${extensionId}/popup.html`);
-      await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+      await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
       return page;
     };
     const stored = (page) => page.evaluate(() => StorageManager.readSettingsStrict());
@@ -169,7 +169,7 @@ const PROBE = {
 
     // 3. The popup of that site says fingerprinting is not checked
     let popup = await popupPage(off.tab);
-    await popup.waitForFunction(() => window.popupInstance.detection.currentResults?.length > 0, null, { timeout: 20000 });
+    await popup.waitForFunction(() => window.popupInstance.detection.currentResults?.length > 0, null, { polling: 250, timeout: 20000 });
     await waitFor(async () => !(await popup.$eval('#hooksOffNote', el => el.hidden)), 'the note on the results');
     assert.equal((await popup.$eval('#hooksOffNote', el => el.textContent)).trim().replace(/\s+/g, ' '), 'JS hooks are off on this site, so fingerprinting is not checked.');
     if (shotsAt) await popup.screenshot({ path: path.join(shotsAt, 'hooks-off-results.png') });
@@ -182,7 +182,7 @@ const PROBE = {
     assert.ok(hasCanvas(back.entry), `the canvas calls are watched again: ${JSON.stringify(back.entry.names)}`);
     assert.equal(back.entry.hooksOff, false);
     popup = await popupPage(back.tab);
-    await popup.waitForFunction(() => window.popupInstance.detection.currentResults?.length > 0, null, { timeout: 20000 });
+    await popup.waitForFunction(() => window.popupInstance.detection.currentResults?.length > 0, null, { polling: 250, timeout: 20000 });
     await sleep(800);
     assert.equal(await popup.$eval('#hooksOffNote', el => el.hidden), true, 'no note when the hooks are on');
     await popup.close(); await back.page.close();
@@ -201,7 +201,7 @@ const PROBE = {
     assert.equal(cleanOff.entry.count, 0);
     assert.equal(cleanOff.entry.hooksOff, true);
     popup = await popupPage(cleanOff.tab);
-    await popup.waitForFunction(() => document.querySelector('#emptyState') && getComputedStyle(document.querySelector('#emptyState')).display !== 'none', null, { timeout: 20000 });
+    await popup.waitForFunction(() => document.querySelector('#emptyState') && getComputedStyle(document.querySelector('#emptyState')).display !== 'none', null, { polling: 250, timeout: 20000 });
     await waitFor(() => popup.$eval('#emptyState [data-badge="fingerprint"]', el => el.classList.contains('state-card-badge--off')), 'the badge of a site without hooks');
     const emptyOff = await popup.evaluate(() => ({
       badge: document.querySelector('#emptyState [data-badge="fingerprint"]').textContent.trim(),
@@ -217,7 +217,7 @@ const PROBE = {
     // A host with no earlier result: a weak rescan keeps a positive result of the same host, so localhost would not do
     const cleanOn = await scan(at('a.localhost', '/clean', '?h=1'), { keepOpen: true });
     popup = await popupPage(cleanOn.tab);
-    await popup.waitForFunction(() => document.querySelector('#emptyState') && getComputedStyle(document.querySelector('#emptyState')).display !== 'none', null, { timeout: 20000 });
+    await popup.waitForFunction(() => document.querySelector('#emptyState') && getComputedStyle(document.querySelector('#emptyState')).display !== 'none', null, { polling: 250, timeout: 20000 });
     await sleep(800);
     const emptyOn = await popup.evaluate(() => ({
       badge: document.querySelector('#emptyState [data-badge="fingerprint"]').textContent.trim(),
@@ -229,9 +229,9 @@ const PROBE = {
 
     // 7. Settings: the box and Save
     await admin.reload();
-    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await admin.$eval('#settingsBtn', el => el.click());
-    await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     await admin.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
     assert.equal(await admin.$eval('#hooksOffDomains', el => el.value), '127.0.0.1', 'the box shows the saved list');
     if (shotsAt) {

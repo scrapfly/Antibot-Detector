@@ -251,12 +251,12 @@ const CATCH = `(() => {
       ]) await SettingsRuntime.recordWebhookDelivery(entry);
     });
     await admin.reload();
-    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await admin.evaluate(CATCH);
     // Save closes Settings: it is opened again, on the Detection tab, whenever the script needs it
     const openSettings = async () => {
       await admin.$eval('#settingsBtn', el => el.click());
-      await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await admin.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
     };
     await openSettings();
@@ -369,7 +369,7 @@ const CATCH = `(() => {
     admin.on('console', message => consoleLines.push(message.text()));
     await patch(admin, { debugMode: true, logCollectorEnabled: true, webhook: webhook({ webhookHeaders: [{ name: 'x-scrapfly-webhook-signature', value: 'forged' }] }) });
     await admin.reload();
-    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized);
+    await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await admin.evaluate(CATCH);
     await openSettings();
     // A secret typed with spaces around it is saved trimmed

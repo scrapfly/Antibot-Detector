@@ -119,7 +119,7 @@ async function scenario(name, fn) {
     page.on('pageerror', (e) => pageErrors.push(`${file}: ${e.message}`));
     await page.goto(`chrome-extension://${extId}/${file}`);
     if (file.startsWith('popup.html')) {
-      await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 30000 });
+      await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 30000 });
     }
     return page;
   }
@@ -270,7 +270,7 @@ async function scenario(name, fn) {
     assert.ok(rescan, 'the command is registered');
     const page = await openExtensionPage();
     await page.$eval('#settingsBtn', el => el.click());
-    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     const line = await until(() => page.$eval('#settingsShortcutRescan', el => el.textContent.trim()).then(t => (t.startsWith('Scan this page again: ') ? t : null)), 5000, 'the shortcut line');
     assert.equal(line, `Scan this page again: ${rescan.shortcut || 'not set'}`);
     await page.close();
@@ -312,7 +312,7 @@ async function scenario(name, fn) {
     await page.close();
 
     const settings = await openExtensionPage('popup.html?settings=history');
-    await settings.waitForFunction(() => document.querySelector('#settingsModal')?.classList.contains('is-open'), null, { timeout: 10000 });
+    await settings.waitForFunction(() => document.querySelector('#settingsModal')?.classList.contains('is-open'), null, { polling: 250, timeout: 10000 });
     const active = await settings.$eval('.settings-tab-btn.active', el => el.dataset.settingsTab);
     assert.equal(active, 'history');
     await settings.close();

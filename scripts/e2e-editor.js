@@ -88,7 +88,7 @@ const CASES = [
   }, [cat, id]);
   const openEditor = async (id, searchText) => {
     await p.goto(`chrome-extension://${extId}/popup.html`);
-    await p.waitForFunction(() => window.popupInstance, null, { timeout: 15000 });
+    await p.waitForFunction(() => window.popupInstance, null, { polling: 250, timeout: 15000 });
     await sleep(700);
     await p.waitForSelector('.tab-btn[data-tab="rules"]', { state: 'visible', timeout: 30000 });
     // Direct click: Playwright's "stable" wait on the tab bar sometimes never
@@ -101,6 +101,8 @@ const CASES = [
     await p.waitForSelector(editBtn, { state: 'attached', timeout: 15000 });
     await p.$eval(editBtn, el => el.click());
     await p.waitForSelector('#saveRuleEdit', { state: 'visible' });
+    // The editor opens with its cards folded (3.0.4): open them as a person would, so every pattern is in view
+    await p.$$eval('#editRuleModal .card-toggle-btn[aria-expanded="false"]', buttons => buttons.forEach(b => b.click()));
     await sleep(500);
   };
   const openSettings = async (method, field) => {

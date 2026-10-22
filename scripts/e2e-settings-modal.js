@@ -44,7 +44,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(`chrome-extension://${extensionId}/popup.html`);
     await page.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline
-      && window.popupInstance?.detectorManager?.initialized);
+      && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await page.evaluate(async () => {
       const saved = await StorageManager.patchSettings({
         debugMode: false,
@@ -82,7 +82,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     const click = selector => page.$eval(selector, element => element.click());
     const open = async () => {
       await click('#settingsBtn');
-      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'));
+      await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
       await page.evaluate(() => window.popupInstance.settings.loadSettings());
     };
     const tab = name => click(`.settings-tab-btn[data-settings-tab="${name}"]`);
@@ -173,7 +173,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     await tab('data');
     await clearNotices();
     await importFile({ ...imported, languageOverride: 'es' });
-    await page.waitForFunction(() => settingsReviewNotices.length === 1);
+    await page.waitForFunction(() => settingsReviewNotices.length === 1, null, { polling: 250 });
     assert.deepEqual(await notices(), ['error']);
     assert.equal(await page.evaluate(() => JSON.stringify(window.popupInstance.settings.settings)), before);
     assert.equal(await page.evaluate(async () => (await chrome.storage.local.get('scrapfly_language_override')).scrapfly_language_override), 'en');
@@ -184,7 +184,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     await restoreWrites();
     await clearNotices();
     await importFile(imported);
-    await page.waitForFunction(() => settingsReviewNotices.length === 1);
+    await page.waitForFunction(() => settingsReviewNotices.length === 1, null, { polling: 250 });
     assert.deepEqual(await notices(), ['success']);
     current = await stored();
     assert.equal(current.debugMode, true);
@@ -212,7 +212,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     await page.evaluate(() => window.popupInstance.settings.handleSaveSettings());
     assert.equal((await stored()).tagColors.dom, '#123456');
     // The worker syncs it into the categories the chips read, and the open popup follows without being reopened
-    await page.waitForFunction(() => window.popupInstance.detectorManager.categoryManager.getTagColor('dom') === '#123456');
+    await page.waitForFunction(() => window.popupInstance.detectorManager.categoryManager.getTagColor('dom') === '#123456', null, { polling: 250 });
     assert.equal(await worker.evaluate(() => detectorManager.categoryManager.getTagColor('dom')), '#123456');
     console.log('PASS the toolbar badge and the tag chips use the colours of Settings, a new tag colour reaches the open popup');
 

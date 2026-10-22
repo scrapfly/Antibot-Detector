@@ -67,10 +67,10 @@ const STAND_IN = `(() => {
     const page = await context.newPage();
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(`chrome-extension://${extensionId}/popup.html`);
-    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized);
+    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await page.evaluate(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
     await page.reload();
-    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized);
+    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
 
     const openEditor = async () => {
       await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
@@ -148,7 +148,7 @@ const STAND_IN = `(() => {
 
     // 4. Save stores them like typed ones; a reopened editor misses nothing
     await page.$eval('#saveRuleEdit', el => el.click());
-    await page.waitForFunction(() => document.querySelector('#editRuleModal').style.display === 'none', null, { timeout: 15000 });
+    await page.waitForFunction(() => document.querySelector('#editRuleModal').style.display === 'none', null, { polling: 250, timeout: 15000 });
     const stored = await page.evaluate(async () => {
       const raw = (await chrome.storage.local.get('scrapfly_detectors')).scrapfly_detectors;
       const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;

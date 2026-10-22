@@ -104,7 +104,7 @@ const MUST_NOT = ['g-cookie-js-as-response', 'g-header-resp-as-request', 'g-cont
   // Install the probe detector the way a user-added rule is stored, then reload
   const admin = await ctx.newPage();
   await admin.goto(`chrome-extension://${extId}/popup.html`);
-  await admin.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { timeout: 15000 }).catch(() => {});
+  await admin.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 15000 }).catch(() => {});
   await admin.evaluate(async () => {
     const raw = (await chrome.storage.local.get('scrapfly_settings')).scrapfly_settings;
     const parsed = typeof raw === 'string' ? JSON.parse(raw) : (raw || {});
@@ -144,7 +144,7 @@ const MUST_NOT = ['g-cookie-js-as-response', 'g-header-resp-as-request', 'g-cont
       chrome.tabs.query = (info, cb) => { if (info && info.active) { if (cb) { cb([t]); return undefined; } return Promise.resolve([t]); } return original(info, cb); };
     }, tab);
     await popup.goto(`chrome-extension://${extId}/popup.html`);
-    await popup.waitForFunction(() => window.popupInstance?.detection?.initialized, null, { timeout: 15000 }).catch(() => {});
+    await popup.waitForFunction(() => window.popupInstance?.detection?.initialized, null, { polling: 250, timeout: 15000 }).catch(() => {});
     await sleep(3000);
     const results = await popup.evaluate(() => (window.popupInstance.detection.currentResults || []).map(d => ({
       name: d.detector?.name || d.name, confidence: d.confidence,
