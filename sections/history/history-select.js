@@ -32,10 +32,14 @@ History.prototype.exitSelectMode = function() {
   if (!this.selectMode) return;
   this.selectMode = false;
   this.selectedIds = new Set();
+  // Done, Escape or a checkbox had the focus: it goes back to the menu that started selecting, not to the page
+  const active = document.activeElement;
+  const hadFocus = !!(active && active.closest && active.closest('#historySelectBar, #historyList'));
   const list = document.querySelector('#historyList');
   if (list) list.classList.remove('is-selecting');
   this.renderHistory();
   this.syncSelectBar();
+  if (hadFocus) document.querySelector('#historyMenuBtn')?.focus();
 };
 
 /** Leaving the History tab ends the selection (popup.js calls cleanup() on the section it leaves). */

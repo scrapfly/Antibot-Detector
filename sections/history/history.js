@@ -851,7 +851,8 @@ class History {
 
     const select = document.createElement('select');
     select.className = 'select-field history-dialog-input';
-    select.setAttribute('dir', 'ltr');
+    // Each option is a translated sentence (date, count, path): its direction is the language's, not forced left to right
+    select.setAttribute('dir', 'auto');
     for (const candidate of candidates) {
       const option = document.createElement('option');
       option.value = candidate.id;
