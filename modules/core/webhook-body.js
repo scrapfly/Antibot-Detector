@@ -186,18 +186,54 @@
     };
   }
 
+  /** Line and column (both 1-based) of a character offset. */
+  function positionAt(text, offset) {
+    const before = text.slice(0, Math.min(Math.max(offset, 0), text.length)).split('\n');
+    return { line: before.length, column: before[before.length - 1].length + 1 };
+  }
+
+  const ENDED_TOO_SOON = /end of JSON input|unterminated|unexpected end/i;
+
   /**
-   * Line/column of a JSON.parse error offset, or null.
+   * Where the text first stops being JSON, for the errors Chrome words without a position ("Unexpected token '}',
+   * … is not valid JSON"): the shortest start of the text that JSON.parse refuses for a reason other than the text
+   * ending too soon. Once a start is refused for that reason every longer one is too, so the search halves.
+   * @returns {number|null} the offset of the character that breaks it
+   */
+  function firstBadOffset(text) {
+    const refused = (length) => {
+      try { JSON.parse(text.slice(0, length)); return false; } catch (error) {
+        const msg = String(error && error.message);
+        // Chrome sometimes words "the text stopped here" as an error at the very end ("Expected double-quoted property name … at position N")
+        const at = msg.match(/position (\d+)/i);
+        return !ENDED_TOO_SOON.test(msg) && !(at && Number(at[1]) >= length);
+      }
+    };
+    if (!refused(text.length)) return null;
+    let good = 0;
+    let bad = text.length;
+    while (bad - good > 1) {
+      const middle = (good + bad) >> 1;
+      if (refused(middle)) bad = middle; else good = middle;
+    }
+    return bad - 1;
+  }
+
+  /**
+   * Line/column of a JSON.parse error, or null: from the message when it says where, from the end of the text when
+   * it ended too soon, else by finding the first character that breaks it.
    */
   function errorPosition(text, error) {
     const msg = String(error && error.message || '');
-    let m = msg.match(/line (\d+) column (\d+)/i);
+    // A text that stops too soon is reported where its last content is, not on the empty lines after it
+    const end = text.trimEnd().length;
+    let m = msg.match(/position (\d+)/i);
+    if (m) return positionAt(text, Math.min(Number(m[1]), end));
+    m = msg.match(/line (\d+) column (\d+)/i);
     if (m) return { line: Number(m[1]), column: Number(m[2]) };
-    m = msg.match(/position (\d+)/i);
-    if (!m) return null;
-    const offset = Math.min(Number(m[1]), text.length);
-    const before = text.slice(0, offset).split('\n');
-    return { line: before.length, column: before[before.length - 1].length + 1 };
+    if (ENDED_TOO_SOON.test(msg)) return positionAt(text, end);
+    const offset = firstBadOffset(text);
+    return offset === null ? null : positionAt(text, offset);
   }
 
   /**

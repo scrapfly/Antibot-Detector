@@ -97,6 +97,23 @@ test('template validation reports the line of a JSON error after substitution', 
   assert.strictEqual(bad.line, 4);
 });
 
+test('a JSON error Chrome words without a position still gets its line: a stray token, or a text that ends too soon', () => {
+  // "Unexpected token '}', … is not valid JSON" carries no position
+  const stray = WB.validateTemplate('{\n  "a": 1,\n  "b": \n}\n');
+  assert.deepStrictEqual([stray.ok, stray.line, stray.column], [false, 4, 1]);
+  // The text stops inside an object: the last line that has anything on it
+  const open = WB.validateTemplate('{\n  "a": 1,\n  "b": [1, 2\n\n');
+  assert.deepStrictEqual([open.ok, open.line], [false, 3]);
+  // A comma left before the closing brace, wherever the message puts it
+  const comma = WB.validateTemplate('{\n  "a": 1,\n  "b": 2,\n}');
+  assert.deepStrictEqual([comma.ok, comma.line], [false, 4]);
+  // A long template does not slow the check
+  const long = '{' + Array.from({ length: 800 }, (_, i) => `\n  "k${i}": "${'x'.repeat(40)}",`).join('') + '\n  "end": oops\n}';
+  const started = Date.now();
+  const far = WB.validateTemplate(long);
+  assert.ok(far.line > 800 && Date.now() - started < 1000, `line ${far.line} in ${Date.now() - started} ms`);
+});
+
 // The Settings "Test" button sends sampleContext(); a naturally triggered
 // event sends the engine's detection objects. The two must agree, or the
 // test cannot validate a real integration (GitHub issue #5).
