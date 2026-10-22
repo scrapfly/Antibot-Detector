@@ -228,20 +228,24 @@ async function scenario(name, fn) {
     const page = await openExtensionPage();
     await page.$eval('.tab-btn[data-tab="detection"]', el => el.click());
     await page.waitForSelector('#copyOverviewBtn', { state: 'attached', timeout: 15000 });
+    const probeResults = [{ detector: { name: 'QuickWin Probe' }, category: 'Anti-Bot', confidence: 90,
+      matches: [{ type: 'cookie', value: 'qw_session=SECRETCOOKIE' }, { type: 'content', value: 'quickwin-marker-bot' }] }];
     await page.evaluate(() => {
       globalThis.__copied = [];
       FormatUtils.copyToClipboard = async (text) => { globalThis.__copied.push(text); return true; };
       DetectionActions.currentPageUrl = async () => 'https://shop.example/cart?session=SECRETURL';
-      const view = window.popupInstance.detection;
-      view.currentResults = [{ detector: { name: 'QuickWin Probe' }, category: 'Anti-Bot', confidence: 90,
-        matches: [{ type: 'cookie', value: 'qw_session=SECRETCOOKIE' }, { type: 'content', value: 'quickwin-marker-bot' }] }];
     });
     const menuShown = () => page.$eval('#copyOverviewMenu', el => !el.hidden);
     for (const format of ['overview', 'markdown', 'json']) {
       await page.$eval('#copyOverviewBtn', el => el.click());
       assert.equal(await menuShown(), true, 'the menu opens');
       assert.equal(await page.$eval('#copyOverviewBtn', el => el.getAttribute('aria-expanded')), 'true');
-      await page.$eval(`#copyOverviewMenu [data-copy-format="${format}"]`, el => el.click());
+      // The popup also scans its own tab and shows an empty state when that ends, which clears the results:
+      // put them back in the same turn as the click, so no late answer can land in between
+      await page.evaluate(({ format, results }) => {
+        window.popupInstance.detection.currentResults = results;
+        document.querySelector(`#copyOverviewMenu [data-copy-format="${format}"]`).click();
+      }, { format, results: probeResults });
       await until(async () => (await page.evaluate(() => globalThis.__copied.length)) > 0 && !(await menuShown()), 5000, `the ${format} copy`);
     }
     const copied = await page.evaluate(() => globalThis.__copied);
