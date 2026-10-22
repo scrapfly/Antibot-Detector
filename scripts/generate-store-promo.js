@@ -154,17 +154,31 @@ function marqueeHtml() {
   </section></body></html>`;
 }
 
-// ---- Store icon: 128x128 with transparent padding, the artwork a 96x96 night-blue square with the toolbar glyph
+// ---- Store icon: 128x128 with transparent padding (Chrome's image guidelines: 96x96 artwork, 16px around it). The
+// artwork is the glyph of Scrapfly's official logo (store/promo/scrapfly-logo.svg, the logo of scrapfly.io), in its
+// own blue: the wordmark beside it would be unreadable at this size.
+const OFFICIAL_LOGO = path.join(repoRoot, 'store', 'promo', 'scrapfly-logo.svg');
+const GLYPH_FILL = '#64b5f6'; // the logo's blue; the wordmark is a grey group beside it
+function officialGlyphSvg() {
+    const source = fs.readFileSync(OFFICIAL_LOGO, 'utf8');
+    // Inkscape's svg: prefix is not HTML; keep the blue glyph's path, drop the grey wordmark and the editor's metadata
+    const paths = [...source.matchAll(/<svg:path\b[^>]*\/>/g)].map((m) => m[0]);
+    const glyph = paths.filter((tag) => tag.includes(`fill="${GLYPH_FILL}"`));
+    if (!glyph.length || glyph.length === paths.length) throw new Error(`${path.relative(repoRoot, OFFICIAL_LOGO)}: the glyph and the wordmark could not be told apart`);
+    return `<svg id="glyph" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 45.294 10.556">${glyph.map((tag) => tag.replace(/<svg:path/, '<path')).join('')}</svg>`;
+}
 function storeIconHtml() {
     return `<!doctype html><html lang="en"><head><meta charset="utf-8"><style>
     * { box-sizing: border-box; }
     html, body { margin: 0; width: 128px; height: 128px; overflow: hidden; background: transparent; }
-    .badge { position: absolute; left: 16px; top: 16px; width: 96px; height: 96px; border-radius: 22px;
-      display: flex; align-items: center; justify-content: center;
-      background: radial-gradient(70% 70% at 30% 25%, rgba(59, 130, 246, 0.35), transparent 70%), linear-gradient(160deg, #16213a 0%, #0b1222 60%, #070b15 100%);
-      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.22); }
-    .badge img { width: 74px; height: 74px; filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.45)); }
-  </style></head><body><div class="badge"><img src="${brandIcon}" alt=""></div></body></html>`;
+    .badge { position: absolute; left: 16px; top: 16px; width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
+    #glyph { width: 96px; height: 96px; }
+  </style></head><body><div class="badge">${officialGlyphSvg()}</div>
+  <script>
+    // Fit the view to the glyph alone, so it fills the 96px artwork square
+    const svg = document.getElementById('glyph'); const box = svg.getBBox();
+    svg.setAttribute('viewBox', [box.x, box.y, box.width, box.height].join(' '));
+  </script></body></html>`;
 }
 
 async function checkLayout(page, label) {
