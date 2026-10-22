@@ -40,6 +40,71 @@
   height: 14px;
 }
 
+/* Detection methods and Combinations fold: closed when the editor opens, a click on the header opens them */
+.modal-card-header--toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.modal-card--folding:not(.is-open) .modal-card-header--toggle {
+  border-bottom-color: transparent;
+}
+
+.modal-card-header--toggle .card-summary {
+  margin-inline-start: auto;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.modal-card-header--toggle .card-summary:empty {
+  display: none;
+}
+
+.card-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-inline-start: auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* The count takes the free space; the arrow then sits right after it */
+.modal-card-header--toggle .card-summary:not(:empty) + .card-toggle-btn {
+  margin-inline-start: 6px;
+}
+
+.card-toggle-btn svg {
+  transition: transform 0.15s;
+}
+
+.card-toggle-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.modal-card-header--toggle:hover .card-toggle-btn,
+.card-toggle-btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.card-toggle-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 /* Icon color variations */
 .modal-card-header .card-icon.icon-info {
   background: rgba(59, 130, 246, 0.15);

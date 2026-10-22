@@ -74,12 +74,75 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     // This ensures comparison matches what save will produce
     this.currentEditDetector.originalDetection = this._collectDetectionFromForm();
 
+    // Detection methods and Combinations start folded, with their counts in the header; a rule with no pattern yet
+    // opens on its patterns, since there is nothing to hide
+    this.setupEditorCardToggles();
+    const patternTotal = Object.values(detectorWithDetection.detection || {}).reduce((sum, list) => sum + (Array.isArray(list) ? list.length : 0), 0);
+    this.setEditorCardOpen('detectionMethodsBody', patternTotal === 0);
+    this.setEditorCardOpen('combinationsBody', false);
+    this.setEditorCardOpen('ruleHistoryCheckBody', false);
+    this.setEditorCardOpen('ruleLiveTestBody', false);
+
     // Show modal
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
     // Start every open at the top (the body kept the previous rule's scroll)
     const modalBody = modal.querySelector('.rule-modal-body');
     if (modalBody) modalBody.scrollTop = 0;
+  };
+
+/** The editor cards that fold, by the id of their body. */
+Rules.EDITOR_FOLDING_CARDS = Object.freeze({
+  detectionMethodsBody: { card: 'detectionMethodsCard', summary: 'detectionMethodsSummary' },
+  combinationsBody: { card: 'combinationsCard', summary: 'combinationsSummary' },
+  ruleHistoryCheckBody: { card: 'ruleHistoryCheckCard' },
+  ruleLiveTestBody: { card: 'ruleLiveTestCard' }
+});
+
+/** A click on a folding card's header (or its arrow button) opens or closes it; bound once. */
+Rules.prototype.setupEditorCardToggles = function() {
+    if (this._editorCardTogglesBound || typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return;
+    this._editorCardTogglesBound = true;
+    document.querySelectorAll('.modal-card-header--toggle').forEach((header) => {
+      header.addEventListener('click', () => {
+        const bodyId = header.dataset.cardBody;
+        const body = document.getElementById(bodyId);
+        if (body) this.setEditorCardOpen(bodyId, body.hidden);
+      });
+    });
+  };
+
+/** Open or close a folding card; Detection methods and Combinations show in the header how much they hold. */
+Rules.prototype.setEditorCardOpen = function(bodyId, open) {
+    const parts = Rules.EDITOR_FOLDING_CARDS[bodyId];
+    const body = typeof document !== 'undefined' && typeof document.getElementById === 'function' ? document.getElementById(bodyId) : null;
+    if (!parts || !body) return;
+    body.hidden = !open;
+    document.getElementById(parts.card)?.classList.toggle('is-open', !!open);
+    const button = document.querySelector(`.card-toggle-btn[aria-controls="${bodyId}"]`);
+    if (button) button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    this.updateEditorCardSummaries();
+  };
+
+/** Open the folding card that holds an element (a field Save points at, a combination to fix). */
+Rules.prototype.revealEditorCard = function(element) {
+    const body = element && typeof element.closest === 'function' ? element.closest('#detectionMethodsBody, #combinationsBody, #ruleHistoryCheckBody, #ruleLiveTestBody') : null;
+    if (body && body.hidden) this.setEditorCardOpen(body.id, true);
+  };
+
+/** The counts in the folded headers: the rule's patterns, and its combinations. */
+Rules.prototype.updateEditorCardSummaries = function() {
+    if (typeof document === 'undefined' || typeof document.getElementById !== 'function' || typeof document.querySelectorAll !== 'function') return;
+    const _t = (typeof I18n !== 'undefined') ? I18n : null;
+    const patterns = document.querySelectorAll('#detectionMethodsContainer .method-item').length;
+    const methods = document.getElementById('detectionMethodsSummary');
+    if (methods) {
+      methods.textContent = patterns === 1
+        ? ((_t && _t.tr('methodOnePattern', '1 pattern')) || '1 pattern')
+        : ((_t && _t.format('methodPatternsFmt', patterns)) || `${patterns} patterns`);
+    }
+    const combos = document.getElementById('combinationsSummary');
+    if (combos) combos.textContent = String(Array.isArray(this.combinationsModel) ? this.combinationsModel.length : 0);
   };
 
 /**

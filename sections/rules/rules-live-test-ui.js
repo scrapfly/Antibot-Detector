@@ -30,6 +30,8 @@ Rules.prototype.liveTestRule = function() {
 Rules.prototype.liveTestProblem = function(status) {
   if (status === 'unsupported') return liveTestText('ruleLiveTestUnsupported', 'Open the popup on a web page to test a rule on it.');
   if (status === 'unreachable') return liveTestText('ruleLiveTestUnreachable', 'The page did not answer. Reload it and try again.');
+  // The worker does not know the request: it still runs the code from before an update of the extension
+  if (status === 'unknown') return liveTestText('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again.");
   return liveTestText('ruleLiveTestError', 'The test could not run.');
 };
 

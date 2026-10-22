@@ -680,6 +680,7 @@ Rules.prototype.revealAndFocusInvalidRow = function(invalidRow) {
     const { section, item, input, itemIndexInSection } = invalidRow;
     if (!section || !item) return;
 
+    this.revealEditorCard(section);
     section.classList.remove('collapsed');
 
     const methodType = invalidRow.methodType || this.getMethodSectionType(section);

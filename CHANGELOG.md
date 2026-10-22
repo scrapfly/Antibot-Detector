@@ -15,6 +15,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Webhook: a failed delivery can be sent again with Retry in Recent deliveries, and Settings → Detection → Webhook has Retry failed deliveries (on): after 1, 5 and 15 minutes when there was no answer or the server answered 408, 425, 429 or 5xx. The page data of a failed delivery stays in memory for an hour, never on disk.
 - Rules: Test on this page in the rule editor runs the rule as edited (unsaved changes included) on the page the popup is open on, and shows what each cookie, URL, content and DOM pattern finds and whether its combinations fire; patterns only a real scan can answer are marked as such. Nothing is saved or sent.
 
+### Changed
+
+- Rules editor: Detection methods, Combinations, Check against History and Test on this page start folded, with the number of patterns and combinations in their headers.
+
 ## [3.0.3] - 2026-10-22
 
 ### Added
