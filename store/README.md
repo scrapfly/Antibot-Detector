@@ -33,7 +33,9 @@ Notes:
   submission is pending: the Package page shows the draft version next to the published one. Wait for the review to
   end, or cancel the submission and submit the listing together with the package.
 - The text describes the newest version. Paste it once that version is live.
-- The small promo tile and the marquee tile cannot be localized, so they stay as they are.
+- The small promo tile (440×280), the marquee tile (1400×560) and the store icon (128×128) cannot be localized: they are
+  English only, in `store/promo/`, drawn by `node scripts/generate-store-promo.js` (Playwright, like the screenshots)
+  from the detectors' own names, logos and counts. Upload them under Store listing → Graphic assets.
 - The store treats a keyword repeated more than five times and lists of vendors or keywords as spam, and testimonials
   without a source: the checker below enforces the first, the English text avoids the rest.
 
