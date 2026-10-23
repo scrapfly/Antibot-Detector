@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "Đã kiểm tra {0} trang, {1} trang thay đổi"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "Không kiểm tra được: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Chưa theo dõi trang nào: hãy ghim một trang trong Lịch sử và chọn Theo dõi thay đổi."
   },

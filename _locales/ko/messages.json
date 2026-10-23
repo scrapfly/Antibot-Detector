@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "페이지 {0}개 확인, {1}개 변경됨"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "확인하지 못한 페이지: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "아직 감시 중인 페이지가 없습니다: 기록에서 페이지를 고정하고 변경 사항 감시를 선택하세요."
   },

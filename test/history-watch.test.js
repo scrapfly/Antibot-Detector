@@ -295,3 +295,37 @@ test('"Check now" is answered for extension pages only', async () => {
   assert.equal(answered.checked, 1);
   assert.equal(w.Watch.Messages.CHECK_NOW, 'HISTORY_WATCH_NOW');
 });
+
+test('the catch-up after a start-up check that found no window runs: a check that checked nothing does not count as recent', async () => {
+  const w = world({ items: [entry('a', 'https://a.example/')], windows: [] });
+  w.store[w.Watch.STATE_KEY] = { at: Date.now() - 2 * 86400000, ok: true, checked: 1, changed: 0, skipped: 0, failed: 0 };
+  assert.equal((await w.Watch.run('alarm')).error, 'no_window');
+  w.ctx.chrome.windows.getAll = async () => [{ id: 7, incognito: false }];
+  const catchUp = await w.Watch.run('startup');
+  assert.equal(catchUp.error, undefined, JSON.stringify(catchUp));
+  assert.equal(catchUp.checked, 1);
+  assert.equal(w.log.created.length, 1, 'the watched page was opened');
+});
+
+test('a check keeps the worker awake while it runs, and a watch tab a stopped worker left behind is closed when it comes back', async () => {
+  const w = world({ items: [entry('a', 'https://a.example/')] });
+  const ops = [];
+  w.ctx.workerKeepaliveManager = { startOperation: (id) => ops.push(['start', id]), endOperation: (id) => ops.push(['end', id]) };
+  const session = {};
+  w.ctx.chrome.storage.session = {
+    get: async (key) => (key in session ? { [key]: session[key] } : {}),
+    set: async (values) => { Object.assign(session, JSON.parse(JSON.stringify(values))); },
+    remove: async (key) => { delete session[key]; }
+  };
+  await w.Watch.run('manual');
+  assert.deepEqual(ops, [['start', 'history-watch'], ['end', 'history-watch']], 'awake for the whole check, released after');
+  assert.deepEqual(session[w.Watch.OPEN_TABS_KEY], [], 'the tab it opened was closed and forgotten');
+  // A worker stopped in the middle of a check: its tab is still listed, and the next start closes it
+  session[w.Watch.OPEN_TABS_KEY] = [4242];
+  const removed = [];
+  w.ctx.chrome.tabs.remove = async (id) => { removed.push(id); };
+  await w.Watch.closeLeftoverTabs();
+  assert.deepEqual(removed, [4242]);
+  assert.equal(session[w.Watch.OPEN_TABS_KEY], undefined);
+});
+

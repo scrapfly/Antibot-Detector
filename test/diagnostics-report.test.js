@@ -112,3 +112,12 @@ test('the rule set is named by its versions and what is waiting, never by rule n
   const bare = D.build({ ...env, detectors: { total: 3 } }, settings);
   assert.ok(!/Rule set:/.test(bare), 'nothing to say without versions or queues');
 });
+
+test('site names with any ending and short name=value secrets are redacted; code, files and versions stay readable', () => {
+  const r = D.redact;
+  assert.strictEqual(r('failed for shop.games, acme.digital and www.mybank.travel'), 'failed for <site>, <site> and <site>');
+  assert.strictEqual(r('bank.museum mysite.ninja'), '<site> <site>');
+  assert.strictEqual(r('cookie __cf_bm=Ab3x.9f-QQ api_key=sk_live_abcd1234'), 'cookie __cf_bm=<value> api_key=<value>');
+  assert.strictEqual(r('TypeError at chrome.storage.local.get in history-store.js'), 'TypeError at chrome.storage.local.get in history-store.js');
+  assert.strictEqual(r('HistoryStore.read failed (version 3.0.4)'), 'HistoryStore.read failed (version 3.0.4)');
+});

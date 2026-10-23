@@ -497,3 +497,14 @@ test('a page that is no longer pinned or watched, or no longer there, is left al
   assert.strictEqual(w.items()[0].watchedAt, undefined);
   assert.strictEqual(w.notes.length, 0);
 });
+
+test('auto-pin pins an address once: sixty visits of a hard page leave one pinned copy and room for other pages', async () => {
+  const w = makeWorld();
+  const hard = (name) => ({ ...antibot(name, 90), difficulty: 'High' });
+  for (let i = 0; i < 60; i++) { await w.save('https://shop.example/', [hard('Akamai')], { historyAutoPinHard: true }); w.advance(60000); }
+  await w.save('https://other.example/', [hard('DataDome')], { historyAutoPinHard: true });
+  const items = w.items();
+  assert.equal(items.filter(i => i.pinned && i.hostname === 'shop.example').length, 1, 'one pinned entry for the page');
+  assert.equal(items.find(i => i.hostname === 'other.example').pinned, true, 'another hard page still pins itself');
+});
+

@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "Проверено страниц: {0}, изменилось: {1}"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "Не удалось проверить: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Нет отслеживаемых страниц: закрепите страницу в Истории и выберите «Следить за изменениями»."
   },

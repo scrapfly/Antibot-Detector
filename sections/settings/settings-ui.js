@@ -1431,6 +1431,9 @@ SettingsUI.refreshHistoryWatch = async function() {
     else if (state.error === 'off') outcome = text('settingsHistoryWatchOff', 'The extension is switched off, so nothing is checked.');
     else if (state.ok === false) outcome = text('settingsHistoryWatchFailed', 'The last check failed.');
     else outcome = text('settingsHistoryWatchLastFmt', 'Last check: {0} · {1} checked, {2} changed', FormatUtils.formatDateTime(state.at), state.checked || 0, state.changed || 0);
+    // Pages that did not load, went elsewhere or did not answer in time are said too, or a check where every site was
+    // down reads as a clean "0 checked, 0 changed"
+    if (state && !state.error && state.failed > 0) outcome += ` · ${text('settingsHistoryWatchUncheckedFmt', '{0} could not be checked', state.failed)}`;
     last.textContent = `${count} · ${outcome}`;
   } catch (_) {
     last.textContent = '';
@@ -1452,9 +1455,14 @@ SettingsUI.checkWatchNow = async function(button) {
     } else if (result && result.error === 'off') {
       NotificationHelper.error(text('settingsHistoryWatchOff', 'The extension is switched off, so nothing is checked.'));
     } else if (result && result.status === 'ok') {
-      NotificationHelper.success(result.checked + result.skipped + result.failed === 0
+      const failed = Number(result.failed) || 0;
+      const done = result.checked + result.skipped + failed === 0
         ? text('settingsHistoryWatchNothing', 'No page is watched yet: pin a page in History and choose Watch for changes.')
-        : text('settingsHistoryWatchDoneFmt', 'Checked {0} pages, {1} changed', result.checked, result.changed));
+        : text('settingsHistoryWatchDoneFmt', 'Checked {0} pages, {1} changed', result.checked, result.changed)
+          + (failed ? ` · ${text('settingsHistoryWatchUncheckedFmt', '{0} could not be checked', failed)}` : '');
+      // Every page failed: nothing was checked, which is not a success
+      if (failed && !result.checked) NotificationHelper.error(done);
+      else NotificationHelper.success(done);
     } else {
       NotificationHelper.error(text('settingsHistoryWatchFailed', 'The last check failed.'));
     }

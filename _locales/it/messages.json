@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "Pagine controllate: {0}, modificate: {1}"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "Impossibile controllare: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Nessuna pagina è ancora monitorata: fissa una pagina nella cronologia e scegli Monitora le modifiche."
   },

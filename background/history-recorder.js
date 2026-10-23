@@ -254,8 +254,13 @@ class HistoryRecorder {
           ? history[duplicateAt]
           : history.find(item => item && this.normalizeDuplicateKey(item.url, item.hostname, 'full_url') === addressKey);
         const neverAgain = !!(sameAddress && sameAddress.unpinned === true);
+        // One pinned entry per address is enough: without it every visit of a hard page pinned another copy of it until
+        // the 50 automatic pins were all the same page
+        const alreadyPinned = history.some((item, index) => item && index !== duplicateAt && item.pinned === true
+          && this.normalizeDuplicateKey(item.url, item.hostname, 'full_url') === addressKey);
         const pinsItself = typeof HistoryPolicy !== 'undefined'
           && !neverAgain
+          && !alreadyPinned
           && HistoryPolicy.shouldAutoPin(detectionResults, settings)
           && HistoryPolicy.countAutoPins(history) < HistoryPolicy.MAX_AUTO_PINS;
 

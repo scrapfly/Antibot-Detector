@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "{0} halaman diperiksa, {1} berubah"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "Tidak dapat diperiksa: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Belum ada halaman yang dipantau: sematkan halaman di Riwayat dan pilih Pantau perubahan."
   },

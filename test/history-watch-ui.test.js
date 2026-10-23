@@ -77,6 +77,15 @@ test('Check now asks the worker and says how it went', async () => {
   assert.deepEqual(await run({ fail: true }), [['error', 'The last check failed.']]);
 });
 
+test('pages that could not be checked are said: in the last-check line, and as an error when every page failed', async () => {
+  const some = settingsHarness({ stored: { scrapfly_history: watchedItems(3), scrapfly_history_watch: { at: 1234, ok: true, checked: 2, changed: 0, failed: 1 } } });
+  await some.SettingsUI.refreshHistoryWatch();
+  assert.equal(some.last.textContent, '3 of 10 pages watched · Last check: at 1234 · 2 checked, 0 changed · 1 could not be checked');
+  const run = async (reply) => { const h = settingsHarness({ reply }); await h.SettingsUI.checkWatchNow.call({}, h.button); return h.toasts; };
+  assert.deepEqual(await run({ status: 'ok', checked: 2, changed: 1, skipped: 0, failed: 1 }), [['success', 'Checked 2 pages, 1 changed · 1 could not be checked']]);
+  assert.deepEqual(await run({ status: 'ok', checked: 0, changed: 0, skipped: 0, failed: 3 }), [['error', 'Checked 0 pages, 0 changed · 3 could not be checked']], 'every site down is not a success');
+});
+
 // ---- The entry menu and the card
 function historyView({ reply = { status: 'ok', updated: 1 }, mode = 'daily' } = {}) {
   const toasts = [], changes = [];

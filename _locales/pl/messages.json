@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "Sprawdzone strony: {0}, zmienione: {1}"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "Nie udało się sprawdzić: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Żadna strona nie jest jeszcze obserwowana: przypnij stronę w Historii i wybierz Obserwuj zmiany."
   },

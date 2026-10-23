@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "تم فحص الصفحات: {0}، المتغيّرة: {1}"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "تعذّر التحقق من {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "لا توجد صفحة تحت المراقبة بعد: ثبّت صفحة في السجل واختر «مراقبة التغييرات»."
   },

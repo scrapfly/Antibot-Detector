@@ -20,6 +20,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: Detection methods, Combinations, Check against History and Test on this page start folded, with the number of patterns and combinations in their headers.
 - Settings → Detection: the Sites without JS hooks card starts folded under its title, like the other titled cards.
 
+### Fixed
+
+- History: pinning pages automatically pinned a new copy of the same page on every visit until all 50 pins were that page; each address is now pinned once.
+- History watchlist: a check due when the browser starts is no longer lost, a check never leaves its background tab open, and pages that could not be checked are reported.
+- Settings → Data → Reset keeps "only the sites I choose" instead of going back to scanning every site.
+- Copy diagnostics leaves out more site names and short keys, and History's Markdown export gives addresses without their query, like every other copy.
+
 ## [3.0.3] - 2026-10-22
 
 ### Added

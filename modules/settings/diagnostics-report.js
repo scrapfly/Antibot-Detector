@@ -27,7 +27,12 @@
     [/\bBearer\s+[A-Za-z0-9._~+/=-]{8,}/gi, 'Bearer <token>'],
     [new RegExp(`\\b(?:[a-z0-9-]+\\.)+(?:${TLDS})\\b(?![\\w/-])`, 'gi'), '<site>'],
     [/\b\d{1,3}(?:\.\d{1,3}){3}\b/g, '<ip>'],
-    [/\b[A-Za-z0-9_-]{24,}\b/g, '<token>']
+    [/\b[A-Za-z0-9_-]{24,}\b/g, '<token>'],
+    // Any other lowercase dotted name is a site too (shop.games, mybank.travel, bank.museum: new endings keep coming),
+    // except code and files: an API chain (chrome.storage.local.get) or a file name (history-store.js)
+    [/(?<![\w.])(?!(?:chrome|browser|self|window|document|this|globalthis|navigator|location|console|math|json|object|array|promise)\.)(?:[a-z0-9-]+\.)+[a-z]{2,24}\b(?![\w(/-])(?<!\.(?:js|mjs|json|css|html|png|svg|md|txt|ts|map|woff2))/g, '<site>'],
+    // The value of any name=value pair (a cookie, a query parameter, a key): short tokens are secrets too
+    [/\b([A-Za-z_][\w.-]{0,40})=(?!<)[^\s&;,"'<>)\]]+/g, '$1=<value>']
   ];
 
   function redact(line) {

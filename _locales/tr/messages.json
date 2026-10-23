@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "{0} sayfa kontrol edildi, {1} değişti"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "Kontrol edilemeyen: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Henüz izlenen sayfa yok: Geçmiş'te bir sayfayı sabitleyin ve Değişiklikleri izle'yi seçin."
   },

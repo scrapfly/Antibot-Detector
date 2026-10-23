@@ -6313,6 +6313,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "Páginas comprobadas: {0}, cambiadas: {1}"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "No se pudieron comprobar: {0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "Aún no se vigila ninguna página: fija una página en el historial y elige Vigilar cambios."
   },

@@ -162,3 +162,9 @@ test('Markdown export: a page title cannot become an image, a link, HTML or a ne
   assert.ok(row.includes('!\\[x\\](https://t.example/p.gif) \\<img src=x\\> \\[l\\](u) \\*b\\* \\`c\\`'), row);
   assert.strictEqual((row.match(/(?<!\\)\|/g) || []).length, 7, 'six cells, no extra column');
 });
+
+test('the Markdown export gives each address without its query or fragment, like every other copy for tickets', () => {
+  const out = E.build([item('a', 'shop.example', 0, [det('Akamai', 'Anti-Bot', 90)], { url: 'https://shop.example/reset?token=SECRET123&code=abc#top' })], { format: 'md', now: NOW });
+  assert.ok(out.text.includes('https://shop.example/reset'), out.text);
+  assert.ok(!/SECRET123|code=abc|#top/.test(out.text), out.text);
+});

@@ -92,12 +92,18 @@
   /** A Markdown table, one row per page; a pipe or line break in a cell cannot break it. */
   // Markdown and HTML characters are escaped: a page title must not become an image, a link or a new row when pasted
   const mdCell = (value) => String(value == null ? '' : value).replace(/[\\`*_[\]<>|~]/g, (c) => `\\${c}`).replace(/[\r\n]+/g, ' ').trim();
+  /** The page's address without its query and fragment, as every other copy for tickets and chats gives it (tokens live there). */
+  function addressOf(url) {
+    const text = String(url || '');
+    try { const u = new URL(text); return `${u.origin}${u.pathname}`; } catch (_) { return text.split('#')[0].split('?')[0]; }
+  }
+
   function buildMarkdown(items, includeTimestamps) {
     const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note'];
     const lines = ['# Scrapfly Antibot Detector: History', '', `| ${header.join(' | ')} |`, `| ${header.map(() => '---').join(' | ')} |`];
     for (const item of items) {
       const found = (item.detections || []).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
-      lines.push(`| ${[item.title || item.hostname || '', item.url || '', ...(includeTimestamps ? [isoOf(item)] : []),
+      lines.push(`| ${[item.title || item.hostname || '', addressOf(item.url), ...(includeTimestamps ? [isoOf(item)] : []),
         found.length ? found.join('; ') : '-', item.pinned === true ? 'yes' : '', item.note || ''].map(mdCell).join(' | ')} |`);
     }
     return `${lines.join('\n')}\n`;

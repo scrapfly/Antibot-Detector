@@ -6311,6 +6311,9 @@
   "settingsHistoryWatchDoneFmt": {
     "message": "已检查 {0} 个页面，{1} 个有变化"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "无法检查：{0}"
+  },
   "settingsHistoryWatchNothing": {
     "message": "尚无监视中的页面：请在历史记录中固定一个页面并选择“监视变化”。"
   },

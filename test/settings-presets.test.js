@@ -89,3 +89,8 @@ test('the connection details are exactly the webhook and sharing settings that a
   assert.deepStrictEqual(listed('webhook').sort(), connection('webhook').filter(key => !preferences.includes(key)).sort());
   assert.deepStrictEqual(listed('share').sort(), connection('share').sort());
 });
+
+test('a reset keeps which site list is in use, so "only the sites I choose" never turns back into every site', () => {
+  assert.ok(SettingsPresets.KEEP.includes('detection.scanMode'));
+  for (const key of ['detection.allowedDomains', 'detection.blacklistedDomains', 'detection.hooksOffDomains']) assert.ok(SettingsPresets.KEEP.includes(key), key);
+});

@@ -45,10 +45,11 @@
     })
   });
 
-  // What a reset keeps: the site lists, the rules check time, and how much History may hold (a default limit or size
+  // What a reset keeps: the site lists and which of them is in use ("only the sites I choose" must not turn back into
+  // "every site"), the rules check time, and how much History may hold (a default limit or size
   // below what History uses would delete pages at once, and Reset promises to leave History alone)
   const KEEP = Object.freeze(['detection.blacklistedDomains', 'detection.allowedDomains', 'detection.hooksOffDomains', 'history.historyExcludedDomains', 'updates.lastCheckTimestamp',
-    'history.historyLimit', 'history.historyMaxMB']);
+    'history.historyLimit', 'history.historyMaxMB', 'detection.scanMode']);
   const CONNECTIONS = Object.freeze([
     'webhook.webhookUrl', 'webhook.webhookMethod', 'webhook.webhookContentType', 'webhook.webhookPayload', 'webhook.webhookHeaders', 'webhook.webhookSecret',
     'share.pastebinKey', 'share.githubToken', 'share.customUrl', 'share.customMethod', 'share.customBodyFormat', 'share.customFieldName',

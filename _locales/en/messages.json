@@ -6799,6 +6799,10 @@
     "message": "Checked {0} pages, {1} changed",
     "description": "Toast after Check now; {0} is how many pages were checked, {1} how many had changed"
   },
+  "settingsHistoryWatchUncheckedFmt": {
+    "message": "{0} could not be checked",
+    "description": "Added to the watchlist result in Settings → History: how many watched pages could not be checked (did not load, went to another address or did not answer in time). {0} = a number"
+  },
   "settingsHistoryWatchNothing": {
     "message": "No page is watched yet: pin a page in History and choose Watch for changes.",
     "description": "Toast after Check now when no page is on the watchlist"

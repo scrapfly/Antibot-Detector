@@ -36,6 +36,7 @@ const HistoryWatch = {
 
     _initialized: false,
     _running: null,
+    OPEN_TABS_KEY: 'session_history_watch_tabs',
     _tabs: new Map(),     // tabId -> the address being checked
     _waiters: new Map(),  // tabId -> resolves with the finished scan
 
@@ -85,7 +86,14 @@ const HistoryWatch = {
     run(reason = 'manual') {
         // One at a time: an alarm that fires during a manual check joins it
         if (!this._running) {
-            this._running = this._run(reason).finally(() => { this._running = null; });
+            // A check takes minutes (a tab per page, up to 45 s each): Chrome stops an idle worker after about 30 s, which
+            // would leave a watch tab open for good, so the check keeps the worker awake like a scan does
+            const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
+            if (keepalive) keepalive.startOperation('history-watch', { reason: 'history_watch' });
+            this._running = this._run(reason).finally(() => {
+                this._running = null;
+                if (keepalive) keepalive.endOperation('history-watch');
+            });
         }
         return this._running;
     },
@@ -106,7 +114,8 @@ const HistoryWatch = {
             // scheduled check that comes too soon after the last, is skipped without touching the record of the last one
             if (reason !== 'manual') {
                 const last = await this.lastState();
-                if (last && Number.isFinite(last.at) && Date.now() - last.at < this.MIN_GAP_MS) return { ...totals, error: 'recent' };
+                // A run that checked nothing (no window yet, the extension off) does not count: the catch-up after it must run
+                if (last && !last.error && Number.isFinite(last.at) && Date.now() - last.at < this.MIN_GAP_MS) return { ...totals, error: 'recent' };
             }
             // The extension's own switch: off means no scanning at all, so no background tabs either (recorded, so the
             // Settings line says why nothing was checked)
@@ -186,6 +195,7 @@ const HistoryWatch = {
         try {
             tab = await chrome.tabs.create({ url, active: false, windowId });
             this._tabs.set(tab.id, url);
+            await this.rememberTab(tab.id, true);
             const finished = new Promise(resolve => this._waiters.set(tab.id, resolve));
             const timeout = new Promise((resolve) => { timer = setTimeout(() => resolve({ ok: false, error: 'timeout' }), this.SCAN_TIMEOUT_MS); });
             return await Promise.race([finished, timeout]);
@@ -198,8 +208,34 @@ const HistoryWatch = {
                 this._tabs.delete(tab.id);
                 this._waiters.delete(tab.id);
                 await chrome.tabs.remove(tab.id).catch(() => {});
+                await this.rememberTab(tab.id, false);
             }
         }
+    },
+
+    /**
+     * The watch tabs that are open, kept in session storage (memory, gone with the browser): a worker stopped in the
+     * middle of a check comes back without its timers, and closes the tab it left (init)
+     */
+    async rememberTab(tabId, open) {
+        const area = chrome.storage && chrome.storage.session;
+        if (!area) return;
+        try {
+            const stored = (await area.get(this.OPEN_TABS_KEY))[this.OPEN_TABS_KEY];
+            const ids = new Set(Array.isArray(stored) ? stored : []);
+            if (open) ids.add(tabId); else ids.delete(tabId);
+            await area.set({ [this.OPEN_TABS_KEY]: [...ids] });
+        } catch (_) { /* a convenience: the check itself does not depend on it */ }
+    },
+
+    async closeLeftoverTabs() {
+        const area = chrome.storage && chrome.storage.session;
+        if (!area || this._running) return;
+        try {
+            const stored = (await area.get(this.OPEN_TABS_KEY))[this.OPEN_TABS_KEY];
+            for (const id of Array.isArray(stored) ? stored : []) await chrome.tabs.remove(id).catch(() => {});
+            await area.remove(this.OPEN_TABS_KEY);
+        } catch (_) { /* nothing to close */ }
     },
 
     /** Keep the alarm in step with the chosen mode (created, re-timed or cleared). */
@@ -260,6 +296,7 @@ const HistoryWatch = {
             if (namespace === 'local' && changes.scrapfly_settings) this.sync(false).catch(() => {});
         });
         this.sync(true).catch(() => {});
+        this.closeLeftoverTabs().catch(() => {});
     }
 };
 
