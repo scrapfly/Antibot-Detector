@@ -11,14 +11,14 @@ const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
 function harness(frame) {
-  let onUpdated;
+  let onUpdated, onCommitted;
   const context = {
     console, setTimeout, clearTimeout, Date, Map, Set, Promise,
     Logger: { debug() {}, warn() {}, error() {} },
     chrome: {
       tabs: { onRemoved: { addListener() {} }, onUpdated: { addListener(f) { onUpdated = f; } }, onActivated: { addListener() {} } },
       action: { setBadgeText: async () => {} },
-      webNavigation: { getFrame: async () => frame() }
+      webNavigation: { getFrame: async () => frame(), onCommitted: { addListener(f) { onCommitted = f; } } }
     },
     detectionStates: new Map(), activeDetections: new Map(), interruptedDetections: new Map(), batchProcessingFlags: new Map(),
     finalizationDebounce: new Map(), tabsUsingCache: new Set(), workerKeepaliveManager: null,
@@ -33,15 +33,31 @@ function harness(frame) {
     return state;
   };
   const update = async (changeInfo) => { await onUpdated(7, changeInfo, { url: changeInfo.url }); await flush(); };
-  return { ctx: context, scan, update };
+  const commit = (documentId) => onCommitted({ tabId: 7, frameId: 0, documentId });
+  return { ctx: context, scan, update, commit };
 }
 
 test('an address change in the same document keeps the scan running', async () => {
   const h = harness(() => ({ documentId: 'doc-1', url: 'https://shop.test/' }));
   const state = h.scan();
-  await h.update({ url: 'https://shop.test/' });
+  // Chrome reports history.replaceState as loading with the new address
+  for (const changeInfo of [{ url: 'https://shop.test/' }, { status: 'loading', url: 'https://shop.test/#top' }]) {
+    await h.update(changeInfo);
+    assert.equal(h.ctx.detectionStates.get(7), state, JSON.stringify(changeInfo));
+    assert.equal(state.interrupted, undefined);
+  }
+});
+
+test('a navigation that started under the old document is cancelled when the new one commits', async () => {
+  const h = harness(() => ({ documentId: 'doc-1' })); // not committed yet: the frame still holds the old page
+  const state = h.scan();
+  await h.update({ status: 'loading', url: 'https://shop.test/next' });
   assert.equal(h.ctx.detectionStates.get(7), state);
-  assert.equal(state.interrupted, undefined);
+  h.commit('doc-1'); // the same document (a same-document commit) changes nothing
+  assert.equal(h.ctx.detectionStates.get(7), state);
+  h.commit('doc-2');
+  assert.equal(h.ctx.detectionStates.has(7), false);
+  assert.equal(state.interrupted, true);
 });
 
 test('an address change that brought another document cancels the scan', async () => {
@@ -52,11 +68,11 @@ test('an address change that brought another document cancels the scan', async (
   assert.equal(state.interrupted, true);
 });
 
-test('a page load cancels the scan at once, without asking which document it is', async () => {
+test('a reload cancels the scan at once, without asking which document it is', async () => {
   let asked = false;
   const h = harness(() => { asked = true; return { documentId: 'doc-1' }; });
   const state = h.scan();
-  await h.update({ status: 'loading', url: 'https://shop.test/' });
+  await h.update({ status: 'loading' });
   assert.equal(state.interrupted, true);
   assert.equal(asked, false);
 });

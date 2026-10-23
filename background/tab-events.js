@@ -111,9 +111,11 @@ function setupTabListeners() {
             const active = activeDetections.get(tabId);
             const nextUrl = changeInfo.url || tab?.url;
             if ((state || active) && (changeInfo.status === 'loading' || (state?.url || active?.url) !== nextUrl)) {
-                if (changeInfo.status !== 'loading' && state?.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
-                    // An address change with no load (history.replaceState, pushState, a #hash) can keep the
-                    // same document: its scan goes on unless the tab now shows another document
+                if (changeInfo.url && state?.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
+                    // A new address can keep the same document (history.replaceState, pushState, a #hash: Chrome
+                    // reports them as loading too). The scan goes on unless the frame holds another document; a
+                    // real navigation is cancelled when its document commits (onCommitted below). A reload, which
+                    // keeps the address, is cancelled here at once.
                     keepScanIfSameDocument(tabId, state);
                 } else {
                     DetectionSessionStore.cancel(tabId, 'url_changed', state);
@@ -161,6 +163,17 @@ function setupTabListeners() {
             awsWafHandleAnalysisTabUpdate(tabId, changeInfo, tab);
         }
     });
+
+    // A new document committed in the tab's main frame ends the scan of the one before
+    if (chrome.webNavigation?.onCommitted) {
+        chrome.webNavigation.onCommitted.addListener((details) => {
+            if (details.frameId !== 0) return;
+            const state = detectionStates.get(details.tabId);
+            if (!state || !state.documentId || !details.documentId || state.documentId === details.documentId) return;
+            DetectionSessionStore.cancel(details.tabId, 'url_changed', state);
+            stopBadgeSpinner(details.tabId);
+        });
+    }
 
     chrome.tabs.onActivated.addListener(async (activeInfo) => {
         const newTabId = activeInfo.tabId;
