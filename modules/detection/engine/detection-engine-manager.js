@@ -1717,6 +1717,12 @@ class DetectionEngineManager {
                     if (!exactUrlMatch && !UrlUtils.hostnamesMatch(requestedHostname, storedHostname)) {
                         continue;
                     }
+                    // Cached by page or by full address, another page of the site is not this one: a clean
+                    // /about must not take the detections found on /login
+                    if (!exactUrlMatch && (cacheScope === 'path' || cacheScope === 'full') &&
+                        (!stored.url || UrlUtils.hashUrl(stored.url, cacheScope) !== urlHash)) {
+                        continue;
+                    }
 
                     if (!existingPositiveData ||
                         getStoredDetectionCount(stored) > getStoredDetectionCount(existingPositiveData) ||

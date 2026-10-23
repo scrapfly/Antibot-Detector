@@ -58,7 +58,30 @@ function tabOfWorkerRequest(details) {
     return found;
 }
 
+// The top-level request each tab is loading: its redirects reuse the request id and keep what was recorded
+const tabPageRequests = new Map();
+
+/**
+ * A tab starting a new page forgets what the page before sent and received: its requests and request
+ * bodies (what it fetched after its scan, late analytics or a challenge it solved, belongs to it, not to the
+ * next page), its response headers and cookies, and its captured responses. Kept until then, a scan of the
+ * same page without a reload (the popup asking again once the cached result expired) still has them.
+ */
+function forgetTabRequests(tabId, requestId) {
+    if (typeof tabId !== 'number' || tabId < 0) return;
+    if (requestId !== undefined && tabPageRequests.get(tabId) === requestId) return; // a redirect of the same load
+    if (requestId === undefined) tabPageRequests.delete(tabId); else tabPageRequests.set(tabId, requestId);
+    for (const store of [payloadStore, networkUrlsStore, headersStore, requestHeadersStore, responseCookiesStore]) store.delete(tabId);
+    if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
+}
+
 function setupHeaderCapture() {
+    // Synchronous and registered first, so the new page's own request is recorded after the clear
+    chrome.webRequest.onBeforeRequest.addListener(
+        (details) => { forgetTabRequests(details.tabId, details.requestId); },
+        { urls: ['<all_urls>'], types: ['main_frame'] }
+    );
+
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
         safeWebRequestListener(async (details) => {

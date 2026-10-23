@@ -10,13 +10,13 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
-function harness() {
+function harness(scope = 'domain') {
   const stored = {};
   const context = vm.createContext({
     URL, Date, JSON, Math, Map, Set, Promise, console,
     Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000, PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
     Logger: { warn() {}, debug() {}, detection() {}, cache() {}, error() {}, debugMode: false },
-    Utils: { getCacheScope: async () => 'domain', getSettings: async () => ({}) },
+    Utils: { getCacheScope: async () => scope, getSettings: async () => ({}) },
     chrome: { storage: { local: {
       get: async () => ({ scrapfly_detection_storage: stored }),
       set: async (values) => { Object.assign(stored, values.scrapfly_detection_storage); }
@@ -78,4 +78,21 @@ test('an empty scan of a page being checked is stored as empty; any other empty 
   assert.equal(stored.detectionCount, 0, 'the page no longer shows its protection, and the cache says so');
   check.Engine.restoreCache(URL_A);
   assert.equal((await check.Engine.getStoredDetection(URL_A)).detectionCount, 0);
+});
+
+test('cached by page or by full address, a clean page does not take the detections of another page of the site', async () => {
+  const LOGIN = 'https://shop.example.com/login', ABOUT = 'https://shop.example.com/about';
+  for (const scope of ['path', 'full']) {
+    const { Engine } = harness(scope);
+    await Engine.storeDetection(LOGIN, { url: LOGIN, hostname: 'shop.example.com' }, found('recaptcha'));
+    const about = await Engine.storeDetection(ABOUT, { url: ABOUT, hostname: 'shop.example.com' }, []);
+    assert.ok(!about.preservedExisting, `${scope}: /about found nothing and says so`);
+    assert.equal((await Engine.getStoredDetection(ABOUT)).detectionCount, 0, scope);
+    const login = await Engine.storeDetection(LOGIN, { url: LOGIN, hostname: 'shop.example.com' }, []);
+    assert.equal(login.preservedExisting, true, `${scope}: a weak rescan of /login keeps its own result`);
+  }
+  const { Engine } = harness('domain');
+  await Engine.storeDetection(LOGIN, { url: LOGIN, hostname: 'shop.example.com' }, found('recaptcha'));
+  assert.equal((await Engine.storeDetection(ABOUT, { url: ABOUT, hostname: 'shop.example.com' }, [])).preservedExisting, true,
+    'cached by site, every page of it shares the result');
 });

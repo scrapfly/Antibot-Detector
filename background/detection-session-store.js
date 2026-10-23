@@ -108,8 +108,8 @@ class DetectionSessionStore {
         interruptedDetections.delete(tabId);
         detectionStates.delete(tabId);
         batchProcessingFlags.delete(tabId);
-        for (const store of [payloadStore, networkUrlsStore, headersStore, requestHeadersStore, responseCookiesStore]) store.delete(tabId);
-        if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
+        // The tab's captured network data stays for a later scan of the same page; a new page clears it
+        // (forgetTabRequests in background/header-capture.js)
         return true;
     }
 }

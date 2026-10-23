@@ -38,10 +38,29 @@ function detectionStateForDocument(document) {
         DetectionSessionStore.cancel(tabId, 'document_changed', current);
         current = null;
     }
+    if (current && verified && documentId && current.documentId === documentId && current.url !== url &&
+        normalizeDetectionMessageUrl(current.url) !== normalizeDetectionMessageUrl(url)) {
+        // The page changed its own address (history.pushState/replaceState): the same document, so the same
+        // scan, now under the address the tab shows
+        (current.previousUrls ||= []).push(current.url);
+        current.url = url;
+        if (current.activeDetection) current.activeDetection.url = url;
+    }
     const sameUrl = current && normalizeDetectionMessageUrl(current.url) === normalizeDetectionMessageUrl(url);
     const state = getOrCreateDetectionState(tabId, sameUrl ? current.url : url);
     if (documentId) state.documentId = documentId;
     return state;
+}
+
+/**
+ * A page served from the cache reports its hooks and window checks as skipped. With no scan running for the
+ * tab that report has nothing to complete, and must not start a scan that would never finish (the popup would
+ * show "Searching" and the worker would be held awake).
+ */
+function skippedForCachedPage(document, reason) {
+    const reasons = globalThis.ScrapflyBridgeProtocol.COMPLETION_REASONS;
+    const cacheHit = reason === reasons.HOOKS.CACHE_HIT || reason === reasons.WINDOW.CACHE_HIT;
+    return cacheHit && !detectionStates.has(document.tabId);
 }
 
 /**
@@ -605,6 +624,7 @@ function registerDetectionHandlers(registry, context) {
 
                 const document = await resolveDetectionMessageDocument(sender, url);
                 if (!document) { sendResponse({ status: 'url_changed' }); return; }
+                if (skippedForCachedPage(document, request.reason)) { sendResponse({ status: 'success' }); return; }
                 const state = detectionStateForDocument(document);
 
                 state.windowPropertiesComplete = true;
@@ -646,6 +666,7 @@ function registerDetectionHandlers(registry, context) {
 
                     const document = await resolveDetectionMessageDocument(sender, url);
                     if (!document) { sendResponse({ status: 'url_changed' }); return; }
+                    if (skippedForCachedPage(document, request.completionReason)) { sendResponse({ status: 'success' }); return; }
                     const state = detectionStateForDocument(document);
 
                     state.hooksComplete = true;

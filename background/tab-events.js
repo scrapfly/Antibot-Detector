@@ -3,6 +3,15 @@
  * Extracted from background.js to keep tab lifecycle logic isolated.
  */
 
+/** Cancel the tab's scan only when its main frame now holds a different document than the one scanned. */
+async function keepScanIfSameDocument(tabId, state) {
+    const frame = await chrome.webNavigation.getFrame({ tabId, frameId: 0 }).catch(() => null);
+    if (detectionStates.get(tabId) !== state) return;
+    if (frame && frame.documentId === state.documentId) return;
+    DetectionSessionStore.cancel(tabId, 'url_changed', state);
+    stopBadgeSpinner(tabId);
+}
+
 function setupTabListeners() {
     // Clear all data stores and detection state for closed tab
     chrome.tabs.onRemoved.addListener((tabId) => {
@@ -14,6 +23,7 @@ function setupTabListeners() {
         payloadStore.delete(tabId);
         networkUrlsStore.delete(tabId);
         if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
+        if (typeof tabPageRequests !== 'undefined') tabPageRequests.delete(tabId);
 
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);
@@ -101,8 +111,14 @@ function setupTabListeners() {
             const active = activeDetections.get(tabId);
             const nextUrl = changeInfo.url || tab?.url;
             if ((state || active) && (changeInfo.status === 'loading' || (state?.url || active?.url) !== nextUrl)) {
-                DetectionSessionStore.cancel(tabId, 'url_changed', state);
-                stopBadgeSpinner(tabId);
+                if (changeInfo.status !== 'loading' && state?.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
+                    // An address change with no load (history.replaceState, pushState, a #hash) can keep the
+                    // same document: its scan goes on unless the tab now shows another document
+                    keepScanIfSameDocument(tabId, state);
+                } else {
+                    DetectionSessionStore.cancel(tabId, 'url_changed', state);
+                    stopBadgeSpinner(tabId);
+                }
             }
         }
         if (changeInfo.status === 'loading' && !await isExtensionEnabled()) {

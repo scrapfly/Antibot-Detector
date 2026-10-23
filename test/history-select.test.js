@@ -44,8 +44,12 @@ function load() {
   view.shown = view.historyItems; // what the list shows now
   view.getFilteredItems = () => view.shown;
   const sent = [];
-  let reply = { status: 'ok', updated: 2, removed: 2, skipped: 0 };
-  view.sendHistoryChange = async (message) => { sent.push(plain(message)); return reply; };
+  let reply = null; // by default the worker changes every id it is sent
+  view.sendHistoryChange = async (message) => {
+    sent.push(plain(message));
+    const n = (message.ids || []).length;
+    return reply || { status: 'ok', updated: n, removed: n, skipped: 0 };
+  };
   view.loadHistoryFromStorage = async () => {};
   view.renderHistory = () => {};
   return { view, els, toasts, confirms, state, sent, setReply: (r) => { reply = r; } };
@@ -99,22 +103,26 @@ test('the bar says how many are selected and what Pin and Watch would do', () =>
   for (const id of ['#historySelectPin', '#historySelectWatch', '#historySelectExport', '#historySelectDelete']) assert.equal(els[id].disabled, true, id);
 });
 
-test('Pin and Watch are one message with every selected id; all pinned (or watched) means undo', async () => {
+test('Pin and Watch are one message with the selected ids they change; all pinned (or watched) means undo', async () => {
   const { view, sent, toasts, state } = load();
   state.settings = { historyWatch: 'daily' };
-  view.selectedIds = new Set(['b', 'c']);
+  view.selectedIds = new Set(['c', 'd']);
   await view.bulkPin();
-  assert.deepEqual(sent[0], { type: 'HISTORY_UPDATE_ITEMS', ids: ['b', 'c'], patch: { pinned: true } });
+  assert.deepEqual(sent[0], { type: 'HISTORY_UPDATE_ITEMS', ids: ['c', 'd'], patch: { pinned: true } });
   view.selectedIds = new Set(['a', 'b']);
   await view.bulkPin();
   assert.deepEqual(sent[1], { type: 'HISTORY_UPDATE_ITEMS', ids: ['a', 'b'], patch: { pinned: false } });
   view.selectedIds = new Set(['a', 'c']);
   await view.bulkWatch();
-  assert.deepEqual(sent[2].patch, { watch: true });
+  assert.deepEqual(sent[2], { type: 'HISTORY_UPDATE_ITEMS', ids: ['c'], patch: { watch: true } }, 'a is watched already');
   view.selectedIds = new Set(['a']);
   await view.bulkWatch();
   assert.deepEqual(sent[3].patch, { watch: false });
-  assert.deepEqual(toasts.map(t => t[1]), ['Pinned: 2', 'Unpinned: 2', 'Watching: 2', 'Stopped watching: 2']);
+  assert.deepEqual(toasts.map(t => t[1]), ['Pinned: 2', 'Unpinned: 2', 'Watching: 1', 'Stopped watching: 1']);
+  view.selectedIds = new Set(['a', 'c']); // a pinned, c not: Pin pins c alone and says 1
+  await view.bulkPin();
+  assert.deepEqual(sent[4].ids, ['c']);
+  assert.equal(toasts.at(-1)[1], 'Pinned: 1');
 });
 
 test('Watch says so when the watchlist is switched off in Settings, so nothing will be checked yet', async () => {
@@ -146,7 +154,7 @@ test('Delete asks first (naming the pinned ones), Cancel deletes nothing, and on
   state.confirm = true;
   await view.bulkDelete();
   assert.deepEqual(sent, [{ type: 'HISTORY_DELETE_ITEMS', ids: ['a', 'c', 'd'] }]);
-  assert.deepEqual(toasts, [['success', 'Deleted: 2']]);
+  assert.deepEqual(toasts, [['success', 'Deleted: 3']]);
   assert.equal(view.selectedIds.size, 0);
 });
 

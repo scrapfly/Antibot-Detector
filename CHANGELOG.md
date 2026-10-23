@@ -26,6 +26,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History watchlist: a check due when the browser starts is no longer lost, a check never leaves its background tab open, and pages that could not be checked are reported.
 - Settings → Data → Reset keeps "only the sites I choose" instead of going back to scanning every site.
 - Copy diagnostics leaves out more site names and short keys, and History's Markdown export gives addresses without their query, like every other copy.
+- Detection: requests the previous page made after its scan no longer count as evidence on the next page opened in the same tab.
+- Detection: a page that changes its own address (single-page apps, removed tracking parameters) no longer cancels its scan halfway.
+- With the cache kept per page or per address, a page where nothing was found no longer shows the detections of another page of the same site.
+- Detection: a page loaded from the cache no longer leaves the popup on "Searching", and scanning an open page again keeps its header evidence.
+- History → Select: Pin and Watch count only the entries they changed.
 
 ## [3.0.3] - 2026-10-22
 

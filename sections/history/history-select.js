@@ -117,7 +117,9 @@ History.prototype.bulkPin = async function() {
   if (!items.length) return;
   const pin = !items.every(item => item.pinned === true);
   try {
-    const response = await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEMS, ids: items.map(item => item.id), patch: { pinned: pin } });
+    // Only the entries that change: the toast counts what was done, not what already was
+    const ids = items.filter(item => (item.pinned === true) !== pin).map(item => item.id);
+    const response = await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEMS, ids, patch: { pinned: pin } });
     await this.refreshAfterBulk();
     NotificationHelper.success(pin
       ? FormatUtils.t('historyBulkPinnedFmt', 'Pinned: {0}', response.updated)
@@ -134,7 +136,8 @@ History.prototype.bulkWatch = async function() {
   if (!items.length) return;
   const watch = !items.every(item => item.watch === true);
   try {
-    const response = await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEMS, ids: items.map(item => item.id), patch: { watch } });
+    const ids = items.filter(item => (item.watch === true) !== watch).map(item => item.id);
+    const response = await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEMS, ids, patch: { watch } });
     await this.refreshAfterBulk();
     if (!watch) {
       NotificationHelper.success(FormatUtils.t('historyBulkWatchStoppedFmt', 'Stopped watching: {0}', response.updated));

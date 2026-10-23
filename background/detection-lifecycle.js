@@ -468,9 +468,6 @@ async function processDetectionData(message, sender) {
         if (headerData.url.includes(pageData.hostname)) {
             pageData.headers = headerData.headers; // Response headers (backward compatibility)
             pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
-
-            // Eager delete after use
-            headersStore.delete(tabId);
         }
     }
 
@@ -480,8 +477,6 @@ async function processDetectionData(message, sender) {
 
         if (requestHeaderData.url.includes(pageData.hostname)) {
             pageData.requestHeaders = requestHeaderData.headers;
-
-            requestHeadersStore.delete(tabId);
         }
     }
 
@@ -491,8 +486,6 @@ async function processDetectionData(message, sender) {
 
         if (responseCookieData.url.includes(pageData.hostname)) {
             pageData.responseCookies = responseCookieData.cookies;
-
-            responseCookiesStore.delete(tabId);
         }
     }
 
@@ -519,9 +512,6 @@ async function processDetectionData(message, sender) {
         // Pass all payloads for detection
         if (relevantPayloads.length > 0) {
             pageData.payloads = relevantPayloads;
-
-            // Don't delete yet - will delete after detection completes
-            // payloadStore.delete(tabId);
         }
     }
 
@@ -635,7 +625,7 @@ async function processDetectionData(message, sender) {
         }
 
         // URL validation: Ensure URL hasn't changed during detection
-        if (state.url !== pageData.url) {
+        if (state.url !== pageData.url && !(state.previousUrls || []).includes(pageData.url)) {
             Logger.debug('SCAN', `Tab ${tabId} navigated during the scan (${pageData.url} → ${state.url}); results dropped`);
             return; // Don't store results for the wrong URL
         }

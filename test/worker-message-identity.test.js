@@ -355,3 +355,34 @@ for (const cached of [null, { detectionResults: [] }]) test(`GET_DETECTION_DATA 
   assert.equal(response.status, 'error');
   assert.equal(response.data, null);
 });
+
+test('a page that changes its own address keeps its scan, now under the new address', async () => {
+  const h = harness();
+  const state = h.begin();
+  h.current.url = 'https://example.test/?step=2'; // history.replaceState: same document
+  const response = await h.message('JS_HOOKS_COMPLETE', { url: h.current.url }, h.sender(h.current.url))();
+  assert.equal(response.status, 'success');
+  assert.equal(h.ctx.detectionStates.get(7), state);
+  assert.equal(state.interrupted, undefined);
+  assert.equal(state.url, 'https://example.test/?step=2');
+  assert.equal(state.activeDetection.url, 'https://example.test/?step=2');
+  assert.deepEqual([...state.previousUrls], ['https://example.test/']);
+  // Another document at that address still replaces it
+  h.current.documentId = 'doc-next';
+  await h.message('JS_HOOKS_COMPLETE', { url: h.current.url }, h.sender(h.current.url, 'doc-next'))();
+  assert.notEqual(h.ctx.detectionStates.get(7), state);
+  assert.equal(state.interrupted, true);
+});
+
+for (const [type, field] of [['WINDOW_PROPS_COMPLETE', 'reason'], ['JS_HOOKS_COMPLETE', 'completionReason']]) {
+  test(`${type} from a page served from the cache starts no scan, and still completes a running one`, async () => {
+    const h = harness();
+    const response = await h.message(type, { url: h.current.url, [field]: 'cache_hit' })();
+    assert.equal(response.status, 'success');
+    assert.equal(h.ctx.detectionStates.has(7), false, 'no scan that would never finish');
+    const state = h.begin();
+    await h.message(type, { url: h.current.url, [field]: 'cache_hit' })();
+    assert.equal(h.ctx.detectionStates.get(7), state);
+    assert.equal(state[type === 'JS_HOOKS_COMPLETE' ? 'hooksComplete' : 'windowPropertiesComplete'], true);
+  });
+}

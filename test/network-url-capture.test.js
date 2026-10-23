@@ -12,8 +12,8 @@ const vm = require('node:vm');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
 const ctx = vm.createContext({ URL });
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest;', ctx);
-const { recordNetworkUrl, tabOfWorkerRequest } = ctx;
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -50,4 +50,35 @@ test('a request from the site\'s own service worker goes to the tab scanning tha
   // Two tabs scanning the same origin: no guess
   ctx.detectionStates.set(9, { url: 'https://bets.example/live' });
   assert.strictEqual(tabOfWorkerRequest(sw), -1);
+});
+
+test('a tab starting a new page forgets what the page before sent and received, once per load', () => {
+  // A late beacon of the previous page (or a challenge it solved) was matched as part of the next page's scan
+  const two = (a, b) => new Map([[7, a], [8, b]]);
+  for (const name of ['payloadStore', 'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore', 'responseStore']) {
+    ctx[name] = two([{ url: 'https://a.example/x' }], [{ url: 'https://b.example/x' }]);
+  }
+  forgetTabRequests(7, 'r1');
+  for (const name of ['payloadStore', 'networkUrlsStore', 'headersStore', 'requestHeadersStore', 'responseCookiesStore', 'responseStore']) {
+    assert.equal(ctx[name].has(7), false, name);
+    assert.equal(ctx[name].has(8), true, `${name}: other tabs keep theirs`);
+  }
+  // A redirect of the same load keeps what its earlier hops recorded
+  ctx.networkUrlsStore.set(7, [req('https://a.example/challenge', 'main_frame')]);
+  forgetTabRequests(7, 'r1');
+  assert.equal(ctx.networkUrlsStore.has(7), true);
+  forgetTabRequests(7, 'r2');
+  assert.equal(ctx.networkUrlsStore.has(7), false, 'the next load starts empty');
+  forgetTabRequests(-1, 'r3'); // requests outside a tab
+  assert.equal(ctx.networkUrlsStore.size, 1);
+});
+
+test('the clear runs first and synchronously, only for top-level pages', () => {
+  const setup = src.slice(src.indexOf('function setupHeaderCapture'));
+  const first = setup.indexOf('chrome.webRequest.');
+  assert.equal(setup.indexOf('chrome.webRequest.onBeforeRequest.addListener', first), first, 'the first listener registered');
+  const listener = setup.slice(first, setup.indexOf('\n    );', first));
+  assert.match(listener, /forgetTabRequests\(details\.tabId, details\.requestId\)/);
+  assert.match(listener, /types: \['main_frame'\]/);
+  assert.doesNotMatch(listener, /async|await/);
 });
