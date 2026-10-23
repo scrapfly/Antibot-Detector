@@ -814,7 +814,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
   .stats-section-btn, .stats-menu-btn, .stats-menu-item, .stats-scope-chip, .stats-chip-btn, .stats-sub-btn, .stats-table-more, .stats-btn, .stats-search, .stats-sort { min-block-size: 44px; }
   .stats-range { padding: 0; }
   .stats-range-btn { min-block-size: 44px; }
-  .stats-link-btn { padding-block: 10px; }
+  .stats-link-btn:not(.stats-host-link) { padding-block: 10px; }
 }
 
 /* --------------------------------------------------------------------------
@@ -854,7 +854,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
     --s-cal-ink-3: #091e42; --s-cal-ink-4: #ffffff; --s-hit-filter: none;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .stats-bar, .stats-menu, .stats-scope, .stats-table-more, .stats-link-btn, .stats-skeleton, .stats-tooltip, .stats-subnav, .stats-table-toolbar, .stats-footer { display: none !important; }
+  .stats-bar, .stats-menu, .stats-scope, .stats-table-more, .stats-link-btn:not(.stats-host-link), .stats-skeleton, .stats-tooltip, .stats-subnav, .stats-table-toolbar, .stats-footer { display: none !important; }
   .stats-masthead-inner, .stats-main { max-inline-size: none; padding-inline: 0; }
   .stats-card, .stats-kpi, .stats-headline, .stats-decided-row, .stats-site { break-inside: avoid; box-shadow: none; }
   .stats-table-wrap { max-block-size: none; overflow: visible; }
@@ -897,7 +897,7 @@ body.stats-page #statsStrongEvidence { grid-template-columns: repeat(auto-fit, m
 
 /* A date in "What changed" follows the page direction: Arabic dates carry their own direction marks and break inside a left-to-right box */
 .stats-changed-meta[data-kind="date"] { direction: inherit; unicode-bidi: isolate; }
-=======
+
 /* A table cell that is a link: the protection name opens the domains that have it */
 .stats-cell-link {
   display: inline-block; max-inline-size: 100%; padding: 0; border: 0; border-radius: 4px; background: none;

@@ -98,9 +98,13 @@ Rules.prototype.runLiveTest = async function() {
   const label = button ? button.textContent : '';
   if (button) { button.disabled = true; button.textContent = liveTestText('ruleLiveTestRunning', 'Testing…'); }
   results.replaceChildren();
+  // The page can take up to 25 s to answer: if the editor was closed or another rule opened meanwhile, the answer is
+  // about a rule no longer on screen and is dropped
+  const editing = this.currentEditDetector;
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const reply = await chrome.runtime.sendMessage({ type: WorkerMessages.RULE_TEST, detector: rule, tabId: tab && tab.id });
+    if (this.currentEditDetector !== editing) return;
     if (!reply || reply.status !== 'ok') {
       results.innerHTML = `<p class="rule-check-empty">${esc(this.liveTestProblem(reply && reply.status))}</p>`;
     } else {
@@ -108,6 +112,7 @@ Rules.prototype.runLiveTest = async function() {
     }
   } catch (error) {
     Logger.warn('UI', 'Test on this page failed', error);
+    if (this.currentEditDetector !== editing) return;
     results.innerHTML = `<p class="rule-check-empty">${esc(this.liveTestProblem('error'))}</p>`;
   } finally {
     if (button) { button.disabled = false; button.textContent = label; }

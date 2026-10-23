@@ -29,7 +29,7 @@
   const state = { items: [], scope: new Set(HistoryStats.DEFAULT_SCOPE), scoped: [], days: 30, section: 'overview', sub: 'confidence',
     now: 0, exporting: false, loadVersion: 0, historyVersion: 0, d: null, cache: { key: '', stats: null },
     rules: [], captures: [], incompatible: [], officialIds: new Set(), bundledOfficialIds: [], descriptions: new Map(),
-    limits: { ...PAGE }, protectionSort: 'pages', domain: { query: '', sort: 'hardest', difficulty: new Set(), captcha: false, changed: false } };
+    limits: { ...PAGE }, protectionSort: 'pages', domain: { query: '', protection: '', sort: 'hardest', difficulty: new Set(), captcha: false, changed: false } };
   const app = { state, PAGE, go: section => selectSection(section), openDomain, openProtection, openHistory, isOfficialRule,
     get d() { return state.d; } };
 
@@ -239,8 +239,9 @@
     if (save) persist(SUB_KEY, sub);
   }
   /** The Domains list searched for a site or a protection (the search also reads each domain's protections). */
-  function showDomains(query) {
+  function showDomains(query, protection = '') {
     state.domain.query = query;
+    state.domain.protection = protection; // set: only the domains with exactly this protection, not every text match
     state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false; // a stale chip must not hide what was clicked
     byId('statsDomainSearch').value = query;
     state.limits.domain = PAGE.domain;
@@ -248,7 +249,7 @@
   }
   function openDomain(hostname) { showDomains(hostname); }
   /** A protection of the Protections table: the domains that have it. */
-  function openProtection(name) { showDomains(name); }
+  function openProtection(name) { showDomains(name, name); }
   /** A site's History: the popup page in a tab, on its History tab, searched for the host (popup.js routeFrom). */
   function openHistory(hostname) {
     const url = chrome.runtime.getURL('popup.html?tab=history&search=' + encodeURIComponent(String(hostname || '').slice(0, 200)));

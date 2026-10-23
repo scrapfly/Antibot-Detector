@@ -13,7 +13,8 @@
 
   /** A host name that opens that site's History in a new tab (a button: it works with the keyboard). */
   function hostLink(app, hostname) {
-    const link = element('button', 'stats-link-btn', hostname);
+    // stats-host-link: a site's name in a table, kept when printing (the other link buttons are page controls)
+    const link = element('button', 'stats-link-btn stats-host-link', hostname);
     link.type = 'button';
     link.setAttribute('dir', 'ltr');
     link.setAttribute('title', fmt('statsOpenInHistoryFmt', 'Open {0} in History', hostname));
@@ -80,7 +81,7 @@
   }
 
   /* ---------- Domains ---------- */
-  const filtersActive = f => !!(f.query || f.difficulty.size || f.captcha || f.changed);
+  const filtersActive = f => !!(f.query || f.protection || f.difficulty.size || f.captcha || f.changed);
   function domainIndex(app) {
     const d = app.d;
     if (!d.domainIndex) d.domainIndex = d.stats.domainMetrics.map(row => (row.hostname + '\n' + row.stack.map(item => item.name).join('\n')).toLowerCase());
@@ -89,7 +90,12 @@
   /** Rows matching the search, with the counts each chip would give against that search. */
   function searchedDomains(app) {
     const { state, d } = app, query = state.domain.query.trim().toLowerCase(), index = domainIndex(app);
-    const rows = d.stats.domainMetrics.filter((row, i) => !query || index[i].includes(query));
+    // A protection clicked in the Protections table: the domains that have exactly it (a site named after it, or another
+    // rule whose name contains it, is not listed); anything typed in the search box is a text search again
+    const protection = (state.domain.protection || '').toLowerCase();
+    const rows = protection
+      ? d.stats.domainMetrics.filter(row => row.stack.some(item => String(item.name).toLowerCase() === protection))
+      : d.stats.domainMetrics.filter((row, i) => !query || index[i].includes(query));
     const changed = new Set(d.changes.hostnames);
     return { rows, changed, counts: { High: rows.filter(r => r.difficulty === 'High').length, Medium: rows.filter(r => r.difficulty === 'Medium').length,
       Low: rows.filter(r => r.difficulty === 'Low').length, captcha: rows.filter(r => r.hasCaptcha).length, changed: rows.filter(r => changed.has(r.hostname)).length } };
@@ -180,7 +186,7 @@
   function initDomains(app) {
     const { state } = app;
     const reset = () => { state.limits.domain = app.PAGE.domain; if (state.d) renderDomainTable(app); };
-    byId('statsDomainSearch').addEventListener('input', () => { state.domain.query = byId('statsDomainSearch').value; reset(); });
+    byId('statsDomainSearch').addEventListener('input', () => { state.domain.query = byId('statsDomainSearch').value; state.domain.protection = ''; reset(); });
     byId('statsDomainSort').addEventListener('change', () => { state.domain.sort = byId('statsDomainSort').value; reset(); });
     document.querySelectorAll('[data-difficulty]').forEach(button => button.addEventListener('click', () => {
       const level = button.dataset.difficulty;
@@ -189,7 +195,7 @@
     }));
     document.querySelectorAll('[data-flag]').forEach(button => button.addEventListener('click', () => { state.domain[button.dataset.flag] = !state.domain[button.dataset.flag]; reset(); }));
     byId('statsDomainClear').addEventListener('click', () => {
-      state.domain.query = ''; state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false;
+      state.domain.query = ''; state.domain.protection = ''; state.domain.difficulty.clear(); state.domain.captcha = false; state.domain.changed = false;
       byId('statsDomainSearch').value = '';
       reset();
       refocus(byId('statsDomainSearch'));

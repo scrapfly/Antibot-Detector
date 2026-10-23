@@ -679,6 +679,8 @@ Rules.prototype.renderCombinations = function({ focusPicker = false } = {}) {
   if (list) list.scrollTop = scroll;
   if (search && focusPicker) search.focus();
   this.refreshComboPatternBadges();
+  // The folded Combinations header shows how many there are: it follows every add and delete
+  if (typeof this.updateEditorCardSummaries === 'function') this.updateEditorCardSummaries();
 };
 /** Mode select (+ "at least" stepper) of a group; ids include the path so nested ones stay unique. */
 Rules.prototype.renderComboMode = function(node, key, path, index) {

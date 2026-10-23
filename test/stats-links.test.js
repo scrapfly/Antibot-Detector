@@ -82,3 +82,24 @@ test('both strings exist in English, and the style gives a keyboard focus the sa
   const css = fs.readFileSync(path.join(root, 'sections/stats/stats.css'), 'utf8');
   assert.ok(/\.stats-cell-link:hover \.stats-stack, \.stats-cell-link:focus-visible \.stats-stack/.test(css));
 });
+
+test('a protection click lists exactly the domains that have it, not a site or a rule whose name contains it', async () => {
+  const list = [
+    entry('datadome.co', 0, [['Cloudflare Bot Management', 'antibot', 100]]),
+    entry('shop.example', 1, [['DataDome', 'antibot', 100]]),
+    entry('other.example', 2, [['DataDome Captcha', 'captcha', 90]])
+  ];
+  const ui = await createPage(list, { preferences: { scrapfly_stats_section: 'protections' } });
+  const link = buttons(ui, 'statsProtectionTable', 'stats-cell-link').find(node => textOf(node) === 'DataDome');
+  link.events.click();
+  assert.deepEqual(plain(ui.rows('statsDomainTable').map(n => textOf(n))), ['shop.example'], 'the text search would also list datadome.co and the DataDome Captcha site');
+});
+
+test('host names stay on a printed page; the page-control links do not', () => {
+  const css = fs.readFileSync(path.join(root, 'sections/stats/stats.css'), 'utf8');
+  const print = css.slice(css.indexOf('@media print'));
+  assert.match(print, /\.stats-link-btn:not\(\.stats-host-link\)/);
+  assert.doesNotMatch(print.split('}')[0] + print, /[,\s]\.stats-link-btn,/, 'no rule hides every link button');
+  assert.match(fs.readFileSync(path.join(root, 'sections/stats/stats-protections.js'), 'utf8'), /'stats-link-btn stats-host-link'/);
+});
+

@@ -412,6 +412,8 @@ Rules.prototype.updateMethodPatternCount = function(section) {
         ? ((_t && _t.get('methodOnePattern')) || '1 pattern')
         : ((_t && _t.format('methodPatternsFmt', totalPatterns)) || `${totalPatterns} patterns`);
     }
+    // The folded Detection methods header shows the rule's total: it follows every add and delete
+    if (typeof this.updateEditorCardSummaries === 'function') this.updateEditorCardSummaries();
     return totalPatterns;
   };
 
