@@ -18,6 +18,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Rules editor: Detection methods, Combinations, Check against History and Test on this page start folded, with the number of patterns and combinations in their headers.
+- Settings → Detection: the Sites without JS hooks card starts folded under its title, like the other titled cards.
 
 ## [3.0.3] - 2026-10-22
 

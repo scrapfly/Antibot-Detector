@@ -234,6 +234,11 @@ const PROBE = {
     await admin.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
     await admin.$eval('.settings-tab-btn[data-settings-tab="detection"]', el => el.click());
     assert.equal(await admin.$eval('#hooksOffDomains', el => el.value), '127.0.0.1', 'the box shows the saved list');
+    // The card starts folded under its title, like the other titled cards; a click on the title opens it
+    assert.equal(await admin.$eval('#hooksOffCard', el => el.classList.contains('is-collapsed')), true, 'folded when Settings opens');
+    assert.equal(await admin.$eval('#hooksOffCard .settings-card-head', el => el.getAttribute('aria-expanded')), 'false');
+    await admin.$eval('#hooksOffCard .settings-card-head', el => el.click());
+    assert.equal(await admin.$eval('#hooksOffCard .settings-card-head', el => el.getAttribute('aria-expanded')), 'true');
     if (shotsAt) {
       await admin.$eval('#hooksOffDomains', el => el.scrollIntoView({ block: 'center' }));
       await admin.screenshot({ path: path.join(shotsAt, 'hooks-off-settings.png') });

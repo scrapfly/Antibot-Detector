@@ -578,11 +578,15 @@
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="hooksOffGroupTitle">Sites without JS hooks</div>
 
-          <div class="settings-card">
+          <!-- A title head: the card starts folded like the other titled cards (SettingsUI.setupCollapsibleCards) -->
+          <div class="settings-card" id="hooksOffCard">
+            <div class="settings-card-head">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z"/></svg>
+              <span id="hooksOffTitle" data-i18n="hooksOffLabel">Turn JS hooks off on these sites</span>
+            </div>
             <div class="settings-card-body">
               <div class="setting-row">
-                <label class="setting-row-label" for="hooksOffDomains" data-i18n="hooksOffLabel">Turn JS hooks off on these sites</label>
-                <textarea id="hooksOffDomains" class="textarea-field textarea-field--mono site-list-box" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="example.com" aria-describedby="hooksOffHint"></textarea>
+                <textarea id="hooksOffDomains" class="textarea-field textarea-field--mono site-list-box" rows="3" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="example.com" aria-describedby="hooksOffHint" aria-labelledby="hooksOffTitle"></textarea>
                 <p class="setting-row-hint" id="hooksOffHint" data-i18n="hooksOffHint">JS hooks watch a page's browser API calls to find fingerprinting. Use this for a site that misbehaves with them: its other detections keep working, but fingerprinting is not checked. One site per line, subdomains included; reload the page to apply.</p>
               </div>
             </div>
