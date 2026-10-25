@@ -2077,8 +2077,10 @@ class DetectionEngineManager {
             return;
         }
 
-        // Cache miss - skip if recent detection exists
-        if (Utils.shouldSkipDetection(tabId, Constants.REQUEST_SKIP_THRESHOLD, recentDetectionRequests)) {
+        // Coalesce this document's notifications, never a new page or reload
+        // that happens to reuse the tab within the throttle interval.
+        const requestKey = `${tabId}:${sender.documentId || pageUrl}`;
+        if (Utils.shouldSkipDetection(requestKey, Constants.REQUEST_SKIP_THRESHOLD, recentDetectionRequests)) {
             Logger.debug('SCAN', `Duplicate request for tab ${tabId} ignored`);
             return;
         }
@@ -2277,7 +2279,8 @@ class DetectionEngineManager {
             };
             const isCurrentRequest = async () => ownsSlot() && await isSameDocument() && ownsSlot();
 
-            if (Utils.shouldSkipDetection(tabId, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
+            const requestKey = `${tabId}:${frame.documentId || tab.url}`;
+            if (Utils.shouldSkipDetection(requestKey, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
                 sendResponse({ status: 'skipped', reason: 'Recent detection exists' });
                 return true;
             }

@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Brak ukończonego skanowania"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Nie można przeskanować tej strony"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Otwórz zwykłą stronę internetową, aby wykryć zabezpieczenia. Stron przeglądarki i rozszerzeń nie można skanować."
+  },
   "detectionRetryScanDesc": {
     "message": "Skanowanie nie zostało ukończone. Odśwież stronę, aby spróbować ponownie."
   },

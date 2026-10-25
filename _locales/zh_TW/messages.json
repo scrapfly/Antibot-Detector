@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "尚無完成的掃描"
   },
+  "detectionUnsupportedTitle": {
+    "message": "無法掃描此頁面"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "請開啟一般網站以偵測防護措施。瀏覽器頁面和擴充功能頁面無法掃描。"
+  },
   "detectionRetryScanDesc": {
     "message": "掃描未完成。請重新載入網頁後再試一次。"
   },

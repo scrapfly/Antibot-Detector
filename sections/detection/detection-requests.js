@@ -66,6 +66,13 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
         return;
       }
 
+      detection.blacklistedDomain = null;
+      if (!Utils.isValidContentScriptTab(tab)) {
+        detection.showEmptyState({ outcome: 'unsupported' });
+        detection.isRequestingDetection = false;
+        return;
+      }
+
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
         if (this.debugMode) Logger.debug('UI', 'Detection: URL is blacklisted');

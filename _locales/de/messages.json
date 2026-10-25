@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Kein abgeschlossener Scan"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Diese Seite kann nicht geprüft werden"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Öffne eine normale Website, um Schutzmaßnahmen zu erkennen. Browserseiten und Erweiterungsseiten können nicht geprüft werden."
+  },
   "detectionRetryScanDesc": {
     "message": "Der Scan wurde nicht abgeschlossen. Lade die Seite neu, um es erneut zu versuchen."
   },

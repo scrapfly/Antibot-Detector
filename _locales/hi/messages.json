@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "कोई स्कैन पूरा नहीं हुआ"
   },
+  "detectionUnsupportedTitle": {
+    "message": "इस पेज को स्कैन नहीं किया जा सकता"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "सुरक्षा उपायों का पता लगाने के लिए कोई सामान्य वेबसाइट खोलें। ब्राउज़र और एक्सटेंशन के पेज स्कैन नहीं किए जा सकते।"
+  },
   "detectionRetryScanDesc": {
     "message": "स्कैन पूरा नहीं हुआ। फिर से कोशिश करने के लिए पेज रीलोड करें।"
   },

@@ -68,13 +68,34 @@ test('an address change that brought another document cancels the scan', async (
   assert.equal(state.interrupted, true);
 });
 
-test('a reload cancels the scan at once, without asking which document it is', async () => {
-  let asked = false;
-  const h = harness(() => { asked = true; return { documentId: 'doc-1' }; });
+test('status-only loading from a same-document history update preserves main results and pending hooks', async () => {
+  const h = harness(() => ({ documentId: 'doc-1' }));
+  const state = h.scan();
+  state.mainStarted = true;
+  state.mainComplete = true;
+  state.mainData = [{ detector: { id: 'detect-example' } }];
+  await h.update({ status: 'loading' });
+  assert.equal(h.ctx.detectionStates.get(7), state);
+  assert.equal(state.interrupted, undefined);
+  assert.equal(state.mainData.length, 1);
+});
+
+test('status-only loading waits for a different document before cancelling a reload', async () => {
+  const h = harness(() => ({ documentId: 'doc-1' }));
   const state = h.scan();
   await h.update({ status: 'loading' });
+  assert.equal(h.ctx.detectionStates.get(7), state);
+  h.commit('doc-2');
+  assert.equal(h.ctx.detectionStates.has(7), false);
   assert.equal(state.interrupted, true);
-  assert.equal(asked, false);
+});
+
+test('status-only loading cancels when the new document is already committed', async () => {
+  const h = harness(() => ({ documentId: 'doc-2' }));
+  const state = h.scan();
+  await h.update({ status: 'loading' });
+  assert.equal(h.ctx.detectionStates.has(7), false);
+  assert.equal(state.interrupted, true);
 });
 
 test('a scan whose document is not known is cancelled as before', async () => {

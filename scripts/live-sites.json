@@ -170,10 +170,10 @@
       "expect": [
         {
           "detector": "detect-reblaze",
-          "min": 100
+          "min": 90
         }
       ],
-      "note": "vendor site",
+      "note": "vendor site: runtime namespace plus configuration scores 90%; 100% needs a session cookie or challenge-library request",
       "waitMs": 12000
     },
     {

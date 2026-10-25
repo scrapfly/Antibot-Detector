@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Nessuna analisi completata"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Questa pagina non può essere analizzata"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Apri un normale sito web per rilevare le protezioni. Le pagine del browser e delle estensioni non possono essere analizzate."
+  },
   "detectionRetryScanDesc": {
     "message": "L’analisi non è terminata. Ricarica la pagina per riprovare."
   },

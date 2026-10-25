@@ -5,6 +5,15 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [Unreleased]
+
+### Fixed
+
+- Detection: scans finish after quick navigation, reloads and address changes within a page.
+- Paused sites show only the action for the selected scan mode.
+- Browser and extension pages clearly say they cannot be scanned, without showing clean-result badges.
+- Opening multiple popups no longer breaks Advanced tools or settings changes.
+
 ## [3.0.4] - 2026-10-23
 
 ### Added
@@ -642,6 +651,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[Unreleased]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.4...HEAD
 [3.0.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.1...v3.0.2

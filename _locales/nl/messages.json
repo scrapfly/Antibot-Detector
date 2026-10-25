@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Geen voltooide scan"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Deze pagina kan niet worden gescand"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Open een gewone website om beveiligingen te detecteren. Browserpagina’s en extensiepagina’s kunnen niet worden gescand."
+  },
   "detectionRetryScanDesc": {
     "message": "De scan is niet voltooid. Laad de pagina opnieuw om het nog eens te proberen."
   },

@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "尚无已完成的扫描"
   },
+  "detectionUnsupportedTitle": {
+    "message": "无法扫描此页面"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "请打开普通网站以检测防护措施。浏览器页面和扩展程序页面无法扫描。"
+  },
   "detectionRetryScanDesc": {
     "message": "扫描未完成。请重新加载页面后重试。"
   },

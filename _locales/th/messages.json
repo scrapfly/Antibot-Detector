@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "ไม่มีการสแกนที่เสร็จสมบูรณ์"
   },
+  "detectionUnsupportedTitle": {
+    "message": "ไม่สามารถสแกนหน้านี้ได้"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "เปิดเว็บไซต์ทั่วไปเพื่อตรวจหาการป้องกัน ไม่สามารถสแกนหน้าของเบราว์เซอร์และส่วนขยายได้"
+  },
   "detectionRetryScanDesc": {
     "message": "การสแกนไม่เสร็จสิ้น โหลดหน้าซ้ำเพื่อลองอีกครั้ง"
   },

@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "لا يوجد فحص مكتمل"
   },
+  "detectionUnsupportedTitle": {
+    "message": "لا يمكن فحص هذه الصفحة"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "افتح موقع ويب عاديًا للكشف عن وسائل الحماية. لا يمكن فحص صفحات المتصفح وصفحات الإضافات."
+  },
   "detectionRetryScanDesc": {
     "message": "لم يكتمل الفحص. أعد تحميل الصفحة للمحاولة مجددًا."
   },

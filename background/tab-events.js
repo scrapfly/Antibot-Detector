@@ -104,18 +104,17 @@ function setupTabListeners() {
     });
 
     chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-        // Invalidate the old document synchronously, before enabled/storage
-        // checks can yield to a new scan for this same tab (including reloads).
+        // Check document identity before enabled/storage work can yield. A
+        // loading event alone does not distinguish a reload from an SPA update.
         if (changeInfo.status === 'loading' || changeInfo.url) {
             const state = detectionStates.get(tabId);
             const active = activeDetections.get(tabId);
             const nextUrl = changeInfo.url || tab?.url;
             if ((state || active) && (changeInfo.status === 'loading' || (state?.url || active?.url) !== nextUrl)) {
-                if (changeInfo.url && state?.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
-                    // A new address can keep the same document (history.replaceState, pushState, a #hash: Chrome
-                    // reports them as loading too). The scan goes on unless the frame holds another document; a
-                    // real navigation is cancelled when its document commits (onCommitted below). A reload, which
-                    // keeps the address, is cancelled here at once.
+                if (state?.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
+                    // replaceState/pushState can emit status:'loading' without a URL change. Preserve that document's
+                    // collected data and hooks. A real navigation/reload is cancelled once getFrame or onCommitted
+                    // identifies its replacement, even when the URL is unchanged.
                     keepScanIfSameDocument(tabId, state);
                 } else {
                     DetectionSessionStore.cancel(tabId, 'url_changed', state);

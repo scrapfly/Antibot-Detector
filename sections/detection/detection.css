@@ -1636,6 +1636,10 @@
 }
 
 /* Primary state action (Enable detection, Remove from blacklist): 2.8 blue button */
+.state-card-enable-btn[hidden] {
+  display: none;
+}
+
 .state-card-enable-btn {
   display: inline-flex;
   align-items: center;
