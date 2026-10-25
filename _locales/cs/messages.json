@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Žádné dokončené skenování"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Tuto stránku nelze prohledat"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Otevřete běžný web pro zjištění ochran. Stránky prohlížeče a rozšíření nelze prohledávat."
+  },
   "detectionRetryScanDesc": {
     "message": "Skenování se nedokončilo. Načtěte stránku znovu a zkuste to znovu."
   },

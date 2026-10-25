@@ -1500,7 +1500,10 @@ async function scenario(name, fn) {
     await resetSettings();
   });
 
-  // ---- Restart check: closing every window clears History (except pinned), at close or at the next start ----
+  // ---- Closing every window clears unpinned History; verify that cleanup persists after relaunch. ----
+  // --load-extension installs the unpacked extension again on relaunch, so this does not exercise runtime.onStartup.
+  // Its enabled/disabled fallback is tested in test/history-clear-on-close.test.js. context.close() alone is not a
+  // substitute for the real window-close events below: it can terminate the worker before cleanup runs.
   if (!only || /restart|clear on browser close/i.test(only)) {
     const now = Date.now();
     const e = (id, extra = {}) => ({ id, url: `https://${id}.example/`, hostname: `${id}.example`, title: id, timestamp: now, detections: [{ detector: { name: 'X' }, category: 'Anti-Bot', confidence: 90 }], ...extra });
@@ -1532,7 +1535,7 @@ async function scenario(name, fn) {
         await sleep(3000);
       }
     }
-    await scenario('Clear on browser close (restart): after the browser was closed and started again only pinned entries remain', async () => {
+    await scenario('Clear on browser close (restart): last-window cleanup persists after relaunch, keeping only pinned entries', async () => {
       const list = await waitFor(l => !l.some(i => /^gone-/.test(i.id)), 20000);
       assert.ok(list, `unpinned entries are still there: ${JSON.stringify((await items()).map(i => i.id))}`);
       assert.deepEqual(list.map(i => i.id), ['pin-1']);

@@ -296,6 +296,12 @@ class ScrapflyPopup {
         return;
       }
 
+      this.detection.blacklistedDomain = null;
+      if (!Utils.isValidContentScriptTab(tab)) {
+        this.detection.showEmptyState({ outcome: 'unsupported' });
+        return;
+      }
+
       // Check if URL is blacklisted
       if (await Utils.isUrlBlacklisted(tab.url)) {
         if (!this.isDetectionViewRequestCurrent(requestId)) return;
@@ -596,6 +602,9 @@ class ScrapflyPopup {
 
         default:
           Logger.debug('UI', 'Popup: Unknown message type:', request.type);
+          // A worker request can reach every open popup. Only its owner may
+          // answer; an acknowledgment here wins the race against the worker.
+          return false;
       }
 
       sendResponse({ status: 'received' });

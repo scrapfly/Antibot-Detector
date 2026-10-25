@@ -196,7 +196,7 @@ const PROBE = {
     const popup = await popupPage(blocked.tab);
     await popup.waitForFunction(() => document.querySelector('#blacklistWarning') && getComputedStyle(document.querySelector('#blacklistWarning')).display !== 'none', null, { polling: 250, timeout: 15000 });
     const card = await popup.evaluate(() => ({
-      visible: [...document.querySelectorAll('#blacklistWarning [data-scan-mode-show]')].filter(el => !el.hidden).map(el => el.textContent.trim().replace(/\s+/g, ' ')),
+      visible: [...document.querySelectorAll('#blacklistWarning [data-scan-mode-show]')].filter(el => el.getBoundingClientRect().width > 0 && getComputedStyle(el).visibility !== 'hidden').map(el => el.textContent.trim().replace(/\s+/g, ' ')),
       blockHidden: document.querySelector('#addToBlacklistBtn').hidden,
       domain: document.querySelector('#blacklistDomain').textContent
     }));

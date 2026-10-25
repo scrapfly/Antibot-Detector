@@ -228,10 +228,12 @@ DetectionUI.applyEmptyStateCopy = function(options = {}) {
         emptyStateTitle.textContent = options.title;
         emptyStateTitle.removeAttribute('data-i18n');
       } else {
-        const titleKey = options.outcome === 'failed' ? 'detectionFailedTitle'
+        const titleKey = options.outcome === 'unsupported' ? 'detectionUnsupportedTitle'
+          : options.outcome === 'failed' ? 'detectionFailedTitle'
           : options.outcome === 'interrupted' ? 'detectionInterruptedTitle'
           : options.noCache ? 'detectionUnscannedTitle' : 'detectionEmptyTitle';
-        const titleFallback = options.outcome === 'failed' ? 'Scan failed'
+        const titleFallback = options.outcome === 'unsupported' ? 'This page cannot be scanned'
+          : options.outcome === 'failed' ? 'Scan failed'
           : options.outcome === 'interrupted' ? 'Scan interrupted'
           : options.noCache ? 'No completed scan' : 'Nothing Detected';
         emptyStateTitle.setAttribute('data-i18n', titleKey);
@@ -244,9 +246,12 @@ DetectionUI.applyEmptyStateCopy = function(options = {}) {
         emptyStateText.textContent = options.description;
         emptyStateText.removeAttribute('data-i18n');
       } else {
-        const descKey = options.outcome === 'failed' || options.outcome === 'interrupted'
+        const descKey = options.outcome === 'unsupported' ? 'detectionUnsupportedDesc'
+          : options.outcome === 'failed' || options.outcome === 'interrupted'
           ? 'detectionRetryScanDesc' : options.noCache ? 'detectionNoCachedDataDesc' : 'detectionNoDetectionsDesc';
-        const descFallback = options.outcome === 'failed' || options.outcome === 'interrupted'
+        const descFallback = options.outcome === 'unsupported'
+          ? 'Open a regular website to scan for protections. Browser pages and extension pages cannot be scanned.'
+          : options.outcome === 'failed' || options.outcome === 'interrupted'
           ? 'The scan did not finish. Reload the page to try again.' : options.noCache
           ? 'No cached detection data is available for this page. Reload the page to run a fresh scan.'
           : 'No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.';
@@ -321,6 +326,9 @@ DetectionUI.syncHooksOffNote = async function() {
 DetectionUI.showEmptyState = function(options = {}) {
     if (DetectionUI.showUnavailableState.call(this)) return;
 
+    if (typeof this.viewedTabUrl === 'string' && !Utils.isValidContentScriptUrl(this.viewedTabUrl)) {
+      options = { ...options, outcome: 'unsupported' };
+    }
     if (options.outcome) options = { ...options, noCache: true, showBadges: false };
     this.scanOutcome = options.outcome || (options.noCache ? 'unscanned' : 'complete');
     if (this.uiStateMachine) {

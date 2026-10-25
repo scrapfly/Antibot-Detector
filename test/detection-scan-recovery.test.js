@@ -185,7 +185,7 @@ for (const [showingResults, expected] of [[false, 2], [true, 1]]) {
     const sent = [];
     context.chrome.runtime.sendMessage = message => sent.push(message.type);
     context.chrome.storage = { local: { get: async () => ({ scrapfly_enabled: true }) } };
-    context.Utils = { isUrlBlacklisted: async () => false };
+    context.Utils = { isUrlBlacklisted: async () => false, isValidContentScriptTab: () => true };
     instance.detection.isShowingResults = showingResults;
     instance.detection.setExtensionEnabled = () => {};
     instance.isDetectionViewRequestCurrent = () => true;

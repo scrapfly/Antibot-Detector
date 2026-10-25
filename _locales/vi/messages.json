@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Chưa có lần quét hoàn tất"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Không thể quét trang này"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Mở một trang web thông thường để phát hiện các biện pháp bảo vệ. Không thể quét trang của trình duyệt và tiện ích mở rộng."
+  },
   "detectionRetryScanDesc": {
     "message": "Quá trình quét chưa hoàn tất. Hãy tải lại trang để thử lại."
   },

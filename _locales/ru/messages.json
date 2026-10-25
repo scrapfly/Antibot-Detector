@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Нет завершённого сканирования"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Эту страницу нельзя просканировать"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Откройте обычный сайт для поиска защит. Страницы браузера и расширений нельзя сканировать."
+  },
   "detectionRetryScanDesc": {
     "message": "Сканирование не завершилось. Перезагрузите страницу, чтобы повторить попытку."
   },

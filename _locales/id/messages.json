@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Belum ada pemindaian selesai"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Halaman ini tidak dapat dipindai"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Buka situs web biasa untuk mendeteksi perlindungan. Halaman browser dan ekstensi tidak dapat dipindai."
+  },
   "detectionRetryScanDesc": {
     "message": "Pemindaian tidak selesai. Muat ulang halaman untuk mencoba lagi."
   },

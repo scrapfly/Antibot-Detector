@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "완료된 검사 없음"
   },
+  "detectionUnsupportedTitle": {
+    "message": "이 페이지는 검사할 수 없습니다"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "보호 기능을 감지하려면 일반 웹사이트를 여세요. 브라우저 및 확장 프로그램 페이지는 검사할 수 없습니다."
+  },
   "detectionRetryScanDesc": {
     "message": "검사가 완료되지 않았습니다. 페이지를 새로고침하여 다시 시도하세요."
   },

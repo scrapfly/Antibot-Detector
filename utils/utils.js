@@ -32,7 +32,7 @@ class Utils {
 
   /**
    * Check if we should skip detection due to recent request
-   * @param {number} tabId - Tab ID
+   * @param {string|number} tabId - Request identity (tab plus document for page scans)
    * @param {number} threshold - Minimum milliseconds between requests (default 2000ms)
    * @param {Map} recentRequests - Map to track recent requests (passed from caller)
    * @returns {boolean} true if should skip, false otherwise

@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Ingen slutförd skanning"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Den här sidan kan inte skannas"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Öppna en vanlig webbplats för att identifiera skydd. Webbläsarens och tilläggens sidor kan inte skannas."
+  },
   "detectionRetryScanDesc": {
     "message": "Skanningen slutfördes inte. Läs in sidan igen och försök på nytt."
   },

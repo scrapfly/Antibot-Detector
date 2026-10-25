@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "Tamamlanmış tarama yok"
   },
+  "detectionUnsupportedTitle": {
+    "message": "Bu sayfa taranamaz"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "Korumaları tespit etmek için normal bir web sitesi açın. Tarayıcı ve uzantı sayfaları taranamaz."
+  },
   "detectionRetryScanDesc": {
     "message": "Tarama tamamlanmadı. Yeniden denemek için sayfayı yeniden yükleyin."
   },

@@ -229,6 +229,20 @@ for (const d of Object.values(definitions)) {
   });
 }
 
+test('Reblaze namespace/configuration stays at 90 until a proof signal is present', () => {
+  const detector = definitions['detect-reblaze'];
+  const namespace = ['rbzns-object', 'rbzns-reference', 'rbz-bereshit-reference'];
+  const baseline = detect(detector, pageFor(detector, namespace));
+  assert.equal(baseline.confidence, 90);
+  assert.ok(baseline.combinations.some(c => c.id === 'reblaze-namespace-config'));
+  for (const proof of ['rbz-session-cookie', 'reblaze-lib-script']) {
+    assert.equal(detect(detector, pageFor(detector, [...namespace, proof])).confidence, 100, proof);
+  }
+  assert.equal(detect(detector, pageFor(detector, ['rbzns-reference', 'rbz-bereshit-reference'])).confidence, 10, 'source references are not runtime evidence');
+  assert.equal(detect(detector, pageFor(detector, ['rbz-bereshit-reference'])).confidence, 0);
+  assert.equal(detect(detector, pageFor(detector, ['rbzns-object'])).confidence, 75);
+});
+
 // Benign shapes seen on real, unprotected pages (or other vendors' signals).
 // Each must not identify the named detector at all.
 const benign = {

@@ -8,6 +8,12 @@
   "detectionUnscannedTitle": {
     "message": "完了したスキャンはありません"
   },
+  "detectionUnsupportedTitle": {
+    "message": "このページはスキャンできません"
+  },
+  "detectionUnsupportedDesc": {
+    "message": "保護機能を検出するには、通常のウェブサイトを開いてください。ブラウザや拡張機能のページはスキャンできません。"
+  },
   "detectionRetryScanDesc": {
     "message": "スキャンが完了しませんでした。ページを再読み込みして再試行してください。"
   },

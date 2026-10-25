@@ -19,6 +19,7 @@
     "e2e:settings": "node scripts/e2e-settings.js",
     "e2e:editor": "node scripts/e2e-editor.js",
     "e2e:refactor": "node scripts/e2e-refactor.js",
+    "e2e:popup-guards": "node scripts/e2e-popup-guards.js",
     "e2e:languages": "node scripts/e2e-languages.js",
     "e2e:history": "node scripts/e2e-history.js",
     "e2e:data": "node scripts/e2e-data.js",

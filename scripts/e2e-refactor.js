@@ -95,12 +95,14 @@ const output = path.join(os.tmpdir(), 'antibot-286-ui');
     await page.waitForSelector('.adv-kit-overlay', { state: 'detached' });
     console.log('PASS Windows terminal tabs show matching Bash setup');
 
-    // Finalized empty and failed scans share layout, but never the same claim.
+    // Finalized empty and failed scans of a regular web page share layout,
+    // but never the same claim. The harness itself is an unsupported extension tab.
     await page.evaluate(async () => {
       await window.popupInstance.switchTab('detection');
       const detection = window.popupInstance.detection;
       detection.isExtensionEnabled = true;
       detection.blacklistedDomain = null;
+      detection.viewedTabUrl = 'https://example.test/';
       detection.showEmptyState({ outcome: 'failed' });
     });
     assert.equal(await page.locator('#emptyState .state-card-title').textContent(), 'Scan failed');
