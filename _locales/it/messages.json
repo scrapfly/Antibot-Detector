@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Cronologia"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Cronologia acquisizioni"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filtra, ispeziona ed esporta le acquisizioni raccolte"
-  },
   "advancedFilterSite": {
     "message": "Sito"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Sito corrente"
-  },
-  "advancedFilterModule": {
-    "message": "Modulo"
-  },
-  "advancedFilterAllModules": {
-    "message": "Tutti i moduli"
   },
   "advancedFilterSearch": {
     "message": "Cerca"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Errore durante il caricamento delle acquisizioni: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Sito corrente ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Prova a modificare i filtri o la ricerca per trovare acquisizioni."
-  },
-  "advPanelNoUrl": {
-    "message": "Nessun URL"
   },
   "advPanelView": {
     "message": "Visualizza"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Ripristina"
-  },
-  "advancedFilterTool": {
-    "message": "Strumento"
-  },
-  "advancedFilterAllTools": {
-    "message": "Tutti gli strumenti"
   },
   "advFilterKindCapture": {
     "message": "Catture"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Non è stato possibile eseguire la prova."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Impossibile salvare la modifica. Riprova."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Apri il popup su un sito web per aggiungerlo."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Scartare le modifiche?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Questa regola ha modifiche non ancora salvate."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Scarta"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analisi interrotta: la scheda è passata a un'altra pagina prima della fine"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Tempo scaduto per l'analisi: la pagina non si è ricaricata in tempo"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "È in corso un'acquisizione in questa scheda: interrompila prima, poi riprova"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Nessun dato hCaptcha rilevato (timeout di 60 s)"
   }
 }

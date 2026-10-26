@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Historik"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Insamlingshistorik"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filtrera, granska och exportera insamlade data"
-  },
   "advancedFilterSite": {
     "message": "Webbplats"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Aktuell webbplats"
-  },
-  "advancedFilterModule": {
-    "message": "Modul"
-  },
-  "advancedFilterAllModules": {
-    "message": "Alla moduler"
   },
   "advancedFilterSearch": {
     "message": "Sök"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Fel vid inläsning av insamlingar: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Aktuell webbplats ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Försök justera filtren eller sökfrågan för att hitta insamlingar."
-  },
-  "advPanelNoUrl": {
-    "message": "Ingen URL"
   },
   "advPanelView": {
     "message": "Visa"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Återställ"
-  },
-  "advancedFilterTool": {
-    "message": "Verktyg"
-  },
-  "advancedFilterAllTools": {
-    "message": "Alla verktyg"
   },
   "advFilterKindCapture": {
     "message": "Insamlingar"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Testet kunde inte köras."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Det gick inte att spara ändringen. Försök igen."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Öppna popupen på en webbplats för att lägga till den."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Förkasta dina ändringar?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Den här regeln har ändringar som inte har sparats än."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Förkasta"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analysen stoppades: fliken gick till en annan sida innan den var klar"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Tidsgränsen för analysen nåddes: sidan lästes inte in igen i tid"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "En insamling pågår på den här fliken: stoppa den först och försök sedan igen"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Inga hCaptcha-data upptäcktes (tidsgräns 60 s)"
   }
 }

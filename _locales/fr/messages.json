@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Historique"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Historique des captures"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filtrez, inspectez et exportez les captures collectées"
-  },
   "advancedFilterSite": {
     "message": "Site"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Site actuel"
-  },
-  "advancedFilterModule": {
-    "message": "Module"
-  },
-  "advancedFilterAllModules": {
-    "message": "Tous les modules"
   },
   "advancedFilterSearch": {
     "message": "Rechercher"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Erreur lors du chargement des captures : {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Site actuel ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Essayez de modifier vos filtres ou votre recherche pour trouver des captures."
-  },
-  "advPanelNoUrl": {
-    "message": "Aucune URL"
   },
   "advPanelView": {
     "message": "Voir"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Restaurer"
-  },
-  "advancedFilterTool": {
-    "message": "Outil"
-  },
-  "advancedFilterAllTools": {
-    "message": "Tous les outils"
   },
   "advFilterKindCapture": {
     "message": "Captures"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Le test n’a pas pu s’exécuter."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Impossible d’enregistrer la modification. Réessayez."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Ouvrez la fenêtre de l’extension sur un site web pour l’ajouter."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Abandonner vos modifications ?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Cette règle a des modifications qui ne sont pas encore enregistrées."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Abandonner"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analyse arrêtée : l’onglet est passé à une autre page avant la fin"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Délai d’analyse dépassé : la page ne s’est pas rechargée à temps"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "Une capture est en cours dans cet onglet : arrêtez-la d’abord, puis réessayez"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Aucune donnée hCaptcha détectée (délai de 60 s)"
   }
 }

@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Historial"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Historial de capturas"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filtra, inspecciona y exporta las capturas recopiladas"
-  },
   "advancedFilterSite": {
     "message": "Sitio"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Sitio actual"
-  },
-  "advancedFilterModule": {
-    "message": "Módulo"
-  },
-  "advancedFilterAllModules": {
-    "message": "Todos los módulos"
   },
   "advancedFilterSearch": {
     "message": "Buscar"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Error al cargar las capturas: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Sitio actual ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Prueba a ajustar los filtros o la búsqueda para encontrar capturas."
-  },
-  "advPanelNoUrl": {
-    "message": "Sin URL"
   },
   "advPanelView": {
     "message": "Ver"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Restaurar"
-  },
-  "advancedFilterTool": {
-    "message": "Herramienta"
-  },
-  "advancedFilterAllTools": {
-    "message": "Todas las herramientas"
   },
   "advFilterKindCapture": {
     "message": "Capturas"
@@ -6594,5 +6570,32 @@
   },
   "ruleLiveTestError": {
     "message": "No se pudo ejecutar la prueba."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "No se pudo guardar el cambio. Inténtalo de nuevo."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Abre la ventana emergente en un sitio web para añadirlo."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "¿Descartar tus cambios?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Esta regla tiene cambios que aún no se han guardado."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Descartar"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Análisis detenido: la pestaña pasó a otra página antes de terminar"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Tiempo de análisis agotado: la página no se recargó a tiempo"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "Hay una captura en curso en esta pestaña: detenla primero y vuelve a intentarlo"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "No se detectaron datos de hCaptcha (tiempo límite de 60 s)"
   }
 }

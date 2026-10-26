@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "ประวัติ"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "ประวัติการจับข้อมูล"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "กรอง ตรวจสอบ และส่งออกข้อมูลที่จับได้"
-  },
   "advancedFilterSite": {
     "message": "ไซต์"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "ไซต์ปัจจุบัน"
-  },
-  "advancedFilterModule": {
-    "message": "โมดูล"
-  },
-  "advancedFilterAllModules": {
-    "message": "ทุกโมดูล"
   },
   "advancedFilterSearch": {
     "message": "ค้นหา"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "โหลดข้อมูลที่จับไม่สำเร็จ: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "ไซต์ปัจจุบัน ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "ลองปรับตัวกรองหรือคำค้นหาเพื่อหาข้อมูลที่จับ"
-  },
-  "advPanelNoUrl": {
-    "message": "ไม่มี URL"
   },
   "advPanelView": {
     "message": "ดู"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "คืนค่า"
-  },
-  "advancedFilterTool": {
-    "message": "เครื่องมือ"
-  },
-  "advancedFilterAllTools": {
-    "message": "ทุกเครื่องมือ"
   },
   "advFilterKindCapture": {
     "message": "ข้อมูลที่จับ"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "เรียกใช้การทดสอบไม่ได้"
+  },
+  "rulesToggleSaveFailed": {
+    "message": "บันทึกการเปลี่ยนแปลงไม่สำเร็จ ลองอีกครั้ง"
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "เปิดป๊อปอัปบนเว็บไซต์เพื่อเพิ่มไซต์นั้น"
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "ละทิ้งการเปลี่ยนแปลงหรือไม่"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "กฎนี้มีการเปลี่ยนแปลงที่ยังไม่ได้บันทึก"
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "ละทิ้ง"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "หยุดการวิเคราะห์: แท็บไปยังหน้าอื่นก่อนวิเคราะห์เสร็จ"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "การวิเคราะห์หมดเวลา: หน้าไม่โหลดซ้ำทันเวลา"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "มีการจับข้อมูลทำงานอยู่ในแท็บนี้: หยุดก่อนแล้วลองอีกครั้ง"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "ไม่พบข้อมูล hCaptcha (หมดเวลาใน 60 วินาที)"
   }
 }

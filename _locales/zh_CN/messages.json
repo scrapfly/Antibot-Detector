@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "历史记录"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "捕获历史记录"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "过滤、检查和导出收集的捕获"
-  },
   "advancedFilterSite": {
     "message": "站点"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "当前站点"
-  },
-  "advancedFilterModule": {
-    "message": "模块"
-  },
-  "advancedFilterAllModules": {
-    "message": "所有模块"
   },
   "advancedFilterSearch": {
     "message": "搜索"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "加载捕获时出错：{0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "当前网站 ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "请尝试调整筛选条件或搜索词来查找捕获。"
-  },
-  "advPanelNoUrl": {
-    "message": "无 URL"
   },
   "advPanelView": {
     "message": "查看"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "恢复"
-  },
-  "advancedFilterTool": {
-    "message": "工具"
-  },
-  "advancedFilterAllTools": {
-    "message": "所有工具"
   },
   "advFilterKindCapture": {
     "message": "捕获"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "无法运行测试。"
+  },
+  "rulesToggleSaveFailed": {
+    "message": "无法保存更改。请重试。"
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "请在网站上打开弹出窗口以添加该网站。"
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "放弃您的修改？"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "此规则有尚未保存的修改。"
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "放弃"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "分析已停止：完成前标签页已跳转到其他页面"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "分析超时：页面未能及时重新加载"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "此标签页正在捕获：请先停止，然后重试"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "未检测到 hCaptcha 数据（超时 60 秒）"
   }
 }

@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Geçmiş"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Yakalama geçmişi"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Toplanan yakalamaları filtreleyin, inceleyin ve dışa aktarın"
-  },
   "advancedFilterSite": {
     "message": "Site"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Geçerli site"
-  },
-  "advancedFilterModule": {
-    "message": "Modül"
-  },
-  "advancedFilterAllModules": {
-    "message": "Tüm modüller"
   },
   "advancedFilterSearch": {
     "message": "Ara"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Yakalamalar yüklenirken hata oluştu: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Geçerli site ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Yakalamaları bulmak için filtrelerinizi veya arama sorgunuzu değiştirmeyi deneyin."
-  },
-  "advPanelNoUrl": {
-    "message": "URL yok"
   },
   "advPanelView": {
     "message": "Görüntüle"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Geri yükle"
-  },
-  "advancedFilterTool": {
-    "message": "Araç"
-  },
-  "advancedFilterAllTools": {
-    "message": "Tüm araçlar"
   },
   "advFilterKindCapture": {
     "message": "Yakalamalar"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Test çalıştırılamadı."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Değişiklik kaydedilemedi. Yeniden deneyin."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Eklemek için açılır pencereyi bir web sitesinde açın."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Değişiklikleriniz silinsin mi?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Bu kuralda henüz kaydedilmemiş değişiklikler var."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Sil"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analiz durduruldu: sekme, analiz bitmeden başka bir sayfaya geçti"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Analiz zaman aşımına uğradı: sayfa zamanında yeniden yüklenmedi"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "Bu sekmede bir yakalama çalışıyor: önce durdurun, sonra yeniden deneyin"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "hCaptcha verisi algılanmadı (60 sn zaman aşımı)"
   }
 }

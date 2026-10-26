@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "السجل"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "سجل الالتقاطات"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "تصفية الالتقاطات المجمعة وفحصها وتصديرها"
-  },
   "advancedFilterSite": {
     "message": "الموقع"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "الموقع الحالي"
-  },
-  "advancedFilterModule": {
-    "message": "الوحدة"
-  },
-  "advancedFilterAllModules": {
-    "message": "جميع الوحدات"
   },
   "advancedFilterSearch": {
     "message": "بحث"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "خطأ في تحميل الالتقاطات: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "الموقع الحالي ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "حاول تعديل عوامل التصفية أو استعلام البحث للعثور على الالتقاطات."
-  },
-  "advPanelNoUrl": {
-    "message": "لا يوجد عنوان URL"
   },
   "advPanelView": {
     "message": "عرض"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "استعادة"
-  },
-  "advancedFilterTool": {
-    "message": "الأداة"
-  },
-  "advancedFilterAllTools": {
-    "message": "كل الأدوات"
   },
   "advFilterKindCapture": {
     "message": "الالتقاطات"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "تعذّر تشغيل الاختبار."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "تعذّر حفظ التغيير. حاول مجددًا."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "افتح النافذة المنبثقة على موقع ويب لإضافته."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "هل تريد تجاهل تغييراتك؟"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "في هذه القاعدة تغييرات لم تُحفظ بعد."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "تجاهل"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "توقّف التحليل: انتقلت علامة التبويب إلى صفحة أخرى قبل اكتماله"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "انتهت مهلة التحليل: لم يُعَد تحميل الصفحة في الوقت المحدد"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "يوجد التقاط قيد التشغيل في علامة التبويب هذه: أوقفه أولًا ثم حاول مجددًا"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "لم تُكتشف بيانات hCaptcha (المهلة 60 ثانية)"
   }
 }

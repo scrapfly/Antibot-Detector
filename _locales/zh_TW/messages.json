@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "歷史記錄"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "擷取歷史記錄"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "篩選、檢查和匯出已收集的擷取項目"
-  },
   "advancedFilterSite": {
     "message": "網站"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "目前網站"
-  },
-  "advancedFilterModule": {
-    "message": "模組"
-  },
-  "advancedFilterAllModules": {
-    "message": "所有模組"
   },
   "advancedFilterSearch": {
     "message": "搜尋"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "載入擷取項目時發生錯誤：{0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "目前網站（{0}）"
-  },
   "advPanelNoResultsText": {
     "message": "請嘗試調整篩選條件或搜尋字詞，以找到擷取項目。"
-  },
-  "advPanelNoUrl": {
-    "message": "無 URL"
   },
   "advPanelView": {
     "message": "檢視"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "還原"
-  },
-  "advancedFilterTool": {
-    "message": "工具"
-  },
-  "advancedFilterAllTools": {
-    "message": "所有工具"
   },
   "advFilterKindCapture": {
     "message": "擷取"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "無法執行測試。"
+  },
+  "rulesToggleSaveFailed": {
+    "message": "無法儲存變更。請再試一次。"
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "請在網站上開啟彈出式視窗以新增該網站。"
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "要捨棄您的變更嗎？"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "此規則有尚未儲存的變更。"
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "捨棄"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "分析已停止：分頁在完成前已前往其他網頁"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "分析逾時：網頁未及時重新載入"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "此分頁正在擷取：請先停止，然後再試一次"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "未偵測到 hCaptcha 資料（60 秒逾時）"
   }
 }

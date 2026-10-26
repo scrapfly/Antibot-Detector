@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Lịch sử"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Lịch sử bản ghi"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Lọc, kiểm tra và xuất các bản ghi đã thu thập"
-  },
   "advancedFilterSite": {
     "message": "Trang web"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Trang web hiện tại"
-  },
-  "advancedFilterModule": {
-    "message": "Mô-đun"
-  },
-  "advancedFilterAllModules": {
-    "message": "Tất cả mô-đun"
   },
   "advancedFilterSearch": {
     "message": "Tìm kiếm"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Lỗi khi tải bản ghi: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Trang web hiện tại ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Hãy thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm để tìm bản ghi."
-  },
-  "advPanelNoUrl": {
-    "message": "Không có URL"
   },
   "advPanelView": {
     "message": "Xem"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Khôi phục"
-  },
-  "advancedFilterTool": {
-    "message": "Công cụ"
-  },
-  "advancedFilterAllTools": {
-    "message": "Tất cả công cụ"
   },
   "advFilterKindCapture": {
     "message": "Bản ghi"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Không thể chạy kiểm tra."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Không thể lưu thay đổi. Hãy thử lại."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Hãy mở cửa sổ bật lên trên một trang web để thêm trang đó."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Bỏ các thay đổi?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Quy tắc này có thay đổi chưa được lưu."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Bỏ"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Đã dừng phân tích: thẻ đã chuyển sang trang khác trước khi hoàn tất"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Phân tích hết thời gian: trang không tải lại kịp"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "Đang ghi dữ liệu trên thẻ này: hãy dừng trước rồi thử lại"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Không phát hiện dữ liệu hCaptcha (hết thời gian sau 60 giây)"
   }
 }

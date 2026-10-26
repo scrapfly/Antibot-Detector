@@ -571,12 +571,6 @@
   "advancedSubtabHistory": {
     "message": "History"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Capture History"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filter, inspect, and export collected captures"
-  },
   "advancedFilterSite": {
     "message": "Site"
   },
@@ -585,12 +579,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Current Site"
-  },
-  "advancedFilterModule": {
-    "message": "Module"
-  },
-  "advancedFilterAllModules": {
-    "message": "All Modules"
   },
   "advancedFilterSearch": {
     "message": "Search"
@@ -3520,16 +3508,8 @@
     "message": "Error loading captures: {0}",
     "description": "{0} = raw error message"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Current Site ({0})",
-    "description": "{0} = hostname of the current tab; site filter option"
-  },
   "advPanelNoResultsText": {
     "message": "Try adjusting your filters or search query to find captures."
-  },
-  "advPanelNoUrl": {
-    "message": "No URL",
-    "description": "Shown instead of a URL when a capture has none"
   },
   "advPanelView": {
     "message": "View",
@@ -4597,12 +4577,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Restore"
-  },
-  "advancedFilterTool": {
-    "message": "Tool"
-  },
-  "advancedFilterAllTools": {
-    "message": "All tools"
   },
   "advFilterKindCapture": {
     "message": "Captures"

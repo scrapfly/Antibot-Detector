@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Riwayat"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Riwayat rekaman"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filter, periksa, dan ekspor rekaman yang terkumpul"
-  },
   "advancedFilterSite": {
     "message": "Situs"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Situs saat ini"
-  },
-  "advancedFilterModule": {
-    "message": "Modul"
-  },
-  "advancedFilterAllModules": {
-    "message": "Semua modul"
   },
   "advancedFilterSearch": {
     "message": "Cari"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Kesalahan saat memuat rekaman: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Situs saat ini ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Coba sesuaikan filter atau kueri pencarian untuk menemukan rekaman."
-  },
-  "advPanelNoUrl": {
-    "message": "Tanpa URL"
   },
   "advPanelView": {
     "message": "Lihat"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Pulihkan"
-  },
-  "advancedFilterTool": {
-    "message": "Alat"
-  },
-  "advancedFilterAllTools": {
-    "message": "Semua alat"
   },
   "advFilterKindCapture": {
     "message": "Rekaman"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Pengujian tidak dapat dijalankan."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Tidak dapat menyimpan perubahan. Coba lagi."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Buka popup di situs web untuk menambahkannya."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Buang perubahan Anda?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Aturan ini memiliki perubahan yang belum disimpan."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Buang"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analisis dihentikan: tab berpindah ke halaman lain sebelum selesai"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Waktu analisis habis: halaman tidak dimuat ulang tepat waktu"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "Perekaman sedang berjalan di tab ini: hentikan dulu, lalu coba lagi"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Tidak ada data hCaptcha yang terdeteksi (batas waktu 60 dtk)"
   }
 }

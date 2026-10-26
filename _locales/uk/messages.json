@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Історія"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Історія захоплень"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Фільтруйте, переглядайте й експортуйте зібрані захоплення"
-  },
   "advancedFilterSite": {
     "message": "Сайт"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Поточний сайт"
-  },
-  "advancedFilterModule": {
-    "message": "Модуль"
-  },
-  "advancedFilterAllModules": {
-    "message": "Усі модулі"
   },
   "advancedFilterSearch": {
     "message": "Пошук"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Помилка завантаження захоплень: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Поточний сайт ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Спробуйте змінити фільтри або пошуковий запит, щоб знайти захоплення."
-  },
-  "advPanelNoUrl": {
-    "message": "Немає URL"
   },
   "advPanelView": {
     "message": "Переглянути"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Відновити"
-  },
-  "advancedFilterTool": {
-    "message": "Інструмент"
-  },
-  "advancedFilterAllTools": {
-    "message": "Усі інструменти"
   },
   "advFilterKindCapture": {
     "message": "Захоплення"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Не вдалося запустити перевірку."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Не вдалося зберегти зміну. Повторіть спробу."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Відкрийте спливне вікно на сайті, щоб додати його."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Скасувати зміни?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "У цьому правилі є незбережені зміни."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Скасувати"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Аналіз зупинено: вкладка перейшла на іншу сторінку до його завершення"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Час аналізу минув: сторінка не перезавантажилася вчасно"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "На цій вкладці триває захоплення: спершу зупиніть його, потім повторіть спробу"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Дані hCaptcha не виявлено (тайм-аут 60 с)"
   }
 }

@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "履歴"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "キャプチャ履歴"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "収集したキャプチャをフィルタリング、検査、エクスポート"
-  },
   "advancedFilterSite": {
     "message": "サイト"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "現在のサイト"
-  },
-  "advancedFilterModule": {
-    "message": "モジュール"
-  },
-  "advancedFilterAllModules": {
-    "message": "すべてのモジュール"
   },
   "advancedFilterSearch": {
     "message": "検索"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "キャプチャの読み込み中にエラーが発生しました: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "現在のサイト ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "フィルターや検索語句を調整してキャプチャを探してください。"
-  },
-  "advPanelNoUrl": {
-    "message": "URL なし"
   },
   "advPanelView": {
     "message": "表示"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "復元"
-  },
-  "advancedFilterTool": {
-    "message": "ツール"
-  },
-  "advancedFilterAllTools": {
-    "message": "すべてのツール"
   },
   "advFilterKindCapture": {
     "message": "キャプチャ"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "テストを実行できませんでした。"
+  },
+  "rulesToggleSaveFailed": {
+    "message": "変更を保存できませんでした。もう一度お試しください。"
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "追加するにはウェブサイトでポップアップを開いてください。"
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "変更を破棄しますか?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "このルールには保存されていない変更があります。"
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "破棄"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "分析を中止しました: 完了前にタブが別のページに移動しました"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "分析がタイムアウトしました: ページが時間内に再読み込みされませんでした"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "このタブでキャプチャを実行中です。停止してからもう一度お試しください"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "hCaptcha のデータは検出されませんでした（タイムアウト 60 秒）"
   }
 }

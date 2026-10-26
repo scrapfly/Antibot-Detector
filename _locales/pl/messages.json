@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "Historia"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "Historia przechwytywania"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "Filtruj, sprawdzaj i eksportuj zebrane przechwycenia"
-  },
   "advancedFilterSite": {
     "message": "Witryna"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "Bieżąca witryna"
-  },
-  "advancedFilterModule": {
-    "message": "Moduł"
-  },
-  "advancedFilterAllModules": {
-    "message": "Wszystkie moduły"
   },
   "advancedFilterSearch": {
     "message": "Szukaj"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "Błąd ładowania przechwyceń: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "Bieżąca witryna ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "Spróbuj zmienić filtry lub zapytanie wyszukiwania, aby znaleźć przechwycenia."
-  },
-  "advPanelNoUrl": {
-    "message": "Brak URL"
   },
   "advPanelView": {
     "message": "Wyświetl"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "Przywróć"
-  },
-  "advancedFilterTool": {
-    "message": "Narzędzie"
-  },
-  "advancedFilterAllTools": {
-    "message": "Wszystkie narzędzia"
   },
   "advFilterKindCapture": {
     "message": "Przechwycenia"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "Nie udało się uruchomić testu."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Nie udało się zapisać zmiany. Spróbuj ponownie."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Otwórz okienko rozszerzenia w witrynie, aby ją dodać."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Odrzucić zmiany?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "Ta reguła ma jeszcze niezapisane zmiany."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Odrzuć"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analiza zatrzymana: karta przeszła na inną stronę przed jej ukończeniem"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Przekroczono limit czasu analizy: strona nie odświeżyła się na czas"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "Na tej karcie trwa przechwytywanie: najpierw je zatrzymaj, potem spróbuj ponownie"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "Nie wykryto danych hCaptcha (limit czasu 60 s)"
   }
 }

@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "기록"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "캡처 기록"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "수집된 캡처를 필터링, 검사 및 내보내기"
-  },
   "advancedFilterSite": {
     "message": "사이트"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "현재 사이트"
-  },
-  "advancedFilterModule": {
-    "message": "모듈"
-  },
-  "advancedFilterAllModules": {
-    "message": "모든 모듈"
   },
   "advancedFilterSearch": {
     "message": "검색"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "캡처를 불러오는 중 오류 발생: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "현재 사이트 ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "필터나 검색어를 조정해 캡처를 찾아보세요."
-  },
-  "advPanelNoUrl": {
-    "message": "URL 없음"
   },
   "advPanelView": {
     "message": "보기"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "복원"
-  },
-  "advancedFilterTool": {
-    "message": "도구"
-  },
-  "advancedFilterAllTools": {
-    "message": "모든 도구"
   },
   "advFilterKindCapture": {
     "message": "캡처"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "테스트를 실행할 수 없습니다."
+  },
+  "rulesToggleSaveFailed": {
+    "message": "변경 사항을 저장하지 못했습니다. 다시 시도하세요."
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "추가하려면 웹사이트에서 팝업을 여세요."
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "변경 사항을 버리시겠습니까?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "이 규칙에 아직 저장되지 않은 변경 사항이 있습니다."
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "버리기"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "분석 중지됨: 완료 전에 탭이 다른 페이지로 이동했습니다"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "분석 시간 초과: 페이지가 제때 다시 로드되지 않았습니다"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "이 탭에서 캡처가 실행 중입니다. 먼저 중지한 후 다시 시도하세요"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "hCaptcha 데이터가 감지되지 않았습니다(제한 시간 60초)"
   }
 }

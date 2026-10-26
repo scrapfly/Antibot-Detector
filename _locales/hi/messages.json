@@ -569,12 +569,6 @@
   "advancedSubtabHistory": {
     "message": "इतिहास"
   },
-  "advancedCaptureHistoryTitle": {
-    "message": "कैप्चर इतिहास"
-  },
-  "advancedCaptureHistorySubtitle": {
-    "message": "एकत्र किए गए कैप्चर को फ़िल्टर करें, जांचें और निर्यात करें"
-  },
   "advancedFilterSite": {
     "message": "साइट"
   },
@@ -583,12 +577,6 @@
   },
   "advancedFilterCurrentSite": {
     "message": "वर्तमान साइट"
-  },
-  "advancedFilterModule": {
-    "message": "मॉड्यूल"
-  },
-  "advancedFilterAllModules": {
-    "message": "सभी मॉड्यूल"
   },
   "advancedFilterSearch": {
     "message": "खोजें"
@@ -3357,14 +3345,8 @@
   "advPanelErrorLoadingCapturesFmt": {
     "message": "कैप्चर लोड करने में त्रुटि: {0}"
   },
-  "advPanelCurrentSiteFmt": {
-    "message": "वर्तमान साइट ({0})"
-  },
   "advPanelNoResultsText": {
     "message": "कैप्चर खोजने के लिए अपने फ़िल्टर या खोज क्वेरी बदलकर देखें।"
-  },
-  "advPanelNoUrl": {
-    "message": "कोई URL नहीं"
   },
   "advPanelView": {
     "message": "देखें"
@@ -4340,12 +4322,6 @@
   },
   "restoreOfficialDetectorsConfirmBtn": {
     "message": "बहाल करें"
-  },
-  "advancedFilterTool": {
-    "message": "टूल"
-  },
-  "advancedFilterAllTools": {
-    "message": "सभी टूल"
   },
   "advFilterKindCapture": {
     "message": "कैप्चर"
@@ -6592,5 +6568,32 @@
   },
   "ruleLiveTestError": {
     "message": "जाँच नहीं चल सकी।"
+  },
+  "rulesToggleSaveFailed": {
+    "message": "बदलाव सहेजा नहीं जा सका। फिर से कोशिश करें।"
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "इसे जोड़ने के लिए पॉपअप को किसी वेबसाइट पर खोलें।"
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "अपने बदलाव छोड़ दें?"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "इस नियम में ऐसे बदलाव हैं जो अभी सहेजे नहीं गए हैं।"
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "छोड़ें"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "विश्लेषण रुका: पूरा होने से पहले टैब दूसरे पेज पर चला गया"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "विश्लेषण का समय समाप्त: पेज समय पर रीलोड नहीं हुआ"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "इस टैब पर कैप्चर चल रहा है: पहले उसे रोकें, फिर दोबारा कोशिश करें"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "कोई hCaptcha डेटा नहीं मिला (60 सेकंड टाइमआउट)"
   }
 }
