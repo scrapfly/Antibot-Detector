@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} تركيبات"
+  },
+  "historyBulkScan": {
+    "message": "الفحص الجماعي"
+  },
+  "bulkTitle": {
+    "message": "الفحص الجماعي"
+  },
+  "bulkSubtitle": {
+    "message": "يفحص قائمة من الصفحات واحدة تلو الأخرى في علامة تبويب في الخلفية. كل صفحة زيارة حقيقية بملفات تعريف الارتباط في متصفحك، وما يُعثر عليه يُضاف إلى السجل كالمعتاد."
+  },
+  "bulkInputLabel": {
+    "message": "الصفحات المراد فحصها"
+  },
+  "bulkInputHint": {
+    "message": "عنوان واحد في كل سطر. عنوان خريطة الموقع (.xml) يضيف الصفحات المدرجة فيها. تُزال العناوين المكررة، ولا تُفحص إلا صفحات http وhttps."
+  },
+  "bulkUpload": {
+    "message": "رفع ملف .txt أو .csv"
+  },
+  "bulkCountFmt": {
+    "message": "العناوين: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "الصفحات في كل تشغيل (حتى {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "المهلة لكل صفحة بالثواني"
+  },
+  "bulkStart": {
+    "message": "بدء"
+  },
+  "bulkPause": {
+    "message": "إيقاف مؤقت"
+  },
+  "bulkResume": {
+    "message": "استئناف"
+  },
+  "bulkStop": {
+    "message": "إيقاف"
+  },
+  "bulkScanWaiting": {
+    "message": "فحص الصفحات التي لا تزال في الانتظار"
+  },
+  "bulkNewList": {
+    "message": "قائمة جديدة"
+  },
+  "bulkResults": {
+    "message": "النتائج"
+  },
+  "bulkColAddress": {
+    "message": "العنوان"
+  },
+  "bulkStatusWaiting": {
+    "message": "في الانتظار"
+  },
+  "bulkStatusScanning": {
+    "message": "جارٍ الفحص"
+  },
+  "bulkStatusDone": {
+    "message": "تم"
+  },
+  "bulkStatusFailed": {
+    "message": "فشل"
+  },
+  "bulkStatusSkipped": {
+    "message": "تم التخطي"
+  },
+  "bulkReasonInvalid": {
+    "message": "ليس عنوانًا صالحًا"
+  },
+  "bulkReasonScheme": {
+    "message": "لا تُفحص إلا صفحات http وhttps"
+  },
+  "bulkReasonScope": {
+    "message": "تم التخطي بسبب الإعدادات → الكشف → المواقع المراد فحصها"
+  },
+  "bulkReasonSitemap": {
+    "message": "تعذّرت قراءة خريطة الموقع. لا يمكن قراءة إلا خرائط المواقع عبر https."
+  },
+  "bulkReasonTimeout": {
+    "message": "لا نتيجة ضمن المهلة"
+  },
+  "bulkReasonLoad": {
+    "message": "لم يتم تحميل الصفحة"
+  },
+  "bulkReasonError": {
+    "message": "فشل الفحص"
+  },
+  "bulkEndedOnFmt": {
+    "message": "انتهت عند {0}"
+  },
+  "bulkNoProtection": {
+    "message": "لم يُعثر على أي حماية"
+  },
+  "bulkRunRunning": {
+    "message": "قيد التشغيل"
+  },
+  "bulkRunPaused": {
+    "message": "متوقف مؤقتًا"
+  },
+  "bulkRunStopped": {
+    "message": "متوقف"
+  },
+  "bulkRunDone": {
+    "message": "اكتمل"
+  },
+  "bulkProgressFmt": {
+    "message": "اكتمل {0} من {1}"
+  },
+  "bulkCountsFmt": {
+    "message": "تم: {0} · مع حماية: {1} · فشل: {2} · تم التخطي: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "أُعيد تشغيل الإضافة أثناء التشغيل، لذا توقف. لم تُفحص الصفحات التي كانت لا تزال في الانتظار."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "لم تكن هناك نافذة متصفح مفتوحة لفحص الصفحات فيها."
+  },
+  "bulkStoppedOff": {
+    "message": "الإضافة معطّلة."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "المكررات المُزالة: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "المستبعدة لتجاوز الحد: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "أسطر أخرى مستبعدة: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "السجل متوقف مؤقتًا: تُفحص الصفحات لكن لا تُسجَّل."
+  },
+  "bulkReadingSitemaps": {
+    "message": "جارٍ قراءة خرائط المواقع…"
+  },
+  "bulkNothingToScan": {
+    "message": "لا يوجد في هذه القائمة عنوان يمكن فحصه."
+  },
+  "bulkErrBusy": {
+    "message": "هناك فحص جماعي قيد التشغيل بالفعل."
+  },
+  "bulkErrStart": {
+    "message": "تعذّر بدء الفحص الجماعي."
+  },
+  "bulkErrFile": {
+    "message": "تعذّرت قراءة الملف."
+  },
+  "bulkEmpty": {
+    "message": "الصق العناوين أو ارفع ملفًا، ثم اختر بدء."
   }
 }

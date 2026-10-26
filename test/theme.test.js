@@ -53,7 +53,7 @@ test('System follows the browser; set() saves and applies; other pages follow st
 });
 
 test('both pages load the theme before their stylesheets paint, and the light rules stay scoped', () => {
-  for (const file of ['popup.html', 'sections/stats/stats.html']) {
+  for (const file of ['popup.html', 'sections/stats/stats.html', 'sections/bulk/bulk.html']) {
     const html = read(file);
     assert.ok(html.indexOf('core/theme.js') > 0 && html.indexOf('core/theme.js') < html.indexOf('</head>'), file);
     assert.ok(html.includes('theme-light.css'), file);

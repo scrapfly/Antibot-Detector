@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} kombinasyon"
+  },
+  "historyBulkScan": {
+    "message": "Toplu tarama"
+  },
+  "bulkTitle": {
+    "message": "Toplu tarama"
+  },
+  "bulkSubtitle": {
+    "message": "Bir sayfa listesini arka plandaki bir sekmede tek tek tarar. Her sayfa, tarayıcınızın çerezleriyle yapılan gerçek bir ziyarettir ve bulunanlar her zamanki gibi Geçmiş’e eklenir."
+  },
+  "bulkInputLabel": {
+    "message": "Taranacak sayfalar"
+  },
+  "bulkInputHint": {
+    "message": "Her satıra bir adres. Bir site haritası adresi (.xml), listelediği sayfaları ekler. Yinelenenler kaldırılır ve yalnızca http ve https sayfaları taranır."
+  },
+  "bulkUpload": {
+    "message": ".txt veya .csv yükle"
+  },
+  "bulkCountFmt": {
+    "message": "Adres: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Çalıştırma başına sayfa (en çok {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Sayfa başına süre sınırı (saniye)"
+  },
+  "bulkStart": {
+    "message": "Başlat"
+  },
+  "bulkPause": {
+    "message": "Duraklat"
+  },
+  "bulkResume": {
+    "message": "Sürdür"
+  },
+  "bulkStop": {
+    "message": "Durdur"
+  },
+  "bulkScanWaiting": {
+    "message": "Hâlâ bekleyen sayfaları tara"
+  },
+  "bulkNewList": {
+    "message": "Yeni liste"
+  },
+  "bulkResults": {
+    "message": "Sonuçlar"
+  },
+  "bulkColAddress": {
+    "message": "Adres"
+  },
+  "bulkStatusWaiting": {
+    "message": "Bekliyor"
+  },
+  "bulkStatusScanning": {
+    "message": "Taranıyor"
+  },
+  "bulkStatusDone": {
+    "message": "Bitti"
+  },
+  "bulkStatusFailed": {
+    "message": "Başarısız"
+  },
+  "bulkStatusSkipped": {
+    "message": "Atlandı"
+  },
+  "bulkReasonInvalid": {
+    "message": "Geçerli bir adres değil"
+  },
+  "bulkReasonScheme": {
+    "message": "Yalnızca http ve https sayfaları taranır"
+  },
+  "bulkReasonScope": {
+    "message": "Ayarlar → Tespit → Taranacak siteler nedeniyle atlandı"
+  },
+  "bulkReasonSitemap": {
+    "message": "Site haritası okunamadı. Yalnızca https site haritaları okunabilir."
+  },
+  "bulkReasonTimeout": {
+    "message": "Süre sınırı içinde sonuç yok"
+  },
+  "bulkReasonLoad": {
+    "message": "Sayfa yüklenmedi"
+  },
+  "bulkReasonError": {
+    "message": "Tarama başarısız oldu"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Şurada sona erdi: {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Koruma bulunamadı"
+  },
+  "bulkRunRunning": {
+    "message": "Çalışıyor"
+  },
+  "bulkRunPaused": {
+    "message": "Duraklatıldı"
+  },
+  "bulkRunStopped": {
+    "message": "Durduruldu"
+  },
+  "bulkRunDone": {
+    "message": "Tamamlandı"
+  },
+  "bulkProgressFmt": {
+    "message": "{1} sayfadan {0} tanesi bitti"
+  },
+  "bulkCountsFmt": {
+    "message": "Biten: {0} · Korumalı: {1} · Başarısız: {2} · Atlanan: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Uzantı çalıştırma sırasında yeniden başladığı için çalıştırma durdu. Hâlâ bekleyen sayfalar taranmadı."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Sayfaları taramak için açık bir tarayıcı penceresi yoktu."
+  },
+  "bulkStoppedOff": {
+    "message": "Uzantı kapalı."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Kaldırılan yinelenenler: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Sınırın üstünde kalanlar: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Dışarıda kalan diğer satırlar: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Geçmiş duraklatıldı: sayfalar taranır ama kaydedilmez."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Site haritaları okunuyor…"
+  },
+  "bulkNothingToScan": {
+    "message": "Bu listede taranacak adres yok."
+  },
+  "bulkErrBusy": {
+    "message": "Zaten bir toplu tarama çalışıyor."
+  },
+  "bulkErrStart": {
+    "message": "Toplu tarama başlatılamadı."
+  },
+  "bulkErrFile": {
+    "message": "Dosya okunamadı."
+  },
+  "bulkEmpty": {
+    "message": "Adresleri yapıştırın veya bir dosya yükleyin, ardından Başlat’ı seçin."
   }
 }

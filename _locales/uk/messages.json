@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "Комбінацій: {0}"
+  },
+  "historyBulkScan": {
+    "message": "Масове сканування"
+  },
+  "bulkTitle": {
+    "message": "Масове сканування"
+  },
+  "bulkSubtitle": {
+    "message": "Сканує список сторінок по одній у фоновій вкладці. Кожна сторінка — справжній візит із файлами cookie вашого браузера, а знайдене, як завжди, потрапляє до історії."
+  },
+  "bulkInputLabel": {
+    "message": "Сторінки для сканування"
+  },
+  "bulkInputHint": {
+    "message": "Одна адреса в рядку. Адреса карти сайту (.xml) додає сторінки, перелічені в ній. Дублікати вилучаються, скануються лише сторінки http і https."
+  },
+  "bulkUpload": {
+    "message": "Завантажити .txt або .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Адрес: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Сторінок за запуск (не більше {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Ліміт часу на сторінку, у секундах"
+  },
+  "bulkStart": {
+    "message": "Запустити"
+  },
+  "bulkPause": {
+    "message": "Призупинити"
+  },
+  "bulkResume": {
+    "message": "Продовжити"
+  },
+  "bulkStop": {
+    "message": "Зупинити"
+  },
+  "bulkScanWaiting": {
+    "message": "Сканувати сторінки, які ще чекають"
+  },
+  "bulkNewList": {
+    "message": "Новий список"
+  },
+  "bulkResults": {
+    "message": "Результати"
+  },
+  "bulkColAddress": {
+    "message": "Адреса"
+  },
+  "bulkStatusWaiting": {
+    "message": "Чекає"
+  },
+  "bulkStatusScanning": {
+    "message": "Сканується"
+  },
+  "bulkStatusDone": {
+    "message": "Готово"
+  },
+  "bulkStatusFailed": {
+    "message": "Збій"
+  },
+  "bulkStatusSkipped": {
+    "message": "Пропущено"
+  },
+  "bulkReasonInvalid": {
+    "message": "Недійсна адреса"
+  },
+  "bulkReasonScheme": {
+    "message": "Скануються лише сторінки http і https"
+  },
+  "bulkReasonScope": {
+    "message": "Пропущено згідно з Налаштування → Виявлення → Сайти для сканування"
+  },
+  "bulkReasonSitemap": {
+    "message": "Не вдалося прочитати карту сайту. Читаються лише карти сайту через https."
+  },
+  "bulkReasonTimeout": {
+    "message": "Немає результату за відведений час"
+  },
+  "bulkReasonLoad": {
+    "message": "Сторінка не завантажилася"
+  },
+  "bulkReasonError": {
+    "message": "Сканування не вдалося"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Завершилася на {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Захисту не знайдено"
+  },
+  "bulkRunRunning": {
+    "message": "Виконується"
+  },
+  "bulkRunPaused": {
+    "message": "Призупинено"
+  },
+  "bulkRunStopped": {
+    "message": "Зупинено"
+  },
+  "bulkRunDone": {
+    "message": "Завершено"
+  },
+  "bulkProgressFmt": {
+    "message": "Готово {0} з {1}"
+  },
+  "bulkCountsFmt": {
+    "message": "Готово: {0} · Із захистом: {1} · Збій: {2} · Пропущено: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Розширення перезапустилося під час запуску, тому його зупинено. Сторінки, які ще чекали, не проскановано."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Не було відкритого вікна браузера, у якому можна сканувати сторінки."
+  },
+  "bulkStoppedOff": {
+    "message": "Розширення вимкнено."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Вилучено дублікатів: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Не ввійшло понад ліміт: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Інших пропущених рядків: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Історію призупинено: сторінки скануються, але не записуються."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Читання карт сайту…"
+  },
+  "bulkNothingToScan": {
+    "message": "У цьому списку немає адрес для сканування."
+  },
+  "bulkErrBusy": {
+    "message": "Масове сканування вже виконується."
+  },
+  "bulkErrStart": {
+    "message": "Не вдалося запустити масове сканування."
+  },
+  "bulkErrFile": {
+    "message": "Не вдалося прочитати файл."
+  },
+  "bulkEmpty": {
+    "message": "Вставте адреси або завантажте файл, потім натисніть «Запустити»."
   }
 }

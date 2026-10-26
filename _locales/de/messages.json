@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} Kombinationen"
+  },
+  "historyBulkScan": {
+    "message": "Massenscan"
+  },
+  "bulkTitle": {
+    "message": "Massenscan"
+  },
+  "bulkSubtitle": {
+    "message": "Scannt eine Liste von Seiten nacheinander in einem Hintergrund-Tab. Jede Seite ist ein echter Besuch mit den Cookies Ihres Browsers, und was dabei gefunden wird, landet wie gewohnt im Verlauf."
+  },
+  "bulkInputLabel": {
+    "message": "Zu scannende Seiten"
+  },
+  "bulkInputHint": {
+    "message": "Eine Adresse pro Zeile. Eine Sitemap-Adresse (.xml) fügt die darin aufgeführten Seiten hinzu. Duplikate werden entfernt, und nur http- und https-Seiten werden gescannt."
+  },
+  "bulkUpload": {
+    "message": ".txt oder .csv hochladen"
+  },
+  "bulkCountFmt": {
+    "message": "Adressen: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Seiten pro Durchlauf (bis zu {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Zeitlimit pro Seite in Sekunden"
+  },
+  "bulkStart": {
+    "message": "Starten"
+  },
+  "bulkPause": {
+    "message": "Pausieren"
+  },
+  "bulkResume": {
+    "message": "Fortsetzen"
+  },
+  "bulkStop": {
+    "message": "Stoppen"
+  },
+  "bulkScanWaiting": {
+    "message": "Die noch wartenden Seiten scannen"
+  },
+  "bulkNewList": {
+    "message": "Neue Liste"
+  },
+  "bulkResults": {
+    "message": "Ergebnisse"
+  },
+  "bulkColAddress": {
+    "message": "Adresse"
+  },
+  "bulkStatusWaiting": {
+    "message": "Wartet"
+  },
+  "bulkStatusScanning": {
+    "message": "Wird gescannt"
+  },
+  "bulkStatusDone": {
+    "message": "Fertig"
+  },
+  "bulkStatusFailed": {
+    "message": "Fehlgeschlagen"
+  },
+  "bulkStatusSkipped": {
+    "message": "Übersprungen"
+  },
+  "bulkReasonInvalid": {
+    "message": "Keine gültige Adresse"
+  },
+  "bulkReasonScheme": {
+    "message": "Nur http- und https-Seiten werden gescannt"
+  },
+  "bulkReasonScope": {
+    "message": "Übersprungen wegen Einstellungen → Erkennung → Zu scannende Sites"
+  },
+  "bulkReasonSitemap": {
+    "message": "Die Sitemap konnte nicht gelesen werden. Nur https-Sitemaps können gelesen werden."
+  },
+  "bulkReasonTimeout": {
+    "message": "Kein Ergebnis innerhalb des Zeitlimits"
+  },
+  "bulkReasonLoad": {
+    "message": "Die Seite wurde nicht geladen"
+  },
+  "bulkReasonError": {
+    "message": "Der Scan ist fehlgeschlagen"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Endete auf {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Kein Schutz gefunden"
+  },
+  "bulkRunRunning": {
+    "message": "Läuft"
+  },
+  "bulkRunPaused": {
+    "message": "Pausiert"
+  },
+  "bulkRunStopped": {
+    "message": "Gestoppt"
+  },
+  "bulkRunDone": {
+    "message": "Abgeschlossen"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} von {1} fertig"
+  },
+  "bulkCountsFmt": {
+    "message": "Fertig: {0} · Mit Schutz: {1} · Fehlgeschlagen: {2} · Übersprungen: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Die Erweiterung wurde während des Durchlaufs neu gestartet, daher wurde er gestoppt. Die noch wartenden Seiten wurden nicht gescannt."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Es war kein Browserfenster geöffnet, in dem Seiten gescannt werden konnten."
+  },
+  "bulkStoppedOff": {
+    "message": "Die Erweiterung ist ausgeschaltet."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Entfernte Duplikate: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Über dem Limit ausgelassen: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Weitere ausgelassene Zeilen: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Der Verlauf ist pausiert: Die Seiten werden gescannt, aber nicht gespeichert."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Sitemaps werden gelesen…"
+  },
+  "bulkNothingToScan": {
+    "message": "In dieser Liste gibt es keine Adresse zum Scannen."
+  },
+  "bulkErrBusy": {
+    "message": "Es läuft bereits ein Massenscan."
+  },
+  "bulkErrStart": {
+    "message": "Der Massenscan konnte nicht gestartet werden."
+  },
+  "bulkErrFile": {
+    "message": "Die Datei konnte nicht gelesen werden."
+  },
+  "bulkEmpty": {
+    "message": "Fügen Sie Adressen ein oder laden Sie eine Datei hoch und wählen Sie dann Starten."
   }
 }

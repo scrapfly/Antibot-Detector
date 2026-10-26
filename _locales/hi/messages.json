@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} संयोजन"
+  },
+  "historyBulkScan": {
+    "message": "बल्क स्कैन"
+  },
+  "bulkTitle": {
+    "message": "बल्क स्कैन"
+  },
+  "bulkSubtitle": {
+    "message": "पेजों की सूची को बैकग्राउंड टैब में एक-एक करके स्कैन करता है। हर पेज आपके ब्राउज़र की कुकीज़ के साथ एक असली विज़िट है, और जो मिलता है वह हमेशा की तरह इतिहास में जुड़ जाता है।"
+  },
+  "bulkInputLabel": {
+    "message": "स्कैन करने के पेज"
+  },
+  "bulkInputHint": {
+    "message": "हर पंक्ति में एक पता। साइटमैप (.xml) का पता उसमें दिए पेज जोड़ देता है। दोहराए गए पते हटा दिए जाते हैं, और सिर्फ़ http और https पेज स्कैन होते हैं।"
+  },
+  "bulkUpload": {
+    "message": ".txt या .csv अपलोड करें"
+  },
+  "bulkCountFmt": {
+    "message": "पते: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "हर रन में पेज ({0} तक)"
+  },
+  "bulkTimeoutLabel": {
+    "message": "हर पेज की समय सीमा, सेकंड में"
+  },
+  "bulkStart": {
+    "message": "शुरू करें"
+  },
+  "bulkPause": {
+    "message": "रोकें"
+  },
+  "bulkResume": {
+    "message": "फिर से शुरू करें"
+  },
+  "bulkStop": {
+    "message": "बंद करें"
+  },
+  "bulkScanWaiting": {
+    "message": "अभी इंतज़ार कर रहे पेज स्कैन करें"
+  },
+  "bulkNewList": {
+    "message": "नई सूची"
+  },
+  "bulkResults": {
+    "message": "नतीजे"
+  },
+  "bulkColAddress": {
+    "message": "पता"
+  },
+  "bulkStatusWaiting": {
+    "message": "इंतज़ार में"
+  },
+  "bulkStatusScanning": {
+    "message": "स्कैन हो रहा है"
+  },
+  "bulkStatusDone": {
+    "message": "हो गया"
+  },
+  "bulkStatusFailed": {
+    "message": "विफल"
+  },
+  "bulkStatusSkipped": {
+    "message": "छोड़ा गया"
+  },
+  "bulkReasonInvalid": {
+    "message": "मान्य पता नहीं है"
+  },
+  "bulkReasonScheme": {
+    "message": "सिर्फ़ http और https पेज स्कैन होते हैं"
+  },
+  "bulkReasonScope": {
+    "message": "सेटिंग्स → जांच → स्कैन की जाने वाली साइटें के कारण छोड़ा गया"
+  },
+  "bulkReasonSitemap": {
+    "message": "साइटमैप पढ़ा नहीं जा सका। सिर्फ़ https साइटमैप पढ़े जा सकते हैं।"
+  },
+  "bulkReasonTimeout": {
+    "message": "समय सीमा में कोई नतीजा नहीं"
+  },
+  "bulkReasonLoad": {
+    "message": "पेज लोड नहीं हुआ"
+  },
+  "bulkReasonError": {
+    "message": "स्कैन विफल रहा"
+  },
+  "bulkEndedOnFmt": {
+    "message": "{0} पर खत्म हुआ"
+  },
+  "bulkNoProtection": {
+    "message": "कोई सुरक्षा नहीं मिली"
+  },
+  "bulkRunRunning": {
+    "message": "चल रहा है"
+  },
+  "bulkRunPaused": {
+    "message": "रुका हुआ"
+  },
+  "bulkRunStopped": {
+    "message": "बंद किया गया"
+  },
+  "bulkRunDone": {
+    "message": "पूरा हुआ"
+  },
+  "bulkProgressFmt": {
+    "message": "{1} में से {0} पूरे"
+  },
+  "bulkCountsFmt": {
+    "message": "हो गए: {0} · सुरक्षा वाले: {1} · विफल: {2} · छोड़े गए: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "रन के दौरान एक्सटेंशन फिर से शुरू हुआ, इसलिए रन बंद हो गया। इंतज़ार कर रहे पेज स्कैन नहीं हुए।"
+  },
+  "bulkStoppedNoWindow": {
+    "message": "पेज स्कैन करने के लिए कोई ब्राउज़र विंडो खुली नहीं थी।"
+  },
+  "bulkStoppedOff": {
+    "message": "एक्सटेंशन बंद है।"
+  },
+  "bulkDuplicatesFmt": {
+    "message": "हटाए गए दोहराव: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "सीमा से ऊपर छोड़े गए: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "छोड़ी गई दूसरी पंक्तियाँ: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "इतिहास रुका हुआ है: पेज स्कैन होते हैं पर दर्ज नहीं होते।"
+  },
+  "bulkReadingSitemaps": {
+    "message": "साइटमैप पढ़े जा रहे हैं…"
+  },
+  "bulkNothingToScan": {
+    "message": "इस सूची में स्कैन करने के लिए कोई पता नहीं है।"
+  },
+  "bulkErrBusy": {
+    "message": "एक बल्क स्कैन पहले से चल रहा है।"
+  },
+  "bulkErrStart": {
+    "message": "बल्क स्कैन शुरू नहीं हो सका।"
+  },
+  "bulkErrFile": {
+    "message": "फ़ाइल पढ़ी नहीं जा सकी।"
+  },
+  "bulkEmpty": {
+    "message": "पते चिपकाएँ या फ़ाइल अपलोड करें, फिर शुरू करें चुनें।"
   }
 }

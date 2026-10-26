@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} combinazioni"
+  },
+  "historyBulkScan": {
+    "message": "Analisi in blocco"
+  },
+  "bulkTitle": {
+    "message": "Analisi in blocco"
+  },
+  "bulkSubtitle": {
+    "message": "Analizza un elenco di pagine una alla volta in una scheda in background. Ogni pagina è una visita reale con i cookie del tuo browser, e ciò che trova viene aggiunto alla cronologia come sempre."
+  },
+  "bulkInputLabel": {
+    "message": "Pagine da analizzare"
+  },
+  "bulkInputHint": {
+    "message": "Un indirizzo per riga. Un indirizzo di sitemap (.xml) aggiunge le pagine che elenca. I duplicati vengono rimossi e si analizzano solo pagine http e https."
+  },
+  "bulkUpload": {
+    "message": "Carica .txt o .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Indirizzi: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Pagine per esecuzione (fino a {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Tempo massimo per pagina, in secondi"
+  },
+  "bulkStart": {
+    "message": "Avvia"
+  },
+  "bulkPause": {
+    "message": "Pausa"
+  },
+  "bulkResume": {
+    "message": "Riprendi"
+  },
+  "bulkStop": {
+    "message": "Interrompi"
+  },
+  "bulkScanWaiting": {
+    "message": "Analizza le pagine ancora in attesa"
+  },
+  "bulkNewList": {
+    "message": "Nuovo elenco"
+  },
+  "bulkResults": {
+    "message": "Risultati"
+  },
+  "bulkColAddress": {
+    "message": "Indirizzo"
+  },
+  "bulkStatusWaiting": {
+    "message": "In attesa"
+  },
+  "bulkStatusScanning": {
+    "message": "In analisi"
+  },
+  "bulkStatusDone": {
+    "message": "Fatto"
+  },
+  "bulkStatusFailed": {
+    "message": "Non riuscita"
+  },
+  "bulkStatusSkipped": {
+    "message": "Saltata"
+  },
+  "bulkReasonInvalid": {
+    "message": "Indirizzo non valido"
+  },
+  "bulkReasonScheme": {
+    "message": "Si analizzano solo pagine http e https"
+  },
+  "bulkReasonScope": {
+    "message": "Saltata da Impostazioni → Rilevamento → Siti da analizzare"
+  },
+  "bulkReasonSitemap": {
+    "message": "Impossibile leggere la sitemap. Si possono leggere solo sitemap https."
+  },
+  "bulkReasonTimeout": {
+    "message": "Nessun risultato entro il tempo massimo"
+  },
+  "bulkReasonLoad": {
+    "message": "La pagina non si è caricata"
+  },
+  "bulkReasonError": {
+    "message": "L’analisi non è riuscita"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Terminata su {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Nessuna protezione trovata"
+  },
+  "bulkRunRunning": {
+    "message": "In corso"
+  },
+  "bulkRunPaused": {
+    "message": "In pausa"
+  },
+  "bulkRunStopped": {
+    "message": "Interrotta"
+  },
+  "bulkRunDone": {
+    "message": "Completata"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} di {1} completate"
+  },
+  "bulkCountsFmt": {
+    "message": "Fatte: {0} · Con protezioni: {1} · Non riuscite: {2} · Saltate: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "L’estensione si è riavviata durante l’esecuzione, che quindi si è interrotta. Le pagine ancora in attesa non sono state analizzate."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Non c’era nessuna finestra del browser aperta in cui analizzare le pagine."
+  },
+  "bulkStoppedOff": {
+    "message": "L’estensione è disattivata."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Duplicati rimossi: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Escluse oltre il limite: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Altre righe escluse: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "La cronologia è in pausa: le pagine vengono analizzate ma non registrate."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Lettura delle sitemap…"
+  },
+  "bulkNothingToScan": {
+    "message": "In questo elenco non c’è nessun indirizzo da analizzare."
+  },
+  "bulkErrBusy": {
+    "message": "Un’analisi in blocco è già in corso."
+  },
+  "bulkErrStart": {
+    "message": "Impossibile avviare l’analisi in blocco."
+  },
+  "bulkErrFile": {
+    "message": "Impossibile leggere il file."
+  },
+  "bulkEmpty": {
+    "message": "Incolla degli indirizzi o carica un file, poi scegli Avvia."
   }
 }

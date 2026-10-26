@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} combinações"
+  },
+  "historyBulkScan": {
+    "message": "Análise em massa"
+  },
+  "bulkTitle": {
+    "message": "Análise em massa"
+  },
+  "bulkSubtitle": {
+    "message": "Analisa uma lista de páginas uma de cada vez em uma aba em segundo plano. Cada página é uma visita real com os cookies do seu navegador, e o que for encontrado é adicionado ao Histórico como de costume."
+  },
+  "bulkInputLabel": {
+    "message": "Páginas para analisar"
+  },
+  "bulkInputHint": {
+    "message": "Um endereço por linha. Um endereço de sitemap (.xml) adiciona as páginas que ele lista. Duplicados são removidos, e só páginas http e https são analisadas."
+  },
+  "bulkUpload": {
+    "message": "Enviar .txt ou .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Endereços: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Páginas por execução (até {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Tempo limite por página, em segundos"
+  },
+  "bulkStart": {
+    "message": "Iniciar"
+  },
+  "bulkPause": {
+    "message": "Pausar"
+  },
+  "bulkResume": {
+    "message": "Retomar"
+  },
+  "bulkStop": {
+    "message": "Parar"
+  },
+  "bulkScanWaiting": {
+    "message": "Analisar as páginas que ainda aguardam"
+  },
+  "bulkNewList": {
+    "message": "Nova lista"
+  },
+  "bulkResults": {
+    "message": "Resultados"
+  },
+  "bulkColAddress": {
+    "message": "Endereço"
+  },
+  "bulkStatusWaiting": {
+    "message": "Aguardando"
+  },
+  "bulkStatusScanning": {
+    "message": "Analisando"
+  },
+  "bulkStatusDone": {
+    "message": "Concluída"
+  },
+  "bulkStatusFailed": {
+    "message": "Falhou"
+  },
+  "bulkStatusSkipped": {
+    "message": "Ignorada"
+  },
+  "bulkReasonInvalid": {
+    "message": "Não é um endereço válido"
+  },
+  "bulkReasonScheme": {
+    "message": "Só páginas http e https são analisadas"
+  },
+  "bulkReasonScope": {
+    "message": "Ignorada por Configurações → Detecção → Sites para analisar"
+  },
+  "bulkReasonSitemap": {
+    "message": "Não foi possível ler o sitemap. Só sitemaps https podem ser lidos."
+  },
+  "bulkReasonTimeout": {
+    "message": "Nenhum resultado dentro do tempo limite"
+  },
+  "bulkReasonLoad": {
+    "message": "A página não carregou"
+  },
+  "bulkReasonError": {
+    "message": "A análise falhou"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Terminou em {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Nenhuma proteção encontrada"
+  },
+  "bulkRunRunning": {
+    "message": "Em andamento"
+  },
+  "bulkRunPaused": {
+    "message": "Pausada"
+  },
+  "bulkRunStopped": {
+    "message": "Parada"
+  },
+  "bulkRunDone": {
+    "message": "Concluída"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} de {1} concluídas"
+  },
+  "bulkCountsFmt": {
+    "message": "Concluídas: {0} · Com proteções: {1} · Com falha: {2} · Ignoradas: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "A extensão reiniciou durante a execução, então ela parou. As páginas que ainda aguardavam não foram analisadas."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Não havia nenhuma janela do navegador aberta para analisar as páginas."
+  },
+  "bulkStoppedOff": {
+    "message": "A extensão está desativada."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Duplicados removidos: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Deixadas de fora acima do limite: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Outras linhas deixadas de fora: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "O Histórico está pausado: as páginas são analisadas, mas não registradas."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Lendo sitemaps…"
+  },
+  "bulkNothingToScan": {
+    "message": "Não há nenhum endereço para analisar nesta lista."
+  },
+  "bulkErrBusy": {
+    "message": "Já há uma análise em massa em andamento."
+  },
+  "bulkErrStart": {
+    "message": "Não foi possível iniciar a análise em massa."
+  },
+  "bulkErrFile": {
+    "message": "Não foi possível ler o arquivo."
+  },
+  "bulkEmpty": {
+    "message": "Cole endereços ou envie um arquivo e depois escolha Iniciar."
   }
 }

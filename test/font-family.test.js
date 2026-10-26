@@ -142,7 +142,7 @@ test('the tokens lead with IBM Plex, and elements the UA gives another font inhe
   assert.match(common, /button, input, select, textarea \{\s*font-family: inherit;/);
   // …and code/kbd/pre/samp default to the generic `monospace` (Consolas)
   assert.match(common, /code, kbd, pre, samp \{\s*font-family: var\(--font-mono\);/);
-  for (const page of ['popup.html', 'sections/stats/stats.html']) {
+  for (const page of ['popup.html', 'sections/stats/stats.html', 'sections/bulk/bulk.html']) {
     const html = fs.readFileSync(path.join(root, page), 'utf8');
     assert.match(html, /modules\/styles\/common\.css/, `${page} loads the font tokens`);
   }

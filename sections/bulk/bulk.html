@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scrapfly: bulk scan</title>
+  <link rel="icon" href="../../icons/icon32.png">
+  <script src="../../modules/core/theme.js"></script>
+  <link rel="stylesheet" href="../../modules/styles/common.css">
+  <link rel="stylesheet" href="bulk.css">
+  <link rel="stylesheet" href="../../modules/styles/theme-light.css">
+</head>
+<body class="bulk-page">
+  <header class="bulk-masthead">
+    <div class="bulk-masthead-inner">
+      <img class="bulk-logo" src="../../icons/icon128.png" alt="" width="36" height="36">
+      <div class="bulk-heading">
+        <h1 data-i18n="bulkTitle">Bulk scan</h1>
+        <p class="bulk-subtitle" data-i18n="bulkSubtitle">Scan a list of pages one at a time in a background tab. Each page is a real visit with your browser's cookies, and what it finds is added to History as usual.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="bulk-main">
+    <section class="bulk-card" id="bulkInputCard" aria-labelledby="bulkInputLabel">
+      <label class="bulk-label" id="bulkInputLabel" for="bulkInput" data-i18n="bulkInputLabel">Pages to scan</label>
+      <p class="bulk-hint" id="bulkInputHint" data-i18n="bulkInputHint">One address per line. A sitemap .xml address adds the pages it lists. Duplicates are removed, and only http and https pages are scanned.</p>
+      <textarea id="bulkInput" class="bulk-input" rows="8" spellcheck="false" autocomplete="off" dir="ltr" aria-describedby="bulkInputHint" placeholder="https://example.com/&#10;https://example.com/sitemap.xml"></textarea>
+      <div class="bulk-input-foot">
+        <button type="button" class="bulk-btn" id="bulkUploadBtn">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          <span data-i18n="bulkUpload">Upload .txt or .csv</span>
+        </button>
+        <input type="file" id="bulkFile" accept=".txt,.csv,text/plain,text/csv" hidden>
+        <span class="bulk-muted" id="bulkInputCount" aria-live="polite"></span>
+      </div>
+      <div class="bulk-options">
+        <label class="bulk-field">
+          <span class="bulk-field-label" id="bulkCapLabel">Pages per run (up to 200)</span>
+          <input type="number" id="bulkCap" class="bulk-number" min="1" max="200" step="1" value="200" inputmode="numeric">
+        </label>
+        <label class="bulk-field">
+          <span class="bulk-field-label" data-i18n="bulkTimeoutLabel">Time limit per page, in seconds</span>
+          <input type="number" id="bulkTimeout" class="bulk-number" min="10" max="120" step="1" value="45" inputmode="numeric">
+        </label>
+        <button type="button" class="bulk-btn bulk-btn--primary" id="bulkStartBtn" data-i18n="bulkStart">Start</button>
+      </div>
+      <p class="bulk-notice" id="bulkNotice" role="status" hidden></p>
+      <p class="bulk-notice bulk-notice--warn" id="bulkHistoryPaused" data-i18n="bulkHistoryPaused" hidden>History is paused, so the pages are scanned but not recorded.</p>
+    </section>
+
+    <section class="bulk-card" id="bulkRunCard" aria-labelledby="bulkResultsTitle" hidden>
+      <div class="bulk-run-head">
+        <div class="bulk-run-title">
+          <h2 id="bulkResultsTitle" data-i18n="bulkResults">Results</h2>
+          <p class="bulk-run-status" id="bulkRunStatus" role="status" aria-live="polite"></p>
+        </div>
+        <div class="bulk-run-actions">
+          <button type="button" class="bulk-btn" id="bulkPauseBtn" data-i18n="bulkPause" hidden>Pause</button>
+          <button type="button" class="bulk-btn" id="bulkResumeBtn" data-i18n="bulkResume" hidden>Resume</button>
+          <button type="button" class="bulk-btn bulk-btn--danger" id="bulkStopBtn" data-i18n="bulkStop" hidden>Stop</button>
+          <button type="button" class="bulk-btn" id="bulkWaitingBtn" data-i18n="bulkScanWaiting" hidden>Scan the pages still waiting</button>
+          <button type="button" class="bulk-btn" id="bulkExportCsvBtn" data-i18n="statsExportCSV">Export CSV</button>
+          <button type="button" class="bulk-btn" id="bulkExportJsonBtn" data-i18n="statsExportJSON">Export JSON</button>
+          <button type="button" class="bulk-btn" id="bulkNewBtn" data-i18n="bulkNewList" hidden>New list</button>
+        </div>
+      </div>
+      <div class="bulk-progress" id="bulkProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="bulkResultsTitle">
+        <div class="bulk-progress-bar" id="bulkProgressBar"></div>
+      </div>
+      <p class="bulk-muted" id="bulkRunCounts"></p>
+      <p class="bulk-notice bulk-notice--warn" id="bulkRunReason" hidden></p>
+      <p class="bulk-muted" id="bulkRunNotes" hidden></p>
+      <div class="bulk-table-wrap">
+        <table class="bulk-table">
+          <thead>
+            <tr>
+              <th scope="col" class="bulk-col-num">#</th>
+              <th scope="col" data-i18n="bulkColAddress">Address</th>
+              <th scope="col" data-i18n="statsRulesStatusColumn">Status</th>
+              <th scope="col" data-i18n="statsStackColumn">Protections</th>
+              <th scope="col" data-i18n="statsDifficultyColumn">Difficulty</th>
+            </tr>
+          </thead>
+          <tbody id="bulkRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="bulk-empty" id="bulkEmpty" data-i18n="bulkEmpty">Paste addresses or upload a file, then choose Start.</p>
+  </main>
+
+  <script src="../../modules/core/worker-messages.js"></script>
+  <script src="../../modules/core/logger.js"></script>
+  <script src="../../modules/core/domain-list.js"></script>
+  <script src="../../modules/core/scan-scope.js"></script>
+  <script src="../../modules/core/i18n.js"></script>
+  <script src="../../modules/core/storage-manager.js"></script>
+  <script src="../../modules/core/categories.js"></script>
+  <script src="../../utils/format-utils.js"></script>
+  <script src="../../modules/core/bulk-scan.js"></script>
+  <script src="bulk.js"></script>
+</body>
+</html>

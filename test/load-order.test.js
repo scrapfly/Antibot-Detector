@@ -21,6 +21,10 @@ function popupScripts() {
   return [...read('popup.html').matchAll(/<script\s+src="([^"]+)"/g)].map(m => m[1]);
 }
 
+function pageScripts(page) {
+  return [...read(page).matchAll(/<script\s+src="([^"]+)"/g)].map(m => path.posix.join(path.posix.dirname(page), m[1]));
+}
+
 function assertBefore(list, dependency, user) {
   assert.ok(list.includes(dependency), `${dependency} is registered`);
   assert.ok(list.includes(user), `${user} is registered`);
@@ -49,11 +53,12 @@ test('worker responsibilities never load popup sections', () => {
   assertBefore(workerImports(), 'background/detection-session-store.js', 'background/detection-lifecycle.js');
 });
 
-test('every script that reads a shared global module loads after it, in the popup, the worker, the stats page and the content script', () => {
-  const stats = [...read('sections/stats/stats.html').matchAll(/<script\s+src="([^"]+)"/g)].map(m => path.posix.join('sections/stats', m[1]));
+test('every script that reads a shared global module loads after it, in the popup, the worker, the stats page, the bulk scan page and the content script', () => {
+  const stats = pageScripts('sections/stats/stats.html');
+  const bulk = pageScripts('sections/bulk/bulk.html');
   const manifest = JSON.parse(read('manifest.json'));
   const contexts = {
-    popup: popupScripts(), worker: workerImports(), stats,
+    popup: popupScripts(), worker: workerImports(), stats, bulk,
     content: manifest.content_scripts.find(entry => entry.world !== 'MAIN').js
   };
   const MODULES = {
@@ -62,7 +67,8 @@ test('every script that reads a shared global module loads after it, in the popu
     WorkerMessages: 'modules/core/worker-messages.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js', RuleTranslationPlan: 'modules/core/rule-translation-plan.js',
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js',
-    RuleSuggest: 'modules/core/rule-suggest.js'
+    RuleSuggest: 'modules/core/rule-suggest.js',
+    BulkScan: 'modules/core/bulk-scan.js'
   };
   const readers = Object.fromEntries(Object.keys(MODULES).map(name => [name, 0]));
   for (const [global, module] of Object.entries(MODULES)) {
@@ -81,6 +87,7 @@ test('every script that reads a shared global module loads after it, in the popu
   assert.ok(readers.CookieTimeline >= 2, 'the guard finds the worker recorder and the Check Cookies window');
   assert.ok(readers.WebhookFilter >= 2 && readers.WebhookLog >= 2 && readers.MessageSender >= 3, 'the guard finds the scripts that use the webhook and sender modules');
   assert.ok(readers.WorkerMessages >= 20, 'the guard finds the scripts that send or handle worker messages');
+  assert.ok(readers.BulkScan >= 2, 'the guard finds the bulk scan page and its worker');
   assert.ok(readers.HistoryFilter >= 1 && readers.StorageOverview >= 1 && readers.BackupBundle >= 1 && readers.DiagnosticsReport >= 1 && readers.SettingsPresets >= 1 && readers.SettingsTransfer >= 2, 'the guard finds the popup modules\' users');
 });
 
@@ -98,8 +105,22 @@ test('rules and integration graphs load dependencies before their users', () => 
   assertBefore(graph, 'modules/ui/modal-focus.js', 'sections/advanced/components/dialogs.js');
 });
 
+test('the bulk scan page lists its own scripts: each exists once, in dependency order, none from the worker or the popup sections', () => {
+  const list = pageScripts('sections/bulk/bulk.html');
+  assert.ok(list.length >= 5, 'script list parsed');
+  for (const file of list) assert.ok(fs.existsSync(path.join(root, file)), `missing: ${file}`);
+  assert.deepStrictEqual(list.filter((f, i) => list.indexOf(f) !== i), []);
+  assert.ok(!list.some(file => file.startsWith('background/') || (file.startsWith('sections/') && !file.startsWith('sections/bulk/'))));
+  assert.equal(list[list.length - 1], 'sections/bulk/bulk.js', 'the page script runs last');
+  for (const dependency of ['modules/core/worker-messages.js', 'modules/core/i18n.js', 'modules/core/storage-manager.js', 'modules/core/categories.js', 'utils/format-utils.js', 'modules/core/bulk-scan.js']) {
+    assertBefore(list, dependency, 'sections/bulk/bulk.js');
+  }
+  assertBefore(list, 'modules/core/categories.js', 'modules/core/bulk-scan.js');
+  assertBefore(list, 'modules/core/worker-messages.js', 'modules/core/logger.js');
+});
+
 test('all popup and standalone stylesheets exist after feature ownership moves', () => {
-  for (const page of ['popup.html', 'sections/stats/stats.html']) {
+  for (const page of ['popup.html', 'sections/stats/stats.html', 'sections/bulk/bulk.html']) {
     for (const [, href] of read(page).matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]+)"/g)) {
       assert.ok(fs.existsSync(path.resolve(root, path.dirname(page), href)), `${page}: ${href}`);
     }

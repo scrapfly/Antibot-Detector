@@ -7371,5 +7371,205 @@
   "combinationsCountFmt": {
     "message": "{0} combinations",
     "description": "Rules editor: count on the folded Combinations card ({0} = how many)"
+  },
+  "historyBulkScan": {
+    "message": "Bulk scan",
+    "description": "History menu: opens the Bulk scan page"
+  },
+  "bulkTitle": {
+    "message": "Bulk scan",
+    "description": "Bulk scan page: title"
+  },
+  "bulkSubtitle": {
+    "message": "Scan a list of pages one at a time in a background tab. Each page is a real visit with your browser's cookies, and what it finds is added to History as usual.",
+    "description": "Bulk scan page: subtitle"
+  },
+  "bulkInputLabel": {
+    "message": "Pages to scan",
+    "description": "Bulk scan: label of the address list"
+  },
+  "bulkInputHint": {
+    "message": "One address per line. A sitemap .xml address adds the pages it lists. Duplicates are removed, and only http and https pages are scanned.",
+    "description": "Bulk scan: hint under the address list"
+  },
+  "bulkUpload": {
+    "message": "Upload .txt or .csv",
+    "description": "Bulk scan: button that reads a file into the list"
+  },
+  "bulkCountFmt": {
+    "message": "Addresses: {0}",
+    "description": "Bulk scan: how many lines the list has ({0} = count)"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Pages per run (up to {0})",
+    "description": "Bulk scan: label of the cap field ({0} = the maximum)"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Time limit per page, in seconds",
+    "description": "Bulk scan: label of the per-page timeout field"
+  },
+  "bulkStart": {
+    "message": "Start",
+    "description": "Bulk scan: start the run"
+  },
+  "bulkPause": {
+    "message": "Pause",
+    "description": "Bulk scan: pause the run"
+  },
+  "bulkResume": {
+    "message": "Resume",
+    "description": "Bulk scan: resume a paused run"
+  },
+  "bulkStop": {
+    "message": "Stop",
+    "description": "Bulk scan: stop the run"
+  },
+  "bulkScanWaiting": {
+    "message": "Scan the pages still waiting",
+    "description": "Bulk scan: start a new run with the pages a stopped run did not scan"
+  },
+  "bulkNewList": {
+    "message": "New list",
+    "description": "Bulk scan: forget the finished run and edit the list again"
+  },
+  "bulkResults": {
+    "message": "Results",
+    "description": "Bulk scan: heading of the results table"
+  },
+  "bulkColAddress": {
+    "message": "Address",
+    "description": "Bulk scan: results column with the page address"
+  },
+  "bulkStatusWaiting": {
+    "message": "Waiting",
+    "description": "Bulk scan: page status"
+  },
+  "bulkStatusScanning": {
+    "message": "Scanning",
+    "description": "Bulk scan: page status"
+  },
+  "bulkStatusDone": {
+    "message": "Done",
+    "description": "Bulk scan: page status"
+  },
+  "bulkStatusFailed": {
+    "message": "Failed",
+    "description": "Bulk scan: page status"
+  },
+  "bulkStatusSkipped": {
+    "message": "Skipped",
+    "description": "Bulk scan: page status"
+  },
+  "bulkReasonInvalid": {
+    "message": "Not a valid address",
+    "description": "Bulk scan: why a line was skipped"
+  },
+  "bulkReasonScheme": {
+    "message": "Only http and https pages are scanned",
+    "description": "Bulk scan: why a line was skipped"
+  },
+  "bulkReasonScope": {
+    "message": "Skipped by Settings → Detection → Sites to scan",
+    "description": "Bulk scan: why a page was skipped"
+  },
+  "bulkReasonSitemap": {
+    "message": "The sitemap could not be read. Only https sitemaps can be read.",
+    "description": "Bulk scan: why a sitemap line was skipped"
+  },
+  "bulkReasonTimeout": {
+    "message": "No result within the time limit",
+    "description": "Bulk scan: why a page failed"
+  },
+  "bulkReasonLoad": {
+    "message": "The page did not load",
+    "description": "Bulk scan: why a page failed"
+  },
+  "bulkReasonError": {
+    "message": "The scan failed",
+    "description": "Bulk scan: why a page failed"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Ended on {0}",
+    "description": "Bulk scan: the page redirected ({0} = the address it ended on)"
+  },
+  "bulkNoProtection": {
+    "message": "No protection found",
+    "description": "Bulk scan: a scanned page with no detection"
+  },
+  "bulkRunRunning": {
+    "message": "Running",
+    "description": "Bulk scan: run state"
+  },
+  "bulkRunPaused": {
+    "message": "Paused",
+    "description": "Bulk scan: run state"
+  },
+  "bulkRunStopped": {
+    "message": "Stopped",
+    "description": "Bulk scan: run state"
+  },
+  "bulkRunDone": {
+    "message": "Finished",
+    "description": "Bulk scan: run state"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} of {1} finished",
+    "description": "Bulk scan: progress ({0} = pages finished, {1} = all pages)"
+  },
+  "bulkCountsFmt": {
+    "message": "Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}",
+    "description": "Bulk scan: totals of the run"
+  },
+  "bulkStoppedRestart": {
+    "message": "The extension restarted during the run, so it stopped. The pages still waiting were not scanned.",
+    "description": "Bulk scan: why the run stopped"
+  },
+  "bulkStoppedNoWindow": {
+    "message": "No browser window was open to scan pages in.",
+    "description": "Bulk scan: why the run stopped or did not start"
+  },
+  "bulkStoppedOff": {
+    "message": "The extension is switched off.",
+    "description": "Bulk scan: why the run stopped or did not start"
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Duplicates removed: {0}",
+    "description": "Bulk scan: note under the progress ({0} = count)"
+  },
+  "bulkOverCapFmt": {
+    "message": "Left out over the limit: {0}",
+    "description": "Bulk scan: pages over the per-run cap ({0} = count)"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Other lines left out: {0}",
+    "description": "Bulk scan: skipped lines not listed in the table ({0} = count)"
+  },
+  "bulkHistoryPaused": {
+    "message": "History is paused, so the pages are scanned but not recorded.",
+    "description": "Bulk scan: notice when History is paused"
+  },
+  "bulkReadingSitemaps": {
+    "message": "Reading sitemaps…",
+    "description": "Bulk scan: while the sitemaps of the list are fetched"
+  },
+  "bulkNothingToScan": {
+    "message": "There is no address to scan in this list.",
+    "description": "Bulk scan: Start with nothing scannable"
+  },
+  "bulkErrBusy": {
+    "message": "A bulk scan is already running.",
+    "description": "Bulk scan: Start while another run is going on"
+  },
+  "bulkErrStart": {
+    "message": "The bulk scan could not start.",
+    "description": "Bulk scan: Start failed"
+  },
+  "bulkErrFile": {
+    "message": "The file could not be read.",
+    "description": "Bulk scan: upload failed"
+  },
+  "bulkEmpty": {
+    "message": "Paste addresses or upload a file, then choose Start.",
+    "description": "Bulk scan: empty state"
   }
 }

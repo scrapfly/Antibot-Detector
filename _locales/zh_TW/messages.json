@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} 個組合"
+  },
+  "historyBulkScan": {
+    "message": "批次掃描"
+  },
+  "bulkTitle": {
+    "message": "批次掃描"
+  },
+  "bulkSubtitle": {
+    "message": "在背景分頁中逐一掃描網頁清單。每個網頁都是使用瀏覽器 Cookie 的真實造訪，找到的內容會照常加入歷史記錄。"
+  },
+  "bulkInputLabel": {
+    "message": "要掃描的網頁"
+  },
+  "bulkInputHint": {
+    "message": "每行一個網址。網站地圖（.xml）網址會加入其中列出的網頁。重複的網址會被移除，且只掃描 http 和 https 網頁。"
+  },
+  "bulkUpload": {
+    "message": "上傳 .txt 或 .csv"
+  },
+  "bulkCountFmt": {
+    "message": "網址：{0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "每次執行的網頁數（最多 {0}）"
+  },
+  "bulkTimeoutLabel": {
+    "message": "每個網頁的時間限制（秒）"
+  },
+  "bulkStart": {
+    "message": "開始"
+  },
+  "bulkPause": {
+    "message": "暫停"
+  },
+  "bulkResume": {
+    "message": "繼續"
+  },
+  "bulkStop": {
+    "message": "停止"
+  },
+  "bulkScanWaiting": {
+    "message": "掃描仍在等待的網頁"
+  },
+  "bulkNewList": {
+    "message": "新清單"
+  },
+  "bulkResults": {
+    "message": "結果"
+  },
+  "bulkColAddress": {
+    "message": "網址"
+  },
+  "bulkStatusWaiting": {
+    "message": "等待中"
+  },
+  "bulkStatusScanning": {
+    "message": "掃描中"
+  },
+  "bulkStatusDone": {
+    "message": "完成"
+  },
+  "bulkStatusFailed": {
+    "message": "失敗"
+  },
+  "bulkStatusSkipped": {
+    "message": "已略過"
+  },
+  "bulkReasonInvalid": {
+    "message": "不是有效的網址"
+  },
+  "bulkReasonScheme": {
+    "message": "只掃描 http 和 https 網頁"
+  },
+  "bulkReasonScope": {
+    "message": "因 設定 → 偵測 → 要掃描的網站 而略過"
+  },
+  "bulkReasonSitemap": {
+    "message": "無法讀取網站地圖。只能讀取 https 網站地圖。"
+  },
+  "bulkReasonTimeout": {
+    "message": "在時間限制內沒有結果"
+  },
+  "bulkReasonLoad": {
+    "message": "網頁未能載入"
+  },
+  "bulkReasonError": {
+    "message": "掃描失敗"
+  },
+  "bulkEndedOnFmt": {
+    "message": "最終停在 {0}"
+  },
+  "bulkNoProtection": {
+    "message": "未發現任何防護"
+  },
+  "bulkRunRunning": {
+    "message": "執行中"
+  },
+  "bulkRunPaused": {
+    "message": "已暫停"
+  },
+  "bulkRunStopped": {
+    "message": "已停止"
+  },
+  "bulkRunDone": {
+    "message": "已完成"
+  },
+  "bulkProgressFmt": {
+    "message": "已完成 {0}/{1}"
+  },
+  "bulkCountsFmt": {
+    "message": "完成：{0} · 有防護：{1} · 失敗：{2} · 已略過：{3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "執行期間擴充功能重新啟動，因此執行已停止。仍在等待的網頁未被掃描。"
+  },
+  "bulkStoppedNoWindow": {
+    "message": "沒有開啟的瀏覽器視窗可用來掃描網頁。"
+  },
+  "bulkStoppedOff": {
+    "message": "擴充功能已關閉。"
+  },
+  "bulkDuplicatesFmt": {
+    "message": "已移除重複：{0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "超出上限未納入：{0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "其他未納入的行：{0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "歷史記錄已暫停：網頁會被掃描，但不會被記錄。"
+  },
+  "bulkReadingSitemaps": {
+    "message": "正在讀取網站地圖…"
+  },
+  "bulkNothingToScan": {
+    "message": "此清單中沒有可掃描的網址。"
+  },
+  "bulkErrBusy": {
+    "message": "已有批次掃描正在執行。"
+  },
+  "bulkErrStart": {
+    "message": "無法開始批次掃描。"
+  },
+  "bulkErrFile": {
+    "message": "無法讀取該檔案。"
+  },
+  "bulkEmpty": {
+    "message": "貼上網址或上傳檔案，然後選擇開始。"
   }
 }

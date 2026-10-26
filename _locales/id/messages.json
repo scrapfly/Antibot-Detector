@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} kombinasi"
+  },
+  "historyBulkScan": {
+    "message": "Pindai massal"
+  },
+  "bulkTitle": {
+    "message": "Pindai massal"
+  },
+  "bulkSubtitle": {
+    "message": "Memindai daftar halaman satu per satu di tab latar belakang. Setiap halaman adalah kunjungan sungguhan dengan cookie browser Anda, dan temuannya ditambahkan ke Riwayat seperti biasa."
+  },
+  "bulkInputLabel": {
+    "message": "Halaman yang dipindai"
+  },
+  "bulkInputHint": {
+    "message": "Satu alamat per baris. Alamat peta situs (.xml) menambahkan halaman yang dicantumkannya. Duplikat dihapus, dan hanya halaman http dan https yang dipindai."
+  },
+  "bulkUpload": {
+    "message": "Unggah .txt atau .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Alamat: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Halaman per putaran (hingga {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Batas waktu per halaman, dalam detik"
+  },
+  "bulkStart": {
+    "message": "Mulai"
+  },
+  "bulkPause": {
+    "message": "Jeda"
+  },
+  "bulkResume": {
+    "message": "Lanjutkan"
+  },
+  "bulkStop": {
+    "message": "Hentikan"
+  },
+  "bulkScanWaiting": {
+    "message": "Pindai halaman yang masih menunggu"
+  },
+  "bulkNewList": {
+    "message": "Daftar baru"
+  },
+  "bulkResults": {
+    "message": "Hasil"
+  },
+  "bulkColAddress": {
+    "message": "Alamat"
+  },
+  "bulkStatusWaiting": {
+    "message": "Menunggu"
+  },
+  "bulkStatusScanning": {
+    "message": "Memindai"
+  },
+  "bulkStatusDone": {
+    "message": "Selesai"
+  },
+  "bulkStatusFailed": {
+    "message": "Gagal"
+  },
+  "bulkStatusSkipped": {
+    "message": "Dilewati"
+  },
+  "bulkReasonInvalid": {
+    "message": "Bukan alamat yang valid"
+  },
+  "bulkReasonScheme": {
+    "message": "Hanya halaman http dan https yang dipindai"
+  },
+  "bulkReasonScope": {
+    "message": "Dilewati oleh Pengaturan → Deteksi → Situs yang dipindai"
+  },
+  "bulkReasonSitemap": {
+    "message": "Peta situs tidak dapat dibaca. Hanya peta situs https yang dapat dibaca."
+  },
+  "bulkReasonTimeout": {
+    "message": "Tidak ada hasil dalam batas waktu"
+  },
+  "bulkReasonLoad": {
+    "message": "Halaman tidak termuat"
+  },
+  "bulkReasonError": {
+    "message": "Pemindaian gagal"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Berakhir di {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Tidak ada perlindungan ditemukan"
+  },
+  "bulkRunRunning": {
+    "message": "Berjalan"
+  },
+  "bulkRunPaused": {
+    "message": "Dijeda"
+  },
+  "bulkRunStopped": {
+    "message": "Dihentikan"
+  },
+  "bulkRunDone": {
+    "message": "Selesai"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} dari {1} selesai"
+  },
+  "bulkCountsFmt": {
+    "message": "Selesai: {0} · Dengan perlindungan: {1} · Gagal: {2} · Dilewati: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Ekstensi dimulai ulang selama putaran, jadi putaran dihentikan. Halaman yang masih menunggu tidak dipindai."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Tidak ada jendela browser yang terbuka untuk memindai halaman."
+  },
+  "bulkStoppedOff": {
+    "message": "Ekstensi dinonaktifkan."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Duplikat dihapus: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Tidak diikutkan karena melebihi batas: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Baris lain yang tidak diikutkan: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Riwayat sedang dijeda: halaman dipindai tetapi tidak dicatat."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Membaca peta situs…"
+  },
+  "bulkNothingToScan": {
+    "message": "Tidak ada alamat untuk dipindai dalam daftar ini."
+  },
+  "bulkErrBusy": {
+    "message": "Pindai massal sudah berjalan."
+  },
+  "bulkErrStart": {
+    "message": "Pindai massal tidak dapat dimulai."
+  },
+  "bulkErrFile": {
+    "message": "File tidak dapat dibaca."
+  },
+  "bulkEmpty": {
+    "message": "Tempel alamat atau unggah file, lalu pilih Mulai."
   }
 }

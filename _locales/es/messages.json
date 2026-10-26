@@ -6753,5 +6753,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} combinaciones"
+  },
+  "historyBulkScan": {
+    "message": "Análisis masivo"
+  },
+  "bulkTitle": {
+    "message": "Análisis masivo"
+  },
+  "bulkSubtitle": {
+    "message": "Analiza una lista de páginas de una en una en una pestaña en segundo plano. Cada página es una visita real con las cookies de tu navegador, y lo que encuentra se añade al Historial como siempre."
+  },
+  "bulkInputLabel": {
+    "message": "Páginas a analizar"
+  },
+  "bulkInputHint": {
+    "message": "Una dirección por línea. Una dirección de sitemap (.xml) añade las páginas que contiene. Se quitan los duplicados y solo se analizan páginas http y https."
+  },
+  "bulkUpload": {
+    "message": "Subir .txt o .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Direcciones: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Páginas por ejecución (hasta {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Tiempo límite por página, en segundos"
+  },
+  "bulkStart": {
+    "message": "Iniciar"
+  },
+  "bulkPause": {
+    "message": "Pausar"
+  },
+  "bulkResume": {
+    "message": "Reanudar"
+  },
+  "bulkStop": {
+    "message": "Detener"
+  },
+  "bulkScanWaiting": {
+    "message": "Analizar las páginas que siguen pendientes"
+  },
+  "bulkNewList": {
+    "message": "Nueva lista"
+  },
+  "bulkResults": {
+    "message": "Resultados"
+  },
+  "bulkColAddress": {
+    "message": "Dirección"
+  },
+  "bulkStatusWaiting": {
+    "message": "Pendiente"
+  },
+  "bulkStatusScanning": {
+    "message": "Analizando"
+  },
+  "bulkStatusDone": {
+    "message": "Hecho"
+  },
+  "bulkStatusFailed": {
+    "message": "Error"
+  },
+  "bulkStatusSkipped": {
+    "message": "Omitida"
+  },
+  "bulkReasonInvalid": {
+    "message": "No es una dirección válida"
+  },
+  "bulkReasonScheme": {
+    "message": "Solo se analizan páginas http y https"
+  },
+  "bulkReasonScope": {
+    "message": "Omitida por Ajustes → Detección → Sitios a analizar"
+  },
+  "bulkReasonSitemap": {
+    "message": "No se pudo leer el sitemap. Solo se pueden leer sitemaps https."
+  },
+  "bulkReasonTimeout": {
+    "message": "Sin resultado dentro del tiempo límite"
+  },
+  "bulkReasonLoad": {
+    "message": "La página no cargó"
+  },
+  "bulkReasonError": {
+    "message": "El análisis falló"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Terminó en {0}"
+  },
+  "bulkNoProtection": {
+    "message": "No se encontró ninguna protección"
+  },
+  "bulkRunRunning": {
+    "message": "En curso"
+  },
+  "bulkRunPaused": {
+    "message": "En pausa"
+  },
+  "bulkRunStopped": {
+    "message": "Detenido"
+  },
+  "bulkRunDone": {
+    "message": "Terminado"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} de {1} terminadas"
+  },
+  "bulkCountsFmt": {
+    "message": "Hechas: {0} · Con protecciones: {1} · Con error: {2} · Omitidas: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "La extensión se reinició durante la ejecución, así que se detuvo. Las páginas pendientes no se analizaron."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "No había ninguna ventana del navegador abierta donde analizar las páginas."
+  },
+  "bulkStoppedOff": {
+    "message": "La extensión está desactivada."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Duplicados quitados: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Fuera por superar el límite: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Otras líneas omitidas: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "El Historial está en pausa: las páginas se analizan pero no se guardan."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Leyendo sitemaps…"
+  },
+  "bulkNothingToScan": {
+    "message": "No hay ninguna dirección que analizar en esta lista."
+  },
+  "bulkErrBusy": {
+    "message": "Ya hay un análisis masivo en curso."
+  },
+  "bulkErrStart": {
+    "message": "No se pudo iniciar el análisis masivo."
+  },
+  "bulkErrFile": {
+    "message": "No se pudo leer el archivo."
+  },
+  "bulkEmpty": {
+    "message": "Pega direcciones o sube un archivo y luego elige Iniciar."
   }
 }

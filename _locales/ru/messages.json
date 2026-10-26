@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "Комбинаций: {0}"
+  },
+  "historyBulkScan": {
+    "message": "Массовое сканирование"
+  },
+  "bulkTitle": {
+    "message": "Массовое сканирование"
+  },
+  "bulkSubtitle": {
+    "message": "Сканирует список страниц по одной в фоновой вкладке. Каждая страница — настоящее посещение с файлами cookie вашего браузера, а найденное, как обычно, попадает в историю."
+  },
+  "bulkInputLabel": {
+    "message": "Страницы для сканирования"
+  },
+  "bulkInputHint": {
+    "message": "Один адрес в строке. Адрес карты сайта (.xml) добавляет перечисленные в ней страницы. Дубликаты удаляются, сканируются только страницы http и https."
+  },
+  "bulkUpload": {
+    "message": "Загрузить .txt или .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Адресов: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Страниц за запуск (не больше {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Лимит времени на страницу, в секундах"
+  },
+  "bulkStart": {
+    "message": "Запустить"
+  },
+  "bulkPause": {
+    "message": "Приостановить"
+  },
+  "bulkResume": {
+    "message": "Продолжить"
+  },
+  "bulkStop": {
+    "message": "Остановить"
+  },
+  "bulkScanWaiting": {
+    "message": "Сканировать страницы, которые ещё ждут"
+  },
+  "bulkNewList": {
+    "message": "Новый список"
+  },
+  "bulkResults": {
+    "message": "Результаты"
+  },
+  "bulkColAddress": {
+    "message": "Адрес"
+  },
+  "bulkStatusWaiting": {
+    "message": "Ожидает"
+  },
+  "bulkStatusScanning": {
+    "message": "Сканируется"
+  },
+  "bulkStatusDone": {
+    "message": "Готово"
+  },
+  "bulkStatusFailed": {
+    "message": "Сбой"
+  },
+  "bulkStatusSkipped": {
+    "message": "Пропущена"
+  },
+  "bulkReasonInvalid": {
+    "message": "Недопустимый адрес"
+  },
+  "bulkReasonScheme": {
+    "message": "Сканируются только страницы http и https"
+  },
+  "bulkReasonScope": {
+    "message": "Пропущена по настройке Настройки → Обнаружение → Сайты для сканирования"
+  },
+  "bulkReasonSitemap": {
+    "message": "Не удалось прочитать карту сайта. Читаются только карты сайта по https."
+  },
+  "bulkReasonTimeout": {
+    "message": "Нет результата за отведённое время"
+  },
+  "bulkReasonLoad": {
+    "message": "Страница не загрузилась"
+  },
+  "bulkReasonError": {
+    "message": "Сканирование не удалось"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Завершилась на {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Защита не найдена"
+  },
+  "bulkRunRunning": {
+    "message": "Выполняется"
+  },
+  "bulkRunPaused": {
+    "message": "Приостановлено"
+  },
+  "bulkRunStopped": {
+    "message": "Остановлено"
+  },
+  "bulkRunDone": {
+    "message": "Завершено"
+  },
+  "bulkProgressFmt": {
+    "message": "Готово {0} из {1}"
+  },
+  "bulkCountsFmt": {
+    "message": "Готово: {0} · С защитой: {1} · Сбой: {2} · Пропущено: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Расширение перезапустилось во время запуска, поэтому он остановлен. Страницы, которые ещё ждали, не просканированы."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Не было открытого окна браузера, в котором можно сканировать страницы."
+  },
+  "bulkStoppedOff": {
+    "message": "Расширение выключено."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Удалено дубликатов: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Не вошло сверх лимита: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Других пропущенных строк: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "История приостановлена: страницы сканируются, но не записываются."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Чтение карт сайта…"
+  },
+  "bulkNothingToScan": {
+    "message": "В этом списке нет адресов для сканирования."
+  },
+  "bulkErrBusy": {
+    "message": "Массовое сканирование уже выполняется."
+  },
+  "bulkErrStart": {
+    "message": "Не удалось запустить массовое сканирование."
+  },
+  "bulkErrFile": {
+    "message": "Не удалось прочитать файл."
+  },
+  "bulkEmpty": {
+    "message": "Вставьте адреса или загрузите файл, затем нажмите «Запустить»."
   }
 }

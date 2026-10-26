@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} combinaisons"
+  },
+  "historyBulkScan": {
+    "message": "Analyse groupée"
+  },
+  "bulkTitle": {
+    "message": "Analyse groupée"
+  },
+  "bulkSubtitle": {
+    "message": "Analyse une liste de pages une à une dans un onglet en arrière-plan. Chaque page est une vraie visite avec les cookies de votre navigateur, et ce qui est trouvé est ajouté à l’historique comme d’habitude."
+  },
+  "bulkInputLabel": {
+    "message": "Pages à analyser"
+  },
+  "bulkInputHint": {
+    "message": "Une adresse par ligne. Une adresse de sitemap (.xml) ajoute les pages qu’il contient. Les doublons sont retirés, et seules les pages http et https sont analysées."
+  },
+  "bulkUpload": {
+    "message": "Importer un .txt ou un .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Adresses : {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Pages par exécution (jusqu’à {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Délai par page, en secondes"
+  },
+  "bulkStart": {
+    "message": "Démarrer"
+  },
+  "bulkPause": {
+    "message": "Pause"
+  },
+  "bulkResume": {
+    "message": "Reprendre"
+  },
+  "bulkStop": {
+    "message": "Arrêter"
+  },
+  "bulkScanWaiting": {
+    "message": "Analyser les pages encore en attente"
+  },
+  "bulkNewList": {
+    "message": "Nouvelle liste"
+  },
+  "bulkResults": {
+    "message": "Résultats"
+  },
+  "bulkColAddress": {
+    "message": "Adresse"
+  },
+  "bulkStatusWaiting": {
+    "message": "En attente"
+  },
+  "bulkStatusScanning": {
+    "message": "Analyse en cours"
+  },
+  "bulkStatusDone": {
+    "message": "Terminé"
+  },
+  "bulkStatusFailed": {
+    "message": "Échec"
+  },
+  "bulkStatusSkipped": {
+    "message": "Ignorée"
+  },
+  "bulkReasonInvalid": {
+    "message": "Adresse non valide"
+  },
+  "bulkReasonScheme": {
+    "message": "Seules les pages http et https sont analysées"
+  },
+  "bulkReasonScope": {
+    "message": "Ignorée par Paramètres → Détection → Sites à analyser"
+  },
+  "bulkReasonSitemap": {
+    "message": "Le sitemap n’a pas pu être lu. Seuls les sitemaps https peuvent être lus."
+  },
+  "bulkReasonTimeout": {
+    "message": "Aucun résultat dans le délai"
+  },
+  "bulkReasonLoad": {
+    "message": "La page ne s’est pas chargée"
+  },
+  "bulkReasonError": {
+    "message": "L’analyse a échoué"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Terminée sur {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Aucune protection trouvée"
+  },
+  "bulkRunRunning": {
+    "message": "En cours"
+  },
+  "bulkRunPaused": {
+    "message": "En pause"
+  },
+  "bulkRunStopped": {
+    "message": "Arrêtée"
+  },
+  "bulkRunDone": {
+    "message": "Terminée"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} sur {1} terminées"
+  },
+  "bulkCountsFmt": {
+    "message": "Terminées : {0} · Avec protections : {1} · En échec : {2} · Ignorées : {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "L’extension a redémarré pendant l’exécution, qui s’est donc arrêtée. Les pages encore en attente n’ont pas été analysées."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Aucune fenêtre de navigateur n’était ouverte pour y analyser les pages."
+  },
+  "bulkStoppedOff": {
+    "message": "L’extension est désactivée."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Doublons retirés : {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Écartées au-delà de la limite : {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Autres lignes écartées : {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "L’historique est en pause : les pages sont analysées mais pas enregistrées."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Lecture des sitemaps…"
+  },
+  "bulkNothingToScan": {
+    "message": "Cette liste ne contient aucune adresse à analyser."
+  },
+  "bulkErrBusy": {
+    "message": "Une analyse groupée est déjà en cours."
+  },
+  "bulkErrStart": {
+    "message": "L’analyse groupée n’a pas pu démarrer."
+  },
+  "bulkErrFile": {
+    "message": "Le fichier n’a pas pu être lu."
+  },
+  "bulkEmpty": {
+    "message": "Collez des adresses ou importez un fichier, puis choisissez Démarrer."
   }
 }

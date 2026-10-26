@@ -72,11 +72,14 @@ test('every script that uses WorkerMessages runs in a context that loads it firs
     }
   }
   // The stats page loads the logger (a user), so it loads the registry first too
-  const stats = [...fs.readFileSync(path.join(ROOT, 'sections/stats/stats.html'), 'utf8').matchAll(/<script src="([^"]+)"/g)].map(m => m[1].replace(/^(\.\.\/)+/, ''));
-  const statsAt = stats.indexOf(registry);
-  assert.ok(statsAt >= 0, 'the stats page loads the registry');
-  for (const user of users) {
-    const index = stats.indexOf(user);
-    if (index >= 0) assert.ok(index > statsAt, `stats page: ${registry} loads before ${user}`);
+  for (const page of ['sections/stats/stats.html', 'sections/bulk/bulk.html']) {
+    const dir = path.posix.dirname(page);
+    const scripts = [...fs.readFileSync(path.join(ROOT, page), 'utf8').matchAll(/<script src="([^"]+)"/g)].map(m => path.posix.join(dir, m[1]));
+    const at = scripts.indexOf(registry);
+    assert.ok(at >= 0, `${page} loads the registry`);
+    for (const user of users) {
+      const index = scripts.indexOf(user);
+      if (index >= 0) assert.ok(index > at, `${page}: ${registry} loads before ${user}`);
+    }
   }
 });

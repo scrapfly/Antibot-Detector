@@ -2167,6 +2167,12 @@ class History {
       });
     }
 
+    // Bulk scan: its own page in a tab (sections/bulk/), where a list of pages is scanned in a background tab
+    const bulkBtn = document.querySelector('#historyTab #bulkScanBtn');
+    if (bulkBtn) {
+      bulkBtn.addEventListener('click', () => this.openBulkScan());
+    }
+
     // Setup export button
     const exportBtn = document.querySelector('#historyTab #exportHistoryBtn');
     if (exportBtn) {
@@ -2179,6 +2185,23 @@ class History {
     if (importBtn && importFile) {
       importBtn.addEventListener('click', () => importFile.click());
       importFile.addEventListener('change', (e) => this.handleImport(e));
+    }
+  }
+
+  /** Open the Bulk scan page in a new tab (an open one is focused instead of opening a second). */
+  async openBulkScan() {
+    const url = chrome.runtime.getURL('sections/bulk/bulk.html');
+    try {
+      const [open] = await chrome.tabs.query({ url });
+      if (open) {
+        await chrome.tabs.update(open.id, { active: true });
+        if (open.windowId !== undefined && chrome.windows && chrome.windows.update) await chrome.windows.update(open.windowId, { focused: true });
+      } else {
+        await chrome.tabs.create({ url });
+      }
+    } catch (error) {
+      Logger.error('UI', 'Failed to open Bulk scan:', error);
+      window.open(url, '_blank', 'noopener');
     }
   }
 

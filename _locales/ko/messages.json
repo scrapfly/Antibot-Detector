@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "조합 {0}개"
+  },
+  "historyBulkScan": {
+    "message": "일괄 스캔"
+  },
+  "bulkTitle": {
+    "message": "일괄 스캔"
+  },
+  "bulkSubtitle": {
+    "message": "페이지 목록을 백그라운드 탭에서 하나씩 스캔합니다. 각 페이지는 브라우저 쿠키를 사용하는 실제 방문이며, 찾은 내용은 평소처럼 기록에 추가됩니다."
+  },
+  "bulkInputLabel": {
+    "message": "스캔할 페이지"
+  },
+  "bulkInputHint": {
+    "message": "한 줄에 주소 하나씩 입력합니다. 사이트맵(.xml) 주소는 그 안에 있는 페이지를 추가합니다. 중복은 제거되며 http와 https 페이지만 스캔합니다."
+  },
+  "bulkUpload": {
+    "message": ".txt 또는 .csv 업로드"
+  },
+  "bulkCountFmt": {
+    "message": "주소: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "실행당 페이지 수(최대 {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "페이지당 제한 시간(초)"
+  },
+  "bulkStart": {
+    "message": "시작"
+  },
+  "bulkPause": {
+    "message": "일시 중지"
+  },
+  "bulkResume": {
+    "message": "재개"
+  },
+  "bulkStop": {
+    "message": "중지"
+  },
+  "bulkScanWaiting": {
+    "message": "아직 대기 중인 페이지 스캔"
+  },
+  "bulkNewList": {
+    "message": "새 목록"
+  },
+  "bulkResults": {
+    "message": "결과"
+  },
+  "bulkColAddress": {
+    "message": "주소"
+  },
+  "bulkStatusWaiting": {
+    "message": "대기 중"
+  },
+  "bulkStatusScanning": {
+    "message": "스캔 중"
+  },
+  "bulkStatusDone": {
+    "message": "완료"
+  },
+  "bulkStatusFailed": {
+    "message": "실패"
+  },
+  "bulkStatusSkipped": {
+    "message": "건너뜀"
+  },
+  "bulkReasonInvalid": {
+    "message": "올바른 주소가 아닙니다"
+  },
+  "bulkReasonScheme": {
+    "message": "http와 https 페이지만 스캔합니다"
+  },
+  "bulkReasonScope": {
+    "message": "설정 → 탐지 → 스캔할 사이트에 따라 건너뜀"
+  },
+  "bulkReasonSitemap": {
+    "message": "사이트맵을 읽을 수 없습니다. https 사이트맵만 읽을 수 있습니다."
+  },
+  "bulkReasonTimeout": {
+    "message": "제한 시간 안에 결과가 없습니다"
+  },
+  "bulkReasonLoad": {
+    "message": "페이지가 로드되지 않았습니다"
+  },
+  "bulkReasonError": {
+    "message": "스캔에 실패했습니다"
+  },
+  "bulkEndedOnFmt": {
+    "message": "최종 위치: {0}"
+  },
+  "bulkNoProtection": {
+    "message": "보호 기능을 찾지 못했습니다"
+  },
+  "bulkRunRunning": {
+    "message": "실행 중"
+  },
+  "bulkRunPaused": {
+    "message": "일시 중지됨"
+  },
+  "bulkRunStopped": {
+    "message": "중지됨"
+  },
+  "bulkRunDone": {
+    "message": "완료됨"
+  },
+  "bulkProgressFmt": {
+    "message": "{1}개 중 {0}개 완료"
+  },
+  "bulkCountsFmt": {
+    "message": "완료: {0} · 보호 있음: {1} · 실패: {2} · 건너뜀: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "실행 중에 확장 프로그램이 다시 시작되어 중지되었습니다. 아직 대기 중이던 페이지는 스캔되지 않았습니다."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "페이지를 스캔할 브라우저 창이 열려 있지 않았습니다."
+  },
+  "bulkStoppedOff": {
+    "message": "확장 프로그램이 꺼져 있습니다."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "제거된 중복: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "한도를 넘어 제외됨: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "그 밖에 제외된 줄: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "기록이 일시 중지되어 페이지는 스캔되지만 기록되지 않습니다."
+  },
+  "bulkReadingSitemaps": {
+    "message": "사이트맵을 읽는 중…"
+  },
+  "bulkNothingToScan": {
+    "message": "이 목록에는 스캔할 주소가 없습니다."
+  },
+  "bulkErrBusy": {
+    "message": "일괄 스캔이 이미 실행 중입니다."
+  },
+  "bulkErrStart": {
+    "message": "일괄 스캔을 시작할 수 없습니다."
+  },
+  "bulkErrFile": {
+    "message": "파일을 읽을 수 없습니다."
+  },
+  "bulkEmpty": {
+    "message": "주소를 붙여 넣거나 파일을 업로드한 다음 시작을 선택하세요."
   }
 }

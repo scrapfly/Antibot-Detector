@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} tổ hợp"
+  },
+  "historyBulkScan": {
+    "message": "Quét hàng loạt"
+  },
+  "bulkTitle": {
+    "message": "Quét hàng loạt"
+  },
+  "bulkSubtitle": {
+    "message": "Quét một danh sách trang lần lượt từng trang trong một tab chạy nền. Mỗi trang là một lượt truy cập thật bằng cookie của trình duyệt, và những gì tìm thấy được thêm vào Lịch sử như thường lệ."
+  },
+  "bulkInputLabel": {
+    "message": "Các trang cần quét"
+  },
+  "bulkInputHint": {
+    "message": "Mỗi dòng một địa chỉ. Địa chỉ sơ đồ trang web (.xml) thêm các trang mà nó liệt kê. Địa chỉ trùng được loại bỏ, và chỉ quét trang http và https."
+  },
+  "bulkUpload": {
+    "message": "Tải lên .txt hoặc .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Địa chỉ: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Số trang mỗi lượt chạy (tối đa {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Giới hạn thời gian mỗi trang, tính bằng giây"
+  },
+  "bulkStart": {
+    "message": "Bắt đầu"
+  },
+  "bulkPause": {
+    "message": "Tạm dừng"
+  },
+  "bulkResume": {
+    "message": "Tiếp tục"
+  },
+  "bulkStop": {
+    "message": "Dừng"
+  },
+  "bulkScanWaiting": {
+    "message": "Quét các trang vẫn đang chờ"
+  },
+  "bulkNewList": {
+    "message": "Danh sách mới"
+  },
+  "bulkResults": {
+    "message": "Kết quả"
+  },
+  "bulkColAddress": {
+    "message": "Địa chỉ"
+  },
+  "bulkStatusWaiting": {
+    "message": "Đang chờ"
+  },
+  "bulkStatusScanning": {
+    "message": "Đang quét"
+  },
+  "bulkStatusDone": {
+    "message": "Xong"
+  },
+  "bulkStatusFailed": {
+    "message": "Thất bại"
+  },
+  "bulkStatusSkipped": {
+    "message": "Đã bỏ qua"
+  },
+  "bulkReasonInvalid": {
+    "message": "Không phải địa chỉ hợp lệ"
+  },
+  "bulkReasonScheme": {
+    "message": "Chỉ quét trang http và https"
+  },
+  "bulkReasonScope": {
+    "message": "Bị bỏ qua theo Cài đặt → Phát hiện → Trang web cần quét"
+  },
+  "bulkReasonSitemap": {
+    "message": "Không đọc được sơ đồ trang web. Chỉ đọc được sơ đồ trang web https."
+  },
+  "bulkReasonTimeout": {
+    "message": "Không có kết quả trong giới hạn thời gian"
+  },
+  "bulkReasonLoad": {
+    "message": "Trang không tải được"
+  },
+  "bulkReasonError": {
+    "message": "Quét thất bại"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Kết thúc tại {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Không tìm thấy lớp bảo vệ nào"
+  },
+  "bulkRunRunning": {
+    "message": "Đang chạy"
+  },
+  "bulkRunPaused": {
+    "message": "Đã tạm dừng"
+  },
+  "bulkRunStopped": {
+    "message": "Đã dừng"
+  },
+  "bulkRunDone": {
+    "message": "Đã hoàn tất"
+  },
+  "bulkProgressFmt": {
+    "message": "Đã xong {0}/{1}"
+  },
+  "bulkCountsFmt": {
+    "message": "Xong: {0} · Có bảo vệ: {1} · Thất bại: {2} · Bỏ qua: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Tiện ích đã khởi động lại trong lúc chạy nên lượt chạy đã dừng. Các trang vẫn đang chờ chưa được quét."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Không có cửa sổ trình duyệt nào đang mở để quét trang."
+  },
+  "bulkStoppedOff": {
+    "message": "Tiện ích đang tắt."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Đã loại bỏ địa chỉ trùng: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Bị bỏ ra vì vượt giới hạn: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Các dòng khác bị bỏ ra: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Lịch sử đang tạm dừng: các trang vẫn được quét nhưng không được ghi lại."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Đang đọc sơ đồ trang web…"
+  },
+  "bulkNothingToScan": {
+    "message": "Danh sách này không có địa chỉ nào để quét."
+  },
+  "bulkErrBusy": {
+    "message": "Đang có một lượt quét hàng loạt chạy."
+  },
+  "bulkErrStart": {
+    "message": "Không thể bắt đầu quét hàng loạt."
+  },
+  "bulkErrFile": {
+    "message": "Không đọc được tệp."
+  },
+  "bulkEmpty": {
+    "message": "Dán địa chỉ hoặc tải lên một tệp, rồi chọn Bắt đầu."
   }
 }

@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} kombinationer"
+  },
+  "historyBulkScan": {
+    "message": "Massskanning"
+  },
+  "bulkTitle": {
+    "message": "Massskanning"
+  },
+  "bulkSubtitle": {
+    "message": "Skannar en lista med sidor en i taget i en bakgrundsflik. Varje sida är ett riktigt besök med webbläsarens cookies, och det som hittas läggs till i historiken som vanligt."
+  },
+  "bulkInputLabel": {
+    "message": "Sidor att skanna"
+  },
+  "bulkInputHint": {
+    "message": "En adress per rad. En sitemap-adress (.xml) lägger till sidorna den listar. Dubbletter tas bort, och bara http- och https-sidor skannas."
+  },
+  "bulkUpload": {
+    "message": "Ladda upp .txt eller .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Adresser: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Sidor per körning (högst {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Tidsgräns per sida, i sekunder"
+  },
+  "bulkStart": {
+    "message": "Starta"
+  },
+  "bulkPause": {
+    "message": "Pausa"
+  },
+  "bulkResume": {
+    "message": "Fortsätt"
+  },
+  "bulkStop": {
+    "message": "Stoppa"
+  },
+  "bulkScanWaiting": {
+    "message": "Skanna sidorna som fortfarande väntar"
+  },
+  "bulkNewList": {
+    "message": "Ny lista"
+  },
+  "bulkResults": {
+    "message": "Resultat"
+  },
+  "bulkColAddress": {
+    "message": "Adress"
+  },
+  "bulkStatusWaiting": {
+    "message": "Väntar"
+  },
+  "bulkStatusScanning": {
+    "message": "Skannar"
+  },
+  "bulkStatusDone": {
+    "message": "Klar"
+  },
+  "bulkStatusFailed": {
+    "message": "Misslyckades"
+  },
+  "bulkStatusSkipped": {
+    "message": "Hoppades över"
+  },
+  "bulkReasonInvalid": {
+    "message": "Ingen giltig adress"
+  },
+  "bulkReasonScheme": {
+    "message": "Bara http- och https-sidor skannas"
+  },
+  "bulkReasonScope": {
+    "message": "Överhoppad enligt Inställningar → Upptäckt → Webbplatser att skanna"
+  },
+  "bulkReasonSitemap": {
+    "message": "Det gick inte att läsa sitemapen. Bara https-sitemaps kan läsas."
+  },
+  "bulkReasonTimeout": {
+    "message": "Inget resultat inom tidsgränsen"
+  },
+  "bulkReasonLoad": {
+    "message": "Sidan laddades inte"
+  },
+  "bulkReasonError": {
+    "message": "Skanningen misslyckades"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Hamnade på {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Inget skydd hittades"
+  },
+  "bulkRunRunning": {
+    "message": "Pågår"
+  },
+  "bulkRunPaused": {
+    "message": "Pausad"
+  },
+  "bulkRunStopped": {
+    "message": "Stoppad"
+  },
+  "bulkRunDone": {
+    "message": "Slutförd"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} av {1} klara"
+  },
+  "bulkCountsFmt": {
+    "message": "Klara: {0} · Med skydd: {1} · Misslyckade: {2} · Överhoppade: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Tillägget startade om under körningen, så den stoppades. Sidorna som fortfarande väntade skannades inte."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Inget webbläsarfönster var öppet att skanna sidor i."
+  },
+  "bulkStoppedOff": {
+    "message": "Tillägget är avstängt."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Borttagna dubbletter: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Utelämnade över gränsen: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Andra utelämnade rader: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Historiken är pausad: sidorna skannas men sparas inte."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Läser sitemaps…"
+  },
+  "bulkNothingToScan": {
+    "message": "Det finns ingen adress att skanna i den här listan."
+  },
+  "bulkErrBusy": {
+    "message": "En massskanning pågår redan."
+  },
+  "bulkErrStart": {
+    "message": "Det gick inte att starta massskanningen."
+  },
+  "bulkErrFile": {
+    "message": "Det gick inte att läsa filen."
+  },
+  "bulkEmpty": {
+    "message": "Klistra in adresser eller ladda upp en fil och välj sedan Starta."
   }
 }

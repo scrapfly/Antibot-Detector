@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "Kombinacje: {0}"
+  },
+  "historyBulkScan": {
+    "message": "Skanowanie zbiorcze"
+  },
+  "bulkTitle": {
+    "message": "Skanowanie zbiorcze"
+  },
+  "bulkSubtitle": {
+    "message": "Skanuje listę stron po kolei w karcie w tle. Każda strona to prawdziwa wizyta z plikami cookie Twojej przeglądarki, a to, co zostanie znalezione, trafia do historii jak zwykle."
+  },
+  "bulkInputLabel": {
+    "message": "Strony do skanowania"
+  },
+  "bulkInputHint": {
+    "message": "Jeden adres w wierszu. Adres mapy witryny (.xml) dodaje wymienione w niej strony. Duplikaty są usuwane, a skanowane są tylko strony http i https."
+  },
+  "bulkUpload": {
+    "message": "Wczytaj plik .txt lub .csv"
+  },
+  "bulkCountFmt": {
+    "message": "Adresy: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Stron na przebieg (do {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Limit czasu na stronę, w sekundach"
+  },
+  "bulkStart": {
+    "message": "Rozpocznij"
+  },
+  "bulkPause": {
+    "message": "Wstrzymaj"
+  },
+  "bulkResume": {
+    "message": "Wznów"
+  },
+  "bulkStop": {
+    "message": "Zatrzymaj"
+  },
+  "bulkScanWaiting": {
+    "message": "Skanuj strony, które nadal czekają"
+  },
+  "bulkNewList": {
+    "message": "Nowa lista"
+  },
+  "bulkResults": {
+    "message": "Wyniki"
+  },
+  "bulkColAddress": {
+    "message": "Adres"
+  },
+  "bulkStatusWaiting": {
+    "message": "Czeka"
+  },
+  "bulkStatusScanning": {
+    "message": "Skanowanie"
+  },
+  "bulkStatusDone": {
+    "message": "Gotowe"
+  },
+  "bulkStatusFailed": {
+    "message": "Niepowodzenie"
+  },
+  "bulkStatusSkipped": {
+    "message": "Pominięta"
+  },
+  "bulkReasonInvalid": {
+    "message": "To nie jest prawidłowy adres"
+  },
+  "bulkReasonScheme": {
+    "message": "Skanowane są tylko strony http i https"
+  },
+  "bulkReasonScope": {
+    "message": "Pominięta przez Ustawienia → Wykrywanie → Witryny do skanowania"
+  },
+  "bulkReasonSitemap": {
+    "message": "Nie udało się odczytać mapy witryny. Odczytać można tylko mapy https."
+  },
+  "bulkReasonTimeout": {
+    "message": "Brak wyniku w limicie czasu"
+  },
+  "bulkReasonLoad": {
+    "message": "Strona się nie wczytała"
+  },
+  "bulkReasonError": {
+    "message": "Skanowanie nie powiodło się"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Zakończona na {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Nie znaleziono zabezpieczeń"
+  },
+  "bulkRunRunning": {
+    "message": "W toku"
+  },
+  "bulkRunPaused": {
+    "message": "Wstrzymane"
+  },
+  "bulkRunStopped": {
+    "message": "Zatrzymane"
+  },
+  "bulkRunDone": {
+    "message": "Zakończone"
+  },
+  "bulkProgressFmt": {
+    "message": "Ukończono {0} z {1}"
+  },
+  "bulkCountsFmt": {
+    "message": "Gotowe: {0} · Z zabezpieczeniami: {1} · Nieudane: {2} · Pominięte: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "Rozszerzenie uruchomiło się ponownie w trakcie przebiegu, więc został zatrzymany. Strony, które nadal czekały, nie zostały zeskanowane."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Nie było otwartego okna przeglądarki, w którym można skanować strony."
+  },
+  "bulkStoppedOff": {
+    "message": "Rozszerzenie jest wyłączone."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Usunięte duplikaty: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Pominięte ponad limit: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Inne pominięte wiersze: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "Historia jest wstrzymana: strony są skanowane, ale nie zapisywane."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Odczytywanie map witryn…"
+  },
+  "bulkNothingToScan": {
+    "message": "Na tej liście nie ma adresu do skanowania."
+  },
+  "bulkErrBusy": {
+    "message": "Skanowanie zbiorcze już trwa."
+  },
+  "bulkErrStart": {
+    "message": "Nie udało się rozpocząć skanowania zbiorczego."
+  },
+  "bulkErrFile": {
+    "message": "Nie udało się odczytać pliku."
+  },
+  "bulkEmpty": {
+    "message": "Wklej adresy lub wczytaj plik, a potem wybierz Rozpocznij."
   }
 }

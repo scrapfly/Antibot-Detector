@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} 个组合"
+  },
+  "historyBulkScan": {
+    "message": "批量扫描"
+  },
+  "bulkTitle": {
+    "message": "批量扫描"
+  },
+  "bulkSubtitle": {
+    "message": "在后台标签页中逐个扫描页面列表。每个页面都是使用浏览器 Cookie 的真实访问，发现的内容会照常添加到历史记录。"
+  },
+  "bulkInputLabel": {
+    "message": "要扫描的页面"
+  },
+  "bulkInputHint": {
+    "message": "每行一个地址。站点地图（.xml）地址会添加其中列出的页面。重复的地址会被移除，只扫描 http 和 https 页面。"
+  },
+  "bulkUpload": {
+    "message": "上传 .txt 或 .csv"
+  },
+  "bulkCountFmt": {
+    "message": "地址：{0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "每次运行的页面数（最多 {0}）"
+  },
+  "bulkTimeoutLabel": {
+    "message": "每个页面的时间限制（秒）"
+  },
+  "bulkStart": {
+    "message": "开始"
+  },
+  "bulkPause": {
+    "message": "暂停"
+  },
+  "bulkResume": {
+    "message": "继续"
+  },
+  "bulkStop": {
+    "message": "停止"
+  },
+  "bulkScanWaiting": {
+    "message": "扫描仍在等待的页面"
+  },
+  "bulkNewList": {
+    "message": "新列表"
+  },
+  "bulkResults": {
+    "message": "结果"
+  },
+  "bulkColAddress": {
+    "message": "地址"
+  },
+  "bulkStatusWaiting": {
+    "message": "等待中"
+  },
+  "bulkStatusScanning": {
+    "message": "扫描中"
+  },
+  "bulkStatusDone": {
+    "message": "完成"
+  },
+  "bulkStatusFailed": {
+    "message": "失败"
+  },
+  "bulkStatusSkipped": {
+    "message": "已跳过"
+  },
+  "bulkReasonInvalid": {
+    "message": "不是有效的地址"
+  },
+  "bulkReasonScheme": {
+    "message": "只扫描 http 和 https 页面"
+  },
+  "bulkReasonScope": {
+    "message": "因 设置 → 检测 → 要扫描的站点 而跳过"
+  },
+  "bulkReasonSitemap": {
+    "message": "无法读取站点地图。只能读取 https 站点地图。"
+  },
+  "bulkReasonTimeout": {
+    "message": "在时间限制内没有结果"
+  },
+  "bulkReasonLoad": {
+    "message": "页面未能加载"
+  },
+  "bulkReasonError": {
+    "message": "扫描失败"
+  },
+  "bulkEndedOnFmt": {
+    "message": "最终停在 {0}"
+  },
+  "bulkNoProtection": {
+    "message": "未发现任何防护"
+  },
+  "bulkRunRunning": {
+    "message": "运行中"
+  },
+  "bulkRunPaused": {
+    "message": "已暂停"
+  },
+  "bulkRunStopped": {
+    "message": "已停止"
+  },
+  "bulkRunDone": {
+    "message": "已完成"
+  },
+  "bulkProgressFmt": {
+    "message": "已完成 {0}/{1}"
+  },
+  "bulkCountsFmt": {
+    "message": "完成：{0} · 有防护：{1} · 失败：{2} · 已跳过：{3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "运行期间扩展已重新启动，因此运行已停止。仍在等待的页面未被扫描。"
+  },
+  "bulkStoppedNoWindow": {
+    "message": "没有打开的浏览器窗口可用来扫描页面。"
+  },
+  "bulkStoppedOff": {
+    "message": "扩展已关闭。"
+  },
+  "bulkDuplicatesFmt": {
+    "message": "已移除重复：{0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "超出上限未纳入：{0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "其他未纳入的行：{0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "历史记录已暂停：页面会被扫描，但不会被记录。"
+  },
+  "bulkReadingSitemaps": {
+    "message": "正在读取站点地图…"
+  },
+  "bulkNothingToScan": {
+    "message": "此列表中没有可扫描的地址。"
+  },
+  "bulkErrBusy": {
+    "message": "已有批量扫描正在运行。"
+  },
+  "bulkErrStart": {
+    "message": "无法开始批量扫描。"
+  },
+  "bulkErrFile": {
+    "message": "无法读取该文件。"
+  },
+  "bulkEmpty": {
+    "message": "粘贴地址或上传文件，然后选择开始。"
   }
 }

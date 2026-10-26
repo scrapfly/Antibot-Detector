@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} combinaties"
+  },
+  "historyBulkScan": {
+    "message": "Bulkscan"
+  },
+  "bulkTitle": {
+    "message": "Bulkscan"
+  },
+  "bulkSubtitle": {
+    "message": "Scant een lijst met pagina's een voor een in een tabblad op de achtergrond. Elke pagina is een echt bezoek met de cookies van je browser, en wat er gevonden wordt komt zoals gewoonlijk in de geschiedenis."
+  },
+  "bulkInputLabel": {
+    "message": "Te scannen pagina's"
+  },
+  "bulkInputHint": {
+    "message": "Eén adres per regel. Een sitemapadres (.xml) voegt de pagina's toe die erin staan. Dubbele adressen worden verwijderd en alleen http- en https-pagina's worden gescand."
+  },
+  "bulkUpload": {
+    "message": ".txt of .csv uploaden"
+  },
+  "bulkCountFmt": {
+    "message": "Adressen: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "Pagina's per ronde (tot {0})"
+  },
+  "bulkTimeoutLabel": {
+    "message": "Tijdslimiet per pagina, in seconden"
+  },
+  "bulkStart": {
+    "message": "Starten"
+  },
+  "bulkPause": {
+    "message": "Pauzeren"
+  },
+  "bulkResume": {
+    "message": "Hervatten"
+  },
+  "bulkStop": {
+    "message": "Stoppen"
+  },
+  "bulkScanWaiting": {
+    "message": "De pagina's scannen die nog wachten"
+  },
+  "bulkNewList": {
+    "message": "Nieuwe lijst"
+  },
+  "bulkResults": {
+    "message": "Resultaten"
+  },
+  "bulkColAddress": {
+    "message": "Adres"
+  },
+  "bulkStatusWaiting": {
+    "message": "Wacht"
+  },
+  "bulkStatusScanning": {
+    "message": "Bezig met scannen"
+  },
+  "bulkStatusDone": {
+    "message": "Klaar"
+  },
+  "bulkStatusFailed": {
+    "message": "Mislukt"
+  },
+  "bulkStatusSkipped": {
+    "message": "Overgeslagen"
+  },
+  "bulkReasonInvalid": {
+    "message": "Geen geldig adres"
+  },
+  "bulkReasonScheme": {
+    "message": "Alleen http- en https-pagina's worden gescand"
+  },
+  "bulkReasonScope": {
+    "message": "Overgeslagen door Instellingen → Detectie → Te scannen sites"
+  },
+  "bulkReasonSitemap": {
+    "message": "De sitemap kon niet worden gelezen. Alleen https-sitemaps kunnen worden gelezen."
+  },
+  "bulkReasonTimeout": {
+    "message": "Geen resultaat binnen de tijdslimiet"
+  },
+  "bulkReasonLoad": {
+    "message": "De pagina is niet geladen"
+  },
+  "bulkReasonError": {
+    "message": "De scan is mislukt"
+  },
+  "bulkEndedOnFmt": {
+    "message": "Geëindigd op {0}"
+  },
+  "bulkNoProtection": {
+    "message": "Geen beveiliging gevonden"
+  },
+  "bulkRunRunning": {
+    "message": "Bezig"
+  },
+  "bulkRunPaused": {
+    "message": "Gepauzeerd"
+  },
+  "bulkRunStopped": {
+    "message": "Gestopt"
+  },
+  "bulkRunDone": {
+    "message": "Voltooid"
+  },
+  "bulkProgressFmt": {
+    "message": "{0} van {1} klaar"
+  },
+  "bulkCountsFmt": {
+    "message": "Klaar: {0} · Met beveiliging: {1} · Mislukt: {2} · Overgeslagen: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "De extensie is tijdens de ronde opnieuw gestart, dus is die gestopt. De pagina's die nog wachtten zijn niet gescand."
+  },
+  "bulkStoppedNoWindow": {
+    "message": "Er was geen browservenster open om pagina's in te scannen."
+  },
+  "bulkStoppedOff": {
+    "message": "De extensie staat uit."
+  },
+  "bulkDuplicatesFmt": {
+    "message": "Dubbele adressen verwijderd: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "Weggelaten boven de limiet: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "Andere weggelaten regels: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "De geschiedenis is gepauzeerd: de pagina's worden gescand maar niet vastgelegd."
+  },
+  "bulkReadingSitemaps": {
+    "message": "Sitemaps lezen…"
+  },
+  "bulkNothingToScan": {
+    "message": "Deze lijst bevat geen adres om te scannen."
+  },
+  "bulkErrBusy": {
+    "message": "Er loopt al een bulkscan."
+  },
+  "bulkErrStart": {
+    "message": "De bulkscan kon niet starten."
+  },
+  "bulkErrFile": {
+    "message": "Het bestand kon niet worden gelezen."
+  },
+  "bulkEmpty": {
+    "message": "Plak adressen of upload een bestand en kies dan Starten."
   }
 }

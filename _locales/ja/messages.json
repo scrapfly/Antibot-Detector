@@ -6751,5 +6751,155 @@
   },
   "combinationsCountFmt": {
     "message": "{0} 件の組み合わせ"
+  },
+  "historyBulkScan": {
+    "message": "一括スキャン"
+  },
+  "bulkTitle": {
+    "message": "一括スキャン"
+  },
+  "bulkSubtitle": {
+    "message": "ページのリストをバックグラウンドのタブで 1 つずつスキャンします。各ページはブラウザーの Cookie を使った実際の訪問で、見つかったものはいつもどおり履歴に追加されます。"
+  },
+  "bulkInputLabel": {
+    "message": "スキャンするページ"
+  },
+  "bulkInputHint": {
+    "message": "1 行に 1 つのアドレス。サイトマップ（.xml）のアドレスは、そこに載っているページを追加します。重複は除かれ、http と https のページだけがスキャンされます。"
+  },
+  "bulkUpload": {
+    "message": ".txt または .csv をアップロード"
+  },
+  "bulkCountFmt": {
+    "message": "アドレス: {0}"
+  },
+  "bulkCapLabelFmt": {
+    "message": "1 回の実行あたりのページ数（最大 {0}）"
+  },
+  "bulkTimeoutLabel": {
+    "message": "1 ページあたりの制限時間（秒）"
+  },
+  "bulkStart": {
+    "message": "開始"
+  },
+  "bulkPause": {
+    "message": "一時停止"
+  },
+  "bulkResume": {
+    "message": "再開"
+  },
+  "bulkStop": {
+    "message": "停止"
+  },
+  "bulkScanWaiting": {
+    "message": "まだ待機中のページをスキャン"
+  },
+  "bulkNewList": {
+    "message": "新しいリスト"
+  },
+  "bulkResults": {
+    "message": "結果"
+  },
+  "bulkColAddress": {
+    "message": "アドレス"
+  },
+  "bulkStatusWaiting": {
+    "message": "待機中"
+  },
+  "bulkStatusScanning": {
+    "message": "スキャン中"
+  },
+  "bulkStatusDone": {
+    "message": "完了"
+  },
+  "bulkStatusFailed": {
+    "message": "失敗"
+  },
+  "bulkStatusSkipped": {
+    "message": "スキップ"
+  },
+  "bulkReasonInvalid": {
+    "message": "有効なアドレスではありません"
+  },
+  "bulkReasonScheme": {
+    "message": "http と https のページだけがスキャンされます"
+  },
+  "bulkReasonScope": {
+    "message": "設定 → 検出 → スキャンするサイト によりスキップ"
+  },
+  "bulkReasonSitemap": {
+    "message": "サイトマップを読み込めませんでした。読み込めるのは https のサイトマップだけです。"
+  },
+  "bulkReasonTimeout": {
+    "message": "制限時間内に結果がありません"
+  },
+  "bulkReasonLoad": {
+    "message": "ページが読み込まれませんでした"
+  },
+  "bulkReasonError": {
+    "message": "スキャンに失敗しました"
+  },
+  "bulkEndedOnFmt": {
+    "message": "最終的に {0} に移動"
+  },
+  "bulkNoProtection": {
+    "message": "保護は見つかりませんでした"
+  },
+  "bulkRunRunning": {
+    "message": "実行中"
+  },
+  "bulkRunPaused": {
+    "message": "一時停止中"
+  },
+  "bulkRunStopped": {
+    "message": "停止しました"
+  },
+  "bulkRunDone": {
+    "message": "完了しました"
+  },
+  "bulkProgressFmt": {
+    "message": "{1} 件中 {0} 件完了"
+  },
+  "bulkCountsFmt": {
+    "message": "完了: {0} · 保護あり: {1} · 失敗: {2} · スキップ: {3}"
+  },
+  "bulkStoppedRestart": {
+    "message": "実行中に拡張機能が再起動したため、停止しました。まだ待機中だったページはスキャンされていません。"
+  },
+  "bulkStoppedNoWindow": {
+    "message": "ページをスキャンするブラウザーのウィンドウが開いていませんでした。"
+  },
+  "bulkStoppedOff": {
+    "message": "拡張機能がオフになっています。"
+  },
+  "bulkDuplicatesFmt": {
+    "message": "除いた重複: {0}"
+  },
+  "bulkOverCapFmt": {
+    "message": "上限を超えて除外: {0}"
+  },
+  "bulkMoreSkippedFmt": {
+    "message": "その他の除外された行: {0}"
+  },
+  "bulkHistoryPaused": {
+    "message": "履歴が一時停止中のため、ページはスキャンされますが記録されません。"
+  },
+  "bulkReadingSitemaps": {
+    "message": "サイトマップを読み込んでいます…"
+  },
+  "bulkNothingToScan": {
+    "message": "このリストにはスキャンできるアドレスがありません。"
+  },
+  "bulkErrBusy": {
+    "message": "一括スキャンはすでに実行中です。"
+  },
+  "bulkErrStart": {
+    "message": "一括スキャンを開始できませんでした。"
+  },
+  "bulkErrFile": {
+    "message": "ファイルを読み込めませんでした。"
+  },
+  "bulkEmpty": {
+    "message": "アドレスを貼り付けるかファイルをアップロードして、開始を選んでください。"
   }
 }
