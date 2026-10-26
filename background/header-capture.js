@@ -62,6 +62,15 @@ function tabOfWorkerRequest(details) {
 const tabPageRequests = new Map();
 
 /**
+ * A request made for a page Chrome is prerendering (speculation rules) is not the visible page's: recorded
+ * under the tab's id, it replaced the shown page's headers and cleared its captured data. Pages the person
+ * has not opened are left alone; once activated, the content script asks for their result.
+ */
+function isPrerenderRequest(details) {
+    return !!details && details.documentLifecycle === 'prerender';
+}
+
+/**
  * A tab starting a new page forgets what the page before sent and received: its requests and request
  * bodies (what it fetched after its scan, late analytics or a challenge it solved, belongs to it, not to the
  * next page), its response headers and cookies, and its captured responses. Kept until then, a scan of the
@@ -84,13 +93,14 @@ function forgetTabRequests(tabId, requestId) {
 function setupHeaderCapture() {
     // Synchronous and registered first, so the new page's own request is recorded after the clear
     chrome.webRequest.onBeforeRequest.addListener(
-        (details) => { forgetTabRequests(details.tabId, details.requestId); },
+        (details) => { if (!isPrerenderRequest(details)) forgetTabRequests(details.tabId, details.requestId); },
         { urls: ['<all_urls>'], types: ['main_frame'] }
     );
 
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
         safeWebRequestListener(async (details) => {
+            if (isPrerenderRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -147,6 +157,7 @@ function setupHeaderCapture() {
     // Listen for request headers
     chrome.webRequest.onBeforeSendHeaders.addListener(
         safeWebRequestListener(async (details) => {
+            if (isPrerenderRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -180,6 +191,7 @@ function setupHeaderCapture() {
     // Listen for request payloads (POST/PUT/PATCH/DELETE bodies)
     chrome.webRequest.onBeforeRequest.addListener(
         safeWebRequestListener(async (details) => {
+            if (isPrerenderRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -247,6 +259,7 @@ function setupHeaderCapture() {
     // Capture all network URLs for pattern detection (anti-bot scripts load asynchronously)
     chrome.webRequest.onBeforeRequest.addListener(
         safeWebRequestListener(async (details) => {
+            if (isPrerenderRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;

@@ -12,8 +12,8 @@ const vm = require('node:vm');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
 const ctx = vm.createContext({ URL });
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests;', ctx);
-const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests } = ctx;
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -78,7 +78,7 @@ test('the clear runs first and synchronously, only for top-level pages', () => {
   const first = setup.indexOf('chrome.webRequest.');
   assert.equal(setup.indexOf('chrome.webRequest.onBeforeRequest.addListener', first), first, 'the first listener registered');
   const listener = setup.slice(first, setup.indexOf('\n    );', first));
-  assert.match(listener, /forgetTabRequests\(details\.tabId, details\.requestId\)/);
+  assert.match(listener, /if \(!isPrerenderRequest\(details\)\) forgetTabRequests\(details\.tabId, details\.requestId\)/);
   assert.match(listener, /types: \['main_frame'\]/);
   assert.doesNotMatch(listener, /async|await/);
 });
@@ -94,4 +94,16 @@ test('a new page clears the "showing a cached result" flag before its headers ar
   ctx.tabsUsingCache.add(7);
   forgetTabRequests(7, 'r10');
   assert.equal(ctx.tabsUsingCache.has(7), true);
+});
+
+test('requests of a page Chrome is prerendering leave the visible page\'s capture alone', () => {
+  // A speculation-rules prerender reports its main-frame request under the visible tab's id
+  assert.equal(isPrerenderRequest({ tabId: 7, type: 'main_frame', documentLifecycle: 'prerender' }), true);
+  assert.equal(isPrerenderRequest({ tabId: 7, type: 'main_frame', documentLifecycle: 'active' }), false);
+  assert.equal(isPrerenderRequest({ tabId: 7, type: 'main_frame' }), false, 'older Chrome without the field');
+  // Every capture listener checks it first
+  const setup = src.slice(src.indexOf('function setupHeaderCapture'));
+  const listeners = setup.split(/chrome\.webRequest\.\w+\.addListener\(/).slice(1);
+  assert.equal(listeners.length, 5);
+  for (const body of listeners) assert.match(body, /isPrerenderRequest\(details\)/);
 });
