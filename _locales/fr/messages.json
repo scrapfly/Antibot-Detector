@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Historique remplacé par {0} éléments"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1 élément d'historique exporté"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1 nouvel élément d'historique fusionné"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Historique remplacé par 1 élément"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Échec de l'importation de l'historique : {0}"
   },

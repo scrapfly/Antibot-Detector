@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Historie nahrazena. Počet položek: {0}"
   },
+  "notificationHistoryExportedOne": {
+    "message": "Exportována 1 položka historie"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "Sloučena 1 nová položka historie"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Historie nahrazena 1 položkou"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Historii se nepodařilo importovat: {0}"
   },

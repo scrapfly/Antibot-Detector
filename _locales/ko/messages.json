@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "기록을 {0}개 항목으로 교체했습니다"
   },
+  "notificationHistoryExportedOne": {
+    "message": "기록 항목 1개를 내보냈습니다"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "새 기록 항목 1개를 병합했습니다"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "기록을 1개 항목으로 교체했습니다"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "기록을 가져오지 못했습니다: {0}"
   },

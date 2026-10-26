@@ -89,7 +89,9 @@ SettingsUI.exportHistoryCsv = async function() {
       const saved = await Utils.getHistorySettings();
       const built = HistoryExport.build(items, { format: 'csv', includeTimestamps: saved.includeTimestamps !== false });
       SettingsUI._downloadFile(built.text, HistoryExport.fileName(built.format), built.type);
-      NotificationHelper.success(_fmt('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
+      NotificationHelper.success(items.length === 1
+        ? ((t && t.get('notificationHistoryExportedOne')) || 'Exported 1 history item')
+        : _fmt('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
     } catch (error) {
       Logger.error('UI', 'Failed to export history:', error);
       NotificationHelper.error(_fmt('notificationImportHistoryFailedFmt', 'Failed to export history: ' + error.message, error.message));

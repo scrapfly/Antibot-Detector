@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Cronologia sostituita con {0} voci"
   },
+  "notificationHistoryExportedOne": {
+    "message": "Esportata 1 voce della cronologia"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "Unita 1 nuova voce della cronologia"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Cronologia sostituita con 1 voce"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Impossibile importare la cronologia: {0}"
   },

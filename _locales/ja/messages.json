@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "履歴を{0}件の項目で置き換えました"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1件の履歴項目をエクスポートしました"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1件の新しい履歴項目をマージしました"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "履歴を1件の項目で置き換えました"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "履歴のインポートに失敗しました: {0}"
   },

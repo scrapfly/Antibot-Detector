@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Історію замінено записами: {0}"
   },
+  "notificationHistoryExportedOne": {
+    "message": "Експортовано 1 запис історії"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "Об’єднано 1 новий запис історії"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Історію замінено 1 записом"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Не вдалося імпортувати історію: {0}"
   },

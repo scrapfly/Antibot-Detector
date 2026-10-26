@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Đã thay lịch sử bằng {0} mục"
   },
+  "notificationHistoryExportedOne": {
+    "message": "Đã xuất 1 mục lịch sử"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "Đã gộp 1 mục lịch sử mới"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Đã thay lịch sử bằng 1 mục"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Không thể nhập lịch sử: {0}"
   },

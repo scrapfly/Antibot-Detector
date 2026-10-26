@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Riwayat diganti dengan {0} item"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1 item riwayat diekspor"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1 item riwayat baru digabungkan"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Riwayat diganti dengan 1 item"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Gagal mengimpor riwayat: {0}"
   },

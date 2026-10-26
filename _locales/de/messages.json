@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Verlauf durch {0} Einträge ersetzt"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1 Verlaufseintrag exportiert"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1 neuer Verlaufseintrag zusammengeführt"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Verlauf durch 1 Eintrag ersetzt"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Verlauf konnte nicht importiert werden: {0}"
   },

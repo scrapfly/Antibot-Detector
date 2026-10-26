@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "แทนที่ประวัติด้วย {0} รายการแล้ว"
   },
+  "notificationHistoryExportedOne": {
+    "message": "ส่งออกรายการประวัติ 1 รายการแล้ว"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "รวมรายการประวัติใหม่ 1 รายการแล้ว"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "แทนที่ประวัติด้วย 1 รายการแล้ว"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "นำเข้าประวัติไม่สำเร็จ: {0}"
   },

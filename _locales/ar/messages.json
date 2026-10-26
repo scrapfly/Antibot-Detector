@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "تم استبدال السجل بـ {0} عنصرًا"
   },
+  "notificationHistoryExportedOne": {
+    "message": "تم تصدير عنصر سجل واحد"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "تم دمج عنصر سجل جديد واحد"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "تم استبدال السجل بعنصر واحد"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "تعذَّر استيراد السجل: {0}"
   },

@@ -1877,7 +1877,9 @@ class History {
     a.click();
 
     URL.revokeObjectURL(url);
-    NotificationHelper.success(FormatUtils.t('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
+    NotificationHelper.success(items.length === 1
+      ? FormatUtils.t('notificationHistoryExportedOne', 'Exported 1 history item')
+      : FormatUtils.t('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
   }
 
   /**
@@ -1922,9 +1924,13 @@ class History {
       await this.saveHistoryToStorage(data.items, mode);
 
       if (mode === 'merge') {
-        NotificationHelper.success(_fmt('notificationHistoryMergedFmt', `Merged ${added} new history items`, added));
+        NotificationHelper.success(added === 1
+          ? _tr('notificationHistoryMergedOne', 'Merged 1 new history item')
+          : _fmt('notificationHistoryMergedFmt', `Merged ${added} new history items`, added));
       } else {
-        NotificationHelper.success(_fmt('notificationHistoryReplacedFmt', `Replaced history with ${preview.length} items`, preview.length));
+        NotificationHelper.success(preview.length === 1
+          ? _tr('notificationHistoryReplacedOne', 'Replaced history with 1 item')
+          : _fmt('notificationHistoryReplacedFmt', `Replaced history with ${preview.length} items`, preview.length));
       }
       this.renderHistory();
     } catch (error) {

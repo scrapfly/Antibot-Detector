@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "इतिहास को {0} आइटम से बदला गया"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1 इतिहास आइटम एक्सपोर्ट किया गया"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1 नया इतिहास आइटम मर्ज किया गया"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "इतिहास को 1 आइटम से बदला गया"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "इतिहास इम्पोर्ट करने में विफल: {0}"
   },

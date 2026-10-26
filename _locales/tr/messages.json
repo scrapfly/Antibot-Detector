@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Geçmiş, {0} öğeyle değiştirildi"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1 geçmiş öğesi dışa aktarıldı"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1 yeni geçmiş öğesi birleştirildi"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Geçmiş, 1 öğeyle değiştirildi"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Geçmiş içe aktarılamadı: {0}"
   },

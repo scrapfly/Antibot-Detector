@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "已用 {0} 筆記錄取代歷史記錄"
   },
+  "notificationHistoryExportedOne": {
+    "message": "已匯出 1 筆歷史記錄"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "已合併 1 筆新的歷史記錄"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "已用 1 筆記錄取代歷史記錄"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "無法匯入歷史記錄：{0}"
   },

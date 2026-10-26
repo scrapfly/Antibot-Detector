@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Geschiedenis vervangen. Items: {0}"
   },
+  "notificationHistoryExportedOne": {
+    "message": "1 geschiedenisitem geëxporteerd"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "1 nieuw geschiedenisitem samengevoegd"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Geschiedenis vervangen door 1 item"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Geschiedenis importeren mislukt: {0}"
   },

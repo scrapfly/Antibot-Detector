@@ -167,7 +167,9 @@ History.prototype.bulkExport = async function() {
   link.download = HistoryExport.fileName(built.format);
   link.click();
   URL.revokeObjectURL(url);
-  NotificationHelper.success(FormatUtils.t('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
+  NotificationHelper.success(items.length === 1
+    ? FormatUtils.t('notificationHistoryExportedOne', 'Exported 1 history item')
+    : FormatUtils.t('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
 };
 
 /** Delete every selected entry, after asking (pinned ones too: the question says how many are pinned). */

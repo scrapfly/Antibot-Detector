@@ -985,6 +985,15 @@
   "notificationHistoryReplacedFmt": {
     "message": "Historiken ersattes. Poster: {0}"
   },
+  "notificationHistoryExportedOne": {
+    "message": "Exporterade 1 historikpost"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "Sammanfogade 1 ny historikpost"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Historiken ersattes med 1 post"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Det gick inte att importera historiken: {0}"
   },

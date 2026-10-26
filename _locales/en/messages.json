@@ -988,6 +988,18 @@
   "notificationHistoryReplacedFmt": {
     "message": "Replaced history with {0} items"
   },
+  "notificationHistoryExportedOne": {
+    "message": "Exported 1 history item",
+    "description": "History export toast when exactly one entry was exported (notificationHistoryExportedFmt for other counts)"
+  },
+  "notificationHistoryMergedOne": {
+    "message": "Merged 1 new history item",
+    "description": "History import toast when exactly one new entry was merged (notificationHistoryMergedFmt for other counts)"
+  },
+  "notificationHistoryReplacedOne": {
+    "message": "Replaced history with 1 item",
+    "description": "History import toast when the history was replaced with exactly one entry (notificationHistoryReplacedFmt for other counts)"
+  },
   "notificationImportHistoryFailedFmt": {
     "message": "Failed to import history: {0}"
   },
