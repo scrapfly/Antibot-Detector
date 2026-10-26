@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Added
 
 - New protections: Fastly Bot Management (anti-bot), Kount and Riskified (fraud scripts, filed under anti-bot) and Lemin Cropped Captcha.
+- Advanced → Check Cookies: a timeline per protection cookie shows when it was set, how often it changed and when it expires (kept in memory only).
 - Akamai recognises its crypto challenge, Cloudflare its challenge cookies, F5 its client-side challenge cookie, and FingerprintJS now also spots BotD and its current script addresses.
 
 ### Changed
