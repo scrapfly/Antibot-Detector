@@ -77,6 +77,8 @@ SettingsUI.hideSettings = function() {
       && document.querySelector('#webhookVariablesModal')) {
       SettingsUI._closeWebhookVariablesHelp();
     }
+    // The log counter is read every 2 s only while Settings shows it; opening Settings starts it again
+    if (typeof this.stopLogCountUpdate === 'function') this.stopLogCountUpdate();
     if (this.settingsBaseline) this.settings = JSON.parse(JSON.stringify(this.settingsBaseline));
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {

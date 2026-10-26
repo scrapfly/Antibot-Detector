@@ -75,6 +75,27 @@ test('closing Settings closes the window too, so it is not there on the next ope
   assert.equal(h.scopes.filter(scope => scope.open).length, 1);
 });
 
+test('closing Settings stops reading the log counter every 2 seconds', () => {
+  const timers = new Set();
+  let next = 1;
+  const context = vm.createContext({
+    console, FormatUtils: require('../utils/format-utils.js'),
+    WorkerMessages: require('../modules/core/worker-messages.js'),
+    setInterval: () => { const id = next++; timers.add(id); return id; },
+    clearInterval: (id) => timers.delete(id),
+    chrome: { runtime: { sendMessage: () => Promise.resolve({ count: 3 }) } },
+    document: { querySelector: (selector) => (selector === '#settingsModal' ? { classList: { remove() {} } } : null) }
+  });
+  vm.runInContext(read('sections/settings/settings-ui.js'), context);
+  vm.runInContext(read('sections/settings/settings-ui-logs.js'), context);
+  const SettingsUI = vm.runInContext('SettingsUI', context);
+  const ui = Object.create(SettingsUI);
+  ui.startLogCountUpdate();
+  assert.equal(timers.size, 1);
+  SettingsUI.hideSettings.call(ui);
+  assert.equal(timers.size, 0);
+});
+
 test('the method buttons are wired once, however often Settings is populated', () => {
   const listeners = [];
   const radio = { value: 'PUT', addEventListener: (type) => listeners.push(['radio', type]), closest: () => null };
