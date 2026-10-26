@@ -11,9 +11,9 @@ const vm = require('node:vm');
 // the cap, low-value request types go before scripts and API calls.
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
-const ctx = vm.createContext({ URL });
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest;', ctx);
-const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest } = ctx;
+const ctx = vm.createContext({ URL, TextDecoder, Uint8Array });
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -106,4 +106,22 @@ test('requests of a page Chrome is prerendering leave the visible page\'s captur
   const listeners = setup.split(/chrome\.webRequest\.\w+\.addListener\(/).slice(1);
   assert.equal(listeners.length, 5);
   for (const body of listeners) assert.match(body, /isPrerenderRequest\(details\)/);
+});
+
+test('request bodies are kept to the captured-response limit', () => {
+  const bytes = (text) => new TextEncoder().encode(text).buffer;
+  // A multi-megabyte upload was decoded whole and held per tab
+  const big = readRequestBody({ raw: [{ bytes: bytes('a'.repeat(3 * 1024 * 1024)) }] }, 65536);
+  assert.equal(big.payloadType, 'raw');
+  assert.equal(big.payloadData.length, 65536);
+  // Small bodies and several parts are unchanged; multi-byte characters still decode
+  assert.equal(readRequestBody({ raw: [{ bytes: bytes('{"a":') }, { file: 'x' }, { bytes: bytes('"é€"}') }] }, 65536).payloadData, '{"a":"é€"}');
+  assert.equal(readRequestBody({ raw: [{ bytes: bytes('ééééé') }] }, 3).payloadData, 'ééé');
+  // Form fields share the limit
+  const form = readRequestBody({ formData: { a: ['x'.repeat(10)], b: ['y'.repeat(10), 'z'], c: ['w'] } }, 15);
+  assert.equal(form.payloadType, 'formData');
+  assert.deepEqual(JSON.parse(JSON.stringify(form.payloadData)), { a: ['x'.repeat(10)], b: ['yyyyy', ''] });
+  assert.deepEqual(JSON.parse(JSON.stringify(readRequestBody({ formData: { k: ['v'] } }, 100).payloadData)), { k: ['v'] });
+  assert.equal(readRequestBody({}, 100).payloadData, null);
+  assert.equal(readRequestBody(undefined, 100).payloadData, null);
 });
