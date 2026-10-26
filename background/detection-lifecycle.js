@@ -540,6 +540,19 @@ async function finalizeDetection(tabId, state) {
     }
 }
 
+/**
+ * Whether what webRequest captured for the tab (headers, Set-Cookie) came from the page's own host. A substring
+ * test also took a capture from evil.example/?u=shop.example, or from sub.shop.example, for shop.example.
+ */
+function capturedForHost(captured, hostname) {
+    if (!captured || typeof captured.url !== 'string' || !hostname) return false;
+    try {
+        return new URL(captured.url).hostname.toLowerCase() === String(hostname).toLowerCase();
+    } catch (_) {
+        return false;
+    }
+}
+
 function enrichPageDataWithTabInfo(pageData, tab) {
     const pageUrl = tab.url || pageData.url || pageData.hostname;
     const favicon = UrlUtils.normalizeFaviconForStorage(tab.favIconUrl || pageData.favicon, pageUrl);
@@ -584,7 +597,7 @@ async function processDetectionData(message, sender) {
         const headerData = headersStore.get(tabId);
 
         // Only use headers if they're from the same URL (or close enough)
-        if (headerData.url.includes(pageData.hostname)) {
+        if (capturedForHost(headerData, pageData.hostname)) {
             pageData.headers = headerData.headers; // Response headers (backward compatibility)
             pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
         }
@@ -594,7 +607,7 @@ async function processDetectionData(message, sender) {
     if (requestHeadersStore.has(tabId)) {
         const requestHeaderData = requestHeadersStore.get(tabId);
 
-        if (requestHeaderData.url.includes(pageData.hostname)) {
+        if (capturedForHost(requestHeaderData, pageData.hostname)) {
             pageData.requestHeaders = requestHeaderData.headers;
         }
     }
@@ -603,7 +616,7 @@ async function processDetectionData(message, sender) {
     if (responseCookiesStore.has(tabId)) {
         const responseCookieData = responseCookiesStore.get(tabId);
 
-        if (responseCookieData.url.includes(pageData.hostname)) {
+        if (capturedForHost(responseCookieData, pageData.hostname)) {
             pageData.responseCookies = responseCookieData.cookies;
         }
     }

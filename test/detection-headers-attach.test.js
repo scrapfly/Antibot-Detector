@@ -68,3 +68,20 @@ test('request-scope header rules see the request headers in detectOnPage', async
   const none = await engine.detectOnPage({ url: 'https://a.example/', headers: { server: 'nginx', cookie: 'session_probe=1' } });
   assert.ok(!(Array.isArray(none) ? none : []).some(d => (d.detector?.id || d.id) === 'detect-reqheader'), 'a response header is not a request header');
 });
+
+test('captured headers and cookies attach only when they came from the page\'s own host', () => {
+  const src = fs.readFileSync(path.join(root, 'background/detection-lifecycle.js'), 'utf8');
+  const start = src.indexOf('function capturedForHost');
+  const ctx = vm.createContext({ URL });
+  vm.runInContext(src.slice(start, src.indexOf('\n}\n', start) + 2) + '\nthis.capturedForHost = capturedForHost;', ctx);
+  const { capturedForHost } = ctx;
+  assert.equal(capturedForHost({ url: 'https://www.mps.gov.cn/' }, 'www.mps.gov.cn'), true);
+  assert.equal(capturedForHost({ url: 'https://Shop.Example/a?b' }, 'shop.example'), true);
+  // The substring test took these as the page's own
+  assert.equal(capturedForHost({ url: 'https://evil.example/?u=shop.example' }, 'shop.example'), false);
+  assert.equal(capturedForHost({ url: 'https://sub.shop.example/' }, 'shop.example'), false);
+  assert.equal(capturedForHost({ url: 'not a url' }, 'shop.example'), false);
+  assert.equal(capturedForHost(null, 'shop.example'), false);
+  assert.equal((src.match(/capturedForHost\((headerData|requestHeaderData|responseCookieData), pageData\.hostname\)/g) || []).length, 3);
+  assert.doesNotMatch(src, /\.url\.includes\(pageData\.hostname\)/);
+});
