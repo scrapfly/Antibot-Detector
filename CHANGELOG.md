@@ -41,6 +41,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: result cards open with Enter or Space, and their details dialog keeps keyboard focus until it is closed.
 - Settings: Escape in the language list closes only the list, not Settings with its unsaved changes; the list also works with the arrow keys.
 - Settings: Add current domain refuses browser pages and blank tabs instead of adding names like "extensions" or "newtab".
+- Settings: keyboard focus stays inside Settings (and its dialogs) until it is closed, and changing the language asks to save or discard unsaved changes first.
+- Exports, backups and saved rules are named with your own date, not UTC's (an export just after midnight was named for the day before).
 - Rules editor: clicking outside the editor after typing changes asks before dropping them.
 - Rules: a search lists the rule with that exact name first, then names starting with it (searching "Cap" no longer buries Cap under every CAPTCHA).
 - Advanced: Shape Security saves one capture once (it could save the same capture up to six times), and hCaptcha saves once and says when it timed out empty.

@@ -630,6 +630,12 @@ class FormatUtils {
    * @param {boolean} [options.useMicroToast=true] - Use compact micro toast vs full toast
    * @returns {Promise<boolean>} True if copy succeeded
    */
+  /** YYYY-MM-DD of a time in the person's own time zone (file names: an export after midnight is named for that day). */
+  static localDay(ts) {
+    const d = new Date(ts);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
   static async copyToClipboard(text, {
     element = null,
     notify = true,

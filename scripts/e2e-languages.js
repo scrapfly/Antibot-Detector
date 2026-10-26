@@ -102,7 +102,8 @@ function auditInPage() {
   const texts = [], clipped = [];
   const walk = (root) => {
     for (const el of root.querySelectorAll('*')) {
-      if (skip.has(el.tagName.toUpperCase()) || el.closest('svg') || !visible(el)) continue;
+      // Text marked as English on purpose (the English original of a rule text) is not a left-over
+      if (skip.has(el.tagName.toUpperCase()) || el.closest('svg') || el.closest('[lang="en"]') || !visible(el)) continue;
       let own = '';
       for (const n of el.childNodes) if (n.nodeType === 3) own += n.nodeValue;
       own = own.replace(/\s+/g, ' ').trim();

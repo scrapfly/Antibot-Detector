@@ -71,7 +71,7 @@ Rules.prototype.handleExport = function() {
   // Create download link
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  const timestamp = new Date().toISOString().split('T')[0];
+  const timestamp = FormatUtils.localDay(Date.now());
   a.href = url;
   a.download = `scrapfly-detectors-${timestamp}.json`;
   a.click();
@@ -134,7 +134,7 @@ Rules.prototype.handleExportDetector = function(category, detectorName, displayN
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `scrapfly-detector-${String(detectorName).replace(/[^\w.-]+/g, '-')}-${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `scrapfly-detector-${String(detectorName).replace(/[^\w.-]+/g, '-')}-${FormatUtils.localDay(Date.now())}.json`;
   a.click();
   URL.revokeObjectURL(url);
   NotificationHelper.success(FormatUtils.t('detectorExportedFmt', 'Exported {0}', displayName));

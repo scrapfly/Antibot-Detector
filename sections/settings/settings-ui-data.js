@@ -29,7 +29,7 @@ SettingsUI.exportSettingsFile = async function() {
         settings: SettingsTransfer.portable(this.settings),
         languageOverride: langResult.scrapfly_language_override || 'auto'
       };
-      const date = new Date().toISOString().split('T')[0];
+      const date = FormatUtils.localDay(Date.now());
       SettingsUI._downloadFile(JSON.stringify(exportData, null, 2), `scrapfly-settings-${date}.json`, 'application/json');
       NotificationHelper.success(_tr('settingsExportedToast', 'Settings exported'));
     } catch (error) {

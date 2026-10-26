@@ -54,6 +54,14 @@ SettingsUI.showSettings = function() {
       settingsModal.classList.add('is-open');
       this.isModalVisible = true;
       this.loadSettings();
+      // Keyboard: focus moves into Settings, Tab stays in it (and in the dialogs it opens), Escape closes it and
+      // focus goes back to the settings button
+      const content = settingsModal.querySelector('.base-modal-content');
+      if (content && typeof ModalFocus !== 'undefined' && !this.releaseSettingsFocus) {
+        content.setAttribute('role', 'dialog');
+        content.setAttribute('aria-modal', 'true');
+        this.releaseSettingsFocus = ModalFocus.activate(content, { onClose: () => this.hideSettings() });
+      }
       requestAnimationFrame(() => {
         const activeBtn = document.querySelector('.settings-tab-btn.active');
         if (activeBtn) {
@@ -70,6 +78,9 @@ SettingsUI.hideSettings = function() {
       settingsModal.classList.remove('is-open');
       this.isModalVisible = false;
     }
+    const release = this.releaseSettingsFocus;
+    this.releaseSettingsFocus = null;
+    if (release) release();
 };
 
 SettingsUI.switchTab = function(tabName) {

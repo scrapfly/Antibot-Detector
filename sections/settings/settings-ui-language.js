@@ -389,7 +389,36 @@ SettingsUI._openLanguagePicker = function() {
 
 
 
+/**
+ * Before the language change reloads the popup: true to go on. With unsaved Settings changes it asks to save them
+ * (and goes on only if the save worked), drop them, or stay (false).
+ */
+SettingsUI._settleUnsavedBeforeReload = async function() {
+  const owner = typeof window !== 'undefined' && window.popupInstance ? window.popupInstance.settings : null;
+  if (!owner || !owner.settingsBaseline || JSON.stringify(owner.settings) === JSON.stringify(owner.settingsBaseline)) return true;
+  if (typeof NotificationHelper === 'undefined' || typeof NotificationHelper.choose !== 'function') return true;
+  const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
+  const answer = await NotificationHelper.choose({
+    title: tr('settingsLanguageUnsavedTitle', 'Unsaved settings'),
+    message: tr('settingsLanguageUnsavedMessage', 'Changing the language reloads the extension. Save your changes to the settings first?'),
+    cancelText: tr('btnCancel', 'Cancel'),
+    tone: 'warning',
+    actions: [
+      { value: 'discard', text: tr('ruleEditorDiscardConfirm', 'Discard') },
+      { value: 'save', text: tr('btnSave', 'Save'), primary: true }
+    ],
+    defaultValue: 'save'
+  });
+  if (answer === 'save') return (await owner.saveSettings({ notify: false })) !== false;
+  return answer === 'discard';
+};
+
 SettingsUI._applyLanguageChoice = async function(choice, { persist = true } = {}) {
+  // The popup reloads in the new language: unsaved Settings changes are saved or dropped first, as the person chooses
+  if (persist && !(await SettingsUI._settleUnsavedBeforeReload())) {
+    SettingsUI._closeLanguagePicker();
+    return false;
+  }
   try {
     if (persist) await chrome.storage.local.set({ scrapfly_language_override: choice });
   } catch (err) {

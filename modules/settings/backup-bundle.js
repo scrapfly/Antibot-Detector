@@ -16,6 +16,9 @@
 (function(root) {
   'use strict';
 
+  // The person's own calendar day (an export made after midnight is named for that day, not for UTC's)
+  const localDay = (ts) => { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+
   const FORMAT = 'scrapfly-backup';
   const VERSION = 1;
 
@@ -91,7 +94,7 @@
   }
 
   function fileName(now = Date.now()) {
-    return `scrapfly-backup-${new Date(now).toISOString().split('T')[0]}.json`;
+    return `scrapfly-backup-${localDay(now)}.json`;
   }
 
   const api = { FORMAT, VERSION, build, parse, summarize, legacyKind, customOnly, fileName };

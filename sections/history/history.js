@@ -1052,7 +1052,7 @@ class History {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     const domain = this.getDomainFromUrl(historyItem.url);
-    const timestamp = new Date(historyItem.timestamp).toISOString().split('T')[0];
+    const timestamp = FormatUtils.localDay(historyItem.timestamp);
     a.href = url;
     a.download = `scrapfly-history-${domain}-${timestamp}.json`;
     a.click();

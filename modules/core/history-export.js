@@ -14,6 +14,9 @@
 (function(root) {
   'use strict';
 
+  // The person's own calendar day (an export made after midnight is named for that day, not for UTC's)
+  const localDay = (ts) => { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+
   // Loaded before this file in the popup and the worker; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
 
@@ -147,7 +150,7 @@
   /** scrapfly-history-2026-10-19.csv, or ...-part-2.csv when the export is in several files. */
   function fileName(format, now = Date.now(), part = 0) {
     const ext = FORMATS.includes(format) ? format : 'json';
-    return `scrapfly-history-${new Date(now).toISOString().split('T')[0]}${part > 0 ? `-part-${part}` : ''}.${ext}`;
+    return `scrapfly-history-${localDay(now)}${part > 0 ? `-part-${part}` : ''}.${ext}`;
   }
 
   const api = { FORMATS, filter, build, chunk, fileName };

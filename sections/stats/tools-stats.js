@@ -52,7 +52,8 @@ const ToolsStats = {
   compute(captures, options = {}) {
     const since = typeof options.since === 'number' && Number.isFinite(options.since) ? options.since : null;
     const now = typeof options.now === 'number' && Number.isFinite(options.now) ? options.now : Date.now();
-    const dayKey = typeof options.dayKey === 'function' ? options.dayKey : (ts) => new Date(ts).toISOString().slice(0, 10);
+    // Days are the person's own calendar days, as everywhere on the page (HistoryStats.dayKey)
+    const dayKey = typeof options.dayKey === 'function' ? options.dayKey : (ts) => { const d = new Date(ts); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
     const inRange = (Array.isArray(captures) ? captures : []).filter((c) => ToolsStats.isRecord(c) && c.timestamp <= now && (since === null || c.timestamp >= since));
     const expired = (c) => typeof c.expiresAt === 'number' && c.expiresAt <= now;
     const list = inRange.filter((c) => !expired(c));

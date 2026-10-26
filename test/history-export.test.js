@@ -168,3 +168,14 @@ test('the Markdown export gives each address without its query or fragment, like
   assert.ok(out.text.includes('https://shop.example/reset'), out.text);
   assert.ok(!/SECRET123|code=abc|#top/.test(out.text), out.text);
 });
+
+test('file names carry the person\'s own day, not UTC\'s (an export after midnight in Auckland is named for that day)', () => {
+  const before = process.env.TZ;
+  process.env.TZ = 'Pacific/Auckland';
+  try {
+    // 2026-10-19 12:30 UTC is already 2026-10-20 in New Zealand
+    assert.strictEqual(E.fileName('csv', Date.UTC(2026, 9, 19, 12, 30)), 'scrapfly-history-2026-10-20.csv');
+  } finally {
+    if (before === undefined) delete process.env.TZ; else process.env.TZ = before;
+  }
+});
