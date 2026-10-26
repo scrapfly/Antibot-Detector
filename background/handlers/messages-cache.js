@@ -9,12 +9,8 @@ async function clearTabDetectionCache(request, sendResponse = () => {}) {
     if (request.tabId) {
         DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
 
-        headersStore.delete(request.tabId);
-        requestHeadersStore.delete(request.tabId);
-        responseCookiesStore.delete(request.tabId);
-        payloadStore.delete(request.tabId);
-        networkUrlsStore.delete(request.tabId);
-        if (typeof responseStore !== 'undefined') responseStore.delete(request.tabId);
+        // Only the saved result goes: the page's response headers, cookies and requests stay with its tab (a new
+        // page clears them, header-capture.js), so a scan of the same page without a reload still has them
         tabsUsingCache.delete(request.tabId);
 
         recentlyClearedTabs.add(request.tabId);
@@ -35,7 +31,7 @@ async function clearTabDetectionCache(request, sendResponse = () => {}) {
             Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
         }
 
-        Logger.debug('BACKGROUND', `[Background] Complete cache clear for tab ${request.tabId} - all memory and storage cleared`);
+        Logger.debug('BACKGROUND', `[Background] Cache cleared for tab ${request.tabId}: saved result removed, network capture kept`);
     }
 }
 
