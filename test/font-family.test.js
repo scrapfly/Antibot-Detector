@@ -8,7 +8,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = path.join(__dirname, '..');
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'test', 'scripts']);
+const SKIP_DIRS = new Set(['.git', '.claude', 'node_modules', 'test', 'scripts']);
 
 function shippedFiles(dir = root, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

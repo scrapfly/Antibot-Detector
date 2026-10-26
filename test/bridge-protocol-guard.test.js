@@ -47,7 +47,7 @@ function leafStrings(value, out = [], at = '') {
 
 function extensionScripts() {
   const out = [];
-  const skip = new Set(['node_modules', 'test', 'scripts', '.git', 'detectors', '_locales', 'assets', 'icons']);
+  const skip = new Set(['node_modules', 'test', 'scripts', '.git', '.claude', 'detectors', '_locales', 'assets', 'icons']);
   const walk = (dir) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       if (entry.isDirectory()) { if (!skip.has(entry.name)) walk(path.join(dir, entry.name)); continue; }
