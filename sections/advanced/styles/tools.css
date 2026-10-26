@@ -287,6 +287,165 @@
 .adv-kit-chip--red { color: var(--danger-light); background: rgba(239, 68, 68, 0.12); border-color: rgba(252, 165, 165, 0.32); }
 .adv-kit-chip--neutral { color: var(--text-secondary); background: transparent; border-color: var(--g-4b4b4b); }
 
+/* Check Cookies: a status line, then one card per cookie (name and flags, the value as a code block, plain meta) */
+.adv-cookie-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.adv-cookie-summary-dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+.adv-cookie-summary--partial .adv-cookie-summary-dot { background: var(--warning); box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18); }
+.adv-cookie-summary--none .adv-cookie-summary-dot { background: var(--text-muted); box-shadow: none; }
+
+.adv-cookie {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--g-2a2a2a);
+  border: 1px solid var(--g-404040);
+  border-radius: 10px;
+}
+
+.adv-cookie-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adv-cookie-name,
+.adv-cookie-value {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: start;
+}
+
+.adv-cookie-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: 5px;
+}
+
+.adv-cookie-name-text {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.adv-cookie-flags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.adv-cookie-copy {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+.adv-cookie-value {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 10px 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--g-3d3d3d);
+  border-radius: 8px;
+  transition: border-color 0.15s ease;
+}
+
+.adv-cookie-value-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Four lines of the value, then "…": the click copies all of it */
+.adv-cookie-value-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 17px;
+  color: var(--g-e0e0e0);
+  word-break: break-all;
+}
+
+.adv-cookie-name:hover .adv-cookie-copy,
+.adv-cookie-name:focus-visible .adv-cookie-copy,
+.adv-cookie-value:hover .adv-cookie-copy,
+.adv-cookie-value:focus-visible .adv-cookie-copy { color: var(--accent-light); }
+.adv-cookie-name:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.adv-cookie-value:hover,
+.adv-cookie-value:focus-visible { outline: none; border-color: var(--accent); }
+
+.adv-cookie-name.copy-feedback-active,
+.adv-cookie-value.copy-feedback-active {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: var(--success-light) !important;
+}
+
+.adv-cookie-value.copy-feedback-active { border-color: rgba(16, 185, 129, 0.6) !important; }
+
+/* Domain, path and expiry: small label over plain text, two to a row */
+.adv-cookie-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px 12px;
+  margin: 0;
+}
+
+.adv-cookie-meta-row { min-width: 0; }
+.adv-cookie-meta-row.is-wide { grid-column: 1 / -1; }
+.adv-cookie-meta-row dt {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.adv-cookie-meta-row dd {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
 .adv-kit-field {
   display: flex;
   flex-direction: column;

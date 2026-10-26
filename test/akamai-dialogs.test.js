@@ -102,13 +102,20 @@ test('kitFacts escapes text values and skips empty rows', () => {
   assert.equal(context.BaseAdvancedModule.kitFacts([]), '');
 });
 
-test('Cookie results: each cookie shows its name as a copyable Name row, before the value', () => {
+test('Cookie results: each cookie card leads with its name to copy, then its value, its flags and its plain details', () => {
   const { context } = load();
   vm.runInContext(read('sections/advanced/components/cookie-results.js'), context);
   const body = context.BaseAdvancedModule.cookieResultsBody({ vendor: 'DataDome', total: 1,
     cookies: [{ name: 'datadome', value: 'abc', domain: '.datadome.co', path: '/', expires: null, secure: true, httpOnly: false, sameSite: 'lax' }] });
-  assert.match(body, /adv-kit-label">Name<\/span>\s*<button[^>]*data-copy="datadome"/);
+  assert.match(body, /<button type="button" class="adv-cookie-name" data-copy="datadome"[^>]*aria-label="Name: datadome"/);
   assert.ok(body.indexOf('data-copy="datadome"') < body.indexOf('data-copy="abc"'), 'the name comes before the value');
   assert.doesNotMatch(body, /adv-kit-chip--blue">datadome</, 'no duplicate name chip');
   assert.match(body, /adv-kit-chip--green">Secure</);
+  assert.match(body, /adv-cookie-summary--all/, 'all expected cookies found: the green status');
+  assert.match(body, /<dt>Domain<\/dt><dd>\.datadome\.co<\/dd>/, 'details are plain text, not copy boxes');
+  assert.doesNotMatch(body, /adv-kit-value/, 'no boxed copy field per detail');
+  const partial = context.BaseAdvancedModule.cookieResultsBody({ vendor: 'DataDome', total: 2, missing: ['dd_s'],
+    cookies: [{ name: 'datadome', value: '<b>', domain: '', path: '', expires: null }] });
+  assert.match(partial, /adv-cookie-summary--partial/);
+  assert.match(partial, /&lt;b&gt;/, 'values are escaped');
 });
