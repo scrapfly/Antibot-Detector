@@ -259,6 +259,12 @@
   },
   "jsd-oneshot": {
    "url": "https://auth.openai.com/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.2576:1792062023:x/a4ae8"
+  },
+  "cf-chl-rc-cookie": {
+   "cookie": [
+    "cf_chl_rc_ni",
+    "1"
+   ]
   }
  },
  "detect-datadome": {

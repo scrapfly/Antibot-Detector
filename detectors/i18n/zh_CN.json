@@ -1098,5 +1098,7 @@
   "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "发往厂商 m1.openfpcdn.io 主机的 BotD npm 包监控 ping",
   "sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)": "Bot Manager 加密挑战的 sec_cpt Cookie（状态 ~1~ 为未完成，~3~ 为已解决）",
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "/_sec/cp_challenge/ 下的 Bot Manager 加密挑战资源或验证",
-  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "加密挑战路径及其 sec_cpt 或 Bot Manager Cookie"
+  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "加密挑战路径及其 sec_cpt 或 Bot Manager Cookie",
+  "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare 挑战平台 Cookie（cf_chl_rc_i、cf_chl_rc_ni、cf_chl_rc_m）",
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "挑战平台 Cookie，同时存在 Cloudflare clearance、服务器标头或挑战"
 }

@@ -1098,5 +1098,7 @@
   "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "Ping de monitorización del paquete npm de BotD al host del proveedor m1.openfpcdn.io",
   "sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)": "Cookie sec_cpt del desafío criptográfico de Bot Manager (estado ~1~ abierto, ~3~ resuelto)",
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "Recurso o verificación del desafío criptográfico de Bot Manager bajo /_sec/cp_challenge/",
-  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "Ruta del desafío criptográfico con su cookie sec_cpt o una cookie de Bot Manager"
+  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "Ruta del desafío criptográfico con su cookie sec_cpt o una cookie de Bot Manager",
+  "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cookie de la plataforma de desafíos de Cloudflare (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cookie de la plataforma de desafíos con una autorización, cabecera de servidor o desafío de Cloudflare"
 }

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-16",
-  "version": "2.2.0",
+  "lastUpdated": "2026-10-26",
+  "version": "2.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.cloudflare.com/products/bot-management/",
   "icon": "cloudflare_official.png",
@@ -36,6 +36,16 @@
         "value": "^[A-Za-z0-9_.-]{43}-[0-9]{10}\\.[0-9]{5,8}-1\\.[0-9]\\.[0-9]\\.[0-9]-[A-Za-z0-9_.-]{20,}",
         "valueRegex": true,
         "valueCaseSensitive": true
+      },
+      {
+        "id": "cf-chl-rc-cookie",
+        "name": "^cf_chl_rc_(?:i|ni|m)$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 85,
+        "description": "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -217,6 +227,34 @@
               },
               {
                 "pattern": "challenge-orchestrator"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-challenge-cookie",
+      "name": "Challenge platform cookie with a Cloudflare clearance, server header or challenge",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "cf-chl-rc-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "cf-clearance-cookie"
+              },
+              {
+                "pattern": "cf-server-header"
+              },
+              {
+                "pattern": "challenge-orchestrator"
+              },
+              {
+                "pattern": "chl-opt-object"
               }
             ]
           }
