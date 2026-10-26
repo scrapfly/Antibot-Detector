@@ -509,9 +509,12 @@ async function finalizeDetection(tabId, state) {
 
     // The webhook gets the finished results (hooks, fingerprints and late requests included) of a page scanned just now
     // (whatever happens to the webhook never fails the scan, and a slow server never holds it: the delivery runs on its own)
+    // A private-window page is never sent anywhere (History leaves it out too)
     if (finalResults.length > 0 && !preservedExistingCache && !watching && DetectionSessionStore.isCurrent(tabId, state)) {
         try {
-            Promise.resolve(Settings.sendWebhookIfEnabled({
+            const privateWindow = typeof HistoryRecorder !== 'undefined' && typeof HistoryRecorder.isIncognitoTab === 'function' &&
+                await HistoryRecorder.isIncognitoTab(tabId, chrome);
+            if (!privateWindow && DetectionSessionStore.isCurrent(tabId, state)) Promise.resolve(Settings.sendWebhookIfEnabled({
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),
                 title: state.tabTitle,

@@ -2063,7 +2063,8 @@ class DetectionEngineManager {
             if (Settings && typeof Settings.sendWebhookIfEnabled === 'function' && storedData.detectionResults && storedData.detectionResults.length > 0) {
                 const tab = await chrome.tabs.get(tabId).catch(() => null);
                 if (!await isCurrentDocument()) return ignored;
-                await Settings.sendWebhookIfEnabled({
+                // A private-window page is never sent anywhere (History leaves it out too)
+                if (!(tab && tab.incognito === true)) await Settings.sendWebhookIfEnabled({
                     url: pageUrl,
                     hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                     title: (tab && tab.title) || 'Untitled',

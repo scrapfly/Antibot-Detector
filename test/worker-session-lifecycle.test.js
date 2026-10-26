@@ -348,6 +348,19 @@ test('a webhook step that throws never fails the scan', async () => {
   assert.equal(h.calls.popup.length, 1, 'the popup was told');
 });
 
+test('a private-window page is not sent to the webhook', async () => {
+  const h = harness();
+  const sent = [];
+  h.ctx.Settings.sendWebhookIfEnabled = async (...args) => { sent.push(args); };
+  h.ctx.HistoryRecorder.isIncognitoTab = async (tabId) => tabId === 7;
+  await h.ctx.finalizeDetection(7, h.begin());
+  assert.deepEqual(sent, []);
+  assert.equal(h.ctx.detectionStates.has(7), false, 'the scan still finished');
+  h.ctx.HistoryRecorder.isIncognitoTab = async () => false;
+  await h.ctx.finalizeDetection(7, h.begin());
+  assert.equal(sent.length, 1, 'a regular window\'s page still is');
+});
+
 test('a webhook that never answers does not hold the scan', async () => {
   const h = harness();
   let started = 0;

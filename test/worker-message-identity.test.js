@@ -268,6 +268,16 @@ test('PAGE_LOAD offers a cached page to the webhook as a cache delivery, describ
   assert.deepEqual({ url: sent[0].page.url, hostname: sent[0].page.hostname, title: sent[0].page.title, count: sent[0].count }, { url: 'https://example.test/', hostname: 'example.test', title: 'Example', count: 1 });
 });
 
+test('PAGE_LOAD sends a cached private-window page nowhere', async () => {
+  const h = pageLoadHarness();
+  const sent = [];
+  h.dependencies.Settings = { sendWebhookIfEnabled: async (...args) => { sent.push(args); } };
+  const get = h.context.chrome.tabs.get;
+  h.context.chrome.tabs.get = async (...args) => ({ ...(await get(...args)), incognito: true });
+  await h.run();
+  assert.deepEqual(sent, []);
+});
+
 test('PAGE_LOAD offers nothing to the webhook for a replacement document or a cached page without detections', async () => {
   const replaced = pageLoadHarness();
   const gate = deferred();
