@@ -28,6 +28,14 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Private windows: cookie rules read the private window's own cookies.
 - Headers and cookies are matched to the page's exact site, not to any address that contains its name.
 - Faster scans on large pages and pages that send big requests.
+- History: a page title containing quotes can no longer change how its card looks; webhook header values with quotes are no longer cut short when saved again.
+- Rules editor: closing it with ✕, Escape or a click outside asks before discarding any change (deleted patterns, icon, conditions, translations), not only typed text; a translation that finishes late no longer lands in the next rule.
+- Rules editor: changing only an official rule's icon marks it as edited, so Rules → Update keeps your icon.
+- Settings: Escape in Template variables closes only that window; an empty number field shows an error instead of saving nothing; the webhook method buttons react once per click.
+- History and Detection keep the page you are on when the list refreshes, and an open detection's details stay open when late evidence arrives.
+- Advanced: a tool card redrawn while its tool is reloading the page shows it is busy instead of ignoring clicks; one bad capture address no longer empties Advanced → History.
+- Keyboard: History cards, pattern types, condition options and icon tiles can be reached with Tab; page arrows have names and point the right way in Arabic.
+- "1 history item" instead of "1 history items"; Clear All leaves Select mode; Detection keeps refreshing after an error.
 
 ## [3.0.5] - 2026-10-26
 
