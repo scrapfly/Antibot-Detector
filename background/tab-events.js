@@ -16,6 +16,7 @@ function setupTabListeners() {
     // Clear all data stores and detection state for closed tab
     chrome.tabs.onRemoved.addListener((tabId) => {
         DetectionSessionStore.cancel(tabId, 'tab_closed');
+        if (typeof forgetFinishedPage === 'function') forgetFinishedPage(tabId);
         Logger.debug('BACKGROUND', `Scrapfly Background: Tab ${tabId} closed, clearing headers, cookies, payloads, and network URLs`);
         headersStore.delete(tabId);
         requestHeadersStore.delete(tabId);

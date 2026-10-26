@@ -136,6 +136,7 @@ async function matchLateRequests(tabId, state, mergedDetections) {
     if (typeof detectionEngine === 'undefined' || !detectionEngine || typeof networkUrlsStore === 'undefined') return;
     const storedUrls = networkUrlsStore.get(tabId);
     const networkUrls = Array.isArray(storedUrls) ? storedUrls.slice() : [];
+    state.lateCheckedUrls = networkUrls.map(entry => entry && entry.url);
     const payloads = payloadsForEngine(tabId);
     const responses = responsesForPage(tabId, state.url);
     if (networkUrls.length === 0 && payloads.length === 0 && responses.length === 0) return;
@@ -207,27 +208,39 @@ async function applyLateResponses(tabId) {
     const evidence = (Array.isArray(late) ? late : []).filter(hasResponseMatch);
     if (evidence.length === 0 || detectionStates.has(tabId)) return;
 
+    await addLateEvidence(tabId, pageUrl, tab.favIconUrl, evidence, () => !detectionStates.has(tabId), 'responses');
+}
+
+/**
+ * Add detections found after the scan to the page's stored result (merged with
+ * what it holds, combinations scored again), then update the badge and an open
+ * popup. History and the webhook keep what the scan gave them.
+ * @param {Array} [fallback] the scan's own results, used when the cache has no entry
+ * @returns {Promise<Array|null>} the page's new results, or null when nothing changed
+ */
+async function addLateEvidence(tabId, pageUrl, tabFavicon, evidence, stillValid, source, fallback) {
     const stored = await DetectionEngineManager.getStoredDetection(pageUrl);
-    if (detectionStates.has(tabId)) return;
+    if (!stillValid()) return null;
     const byId = new Map();
-    for (const detection of Array.isArray(stored?.detectionResults) ? stored.detectionResults : []) {
+    const base = Array.isArray(stored?.detectionResults) ? stored.detectionResults : (Array.isArray(fallback) ? fallback : []);
+    for (const detection of base) {
         const id = detection?.detector?.id || detection?.id;
         if (id) byId.set(id, detection);
     }
     const signature = () => Array.from(byId.values()).map(d => `${d.detector?.id || d.id}:${(d.matches || []).length}`).sort().join(',');
     const before = signature();
     for (const detection of evidence) mergeDetection(byId, detection);
-    if (signature() === before) return; // already known
+    if (signature() === before) return null; // already known
 
     const finalResults = Array.from(byId.values()).filter(rescoreCombinations);
     const storedData = await DetectionEngineManager.storeDetection(pageUrl, {
         url: pageUrl,
         hostname: UrlUtils.getHostnameFromUrl(pageUrl),
-        favicon: stored?.favicon || tab.favIconUrl
+        favicon: stored?.favicon || tabFavicon
     }, finalResults);
-    if (detectionStates.has(tabId)) return;
+    if (!stillValid()) return null;
     await setBadgeForDetections(tabId, pageUrl, finalResults);
-    Logger.detection(`${Logger.hostOf(pageUrl)}: added from responses after the scan: ${evidence.map(d => d.detector?.name || d.name).join(', ')}`);
+    Logger.detection(`${Logger.hostOf(pageUrl)}: added from ${source} after the scan: ${evidence.map(d => d.detector?.name || d.name).join(', ')}`);
     chrome.runtime.sendMessage({
         type: WorkerMessages.NEW_DETECTION_DATA,
         tabId,
@@ -240,6 +253,109 @@ async function applyLateResponses(tabId) {
     }).catch(() => {
         // Expected: Popup may not be open
     });
+    return finalResults;
+}
+
+// Pages whose scan finished, by tab. Requests they make afterwards (CHEQ's beacons, a challenge call seconds after
+// load) are matched against URL rules and their evidence is added to the page's result (applyLateNetworkUrls).
+// A new page in the tab (forgetTabRequests), a new scan, a cache hit, another address or document ends it.
+const finishedPages = new Map();
+const LATE_NETWORK_DELAY_MS = 1000;   // requests are checked in batches, at most once a second per tab
+const LATE_NETWORK_BATCH = 300;       // URLs one check reads; the rest wait for the next second
+const LATE_NETWORK_MAX_SEEN = 5000;   // distinct URLs one page is checked for
+const LATE_NETWORK_MAX_MATCHES = 20;  // late URLs that may add evidence to one page
+
+function urlWithoutHash(url) {
+    return typeof url === 'string' ? url.split('#')[0] : '';
+}
+
+/** The scan of this tab's page finished: requests from now on are its late requests. */
+function rememberFinishedPage(tabId, state, results) {
+    forgetFinishedPage(tabId);
+    const page = {
+        state, url: state.url, documentId: state.documentId || null, results: Array.isArray(results) ? results : [],
+        seen: new Set(state.lateCheckedUrls || []), pending: [], timer: null, added: 0
+    };
+    finishedPages.set(tabId, page);
+    // Requests recorded after the late-request check read the tab's list are late too
+    const stored = typeof networkUrlsStore !== 'undefined' ? networkUrlsStore.get(tabId) : null;
+    for (const entry of Array.isArray(stored) ? stored.slice() : []) noteLateNetworkUrl(tabId, entry);
+}
+
+function forgetFinishedPage(tabId) {
+    const page = finishedPages.get(tabId);
+    if (!page) return;
+    clearTimeout(page.timer);
+    finishedPages.delete(tabId);
+}
+
+/**
+ * A request the tab made (header-capture.js records it first). After the tab's scan finished it is queued for one
+ * check of URL rules a second later, with the other requests of that second; during a scan the scan reads it.
+ */
+function noteLateNetworkUrl(tabId, entry) {
+    const page = finishedPages.get(tabId);
+    if (!page || !entry || typeof entry.url !== 'string' || !entry.url || entry.type === 'main_frame') return;
+    if (page.added >= LATE_NETWORK_MAX_MATCHES || page.seen.has(entry.url) || page.seen.size >= LATE_NETWORK_MAX_SEEN) return;
+    page.seen.add(entry.url);
+    page.pending.push(entry);
+    scheduleLateNetworkCheck(tabId, page);
+}
+
+function scheduleLateNetworkCheck(tabId, page) {
+    if (page.timer !== null || page.pending.length === 0) return;
+    page.timer = setTimeout(() => {
+        page.timer = null;
+        applyLateNetworkUrls(tabId, page)
+            .catch(error => Logger.error('SCAN', 'Late network check failed', error))
+            .finally(() => { if (finishedPages.get(tabId) === page) scheduleLateNetworkCheck(tabId, page); });
+    }, LATE_NETWORK_DELAY_MS);
+}
+
+/**
+ * After the scan: URL rules (scope "all") of the enabled detectors against the requests the page made since, with the
+ * engine's own matching. Detectors they add evidence to are merged into the page's stored result as late responses are
+ * (applyLateResponses): same cache entry, combinations scored again, badge and popup updated, History left alone.
+ */
+async function applyLateNetworkUrls(tabId, page) {
+    const entries = page.pending.splice(0, LATE_NETWORK_BATCH);
+    const ours = () => finishedPages.get(tabId) === page && !detectionStates.has(tabId) &&
+        !(typeof tabsUsingCache !== 'undefined' && tabsUsingCache.has(tabId));
+    if (entries.length === 0 || finishedPages.get(tabId) !== page) return;
+    if (!ours()) { forgetFinishedPage(tabId); return; } // a new scan reads the tab's requests itself; a cached page has none
+    if (typeof detectionEngine === 'undefined' || !detectionEngine || !await isExtensionEnabled()) return;
+    const tab = await chrome.tabs.get(tabId).catch(() => null);
+    if (finishedPages.get(tabId) !== page) return;
+    if (!tab || urlWithoutHash(tab.url) !== urlWithoutHash(page.url)) { forgetFinishedPage(tabId); return; }
+    if (page.documentId && typeof chrome.webNavigation?.getFrame === 'function') {
+        const frame = await chrome.webNavigation.getFrame({ tabId, frameId: 0 }).catch(() => null);
+        if (finishedPages.get(tabId) !== page) return;
+        if (!frame || (frame.documentId && frame.documentId !== page.documentId)) { forgetFinishedPage(tabId); return; }
+    }
+    if (await Utils.isUrlBlacklisted(page.url)) return;
+    if (!ours()) return;
+
+    // Only the late requests go in, so only URL rules can match (the page address and the rest were matched by the scan)
+    const statsBefore = detectionEngine.lastStats; // the scan report keeps describing the page snapshot
+    const run = detectionEngine.detectOnPage({ networkUrls: entries }, { includePartial: true });
+    const statsOfRun = detectionEngine.lastStats;
+    let late;
+    try { late = await run; } finally { if (detectionEngine.lastStats === statsOfRun) detectionEngine.lastStats = statsBefore; }
+    const urls = new Set(entries.map(entry => entry.url));
+    const evidence = [];
+    const matchedUrls = new Set();
+    for (const detection of Array.isArray(late) ? late : []) {
+        const matches = (detection.matches || []).filter(match => match && match.type === 'url' && urls.has(match.fullUrl));
+        if (matches.length === 0) continue;
+        matches.forEach(match => matchedUrls.add(match.fullUrl));
+        evidence.push({ ...detection, matches, detectionMethods: ['url'] });
+    }
+    if (evidence.length === 0 || !ours()) return;
+    page.added += matchedUrls.size;
+    if (page.added >= LATE_NETWORK_MAX_MATCHES) page.pending.length = 0;
+
+    const results = await addLateEvidence(tabId, page.url, tab.favIconUrl, evidence, ours, 'requests', page.results);
+    if (results) page.results = results;
 }
 
 async function finalizeDetection(tabId, state) {
@@ -402,6 +518,8 @@ async function finalizeDetection(tabId, state) {
         }
     }
 
+    // Requests the page makes from now on still add URL evidence to this result (applyLateNetworkUrls)
+    if (!watching && DetectionSessionStore.isCurrent(tabId, state)) rememberFinishedPage(tabId, state, finalResults);
     DetectionSessionStore.finish(tabId, state);
     } catch (error) {
         // A retry starts a new session; a failed write never completes this scan.

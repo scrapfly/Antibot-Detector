@@ -73,6 +73,8 @@ function forgetTabRequests(tabId, requestId) {
     if (requestId === undefined) tabPageRequests.delete(tabId); else tabPageRequests.set(tabId, requestId);
     for (const store of [payloadStore, networkUrlsStore, headersStore, requestHeadersStore, responseCookiesStore]) store.delete(tabId);
     if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
+    // The finished scan of the page before takes no more late requests (detection-lifecycle.js)
+    if (typeof forgetFinishedPage === 'function') forgetFinishedPage(tabId);
 }
 
 function setupHeaderCapture() {
@@ -256,13 +258,16 @@ function setupHeaderCapture() {
             if (details.type === 'font' || details.type === 'media' || details.type === 'stylesheet') return;
 
             const networkUrls = networkUrlsStore.get(tabId) || [];
-            recordNetworkUrl(networkUrls, {
+            const entry = {
                 url: details.url,
                 type: details.type,        // 'main_frame', 'sub_frame', 'script', 'xhr', 'fetch', etc.
                 method: details.method,     // 'GET', 'POST', etc.
                 timestamp: Date.now()
-            }, Constants.MAX_NETWORK_URLS_PER_TAB);
+            };
+            recordNetworkUrl(networkUrls, entry, Constants.MAX_NETWORK_URLS_PER_TAB);
             networkUrlsStore.set(tabId, networkUrls);
+            // After the tab's scan finished, its URL rules still see this request (applyLateNetworkUrls)
+            if (typeof noteLateNetworkUrl === 'function') noteLateNetworkUrl(tabId, entry);
         }),
         { urls: ["<all_urls>"] }
     );
