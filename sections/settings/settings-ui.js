@@ -554,7 +554,9 @@ SettingsUI.getSettingsFromUI = function() {
     settings.debugVerbose = document.querySelector('#debugVerbose')?.checked ?? this.settings.debugVerbose ?? false;
     settings.logCollectorEnabled = logCollectorToggle?.checked ?? this.settings.logCollectorEnabled ?? false;
     const rawMaxLogs = parseInt(logCollectorMaxLogsInput?.value ?? this.settings.logCollectorMaxLogs ?? 5000);
-    settings.logCollectorMaxLogs = Math.min(Math.max(rawMaxLogs, 100), 5000);
+    // An emptied field (NaN) keeps the saved value instead of saving NaN
+    const maxLogs = Number.isFinite(rawMaxLogs) ? rawMaxLogs : (parseInt(this.settings.logCollectorMaxLogs, 10) || 5000);
+    settings.logCollectorMaxLogs = Math.min(Math.max(maxLogs, 100), 5000);
 
     // Badge, category and tag colours
     for (const { group, inputs, defaults } of SettingsUI.colorGroups()) {
@@ -663,7 +665,8 @@ SettingsUI.validateSettings = function(settings) {
     };
 
     if (settings.history && settings.history.historyLimit !== undefined) {
-      if (settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
+      // An emptied number field reads as NaN, which no range comparison catches
+      if (!Number.isInteger(settings.history.historyLimit) || settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
         errors.push(text('settingsUiErrHistoryLimit', 'History limit must be between 0 (unlimited) and 10000'));
       }
     }
@@ -743,7 +746,8 @@ SettingsUI.validateSettings = function(settings) {
     }
 
     if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
-      if (settings.duplicatePrevention.duplicateDuration < 1 || settings.duplicatePrevention.duplicateDuration > 999) {
+      const duration = settings.duplicatePrevention.duplicateDuration;
+      if (!Number.isInteger(duration) || duration < 1 || duration > 999) {
         errors.push(text('settingsUiErrDuplicateDuration', 'Duplicate duration must be between 1 and 999'));
       }
     }
