@@ -28,7 +28,7 @@ const PROOF = new Set([
   'detect-funcaptcha/arkose-enforcement-frame', 'detect-funcaptcha/arkose-session-request', 'detect-funcaptcha/funcaptcha-legacy-api',
   'detect-geetest/geetest-v3-api', 'detect-geetest/geetest-v3-resource', 'detect-geetest/geetest-v4-api',
   'detect-geetest/geetest-v4-resource', 'detect-hcaptcha/hcaptcha-api-resource', 'detect-hcaptcha/hcaptcha-challenge-api',
-  'detect-hcaptcha/hcaptcha-widget-frame-request', 'detect-mtcaptcha/mtcaptcha-challenge-api', 'detect-mtcaptcha/mtcaptcha-sdk-resource',
+  'detect-hcaptcha/hcaptcha-widget-frame-request', 'detect-lemin/lemin-captcha-script', 'detect-mtcaptcha/mtcaptcha-challenge-api', 'detect-mtcaptcha/mtcaptcha-sdk-resource',
   'detect-prosopo/prosopo-bundle', 'detect-prosopo/prosopo-provider-captcha', 'detect-qcloud/qcloud-prehandle',
   'detect-qcloud/qcloud-sdk', 'detect-recaptcha/configured-enterprise-sdk', 'detect-recaptcha/configured-sdk',
   'detect-recaptcha/google-frame-request', 'detect-recaptcha/google-runtime', 'detect-recaptcha/google-sdk',
@@ -208,10 +208,10 @@ test('combination AST rejects malformed and unreachable alternatives', () => {
     assert.throws(() => validate(node, new Set(['a']), 'invalid'));
   }
 });
-test('all twenty-one definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
+test('all twenty-two definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
   assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-aliyun', 'detect-altcha', 'detect-basilisk', 'detect-binance-captcha',
     'detect-capjs', 'detect-captchaeu', 'detect-capy', 'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest',
-    'detect-hcaptcha', 'detect-mtcaptcha', 'detect-prosopo', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei',
+    'detect-hcaptcha', 'detect-lemin', 'detect-mtcaptcha', 'detect-prosopo', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei',
     'detect-smartcaptcha', 'detect-turnstile', 'detect-yidun']);
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it

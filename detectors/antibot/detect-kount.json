@@ -1,0 +1,121 @@
+{
+  "id": "detect-kount",
+  "name": "Kount",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://kount.com/",
+  "icon": "kount_official.png",
+  "description": "Kount (Equifax) Device Data Collector that fingerprints the browser for payment fraud and bot checks",
+  "detection": {
+    "url": [
+      {
+        "id": "kount-collector-sdk",
+        "confidence": 100,
+        "description": "Kount Device Data Collector script from the vendor kaptcha.com host (collect/sdk?m=<merchant id>)",
+        "text": "^https://(?:ssl|tst)\\.kaptcha\\.com/collect/sdk\\?(?:[^#]*&)?m=[0-9]{3,}(?:[&#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "kount-collector-endpoint",
+        "confidence": 100,
+        "description": "Kount Web SDK request to the vendor kaptcha.com collector",
+        "text": "^https://(?:ssl|tst)\\.kaptcha\\.com/(?:cs/(?:config|generatecookie|storecookie|location)|session/[A-Za-z0-9_-]+|logo\\.htm|fin)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "kount-kaxsdc-reference",
+        "confidence": 20,
+        "description": "Script reference to the kaxsdc class that triggers Kount data collection",
+        "text": "kaxsdc",
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "kount-client-sdk",
+        "path": "ka.ClientSDK",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "ka.ClientSDK class of the Kount data collector"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "kount-collector-running",
+      "name": "Kount collector script with its class or trigger",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "kount-collector-sdk"
+          },
+          {
+            "any": [
+              {
+                "pattern": "kount-client-sdk"
+              },
+              {
+                "pattern": "kount-kaxsdc-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kount-web-sdk",
+      "name": "Kount collector request with its script or class",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "kount-collector-endpoint"
+          },
+          {
+            "any": [
+              {
+                "pattern": "kount-collector-sdk"
+              },
+              {
+                "pattern": "kount-client-sdk"
+              },
+              {
+                "pattern": "kount-kaxsdc-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "kount-page-integration",
+      "name": "Kount class with its trigger",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "kount-client-sdk"
+          },
+          {
+            "pattern": "kount-kaxsdc-reference"
+          }
+        ]
+      }
+    }
+  ]
+}

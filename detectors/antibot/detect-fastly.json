@@ -1,0 +1,155 @@
+{
+  "id": "detect-fastly",
+  "name": "Fastly Bot Management",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.fastly.com/products/bot-management",
+  "icon": "fastly_official.png",
+  "description": "Fastly Bot Management client challenges and client-side bot detections served from the site's own domain",
+  "detection": {
+    "url": [
+      {
+        "id": "fastly-challenge-script",
+        "confidence": 100,
+        "description": "Fastly client challenge script on the site's own /_fs-ch-<token>/ path",
+        "text": "^https?://[^/?#]+/_fs-ch-[A-Za-z0-9]{8,32}/challenge\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "fastly-detection-script",
+        "confidence": 100,
+        "description": "Fastly client-side detection script on the site's own /_fs-ch-<token>/assets/ path",
+        "text": "^https?://[^/?#]+/_fs-ch-[A-Za-z0-9]{8,32}/assets/[A-Za-z0-9_.-]{1,64}\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "fastly-challenge-start-cookie",
+        "name": "^_fs_ch_st_[A-Za-z0-9_-]{4,}$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 100,
+        "description": "Fastly challenge start cookie (_fs_ch_st_<random>)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "fastly-challenge-complete-cookie",
+        "name": "^_fs_ch_cp_[A-Za-z0-9_-]{4,}$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 100,
+        "description": "Fastly challenge complete cookie (_fs_ch_cp_<random>)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "fastly-detection-cookie",
+        "name": "^_fs_cd_cp_[A-Za-z0-9_-]{4,}$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 100,
+        "description": "Fastly client-side detection cookie (_fs_cd_cp_<random>), set once its script ran",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "dom": [
+      {
+        "id": "fastly-challenge-widget",
+        "selector": "div.fastly-challenge",
+        "confidence": 40,
+        "description": "Embedded Fastly dynamic challenge container (div.fastly-challenge)"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "fastly-challenge-served",
+      "name": "Fastly challenge script with its cookie or container",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "fastly-challenge-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "fastly-challenge-start-cookie"
+              },
+              {
+                "pattern": "fastly-challenge-complete-cookie"
+              },
+              {
+                "pattern": "fastly-challenge-widget"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fastly-challenge-solved",
+      "name": "Fastly challenge complete cookie with its start cookie or container",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "fastly-challenge-complete-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "fastly-challenge-start-cookie"
+              },
+              {
+                "pattern": "fastly-challenge-widget"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "fastly-client-detection",
+      "name": "Fastly detection script with its cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "fastly-detection-script"
+          },
+          {
+            "pattern": "fastly-detection-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "fastly-embedded-challenge",
+      "name": "Fastly challenge container with its start cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "fastly-challenge-widget"
+          },
+          {
+            "pattern": "fastly-challenge-start-cookie"
+          }
+        ]
+      }
+    }
+  ]
+}

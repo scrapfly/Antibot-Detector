@@ -130,7 +130,10 @@ const PROOF = new Set([
   'detect-ddosguard/ddosguard-cookie', 'detect-ddosguard/ddosguard-wellknown-path', 'detect-ddosguard/ddosguard-check-domain',
   'detect-iovation/iovation-snare-host', 'detect-iovation/iovation-vendor-host', 'detect-forter/forter-snippet-script',
   'detect-forter/forter-collector', 'detect-sift/sift-snippet-script', 'detect-sift/sift-beacon', 'detect-castle/castle-cdn-script',
-  'detect-castle/castle-monitor', 'detect-seon/seon-agent-script', 'detect-seon/seon-legacy-agent-script', 'detect-seon/seon-dns-resolve'
+  'detect-castle/castle-monitor', 'detect-seon/seon-agent-script', 'detect-seon/seon-legacy-agent-script', 'detect-seon/seon-dns-resolve',
+  'detect-fastly/fastly-challenge-script', 'detect-fastly/fastly-detection-script', 'detect-fastly/fastly-challenge-start-cookie',
+  'detect-fastly/fastly-challenge-complete-cookie', 'detect-fastly/fastly-detection-cookie', 'detect-kount/kount-collector-sdk',
+  'detect-kount/kount-collector-endpoint', 'detect-riskified/riskified-beacon-script', 'detect-riskified/riskified-collector'
 ]);
 // Detectors whose top tier stays below 100: legacy vendors (Ocule, Meetrics)
 // and edges that prove a CDN rather than protection (Azure Front Door, Yundun);
@@ -138,12 +141,12 @@ const PROOF = new Set([
 const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('thirty-nine anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+test('forty-two anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
     'detect-azurefrontdoor', 'detect-botguard', 'detect-castle', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
-    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fingerprintjs', 'detect-forter', 'detect-hunt', 'detect-incapsula',
-    'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
-    'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
+    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-hunt', 'detect-incapsula',
+    'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-kount', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
+    'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-riskified', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
     'detect-sift', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
     const raw = antibot[d.id].__raw;
@@ -291,7 +294,11 @@ const benign = {
   'detect-castle': { urls: ['https://castle.io/'] },
   'detect-iovation': { urls: ['https://example.test/iojs/latest/io.js'] },
   'detect-forter': { urls: ['https://www.forter.com/events'] },
-  'detect-seon': { sources: ['reason.config(options); season.getSession();'] }
+  'detect-seon': { sources: ['reason.config(options); season.getSession();'] },
+  // Fastly's CDN cookies and a bare /_fs-ch- path; Kount's and Riskified's marketing hosts and first-party lookalikes
+  'detect-fastly': { cookies: ['_fs_session', 'fs_ch_st', '_fs_ch_st_'], urls: ['https://example.test/_fs-ch-/challenge.js', 'https://www.fastly.com/products/bot-management'] },
+  'detect-kount': { urls: ['https://kount.com/', 'https://example.test/collect/sdk?m=123456'], sources: ['var kaxsdcx = 1;'] },
+  'detect-riskified': { urls: ['https://www.riskified.com/', 'https://example.test/?shop=shop.example.com&sid=abc'] }
 };
 test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   for (const [id, b] of Object.entries(benign)) {

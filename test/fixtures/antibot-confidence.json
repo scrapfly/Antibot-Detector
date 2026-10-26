@@ -1411,5 +1411,68 @@
   "seon-webpack-chunk": {
    "runtimeType": "object"
   }
+ },
+ "detect-fastly": {
+  "fastly-challenge-script": {
+   "url": "https://www.example.com/_fs-ch-1T1wmsGaOgGaSxcX/challenge.js"
+  },
+  "fastly-detection-script": {
+   "url": "https://www.example.com/_fs-ch-1T1wmsGaOgGaSxcX/assets/script.js"
+  },
+  "fastly-challenge-start-cookie": {
+   "cookie": [
+    "_fs_ch_st_FAKE0a1b2c3d",
+    "fake0000000000000000"
+   ]
+  },
+  "fastly-challenge-complete-cookie": {
+   "cookie": [
+    "_fs_ch_cp_FAKE0a1b2c3d",
+    "fake0000000000000000"
+   ]
+  },
+  "fastly-detection-cookie": {
+   "cookie": [
+    "_fs_cd_cp_FAKE0a1b2c3d",
+    "fake0000000000000000"
+   ]
+  },
+  "fastly-challenge-widget": {
+   "dom": {
+    "tagName": "div",
+    "attributes": {
+     "class": "fastly-challenge",
+     "data-challenge-status": "started"
+    }
+   }
+  }
+ },
+ "detect-kount": {
+  "kount-collector-sdk": {
+   "url": "https://ssl.kaptcha.com/collect/sdk?m=123456&s=abcdefg12345abababab123456789012"
+  },
+  "kount-collector-endpoint": {
+   "url": "https://ssl.kaptcha.com/cs/config?m=123456&s=abcdefg12345abababab123456789012"
+  },
+  "kount-kaxsdc-reference": {
+   "source": "var client = new ka.ClientSDK(); client.autoLoadEvents(); // body class='kaxsdc' data-event='load'"
+  },
+  "kount-client-sdk": {
+   "runtimeType": "function"
+  }
+ },
+ "detect-riskified": {
+  "riskified-beacon-script": {
+   "url": "https://beacon.riskified.com?shop=shop.example.com&sid=fake0123456789"
+  },
+  "riskified-collector": {
+   "url": "https://img.riskified.com/img/image-l.gif?t=1700000000&c=fake"
+  },
+  "riskified-riskx-go": {
+   "runtimeType": "function"
+  },
+  "riskified-riskx-setsid": {
+   "runtimeType": "function"
+  }
  }
 }

@@ -2,7 +2,7 @@
 
 > A free Chrome (Manifest V3) extension that shows how a website defends itself against bots: which anti-bot system, which CAPTCHA and which browser-fingerprinting scripts a page uses, each with a confidence score and an estimated bypass difficulty. Built by [Scrapfly](https://scrapfly.io). Everything runs locally in the browser; no page data leaves the machine.
 
-It recognizes 81 technologies out of the box — 39 anti-bot systems, 21 CAPTCHAs and 21 fingerprinting techniques. Each detector is a plain JSON rule you can read, edit or extend, and new rules ship with every GitHub release, so the extension can pick them up without waiting for a Chrome Web Store update.
+It recognizes 85 technologies out of the box — 42 anti-bot systems, 22 CAPTCHAs and 21 fingerprinting techniques. Each detector is a plain JSON rule you can read, edit or extend, and new rules ship with every GitHub release, so the extension can pick them up without waiting for a Chrome Web Store update.
 
 Use it to answer "what is protecting this page?" before a scraping project, to check how your own site's bot protection looks from the outside, or for security research.
 
@@ -34,8 +34,8 @@ Browse normally. The number on the toolbar icon is how many protections the curr
 
 ## What it detects
 
-- **Anti-bot (39):** Cloudflare Bot Management, Akamai Bot Manager, DataDome, HUMAN (PerimeterX), Imperva/Incapsula, Kasada, F5 BIG-IP ASM, Shape Security, AWS WAF, Google BotGuard, Radware Bot Manager, Reblaze, Sucuri WAF, ThreatMetrix, Netacea, Alibaba Cloud WAF, Azure Front Door, Amazon Bot Protection, FingerprintJS, OpenAI Sentinel, Anubis, Jiasule, Ruishu, Yundun, Cheq, Hunt, DeepSeek PoW, Cloudflare Waiting Room, Vercel Firewall, Queue-it, DDoS-Guard, Wordfence, iovation (TransUnion TruValidate), Forter, Sift, Castle, SEON, Meetrics and Ocule.
-- **CAPTCHA (21):** Google reCAPTCHA, Cloudflare Turnstile, hCaptcha, FunCaptcha (Arkose Labs), GeeTest, Capy Puzzle Captcha, MTCaptcha, Friendly Captcha, Yandex SmartCaptcha, QCloud Captcha, NetEase Yidun, Aliyun Captcha, Dingxiang, Shumei, Prosopo Procaptcha, Basilisk, Binance Captcha, Captcha.eu, ALTCHA, Cap and AliExpress CAPTCHA.
+- **Anti-bot (42):** Cloudflare Bot Management, Akamai Bot Manager, DataDome, HUMAN (PerimeterX), Imperva/Incapsula, Kasada, F5 BIG-IP ASM, Shape Security, AWS WAF, Google BotGuard, Radware Bot Manager, Reblaze, Sucuri WAF, ThreatMetrix, Netacea, Alibaba Cloud WAF, Azure Front Door, Amazon Bot Protection, FingerprintJS, OpenAI Sentinel, Anubis, Jiasule, Ruishu, Yundun, Cheq, Hunt, DeepSeek PoW, Cloudflare Waiting Room, Vercel Firewall, Queue-it, DDoS-Guard, Wordfence, iovation (TransUnion TruValidate), Forter, Sift, Castle, SEON, Fastly Bot Management, Kount, Riskified, Meetrics and Ocule.
+- **CAPTCHA (22):** Google reCAPTCHA, Cloudflare Turnstile, hCaptcha, FunCaptcha (Arkose Labs), GeeTest, Capy Puzzle Captcha, MTCaptcha, Friendly Captcha, Yandex SmartCaptcha, QCloud Captcha, NetEase Yidun, Aliyun Captcha, Dingxiang, Shumei, Prosopo Procaptcha, Basilisk, Binance Captcha, Captcha.eu, ALTCHA, Cap, Lemin Cropped Captcha and AliExpress CAPTCHA.
 - **Fingerprinting (21):** canvas, audio, WebGL, font, navigator, screen, WebRTC, battery, hardware, media, clipboard, crypto, CSS, gamepads, geolocation, IndexedDB, Web Storage, timezone/Intl, USB, device orientation and performance.
 
 Scoring: a signal only one vendor produces can read 100% on its own; weaker or shared signals score lower, and a page's difficulty is estimated from the protections found.

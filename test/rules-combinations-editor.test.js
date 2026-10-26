@@ -57,7 +57,7 @@ test('opening and saving every shipped rule keeps its combinations and pattern f
       count++;
     }
   }
-  assert.equal(count, 81);
+  assert.equal(count, 85);
 });
 
 test('renaming preserves nested alternatives, exclusions and thresholds without mutating the source', () => {

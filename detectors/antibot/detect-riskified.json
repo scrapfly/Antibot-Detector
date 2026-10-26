@@ -1,0 +1,117 @@
+{
+  "id": "detect-riskified",
+  "name": "Riskified",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.riskified.com/",
+  "icon": "riskified_official.png",
+  "description": "Riskified storefront beacon that fingerprints shoppers for payment fraud and account abuse decisions",
+  "detection": {
+    "url": [
+      {
+        "id": "riskified-beacon-script",
+        "confidence": 100,
+        "description": "Riskified beacon script from the vendor beacon.riskified.com host (shop=<store>&sid=<session>)",
+        "text": "^https?://beacon\\.riskified\\.com/?\\?(?:[^#]*&)?shop=[^&#]+",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "riskified-collector",
+        "confidence": 100,
+        "description": "Riskified beacon request to its c.riskified.com or img.riskified.com collector",
+        "text": "^https://(?:c\\.riskified\\.com/e\\.gif|img\\.riskified\\.com/img/)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "window": [
+      {
+        "id": "riskified-riskx-go",
+        "path": "RISKX.go",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "RISKX.go function of the Riskified beacon"
+      },
+      {
+        "id": "riskified-riskx-setsid",
+        "path": "RISKX.setSid",
+        "condition": "typeof function",
+        "confidence": 40,
+        "standalone": false,
+        "description": "RISKX.setSid session helper of the Riskified beacon"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "riskified-beacon-running",
+      "name": "Riskified beacon with its global or collector",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "riskified-beacon-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "riskified-riskx-go"
+              },
+              {
+                "pattern": "riskified-riskx-setsid"
+              },
+              {
+                "pattern": "riskified-collector"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "riskified-collector-runtime",
+      "name": "Riskified collector request with its global",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "riskified-collector"
+          },
+          {
+            "any": [
+              {
+                "pattern": "riskified-riskx-go"
+              },
+              {
+                "pattern": "riskified-riskx-setsid"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "riskified-global",
+      "name": "Riskified global with its session helper",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "riskified-riskx-go"
+          },
+          {
+            "pattern": "riskified-riskx-setsid"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "id": "detect-lemin",
+  "name": "Lemin Cropped Captcha",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.leminnow.com/",
+  "icon": "lemin_official.png",
+  "description": "Lemin Cropped Captcha puzzle widget loaded from the vendor api.leminnow.com host",
+  "detection": {
+    "url": [
+      {
+        "id": "lemin-captcha-script",
+        "confidence": 100,
+        "description": "Lemin captcha script for a CROPPED_ captcha id from the vendor api.leminnow.com host",
+        "text": "^https://api\\.leminnow\\.com/captcha/v1/cropped/CROPPED_[A-Za-z0-9_-]{4,64}/js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "lemin-reference",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Script reference to the leminCroppedCaptcha global",
+        "text": "leminCroppedCaptcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "lemin-widget",
+        "selector": "#lemin-cropped-captcha",
+        "confidence": 40,
+        "description": "Default Lemin captcha container (div#lemin-cropped-captcha; the id can be changed)"
+      }
+    ],
+    "window": [
+      {
+        "id": "lemin-runtime",
+        "path": "leminCroppedCaptcha.getCaptcha",
+        "condition": "typeof function",
+        "confidence": 50,
+        "description": "leminCroppedCaptcha.getCaptcha function of the Lemin widget"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "lemin-complete-integration",
+      "name": "Lemin container, script and runtime",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "lemin-captcha-script"
+          },
+          {
+            "pattern": "lemin-widget"
+          },
+          {
+            "any": [
+              {
+                "pattern": "lemin-runtime"
+              },
+              {
+                "pattern": "lemin-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "lemin-widget-runtime",
+      "name": "Lemin container with its global",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "lemin-widget"
+          },
+          {
+            "pattern": "lemin-runtime"
+          }
+        ]
+      }
+    },
+    {
+      "id": "lemin-widget-code",
+      "name": "Lemin container with code that uses it",
+      "confidence": 70,
+      "when": {
+        "all": [
+          {
+            "pattern": "lemin-widget"
+          },
+          {
+            "pattern": "lemin-reference"
+          }
+        ]
+      }
+    }
+  ]
+}

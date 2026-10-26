@@ -191,5 +191,11 @@
     "capjs-configured-widget": {"dom": {"tagName": "cap-widget", "attributes": {"id": "cap", "data-cap-api-endpoint": "https://captcha.gurl.eu.org/api/"}}},
     "capjs-token-field": {"dom": {"tagName": "input", "attributes": {"type": "hidden", "name": "cap-token"}}},
     "capjs-global": {"runtimeType": "function"}
+  },
+  "detect-lemin": {
+    "lemin-captcha-script": {"url": "https://api.leminnow.com/captcha/v1/cropped/CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b/js"},
+    "lemin-reference": {"source": "const values = window.leminCroppedCaptcha.getCaptcha().getCaptchaValue();"},
+    "lemin-widget": {"dom": {"tagName": "div", "id": "lemin-cropped-captcha", "attributes": {"id": "lemin-cropped-captcha"}}},
+    "lemin-runtime": {"runtimeType": "function"}
   }
 }
