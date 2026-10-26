@@ -121,17 +121,31 @@ const PROBE = {
       return { entry, page, tab };
     };
     const hasCanvas = (entry) => entry.names.some(name => /canvas/i.test(name || ''));
-    // Which of the page's and its frame's methods carry a wrapper of ours: a wrapper is given its own toString (so it
-    // reads as native), a native method has none of its own
-    const wrappedIn = (page) => page.evaluate(async () => {
-      const frame = document.getElementById('f');
-      if (!frame.contentDocument || frame.contentDocument.readyState !== 'complete') await new Promise(resolve => frame.addEventListener('load', resolve, { once: true }));
-      const wrapped = (fn) => typeof fn === 'function' && Object.prototype.hasOwnProperty.call(fn, 'toString');
-      const win = frame.contentWindow;
-      const accessor = (w) => Object.getOwnPropertyDescriptor(w.HTMLIFrameElement.prototype, 'contentWindow').get;
-      return { topCanvas: wrapped(HTMLCanvasElement.prototype.toDataURL), frameCanvas: wrapped(win.HTMLCanvasElement.prototype.toDataURL),
-        topAccessor: wrapped(accessor(window)), frameAccessor: wrapped(accessor(win)) };
-    });
+    // Which of the page's and its frame's methods carry a wrapper of ours. A page can no longer tell (the wrappers read
+    // as native through the patched Function.prototype.toString), so this asks DevTools: a native method has no
+    // [[FunctionLocation]], a wrapper (script code) has one
+    const wrappedIn = async (page) => {
+      await page.evaluate(async () => {
+        const frame = document.getElementById('f');
+        if (!frame.contentDocument || frame.contentDocument.readyState !== 'complete') await new Promise(resolve => frame.addEventListener('load', resolve, { once: true }));
+      });
+      const cdp = await page.context().newCDPSession(page);
+      const isScript = async (expression) => {
+        const { result } = await cdp.send('Runtime.evaluate', { expression });
+        if (!result.objectId) return false;
+        const { internalProperties = [] } = await cdp.send('Runtime.getProperties', { objectId: result.objectId, ownProperties: true });
+        return internalProperties.some(prop => prop.name === '[[FunctionLocation]]');
+      };
+      const frameWin = "document.getElementById('f').contentWindow";
+      const state = {
+        topCanvas: await isScript('HTMLCanvasElement.prototype.toDataURL'),
+        frameCanvas: await isScript(`${frameWin}.HTMLCanvasElement.prototype.toDataURL`),
+        topAccessor: await isScript("Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'contentWindow').get"),
+        frameAccessor: await isScript(`Object.getOwnPropertyDescriptor(${frameWin}.HTMLIFrameElement.prototype, 'contentWindow').get`)
+      };
+      await cdp.detach().catch(() => {});
+      return state;
+    };
 
     // Setup: the probe rule, results cached per full address, English, no hooks off
     const admin = await popupPage();
