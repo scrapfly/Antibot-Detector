@@ -82,3 +82,16 @@ test('the clear runs first and synchronously, only for top-level pages', () => {
   assert.match(listener, /types: \['main_frame'\]/);
   assert.doesNotMatch(listener, /async|await/);
 });
+
+test('a new page clears the "showing a cached result" flag before its headers arrive', () => {
+  // The flag was cleared only when the tab's address changed, after the next page's response headers and
+  // Set-Cookie had already been dropped as "cached"
+  ctx.tabsUsingCache = new Set([7, 8]);
+  forgetTabRequests(7, 'r10');
+  assert.equal(ctx.tabsUsingCache.has(7), false, 'the new page captures its headers');
+  assert.equal(ctx.tabsUsingCache.has(8), true, 'other tabs keep theirs');
+  // A redirect of the same load does not clear a flag the new page's own cache hit set
+  ctx.tabsUsingCache.add(7);
+  forgetTabRequests(7, 'r10');
+  assert.equal(ctx.tabsUsingCache.has(7), true);
+});

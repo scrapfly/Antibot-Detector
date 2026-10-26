@@ -71,6 +71,10 @@ function forgetTabRequests(tabId, requestId) {
     if (typeof tabId !== 'number' || tabId < 0) return;
     if (requestId !== undefined && tabPageRequests.get(tabId) === requestId) return; // a redirect of the same load
     if (requestId === undefined) tabPageRequests.delete(tabId); else tabPageRequests.set(tabId, requestId);
+    // "This tab shows a cached result" belonged to the page before: the new page's own response headers and
+    // Set-Cookie arrive before it commits (and before its content script asks the cache), so a flag left over
+    // until the address changed dropped them. A cache hit on the new page sets it again.
+    if (typeof tabsUsingCache !== 'undefined') tabsUsingCache.delete(tabId);
     for (const store of [payloadStore, networkUrlsStore, headersStore, requestHeadersStore, responseCookiesStore]) store.delete(tabId);
     if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
     // The finished scan of the page before takes no more late requests (detection-lifecycle.js)
