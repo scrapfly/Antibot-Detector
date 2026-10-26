@@ -140,9 +140,18 @@ Rules.prototype.openIconPicker = function() {
   }
 
   let isClosed = false;
+  // Escape closes the picker only (the editor under it stays: onRuleEditorEscape skips while the picker is open)
+  const onKey = (event) => {
+    if (!modalContainer.isConnected) { document.removeEventListener('keydown', onKey); return; }
+    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    event.preventDefault();
+    closeModal();
+  };
+  document.addEventListener('keydown', onKey);
   const closeModal = () => {
     if (isClosed) return;
     isClosed = true;
+    document.removeEventListener('keydown', onKey);
     if (editBackdrop) {
       editBackdrop.style.visibility = previousEditBackdropVisibility;
     }

@@ -74,6 +74,13 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     // Store snapshot of detection AFTER populating form (includes defaults from form)
     // This ensures comparison matches what save will produce
     this.currentEditDetector.originalDetection = this._collectDetectionFromForm();
+    // The editor as it opened: closing asks before dropping anything that differs from it (isRuleEditorDirty)
+    try {
+      this.ruleEditorSnapshot = this.ruleEditorFingerprint();
+    } catch (error) {
+      this.ruleEditorSnapshot = null; // falls back to "anything typed"
+      Logger.debug('UI', 'Rule editor snapshot failed', error);
+    }
 
     // Detection methods and Combinations start folded, with their counts in the header; a rule with no pattern yet
     // opens on its patterns, since there is nothing to hide
@@ -172,7 +179,76 @@ Rules.prototype.closeEditModal = function() {
       modal.style.display = 'none';
       document.body.style.overflow = ''; // Restore scrolling
       this.currentEditDetector = null;
+      this.ruleEditorSnapshot = null;
     }
+  };
+
+/**
+ * What Save would store from the editor as it stands: name, category, difficulty, author, icon, description and its
+ * translations, the patterns with their settings, and the combinations. Taken on open and compared on close, so any
+ * change counts (a pattern deleted, Method Settings saved, an icon chosen, Translate), and undoing it does not.
+ * @returns {string}
+ */
+Rules.prototype.ruleEditorFingerprint = function() {
+    const edit = this.currentEditDetector;
+    if (!edit || typeof document === 'undefined') return '';
+    const value = (selector) => {
+      const field = document.querySelector(selector);
+      return field ? field.value : null;
+    };
+    const description = typeof this.collectDetectorDescription === 'function' && document.querySelector('#detectorDescriptionInput')
+      ? this.collectDetectorDescription() : null;
+    const combinations = typeof this.buildCombinationsForSave === 'function'
+      ? this.buildCombinationsForSave(null, { validate: false }).combinations : null;
+    return JSON.stringify({
+      name: value('#detectorNameInput'),
+      category: value('#detectorCategorySelect'),
+      difficulty: value('#detectorDifficultySelect'),
+      author: value('#detectorAuthorInput'),
+      icon: edit.detector?.icon ?? null,
+      customIcon: edit.customIcon || edit.detector?.customIcon || null,
+      description,
+      detection: this._collectDetectionFromForm(),
+      combinations
+    });
+  };
+
+/** True when the open editor holds something its Save would store and that was not there when it opened. */
+Rules.prototype.isRuleEditorDirty = function() {
+    if (!this.currentEditDetector) return false;
+    if (typeof this.ruleEditorSnapshot !== 'string' || !this.ruleEditorSnapshot) return this.ruleEditorEdited === true;
+    try {
+      return this.ruleEditorFingerprint() !== this.ruleEditorSnapshot;
+    } catch (error) {
+      Logger.debug('UI', 'Rule editor dirty check failed', error);
+      return true;
+    }
+  };
+
+/**
+ * ✕, Escape and a click outside the editor: with changes, ask before dropping them.
+ * @returns {Promise<boolean>} whether the editor closed
+ */
+Rules.prototype.requestCloseEditModal = async function() {
+    if (this.savingRule || this._ruleEditorCloseAsking || !this.currentEditDetector) return false;
+    if (this.isRuleEditorDirty() && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.confirm === 'function') {
+      const text = (key, fallback) => (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
+      this._ruleEditorCloseAsking = true;
+      let discard = false;
+      try {
+        discard = await NotificationHelper.confirm({
+          title: text('ruleEditorDiscardTitle', 'Discard your changes?'),
+          message: text('ruleEditorDiscardMessage', 'This rule has changes that are not saved yet.'),
+          type: 'warning', tone: 'danger',
+          confirmText: text('ruleEditorDiscardConfirm', 'Discard'), cancelText: text('btnCancel', 'Cancel')
+        });
+      } finally {
+        this._ruleEditorCloseAsking = false;
+      }
+      if (!discard) return false;
+    }
+    this.closeEditModal();
+    return true;
   };
 
 Rules.prototype.populateModalData = function(detector) {

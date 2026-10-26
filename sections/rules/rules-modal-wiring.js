@@ -3,39 +3,55 @@
  * Dependencies: rules.js, rules-modal-lifecycle.js, all modal/helper files
  */
 
+/**
+ * Escape closes the top-most rule dialog: Method Settings over the editor, else the editor (through the same
+ * dirty check as ✕). The helpers, the icon picker, the colour dialog and confirmations above them handle their own.
+ */
+Rules.prototype.onRuleEditorEscape = function(event) {
+  if (!event || event.key !== 'Escape' || event.defaultPrevented) return false;
+  const shown = (element) => !!element && !!element.style && element.style.display !== 'none' && element.style.display !== '';
+  if (document.querySelector('.notification-confirm[data-open="true"], .icon-picker-modal')) return false;
+  if ([...document.querySelectorAll('.rh-modal, #advancedColorModal')].some(shown)) return false;
+  if (shown(document.querySelector('#methodSettingsModal'))) {
+    event.preventDefault();
+    this.closeMethodSettingsModal();
+    return true;
+  }
+  if (shown(document.querySelector('#editRuleModal')) && this.currentEditDetector) {
+    event.preventDefault();
+    this.requestCloseEditModal();
+    return true;
+  }
+  return false;
+};
+
 Rules.prototype.setupModalEventListeners = function() {
     // Close modal events
     const closeBtn = document.querySelector('#closeRuleModal');
     const cancelBtn = document.querySelector('#cancelRuleEdit');
     const backdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
 
+    // ✕, Escape and a click outside the editor are easy to make by accident: with changes they ask before dropping
+    // them (requestCloseEditModal compares the editor with how it opened). Cancel says it already.
     if (closeBtn) {
-      closeBtn.addEventListener('click', () => this.closeEditModal());
+      closeBtn.addEventListener('click', () => this.requestCloseEditModal());
     }
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.closeEditModal());
     }
-    // A click outside the editor is easy to make by accident: with typed changes it asks before dropping them
     const editModal = document.querySelector('#editRuleModal');
     if (editModal) {
+      // Only the fallback when the editor's snapshot could not be taken
       const markEdited = () => { this.ruleEditorEdited = true; };
       editModal.addEventListener('input', markEdited);
       editModal.addEventListener('change', markEdited);
     }
     if (backdrop) {
-      backdrop.addEventListener('click', async () => {
-        if (this.ruleEditorEdited && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.confirm === 'function') {
-          const text = (key, fallback) => (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
-          const discard = await NotificationHelper.confirm({
-            title: text('ruleEditorDiscardTitle', 'Discard your changes?'),
-            message: text('ruleEditorDiscardMessage', 'This rule has changes that are not saved yet.'),
-            type: 'warning', tone: 'danger',
-            confirmText: text('ruleEditorDiscardConfirm', 'Discard'), cancelText: text('btnCancel', 'Cancel')
-          });
-          if (!discard) return;
-        }
-        this.closeEditModal();
-      });
+      backdrop.addEventListener('click', () => this.requestCloseEditModal());
+    }
+    if (!this._ruleEditorEscapeBound) {
+      this._ruleEditorEscapeBound = true;
+      document.addEventListener('keydown', (event) => this.onRuleEditorEscape(event));
     }
 
     // Check against History
