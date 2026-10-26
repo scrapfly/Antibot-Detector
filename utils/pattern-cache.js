@@ -19,9 +19,253 @@ function simpleHash(str) {
 }
 
 /**
+ * A rough reading of a regex source for the ReDoS check: atoms with the characters they can start with and
+ * their quantifier, groups with their branches. Anything it does not understand reads as "any character",
+ * which only makes the check stricter.
+ */
+const REDOS_ASCII = 128;
+
+function redosSet(all = false) {
+    return { ascii: new Array(REDOS_ASCII).fill(all), other: all };
+}
+
+function redosAddChar(set, code) {
+    if (code >= REDOS_ASCII) { set.other = true; return; }
+    set.ascii[code] = true;
+    // Detector regexes are mostly compiled case-insensitively: a letter overlaps both of its cases
+    const ch = String.fromCharCode(code);
+    const lower = ch.toLowerCase().charCodeAt(0), upper = ch.toUpperCase().charCodeAt(0);
+    if (lower < REDOS_ASCII) set.ascii[lower] = true;
+    if (upper < REDOS_ASCII) set.ascii[upper] = true;
+}
+
+function redosAddRange(set, from, to) {
+    for (let code = from; code <= to; code++) {
+        if (code >= REDOS_ASCII) { set.other = true; break; }
+        redosAddChar(set, code);
+    }
+}
+
+function redosUnion(into, set) {
+    for (let i = 0; i < REDOS_ASCII; i++) if (set.ascii[i]) into.ascii[i] = true;
+    if (set.other) into.other = true;
+    return into;
+}
+
+function redosOverlap(a, b) {
+    if (a.other && b.other) return true;
+    for (let i = 0; i < REDOS_ASCII; i++) if (a.ascii[i] && b.ascii[i]) return true;
+    return false;
+}
+
+/** The set of a class escape (\d \w \s), or null for any other escape. */
+function redosClassEscape(c) {
+    const set = redosSet();
+    if (c === 'd') { redosAddRange(set, 48, 57); return set; }
+    if (c === 'w') { redosAddRange(set, 48, 57); redosAddRange(set, 65, 90); redosAddRange(set, 97, 122); redosAddChar(set, 95); return set; }
+    if (c === 's') { [9, 10, 11, 12, 13, 32].forEach(code => redosAddChar(set, code)); set.other = true; return set; }
+    if (c === 'D' || c === 'W' || c === 'S') return redosSet(true);
+    return null;
+}
+
+const REDOS_CONTROL_ESCAPES = { n: 10, r: 13, t: 9, f: 12, v: 11, '0': 0 };
+
+/** Parses source into a tree; throws on what it cannot follow (the caller then falls back). */
+function redosParse(source) {
+    let pos = 0;
+
+    function parseEscapeAt(set) {
+        // pos is on the character after the backslash
+        const c = source[pos];
+        if (c === undefined) throw new Error('trailing backslash');
+        pos++;
+        const cls = redosClassEscape(c);
+        if (cls) return redosUnion(set, cls);
+        if (c in REDOS_CONTROL_ESCAPES) { redosAddChar(set, REDOS_CONTROL_ESCAPES[c]); return set; }
+        if (/[1-9xucpPk]/.test(c)) return redosUnion(set, redosSet(true)); // backreferences, code points, properties
+        redosAddChar(set, c.charCodeAt(0));
+        return set;
+    }
+
+    function parseClass() {
+        // pos is after '['
+        const set = redosSet();
+        let negated = false;
+        if (source[pos] === '^') { negated = true; pos++; }
+        while (pos < source.length && source[pos] !== ']') {
+            let code = null;
+            if (source[pos] === '\\') {
+                pos++;
+                const c = source[pos];
+                const cls = c !== undefined ? redosClassEscape(c) : null;
+                if (cls) { pos++; redosUnion(set, cls); continue; }
+                if (c in REDOS_CONTROL_ESCAPES) { pos++; code = REDOS_CONTROL_ESCAPES[c]; }
+                else if (c !== undefined && /[xucpPb]/.test(c)) { pos++; redosUnion(set, redosSet(true)); continue; }
+                else if (c === undefined) throw new Error('trailing backslash');
+                else { pos++; code = c.charCodeAt(0); }
+            } else {
+                code = source.charCodeAt(pos);
+                pos++;
+            }
+            if (source[pos] === '-' && source[pos + 1] !== undefined && source[pos + 1] !== ']') {
+                pos++;
+                let to;
+                if (source[pos] === '\\') {
+                    const c = source[pos + 1];
+                    if (c === undefined || redosClassEscape(c) || /[xucpP]/.test(c)) { pos += 2; redosUnion(set, redosSet(true)); continue; }
+                    to = c in REDOS_CONTROL_ESCAPES ? REDOS_CONTROL_ESCAPES[c] : c.charCodeAt(0);
+                    pos += 2;
+                } else {
+                    to = source.charCodeAt(pos);
+                    pos++;
+                }
+                redosAddRange(set, code, to);
+                continue;
+            }
+            redosAddChar(set, code);
+        }
+        if (source[pos] !== ']') throw new Error('unclosed class');
+        pos++;
+        return negated ? redosSet(true) : set;
+    }
+
+    function parseQuantifier(atom) {
+        const c = source[pos];
+        if (c === '*' || c === '+' || c === '?') {
+            pos++;
+            atom.quant = c === '?' ? 'optional' : 'unbounded';
+            atom.nullable = atom.nullable || c !== '+';
+        } else if (c === '{') {
+            const m = /^\{(\d+)(,(\d*))?\}/.exec(source.slice(pos));
+            if (!m) return; // a literal brace
+            pos += m[0].length;
+            const min = Number(m[1]);
+            const unbounded = m[2] !== undefined && m[3] === '';
+            atom.quant = unbounded ? 'unbounded' : 'bounded';
+            if (min === 0) atom.nullable = true;
+        } else {
+            return;
+        }
+        if (source[pos] === '?') pos++; // lazy
+    }
+
+    function parseAtom() {
+        const c = source[pos];
+        let atom;
+        if (c === '(') {
+            pos++;
+            let zeroWidth = false;
+            if (source[pos] === '?') {
+                const rest = source.slice(pos);
+                if (rest.startsWith('?:')) pos += 2;
+                else if (rest.startsWith('?=') || rest.startsWith('?!')) { pos += 2; zeroWidth = true; }
+                else if (rest.startsWith('?<=') || rest.startsWith('?<!')) { pos += 3; zeroWidth = true; }
+                else if (rest.startsWith('?<')) { const end = source.indexOf('>', pos); if (end === -1) throw new Error('bad group name'); pos = end + 1; }
+                else throw new Error('unknown group');
+            }
+            const branches = parseAlternatives();
+            if (source[pos] !== ')') throw new Error('unclosed group');
+            pos++;
+            const first = redosSet();
+            let nullable = false;
+            for (const branch of branches) { redosUnion(first, branch.first); if (branch.nullable) nullable = true; }
+            atom = zeroWidth
+                ? { kind: 'zero', first: redosSet(), nullable: true, branches }
+                : { kind: 'group', first, nullable, branches };
+        } else if (c === '[') {
+            pos++;
+            atom = { kind: 'char', first: parseClass(), nullable: false };
+        } else if (c === '\\') {
+            pos++;
+            if (source[pos] === 'b' || source[pos] === 'B') { pos++; atom = { kind: 'zero', first: redosSet(), nullable: true }; }
+            else atom = { kind: 'char', first: parseEscapeAt(redosSet()), nullable: false };
+        } else if (c === '^' || c === '$') {
+            pos++;
+            atom = { kind: 'zero', first: redosSet(), nullable: true };
+        } else if (c === '.') {
+            pos++;
+            atom = { kind: 'char', first: redosSet(true), nullable: false };
+        } else {
+            const set = redosSet();
+            redosAddChar(set, source.charCodeAt(pos));
+            pos++;
+            atom = { kind: 'char', first: set, nullable: false };
+        }
+        atom.quant = null;
+        parseQuantifier(atom);
+        return atom;
+    }
+
+    function parseSequence() {
+        const atoms = [];
+        while (pos < source.length && source[pos] !== '|' && source[pos] !== ')') atoms.push(parseAtom());
+        const first = redosSet();
+        let nullable = true;
+        for (const atom of atoms) {
+            if (atom.kind === 'zero') continue;
+            redosUnion(first, atom.first);
+            if (!atom.nullable) { nullable = false; break; }
+        }
+        return { atoms, first, nullable };
+    }
+
+    function parseAlternatives() {
+        const branches = [parseSequence()];
+        while (source[pos] === '|') { pos++; branches.push(parseSequence()); }
+        return branches;
+    }
+
+    const branches = parseAlternatives();
+    if (pos !== source.length) throw new Error('unbalanced');
+    return branches;
+}
+
+/**
+ * Whether a repeated group in the tree can match the same text in many ways (exponential backtracking):
+ * - a repeated choice whose branches can start alike, or match nothing: (a|aa)+, (\w|\d)+, (a|)+
+ * - a repeat inside a repeat that can run into the next round: (a+)+, (a+a)+, (\d*)*. One that a required
+ *   character it cannot match ends, as in host names (?:[a-z0-9-]*[a-z0-9]\.)*, splits the text one way only.
+ * @param {Array} branches - redosParse() output
+ * @param {{rest: Array, boundary: ?Object}} [scope] - the required character sets after this point in the
+ *        round of the nearest repeated group, and what that group's next round starts with
+ */
+function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
+    for (const branch of branches) {
+        for (let index = 0; index < branch.atoms.length; index++) {
+            const atom = branch.atoms[index];
+            const unbounded = atom.quant === 'unbounded';
+            const rest = branch.atoms.slice(index + 1)
+                .filter(next => next.kind !== 'zero' && !next.nullable)
+                .map(next => next.first)
+                .concat(scope.rest);
+            if (unbounded && scope.boundary && atom.kind !== 'zero') {
+                const separated = rest.some(set => !redosOverlap(set, atom.first));
+                if (!separated && redosOverlap(atom.first, scope.boundary)) return true;
+            }
+            if (!atom.branches) continue;
+            if (unbounded && atom.kind === 'group' && atom.branches.length > 1) {
+                if (atom.branches.some(b => b.nullable)) return true;
+                for (let i = 0; i < atom.branches.length; i++) {
+                    for (let j = i + 1; j < atom.branches.length; j++) {
+                        if (redosOverlap(atom.branches[i].first, atom.branches[j].first)) return true;
+                    }
+                }
+            }
+            const inner = unbounded && atom.kind === 'group'
+                ? { rest: [], boundary: atom.first }
+                : { rest, boundary: scope.boundary };
+            if (redosTreeIsEvil(atom.branches, inner)) return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Heuristic ReDoS check — rejects patterns most likely to cause catastrophic
  * backtracking. Conservative: prefers false positives (over-rejection) to a
- * hung extension. Catches `(a+)+`, `(a*)*`, `(\d+)+`, `(a{2,})+`, etc.
+ * hung extension. Catches `(a+)+`, `(a*)*`, `(\d+)+`, `(a{2,})+`, nested ones
+ * such as `((a+)+b)+`, and repeated choices whose branches overlap, such as
+ * `(a|aa)+` and `(\w|\d)+` (redosTreeIsEvil).
  * @param {string} pattern - User-supplied regex source
  * @returns {boolean} true if the pattern looks dangerous
  */
@@ -31,6 +275,11 @@ function isLikelyEvilRegex(pattern) {
     // group containing + * or {n,} immediately followed by another + or *
     if (/\([^()]*[+*][^()]*\)\s*[+*]/.test(pattern)) return true;
     if (/\([^()]*\{\d+,\}[^()]*\)\s*[+*]/.test(pattern)) return true;
+    try {
+        if (redosTreeIsEvil(redosParse(pattern))) return true;
+    } catch (_) {
+        // A source the reading does not follow: the checks above decide (an invalid one never compiles)
+    }
     return false;
 }
 
