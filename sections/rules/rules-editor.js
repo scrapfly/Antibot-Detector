@@ -154,7 +154,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               value = method.condition || 'exists';
             }
 
-            const confidence = method.confidence || (methodType === 'dom' ? Constants.DEFAULT_DOM_CONFIDENCE : Constants.DEFAULT_MATCH_CONFIDENCE);
+            // 0 is a confidence of its own, not a missing one
+            const confidence = Number.isFinite(method.confidence) ? method.confidence : (methodType === 'dom' ? Constants.DEFAULT_DOM_CONFIDENCE : Constants.DEFAULT_MATCH_CONFIDENCE);
             // Stable id combinations refer to, and whether the pattern may fire alone
             const patternId = ((typeof DetectionCombinations !== 'undefined') && DetectionCombinations.idOf(detector, method))
               || `${methodType}-${index + 1}`;
@@ -243,9 +244,9 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 data-value-wholeword="${valueWholeWord}"
                 data-value-case="${valueCaseSensitive}"
                 data-check-scripts="${checkScripts}"
-                data-name-scope="${nameScope}"
-                data-value-scope="${valueScope}"
-                data-text-scope="${textScope}"
+                data-name-scope="${FormatUtils.escapeAttr(nameScope)}"
+                data-value-scope="${FormatUtils.escapeAttr(valueScope)}"
+                data-text-scope="${FormatUtils.escapeAttr(textScope)}"
                 data-payload-url-pattern="${FormatUtils.escapeAttr(payloadUrlPattern)}"
                 data-payload-url-regex="${payloadUrlRegex}"
                 data-payload-url-case-sensitive="${payloadUrlCaseSensitive}"
@@ -1340,7 +1341,10 @@ Rules.prototype.saveRule = async function() {
         const baseId = DetectorManager.canonicalizeDetectorId(slug || `custom-${Date.now()}`);
         detectorId = baseId;
         let suffix = 2;
-        while (Object.values(candidate).some(records => records[detectorId])) detectorId = `${baseId}-${suffix++}`;
+        // An official id stays free even when that rule is deleted: Rules → Update would take it back
+        const taken = (id) => Object.values(candidate).some(records => records[id])
+          || (typeof DetectionUtils !== 'undefined' && DetectionUtils._officialDetectorIds.has(id));
+        while (taken(detectorId)) detectorId = `${baseId}-${suffix++}`;
         draft.detector.id = detectorId;
       } else {
         if (!candidate[originalCategory]?.[detectorId]) throw new Error('Detector no longer exists');

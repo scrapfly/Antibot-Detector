@@ -434,3 +434,32 @@ test('keeping edits does not dismiss the pending update when saving the decision
   await assert.rejects(UM.keepUserEdits(['detect-akamai']), /save detector updates/);
   assert.deepStrictEqual(local, before);
 });
+
+test('the user\'s own rule on an official id is never replaced without asking', async () => {
+  // A deleted official rule re-created by name, or an imported custom rule, carries the official id
+  const mine = { id: 'detect-cloudflare', name: 'Cloudflare', author: 'Me', version: '1.0', detection: { cookie: [{ name: 'mine' }] } };
+  const local = { scrapfly_detectors: { detectors: { antibot: { 'detect-cloudflare': mine } } } };
+  const { UM } = load(local, { remote: { 'detect-cloudflare': official('detect-cloudflare', '2.1.0') } });
+
+  const check = await UM.checkForUpdates(true);
+  assert.strictEqual(check.updates.find(u => u.id === 'detect-cloudflare').userModified, true);
+  const result = await UM.applyUpdates();
+  assert.deepStrictEqual(plain(result.needsDecision.map(u => u.id)), ['detect-cloudflare']);
+  assert.deepStrictEqual(stored(local)['detect-cloudflare'].detection, { cookie: [{ name: 'mine' }] }, 'own rule kept');
+});
+
+test('an official rule the user moved to another category is updated there once, never duplicated', async () => {
+  const moved = DetectorManager.markUserEdited({ ...official('detect-akamai', '2.0.0') }, official('detect-akamai', '2.0.0'));
+  const local = { scrapfly_detectors: { detectors: { antibot: {}, captcha: { 'detect-akamai': moved } } } };
+  const { UM } = load(local, { remote: { 'detect-akamai': official('detect-akamai', '2.1.0') } });
+
+  const check = await UM.checkForUpdates(true);
+  const akamai = check.updates.find(u => u.id === 'detect-akamai');
+  assert.strictEqual(akamai.isNew, false, 'found in its new category, not offered as a new rule');
+  assert.strictEqual(akamai.userModified, true);
+
+  await UM.applyUpdates({ overwriteModified: true });
+  const all = local.scrapfly_detectors.detectors;
+  assert.strictEqual(all.antibot['detect-akamai'].version, '2.1.0', '"Use new version" puts the official rule back in its category');
+  assert.ok(!all.captcha['detect-akamai'], 'the moved copy is replaced, not kept beside it');
+});

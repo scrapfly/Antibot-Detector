@@ -234,10 +234,10 @@ Rules.prototype.populateModalData = function(detector) {
       };
 
       // Check for custom icon first
-      if (detector.customIcon) {
+      if (typeof detector.customIcon === 'string' && detector.customIcon) {
         iconImg.src = detector.customIcon;
         iconSourceType = 'custom';
-      } else if (!detector.icon || detector.icon === 'default') {
+      } else if (typeof detector.icon !== 'string' || !detector.icon || detector.icon === 'default') {
         // Use Scrapfly icon for default or when no icon is set
         iconImg.src = scrapflyIcon;
         iconSourceType = 'default';

@@ -466,7 +466,7 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
     const name = FormatUtils.ruleText(combo.name.trim(), combo.nameI18n) || combosFormat('combinationDefaultNameFmt', 'Combination {0}', index + 1);
     const ask = typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.confirm === 'function'
       ? NotificationHelper.confirm({ title: combosText('combinationDelete', 'Delete combination'),
-          message: combosFormat('combinationDeleteConfirmFmt', 'Delete the combination "{0}"? Its patterns stay in the rule.', FormatUtils.escapeHtml(name)),
+          message: combosFormat('combinationDeleteConfirmFmt', 'Delete the combination "{0}"? Its patterns stay in the rule.', name),
           type: 'danger', confirmText: combosText('btnDelete', 'Delete'), cancelText: combosText('btnCancel', 'Cancel'), emphasizeAction: true })
       : Promise.resolve(true);
     ask.then(confirmed => {

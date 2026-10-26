@@ -7174,5 +7174,9 @@
   "ruleLiveTestError": {
     "message": "The test could not run.",
     "description": "Test on this page: a failure with no more precise message"
+  },
+  "rulesToggleSaveFailed": {
+    "message": "Could not save the change. Try again.",
+    "description": "Rules: a rule's on/off switch could not be saved, so it went back to how it was"
   }
 }

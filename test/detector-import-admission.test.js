@@ -24,7 +24,13 @@ test('replace all rejects the entire import before deleting custom rules or chan
   const invalid = [null, [], 'broken', { detection: null }, definition('detect-bad', { detection: { cookie: 'broken' } }),
     definition('detect-bad', { detection: { cookie: [null] } }), definition('detect-bad', { detection: { cookie: [{ name: '(', nameRegex: true }] } }),
     definition('detect-bad', { minExtensionVersion: '99.0' }), definition('detect-bad', { enabled: 'false' }),
-    definition('detect-bad', { combinations: [{ when: { pattern: 'missing' } }] })];
+    definition('detect-bad', { combinations: [{ when: { pattern: 'missing' } }] }),
+    // Values the engine reads as text (a number stops every scan) and logos that are markup
+    definition('detect-bad', { detection: { cookie: [{ name: 'sess', value: 123 }] } }),
+    definition('detect-bad', { detection: { payload: [{ text: 'x', urlPattern: 42 }] } }),
+    definition('detect-bad', { detection: { payload: [{ text: 'x', methods: ['POST', 7] }] } }),
+    definition('detect-bad', { icon: 5 }), definition('detect-bad', { icon: '<a href="https://x.test">Update</a>' }),
+    definition('detect-bad', { customIcon: 'x" onerror="y' })];
   for (const bad of invalid) {
     const dm = manager();
     const before = plain(dm.detectors);

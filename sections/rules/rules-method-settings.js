@@ -724,6 +724,9 @@ Rules.prototype.saveMethodSettings = function() {
         payloadMethods = selectedRadio.value;
       }
     }
+    // The dialog picks one method: a rule listing several keeps its list while its first one stays picked
+    const storedMethods = this.currentMethodItem.dataset.payloadMethods || '';
+    if (storedMethods.includes(',') && payloadMethods === storedMethods.split(',')[0]) payloadMethods = storedMethods;
 
     // Save to data attributes
     this.currentMethodItem.dataset.confidence = confidence;

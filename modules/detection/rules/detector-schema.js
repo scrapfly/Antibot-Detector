@@ -42,13 +42,18 @@ class DetectorSchema {
         return children.every(child => this.validCombination(child, ids, depth + 1));
     }
 
+    static RULE_TEXT_FIELDS = Object.freeze(['name', 'value', 'text', 'selector', 'path', 'target', 'urlPattern', 'description',
+        'textScope', 'scope', 'condition', 'nameScope', 'valueScope', 'body', 'windowPath']);
+
     /** Validate before normalizing: normalization must never hide corrupt input. */
     static admit(detector, { categoryName, detectorName, extensionVersion } = {}) {
         if (!this.isRecord(detector) || !this.safeKey(detectorName) || !this.isRecord(detector.detection)) return null;
         if (detector.id !== undefined && (!this.safeKey(detector.id) || this.canonicalizeDetectorId(detector.id) !== this.canonicalizeDetectorId(detectorName))) return null;
-        for (const field of ['name', 'author', 'category', 'version']) {
+        for (const field of ['name', 'author', 'category', 'version', 'description', 'website', 'lastUpdated', 'icon', 'customIcon', 'difficulty']) {
             if (detector[field] !== undefined && typeof detector[field] !== 'string') return null;
         }
+        // A logo is a file name, an address or an emoji, never markup
+        if (/[<>"'`]/.test(detector.icon || '') || /[<>"'`\s]/.test(detector.customIcon || '')) return null;
         if (detector.enabled !== undefined && typeof detector.enabled !== 'boolean') return null;
         if (!this.compatible(detector, extensionVersion)) return null;
         const ids = new Set();
@@ -61,6 +66,11 @@ class DetectorSchema {
                 if (!this.isRecord(rule) || typeof rule[fields[method]] !== 'string' || !rule[fields[method]].trim()) return null;
                 if (rule.confidence !== undefined && (!Number.isFinite(rule.confidence) || rule.confidence < 0 || rule.confidence > 100)) return null;
                 if (rule.id !== undefined && !this.safeKey(rule.id)) return null;
+                // The engine calls string methods on these: a number or an object would stop every scan
+                for (const field of this.RULE_TEXT_FIELDS) {
+                    if (rule[field] !== undefined && typeof rule[field] !== 'string') return null;
+                }
+                if (rule.methods !== undefined && (!Array.isArray(rule.methods) || rule.methods.some(m => typeof m !== 'string'))) return null;
                 const id = rule.id || `${method}-${index + 1}`;
                 if (ids.has(id)) return null;
                 ids.add(id);

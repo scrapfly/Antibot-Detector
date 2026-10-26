@@ -232,9 +232,8 @@ class Rules {
   }
 
   async updateDetectorEnabledState(category, detectorName, enabled) {
+    const detector = this.detectorManager.getDetector(category, detectorName);
     try {
-      // Get the detector
-      const detector = this.detectorManager.getDetector(category, detectorName);
       if (detector) {
         // Update enabled state
         detector.enabled = enabled;
@@ -262,6 +261,12 @@ class Rules {
       }
     } catch (error) {
       Logger.error('UI', 'Failed to update detector enabled state:', error);
+      // Not saved: the switch and the rule go back, so what the card shows is what reopening it shows
+      if (detector) detector.enabled = !enabled;
+      const toggle = document.querySelector(`.detector-toggle[data-detector="${CSS.escape(detectorName)}"][data-category="${CSS.escape(category)}"]`);
+      if (toggle) toggle.checked = !enabled;
+      const message = (typeof I18n !== 'undefined' && I18n.get('rulesToggleSaveFailed')) || 'Could not save the change. Try again.';
+      if (typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.error === 'function') NotificationHelper.error(message);
     }
   }
 }

@@ -148,7 +148,7 @@ Rules.prototype.formatLastUpdated = function(rawTimestamp) {
   }
 
   if (!parsedDate) {
-    return String(rawTimestamp);
+    return FormatUtils.escapeHtml(String(rawTimestamp));
   }
 
   // Format: "relative time (absolute time)"
@@ -439,17 +439,21 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
     `;
   };
 
+  // Imported rules are user input: a logo is text or an address, never markup or a number
+  const iconText = typeof detector.icon === 'string' ? detector.icon : '';
+  const customIcon = typeof detector.customIcon === 'string' ? detector.customIcon : '';
+
   // Check for custom uploaded icon first
-  if (detector.customIcon) {
+  if (customIcon) {
     if (isFingerprintCategory) {
-      return wrapFingerprintImage(detector.customIcon, iconAlt, 'custom', scrapflyIcon);
+      return wrapFingerprintImage(escAttr(customIcon), iconAlt, 'custom', scrapflyIcon);
     }
-    return `<img src="${detector.customIcon}" alt="${iconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
+    return `<img src="${escAttr(customIcon)}" alt="${iconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
   }
 
   // Try to get real icon from detector data
-  if (detector.icon) {
-    const lowerIcon = detector.icon.toLowerCase ? detector.icon.toLowerCase() : detector.icon;
+  if (iconText) {
+    const lowerIcon = iconText.toLowerCase();
 
     if (lowerIcon === 'default') {
       if (isFingerprintCategory) {
@@ -458,7 +462,7 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
       return `<img src="${scrapflyIcon}" alt="${scrapflyAlt}" class="detector-icon-img">`;
     }
     // If icon is "custom.png" or "custom", use scrapfly icon directly
-    if (detector.icon === 'custom.png' || detector.icon === 'custom') {
+    if (iconText === 'custom.png' || iconText === 'custom') {
       if (isFingerprintCategory) {
         return wrapFingerprintImage(scrapflyIcon, scrapflyAlt, 'default', '');
       }
@@ -471,28 +475,28 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
     }
 
     // If it's a URL, return as image
-    if (detector.icon.startsWith('http') || detector.icon.startsWith('/')) {
+    if (iconText.startsWith('http') || iconText.startsWith('/')) {
       if (isFingerprintCategory) {
-        return wrapFingerprintImage(detector.icon, iconAlt, 'builtin', scrapflyIcon);
+        return wrapFingerprintImage(escAttr(iconText), iconAlt, 'builtin', scrapflyIcon);
       }
-      return `<img src="${detector.icon}" alt="${iconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
+      return `<img src="${escAttr(iconText)}" alt="${iconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
     // If it's a filename, construct the path to the detectors/icons folder
-    if (detector.icon.includes('.png') || detector.icon.includes('.jpg') || detector.icon.includes('.svg') || detector.icon.includes('.webp')) {
+    if (iconText.includes('.png') || iconText.includes('.jpg') || iconText.includes('.svg') || iconText.includes('.webp')) {
       if (isFingerprintCategory) {
-        return wrapFingerprintImage(`detectors/icons/${detector.icon}`, namedIconAlt, 'builtin', scrapflyIcon);
+        return wrapFingerprintImage(`detectors/icons/${escAttr(iconText)}`, namedIconAlt, 'builtin', scrapflyIcon);
       }
       // Brand logos: the dark theme shows the copy without the icon's white square
       // (assets/logos-dark/, scripts/generate-dark-logos.js) on a tile; the light theme the original
-      if (/_official\.png$/.test(detector.icon)) {
-        const icon = escAttr(detector.icon);
+      if (/_official\.png$/.test(iconText)) {
+        const icon = escAttr(iconText);
         return `<span class="detector-logo"><img src="assets/logos-dark/${icon}" alt="${namedIconAlt}" class="detector-icon-img detector-logo-dark" data-fallback="detectors/icons/${icon}">`
           + `<img src="detectors/icons/${icon}" alt="" class="detector-icon-img detector-logo-light" data-fallback="${scrapflyIcon}"></span>`;
       }
-      return `<img src="detectors/icons/${detector.icon}" alt="${namedIconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
+      return `<img src="detectors/icons/${escAttr(iconText)}" alt="${namedIconAlt}" class="detector-icon-img" data-fallback="${scrapflyIcon}">`;
     }
-    // Otherwise return as emoji or text
-    return detector.icon;
+    // Otherwise return as emoji or text (a rule file is user input: text, never markup)
+    return escAttr(iconText);
   }
 
   // Fallback to Scrapfly default icon

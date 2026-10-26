@@ -279,7 +279,7 @@ class UpdateManager {
         }
 
         for (const { category, detectorId, remoteDetector } of fetchResults) {
-            const localDetector = localDetectors[category]?.[detectorId];
+            const localDetector = this.findStored(localDetectors, category, detectorId)?.detector;
             if (!remoteDetector) {
                 failed.push({ id: detectorId, category, name: localDetector?.name || detectorId });
                 continue;
@@ -335,7 +335,7 @@ class UpdateManager {
         const remoteVersion = incoming.version || '0.0';
         const localVersion = this.localVersionOf(localDetector);
         if (!this.isNewerVersion(remoteVersion, localVersion)) return null;
-        if (localDetector?.userModified && localDetector.dismissedVersion
+        if (this.isProtected(localDetector) && localDetector.dismissedVersion
             && !this.isNewerVersion(remoteVersion, localDetector.dismissedVersion)) {
             return null;
         }
@@ -347,10 +347,33 @@ class UpdateManager {
             remoteVersion,
             minExtensionVersion: incoming.minExtensionVersion || '1.0',
             isNew: !localDetector,
-            userModified: !!localDetector?.userModified
+            userModified: this.isProtected(localDetector)
         };
         if (source !== 'remote') entry.source = source;
         return entry;
+    }
+
+    /**
+     * Never replaced without asking: an official detector the user edited, and the user's own rule that
+     * happens to carry an official id (a deleted official rule re-created by name, an imported custom rule)
+     */
+    static isProtected(localDetector) {
+        if (!localDetector) return false;
+        // An author other than Scrapfly marks the user's own rule (the editor reserves that name for official ones)
+        const author = typeof localDetector.author === 'string' ? localDetector.author.trim().toLowerCase() : '';
+        return !!localDetector.userModified || (author !== '' && author !== 'scrapfly');
+    }
+
+    /**
+     * The stored copy of an official detector, wherever it is: an edit can move it to another category.
+     * @returns {{category: string, detector: object}|null}
+     */
+    static findStored(detectors, category, detectorId) {
+        if (detectors[category]?.[detectorId]) return { category, detector: detectors[category][detectorId] };
+        for (const [other, records] of Object.entries(detectors || {})) {
+            if (records && records[detectorId]) return { category: other, detector: records[detectorId] };
+        }
+        return null;
     }
 
     /** Stored detectors as { category: { id: detector } } */
@@ -422,7 +445,10 @@ class UpdateManager {
      * the user's on/off and difficulty choices.
      */
     static installDetector(detectors, category, detectorId, incoming) {
-        const localDetector = detectors[category]?.[detectorId];
+        const found = this.findStored(detectors, category, detectorId);
+        const localDetector = found?.detector;
+        // The official version goes back to its own category: a copy the user moved elsewhere is replaced, not duplicated
+        if (found && found.category !== category) delete detectors[found.category][detectorId];
         if (localDetector && typeof localDetector.enabled === 'boolean') {
             incoming.enabled = localDetector.enabled;
         }
@@ -590,7 +616,7 @@ class UpdateManager {
                         continue;
                     }
 
-                    const localDetector = detectors[update.category]?.[update.id];
+                    const localDetector = this.findStored(detectors, update.category, update.id)?.detector;
                     const current = this.describeUpdate(update.category, update.id, incoming, localDetector, update.source);
                     if (!current) continue; // no longer an update: drop it
                     if (update.tag) current.tag = update.tag;
@@ -613,8 +639,8 @@ class UpdateManager {
             if (planned.length > 0) {
                 await this.commitDetectors((fresh) => {
                     for (const { update, incoming, current } of planned) {
-                        const now = fresh[update.category]?.[update.id];
-                        if (now?.userModified && !current.userModified && !overwriteModified) {
+                        const now = this.findStored(fresh, update.category, update.id)?.detector;
+                        if (this.isProtected(now) && !current.userModified && !overwriteModified) {
                             keepPending.push({ ...current, userModified: true });
                             continue;
                         }
@@ -747,7 +773,7 @@ class UpdateManager {
         let kept = 0;
         for (const update of pendingUpdates) {
             if (!ids.includes(update.id)) continue;
-            const localDetector = detectors[update.category]?.[update.id];
+            const localDetector = this.findStored(detectors, update.category, update.id)?.detector;
             if (!localDetector) continue;
             localDetector.dismissedVersion = update.remoteVersion;
             kept++;
@@ -882,7 +908,7 @@ class UpdateManager {
         for (const [category, categoryData] of Object.entries(index)) {
             if (!categoryData || !Array.isArray(categoryData.detectors)) continue;
             for (const detectorId of categoryData.detectors) {
-                const localDetector = detectors[category]?.[detectorId];
+                const localDetector = this.findStored(detectors, category, detectorId)?.detector;
                 if (deletedOfficial.has(detectorId) && !localDetector) continue;
                 const bundled = await this.fetchBundledDetector(category, detectorId);
                 if (!bundled) continue;
@@ -912,7 +938,7 @@ class UpdateManager {
                 this.installDetector(detectors, category, detectorId, bundled);
                 installed++;
                 ops.push((fresh) => {
-                    if (fresh[category]?.[detectorId]?.userModified) return; // edited meanwhile: keep the edit
+                    if (this.isProtected(this.findStored(fresh, category, detectorId)?.detector)) return; // edited meanwhile: keep the edit
                     this.installDetector(fresh, category, detectorId, bundled);
                 });
             }
