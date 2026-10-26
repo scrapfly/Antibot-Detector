@@ -67,6 +67,28 @@ class AdvancedToolGrid {
         return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${shapes[action] || shapes.inspect}</svg>`;
     }
 
+    /** A card busy with its job: disabled, marked, its hint saying what it does (the idle hint kept to restore). */
+    static markToolBusy(card, text) {
+        if (!card) return;
+        const hint = card.querySelector('.advanced-tool-hint');
+        if (hint && !AdvancedToolGrid.idleHints.has(card)) AdvancedToolGrid.idleHints.set(card, hint.textContent);
+        card.disabled = true;
+        card.classList.add('is-working');
+        card.setAttribute('aria-busy', 'true');
+        if (hint && typeof text === 'string') hint.textContent = text;
+    }
+
+    /** The card ready again, with its own hint. */
+    static markToolIdle(card) {
+        if (!card) return;
+        card.disabled = false;
+        card.classList.remove('is-working');
+        card.removeAttribute('aria-busy');
+        const hint = card.querySelector('.advanced-tool-hint');
+        if (hint && AdvancedToolGrid.idleHints.has(card)) hint.textContent = AdvancedToolGrid.idleHints.get(card);
+        AdvancedToolGrid.idleHints.delete(card);
+    }
+
     static captureLast(tools, actionOf) {
         const list = Array.isArray(tools) ? tools : [];
         return [...list.filter(tool => actionOf(tool) !== 'capture'), ...list.filter(tool => actionOf(tool) === 'capture')];
@@ -158,27 +180,39 @@ class AdvancedToolGrid {
             if (!btn) return;
             const previous = this.toolActionBindings.get(btn);
             if (previous) btn.removeEventListener('click', previous);
+            // The card is drawn again (another tab and back) while its job still runs: it says so, instead of
+            // looking ready while it ignores clicks until the job ends
+            if (this.pendingToolActions.has(id)) {
+                const busyHint = this.pendingToolHints?.get(id);
+                BaseAdvancedModule.markToolBusy(btn, busyHint || BaseAdvancedModule._tr('advToolWorking', 'Working…'));
+            }
             const listener = async event => {
                 if (btn.disabled || this.pendingToolActions.has(id)) return;
                 this.pendingToolActions.add(id);
+                if (!this.pendingToolHints) this.pendingToolHints = new Map();
                 // The result dialog this click opens (now or after a reload) goes to History
                 this._lastTool = {
                     id,
                     label: (btn.querySelector('.advanced-tool-label')?.textContent || id).trim(),
                     action: btn.dataset?.toolAction || ''
                 };
-                const hint = btn.querySelector('.advanced-tool-hint');
-                const originalHint = hint ? hint.textContent : '';
-                btn.disabled = true;
-                btn.classList.add('is-working');
-                btn.setAttribute('aria-busy', 'true');
-                if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWorking', 'Working…');
+                const say = (text) => {
+                    this.pendingToolHints.set(id, text);
+                    const current = document.querySelector(`#${id}`);
+                    for (const card of new Set([btn, current].filter(Boolean))) {
+                        const cardHint = card.querySelector('.advanced-tool-hint');
+                        if (cardHint) cardHint.textContent = text;
+                    }
+                };
+                const working = BaseAdvancedModule._tr('advToolWorking', 'Working…');
+                BaseAdvancedModule.markToolBusy(btn, working);
+                this.pendingToolHints.set(id, working);
                 const release = () => {
                     this.pendingToolActions.delete(id);
-                    btn.disabled = false;
-                    btn.classList.remove('is-working');
-                    btn.removeAttribute('aria-busy');
-                    if (hint) hint.textContent = originalHint;
+                    this.pendingToolHints.delete(id);
+                    // The card on screen now, which is a new one when the grid was drawn again meanwhile
+                    const current = document.querySelector(`#${id}`);
+                    for (const card of new Set([btn, current].filter(Boolean))) BaseAdvancedModule.markToolIdle(card);
                     if (id === `${this.moduleName}StartCapture`) this.updateCaptureButtonState(this.isCapturing, false);
                 };
                 // Did this click open its result window right away?
@@ -197,7 +231,7 @@ class AdvancedToolGrid {
                 // A tool that started a background job (it returns { awaitingResult: true })
                 // answers seconds later: stay busy, and say so, until its window or a notification appears
                 if (!failed && outcome && outcome.awaitingResult === true && opened.available && !opened.seen) {
-                    if (hint) hint.textContent = BaseAdvancedModule._tr('advToolWaitingReload', 'Reloading the page and collecting results. This takes a few seconds…');
+                    say(BaseAdvancedModule._tr('advToolWaitingReload', 'Reloading the page and collecting results. This takes a few seconds…'));
                     // A result window, or a success / warning / error note; the tool's own "page will reload" info note does not count
                     const outcome = BaseAdvancedModule.watchToolOutcome(`${BaseAdvancedModule.TOOL_RESULT_SELECTOR}, .notification-toast:not(.notification-info)`, () => {
                         clearTimeout(timer);
@@ -220,7 +254,9 @@ for (const name of ['resolveToolAction', 'resolveToolTone', 'getToolHint', 'rend
 AdvancedToolGrid.TOOL_RESULT_SELECTOR = '.adv-kit-overlay, .tool-modal, .advanced-code-dialog';
 AdvancedToolGrid.TOOL_RELOAD_TIMEOUT_MS = 40000;
 for (const name of ['TOOL_RESULT_SELECTOR', 'TOOL_RELOAD_TIMEOUT_MS']) BaseAdvancedModule[name] = AdvancedToolGrid[name];
-for (const name of ['toolIcon', 'captureLast', 'watchToolOutcome']) {
+// Each busy card's own hint, given back when it is ready again
+AdvancedToolGrid.idleHints = new WeakMap();
+for (const name of ['toolIcon', 'captureLast', 'watchToolOutcome', 'markToolBusy', 'markToolIdle']) {
     Object.defineProperty(BaseAdvancedModule, name, Object.getOwnPropertyDescriptor(AdvancedToolGrid, name));
 }
 })();

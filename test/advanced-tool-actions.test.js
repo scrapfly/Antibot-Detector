@@ -385,3 +385,34 @@ test('a tool that started a background job stays busy, says so, and frees itself
   await version.click();
   assert.equal(version.disabled, false);
 });
+
+test('a card drawn again while its job runs shows it is busy, and is ready (and clickable) when the job ends', async () => {
+  const { context, instance, nodes } = fixture();
+  const observers = [];
+  context.MutationObserver = class { constructor(fn) { this.fn = fn; this.on = false; observers.push(this); } observe() { this.on = true; } disconnect() { this.on = false; } };
+  context.document.body = {};
+  const add = className => observers.filter(o => o.on).forEach(o => o.fn([{ addedNodes: [{ nodeType: 1, querySelector: () => null,
+    matches: selector => selector.split(', ').includes('.' + className) }] }]));
+  let calls = 0;
+  const actions = [{ id: 'testAnalyzeScripts', handler: async () => { calls++; return { awaitingResult: true }; } }];
+  const first = element(); first.dataset = {}; first.parts['.advanced-tool-hint'].textContent = 'Find the scripts';
+  nodes.set('#testAnalyzeScripts', first);
+  instance.bindToolActions(actions);
+  await first.click();
+  assert.equal(first.disabled, true);
+
+  // Another tab and back: the grid is drawn again with a fresh card
+  const redrawn = element(); redrawn.dataset = {}; redrawn.parts['.advanced-tool-hint'].textContent = 'Find the scripts';
+  nodes.set('#testAnalyzeScripts', redrawn);
+  instance.bindToolActions(actions);
+  assert.equal(redrawn.disabled, true, 'it does not look ready while it would ignore a click');
+  assert.equal(redrawn.getAttribute('aria-busy'), 'true');
+  assert.match(redrawn.parts['.advanced-tool-hint'].textContent, /Reloading the page/);
+
+  add('tool-modal');
+  assert.equal(redrawn.disabled, false);
+  assert.equal(redrawn.getAttribute('aria-busy'), null);
+  assert.equal(redrawn.parts['.advanced-tool-hint'].textContent, 'Find the scripts', 'its own hint is back');
+  await redrawn.click();
+  assert.equal(calls, 2, 'and a click starts the tool again');
+});
