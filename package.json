@@ -27,6 +27,7 @@
     "e2e:webhook": "node scripts/e2e-webhook.js",
     "e2e:hooks": "node scripts/e2e-hooks.js",
     "e2e:translate": "node scripts/e2e-translate.js",
+    "e2e:translate-local": "node scripts/e2e-translate-local.js",
     "e2e:quickwins": "node scripts/e2e-quickwins.js",
     "e2e:v304": "node scripts/e2e-v304.js",
     "e2e:live": "node scripts/e2e-live.js"
