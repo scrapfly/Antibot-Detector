@@ -446,6 +446,21 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
+/* Nothing to translate: a quiet line, no blue frame */
+.rule-translate-bar.is-complete {
+  position: static;
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.rule-translate-bar.is-complete .rule-translate-icon {
+  color: var(--success-light);
+}
+
+.rule-translate-bar.is-complete .rule-translate-text {
+  color: var(--text-secondary);
+}
+
 .rule-translate-bar[hidden] {
   display: none;
 }

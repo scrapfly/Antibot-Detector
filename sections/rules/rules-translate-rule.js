@@ -47,7 +47,10 @@ Rules.prototype.planRuleTranslations = function() {
   return RuleTranslationPlan.plan(this.collectRuleTexts(), RULE_TRANSLATION_LOCALES, ruleShippedTranslation);
 };
 
-/** The bar above the editor: how many texts miss a language, and the button. Hidden when nothing is missing. */
+/**
+ * The bar above the editor, always there so the one-click translation can be found: how many texts miss a language
+ * and the button, or, when nothing is missing, that every text is translated (no button).
+ */
 Rules.prototype.refreshTranslateBar = async function() {
   const bar = document.querySelector('#ruleTranslateBar');
   if (!bar || bar.dataset.busy === '1') return;
@@ -55,9 +58,13 @@ Rules.prototype.refreshTranslateBar = async function() {
   const plan = this.planRuleTranslations();
   const status = this._ruleTranslateResult;
   const supported = typeof self !== 'undefined' && 'Translator' in self;
-  bar.hidden = plan.texts === 0 && !status;
+  bar.hidden = false;
+  bar.classList.toggle('is-complete', plan.texts === 0 && !status);
   const text = bar.querySelector('#ruleTranslateText');
-  if (text) text.textContent = plan.texts ? ruleBarText('ruleTranslateBarFmt', 'Texts not yet translated into every language: {0}', plan.texts) : (status || '');
+  if (text) {
+    text.textContent = plan.texts ? ruleBarText('ruleTranslateBarFmt', 'Texts not yet translated into every language: {0}', plan.texts)
+      : (status || ruleBarText('ruleTranslateBarDoneFmt', 'Every text of this rule is translated into all {0} languages.', RULE_TRANSLATION_LOCALES.length));
+  }
   const button = bar.querySelector('#ruleTranslateAllBtn');
   if (button) {
     button.hidden = plan.texts === 0;

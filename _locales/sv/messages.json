@@ -6610,5 +6610,8 @@
   },
   "ruleOriginalHint": {
     "message": "De andra språken översätter den här texten: ändrar du den visas den oöversatt tills den översätts igen."
+  },
+  "ruleTranslateBarDoneFmt": {
+    "message": "Alla texter i den här regeln är översatta till alla {0} språk."
   }
 }

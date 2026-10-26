@@ -94,8 +94,11 @@ const STAND_IN = `(() => {
     // 1. An official rule is translated into every language already
     await openEditor();
     await sleep(800);
-    assert.equal((await bar()).hidden, true, 'a shipped rule misses no translation');
-    console.log('PASS Official rule: every text of CHEQ has its translations, so the bar stays hidden');
+    const shipped = await bar();
+    assert.equal(shipped.hidden, false, 'the bar is always there, so the translation can be found');
+    assert.equal(shipped.button.hidden, true, 'a shipped rule misses no translation: nothing to translate');
+    assert.match(shipped.text, /21/, `says every text is translated: ${shipped.text}`);
+    console.log('PASS Official rule: every text of CHEQ has its translations: the bar says so, with no button');
 
     // 2. New texts are noticed as they are written
     await page.evaluate(STAND_IN);
@@ -143,8 +146,8 @@ const STAND_IN = `(() => {
     if (shotsAt) await page.screenshot({ path: path.join(shotsAt, 'translate-done.png') });
     // A click anywhere in the editor clears the result
     await page.$eval('#editRuleModal .rule-modal-body', el => el.click());
-    await barIs(b => b.hidden, 'the bar going away');
-    console.log('PASS One click: 21 languages for 3 texts, in the description, the pattern and the combination, and the bar goes once they are covered');
+    await barIs(b => !b.hidden && b.button.hidden && /21/.test(b.text), 'the bar saying every text is translated');
+    console.log('PASS One click: 21 languages for 3 texts, in the description, the pattern and the combination, and the bar then says every text is translated');
 
     // 4. Save stores them like typed ones; a reopened editor misses nothing
     await page.$eval('#saveRuleEdit', el => el.click());
@@ -163,7 +166,7 @@ const STAND_IN = `(() => {
     assert.deepEqual(stored, { description: 'A brand-new description of this protection', descriptionLocales: 21, patternLocales: 21, comboLocales: 21 });
     await openEditor();
     await sleep(800);
-    assert.equal((await bar()).hidden, true, 'every language is covered by what was saved');
+    assert.equal((await bar()).button.hidden, true, 'every language is covered by what was saved');
     console.log('PASS Save: the translations are stored with the rule, and a reopened editor misses nothing');
 
     // 5. Without the translator the bar says what is missing and the button is off

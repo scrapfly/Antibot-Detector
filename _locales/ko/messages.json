@@ -6610,5 +6610,8 @@
   },
   "ruleOriginalHint": {
     "message": "다른 언어는 이 텍스트를 번역합니다. 변경하면 다시 번역될 때까지 번역되지 않은 채로 표시됩니다."
+  },
+  "ruleTranslateBarDoneFmt": {
+    "message": "이 규칙의 모든 텍스트가 {0}개 언어로 모두 번역되었습니다."
   }
 }

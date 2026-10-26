@@ -6610,5 +6610,8 @@
   },
   "ruleOriginalHint": {
     "message": "Các ngôn ngữ khác dịch văn bản này: nếu bạn thay đổi, văn bản sẽ hiển thị chưa dịch cho đến khi được dịch lại."
+  },
+  "ruleTranslateBarDoneFmt": {
+    "message": "Mọi văn bản của quy tắc này đã được dịch sang cả {0} ngôn ngữ."
   }
 }

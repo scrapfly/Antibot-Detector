@@ -6610,5 +6610,8 @@
   },
   "ruleOriginalHint": {
     "message": "Les autres langues traduisent ce texte : si vous le modifiez, elles l’afficheront sans traduction jusqu’à une nouvelle traduction."
+  },
+  "ruleTranslateBarDoneFmt": {
+    "message": "Tous les textes de cette règle sont traduits dans les {0} langues."
   }
 }

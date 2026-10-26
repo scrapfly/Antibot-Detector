@@ -6610,5 +6610,8 @@
   },
   "ruleOriginalHint": {
     "message": "Die anderen Sprachen übersetzen diesen Text: Wenn du ihn änderst, zeigen sie ihn unübersetzt, bis er neu übersetzt ist."
+  },
+  "ruleTranslateBarDoneFmt": {
+    "message": "Alle Texte dieser Regel sind in alle {0} Sprachen übersetzt."
   }
 }
