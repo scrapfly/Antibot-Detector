@@ -142,7 +142,7 @@ function akamaiStopCapture(tabId) {
         const removed = removeListenerIfIdle({
             captureStateRef: akamaiCaptureStateRef,
             listenerRef: akamaiInterceptionListener,
-            removeFn: chrome.webRequest.onBeforeRequest.removeListener
+            removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
         });
         if (removed) {
             akamaiInterceptionListener = null;
@@ -223,7 +223,7 @@ function akamaiHandleCaptureTabUpdate(tabId, changeInfo, tab) {
             state,
             captureStateRef: akamaiCaptureStateRef,
             listenerRef: akamaiInterceptionListener,
-            removeFn: chrome.webRequest.onBeforeRequest.removeListener,
+            removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest),
             loggerPrefix: 'AKAMAI-CAPTURE'
         });
         if (aborted && akamaiCaptureStateRef.size === 0) {
@@ -346,7 +346,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
             const removed = removeListenerIfIdle({
                 captureStateRef: akamaiCaptureStateRef,
                 listenerRef: akamaiInterceptionListener,
-                removeFn: chrome.webRequest.onBeforeRequest.removeListener
+                removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
             });
             if (removed) {
                 akamaiInterceptionListener = null;
@@ -419,6 +419,22 @@ async function akamaiStartExtraction(tabId) {
         }
         Logger.network('[AKAMAI-EXTRACT] Tab info:', { id: tab.id, url: tab.url });
 
+        // After a worker restart only START/GET-state set the ref: set it here too,
+        // and check it before touching cookies or adding listeners.
+        if (!akamaiCaptureStateRef && typeof akamaiCaptureState !== 'undefined' && akamaiCaptureState) {
+            akamaiInitializeInterceptor(akamaiCaptureState);
+        }
+        if (!akamaiCaptureStateRef) {
+            Logger.error('NETWORK', '[AKAMAI-EXTRACT] akamaiCaptureStateRef is not available!');
+            throw new Error('Capture state not initialized');
+        }
+        // A capture on this tab owns its state (and its capture job): never overwrite it
+        const existing = akamaiCaptureStateRef.get(tabId);
+        if (existing && !existing.extractMode) {
+            Logger.network('[AKAMAI-EXTRACT] A capture is running on this tab; extraction refused');
+            return { status: 'capture_running' };
+        }
+
         // Delete _abck cookies for the current site
         Logger.network('[AKAMAI-EXTRACT] Step 2: Getting cookies for:', tab.url);
         const cookies = await PageCookies.getAll({ url: tab.url, name: '_abck' }, tab.id);
@@ -440,11 +456,6 @@ async function akamaiStartExtraction(tabId) {
         }
 
         // Set up extraction mode in the capture state
-        if (!akamaiCaptureStateRef) {
-            Logger.error('NETWORK', '[AKAMAI-EXTRACT] akamaiCaptureStateRef is not available!');
-            throw new Error('Capture state not initialized');
-        }
-
         Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting extraction mode in capture state');
         akamaiCaptureStateRef.set(tabId, {
             active: true,
@@ -481,9 +492,7 @@ async function akamaiStartExtraction(tabId) {
         }
         Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
 
-        // Reload the page
-        await chrome.tabs.reload(tabId);
-        Logger.network('[AKAMAI-EXTRACT] Page reload initiated');
+        // The popup reloads the page once it has this answer (one reload, not two)
 
         // Nothing is drawn on the page while waiting: the popup shows the progress
         Logger.network('[AKAMAI-EXTRACT] ========== WAITING FOR SENSOR DATA ==========');
@@ -911,10 +920,14 @@ function akamaiHandleMessage(request, sendResponse) {
         case 'AKAMAI_EXTRACT_SENSOR':
             // Handle async operation without making the whole function async
             akamaiStartExtraction(request.tabId)
-                .then(() => {
+                .then((result) => {
+                    if (result && result.status === 'capture_running') {
+                        sendResponse({ status: 'capture_running', error: 'Stop the running capture on this tab first' });
+                        return;
+                    }
                     sendResponse({
                         status: 'success',
-                        message: 'Extraction mode enabled. Page will reload.'
+                        message: 'Extraction mode enabled. Reload the page.'
                     });
                 })
                 .catch(error => {

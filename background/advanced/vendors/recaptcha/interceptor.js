@@ -506,6 +506,16 @@ function stopRecaptchaInterception() {
     }
 }
 
+// A capture job can end before this file's own stop runs (tab closed, page left,
+// worker cleanup). That cleanup removes the tab's state and per-tab listeners, but
+// the request listener is shared ('global'): stop it once no capture needs it.
+var recaptchaJobHookInstalled = recaptchaJobHookInstalled || false;
+if (!recaptchaJobHookInstalled && typeof AdvancedJobManager !== 'undefined'
+    && typeof AdvancedJobManager.onCaptureFinished === 'function') {
+    AdvancedJobManager.onCaptureFinished('recaptcha', () => stopRecaptchaInterception());
+    recaptchaJobHookInstalled = true;
+}
+
 async function processCaptureData(state) {
     Logger.debug('NETWORK', '[reCAPTCHA] Processing capture data');
 

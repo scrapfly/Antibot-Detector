@@ -598,6 +598,34 @@ async function showCaptureStarted(tabId, options = {}) {
     });
 }
 
+/**
+ * Reload a tab and wait until its main frame has loaded (webNavigation.onCompleted,
+ * frameId 0), instead of a fixed sleep. Resolves false when the load did not
+ * complete within the time limit (the caller then goes on with what the page has).
+ * @param {number} tabId
+ * @param {{ timeoutMs?: number }} [options]
+ * @returns {Promise<boolean>} true when the load completed
+ */
+function reloadTabAndWait(tabId, { timeoutMs = 15000 } = {}) {
+    return new Promise(resolve => {
+        let done = false;
+        let timer = null;
+        const listener = details => {
+            if (details && details.tabId === tabId && details.frameId === 0) finish(true);
+        };
+        const finish = loaded => {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            try { chrome.webNavigation?.onCompleted?.removeListener(listener); } catch (_) { /* gone */ }
+            resolve(loaded);
+        };
+        try { chrome.webNavigation?.onCompleted?.addListener(listener); } catch (_) { /* fallback: timer */ }
+        timer = setTimeout(() => finish(false), timeoutMs);
+        Promise.resolve().then(() => chrome.tabs.reload(tabId)).catch(() => finish(false));
+    });
+}
+
 // ============================================================================
 // VERSION DETECTION
 // ============================================================================
@@ -628,7 +656,8 @@ const globalContext = typeof window !== 'undefined' ? window : (typeof self !== 
         removeManagedListener,
         cleanupManagedListeners,
         handleUrlChangeAbort,
-        showCaptureStarted
+        showCaptureStarted,
+        reloadTabAndWait
     };
 
     Logger.debug('UI', '[BaseInterceptorHelpers] Loaded in context:', typeof window !== 'undefined' ? 'popup' : 'service-worker');

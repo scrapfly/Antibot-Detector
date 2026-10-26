@@ -25,7 +25,7 @@ class AdvancedScriptResults {
             if (requestId && message.requestId !== requestId) return;
             AdvancedToolClient.unsubscribe(listener);
             if (message.status !== 'completed') {
-                NotificationHelper.error(message.error || K._tr('advCommonFailedStartAnalysis', 'Failed to start analysis'));
+                NotificationHelper.error(message.error || AdvancedScriptResults.endedMessage(message.status));
                 return;
             }
             const data = message.data || { scripts: [] };
@@ -108,6 +108,18 @@ class AdvancedScriptResults {
             }] : [],
             record: false
         });
+    }
+
+    /** What to say when an analysis ended without a result: it did start. */
+    static endedMessage(status) {
+        const K = BaseAdvancedModule;
+        if (status === 'cancelled') {
+            return K._tr('advCommonAnalysisCancelled', 'Analysis stopped: the tab moved to another page before it finished');
+        }
+        if (status === 'timeout') {
+            return K._tr('advCommonAnalysisTimedOut', 'Analysis timed out: the page did not reload in time');
+        }
+        return K._tr('advCommonFailedStartAnalysis', 'Failed to start analysis');
     }
 
     static hostOf(url) {

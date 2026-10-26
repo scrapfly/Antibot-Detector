@@ -3,6 +3,24 @@
 
 // Destructure helpers from BaseInterceptorHelpers
 var showNotification = self.BaseInterceptorHelpers?.showNotification;
+var reloadTabAndWait = self.BaseInterceptorHelpers?.reloadTabAndWait;
+
+// After the page's load event, GeeTest's own loader may still add its scripts
+var GEETEST_SETTLE_MS = 1000;
+
+/**
+ * Reload the tab and wait for its main frame to finish loading (with a time limit),
+ * then a short settle, instead of a fixed sleep from the moment of the reload.
+ */
+async function geetestReloadAndSettle(tabId) {
+    if (typeof reloadTabAndWait === 'function') {
+        await reloadTabAndWait(tabId);
+    } else {
+        await chrome.tabs.reload(tabId);
+        await new Promise(resolve => setTimeout(resolve, 3000));
+    }
+    await new Promise(resolve => setTimeout(resolve, GEETEST_SETTLE_MS));
+}
 
 /**
  * Main message handler for Geetest messages (simplified - no capture functionality)
@@ -46,35 +64,31 @@ async function handleGeetestCheckVersion(message, sender, sendResponse) {
             }).catch(() => {});
         }
 
-        // Reload page
-        chrome.tabs.reload(tabId);
-
-        // Wait for page to load, then check version with 4 different methods
-        setTimeout(() => {
-            chrome.scripting.executeScript({
-                target: { tabId: tabId },
-                world: 'MAIN',
-                func: () => {
-                    // v4 or v3 from GeeTest's own scripts, globals and init calls; null when there is no GeeTest
-                    const sources = Array.from(document.querySelectorAll('script[src]')).map(script => script.src);
-                    const hostOf = src => { try { return new URL(src).hostname; } catch (_) { return ''; } };
-                    const geetestHost = host => /(?:^|\.)(?:geetest\.com|geevisit\.com|gsensebot\.com)$/.test(host);
-                    const v4Script = sources.some(src => geetestHost(hostOf(src)) && (src.includes('/v4/') || hostOf(src).startsWith('gcaptcha4.')));
-                    const v3Script = sources.some(src => {
-                        const host = hostOf(src);
-                        return (geetestHost(host) && (host.startsWith('api.') || src.includes('/static/js/'))) || /\/gt\.js(?:[?#]|$)/.test(src);
-                    });
-                    const html = document.documentElement.outerHTML;
-                    if (v4Script || typeof window.initGeetest4 === 'function' || html.includes('initGeetest4(')) return 'v4';
-                    if (v3Script || typeof window.initGeetest === 'function' || /initGeetest\s*\(/.test(html)) return 'v3';
-                    return null;
-                }
-            }).then(results => {
-                sendResponse({ version: (results && results[0] && results[0].result) || null });
-            }).catch(error => {
-                sendResponse({ version: null, error: error.message });
-            });
-        }, 3000);
+        // Reload the page and wait for it to load, then check version with 4 different methods
+        await geetestReloadAndSettle(tabId);
+        await chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            world: 'MAIN',
+            func: () => {
+                // v4 or v3 from GeeTest's own scripts, globals and init calls; null when there is no GeeTest
+                const sources = Array.from(document.querySelectorAll('script[src]')).map(script => script.src);
+                const hostOf = src => { try { return new URL(src).hostname; } catch (_) { return ''; } };
+                const geetestHost = host => /(?:^|\.)(?:geetest\.com|geevisit\.com|gsensebot\.com)$/.test(host);
+                const v4Script = sources.some(src => geetestHost(hostOf(src)) && (src.includes('/v4/') || hostOf(src).startsWith('gcaptcha4.')));
+                const v3Script = sources.some(src => {
+                    const host = hostOf(src);
+                    return (geetestHost(host) && (host.startsWith('api.') || src.includes('/static/js/'))) || /\/gt\.js(?:[?#]|$)/.test(src);
+                });
+                const html = document.documentElement.outerHTML;
+                if (v4Script || typeof window.initGeetest4 === 'function' || html.includes('initGeetest4(')) return 'v4';
+                if (v3Script || typeof window.initGeetest === 'function' || /initGeetest\s*\(/.test(html)) return 'v3';
+                return null;
+            }
+        }).then(results => {
+            sendResponse({ version: (results && results[0] && results[0].result) || null });
+        }).catch(error => {
+            sendResponse({ version: null, error: error.message });
+        });
 
         return;
     } catch (error) {
@@ -106,179 +120,175 @@ async function handleGeetestAnalyzeScripts(message, sender, sendResponse) {
             }).catch(() => {});
         }
 
-        // Reload page
-        chrome.tabs.reload(tabId);
+        // Reload the page and wait for it to load, then inject enhanced analyzer with 4 detection methods
+        await geetestReloadAndSettle(tabId);
+        await chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            world: 'MAIN',
+            func: () => {
+                const results = [];
 
-        // Wait for page to load, then inject enhanced analyzer with 4 detection methods
-        setTimeout(() => {
-            chrome.scripting.executeScript({
-                target: { tabId: tabId },
-                world: 'MAIN',
-                func: () => {
-                    const results = [];
+                // METHOD 1: Search inline script tags for initGeetest4/initGeetest
+                const scripts = Array.from(document.querySelectorAll('script'));
+                for (const script of scripts) {
+                    const content = script.textContent;
+                    if (!content) continue;
 
-                    // METHOD 1: Search inline script tags for initGeetest4/initGeetest
-                    const scripts = Array.from(document.querySelectorAll('script'));
-                    for (const script of scripts) {
-                        const content = script.textContent;
-                        if (!content) continue;
+                    // V4 Detection: Multiple flexible patterns
+                    // Pattern 1: initGeetest4({ captchaId: "..." })
+                    const v4Pattern1 = /initGeetest4\s*\(\s*\{([^}]*captchaId[^}]*)\}/gi;
+                    let v4Match;
+                    while ((v4Match = v4Pattern1.exec(content)) !== null) {
+                        const configText = v4Match[1];
+                        const captchaIdMatch = configText.match(/captchaId\s*:\s*["']([a-f0-9]{32})["']/i);
+                        const productMatch = configText.match(/product\s*:\s*["']([^"']+)["']/i);
 
-                        // V4 Detection: Multiple flexible patterns
-                        // Pattern 1: initGeetest4({ captchaId: "..." })
-                        const v4Pattern1 = /initGeetest4\s*\(\s*\{([^}]*captchaId[^}]*)\}/gi;
-                        let v4Match;
-                        while ((v4Match = v4Pattern1.exec(content)) !== null) {
-                            const configText = v4Match[1];
-                            const captchaIdMatch = configText.match(/captchaId\s*:\s*["']([a-f0-9]{32})["']/i);
-                            const productMatch = configText.match(/product\s*:\s*["']([^"']+)["']/i);
-
-                            if (captchaIdMatch) {
-                                results.push({
-                                    type: 'v4',
-                                    source: 'inline-script',
-                                    captchaId: captchaIdMatch[1],
-                                    product: productMatch ? productMatch[1] : null,
-                                    snippet: v4Match[0].substring(0, 300)
-                                });
-                            }
-                        }
-
-                        // Pattern 2: Just captchaId in any context (fallback)
-                        if (results.length === 0) {
-                            const captchaIdPattern = /["']?captchaId["']?\s*[:=]\s*["']([a-f0-9]{32})["']/gi;
-                            let idMatch;
-                            while ((idMatch = captchaIdPattern.exec(content)) !== null) {
-                                // Get surrounding context (50 chars before and after)
-                                const start = Math.max(0, idMatch.index - 50);
-                                const end = Math.min(content.length, idMatch.index + idMatch[0].length + 50);
-                                const snippet = content.substring(start, end);
-
-                                results.push({
-                                    type: 'v4',
-                                    source: 'inline-script',
-                                    captchaId: idMatch[1],
-                                    product: null,
-                                    snippet: '...' + snippet + '...'
-                                });
-                            }
-                        }
-
-                        // V3 Detection (only if no V4 found yet)
-                        if (results.length === 0) {
-                            const v3Pattern = /initGeetest\s*\(\s*\{([^}]*gt[^}]*)\}/gi;
-                            let v3Match;
-                            while ((v3Match = v3Pattern.exec(content)) !== null) {
-                                const configText = v3Match[1];
-                                const gtMatch = configText.match(/gt\s*:\s*["']([a-f0-9]{32})["']/i);
-                                const challengeMatch = configText.match(/challenge\s*:\s*["']([a-f0-9]{32})["']/i);
-
-                                if (gtMatch || challengeMatch) {
-                                    results.push({
-                                        type: 'v3',
-                                        source: 'inline-script',
-                                        gt: gtMatch ? gtMatch[1] : null,
-                                        challenge: challengeMatch ? challengeMatch[1] : null,
-                                        snippet: v3Match[0].substring(0, 300)
-                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    // METHOD 2: Search DOM for data attributes
-                    const domElements = document.querySelectorAll('[data-captcha-id], [data-gt], [data-challenge], [data-geetest-id]');
-                    for (const el of domElements) {
-                        if (el.dataset.captchaId || el.dataset.geetestId) {
-                            const captchaId = el.dataset.captchaId || el.dataset.geetestId;
+                        if (captchaIdMatch) {
                             results.push({
                                 type: 'v4',
-                                source: 'dom-attribute',
-                                captchaId: captchaId,
-                                element: el.tagName.toLowerCase(),
-                                snippet: `<${el.tagName.toLowerCase()} data-captcha-id="${captchaId}">`
-                            });
-                        }
-                        if (el.dataset.gt) {
-                            results.push({
-                                type: 'v3',
-                                source: 'dom-attribute',
-                                gt: el.dataset.gt,
-                                challenge: el.dataset.challenge || null,
-                                element: el.tagName.toLowerCase(),
-                                snippet: `<${el.tagName.toLowerCase()} data-gt="${el.dataset.gt}">`
+                                source: 'inline-script',
+                                captchaId: captchaIdMatch[1],
+                                product: productMatch ? productMatch[1] : null,
+                                snippet: v4Match[0].substring(0, 300)
                             });
                         }
                     }
 
-                    // METHOD 3: Search script src URLs
-                    const scriptTags = document.querySelectorAll('script[src]');
-                    for (const tag of scriptTags) {
-                        const src = tag.src;
-                        if (/(?:geetest|geevisit)\.com\/v4\/|gcaptcha4\.(?:geetest|geevisit|gsensebot)\.com/.test(src)) {
+                    // Pattern 2: Just captchaId in any context (fallback)
+                    if (results.length === 0) {
+                        const captchaIdPattern = /["']?captchaId["']?\s*[:=]\s*["']([a-f0-9]{32})["']/gi;
+                        let idMatch;
+                        while ((idMatch = captchaIdPattern.exec(content)) !== null) {
+                            // Get surrounding context (50 chars before and after)
+                            const start = Math.max(0, idMatch.index - 50);
+                            const end = Math.min(content.length, idMatch.index + idMatch[0].length + 50);
+                            const snippet = content.substring(start, end);
+
                             results.push({
                                 type: 'v4',
-                                source: 'script-url',
-                                url: src,
-                                snippet: `<script src="${src}">`
-                            });
-                        } else if (/api\.(?:geetest|geevisit)\.com|static\.(?:geetest|geevisit)\.com\/static\/js\/|\/gt\.js(?:[?#]|$)/.test(src)) {
-                            results.push({
-                                type: 'v3',
-                                source: 'script-url',
-                                url: src,
-                                snippet: `<script src="${src}">`
+                                source: 'inline-script',
+                                captchaId: idMatch[1],
+                                product: null,
+                                snippet: '...' + snippet + '...'
                             });
                         }
                     }
 
-                    // METHOD 4: Search JSON config blocks
-                    const jsonScripts = document.querySelectorAll('script[type="application/json"]');
-                    for (const json of jsonScripts) {
-                        try {
-                            const config = JSON.parse(json.textContent);
-                            if (config.captchaId) {
-                                results.push({
-                                    type: 'v4',
-                                    source: 'json-config',
-                                    captchaId: config.captchaId,
-                                    product: config.product || null,
-                                    snippet: JSON.stringify(config, null, 2).substring(0, 300)
-                                });
-                            } else if (config.gt) {
+                    // V3 Detection (only if no V4 found yet)
+                    if (results.length === 0) {
+                        const v3Pattern = /initGeetest\s*\(\s*\{([^}]*gt[^}]*)\}/gi;
+                        let v3Match;
+                        while ((v3Match = v3Pattern.exec(content)) !== null) {
+                            const configText = v3Match[1];
+                            const gtMatch = configText.match(/gt\s*:\s*["']([a-f0-9]{32})["']/i);
+                            const challengeMatch = configText.match(/challenge\s*:\s*["']([a-f0-9]{32})["']/i);
+
+                            if (gtMatch || challengeMatch) {
                                 results.push({
                                     type: 'v3',
-                                    source: 'json-config',
-                                    gt: config.gt,
-                                    challenge: config.challenge || null,
-                                    snippet: JSON.stringify(config, null, 2).substring(0, 300)
+                                    source: 'inline-script',
+                                    gt: gtMatch ? gtMatch[1] : null,
+                                    challenge: challengeMatch ? challengeMatch[1] : null,
+                                    snippet: v3Match[0].substring(0, 300)
                                 });
                             }
-                        } catch (e) {
-                            // Ignore parse errors
                         }
                     }
+                }
 
-                    return results.length > 0 ? results : null;
+                // METHOD 2: Search DOM for data attributes
+                const domElements = document.querySelectorAll('[data-captcha-id], [data-gt], [data-challenge], [data-geetest-id]');
+                for (const el of domElements) {
+                    if (el.dataset.captchaId || el.dataset.geetestId) {
+                        const captchaId = el.dataset.captchaId || el.dataset.geetestId;
+                        results.push({
+                            type: 'v4',
+                            source: 'dom-attribute',
+                            captchaId: captchaId,
+                            element: el.tagName.toLowerCase(),
+                            snippet: `<${el.tagName.toLowerCase()} data-captcha-id="${captchaId}">`
+                        });
+                    }
+                    if (el.dataset.gt) {
+                        results.push({
+                            type: 'v3',
+                            source: 'dom-attribute',
+                            gt: el.dataset.gt,
+                            challenge: el.dataset.challenge || null,
+                            element: el.tagName.toLowerCase(),
+                            snippet: `<${el.tagName.toLowerCase()} data-gt="${el.dataset.gt}">`
+                        });
+                    }
                 }
-            }).then(results => {
-                if (results && results[0] && results[0].result) {
-                    sendResponse({
-                        scripts: results[0].result || [],
-                        error: null
-                    });
-                } else {
-                    sendResponse({
-                        scripts: [],
-                        error: 'No Geetest scripts found'
-                    });
+
+                // METHOD 3: Search script src URLs
+                const scriptTags = document.querySelectorAll('script[src]');
+                for (const tag of scriptTags) {
+                    const src = tag.src;
+                    if (/(?:geetest|geevisit)\.com\/v4\/|gcaptcha4\.(?:geetest|geevisit|gsensebot)\.com/.test(src)) {
+                        results.push({
+                            type: 'v4',
+                            source: 'script-url',
+                            url: src,
+                            snippet: `<script src="${src}">`
+                        });
+                    } else if (/api\.(?:geetest|geevisit)\.com|static\.(?:geetest|geevisit)\.com\/static\/js\/|\/gt\.js(?:[?#]|$)/.test(src)) {
+                        results.push({
+                            type: 'v3',
+                            source: 'script-url',
+                            url: src,
+                            snippet: `<script src="${src}">`
+                        });
+                    }
                 }
-            }).catch(error => {
+
+                // METHOD 4: Search JSON config blocks
+                const jsonScripts = document.querySelectorAll('script[type="application/json"]');
+                for (const json of jsonScripts) {
+                    try {
+                        const config = JSON.parse(json.textContent);
+                        if (config.captchaId) {
+                            results.push({
+                                type: 'v4',
+                                source: 'json-config',
+                                captchaId: config.captchaId,
+                                product: config.product || null,
+                                snippet: JSON.stringify(config, null, 2).substring(0, 300)
+                            });
+                        } else if (config.gt) {
+                            results.push({
+                                type: 'v3',
+                                source: 'json-config',
+                                gt: config.gt,
+                                challenge: config.challenge || null,
+                                snippet: JSON.stringify(config, null, 2).substring(0, 300)
+                            });
+                        }
+                    } catch (e) {
+                        // Ignore parse errors
+                    }
+                }
+
+                return results.length > 0 ? results : null;
+            }
+        }).then(results => {
+            if (results && results[0] && results[0].result) {
+                sendResponse({
+                    scripts: results[0].result || [],
+                    error: null
+                });
+            } else {
                 sendResponse({
                     scripts: [],
-                    error: error.message
+                    error: 'No Geetest scripts found'
                 });
+            }
+        }).catch(error => {
+            sendResponse({
+                scripts: [],
+                error: error.message
             });
-        }, 3000);
+        });
 
         return;
     } catch (error) {

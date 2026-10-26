@@ -159,11 +159,10 @@ test('card pointer and keyboard navigation isolate copy and delete actions', asy
   const copy = node(), remove = node(), card = node();
   card.getAttribute = key => key === 'data-module-id' ? 'akamai' : 'saved';
   card.querySelector = selector => selector.includes('copy') ? copy : selector.includes('delete') ? remove : null;
-  f.context.document.querySelectorAll = () => [card];
   f.advanced.viewCaptureDetails = (...args) => calls.push(['view', ...args]);
   f.advanced.copyCaptureData = (...args) => calls.push(['copy', ...args]);
   f.advanced.deleteSingleCapture = (...args) => calls.push(['delete', ...args]);
-  f.advanced.setupCaptureCardListeners();
+  f.advanced.setupCaptureCardListeners({ querySelectorAll: () => [card] });
   card.listeners.click({ target: { closest: () => null } });
   let prevented = 0;
   for (const key of ['Enter', ' ']) card.listeners.keydown({ key, target: card, preventDefault() { prevented++; } });

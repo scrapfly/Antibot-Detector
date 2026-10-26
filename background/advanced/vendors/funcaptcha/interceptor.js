@@ -257,7 +257,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
         : funcaptchaCaptureStateRef.get(tabId);
     if (!state) {
         Logger.network('[FunCaptcha] No capture state found');
-        return { status: 'no_capture' };
+        return { status: 'not_capturing' };
     }
 
     const completionIdentity = AdvancedJobManager.captureIdentity(state, tabId, 'funcaptcha');

@@ -3,6 +3,9 @@
     const active = new Map();
     const recent = new Map();
     const captureJobs = new WeakMap();
+    // vendorId -> Set(fn): vendor teardown after its capture job's own cleanup ran,
+    // for resources shared across tabs that a per-tab cleanup cannot own
+    const captureFinishHooks = new Map();
     const keyFor = ({ tabId, vendorId, operation }) => `${tabId}:${vendorId}:${operation}`;
     function snapshot(job) {
         return { requestId: job.requestId, tabId: job.tabId, vendorId: job.vendorId,
@@ -42,6 +45,11 @@
                 try { dispose(); } catch (error) { Logger.error('NETWORK', '[AdvancedJob] Cleanup failed:', error); }
             }
             cleanups.clear();
+            if (job.operation === 'capture') {
+                for (const hook of captureFinishHooks.get(vendorId) || []) {
+                    try { hook(snapshot(job)); } catch (error) { Logger.error('NETWORK', '[AdvancedJob] Finish hook failed:', error); }
+                }
+            }
             recent.set(key, snapshot(job));
             while (recent.size > 100) recent.delete(recent.keys().next().value);
             if (options.onFinish) {
@@ -57,11 +65,17 @@
     function cancelTab(tabId, reason = 'cancelled') {
         for (const job of Array.from(active.values())) if (job.tabId === tabId) job.finish(reason);
     }
+    // The page itself: origin and path. A query or hash the page rewrites after the
+    // reload (consent, analytics, a router's replaceState) is still the same page.
+    function pageOf(url) {
+        try { const parsed = new URL(url); return `${parsed.origin}${parsed.pathname}`; } catch (_) { return String(url); }
+    }
     function handleNavigation(tabId, changeInfo) {
         if (!changeInfo?.url) return;
+        const page = pageOf(changeInfo.url);
         for (const job of Array.from(active.values())) {
-            // The requested reload keeps the exact URL. Moving to another page cancels it.
-            if (job.tabId === tabId && job.url && changeInfo.url !== job.url) job.finish('cancelled');
+            // The requested reload stays on the same page. Moving to another page cancels it.
+            if (job.tabId === tabId && job.url && page !== pageOf(job.url)) job.finish('cancelled');
         }
     }
     function state(tabId, vendorId, operation) {
@@ -86,7 +100,13 @@
             operation: identity.operation, ...(identity.requestId ? { requestId: identity.requestId } : {}) };
     }
     function bindCaptureState(state, job) { captureJobs.set(state, job); }
+    function onCaptureFinished(vendorId, fn) {
+        const id = AdvancedVendorRegistry.canonical(vendorId);
+        if (!captureFinishHooks.has(id)) captureFinishHooks.set(id, new Set());
+        captureFinishHooks.get(id).add(fn);
+        return () => captureFinishHooks.get(id)?.delete(fn);
+    }
     function finishCaptureState(state) { captureJobs.get(state)?.finish('completed'); }
     global.AdvancedJobManager = Object.freeze({ begin, current, state, snapshot, cancelTab, handleNavigation,
-        bindCaptureState, finishCaptureState, captureIdentity, completionMessage, message });
+        bindCaptureState, finishCaptureState, captureIdentity, completionMessage, message, onCaptureFinished });
 })(globalThis);

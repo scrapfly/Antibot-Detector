@@ -249,10 +249,21 @@ Advanced.prototype.applyFilters = function(captures, currentSite) {
    * @param {Array} captures - All captures
    * @param {string} currentSite - Current site hostname
    */
-Advanced.prototype.setupCaptureCardListeners = function() {
-    const cards = document.querySelectorAll('.capture-card');
+// Cards that already have their listeners: a re-render never binds one twice
+Advanced._boundCaptureCards = Advanced._boundCaptureCards || new WeakSet();
+
+/**
+ * Bind the cards of the Captures panel's own grid only: the vendor tools'
+ * Captured Data list uses the same class and has its own handlers.
+ * @param {ParentNode} grid - the #captureGrid the cards were rendered into
+ */
+Advanced.prototype.setupCaptureCardListeners = function(grid) {
+    if (!grid || typeof grid.querySelectorAll !== 'function') return;
+    const cards = grid.querySelectorAll('.capture-card');
 
     cards.forEach(card => {
+      if (Advanced._boundCaptureCards.has(card)) return;
+      Advanced._boundCaptureCards.add(card);
       const copyBtn = card.querySelector('[data-action="copy"]');
       const deleteBtn = card.querySelector('[data-action="delete"]');
 

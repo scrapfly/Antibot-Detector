@@ -9,11 +9,8 @@ AkamaiAdvanced.prototype.analyzeContent = async function() {
 
             NotificationHelper.info(AkamaiAdvanced.tr('advAkamaiReloadingToAnalyze', 'Reloading page to analyze Akamai data…'));
 
-            // Reload the page
-            await chrome.tabs.reload(this.tabInfo.id);
-
-            // Wait for page to load
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Reload the page and wait until it has loaded (with a time limit)
+            await AdvancedUtils.reloadTabAndWait(this.tabInfo.id);
 
             // Get cookies
             const cookies = await PageCookies.getAll({ url: this.tabInfo.url }, this.tabInfo.id);
@@ -321,15 +318,6 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
         if (!tab || !tab.id || !tab.url) throw new Error('Tab information not available');
         NotificationHelper.info(tr('advAkamaiExtractingSensor', 'Extracting sensor information…'));
 
-        // Delete Akamai-related cookies to force regeneration
-        for (const cookieName of ['_abck', 'sbsd', 'sbsd_o', 'ak_bmsc', 'bm_sz', 'bm_sv', 'bm_mi']) {
-            try {
-                await chrome.cookies.remove({ url: tab.url, name: cookieName });
-            } catch (err) {
-                Logger.network(`[AKAMAI-EXTRACT] Could not delete cookie ${cookieName}:`, err.message);
-            }
-        }
-
         this.isExtracting = true;
         let timeoutId = null;
         const stop = () => {
@@ -347,7 +335,21 @@ AkamaiAdvanced.prototype.extractSensorInformation = async function() {
         chrome.runtime.onMessage.addListener(extractionListener);
         try {
             const response = await chrome.runtime.sendMessage({ type: 'AKAMAI_EXTRACT_SENSOR', tabId: tab.id });
-            if (!response || response.status !== 'success') throw new Error('Failed to start extraction mode');
+            if (response && response.status === 'capture_running') {
+                stop();
+                NotificationHelper.error(AdvancedUtils.notifications.captureRunning());
+                return { awaitingResult: false };
+            }
+            if (!response || response.status !== 'success') throw new Error((response && response.error) || 'Failed to start extraction mode');
+            // Delete Akamai-related cookies to force regeneration (the worker's
+            // extraction state is set: nothing is lost if this tool was refused)
+            for (const cookieName of ['_abck', 'sbsd', 'sbsd_o', 'ak_bmsc', 'bm_sz', 'bm_sv', 'bm_mi']) {
+                try {
+                    await chrome.cookies.remove({ url: tab.url, name: cookieName });
+                } catch (err) {
+                    Logger.network(`[AKAMAI-EXTRACT] Could not delete cookie ${cookieName}:`, err.message);
+                }
+            }
             // The worker gives up after 30 s without a word: say so here
             timeoutId = setTimeout(() => {
                 stop();

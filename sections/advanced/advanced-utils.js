@@ -128,6 +128,36 @@ const AdvancedUtils = {
     },
 
     /**
+     * Reload a tab and wait until it has finished loading (tabs.onUpdated status
+     * "complete" after the reload started), with a time limit instead of a fixed sleep.
+     * @param {number} tabId
+     * @param {{ timeoutMs?: number }} [options]
+     * @returns {Promise<boolean>} true when the load completed in time
+     */
+    reloadTabAndWait(tabId, { timeoutMs = 15000 } = {}) {
+        return new Promise(resolve => {
+            let done = false;
+            let loading = false;
+            let timer = null;
+            const listener = (id, changeInfo) => {
+                if (id !== tabId || !changeInfo) return;
+                if (changeInfo.status === 'loading') loading = true;
+                else if (changeInfo.status === 'complete' && loading) finish(true);
+            };
+            const finish = loaded => {
+                if (done) return;
+                done = true;
+                clearTimeout(timer);
+                try { chrome.tabs.onUpdated.removeListener(listener); } catch (_) { /* popup closing */ }
+                resolve(loaded);
+            };
+            try { chrome.tabs.onUpdated.addListener(listener); } catch (_) { /* fallback: timer */ }
+            timer = setTimeout(() => finish(false), timeoutMs);
+            Promise.resolve().then(() => chrome.tabs.reload(tabId)).catch(() => finish(false));
+        });
+    },
+
+    /**
      * Standardized notification messages for advanced modules
      * Provides consistent messaging across all advanced modules
      */
@@ -156,7 +186,10 @@ const AdvancedUtils = {
         checkVersion: {
             success: (moduleName, version) => _advUtilsFmt('advPanelVersionDetectedFmt', `${moduleName} version detected: ${version}`, moduleName, version),
             none: (moduleName) => _advUtilsFmt('advPanelNoVersionFmt', `No ${moduleName} version detected`, moduleName)
-        }
+        },
+
+        /** An extract tool refused because Start Capturing is running on the tab */
+        captureRunning: () => _advUtilsTr('advCommonStopCaptureFirst', 'A capture is running on this tab: stop it first, then try again')
     }
 };
 

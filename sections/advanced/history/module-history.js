@@ -132,7 +132,8 @@ class AdvancedModuleHistory {
         // Clear history button
         const clearBtnId = `clear${this.moduleName.charAt(0).toUpperCase() + this.moduleName.slice(1)}History`;
         const clearBtn = document.querySelector(`#${clearBtnId}`);
-        if (clearBtn) {
+        if (clearBtn && !AdvancedModuleHistory.boundElements.has(clearBtn)) {
+            AdvancedModuleHistory.boundElements.add(clearBtn);
             clearBtn.addEventListener('click', () => this.clearCaptureHistory());
         }
 
@@ -149,15 +150,28 @@ class AdvancedModuleHistory {
     }
 
     setupExpandListeners() {
+        // This vendor's own Captured Data list only: the Captures panel uses the same
+        // card class with its own handlers, and a re-render must not bind twice
+        const list = document.querySelector(`#${this.moduleName}HistoryList`);
+        if (!list) return;
+        const bound = AdvancedModuleHistory.boundElements;
+        const once = el => {
+            if (bound.has(el)) return false;
+            bound.add(el);
+            return true;
+        };
+
         // CSP-compliant image error fallback
-        document.querySelectorAll('img[data-fallback]').forEach(img => {
+        list.querySelectorAll('img[data-fallback]').forEach(img => {
+            if (!once(img)) return;
             img.addEventListener('error', function() {
                 this.src = this.dataset.fallback;
             }, { once: true });
         });
 
-        const expandBtns = document.querySelectorAll('.capture-expand');
+        const expandBtns = list.querySelectorAll('.capture-expand');
         expandBtns.forEach(btn => {
+            if (!once(btn)) return;
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const captureId = btn.getAttribute('data-capture-id');
@@ -165,8 +179,9 @@ class AdvancedModuleHistory {
             });
         });
 
-        const captureCards = document.querySelectorAll('.capture-card');
+        const captureCards = list.querySelectorAll('.capture-card');
         captureCards.forEach(card => {
+            if (!once(card)) return;
             card.addEventListener('click', (e) => {
                 if (!e.target.closest('.capture-expand')) {
                     const captureId = card.getAttribute('data-capture-id');
@@ -366,6 +381,8 @@ class AdvancedModuleHistory {
         return AdvancedUtils.getTimeAgo(timestamp);
     }
 }
+// History elements that already have their listeners
+AdvancedModuleHistory.boundElements = new WeakSet();
 for (const name of ['loadCaptureHistory', 'renderCaptureHistoryHTML', 'renderEmptyCaptureState', 'renderCaptureHistoryItems', 'setupCaptureHistoryListeners', 'setupExpandListeners', 'setupCaptureHistoryPagination', 'renderCaptureHistoryPage', 'recordStructuredResult', 'renderToolResultContent', 'saveToolResult', 'renderCaptureDetailsContent', 'displayCaptureDetailsModal', 'toggleCaptureDetails', 'showConfirmationModal', 'clearCaptureHistory', 'renderCapturedDataSection', 'getTimeAgo']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedModuleHistory.prototype, name));
 }

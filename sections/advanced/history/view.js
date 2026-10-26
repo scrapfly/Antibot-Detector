@@ -230,7 +230,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
     });
 
     // Add click listeners
-    this.setupCaptureCardListeners();
+    this.setupCaptureCardListeners(grid);
   };
 
 

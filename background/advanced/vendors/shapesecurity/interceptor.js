@@ -148,10 +148,13 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     const requestHeaderListener = (details) => {
         if (details.tabId === tabId && details.requestHeaders) {
             const captureState = shapesecurityCaptureStateRef.get(tabId);
-            if (captureState) {
+            if (captureState && !captureState.stopping) {
                 // Pattern: x-[8 random chars]-[single letter]
                 const headerPattern = /^x-[a-z0-9]{8}-[a-z]$/i;
+                let added = false;
 
+                // One request carries all of Shape's headers: collect every one of them
+                // first, then decide once whether the capture is complete.
                 for (const header of details.requestHeaders) {
                     if (headerPattern.test(header.name.toLowerCase())) {
                         // Check if not already captured
@@ -161,19 +164,20 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                                 value: header.value,
                                 timestamp: Date.now()
                             });
+                            added = true;
                             Logger.network('[ShapeSecurity] Captured header:', header.name);
-
-                            // Auto-stop based on version (only V2 needs headers):
-                            // V1: Headers not required, won't auto-stop here
-                            // V2: Needs both cookie AND headers
-                            if (captureState.version === 'v2' && captureState.cookie && captureState.headers.length > 0) {
-                                Logger.network('[ShapeSecurity] V2 - both cookie and headers captured! Auto-stopping');
-                                autoStopCapture(tabId, 'complete');
-                            } else if (captureState.version === 'v1') {
-                                Logger.network('[ShapeSecurity] V1 - headers captured but not required for V1');
-                            }
                         }
                     }
+                }
+
+                // Auto-stop based on version (only V2 needs headers):
+                // V1: Headers not required, won't auto-stop here
+                // V2: Needs both cookie AND headers
+                if (added && captureState.version === 'v2' && captureState.cookie && captureState.headers.length > 0) {
+                    Logger.network('[ShapeSecurity] V2 - both cookie and headers captured! Auto-stopping');
+                    autoStopCapture(tabId, 'complete');
+                } else if (added && captureState.version === 'v1') {
+                    Logger.network('[ShapeSecurity] V1 - headers captured but not required for V1');
                 }
             }
         }
@@ -348,6 +352,10 @@ async function autoStopCapture(tabId, reason = 'complete') {
         Logger.network('[ShapeSecurity] No active capture state found');
         return;
     }
+    // A stop is already saving this capture: the state stays until after the save,
+    // so a second trigger (another header, the cookie, the timer) must not save it again.
+    if (captureState.stopping) return;
+    captureState.stopping = true;
 
     // Clear timeout if exists
     if (typeof clearCaptureTimeout === 'function') {
@@ -445,6 +453,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
         }
     } catch (error) {
         Logger.error('NETWORK', '[ShapeSecurity] Failed to save capture data:', error);
+        // The listeners are gone: drop the state so the next Start is not refused.
+        if (shapesecurityCaptureStateRef.get(tabId) === captureState) {
+            if (typeof removeCaptureState === 'function') removeCaptureState(shapesecurityCaptureStateRef, tabId);
+            else shapesecurityCaptureStateRef.delete(tabId);
+        }
     }
 }
 
@@ -463,6 +476,12 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
         sendResponse({ status: 'not_capturing' });
         return;
     }
+    // An automatic stop is already saving this capture: do not save it a second time.
+    if (captureState.stopping) {
+        sendResponse({ status: 'not_capturing' });
+        return;
+    }
+    captureState.stopping = true;
 
     // Remove listeners
     if (captureState.setCookieListener) {

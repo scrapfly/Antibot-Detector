@@ -145,73 +145,63 @@ function hcaptchaStartCapture(tabId, captureUrl) {
         detectionMethods: []
     });
 
+    // Complete once: two checksiteconfig responses (or one plus the request path)
+    // must not both save. The flag is set before the first await.
+    const completeCapture = (state, why) => {
+        if (state.completed || hcaptchaCaptureStateRef.get(tabId) !== state) return;
+        state.completed = true;
+        Logger.network(`[hCaptcha-Capture] All required data captured (${why})`);
+        if (typeof clearCaptureTimeout === 'function') {
+            clearCaptureTimeout(state);
+        } else if (state.timeout) {
+            clearTimeout(state.timeout);
+        }
+        chrome.webRequest.onBeforeRequest.removeListener(requestListener);
+        handleHCaptchaCaptureCompleted(tabId, {
+            version: state.version,
+            websiteKey: state.websiteKey,
+            websiteURL: state.websiteURL,
+            isEnterprise: state.isEnterprise,
+            detectionMethods: state.detectionMethods,
+            timestamp: state.timestamp
+        });
+    };
+
     // Set up network request listener
     const requestListener = (details) => {
         if (details.tabId !== tabId) return;
         const state = (typeof getCaptureState === 'function')
             ? getCaptureState(hcaptchaCaptureStateRef, tabId)
             : hcaptchaCaptureStateRef.get(tabId);
-        if (!state) return;
+        if (!state || state.completed) return;
 
         // checksiteconfig, api.js and getcaptcha: version, site key, website and Enterprise signs
         const configUrl = hcaptchaInspectRequest(details, state);
         if (configUrl) {
-            // Wait for the checksiteconfig response before completing
+            // Wait for the checksiteconfig response(s) before completing
+            state.pendingChecksiteconfig = (state.pendingChecksiteconfig || 0) + 1;
             state.waitingForChecksiteconfig = true;
             hcaptchaFetchFeatures(configUrl)
                 .then(enterprise => {
-                    if (hcaptchaCaptureStateRef.get(tabId) !== state) return;
+                    if (hcaptchaCaptureStateRef.get(tabId) !== state || state.completed) return;
                     if (enterprise) hcaptchaMarkEnterprise(state, 'checksiteconfig-features');
-                    state.waitingForChecksiteconfig = false;
-                    if (state.version && state.websiteKey) {
-                        Logger.network('[hCaptcha-Capture] All required data captured (after checksiteconfig fetch)');
-                        if (typeof clearCaptureTimeout === 'function') {
-                            clearCaptureTimeout(state);
-                        } else if (state.timeout) {
-                            clearTimeout(state.timeout);
-                        }
-                        chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-                        handleHCaptchaCaptureCompleted(tabId, {
-                            version: state.version,
-                            websiteKey: state.websiteKey,
-                            websiteURL: state.websiteURL,
-                            isEnterprise: state.isEnterprise,
-                            detectionMethods: state.detectionMethods,
-                            timestamp: state.timestamp
-                        });
-                    }
                 })
                 .catch(err => {
                     Logger.warn('NETWORK', '[hCaptcha-Capture] Fetch error:', err);
-                    state.waitingForChecksiteconfig = false;
+                })
+                .finally(() => {
+                    state.pendingChecksiteconfig = Math.max(0, (state.pendingChecksiteconfig || 1) - 1);
+                    state.waitingForChecksiteconfig = state.pendingChecksiteconfig > 0;
+                    if (!state.waitingForChecksiteconfig && state.version && state.websiteKey) {
+                        completeCapture(state, 'after checksiteconfig fetch');
+                    }
                 });
         }
 
         // Check if we have all required data to complete capture
         // Don't complete if we're still waiting for checksiteconfig response
         if (state.version && state.websiteKey && !state.waitingForChecksiteconfig) {
-            Logger.network('[hCaptcha-Capture] All required data captured!');
-            Logger.network('[hCaptcha-Capture] Auto-stopping capture (data complete)');
-
-            // Clear timeout since we got the data
-            if (typeof clearCaptureTimeout === 'function') {
-                clearCaptureTimeout(state);
-            } else if (state.timeout) {
-                clearTimeout(state.timeout);
-            }
-
-            // Remove listener to stop monitoring
-            chrome.webRequest.onBeforeRequest.removeListener(requestListener);
-
-            // Call completion handler
-            handleHCaptchaCaptureCompleted(tabId, {
-                version: state.version,
-                websiteKey: state.websiteKey,
-                websiteURL: state.websiteURL,
-                isEnterprise: state.isEnterprise,
-                detectionMethods: state.detectionMethods,
-                timestamp: state.timestamp
-            });
+            completeCapture(state, 'request');
         }
     };
 
@@ -242,12 +232,12 @@ function hcaptchaStartCapture(tabId, captureUrl) {
     if (typeof setCaptureTimeout === 'function') {
         setCaptureTimeout(hcaptchaCaptureStateRef, tabId, Constants.CAPTURE_AUTO_STOP_TIMEOUT, () => {
             Logger.network(`[hCaptcha-Capture] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
-            hcaptchaStopCapture(tabId);
+            hcaptchaStopCapture(tabId, 'timeout');
         });
     } else if (state) {
         state.timeout = setTimeout(() => {
             Logger.network(`[hCaptcha-Capture] Auto-stopping capture for tab ${tabId} (60s timeout reached)`);
-            hcaptchaStopCapture(tabId);
+            hcaptchaStopCapture(tabId, 'timeout');
         }, Constants.CAPTURE_AUTO_STOP_TIMEOUT);
     }
 
@@ -284,12 +274,20 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
     const completionState = hcaptchaCaptureStateRef?.get(tabId);
     const completionIdentity = AdvancedJobManager.captureIdentity(completionState, tabId, 'hcaptcha');
     Logger.network('[hCaptcha-Capture] ========== HANDLING CAPTURE COMPLETION ==========');
+    // Its listener and timer are gone: a failure below must not leave the tab "capturing"
+    const dropState = () => {
+        if (completionState && hcaptchaCaptureStateRef?.get(tabId) === completionState) {
+            if (typeof removeCaptureState === 'function') removeCaptureState(hcaptchaCaptureStateRef, tabId);
+            else hcaptchaCaptureStateRef.delete(tabId);
+        }
+    };
 
     try {
         // Get tab info
         const tab = await chrome.tabs.get(tabId);
         if (!tab || !tab.url) {
             Logger.error('NETWORK', '[hCaptcha-Capture] Tab not found or no URL');
+            dropState();
             return;
         }
 
@@ -348,13 +346,14 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
         Logger.network('[hCaptcha-Capture] ========== CAPTURE COMPLETED SUCCESSFULLY ==========');
     } catch (error) {
         Logger.error('NETWORK', '[hCaptcha-Capture] Error handling capture completion:', error);
+        dropState();
     }
 }
 
 /**
  * Stop capturing for a specific tab and save results to history
  */
-function hcaptchaStopCapture(tabId) {
+function hcaptchaStopCapture(tabId, reason = 'manual') {
     Logger.network('[hCaptcha-Capture] ========== STOP CAPTURE ==========');
     Logger.network('[hCaptcha-Capture] Tab ID:', tabId);
 
@@ -365,6 +364,12 @@ function hcaptchaStopCapture(tabId) {
         Logger.network('[hCaptcha-Capture] No capture state for this tab');
         return { status: 'not_capturing' };
     }
+    // A completion already owns this capture (it removes the state once saved)
+    if (state.completed) return { status: 'stopped' };
+    state.completed = true;
+    const completionIdentity = (typeof AdvancedJobManager !== 'undefined')
+        ? AdvancedJobManager.captureIdentity(state, tabId, 'hcaptcha')
+        : { tabId, vendorId: 'hcaptcha', operation: 'capture' };
 
     // Clean up listeners
     if (state.requestListener) {
@@ -393,6 +398,25 @@ function hcaptchaStopCapture(tabId) {
         cleanupManagedListeners(tabId, 'hcaptcha');
     }
     Logger.network('[hCaptcha-Capture] ========================================');
+
+    // 60 s without the data: say so on the page and tell the popup, as FunCaptcha does
+    if (reason === 'timeout') {
+        if (typeof showNotification === 'function') {
+            showNotification(tabId, {
+                module: 'hCaptcha',
+                type: 'warning',
+                title: pageText('advFuncaptchaCaptureTimeout', 'Capture Timeout'),
+                message: pageText('advHcaptchaNoDataTimeout', 'No hCaptcha data detected (60s timeout)'),
+                duration: 5000
+            }).catch(err => {
+                Logger.error('NETWORK', '[hCaptcha-Capture] Failed to show timeout notification:', err);
+            });
+        }
+        const timeoutMessage = { type: 'HCAPTCHA_CAPTURE_COMPLETED', captureData: null, reason: 'timeout' };
+        Promise.resolve().then(() => chrome.runtime.sendMessage(typeof AdvancedJobManager !== 'undefined'
+            ? AdvancedJobManager.completionMessage(completionIdentity, timeoutMessage)
+            : { ...timeoutMessage, ...completionIdentity })).catch(() => { /* popup not open */ });
+    }
 
     return { status: 'stopped' };
 }

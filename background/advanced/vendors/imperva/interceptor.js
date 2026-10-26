@@ -128,6 +128,18 @@ function impervaStartExtraction(tabId, url) {
     Logger.network('[IMPERVA-EXTRACT] Monitoring POST requests for: old_token, performance, solution');
     Logger.network('[IMPERVA-EXTRACT] ========================================');
 
+    if (!impervaCaptureStateRef) {
+        throw new Error('Imperva capture state not initialized');
+    }
+    // A capture on this tab owns its state (and its capture job): never overwrite it
+    const existing = impervaCaptureStateRef.get(tabId);
+    if (existing && !existing.extractMode) {
+        Logger.network('[IMPERVA-EXTRACT] A capture is running on this tab; extraction refused');
+        return { status: 'capture_running' };
+    }
+    // A previous extraction on this tab is replaced: drop its load listener
+    if (existing && typeof existing.removeLoadListener === 'function') existing.removeLoadListener();
+
     if (!impervaInterceptionListener) {
         setupImpervaInterceptor();
     }
@@ -912,13 +924,22 @@ function impervaHandleMessage(request, sendResponse) {
             // Handle async operation without making the whole function async
             (async () => {
                 try {
+                    // After a worker restart only START/GET-state had set the ref
+                    if (typeof impervaInitializeInterceptor === 'function' && typeof impervaCaptureState !== 'undefined' && impervaCaptureState) {
+                        impervaInitializeInterceptor(impervaCaptureState);
+                    }
+
                     // Get current tab URL
                     const tab = await chrome.tabs.get(request.tabId);
                     if (!tab || !tab.url) {
                         throw new Error('Unable to get tab URL');
                     }
 
-                    impervaStartExtraction(request.tabId, tab.url);
+                    const result = impervaStartExtraction(request.tabId, tab.url);
+                    if (result && result.status === 'capture_running') {
+                        sendResponse({ status: 'capture_running', error: 'Stop the running capture on this tab first' });
+                        return;
+                    }
                     sendResponse({ status: 'success', message: 'Extraction mode enabled' });
                 } catch (error) {
                     Logger.error('NETWORK', '[IMPERVA-EXTRACT] Error starting extraction:', error);
