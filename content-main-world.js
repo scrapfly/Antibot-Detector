@@ -47,6 +47,75 @@
   })();
   let illegalInvocationMessage = null;
 
+  // Native source text for our wrappers. Every wrapper this world puts on the
+  // page (bind shims, early and frame recorders, frame accessors, response
+  // capture, the hooks) is registered here against the member it replaces, and
+  // one patched Function.prototype.toString per realm answers for it with the
+  // original's native text. No wrapper carries an own `toString` (that is
+  // visible to getOwnPropertyNames). The map and the intrinsics below are taken
+  // while this file loads, before any page script can replace them.
+  const nativeSourceOf = new WeakMap();      // wrapper -> the function it stands for
+  const patchedFunctionPrototypes = new WeakSet();
+  const weakMapGet = WeakMap.prototype.get;
+  const weakMapHas = WeakMap.prototype.has;
+  const weakMapSet = WeakMap.prototype.set;
+  const weakSetHas = WeakSet.prototype.has;
+  const weakSetAdd = WeakSet.prototype.add;
+  const reflectApply = Reflect.apply;
+
+  function registerNativeSource(wrapper, original) {
+    try {
+      reflectApply(weakMapSet, nativeSourceOf, [wrapper, original]);
+    } catch (e) {
+      // Not registered: the wrapper still works
+    }
+  }
+
+  // The function whose text the page should see for `fn` (wrappers of wrappers
+  // resolve to the innermost original); anything else is returned unchanged
+  function nativeSourceTarget(fn) {
+    let target = fn;
+    if (typeof target !== 'function') return target;
+    while (reflectApply(weakMapHas, nativeSourceOf, [target])) {
+      const next = reflectApply(weakMapGet, nativeSourceOf, [target]);
+      if (next === target || typeof next !== 'function') break;
+      target = next;
+    }
+    return target;
+  }
+
+  // Patch `win`'s own Function.prototype.toString, once per realm. The patch is
+  // a method definition (no own prototype, not constructible) with the native
+  // member's name, length, descriptor and [[Prototype]], and is itself mapped to
+  // the native toString. Receivers that are not wrappers (non-functions
+  // included) go to the native toString untouched, so its results and its
+  // TypeErrors are exactly the browser's. Never throws.
+  function patchFunctionToString(win) {
+    try {
+      const FunctionInterface = win && win.Function;
+      const proto = FunctionInterface && FunctionInterface.prototype;
+      if (!proto || reflectApply(weakSetHas, patchedFunctionPrototypes, [proto])) return;
+      const descriptor = Object.getOwnPropertyDescriptors(proto).toString;
+      if (!descriptor || typeof descriptor.value !== 'function' || !descriptor.configurable) return;
+      const nativeToString = descriptor.value;
+      const { toString } = {
+        toString() {
+          return reflectApply(nativeToString, nativeSourceTarget(this), []);
+        }
+      };
+      Object.defineProperties(toString, {
+        name: { value: nativeToString.name, writable: false, enumerable: false, configurable: true },
+        length: { value: nativeToString.length, writable: false, enumerable: false, configurable: true }
+      });
+      Object.setPrototypeOf(toString, Object.getPrototypeOf(nativeToString));
+      registerNativeSource(toString, nativeToString);
+      Object.defineProperties(proto, { toString: { ...descriptor, value: toString } });
+      reflectApply(weakSetAdd, patchedFunctionPrototypes, [proto]);
+    } catch (e) {
+      // This realm keeps its native toString
+    }
+  }
+
   let debugMode = false; // Will be set by ISOLATED world
   // Verbose logs: routine traces (logDebug). Plain Debug mode sends warnings and
   // errors only; the worker's scan report covers the rest.
@@ -139,6 +208,9 @@
     ({ LOG, MAIN_WORLD } = PROTOCOL);
     PATH_SEPARATOR = MAIN_WORLD.PATH_SEPARATOR;
     illegalInvocationMessage = derivedIllegalInvocationMessage || MAIN_WORLD.ILLEGAL_INVOCATION_FALLBACK;
+    // Before the first wrapper exists, and kept for the page's lifetime (hooks
+    // off included: the bind shims stay)
+    patchFunctionToString(window);
     HOOK_SUPPRESSION_DEPTH_KEY = GLOBALS.HOOK_SUPPRESSION_DEPTH;
     ALLOWED_ISOLATED_MESSAGE_TYPES = new Set(PROTOCOL.TO_MAIN_TYPES);
     if (hookResilienceManager) {
@@ -328,15 +400,9 @@
     Object.defineProperty(shim, MAIN_WORLD.BIND_SHIM_MARKER, { value: true });
     Object.defineProperties(shim, {
       name: { value: original.name, writable: false, enumerable: false, configurable: true },
-      length: { value: original.length, writable: false, enumerable: false, configurable: true },
-      toString: {
-        value: function toString() {
-          return Function.prototype.toString.call(original);
-        },
-        writable: true,
-        configurable: true
-      }
+      length: { value: original.length, writable: false, enumerable: false, configurable: true }
     });
+    registerNativeSource(shim, original);
 
     return shim;
   };
@@ -467,19 +533,14 @@
     }
   }
 
-  // Same name, length, source text and prototype as the native member
+  // Same name, length and prototype as the native member; its source text
+  // comes from the patched Function.prototype.toString (registerNativeSource)
   function disguiseAs(wrapper, original) {
+    registerNativeSource(wrapper, original);
     try {
       Object.defineProperties(wrapper, {
         name: { value: original.name, writable: false, enumerable: false, configurable: true },
-        length: { value: original.length, writable: false, enumerable: false, configurable: true },
-        toString: {
-          value: function toString() {
-            return Function.prototype.toString.call(original);
-          },
-          writable: true,
-          configurable: true
-        }
+        length: { value: original.length, writable: false, enumerable: false, configurable: true }
       });
       Object.setPrototypeOf(wrapper, Object.getPrototypeOf(original));
     } catch (e) {
@@ -549,6 +610,8 @@
     // Keyed by document: a frame keeps its window object across navigations
     if (!doc || instrumentedDocuments.has(doc)) return;
     instrumentedDocuments.add(doc);
+    // The child realm's own toString, before its first wrapper
+    patchFunctionToString(win);
     const record = frameRecordFor(win, doc);
     for (const { target } of earlyTargets) {
       try {

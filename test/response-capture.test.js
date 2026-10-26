@@ -122,7 +122,10 @@ test('other URLs and event streams are never read, and fetch still looks native'
   assert.deepEqual(page.ofType(T.RESPONSE_BODY), []);
   assert.notEqual(page.run('fetch'), originalFetch, 'wrapped');
   assert.equal(page.run('fetch.name'), 'fetch');
-  assert.equal(page.run('fetch.toString()'), Function.prototype.toString.call(originalFetch));
+  // The page's Function.prototype.toString answers for the wrapper (this fake fetch comes from
+  // the test's realm, so its inherited fetch.toString() is not the page's and is not checked)
+  assert.equal(page.run('Function.prototype.toString.call(fetch)'), Function.prototype.toString.call(originalFetch));
+  assert.equal(page.run('Object.prototype.hasOwnProperty.call(fetch, "toString")'), false);
 });
 
 test('nothing is wrapped when no pattern applies to the site, or the spec is malformed', () => {

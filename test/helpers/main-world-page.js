@@ -64,7 +64,9 @@ function makeInterfaces(ILLEGAL) {
 // illegal: the brand-check message this fake browser throws; noNavigator: no
 // Navigator interface at all (the MAIN world must then use the protocol fallback)
 // globals: extra page globals present before the MAIN-world scripts load
-function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavigator = false, globals = {} } = {}) {
+// realmInterfaces: build the interfaces inside the page's own realm (their
+// members then inherit the page's Function.prototype, as in a browser)
+function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavigator = false, globals = {}, realmInterfaces = false } = {}) {
   const target = new EventTarget();
   const posted = [];
   const context = vm.createContext({
@@ -79,7 +81,9 @@ function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavig
   context.addEventListener = target.addEventListener.bind(target);
   context.removeEventListener = target.removeEventListener.bind(target);
   context.dispatchEvent = target.dispatchEvent.bind(target);
-  const interfaces = makeInterfaces(illegal);
+  const interfaces = realmInterfaces
+    ? vm.runInContext(`(${makeInterfaces.toString()})`, context)(illegal)
+    : makeInterfaces(illegal);
   if (noNavigator) {
     // The page's navigator object still exists; only the interface object is missing
     delete interfaces.Navigator;
