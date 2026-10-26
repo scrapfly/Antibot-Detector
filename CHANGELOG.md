@@ -34,6 +34,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced: Imperva and Akamai extract tools ask you to stop a running capture first instead of leaving Start Capturing stuck, and work again after Chrome restarts the extension in the background.
 - Advanced: Akamai Extract Sensor reloads the page once instead of twice; GeeTest and Akamai tools wait for the page to finish loading instead of a fixed delay.
 - Advanced: stopping a FunCaptcha capture that had already ended no longer shows an error, and a captured item opens once per click.
+- Detection: rescanning a page, or moving within a single-page site, after a cached result checks JavaScript hooks and page globals again.
+- Detection: fingerprinting checks no longer stop early on pages that use a watched browser API while still loading, so later calls are still caught.
+- Detection: a site that calls a browser API on the wrong object gets the browser's normal error again instead of a quiet answer (one case could clear the site's storage).
+- Detection: pages that add and remove many frames no longer keep growing in memory, and two rules checking the same page global (a duplicated rule) are both reported.
+- Rules: URL, content and JavaScript-hook rules without a confidence score the default instead of zero, cookie rules score the same in any order, and page plus hook evidence keeps the higher confidence.
 
 ## [3.0.4] - 2026-10-23
 
