@@ -57,7 +57,16 @@ class CategoryManager {
                     'detect-cloudflare-waitingroom',
                     'detect-hunt',
                     'detect-deepseek-pow',
-                    'detect-openai-sentinel'
+                    'detect-openai-sentinel',
+                    'detect-queueit',
+                    'detect-vercel',
+                    'detect-ddosguard',
+                    'detect-wordfence',
+                    'detect-iovation',
+                    'detect-forter',
+                    'detect-sift',
+                    'detect-castle',
+                    'detect-seon'
                 ]
             },
             captcha: {
@@ -81,7 +90,9 @@ class CategoryManager {
                     'detect-mtcaptcha',
                     'detect-binance-captcha',
                     'detect-prosopo',
-                    'detect-basilisk'
+                    'detect-basilisk',
+                    'detect-altcha',
+                    'detect-capjs'
                 ]
             },
             fingerprint: {

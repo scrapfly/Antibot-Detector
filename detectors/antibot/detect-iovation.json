@@ -1,0 +1,197 @@
+{
+  "id": "detect-iovation",
+  "name": "iovation (TransUnion TruValidate)",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.iovation.com/",
+  "icon": "iovation_official.png",
+  "description": "TransUnion TruValidate (iovation) device recognition script that builds a device blackbox for fraud and account-takeover checks",
+  "detection": {
+    "url": [
+      {
+        "id": "iovation-snare-host",
+        "confidence": 100,
+        "description": "iovation device profiling script or socket on the vendor iesnare.com host (snare.js, wdp.js, logo.js)",
+        "text": "^(?:https|wss)://(?:ci-)?mpsnare\\.iesnare\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "iovation-vendor-host",
+        "confidence": 100,
+        "description": "iovation script on the vendor iovation.com hosts (ci-mpsnare snare.js, first and ci-first collectors)",
+        "text": "^https://(?:ci-)?(?:mpsnare|first)\\.iovation\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "iovation-first-party-wdp",
+        "confidence": 80,
+        "description": "iovation wdp.js profiling script served through the site's own /iojs/ proxy",
+        "text": "^https?://[^/?#]+/iojs/(?:latest|general5|\\d+\\.\\d+\\.\\d+)/(?:[^?#]*/)?(?:static_|dyn_)?wdp\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "iovation-first-party-logo",
+        "confidence": 40,
+        "standalone": false,
+        "description": "iovation logo.js served through the site's own /iojs/ proxy",
+        "text": "^https?://[^/?#]+/iojs/(?:latest|general5|\\d+\\.\\d+\\.\\d+)/(?:[^?#]*/)?logo\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "iovation-config-reference",
+        "confidence": 30,
+        "standalone": false,
+        "description": "iovation configuration globals in scripts (io_global_object_name, io_bbout_element_id)",
+        "text": "\\bio_(?:global_object_name|bbout_element_id)\\b",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "iovation-igloo-blackbox",
+        "path": "IGLOO.getBlackbox",
+        "condition": "typeof function",
+        "confidence": 70,
+        "description": "IGLOO.getBlackbox function of the iovation loader"
+      },
+      {
+        "id": "iovation-igloo-fp",
+        "path": "IGLOO.fp",
+        "condition": "typeof object",
+        "confidence": 50,
+        "standalone": false,
+        "description": "IGLOO.fp object created by the iovation profiling scripts"
+      },
+      {
+        "id": "iovation-global-name",
+        "path": "io_global_object_name",
+        "condition": "typeof string",
+        "confidence": 30,
+        "standalone": false,
+        "description": "io_global_object_name setting read by the iovation scripts"
+      }
+    ],
+    "dom": [
+      {
+        "id": "iovation-blackbox-field",
+        "selector": "input[type='hidden']#ioBlackBox",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Hidden ioBlackBox field that receives the iovation blackbox"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "iovation-snare-runtime",
+      "name": "iovation script with its IGLOO runtime",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "iovation-snare-host"
+              },
+              {
+                "pattern": "iovation-vendor-host"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "iovation-igloo-blackbox"
+              },
+              {
+                "pattern": "iovation-igloo-fp"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "iovation-proxy-runtime",
+      "name": "First-party iovation scripts with their runtime",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "iovation-first-party-wdp"
+              },
+              {
+                "pattern": "iovation-first-party-logo"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "iovation-igloo-blackbox"
+              },
+              {
+                "pattern": "iovation-igloo-fp"
+              },
+              {
+                "pattern": "iovation-global-name"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "iovation-runtime-config",
+      "name": "iovation runtime with its configuration",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "iovation-igloo-blackbox"
+              },
+              {
+                "pattern": "iovation-igloo-fp"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "iovation-global-name"
+              },
+              {
+                "pattern": "iovation-config-reference"
+              },
+              {
+                "pattern": "iovation-blackbox-field"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

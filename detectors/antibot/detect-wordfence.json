@@ -1,0 +1,333 @@
+{
+  "id": "detect-wordfence",
+  "name": "Wordfence",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.wordfence.com/",
+  "icon": "wordfence_official.png",
+  "description": "WordPress security plugin with a firewall, rate limiting, IP and country blocking, and login protection with 2FA and reCAPTCHA",
+  "detection": {
+    "cookie": [
+      {
+        "id": "wordfence-waf-auth-cookie",
+        "name": "^wfwaf-authcookie-[0-9a-f]{32}$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Wordfence firewall cookie wfwaf-authcookie-<hash> set for logged-in users",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "wordfence-login-alert-cookie",
+        "name": "^wf_loginalerted_[0-9a-f]{64}$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Wordfence new-device login alert cookie wf_loginalerted_<hash>",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "wordfence-remembered-device-cookie",
+        "name": "^wfls-remembered-[A-Za-z0-9_-]{20,24}$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Wordfence Login Security cookie wfls-remembered-<id> for a device that passed 2FA",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "wordfence-country-bypass-cookie",
+        "name": "^wfCBLBypass$",
+        "nameRegex": true,
+        "value": "^[0-9a-f]{13}$",
+        "valueRegex": true,
+        "valueCaseSensitive": true,
+        "confidence": 60,
+        "description": "Wordfence country blocking bypass cookie wfCBLBypass",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "wordfence-ls-login-script",
+        "confidence": 90,
+        "description": "Wordfence Login Security login script or its translations",
+        "text": "^https?://[^/?#]+/(?:[^?#]*/)?wp-content/plugins/wordfence(?:-login-security)?/(?:modules/login-security/)?js/(?:login|wflsi18n)\\.\\d+(?:\\.min)?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "wordfence-plugin-asset",
+        "confidence": 80,
+        "description": "Script or stylesheet from the Wordfence plugin's own js or css folder",
+        "text": "^https?://[^/?#]+/(?:[^?#]*/)?wp-content/plugins/wordfence/(?:js|css)/[\\w.-]+\\.(?:js|css)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "wordfence-live-traffic-request",
+        "confidence": 50,
+        "description": "Wordfence Live Traffic request that reports a human visitor (wordfence_lh)",
+        "text": "^https?://[^/?#]+/(?:[^?#]*/)?\\?wordfence_lh=1&hid=",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "wordfence-ls-vars-script",
+        "confidence": 30,
+        "description": "Script defining WFLSVars, the Wordfence Login Security settings",
+        "text": "WFLSVars",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "wordfence-ajax-watcher-script",
+        "confidence": 30,
+        "description": "Script defining WFAJAXWatcherVars, the Wordfence firewall watcher settings",
+        "text": "WFAJAXWatcherVars",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "wordfence-live-traffic-script",
+        "confidence": 20,
+        "description": "Wordfence Live Traffic script that reports human visitors (wfLogHumanRan)",
+        "text": "wfLogHumanRan",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "wordfence-unlock-script",
+        "confidence": 20,
+        "description": "Unlock-by-email script of the Wordfence block page (_wfsf=unlockEmail)",
+        "text": "_wfsf=unlockEmail",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "wordfence-report-script",
+        "confidence": 20,
+        "description": "Report-a-problem script of the Wordfence blocklist page (user-reports.wordfence)",
+        "text": "user-reports.wordfence",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "wordfence-help-link",
+        "selector": "a[href=\"https://www.wordfence.com/help/?query=locked-out\"]",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Locked-out documentation link on the Wordfence block page"
+      },
+      {
+        "id": "wordfence-unlock-email-field",
+        "selector": "input#unlock-email",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Unlock email field on the Wordfence block page"
+      },
+      {
+        "id": "wordfence-false-positive-field",
+        "selector": "input[name=\"wfwaf-false-positive-verified\"]",
+        "confidence": 50,
+        "description": "Checkbox wfwaf-false-positive-verified on the Wordfence firewall block page shown to admins"
+      },
+      {
+        "id": "wordfence-report-button",
+        "selector": "a#reportButton",
+        "confidence": 10,
+        "standalone": false,
+        "description": "Report Problem button on the Wordfence blocklist page"
+      }
+    ],
+    "window": [
+      {
+        "id": "wordfence-ls-vars",
+        "path": "WFLSVars",
+        "condition": "typeof object",
+        "confidence": 60,
+        "description": "Wordfence Login Security settings object"
+      },
+      {
+        "id": "wordfence-ls-captcha",
+        "path": "WFLSVars.useCAPTCHA",
+        "condition": "truthy",
+        "confidence": 60,
+        "description": "Wordfence Login Security reCAPTCHA turned on"
+      },
+      {
+        "id": "wordfence-ajax-watcher",
+        "path": "wordfenceAJAXWatcher",
+        "condition": "typeof object",
+        "confidence": 60,
+        "description": "Wordfence firewall watcher object"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "wordfence-login-security",
+      "name": "Login Security script with its settings",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-ls-login-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "wordfence-ls-vars"
+              },
+              {
+                "pattern": "wordfence-ls-vars-script"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "wordfence-login-captcha",
+      "name": "Login Security with reCAPTCHA turned on",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-ls-captcha"
+          },
+          {
+            "any": [
+              {
+                "pattern": "wordfence-ls-login-script"
+              },
+              {
+                "pattern": "wordfence-ls-vars-script"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "wordfence-login-settings",
+      "name": "Login Security settings in a script and at runtime",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-ls-vars-script"
+          },
+          {
+            "pattern": "wordfence-ls-vars"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wordfence-live-traffic",
+      "name": "Live Traffic script and its report request",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-live-traffic-script"
+          },
+          {
+            "pattern": "wordfence-live-traffic-request"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wordfence-firewall-watcher",
+      "name": "Firewall watcher script with its settings",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-plugin-asset"
+          },
+          {
+            "any": [
+              {
+                "pattern": "wordfence-ajax-watcher"
+              },
+              {
+                "pattern": "wordfence-ajax-watcher-script"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "wordfence-block-page",
+      "name": "Wordfence block page help link with its unlock form or allowlist field",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-help-link"
+          },
+          {
+            "any": [
+              {
+                "pattern": "wordfence-unlock-script"
+              },
+              {
+                "pattern": "wordfence-unlock-email-field"
+              },
+              {
+                "pattern": "wordfence-false-positive-field"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "wordfence-blocklist-page",
+      "name": "Wordfence blocklist page report script and button",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "wordfence-report-script"
+          },
+          {
+            "pattern": "wordfence-report-button"
+          }
+        ]
+      }
+    }
+  ]
+}

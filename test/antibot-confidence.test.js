@@ -123,7 +123,14 @@ const PROOF = new Set([
   'detect-radware/radware-stormcaster-script', 'detect-radware/radware-uzm-cookie', 'detect-radware/radware-validate-host',
   'detect-reblaze/rbz-session-cookie', 'detect-reblaze/reblaze-lib-script', 'detect-ruishu/fssbbi-cookie',
   'detect-sucuri/sucuri-block-header', 'detect-sucuri/sucuri-cloudproxy-cookie', 'detect-sucuri/sucuri-id-header',
-  'detect-sucuri/sucuri-server-header', 'detect-threatmetrix/tmx-check', 'detect-threatmetrix/tmx-tags'
+  'detect-sucuri/sucuri-server-header', 'detect-threatmetrix/tmx-check', 'detect-threatmetrix/tmx-tags',
+  'detect-queueit/queueit-connector-script', 'detect-queueit/queueit-integration-config', 'detect-queueit/queueit-queue-page-assets',
+  'detect-queueit/queueit-queue-page-host', 'detect-queueit/queueit-visitorsession-cookie', 'detect-vercel/vercel-mitigated-challenge',
+  'detect-vercel/vercel-mitigated-deny', 'detect-vercel/vercel-botid-script', 'detect-ddosguard/ddosguard-server-header',
+  'detect-ddosguard/ddosguard-cookie', 'detect-ddosguard/ddosguard-wellknown-path', 'detect-ddosguard/ddosguard-check-domain',
+  'detect-iovation/iovation-snare-host', 'detect-iovation/iovation-vendor-host', 'detect-forter/forter-snippet-script',
+  'detect-forter/forter-collector', 'detect-sift/sift-snippet-script', 'detect-sift/sift-beacon', 'detect-castle/castle-cdn-script',
+  'detect-castle/castle-monitor', 'detect-seon/seon-agent-script', 'detect-seon/seon-legacy-agent-script', 'detect-seon/seon-dns-resolve'
 ]);
 // Detectors whose top tier stays below 100: legacy vendors (Ocule, Meetrics)
 // and edges that prove a CDN rather than protection (Azure Front Door, Yundun);
@@ -131,12 +138,13 @@ const PROOF = new Set([
 const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('thirty anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+test('thirty-nine anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
-    'detect-azurefrontdoor', 'detect-botguard', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
-    'detect-deepseek-pow', 'detect-f5', 'detect-fingerprintjs', 'detect-hunt', 'detect-incapsula', 'detect-jiasule', 'detect-kasada',
-    'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel', 'detect-perimeterx', 'detect-radware', 'detect-reblaze',
-    'detect-ruishu', 'detect-shapesecurity', 'detect-sucuri', 'detect-threatmetrix', 'detect-yundun']);
+    'detect-azurefrontdoor', 'detect-botguard', 'detect-castle', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
+    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fingerprintjs', 'detect-forter', 'detect-hunt', 'detect-incapsula',
+    'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
+    'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
+    'detect-sift', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
     const raw = antibot[d.id].__raw;
     assert.equal(raw.split('\n').length - 1, (raw.match(/\r\n/g) || []).length, `${d.id}: CRLF throughout`);
@@ -256,7 +264,19 @@ const benign = {
   'detect-netacea': { cookies: ['mitata'] },
   'detect-radware': { sources: ["var plugin = 'radware';"] },
   'detect-ruishu': { cookies: ['ssxmod_itn'] },
-  'detect-yundun': { headers: { 'x-cache': 'HIT from cloudfront', server: 'nginx' }, cookies: ['yd_session'] }
+  'detect-yundun': { headers: { 'x-cache': 'HIT from cloudfront', server: 'nginx' }, cookies: ['yd_session'] },
+  // A plain Vercel-hosted page, Queue-it's own login and marketing hosts, a DDoS-Guard-like cookie
+  'detect-vercel': { headers: { server: 'Vercel', 'x-vercel-id': 'fra1::abcde-1700000000000', 'x-vercel-cache': 'HIT' },
+    urls: ['https://example.test/_vercel/insights/script.js', 'https://example.test/.well-known/vercel/flags'] },
+  'detect-queueit': { urls: ['https://go.queue-it.net/login', 'https://www.queue-it.com/', 'https://example.test/queueit/queueclient.min.js'] },
+  'detect-ddosguard': { cookies: ['__ddg_session', 'ddg'], urls: ['https://example.test/ddos-guard/check.js'] },
+  'detect-wordfence': { urls: ['https://example.test/wp-content/plugins/wordfence-assistant/js/admin.js'], sources: ["var plugin = 'wordfence';"] },
+  // Short names other code also uses: alone they never identify the vendor
+  'detect-sift': { cookies: ['__ssid'], urls: ['https://sift.com/'] },
+  'detect-castle': { cookies: ['__cuid'], urls: ['https://castle.io/'] },
+  'detect-iovation': { urls: ['https://example.test/iojs/latest/io.js'] },
+  'detect-forter': { urls: ['https://www.forter.com/events'] },
+  'detect-seon': { sources: ['reason.config(options); season.getSession();'] }
 };
 test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   for (const [id, b] of Object.entries(benign)) {

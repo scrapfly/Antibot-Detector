@@ -1,0 +1,121 @@
+{
+  "id": "detect-ddosguard",
+  "name": "DDoS-Guard",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://ddos-guard.net/",
+  "icon": "ddosguard_official.png",
+  "description": "DDoS-Guard reverse proxy with DDoS protection, JavaScript browser checks and bot filtering",
+  "detection": {
+    "header": [
+      {
+        "id": "ddosguard-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^ddos-guard$",
+        "valueRegex": true,
+        "confidence": 100,
+        "description": "DDoS-Guard server header",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "ddosguard-cookie",
+        "name": "^__ddg(?:[0-9]{1,2}|id|mark)_$",
+        "nameRegex": true,
+        "confidence": 100,
+        "description": "DDoS-Guard cookies (__ddg1_, __ddgid_, __ddgmark_ and the other numbered __ddg cookies)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "ddosguard-wellknown-path",
+        "confidence": 100,
+        "description": "DDoS-Guard check scripts under /.well-known/ddos-guard/",
+        "text": "^https?://[^/?#]+/\\.well-known/ddos-guard/(?:check|js-challenge/|id/)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "ddosguard-check-domain",
+        "confidence": 100,
+        "description": "Request to check.ddos-guard.net",
+        "text": "^https?://check\\.ddos-guard\\.net/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "ddosguard-proxy",
+      "name": "DDoS-Guard server with its cookies",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "ddosguard-server-header"
+          },
+          {
+            "pattern": "ddosguard-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ddosguard-browser-check",
+      "name": "Browser check script on a DDoS-Guard response",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "ddosguard-wellknown-path"
+              },
+              {
+                "pattern": "ddosguard-check-domain"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "ddosguard-server-header"
+              },
+              {
+                "pattern": "ddosguard-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "ddosguard-check-scripts",
+      "name": "Check scripts on the site and on check.ddos-guard.net",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "ddosguard-wellknown-path"
+          },
+          {
+            "pattern": "ddosguard-check-domain"
+          }
+        ]
+      }
+    }
+  ]
+}

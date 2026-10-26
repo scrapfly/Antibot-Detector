@@ -27,6 +27,7 @@ const OPTIONS = {
     'shape_security_official.png': { keepInsideEllipse: true },
     // Black marks would vanish on a dark tile: draw them light, as on the vendors' dark sites
     'azurefrontdoor_official.png': { lightenBelow: 60 },
+    'castle_official.png': { lightenBelow: 60 },
     'imperva_official.png': { lightenBelow: 60 },
     'kasada_official.png': { lightenBelow: 60 },
     'ocule_official.png': { lightenBelow: 60 },

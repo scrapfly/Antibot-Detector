@@ -1,0 +1,204 @@
+{
+  "id": "detect-queueit",
+  "name": "Queue-it",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://queue-it.com/",
+  "icon": "queueit_official.png",
+  "description": "Queue-it virtual waiting room that holds visitors in a queue on queue-it.net before letting them into the site",
+  "detection": {
+    "url": [
+      {
+        "id": "queueit-connector-script",
+        "confidence": 100,
+        "description": "Queue-it JavaScript connector loaded from static.queue-it.net",
+        "text": "^https?://static\\.queue-it\\.net/script/(?:queueclient|queueconfigloader)(?:\\.min)?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "queueit-integration-config",
+        "confidence": 100,
+        "description": "Queue-it integration config requested from assets.queue-it.net",
+        "text": "^https?://assets\\.queue-it\\.net/[a-z0-9_-]+/integrationconfig/javascript/queueclientConfig\\.js",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "queueit-queue-page-assets",
+        "confidence": 100,
+        "description": "Queue page scripts and images from assets.queue-it.net/static/QueueFront/",
+        "text": "^https?://assets\\.queue-it\\.net/static/QueueFront/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "queueit-queue-page-host",
+        "confidence": 100,
+        "description": "Queue-it queue page on a customer subdomain of queue-it.net",
+        "text": "^https?://(?!(?:go|static|assets|www)\\.)[a-z0-9-]+\\.queue-it\\.net/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "queueit-token-param",
+        "confidence": 40,
+        "standalone": false,
+        "description": "queueittoken parameter in the page address after leaving the queue",
+        "text": "^https?://[^/?#]+/[^?#]*\\?(?:[^#]*&)?queueittoken=",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "queueit-accepted-cookie",
+        "name": "^QueueITAccepted-SDFrts345E-V3_",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Queue-it cookie QueueITAccepted-SDFrts345E-V3_<event> set after passing the queue",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "queueit-visitorsession-cookie",
+        "name": "^Queue-it-visitorsession$",
+        "nameRegex": true,
+        "confidence": 100,
+        "description": "Queue-it-visitorsession cookie set by the queue page",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "dom": [
+      {
+        "id": "queueit-connector-tag",
+        "selector": "script[data-queueit-c]",
+        "confidence": 50,
+        "description": "Queue-it connector script tag with its data-queueit-c customer attribute"
+      }
+    ],
+    "window": [
+      {
+        "id": "queueit-runtime-object",
+        "path": "QueueIt.Javascript",
+        "condition": "typeof object",
+        "confidence": 60,
+        "description": "QueueIt.Javascript object created by the Queue-it connector"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "queueit-connector-running",
+      "name": "Connector script with its runtime or tag",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "queueit-connector-script"
+              },
+              {
+                "pattern": "queueit-integration-config"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "queueit-runtime-object"
+              },
+              {
+                "pattern": "queueit-connector-tag"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "queueit-queue-page",
+      "name": "Queue page with its scripts or session cookie",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "queueit-queue-page-host"
+          },
+          {
+            "any": [
+              {
+                "pattern": "queueit-queue-page-assets"
+              },
+              {
+                "pattern": "queueit-visitorsession-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "queueit-passed-queue",
+      "name": "Back from the queue with its token or cookie",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "queueit-token-param"
+              },
+              {
+                "pattern": "queueit-accepted-cookie"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "queueit-connector-script"
+              },
+              {
+                "pattern": "queueit-integration-config"
+              },
+              {
+                "pattern": "queueit-runtime-object"
+              },
+              {
+                "pattern": "queueit-connector-tag"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "queueit-connector-markup",
+      "name": "Connector tag with the Queue-it runtime",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "queueit-connector-tag"
+          },
+          {
+            "pattern": "queueit-runtime-object"
+          }
+        ]
+      }
+    }
+  ]
+}

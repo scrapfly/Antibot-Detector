@@ -1,0 +1,154 @@
+{
+  "id": "detect-castle",
+  "name": "Castle",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://castle.io/",
+  "icon": "castle_official.png",
+  "description": "Castle fingerprinting script (Castle.js) that creates request tokens for bot, abuse and account-takeover checks",
+  "detection": {
+    "url": [
+      {
+        "id": "castle-cdn-script",
+        "confidence": 100,
+        "description": "Castle.js loaded from the vendor cdn.castle.io host (v2/castle.js)",
+        "text": "^https://cdn\\.castle\\.io/v2/castle\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "castle-monitor",
+        "confidence": 100,
+        "description": "Castle.js event request to the vendor m.castle.io monitor endpoint",
+        "text": "^https://m\\.castle\\.io/v1/monitor(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "castle-cuid-cookie",
+        "name": "^__cuid$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "__cuid device cookie Castle.js stores by default",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "window": [
+      {
+        "id": "castle-request-token",
+        "path": "Castle.createRequestToken",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "Castle.createRequestToken function of the Castle.js global"
+      },
+      {
+        "id": "castle-inject-token",
+        "path": "Castle.injectTokenOnSubmit",
+        "condition": "typeof function",
+        "confidence": 50,
+        "standalone": false,
+        "description": "Castle.injectTokenOnSubmit form helper of the Castle.js global"
+      },
+      {
+        "id": "castle-legacy-global",
+        "path": "_castle",
+        "condition": "typeof function",
+        "confidence": 30,
+        "standalone": false,
+        "description": "_castle function set by the CDN castle.js"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "castle-script-running",
+      "name": "Castle.js from its host with its cookie or global",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "castle-cdn-script"
+              },
+              {
+                "pattern": "castle-monitor"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "castle-cuid-cookie"
+              },
+              {
+                "pattern": "castle-request-token"
+              },
+              {
+                "pattern": "castle-legacy-global"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "castle-cookie-runtime",
+      "name": "__cuid cookie with Castle.js",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "castle-cuid-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "castle-request-token"
+              },
+              {
+                "pattern": "castle-inject-token"
+              },
+              {
+                "pattern": "castle-legacy-global"
+              },
+              {
+                "pattern": "castle-cdn-script"
+              },
+              {
+                "pattern": "castle-monitor"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "castle-global",
+      "name": "Castle.js global with its helpers",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "castle-request-token"
+          },
+          {
+            "pattern": "castle-inject-token"
+          }
+        ]
+      }
+    }
+  ]
+}

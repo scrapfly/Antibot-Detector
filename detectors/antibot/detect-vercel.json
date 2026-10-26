@@ -1,0 +1,212 @@
+{
+  "id": "detect-vercel",
+  "name": "Vercel Firewall",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://vercel.com/docs/vercel-firewall",
+  "icon": "vercel_official.png",
+  "description": "Vercel Firewall bot protection: the Vercel Security Checkpoint challenge (Attack Mode, WAF challenge rules) and the BotID invisible check",
+  "detection": {
+    "header": [
+      {
+        "id": "vercel-mitigated-challenge",
+        "name": "^x-vercel-mitigated$",
+        "nameRegex": true,
+        "value": "^challenge$",
+        "valueRegex": true,
+        "confidence": 100,
+        "description": "x-vercel-mitigated: challenge, the Vercel Firewall served its challenge",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "vercel-mitigated-deny",
+        "name": "^x-vercel-mitigated$",
+        "nameRegex": true,
+        "value": "^deny$",
+        "valueRegex": true,
+        "confidence": 100,
+        "description": "x-vercel-mitigated: deny, the Vercel Firewall blocked the request",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "vercel-challenge-token-header",
+        "name": "^x-vercel-challenge-(?:token|solution|version)$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "x-vercel-challenge-token header of the Vercel Security Checkpoint",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "vercel-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^Vercel$",
+        "valueRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Hosted on Vercel; hosting, not bot protection on its own",
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "vercel-id-header",
+        "name": "^x-vercel-id$",
+        "nameRegex": true,
+        "confidence": 15,
+        "standalone": false,
+        "description": "Vercel request id header; present on any Vercel response",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [
+      {
+        "id": "vercel-checkpoint-script",
+        "confidence": 90,
+        "description": "Vercel Security Checkpoint script under /.well-known/vercel/security/static/",
+        "text": "^https?://[^/?#]+/\\.well-known/vercel/security/static/challenge(?:\\.v[0-9]+)?(?:\\.min)?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "vercel-checkpoint-endpoint",
+        "confidence": 50,
+        "standalone": false,
+        "description": "Vercel Security Checkpoint answer endpoint /.well-known/vercel/security/request-challenge",
+        "text": "^https?://[^/?#]+/\\.well-known/vercel/security/request-challenge(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "vercel-botid-script",
+        "confidence": 100,
+        "description": "BotID client script on its fixed path (a-4-a/c.js or p.js)",
+        "text": "^https?://[^/?#]+/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/(?:a-4-a/c|p)\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "vercel-botid-path-reference",
+        "confidence": 30,
+        "description": "BotID path written in the page's scripts",
+        "text": "149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3",
+        "textCaseSensitive": false,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "vercel-checkpoint-on-vercel",
+      "name": "Vercel Security Checkpoint on a Vercel response",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "vercel-mitigated-challenge"
+              },
+              {
+                "pattern": "vercel-mitigated-deny"
+              },
+              {
+                "pattern": "vercel-checkpoint-script"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "vercel-server-header"
+              },
+              {
+                "pattern": "vercel-id-header"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "vercel-botid-client",
+      "name": "BotID script with its path in the page's scripts",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "vercel-botid-script"
+          },
+          {
+            "pattern": "vercel-botid-path-reference"
+          }
+        ]
+      }
+    },
+    {
+      "id": "vercel-checkpoint-flow",
+      "name": "Checkpoint script with its answer request or token",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "vercel-checkpoint-script"
+          },
+          {
+            "any": [
+              {
+                "pattern": "vercel-checkpoint-endpoint"
+              },
+              {
+                "pattern": "vercel-challenge-token-header"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "vercel-challenge-token-on-vercel",
+      "name": "Checkpoint token or answer request on a Vercel response",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "vercel-challenge-token-header"
+              },
+              {
+                "pattern": "vercel-checkpoint-endpoint"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "vercel-server-header"
+              },
+              {
+                "pattern": "vercel-id-header"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

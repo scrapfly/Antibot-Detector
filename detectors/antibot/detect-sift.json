@@ -1,0 +1,153 @@
+{
+  "id": "detect-sift",
+  "name": "Sift",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://sift.com/",
+  "icon": "sift_official.png",
+  "description": "Sift digital trust and fraud detection JavaScript snippet that sends device and page-view data to Sift",
+  "detection": {
+    "url": [
+      {
+        "id": "sift-snippet-script",
+        "confidence": 100,
+        "description": "Sift JavaScript snippet s.js on cdn.sift.com or the former cdn.siftscience.com host",
+        "text": "^https://cdn\\.(?:sift|siftscience)\\.com/(?:s|js/s-\\d+)\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "sift-beacon",
+        "confidence": 100,
+        "description": "Sift page-view beacon to hexagon-analytics.com (images/<n>.gif)",
+        "text": "^https://hexagon-analytics\\.com/images/\\d+\\.gif\\?",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "sift-ssid-cookie",
+        "name": "^__ssid$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 30,
+        "standalone": false,
+        "description": "__ssid visitor cookie the Sift snippet sets",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "sift-snippet-account",
+        "confidence": 20,
+        "description": "Sift snippet account call in scripts (_sift.push(['_setAccount', ...]))",
+        "text": "_sift\\.push\\(\\s*\\[\\s*['\\\"]_setAccount['\\\"]",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "sift-queue",
+        "path": "_sift",
+        "condition": "typeof object",
+        "confidence": 30,
+        "standalone": false,
+        "description": "_sift command queue of the Sift snippet"
+      },
+      {
+        "id": "sift-loaded-flag",
+        "path": "Sift",
+        "condition": "typeof string",
+        "confidence": 40,
+        "standalone": false,
+        "description": "Sift global the Sift s.js sets once loaded"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "sift-snippet-running",
+      "name": "Sift script or beacon with its runtime or cookie",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "sift-snippet-script"
+              },
+              {
+                "pattern": "sift-beacon"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "sift-queue"
+              },
+              {
+                "pattern": "sift-loaded-flag"
+              },
+              {
+                "pattern": "sift-ssid-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sift-runtime",
+      "name": "Sift command queue with the loaded s.js",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "sift-queue"
+          },
+          {
+            "pattern": "sift-loaded-flag"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sift-cookie-runtime",
+      "name": "__ssid cookie with the Sift runtime",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "sift-ssid-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "sift-queue"
+              },
+              {
+                "pattern": "sift-loaded-flag"
+              },
+              {
+                "pattern": "sift-snippet-account"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

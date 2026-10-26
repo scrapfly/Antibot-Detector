@@ -1,0 +1,194 @@
+{
+  "id": "detect-capjs",
+  "name": "Cap",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-26",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://trycap.dev/",
+  "icon": "capjs_official.png",
+  "description": "Open-source self-hosted proof-of-work CAPTCHA (Cap.js) with a cap-widget element solved in WebAssembly",
+  "detection": {
+    "url": [
+      {
+        "id": "capjs-cdn-widget",
+        "confidence": 50,
+        "description": "Official Cap widget package (cap-widget or @cap.js/widget) from the public jsDelivr CDN",
+        "text": "^https://cdn\\.jsdelivr\\.net/npm/(?:cap-widget|@cap\\.js/widget)(?:@[\\w.-]+)?(?:/[\\w./-]*)?(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "capjs-wasm-solver",
+        "confidence": 60,
+        "description": "Cap proof-of-work solver from the @cap.js/wasm package on jsDelivr",
+        "text": "^https://cdn\\.jsdelivr\\.net/npm/@cap\\.js/wasm(?:@[\\w.-]+)?/browser/(?:cap_wasm(?:_bg\\.wasm|\\.min\\.js)|hashwx\\.wasm)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "capjs-wasm-url-script",
+        "confidence": 10,
+        "standalone": true,
+        "description": "Cap widget code or setup reference to window.CAP_CUSTOM_WASM_URL",
+        "text": "CAP_CUSTOM_WASM_URL",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "capjs-widget",
+        "selector": "cap-widget",
+        "confidence": 40,
+        "description": "Cap widget element cap-widget, possibly unconfigured"
+      },
+      {
+        "id": "capjs-configured-widget",
+        "selector": "cap-widget[data-cap-api-endpoint]",
+        "confidence": 60,
+        "description": "Cap widget with its data-cap-api-endpoint attribute"
+      },
+      {
+        "id": "capjs-token-field",
+        "selector": "input[type=\"hidden\"][name=\"cap-token\"]",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Hidden field named cap-token that carries the solved token"
+      }
+    ],
+    "window": [
+      {
+        "id": "capjs-global",
+        "path": "Cap",
+        "condition": "typeof function",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Cap class on window (a generic name, counts only with Cap code)"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "capjs-complete-integration",
+      "name": "Configured widget, its code and its token field or class",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "capjs-configured-widget"
+          },
+          {
+            "any": [
+              {
+                "pattern": "capjs-cdn-widget"
+              },
+              {
+                "pattern": "capjs-wasm-solver"
+              },
+              {
+                "pattern": "capjs-wasm-url-script"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "capjs-token-field"
+              },
+              {
+                "pattern": "capjs-global"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "capjs-widget-code",
+      "name": "Widget with its script or solver",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "capjs-widget"
+              },
+              {
+                "pattern": "capjs-configured-widget"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "capjs-cdn-widget"
+              },
+              {
+                "pattern": "capjs-wasm-solver"
+              },
+              {
+                "pattern": "capjs-wasm-url-script"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "capjs-widget-rendered",
+      "name": "Widget rendered with its token field",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "capjs-widget"
+              },
+              {
+                "pattern": "capjs-configured-widget"
+              }
+            ]
+          },
+          {
+            "pattern": "capjs-token-field"
+          }
+        ]
+      }
+    },
+    {
+      "id": "capjs-runtime",
+      "name": "Cap class with Cap widget code",
+      "confidence": 70,
+      "when": {
+        "all": [
+          {
+            "pattern": "capjs-global"
+          },
+          {
+            "any": [
+              {
+                "pattern": "capjs-cdn-widget"
+              },
+              {
+                "pattern": "capjs-wasm-url-script"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "id": "detect-forter",
+  "name": "Forter",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.forter.com/",
+  "icon": "forter_official.png",
+  "description": "Forter fraud prevention script that fingerprints the browser and sets a forterToken for checkout and login decisions",
+  "detection": {
+    "url": [
+      {
+        "id": "forter-snippet-script",
+        "confidence": 100,
+        "description": "Forter script loaded from a site-specific cdn4.forter.com host (sn/<site id>/script.js)",
+        "text": "^https://[0-9a-f]{12}\\.cdn4\\.forter\\.com/sns?/[0-9a-f]{12}/(?:[^?#]*/)?script\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "forter-collector",
+        "confidence": 100,
+        "description": "Forter collection request to a forter.com CDN host (prop.json, wpt.json, events)",
+        "text": "^https://(?:[0-9a-f-]+\\.)?cdn\\d*\\.forter\\.com/(?:events|[^?#]*\\.json)(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "forter-token-cookie",
+        "name": "^forterToken$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 90,
+        "description": "forterToken cookie set by the Forter script",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "forter-snippet-reference",
+        "confidence": 20,
+        "standalone": false,
+        "description": "Forter loader snippet globals in scripts (ftr__startScriptLoad, ftr__config)",
+        "text": "\\bftr__(?:startScriptLoad|config)\\b",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "forter-config",
+        "path": "ftr__config",
+        "condition": "typeof object",
+        "confidence": 60,
+        "description": "ftr__config object set by the Forter loader snippet"
+      },
+      {
+        "id": "forter-start-time",
+        "path": "ftr__startScriptLoad",
+        "condition": "typeof number",
+        "confidence": 50,
+        "standalone": false,
+        "description": "ftr__startScriptLoad timestamp set by the Forter loader snippet"
+      },
+      {
+        "id": "forter-json3",
+        "path": "ftr__JSON3",
+        "condition": "typeof object",
+        "confidence": 50,
+        "standalone": false,
+        "description": "ftr__JSON3 object set by the Forter script"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "forter-script-token",
+      "name": "Forter script with its token cookie or config",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "forter-snippet-script"
+              },
+              {
+                "pattern": "forter-collector"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "forter-token-cookie"
+              },
+              {
+                "pattern": "forter-config"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "forter-token-runtime",
+      "name": "forterToken cookie with the Forter runtime",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "forter-token-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "forter-config"
+              },
+              {
+                "pattern": "forter-start-time"
+              },
+              {
+                "pattern": "forter-json3"
+              },
+              {
+                "pattern": "forter-snippet-reference"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "forter-runtime",
+      "name": "Forter loader globals together",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "forter-config"
+          },
+          {
+            "any": [
+              {
+                "pattern": "forter-start-time"
+              },
+              {
+                "pattern": "forter-json3"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1077,5 +1077,339 @@
   "sentinel-sdk-object": {
    "runtimeType": "object"
   }
+ },
+ "detect-queueit": {
+  "queueit-accepted-cookie": {
+   "cookie": [
+    "QueueITAccepted-SDFrts345E-V3_exampleevent",
+    "EventId=exampleevent&QueueId=fake"
+   ]
+  },
+  "queueit-connector-script": {
+   "url": "https://static.queue-it.net/script/queueclient.min.js"
+  },
+  "queueit-connector-tag": {
+   "dom": {
+    "tagName": "script",
+    "attributes": {
+     "src": "https://static.queue-it.net/script/queueclient.min.js",
+     "data-queueit-c": "examplecustomer"
+    }
+   }
+  },
+  "queueit-integration-config": {
+   "url": "https://assets.queue-it.net/queueitknownusertst/integrationconfig/javascript/queueclientConfig.js"
+  },
+  "queueit-queue-page-assets": {
+   "url": "https://assets.queue-it.net/static/QueueFront/Script/combined/queueit_0f1e2d3c.js"
+  },
+  "queueit-queue-page-host": {
+   "url": "https://queueitknownusertst.queue-it.net/?c=queueitknownusertst&e=exampleevent"
+  },
+  "queueit-runtime-object": {
+   "runtimeType": "object"
+  },
+  "queueit-token-param": {
+   "url": "https://shop.example.test/tickets?queueittoken=e_exampleevent~q_fake~ts_1700000000~h_fake"
+  },
+  "queueit-visitorsession-cookie": {
+   "cookie": [
+    "Queue-it-visitorsession",
+    "fake-session"
+   ]
+  }
+ },
+ "detect-vercel": {
+  "vercel-botid-path-reference": {
+   "source": "var botIdScript = '/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/a-4-a/c.js';"
+  },
+  "vercel-botid-script": {
+   "url": "https://vercel.com/149e9513-01fa-4fb0-aad4-566afd725d1b/2d206a39-8ed7-437e-a3be-862e0f06eea3/a-4-a/c.js"
+  },
+  "vercel-challenge-token-header": {
+   "header": [
+    "x-vercel-challenge-token",
+    "fake-token"
+   ]
+  },
+  "vercel-checkpoint-endpoint": {
+   "url": "https://nextjs.org/.well-known/vercel/security/request-challenge"
+  },
+  "vercel-checkpoint-script": {
+   "url": "https://nextjs.org/.well-known/vercel/security/static/challenge.v2.min.js"
+  },
+  "vercel-id-header": {
+   "header": [
+    "x-vercel-id",
+    "fra1::iad1::fake0-1700000000000-000000000000"
+   ]
+  },
+  "vercel-mitigated-challenge": {
+   "header": [
+    "x-vercel-mitigated",
+    "challenge"
+   ]
+  },
+  "vercel-mitigated-deny": {
+   "header": [
+    "x-vercel-mitigated",
+    "deny"
+   ]
+  },
+  "vercel-server-header": {
+   "header": [
+    "server",
+    "Vercel"
+   ]
+  }
+ },
+ "detect-ddosguard": {
+  "ddosguard-check-domain": {
+   "url": "https://check.ddos-guard.net/check.js"
+  },
+  "ddosguard-cookie": {
+   "cookie": [
+    "__ddg1_",
+    "FakeValue000000000000"
+   ]
+  },
+  "ddosguard-server-header": {
+   "header": [
+    "server",
+    "ddos-guard"
+   ]
+  },
+  "ddosguard-wellknown-path": {
+   "url": "https://ddos-guard.net/.well-known/ddos-guard/check?context=free_splash"
+  }
+ },
+ "detect-wordfence": {
+  "wordfence-ajax-watcher": {
+   "runtimeType": "object"
+  },
+  "wordfence-ajax-watcher-script": {
+   "source": "var WFAJAXWatcherVars = {\"wafStatus\":\"enabled\"};"
+  },
+  "wordfence-country-bypass-cookie": {
+   "cookie": [
+    "wfCBLBypass",
+    "0123456789abc"
+   ]
+  },
+  "wordfence-false-positive-field": {
+   "dom": {
+    "tagName": "input",
+    "attributes": {
+     "id": "verified-false-positive-checkbox",
+     "type": "checkbox",
+     "name": "wfwaf-false-positive-verified"
+    }
+   }
+  },
+  "wordfence-help-link": {
+   "dom": {
+    "tagName": "a",
+    "attributes": {
+     "href": "https://www.wordfence.com/help/?query=locked-out",
+     "target": "_blank"
+    }
+   }
+  },
+  "wordfence-live-traffic-request": {
+   "url": "https://example.test/?wordfence_lh=1&hid=SYNTHETIC&r=0.5"
+  },
+  "wordfence-live-traffic-script": {
+   "source": "var logHuman = function() { if (window.wfLogHumanRan) { return; } window.wfLogHumanRan = true; };"
+  },
+  "wordfence-login-alert-cookie": {
+   "cookie": [
+    "wf_loginalerted_0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "synthetic"
+   ]
+  },
+  "wordfence-ls-captcha": {
+   "runtimeType": "object"
+  },
+  "wordfence-ls-login-script": {
+   "url": "https://mgchemicals.com/wp-content/plugins/wordfence/modules/login-security/js/login.1722265817.js?ver=1.1.12"
+  },
+  "wordfence-ls-vars": {
+   "runtimeType": "object"
+  },
+  "wordfence-ls-vars-script": {
+   "source": "var WFLSVars = {\"ajaxurl\":\"/wp-admin/admin-ajax.php\",\"useCAPTCHA\":\"1\"};"
+  },
+  "wordfence-plugin-asset": {
+   "url": "https://www.journalismfestival.com/wp-content/plugins/wordfence/js/admin.ajaxWatcher.1786376654.js?ver=9.0.0"
+  },
+  "wordfence-remembered-device-cookie": {
+   "cookie": [
+    "wfls-remembered-AbCdEfGhIjKlMnOpQrStUv",
+    "synthetic"
+   ]
+  },
+  "wordfence-report-button": {
+   "dom": {
+    "tagName": "a",
+    "attributes": {
+     "href": "#",
+     "id": "reportButton",
+     "class": "btn disabled"
+    }
+   }
+  },
+  "wordfence-report-script": {
+   "source": "document.getElementById('reportButton').href = 'ht' + 'tps:/' + '/user-reports.wordfence' + '.com';"
+  },
+  "wordfence-unlock-email-field": {
+   "dom": {
+    "tagName": "input",
+    "attributes": {
+     "type": "text",
+     "name": "email",
+     "id": "unlock-email"
+    }
+   }
+  },
+  "wordfence-unlock-script": {
+   "source": "document.getElementById('unlock-form').action = \"https://example.test/\" + \"?_wfsf=unlockEmail\";"
+  },
+  "wordfence-waf-auth-cookie": {
+   "cookie": [
+    "wfwaf-authcookie-0123456789abcdef0123456789abcdef",
+    "synthetic"
+   ]
+  }
+ },
+ "detect-iovation": {
+  "iovation-blackbox-field": {
+   "dom": {
+    "tagName": "input",
+    "attributes": {
+     "type": "hidden",
+     "name": "blackBox",
+     "id": "ioBlackBox"
+    }
+   }
+  },
+  "iovation-config-reference": {
+   "source": "window.io_global_object_name = \"IGLOO\";"
+  },
+  "iovation-first-party-logo": {
+   "url": "https://poshmark.com/iojs/5.13.0/logo.js"
+  },
+  "iovation-first-party-wdp": {
+   "url": "https://poshmark.com/iojs/general5/static_wdp.js"
+  },
+  "iovation-global-name": {
+   "runtimeType": "string"
+  },
+  "iovation-igloo-blackbox": {
+   "runtimeType": "function"
+  },
+  "iovation-igloo-fp": {
+   "runtimeType": "object"
+  },
+  "iovation-snare-host": {
+   "url": "https://mpsnare.iesnare.com/general5/wdp.js?loaderVer=5.2.2"
+  },
+  "iovation-vendor-host": {
+   "url": "https://ci-mpsnare.iovation.com/snare.js"
+  }
+ },
+ "detect-forter": {
+  "forter-collector": {
+   "url": "https://cdn3.forter.com/events"
+  },
+  "forter-config": {
+   "runtimeType": "object"
+  },
+  "forter-json3": {
+   "runtimeType": "object"
+  },
+  "forter-snippet-reference": {
+   "source": "window.ftr__startScriptLoad = 1 * new Date(); window.ftr__config = { m: merchantConfig, s: '15', si: siteId };"
+  },
+  "forter-snippet-script": {
+   "url": "https://e309da9b9aaf.cdn4.forter.com/sn/e309da9b9aaf/script.js"
+  },
+  "forter-start-time": {
+   "runtimeType": "number"
+  },
+  "forter-token-cookie": {
+   "cookie": [
+    "forterToken",
+    "fake0123456789abcdef_1700000000000"
+   ]
+  }
+ },
+ "detect-sift": {
+  "sift-beacon": {
+   "url": "https://hexagon-analytics.com/images/1700000000.gif?bk=fake"
+  },
+  "sift-loaded-flag": {
+   "runtimeType": "string"
+  },
+  "sift-queue": {
+   "runtimeType": "object"
+  },
+  "sift-snippet-account": {
+   "source": "var _sift = window._sift = window._sift || []; _sift.push(['_setAccount', 'fake0123456789']);"
+  },
+  "sift-snippet-script": {
+   "url": "https://cdn.siftscience.com/s.js"
+  },
+  "sift-ssid-cookie": {
+   "cookie": [
+    "__ssid",
+    "fake0123456789abcdef0123456789a"
+   ]
+  }
+ },
+ "detect-castle": {
+  "castle-cdn-script": {
+   "url": "https://cdn.castle.io/v2/castle.js?key=pk_FAKE00000000000"
+  },
+  "castle-cuid-cookie": {
+   "cookie": [
+    "__cuid",
+    "fake0000-0000-4000-8000-000000000000"
+   ]
+  },
+  "castle-inject-token": {
+   "runtimeType": "function"
+  },
+  "castle-legacy-global": {
+   "runtimeType": "function"
+  },
+  "castle-monitor": {
+   "url": "https://m.castle.io/v1/monitor"
+  },
+  "castle-request-token": {
+   "runtimeType": "function"
+  }
+ },
+ "detect-seon": {
+  "seon-agent-call": {
+   "source": "seon.getSession().then(function (session) { form.elements.session.value = session; });"
+  },
+  "seon-agent-script": {
+   "url": "https://cdn.seondf.com/js/v6/agent.umd.js"
+  },
+  "seon-dns-resolve": {
+   "url": "https://0123456789abcdef0123456789abcdef.seondnsresolve.com/"
+  },
+  "seon-get-base64-session": {
+   "runtimeType": "function"
+  },
+  "seon-get-session": {
+   "runtimeType": "function"
+  },
+  "seon-legacy-agent-script": {
+   "url": "https://cdn.seon.io/js/v5/agent.js"
+  },
+  "seon-webpack-chunk": {
+   "runtimeType": "object"
+  }
  }
 }

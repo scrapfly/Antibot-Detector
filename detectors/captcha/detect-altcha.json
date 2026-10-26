@@ -1,0 +1,257 @@
+{
+  "id": "detect-altcha",
+  "name": "ALTCHA",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Low",
+  "lastUpdated": "2026-10-26",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://altcha.org/",
+  "icon": "altcha_official.png",
+  "description": "Open-source proof-of-work CAPTCHA widget, self-hosted or backed by ALTCHA Cloud and Sentinel",
+  "detection": {
+    "url": [
+      {
+        "id": "altcha-cloud-challenge",
+        "confidence": 100,
+        "description": "Challenge request to ALTCHA Cloud",
+        "text": "^https://[a-z0-9-]+\\.altcha\\.org/(?:api/)?v1/challenge(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "altcha-cdn-script",
+        "confidence": 50,
+        "description": "Official ALTCHA widget script from the public jsDelivr CDN",
+        "text": "^https://cdn\\.jsdelivr\\.net/(?:npm/altcha|gh/altcha-org/altcha)(?:@[\\w.-]+)?(?:/dist/(?:[a-z]+/)?altcha(?:\\.min)?\\.js)?(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "altcha-wordpress-challenge",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Challenge route of the ALTCHA WordPress plugin (wp-json/altcha) on the site itself",
+        "text": "^https?://[^/?#]+/(?:[^?#]*/)?wp-json/altcha/v\\d+/challenge(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "altcha-v3-global-script",
+        "confidence": 10,
+        "standalone": true,
+        "description": "ALTCHA 3 widget code reference to its globalThis.$altcha registry",
+        "text": "globalThis.$altcha",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      },
+      {
+        "id": "altcha-v2-worker-script",
+        "confidence": 10,
+        "standalone": true,
+        "description": "ALTCHA 1 and 2 widget code reference to altchaCreateWorker",
+        "text": "altchaCreateWorker",
+        "textRegex": false,
+        "textWholeWord": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "altcha-widget",
+        "selector": "altcha-widget",
+        "confidence": 40,
+        "description": "ALTCHA widget element altcha-widget, possibly unconfigured"
+      },
+      {
+        "id": "altcha-configured-widget",
+        "selector": "altcha-widget[challenge], altcha-widget[challengeurl], altcha-widget[challengejson]",
+        "confidence": 60,
+        "description": "ALTCHA widget with a challenge, challengeurl or challengejson attribute"
+      },
+      {
+        "id": "altcha-payload-field",
+        "selector": "input[type=\"hidden\"][name=\"altcha\"]",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Hidden field named altcha that carries the solved payload"
+      },
+      {
+        "id": "altcha-widget-root",
+        "selector": "div.altcha[data-state]",
+        "confidence": 30,
+        "standalone": false,
+        "description": "Rendered ALTCHA widget box with its data-state attribute"
+      }
+    ],
+    "window": [
+      {
+        "id": "altcha-v3-registry",
+        "path": "$altcha.algorithms",
+        "condition": "typeof object",
+        "confidence": 50,
+        "description": "ALTCHA 3 global registry of proof-of-work algorithms"
+      },
+      {
+        "id": "altcha-v2-worker",
+        "path": "altchaCreateWorker",
+        "condition": "typeof function",
+        "confidence": 50,
+        "description": "ALTCHA 1 and 2 worker factory"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "altcha-cloud-widget",
+      "name": "Configured widget with an ALTCHA Cloud challenge",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "altcha-configured-widget"
+          },
+          {
+            "pattern": "altcha-cloud-challenge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "altcha-complete-integration",
+      "name": "Widget, its script and its runtime",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "altcha-widget"
+              },
+              {
+                "pattern": "altcha-configured-widget"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "altcha-cdn-script"
+              },
+              {
+                "pattern": "altcha-v3-global-script"
+              },
+              {
+                "pattern": "altcha-v2-worker-script"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "altcha-v3-registry"
+              },
+              {
+                "pattern": "altcha-v2-worker"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "altcha-wordpress-widget",
+      "name": "Configured widget with the WordPress plugin challenge route",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "altcha-configured-widget"
+          },
+          {
+            "pattern": "altcha-wordpress-challenge"
+          }
+        ]
+      }
+    },
+    {
+      "id": "altcha-widget-code",
+      "name": "Widget with its script or runtime",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "altcha-widget"
+              },
+              {
+                "pattern": "altcha-configured-widget"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "altcha-cdn-script"
+              },
+              {
+                "pattern": "altcha-v3-global-script"
+              },
+              {
+                "pattern": "altcha-v2-worker-script"
+              },
+              {
+                "pattern": "altcha-v3-registry"
+              },
+              {
+                "pattern": "altcha-v2-worker"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "altcha-widget-rendered",
+      "name": "Widget rendered with its payload field or state box",
+      "confidence": 75,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "altcha-widget"
+              },
+              {
+                "pattern": "altcha-configured-widget"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "altcha-payload-field"
+              },
+              {
+                "pattern": "altcha-widget-root"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

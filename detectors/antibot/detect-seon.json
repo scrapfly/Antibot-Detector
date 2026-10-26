@@ -1,0 +1,159 @@
+{
+  "id": "detect-seon",
+  "name": "SEON",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-10-26",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://seon.io/",
+  "icon": "seon_official.png",
+  "description": "SEON device intelligence JavaScript agent that fingerprints the browser and network for fraud prevention",
+  "detection": {
+    "url": [
+      {
+        "id": "seon-agent-script",
+        "confidence": 100,
+        "description": "SEON JavaScript agent (agent.umd.js) on one of the vendor CDN hosts",
+        "text": "^https://cdn\\.(?:seondf|dfsdk|deviceinf|seonintelligence)\\.com/js/v\\d+/agent(?:\\.umd)?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "seon-legacy-agent-script",
+        "confidence": 100,
+        "description": "SEON JavaScript agent v4/v5 on the vendor cdn.seon.io host",
+        "text": "^https://cdn\\.seon\\.io/js/v\\d+/agent\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "seon-dns-resolve",
+        "confidence": 100,
+        "description": "SEON agent network probe to a seondnsresolve.com host",
+        "text": "^https://[0-9a-f]{16,64}\\.seondnsresolve\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "seon-agent-call",
+        "confidence": 20,
+        "standalone": false,
+        "description": "SEON agent calls in scripts (seon.getSession, seon.getBase64Session, seon.config)",
+        "text": "\\bseon\\.(?:getSession|getBase64Session|config)\\s*\\(",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ],
+    "window": [
+      {
+        "id": "seon-get-session",
+        "path": "seon.getSession",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "seon.getSession function of the SEON v6 agent"
+      },
+      {
+        "id": "seon-get-base64-session",
+        "path": "seon.getBase64Session",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "seon.getBase64Session function of the SEON v5 agent"
+      },
+      {
+        "id": "seon-webpack-chunk",
+        "path": "webpackChunkseon_javascript_sdk",
+        "condition": "exists",
+        "confidence": 50,
+        "standalone": false,
+        "description": "webpackChunkseon_javascript_sdk global left by the SEON v5 agent"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "seon-agent-loaded",
+      "name": "SEON agent from its host with its runtime",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "seon-agent-script"
+              },
+              {
+                "pattern": "seon-legacy-agent-script"
+              },
+              {
+                "pattern": "seon-dns-resolve"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "seon-get-session"
+              },
+              {
+                "pattern": "seon-get-base64-session"
+              },
+              {
+                "pattern": "seon-webpack-chunk"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "seon-agent-runtime",
+      "name": "SEON agent with its calls",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "seon-get-session"
+              },
+              {
+                "pattern": "seon-get-base64-session"
+              },
+              {
+                "pattern": "seon-webpack-chunk"
+              }
+            ]
+          },
+          {
+            "pattern": "seon-agent-call"
+          }
+        ]
+      }
+    },
+    {
+      "id": "seon-v5-runtime",
+      "name": "SEON v5 agent function with its runtime",
+      "confidence": 80,
+      "when": {
+        "all": [
+          {
+            "pattern": "seon-get-base64-session"
+          },
+          {
+            "pattern": "seon-webpack-chunk"
+          }
+        ]
+      }
+    }
+  ]
+}

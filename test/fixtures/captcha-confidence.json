@@ -169,5 +169,27 @@
     "basilisk-check-site": {"url": "https://basiliskcaptcha.com/challenge/check-site?site_key=0f1a2b3c"},
     "basilisk-host-reference": {"source": "script.src = 'https://basiliskcaptcha.com/static/basilisk.js';"},
     "basilisk-vendor-resource": {"url": "https://basiliskcaptcha.com/static/js/basilisk.min.js"}
+  },
+  "detect-altcha": {
+    "altcha-cloud-challenge": {"url": "https://eu.altcha.org/v1/challenge?apiKey=key_SYNTHETIC"},
+    "altcha-cdn-script": {"url": "https://cdn.jsdelivr.net/npm/altcha@3.0.2/dist/main/altcha.min.js"},
+    "altcha-wordpress-challenge": {"url": "https://schechtl.de/wp-json/altcha/v2/challenge"},
+    "altcha-v3-global-script": {"source": "globalThis.$altcha=globalThis.$altcha||{algorithms:new Map}"},
+    "altcha-v2-worker-script": {"source": "globalThis.altchaCreateWorker=e=>e?new Worker(new URL(e)):new t"},
+    "altcha-widget": {"dom": {"tagName": "altcha-widget", "attributes": {"type": "switch"}}},
+    "altcha-configured-widget": {"dom": {"tagName": "altcha-widget", "attributes": {"challenge": "https://schechtl.de/wp-json/altcha/v2/challenge", "auto": "onsubmit"}}},
+    "altcha-payload-field": {"dom": {"tagName": "input", "attributes": {"type": "hidden", "name": "altcha"}}},
+    "altcha-widget-root": {"dom": {"tagName": "div", "class": "altcha", "attributes": {"class": "altcha", "data-state": "unverified"}}},
+    "altcha-v3-registry": {"runtimeType": "object"},
+    "altcha-v2-worker": {"runtimeType": "function"}
+  },
+  "detect-capjs": {
+    "capjs-cdn-widget": {"url": "https://cdn.jsdelivr.net/npm/@cap.js/widget@0.1.26"},
+    "capjs-wasm-solver": {"url": "https://cdn.jsdelivr.net/npm/@cap.js/wasm@0.0.8/browser/cap_wasm_bg.wasm"},
+    "capjs-wasm-url-script": {"source": "window.CAP_CUSTOM_WASM_URL = \"/vendor/cap/cap_wasm_bg.wasm\";"},
+    "capjs-widget": {"dom": {"tagName": "cap-widget", "attributes": {"id": "cap"}}},
+    "capjs-configured-widget": {"dom": {"tagName": "cap-widget", "attributes": {"id": "cap", "data-cap-api-endpoint": "https://captcha.gurl.eu.org/api/"}}},
+    "capjs-token-field": {"dom": {"tagName": "input", "attributes": {"type": "hidden", "name": "cap-token"}}},
+    "capjs-global": {"runtimeType": "function"}
   }
 }
