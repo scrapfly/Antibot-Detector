@@ -15,6 +15,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Azure Front Door scores lower on its own: its headers show the Microsoft edge, not that its firewall is switched on.
 - Advanced: the protection's name above its tools is now a heading, no longer a box that looks like one of the tool buttons.
+- Advanced → History redesigned: one search row with a … menu (export, clear), a Current site / All sites switch, vendor and tool chips, and compact rows with the vendor's logo.
 
 ### Fixed
 

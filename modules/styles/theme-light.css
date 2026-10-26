@@ -20,7 +20,6 @@
 /* Hovers that tint the background blue: blue text instead of white */
 :root[data-theme="light"] .capture-action-btn:hover,
 :root[data-theme="light"] .advanced-no-tools-history:hover,
-:root[data-theme="light"] #capturesPanel .history-v2-btn:hover,
 :root[data-theme="light"] .rh-pager-btn:hover:not(:disabled),
 :root[data-theme="light"] .pt-option[aria-pressed="true"],
 :root[data-theme="light"] .rules-toolbar .check-updates-btn:hover,
@@ -83,6 +82,13 @@
 :root[data-theme="light"] .advanced-supported-logo .advanced-supported-logo-light {
   display: inline;
 }
+
+/* Advanced → History: the original logos on white tiles */
+:root[data-theme="light"] .cap-row-mark { background: #fff; }
+:root[data-theme="light"] .cap-chip-logo .cap-logo-dark,
+:root[data-theme="light"] .cap-row-mark .cap-logo-dark { display: none; }
+:root[data-theme="light"] .cap-chip-logo .cap-logo-light,
+:root[data-theme="light"] .cap-row-mark .cap-logo-light { display: inline; }
 
 /* Detection and History: the original logo on its white plate */
 :root[data-theme="light"] .brand-logo .brand-logo-dark {

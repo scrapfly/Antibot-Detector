@@ -139,9 +139,6 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
         }
       });
 
-      // Apply filters
-      let filteredCaptures = this.applyFilters(allCaptures, currentSite);
-
       // Render empty state if no captures
       if (allCaptures.length === 0) {
         this.renderEmptyState(capturesPanel);
@@ -155,11 +152,13 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
       const emptyState = capturesPanel.querySelector('#captureEmptyState');
       if (shell) shell.style.display = 'flex';
       if (emptyState) emptyState.style.display = 'none';
-      this.updateSiteFilterOptions(allCaptures, currentSite);
-      this.updateModuleFilterOptions(allCaptures);
-      this.updateToolFilterOptions(allCaptures);
+      this.updateCaptureScope(currentSite);
+      // The chips offer the vendors and tools of the chosen sites only
+      this.renderCaptureChips(this.applyFilters(allCaptures, currentSite, { siteOnly: true }));
       this.setupCaptureHistoryListeners();
 
+      // After the chips: a chip whose vendor or tool left the chosen sites goes back to everything
+      const filteredCaptures = this.applyFilters(allCaptures, currentSite);
       // Filters must work even when this is the first history view.
       if (filteredCaptures.length === 0) {
         this.renderNoResults(capturesPanel);
@@ -202,7 +201,7 @@ Advanced.prototype.getCurrentSite = async function() {
    * @param {string} currentSite - Current site hostname
    * @returns {Array} Filtered captures
    */
-Advanced.prototype.applyFilters = function(captures, currentSite) {
+Advanced.prototype.applyFilters = function(captures, currentSite, { siteOnly = false } = {}) {
     let filtered = [...captures];
 
     // Site filter
@@ -211,6 +210,7 @@ Advanced.prototype.applyFilters = function(captures, currentSite) {
     } else if (this.captureFilters.site !== 'all' && this.captureFilters.site !== 'current') {
       filtered = filtered.filter(c => c.site === this.captureFilters.site);
     }
+    if (siteOnly) return filtered;
 
     // Module filter
     if (this.captureFilters.module !== 'all') {
@@ -553,15 +553,7 @@ Advanced.prototype.resetAllFilters = async function() {
       search: ''
     };
 
-    // Update UI
-    const toolFilter = document.querySelector('#captureToolFilter');
-    if (toolFilter) toolFilter.value = 'all';
-    const siteFilter = document.querySelector('#captureSiteFilter');
-    const moduleFilter = document.querySelector('#captureModuleFilter');
     const searchInput = document.querySelector('#captureSearchInput');
-
-    if (siteFilter) siteFilter.value = 'current';
-    if (moduleFilter) moduleFilter.value = 'all';
     if (searchInput) searchInput.value = '';
 
     // Re-render
@@ -573,55 +565,91 @@ Advanced.prototype.resetAllFilters = async function() {
    * Setup capture history event listeners
    */
 Advanced.prototype.setupCaptureHistoryListeners = function() {
-    // Export button
-    const exportBtn = document.querySelector('#exportCapturesBtn');
-    if (exportBtn) {
-      exportBtn.removeEventListener('click', this._exportHandler);
-      this._exportHandler = () => this.exportCaptures();
-      exportBtn.addEventListener('click', this._exportHandler);
+    // Bound once: the panel's controls stay in the DOM across renders
+    const panel = document.querySelector('#capturesPanel');
+    if (!panel || panel.dataset.controlsBound === 'true') {
+      this.bindCaptureSearch();
+      return;
     }
+    panel.dataset.controlsBound = 'true';
 
-    // Clear all button
-    const clearBtn = document.querySelector('#clearAllCapturesBtn');
-    if (clearBtn) {
-      clearBtn.removeEventListener('click', this._clearAllHandler);
-      this._clearAllHandler = () => this.clearAllCaptures();
-      clearBtn.addEventListener('click', this._clearAllHandler);
+    // "…" menu: Export captures, Clear all captures
+    const menuBtn = document.querySelector('#captureMenuBtn');
+    const menu = document.querySelector('#captureMenu');
+    if (menuBtn && menu) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (menu.hidden) this.openCaptureMenu(menu, menuBtn); else this.closeCaptureMenu();
+      });
+      menu.addEventListener('keydown', (e) => {
+        const items = [...menu.querySelectorAll('.history-menu-item')];
+        const at = items.indexOf(document.activeElement);
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          items[(at + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.focus();
+        } else if (e.key === 'Escape' || e.key === 'Tab') {
+          if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); }
+          this.closeCaptureMenu(e.key === 'Escape');
+        }
+      });
+      document.addEventListener('click', (e) => {
+        if (!menu.hidden && !menu.contains(e.target) && e.target !== menuBtn) this.closeCaptureMenu();
+      });
     }
+    document.querySelector('#exportCapturesBtn')?.addEventListener('click', () => { this.closeCaptureMenu(); this.exportCaptures(); });
+    document.querySelector('#clearAllCapturesBtn')?.addEventListener('click', () => { this.closeCaptureMenu(); this.clearAllCaptures(); });
 
-    // Site filter
-    const siteFilter = document.querySelector('#captureSiteFilter');
-    if (siteFilter) {
-      siteFilter.removeEventListener('change', this._siteFilterHandler);
-      this._siteFilterHandler = (e) => {
-        this.captureFilters.site = e.target.value;
+    // Current site / All sites
+    document.querySelectorAll('.cap-scope-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        const site = button.dataset.site === 'all' ? 'all' : 'current';
+        if (this.captureFilters.site === site) return;
+        this.captureFilters.site = site;
         this.renderUnifiedCaptureHistory();
-      };
-      siteFilter.addEventListener('change', this._siteFilterHandler);
-    }
+      });
+    });
 
-    // Module filter
-    const moduleFilter = document.querySelector('#captureModuleFilter');
-    if (moduleFilter) {
-      moduleFilter.removeEventListener('change', this._moduleFilterHandler);
-      this._moduleFilterHandler = (e) => {
-        this.captureFilters.module = e.target.value;
-        this.renderUnifiedCaptureHistory();
-      };
-      moduleFilter.addEventListener('change', this._moduleFilterHandler);
-    }
+    // Vendor and tool chips: one of each group at a time; the pressed one again shows everything
+    document.querySelector('#captureChips')?.addEventListener('click', (e) => {
+      const chip = e.target.closest('.cap-chip');
+      if (!chip) return;
+      const group = chip.dataset.filterGroup;
+      if (group !== 'module' && group !== 'tool') return;
+      const value = chip.dataset.filterValue;
+      this.captureFilters[group] = this.captureFilters[group] === value ? 'all' : value;
+      this.renderUnifiedCaptureHistory();
+    });
 
-    // Tool filter
-    const toolFilter = document.querySelector('#captureToolFilter');
-    if (toolFilter) {
-      toolFilter.removeEventListener('change', this._toolFilterHandler);
-      this._toolFilterHandler = (e) => {
-        this.captureFilters.tool = e.target.value;
-        this.renderUnifiedCaptureHistory();
-      };
-      toolFilter.addEventListener('change', this._toolFilterHandler);
-    }
+    this.bindCaptureSearch();
+  };
 
+/** Open the "…" menu under its button (fixed, so the list never clips it), focus its first item. */
+Advanced.prototype.openCaptureMenu = function(menu, anchor) {
+    menu.hidden = false;
+    const anchorRect = anchor.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
+    let top = anchorRect.bottom + 4;
+    if (top + menuRect.height > viewportHeight - 4) top = Math.max(4, anchorRect.top - 4 - menuRect.height);
+    menu.style.top = `${top}px`;
+    menu.style.left = `${Math.min(Math.max(4, anchorRect.right - menuRect.width), viewportWidth - menuRect.width - 4)}px`;
+    anchor.setAttribute('aria-expanded', 'true');
+    anchor.classList.add('active');
+    menu.querySelector('.history-menu-item')?.focus();
+  };
+
+Advanced.prototype.closeCaptureMenu = function(returnFocus = false) {
+    const menu = document.querySelector('#captureMenu');
+    const anchor = document.querySelector('#captureMenuBtn');
+    if (!menu || menu.hidden) return;
+    menu.hidden = true;
+    anchor?.setAttribute('aria-expanded', 'false');
+    anchor?.classList.remove('active');
+    if (returnFocus) anchor?.focus();
+  };
+
+Advanced.prototype.bindCaptureSearch = function() {
     // Search input (with debounce)
     const searchInput = document.querySelector('#captureSearchInput');
     if (searchInput) {
@@ -636,5 +664,4 @@ Advanced.prototype.setupCaptureHistoryListeners = function() {
       };
       searchInput.addEventListener('input', this._searchHandler);
     }
-
   };

@@ -12,21 +12,25 @@ function node() {
     addEventListener(name, callback) { listeners.set(name, callback); },
     removeEventListener(name, callback) { if (listeners.get(name) === callback) listeners.delete(name); },
     dispatch(name) { return listeners.get(name)?.({ target: this }); },
-    focus() { this.focused = true; } };
+    focus() { this.focused = true; }, querySelector() { return null; } };
 }
 
 function fixture() {
   let history = {}, panelReplaced = false;
   const elements = Object.fromEntries(['.history-v2-shell', '#captureGrid', '#captureEmptyState',
-    '#captureOpenToolsBtn', '#captureSiteFilter', '#captureModuleFilter', '#captureSearchInput',
+    '#captureOpenToolsBtn', '#captureChips', '#captureCurrentHost', '#captureSearchInput', '#captureMenuBtn', '#captureMenu',
     '#exportCapturesBtn', '#clearAllCapturesBtn', '#toolsPanel', '#advancedContent'].map(selector => [selector, node()]));
+  // The Current site / All sites switch
+  const scope = ['current', 'all'].map(site => Object.assign(node(), { dataset: { site }, setAttribute(name, value) { this[name] = value; } }));
+  elements['#captureChips'].querySelectorAll = () => [];
   const panel = node();
   Object.defineProperty(panel, 'innerHTML', { set() { panelReplaced = true; } });
   panel.querySelector = selector => panelReplaced ? null : elements[selector] || null;
   const context = { window: {}, URL, Logger: { ui() {}, debug() {}, error(error) { throw error; } },
     FormatUtils: require('../utils/format-utils'),
     AdvancedHistoryStore: { load: async () => history },
-    document: { querySelector: selector => selector === '#capturesPanel' ? panel : panel.querySelector(selector) },
+    document: { querySelector: selector => selector === '#capturesPanel' ? panel : panel.querySelector(selector),
+      querySelectorAll: selector => (selector === '.cap-scope-btn' ? scope : []), addEventListener() {} },
     setTimeout, clearTimeout };
   vm.createContext(context);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/advanced/vendor-registry.js'), 'utf8'), context);
@@ -41,7 +45,7 @@ function fixture() {
     const grid = container.querySelector('#captureGrid');
     if (grid) grid.innerHTML = captures.map(capture => capture.id).join(',');
   };
-  return { advanced, elements, panel, save: value => { history = value; } };
+  return { advanced, elements, panel, scope, save: value => { history = value; } };
 }
 
 test('capture history can show its first capture after rendering empty without losing controls', async () => {
@@ -49,7 +53,7 @@ test('capture history can show its first capture after rendering empty without l
   await advanced.renderUnifiedCaptureHistory();
   save({ akamai: [{ id: 'first-capture', timestamp: Date.now(), url: 'https://example.test' }] });
   await advanced.renderUnifiedCaptureHistory();
-  assert.equal(panel.querySelector('#captureSiteFilter'), elements['#captureSiteFilter']);
+  assert.equal(panel.querySelector('#captureChips'), elements['#captureChips']);
   assert.equal(elements['#captureGrid'].innerHTML, 'first-capture');
   assert.equal(elements['#captureEmptyState'].style.display, 'none');
   assert.notEqual(elements['.history-v2-shell'].style.display, 'none');
@@ -60,15 +64,17 @@ test('capture history can show its first capture after rendering empty without l
 });
 
 test('filters work when the first history view has no captures on the current site', async () => {
-  const { advanced, elements, save } = fixture();
+  const { advanced, elements, scope, save } = fixture();
   save({ akamai: [{ id: 'other-site', timestamp: Date.now(), url: 'https://other.test' }] });
   await advanced.renderUnifiedCaptureHistory();
   assert.match(elements['#captureGrid'].innerHTML, /No captures found/);
-  elements['#captureSiteFilter'].value = 'all';
-  await elements['#captureSiteFilter'].dispatch('change');
+  assert.equal(scope[0]['aria-pressed'], 'true', 'Current site is on');
+  await scope[1].dispatch('click');
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(elements['#captureGrid'].innerHTML, 'other-site');
   assert.equal(advanced.captureFilters.site, 'all');
+  assert.equal(scope[1]['aria-pressed'], 'true', 'All sites is on');
+  assert.equal(elements['#captureCurrentHost'].textContent, 'example.test', 'the current site is named under its button');
 });
 
 test('the empty history action opens Tools and moves focus into the visible panel', async () => {
@@ -110,7 +116,7 @@ test('returning to empty capture history clears the grid and leaves the filters 
   const { advanced, elements } = fixture();
   await advanced.renderUnifiedCaptureHistory();
   assert.equal(elements['#captureGrid'].innerHTML, '');
-  assert.equal(elements['#captureSiteFilter'].value, '', 'empty styling must not mutate filters');
+  assert.equal(advanced.captureFilters.site, 'current', 'empty styling must not mutate filters');
 });
 
 test('the History badge follows saved captures without opening the History tab', async () => {
@@ -190,6 +196,9 @@ test('every history card has a tool tag in the current language, Analyze Scripts
   const advanced = new Advanced({}, {});
   advanced.setupCaptureCardListeners = () => {};
   advanced.renderCaptureCards(captures, { querySelector: () => grid });
-  const tags = [...grid.innerHTML.matchAll(/<span class="capture-tool-tag" title="[^"]*">([^<]*)<\/span>/g)].map(match => match[1]);
+  const tags = [...grid.innerHTML.matchAll(/<span class="cap-row-tool">([^<]*)<\/span>/g)].map(match => match[1]);
+  // Each row names its vendor and shows its logo
+  assert.equal([...grid.innerHTML.matchAll(/<span class="cap-row-vendor">AWS WAF<\/span>/g)].length, 4);
+  assert.match(grid.innerHTML, /detectors\/icons\/aws_official\.png/);
   assert.deepEqual(tags, ['Analizar scripts', 'Comprobar cookies', 'Captura', 'Tool &lt;b&gt;name&lt;/b&gt;']);
 });

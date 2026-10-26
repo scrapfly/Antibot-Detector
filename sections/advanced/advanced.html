@@ -52,77 +52,47 @@
 
   <!-- Capture History Tab Content -->
   <div class="advanced-tab-panel" id="capturesPanel" style="display: none;">
-    <div class="history-v2-shell">
-      <div class="history-v2-controls">
-        <div class="history-v2-heading">
-          <span class="history-v2-heading-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M8 5H5.8C4.81 5 4 5.81 4 6.8V18.2C4 19.19 4.81 20 5.8 20H18.2C19.19 20 20 19.19 20 18.2V16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-              <path d="M15 4H18.2C19.19 4 20 4.81 20 5.8V11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-              <path d="M8 10H13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-              <path d="M8 14H16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <div>
-            <h3 class="history-v2-title" data-i18n="advancedCaptureHistoryTitle">Capture History</h3>
-            <p class="history-v2-subtitle" data-i18n="advancedCaptureHistorySubtitle">Filter, inspect, and export collected captures</p>
-          </div>
-        </div>
-
-        <div class="history-v2-filters-grid">
-          <label class="history-v2-field">
-            <span class="history-v2-label" data-i18n="advancedFilterSite">Site</span>
-            <select id="captureSiteFilter" class="history-v2-select">
-              <option value="all" data-i18n="advancedFilterAllSites">All Sites</option>
-              <option value="current" selected data-site="" data-i18n="advancedFilterCurrentSite">Current Site</option>
-            </select>
-          </label>
-
-          <label class="history-v2-field">
-            <span class="history-v2-label" data-i18n="advancedFilterModule">Module</span>
-            <!-- One option per vendor saved in history (Advanced.updateModuleFilterOptions) -->
-            <select id="captureModuleFilter" class="history-v2-select">
-              <option value="all" data-i18n="advancedFilterAllModules">All Modules</option>
-            </select>
-          </label>
-
-          <label class="history-v2-field history-v2-field--wide">
-            <span class="history-v2-label" data-i18n="advancedFilterTool">Tool</span>
-            <!-- Captures and one option per tool type saved in history (Advanced.updateToolFilterOptions) -->
-            <select id="captureToolFilter" class="history-v2-select">
-              <option value="all" data-i18n="advancedFilterAllTools">All tools</option>
-            </select>
-          </label>
-
-          <label class="history-v2-field history-v2-field--search">
-            <span class="history-v2-label" data-i18n="advancedFilterSearch">Search</span>
-            <input type="text" id="captureSearchInput" class="history-v2-search" placeholder="Search by URL, module, site, or content..." data-i18n-placeholder="advancedSearchPlaceholder">
-          </label>
-        </div>
-
-        <div class="history-v2-actions">
-          <button id="exportCapturesBtn" class="history-v2-btn history-v2-btn--primary" title="Export captures" data-i18n-title="advancedBtnExportTitle">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 4V14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M8.5 10.5L12 14L15.5 10.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M5 18H19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-            <span data-i18n="advancedBtnExport">Export</span>
-          </button>
-          <button id="clearAllCapturesBtn" class="history-v2-btn history-v2-btn--danger" title="Clear all captures" data-i18n-title="advancedBtnClearAllTitle">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M6 7H18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M9 7V5.8C9 4.81 9.81 4 10.8 4H13.2C14.19 4 15 4.81 15 5.8V7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M8 7L8.6 18.1C8.65 19.14 9.5 20 10.54 20H13.46C14.5 20 15.35 19.14 15.4 18.1L16 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-            <span data-i18n="advancedBtnClearAll">Clear All</span>
-          </button>
-        </div>
+    <!-- Saved captures: one search row with a "…" menu (export, clear), which sites, the vendors and tools
+         present as chips (only when there is a choice), then one compact row per capture -->
+    <div class="history-v2-shell cap-shell">
+      <div class="cap-toolbar">
+        <label class="cap-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+          <input type="search" id="captureSearchInput" class="cap-search-input" placeholder="Search by URL, module, site, or content..." data-i18n-placeholder="advancedSearchPlaceholder" aria-label="Search" data-i18n-aria-label="advancedFilterSearch">
+        </label>
+        <button type="button" id="captureMenuBtn" class="history-square-btn history-menu-btn" title="More actions" aria-label="More actions" aria-haspopup="menu" aria-expanded="false" data-i18n-title="historyMoreActions" data-i18n-aria-label="historyMoreActions">
+          <svg width="14" height="4" viewBox="0 0 14 4" aria-hidden="true"><circle cx="2.4" cy="2" r="1.3" fill="currentColor"/><circle cx="7" cy="2" r="1.3" fill="currentColor"/><circle cx="11.6" cy="2" r="1.3" fill="currentColor"/></svg>
+        </button>
       </div>
 
-      <div id="captureGrid" class="history-v2-grid">
-        <!-- Capture cards rendered by Advanced.js -->
+      <div class="cap-scope" role="group" aria-label="Site" data-i18n-aria-label="advancedFilterSite">
+        <button type="button" class="cap-scope-btn" data-site="current" aria-pressed="true">
+          <span class="cap-scope-label" data-i18n="advancedFilterCurrentSite">Current Site</span>
+          <span class="cap-scope-host" id="captureCurrentHost"></span>
+        </button>
+        <button type="button" class="cap-scope-btn" data-site="all" aria-pressed="false">
+          <span class="cap-scope-label" data-i18n="advancedFilterAllSites">All Sites</span>
+        </button>
       </div>
+
+      <!-- Vendors and tools present in the saved captures (Advanced.renderCaptureChips) -->
+      <div id="captureChips" class="cap-chips" role="group" aria-label="Filters" data-i18n-aria-label="historyFiltersLabel" hidden></div>
+
+      <div id="captureGrid" class="cap-list">
+        <!-- Capture rows rendered by Advanced.renderCaptureCards -->
+      </div>
+    </div>
+
+    <div id="captureMenu" class="history-menu" role="menu" hidden>
+      <button type="button" id="exportCapturesBtn" class="history-menu-item" role="menuitem">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        <span data-i18n="advancedBtnExportTitle">Export captures</span>
+      </button>
+      <div class="history-menu-separator" role="separator"></div>
+      <button type="button" id="clearAllCapturesBtn" class="history-menu-item history-menu-item-danger" role="menuitem">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        <span data-i18n="advancedBtnClearAllTitle">Clear all captures</span>
+      </button>
     </div>
 
     <div id="captureEmptyState" class="advanced-history-empty state-card state-card--blue" style="display: none;">
