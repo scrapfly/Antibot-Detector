@@ -45,6 +45,7 @@ importScripts(
     './modules/core/history-store.js',
     './modules/core/history-policy.js',
     './modules/core/history-export.js',
+    './modules/core/bulk-scan.js',
     './background/history-recorder.js',
     './background/notification-clicks.js',
     './modules/core/webhook-body.js',
@@ -104,6 +105,7 @@ importScripts(
     './background/history-watch.js',
     './modules/core/cookie-timeline.js',
     './background/cookie-timeline.js',
+    './background/bulk-scan-runner.js',
     './background/detection-cache-retention.js',
     './background/init.js'
 );

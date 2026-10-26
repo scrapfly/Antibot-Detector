@@ -54,6 +54,13 @@
     'RULE_SUGGEST_PAGE',        // Rules → From this page: the active tab's cookies, loaded scripts and response headers ({ tabId })
     'WEBHOOK_RETRY',            // Recent deliveries → Retry: send a failed delivery again now ({ id })
     'COOKIE_TIMELINE_GET',      // Advanced → Check Cookies: the protection cookie timeline of a page's site ({ url })
+    // Bulk scan (sections/bulk/): the run lives in the worker, the page starts and steers it (extension pages only)
+    'BULK_SCAN_START',          // { entries, timeoutSec, cap }: a new run of these addresses
+    'BULK_SCAN_PAUSE',          // finish the page being scanned, then wait
+    'BULK_SCAN_RESUME',
+    'BULK_SCAN_STOP',           // close the scan tab now; the pages not scanned stay waiting
+    'BULK_SCAN_STATE',          // the run as it is now (also in chrome.storage.session)
+    'BULK_SCAN_CLEAR',          // forget a finished or stopped run
     // Logging and the log collector
     'LOG',
     'LOG_COLLECTOR_ENABLE',

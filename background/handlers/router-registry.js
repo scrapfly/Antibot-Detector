@@ -38,6 +38,10 @@ function buildMessageHandlerRegistry(context) {
     if (typeof CookieTimelineRecorder !== 'undefined') {
         CookieTimelineRecorder.registerHandlers(registry);
     }
+    // Bulk scan: start, pause, resume, stop from its page
+    if (typeof BulkScanRunner !== 'undefined') {
+        BulkScanRunner.registerHandlers(registry);
+    }
 
     return registry;
 }

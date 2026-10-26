@@ -116,6 +116,8 @@ BackgroundTabScan.init();
 HistoryWatch.init();
 // Protection cookie timeline (Advanced → Check Cookies): its chrome.cookies.onChanged listener registers in the first turn
 CookieTimelineRecorder.init();
+// A Bulk scan run the previous worker left "running" is marked stopped
+BulkScanRunner.init();
 // Failed webhook deliveries are retried by an alarm (modules/settings/webhook-runtime.js)
 SettingsRuntime.initWebhookRetries();
 
