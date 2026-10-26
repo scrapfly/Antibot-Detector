@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Non trovati"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "impostato {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "cambiato una volta"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "cambiato {0} volte"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "ultima modifica {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "scade {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "cookie di sessione"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "rimosso {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "scaduto {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Cronologia"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Impostato"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Cambiato"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Rimosso"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Scaduto"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "La registrazione inizia quando la pagina imposta il cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Registrati in precedenza"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Impronta breve del valore: distingue i valori, non salva mai il valore"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Ripristinare i rilevatori ufficiali?"
   },

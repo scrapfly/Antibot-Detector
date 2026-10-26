@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Não encontrados"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "definido {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "alterado uma vez"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "alterado {0} vezes"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "última alteração {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "expira {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "cookie de sessão"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "removido {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "expirou {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Linha do tempo"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Definido"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Alterado"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Removido"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Expirado"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "A gravação começa quando a página define o cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Registrados antes"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Impressão curta do valor: distingue valores, nunca guarda o valor"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Restaurar os detectores oficiais?"
   },

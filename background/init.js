@@ -112,6 +112,8 @@ HistoryRetention.init();
 // Automatic History backup to the Downloads folder (alarm + "Back up now"); its listeners register in the first turn
 HistoryBackup.init();
 HistoryWatch.init();
+// Protection cookie timeline (Advanced → Check Cookies): its chrome.cookies.onChanged listener registers in the first turn
+CookieTimelineRecorder.init();
 // Failed webhook deliveries are retried by an alarm (modules/settings/webhook-runtime.js)
 SettingsRuntime.initWebhookRetries();
 

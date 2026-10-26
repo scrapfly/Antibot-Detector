@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Introuvables"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "défini {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "modifié une fois"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "modifié {0} fois"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "dernière modification {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "expire {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "cookie de session"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "supprimé {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "expiré {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Chronologie"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Défini"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Modifié"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Supprimé"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Expiré"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "L’enregistrement commence quand la page définit le cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Enregistrés auparavant"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Empreinte courte de la valeur : distingue les valeurs, ne stocke jamais la valeur"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Restaurer les détecteurs officiels ?"
   },

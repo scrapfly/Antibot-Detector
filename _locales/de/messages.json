@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Nicht gefunden"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "gesetzt {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "einmal geändert"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "{0}-mal geändert"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "letzte Änderung {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "läuft ab {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "Sitzungscookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "entfernt {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "abgelaufen {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Verlauf"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Gesetzt"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Geändert"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Entfernt"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Abgelaufen"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Die Aufzeichnung beginnt, wenn die Seite das Cookie setzt"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Früher aufgezeichnet"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Kurzer Fingerabdruck des Werts: unterscheidet Werte, speichert nie den Wert"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Offizielle Detektoren wiederherstellen?"
   },

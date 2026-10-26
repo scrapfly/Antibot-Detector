@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Bulunamadı"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "ayarlandı: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "bir kez değişti"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "değişiklik sayısı: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "son değişiklik: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "sona erme: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "oturum çerezi"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "silindi: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "süresi doldu: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Zaman çizelgesi"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Ayarlandı"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Değişti"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Silindi"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Süresi doldu"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Kayıt, sayfa çerezi ayarladığında başlar"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Daha önce kaydedilenler"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Değerin kısa parmak izi: değerleri ayırt eder, değeri asla saklamaz"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Resmi dedektörler geri yüklensin mi?"
   },

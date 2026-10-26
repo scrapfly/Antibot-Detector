@@ -4558,6 +4558,54 @@
   "advCookieNotFound": {
     "message": "Not found"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "set {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "changed once"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "changed {0} times"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "last change {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "expires {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "session cookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "removed {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "expired {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Timeline"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Set"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Changed"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Removed"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Expired"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Recording starts when the page sets the cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Recorded earlier"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Short fingerprint of the value: tells values apart, never stores the value"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Restore official detectors?"
   },

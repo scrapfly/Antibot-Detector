@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "찾을 수 없음"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "설정: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "1회 변경"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "{0}회 변경"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "마지막 변경: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "만료: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "세션 쿠키"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "삭제: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "만료됨: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "타임라인"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "설정"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "변경"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "삭제"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "만료"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "페이지가 쿠키를 설정하면 기록이 시작됩니다"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "이전에 기록됨"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "값의 짧은 지문: 값을 구분하지만 값 자체는 저장하지 않습니다"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "공식 탐지기를 복원할까요?"
   },

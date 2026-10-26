@@ -34,6 +34,10 @@ function buildMessageHandlerRegistry(context) {
     if (typeof HistoryWatch !== 'undefined') {
         HistoryWatch.registerHandlers(registry);
     }
+    // Advanced → Check Cookies: the protection cookie timeline of the page's site
+    if (typeof CookieTimelineRecorder !== 'undefined') {
+        CookieTimelineRecorder.registerHandlers(registry);
+    }
 
     return registry;
 }

@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Не найдены"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "установлен: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "изменён один раз"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "изменений: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "последнее изменение: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "истекает: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "сеансовый cookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "удалён: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "истёк: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Хронология"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Установлен"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Изменён"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Удалён"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Истёк"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Запись начнётся, когда страница установит cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Записанные ранее"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Короткий отпечаток значения: различает значения, само значение не сохраняется"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Восстановить официальные детекторы?"
   },

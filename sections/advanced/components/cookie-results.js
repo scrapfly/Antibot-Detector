@@ -24,12 +24,102 @@ class AdvancedCookieResults {
         return `${label} · ${BaseAdvancedModule._fmt('advCommonCharsFmt', `${count} chars`, count)}`;
     }
 
+    /** The page's site's protection cookie timeline from the worker ({ cookies: { name: events[] }, now }), or null. */
+    static fetchCookieTimeline(url, timeoutMs = 1500) {
+        if (!url || typeof chrome === 'undefined' || !chrome.runtime || typeof WorkerMessages === 'undefined') return Promise.resolve(null);
+        return new Promise((resolve) => {
+            const timer = setTimeout(() => resolve(null), timeoutMs);
+            try {
+                chrome.runtime.sendMessage({ type: WorkerMessages.COOKIE_TIMELINE_GET, url }, (response) => {
+                    clearTimeout(timer);
+                    const ok = !chrome.runtime.lastError && response && response.status === 'ok' && response.cookies;
+                    resolve(ok ? { cookies: response.cookies, now: Number(response.now) || Date.now() } : null);
+                });
+            } catch (_) { clearTimeout(timer); resolve(null); }
+        });
+    }
+
+    /** "set 4 min. ago · changed 3 times · last change 40 sec. ago · expires in 1 hr." for one cookie's events. */
+    static cookieTimelineSummary(events, now) {
+        const K = BaseAdvancedModule;
+        const locale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        const ago = (t) => CookieTimeline.relative(t - now, locale);
+        const s = CookieTimeline.summarize(events);
+        if (s.state === 'none') return '';
+        const parts = [];
+        if (s.state !== 'live') {
+            parts.push(s.state === 'expired'
+                ? K._fmt('advCookieTimelineExpiredFmt', `expired ${ago(s.endedAt)}`, ago(s.endedAt))
+                : K._fmt('advCookieTimelineRemovedFmt', `removed ${ago(s.endedAt)}`, ago(s.endedAt)));
+        }
+        if (s.setAt !== null) parts.push(K._fmt('advCookieTimelineSetFmt', `set ${ago(s.setAt)}`, ago(s.setAt)));
+        if (s.changes === 1) parts.push(K._tr('advCookieTimelineChangedOnce', 'changed once'));
+        else if (s.changes > 1) parts.push(K._fmt('advCookieTimelineChangedFmt', `changed ${s.changes} times`, s.changes));
+        if (s.lastChangeAt !== null) parts.push(K._fmt('advCookieTimelineLastChangeFmt', `last change ${ago(s.lastChangeAt)}`, ago(s.lastChangeAt)));
+        if (s.state === 'live') {
+            parts.push(s.expiresAt !== null
+                ? K._fmt('advCookieTimelineExpiresFmt', `expires ${CookieTimeline.relative(s.expiresAt - now, locale)}`, CookieTimeline.relative(s.expiresAt - now, locale))
+                : K._tr('advCookieTimelineSession', 'session cookie'));
+        }
+        return parts.join(' · ');
+    }
+
+    /**
+     * One cookie's timeline: the summary line, then its events (newest first) folded under "Timeline". Nothing
+     * recorded yet: the line that says when recording starts.
+     */
+    static cookieTimelineBlock(events, now) {
+        const K = BaseAdvancedModule;
+        const tr = K._tr;
+        const esc = FormatUtils.escapeHtml;
+        const attr = FormatUtils.escapeAttr;
+        const list = Array.isArray(events) ? events : [];
+        if (!list.length) {
+            return `<p class="adv-cookie-timeline-empty">${esc(tr('advCookieTimelineEmpty', 'Recording starts when the page sets the cookie'))}</p>`;
+        }
+        const locale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
+        const labels = {
+            set: tr('advCookieTimelineEventSet', 'Set'),
+            changed: tr('advCookieTimelineEventChanged', 'Changed'),
+            removed: tr('advCookieTimelineEventRemoved', 'Removed'),
+            expired: tr('advCookieTimelineEventExpired', 'Expired')
+        };
+        const markerHint = attr(tr('advCookieTimelineMarkerHint', 'Short fingerprint of the value: tells values apart, never stores the value'));
+        const clock = (t) => {
+            try { return new Date(t).toLocaleTimeString(locale); } catch (_) { return new Date(t).toLocaleTimeString(); }
+        };
+        const rows = list.slice().reverse().map((event) => {
+            const facts = [];
+            if (Number.isFinite(event.l) && (event.e === 'set' || event.e === 'changed')) {
+                const count = String(event.l);
+                facts.push(esc(K._fmt('advCommonCharsFmt', `${count} chars`, count)));
+                if (event.m) facts.push(`<code class="adv-cookie-timeline-marker" title="${markerHint}">${esc(event.m)}</code>`);
+            }
+            return `
+                    <li class="adv-cookie-timeline-event is-${esc(event.e)}">
+                        <span class="adv-cookie-timeline-dot" aria-hidden="true"></span>
+                        <span class="adv-cookie-timeline-label">${esc(labels[event.e] || event.e)}</span>
+                        <time class="adv-cookie-timeline-time" datetime="${attr(new Date(event.t).toISOString())}" title="${attr(K.kitDateTime(event.t))}">${esc(clock(event.t))} · ${esc(CookieTimeline.relative(event.t - now, locale))}</time>
+                        ${facts.length ? `<span class="adv-cookie-timeline-facts">${facts.join(' · ')}</span>` : ''}
+                    </li>`;
+        }).join('');
+        return `
+            <div class="adv-cookie-timeline">
+                <p class="adv-cookie-timeline-summary">${esc(K.cookieTimelineSummary(list, now))}</p>
+                <details class="adv-cookie-timeline-details">
+                    <summary><span>${esc(tr('advCookieTimelineTitle', 'Timeline'))}</span><span class="adv-kit-count">${list.length}</span></summary>
+                    <ol class="adv-cookie-timeline-list">${rows}
+                    </ol>
+                </details>
+            </div>`;
+    }
+
     /**
      * The Check Cookies result: one status line (found / expected, green when all are there, amber when some are
      * missing), then one card per cookie: its name to copy with its flags, its value as one code block to copy, and
      * domain, path and expiry as plain text. Cookies the vendor uses that were not found close the list as chips.
      */
-    static cookieResultsBody(result) {
+    static cookieResultsBody(result, timeline = null) {
         const K = BaseAdvancedModule;
         const tr = K._tr;
         const esc = FormatUtils.escapeHtml;
@@ -69,25 +159,38 @@ class AdvancedCookieResults {
                     ${meta(tr('advCommonDomainLabel', 'Domain:').replace(/:\s*$/, ''), cookie.domain)}
                     ${meta(tr('advCookiePath', 'Path'), cookie.path)}
                     ${meta(tr('advCookieExpires', 'Expires'), cookie.expires ? when(cookie.expires) : tr('advCookieSession', 'Session (deleted when the browser closes)'), true)}
-                </dl>
+                </dl>${timeline ? K.cookieTimelineBlock(timeline.cookies[cookie.name], timeline.now) : ''}
             </article>`).join('');
+        // Protection cookies recorded on this site that the page no longer has (removed, expired, or renamed by a site)
+        const expected = Array.isArray(result.expected) ? result.expected : [];
+        const nameMatches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
+        const gone = timeline ? Object.keys(timeline.cookies)
+            .filter(name => !cookies.some(cookie => cookie.name === name) && expected.some(pattern => nameMatches(pattern, name)))
+            .sort() : [];
+        const earlier = gone.length ? K.kitSection(tr('advCookieTimelineEarlier', 'Recorded earlier'), gone.map(name => `
+            <article class="adv-cookie adv-cookie--gone">
+                <div class="adv-cookie-head"><span class="adv-cookie-name-text">${esc(name)}</span></div>
+                ${K.cookieTimelineBlock(timeline.cookies[name], timeline.now)}
+            </article>`).join(''), gone.length) : '';
         const absent = missing.length
             ? K.kitSection(tr('advCookieNotFound', 'Not found'), `<div class="adv-kit-chips">${missing.map(name => K.kitChip(name, 'neutral')).join('')}</div>`, missing.length)
             : '';
         const none = cookies.length ? '' : K.kitNote(K._fmt('advCommonNoCookiesFmt', `No ${result.vendor} cookies found`, result.vendor));
-        return summary + cards + none + absent;
+        return summary + cards + none + earlier + absent;
     }
 
-    showCookieResults({ vendor, expected = [], cookies = [], facts = [], total = null }) {
+    async showCookieResults({ vendor, expected = [], cookies = [], facts = [], total = null }) {
         const records = cookies.map(cookie => BaseAdvancedModule.cookieRecord(cookie));
         const matches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
         const missing = expected.filter(pattern => !records.some(cookie => matches(pattern, cookie.name)));
         const result = { kind: 'cookies', vendor, total: Number.isInteger(total) ? total : Math.max(expected.length, records.length), facts, cookies: records, missing };
         const title = BaseAdvancedModule._fmt('advCommonCookiesTitleFmt', `${vendor} Cookies`, vendor);
+        // The timeline is shown here only: it lives in the worker's memory and is never saved with the result
+        const timeline = await BaseAdvancedModule.fetchCookieTimeline(this.tabInfo && this.tabInfo.url);
         this.openKitModal({
             title,
             iconSvg: BaseAdvancedModule.COOKIE_ICON,
-            body: BaseAdvancedModule.cookieResultsBody(result),
+            body: BaseAdvancedModule.cookieResultsBody({ ...result, expected }, timeline),
             copiedMessage: BaseAdvancedModule._tr('copiedNotification', 'Copied'),
             record: false
         });
@@ -115,7 +218,7 @@ class AdvancedCookieResults {
 for (const name of ['showCookieResults', 'showSavedCookieResults']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedCookieResults.prototype, name));
 }
-for (const name of ['cookieRecord', 'cookieValueLabel', 'cookieResultsBody']) {
+for (const name of ['cookieRecord', 'cookieValueLabel', 'fetchCookieTimeline', 'cookieTimelineSummary', 'cookieTimelineBlock', 'cookieResultsBody']) {
     Object.defineProperty(BaseAdvancedModule, name, Object.getOwnPropertyDescriptor(AdvancedCookieResults, name));
 }
 })();

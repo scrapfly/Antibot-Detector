@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Nie znaleziono"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "ustawione: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "zmienione raz"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "liczba zmian: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "ostatnia zmiana: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "wygasa: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "plik cookie sesji"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "usunięte: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "wygasło: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Oś czasu"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Ustawione"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Zmienione"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Usunięte"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Wygasłe"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Zapis zaczyna się, gdy strona ustawi plik cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Zapisane wcześniej"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Krótki odcisk wartości: odróżnia wartości, nigdy nie zapisuje wartości"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Przywrócić oficjalne detektory?"
   },

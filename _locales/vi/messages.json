@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Không tìm thấy"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "đặt {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "đã đổi một lần"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "đã đổi {0} lần"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "lần đổi cuối {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "hết hạn {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "cookie phiên"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "đã xóa {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "đã hết hạn {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Dòng thời gian"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Đã đặt"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Đã đổi"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Đã xóa"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Đã hết hạn"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Việc ghi bắt đầu khi trang đặt cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Đã ghi trước đó"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Dấu vân tay ngắn của giá trị: phân biệt các giá trị, không bao giờ lưu giá trị"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Khôi phục trình phát hiện chính thức?"
   },

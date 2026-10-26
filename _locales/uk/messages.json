@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Не знайдено"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "встановлено: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "змінено один раз"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "змін: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "остання зміна: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "спливає: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "сеансовий cookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "видалено: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "сплив: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Хронологія"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Встановлено"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Змінено"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Видалено"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Сплив"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Запис почнеться, коли сторінка встановить cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Записані раніше"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Короткий відбиток значення: розрізняє значення, саме значення не зберігається"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Відновити офіційні детектори?"
   },

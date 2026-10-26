@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Tidak ditemukan"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "dipasang {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "berubah sekali"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "berubah {0} kali"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "perubahan terakhir {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "kedaluwarsa {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "cookie sesi"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "dihapus {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "kedaluwarsa {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Linimasa"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Dipasang"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Berubah"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Dihapus"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Kedaluwarsa"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Perekaman dimulai saat halaman memasang cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Terekam sebelumnya"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Sidik jari pendek dari nilai: membedakan nilai, tidak pernah menyimpan nilainya"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Pulihkan detektor resmi?"
   },

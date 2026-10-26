@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "नहीं मिलीं"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "सेट: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "एक बार बदली"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "बदलाव: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "आख़िरी बदलाव: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "समाप्ति: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "सत्र कुकी"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "हटाई गई: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "समाप्त: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "टाइमलाइन"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "सेट"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "बदली"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "हटाई गई"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "समाप्त"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "रिकॉर्डिंग तब शुरू होती है जब पेज कुकी सेट करता है"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "पहले रिकॉर्ड की गई"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "मान का छोटा फ़िंगरप्रिंट: मानों में अंतर बताता है, मान कभी सहेजता नहीं"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "आधिकारिक डिटेक्टर बहाल करें?"
   },

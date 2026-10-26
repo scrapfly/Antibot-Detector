@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "見つからない"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "設定: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "1 回変更"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "変更 {0} 回"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "最終変更: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "有効期限: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "セッション Cookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "削除: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "期限切れ: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "タイムライン"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "設定"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "変更"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "削除"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "期限切れ"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "ページが Cookie を設定すると記録が始まります"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "以前に記録"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "値の短い指紋: 値を区別しますが、値そのものは保存しません"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "公式の検出器を復元しますか？"
   },

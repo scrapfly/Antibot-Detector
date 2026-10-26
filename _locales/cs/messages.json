@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Nenalezeno"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "nastaveno {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "změněno jednou"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "počet změn: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "poslední změna {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "vyprší {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "relační cookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "odstraněno {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "vypršelo {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Časová osa"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Nastaveno"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Změněno"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Odstraněno"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Vypršelo"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Záznam začne, jakmile stránka nastaví cookie"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Zaznamenáno dříve"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Krátký otisk hodnoty: rozliší hodnoty, nikdy hodnotu neukládá"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Obnovit oficiální detektory?"
   },

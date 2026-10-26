@@ -52,6 +52,7 @@
     'RULE_TEST',                // Rules editor → Test on this page: run the unsaved rule against the active tab ({ detector, tabId })
     'RULE_TEST_COLLECT',        // worker → content script: hand back the page as a scan would collect it, without scanning it
     'WEBHOOK_RETRY',            // Recent deliveries → Retry: send a failed delivery again now ({ id })
+    'COOKIE_TIMELINE_GET',      // Advanced → Check Cookies: the protection cookie timeline of a page's site ({ url })
     // Logging and the log collector
     'LOG',
     'LOG_COLLECTOR_ENABLE',

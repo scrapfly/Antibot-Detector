@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Niet gevonden"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "ingesteld {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "één keer gewijzigd"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "{0} keer gewijzigd"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "laatste wijziging {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "verloopt {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "sessiecookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "verwijderd {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "verlopen {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Tijdlijn"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Ingesteld"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Gewijzigd"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Verwijderd"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Verlopen"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "De registratie begint wanneer de pagina de cookie instelt"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Eerder geregistreerd"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Korte vingerafdruk van de waarde: onderscheidt waarden, slaat de waarde nooit op"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Officiële detectors herstellen?"
   },

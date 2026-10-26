@@ -224,6 +224,7 @@ test('startup initialization and an early event reuse one detector load', async 
   h.ctx.HistoryRetention = { init() {} };
   h.ctx.HistoryBackup = { init() {} };
   h.ctx.HistoryWatch = { init() {} };
+  h.ctx.CookieTimelineRecorder = { init() {} };
   h.ctx.SettingsRuntime = { initWebhookRetries() {} };
   h.ctx.DetectionCacheRetention = { init() {} };
   h.ctx.HistoryStore = { setQuotaRelief() {}, setBudget() {} };

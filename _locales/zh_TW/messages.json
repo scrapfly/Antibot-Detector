@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "未找到"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "設定於 {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "變更過 1 次"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "變更過 {0} 次"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "最近變更 {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "到期 {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "工作階段 Cookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "刪除於 {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "到期於 {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "時間軸"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "設定"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "變更"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "刪除"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "到期"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "頁面設定此 Cookie 時開始記錄"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "先前記錄的"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "值的簡短指紋：用於區分不同的值，從不儲存值本身"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "要還原官方偵測器嗎？"
   },

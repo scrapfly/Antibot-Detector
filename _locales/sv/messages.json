@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "Hittades inte"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "satt {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "ändrad en gång"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "ändrad {0} gånger"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "senaste ändring {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "går ut {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "sessionscookie"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "borttagen {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "gick ut {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "Tidslinje"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "Satt"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "Ändrad"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "Borttagen"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "Utgången"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "Inspelningen börjar när sidan sätter kakan"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "Registrerade tidigare"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "Kort fingeravtryck av värdet: skiljer värden åt, sparar aldrig värdet"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "Återställa officiella detektorer?"
   },

@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "غير موجودة"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "التعيين: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "تغيّر مرة واحدة"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "عدد التغييرات: {0}"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "آخر تغيير: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "الانتهاء: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "ملف تعريف ارتباط للجلسة"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "الحذف: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "انتهت صلاحيته: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "المخطط الزمني"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "تعيين"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "تغيير"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "حذف"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "انتهاء الصلاحية"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "يبدأ التسجيل عندما تعيّن الصفحة ملف تعريف الارتباط"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "سُجّلت سابقًا"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "بصمة قصيرة للقيمة: تميّز بين القيم ولا تخزّن القيمة أبدًا"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "استعادة أدوات الكشف الرسمية؟"
   },

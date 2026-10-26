@@ -100,6 +100,8 @@ importScripts(
     './background/history-retention.js',
     './background/history-backup.js',
     './background/history-watch.js',
+    './modules/core/cookie-timeline.js',
+    './background/cookie-timeline.js',
     './background/detection-cache-retention.js',
     './background/init.js'
 );

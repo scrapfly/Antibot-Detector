@@ -58,7 +58,7 @@ test('every script that reads a shared global module loads after it, in the popu
   };
   const MODULES = {
     Categories: 'modules/core/categories.js', CaptureRetention: 'modules/core/capture-retention.js', DomainList: 'modules/core/domain-list.js', ScanScope: 'modules/core/scan-scope.js',
-    WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js',
+    WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js', CookieTimeline: 'modules/core/cookie-timeline.js',
     WorkerMessages: 'modules/core/worker-messages.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js', RuleTranslationPlan: 'modules/core/rule-translation-plan.js',
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js'
@@ -77,6 +77,7 @@ test('every script that reads a shared global module loads after it, in the popu
   assert.ok(readers.Categories >= 20, 'the guard finds the scripts that use the category module');
   assert.ok(readers.CaptureRetention >= 4, 'the guard finds the scripts that use the capture retention module');
   assert.ok(readers.DomainList >= 2 && readers.ScanScope >= 3, 'the guard finds the scripts that use the site list modules');
+  assert.ok(readers.CookieTimeline >= 2, 'the guard finds the worker recorder and the Check Cookies window');
   assert.ok(readers.WebhookFilter >= 2 && readers.WebhookLog >= 2 && readers.MessageSender >= 3, 'the guard finds the scripts that use the webhook and sender modules');
   assert.ok(readers.WorkerMessages >= 20, 'the guard finds the scripts that send or handle worker messages');
   assert.ok(readers.HistoryFilter >= 1 && readers.StorageOverview >= 1 && readers.BackupBundle >= 1 && readers.DiagnosticsReport >= 1 && readers.SettingsPresets >= 1 && readers.SettingsTransfer >= 2, 'the guard finds the popup modules\' users');

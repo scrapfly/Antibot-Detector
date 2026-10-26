@@ -4299,6 +4299,54 @@
   "advCookieNotFound": {
     "message": "ไม่พบ"
   },
+  "advCookieTimelineSetFmt": {
+    "message": "ตั้งค่า: {0}"
+  },
+  "advCookieTimelineChangedOnce": {
+    "message": "เปลี่ยนหนึ่งครั้ง"
+  },
+  "advCookieTimelineChangedFmt": {
+    "message": "เปลี่ยน {0} ครั้ง"
+  },
+  "advCookieTimelineLastChangeFmt": {
+    "message": "เปลี่ยนล่าสุด: {0}"
+  },
+  "advCookieTimelineExpiresFmt": {
+    "message": "หมดอายุ: {0}"
+  },
+  "advCookieTimelineSession": {
+    "message": "คุกกี้เซสชัน"
+  },
+  "advCookieTimelineRemovedFmt": {
+    "message": "ลบ: {0}"
+  },
+  "advCookieTimelineExpiredFmt": {
+    "message": "หมดอายุแล้ว: {0}"
+  },
+  "advCookieTimelineTitle": {
+    "message": "ไทม์ไลน์"
+  },
+  "advCookieTimelineEventSet": {
+    "message": "ตั้งค่า"
+  },
+  "advCookieTimelineEventChanged": {
+    "message": "เปลี่ยน"
+  },
+  "advCookieTimelineEventRemoved": {
+    "message": "ลบ"
+  },
+  "advCookieTimelineEventExpired": {
+    "message": "หมดอายุ"
+  },
+  "advCookieTimelineEmpty": {
+    "message": "การบันทึกจะเริ่มเมื่อหน้าเว็บตั้งค่าคุกกี้"
+  },
+  "advCookieTimelineEarlier": {
+    "message": "บันทึกไว้ก่อนหน้า"
+  },
+  "advCookieTimelineMarkerHint": {
+    "message": "ลายนิ้วมือสั้นของค่า: แยกค่าต่างๆ ออกจากกัน โดยไม่เก็บค่าจริง"
+  },
   "restoreOfficialDetectorsConfirmTitle": {
     "message": "คืนค่าตัวตรวจจับทางการหรือไม่"
   },

@@ -520,6 +520,125 @@
   overflow-wrap: anywhere;
 }
 
+/* Protection cookie timeline: one summary line under the meta, the events folded below it (newest first) */
+.adv-cookie-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--g-3d3d3d);
+}
+
+.adv-cookie-timeline-summary,
+.adv-cookie-timeline-empty {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.adv-cookie-timeline-empty {
+  padding-top: 10px;
+  border-top: 1px solid var(--g-3d3d3d);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.adv-cookie-timeline-details > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 5px;
+  list-style: none;
+}
+
+.adv-cookie-timeline-details > summary::-webkit-details-marker { display: none; }
+
+/* The fold's chevron: points to the reading direction when closed, down when open */
+.adv-cookie-timeline-details > summary::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.adv-cookie-timeline-details > summary:dir(rtl)::before { transform: rotate(45deg); }
+.adv-cookie-timeline-details[open] > summary::before { transform: rotate(45deg); }
+.adv-cookie-timeline-details[open] > summary:dir(rtl)::before { transform: rotate(-45deg); }
+
+.adv-cookie-timeline-details > summary:hover { color: var(--accent-light); }
+.adv-cookie-timeline-details > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.adv-cookie-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0 0;
+  padding: 0;
+  padding-inline-start: 4px;
+  list-style: none;
+}
+
+.adv-cookie-timeline-event {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  padding-inline-start: 16px;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--text-primary);
+}
+
+/* The rail: a line through the dots, on the reading side the list starts on (RTL too) */
+.adv-cookie-timeline-event::before {
+  content: "";
+  position: absolute;
+  inset-block: 9px -7px;
+  inset-inline-start: 3px;
+  width: 1px;
+  background: var(--g-404040);
+}
+
+.adv-cookie-timeline-event:last-child::before { display: none; }
+
+.adv-cookie-timeline-dot {
+  position: absolute;
+  inset-block-start: 4px;
+  inset-inline-start: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.adv-cookie-timeline-event.is-set .adv-cookie-timeline-dot { background: var(--success); }
+.adv-cookie-timeline-event.is-changed .adv-cookie-timeline-dot { background: var(--accent); }
+.adv-cookie-timeline-event.is-removed .adv-cookie-timeline-dot { background: var(--danger); }
+.adv-cookie-timeline-event.is-expired .adv-cookie-timeline-dot { background: var(--warning); }
+
+.adv-cookie-timeline-label { font-weight: 600; }
+.adv-cookie-timeline-time,
+.adv-cookie-timeline-facts { color: var(--text-secondary); }
+
+.adv-cookie-timeline-marker {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  cursor: help;
+}
+
+.adv-cookie--gone .adv-cookie-name-text { color: var(--text-secondary); }
+
 .adv-kit-field {
   display: flex;
   flex-direction: column;
