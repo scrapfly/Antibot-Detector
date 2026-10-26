@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-26",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.akamai.com/products/bot-manager",
   "icon": "akamai_official.png",
@@ -21,15 +21,6 @@
         "valueCaseSensitive": true,
         "confidence": 100,
         "description": "Bot Manager sensor cookie in its documented hash~state~token shape",
-        "nameScope": "all",
-        "valueScope": "all"
-      },
-      {
-        "id": "abck-cookie-name",
-        "name": "^_abck$",
-        "nameRegex": true,
-        "confidence": 100,
-        "description": "Cookie named _abck, set only by Akamai Bot Manager (value not checked)",
         "nameScope": "all",
         "valueScope": "all"
       },
@@ -84,6 +75,18 @@
         "description": "Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own",
         "nameScope": "all",
         "valueScope": "all"
+      },
+      {
+        "id": "sec-cpt-cookie",
+        "name": "^sec_cpt$",
+        "nameRegex": true,
+        "value": "~[0-9]~",
+        "valueRegex": true,
+        "valueCaseSensitive": true,
+        "confidence": 70,
+        "description": "sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)",
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -124,6 +127,15 @@
         "confidence": 100,
         "description": "SBSD challenge endpoint",
         "text": "^https?://[^/?#]+/(?:\\.well-known|_sec)/sbsd(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "cp-challenge-path",
+        "confidence": 70,
+        "description": "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/",
+        "text": "^https?://[^/?#]+/_sec/cp_challenge/[A-Za-z0-9_.-]{1,64}(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -216,14 +228,7 @@
       "when": {
         "all": [
           {
-            "any": [
-              {
-                "pattern": "abck-sensor-cookie"
-              },
-              {
-                "pattern": "abck-cookie-name"
-              }
-            ]
+            "pattern": "abck-sensor-cookie"
           },
           {
             "any": [
@@ -266,9 +271,6 @@
                 "pattern": "abck-sensor-cookie"
               },
               {
-                "pattern": "abck-cookie-name"
-              },
-              {
                 "pattern": "bm-sz-cookie"
               },
               {
@@ -289,14 +291,7 @@
             "pattern": "obfuscated-script-path"
           },
           {
-            "any": [
-              {
-                "pattern": "abck-sensor-cookie"
-              },
-              {
-                "pattern": "abck-cookie-name"
-              }
-            ]
+            "pattern": "abck-sensor-cookie"
           },
           {
             "any": [
@@ -355,7 +350,7 @@
           {
             "any": [
               {
-                "pattern": "abck-cookie-name"
+                "pattern": "abck-sensor-cookie"
               },
               {
                 "pattern": "bm-sz-cookie"
@@ -379,6 +374,31 @@
           },
           {
             "pattern": "bm-family-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "akamai-crypto-challenge",
+      "name": "Crypto challenge path with its sec_cpt or Bot Manager cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "cp-challenge-path"
+          },
+          {
+            "any": [
+              {
+                "pattern": "sec-cpt-cookie"
+              },
+              {
+                "pattern": "abck-sensor-cookie"
+              },
+              {
+                "pattern": "bm-sz-cookie"
+              }
+            ]
           }
         ]
       }

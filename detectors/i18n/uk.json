@@ -1095,5 +1095,8 @@
   "Lemin container with code that uses it": "Контейнер Lemin з кодом, що його використовує",
   "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "Бібліотека цифрових відбитків пристрою FingerprintJS (OSS та агент Pro) і її бібліотека виявлення ботів BotD",
   "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "Бібліотека виявлення ботів BotD на хості постачальника openfpcdn.io (botd/v1, botd/v2)",
-  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "Моніторинговий пінг npm-пакета BotD на хості постачальника m1.openfpcdn.io"
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "Моніторинговий пінг npm-пакета BotD на хості постачальника m1.openfpcdn.io",
+  "sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)": "Cookie sec_cpt криптографічної перевірки Bot Manager (стан ~1~ відкрита, ~3~ пройдена)",
+  "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "Ресурс або верифікація криптографічної перевірки Bot Manager у /_sec/cp_challenge/",
+  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "Шлях криптографічної перевірки з cookie sec_cpt або cookie Bot Manager"
 }

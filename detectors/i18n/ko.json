@@ -1095,5 +1095,8 @@
   "Lemin container with code that uses it": "Lemin 컨테이너와 이를 사용하는 코드",
   "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "FingerprintJS 기기 핑거프린팅 라이브러리 (OSS 및 Pro 에이전트)와 해당 BotD 봇 탐지 라이브러리",
   "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "벤더 openfpcdn.io 호스트의 BotD 봇 탐지 라이브러리 (botd/v1, botd/v2)",
-  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "벤더 m1.openfpcdn.io 호스트로 보내는 BotD npm 패키지 모니터링 ping"
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "벤더 m1.openfpcdn.io 호스트로 보내는 BotD npm 패키지 모니터링 ping",
+  "sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)": "Bot Manager 암호 챌린지의 sec_cpt 쿠키 (상태 ~1~ 진행 중, ~3~ 해결됨)",
+  "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "/_sec/cp_challenge/ 아래의 Bot Manager 암호 챌린지 리소스 또는 검증",
+  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "암호 챌린지 경로와 해당 sec_cpt 또는 Bot Manager 쿠키"
 }

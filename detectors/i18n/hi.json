@@ -1095,5 +1095,8 @@
   "Lemin container with code that uses it": "उसका उपयोग करने वाले कोड के साथ Lemin कंटेनर",
   "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "FingerprintJS डिवाइस फ़िंगरप्रिंटिंग लाइब्रेरी (OSS और Pro एजेंट) और उसकी BotD बॉट डिटेक्शन लाइब्रेरी",
   "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "वेंडर के openfpcdn.io होस्ट पर BotD बॉट डिटेक्शन लाइब्रेरी (botd/v1, botd/v2)",
-  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "वेंडर के m1.openfpcdn.io होस्ट पर BotD npm पैकेज मॉनिटरिंग ping"
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "वेंडर के m1.openfpcdn.io होस्ट पर BotD npm पैकेज मॉनिटरिंग ping",
+  "sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)": "Bot Manager क्रिप्टो चैलेंज की sec_cpt कुकी (स्थिति ~1~ खुला, ~3~ हल)",
+  "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "/_sec/cp_challenge/ के अंतर्गत Bot Manager क्रिप्टो चैलेंज संसाधन या सत्यापन",
+  "Crypto challenge path with its sec_cpt or Bot Manager cookie": "अपनी sec_cpt या Bot Manager कुकी के साथ क्रिप्टो चैलेंज पाथ"
 }

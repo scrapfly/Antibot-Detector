@@ -1,11 +1,5 @@
 {
  "detect-akamai": {
-  "abck-cookie-name": {
-   "cookie": [
-    "_abck",
-    "truncated"
-   ]
-  },
   "abck-sensor-cookie": {
    "cookie": [
     "_abck",
@@ -89,6 +83,15 @@
     "url": "https://www.walmart.com/akam/13/26dcf39b",
     "data": "{\"sensor_data\":\"3;0;1;0;3290164;...\"}"
    }
+  },
+  "sec-cpt-cookie": {
+   "cookie": [
+    "sec_cpt",
+    "FAKE0123456789ABCDEF0123456789AB~3~FAKE0123456789ABCDEF0123456789AB~"
+   ]
+  },
+  "cp-challenge-path": {
+   "url": "https://www.example.com/_sec/cp_challenge/verify"
   }
  },
  "detect-aws-waf": {
