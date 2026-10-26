@@ -2004,6 +2004,10 @@ class DetectionEngineManager {
             setBadgeTextColor(tabId, true);
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId }).catch(() => {});
             if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'skipped');
+            // A Bulk scan page that ended on a skipped site: listed as skipped, not left to time out
+            if (typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId) && !BackgroundTabScan.isQuiet(tabId)) {
+                BackgroundTabScan.scanFinished(tabId, pageUrl, [], { excluded: true });
+            }
             return;
         }
         setPausedIcon(tabId, false);
@@ -2053,9 +2057,11 @@ class DetectionEngineManager {
 
             // A watchlist check's tab that landed on a cached page (its watched address redirected there): the check gets
             // the cached result as the scan's outcome and judges the address itself; the webhook and History are the
-            // check's business, never this tab's
-            if (typeof HistoryWatch !== 'undefined' && HistoryWatch.isWatchTab(tabId)) {
-                HistoryWatch.scanFinished(tabId, pageUrl, storedData.detectionResults || []);
+            // check's business, never this tab's. A Bulk scan tab gets it too, once the cache hit is handled as usual (end
+            // of this branch)
+            const scanTab = typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId);
+            if (scanTab && BackgroundTabScan.isQuiet(tabId)) {
+                BackgroundTabScan.scanFinished(tabId, pageUrl, storedData.detectionResults || []);
                 return;
             }
 
@@ -2096,6 +2102,7 @@ class DetectionEngineManager {
                 }
             }
 
+            if (scanTab) BackgroundTabScan.scanFinished(tabId, pageUrl, storedData.detectionResults || []);
             return;
         }
 

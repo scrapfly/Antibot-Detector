@@ -302,7 +302,7 @@ test('PAGE_LOAD on a watchlist tab that landed on a cached page hands the result
   const sent = [];
   const finished = [];
   h.dependencies.Settings = { sendWebhookIfEnabled: async (...args) => { sent.push(args); } };
-  h.context.HistoryWatch = { isWatchTab: () => true, scanFinished: (tabId, url, results) => finished.push({ tabId, url, count: results.length }) };
+  h.context.BackgroundTabScan = { isScanTab: () => true, isQuiet: () => true, scanFinished: (tabId, url, results) => finished.push({ tabId, url, count: results.length }) };
   await h.run();
   assert.deepEqual(sent, [], 'no cache delivery to the webhook');
   assert.equal(h.effects.filter(effect => effect.kind === 'history').length, 0, 'no History entry of this tab\'s own');
@@ -310,6 +310,15 @@ test('PAGE_LOAD on a watchlist tab that landed on a cached page hands the result
   assert.equal(finished[0].url, 'https://example.test/');
   assert.equal(finished[0].count, 1);
   assert.equal(h.effects.find(effect => effect.kind === 'badge').data.text, '1', 'the badge still shows the cached result');
+});
+
+test('PAGE_LOAD on a Bulk scan tab that landed on a cached page is handled like any page, then hands the result over', async () => {
+  const h = pageLoadHarness();
+  const order = [];
+  h.dependencies.Settings = { sendWebhookIfEnabled: async () => { order.push('webhook'); } };
+  h.context.BackgroundTabScan = { isScanTab: () => true, isQuiet: () => false, scanFinished: (tabId, url, results) => order.push(`finished:${results.length}`) };
+  await h.run();
+  assert.deepEqual(order, ['webhook', 'finished:1'], 'the cache hit goes its usual way first, and the run gets the result last');
 });
 
 test('PAGE_LOAD retries stop when their document is replaced', async () => {

@@ -58,7 +58,7 @@ function world({ items = [], settings = {}, windows = [{ id: 7, incognito: false
     }
   });
   ctx.self = ctx;
-  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'utils/url-utils.js', 'modules/core/message-sender.js', 'modules/core/history-store.js', 'modules/core/history-policy.js', 'background/history-watch.js']) {
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'utils/url-utils.js', 'modules/core/message-sender.js', 'modules/core/history-store.js', 'modules/core/history-policy.js', 'background/background-tab-scan.js', 'background/history-watch.js']) {
     vm.runInContext(read(file), ctx, { filename: file });
   }
   const Watch = ctx.HistoryWatch;

@@ -9,7 +9,8 @@
  *
  * Why a real tab: the scan needs a page that runs (its scripts, hooks and requests), and an offscreen document cannot
  * give one (its content-script access and frames are limited). So a check is a visit: the page is loaded with the
- * person's cookies, which Settings says.
+ * person's cookies, which Settings says. The tab itself is BackgroundTabScan's (background/background-tab-scan.js,
+ * shared with Bulk scan): a watch scan is a quiet one, it leaves no History entry or webhook delivery of its own.
  *
  * What keeps a check honest:
  *   - the cached result of the page is set aside while it is scanned (DetectionEngineManager.bypassCache), or
@@ -36,9 +37,12 @@ const HistoryWatch = {
 
     _initialized: false,
     _running: null,
-    OPEN_TABS_KEY: 'session_history_watch_tabs',
-    _tabs: new Map(),     // tabId -> the address being checked
-    _waiters: new Map(),  // tabId -> resolves with the finished scan
+    OWNER: 'watch',
+
+    /** The session key that lists the open scan tabs (BackgroundTabScan's, shared with Bulk scan). */
+    get OPEN_TABS_KEY() {
+        return BackgroundTabScan.OPEN_TABS_KEY;
+    },
 
     /** Minutes between checks for a mode, or 0 when it is off. */
     periodOf(mode) {
@@ -56,13 +60,12 @@ const HistoryWatch = {
     },
 
     isWatchTab(tabId) {
-        return this._tabs.has(tabId);
+        return BackgroundTabScan.ownerOf(tabId) === this.OWNER;
     },
 
     /** Called by the scan pipeline when the page of a watch tab is finished: the check goes on with the results. */
     scanFinished(tabId, url, results) {
-        const waiter = this._waiters.get(tabId);
-        if (waiter) waiter({ ok: true, url, results: Array.isArray(results) ? results : [] });
+        if (this.isWatchTab(tabId)) BackgroundTabScan.scanFinished(tabId, url, results);
     },
 
     /** Do these two addresses name the same page (host and path; a redirect to another page does not)? */
@@ -99,11 +102,8 @@ const HistoryWatch = {
     },
 
     /** A normal (not private) window to open the check's tab in, or null when the browser has none open. */
-    async normalWindowId() {
-        if (!chrome.windows || !chrome.windows.getAll) return null;
-        const windows = await chrome.windows.getAll({ windowTypes: ['normal'] });
-        const window = windows.find(w => w && w.incognito !== true);
-        return window ? window.id : null;
+    normalWindowId() {
+        return BackgroundTabScan.normalWindowId();
     },
 
     async _run(reason) {
@@ -185,57 +185,17 @@ const HistoryWatch = {
     },
 
     /**
-     * Open the address in a background tab and wait for the extension's scan of it.
+     * Open the address in a background tab and wait for the extension's scan of it (a quiet scan: the check records it).
      * @returns {Promise<{ok: boolean, url?: string, results?: Array, error?: string}>}
      */
-    async scan(url, windowId) {
-        DetectionEngineManager.bypassCache(url);
-        let tab = null;
-        let timer = null;
-        try {
-            tab = await chrome.tabs.create({ url, active: false, windowId });
-            this._tabs.set(tab.id, url);
-            await this.rememberTab(tab.id, true);
-            const finished = new Promise(resolve => this._waiters.set(tab.id, resolve));
-            const timeout = new Promise((resolve) => { timer = setTimeout(() => resolve({ ok: false, error: 'timeout' }), this.SCAN_TIMEOUT_MS); });
-            return await Promise.race([finished, timeout]);
-        } catch (error) {
-            return { ok: false, error: String((error && error.message) || error) };
-        } finally {
-            clearTimeout(timer);
-            DetectionEngineManager.restoreCache(url);
-            if (tab) {
-                this._tabs.delete(tab.id);
-                this._waiters.delete(tab.id);
-                await chrome.tabs.remove(tab.id).catch(() => {});
-                await this.rememberTab(tab.id, false);
-            }
-        }
+    scan(url, windowId) {
+        return BackgroundTabScan.scan(url, { windowId, timeoutMs: this.SCAN_TIMEOUT_MS, owner: this.OWNER, quiet: true });
     },
 
-    /**
-     * The watch tabs that are open, kept in session storage (memory, gone with the browser): a worker stopped in the
-     * middle of a check comes back without its timers, and closes the tab it left (init)
-     */
-    async rememberTab(tabId, open) {
-        const area = chrome.storage && chrome.storage.session;
-        if (!area) return;
-        try {
-            const stored = (await area.get(this.OPEN_TABS_KEY))[this.OPEN_TABS_KEY];
-            const ids = new Set(Array.isArray(stored) ? stored : []);
-            if (open) ids.add(tabId); else ids.delete(tabId);
-            await area.set({ [this.OPEN_TABS_KEY]: [...ids] });
-        } catch (_) { /* a convenience: the check itself does not depend on it */ }
-    },
-
+    /** The scan tabs a stopped worker left open are closed when it starts again (BackgroundTabScan). */
     async closeLeftoverTabs() {
-        const area = chrome.storage && chrome.storage.session;
-        if (!area || this._running) return;
-        try {
-            const stored = (await area.get(this.OPEN_TABS_KEY))[this.OPEN_TABS_KEY];
-            for (const id of Array.isArray(stored) ? stored : []) await chrome.tabs.remove(id).catch(() => {});
-            await area.remove(this.OPEN_TABS_KEY);
-        } catch (_) { /* nothing to close */ }
+        if (this._running) return;
+        await BackgroundTabScan.closeLeftoverTabs();
     },
 
     /** Keep the alarm in step with the chosen mode (created, re-timed or cleared). */

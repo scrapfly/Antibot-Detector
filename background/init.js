@@ -111,6 +111,8 @@ HistoryRetention.init();
 
 // Automatic History backup to the Downloads folder (alarm + "Back up now"); its listeners register in the first turn
 HistoryBackup.init();
+// Background-tab scans (the watchlist and Bulk scan): load errors, and the tabs a stopped worker left open
+BackgroundTabScan.init();
 HistoryWatch.init();
 // Protection cookie timeline (Advanced → Check Cookies): its chrome.cookies.onChanged listener registers in the first turn
 CookieTimelineRecorder.init();

@@ -100,6 +100,7 @@ importScripts(
     './background/tab-events.js',
     './background/history-retention.js',
     './background/history-backup.js',
+    './background/background-tab-scan.js',
     './background/history-watch.js',
     './modules/core/cookie-timeline.js',
     './background/cookie-timeline.js',
