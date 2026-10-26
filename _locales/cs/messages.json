@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Testuje se…"
   },
+  "suggestRuleTitle": {
+    "message": "Nové pravidlo z této stránky"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Otevřete okno rozšíření na webu, abyste z něj vytvořili pravidlo."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Zaškrtněte, co patří k ochraně na {0}. Nejdřív je uvedeno, co žádné nainstalované pravidlo nezjistí."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Název ochrany"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Nejdřív ochranu pojmenujte."
+  },
+  "suggestRuleCookies": {
+    "message": "Cookies"
+  },
+  "suggestRuleScripts": {
+    "message": "Skripty třetích stran"
+  },
+  "suggestRuleHeaders": {
+    "message": "Hlavičky odpovědi"
+  },
+  "suggestRuleExactName": {
+    "message": "Hledá se podle přesného názvu"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Názvy začínající na {0}: zbytek vypadá náhodně"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Adresy skriptů, které to obsahují: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Už zjišťuje {0}"
+  },
+  "suggestRuleLoading": {
+    "message": "Čtení stránky…"
+  },
+  "suggestRuleError": {
+    "message": "Stránku se nepodařilo přečíst. Načtěte ji znovu a zkuste to ještě jednou."
+  },
+  "suggestRuleNoCookies": {
+    "message": "Stránka nemá žádné cookies."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Žádné skripty z jiných webů."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Žádné hlavičky odpovědi: načtěte stránku znovu, abyste je zachytili."
+  },
+  "suggestRuleCreate": {
+    "message": "Vytvořit pravidlo"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "Pravidlo se shoduje na {0} (spolehlivost {1} %)"
   },

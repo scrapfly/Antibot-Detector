@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Test en cours…"
   },
+  "suggestRuleTitle": {
+    "message": "Nouvelle règle depuis cette page"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Ouvrez la fenêtre de l’extension sur un site web pour en tirer une règle."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Cochez ce qui appartient à la protection de {0}. Ce qu’aucune règle installée ne détecte vient en premier."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Nom de la protection"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Donnez d’abord un nom à la protection."
+  },
+  "suggestRuleCookies": {
+    "message": "Cookies"
+  },
+  "suggestRuleScripts": {
+    "message": "Scripts tiers"
+  },
+  "suggestRuleHeaders": {
+    "message": "En-têtes de réponse"
+  },
+  "suggestRuleExactName": {
+    "message": "Recherché par son nom exact"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Noms commençant par {0} : la suite semble aléatoire"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Adresses de scripts qui le contiennent : {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Déjà détecté par {0}"
+  },
+  "suggestRuleLoading": {
+    "message": "Lecture de la page…"
+  },
+  "suggestRuleError": {
+    "message": "La page n’a pas pu être lue. Rechargez-la et réessayez."
+  },
+  "suggestRuleNoCookies": {
+    "message": "La page n’a pas de cookies."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Aucun script d’autres sites."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Aucun en-tête de réponse : rechargez la page pour les capturer."
+  },
+  "suggestRuleCreate": {
+    "message": "Créer la règle"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "La règle correspond à {0} (confiance {1} %)"
   },

@@ -61,7 +61,8 @@ test('every script that reads a shared global module loads after it, in the popu
     WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js', CookieTimeline: 'modules/core/cookie-timeline.js',
     WorkerMessages: 'modules/core/worker-messages.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js', RuleTranslationPlan: 'modules/core/rule-translation-plan.js',
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
-    SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js'
+    SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js',
+    RuleSuggest: 'modules/core/rule-suggest.js'
   };
   const readers = Object.fromEntries(Object.keys(MODULES).map(name => [name, 0]));
   for (const [global, module] of Object.entries(MODULES)) {

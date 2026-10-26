@@ -64,7 +64,7 @@
 /* Toolbar: Add + Update, then the square "more" menu (Import/Export/Clear) */
 .rules-toolbar {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
+  grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) 32px;
   gap: 6px;
   flex-shrink: 0;
   margin: 6px 0 0;

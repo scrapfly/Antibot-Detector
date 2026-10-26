@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Testando…"
   },
+  "suggestRuleTitle": {
+    "message": "Nova regra a partir desta página"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Abra o pop-up em um site para criar uma regra a partir dele."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Marque o que pertence à proteção de {0}. O que nenhuma regra instalada detecta aparece primeiro."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Nome da proteção"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Dê um nome à proteção primeiro."
+  },
+  "suggestRuleCookies": {
+    "message": "Cookies"
+  },
+  "suggestRuleScripts": {
+    "message": "Scripts de terceiros"
+  },
+  "suggestRuleHeaders": {
+    "message": "Cabeçalhos de resposta"
+  },
+  "suggestRuleExactName": {
+    "message": "Procurado pelo nome exato"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Nomes que começam com {0}: o resto parece aleatório"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Endereços de scripts que contêm isto: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Já detectado por {0}"
+  },
+  "suggestRuleLoading": {
+    "message": "Lendo a página…"
+  },
+  "suggestRuleError": {
+    "message": "Não foi possível ler a página. Recarregue-a e tente de novo."
+  },
+  "suggestRuleNoCookies": {
+    "message": "A página não tem cookies."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Nenhum script de outros sites."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Nenhum cabeçalho de resposta: recarregue a página para capturá-los."
+  },
+  "suggestRuleCreate": {
+    "message": "Criar regra"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "A regra corresponde a {0} (confiança de {1}%)"
   },

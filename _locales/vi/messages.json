@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Đang kiểm tra…"
   },
+  "suggestRuleTitle": {
+    "message": "Quy tắc mới từ trang này"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Hãy mở cửa sổ bật lên trên một trang web để tạo quy tắc từ trang đó."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Đánh dấu những gì thuộc về lớp bảo vệ trên {0}. Những mục chưa quy tắc đã cài nào phát hiện được xếp trước."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Tên lớp bảo vệ"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Hãy đặt tên cho lớp bảo vệ trước."
+  },
+  "suggestRuleCookies": {
+    "message": "Cookie"
+  },
+  "suggestRuleScripts": {
+    "message": "Tập lệnh bên thứ ba"
+  },
+  "suggestRuleHeaders": {
+    "message": "Tiêu đề phản hồi"
+  },
+  "suggestRuleExactName": {
+    "message": "Tìm theo đúng tên"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Tên bắt đầu bằng {0}: phần còn lại trông ngẫu nhiên"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Địa chỉ tập lệnh chứa chuỗi này: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Đã được {0} phát hiện"
+  },
+  "suggestRuleLoading": {
+    "message": "Đang đọc trang…"
+  },
+  "suggestRuleError": {
+    "message": "Không đọc được trang. Hãy tải lại trang và thử lại."
+  },
+  "suggestRuleNoCookies": {
+    "message": "Trang không có cookie."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Không có tập lệnh từ trang web khác."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Không có tiêu đề phản hồi: hãy tải lại trang để ghi nhận chúng."
+  },
+  "suggestRuleCreate": {
+    "message": "Tạo quy tắc"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "Quy tắc khớp với {0} (độ tin cậy {1}%)"
   },

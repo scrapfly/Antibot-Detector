@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Test ediliyor…"
   },
+  "suggestRuleTitle": {
+    "message": "Bu sayfadan yeni kural"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Bir web sitesinden kural oluşturmak için açılır pencereyi o sitede açın."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "{0} üzerindeki korumaya ait olanları işaretleyin. Yüklü hiçbir kuralın algılamadıkları önce gelir."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Korumanın adı"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Önce korumaya bir ad verin."
+  },
+  "suggestRuleCookies": {
+    "message": "Çerezler"
+  },
+  "suggestRuleScripts": {
+    "message": "Üçüncü taraf betikler"
+  },
+  "suggestRuleHeaders": {
+    "message": "Yanıt başlıkları"
+  },
+  "suggestRuleExactName": {
+    "message": "Tam adıyla aranır"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "{0} ile başlayan adlar: gerisi rastgele görünüyor"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Bunu içeren betik adresleri: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Zaten {0} tarafından algılanıyor"
+  },
+  "suggestRuleLoading": {
+    "message": "Sayfa okunuyor…"
+  },
+  "suggestRuleError": {
+    "message": "Sayfa okunamadı. Sayfayı yeniden yükleyip tekrar deneyin."
+  },
+  "suggestRuleNoCookies": {
+    "message": "Sayfada çerez yok."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Başka sitelerden betik yok."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Yanıt başlığı yok: yakalamak için sayfayı yeniden yükleyin."
+  },
+  "suggestRuleCreate": {
+    "message": "Kural oluştur"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "Kural {0} ile eşleşiyor (güven %{1})"
   },

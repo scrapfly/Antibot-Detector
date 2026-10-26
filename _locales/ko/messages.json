@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "테스트 중…"
   },
+  "suggestRuleTitle": {
+    "message": "이 페이지로 새 규칙 만들기"
+  },
+  "suggestRuleUnsupported": {
+    "message": "규칙을 만들려면 웹사이트에서 팝업을 여세요."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "{0}의 보호 기능에 속하는 항목을 선택하세요. 설치된 어떤 규칙도 탐지하지 않는 항목이 먼저 표시됩니다."
+  },
+  "suggestRuleNameLabel": {
+    "message": "보호 기능 이름"
+  },
+  "suggestRuleNameMissing": {
+    "message": "먼저 보호 기능의 이름을 입력하세요."
+  },
+  "suggestRuleCookies": {
+    "message": "쿠키"
+  },
+  "suggestRuleScripts": {
+    "message": "서드파티 스크립트"
+  },
+  "suggestRuleHeaders": {
+    "message": "응답 헤더"
+  },
+  "suggestRuleExactName": {
+    "message": "정확한 이름으로 찾음"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "{0}(으)로 시작하는 이름: 나머지는 무작위로 보입니다"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "이 내용을 포함하는 스크립트 주소: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "이미 {0}에서 탐지함"
+  },
+  "suggestRuleLoading": {
+    "message": "페이지를 읽는 중…"
+  },
+  "suggestRuleError": {
+    "message": "페이지를 읽을 수 없습니다. 새로고침한 후 다시 시도하세요."
+  },
+  "suggestRuleNoCookies": {
+    "message": "이 페이지에는 쿠키가 없습니다."
+  },
+  "suggestRuleNoScripts": {
+    "message": "다른 사이트의 스크립트가 없습니다."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "응답 헤더가 없습니다. 헤더를 수집하려면 페이지를 새로고침하세요."
+  },
+  "suggestRuleCreate": {
+    "message": "규칙 만들기"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "규칙이 {0}에서 일치합니다(신뢰도 {1}%)"
   },

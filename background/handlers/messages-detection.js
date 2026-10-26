@@ -163,6 +163,16 @@ function registerDetectionHandlers(registry, context) {
         return true;
     };
 
+    // Rules → From this page: what the page in the tab is made of, for a new rule (background/rule-suggest.js)
+    registry[WorkerMessages.RULE_SUGGEST_PAGE] = function({ request, sender, sendResponse }) {
+        if (!MessageSender.isExtensionPage(sender)) { sendResponse({ status: 'error' }); return false; }
+        RuleSuggestRuntime.collect(request).then(
+            (result) => sendResponse(result),
+            (error) => { Logger.warn('BACKGROUND', '[RuleSuggest] failed:', error && error.message); sendResponse({ status: 'error' }); }
+        );
+        return true;
+    };
+
     const handle_content_script_ready = function({ request, sender, sendResponse, context }) {
         void context;
 

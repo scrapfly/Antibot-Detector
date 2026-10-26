@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Testen…"
   },
+  "suggestRuleTitle": {
+    "message": "Nieuwe regel van deze pagina"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Open de pop-up op een website om er een regel van te maken."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Vink aan wat bij de beveiliging van {0} hoort. Wat geen geïnstalleerde regel herkent, staat bovenaan."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Naam van de beveiliging"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Geef de beveiliging eerst een naam."
+  },
+  "suggestRuleCookies": {
+    "message": "Cookies"
+  },
+  "suggestRuleScripts": {
+    "message": "Scripts van derden"
+  },
+  "suggestRuleHeaders": {
+    "message": "Responsheaders"
+  },
+  "suggestRuleExactName": {
+    "message": "Gezocht op de exacte naam"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Namen die beginnen met {0}: de rest lijkt willekeurig"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Scriptadressen die dit bevatten: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Al herkend door {0}"
+  },
+  "suggestRuleLoading": {
+    "message": "Pagina wordt gelezen…"
+  },
+  "suggestRuleError": {
+    "message": "De pagina kon niet worden gelezen. Laad hem opnieuw en probeer het nog eens."
+  },
+  "suggestRuleNoCookies": {
+    "message": "De pagina heeft geen cookies."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Geen scripts van andere sites."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Geen responsheaders: laad de pagina opnieuw om ze vast te leggen."
+  },
+  "suggestRuleCreate": {
+    "message": "Regel maken"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "De regel komt overeen met {0} (zekerheid {1}%)"
   },

@@ -1,0 +1,145 @@
+/* ============================================
+   Rules → New rule from this page (rules-suggest-ui.js)
+   The toolbar's square button next to Add, and the dialog: a .rh-modal
+   (rule-helpers.css) with a name, a category and the page's cookies,
+   scripts and headers to tick. Logical properties only, so it mirrors
+   in right-to-left languages.
+   ============================================ */
+
+.rules-toolbar .rules-suggest-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--g-242424);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 7px;
+  color: var(--g-e0e0e0);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.rules-toolbar .rules-suggest-btn:hover:not([aria-disabled="true"]) {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+}
+
+.rules-toolbar .rules-suggest-btn:active:not([aria-disabled="true"]) {
+  transform: scale(0.95);
+}
+
+.rules-toolbar .rules-suggest-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+/* Focusable, so its title still says why: a page the extension cannot read */
+.rules-toolbar .rules-suggest-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sr-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  gap: 8px;
+}
+
+.sr-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  background: var(--rh-field-bg);
+  border: 1px solid var(--rh-border);
+  border-radius: 6px;
+  color: var(--rh-text);
+  font-size: 12px;
+  outline: none;
+}
+
+.sr-input:hover:not(:focus) {
+  border-color: var(--rh-border-hover);
+}
+
+.sr-input:focus {
+  border-color: var(--accent);
+}
+
+.sr-input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.sr-error {
+  margin: 4px 1px 0;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--danger-light);
+}
+
+.sr-error[hidden] {
+  display: none;
+}
+
+/* The arrow sits at the end of the line in either direction */
+[dir="rtl"] .sr-select {
+  padding: 0 10px 0 26px;
+  background-position: left 10px center;
+}
+
+.sr-row {
+  text-align: start;
+  cursor: pointer;
+}
+
+.sr-check {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.sr-row:has(.sr-check:checked) {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: var(--accent);
+}
+
+.sr-row:has(.sr-check:focus-visible) {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 1px;
+}
+
+/* Already detected by an installed rule: listed last, quieter */
+.sr-row.is-known:not(:has(.sr-check:checked)) .rh-row-value {
+  color: var(--rh-text-dim);
+}
+
+.sr-row .rh-row-desc {
+  unicode-bidi: plaintext;
+}
+
+.sr-row.is-known .rh-row-desc {
+  color: var(--success-light);
+}
+
+.sr-message {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px dashed var(--rh-border);
+  border-radius: 8px;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--rh-text-dim);
+}
+
+.sr-empty {
+  margin: 0;
+  padding: 6px 1px 0;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--rh-text-muted);
+}

@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "正在测试…"
   },
+  "suggestRuleTitle": {
+    "message": "从此页面新建规则"
+  },
+  "suggestRuleUnsupported": {
+    "message": "请在网站上打开弹出窗口，以便据此创建规则。"
+  },
+  "suggestRuleIntroFmt": {
+    "message": "勾选属于 {0} 上防护的项目。没有任何已安装规则检测到的项目排在前面。"
+  },
+  "suggestRuleNameLabel": {
+    "message": "防护名称"
+  },
+  "suggestRuleNameMissing": {
+    "message": "请先为防护命名。"
+  },
+  "suggestRuleCookies": {
+    "message": "Cookie"
+  },
+  "suggestRuleScripts": {
+    "message": "第三方脚本"
+  },
+  "suggestRuleHeaders": {
+    "message": "响应标头"
+  },
+  "suggestRuleExactName": {
+    "message": "按确切名称匹配"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "以 {0} 开头的名称：其余部分看起来是随机的"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "包含此内容的脚本地址：{0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "已由 {0} 检测"
+  },
+  "suggestRuleLoading": {
+    "message": "正在读取页面…"
+  },
+  "suggestRuleError": {
+    "message": "无法读取页面。请重新加载页面后重试。"
+  },
+  "suggestRuleNoCookies": {
+    "message": "此页面没有 Cookie。"
+  },
+  "suggestRuleNoScripts": {
+    "message": "没有来自其他网站的脚本。"
+  },
+  "suggestRuleNoHeaders": {
+    "message": "没有响应标头：请重新加载页面以捕获它们。"
+  },
+  "suggestRuleCreate": {
+    "message": "创建规则"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "规则匹配 {0}（置信度 {1}%）"
   },

@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "جارٍ الاختبار…"
   },
+  "suggestRuleTitle": {
+    "message": "قاعدة جديدة من هذه الصفحة"
+  },
+  "suggestRuleUnsupported": {
+    "message": "افتح النافذة المنبثقة على موقع ويب لإنشاء قاعدة منه."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "حدّد ما يخص الحماية على {0}. يظهر أولًا ما لا تكتشفه أي قاعدة مثبتة."
+  },
+  "suggestRuleNameLabel": {
+    "message": "اسم الحماية"
+  },
+  "suggestRuleNameMissing": {
+    "message": "سمِّ الحماية أولًا."
+  },
+  "suggestRuleCookies": {
+    "message": "ملفات تعريف الارتباط"
+  },
+  "suggestRuleScripts": {
+    "message": "نصوص برمجية من جهات خارجية"
+  },
+  "suggestRuleHeaders": {
+    "message": "ترويسات الاستجابة"
+  },
+  "suggestRuleExactName": {
+    "message": "يُبحث عنه باسمه الدقيق"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "أسماء تبدأ بـ {0}: يبدو الباقي عشوائيًا"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "عناوين النصوص البرمجية التي تتضمن هذا: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "تكتشفه {0} بالفعل"
+  },
+  "suggestRuleLoading": {
+    "message": "جارٍ قراءة الصفحة…"
+  },
+  "suggestRuleError": {
+    "message": "تعذّرت قراءة الصفحة. أعد تحميلها وحاول مرة أخرى."
+  },
+  "suggestRuleNoCookies": {
+    "message": "لا تحتوي الصفحة على ملفات تعريف ارتباط."
+  },
+  "suggestRuleNoScripts": {
+    "message": "لا توجد نصوص برمجية من مواقع أخرى."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "لا توجد ترويسات استجابة: أعد تحميل الصفحة لالتقاطها."
+  },
+  "suggestRuleCreate": {
+    "message": "إنشاء القاعدة"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "تتطابق القاعدة مع {0} (الثقة {1}%)"
   },

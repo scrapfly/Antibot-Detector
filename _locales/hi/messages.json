@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "जाँच हो रही है…"
   },
+  "suggestRuleTitle": {
+    "message": "इस पेज से नया नियम"
+  },
+  "suggestRuleUnsupported": {
+    "message": "किसी वेबसाइट से नियम बनाने के लिए पॉपअप को उस वेबसाइट पर खोलें।"
+  },
+  "suggestRuleIntroFmt": {
+    "message": "{0} पर सुरक्षा से जुड़ी चीज़ों पर निशान लगाएँ। जिन्हें कोई इंस्टॉल किया गया नियम नहीं पहचानता, वे पहले दिखती हैं।"
+  },
+  "suggestRuleNameLabel": {
+    "message": "सुरक्षा का नाम"
+  },
+  "suggestRuleNameMissing": {
+    "message": "पहले सुरक्षा को नाम दें।"
+  },
+  "suggestRuleCookies": {
+    "message": "कुकीज़"
+  },
+  "suggestRuleScripts": {
+    "message": "तृतीय-पक्ष स्क्रिप्ट"
+  },
+  "suggestRuleHeaders": {
+    "message": "रिस्पॉन्स हेडर"
+  },
+  "suggestRuleExactName": {
+    "message": "सटीक नाम से खोजा जाता है"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "{0} से शुरू होने वाले नाम: बाकी हिस्सा बेतरतीब लगता है"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "इसे शामिल करने वाले स्क्रिप्ट पते: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "{0} पहले से पहचानता है"
+  },
+  "suggestRuleLoading": {
+    "message": "पेज पढ़ा जा रहा है…"
+  },
+  "suggestRuleError": {
+    "message": "पेज पढ़ा नहीं जा सका। उसे रीलोड करके फिर से कोशिश करें।"
+  },
+  "suggestRuleNoCookies": {
+    "message": "इस पेज पर कोई कुकी नहीं है।"
+  },
+  "suggestRuleNoScripts": {
+    "message": "दूसरी साइटों की कोई स्क्रिप्ट नहीं।"
+  },
+  "suggestRuleNoHeaders": {
+    "message": "कोई रिस्पॉन्स हेडर नहीं: उन्हें पकड़ने के लिए पेज रीलोड करें।"
+  },
+  "suggestRuleCreate": {
+    "message": "नियम बनाएँ"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "नियम {0} पर मेल खाता है (विश्वसनीयता {1}%)"
   },

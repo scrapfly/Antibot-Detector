@@ -86,6 +86,7 @@ importScripts(
     './background/scan-report.js',
     './background/detection-lifecycle.js',
     './background/rule-test.js',
+    './background/rule-suggest.js',
     './background/handlers/router-utils.js',
     './background/handlers/messages-logging.js',
     './background/handlers/messages-detection.js',

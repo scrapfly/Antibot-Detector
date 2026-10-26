@@ -555,9 +555,9 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
 };
 
 /**
- * Handle adding a new detector
+ * A new, empty detector: no name yet, Anti-Bot, today's local time as its date.
  */
-Rules.prototype.handleAddDetector = function() {
+Rules.prototype.newDetectorTemplate = function() {
   // Get current timestamp in local time
   const now = new Date();
   const year = now.getFullYear();
@@ -584,7 +584,14 @@ Rules.prototype.handleAddDetector = function() {
     lastUpdated: timestamp,
     detection: {}
   };
+  return newDetector;
+};
 
+/**
+ * Handle adding a new detector
+ */
+Rules.prototype.handleAddDetector = function() {
+  const newDetector = this.newDetectorTemplate();
   // Open edit modal with the new detector - pass isNew as true
   this.openEditModal(newDetector, 'antibot', newDetector.id, true);
 };

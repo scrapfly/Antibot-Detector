@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Перевірка…"
   },
+  "suggestRuleTitle": {
+    "message": "Нове правило з цієї сторінки"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Відкрийте спливне вікно на сайті, щоб створити з нього правило."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Позначте те, що належить до захисту на {0}. Спочатку йде те, чого не виявляє жодне встановлене правило."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Назва захисту"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Спершу назвіть захист."
+  },
+  "suggestRuleCookies": {
+    "message": "Файли cookie"
+  },
+  "suggestRuleScripts": {
+    "message": "Сторонні скрипти"
+  },
+  "suggestRuleHeaders": {
+    "message": "Заголовки відповіді"
+  },
+  "suggestRuleExactName": {
+    "message": "Шукається за точною назвою"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Назви, що починаються з {0}: решта схожа на випадковий набір"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Адреси скриптів, які це містять: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Уже виявляє {0}"
+  },
+  "suggestRuleLoading": {
+    "message": "Читання сторінки…"
+  },
+  "suggestRuleError": {
+    "message": "Не вдалося прочитати сторінку. Перезавантажте її й спробуйте ще раз."
+  },
+  "suggestRuleNoCookies": {
+    "message": "Сторінка не має файлів cookie."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Немає скриптів з інших сайтів."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Немає заголовків відповіді: перезавантажте сторінку, щоб їх отримати."
+  },
+  "suggestRuleCreate": {
+    "message": "Створити правило"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "Правило збігається на {0} (впевненість {1}%)"
   },

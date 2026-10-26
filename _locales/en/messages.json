@@ -7172,6 +7172,78 @@
     "message": "Testing…",
     "description": "The Test button while the test runs"
   },
+  "suggestRuleTitle": {
+    "message": "New rule from this page",
+    "description": "Rules tab: the button next to Add and the title of its dialog, which builds a new rule from the cookies, scripts and headers of the page in the active tab"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Open the popup on a website to build a rule from it.",
+    "description": "New rule from this page: why the button is unavailable (a browser page, or the popup opened in its own tab)"
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Tick what belongs to the protection on {0}. What no installed rule detects comes first.",
+    "description": "New rule from this page: the note at the top of the dialog; {0} is the page's host name"
+  },
+  "suggestRuleNameLabel": {
+    "message": "Protection name",
+    "description": "New rule from this page: label of the field for the new rule's name"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Name the protection first.",
+    "description": "New rule from this page: shown under the name field when Create rule is pressed without a name"
+  },
+  "suggestRuleCookies": {
+    "message": "Cookies",
+    "description": "New rule from this page: heading of the list of the page's cookies"
+  },
+  "suggestRuleScripts": {
+    "message": "Third-party scripts",
+    "description": "New rule from this page: heading of the list of scripts the page loaded from other sites"
+  },
+  "suggestRuleHeaders": {
+    "message": "Response headers",
+    "description": "New rule from this page: heading of the list of the page's response header names"
+  },
+  "suggestRuleExactName": {
+    "message": "Matched by its exact name",
+    "description": "New rule from this page: a cookie or header the new rule will look for by its exact name"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Names starting with {0}: the rest looks random",
+    "description": "New rule from this page: a cookie name with a random-looking end; {0} is the part the new rule will look for at the start of the name"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Script addresses containing this: {0}",
+    "description": "New rule from this page: a script address the new rule will look for; {0} is how many loaded scripts have it"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Already detected by {0}",
+    "description": "New rule from this page: an item an installed rule already finds; {0} lists those rules' names"
+  },
+  "suggestRuleLoading": {
+    "message": "Reading the page…",
+    "description": "New rule from this page: shown while the page is read"
+  },
+  "suggestRuleError": {
+    "message": "The page could not be read. Reload it and try again.",
+    "description": "New rule from this page: the page could not be read"
+  },
+  "suggestRuleNoCookies": {
+    "message": "The page has no cookies.",
+    "description": "New rule from this page: the page has no cookies"
+  },
+  "suggestRuleNoScripts": {
+    "message": "No scripts from other sites.",
+    "description": "New rule from this page: the page loaded no scripts from other sites"
+  },
+  "suggestRuleNoHeaders": {
+    "message": "No response headers: reload the page to capture them.",
+    "description": "New rule from this page: no response headers were captured for the page (a page shown from the saved results)"
+  },
+  "suggestRuleCreate": {
+    "message": "Create rule",
+    "description": "New rule from this page: the button that opens the rule editor with the ticked items"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "The rule matches {0} (confidence {1}%)",
     "description": "Result of Test on this page. {0} = the page's host name, {1} = the rule's confidence on it (a number)"

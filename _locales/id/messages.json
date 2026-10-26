@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "Menguji…"
   },
+  "suggestRuleTitle": {
+    "message": "Aturan baru dari halaman ini"
+  },
+  "suggestRuleUnsupported": {
+    "message": "Buka popup di sebuah situs web untuk membuat aturan darinya."
+  },
+  "suggestRuleIntroFmt": {
+    "message": "Centang yang termasuk proteksi di {0}. Yang belum dideteksi aturan terpasang mana pun tampil lebih dulu."
+  },
+  "suggestRuleNameLabel": {
+    "message": "Nama proteksi"
+  },
+  "suggestRuleNameMissing": {
+    "message": "Beri nama proteksinya terlebih dahulu."
+  },
+  "suggestRuleCookies": {
+    "message": "Cookie"
+  },
+  "suggestRuleScripts": {
+    "message": "Skrip pihak ketiga"
+  },
+  "suggestRuleHeaders": {
+    "message": "Header respons"
+  },
+  "suggestRuleExactName": {
+    "message": "Dicari berdasarkan nama persisnya"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "Nama yang diawali {0}: sisanya tampak acak"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "Alamat skrip yang memuat ini: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "Sudah dideteksi oleh {0}"
+  },
+  "suggestRuleLoading": {
+    "message": "Membaca halaman…"
+  },
+  "suggestRuleError": {
+    "message": "Halaman tidak dapat dibaca. Muat ulang lalu coba lagi."
+  },
+  "suggestRuleNoCookies": {
+    "message": "Halaman ini tidak memiliki cookie."
+  },
+  "suggestRuleNoScripts": {
+    "message": "Tidak ada skrip dari situs lain."
+  },
+  "suggestRuleNoHeaders": {
+    "message": "Tidak ada header respons: muat ulang halaman untuk menangkapnya."
+  },
+  "suggestRuleCreate": {
+    "message": "Buat aturan"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "Aturan cocok dengan {0} (kepercayaan {1}%)"
   },

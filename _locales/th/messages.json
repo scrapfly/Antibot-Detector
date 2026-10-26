@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "กำลังทดสอบ…"
   },
+  "suggestRuleTitle": {
+    "message": "กฎใหม่จากหน้านี้"
+  },
+  "suggestRuleUnsupported": {
+    "message": "เปิดป๊อปอัปบนเว็บไซต์เพื่อสร้างกฎจากเว็บไซต์นั้น"
+  },
+  "suggestRuleIntroFmt": {
+    "message": "เลือกสิ่งที่เป็นของระบบป้องกันบน {0} รายการที่ยังไม่มีกฎที่ติดตั้งไว้ตรวจพบจะแสดงก่อน"
+  },
+  "suggestRuleNameLabel": {
+    "message": "ชื่อระบบป้องกัน"
+  },
+  "suggestRuleNameMissing": {
+    "message": "ตั้งชื่อระบบป้องกันก่อน"
+  },
+  "suggestRuleCookies": {
+    "message": "คุกกี้"
+  },
+  "suggestRuleScripts": {
+    "message": "สคริปต์ของบุคคลที่สาม"
+  },
+  "suggestRuleHeaders": {
+    "message": "ส่วนหัวการตอบกลับ"
+  },
+  "suggestRuleExactName": {
+    "message": "ค้นหาด้วยชื่อที่ตรงกันทุกตัว"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "ชื่อที่ขึ้นต้นด้วย {0}: ส่วนที่เหลือดูเหมือนสุ่ม"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "ที่อยู่สคริปต์ที่มีข้อความนี้: {0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "{0} ตรวจพบอยู่แล้ว"
+  },
+  "suggestRuleLoading": {
+    "message": "กำลังอ่านหน้า…"
+  },
+  "suggestRuleError": {
+    "message": "อ่านหน้าไม่ได้ โหลดหน้าซ้ำแล้วลองอีกครั้ง"
+  },
+  "suggestRuleNoCookies": {
+    "message": "หน้านี้ไม่มีคุกกี้"
+  },
+  "suggestRuleNoScripts": {
+    "message": "ไม่มีสคริปต์จากเว็บไซต์อื่น"
+  },
+  "suggestRuleNoHeaders": {
+    "message": "ไม่มีส่วนหัวการตอบกลับ: โหลดหน้าซ้ำเพื่อเก็บข้อมูล"
+  },
+  "suggestRuleCreate": {
+    "message": "สร้างกฎ"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "กฎตรงกับ {0} (ความมั่นใจ {1}%)"
   },

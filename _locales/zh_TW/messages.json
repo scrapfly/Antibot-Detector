@@ -6602,6 +6602,60 @@
   "ruleLiveTestRunning": {
     "message": "正在測試…"
   },
+  "suggestRuleTitle": {
+    "message": "從此網頁新增規則"
+  },
+  "suggestRuleUnsupported": {
+    "message": "請在網站上開啟彈出式視窗，才能據此建立規則。"
+  },
+  "suggestRuleIntroFmt": {
+    "message": "勾選屬於 {0} 上防護的項目。沒有任何已安裝規則偵測到的項目會排在前面。"
+  },
+  "suggestRuleNameLabel": {
+    "message": "防護名稱"
+  },
+  "suggestRuleNameMissing": {
+    "message": "請先為防護命名。"
+  },
+  "suggestRuleCookies": {
+    "message": "Cookie"
+  },
+  "suggestRuleScripts": {
+    "message": "第三方指令碼"
+  },
+  "suggestRuleHeaders": {
+    "message": "回應標頭"
+  },
+  "suggestRuleExactName": {
+    "message": "依確切名稱比對"
+  },
+  "suggestRuleCookiePrefixFmt": {
+    "message": "以 {0} 開頭的名稱：其餘部分看起來是隨機的"
+  },
+  "suggestRuleScriptFmt": {
+    "message": "包含此內容的指令碼位址：{0}"
+  },
+  "suggestRuleDetectedByFmt": {
+    "message": "已由 {0} 偵測"
+  },
+  "suggestRuleLoading": {
+    "message": "正在讀取網頁…"
+  },
+  "suggestRuleError": {
+    "message": "無法讀取網頁。請重新載入網頁後再試一次。"
+  },
+  "suggestRuleNoCookies": {
+    "message": "此網頁沒有 Cookie。"
+  },
+  "suggestRuleNoScripts": {
+    "message": "沒有來自其他網站的指令碼。"
+  },
+  "suggestRuleNoHeaders": {
+    "message": "沒有回應標頭：請重新載入網頁以擷取它們。"
+  },
+  "suggestRuleCreate": {
+    "message": "建立規則"
+  },
   "ruleLiveTestMatchesFmt": {
     "message": "規則符合 {0}（信賴度 {1}%）"
   },
