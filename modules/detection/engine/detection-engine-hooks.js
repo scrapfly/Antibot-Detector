@@ -508,7 +508,12 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
                             type: DEH_TYPES.WINDOW_PROPS_COMPLETE,
                             url: data.url,
                             timestamp: data.timestamp,
-                            detectedCount: data.detectedCount
+                            detectedCount: data.detectedCount,
+                            // The worker reads these: its reason says when the page is served from the cache
+                            // (without it, every cached page load opened a scan that never finished)
+                            totalChecked: data.totalChecked,
+                            elapsedMs: data.elapsedMs,
+                            reason: data.reason
                         });
                         Logger.detection(`[Content Script] Window properties completion signal sent successfully on attempt ${attempt}`);
                         return;
