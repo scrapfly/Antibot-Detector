@@ -68,14 +68,12 @@
     const INITIATOR_TYPES = Object.freeze({ script: 'script', xmlhttprequest: 'xmlhttprequest', fetch: 'fetch', iframe: 'sub_frame', beacon: 'ping', other: 'other' });
 
     /**
-     * The vendor's scripts among what the page has already loaded: the requests the worker recorded for the tab
-     * (none for a page served from the scan cache) and the page's own Resource Timing list and script tags, in every
-     * frame. Nothing is reloaded, so the popup stays open; an empty answer means only a reload can tell.
-     * @returns {Promise<Array<{url, type, resourceType, source}>|null>} null for a vendor without a classifier
+     * What the page has already loaded, by address: the requests the worker recorded for the tab (none for a page
+     * served from the scan cache) and the page's own Resource Timing list and script tags, in every frame. Images,
+     * fonts, CSS, media and the page itself are left out. Nothing is reloaded, so the popup stays open.
+     * @returns {Promise<Map<string, string>>} url -> resource type ('script', 'xmlhttprequest', 'fetch', ...)
      */
-    async function fromLoadedPage({ tabId, vendorId }) {
-        const classify = classifierFor(vendorId);
-        if (!classify) return null;
+    async function loadedUrls(tabId) {
         const seen = new Map();
         const add = (url, type) => {
             if (typeof url !== 'string' || !/^https?:/i.test(url) || seen.has(url)) return;
@@ -100,6 +98,18 @@
         } catch (_) { /* A page the extension cannot script (the Web Store, a PDF): what the worker recorded */ }
         const recorded = typeof networkUrlsStore !== 'undefined' ? networkUrlsStore.get(tabId) : null;
         for (const entry of Array.isArray(recorded) ? recorded : []) add(entry && entry.url, entry && entry.type);
+        return seen;
+    }
+
+    /**
+     * The vendor's scripts among what the page has already loaded (loadedUrls). An empty answer means only a reload
+     * can tell.
+     * @returns {Promise<Array<{url, type, resourceType, source}>|null>} null for a vendor without a classifier
+     */
+    async function fromLoadedPage({ tabId, vendorId }) {
+        const classify = classifierFor(vendorId);
+        if (!classify) return null;
+        const seen = await loadedUrls(tabId);
         const scripts = [];
         for (const [url, resourceType] of seen) {
             let type = null;
@@ -118,5 +128,5 @@
         return name && typeof global[name] === 'function' ? global[name] : null;
     }
 
-    global.AdvancedScriptAnalysis = Object.freeze({ start, fromLoadedPage, classifierFor, readerFor });
+    global.AdvancedScriptAnalysis = Object.freeze({ start, loadedUrls, fromLoadedPage, classifierFor, readerFor });
 })(globalThis);
