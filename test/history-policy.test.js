@@ -204,3 +204,11 @@ test('the pages that are watched: pinned and marked, the one checked longest ago
   assert.deepStrictEqual(chosen.map(i => i.id), many.slice(4).reverse().map(i => i.id), 'the ten checked longest ago');
   assert.deepStrictEqual(P.watchedOf(undefined), []);
 });
+
+test('a renamed protection (PerimeterX → HUMAN (PerimeterX)) is the same protection: no change, still pinned by its old name', () => {
+  const was = [{ name: 'PerimeterX', category: 'Anti-Bot', confidence: 100 }];
+  const is = [{ name: 'HUMAN (PerimeterX)', category: 'Anti-Bot', confidence: 100 }];
+  assert.equal(P.diffProtections(was, is).changed, false);
+  assert.equal(P.shouldAutoPin(is, { historyAutoPinVendors: ['PerimeterX'] }), true, 'a name the person typed before the rename still pins');
+  assert.equal(P.diffProtections(was, [{ name: 'DataDome', category: 'Anti-Bot', confidence: 100 }]).changed, true);
+});

@@ -81,7 +81,7 @@
       const map = new Map();
       for (const d of (Array.isArray(detections) ? detections : [])) {
         const name = nameOf(d);
-        if (name && !isFingerprint(d) && !map.has(name.toLowerCase())) map.set(name.toLowerCase(), name);
+        if (name && !isFingerprint(d) && !map.has(Categories.protectionKey(name))) map.set(Categories.protectionKey(name), name);
       }
       return map;
     };
@@ -103,13 +103,13 @@
     const s = settings || {};
     const hard = s.historyAutoPinHard === true;
     const named = new Set((Array.isArray(s.historyAutoPinVendors) ? s.historyAutoPinVendors : [])
-      .map(name => String(name).trim().toLowerCase()).filter(Boolean));
+      .map(name => Categories.protectionKey(name)).filter(Boolean));
     if (!hard && named.size === 0) return false;
     const minimum = clampInt(s.historyAutoPinMinConfidence, 0, 100, AUTO_PIN_MIN_CONFIDENCE);
     return (Array.isArray(detections) ? detections : []).some((d) => {
       if (!(Number(d && d.confidence) >= minimum)) return false; // a detection with no score never pins
       const difficulty = String((d && (d.difficulty || (d.detector && d.detector.difficulty))) || '').toLowerCase();
-      return (hard && !isFingerprint(d) && difficulty === 'high') || named.has(nameOf(d).toLowerCase());
+      return (hard && !isFingerprint(d) && difficulty === 'high') || named.has(Categories.protectionKey(nameOf(d)));
     });
   }
 

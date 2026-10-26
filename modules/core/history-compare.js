@@ -89,8 +89,8 @@
       const name = nameOf(d);
       if (!name) continue;
       const row = { name, category: Categories.keyOf(d), confidence: confidenceOf(d), methods: methodsOf(d) };
-      const have = map.get(name.toLowerCase());
-      if (!have || (row.confidence === null ? -1 : row.confidence) > (have.confidence === null ? -1 : have.confidence)) map.set(name.toLowerCase(), row);
+      const have = map.get(Categories.protectionKey(name));
+      if (!have || (row.confidence === null ? -1 : row.confidence) > (have.confidence === null ? -1 : have.confidence)) map.set(Categories.protectionKey(name), row);
     }
     return map;
   }

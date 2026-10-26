@@ -205,7 +205,7 @@ const HistoryStats = {
       for (const detection of Array.isArray(item.detections) ? item.detections : []) {
         const name = HistoryStats.detectionName(detection);
         if (!name) continue;
-        const key = name.toLowerCase(), p = protections.get(key);
+        const key = Categories.protectionKey(name), p = protections.get(key);
         if (!p || ts < p.ts) protections.set(key, { name, category: HistoryStats.detectionCategory(detection), ts, hostname });
       }
     }
@@ -318,7 +318,7 @@ const HistoryStats = {
           if (domain) { domain.sum += score; domain.count++; }
         }
         if (!name) continue;
-        const key = name.toLowerCase();
+        const key = Categories.protectionKey(name);
         if (domain && !domain.names.has(key)) domain.names.set(key, { name, category });
         const entry = detectors.get(key) || { name, category, id: '', pages: 0, domains: new Set(), sum: 0, count: 0, matchSum: 0, matchCount: 0, strong: 0, moderate: 0, weak: 0 };
         if (!seen.has(key)) { entry.pages++; seen.add(key); }
@@ -466,10 +466,10 @@ const HistoryStats = {
       const scored = row.strong + row.moderate + row.weak;
       return row.category !== 'fingerprint' && row.pages >= HistoryStats.UNCONFIRMED_MIN_PAGES && scored > 0 && row.strong / scored < 0.5;
     }).sort((a, b) => b.weak - a.weak || b.pages - a.pages || a.name.localeCompare(b.name)).slice(0, 12).map((row) => {
-      const lower = row.name.toLowerCase();
+      const lower = Categories.protectionKey(row.name);
       let driver = null;
       for (const signal of signalMetrics) {
-        if (signal.detector.toLowerCase() !== lower || (signal.avgConfidence !== null && signal.avgConfidence >= HistoryStats.MODERATE_MIN)) continue;
+        if (Categories.protectionKey(signal.detector) !== lower || (signal.avgConfidence !== null && signal.avgConfidence >= HistoryStats.MODERATE_MIN)) continue;
         if (!driver || signal.pages > driver.pages || (signal.pages === driver.pages && (signal.matches > driver.matches || (signal.matches === driver.matches && signal.label.localeCompare(driver.label) < 0)))) driver = signal;
       }
       return { name: row.name, id: row.id, category: row.category, pages: row.pages, strong: row.strong, moderate: row.moderate, weak: row.weak,
@@ -570,7 +570,7 @@ const HistoryStats = {
         if (score !== null) { sum += score; count++; }
         const name = HistoryStats.detectionName(detection);
         if (!name) continue;
-        const key = name.toLowerCase();
+        const key = Categories.protectionKey(name);
         const row = names.get(key) || { name, pages: 0 };
         if (!seen.has(key)) { row.pages++; seen.add(key); }
         names.set(key, row);
@@ -626,11 +626,11 @@ const HistoryStats = {
         out.detections++;
         const category = HistoryStats.detectionCategory(detection);
         const name = HistoryStats.detectionName(detection);
-        if (name) names.add(name.toLowerCase());
+        if (name) names.add(Categories.protectionKey(name));
         if (!row) continue;
         row.found = true;
         if (category === 'captcha') row.captcha = true;
-        if (name && category !== 'fingerprint') { row.names.add(name.toLowerCase()); pageProtections.add(name.toLowerCase()); }
+        if (name && category !== 'fingerprint') { row.names.add(Categories.protectionKey(name)); pageProtections.add(Categories.protectionKey(name)); }
       }
       if (row && pageProtections.size > row.maxPage) row.maxPage = pageProtections.size;
       if (found) out.pagesWithDetections++;
@@ -653,7 +653,7 @@ const HistoryStats = {
       for (const detection of item.detections) {
         const name = HistoryStats.detectionName(detection);
         if (!name) continue;
-        const key = name.toLowerCase();
+        const key = Categories.protectionKey(name);
         const row = index.get(key) || { name, category: HistoryStats.detectionCategory(detection), pages: 0 };
         if (!seen.has(key)) { row.pages++; seen.add(key); }
         index.set(key, row);
@@ -755,7 +755,7 @@ const HistoryStats = {
       const names = new Map();
       for (const detection of Array.isArray(item.detections) ? item.detections : []) {
         const name = HistoryStats.detectionName(detection);
-        if (name && !names.has(name.toLowerCase())) names.set(name.toLowerCase(), { name, category: HistoryStats.detectionCategory(detection) });
+        if (name && !names.has(Categories.protectionKey(name))) names.set(Categories.protectionKey(name), { name, category: HistoryStats.detectionCategory(detection) });
       }
       group.visits.push({ ts, names, order: group.visits.length });
     }
@@ -790,7 +790,7 @@ const HistoryStats = {
       for (const detection of item.detections) {
         const name = HistoryStats.detectionName(detection);
         if (!name) continue;
-        const key = name.toLowerCase();
+        const key = Categories.protectionKey(name);
         const row = map.get(key) || { name, id: '', category: HistoryStats.detectionCategory(detection), pages: 0, domains: new Set(), sum: 0, count: 0 };
         if (!seen.has(key)) { row.pages++; seen.add(key); }
         if (hostname) row.domains.add(hostname);
@@ -829,7 +829,7 @@ const HistoryStats = {
         const id = nested.id || detection.id;
         if (typeof id === 'string' && id) ids.add(id);
         const name = HistoryStats.detectionName(detection);
-        if (name) names.add(name.toLowerCase());
+        if (name) names.add(Categories.protectionKey(name));
       }
       for (const id of ids) touch(byId, id, ts);
       for (const name of names) touch(byName, name, ts);

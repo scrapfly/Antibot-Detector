@@ -15,6 +15,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Changed
 
+- PerimeterX is now named HUMAN (PerimeterX); History, the watchlist, Compare, Statistics and pinning by name treat both names as one protection.
 - Azure Front Door scores lower on its own: its headers show the Microsoft edge, not that its firewall is switched on.
 - Detection: in a protection's details, each piece of evidence (an address, cookie or header) copies in full with a click or Enter.
 - Arabic: the popup reads right to left, like the Statistics page; addresses and page titles keep their own order and are cut at their end.

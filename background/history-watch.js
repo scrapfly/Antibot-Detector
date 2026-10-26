@@ -72,7 +72,7 @@ const HistoryWatch = {
 
     /** The same protections gained and lost, whatever their order. */
     sameChange(a, b) {
-        const key = (names) => [...names].map(name => String(name).toLowerCase()).sort().join('\n');
+        const key = (names) => [...names].map(name => Categories.protectionKey(name)).sort().join('\n');
         return key(a.added) === key(b.added) && key(a.removed) === key(b.removed);
     },
 

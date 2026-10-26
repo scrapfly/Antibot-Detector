@@ -61,7 +61,16 @@
   const defaultDifficulty = (value) => DEFAULT_DIFFICULTY[keyOf(value)] || 'Medium';
   const badgeClass = (value) => { const key = keyOf(value); return KEYS.includes(key) ? key : 'primary'; };
 
-  const api = { KEYS, KEYS_AND_OTHER, NAMES, DEFAULT_COLORS, LABELS, normalize, keyOf, builtIn, labelOf, defaultDifficulty, badgeClass };
+  // One protection under the names it has had: History, the watchlist, Compare and Statistics match saved entries
+  // by name, so a renamed detector must not read as one protection gone and another found
+  const PROTECTION_ALIASES = Object.freeze({ 'human (perimeterx)': 'perimeterx', 'human security': 'perimeterx', 'human': 'perimeterx' });
+  /** The key two names of the same protection share (case-insensitive, renames included). */
+  const protectionKey = (name) => {
+    const key = String(name || '').trim().toLowerCase();
+    return PROTECTION_ALIASES[key] || key;
+  };
+
+  const api = { KEYS, KEYS_AND_OTHER, NAMES, DEFAULT_COLORS, LABELS, normalize, keyOf, builtIn, labelOf, defaultDifficulty, badgeClass, protectionKey };
   root.Categories = api;
   // The other modules name it as a plain global: a page or a worker has one (self is globalThis), a test sandbox may not
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.Categories = api;
