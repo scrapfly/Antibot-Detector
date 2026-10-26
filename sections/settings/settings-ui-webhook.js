@@ -8,7 +8,12 @@ SettingsUI.setupWebhookMethodRadios = function() {
     const customContainer = document.querySelector('#webhookCustomMethodContainer');
     const customInput = document.querySelector('#webhookCustomMethod');
 
+    // Called on every populate (open, import, preset, reset): each control is wired once, or one click ran its
+    // handler once per populate so far
+    const bound = SettingsUI._webhookMethodBound || (SettingsUI._webhookMethodBound = new WeakSet());
     radios.forEach(radio => {
+      if (bound.has(radio)) return;
+      bound.add(radio);
       radio.addEventListener('change', (e) => {
         radios.forEach(r => {
           const badge = r.closest('.http-method-badge');
@@ -28,7 +33,8 @@ SettingsUI.setupWebhookMethodRadios = function() {
       });
     });
 
-    if (customInput) {
+    if (customInput && !bound.has(customInput)) {
+      bound.add(customInput);
       customInput.addEventListener('input', () => {
         const customValue = customInput.value.trim().toUpperCase();
         if (customValue && webhookMethodInput) {

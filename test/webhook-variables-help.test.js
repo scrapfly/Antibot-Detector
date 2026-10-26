@@ -74,3 +74,21 @@ test('closing Settings closes the window too, so it is not there on the next ope
   await h.context.SettingsUI.openWebhookVariablesHelp.call(h.ui);
   assert.equal(h.scopes.filter(scope => scope.open).length, 1);
 });
+
+test('the method buttons are wired once, however often Settings is populated', () => {
+  const listeners = [];
+  const radio = { value: 'PUT', addEventListener: (type) => listeners.push(['radio', type]), closest: () => null };
+  const custom = { value: '', addEventListener: (type) => listeners.push(['custom', type]) };
+  const context = vm.createContext({
+    console, FormatUtils: require('../utils/format-utils.js'),
+    document: {
+      querySelectorAll: (selector) => (selector === 'input[name="webhookMethodRadio"]' ? [radio] : []),
+      querySelector: (selector) => (selector === '#webhookCustomMethod' ? custom : null)
+    }
+  });
+  vm.runInContext(read('sections/settings/settings-ui.js'), context);
+  vm.runInContext(read('sections/settings/settings-ui-webhook.js'), context);
+  const SettingsUI = vm.runInContext('SettingsUI', context);
+  for (let i = 0; i < 4; i++) SettingsUI.setupWebhookMethodRadios.call({});
+  assert.deepEqual(listeners, [['radio', 'change'], ['custom', 'input']]);
+});
