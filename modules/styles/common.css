@@ -1375,3 +1375,10 @@ input:checked + .slider:before {
 option:checked .opt-icon {
   color: inherit;
 }
+
+/* Right to left (Arabic): addresses, host names and page titles are Latin text. They keep their own reading
+   order, so a long one is cut at its end ("shop.example.te…"), not at its start, and stay right-aligned */
+[dir="rtl"] :is(.site-url, .history-url, .history-title, .cap-row-place, .cap-scope-host, .blacklist-domain-text) {
+  unicode-bidi: plaintext;
+  text-align: right;
+}

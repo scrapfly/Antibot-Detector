@@ -163,6 +163,9 @@ class I18n {
         if (!doc || !doc.documentElement) return;
         const tag = I18n.locale();
         if (doc.documentElement.getAttribute('lang') !== tag) doc.documentElement.setAttribute('lang', tag);
+        // and with its reading direction: Arabic reads right to left in the popup as on the Statistics page
+        const dir = I18n.dir();
+        if (doc.documentElement.getAttribute('dir') !== dir) doc.documentElement.setAttribute('dir', dir);
     }
 
     static apply(root = document) {

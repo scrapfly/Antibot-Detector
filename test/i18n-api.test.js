@@ -25,6 +25,17 @@ test('dir() is rtl for the right-to-left languages, whatever the region, and ltr
   assert.strictEqual(override.dir(), 'rtl', 'the language chosen in Settings wins over the browser language');
 });
 
+test('applyDocumentLang tags the page with the language and its reading direction (the popup reads right to left in Arabic)', () => {
+  for (const [language, dir] of [['ar', 'rtl'], ['es', 'ltr']]) {
+    const I18n = load(language);
+    const attributes = {};
+    const doc = { documentElement: { getAttribute: (name) => attributes[name] ?? null, setAttribute: (name, value) => { attributes[name] = value; } } };
+    I18n.applyDocumentLang(doc);
+    assert.strictEqual(attributes.dir, dir, language);
+    assert.strictEqual(attributes.lang, language);
+  }
+});
+
 test('apply() translates the element it is given as well as its descendants (a section is added one top-level element at a time)', () => {
   const context = vm.createContext({ chrome: { i18n: { getUILanguage: () => 'de', getMessage: (key) => `[${key}]` } }, document: {}, console });
   vm.runInContext(read('modules/core/i18n.js') + '\nthis.I18n = I18n;', context);

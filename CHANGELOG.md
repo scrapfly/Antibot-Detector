@@ -16,6 +16,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Azure Front Door scores lower on its own: its headers show the Microsoft edge, not that its firewall is switched on.
+- Arabic: the popup reads right to left, like the Statistics page; addresses and page titles keep their own order and are cut at their end.
 - Advanced: the protection's name above its tools is now a heading, no longer a box that looks like one of the tool buttons.
 - Advanced → Check Cookies redesigned: a found/expected status line, then one card per cookie with its name and flags, its value as one block to copy, and domain, path and expiry as plain text.
 - Advanced → History redesigned: one search row with a … menu (export, clear), a Current site / All sites switch, vendor and tool chips, and compact rows with the vendor's logo.

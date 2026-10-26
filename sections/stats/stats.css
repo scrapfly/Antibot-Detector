@@ -16,7 +16,7 @@
 
 :root { color-scheme: dark; }
 html { width: auto; min-height: 100%; height: auto; overflow: auto; scroll-padding-block-start: 68px; }
-/* Nothing in the extension sets dir="rtl", so right-to-left UI languages get it here */
+/* I18n.applyDocumentLang sets dir="rtl"; the language tag covers the moment before it runs */
 :root:is(:lang(ar), :lang(he), :lang(fa), :lang(ur)) { direction: rtl; }
 
 /* --------------------------------------------------------------------------
