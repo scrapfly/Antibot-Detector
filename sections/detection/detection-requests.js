@@ -244,6 +244,9 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
       );
     } catch (error) {
       Logger.error('UI', 'Detection: Failed to request detection:', error);
+      // A failure before the worker was asked (no callback will clear it) must not block every later request.
+      // Not in a finally: on success the flag stays set until the worker's answer arrives.
+      detection.isRequestingDetection = false;
       detection.showEmptyState({ outcome: 'failed' });
     }
 };
