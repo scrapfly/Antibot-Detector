@@ -22,7 +22,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules editor: in another language than English, descriptions and combination names show and are edited in that language (saved as its translation); the English original and the other languages fold under "Original (English)".
 - Rules editor: the Translate the rule bar is always at the top, so it can be found; on a fully translated rule it says so instead of offering the button.
 - Advanced: the protection's name above its tools is now a heading, no longer a box that looks like one of the tool buttons.
-- Advanced → Analyze Scripts no longer closes the popup: it lists the protection's scripts the page already loaded, at once, and reloads only a page where none were found (GeeTest, Imperva and Shape Security still reload).
+- Advanced → Analyze Scripts no longer closes the popup: it lists the protection's scripts the page already loaded, at once, and reloads only a page where none were found.
 - Advanced → Analyze Scripts redesigned: one compact list, each script's type and its path (the host only when it is another site's), the whole row copies the address.
 - Advanced → Check Cookies redesigned: a found/expected status line, then one card per cookie with its name and flags, its value as one block to copy, and domain, path and expiry as plain text.
 - Advanced → History redesigned: one search row with a … menu (export, clear), a Current site / All sites switch, vendor and tool chips, and compact rows with the vendor's logo.
@@ -54,6 +54,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: rescanning a page, or moving within a single-page site, after a cached result checks JavaScript hooks and page globals again.
 - Detection: fingerprinting checks no longer stop early on pages that use a watched browser API while still loading, so later calls are still caught.
 - Detection: a site that calls a browser API on the wrong object gets the browser's normal error again instead of a quiet answer (one case could clear the site's storage).
+- Detection: pages can no longer tell the extension's JavaScript hooks from the browser's own functions by reading their source text.
 - Detection: pages that add and remove many frames no longer keep growing in memory, and two rules checking the same page global (a duplicated rule) are both reported.
 - Rules: URL, content and JavaScript-hook rules without a confidence score the default instead of zero, cookie rules score the same in any order, and page plus hook evidence keeps the higher confidence.
 

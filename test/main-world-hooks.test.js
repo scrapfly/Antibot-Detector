@@ -651,7 +651,12 @@ test('a hook wrapper looks like the native member: not constructible, no own pro
     assert.strictEqual(page.run(`${expr}.length`), original.length);
     assert.strictEqual(page.run(`Object.prototype.hasOwnProperty.call(${expr}, "prototype")`), false);
     assert.throws(() => page.run(`new (${expr})()`), /not a constructor/);
-    assert.strictEqual(page.run(`${expr}.toString()`), Function.prototype.toString.call(original));
+    // Through the page's own (patched) Function.prototype.toString: the fake interfaces come from the test realm
+    const pageToString = page.run('Function.prototype.toString');
+    assert.strictEqual(page.run(`Function.prototype.toString.call(${expr})`), pageToString.call(original));
+    assert.match(page.run(`Function.prototype.toString.call(${expr})`), /^(?:get )?\w*\(/, 'reads as the original member, not the wrapper');
+    assert.doesNotMatch(page.run(`Function.prototype.toString.call(${expr})`), /Reflect\.apply|isUnboundThis/);
+    assert.strictEqual(page.run(`Object.prototype.hasOwnProperty.call(${expr}, "toString")`), false, 'no own toString to give it away');
   }
 });
 
