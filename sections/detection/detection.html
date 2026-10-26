@@ -202,19 +202,19 @@
     <div id="detectionPagination" class="pagination">
       <div class="pagination-info">Showing 1-10 of 0</div>
       <div class="pagination-controls">
-        <button class="pagination-btn pagination-btn-prev" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24">
+        <button class="pagination-btn pagination-btn-prev" type="button" aria-label="Previous page" data-i18n-aria-label="paginationPrev" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
           </svg>
         </button>
         <div class="page-info">
           <span data-i18n="detectionPaginationPage">Page</span>
-          <input type="text" class="page-input" value="1" />
+          <input type="text" class="page-input" value="1" aria-label="Current page number" data-i18n-aria-label="paginationCurrentPageAria" />
           <span data-i18n="detectionPaginationOf">of</span>
           <span class="total-pages">1</span>
         </div>
-        <button class="pagination-btn pagination-btn-next" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24">
+        <button class="pagination-btn pagination-btn-next" type="button" aria-label="Next page" data-i18n-aria-label="paginationNext" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
           </svg>
         </button>

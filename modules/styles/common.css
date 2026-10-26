@@ -1383,6 +1383,11 @@ option:checked .opt-icon {
   text-align: right;
 }
 
+/* Previous / next page arrows point the way the pages go: right-to-left, previous is on the right and points right */
+[dir="rtl"] :is(.pagination-btn, .rh-pager-btn) svg {
+  transform: scaleX(-1);
+}
+
 /* Addresses and host names are always left-to-right text: the "…" of a long one goes at its end */
 [dir="rtl"] :is(.site-url, .history-url, .cap-row-place, .cap-scope-host, .blacklist-domain-text) {
   direction: ltr;

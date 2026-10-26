@@ -2988,7 +2988,8 @@ input[type="file"] {
 /* Folding cards: a title head opens and closes the card; folded by default */
 #settingsModal .settings-card.is-collapsible > [role="button"] {
   position: relative;
-  padding-right: 34px;
+  /* Logical sides: in a right-to-left language the arrow sits at the title's end, on the left */
+  padding-inline-end: 34px;
   cursor: pointer;
   user-select: none;
 }
@@ -3001,7 +3002,7 @@ input[type="file"] {
 #settingsModal .settings-card.is-collapsible .settings-card-chevron {
   position: absolute;
   top: 50%;
-  right: 12px;
+  inset-inline-end: 12px;
   width: 14px;
   height: 14px;
   margin-top: -7px;

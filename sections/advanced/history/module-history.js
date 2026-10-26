@@ -56,14 +56,14 @@ class AdvancedModuleHistory {
                     <div id="${this.moduleName}HistoryPagination" class="pagination">
                         <div class="pagination-info">${BaseAdvancedModule._fmt('paginationShowingFmt', `Showing 1-3 of ${history.length}`, 1, 3, history.length)}</div>
                         <div class="pagination-controls">
-                            <button class="pagination-btn pagination-btn-prev" disabled>
-                                <svg width="16" height="16" viewBox="0 0 24 24">
+                            <button type="button" class="pagination-btn pagination-btn-prev" aria-label="${FormatUtils.escapeAttr(BaseAdvancedModule._tr('paginationPrev', 'Previous page'))}" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/>
                                 </svg>
                             </button>
                             <div class="page-numbers"></div>
-                            <button class="pagination-btn pagination-btn-next">
-                                <svg width="16" height="16" viewBox="0 0 24 24">
+                            <button type="button" class="pagination-btn pagination-btn-next" aria-label="${FormatUtils.escapeAttr(BaseAdvancedModule._tr('paginationNext', 'Next page'))}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12Z" fill="currentColor"/>
                                 </svg>
                             </button>
