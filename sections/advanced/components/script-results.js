@@ -84,6 +84,25 @@ class AdvancedScriptResults {
     }
 
     /**
+     * What the page already loaded, in the vendor's own result shape (GeeTest, Imperva and Shape Security, whose
+     * Analyze Scripts used to always reload): nothing is reloaded, so the popup stays open and can show it at once.
+     * @returns {Promise<object|null>} the result data; null when nothing of the vendor is found or the worker cannot
+     *   tell, and then the vendor's own reload flow runs (which closes the popup)
+     */
+    async loadedPageResult() {
+        const tabId = this.tabInfo && this.tabInfo.id;
+        if (!tabId || typeof AdvancedMessageTypes === 'undefined' || !AdvancedMessageTypes.ADVANCED_LOADED_SCRIPTS) return null;
+        try {
+            const loaded = await AdvancedUtils.sendMessage({ type: AdvancedMessageTypes.ADVANCED_LOADED_SCRIPTS, tabId,
+                vendorId: String(this.moduleName || '').toLowerCase() });
+            return loaded && loaded.status === 'ok' && loaded.found === true && loaded.data ? loaded.data : null;
+        } catch (error) {
+            Logger.error('UI', `[${this.moduleName}] Loaded scripts unavailable, reloading instead:`, error);
+            return null;
+        }
+    }
+
+    /**
      * The Analyze Scripts result window: one card per captured URL with its
      * type, the empty note, and Export Code for the URLs.
      * @param {object} data - { scripts: [{ url, type, resourceType }] }
@@ -161,7 +180,7 @@ class AdvancedScriptResults {
         try { return new URL(url).hostname; } catch (_) { return ''; }
     }
 }
-for (const name of ['startScriptAnalysis', 'showScriptResults']) {
+for (const name of ['startScriptAnalysis', 'loadedPageResult', 'showScriptResults']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedScriptResults.prototype, name));
 }
 })();

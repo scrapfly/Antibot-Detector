@@ -36,12 +36,8 @@ class AdvancedToolGrid {
                 ? ['advToolStopCaptureHint', 'Stop recording data from this page']
                 : ['advToolCaptureHint', 'Record data from this page']
         };
-        // Analyze Scripts lists what the page already loaded (components/script-results.js); these tools still reload
-        if (action === 'scripts' && this.moduleName === 'imperva') {
-            hints.scripts = ['advToolResetScriptsHint', 'Reset protection cookies and reload to analyze scripts'];
-        } else if (action === 'scripts' && ['geetest', 'shapesecurity'].includes(this.moduleName)) {
-            hints.scripts = ['advToolReloadScriptsHint', 'Reload the page to analyze protection scripts'];
-        }
+        // Analyze Scripts lists what the page already loaded first, for every vendor (components/script-results.js and
+        // each vendor's loadedPageResult); it reloads only when nothing is found
         if (action === 'version' && ['hcaptcha', 'geetest'].includes(this.moduleName)) {
             hints.version = ['advToolReloadVersionHint', 'Reload the page to detect the protection version'];
         }

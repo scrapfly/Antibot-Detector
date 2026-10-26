@@ -222,6 +222,13 @@ function registerAdvancedCaptureHandlers(registry, context) {
             return false;
         }
         (async () => {
+            // GeeTest, Imperva and Shape Security answer in their own result's shape; their popup window records it
+            // in History, as it does for the result after a reload
+            const reader = AdvancedScriptAnalysis.readerFor(request.vendorId);
+            if (reader) {
+                const { data, found } = await reader(request.tabId);
+                return { status: 'ok', data, found: Boolean(found) };
+            }
             const scripts = await AdvancedScriptAnalysis.fromLoadedPage({ tabId: request.tabId, vendorId: request.vendorId });
             if (!scripts) return { status: 'error', error: 'No script analysis for this vendor' };
             const data = { scripts, scriptCount: scripts.length };

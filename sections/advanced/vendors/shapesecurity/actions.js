@@ -145,6 +145,14 @@ ShapeSecurityAdvanced.prototype.extractScripts = async function() {
         // The tab these tools were opened for, not whichever tab is active now
         const tab = this.tabInfo;
         if (!tab || !tab.id) throw new Error('Tab information not available');
+        // First the scripts the page already loaded: no reload, so the popup stays open and shows the result at once
+        // (saved to History by the window). Only a page where none of Shape's loaders is listed is reloaded
+        const loaded = await this.loadedPageResult();
+        if (loaded) {
+            NotificationHelper.success(AdvancedUtils.notifications.analyzeScripts.success((loaded.allScripts || []).length));
+            this.displayScriptDataModal(loaded);
+            return { awaitingResult: false };
+        }
         this.isExtracting = true;
         let timeoutId = null;
         const stop = () => {

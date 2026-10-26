@@ -51,6 +51,15 @@ GeetestAdvanced.prototype.analyzeScripts = async function() {
                 throw new Error('Tab information not available');
             }
 
+            // First the page as it is: no reload, so the popup stays open and shows the result at once (saved to
+            // History by the window). Only a page with nothing of GeeTest is reloaded
+            const loaded = await this.loadedPageResult();
+            if (loaded && Array.isArray(loaded.scripts) && loaded.scripts.length > 0) {
+                NotificationHelper.success(AdvancedUtils.notifications.analyzeScripts.success(loaded.scripts.length));
+                this.displayScriptsModal(loaded.scripts);
+                return;
+            }
+
             NotificationHelper.info(AdvancedUtils.notifications.analyzeScripts.start('Geetest'));
 
             const response = await this.sendMessage({

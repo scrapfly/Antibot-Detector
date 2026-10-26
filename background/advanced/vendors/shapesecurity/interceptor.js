@@ -624,28 +624,7 @@ function handleShapeSecurityStartExtraction(message, sender, sendResponse) {
                 try {
                     const [result] = await chrome.scripting.executeScript({
                         target: { tabId: tabId },
-                        func: () => {
-                            const scripts = [];
-                            const scriptElements = document.querySelectorAll('script[src]');
-
-                            scriptElements.forEach(script => {
-                                const src = script.src;
-                                if (src.includes('seed=') || src.includes('shape') || src.includes('/init.js') || src.includes('vendor2.js') || src.includes('?async')) {
-                                    scripts.push({ url: src });
-                                }
-                            });
-
-                            // Also check performance entries
-                            const resources = performance.getEntriesByType('resource');
-                            resources.forEach(resource => {
-                                if ((resource.name.includes('seed=') || resource.name.includes('shape') || resource.name.includes('/init.js') || resource.name.includes('vendor2.js') || resource.name.includes('?async')) &&
-                                    !scripts.some(s => s.url === resource.name)) {
-                                    scripts.push({ url: resource.name });
-                                }
-                            });
-
-                            return scripts;
-                        }
+                        func: shapeSecurityPageScripts
                     });
 
                     const scripts = result.result || [];
@@ -717,7 +696,62 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
     // Analyze the captured scripts from message
     const scripts = message.scripts || [];
     Logger.network('[ShapeSecurity-EXTRACT] Analyzing', scripts.length, 'scripts');
+    const extractedData = shapeSecurityExtractedData(scripts);
 
+    Logger.network('[ShapeSecurity-EXTRACT] Extracted data:', extractedData);
+
+    // Send result to popup
+    try {
+        await chrome.runtime.sendMessage({
+            type: 'SHAPESECURITY_EXTRACTION_RESULT',
+            tabId,
+            extractedData: extractedData
+        });
+        Logger.network('[ShapeSecurity-EXTRACT] Result sent to popup');
+    } catch (error) {
+        Logger.network('[ShapeSecurity-EXTRACT] Popup not available:', error.message);
+    }
+
+    // Clean up extraction state
+    shapeSecurityExtractionStateRef.delete(tabId);
+    Logger.network('[ShapeSecurity-EXTRACT] Extraction state cleaned up');
+
+    sendResponse({ status: 'success' });
+}
+
+/**
+ * Shape's script URLs the page lists now (runs in the page): script tags and Resource Timing entries whose URL
+ * looks like Shape's loader (seed=, /init.js, vendor2.js, ?async). Self-contained: chrome.scripting serializes it.
+ * @returns {Array<{url: string}>}
+ */
+function shapeSecurityPageScripts() {
+    const scripts = [];
+    const scriptElements = document.querySelectorAll('script[src]');
+
+    scriptElements.forEach(script => {
+        const src = script.src;
+        if (src.includes('seed=') || src.includes('shape') || src.includes('/init.js') || src.includes('vendor2.js') || src.includes('?async')) {
+            scripts.push({ url: src });
+        }
+    });
+
+    // Also check performance entries
+    const resources = performance.getEntriesByType('resource');
+    resources.forEach(resource => {
+        if ((resource.name.includes('seed=') || resource.name.includes('shape') || resource.name.includes('/init.js') || resource.name.includes('vendor2.js') || resource.name.includes('?async')) &&
+            !scripts.some(s => s.url === resource.name)) {
+            scripts.push({ url: resource.name });
+        }
+    });
+
+    return scripts;
+}
+
+/**
+ * The extraction result from the collected script URLs: init scripts, seed scripts and all of them.
+ * @param {Array<{url: string}>} scripts
+ */
+function shapeSecurityExtractedData(scripts) {
     const initJsUrls = [];
     const seedUrls = [];
     const allScripts = [];
@@ -752,32 +786,26 @@ async function handleShapeSecurityExtractionCompleted(message, sender, sendRespo
         }
     });
 
-    const extractedData = {
+    return {
         initJsUrls,
         seedUrls,
         allScripts,
         timestamp: Date.now()
     };
+}
 
-    Logger.network('[ShapeSecurity-EXTRACT] Extracted data:', extractedData);
-
-    // Send result to popup
-    try {
-        await chrome.runtime.sendMessage({
-            type: 'SHAPESECURITY_EXTRACTION_RESULT',
-            tabId,
-            extractedData: extractedData
-        });
-        Logger.network('[ShapeSecurity-EXTRACT] Result sent to popup');
-    } catch (error) {
-        Logger.network('[ShapeSecurity-EXTRACT] Popup not available:', error.message);
-    }
-
-    // Clean up extraction state
-    shapeSecurityExtractionStateRef.delete(tabId);
-    Logger.network('[ShapeSecurity-EXTRACT] Extraction state cleaned up');
-
-    sendResponse({ status: 'success' });
+/**
+ * Analyze Scripts on the page as already loaded: the same collection the reload flow makes once the reloaded page
+ * has loaded, without the reload, so the popup stays open. found is false unless one of Shape's own loaders is
+ * listed (a seed= script, an init.js, ssx.mod.js or an X-xxxxxxxx--z=q URL): a page's own app.js?async is not one,
+ * and then only a reload can tell.
+ * @returns {Promise<{data: object, found: boolean}>}
+ */
+async function shapeSecurityFromLoadedPage(tabId) {
+    const [result] = await chrome.scripting.executeScript({ target: { tabId }, func: shapeSecurityPageScripts });
+    const data = shapeSecurityExtractedData((result && Array.isArray(result.result)) ? result.result : []);
+    const found = data.allScripts.some(url => /[?&]seed=|\/init\.js(?:[?#]|$)|\/ssx\.mod\.js(?:[?#]|$)|[?&]X-[A-Za-z0-9]{6,10}--z=q/.test(url));
+    return { data, found };
 }
 
 Logger.network('[ShapeSecurityInterceptor] Loaded');

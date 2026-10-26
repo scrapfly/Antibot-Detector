@@ -109,5 +109,14 @@
         return scripts;
     }
 
-    global.AdvancedScriptAnalysis = Object.freeze({ start, fromLoadedPage, classifierFor });
+    // Vendors whose Analyze Scripts result is their own shape (GeeTest's keys, Imperva's script paths and cookies, Shape's
+    // init and seed scripts): each interceptor reads the loaded page itself and answers { data, found }
+    const READERS = Object.freeze({ geetest: 'geetestFromLoadedPage', imperva: 'impervaFromLoadedPage',
+        shapesecurity: 'shapeSecurityFromLoadedPage' });
+    function readerFor(vendorId) {
+        const name = READERS[vendorId];
+        return name && typeof global[name] === 'function' ? global[name] : null;
+    }
+
+    global.AdvancedScriptAnalysis = Object.freeze({ start, fromLoadedPage, classifierFor, readerFor });
 })(globalThis);

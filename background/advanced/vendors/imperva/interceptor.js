@@ -645,23 +645,8 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
             return;
         }
 
-        // Get all Imperva cookies
-        const cookies = await checkCookies(tab.url, [
-            { name: { pattern: 'reese84' }, returnValue: true },
-            { name: { pattern: 'utmvc' }, returnValue: true },
-            { name: { pattern: 'incap_ses_\\d+_\\d+', regex: true }, returnValue: true },
-            { name: { pattern: 'nlbi_\\d+', regex: true }, returnValue: true },
-            { name: { pattern: 'visid_incap_\\d+', regex: true }, returnValue: true }
-        ], tab.id);
-
-        // Organize cookies by type
-        const cookieData = {
-            reese84: cookies.find(c => c.name === 'reese84'),
-            utmvc: cookies.find(c => /^_*utmvc$/.test(c.name)),
-            incap_ses: cookies.filter(c => /^incap_ses_/.test(c.name)),
-            nlbi: cookies.filter(c => /^nlbi_/.test(c.name)),
-            visid: cookies.filter(c => /^visid_incap_/.test(c.name))
-        };
+        // Get all Imperva cookies, organized by type
+        const cookieData = await impervaCookieData(tab);
 
         // Build extraction result
         const extractedData = {
@@ -716,6 +701,95 @@ async function handleImpervaExtractionCompleted(tabId, extractionState) {
             }
         }
     }
+}
+
+/**
+ * The page's Imperva cookies, organized by type (the extraction result's cookies)
+ * @param {chrome.tabs.Tab} tab
+ */
+async function impervaCookieData(tab) {
+    const cookies = await checkCookies(tab.url, [
+        { name: { pattern: 'reese84' }, returnValue: true },
+        { name: { pattern: 'utmvc' }, returnValue: true },
+        { name: { pattern: 'incap_ses_\\d+_\\d+', regex: true }, returnValue: true },
+        { name: { pattern: 'nlbi_\\d+', regex: true }, returnValue: true },
+        { name: { pattern: 'visid_incap_\\d+', regex: true }, returnValue: true }
+    ], tab.id);
+    return {
+        reese84: cookies.find(c => c.name === 'reese84'),
+        utmvc: cookies.find(c => /^_*utmvc$/.test(c.name)),
+        incap_ses: cookies.filter(c => /^incap_ses_/.test(c.name)),
+        nlbi: cookies.filter(c => /^nlbi_/.test(c.name)),
+        visid: cookies.filter(c => /^visid_incap_/.test(c.name))
+    };
+}
+
+// The script paths the result window reads (ImpervaAdvanced.parseScriptPaths): UTMVC's _Incapsula_Resource script,
+// and Reese84's first-party /<path>/<number> script, here only as a whole path so a CDN's /v/2/app.js is not one
+var IMPERVA_UTMVC_SCRIPT = /\/_Incapsula_Resource\?SWKMTFSR=1&e=/i;
+var IMPERVA_REESE_SCRIPT = /^\/[^/]+\/\d+\/?$/;
+
+/**
+ * The scripts and requests the page lists now (runs in the page): script tags and Resource Timing entries.
+ * Self-contained: chrome.scripting serializes it.
+ * @returns {Array<[string, string]>} [url, kind]
+ */
+function impervaPageRequests() {
+    return [
+        ...Array.from(document.scripts, script => [script.src, 'script']),
+        ...performance.getEntriesByType('resource').map(entry => [entry.name, entry.initiatorType])
+    ];
+}
+
+/**
+ * Analyze Scripts on the page as already loaded, with no cookie deleted and no reload, so the popup stays open:
+ * the Reese84 / UTMVC script URLs among the page's script tags, its Resource Timing list and the requests the worker
+ * recorded for the tab, plus the cookies, in the extraction result's shape. The challenge POSTs (payloads) are only
+ * seen while a reload is watched, so they stay empty here. found is false when no Imperva script is listed.
+ * @returns {Promise<{data: object, found: boolean}>}
+ */
+async function impervaFromLoadedPage(tabId) {
+    const tab = await chrome.tabs.get(tabId);
+    if (!tab || !tab.url) throw new Error('Unable to get tab URL');
+    const page = new URL(tab.url);
+    // Reese84 is served from the protected site itself: the same site, or any _Incapsula_Resource
+    const site = page.hostname.split('.').slice(-2).join('.');
+    const sameSite = host => host === site || host.endsWith('.' + site);
+    const kinds = { script: 'script', xmlhttprequest: 'xhr', fetch: 'xhr', other: 'other' };
+    const seen = new Map();
+    const add = (url, kind) => {
+        if (typeof url !== 'string' || !/^https?:/i.test(url) || seen.has(url) || !kinds[kind]) return;
+        let parsed;
+        try { parsed = new URL(url); } catch (_) { return; }
+        const incapsula = /_incapsula_resource|\/interrogation/i.test(url);
+        if (!incapsula && (kinds[kind] === 'other' || !sameSite(parsed.hostname))) return;
+        seen.set(url, { url, kind: kinds[kind], path: parsed.pathname, query: parsed.search });
+    };
+    try {
+        const frames = await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, func: impervaPageRequests });
+        for (const frame of frames || []) {
+            for (const [url, kind] of Array.isArray(frame && frame.result) ? frame.result : []) add(url, kind);
+        }
+    } catch (_) { /* A page the extension cannot script: what the worker recorded */ }
+    const recorded = typeof networkUrlsStore !== 'undefined' ? networkUrlsStore.get(tabId) : null;
+    for (const entry of Array.isArray(recorded) ? recorded : []) add(entry && entry.url, entry && entry.type);
+    const entries = Array.from(seen.values());
+    const reese = entries.filter(entry => entry.kind === 'script' && IMPERVA_REESE_SCRIPT.test(entry.path));
+    const utmvc = entries.filter(entry => IMPERVA_UTMVC_SCRIPT.test(entry.path + entry.query));
+    // The result window takes the first URL that looks like each script: the real ones first
+    const first = new Set([...reese, ...utmvc]);
+    const scriptUrls = [...first, ...entries.filter(entry => !first.has(entry))].map(entry => entry.url);
+    const data = {
+        challengeUrls: [],
+        payloads: [],
+        cookies: await impervaCookieData(tab),
+        scriptUrls,
+        timestamp: Date.now(),
+        url: tab.url,
+        hostname: page.hostname,
+        loadedPage: true
+    };
+    return { data, found: first.size > 0 };
 }
 
 /**
