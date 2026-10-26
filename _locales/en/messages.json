@@ -7194,5 +7194,21 @@
   "ruleEditorDiscardConfirm": {
     "message": "Discard",
     "description": "Rules editor: button that closes the editor and drops its unsaved changes"
+  },
+  "advCommonAnalysisCancelled": {
+    "message": "Analysis stopped: the tab moved to another page before it finished",
+    "description": "Advanced → Analyze Scripts: the analysis was cancelled because the tab went to another page"
+  },
+  "advCommonAnalysisTimedOut": {
+    "message": "Analysis timed out: the page did not reload in time",
+    "description": "Advanced → Analyze Scripts: the page took too long to reload"
+  },
+  "advCommonStopCaptureFirst": {
+    "message": "A capture is running on this tab: stop it first, then try again",
+    "description": "Advanced: an extract tool was refused because Start Capturing is running on the same tab"
+  },
+  "advHcaptchaNoDataTimeout": {
+    "message": "No hCaptcha data detected (60s timeout)",
+    "description": "Advanced → hCaptcha capture: in-page notice when nothing was captured within 60 seconds"
   }
 }

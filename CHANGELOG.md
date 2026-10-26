@@ -28,6 +28,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings: Escape in the language list closes only the list, not Settings with its unsaved changes; the list also works with the arrow keys.
 - Settings: Add current domain refuses browser pages and blank tabs instead of adding names like "extensions" or "newtab".
 - Rules editor: clicking outside the editor after typing changes asks before dropping them.
+- Advanced: Shape Security saves one capture once (it could save the same capture up to six times), and hCaptcha saves once and says when it timed out empty.
+- Advanced: Analyze Scripts and captures are no longer cancelled when the page changes its own address, and a stopped or timed-out analysis says so.
+- Advanced: Imperva and Akamai extract tools ask you to stop a running capture first instead of leaving Start Capturing stuck, and work again after Chrome restarts the extension in the background.
+- Advanced: Akamai Extract Sensor reloads the page once instead of twice; GeeTest and Akamai tools wait for the page to finish loading instead of a fixed delay.
+- Advanced: stopping a FunCaptcha capture that had already ended no longer shows an error, and a captured item opens once per click.
 
 ## [3.0.4] - 2026-10-23
 
