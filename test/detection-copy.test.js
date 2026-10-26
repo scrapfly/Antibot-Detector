@@ -68,11 +68,37 @@ test('an empty page copies a heading and the summary, without a table', () => {
   assert.doesNotThrow(() => DetectionActions.buildDetectionsMarkdown(null));
 });
 
-test('the Detection tab offers the three formats in a menu wired to copyDetectionsAs', () => {
+test('the Detection tab offers the five formats in a menu wired to copyDetectionsAs', () => {
   const html = fs.readFileSync(path.join(root, 'sections/detection/detection.html'), 'utf8');
   assert.ok(/id="copyOverviewBtn"[^>]*aria-haspopup="menu"/.test(html));
   const formats = [...html.matchAll(/data-copy-format="([a-z]+)"/g)].map(m => m[1]);
-  assert.deepStrictEqual(formats, ['overview', 'markdown', 'json']);
+  assert.deepStrictEqual(formats, ['overview', 'markdown', 'json', 'curl', 'python']);
   const js = fs.readFileSync(path.join(root, 'sections/detection/detection.js'), 'utf8');
   assert.ok(js.includes('DetectionActions.copyDetectionsAs.call(this, item.dataset.copyFormat'));
+});
+
+test('curl and Python copy the replay kit\'s code, with the page\'s cookies read for the active tab', async () => {
+  const copied = [];
+  const asked = [];
+  const context = vm.createContext({
+    console, URL, JSON, Math, Date, Object, Array, String, Number,
+    document: { querySelector: () => null },
+    navigator: { userAgent: 'UA/1', languages: ['en-US', 'en'] },
+    chrome: { tabs: { query: async () => [{ id: 7 }] } },
+    PageCookies: { getAll: async (details, tabId) => { asked.push([details.url, tabId]); return [{ name: '__cf_bm', value: 'v' }]; } },
+    NotificationHelper: { warning: () => {} },
+    FormatUtils: { copyToClipboard: async (text) => { copied.push(text); } }
+  });
+  context.self = context;
+  const sources = ['scrapfly/options', 'scrapfly/parameters', 'scrapfly/codegen', 'replay-kit'].map(n => `modules/integrations/${n}.js`).concat('sections/detection/detection-actions.js');
+  vm.runInContext(sources.map(f => fs.readFileSync(path.join(root, f), 'utf8')).join('\n;\n') + '\n;globalThis.DetectionActions = DetectionActions;', context);
+  const { DetectionActions } = context;
+  await DetectionActions.copyDetectionsAs.call(view, 'curl', 'https://shop.example/cart#x');
+  await DetectionActions.copyDetectionsAs.call(view, 'python', 'https://shop.example/cart#x');
+  assert.deepStrictEqual(asked[0], ['https://shop.example/cart', 7]);
+  assert.ok(copied[0].includes("curl 'https://shop.example/cart'") && copied[0].includes("-b '__cf_bm=v'") && copied[0].includes("-H 'User-Agent: UA/1'"), copied[0]);
+  assert.ok(copied[0].includes('# Protection cookies: __cf_bm (Cloudflare)'));
+  assert.ok(copied[1].includes('import requests') && copied[1].includes('"__cf_bm": "v",  # Cloudflare'), copied[1]);
+  assert.strictEqual(await DetectionActions.copyDetectionsAs.call(view, 'curl', 'about:blank'), '', 'no web page, nothing copied');
+  assert.strictEqual(copied.length, 2);
 });

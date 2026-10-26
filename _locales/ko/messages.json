@@ -6389,6 +6389,15 @@
   "detectionCopyMenuJson": {
     "message": "JSON"
   },
+  "detectionCopyMenuCurl": {
+    "message": "curl 명령"
+  },
+  "detectionCopyMenuPython": {
+    "message": "Python (requests)"
+  },
+  "detectionReplayNoPage": {
+    "message": "코드로 복사하려면 웹 페이지를 여세요"
+  },
   "detectionMdHeadingFmt": {
     "message": "{0}의 보호 기능"
   },

@@ -6891,6 +6891,15 @@
     "message": "JSON",
     "description": "Copy menu on the Detection tab: copies the results as JSON. Usually kept as JSON."
   },
+  "detectionCopyMenuCurl": {
+    "message": "curl command"
+  },
+  "detectionCopyMenuPython": {
+    "message": "Python (requests)"
+  },
+  "detectionReplayNoPage": {
+    "message": "Open a web page to copy it as code"
+  },
   "detectionMdHeadingFmt": {
     "message": "Protections on {0}",
     "description": "Heading of the copied Markdown summary. {0} = the site's host name"

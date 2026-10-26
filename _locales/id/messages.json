@@ -6389,6 +6389,15 @@
   "detectionCopyMenuJson": {
     "message": "JSON"
   },
+  "detectionCopyMenuCurl": {
+    "message": "Perintah curl"
+  },
+  "detectionCopyMenuPython": {
+    "message": "Python (requests)"
+  },
+  "detectionReplayNoPage": {
+    "message": "Buka halaman web untuk menyalinnya sebagai kode"
+  },
   "detectionMdHeadingFmt": {
     "message": "Proteksi di {0}"
   },

@@ -6389,6 +6389,15 @@
   "detectionCopyMenuJson": {
     "message": "JSON"
   },
+  "detectionCopyMenuCurl": {
+    "message": "Polecenie curl"
+  },
+  "detectionCopyMenuPython": {
+    "message": "Python (requests)"
+  },
+  "detectionReplayNoPage": {
+    "message": "Otwórz stronę internetową, aby skopiować ją jako kod"
+  },
   "detectionMdHeadingFmt": {
     "message": "Ochrony na {0}"
   },

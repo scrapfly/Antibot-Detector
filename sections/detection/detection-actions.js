@@ -511,8 +511,39 @@ DetectionActions.buildDetectionsMarkdown = function(payload, format = detectionA
     return lines.join('\n') + '\n';
 };
 
-/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown' or 'json'. */
+/**
+ * Replay kit input: the page, this browser's own headers (the popup runs in
+ * the same browser) and every cookie the page sends, HttpOnly ones included.
+ */
+DetectionActions.replayInput = async function(pageUrl) {
+    let cookies = [];
+    try {
+      if (!ReplayKit.pageUrl(pageUrl)) throw new Error('not a web page');
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      cookies = await PageCookies.getAll({ url: ReplayKit.pageUrl(pageUrl) }, tab?.id);
+    } catch (e) {
+      // No cookies readable: the snippet still replays the headers
+    }
+    return {
+      url: pageUrl,
+      cookies,
+      headers: ReplayKit.browserHeaders(typeof navigator !== 'undefined' ? navigator : {}),
+      detections: Array.isArray(this.currentResults) ? this.currentResults : []
+    };
+};
+
+/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'json', or the replay kit's 'curl' and 'python'. */
 DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
+    if (kind === 'curl' || kind === 'python') {
+      const input = await DetectionActions.replayInput.call(this, pageUrl);
+      const code = ReplayKit[kind](input);
+      if (!code) {
+        NotificationHelper.warning(detectionActionsTr('detectionReplayNoPage', 'Open a web page to copy it as code'));
+        return '';
+      }
+      await FormatUtils.copyToClipboard(code);
+      return code;
+    }
     const { content, payload } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
     const text = kind === 'markdown'
       ? DetectionActions.buildDetectionsMarkdown(payload)

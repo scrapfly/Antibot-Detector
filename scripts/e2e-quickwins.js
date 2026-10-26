@@ -224,7 +224,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Detection copy menu: summary, Markdown and JSON, never a cookie value; Escape closes it', async () => {
+  await scenario('Detection copy menu: summary, Markdown and JSON without a cookie value, curl and Python with the browser headers; Escape closes it', async () => {
     const page = await openExtensionPage();
     await page.$eval('.tab-btn[data-tab="detection"]', el => el.click());
     await page.waitForSelector('#copyOverviewBtn', { state: 'attached', timeout: 15000 });
@@ -236,7 +236,8 @@ async function scenario(name, fn) {
       DetectionActions.currentPageUrl = async () => 'https://shop.example/cart?session=SECRETURL';
     });
     const menuShown = () => page.$eval('#copyOverviewMenu', el => !el.hidden);
-    for (const format of ['overview', 'markdown', 'json']) {
+    for (const format of ['overview', 'markdown', 'json', 'curl', 'python']) {
+      const before = await page.evaluate(() => globalThis.__copied.length);
       await page.$eval('#copyOverviewBtn', el => el.click());
       assert.equal(await menuShown(), true, 'the menu opens');
       assert.equal(await page.$eval('#copyOverviewBtn', el => el.getAttribute('aria-expanded')), 'true');
@@ -246,10 +247,16 @@ async function scenario(name, fn) {
         window.popupInstance.detection.currentResults = results;
         document.querySelector(`#copyOverviewMenu [data-copy-format="${format}"]`).click();
       }, { format, results: probeResults });
-      await until(async () => (await page.evaluate(() => globalThis.__copied.length)) > 0 && !(await menuShown()), 5000, `the ${format} copy`);
+      await until(async () => (await page.evaluate(() => globalThis.__copied.length)) > before && !(await menuShown()), 5000, `the ${format} copy`);
     }
     const copied = await page.evaluate(() => globalThis.__copied);
-    assert.equal(copied.length, 3);
+    assert.equal(copied.length, 5);
+    // The replay kit: this browser's own User-Agent and the page address, as a curl command and a Python script
+    const ua = await page.evaluate(() => navigator.userAgent);
+    assert.ok(copied[3].includes("curl 'https://shop.example/cart?session=SECRETURL'") && copied[3].includes(`-H 'User-Agent: ${ua}'`), copied[3]);
+    assert.ok(copied[3].includes('# Detected: QuickWin Probe') && copied[3].includes('TLS/HTTP2 fingerprint'), copied[3]);
+    assert.ok(copied[4].includes('import requests') && copied[4].includes('requests.get(url, headers=headers'), copied[4]);
+    copied.splice(3);
     assert.ok(copied[0].startsWith('====='), 'summary first line');
     assert.ok(copied[1].startsWith('## Protections on shop.example'), copied[1]);
     assert.ok(copied[1].includes('| QuickWin Probe | Anti-Bot | 90% | cookie, content |'), copied[1]);
@@ -259,7 +266,7 @@ async function scenario(name, fn) {
     await page.keyboard.press('Escape');
     assert.equal(await menuShown(), false, 'Escape closes the menu');
     const labels = await page.$$eval('#copyOverviewMenu [data-copy-format]', els => els.map(el => el.textContent.trim()));
-    assert.deepEqual(labels, ['Summary (as uploaded)', 'Markdown table', 'JSON']);
+    assert.deepEqual(labels, ['Summary (as uploaded)', 'Markdown table', 'JSON', 'curl command', 'Python (requests)']);
     await page.close();
   });
 

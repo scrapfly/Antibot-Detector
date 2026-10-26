@@ -91,6 +91,9 @@ test('rules and integration graphs load dependencies before their users', () => 
   const graph = popupScripts();
   const files = ['options', 'parameters', 'codegen', 'ai-export', 'dialog'].map(name => `modules/integrations/scrapfly/${name}.js`);
   for (let i = 1; i < files.length; i++) assertBefore(graph, files[i - 1], files[i]);
+  // The replay kit quotes as the Scrapfly code does, and the copy menu uses it
+  assertBefore(graph, 'modules/integrations/scrapfly/codegen.js', 'modules/integrations/replay-kit.js');
+  assertBefore(graph, 'modules/integrations/replay-kit.js', 'sections/detection/detection-actions.js');
   assertBefore(graph, 'modules/ui/modal-focus.js', 'sections/advanced/components/dialogs.js');
 });
 
