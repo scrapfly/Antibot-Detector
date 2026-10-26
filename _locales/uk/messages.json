@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Усі тексти цього правила перекладено всіма {0} мовами."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Незбережені налаштування"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Зміна мови перезавантажить розширення. Спершу зберегти зміни налаштувань?"
   }
 }

@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Semua teks aturan ini sudah diterjemahkan ke {0} bahasa."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Pengaturan belum disimpan"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Mengganti bahasa akan memuat ulang ekstensi. Simpan perubahan pengaturan terlebih dahulu?"
   }
 }

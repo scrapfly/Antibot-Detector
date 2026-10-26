@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Alle Texte dieser Regel sind in alle {0} Sprachen übersetzt."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Nicht gespeicherte Einstellungen"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Ein Sprachwechsel lädt die Erweiterung neu. Zuerst deine Änderungen an den Einstellungen speichern?"
   }
 }

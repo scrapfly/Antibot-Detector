@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Alla texter i den här regeln är översatta till alla {0} språk."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Osparade inställningar"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Byte av språk läser in tillägget igen. Spara ändringarna i inställningarna först?"
   }
 }

@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Bu kuralın tüm metinleri {0} dilin tamamına çevrildi."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Kaydedilmemiş ayarlar"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Dili değiştirmek uzantıyı yeniden yükler. Önce ayarlardaki değişiklikler kaydedilsin mi?"
   }
 }

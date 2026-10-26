@@ -6615,5 +6615,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Todos los textos de esta regla están traducidos a los {0} idiomas."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Ajustes sin guardar"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Cambiar el idioma recarga la extensión. ¿Guardar primero los cambios en los ajustes?"
   }
 }

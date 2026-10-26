@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Alle teksten van deze regel zijn in alle {0} talen vertaald."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Niet-opgeslagen instellingen"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Een andere taal kiezen laadt de extensie opnieuw. Eerst je wijzigingen in de instellingen opslaan?"
   }
 }

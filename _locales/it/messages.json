@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Tutti i testi di questa regola sono tradotti in tutte le {0} lingue."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Impostazioni non salvate"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Cambiare lingua ricarica l'estensione. Salvare prima le modifiche alle impostazioni?"
   }
 }

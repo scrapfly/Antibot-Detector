@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "كل نصوص هذه القاعدة مترجمة إلى اللغات الـ{0} كلها."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "إعدادات غير محفوظة"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "يؤدي تغيير اللغة إلى إعادة تحميل الإضافة. هل تريد حفظ تغييرات الإعدادات أولاً؟"
   }
 }

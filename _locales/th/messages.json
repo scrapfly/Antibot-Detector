@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "ข้อความทั้งหมดของกฎนี้แปลครบทั้ง {0} ภาษาแล้ว"
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "การตั้งค่าที่ยังไม่ได้บันทึก"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "การเปลี่ยนภาษาจะโหลดส่วนขยายใหม่ บันทึกการเปลี่ยนแปลงการตั้งค่าก่อนไหม"
   }
 }

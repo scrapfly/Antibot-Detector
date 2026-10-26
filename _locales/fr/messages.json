@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Tous les textes de cette règle sont traduits dans les {0} langues."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Paramètres non enregistrés"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Changer de langue recharge l’extension. Enregistrer d’abord vos modifications des paramètres ?"
   }
 }

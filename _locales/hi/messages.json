@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "इस नियम के सभी टेक्स्ट सभी {0} भाषाओं में अनुवादित हैं।"
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "सेटिंग्स सहेजी नहीं गईं"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "भाषा बदलने से एक्सटेंशन फिर से लोड होता है। क्या पहले सेटिंग्स में किए गए बदलाव सहेजें?"
   }
 }

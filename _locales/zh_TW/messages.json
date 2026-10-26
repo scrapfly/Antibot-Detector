@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "此規則的所有文字都已翻譯成全部 {0} 種語言。"
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "設定尚未儲存"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "變更語言會重新載入擴充功能。要先儲存對設定的變更嗎？"
   }
 }

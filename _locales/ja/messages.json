@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "このルールのすべてのテキストは{0}言語すべてに翻訳されています。"
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "未保存の設定"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "言語を変更すると拡張機能が再読み込みされます。先に設定の変更を保存しますか？"
   }
 }

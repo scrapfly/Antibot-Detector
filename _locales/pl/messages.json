@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Wszystkie teksty tej reguły są przetłumaczone na wszystkie {0} języki."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Niezapisane ustawienia"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Zmiana języka przeładuje rozszerzenie. Zapisać najpierw zmiany w ustawieniach?"
   }
 }

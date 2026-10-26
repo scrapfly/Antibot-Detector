@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Všechny texty tohoto pravidla jsou přeložené do všech {0} jazyků."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Neuložená nastavení"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Změna jazyka znovu načte rozšíření. Uložit nejdřív změny nastavení?"
   }
 }

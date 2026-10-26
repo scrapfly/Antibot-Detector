@@ -6613,5 +6613,11 @@
   },
   "ruleTranslateBarDoneFmt": {
     "message": "Mọi văn bản của quy tắc này đã được dịch sang cả {0} ngôn ngữ."
+  },
+  "settingsLanguageUnsavedTitle": {
+    "message": "Cài đặt chưa lưu"
+  },
+  "settingsLanguageUnsavedMessage": {
+    "message": "Đổi ngôn ngữ sẽ tải lại tiện ích. Lưu các thay đổi cài đặt trước?"
   }
 }
