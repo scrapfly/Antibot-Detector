@@ -6611,9 +6611,6 @@
   "ruleOriginalHint": {
     "message": "تترجم اللغات الأخرى هذا النص: إذا غيّرته فستعرضه دون ترجمة إلى أن يُترجم من جديد."
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "كل نصوص هذه القاعدة مترجمة إلى اللغات الـ{0} كلها."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "إعدادات غير محفوظة"
   },

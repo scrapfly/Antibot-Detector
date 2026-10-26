@@ -6611,9 +6611,6 @@
   "ruleOriginalHint": {
     "message": "其他语言翻译此文本：修改后，在重新翻译之前将显示未翻译的文本。"
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "此规则的所有文本均已翻译成全部 {0} 种语言。"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "设置未保存"
   },

@@ -3,7 +3,7 @@
  * Rules → editor in another language than English (Spanish), end to end in the real extension (unpacked in Chromium):
  *
  *   Your language   an official rule's description and combination names show in Spanish; the English original folds
- *                   under "Original (inglés)"; the bar says every text is translated
+ *                   under "Original (inglés)"; with nothing to translate there is no bar
  *   Edit            typing a Spanish description and combination name saves them as the Spanish translations; the
  *                   English originals are unchanged
  *   Changes         a text rewritten in Spanish is counted on the bar ("Textos que cambiaste en Español: 1"); Translate
@@ -70,11 +70,11 @@ const scenario = async (name, fn) => {
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
     return (data.data || data).detectors.antibot['detect-azurefrontdoor'];
   });
-  const bar = () => page.evaluate(() => ({ text: document.querySelector('#ruleTranslateText').textContent,
+  const bar = () => page.evaluate(() => ({ hidden: document.querySelector('#ruleTranslateBar').hidden, text: document.querySelector('#ruleTranslateText').textContent,
     changes: !document.querySelector('#ruleTranslateChangesBtn').hidden, all: !document.querySelector('#ruleTranslateAllBtn').hidden }));
   const original = await stored();
 
-  await scenario('Your language: Spanish texts in the fields, the English original folded, every text translated', async () => {
+  await scenario('Your language: Spanish texts in the fields, the English original folded, no translate bar (nothing to do)', async () => {
     await openEditor();
     const view = await page.evaluate(() => ({
       local: document.querySelector('#detectorDescriptionLocal').value, localHidden: document.querySelector('#detectorDescriptionLocal').hidden,
@@ -87,7 +87,7 @@ const scenario = async (name, fn) => {
     assert.ok(/^Cabecera de referencia/.test(view.combo), `Spanish combination name: ${view.combo}`);
     const b = await bar();
     assert.equal(b.changes, false);
-    assert.match(b.text, /21 idiomas/);
+    assert.equal(b.hidden, true, 'every text is translated: nothing to do, no bar');
   });
 
   await scenario('Edit: what is typed in Spanish is saved as the Spanish translation, the originals stay', async () => {

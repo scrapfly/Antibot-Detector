@@ -6611,9 +6611,6 @@
   "ruleOriginalHint": {
     "message": "Ostatní jazyky tento text překládají: když ho změníte, zobrazí ho nepřeložený, dokud se znovu nepřeloží."
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "Všechny texty tohoto pravidla jsou přeložené do všech {0} jazyků."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Neuložená nastavení"
   },

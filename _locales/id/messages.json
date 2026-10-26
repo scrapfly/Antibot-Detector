@@ -6611,9 +6611,6 @@
   "ruleOriginalHint": {
     "message": "Bahasa lain menerjemahkan teks ini: jika diubah, teks ditampilkan tanpa terjemahan sampai diterjemahkan lagi."
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "Semua teks aturan ini sudah diterjemahkan ke {0} bahasa."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Pengaturan belum disimpan"
   },

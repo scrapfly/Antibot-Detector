@@ -7203,10 +7203,6 @@
     "message": "The other languages translate this text: change it and they show it untranslated until they are translated again.",
     "description": "Rules editor: under the English original of a rule text (shown when the extension is in another language)"
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "Every text of this rule is translated into all {0} languages.",
-    "description": "Rule editor, top bar: nothing of the rule is missing a translation ({0} = number of languages)"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Unsaved settings",
     "description": "Settings → Language: title of the question asked when the language is changed with unsaved settings"

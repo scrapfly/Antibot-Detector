@@ -143,8 +143,8 @@ Rules.prototype.planRuleTranslations = function() {
 };
 
 /**
- * The bar above the editor, always there so the one-click translation can be found: how many texts miss a language
- * and the button, or, when nothing is missing, that every text is translated (no button).
+ * The bar above the editor, only when there is something to do: texts rewritten in the UI language (Translate the
+ * changes) or texts missing a language (Translate the rule), with the button. Nothing to do: no bar.
  */
 Rules.prototype.refreshTranslateBar = async function() {
   const bar = document.querySelector('#ruleTranslateBar');
@@ -155,14 +155,12 @@ Rules.prototype.refreshTranslateBar = async function() {
   const supported = typeof self !== 'undefined' && 'Translator' in self;
   // Texts rewritten in the UI language come first: their other languages still say the old text
   const changed = this.collectChangedTexts();
-  bar.hidden = false;
-  bar.classList.toggle('is-complete', plan.texts === 0 && changed.length === 0 && !status);
+  bar.hidden = plan.texts === 0 && changed.length === 0 && !status;
   const text = bar.querySelector('#ruleTranslateText');
   if (text) {
     text.textContent = changed.length
       ? ruleBarText('ruleTranslateChangedFmt', 'Texts you changed in {0}: {1}. The other languages still show the old text.', ruleTranslationLanguageName(Rules.uiLocale()), changed.length)
-      : plan.texts ? ruleBarText('ruleTranslateBarFmt', 'Texts not yet translated into every language: {0}', plan.texts)
-        : (status || ruleBarText('ruleTranslateBarDoneFmt', 'Every text of this rule is translated into all {0} languages.', RULE_TRANSLATION_LOCALES.length));
+      : plan.texts ? ruleBarText('ruleTranslateBarFmt', 'Texts not yet translated into every language: {0}', plan.texts) : (status || '');
   }
   const changesButton = bar.querySelector('#ruleTranslateChangesBtn');
   if (changesButton) {

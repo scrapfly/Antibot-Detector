@@ -6611,9 +6611,6 @@
   "ruleOriginalHint": {
     "message": "Diğer diller bu metni çevirir: değiştirirsen yeniden çevrilene kadar çevrilmeden gösterilir."
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "Bu kuralın tüm metinleri {0} dilin tamamına çevrildi."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Kaydedilmemiş ayarlar"
   },

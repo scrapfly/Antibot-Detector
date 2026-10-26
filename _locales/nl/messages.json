@@ -6611,9 +6611,6 @@
   "ruleOriginalHint": {
     "message": "De andere talen vertalen deze tekst: als je hem wijzigt, tonen ze hem onvertaald tot hij opnieuw is vertaald."
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "Alle teksten van deze regel zijn in alle {0} talen vertaald."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Niet-opgeslagen instellingen"
   },

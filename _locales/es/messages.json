@@ -6613,9 +6613,6 @@
   "ruleOriginalHint": {
     "message": "Los demás idiomas traducen este texto: si lo cambias, lo mostrarán sin traducir hasta que se vuelva a traducir."
   },
-  "ruleTranslateBarDoneFmt": {
-    "message": "Todos los textos de esta regla están traducidos a los {0} idiomas."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Ajustes sin guardar"
   },

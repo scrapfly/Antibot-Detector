@@ -20,8 +20,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: in a protection's details, each piece of evidence (an address, cookie or header) copies in full with a click or Enter.
 - Arabic: the popup reads right to left, like the Statistics page; addresses and page titles keep their own order and are cut at their end.
 - Rules editor: in another language than English, descriptions and combination names show and are edited in that language (saved as its translation); the English original and the other languages fold under "Original (English)".
-- Rules editor: the Translate the rule bar is always at the top, so it can be found; on a fully translated rule it says so instead of offering the button.
-- Rules editor: after you change a description or a combination name in your language, Translate the changes puts your new wording into English and every other language.
+- Rules editor: after you change a description or a combination name in your language, a bar at the top offers Translate the changes, which puts your new wording into English and every other language.
 - Advanced: the protection's name above its tools is now a heading, no longer a box that looks like one of the tool buttons.
 - Advanced → Analyze Scripts no longer closes the popup: it lists the protection's scripts the page already loaded, at once, and reloads only a page where none were found.
 - Advanced → Analyze Scripts redesigned: one compact list, each script's type and its path (the host only when it is another site's), the whole row copies the address.
