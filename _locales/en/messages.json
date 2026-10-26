@@ -7182,5 +7182,17 @@
   "addCurrentDomainNotWebPage": {
     "message": "Open the popup on a website to add it.",
     "description": "Settings → Detection → Sites to scan: Add current domain was pressed on a browser page, a blank tab or the extension's own page"
+  },
+  "ruleEditorDiscardTitle": {
+    "message": "Discard your changes?",
+    "description": "Rules editor: title of the question asked when the editor is closed by clicking outside it with unsaved changes"
+  },
+  "ruleEditorDiscardMessage": {
+    "message": "This rule has changes that are not saved yet.",
+    "description": "Rules editor: text of the question asked when the editor is closed by clicking outside it with unsaved changes"
+  },
+  "ruleEditorDiscardConfirm": {
+    "message": "Discard",
+    "description": "Rules editor: button that closes the editor and drops its unsaved changes"
   }
 }

@@ -30,6 +30,7 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     const modal = document.querySelector('#editRuleModal');
 
     if (!modal) return;
+    this.ruleEditorEdited = false;
 
     // Ensure detector has detection property before storing
     const detectorWithDetection = {

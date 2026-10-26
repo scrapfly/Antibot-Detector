@@ -14,6 +14,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Azure Front Door scores lower on its own: its headers show the Microsoft edge, not that its firewall is switched on.
+- Advanced: the protection's name above its tools is now a heading, no longer a box that looks like one of the tool buttons.
 
 ### Fixed
 
@@ -26,6 +27,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: result cards open with Enter or Space, and their details dialog keeps keyboard focus until it is closed.
 - Settings: Escape in the language list closes only the list, not Settings with its unsaved changes; the list also works with the arrow keys.
 - Settings: Add current domain refuses browser pages and blank tabs instead of adding names like "extensions" or "newtab".
+- Rules editor: clicking outside the editor after typing changes asks before dropping them.
 
 ## [3.0.4] - 2026-10-23
 

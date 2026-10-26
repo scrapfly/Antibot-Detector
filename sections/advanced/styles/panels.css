@@ -164,16 +164,18 @@
 .captcha-tools-section.compact-mode .advanced-tools-heading,
 .captcha-tools-section.compact-mode .advanced-launch-list { display: none; }
 
+/* A heading for the tools below it, not one more card: no box of its own, a rule under it */
 .compact-detection-bar {
   display: none;
   align-items: center;
   gap: 10px;
-  min-height: 52px;
-  padding: 8px 8px 8px 10px;
-  margin-bottom: 10px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--adv-line);
-  border-radius: 9px;
+  min-height: 44px;
+  padding: 2px 2px 10px;
+  margin-bottom: 12px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--adv-line);
+  border-radius: 0;
 }
 
 .captcha-tools-section.compact-mode .compact-detection-bar { display: flex; }
@@ -191,7 +193,7 @@
   object-fit: contain;
 }
 
-.compact-detection-name { font-size: 12.5px; font-weight: 600; color: var(--text-primary); overflow-wrap: anywhere; }
+.compact-detection-name { font-size: 15px; font-weight: 700; line-height: 1.25; color: var(--text-primary); overflow-wrap: anywhere; }
 .compact-change-btn {
   display: inline-flex;
   align-items: center;

@@ -7,7 +7,7 @@ Rules.prototype.setupModalEventListeners = function() {
     // Close modal events
     const closeBtn = document.querySelector('#closeRuleModal');
     const cancelBtn = document.querySelector('#cancelRuleEdit');
-    const backdrop = document.querySelector('.rule-modal-backdrop');
+    const backdrop = document.querySelector('#editRuleModal .rule-modal-backdrop');
 
     if (closeBtn) {
       closeBtn.addEventListener('click', () => this.closeEditModal());
@@ -15,8 +15,27 @@ Rules.prototype.setupModalEventListeners = function() {
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.closeEditModal());
     }
+    // A click outside the editor is easy to make by accident: with typed changes it asks before dropping them
+    const editModal = document.querySelector('#editRuleModal');
+    if (editModal) {
+      const markEdited = () => { this.ruleEditorEdited = true; };
+      editModal.addEventListener('input', markEdited);
+      editModal.addEventListener('change', markEdited);
+    }
     if (backdrop) {
-      backdrop.addEventListener('click', () => this.closeEditModal());
+      backdrop.addEventListener('click', async () => {
+        if (this.ruleEditorEdited && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.confirm === 'function') {
+          const text = (key, fallback) => (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
+          const discard = await NotificationHelper.confirm({
+            title: text('ruleEditorDiscardTitle', 'Discard your changes?'),
+            message: text('ruleEditorDiscardMessage', 'This rule has changes that are not saved yet.'),
+            type: 'warning', tone: 'danger',
+            confirmText: text('ruleEditorDiscardConfirm', 'Discard'), cancelText: text('btnCancel', 'Cancel')
+          });
+          if (!discard) return;
+        }
+        this.closeEditModal();
+      });
     }
 
     // Check against History
