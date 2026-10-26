@@ -399,3 +399,20 @@ test('a finished scan leaves the page\'s headers and requests for a later scan o
   assert.equal(h.ctx.headersStore.has(7), true);
   assert.equal(h.ctx.networkUrlsStore.has(7), true);
 });
+
+test('page evidence stronger than the hooks raises the merged confidence of a detector without combinations', async () => {
+  const h = harness();
+  h.ctx.generateMatchKey = match => `${match.type}|${match.pattern || match.name}`;
+  let stored = null;
+  h.ctx.DetectionEngineManager.storeDetection = async (url, page, results) => { stored = results; return { ...page, detectionResults: results }; };
+  const state = h.begin();
+  state.hooksData.set('detect-demo', { detector: { id: 'detect-demo' }, confidence: 40, detectionMethods: ['js_hooks'],
+    matches: [{ type: 'js_hooks', pattern: 'Navigator.prototype.getBattery', confidence: 40 }] });
+  state.mainData = [{ detector: { id: 'detect-demo' }, confidence: 95, detectionMethods: ['cookie'],
+    matches: [{ type: 'cookie', name: '_abck', confidence: 95 }] }];
+  await h.ctx.finalizeDetection(7, state);
+  assert.equal(stored.length, 1);
+  assert.equal(stored[0].confidence, 95);
+  assert.deepEqual(stored[0].matches.map(m => m.type), ['js_hooks', 'cookie']);
+  assert.deepEqual([...stored[0].detectionMethods].sort(), ['cookie', 'js_hooks']);
+});

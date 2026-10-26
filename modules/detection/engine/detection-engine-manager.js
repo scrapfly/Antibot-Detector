@@ -120,7 +120,7 @@ class DetectionEngineManager {
      * @param {Window} window - The window object
      * @param {object} chrome - The chrome API object
      */
-    static async installHooksOrchestrator(window, chrome) {
+    static async installHooksOrchestrator(window, chrome, options = {}) {
         const bridgeToken = window.ScrapflyBridge?.getToken?.() || null;
         const protocol = globalThis.ScrapflyBridgeProtocol;
         // Every install event carries a complete, clamped hooks config and the
@@ -128,6 +128,9 @@ class DetectionEngineManager {
         // formulas of its own (see modules/core/hooks-config.js).
         const dispatchInstallHooks = (detail) => {
             const withConfig = { hooksConfig: HooksConfig.defaults, ...detail };
+            // A re-arm (rescan or SPA navigation after a cached load) starts a new
+            // detection: the MAIN world clears its cache-hit flag before deciding
+            if (options && options.rearm === true) withConfig.rearm = true;
             withConfig.minMonitorMs = HooksConfig.minMonitorMs(withConfig.hooksConfig);
             DetectionEngineManager.lastHooksConfig = withConfig.hooksConfig;
             const safeDetail = bridgeToken
@@ -588,6 +591,15 @@ class DetectionEngineManager {
         if (!DetectionCombinations.rescore(detector, detection)) detection.partial = true;
     }
 
+    /**
+     * A rule's confidence, or the default for rules that declare none. An
+     * explicit 0 stays 0 (it is a number); missing or non-numeric values fall back.
+     */
+    static ruleConfidence(rule, fallback = Constants.DEFAULT_MATCH_CONFIDENCE) {
+        const value = rule ? rule.confidence : undefined;
+        return Number.isFinite(value) ? value : fallback;
+    }
+
     static patternIdOf(detector, pattern) {
         // Only combination detectors need it; the rest keep their matches as before
         return DetectionEngineManager.usesCombinations(detector) ? DetectionCombinations.idOf(detector, pattern) : undefined;
@@ -628,7 +640,7 @@ class DetectionEngineManager {
                         pattern: urlPattern.text,
                         value: urlMatch,
                         fullUrl: url,
-                        confidence: urlPattern.confidence,
+                        confidence: DetectionEngineManager.ruleConfidence(urlPattern),
                         patternId: DetectionEngineManager.patternIdOf(detector, urlPattern),
                         description: urlPattern.description
                     });
@@ -647,7 +659,7 @@ class DetectionEngineManager {
                                     pattern: urlPattern.text,
                                     value: scriptMatch,
                                     fullUrl: scriptSrc,
-                                    confidence: urlPattern.confidence,
+                                    confidence: DetectionEngineManager.ruleConfidence(urlPattern),
                                     patternId: DetectionEngineManager.patternIdOf(detector, urlPattern),
                                     description: urlPattern.description
                                 });
@@ -669,7 +681,7 @@ class DetectionEngineManager {
                                     pattern: urlPattern.text,
                                     value: resourceMatch,
                                     fullUrl: resourceUrl,
-                                    confidence: urlPattern.confidence,
+                                    confidence: DetectionEngineManager.ruleConfidence(urlPattern),
                                     patternId: DetectionEngineManager.patternIdOf(detector, urlPattern),
                                     description: urlPattern.description
                                 });
@@ -692,7 +704,7 @@ class DetectionEngineManager {
                                 fullUrl: networkUrl.url,
                                 resourceType: networkUrl.type,
                                 method: networkUrl.method,
-                                confidence: urlPattern.confidence,
+                                confidence: DetectionEngineManager.ruleConfidence(urlPattern),
                                 patternId: DetectionEngineManager.patternIdOf(detector, urlPattern),
                                 description: urlPattern.description
                             });
@@ -775,7 +787,7 @@ class DetectionEngineManager {
                         pattern: patternText,
                         value: patternText, // Show the matched pattern itself
                         foundIn, // 'page content', 'inline script' or the resource URL
-                        confidence: contentPattern.confidence,
+                        confidence: DetectionEngineManager.ruleConfidence(contentPattern),
                         patternId: DetectionEngineManager.patternIdOf(detector, contentPattern),
                         description: contentPattern.description
                     });
@@ -785,11 +797,11 @@ class DetectionEngineManager {
 
         // Check cookies patterns
         if (detector.detection?.cookie && (cookiesToMatch.length > 0 || (responseCookies && responseCookies.length > 0))) {
-            // Track matched cookies and filter before searching. A cookie
-            // counts once per detector, except for combination detectors:
-            // there every row is its own condition ("_abck" AND NOT
-            // "_abck = ~-1~"), so each row checks every cookie
-            const matchedCookieNames = new Set();
+            // Every row checks every cookie. In combination detectors each row
+            // is its own condition ("_abck" AND NOT "_abck = ~-1~") and keeps its
+            // own match; elsewhere a cookie is listed once per detector, with the
+            // highest confidence of the rows it matched (row order never matters)
+            const cookieMatchIndex = new Map(); // cookie name -> its match in `matches` (non-combination detectors)
             const cookiePerRow = DetectionEngineManager.usesCombinations(detector);
 
         // Pre-build cookie arrays and Maps by scope (O(1) lookup vs O(n) filter)
@@ -849,12 +861,10 @@ class DetectionEngineManager {
                 const cookiesForName = cookieArrayByScope[nameScope] || requestCookies;
                 const valueMap = cookieMapByScope[valueScope] || cookieMapByScope.request;
 
-                // Filter out already-matched cookies
                 const rowMatchedNames = new Set();
-                const unmatchedCookies = cookiePerRow ? cookiesForName : cookiesForName.filter(c => !matchedCookieNames.has(c.name));
 
                 // Find matching cookies
-                const matchingCookies = unmatchedCookies.filter(cookie => {
+                const matchingCookies = cookiesForName.filter(cookie => {
                     if (cookiePattern.name && cookie.name) {
                         const matched = this.matchCookieName(cookie.name, cookiePattern.name, nameMatchOptions);
 
@@ -875,22 +885,33 @@ class DetectionEngineManager {
 
                 // Add all matching cookies to results
                 for (const matchingCookie of matchingCookies) {
-                    // Prevent duplicate matches across cookie sources (and, for
-                    // combination detectors, only within this row)
-                    const seenNames = cookiePerRow ? rowMatchedNames : matchedCookieNames;
-                    if (seenNames.has(matchingCookie.name)) {
+                    // One match per cookie name within a row (a cookie can come
+                    // from several sources)
+                    if (rowMatchedNames.has(matchingCookie.name)) {
                         continue;
                     }
-                    seenNames.add(matchingCookie.name); // Mark as matched
+                    rowMatchedNames.add(matchingCookie.name);
 
-                    matches.push({
+                    const cookieMatch = {
                         type: 'cookie',
                         name: matchingCookie.name,
                         value: `${matchingCookie.name}=${matchingCookie.value || ''}`,
                         confidence: cookiePattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
                         patternId: DetectionEngineManager.patternIdOf(detector, cookiePattern),
                         description: cookiePattern.description
-                    });
+                    };
+                    if (cookiePerRow) {
+                        matches.push(cookieMatch);
+                        continue;
+                    }
+                    // Already matched by an earlier row: the stronger row describes it
+                    const earlier = cookieMatchIndex.get(matchingCookie.name);
+                    if (earlier === undefined) {
+                        cookieMatchIndex.set(matchingCookie.name, matches.length);
+                        matches.push(cookieMatch);
+                    } else if (cookieMatch.confidence > (matches[earlier].confidence || 0)) {
+                        matches[earlier] = cookieMatch;
+                    }
                 }
             }
         }

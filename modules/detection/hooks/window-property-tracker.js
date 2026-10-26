@@ -83,6 +83,11 @@
     };
   }
 
+  // Identity of a tracked check: who asks, where, and for what
+  function trackingKey(definition) {
+    return JSON.stringify([definition.detectorId, definition.path, definition.condition]);
+  }
+
   function createStats() {
     return {
       totalProperties: 0,
@@ -101,7 +106,10 @@
   class WindowPropertyTracker {
     constructor() {
       // Property tracking state
-      this.properties = new Map(); // path -> PropertyTrackingData
+      // trackingKey(definition) -> PropertyTrackingData: one entry per detector,
+      // path and condition, so two detectors checking the same path (a
+      // duplicated rule, say) are each tracked and reported
+      this.properties = new Map();
 
       // Polling state
       this.currentPhase = null;
@@ -179,7 +187,10 @@
       for (const propDef of propertyDefinitions) {
         if (!propDef.path) continue;
 
-        this.properties.set(propDef.path, {
+        const key = trackingKey(propDef);
+        if (this.properties.has(key)) continue; // the same check twice in one detector
+        this.properties.set(key, {
+          path: propDef.path,
           definition: propDef,
           state: PropertyState.PENDING,
           retryCount: 0,
@@ -274,7 +285,8 @@
     _performPollingCheck() {
       const now = Date.now();
 
-      for (const [path, trackingData] of this.properties.entries()) {
+      for (const trackingData of this.properties.values()) {
+        const path = trackingData.path;
         // Skip terminal states
         if (TERMINAL_STATES.has(trackingData.state)) continue;
 

@@ -94,8 +94,8 @@ window.ScrapflyBridge = {
  * Install JS Hooks early (at document_start)
  * Delegates to DetectionEngineManager.installHooksOrchestrator()
  */
-async function installJSHooks() {
-    return DetectionEngineManager.installHooksOrchestrator(window, chrome);
+async function installJSHooks(options = {}) {
+    return DetectionEngineManager.installHooksOrchestrator(window, chrome, options);
 }
 
 async function rearmHooksForNewDetectionIfNeeded() {
@@ -108,7 +108,9 @@ async function rearmHooksForNewDetectionIfNeeded() {
     window[CACHE_HIT_FLAG] = false;
     initializeMainWorldBridge();
     try {
-        await installJSHooks();
+        // rearm: the MAIN world keeps its own cache-hit flag (set by the cached
+        // load's CACHE_HIT message); the install event tells it to clear it too
+        await installJSHooks({ rearm: true });
     } catch (error) {
         Logger.warn('CONTENT', '[hooks] Failed to re-arm hooks for new detection', error);
     }

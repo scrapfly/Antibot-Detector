@@ -267,21 +267,13 @@ async function finalizeDetection(tabId, state) {
         mergedDetections.set(detectorId, detector);
     }
 
+    // Page evidence joins the hooks' entry with its matches, methods and (when
+    // higher) its confidence; combination detectors are rescored below
     for (const detector of state.mainData) {
-        const detectorId = detector.detector?.id || detector.id;
-        if (mergedDetections.has(detectorId)) {
-            const existing = mergedDetections.get(detectorId);
-            existing.matches = [...existing.matches, ...(detector.matches || [])];
-
-            const existingMethods = existing.detectionMethods || [];
-            const newMethods = detector.detectionMethods || [];
-            existing.detectionMethods = [...new Set([...existingMethods, ...newMethods])];
-        } else {
-            if (!detector.detectionMethods) {
-                detector.detectionMethods = [];
-            }
-            mergedDetections.set(detectorId, detector);
+        if (!detector.detectionMethods) {
+            detector.detectionMethods = [];
         }
+        mergeDetection(mergedDetections, detector);
     }
 
     await matchLateRequests(tabId, state, mergedDetections);

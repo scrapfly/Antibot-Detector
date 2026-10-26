@@ -173,13 +173,21 @@ test('a forged later bootstrap cannot add bind shims', () => {
 function retryWorks(options) {
   const page = createPage(options);
   page.bootstrap(bootstrapDetail(TOKEN));
+  // A member without a bind shim, brand-checked with this browser's message
+  page.run(`
+    window.Probe = class Probe {
+      method() { if (this !== probe) throw new TypeError(${JSON.stringify(options.illegal || 'Illegal invocation')}); return 'devices'; }
+    };
+    window.probe = new Probe();
+  `);
   page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [{
     id: 'm', name: 'M', category: 'fingerprint',
-    hooks: [{ target: 'MediaDevices.prototype.enumerateDevices', contextPaths: ['navigator.mediaDevices'] }]
+    hooks: [{ target: 'Probe.prototype.method', contextPaths: ['probe'] }]
   }] }));
-  // Wrong (non-nullish) receiver: the native call fails its brand check, the wrapper retries
+  // Unbound sloppy-mode call (`this` is the global object): the native call
+  // fails its brand check, the wrapper retries on the engine-resolved instance
   try {
-    return page.run('MediaDevices.prototype.enumerateDevices.call({})') === 'devices';
+    return page.run('Probe.prototype.method.call(window)') === 'devices';
   } catch (e) {
     return false;
   }
@@ -281,12 +289,12 @@ test('only a successful illegal-invocation fallback reports and preserves the ex
     hooks: [{ target: 'Probe.prototype.method', contextPaths: ['probe'] }]
   }] }));
   const wrapped = page.run('Probe.prototype.method');
-  assert.throws(() => page.run('Probe.prototype.method.call({})'), error => error === page.run('fallbackError'));
-  assert.strictEqual(page.run('calls'), 2, 'one wrong-receiver attempt and one fallback attempt');
+  assert.throws(() => page.run('Probe.prototype.method.call(window)'), error => error === page.run('fallbackError'));
+  assert.strictEqual(page.run('calls'), 2, 'one global-receiver attempt and one fallback attempt');
   assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 0);
   assert.strictEqual(page.run('Probe.prototype.method'), wrapped);
   page.run('failFallback = false');
-  assert.strictEqual(page.run('Probe.prototype.method.call({})'), page.run('result'));
+  assert.strictEqual(page.run('Probe.prototype.method.call(window)'), page.run('result'));
   assert.strictEqual(page.run('calls'), 4);
   assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1);
 });
@@ -523,4 +531,149 @@ test('a frame reached by index is instrumented when the DOM changes', () => {
   // Seen again: not wrapped twice
   observers[0].callback([]);
   assert.strictEqual(observers.length, 2);
+});
+
+test('a hooks-off install takes the recorders, accessors and observers off the page and its frames', () => {
+  const observers = [];
+  class FakeMutationObserver {
+    constructor(callback) { this.callback = callback; this.connected = true; observers.push(this); }
+    observe(node) { this.node = node; }
+    disconnect() { this.connected = false; }
+  }
+  const page = createPage({ globals: { MutationObserver: FakeMutationObserver } });
+  page.run(`
+    function HTMLIFrameElement() {}
+    Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', { get() { return child; }, configurable: true });
+  `);
+  addChildFrame(page);
+  const accessor = page.run('Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "contentWindow").get');
+  const childGetter = page.run('Object.getOwnPropertyDescriptor(child.Navigator.prototype, "hardwareConcurrency").get');
+  page.bootstrap(bootstrapDetail(TOKEN));
+  page.run('frame.contentWindow');
+  assert.notStrictEqual(page.run('Object.getOwnPropertyDescriptor(child.Navigator.prototype, "hardwareConcurrency").get'), childGetter,
+    'the child window got its recorder');
+  assert.strictEqual(observers.length, 2, 'the page and the child document are watched');
+  const detail = installDetail(TOKEN, { overrides: FAST });
+  detail.hooksOff = true;
+  page.install(detail);
+  assert.strictEqual(page.run('Object.getOwnPropertyDescriptor(child.Navigator.prototype, "hardwareConcurrency").get'), childGetter);
+  assert.strictEqual(page.run('Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, "contentWindow").get'), accessor);
+  assert.ok(observers.every(o => !o.connected), 'every frame observer is disconnected');
+});
+
+test('what was put into a child frame does not keep the frame alive', async () => {
+  const v8 = require('node:v8');
+  const vm = require('node:vm');
+  v8.setFlagsFromString('--expose-gc');
+  const gc = vm.runInNewContext('gc');
+  class FakeMutationObserver {
+    constructor(callback) { this.callback = callback; }
+    observe() {}
+    disconnect() {}
+  }
+  const page = createPage({ globals: { MutationObserver: FakeMutationObserver } });
+  page.run(`
+    function HTMLIFrameElement() {}
+    Object.defineProperty(HTMLIFrameElement.prototype, 'contentWindow', { get() { return child; }, configurable: true });
+  `);
+  addChildFrame(page);
+  page.bootstrap(bootstrapDetail(TOKEN));
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [detector('a', ['Navigator.prototype.hardwareConcurrency'])] }));
+  page.run('frame.contentWindow');
+  const childDocument = new WeakRef(page.run('child.document'));
+  // The page removes the frame: nothing of its own refers to it any more
+  page.run('child = null; frame = null;');
+  for (let i = 0; i < 5 && childDocument.deref(); i++) {
+    await sleep(0);
+    gc();
+  }
+  assert.strictEqual(childDocument.deref(), undefined, 'the removed frame document was collected');
+});
+
+test('a re-arm after a cached load installs the hooks and runs the window checks again', async () => {
+  const page = bootstrapped();
+  const original = page.run('Navigator.prototype.getBattery');
+  page.toMain({ type: T.CACHE_HIT, [P.FIELDS.TOKEN]: TOKEN });
+  const overrides = { ...FAST, INSTALL_DEBOUNCE_MS: 0 };
+  const windowProperties = [{ path: 'probe', condition: 'exists', detectorId: 'w', detectorName: 'W', category: 'antibot', confidence: 80 }];
+  page.run('window.probe = 1');
+  const hookDefinitions = [detector('a', ['Navigator.prototype.getBattery'])];
+  // The cached load: the cache hit keeps this install from hooking
+  page.install(installDetail(TOKEN, { overrides, hookDefinitions, windowProperties }));
+  assert.strictEqual(page.run('Navigator.prototype.getBattery'), original, 'nothing hooked on a cached load');
+  // Rescan / SPA navigation: content.js re-arms with a fresh install
+  const rearm = installDetail(TOKEN, { overrides, hookDefinitions, windowProperties });
+  rearm.rearm = true;
+  page.install(rearm);
+  assert.notStrictEqual(page.run('Navigator.prototype.getBattery'), original, 'hooks installed after the re-arm');
+  assert.strictEqual(page.run('navigator.getBattery()'), 'battery');
+  assert.deepStrictEqual(page.ofType(T.JS_HOOK_DETECTION).map(m => m.detection.detectorId), ['a']);
+  await sleep(300);
+  assert.deepStrictEqual(page.ofType(T.WINDOW_DETECTIONS).flatMap(m => m.detections).map(d => d.detectorId), ['w']);
+});
+
+test('a page-chosen foreign `this` fails like the native call and is never retried on the real instance', () => {
+  const page = bootstrapped();
+  // Bind shim (installed at the bootstrap): only unbound calls get the instance
+  assert.throws(() => page.run('Navigator.prototype.getBattery.call({})'), /Illegal invocation/);
+  assert.throws(() => page.run('Navigator.prototype.getBattery.call(Object.create(Navigator.prototype))'), /Illegal invocation/);
+  assert.strictEqual(page.run('const unbound = navigator.getBattery; unbound()'), 'battery');
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [{
+    id: 'm', name: 'M', category: 'fingerprint',
+    hooks: [
+      { target: 'MediaDevices.prototype.enumerateDevices', contextPaths: ['navigator.mediaDevices'] },
+      { target: 'Navigator.prototype.userAgent', contextPaths: ['navigator'] }
+    ]
+  }] }));
+  // Hook wrappers: a method and a getter called on a foreign object throw, report nothing and stay installed
+  assert.throws(() => page.run('MediaDevices.prototype.enumerateDevices.call({})'), /Illegal invocation/);
+  assert.throws(() => page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "userAgent").get.call({})'), /Illegal invocation/);
+  assert.deepStrictEqual(page.ofType(T.JS_HOOK_DETECTION), []);
+  // Unbound calls still fall back to the engine-resolved instance
+  assert.strictEqual(page.run('MediaDevices.prototype.enumerateDevices.call(undefined)'), 'devices');
+  assert.strictEqual(page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "userAgent").get.call(window)'), 'fake');
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 2);
+});
+
+test('a hook wrapper looks like the native member: not constructible, no own prototype', () => {
+  const page = bootstrapped();
+  const native = page.run('MediaDevices.prototype.enumerateDevices');
+  const nativeGetter = page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "userAgent").get');
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+    detector('a', ['MediaDevices.prototype.enumerateDevices', 'Navigator.prototype.userAgent'])
+  ] }));
+  const method = 'MediaDevices.prototype.enumerateDevices';
+  const getter = 'Object.getOwnPropertyDescriptor(Navigator.prototype, "userAgent").get';
+  assert.notStrictEqual(page.run(method), native, 'method wrapped');
+  assert.notStrictEqual(page.run(getter), nativeGetter, 'getter wrapped');
+  for (const [expr, original] of [[method, native], [getter, nativeGetter]]) {
+    assert.strictEqual(page.run(`${expr}.name`), original.name);
+    assert.strictEqual(page.run(`${expr}.length`), original.length);
+    assert.strictEqual(page.run(`Object.prototype.hasOwnProperty.call(${expr}, "prototype")`), false);
+    assert.throws(() => page.run(`new (${expr})()`), /not a constructor/);
+    assert.strictEqual(page.run(`${expr}.toString()`), Function.prototype.toString.call(original));
+  }
+});
+
+test('a hook that fires while the page loads does not complete the monitoring before the page is ready', async () => {
+  const page = bootstrapped();
+  page.run('document.readyState = "loading"');
+  const getter = () => page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "hardwareConcurrency").get');
+  const nativeGetter = getter();
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+    detector('a', ['Navigator.prototype.getBattery', 'Navigator.prototype.hardwareConcurrency'])
+  ] }));
+  assert.strictEqual(page.run('navigator.getBattery()'), 'battery');
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1, 'reported at once');
+  // Well past the idle timeout and the monitoring floor: still watching
+  await sleep(700);
+  assert.deepStrictEqual(page.ofType(T.JS_HOOKS_COMPLETE), []);
+  assert.notStrictEqual(getter(), nativeGetter, 'the other hooks stay installed');
+  page.toMain({ type: T.PAGE_READY, [P.FIELDS.TOKEN]: TOKEN });
+  assert.strictEqual(page.run('navigator.hardwareConcurrency'), 8);
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 2, 'a hook that fires on load is still caught');
+  await sleep(700);
+  const [done] = page.ofType(T.JS_HOOKS_COMPLETE);
+  assert.ok(done, 'completes once the page is ready');
+  assert.strictEqual(done.completionReason, P.COMPLETION_REASONS.HOOKS.ACTIVITY_TIMEOUT);
 });

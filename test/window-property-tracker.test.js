@@ -30,6 +30,11 @@ function init(tracker, paths, config = HooksConfig.defaults) {
   return detections;
 }
 
+// The tracked entry for a path (the tracker keys entries by detector, path and condition)
+function entry(tracker, p) {
+  return [...tracker.properties.values()].find(e => e.path === p);
+}
+
 test('polling phases keep the 2.8 order, intervals and boundaries', () => {
   const { tracker } = loadTracker();
   init(tracker, []);
@@ -62,7 +67,7 @@ test('each lookup outcome maps to the 2.8 state and retry policy', () => {
   const { tracker } = loadTracker(page);
   init(tracker, ['present.yes', 'present.no', 'missing.x', 'present.missing', 'present.nothing.x', 'present.text.x', 'api.flaky']);
   tracker._performPollingCheck();
-  const state = (p) => [tracker.properties.get(p).state, tracker.properties.get(p).retryCount];
+  const state = (p) => [entry(tracker, p).state, entry(tracker, p).retryCount];
   assert.deepStrictEqual(state('present.yes'), ['DETECTED', 0]);
   assert.deepStrictEqual(state('present.no'), ['NOT_MATCHED', 1]);      // condition unmet: propertyAbsent retry
   assert.deepStrictEqual(state('missing.x'), ['PATH_NOT_FOUND', 1]);
@@ -70,25 +75,41 @@ test('each lookup outcome maps to the 2.8 state and retry policy', () => {
   assert.deepStrictEqual(state('present.nothing.x'), ['PROPERTY_ABSENT', 1]); // parent null counts as absent
   assert.deepStrictEqual(state('present.text.x'), ['PENDING', 1]);       // `in` on a primitive throws: getter retry
   assert.deepStrictEqual(state('api.flaky'), ['PENDING', 1]);
-  assert.strictEqual(tracker.properties.get('api.flaky').lastError, 'not yet');
+  assert.strictEqual(entry(tracker, 'api.flaky').lastError, 'not yet');
   // getterError backoff was used (50 ms), propertyAbsent for the unmet condition (250 ms)
-  const wait = (p) => tracker.properties.get(p).nextRetryTime - tracker.properties.get(p).lastCheckTime;
+  const wait = (p) => entry(tracker, p).nextRetryTime - entry(tracker, p).lastCheckTime;
   assert.ok(wait('api.flaky') >= 50 && wait('api.flaky') < 60, `api.flaky waited ${wait('api.flaky')}`);
   assert.ok(wait('present.no') >= 250 && wait('present.no') < 260);
   throwing = false;
-  tracker.properties.get('api.flaky').nextRetryTime = 0;
+  entry(tracker, 'api.flaky').nextRetryTime = 0;
   tracker._performPollingCheck();
-  assert.strictEqual(tracker.properties.get('api.flaky').state, 'DETECTED');
+  assert.strictEqual(entry(tracker, 'api.flaky').state, 'DETECTED');
 });
 
 test('a property is abandoned after its policy\'s max retries', () => {
   const { tracker } = loadTracker();
   init(tracker, ['missing.x'], HooksConfig.resolve({ WINDOW_RETRY_PATH_MAX: 2 }));
   for (let i = 0; i < 3; i++) {
-    tracker.properties.get('missing.x').nextRetryTime = 0;
+    entry(tracker, 'missing.x').nextRetryTime = 0;
     tracker._performPollingCheck();
   }
-  assert.strictEqual(tracker.properties.get('missing.x').state, 'ABANDONED');
+  assert.strictEqual(entry(tracker, 'missing.x').state, 'ABANDONED');
   assert.strictEqual(tracker.stats.abandoned, 1);
   assert.strictEqual(tracker._allPropertiesTerminal(), true);
+});
+
+test('two detectors checking the same path are each tracked and each reported', () => {
+  const { tracker } = loadTracker({ bmak: {} });
+  const detections = [];
+  const def = (detectorId, extra = {}) => ({ path: 'bmak', detectorId, detectorName: detectorId.toUpperCase(), category: 'antibot', ...extra });
+  tracker.initialize([
+    def('akamai', { confidence: 90 }),
+    def('akamai-copy', { confidence: 60 }),
+    def('akamai-copy', { confidence: 60 }),             // the same check twice in one detector counts once
+    def('akamai-copy', { condition: 'exists', confidence: 40 }) // another condition on the same path is its own check
+  ], { protocol: P, config: HooksConfig.defaults, onDetection: (d) => detections.push(...d) });
+  assert.strictEqual(tracker.properties.size, 3);
+  tracker._performPollingCheck();
+  assert.deepStrictEqual(detections.map(d => [d.detectorId, d.property.path, d.property.confidence]),
+    [['akamai', 'bmak', 90], ['akamai-copy', 'bmak', 60], ['akamai-copy', 'bmak', 40]]);
 });

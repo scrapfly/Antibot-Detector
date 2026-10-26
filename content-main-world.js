@@ -290,6 +290,12 @@
     return null;
   }
 
+  // A call that arrived without a receiver of its own: a detached method called
+  // bare (undefined in strict code, the global object in sloppy code)
+  function isUnboundThis(value) {
+    return value === undefined || value === null || value === window || value === globalThis;
+  }
+
   // Early bind shims: let page code call some methods unbound without an
   // illegal-invocation TypeError. Which methods, and the instance each falls
   // back to, is engine data (detection-engine-hooks.js, demEarlyBindShims)
@@ -310,18 +316,12 @@
     // "shim" and a prototype object to the page)
     const { [propertyName]: shim } = {
       [propertyName](...args) {
-        const ctx = (this === undefined || this === null || this === window) ? instance : this;
-        try {
-          // Return the original result/promise untouched to preserve identity.
-          return Reflect.apply(original, ctx, args);
-        } catch (e) {
-          // Retry only for a genuine illegal invocation; all other errors
-          // propagate exactly like the native call.
-          if (instance && instance !== ctx && isIllegalInvocationError(e)) {
-            return Reflect.apply(original, instance, args);
-          }
-          throw e;
-        }
+        // Only an unbound call gets the instance. A `this` the page chose (even
+        // a wrong one) is passed through, so a brand check fails exactly like
+        // the native call: never retried on the real instance.
+        const ctx = (isUnboundThis(this) && instance) ? instance : this;
+        // Return the original result/promise untouched to preserve identity.
+        return Reflect.apply(original, ctx, args);
       }
     };
 
@@ -422,13 +422,37 @@
   let earlyRetireTimer = null;
   let activeHookReporter = null;    // the current install's reporter, for calls after it
   const instrumentedDocuments = new WeakSet();
-  // What the early phase put into child frames (recorders, frame accessors, frame observers): the real hooks
-  // leave these in place (frame calls route to the current install), a hooks-off install takes them off
-  const frameRecorders = [];   // {obj, propertyName, originalDescriptor, replacement} in child windows
-  const frameAccessors = [];   // {obj, propertyName, descriptor, replacement} contentWindow-like getters
-  const frameObservers = [];   // MutationObservers watching for new frames
-  // Taken before any page script can replace it
+  // What the early phase put into frames (recorders, frame accessors, frame observers): the real hooks
+  // leave these in place (frame calls route to the current install), a hooks-off install takes them off.
+  // Each record is {recorders: [{obj, propertyName, originalDescriptor, replacement}],
+  // accessors: [{obj, propertyName, descriptor, replacement}], observers: [MutationObserver]}.
+  // This window's own record lives as long as the page; a child document's is held only through that
+  // document (WeakMap) and found again through a weak reference, so a removed or navigated frame is not
+  // kept alive by what was put into it
+  const createFrameRecord = () => ({ recorders: [], accessors: [], observers: [] });
+  const topFrameRecord = createFrameRecord();
+  let childFrameRecords = new WeakMap(); // child document -> record
+  let childFrameDocuments = [];          // WeakRefs (documents themselves without WeakRef) to those documents
+  // Taken before any page script can replace them
   const NativeMutationObserver = typeof window.MutationObserver === 'function' ? window.MutationObserver : null;
+  const NativeWeakRef = typeof window.WeakRef === 'function' ? window.WeakRef : null;
+
+  function frameRecordFor(root, doc) {
+    if (root === window) return topFrameRecord;
+    let record = childFrameRecords.get(doc);
+    if (!record) {
+      record = createFrameRecord();
+      childFrameRecords.set(doc, record);
+      // Forget the documents already collected, then remember this one
+      childFrameDocuments = childFrameDocuments.filter(ref => liveDocument(ref) !== null);
+      childFrameDocuments.push(NativeWeakRef ? new NativeWeakRef(doc) : doc);
+    }
+    return record;
+  }
+
+  function liveDocument(ref) {
+    return NativeWeakRef ? (ref.deref() || null) : ref;
+  }
 
   function isEarlyHooksSpec(spec) {
     return !!spec && Array.isArray(spec.targets) && Array.isArray(spec.childWindowAccessors) &&
@@ -525,15 +549,16 @@
     // Keyed by document: a frame keeps its window object across navigations
     if (!doc || instrumentedDocuments.has(doc)) return;
     instrumentedDocuments.add(doc);
+    const record = frameRecordFor(win, doc);
     for (const { target } of earlyTargets) {
       try {
         const wrapped = wrapWithRecorder(win, target);
-        if (wrapped) frameRecorders.push(wrapped);
+        if (wrapped) record.recorders.push(wrapped);
       } catch (e) {
         // Not hookable in this window
       }
     }
-    installChildWindowAccessors(win, accessors);
+    installChildWindowAccessors(win, accessors, record);
     watchFrames(win, doc, accessors);
     instrumentFramesOf(win, accessors);
   }
@@ -567,13 +592,13 @@
     try {
       const observer = new NativeMutationObserver(() => instrumentFramesOf(win, accessors));
       observer.observe(doc, { childList: true, subtree: true });
-      frameObservers.push(observer);
+      frameRecordFor(win, doc).observers.push(observer);
     } catch (e) {
       // No frame watching in this document
     }
   }
 
-  function installChildWindowAccessors(root, accessors) {
+  function installChildWindowAccessors(root, accessors, record) {
     for (const spec of accessors) {
       try {
         const parts = spec.target.split(PATH_SEPARATOR);
@@ -596,7 +621,7 @@
         };
         const replacement = disguiseAs(getter, original);
         Object.defineProperty(obj, propertyName, { ...descriptor, get: replacement });
-        frameAccessors.push({ obj, propertyName, descriptor, replacement });
+        record.accessors.push({ obj, propertyName, descriptor, replacement });
       } catch (e) {
         // Accessor missing in this browser
       }
@@ -615,7 +640,7 @@
         // Not hookable here; the real hook reports why
       }
     }
-    installChildWindowAccessors(window, accessors);
+    installChildWindowAccessors(window, accessors, topFrameRecord);
     watchFrames(window, document, accessors);
     // If no install event comes, do not leave the recorders in place
     earlyRetireTimer = setTimeout(restoreEarlyRecorders, spec.maxMs);
@@ -645,10 +670,22 @@
   // and the frame observers go too (unless the page replaced them since). The bind shims stay: they only keep
   // the page's own calls working. Frames seen later start over, so a frame is never instrumented twice
   function retireFrameInstrumentation() {
-    for (const observer of frameObservers.splice(0)) {
+    const records = [topFrameRecord];
+    for (const ref of childFrameDocuments) {
+      const doc = liveDocument(ref);
+      const record = doc && childFrameRecords.get(doc);
+      if (record) records.push(record);
+    }
+    childFrameRecords = new WeakMap();
+    childFrameDocuments = [];
+    for (const record of records) retireFrameRecord(record);
+  }
+
+  function retireFrameRecord(record) {
+    for (const observer of record.observers.splice(0)) {
       try { observer.disconnect(); } catch (e) { /* already gone with its document */ }
     }
-    for (const { obj, propertyName, originalDescriptor, replacement } of frameRecorders.splice(0)) {
+    for (const { obj, propertyName, originalDescriptor, replacement } of record.recorders.splice(0)) {
       try {
         const current = Object.getOwnPropertyDescriptor(obj, propertyName);
         if (current && current.get === replacement.get && current.value === replacement.value) {
@@ -658,7 +695,7 @@
         // The frame is gone or cross-origin now: nothing to restore
       }
     }
-    for (const { obj, propertyName, descriptor, replacement } of frameAccessors.splice(0)) {
+    for (const { obj, propertyName, descriptor, replacement } of record.accessors.splice(0)) {
       try {
         const current = Object.getOwnPropertyDescriptor(obj, propertyName);
         if (current && current.get === replacement) Object.defineProperty(obj, propertyName, descriptor);
@@ -1151,6 +1188,9 @@
     if (event.detail?.[FIELDS.TOKEN] !== bridgeToken) {
       return;
     }
+    // A re-arm starts a new detection after a cached load: the cache-hit flag
+    // that load set must not keep this install from hooking and checking
+    if (event.detail?.rearm === true) window[GLOBALS.CACHE_HIT_EARLY_EXIT] = false;
     // The real hooks resolve the APIs next: take the early recorders off first
     restoreEarlyRecorders();
     // JS hooks off on this site (Settings → Detection): nothing stays wrapped, in the page or in its frames
@@ -1300,6 +1340,10 @@
     // Prevents race conditions between activity timeout (2s) and max timeout (3s)
     let maxTimeoutId = null;
     let completionSignalSent = false;
+    // No completion timer before the page is ready: a hook that fires while the
+    // document is still parsing is reported at once, but must not start the
+    // idle countdown that would take every remaining hook off before load
+    let monitoringStarted = false;
 
     /**
      * Complete hook detection with cleanup
@@ -1374,6 +1418,7 @@
      * Resets on each hook detection
      */
     function scheduleCompletion() {
+      if (!monitoringStarted) return; // startHookMonitoring arms it once the page is ready
       if (completionTimeout) clearTimeout(completionTimeout);
       completionTimeout = setTimeout(() => {
         const elapsed = Date.now() - hooksStartTime;
@@ -1475,12 +1520,6 @@
       }
     };
 
-    const stealthDescriptors = {
-      name: { writable: false, enumerable: false, configurable: true },
-      length: { writable: false, enumerable: false, configurable: true },
-      toString: { writable: true, enumerable: false, configurable: true }
-    };
-
     // Wrapper factory for faster hook creation
     // Creates lightweight wrappers without repeated property definitions
     // FIXED: Preserves proper 'this' context to avoid illegal-invocation errors
@@ -1507,63 +1546,57 @@
     }
 
     function createStealthWrapper(original, callback, explicitContext, target, contextPaths, isGetter = false, substituteArgs = null) {
-      const wrapper = function(...args) {
-        // Prefer the natural 'this'; fall back to a resolved context only when
-        // 'this' is missing (e.g. destructured calls: const { getBattery } = navigator).
-        const dynamicContext = (explicitContext && typeof explicitContext !== 'function')
-          ? explicitContext
-          : resolveContext(contextPaths);
-        const context = (this === undefined || this === null) ? (dynamicContext || this) : this;
-        const callArgs = substituteArgs ? substituteArgs(args) : args;
+      // A method definition, like createRecorder and the native member: not
+      // constructible and no own `prototype` (a plain function is both)
+      const { [original.name]: wrapper } = {
+        [original.name](...args) {
+          // Prefer the natural 'this'; fall back to a resolved context only when
+          // 'this' is missing (e.g. destructured calls: const { getBattery } = navigator).
+          const dynamicContext = (explicitContext && typeof explicitContext !== 'function')
+            ? explicitContext
+            : resolveContext(contextPaths);
+          const context = (this === undefined || this === null) ? (dynamicContext || this) : this;
+          const callArgs = substituteArgs ? substituteArgs(args) : args;
 
-        let result;
-        try {
-          result = Reflect.apply(original, context, callArgs);
-        } catch (e) {
-          // Last-resort retry ONLY for a genuine illegal invocation when a
-          // different context is available. All other errors propagate exactly
-          // like the native call (no double-execution of side-effecting APIs).
-          if (dynamicContext && dynamicContext !== context && isIllegalInvocationError(e)) {
-            result = Reflect.apply(original, dynamicContext, callArgs);
-          } else {
-            throw e;
-          }
-        }
-
-        // Failed native calls (including brand-check probes) must neither report
-        // nor consume this target's one-shot detection. A successful fallback
-        // reaches the same reporting path, without awaiting or replacing promises.
-        if (!isHookReportingSuppressed() && !exhaustedHooks.has(target)) {
+          let result;
           try {
-            callback();
+            result = Reflect.apply(original, context, callArgs);
           } catch (e) {
-            // Detection error must never break the page API.
-            logError(`[Hooks MAIN] Detection callback error for ${target}: ${getErrorMessage(e)}`);
-          }
-        }
-        return result;
-      };
-
-      // Apply stealth properties in one batch
-      try {
-        Object.defineProperties(wrapper, {
-          name: { ...stealthDescriptors.name, value: original.name },
-          length: { ...stealthDescriptors.length, value: original.length },
-          toString: {
-            ...stealthDescriptors.toString,
-            value: function toString() {
-              return Function.prototype.toString.call(original);
+            // Last-resort retry ONLY for an unbound call (sloppy-mode `this` is
+            // the global object) that failed with a genuine illegal invocation.
+            // A foreign `this` the page passed fails like the native call, and
+            // all other errors propagate unchanged (no double execution).
+            if (isUnboundThis(this) && dynamicContext && dynamicContext !== context && isIllegalInvocationError(e)) {
+              result = Reflect.apply(original, dynamicContext, callArgs);
+            } else {
+              throw e;
             }
           }
-        });
 
-        // Copy prototype for methods
-        if (!isGetter && original.prototype) {
-          wrapper.prototype = original.prototype;
-          Object.setPrototypeOf(wrapper, Object.getPrototypeOf(original));
+          // Failed native calls (including brand-check probes) must neither report
+          // nor consume this target's one-shot detection. A successful fallback
+          // reaches the same reporting path, without awaiting or replacing promises.
+          if (!isHookReportingSuppressed() && !exhaustedHooks.has(target)) {
+            try {
+              callback();
+            } catch (e) {
+              // Detection error must never break the page API.
+              logError(`[Hooks MAIN] Detection callback error for ${target}: ${getErrorMessage(e)}`);
+            }
+          }
+          return result;
         }
-      } catch (e) {
-        // Stealth properties failed, wrapper still works
+      };
+
+      // Same name, length, source text and [[Prototype]] as the native member
+      disguiseAs(wrapper, original);
+      // A page function that owns a prototype keeps it reachable through the wrapper
+      if (!isGetter && original.prototype) {
+        try {
+          wrapper.prototype = original.prototype;
+        } catch (e) {
+          // The wrapper still works
+        }
       }
 
       return wrapper;
@@ -1734,6 +1767,8 @@
     const originalHooksCount = originallyInstalledHooks.length;
 
     const startHookMonitoring = () => {
+      if (completionSignalSent) return;
+      monitoringStarted = true;
       // Maximum timeout for guaranteed completion (even if hooks keep firing)
       maxTimeoutId = setTimeout(() => {
         completeDetection(HOOKS_REASONS.MAX_TIMEOUT);

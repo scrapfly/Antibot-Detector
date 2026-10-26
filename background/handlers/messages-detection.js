@@ -425,7 +425,8 @@ function registerDetectionHandlers(registry, context) {
                             type: 'js_hooks',
                             pattern: detection.hook.target,
                             value: detection.hook.target.split('.').pop(),
-                            confidence: detection.hook.confidence,
+                            // A hook that declares no confidence gets the default, like every other rule (0 stays 0)
+                            confidence: Number.isFinite(detection.hook.confidence) ? detection.hook.confidence : Constants.DEFAULT_MATCH_CONFIDENCE,
                             description: detection.hook.description,
                             ...(detection.hook.id ? { patternId: detection.hook.id } : {})
                         };

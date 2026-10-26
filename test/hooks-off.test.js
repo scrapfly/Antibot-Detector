@@ -74,12 +74,12 @@ const DETECTORS = {
     payload: [{ id: 'challenge', urlPattern: 'https://api.example.test/challenge', body: 'response', pattern: 'x', confidence: 80 }] } } }
 };
 
-async function installFor(hostname, detection) {
+async function installFor(hostname, detection, options) {
   const { Engine } = engineContext();
   const events = [];
   await Engine.installHooksOrchestrator({ location: { hostname }, dispatchEvent(event) { events.push(event); } }, {
     storage: { local: { async get() { return { scrapfly_detectors: { detectors: DETECTORS }, scrapfly_settings: { detection } }; } } }
-  });
+  }, options);
   assert.equal(events.length, 1);
   return JSON.parse(JSON.stringify(events[0].detail));
 }
@@ -105,6 +105,17 @@ test('every other site, and a site when the list is empty, is installed with its
     assert.equal(on.responseCapture.patterns.length, 1, `${host}: response capture`);
     assert.equal(on.windowProperties.length, 1);
   }
+});
+
+test('a re-arm install (rescan or SPA navigation after a cached load) tells the MAIN world so; the first install does not', async () => {
+  const first = await installFor('other.test', {});
+  assert.ok(!('rearm' in first));
+  const rearm = await installFor('other.test', {}, { rearm: true });
+  assert.equal(rearm.rearm, true);
+  assert.equal(rearm.hookDefinitions.length, 1);
+  const rearmOff = await installFor('example.com', { hooksOffDomains: ['example.com'] }, { rearm: true });
+  assert.equal(rearmOff.rearm, true);
+  assert.equal(rearmOff.hooksOff, true);
 });
 
 // ---- A cached result belongs to one setting or the other
