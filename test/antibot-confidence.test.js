@@ -287,7 +287,8 @@ const benign = {
   'detect-wordfence': { urls: ['https://example.test/wp-content/plugins/wordfence-assistant/js/admin.js'], sources: ["var plugin = 'wordfence';"] },
   // Short names other code also uses: alone they never identify the vendor
   'detect-sift': { cookies: ['__ssid'], urls: ['https://sift.com/'] },
-  'detect-castle': { cookies: ['__cuid'], urls: ['https://castle.io/'] },
+  // Castle bundled from npm leaves only __cuid (x.com, Atlassian): that counts alone, low (castle-cuid-cookie, 30)
+  'detect-castle': { urls: ['https://castle.io/'] },
   'detect-iovation': { urls: ['https://example.test/iojs/latest/io.js'] },
   'detect-forter': { urls: ['https://www.forter.com/events'] },
   'detect-seon': { sources: ['reason.config(options); season.getSession();'] }

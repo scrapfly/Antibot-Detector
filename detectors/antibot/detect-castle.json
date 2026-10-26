@@ -6,7 +6,7 @@
   "category": "Anti-Bot",
   "difficulty": "Medium",
   "lastUpdated": "2026-10-26",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "minExtensionVersion": "2.8",
   "website": "https://castle.io/",
   "icon": "castle_official.png",
@@ -39,7 +39,6 @@
         "nameRegex": true,
         "nameCaseSensitive": true,
         "confidence": 30,
-        "standalone": false,
         "description": "__cuid device cookie Castle.js stores by default",
         "nameScope": "all",
         "valueScope": "all"
