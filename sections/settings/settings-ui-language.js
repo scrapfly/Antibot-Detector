@@ -110,7 +110,7 @@ SettingsUI._languageFlagMarkup = function(option) {
 
   }
 
-  const safeUrl = FormatUtils.escapeHtml(url);
+  const safeUrl = FormatUtils.escapeAttr(url);
 
   return `<span class="language-picker-flag-slot" aria-hidden="true"><img class="language-picker-flag" src="${safeUrl}" width="22" height="16" alt="" loading="lazy" decoding="async"></span>`;
 

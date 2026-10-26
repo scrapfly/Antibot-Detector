@@ -228,6 +228,9 @@ class History {
       const safeUrl = FormatUtils.escapeHtml(item.url || '');
       // The full address on the card (cut off with an ellipsis), the domain when none was saved
       const safeDomain = FormatUtils.escapeHtml(domain);
+      // Attribute context ("..."): escapeHtml leaves quotes, so a title or an imported id with one would break out
+      const attrTitle = FormatUtils.escapeAttr(rawTitle);
+      const attrUrl = FormatUtils.escapeAttr(item.url || domain);
 
       const faviconSrc = UrlUtils.resolveDisplayFavicon(item.favicon, item.url || item.hostname);
       const summary = this.getHistorySummary(item);
@@ -244,21 +247,21 @@ class History {
       const selectLabel = FormatUtils.escapeAttr(FormatUtils.t('historySelectCheckboxFmt', 'Select {0}', rawTitle));
 
       return `
-        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${item.id}">
+        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${FormatUtils.escapeAttr(item.id)}">
           <div class="history-item-top">
             ${selecting ? `<input type="checkbox" class="history-select-input" aria-label="${selectLabel}"${selected ? ' checked' : ''}>` : ''}
             <span class="history-favicon-tile">
-              <img src="${faviconSrc}" alt="" class="history-favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
+              <img src="${FormatUtils.escapeAttr(faviconSrc)}" alt="" class="history-favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
             </span>
             <div class="history-item-content">
               <div class="history-title-row">
                 ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
                 ${item.watch === true ? `<span class="history-watch" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
-                <div class="history-title" title="${safeTitle}">${safeTitle}</div>
+                <div class="history-title" title="${attrTitle}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>
               <div class="history-subline">
-                <span class="history-url" dir="ltr" title="${safeUrl || safeDomain}">${safeUrl || safeDomain}</span>
+                <span class="history-url" dir="ltr" title="${attrUrl}">${safeUrl || safeDomain}</span>
 
               </div>
               ${item.note ? `<div class="history-note" title="${FormatUtils.escapeAttr(item.note)}">${FormatUtils.escapeHtml(item.note)}</div>` : ''}
@@ -1242,7 +1245,7 @@ class History {
     return ordered.map(({ detection, index }) => {
       const rawName = FormatUtils.detectorName(detection);
       const name = rawName || _tr('unknownDetection', 'Unknown Detection');
-      const safeName = FormatUtils.escapeHtml(name);
+      const safeName = FormatUtils.escapeAttr(name); // also in alt="..."
       const category = detection.category || '';
       const categoryKey = Categories.labelOf(category)?.[0] || null;
       const translatedCategory = categoryKey ? _tr(categoryKey, category) : category;

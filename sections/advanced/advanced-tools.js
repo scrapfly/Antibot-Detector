@@ -173,8 +173,8 @@ Advanced.supportedProtectionGroups = function() {
    * @returns {string} HTML
    */
 Advanced.prototype.renderNoToolsState = function(tr) {
-    const esc = (value) => (typeof FormatUtils !== 'undefined' && FormatUtils.escapeHtml)
-      ? FormatUtils.escapeHtml(value)
+    const esc = (value) => (typeof FormatUtils !== 'undefined' && FormatUtils.escapeAttr)
+      ? FormatUtils.escapeAttr(value)
       : String(value).replace(/[&<>"']/g, ch => `&#${ch.charCodeAt(0)};`);
     // Nothing detected, or a supported protection detected at or below the minimum confidence
     const fmt = (key, fallback, ...args) => (typeof I18n !== 'undefined' && typeof I18n.format === 'function' && I18n.format(key, ...args))

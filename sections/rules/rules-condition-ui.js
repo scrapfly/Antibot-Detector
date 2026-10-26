@@ -113,7 +113,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
     const customLabel = FormatUtils.escapeHtml((_t && _t.get('rhCustomChip')) || 'Custom');
 
     const renderOption = (value) => {
-      const safeValue = FormatUtils.escapeHtml(value);
+      const safeValue = FormatUtils.escapeAttr(value); // also in data-value="..."
       const isSelected = value === selected;
       return `<div class="condition-option${isSelected ? ' selected' : ''}" data-value="${safeValue}">${safeValue}</div>`;
     };
@@ -153,7 +153,7 @@ Rules.prototype.renderWindowConditionMenu = function(selectedValue) {
 
 Rules.prototype.renderInlineConditionDropdown = function(conditionValue, methodKey, itemIndex) {
     const selected = (conditionValue || 'exists').trim() || 'exists';
-    const safeSelected = FormatUtils.escapeHtml(selected);
+    const safeSelected = FormatUtils.escapeAttr(selected); // also in value="..."
     const menu = this.renderWindowConditionMenu(selected);
 
     return `
