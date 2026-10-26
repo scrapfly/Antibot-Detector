@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Impossibile salvare questa regola. Le modifiche sono ancora qui; riprova."
   },
+  "advToolScriptsHint": {
+    "message": "Mostra gli script di protezione caricati da questa pagina"
+  },
   "advToolReloadScriptsHint": {
     "message": "Ricarica la pagina per analizzare gli script di protezione"
   },

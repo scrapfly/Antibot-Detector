@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Diese Regel konnte nicht gespeichert werden. Deine Änderungen bleiben erhalten; versuche es erneut."
   },
+  "advToolScriptsHint": {
+    "message": "Schutzskripte anzeigen, die diese Seite geladen hat"
+  },
   "advToolReloadScriptsHint": {
     "message": "Seite neu laden, um Schutzskripte zu analysieren"
   },

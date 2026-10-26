@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "无法保存此规则。更改已保留，请重试。"
   },
+  "advToolScriptsHint": {
+    "message": "显示此页面加载的防护脚本"
+  },
   "advToolReloadScriptsHint": {
     "message": "重新加载页面以分析防护脚本"
   },

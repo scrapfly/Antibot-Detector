@@ -53,5 +53,61 @@
         }
         return { ...AdvancedJobManager.snapshot(job), status: 'started' };
     }
-    global.AdvancedScriptAnalysis = Object.freeze({ start });
+    // Each vendor's own classifier (declared by its interceptor, loaded after this file); the data-described CAPTCHA
+    // vendors classify through their scripts list
+    const CLASSIFIERS = Object.freeze({ awswaf: 'awsWafClassifyUrl', cloudflare: 'cloudflareClassifyUrl', datadome: 'datadomeClassifyUrl',
+        funcaptcha: 'funcaptchaClassifyUrl', hcaptcha: 'hcaptchaClassifyUrl', turnstile: 'turnstileClassifyUrl' });
+    function classifierFor(vendorId) {
+        const named = CLASSIFIERS[vendorId];
+        if (named && typeof global[named] === 'function') return global[named];
+        const captcha = global.AdvancedCaptchaVendors;
+        const vendor = captcha && Array.isArray(captcha.list) ? captcha.list.find(entry => entry.vendorId === vendorId && Array.isArray(entry.scripts)) : null;
+        return vendor ? (url => captcha.classify(vendor, url)) : null;
+    }
+    // Resource Timing names what loaded each request; the same kinds webRequest reports
+    const INITIATOR_TYPES = Object.freeze({ script: 'script', xmlhttprequest: 'xmlhttprequest', fetch: 'fetch', iframe: 'sub_frame', beacon: 'ping', other: 'other' });
+
+    /**
+     * The vendor's scripts among what the page has already loaded: the requests the worker recorded for the tab
+     * (none for a page served from the scan cache) and the page's own Resource Timing list and script tags, in every
+     * frame. Nothing is reloaded, so the popup stays open; an empty answer means only a reload can tell.
+     * @returns {Promise<Array<{url, type, resourceType, source}>|null>} null for a vendor without a classifier
+     */
+    async function fromLoadedPage({ tabId, vendorId }) {
+        const classify = classifierFor(vendorId);
+        if (!classify) return null;
+        const seen = new Map();
+        const add = (url, type) => {
+            if (typeof url !== 'string' || !/^https?:/i.test(url) || seen.has(url)) return;
+            if (SKIPPED_RESOURCE_TYPES.has(type) || type === 'main_frame') return;
+            seen.set(url, type || '');
+        };
+        // The page's own list first: the worker also records the content script's fetches of script sources (as
+        // xhr), which would name a script tag's file a request
+        try {
+            const frames = await chrome.scripting.executeScript({
+                target: { tabId, allFrames: true },
+                func: () => [
+                    ...performance.getEntriesByType('resource').map(entry => [entry.name, entry.initiatorType]),
+                    ...Array.from(document.scripts, script => [script.src, 'script'])
+                ]
+            });
+            for (const frame of frames || []) {
+                for (const [url, initiator] of Array.isArray(frame && frame.result) ? frame.result : []) {
+                    if (INITIATOR_TYPES[initiator]) add(url, INITIATOR_TYPES[initiator]);
+                }
+            }
+        } catch (_) { /* A page the extension cannot script (the Web Store, a PDF): what the worker recorded */ }
+        const recorded = typeof networkUrlsStore !== 'undefined' ? networkUrlsStore.get(tabId) : null;
+        for (const entry of Array.isArray(recorded) ? recorded : []) add(entry && entry.url, entry && entry.type);
+        const scripts = [];
+        for (const [url, resourceType] of seen) {
+            let type = null;
+            try { type = classify(url, { url, type: resourceType, tabId }); } catch (_) { type = null; }
+            if (type) scripts.push({ url, type, resourceType, source: 'page' });
+        }
+        return scripts;
+    }
+
+    global.AdvancedScriptAnalysis = Object.freeze({ start, fromLoadedPage, classifierFor });
 })(globalThis);

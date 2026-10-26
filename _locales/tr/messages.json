@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Bu kural kaydedilemedi. Değişiklikleriniz burada duruyor; yeniden deneyin."
   },
+  "advToolScriptsHint": {
+    "message": "Bu sayfanın yüklediği koruma script'lerini göster"
+  },
   "advToolReloadScriptsHint": {
     "message": "Koruma komut dosyalarını analiz etmek için sayfayı yeniden yükleyin"
   },

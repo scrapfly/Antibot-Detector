@@ -37,9 +37,12 @@ function fixture(vendor, options = {}) {
     Logger: { network() {}, error() {} },
     NotificationHelper: { info() {}, error(message) { errors.push(message); } },
     AdvancedToolClient: { subscribe() {}, unsubscribe() {} },
+    AdvancedMessageTypes: { ADVANCED_LOADED_SCRIPTS: 'ADVANCED_LOADED_SCRIPTS' },
     AdvancedUtils: {
       async sendMessage(message) {
         calls.push(['message', message]);
+        // What the page already loaded: nothing of the vendor unless the test says so, so the flow reloads
+        if (message.type === 'ADVANCED_LOADED_SCRIPTS') return options.loaded || { status: 'ok', data: { scripts: [] } };
         return { status: options.status || 'started' };
       }
     },
@@ -99,7 +102,8 @@ for (const vendor of Object.keys(vendors)) {
       assert.ok(f.calls.findIndex(([kind]) => kind === 'remove') < f.calls.findIndex(([kind]) => kind === 'reload'));
     }
     const messages = f.calls.filter(([kind]) => kind === 'message').map(([, message]) => message.type);
-    assert.equal(messages[0], `${vendor.toUpperCase()}_START_ANALYSIS`);
+    assert.deepEqual(messages.slice(0, 2), ['ADVANCED_LOADED_SCRIPTS', `${vendor.toUpperCase()}_START_ANALYSIS`],
+      'what the page already loaded is asked first; only nothing found reloads');
     // Analyze Scripts draws nothing on the page: the popup shows the progress
     assert.equal(messages.some(type => /_SHOW_ANALYZING_NOTIFICATION$/.test(type)), false);
     f.finishReload();
@@ -129,7 +133,21 @@ for (const vendor of Object.keys(vendors)) {
     await f.instance.analyzeScripts();
     assert.equal(f.timers.length, 0);
     assert.equal(f.calls.some(([kind]) => kind === 'reload' || kind === 'remove'), false);
-    assert.equal(f.calls.filter(([kind]) => kind === 'message').length, 1);
+    assert.equal(f.calls.filter(([kind]) => kind === 'message').length, 2);
+  });
+
+  test(`${vendor}: scripts the page already loaded show at once, with no reload (the popup stays open)`, async () => {
+    const scripts = [{ url: 'https://example.test/cdn-cgi/x.js', type: 'Challenge', resourceType: 'script' }];
+    const f = fixture(vendor, { loaded: { status: 'ok', data: { scripts, scriptCount: 1 } } });
+    const shown = [];
+    f.instance.displayAnalysisModal = data => shown.push(data);
+    const result = await f.instance.analyzeScripts();
+    assert.equal(result && result.awaitingResult, false);
+    assert.equal(f.calls.some(([kind]) => kind === 'reload' || kind === 'remove'), false, 'no reload, no cookie deleted');
+    assert.equal(f.calls.filter(([kind]) => kind === 'message').length, 1, 'no START: nothing to watch');
+    assert.equal(shown.length, 1);
+    assert.equal(shown[0].scripts[0].url, scripts[0].url);
+    assert.equal(shown[0]._advancedPersisted, true, 'the worker already saved it to History');
   });
 }
 

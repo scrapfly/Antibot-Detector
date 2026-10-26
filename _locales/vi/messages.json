@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Không thể lưu quy tắc này. Các thay đổi của bạn vẫn còn ở đây; hãy thử lại."
   },
+  "advToolScriptsHint": {
+    "message": "Hiển thị các script bảo vệ mà trang này đã tải"
+  },
   "advToolReloadScriptsHint": {
     "message": "Tải lại trang để phân tích các script bảo vệ"
   },

@@ -35,6 +35,10 @@
   "rulesUiSaveFailed": {
     "message": "Could not save this rule. Your changes are still here; try again."
   },
+  "advToolScriptsHint": {
+    "message": "Show the protection scripts this page loaded",
+    "description": "Advanced → Analyze Scripts tool card: what it does (it lists the scripts of the protection the page loaded; only a page with none is reloaded)"
+  },
   "advToolReloadScriptsHint": {
     "message": "Reload the page to analyze protection scripts"
   },

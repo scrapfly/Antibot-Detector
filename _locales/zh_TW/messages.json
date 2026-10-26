@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "無法儲存此規則。您的變更仍保留在此，請再試一次。"
   },
+  "advToolScriptsHint": {
+    "message": "顯示此頁面載入的防護指令碼"
+  },
   "advToolReloadScriptsHint": {
     "message": "重新載入網頁以分析防護指令碼"
   },

@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Impossible d’enregistrer cette règle. Vos modifications sont conservées ; réessayez."
   },
+  "advToolScriptsHint": {
+    "message": "Afficher les scripts de protection chargés par cette page"
+  },
   "advToolReloadScriptsHint": {
     "message": "Recharger la page pour analyser les scripts de protection"
   },

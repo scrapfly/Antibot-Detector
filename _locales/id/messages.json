@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Tidak dapat menyimpan aturan ini. Perubahan Anda masih ada; coba lagi."
   },
+  "advToolScriptsHint": {
+    "message": "Tampilkan script perlindungan yang dimuat halaman ini"
+  },
   "advToolReloadScriptsHint": {
     "message": "Muat ulang halaman untuk menganalisis script proteksi"
   },

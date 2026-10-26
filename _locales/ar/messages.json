@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "تعذر حفظ هذه القاعدة. تغييراتك محفوظة؛ حاول مجددًا."
   },
+  "advToolScriptsHint": {
+    "message": "عرض سكربتات الحماية التي حمّلتها هذه الصفحة"
+  },
   "advToolReloadScriptsHint": {
     "message": "إعادة تحميل الصفحة لتحليل نصوص الحماية البرمجية"
   },

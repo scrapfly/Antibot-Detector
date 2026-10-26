@@ -19,6 +19,20 @@ class AdvancedScriptResults {
         const tabId = this.tabInfo && this.tabInfo.id;
         if (!tabId) throw new Error('Tab information not available');
         const prefix = String(this.moduleName || '').toUpperCase();
+        // First what the page already loaded: no reload, so the popup stays open and shows the result at once. Only a
+        // page where nothing of the vendor is found (it ran before the extension, or loads its scripts on demand) is
+        // reloaded and watched, which closes the popup (the result then waits in History)
+        try {
+            const loaded = typeof AdvancedMessageTypes !== 'undefined' && AdvancedMessageTypes.ADVANCED_LOADED_SCRIPTS
+                ? await AdvancedUtils.sendMessage({ type: AdvancedMessageTypes.ADVANCED_LOADED_SCRIPTS, tabId, vendorId: String(this.moduleName || '').toLowerCase() })
+                : null;
+            if (loaded && loaded.status === 'ok' && Array.isArray(loaded.data && loaded.data.scripts) && loaded.data.scripts.length) {
+                this.displayAnalysisModal({ ...loaded.data, _advancedPersisted: true });
+                return { awaitingResult: false };
+            }
+        } catch (error) {
+            Logger.error('UI', `[${this.moduleName}] Loaded scripts unavailable, reloading instead:`, error);
+        }
         let requestId = null;
         const listener = (message) => {
             if (!message || message.type !== `${prefix}_ANALYSIS_RESULT` || message.tabId !== tabId) return;

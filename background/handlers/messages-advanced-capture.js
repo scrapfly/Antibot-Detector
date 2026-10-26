@@ -214,6 +214,27 @@ function registerAdvancedCaptureHandlers(registry, context) {
         return true;
     };
 
+    // Analyze Scripts without a reload: the vendor's scripts among what the tab already loaded, saved to History
+    // like a reloaded analysis when there are any
+    registry[messageTypes.ADVANCED_LOADED_SCRIPTS] = ({ request, sender, sendResponse }) => {
+        if (!MessageSender.isExtensionPage(sender) || !Number.isInteger(request.tabId) || typeof request.vendorId !== 'string') {
+            sendResponse({ status: 'error', error: 'Invalid loaded-scripts request' });
+            return false;
+        }
+        (async () => {
+            const scripts = await AdvancedScriptAnalysis.fromLoadedPage({ tabId: request.tabId, vendorId: request.vendorId });
+            if (!scripts) return { status: 'error', error: 'No script analysis for this vendor' };
+            const data = { scripts, scriptCount: scripts.length };
+            if (scripts.length) {
+                const id = AdvancedResultModel.requestId();
+                await BaseInterceptorHelpers.saveToHistory(request.tabId, AdvancedResultModel.create({ vendorId: request.vendorId,
+                    operation: 'analysis', data, id }), { type: request.vendorId, id, expiryMinutes: 30 });
+            }
+            return { status: 'ok', data };
+        })().then(sendResponse, error => sendResponse({ status: 'error', error: error.message }));
+        return true;
+    };
+
     registry[messageTypes.ADVANCED_HISTORY] = ({ request, sender, sendResponse }) => {
         // This channel handles extension UI data, never page/content-script requests
         if (!MessageSender.isExtensionPage(sender)) {

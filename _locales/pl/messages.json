@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Nie udało się zapisać tej reguły. Twoje zmiany nadal tu są; spróbuj ponownie."
   },
+  "advToolScriptsHint": {
+    "message": "Pokaż skrypty ochrony wczytane przez tę stronę"
+  },
   "advToolReloadScriptsHint": {
     "message": "Odśwież stronę, aby przeanalizować skrypty ochrony"
   },

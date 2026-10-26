@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "このルールを保存できませんでした。変更は保持されています。再試行してください。"
   },
+  "advToolScriptsHint": {
+    "message": "このページが読み込んだ保護スクリプトを表示する"
+  },
   "advToolReloadScriptsHint": {
     "message": "ページを再読み込みして保護スクリプトを解析する"
   },

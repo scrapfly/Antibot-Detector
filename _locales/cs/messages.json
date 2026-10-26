@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Toto pravidlo se nepodařilo uložit. Vaše změny tu zůstaly; zkuste to znovu."
   },
+  "advToolScriptsHint": {
+    "message": "Zobrazit ochranné skripty, které tato stránka načetla"
+  },
   "advToolReloadScriptsHint": {
     "message": "Načtěte stránku znovu pro analýzu skriptů ochrany"
   },

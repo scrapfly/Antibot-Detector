@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Det gick inte att spara regeln. Dina ändringar finns kvar här; försök igen."
   },
+  "advToolScriptsHint": {
+    "message": "Visa skyddsskripten som den här sidan läste in"
+  },
   "advToolReloadScriptsHint": {
     "message": "Läs in sidan igen för att analysera skyddets skript"
   },

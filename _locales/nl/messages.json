@@ -35,6 +35,9 @@
   "rulesUiSaveFailed": {
     "message": "Kan deze regel niet opslaan. Je wijzigingen staan er nog; probeer het opnieuw."
   },
+  "advToolScriptsHint": {
+    "message": "De beveiligingsscripts tonen die deze pagina heeft geladen"
+  },
   "advToolReloadScriptsHint": {
     "message": "Laad de pagina opnieuw om beveiligingsscripts te analyseren"
   },

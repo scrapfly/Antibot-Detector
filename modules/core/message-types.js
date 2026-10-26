@@ -7,6 +7,8 @@
     const AdvancedMessageTypes = Object.freeze({
         ADVANCED_HISTORY: 'ADVANCED_HISTORY',
         ADVANCED_PAGE_NOTICE: 'ADVANCED_PAGE_NOTICE',
+        // Analyze Scripts from what the page already loaded, without a reload
+        ADVANCED_LOADED_SCRIPTS: 'ADVANCED_LOADED_SCRIPTS',
         // reCAPTCHA
         RECAPTCHA_START_CAPTURE: 'RECAPTCHA_START_CAPTURE',
         RECAPTCHA_STOP_CAPTURE: 'RECAPTCHA_STOP_CAPTURE',
