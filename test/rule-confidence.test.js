@@ -54,8 +54,9 @@ test('URL and content rules without a confidence score the default, like the oth
   }
 });
 
-test('an explicit confidence of 0 stays 0 for URL and content rules', () => {
-  for (const detection of [{ url: [{ text: '/akam/', confidence: 0 }] }, { content: [{ text: 'bmak', confidence: 0 }] }]) {
+test('an explicit confidence of 0 stays 0 for every method, as the rule editor shows it', () => {
+  for (const detection of [{ url: [{ text: '/akam/', confidence: 0 }] }, { content: [{ text: 'bmak', confidence: 0 }] },
+    { cookie: [{ name: 'x_sess', confidence: 0 }] }]) {
     const result = run(detection);
     assert.equal(result.confidence, 0, JSON.stringify(detection));
     assert.equal(result.detected, false);

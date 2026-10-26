@@ -236,7 +236,7 @@ class DetectionEngineManager {
                     for (const prop of detector.detection.window) {
                         windowProperties.push({
                             ...prop,
-                            confidence: prop.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                            confidence: DetectionEngineManager.ruleConfidence(prop),
                             detectorId: detector.id || detectorKey,
                             detectorName: detector.name,
                             category: category
@@ -896,7 +896,7 @@ class DetectionEngineManager {
                         type: 'cookie',
                         name: matchingCookie.name,
                         value: `${matchingCookie.name}=${matchingCookie.value || ''}`,
-                        confidence: cookiePattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                        confidence: DetectionEngineManager.ruleConfidence(cookiePattern),
                         patternId: DetectionEngineManager.patternIdOf(detector, cookiePattern),
                         description: cookiePattern.description
                     };
@@ -963,7 +963,7 @@ class DetectionEngineManager {
                                     type: 'header',
                                     name: headerPattern.name,
                                     value: `${headerName}: ${valueToCheck}`,
-                                    confidence: headerPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                                    confidence: DetectionEngineManager.ruleConfidence(headerPattern),
                                     patternId: DetectionEngineManager.patternIdOf(detector, headerPattern),
                                     description: headerPattern.description
                                 });
@@ -975,7 +975,7 @@ class DetectionEngineManager {
                                 type: 'header',
                                 name: headerPattern.name,
                                 value: `${headerName}: ${headerValue}`,
-                                confidence: headerPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                                confidence: DetectionEngineManager.ruleConfidence(headerPattern),
                                 patternId: DetectionEngineManager.patternIdOf(detector, headerPattern),
                                 description: headerPattern.description
                             });
@@ -1098,7 +1098,7 @@ class DetectionEngineManager {
                             type: 'payload',
                             pattern: payloadPattern.text,
                             value: matchedValue,
-                            confidence: payloadPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                            confidence: DetectionEngineManager.ruleConfidence(payloadPattern),
                             patternId: DetectionEngineManager.patternIdOf(detector, payloadPattern),
                             description: payloadPattern.description || 'Payload pattern detected'
                         });
@@ -1204,7 +1204,7 @@ class DetectionEngineManager {
                         type: 'payload',
                         pattern: payloadPattern.text,
                         value: matchedValue,
-                        confidence: payloadPattern.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                        confidence: DetectionEngineManager.ruleConfidence(payloadPattern),
                         patternId: DetectionEngineManager.patternIdOf(detector, payloadPattern),
                         description: payloadPattern.description || 'Payload pattern detected'
                     });
@@ -1236,7 +1236,7 @@ class DetectionEngineManager {
                         value: value.length > 80 ? value.slice(0, 80) + '...' : value,
                         fullUrl: response.url,
                         body: 'response',
-                        confidence: rule.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                        confidence: DetectionEngineManager.ruleConfidence(rule),
                         patternId: DetectionEngineManager.patternIdOf(detector, rule),
                         description: rule.description || 'Response pattern detected'
                     });
@@ -1259,7 +1259,7 @@ class DetectionEngineManager {
                         type: 'dom',
                         selector: domPattern.selector,
                         value: `${domPattern.selector}=${truncatedText}`,
-                        confidence: domPattern.confidence || Constants.DEFAULT_DOM_CONFIDENCE,
+                        confidence: DetectionEngineManager.ruleConfidence(domPattern, Constants.DEFAULT_DOM_CONFIDENCE),
                         patternId: DetectionEngineManager.patternIdOf(detector, domPattern),
                         description: domPattern.description
                     });
@@ -1418,7 +1418,7 @@ class DetectionEngineManager {
                             type: 'js_hooks',
                             target: hookData.target,
                             value: hookData.target,
-                            confidence: hookData.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                            confidence: DetectionEngineManager.ruleConfidence(hookData),
                             description: hookData.description || 'JavaScript API hook'
                         });
 
@@ -1438,13 +1438,13 @@ class DetectionEngineManager {
                         const detectorInfo = DetectionEngineManager.buildDetectorInfo(detector, hookData.detectorName, hookData.detectorId);
                         detections.push({
                             detected: true,
-                            confidence: hookData.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                            confidence: DetectionEngineManager.ruleConfidence(hookData),
                             difficulty: detectorInfo.difficulty,
                             matches: [{
                                 type: 'js_hooks',
                                 target: hookData.target,
                                 value: hookData.target,
-                                confidence: hookData.confidence || Constants.DEFAULT_MATCH_CONFIDENCE,
+                                confidence: DetectionEngineManager.ruleConfidence(hookData),
                                 description: hookData.description || 'JavaScript API hook'
                             }],
                             detectionMethods: ['js_hooks'],
