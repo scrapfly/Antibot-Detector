@@ -100,15 +100,22 @@ class PatternCache {
     }
 
     /**
-     * Check if match result is cached
+     * The key a text's match results are cached under, or null when the text is not cached at all: hashing a
+     * long text (a whole page's HTML) for every pattern cost more than the match it would save, and the entry
+     * was rarely hit again.
      */
     textKeyFor(text) {
+        if (text.length > PatternCache.MATCH_CACHE_MAX_TEXT) return null;
         // Hash full text instead of truncating (prevents collisions)
         return text.length > 100 ? simpleHash(text) : text;
     }
 
+    /**
+     * Check if match result is cached
+     */
     getCachedMatch(text, pattern, options, textKey) {
         const textHash = textKey !== undefined ? textKey : this.textKeyFor(text);
+        if (textHash === null) return { found: false };
         const matchKey = `${textHash}|${this.getCacheKey(pattern, options)}`;
 
         if (this.matchCache.has(matchKey)) {
@@ -127,6 +134,7 @@ class PatternCache {
      */
     cacheMatch(text, pattern, options, result, textKey) {
         const textHash = textKey !== undefined ? textKey : this.textKeyFor(text);
+        if (textHash === null) return;
         const matchKey = `${textHash}|${this.getCacheKey(pattern, options)}`;
         this.matchCache.set(matchKey, { result, timestamp: Date.now() });
         this.insertionOrder.push(matchKey);
@@ -159,6 +167,9 @@ class PatternCache {
         this.insertionOrder = [];
     }
 }
+
+// Texts longer than this (in characters) are matched without the result cache
+PatternCache.MATCH_CACHE_MAX_TEXT = 4096;
 
 // Node test export (no-op in the browser, where `module` is undefined).
 if (typeof module !== 'undefined' && module.exports) { module.exports = { PatternCache, isLikelyEvilRegex, simpleHash }; }
