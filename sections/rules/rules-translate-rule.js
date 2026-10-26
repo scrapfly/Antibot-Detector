@@ -80,6 +80,9 @@ Rules.prototype.translateChangedTexts = async function() {
   const others = RULE_TRANSLATION_LOCALES.filter(code => code !== locale);
   const toEnglish = Translator.create({ sourceLanguage: ruleTranslatorCode(locale), targetLanguage: 'en' });
   const fromEnglish = new Map(others.map(code => [code, Translator.create({ sourceLanguage: 'en', targetLanguage: ruleTranslatorCode(code) })]));
+  // Dropped when the editor closed or another rule opened meanwhile (see translateWholeRule)
+  const editing = this.currentEditDetector;
+  const stale = () => this.currentEditDetector !== editing;
   bar.dataset.busy = '1';
   bar.querySelectorAll('button').forEach(button => { button.disabled = true; });
   const text = bar.querySelector('#ruleTranslateText');
@@ -90,6 +93,7 @@ Rules.prototype.translateChangedTexts = async function() {
     let english;
     try { english = await toEnglish; } catch (error) { english = null; Logger.debug('UI', 'No translator into English', error); }
     for (const entry of changed) {
+      if (stale()) break;
       let original = '';
       try { original = english ? ruleTranslationClean(await english.translate(entry.typed)) : ''; } catch (_) { original = ''; }
       if (!original) { failed++; continue; }
@@ -100,12 +104,14 @@ Rules.prototype.translateChangedTexts = async function() {
           if (out) { map[code] = out; filled++; } else failed++;
         } catch (_) { failed++; }
       }
+      if (stale()) break;
       this.storeChangedText(entry, original, map);
     }
   } finally {
     for (const pending of [toEnglish, ...fromEnglish.values()]) pending.then(t => t && t.destroy && t.destroy()).catch(() => {});
-    delete bar.dataset.busy;
+    if (!stale()) delete bar.dataset.busy;
   }
+  if (stale()) return;
   if (typeof this.renderCombinations === 'function') this.renderCombinations();
   this.updateTranslationsCount(detectorTranslationsScope());
   this._ruleTranslateResult = failed
@@ -207,6 +213,10 @@ Rules.prototype.translateWholeRule = async function() {
   const entries = new Map(this.collectRuleTexts().map(entry => [entry.id, entry]));
   const button = bar.querySelector('#ruleTranslateAllBtn');
   const text = bar.querySelector('#ruleTranslateText');
+  // Translating takes a while: if the editor was closed or another rule opened meanwhile, what comes back is about a
+  // rule no longer on screen and is dropped (as runLiveTest does)
+  const editing = this.currentEditDetector;
+  const stale = () => this.currentEditDetector !== editing;
   bar.dataset.busy = '1';
   if (button) button.disabled = true;
   if (text) text.textContent = ruleBarText('ruleTranslateRuleWorkingFmt', 'Translating {0} texts…', plan.texts);
@@ -222,8 +232,10 @@ Rules.prototype.translateWholeRule = async function() {
       return;
     }
     for (const job of plan.jobs.filter(item => item.missing.includes(locale))) {
+      if (stale()) break;
       try {
         const out = ruleTranslationClean(await translator.translate(job.text));
+        if (stale()) break;
         if (!out) { failed++; continue; }
         this.storeRuleTranslation(entries.get(job.id), locale, out);
         filled++;
@@ -234,6 +246,8 @@ Rules.prototype.translateWholeRule = async function() {
     }
     if (translator && typeof translator.destroy === 'function') translator.destroy();
   }));
+  // The editor that opened since then reset the bar (resetTranslateBar) and owns it now
+  if (stale()) return;
   delete bar.dataset.busy;
   // The combinations are drawn from their model, and the description's count from its fields
   if (typeof this.renderCombinations === 'function') this.renderCombinations();

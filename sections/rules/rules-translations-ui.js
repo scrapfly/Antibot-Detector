@@ -253,8 +253,13 @@ Rules.prototype.updateAutoTranslateButton = function(scope = methodTranslationsS
  * @param {{needsText?: string, onFill?: Function, onStatus?: Function}} [options]
  *   onFill(locale, text) for each translation, onStatus(text, busy) for the progress
  */
-Rules.prototype.autoTranslateFields = function(getScope, sourceText, { needsText, onFill, onStatus } = {}) {
+Rules.prototype.autoTranslateFields = function(getScope, sourceText, { needsText, onFill, onStatus, followsMethodItem = false } = {}) {
   const source = ruleTranslationClean(sourceText);
+  // A translation that comes back after the editor closed, another rule opened, or (for a pattern's description)
+  // Method Settings moved to another pattern belongs to what is no longer on screen: dropped
+  const editing = this.currentEditDetector;
+  const methodItem = this.currentMethodItem;
+  const stale = () => this.currentEditDetector !== editing || (followsMethodItem && this.currentMethodItem !== methodItem);
   const say = (text, busy) => {
     const scope = getScope();
     const status = scope?.querySelector('.rule-translations-status');
@@ -288,6 +293,7 @@ Rules.prototype.autoTranslateFields = function(getScope, sourceText, { needsText
       const translator = await created;
       const text = translator ? (await translator.translate(source)).trim() : source;
       if (translator && typeof translator.destroy === 'function') translator.destroy();
+      if (stale()) return;
       const input = getScope()?.querySelector(`.rule-translation-input[data-locale="${locale}"]`);
       if (input) input.value = text;
       if (onFill) onFill(locale, text);
@@ -298,6 +304,7 @@ Rules.prototype.autoTranslateFields = function(getScope, sourceText, { needsText
     }
     this.updateTranslationsCount(getScope());
   })).then(() => {
+    if (stale()) return;
     this.updateTranslationsCount(getScope());
     this.refreshLocalFields();
     say(failed
@@ -350,7 +357,7 @@ Rules.prototype.autoTranslateDetectorDescription = function() {
 
 /** Pattern settings → Description → Translations → Translate automatically. */
 Rules.prototype.autoTranslateDescription = function() {
-  return this.autoTranslateFields(methodTranslationsScope, document.querySelector('#methodDescriptionInput')?.value || '');
+  return this.autoTranslateFields(methodTranslationsScope, document.querySelector('#methodDescriptionInput')?.value || '', { followsMethodItem: true });
 };
 
 /** The greyed shipped translations follow the description as it is edited (they are looked up by its text). */

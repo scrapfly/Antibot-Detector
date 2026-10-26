@@ -160,3 +160,30 @@ test('the detector\'s own description has Translations and Translate automatical
   assert.equal(input.maxLength, 320);
   assert.equal(scope.open, false);
 });
+
+test('a translation that finishes after the editor closed, or after another pattern\'s settings opened, is dropped', async () => {
+  let release;
+  const gate = new Promise(resolve => { release = resolve; });
+  const translator = { create: ({ targetLanguage }) => gate.then(() => ({ translate: async (t) => `[${targetLanguage}] ${t}`, destroy() {} })) };
+  const fields = [field('de'), field('fr')];
+  const { rules, elements } = load({ fields, description: 'Old rule text', translator });
+  rules.currentEditDetector = { detectorName: 'first' };
+  rules.currentMethodItem = { id: 'row-1' };
+  const done = rules.autoTranslateDescription();
+  rules.currentEditDetector = { detectorName: 'second' };
+  release();
+  await done;
+  assert.deepEqual(fields.map(f => f.value), ['', ''], 'the next rule\'s fields stay empty');
+  assert.doesNotMatch(elements['#methodTranslateStatus'].textContent, /^Filled/);
+
+  let releaseAgain;
+  const gateAgain = new Promise(resolve => { releaseAgain = resolve; });
+  const again = load({ fields: [field('de')], description: 'Text', translator: { create: () => gateAgain.then(() => ({ translate: async () => 'Übersetzt' })) } });
+  again.rules.currentEditDetector = { detectorName: 'same' };
+  again.rules.currentMethodItem = { id: 'row-1' };
+  const pending = again.rules.autoTranslateDescription();
+  again.rules.currentMethodItem = { id: 'row-2' };
+  releaseAgain();
+  await pending;
+  assert.equal(again.elements['#methodDescriptionTranslations'].querySelectorAll('.rule-translation-input')[0].value, '', 'another pattern\'s settings are not filled');
+});
