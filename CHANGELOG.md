@@ -13,6 +13,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced → Check Cookies: a timeline per protection cookie shows when it was set, how often it changed and when it expires (kept in memory only).
 - Detection → Copy: curl command and Python (requests) that request the page again with this browser's headers and cookies, naming the protection cookies.
 - Rules: New rule from this page lists the page's cookies, scripts and headers, marks what is already detected, and opens the editor with a draft rule.
+- Bulk scan (History → ⋯ menu): scan a pasted list, a file or a sitemap of up to 200 pages in a background tab, with live results, CSV/JSON export and History recording.
 - Akamai recognises its crypto challenge, Cloudflare its challenge cookies, F5 its client-side challenge cookie, and FingerprintJS now also spots BotD and its current script addresses.
 
 ### Changed
