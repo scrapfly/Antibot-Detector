@@ -319,8 +319,12 @@ function scheduleLateNetworkCheck(tabId, page) {
  */
 async function applyLateNetworkUrls(tabId, page) {
     const entries = page.pending.splice(0, LATE_NETWORK_BATCH);
-    const ours = () => finishedPages.get(tabId) === page && !detectionStates.has(tabId) &&
-        !(typeof tabsUsingCache !== 'undefined' && tabsUsingCache.has(tabId));
+    // The finished scan's own state stays in detectionStates: only another scan (a rescan, a new page) ends it
+    const ours = () => {
+        const current = detectionStates.get(tabId);
+        return finishedPages.get(tabId) === page && (!current || current === page.state) &&
+            !(typeof tabsUsingCache !== 'undefined' && tabsUsingCache.has(tabId));
+    };
     if (entries.length === 0 || finishedPages.get(tabId) !== page) return;
     if (!ours()) { forgetFinishedPage(tabId); return; } // a new scan reads the tab's requests itself; a cached page has none
     if (typeof detectionEngine === 'undefined' || !detectionEngine || !await isExtensionEnabled()) return;

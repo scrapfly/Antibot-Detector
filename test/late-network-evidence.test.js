@@ -229,3 +229,14 @@ test('the listener hands every recorded request to the late check, and a new pag
   assert.match(capture, /function forgetTabRequests[\s\S]*?forgetFinishedPage\(tabId\)[\s\S]*?\n}/);
   assert.match(read('background/tab-events.js'), /onRemoved[\s\S]{0,200}forgetFinishedPage\(tabId\)/);
 });
+
+test('a hooks or window completion that arrives after the scan finished starts no new scan', async () => {
+  await scanned();
+  vm.runInContext(read('background/handlers/messages-detection.js'), worker, { filename: 'messages-detection.js' });
+  const late = { tabId: 1, url: PAGE, documentId: 'doc-1', verified: true };
+  assert.equal(worker.skippedForCachedPage(late, 'idle'), true, 'the same document: nothing left to complete');
+  assert.equal(worker.skippedForCachedPage({ ...late, documentId: 'doc-2' }, 'idle'), false, 'another document is a page of its own');
+  worker.detectionStates.set(1, { url: PAGE });
+  assert.equal(worker.skippedForCachedPage(late, 'idle'), false, 'a scan running for the tab takes it');
+  worker.detectionStates.delete(1);
+});

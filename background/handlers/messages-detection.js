@@ -53,14 +53,20 @@ function detectionStateForDocument(document) {
 }
 
 /**
- * A page served from the cache reports its hooks and window checks as skipped. With no scan running for the
- * tab that report has nothing to complete, and must not start a scan that would never finish (the popup would
- * show "Searching" and the worker would be held awake).
+ * A page served from the cache reports its hooks and window checks as skipped, and a slow page can report them
+ * after its scan already finished. With no scan running for the tab such a report has nothing to complete, and
+ * must not start a scan that would never finish (the popup would show "Searching", the worker would be held
+ * awake and the page's later requests would no longer be checked).
  */
 function skippedForCachedPage(document, reason) {
     const reasons = globalThis.ScrapflyBridgeProtocol.COMPLETION_REASONS;
     const cacheHit = reason === reasons.HOOKS.CACHE_HIT || reason === reasons.WINDOW.CACHE_HIT;
-    return cacheHit && !detectionStates.has(document.tabId);
+    if (detectionStates.has(document.tabId)) return false;
+    // A completion that arrives after this document's scan already finished (the scan ended on its timeout first)
+    // has nothing left to complete: a new state would never finish, show "Searching" and hold the worker awake
+    const finished = typeof finishedPages !== 'undefined' ? finishedPages.get(document.tabId) : null;
+    const sameDocument = !!finished && !!document.documentId && finished.documentId === document.documentId;
+    return cacheHit || sameDocument;
 }
 
 /**
