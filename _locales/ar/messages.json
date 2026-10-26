@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "يترجم ما كتبته إلى الإنجليزية (الأصل) وإلى اللغات الأخرى بمترجم المتصفح على الجهاز. راجعها قبل الحفظ."
+  },
+  "combinationOneCount": {
+    "message": "تركيبة واحدة"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} تركيبات"
   }
 }

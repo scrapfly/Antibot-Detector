@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "입력한 내용을 브라우저의 기기 내 번역기로 영어(원문)와 다른 언어로 번역합니다. 저장하기 전에 확인하세요."
+  },
+  "combinationOneCount": {
+    "message": "조합 1개"
+  },
+  "combinationsCountFmt": {
+    "message": "조합 {0}개"
   }
 }

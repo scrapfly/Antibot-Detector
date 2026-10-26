@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Yazdığını tarayıcının cihazdaki çevirmeniyle İngilizceye (orijinal) ve diğer dillere çevirir. Kaydetmeden önce kontrol et."
+  },
+  "combinationOneCount": {
+    "message": "1 kombinasyon"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} kombinasyon"
   }
 }

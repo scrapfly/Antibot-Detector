@@ -477,7 +477,7 @@ const SEED = [
     await open(RULE, false);
     let s = await state();
     assert.ok(Object.values(s).every(card => card.hidden && card.expanded === 'false'), JSON.stringify(s));
-    assert.deepEqual(await summaries(), ['3 patterns', '1'], 'the folded headers say how much they hold');
+    assert.deepEqual(await summaries(), ['3 patterns', '1 combination'], 'the folded headers say how much they hold');
     // A click on the header opens a card, and again closes it; the arrow button does the same from the keyboard
     await page.$eval('#detectionMethodsCard .modal-card-header--toggle h3', el => el.click());
     s = await state();

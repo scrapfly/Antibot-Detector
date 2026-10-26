@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "आपने जो लिखा उसका अंग्रेज़ी (मूल) और अन्य भाषाओं में ब्राउज़र के डिवाइस पर चलने वाले अनुवादक से अनुवाद करता है। सहेजने से पहले उन्हें जाँचें।"
+  },
+  "combinationOneCount": {
+    "message": "1 संयोजन"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} संयोजन"
   }
 }

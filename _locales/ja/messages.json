@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "入力した内容をブラウザー内蔵の翻訳機能で英語（原文）と他の言語に翻訳します。保存する前に確認してください。"
+  },
+  "combinationOneCount": {
+    "message": "1 件の組み合わせ"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} 件の組み合わせ"
   }
 }

@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Übersetzt, was du geschrieben hast, ins Englische (das Original) und in die anderen Sprachen, mit dem Übersetzer des Browsers auf dem Gerät. Vor dem Speichern prüfen."
+  },
+  "combinationOneCount": {
+    "message": "1 Kombination"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} Kombinationen"
   }
 }

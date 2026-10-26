@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Přeloží, co jste napsali, do angličtiny (originál) a do ostatních jazyků pomocí překladače v prohlížeči. Před uložením je zkontrolujte."
+  },
+  "combinationOneCount": {
+    "message": "1 kombinace"
+  },
+  "combinationsCountFmt": {
+    "message": "Kombinace: {0}"
   }
 }

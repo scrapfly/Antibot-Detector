@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Översätter det du skrev till engelska (originalet) och de andra språken med webbläsarens inbyggda översättare. Kontrollera dem innan du sparar."
+  },
+  "combinationOneCount": {
+    "message": "1 kombination"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} kombinationer"
   }
 }

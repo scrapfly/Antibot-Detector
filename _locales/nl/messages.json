@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Vertaalt wat je schreef naar het Engels (het origineel) en de andere talen, met de vertaler van de browser op je apparaat. Controleer ze voor het opslaan."
+  },
+  "combinationOneCount": {
+    "message": "1 combinatie"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} combinaties"
   }
 }

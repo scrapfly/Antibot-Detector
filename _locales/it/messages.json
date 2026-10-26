@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Traduce quello che hai scritto in inglese (l'originale) e nelle altre lingue con il traduttore integrato del browser. Controllali prima di salvare."
+  },
+  "combinationOneCount": {
+    "message": "1 combinazione"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} combinazioni"
   }
 }

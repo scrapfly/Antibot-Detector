@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "使用浏览器内置的翻译功能，将你写的内容翻译成英文（原文）和其他语言。保存前请检查。"
+  },
+  "combinationOneCount": {
+    "message": "1 个组合"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} 个组合"
   }
 }

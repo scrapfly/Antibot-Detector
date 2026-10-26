@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "แปลสิ่งที่คุณเขียนเป็นภาษาอังกฤษ (ต้นฉบับ) และภาษาอื่นด้วยตัวแปลในเบราว์เซอร์ ตรวจสอบก่อนบันทึก"
+  },
+  "combinationOneCount": {
+    "message": "1 ชุดค่าผสม"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} ชุดค่าผสม"
   }
 }

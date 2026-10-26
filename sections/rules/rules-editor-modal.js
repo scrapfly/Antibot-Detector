@@ -143,7 +143,13 @@ Rules.prototype.updateEditorCardSummaries = function() {
         : ((_t && _t.format('methodPatternsFmt', patterns)) || `${patterns} patterns`);
     }
     const combos = document.getElementById('combinationsSummary');
-    if (combos) combos.textContent = String(Array.isArray(this.combinationsModel) ? this.combinationsModel.length : 0);
+    if (combos) {
+      // "4 combinations", like the patterns card's "4 patterns", not a bare number
+      const count = Array.isArray(this.combinationsModel) ? this.combinationsModel.length : 0;
+      combos.textContent = count === 1
+        ? ((_t && _t.tr('combinationOneCount', '1 combination')) || '1 combination')
+        : ((_t && _t.format('combinationsCountFmt', count)) || `${count} combinations`);
+    }
   };
 
 /**

@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Dịch nội dung bạn viết sang tiếng Anh (bản gốc) và các ngôn ngữ khác bằng trình dịch tích hợp của trình duyệt. Hãy kiểm tra trước khi lưu."
+  },
+  "combinationOneCount": {
+    "message": "1 tổ hợp"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} tổ hợp"
   }
 }

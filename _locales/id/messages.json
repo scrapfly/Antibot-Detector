@@ -6625,5 +6625,11 @@
   },
   "ruleTranslateChangesHint": {
     "message": "Menerjemahkan yang Anda tulis ke bahasa Inggris (aslinya) dan ke bahasa lain dengan penerjemah bawaan browser. Periksa sebelum menyimpan."
+  },
+  "combinationOneCount": {
+    "message": "1 kombinasi"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} kombinasi"
   }
 }

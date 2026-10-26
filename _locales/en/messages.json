@@ -7222,5 +7222,13 @@
   "ruleTranslateChangesHint": {
     "message": "Translates what you wrote into English (the original) and into the other languages, with the browser's on-device translator. Check them before saving.",
     "description": "Rule editor, top bar: tooltip of Translate the changes"
+  },
+  "combinationOneCount": {
+    "message": "1 combination",
+    "description": "Rules editor: count on the folded Combinations card when the rule has one"
+  },
+  "combinationsCountFmt": {
+    "message": "{0} combinations",
+    "description": "Rules editor: count on the folded Combinations card ({0} = how many)"
   }
 }
