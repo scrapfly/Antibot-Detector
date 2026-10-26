@@ -508,15 +508,17 @@ async function finalizeDetection(tabId, state) {
     }
 
     // The webhook gets the finished results (hooks, fingerprints and late requests included) of a page scanned just now
-    // (whatever happens to the webhook never fails the scan)
+    // (whatever happens to the webhook never fails the scan, and a slow server never holds it: the delivery runs on its own)
     if (finalResults.length > 0 && !preservedExistingCache && !watching && DetectionSessionStore.isCurrent(tabId, state)) {
         try {
-            await Settings.sendWebhookIfEnabled({
+            Promise.resolve(Settings.sendWebhookIfEnabled({
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),
                 title: state.tabTitle,
                 favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url)
-            }, finalResults, { trigger: 'scan' });
+            }, finalResults, { trigger: 'scan' })).catch((error) => {
+                Logger.warn('NETWORK', 'The webhook step failed', error);
+            });
         } catch (error) {
             Logger.warn('NETWORK', 'The webhook step failed', error);
         }

@@ -12,10 +12,10 @@ const read = (file) => fs.readFileSync(path.join(__dirname, '..', file), 'utf8')
 const det = (name, category, confidence) => ({ detector: { name }, category, confidence });
 const FOUND = [det('Cloudflare', 'Anti-Bot', 90), det('Canvas', 'Fingerprint', 30)];
 
-function harness(webhook, { respond = () => ({ ok: true, status: 200 }), failStore = false } = {}) {
+function harness(webhook, { respond = () => ({ ok: true, status: 200 }), failStore = false, globals = {} } = {}) {
   const calls = [], store = {}, warnings = [];
   const context = vm.createContext({
-    WebhookBody, URL, URLSearchParams, FormData, console,
+    WebhookBody, URL, URLSearchParams, FormData, console, ...globals,
     Logger: { network() {}, warn: (...args) => warnings.push(args), error() {}, ui() {}, debug() {} },
     UrlUtils: { getFaviconUrl: (h) => `https://icons.example/${h}.png` },
     Utils: { getSettings: async () => ({ webhook }) },
@@ -37,6 +37,18 @@ function harness(webhook, { respond = () => ({ ok: true, status: 200 }), failSto
 const ON = { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookMethod: 'POST', webhookContentType: 'application/json',
   webhookPayload: WebhookBody.DEFAULT_TEMPLATE, webhookHeaders: [{ name: 'Authorization', value: 'Bearer SYNTHETIC_KEY' }] };
 const PAGE = { url: 'https://shop.example/cart?id=1', title: 'Cart' };
+
+test('a webhook that never answers is given up after the timeout and recorded as failed', async () => {
+  // fetch had no timeout: a server that never answered held the delivery (and the scan that awaited it) forever
+  const timeouts = [];
+  const FakeAbortSignal = { timeout: (ms) => { timeouts.push(ms); return { aborted: true, reason: new Error('TimeoutError') }; } };
+  const h = harness(ON, { globals: { AbortSignal: FakeAbortSignal }, respond: (url, options) => (options.signal && options.signal.aborted ? new Error('The operation was aborted') : { ok: true, status: 200 }) });
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  assert.deepEqual(timeouts, [h.runtime.WEBHOOK_TIMEOUT_MS]);
+  assert.equal(h.runtime.WEBHOOK_TIMEOUT_MS, 10000);
+  assert.ok(h.calls[0].options.signal, 'the request carries the timeout');
+  assert.deepEqual(h.log().map(e => [e.outcome, e.error]), [['failed', 'network']]);
+});
 
 test('a page is sent to a webhook that is on, and the record says so without naming the address', async () => {
   const h = harness(ON);

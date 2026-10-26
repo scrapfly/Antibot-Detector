@@ -280,9 +280,15 @@ SettingsRuntime._signWebhookRequest = async function(options, secret) {
     return options;
 };
 
+/** How long a webhook may take to answer: a server that never does would otherwise hold its delivery forever. */
+SettingsRuntime.WEBHOOK_TIMEOUT_MS = 10000;
+
 SettingsRuntime.sendWebhook = async function(webhook, ctx) {
     const { url, options } = SettingsRuntime.buildWebhookRequest(webhook, ctx);
     await SettingsRuntime._signWebhookRequest(options, webhook.webhookSecret);
+    if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+        options.signal = AbortSignal.timeout(SettingsRuntime.WEBHOOK_TIMEOUT_MS);
+    }
     try {
         return await fetch(url, options);
     } catch (_) {

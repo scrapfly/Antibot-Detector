@@ -348,6 +348,16 @@ test('a webhook step that throws never fails the scan', async () => {
   assert.equal(h.calls.popup.length, 1, 'the popup was told');
 });
 
+test('a webhook that never answers does not hold the scan', async () => {
+  const h = harness();
+  let started = 0;
+  h.ctx.Settings.sendWebhookIfEnabled = () => { started++; return new Promise(() => {}); };
+  const state = h.begin();
+  await h.ctx.finalizeDetection(7, state);
+  assert.equal(started, 1, 'the delivery was started');
+  assert.equal(h.ctx.detectionStates.has(7), false, 'the scan finished without waiting for it');
+});
+
 test('a scan replaced before the webhook step sends nothing', async () => {
   const h = harness();
   const gate = deferred(), arrived = deferred(), sent = [];
