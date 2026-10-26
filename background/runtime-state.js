@@ -47,7 +47,6 @@ let currentActiveTab = null;
 
 const tabsUsingCache = new Set();
 const recentlyClearedTabs = new Set();
-const manuallyClearedCaches = new Set();
 
 
 // ─── Extension Enabled State Cache ──────────────────────────────────────────

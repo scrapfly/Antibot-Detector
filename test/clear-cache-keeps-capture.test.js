@@ -21,7 +21,6 @@ test('Clear Cache drops the saved result and keeps the tab\'s network capture', 
     chrome: { action: { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {} } },
     DetectionEngineManager: { handleClearDetectionCache: async (request, sendResponse) => { cleared.push(request.tabId); sendResponse({ success: true }); } },
     DetectionSessionStore: { cancel: (tabId, reason) => cancelled.push([tabId, reason]) },
-    manuallyClearedCaches: new Set(),
     tabsUsingCache: new Set([7]), recentlyClearedTabs: new Set(),
     setTimeout: () => 0,
     ...stores

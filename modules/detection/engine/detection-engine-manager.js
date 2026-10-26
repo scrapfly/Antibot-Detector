@@ -2153,13 +2153,6 @@ class DetectionEngineManager {
         return await sendDataRequest();
     }
 
-    /**
-     * Handle CLEAR_DETECTION_CACHE message
-     * @param {object} request - Message request object
-     * @param {function} sendResponse - Response callback
-     * @param {Set} manuallyClearedCaches - Set to track manually cleared URLs
-     * @returns {boolean} True (async response)
-     */
     /** Settings → Data → Storage → Clear: every saved detection result, under the same lock as the stores and the single clear. */
     static async handleClearAllDetectionCache(sendResponse) {
         try {
@@ -2180,7 +2173,13 @@ class DetectionEngineManager {
         return true;
     }
 
-    static async handleClearDetectionCache(request, sendResponse, manuallyClearedCaches = null) {
+    /**
+     * Handle CLEAR_DETECTION_CACHE message
+     * @param {object} request - Message request object
+     * @param {function} sendResponse - Response callback
+     * @returns {boolean} True (async response)
+     */
+    static async handleClearDetectionCache(request, sendResponse) {
         try {
             const requestedScopeRaw = String(request.cacheScope || '').toLowerCase();
             const requestedScope = requestedScopeRaw === 'url' ? 'full' : requestedScopeRaw;
@@ -2212,10 +2211,6 @@ class DetectionEngineManager {
             }
 
             if (cleared) {
-                if (manuallyClearedCaches) {
-                    manuallyClearedCaches.add(urlHash);
-                }
-
                 sendResponse({ status: 'cleared', urlHash });
             } else {
                 sendResponse({ status: 'not_found' });

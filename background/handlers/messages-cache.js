@@ -4,7 +4,7 @@
  * (background/commands.js) share. `sendResponse` answers the message, if any.
  */
 async function clearTabDetectionCache(request, sendResponse = () => {}) {
-    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse, manuallyClearedCaches);
+    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse);
 
     if (request.tabId) {
         DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
