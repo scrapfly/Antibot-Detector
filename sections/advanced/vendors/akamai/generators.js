@@ -85,7 +85,7 @@ function parseAkamaiScripts() {
 
         ${hasSensorUrl ? `
         // Parse Sensor Data URLs
-        const sensorUrls = [${scriptCategories.sensorUrl.map(script => `'${script.url}'`).join(', ')}];
+        const sensorUrls = [${scriptCategories.sensorUrl.map(script => JSON.stringify(String(script.url))).join(', ')}];
 
         sensorUrls.forEach((url, index) => {
             console.log(\`[Sensor URL \${index + 1}]\`, url);

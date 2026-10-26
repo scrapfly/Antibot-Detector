@@ -2,6 +2,12 @@
 ImpervaAdvanced.prototype.generateParsingCode = function(extractedData, scriptPaths, exportType = 'all') {
         const { utmvcScriptPath, reeseScriptPath, reeseSensorPath } = scriptPaths;
         const hostname = extractedData.hostname || 'example.com';
+        const pageUrlText = extractedData.url || 'https://example.com';
+        // Page values go into the code as string literals with quotes and backslashes escaped: inside a bare '...'
+        // a quote in the address ended the string. JSON.stringify gives a literal JavaScript, Python, Go and C# read;
+        // PHP gets a single-quoted one (a double-quoted PHP string would expand a $ in the address).
+        const lit = (value) => JSON.stringify(String(value));
+        const phpLit = (value) => `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
         // Filter based on export type
         const includeReese = exportType === 'all' || exportType === 'reese84';
@@ -46,7 +52,7 @@ function parseDynamicReeseScript(html, urlStr) {
 }
 
 // Example usage:
-const result = parseDynamicReeseScript(htmlContent, '${extractedData.url || 'https://example.com'}');
+const result = parseDynamicReeseScript(htmlContent, ${lit(pageUrlText)});
 console.log('Sensor Path:', result.sensorPath);
 console.log('Script Path:', result.scriptPath);
 ` : ''}
@@ -69,7 +75,7 @@ function generateUtmvcScriptPath() {
 }
 
 // Example detected path:
-const detectedPath = '${utmvcScriptPath}';
+const detectedPath = ${lit(utmvcScriptPath)};
 console.log('UTMVC Script Path:', detectedPath);
 ` : ''}
 
@@ -137,7 +143,7 @@ def parse_dynamic_reese_script(html: str, url_str: str) -> dict:
     }
 
 # Example usage:
-result = parse_dynamic_reese_script(html_content, '${extractedData.url || 'https://example.com'}')
+result = parse_dynamic_reese_script(html_content, ${lit(pageUrlText)})
 print(f"Sensor Path: {result['sensor_path']}")
 print(f"Script Path: {result['script_path']}")
 ` : ''}
@@ -159,7 +165,7 @@ def generate_utmvc_script_path() -> str:
     return f'/_Incapsula_Resource?SWKMTFSR=1&e={int(time.time() * 1000)}'
 
 # Example detected path:
-detected_path = '${utmvcScriptPath}'
+detected_path = ${lit(utmvcScriptPath)}
 print(f'UTMVC Script Path: {detected_path}')
 ` : ''}
 
@@ -216,7 +222,7 @@ func parseDynamicReeseScript(html string, urlStr string) (*ReeseScript, error) {
 }
 
 // Example usage:
-// result, err := parseDynamicReeseScript(htmlContent, "${extractedData.url || 'https://example.com'}")
+// result, err := parseDynamicReeseScript(htmlContent, ${lit(pageUrlText)})
 // if err == nil {
 //     fmt.Printf("Sensor Path: %s\\n", result.SensorPath)
 //     fmt.Printf("Script Path: %s\\n", result.ScriptPath)
@@ -241,7 +247,7 @@ func generateUtmvcScriptPath() string {
 }
 
 // Example detected path:
-// const detectedPath = "${utmvcScriptPath}"
+// const detectedPath = ${lit(utmvcScriptPath)}
 ` : ''}
 
 // Detected on: ${hostname}
@@ -291,7 +297,7 @@ function parseDynamicReeseScript($html, $urlStr) {
 }
 
 // Example usage:
-// $result = parseDynamicReeseScript($htmlContent, '${extractedData.url || 'https://example.com'}');
+// $result = parseDynamicReeseScript($htmlContent, ${phpLit(pageUrlText)});
 // echo "Sensor Path: " . $result['sensor_path'] . "\\n";
 // echo "Script Path: " . $result['script_path'] . "\\n";
 ` : ''}
@@ -323,7 +329,7 @@ function generateUtmvcScriptPath() {
 }
 
 // Example detected path:
-// $detectedPath = '${utmvcScriptPath}';
+// $detectedPath = ${phpLit(utmvcScriptPath)};
 // echo 'UTMVC Script Path: ' . $detectedPath . "\\n";
 ` : ''}
 
@@ -393,7 +399,7 @@ public static ReeseScript ParseDynamicReeseScript(string html, string urlStr)
 }
 
 // Example usage:
-// var result = ParseDynamicReeseScript(htmlContent, "${extractedData.url || 'https://example.com'}");
+// var result = ParseDynamicReeseScript(htmlContent, ${lit(pageUrlText)});
 // Console.WriteLine($"Sensor Path: {result.SensorPath}");
 // Console.WriteLine($"Script Path: {result.ScriptPath}");
 ` : ''}
@@ -430,7 +436,7 @@ public static string GenerateUtmvcScriptPath()
 }
 
 // Example detected path:
-// string detectedPath = "${utmvcScriptPath}";
+// string detectedPath = ${lit(utmvcScriptPath)};
 // Console.WriteLine($"UTMVC Script Path: {detectedPath}");
 ` : ''}
 

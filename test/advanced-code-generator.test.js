@@ -257,6 +257,25 @@ for (const vendor of Object.keys(vendors)) test(`${vendor} shared dialog retains
   assert.doesNotMatch(source, /(?<!\r)\n/, 'vendor CRLF is preserved');
 });
 
+test('a page address with a quote stays one string literal in the generated code', () => {
+  const tricky = "https://shop.example/it's?q=\"x\"&a=\\$b";
+  const imperva = vendorFixture('imperva').module.generateParsingCode({ hostname: 'shop.example', url: tricky, timestamp: 1700000000000 },
+    { reeseScriptPath: '/reese.js', utmvcScriptPath: "/utm'vc.js" });
+  new Function(imperva.javascript);
+  assert.ok(imperva.javascript.includes(`parseDynamicReeseScript(htmlContent, ${JSON.stringify(tricky)})`));
+  assert.ok(imperva.python.includes(`parse_dynamic_reese_script(html_content, ${JSON.stringify(tricky)})`));
+  assert.ok(imperva.php.includes("'https://shop.example/it\\'s?q=\"x\"&a=\\\\$b'"), 'PHP: single-quoted, quote and backslash escaped');
+
+  const shape = vendorFixture('shapesecurity').module.generateParsingCode([{ url: tricky, hasSeed: true, categories: [] }],
+    { hasInitJs: true, hasSeeds: true, scriptType: 'all' });
+  assert.ok(shape.javascript.includes(`const scriptUrl = ${JSON.stringify(tricky)};`));
+
+  const akamai = vendorFixture('akamai').module.generateScriptParsingCode({ pixel: [], sensor: [], sbsd: [],
+    sensorUrl: [{ type: 'sensor-url', src: tricky, url: tricky, categories: ['sensor-url'] }] });
+  new Function(akamai.javascript);
+  assert.ok(akamai.javascript.includes(`const sensorUrls = [${JSON.stringify(tricky)}];`));
+});
+
 test('code generators join shared focus ownership above a kit dialog', () => {
   const { api, owner, document, opener, context } = fixture();
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../modules/ui/modal-focus.js'), 'utf8'), context);

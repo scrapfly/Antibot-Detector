@@ -27,6 +27,11 @@ ShapeSecurityAdvanced.prototype.generateParsingCode = function(scripts, options)
         const sampleInitUrl = initScripts[0]?.url || 'https://example.com/path/init.js';
         const sampleVendor2Url = vendor2Scripts[0]?.url || 'https://example.com/vendor/static/vendor2.js';
         const sampleSeedUrl = seedScripts[0]?.url || 'https://example.com/vendor/static/vendor2.js?seed=xxxxx';
+        // Page values go into the code as string literals with quotes and backslashes escaped: inside a bare '...'
+        // a quote in the address ended the string. JSON.stringify gives a literal JavaScript, Python, Go and C# read;
+        // PHP gets a single-quoted one (a double-quoted PHP string would expand a $ in the address).
+        const lit = (value) => JSON.stringify(String(value));
+        const phpLit = (value) => `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 
         // Determine which patterns to include based on scriptType
         const getPatterns = () => {
@@ -65,7 +70,7 @@ function extractSeedParameter(url) {
 }
 
 // Example usage:
-const scriptUrl = '${sampleSeedUrl}';
+const scriptUrl = ${lit(sampleSeedUrl)};
 const seed = extractSeedParameter(scriptUrl);
 console.log('Extracted seed:', seed);
 ` : ''}
@@ -128,7 +133,7 @@ def extract_seed_parameter(url: str) -> Optional[str]:
     return match.group(1) if match else None
 
 # Example usage:
-script_url = '${sampleSeedUrl}'
+script_url = ${lit(sampleSeedUrl)}
 seed = extract_seed_parameter(script_url)
 print(f'Extracted seed: {seed}')
 ` : ''}
@@ -180,7 +185,7 @@ function extractSeedParameter(url) {
 }
 
 // Example usage:
-const scriptUrl = '${sampleSeedUrl}';
+const scriptUrl = ${lit(sampleSeedUrl)};
 const seed = extractSeedParameter(scriptUrl);
 console.log('Extracted seed:', seed);
 ` : ''}
@@ -243,7 +248,7 @@ function extractSeedParameter($url) {
 }
 
 // Example usage:
-$scriptUrl = '${sampleSeedUrl}';
+$scriptUrl = ${phpLit(sampleSeedUrl)};
 $seed = extractSeedParameter($scriptUrl);
 echo "Extracted seed: $seed\\n";
 ` : ''}
@@ -364,7 +369,7 @@ func FindShapeSecurityScripts(html string) []string {
 
 // Example usage:
 // func main() {
-//     scriptURL := "${sampleSeedUrl}"
+//     scriptURL := ${lit(sampleSeedUrl)}
 //     seed := ExtractSeedParameter(scriptURL)
 //     fmt.Printf("Extracted seed: %s\\n", seed)
 // }`
