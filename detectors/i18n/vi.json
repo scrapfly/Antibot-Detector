@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "Tài nguyên hoặc bước xác minh thử thách mật mã Bot Manager dưới /_sec/cp_challenge/",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "Đường dẫn thử thách mật mã cùng cookie sec_cpt hoặc cookie Bot Manager",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cookie nền tảng thử thách Cloudflare (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cookie nền tảng thử thách cùng clearance Cloudflare, header server hoặc thử thách"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cookie nền tảng thử thách cùng clearance Cloudflare, header server hoặc thử thách",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie giảm thiểu của Netacea, trong trình duyệt hoặc do máy chủ đặt (tên mặc định)",
+  "Captcha verification with the mitigation cookie": "Xác minh CAPTCHA cùng cookie giảm thiểu"
 }

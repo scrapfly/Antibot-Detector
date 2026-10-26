@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "ทรัพยากรหรือการยืนยันของ challenge เข้ารหัสของ Bot Manager ภายใต้ /_sec/cp_challenge/",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "path ของ challenge เข้ารหัสร่วมกับคุกกี้ sec_cpt หรือคุกกี้ Bot Manager",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "คุกกี้ของแพลตฟอร์ม challenge ของ Cloudflare (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "คุกกี้ของแพลตฟอร์ม challenge ร่วมกับ clearance ของ Cloudflare, header ของเซิร์ฟเวอร์ หรือ challenge"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "คุกกี้ของแพลตฟอร์ม challenge ร่วมกับ clearance ของ Cloudflare, header ของเซิร์ฟเวอร์ หรือ challenge",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "คุกกี้ mitigation ของ Netacea ในเบราว์เซอร์หรือที่เซิร์ฟเวอร์ตั้งค่า (ชื่อเริ่มต้น)",
+  "Captcha verification with the mitigation cookie": "การยืนยัน captcha ร่วมกับคุกกี้ mitigation"
 }

@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "/_sec/cp_challenge/ 配下の Bot Manager 暗号チャレンジのリソースまたは検証",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "暗号チャレンジのパスとその sec_cpt または Bot Manager の Cookie",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare チャレンジプラットフォームの Cookie (cf_chl_rc_i、cf_chl_rc_ni、cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare の clearance、サーバーヘッダーまたはチャレンジを伴うチャレンジプラットフォームの Cookie"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare の clearance、サーバーヘッダーまたはチャレンジを伴うチャレンジプラットフォームの Cookie",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "Netacea の緩和 Cookie (ブラウザー内またはサーバーが設定、既定の名前)",
+  "Captcha verification with the mitigation cookie": "CAPTCHA 検証と緩和 Cookie"
 }

@@ -821,14 +821,8 @@
   }
  },
  "detect-netacea": {
-  "mitata-request-cookie": {
+  "mitata-cookie": {
    "cookie": [
-    "_mitata",
-    "c3RhcnRfdGltZV9zdGFtcA=="
-   ]
-  },
-  "mitata-response-cookie": {
-   "setCookie": [
     "_mitata",
     "c3RhcnRfdGltZV9zdGFtcA=="
    ]

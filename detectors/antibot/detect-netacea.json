@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
+  "lastUpdated": "2026-10-26",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.netacea.com/",
   "icon": "netacea_official.png",
@@ -14,22 +14,13 @@
   "detection": {
     "cookie": [
       {
-        "id": "mitata-request-cookie",
-        "name": "^_mitata$",
-        "nameRegex": true,
-        "confidence": 55,
-        "description": "Netacea mitigation cookie observed in the browser's cookie jar (default name)",
-        "nameScope": "request",
-        "valueScope": "request"
-      },
-      {
-        "id": "mitata-response-cookie",
+        "id": "mitata-cookie",
         "name": "^_mitata$",
         "nameRegex": true,
         "confidence": 60,
-        "description": "Netacea mitigation cookie observed while being set by the server (default name)",
-        "nameScope": "response",
-        "valueScope": "response"
+        "description": "Netacea mitigation cookie, in the browser or set by the server (default name)",
+        "nameScope": "all",
+        "valueScope": "all"
       },
       {
         "id": "mitatacaptcha-cookie",
@@ -55,29 +46,13 @@
   },
   "combinations": [
     {
-      "id": "netacea-session-cookie",
-      "name": "Mitigation cookie both set by the server and echoed by the browser",
-      "confidence": 80,
-      "when": {
-        "all": [
-          { "pattern": "mitata-request-cookie" },
-          { "pattern": "mitata-response-cookie" }
-        ]
-      }
-    },
-    {
       "id": "netacea-captcha-session",
       "name": "Captcha cookie with a mitigation cookie",
       "confidence": 100,
       "when": {
         "all": [
           { "pattern": "mitatacaptcha-cookie" },
-          {
-            "any": [
-              { "pattern": "mitata-request-cookie" },
-              { "pattern": "mitata-response-cookie" }
-            ]
-          }
+          { "pattern": "mitata-cookie" }
         ]
       }
     },
@@ -88,25 +63,18 @@
       "when": {
         "all": [
           { "pattern": "netacea-captcha-verify" },
-          {
-            "any": [
-              { "pattern": "mitata-request-cookie" },
-              { "pattern": "mitata-response-cookie" },
-              { "pattern": "mitatacaptcha-cookie" }
-            ]
-          }
+          { "pattern": "mitatacaptcha-cookie" }
         ]
       }
     },
     {
-      "id": "netacea-complete-profile",
-      "name": "Captcha cookie with the mitigation cookie set and echoed",
-      "confidence": 100,
+      "id": "netacea-verify-mitigation",
+      "name": "Captcha verification with the mitigation cookie",
+      "confidence": 95,
       "when": {
         "all": [
-          { "pattern": "mitatacaptcha-cookie" },
-          { "pattern": "mitata-request-cookie" },
-          { "pattern": "mitata-response-cookie" }
+          { "pattern": "netacea-captcha-verify" },
+          { "pattern": "mitata-cookie" }
         ]
       }
     }

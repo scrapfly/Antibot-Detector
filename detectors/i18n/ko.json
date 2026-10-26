@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "/_sec/cp_challenge/ 아래의 Bot Manager 암호 챌린지 리소스 또는 검증",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "암호 챌린지 경로와 해당 sec_cpt 또는 Bot Manager 쿠키",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare 챌린지 플랫폼 쿠키 (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare clearance, 서버 헤더 또는 챌린지와 함께 있는 챌린지 플랫폼 쿠키"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare clearance, 서버 헤더 또는 챌린지와 함께 있는 챌린지 플랫폼 쿠키",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "브라우저에 있거나 서버가 설정한 Netacea 완화 쿠키 (기본 이름)",
+  "Captcha verification with the mitigation cookie": "캡차 검증과 완화 쿠키"
 }

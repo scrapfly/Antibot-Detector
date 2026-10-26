@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "Resource of verificatie van de cryptochallenge van Bot Manager onder /_sec/cp_challenge/",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "Pad van de cryptochallenge met de sec_cpt-cookie of een Bot Manager-cookie",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cookie van het challengeplatform van Cloudflare (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cookie van het challengeplatform met een Cloudflare-vrijgave, serverheader of challenge"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cookie van het challengeplatform met een Cloudflare-vrijgave, serverheader of challenge",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "Mitigatiecookie van Netacea, in de browser of door de server gezet (standaardnaam)",
+  "Captcha verification with the mitigation cookie": "Captchaverificatie met de mitigatiecookie"
 }

@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "مورد تحدي التشفير في Bot Manager أو التحقق منه ضمن /_sec/cp_challenge/",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "مسار تحدي التشفير مع ملف تعريف الارتباط sec_cpt أو ملف تعريف الارتباط الخاص بـ Bot Manager",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "ملف تعريف الارتباط لمنصة التحدي في Cloudflare (cf_chl_rc_i، cf_chl_rc_ni، cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "ملف تعريف الارتباط لمنصة التحدي مع clearance من Cloudflare أو ترويسة الخادم أو تحدٍ"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "ملف تعريف الارتباط لمنصة التحدي مع clearance من Cloudflare أو ترويسة الخادم أو تحدٍ",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "ملف تعريف الارتباط للتخفيف من Netacea، في المتصفح أو يضبطه الخادم (الاسم الافتراضي)",
+  "Captcha verification with the mitigation cookie": "التحقق من captcha مع ملف تعريف الارتباط للتخفيف"
 }

@@ -1100,5 +1100,7 @@
   "Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/": "/_sec/cp_challenge/ altındaki Bot Manager kripto doğrulama sınaması kaynağı veya doğrulaması",
   "Crypto challenge path with its sec_cpt or Bot Manager cookie": "sec_cpt veya Bot Manager çerezi ile birlikte kripto doğrulama sınaması yolu",
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare doğrulama sınaması platformu çerezi (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
-  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare izni, server üstbilgisi veya doğrulama sınaması ile birlikte sınama platformu çerezi"
+  "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare izni, server üstbilgisi veya doğrulama sınaması ile birlikte sınama platformu çerezi",
+  "Netacea mitigation cookie, in the browser or set by the server (default name)": "Tarayıcıda veya sunucu tarafından ayarlanan Netacea önleme çerezi (varsayılan ad)",
+  "Captcha verification with the mitigation cookie": "Önleme çerezi ile birlikte CAPTCHA doğrulaması"
 }
