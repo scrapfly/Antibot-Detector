@@ -2098,6 +2098,14 @@ class DetectionEngineManager {
             return;
         }
 
+        // A page back from the back/forward cache only gets its cached result back on the badge: the tab's
+        // captured headers, cookies and requests by now belong to the page it went to, so a scan from here
+        // would mix the two (the popup still scans it on request)
+        if (triggerSource === 'bfcache_restore') {
+            Logger.debug('SCAN', `Page restored from the back/forward cache with no cached result, tab ${tabId}`);
+            return { status: 'not_cached' };
+        }
+
         // Coalesce this document's notifications, never a new page or reload
         // that happens to reuse the tab within the throttle interval.
         const requestKey = `${tabId}:${sender.documentId || pageUrl}`;

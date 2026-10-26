@@ -287,11 +287,38 @@ function onPageLoaded(callback) {
 }
 
 /**
+ * Run start once the person can see the page. A page Chrome prerenders (speculation rules) is not in the tab
+ * yet: the worker turns its messages away, so its scan, or its cached result on the badge, waits until the
+ * page is shown.
+ * @param {Function} start - Called exactly once
+ */
+function whenPageShown(start) {
+    if (document.prerendering) {
+        document.addEventListener('prerenderingchange', () => start(), { once: true });
+    } else {
+        start();
+    }
+}
+
+/**
+ * A page restored from the back/forward cache runs no script from the start and fires no load, while the
+ * toolbar badge was reset when the tab left it: ask the worker again. It only restores the page's cached
+ * result (the tab's captured headers by now belong to the page it went to, so it starts no scan from here).
+ */
+function onBackForwardRestore(event) {
+    if (!event || !event.persisted || hasCleanedUp || !detectionEngine) return;
+    notifyPageLoad('bfcache_restore');
+}
+
+/**
  * Setup detection triggers
  * OPTIMIZED 2.3: Consolidated event listeners with debouncing
  */
 function setupDetectionTriggers() {
     Logger.debug('CONTENT', 'Setting up detection triggers');
+
+    window.removeEventListener('pageshow', onBackForwardRestore);
+    window.addEventListener('pageshow', onBackForwardRestore);
 
     // Notify page load AFTER all resources load (background checks cache first)
     // Use 'load' event instead of 'DOMContentLoaded' to ensure async scripts (like reCAPTCHA) are loaded
@@ -919,6 +946,6 @@ if (window.__scrapflyContentScriptInitialized) {
     // Already initialized, silently skip
 } else {
     window.__scrapflyContentScriptInitialized = true;
-    // Wait for Utils to load before initializing
-    waitForUtilsAndInitialize();
+    // Wait for Utils to load (and, for a prerendered page, until it is shown) before initializing
+    whenPageShown(waitForUtilsAndInitialize);
 }
