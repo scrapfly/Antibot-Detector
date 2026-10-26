@@ -914,6 +914,14 @@
   box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
 }
 
+.method-value-btn.copyable-value { cursor: pointer; font-family: var(--font-mono); }
+.method-value-btn.copyable-value:hover,
+.method-value-btn.copyable-value:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
 .copyable-value.copy-feedback-active {
   background: rgba(16, 185, 129, 0.22) !important;
   border-color: rgba(16, 185, 129, 0.55) !important;
@@ -1242,7 +1250,6 @@
   background: var(--bg-primary);
   border: 1px solid var(--g-4b4b4b);
   border-radius: 5px;
-  /* Read-only text, not a field or a button: nothing happens on click */
   box-sizing: border-box;
   cursor: default;
   overflow: hidden;

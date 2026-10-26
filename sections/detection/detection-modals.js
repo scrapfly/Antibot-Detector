@@ -120,6 +120,12 @@ DetectionModals.initializeModalElements = function() {
 
     const closeHandler = () => this.closeDetectionModal();
 
+    // Evidence values copy on click or Enter (the rows are re-rendered for each detection: one delegated listener)
+    if (this.modalElements.methods) {
+      this.modalElements.methods.addEventListener('click', (e) => DetectionUI.handleCopyableValueClick.call(this, e));
+      this.modalElements.methods.addEventListener('keydown', (e) => DetectionUI.handleCopyableValueKeyDown.call(this, e));
+    }
+
     if (overlay) {
       overlay.addEventListener('click', closeHandler);
     }

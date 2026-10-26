@@ -131,3 +131,14 @@ test('the evidence icons: one per method, a combination mark when one decided, a
     assert.match(context.FormatUtils.methodIconSvg(method), /^<svg [^>]*aria-hidden="true">/, method);
   }
 });
+
+test('the details dialog\'s evidence values are copy buttons holding the whole value, escaped', () => {
+  const { ui } = load();
+  const html = ui.getMethodBadges.call({ detectorManager: { categoryManager: { getTagColor: () => '#00BCD4' } } }, [
+    { type: 'url', fullUrl: 'https://www.google.com/js/bg/ekPP3ntX4.js?a=1&b="2"', confidence: 100 },
+    { type: 'header', name: '', value: '', confidence: 50 }
+  ]);
+  assert.match(html, /<button type="button" class="method-value-btn copyable-value"[^>]*data-copy-value="https:\/\/www\.google\.com\/js\/bg\/ekPP3ntX4\.js\?a=1&amp;b=&quot;2&quot;"/);
+  assert.match(html, /data-copy-label="value"/);
+  assert.match(html, /<span class="method-value-btn" dir="ltr">unknown<\/span>/, 'a row with nothing to copy stays plain text');
+});

@@ -901,14 +901,18 @@ DetectionUI.copyCopyableValue = async function(element) {
 DetectionUI.handleCopyableValueClick = function(event) {
     const eventTarget = event.target instanceof Element ? event.target : event.target?.parentElement;
     const target = eventTarget?.closest('[data-copy-value]');
-    const container = document.querySelector('#detectionResults');
-    if (!target || !container || !container.contains(target)) {
+    if (!target || !DetectionUI.inCopyArea(target)) {
       return;
     }
 
     event.preventDefault();
     event.stopPropagation();
     this.copyCopyableValue(target);
+};
+
+/** Copyable values live in the results header and in the details dialog's evidence rows. */
+DetectionUI.inCopyArea = function(element) {
+    return ['#detectionResults', '#detectionDetailModal'].some((selector) => document.querySelector(selector)?.contains(element));
 };
 
 DetectionUI.handleCopyableValueKeyDown = function(event) {
@@ -918,8 +922,7 @@ DetectionUI.handleCopyableValueKeyDown = function(event) {
 
     const eventTarget = event.target instanceof Element ? event.target : event.target?.parentElement;
     const target = eventTarget?.closest('[data-copy-value]');
-    const container = document.querySelector('#detectionResults');
-    if (!target || !container || !container.contains(target)) {
+    if (!target || !DetectionUI.inCopyArea(target)) {
       return;
     }
 
@@ -1471,12 +1474,16 @@ DetectionUI.getMethodBadges = function(matches) {
       const methodClass = matchType.replace(/_/g, '-').replace(/s$/, ''); // js_hooks -> js-hooks, cookies -> cookie
 
       const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
-      const safeFullValue = FormatUtils.escapeHtml(copyValue);
+      // The value is a button: a click (or Enter) copies the whole of it, like the site address above
+      const copyText = DetectionUI.copyLabelText('value', copyValue);
+      const copyable = copyValue && copyValue !== unknownValue;
 
       return `
         <div class="method-item-card method-${methodClass}" data-method-type="${methodType}">
           <span class="method-type-badge" ${badgeStyle}>${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(matchType || 'unknown'))}</span>
-          <span class="method-value-btn" dir="ltr" title="${safeFullValue}">${safeDisplayValue}</span>
+          ${copyable
+            ? `<button type="button" class="method-value-btn copyable-value" dir="ltr" data-copy-value="${FormatUtils.escapeAttr(copyValue)}" data-copy-label="value" title="${FormatUtils.escapeAttr(copyText.withValue)}" aria-label="${FormatUtils.escapeAttr(copyText.action)}">${safeDisplayValue}</button>`
+            : `<span class="method-value-btn" dir="ltr">${safeDisplayValue}</span>`}
           ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
         </div>
       `;
