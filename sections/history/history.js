@@ -1912,15 +1912,17 @@ class History {
 
       // Preview locally (same rule the worker applies), then let the worker
       // apply it to the stored list so entries saved meanwhile are kept.
+      // The preview stays local: a save that fails leaves the list, its search and its filters as they were.
+      // After a save, the list is the stored one (loadHistoryFromStorage).
       const before = this.historyItems.length;
-      this.historyItems = HistoryStore.applyImport(this.historyItems, data.items, mode, this.historyLimit);
-      const added = Math.max(0, this.historyItems.length - before);
+      const preview = HistoryStore.applyImport(this.historyItems, data.items, mode, this.historyLimit);
+      const added = Math.max(0, preview.length - before);
       await this.saveHistoryToStorage(data.items, mode);
 
       if (mode === 'merge') {
         NotificationHelper.success(_fmt('notificationHistoryMergedFmt', `Merged ${added} new history items`, added));
       } else {
-        NotificationHelper.success(_fmt('notificationHistoryReplacedFmt', `Replaced history with ${this.historyItems.length} items`, this.historyItems.length));
+        NotificationHelper.success(_fmt('notificationHistoryReplacedFmt', `Replaced history with ${preview.length} items`, preview.length));
       }
       this.renderHistory();
     } catch (error) {

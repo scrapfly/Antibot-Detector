@@ -180,12 +180,17 @@ function loadHistory(dialogs) {
   vm.runInContext(read('modules/core/history-store.js'), dialogs.context);
   vm.runInContext(read('sections/history/history.js'), dialogs.context);
   const saved = [];
+  const store = vm.runInContext('HistoryStore', dialogs.context);
   const history = Object.create(dialogs.context.History.prototype);
   Object.assign(history, {
     historyItems: [{ id: 'old', timestamp: '2026-01-01T00:00:00Z' }],
     historyLimit: 0,
-    // The worker applies the import; record what the popup ends up showing
-    saveHistoryToStorage: async () => { saved.push([...history.historyItems].map(i => i.id)); },
+    // The worker applies the import and the popup reads the stored list back; record what it ends up showing
+    saveHistoryToStorage: async (items, mode) => {
+      if (history.failSave) throw new Error('quota');
+      history.historyItems = store.applyImport(history.historyItems, items, mode, 0);
+      saved.push([...history.historyItems].map(i => i.id));
+    },
     renderHistory() {}
   });
   return { history, saved };
@@ -219,6 +224,21 @@ test('history import: Merge keeps old items, Replace drops them', async () => {
     await done;
     assert.deepStrictEqual(saved, [expected], text);
   }
+});
+
+test('history import: a save that fails leaves the list as it was (no preview entries in search or filters)', async () => {
+  const dialogs = loadDialogs();
+  const { history, saved } = loadHistory(dialogs);
+  history.failSave = true;
+  const errors = [];
+  vm.runInContext('NotificationHelper', dialogs.context).error = (text) => errors.push(text);
+  const done = history.handleImport(importEvent(FILE));
+  await tick();
+  dialogs.button('Merge').click();
+  await done;
+  assert.deepStrictEqual(saved, []);
+  assert.deepStrictEqual(history.historyItems.map(i => i.id), ['old']);
+  assert.equal(errors.length, 1, 'the failure is said');
 });
 
 function loadRules(dialogs) {
