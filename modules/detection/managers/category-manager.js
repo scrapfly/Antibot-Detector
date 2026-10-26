@@ -66,7 +66,10 @@ class CategoryManager {
                     'detect-forter',
                     'detect-sift',
                     'detect-castle',
-                    'detect-seon'
+                    'detect-seon',
+                    'detect-fastly',
+                    'detect-kount',
+                    'detect-riskified'
                 ]
             },
             captcha: {
@@ -92,7 +95,8 @@ class CategoryManager {
                     'detect-prosopo',
                     'detect-basilisk',
                     'detect-altcha',
-                    'detect-capjs'
+                    'detect-capjs',
+                    'detect-lemin'
                 ]
             },
             fingerprint: {
