@@ -82,6 +82,8 @@ SettingsUI.clearStoragePart = async function(part) {
         if (part === 'cache') {
             if (!await confirm(text('storageClearCacheTitle', 'Clear the detection cache'), text('storageClearCacheMessage', 'Pages are scanned again the next time you open them. History, rules and settings are not touched.'))) return;
             if (!await ask({ type: WorkerMessages.DETECTION_CLEAR_ALL_CACHE })) throw new Error('The worker did not clear the cache');
+            // The Detection tab behind Settings must not keep showing the cleared result
+            window.popupInstance?.detection?.refreshAfterCacheChange?.();
             NotificationHelper.success(text('storageCacheCleared', 'Detection cache cleared'));
         } else if (part === 'captures') {
             if (!await confirm(text('storageClearCapturesTitle', 'Delete tool captures'), text('storageClearCapturesMessage', 'Everything the Advanced tools saved is deleted. History, rules and settings are not touched.'))) return;

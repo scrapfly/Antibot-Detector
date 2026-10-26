@@ -1000,7 +1000,7 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
     const evidenceIcons = DetectionUI.evidenceIconsHtml.call(this, matchList, combos.length > 0);
 
     return `
-      <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}" style="--conf:${sure}%;--cat-color:${categoryColor}">
+      <div class="detection-card ${isSingleResult ? 'single-result' : ''}" data-detection-index="${globalIndex}" role="button" tabindex="0" aria-haspopup="dialog" style="--conf:${sure}%;--cat-color:${categoryColor}">
         <div class="card-header">
           <div class="card-icon-section">
             ${detectorIcon}
@@ -1174,6 +1174,12 @@ DetectionUI.renderDetectionsPage = function(detections) {
           if (!Number.isNaN(parsedIndex)) {
             this.openDetectionModal(parsedIndex);
           }
+        });
+        // Keyboard: Enter or Space opens the card like a click (keys on its own buttons stay theirs)
+        card.addEventListener('keydown', (e) => {
+          if (e.target !== card || (e.key !== 'Enter' && e.key !== ' ')) return;
+          e.preventDefault();
+          card.click();
         });
       });
     };

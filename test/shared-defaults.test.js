@@ -34,7 +34,8 @@ test('a rule that declares no confidence is 80 (85 for a DOM pattern) for detect
   assert.strictEqual(Constants.DEFAULT_DOM_CONFIDENCE, 85);
   assert.ok(!/confidence \|\| (?!0\b)\d+/.test(read('modules/detection/engine/detection-engine-manager.js')), 'the engine reads the constants');
   assert.ok(!/confidence \|\| (?!0\b)\d+/.test(read('sections/rules/rules-editor.js')), 'the rule editor reads the constants');
-  assert.ok(/method\.confidence \|\| \(methodType === 'dom' \? Constants\.DEFAULT_DOM_CONFIDENCE : Constants\.DEFAULT_MATCH_CONFIDENCE\)/.test(read('sections/rules/rules-editor.js')));
+  // 0 is kept as 0: only a missing confidence takes the default
+  assert.ok(/Number\.isFinite\(method\.confidence\) \? method\.confidence : \(methodType === 'dom' \? Constants\.DEFAULT_DOM_CONFIDENCE : Constants\.DEFAULT_MATCH_CONFIDENCE\)/.test(read('sections/rules/rules-editor.js')));
 });
 
 test('the two windows in which a repeated scan is skipped are named constants, and the request one stays shorter', () => {

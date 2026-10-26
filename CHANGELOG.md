@@ -21,6 +21,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: importing a rule with a number where text belongs, or with markup in its logo, is refused instead of stopping scans or showing that markup on its card.
 - Rules editor: a confidence of 0 stays 0 when the rule is reopened, and a payload rule listing several HTTP methods keeps them all.
 - Rules: an on/off switch that could not be saved goes back and says so, and deleting a combination names it without stray "&amp;" codes.
+- Detection: a page that was never scanned, whose scan failed or was cut short, or whose cache was just cleared no longer shows the green "Nothing Detected".
+- Detection: clearing the cache or changing the cache scope in Settings no longer leaves the old results on the Detection tab.
+- Detection: result cards open with Enter or Space, and their details dialog keeps keyboard focus until it is closed.
+- Settings: Escape in the language list closes only the list, not Settings with its unsaved changes; the list also works with the arrow keys.
+- Settings: Add current domain refuses browser pages and blank tabs instead of adding names like "extensions" or "newtab".
 
 ## [3.0.4] - 2026-10-23
 

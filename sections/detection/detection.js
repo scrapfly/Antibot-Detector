@@ -150,7 +150,7 @@ class Detection {
                 if (chrome.runtime.lastError) {
                   Logger.error('UI', '[Detection] Error fetching completed data:', chrome.runtime.lastError);
                   if (!this.isShowingResults || this.currentResults.length === 0) {
-                    this.showEmptyState();
+                    this.showEmptyState({ outcome: 'failed' });
                   }
                   return;
                 }
@@ -169,7 +169,7 @@ class Detection {
                 } else {
                   if (this.debugMode) Logger.debug('UI', '[Detection] No data in completion response');
                   if (!this.isShowingResults || this.currentResults.length === 0) {
-                    this.showEmptyState();
+                    this.showEmptyState({ outcome: 'unscanned' });
                   }
                 }
               }
@@ -178,93 +178,10 @@ class Detection {
         });
       }
 
-      // Listen for cache scope changes from Settings
+      // Cache scope changed or cache cleared elsewhere (a runtime message never reaches the page that sent it:
+      // Settings, in this popup, calls refreshAfterCacheChange itself)
       if (message.type === WorkerMessages.DETECTION_CLEAR_CACHE) {
-        (async () => {
-          Logger.debug('UI', '[Detection] Cache scope changed - checking for cached data with new scope');
-
-          // Clear current results display
-          this.currentResults = [];
-
-          // Clear pagination
-          if (this.paginationManager) {
-            this.paginationManager.setItems([]);
-          }
-
-          // Clear result cards from DOM
-          const detectionResults = document.querySelector('#detectionResults');
-          if (detectionResults) {
-            detectionResults.innerHTML = '';
-          }
-
-          // Set flags to prevent auto-detection
-          this.justClearedCache = true;
-          this.cacheCleared = true;
-
-          // Update cache info display to reflect new cache scope from settings
-          this.updateCacheInfo();
-
-          // Check if there's cached detection data for the new scope
-          try {
-            const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-            if (!tabs[0]) return;
-
-            // Request detection data with new cache scope
-            chrome.runtime.sendMessage(
-              { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
-              async (response) => {
-                if (chrome.runtime.lastError) {
-                  Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
-                  this.showEmptyState();
-                  // Set badge to CLR (cleared)
-                  try {
-                    await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
-                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
-                    await chrome.action.setBadgeBackgroundColor({
-                      color: BADGE.COLORS.CLEARED,
-                      tabId: tabs[0].id
-                    });
-                  } catch (e) { /* Tab may be closed */ }
-                  return;
-                }
-
-                if (response && response.data) {
-                  // Found cached data for new scope - display it
-                  Logger.debug('UI', '[Detection] Found cached data for new scope - displaying');
-
-                  // Use ScrapflyPopup's processDetectionData to display results
-                  if (window.popupInstance) {
-                    await window.popupInstance.processDetectionData(response.data);
-                  } else {
-                    // Fallback: display directly
-                    await this.displayResults(response.data.detections);
-                  }
-                } else {
-                  // No cached data for new scope - show empty state
-                  Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
-                  this.showEmptyState();
-                  // Set badge to CLR (cleared)
-                  try {
-                    await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
-                    await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
-                    await chrome.action.setBadgeBackgroundColor({
-                      color: BADGE.COLORS.CLEARED,
-                      tabId: tabs[0].id
-                    });
-                  } catch (e) { /* Tab may be closed */ }
-                }
-              }
-            );
-          } catch (error) {
-            if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for cached data:', error);
-            this.showEmptyState();
-          }
-
-          if (sendResponse) {
-            sendResponse({ success: true });
-          }
-        })();
-
+        this.refreshAfterCacheChange().finally(() => { if (sendResponse) sendResponse({ success: true }); });
         return true; // Keep message channel open for async response
       }
     });
@@ -294,6 +211,88 @@ class Detection {
   hideLoadingState(...args) {
     return DetectionUI.hideLoadingState.apply(this, args);
   }
+  /** The cache scope changed or the cache was cleared: drop the shown results and show what the cache has now. */
+  async refreshAfterCacheChange() {
+    Logger.debug('UI', '[Detection] Cache scope changed - checking for cached data with new scope');
+
+    // Clear current results display
+    this.currentResults = [];
+
+    // Clear pagination
+    if (this.paginationManager) {
+      this.paginationManager.setItems([]);
+    }
+
+    // Clear result cards from DOM
+    const detectionResults = document.querySelector('#detectionResults');
+    if (detectionResults) {
+      detectionResults.innerHTML = '';
+    }
+
+    // Set flags to prevent auto-detection
+    this.justClearedCache = true;
+    this.cacheCleared = true;
+
+    // Update cache info display to reflect new cache scope from settings
+    this.updateCacheInfo();
+
+    // Check if there's cached detection data for the new scope
+    try {
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tabs[0]) return;
+
+      // Request detection data with new cache scope
+      chrome.runtime.sendMessage(
+        { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
+        async (response) => {
+          if (chrome.runtime.lastError) {
+            Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
+            this.showEmptyState({ outcome: 'unscanned' });
+            // Set badge to CLR (cleared)
+            try {
+              await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
+              await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
+              await chrome.action.setBadgeBackgroundColor({
+                color: BADGE.COLORS.CLEARED,
+                tabId: tabs[0].id
+              });
+            } catch (e) { /* Tab may be closed */ }
+            return;
+          }
+
+          if (response && response.data) {
+            // Found cached data for new scope - display it
+            Logger.debug('UI', '[Detection] Found cached data for new scope - displaying');
+
+            // Use ScrapflyPopup's processDetectionData to display results
+            if (window.popupInstance) {
+              await window.popupInstance.processDetectionData(response.data);
+            } else {
+              // Fallback: display directly
+              await this.displayResults(response.data.detections);
+            }
+          } else {
+            // No cached data for new scope - show empty state
+            Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
+            this.showEmptyState({ outcome: 'unscanned' });
+            // Set badge to CLR (cleared)
+            try {
+              await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
+              await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
+              await chrome.action.setBadgeBackgroundColor({
+                color: BADGE.COLORS.CLEARED,
+                tabId: tabs[0].id
+              });
+            } catch (e) { /* Tab may be closed */ }
+          }
+        }
+      );
+    } catch (error) {
+      if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for cached data:', error);
+      this.showEmptyState({ outcome: 'unscanned' });
+    }
+  }
+
   showAnalyzingState(...args) {
     return DetectionUI.showAnalyzingState.apply(this, args);
   }

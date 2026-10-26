@@ -168,6 +168,11 @@ DetectionModals.openDetectionModal = function(index) {
     requestAnimationFrame(() => {
       this.modalElements.modal.classList.add('is-open');
     });
+    // Keyboard: focus moves into the dialog, Tab stays in it, Escape closes it and focus goes back to the card
+    const dialog = this.modalElements.modal.querySelector('.detection-modal-container');
+    if (dialog && typeof ModalFocus !== 'undefined' && !this.releaseModalFocus) {
+      this.releaseModalFocus = ModalFocus.activate(dialog, { onClose: () => this.closeDetectionModal(), initialFocus: this.modalElements.closeBtn || undefined });
+    }
 };
 
 DetectionModals.closeDetectionModal = function() {
@@ -178,6 +183,9 @@ DetectionModals.closeDetectionModal = function() {
     this.modalElements.modal.classList.remove('is-open');
     this.modalElements.modal.style.display = 'none';
     this.activeModalIndex = null;
+    const release = this.releaseModalFocus;
+    this.releaseModalFocus = null;
+    if (release) release();
 };
 
 DetectionModals.renderDetectionModalContent = function(detection) {

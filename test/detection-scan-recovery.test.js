@@ -116,7 +116,7 @@ test('waiting for a scan has an end: after the last ask the usual outcome applie
 // ---- popup.js: the first answer when the popup opens
 
 function popup() {
-  const calls = { analyzing: 0, empty: 0, processed: [] };
+  const calls = { analyzing: 0, empty: 0, outcomes: [], processed: [] };
   const context = {
     WorkerMessages: require('../modules/core/worker-messages.js'),
     ScrapflyBridgeProtocol: { MESSAGE_TYPES: {} },
@@ -134,15 +134,16 @@ function popup() {
     currentTab: 'detection', detectionViewRequestId: 1,
     detection: {
       viewedTabId: 5, isShowingResults: false, currentResults: [],
-      showAnalyzingState() { calls.analyzing++; }, showEmptyState() { calls.empty++; }
+      showAnalyzingState() { calls.analyzing++; }, showEmptyState(options = {}) { calls.empty++; calls.outcomes.push(options.outcome || 'complete'); }
     },
     processDetectionData: async data => { calls.processed.push(data); }
   });
   return { instance, calls, context };
 }
 
-for (const [name, response] of [['no answer', null], ['an interrupted scan', { status: 'interrupted' }],
-  ['no data', { status: 'ok', data: null }], ['an error', { status: 'error', error: 'x' }]]) {
+// Never the green "Nothing Detected": that card is for a finished scan, whose answer carries data
+for (const [name, response, outcome] of [['no answer', null, 'unscanned'], ['an interrupted scan', { status: 'interrupted' }, 'interrupted'],
+  ['no data', { status: 'ok', data: null }, 'unscanned'], ['an error', { status: 'error', error: 'x' }, 'failed']]) {
   test(`opening the popup on a page still loading shows the scan card, not "Nothing Detected" (${name})`, async () => {
     const { instance, calls } = popup();
     tabStatus = 'loading';
@@ -156,9 +157,17 @@ for (const [name, response] of [['no answer', null], ['an interrupted scan', { s
     tabStatus = 'complete';
     await instance.handleDetectionResponseAndUpdateUI(5, response, 1);
     assert.equal(calls.empty, 1);
+    assert.deepEqual(calls.outcomes, [outcome]);
     assert.equal(calls.analyzing, 0);
   });
 }
+
+test('a reload or cleared mark on the badge is not shown as a clean page', async () => {
+  const { instance, calls, context } = popup();
+  context.Detection.getBadgeText = async () => '-';
+  await instance.handleDetectionResponseAndUpdateUI(5, { status: 'ok', data: null }, 1);
+  assert.deepEqual(calls.outcomes, ['unscanned']);
+});
 
 test('a page that is still loading but has a stored result shows the result', async () => {
   const { instance, calls } = popup();

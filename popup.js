@@ -382,8 +382,10 @@ class ScrapflyPopup {
       badgeTrimmed === '?' ||
       badgeTrimmed === '\u2715';
 
+    // Without a finished scan the page is never shown as "Nothing Detected": that green card is for a scan that
+    // ran and found nothing (its result comes with data). A reload mark means the scan was cut short or cleared.
     if (isReloadBadge) {
-      this.detection.showEmptyState();
+      this.detection.showEmptyState({ outcome: 'unscanned' });
       return false;
     }
 
@@ -393,9 +395,9 @@ class ScrapflyPopup {
     if (!this.isDetectionViewRequestCurrent(requestId)) {
       return false;
     }
-    const showEmptyOrScanning = () => (tabLoading
+    const showEmptyOrScanning = (outcome) => (tabLoading
       ? this.detection.showAnalyzingState()
-      : this.detection.showEmptyState());
+      : this.detection.showEmptyState({ outcome }));
 
     if (!response) {
       if (isLoadingBadgeText(badgeTrimmed)) {
@@ -403,7 +405,7 @@ class ScrapflyPopup {
       } else if (hasVisibleResults) {
         return true;
       } else {
-        showEmptyOrScanning();
+        showEmptyOrScanning('unscanned');
       }
       return false;
     }
@@ -417,7 +419,7 @@ class ScrapflyPopup {
     }
 
     if (response.status === 'interrupted') {
-      showEmptyOrScanning();
+      showEmptyOrScanning('interrupted');
       return false;
     }
 
@@ -428,7 +430,7 @@ class ScrapflyPopup {
       } else if (hasVisibleResults) {
         return true;
       } else {
-        showEmptyOrScanning();
+        showEmptyOrScanning('failed');
       }
       return false;
     }
@@ -450,7 +452,7 @@ class ScrapflyPopup {
     } else if (hasVisibleResults) {
       return true;
     } else {
-      showEmptyOrScanning();
+      showEmptyOrScanning('unscanned');
     }
     return false;
   }

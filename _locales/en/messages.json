@@ -7178,5 +7178,9 @@
   "rulesToggleSaveFailed": {
     "message": "Could not save the change. Try again.",
     "description": "Rules: a rule's on/off switch could not be saved, so it went back to how it was"
+  },
+  "addCurrentDomainNotWebPage": {
+    "message": "Open the popup on a website to add it.",
+    "description": "Settings → Detection → Sites to scan: Add current domain was pressed on a browser page, a blank tab or the extension's own page"
   }
 }

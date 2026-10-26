@@ -457,7 +457,7 @@ SettingsUI.initLanguagePicker = function() {
 
     const label = SettingsUI._languageOptionLabel(option);
 
-    return `<li class="language-picker-option" role="option" data-value="${option.value}" aria-selected="false">
+    return `<li class="language-picker-option" role="option" tabindex="-1" data-value="${option.value}" aria-selected="false">
 
       ${SettingsUI._languageFlagMarkup(option)}
 
@@ -517,9 +517,57 @@ SettingsUI.initLanguagePicker = function() {
 
 
 
+  // Escape closes only the list (Settings stays open with its unsaved changes): capture phase, before Settings' own key handler
+
   document.addEventListener('keydown', (e) => {
 
-    if (e.key === 'Escape') {
+    if (e.key !== 'Escape' || !picker.classList.contains('open')) return;
+
+    e.preventDefault();
+
+    e.stopImmediatePropagation();
+
+    SettingsUI._closeLanguagePicker();
+
+    trigger.focus();
+
+  }, true);
+
+  // Keyboard: arrows (and Home/End) move through the languages, Enter or Space picks one, Tab leaves the list
+
+  trigger.addEventListener('keydown', (e) => {
+
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+
+    e.preventDefault();
+
+    SettingsUI._openLanguagePicker();
+
+    (menu.querySelector('[aria-selected="true"]') || menu.querySelector('.language-picker-option'))?.focus();
+
+  });
+
+  menu.addEventListener('keydown', (e) => {
+
+    const options = Array.from(menu.querySelectorAll('.language-picker-option'));
+
+    const current = options.indexOf(document.activeElement);
+
+    const move = { ArrowDown: current + 1, ArrowUp: current - 1, Home: 0, End: options.length - 1 }[e.key];
+
+    if (move !== undefined) {
+
+      e.preventDefault();
+
+      options[Math.max(0, Math.min(options.length - 1, move))]?.focus();
+
+    } else if ((e.key === 'Enter' || e.key === ' ') && current >= 0) {
+
+      e.preventDefault();
+
+      SettingsUI._applyLanguageChoice(options[current].dataset.value || 'auto');
+
+    } else if (e.key === 'Tab') {
 
       SettingsUI._closeLanguagePicker();
 

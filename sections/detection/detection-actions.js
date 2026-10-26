@@ -88,7 +88,7 @@ DetectionActions.clearCache = async function() {
 
       this.currentResults = [];
       this.justClearedCache = true;
-      this.showEmptyState();
+      this.showEmptyState({ outcome: 'unscanned' });
     } catch (error) {
       Logger.error('UI', 'Failed to clear cache:', error);
       NotificationHelper.error(detectionActionsTr('failedToClearCacheToast', 'Failed to clear cache'));

@@ -208,6 +208,8 @@ SettingsUI.saveSettings = async function(options = {}) {
         UrlUtils.clearUrlHashCache();
         notifyWorker(WorkerMessages.CACHE_SCOPE_CHANGED);
         notifyWorker(WorkerMessages.DETECTION_CLEAR_CACHE);
+        // That message reaches other extension pages, never this popup: its Detection tab refreshes here
+        window.popupInstance?.detection?.refreshAfterCacheChange?.();
       }
       notifyWorker(WorkerMessages.SETTINGS_UPDATED);
       notifyWorker(WorkerMessages.SYNC_CATEGORY_COLORS);
@@ -852,6 +854,11 @@ SettingsUI.setupEventListeners = function() {
 
           const url = new URL(tab.url);
           const domain = url.hostname;
+          // Only websites: not chrome://extensions ("extensions"), a new tab, about:blank or this extension's own page
+          if (!/^https?:$/.test(url.protocol) || !domain) {
+            NotificationHelper.error(_tr2('addCurrentDomainNotWebPage', 'Open the popup on a website to add it.'));
+            return;
+          }
 
           if (!this.settings.detection) {
             this.settings.detection = { blacklistedDomains: [], allowedDomains: [] };
