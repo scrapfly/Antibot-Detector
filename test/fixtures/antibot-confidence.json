@@ -344,6 +344,12 @@
     "TS4a8b2c1d",
     "08abcdef"
    ]
+  },
+  "tspd-cookie": {
+   "cookie": [
+    "TSPD_101_DID",
+    "08fake0123456789abcdef0123456789abcdef"
+   ]
   }
  },
  "detect-incapsula": {

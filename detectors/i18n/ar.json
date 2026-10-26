@@ -1102,5 +1102,7 @@
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "ملف تعريف الارتباط لمنصة التحدي في Cloudflare (cf_chl_rc_i، cf_chl_rc_ni، cf_chl_rc_m)",
   "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "ملف تعريف الارتباط لمنصة التحدي مع clearance من Cloudflare أو ترويسة الخادم أو تحدٍ",
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "ملف تعريف الارتباط للتخفيف من Netacea، في المتصفح أو يضبطه الخادم (الاسم الافتراضي)",
-  "Captcha verification with the mitigation cookie": "التحقق من captcha مع ملف تعريف الارتباط للتخفيف"
+  "Captcha verification with the mitigation cookie": "التحقق من captcha مع ملف تعريف الارتباط للتخفيف",
+  "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "ملف تعريف الارتباط لتحدي جانب العميل في BIG-IP ASM (البادئة الافتراضية TSPD_101، مثل TSPD_101_DID)",
+  "ASM cookie with its client-side challenge cookie": "ملف تعريف الارتباط لـ ASM مع ملف تعريف الارتباط لتحدي جانب العميل الخاص به"
 }

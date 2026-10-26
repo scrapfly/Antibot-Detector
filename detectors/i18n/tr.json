@@ -1102,5 +1102,7 @@
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare doğrulama sınaması platformu çerezi (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
   "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare izni, server üstbilgisi veya doğrulama sınaması ile birlikte sınama platformu çerezi",
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Tarayıcıda veya sunucu tarafından ayarlanan Netacea önleme çerezi (varsayılan ad)",
-  "Captcha verification with the mitigation cookie": "Önleme çerezi ile birlikte CAPTCHA doğrulaması"
+  "Captcha verification with the mitigation cookie": "Önleme çerezi ile birlikte CAPTCHA doğrulaması",
+  "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM istemci tarafı doğrulama sınaması çerezi (varsayılan önek TSPD_101, ör. TSPD_101_DID)",
+  "ASM cookie with its client-side challenge cookie": "İstemci tarafı doğrulama sınaması çerezi ile birlikte ASM çerezi"
 }

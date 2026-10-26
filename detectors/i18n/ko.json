@@ -1102,5 +1102,7 @@
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare 챌린지 플랫폼 쿠키 (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
   "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare clearance, 서버 헤더 또는 챌린지와 함께 있는 챌린지 플랫폼 쿠키",
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "브라우저에 있거나 서버가 설정한 Netacea 완화 쿠키 (기본 이름)",
-  "Captcha verification with the mitigation cookie": "캡차 검증과 완화 쿠키"
+  "Captcha verification with the mitigation cookie": "캡차 검증과 완화 쿠키",
+  "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM 클라이언트 측 챌린지 쿠키 (기본 접두사 TSPD_101, 예: TSPD_101_DID)",
+  "ASM cookie with its client-side challenge cookie": "ASM 쿠키와 해당 클라이언트 측 챌린지 쿠키"
 }

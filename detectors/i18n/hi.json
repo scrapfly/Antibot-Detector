@@ -1102,5 +1102,7 @@
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cloudflare चैलेंज प्लैटफ़ॉर्म कुकी (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
   "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cloudflare clearance, सर्वर हेडर या चैलेंज के साथ चैलेंज प्लैटफ़ॉर्म कुकी",
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Netacea मिटिगेशन कुकी, ब्राउज़र में या सर्वर द्वारा सेट (डिफ़ॉल्ट नाम)",
-  "Captcha verification with the mitigation cookie": "मिटिगेशन कुकी के साथ कैप्चा सत्यापन"
+  "Captcha verification with the mitigation cookie": "मिटिगेशन कुकी के साथ कैप्चा सत्यापन",
+  "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM क्लाइंट-साइड चैलेंज कुकी (डिफ़ॉल्ट प्रीफ़िक्स TSPD_101, जैसे TSPD_101_DID)",
+  "ASM cookie with its client-side challenge cookie": "अपनी क्लाइंट-साइड चैलेंज कुकी के साथ ASM कुकी"
 }

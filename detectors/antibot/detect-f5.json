@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-16",
-  "version": "2.2.0",
+  "lastUpdated": "2026-10-26",
+  "version": "2.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.f5.com/",
   "icon": "f5_official.png",
@@ -32,6 +32,16 @@
         "confidence": 20,
         "standalone": false,
         "description": "Older BIG-IP ASM TSxxxxxxxx cookie name (also matches TS01 names)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "tspd-cookie",
+        "name": "^TSPD_101(?:_[A-Za-z0-9]{1,16})?$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 70,
+        "description": "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)",
         "nameScope": "all",
         "valueScope": "all"
       },
@@ -154,6 +164,28 @@
               },
               {
                 "pattern": "bigip-server-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "f5-asm-challenge",
+      "name": "ASM cookie with its client-side challenge cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "tspd-cookie"
+          },
+          {
+            "any": [
+              {
+                "pattern": "ts-asm-cookie"
+              },
+              {
+                "pattern": "ts-legacy-cookie"
               }
             ]
           }

@@ -1102,5 +1102,7 @@
   "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)": "Cookie platform challenge Cloudflare (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
   "Challenge platform cookie with a Cloudflare clearance, server header or challenge": "Cookie platform challenge dengan clearance Cloudflare, header server, atau challenge",
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie mitigasi Netacea, di browser atau diatur oleh server (nama default)",
-  "Captcha verification with the mitigation cookie": "Verifikasi CAPTCHA beserta cookie mitigasi"
+  "Captcha verification with the mitigation cookie": "Verifikasi CAPTCHA beserta cookie mitigasi",
+  "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie challenge sisi klien BIG-IP ASM (prefiks default TSPD_101, mis. TSPD_101_DID)",
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM beserta cookie challenge sisi kliennya"
 }
