@@ -181,3 +181,13 @@ test('the worker message exists, and the cards, the bar and the menu item are in
   const history = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
   assert.ok(history.includes('class="history-select-input"') && history.includes('this.onSelectClick(e, historyId)'));
 });
+
+test('Clear All while selecting ends Select mode, so no "N selected" bar is left with nothing to act on', async () => {
+  const { view, els } = load();
+  view.selectedIds = new Set(['a', 'b']);
+  view.showEmptyState = () => {};
+  await view.clearHistory();
+  assert.equal(view.selectMode, false);
+  assert.equal(view.selectedIds.size, 0);
+  assert.equal(els['#historySelectBar'].hidden, true);
+});

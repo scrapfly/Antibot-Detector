@@ -617,6 +617,8 @@ class History {
     try {
       await this.sendHistoryChange({ type: HistoryStore.Messages.CLEAR });
       this.historyItems = [];
+      // Select mode ends with the list: its "N selected" bar would stay with nothing to act on
+      if (this.selectMode && typeof this.exitSelectMode === 'function') this.exitSelectMode();
       this.showEmptyState();
       Logger.ui('History cleared');
       NotificationHelper.success(_tr('notificationHistoryCleared', 'History cleared'));
