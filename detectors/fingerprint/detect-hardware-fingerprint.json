@@ -5,12 +5,12 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "1.3.0",
+  "lastUpdated": "2026-10-26",
+  "version": "1.4.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/navigator/hardwareConcurrency",
   "icon": "hardware_fingerprint.png",
-  "description": "Observed reads of CPU, memory, and touch capabilities with graded hardware profile evidence",
+  "description": "Observed reads of CPU, memory, touch and WebGPU adapter details with graded hardware profile evidence",
   "detection": {
     "js_hooks": [
       {
@@ -36,6 +36,24 @@
         "target": "Navigator.prototype.maxTouchPoints",
         "id": "hardware-touch",
         "standalone": true
+      },
+      {
+        "description": "Requests a WebGPU adapter, which describes the graphics hardware (WebGPU pages also do this)",
+        "enabled": true,
+        "confidence": 20,
+        "target": "GPU.prototype.requestAdapter",
+        "id": "hardware-webgpu-adapter",
+        "standalone": true,
+        "optional": true
+      },
+      {
+        "description": "Reads the WebGPU adapter's vendor and architecture details",
+        "enabled": true,
+        "confidence": 30,
+        "target": "GPUAdapter.prototype.info",
+        "id": "hardware-webgpu-info",
+        "standalone": true,
+        "optional": true
       }
     ],
     "content": [
@@ -119,6 +137,17 @@
           { "pattern": "hardware-cpu" },
           { "pattern": "hardware-memory" },
           { "pattern": "hardware-touch" }
+        ]
+      }
+    },
+    {
+      "id": "hardware-webgpu-profile",
+      "name": "WebGPU adapter details with CPU or memory reads",
+      "confidence": 60,
+      "when": {
+        "all": [
+          { "pattern": "hardware-webgpu-info" },
+          { "any": [ { "pattern": "hardware-cpu" }, { "pattern": "hardware-memory" } ] }
         ]
       }
     }

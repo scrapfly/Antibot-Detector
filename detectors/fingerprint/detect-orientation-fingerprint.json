@@ -5,14 +5,60 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-10-26",
+  "version": "1.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/DeviceOrientationEvent",
   "icon": "orientation_fingerprint.png",
-  "description": "Script references to orientation and motion APIs; sensor collection and fingerprinting intent are unconfirmed",
+  "description": "Reads of orientation and motion sensor values, and script references to those APIs",
   "detection": {
-    "js_hooks": [],
+    "js_hooks": [
+      {
+        "id": "orientation-alpha-read",
+        "description": "Reads the device rotation angle from an orientation event",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "DeviceOrientationEvent.prototype.alpha",
+        "optional": true
+      },
+      {
+        "id": "orientation-beta-read",
+        "description": "Reads the front-to-back tilt from an orientation event",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "DeviceOrientationEvent.prototype.beta",
+        "optional": true
+      },
+      {
+        "id": "orientation-gamma-read",
+        "description": "Reads the left-to-right tilt from an orientation event",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "DeviceOrientationEvent.prototype.gamma",
+        "optional": true
+      },
+      {
+        "id": "motion-acceleration-read",
+        "description": "Reads the acceleration from a motion event",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "DeviceMotionEvent.prototype.accelerationIncludingGravity",
+        "optional": true
+      },
+      {
+        "id": "motion-rotation-read",
+        "description": "Reads the rotation rate from a motion event",
+        "enabled": true,
+        "confidence": 15,
+        "standalone": true,
+        "target": "DeviceMotionEvent.prototype.rotationRate",
+        "optional": true
+      }
+    ],
     "content": [
       {
         "id": "content-1",
@@ -76,6 +122,12 @@
       "name": "Orientation and motion event names referenced in scripts; collection unconfirmed",
       "confidence": 15,
       "when": { "all": [{ "pattern": "content-1" }, { "pattern": "content-2" }] }
+    },
+    {
+      "id": "orientation-motion-sensor-reads",
+      "name": "Orientation angles and motion values read from sensor events",
+      "confidence": 40,
+      "when": { "all": [{ "any": [{ "pattern": "orientation-alpha-read" }, { "pattern": "orientation-beta-read" }, { "pattern": "orientation-gamma-read" }] }, { "any": [{ "pattern": "motion-acceleration-read" }, { "pattern": "motion-rotation-read" }] }] }
     }
   ]
 }

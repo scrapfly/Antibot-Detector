@@ -5,6 +5,23 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.0.5] - 2026-10-26
+
+### Added
+
+- Fingerprinting: Hardware now notices pages asking for the WebGPU adapter and its details, Navigator notices permission checks, and Device Orientation notices reads of orientation and motion sensor values.
+
+### Changed
+
+- Azure Front Door scores lower on its own: its headers show the Microsoft edge, not that its firewall is switched on.
+
+### Fixed
+
+- Rules → Update no longer overwrites your own rule that uses an official rule's name, and no longer duplicates an official rule you moved to another category; both now ask first.
+- Rules: importing a rule with a number where text belongs, or with markup in its logo, is refused instead of stopping scans or showing that markup on its card.
+- Rules editor: a confidence of 0 stays 0 when the rule is reopened, and a payload rule listing several HTTP methods keeps them all.
+- Rules: an on/off switch that could not be saved goes back and says so, and deleting a combination names it without stray "&amp;" codes.
+
 ## [3.0.4] - 2026-10-23
 
 ### Added
@@ -642,6 +659,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.0.5]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.4...v3.0.5
 [3.0.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.3...v3.0.4
 [3.0.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.2...v3.0.3
 [3.0.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.1...v3.0.2

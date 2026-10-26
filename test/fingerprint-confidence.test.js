@@ -148,8 +148,9 @@ test('all 21 fingerprint definitions have multiple graded, reachable combination
     // Screen and IndexedDB on 2026-10-08 (one combination re-rated)
     // 1.3.0 of 2026-10-16: ordinary page behaviour (localStorage, CPU count, pixel
     // ratio, languages, RUM timing) scores lower, so clean pages show less noise
-    assert.match(detector.version, /^1\.(?:2\.[01]|3\.0)$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-(?:0[378]|16)$/, detector.id);
+    // 2026-10-26: Hardware and Navigator 1.4.0 (WebGPU adapter, permission queries), Orientation 1.3.0 (sensor reads)
+    assert.match(detector.version, /^1\.(?:2\.[01]|3\.0|4\.0)$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-10-(?:0[378]|16|26)$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate pattern ids`);

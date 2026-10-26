@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "1.3.0",
+  "lastUpdated": "2026-10-26",
+  "version": "1.4.0",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator",
   "icon": "navigator_fingerprint.png",
@@ -76,6 +76,15 @@
         "target": "NavigatorUAData.prototype.getHighEntropyValues",
         "id": "navigator-hints",
         "standalone": true
+      },
+      {
+        "description": "Queries the state of a browser permission (sites asking for notifications also do this)",
+        "enabled": true,
+        "confidence": 10,
+        "target": "Permissions.prototype.query",
+        "id": "navigator-permission-query",
+        "standalone": true,
+        "optional": true
       }
     ],
     "content": [

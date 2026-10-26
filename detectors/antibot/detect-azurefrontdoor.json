@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-06",
-  "version": "2.0.0",
+  "lastUpdated": "2026-10-26",
+  "version": "2.1.0",
   "minExtensionVersion": "2.8",
   "website": "https://azure.microsoft.com/products/frontdoor",
   "icon": "azurefrontdoor_official.png",
@@ -17,7 +17,7 @@
         "id": "azure-ref-header",
         "name": "^x-azure-ref$",
         "nameRegex": true,
-        "confidence": 55,
+        "confidence": 40,
         "description": "Azure Front Door request reference header on every edge response",
         "nameScope": "response",
         "valueScope": "response"
@@ -38,7 +38,7 @@
         "id": "azure-purgeid-header",
         "name": "^x-fd-int-roxy-purgeid$",
         "nameRegex": true,
-        "confidence": 60,
+        "confidence": 45,
         "description": "Internal Front Door purge-id header on cached responses",
         "nameScope": "response",
         "valueScope": "response"
@@ -47,7 +47,7 @@
     "url": [
       {
         "id": "azurefd-host-resource",
-        "confidence": 55,
+        "confidence": 40,
         "description": "Resource served from an azurefd.net Front Door endpoint host",
         "text": "^https://[^/?#]+\\.azurefd\\.net(?:[/?#]|$)",
         "textRegex": true,
@@ -60,7 +60,7 @@
     {
       "id": "frontdoor-response-headers",
       "name": "Front Door reference header with the edge cache header",
-      "confidence": 75,
+      "confidence": 55,
       "when": {
         "all": [
           { "pattern": "azure-ref-header" },
@@ -71,7 +71,7 @@
     {
       "id": "frontdoor-purge-ref",
       "name": "Front Door reference with its purge-id header",
-      "confidence": 85,
+      "confidence": 60,
       "when": {
         "all": [
           { "pattern": "azure-ref-header" },
@@ -82,7 +82,7 @@
     {
       "id": "frontdoor-host-session",
       "name": "Front Door endpoint host with an edge response header",
-      "confidence": 80,
+      "confidence": 60,
       "when": {
         "all": [
           { "pattern": "azurefd-host-resource" },
@@ -98,7 +98,7 @@
     {
       "id": "frontdoor-complete-profile",
       "name": "Front Door reference header, cache header and endpoint host",
-      "confidence": 90,
+      "confidence": 70,
       "when": {
         "all": [
           { "pattern": "azure-ref-header" },
