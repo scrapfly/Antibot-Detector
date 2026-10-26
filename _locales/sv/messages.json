@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Byte av språk läser in tillägget igen. Spara ändringarna i inställningarna först?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Översätt ändringarna"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Texter du ändrade på {0}: {1}. De andra språken visar fortfarande den gamla texten."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Översätter det du skrev till engelska (originalet) och de andra språken med webbläsarens inbyggda översättare. Kontrollera dem innan du sparar."
   }
 }

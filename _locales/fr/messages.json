@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Changer de langue recharge l’extension. Enregistrer d’abord vos modifications des paramètres ?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Traduire les modifications"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Textes modifiés en {0} : {1}. Les autres langues affichent encore l’ancien texte."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Traduit ce que vous avez écrit en anglais (l’original) et dans les autres langues, avec le traducteur intégré du navigateur. Vérifiez-les avant d’enregistrer."
   }
 }

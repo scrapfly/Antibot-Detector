@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Dili değiştirmek uzantıyı yeniden yükler. Önce ayarlardaki değişiklikler kaydedilsin mi?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Değişiklikleri çevir"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "{0} dilinde değiştirdiğin metinler: {1}. Diğer diller hâlâ eski metni gösteriyor."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Yazdığını tarayıcının cihazdaki çevirmeniyle İngilizceye (orijinal) ve diğer dillere çevirir. Kaydetmeden önce kontrol et."
   }
 }

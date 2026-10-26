@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "言語を変更すると拡張機能が再読み込みされます。先に設定の変更を保存しますか？"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "変更を翻訳"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "{0}で変更したテキスト：{1}。他の言語には古いテキストが表示されたままです。"
+  },
+  "ruleTranslateChangesHint": {
+    "message": "入力した内容をブラウザー内蔵の翻訳機能で英語（原文）と他の言語に翻訳します。保存する前に確認してください。"
   }
 }

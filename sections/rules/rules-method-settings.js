@@ -679,6 +679,8 @@ Rules.prototype.saveMethodSettings = function() {
     if (typeof this.collectDescriptionTranslations === 'function') {
       const translations = this.collectDescriptionTranslations();
       this.currentMethodItem.dataset.descriptionI18n = Object.keys(translations).length ? JSON.stringify(translations) : '';
+      // Written in the UI language: the other languages still say the old text (Translate the changes)
+      if (document.querySelector('#methodDescriptionLocal')?.dataset.edited) this.currentMethodItem.dataset.localEdited = '1';
     }
 
     // Get values from modal

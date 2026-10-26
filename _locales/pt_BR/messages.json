@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Mudar o idioma recarrega a extensão. Salvar primeiro as alterações nas configurações?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Traduzir as alterações"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Textos que você alterou em {0}: {1}. Os outros idiomas ainda mostram o texto antigo."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Traduz o que você escreveu para o inglês (o original) e para os outros idiomas com o tradutor integrado do navegador. Revise antes de salvar."
   }
 }

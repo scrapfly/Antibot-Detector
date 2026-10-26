@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Změna jazyka znovu načte rozšíření. Uložit nejdřív změny nastavení?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Přeložit změny"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Texty změněné v jazyce {0}: {1}. Ostatní jazyky stále zobrazují starý text."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Přeloží, co jste napsali, do angličtiny (originál) a do ostatních jazyků pomocí překladače v prohlížeči. Před uložením je zkontrolujte."
   }
 }

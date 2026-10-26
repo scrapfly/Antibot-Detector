@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Đổi ngôn ngữ sẽ tải lại tiện ích. Lưu các thay đổi cài đặt trước?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Dịch các thay đổi"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Văn bản bạn đã đổi bằng {0}: {1}. Các ngôn ngữ khác vẫn hiển thị văn bản cũ."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Dịch nội dung bạn viết sang tiếng Anh (bản gốc) và các ngôn ngữ khác bằng trình dịch tích hợp của trình duyệt. Hãy kiểm tra trước khi lưu."
   }
 }

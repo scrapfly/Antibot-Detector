@@ -6621,5 +6621,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Cambiar el idioma recarga la extensión. ¿Guardar primero los cambios en los ajustes?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Traducir los cambios"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Textos que cambiaste en {0}: {1}. Los demás idiomas siguen mostrando el texto anterior."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Traduce lo que escribiste al inglés (el original) y a los demás idiomas con el traductor integrado del navegador. Revísalos antes de guardar."
   }
 }

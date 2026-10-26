@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "更改语言会重新加载扩展程序。要先保存对设置的更改吗？"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "翻译更改"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "你用{0}修改的文本：{1}。其他语言仍显示旧文本。"
+  },
+  "ruleTranslateChangesHint": {
+    "message": "使用浏览器内置的翻译功能，将你写的内容翻译成英文（原文）和其他语言。保存前请检查。"
   }
 }

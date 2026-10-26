@@ -332,6 +332,7 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
       try { own = row.dataset.descriptionI18n ? JSON.parse(row.dataset.descriptionI18n) : {}; } catch (_) { own = {}; }
       const map = Rules.withLocalEdit(row.dataset.description || '', own, locale, target.textContent);
       row.dataset.descriptionI18n = Object.keys(map).length ? JSON.stringify(map) : '';
+      row.dataset.localEdited = '1'; // the other languages still say the old text (Translate the changes)
     } else {
       this.setComboPatternDescription(target.dataset.pattern, target.textContent, target);
     }
@@ -347,6 +348,7 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
       // In another language: the name's translation in that language; the original is under Name translations
       const map = Rules.withLocalEdit(combo.name, combo.nameI18n, locale, target.value);
       combo.nameI18n = Object.keys(map).length ? map : null;
+      combo.localEdited = true; // the other languages still say the old name (Translate the changes)
       const row = card.querySelector?.(`.combo-translations .rule-translation-input[data-locale="${locale}"]`);
       if (row) row.value = map[locale] || '';
       if (typeof this.updateTranslationsCount === 'function') this.updateTranslationsCount(card.querySelector?.('.combo-translations'));

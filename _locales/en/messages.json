@@ -7214,5 +7214,17 @@
   "settingsLanguageUnsavedMessage": {
     "message": "Changing the language reloads the extension. Save your changes to the settings first?",
     "description": "Settings → Language: the question; buttons Save, Discard, Cancel"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Translate the changes",
+    "description": "Rule editor, top bar: button that translates the texts the person rewrote in their language into English and the other languages"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Texts you changed in {0}: {1}. The other languages still show the old text.",
+    "description": "Rule editor, top bar: {0} = the UI language's name (Español), {1} = how many texts were rewritten in it"
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Translates what you wrote into English (the original) and into the other languages, with the browser's on-device translator. Check them before saving.",
+    "description": "Rule editor, top bar: tooltip of Translate the changes"
   }
 }

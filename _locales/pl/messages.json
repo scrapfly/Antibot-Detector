@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Zmiana języka przeładuje rozszerzenie. Zapisać najpierw zmiany w ustawieniach?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Przetłumacz zmiany"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Teksty zmienione w języku {0}: {1}. Pozostałe języki nadal pokazują stary tekst."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Tłumaczy to, co napisałeś, na angielski (oryginał) i pozostałe języki za pomocą wbudowanego tłumacza przeglądarki. Sprawdź je przed zapisaniem."
   }
 }

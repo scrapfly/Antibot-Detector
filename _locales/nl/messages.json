@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Een andere taal kiezen laadt de extensie opnieuw. Eerst je wijzigingen in de instellingen opslaan?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Wijzigingen vertalen"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Teksten die je in het {0} hebt gewijzigd: {1}. De andere talen tonen nog de oude tekst."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Vertaalt wat je schreef naar het Engels (het origineel) en de andere talen, met de vertaler van de browser op je apparaat. Controleer ze voor het opslaan."
   }
 }

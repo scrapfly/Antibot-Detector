@@ -43,6 +43,101 @@ Rules.prototype.loadRuleTranslationFiles = function() {
   return this._ruleTranslationFiles;
 };
 
+/**
+ * Texts the person rewrote in the UI language in this editor: their other languages (and the English original) still
+ * say the old text. Each with what was typed and where its original and translations live.
+ */
+Rules.prototype.collectChangedTexts = function() {
+  const locale = typeof Rules.uiLocale === 'function' ? Rules.uiLocale() : null;
+  if (!locale) return [];
+  const changed = [];
+  const local = document.querySelector('#detectorDescriptionLocal');
+  if (local && !local.hidden && local.dataset.edited && ruleTranslationClean(local.value)) {
+    changed.push({ kind: 'detector', typed: ruleTranslationClean(local.value), local });
+  }
+  document.querySelectorAll('#editRuleModal .method-item[data-local-edited="1"]').forEach((item) => {
+    let own = {};
+    try { own = item.dataset.descriptionI18n ? JSON.parse(item.dataset.descriptionI18n) : {}; } catch (_) { own = {}; }
+    if (ruleTranslationClean(own[locale])) changed.push({ kind: 'pattern', typed: ruleTranslationClean(own[locale]), item });
+  });
+  (this.combinationsModel || []).forEach((combo) => {
+    const typed = combo.localEdited && combo.nameI18n ? ruleTranslationClean(combo.nameI18n[locale]) : '';
+    if (typed) changed.push({ kind: 'combination', typed, combo });
+  });
+  return changed;
+};
+
+/**
+ * "Translate the changes": what the person wrote in their language becomes the new English original (translated
+ * into English) and every other language's translation (translated from that English, as the rest of the rule is).
+ * Every translator is requested at once, while the click still lets Chrome start a download.
+ */
+Rules.prototype.translateChangedTexts = async function() {
+  const bar = document.querySelector('#ruleTranslateBar');
+  const locale = Rules.uiLocale();
+  const changed = this.collectChangedTexts();
+  if (!bar || bar.dataset.busy === '1' || !locale || !changed.length || typeof Translator === 'undefined') return;
+  const others = RULE_TRANSLATION_LOCALES.filter(code => code !== locale);
+  const toEnglish = Translator.create({ sourceLanguage: ruleTranslatorCode(locale), targetLanguage: 'en' });
+  const fromEnglish = new Map(others.map(code => [code, Translator.create({ sourceLanguage: 'en', targetLanguage: ruleTranslatorCode(code) })]));
+  bar.dataset.busy = '1';
+  bar.querySelectorAll('button').forEach(button => { button.disabled = true; });
+  const text = bar.querySelector('#ruleTranslateText');
+  if (text) text.textContent = ruleBarText('ruleTranslateRuleWorkingFmt', 'Translating {0} texts…', changed.length);
+  let filled = 0;
+  let failed = 0;
+  try {
+    let english;
+    try { english = await toEnglish; } catch (error) { english = null; Logger.debug('UI', 'No translator into English', error); }
+    for (const entry of changed) {
+      let original = '';
+      try { original = english ? ruleTranslationClean(await english.translate(entry.typed)) : ''; } catch (_) { original = ''; }
+      if (!original) { failed++; continue; }
+      const map = { [locale]: entry.typed };
+      for (const code of others) {
+        try {
+          const out = ruleTranslationClean(await (await fromEnglish.get(code)).translate(original));
+          if (out) { map[code] = out; filled++; } else failed++;
+        } catch (_) { failed++; }
+      }
+      this.storeChangedText(entry, original, map);
+    }
+  } finally {
+    for (const pending of [toEnglish, ...fromEnglish.values()]) pending.then(t => t && t.destroy && t.destroy()).catch(() => {});
+    delete bar.dataset.busy;
+  }
+  if (typeof this.renderCombinations === 'function') this.renderCombinations();
+  this.updateTranslationsCount(detectorTranslationsScope());
+  this._ruleTranslateResult = failed
+    ? ruleBarText('ruleTranslateRulePartialFmt', 'Filled {0}; {1} could not be translated here.', filled, failed)
+    : ruleBarText('ruleTranslateRuleDoneFmt', 'Filled {0} translations. Check them before saving.', filled);
+  await this.refreshTranslateBar();
+};
+
+/** A rewritten text's new English original and its translations, where the editor keeps that kind of text. */
+Rules.prototype.storeChangedText = function(entry, original, map) {
+  if (entry.kind === 'detector') {
+    const input = document.querySelector('#detectorDescriptionInput');
+    if (input) input.value = original;
+    detectorTranslationsScope()?.querySelectorAll('.rule-translation-input').forEach((field) => {
+      field.value = map[field.dataset.locale] || '';
+    });
+    this.fillShippedPlaceholders(detectorTranslationsScope(), original);
+    delete entry.local.dataset.edited;
+    this.updateOriginalPreview(entry.local);
+  } else if (entry.kind === 'pattern') {
+    entry.item.dataset.description = original;
+    entry.item.dataset.descriptionI18n = JSON.stringify(map);
+    const inline = entry.item.querySelector('.method-description-inline');
+    if (inline) inline.value = original;
+    delete entry.item.dataset.localEdited;
+  } else if (entry.kind === 'combination') {
+    entry.combo.name = original;
+    entry.combo.nameI18n = map;
+    delete entry.combo.localEdited;
+  }
+};
+
 Rules.prototype.planRuleTranslations = function() {
   return RuleTranslationPlan.plan(this.collectRuleTexts(), RULE_TRANSLATION_LOCALES, ruleShippedTranslation);
 };
@@ -58,16 +153,28 @@ Rules.prototype.refreshTranslateBar = async function() {
   const plan = this.planRuleTranslations();
   const status = this._ruleTranslateResult;
   const supported = typeof self !== 'undefined' && 'Translator' in self;
+  // Texts rewritten in the UI language come first: their other languages still say the old text
+  const changed = this.collectChangedTexts();
   bar.hidden = false;
-  bar.classList.toggle('is-complete', plan.texts === 0 && !status);
+  bar.classList.toggle('is-complete', plan.texts === 0 && changed.length === 0 && !status);
   const text = bar.querySelector('#ruleTranslateText');
   if (text) {
-    text.textContent = plan.texts ? ruleBarText('ruleTranslateBarFmt', 'Texts not yet translated into every language: {0}', plan.texts)
-      : (status || ruleBarText('ruleTranslateBarDoneFmt', 'Every text of this rule is translated into all {0} languages.', RULE_TRANSLATION_LOCALES.length));
+    text.textContent = changed.length
+      ? ruleBarText('ruleTranslateChangedFmt', 'Texts you changed in {0}: {1}. The other languages still show the old text.', ruleTranslationLanguageName(Rules.uiLocale()), changed.length)
+      : plan.texts ? ruleBarText('ruleTranslateBarFmt', 'Texts not yet translated into every language: {0}', plan.texts)
+        : (status || ruleBarText('ruleTranslateBarDoneFmt', 'Every text of this rule is translated into all {0} languages.', RULE_TRANSLATION_LOCALES.length));
+  }
+  const changesButton = bar.querySelector('#ruleTranslateChangesBtn');
+  if (changesButton) {
+    changesButton.hidden = changed.length === 0;
+    changesButton.disabled = !supported;
+    changesButton.title = supported
+      ? ruleBarText('ruleTranslateChangesHint', 'Translates what you wrote into English (the original) and into the other languages, with the browser\'s on-device translator. Check them before saving.')
+      : ruleBarText('ruleTranslateUnavailable', 'Automatic translation needs Chrome 138 or newer.');
   }
   const button = bar.querySelector('#ruleTranslateAllBtn');
   if (button) {
-    button.hidden = plan.texts === 0;
+    button.hidden = plan.texts === 0 || changed.length > 0;
     button.disabled = !supported;
     button.title = supported
       ? ruleBarText('ruleTranslateRuleHint', "Fills the missing translations of the description, the patterns and the combinations with Chrome's on-device translator. Check them before saving.")
@@ -162,6 +269,10 @@ if (typeof document !== 'undefined' && document.addEventListener) {
     const rules = typeof window !== 'undefined' && window.popupInstance && window.popupInstance.rules;
     if (rules && event.target.closest && event.target.closest('#ruleTranslateAllBtn')) {
       rules.translateWholeRule();
+      return;
+    }
+    if (rules && event.target.closest && event.target.closest('#ruleTranslateChangesBtn')) {
+      rules.translateChangedTexts();
       return;
     }
     if (event.target.closest && event.target.closest('#editRuleModal, #methodSettingsModal')) {

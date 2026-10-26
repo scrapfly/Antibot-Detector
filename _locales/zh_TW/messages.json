@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "變更語言會重新載入擴充功能。要先儲存對設定的變更嗎？"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "翻譯變更"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "你用{0}修改的文字：{1}。其他語言仍顯示舊文字。"
+  },
+  "ruleTranslateChangesHint": {
+    "message": "使用瀏覽器內建的翻譯功能，將你寫的內容翻譯成英文（原文）和其他語言。儲存前請檢查。"
   }
 }

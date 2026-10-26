@@ -6619,5 +6619,14 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Mengganti bahasa akan memuat ulang ekstensi. Simpan perubahan pengaturan terlebih dahulu?"
+  },
+  "ruleTranslateChangesBtn": {
+    "message": "Terjemahkan perubahan"
+  },
+  "ruleTranslateChangedFmt": {
+    "message": "Teks yang Anda ubah dalam {0}: {1}. Bahasa lain masih menampilkan teks lama."
+  },
+  "ruleTranslateChangesHint": {
+    "message": "Menerjemahkan yang Anda tulis ke bahasa Inggris (aslinya) dan ke bahasa lain dengan penerjemah bawaan browser. Periksa sebelum menyimpan."
   }
 }
