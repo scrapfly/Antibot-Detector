@@ -322,3 +322,15 @@ test('Vendor Captured Data binds only its own list, once per element', () => {
     assert.deepEqual(expand.listeners, ['click']);
     assert.deepEqual(img.listeners, ['error']);
 });
+
+test('one capture with an address that does not parse no longer empties Advanced → History', () => {
+    const context = { console, URL, window: {}, Advanced: function() {}, document: {} };
+    vm.createContext(context);
+    vm.runInContext(read('sections/advanced/history/controller.js'), context);
+    const site = vm.runInContext('_advCaptureSite', context);
+    assert.equal(site('https://shop.example/login'), 'shop.example');
+    assert.equal(site('not an address'), 'unknown');
+    assert.equal(site(''), 'unknown');
+    assert.equal(site(undefined), 'unknown');
+    assert.doesNotMatch(read('sections/advanced/history/controller.js'), /new URL\(capture\.url\)/, 'every capture list uses the guarded form');
+});

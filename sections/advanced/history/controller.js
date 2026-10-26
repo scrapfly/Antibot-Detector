@@ -5,6 +5,17 @@ function _advHistoryTr(key, fallback) {
     return (typeof I18n !== 'undefined' && I18n.get(key)) || fallback;
   }
 
+/** A capture's site: its address's host name, or 'unknown' without one or with one that is not an address
+ *  (one bad stored capture used to throw and leave Advanced → History empty). */
+function _advCaptureSite(url) {
+    if (!url) return 'unknown';
+    try {
+      return new URL(url).hostname || 'unknown';
+    } catch (_) {
+      return 'unknown';
+    }
+  }
+
 function _advHistoryFmt(key, fallback, ...args) {
     return (typeof I18n !== 'undefined' && I18n.format(key, ...args)) || fallback;
   }
@@ -38,7 +49,7 @@ Advanced.prototype.updateCaptureCountBadge = async function() {
                 ...capture,
                 moduleId: moduleId,
                 moduleName: this.getModuleName(moduleId),
-                site: capture.url ? new URL(capture.url).hostname : 'unknown'
+                site: _advCaptureSite(capture.url)
               });
             }
           });
@@ -133,7 +144,7 @@ Advanced.prototype.renderUnifiedCaptureHistory = async function() {
               ...capture,
               moduleId: moduleId,
               moduleName: this.getModuleName(moduleId),
-              site: capture.url ? new URL(capture.url).hostname : 'unknown'
+              site: _advCaptureSite(capture.url)
             });
           });
         }
@@ -455,7 +466,7 @@ Advanced.prototype.exportCaptures = async function() {
               ...capture,
               moduleId,
               moduleName: this.getModuleName(moduleId),
-              site: capture.url ? new URL(capture.url).hostname : 'unknown'
+              site: _advCaptureSite(capture.url)
             });
           });
         }
