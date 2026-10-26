@@ -1280,7 +1280,12 @@ Rules.prototype.saveRule = async function() {
     Logger.debug('UI', 'Saving rule for:', draft.detector.displayName);
 
     const originalDetection = draft.originalDetection || {};
-    const metadataChanged = ['name', 'author', 'customIcon', 'difficulty', 'description'].some(field =>
+    // The icon picker writes its choice into edit.detector as well, so the icon is compared with the rule as it was
+    // opened (edit.original): an icon-only change still marks an official rule as edited
+    const before = edit.original || edit.detector;
+    const iconChanged = (draft.detector.icon ?? null) !== (before.icon ?? null)
+      || (draft.detector.customIcon || null) !== (before.customIcon || null);
+    const metadataChanged = iconChanged || ['name', 'author', 'customIcon', 'difficulty', 'description'].some(field =>
       draft.detector[field] !== edit.detector[field]) || draft.category !== (edit.originalCategory || edit.category)
       || JSON.stringify(draft.detector.descriptionI18n || null) !== JSON.stringify(edit.detector.descriptionI18n || null);
     const hasChanges = draft.isNew || metadataChanged ||

@@ -191,3 +191,22 @@ test('a description-only edit to an official rule counts as an edit', async () =
   assert.equal(saved.userModified, true, 'translations alone are a change');
   assert.deepEqual(plain(saved.descriptionI18n), { de: 'Offizieller Text' });
 });
+
+test('an icon-only edit to an official rule counts as an edit, though the picker wrote it into both copies', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  DetectionUtils.setOfficialDetectorIds(['detect-custom']);
+  const original = { ...fixture(), author: 'Scrapfly', name: 'Edited custom', icon: 'old.png' };
+  state.dm.detectors.antibot['detect-custom'] = original;
+  state.rules.currentEditDetector.detector = { ...plain(original), icon: 'new.png' };
+  state.rules.currentEditDetector.original = plain(original);
+  state.rules.currentEditDetector.isOfficial = true;
+  state.fields['#detectorAuthorInput'].value = 'Scrapfly';
+  state.rules._collectDetectionFromForm = () => plain(original.detection);
+  state.rules.currentEditDetector.originalDetection = plain(original.detection);
+  assert.equal(await state.rules.saveRule(), true);
+  const saved = state.dm.detectors.antibot['detect-custom'];
+  assert.equal(saved.icon, 'new.png');
+  assert.equal(saved.userModified, true, 'the icon alone is a change');
+  assert.equal(saved.officialSnapshot.icon, 'old.png');
+});
