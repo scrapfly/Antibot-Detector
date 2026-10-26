@@ -15,11 +15,16 @@ class PaginationManager {
   /**
    * Set the items to paginate
    * @param {Array} items - Array of items to paginate
+   * @param {{keepPage?: boolean}} [options] - keepPage: the same list again (an entry pinned, deleted, evidence
+   *   added): stay on the page shown, or the last one if it no longer exists. Otherwise (a new search, a new
+   *   list) start on page 1.
    */
-  setItems(items) {
+  setItems(items, { keepPage = false } = {}) {
     this.filteredItems = items;
-    this.currentPage = 1;
     this.pageStarts = this.pageSizer ? this.pageSizer(items) : null;
+    this.currentPage = keepPage
+      ? Math.min(Math.max(1, this.currentPage || 1), Math.max(this.getTotalPages(), 1))
+      : 1;
     this.render();
   }
 
@@ -83,8 +88,7 @@ class PaginationManager {
     const totalPages = Math.max(this.getTotalPages(), 1);
     if (page >= 1 && page <= totalPages) {
       this.currentPage = page;
-      this.render();
-      this.onPageChange(page, this.getCurrentPageItems());
+      this.render(); // calls onPageChange: once per page change, not twice
     }
   }
 

@@ -71,3 +71,53 @@ test('pagination without the Detection option still hides empty lists', () => {
   pager.setItems([]);
   assert.equal(container.style.display, 'none');
 });
+
+test('the same list again stays on its page (the last one when it shrank); a new list starts on page 1', () => {
+  const { context } = fixture();
+  const pager = new context.window.PaginationManager('detectionPagination', { itemsPerPage: 10 });
+  const items = Array.from({ length: 25 }, (_, i) => ({ detector: { name: `P${i}` }, category: 'Antibot' }));
+  pager.setItems(items);
+  pager.goToPage(3);
+  pager.setItems(items.slice(), { keepPage: true });
+  assert.equal(pager.currentPage, 3, 'an entry pinned or evidence added: same page');
+  pager.setItems(items.slice(0, 15), { keepPage: true });
+  assert.equal(pager.currentPage, 2, 'clamped to the last page there is');
+  pager.setItems([], { keepPage: true });
+  assert.equal(pager.currentPage, 1);
+  pager.setItems(items);
+  pager.goToPage(2);
+  pager.setItems(items);
+  assert.equal(pager.currentPage, 1, 'a new list or search starts at the top');
+});
+
+test('changing page draws the page once', () => {
+  const { context } = fixture();
+  let draws = 0;
+  const pager = new context.window.PaginationManager('detectionPagination', { itemsPerPage: 1, onPageChange: () => { draws++; } });
+  pager.setItems([1, 2, 3]);
+  draws = 0;
+  pager.goToPage(2);
+  assert.equal(draws, 1);
+  pager.nextPage();
+  assert.equal(draws, 2);
+});
+
+test('an open details dialog follows its protection into the new results, or closes when it is gone', () => {
+  const { context, detection } = fixture();
+  const DetectionUI = vm.runInContext('DetectionUI', context);
+  const shown = [];
+  let closed = 0;
+  detection.renderDetectionModalContent = item => shown.push(item);
+  detection.closeDetectionModal = () => { closed++; };
+  const canvas = { detector: { id: 'canvas', name: 'Canvas' }, category: 'Fingerprint', matches: [1] };
+  const key = DetectionUI.detectionKey(canvas);
+  const richer = { ...canvas, matches: [1, 2] };
+  detection.paginationManager.setItems([{ detector: { id: 'audio' }, category: 'Fingerprint' }, richer]);
+  assert.equal(DetectionUI.refreshOpenDetectionModal.call(detection, key), true);
+  assert.equal(detection.activeModalIndex, 1);
+  assert.equal(shown[0], richer, 'redrawn with the new evidence');
+  assert.equal(closed, 0);
+  detection.paginationManager.setItems([{ detector: { id: 'audio' }, category: 'Fingerprint' }]);
+  assert.equal(DetectionUI.refreshOpenDetectionModal.call(detection, key), false);
+  assert.equal(closed, 1);
+});

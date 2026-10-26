@@ -418,6 +418,29 @@ DetectionUI.showDisabledState = function(isBlacklisted = !!this.blacklistedDomai
     DetectionUI.applyDisabledStateCopy.call(this);
 };
 
+/** What identifies one protection across two result lists of the same page: its category and detector. */
+DetectionUI.detectionKey = function(detection) {
+    if (!detection) return null;
+    const id = detection.detector?.id || detection.id || detection.detector?.name || detection.name;
+    if (!id) return null;
+    const category = (typeof Categories !== 'undefined' && typeof Categories.keyOf === 'function')
+      ? Categories.keyOf(detection) : (detection.category || '');
+    return `${category}|${id}`;
+};
+
+/** The details dialog open on a protection shows its new results, or closes when the protection is gone. */
+DetectionUI.refreshOpenDetectionModal = function(key) {
+    const items = Array.isArray(this.paginationManager?.filteredItems) ? this.paginationManager.filteredItems : (this.currentResults || []);
+    const index = items.findIndex(item => DetectionUI.detectionKey(item) === key);
+    if (index < 0 || typeof this.renderDetectionModalContent !== 'function') {
+      this.closeDetectionModal();
+      return false;
+    }
+    this.activeModalIndex = index;
+    this.renderDetectionModalContent(items[index]);
+    return true;
+};
+
 DetectionUI.displayResults = async function(detections = [], options = {}) {
     if (DetectionUI.showUnavailableState.call(this)) return;
 
@@ -431,6 +454,14 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     if (this.uiStateMachine) {
       this.uiStateMachine.setState(this.uiStates.RESULTS, { count: detections?.length || 0 });
     }
+
+    // The same page's results again (evidence that came in late, a cached result re-read): the list stays on its
+    // page and an open details dialog is refreshed in place instead of closing under the reader
+    const previousUrl = this.isShowingResults ? (this.displayOptions?.cacheMetadata?.url || null) : null;
+    const samePage = !!previousUrl && previousUrl === (options.cacheMetadata?.url || null);
+    const openKey = samePage && this.activeModalIndex !== null && this.activeModalIndex !== undefined
+      && typeof this.getDetectionByIndex === 'function'
+      ? DetectionUI.detectionKey(this.getDetectionByIndex(this.activeModalIndex)) : null;
 
     this.wasInterrupted = false; // Reset flag when successfully displaying results
     this.isShowingResults = true; // Prevent message listeners from overriding displayed results
@@ -450,7 +481,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     this.clearLoadingTimeout();
 
     this.hideLoadingState();
-    this.closeDetectionModal();
+    if (!openKey) this.closeDetectionModal();
 
     // Reset clear cache button to default state
     this.resetClearCacheButton();
@@ -466,12 +497,14 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
       const isExpired = Date.now() > options.cacheMetadata.expiry;
       if (isExpired) {
         Logger.debug('UI', '[Detection] Cache expired, showing empty state instead of stale data');
+        this.closeDetectionModal();
         this.showEmptyState({ outcome: 'unscanned' });
         return;
       }
     }
 
     if (detections.length === 0) {
+      this.closeDetectionModal();
       this.showEmptyState();
       // Badge is managed by background script now
       return;
@@ -505,8 +538,9 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Use pagination to display results
     // PaginationManager will handle showing/hiding pagination based on whether it's needed
     if (this.paginationManager) {
-      this.paginationManager.setItems(itemsToShow);
+      this.paginationManager.setItems(itemsToShow, { keepPage: samePage });
     }
+    if (openKey) DetectionUI.refreshOpenDetectionModal.call(this, openKey);
 
     // Show overview if there are detections
     const detectionOverview = document.querySelector('#detectionOverview');

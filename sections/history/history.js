@@ -116,7 +116,12 @@ class History {
     if (this.selectMode) this.pruneSelection(itemsToShow);
 
     if (this.paginationManager) {
-      this.paginationManager.setItems(itemsToShow);
+      // Pinning, a note, watching, deleting or a new scan redraw the same search: the list stays on its page.
+      // A new search or chip starts on page 1.
+      const filterKey = JSON.stringify([this.searchQuery || '', this.activeChips || null]);
+      const keepPage = this._renderedFilterKey === filterKey;
+      this._renderedFilterKey = filterKey;
+      this.paginationManager.setItems(itemsToShow, { keepPage });
     }
     if (this.selectMode) this.syncSelectBar();
 
