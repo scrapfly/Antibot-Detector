@@ -111,7 +111,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       methodsHtml += `
         <div class="method-section collapsed" data-method-type="${methodType}">
           <div class="method-header">
-            <div class="method-header-left">
+            <div class="method-header-left" role="button" tabindex="0" aria-expanded="false">
               <svg class="method-collapse-icon" width="16" height="16" viewBox="0 0 24 24">
                 <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" fill="currentColor"/>
               </svg>
@@ -685,6 +685,7 @@ Rules.prototype.revealAndFocusInvalidRow = function(invalidRow) {
 
     this.revealEditorCard(section);
     section.classList.remove('collapsed');
+    section.querySelector('.method-header-left[role="button"]')?.setAttribute('aria-expanded', 'true');
 
     const methodType = invalidRow.methodType || this.getMethodSectionType(section);
     const searchInput = section.querySelector('.method-search-input');

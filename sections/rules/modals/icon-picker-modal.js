@@ -92,9 +92,9 @@ Rules.prototype.openIconPicker = function() {
   const modalHtml = `
     <div class="icon-picker-modal rule-modal">
       <div class="icon-picker-backdrop rule-modal-backdrop"></div>
-      <div class="icon-picker-content rule-modal-content">
+      <div class="icon-picker-content rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="iconPickerTitle">
         <div class="icon-picker-header rule-modal-header">
-          <h2>${_tr('iconPickerTitle', 'Choose Icon')}</h2>
+          <h2 id="iconPickerTitle">${_tr('iconPickerTitle', 'Choose Icon')}</h2>
           ${CloseButton.html({ className: 'icon-picker-close' })}
         </div>
         <div class="icon-picker-search">
@@ -107,7 +107,7 @@ Rules.prototype.openIconPicker = function() {
               { icon: 'default', label: _tr('iconPickerDefault', 'Default'), image: scrapflyIcon, className: 'icon-option icon-option-default icon-option-special', isFingerprint: false },
               ...availableIcons.map(icon => ({ icon, label: icon.replace('_official.png', '').replace('_fingerprint.png', '').replace('.png', ''), image: chrome.runtime.getURL('detectors/icons/' + icon), className: 'icon-option', isFingerprint: isFingerprint(icon), svg: fingerprintSvgIcons[icon] }))
             ].map(({ icon, label, image, className, isFingerprint: isFp, svg }) => `
-              <div class="${className}" data-icon="${icon}">
+              <div class="${className}" data-icon="${FormatUtils.escapeAttr(icon)}" role="button" tabindex="0" aria-label="${FormatUtils.escapeAttr(label)}">
                 ${isFp ? `<div class="icon-option-fingerprint-preview fingerprint-icon fingerprint-icon-shell">${svg}</div>` : `<img src="${image}" alt="${label}" class="icon-option-image ${icon === 'default' ? 'icon-option-image-default' : ''}">`}
                 <div class="icon-option-label">${label}</div>
               </div>
@@ -143,6 +143,13 @@ Rules.prototype.openIconPicker = function() {
   // Escape closes the picker only (the editor under it stays: onRuleEditorEscape skips while the picker is open)
   const onKey = (event) => {
     if (!modalContainer.isConnected) { document.removeEventListener('keydown', onKey); return; }
+    // Enter or Space on a focused icon tile chooses it, as a click does
+    const tile = (event.key === 'Enter' || event.key === ' ') && event.target?.closest ? event.target.closest('.icon-option') : null;
+    if (tile && tile === event.target && modalContainer.contains(tile)) {
+      event.preventDefault();
+      tile.click();
+      return;
+    }
     if (event.key !== 'Escape' || event.defaultPrevented) return;
     event.preventDefault();
     closeModal();

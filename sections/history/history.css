@@ -362,6 +362,12 @@
   border-color: var(--g-424242);
 }
 
+/* Reached with Tab: Enter or Space opens it, like a click */
+#historyTab .history-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .history-item-top {
   display: flex;
   align-items: center;

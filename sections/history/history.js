@@ -252,7 +252,7 @@ class History {
       const selectLabel = FormatUtils.escapeAttr(FormatUtils.t('historySelectCheckboxFmt', 'Select {0}', rawTitle));
 
       return `
-        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${FormatUtils.escapeAttr(item.id)}">
+        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${FormatUtils.escapeAttr(item.id)}" role="group" tabindex="0" aria-label="${attrTitle}">
           <div class="history-item-top">
             ${selecting ? `<input type="checkbox" class="history-select-input" aria-label="${selectLabel}"${selected ? ' checked' : ''}>` : ''}
             <span class="history-favicon-tile">
@@ -715,6 +715,12 @@ class History {
         if (historyItem) {
           this.showHistoryItemDetails(historyItem);
         }
+      });
+      // Keyboard: Enter or Space on the card itself (not on its buttons) does what a click does
+      item.addEventListener('keydown', (e) => {
+        if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
+        e.preventDefault();
+        e.currentTarget.click();
       });
     });
   }

@@ -2123,6 +2123,14 @@
   font-weight: 500;
 }
 
+/* Reached with the keyboard: Enter or Space picks it, as a click does */
+.condition-option:focus-visible,
+.icon-option:focus-visible,
+.method-header-left[role="button"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 /* Inline condition dropdown (in edit modal) */
 .inline-condition-dropdown {
   flex: 1;

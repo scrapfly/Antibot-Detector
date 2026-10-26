@@ -3,6 +3,35 @@
  * Dependencies: `sections/rules/rules.js` must be loaded first.
  */
 
+/**
+ * Keys on the rule editor's clickable non-buttons: Enter / Space on a pattern type's header or a window condition
+ * choice clicks it, and Escape closes an open window condition list (focus back on its field).
+ * @returns {boolean} whether the key was used
+ */
+Rules.onRuleControlKey = function(event) {
+  const target = event && event.target;
+  if (!target || typeof target.closest !== 'function' || event.defaultPrevented) return false;
+  if (event.key === 'Escape') {
+    const open = target.closest('.condition-dropdown.open');
+    if (!open) return false;
+    event.preventDefault();
+    event.stopPropagation();
+    open.classList.remove('open');
+    const trigger = open.querySelector('.condition-dropdown-trigger');
+    if (trigger) {
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.focus();
+    }
+    return true;
+  }
+  if (event.key !== 'Enter' && event.key !== ' ') return false;
+  const control = target.closest('.condition-option, .method-header-left[role="button"]');
+  if (!control || control !== target) return false;
+  event.preventDefault();
+  control.click();
+  return true;
+};
+
 Rules.prototype.setupMethodSettingsModal = function() {
     // Prevent duplicate event listener registration. Use a DISTINCT flag from
     // rules.js setupEventListeners() — that function sets this.eventListenersSetup
@@ -126,6 +155,7 @@ Rules.prototype.setupMethodSettingsModal = function() {
             dropdown.dataset.conditionValue = value;
             dropdown.querySelectorAll('.condition-option').forEach(opt => {
               opt.classList.toggle('selected', opt === option);
+              opt.setAttribute('aria-selected', opt === option ? 'true' : 'false');
             });
 
           const hiddenInput = dropdown.querySelector('.method-input.method-value');
@@ -143,7 +173,11 @@ Rules.prototype.setupMethodSettingsModal = function() {
 
           dropdown.classList.remove('open');
           const trigger = dropdown.querySelector('.condition-dropdown-trigger');
-          if (trigger) trigger.setAttribute('aria-expanded', 'false');
+          if (trigger) {
+            trigger.setAttribute('aria-expanded', 'false');
+            // Picked with the keyboard: focus goes back to the field, not to the closed menu
+            if (option.contains(document.activeElement)) trigger.focus();
+          }
         }
         return;
       }
@@ -266,11 +300,17 @@ Rules.prototype.setupMethodSettingsModal = function() {
           const section = header.closest('.method-section');
           if (section) {
             section.classList.toggle('collapsed');
+            header.querySelector('.method-header-left[role="button"]')
+              ?.setAttribute('aria-expanded', section.classList.contains('collapsed') ? 'false' : 'true');
             this.updateMethodSectionPagination(section);
           }
         }
       }
     });
+
+    // Keyboard: a pattern type's header and a window condition choice answer Enter and Space as a click; Escape
+    // closes an open condition list (before the editor's own Escape, hence the capture phase)
+    document.addEventListener('keydown', (e) => Rules.onRuleControlKey(e), true);
 
     // Keep filtered pagination in sync while editing method inputs.
     document.addEventListener('input', (e) => {
