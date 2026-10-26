@@ -86,14 +86,24 @@ class AdvancedScriptResults {
             const shown = typeof label === 'function' ? label(type) : '';
             return shown || String(type || name);
         };
-        const cards = scripts.map(script => K.kitCard(
-            // Long URLs show a few lines; copying gives the whole URL
-            K.kitField(K._tr('advCommonUrl', 'URL'), script.url, { clamp: true }),
-            K.kitChip(typeLabel(script.type), 'blue')
-            + (RESOURCE_LABELS[script.resourceType] ? K.kitChip(RESOURCE_LABELS[script.resourceType], 'neutral') : '')
-        )).join('');
+        // One list, one row per address: its type chips, then the address (the page's own host left out, the
+        // subtitle names it) in two lines at most; the whole row copies the whole address
+        const pageHost = this.tabInfo && this.tabInfo.url ? AdvancedScriptResults.hostOf(this.tabInfo.url) : '';
+        const copyTitle = FormatUtils.escapeAttr(K._tr('advCommonClickToCopy', 'Click to copy'));
+        const rows = scripts.map(script => {
+            const place = AdvancedScriptResults.placeOf(script.url, pageHost);
+            return `
+            <button type="button" class="adv-script-row" data-copy="${FormatUtils.escapeAttr(script.url)}" title="${copyTitle}">
+                <span class="adv-script-top">
+                    ${K.kitChip(typeLabel(script.type), 'blue')}${RESOURCE_LABELS[script.resourceType] ? K.kitChip(RESOURCE_LABELS[script.resourceType], 'neutral') : ''}
+                    ${place.host ? `<span class="adv-script-host">${FormatUtils.escapeHtml(place.host)}</span>` : ''}
+                    <svg class="adv-script-copy" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
+                </span>
+                <span class="adv-script-path" dir="ltr">${FormatUtils.escapeHtml(place.path)}</span>
+            </button>`;
+        }).join('');
         const body = scripts.length
-            ? cards
+            ? `<div class="adv-script-list">${rows}</div>`
             : K.kitNote(K._fmt('advPanelNoScriptsFmt', `No ${name} scripts found`, name));
         return this.openKitModal({
             title: K._fmt('advCommonScriptsTitleFmt', `${name} Scripts (${scripts.length})`, name, scripts.length),
@@ -120,6 +130,17 @@ class AdvancedScriptResults {
             return K._tr('advCommonAnalysisTimedOut', 'Analysis timed out: the page did not reload in time');
         }
         return K._tr('advCommonFailedStartAnalysis', 'Failed to start analysis');
+    }
+
+    /** Where an address points: its path (with the query) alone on the page's own host, else its host too. */
+    static placeOf(url, pageHost = '') {
+        try {
+            const parsed = new URL(url);
+            const path = `${parsed.pathname}${parsed.search}` || '/';
+            return parsed.hostname === pageHost ? { host: '', path } : { host: parsed.hostname, path };
+        } catch (_) {
+            return { host: '', path: String(url) };
+        }
     }
 
     static hostOf(url) {

@@ -71,6 +71,14 @@ test('the shared Scripts window escapes URLs, labels types, notes an empty resul
   assert.match(result.body, /adv-kit-chip--blue">c\.js</);
   assert.match(result.body, /adv-kit-chip--blue">captcha</, 'a type with no label shows as stored');
   assert.match(result.body, /adv-kit-chip--neutral">frame</);
+  // One row per address: the whole row copies the full address; the host shows when it is not the page's own
+  assert.match(result.body, /<button type="button" class="adv-script-row" data-copy="https:\/\/ct\.captcha-delivery\.com\/c\.js\?a=&quot;&gt;&lt;img src=x&gt;"/);
+  assert.match(result.body, /adv-script-host">ct\.captcha-delivery\.com</);
+  assert.match(result.body, /adv-script-path" dir="ltr">\/c\.js\?a=/);
+  module.showScriptResults({ scripts: [{ url: 'https://shop.example/cdn-cgi/challenge-platform/main.js?v=2', type: 'challenge', resourceType: 'script' }] }, { vendor: 'Cloudflare' });
+  assert.doesNotMatch(opened[1].body, /adv-script-host/, 'the page\'s own host is left out: the subtitle names it');
+  assert.match(opened[1].body, /adv-script-path" dir="ltr">\/cdn-cgi\/challenge-platform\/main\.js\?v=2</);
+  opened.length = 1;
   assert.equal(result.actions.length, 1);
   result.actions[0].onClick();
   assert.deepEqual(JSON.parse(JSON.stringify(exported)), [{ name: 'DataDome', urls: ['https://ct.captcha-delivery.com/c.js?a="><img src=x>', 'https://geo.captcha-delivery.com/captcha/'] }]);
