@@ -7,9 +7,27 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.6] - 2026-10-26
 
+### Added
+
+- New protections: Fastly Bot Management (anti-bot), Kount and Riskified (fraud scripts, filed under anti-bot) and Lemin Cropped Captcha.
+- Akamai recognises its crypto challenge, Cloudflare its challenge cookies, F5 its client-side challenge cookie, and FingerprintJS now also spots BotD and its current script addresses.
+
 ### Changed
 
 - Rules editor: the folded Combinations card says how many combinations the rule has ("4 combinations"), like the patterns card.
+- Netacea scores its cookie once, so a page that sets and sends it back no longer looks more certain than it is.
+- Webhook: a server that does not answer within 10 seconds counts as a failed delivery (and is retried) instead of holding up the scan; private-window pages are never sent.
+- Rules: a custom pattern that could freeze scanning on long pages is refused when you save it.
+
+### Fixed
+
+- After a page served from the cache, the next page you open keeps its headers and cookies as evidence (Cloudflare and Akamai header rules could miss it).
+- A page served from the cache no longer leaves a scan running in the background for minutes.
+- Pages restored with Back or Forward, and pages Chrome loaded ahead of time, show their badge again; a preloaded page no longer wipes the captured data of the page you are on.
+- Clear Cache keeps the tab's captured headers and cookies, so the next scan without a reload is as complete as before.
+- Private windows: cookie rules read the private window's own cookies.
+- Headers and cookies are matched to the page's exact site, not to any address that contains its name.
+- Faster scans on large pages and pages that send big requests.
 
 ## [3.0.5] - 2026-10-26
 
