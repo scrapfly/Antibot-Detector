@@ -72,6 +72,11 @@ SettingsUI.showSettings = function() {
 };
 
 SettingsUI.hideSettings = function() {
+    // A window opened inside Settings (Template variables) goes with it, so it is not there again on the next open
+    if (typeof SettingsUI._closeWebhookVariablesHelp === 'function' && typeof document !== 'undefined'
+      && document.querySelector('#webhookVariablesModal')) {
+      SettingsUI._closeWebhookVariablesHelp();
+    }
     if (this.settingsBaseline) this.settings = JSON.parse(JSON.stringify(this.settingsBaseline));
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {

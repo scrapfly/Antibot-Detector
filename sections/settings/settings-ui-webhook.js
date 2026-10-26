@@ -695,7 +695,10 @@ SettingsUI.openWebhookVariablesHelp = async function() {
     const host = document.querySelector('#settingsModal .base-modal-content') || document.body;
     const opener = document.querySelector('#webhookVariablesHelpBtn');
     const existing = document.querySelector('#webhookVariablesModal');
-    if (existing) existing.remove();
+    if (existing) {
+      if (typeof SettingsUI._closeWebhookVariablesHelp === 'function') SettingsUI._closeWebhookVariablesHelp();
+      existing.remove();
+    }
 
     const ctx = await SettingsUI.webhookExampleContext();
     const copyFmt = SettingsUI._whTr('webhookVarsCopyFmt', 'Copy {0}');
@@ -734,9 +737,16 @@ SettingsUI.openWebhookVariablesHelp = async function() {
       </div>`;
     host.appendChild(overlay);
 
+    // Its own focus scope above Settings': Escape closes this window only (Settings' scope stands aside while this
+    // one is on top), and Tab stays in it
+    const card = overlay.querySelector('.webhook-vars-card');
+    let releaseFocus = null;
     const close = () => {
       overlay.remove();
-      if (opener) opener.focus();
+      const release = releaseFocus;
+      releaseFocus = null;
+      if (release) release();
+      if (opener && opener.isConnected) opener.focus();
     };
     overlay.addEventListener('click', async (e) => {
       if (e.target === overlay || e.target.closest('.webhook-vars-close')) { close(); return; }
@@ -749,19 +759,12 @@ SettingsUI.openWebhookVariablesHelp = async function() {
         Logger.warn('UI', 'Copy webhook variable failed', { error: error.message });
       }
     });
-    overlay.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        e.stopPropagation();
-        close();
-      } else if (e.key === 'Tab') {
-        const items = [...overlay.querySelectorAll('button')];
-        const i = items.indexOf(document.activeElement);
-        const next = items[(i + (e.shiftKey ? -1 : 1) + items.length) % items.length];
-        if (next) { e.preventDefault(); next.focus(); }
-      }
-    });
-    overlay.querySelector('.webhook-vars-close')?.focus();
+    SettingsUI._closeWebhookVariablesHelp = close;
+    if (typeof ModalFocus !== 'undefined' && card) {
+      releaseFocus = ModalFocus.activate(card, { onClose: close, initialFocus: overlay.querySelector('.webhook-vars-close') || undefined });
+    } else {
+      overlay.querySelector('.webhook-vars-close')?.focus();
+    }
 };
 
 SettingsUI._setupWebhookListeners = function() {
