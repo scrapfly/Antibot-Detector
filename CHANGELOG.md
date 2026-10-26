@@ -9,6 +9,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- New protections: Queue-it, Vercel Firewall, DDoS-Guard and Wordfence (anti-bot), ALTCHA and Cap (CAPTCHA).
+- New fraud and device-intelligence scripts, filed under anti-bot: TransUnion TruValidate (iovation), Forter, Sift, Castle and SEON.
 - Fingerprinting: Hardware now notices pages asking for the WebGPU adapter and its details, Navigator notices permission checks, and Device Orientation notices reads of orientation and motion sensor values.
 
 ### Changed
