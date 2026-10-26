@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "कोई hCaptcha डेटा नहीं मिला (60 सेकंड टाइमआउट)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "मूल (अंग्रेज़ी)"
+  },
+  "ruleOriginalHint": {
+    "message": "अन्य भाषाएँ इस टेक्स्ट का अनुवाद करती हैं: इसे बदलने पर वे इसे बिना अनुवाद के दिखाएँगी, जब तक इसका फिर से अनुवाद न हो।"
   }
 }

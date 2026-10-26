@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "Inga hCaptcha-data upptäcktes (tidsgräns 60 s)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Original (engelska)"
+  },
+  "ruleOriginalHint": {
+    "message": "De andra språken översätter den här texten: ändrar du den visas den oöversatt tills den översätts igen."
   }
 }

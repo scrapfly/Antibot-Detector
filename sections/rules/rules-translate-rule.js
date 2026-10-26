@@ -126,6 +126,7 @@ Rules.prototype.translateWholeRule = async function() {
   // The combinations are drawn from their model, and the description's count from its fields
   if (typeof this.renderCombinations === 'function') this.renderCombinations();
   this.updateTranslationsCount(detectorTranslationsScope());
+  if (typeof this.refreshLocalFields === 'function') this.refreshLocalFields();
   this._ruleTranslateResult = failed
     ? ruleBarText('ruleTranslateRulePartialFmt', 'Filled {0}; {1} could not be translated here.', filled, failed)
     : ruleBarText('ruleTranslateRuleDoneFmt', 'Filled {0} translations. Check them before saving.', filled);

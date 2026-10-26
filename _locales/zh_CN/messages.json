@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "未检测到 hCaptcha 数据（超时 60 秒）"
+  },
+  "ruleOriginalEnglish": {
+    "message": "原文（英文）"
+  },
+  "ruleOriginalHint": {
+    "message": "其他语言翻译此文本：修改后，在重新翻译之前将显示未翻译的文本。"
   }
 }

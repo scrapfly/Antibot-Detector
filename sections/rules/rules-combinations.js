@@ -308,9 +308,12 @@ Rules.prototype.addComboItems = function(combo, values, path = '') {
     this.comboReferencedOptions(combo).forEach(p => this.setComboPatternStrict(p.id, true));
   }
 };
-// A rule text in the UI language while not edited (rules-translations-ui.js); as written without it
-const comboLocalized = (text, map) => (typeof Rules.localizedEditable === 'function'
-  ? Rules.localizedEditable(text, map) : { shown: String(text || ''), attrs: '' });
+// A rule text in the UI language (rules-translations-ui.js): there it is edited as that language's translation
+const comboLocale = () => (typeof Rules.uiLocale === 'function' ? Rules.uiLocale() : null);
+const comboLocalized = (text, map) => {
+  const locale = comboLocale();
+  return { shown: locale && typeof Rules.shownText === 'function' ? Rules.shownText(text, map, locale) : String(text || ''), attrs: '' };
+};
 
 Rules.prototype.handleCombinationAction = function(event, kind) {
   const target = event.target;
@@ -320,7 +323,18 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
   if (!combo) return;
   const field = target.dataset.comboField;
   if (field === 'description') {
-    if (kind === 'input') this.setComboPatternDescription(target.dataset.pattern, target.textContent, target);
+    if (kind !== 'input') return;
+    const locale = comboLocale();
+    const row = locale ? this.getComboPatternRow(target.dataset.pattern) : null;
+    if (row && typeof Rules.withLocalEdit === 'function') {
+      // In another language: that language's translation of the pattern's description, the original stays
+      let own = {};
+      try { own = row.dataset.descriptionI18n ? JSON.parse(row.dataset.descriptionI18n) : {}; } catch (_) { own = {}; }
+      const map = Rules.withLocalEdit(row.dataset.description || '', own, locale, target.textContent);
+      row.dataset.descriptionI18n = Object.keys(map).length ? JSON.stringify(map) : '';
+    } else {
+      this.setComboPatternDescription(target.dataset.pattern, target.textContent, target);
+    }
     return;
   }
   if (target.classList?.contains('rule-translation-input')) {
@@ -328,10 +342,21 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
     return;
   }
   if (field && kind === 'input') {
-    if (field === 'name') {
+    const locale = comboLocale();
+    if (field === 'name' && locale && typeof Rules.withLocalEdit === 'function') {
+      // In another language: the name's translation in that language; the original is under Name translations
+      const map = Rules.withLocalEdit(combo.name, combo.nameI18n, locale, target.value);
+      combo.nameI18n = Object.keys(map).length ? map : null;
+      const row = card.querySelector?.(`.combo-translations .rule-translation-input[data-locale="${locale}"]`);
+      if (row) row.value = map[locale] || '';
+      if (typeof this.updateTranslationsCount === 'function') this.updateTranslationsCount(card.querySelector?.('.combo-translations'));
+    } else if (field === 'name' || field === 'name-original') {
       combo.name = target.value;
       // The shipped translations are looked up by the name as it is now
       if (typeof this.fillShippedPlaceholders === 'function') this.fillShippedPlaceholders(card.querySelector?.('.combo-translations'), combo.name);
+      // The name shown in the UI language follows the original it translates
+      const summary = field === 'name-original' ? card.querySelector?.('.combo-summary-name') : null;
+      if (summary && document.activeElement !== summary) summary.value = comboLocalized(combo.name, combo.nameI18n).shown;
     }
     if (field === 'confidence') {
       const digits = target.value.replace(/[^0-9]/g, '').slice(0, 3);
@@ -536,7 +561,9 @@ Rules.prototype.comboTranslationsHtml = function(combo, index) {
             <button type="button" class="action-btn" data-rule-translate="combo" data-combo-action="translate-name"${supported && !status?.busy ? '' : ' disabled'}${supported ? '' : ` title="${attr(unavailable)}"`}>${esc(combosText('ruleTranslateAuto', 'Translate automatically'))}</button>
             <span class="rule-translations-status" aria-live="polite">${esc(status?.text || '')}</span>
           </div>
-          <div class="rule-translations-fields">${Rules.translationRowsHtml(combo.name, combo.nameI18n, `combo-${index}-translation`)}</div>
+          ${comboLocale() ? `<label class="rule-original-row"><span class="rule-original-label">${esc(combosText('ruleOriginalEnglish', 'Original (English)'))}</span>
+            <input type="text" class="input-field" data-combo-field="name-original" dir="ltr" lang="en" value="${attr(combo.name || '')}"></label>` : ''}
+          <div class="rule-translations-fields">${Rules.translationRowsHtml(combo.name, combo.nameI18n, `combo-${index}-translation`, { hide: comboLocale() })}</div>
         </details>`;
 };
 Rules.prototype.setComboNameTranslation = function(combo, locale, text) {

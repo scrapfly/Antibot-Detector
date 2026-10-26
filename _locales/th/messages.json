@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "ไม่พบข้อมูล hCaptcha (หมดเวลาใน 60 วินาที)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "ต้นฉบับ (ภาษาอังกฤษ)"
+  },
+  "ruleOriginalHint": {
+    "message": "ภาษาอื่นแปลข้อความนี้: หากแก้ไข ภาษาเหล่านั้นจะแสดงข้อความโดยไม่แปลจนกว่าจะแปลใหม่"
   }
 }

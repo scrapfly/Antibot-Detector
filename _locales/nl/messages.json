@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "Geen hCaptcha-gegevens gedetecteerd (time-out na 60 s)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Origineel (Engels)"
+  },
+  "ruleOriginalHint": {
+    "message": "De andere talen vertalen deze tekst: als je hem wijzigt, tonen ze hem onvertaald tot hij opnieuw is vertaald."
   }
 }

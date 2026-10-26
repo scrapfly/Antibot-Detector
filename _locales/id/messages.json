@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "Tidak ada data hCaptcha yang terdeteksi (batas waktu 60 dtk)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Asli (bahasa Inggris)"
+  },
+  "ruleOriginalHint": {
+    "message": "Bahasa lain menerjemahkan teks ini: jika diubah, teks ditampilkan tanpa terjemahan sampai diterjemahkan lagi."
   }
 }

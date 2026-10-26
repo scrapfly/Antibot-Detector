@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "hCaptcha のデータは検出されませんでした（タイムアウト 60 秒）"
+  },
+  "ruleOriginalEnglish": {
+    "message": "原文（英語）"
+  },
+  "ruleOriginalHint": {
+    "message": "他の言語はこのテキストを翻訳しています。変更すると、再翻訳されるまで翻訳されずに表示されます。"
   }
 }

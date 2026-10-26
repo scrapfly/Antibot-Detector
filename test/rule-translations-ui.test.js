@@ -77,18 +77,24 @@ test('with a translation in every language there is nothing to translate', async
   assert.equal(elements['#methodTranslateStatus'].textContent, 'Every language already has a translation.');
 });
 
-test('a translated rule text shows in the UI language and keeps its original for editing', () => {
+test('in another language a rule text shows and is edited in that language; the original stays as written', () => {
   const { context } = load({ fields: [], description: '' });
+  const R = context.Rules;
   context.RuleI18n.addShipped('es', { 'Sensor cookie with session cookie': 'Cookie de sensor con cookie de sesión' });
   context.RuleI18n.setLocale('es');
-  const shown = context.Rules.localizedEditable('Sensor cookie with session cookie', null);
-  assert.equal(shown.shown, 'Cookie de sensor con cookie de sesión');
-  assert.match(shown.attrs, /data-i18n-source="Sensor cookie with session cookie"/);
-  assert.match(shown.attrs, /data-i18n-showing="1"/);
-  assert.equal(context.Rules.localizedEditable('Sensor cookie with session cookie', { es: 'Propia' }).shown, 'Propia', 'the rule\'s own translation first');
-  assert.deepEqual({ ...context.Rules.localizedEditable('No translation here', null) }, { shown: 'No translation here', attrs: '' });
+  assert.equal(R.uiLocale(), 'es');
+  assert.equal(R.shownText('Sensor cookie with session cookie', null, 'es'), 'Cookie de sensor con cookie de sesión');
+  assert.equal(R.shownText('Sensor cookie with session cookie', { es: 'Propia' }, 'es'), 'Propia', 'the rule\'s own translation first');
+  assert.equal(R.shownText('No translation here', null, 'es'), 'No translation here');
+  // What is typed in Spanish becomes the Spanish translation; the shipped text or the original itself adds nothing
+  const plain = value => JSON.parse(JSON.stringify(value));
+  assert.deepEqual(plain(R.withLocalEdit('Sensor cookie with session cookie', { de: 'X' }, 'es', '  Cookie del sensor ')), { de: 'X', es: 'Cookie del sensor' });
+  assert.deepEqual(plain(R.withLocalEdit('Sensor cookie with session cookie', { es: 'Vieja' }, 'es', 'Cookie de sensor con cookie de sesión')), {});
+  assert.deepEqual(plain(R.withLocalEdit('Sensor cookie with session cookie', { es: 'Vieja' }, 'es', 'Sensor cookie with session cookie')), {});
+  assert.deepEqual(plain(R.withLocalEdit('Sensor cookie with session cookie', { es: 'Vieja' }, 'es', '')), {});
   context.RuleI18n.setLocale(null);
-  assert.equal(context.Rules.localizedEditable('Sensor cookie with session cookie', null).attrs, '', 'English: shown as written');
+  assert.equal(R.uiLocale(), null, 'English: the original is edited as before');
+  assert.equal(R.shownText('Sensor cookie with session cookie', { es: 'Propia' }, null), 'Sensor cookie with session cookie');
 });
 
 test('a combination name has Translations too: filled into the combination, kept when it is redrawn or renamed', async () => {

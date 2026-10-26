@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "hCaptcha 데이터가 감지되지 않았습니다(제한 시간 60초)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "원문(영어)"
+  },
+  "ruleOriginalHint": {
+    "message": "다른 언어는 이 텍스트를 번역합니다. 변경하면 다시 번역될 때까지 번역되지 않은 채로 표시됩니다."
   }
 }

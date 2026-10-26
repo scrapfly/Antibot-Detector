@@ -18,6 +18,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Azure Front Door scores lower on its own: its headers show the Microsoft edge, not that its firewall is switched on.
 - Detection: in a protection's details, each piece of evidence (an address, cookie or header) copies in full with a click or Enter.
 - Arabic: the popup reads right to left, like the Statistics page; addresses and page titles keep their own order and are cut at their end.
+- Rules editor: in another language than English, descriptions and combination names show and are edited in that language (saved as its translation); the English original and the other languages fold under "Original (English)".
 - Advanced: the protection's name above its tools is now a heading, no longer a box that looks like one of the tool buttons.
 - Advanced → Analyze Scripts no longer closes the popup: it lists the protection's scripts the page already loaded, at once, and reloads only a page where none were found (GeeTest, Imperva and Shape Security still reload).
 - Advanced → Analyze Scripts redesigned: one compact list, each script's type and its path (the host only when it is another site's), the whole row copies the address.

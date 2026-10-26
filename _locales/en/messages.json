@@ -7194,5 +7194,13 @@
   "advHcaptchaNoDataTimeout": {
     "message": "No hCaptcha data detected (60s timeout)",
     "description": "Advanced → hCaptcha capture: in-page notice when nothing was captured within 60 seconds"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Original (English)",
+    "description": "Rules editor: the folded line under a text shown in the UI language; opens the English original it translates"
+  },
+  "ruleOriginalHint": {
+    "message": "The other languages translate this text: change it and they show it untranslated until they are translated again.",
+    "description": "Rules editor: under the English original of a rule text (shown when the extension is in another language)"
   }
 }

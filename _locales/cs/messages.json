@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "Nezjištěna žádná data hCaptcha (časový limit 60 s)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Originál (anglicky)"
+  },
+  "ruleOriginalHint": {
+    "message": "Ostatní jazyky tento text překládají: když ho změníte, zobrazí ho nepřeložený, dokud se znovu nepřeloží."
   }
 }

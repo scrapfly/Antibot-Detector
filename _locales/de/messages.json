@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "Keine hCaptcha-Daten erkannt (Zeitlimit 60 s)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Original (Englisch)"
+  },
+  "ruleOriginalHint": {
+    "message": "Die anderen Sprachen übersetzen diesen Text: Wenn du ihn änderst, zeigen sie ihn unübersetzt, bis er neu übersetzt ist."
   }
 }

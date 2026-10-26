@@ -33,7 +33,7 @@ const ruleTranslationClean = (text) => String(text || '').replace(/\s+/g, ' ').t
  * translations, and the one the extension ships greyed as a placeholder.
  * @param {string} idPrefix unique per panel (the inputs are labelled by id)
  */
-Rules.translationRowsHtml = function(english, saved, idPrefix, { maxLength = 200 } = {}) {
+Rules.translationRowsHtml = function(english, saved, idPrefix, { maxLength = 200, hide = null } = {}) {
   const own = saved && typeof saved === 'object' ? saved : {};
   const source = ruleTranslationClean(english);
   return RULE_TRANSLATION_LOCALES.map((locale) => {
@@ -42,7 +42,8 @@ Rules.translationRowsHtml = function(english, saved, idPrefix, { maxLength = 200
     const shipped = source && typeof RuleI18n !== 'undefined' ? RuleI18n.t(source, locale) : '';
     const placeholder = shipped && shipped !== source ? shipped : '';
     const lang = locale.replace('_', '-');
-    return `<label class="rule-translation-row" for="${id}">
+    // `hide`: the UI language, whose translation is edited in the field itself
+    return `<label class="rule-translation-row" for="${id}"${locale === hide ? ' hidden' : ''}>
       <span class="rule-translation-lang" lang="${lang}">${FormatUtils.escapeHtml(ruleTranslationLanguageName(locale))}</span>
       <textarea id="${id}" class="input-field rule-translation-input" data-locale="${locale}" rows="1" maxlength="${maxLength}" dir="${locale === 'ar' ? 'rtl' : 'auto'}"
         lang="${lang}" placeholder="${FormatUtils.escapeAttr(placeholder)}">${FormatUtils.escapeHtml(value)}</textarea>
@@ -60,6 +61,119 @@ Rules.collectTranslations = function(scope) {
   return out;
 };
 
+/**
+ * Editing in the UI language. Rule texts are written in English (the original, the key every translation hangs
+ * on); in another language the editor shows each text in that language and saves what is typed there as its
+ * translation, leaving the original alone. The original and the other languages stay one click away.
+ */
+/** The UI language as a rule-translation locale ('es', 'pt_BR'…), or null for English. */
+Rules.uiLocale = function() {
+  return typeof RuleI18n !== 'undefined' && typeof RuleI18n.current === 'function' ? RuleI18n.current() : null;
+};
+
+/** The translation the extension ships for a text in a locale, or ''. */
+Rules.shippedText = function(english, locale) {
+  const source = ruleTranslationClean(english);
+  const shipped = source && locale && typeof RuleI18n !== 'undefined' ? ruleTranslationClean(RuleI18n.t(source, locale)) : '';
+  return shipped && shipped !== source ? shipped : '';
+};
+
+/** What a text shows in a locale: the rule's own translation, the shipped one, else the original. */
+Rules.shownText = function(english, own, locale) {
+  const mine = locale && own && typeof own[locale] === 'string' ? ruleTranslationClean(own[locale]) : '';
+  return mine || Rules.shippedText(english, locale) || ruleTranslationClean(english);
+};
+
+/**
+ * The rule's own translations after `typed` was written in `locale`: kept as that language's translation, unless it
+ * is the shipped translation or the original itself (nothing of the rule's own to keep then) or empty.
+ * @returns {object} a new { locale: text } map
+ */
+Rules.withLocalEdit = function(english, own, locale, typed) {
+  const map = { ...(own && typeof own === 'object' ? own : {}) };
+  if (!locale) return map;
+  const value = ruleTranslationClean(typed);
+  if (!value || value === ruleTranslationClean(english) || value === Rules.shippedText(english, locale)) delete map[locale];
+  else map[locale] = value;
+  return map;
+};
+
+/**
+ * Set up a description that has a field in the UI language (detector or pattern description): in English the
+ * original is edited as before; in another language the localized field shows the text in that language, the
+ * original and the other languages fold under "Original (English)", and the language's own row of the Translations
+ * panel is hidden (the localized field writes it).
+ * @param {HTMLTextAreaElement} local the field in the UI language (data-local-english, -scope, -original)
+ */
+Rules.prototype.setupLocalField = function(local) {
+  if (!local) return;
+  const english = document.getElementById(local.dataset.localEnglish);
+  const scope = document.getElementById(local.dataset.localScope);
+  const original = document.getElementById(local.dataset.localOriginal);
+  const locale = Rules.uiLocale();
+  local.hidden = !locale;
+  original?.classList.toggle('is-plain', !locale);
+  if (original) original.open = !locale;
+  const label = local.closest('.form-group, .modal-card')?.querySelector(`label[for="${local.dataset.localEnglish}"], label[for="${local.id}"]`);
+  if (label) label.htmlFor = locale ? local.id : local.dataset.localEnglish;
+  scope?.querySelectorAll('.rule-translation-row').forEach((row) => {
+    row.hidden = !!locale && row.querySelector('.rule-translation-input')?.dataset.locale === locale;
+  });
+  if (!locale) return;
+  local.lang = locale.replace('_', '-');
+  local.dir = locale === 'ar' ? 'rtl' : 'auto';
+  local.placeholder = english?.placeholder || '';
+  local.dataset.edited = '';
+  const show = () => {
+    if (local.dataset.edited) return;
+    const own = Rules.collectTranslations(scope);
+    local.value = Rules.shownText(english?.value || '', own, locale);
+    this.updateOriginalPreview(local);
+  };
+  show();
+  // The shipped translations may still be loading
+  if (typeof RuleI18n !== 'undefined') RuleI18n.load(locale).then(show).catch(() => {});
+};
+
+/** Localized fields nobody typed in show what the Translations now hold (after an automatic translation). */
+Rules.prototype.refreshLocalFields = function() {
+  const locale = Rules.uiLocale();
+  if (!locale) return;
+  document.querySelectorAll('.rule-local-input').forEach((local) => {
+    if (local.hidden || local.dataset.edited) return;
+    const english = document.getElementById(local.dataset.localEnglish)?.value || '';
+    local.value = Rules.shownText(english, Rules.collectTranslations(document.getElementById(local.dataset.localScope)), locale);
+  });
+};
+
+/** The original's first words on the folded "Original (English)" line. */
+Rules.prototype.updateOriginalPreview = function(local) {
+  const english = document.getElementById(local.dataset.localEnglish);
+  const preview = document.getElementById(local.dataset.localOriginal)?.querySelector('.rule-original-preview');
+  if (preview) preview.textContent = ruleTranslationClean(english?.value || '');
+};
+
+/** Typed in the UI language: written to that language's row of the Translations panel, which Save collects. */
+Rules.prototype.onLocalFieldInput = function(local) {
+  const locale = Rules.uiLocale();
+  const english = document.getElementById(local.dataset.localEnglish)?.value || '';
+  const scope = document.getElementById(local.dataset.localScope);
+  const row = scope?.querySelector(`.rule-translation-input[data-locale="${locale}"]`);
+  local.dataset.edited = '1';
+  if (row) row.value = Rules.withLocalEdit(english, {}, locale, local.value)[locale] || '';
+  this.updateTranslationsCount(scope);
+};
+
+/** The original changed: a localized field nobody typed in follows it (its translation is looked up by the new text). */
+Rules.prototype.onOriginalInput = function(englishInput) {
+  const local = document.querySelector(`.rule-local-input[data-local-english="${englishInput.id}"]`);
+  if (!local || local.hidden) return;
+  this.updateOriginalPreview(local);
+  if (local.dataset.edited) return;
+  const scope = document.getElementById(local.dataset.localScope);
+  local.value = Rules.shownText(englishInput.value, Rules.collectTranslations(scope), Rules.uiLocale());
+};
+
 const methodTranslationsScope = () => document.querySelector('#methodDescriptionTranslations');
 
 Rules.prototype.renderDescriptionTranslations = function(methodItem) {
@@ -75,6 +189,7 @@ Rules.prototype.renderDescriptionTranslations = function(methodItem) {
   if (status) status.textContent = '';
   if (scope) scope.open = Object.keys(saved).length > 0 && scope.open;
   this.updateAutoTranslateButton(scope);
+  this.setupLocalField(document.querySelector('#methodDescriptionLocal'));
 };
 
 /** { locale: text } for the filled fields. */
@@ -184,6 +299,7 @@ Rules.prototype.autoTranslateFields = function(getScope, sourceText, { needsText
     this.updateTranslationsCount(getScope());
   })).then(() => {
     this.updateTranslationsCount(getScope());
+    this.refreshLocalFields();
     say(failed
       ? ruleTranslateText('ruleTranslateDonePartialFmt', 'Filled {0}; {1} could not be translated here.', filled, failed)
       : ruleTranslateText('ruleTranslateDoneFmt', 'Filled {0} languages. Check them before saving.', filled), false);
@@ -214,6 +330,7 @@ Rules.prototype.renderDetectorDescription = function(detector) {
   if (status) status.textContent = '';
   if (scope) scope.open = Object.keys(saved).length > 0;
   this.updateAutoTranslateButton(scope);
+  this.setupLocalField(document.querySelector('#detectorDescriptionLocal'));
 };
 
 /**
@@ -241,24 +358,6 @@ Rules.prototype.refreshShippedPlaceholders = function() {
   this.fillShippedPlaceholders(methodTranslationsScope(), document.querySelector('#methodDescriptionInput')?.value || '');
 };
 
-/**
- * An editable rule text (a pattern description or a combination name) shown
- * in the UI language: the field shows the translation, and switches to the
- * text itself while it is being edited, so a save never stores a translation
- * in place of the original.
- * @returns {{shown: string, attrs: string}} the text to show and the attributes for the field
- */
-Rules.localizedEditable = function(text, map) {
-  const source = String(text || '');
-  const shown = source && typeof FormatUtils !== 'undefined' ? FormatUtils.ruleText(source, map) : source;
-  if (!source || shown === source) return { shown: source, attrs: '' };
-  const attr = FormatUtils.escapeAttr;
-  return { shown, attrs: ` data-i18n-source="${attr(source)}" data-i18n-shown="${attr(shown)}" data-i18n-showing="1"` };
-};
-
-const ruleEditableText = (el) => (el.isContentEditable ? el.textContent : el.value);
-const setRuleEditableText = (el, text) => { if (el.isContentEditable) el.textContent = text; else el.value = text; };
-
 // One delegated listener: the fields are rebuilt each time the dialog opens
 if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('click', (event) => {
@@ -275,29 +374,14 @@ if (typeof document !== 'undefined' && document.addEventListener) {
     }
     if (event.target.id === 'methodDescriptionInput' && typeof window !== 'undefined' && window.popupInstance?.rules) {
       window.popupInstance.rules.refreshShippedPlaceholders();
+      window.popupInstance.rules.onOriginalInput(event.target);
     }
     if (event.target.id === 'detectorDescriptionInput' && typeof window !== 'undefined' && window.popupInstance?.rules) {
       window.popupInstance.rules.fillShippedPlaceholders(detectorTranslationsScope(), event.target.value);
+      window.popupInstance.rules.onOriginalInput(event.target);
     }
-  });
-  // Translated rule texts: the original while editing, the translation again if left unchanged
-  document.addEventListener('focusin', (event) => {
-    const el = event.target.closest?.('[data-i18n-source]');
-    if (!el || el.dataset.i18nShowing !== '1') return;
-    el.dataset.i18nShowing = '0';
-    setRuleEditableText(el, el.dataset.i18nSource);
-  });
-  document.addEventListener('focusout', (event) => {
-    const el = event.target.closest?.('[data-i18n-source]');
-    if (!el || el.dataset.i18nShowing !== '0') return;
-    if (ruleEditableText(el).replace(/\s+/g, ' ').trim() === el.dataset.i18nSource.replace(/\s+/g, ' ').trim()) {
-      el.dataset.i18nShowing = '1';
-      setRuleEditableText(el, el.dataset.i18nShown);
-    } else {
-      // Edited: the field now shows what was typed (a new text has no translation)
-      delete el.dataset.i18nSource;
-      delete el.dataset.i18nShown;
-      delete el.dataset.i18nShowing;
+    if (event.target.classList?.contains('rule-local-input') && typeof window !== 'undefined' && window.popupInstance?.rules) {
+      window.popupInstance.rules.onLocalFieldInput(event.target);
     }
   });
 }

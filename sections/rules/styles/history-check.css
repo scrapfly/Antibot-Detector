@@ -159,6 +159,95 @@
 }
 
 /* ============================================
+   Editing in the UI language: the field shows the text in that language; the
+   English original (and the other languages) fold under one quiet line
+   ============================================ */
+.rule-local-input[hidden],
+.rule-translation-row[hidden] {
+  display: none;
+}
+
+.rule-original {
+  margin-top: 6px;
+}
+
+.rule-original > summary {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 0;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.rule-original > summary::-webkit-details-marker {
+  display: none;
+}
+
+.rule-original > summary::before {
+  content: '';
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(-45deg);
+  transition: transform 0.15s ease;
+}
+
+.rule-original[open] > summary::before {
+  transform: translateY(-3px) rotate(45deg);
+}
+
+.rule-original > summary:hover {
+  color: var(--text-primary);
+}
+
+.rule-original-label {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.rule-original-preview {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rule-original[open] .rule-original-preview {
+  display: none;
+}
+
+.rule-original[open] > summary + * {
+  margin-top: 6px;
+}
+
+/* English: the original is the field itself, as before */
+.rule-original.is-plain > summary,
+.rule-original.is-plain .rule-original-hint {
+  display: none;
+}
+
+.rule-original.is-plain[open] > summary + * {
+  margin-top: 0;
+}
+
+/* A combination's original name, at the top of its Name translations */
+.rule-original-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 6px 0 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ============================================
    Pattern settings → Description → Translations,
    and a combination's Name translations
    ============================================ */

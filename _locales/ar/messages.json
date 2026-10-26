@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "لم تُكتشف بيانات hCaptcha (المهلة 60 ثانية)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "الأصل (بالإنجليزية)"
+  },
+  "ruleOriginalHint": {
+    "message": "تترجم اللغات الأخرى هذا النص: إذا غيّرته فستعرضه دون ترجمة إلى أن يُترجم من جديد."
   }
 }

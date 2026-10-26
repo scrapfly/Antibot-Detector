@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "未偵測到 hCaptcha 資料（60 秒逾時）"
+  },
+  "ruleOriginalEnglish": {
+    "message": "原文（英文）"
+  },
+  "ruleOriginalHint": {
+    "message": "其他語言會翻譯此文字：修改後，在重新翻譯之前會顯示未翻譯的文字。"
   }
 }

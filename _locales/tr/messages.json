@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "hCaptcha verisi algılanmadı (60 sn zaman aşımı)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Orijinal (İngilizce)"
+  },
+  "ruleOriginalHint": {
+    "message": "Diğer diller bu metni çevirir: değiştirirsen yeniden çevrilene kadar çevrilmeden gösterilir."
   }
 }

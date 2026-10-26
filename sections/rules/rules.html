@@ -133,9 +133,15 @@
             <!-- The detector's own description: detection details show it, translated when it has a translation -->
             <div class="form-group form-group-description" id="detectorDescriptionGroup">
               <label class="form-label" for="detectorDescriptionInput" data-i18n="ruleDescriptionTitle">Description</label>
+              <!-- In another language than English: the description in that language, edited as its translation -->
+              <textarea id="detectorDescriptionLocal" class="detector-description-input rule-local-input" rows="2" maxlength="400" dir="auto" hidden
+                data-local-english="detectorDescriptionInput" data-local-scope="detectorDescriptionTranslations" data-local-original="detectorDescriptionOriginal"></textarea>
+              <p class="option-hint" data-i18n="ruleFieldDescriptionHint">Shown in the detection details of this protection.</p>
+              <details class="rule-original" id="detectorDescriptionOriginal">
+                <summary><span class="rule-original-label" data-i18n="ruleOriginalEnglish">Original (English)</span><span class="rule-original-preview" dir="ltr"></span></summary>
               <textarea id="detectorDescriptionInput" class="detector-description-input" rows="2" maxlength="300" dir="auto"
                 placeholder="What this protection is, e.g. Bot detection on login and checkout pages" data-i18n-placeholder="ruleFieldDescriptionPlaceholder"></textarea>
-              <p class="option-hint" data-i18n="ruleFieldDescriptionHint">Shown in the detection details of this protection.</p>
+              <p class="option-hint rule-original-hint" data-i18n="ruleOriginalHint">The other languages translate this text: change it and they show it untranslated until they are translated again.</p>
               <details class="rule-translations" id="detectorDescriptionTranslations">
                 <summary>
                   <span data-i18n="ruleTranslationsTitle">Translations</span>
@@ -147,6 +153,7 @@
                   <span class="rule-translations-status" aria-live="polite"></span>
                 </div>
                 <div class="rule-translations-fields" id="detectorTranslationFields"></div>
+              </details>
               </details>
             </div>
             <div class="form-row">
@@ -366,9 +373,14 @@
             <h3><label for="methodDescriptionInput" data-i18n="ruleDescriptionTitle">Description</label></h3>
           </div>
           <div class="modal-card-body">
+            <textarea id="methodDescriptionLocal" class="method-description-input rule-local-input" rows="2" maxlength="400" dir="auto" hidden
+              data-local-english="methodDescriptionInput" data-local-scope="methodDescriptionTranslations" data-local-original="methodDescriptionOriginal"></textarea>
+            <p class="option-hint" data-i18n="ruleDescriptionHint">Shown in the detection details and in History when this pattern is found.</p>
+            <details class="rule-original" id="methodDescriptionOriginal">
+              <summary><span class="rule-original-label" data-i18n="ruleOriginalEnglish">Original (English)</span><span class="rule-original-preview" dir="ltr"></span></summary>
             <textarea id="methodDescriptionInput" class="method-description-input" rows="2" maxlength="200" dir="auto"
               placeholder="What this pattern means, e.g. Reads browser language preferences" data-i18n-placeholder="ruleDescriptionPlaceholder"></textarea>
-            <p class="option-hint" data-i18n="ruleDescriptionHint">Shown in the detection details and in History when this pattern is found.</p>
+            <p class="option-hint rule-original-hint" data-i18n="ruleOriginalHint">The other languages translate this text: change it and they show it untranslated until they are translated again.</p>
             <details class="rule-translations" id="methodDescriptionTranslations">
               <summary>
                 <span data-i18n="ruleTranslationsTitle">Translations</span>
@@ -380,6 +392,7 @@
                 <span class="rule-translations-status" id="methodTranslateStatus" aria-live="polite"></span>
               </div>
               <div class="rule-translations-fields" id="methodTranslationFields"></div>
+            </details>
             </details>
           </div>
         </div>

@@ -6604,5 +6604,11 @@
   },
   "advHcaptchaNoDataTimeout": {
     "message": "Không phát hiện dữ liệu hCaptcha (hết thời gian sau 60 giây)"
+  },
+  "ruleOriginalEnglish": {
+    "message": "Bản gốc (tiếng Anh)"
+  },
+  "ruleOriginalHint": {
+    "message": "Các ngôn ngữ khác dịch văn bản này: nếu bạn thay đổi, văn bản sẽ hiển thị chưa dịch cho đến khi được dịch lại."
   }
 }
