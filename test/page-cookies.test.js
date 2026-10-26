@@ -47,6 +47,27 @@ test('without a tab or before Chrome 132 it reads unpartitioned cookies only, as
   assert.deepEqual(names(await failing.PageCookies.getAll({ url: 'https://discord.com/' }, 7)), ['_cfuvid']);
 });
 
+test('a private-window tab\'s cookies come from its own cookie store', async () => {
+  // Without storeId chrome.cookies reads the worker's regular store: the page was scanned with the wrong cookies
+  const stores = [{ id: '0', tabIds: [3] }, { id: '1', tabIds: [7, 8] }];
+  const { PageCookies, calls } = load({ async getAllCookieStores() { return stores; }, async getPartitionKey() { return { partitionKey: own }; } });
+  assert.equal(await PageCookies.storeIdOf(7), '1');
+  assert.equal(await PageCookies.storeIdOf(3), '0');
+  assert.equal(await PageCookies.storeIdOf(99), null);
+  await PageCookies.getAll({ url: 'https://discord.com/' }, 7);
+  const queries = calls.filter(([kind]) => kind === 'getAll').map(([, details]) => details.storeId);
+  assert.deepEqual(queries, ['1', '1'], 'both the plain and the partitioned read');
+  // No tab, or a tab no store lists: the query is unchanged
+  calls.length = 0;
+  await PageCookies.getAll({ url: 'https://discord.com/' });
+  assert.equal(calls[0][1].storeId, undefined);
+  const failing = load({ async getAllCookieStores() { throw new Error('boom'); } });
+  assert.deepEqual(names(await failing.PageCookies.getAll({ url: 'https://discord.com/' }, 7)), ['_cfuvid']);
+  // A cookie is deleted from the store it came from
+  await PageCookies.remove('https://discord.com/', { name: 'x', storeId: '1' });
+  assert.deepEqual(JSON.parse(JSON.stringify(calls.at(-1)[1])), { url: 'https://discord.com/', name: 'x', storeId: '1' });
+});
+
 test('a partitioned cookie is deleted from its own partition', async () => {
   const { PageCookies, calls } = load({});
   await PageCookies.remove('https://discord.com/', jar[1]);
