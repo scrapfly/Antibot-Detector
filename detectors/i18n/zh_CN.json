@@ -1092,5 +1092,8 @@
   "leminCroppedCaptcha.getCaptcha function of the Lemin widget": "Lemin 组件的 leminCroppedCaptcha.getCaptcha 函数",
   "Lemin container, script and runtime": "Lemin 容器、脚本和运行时",
   "Lemin container with its global": "Lemin 容器及其全局对象",
-  "Lemin container with code that uses it": "Lemin 容器及使用它的代码"
+  "Lemin container with code that uses it": "Lemin 容器及使用它的代码",
+  "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "FingerprintJS 设备指纹库（OSS 和 Pro 代理）及其 BotD 机器人检测库",
+  "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "位于厂商 openfpcdn.io 主机上的 BotD 机器人检测库（botd/v1、botd/v2）",
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "发往厂商 m1.openfpcdn.io 主机的 BotD npm 包监控 ping"
 }

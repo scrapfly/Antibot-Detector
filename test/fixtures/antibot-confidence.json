@@ -775,13 +775,13 @@
    "url": "https://fpcdn.io/v4/abc123DEF456"
   },
   "openfpcdn-oss-script": {
-   "url": "https://openfpcdn.io/fingerprintjs/v3/iife.min.js"
+   "url": "https://openfpcdn.io/fingerprintjs/v5"
   },
   "fp-esm-bundle": {
    "url": "https://fingerprint.com/_astro/fp.esm.igOf38FS.js?dpl=dpl_Gvyz2LLeSchmoL49X6HbJAy6nLEj"
   },
   "oss-npm-monitoring": {
-   "url": "https://m1.openfpcdn.io/fingerprintjs/v3/npm-monitoring"
+   "url": "https://m1.openfpcdn.io/fingerprintjs/v5.3.0/npm-monitoring"
   },
   "fpjs-proxy-endpoint": {
    "url": "https://example.test/fpjs/api?token=abc123"
@@ -803,6 +803,12 @@
   },
   "fpjs-pvid": {
    "runtimeType": "string"
+  },
+  "botd-cdn-script": {
+   "url": "https://openfpcdn.io/botd/v2"
+  },
+  "botd-npm-monitoring": {
+   "url": "https://m1.openfpcdn.io/botd/v2.0.0/npm-monitoring"
   }
  },
  "detect-netacea": {

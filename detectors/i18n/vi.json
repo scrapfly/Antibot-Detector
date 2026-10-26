@@ -1092,5 +1092,8 @@
   "leminCroppedCaptcha.getCaptcha function of the Lemin widget": "Hàm leminCroppedCaptcha.getCaptcha của widget Lemin",
   "Lemin container, script and runtime": "Container, script và runtime của Lemin",
   "Lemin container with its global": "Container Lemin cùng biến toàn cục của nó",
-  "Lemin container with code that uses it": "Container Lemin cùng mã sử dụng nó"
+  "Lemin container with code that uses it": "Container Lemin cùng mã sử dụng nó",
+  "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "Thư viện lấy dấu vân tay thiết bị FingerprintJS (OSS và agent Pro) cùng thư viện phát hiện bot BotD của nó",
+  "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "Thư viện phát hiện bot BotD trên host openfpcdn.io của nhà cung cấp (botd/v1, botd/v2)",
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "Ping giám sát của gói npm BotD trên host m1.openfpcdn.io của nhà cung cấp"
 }

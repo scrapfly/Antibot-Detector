@@ -111,7 +111,7 @@ const PROOF = new Set([
   'detect-deepseek-pow/pow-challenge-endpoint', 'detect-deepseek-pow/pow-challenge-payload', 'detect-deepseek-pow/pow-challenge-response',
   'detect-deepseek-pow/pow-solver-wasm', 'detect-f5/ts-asm-cookie', 'detect-fingerprintjs/fpcdn-pro-script',
   'detect-fingerprintjs/fpjs-api-host', 'detect-fingerprintjs/fpnpmcdn-loader', 'detect-fingerprintjs/openfpcdn-oss-script',
-  'detect-fingerprintjs/oss-npm-monitoring', 'detect-incapsula/imperva-cdn-header', 'detect-incapsula/incap-iinfo-header',
+  'detect-fingerprintjs/oss-npm-monitoring', 'detect-fingerprintjs/botd-cdn-script', 'detect-fingerprintjs/botd-npm-monitoring', 'detect-incapsula/imperva-cdn-header', 'detect-incapsula/incap-iinfo-header',
   'detect-incapsula/incap-session-cookie', 'detect-incapsula/incap-visitor-cookie', 'detect-incapsula/incapsula-resource',
   'detect-incapsula/reese84-cookie', 'detect-incapsula/utmvc-cookie', 'detect-jiasule/jsl-clearance-cookie',
   'detect-kasada/ips-script', 'detect-kasada/kpsdk-ct-header', 'detect-kasada/tl-endpoint', 'detect-netacea/mitatacaptcha-cookie',

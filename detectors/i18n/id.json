@@ -1092,5 +1092,8 @@
   "leminCroppedCaptcha.getCaptcha function of the Lemin widget": "Fungsi leminCroppedCaptcha.getCaptcha dari widget Lemin",
   "Lemin container, script and runtime": "Container, script, dan runtime Lemin",
   "Lemin container with its global": "Container Lemin beserta global-nya",
-  "Lemin container with code that uses it": "Container Lemin beserta kode yang menggunakannya"
+  "Lemin container with code that uses it": "Container Lemin beserta kode yang menggunakannya",
+  "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "Library fingerprinting perangkat FingerprintJS (OSS dan agen Pro) beserta library deteksi bot BotD-nya",
+  "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "Library deteksi bot BotD pada host vendor openfpcdn.io (botd/v1, botd/v2)",
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "Ping pemantauan paket npm BotD pada host vendor m1.openfpcdn.io"
 }

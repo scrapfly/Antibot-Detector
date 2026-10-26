@@ -5,12 +5,12 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "2.2.0",
+  "lastUpdated": "2026-10-26",
+  "version": "2.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://fingerprint.com/",
   "icon": "fingerprintjs_official.png",
-  "description": "FingerprintJS device fingerprinting library (OSS and Pro agent) used for bot detection and identification",
+  "description": "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library",
   "detection": {
     "url": [
       {
@@ -26,7 +26,7 @@
         "id": "openfpcdn-oss-script",
         "confidence": 100,
         "description": "FingerprintJS open-source library on the vendor openfpcdn.io host",
-        "text": "^https://openfpcdn\\.io/fingerprintjs/v3/",
+        "text": "^https://openfpcdn\\.io/fingerprintjs/v[0-9]+(?:[/?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -72,7 +72,7 @@
         "id": "oss-npm-monitoring",
         "confidence": 100,
         "description": "OSS npm package monitoring ping on the vendor m1.openfpcdn.io host",
-        "text": "^https://m1\\.openfpcdn\\.io/fingerprintjs/v\\d+/npm-monitoring$",
+        "text": "^https://m1\\.openfpcdn\\.io/fingerprintjs/v\\d+(?:\\.\\d+){0,2}/npm-monitoring$",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -83,6 +83,24 @@
         "standalone": false,
         "description": "First-party Pro proxy endpoint forwarding agent traffic to FingerprintJS",
         "text": "^https?://[^/?#]+/fpjs/api(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "botd-cdn-script",
+        "confidence": 100,
+        "description": "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)",
+        "text": "^https://openfpcdn\\.io/botd/v[0-9]+(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "botd-npm-monitoring",
+        "confidence": 100,
+        "description": "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host",
+        "text": "^https://m1\\.openfpcdn\\.io/botd/v\\d+(?:\\.\\d+){0,2}/npm-monitoring$",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"

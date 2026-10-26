@@ -1092,5 +1092,8 @@
   "leminCroppedCaptcha.getCaptcha function of the Lemin widget": "Lemin bileşeninin leminCroppedCaptcha.getCaptcha işlevi",
   "Lemin container, script and runtime": "Lemin kapsayıcısı, komut dosyası ve çalışma zamanı",
   "Lemin container with its global": "Global değişkeni ile birlikte Lemin kapsayıcısı",
-  "Lemin container with code that uses it": "Onu kullanan kod ile birlikte Lemin kapsayıcısı"
+  "Lemin container with code that uses it": "Onu kullanan kod ile birlikte Lemin kapsayıcısı",
+  "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "FingerprintJS cihaz parmak izi kitaplığı (OSS ve Pro agent) ve BotD bot tespit kitaplığı",
+  "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "Sağlayıcının openfpcdn.io ana makinesindeki BotD bot tespit kitaplığı (botd/v1, botd/v2)",
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "Sağlayıcının m1.openfpcdn.io ana makinesindeki BotD npm paketi izleme ping'i"
 }

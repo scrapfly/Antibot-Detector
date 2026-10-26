@@ -1092,5 +1092,8 @@
   "leminCroppedCaptcha.getCaptcha function of the Lemin widget": "ฟังก์ชัน leminCroppedCaptcha.getCaptcha ของวิดเจ็ต Lemin",
   "Lemin container, script and runtime": "container, สคริปต์ และ runtime ของ Lemin",
   "Lemin container with its global": "container ของ Lemin ร่วมกับ global ของมัน",
-  "Lemin container with code that uses it": "container ของ Lemin ร่วมกับโค้ดที่ใช้งานมัน"
+  "Lemin container with code that uses it": "container ของ Lemin ร่วมกับโค้ดที่ใช้งานมัน",
+  "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "ไลบรารีสร้างลายนิ้วมืออุปกรณ์ FingerprintJS (OSS และ Pro agent) และไลบรารีตรวจจับบอต BotD ของมัน",
+  "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "ไลบรารีตรวจจับบอต BotD บนโฮสต์ openfpcdn.io ของผู้ให้บริการ (botd/v1, botd/v2)",
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "ping ตรวจสอบของแพ็กเกจ npm ของ BotD ไปยังโฮสต์ m1.openfpcdn.io ของผู้ให้บริการ"
 }

@@ -1092,5 +1092,8 @@
   "leminCroppedCaptcha.getCaptcha function of the Lemin widget": "Lemin ウィジェットの leminCroppedCaptcha.getCaptcha 関数",
   "Lemin container, script and runtime": "Lemin のコンテナー、スクリプト、ランタイム",
   "Lemin container with its global": "Lemin コンテナーとそのグローバル",
-  "Lemin container with code that uses it": "Lemin コンテナーとそれを使うコード"
+  "Lemin container with code that uses it": "Lemin コンテナーとそれを使うコード",
+  "FingerprintJS device fingerprinting library (OSS and Pro agent) and its BotD bot detection library": "FingerprintJS のデバイスフィンガープリンティングライブラリ (OSS と Pro エージェント) とその BotD ボット検出ライブラリ",
+  "BotD bot detection library on the vendor openfpcdn.io host (botd/v1, botd/v2)": "ベンダーの openfpcdn.io ホスト上の BotD ボット検出ライブラリ (botd/v1、botd/v2)",
+  "BotD npm package monitoring ping on the vendor m1.openfpcdn.io host": "ベンダーの m1.openfpcdn.io ホストへの BotD npm パッケージの監視 ping"
 }
