@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "Değiştirilen {1} metinden {0} tanesi burada tüm dillere çevrilemedi (tarayıcı onları hâlâ indiriyor olabilir). Hiçbir şey kaybolmadı: bu metinler olduğu gibi kaldı. Birazdan tekrar deneyin."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "İndirildi: {0}. {2} dilden {1} tanesi hazır. Tarayıcı her dili bir kez, her tıklamada bir tane indirir: sonraki için Çevir'e yeniden tıklayın."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} metin çevriliyor…"
   },

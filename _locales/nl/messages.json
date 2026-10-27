@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "{0} van de {1} gewijzigde teksten konden hier niet in elke taal worden vertaald (de browser downloadt ze misschien nog). Er is niets verloren: die teksten zijn zoals ze waren. Probeer het zo meteen opnieuw."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Gedownload: {0}. {1} van {2} talen klaar. De browser downloadt elke taal één keer, één per klik: klik opnieuw op Vertalen voor de volgende."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} teksten vertalen…"
   },

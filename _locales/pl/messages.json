@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "Nie udało się tu przetłumaczyć {0} z {1} zmienionych tekstów na wszystkie języki (przeglądarka może je jeszcze pobierać). Nic nie przepadło: te teksty pozostały bez zmian. Spróbuj ponownie za chwilę."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Pobrano: {0}. Gotowe języki: {1} z {2}. Przeglądarka pobiera każdy język raz, jeden na kliknięcie: kliknij ponownie Przetłumacz, aby pobrać następny."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Tłumaczenie tekstów: {0}…"
   },

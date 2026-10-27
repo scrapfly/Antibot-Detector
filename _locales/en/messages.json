@@ -6767,6 +6767,10 @@
     "message": "Could not translate {0} of {1} changed texts into every language here (the browser may still be downloading them). Nothing was lost: those texts are as they were. Try again in a moment.",
     "description": "Rule editor \u2192 Translate changes: some texts could not be translated into every language, so they were left unchanged ({0} = how many, {1} = changed texts)"
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Downloaded {0}: {1} of {2} languages ready. The browser downloads each language once, one per click: click Translate again for the next.",
+    "description": "Rule editor \u2192 Translate: a language model was downloaded; the browser allows one download per click ({0} = language, {1} = ready, {2} = total)"
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Translating {0} texts…",
     "description": "Shown while Translate the rule works; {0} is how many texts it translates"

@@ -45,12 +45,22 @@ const scenario = async (name, fn) => {
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
   await page.addInitScript(() => {
-    self.Translator = { availability: async () => 'available',
-      // self.__failTo names a language the stand-in cannot translate into, as a browser still downloading it
-      create: async ({ sourceLanguage, targetLanguage }) => ({ translate: async (text) => {
+    // As Chrome and Brave do: a language in self.__notDownloaded is 'downloadable' and creating it needs a click, one
+    // download per click (the click's activation is used up by the first)
+    self.__notDownloaded = new Set();
+    document.addEventListener('click', () => { self.__gesture = true; }, true);
+    self.Translator = { availability: async ({ targetLanguage }) => self.__notDownloaded.has(targetLanguage) ? 'downloadable' : 'available',
+      create: async ({ sourceLanguage, targetLanguage }) => {
+        if (self.__notDownloaded.has(targetLanguage)) {
+          if (!self.__gesture) throw new DOMException('Requires a user gesture', 'NotAllowedError');
+          self.__gesture = false;
+          self.__notDownloaded.delete(targetLanguage);
+        }
+        return { translate: async (text) => {
         if (self.__failTo === targetLanguage) throw new Error('not downloaded yet');
         return `[${sourceLanguage}>${targetLanguage}] ${text}`;
-      }, destroy() {} }) };
+      }, destroy() {} };
+      } };
   });
   await page.goto(`chrome-extension://${extId}/popup.html`);
   await page.evaluate(async () => { await chrome.storage.local.set({ scrapfly_language_override: 'es' }); });
@@ -82,7 +92,7 @@ const scenario = async (name, fn) => {
   });
   const original = await stored();
 
-  await scenario('Your language: Spanish texts in the fields, no English original, the Translations panel, no translate bar (nothing to do)', async () => {
+  await scenario('Your language: Spanish texts in the fields, no English original, no Translations panel, the button says Translated (nothing to do)', async () => {
     await openEditor();
     const view = await page.evaluate(() => ({
       local: document.querySelector('#detectorDescriptionLocal').value, localHidden: document.querySelector('#detectorDescriptionLocal').hidden,
@@ -92,7 +102,7 @@ const scenario = async (name, fn) => {
     }));
     assert.equal(view.localHidden, false);
     assert.equal(view.originalShown, false, 'the English original is not shown: the text is edited in Spanish');
-    assert.equal(view.translationsShown, true, 'the Translations panel (Translate automatically) stays');
+    assert.equal(view.translationsShown, false, 'no per-text Translations panel: the header button translates the rule');
     assert.ok(/^Edge de CDN/.test(view.local), `Spanish description: ${view.local}`);
     assert.ok(/^Cabecera de referencia/.test(view.combo), `Spanish combination name: ${view.combo}`);
     const b = await bar();
@@ -151,6 +161,39 @@ const scenario = async (name, fn) => {
       if (code !== 'es') assert.equal(after.nameI18n[code], text, `${code} keeps its translation`);
     }
     assert.equal((await bar()).changes, true, 'still counted, for another try');
+    await closeEditor();
+  });
+
+  await scenario('Languages not downloaded yet: each click downloads one and says how many are ready; the click that downloads the last translates the change', async () => {
+    await openEditor();
+    const before = await page.evaluate(() => JSON.parse(JSON.stringify(window.popupInstance.rules.combinationsModel[0])));
+    await page.evaluate(() => {
+      self.__notDownloaded = new Set(['de', 'fr']);
+      window.__notes = [];
+      for (const kind of ['success', 'warning', 'info']) {
+        const show = NotificationHelper[kind].bind(NotificationHelper);
+        NotificationHelper[kind] = (message, ...rest) => { window.__notes.push(message); return show(message, ...rest); };
+      }
+    });
+    await page.fill('#combinationsContainer .combo-summary-name', 'Cabecera descargada');
+    await sleep(800);
+    // English and the 20 other languages: German downloads on the first click (20 of 21 ready); the click that
+    // downloads the last one (French) also translates the change
+    for (const [language, ready] of [['Deutsch', 20]]) {
+      await page.$eval('#ruleTranslateBtn', el => el.click());
+      await sleep(1500);
+      const notes = await page.evaluate(() => window.__notes);
+      assert.match(notes[notes.length - 1] || '', new RegExp(`${language}.*${ready} de 21`), `the notice after a download: ${notes.join(' | ')}`);
+      const now = await page.evaluate(() => window.popupInstance.rules.combinationsModel[0].name);
+      assert.equal(now, before.name, 'nothing is applied while a language is missing');
+      assert.equal((await bar()).changes, true, 'still to translate');
+    }
+    await page.$eval('#ruleTranslateBtn', el => el.click());
+    await sleep(1500);
+    const after = await page.evaluate(() => JSON.parse(JSON.stringify(window.popupInstance.rules.combinationsModel[0])));
+    assert.equal(after.name, '[es>en] Cabecera descargada', 'every language ready: the change is translated');
+    assert.equal(after.nameI18n.de, '[en>de] [es>en] Cabecera descargada');
+    assert.equal((await bar()).changes, false);
     await closeEditor();
   });
 

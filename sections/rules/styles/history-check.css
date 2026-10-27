@@ -167,6 +167,13 @@
   display: none;
 }
 
+/* Translations live in the editor header's Translate button: the per-text panels (the description's, a pattern
+   description's, a combination name's) stay in the page, hidden, as where the editor keeps them for Save */
+#editRuleModal .rule-translations,
+#methodSettingsModal .rule-translations {
+  display: none;
+}
+
 /* The editor's description fields set display themselves: in English the field for the UI language stays hidden */
 #editRuleModal .rule-local-input[hidden],
 #methodSettingsModal .rule-local-input[hidden] {

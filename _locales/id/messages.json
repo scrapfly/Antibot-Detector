@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "{0} dari {1} teks yang diubah tidak dapat diterjemahkan ke semua bahasa di sini (browser mungkin masih mengunduhnya). Tidak ada yang hilang: teks tersebut tetap seperti semula. Coba lagi sebentar lagi."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Diunduh: {0}. {1} dari {2} bahasa siap. Browser mengunduh tiap bahasa sekali, satu per klik: klik Terjemahkan lagi untuk berikutnya."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Menerjemahkan {0} teks…"
   },

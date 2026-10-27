@@ -73,22 +73,94 @@ Rules.prototype.collectChangedTexts = function() {
 };
 
 /**
+ * Translators for these language pairs ({ key, from, to } with locale codes). The browser downloads a language it does
+ * not have yet only on a click, and only one per click (Chrome and Brave refuse the others with NotAllowedError, even
+ * in the same click): the pairs it already has are created at once, plus the first one it still has to download. A
+ * downloaded language stays, so each click brings one more until every language is ready.
+ * @returns {Promise<{ translators: Map<string, Promise>, waiting: string[], downloading: string|null }>}
+ */
+Rules.prototype.ruleTranslators = async function(pairs) {
+  // A Translator without availability() (an older build) is asked for every pair, as before
+  const check = (pair) => typeof Translator.availability === 'function'
+    ? Promise.resolve().then(() => Translator.availability({ sourceLanguage: ruleTranslatorCode(pair.from), targetLanguage: ruleTranslatorCode(pair.to) })).catch(() => 'unavailable')
+    : Promise.resolve('available');
+  const states = await Promise.all(pairs.map(check));
+  const translators = new Map();
+  const waiting = [];
+  let downloading = null;
+  pairs.forEach((pair, index) => {
+    const state = states[index];
+    if (state === 'unavailable') return;
+    const ready = state === 'available';
+    if (!ready && downloading) { waiting.push(pair.key); return; }
+    if (!ready) downloading = pair.key;
+    const pending = Translator.create({ sourceLanguage: ruleTranslatorCode(pair.from), targetLanguage: ruleTranslatorCode(pair.to) });
+    pending.catch(() => {}); // a refusal is read where the translator is awaited
+    translators.set(pair.key, pending);
+  });
+  return { translators, waiting, downloading };
+};
+
+/** The notice after a click that downloaded a language while others still wait for theirs. */
+Rules.prototype.reportLanguageDownload = function(language, ready, total) {
+  if (typeof NotificationHelper === 'undefined') return;
+  NotificationHelper.info(ruleBarText('ruleTranslateDownloadedFmt', 'Downloaded {0}: {1} of {2} languages ready. The browser downloads each language once, one per click: click Translate again for the next.',
+    ruleTranslationLanguageName(language), ready, total));
+};
+
+/**
  * "Translate the changes": what the person wrote in their language becomes the new English original (translated
  * into English) and every other language's translation (translated from that English, as the rest of the rule is).
- * Every translator is requested at once, while the click still lets Chrome start a download.
+ * Each click downloads one language the browser does not have yet (ruleTranslators); a text is applied only once all
+ * of its languages are ready.
  */
-Rules.prototype.translateChangedTexts = async function() {
+Rules.prototype.translateChangedTexts = function() {
+  return this.untilTranslated(() => this.translateChangedTextsNow());
+};
+
+/** Runs a translation; an unexpected error is logged and leaves the button usable instead of stuck on Translating. */
+Rules.prototype.untilTranslated = async function(run) {
+  try {
+    await run();
+  } catch (error) {
+    Logger.warn('UI', 'Translating the rule failed', error);
+    const button = document.querySelector('#ruleTranslateBtn');
+    if (button && button.dataset.state === 'busy') button.dataset.state = '';
+    await this.refreshTranslateBar();
+  }
+};
+
+Rules.prototype.translateChangedTextsNow = async function() {
   const button = document.querySelector('#ruleTranslateBtn');
   const locale = Rules.uiLocale();
   const changed = this.collectChangedTexts();
   if (!button || button.dataset.state === 'busy' || !locale || !changed.length || typeof Translator === 'undefined') return;
   const others = RULE_TRANSLATION_LOCALES.filter(code => code !== locale);
-  const toEnglish = Translator.create({ sourceLanguage: ruleTranslatorCode(locale), targetLanguage: 'en' });
-  const fromEnglish = new Map(others.map(code => [code, Translator.create({ sourceLanguage: 'en', targetLanguage: ruleTranslatorCode(code) })]));
   // Dropped when the editor closed or another rule opened meanwhile (see translateWholeRule)
   const editing = this.currentEditDetector;
   const stale = () => this.currentEditDetector !== editing;
   this.setTranslateButton('busy', changed.length);
+  const { translators, waiting, downloading } = await this.ruleTranslators([
+    { key: 'en', from: locale, to: 'en' },
+    ...others.map(code => ({ key: code, from: 'en', to: code }))
+  ]);
+  const toEnglish = translators.get('en') || Promise.reject(new Error('English is not available'));
+  toEnglish.catch(() => {});
+  const fromEnglish = new Map(others.map(code => [code, translators.get(code) || Promise.reject(new Error(`${code} is not ready`))]));
+  fromEnglish.forEach(pending => pending.catch(() => {}));
+  if (waiting.length) {
+    // Not every language is ready, so no text can be complete: this click downloads one more and stops there
+    let ok = false;
+    try { ok = !!(await translators.get(downloading)); } catch (error) { Logger.debug('UI', `Downloading ${downloading} failed`, error); }
+    for (const pending of translators.values()) pending.then(t => t && t.destroy && t.destroy()).catch(() => {});
+    if (stale()) return;
+    button.dataset.state = '';
+    const total = others.length + 1;
+    if (ok) this.reportLanguageDownload(downloading, total - waiting.length, total);
+    else if (typeof NotificationHelper !== 'undefined') NotificationHelper.warning(ruleBarText('ruleTranslateChangesKeptFmt', 'Could not translate {0} of {1} changed texts into every language here (the browser may still be downloading them). Nothing was lost: those texts are as they were. Try again in a moment.', changed.length, changed.length));
+    await this.refreshTranslateBar();
+    return;
+  }
   let filled = 0;
   let kept = 0;
   try {
@@ -247,22 +319,27 @@ Rules.prototype.storeRuleTranslation = function(entry, locale, text) {
  * "Translate the rule". Chrome lets a page start a language model download only right after a click, so a translator
  * for every language that is missing is requested at once, before anything is awaited.
  */
-Rules.prototype.translateWholeRule = async function() {
+Rules.prototype.translateWholeRule = function() {
+  return this.untilTranslated(() => this.translateWholeRuleNow());
+};
+
+Rules.prototype.translateWholeRuleNow = async function() {
   const button = document.querySelector('#ruleTranslateBtn');
   if (!button || button.dataset.state === 'busy') return;
   const plan = this.planRuleTranslations();
   if (!plan.texts) return;
   if (typeof Translator === 'undefined') return;
-  const translators = new Map(plan.locales.map(locale => [locale, Translator.create({ sourceLanguage: 'en', targetLanguage: ruleTranslatorCode(locale) })]));
   const entries = new Map(this.collectRuleTexts().map(entry => [entry.id, entry]));
   // Translating takes a while: if the editor was closed or another rule opened meanwhile, what comes back is about a
   // rule no longer on screen and is dropped (as runLiveTest does)
   const editing = this.currentEditDetector;
   const stale = () => this.currentEditDetector !== editing;
   this.setTranslateButton('busy', plan.texts);
+  // The languages the browser has, plus one it downloads on this click; the others wait for the next clicks
+  const { translators, waiting, downloading } = await this.ruleTranslators(plan.locales.map(locale => ({ key: locale, from: 'en', to: locale })));
   let filled = 0;
   let failed = 0;
-  await Promise.all(plan.locales.map(async (locale) => {
+  await Promise.all(plan.locales.filter(locale => translators.has(locale)).map(async (locale) => {
     let translator;
     try {
       translator = await translators.get(locale);
@@ -293,7 +370,15 @@ Rules.prototype.translateWholeRule = async function() {
   if (typeof this.renderCombinations === 'function') this.renderCombinations();
   this.updateTranslationsCount(detectorTranslationsScope());
   if (typeof this.refreshLocalFields === 'function') this.refreshLocalFields();
-  this.reportTranslateResult(filled, failed);
+  if (waiting.length && downloading && translators.has(downloading)) {
+    let ok = false;
+    try { ok = !!(await translators.get(downloading)); } catch (_) { ok = false; }
+    const total = plan.locales.length;
+    if (ok) this.reportLanguageDownload(downloading, total - waiting.length, total);
+    else this.reportTranslateResult(filled, failed);
+  } else {
+    this.reportTranslateResult(filled, failed);
+  }
   await this.refreshTranslateBar();
 };
 

@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "{0} av {1} ändrade texter kunde inte översättas till alla språk här (webbläsaren kanske fortfarande laddar ner dem). Inget gick förlorat: texterna är som de var. Försök igen om en stund."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Nedladdat: {0}. {1} av {2} språk klara. Webbläsaren laddar ner varje språk en gång, ett per klick: klicka på Översätt igen för nästa."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Översätter {0} texter…"
   },

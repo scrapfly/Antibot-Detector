@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "Không dịch được {0} trong {1} văn bản đã đổi sang mọi ngôn ngữ ở đây (trình duyệt có thể vẫn đang tải chúng). Không mất gì: các văn bản đó vẫn như cũ. Hãy thử lại sau giây lát."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Đã tải: {0}. Sẵn sàng {1}/{2} ngôn ngữ. Trình duyệt tải mỗi ngôn ngữ một lần, mỗi lần nhấp một ngôn ngữ: nhấp Dịch lần nữa để tải ngôn ngữ tiếp theo."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Đang dịch {0} văn bản…"
   },

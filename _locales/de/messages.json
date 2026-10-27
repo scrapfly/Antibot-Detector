@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "{0} von {1} geänderten Texten konnten hier nicht in alle Sprachen übersetzt werden (der Browser lädt sie vielleicht noch herunter). Nichts ging verloren: Diese Texte sind unverändert. Versuche es gleich noch einmal."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Heruntergeladen: {0}. {1} von {2} Sprachen bereit. Der Browser lädt jede Sprache einmal herunter, eine pro Klick: Klicke für die nächste erneut auf Übersetzen."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} Texte werden übersetzt…"
   },

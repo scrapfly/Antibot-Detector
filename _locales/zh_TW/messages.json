@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "有 {0} 條（共 {1} 條）變更的文字在此無法翻譯成所有語言（瀏覽器可能仍在下載）。沒有遺失任何內容：這些文字維持原樣。請稍後再試。"
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "已下載：{0}。{2} 種語言中已有 {1} 種就緒。瀏覽器每種語言只下載一次，每次點擊下載一種：請再次點擊「翻譯」下載下一種。"
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "正在翻譯 {0} 段文字…"
   },

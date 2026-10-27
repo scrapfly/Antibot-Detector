@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "Não foi possível traduzir aqui {0} de {1} textos alterados para todos os idiomas (o navegador pode ainda estar baixando-os). Nada se perdeu: esses textos continuam como estavam. Tente de novo em instantes."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Baixado: {0}. {1} de {2} idiomas prontos. O navegador baixa cada idioma uma vez, um por clique: clique em Traduzir de novo para o próximo."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Traduzindo {0} textos…"
   },

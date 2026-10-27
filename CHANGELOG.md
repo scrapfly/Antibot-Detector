@@ -19,7 +19,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Rules editor: the folded Combinations card says how many combinations the rule has ("4 combinations"), like the patterns card.
-- Rules editor: a Translate button in the header, always there, counts the description, pattern and combination texts left to translate and fills them in one click; the bar above the editor is gone.
+- Rules editor: a Translate button in the header, always there, counts the description, pattern and combination texts left to translate and fills them; it replaces the bar above the editor and the per-text Translations panels.
+- Rules editor: languages the browser has not downloaded yet download one per click (the browser allows one per click), with a notice saying how many are ready.
 - Rules editor in another language: texts are edited in that language only; the English original is no longer shown under them.
 - Netacea scores its cookie once, so a page that sets and sends it back no longer looks more certain than it is.
 - Webhook: a server that does not answer within 10 seconds counts as a failed delivery (and is retried) instead of holding up the scan; private-window pages are never sent.

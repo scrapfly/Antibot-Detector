@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "Impossible de traduire {0} des {1} textes modifiés dans toutes les langues ici (le navigateur les télécharge peut-être encore). Rien n’a été perdu : ces textes sont restés tels quels. Réessayez dans un instant."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Téléchargé : {0}. {1} langues prêtes sur {2}. Le navigateur télécharge chaque langue une seule fois, une par clic : cliquez à nouveau sur Traduire pour la suivante."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Traduction de {0} textes…"
   },

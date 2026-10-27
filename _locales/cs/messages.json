@@ -6296,6 +6296,9 @@
   "ruleTranslateChangesKeptFmt": {
     "message": "{0} z {1} změněných textů se zde nepodařilo přeložit do všech jazyků (prohlížeč je možná ještě stahuje). Nic se neztratilo: tyto texty zůstaly beze změny. Zkuste to za chvíli znovu."
   },
+  "ruleTranslateDownloadedFmt": {
+    "message": "Staženo: {0}. Připraveno {1} z {2} jazyků. Prohlížeč stahuje každý jazyk jen jednou, jeden na kliknutí: pro další klikněte znovu na Přeložit."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Překlad textů: {0}…"
   },
