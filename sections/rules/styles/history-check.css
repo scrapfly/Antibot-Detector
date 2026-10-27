@@ -163,7 +163,6 @@
    English original (and the other languages) fold under one quiet line
    ============================================ */
 .rule-local-input[hidden],
-.rule-original[hidden],
 .rule-translation-row[hidden] {
   display: none;
 }
@@ -235,6 +234,20 @@
 }
 
 .rule-original.is-plain[open] > summary + * {
+  margin-top: 0;
+}
+
+/* Another language: the text is edited in that language, the English original is not shown; Translations stays */
+#editRuleModal .rule-original.is-local > summary,
+#editRuleModal .rule-original.is-local > textarea,
+#editRuleModal .rule-original.is-local > .rule-original-hint,
+#methodSettingsModal .rule-original.is-local > summary,
+#methodSettingsModal .rule-original.is-local > textarea,
+#methodSettingsModal .rule-original.is-local > .rule-original-hint {
+  display: none;
+}
+
+.rule-original.is-local > .rule-translations {
   margin-top: 0;
 }
 

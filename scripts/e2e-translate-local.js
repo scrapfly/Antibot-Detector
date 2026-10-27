@@ -74,15 +74,17 @@ const scenario = async (name, fn) => {
     changes: !document.querySelector('#ruleTranslateChangesBtn').hidden, all: !document.querySelector('#ruleTranslateAllBtn').hidden }));
   const original = await stored();
 
-  await scenario('Your language: Spanish texts in the fields, no English original shown, no translate bar (nothing to do)', async () => {
+  await scenario('Your language: Spanish texts in the fields, no English original, the Translations panel, no translate bar (nothing to do)', async () => {
     await openEditor();
     const view = await page.evaluate(() => ({
       local: document.querySelector('#detectorDescriptionLocal').value, localHidden: document.querySelector('#detectorDescriptionLocal').hidden,
-      originalHidden: document.querySelector('#detectorDescriptionOriginal').hidden,
+      originalShown: getComputedStyle(document.querySelector('#detectorDescriptionInput')).display !== 'none',
+      translationsShown: !!document.querySelector('#detectorDescriptionTranslations').offsetParent,
       combo: document.querySelector('#combinationsContainer .combo-summary-name').value
     }));
     assert.equal(view.localHidden, false);
-    assert.equal(view.originalHidden, true, 'the English original is not shown: the text is edited in Spanish');
+    assert.equal(view.originalShown, false, 'the English original is not shown: the text is edited in Spanish');
+    assert.equal(view.translationsShown, true, 'the Translations panel (Translate automatically) stays');
     assert.ok(/^Edge de CDN/.test(view.local), `Spanish description: ${view.local}`);
     assert.ok(/^Cabecera de referencia/.test(view.combo), `Spanish combination name: ${view.combo}`);
     const b = await bar();

@@ -100,8 +100,8 @@ Rules.withLocalEdit = function(english, own, locale, typed) {
 
 /**
  * Set up a description that has a field in the UI language (detector or pattern description): in English the
- * original is edited as before; in another language only the localized field shows, with the text in that language
- * (it writes that language's row of the Translations panel; the original and the other languages stay hidden).
+ * original is edited as before; in another language the localized field shows the text in that language (it writes
+ * that language's row of the Translations panel), the English original is hidden and the Translations panel stays.
  * @param {HTMLTextAreaElement} local the field in the UI language (data-local-english, -scope, -original)
  */
 Rules.prototype.setupLocalField = function(local) {
@@ -111,12 +111,12 @@ Rules.prototype.setupLocalField = function(local) {
   const original = document.getElementById(local.dataset.localOriginal);
   const locale = Rules.uiLocale();
   local.hidden = !locale;
-  // In another language the text is edited in that language and "Translate the changes" carries it to English and the
-  // rest, so the English original and the other languages are not shown at all
+  // In another language the text is edited in that language, so the English original is not shown; its Translations
+  // panel (Translate automatically, the other languages) stays, as in English
   if (original) {
-    original.hidden = !!locale;
     original.classList.toggle('is-plain', !locale);
-    original.open = !locale;
+    original.classList.toggle('is-local', !!locale);
+    original.open = true;
   }
   const label = local.closest('.form-group, .modal-card')?.querySelector(`label[for="${local.dataset.localEnglish}"], label[for="${local.id}"]`);
   if (label) label.htmlFor = locale ? local.id : local.dataset.localEnglish;
