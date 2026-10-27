@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Расширение обновлено, но его фоновая часть всё ещё работает в старой версии. Перезагрузите расширение на странице «Расширения» в браузере и попробуйте снова."
   },
+  "suggestRuleFilter": {
+    "message": "Фильтр"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Выбрано: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Уже обнаружено: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "начинается с"
+  },
   "suggestRuleNoCookies": {
     "message": "У страницы нет файлов cookie."
   },

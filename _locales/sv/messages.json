@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Tillägget har uppdaterats, men dess bakgrundsdel kör fortfarande den gamla versionen. Läs in tillägget igen på webbläsarens sida Tillägg och försök igen."
   },
+  "suggestRuleFilter": {
+    "message": "Filtrera"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Valda: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Redan upptäckta: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "börjar med"
+  },
   "suggestRuleNoCookies": {
     "message": "Sidan har inga cookies."
   },

@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "拡張機能は更新されましたが、バックグラウンド部分はまだ古いバージョンのままです。ブラウザの拡張機能ページで拡張機能を再読み込みしてから、もう一度お試しください。"
   },
+  "suggestRuleFilter": {
+    "message": "絞り込み"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "選択中: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "検出済み: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "前方一致"
+  },
   "suggestRuleNoCookies": {
     "message": "このページには Cookie がありません。"
   },

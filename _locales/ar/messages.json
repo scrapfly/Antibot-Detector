@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "تم تحديث الإضافة، لكن جزءها الذي يعمل في الخلفية ما زال يشغّل الإصدار القديم. أعد تحميل الإضافة من صفحة الإضافات في المتصفح وحاول مرة أخرى."
   },
+  "suggestRuleFilter": {
+    "message": "تصفية"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "المحدد: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "مكتشفة مسبقًا: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "يبدأ بـ"
+  },
   "suggestRuleNoCookies": {
     "message": "لا تحتوي الصفحة على ملفات تعريف ارتباط."
   },

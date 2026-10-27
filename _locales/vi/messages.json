@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Tiện ích đã được cập nhật nhưng phần chạy nền vẫn dùng phiên bản cũ. Hãy tải lại tiện ích trong trang Tiện ích của trình duyệt rồi thử lại."
   },
+  "suggestRuleFilter": {
+    "message": "Lọc"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Đã chọn: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Đã phát hiện: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "bắt đầu bằng"
+  },
   "suggestRuleNoCookies": {
     "message": "Trang không có cookie."
   },

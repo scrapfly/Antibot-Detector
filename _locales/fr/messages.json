@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "L’extension a été mise à jour, mais sa partie en arrière-plan exécute encore l’ancienne version. Rechargez l’extension depuis la page Extensions du navigateur, puis réessayez."
   },
+  "suggestRuleFilter": {
+    "message": "Filtrer"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Sélection : {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Déjà détectés : {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "commence par"
+  },
   "suggestRuleNoCookies": {
     "message": "La page n’a pas de cookies."
   },

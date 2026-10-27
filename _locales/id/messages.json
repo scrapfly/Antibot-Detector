@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Ekstensi sudah diperbarui, tetapi bagian latar belakangnya masih menjalankan versi lama. Muat ulang ekstensi di halaman Ekstensi browser, lalu coba lagi."
   },
+  "suggestRuleFilter": {
+    "message": "Saring"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Dipilih: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Sudah terdeteksi: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "diawali"
+  },
   "suggestRuleNoCookies": {
     "message": "Halaman ini tidak memiliki cookie."
   },

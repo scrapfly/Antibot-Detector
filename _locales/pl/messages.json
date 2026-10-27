@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Rozszerzenie zostało zaktualizowane, ale jego część działająca w tle nadal używa starej wersji. Załaduj ponownie rozszerzenie na stronie Rozszerzenia w przeglądarce i spróbuj jeszcze raz."
   },
+  "suggestRuleFilter": {
+    "message": "Filtruj"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Zaznaczono: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Już wykryte: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "zaczyna się od"
+  },
   "suggestRuleNoCookies": {
     "message": "Strona nie ma plików cookie."
   },

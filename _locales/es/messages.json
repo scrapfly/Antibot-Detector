@@ -6649,6 +6649,18 @@
   "suggestRuleOutdated": {
     "message": "La extensión se actualizó, pero su parte en segundo plano sigue con la versión anterior. Recarga la extensión en la página Extensiones del navegador y vuelve a intentarlo."
   },
+  "suggestRuleFilter": {
+    "message": "Filtrar"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Seleccionados: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Ya detectados: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "empieza por"
+  },
   "suggestRuleNoCookies": {
     "message": "La página no tiene cookies."
   },

@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Розширення оновлено, але його фонова частина досі працює в старій версії. Перезавантажте розширення на сторінці «Розширення» в браузері й спробуйте ще раз."
   },
+  "suggestRuleFilter": {
+    "message": "Фільтр"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Вибрано: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Уже виявлено: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "починається з"
+  },
   "suggestRuleNoCookies": {
     "message": "Сторінка не має файлів cookie."
   },

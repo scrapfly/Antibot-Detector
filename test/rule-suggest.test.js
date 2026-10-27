@@ -149,7 +149,7 @@ test('names with regex characters are escaped in the rule', () => {
 
 function loadDialog({ sendMessage = async () => undefined } = {}) {
   const elements = {};
-  const element = (id) => (elements[id] = elements[id] || { id, innerHTML: '', textContent: '', disabled: false, hidden: false, dataset: {},
+  const element = (id) => (elements[id] = elements[id] || { id, innerHTML: '', textContent: '', disabled: false, hidden: false, dataset: {}, classList: { toggle() {} },
     setAttribute() {}, removeAttribute() {}, addEventListener() {} });
   const context = vm.createContext({
     console, FormatUtils: require('../utils/format-utils.js'),
@@ -175,8 +175,11 @@ test('the dialog escapes cookie names, script addresses and rule names in text a
   const html = elements['#suggestRuleList'].innerHTML;
   assert.ok(!html.includes('<img'), 'no element from page data');
   assert.ok(!/title="[^"]*"><img/.test(html), 'no attribute cut short');
-  assert.match(html, /title="&quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;"/);
-  assert.match(html, /Already detected by Rule "&gt;&lt;img src=x/);
+  assert.match(html, /<span class="sr-name" dir="ltr">"&gt;&lt;img src=x onerror=alert\(1\)&gt;<\/span>/);
+  assert.match(html, /title="Already detected by Rule &quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(html, /<span class="sr-tag is-known" dir="auto">Rule "&gt;&lt;img src=x/);
+  assert.match(html, /Already detected: 1/, 'what a rule already finds is folded');
+  assert.ok(!html.includes('Matched by its exact name<'), 'the default way to match is not repeated on every row');
   assert.match(html, /No response headers: reload the page to capture them\./);
   assert.equal(elements['#createSuggestRule'].disabled, true, 'nothing ticked: Create rule waits');
 });

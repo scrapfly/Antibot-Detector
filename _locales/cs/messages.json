@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Rozšíření bylo aktualizováno, ale jeho část na pozadí stále běží ve staré verzi. Znovu načtěte rozšíření na stránce Rozšíření v prohlížeči a zkuste to znovu."
   },
+  "suggestRuleFilter": {
+    "message": "Filtrovat"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Vybráno: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Už rozpoznáno: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "začíná na"
+  },
   "suggestRuleNoCookies": {
     "message": "Stránka nemá žádné cookies."
   },

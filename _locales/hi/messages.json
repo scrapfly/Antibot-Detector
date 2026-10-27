@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "एक्सटेंशन अपडेट हो गया है, पर उसका बैकग्राउंड हिस्सा अब भी पुराना संस्करण चला रहा है। ब्राउज़र के एक्सटेंशन पेज में एक्सटेंशन को फिर से लोड करें और दोबारा कोशिश करें।"
   },
+  "suggestRuleFilter": {
+    "message": "फ़िल्टर करें"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "चुने गए: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "पहले से पहचाने गए: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "से शुरू"
+  },
   "suggestRuleNoCookies": {
     "message": "इस पेज पर कोई कुकी नहीं है।"
   },

@@ -41,6 +41,8 @@ Rules.prototype.setupSuggestRule = function() {
 
   const list = document.querySelector('#suggestRuleList');
   if (list) list.addEventListener('change', () => this.updateSuggestCreate());
+  const filter = document.querySelector('#suggestRuleFilter');
+  if (filter) filter.addEventListener('input', () => this.filterSuggestions());
   const name = document.querySelector('#suggestRuleName');
   if (name) {
     name.addEventListener('input', () => {
@@ -93,6 +95,8 @@ Rules.prototype.openSuggestRule = async function() {
   if (error) error.hidden = true;
   const category = document.querySelector('#suggestRuleCategory');
   if (category) category.value = 'antibot';
+  const filter = document.querySelector('#suggestRuleFilter');
+  if (filter) filter.value = '';
   let host = '';
   try { host = new URL(tab.url).hostname; } catch (_) { /* shown without it */ }
   this.setSuggestIntro(host);
@@ -168,7 +172,7 @@ Rules.prototype.renderSuggestMessage = function(text) {
   list.innerHTML = `<p class="sr-message" dir="auto">${FormatUtils.escapeHtml(text)}</p>`;
 };
 
-/** What a row's second line says: who already detects it, else how the new pattern will match it. */
+/** A row's hover text: who already detects it, else how the new pattern will match it (plus every script it covers). */
 Rules.prototype.suggestRowDescription = function(candidate) {
   if (candidate.matchedBy.length) {
     return ruleSuggestText('suggestRuleDetectedByFmt', 'Already detected by {0}', candidate.matchedBy.join(', '));
@@ -182,6 +186,27 @@ Rules.prototype.suggestRowDescription = function(candidate) {
   return ruleSuggestText('suggestRuleExactName', 'Matched by its exact name');
 };
 
+/** One line per candidate: the box, the name and, only when it says something, a short tag. */
+Rules.prototype.suggestRowHtml = function(candidate, index) {
+  const esc = FormatUtils.escapeHtml;
+  const attr = FormatUtils.escapeAttr;
+  const hover = [this.suggestRowDescription(candidate), ...candidate.sources.filter(source => source !== candidate.value)].join('\n');
+  let tag = '';
+  if (candidate.matchedBy.length) {
+    tag = `<span class="sr-tag is-known" dir="auto">${esc(candidate.matchedBy.join(', '))}</span>`;
+  } else if (candidate.kind === 'cookie' && candidate.prefix) {
+    tag = `<span class="sr-tag" dir="auto">${esc(ruleSuggestText('suggestRulePrefixTag', 'prefix'))}</span>`;
+  } else if (candidate.kind === 'url' && candidate.sources.length > 1) {
+    tag = `<span class="sr-tag">×${esc(String(candidate.sources.length))}</span>`;
+  }
+  return `
+          <label class="sr-row${candidate.matchedBy.length ? ' is-known' : ''}" title="${attr(hover)}" data-filter="${attr(String(candidate.value).toLowerCase())}">
+            <input type="checkbox" class="sr-check" data-index="${attr(String(index))}">
+            <span class="sr-name" dir="ltr">${esc(candidate.value)}</span>
+            ${tag}
+          </label>`;
+};
+
 Rules.prototype.renderSuggestions = function() {
   const list = document.querySelector('#suggestRuleList');
   if (!list) return;
@@ -190,31 +215,46 @@ Rules.prototype.renderSuggestions = function() {
   const candidates = this.suggestCandidates || [];
   list.innerHTML = RULE_SUGGEST_SECTIONS.map(({ kind, title, empty }) => {
     const rows = candidates.map((candidate, index) => ({ candidate, index })).filter(({ candidate }) => candidate.kind === kind);
+    const fresh = rows.filter(({ candidate }) => !candidate.matchedBy.length);
+    const known = rows.filter(({ candidate }) => candidate.matchedBy.length);
     const headingId = `suggestRuleHead-${kind}`;
-    const body = rows.length
-      ? `<div class="rh-list" role="group" aria-labelledby="${attr(headingId)}">${rows.map(({ candidate, index }) => {
-        const description = this.suggestRowDescription(candidate);
-        const full = [candidate.value, ...candidate.sources.filter(source => source !== candidate.value)].join('\n');
-        return `
-          <label class="rh-row sr-row${candidate.matchedBy.length ? ' is-known' : ''}" title="${attr(full)}">
-            <input type="checkbox" class="sr-check" data-index="${attr(String(index))}">
-            <span class="rh-row-main">
-              <span class="rh-row-value" dir="ltr">${esc(candidate.value)}</span>
-              <span class="rh-row-desc" dir="auto">${esc(description)}</span>
-            </span>
-          </label>`;
-      }).join('')}</div>`
-      : `<p class="sr-empty" dir="auto">${esc(ruleSuggestText(empty[0], empty[1]))}</p>`;
+    const group = (items) => `<div class="sr-group">${items.map(({ candidate, index }) => this.suggestRowHtml(candidate, index)).join('')}</div>`;
+    // What an installed rule already finds is folded: rarely what a new rule is made of
+    const body = !rows.length
+      ? `<p class="sr-empty" dir="auto">${esc(ruleSuggestText(empty[0], empty[1]))}</p>`
+      : `${fresh.length ? group(fresh) : ''}${known.length ? `
+        <details class="sr-known">
+          <summary dir="auto">${esc(ruleSuggestText('suggestRuleKnownFmt', 'Already detected: {0}', known.length))}</summary>
+          ${group(known)}
+        </details>` : ''}`;
     return `
-      <section class="rh-section">
-        <div class="rh-section-head">
-          <span class="rh-section-title" id="${attr(headingId)}">${esc(ruleSuggestText(title[0], title[1]))}</span>
-          <span class="rh-section-count">${esc(String(rows.length))}</span>
+      <section class="sr-section" role="group" aria-labelledby="${attr(headingId)}">
+        <div class="sr-head">
+          <span class="sr-head-title" id="${attr(headingId)}">${esc(ruleSuggestText(title[0], title[1]))}</span>
+          <span class="sr-head-count">${esc(String(rows.length))}</span>
         </div>
         ${body}
       </section>`;
   }).join('');
+  this.filterSuggestions();
   this.updateSuggestCreate();
+};
+
+/** The filter box: rows whose name contains what is typed; a section with none left is hidden. */
+Rules.prototype.filterSuggestions = function() {
+  const input = document.querySelector('#suggestRuleFilter');
+  const query = input ? String(input.value || '').trim().toLowerCase() : '';
+  for (const section of document.querySelectorAll('#suggestRuleList .sr-section')) {
+    let shown = 0;
+    for (const row of section.querySelectorAll('.sr-row')) {
+      const match = !query || String(row.dataset.filter || '').includes(query);
+      row.hidden = !match;
+      if (match) shown++;
+    }
+    const known = section.querySelector('.sr-known');
+    if (known && query) known.open = !!known.querySelector('.sr-row:not([hidden])');
+    section.hidden = !!query && shown === 0;
+  }
 };
 
 /** The candidates ticked in the list, in list order. */
@@ -226,8 +266,14 @@ Rules.prototype.suggestPicked = function() {
 };
 
 Rules.prototype.updateSuggestCreate = function() {
+  const picked = this.suggestPicked().length;
   const create = document.querySelector('#createSuggestRule');
-  if (create) create.disabled = this.suggestPicked().length === 0;
+  if (create) create.disabled = picked === 0;
+  const selected = document.querySelector('#suggestRuleSelected');
+  if (selected) {
+    selected.textContent = ruleSuggestText('suggestRuleSelectedFmt', 'Selected: {0}', picked);
+    selected.classList.toggle('has-picked', picked > 0);
+  }
 };
 
 Rules.prototype.createRuleFromSuggestions = function() {

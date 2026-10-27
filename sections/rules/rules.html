@@ -915,7 +915,11 @@
             </select>
           </div>
         </div>
-        <div id="suggestRuleList" class="rh-stack" aria-live="polite"></div>
+        <div class="sr-toolbar">
+          <input type="search" id="suggestRuleFilter" class="sr-input sr-filter" dir="auto" autocomplete="off" spellcheck="false" placeholder="Filter" aria-label="Filter" data-i18n-placeholder="suggestRuleFilter" data-i18n-aria-label="suggestRuleFilter">
+          <span id="suggestRuleSelected" class="sr-selected" aria-live="polite"></span>
+        </div>
+        <div id="suggestRuleList" class="sr-list" aria-live="polite"></div>
       </div>
       <div class="rule-modal-footer">
         <button type="button" id="cancelSuggestRule" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>

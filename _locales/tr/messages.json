@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "Uzantı güncellendi ancak arka plan bölümü hâlâ eski sürümü çalıştırıyor. Tarayıcının Uzantılar sayfasında uzantıyı yeniden yükleyip tekrar deneyin."
   },
+  "suggestRuleFilter": {
+    "message": "Filtrele"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Seçilen: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Zaten algılanan: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "ile başlar"
+  },
   "suggestRuleNoCookies": {
     "message": "Sayfada çerez yok."
   },

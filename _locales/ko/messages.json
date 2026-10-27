@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "확장 프로그램이 업데이트되었지만 백그라운드 부분은 아직 이전 버전으로 실행 중입니다. 브라우저의 확장 프로그램 페이지에서 확장 프로그램을 다시 로드한 뒤 다시 시도하세요."
   },
+  "suggestRuleFilter": {
+    "message": "필터"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "선택됨: {0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "이미 감지됨: {0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "시작 문자열"
+  },
   "suggestRuleNoCookies": {
     "message": "이 페이지에는 쿠키가 없습니다."
   },

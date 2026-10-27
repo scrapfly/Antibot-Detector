@@ -7232,6 +7232,22 @@
     "message": "The extension was updated but its background part still runs the old version. Reload the extension in the browser's Extensions page and try again.",
     "description": "New rule from this page: the worker still runs the version from before the extension was updated (reload the extension)"
   },
+  "suggestRuleFilter": {
+    "message": "Filter",
+    "description": "New rule from this page: placeholder of the box that filters the list by name"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "Selected: {0}",
+    "description": "New rule from this page: how many items are ticked ({0} = a number)"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "Already detected: {0}",
+    "description": "New rule from this page: folded group of items an installed rule already finds ({0} = how many)"
+  },
+  "suggestRulePrefixTag": {
+    "message": "starts with",
+    "description": "New rule from this page: short tag on a cookie matched by the start of its name (the rest looks random)"
+  },
   "suggestRuleNoCookies": {
     "message": "The page has no cookies.",
     "description": "New rule from this page: the page has no cookies"

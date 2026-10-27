@@ -6647,6 +6647,18 @@
   "suggestRuleOutdated": {
     "message": "擴充功能已更新，但其背景部分仍在執行舊版本。請在瀏覽器的擴充功能頁面重新載入擴充功能，然後再試一次。"
   },
+  "suggestRuleFilter": {
+    "message": "篩選"
+  },
+  "suggestRuleSelectedFmt": {
+    "message": "已選：{0}"
+  },
+  "suggestRuleKnownFmt": {
+    "message": "已偵測到：{0}"
+  },
+  "suggestRulePrefixTag": {
+    "message": "前綴比對"
+  },
   "suggestRuleNoCookies": {
     "message": "此網頁沒有 Cookie。"
   },
