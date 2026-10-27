@@ -41,6 +41,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History and Detection keep the page you are on when the list refreshes, and an open detection's details stay open when late evidence arrives.
 - Advanced: a tool card redrawn while its tool is reloading the page shows it is busy instead of ignoring clicks; one bad capture address no longer empties Advanced → History.
 - Keyboard: History cards, pattern types, condition options and icon tiles can be reached with Tab; page arrows have names and point the right way in Arabic.
+- Rules editor: Translate changes no longer wipes translations when the browser cannot translate some languages yet (the text stays as it was), and a change typed back as it was no longer counts.
 - Rules editor in English: the empty second description box (left over from 3.0.5's editing in your language) no longer shows.
 - "1 history item" instead of "1 history items"; Clear All leaves Select mode; Detection keeps refreshing after an error.
 

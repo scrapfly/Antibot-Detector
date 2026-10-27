@@ -6293,6 +6293,9 @@
   "ruleTranslateAllTranslatedFmt": {
     "message": "이 규칙의 모든 텍스트가 {0}개 언어로 모두 번역되었습니다."
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "변경한 텍스트 {1}개 중 {0}개를 여기서 모든 언어로 번역하지 못했습니다(브라우저가 아직 다운로드 중일 수 있음). 잃은 것은 없습니다. 해당 텍스트는 그대로입니다. 잠시 후 다시 시도하세요."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "텍스트 {0}개 번역 중…"
   },

@@ -132,6 +132,8 @@ Rules.prototype.setupLocalField = function(local) {
     if (local.dataset.edited) return;
     const own = Rules.collectTranslations(scope);
     local.value = Rules.shownText(english?.value || '', own, locale);
+    // What it says before any edit: typing it back is no change (collectChangedTexts)
+    local.dataset.initial = local.value;
     this.updateOriginalPreview(local);
   };
   show();

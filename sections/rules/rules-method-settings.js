@@ -717,6 +717,13 @@ Rules.prototype.saveMethodSettings = function() {
       if (inline) inline.value = this.currentMethodItem.dataset.description || '';
     }
     if (typeof this.collectDescriptionTranslations === 'function') {
+      // What the UI language's translation said before the first edit: typing it back is no change (collectChangedTexts)
+      const uiLocale = typeof Rules.uiLocale === 'function' ? Rules.uiLocale() : null;
+      if (uiLocale && !('localInitial' in this.currentMethodItem.dataset)) {
+        let before = {};
+        try { before = this.currentMethodItem.dataset.descriptionI18n ? JSON.parse(this.currentMethodItem.dataset.descriptionI18n) : {}; } catch (_) { before = {}; }
+        this.currentMethodItem.dataset.localInitial = before[uiLocale] || '';
+      }
       const translations = this.collectDescriptionTranslations();
       this.currentMethodItem.dataset.descriptionI18n = Object.keys(translations).length ? JSON.stringify(translations) : '';
       // Written in the UI language: the other languages still say the old text (Translate the changes)

@@ -6293,6 +6293,9 @@
   "ruleTranslateAllTranslatedFmt": {
     "message": "此規則的所有文字皆已翻譯成全部 {0} 種語言。"
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "有 {0} 條（共 {1} 條）變更的文字在此無法翻譯成所有語言（瀏覽器可能仍在下載）。沒有遺失任何內容：這些文字維持原樣。請稍後再試。"
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "正在翻譯 {0} 段文字…"
   },

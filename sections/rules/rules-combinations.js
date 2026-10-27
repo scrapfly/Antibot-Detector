@@ -330,6 +330,8 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
       // In another language: that language's translation of the pattern's description, the original stays
       let own = {};
       try { own = row.dataset.descriptionI18n ? JSON.parse(row.dataset.descriptionI18n) : {}; } catch (_) { own = {}; }
+      // What it said before the first edit: typing it back is no change (collectChangedTexts)
+      if (!('localInitial' in row.dataset)) row.dataset.localInitial = own[locale] || '';
       const map = Rules.withLocalEdit(row.dataset.description || '', own, locale, target.textContent);
       row.dataset.descriptionI18n = Object.keys(map).length ? JSON.stringify(map) : '';
       row.dataset.localEdited = '1'; // the other languages still say the old text (Translate the changes)
@@ -346,6 +348,8 @@ Rules.prototype.handleCombinationAction = function(event, kind) {
     const locale = comboLocale();
     if (field === 'name' && locale && typeof Rules.withLocalEdit === 'function') {
       // In another language: the name's translation in that language; the original is under Name translations
+      // What it said before the first edit: typing it back is no change (collectChangedTexts)
+      if (combo.localInitial === undefined) combo.localInitial = (combo.nameI18n && combo.nameI18n[locale]) || '';
       const map = Rules.withLocalEdit(combo.name, combo.nameI18n, locale, target.value);
       combo.nameI18n = Object.keys(map).length ? map : null;
       combo.localEdited = true; // the other languages still say the old name (Translate the changes)

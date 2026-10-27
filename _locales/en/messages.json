@@ -6763,6 +6763,10 @@
     "message": "Every text of this rule is translated into all {0} languages.",
     "description": "Rule editor: hover text and notice when nothing is left to translate ({0} = number of languages)"
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "Could not translate {0} of {1} changed texts into every language here (the browser may still be downloading them). Nothing was lost: those texts are as they were. Try again in a moment.",
+    "description": "Rule editor \u2192 Translate changes: some texts could not be translated into every language, so they were left unchanged ({0} = how many, {1} = changed texts)"
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Translating {0} texts…",
     "description": "Shown while Translate the rule works; {0} is how many texts it translates"

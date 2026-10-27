@@ -53,17 +53,21 @@ Rules.prototype.collectChangedTexts = function() {
   if (!locale) return [];
   const changed = [];
   const local = document.querySelector('#detectorDescriptionLocal');
-  if (local && !local.hidden && local.dataset.edited && ruleTranslationClean(local.value)) {
+  // A text counts when it differs from what it said before the first edit: typing it back (or deleting the change)
+  // leaves nothing to translate
+  const differs = (typed, initial) => !!typed && typed !== ruleTranslationClean(initial || '');
+  if (local && !local.hidden && local.dataset.edited && differs(ruleTranslationClean(local.value), local.dataset.initial)) {
     changed.push({ kind: 'detector', typed: ruleTranslationClean(local.value), local });
   }
   document.querySelectorAll('#editRuleModal .method-item[data-local-edited="1"]').forEach((item) => {
     let own = {};
     try { own = item.dataset.descriptionI18n ? JSON.parse(item.dataset.descriptionI18n) : {}; } catch (_) { own = {}; }
-    if (ruleTranslationClean(own[locale])) changed.push({ kind: 'pattern', typed: ruleTranslationClean(own[locale]), item });
+    const typed = ruleTranslationClean(own[locale]);
+    if (differs(typed, item.dataset.localInitial)) changed.push({ kind: 'pattern', typed, item });
   });
   (this.combinationsModel || []).forEach((combo) => {
     const typed = combo.localEdited && combo.nameI18n ? ruleTranslationClean(combo.nameI18n[locale]) : '';
-    if (typed) changed.push({ kind: 'combination', typed, combo });
+    if (differs(typed, combo.localInitial)) changed.push({ kind: 'combination', typed, combo });
   });
   return changed;
 };
@@ -86,7 +90,7 @@ Rules.prototype.translateChangedTexts = async function() {
   const stale = () => this.currentEditDetector !== editing;
   this.setTranslateButton('busy', changed.length);
   let filled = 0;
-  let failed = 0;
+  let kept = 0;
   try {
     let english;
     try { english = await toEnglish; } catch (error) { english = null; Logger.debug('UI', 'No translator into English', error); }
@@ -94,16 +98,23 @@ Rules.prototype.translateChangedTexts = async function() {
       if (stale()) break;
       let original = '';
       try { original = english ? ruleTranslationClean(await english.translate(entry.typed)) : ''; } catch (_) { original = ''; }
-      if (!original) { failed++; continue; }
       const map = { [locale]: entry.typed };
-      for (const code of others) {
+      let complete = !!original;
+      for (const code of complete ? others : []) {
         try {
           const out = ruleTranslationClean(await (await fromEnglish.get(code)).translate(original));
-          if (out) { map[code] = out; filled++; } else failed++;
-        } catch (_) { failed++; }
+          if (out) map[code] = out; else complete = false;
+        } catch (error) {
+          complete = false;
+          Logger.debug('UI', `Automatic translation to ${code} failed`, error);
+        }
       }
       if (stale()) break;
+      // All or nothing: a text whose languages could not all be translated keeps its original and every translation it
+      // had (the browser may still be downloading a language), and stays counted for another try
+      if (!complete) { kept++; continue; }
       this.storeChangedText(entry, original, map);
+      filled += others.length + 1;
     }
   } finally {
     for (const pending of [toEnglish, ...fromEnglish.values()]) pending.then(t => t && t.destroy && t.destroy()).catch(() => {});
@@ -112,7 +123,11 @@ Rules.prototype.translateChangedTexts = async function() {
   if (stale()) return;
   if (typeof this.renderCombinations === 'function') this.renderCombinations();
   this.updateTranslationsCount(detectorTranslationsScope());
-  this.reportTranslateResult(filled, failed);
+  if (kept && typeof NotificationHelper !== 'undefined') {
+    NotificationHelper.warning(ruleBarText('ruleTranslateChangesKeptFmt', 'Could not translate {0} of {1} changed texts into every language here (the browser may still be downloading them). Nothing was lost: those texts are as they were. Try again in a moment.', kept, changed.length));
+  } else {
+    this.reportTranslateResult(filled, 0);
+  }
   await this.refreshTranslateBar();
 };
 
@@ -126,6 +141,7 @@ Rules.prototype.storeChangedText = function(entry, original, map) {
     });
     this.fillShippedPlaceholders(detectorTranslationsScope(), original);
     delete entry.local.dataset.edited;
+    entry.local.dataset.initial = entry.local.value;
     this.updateOriginalPreview(entry.local);
   } else if (entry.kind === 'pattern') {
     entry.item.dataset.description = original;
@@ -133,10 +149,12 @@ Rules.prototype.storeChangedText = function(entry, original, map) {
     const inline = entry.item.querySelector('.method-description-inline');
     if (inline) inline.value = original;
     delete entry.item.dataset.localEdited;
+    delete entry.item.dataset.localInitial;
   } else if (entry.kind === 'combination') {
     entry.combo.name = original;
     entry.combo.nameI18n = map;
     delete entry.combo.localEdited;
+    delete entry.combo.localInitial;
   }
 };
 

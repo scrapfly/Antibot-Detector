@@ -6293,6 +6293,9 @@
   "ruleTranslateAllTranslatedFmt": {
     "message": "Tutti i testi di questa regola sono tradotti in tutte le {0} lingue."
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "Non è stato possibile tradurre qui {0} dei {1} testi modificati in tutte le lingue (il browser potrebbe ancora scaricarle). Non si è perso nulla: quei testi sono rimasti com’erano. Riprova tra un momento."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Traduzione di {0} testi…"
   },

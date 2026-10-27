@@ -6293,6 +6293,9 @@
   "ruleTranslateAllTranslatedFmt": {
     "message": "Semua teks aturan ini sudah diterjemahkan ke semua {0} bahasa."
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "{0} dari {1} teks yang diubah tidak dapat diterjemahkan ke semua bahasa di sini (browser mungkin masih mengunduhnya). Tidak ada yang hilang: teks tersebut tetap seperti semula. Coba lagi sebentar lagi."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Menerjemahkan {0} teks…"
   },

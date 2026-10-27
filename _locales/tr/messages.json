@@ -6293,6 +6293,9 @@
   "ruleTranslateAllTranslatedFmt": {
     "message": "Bu kuralın tüm metinleri {0} dilin hepsine çevrildi."
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "Değiştirilen {1} metinden {0} tanesi burada tüm dillere çevrilemedi (tarayıcı onları hâlâ indiriyor olabilir). Hiçbir şey kaybolmadı: bu metinler olduğu gibi kaldı. Birazdan tekrar deneyin."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} metin çevriliyor…"
   },

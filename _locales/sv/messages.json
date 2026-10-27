@@ -6293,6 +6293,9 @@
   "ruleTranslateAllTranslatedFmt": {
     "message": "Alla texter i den här regeln är översatta till alla {0} språk."
   },
+  "ruleTranslateChangesKeptFmt": {
+    "message": "{0} av {1} ändrade texter kunde inte översättas till alla språk här (webbläsaren kanske fortfarande laddar ner dem). Inget gick förlorat: texterna är som de var. Försök igen om en stund."
+  },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Översätter {0} texter…"
   },

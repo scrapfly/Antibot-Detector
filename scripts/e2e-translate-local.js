@@ -46,7 +46,11 @@ const scenario = async (name, fn) => {
   page.on('pageerror', error => pageErrors.push(error.message));
   await page.addInitScript(() => {
     self.Translator = { availability: async () => 'available',
-      create: async ({ sourceLanguage, targetLanguage }) => ({ translate: async (text) => `[${sourceLanguage}>${targetLanguage}] ${text}`, destroy() {} }) };
+      // self.__failTo names a language the stand-in cannot translate into, as a browser still downloading it
+      create: async ({ sourceLanguage, targetLanguage }) => ({ translate: async (text) => {
+        if (self.__failTo === targetLanguage) throw new Error('not downloaded yet');
+        return `[${sourceLanguage}>${targetLanguage}] ${text}`;
+      }, destroy() {} }) };
   });
   await page.goto(`chrome-extension://${extId}/popup.html`);
   await page.evaluate(async () => { await chrome.storage.local.set({ scrapfly_language_override: 'es' }); });
@@ -103,6 +107,51 @@ const scenario = async (name, fn) => {
     const now = await stored();
     assert.equal(now.description, original.description, 'English description unchanged');
     assert.equal(now.descriptionI18n.es, 'Borde de Azure Front Door (texto propio)');
+  });
+
+  const closeEditor = async () => {
+    await page.$eval('#cancelRuleEdit', el => el.click());
+    await page.waitForFunction(() => document.querySelector('#editRuleModal').style.display === 'none', null, { polling: 250, timeout: 15000 });
+    await sleep(300);
+  };
+
+  await scenario('Undo: a name or description changed and typed back as it was is no change, so there is nothing to translate', async () => {
+    await openEditor();
+    const before = await page.$eval('#combinationsContainer .combo-summary-name', el => el.value);
+    await page.fill('#combinationsContainer .combo-summary-name', 'Otro nombre');
+    await sleep(800);
+    assert.equal((await bar()).changes, true, 'a real change is counted');
+    await page.fill('#combinationsContainer .combo-summary-name', before);
+    await sleep(800);
+    const b = await bar();
+    assert.equal(b.changes, false, `typed back: ${b.text}`);
+    assert.equal(b.hidden, true, 'the button says Translated again');
+    const description = await page.$eval('#detectorDescriptionLocal', el => el.value);
+    await page.fill('#detectorDescriptionLocal', `${description} y más`);
+    await sleep(800);
+    assert.equal((await bar()).changes, true, 'a changed description is counted');
+    await page.fill('#detectorDescriptionLocal', description);
+    await sleep(800);
+    assert.equal((await bar()).hidden, true, 'the description typed back: Translated again');
+    await closeEditor();
+  });
+
+  await scenario('A language the browser cannot translate yet: Translate changes leaves that text as it was, nothing is lost', async () => {
+    await openEditor();
+    const before = await page.evaluate(() => JSON.parse(JSON.stringify(window.popupInstance.rules.combinationsModel[0])));
+    await page.evaluate(() => { self.__failTo = 'de'; });
+    await page.fill('#combinationsContainer .combo-summary-name', 'Cabecera con caché nueva');
+    await sleep(800);
+    await page.$eval('#ruleTranslateBtn', el => el.click());
+    await sleep(1500);
+    const after = await page.evaluate(() => JSON.parse(JSON.stringify(window.popupInstance.rules.combinationsModel[0])));
+    await page.evaluate(() => { self.__failTo = null; });
+    assert.equal(after.name, before.name, 'the English original is unchanged');
+    for (const [code, text] of Object.entries(before.nameI18n || {})) {
+      if (code !== 'es') assert.equal(after.nameI18n[code], text, `${code} keeps its translation`);
+    }
+    assert.equal((await bar()).changes, true, 'still counted, for another try');
+    await closeEditor();
   });
 
   await scenario('Changes: a combination renamed in Spanish is counted, and one click translates it into English and every language', async () => {
