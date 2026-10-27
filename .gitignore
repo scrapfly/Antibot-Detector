@@ -63,8 +63,9 @@ temp/
 *.crx
 *.pem
 
-# Documentation
-docs/
+# Documentation (the translated READMEs are kept)
+docs/*
+!docs/README.*.md
 *.pdf
 
 # Internal planning docs (not shipped, not needed in the repo)

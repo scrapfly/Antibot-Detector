@@ -14,6 +14,8 @@
 
 [**Add to Chrome**](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca) · [Product page](https://scrapfly.io/products/antibot-detector) · [What's new](CHANGELOG.md) · [llms.txt](llms.txt) · [Report a problem](https://github.com/scrapfly/Antibot-Detector/issues)
 
+**English** · [简体中文](docs/README.zh-CN.md) · [Español](docs/README.es.md) · [Русский](docs/README.ru.md)
+
 </div>
 
 ---
