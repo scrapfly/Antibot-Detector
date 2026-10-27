@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Texter som ännu inte är översatta till alla språk: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Översätt regeln"
-  },
   "ruleTranslateRuleHint": {
     "message": "Fyller i de översättningar som saknas för beskrivningen, mönstren och kombinationerna med Chromes översättare på enheten. Kontrollera dem innan du sparar."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Översätt"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Översätt ändringar"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Översatt"
+  },
+  "ruleTranslateBusy": {
+    "message": "Översätter…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Alla texter i den här regeln är översatta till alla {0} språk."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Översätter {0} texter…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Byte av språk läser in tillägget igen. Spara ändringarna i inställningarna först?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Översätt ändringarna"
   },
   "ruleTranslateChangedFmt": {
     "message": "Texter du ändrade på {0}: {1}. De andra språken visar fortfarande den gamla texten."

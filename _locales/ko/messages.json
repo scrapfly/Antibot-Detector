@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "아직 모든 언어로 번역되지 않은 텍스트: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "규칙 번역"
-  },
   "ruleTranslateRuleHint": {
     "message": "설명, 패턴, 조합에 빠진 번역을 Chrome의 온디바이스 번역기로 채웁니다. 저장하기 전에 확인하세요."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "번역"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "변경 내용 번역"
+  },
+  "ruleTranslatedLabel": {
+    "message": "번역됨"
+  },
+  "ruleTranslateBusy": {
+    "message": "번역 중…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "이 규칙의 모든 텍스트가 {0}개 언어로 모두 번역되었습니다."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "텍스트 {0}개 번역 중…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "언어를 바꾸면 확장 프로그램이 다시 로드됩니다. 먼저 설정 변경 사항을 저장할까요?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "변경 내용 번역"
   },
   "ruleTranslateChangedFmt": {
     "message": "{0}(으)로 바꾼 텍스트: {1}. 다른 언어에는 아직 이전 텍스트가 표시됩니다."

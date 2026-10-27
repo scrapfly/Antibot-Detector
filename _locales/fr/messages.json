@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Textes pas encore traduits dans toutes les langues : {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Traduire la règle"
-  },
   "ruleTranslateRuleHint": {
     "message": "Complète les traductions manquantes de la description, des motifs et des combinaisons avec le traducteur sur l’appareil de Chrome. Vérifiez-les avant d’enregistrer."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Traduire"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Traduire les modifs"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Traduite"
+  },
+  "ruleTranslateBusy": {
+    "message": "Traduction…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Tous les textes de cette règle sont traduits dans les {0} langues."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Traduction de {0} textes…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Changer de langue recharge l’extension. Enregistrer d’abord vos modifications des paramètres ?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Traduire les modifications"
   },
   "ruleTranslateChangedFmt": {
     "message": "Textes modifiés en {0} : {1}. Les autres langues affichent encore l’ancien texte."

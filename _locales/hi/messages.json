@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "हर भाषा में अभी अनूदित न हुए टेक्स्ट: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "नियम का अनुवाद करें"
-  },
   "ruleTranslateRuleHint": {
     "message": "विवरण, पैटर्न और संयोजनों के छूटे हुए अनुवाद Chrome के ऑन-डिवाइस अनुवादक से भरता है। सहेजने से पहले जाँच लें।"
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "अनुवाद करें"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "बदलाव अनुवाद करें"
+  },
+  "ruleTranslatedLabel": {
+    "message": "अनूदित"
+  },
+  "ruleTranslateBusy": {
+    "message": "अनुवाद हो रहा है…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "इस नियम के सभी टेक्स्ट सभी {0} भाषाओं में अनूदित हैं।"
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} टेक्स्ट का अनुवाद हो रहा है…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "भाषा बदलने से एक्सटेंशन फिर से लोड होता है। क्या पहले सेटिंग्स में किए गए बदलाव सहेजें?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "बदलावों का अनुवाद करें"
   },
   "ruleTranslateChangedFmt": {
     "message": "{0} में आपके बदले गए टेक्स्ट: {1}। अन्य भाषाएँ अभी भी पुराना टेक्स्ट दिखाती हैं।"

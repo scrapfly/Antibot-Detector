@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "نصوص غير مترجمة بعد إلى كل اللغات: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "ترجمة القاعدة"
-  },
   "ruleTranslateRuleHint": {
     "message": "يملأ الترجمات الناقصة للوصف والأنماط والتركيبات بمترجم Chrome على الجهاز. راجعها قبل الحفظ."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "ترجمة"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "ترجمة التغييرات"
+  },
+  "ruleTranslatedLabel": {
+    "message": "مترجمة"
+  },
+  "ruleTranslateBusy": {
+    "message": "جارٍ الترجمة…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "كل نصوص هذه القاعدة مترجمة إلى اللغات الـ{0} كلها."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "جارٍ ترجمة النصوص: {0}…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "يؤدي تغيير اللغة إلى إعادة تحميل الإضافة. هل تريد حفظ تغييرات الإعدادات أولاً؟"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "ترجمة التغييرات"
   },
   "ruleTranslateChangedFmt": {
     "message": "النصوص التي غيّرتها بـ{0}: {1}. لا تزال اللغات الأخرى تعرض النص القديم."

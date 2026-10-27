@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Тексты, ещё не переведённые на все языки: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Перевести правило"
-  },
   "ruleTranslateRuleHint": {
     "message": "Заполняет недостающие переводы описания, шаблонов и комбинаций с помощью переводчика Chrome на устройстве. Проверьте их перед сохранением."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Перевести"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Перевести изменения"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Переведено"
+  },
+  "ruleTranslateBusy": {
+    "message": "Перевод…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Все тексты этого правила переведены на все {0} языка."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Перевод текстов: {0}…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Смена языка перезагрузит расширение. Сначала сохранить изменения настроек?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Перевести изменения"
   },
   "ruleTranslateChangedFmt": {
     "message": "Тексты, изменённые на языке {0}: {1}. Другие языки пока показывают старый текст."

@@ -104,19 +104,16 @@
     <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="editRuleModalAction">
       <div class="rule-modal-header">
         <span id="editRuleModalAction" class="rule-modal-action" data-i18n="ruleModalActionEdit">Edit</span>
+        <!-- Translate the rule: its description, pattern descriptions and combination names (rules-translate-rule.js) -->
+        <button type="button" id="ruleTranslateBtn" class="rule-translate-btn" data-state="done">
+          <svg class="rule-translate-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
+          <span id="ruleTranslateLabel" class="rule-translate-label" data-i18n="ruleTranslateBtnLabel">Translate</span>
+          <span id="ruleTranslateBadge" class="rule-translate-badge" hidden></span>
+        </button>
         <button type="button" id="closeRuleModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
 
       <div class="rule-modal-body">
-        <!-- Texts of this rule that are not translated into every language (RuleTranslationPlan), and one button for all of them -->
-        <div id="ruleTranslateBar" class="rule-translate-bar" role="status" aria-live="polite" hidden>
-          <span class="rule-translate-icon" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
-          </span>
-          <span id="ruleTranslateText" class="rule-translate-text"></span>
-          <button type="button" id="ruleTranslateChangesBtn" class="action-btn" data-i18n="ruleTranslateChangesBtn" hidden>Translate the changes</button>
-          <button type="button" id="ruleTranslateAllBtn" class="action-btn" data-i18n="ruleTranslateRule">Translate the rule</button>
-        </div>
         <!-- Detector Information Card -->
         <div class="modal-card">
           <div class="modal-card-header">

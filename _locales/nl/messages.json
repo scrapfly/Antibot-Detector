@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Teksten die nog niet in elke taal zijn vertaald: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Regel vertalen"
-  },
   "ruleTranslateRuleHint": {
     "message": "Vult de ontbrekende vertalingen van de beschrijving, de patronen en de combinaties aan met de vertaler op het apparaat van Chrome. Controleer ze voordat je opslaat."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Vertalen"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Wijzigingen vertalen"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Vertaald"
+  },
+  "ruleTranslateBusy": {
+    "message": "Vertalen…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Alle teksten van deze regel zijn vertaald in alle {0} talen."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} teksten vertalen…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Een andere taal kiezen laadt de extensie opnieuw. Eerst je wijzigingen in de instellingen opslaan?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Wijzigingen vertalen"
   },
   "ruleTranslateChangedFmt": {
     "message": "Teksten die je in het {0} hebt gewijzigd: {1}. De andere talen tonen nog de oude tekst."

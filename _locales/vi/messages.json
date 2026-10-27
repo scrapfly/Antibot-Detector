@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Số văn bản chưa được dịch sang mọi ngôn ngữ: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Dịch quy tắc"
-  },
   "ruleTranslateRuleHint": {
     "message": "Điền các bản dịch còn thiếu của mô tả, các mẫu và các tổ hợp bằng trình dịch trên thiết bị của Chrome. Hãy kiểm tra trước khi lưu."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Dịch"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Dịch thay đổi"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Đã dịch"
+  },
+  "ruleTranslateBusy": {
+    "message": "Đang dịch…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Mọi văn bản của quy tắc này đã được dịch sang cả {0} ngôn ngữ."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Đang dịch {0} văn bản…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Đổi ngôn ngữ sẽ tải lại tiện ích. Lưu các thay đổi cài đặt trước?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Dịch các thay đổi"
   },
   "ruleTranslateChangedFmt": {
     "message": "Văn bản bạn đã đổi bằng {0}: {1}. Các ngôn ngữ khác vẫn hiển thị văn bản cũ."

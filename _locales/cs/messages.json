@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Texty dosud nepřeložené do všech jazyků: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Přeložit pravidlo"
-  },
   "ruleTranslateRuleHint": {
     "message": "Vyplní chybějící překlady popisu, vzorů a kombinací pomocí překladače Chrome přímo v zařízení. Před uložením je zkontrolujte."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Přeložit"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Přeložit změny"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Přeloženo"
+  },
+  "ruleTranslateBusy": {
+    "message": "Překládání…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Všechny texty tohoto pravidla jsou přeloženy do všech {0} jazyků."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Překlad textů: {0}…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Změna jazyka znovu načte rozšíření. Uložit nejdřív změny nastavení?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Přeložit změny"
   },
   "ruleTranslateChangedFmt": {
     "message": "Texty změněné v jazyce {0}: {1}. Ostatní jazyky stále zobrazují starý text."

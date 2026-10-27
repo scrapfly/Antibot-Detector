@@ -82,10 +82,21 @@ const STAND_IN = `(() => {
       await page.waitForSelector('#saveRuleEdit', { state: 'visible' });
       await sleep(1000);
     };
+    // The header's Translate button: 'done' when nothing is left; its hover text's first line says what is missing, and
+    // a run's result is a notice (recorded here as it is shown)
     const bar = () => page.evaluate(() => {
-      const el = document.querySelector('#ruleTranslateBar');
-      const button = document.querySelector('#ruleTranslateAllBtn');
-      return { hidden: el.hidden, text: document.querySelector('#ruleTranslateText').textContent, button: { hidden: button.hidden, disabled: button.disabled, title: button.title } };
+      if (!window.__notes) {
+        window.__notes = [];
+        for (const kind of ['success', 'warning', 'info']) {
+          const show = NotificationHelper[kind].bind(NotificationHelper);
+          NotificationHelper[kind] = (message, ...rest) => { window.__notes.push(message); return show(message, ...rest); };
+        }
+      }
+      const button = document.querySelector('#ruleTranslateBtn');
+      const done = button.dataset.state === 'done';
+      const note = window.__notes[window.__notes.length - 1];
+      return { hidden: done, state: button.dataset.state, text: done && note ? note : button.title.split('\n')[0],
+        button: { hidden: done, disabled: button.disabled, title: button.title } };
     });
     const barIs = async (check, what) => {
       try { await waitFor(async () => check(await bar()), what); } catch (error) { throw new Error(`${error.message}; the bar was ${JSON.stringify(await bar())}`); }
@@ -115,11 +126,11 @@ const STAND_IN = `(() => {
     assert.equal(waiting.button.hidden, false);
     assert.equal(waiting.button.disabled, false);
     assert.match(waiting.button.title, /on-device translator/);
-    if (shotsAt) { await page.$eval('#ruleTranslateBar', el => el.scrollIntoView({ block: 'start' })); await page.screenshot({ path: path.join(shotsAt, 'translate-bar.png') }); }
+    if (shotsAt) { await page.$eval('#ruleTranslateBtn', el => el.scrollIntoView({ block: 'start' })); await page.screenshot({ path: path.join(shotsAt, 'translate-bar.png') }); }
     console.log('PASS New texts: a changed description, a new pattern description and a new combination name are counted as they are written');
 
     // 3. One click fills every language of every text
-    await page.$eval('#ruleTranslateAllBtn', el => el.click());
+    await page.$eval('#ruleTranslateBtn', el => el.click());
     await barIs(b => /^Filled 63 translations\. Check them before saving\.$/.test(b.text), 'the result of the translation');
     const filled = await page.evaluate(() => {
       const rules = window.popupInstance.rules;

@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "尚未翻译成所有语言的文本：{0}"
   },
-  "ruleTranslateRule": {
-    "message": "翻译规则"
-  },
   "ruleTranslateRuleHint": {
     "message": "使用 Chrome 的设备端翻译器补全说明、模式和组合中缺失的翻译。保存前请检查。"
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "翻译"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "翻译更改"
+  },
+  "ruleTranslatedLabel": {
+    "message": "已翻译"
+  },
+  "ruleTranslateBusy": {
+    "message": "正在翻译…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "此规则的所有文本均已翻译成全部 {0} 种语言。"
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "正在翻译 {0} 段文本…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "更改语言会重新加载扩展程序。要先保存对设置的更改吗？"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "翻译更改"
   },
   "ruleTranslateChangedFmt": {
     "message": "你用{0}修改的文本：{1}。其他语言仍显示旧文本。"

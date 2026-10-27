@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Teksty jeszcze nieprzetłumaczone na wszystkie języki: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Przetłumacz regułę"
-  },
   "ruleTranslateRuleHint": {
     "message": "Uzupełnia brakujące tłumaczenia opisu, wzorców i kombinacji za pomocą tłumacza Chrome działającego na urządzeniu. Sprawdź je przed zapisaniem."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Przetłumacz"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Przetłumacz zmiany"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Przetłumaczono"
+  },
+  "ruleTranslateBusy": {
+    "message": "Tłumaczenie…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Wszystkie teksty tej reguły są przetłumaczone na wszystkie {0} języki."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Tłumaczenie tekstów: {0}…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Zmiana języka przeładuje rozszerzenie. Zapisać najpierw zmiany w ustawieniach?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Przetłumacz zmiany"
   },
   "ruleTranslateChangedFmt": {
     "message": "Teksty zmienione w języku {0}: {1}. Pozostałe języki nadal pokazują stary tekst."

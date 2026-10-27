@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Texte, die noch nicht in jede Sprache übersetzt sind: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Regel übersetzen"
-  },
   "ruleTranslateRuleHint": {
     "message": "Füllt die fehlenden Übersetzungen von Beschreibung, Mustern und Kombinationen mit dem geräteinternen Übersetzer von Chrome aus. Prüfe sie vor dem Speichern."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Übersetzen"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Änderungen übersetzen"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Übersetzt"
+  },
+  "ruleTranslateBusy": {
+    "message": "Wird übersetzt…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Alle Texte dieser Regel sind in alle {0} Sprachen übersetzt."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} Texte werden übersetzt…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Ein Sprachwechsel lädt die Erweiterung neu. Zuerst deine Änderungen an den Einstellungen speichern?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Änderungen übersetzen"
   },
   "ruleTranslateChangedFmt": {
     "message": "Auf {0} geänderte Texte: {1}. Die anderen Sprachen zeigen noch den alten Text."

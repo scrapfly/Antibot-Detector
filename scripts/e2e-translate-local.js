@@ -70,8 +70,12 @@ const scenario = async (name, fn) => {
     const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
     return (data.data || data).detectors.antibot['detect-azurefrontdoor'];
   });
-  const bar = () => page.evaluate(() => ({ hidden: document.querySelector('#ruleTranslateBar').hidden, text: document.querySelector('#ruleTranslateText').textContent,
-    changes: !document.querySelector('#ruleTranslateChangesBtn').hidden, all: !document.querySelector('#ruleTranslateAllBtn').hidden }));
+  // The header's Translate button: its state, and its hover text's first line says what it would do
+  const bar = () => page.evaluate(() => {
+    const button = document.querySelector('#ruleTranslateBtn');
+    return { hidden: button.dataset.state === 'done', text: button.title.split('\n')[0],
+      changes: button.dataset.state === 'changed', all: button.dataset.state === 'missing' };
+  });
   const original = await stored();
 
   await scenario('Your language: Spanish texts in the fields, no English original, the Translations panel, no translate bar (nothing to do)', async () => {
@@ -89,7 +93,7 @@ const scenario = async (name, fn) => {
     assert.ok(/^Cabecera de referencia/.test(view.combo), `Spanish combination name: ${view.combo}`);
     const b = await bar();
     assert.equal(b.changes, false);
-    assert.equal(b.hidden, true, 'every text is translated: nothing to do, no bar');
+    assert.equal(b.hidden, true, 'every text is translated: the button says Translated');
   });
 
   await scenario('Edit: what is typed in Spanish is saved as the Spanish translation, the originals stay', async () => {
@@ -108,7 +112,7 @@ const scenario = async (name, fn) => {
     const counted = await bar();
     assert.equal(counted.changes, true, `the bar offers Translate the changes: ${counted.text}`);
     assert.match(counted.text, /Español: 1/);
-    await page.$eval('#ruleTranslateChangesBtn', el => el.click());
+    await page.$eval('#ruleTranslateBtn', el => el.click());
     await sleep(1500);
     assert.equal((await bar()).changes, false, 'nothing changed is left');
     await page.$eval('#saveRuleEdit', el => el.click());

@@ -167,6 +167,12 @@
   display: none;
 }
 
+/* The editor's description fields set display themselves: in English the field for the UI language stays hidden */
+#editRuleModal .rule-local-input[hidden],
+#methodSettingsModal .rule-local-input[hidden] {
+  display: none;
+}
+
 .rule-original {
   margin-top: 6px;
 }
@@ -444,60 +450,109 @@
   opacity: 0.7;
 }
 
-/* Texts of the rule that miss a language, and the one button for all of them: stays in view while the editor scrolls */
-.rule-translate-bar {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 10px;
-  padding: 8px 10px;
-  border: 1px solid rgba(59, 130, 246, 0.45);
-  border-radius: 8px;
-  background: var(--bg-secondary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-}
-
-.rule-translate-bar[hidden] {
-  display: none;
-}
-
-.rule-translate-icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  color: var(--accent-light);
-}
-
-.rule-translate-text {
+/* The editor header's Translate button, always there: what the whole rule (description, pattern descriptions,
+   combination names) needs is its state. A count when texts miss a language, amber for texts rewritten in the UI
+   language, a quiet check when everything is translated */
+#editRuleModal .rule-modal-action {
   flex: 1 1 auto;
   min-width: 0;
-  color: var(--text-primary);
-  font-size: 12px;
-  line-height: 1.35;
 }
 
-.rule-translate-bar .action-btn {
+.rule-translate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   flex: 0 0 auto;
+  max-width: 48%;
   height: 28px;
-  padding: 0 12px;
-  border-color: rgba(59, 130, 246, 0.45);
+  margin-inline: 8px;
+  padding: 0 10px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  border-radius: 8px;
   background: rgba(59, 130, 246, 0.12);
   color: var(--accent-light);
+  font: inherit;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 
-.rule-translate-bar .action-btn[hidden] {
-  display: none;
-}
-
-.rule-translate-bar .action-btn:hover:not(:disabled) {
+.rule-translate-btn:hover:not(:disabled) {
   border-color: var(--accent);
   background: rgba(59, 130, 246, 0.22);
   color: var(--text-primary);
+}
+
+.rule-translate-btn:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.rule-translate-icon {
+  flex: 0 0 auto;
+}
+
+.rule-translate-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rule-translate-badge {
+  flex: 0 0 auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.rule-translate-badge[hidden] {
+  display: none;
+}
+
+/* Rewritten in your language: the other languages still say the old text */
+.rule-translate-btn[data-state="changed"] {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning-light);
+}
+
+.rule-translate-btn[data-state="changed"] .rule-translate-badge {
+  background: var(--warning);
+  color: #1a1a1a;
+}
+
+/* Everything translated: still there, quiet */
+.rule-translate-btn[data-state="done"] {
+  border-color: var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.rule-translate-btn[data-state="busy"] {
+  cursor: progress;
+}
+
+.rule-translate-btn[data-state="busy"] .rule-translate-icon {
+  animation: rule-translate-spin 1.2s linear infinite;
+}
+
+@keyframes rule-translate-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rule-translate-btn:disabled:not([data-state="busy"]) {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .rule-translate-bar .action-btn:disabled {

@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Textos que aún faltan por traducir en algún idioma: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Traducir la regla"
-  },
   "ruleTranslateRuleHint": {
     "message": "Completa las traducciones que faltan de la descripción, los patrones y las combinaciones con el traductor de Chrome en el dispositivo. Revísalas antes de guardar."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Traducir"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Traducir cambios"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Traducida"
+  },
+  "ruleTranslateBusy": {
+    "message": "Traduciendo…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Todos los textos de esta regla están traducidos a los {0} idiomas."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Traduciendo {0} textos…"
@@ -6735,9 +6747,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Cambiar el idioma recarga la extensión. ¿Guardar primero los cambios en los ajustes?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Traducir los cambios"
   },
   "ruleTranslateChangedFmt": {
     "message": "Textos que cambiaste en {0}: {1}. Los demás idiomas siguen mostrando el texto anterior."

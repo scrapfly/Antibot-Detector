@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "ข้อความที่ยังไม่ได้แปลเป็นทุกภาษา: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "แปลกฎ"
-  },
   "ruleTranslateRuleHint": {
     "message": "เติมคำแปลที่ขาดของคำอธิบาย รูปแบบ และชุดค่าผสมด้วยตัวแปลบนอุปกรณ์ของ Chrome ตรวจสอบก่อนบันทึก"
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "แปล"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "แปลส่วนที่แก้ไข"
+  },
+  "ruleTranslatedLabel": {
+    "message": "แปลแล้ว"
+  },
+  "ruleTranslateBusy": {
+    "message": "กำลังแปล…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "ข้อความทั้งหมดของกฎนี้แปลเป็นทั้ง {0} ภาษาแล้ว"
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "กำลังแปล {0} ข้อความ…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "การเปลี่ยนภาษาจะโหลดส่วนขยายใหม่ บันทึกการเปลี่ยนแปลงการตั้งค่าก่อนไหม"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "แปลการเปลี่ยนแปลง"
   },
   "ruleTranslateChangedFmt": {
     "message": "ข้อความที่คุณเปลี่ยนเป็นภาษา{0}: {1} ภาษาอื่นยังแสดงข้อความเดิม"

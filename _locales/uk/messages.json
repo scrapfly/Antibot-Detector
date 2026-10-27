@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Тексти, ще не перекладені всіма мовами: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Перекласти правило"
-  },
   "ruleTranslateRuleHint": {
     "message": "Заповнює відсутні переклади опису, шаблонів і комбінацій за допомогою перекладача Chrome на пристрої. Перевірте їх перед збереженням."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Перекласти"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Перекласти зміни"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Перекладено"
+  },
+  "ruleTranslateBusy": {
+    "message": "Переклад…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Усі тексти цього правила перекладено всіма {0} мовами."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Переклад текстів: {0}…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Зміна мови перезавантажить розширення. Спершу зберегти зміни налаштувань?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Перекласти зміни"
   },
   "ruleTranslateChangedFmt": {
     "message": "Тексти, змінені мовою {0}: {1}. Інші мови досі показують старий текст."

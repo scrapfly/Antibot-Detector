@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Henüz her dile çevrilmemiş metinler: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Kuralı çevir"
-  },
   "ruleTranslateRuleHint": {
     "message": "Açıklamanın, desenlerin ve kombinasyonların eksik çevirilerini Chrome'un cihaz üzerindeki çevirmeniyle doldurur. Kaydetmeden önce kontrol edin."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Çevir"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Değişiklikleri çevir"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Çevrildi"
+  },
+  "ruleTranslateBusy": {
+    "message": "Çevriliyor…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Bu kuralın tüm metinleri {0} dilin hepsine çevrildi."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} metin çevriliyor…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Dili değiştirmek uzantıyı yeniden yükler. Önce ayarlardaki değişiklikler kaydedilsin mi?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Değişiklikleri çevir"
   },
   "ruleTranslateChangedFmt": {
     "message": "{0} dilinde değiştirdiğin metinler: {1}. Diğer diller hâlâ eski metni gösteriyor."

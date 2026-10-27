@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "Teks yang belum diterjemahkan ke semua bahasa: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "Terjemahkan aturan"
-  },
   "ruleTranslateRuleHint": {
     "message": "Mengisi terjemahan yang hilang untuk deskripsi, pola, dan kombinasi dengan penerjemah di perangkat milik Chrome. Periksa sebelum menyimpan."
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "Terjemahkan"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "Terjemahkan perubahan"
+  },
+  "ruleTranslatedLabel": {
+    "message": "Diterjemahkan"
+  },
+  "ruleTranslateBusy": {
+    "message": "Menerjemahkan…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "Semua teks aturan ini sudah diterjemahkan ke semua {0} bahasa."
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "Menerjemahkan {0} teks…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Mengganti bahasa akan memuat ulang ekstensi. Simpan perubahan pengaturan terlebih dahulu?"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "Terjemahkan perubahan"
   },
   "ruleTranslateChangedFmt": {
     "message": "Teks yang Anda ubah dalam {0}: {1}. Bahasa lain masih menampilkan teks lama."

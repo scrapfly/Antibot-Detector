@@ -6275,11 +6275,23 @@
   "ruleTranslateBarFmt": {
     "message": "すべての言語に翻訳されていないテキスト: {0}"
   },
-  "ruleTranslateRule": {
-    "message": "ルールを翻訳"
-  },
   "ruleTranslateRuleHint": {
     "message": "説明、パターン、組み合わせの足りない翻訳を、Chrome のオンデバイス翻訳で補います。保存する前に確認してください。"
+  },
+  "ruleTranslateBtnLabel": {
+    "message": "翻訳"
+  },
+  "ruleTranslateChangesShort": {
+    "message": "変更を翻訳"
+  },
+  "ruleTranslatedLabel": {
+    "message": "翻訳済み"
+  },
+  "ruleTranslateBusy": {
+    "message": "翻訳中…"
+  },
+  "ruleTranslateAllTranslatedFmt": {
+    "message": "このルールのすべてのテキストは {0} 言語すべてに翻訳済みです。"
   },
   "ruleTranslateRuleWorkingFmt": {
     "message": "{0} 件のテキストを翻訳中…"
@@ -6733,9 +6745,6 @@
   },
   "settingsLanguageUnsavedMessage": {
     "message": "言語を変更すると拡張機能が再読み込みされます。先に設定の変更を保存しますか？"
-  },
-  "ruleTranslateChangesBtn": {
-    "message": "変更を翻訳"
   },
   "ruleTranslateChangedFmt": {
     "message": "{0}で変更したテキスト：{1}。他の言語には古いテキストが表示されたままです。"
