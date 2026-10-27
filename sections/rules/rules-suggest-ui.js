@@ -1,12 +1,12 @@
 /**
- * Rules editor → Cookies, Headers and Url: "From this page" beside Add Pattern. It folds out, under the section, the
- * active tab's cookies, response headers or scripts from other sites (the worker's RULE_SUGGEST_PAGE answer), each
- * marked with the installed rules that already detect it (the engine's runDetector, through RuleSuggest.annotate) or
- * as already in this rule. The ticked ones become pattern rows of the section, as Add Pattern makes them, to review
- * and save with the rule.
+ * Rules editor → Cookies, Headers and Url: a "From this page" button on each pattern row, beside its settings and
+ * delete buttons. It folds out, under the row, the active tab's cookies, response headers or scripts from other sites
+ * (the worker's RULE_SUGGEST_PAGE answer), each marked with the installed rules that already detect it (the engine's
+ * runDetector, through RuleSuggest.annotate) or as already in this rule. The first item ticked fills that row; any
+ * other becomes a new row, as Add Pattern makes them, to review and save with the rule.
  *
  * The page is read once per editor opening; a page the extension cannot read (a browser page, the popup opened in its
- * own tab) leaves the button greyed out, with the reason as its title.
+ * own tab) leaves the buttons greyed out, with the reason as their title.
  *
  * Dependencies: rules.js, rules-editor.js (populateDetectionMethods, addNewMethodItem), modules/core/rule-suggest.js
  */
@@ -48,45 +48,43 @@ Rules.prototype.suggestDetectors = function() {
 };
 
 /**
- * Called by populateDetectionMethods on every editor opening: a "From this page" button next to Add Pattern in the
- * sections the page can fill, and a fresh read of the page the next time one is opened.
+ * Called by populateDetectionMethods on every editor opening: the button on every row of the sections the page can
+ * fill, and a fresh read of the page the next time a list is opened.
  */
 Rules.prototype.addPagePickButtons = function(container) {
   this.pagePickLoad = null;
+  this.pagePickSupported = null;
   if (!container) return;
-  const label = ruleSuggestText('pagePickButton', 'From this page');
-  for (const section of container.querySelectorAll('.method-section')) {
-    const kind = section.dataset.methodType;
-    const add = section.querySelector(':scope > .add-method-btn');
-    if (!RULE_PAGE_PICK_KINDS[kind] || !add || section.querySelector('.page-pick-btn')) continue;
-    const row = document.createElement('div');
-    row.className = 'method-add-row';
-    add.replaceWith(row);
-    row.appendChild(add);
-    row.insertAdjacentHTML('beforeend', `
-      <button type="button" class="page-pick-btn" data-method-type="${FormatUtils.escapeAttr(kind)}" aria-expanded="false">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
-        <span>${FormatUtils.escapeHtml(label)}</span>
-      </button>`);
-  }
+  container.querySelectorAll('.method-section .method-item').forEach(item => this.decoratePagePickRow(item));
   this.setupPagePick(container);
   this.refreshPagePickAvailability(container);
 };
 
+/** The row's "From this page" button, before its settings button (also for a row Add Pattern just made). */
+Rules.prototype.decoratePagePickRow = function(item) {
+  if (!item || !item.classList || !item.classList.contains('method-item')) return;
+  const kind = item.closest('.method-section')?.dataset.methodType;
+  const actions = item.querySelector('.field-actions[data-field-type="name"]');
+  if (!RULE_PAGE_PICK_KINDS[kind] || !actions || actions.querySelector('.page-pick-btn')) return;
+  const label = ruleSuggestText('pagePickButton', 'From this page');
+  actions.insertAdjacentHTML('afterbegin', `
+                  <button type="button" class="method-action-btn page-pick-btn" aria-expanded="false" title="${FormatUtils.escapeAttr(label)}" aria-label="${FormatUtils.escapeAttr(label)}">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M12 12v5"/><path d="M9.5 14.5L12 17l2.5-2.5"/></svg>
+                  </button>`);
+  if (this.pagePickSupported === false) this.markPagePickUnsupported(actions.querySelector('.page-pick-btn'));
+};
+
+Rules.prototype.markPagePickUnsupported = function(button) {
+  if (!button) return;
+  button.title = `${ruleSuggestText('pagePickButton', 'From this page')}: ${ruleSuggestText('suggestRuleUnsupported', 'Open the popup on a website to build a rule from it.')}`;
+  button.setAttribute('aria-disabled', 'true');
+};
+
 /** Greys the buttons out on a page the extension cannot read, with the reason as their title. */
 Rules.prototype.refreshPagePickAvailability = async function(container) {
-  const supported = Rules.isSuggestableTab(await this.suggestActiveTab());
-  const label = ruleSuggestText('pagePickButton', 'From this page');
-  for (const button of container.querySelectorAll('.page-pick-btn')) {
-    // The label says what it does; only a greyed-out button needs its reason as hover text
-    if (supported) {
-      button.removeAttribute('title');
-      button.removeAttribute('aria-disabled');
-    } else {
-      button.title = `${label}: ${ruleSuggestText('suggestRuleUnsupported', 'Open the popup on a website to build a rule from it.')}`;
-      button.setAttribute('aria-disabled', 'true');
-    }
-  }
+  this.pagePickSupported = Rules.isSuggestableTab(await this.suggestActiveTab());
+  if (this.pagePickSupported) return;
+  container.querySelectorAll('.page-pick-btn').forEach(button => this.markPagePickUnsupported(button));
 };
 
 /** One delegated listener on the methods container (it is kept across openings; its content is redrawn). */
@@ -98,14 +96,14 @@ Rules.prototype.setupPagePick = function(container) {
     if (toggle) {
       event.stopPropagation();
       if (toggle.getAttribute('aria-disabled') === 'true') return;
-      this.togglePagePick(toggle.closest('.method-section'));
+      this.togglePagePick(toggle.closest('.method-item'));
       return;
     }
     const panel = event.target.closest('.page-pick-panel');
     if (!panel) return;
     event.stopPropagation();
-    if (event.target.closest('.page-pick-cancel')) this.closePagePick(panel.closest('.method-section'), true);
-    else if (event.target.closest('.page-pick-add')) this.addPagePicks(panel.closest('.method-section'));
+    if (event.target.closest('.page-pick-cancel')) this.closePagePick(panel.closest('.method-item'), true);
+    else if (event.target.closest('.page-pick-add')) this.addPagePicks(panel.closest('.method-item'));
   });
   container.addEventListener('change', (event) => {
     const panel = event.target.closest('.page-pick-panel');
@@ -121,7 +119,7 @@ Rules.prototype.setupPagePick = function(container) {
     if (!panel) return;
     event.preventDefault();
     event.stopPropagation();
-    this.closePagePick(panel.closest('.method-section'), true);
+    this.closePagePick(panel.closest('.method-item'), true);
   });
 };
 
@@ -160,31 +158,30 @@ Rules.prototype.readPagePick = async function() {
   return { host: reply.host, candidates: RuleSuggest.suggest(reply, this.suggestDetectors(), (detector, pageData) => engine.runDetector(detector, pageData)) };
 };
 
-Rules.prototype.togglePagePick = async function(section) {
-  if (!section) return;
-  if (section.querySelector('.page-pick-panel')) {
-    this.closePagePick(section, false);
+Rules.prototype.togglePagePick = async function(item) {
+  if (!item) return;
+  if (item.querySelector('.page-pick-panel')) {
+    this.closePagePick(item, false);
     return;
   }
-  if (section.classList.contains('collapsed')) section.querySelector('.method-header-left')?.click();
-  const row = section.querySelector('.method-add-row');
-  if (!row) return;
+  // One list at a time in the editor
+  document.querySelectorAll('#detectionMethodsContainer .page-pick-panel').forEach(open => this.closePagePick(open.closest('.method-item'), false));
   const panel = document.createElement('div');
   panel.className = 'page-pick-panel';
   panel.setAttribute('role', 'group');
   panel.setAttribute('aria-label', ruleSuggestText('pagePickButton', 'From this page'));
   panel.innerHTML = this.pagePickMessageHtml(ruleSuggestText('suggestRuleLoading', 'Reading the page…'));
-  row.after(panel);
-  section.querySelector('.page-pick-btn')?.setAttribute('aria-expanded', 'true');
+  item.appendChild(panel);
+  item.querySelector('.page-pick-btn')?.setAttribute('aria-expanded', 'true');
   const data = await this.pagePickData();
   if (!panel.isConnected) return; // closed, or the editor redrawn, meanwhile
-  this.renderPagePick(section, panel, data);
+  this.renderPagePick(item, panel, data);
 };
 
-Rules.prototype.closePagePick = function(section, focusButton) {
-  if (!section) return;
-  section.querySelector('.page-pick-panel')?.remove();
-  const button = section.querySelector('.page-pick-btn');
+Rules.prototype.closePagePick = function(item, focusButton) {
+  if (!item) return;
+  item.querySelector('.page-pick-panel')?.remove();
+  const button = item.querySelector('.page-pick-btn');
   if (!button) return;
   button.setAttribute('aria-expanded', 'false');
   if (focusButton) button.focus();
@@ -195,8 +192,9 @@ Rules.prototype.pagePickMessageHtml = function(text) {
 };
 
 /** What the section already has, lower-cased, so the page's items it covers are marked "in this rule". */
-Rules.prototype.pagePickExisting = function(section) {
+Rules.prototype.pagePickExisting = function(section, except) {
   return new Set([...section.querySelectorAll('.method-item .method-name')]
+    .filter(input => input.closest('.method-item') !== except)
     .map(input => String(input.value || '').trim().toLowerCase())
     .filter(Boolean));
 };
@@ -219,7 +217,7 @@ Rules.prototype.suggestRowDescription = function(candidate) {
 Rules.prototype.suggestRowHtml = function(candidate, index, inRule) {
   const esc = FormatUtils.escapeHtml;
   const attr = FormatUtils.escapeAttr;
-  const hover = [this.suggestRowDescription(candidate), ...candidate.sources.filter(source => source !== candidate.value)].join('\n');
+  const hover = this.suggestRowDescription(candidate);
   let tag = '';
   if (inRule) {
     tag = `<span class="sr-tag is-in-rule" dir="auto">${esc(ruleSuggestText('pagePickInRule', 'in this rule'))}</span>`;
@@ -238,14 +236,15 @@ Rules.prototype.suggestRowHtml = function(candidate, index, inRule) {
           </label>`;
 };
 
-Rules.prototype.renderPagePick = function(section, panel, data) {
+Rules.prototype.renderPagePick = function(item, panel, data) {
+  const section = item.closest('.method-section');
   const kind = section.dataset.methodType;
   if (!data || !Array.isArray(data.candidates)) {
     panel.innerHTML = this.pagePickMessageHtml(data && data.message ? data.message : ruleSuggestText('suggestRuleError', 'The page could not be read. Reload it and try again.'));
     return;
   }
   panel.pagePickCandidates = data.candidates;
-  const existing = this.pagePickExisting(section);
+  const existing = this.pagePickExisting(section, item);
   const rows = data.candidates.map((candidate, index) => ({ candidate, index })).filter(({ candidate }) => candidate.kind === kind);
   if (!rows.length) {
     const [key, fallback] = RULE_PAGE_PICK_KINDS[kind];
@@ -306,26 +305,26 @@ Rules.pagePickPatternText = function(candidate) {
   return String(candidate.text || '');
 };
 
-/** Each ticked item becomes a pattern row, as Add Pattern makes them; an empty row left in the section is used first. */
-Rules.prototype.addPagePicks = function(section) {
-  const panel = section && section.querySelector('.page-pick-panel');
+/** The first ticked item fills the row the list was opened from; any other becomes a new row, as Add Pattern makes them. */
+Rules.prototype.addPagePicks = function(item) {
+  const panel = item && item.querySelector('.page-pick-panel');
   if (!panel) return;
   const picked = this.pagePickPicked(panel);
   if (!picked.length) return;
+  const section = item.closest('.method-section');
   const addButton = section.querySelector('.add-method-btn');
-  for (const candidate of picked) {
-    let input = [...section.querySelectorAll('.method-item .method-name')].find(field => !String(field.value || '').trim());
+  picked.forEach((candidate, index) => {
+    let input = index === 0 ? item.querySelector('.method-name') : null;
     if (!input) {
       this.addNewMethodItem(addButton);
       const items = section.querySelectorAll('.method-item');
       input = items[items.length - 1]?.querySelector('.method-name');
     }
-    if (!input) continue;
+    if (!input) return;
     input.value = Rules.pagePickPatternText(candidate);
     input.dispatchEvent(new Event('input', { bubbles: true }));
-  }
-  this.closePagePick(section, true);
+  });
+  this.closePagePick(item, true);
   this.updateMethodPatternCount(section);
-  this.updateMethodSectionPagination(section, { goToLastPage: true });
   this.updateAddPatternButtonState(section);
 };

@@ -175,6 +175,10 @@ test('a row of the list escapes cookie names, script addresses and rule names in
   assert.match(plainRow, /title="Matched by its exact name"/, 'the default way to match is the hover text, not a second line');
   assert.match(knownRow, /title="Already detected by Rule &quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.match(knownRow, /<span class="sr-tag is-known" dir="auto">Rule "&gt;&lt;img src=x/);
+  const many = rules.suggestRowHtml({ id: 'url:m', kind: 'url', value: 'abs.example/web/', text: 'abs.example/web/', prefix: false,
+    sources: Array.from({ length: 20 }, (_, i) => `https://abs.example/web/bundle.${i}.js`), matchedBy: [] }, 3, false);
+  assert.match(many, /title="Script addresses containing this: 20"/, 'the hover text says how many scripts, it does not list them');
+  assert.match(many, /×20/);
   const inRule = rules.suggestRowHtml({ id: 'cookie:z', kind: 'cookie', value: 'z', text: 'z', prefix: false, sources: ['z'], matchedBy: [] }, 2, true);
   assert.match(inRule, /class="sr-check" data-index="2" disabled/, 'what the rule already has is not offered again');
   assert.match(inRule, /in this rule/);

@@ -345,7 +345,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       this.updateMethodSectionPagination(section);
     });
     this.updateAllAddPatternButtonStates();
-    // Cookies, Headers and Url: "From this page" beside Add Pattern (rules-suggest-ui.js)
+    // Cookies, Headers and Url: a "From this page" button on each pattern row (rules-suggest-ui.js)
     if (typeof this.addPagePickButtons === 'function') this.addPagePickButtons(container);
 
     const searchInputs = container.querySelectorAll('.method-search-input');
@@ -824,6 +824,8 @@ Rules.prototype.addNewMethodItem = function(button) {
     }
     this.updateMethodSectionPagination(methodSection, { goToLastPage: true });
     this.updateAddPatternButtonState(methodSection);
+    // Cookies, Headers and Url: the row's "From this page" button (rules-suggest-ui.js)
+    if (typeof this.decoratePagePickRow === 'function') this.decoratePagePickRow(methodItems.lastElementChild);
   };
 
 Rules.prototype.addNewMethodSection = function() {
