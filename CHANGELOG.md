@@ -14,6 +14,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Rules: translating an official rule no longer marks it as edited, so updates still install without asking and keep your translations (also for rules translated in 3.0.6); Reset to official keeps them too.
+- Private windows: pages scanned there leave the detection cache when the last private window closes (or at the next start), instead of staying for days.
 
 ## [3.0.6] - 2026-10-26
 

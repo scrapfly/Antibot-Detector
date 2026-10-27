@@ -417,11 +417,15 @@ async function finalizeDetection(tabId, state) {
     }
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
 
-    // Store to cache
+    // Store to cache (a private-window page only until the last private window closes)
+    const privateWindow = typeof HistoryRecorder !== 'undefined' && typeof HistoryRecorder.isIncognitoTab === 'function'
+        && await HistoryRecorder.isIncognitoTab(tabId, chrome).catch(() => false);
+    if (!DetectionSessionStore.isCurrent(tabId, state)) return;
     const pageData = {
         url: state.url,
         hostname: UrlUtils.getHostnameFromUrl(state.url),
-        favicon: normalizedFavicon
+        favicon: normalizedFavicon,
+        ...(privateWindow ? { privateWindow: true } : {})
     };
 
     const storedDataWithExpiry = await DetectionEngineManager.storeDetection(state.url, pageData, finalResults);
@@ -515,8 +519,6 @@ async function finalizeDetection(tabId, state) {
     // A private-window page is never sent anywhere (History leaves it out too)
     if (finalResults.length > 0 && !preservedExistingCache && !watching && DetectionSessionStore.isCurrent(tabId, state)) {
         try {
-            const privateWindow = typeof HistoryRecorder !== 'undefined' && typeof HistoryRecorder.isIncognitoTab === 'function' &&
-                await HistoryRecorder.isIncognitoTab(tabId, chrome);
             if (!privateWindow && DetectionSessionStore.isCurrent(tabId, state)) Promise.resolve(Settings.sendWebhookIfEnabled({
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),

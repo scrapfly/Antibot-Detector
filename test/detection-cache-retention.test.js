@@ -110,10 +110,44 @@ test('storeDetection drops expired entries of other sites in the same write', as
 test('pruneStoredDetections writes only when something was removed', async () => {
   const now = Date.now();
   const clean = loadEngine({ 'hash:a': { timestamp: now, expiry: now + HOUR } });
-  assert.deepStrictEqual({ ...await clean.Engine.pruneStoredDetections() }, { expired: 0, evicted: 0 });
+  assert.deepStrictEqual({ ...await clean.Engine.pruneStoredDetections() }, { expired: 0, evicted: 0, privateRemoved: 0 });
   assert.strictEqual(clean.writes.length, 0);
 
   const dirty = loadEngine({ 'hash:a': { timestamp: now, expiry: now + HOUR }, 'hash:b': { timestamp: now - 2 * HOUR, expiry: now - HOUR } });
-  assert.deepStrictEqual({ ...await dirty.Engine.pruneStoredDetections() }, { expired: 1, evicted: 0 });
+  assert.deepStrictEqual({ ...await dirty.Engine.pruneStoredDetections() }, { expired: 1, evicted: 0, privateRemoved: 0 });
   assert.deepStrictEqual(Object.keys(dirty.store.scrapfly_detection_storage), ['hash:a']);
+});
+
+// ---- Private windows: their pages last no longer than the private session ----
+test('private-window pages are kept while a private window is open and removed after', () => {
+  const storage = { a: entry('a', 1), p: { ...entry('p', 1), privateWindow: true } };
+  assert.deepStrictEqual(Object.keys(Retention.prune(storage, { now: NOW }).storage).sort(), ['a', 'p']);
+  const closed = Retention.prune(storage, { now: NOW, dropPrivate: true });
+  assert.deepStrictEqual(Object.keys(closed.storage), ['a']);
+  assert.strictEqual(closed.privateRemoved, 1);
+});
+
+test('storeDetection marks a private-window page, and pruning removes it once no private window is open', async () => {
+  const { Engine, store } = loadEngine({});
+  await Engine.storeDetection('https://secret.example/', { url: 'https://secret.example/', hostname: 'secret.example', privateWindow: true },
+    [{ id: 'x', confidence: 90, category: 'Anti-Bot', detector: { id: 'x', name: 'X' }, matches: [] }]);
+  assert.strictEqual(store.scrapfly_detection_storage['hash:secret.example'].privateWindow, true);
+  assert.strictEqual((await Engine.pruneStoredDetections()).privateRemoved, 0, 'kept while private windows may be open');
+  assert.strictEqual((await Engine.pruneStoredDetections({ dropPrivate: true })).privateRemoved, 1);
+  assert.deepStrictEqual(store.scrapfly_detection_storage, {});
+});
+
+test('the retention run removes private pages only when no private window is open', async () => {
+  const calls = [];
+  const run = async (windows) => {
+    const context = vm.createContext({ console, Date, Math, JSON, Object, Array, Number, Promise,
+      DetectionEngineManager: { pruneStoredDetections: async (options) => { calls.push(options); return { expired: 0, evicted: 0, privateRemoved: 0 }; } },
+      chrome: { windows: { getAll: async () => { if (windows instanceof Error) throw windows; return windows; } } } });
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'background/detection-cache-retention.js'), 'utf8') + '\nself = this; this.R = DetectionCacheRetention;', context);
+    await context.R.run('test');
+  };
+  await run([{ incognito: false }, { incognito: true }]);
+  await run([{ incognito: false }]);
+  await run(new Error('no windows API'));
+  assert.deepStrictEqual(calls.map(c => c.dropPrivate), [false, true, false]);
 });

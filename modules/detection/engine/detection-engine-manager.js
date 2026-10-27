@@ -1827,7 +1827,9 @@ class DetectionEngineManager {
                 detectionCount: detectionResults.length,
                 fromStorage: false,
                 cacheScope: cacheScope,
-                ...(hooksOff ? { hooksOff: true } : {})
+                ...(hooksOff ? { hooksOff: true } : {}),
+                // Removed when no private window is left (DetectionCacheRetention)
+                ...(pageData.privateWindow === true ? { privateWindow: true } : {})
             };
 
             storage[urlHash] = storedData;
@@ -1914,11 +1916,11 @@ class DetectionEngineManager {
      * @param {object} storage
      * @returns {{storage: object, expired: number, evicted: number}}
      */
-    static pruneStorageObject(storage) {
+    static pruneStorageObject(storage, options = {}) {
         if (typeof DetectionCacheRetention === 'undefined' || !DetectionCacheRetention.prune) {
-            return { storage, expired: 0, evicted: 0 };
+            return { storage, expired: 0, evicted: 0, privateRemoved: 0 };
         }
-        return DetectionCacheRetention.prune(storage);
+        return DetectionCacheRetention.prune(storage, options);
     }
 
     /**
@@ -1926,7 +1928,7 @@ class DetectionEngineManager {
      * when something was removed.
      * @returns {Promise<{expired: number, evicted: number}>}
      */
-    static async pruneStoredDetections() {
+    static async pruneStoredDetections({ dropPrivate = false } = {}) {
         const releaseStorageLock = await acquireDetectionStorageLock();
         try {
             const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
@@ -1942,11 +1944,11 @@ class DetectionEngineManager {
             if (!storage || typeof storage !== 'object' || Array.isArray(storage)) {
                 return { expired: 0, evicted: 0 };
             }
-            const pruned = DetectionEngineManager.pruneStorageObject(storage);
-            if (pruned.expired > 0 || pruned.evicted > 0) {
+            const pruned = DetectionEngineManager.pruneStorageObject(storage, { dropPrivate });
+            if (pruned.expired > 0 || pruned.evicted > 0 || pruned.privateRemoved > 0) {
                 await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: pruned.storage });
             }
-            return { expired: pruned.expired, evicted: pruned.evicted };
+            return { expired: pruned.expired, evicted: pruned.evicted, privateRemoved: pruned.privateRemoved || 0 };
         } finally {
             releaseStorageLock();
         }
