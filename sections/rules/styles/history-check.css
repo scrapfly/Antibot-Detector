@@ -163,6 +163,7 @@
    English original (and the other languages) fold under one quiet line
    ============================================ */
 .rule-local-input[hidden],
+.rule-original[hidden],
 .rule-translation-row[hidden] {
   display: none;
 }

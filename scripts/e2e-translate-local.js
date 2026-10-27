@@ -2,8 +2,8 @@
 /**
  * Rules → editor in another language than English (Spanish), end to end in the real extension (unpacked in Chromium):
  *
- *   Your language   an official rule's description and combination names show in Spanish; the English original folds
- *                   under "Original (inglés)"; with nothing to translate there is no bar
+ *   Your language   an official rule's description and combination names show in Spanish; the English original is
+ *                   not shown; with nothing to translate there is no bar
  *   Edit            typing a Spanish description and combination name saves them as the Spanish translations; the
  *                   English originals are unchanged
  *   Changes         a text rewritten in Spanish is counted on the bar ("Textos que cambiaste en Español: 1"); Translate
@@ -74,15 +74,15 @@ const scenario = async (name, fn) => {
     changes: !document.querySelector('#ruleTranslateChangesBtn').hidden, all: !document.querySelector('#ruleTranslateAllBtn').hidden }));
   const original = await stored();
 
-  await scenario('Your language: Spanish texts in the fields, the English original folded, no translate bar (nothing to do)', async () => {
+  await scenario('Your language: Spanish texts in the fields, no English original shown, no translate bar (nothing to do)', async () => {
     await openEditor();
     const view = await page.evaluate(() => ({
       local: document.querySelector('#detectorDescriptionLocal').value, localHidden: document.querySelector('#detectorDescriptionLocal').hidden,
-      originalOpen: document.querySelector('#detectorDescriptionOriginal').open,
+      originalHidden: document.querySelector('#detectorDescriptionOriginal').hidden,
       combo: document.querySelector('#combinationsContainer .combo-summary-name').value
     }));
     assert.equal(view.localHidden, false);
-    assert.equal(view.originalOpen, false, 'the original is folded');
+    assert.equal(view.originalHidden, true, 'the English original is not shown: the text is edited in Spanish');
     assert.ok(/^Edge de CDN/.test(view.local), `Spanish description: ${view.local}`);
     assert.ok(/^Cabecera de referencia/.test(view.combo), `Spanish combination name: ${view.combo}`);
     const b = await bar();
