@@ -48,7 +48,7 @@ Scrapfly Anti-bot Detector — бесплатное расширение для 
     <td width="50%"><a href="../assets/store-screenshots/ru/03-rules-1280x800.png"><img src="../assets/store-screenshots/ru/03-rules-1280x800.png" alt="Вкладка «Правила» с поиском по Cloudflare: карточки детекторов с категорией, методами обнаружения, версией и переключателем" width="100%"></a></td>
   </tr>
   <tr>
-    <td width="50%"><a href="../assets/store-screenshots/ru/04-advanced-tools-1280x800.png"><img src="../assets/store-screenshots/ru/04-advanced-tools-1280x800.png" alt="Вкладка «Расширенно» с инструментами для Google reCAPTCHA: получить селектор, извлечь ключ сайта и изучить callback-функции" width="100%"></a></td>
+    <td width="50%"><a href="../assets/store-screenshots/ru/04-advanced-tools-1280x800.png"><img src="../assets/store-screenshots/ru/04-advanced-tools-1280x800.png" alt="Вкладка «Дополнительно» с инструментами для Google reCAPTCHA: получить селектор, извлечь ключ сайта и изучить callback-функции" width="100%"></a></td>
     <td width="50%"><a href="../assets/store-screenshots/ru/05-settings-1280x800.png"><img src="../assets/store-screenshots/ru/05-settings-1280x800.png" alt="Настройки с открытым списком языков: 22 языка интерфейса с флагами" width="100%"></a></td>
   </tr>
 </table>
@@ -147,7 +147,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 **Обновить** загружает официальные детекторы из последнего релиза этого репозитория. Отредактированный вами встроенный детектор никогда не заменяется без вопроса: вы выбираете между своей версией и новой. Если вы удалили встроенный детектор, **Восстановить официальные детекторы** в том же меню вернёт его. Обновление детекторов можно также запускать по расписанию (**Настройки → Общие**).
 
-### Расширенно
+### Дополнительно
 
 Практические инструменты для защит, которые использует страница. Защита получает свои инструменты, когда она обнаружена с уверенностью выше 50%; этот порог меняется в **Настройки → Обнаружение → Расширенные инструменты**. Если на странице ничего не подходит, вкладка сообщает об этом, указывает порог (или называет защиту, найденную ниже него) и показывает 25 поддерживаемых защит.
 
@@ -167,7 +167,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 | Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Извлечь SiteKey · Анализ скриптов |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Анализ скриптов |
 
-Результаты и захваты хранятся 30 минут в **Расширенно → История**, где их можно фильтровать по сайту, вендору и инструменту, открывать снова и экспортировать.
+Результаты и захваты хранятся 30 минут в **Дополнительно → История**, где их можно фильтровать по сайту, вендору и инструменту, открывать снова и экспортировать.
 
 ### Настройки
 

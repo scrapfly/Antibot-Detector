@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [Unreleased]
 
+### Changed
+
+- Russian: the Advanced tab is now called «Дополнительно».
+
 ### Fixed
 
 - Rules: translating an official rule no longer marks it as edited, so updates still install without asking and keep your translations (also for rules translated in 3.0.6); Reset to official keeps them too.
