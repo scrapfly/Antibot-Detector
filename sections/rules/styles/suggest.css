@@ -104,7 +104,20 @@
 .sr-filter {
   flex: 1 1 auto;
   min-width: 0;
-  height: 28px;
+  height: 30px;
+  padding-inline-start: 30px;
+  background: var(--rh-field-bg) no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238f8f8f' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l4.5 4.5'/%3E%3C/svg%3E");
+  background-size: 14px;
+  background-position: left 10px center;
+}
+
+[dir="rtl"] .sr-filter {
+  background-position: right 10px center;
+}
+
+.sr-filter::-webkit-search-cancel-button {
+  cursor: pointer;
 }
 
 .sr-selected {
@@ -114,7 +127,14 @@
   color: var(--rh-text-muted);
 }
 
+.sr-selected:not(.has-picked) {
+  display: none;
+}
+
 .sr-selected.has-picked {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.14);
   color: var(--accent-light);
   font-weight: 600;
 }
@@ -194,13 +214,33 @@
   background: var(--rh-card-hover);
 }
 
+/* A tick box drawn like the rest of the interface (as History's), not the browser's square */
 .sr-check {
-  flex-shrink: 0;
-  width: 14px;
-  height: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
   margin: 0;
-  accent-color: var(--accent);
+  background: transparent center / 11px no-repeat;
+  border: 1px solid var(--g-5c5c5c);
+  border-radius: 4px;
   cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.sr-row:hover .sr-check {
+  border-color: var(--accent);
+}
+
+.sr-check:checked {
+  background-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
+  border-color: var(--accent);
+}
+
+.sr-check:focus-visible {
+  outline: none;
 }
 
 .sr-row:has(.sr-check:checked) {
