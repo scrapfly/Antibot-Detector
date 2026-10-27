@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "테스트 중…"
   },
-  "suggestRuleTitle": {
-    "message": "이 페이지로 새 규칙 만들기"
-  },
   "suggestRuleUnsupported": {
     "message": "규칙을 만들려면 웹사이트에서 팝업을 여세요."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "{0}의 보호 기능에 속하는 항목을 선택하세요. 설치된 어떤 규칙도 탐지하지 않는 항목이 먼저 표시됩니다."
-  },
-  "suggestRuleNameLabel": {
-    "message": "보호 기능 이름"
-  },
-  "suggestRuleNameMissing": {
-    "message": "먼저 보호 기능의 이름을 입력하세요."
-  },
-  "suggestRuleCookies": {
-    "message": "쿠키"
-  },
-  "suggestRuleScripts": {
-    "message": "서드파티 스크립트"
-  },
-  "suggestRuleHeaders": {
-    "message": "응답 헤더"
   },
   "suggestRuleExactName": {
     "message": "정확한 이름으로 찾음"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "확장 프로그램이 업데이트되었지만 백그라운드 부분은 아직 이전 버전으로 실행 중입니다. 브라우저의 확장 프로그램 페이지에서 확장 프로그램을 다시 로드한 뒤 다시 시도하세요."
   },
+  "pagePickButton": {
+    "message": "이 페이지에서"
+  },
+  "pagePickAddFmt": {
+    "message": "{0}개 추가"
+  },
+  "pagePickInRule": {
+    "message": "이 규칙에 있음"
+  },
   "suggestRuleFilter": {
     "message": "필터"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "선택됨: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "이미 감지됨: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "응답 헤더가 없습니다. 헤더를 수집하려면 페이지를 새로고침하세요."
-  },
-  "suggestRuleCreate": {
-    "message": "규칙 만들기"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "규칙이 {0}에서 일치합니다(신뢰도 {1}%)"

@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "กำลังทดสอบ…"
   },
-  "suggestRuleTitle": {
-    "message": "กฎใหม่จากหน้านี้"
-  },
   "suggestRuleUnsupported": {
     "message": "เปิดป๊อปอัปบนเว็บไซต์เพื่อสร้างกฎจากเว็บไซต์นั้น"
-  },
-  "suggestRuleIntroFmt": {
-    "message": "เลือกสิ่งที่เป็นของระบบป้องกันบน {0} รายการที่ยังไม่มีกฎที่ติดตั้งไว้ตรวจพบจะแสดงก่อน"
-  },
-  "suggestRuleNameLabel": {
-    "message": "ชื่อระบบป้องกัน"
-  },
-  "suggestRuleNameMissing": {
-    "message": "ตั้งชื่อระบบป้องกันก่อน"
-  },
-  "suggestRuleCookies": {
-    "message": "คุกกี้"
-  },
-  "suggestRuleScripts": {
-    "message": "สคริปต์ของบุคคลที่สาม"
-  },
-  "suggestRuleHeaders": {
-    "message": "ส่วนหัวการตอบกลับ"
   },
   "suggestRuleExactName": {
     "message": "ค้นหาด้วยชื่อที่ตรงกันทุกตัว"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "ส่วนขยายได้รับการอัปเดตแล้ว แต่ส่วนที่ทำงานเบื้องหลังยังใช้เวอร์ชันเก่าอยู่ โหลดส่วนขยายใหม่ในหน้าส่วนขยายของเบราว์เซอร์แล้วลองอีกครั้ง"
   },
+  "pagePickButton": {
+    "message": "จากหน้านี้"
+  },
+  "pagePickAddFmt": {
+    "message": "เพิ่ม {0}"
+  },
+  "pagePickInRule": {
+    "message": "มีในกฎนี้แล้ว"
+  },
   "suggestRuleFilter": {
     "message": "กรอง"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "เลือกแล้ว: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "ตรวจพบแล้ว: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "ไม่มีส่วนหัวการตอบกลับ: โหลดหน้าซ้ำเพื่อเก็บข้อมูล"
-  },
-  "suggestRuleCreate": {
-    "message": "สร้างกฎ"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "กฎตรงกับ {0} (ความมั่นใจ {1}%)"

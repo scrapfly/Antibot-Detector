@@ -345,6 +345,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
       this.updateMethodSectionPagination(section);
     });
     this.updateAllAddPatternButtonStates();
+    // Cookies, Headers and Url: "From this page" beside Add Pattern (rules-suggest-ui.js)
+    if (typeof this.addPagePickButtons === 'function') this.addPagePickButtons(container);
 
     const searchInputs = container.querySelectorAll('.method-search-input');
     searchInputs.forEach(input => {

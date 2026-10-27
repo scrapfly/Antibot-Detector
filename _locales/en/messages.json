@@ -7172,37 +7172,9 @@
     "message": "Testing…",
     "description": "The Test button while the test runs"
   },
-  "suggestRuleTitle": {
-    "message": "New rule from this page",
-    "description": "Rules tab: the button next to Add and the title of its dialog, which builds a new rule from the cookies, scripts and headers of the page in the active tab"
-  },
   "suggestRuleUnsupported": {
     "message": "Open the popup on a website to build a rule from it.",
     "description": "New rule from this page: why the button is unavailable (a browser page, or the popup opened in its own tab)"
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Tick what belongs to the protection on {0}. What no installed rule detects comes first.",
-    "description": "New rule from this page: the note at the top of the dialog; {0} is the page's host name"
-  },
-  "suggestRuleNameLabel": {
-    "message": "Protection name",
-    "description": "New rule from this page: label of the field for the new rule's name"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Name the protection first.",
-    "description": "New rule from this page: shown under the name field when Create rule is pressed without a name"
-  },
-  "suggestRuleCookies": {
-    "message": "Cookies",
-    "description": "New rule from this page: heading of the list of the page's cookies"
-  },
-  "suggestRuleScripts": {
-    "message": "Third-party scripts",
-    "description": "New rule from this page: heading of the list of scripts the page loaded from other sites"
-  },
-  "suggestRuleHeaders": {
-    "message": "Response headers",
-    "description": "New rule from this page: heading of the list of the page's response header names"
   },
   "suggestRuleExactName": {
     "message": "Matched by its exact name",
@@ -7232,13 +7204,21 @@
     "message": "The extension was updated but its background part still runs the old version. Reload the extension in the browser's Extensions page and try again.",
     "description": "New rule from this page: the worker still runs the version from before the extension was updated (reload the extension)"
   },
+  "pagePickButton": {
+    "message": "From this page",
+    "description": "Rules editor \u2192 Cookies, Headers, Url: button beside Add Pattern that lists what the current page has, to add as patterns"
+  },
+  "pagePickAddFmt": {
+    "message": "Add {0}",
+    "description": "Rules editor \u2192 From this page: button that adds the ticked items as patterns ({0} = how many)"
+  },
+  "pagePickInRule": {
+    "message": "in this rule",
+    "description": "Rules editor \u2192 From this page: tag on an item the rule already has as a pattern"
+  },
   "suggestRuleFilter": {
     "message": "Filter",
     "description": "New rule from this page: placeholder of the box that filters the list by name"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Selected: {0}",
-    "description": "New rule from this page: how many items are ticked ({0} = a number)"
   },
   "suggestRuleKnownFmt": {
     "message": "Already detected: {0}",
@@ -7259,10 +7239,6 @@
   "suggestRuleNoHeaders": {
     "message": "No response headers: reload the page to capture them.",
     "description": "New rule from this page: no response headers were captured for the page (a page shown from the saved results)"
-  },
-  "suggestRuleCreate": {
-    "message": "Create rule",
-    "description": "New rule from this page: the button that opens the rule editor with the ticked items"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "The rule matches {0} (confidence {1}%)",

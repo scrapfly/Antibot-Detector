@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Testuje se…"
   },
-  "suggestRuleTitle": {
-    "message": "Nové pravidlo z této stránky"
-  },
   "suggestRuleUnsupported": {
     "message": "Otevřete okno rozšíření na webu, abyste z něj vytvořili pravidlo."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Zaškrtněte, co patří k ochraně na {0}. Nejdřív je uvedeno, co žádné nainstalované pravidlo nezjistí."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Název ochrany"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Nejdřív ochranu pojmenujte."
-  },
-  "suggestRuleCookies": {
-    "message": "Cookies"
-  },
-  "suggestRuleScripts": {
-    "message": "Skripty třetích stran"
-  },
-  "suggestRuleHeaders": {
-    "message": "Hlavičky odpovědi"
   },
   "suggestRuleExactName": {
     "message": "Hledá se podle přesného názvu"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Rozšíření bylo aktualizováno, ale jeho část na pozadí stále běží ve staré verzi. Znovu načtěte rozšíření na stránce Rozšíření v prohlížeči a zkuste to znovu."
   },
+  "pagePickButton": {
+    "message": "Z této stránky"
+  },
+  "pagePickAddFmt": {
+    "message": "Přidat {0}"
+  },
+  "pagePickInRule": {
+    "message": "už v pravidle"
+  },
   "suggestRuleFilter": {
     "message": "Filtrovat"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Vybráno: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Už rozpoznáno: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Žádné hlavičky odpovědi: načtěte stránku znovu, abyste je zachytili."
-  },
-  "suggestRuleCreate": {
-    "message": "Vytvořit pravidlo"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Pravidlo se shoduje na {0} (spolehlivost {1} %)"

@@ -143,8 +143,6 @@ class Rules {
       addBtn.addEventListener('click', () => this.handleAddDetector());
     }
 
-    // New rule from this page (rules-suggest-ui.js)
-    this.setupSuggestRule();
 
     // Update button - checks for updates or applies pending ones
     const checkUpdatesBtn = document.querySelector('#checkUpdatesBtn');

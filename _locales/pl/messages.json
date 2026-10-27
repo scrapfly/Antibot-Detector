@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Testowanie…"
   },
-  "suggestRuleTitle": {
-    "message": "Nowa reguła z tej strony"
-  },
   "suggestRuleUnsupported": {
     "message": "Otwórz okienko rozszerzenia na stronie internetowej, aby utworzyć z niej regułę."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Zaznacz to, co należy do zabezpieczenia na {0}. Najpierw pokazane jest to, czego nie wykrywa żadna zainstalowana reguła."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Nazwa zabezpieczenia"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Najpierw nazwij zabezpieczenie."
-  },
-  "suggestRuleCookies": {
-    "message": "Pliki cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "Skrypty firm zewnętrznych"
-  },
-  "suggestRuleHeaders": {
-    "message": "Nagłówki odpowiedzi"
   },
   "suggestRuleExactName": {
     "message": "Wyszukiwane po dokładnej nazwie"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Rozszerzenie zostało zaktualizowane, ale jego część działająca w tle nadal używa starej wersji. Załaduj ponownie rozszerzenie na stronie Rozszerzenia w przeglądarce i spróbuj jeszcze raz."
   },
+  "pagePickButton": {
+    "message": "Z tej strony"
+  },
+  "pagePickAddFmt": {
+    "message": "Dodaj {0}"
+  },
+  "pagePickInRule": {
+    "message": "już w regule"
+  },
   "suggestRuleFilter": {
     "message": "Filtruj"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Zaznaczono: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Już wykryte: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Brak nagłówków odpowiedzi: odśwież stronę, aby je przechwycić."
-  },
-  "suggestRuleCreate": {
-    "message": "Utwórz regułę"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Reguła pasuje do {0} (pewność {1}%)"

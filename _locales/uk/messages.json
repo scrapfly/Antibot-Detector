@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Перевірка…"
   },
-  "suggestRuleTitle": {
-    "message": "Нове правило з цієї сторінки"
-  },
   "suggestRuleUnsupported": {
     "message": "Відкрийте спливне вікно на сайті, щоб створити з нього правило."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Позначте те, що належить до захисту на {0}. Спочатку йде те, чого не виявляє жодне встановлене правило."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Назва захисту"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Спершу назвіть захист."
-  },
-  "suggestRuleCookies": {
-    "message": "Файли cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "Сторонні скрипти"
-  },
-  "suggestRuleHeaders": {
-    "message": "Заголовки відповіді"
   },
   "suggestRuleExactName": {
     "message": "Шукається за точною назвою"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Розширення оновлено, але його фонова частина досі працює в старій версії. Перезавантажте розширення на сторінці «Розширення» в браузері й спробуйте ще раз."
   },
+  "pagePickButton": {
+    "message": "З цієї сторінки"
+  },
+  "pagePickAddFmt": {
+    "message": "Додати {0}"
+  },
+  "pagePickInRule": {
+    "message": "уже в правилі"
+  },
   "suggestRuleFilter": {
     "message": "Фільтр"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Вибрано: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Уже виявлено: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Немає заголовків відповіді: перезавантажте сторінку, щоб їх отримати."
-  },
-  "suggestRuleCreate": {
-    "message": "Створити правило"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Правило збігається на {0} (впевненість {1}%)"

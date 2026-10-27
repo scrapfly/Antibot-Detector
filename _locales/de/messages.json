@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Wird getestet…"
   },
-  "suggestRuleTitle": {
-    "message": "Neue Regel aus dieser Seite"
-  },
   "suggestRuleUnsupported": {
     "message": "Öffne das Popup auf einer Website, um daraus eine Regel zu erstellen."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Markiere die Einträge, die zum Schutz auf {0} gehören. Einträge, die keine installierte Regel erkennt, stehen oben."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Name des Schutzes"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Gib dem Schutz zuerst einen Namen."
-  },
-  "suggestRuleCookies": {
-    "message": "Cookies"
-  },
-  "suggestRuleScripts": {
-    "message": "Skripte von Drittanbietern"
-  },
-  "suggestRuleHeaders": {
-    "message": "Antwort-Header"
   },
   "suggestRuleExactName": {
     "message": "Wird über den genauen Namen gefunden"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Die Erweiterung wurde aktualisiert, ihr Hintergrundteil läuft aber noch mit der alten Version. Lade die Erweiterung auf der Erweiterungsseite des Browsers neu und versuche es erneut."
   },
+  "pagePickButton": {
+    "message": "Von dieser Seite"
+  },
+  "pagePickAddFmt": {
+    "message": "{0} hinzufügen"
+  },
+  "pagePickInRule": {
+    "message": "schon in der Regel"
+  },
   "suggestRuleFilter": {
     "message": "Filtern"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Ausgewählt: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Bereits erkannt: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Keine Antwort-Header: Lade die Seite neu, um sie zu erfassen."
-  },
-  "suggestRuleCreate": {
-    "message": "Regel erstellen"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Die Regel trifft auf {0} zu (Konfidenz {1} %)"

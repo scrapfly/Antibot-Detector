@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "正在测试…"
   },
-  "suggestRuleTitle": {
-    "message": "从此页面新建规则"
-  },
   "suggestRuleUnsupported": {
     "message": "请在网站上打开弹出窗口，以便据此创建规则。"
-  },
-  "suggestRuleIntroFmt": {
-    "message": "勾选属于 {0} 上防护的项目。没有任何已安装规则检测到的项目排在前面。"
-  },
-  "suggestRuleNameLabel": {
-    "message": "防护名称"
-  },
-  "suggestRuleNameMissing": {
-    "message": "请先为防护命名。"
-  },
-  "suggestRuleCookies": {
-    "message": "Cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "第三方脚本"
-  },
-  "suggestRuleHeaders": {
-    "message": "响应标头"
   },
   "suggestRuleExactName": {
     "message": "按确切名称匹配"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "扩展程序已更新，但其后台部分仍在运行旧版本。请在浏览器的扩展程序页面重新加载扩展程序，然后重试。"
   },
+  "pagePickButton": {
+    "message": "从此页面"
+  },
+  "pagePickAddFmt": {
+    "message": "添加 {0} 项"
+  },
+  "pagePickInRule": {
+    "message": "已在此规则中"
+  },
   "suggestRuleFilter": {
     "message": "筛选"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "已选：{0}"
   },
   "suggestRuleKnownFmt": {
     "message": "已检测到：{0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "没有响应标头：请重新加载页面以捕获它们。"
-  },
-  "suggestRuleCreate": {
-    "message": "创建规则"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "规则匹配 {0}（置信度 {1}%）"

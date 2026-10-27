@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Проверка…"
   },
-  "suggestRuleTitle": {
-    "message": "Новое правило с этой страницы"
-  },
   "suggestRuleUnsupported": {
     "message": "Откройте окно расширения на сайте, чтобы создать по нему правило."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Отметьте то, что относится к защите на {0}. Сначала идёт то, что не обнаруживает ни одно установленное правило."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Название защиты"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Сначала назовите защиту."
-  },
-  "suggestRuleCookies": {
-    "message": "Файлы cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "Сторонние скрипты"
-  },
-  "suggestRuleHeaders": {
-    "message": "Заголовки ответа"
   },
   "suggestRuleExactName": {
     "message": "Ищется по точному имени"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Расширение обновлено, но его фоновая часть всё ещё работает в старой версии. Перезагрузите расширение на странице «Расширения» в браузере и попробуйте снова."
   },
+  "pagePickButton": {
+    "message": "С этой страницы"
+  },
+  "pagePickAddFmt": {
+    "message": "Добавить {0}"
+  },
+  "pagePickInRule": {
+    "message": "уже в правиле"
+  },
   "suggestRuleFilter": {
     "message": "Фильтр"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Выбрано: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Уже обнаружено: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Нет заголовков ответа: перезагрузите страницу, чтобы их получить."
-  },
-  "suggestRuleCreate": {
-    "message": "Создать правило"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Правило находит совпадения на {0} (достоверность {1}%)"

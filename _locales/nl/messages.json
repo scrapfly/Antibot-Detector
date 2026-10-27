@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Testen…"
   },
-  "suggestRuleTitle": {
-    "message": "Nieuwe regel van deze pagina"
-  },
   "suggestRuleUnsupported": {
     "message": "Open de pop-up op een website om er een regel van te maken."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Vink aan wat bij de beveiliging van {0} hoort. Wat geen geïnstalleerde regel herkent, staat bovenaan."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Naam van de beveiliging"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Geef de beveiliging eerst een naam."
-  },
-  "suggestRuleCookies": {
-    "message": "Cookies"
-  },
-  "suggestRuleScripts": {
-    "message": "Scripts van derden"
-  },
-  "suggestRuleHeaders": {
-    "message": "Responsheaders"
   },
   "suggestRuleExactName": {
     "message": "Gezocht op de exacte naam"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "De extensie is bijgewerkt, maar het achtergronddeel draait nog de oude versie. Laad de extensie opnieuw op de pagina Extensies van de browser en probeer het nog eens."
   },
+  "pagePickButton": {
+    "message": "Van deze pagina"
+  },
+  "pagePickAddFmt": {
+    "message": "{0} toevoegen"
+  },
+  "pagePickInRule": {
+    "message": "al in de regel"
+  },
   "suggestRuleFilter": {
     "message": "Filteren"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Geselecteerd: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Al gedetecteerd: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Geen responsheaders: laad de pagina opnieuw om ze vast te leggen."
-  },
-  "suggestRuleCreate": {
-    "message": "Regel maken"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "De regel komt overeen met {0} (zekerheid {1}%)"

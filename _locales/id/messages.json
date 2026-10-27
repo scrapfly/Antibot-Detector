@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Menguji…"
   },
-  "suggestRuleTitle": {
-    "message": "Aturan baru dari halaman ini"
-  },
   "suggestRuleUnsupported": {
     "message": "Buka popup di sebuah situs web untuk membuat aturan darinya."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Centang yang termasuk proteksi di {0}. Yang belum dideteksi aturan terpasang mana pun tampil lebih dulu."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Nama proteksi"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Beri nama proteksinya terlebih dahulu."
-  },
-  "suggestRuleCookies": {
-    "message": "Cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "Skrip pihak ketiga"
-  },
-  "suggestRuleHeaders": {
-    "message": "Header respons"
   },
   "suggestRuleExactName": {
     "message": "Dicari berdasarkan nama persisnya"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Ekstensi sudah diperbarui, tetapi bagian latar belakangnya masih menjalankan versi lama. Muat ulang ekstensi di halaman Ekstensi browser, lalu coba lagi."
   },
+  "pagePickButton": {
+    "message": "Dari halaman ini"
+  },
+  "pagePickAddFmt": {
+    "message": "Tambahkan {0}"
+  },
+  "pagePickInRule": {
+    "message": "sudah di aturan"
+  },
   "suggestRuleFilter": {
     "message": "Saring"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Dipilih: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Sudah terdeteksi: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Tidak ada header respons: muat ulang halaman untuk menangkapnya."
-  },
-  "suggestRuleCreate": {
-    "message": "Buat aturan"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Aturan cocok dengan {0} (kepercayaan {1}%)"

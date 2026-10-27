@@ -145,43 +145,48 @@ test('names with regex characters are escaped in the rule', () => {
   assert.equal(rule.category, 'antibot');
 });
 
-// ---- The dialog renders page data escaped ----------------------------------------------------------------------------
+// ---- The rule editor's "From this page" list renders page data escaped -----------------------------------------------
 
-function loadDialog({ sendMessage = async () => undefined } = {}) {
-  const elements = {};
-  const element = (id) => (elements[id] = elements[id] || { id, innerHTML: '', textContent: '', disabled: false, hidden: false, dataset: {}, classList: { toggle() {} },
-    setAttribute() {}, removeAttribute() {}, addEventListener() {} });
+function loadPicker({ sendMessage = async () => undefined, tab = { id: 7, url: 'https://a.example/' } } = {}) {
   const context = vm.createContext({
     console, FormatUtils: require('../utils/format-utils.js'),
-    document: { querySelector: (selector) => element(selector), querySelectorAll: () => [] },
-    chrome: { runtime: { sendMessage } },
+    chrome: { runtime: { sendMessage }, tabs: { query: async () => [tab] } },
     WorkerMessages: { RULE_SUGGEST_PAGE: 'RULE_SUGGEST_PAGE' },
-    Logger: { warn() {} }
+    Logger: { warn() {} },
+    DetectionEngineManager: class { runDetector() { return { detected: false }; } },
+    RuleSuggest
   });
   vm.runInContext('function Rules() {}', context);
   vm.runInContext(read('sections/rules/rules-suggest-ui.js'), context);
-  return { Rules: vm.runInContext('Rules', context), elements };
+  return { Rules: vm.runInContext('Rules', context) };
 }
 
-test('the dialog escapes cookie names, script addresses and rule names in text and in attributes', () => {
-  const { Rules, elements } = loadDialog();
+test('a row of the list escapes cookie names, script addresses and rule names in text and in attributes', () => {
+  const { Rules } = loadPicker();
   const rules = new Rules();
   const evil = '"><img src=x onerror=alert(1)>';
-  rules.suggestCandidates = [
-    { id: 'cookie:x', kind: 'cookie', value: evil, text: evil, prefix: false, sources: [evil], matchedBy: [] },
-    { id: 'url:y', kind: 'url', value: `cdn.example.com/${evil}`, text: 'y', prefix: false, sources: [`https://cdn.example.com/${evil}`], matchedBy: [`Rule ${evil}`] }
-  ];
-  rules.renderSuggestions();
-  const html = elements['#suggestRuleList'].innerHTML;
-  assert.ok(!html.includes('<img'), 'no element from page data');
-  assert.ok(!/title="[^"]*"><img/.test(html), 'no attribute cut short');
-  assert.match(html, /<span class="sr-name" dir="ltr">"&gt;&lt;img src=x onerror=alert\(1\)&gt;<\/span>/);
-  assert.match(html, /title="Already detected by Rule &quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
-  assert.match(html, /<span class="sr-tag is-known" dir="auto">Rule "&gt;&lt;img src=x/);
-  assert.match(html, /Already detected: 1/, 'what a rule already finds is folded');
-  assert.ok(!html.includes('Matched by its exact name<'), 'the default way to match is not repeated on every row');
-  assert.match(html, /No response headers: reload the page to capture them\./);
-  assert.equal(elements['#createSuggestRule'].disabled, true, 'nothing ticked: Create rule waits');
+  const plainRow = rules.suggestRowHtml({ id: 'cookie:x', kind: 'cookie', value: evil, text: evil, prefix: false, sources: [evil], matchedBy: [] }, 0, false);
+  const knownRow = rules.suggestRowHtml({ id: 'url:y', kind: 'url', value: `cdn.example.com/${evil}`, text: 'y', prefix: false, sources: [`https://cdn.example.com/${evil}`], matchedBy: [`Rule ${evil}`] }, 1, false);
+  for (const html of [plainRow, knownRow]) {
+    assert.ok(!html.includes('<img'), 'no element from page data');
+    assert.ok(!/title="[^"]*"><img/.test(html), 'no attribute cut short');
+  }
+  assert.match(plainRow, /<span class="sr-name" dir="ltr">"&gt;&lt;img src=x onerror=alert\(1\)&gt;<\/span>/);
+  assert.match(plainRow, /title="Matched by its exact name"/, 'the default way to match is the hover text, not a second line');
+  assert.match(knownRow, /title="Already detected by Rule &quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(knownRow, /<span class="sr-tag is-known" dir="auto">Rule "&gt;&lt;img src=x/);
+  const inRule = rules.suggestRowHtml({ id: 'cookie:z', kind: 'cookie', value: 'z', text: 'z', prefix: false, sources: ['z'], matchedBy: [] }, 2, true);
+  assert.match(inRule, /class="sr-check" data-index="2" disabled/, 'what the rule already has is not offered again');
+  assert.match(inRule, /in this rule/);
+});
+
+test('a picked item becomes the name field as the editor reads it: a cookie prefix, a header name, a script host and path', () => {
+  const { Rules } = loadPicker();
+  const [cookie, prefixed] = RuleSuggest.candidates({ cookies: [{ name: 'locale' }, { name: 'incap_ses_1234_5678' }] });
+  assert.equal(Rules.pagePickPatternText(cookie), 'locale');
+  assert.equal(Rules.pagePickPatternText(prefixed), 'incap_ses_', 'a plain cookie name matches the names starting with it');
+  const [script] = RuleSuggest.candidates({ host: 'shop.example', scripts: ['https://cdn.vendor.io/v2/sdk.js?x=1'] });
+  assert.equal(Rules.pagePickPatternText(script), 'cdn.vendor.io/v2/sdk.js');
 });
 
 test('a worker from before an update says to reload the extension; a first message it drops is sent again', async () => {
@@ -193,16 +198,27 @@ test('a worker from before an update says to reload the extension; a first messa
   ]) {
     let sent = 0;
     const queue = replies.slice();
-    const { Rules, elements } = loadDialog({ sendMessage: async () => { sent++; const reply = queue.shift(); if (reply === 'throw') throw new Error('port closed'); return reply; } });
-    const rules = new Rules();
-    await rules.loadSuggestions({ id: 7, url: 'https://a.example/' });
-    assert.match(elements['#suggestRuleList'].innerHTML, expected, JSON.stringify(replies));
+    const { Rules } = loadPicker({ sendMessage: async () => { sent++; const reply = queue.shift(); if (reply === 'throw') throw new Error('port closed'); return reply; } });
+    const data = await new Rules().readPagePick();
+    assert.match(String(data.message), expected, JSON.stringify(replies));
     assert.equal(sent, tries, JSON.stringify(replies));
   }
+  const { Rules } = loadPicker({ tab: { id: 1, url: 'chrome://extensions/' }, sendMessage: async () => { throw new Error('not sent'); } });
+  assert.match((await new Rules().readPagePick()).message, /Open the popup on a website/, 'a browser page is not asked for');
+});
+
+test('the page is read into candidates marked by the installed rules', async () => {
+  const { Rules } = loadPicker({ sendMessage: async () => ({ status: 'ok', host: 'a.example', cookies: [{ name: 'x', value: '1' }], scripts: [], headers: {} }) });
+  const rules = new Rules();
+  rules.detectorManager = { getAllDetectors: () => ({}) };
+  rules.getDetectorDisplayName = (name) => name;
+  const data = await rules.readPagePick();
+  assert.equal(data.host, 'a.example');
+  assert.deepEqual(plain(data.candidates.map(c => [c.kind, c.text])), [['cookie', 'x']]);
 });
 
 test('the button is offered on web pages only', () => {
-  const { Rules } = loadDialog();
+  const { Rules } = loadPicker();
   assert.equal(Rules.isSuggestableTab({ url: 'https://example.com/' }), true);
   assert.equal(Rules.isSuggestableTab({ url: 'http://localhost:8080/' }), true);
   for (const url of ['chrome://extensions/', 'chrome-extension://abc/popup.html', 'file:///tmp/a.html', 'about:blank', '']) {

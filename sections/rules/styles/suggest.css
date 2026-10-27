@@ -1,50 +1,138 @@
 /* ============================================
-   Rules → New rule from this page (rules-suggest-ui.js)
-   The toolbar's square button next to Add, and the dialog: a .rh-modal
-   (rule-helpers.css) with a name, a category and the page's cookies,
-   scripts and headers to tick. Logical properties only, so it mirrors
-   in right-to-left languages.
+   Rules editor → Cookies, Headers and Url: "From this page"
+   (rules-suggest-ui.js). A button beside Add Pattern and, under it,
+   a folded list of the page's items to tick and add as patterns.
+   Logical properties only, so it mirrors in right-to-left languages.
    ============================================ */
 
-.rules-toolbar .rules-suggest-btn {
+#editRuleModal .method-add-row {
+  display: flex;
+  gap: 6px;
+  width: calc(100% - 16px);
+  margin-top: 8px;
+}
+
+#editRuleModal .method-add-row .add-method-btn {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.method-section.collapsed .method-add-row,
+.method-section.collapsed .page-pick-panel {
+  display: none;
+}
+
+.page-pick-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: var(--g-242424);
-  border: 1px solid var(--g-4b4b4b);
-  border-radius: 7px;
-  color: var(--g-e0e0e0);
+  gap: 6px;
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 0 12px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  color: var(--accent-light);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.rules-toolbar .rules-suggest-btn:hover:not([aria-disabled="true"]) {
-  background: var(--bg-tertiary);
-  border-color: var(--border-light);
+.page-pick-btn:hover:not([aria-disabled="true"]),
+.page-pick-btn[aria-expanded="true"] {
+  background: rgba(59, 130, 246, 0.14);
 }
 
-.rules-toolbar .rules-suggest-btn:active:not([aria-disabled="true"]) {
-  transform: scale(0.95);
-}
-
-.rules-toolbar .rules-suggest-btn:focus-visible {
+.page-pick-btn:focus-visible {
   outline: 2px solid var(--accent-light);
   outline-offset: 1px;
 }
 
 /* Focusable, so its title still says why: a page the extension cannot read */
-.rules-toolbar .rules-suggest-btn[aria-disabled="true"] {
+.page-pick-btn[aria-disabled="true"] {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.sr-fields {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+/* The list's own tokens (the rule editor is not a .rh-modal) */
+.page-pick-panel {
+  --rh-border: var(--border);
+  --rh-border-hover: var(--g-5c5c5c);
+  --rh-field-bg: var(--g-262626);
+  --rh-card-hover: var(--g-383838);
+  --rh-text: var(--g-e0e0e0);
+  --rh-text-dim: var(--g-b3b3b3);
+  --rh-text-muted: var(--g-8f8f8f);
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+  margin-top: 8px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+}
+
+.page-pick-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.page-pick-message {
+  margin: 0;
+  padding: 4px 2px;
+  font-size: 11.5px;
+  line-height: 16px;
+  color: var(--rh-text-dim);
+}
+
+.page-pick-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.page-pick-actions button {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.page-pick-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.page-pick-cancel:hover {
+  border-color: var(--g-5c5c5c);
+  color: var(--text-primary);
+}
+
+.page-pick-add {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: white;
+}
+
+.page-pick-add:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.page-pick-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .sr-input {
@@ -72,35 +160,6 @@
   border-color: var(--danger);
 }
 
-.sr-error {
-  margin: 4px 1px 0;
-  font-size: 11px;
-  line-height: 14px;
-  color: var(--danger-light);
-}
-
-.sr-error[hidden] {
-  display: none;
-}
-
-/* The arrow sits at the end of the line in either direction */
-[dir="rtl"] .sr-select {
-  padding: 0 10px 0 26px;
-  background-position: left 10px center;
-}
-
-/* Name, category and filter stay put; only the list scrolls */
-#suggestRuleModal .rule-modal-body.sr-body {
-  overflow: hidden;
-  gap: 10px;
-}
-
-.sr-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .sr-filter {
   flex: 1 1 auto;
   min-width: 0;
@@ -118,67 +177,6 @@
 
 .sr-filter::-webkit-search-cancel-button {
   cursor: pointer;
-}
-
-.sr-selected {
-  flex-shrink: 0;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-  color: var(--rh-text-muted);
-}
-
-.sr-selected:not(.has-picked) {
-  display: none;
-}
-
-.sr-selected.has-picked {
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(59, 130, 246, 0.14);
-  color: var(--accent-light);
-  font-weight: 600;
-}
-
-.sr-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  margin-inline-end: -4px;
-  padding-inline-end: 4px;
-  scrollbar-gutter: stable;
-}
-
-.sr-section[hidden] {
-  display: none;
-}
-
-.sr-head {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 0 1px 5px;
-  background: var(--bg-secondary);
-}
-
-.sr-head-title {
-  font-size: 10.5px;
-  font-weight: 600;
-  line-height: 14px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--rh-text-muted);
-}
-
-.sr-head-count {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--rh-text-muted);
 }
 
 /* One bordered block per group, rows split by a hairline */
@@ -315,20 +313,18 @@
   color: var(--rh-text-dim);
 }
 
-.sr-message {
-  margin: 0;
-  padding: 9px 11px;
-  border: 1px dashed var(--rh-border);
-  border-radius: 8px;
-  font-size: 11.5px;
-  line-height: 16px;
-  color: var(--rh-text-dim);
+/* Already a pattern of this rule: shown, not offered again */
+.sr-row.is-in-rule {
+  cursor: default;
 }
 
-.sr-empty {
-  margin: 0;
-  padding: 6px 1px 0;
-  font-size: 11px;
-  line-height: 15px;
-  color: var(--rh-text-muted);
+.sr-row.is-in-rule .sr-check {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.sr-tag.is-in-rule {
+  border-color: transparent;
+  background: rgba(59, 130, 246, 0.14);
+  color: var(--accent-light);
 }

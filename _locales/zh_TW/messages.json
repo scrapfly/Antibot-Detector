@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "正在測試…"
   },
-  "suggestRuleTitle": {
-    "message": "從此網頁新增規則"
-  },
   "suggestRuleUnsupported": {
     "message": "請在網站上開啟彈出式視窗，才能據此建立規則。"
-  },
-  "suggestRuleIntroFmt": {
-    "message": "勾選屬於 {0} 上防護的項目。沒有任何已安裝規則偵測到的項目會排在前面。"
-  },
-  "suggestRuleNameLabel": {
-    "message": "防護名稱"
-  },
-  "suggestRuleNameMissing": {
-    "message": "請先為防護命名。"
-  },
-  "suggestRuleCookies": {
-    "message": "Cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "第三方指令碼"
-  },
-  "suggestRuleHeaders": {
-    "message": "回應標頭"
   },
   "suggestRuleExactName": {
     "message": "依確切名稱比對"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "擴充功能已更新，但其背景部分仍在執行舊版本。請在瀏覽器的擴充功能頁面重新載入擴充功能，然後再試一次。"
   },
+  "pagePickButton": {
+    "message": "從此頁面"
+  },
+  "pagePickAddFmt": {
+    "message": "新增 {0} 項"
+  },
+  "pagePickInRule": {
+    "message": "已在此規則中"
+  },
   "suggestRuleFilter": {
     "message": "篩選"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "已選：{0}"
   },
   "suggestRuleKnownFmt": {
     "message": "已偵測到：{0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "沒有回應標頭：請重新載入網頁以擷取它們。"
-  },
-  "suggestRuleCreate": {
-    "message": "建立規則"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "規則符合 {0}（信賴度 {1}%）"

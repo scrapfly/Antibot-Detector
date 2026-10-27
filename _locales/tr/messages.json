@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Test ediliyor…"
   },
-  "suggestRuleTitle": {
-    "message": "Bu sayfadan yeni kural"
-  },
   "suggestRuleUnsupported": {
     "message": "Bir web sitesinden kural oluşturmak için açılır pencereyi o sitede açın."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "{0} üzerindeki korumaya ait olanları işaretleyin. Yüklü hiçbir kuralın algılamadıkları önce gelir."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Korumanın adı"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Önce korumaya bir ad verin."
-  },
-  "suggestRuleCookies": {
-    "message": "Çerezler"
-  },
-  "suggestRuleScripts": {
-    "message": "Üçüncü taraf betikler"
-  },
-  "suggestRuleHeaders": {
-    "message": "Yanıt başlıkları"
   },
   "suggestRuleExactName": {
     "message": "Tam adıyla aranır"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Uzantı güncellendi ancak arka plan bölümü hâlâ eski sürümü çalıştırıyor. Tarayıcının Uzantılar sayfasında uzantıyı yeniden yükleyip tekrar deneyin."
   },
+  "pagePickButton": {
+    "message": "Bu sayfadan"
+  },
+  "pagePickAddFmt": {
+    "message": "{0} ekle"
+  },
+  "pagePickInRule": {
+    "message": "kuralda var"
+  },
   "suggestRuleFilter": {
     "message": "Filtrele"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Seçilen: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Zaten algılanan: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Yanıt başlığı yok: yakalamak için sayfayı yeniden yükleyin."
-  },
-  "suggestRuleCreate": {
-    "message": "Kural oluştur"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Kural {0} ile eşleşiyor (güven %{1})"

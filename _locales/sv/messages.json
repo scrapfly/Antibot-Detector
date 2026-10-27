@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Testar…"
   },
-  "suggestRuleTitle": {
-    "message": "Ny regel från den här sidan"
-  },
   "suggestRuleUnsupported": {
     "message": "Öppna popupen på en webbplats för att skapa en regel från den."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Bocka för det som hör till skyddet på {0}. Det som ingen installerad regel upptäcker visas först."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Skyddets namn"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Ge skyddet ett namn först."
-  },
-  "suggestRuleCookies": {
-    "message": "Cookies"
-  },
-  "suggestRuleScripts": {
-    "message": "Skript från tredje part"
-  },
-  "suggestRuleHeaders": {
-    "message": "Svarshuvuden"
   },
   "suggestRuleExactName": {
     "message": "Söks på exakt namn"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "Tillägget har uppdaterats, men dess bakgrundsdel kör fortfarande den gamla versionen. Läs in tillägget igen på webbläsarens sida Tillägg och försök igen."
   },
+  "pagePickButton": {
+    "message": "Från den här sidan"
+  },
+  "pagePickAddFmt": {
+    "message": "Lägg till {0}"
+  },
+  "pagePickInRule": {
+    "message": "redan i regeln"
+  },
   "suggestRuleFilter": {
     "message": "Filtrera"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Valda: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Redan upptäckta: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Inga svarshuvuden: läs in sidan igen för att fånga dem."
-  },
-  "suggestRuleCreate": {
-    "message": "Skapa regel"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "Regeln matchar {0} (säkerhet {1} %)"

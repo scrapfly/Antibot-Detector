@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "テスト中…"
   },
-  "suggestRuleTitle": {
-    "message": "このページから新しいルール"
-  },
   "suggestRuleUnsupported": {
     "message": "ルールを作成するには、ウェブサイトでポップアップを開いてください。"
-  },
-  "suggestRuleIntroFmt": {
-    "message": "{0} の保護に関係するものにチェックを入れてください。インストール済みのどのルールも検出しないものが先に表示されます。"
-  },
-  "suggestRuleNameLabel": {
-    "message": "保護の名前"
-  },
-  "suggestRuleNameMissing": {
-    "message": "まず保護に名前を付けてください。"
-  },
-  "suggestRuleCookies": {
-    "message": "Cookie"
-  },
-  "suggestRuleScripts": {
-    "message": "サードパーティのスクリプト"
-  },
-  "suggestRuleHeaders": {
-    "message": "レスポンスヘッダー"
   },
   "suggestRuleExactName": {
     "message": "名前の完全一致で検索"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "拡張機能は更新されましたが、バックグラウンド部分はまだ古いバージョンのままです。ブラウザの拡張機能ページで拡張機能を再読み込みしてから、もう一度お試しください。"
   },
+  "pagePickButton": {
+    "message": "このページから"
+  },
+  "pagePickAddFmt": {
+    "message": "{0} 件を追加"
+  },
+  "pagePickInRule": {
+    "message": "このルールにあり"
+  },
   "suggestRuleFilter": {
     "message": "絞り込み"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "選択中: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "検出済み: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "レスポンスヘッダーがありません。取得するにはページを再読み込みしてください。"
-  },
-  "suggestRuleCreate": {
-    "message": "ルールを作成"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "ルールは {0} に一致します（信頼度 {1}%）"

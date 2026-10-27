@@ -6602,29 +6602,8 @@
   "ruleLiveTestRunning": {
     "message": "Testando…"
   },
-  "suggestRuleTitle": {
-    "message": "Nova regra a partir desta página"
-  },
   "suggestRuleUnsupported": {
     "message": "Abra o pop-up em um site para criar uma regra a partir dele."
-  },
-  "suggestRuleIntroFmt": {
-    "message": "Marque o que pertence à proteção de {0}. O que nenhuma regra instalada detecta aparece primeiro."
-  },
-  "suggestRuleNameLabel": {
-    "message": "Nome da proteção"
-  },
-  "suggestRuleNameMissing": {
-    "message": "Dê um nome à proteção primeiro."
-  },
-  "suggestRuleCookies": {
-    "message": "Cookies"
-  },
-  "suggestRuleScripts": {
-    "message": "Scripts de terceiros"
-  },
-  "suggestRuleHeaders": {
-    "message": "Cabeçalhos de resposta"
   },
   "suggestRuleExactName": {
     "message": "Procurado pelo nome exato"
@@ -6647,11 +6626,17 @@
   "suggestRuleOutdated": {
     "message": "A extensão foi atualizada, mas a parte em segundo plano ainda roda a versão antiga. Recarregue a extensão na página Extensões do navegador e tente de novo."
   },
+  "pagePickButton": {
+    "message": "Desta página"
+  },
+  "pagePickAddFmt": {
+    "message": "Adicionar {0}"
+  },
+  "pagePickInRule": {
+    "message": "já na regra"
+  },
   "suggestRuleFilter": {
     "message": "Filtrar"
-  },
-  "suggestRuleSelectedFmt": {
-    "message": "Selecionados: {0}"
   },
   "suggestRuleKnownFmt": {
     "message": "Já detectados: {0}"
@@ -6667,9 +6652,6 @@
   },
   "suggestRuleNoHeaders": {
     "message": "Nenhum cabeçalho de resposta: recarregue a página para capturá-los."
-  },
-  "suggestRuleCreate": {
-    "message": "Criar regra"
   },
   "ruleLiveTestMatchesFmt": {
     "message": "A regra corresponde a {0} (confiança de {1}%)"
