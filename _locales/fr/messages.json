@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "La page n’a pas pu être lue. Rechargez-la et réessayez."
   },
+  "suggestRuleOutdated": {
+    "message": "L’extension a été mise à jour, mais sa partie en arrière-plan exécute encore l’ancienne version. Rechargez l’extension depuis la page Extensions du navigateur, puis réessayez."
+  },
   "suggestRuleNoCookies": {
     "message": "La page n’a pas de cookies."
   },

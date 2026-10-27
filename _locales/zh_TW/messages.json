@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "無法讀取網頁。請重新載入網頁後再試一次。"
   },
+  "suggestRuleOutdated": {
+    "message": "擴充功能已更新，但其背景部分仍在執行舊版本。請在瀏覽器的擴充功能頁面重新載入擴充功能，然後再試一次。"
+  },
   "suggestRuleNoCookies": {
     "message": "此網頁沒有 Cookie。"
   },

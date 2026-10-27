@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Stránku se nepodařilo přečíst. Načtěte ji znovu a zkuste to ještě jednou."
   },
+  "suggestRuleOutdated": {
+    "message": "Rozšíření bylo aktualizováno, ale jeho část na pozadí stále běží ve staré verzi. Znovu načtěte rozšíření na stránce Rozšíření v prohlížeči a zkuste to znovu."
+  },
   "suggestRuleNoCookies": {
     "message": "Stránka nemá žádné cookies."
   },

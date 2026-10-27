@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "De pagina kon niet worden gelezen. Laad hem opnieuw en probeer het nog eens."
   },
+  "suggestRuleOutdated": {
+    "message": "De extensie is bijgewerkt, maar het achtergronddeel draait nog de oude versie. Laad de extensie opnieuw op de pagina Extensies van de browser en probeer het nog eens."
+  },
   "suggestRuleNoCookies": {
     "message": "De pagina heeft geen cookies."
   },

@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Không đọc được trang. Hãy tải lại trang và thử lại."
   },
+  "suggestRuleOutdated": {
+    "message": "Tiện ích đã được cập nhật nhưng phần chạy nền vẫn dùng phiên bản cũ. Hãy tải lại tiện ích trong trang Tiện ích của trình duyệt rồi thử lại."
+  },
   "suggestRuleNoCookies": {
     "message": "Trang không có cookie."
   },

@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Halaman tidak dapat dibaca. Muat ulang lalu coba lagi."
   },
+  "suggestRuleOutdated": {
+    "message": "Ekstensi sudah diperbarui, tetapi bagian latar belakangnya masih menjalankan versi lama. Muat ulang ekstensi di halaman Ekstensi browser, lalu coba lagi."
+  },
   "suggestRuleNoCookies": {
     "message": "Halaman ini tidak memiliki cookie."
   },

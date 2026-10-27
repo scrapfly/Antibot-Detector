@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Die Seite konnte nicht gelesen werden. Lade sie neu und versuche es erneut."
   },
+  "suggestRuleOutdated": {
+    "message": "Die Erweiterung wurde aktualisiert, ihr Hintergrundteil läuft aber noch mit der alten Version. Lade die Erweiterung auf der Erweiterungsseite des Browsers neu und versuche es erneut."
+  },
   "suggestRuleNoCookies": {
     "message": "Die Seite hat keine Cookies."
   },

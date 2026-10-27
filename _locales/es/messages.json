@@ -6646,6 +6646,9 @@
   "suggestRuleError": {
     "message": "No se pudo leer la página. Recárgala y vuelve a intentarlo."
   },
+  "suggestRuleOutdated": {
+    "message": "La extensión se actualizó, pero su parte en segundo plano sigue con la versión anterior. Recarga la extensión en la página Extensiones del navegador y vuelve a intentarlo."
+  },
   "suggestRuleNoCookies": {
     "message": "La página no tiene cookies."
   },

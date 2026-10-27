@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "ページを読み取れませんでした。再読み込みして、もう一度お試しください。"
   },
+  "suggestRuleOutdated": {
+    "message": "拡張機能は更新されましたが、バックグラウンド部分はまだ古いバージョンのままです。ブラウザの拡張機能ページで拡張機能を再読み込みしてから、もう一度お試しください。"
+  },
   "suggestRuleNoCookies": {
     "message": "このページには Cookie がありません。"
   },

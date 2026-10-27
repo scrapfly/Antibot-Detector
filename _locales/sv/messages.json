@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Sidan kunde inte läsas. Läs in den igen och försök på nytt."
   },
+  "suggestRuleOutdated": {
+    "message": "Tillägget har uppdaterats, men dess bakgrundsdel kör fortfarande den gamla versionen. Läs in tillägget igen på webbläsarens sida Tillägg och försök igen."
+  },
   "suggestRuleNoCookies": {
     "message": "Sidan har inga cookies."
   },

@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Impossibile leggere la pagina. Ricaricala e riprova."
   },
+  "suggestRuleOutdated": {
+    "message": "L’estensione è stata aggiornata, ma la sua parte in background usa ancora la versione precedente. Ricarica l’estensione dalla pagina Estensioni del browser e riprova."
+  },
   "suggestRuleNoCookies": {
     "message": "La pagina non ha cookie."
   },

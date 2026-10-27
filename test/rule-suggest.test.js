@@ -147,13 +147,16 @@ test('names with regex characters are escaped in the rule', () => {
 
 // ---- The dialog renders page data escaped ----------------------------------------------------------------------------
 
-function loadDialog() {
+function loadDialog({ sendMessage = async () => undefined } = {}) {
   const elements = {};
   const element = (id) => (elements[id] = elements[id] || { id, innerHTML: '', textContent: '', disabled: false, hidden: false, dataset: {},
     setAttribute() {}, removeAttribute() {}, addEventListener() {} });
   const context = vm.createContext({
     console, FormatUtils: require('../utils/format-utils.js'),
-    document: { querySelector: (selector) => element(selector), querySelectorAll: () => [] }
+    document: { querySelector: (selector) => element(selector), querySelectorAll: () => [] },
+    chrome: { runtime: { sendMessage } },
+    WorkerMessages: { RULE_SUGGEST_PAGE: 'RULE_SUGGEST_PAGE' },
+    Logger: { warn() {} }
   });
   vm.runInContext('function Rules() {}', context);
   vm.runInContext(read('sections/rules/rules-suggest-ui.js'), context);
@@ -176,6 +179,23 @@ test('the dialog escapes cookie names, script addresses and rule names in text a
   assert.match(html, /Already detected by Rule "&gt;&lt;img src=x/);
   assert.match(html, /No response headers: reload the page to capture them\./);
   assert.equal(elements['#createSuggestRule'].disabled, true, 'nothing ticked: Create rule waits');
+});
+
+test('a worker from before an update says to reload the extension; a first message it drops is sent again', async () => {
+  for (const [replies, expected, tries] of [
+    [[{ status: 'unknown' }], /Reload the extension/, 1],
+    [[{ status: 'unsupported' }], /Open the popup on a website/, 1],
+    [[{ status: 'error' }], /could not be read/, 1],
+    [['throw', 'throw'], /could not be read/, 2]
+  ]) {
+    let sent = 0;
+    const queue = replies.slice();
+    const { Rules, elements } = loadDialog({ sendMessage: async () => { sent++; const reply = queue.shift(); if (reply === 'throw') throw new Error('port closed'); return reply; } });
+    const rules = new Rules();
+    await rules.loadSuggestions({ id: 7, url: 'https://a.example/' });
+    assert.match(elements['#suggestRuleList'].innerHTML, expected, JSON.stringify(replies));
+    assert.equal(sent, tries, JSON.stringify(replies));
+  }
 });
 
 test('the button is offered on web pages only', () => {

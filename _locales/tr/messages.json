@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "Sayfa okunamadı. Sayfayı yeniden yükleyip tekrar deneyin."
   },
+  "suggestRuleOutdated": {
+    "message": "Uzantı güncellendi ancak arka plan bölümü hâlâ eski sürümü çalıştırıyor. Tarayıcının Uzantılar sayfasında uzantıyı yeniden yükleyip tekrar deneyin."
+  },
   "suggestRuleNoCookies": {
     "message": "Sayfada çerez yok."
   },

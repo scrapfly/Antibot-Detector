@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "페이지를 읽을 수 없습니다. 새로고침한 후 다시 시도하세요."
   },
+  "suggestRuleOutdated": {
+    "message": "확장 프로그램이 업데이트되었지만 백그라운드 부분은 아직 이전 버전으로 실행 중입니다. 브라우저의 확장 프로그램 페이지에서 확장 프로그램을 다시 로드한 뒤 다시 시도하세요."
+  },
   "suggestRuleNoCookies": {
     "message": "이 페이지에는 쿠키가 없습니다."
   },

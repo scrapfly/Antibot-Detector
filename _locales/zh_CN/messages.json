@@ -6644,6 +6644,9 @@
   "suggestRuleError": {
     "message": "无法读取页面。请重新加载页面后重试。"
   },
+  "suggestRuleOutdated": {
+    "message": "扩展程序已更新，但其后台部分仍在运行旧版本。请在浏览器的扩展程序页面重新加载扩展程序，然后重试。"
+  },
   "suggestRuleNoCookies": {
     "message": "此页面没有 Cookie。"
   },

@@ -135,17 +135,25 @@ Rules.prototype.loadSuggestions = async function(tab) {
   const load = {};
   this.suggestLoad = load;
   let reply = null;
-  try {
-    reply = await chrome.runtime.sendMessage({ type: WorkerMessages.RULE_SUGGEST_PAGE, tabId: tab.id });
-  } catch (error) {
-    Logger.warn('UI', 'New rule from this page: the page could not be read', error);
+  // A worker that is starting up can drop the first message: one more try before giving up
+  for (let attempt = 0; attempt < 2 && !(reply && reply.status); attempt++) {
+    try {
+      reply = await chrome.runtime.sendMessage({ type: WorkerMessages.RULE_SUGGEST_PAGE, tabId: tab.id });
+    } catch (error) {
+      Logger.warn('UI', 'New rule from this page: the worker did not answer', error);
+    }
   }
   if (this.suggestLoad !== load) return; // closed, or opened again, meanwhile
   if (!reply || reply.status !== 'ok') {
-    const unsupported = reply && reply.status === 'unsupported';
-    this.renderSuggestMessage(unsupported
+    Logger.warn('UI', 'New rule from this page: the page could not be read', reply);
+    // 'unknown': the worker does not know the message, so it still runs the code from before an update (an
+    // unpacked extension's pages read the new files at once, its worker only after the extension is reloaded)
+    const status = reply && reply.status;
+    this.renderSuggestMessage(status === 'unsupported'
       ? ruleSuggestText('suggestRuleUnsupported', 'Open the popup on a website to build a rule from it.')
-      : ruleSuggestText('suggestRuleError', 'The page could not be read. Reload it and try again.'));
+      : status === 'unknown'
+        ? ruleSuggestText('suggestRuleOutdated', 'The extension was updated but its background part still runs the old version. Reload the extension in the browser\'s Extensions page and try again.')
+        : ruleSuggestText('suggestRuleError', 'The page could not be read. Reload it and try again.'));
     return;
   }
   if (reply.host) this.setSuggestIntro(reply.host);
