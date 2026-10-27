@@ -5,7 +5,8 @@
  *   Your language   an official rule's description and combination names show in Spanish; the English original is
  *                   not shown; with nothing to translate there is no bar
  *   Edit            typing a Spanish description and combination name saves them as the Spanish translations; the
- *                   English originals are unchanged
+ *                   English originals are unchanged, and the official rule is not marked as edited
+ *   3.0.6 rules     a rule 3.0.6 marked as edited for its translations alone is unmarked; updates keep translations
  *   Changes         a text rewritten in Spanish is counted on the bar ("Textos que cambiaste en Español: 1"); Translate
  *                   the changes puts the new wording into English (the new original) and every other language
  *
@@ -117,6 +118,44 @@ const scenario = async (name, fn) => {
     const now = await stored();
     assert.equal(now.description, original.description, 'English description unchanged');
     assert.equal(now.descriptionI18n.es, 'Borde de Azure Front Door (texto propio)');
+    assert.ok(!now.userModified && !now.officialSnapshot, 'translating is not editing: the official rule is not marked as edited');
+    assert.equal(now.version, original.version, 'the official version stays');
+    await page.waitForSelector('.detector-card[data-detector-id="detect-azurefrontdoor"]');
+    assert.equal(await page.$('.detector-card[data-detector-id="detect-azurefrontdoor"] .rule-edited-tag'), null, 'no Edited tag on the card');
+  });
+
+  await scenario('3.0.6 marked a translated rule as edited: it is recognised, unmarked on the extension update, and updates keep the translation', async () => {
+    const saved = await stored();
+    const result = await page.evaluate(async ({ saved, original }) => {
+      // As 3.0.6 saved it: the edit flags with the rule as shipped as the official copy
+      const marked = { ...saved, userModified: true, officialSnapshot: DetectorManager.cleanDetectorCopy(original) };
+      const write = async (detector) => {
+        const detectors = await UpdateManager.loadStoredDetectors();
+        detectors.antibot['detect-azurefrontdoor'] = detector;
+        await UpdateManager.saveStoredDetectors(detectors);
+      };
+      await write(marked);
+      const recognised = DetectorManager.isTranslationOnlyEdit(marked) && !UpdateManager.isProtected(marked);
+      const merged = await UpdateManager.mergeBundledDetectors();
+      const after = (await UpdateManager.loadStoredDetectors()).antibot['detect-azurefrontdoor'];
+      // A newer official version: installed without asking, and the Spanish text of an unchanged description stays
+      const detectors = { antibot: { 'detect-azurefrontdoor': after } };
+      UpdateManager.installDetector(detectors, 'antibot', 'detect-azurefrontdoor', { ...DetectorManager.cleanDetectorCopy(original), version: '99.0' });
+      // A real edit stays protected
+      const edited = { ...marked, detection: { ...marked.detection, header: [] } };
+      return { recognised, unmarked: merged.unmarked, after, updated: detectors.antibot['detect-azurefrontdoor'],
+        editedProtected: UpdateManager.isProtected(edited) && DetectorManager.isUserEdited(edited) };
+    }, { saved, original });
+    assert.equal(result.recognised, true, 'the 3.0.6 save is recognised as translations only');
+    assert.equal(result.unmarked, 1);
+    assert.ok(!result.after.userModified && !result.after.officialSnapshot, 'unmarked in storage');
+    assert.equal(result.after.descriptionI18n.es, 'Borde de Azure Front Door (texto propio)');
+    assert.equal(result.updated.version, '99.0');
+    assert.equal(result.updated.descriptionI18n.es, 'Borde de Azure Front Door (texto propio)', 'the update keeps the translation');
+    assert.equal(result.editedProtected, true, 'a real edit is still protected and shown as edited');
+    await page.reload();
+    await page.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 20000 });
+    await sleep(800);
   });
 
   const closeEditor = async () => {

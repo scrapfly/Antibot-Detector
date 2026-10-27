@@ -361,7 +361,14 @@ class UpdateManager {
         if (!localDetector) return false;
         // An author other than Scrapfly marks the user's own rule (the editor reserves that name for official ones)
         const author = typeof localDetector.author === 'string' ? localDetector.author.trim().toLowerCase() : '';
-        return !!localDetector.userModified || (author !== '' && author !== 'scrapfly');
+        // A rule the user only translated is not edited: updates replace it and keep the translations
+        const edited = !!localDetector.userModified && !this.translatedOnly(localDetector);
+        return edited || (author !== '' && author !== 'scrapfly');
+    }
+
+    /** An official rule marked as edited for its translations alone (DetectorManager.isTranslationOnlyEdit) */
+    static translatedOnly(localDetector) {
+        return typeof DetectorManager !== 'undefined' && DetectorManager.isTranslationOnlyEdit(localDetector);
     }
 
     /**
@@ -458,6 +465,8 @@ class UpdateManager {
             incoming.difficulty = localDetector.difficulty;
             incoming.difficultyChosen = true;
         }
+        // The person's translations of texts the update did not reword stay
+        if (localDetector && typeof DetectorManager !== 'undefined') DetectorManager.carryTranslations(incoming, localDetector);
         if (!detectors[category]) {
             detectors[category] = {};
         }
@@ -903,6 +912,7 @@ class UpdateManager {
         const ops = []; // replayed on the rules as stored when saving
         let installed = 0;
         let rerated = 0;
+        let unmarked = 0;
         let changed = false;
 
         for (const [category, categoryData] of Object.entries(index)) {
@@ -912,6 +922,15 @@ class UpdateManager {
                 if (deletedOfficial.has(detectorId) && !localDetector) continue;
                 const bundled = await this.fetchBundledDetector(category, detectorId);
                 if (!bundled) continue;
+                // 3.0.6 marked a rule the user only translated as edited: it is not
+                if (this.translatedOnly(localDetector)) {
+                    DetectorManager.clearUserEdit(localDetector);
+                    unmarked++;
+                    ops.push((fresh) => {
+                        const now = this.findStored(fresh, category, detectorId)?.detector;
+                        if (this.translatedOnly(now)) DetectorManager.clearUserEdit(now);
+                    });
+                }
                 if (this.markChosenDifficulty(localDetector, bundled, detectorId)) {
                     changed = true;
                     ops.push((fresh) => { this.markChosenDifficulty(fresh[category]?.[detectorId], bundled, detectorId); });
@@ -944,14 +963,14 @@ class UpdateManager {
             }
         }
 
-        if (installed > 0 || rerated > 0 || changed) {
+        if (installed > 0 || rerated > 0 || unmarked > 0 || changed) {
             await this.commitDetectors((fresh) => { ops.forEach(op => op(fresh)); return ops.length > 0; });
         }
         if (queued.length > 0) {
             await this.setPendingUpdates(this.mergeUpdateLists(await this.getPendingUpdates(), queued));
         }
-        Logger.storage(`UpdateManager: Bundled detectors merged: ${installed} installed, ${rerated} re-rated, ${queued.length} edited rules pending`);
-        return { installed, pending: queued.length, rerated };
+        Logger.storage(`UpdateManager: Bundled detectors merged: ${installed} installed, ${rerated} re-rated, ${unmarked} only translated, ${queued.length} edited rules pending`);
+        return { installed, pending: queued.length, rerated, unmarked };
     }
 
     /**

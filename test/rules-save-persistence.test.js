@@ -173,7 +173,7 @@ test('the detector description and its translations are saved with the rule, and
   assert.equal(saved.descriptionI18n, undefined);
 });
 
-test('a description-only edit to an official rule counts as an edit', async () => {
+test('translating an official rule saves the translations without marking it as edited', async () => {
   global.StorageManager = { saveToStorage: async () => true };
   const state = editor();
   DetectionUtils.setOfficialDetectorIds(['detect-custom']);
@@ -188,8 +188,28 @@ test('a description-only edit to an official rule counts as an edit', async () =
   state.rules.collectDetectorDescription = () => ({ description: 'Official text', descriptionI18n: { de: 'Offizieller Text' } });
   assert.equal(await state.rules.saveRule(), true);
   const saved = state.dm.detectors.antibot['detect-custom'];
-  assert.equal(saved.userModified, true, 'translations alone are a change');
+  assert.equal(saved.userModified, undefined, 'translating is not editing: updates keep replacing it');
+  assert.equal(saved.officialSnapshot, undefined);
   assert.deepEqual(plain(saved.descriptionI18n), { de: 'Offizieller Text' });
+});
+
+test('a description-only edit to an official rule counts as an edit', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  DetectionUtils.setOfficialDetectorIds(['detect-custom']);
+  const original = { ...fixture(), author: 'Scrapfly', name: 'Edited custom', description: 'Official text' };
+  state.dm.detectors.antibot['detect-custom'] = original;
+  state.rules.currentEditDetector.detector = plain(original);
+  state.rules.currentEditDetector.original = plain(original);
+  state.rules.currentEditDetector.isOfficial = true;
+  state.fields['#detectorAuthorInput'].value = 'Scrapfly';
+  state.rules._collectDetectionFromForm = () => plain(original.detection);
+  state.fields['#detectorDescriptionInput'] = { value: 'My own text' };
+  state.rules.collectDetectorDescription = () => ({ description: 'My own text', descriptionI18n: {} });
+  assert.equal(await state.rules.saveRule(), true);
+  const saved = state.dm.detectors.antibot['detect-custom'];
+  assert.equal(saved.userModified, true, 'a reworded English description is an edit');
+  assert.equal(saved.officialSnapshot.description, 'Official text');
 });
 
 test('an icon-only edit to an official rule counts as an edit, though the picker wrote it into both copies', async () => {

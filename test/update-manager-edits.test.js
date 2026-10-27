@@ -23,6 +23,7 @@ function load(local, { remote = {}, bundled = {}, bundledIndex = null, saveSucce
     WorkerMessages: require('../modules/core/worker-messages.js'),
     console, setTimeout, clearTimeout, Promise, JSON, Date, Math, Set, Map, Object, Array, Error,
     Logger: new Proxy({}, { get: () => () => {} }),
+    DetectorManager,
     Constants: { UPDATE_CHECK_TIMEOUT: 30000, DEFAULT_UPDATE_CHECK_INTERVAL_HOURS: 12 },
     Utils: { getSettings: async () => ({ updates: { autoUpdate: true } }) },
     StorageManager: {
@@ -222,7 +223,7 @@ test('an extension update brings new and newer bundled detectors to an existing 
   });
 
   const merged = await UM.mergeBundledDetectors();
-  assert.deepStrictEqual(plain(merged), { installed: 2, pending: 1, rerated: 0 });
+  assert.deepStrictEqual(plain(merged), { installed: 2, pending: 1, rerated: 0, unmarked: 0 });
   assert.strictEqual(stored(local)['detect-akamai'].version, '2.1.0');
   assert.strictEqual(stored(local)['detect-akamai'].enabled, false, 'user toggle kept');
   assert.ok(stored(local)['detect-fresh'], 'new bundled detector added');
@@ -292,7 +293,7 @@ test('after an extension update, copies still on the pre-2.8.2 rating take the n
   const { UM } = load(local, { bundledIndex: { antibot: { detectors: ids } }, bundled });
 
   const merged = await UM.mergeBundledDetectors();
-  assert.deepStrictEqual(plain(merged), { installed: 1, pending: 1, rerated: 1 });
+  assert.deepStrictEqual(plain(merged), { installed: 1, pending: 1, rerated: 1, unmarked: 0 });
   const s = stored(local);
   assert.deepStrictEqual([s['detect-radware'].version, s['detect-radware'].difficulty], ['2.0.1', 'Low'], 'same version, old rating: re-rated');
   assert.deepStrictEqual([s['detect-jiasule'].version, s['detect-jiasule'].difficulty], ['2.0.1', 'Low'], 'newer bundle installed with its rating');
@@ -302,7 +303,7 @@ test('after an extension update, copies still on the pre-2.8.2 rating take the n
   assert.deepStrictEqual([s['detect-sucuri'].difficulty, s['detect-sucuri'].userModified], ['Medium', true], 'edited rule untouched, update pending');
 
   // A second run (next extension update) changes nothing more
-  assert.deepStrictEqual(plain(await UM.mergeBundledDetectors()), { installed: 0, pending: 1, rerated: 0 });
+  assert.deepStrictEqual(plain(await UM.mergeBundledDetectors()), { installed: 0, pending: 1, rerated: 0, unmarked: 0 });
   // Later GitHub updates keep the picked ratings and follow Scrapfly's for the rest
   UM.fetchRemoteIndex = async () => ({ antibot: { detectors: ['detect-akamai', 'detect-radware'] } });
   UM.fetchRemoteDetector = async (_c, id) => before(id, id === 'detect-akamai' ? '2.0.1' : '2.0.2', 'High');
@@ -449,7 +450,8 @@ test('the user\'s own rule on an official id is never replaced without asking', 
 });
 
 test('an official rule the user moved to another category is updated there once, never duplicated', async () => {
-  const moved = DetectorManager.markUserEdited({ ...official('detect-akamai', '2.0.0') }, official('detect-akamai', '2.0.0'));
+  const moved = DetectorManager.markUserEdited({ ...official('detect-akamai', '2.0.0'), category: 'captcha' },
+    official('detect-akamai', '2.0.0', { category: 'antibot' }));
   const local = { scrapfly_detectors: { detectors: { antibot: {}, captcha: { 'detect-akamai': moved } } } };
   const { UM } = load(local, { remote: { 'detect-akamai': official('detect-akamai', '2.1.0') } });
 
@@ -462,4 +464,71 @@ test('an official rule the user moved to another category is updated there once,
   const all = local.scrapfly_detectors.detectors;
   assert.strictEqual(all.antibot['detect-akamai'].version, '2.1.0', '"Use new version" puts the official rule back in its category');
   assert.ok(!all.captcha['detect-akamai'], 'the moved copy is replaced, not kept beside it');
+});
+
+// ------------------------------------------------------------ translations only
+// Translating an official rule is not editing it: updates replace it without asking and keep the translations
+const translated = (id, version) => {
+  const rule = official(id, version, { description: 'Official text', descriptionI18n: { es: 'Texto propio' } });
+  rule.detection.cookie[0].description = 'A cookie';
+  rule.detection.cookie[0].descriptionI18n = { de: 'Ein Cookie' };
+  return rule;
+};
+
+test('a rule translated only is not edited; a real edit still is', () => {
+  const marked = DetectorManager.markUserEdited({ ...translated('detect-akamai', '2.0.0'), lastUpdated: 'today', enabled: false },
+    official('detect-akamai', '2.0.0', { description: 'Official text', detection: { cookie: [{ name: 'detect-akamai-v2.0.0', description: 'A cookie' }] } }));
+  assert.strictEqual(DetectorManager.isTranslationOnlyEdit(marked), true);
+  assert.strictEqual(DetectorManager.isUserEdited(marked), false);
+  const reworded = { ...plain(marked), description: 'My text' };
+  assert.strictEqual(DetectorManager.isUserEdited(reworded), true);
+  const { UM } = load({});
+  assert.strictEqual(UM.isProtected(marked), false, 'updates replace it');
+  assert.strictEqual(UM.isProtected(reworded), true, 'a real edit is asked about');
+});
+
+test('an update keeps the translations of texts it did not reword; Reset to official keeps them too', () => {
+  const { UM } = load({});
+  const incoming = official('detect-akamai', '2.1.0', { description: 'Official text' });
+  incoming.detection.cookie[0].description = 'A reworded cookie';
+  const detectors = { antibot: { 'detect-akamai': translated('detect-akamai', '2.0.0') } };
+  UM.installDetector(detectors, 'antibot', 'detect-akamai', incoming);
+  const updated = plain(detectors.antibot['detect-akamai']);
+  assert.strictEqual(updated.version, '2.1.0');
+  assert.deepStrictEqual(updated.descriptionI18n, { es: 'Texto propio' }, 'the unchanged description keeps its translation');
+  assert.strictEqual(updated.detection.cookie[0].descriptionI18n, undefined, 'a reworded text starts over');
+
+  const edited = DetectorManager.markUserEdited({ ...translated('detect-akamai', '2.0.0'), name: 'Mine' },
+    official('detect-akamai', '2.0.0', { description: 'Official text' }));
+  const restored = DetectorManager.officialVersionOf(edited);
+  assert.strictEqual(restored.name, 'detect-akamai');
+  assert.deepStrictEqual(restored.descriptionI18n, { es: 'Texto propio' });
+});
+
+test('the extension update unmarks rules 3.0.6 marked as edited for their translations alone', async () => {
+  const shipped = official('detect-akamai', '2.0.0', { description: 'Official text' });
+  const marked = DetectorManager.markUserEdited({ ...plain(shipped), descriptionI18n: { es: 'Texto propio' } }, shipped);
+  const local = { scrapfly_detectors: { detectors: { antibot: { 'detect-akamai': marked } } } };
+  const { UM } = load(local, {
+    bundledIndex: { antibot: { detectors: ['detect-akamai'] } },
+    bundled: { 'ext://detectors/antibot/detect-akamai.json': official('detect-akamai', '2.1.0', { description: 'Official text' }) }
+  });
+  const merged = await UM.mergeBundledDetectors();
+  assert.strictEqual(merged.unmarked, 1);
+  assert.strictEqual(merged.installed, 1, 'the newer version installs without asking');
+  assert.strictEqual(merged.pending, 0);
+  const now = stored(local)['detect-akamai'];
+  assert.strictEqual(now.version, '2.1.0');
+  assert.strictEqual(now.userModified, undefined);
+  assert.deepStrictEqual(now.descriptionI18n, { es: 'Texto propio' });
+});
+
+test('a rule saved by the editor matches its shipped copy: category spelling and flags left off do not count', () => {
+  const shipped = official('detect-akamai', '2.0.0', { category: 'Anti-Bot', detection: { url: [{ pattern: 'x', textCaseSensitive: false, standalone: false }] } });
+  const saved = { ...plain(shipped), category: 'antibot', descriptionI18n: { es: 'Texto' }, detection: { url: [{ pattern: 'x', standalone: false }] } };
+  assert.strictEqual(DetectorManager.ruleContent(saved), DetectorManager.ruleContent(shipped));
+  const flagChanged = { ...plain(saved), detection: { url: [{ pattern: 'x' }] } };
+  assert.notStrictEqual(DetectorManager.ruleContent(flagChanged), DetectorManager.ruleContent(shipped), 'standalone: false is a choice');
+  const moved = { ...plain(saved), category: 'captcha' };
+  assert.notStrictEqual(DetectorManager.ruleContent(moved), DetectorManager.ruleContent(shipped));
 });

@@ -174,9 +174,10 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
       ]);
     const updatedTip = FormatUtils.tipAttrs(_tr('tipLastUpdated', 'Updated'),
       detector.lastUpdated ? String(detector.lastUpdated).slice(0, 10) : '');
-    // An official rule the user changed: marked on the card, and the menu
-    // can put the official version back
-    const edited = !!(detector.userModified && detector.officialSnapshot);
+    // An official rule the user changed (not only translated): marked on the
+    // card, and the menu can put the official version back
+    const edited = typeof DetectorManager !== 'undefined' && typeof DetectorManager.isUserEdited === 'function'
+      ? DetectorManager.isUserEdited(detector) : !!(detector.userModified && detector.officialSnapshot);
     const editedBadge = edited
       ? `<span class="method-tag rule-edited-tag" ${FormatUtils.tipAttrs(_tr('ruleEditedTag', 'Edited'), _tr('tipRuleEdited', 'You edited this official rule. Updates ask before replacing your changes.'))}>${FormatUtils.escapeHtml(_tr('ruleEditedTag', 'Edited'))}</span>`
       : '';

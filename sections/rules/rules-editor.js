@@ -1296,6 +1296,13 @@ Rules.prototype.saveRule = async function() {
     const hasChanges = draft.isNew || metadataChanged ||
       JSON.stringify(originalDetection) !== JSON.stringify(detectionMethods) ||
       JSON.stringify(draft.originalCombinations || []) !== JSON.stringify(combinations);
+    // Translating is not editing: an official rule whose only change is its texts' translations keeps
+    // following Scrapfly's updates (they keep the translations), and is not shown as edited
+    const withoutTranslations = value => JSON.stringify(DetectorManager.withoutTranslations(value));
+    const contentChanged = draft.isNew || iconChanged || ['name', 'author', 'customIcon', 'difficulty', 'description'].some(field =>
+      draft.detector[field] !== edit.detector[field]) || draft.category !== (edit.originalCategory || edit.category)
+      || withoutTranslations(originalDetection) !== withoutTranslations(detectionMethods)
+      || withoutTranslations(draft.originalCombinations || []) !== withoutTranslations(combinations);
 
     if (hasChanges) {
       const now = new Date();
@@ -1316,7 +1323,14 @@ Rules.prototype.saveRule = async function() {
         // The original object carries the user-edit fields cleanDetectorCopy
         // drops; read them from the stored detector
         const stored = this.detectorManager?.getDetector(edit.originalCategory || edit.category, edit.detectorName) || {};
-        if (DetectionUtils.isOfficialDetector({ ...original, id: original.id || draft.detectorName })) {
+        const official = DetectionUtils.isOfficialDetector({ ...original, id: original.id || draft.detectorName });
+        if (official && !contentChanged) {
+          // Only translations: the official version and the rule's state stay as they were. A rule an
+          // earlier build marked as edited for its translations alone is unmarked
+          draft.detector.lastUpdated = edit.detector.lastUpdated;
+          if (DetectorManager.isTranslationOnlyEdit(draft.detector)) DetectorManager.clearUserEdit(draft.detector);
+          Logger.debug('UI', 'Only translations changed: the official rule is not marked as edited');
+        } else if (official) {
           // Official rule: keep the official version so updates still compare
           // against what Scrapfly shipped, and remember the original so an
           // update asks first and "Reset to official" can restore it
