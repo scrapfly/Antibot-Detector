@@ -26,7 +26,7 @@ SettingsUI.exportSettingsFile = async function() {
         version: chrome.runtime.getManifest().version,
         timestamp: new Date().toISOString(),
         // Integration connection details stay in this browser
-        settings: SettingsTransfer.portable(this.settings),
+        settings: SettingsTransfer.portable(this.settingsBaseline || this.settings),
         languageOverride: langResult.scrapfly_language_override || 'auto'
       };
       const date = FormatUtils.localDay(Date.now());
@@ -52,13 +52,16 @@ SettingsUI.importSettingsFile = async function(event) {
       }
       // A portable file changes preferences only. Connections already stored in
       // this browser survive even when an older export includes credentials.
-      const candidate = this.deepMerge(this.settings, SettingsTransfer.portable(imported));
+      // Over the saved settings: a change staged in the form but not saved is not written with the import
+      const candidate = this.deepMerge(this.settingsBaseline || this.settings, SettingsTransfer.portable(imported));
       const validation = this.validateSettings(candidate);
       if (!validation.isValid) throw new Error('Invalid settings file');
       // A smaller History size than History uses is asked about first (declined, the current size stays)
       await SettingsUI.confirmHistorySizeFor.call(this, candidate);
       const knownLanguage = Array.isArray(SettingsUI.LANGUAGE_OPTIONS)
         && SettingsUI.LANGUAGE_OPTIONS.some((opt) => opt.value === data.languageOverride);
+      // Showing a language reloads the popup and wipes this import's message: only when it is another one
+      const languageBefore = typeof SettingsUI.languageInForce === 'function' ? await SettingsUI.languageInForce() : null;
       const saved = await this.saveSettings({
         notify: false, notifyError: false, candidate,
         languageOverride: knownLanguage ? data.languageOverride : undefined
@@ -68,7 +71,7 @@ SettingsUI.importSettingsFile = async function(event) {
         return;
       }
       this.updateSettingsUI();
-      if (knownLanguage && typeof SettingsUI._applyLanguageChoice === 'function') {
+      if (knownLanguage && data.languageOverride !== languageBefore && typeof SettingsUI._applyLanguageChoice === 'function') {
         await SettingsUI._applyLanguageChoice.call(this, data.languageOverride, { persist: false });
       }
       NotificationHelper.success(_tr('settingsImportedToast', 'Settings imported'));

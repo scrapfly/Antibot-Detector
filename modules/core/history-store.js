@@ -397,14 +397,47 @@
    */
   function applyImport(current, imported, mode, limit) {
     let items;
+    const clean = cleanImported(imported);
     if (mode === 'merge') {
-      const existing = new Set(current.map(item => item.id));
-      items = [...imported.filter(item => !existing.has(item.id)), ...current];
-      items.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const kept = (Array.isArray(current) ? current : []).filter(isPlainObject);
+      const existing = new Set(kept.map(item => item.id));
+      items = [...clean.filter(item => !existing.has(item.id)), ...kept];
     } else {
-      items = imported.slice();
+      items = clean;
     }
+    // Newest first, as History keeps it: the limit keeps the newest, and a page's newest scan is the one compared
+    items.sort((a, b) => timeOf(b) - timeOf(a));
     return applyLimit(items, limit);
+  }
+
+  const isPlainObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
+  const timeOf = (item) => {
+    const t = typeof item.timestamp === 'number' ? item.timestamp : Date.parse(item.timestamp);
+    return Number.isFinite(t) ? t : 0;
+  };
+
+  /**
+   * Imported entries as History can show, pin, delete and export them: entries only (no null, number or list), a
+   * unique string id each, a list of detections (objects only). The watchlist is the person's own choice on this
+   * machine, so an imported file never puts a page on it (it would make the browser visit that address by itself).
+   */
+  function cleanImported(imported) {
+    const seen = new Set();
+    const out = [];
+    (Array.isArray(imported) ? imported : []).forEach((item, index) => {
+      if (!isPlainObject(item)) return;
+      const entry = { ...item, detections: Array.isArray(item.detections) ? item.detections.filter(isPlainObject) : [] };
+      let id = typeof entry.id === 'string' && entry.id.trim() && entry.id.length <= MAX_ID_LENGTH ? entry.id : '';
+      if (!id || seen.has(id)) id = `imported_${timeOf(entry) || 0}_${index}`;
+      while (seen.has(id)) id += '_';
+      seen.add(id);
+      entry.id = id;
+      delete entry.watch;
+      delete entry.watchedAt;
+      if (entry.changed !== undefined && !isPlainObject(entry.changed)) delete entry.changed;
+      out.push(entry);
+    });
+    return out;
   }
 
   /**

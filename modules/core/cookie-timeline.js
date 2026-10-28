@@ -6,6 +6,8 @@
  * the popup's Check Cookies window and the tests.
  *
  *   siteOf(hostOrUrl)        the registrable site a cookie or a page belongs to (www.shop.example.co.uk → example.co.uk)
+ *   keyOf(name, domain)      a cookie's record: its name and domain (__cf_bm of shop.example and of cdn.shop.example
+ *                            are two cookies with two lives); nameOf(key) gives the name back
  *   cookieRules(detectors)   the cookie name rules of the loaded, enabled detectors: no list of names is written here
  *   matcher(rules)           name → true when a rule names it, matched as the detection engine matches cookie names
  *   marker(value, salt, digest)   six hex characters of a salted SHA-256: tells two values apart, never stores one
@@ -28,6 +30,18 @@
 
   // Second-level labels under a country code that are sold like a top-level domain (example.co.uk, example.com.br)
   const SECOND_LEVEL = new Set(['co', 'com', 'net', 'org', 'gov', 'edu', 'ac', 'gob', 'ne', 'or', 'go', 'mil', 'ltd', 'plc', 'sch', 'nic']);
+
+  const KEY_SEPARATOR = '\t'; // never part of a cookie name or domain
+
+  function keyOf(name, domain) {
+    return `${String(name || '')}${KEY_SEPARATOR}${String(domain || '').replace(/^\./, '').toLowerCase()}`;
+  }
+
+  function nameOf(key) {
+    const text = String(key || '');
+    const at = text.indexOf(KEY_SEPARATOR);
+    return at === -1 ? text : text.slice(0, at);
+  }
 
   /** The registrable site of a host, a cookie domain (leading dot) or an address; '' when there is none. */
   function siteOf(input) {
@@ -70,11 +84,17 @@
   }
 
   const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // The engine's guard against patterns that backtrack catastrophically (utils/pattern-cache.js)
+  const evilRegex = typeof root.isLikelyEvilRegex === 'function' ? root.isLikelyEvilRegex
+    : (typeof require === 'function' ? (() => { try { return require('../../utils/pattern-cache.js').isLikelyEvilRegex; } catch (_) { return null; } })() : null);
 
   /** One rule as a test, with the detection engine's cookie name semantics (exact prefix unless regex, word or *). */
   function compileRule(rule) {
     const flags = rule.caseSensitive ? '' : 'i';
     try {
+      // A pattern that can backtrack for seconds on a crafted cookie name (^(a+)+$) names nothing, as in the engine:
+      // the recorder runs on every cookie change of every site
+      if (rule.regex && typeof evilRegex === 'function' && evilRegex(rule.pattern)) return () => false;
       if (rule.regex) { const re = new RegExp(rule.pattern, flags); return (name) => re.test(name); }
       if (rule.wholeWord) { const re = new RegExp(`\\b${escapeRegExp(rule.pattern)}\\b`, flags); return (name) => re.test(name); }
       if (rule.pattern.includes('*')) {
@@ -250,7 +270,7 @@
 
   const api = Object.freeze({
     STORAGE_KEY, DEFAULT_STORE_ID, LIMITS, EVENTS,
-    siteOf, cookieRules, matcher, marker, classify, emptyState, record, forSite, summarize, relative
+    siteOf, keyOf, nameOf, cookieRules, matcher, marker, classify, emptyState, record, forSite, summarize, relative
   });
   root.CookieTimeline = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.CookieTimeline = api;

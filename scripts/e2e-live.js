@@ -4,7 +4,13 @@
  * unpacked in Chromium. Sites and expectations live in scripts/live-sites.json:
  *
  *   { "url": "...", "expect": [{ "detector": "detect-x", "min": 80 }],
- *     "forbid": ["detect-y"], "waitMs": 12000, "note": "why this site" }
+ *     "forbid": ["detect-y"], "waitMs": 12000, "note": "why this site", "retries": 3 }
+ *
+ * "retries" is for a site that sometimes blocks headless Chromium itself (cheq.ai
+ * redirect-loops through its own /__cheq/block): a failed visit is repeated, up to that many
+ * more times, and only the last one counts; each visit starts with the extension's detection cache and the
+ * cookies cleared. A rule that really stopped detecting the site fails every visit, so a regression is never
+ * hidden by it.
  *
  * For every site it prints what the extension detected (confidence, the rule
  * ids that matched and the combinations that fired), checks expect/forbid,
@@ -76,7 +82,9 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
 
   const results = [];
   let failures = 0;
-  for (const site of sites) {
+  const queue = sites.map(site => ({ site, attempt: 0 }));
+  while (queue.length) {
+    const { site, attempt } = queue.shift();
     const page = await ctx.newPage();
     const requests = [];
     const docs = [];
@@ -136,6 +144,16 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
       checks.push({ ok: !d, text: `forbid ${id}: ${d ? 'DETECTED ' + d.confidence + '%' : 'not detected'}` });
     }
     const ok = !loadError && checks.every(c => c.ok);
+    if (!ok && attempt < (site.retries || 0)) {
+      console.log(`\nRETRY ${site.url}  (visit ${attempt + 1} of ${site.retries + 1} missed: ${checks.filter(c => !c.ok).map(c => c.text).join('; ') || loadError})`);
+      queue.unshift({ site, attempt: attempt + 1 });
+      await page.close();
+      // A visit again is a fresh one: the extension caches a page that showed nothing (a blocked 403 included) and would
+      // answer the next visit from it, and the site remembers the visitor in its cookies
+      await sw.evaluate(() => chrome.storage.local.remove('scrapfly_detection_storage')).catch(() => {});
+      await ctx.clearCookies().catch(() => {});
+      continue;
+    }
     if (!ok) failures++;
 
     const signals = {
@@ -147,7 +165,7 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
     };
     results.push({ ...site, ok, loadError, checks, detections, signals });
 
-    console.log(`\n${ok ? 'PASS' : 'FAIL'}  ${site.url}  [${signals.status.join(',')}]${loadError ? '  ' + loadError : ''}${site.note ? '  — ' + site.note : ''}`);
+    console.log(`\n${ok ? 'PASS' : 'FAIL'}  ${site.url}${attempt ? `  (visit ${attempt + 1})` : ''}  [${signals.status.join(',')}]${loadError ? '  ' + loadError : ''}${site.note ? '  — ' + site.note : ''}`);
     for (const c of checks) console.log(`      ${c.ok ? 'ok ' : 'NO '} ${c.text}`);
     for (const d of detections.filter(x => x.category !== 'fingerprint' || opt.fingerprint)) {
       console.log(`      ${String(d.confidence).padStart(3)}% ${d.name}  <- ${d.rules.join(', ')}`

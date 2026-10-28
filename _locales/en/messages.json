@@ -1091,6 +1091,10 @@
   "detectorsImported": {
     "message": "Detectors imported"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Detectors imported, except: {0} (not valid in this version)",
+    "description": "Rules → Import (merge): the rules of the file that could not be imported, by name ({0} = their names)"
+  },
   "detectorExportedFmt": {
     "message": "Exported {0}"
   },
@@ -3761,6 +3765,10 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Please fill all required pattern fields before saving."
   },
+  "rulesUiInvalidRegex": {
+    "message": "A pattern marked as a regular expression is not valid, or could freeze scanning. Fix it, or turn Regex off for that row.",
+    "description": "Rules editor → Save refused: a row marked as a regex does not compile or could backtrack catastrophically"
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Enter detection method type (e.g., HEADERS, CONTENT, URLs):",
     "description": "Browser prompt; keep HEADERS, CONTENT, URLs unchanged (they are typed as-is)"
@@ -4510,6 +4518,10 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Custom upload server: use an HTTPS address on a public host"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook URL: use an HTTPS address on a public host",
+    "description": "Settings → Save refused: the webhook address is not HTTPS on a public host, so no delivery could ever be sent"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Custom upload server: the JSON template is not valid JSON"
   },
@@ -5033,33 +5045,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Keep the logs here instead of the console, to export them as JSON or text"
   },
-  "ruleTranslationsTitle": {
-    "message": "Translations"
-  },
-  "ruleTranslationsHint": {
-    "message": "Shown instead of the description when the extension is in that language. Empty: the description is shown."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} of {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Translate automatically"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Automatic translation needs Chrome 138 or newer."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Write the description first."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Translating: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Filled {0} languages. Check them before saving."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Filled {0}; {1} could not be translated here."
-  },
   "sfxOptRenderingWait": {
     "message": "Wait after load"
   },
@@ -5338,18 +5323,6 @@
   },
   "sfxValOff": {
     "message": "Off"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Every language already has a translation."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Name translations"
-  },
-  "combinationTranslationsHint": {
-    "message": "Shown instead of the name when the extension is in that language. Empty: the name is shown."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Write the name first."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Checks the challenge cookies and analyzes its scripts"
@@ -6735,54 +6708,6 @@
     "message": "History size must be one of {0} MB",
     "description": "Error when the History size is not one of the offered sizes; {0} is the list of sizes, like 6, 12, 25"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Texts not yet translated into every language: {0}",
-    "description": "Rules → editor: shown above the rule when some of its texts (the description, a pattern's description, a combination's name) lack a translation in some language; {0} is how many texts"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Fills the missing translations of the description, the patterns and the combinations with Chrome's on-device translator. Check them before saving.",
-    "description": "Hover text of the Translate the rule button"
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Translate",
-    "description": "Rule editor header: button that translates the rule's texts (description, pattern descriptions, combination names) into every language"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Translate changes",
-    "description": "Rule editor header button when texts were rewritten in the UI language: puts them into English and every other language"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Translated",
-    "description": "Rule editor header button when every text of the rule is translated into all languages"
-  },
-  "ruleTranslateBusy": {
-    "message": "Translating…",
-    "description": "Rule editor header button while the translations are being made"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Every text of this rule is translated into all {0} languages.",
-    "description": "Rule editor: hover text and notice when nothing is left to translate ({0} = number of languages)"
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Could not translate {0} of {1} changed texts into every language here (the browser may still be downloading them). Nothing was lost: those texts are as they were. Try again in a moment.",
-    "description": "Rule editor \u2192 Translate changes: some texts could not be translated into every language, so they were left unchanged ({0} = how many, {1} = changed texts)"
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Downloaded {0}: {1} of {2} languages ready. The browser downloads each language once, one per click: click Translate again for the next.",
-    "description": "Rule editor \u2192 Translate: a language model was downloaded; the browser allows one download per click ({0} = language, {1} = ready, {2} = total)"
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Translating {0} texts…",
-    "description": "Shown while Translate the rule works; {0} is how many texts it translates"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Filled {0} translations. Check them before saving.",
-    "description": "Shown after Translate the rule; {0} is how many translations it filled"
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Filled {0}; {1} could not be translated here.",
-    "description": "Shown after Translate the rule when some translations failed; {0} is how many it filled, {1} how many it could not"
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Patterns",
     "description": "Rules → editor → Check against History: heading of the list of the rule's patterns with the pages each matches"
@@ -7200,9 +7125,13 @@
     "message": "Open the popup on a website to build a rule from it.",
     "description": "New rule from this page: why the button is unavailable (a browser page, or the popup opened in its own tab)"
   },
-  "suggestRuleExactName": {
-    "message": "Matched by its exact name",
-    "description": "New rule from this page: a cookie or header the new rule will look for by its exact name"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Headers whose name contains {0}",
+    "description": "Rules editor → From this page: hover text of a response header ({0} = header name); a plain header name matches names containing it"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookies named {0}, or whose name starts with it",
+    "description": "Rules editor → From this page: hover text of a cookie ({0} = cookie name); a plain cookie name matches names starting with it"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Names starting with {0}: the rest looks random",
@@ -7230,15 +7159,15 @@
   },
   "pagePickButton": {
     "message": "From this page",
-    "description": "Rules editor \u2192 Cookies, Headers, Url: button beside Add Pattern that lists what the current page has, to add as patterns"
+    "description": "Rules editor → Cookies, Headers, Url: button beside Add Pattern that lists what the current page has, to add as patterns"
   },
   "pagePickAddFmt": {
     "message": "Add {0}",
-    "description": "Rules editor \u2192 From this page: button that adds the ticked items as patterns ({0} = how many)"
+    "description": "Rules editor → From this page: button that adds the ticked items as patterns ({0} = how many)"
   },
   "pagePickInRule": {
     "message": "in this rule",
-    "description": "Rules editor \u2192 From this page: tag on an item the rule already has as a pattern"
+    "description": "Rules editor → From this page: tag on an item the rule already has as a pattern"
   },
   "suggestRuleFilter": {
     "message": "Filter",
@@ -7356,14 +7285,6 @@
     "message": "No hCaptcha data detected (60s timeout)",
     "description": "Advanced → hCaptcha capture: in-page notice when nothing was captured within 60 seconds"
   },
-  "ruleOriginalEnglish": {
-    "message": "Original (English)",
-    "description": "Rules editor: the folded line under a text shown in the UI language; opens the English original it translates"
-  },
-  "ruleOriginalHint": {
-    "message": "The other languages translate this text: change it and they show it untranslated until they are translated again.",
-    "description": "Rules editor: under the English original of a rule text (shown when the extension is in another language)"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Unsaved settings",
     "description": "Settings → Language: title of the question asked when the language is changed with unsaved settings"
@@ -7371,14 +7292,6 @@
   "settingsLanguageUnsavedMessage": {
     "message": "Changing the language reloads the extension. Save your changes to the settings first?",
     "description": "Settings → Language: the question; buttons Save, Discard, Cancel"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Texts you changed in {0}: {1}. The other languages still show the old text.",
-    "description": "Rule editor, top bar: {0} = the UI language's name (Español), {1} = how many texts were rewritten in it"
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Translates what you wrote into English (the original) and into the other languages, with the browser's on-device translator. Check them before saving.",
-    "description": "Rule editor, top bar: tooltip of Translate the changes"
   },
   "combinationOneCount": {
     "message": "1 combination",

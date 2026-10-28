@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Detector importati"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Rilevatori importati, tranne: {0} (non validi in questa versione)"
+  },
   "detectorExportedFmt": {
     "message": "{0} esportato"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Compila tutti i campi obbligatori dei pattern prima di salvare."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Un pattern indicato come espressione regolare non è valido o potrebbe bloccare l’analisi. Correggilo o disattiva Regex per quella riga."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Inserisci il tipo di metodo di rilevamento (es. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Server di caricamento personalizzato: usa un indirizzo HTTPS su un host pubblico"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL del webhook: usa un indirizzo HTTPS su un host pubblico"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Server di caricamento personalizzato: il modello JSON non è un JSON valido"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Conserva i log qui invece che nella console, per esportarli come JSON o testo"
   },
-  "ruleTranslationsTitle": {
-    "message": "Traduzioni"
-  },
-  "ruleTranslationsHint": {
-    "message": "Mostrata al posto della descrizione quando l'estensione è in quella lingua. Vuota: viene mostrata la descrizione."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} di {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Traduci automaticamente"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "La traduzione automatica richiede Chrome 138 o successivo."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Scrivi prima la descrizione."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Traduzione: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} lingue compilate. Controllale prima di salvare."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} compilate; {1} non è stato possibile tradurle qui."
-  },
   "sfxOptRenderingWait": {
     "message": "Attesa dopo il caricamento"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Disattivato"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Tutte le lingue hanno già una traduzione."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Traduzioni del nome"
-  },
-  "combinationTranslationsHint": {
-    "message": "Mostrata al posto del nome quando l'estensione è in quella lingua. Vuota: viene mostrato il nome."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Scrivi prima il nome."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Controlla i cookie della sfida e analizza i suoi script"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "La dimensione della cronologia deve essere uno di questi valori: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Testi non ancora tradotti in tutte le lingue: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Compila le traduzioni mancanti di descrizione, pattern e combinazioni con il traduttore di Chrome sul dispositivo. Controllale prima di salvare."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Traduci"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Traduci modifiche"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Tradotta"
-  },
-  "ruleTranslateBusy": {
-    "message": "Traduzione…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Tutti i testi di questa regola sono tradotti in tutte le {0} lingue."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Non è stato possibile tradurre qui {0} dei {1} testi modificati in tutte le lingue (il browser potrebbe ancora scaricarle). Non si è perso nulla: quei testi sono rimasti com’erano. Riprova tra un momento."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Scaricato: {0}. {1} lingue pronte su {2}. Il browser scarica ogni lingua una sola volta, una per clic: fai di nuovo clic su Traduci per la successiva."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Traduzione di {0} testi…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} traduzioni compilate. Controllale prima di salvare."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} compilate; {1} non è stato possibile tradurle qui."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Pattern"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Apri il popup su un sito web per crearne una regola."
   },
-  "suggestRuleExactName": {
-    "message": "Cercato per nome esatto"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Intestazioni il cui nome contiene {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookie chiamati {0} o il cui nome inizia così"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Nomi che iniziano con {0}: il resto sembra casuale"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Nessun dato hCaptcha rilevato (timeout di 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Originale (inglese)"
-  },
-  "ruleOriginalHint": {
-    "message": "Le altre lingue traducono questo testo: se lo modifichi, lo mostreranno non tradotto finché non viene tradotto di nuovo."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Impostazioni non salvate"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Cambiare lingua ricarica l'estensione. Salvare prima le modifiche alle impostazioni?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Testi modificati in {0}: {1}. Le altre lingue mostrano ancora il testo precedente."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Traduce quello che hai scritto in inglese (l'originale) e nelle altre lingue con il traduttore integrato del browser. Controllali prima di salvare."
   },
   "combinationOneCount": {
     "message": "1 combinazione"

@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Zaimportowano detektory"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Zaimportowano detektory, z wyjątkiem: {0} (nieprawidłowe w tej wersji)"
+  },
   "detectorExportedFmt": {
     "message": "Wyeksportowano: {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Wypełnij wszystkie wymagane pola wzorca przed zapisaniem."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Wzorzec oznaczony jako wyrażenie regularne jest nieprawidłowy lub może zablokować skanowanie. Popraw go albo wyłącz Regex w tym wierszu."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Wpisz typ metody wykrywania (np. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Niestandardowy serwer przesyłania: użyj adresu HTTPS na hoście publicznym"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL webhooka: użyj adresu HTTPS na hoście publicznym"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Niestandardowy serwer przesyłania: szablon JSON nie jest prawidłowym kodem JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Przechowuj logi tutaj zamiast w konsoli, aby wyeksportować je jako JSON lub tekst"
   },
-  "ruleTranslationsTitle": {
-    "message": "Tłumaczenia"
-  },
-  "ruleTranslationsHint": {
-    "message": "Wyświetlane zamiast opisu, gdy rozszerzenie jest w tym języku. Puste: wyświetlany jest opis."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} z {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Tłumacz automatycznie"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Automatyczne tłumaczenie wymaga Chrome 138 lub nowszego."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Najpierw napisz opis."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Tłumaczenie: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Wypełniono języki: {0}. Sprawdź je przed zapisaniem."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Wypełniono: {0}; nie udało się tutaj przetłumaczyć: {1}."
-  },
   "sfxOptRenderingWait": {
     "message": "Czekaj po załadowaniu"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Wyłączone"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Każdy język ma już tłumaczenie."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Tłumaczenia nazwy"
-  },
-  "combinationTranslationsHint": {
-    "message": "Wyświetlane zamiast nazwy, gdy rozszerzenie jest w tym języku. Puste: wyświetlana jest nazwa."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Najpierw wpisz nazwę."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Sprawdza pliki cookie wyzwań i analizuje skrypty"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Rozmiar historii musi być jednym z: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Teksty jeszcze nieprzetłumaczone na wszystkie języki: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Uzupełnia brakujące tłumaczenia opisu, wzorców i kombinacji za pomocą tłumacza Chrome działającego na urządzeniu. Sprawdź je przed zapisaniem."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Przetłumacz"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Przetłumacz zmiany"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Przetłumaczono"
-  },
-  "ruleTranslateBusy": {
-    "message": "Tłumaczenie…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Wszystkie teksty tej reguły są przetłumaczone na wszystkie {0} języki."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Nie udało się tu przetłumaczyć {0} z {1} zmienionych tekstów na wszystkie języki (przeglądarka może je jeszcze pobierać). Nic nie przepadło: te teksty pozostały bez zmian. Spróbuj ponownie za chwilę."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Pobrano: {0}. Gotowe języki: {1} z {2}. Przeglądarka pobiera każdy język raz, jeden na kliknięcie: kliknij ponownie Przetłumacz, aby pobrać następny."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Tłumaczenie tekstów: {0}…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Uzupełniono tłumaczenia: {0}. Sprawdź je przed zapisaniem."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Uzupełniono: {0}; nie udało się przetłumaczyć tutaj: {1}."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Wzorce"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Otwórz okienko rozszerzenia na stronie internetowej, aby utworzyć z niej regułę."
   },
-  "suggestRuleExactName": {
-    "message": "Wyszukiwane po dokładnej nazwie"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Nagłówki, których nazwa zawiera {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Pliki cookie o nazwie {0} lub których nazwa tak się zaczyna"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Nazwy zaczynające się od {0}: reszta wygląda na losową"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Nie wykryto danych hCaptcha (limit czasu 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Oryginał (angielski)"
-  },
-  "ruleOriginalHint": {
-    "message": "Pozostałe języki tłumaczą ten tekst: jeśli go zmienisz, będą go pokazywać bez tłumaczenia, dopóki nie zostanie przetłumaczony ponownie."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Niezapisane ustawienia"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Zmiana języka przeładuje rozszerzenie. Zapisać najpierw zmiany w ustawieniach?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Teksty zmienione w języku {0}: {1}. Pozostałe języki nadal pokazują stary tekst."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Tłumaczy to, co napisałeś, na angielski (oryginał) i pozostałe języki za pomocą wbudowanego tłumacza przeglądarki. Sprawdź je przed zapisaniem."
   },
   "combinationOneCount": {
     "message": "1 kombinacja"

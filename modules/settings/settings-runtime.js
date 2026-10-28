@@ -323,7 +323,9 @@ SettingsRuntime.dispatchJsApiEvent = async function(eventName, data = {}) {
       const message = {
         type: globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES.JS_API_EVENT,
         eventName: eventName,
-        detail: eventData
+        detail: eventData,
+        // The on* events may also reach window.<name>(detail); 'ready' never would call a page's own ready() helper
+        windowCallback: /^on[A-Z]/.test(eventName)
       };
 
       if (bridge && typeof bridge.sendToMainWorld === 'function') {

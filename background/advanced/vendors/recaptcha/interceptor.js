@@ -221,6 +221,8 @@ async function reCaptchaStartCapture(tabId) {
 
                 const capturedResults = await processCaptureData(captureState);
                 Logger.network('[reCAPTCHA] Auto-stop - Captured results:', capturedResults);
+                // Decoded requests are kept as on a manual stop (a reload seen before the anchor stops it early)
+                await saveRecaptchaResults(tabId, capturedResults);
 
                 captureState.results = capturedResults;
                 captureState.isCapturing = false;
@@ -516,6 +518,43 @@ if (!recaptchaJobHookInstalled && typeof AdvancedJobManager !== 'undefined'
     recaptchaJobHookInstalled = true;
 }
 
+/** Every decoded reCAPTCHA request of a capture, to Advanced → History (the manual stop and the 60 s auto-stop alike). */
+async function saveRecaptchaResults(tabId, capturedResults) {
+    if (capturedResults.length > 0 && saveToHistory) {
+        try {
+            const tab = await chrome.tabs.get(tabId);
+
+            // Create capture data for each result
+            for (const result of capturedResults) {
+                const captureData = {
+                    type: 'recaptcha',
+                    version: result.isReCaptchaV3 ? 'v3' : 'v2',
+                    siteKey: result.siteKey,
+                    action: result.action,
+                    isEnterprise: result.isEnterprise,
+                    isInvisible: result.isInvisible,
+                    isSRequired: result.isSRequired,
+                    apiDomain: result.apiDomain,
+                    hasSession: result.hasSession,
+                    requiredCookie: result.requiredCookie,
+                    protobufFields: result.protobufFields,
+                    siteUrl: result.siteUrl,
+                    timestamp: result.timestamp
+                };
+
+                await saveToHistory(tabId, captureData, {
+                    type: 'recaptcha',
+                    expiryMinutes: 30
+                });
+            }
+
+            Logger.network('[reCAPTCHA] Saved to history using helper');
+        } catch (err) {
+            Logger.error('NETWORK', '[reCAPTCHA] Failed to save to history:', err);
+        }
+    }
+}
+
 async function processCaptureData(state) {
     Logger.debug('NETWORK', '[reCAPTCHA] Processing capture data');
 
@@ -658,39 +697,7 @@ async function reCaptchaStopCapture(tabId) {
         stopRecaptchaInterception();
 
         // Save to advanced history using helper
-        if (capturedResults.length > 0 && saveToHistory) {
-            try {
-                const tab = await chrome.tabs.get(tabId);
-
-                // Create capture data for each result
-                for (const result of capturedResults) {
-                    const captureData = {
-                        type: 'recaptcha',
-                        version: result.isReCaptchaV3 ? 'v3' : 'v2',
-                        siteKey: result.siteKey,
-                        action: result.action,
-                        isEnterprise: result.isEnterprise,
-                        isInvisible: result.isInvisible,
-                        isSRequired: result.isSRequired,
-                        apiDomain: result.apiDomain,
-                        hasSession: result.hasSession,
-                        requiredCookie: result.requiredCookie,
-                        protobufFields: result.protobufFields,
-                        siteUrl: result.siteUrl,
-                        timestamp: result.timestamp
-                    };
-
-                    await saveToHistory(tabId, captureData, {
-                        type: 'recaptcha',
-                        expiryMinutes: 30
-                    });
-                }
-
-                Logger.network('[reCAPTCHA] Saved to history using helper');
-            } catch (err) {
-                Logger.error('NETWORK', '[reCAPTCHA] Failed to save to history:', err);
-            }
-        }
+        await saveRecaptchaResults(tabId, capturedResults);
 
         // Notify popup to clear UI
         chrome.runtime.sendMessage(AdvancedJobManager.completionMessage(completionIdentity, { type: 'CAPTURE_COMPLETED' })).catch(() => {
@@ -743,7 +750,9 @@ function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
     if (!state) return;
 
     // If URL changed (user navigated away), clear capture state
-    if (changeInfo.url && state.captureUrl && changeInfo.url !== state.captureUrl) {
+    // Another page; the same page with another query or #fragment keeps its capture going
+    const pageOf = typeof capturePageOf === 'function' ? capturePageOf : (url) => url;
+    if (changeInfo.url && state.captureUrl && pageOf(changeInfo.url) !== pageOf(state.captureUrl)) {
         Logger.network('[reCAPTCHA] URL changed, clearing capture state for tab:', tabId);
         if (state.captureInterval) {
             clearInterval(state.captureInterval);

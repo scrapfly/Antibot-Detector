@@ -11,6 +11,8 @@ const vm = require('node:vm');
 const ROOT = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
 const CookieTimeline = require('../modules/core/cookie-timeline.js');
+// The record keys a cookie by name and domain: the tests read it by name
+const byName = (cookies) => Object.fromEntries(Object.entries(cookies).map(([key, events]) => [CookieTimeline.nameOf(key), events]));
 global.CookieTimeline = CookieTimeline;
 global.WorkerMessages = require('../modules/core/worker-messages.js');
 global.MessageSender = require('../modules/core/message-sender.js');
@@ -103,7 +105,8 @@ test('set, changed, the same value again, the removal half of an overwrite, remo
   assert.equal(await rec.handle(change('_abck', 'DD', { removed: true, cause: 'expired_overwrite' })), 'removed', 'deleted by the site');
   assert.equal(await rec.handle(change('_ga', 'GA1.2.3')), null, 'not a protection cookie');
 
-  const { site, cookies } = await rec.get('https://www.example.com/checkout');
+  const { site, cookies: record } = await rec.get('https://www.example.com/checkout');
+  const cookies = byName(record);
   assert.equal(site, 'example.com');
   assert.deepEqual(Object.keys(cookies), ['_abck']);
   const events = cookies._abck;
@@ -132,20 +135,20 @@ test('caps: events per cookie, cookies per site, and the least recently active s
   const detectors = { antibot: { d: { name: 'D', detection: { cookie: [{ name: '^c\\d$', nameRegex: true }] } } } };
   const { rec, tick } = recorder({ detectors, limits });
   for (let i = 0; i < 5; i++) { tick(10); await rec.handle(change('c1', `value-${i}`)); }
-  let cookies = (await rec.get('https://example.com')).cookies;
+  let cookies = byName((await rec.get('https://example.com')).cookies);
   assert.deepEqual(cookies.c1.map(e => e.e), ['changed', 'changed', 'changed'], 'the oldest events fall off');
   tick(10); await rec.handle(change('c2', 'a'));
   tick(10); await rec.handle(change('c1', 'again'));
   tick(10); await rec.handle(change('c3', 'a'));
-  cookies = (await rec.get('https://example.com')).cookies;
+  cookies = byName((await rec.get('https://example.com')).cookies);
   assert.deepEqual(Object.keys(cookies).sort(), ['c1', 'c3'], 'the least recently active cookie gives way');
 
   tick(10); await rec.handle(change('c1', 'a', { domain: 'other.org' }));
   tick(10); await rec.handle(change('c1', 'b', { domain: '.example.com' }));
   tick(10); await rec.handle(change('c1', 'a', { domain: 'third.net' }));
   assert.deepEqual((await rec.get('https://other.org')).cookies, {}, 'the least recently active site was evicted');
-  assert.ok((await rec.get('https://example.com')).cookies.c1);
-  assert.ok((await rec.get('https://third.net')).cookies.c1);
+  assert.ok(byName((await rec.get('https://example.com')).cookies).c1);
+  assert.ok(byName((await rec.get('https://third.net')).cookies).c1);
 });
 
 test('the record survives a worker restart through storage.session and starts empty without it', async () => {
@@ -157,7 +160,17 @@ test('the record survives a worker restart through storage.session and starts em
     randomSalt: () => 'other-salt', writeDelay: 0
   });
   assert.equal(await again.handle(change('datadome', 'abc')), 'refresh', 'same salt, same marker');
-  assert.deepEqual((await again.get('https://example.com')).cookies.datadome.map(e => e.e), ['set']);
+  assert.deepEqual(byName((await again.get('https://example.com')).cookies).datadome.map(e => e.e), ['set']);
+});
+
+test('the same cookie name on two domains of a site has two lives: one ending does not end the other', async () => {
+  const { rec } = recorder();
+  assert.equal(await rec.handle(change('__cf_bm', 'a', { domain: '.shop.example.com' })), 'set');
+  assert.equal(await rec.handle(change('__cf_bm', 'b', { domain: '.cdn.shop.example.com' })), 'set', 'not a change of the other one');
+  assert.equal(await rec.handle(change('__cf_bm', 'b', { domain: '.cdn.shop.example.com', removed: true, cause: 'expired' })), 'expired');
+  const { cookies } = await rec.get('https://shop.example.com');
+  assert.deepEqual(cookies[CookieTimeline.keyOf('__cf_bm', '.shop.example.com')].map(e => e.e), ['set']);
+  assert.deepEqual(cookies[CookieTimeline.keyOf('__cf_bm', 'cdn.shop.example.com')].map(e => e.e), ['set', 'expired']);
 });
 
 test('the worker message is registered by name and answers extension pages only', async () => {
@@ -231,7 +244,7 @@ test('Check Cookies: the summary line, the folded timeline, the empty state and 
 
   const result = { vendor: 'Akamai', total: 2, expected: ['_abck', 'bm_sz'], missing: ['bm_sz'],
     cookies: [{ name: '_abck', value: 'v', domain: '.example.com', path: '/', expires: null }] };
-  const timeline = { now, cookies: { _abck: events, bm_sz: [{ e: 'set', t: now - 9000, x: null, l: 3, m: 'ffffff' }, { e: 'expired', t: now - 1000 }], other: [{ e: 'set', t: now, x: null, l: 1, m: 'eeeeee' }] } };
+  const timeline = { now, cookies: { [CookieTimeline.keyOf('_abck', 'example.com')]: events, [CookieTimeline.keyOf('bm_sz', 'example.com')]: [{ e: 'set', t: now - 9000, x: null, l: 3, m: 'ffffff' }, { e: 'expired', t: now - 1000 }], other: [{ e: 'set', t: now, x: null, l: 1, m: 'eeeeee' }] } };
   const body = K.cookieResultsBody(result, timeline);
   assert.match(body, /changed 3 times/);
   assert.match(body, /Recorded earlier/);
@@ -250,4 +263,12 @@ test('Check Cookies reads the timeline by name, never saves it with the result, 
   const K = loadPopup('de');
   const line = K.cookieTimelineSummary([{ e: 'set', t: 0, x: 3_600_000, l: 1, m: 'aaaaaa' }], 60_000);
   assert.match(line, /^gesetzt vor 1 Min\. · läuft ab in 59 Min\.$/);
+});
+
+test('a cookie-name regex that backtracks catastrophically names nothing, instead of hanging the worker on a crafted name', () => {
+  const m = CookieTimeline.matcher([{ pattern: '^(a+)+$', regex: true }, { pattern: 'datadome' }]);
+  const started = Date.now();
+  assert.equal(m(`${'a'.repeat(40)}!`), false);
+  assert.ok(Date.now() - started < 200, 'answered at once');
+  assert.equal(m('datadome'), true, 'the other rules still work');
 });

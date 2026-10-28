@@ -10,11 +10,40 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Russian: the Advanced tab is now called «Дополнительно».
+- Rules editor: the description boxes are taller and grow as you type.
+
+### Removed
+
+- Rules editor: the Translate button, the per-language fields and the Original panel are gone. A description or name is one box in your language, and what you type replaces it for every language. Scrapfly's rules stay translated.
 
 ### Fixed
 
-- Rules: translating an official rule no longer marks it as edited, so updates still install without asking and keep your translations (also for rules translated in 3.0.6); Reset to official keeps them too.
-- Private windows: pages scanned there leave the detection cache when the last private window closes (or at the next start), instead of staying for days.
+- Rules translated in 3.0.6 no longer show as edited, so updates install without asking; updates and Reset to official keep their translations.
+- Rules: texts downloaded with an older release no longer override the newer translations an update brings.
+- History → Changed: no more marks from a cached result, a weak score or a protection missing for one visit; a page that lost its protections is now marked (History's own settings still apply).
+- History: a Changed mark stays until the next change, the watchlist and Statistics ignore cached results, and pages that keep failing no longer block the other watched ones.
+- History: a damaged entry or a hand-edited import file no longer breaks the list, exports or backups, and an imported file never adds pages to the watchlist.
+- Private windows: scanned pages are forgotten when the last private window closes (or at the next start) instead of staying for days.
+- Private windows: a private page's result is never shown, recorded or sent for a normal window, even when evidence arrives after the scan.
+- Private windows: Check Cookies no longer shows the cookie timeline of your regular windows, and Advanced tool results (cookie values, captures) are shown but no longer saved to Advanced → History.
+- Check Cookies: a cookie with the same name on two domains of a site gets its own timeline on each, so one expiring no longer ends the other.
+- Detection: requests sent while you leave a page, or by the page before a preloaded one, no longer count as evidence for the next page.
+- Detection: a rescan no longer cuts its JS hooks short.
+- Settings: changing the language asks about unsaved changes, and presets, imports and restores start from your saved settings.
+- Settings: Save refuses a webhook address that cannot receive deliveries, imported colours are checked, and site names with accents (bücher.de) are kept in the site lists.
+- Advanced: reCAPTCHA and Akamai captures keep going when a page only changes what comes after ? or #, and the reCAPTCHA auto-stop keeps its results.
+- Advanced: expired captures are removed on time, FunCaptcha no longer saves a capture twice, and a finished capture stops watching pages.
+- Rules: stray text in an imported rule file can no longer wipe your custom rules at the next start, and a file cannot pass off a fake rule as an official one.
+- Rules: Merge imports the valid rules of a file and tells you which ones it skipped.
+- Rules: Save refuses a pattern that is invalid or could freeze scanning, and Check against History reads header names as detection does and can no longer freeze the popup.
+- Rules editor: From this page on a row that already has a pattern now adds new rows instead of replacing it, and the hover text explains how a plain name matches.
+- Page safety: a web page can no longer read the extension's internal token by wrapping browser functions, and a page function named ready() is no longer called by the JS API.
+- Share uploads: tokens in a page's address path (password reset, invite and magic-link pages) are left out.
+- Webhook: a failed delivery waiting for a retry is no longer lost if the browser stops the extension's background work in between.
+- Watchlist and Bulk scan running together: the background scan tab is now always closed after the extension restarts.
+- Detection → Copy → curl: addresses with brackets or braces (filter[brand]=…) no longer make curl fail.
+- Bulk scan: addresses with commas or semicolons (?ids=1,2,3) are no longer cut off, and a page an address redirects to is scanned instead of shown from the cache.
+- Bulk scan: pressing Stop and then Scan on the waiting pages no longer leaves the run stuck on Running.
 
 ## [3.0.6] - 2026-10-26
 

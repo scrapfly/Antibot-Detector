@@ -215,6 +215,8 @@ SettingsUI.saveSettings = async function(options = {}) {
       // Do not advance the form/baseline until persistence succeeds.
       this.settings = committed.settings;
       this.settingsBaseline = JSON.parse(JSON.stringify(committed.settings));
+      // What the form shows is saved now: later edits are measured from here
+      if (typeof SettingsUI.formState === 'function') this.settingsFormShown = SettingsUI.formState(this);
       if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') Utils.applyDebugMode(this.settings);
       Logger.debug('UI', 'Settings saved', SettingsTransfer.diagnostics(this.settings));
       const oldScope = committed.previous.detection?.cacheScope || committed.previous.cacheScope || 'domain';
@@ -541,6 +543,9 @@ SettingsUI.updateSettingsUI = function() {
       SettingsUI.populateShareUI.call(this);
     }
 
+    // The form as just filled: a field changed after this is an unsaved change (SettingsUI.hasUnsavedChanges)
+    if (typeof SettingsUI.formState === 'function') this.settingsFormShown = SettingsUI.formState(this);
+
 };
 
 SettingsUI.getSettingsFromUI = function() {
@@ -724,6 +729,14 @@ SettingsUI.validateSettings = function(settings) {
       if (!Number.isInteger(value) || value < 0 || value > 99) {
         errors.push(text('settingsUiErrAdvancedToolsMinConfidence', 'Advanced tools confidence must be between 0 and 99'));
       }
+    }
+
+    // A webhook address that is not HTTPS on a public host would fail every delivery ("address not allowed"): the
+    // variables a URL may hold are filled with a placeholder first, as the custom upload server is checked
+    const webhookUrl = settings.webhook && typeof settings.webhook.webhookUrl === 'string' ? settings.webhook.webhookUrl.trim() : '';
+    if (webhookUrl && typeof SettingsRuntime !== 'undefined' && typeof SettingsRuntime._isWebhookUrlSafe === 'function'
+        && !SettingsRuntime._isWebhookUrlSafe(webhookUrl.replace(/<[A-Z_]+>/g, 'x'))) {
+      errors.push(text('settingsUiErrWebhookUrl', 'Webhook URL: use an HTTPS address on a public host'));
     }
 
     if (typeof SettingsUI.validateShareSettings === 'function') {

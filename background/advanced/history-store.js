@@ -209,6 +209,11 @@
         if (!history[moduleId]) {
             history[moduleId] = [];
         }
+        // Every tool's expired captures go with this write: they hold cookie and header values, and the retention
+        // the person chose is how long they may stay (not until Advanced is opened again)
+        for (const [otherId, entries] of Object.entries(history)) {
+            if (otherId !== moduleId && Array.isArray(entries)) history[otherId] = filterNotExpired(entries, now);
+        }
 
         const existing = filterNotExpired(history[moduleId], now);
         // A retried completion must not create a second history record.

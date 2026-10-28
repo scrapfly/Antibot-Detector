@@ -68,6 +68,10 @@ const DetectionCacheRetention = {
         if (typeof DetectionEngineManager === 'undefined' || !DetectionEngineManager.pruneStoredDetections) {
             return { expired: 0, evicted: 0 };
         }
+        // The Advanced tools' captures follow their own retention (Settings → Detection), checked on the same tick
+        if (typeof AdvancedHistoryStore !== 'undefined' && typeof AdvancedHistoryStore.pruneExpired === 'function') {
+            await AdvancedHistoryStore.pruneExpired().catch((error) => this._warn('[DetectionCacheRetention] Advanced captures not pruned:', error));
+        }
         const dropPrivate = !(await this.privateWindowOpen());
         const result = await DetectionEngineManager.pruneStoredDetections({ dropPrivate });
         if (result.expired || result.evicted || result.privateRemoved) {

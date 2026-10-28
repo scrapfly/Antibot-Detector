@@ -13,6 +13,7 @@ var spaObserver = spaObserver || null; // SPA URL-change observer (module-scoped
 var spaUrlChangeTimeout = spaUrlChangeTimeout || null;
 var detectionFinalized = detectionFinalized || false; // Flag to suppress late events after onDetection
 var hooksMonitoringComplete = hooksMonitoringComplete || false;
+var pageShownAfterPrerender = pageShownAfterPrerender || false; // the page was prerendered and has just been shown
 
 // Bridge protocol: modules/core/bridge-protocol.js (loaded first in this content script)
 const SCRAPFLY_PROTOCOL = globalThis.ScrapflyBridgeProtocol;
@@ -211,7 +212,12 @@ async function dispatchReadyEvent() {
  * Delegates to Utils.notifyPageLoad()
  * @param {string} triggerSource - What triggered this notification (page_load, visibility_change, url_change, manual)
  */
-async function notifyPageLoad(triggerSource = 'page_load') {
+async function notifyPageLoad(triggerSource) {
+    // The first notice of a page Chrome prerendered says so: the tab's captured requests are still the page before's
+    if (!triggerSource) {
+        triggerSource = pageShownAfterPrerender ? 'prerender_activation' : 'page_load';
+        pageShownAfterPrerender = false;
+    }
     if (typeof Utils === 'undefined') {
         if (typeof Logger !== 'undefined') {
             Logger.debug('CONTENT', '[notifyPageLoad] Utils not loaded, skipping');
@@ -294,7 +300,7 @@ function onPageLoaded(callback) {
  */
 function whenPageShown(start) {
     if (document.prerendering) {
-        document.addEventListener('prerenderingchange', () => start(), { once: true });
+        document.addEventListener('prerenderingchange', () => { pageShownAfterPrerender = true; start(); }, { once: true });
     } else {
         start();
     }

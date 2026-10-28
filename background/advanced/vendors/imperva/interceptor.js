@@ -200,6 +200,14 @@ function impervaStartExtraction(tabId, url) {
     return { status: 'started' };
 }
 
+// A capture can end without this file's own stop (tab closed, page left): the request listener on every page goes
+// once nothing needs it
+var impervaJobHookInstalled = impervaJobHookInstalled || false;
+if (!impervaJobHookInstalled && typeof AdvancedJobManager !== 'undefined' && typeof AdvancedJobManager.onCaptureFinished === 'function') {
+    AdvancedJobManager.onCaptureFinished('imperva', () => impervaRemoveListenerIfIdle());
+    impervaJobHookInstalled = true;
+}
+
 /** Remove the request interceptor when no capture or extraction is running. */
 function impervaRemoveListenerIfIdle() {
     if (typeof removeListenerIfIdle === 'function') {

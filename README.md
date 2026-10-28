@@ -311,7 +311,7 @@ npm run e2e:data       # Settings → Data: storage and Clear, backup and restor
 npm run e2e:scope      # Settings → Detection → Sites to scan: skipped sites, chosen sites, the paused card
 npm run e2e:webhook    # Settings → Detection → Webhook: filters, cache, failures, Recent deliveries, Test, Clear, signing
 npm run e2e:hooks      # Settings → Detection → Sites without JS hooks: hooks on and off, switching, the popup note, the cache
-npm run e2e:translate  # Rules editor → Translate the rule: what is missing, one click, Save
+npm run e2e:rule-texts  # Rules editor texts in Spanish: one plain box, replaced when changed, untouched when left alone
 npm run e2e:quickwins  # 3.0.3: toolbar hover text, the copy menu, the rescan shortcut, notification clicks, History open and rescan, Duplicate rule, Markdown exports
 npm run e2e:languages  # every language through the real popup, settings and statistics pages
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json

@@ -277,3 +277,19 @@ test('detector import: Merge merges, Replace All replaces', async () => {
     assert.deepStrictEqual(calls, [expected], text);
   }
 });
+
+test('an imported History file is cleaned: entries only, a unique string id each, newest first, never on the watchlist', () => {
+  const S = require('../modules/core/history-store.js');
+  const imported = [null, 7, [], { id: 5, timestamp: 1000, url: 'https://old.example/', detections: [null, { name: 'A' }] },
+    { id: 'dup', timestamp: 3000, url: 'https://new.example/', watch: true, watchedAt: 1, detections: 'x' },
+    { id: 'dup', timestamp: 2000, url: 'https://mid.example/', changed: 'yes' }];
+  const out = S.applyImport([], imported, 'replace', 0);
+  assert.deepStrictEqual(out.map(i => i.url), ['https://new.example/', 'https://mid.example/', 'https://old.example/']);
+  assert.strictEqual(new Set(out.map(i => i.id)).size, 3);
+  assert.ok(out.every(i => typeof i.id === 'string' && Array.isArray(i.detections)));
+  assert.ok(!('watch' in out[0]) && !('watchedAt' in out[0]), 'a file never puts a page on the watchlist');
+  assert.ok(!('changed' in out[1]));
+  assert.deepStrictEqual(out[2].detections, [{ name: 'A' }]);
+  const merged = S.applyImport([null, { id: 'keep', timestamp: 5000, url: 'https://keep.example/', detections: [] }], imported, 'merge', 0);
+  assert.strictEqual(merged[0].id, 'keep', 'a damaged stored entry does not stop a merge');
+});

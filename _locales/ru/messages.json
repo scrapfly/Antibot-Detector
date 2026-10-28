@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Детекторы импортированы"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Детекторы импортированы, кроме: {0} (недопустимы в этой версии)"
+  },
   "detectorExportedFmt": {
     "message": "{0}: экспортировано"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Перед сохранением заполните все обязательные поля шаблонов."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Шаблон, отмеченный как регулярное выражение, недопустим или может заблокировать проверку. Исправьте его или отключите Regex в этой строке."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Введите тип метода обнаружения (напр. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Свой сервер загрузки: укажите HTTPS-адрес на публичном хосте"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL вебхука: укажите HTTPS-адрес на публичном хосте"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Свой сервер загрузки: шаблон JSON некорректен"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Хранить журналы здесь, а не в консоли, чтобы экспортировать их в JSON или текст"
   },
-  "ruleTranslationsTitle": {
-    "message": "Переводы"
-  },
-  "ruleTranslationsHint": {
-    "message": "Показывается вместо описания, когда расширение на этом языке. Пусто: показывается описание."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} из {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Перевести автоматически"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Для автоматического перевода нужен Chrome 138 или новее."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Сначала напишите описание."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Перевод: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Заполнено языков: {0}. Проверьте перед сохранением."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Заполнено: {0}; не удалось перевести здесь: {1}."
-  },
   "sfxOptRenderingWait": {
     "message": "Ждать после загрузки"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Выкл."
-  },
-  "ruleTranslateAllDone": {
-    "message": "Для всех языков перевод уже есть."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Переводы названия"
-  },
-  "combinationTranslationsHint": {
-    "message": "Показывается вместо названия, когда расширение на этом языке. Пусто: показывается название."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Сначала напишите название."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Проверяет cookie проверки и анализирует его скрипты"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Размер истории должен быть одним из: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Тексты, ещё не переведённые на все языки: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Заполняет недостающие переводы описания, шаблонов и комбинаций с помощью переводчика Chrome на устройстве. Проверьте их перед сохранением."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Перевести"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Перевести изменения"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Переведено"
-  },
-  "ruleTranslateBusy": {
-    "message": "Перевод…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Все тексты этого правила переведены на все {0} языка."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Не удалось перевести здесь {0} из {1} изменённых текстов на все языки (возможно, браузер ещё скачивает их). Ничего не потеряно: эти тексты остались как были. Попробуйте ещё раз через минуту."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Загружено: {0}. Готово языков: {1} из {2}. Браузер загружает каждый язык один раз, по одному за щелчок: нажмите «Перевести» ещё раз для следующего."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Перевод текстов: {0}…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Заполнено переводов: {0}. Проверьте их перед сохранением."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Заполнено: {0}; не удалось перевести здесь: {1}."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Шаблоны"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Откройте окно расширения на сайте, чтобы создать по нему правило."
   },
-  "suggestRuleExactName": {
-    "message": "Ищется по точному имени"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Заголовки, в имени которых есть {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookie с именем {0} или с именем, которое так начинается"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Имена, начинающиеся с {0}: остальное похоже на случайный набор"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Данные hCaptcha не обнаружены (тайм-аут 60 с)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Оригинал (английский)"
-  },
-  "ruleOriginalHint": {
-    "message": "Другие языки переводят этот текст: если изменить его, они будут показывать его без перевода, пока он не будет переведён заново."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Несохранённые настройки"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Смена языка перезагрузит расширение. Сначала сохранить изменения настроек?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Тексты, изменённые на языке {0}: {1}. Другие языки пока показывают старый текст."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Переводит написанное на английский (оригинал) и другие языки встроенным переводчиком браузера. Проверьте перед сохранением."
   },
   "combinationOneCount": {
     "message": "1 комбинация"

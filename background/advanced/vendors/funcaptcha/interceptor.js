@@ -232,10 +232,13 @@ function handleFuncaptchaRequest(details, tabId) {
         state.capturedData.push(captureData);
         state.captureUrl = details.url;
 
-        // Auto-stop after capturing data
-        setTimeout(() => {
-            funcaptchaStopCapture(tabId, 'captured');
-        }, 100);
+        // Auto-stop after capturing data (once: later requests of the same challenge join this capture)
+        if (!state.autoStopScheduled) {
+            state.autoStopScheduled = true;
+            setTimeout(() => {
+                funcaptchaStopCapture(tabId, 'captured');
+            }, 100);
+        }
 
     } catch (error) {
         Logger.error('NETWORK', '[FunCaptcha] Error handling request:', error.message);
@@ -259,6 +262,10 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
         Logger.network('[FunCaptcha] No capture state found');
         return { status: 'not_capturing' };
     }
+    // One stop per capture: a second public_key request within the auto-stop delay, or Stop pressed while the
+    // auto-stop is saving, would save every entry twice
+    if (state.stopping) return { status: 'stopping' };
+    state.stopping = true;
 
     const completionIdentity = AdvancedJobManager.captureIdentity(state, tabId, 'funcaptcha');
 

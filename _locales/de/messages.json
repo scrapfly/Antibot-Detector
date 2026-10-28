@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Detektoren importiert"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Detektoren importiert, außer: {0} (in dieser Version nicht gültig)"
+  },
   "detectorExportedFmt": {
     "message": "{0} exportiert"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Bitte füllen Sie vor dem Speichern alle Pflichtfelder der Muster aus."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Ein als regulärer Ausdruck markiertes Muster ist ungültig oder könnte die Prüfung blockieren. Korrigiere es oder schalte Regex für diese Zeile aus."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Art der Erkennungsmethode eingeben (z. B. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Eigener Upload-Server: verwenden Sie eine HTTPS-Adresse auf einem öffentlichen Host"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook-URL: verwenden Sie eine HTTPS-Adresse auf einem öffentlichen Host"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Eigener Upload-Server: die JSON-Vorlage ist kein gültiges JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Logs hier statt in der Konsole sammeln, um sie als JSON oder Text zu exportieren"
   },
-  "ruleTranslationsTitle": {
-    "message": "Übersetzungen"
-  },
-  "ruleTranslationsHint": {
-    "message": "Wird statt der Beschreibung gezeigt, wenn die Erweiterung in dieser Sprache ist. Leer: die Beschreibung wird gezeigt."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} von {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Automatisch übersetzen"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Die automatische Übersetzung benötigt Chrome 138 oder neuer."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Schreibe zuerst die Beschreibung."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Übersetze: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} Sprachen ausgefüllt. Prüfe sie vor dem Speichern."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} ausgefüllt; {1} konnten hier nicht übersetzt werden."
-  },
   "sfxOptRenderingWait": {
     "message": "Warten nach dem Laden"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Aus"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Alle Sprachen haben schon eine Übersetzung."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Übersetzungen des Namens"
-  },
-  "combinationTranslationsHint": {
-    "message": "Wird statt des Namens gezeigt, wenn die Erweiterung in dieser Sprache ist. Leer: der Name wird gezeigt."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Schreibe zuerst den Namen."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Prüft die Challenge-Cookies und analysiert die Skripte"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Die Verlaufsgröße muss einer dieser Werte sein: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Texte, die noch nicht in jede Sprache übersetzt sind: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Füllt die fehlenden Übersetzungen von Beschreibung, Mustern und Kombinationen mit dem geräteinternen Übersetzer von Chrome aus. Prüfe sie vor dem Speichern."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Übersetzen"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Änderungen übersetzen"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Übersetzt"
-  },
-  "ruleTranslateBusy": {
-    "message": "Wird übersetzt…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Alle Texte dieser Regel sind in alle {0} Sprachen übersetzt."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "{0} von {1} geänderten Texten konnten hier nicht in alle Sprachen übersetzt werden (der Browser lädt sie vielleicht noch herunter). Nichts ging verloren: Diese Texte sind unverändert. Versuche es gleich noch einmal."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Heruntergeladen: {0}. {1} von {2} Sprachen bereit. Der Browser lädt jede Sprache einmal herunter, eine pro Klick: Klicke für die nächste erneut auf Übersetzen."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "{0} Texte werden übersetzt…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} Übersetzungen ausgefüllt. Prüfe sie vor dem Speichern."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} ausgefüllt; {1} konnten hier nicht übersetzt werden."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Muster"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Öffne das Popup auf einer Website, um daraus eine Regel zu erstellen."
   },
-  "suggestRuleExactName": {
-    "message": "Wird über den genauen Namen gefunden"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Header, deren Name {0} enthält"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookies namens {0} oder deren Name damit beginnt"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Namen, die mit {0} beginnen: der Rest wirkt zufällig"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Keine hCaptcha-Daten erkannt (Zeitlimit 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Original (Englisch)"
-  },
-  "ruleOriginalHint": {
-    "message": "Die anderen Sprachen übersetzen diesen Text: Wenn du ihn änderst, zeigen sie ihn unübersetzt, bis er neu übersetzt ist."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Nicht gespeicherte Einstellungen"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Ein Sprachwechsel lädt die Erweiterung neu. Zuerst deine Änderungen an den Einstellungen speichern?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Auf {0} geänderte Texte: {1}. Die anderen Sprachen zeigen noch den alten Text."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Übersetzt, was du geschrieben hast, ins Englische (das Original) und in die anderen Sprachen, mit dem Übersetzer des Browsers auf dem Gerät. Vor dem Speichern prüfen."
   },
   "combinationOneCount": {
     "message": "1 Kombination"

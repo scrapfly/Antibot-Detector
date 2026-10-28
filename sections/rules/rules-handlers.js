@@ -48,7 +48,12 @@ Rules.prototype.handleImport = async function(event) {
       chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
         Logger.ui('Detectors reloaded in background after import:', response);
       });
-      NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
+      const skipped = this.detectorManager.lastImportSkipped || [];
+      if (skipped.length) {
+        NotificationHelper.warning(_fmt('detectorsImportedSkippedFmt', `Detectors imported, except: ${skipped.join(', ')} (not valid in this version)`, skipped.join(', ')));
+      } else {
+        NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
+      }
       this.displayRules();
     } else {
       NotificationHelper.error(_tr('failedImportDetectors', 'Failed to import detectors. Check the file format.'));

@@ -159,18 +159,19 @@ class AdvancedCookieResults {
                     ${meta(tr('advCommonDomainLabel', 'Domain:').replace(/:\s*$/, ''), cookie.domain)}
                     ${meta(tr('advCookiePath', 'Path'), cookie.path)}
                     ${meta(tr('advCookieExpires', 'Expires'), cookie.expires ? when(cookie.expires) : tr('advCookieSession', 'Session (deleted when the browser closes)'), true)}
-                </dl>${timeline ? K.cookieTimelineBlock(timeline.cookies[cookie.name], timeline.now) : ''}
+                </dl>${timeline ? K.cookieTimelineBlock(timeline.cookies[CookieTimeline.keyOf(cookie.name, cookie.domain)], timeline.now) : ''}
             </article>`).join('');
         // Protection cookies recorded on this site that the page no longer has (removed, expired, or renamed by a site)
         const expected = Array.isArray(result.expected) ? result.expected : [];
         const nameMatches = (pattern, name) => pattern.endsWith('*') ? name.startsWith(pattern.slice(0, -1)) : name === pattern;
         const gone = timeline ? Object.keys(timeline.cookies)
-            .filter(name => !cookies.some(cookie => cookie.name === name) && expected.some(pattern => nameMatches(pattern, name)))
+            .filter(key => !cookies.some(cookie => CookieTimeline.keyOf(cookie.name, cookie.domain) === key)
+                && expected.some(pattern => nameMatches(pattern, CookieTimeline.nameOf(key))))
             .sort() : [];
-        const earlier = gone.length ? K.kitSection(tr('advCookieTimelineEarlier', 'Recorded earlier'), gone.map(name => `
+        const earlier = gone.length ? K.kitSection(tr('advCookieTimelineEarlier', 'Recorded earlier'), gone.map(key => `
             <article class="adv-cookie adv-cookie--gone">
-                <div class="adv-cookie-head"><span class="adv-cookie-name-text">${esc(name)}</span></div>
-                ${K.cookieTimelineBlock(timeline.cookies[name], timeline.now)}
+                <div class="adv-cookie-head"><span class="adv-cookie-name-text">${esc(CookieTimeline.nameOf(key))}</span><span class="adv-cookie-domain">${esc(key.slice(CookieTimeline.nameOf(key).length + 1))}</span></div>
+                ${K.cookieTimelineBlock(timeline.cookies[key], timeline.now)}
             </article>`).join(''), gone.length) : '';
         const absent = missing.length
             ? K.kitSection(tr('advCookieNotFound', 'Not found'), `<div class="adv-kit-chips">${missing.map(name => K.kitChip(name, 'neutral')).join('')}</div>`, missing.length)
@@ -186,7 +187,9 @@ class AdvancedCookieResults {
         const result = { kind: 'cookies', vendor, total: Number.isInteger(total) ? total : Math.max(expected.length, records.length), facts, cookies: records, missing };
         const title = BaseAdvancedModule._fmt('advCommonCookiesTitleFmt', `${vendor} Cookies`, vendor);
         // The timeline is shown here only: it lives in the worker's memory and is never saved with the result
-        const timeline = await BaseAdvancedModule.fetchCookieTimeline(this.tabInfo && this.tabInfo.url);
+        // Never in a private window: the timeline records regular windows only, and would show their browsing there
+        const timeline = this.tabInfo && this.tabInfo.incognito === true
+            ? null : await BaseAdvancedModule.fetchCookieTimeline(this.tabInfo && this.tabInfo.url);
         this.openKitModal({
             title,
             iconSvg: BaseAdvancedModule.COOKIE_ICON,

@@ -306,6 +306,8 @@ class CategoryManager {
             if (categoryColors) {
                 // Update colors in CategoryManager's categories
                 for (const [categoryName, color] of Object.entries(categoryColors)) {
+                    // Written into styles of the Rules and History lists: a colour, nothing else
+                    if (typeof color !== 'string' || !/^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(color)) continue;
                     if (this.categories[categoryName]) {
                         this.categories[categoryName].colour = color;
                     }

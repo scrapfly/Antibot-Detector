@@ -57,3 +57,11 @@ test('shipped translation files are JSON objects of non-empty strings for every 
     assert.ok(Object.values(dict).every(v => typeof v === 'string' && v.trim()), `${locale}: empty translation`);
   }
 });
+
+test('rule translations downloaded from a release are used only while that release is newer than this build', () => {
+  const R = require('../modules/core/rule-i18n.js');
+  assert.equal(R.newerRelease('v3.0.6', '3.0.7'), false, 'an older download never covers this build\'s own translations');
+  assert.equal(R.newerRelease('v3.0.7', '3.0.7'), false, 'the same release ships the same files');
+  assert.equal(R.newerRelease('v3.0.8', '3.0.7'), true);
+  assert.equal(R.newerRelease('v3.1', '3.0.12'), true);
+});

@@ -94,22 +94,33 @@ class DetectorSchema {
     }
 
     /** All-or-nothing admission for current exports and legacy bare maps. */
-    static admitImport(data, extensionVersion) {
+    static admitImport(data, extensionVersion, { partial = false } = {}) {
         if (!this.isRecord(data)) return null;
         const source = Object.prototype.hasOwnProperty.call(data, 'detectors') ? data.detectors : data;
         if (!this.isRecord(source)) return null;
         const incoming = [];
         const ids = new Set();
+        // Merge (partial): one rule that is not valid here (an invalid regex, one that needs a newer extension, a
+        // duplicate) is left out and named, the others still come in. Replace All deletes the person's own rules
+        // first, so there the whole file has to be valid. A file with no valid rule at all is refused
+        const skipped = [];
         for (const [category, records] of Object.entries(source)) {
             if (!this.safeKey(category) || !this.isRecord(records)) return null;
             for (const [key, detector] of Object.entries(records)) {
                 const normalized = this.admit(detector, { categoryName: category, detectorName: key, extensionVersion });
-                if (!normalized || ids.has(normalized.id)) return null;
+                if (!normalized || ids.has(normalized.id)) {
+                    if (!partial) return null;
+                    const name = this.isRecord(detector) && typeof detector.name === 'string' && detector.name.trim() ? detector.name.trim() : String(key);
+                    skipped.push(name.slice(0, 80));
+                    continue;
+                }
                 ids.add(normalized.id);
                 incoming.push({ category, detector: normalized, enabledProvided: typeof detector.enabled === 'boolean' });
             }
         }
-        return incoming.length ? incoming : null;
+        if (!incoming.length) return null;
+        incoming.skipped = skipped;
+        return incoming;
     }
 
     // Remove prefix, join with spaces, capitalize
@@ -152,6 +163,11 @@ class DetectorSchema {
         if (!this.isRecord(detector.detection)) detector.detection = {};
         for (const key of this.METHODS) {
             if (detector.detection[key] !== undefined && !Array.isArray(detector.detection[key])) detector.detection[key] = [];
+        }
+        // A method this build does not know is kept (a rule from a newer build), but only as rules: a text or a
+        // number there (a comment someone added to a file) is dropped, never read as a damaged rule set
+        for (const [key, value] of Object.entries(detector.detection)) {
+            if (!this.METHODS.includes(key) && !Array.isArray(value) && !this.isRecord(value)) delete detector.detection[key];
         }
         // Cookie/header collectors never expose storage; normalize legacy scopes.
         const normalizeScope = (scope, fallback) => {

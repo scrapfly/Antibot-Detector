@@ -110,15 +110,19 @@ const BackgroundTabScan = {
      * The scan tabs that are open, kept in session storage (memory, gone with the browser): a worker stopped in the
      * middle of a scan comes back without its timers, and closes the tab it left (init)
      */
-    async rememberTab(tabId, open) {
+    rememberTab(tabId, open) {
         const area = typeof chrome !== 'undefined' && chrome.storage && chrome.storage.session;
-        if (!area) return;
-        try {
+        if (!area) return Promise.resolve();
+        // One change at a time: a watch check and a Bulk scan opening their tabs together would each read the list
+        // before the other wrote it, and the tab one of them lost would stay open after a worker restart
+        const run = (this._tabListQueue || Promise.resolve()).then(async () => {
             const stored = (await area.get(this.OPEN_TABS_KEY))[this.OPEN_TABS_KEY];
             const ids = new Set(Array.isArray(stored) ? stored : []);
             if (open) ids.add(tabId); else ids.delete(tabId);
             await area.set({ [this.OPEN_TABS_KEY]: [...ids] });
-        } catch (_) { /* a convenience: the scan itself does not depend on it */ }
+        }).catch(() => { /* a convenience: the scan itself does not depend on it */ });
+        this._tabListQueue = run;
+        return run;
     },
 
     async closeLeftoverTabs() {

@@ -95,3 +95,14 @@ test('the file name carries the date, and build() needs SettingsTransfer', () =>
   assert.throws(() => B.build(parts), /SettingsTransfer is not loaded/);
   globalThis.SettingsTransfer = saved;
 });
+
+test('a settings file brings in only hex colours: anything else in a colour (markup, a url) is left out', () => {
+  const imported = globalThis.SettingsTransfer.portable({
+    categoryColors: { antibot: '#000"><img src=https://x.example/t>', captcha: '#3b82f6', fingerprint: 'url(https://x.example)' },
+    tagColors: { dom: '#abc', headers: 'red; background:url(x)' },
+    badgeColors: { low: '#22c55e', high: 42 }
+  });
+  assert.deepStrictEqual(imported.categoryColors, { captcha: '#3b82f6' });
+  assert.deepStrictEqual(imported.tagColors, { dom: '#abc' });
+  assert.deepStrictEqual(imported.badgeColors, { low: '#22c55e' });
+});

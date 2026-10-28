@@ -55,7 +55,7 @@ function registerCacheHandlers(registry, context) {
                     sendResponse({ cacheHit: false });
                     return;
                 }
-                const cachedData = await DetectionEngineManager.getStoredDetection(url);
+                const cachedData = await DetectionEngineManager.getStoredDetection(url, { privateWindow: sender.tab?.incognito === true });
 
                 if (cachedData) {
                     Logger.detection(`${Logger.hostOf(url)}: cached result reused`);

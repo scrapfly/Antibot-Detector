@@ -325,3 +325,48 @@ test('an old Imperva completion timer does not complete the next capture', async
     assert.equal(completed, 0);
     assert.equal(next.completed, undefined);
 });
+
+test('a saved capture takes every tool\'s expired captures with it; a private window\'s capture is never saved', async () => {
+    const f = fixture({ cloudflare: [{ id: 'expired', timestamp: 1, expiresAt: 2, captureData: { cookie: 'cf_clearance=SYNTHETIC' } }],
+        akamai: [{ id: 'live', timestamp: Date.now(), expiresAt: Date.now() + 60000, captureData: {} }] });
+    await f.context.AdvancedHistoryStore.appendCapture('recaptcha', { id: 'new', data: {} });
+    assert.deepEqual(f.saved().cloudflare, [], 'expired cookie values do not wait for Advanced to be opened');
+    assert.equal(f.saved().akamai[0].id, 'live');
+
+    f.context.chrome.tabs.get = async id => ({ id, url: 'https://private.example/', incognito: true });
+    const result = await f.context.saveToHistory(7, { cookie: 'datadome=SYNTHETIC' }, { type: 'datadome' });
+    assert.equal(result.notSaved, true);
+    assert.equal(f.saved().datadome, undefined, 'nothing kept from a private window');
+});
+
+test('FunCaptcha: two stops of the same capture (Stop pressed during the auto-stop) save its entries once', async () => {
+    const f = fixture(), context = f.context;
+    vm.runInContext(read('background/advanced/vendors/funcaptcha/interceptor.js'), context);
+    context.showNotification = null;
+    const capture = { publicKey: 'SYNTHETIC-KEY', apiDomain: 'client-api.arkoselabs.com' };
+    const states = new Map([[7, { isCapturing: true, capturedData: [capture] }]]);
+    context.funcaptchaInitializeInterceptor(states);
+    const { job } = context.AdvancedJobManager.begin({ tabId: 7, vendorId: 'funcaptcha', operation: 'capture' });
+    context.AdvancedJobManager.bindCaptureState(states.get(7), job);
+    const [first, second] = await Promise.all([context.funcaptchaStopCapture(7, 'captured'), context.funcaptchaStopCapture(7, 'manual')]);
+    assert.equal(second.status, 'stopping');
+    assert.notEqual(first.status, 'stopping');
+    assert.equal((f.saved().funcaptcha || []).length, 1, 'one entry, saved once');
+});
+
+for (const vendorId of ['akamai', 'imperva']) {
+    test(`${vendorId}: a capture that ends without its own stop (tab closed, page left) takes the request listener on every page with it`, async () => {
+        const f = fixture(), context = f.context;
+        vm.runInContext(read(`background/advanced/vendors/${vendorId}/interceptor.js`), context);
+        const states = new Map([[7, { isCapturing: true }]]);
+        context[`${vendorId}InitializeInterceptor`](states);
+        const listener = () => {};
+        context.chrome.webRequest.onBeforeRequest.addListener(listener);
+        vm.runInContext(`${vendorId}InterceptionListener = this.__listener`, Object.assign(context, { __listener: listener }));
+        const { job } = context.AdvancedJobManager.begin({ tabId: 7, vendorId, operation: 'capture' });
+        context.AdvancedJobManager.bindCaptureState(states.get(7), job);
+        states.delete(7); // the job's own cleanup when the tab closes
+        job.finish('cancelled');
+        assert.equal(context.chrome.webRequest.onBeforeRequest.listeners.size, 0, 'no listener left on every request');
+    });
+}

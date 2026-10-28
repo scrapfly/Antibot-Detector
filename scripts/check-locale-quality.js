@@ -129,4 +129,5 @@ for (const { locale, errors, warnings } of rows) {
 const englishName = (english.extensionName || {}).message || '', englishDescription = (english.extensionDescription || {}).message || '';
 if ([...englishName].length > 75 || [...englishDescription].length > 132) { console.error('English extensionName/extensionDescription exceed the Web Store limits'); failed = true; }
 console.log(failed ? '\nTranslation checks failed.' : '\nTranslation checks passed.');
-process.exit(failed ? 1 : 0);
+// The exit code is set, not forced: process.exit() right after a long listing can drop the end of it when the reader is slow
+process.exitCode = failed ? 1 : 0;

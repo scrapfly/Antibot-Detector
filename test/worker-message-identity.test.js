@@ -312,13 +312,17 @@ test('PAGE_LOAD on a watchlist tab that landed on a cached page hands the result
   assert.equal(h.effects.find(effect => effect.kind === 'badge').data.text, '1', 'the badge still shows the cached result');
 });
 
-test('PAGE_LOAD on a Bulk scan tab that landed on a cached page is handled like any page, then hands the result over', async () => {
+test('PAGE_LOAD on a Bulk scan tab never takes a cached result: the page it landed on is scanned now', async () => {
   const h = pageLoadHarness();
   const order = [];
+  let lookedUp = false;
+  const cached = h.context.Engine.getStoredDetection;
+  h.context.Engine.getStoredDetection = async (...args) => { lookedUp = true; return cached(...args); };
   h.dependencies.Settings = { sendWebhookIfEnabled: async () => { order.push('webhook'); } };
   h.context.BackgroundTabScan = { isScanTab: () => true, isQuiet: () => false, scanFinished: (tabId, url, results) => order.push(`finished:${results.length}`) };
   await h.run();
-  assert.deepEqual(order, ['webhook', 'finished:1'], 'the cache hit goes its usual way first, and the run gets the result last');
+  assert.equal(lookedUp, false, 'a result days old would be reported as found today');
+  assert.deepEqual(order, [], 'no cached result is sent or handed over: the scan reports when it finishes');
 });
 
 test('PAGE_LOAD retries stop when their document is replaced', async () => {
@@ -405,3 +409,16 @@ for (const [type, field] of [['WINDOW_PROPS_COMPLETE', 'reason'], ['JS_HOOKS_COM
     assert.equal(state[type === 'JS_HOOKS_COMPLETE' ? 'hooksComplete' : 'windowPropertiesComplete'], true);
   });
 }
+
+test('a prerendered page just shown starts without what the tab captured for the page before; a normal load keeps the clear to its own request', async () => {
+  const h = pageLoadHarness();
+  const forgotten = [];
+  h.context.forgetTabRequests = (tabId) => forgotten.push(tabId);
+  h.context.noteTabLeaving = () => {};
+  await h.context.Engine.handlePageLoadNotification({ url: 'https://example.test/', triggerSource: 'prerender_activation' },
+    { documentId: 'doc-current', tab: { id: 7 } }, h.dependencies);
+  assert.deepEqual(forgotten, [7]);
+  await h.context.Engine.handlePageLoadNotification({ url: 'https://example.test/', triggerSource: 'page_load' },
+    { documentId: 'doc-current', tab: { id: 7 } }, h.dependencies);
+  assert.deepEqual(forgotten, [7], 'a normal load was cleared by its own main-frame request already');
+});

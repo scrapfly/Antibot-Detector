@@ -4,7 +4,7 @@
  * these sites" list of Settings → Detection use the same rules.
  *
  *   normalize()   text (one per line, or separated by commas, semicolons or spaces) or an array as bare lowercase hosts:
- *                 protocol, credentials, port, path and a leading "*." are dropped
+ *                 protocol, credentials, port, path and a leading "*." are dropped; an international name in punycode
  *   matches()     is a host one of the listed sites, or a subdomain of one? ("notexample.com" is not "example.com")
  */
 (function(root) {
@@ -18,6 +18,10 @@
       let host = entry.trim().toLowerCase();
       if (!host) continue;
       host = host.replace(/^[a-z][a-z0-9+.-]*:\/\//, '').replace(/^[^@/]*@/, '').replace(/[/?#].*$/, '').replace(/:\d+$/, '').replace(/^\*\./, '').replace(/^\.+/, '').replace(/\.+$/, '');
+      // A name with letters beyond ASCII (bücher.de) is kept as the browser spells page hosts: xn--bcher-kva.de
+      if (host && /[^\x00-\x7f]/.test(host)) {
+        try { host = new URL(`http://${host}`).hostname; } catch (_) { continue; }
+      }
       if (host && /^[a-z0-9._-]+$/.test(host) && !out.includes(host)) out.push(host);
     }
     return out;

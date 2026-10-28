@@ -23,7 +23,8 @@ function uiHarness() {
   ui.LANGUAGE_OPTIONS = [{ value: 'en' }, { value: 'es' }];
   const form = {
     settings: { debugMode: false, webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookSecret: 'SYNTHETIC_TOKEN' }, share: { githubToken: 'SYNTHETIC_TOKEN', provider: 'github_gist' } },
-    settingsBaseline: { debugMode: false },
+    // Saved as loaded: the import starts from what is saved, never from a draft
+    settingsBaseline: { debugMode: false, webhook: { enableWebhook: true, webhookUrl: 'https://hooks.example/SYNTHETIC_TOKEN', webhookSecret: 'SYNTHETIC_TOKEN' }, share: { githubToken: 'SYNTHETIC_TOKEN', provider: 'github_gist' } },
     deepMerge: (...args) => ui.deepMerge(...args),
     validateSettings: () => ({ isValid: true, errors: [] }),
     updateSettingsUI() { this.renders = (this.renders || 0) + 1; },
@@ -164,4 +165,14 @@ test('draft edits do not mutate defaults reused after Cancel or reopening settin
   draft.webhook.webhookHeaders.push({ name: 'X-Test', value: 'draft' });
   assert.deepEqual(defaults.detection.blacklistedDomains, []);
   assert.deepEqual(defaults.webhook.webhookHeaders, []);
+});
+
+test('an import starts from the saved settings: a change staged in the form but never saved is not written with it', async () => {
+  const { context, ui, form } = uiHarness();
+  let saved;
+  context.StorageManager = { commitSettings: async mutation => { saved = plain(mutation); return { settings: mutation.candidate, previous: form.settings }; } };
+  form.settings = { ...plain(form.settings), detection: { scanMode: 'allowlist', allowedDomains: [] } }; // staged, not saved
+  await ui.importSettingsFile.call(form, { target: { files: [{ text: async () => JSON.stringify({ settings: { debugMode: true } }) }] } });
+  assert.equal(saved.candidate.debugMode, true);
+  assert.equal(saved.candidate.detection, undefined, 'the staged "only these sites" with an empty list is not saved');
 });

@@ -107,7 +107,9 @@ function main() {
 
     if (failed) {
         console.error('\nStore listing check failed.');
-        process.exit(1);
+        // Set, not forced: process.exit() right after a listing can drop the end of it when the reader is slow
+        process.exitCode = 1;
+        return;
     }
     console.log('\nStore listing check passed.');
 }

@@ -121,10 +121,11 @@
     const p = prepare(input);
     if (!p.url || !quote) return '';
     const q = quote.shell;
+    // -g: [ ] and { } in an address (filter[brand]=x) are characters, not curl's URL patterns
     const args = [q(p.url)];
     for (const [name, value] of p.headers) args.push(`-H ${q(`${name}: ${value}`)}`);
     if (p.cookies.length) args.push(`-b ${q(p.cookies.map(c => `${c.name}=${c.value}`).join('; '))}`);
-    return [...header(p, '#'), `curl ${args.join(' \\\n  ')}`].join('\n') + '\n';
+    return [...header(p, '#'), `curl -g ${args.join(' \\\n  ')}`].join('\n') + '\n';
   }
 
   /** A Python script using requests; '' without a web page */

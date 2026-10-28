@@ -235,3 +235,27 @@ test('a Retry press while the automatic retry of the same delivery is being sent
   assert.equal(h.log().filter((e) => e.trigger === 'retry').length, 1, 'one retry line');
 });
 
+
+test('a worker stopped while it was sending an automatic retry does not lose it: the next worker retries it once the claim runs out', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 503 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  const [id] = Object.keys(h.held());
+  h.advance(MIN);
+  let sending = false;
+  h.reply(() => { sending = true; return new Promise(() => {}); }); // the worker stops here: no answer, ever
+  h.runtime.runDueWebhookRetries();
+  for (let i = 0; i < 50 && !sending; i++) await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.ok(sending, 'the retry is in flight');
+  const left = h.held();
+  assert.equal(typeof left[id].due, 'number', 'still due once the claim runs out');
+
+  // A new worker: same storage.session, the claim has run out
+  const next = harness(ON);
+  next.sessionStore[next.runtime.WEBHOOK_HELD_KEY] = left;
+  next.clock.t = h.clock.t + next.runtime.WEBHOOK_RETRY_CLAIM_MS + 1000;
+  next.reply(() => ({ ok: true, status: 200 }));
+  await next.runtime.runDueWebhookRetries();
+  assert.equal(next.calls.length, 1, 'sent again');
+  assert.deepEqual(next.held(), {});
+});

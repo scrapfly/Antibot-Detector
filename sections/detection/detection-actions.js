@@ -404,10 +404,21 @@ DetectionActions._sanitizeUrlForPaste = function(raw) {
     if (!raw) return null;
     try {
       const u = new URL(raw);
-      return `${u.origin}${u.pathname}`;
+      // A path can carry a secret too (a password-reset, invite or magic-link token): a segment that looks like one
+      // is replaced, the readable ones (/reset, /invite) stay
+      const path = u.pathname.split('/').map(segment => (DetectionActions._looksLikeSecret(segment) ? ':token' : segment)).join('/');
+      return `${u.origin}${path}`;
     } catch {
       return null;
     }
+};
+
+/** A path segment that reads as a token rather than a word: a UUID, long hex, or a long mix of letters and digits. */
+DetectionActions._looksLikeSecret = function(segment) {
+    const text = (() => { try { return decodeURIComponent(segment); } catch (_) { return segment; } })();
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(text)) return true;
+    if (/^[0-9a-f]{16,}$/i.test(text)) return true;
+    return text.length >= 16 && /^[A-Za-z0-9._~+=-]+$/.test(text) && /\d/.test(text) && /[A-Za-z]/.test(text);
 };
 
 /**

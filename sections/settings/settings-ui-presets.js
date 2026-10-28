@@ -25,8 +25,11 @@ SettingsUI.applyPreset = async function(id) {
     });
     if (!confirmed) return;
     // The same Save as the form: three-way merged with whatever changed meanwhile, announced to the worker
-    const patch = SettingsPresets.patchOf(id, this.settings, this.defaultSettings || {});
-    const saved = await this.saveSettings({ candidate: this.deepMerge(this.settings, patch), notify: false });
+    // Over the saved settings: a change staged in the form but not saved (an empty "only these sites" list) is not
+    // written with the preset
+    const base = this.settingsBaseline || this.settings;
+    const patch = SettingsPresets.patchOf(id, base, this.defaultSettings || {});
+    const saved = await this.saveSettings({ candidate: this.deepMerge(base, patch), notify: false });
     if (!saved) return;
     this.updateSettingsUI();
     NotificationHelper.success(text('presetApplied', 'Preset applied'));

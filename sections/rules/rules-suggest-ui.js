@@ -210,7 +210,10 @@ Rules.prototype.suggestRowDescription = function(candidate) {
   if (candidate.kind === 'url') {
     return ruleSuggestText('suggestRuleScriptFmt', 'Script addresses containing this: {0}', candidate.sources.length);
   }
-  return ruleSuggestText('suggestRuleExactName', 'Matched by its exact name');
+  // As the engine reads a plain name: a cookie name matches names starting with it, a header name names containing it
+  return candidate.kind === 'header'
+    ? ruleSuggestText('suggestRuleHeaderNameFmt', 'Headers whose name contains {0}', candidate.text)
+    : ruleSuggestText('suggestRuleCookieNameFmt', 'Cookies named {0}, or whose name starts with it', candidate.text);
 };
 
 /** One line per candidate: the box, the name and, only when it says something, a short tag. */
@@ -305,7 +308,11 @@ Rules.pagePickPatternText = function(candidate) {
   return String(candidate.text || '');
 };
 
-/** The first ticked item fills the row the list was opened from; any other becomes a new row, as Add Pattern makes them. */
+/**
+ * The first ticked item fills the row the list was opened from when that row is still empty; any other (or every one,
+ * from a row that already has a pattern: its id, options, value and description belong to that pattern) becomes a new
+ * row, as Add Pattern makes them.
+ */
 Rules.prototype.addPagePicks = function(item) {
   const panel = item && item.querySelector('.page-pick-panel');
   if (!panel) return;
@@ -314,7 +321,8 @@ Rules.prototype.addPagePicks = function(item) {
   const section = item.closest('.method-section');
   const addButton = section.querySelector('.add-method-btn');
   picked.forEach((candidate, index) => {
-    let input = index === 0 ? item.querySelector('.method-name') : null;
+    const own = index === 0 ? item.querySelector('.method-name') : null;
+    let input = own && !own.value.trim() ? own : null;
     if (!input) {
       this.addNewMethodItem(addButton);
       const items = section.querySelectorAll('.method-item');

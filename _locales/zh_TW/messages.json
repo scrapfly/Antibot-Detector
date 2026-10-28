@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "偵測器已匯入"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "已匯入偵測器，以下除外：{0}（在此版本中無效）"
+  },
   "detectorExportedFmt": {
     "message": "已匯出 {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "儲存前請填寫所有必填的模式欄位。"
   },
+  "rulesUiInvalidRegex": {
+    "message": "標記為正規表示式的模式無效，或可能讓掃描卡住。請修正，或關閉該列的 Regex。"
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "輸入偵測方法類型（例如 HEADERS、CONTENT、URLs）："
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "自訂上傳伺服器：請使用公用主機上的 HTTPS 位址"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook URL：請使用公用主機上的 HTTPS 位址"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "自訂上傳伺服器：JSON 範本不是有效的 JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "將日誌保留在這裡而不是主控台，以便匯出為 JSON 或文字"
   },
-  "ruleTranslationsTitle": {
-    "message": "翻譯"
-  },
-  "ruleTranslationsHint": {
-    "message": "擴充功能使用該語言時，會顯示此文字來取代說明。留空則顯示說明。"
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} / {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "自動翻譯"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "自動翻譯需要 Chrome 138 或更新版本。"
-  },
-  "ruleTranslateNeedsText": {
-    "message": "請先填寫說明。"
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "正在翻譯：{0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "已填入 {0} 種語言。儲存前請檢查。"
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "已填入 {0} 種；有 {1} 種無法在此翻譯。"
-  },
   "sfxOptRenderingWait": {
     "message": "載入後等待"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "關閉"
-  },
-  "ruleTranslateAllDone": {
-    "message": "每種語言都已有翻譯。"
-  },
-  "combinationTranslationsTitle": {
-    "message": "名稱翻譯"
-  },
-  "combinationTranslationsHint": {
-    "message": "擴充功能使用該語言時，會顯示此文字來取代名稱。留空則顯示名稱。"
-  },
-  "combinationTranslateNeedsName": {
-    "message": "請先填寫名稱。"
   },
   "advancedInfoCloudflareDesc": {
     "message": "檢查挑戰 Cookie 並分析其指令碼"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "歷史記錄大小必須是 {0} MB 其中之一"
   },
-  "ruleTranslateBarFmt": {
-    "message": "尚未翻譯成所有語言的文字：{0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "使用 Chrome 的裝置端翻譯工具，填入說明、模式和組合中缺少的翻譯。儲存前請檢查。"
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "翻譯"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "翻譯變更"
-  },
-  "ruleTranslatedLabel": {
-    "message": "已翻譯"
-  },
-  "ruleTranslateBusy": {
-    "message": "正在翻譯…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "此規則的所有文字皆已翻譯成全部 {0} 種語言。"
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "有 {0} 條（共 {1} 條）變更的文字在此無法翻譯成所有語言（瀏覽器可能仍在下載）。沒有遺失任何內容：這些文字維持原樣。請稍後再試。"
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "已下載：{0}。{2} 種語言中已有 {1} 種就緒。瀏覽器每種語言只下載一次，每次點擊下載一種：請再次點擊「翻譯」下載下一種。"
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "正在翻譯 {0} 段文字…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "已填入 {0} 筆翻譯。儲存前請檢查。"
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "已填入 {0} 筆；有 {1} 筆無法在此翻譯。"
-  },
   "ruleHistoryCheckPatterns": {
     "message": "模式"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "請在網站上開啟彈出式視窗，才能據此建立規則。"
   },
-  "suggestRuleExactName": {
-    "message": "依確切名稱比對"
+  "suggestRuleHeaderNameFmt": {
+    "message": "名稱包含 {0} 的標頭"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "名為 {0} 或名稱以其開頭的 Cookie"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "以 {0} 開頭的名稱：其餘部分看起來是隨機的"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "未偵測到 hCaptcha 資料（60 秒逾時）"
   },
-  "ruleOriginalEnglish": {
-    "message": "原文（英文）"
-  },
-  "ruleOriginalHint": {
-    "message": "其他語言會翻譯此文字：修改後，在重新翻譯之前會顯示未翻譯的文字。"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "設定尚未儲存"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "變更語言會重新載入擴充功能。要先儲存對設定的變更嗎？"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "你用{0}修改的文字：{1}。其他語言仍顯示舊文字。"
-  },
-  "ruleTranslateChangesHint": {
-    "message": "使用瀏覽器內建的翻譯功能，將你寫的內容翻譯成英文（原文）和其他語言。儲存前請檢查。"
   },
   "combinationOneCount": {
     "message": "1 個組合"

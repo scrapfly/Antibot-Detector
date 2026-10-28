@@ -462,6 +462,19 @@ async function scenario(name, fn) {
     assert.match(sent[0].message, /Removed: HistProbe Bot A/);
   });
 
+  await scenario('Changed: a page that lost its only protection is recorded with the change; back as before, the blip is unmarked', async () => {
+    await resetHistory(); await clearNotes();
+    await historySettings({ historyChangeAlerts: 'off' });
+    const { second } = await scanChange('chg-gone', ['bot-a'], []);
+    assert.deepEqual(second.changed && second.changed.removed, ['HistProbe Bot A'], 'a scan that found nothing is recorded when it is the change');
+    assert.deepEqual(names(second), []);
+    dyn['chg-gone'] = ['bot-a'];
+    const third = await visitSaved(changePage('chg-gone', 'v=3'), { match: i => i.url === changePage('chg-gone', 'v=3') });
+    assert.ok(!third.changed, 'back to what it had: not a change');
+    assert.ok(!(await items()).some(i => i.changed), 'and the blip before it is no longer marked');
+    await resetSettings();
+  });
+
   await scenario('Change alerts: off sends nothing but the badge is still recorded; pinned-only alerts only for pinned pages', async () => {
     await resetHistory(); await clearNotes();
     await historySettings({ historyChangeAlerts: 'off' });

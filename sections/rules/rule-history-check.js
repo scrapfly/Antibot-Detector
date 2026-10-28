@@ -46,6 +46,11 @@
     const n = str(needle), h = str(hay);
     if (!n) return true;
     if (regex) {
+      // A pattern that backtracks catastrophically would freeze the popup over hundreds of saved pages; the engine
+      // refuses it too (utils/pattern-cache.js)
+      const evil = typeof isLikelyEvilRegex === 'function' ? isLikelyEvilRegex
+        : (typeof globalThis !== 'undefined' && typeof globalThis.isLikelyEvilRegex === 'function' ? globalThis.isLikelyEvilRegex : null);
+      if (evil && evil(n)) return false;
       try { return new RegExp(n, caseSensitive ? '' : 'i').test(h); } catch (_) { return false; }
     }
     if (wholeWord) {
@@ -71,9 +76,9 @@
       case 'header': {
         const [name, value] = split(match.value, ':');
         const headerName = str(match.name) || name;
-        const nameOk = pattern.nameRegex
-          ? textMatches(pattern.name, headerName, { regex: true, caseSensitive: pattern.nameCaseSensitive })
-          : headerName.toLowerCase() === str(pattern.name).toLowerCase();
+        // As detection reads a header name: a plain one matches names containing it (x-cache: x-cache-status too)
+        const nameOk = textMatches(pattern.name, headerName,
+          { regex: pattern.nameRegex, wholeWord: pattern.nameWholeWord, caseSensitive: pattern.nameCaseSensitive });
         return nameOk && (!pattern.value || textMatches(pattern.value, value,
           { regex: pattern.valueRegex, wholeWord: pattern.valueWholeWord, caseSensitive: pattern.valueCaseSensitive }));
       }

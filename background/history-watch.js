@@ -142,6 +142,10 @@ const HistoryWatch = {
             for (let i = 0; i < watched.length; i++) {
                 if (i > 0) await this.sleep(this.JITTER_MS[0] + Math.random() * (this.JITTER_MS[1] - this.JITTER_MS[0]));
                 const outcome = await this._checkOne(watched[i], settings, windowId);
+                // A check that did not get an answer (failed, redirected, unsteady, skipped) still counts as tried
+                if (outcome !== 'changed' && outcome !== 'unchanged' && typeof HistoryRecorder.noteWatchAttempt === 'function') {
+                    await HistoryRecorder.noteWatchAttempt(watched[i].id, chrome).catch(() => {});
+                }
                 if (outcome === 'changed') { totals.checked++; totals.changed++; }
                 else if (outcome === 'unchanged') totals.checked++;
                 else if (outcome === 'skipped') totals.skipped++;
@@ -171,6 +175,7 @@ const HistoryWatch = {
 
         const first = await this.scan(entry.url, windowId);
         if (!first.ok) return 'failed';
+        if (first.excluded) return 'skipped'; // it ended on a site Settings → Detection skips
         if (!this.samePage(first.url, entry.url)) return 'redirected';
         const diff = HistoryPolicy.diffProtections(entry.detections, first.results);
         if (diff.changed) {

@@ -713,6 +713,9 @@ const HistoryStats = {
       .sort((a, b) => rank(b) - rank(a) || b.uniqueDetectors - a.uniqueDetectors || b.visits - a.visits || String(a.hostname).localeCompare(String(b.hostname)));
     return typeof limit === 'number' && Number.isFinite(limit) ? list.slice(0, Math.max(0, Math.floor(limit))) : list;
   },
+  // History's Changed rule (HistoryPolicy): found from SURE, gone below MAYBE
+  CHANGE_SURE: 50,
+  CHANGE_MAYBE: 25,
   /** A path segment that names one record rather than one page: digits, a UUID or a long opaque token. */
   isIdSegment(segment) {
     return /^\d+$/.test(segment) || /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(segment) ||
@@ -735,6 +738,8 @@ const HistoryStats = {
    * Protections a page gained or lost between two saved copies of the same page (same domain and
    * pageKey). `items` is all of History, already scoped, so the first copy inside the range is
    * compared with the last one before it. Rows with a timestamp before `since` are dropped.
+   * The same rule as History's Changed mark (HistoryPolicy.diffProtections): anti-bot and CAPTCHA
+   * only, gained from 50% and lost below 25%, and a copy recorded from the cache is not a visit.
    */
   protectionChanges(items, options = {}) {
     options = HistoryStats.isRecord(options) ? options : {};
@@ -742,7 +747,7 @@ const HistoryStats = {
     const since = typeof options.since === 'number' && Number.isFinite(options.since) ? options.since : null;
     const groups = new Map(), paths = new Map();
     for (const item of Array.isArray(items) ? items : []) {
-      if (!HistoryStats.isRecord(item)) continue;
+      if (!HistoryStats.isRecord(item) || item.fromCache === true) continue;
       const ts = HistoryStats.getTimestamp(item);
       if (ts === null || ts > now) continue;
       const hostname = HistoryStats.hostOf(item);
@@ -752,12 +757,18 @@ const HistoryStats = {
       const groupKey = hostname + '\n' + path;
       let group = groups.get(groupKey);
       if (!group) { group = { hostname, path, visits: [] }; groups.set(groupKey, group); }
-      const names = new Map();
+      const names = new Map(), seen = new Set();
       for (const detection of Array.isArray(item.detections) ? item.detections : []) {
         const name = HistoryStats.detectionName(detection);
-        if (name && !names.has(Categories.protectionKey(name))) names.set(Categories.protectionKey(name), { name, category: HistoryStats.detectionCategory(detection) });
+        const category = HistoryStats.detectionCategory(detection);
+        if (!name || category === 'fingerprint') continue;
+        const key = Categories.protectionKey(name);
+        const score = HistoryStats.confidenceOf(detection);
+        const value = score === null ? 100 : score; // saved without a score: found
+        if (value >= HistoryStats.CHANGE_MAYBE) seen.add(key);
+        if (value >= HistoryStats.CHANGE_SURE && !names.has(key)) names.set(key, { name, category });
       }
-      group.visits.push({ ts, names, order: group.visits.length });
+      group.visits.push({ ts, names, seen, order: group.visits.length });
     }
     const { CATEGORY_ORDER } = HistoryStats;
     const byOrder = (a, b) => CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category) || a.name.localeCompare(b.name);
@@ -770,8 +781,8 @@ const HistoryStats = {
         const current = visits[i], previous = visits[i - 1];
         if (since !== null && current.ts < since) continue;
         const added = [], removed = [];
-        for (const [key, row] of current.names) if (!previous.names.has(key)) added.push(row);
-        for (const [key, row] of previous.names) if (!current.names.has(key)) removed.push(row);
+        for (const [key, row] of current.names) if (!previous.seen.has(key)) added.push(row);
+        for (const [key, row] of previous.names) if (!current.seen.has(key)) removed.push(row);
         if (!added.length && !removed.length) continue;
         rows.push({ hostname: group.hostname, path: group.path, timestamp: current.ts, previous: previous.ts, added: added.sort(byOrder), removed: removed.sort(byOrder),
           kind: added.length && removed.length ? 'replaced' : added.length ? 'gained' : 'dropped' });

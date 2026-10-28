@@ -507,8 +507,10 @@ class DetectorManager {
                     for (const [detectorKey, detector] of Object.entries(categoryDetectors)) {
                         const originalDifficulty = detector?.difficulty;
                         if (detector?.detection) {
-                            for (const methodData of Object.values(detector.detection)) {
-                                if (typeof methodData === 'string') {
+                            // A known method saved as text is the old damage this repairs; text under any other key
+                            // (a comment in an imported file) is dropped by normalize, never a reason to reload everything
+                            for (const [method, methodData] of Object.entries(detector.detection)) {
+                                if (typeof methodData === 'string' && DetectorManager.schema.METHODS.includes(method)) {
                                     hasCorruption = true;
                                     break;
                                 }
@@ -987,7 +989,9 @@ class DetectorManager {
      */
     async importDetectors(data, merge = true) {
         const extensionVersion = typeof chrome !== 'undefined' ? chrome.runtime?.getManifest?.().version : null;
-        const incoming = DetectorManager.schema.admitImport(data, extensionVersion);
+        const incoming = DetectorManager.schema.admitImport(data, extensionVersion, { partial: merge });
+        // The rules of the file left out (not valid here), for the message that names them
+        this.lastImportSkipped = incoming && Array.isArray(incoming.skipped) ? incoming.skipped.slice() : [];
         if (!incoming) return false;
 
         // Construct a candidate without touching live rules. An invalid record
@@ -1009,7 +1013,15 @@ class DetectorManager {
             }
             for (const records of Object.values(candidate)) delete records[detector.id];
             if (!candidate[category]) candidate[category] = {};
-            candidate[category][detector.id] = DetectorManager.applyDetectorFixups(detector);
+            // A file cannot say how this browser's rules relate to Scrapfly's: an edit mark or an "official copy" in it
+            // would make Update skip the rule and Reset restore whatever the file holds
+            const imported = JSON.parse(JSON.stringify(detector));
+            for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion']) delete imported[field];
+            // Only Rules → Update installs an official rule: a file's copy under an official id is the person's own
+            // rule (Update offers the real one beside it), never one shown as Scrapfly's
+            const author = typeof imported.author === 'string' ? imported.author.trim().toLowerCase() : '';
+            if (author === 'scrapfly' && DetectionUtils._officialDetectorIds && DetectionUtils._officialDetectorIds.has(imported.id)) delete imported.author;
+            candidate[category][detector.id] = DetectorManager.applyDetectorFixups(imported);
         }
         await this.saveDetectorsToStorage(candidate);
         return true;

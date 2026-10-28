@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Detektorer importerade"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Detektorer importerade, utom: {0} (inte giltiga i den här versionen)"
+  },
   "detectorExportedFmt": {
     "message": "Exporterade {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Fyll i alla obligatoriska mönsterfält innan du sparar."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Ett mönster markerat som reguljärt uttryck är ogiltigt eller kan låsa genomsökningen. Rätta det eller stäng av Regex för den raden."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Ange typ av upptäcktsmetod (t.ex. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Egen uppladdningsserver: använd en HTTPS-adress på en publik värd"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook-URL: använd en HTTPS-adress på en publik värd"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Egen uppladdningsserver: JSON-mallen är inte giltig JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Behåll loggarna här i stället för i konsolen, för att exportera dem som JSON eller text"
   },
-  "ruleTranslationsTitle": {
-    "message": "Översättningar"
-  },
-  "ruleTranslationsHint": {
-    "message": "Visas i stället för beskrivningen när tillägget har det språket. Tomt: beskrivningen visas."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} av {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Översätt automatiskt"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Automatisk översättning kräver Chrome 138 eller senare."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Skriv beskrivningen först."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Översätter: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Fyllde i {0} språk. Kontrollera dem innan du sparar."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Fyllde i {0}; {1} kunde inte översättas här."
-  },
   "sfxOptRenderingWait": {
     "message": "Vänta efter inläsning"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Av"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Varje språk har redan en översättning."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Namnöversättningar"
-  },
-  "combinationTranslationsHint": {
-    "message": "Visas i stället för namnet när tillägget har det språket. Tomt: namnet visas."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Skriv namnet först."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Kontrollerar utmaningscookies och analyserar skripten"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Historikens storlek måste vara något av: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Texter som ännu inte är översatta till alla språk: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Fyller i de översättningar som saknas för beskrivningen, mönstren och kombinationerna med Chromes översättare på enheten. Kontrollera dem innan du sparar."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Översätt"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Översätt ändringar"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Översatt"
-  },
-  "ruleTranslateBusy": {
-    "message": "Översätter…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Alla texter i den här regeln är översatta till alla {0} språk."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "{0} av {1} ändrade texter kunde inte översättas till alla språk här (webbläsaren kanske fortfarande laddar ner dem). Inget gick förlorat: texterna är som de var. Försök igen om en stund."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Nedladdat: {0}. {1} av {2} språk klara. Webbläsaren laddar ner varje språk en gång, ett per klick: klicka på Översätt igen för nästa."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Översätter {0} texter…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Fyllde i {0} översättningar. Kontrollera dem innan du sparar."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Fyllde i {0}; {1} kunde inte översättas här."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Mönster"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Öppna popupen på en webbplats för att skapa en regel från den."
   },
-  "suggestRuleExactName": {
-    "message": "Söks på exakt namn"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Rubriker vars namn innehåller {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookies som heter {0} eller vars namn börjar så"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Namn som börjar med {0}: resten ser slumpmässigt ut"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Inga hCaptcha-data upptäcktes (tidsgräns 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Original (engelska)"
-  },
-  "ruleOriginalHint": {
-    "message": "De andra språken översätter den här texten: ändrar du den visas den oöversatt tills den översätts igen."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Osparade inställningar"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Byte av språk läser in tillägget igen. Spara ändringarna i inställningarna först?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Texter du ändrade på {0}: {1}. De andra språken visar fortfarande den gamla texten."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Översätter det du skrev till engelska (originalet) och de andra språken med webbläsarens inbyggda översättare. Kontrollera dem innan du sparar."
   },
   "combinationOneCount": {
     "message": "1 kombination"

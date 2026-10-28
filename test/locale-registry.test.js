@@ -43,10 +43,9 @@ test('every language has a flag', () => {
   for (const code of Object.values(flags)) assert.match(code, /^[a-z]{2}$/);
 });
 
-test('rule texts, the updater, the editor and the import allowlist know the same languages', () => {
+test('rule texts, the updater and the import allowlist know the same languages', () => {
   same(RuleI18n.LOCALES, translated, 'RuleI18n.LOCALES');
   same(quoted(/RULE_I18N_LOCALES = \[([^\]]*)\]/.exec(read('modules/detection/rules/update-manager.js'))[1]), translated, 'UpdateManager.RULE_I18N_LOCALES');
-  same(quoted(/RULE_TRANSLATION_LOCALES = [^;]*?\|\| \[([^\]]*)\]/s.exec(read('sections/rules/rules-translations-ui.js'))[1]), translated, 'the rule editor fallback list');
   const allow = /\[('auto'[^\]]*)\]\.includes\(mutation\.languageOverride\)/.exec(read('modules/settings/settings-store.js'))[1];
   same(quoted(allow), ['auto', ...folders], 'settings import allowlist');
   for (const locale of translated) assert.ok(fs.existsSync(path.join(root, 'detectors/i18n', `${locale}.json`)), `detectors/i18n/${locale}.json`);

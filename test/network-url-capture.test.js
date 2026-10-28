@@ -12,8 +12,8 @@ const vm = require('node:vm');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
 const ctx = vm.createContext({ URL, TextDecoder, Uint8Array });
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody;', ctx);
-const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody } = ctx;
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody; this.isOtherPageRequest = isOtherPageRequest; this.noteTabLeaving = noteTabLeaving;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody, isOtherPageRequest, noteTabLeaving } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -78,7 +78,8 @@ test('the clear runs first and synchronously, only for top-level pages', () => {
   const first = setup.indexOf('chrome.webRequest.');
   assert.equal(setup.indexOf('chrome.webRequest.onBeforeRequest.addListener', first), first, 'the first listener registered');
   const listener = setup.slice(first, setup.indexOf('\n    );', first));
-  assert.match(listener, /if \(!isPrerenderRequest\(details\)\) forgetTabRequests\(details\.tabId, details\.requestId\)/);
+  assert.match(listener, /if \(isPrerenderRequest\(details\)\) return;/);
+  assert.match(listener, /forgetTabRequests\(details\.tabId, details\.requestId\)/);
   assert.match(listener, /types: \['main_frame'\]/);
   assert.doesNotMatch(listener, /async|await/);
 });
@@ -105,7 +106,21 @@ test('requests of a page Chrome is prerendering leave the visible page\'s captur
   const setup = src.slice(src.indexOf('function setupHeaderCapture'));
   const listeners = setup.split(/chrome\.webRequest\.\w+\.addListener\(/).slice(1);
   assert.equal(listeners.length, 5);
-  for (const body of listeners) assert.match(body, /isPrerenderRequest\(details\)/);
+  assert.match(listeners[0], /isPrerenderRequest\(details\)/, 'the clear');
+  for (const body of listeners.slice(1)) assert.match(body, /isOtherPageRequest\(details\)/, 'every capture listener');
+});
+
+test('requests of the page the tab is leaving (unload beacons, last analytics) are not credited to the next page', () => {
+  const tab = 31;
+  const req = (extra) => ({ tabId: tab, frameId: 0, type: 'xmlhttprequest', documentLifecycle: 'active', ...extra });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false, 'the shown page');
+  noteTabLeaving(tab); // a new page starts loading
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', type: 'ping' })), true, 'a beacon of the page being left');
+  assert.equal(isOtherPageRequest({ tabId: tab, frameId: 4, parentDocumentId: 'doc-A', documentLifecycle: 'active' }), true, 'a frame of it');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', documentLifecycle: 'pending_deletion' })), true, 'unloading');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-B' })), false, 'the new page');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', tabId: 32 })), false, 'another tab is not affected');
+  assert.equal(isOtherPageRequest({ tabId: tab, type: 'main_frame', frameId: 0 }), false, 'the new page\'s own request');
 });
 
 test('request bodies are kept to the captured-response limit', () => {

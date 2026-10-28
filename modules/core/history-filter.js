@@ -22,9 +22,13 @@
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
   const categoryKey = (d) => Categories.keyOf(d);
 
+  /** A Changed record's names as a list, whatever shape an old build or an import left (one name, nothing, junk). */
+  const changeNames = (value) => (Array.isArray(value) ? value : (typeof value === 'string' && value.trim() ? [value] : []))
+    .filter(name => typeof name === 'string' && name.trim());
+
   const isChanged = (item) => {
     const change = item && item.changed;
-    return !!change && ((change.added || []).length > 0 || (change.removed || []).length > 0);
+    return !!change && typeof change === 'object' && (changeNames(change.added).length > 0 || changeNames(change.removed).length > 0);
   };
 
   /** The chips as the popup keeps them, whatever was passed: booleans and known categories only. */
@@ -76,7 +80,7 @@
     return list.filter(item => matches(item, options));
   }
 
-  const api = { CATEGORIES, isChanged, isActive, normalizeChips, matches, filter };
+  const api = { CATEGORIES, changeNames, isChanged, isActive, normalizeChips, matches, filter };
   root.HistoryFilter = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "นำเข้าตัวตรวจจับแล้ว"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "นำเข้าตัวตรวจจับแล้ว ยกเว้น: {0} (ใช้ไม่ได้ในเวอร์ชันนี้)"
+  },
   "detectorExportedFmt": {
     "message": "ส่งออก {0} แล้ว"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "โปรดกรอกฟิลด์รูปแบบที่จำเป็นทั้งหมดก่อนบันทึก"
   },
+  "rulesUiInvalidRegex": {
+    "message": "รูปแบบที่ทำเครื่องหมายเป็นนิพจน์ทั่วไปไม่ถูกต้องหรืออาจทำให้การสแกนค้าง แก้ไขหรือปิด Regex สำหรับแถวนั้น"
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "ป้อนประเภทวิธีการตรวจจับ (เช่น HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "เซิร์ฟเวอร์อัปโหลดที่กำหนดเอง: ใช้ที่อยู่ HTTPS บนโฮสต์สาธารณะ"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL ของ Webhook: ใช้ที่อยู่ HTTPS บนโฮสต์สาธารณะ"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "เซิร์ฟเวอร์อัปโหลดที่กำหนดเอง: เทมเพลต JSON ไม่ใช่ JSON ที่ถูกต้อง"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "เก็บล็อกไว้ที่นี่แทนคอนโซล เพื่อส่งออกเป็น JSON หรือข้อความ"
   },
-  "ruleTranslationsTitle": {
-    "message": "คำแปล"
-  },
-  "ruleTranslationsHint": {
-    "message": "แสดงแทนคำอธิบายเมื่อส่วนขยายใช้ภาษานั้น ถ้าว่าง จะแสดงคำอธิบาย"
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} จาก {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "แปลอัตโนมัติ"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "การแปลอัตโนมัติต้องใช้ Chrome 138 หรือใหม่กว่า"
-  },
-  "ruleTranslateNeedsText": {
-    "message": "เขียนคำอธิบายก่อน"
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "กำลังแปล: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "เติม {0} ภาษาแล้ว ตรวจสอบก่อนบันทึก"
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "เติมแล้ว {0} ภาษา อีก {1} ภาษาแปลที่นี่ไม่ได้"
-  },
   "sfxOptRenderingWait": {
     "message": "รอหลังโหลด"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "ปิด"
-  },
-  "ruleTranslateAllDone": {
-    "message": "ทุกภาษามีคำแปลแล้ว"
-  },
-  "combinationTranslationsTitle": {
-    "message": "คำแปลของชื่อ"
-  },
-  "combinationTranslationsHint": {
-    "message": "แสดงแทนชื่อเมื่อส่วนขยายใช้ภาษานั้น ถ้าว่าง จะแสดงชื่อ"
-  },
-  "combinationTranslateNeedsName": {
-    "message": "เขียนชื่อก่อน"
   },
   "advancedInfoCloudflareDesc": {
     "message": "ตรวจสอบคุกกี้ของ challenge และวิเคราะห์สคริปต์"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "ขนาดประวัติต้องเป็นหนึ่งใน {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "ข้อความที่ยังไม่ได้แปลเป็นทุกภาษา: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "เติมคำแปลที่ขาดของคำอธิบาย รูปแบบ และชุดค่าผสมด้วยตัวแปลบนอุปกรณ์ของ Chrome ตรวจสอบก่อนบันทึก"
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "แปล"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "แปลส่วนที่แก้ไข"
-  },
-  "ruleTranslatedLabel": {
-    "message": "แปลแล้ว"
-  },
-  "ruleTranslateBusy": {
-    "message": "กำลังแปล…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "ข้อความทั้งหมดของกฎนี้แปลเป็นทั้ง {0} ภาษาแล้ว"
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "แปลข้อความที่แก้ไข {0} จาก {1} รายการเป็นทุกภาษาที่นี่ไม่ได้ (เบราว์เซอร์อาจยังดาวน์โหลดอยู่) ไม่มีอะไรสูญหาย ข้อความเหล่านั้นยังเหมือนเดิม ลองอีกครั้งในอีกสักครู่"
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "ดาวน์โหลด {0} แล้ว: พร้อม {1} จาก {2} ภาษา เบราว์เซอร์ดาวน์โหลดแต่ละภาษาครั้งเดียว ครั้งละหนึ่งภาษาต่อการคลิก: คลิกแปลอีกครั้งสำหรับภาษาถัดไป"
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "กำลังแปล {0} ข้อความ…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "เติมคำแปลแล้ว {0} รายการ ตรวจสอบก่อนบันทึก"
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "เติมแล้ว {0} รายการ อีก {1} รายการแปลที่นี่ไม่ได้"
-  },
   "ruleHistoryCheckPatterns": {
     "message": "รูปแบบ"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "เปิดป๊อปอัปบนเว็บไซต์เพื่อสร้างกฎจากเว็บไซต์นั้น"
   },
-  "suggestRuleExactName": {
-    "message": "ค้นหาด้วยชื่อที่ตรงกันทุกตัว"
+  "suggestRuleHeaderNameFmt": {
+    "message": "เฮดเดอร์ที่ชื่อมี {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "คุกกี้ชื่อ {0} หรือชื่อที่ขึ้นต้นด้วยคำนี้"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "ชื่อที่ขึ้นต้นด้วย {0}: ส่วนที่เหลือดูเหมือนสุ่ม"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "ไม่พบข้อมูล hCaptcha (หมดเวลาใน 60 วินาที)"
   },
-  "ruleOriginalEnglish": {
-    "message": "ต้นฉบับ (ภาษาอังกฤษ)"
-  },
-  "ruleOriginalHint": {
-    "message": "ภาษาอื่นแปลข้อความนี้: หากแก้ไข ภาษาเหล่านั้นจะแสดงข้อความโดยไม่แปลจนกว่าจะแปลใหม่"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "การตั้งค่าที่ยังไม่ได้บันทึก"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "การเปลี่ยนภาษาจะโหลดส่วนขยายใหม่ บันทึกการเปลี่ยนแปลงการตั้งค่าก่อนไหม"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "ข้อความที่คุณเปลี่ยนเป็นภาษา{0}: {1} ภาษาอื่นยังแสดงข้อความเดิม"
-  },
-  "ruleTranslateChangesHint": {
-    "message": "แปลสิ่งที่คุณเขียนเป็นภาษาอังกฤษ (ต้นฉบับ) และภาษาอื่นด้วยตัวแปลในเบราว์เซอร์ ตรวจสอบก่อนบันทึก"
   },
   "combinationOneCount": {
     "message": "1 ชุดค่าผสม"

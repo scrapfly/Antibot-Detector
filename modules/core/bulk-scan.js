@@ -44,18 +44,27 @@
   const looksLikeAddress = (cell) => /^[a-z][a-z0-9+.-]*:/i.test(cell) || /^[^\s/:?#]+\.[^\s/:?#]+(:\d+)?([/?#]|$)/.test(cell);
 
   /**
-   * The addresses of a pasted list or a .txt/.csv file: one per line, blank lines and # comments ignored; in a row with
-   * commas, semicolons or tabs, the first cell that looks like an address (a header row like "url" gives none).
+   * The addresses of a pasted list or a .txt/.csv file: one per line, blank lines and # comments ignored. The text is
+   * read as a table (the first cell of each row that looks like an address) only when it is one: tab-separated, with a
+   * header row (a row with no address, like "url,name"), or two or more rows that all split into the same number of
+   * cells. A row that starts with a quote, or whose first cell is not an address, is a table row anyway. Otherwise a
+   * comma or semicolon belongs to the address (?ids=1,2,3, ;jsessionid=…).
    * @param {string} text
    * @returns {string[]}
    */
   function linesOf(text) {
+    const lines = String(text || '').replace(/^\uFEFF/, '').split(/\r\n|\r|\n/)
+      .map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
+    const cells = line => line.split(/[,;\t]/).map(unquote);
+    const table = lines.some(line => line.includes('\t'))
+      || lines.some(line => /[,;]/.test(line) && !cells(line).some(looksLikeAddress))
+      || (lines.length > 1 && lines.every(line => /[,;]/.test(line))
+        && new Set(lines.map(line => cells(line).length)).size === 1);
     const out = [];
-    for (const raw of String(text || '').replace(/^﻿/, '').split(/\r\n|\r|\n/)) {
-      const line = raw.trim();
-      if (!line || line.startsWith('#')) continue;
-      if (/[,;\t]/.test(line)) {
-        const cell = line.split(/[,;\t]/).map(unquote).find(looksLikeAddress);
+    for (const line of lines) {
+      const row = table || /^["']/.test(line) || !looksLikeAddress(cells(line)[0]);
+      if (row && /[,;\t]/.test(line)) {
+        const cell = cells(line).find(looksLikeAddress);
         if (cell) out.push(cell);
         continue;
       }

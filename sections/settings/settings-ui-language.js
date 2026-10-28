@@ -395,7 +395,7 @@ SettingsUI._openLanguagePicker = function() {
  */
 SettingsUI._settleUnsavedBeforeReload = async function() {
   const owner = typeof window !== 'undefined' && window.popupInstance ? window.popupInstance.settings : null;
-  if (!owner || !owner.settingsBaseline || JSON.stringify(owner.settings) === JSON.stringify(owner.settingsBaseline)) return true;
+  if (!owner || !owner.settingsBaseline || !SettingsUI.hasUnsavedChanges(owner)) return true;
   if (typeof NotificationHelper === 'undefined' || typeof NotificationHelper.choose !== 'function') return true;
   const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
   const answer = await NotificationHelper.choose({
@@ -409,8 +409,51 @@ SettingsUI._settleUnsavedBeforeReload = async function() {
     ],
     defaultValue: 'save'
   });
-  if (answer === 'save') return (await owner.saveSettings({ notify: false })) !== false;
+  if (answer === 'save') return SettingsUI.saveFormBeforeReload(owner);
   return answer === 'discard';
+};
+
+/** The language choice saved now ('auto' when none): an import shows a language only when it is another one. */
+SettingsUI.languageInForce = async function() {
+  try { return (await chrome.storage.local.get(['scrapfly_language_override'])).scrapfly_language_override || 'auto'; } catch (_) { return 'auto'; }
+};
+
+/** The form as Save would read it, as comparable text ('' when the form is not there). */
+SettingsUI.formState = function(owner) {
+  try { return JSON.stringify(owner.getSettingsFromUI()); } catch (_) { return ''; }
+};
+
+/**
+ * Unsaved Settings changes: a field changed since the form was filled (most fields live only in the form until
+ * Save), or a change staged on the settings themselves (the site lists). A value shown in another form than it is
+ * stored (48 hours as 2 days) is not a change.
+ */
+SettingsUI.hasUnsavedChanges = function(owner) {
+  if (typeof owner.settingsFormShown === 'string' && SettingsUI.formState(owner) !== owner.settingsFormShown) return true;
+  const comparable = (settings) => {
+    const copy = JSON.parse(JSON.stringify(settings || {}));
+    if (copy.detection && typeof SettingsUI.getCacheDurationDisplay === 'function') {
+      const shown = SettingsUI.getCacheDurationDisplay(copy.detection);
+      copy.detection.cacheDuration = shown.duration;
+      copy.detection.cacheUnit = shown.unit;
+    }
+    return JSON.stringify(copy);
+  };
+  return comparable(owner.settings) !== comparable(owner.settingsBaseline);
+};
+
+/** "Save" before the language change: the form's values, checked as the Save button checks them. */
+SettingsUI.saveFormBeforeReload = async function(owner) {
+  const fromForm = owner.getSettingsFromUI();
+  const validation = owner.validateSettings(fromForm);
+  if (!validation.isValid) {
+    const message = ((typeof I18n !== 'undefined') && I18n.format && I18n.format('invalidSettingsFmt', validation.errors.join(', ')))
+      || `Invalid settings: ${validation.errors.join(', ')}`;
+    NotificationHelper.error(message);
+    return false;
+  }
+  owner.settings = owner.deepMerge(owner.settings, fromForm);
+  return (await owner.saveSettings({ notify: false })) !== false;
 };
 
 SettingsUI._applyLanguageChoice = async function(choice, { persist = true } = {}) {

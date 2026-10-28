@@ -295,6 +295,12 @@ async function saveToHistory(tabId, captureData, options = {}) {
         }
 
         const captureHostname = hostname || new URL(tab.url).hostname;
+        // A private window's capture (cookie values, headers, the address) is shown, never kept: Advanced → History
+        // lives in storage.local and would outlast the private session
+        if (tab.incognito === true) {
+            Logger.debug('UI', `[BaseInterceptor] ${type} capture in a private window: not saved to history`);
+            return { id: options.id || AdvancedResultModel.requestId(), timestamp: Date.now(), url: tab.url, hostname: captureHostname, data: captureData, captureData, notSaved: true };
+        }
         const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(tab.favIconUrl, tab.url || captureHostname);
         const newCapture = await AdvancedHistoryStore.appendCapture(type, {
             id: options.id || AdvancedResultModel.requestId(),
@@ -550,6 +556,14 @@ function cleanupManagedListeners(tabId, vendorId = null) {
  * @param {object} options
  * @returns {boolean}
  */
+/**
+ * The page an address is (origin and path): a site that rewrites its query or #fragment (a consent banner, a
+ * router) is still the page a capture watches. Anything that is not a URL compares as itself.
+ */
+function capturePageOf(url) {
+    try { const u = new URL(url); return `${u.origin}${u.pathname}`; } catch (_) { return String(url || ''); }
+}
+
 function handleUrlChangeAbort(options = {}) {
     const {
         tabId,
@@ -561,7 +575,7 @@ function handleUrlChangeAbort(options = {}) {
         loggerPrefix = 'Capture'
     } = options;
 
-    if (!changeInfo || !changeInfo.url || !state || !state.captureUrl || changeInfo.url === state.captureUrl) {
+    if (!changeInfo || !changeInfo.url || !state || !state.captureUrl || capturePageOf(changeInfo.url) === capturePageOf(state.captureUrl)) {
         return false;
     }
 

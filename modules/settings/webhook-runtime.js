@@ -166,7 +166,8 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
         if (!held) return undefined;
         if (typeof held.sending === 'number' && Date.now() - held.sending < SettingsRuntime.WEBHOOK_RETRY_CLAIM_MS) { busy = true; return undefined; }
         item = { ...held };
-        all[id] = { ...held, sending: Date.now(), due: null };
+        // An automatic retry stays due once the claim has run out: a worker stopped while sending must not lose it
+        all[id] = { ...held, sending: Date.now(), due: held.due ? Date.now() + SettingsRuntime.WEBHOOK_RETRY_CLAIM_MS : null };
         return all;
     });
     if (busy) return { status: 'busy' };

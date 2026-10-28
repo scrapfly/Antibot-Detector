@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "डिटेक्टर इम्पोर्ट किए गए"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "डिटेक्टर इंपोर्ट किए गए, इनके सिवा: {0} (इस संस्करण में मान्य नहीं)"
+  },
   "detectorExportedFmt": {
     "message": "{0} निर्यात किया गया"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "सहेजने से पहले पैटर्न के सभी ज़रूरी फ़ील्ड भरें।"
   },
+  "rulesUiInvalidRegex": {
+    "message": "रेगुलर एक्सप्रेशन के रूप में चिह्नित एक पैटर्न अमान्य है या स्कैन को रोक सकता है। उसे ठीक करें या उस पंक्ति के लिए Regex बंद करें।"
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "पहचान विधि का प्रकार दर्ज करें (जैसे HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "कस्टम अपलोड सर्वर: सार्वजनिक होस्ट पर HTTPS पता उपयोग करें"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook URL: सार्वजनिक होस्ट पर HTTPS पता उपयोग करें"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "कस्टम अपलोड सर्वर: JSON टेम्पलेट मान्य JSON नहीं है"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "लॉग को कंसोल के बजाय यहाँ रखें, ताकि उन्हें JSON या टेक्स्ट के रूप में निर्यात कर सकें"
   },
-  "ruleTranslationsTitle": {
-    "message": "अनुवाद"
-  },
-  "ruleTranslationsHint": {
-    "message": "जब एक्सटेंशन उस भाषा में हो, तो विवरण की जगह दिखाया जाता है। खाली: विवरण दिखाया जाता है।"
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{1} में से {0}"
-  },
-  "ruleTranslateAuto": {
-    "message": "अपने आप अनुवाद करें"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "अपने आप अनुवाद के लिए Chrome 138 या नया चाहिए।"
-  },
-  "ruleTranslateNeedsText": {
-    "message": "पहले विवरण लिखें।"
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "अनुवाद हो रहा है: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} भाषाएँ भरी गईं। सहेजने से पहले जाँच लें।"
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} भरी गईं; {1} का यहाँ अनुवाद नहीं हो सका।"
-  },
   "sfxOptRenderingWait": {
     "message": "लोड के बाद प्रतीक्षा"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "बंद"
-  },
-  "ruleTranslateAllDone": {
-    "message": "हर भाषा का अनुवाद पहले से है।"
-  },
-  "combinationTranslationsTitle": {
-    "message": "नाम के अनुवाद"
-  },
-  "combinationTranslationsHint": {
-    "message": "जब एक्सटेंशन उस भाषा में हो, तो नाम की जगह दिखाया जाता है। खाली: नाम दिखाया जाता है।"
-  },
-  "combinationTranslateNeedsName": {
-    "message": "पहले नाम लिखें।"
   },
   "advancedInfoCloudflareDesc": {
     "message": "चैलेंज कुकीज़ जांचता है और उसकी स्क्रिप्ट का विश्लेषण करता है"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "इतिहास का आकार {0} MB में से एक होना चाहिए"
   },
-  "ruleTranslateBarFmt": {
-    "message": "हर भाषा में अभी अनूदित न हुए टेक्स्ट: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "विवरण, पैटर्न और संयोजनों के छूटे हुए अनुवाद Chrome के ऑन-डिवाइस अनुवादक से भरता है। सहेजने से पहले जाँच लें।"
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "अनुवाद करें"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "बदलाव अनुवाद करें"
-  },
-  "ruleTranslatedLabel": {
-    "message": "अनूदित"
-  },
-  "ruleTranslateBusy": {
-    "message": "अनुवाद हो रहा है…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "इस नियम के सभी टेक्स्ट सभी {0} भाषाओं में अनूदित हैं।"
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "{1} बदले गए टेक्स्ट में से {0} का यहाँ सभी भाषाओं में अनुवाद नहीं हो सका (ब्राउज़र शायद अभी उन्हें डाउनलोड कर रहा है)। कुछ भी नहीं खोया: वे टेक्स्ट पहले जैसे हैं। थोड़ी देर में फिर कोशिश करें।"
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "डाउनलोड हुई: {0}। {2} में से {1} भाषाएँ तैयार। ब्राउज़र हर भाषा एक बार, हर क्लिक पर एक, डाउनलोड करता है: अगली के लिए फिर से अनुवाद करें दबाएँ।"
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "{0} टेक्स्ट का अनुवाद हो रहा है…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} अनुवाद भरे गए। सहेजने से पहले जाँच लें।"
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} भरे गए; {1} का यहाँ अनुवाद नहीं हो सका।"
-  },
   "ruleHistoryCheckPatterns": {
     "message": "पैटर्न"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "किसी वेबसाइट से नियम बनाने के लिए पॉपअप को उस वेबसाइट पर खोलें।"
   },
-  "suggestRuleExactName": {
-    "message": "सटीक नाम से खोजा जाता है"
+  "suggestRuleHeaderNameFmt": {
+    "message": "हेडर जिनके नाम में {0} है"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "{0} नाम की कुकीज़, या जिनका नाम इससे शुरू होता है"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "{0} से शुरू होने वाले नाम: बाकी हिस्सा बेतरतीब लगता है"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "कोई hCaptcha डेटा नहीं मिला (60 सेकंड टाइमआउट)"
   },
-  "ruleOriginalEnglish": {
-    "message": "मूल (अंग्रेज़ी)"
-  },
-  "ruleOriginalHint": {
-    "message": "अन्य भाषाएँ इस टेक्स्ट का अनुवाद करती हैं: इसे बदलने पर वे इसे बिना अनुवाद के दिखाएँगी, जब तक इसका फिर से अनुवाद न हो।"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "सेटिंग्स सहेजी नहीं गईं"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "भाषा बदलने से एक्सटेंशन फिर से लोड होता है। क्या पहले सेटिंग्स में किए गए बदलाव सहेजें?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "{0} में आपके बदले गए टेक्स्ट: {1}। अन्य भाषाएँ अभी भी पुराना टेक्स्ट दिखाती हैं।"
-  },
-  "ruleTranslateChangesHint": {
-    "message": "आपने जो लिखा उसका अंग्रेज़ी (मूल) और अन्य भाषाओं में ब्राउज़र के डिवाइस पर चलने वाले अनुवादक से अनुवाद करता है। सहेजने से पहले उन्हें जाँचें।"
   },
   "combinationOneCount": {
     "message": "1 संयोजन"

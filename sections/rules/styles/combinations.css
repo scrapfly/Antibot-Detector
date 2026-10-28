@@ -800,7 +800,10 @@
   box-sizing: border-box;
   display: block;
   width: 100%;
-  min-height: 52px;
+  /* About five lines, and taller with the text up to about twelve (then it scrolls): a description is read whole */
+  min-height: 96px;
+  max-height: 220px;
+  field-sizing: content;
   padding: 8px 10px;
   background: var(--bg-primary);
   border: 1px solid var(--border);

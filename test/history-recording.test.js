@@ -62,12 +62,12 @@ function makeWorld(options = {}) {
   vm.runInContext(read('background/history-recorder.js') + '\n;globalThis.HistoryRecorder = HistoryRecorder;', sw);
 
   const items = () => JSON.parse(store.scrapfly_history || '{"items":[]}').items;
-  const save = (url, detections, settings = {}, tabId = 1) => {
+  const save = (url, detections, settings = {}, tabId = 1, extra = {}) => {
     let host = '';
     try { host = new URL(url).hostname; } catch (_) { /* leave empty */ }
     if (!tabs.has(tabId) && !options.closedTabs) tabs.set(tabId, { id: tabId, url, title: `Title of ${host}`, incognito: false });
     return sw.HistoryRecorder.saveDetectionToHistory(tabId, { url, hostname: host, title: host },
-      detections, sw.chrome, { source: 'test', historySettings: { historyEnabled: true, historyLimit: 0, preventDuplicates: false, ...settings } });
+      detections, sw.chrome, { source: 'test', ...extra, historySettings: { historyEnabled: true, historyLimit: 0, preventDuplicates: false, ...settings } });
   };
   return {
     sw, store, notes, items, save, clock, tabs,
@@ -201,8 +201,23 @@ test('an updated entry whose protections differ is marked Changed', async () => 
   assert.deepStrictEqual(w.items()[0].changed, { at: START + 2 * HOUR, added: ['DataDome', 'reCAPTCHA'], removed: ['Cloudflare'] });
   w.advance(HOUR);
   await w.save('https://a.com/', [antibot('DataDome'), captcha('reCAPTCHA')], s);
-  assert.ok(!('changed' in w.items()[0]), 'the mark goes when the next scan matches the one before');
+  assert.deepStrictEqual(w.items()[0].changed.added, ['DataDome', 'reCAPTCHA'], 'the mark stays while the page stays as it changed');
+  w.advance(HOUR);
+  await w.save('https://a.com/', [antibot('Cloudflare')], s);
+  assert.ok(!('changed' in w.items()[0]), 'a scan that undoes the change was a blip: the mark goes');
   assert.strictEqual(w.items().length, 1);
+});
+
+test('updated in place: a cached result never replaces what a scan of the page found, and is never compared', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'days', duplicateAction: 'update' };
+  await w.save('https://b.com/p', [antibot('Akamai')], s);
+  w.advance(HOUR);
+  await w.save('https://b.com/p', [antibot('Cloudflare')], s, 1, { fromCache: true });
+  assert.deepStrictEqual(w.items()[0].detections.map(d => d.detector.name), ['Akamai'], 'the scan of the page stays');
+  assert.ok(!('changed' in w.items()[0]) && !w.items()[0].fromCache);
+  assert.strictEqual(w.items()[0].timestamp, START + HOUR, 'seen again');
+  assert.strictEqual(w.items()[0].firstSeen, START, 'the first-seen date is kept');
 });
 
 test('a new entry for a page seen before is marked Changed too (no duplicate prevention), ignoring the query string', async () => {
@@ -508,3 +523,79 @@ test('auto-pin pins an address once: sixty visits of a hard page leave one pinne
   assert.equal(items.find(i => i.hostname === 'other.example').pinned, true, 'another hard page still pins itself');
 });
 
+
+// ---- Changed: only what a scan really found, compared with what a scan found before
+
+test('a result served from the cache is recorded but never compared, and is not what the next scan is compared with', async () => {
+  const w = makeWorld();
+  await w.save('https://shop.com/login', [antibot('Cloudflare'), captcha('reCAPTCHA')]);
+  w.advance(HOUR);
+  // The site's cached result (found on its home page) served for /login: reCAPTCHA is not in it
+  await w.save('https://shop.com/login', [antibot('Cloudflare')], {}, 1, { fromCache: true });
+  assert.ok(!('changed' in w.items()[0]), 'a cached result says nothing about this page now');
+  assert.strictEqual(w.items()[0].fromCache, true);
+  w.advance(HOUR);
+  await w.save('https://shop.com/login', [antibot('Cloudflare'), captcha('reCAPTCHA')]);
+  assert.ok(!('changed' in w.items()[0]), 'compared with the last scan of /login, not with the cached entry');
+});
+
+test('a protection gone and back on the next scan was a blip: neither scan stays marked', async () => {
+  const w = makeWorld();
+  await w.save('https://reddit.example/', [antibot('Cloudflare'), captcha('reCAPTCHA', 100)]);
+  w.advance(HOUR);
+  await w.save('https://reddit.example/', [antibot('Cloudflare')]);
+  assert.deepStrictEqual(w.items()[0].changed.removed, ['reCAPTCHA'], 'marked when it is gone');
+  w.advance(HOUR);
+  await w.save('https://reddit.example/', [antibot('Cloudflare'), captcha('reCAPTCHA', 100)]);
+  assert.deepStrictEqual(w.items().map(item => 'changed' in item), [false, false, false], 'back as before: the mark goes');
+  assert.strictEqual(w.notes.length, 0, 'alerts are off by default');
+});
+
+test('a page that lost every protection is recorded with the change, though a scan finding nothing is not kept otherwise', async () => {
+  const w = makeWorld();
+  await w.save('https://gone.example/', [antibot('DataDome')]);
+  w.advance(HOUR);
+  await w.save('https://gone.example/', [], {}, 1, { onlyIfChanged: true });
+  assert.strictEqual(w.items().length, 2);
+  assert.deepStrictEqual(w.items()[0].changed.removed, ['DataDome']);
+  assert.deepStrictEqual(w.items()[0].detections, []);
+  w.advance(HOUR);
+  await w.save('https://never.example/', [], {}, 1, { onlyIfChanged: true });
+  assert.strictEqual(w.items().length, 2, 'a page with nothing before and nothing now is not recorded');
+});
+
+test('Skip fingerprint-only and Minimum confidence always win: a page below them is not recorded, even one that lost a protection', async () => {
+  const w = makeWorld();
+  const s = { historySkipFingerprintOnly: true, historyMinConfidence: 80 };
+  await w.save('https://fp.example/', [antibot('Akamai', 95), fingerprint('Canvas')], s);
+  w.advance(HOUR);
+  await w.save('https://fp.example/', [fingerprint('Canvas')], s);
+  assert.strictEqual(w.items().length, 1, 'fingerprint-only: skipped as the setting says');
+  w.advance(HOUR);
+  await w.save('https://fp.example/', [captcha('hCaptcha', 40)], s);
+  assert.strictEqual(w.items().length, 1, 'below the minimum confidence: skipped');
+  w.advance(HOUR);
+  await w.save('https://fp.example/', [], s, 1, { onlyIfChanged: true });
+  assert.strictEqual(w.items().length, 1, 'a page that found nothing is below the minimum too');
+  assert.ok(!('changed' in w.items()[0]));
+});
+
+test('a watched entry recorded from the cache is not compared: the first check becomes its scan, unmarked', async () => {
+  const w = watchWorld([watched('pricing', { fromCache: true })], { historyChangeAlerts: 'all' });
+  const result = await w.sw.HistoryRecorder.applyWatchResult('pricing', [], w.sw.chrome);
+  assert.deepStrictEqual({ found: result.found, changed: result.changed }, { found: true, changed: false });
+  const [entry] = w.items();
+  assert.ok(!('changed' in entry) && !('fromCache' in entry));
+  assert.deepStrictEqual(entry.detections, []);
+  assert.strictEqual(w.notes.length, 0, 'no alert for a protection the page never had');
+});
+
+test('a watch check with no answer records when it was tried, and touches nothing else', async () => {
+  const w = watchWorld([watched('flaky')]);
+  const before = JSON.stringify(w.items()[0]);
+  await w.sw.HistoryRecorder.noteWatchAttempt('flaky', w.sw.chrome, START);
+  const after = w.items()[0];
+  assert.strictEqual(after.watchAttemptAt, START);
+  const { watchAttemptAt: _t, ...rest } = after;
+  assert.strictEqual(JSON.stringify(rest), before);
+});

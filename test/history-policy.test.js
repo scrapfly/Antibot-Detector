@@ -100,6 +100,15 @@ test('diffProtections: the same protections, in any order or case, are not a cha
   assert.deepStrictEqual(P.diffProtections(undefined, undefined), { added: [], removed: [], changed: false });
 });
 
+test('diffProtections: a weak or wavering score is not a change; a protection is added from 50% and gone below 25%', () => {
+  assert.strictEqual(P.diffProtections([], [captcha('reCAPTCHA', 10)]).changed, false, 'a 10% mention of a name');
+  assert.strictEqual(P.diffProtections([antibot('HUMAN', 60)], [antibot('HUMAN', 30)]).changed, false, 'still seen');
+  assert.strictEqual(P.diffProtections([antibot('HUMAN', 30)], [antibot('HUMAN', 100)]).changed, false, 'was seen already');
+  assert.deepStrictEqual(P.diffProtections([antibot('HUMAN', 20)], [antibot('HUMAN', 100)]).added, ['HUMAN']);
+  assert.deepStrictEqual(P.diffProtections([antibot('Kasada', 100)], [antibot('Kasada', 15)]).removed, ['Kasada']);
+  assert.deepStrictEqual(P.diffProtections([{ name: 'Old', category: 'antibot' }], []).removed, ['Old'], 'an entry saved without a score counts as found');
+});
+
 test('diffProtections reads names from either detection shape', () => {
   const r = P.diffProtections([{ name: 'Imperva', category: 'antibot' }], [{ detector: { name: 'Kasada', category: 'antibot' } }]);
   assert.deepStrictEqual(r, { added: ['Kasada'], removed: ['Imperva'], changed: true });
@@ -211,4 +220,11 @@ test('a renamed protection (PerimeterX → HUMAN (PerimeterX)) is the same prote
   assert.equal(P.diffProtections(was, is).changed, false);
   assert.equal(P.shouldAutoPin(is, { historyAutoPinVendors: ['PerimeterX'] }), true, 'a name the person typed before the rename still pins');
   assert.equal(P.diffProtections(was, [{ name: 'DataDome', category: 'Anti-Bot', confidence: 100 }]).changed, true);
+});
+
+test('watchedOf: web pages only, the least recently tried first (a page that keeps failing counts its tries)', () => {
+  const entry = (id, extra) => ({ id, url: `https://${id}.example/`, pinned: true, watch: true, ...extra });
+  const list = [entry('ok', { watchedAt: 3000 }), entry('fails', { watchedAt: 0, watchAttemptAt: 5000 }), entry('new', {}),
+    { id: 'file', url: 'file:///etc/passwd', pinned: true, watch: true }, { id: 'js', url: 'javascript:alert(1)', pinned: true, watch: true }];
+  assert.deepStrictEqual(P.watchedOf(list).map(e => e.id), ['new', 'ok', 'fails']);
 });

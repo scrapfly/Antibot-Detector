@@ -83,3 +83,9 @@ test('Utils.isUrlBlacklisted asks the scope: it reads the mode and the list from
   assert.strictEqual(await check({}, 'https://any.example/'), false);
   assert.strictEqual(await check({ detection: { scanMode: 'allowlist' } }, ''), false);
 });
+
+test('a site name with letters beyond ASCII is kept in punycode, as the browser spells page hosts', () => {
+  assert.deepStrictEqual(DomainList.normalize('bücher.de\nhttps://www.Straße.de/x'), ['xn--bcher-kva.de', 'www.xn--strae-oqa.de']);
+  assert.strictEqual(DomainList.matches('shop.xn--bcher-kva.de', ['bücher.de']), true, 'a subdomain of the typed name');
+  assert.deepStrictEqual(DomainList.normalize('ok.com'), ['ok.com']);
+});

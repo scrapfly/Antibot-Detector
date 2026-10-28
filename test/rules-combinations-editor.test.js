@@ -5,6 +5,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const C = require('../modules/detection/detection-combinations.js');
 const source = fs.readFileSync(path.join(__dirname, '../sections/rules/rules-combinations.js'), 'utf8');
+// The texts a combination edits (names, descriptions) follow the rules of the shared text module
+const textFields = fs.readFileSync(path.join(__dirname, '../sections/rules/rules-text-fields.js'), 'utf8');
 const plain = value => JSON.parse(JSON.stringify(value));
 
 function editor(detector, givenOptions) {
@@ -19,6 +21,7 @@ function editor(detector, givenOptions) {
     setTimeout, clearTimeout };
   vm.createContext(context);
   vm.runInContext(source, context);
+  vm.runInContext(textFields, context);
   const rules = new context.Rules();
   rules.currentEditDetector = {};
   rules.getComboPatternOptions = () => options;
@@ -369,4 +372,34 @@ test('the Combinations only row counts the marked patterns and names the one act
   assert.match(html, /class="combo-strict-count is-on">1\/3</);
   assert.match(html, /class="combo-strict-all" data-combo-action="strict-all" aria-pressed="false">Mark all</);
   assert.doesNotMatch(html, /type="checkbox"[^>]*data-combo-action|indeterminate|data-mixed/);
+});
+
+test('a description typed on a row replaces the text for every language; typing back what it showed puts the original back', () => {
+  const { rules, context } = editor(base({ all: [{ pattern: 'a' }] }));
+  const row = { dataset: { patternId: 'a', description: 'Edge of the CDN', descriptionI18n: '{"de":"Rand des CDN"}' }, querySelector: () => null };
+  const typed = text => ({ dataset: { comboField: 'description', pattern: 'a' }, textContent: text,
+    closest: selector => selector === '.combo-card' ? { dataset: { combo: '0' } } : null });
+  rules.getComboPatternRow = id => id === 'a' ? row : null;
+  context.document.querySelectorAll = () => [];
+  rules.handleCombinationAction({ target: typed('My own words') }, 'input');
+  assert.equal(row.dataset.description, 'My own words');
+  assert.equal(row.dataset.descriptionI18n, '', 'the translations were of the old text');
+  rules.handleCombinationAction({ target: typed('  Edge   of the CDN ') }, 'input');
+  assert.equal(row.dataset.description, 'Edge of the CDN', 'typed back: the original is back');
+  assert.equal(row.dataset.descriptionI18n, '{"de":"Rand des CDN"}', 'with its translations');
+});
+
+test('a combination name: a change replaces it for every language, typing the shown name back puts the original back', () => {
+  const detector = base({ all: [{ pattern: 'a' }] });
+  detector.combinations = [{ id: 'c1', name: 'Cached reference header', nameI18n: { de: 'Referenz-Header' }, when: { all: [{ pattern: 'a' }] } }];
+  const { rules } = editor(detector);
+  const rename = value => rules.handleCombinationAction({ target: { dataset: { comboField: 'name' }, value,
+    closest: selector => selector === '.combo-card' ? { dataset: { combo: '0' } } : null } }, 'input');
+  rename('My combination');
+  assert.equal(rules.combinationsModel[0].name, 'My combination');
+  assert.equal(rules.combinationsModel[0].nameI18n, null);
+  assert.equal(rules.buildCombinationsForSave(null, { validate: false }).combinations[0].nameI18n, undefined);
+  rename('Cached  reference header ');
+  assert.equal(rules.combinationsModel[0].name, 'Cached reference header');
+  assert.deepEqual(plain(rules.combinationsModel[0].nameI18n), { de: 'Referenz-Header' }, 'the translations come back with the original');
 });

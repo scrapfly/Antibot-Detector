@@ -403,10 +403,6 @@ Rules.prototype.populateModalData = function(detector) {
     this.initCombinationsEditor(detector);
     if (typeof this.resetHistoryCheck === 'function') this.resetHistoryCheck();
     if (typeof this.resetLiveTest === 'function') this.resetLiveTest();
-    if (typeof this.resetTranslateBar === 'function') {
-      this.resetTranslateBar();
-      this.refreshTranslateBar();
-    }
   };
 
 Rules.prototype.clearAuthorError = function() {

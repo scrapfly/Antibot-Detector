@@ -16,6 +16,8 @@
         duplicatePrevention: ['preventDuplicates', 'duplicateScope', 'duplicateDuration', 'duplicateUnit', 'duplicateAction'],
         updates: ['autoUpdate', 'checkIntervalHours']
     };
+    const COLOR_GROUPS = new Set(['badgeColors', 'categoryColors', 'tagColors']);
+    const isHexColor = (value) => typeof value === 'string' && /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value);
     function portable(settings) {
         const output = {};
         if (!settings || typeof settings !== 'object' || Array.isArray(settings)) return output;
@@ -24,7 +26,10 @@
             if (!source || typeof source !== 'object' || Array.isArray(source)) continue;
             const target = section === 'root' ? output : (output[section] = {});
             for (const key of keys) {
-                if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = JSON.parse(JSON.stringify(source[key]));
+                if (!Object.prototype.hasOwnProperty.call(source, key)) continue;
+                // A colour is written into the pages' styles: only a hex colour comes in from a file
+                if (COLOR_GROUPS.has(section) && !isHexColor(source[key])) continue;
+                target[key] = JSON.parse(JSON.stringify(source[key]));
             }
         }
         return output;
@@ -38,5 +43,5 @@
             autoUpdate: settings.updates?.autoUpdate === true
         };
     }
-    root.SettingsTransfer = { portable, diagnostics };
+    root.SettingsTransfer = { portable, diagnostics, isHexColor };
 })(globalThis);

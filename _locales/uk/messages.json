@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Детектори імпортовано"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Детектори імпортовано, крім: {0} (недійсні в цій версії)"
+  },
   "detectorExportedFmt": {
     "message": "Експортовано: {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Перед збереженням заповніть усі обов’язкові поля шаблонів."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Шаблон, позначений як регулярний вираз, недійсний або може заблокувати перевірку. Виправте його або вимкніть Regex у цьому рядку."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Введіть тип методу виявлення (напр. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Власний сервер надсилання: використайте HTTPS-адресу на публічному хості"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL вебхука: використайте HTTPS-адресу на публічному хості"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Власний сервер надсилання: шаблон JSON не є дійсним JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Зберігати журнали тут, а не в консолі, щоб експортувати їх у JSON або текст"
   },
-  "ruleTranslationsTitle": {
-    "message": "Переклади"
-  },
-  "ruleTranslationsHint": {
-    "message": "Показується замість опису, коли розширення використовує цю мову. Порожньо: показується опис."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} із {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Перекласти автоматично"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Для автоматичного перекладу потрібен Chrome 138 або новіший."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Спочатку напишіть опис."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Переклад: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Заповнено мов: {0}. Перевірте перед збереженням."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Заповнено: {0}; не вдалося перекласти тут: {1}."
-  },
   "sfxOptRenderingWait": {
     "message": "Чекати після завантаження"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Вимк."
-  },
-  "ruleTranslateAllDone": {
-    "message": "Усі мови вже мають переклад."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Переклади назви"
-  },
-  "combinationTranslationsHint": {
-    "message": "Показується замість назви, коли розширення використовує цю мову. Порожньо: показується назва."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Спочатку напишіть назву."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Перевіряє cookie перевірки та аналізує скрипти"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Розмір історії має бути одним із: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Тексти, ще не перекладені всіма мовами: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Заповнює відсутні переклади опису, шаблонів і комбінацій за допомогою перекладача Chrome на пристрої. Перевірте їх перед збереженням."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Перекласти"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Перекласти зміни"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Перекладено"
-  },
-  "ruleTranslateBusy": {
-    "message": "Переклад…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Усі тексти цього правила перекладено всіма {0} мовами."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Не вдалося перекласти тут {0} з {1} змінених текстів усіма мовами (можливо, браузер ще їх завантажує). Нічого не втрачено: ці тексти лишилися як були. Спробуйте ще раз за хвилину."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Завантажено: {0}. Готово мов: {1} з {2}. Браузер завантажує кожну мову один раз, по одній за клацання: натисніть «Перекласти» ще раз для наступної."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Переклад текстів: {0}…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Заповнено перекладів: {0}. Перевірте їх перед збереженням."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Заповнено: {0}; не вдалося перекласти тут: {1}."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Шаблони"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Відкрийте спливне вікно на сайті, щоб створити з нього правило."
   },
-  "suggestRuleExactName": {
-    "message": "Шукається за точною назвою"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Заголовки, у назві яких є {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookie з назвою {0} або з назвою, що так починається"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Назви, що починаються з {0}: решта схожа на випадковий набір"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Дані hCaptcha не виявлено (тайм-аут 60 с)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Оригінал (англійською)"
-  },
-  "ruleOriginalHint": {
-    "message": "Інші мови перекладають цей текст: якщо змінити його, вони показуватимуть його без перекладу, доки його не перекладуть знову."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Незбережені налаштування"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Зміна мови перезавантажить розширення. Спершу зберегти зміни налаштувань?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Тексти, змінені мовою {0}: {1}. Інші мови досі показують старий текст."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Перекладає написане англійською (оригінал) та іншими мовами вбудованим перекладачем браузера. Перевірте перед збереженням."
   },
   "combinationOneCount": {
     "message": "1 комбінація"

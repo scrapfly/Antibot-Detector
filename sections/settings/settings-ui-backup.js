@@ -10,7 +10,8 @@ SettingsUI.backUpEverything = async function() {
         const stored = await chrome.storage.local.get(['scrapfly_language_override']);
         const bundle = BackupBundle.build({
             extensionVersion: chrome.runtime.getManifest().version,
-            settings: this.settings,
+            // What is saved, never a draft that was not (Save it first to include it)
+            settings: this.settingsBaseline || this.settings,
             languageOverride: stored.scrapfly_language_override || 'auto',
             detectors: BackupBundle.customOnly(detectorManager.exportDetectors(), detector => DetectionUtils.isOfficialDetector(detector)),
             historyItems: await SettingsUI._readStoredHistoryItems()
@@ -99,14 +100,17 @@ SettingsUI.applyBackup = async function(bundle, choice) {
     if (choice.parts.settings) {
         await run('settings', async () => {
             // The same rules as importing a settings file: only portable preferences, merged over the current ones
-            const candidate = this.deepMerge(this.settings, SettingsTransfer.portable(bundle.settings));
+            // Over the saved settings: a change staged in the form but not saved is not written with the restore
+            const candidate = this.deepMerge(this.settingsBaseline || this.settings, SettingsTransfer.portable(bundle.settings));
             if (!this.validateSettings(candidate).isValid) throw new Error('Invalid settings in the backup');
             await SettingsUI.confirmHistorySizeFor.call(this, candidate);
             const knownLanguage = Array.isArray(SettingsUI.LANGUAGE_OPTIONS) && SettingsUI.LANGUAGE_OPTIONS.some(option => option.value === bundle.languageOverride);
+            // Showing a language reloads the popup and wipes the restore's messages: only when it is another one
+            const languageBefore = typeof SettingsUI.languageInForce === 'function' ? await SettingsUI.languageInForce() : null;
             const saved = await this.saveSettings({ notify: false, notifyError: false, candidate, languageOverride: knownLanguage ? bundle.languageOverride : undefined });
             if (!saved) throw new Error('The settings could not be saved');
             this.updateSettingsUI();
-            if (knownLanguage) language = bundle.languageOverride;
+            if (knownLanguage && bundle.languageOverride !== languageBefore) language = bundle.languageOverride;
         });
     }
     if (choice.parts.rules) {

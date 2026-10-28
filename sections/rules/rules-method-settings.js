@@ -390,9 +390,9 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     const isContentMethod = methodKey === 'content';
 
     // Description shown in detection details and History
+    // (as the interface language shows it: what is changed here replaces the text for every language)
     const descriptionInput = document.querySelector('#methodDescriptionInput');
-    if (descriptionInput) descriptionInput.value = methodItem.dataset.description || '';
-    if (typeof this.renderDescriptionTranslations === 'function') this.renderDescriptionTranslations(methodItem);
+    if (descriptionInput) this.showRuleText(descriptionInput, methodItem.dataset.description || '', methodItem.dataset.descriptionI18n);
 
     // Load current settings from data attributes
     const confidence = methodItem.dataset.confidence || '100';
@@ -707,27 +707,17 @@ Rules.prototype.saveMethodSettings = function() {
     // Pattern text applied in the Test pattern dialog
     this.commitPendingPatternText?.();
 
-    // Description: kept exactly as stored unless it was edited here
+    // Description: kept exactly as stored (with its translations) unless it was changed here; then the text written
+    // replaces it for every language
     const descriptionInput = document.querySelector('#methodDescriptionInput');
     if (descriptionInput) {
-      const typed = descriptionInput.value.replace(/\s+/g, ' ').trim();
-      const stored = this.currentMethodItem.dataset.description || '';
-      if (typed !== stored.replace(/\s+/g, ' ').trim()) this.currentMethodItem.dataset.description = typed;
+      const { text, changed } = Rules.collectRuleText(descriptionInput);
+      if (changed) {
+        this.currentMethodItem.dataset.description = text;
+        this.currentMethodItem.dataset.descriptionI18n = '';
+      }
       const inline = this.currentMethodItem.querySelector('.method-description-inline');
       if (inline) inline.value = this.currentMethodItem.dataset.description || '';
-    }
-    if (typeof this.collectDescriptionTranslations === 'function') {
-      // What the UI language's translation said before the first edit: typing it back is no change (collectChangedTexts)
-      const uiLocale = typeof Rules.uiLocale === 'function' ? Rules.uiLocale() : null;
-      if (uiLocale && !('localInitial' in this.currentMethodItem.dataset)) {
-        let before = {};
-        try { before = this.currentMethodItem.dataset.descriptionI18n ? JSON.parse(this.currentMethodItem.dataset.descriptionI18n) : {}; } catch (_) { before = {}; }
-        this.currentMethodItem.dataset.localInitial = before[uiLocale] || '';
-      }
-      const translations = this.collectDescriptionTranslations();
-      this.currentMethodItem.dataset.descriptionI18n = Object.keys(translations).length ? JSON.stringify(translations) : '';
-      // Written in the UI language: the other languages still say the old text (Translate the changes)
-      if (document.querySelector('#methodDescriptionLocal')?.dataset.edited) this.currentMethodItem.dataset.localEdited = '1';
     }
 
     // Get values from modal

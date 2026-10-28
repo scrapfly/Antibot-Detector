@@ -96,3 +96,12 @@ test('the chip row of the History tab has one chip for Pinned, one for Changed a
   }
   assert.ok(F.CATEGORIES.every(key => chips.some(chip => chip.filter === key)), 'every category the filter knows has a chip');
 });
+
+test('a Changed record left in another shape (one name as text, junk) still counts and lists its names, never throws', () => {
+  assert.strictEqual(F.isChanged({ changed: { added: 'DataDome', removed: [] } }), true);
+  assert.deepStrictEqual(F.changeNames('DataDome'), ['DataDome']);
+  assert.deepStrictEqual(F.changeNames(['A', 3, '', null, 'B']), ['A', 'B']);
+  assert.strictEqual(F.isChanged({ changed: true }), false);
+  assert.strictEqual(F.isChanged({ changed: { added: 5 } }), false);
+  assert.strictEqual(F.isChanged({ changed: 'yes' }), false);
+});

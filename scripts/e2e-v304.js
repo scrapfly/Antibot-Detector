@@ -299,6 +299,8 @@ const SEED = [
 
     // Escape and Done leave Select mode: no bar, no checkboxes
     await until(async () => (await page.$$eval('.history-item', els => els.length)) === 1, 5000, 'the list after deleting');
+    // Escape belongs to a dialog while one is still in the page (Select mode ignores it then): wait for the confirm to close
+    await until(async () => !(await page.$('.notification-confirm')), 5000, 'the confirm dialog closed');
     await page.keyboard.press('Escape');
     await until(() => page.$eval('#historySelectBar', el => el.hidden), 5000, 'Escape leaves Select mode');
     assert.equal(await page.$$eval('.history-select-input', els => els.length), 0);

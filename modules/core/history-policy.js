@@ -71,24 +71,42 @@
     return { save: true };
   }
 
+  // A protection counts as there from SURE up, and as gone only below MAYBE: a 10% mention of a vendor's name, or a
+  // score that moves around one line between visits, is not a change
+  const CHANGE_SURE = 50;
+  const CHANGE_MAYBE = 25;
+  const scoreOf = (d) => {
+    const c = Number(d && d.confidence);
+    return Number.isFinite(c) ? c : 100; // entries saved without a score count as found
+  };
+
   /**
-   * The protections (anti-bot and CAPTCHA, never fingerprinting) a page gained or lost between two scans.
+   * The protections (anti-bot and CAPTCHA, never fingerprinting) a page gained or lost between two scans: added when it
+   * is found now at CHANGE_SURE or more and was not found before (or below CHANGE_MAYBE); removed the other way round.
    * Names compare case-insensitively; the result keeps the names as written.
    * @returns {{added: string[], removed: string[], changed: boolean}}
    */
   function diffProtections(before, after) {
-    const index = (detections) => {
+    const index = (detections, min) => {
       const map = new Map();
       for (const d of (Array.isArray(detections) ? detections : [])) {
         const name = nameOf(d);
-        if (name && !isFingerprint(d) && !map.has(Categories.protectionKey(name))) map.set(Categories.protectionKey(name), name);
+        if (!name || isFingerprint(d) || scoreOf(d) < min) continue;
+        const key = Categories.protectionKey(name);
+        if (!map.has(key)) map.set(key, name);
       }
       return map;
     };
-    const was = index(before), is = index(after);
-    const added = [...is].filter(([key]) => !was.has(key)).map(([, name]) => name);
-    const removed = [...was].filter(([key]) => !is.has(key)).map(([, name]) => name);
+    const wasSure = index(before, CHANGE_SURE), wasSeen = index(before, CHANGE_MAYBE);
+    const isSure = index(after, CHANGE_SURE), isSeen = index(after, CHANGE_MAYBE);
+    const added = [...isSure].filter(([key]) => !wasSeen.has(key)).map(([, name]) => name);
+    const removed = [...wasSure].filter(([key]) => !isSeen.has(key)).map(([, name]) => name);
     return { added, removed, changed: added.length > 0 || removed.length > 0 };
+  }
+
+  /** Protections found for sure (CHANGE_SURE or more): a scan without any cannot take one away from the page's record. */
+  function hasSureProtection(detections) {
+    return (Array.isArray(detections) ? detections : []).some(d => nameOf(d) && !isFingerprint(d) && scoreOf(d) >= CHANGE_SURE);
   }
 
   /**
@@ -125,17 +143,22 @@
   }
 
   /** The entries the watchlist checks: pinned and marked to watch, the one checked longest ago first, at most MAX_WATCHED. */
+  const lastTry = (item) => Math.max(Number(item.watchedAt) || 0, Number(item.watchAttemptAt) || 0);
+
   function watchedOf(items) {
     return (Array.isArray(items) ? items : [])
-      .filter(item => item && item.pinned === true && item.watch === true && typeof item.url === 'string' && item.url)
-      .sort((a, b) => (Number(a.watchedAt) || 0) - (Number(b.watchedAt) || 0))
+      // Only web pages are visited (an entry from an old build or an edited file may hold any address)
+      .filter(item => item && item.pinned === true && item.watch === true && typeof item.url === 'string' && /^https?:\/\//i.test(item.url))
+      // The least recently tried first: a page that keeps failing has its tries counted too, so it cannot keep the
+      // others from ever being checked
+      .sort((a, b) => lastTry(a) - lastTry(b))
       .slice(0, MAX_WATCHED);
   }
 
   const api = {
     CHANGE_ALERT_MODES, BACKUP_FREQUENCIES, MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE, WATCH_MODES, MAX_WATCHED, watchModeOf, watchedOf,
     clampInt, normalizeDomains, matchesDomain, strongest, isFingerprintOnly, evaluate,
-    diffProtections, shouldAutoPin, countAutoPins
+    diffProtections, hasSureProtection, CHANGE_SURE, CHANGE_MAYBE, shouldAutoPin, countAutoPins
   };
   root.HistoryPolicy = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

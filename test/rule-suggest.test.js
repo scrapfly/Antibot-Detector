@@ -172,7 +172,10 @@ test('a row of the list escapes cookie names, script addresses and rule names in
     assert.ok(!/title="[^"]*"><img/.test(html), 'no attribute cut short');
   }
   assert.match(plainRow, /<span class="sr-name" dir="ltr">"&gt;&lt;img src=x onerror=alert\(1\)&gt;<\/span>/);
-  assert.match(plainRow, /title="Matched by its exact name"/, 'the default way to match is the hover text, not a second line');
+  assert.match(plainRow, /title="Cookies named &quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;, or whose name starts with it"/,
+    'how the plain name will match is the hover text, not a second line');
+  const header = rules.suggestRowHtml({ id: 'header:x', kind: 'header', value: 'x-cache', text: 'x-cache', prefix: false, sources: ['x-cache'], matchedBy: [] }, 4, false);
+  assert.match(header, /title="Headers whose name contains x-cache"/, 'a plain header name matches names containing it (x-cache-status too)');
   assert.match(knownRow, /title="Already detected by Rule &quot;&gt;&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.match(knownRow, /<span class="sr-tag is-known" dir="auto">Rule "&gt;&lt;img src=x/);
   const many = rules.suggestRowHtml({ id: 'url:m', kind: 'url', value: 'abs.example/web/', text: 'abs.example/web/', prefix: false,
@@ -274,4 +277,10 @@ test('the worker refuses pages it cannot read', async () => {
   for (const tab of [null, { id: 1, url: 'chrome://settings/' }, { id: 1, url: 'chrome-extension://x/popup.html' }, { id: 1, url: 'ftp://x/' }]) {
     assert.equal((await loadRuntime({ tab }).collect({})).status, 'unsupported');
   }
+});
+
+test('From this page fills the row it was opened from only while that row is empty; a filled row keeps its pattern', () => {
+  const source = read('sections/rules/rules-suggest-ui.js');
+  assert.match(source, /let input = own && !own\.value\.trim\(\) \? own : null;/,
+    'a row with a pattern keeps its id, options, value and description: the picks become new rows');
 });

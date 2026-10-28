@@ -173,24 +173,47 @@ test('the detector description and its translations are saved with the rule, and
   assert.equal(saved.descriptionI18n, undefined);
 });
 
-test('translating an official rule saves the translations without marking it as edited', async () => {
+test('saving an official rule with its description left as it was keeps its translations and does not mark it as edited', async () => {
   global.StorageManager = { saveToStorage: async () => true };
   const state = editor();
   DetectionUtils.setOfficialDetectorIds(['detect-custom']);
-  const original = { ...fixture(), author: 'Scrapfly', name: 'Edited custom', description: 'Official text' };
+  const original = { ...fixture(), author: 'Scrapfly', name: 'Edited custom', description: 'Official text', descriptionI18n: { de: 'Offizieller Text' } };
   state.dm.detectors.antibot['detect-custom'] = original;
   state.rules.currentEditDetector.detector = plain(original);
   state.rules.currentEditDetector.original = plain(original);
   state.rules.currentEditDetector.isOfficial = true;
   state.fields['#detectorAuthorInput'].value = 'Scrapfly';
   state.rules._collectDetectionFromForm = () => plain(original.detection);
-  state.fields['#detectorDescriptionInput'] = { value: 'Official text' };
+  state.fields['#detectorDescriptionInput'] = { value: 'Offizieller Text' };
+  // The box showed the German text and was left alone: the rule's own text and translations come back as they were
   state.rules.collectDetectorDescription = () => ({ description: 'Official text', descriptionI18n: { de: 'Offizieller Text' } });
   assert.equal(await state.rules.saveRule(), true);
   const saved = state.dm.detectors.antibot['detect-custom'];
-  assert.equal(saved.userModified, undefined, 'translating is not editing: updates keep replacing it');
+  assert.equal(saved.userModified, undefined);
   assert.equal(saved.officialSnapshot, undefined);
+  assert.equal(saved.description, 'Official text');
   assert.deepEqual(plain(saved.descriptionI18n), { de: 'Offizieller Text' });
+});
+
+test('replacing the description of an official rule is an edit, and the translations of the old text go', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  DetectionUtils.setOfficialDetectorIds(['detect-custom']);
+  const original = { ...fixture(), author: 'Scrapfly', name: 'Edited custom', description: 'Official text', descriptionI18n: { de: 'Offizieller Text' } };
+  state.dm.detectors.antibot['detect-custom'] = original;
+  state.rules.currentEditDetector.detector = plain(original);
+  state.rules.currentEditDetector.original = plain(original);
+  state.rules.currentEditDetector.isOfficial = true;
+  state.fields['#detectorAuthorInput'].value = 'Scrapfly';
+  state.rules._collectDetectionFromForm = () => plain(original.detection);
+  state.fields['#detectorDescriptionInput'] = { value: 'My own words' };
+  state.rules.collectDetectorDescription = () => ({ description: 'My own words', descriptionI18n: {} });
+  assert.equal(await state.rules.saveRule(), true);
+  const saved = state.dm.detectors.antibot['detect-custom'];
+  assert.equal(saved.userModified, true);
+  assert.equal(saved.description, 'My own words');
+  assert.equal(saved.descriptionI18n, undefined);
+  assert.equal(saved.officialSnapshot.description, 'Official text');
 });
 
 test('a description-only edit to an official rule counts as an edit', async () => {

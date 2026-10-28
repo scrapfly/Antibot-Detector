@@ -214,10 +214,12 @@ class History {
     // "Changed": the page's protections differ from its earlier scan; the hover lists what was added and removed
     const changedBadgeHtml = (item) => {
       const change = item.changed;
-      if (!change || (!(change.added || []).length && !(change.removed || []).length)) return '';
+      if (!HistoryFilter.isChanged(item)) return '';
+      const added = HistoryFilter.changeNames(change.added);
+      const removed = HistoryFilter.changeNames(change.removed);
       const rows = [];
-      if ((change.added || []).length) rows.push({ label: FormatUtils.t('historyChangeAlertAddedFmt', 'Added: {0}', change.added.join(', ')), tone: 'green' });
-      if ((change.removed || []).length) rows.push({ label: FormatUtils.t('historyChangeAlertRemovedFmt', 'Removed: {0}', change.removed.join(', ')), tone: 'red' });
+      if (added.length) rows.push({ label: FormatUtils.t('historyChangeAlertAddedFmt', 'Added: {0}', added.join(', ')), tone: 'green' });
+      if (removed.length) rows.push({ label: FormatUtils.t('historyChangeAlertRemovedFmt', 'Removed: {0}', removed.join(', ')), tone: 'red' });
       const when = Number.isFinite(change.at) ? FormatUtils.formatDateTime(change.at) : '';
       return `<span class="history-changed-badge" ${FormatUtils.tipAttrs(_tr('historyChangedBadge', 'Changed'), when, rows)}>${FormatUtils.escapeHtml(_tr('historyChangedBadge', 'Changed'))}</span>`;
     };
@@ -300,6 +302,17 @@ class History {
       `;
     };
 
+    // One entry that cannot be drawn (data from an old build, an import) is left out, never the whole list: a throw here
+    // would leave the previous list on screen under chips that already say something else
+    const buildCard = (item) => {
+      try {
+        return buildHistoryItemHtml(item);
+      } catch (error) {
+        Logger.warn('UI', `[History] Entry ${item && item.id} could not be shown`, error);
+        return '';
+      }
+    };
+
     const finalizeRender = () => {
       if (renderToken !== this._historyRenderToken) {
         return;
@@ -324,7 +337,7 @@ class History {
     if (!shouldBatchRender) {
       let historyHtml = '';
       items.forEach(item => {
-        historyHtml += buildHistoryItemHtml(item);
+        historyHtml += buildCard(item);
       });
       historyList.innerHTML = historyHtml;
       finalizeRender();
@@ -343,7 +356,7 @@ class History {
       const slice = items.slice(offset, offset + batchSize);
       let batchHtml = '';
       slice.forEach(item => {
-        batchHtml += buildHistoryItemHtml(item);
+        batchHtml += buildCard(item);
       });
       historyList.insertAdjacentHTML('beforeend', batchHtml);
       offset += batchSize;

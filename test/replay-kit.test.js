@@ -70,10 +70,11 @@ test('curl: bash reads back every header and the cookie line exactly, quotes and
   const run = spawnSync('bash', ['-c', `curl() { for a in "$@"; do printf '%s\\0' "$a"; done; }\n${code}`], { encoding: 'utf8' });
   assert.strictEqual(run.status, 0, run.stderr);
   const args = run.stdout.split('\0').slice(0, -1);
-  assert.strictEqual(args[0], 'https://shop.example/cart?q=a%20b&x=%271%27');
+  assert.strictEqual(args[0], '-g', 'brackets and braces in an address are not curl URL patterns');
+  assert.strictEqual(args[1], 'https://shop.example/cart?q=a%20b&x=%271%27');
   const headers = [];
   let cookie = null;
-  for (let i = 1; i < args.length; i += 2) {
+  for (let i = 2; i < args.length; i += 2) {
     if (args[i] === '-H') headers.push(args[i + 1]);
     else if (args[i] === '-b') cookie = args[i + 1];
   }

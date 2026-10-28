@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "检测器已导入"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "已导入检测器，以下除外：{0}（在此版本中无效）"
+  },
   "detectorExportedFmt": {
     "message": "已导出 {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "保存前请填写所有必填的模式字段。"
   },
+  "rulesUiInvalidRegex": {
+    "message": "标记为正则表达式的模式无效，或可能导致扫描卡住。请修正，或关闭该行的 Regex。"
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "输入检测方法类型（例如 HEADERS、CONTENT、URLs）："
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "自定义上传服务器：请使用公共主机上的 HTTPS 地址"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook URL：请使用公共主机上的 HTTPS 地址"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "自定义上传服务器：JSON 模板不是有效的 JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "将日志保存在这里而不是控制台，以便导出为 JSON 或文本"
   },
-  "ruleTranslationsTitle": {
-    "message": "翻译"
-  },
-  "ruleTranslationsHint": {
-    "message": "扩展使用该语言时，显示此文字代替描述。留空则显示描述。"
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} / {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "自动翻译"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "自动翻译需要 Chrome 138 或更高版本。"
-  },
-  "ruleTranslateNeedsText": {
-    "message": "请先填写描述。"
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "正在翻译：{0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "已填写 {0} 种语言。保存前请检查。"
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "已填写 {0} 种；{1} 种无法在此翻译。"
-  },
   "sfxOptRenderingWait": {
     "message": "加载后等待"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "关闭"
-  },
-  "ruleTranslateAllDone": {
-    "message": "所有语言都已有翻译。"
-  },
-  "combinationTranslationsTitle": {
-    "message": "名称翻译"
-  },
-  "combinationTranslationsHint": {
-    "message": "扩展使用该语言时，显示此文字代替名称。留空则显示名称。"
-  },
-  "combinationTranslateNeedsName": {
-    "message": "请先填写名称。"
   },
   "advancedInfoCloudflareDesc": {
     "message": "检查验证 Cookie 并分析其脚本"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "历史记录大小必须是 {0} MB 之一"
   },
-  "ruleTranslateBarFmt": {
-    "message": "尚未翻译成所有语言的文本：{0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "使用 Chrome 的设备端翻译器补全说明、模式和组合中缺失的翻译。保存前请检查。"
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "翻译"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "翻译更改"
-  },
-  "ruleTranslatedLabel": {
-    "message": "已翻译"
-  },
-  "ruleTranslateBusy": {
-    "message": "正在翻译…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "此规则的所有文本均已翻译成全部 {0} 种语言。"
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "有 {0} 条（共 {1} 条）更改的文本在此无法翻译成所有语言（浏览器可能仍在下载）。没有丢失任何内容：这些文本保持原样。请稍后重试。"
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "已下载：{0}。{2} 种语言中已有 {1} 种就绪。浏览器每种语言只下载一次，每次点击下载一种：请再次点击“翻译”下载下一种。"
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "正在翻译 {0} 段文本…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "已填写 {0} 条翻译。保存前请检查。"
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "已填写 {0} 条；{1} 条无法在此翻译。"
-  },
   "ruleHistoryCheckPatterns": {
     "message": "模式"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "请在网站上打开弹出窗口，以便据此创建规则。"
   },
-  "suggestRuleExactName": {
-    "message": "按确切名称匹配"
+  "suggestRuleHeaderNameFmt": {
+    "message": "名称包含 {0} 的标头"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "名为 {0} 或名称以其开头的 Cookie"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "以 {0} 开头的名称：其余部分看起来是随机的"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "未检测到 hCaptcha 数据（超时 60 秒）"
   },
-  "ruleOriginalEnglish": {
-    "message": "原文（英文）"
-  },
-  "ruleOriginalHint": {
-    "message": "其他语言翻译此文本：修改后，在重新翻译之前将显示未翻译的文本。"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "设置未保存"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "更改语言会重新加载扩展程序。要先保存对设置的更改吗？"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "你用{0}修改的文本：{1}。其他语言仍显示旧文本。"
-  },
-  "ruleTranslateChangesHint": {
-    "message": "使用浏览器内置的翻译功能，将你写的内容翻译成英文（原文）和其他语言。保存前请检查。"
   },
   "combinationOneCount": {
     "message": "1 个组合"

@@ -501,3 +501,13 @@ test('one click listener on the list, however often Settings is populated', () =
   h.SettingsUI._setupWebhookLogListeners.call(h.ui());
   assert.equal(list.handlers.filter(x => x.type === 'click').length, 1);
 });
+
+test('Save refuses a webhook address no delivery could reach: http, a private host; variables in it are fine', () => {
+  const h = harness();
+  const check = (webhookUrl) => h.SettingsUI.validateSettings({ webhook: { webhookUrl } });
+  assert.match(check('http://hooks.example.com/x').errors.join(' '), /Webhook URL: use an HTTPS address on a public host/);
+  assert.equal(check('https://192.168.1.5/hook').isValid, false);
+  assert.equal(check('https://localhost/hook').isValid, false);
+  assert.equal(check('https://hooks.example.com/in/<HOSTNAME>?t=<TIMESTAMP>').isValid, true);
+  assert.equal(check('').isValid, true, 'no address: nothing to check (the webhook is off)');
+});

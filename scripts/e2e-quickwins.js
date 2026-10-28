@@ -253,7 +253,7 @@ async function scenario(name, fn) {
     assert.equal(copied.length, 5);
     // The replay kit: this browser's own User-Agent and the page address, as a curl command and a Python script
     const ua = await page.evaluate(() => navigator.userAgent);
-    assert.ok(copied[3].includes("curl 'https://shop.example/cart?session=SECRETURL'") && copied[3].includes(`-H 'User-Agent: ${ua}'`), copied[3]);
+    assert.ok(copied[3].includes("curl -g 'https://shop.example/cart?session=SECRETURL'") && copied[3].includes(`-H 'User-Agent: ${ua}'`), copied[3]);
     assert.ok(copied[3].includes('# Detected: QuickWin Probe') && copied[3].includes('TLS/HTTP2 fingerprint'), copied[3]);
     assert.ok(copied[4].includes('import requests') && copied[4].includes('requests.get(url, headers=headers'), copied[4]);
     copied.splice(3);

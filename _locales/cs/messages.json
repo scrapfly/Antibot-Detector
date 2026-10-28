@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Detektory importovány"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Detektory importovány, kromě: {0} (v této verzi nejsou platné)"
+  },
   "detectorExportedFmt": {
     "message": "Exportováno: {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Před uložením vyplňte všechna povinná pole vzorů."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Vzor označený jako regulární výraz je neplatný nebo by mohl zablokovat kontrolu. Opravte ho, nebo pro tento řádek vypněte Regex."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Zadejte typ metody detekce (např. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Vlastní server pro nahrávání: použijte adresu HTTPS na veřejném hostiteli"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL webhooku: použijte adresu HTTPS na veřejném hostiteli"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Vlastní server pro nahrávání: šablona JSON není platný JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Uchovávat protokoly tady místo v konzoli, aby šly exportovat jako JSON nebo text"
   },
-  "ruleTranslationsTitle": {
-    "message": "Překlady"
-  },
-  "ruleTranslationsHint": {
-    "message": "Zobrazí se místo popisu, když je rozšíření v daném jazyce. Prázdné: zobrazí se popis."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} z {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Přeložit automaticky"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Automatický překlad vyžaduje Chrome 138 nebo novější."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Nejprve napište popis."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Překládání: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Vyplněné jazyky: {0}. Před uložením je zkontrolujte."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Vyplněno: {0}; nepřeloženo zde: {1}."
-  },
   "sfxOptRenderingWait": {
     "message": "Počkat po načtení"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Vypnuto"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Každý jazyk už má překlad."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Překlady názvu"
-  },
-  "combinationTranslationsHint": {
-    "message": "Zobrazí se místo názvu, když je rozšíření v daném jazyce. Prázdné: zobrazí se název."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Nejprve napište název."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Kontroluje cookies výzev a analyzuje skripty"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Velikost historie musí být jedna z hodnot: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Texty dosud nepřeložené do všech jazyků: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Vyplní chybějící překlady popisu, vzorů a kombinací pomocí překladače Chrome přímo v zařízení. Před uložením je zkontrolujte."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Přeložit"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Přeložit změny"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Přeloženo"
-  },
-  "ruleTranslateBusy": {
-    "message": "Překládání…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Všechny texty tohoto pravidla jsou přeloženy do všech {0} jazyků."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "{0} z {1} změněných textů se zde nepodařilo přeložit do všech jazyků (prohlížeč je možná ještě stahuje). Nic se neztratilo: tyto texty zůstaly beze změny. Zkuste to za chvíli znovu."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Staženo: {0}. Připraveno {1} z {2} jazyků. Prohlížeč stahuje každý jazyk jen jednou, jeden na kliknutí: pro další klikněte znovu na Přeložit."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Překlad textů: {0}…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Vyplněno překladů: {0}. Před uložením je zkontrolujte."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Vyplněno: {0}; nepřeloženo zde: {1}."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Vzory"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Otevřete okno rozšíření na webu, abyste z něj vytvořili pravidlo."
   },
-  "suggestRuleExactName": {
-    "message": "Hledá se podle přesného názvu"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Hlavičky, jejichž název obsahuje {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookies s názvem {0} nebo jejichž název tak začíná"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Názvy začínající na {0}: zbytek vypadá náhodně"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Nezjištěna žádná data hCaptcha (časový limit 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Originál (anglicky)"
-  },
-  "ruleOriginalHint": {
-    "message": "Ostatní jazyky tento text překládají: když ho změníte, zobrazí ho nepřeložený, dokud se znovu nepřeloží."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Neuložená nastavení"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Změna jazyka znovu načte rozšíření. Uložit nejdřív změny nastavení?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Texty změněné v jazyce {0}: {1}. Ostatní jazyky stále zobrazují starý text."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Přeloží, co jste napsali, do angličtiny (originál) a do ostatních jazyků pomocí překladače v prohlížeči. Před uložením je zkontrolujte."
   },
   "combinationOneCount": {
     "message": "1 kombinace"

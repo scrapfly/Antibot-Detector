@@ -63,3 +63,16 @@ test('stored History in any of its shapes', () => {
   assert.strictEqual(R.parseHistory(items).length, 4);
   assert.deepStrictEqual(R.parseHistory('nope'), []);
 });
+
+test('a plain header name matches as detection reads it (names containing it); a dangerous regex matches nothing at once', () => {
+  global.isLikelyEvilRegex = require('../utils/pattern-cache.js').isLikelyEvilRegex;
+  const C = require('../sections/rules/rule-history-check.js');
+  const match = { type: 'header', name: 'x-cache-status', value: 'x-cache-status: HIT' };
+  assert.equal(C.patternMatches('header', { name: 'x-cache' }, match), true);
+  assert.equal(C.patternMatches('header', { name: 'X-CACHE-STATUS' }, match), true);
+  assert.equal(C.patternMatches('header', { name: 'server' }, match), false);
+  const started = Date.now();
+  assert.equal(C.textMatches('^(a+)+$', `${'a'.repeat(40)}!`, { regex: true }), false);
+  assert.ok(Date.now() - started < 200);
+  delete global.isLikelyEvilRegex;
+});

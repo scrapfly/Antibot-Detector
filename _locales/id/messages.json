@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Detektor diimpor"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Detektor diimpor, kecuali: {0} (tidak valid di versi ini)"
+  },
   "detectorExportedFmt": {
     "message": "{0} diekspor"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Isi semua kolom pola yang wajib sebelum menyimpan."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Pola yang ditandai sebagai ekspresi reguler tidak valid atau dapat membekukan pemindaian. Perbaiki, atau matikan Regex untuk baris itu."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Masukkan tipe metode deteksi (mis., HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Server unggahan kustom: gunakan alamat HTTPS pada host publik"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL webhook: gunakan alamat HTTPS pada host publik"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Server unggahan kustom: template JSON bukan JSON yang valid"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Simpan log di sini, bukan di konsol, agar dapat diekspor sebagai JSON atau teks"
   },
-  "ruleTranslationsTitle": {
-    "message": "Terjemahan"
-  },
-  "ruleTranslationsHint": {
-    "message": "Ditampilkan sebagai ganti deskripsi saat ekstensi menggunakan bahasa tersebut. Kosong: deskripsi yang ditampilkan."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} dari {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Terjemahkan otomatis"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Terjemahan otomatis memerlukan Chrome 138 atau lebih baru."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Tulis deskripsinya terlebih dahulu."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Menerjemahkan: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} bahasa terisi. Periksa sebelum menyimpan."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} terisi; {1} tidak dapat diterjemahkan di sini."
-  },
   "sfxOptRenderingWait": {
     "message": "Tunggu setelah dimuat"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Mati"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Setiap bahasa sudah memiliki terjemahan."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Terjemahan nama"
-  },
-  "combinationTranslationsHint": {
-    "message": "Ditampilkan sebagai ganti nama saat ekstensi menggunakan bahasa tersebut. Kosong: nama yang ditampilkan."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Tulis namanya terlebih dahulu."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Memeriksa cookie challenge dan menganalisis script-nya"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Ukuran Riwayat harus salah satu dari {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Teks yang belum diterjemahkan ke semua bahasa: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Mengisi terjemahan yang hilang untuk deskripsi, pola, dan kombinasi dengan penerjemah di perangkat milik Chrome. Periksa sebelum menyimpan."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Terjemahkan"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Terjemahkan perubahan"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Diterjemahkan"
-  },
-  "ruleTranslateBusy": {
-    "message": "Menerjemahkan…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Semua teks aturan ini sudah diterjemahkan ke semua {0} bahasa."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "{0} dari {1} teks yang diubah tidak dapat diterjemahkan ke semua bahasa di sini (browser mungkin masih mengunduhnya). Tidak ada yang hilang: teks tersebut tetap seperti semula. Coba lagi sebentar lagi."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Diunduh: {0}. {1} dari {2} bahasa siap. Browser mengunduh tiap bahasa sekali, satu per klik: klik Terjemahkan lagi untuk berikutnya."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Menerjemahkan {0} teks…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} terjemahan terisi. Periksa sebelum menyimpan."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} terisi; {1} tidak dapat diterjemahkan di sini."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Pola"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Buka popup di sebuah situs web untuk membuat aturan darinya."
   },
-  "suggestRuleExactName": {
-    "message": "Dicari berdasarkan nama persisnya"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Header yang namanya berisi {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookie bernama {0} atau yang namanya diawali dengannya"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Nama yang diawali {0}: sisanya tampak acak"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Tidak ada data hCaptcha yang terdeteksi (batas waktu 60 dtk)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Asli (bahasa Inggris)"
-  },
-  "ruleOriginalHint": {
-    "message": "Bahasa lain menerjemahkan teks ini: jika diubah, teks ditampilkan tanpa terjemahan sampai diterjemahkan lagi."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Pengaturan belum disimpan"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Mengganti bahasa akan memuat ulang ekstensi. Simpan perubahan pengaturan terlebih dahulu?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Teks yang Anda ubah dalam {0}: {1}. Bahasa lain masih menampilkan teks lama."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Menerjemahkan yang Anda tulis ke bahasa Inggris (aslinya) dan ke bahasa lain dengan penerjemah bawaan browser. Periksa sebelum menyimpan."
   },
   "combinationOneCount": {
     "message": "1 kombinasi"

@@ -96,9 +96,19 @@ test('curl and Python copy the replay kit\'s code, with the page\'s cookies read
   await DetectionActions.copyDetectionsAs.call(view, 'curl', 'https://shop.example/cart#x');
   await DetectionActions.copyDetectionsAs.call(view, 'python', 'https://shop.example/cart#x');
   assert.deepStrictEqual(asked[0], ['https://shop.example/cart', 7]);
-  assert.ok(copied[0].includes("curl 'https://shop.example/cart'") && copied[0].includes("-b '__cf_bm=v'") && copied[0].includes("-H 'User-Agent: UA/1'"), copied[0]);
+  assert.ok(copied[0].includes("curl -g 'https://shop.example/cart'") && copied[0].includes("-b '__cf_bm=v'") && copied[0].includes("-H 'User-Agent: UA/1'"), copied[0]);
   assert.ok(copied[0].includes('# Protection cookies: __cf_bm (Cloudflare)'));
   assert.ok(copied[1].includes('import requests') && copied[1].includes('"__cf_bm": "v",  # Cloudflare'), copied[1]);
   assert.strictEqual(await DetectionActions.copyDetectionsAs.call(view, 'curl', 'about:blank'), '', 'no web page, nothing copied');
   assert.strictEqual(copied.length, 2);
+});
+
+test('a share upload leaves out a token in the address path too (reset, invite, magic-link pages); readable segments stay', () => {
+  const { DetectionActions } = load();
+  const clean = (url) => DetectionActions._sanitizeUrlForPaste(url);
+  assert.equal(clean('https://app.example/reset/9f3c2a7b1e4d8c6f0a5b2e9d7c4f1a3b?x=1'), 'https://app.example/reset/:token');
+  assert.equal(clean('https://app.example/invite/0b7c3d1e-2f4a-4b5c-9d6e-7f8a9b0c1d2e'), 'https://app.example/invite/:token');
+  assert.equal(clean('https://app.example/login/magic/aZ3kP9qL2mX7wR5tY8vB'), 'https://app.example/login/magic/:token');
+  assert.equal(clean('https://shop.example/products/running-shoes-for-women/'), 'https://shop.example/products/running-shoes-for-women/', 'words stay');
+  assert.equal(clean('https://news.example/2026/10/28/story'), 'https://news.example/2026/10/28/story', 'short numbers stay');
 });

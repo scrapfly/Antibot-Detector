@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Detectors geïmporteerd"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Detectors geïmporteerd, behalve: {0} (niet geldig in deze versie)"
+  },
   "detectorExportedFmt": {
     "message": "{0} geëxporteerd"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Vul alle vereiste patroonvelden in voordat je opslaat."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Een patroon dat als reguliere expressie is gemarkeerd, is ongeldig of kan het scannen laten vastlopen. Pas het aan of zet Regex voor die rij uit."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Voer het type detectiemethode in (bijv. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Aangepaste uploadserver: gebruik een HTTPS-adres op een openbare host"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook-URL: gebruik een HTTPS-adres op een openbare host"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Aangepaste uploadserver: het JSON-sjabloon is geen geldige JSON"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Bewaar de logs hier in plaats van in de console, om ze als JSON of tekst te exporteren"
   },
-  "ruleTranslationsTitle": {
-    "message": "Vertalingen"
-  },
-  "ruleTranslationsHint": {
-    "message": "Wordt getoond in plaats van de beschrijving wanneer de extensie in die taal staat. Leeg: de beschrijving wordt getoond."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} van {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Automatisch vertalen"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Automatisch vertalen vereist Chrome 138 of nieuwer."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Schrijf eerst de beschrijving."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Vertalen: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Ingevulde talen: {0}. Controleer ze voordat je opslaat."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Ingevuld: {0}; hier niet vertaald: {1}."
-  },
   "sfxOptRenderingWait": {
     "message": "Wachten na laden"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Uit"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Elke taal heeft al een vertaling."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Naamvertalingen"
-  },
-  "combinationTranslationsHint": {
-    "message": "Wordt getoond in plaats van de naam wanneer de extensie in die taal staat. Leeg: de naam wordt getoond."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Schrijf eerst de naam."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Controleert de challengecookies en analyseert de scripts"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "De grootte van de geschiedenis moet een van deze waarden zijn: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Teksten die nog niet in elke taal zijn vertaald: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Vult de ontbrekende vertalingen van de beschrijving, de patronen en de combinaties aan met de vertaler op het apparaat van Chrome. Controleer ze voordat je opslaat."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Vertalen"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Wijzigingen vertalen"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Vertaald"
-  },
-  "ruleTranslateBusy": {
-    "message": "Vertalen…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Alle teksten van deze regel zijn vertaald in alle {0} talen."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "{0} van de {1} gewijzigde teksten konden hier niet in elke taal worden vertaald (de browser downloadt ze misschien nog). Er is niets verloren: die teksten zijn zoals ze waren. Probeer het zo meteen opnieuw."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Gedownload: {0}. {1} van {2} talen klaar. De browser downloadt elke taal één keer, één per klik: klik opnieuw op Vertalen voor de volgende."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "{0} teksten vertalen…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} vertalingen ingevuld. Controleer ze voordat je opslaat."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Ingevuld: {0}; hier niet vertaald: {1}."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Patronen"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Open de pop-up op een website om er een regel van te maken."
   },
-  "suggestRuleExactName": {
-    "message": "Gezocht op de exacte naam"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Headers waarvan de naam {0} bevat"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookies met de naam {0} of waarvan de naam daarmee begint"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Namen die beginnen met {0}: de rest lijkt willekeurig"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Geen hCaptcha-gegevens gedetecteerd (time-out na 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Origineel (Engels)"
-  },
-  "ruleOriginalHint": {
-    "message": "De andere talen vertalen deze tekst: als je hem wijzigt, tonen ze hem onvertaald tot hij opnieuw is vertaald."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Niet-opgeslagen instellingen"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Een andere taal kiezen laadt de extensie opnieuw. Eerst je wijzigingen in de instellingen opslaan?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Teksten die je in het {0} hebt gewijzigd: {1}. De andere talen tonen nog de oude tekst."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Vertaalt wat je schreef naar het Engels (het origineel) en de andere talen, met de vertaler van de browser op je apparaat. Controleer ze voor het opslaan."
   },
   "combinationOneCount": {
     "message": "1 combinatie"

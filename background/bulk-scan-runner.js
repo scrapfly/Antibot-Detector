@@ -85,7 +85,14 @@ const BulkScanRunner = {
      * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, cap?: number}} request
      * @returns {Promise<{ok: boolean, run?: object, error?: 'busy'|'off'|'empty'|'no_window'}>}
      */
-    async start(request = {}) {
+    start(request = {}) {
+        // One start at a time: two pages starting together would both see no run and the second would replace the first
+        const next = (this._starting || Promise.resolve()).then(() => this._start(request));
+        this._starting = next.catch(() => {});
+        return next;
+    },
+
+    async _start(request) {
         await this.ready();
         if (BulkScan.isActive(this._run)) return { ok: false, error: 'busy' };
         if (!await this.extensionOn()) return { ok: false, error: 'off' };
@@ -111,6 +118,7 @@ const BulkScanRunner = {
         const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
         // A run takes minutes: Chrome stops an idle worker after about 30 s, which would end the run and leave its tab
         if (keepalive) keepalive.startOperation(this.KEEPALIVE_ID, { reason: 'bulk_scan' });
+        const looped = this._run;
         this._loop = this._runLoop().catch((error) => {
             if (typeof Logger !== 'undefined' && Logger.warn) Logger.warn('BACKGROUND', '[BulkScan] Run failed:', error);
             if (BulkScan.stop(this._run, 'error')) return this.save();
@@ -119,6 +127,8 @@ const BulkScanRunner = {
             this._loop = null;
             this._token = null;
             if (keepalive) keepalive.endOperation(this.KEEPALIVE_ID);
+            // A run started while this loop was still winding down (Stop, then Scan the waiting pages) gets its own loop
+            if (this._run !== looped && BulkScan.isActive(this._run)) this._startLoop();
         });
     },
 

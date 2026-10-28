@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "تم استيراد الكواشف"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "تم استيراد الكواشف، باستثناء: {0} (غير صالحة في هذا الإصدار)"
+  },
   "detectorExportedFmt": {
     "message": "تم تصدير {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "يرجى ملء جميع حقول الأنماط المطلوبة قبل الحفظ."
   },
+  "rulesUiInvalidRegex": {
+    "message": "نمط مُعلَّم كتعبير نمطي غير صالح أو قد يُجمّد الفحص. صحّحه أو أوقف Regex لهذا الصف."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "أدخل نوع طريقة الكشف (مثل HEADERS أو CONTENT أو URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "خادم الرفع المخصص: استخدم عنوان HTTPS على مضيف عام"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL الـ Webhook: استخدم عنوان HTTPS على مضيف عام"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "خادم الرفع المخصص: قالب JSON ليس JSON صالحًا"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "احتفظ بالسجلات هنا بدلًا من وحدة التحكم لتصديرها كـ JSON أو نص"
   },
-  "ruleTranslationsTitle": {
-    "message": "الترجمات"
-  },
-  "ruleTranslationsHint": {
-    "message": "تظهر بدلًا من الوصف عندما تكون الإضافة بتلك اللغة. فارغة: يظهر الوصف."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} من {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "ترجمة تلقائية"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "تتطلب الترجمة التلقائية Chrome 138 أو أحدث."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "اكتب الوصف أولًا."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "جارٍ الترجمة: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "تم ملء {0} لغات. راجعها قبل الحفظ."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "تم ملء {0}؛ تعذرت ترجمة {1} هنا."
-  },
   "sfxOptRenderingWait": {
     "message": "الانتظار بعد التحميل"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "إيقاف"
-  },
-  "ruleTranslateAllDone": {
-    "message": "كل اللغات لها ترجمة بالفعل."
-  },
-  "combinationTranslationsTitle": {
-    "message": "ترجمات الاسم"
-  },
-  "combinationTranslationsHint": {
-    "message": "تظهر بدلًا من الاسم عندما تكون الإضافة بتلك اللغة. فارغة: يظهر الاسم."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "اكتب الاسم أولًا."
   },
   "advancedInfoCloudflareDesc": {
     "message": "يفحص ملفات تعريف الارتباط الخاصة بالتحدي ويحلل سكربتاته"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "يجب أن يكون حجم السجل أحد هذه القيم: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "نصوص غير مترجمة بعد إلى كل اللغات: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "يملأ الترجمات الناقصة للوصف والأنماط والتركيبات بمترجم Chrome على الجهاز. راجعها قبل الحفظ."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "ترجمة"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "ترجمة التغييرات"
-  },
-  "ruleTranslatedLabel": {
-    "message": "مترجمة"
-  },
-  "ruleTranslateBusy": {
-    "message": "جارٍ الترجمة…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "كل نصوص هذه القاعدة مترجمة إلى اللغات الـ{0} كلها."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "تعذّرت ترجمة {0} من {1} من النصوص المعدّلة إلى كل اللغات هنا (قد يكون المتصفح ما زال ينزّلها). لم يُفقد شيء: بقيت هذه النصوص كما كانت. حاول مرة أخرى بعد قليل."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "تم تنزيل {0}: {1} من {2} لغة جاهزة. ينزّل المتصفح كل لغة مرة واحدة، لغة لكل نقرة: انقر «ترجمة» مرة أخرى للغة التالية."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "جارٍ ترجمة النصوص: {0}…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "تم ملء الترجمات: {0}. راجعها قبل الحفظ."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "تم ملء {0}؛ تعذرت ترجمة {1} هنا."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "الأنماط"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "افتح النافذة المنبثقة على موقع ويب لإنشاء قاعدة منه."
   },
-  "suggestRuleExactName": {
-    "message": "يُبحث عنه باسمه الدقيق"
+  "suggestRuleHeaderNameFmt": {
+    "message": "الترويسات التي يحتوي اسمها على {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "ملفات تعريف الارتباط المسماة {0} أو التي يبدأ اسمها به"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "أسماء تبدأ بـ {0}: يبدو الباقي عشوائيًا"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "لم تُكتشف بيانات hCaptcha (المهلة 60 ثانية)"
   },
-  "ruleOriginalEnglish": {
-    "message": "الأصل (بالإنجليزية)"
-  },
-  "ruleOriginalHint": {
-    "message": "تترجم اللغات الأخرى هذا النص: إذا غيّرته فستعرضه دون ترجمة إلى أن يُترجم من جديد."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "إعدادات غير محفوظة"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "يؤدي تغيير اللغة إلى إعادة تحميل الإضافة. هل تريد حفظ تغييرات الإعدادات أولاً؟"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "النصوص التي غيّرتها بـ{0}: {1}. لا تزال اللغات الأخرى تعرض النص القديم."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "يترجم ما كتبته إلى الإنجليزية (الأصل) وإلى اللغات الأخرى بمترجم المتصفح على الجهاز. راجعها قبل الحفظ."
   },
   "combinationOneCount": {
     "message": "تركيبة واحدة"

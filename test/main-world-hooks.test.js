@@ -682,3 +682,41 @@ test('a hook that fires while the page loads does not complete the monitoring be
   assert.ok(done, 'completes once the page is ready');
   assert.strictEqual(done.completionReason, P.COMPLETION_REASONS.HOOKS.ACTIVITY_TIMEOUT);
 });
+
+test('a page that wraps dispatchEvent or replaces CustomEvent after the bootstrap never sees a report or the token', () => {
+  const page = bootstrapped();
+  const stolen = [];
+  page.run('(() => { const real = window.dispatchEvent; window.dispatchEvent = function(e) { this.__seen = (this.__seen || 0) + 1; return real.call(this, e); }; })()');
+  page.context.__stolen = stolen;
+  page.run('(() => { const Real = window.CustomEvent; window.CustomEvent = function(type, init) { __stolen.push(init && init.detail); return new Real(type, init); }; })()');
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [detector('a', ['Navigator.prototype.getBattery'])] }));
+  page.run('navigator.getBattery()');
+  assert.ok(page.ofType(T.JS_HOOK_DETECTION).length > 0, 'the report still reaches the extension');
+  assert.deepStrictEqual(stolen, [], 'the page\'s CustomEvent never built a report');
+  assert.ok(!page.run('window.__seen'), 'the page\'s dispatchEvent never sent one');
+});
+
+test('JS API events call a page callback only when the extension marks the event as one (its on* events), never a page helper', () => {
+  const page = bootstrapped();
+  page.run('window.__calls = []; window.ready = () => __calls.push("ready"); window.onDetection = (d) => __calls.push("onDetection")');
+  for (const eventName of ['ready', 'onDetection']) {
+    page.toMain({ type: T.JS_API_EVENT, eventName, detail: { url: 'https://x.example/' }, windowCallback: eventName !== 'ready', [P.FIELDS.TOKEN]: TOKEN });
+  }
+  assert.deepStrictEqual(JSON.parse(page.run('JSON.stringify(window.__calls)')), ['onDetection']);
+});
+
+test('a rescan\'s hooks are not taken off by the maximum timer the first setup left running', async () => {
+  const page = bootstrapped();
+  const slow = { ACTIVITY_TIMEOUT_MS: 5000, MIN_MONITOR_MS: 0, INSTALL_DEBOUNCE_MS: 0 };
+  page.install(installDetail(TOKEN, { overrides: { ...slow, MAX_DETECTION_MS: 1000 }, hookDefinitions: [detector('a', ['Navigator.prototype.getBattery'])] }));
+  page.toMain({ type: T.PAGE_READY, [P.FIELDS.TOKEN]: TOKEN }); // arms the first setup's 1 s maximum (the lowest allowed)
+  await sleep(200);
+  const getter = () => page.run('Object.getOwnPropertyDescriptor(Navigator.prototype, "hardwareConcurrency").get');
+  const nativeGetter = getter();
+  page.install(installDetail(TOKEN, { overrides: { ...slow, MAX_DETECTION_MS: 5000 }, hookDefinitions: [detector('b', ['Navigator.prototype.hardwareConcurrency'])] }));
+  await sleep(1100); // past the first setup's maximum
+  assert.deepStrictEqual(page.ofType(T.JS_HOOKS_COMPLETE), [], 'no completion from the first setup');
+  assert.notStrictEqual(getter(), nativeGetter, 'the rescan\'s hook is still installed');
+  assert.strictEqual(page.run('navigator.hardwareConcurrency'), 8);
+  assert.ok(page.ofType(T.JS_HOOK_DETECTION).some(m => m.detection.detectorId === 'b'), 'and still reports');
+});

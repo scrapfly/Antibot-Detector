@@ -8,8 +8,9 @@
           "min": 100
         }
       ],
-      "note": "Amazon sign-in: metadata1 field and FWCIM scripts",
-      "waitMs": 12000
+      "note": "Amazon sign-in: metadata1 field and FWCIM scripts (an occasional visit gets a bare page without them, in 3.0.6 too)",
+      "waitMs": 12000,
+      "retries": 2
     },
     {
       "url": "https://www.akamai.com/",
@@ -184,8 +185,9 @@
           "min": 100
         }
       ],
-      "note": "vendor site",
-      "waitMs": 12000
+      "note": "vendor site; CHEQ blocks some headless Chromium loads itself (/ answers 200, then /__cheq/block redirects back to /, in a loop; seen with no extension and on 3.0.6), so a miss here is the site, not the rules: run it again",
+      "waitMs": 12000,
+      "retries": 3
     },
     {
       "url": "https://www.realestate.com.au/",
@@ -239,8 +241,9 @@
           "min": 80
         }
       ],
-      "note": "Ruishu",
-      "waitMs": 12000
+      "note": "Ruishu; the site sometimes answers nothing at all (ERR_EMPTY_RESPONSE), so a miss here is the site",
+      "waitMs": 12000,
+      "retries": 1
     },
     {
       "url": "https://www.mexc.co/",
@@ -269,10 +272,10 @@
       "expect": [
         {
           "detector": "detect-azurefrontdoor",
-          "min": 80
+          "min": 55
         }
       ],
-      "note": "Azure Front Door",
+      "note": "Azure Front Door: its headers show Microsoft's edge, not that the firewall is on, so it scores 55-60% on its own since 3.0.5",
       "waitMs": 12000
     },
     {
@@ -305,8 +308,9 @@
           "min": 60
         }
       ],
-      "note": "Radware Bot Manager customer",
-      "waitMs": 12000
+      "note": "Radware Bot Manager customer; its own bot protection sometimes answers 403 to headless Chromium (also with no extension and to plain curl), so a miss here is the site",
+      "waitMs": 12000,
+      "retries": 2
     },
     {
       "url": "https://www.google.com/recaptcha/api2/demo",
@@ -349,8 +353,9 @@
           "min": 100
         }
       ],
-      "note": "official demo",
-      "waitMs": 12000
+      "note": "official demo; a slow third-party demo that now and then misses the suite's wait",
+      "waitMs": 12000,
+      "retries": 2
     },
     {
       "url": "https://2captcha.com/demo/geetest-v4",
@@ -404,8 +409,9 @@
           "min": 100
         }
       ],
-      "note": "official demo",
-      "waitMs": 12000
+      "note": "official demo; a slow third-party demo that now and then misses the suite's wait",
+      "waitMs": 12000,
+      "retries": 2
     },
     {
       "url": "https://www.zhihu.com/",
@@ -448,8 +454,9 @@
           "min": 100
         }
       ],
-      "note": "official demo",
-      "waitMs": 12000
+      "note": "official demo; a slow third-party demo that now and then misses the suite's wait",
+      "waitMs": 12000,
+      "retries": 2
     },
     {
       "url": "https://signup.live.com/",
@@ -470,8 +477,9 @@
           "min": 100
         }
       ],
-      "note": "official product page loads TJCaptcha.js",
-      "waitMs": 15000
+      "note": "official product page loads TJCaptcha.js (an occasional visit loads the page without it)",
+      "waitMs": 15000,
+      "retries": 2
     },
     {
       "url": "https://www.capy.me/account/signin",

@@ -179,3 +179,15 @@ test('file names carry the person\'s own day, not UTC\'s (an export after midnig
     if (before === undefined) delete process.env.TZ; else process.env.TZ = before;
   }
 });
+
+test('damaged entries (from an old build or an edited file) never break an export or a scheduled backup', () => {
+  const broken = [null, 7, { id: 'x', url: 'https://x.example/', detections: [null, det('Akamai', 'Anti-Bot', 90), 'junk'] }, { id: 'y', url: 'https://y.example/', detections: { a: 1 } }];
+  for (const format of ['json', 'csv', 'txt', 'md']) {
+    assert.doesNotThrow(() => E.build(broken, { format, includeTimestamps: true }), format);
+  }
+  assert.match(E.build(broken, { format: 'txt' }).text, /Akamai \(Anti-Bot, 90%\)/);
+  assert.doesNotThrow(() => E.filter(broken, { category: 'antibot' }, NOW));
+  // "Changed only" counts what the History chip counts
+  const marks = [{ id: 'a', changed: true }, { id: 'b', changed: { added: [], removed: [] } }, { id: 'c', changed: { added: 'DataDome' } }];
+  assert.deepStrictEqual(E.filter(marks, { changedOnly: true }, NOW).map(i => i.id), ['c']);
+});

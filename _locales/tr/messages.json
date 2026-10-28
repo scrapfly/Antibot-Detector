@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Dedektörler içe aktarıldı"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Dedektörler içe aktarıldı, şunlar hariç: {0} (bu sürümde geçerli değil)"
+  },
   "detectorExportedFmt": {
     "message": "{0} dışa aktarıldı"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Kaydetmeden önce lütfen tüm gerekli desen alanlarını doldurun."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Normal ifade olarak işaretlenen bir desen geçersiz veya taramayı kilitleyebilir. Düzeltin ya da o satırda Regex'i kapatın."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Tespit yöntemi türünü girin (ör. HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Özel yükleme sunucusu: herkese açık bir ana makinede HTTPS adresi kullanın"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook URL'si: herkese açık bir ana makinede HTTPS adresi kullanın"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Özel yükleme sunucusu: JSON şablonu geçerli bir JSON değil"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Günlükleri konsol yerine burada tutar; JSON veya metin olarak dışa aktarabilirsiniz"
   },
-  "ruleTranslationsTitle": {
-    "message": "Çeviriler"
-  },
-  "ruleTranslationsHint": {
-    "message": "Uzantı o dildeyken açıklama yerine gösterilir. Boşsa açıklama gösterilir."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} / {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Otomatik çevir"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Otomatik çeviri için Chrome 138 veya daha yeni bir sürüm gerekir."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Önce açıklamayı yazın."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Çevriliyor: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} dil dolduruldu. Kaydetmeden önce kontrol edin."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} dolduruldu; {1} burada çevrilemedi."
-  },
   "sfxOptRenderingWait": {
     "message": "Yüklemeden sonra bekle"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Kapalı"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Her dilin zaten bir çevirisi var."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Ad çevirileri"
-  },
-  "combinationTranslationsHint": {
-    "message": "Uzantı o dildeyken ad yerine gösterilir. Boşsa ad gösterilir."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Önce adı yazın."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Doğrulama sınaması çerezlerini kontrol eder ve komut dosyalarını analiz eder"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Geçmiş boyutu şunlardan biri olmalıdır: {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Henüz her dile çevrilmemiş metinler: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Açıklamanın, desenlerin ve kombinasyonların eksik çevirilerini Chrome'un cihaz üzerindeki çevirmeniyle doldurur. Kaydetmeden önce kontrol edin."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Çevir"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Değişiklikleri çevir"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Çevrildi"
-  },
-  "ruleTranslateBusy": {
-    "message": "Çevriliyor…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Bu kuralın tüm metinleri {0} dilin hepsine çevrildi."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Değiştirilen {1} metinden {0} tanesi burada tüm dillere çevrilemedi (tarayıcı onları hâlâ indiriyor olabilir). Hiçbir şey kaybolmadı: bu metinler olduğu gibi kaldı. Birazdan tekrar deneyin."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "İndirildi: {0}. {2} dilden {1} tanesi hazır. Tarayıcı her dili bir kez, her tıklamada bir tane indirir: sonraki için Çevir'e yeniden tıklayın."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "{0} metin çevriliyor…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} çeviri dolduruldu. Kaydetmeden önce kontrol edin."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} dolduruldu; {1} burada çevrilemedi."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Desenler"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Bir web sitesinden kural oluşturmak için açılır pencereyi o sitede açın."
   },
-  "suggestRuleExactName": {
-    "message": "Tam adıyla aranır"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Adı {0} içeren başlıklar"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Adı {0} olan veya böyle başlayan çerezler"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "{0} ile başlayan adlar: gerisi rastgele görünüyor"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "hCaptcha verisi algılanmadı (60 sn zaman aşımı)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Orijinal (İngilizce)"
-  },
-  "ruleOriginalHint": {
-    "message": "Diğer diller bu metni çevirir: değiştirirsen yeniden çevrilene kadar çevrilmeden gösterilir."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Kaydedilmemiş ayarlar"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Dili değiştirmek uzantıyı yeniden yükler. Önce ayarlardaki değişiklikler kaydedilsin mi?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "{0} dilinde değiştirdiğin metinler: {1}. Diğer diller hâlâ eski metni gösteriyor."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Yazdığını tarayıcının cihazdaki çevirmeniyle İngilizceye (orijinal) ve diğer dillere çevirir. Kaydetmeden önce kontrol et."
   },
   "combinationOneCount": {
     "message": "1 kombinasyon"

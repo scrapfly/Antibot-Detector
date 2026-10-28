@@ -112,6 +112,31 @@ function akamaiStartCapture(tabId, captureUrl) {
  * @param {number} tabId - Tab ID to stop capture for
  * @returns {object} Status and results
  */
+/** Remove the shared request interceptor when no capture or extraction needs it any more. */
+function akamaiRemoveListenerIfIdle() {
+    if (!akamaiCaptureStateRef || !akamaiInterceptionListener) return;
+    if (typeof removeListenerIfIdle === 'function') {
+        const removed = removeListenerIfIdle({
+            captureStateRef: akamaiCaptureStateRef,
+            listenerRef: akamaiInterceptionListener,
+            removeFn: chrome.webRequest.onBeforeRequest.removeListener.bind(chrome.webRequest.onBeforeRequest)
+        });
+        if (removed) akamaiInterceptionListener = null;
+    } else if (akamaiCaptureStateRef.size === 0) {
+        chrome.webRequest.onBeforeRequest.removeListener(akamaiInterceptionListener);
+        akamaiInterceptionListener = null;
+    }
+    if (!akamaiInterceptionListener) Logger.network('[AKAMAI-CAPTURE] Removed request interceptor (no active captures)');
+}
+
+// A capture can end without this file's own stop (tab closed, page left): the request listener on every page goes
+// once nothing needs it
+var akamaiJobHookInstalled = akamaiJobHookInstalled || false;
+if (!akamaiJobHookInstalled && typeof AdvancedJobManager !== 'undefined' && typeof AdvancedJobManager.onCaptureFinished === 'function') {
+    AdvancedJobManager.onCaptureFinished('akamai', () => akamaiRemoveListenerIfIdle());
+    akamaiJobHookInstalled = true;
+}
+
 function akamaiStopCapture(tabId) {
     Logger.network('[AKAMAI-CAPTURE] ========== STOP CAPTURE ==========');
     Logger.network('[AKAMAI-CAPTURE] Tab ID:', tabId);
@@ -476,6 +501,7 @@ async function akamaiStartExtraction(tabId) {
                     } else {
                         akamaiCaptureStateRef.delete(tabId);
                     }
+                    akamaiRemoveListenerIfIdle();
                     Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                 }
             });
@@ -485,6 +511,7 @@ async function akamaiStartExtraction(tabId) {
                 const currentState = akamaiCaptureStateRef.get(tabId);
                 if (currentState && currentState.extractMode) {
                     akamaiCaptureStateRef.delete(tabId);
+                    akamaiRemoveListenerIfIdle();
                     Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                 }
             }, 30000);

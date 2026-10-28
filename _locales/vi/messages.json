@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Đã nhập trình phát hiện"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Đã nhập bộ phát hiện, trừ: {0} (không hợp lệ ở phiên bản này)"
+  },
   "detectorExportedFmt": {
     "message": "Đã xuất {0}"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Vui lòng điền tất cả trường mẫu bắt buộc trước khi lưu."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Một mẫu được đánh dấu là biểu thức chính quy không hợp lệ hoặc có thể làm treo quá trình quét. Hãy sửa lại hoặc tắt Regex cho hàng đó."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Nhập loại phương thức phát hiện (ví dụ: HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Máy chủ tải lên tùy chỉnh: hãy dùng địa chỉ HTTPS trên máy chủ công khai"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL webhook: hãy dùng địa chỉ HTTPS trên máy chủ công khai"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Máy chủ tải lên tùy chỉnh: mẫu JSON không phải JSON hợp lệ"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Giữ nhật ký tại đây thay vì trong bảng điều khiển, để xuất dưới dạng JSON hoặc văn bản"
   },
-  "ruleTranslationsTitle": {
-    "message": "Bản dịch"
-  },
-  "ruleTranslationsHint": {
-    "message": "Hiển thị thay cho mô tả khi tiện ích dùng ngôn ngữ đó. Để trống: hiển thị mô tả."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0}/{1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Dịch tự động"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "Dịch tự động cần Chrome 138 trở lên."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Hãy viết mô tả trước."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Đang dịch: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "Đã điền {0} ngôn ngữ. Hãy kiểm tra trước khi lưu."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "Đã điền {0}; {1} không thể dịch tại đây."
-  },
   "sfxOptRenderingWait": {
     "message": "Chờ sau khi tải"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Tắt"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Mọi ngôn ngữ đều đã có bản dịch."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Bản dịch tên"
-  },
-  "combinationTranslationsHint": {
-    "message": "Hiển thị thay cho tên khi tiện ích dùng ngôn ngữ đó. Để trống: hiển thị tên."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Hãy viết tên trước."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Kiểm tra cookie thử thách và phân tích các script của nó"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "Dung lượng Lịch sử phải là một trong các giá trị {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Số văn bản chưa được dịch sang mọi ngôn ngữ: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Điền các bản dịch còn thiếu của mô tả, các mẫu và các tổ hợp bằng trình dịch trên thiết bị của Chrome. Hãy kiểm tra trước khi lưu."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Dịch"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Dịch thay đổi"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Đã dịch"
-  },
-  "ruleTranslateBusy": {
-    "message": "Đang dịch…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Mọi văn bản của quy tắc này đã được dịch sang cả {0} ngôn ngữ."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Không dịch được {0} trong {1} văn bản đã đổi sang mọi ngôn ngữ ở đây (trình duyệt có thể vẫn đang tải chúng). Không mất gì: các văn bản đó vẫn như cũ. Hãy thử lại sau giây lát."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Đã tải: {0}. Sẵn sàng {1}/{2} ngôn ngữ. Trình duyệt tải mỗi ngôn ngữ một lần, mỗi lần nhấp một ngôn ngữ: nhấp Dịch lần nữa để tải ngôn ngữ tiếp theo."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Đang dịch {0} văn bản…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "Đã điền {0} bản dịch. Hãy kiểm tra trước khi lưu."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "Đã điền {0}; {1} không thể dịch tại đây."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Mẫu"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Hãy mở cửa sổ bật lên trên một trang web để tạo quy tắc từ trang đó."
   },
-  "suggestRuleExactName": {
-    "message": "Tìm theo đúng tên"
+  "suggestRuleHeaderNameFmt": {
+    "message": "Header có tên chứa {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookie tên {0} hoặc có tên bắt đầu như vậy"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Tên bắt đầu bằng {0}: phần còn lại trông ngẫu nhiên"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Không phát hiện dữ liệu hCaptcha (hết thời gian sau 60 giây)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Bản gốc (tiếng Anh)"
-  },
-  "ruleOriginalHint": {
-    "message": "Các ngôn ngữ khác dịch văn bản này: nếu bạn thay đổi, văn bản sẽ hiển thị chưa dịch cho đến khi được dịch lại."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Cài đặt chưa lưu"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Đổi ngôn ngữ sẽ tải lại tiện ích. Lưu các thay đổi cài đặt trước?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Văn bản bạn đã đổi bằng {0}: {1}. Các ngôn ngữ khác vẫn hiển thị văn bản cũ."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Dịch nội dung bạn viết sang tiếng Anh (bản gốc) và các ngôn ngữ khác bằng trình dịch tích hợp của trình duyệt. Hãy kiểm tra trước khi lưu."
   },
   "combinationOneCount": {
     "message": "1 tổ hợp"

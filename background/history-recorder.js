@@ -183,6 +183,11 @@ class HistoryRecorder {
       historySettings = null,
       source = 'unknown'
     } = options || {};
+    // A scan that found nothing is recorded only when the page had a protection before (a change), and only while
+    // History's own rules (paused, ignored sites, minimum confidence...) let it keep the page
+    let onlyIfChanged = options && options.onlyIfChanged === true;
+    // A cached result is what an earlier scan (maybe of another page of the site) found: it is recorded, never compared
+    const fromCache = options && options.fromCache === true;
 
     try {
       // Slow lookups first, outside the write queue
@@ -194,10 +199,13 @@ class HistoryRecorder {
       const verdict = typeof HistoryPolicy !== 'undefined'
         ? HistoryPolicy.evaluate({ detections: detectionResults, hostname: hostnameForPolicy, incognito }, settings)
         : { save: true };
+      // What the person chose to keep out of History (paused, private, ignored sites, fingerprint-only, minimum
+      // confidence) always wins: a page below those rules is not recorded, whatever it lost
       if (!verdict.save) {
         Logger.debug('UI', `[History] Not saved (${verdict.reason}, source: ${source}): ${hostnameForPolicy}`);
         return false;
       }
+      if (onlyIfChanged && fromCache) return false;
 
       const duplicateScope = settings.duplicateScope || 'full_url';
       const duplicateDuration = Number.isFinite(parseInt(settings.duplicateDuration, 10))
@@ -237,13 +245,39 @@ class HistoryRecorder {
           }
         }
 
-        // The earlier scan of this page: the duplicate being updated, else the newest entry for the same page
-        const earlier = duplicateAt !== -1
-          ? history[duplicateAt]
-          : (pageKey ? history.find(item => item && this.normalizeDuplicateKey(item.url, item.hostname, 'path') === pageKey) : null);
-        const diff = earlier && typeof HistoryPolicy !== 'undefined'
+        // The earlier scan of this page: the duplicate being updated, else the newest entry for the same page that a
+        // scan found (an entry from the cache says what another visit, maybe of another page, found)
+        const samePage = item => item && item.fromCache !== true && this.normalizeDuplicateKey(item.url, item.hostname, 'path') === pageKey;
+        const earlierAt = duplicateAt !== -1 ? duplicateAt : (pageKey ? history.findIndex(samePage) : -1);
+        const earlier = earlierAt !== -1 ? history[earlierAt] : null;
+        const none = { added: [], removed: [], changed: false };
+        // A cached result is never compared, and never the base of a comparison (the duplicate being updated may be one)
+        let diff = earlier && !fromCache && earlier.fromCache !== true && typeof HistoryPolicy !== 'undefined'
           ? HistoryPolicy.diffProtections(earlier.detections, detectionResults)
-          : { added: [], removed: [], changed: false };
+          : none;
+        // The change undoes the one the entry is marked with (an entry updated in place has no older scan to look at)
+        const sameNames = (a, b) => {
+          const key = list => [...new Set((Array.isArray(list) ? list : []).map(name => Categories.protectionKey(String(name))))].sort().join('|');
+          return key(a) === key(b);
+        };
+        const undoesLast = diff.changed && earlier && earlier.changed
+          && sameNames(diff.added, earlier.changed.removed) && sameNames(diff.removed, earlier.changed.added);
+        // Back to what the page had the scan before: the last change was a blip (a script that loaded once, a challenge
+        // shown once), so neither scan is marked
+        let blipAt = -1;
+        if (diff.changed && earlier && earlier.changed) {
+          const olderAt = history.findIndex((item, index) => index > earlierAt && samePage(item));
+          if (olderAt !== -1 && !HistoryPolicy.diffProtections(history[olderAt].detections, detectionResults).changed) {
+            diff = none;
+            if (earlierAt !== duplicateAt) blipAt = earlierAt;
+          }
+        }
+        if (duplicateAt !== -1 && undoesLast) diff = none;
+        if (onlyIfChanged && !diff.changed && !(duplicateAt !== -1 && undoesLast)) return undefined;
+        if (blipAt !== -1) {
+          const { changed: _blip, ...unmarked } = history[blipAt];
+          history = history.map((item, index) => (index === blipAt ? unmarked : item));
+        }
 
         // Pages that pin themselves (Settings → History): a new entry, or an update of one the person never unpinned,
         // while there is room (the pinned entries are exempt from the limit and from retention). An address the person
@@ -259,6 +293,7 @@ class HistoryRecorder {
         const alreadyPinned = history.some((item, index) => item && index !== duplicateAt && item.pinned === true
           && this.normalizeDuplicateKey(item.url, item.hostname, 'full_url') === addressKey);
         const pinsItself = typeof HistoryPolicy !== 'undefined'
+          && !onlyIfChanged
           && !neverAgain
           && !alreadyPinned
           && HistoryPolicy.shouldAutoPin(detectionResults, settings)
@@ -273,7 +308,8 @@ class HistoryRecorder {
           detections: detectionResults,
           detectionCount: detectionResults.length,
           categories: [...new Set(detectionResults.map(d => d.category))],
-          cacheScope: cacheScope
+          cacheScope: cacheScope,
+          ...(fromCache ? { fromCache: true } : {})
         };
         // A change since the earlier scan is marked on the entry (the badge in History)
         if (diff.changed) fresh.changed = { at: now, added: diff.added, removed: diff.removed };
@@ -286,8 +322,13 @@ class HistoryRecorder {
         if (duplicateAt !== -1) {
           // Update in place: same entry, new scan, moved to the top; the first-seen date, pin and note stay
           const kept = history[duplicateAt];
-          const updated = Object.assign({}, kept, fresh, { id: kept.id, firstSeen: kept.firstSeen || kept.timestamp });
-          if (!diff.changed) delete updated.changed;
+          // A cached result never takes the place of what a scan of this page found: it only says the page was seen again
+          const updated = fromCache && kept.fromCache !== true
+            ? Object.assign({}, kept, { timestamp: now, firstSeen: kept.firstSeen || kept.timestamp })
+            : Object.assign({}, kept, fresh, { id: kept.id, firstSeen: kept.firstSeen || kept.timestamp });
+          // The mark stays until another change replaces it, or a scan undoes it (a blip)
+          if (undoesLast) delete updated.changed;
+          if (!fromCache) delete updated.fromCache;
           if (pinsItself && kept.pinned !== true && kept.unpinned !== true) { updated.pinned = true; updated.autoPinned = true; }
           next = [updated, ...history.filter((_, i) => i !== duplicateAt)];
         } else {
@@ -330,6 +371,15 @@ class HistoryRecorder {
       const index = history.findIndex(item => item && item.id === entryId && item.pinned === true && item.watch === true);
       if (index === -1) return { result: { found: false, changed: false } };
       const entry = history[index];
+      // An entry recorded from the cache (maybe another page's result) is not what this page had: the check only
+      // takes its place, as the page's first real scan
+      if (entry.fromCache === true) {
+        const { fromCache: _cached, ...rest } = entry;
+        const next = history.slice();
+        next[index] = Object.assign(rest, { watchedAt: now, detections: detectionResults, detectionCount: detectionResults.length,
+          categories: [...new Set(detectionResults.map(d => d.category))] });
+        return { items: next, result: { found: true, changed: false } };
+      }
       const diff = HistoryPolicy.diffProtections(entry.detections, detectionResults);
       if (!diff.changed) {
         const next = history.slice();
@@ -351,6 +401,17 @@ class HistoryRecorder {
     }, chrome.storage.local);
     await this.notifyChange(result && result.alert, chrome).catch(() => {});
     return { found: !!(result && result.found), changed: !!(result && result.changed), added: result && result.added, removed: result && result.removed };
+  }
+
+  /** A watch check that got no answer: the time it was tried, so the next checks start with the other pages. */
+  static async noteWatchAttempt(entryId, chrome, now = Date.now()) {
+    await HistoryStore.mutate((history) => {
+      const index = history.findIndex(item => item && item.id === entryId && item.watch === true);
+      if (index === -1) return undefined;
+      const next = history.slice();
+      next[index] = Object.assign({}, history[index], { watchAttemptAt: now });
+      return next;
+    }, chrome.storage.local);
   }
 
   /** A notification when a page you scanned before gained or lost a protection (Settings → History). */

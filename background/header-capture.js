@@ -70,6 +70,40 @@ function isPrerenderRequest(details) {
     return !!details && details.documentLifecycle === 'prerender';
 }
 
+// The page each tab shows (its main frame's document), and the one it is leaving once a new page starts loading
+const tabDocuments = new Map();
+const leavingDocuments = new Map();
+
+/**
+ * A request that belongs to the page the tab is leaving: its unload beacons and last analytics are sent after the new
+ * page's own request started (and after its stores were cleared), and were credited to the new page. Chrome marks an
+ * unloading document 'pending_deletion'; before the new page commits, the old one is still 'active', so it is known
+ * by its id (and its frames by their parent's).
+ */
+function isLeavingPageRequest(details) {
+    if (!details) return false;
+    if (details.documentLifecycle === 'pending_deletion') return true;
+    const left = leavingDocuments.get(details.tabId);
+    return !!left && (details.documentId === left || details.parentDocumentId === left);
+}
+
+/** Requests that are not the shown page's: a prerendered page's, or the page being left's. */
+function isOtherPageRequest(details) {
+    if (isPrerenderRequest(details) || isLeavingPageRequest(details)) return true;
+    // The main frame's document as its own requests name it
+    if (details && details.frameId === 0 && details.documentId && details.documentLifecycle === 'active' && details.type !== 'main_frame') {
+        tabDocuments.set(details.tabId, details.documentId);
+    }
+    return false;
+}
+
+/** A new page starts loading in the tab: from now on the document it showed is the one being left. */
+function noteTabLeaving(tabId) {
+    const shown = tabDocuments.get(tabId);
+    if (shown) leavingDocuments.set(tabId, shown);
+    tabDocuments.delete(tabId);
+}
+
 /**
  * A tab starting a new page forgets what the page before sent and received: its requests and request
  * bodies (what it fetched after its scan, late analytics or a challenge it solved, belongs to it, not to the
@@ -128,14 +162,18 @@ function readRequestBody(requestBody, limit) {
 function setupHeaderCapture() {
     // Synchronous and registered first, so the new page's own request is recorded after the clear
     chrome.webRequest.onBeforeRequest.addListener(
-        (details) => { if (!isPrerenderRequest(details)) forgetTabRequests(details.tabId, details.requestId); },
+        (details) => {
+            if (isPrerenderRequest(details)) return;
+            if (tabPageRequests.get(details.tabId) !== details.requestId) noteTabLeaving(details.tabId); // not a redirect
+            forgetTabRequests(details.tabId, details.requestId);
+        },
         { urls: ['<all_urls>'], types: ['main_frame'] }
     );
 
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
         safeWebRequestListener(async (details) => {
-            if (isPrerenderRequest(details)) return;
+            if (isOtherPageRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -192,7 +230,7 @@ function setupHeaderCapture() {
     // Listen for request headers
     chrome.webRequest.onBeforeSendHeaders.addListener(
         safeWebRequestListener(async (details) => {
-            if (isPrerenderRequest(details)) return;
+            if (isOtherPageRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -226,7 +264,7 @@ function setupHeaderCapture() {
     // Listen for request payloads (POST/PUT/PATCH/DELETE bodies)
     chrome.webRequest.onBeforeRequest.addListener(
         safeWebRequestListener(async (details) => {
-            if (isPrerenderRequest(details)) return;
+            if (isOtherPageRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;
@@ -272,7 +310,7 @@ function setupHeaderCapture() {
     // Capture all network URLs for pattern detection (anti-bot scripts load asynchronously)
     chrome.webRequest.onBeforeRequest.addListener(
         safeWebRequestListener(async (details) => {
-            if (isPrerenderRequest(details)) return;
+            if (isOtherPageRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
                 return;

@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "Détecteurs importés"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "Détecteurs importés, sauf : {0} (non valides dans cette version)"
+  },
   "detectorExportedFmt": {
     "message": "{0} exporté"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "Remplissez tous les champs obligatoires des motifs avant d’enregistrer."
   },
+  "rulesUiInvalidRegex": {
+    "message": "Un motif marqué comme expression régulière n’est pas valide ou pourrait bloquer l’analyse. Corrigez-le ou désactivez Regex pour cette ligne."
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "Saisissez le type de méthode de détection (ex. HEADERS, CONTENT, URLs) :"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "Serveur d’envoi personnalisé : utilisez une adresse HTTPS sur un hôte public"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "URL du webhook : utilisez une adresse HTTPS sur un hôte public"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "Serveur d’envoi personnalisé : le modèle JSON n’est pas un JSON valide"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "Garder les journaux ici plutôt que dans la console, pour les exporter en JSON ou en texte"
   },
-  "ruleTranslationsTitle": {
-    "message": "Traductions"
-  },
-  "ruleTranslationsHint": {
-    "message": "Affichée à la place de la description quand l'extension est dans cette langue. Vide : la description est affichée."
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{0} sur {1}"
-  },
-  "ruleTranslateAuto": {
-    "message": "Traduire automatiquement"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "La traduction automatique nécessite Chrome 138 ou plus récent."
-  },
-  "ruleTranslateNeedsText": {
-    "message": "Écrivez d'abord la description."
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "Traduction : {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} langues remplies. Vérifiez-les avant d'enregistrer."
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} remplies ; {1} n'ont pas pu être traduites ici."
-  },
   "sfxOptRenderingWait": {
     "message": "Attendre après le chargement"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "Désactivé"
-  },
-  "ruleTranslateAllDone": {
-    "message": "Toutes les langues ont déjà une traduction."
-  },
-  "combinationTranslationsTitle": {
-    "message": "Traductions du nom"
-  },
-  "combinationTranslationsHint": {
-    "message": "Affichée à la place du nom quand l'extension est dans cette langue. Vide : le nom est affiché."
-  },
-  "combinationTranslateNeedsName": {
-    "message": "Écrivez d'abord le nom."
   },
   "advancedInfoCloudflareDesc": {
     "message": "Vérifie les cookies du challenge et analyse ses scripts"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "La taille de l’historique doit être l’une des valeurs suivantes : {0} MB"
   },
-  "ruleTranslateBarFmt": {
-    "message": "Textes pas encore traduits dans toutes les langues : {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "Complète les traductions manquantes de la description, des motifs et des combinaisons avec le traducteur sur l’appareil de Chrome. Vérifiez-les avant d’enregistrer."
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "Traduire"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "Traduire les modifs"
-  },
-  "ruleTranslatedLabel": {
-    "message": "Traduite"
-  },
-  "ruleTranslateBusy": {
-    "message": "Traduction…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "Tous les textes de cette règle sont traduits dans les {0} langues."
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "Impossible de traduire {0} des {1} textes modifiés dans toutes les langues ici (le navigateur les télécharge peut-être encore). Rien n’a été perdu : ces textes sont restés tels quels. Réessayez dans un instant."
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "Téléchargé : {0}. {1} langues prêtes sur {2}. Le navigateur télécharge chaque langue une seule fois, une par clic : cliquez à nouveau sur Traduire pour la suivante."
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "Traduction de {0} textes…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} traductions remplies. Vérifiez-les avant d’enregistrer."
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} remplies ; {1} n’ont pas pu être traduites ici."
-  },
   "ruleHistoryCheckPatterns": {
     "message": "Motifs"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "Ouvrez la fenêtre de l’extension sur un site web pour en tirer une règle."
   },
-  "suggestRuleExactName": {
-    "message": "Recherché par son nom exact"
+  "suggestRuleHeaderNameFmt": {
+    "message": "En-têtes dont le nom contient {0}"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "Cookies nommés {0} ou dont le nom commence ainsi"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "Noms commençant par {0} : la suite semble aléatoire"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "Aucune donnée hCaptcha détectée (délai de 60 s)"
   },
-  "ruleOriginalEnglish": {
-    "message": "Original (anglais)"
-  },
-  "ruleOriginalHint": {
-    "message": "Les autres langues traduisent ce texte : si vous le modifiez, elles l’afficheront sans traduction jusqu’à une nouvelle traduction."
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "Paramètres non enregistrés"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "Changer de langue recharge l’extension. Enregistrer d’abord vos modifications des paramètres ?"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "Textes modifiés en {0} : {1}. Les autres langues affichent encore l’ancien texte."
-  },
-  "ruleTranslateChangesHint": {
-    "message": "Traduit ce que vous avez écrit en anglais (l’original) et dans les autres langues, avec le traducteur intégré du navigateur. Vérifiez-les avant d’enregistrer."
   },
   "combinationOneCount": {
     "message": "1 combinaison"

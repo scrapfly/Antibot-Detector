@@ -104,12 +104,6 @@
     <div class="rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="editRuleModalAction">
       <div class="rule-modal-header">
         <span id="editRuleModalAction" class="rule-modal-action" data-i18n="ruleModalActionEdit">Edit</span>
-        <!-- Translate the rule: its description, pattern descriptions and combination names (rules-translate-rule.js) -->
-        <button type="button" id="ruleTranslateBtn" class="rule-translate-btn" data-state="done">
-          <svg class="rule-translate-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
-          <span id="ruleTranslateLabel" class="rule-translate-label" data-i18n="ruleTranslateBtnLabel">Translate</span>
-          <span id="ruleTranslateBadge" class="rule-translate-badge" hidden></span>
-        </button>
         <button type="button" id="closeRuleModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
       </div>
 
@@ -129,31 +123,12 @@
               <label class="form-label" for="detectorNameInput" data-i18n="ruleFieldName">Name</label>
               <input type="text" id="detectorNameInput" class="form-input" placeholder="Detector name" data-i18n-placeholder="ruleFieldNamePlaceholder">
             </div>
-            <!-- The detector's own description: detection details show it, translated when it has a translation -->
+            <!-- The detector's own description: detection details show it, in the interface language when the rule has a translation -->
             <div class="form-group form-group-description" id="detectorDescriptionGroup">
               <label class="form-label" for="detectorDescriptionInput" data-i18n="ruleDescriptionTitle">Description</label>
-              <!-- In another language than English: the description in that language, edited as its translation -->
-              <textarea id="detectorDescriptionLocal" class="detector-description-input rule-local-input" rows="2" maxlength="400" dir="auto" hidden
-                data-local-english="detectorDescriptionInput" data-local-scope="detectorDescriptionTranslations" data-local-original="detectorDescriptionOriginal"></textarea>
-              <p class="option-hint" data-i18n="ruleFieldDescriptionHint">Shown in the detection details of this protection.</p>
-              <details class="rule-original" id="detectorDescriptionOriginal">
-                <summary><span class="rule-original-label" data-i18n="ruleOriginalEnglish">Original (English)</span><span class="rule-original-preview" dir="ltr" lang="en"></span></summary>
-              <textarea id="detectorDescriptionInput" class="detector-description-input" rows="2" maxlength="300" dir="auto"
+              <textarea id="detectorDescriptionInput" class="detector-description-input" rows="2" maxlength="400" dir="auto"
                 placeholder="What this protection is, e.g. Bot detection on login and checkout pages" data-i18n-placeholder="ruleFieldDescriptionPlaceholder"></textarea>
-              <p class="option-hint rule-original-hint" data-i18n="ruleOriginalHint">The other languages translate this text: change it and they show it untranslated until they are translated again.</p>
-              <details class="rule-translations" id="detectorDescriptionTranslations">
-                <summary>
-                  <span data-i18n="ruleTranslationsTitle">Translations</span>
-                  <span class="rule-translations-count"></span>
-                </summary>
-                <p class="option-hint" data-i18n="ruleTranslationsHint">Shown instead of the description when the extension is in that language. Empty: the description is shown.</p>
-                <div class="rule-translations-actions">
-                  <button type="button" class="action-btn" data-rule-translate="detector-description" data-i18n="ruleTranslateAuto">Translate automatically</button>
-                  <span class="rule-translations-status" aria-live="polite"></span>
-                </div>
-                <div class="rule-translations-fields" id="detectorTranslationFields"></div>
-              </details>
-              </details>
+              <p class="option-hint" data-i18n="ruleFieldDescriptionHint">Shown in the detection details of this protection.</p>
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -372,27 +347,9 @@
             <h3><label for="methodDescriptionInput" data-i18n="ruleDescriptionTitle">Description</label></h3>
           </div>
           <div class="modal-card-body">
-            <textarea id="methodDescriptionLocal" class="method-description-input rule-local-input" rows="2" maxlength="400" dir="auto" hidden
-              data-local-english="methodDescriptionInput" data-local-scope="methodDescriptionTranslations" data-local-original="methodDescriptionOriginal"></textarea>
-            <p class="option-hint" data-i18n="ruleDescriptionHint">Shown in the detection details and in History when this pattern is found.</p>
-            <details class="rule-original" id="methodDescriptionOriginal">
-              <summary><span class="rule-original-label" data-i18n="ruleOriginalEnglish">Original (English)</span><span class="rule-original-preview" dir="ltr" lang="en"></span></summary>
-            <textarea id="methodDescriptionInput" class="method-description-input" rows="2" maxlength="200" dir="auto"
+            <textarea id="methodDescriptionInput" class="method-description-input" rows="2" maxlength="400" dir="auto"
               placeholder="What this pattern means, e.g. Reads browser language preferences" data-i18n-placeholder="ruleDescriptionPlaceholder"></textarea>
-            <p class="option-hint rule-original-hint" data-i18n="ruleOriginalHint">The other languages translate this text: change it and they show it untranslated until they are translated again.</p>
-            <details class="rule-translations" id="methodDescriptionTranslations">
-              <summary>
-                <span data-i18n="ruleTranslationsTitle">Translations</span>
-                <span class="rule-translations-count" id="methodTranslationsCount"></span>
-              </summary>
-              <p class="option-hint" data-i18n="ruleTranslationsHint">Shown instead of the description when the extension is in that language. Empty: the description is shown.</p>
-              <div class="rule-translations-actions">
-                <button type="button" class="action-btn" id="methodTranslateAutoBtn" data-rule-translate="description" data-i18n="ruleTranslateAuto">Translate automatically</button>
-                <span class="rule-translations-status" id="methodTranslateStatus" aria-live="polite"></span>
-              </div>
-              <div class="rule-translations-fields" id="methodTranslationFields"></div>
-            </details>
-            </details>
+            <p class="option-hint" data-i18n="ruleDescriptionHint">Shown in the detection details and in History when this pattern is found.</p>
           </div>
         </div>
 

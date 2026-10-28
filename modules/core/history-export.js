@@ -27,6 +27,14 @@
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
   const detectionCategory = (d) => String((d && (d.category || (d.detector && d.detector.category))) || '').trim();
   const categoryKey = (d) => Categories.keyOf(d);
+  // An entry's detections as a list of objects, whatever an old build or an imported file left there
+  const detectionsOf = (item) => (item && Array.isArray(item.detections) ? item.detections.filter(d => d && typeof d === 'object') : []);
+  /** Marked Changed, as the History chip counts it: a change record that names at least one protection. */
+  const isChangedEntry = (item) => {
+    const change = item && item.changed;
+    const names = (value) => (Array.isArray(value) ? value : (typeof value === 'string' && value.trim() ? [value] : [])).filter(n => typeof n === 'string' && n.trim());
+    return !!change && typeof change === 'object' && (names(change.added).length > 0 || names(change.removed).length > 0);
+  };
   const timeOf = (item) => {
     const ts = item && item.timestamp;
     const n = typeof ts === 'number' ? ts : Date.parse(ts);
@@ -45,12 +53,12 @@
     const cutoff = days > 0 ? now - days * DAY_MS : null;
     const domain = String(filters.domain || '').trim().toLowerCase();
     return list.filter((item) => {
-      if (!item) return false;
+      if (!item || typeof item !== 'object') return false;
       if (filters.pinnedOnly === true && item.pinned !== true) return false;
-      if (filters.changedOnly === true && !item.changed) return false; // marked Changed by its latest scan
+      if (filters.changedOnly === true && !isChangedEntry(item)) return false; // marked Changed by its latest scan
       if (cutoff !== null && timeOf(item) < cutoff) return false;
       if (domain && !`${item.hostname || ''} ${item.url || ''}`.toLowerCase().includes(domain)) return false;
-      if (category && !(item.detections || []).some(d => categoryKey(d) === category)) return false;
+      if (category && !detectionsOf(item).some(d => categoryKey(d) === category)) return false;
       return true;
     });
   }
@@ -67,8 +75,8 @@
   function buildCsv(items, includeTimestamps) {
     const header = ['url', 'hostname', 'title', ...(includeTimestamps ? ['timestamp'] : []), 'protection', 'category', 'confidence', 'difficulty', 'pinned', 'note'];
     const lines = [header.join(',')];
-    for (const item of items) {
-      const detections = (item.detections || []).length ? item.detections : [null];
+    for (const item of items.filter(i => i && typeof i === 'object')) {
+      const detections = detectionsOf(item).length ? detectionsOf(item) : [null];
       for (const d of detections) {
         lines.push([
           item.url, item.hostname, item.title, ...(includeTimestamps ? [isoOf(item)] : []),
@@ -81,10 +89,10 @@
   }
 
   function buildText(items, includeTimestamps) {
-    return items.map((item) => {
+    return items.filter(i => i && typeof i === 'object').map((item) => {
       const lines = [item.title || item.hostname || item.url || '', item.url || ''];
       if (includeTimestamps && timeOf(item)) lines.push(`Date: ${isoOf(item)}`);
-      const found = (item.detections || []).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
+      const found = detectionsOf(item).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
       lines.push(`Protections: ${found.length ? found.join('; ') : '-'}`);
       if (item.pinned === true) lines.push('Pinned');
       if (item.note) lines.push(`Note: ${item.note}`);
@@ -104,8 +112,8 @@
   function buildMarkdown(items, includeTimestamps) {
     const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note'];
     const lines = ['# Scrapfly Antibot Detector: History', '', `| ${header.join(' | ')} |`, `| ${header.map(() => '---').join(' | ')} |`];
-    for (const item of items) {
-      const found = (item.detections || []).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
+    for (const item of items.filter(i => i && typeof i === 'object')) {
+      const found = detectionsOf(item).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
       lines.push(`| ${[item.title || item.hostname || '', addressOf(item.url), ...(includeTimestamps ? [isoOf(item)] : []),
         found.length ? found.join('; ') : '-', item.pinned === true ? 'yes' : '', item.note || ''].map(mdCell).join(' | ')} |`);
     }

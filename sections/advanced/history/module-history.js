@@ -251,6 +251,8 @@ class AdvancedModuleHistory {
     }
 
     async saveToolResult(data) {
+        // A private window's result is shown, never kept (Advanced → History outlasts the private session)
+        if (this.tabInfo && this.tabInfo.incognito === true) return null;
         try {
             const url = this.tabInfo?.url || '';
             const hostname = url ? new URL(url).hostname : '';

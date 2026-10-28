@@ -62,6 +62,10 @@
   const weakSetHas = WeakSet.prototype.has;
   const weakSetAdd = WeakSet.prototype.add;
   const reflectApply = Reflect.apply;
+  // The bridge's own way out: a page that wraps dispatchEvent or replaces CustomEvent after this file loaded would
+  // read the token from the first report (and could then forge reports)
+  const nativeDispatchEvent = window.dispatchEvent;
+  const NativeCustomEvent = window.CustomEvent;
 
   function registerNativeSource(wrapper, original) {
     try {
@@ -141,12 +145,12 @@
     }
 
     try {
-      window.dispatchEvent(new CustomEvent(EVENTS.MAIN_TO_ISOLATED, {
+      reflectApply(nativeDispatchEvent, window, [new NativeCustomEvent(EVENTS.MAIN_TO_ISOLATED, {
         detail: {
           ...message,
           [FIELDS.TOKEN]: bridgeToken
         }
-      }));
+      })]);
       return true;
     } catch (e) {
       return false;
@@ -336,6 +340,9 @@
   // Hooks monitoring state (module scope for disable monitoring)
   let installedHooks = new Map(); // Map: hook.target -> {obj, propertyName, originalDescriptor, detectors (Map), wrapper, fallbackContext}
   let completionTimeout = null;
+  // Which hook setup is the current one: a setup's timers (its 8 s maximum lives in its own scope) are ignored once a
+  // newer setup or a stop took over, so a rescan's hooks are never taken off by the first setup's leftover timer
+  let hooksSetupGeneration = 0;
   let pageReadySignalReceived = false;
   const pageReadyCallbacks = [];
 
@@ -796,6 +803,7 @@
    * Prevents memory leaks from accumulating state across page transitions
    */
   function resetModuleState() {
+    hooksSetupGeneration += 1;
     // Restore previous hooks to avoid stacking wrappers across reinjection / SPA re-init.
     try {
       uninstallAllRemainingHooks();
@@ -988,6 +996,7 @@
         clearTimeout(completionTimeout);
         completionTimeout = null;
       }
+      hooksSetupGeneration += 1; // the setup that was running is over: its own timers do nothing now
 
       // Uninstall any installed hooks to reduce overhead
       const cacheHitUninstallStats = uninstallAllRemainingHooks();
@@ -1046,7 +1055,8 @@
         // Method 2: Call callback function if defined (for early setup)
         // Page can do: window.onDetection = (data) => console.log(data);
         // eventName is already like 'onDetection', so use it directly
-        if (typeof window[eventName] === 'function') {
+        // Only the extension's on* names (onDetection, onStart...): 'ready' would call the page's own ready() helper
+        if (data.windowCallback === true && typeof window[eventName] === 'function') {
           try {
             window[eventName](eventDetail);
             logDebug(`[MAIN WORLD] Called callback: window.${eventName}()`);
@@ -1403,6 +1413,7 @@
     // Prevents race conditions between activity timeout (2s) and max timeout (3s)
     let maxTimeoutId = null;
     let completionSignalSent = false;
+    const setupGeneration = hooksSetupGeneration;
     // No completion timer before the page is ready: a hook that fires while the
     // document is still parsing is reported at once, but must not start the
     // idle countdown that would take every remaining hook off before load
@@ -1413,6 +1424,12 @@
      * @param {string} reason - one of COMPLETION_REASONS.HOOKS
      */
     const completeDetection = (reason) => {
+      // A newer setup (a rescan) or a stop took over: this one's timer must not touch the hooks, timers or
+      // report of the current one
+      if (setupGeneration !== hooksSetupGeneration) {
+        if (maxTimeoutId) { clearTimeout(maxTimeoutId); maxTimeoutId = null; }
+        return;
+      }
       if (completionSignalSent) return;
       completionSignalSent = true;
 

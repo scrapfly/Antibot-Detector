@@ -1084,6 +1084,9 @@
   "detectorsImported": {
     "message": "ディテクターをインポートしました"
   },
+  "detectorsImportedSkippedFmt": {
+    "message": "検出器をインポートしました（次を除く: {0}。このバージョンでは無効です）"
+  },
   "detectorExportedFmt": {
     "message": "{0} をエクスポートしました"
   },
@@ -3549,6 +3552,9 @@
   "rulesUiFillRequiredPatterns": {
     "message": "保存する前に、パターンの必須項目をすべて入力してください。"
   },
+  "rulesUiInvalidRegex": {
+    "message": "正規表現として指定されたパターンが無効か、スキャンを止めてしまう可能性があります。修正するか、その行の Regex をオフにしてください。"
+  },
   "rulesUiEnterMethodTypePrompt": {
     "message": "検出方法の種類を入力してください (例: HEADERS, CONTENT, URLs):"
   },
@@ -4251,6 +4257,9 @@
   "settingsUiErrShareCustomUrl": {
     "message": "カスタムアップロードサーバー: 公開ホストの HTTPS アドレスを使用してください"
   },
+  "settingsUiErrWebhookUrl": {
+    "message": "Webhook URL: 公開ホストの HTTPS アドレスを使用してください"
+  },
   "settingsUiErrShareCustomJson": {
     "message": "カスタムアップロードサーバー: JSON テンプレートが正しい JSON ではありません"
   },
@@ -4774,33 +4783,6 @@
   "settingsRowLogCollectorDesc": {
     "message": "ログをコンソールではなくここに保存し、JSON またはテキストで書き出します"
   },
-  "ruleTranslationsTitle": {
-    "message": "翻訳"
-  },
-  "ruleTranslationsHint": {
-    "message": "拡張機能がその言語のとき、説明の代わりに表示されます。空欄の場合は説明が表示されます。"
-  },
-  "ruleTranslationsCountFmt": {
-    "message": "{1} 件中 {0} 件"
-  },
-  "ruleTranslateAuto": {
-    "message": "自動翻訳"
-  },
-  "ruleTranslateUnavailable": {
-    "message": "自動翻訳には Chrome 138 以降が必要です。"
-  },
-  "ruleTranslateNeedsText": {
-    "message": "先に説明を入力してください。"
-  },
-  "ruleTranslateWorkingFmt": {
-    "message": "翻訳中: {0}"
-  },
-  "ruleTranslateDoneFmt": {
-    "message": "{0} 言語を入力しました。保存前に確認してください。"
-  },
-  "ruleTranslateDonePartialFmt": {
-    "message": "{0} 件入力。{1} 件はここでは翻訳できませんでした。"
-  },
   "sfxOptRenderingWait": {
     "message": "読み込み後の待機"
   },
@@ -5079,18 +5061,6 @@
   },
   "sfxValOff": {
     "message": "オフ"
-  },
-  "ruleTranslateAllDone": {
-    "message": "すべての言語に翻訳があります。"
-  },
-  "combinationTranslationsTitle": {
-    "message": "名前の翻訳"
-  },
-  "combinationTranslationsHint": {
-    "message": "拡張機能がその言語のとき、名前の代わりに表示されます。空欄の場合は名前が表示されます。"
-  },
-  "combinationTranslateNeedsName": {
-    "message": "先に名前を入力してください。"
   },
   "advancedInfoCloudflareDesc": {
     "message": "チャレンジの Cookie を確認し、スクリプトを分析します"
@@ -6272,42 +6242,6 @@
   "settingsUiErrHistorySizeFmt": {
     "message": "履歴のサイズは {0} MB のいずれかにしてください"
   },
-  "ruleTranslateBarFmt": {
-    "message": "すべての言語に翻訳されていないテキスト: {0}"
-  },
-  "ruleTranslateRuleHint": {
-    "message": "説明、パターン、組み合わせの足りない翻訳を、Chrome のオンデバイス翻訳で補います。保存する前に確認してください。"
-  },
-  "ruleTranslateBtnLabel": {
-    "message": "翻訳"
-  },
-  "ruleTranslateChangesShort": {
-    "message": "変更を翻訳"
-  },
-  "ruleTranslatedLabel": {
-    "message": "翻訳済み"
-  },
-  "ruleTranslateBusy": {
-    "message": "翻訳中…"
-  },
-  "ruleTranslateAllTranslatedFmt": {
-    "message": "このルールのすべてのテキストは {0} 言語すべてに翻訳済みです。"
-  },
-  "ruleTranslateChangesKeptFmt": {
-    "message": "変更した {1} 件のうち {0} 件のテキストを、ここではすべての言語に翻訳できませんでした（ブラウザーがまだダウンロード中かもしれません）。失われたものはありません。これらのテキストは元のままです。少し待ってからもう一度お試しください。"
-  },
-  "ruleTranslateDownloadedFmt": {
-    "message": "{0} をダウンロードしました。{2} 言語中 {1} 言語の準備ができています。ブラウザーは各言語を一度だけ、1 クリックにつき 1 つダウンロードします。次の言語は、もう一度「翻訳」をクリックしてください。"
-  },
-  "ruleTranslateRuleWorkingFmt": {
-    "message": "{0} 件のテキストを翻訳中…"
-  },
-  "ruleTranslateRuleDoneFmt": {
-    "message": "{0} 件の翻訳を入力しました。保存する前に確認してください。"
-  },
-  "ruleTranslateRulePartialFmt": {
-    "message": "{0} 件入力。{1} 件はここでは翻訳できませんでした。"
-  },
   "ruleHistoryCheckPatterns": {
     "message": "パターン"
   },
@@ -6623,8 +6557,11 @@
   "suggestRuleUnsupported": {
     "message": "ルールを作成するには、ウェブサイトでポップアップを開いてください。"
   },
-  "suggestRuleExactName": {
-    "message": "名前の完全一致で検索"
+  "suggestRuleHeaderNameFmt": {
+    "message": "名前に {0} を含むヘッダー"
+  },
+  "suggestRuleCookieNameFmt": {
+    "message": "{0} という名前、またはその名前で始まる Cookie"
   },
   "suggestRuleCookiePrefixFmt": {
     "message": "{0} で始まる名前（残りはランダムに見えます）"
@@ -6740,23 +6677,11 @@
   "advHcaptchaNoDataTimeout": {
     "message": "hCaptcha のデータは検出されませんでした（タイムアウト 60 秒）"
   },
-  "ruleOriginalEnglish": {
-    "message": "原文（英語）"
-  },
-  "ruleOriginalHint": {
-    "message": "他の言語はこのテキストを翻訳しています。変更すると、再翻訳されるまで翻訳されずに表示されます。"
-  },
   "settingsLanguageUnsavedTitle": {
     "message": "未保存の設定"
   },
   "settingsLanguageUnsavedMessage": {
     "message": "言語を変更すると拡張機能が再読み込みされます。先に設定の変更を保存しますか？"
-  },
-  "ruleTranslateChangedFmt": {
-    "message": "{0}で変更したテキスト：{1}。他の言語には古いテキストが表示されたままです。"
-  },
-  "ruleTranslateChangesHint": {
-    "message": "入力した内容をブラウザー内蔵の翻訳機能で英語（原文）と他の言語に翻訳します。保存する前に確認してください。"
   },
   "combinationOneCount": {
     "message": "1 件の組み合わせ"

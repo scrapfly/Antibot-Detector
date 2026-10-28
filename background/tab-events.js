@@ -25,6 +25,8 @@ function setupTabListeners() {
         networkUrlsStore.delete(tabId);
         if (typeof responseStore !== 'undefined') responseStore.delete(tabId);
         if (typeof tabPageRequests !== 'undefined') tabPageRequests.delete(tabId);
+        if (typeof tabDocuments !== 'undefined') tabDocuments.delete(tabId);
+        if (typeof leavingDocuments !== 'undefined') leavingDocuments.delete(tabId);
 
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);

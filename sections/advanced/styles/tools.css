@@ -638,6 +638,7 @@
 }
 
 .adv-cookie--gone .adv-cookie-name-text { color: var(--text-secondary); }
+.adv-cookie--gone .adv-cookie-domain { margin-inline-start: 8px; font-size: 12px; color: var(--text-muted, var(--text-secondary)); }
 
 .adv-kit-field {
   display: flex;

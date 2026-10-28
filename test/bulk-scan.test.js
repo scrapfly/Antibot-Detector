@@ -11,6 +11,12 @@ test('a pasted list or a .txt/.csv gives one address per line, the first address
   const text = '﻿https://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
     'url,title\nhttps://d.example/,Shop\nname;https://e.example/x;notes\nplain words\n';
   assert.deepEqual(BulkScan.linesOf(text), ['https://a.example/', 'b.example/path', 'https://c.example/?q=1', 'https://d.example/', 'https://e.example/x', 'plain words']);
+  // A comma or semicolon in an address of a plain list belongs to it
+  assert.deepEqual(BulkScan.linesOf('https://shop.example/search?ids=1,2,3\nhttps://x.example/a;jsessionid=abc\nexample.org'),
+    ['https://shop.example/search?ids=1,2,3', 'https://x.example/a;jsessionid=abc', 'example.org']);
+  // Rows of the same shape are a table even without a header
+  assert.deepEqual(BulkScan.linesOf('https://a.example/,Shop A\nhttps://b.example/,Shop B'), ['https://a.example/', 'https://b.example/']);
+  assert.deepEqual(BulkScan.linesOf('"https://q.example/";x'), ['https://q.example/']);
   assert.deepEqual(BulkScan.linesOf(''), []);
   assert.deepEqual(BulkScan.linesOf(null), []);
 });

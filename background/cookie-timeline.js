@@ -72,13 +72,14 @@
       const cookie = changeInfo && changeInfo.cookie;
       if (!cookie || !cookie.name) return null;
       if (String(cookie.storeId ?? CT().DEFAULT_STORE_ID) !== CT().DEFAULT_STORE_ID) return null; // private windows
-      if (!(await matcher())(cookie.name)) return null;
       if (!(await enabled())) return null;
+      if (!(await matcher())(cookie.name)) return null;
       const site = CT().siteOf(cookie.domain);
       if (!site) return null;
       const current = await load();
       const cookies = current.sites[site] && current.sites[site].cookies;
-      const events = cookies && cookies[cookie.name] ? cookies[cookie.name].events : [];
+      const key = CT().keyOf(cookie.name, cookie.domain);
+      const events = cookies && cookies[key] ? cookies[key].events : [];
       const last = events[events.length - 1];
       const value = String(cookie.value || '');
       const mark = changeInfo.removed ? '' : await CT().marker(value, current.salt, subtle);
@@ -86,7 +87,7 @@
       if (!event) return null;
       const expires = !changeInfo.removed && !cookie.session && Number.isFinite(cookie.expirationDate)
         ? Math.round(cookie.expirationDate * 1000) : null;
-      CT().record(current, { site, name: cookie.name, event, time: now(), expires, length: value.length, marker: mark }, limits);
+      CT().record(current, { site, name: key, event, time: now(), expires, length: value.length, marker: mark }, limits);
       await scheduleWrite();
       return event;
     }
@@ -98,7 +99,7 @@
         queue = run.then(() => {}, () => {});
         return run;
       },
-      /** The record of the site an address belongs to: { site, cookies: { name: events[] }, now }. */
+      /** The record of the site an address belongs to: { site, cookies: { keyOf(name, domain): events[] }, now }. */
       async get(url) {
         await queue;
         const site = CT().siteOf(url);

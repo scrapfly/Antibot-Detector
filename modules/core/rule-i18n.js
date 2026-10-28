@@ -107,6 +107,18 @@
     return loaded.get(loc);
   }
 
+  /** Is release `tag` (v3.0.8) newer than version `installed` (3.0.7)? Unknown versions count as newer, as before. */
+  function newerRelease(tag, installed) {
+    const parts = (text) => String(text || '').replace(/^v/i, '').split('.').map(n => parseInt(n, 10));
+    const a = parts(tag), b = parts(installed);
+    if (a.some(Number.isNaN) || b.some(Number.isNaN) || !installed) return true;
+    for (let i = 0; i < Math.max(a.length, b.length); i++) {
+      const x = a[i] || 0, y = b[i] || 0;
+      if (x !== y) return x > y;
+    }
+    return false;
+  }
+
   async function readLocale(loc) {
     if (typeof chrome === 'undefined' || !chrome.runtime || !chrome.runtime.getURL) return false;
     try {
@@ -115,14 +127,18 @@
     } catch (_) { /* English stays */ }
     try {
       const stored = await chrome.storage.local.get(STORAGE_KEY);
-      const updated = stored && stored[STORAGE_KEY] && stored[STORAGE_KEY].dicts;
-      if (isRecord(updated) && isRecord(updated[loc])) addShipped(loc, updated[loc]);
+      const record = stored && stored[STORAGE_KEY];
+      const updated = record && record.dicts;
+      // Downloaded from a release older than (or as old as) this build, they would lay old wording over the
+      // translations this build ships: only a newer release's files count
+      const installed = chrome.runtime.getManifest ? chrome.runtime.getManifest().version : '';
+      if (isRecord(updated) && isRecord(updated[loc]) && newerRelease(record.tag, installed)) addShipped(loc, updated[loc]);
     } catch (_) { /* bundled only */ }
     return true;
   }
 
   const api = {
-    LOCALES, STORAGE_KEY, localeKey, current, t, pick, indexRules, addShipped, load,
+    LOCALES, STORAGE_KEY, localeKey, current, t, pick, indexRules, addShipped, load, newerRelease,
     /** Tests: pin the locale (null = English, undefined = follow the UI) */
     setLocale(loc) { forced = loc; }
   };

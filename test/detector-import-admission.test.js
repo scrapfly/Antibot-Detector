@@ -63,9 +63,12 @@ test('valid bare legacy maps canonicalize IDs while preserving custom fields and
   assert.equal(await dm.importDetectors(source, false), true);
   const imported = dm.detectors.antibot['detect-legacy'];
   assert.equal(imported.id, 'detect-legacy');
-  for (const key of ['futureMetadata', 'nameI18n', 'combinations', 'detection', 'officialSnapshot', 'enabled', 'difficultyChosen']) {
+  for (const key of ['futureMetadata', 'nameI18n', 'combinations', 'detection', 'enabled', 'difficultyChosen']) {
     assert.deepEqual(imported[key], before.antibot.legacy[key], key);
   }
+  // How a rule relates to Scrapfly's is this browser's to know, never a file's
+  assert.equal(imported.userModified, undefined);
+  assert.equal(imported.officialSnapshot, undefined);
   assert.deepEqual(source, before, 'admission does not mutate caller data');
   assert.equal(dm.detectors.antibot['detect-kept'], undefined);
   assert.ok(dm.detectors.antibot['detect-official']);
@@ -108,4 +111,30 @@ test('an import without an explicit enabled preference does not enable an offici
   dm.detectors.antibot['detect-official'].enabled = false;
   assert.equal(await dm.importDetectors({ antibot: { 'detect-official': definition('detect-official') } }), true);
   assert.equal(dm.detectors.antibot['detect-official'].enabled, false);
+});
+
+test('a file cannot plant a Scrapfly rule under the id of an official rule the person deleted', async () => {
+  const dm = manager();
+  DetectionUtils.setOfficialDetectorIds(['detect-official', 'detect-cloudflare']);
+  const forged = { antibot: { 'detect-cloudflare': definition('cloudflare', { id: 'detect-cloudflare', author: 'Scrapfly', version: '99.0',
+    userModified: true, officialSnapshot: { version: '99.0', detection: {} }, dismissedVersion: '99.0' }) } };
+  assert.equal(await dm.importDetectors(forged, true), true);
+  const imported = dm.detectors.antibot['detect-cloudflare'];
+  assert.ok(imported, 'kept as the person\'s own rule');
+  assert.notEqual(String(imported.author || '').toLowerCase(), 'scrapfly');
+  assert.equal(DetectionUtils.isOfficialDetector(imported), false, 'not shown as Scrapfly\'s');
+  for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion']) assert.equal(imported[field], undefined, field);
+});
+
+test('merge brings in the valid rules of a file and names the ones it leaves out; replace all still needs every rule valid', async () => {
+  const file = { detectors: { antibot: { 'detect-new': definition(), 'detect-bad': definition('detect-bad', { name: 'Broken one', detection: { cookie: [{ name: 'cf_(', nameRegex: true }] } }) } } };
+  const merged = manager();
+  assert.equal(await merged.importDetectors(file, true), true);
+  assert.ok(merged.detectors.antibot['detect-new']);
+  assert.equal(merged.detectors.antibot['detect-bad'], undefined);
+  assert.deepEqual(merged.lastImportSkipped, ['Broken one']);
+  const replaced = manager();
+  const before = plain(replaced.detectors);
+  assert.equal(await replaced.importDetectors(file, false), false);
+  assert.deepEqual(replaced.detectors, before, 'nothing deleted');
 });
