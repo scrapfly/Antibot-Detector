@@ -82,9 +82,11 @@ Advanced.prototype.updateCaptureCountBadge = async function() {
 Advanced.prototype.setupCaptureHistoryWatcher = function() {
     if (this._captureHistoryWatcher || typeof chrome === 'undefined' || !chrome.storage?.onChanged) return;
     const key = (typeof AdvancedHistoryStore !== 'undefined' && AdvancedHistoryStore.STORAGE_KEY) || 'scrapfly_advanced_history';
+    // Captures of a private window are kept in memory (session storage), under a key of their own
+    const privateKey = (typeof AdvancedHistoryStore !== 'undefined' && AdvancedHistoryStore.PRIVATE_KEY) || 'session_advanced_private';
     let timer = null;
     this._captureHistoryWatcher = (changes, area) => {
-      if (area !== 'local' || !changes || !changes[key]) return;
+      if (!changes || !((area === 'local' && changes[key]) || (area === 'session' && changes[privateKey]))) return;
       // One refresh for a burst of writes; the refresh's own expiry clean-up
       // only writes when something expired, so it cannot loop
       clearTimeout(timer);

@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.8] - 2026-10-29
 
+### Changed
+
+- Advanced captures are stored once instead of twice, so they take about half the room shown in Settings → Data.
+
 ### Fixed
 
 - Private windows: a page scanned in a private window is no longer shown (badge, popup) for the same page in a normal window.

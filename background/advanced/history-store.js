@@ -178,9 +178,22 @@
         }
     }
 
+    /**
+     * An entry as it is written: `captureData` is the same object as `data` under its older name (readers of either get
+     * both when the history is loaded), and a capture holds cookie values, headers and request bodies: written twice,
+     * it took twice the room.
+     */
+    function slim(entry) {
+        if (!entry || typeof entry !== 'object' || !('captureData' in entry)) return entry;
+        const { captureData, ...rest } = entry;
+        return rest;
+    }
+    const slimAll = (entries) => (Array.isArray(entries) ? entries.map(slim) : entries);
+
     async function saveLocal(history) {
         const { history: canonical } = migrateToCanonical(history);
-        await chrome.storage.local.set({ [STORAGE_KEY]: canonical });
+        const stored = Object.fromEntries(Object.entries(canonical).map(([moduleId, entries]) => [moduleId, slimAll(entries)]));
+        await chrome.storage.local.set({ [STORAGE_KEY]: stored });
         return canonical;
     }
 
@@ -211,8 +224,8 @@
         const kept = {};
         for (const [moduleId, entries] of Object.entries(canonical)) {
             const list = Array.isArray(entries) ? entries : [];
-            stored[moduleId] = list.filter(entry => !(entry && entry.privateSession === true));
-            const memory = list.filter(entry => entry && entry.privateSession === true);
+            stored[moduleId] = slimAll(list.filter(entry => !(entry && entry.privateSession === true)));
+            const memory = slimAll(list.filter(entry => entry && entry.privateSession === true));
             if (memory.length) kept[moduleId] = memory;
         }
         await chrome.storage.local.set({ [STORAGE_KEY]: stored });

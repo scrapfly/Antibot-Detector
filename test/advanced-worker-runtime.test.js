@@ -372,6 +372,20 @@ test('a private window\'s capture is kept in memory only: listed with the others
     assert.deepEqual(memory[store.PRIVATE_KEY], {}, 'Clear all takes the private ones too');
 });
 
+test('a capture is written once: storage holds `data`, loading gives readers of the older `captureData` name the same object', async () => {
+    const f = fixture({ akamai: [{ id: 'old', timestamp: Date.now(), expiresAt: Date.now() + 60000, captureData: { cookie: 'a' } }] });
+    const store = f.context.AdvancedHistoryStore;
+    await store.appendCapture('cloudflare', { id: 'new', data: { cookie: 'b' }, captureData: { cookie: 'b' } });
+    const stored = f.saved();
+    assert.equal('captureData' in stored.cloudflare[0], false, 'not written twice');
+    assert.deepEqual(stored.cloudflare[0].data, { cookie: 'b' });
+    assert.equal('captureData' in stored.akamai[0], false, 'an older entry is written once with the next write');
+    assert.deepEqual(stored.akamai[0].data, { cookie: 'a' }, 'and keeps what it held');
+    const loaded = await store.load();
+    assert.equal(loaded.cloudflare[0].captureData, loaded.cloudflare[0].data, 'both names for readers');
+    assert.deepEqual(JSON.parse(JSON.stringify(loaded.akamai[0].captureData)), { cookie: 'a' });
+});
+
 test('FunCaptcha: two stops of the same capture (Stop pressed during the auto-stop) save its entries once', async () => {
     const f = fixture(), context = f.context;
     vm.runInContext(read('background/advanced/vendors/funcaptcha/interceptor.js'), context);
