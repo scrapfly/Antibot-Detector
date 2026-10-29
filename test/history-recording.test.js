@@ -661,3 +661,36 @@ test('a watch check with no answer records when it was tried, and touches nothin
   const { watchAttemptAt: _t, ...rest } = after;
   assert.strictEqual(JSON.stringify(rest), before);
 });
+
+test('a watch check that agrees with a mark confirms it: the page going back later is a change, not a blip', async () => {
+  const w = makeWorld();
+  await w.save('https://watch.example/', [antibot('Cloudflare')]);
+  w.advance(HOUR);
+  await w.save('https://watch.example/', [antibot('Cloudflare'), captcha('reCAPTCHA', 100)]);
+  const id = w.items()[0].id;
+  assert.deepStrictEqual(w.items()[0].changed.added, ['reCAPTCHA']);
+  const stored = JSON.parse(w.store.scrapfly_history);
+  stored.items[0].pinned = true;
+  stored.items[0].watch = true;
+  w.store.scrapfly_history = JSON.stringify(stored);
+  w.advance(HOUR);
+  const checked = await w.sw.HistoryRecorder.applyWatchResult(id, [antibot('Cloudflare'), captcha('reCAPTCHA', 100)], w.sw.chrome, w.clock.t);
+  assert.strictEqual(checked.changed, false);
+  assert.strictEqual(w.items()[0].changed.seen, 1, 'the check agreed with the mark');
+  w.advance(HOUR);
+  await w.save('https://watch.example/', [antibot('Cloudflare')]);
+  assert.deepStrictEqual(w.items()[0].changed.removed, ['reCAPTCHA'], 'confirmed by the check: its removal is reported');
+});
+
+test('a scan that finds nothing and undoes the last mark was a blip: the mark goes', async () => {
+  const w = makeWorld();
+  await w.save('https://blip.example/', [fingerprint('Canvas')]);
+  w.advance(HOUR);
+  await w.save('https://blip.example/', [antibot('Cloudflare')]);
+  assert.deepStrictEqual(w.items()[0].changed.added, ['Cloudflare']);
+  w.advance(HOUR);
+  await w.save('https://blip.example/', [], {}, 1, { onlyIfChanged: true });
+  assert.strictEqual(w.items().length, 2, 'the empty scan is not recorded');
+  assert.ok(!('changed' in w.items()[0]), 'and the mark of a protection that was gone the next scan is removed');
+});
+

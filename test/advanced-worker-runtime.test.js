@@ -353,7 +353,9 @@ test('a private window\'s capture is kept in memory only: listed with the others
     assert.notEqual(kept.notSaved, true, 'shown with the others, not dropped');
     assert.deepEqual((f.saved().datadome || []).length, 0, 'nothing of it in storage.local');
     assert.equal(memory[store.PRIVATE_KEY].datadome.length, 1, 'kept in memory');
-    assert.equal((await store.load()).datadome[0].privateSession, true);
+    const loadedPrivate = (await store.load()).datadome[0];
+    assert.equal(loadedPrivate.privateSession, true);
+    assert.equal(loadedPrivate.captureData, loadedPrivate.data, 'a private entry reads back with both names, as the stored ones do');
 
     context.chrome.tabs.get = async id => ({ id, url: 'https://shop.example/', incognito: false });
     await context.saveToHistory(8, { cookie: 'datadome=OTHER' }, { type: 'datadome' });
@@ -425,5 +427,9 @@ test('reCAPTCHA auto-stop marks the capture stopped before it awaits the save, a
     const saved = auto.indexOf('await saveRecaptchaResults');
     assert.ok(stopped > 0 && saved > 0, 'both steps are there');
     assert.ok(stopped < saved, 'a Stop or a late request during the save finds the capture stopped and saves nothing twice');
+    // A manual Stop while the auto-stop saves (or a second Stop) returns at once: the first one reports when it is done
+    assert.ok(auto.indexOf('captureState.stopping = true') > 0 && auto.indexOf('captureState.stopping = true') < saved, 'the auto-stop claims the capture first');
+    assert.match(source, /if \(stateStop\.stopping\) return \{ status: 'stopping'/);
+    assert.match(source, /stateStop\.stopping = true;/);
 });
 

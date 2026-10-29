@@ -14,19 +14,20 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Private windows: a page scanned in a private window is no longer shown (badge, popup) for the same page in a normal window.
-- Private windows: Advanced captures (Akamai, reCAPTCHA, FunCaptcha…) are listed in Advanced → History again, kept in memory until the browser closes and never saved to disk.
-- History → Changed: a change another scan agreed with, or days old, is no longer taken for a blip and lost; a removal stays marked after repeated clean scans.
+- Private windows: Advanced captures (Akamai, reCAPTCHA, FunCaptcha…) are listed in Advanced → History again and counted in Settings → Data, kept in memory until the browser closes and never saved to disk.
+- History → Changed: a change confirmed by another scan or a watch check, or days old, is no longer taken for a blip and lost; a removal stays marked after clean scans.
+- History → Changed: a clean scan that undoes the mark right after it now clears it, like any other scan.
 - History: two pages of one site are no longer a change; Alert for pinned pages keeps working after a second visit; pinned entries past the History limit are listed again.
 - Rules: translating an official rule no longer marks it Edited when the rule spells out a default setting (45 of the 85 rules did).
 - Rules: Save refuses an invalid regex in a payload pattern's URL pattern.
 - Settings → Restore: rules of a backup that this version cannot take are named instead of dropped without a word.
 - Settings: a webhook address saved by an older version no longer blocks an unrelated Save, an import or a restore.
-- Bulk scan: quoted cells with commas (as its own CSV export writes them) and several addresses on one line are read right; commas inside addresses are never split.
+- Bulk scan: quoted cells with commas (as its own CSV export writes them) and several addresses on one line are read right; commas inside an address (a Wikipedia title, ?ids=1,2,3) are kept.
 - Bulk scan: a page an address redirects to is always scanned in full, even when a result for it is cached.
 - Watchlist: a check that lands on a skipped site is reported as skipped at once, not as failed after 45 seconds.
 - Detection: a page you stay on after a download, a cancelled load or Back keeps its requests as evidence, and so does a prerendered page just shown.
 - Webhook: a page title with a dash or non-Latin letters in a header no longer fails every delivery; a retry claimed by a worker that then stops is no longer lost.
-- Advanced: reCAPTCHA's 60-second auto-stop no longer saves the captured requests twice.
+- Advanced: reCAPTCHA's 60-second auto-stop, or a Stop pressed while it saves, no longer saves the captured requests twice.
 
 ### Security
 

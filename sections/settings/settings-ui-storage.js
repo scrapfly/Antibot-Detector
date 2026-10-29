@@ -5,7 +5,15 @@
 SettingsUI.readStorageSizes = async function() {
     const local = chrome.storage.local;
     const sizes = Object.fromEntries(await Promise.all(StorageOverview.GROUPS.map(async group => [group.id, await local.getBytesInUse(group.keys)])));
-    return StorageOverview.summarize(sizes, await local.getBytesInUse(null), local.QUOTA_BYTES, HistoryStore.hasUnlimitedStorage());
+    // Captures made in a private window sit in memory (session storage) and are listed and cleared with the others
+    let memory = 0;
+    try {
+        const area = chrome.storage.session;
+        const key = typeof AdvancedHistoryStore !== 'undefined' && AdvancedHistoryStore.PRIVATE_KEY;
+        if (area && typeof area.getBytesInUse === 'function' && key) memory = Number(await area.getBytesInUse([key])) || 0;
+    } catch (_) { memory = 0; }
+    sizes.captures = (Number(sizes.captures) || 0) + memory;
+    return StorageOverview.summarize(sizes, (await local.getBytesInUse(null)) + memory, local.QUOTA_BYTES, HistoryStore.hasUnlimitedStorage());
 };
 
 SettingsUI.refreshStorageOverview = async function() {

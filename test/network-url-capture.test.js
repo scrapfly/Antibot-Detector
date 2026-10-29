@@ -12,8 +12,8 @@ const vm = require('node:vm');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
 const ctx = vm.createContext({ URL, TextDecoder, Uint8Array });
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody; this.isOtherPageRequest = isOtherPageRequest; this.noteTabLeaving = noteTabLeaving; this.forgetLeavingPage = forgetLeavingPage;', ctx);
-const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody, isOtherPageRequest, noteTabLeaving, forgetLeavingPage } = ctx;
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody; this.isOtherPageRequest = isOtherPageRequest; this.noteTabLeaving = noteTabLeaving; this.navigationStarted = navigationStarted; this.navigationFailed = navigationFailed; this.navigationCommitted = navigationCommitted;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody, isOtherPageRequest, noteTabLeaving, navigationStarted, navigationFailed, navigationCommitted } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -123,15 +123,44 @@ test('requests of the page the tab is leaving (unload beacons, last analytics) a
   assert.equal(isOtherPageRequest({ tabId: tab, type: 'main_frame', frameId: 0 }), false, 'the new page\'s own request');
 });
 
-test('a navigation that does not replace the page ends the "page being left" mark, so the page keeps its requests', () => {
+test('a navigation that does not replace the page ends the "page being left" mark: the page keeps its requests and still knows it is the page a later navigation leaves', () => {
   const tab = 33;
   const req = (extra) => ({ tabId: tab, frameId: 0, type: 'xmlhttprequest', documentLifecycle: 'active', ...extra });
   assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false);
-  noteTabLeaving(tab); // a click starts a navigation
+  navigationStarted(tab); // a click starts a navigation
   assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), true, 'while the navigation is pending');
-  forgetLeavingPage(tab); // it was a download, a 204 or a cancelled load: page A stays
+  navigationFailed(tab); // it was a download, a 204 or a cancelled load: page A stays
   assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false, 'page A still shown: its requests count again');
-  forgetLeavingPage('not a tab id'); // a navigation event without a tab changes nothing
+  navigationStarted(tab); // a real navigation later
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', type: 'ping' })), true, 'A is known as the page being left, so its unload beacons are not the next page\'s');
+  navigationFailed('not a tab id'); // an event without a tab changes nothing
+});
+
+test('a navigation superseded by another does not end the mark that protects the second', () => {
+  const tab = 36;
+  const req = (extra) => ({ tabId: tab, frameId: 0, type: 'xmlhttprequest', documentLifecycle: 'active', ...extra });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false);
+  navigationStarted(tab); // B
+  navigationStarted(tab); // C replaces B (a script redirect)
+  navigationFailed(tab);  // B is cancelled
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', type: 'ping' })), true, 'A is still being left for C');
+  navigationCommitted({ tabId: tab, frameId: 0, documentId: 'doc-C' });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-C' })), false, 'C is shown');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', type: 'ping' })), false, 'the mark is over (Chrome marks the unloading page itself)');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', documentLifecycle: 'pending_deletion' })), true);
+});
+
+test('only the new page\'s commit ends the mark, not a prerendered page\'s or the left page\'s own', () => {
+  const tab = 37;
+  const req = (extra) => ({ tabId: tab, frameId: 0, type: 'xmlhttprequest', documentLifecycle: 'active', ...extra });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false);
+  navigationStarted(tab);
+  navigationCommitted({ tabId: tab, frameId: 0, documentId: 'doc-P', documentLifecycle: 'prerender' });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), true, 'a prerendered page\'s commit is not the navigation');
+  navigationCommitted({ tabId: tab, frameId: 0, documentId: 'doc-A' });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), true, 'a commit of the left page itself is not the new page');
+  navigationCommitted({ tabId: tab, frameId: 0, documentId: 'doc-B' });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-B' })), false);
 });
 
 test('a prerendered page just activated is not the page being left', () => {
@@ -148,10 +177,10 @@ test('a prerendered page just activated is not the page being left', () => {
   assert.equal(isOtherPageRequest(req({ documentId: 'doc-A2', tabId: 35 })), true, 'the old page of a tab that has not seen the new one yet');
 });
 
-test('the main frame\'s commit and failure events end the mark (the listeners are registered)', () => {
-  assert.match(src, /webNavigation\.onCommitted\.addListener\(mainFrameOver\)/);
-  assert.match(src, /webNavigation\.onErrorOccurred\.addListener\(mainFrameOver\)/);
-  assert.match(src, /details\.frameId === 0 && forgetLeavingPage|details\.frameId === 0\) forgetLeavingPage/);
+test('the main frame\'s commit and failure events are registered, and a started navigation is counted', () => {
+  assert.match(src, /webNavigation\.onCommitted\.addListener\(\(details\) => \{ if \(details && details\.frameId === 0\) navigationCommitted\(details\)/);
+  assert.match(src, /webNavigation\.onErrorOccurred\.addListener\(\(details\) => \{ if \(details && details\.frameId === 0\) navigationFailed\(details\.tabId\)/);
+  assert.match(src, /navigationStarted\(details\.tabId\); \/\/ not a redirect/);
 });
 
 test('request bodies are kept to the captured-response limit', () => {

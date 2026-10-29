@@ -208,8 +208,9 @@
 
         // What was captured in a private window sits beside the rest, newest first
         const kept = await loadPrivate();
-        for (const [moduleId, entries] of Object.entries(kept)) {
-            if (!Array.isArray(entries) || !entries.length) continue;
+        for (const [moduleId, rawEntries] of Object.entries(kept)) {
+            const entries = (Array.isArray(rawEntries) ? rawEntries : []).map(entry => normalizeCapture(moduleId, entry)).filter(Boolean);
+            if (!entries.length) continue;
             history[moduleId] = [...entries, ...(Array.isArray(history[moduleId]) ? history[moduleId] : [])]
                 .sort((a, b) => toFiniteTimestamp(b && b.timestamp, 0) - toFiniteTimestamp(a && a.timestamp, 0));
         }

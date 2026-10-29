@@ -24,6 +24,32 @@ test('several addresses on one line are all scanned; a comma inside an address i
   assert.deepEqual(BulkScan.linesOf('https://a.example/,Shop A\nhttps://b.example/,Shop B'), ['https://a.example/', 'https://b.example/'], 'a table without a header');
 });
 
+test('a list is read by explicit rules: a comma ends an address after a host, after a "/", before another address or before a note with a space', () => {
+  const cases = [
+    // a CSV with a header: commas separate cells, whatever the address holds
+    ['url,name\nhttps://a.example/p?id=5,Alpha', ['https://a.example/p?id=5']],
+    ['url;name\nhttps://a.example/p?id=5;Alpha', ['https://a.example/p?id=5']],
+    ['name;url;status\nAlpha;https://a.example/p?id=5;done', ['https://a.example/p?id=5']],
+    // a plain list: a comma in a path or a query is part of the address
+    ['https://en.wikipedia.example/wiki/Portland,_Oregon', ['https://en.wikipedia.example/wiki/Portland,_Oregon']],
+    ['https://maps.example/maps/@40.7128,-74.0060,15z', ['https://maps.example/maps/@40.7128,-74.0060,15z']],
+    ['https://en.wikipedia.example/wiki/Portland,_Oregon\nhttps://a.example/x\nhttps://en.wikipedia.example/wiki/Paris,_Texas',
+      ['https://en.wikipedia.example/wiki/Portland,_Oregon', 'https://a.example/x', 'https://en.wikipedia.example/wiki/Paris,_Texas']],
+    ['https://a.example/?ids=1,2,3, my note', ['https://a.example/?ids=1,2,3']],
+    // several addresses on one line, with or without a query
+    ['https://a.example/?x=1, https://b.example/?y=2', ['https://a.example/?x=1', 'https://b.example/?y=2']],
+    ['https://a.example/?x=1;https://b.example/?y=2', ['https://a.example/?x=1', 'https://b.example/?y=2']],
+    ['a.example/?q=1, b.example/?q=2', ['a.example/?q=1', 'b.example/?q=2']],
+    ['a.example, b.example, c.example\nd.example, e.example, f.example', ['a.example', 'b.example', 'c.example', 'd.example', 'e.example', 'f.example']],
+    ['a.example,b.example\nc.example,d.example', ['a.example', 'b.example', 'c.example', 'd.example']],
+    // an address and a name or a status after it
+    ['https://a.example/,status=done\nhttps://b.example/,status=failed', ['https://a.example/', 'https://b.example/']],
+    ['https://a.example/x,Alpha Beta', ['https://a.example/x']],
+    ['a.example,', ['a.example']]
+  ];
+  for (const [input, expected] of cases) assert.deepEqual(BulkScan.linesOf(input), expected, JSON.stringify(input));
+});
+
 test('a pasted list or a .txt/.csv gives one address per line, the first address-like cell of a CSV row', () => {
   const text = '﻿https://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
     'url,title\nhttps://d.example/,Shop\nname;https://e.example/x;notes\nplain words\n';

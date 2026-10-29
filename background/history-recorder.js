@@ -289,6 +289,11 @@ class HistoryRecorder {
               ? { ...item, changed: { ...item.changed, seen: (Number(item.changed.seen) || 0) + 1 } } : item));
             return { items: confirmed, result: { alert: null } };
           }
+          // A scan that finds nothing and undoes the last mark was a blip too: the mark goes, nothing is recorded
+          if (blip && blipAt !== -1) {
+            const { changed: _blip, ...unmarked } = history[blipAt];
+            return { items: history.map((item, index) => (index === blipAt ? unmarked : item)), result: { alert: null } };
+          }
           return undefined;
         }
         if (blipAt !== -1) {
@@ -407,7 +412,9 @@ class HistoryRecorder {
       const diff = HistoryPolicy.diffProtections(entry.detections, detectionResults);
       if (!diff.changed) {
         const next = history.slice();
-        next[index] = Object.assign({}, entry, { watchedAt: now });
+        // A check that agrees with the mark confirms it: going back later is a change of its own, not a blip
+        const confirmed = entry.changed ? { changed: { ...entry.changed, seen: (Number(entry.changed.seen) || 0) + 1 } } : {};
+        next[index] = Object.assign({}, entry, { watchedAt: now }, confirmed);
         return { items: next, result: { found: true, changed: false } };
       }
       const updated = Object.assign({}, entry, {

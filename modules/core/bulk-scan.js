@@ -44,9 +44,8 @@
   const looksLikeAddress = (cell) => /^[a-z][a-z0-9+.-]*:/i.test(cell) || /^[^\s/:?#]+\.[^\s/:?#]+(:\d+)?([/?#]|$)/.test(cell);
 
   /**
-   * A row's cells. Commas, semicolons and tabs separate them, except inside double quotes (a CSV exports a cell with a
-   * comma in quotes) and inside an address whose query or parameters are still open: ?ids=1,2,3 and ;jsessionid=… belong
-   * to the address.
+   * A row's cells: commas, semicolons and tabs separate them, except inside double quotes (a CSV quotes a cell that
+   * holds a comma, and Bulk scan's own export does).
    * @param {string} line
    * @returns {string[]}
    */
@@ -54,25 +53,15 @@
     const cells = [];
     let cell = '';
     let quoted = false;
-    let closed = false; // the cell was quoted: its end is the quote, whatever follows
     for (let i = 0; i < line.length; i++) {
       const ch = line[i];
       if (quoted) {
         if (ch !== '"') cell += ch;
-        else if (line[i + 1] === '"') { cell += '"'; i++; } else { quoted = false; closed = true; }
+        else if (line[i + 1] === '"') { cell += '"'; i++; } else quoted = false;
         continue;
       }
       if (ch === '"' && !cell.trim()) { quoted = true; continue; }
-      if (ch === ',' || ch === ';' || ch === '\t') {
-        // Inside a value of the address's query (?ids=1,…), or just before a parameter (;jsessionid=…)
-        const open = ch !== '\t' && !closed && looksLikeAddress(cell.trim())
-          && (/=/.test(cell.replace(/^.*[?&;]/, '')) && /[?&;]/.test(cell) || /^[a-z][\w.-]*=/i.test(line.slice(i + 1)));
-        if (open) { cell += ch; continue; }
-        cells.push(cell);
-        cell = '';
-        closed = false;
-        continue;
-      }
+      if (ch === ',' || ch === ';' || ch === '\t') { cells.push(cell); cell = ''; continue; }
       cell += ch;
     }
     cells.push(cell);
@@ -80,26 +69,51 @@
   }
 
   /**
-   * The addresses of a pasted list or a .txt/.csv file: one per line, blank lines and # comments ignored. A line with
-   * several cells is a list on one line when every cell is an address (a.com, b.com), else a table row whose first
-   * address is the page. The text is a table (every row's first address, other columns are data) when it has tabs, a
-   * header row (a row with no address, like "url,name") or two or more rows that all split into the same number of cells.
+   * The parts of a line that is not a table row: one address, or several (a.com, b.com), or an address and a name. A
+   * comma or semicolon ends an address when what came before is only a host (a host has none), or follows a "/" (no
+   * path segment starts with one), or what follows is another address, or what follows has a space (an address has
+   * none: it is a name or a note). Any other one belongs to the address: ?ids=1,2,3, ;jsessionid=…, Portland,_Oregon.
+   * @param {string} line
+   * @returns {string[]}
+   */
+  function partsOf(line) {
+    const parts = [];
+    let start = 0;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] !== ',' && line[i] !== ';') continue;
+      const before = line.slice(start, i);
+      const after = line.slice(i + 1);
+      const token = after.split(/[,;]/)[0];
+      const ends = !/[/?#]/.test(before.replace(/^\s*[a-z][a-z0-9+.-]*:\/\//i, ''))
+        || /\/$/.test(before)
+        || /^\s*[a-z][a-z0-9+.-]*:\/\//i.test(after)
+        || (/^\s/.test(token) && looksLikeAddress(token.trim()))
+        || /\s/.test(token.trim());
+      if (ends) { parts.push(before); start = i + 1; }
+    }
+    parts.push(line.slice(start));
+    return parts.map(unquote);
+  }
+
+  /**
+   * The addresses of a pasted list or a .txt/.csv file: one per line, blank lines and # comments ignored. The text is a
+   * table when it has tabs or a header row (a row with no address, like "url,name"): every row's first address is its
+   * page and the other columns are data. Otherwise a line holds an address, or several, or an address and a name (see
+   * partsOf), and a row that starts with a quote is read as a quoted CSV row.
    * @param {string} text
    * @returns {string[]}
    */
   function linesOf(text) {
     const lines = String(text || '').replace(/^\uFEFF/, '').split(/\r\n|\r|\n/)
       .map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
-    const rows = lines.map(line => ({ line, cells: cellsOf(line) }));
     const table = lines.some(line => line.includes('\t'))
-      || rows.some(({ cells }) => cells.length > 1 && !cells.some(looksLikeAddress))
-      || (rows.length > 1 && rows.every(({ cells }) => cells.length > 1) && new Set(rows.map(({ cells }) => cells.length)).size === 1);
+      || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); });
     const out = [];
-    for (const { line, cells } of rows) {
-      if (cells.length < 2) { out.push(unquote(line)); continue; }
-      const addresses = cells.filter(looksLikeAddress);
-      if (!table && addresses.length === cells.length) out.push(...addresses); // a list on one line
-      else if (addresses.length) out.push(addresses[0]);
+    for (const line of lines) {
+      const parts = table || /^"/.test(line) ? cellsOf(line) : partsOf(line);
+      if (parts.length < 2) { out.push(unquote(line)); continue; }
+      const addresses = parts.filter(looksLikeAddress);
+      out.push(...(table ? addresses.slice(0, 1) : addresses));
     }
     return out.filter(Boolean);
   }
