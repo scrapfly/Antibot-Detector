@@ -10,7 +10,9 @@
  * redirect-loops through its own /__cheq/block): a failed visit is repeated, up to that many
  * more times, and only the last one counts; each visit starts with the extension's detection cache and the
  * cookies cleared. A rule that really stopped detecting the site fails every visit, so a regression is never
- * hidden by it.
+ * hidden by it. "keepCookies": true keeps the cookies between the visits of one site, for an edge that answers the
+ * first, cookie-less visit with a 403 that sets them (eBay's Akamai) and serves the real page to the next one, as it
+ * does a person's browser; the page is still scanned fresh.
  *
  * For every site it prints what the extension detected (confidence, the rule
  * ids that matched and the combinations that fired), checks expect/forbid,
@@ -149,9 +151,10 @@ const sites = JSON.parse(fs.readFileSync(SITES_FILE, 'utf8')).sites
       queue.unshift({ site, attempt: attempt + 1 });
       await page.close();
       // A visit again is a fresh one: the extension caches a page that showed nothing (a blocked 403 included) and would
-      // answer the next visit from it, and the site remembers the visitor in its cookies
+      // answer the next visit from it, and the site remembers the visitor in its cookies (unless "keepCookies": the
+      // site's edge answers a visitor with no cookies a 403 that sets them, and lets the next visit through)
       await sw.evaluate(() => chrome.storage.local.remove('scrapfly_detection_storage')).catch(() => {});
-      await ctx.clearCookies().catch(() => {});
+      if (!site.keepCookies) await ctx.clearCookies().catch(() => {});
       continue;
     }
     if (!ok) failures++;

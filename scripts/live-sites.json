@@ -64,8 +64,9 @@
           "min": 100
         }
       ],
-      "note": "AWS WAF customer",
-      "waitMs": 12000
+      "note": "AWS WAF customer (in a long run the name sometimes fails to resolve here, ERR_NAME_NOT_RESOLVED, and resolves a moment later)",
+      "waitMs": 12000,
+      "retries": 2
     },
     {
       "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
@@ -308,9 +309,10 @@
           "min": 60
         }
       ],
-      "note": "Radware Bot Manager customer; its own bot protection sometimes answers 403 to headless Chromium (also with no extension and to plain curl), so a miss here is the site",
+      "note": "Radware Bot Manager customer behind an Akamai edge (server: AkamaiGHost) that answers a cookie-less headless visit, and curl, with a 403 that sets cookies; the next visit with them gets the real page",
       "waitMs": 12000,
-      "retries": 2
+      "retries": 2,
+      "keepCookies": true
     },
     {
       "url": "https://www.google.com/recaptcha/api2/demo",
