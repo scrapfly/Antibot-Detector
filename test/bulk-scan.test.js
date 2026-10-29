@@ -7,6 +7,23 @@ const assert = require('node:assert/strict');
 const BulkScan = require('../modules/core/bulk-scan.js');
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test('a CSV quotes a cell with a comma: Bulk scan\'s own export reads back to the same pages', () => {
+  const exported = '"https://a.example/?ids=1,2,3",done,2\n"https://b.example/x;y",done,0\n';
+  assert.deepEqual(BulkScan.linesOf('url,status,found\n' + exported), ['https://a.example/?ids=1,2,3', 'https://b.example/x;y']);
+  assert.deepEqual(BulkScan.linesOf(exported), ['https://a.example/?ids=1,2,3', 'https://b.example/x;y'], 'without the header too');
+  assert.deepEqual(BulkScan.linesOf('"Shop, the ""big"" one",https://c.example/\n"Other",https://d.example/'), ['https://c.example/', 'https://d.example/']);
+});
+
+test('several addresses on one line are all scanned; a comma inside an address is not a separator, however many rows have one', () => {
+  assert.deepEqual(BulkScan.linesOf('a.example,b.example,c.example'), ['a.example', 'b.example', 'c.example']);
+  assert.deepEqual(BulkScan.linesOf('a.example, b.example'), ['a.example', 'b.example']);
+  assert.deepEqual(BulkScan.linesOf('a.example\nb.example,Beta\nc.example'), ['a.example', 'b.example', 'c.example'], 'a name after an address is not part of it');
+  assert.deepEqual(BulkScan.linesOf('https://a.example/?ids=1,2,3\nhttps://b.example/?ids=4,5,6'), ['https://a.example/?ids=1,2,3', 'https://b.example/?ids=4,5,6'],
+    'two rows with as many commas are not a table');
+  assert.deepEqual(BulkScan.linesOf('https://a.example/x;jsessionid=A1\nhttps://b.example/y;jsessionid=B2'), ['https://a.example/x;jsessionid=A1', 'https://b.example/y;jsessionid=B2']);
+  assert.deepEqual(BulkScan.linesOf('https://a.example/,Shop A\nhttps://b.example/,Shop B'), ['https://a.example/', 'https://b.example/'], 'a table without a header');
+});
+
 test('a pasted list or a .txt/.csv gives one address per line, the first address-like cell of a CSV row', () => {
   const text = '﻿https://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
     'url,title\nhttps://d.example/,Shop\nname;https://e.example/x;notes\nplain words\n';

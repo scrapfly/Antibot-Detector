@@ -1508,6 +1508,15 @@ class DetectionEngineManager {
         else DetectionEngineManager._cacheBypass.delete(key);
     }
 
+    /**
+     * A Bulk scan tab scans every page it ends on, also one its address redirected to (only the listed address is set
+     * aside from the cache): a cached result days old would be reported as found today, and a cache hit on the early
+     * check stops the tab's capture, leaving the scan with the page's DOM and cookies alone.
+     */
+    static scansFresh(tabId) {
+        return typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId) && !BackgroundTabScan.isQuiet(tabId);
+    }
+
     static isCacheBypassed(url) {
         return DetectionEngineManager._cacheBypass.size > 0 && DetectionEngineManager._cacheBypass.has(UrlUtils.hashUrl(url, 'path'));
     }
@@ -1534,8 +1543,9 @@ class DetectionEngineManager {
      */
     static async getStoredDetection(url, { privateWindow } = {}) {
         if (DetectionEngineManager.isCacheBypassed(url)) return null;
-        // A page scanned in a private window is never an answer for a normal window (its History, webhook or popup)
-        const hidden = (stored) => privateWindow === false && stored && stored.privateWindow === true;
+        // A page scanned in a private window is never an answer for a normal window (its History, webhook or popup); a
+        // caller that does not say which window it asks for is a normal window's
+        const hidden = (stored) => privateWindow !== true && stored && stored.privateWindow === true;
         const releaseStorageLock = await acquireDetectionStorageLock();
         try { // outer: release the storage lock in finally
         try {
@@ -1666,7 +1676,7 @@ class DetectionEngineManager {
                 return null;
             }
 
-            const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
+            const storedData = await DetectionEngineManager.getStoredDetection(tab.url, { privateWindow: tab.incognito === true });
             if (storedData) {
                 return {
                     data: storedData,
@@ -1986,7 +1996,7 @@ class DetectionEngineManager {
         // A prerendered page just shown: its load sent no request in this tab, so what the tab captured (requests,
         // bodies, headers, cookies) is still the page shown before, maybe another site. It is not this page's evidence
         if (triggerSource === 'prerender_activation' && typeof forgetTabRequests === 'function') {
-            if (typeof noteTabLeaving === 'function') noteTabLeaving(tabId);
+            if (typeof noteTabLeaving === 'function') noteTabLeaving(tabId, sender.documentId);
             forgetTabRequests(tabId);
         }
 
@@ -2017,18 +2027,16 @@ class DetectionEngineManager {
             setBadgeTextColor(tabId, true);
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tabId }).catch(() => {});
             if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'skipped');
-            // A Bulk scan page that ended on a skipped site: listed as skipped, not left to time out
-            if (typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId) && !BackgroundTabScan.isQuiet(tabId)) {
+            // A Bulk scan page or a watchlist check that ended on a skipped site: told so (listed as skipped), not left to time out
+            if (typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId)) {
                 BackgroundTabScan.scanFinished(tabId, pageUrl, [], { excluded: true });
             }
             return;
         }
         setPausedIcon(tabId, false);
 
-        // Check cache first. A Bulk scan scans every page now, also one its address redirected to (only the listed
-        // address is set aside from the cache): a cached result days old would be reported as found today
-        const bulkScanTab = typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId) && !BackgroundTabScan.isQuiet(tabId);
-        const storedData = bulkScanTab ? null : await DetectionEngineManager.getStoredDetection(pageUrl, { privateWindow: sender.tab?.incognito === true });
+        // Check cache first (a Bulk scan tab scans every page fresh)
+        const storedData = DetectionEngineManager.scansFresh(tabId) ? null : await DetectionEngineManager.getStoredDetection(pageUrl, { privateWindow: sender.tab?.incognito === true });
         if (!await isCurrentDocument()) return ignored;
 
         if (storedData) {

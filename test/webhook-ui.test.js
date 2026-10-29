@@ -502,6 +502,17 @@ test('one click listener on the list, however often Settings is populated', () =
   assert.equal(list.handlers.filter(x => x.type === 'click').length, 1);
 });
 
+test('a webhook address saved by an older version does not block an unrelated Save, an import or a restore', () => {
+  const h = harness();
+  const bad = 'http://localhost:5678/hook';
+  const saved = (extra) => ({ settingsBaseline: { webhook: { webhookUrl: bad, enableWebhook: false, ...extra } } });
+  const check = (owner, webhook) => h.SettingsUI.validateSettings.call(owner, { webhook });
+  assert.equal(check(saved(), { webhookUrl: bad, enableWebhook: false }).isValid, true, 'untouched');
+  assert.equal(check(saved({ enableWebhook: true }), { webhookUrl: bad, enableWebhook: true }).isValid, true, 'untouched and on, as it was');
+  assert.equal(check(saved(), { webhookUrl: 'http://other.local/x', enableWebhook: false }).isValid, false, 'an address the person writes is checked');
+  assert.equal(check(saved(), { webhookUrl: bad, enableWebhook: true }).isValid, false, 'turning the webhook on checks the saved address');
+});
+
 test('Save refuses a webhook address no delivery could reach: http, a private host; variables in it are fine', () => {
   const h = harness();
   const check = (webhookUrl) => h.SettingsUI.validateSettings({ webhook: { webhookUrl } });

@@ -135,8 +135,9 @@ class DetectorManager {
 
     // Fields that change without the rule's content changing: on/off, the save time and the version it keeps
     static CONTENT_IGNORED_FIELDS = ['enabled', 'lastUpdated', 'version'];
-    // Pattern flags whose default is on: false is a choice there. Any other flag left out reads as false, and the
-    // editor leaves out the ones that are off
+    // Pattern flags whose default is on: false is a choice there, and true is the same as leaving it out (the editor
+    // never writes it, shipped rules often do). Any other flag left out reads as false, and the editor leaves out the
+    // ones that are off
     static FLAGS_ON_BY_DEFAULT = new Set(['standalone', 'caseSensitive', 'insensitive', 'enabled']);
 
     /**
@@ -151,7 +152,7 @@ class DetectorManager {
             if (Array.isArray(value)) return value.map(canonical);
             if (!value || typeof value !== 'object') return value;
             return Object.fromEntries(Object.keys(value).sort()
-                .filter(key => value[key] !== false || DetectorManager.FLAGS_ON_BY_DEFAULT.has(key))
+                .filter(key => (DetectorManager.FLAGS_ON_BY_DEFAULT.has(key) ? value[key] !== true : value[key] !== false))
                 .map(key => [key, canonical(value[key])]));
         };
         return JSON.stringify(canonical(copy));
@@ -195,7 +196,8 @@ class DetectorManager {
      * @returns {Object<string, Object<string, string>>}
      */
     static userTranslations(detector) {
-        const found = { description: {}, name: {} };
+        // Keyed by text a rule file chose ("__proto__" included): no prototype to write through
+        const found = { description: Object.create(null), name: Object.create(null) };
         const walk = (value) => {
             if (Array.isArray(value)) { value.forEach(walk); return; }
             if (!value || typeof value !== 'object') return;
@@ -204,7 +206,7 @@ class DetectorManager {
                 if (typeof text !== 'string' || !text.trim() || !map || typeof map !== 'object' || Array.isArray(map)) continue;
                 for (const [locale, translation] of Object.entries(map)) {
                     if (typeof translation !== 'string' || !translation.trim()) continue;
-                    (found[field][text] ||= {})[locale] = translation;
+                    (found[field][text] ||= Object.create(null))[locale] = translation;
                 }
             }
             for (const [key, item] of Object.entries(value)) {

@@ -374,7 +374,8 @@ function registerDetectionHandlers(registry, context) {
                     batchProcessingFlags.set(tabId, true);
 
                     // CACHE CHECK: If cache exists for this URL, skip processing hooks entirely
-                    const cachedData = await DetectionEngineManager.getStoredDetection(url, { privateWindow: sender.tab?.incognito === true });
+                    const cachedData = DetectionEngineManager.scansFresh(tabId) ? null
+                        : await DetectionEngineManager.getStoredDetection(url, { privateWindow: sender.tab?.incognito === true });
                     if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
                     if (cachedData) {
                         // Mark this detection as using cache to suppress misleading warning logs
@@ -497,7 +498,8 @@ function registerDetectionHandlers(registry, context) {
                 const state = detectionStateForDocument(document);
 
                 // Skip if cached results exist for this URL
-                const cachedData = await DetectionEngineManager.getStoredDetection(url, { privateWindow: sender.tab?.incognito === true });
+                const cachedData = DetectionEngineManager.scansFresh(tabId) ? null
+                    : await DetectionEngineManager.getStoredDetection(url, { privateWindow: sender.tab?.incognito === true });
                 if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
                 if (cachedData) {
                     state.usedCache = true;

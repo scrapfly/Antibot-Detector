@@ -95,7 +95,7 @@ function registerSettingsHandlers(registry, context) {
                 if (tabs && tabs[0]) {
                     const tab = tabs[0];
 
-                    const storedData = await DetectionEngineManager.getStoredDetection(tab.url);
+                    const storedData = await DetectionEngineManager.getStoredDetection(tab.url, { privateWindow: tab.incognito === true });
 
                     // Treat cache scope change like explicit cache clear
                     recentlyClearedTabs.add(tab.id);

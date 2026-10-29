@@ -204,8 +204,70 @@ test('an updated entry whose protections differ is marked Changed', async () => 
   assert.deepStrictEqual(w.items()[0].changed.added, ['DataDome', 'reCAPTCHA'], 'the mark stays while the page stays as it changed');
   w.advance(HOUR);
   await w.save('https://a.com/', [antibot('Cloudflare')], s);
-  assert.ok(!('changed' in w.items()[0]), 'a scan that undoes the change was a blip: the mark goes');
+  assert.deepStrictEqual(w.items()[0].changed.removed, ['DataDome', 'reCAPTCHA'], 'another scan agreed with the change: going back is a change of its own, not a blip');
   assert.strictEqual(w.items().length, 1);
+});
+
+test('updated in place: a change the very next scan undoes was a blip, one confirmed or days old was not', async () => {
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 30, duplicateUnit: 'days', duplicateAction: 'update' };
+  const blip = makeWorld();
+  await blip.save('https://a.com/', [antibot('Cloudflare')], s);
+  blip.advance(HOUR);
+  await blip.save('https://a.com/', [antibot('Cloudflare'), captcha('reCAPTCHA')], s);
+  assert.deepStrictEqual(blip.items()[0].changed.added, ['reCAPTCHA']);
+  blip.advance(HOUR);
+  await blip.save('https://a.com/', [antibot('Cloudflare')], s);
+  assert.ok(!('changed' in blip.items()[0]), 'gone on the next scan: a blip, no mark');
+  const days = makeWorld();
+  await days.save('https://a.com/', [antibot('Cloudflare')], s);
+  days.advance(HOUR);
+  await days.save('https://a.com/', [antibot('Cloudflare'), captcha('reCAPTCHA')], s);
+  days.advance(7 * 24 * HOUR);
+  await days.save('https://a.com/', [antibot('Cloudflare')], s);
+  assert.deepStrictEqual(days.items()[0].changed.removed, ['reCAPTCHA'], 'a week later it is a removal, reported');
+});
+
+test('a mark confirmed by scans that found nothing new keeps its meaning when the protection comes back', async () => {
+  const w = makeWorld();
+  await w.save('https://gone.example/', [antibot('Cloudflare')]);
+  w.advance(HOUR);
+  await w.save('https://gone.example/', [], {}, 1, { onlyIfChanged: true });
+  assert.deepStrictEqual(w.items()[0].changed.removed, ['Cloudflare']);
+  for (let i = 0; i < 2; i++) { // two more clean scans: nothing new to record, but they agree with the removal
+    w.advance(HOUR);
+    await w.save('https://gone.example/', [], {}, 1, { onlyIfChanged: true });
+  }
+  assert.strictEqual(w.items().length, 2, 'a clean scan equal to the last is not recorded');
+  assert.strictEqual(w.items()[0].changed.seen, 2, 'but the mark knows it was confirmed');
+  w.advance(HOUR);
+  await w.save('https://gone.example/', [antibot('Cloudflare')]);
+  assert.deepStrictEqual(w.items().map(item => 'changed' in item), [true, true, false], 'the removal stays marked and the return is a change too');
+});
+
+test('a "domain" duplicate of another page is not compared with this one, and its mark does not stay on the new page', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'domain', duplicateDuration: 1, duplicateUnit: 'days', duplicateAction: 'update', historyChangeAlerts: 'all' };
+  await w.save('https://a.com/home', [antibot('Cloudflare')], s);
+  w.advance(HOUR);
+  await w.save('https://a.com/checkout', [antibot('Cloudflare'), captcha('reCAPTCHA')], s);
+  assert.strictEqual(w.items().length, 1, 'updated in place');
+  assert.ok(!('changed' in w.items()[0]), 'two pages of a site are not a change');
+  assert.deepStrictEqual(w.notes, []);
+});
+
+test('alerts for pinned pages follow the page: a later copy of a pinned address still alerts', async () => {
+  const w = makeWorld();
+  const s = { historyChangeAlerts: 'pinned' };
+  await w.save('https://watch.example.com/', [antibot('Cloudflare')], s);
+  const stored = JSON.parse(w.store.scrapfly_history);
+  stored.items[0].pinned = true;
+  w.store.scrapfly_history = JSON.stringify(stored);
+  w.advance(HOUR);
+  await w.save('https://watch.example.com/', [antibot('Cloudflare')], s); // a new, unpinned copy
+  assert.ok(!('pinned' in w.items()[0]) || w.items()[0].pinned !== true);
+  w.advance(HOUR);
+  await w.save('https://watch.example.com/', [antibot('Cloudflare'), captcha('reCAPTCHA')], s);
+  assert.strictEqual(w.notes.length, 1, 'the page is pinned through its older copy');
 });
 
 test('updated in place: a cached result never replaces what a scan of the page found, and is never compared', async () => {

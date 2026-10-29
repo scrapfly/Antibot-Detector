@@ -69,7 +69,7 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
                 continue;
               }
               await setPausedIcon(tab.id, false);
-              const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url);
+              const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url, { privateWindow: tab.incognito === true });
               if (storedData && storedData.detectionCount > 0) {
                 const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
                 const color = DetectionUtils.getBadgeColor(detections, badgeColors);
@@ -230,7 +230,7 @@ SettingsRuntime._buildWebhookHeaders = function(webhook, method, ctx, contentTyp
         // and can't smuggle control characters.
         const name = (header.name || '').trim().replace(/[^!#$%&'*+.^_`|~0-9A-Za-z-]/g, '');
         if (!name) continue;
-        headers[name] = SettingsRuntime._substituteWebhookTokens(header.value || '', ctx);
+        headers[name] = WebhookBody.headerValue(SettingsRuntime._substituteWebhookTokens(header.value || '', ctx));
     }
     return headers;
 };

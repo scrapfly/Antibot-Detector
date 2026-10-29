@@ -658,6 +658,14 @@ Rules.prototype.validatePatternRows = function() {
           invalidRows.push({ section, item, input, methodType, itemIndexInSection, reason: 'regex' });
           break;
         }
+        // A payload pattern's URL pattern (set in its settings dialog) too; its row is the one to fix
+        if (methodType === 'payload' && item.dataset.payloadUrlRegex === 'true') {
+          const urlPattern = (item.dataset.payloadUrlPattern || '').trim();
+          const flagged = invalidRows.length && invalidRows[invalidRows.length - 1].item === item;
+          if (urlPattern && !flagged && !Rules.isRunnableRegex(urlPattern)) {
+            invalidRows.push({ section, item, input: requiredInput, methodType, itemIndexInSection, reason: 'regex' });
+          }
+        }
       });
     });
 

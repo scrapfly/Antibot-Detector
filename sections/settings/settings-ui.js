@@ -733,8 +733,13 @@ SettingsUI.validateSettings = function(settings) {
 
     // A webhook address that is not HTTPS on a public host would fail every delivery ("address not allowed"): the
     // variables a URL may hold are filled with a placeholder first, as the custom upload server is checked
+    // Only an address the person is writing or turning on: one saved by an older version stays as it is, so it does not
+    // block an unrelated Save, an import or a restore (which merge over the saved settings)
     const webhookUrl = settings.webhook && typeof settings.webhook.webhookUrl === 'string' ? settings.webhook.webhookUrl.trim() : '';
-    if (webhookUrl && typeof SettingsRuntime !== 'undefined' && typeof SettingsRuntime._isWebhookUrlSafe === 'function'
+    const savedWebhook = (this && this.settingsBaseline && this.settingsBaseline.webhook) || {};
+    const webhookTouched = webhookUrl !== String(savedWebhook.webhookUrl || '').trim()
+      || (settings.webhook && settings.webhook.enableWebhook === true && savedWebhook.enableWebhook !== true);
+    if (webhookUrl && webhookTouched && typeof SettingsRuntime !== 'undefined' && typeof SettingsRuntime._isWebhookUrlSafe === 'function'
         && !SettingsRuntime._isWebhookUrlSafe(webhookUrl.replace(/<[A-Z_]+>/g, 'x'))) {
       errors.push(text('settingsUiErrWebhookUrl', 'Webhook URL: use an HTTPS address on a public host'));
     }

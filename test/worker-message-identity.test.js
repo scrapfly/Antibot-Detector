@@ -23,7 +23,7 @@ function harness() {
     chrome: { webNavigation: { getFrame: async () => ({ ...current }) } },
     detectorManager: { getDetector: () => ({ id: 'detect-demo', name: 'Demo' }), findDetectorById: () => null },
     ensureDetectorManagerInitialized: async () => {},
-    DetectionEngineManager: { getStoredDetection: async () => null, handlePageLoadNotification: async () => {} },
+    DetectionEngineManager: { getStoredDetection: async () => null, scansFresh: () => false, handlePageLoadNotification: async () => {} },
     HistoryRecorder: {}, Settings: {}, CategoryManager: {}, categoryManager: {}, Utils: {},
     checkAndFinalizeDetection: () => {},
     markMethodComplete: (tabId, method) => context.detectionStates.get(tabId)?.completedMethods.add(method)
@@ -323,6 +323,18 @@ test('PAGE_LOAD on a Bulk scan tab never takes a cached result: the page it land
   await h.run();
   assert.equal(lookedUp, false, 'a result days old would be reported as found today');
   assert.deepEqual(order, [], 'no cached result is sent or handed over: the scan reports when it finishes');
+});
+
+test('PAGE_LOAD on a scan tab (Bulk scan or watchlist check) that ended on a skipped site tells the scan instead of leaving it to time out', async () => {
+  for (const quiet of [false, true]) {
+    const h = pageLoadHarness();
+    const finished = [];
+    h.dependencies.Utils.isUrlBlacklisted = async () => true;
+    h.context.BackgroundTabScan = { isScanTab: () => true, isQuiet: () => quiet,
+      scanFinished: (tabId, url, results, extra) => finished.push({ url, excluded: !!(extra && extra.excluded), count: results.length }) };
+    await h.run();
+    assert.deepEqual(JSON.parse(JSON.stringify(finished)), [{ url: 'https://example.test/', excluded: true, count: 0 }], quiet ? 'watchlist check' : 'Bulk scan');
+  }
 });
 
 test('PAGE_LOAD retries stop when their document is replaced', async () => {

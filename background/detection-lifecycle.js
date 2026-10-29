@@ -847,7 +847,9 @@ async function processDetectionData(message, sender) {
             }
 
             // Check if detection data is already stored
-            const storedData = await DetectionEngineManager.getStoredDetection(currentState.url);
+            const privateTab = typeof HistoryRecorder !== 'undefined' && typeof HistoryRecorder.isIncognitoTab === 'function'
+                && await HistoryRecorder.isIncognitoTab(tabId, chrome).catch(() => false);
+            const storedData = await DetectionEngineManager.getStoredDetection(currentState.url, { privateWindow: privateTab });
             if (!DetectionSessionStore.isCurrent(tabId, state)) return;
             if (storedData) {
                 Logger.debug('SCAN', `Safety timeout: finalizing tab ${tabId}`);

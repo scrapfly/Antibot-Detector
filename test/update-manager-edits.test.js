@@ -487,6 +487,38 @@ test('a rule translated only is not edited; a real edit still is', () => {
   assert.strictEqual(UM.isProtected(reworded), true, 'a real edit is asked about');
 });
 
+test('a shipped rule with an explicit standalone: true is only translated when saved without it (the editor never writes the default)', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const shipped = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'detectors/antibot/detect-cheq.json'), 'utf8'));
+  assert.ok(JSON.stringify(shipped).includes('"standalone":true'), 'the shipped rule spells the default out');
+  const strip = (v) => (Array.isArray(v) ? v.map(strip) : (v && typeof v === 'object')
+    ? Object.fromEntries(Object.entries(v).filter(([k, x]) => !(k === 'standalone' && x === true)).map(([k, x]) => [k, strip(x)])) : v);
+  const saved = { ...strip(shipped), descriptionI18n: { es: 'Texto propio' } };
+  const marked = DetectorManager.markUserEdited(saved, shipped);
+  assert.strictEqual(DetectorManager.isTranslationOnlyEdit(marked), true, 'translating is not editing');
+  assert.strictEqual(DetectorManager.isUserEdited(marked), false);
+  // A pattern the person really switched off is an edit
+  const changed = JSON.parse(JSON.stringify(shipped));
+  let done = false;
+  const off = (v) => { if (Array.isArray(v)) { v.forEach(off); return; } if (v && typeof v === 'object') { if (v.standalone === true && !done) { v.standalone = false; done = true; return; } Object.values(v).forEach(off); } };
+  off(changed.detection);
+  assert.ok(done, 'a pattern to switch off');
+  assert.strictEqual(DetectorManager.isUserEdited({ ...strip(changed), userModified: true, officialSnapshot: shipped }), true, 'false is a choice');
+});
+
+test('a rule file cannot write through the prototype by the text it chooses to translate', () => {
+  const hostile = JSON.parse('{"id":"x","description":"__proto__","descriptionI18n":{"polluted":"yes"},"detection":{"cookie":[{"name":"a","description":"constructor","descriptionI18n":{"keys":"no"}}]}}');
+  const translations = DetectorManager.userTranslations(hostile);
+  assert.strictEqual({}.polluted, undefined, 'Object.prototype is untouched');
+  assert.strictEqual(Object.keys(translations.description).length, 2, 'both texts are kept as ordinary keys');
+  const target = JSON.parse('{"id":"x","description":"__proto__","detection":{"cookie":[{"name":"a","description":"constructor"}]}}');
+  DetectorManager.carryTranslations(target, hostile);
+  assert.strictEqual({}.polluted, undefined);
+  assert.strictEqual(typeof Object.keys, 'function', 'Object is untouched');
+  assert.strictEqual(target.descriptionI18n.polluted, 'yes', 'the translation still reaches the rule that has that text');
+});
+
 test('an update keeps the translations of texts it did not reword; Reset to official keeps them too', () => {
   const { UM } = load({});
   const incoming = official('detect-akamai', '2.1.0', { description: 'Official text' });

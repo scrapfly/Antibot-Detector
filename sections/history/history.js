@@ -41,8 +41,9 @@ class History {
   async loadHistoryFromStorage() {
     try {
       this.historyItems = await HistoryStore.read(chrome.storage.local);
+      // The store keeps every pinned entry on top of the limit, so the list does too
       if (this.historyLimit > 0 && this.historyItems.length > this.historyLimit) {
-        this.historyItems = this.historyItems.slice(0, this.historyLimit);
+        this.historyItems = HistoryStore.applyLimit(this.historyItems, this.historyLimit);
       }
       Logger.debug('UI', 'Loaded history items:', this.historyItems.length);
     } catch (error) {

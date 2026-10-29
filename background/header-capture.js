@@ -97,11 +97,25 @@ function isOtherPageRequest(details) {
     return false;
 }
 
-/** A new page starts loading in the tab: from now on the document it showed is the one being left. */
-function noteTabLeaving(tabId) {
+/**
+ * A new page starts loading in the tab: from now on the document it showed is the one being left. `shownDocumentId` is
+ * the page that is being shown when the caller already knows it (a prerendered page just activated): the tab may
+ * already name it after a request of its own, and it is not the page being left.
+ */
+function noteTabLeaving(tabId, shownDocumentId) {
     const shown = tabDocuments.get(tabId);
+    if (shown && shown === shownDocumentId) return;
     if (shown) leavingDocuments.set(tabId, shown);
     tabDocuments.delete(tabId);
+}
+
+/**
+ * The navigation that made the shown page "the page being left" is over: it committed (the old document is now
+ * unloading and Chrome marks it itself) or it never replaced the page (a download, a 204, a cancelled or failed load,
+ * the page restored from the back/forward cache). Kept, the mark dropped every later request of a page that stayed.
+ */
+function forgetLeavingPage(tabId) {
+    if (typeof tabId === 'number') leavingDocuments.delete(tabId);
 }
 
 /**
@@ -169,6 +183,12 @@ function setupHeaderCapture() {
         },
         { urls: ['<all_urls>'], types: ['main_frame'] }
     );
+
+    if (chrome.webNavigation) {
+        const mainFrameOver = (details) => { if (details && details.frameId === 0) forgetLeavingPage(details.tabId); };
+        if (chrome.webNavigation.onCommitted) chrome.webNavigation.onCommitted.addListener(mainFrameOver);
+        if (chrome.webNavigation.onErrorOccurred) chrome.webNavigation.onErrorOccurred.addListener(mainFrameOver);
+    }
 
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(

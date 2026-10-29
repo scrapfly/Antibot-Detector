@@ -44,31 +44,62 @@
   const looksLikeAddress = (cell) => /^[a-z][a-z0-9+.-]*:/i.test(cell) || /^[^\s/:?#]+\.[^\s/:?#]+(:\d+)?([/?#]|$)/.test(cell);
 
   /**
-   * The addresses of a pasted list or a .txt/.csv file: one per line, blank lines and # comments ignored. The text is
-   * read as a table (the first cell of each row that looks like an address) only when it is one: tab-separated, with a
-   * header row (a row with no address, like "url,name"), or two or more rows that all split into the same number of
-   * cells. A row that starts with a quote, or whose first cell is not an address, is a table row anyway. Otherwise a
-   * comma or semicolon belongs to the address (?ids=1,2,3, ;jsessionid=…).
+   * A row's cells. Commas, semicolons and tabs separate them, except inside double quotes (a CSV exports a cell with a
+   * comma in quotes) and inside an address whose query or parameters are still open: ?ids=1,2,3 and ;jsessionid=… belong
+   * to the address.
+   * @param {string} line
+   * @returns {string[]}
+   */
+  function cellsOf(line) {
+    const cells = [];
+    let cell = '';
+    let quoted = false;
+    let closed = false; // the cell was quoted: its end is the quote, whatever follows
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (quoted) {
+        if (ch !== '"') cell += ch;
+        else if (line[i + 1] === '"') { cell += '"'; i++; } else { quoted = false; closed = true; }
+        continue;
+      }
+      if (ch === '"' && !cell.trim()) { quoted = true; continue; }
+      if (ch === ',' || ch === ';' || ch === '\t') {
+        // Inside a value of the address's query (?ids=1,…), or just before a parameter (;jsessionid=…)
+        const open = ch !== '\t' && !closed && looksLikeAddress(cell.trim())
+          && (/=/.test(cell.replace(/^.*[?&;]/, '')) && /[?&;]/.test(cell) || /^[a-z][\w.-]*=/i.test(line.slice(i + 1)));
+        if (open) { cell += ch; continue; }
+        cells.push(cell);
+        cell = '';
+        closed = false;
+        continue;
+      }
+      cell += ch;
+    }
+    cells.push(cell);
+    return cells.map(unquote);
+  }
+
+  /**
+   * The addresses of a pasted list or a .txt/.csv file: one per line, blank lines and # comments ignored. A line with
+   * several cells is a list on one line when every cell is an address (a.com, b.com), else a table row whose first
+   * address is the page. The text is a table (every row's first address, other columns are data) when it has tabs, a
+   * header row (a row with no address, like "url,name") or two or more rows that all split into the same number of cells.
    * @param {string} text
    * @returns {string[]}
    */
   function linesOf(text) {
     const lines = String(text || '').replace(/^\uFEFF/, '').split(/\r\n|\r|\n/)
       .map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
-    const cells = line => line.split(/[,;\t]/).map(unquote);
+    const rows = lines.map(line => ({ line, cells: cellsOf(line) }));
     const table = lines.some(line => line.includes('\t'))
-      || lines.some(line => /[,;]/.test(line) && !cells(line).some(looksLikeAddress))
-      || (lines.length > 1 && lines.every(line => /[,;]/.test(line))
-        && new Set(lines.map(line => cells(line).length)).size === 1);
+      || rows.some(({ cells }) => cells.length > 1 && !cells.some(looksLikeAddress))
+      || (rows.length > 1 && rows.every(({ cells }) => cells.length > 1) && new Set(rows.map(({ cells }) => cells.length)).size === 1);
     const out = [];
-    for (const line of lines) {
-      const row = table || /^["']/.test(line) || !looksLikeAddress(cells(line)[0]);
-      if (row && /[,;\t]/.test(line)) {
-        const cell = cells(line).find(looksLikeAddress);
-        if (cell) out.push(cell);
-        continue;
-      }
-      out.push(unquote(line));
+    for (const { line, cells } of rows) {
+      if (cells.length < 2) { out.push(unquote(line)); continue; }
+      const addresses = cells.filter(looksLikeAddress);
+      if (!table && addresses.length === cells.length) out.push(...addresses); // a list on one line
+      else if (addresses.length) out.push(addresses[0]);
     }
     return out.filter(Boolean);
   }

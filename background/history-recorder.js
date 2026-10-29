@@ -247,8 +247,11 @@ class HistoryRecorder {
 
         // The earlier scan of this page: the duplicate being updated, else the newest entry for the same page that a
         // scan found (an entry from the cache says what another visit, maybe of another page, found)
-        const samePage = item => item && item.fromCache !== true && this.normalizeDuplicateKey(item.url, item.hostname, 'path') === pageKey;
-        const earlierAt = duplicateAt !== -1 ? duplicateAt : (pageKey ? history.findIndex(samePage) : -1);
+        const samePath = item => item && this.normalizeDuplicateKey(item.url, item.hostname, 'path') === pageKey;
+        const samePage = item => samePath(item) && item.fromCache !== true;
+        // (a duplicate of another page, found by a "domain" scope, says nothing about this one)
+        const duplicateIsThisPage = duplicateAt !== -1 && samePath(history[duplicateAt]);
+        const earlierAt = duplicateIsThisPage ? duplicateAt : (pageKey ? history.findIndex(samePage) : -1);
         const earlier = earlierAt !== -1 ? history[earlierAt] : null;
         const none = { added: [], removed: [], changed: false };
         // A cached result is never compared, and never the base of a comparison (the duplicate being updated may be one)
@@ -260,20 +263,34 @@ class HistoryRecorder {
           const key = list => [...new Set((Array.isArray(list) ? list : []).map(name => Categories.protectionKey(String(name))))].sort().join('|');
           return key(a) === key(b);
         };
-        const undoesLast = diff.changed && earlier && earlier.changed
+        // Only a change the very next scan undoes can be a blip: one that another scan agreed with (`seen`), or that is
+        // days old, was real
+        const markedRecently = !!(earlier && earlier.changed && !(Number(earlier.changed.seen) > 0)
+          && now - (Number(earlier.changed.at) || 0) <= HistoryPolicy.BLIP_WINDOW_MS);
+        const undoesLast = diff.changed && markedRecently
           && sameNames(diff.added, earlier.changed.removed) && sameNames(diff.removed, earlier.changed.added);
         // Back to what the page had the scan before: the last change was a blip (a script that loaded once, a challenge
         // shown once), so neither scan is marked
         let blipAt = -1;
-        if (diff.changed && earlier && earlier.changed) {
+        let blip = false;
+        if (diff.changed && markedRecently) {
           const olderAt = history.findIndex((item, index) => index > earlierAt && samePage(item));
           if (olderAt !== -1 && !HistoryPolicy.diffProtections(history[olderAt].detections, detectionResults).changed) {
             diff = none;
+            blip = true;
             if (earlierAt !== duplicateAt) blipAt = earlierAt;
           }
         }
         if (duplicateAt !== -1 && undoesLast) diff = none;
-        if (onlyIfChanged && !diff.changed && !(duplicateAt !== -1 && undoesLast)) return undefined;
+        if (onlyIfChanged && !diff.changed && !(duplicateAt !== -1 && undoesLast)) {
+          // A scan that agrees with the marked entry confirms its change (it is no blip any more); nothing else is recorded
+          if (earlier && earlier.changed && earlier.fromCache !== true && !fromCache && !blip) {
+            const confirmed = history.map((item, index) => (index === earlierAt
+              ? { ...item, changed: { ...item.changed, seen: (Number(item.changed.seen) || 0) + 1 } } : item));
+            return { items: confirmed, result: { alert: null } };
+          }
+          return undefined;
+        }
         if (blipAt !== -1) {
           const { changed: _blip, ...unmarked } = history[blipAt];
           history = history.map((item, index) => (index === blipAt ? unmarked : item));
@@ -313,8 +330,9 @@ class HistoryRecorder {
         };
         // A change since the earlier scan is marked on the entry (the badge in History)
         if (diff.changed) fresh.changed = { at: now, added: diff.added, removed: diff.removed };
+        // A page is pinned when any copy of it is: the automatic pin keeps one per address, and a later visit is a new copy
         const alert = diff.changed && earlier
-          && (settings.historyChangeAlerts === 'all' || (settings.historyChangeAlerts === 'pinned' && earlier.pinned === true))
+          && (settings.historyChangeAlerts === 'all' || (settings.historyChangeAlerts === 'pinned' && (earlier.pinned === true || alreadyPinned)))
           ? { hostname: entryHostname, url: fresh.url, added: diff.added, removed: diff.removed }
           : null;
 
@@ -323,11 +341,17 @@ class HistoryRecorder {
           // Update in place: same entry, new scan, moved to the top; the first-seen date, pin and note stay
           const kept = history[duplicateAt];
           // A cached result never takes the place of what a scan of this page found: it only says the page was seen again
-          const updated = fromCache && kept.fromCache !== true
+          const keepsScan = fromCache && kept.fromCache !== true;
+          const updated = keepsScan
             ? Object.assign({}, kept, { timestamp: now, firstSeen: kept.firstSeen || kept.timestamp })
             : Object.assign({}, kept, fresh, { id: kept.id, firstSeen: kept.firstSeen || kept.timestamp });
-          // The mark stays until another change replaces it, or a scan undoes it (a blip)
-          if (undoesLast) delete updated.changed;
+          // The mark stays until another change replaces it, or a scan undoes it (a blip); one that belongs to another
+          // page (a duplicate found by the "domain" scope) does not stay
+          if (undoesLast || (!keepsScan && !duplicateIsThisPage && !fresh.changed)) delete updated.changed;
+          // A scan that agrees with the mark confirms it
+          else if (!fromCache && !diff.changed && !blip && updated.changed) {
+            updated.changed = { ...updated.changed, seen: (Number(updated.changed.seen) || 0) + 1 };
+          }
           if (!fromCache) delete updated.fromCache;
           if (pinsItself && kept.pinned !== true && kept.unpinned !== true) { updated.pinned = true; updated.autoPinned = true; }
           next = [updated, ...history.filter((_, i) => i !== duplicateAt)];

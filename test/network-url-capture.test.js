@@ -12,8 +12,8 @@ const vm = require('node:vm');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'background/header-capture.js'), 'utf8');
 const ctx = vm.createContext({ URL, TextDecoder, Uint8Array });
-vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody; this.isOtherPageRequest = isOtherPageRequest; this.noteTabLeaving = noteTabLeaving;', ctx);
-const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody, isOtherPageRequest, noteTabLeaving } = ctx;
+vm.runInContext(src.slice(0, src.indexOf('function setupHeaderCapture')) + '\nthis.recordNetworkUrl = recordNetworkUrl; this.tabOfWorkerRequest = tabOfWorkerRequest; this.forgetTabRequests = forgetTabRequests; this.isPrerenderRequest = isPrerenderRequest; this.readRequestBody = readRequestBody; this.isOtherPageRequest = isOtherPageRequest; this.noteTabLeaving = noteTabLeaving; this.forgetLeavingPage = forgetLeavingPage;', ctx);
+const { recordNetworkUrl, tabOfWorkerRequest, forgetTabRequests, isPrerenderRequest, readRequestBody, isOtherPageRequest, noteTabLeaving, forgetLeavingPage } = ctx;
 const req = (url, type = 'image', method = 'GET') => ({ url, type, method, timestamp: 0 });
 
 test('repeats of the same request are stored once', () => {
@@ -121,6 +121,37 @@ test('requests of the page the tab is leaving (unload beacons, last analytics) a
   assert.equal(isOtherPageRequest(req({ documentId: 'doc-B' })), false, 'the new page');
   assert.equal(isOtherPageRequest(req({ documentId: 'doc-A', tabId: 32 })), false, 'another tab is not affected');
   assert.equal(isOtherPageRequest({ tabId: tab, type: 'main_frame', frameId: 0 }), false, 'the new page\'s own request');
+});
+
+test('a navigation that does not replace the page ends the "page being left" mark, so the page keeps its requests', () => {
+  const tab = 33;
+  const req = (extra) => ({ tabId: tab, frameId: 0, type: 'xmlhttprequest', documentLifecycle: 'active', ...extra });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false);
+  noteTabLeaving(tab); // a click starts a navigation
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), true, 'while the navigation is pending');
+  forgetLeavingPage(tab); // it was a download, a 204 or a cancelled load: page A stays
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false, 'page A still shown: its requests count again');
+  forgetLeavingPage('not a tab id'); // a navigation event without a tab changes nothing
+});
+
+test('a prerendered page just activated is not the page being left', () => {
+  const tab = 34;
+  const req = (extra) => ({ tabId: tab, frameId: 0, type: 'xmlhttprequest', documentLifecycle: 'active', ...extra });
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A' })), false);
+  // Activated: the new page sent a request before the worker handled its page load, so the tab already names it
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-P' })), false);
+  noteTabLeaving(tab, 'doc-P');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-P' })), false, 'the activated page keeps its later requests');
+  // The page before it, still named by the tab, is the one being left
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A2', tabId: 35 })), false);
+  noteTabLeaving(35, 'doc-P2');
+  assert.equal(isOtherPageRequest(req({ documentId: 'doc-A2', tabId: 35 })), true, 'the old page of a tab that has not seen the new one yet');
+});
+
+test('the main frame\'s commit and failure events end the mark (the listeners are registered)', () => {
+  assert.match(src, /webNavigation\.onCommitted\.addListener\(mainFrameOver\)/);
+  assert.match(src, /webNavigation\.onErrorOccurred\.addListener\(mainFrameOver\)/);
+  assert.match(src, /details\.frameId === 0 && forgetLeavingPage|details\.frameId === 0\) forgetLeavingPage/);
 });
 
 test('request bodies are kept to the captured-response limit', () => {

@@ -43,7 +43,7 @@ function harness(initial, { session = true } = {}) {
     'modules/core/webhook-retry.js', 'modules/settings/settings-runtime.js', 'modules/settings/webhook-runtime.js']) vm.runInContext(read(file), context);
   const runtime = context.SettingsRuntime;
   return {
-    runtime, calls, alarms, clock,
+    runtime, context, calls, alarms, clock,
     log: () => JSON.parse(JSON.stringify(local[runtime.WEBHOOK_LOG_KEY] || [])),
     held: () => JSON.parse(JSON.stringify(sessionStore[runtime.WEBHOOK_HELD_KEY] || {})),
     local, sessionStore,
@@ -259,3 +259,27 @@ test('a worker stopped while it was sending an automatic retry does not lose it:
   assert.equal(next.calls.length, 1, 'sent again');
   assert.deepEqual(next.held(), {});
 });
+
+test('an automatic retry arms the next alarm before it sends, and a new worker arms one for what the old one held', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 503 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  const [id] = Object.keys(h.held());
+  h.advance(MIN);
+  h.alarms.clear(); // the alarm that started the retry has fired
+  let sending = false;
+  h.reply(() => { sending = true; return new Promise(() => {}); }); // the worker stops while sending
+  h.runtime.runDueWebhookRetries();
+  for (let i = 0; i < 50 && !sending; i++) await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.ok(sending, 'the retry is in flight');
+  assert.equal(h.alarms.get('scrapfly-webhook-retry').when, h.clock.t + h.runtime.WEBHOOK_RETRY_CLAIM_MS, 'an alarm waits for the claim to run out');
+
+  // A worker that starts with a due delivery and no alarm
+  const next = harness(ON);
+  next.sessionStore[next.runtime.WEBHOOK_HELD_KEY] = { [id]: { ...h.held()[id], sending: undefined, due: next.clock.t + MIN } };
+  next.context.chrome.alarms.onAlarm = { addListener() {} };
+  next.runtime.initWebhookRetries();
+  for (let i = 0; i < 50 && !next.alarms.has('scrapfly-webhook-retry'); i++) await new Promise((resolve) => setTimeout(resolve, 0));
+  assert.equal(next.alarms.get('scrapfly-webhook-retry').when, next.clock.t + MIN, 'the held delivery has its alarm again');
+});
+

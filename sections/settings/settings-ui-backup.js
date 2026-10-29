@@ -88,12 +88,14 @@ SettingsUI.chooseRestore = async function(parsed) {
 /**
  * Settings, then rules, then History. A part that fails does not undo the ones before it. A language that comes with the
  * settings is saved with them but shown last: showing it reloads the popup, which would cut the other parts short.
- * @returns {{done: string[], failed: string[], language: string|null}}
+ * @returns {{done: string[], failed: string[], language: string|null, skipped: string[]}} `skipped`: rules of the backup this
+ *   version could not take (merge imports the valid ones), to be named to the person
  */
 SettingsUI.applyBackup = async function(bundle, choice) {
     const done = [];
     const failed = [];
     let language = null;
+    let skipped = [];
     const run = async (part, apply) => {
         try { await apply(); done.push(part); } catch (error) { Logger.warn('UI', `Could not restore ${part}`, error); failed.push(part); }
     };
@@ -117,6 +119,7 @@ SettingsUI.applyBackup = async function(bundle, choice) {
         await run('rules', async () => {
             const detectorManager = window.popupInstance && window.popupInstance.detectorManager;
             if (!detectorManager || !await detectorManager.importDetectors(bundle.detectors, choice.mode === 'merge')) throw new Error('The rules could not be imported');
+            skipped = Array.isArray(detectorManager.lastImportSkipped) ? detectorManager.lastImportSkipped.slice() : [];
             chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
         });
     }
@@ -129,7 +132,7 @@ SettingsUI.applyBackup = async function(bundle, choice) {
             history.renderHistory();
         });
     }
-    return { done, failed, language };
+    return { done, failed, language, skipped };
 };
 
 SettingsUI.restoreBackupFile = async function(event) {
@@ -166,7 +169,7 @@ SettingsUI.restoreBackupFile = async function(event) {
             NotificationHelper.info(text('restoreNothing', 'Nothing is selected.'));
             return;
         }
-        const { done, failed, language } = await SettingsUI.applyBackup.call(this, parsed.bundle, choice);
+        const { done, failed, language, skipped } = await SettingsUI.applyBackup.call(this, parsed.bundle, choice);
         const names = {
             settings: text('restorePartSettings', 'Settings'),
             rules: text('restorePartRulesFmt', 'Your rules ({0})', parsed.summary.rules),
@@ -174,6 +177,8 @@ SettingsUI.restoreBackupFile = async function(event) {
         };
         for (const part of failed) NotificationHelper.error(text('restorePartFailedFmt', '{0} could not be restored.', names[part]));
         if (done.length) NotificationHelper.success(text('restoreDoneFmt', 'Restored: {0}', done.map(part => names[part]).join(', ')));
+        // Rules of the backup this version could not take are named, as Rules → Import does
+        if (skipped && skipped.length) NotificationHelper.warning(text('detectorsImportedSkippedFmt', `Detectors imported, except: ${skipped.join(', ')} (not valid in this version)`, skipped.join(', ')));
         await SettingsUI.refreshStorageOverview();
         if (language && typeof SettingsUI._applyLanguageChoice === 'function') await SettingsUI._applyLanguageChoice.call(this, language, { persist: false });
     } catch (error) {

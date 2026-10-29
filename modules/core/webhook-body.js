@@ -389,9 +389,24 @@
     return out;
   }
 
+  // A spreadsheet runs text that starts with = + - @ as a formula (a page title is anyone's text): the apostrophe keeps
+  // it text, as in the History and Bulk scan exports. A number is left as it is.
+  const NUMBER_TEXT = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
   function csvField(value) {
-    const text = String(value);
+    let text = String(value);
+    if (/^[=+\-@\t\r]/.test(text) && !NUMBER_TEXT.test(text)) text = `'${text}`;
     return /[",\r\n]|^\s|\s$/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  }
+
+  /**
+   * A header value fetch accepts: no control characters, and only ISO-8859-1 characters (a page title with an em dash or
+   * a Japanese title made the whole request throw, again on every retry). Others are percent-encoded.
+   */
+  function headerValue(value) {
+    return String(value == null ? '' : value)
+      .replace(/[\x00-\x08\x0A-\x1F\x7F]+/g, ' ')
+      .replace(/[^\x00-\xFF]/gu, (ch) => { try { return encodeURIComponent(ch); } catch (_) { return '?'; } })
+      .trim();
   }
 
   function toCSV(obj, ctx) {
@@ -505,6 +520,7 @@
     resolveContentType,
     sampleContext,
     substitute,
+    headerValue,
     defaultPayload,
     validateTemplate,
     payloadObject,

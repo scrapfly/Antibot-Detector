@@ -176,3 +176,17 @@ test('HistoryStore.parse accepts the string container, arrays and junk', () => {
   assert.deepStrictEqual(HistoryStore.parse('{bad').items, []);
   assert.deepStrictEqual(HistoryStore.parse(undefined).items, []);
 });
+
+test('the History list keeps a pinned entry older than the limit, as the store does', async () => {
+  const w = makeWorld();
+  w.store.scrapfly_history = JSON.stringify({ items: [
+    { id: 'n1', url: 'https://n1.com', timestamp: 1000, detections: [] },
+    { id: 'n2', url: 'https://n2.com', timestamp: 999, detections: [] },
+    { id: 'n3', url: 'https://n3.com', timestamp: 998, detections: [] },
+    { id: 'old-pin', url: 'https://old.com', timestamp: 1, pinned: true, detections: [] }
+  ] });
+  w.view.historyLimit = 2;
+  await w.view.loadHistoryFromStorage();
+  assert.deepStrictEqual(w.view.historyItems.map(i => i.id), ['n1', 'n2', 'old-pin'], 'the two newest and the pinned one, not cut by the limit');
+});
+

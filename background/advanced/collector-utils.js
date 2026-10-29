@@ -295,9 +295,10 @@ async function saveToHistory(tabId, captureData, options = {}) {
         }
 
         const captureHostname = hostname || new URL(tab.url).hostname;
-        // A private window's capture (cookie values, headers, the address) is shown, never kept: Advanced → History
-        // lives in storage.local and would outlast the private session
-        if (tab.incognito === true) {
+        // A private window's capture (cookie values, headers, the address) is never written to storage.local, which would
+        // outlast the private session: it is kept in memory only, listed with the others until the browser closes
+        const privateTab = tab.incognito === true;
+        if (privateTab && !AdvancedHistoryStore.canKeepPrivate()) {
             Logger.debug('UI', `[BaseInterceptor] ${type} capture in a private window: not saved to history`);
             return { id: options.id || AdvancedResultModel.requestId(), timestamp: Date.now(), url: tab.url, hostname: captureHostname, data: captureData, captureData, notSaved: true };
         }
@@ -311,7 +312,8 @@ async function saveToHistory(tabId, captureData, options = {}) {
             data: captureData,
             captureData
         }, {
-            expiryMinutes
+            expiryMinutes,
+            privateSession: privateTab
         });
 
         Logger.debug('UI', `[BaseInterceptor] Saved ${type} capture to history:`, newCapture.id);

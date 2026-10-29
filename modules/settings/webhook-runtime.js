@@ -172,6 +172,9 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
     });
     if (busy) return { status: 'busy' };
     if (!item) return { status: 'gone' };
+    // The alarm that started an automatic retry has fired: arm the next one for when the claim runs out, so a worker
+    // stopped while sending is not the end of this delivery
+    await SettingsRuntime._scheduleWebhookRetries();
     const result = await SettingsRuntime._deliverWebhook(webhook, item.ctx);
     const page = item.ctx.hostname || '';
     let extra = { attempt: item.attempts + 1 };
@@ -210,4 +213,6 @@ SettingsRuntime.initWebhookRetries = function() {
     chrome.alarms.onAlarm.addListener((alarm) => {
         if (alarm && alarm.name === SettingsRuntime.WEBHOOK_RETRY_ALARM) SettingsRuntime.runDueWebhookRetries().catch(() => {});
     });
+    // A delivery held by the worker before this one (due, but its alarm gone) gets its alarm again
+    Promise.resolve().then(() => SettingsRuntime._scheduleWebhookRetries()).catch(() => {});
 };

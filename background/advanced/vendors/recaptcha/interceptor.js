@@ -221,11 +221,12 @@ async function reCaptchaStartCapture(tabId) {
 
                 const capturedResults = await processCaptureData(captureState);
                 Logger.network('[reCAPTCHA] Auto-stop - Captured results:', capturedResults);
-                // Decoded requests are kept as on a manual stop (a reload seen before the anchor stops it early)
-                await saveRecaptchaResults(tabId, capturedResults);
-
+                // Stopped before it is saved, as a manual stop is: a Stop or a late request that lands while the save is
+                // awaited must not save the same decoded requests again
                 captureState.results = capturedResults;
                 captureState.isCapturing = false;
+                // Decoded requests are kept as on a manual stop (a reload seen before the anchor stops it early)
+                await saveRecaptchaResults(tabId, capturedResults);
 
                 // Remove navigation listeners before deleting state
                 if (captureState.navigationListener) {
