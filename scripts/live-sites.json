@@ -231,8 +231,9 @@
           "min": 80
         }
       ],
-      "note": "Jiasule",
-      "waitMs": 12000
+      "note": "Jiasule (an occasional visit does not show the Jiasule signals; it passes on the next)",
+      "waitMs": 12000,
+      "retries": 1
     },
     {
       "url": "https://www.nmpa.gov.cn/",
@@ -287,7 +288,7 @@
           "min": 80
         }
       ],
-      "note": "Yundun",
+      "note": "Yundun (the WAF sometimes answers this address with only its captcha page, status 521: the extension names it from that page too)",
       "waitMs": 12000
     },
     {

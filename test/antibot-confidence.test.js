@@ -330,3 +330,15 @@ test('Ocule and Meetrics are kept as legacy detectors with capped confidence', (
     assert.ok(all.confidence <= 60, `${id}: ${all.confidence}`);
   }
 });
+
+
+test('detect-yundun: the captcha page a blocked visitor is shown is identified, its own scripts alone are not enough', () => {
+  const d = definitions['detect-yundun'];
+  // csdn.net answering 521: no real page, only the WAF's challenge with its marker cookie and its scripts under /cdn_cgi_bs_captcha/
+  const challenge = detect(d, pageFor(d, ['bs-captcha-path', 'waf-captcha-marker-cookie', 'server-waf-header']));
+  assert.ok(challenge.detected && challenge.confidence >= 90, `the challenge page scores ${challenge.confidence}`);
+  const scriptsOnly = detect(d, pageFor(d, ['bs-captcha-path']));
+  assert.ok(!scriptsOnly.detected || scriptsOnly.confidence === 0, 'a path alone is not a detection');
+  const noCookie = detect(d, pageFor(d, ['bs-captcha-path', 'server-waf-header']));
+  assert.ok(!noCookie.detected || noCookie.confidence < 80, `the path with a generic header scores ${noCookie.confidence}`);
+});

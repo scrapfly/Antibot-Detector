@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-07",
-  "version": "2.0.1",
+  "lastUpdated": "2026-10-29",
+  "version": "2.0.2",
   "minExtensionVersion": "2.8",
   "website": "https://www.yundun.com/",
   "icon": "yundun_official.png",
@@ -117,6 +117,16 @@
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
+      },
+      {
+        "id": "bs-captcha-path",
+        "confidence": 60,
+        "standalone": false,
+        "description": "First-party Yundun WAF captcha script (cdn_cgi_bs_captcha)",
+        "text": "^https?://[^/?#]+/cdn_cgi_bs_captcha/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
       }
     ]
   },
@@ -178,7 +188,7 @@
       "confidence": 90,
       "when": {
         "all": [
-          { "pattern": "bs-captcha-script" },
+          { "any": [{ "pattern": "bs-captcha-script" }, { "pattern": "bs-captcha-path" }] },
           {
             "any": [
               { "pattern": "bc-bot-cookie" },

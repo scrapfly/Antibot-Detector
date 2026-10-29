@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Advanced captures are stored once instead of twice, so they take about half the room shown in Settings → Data.
+- Yundun Cloud WAF is now recognised on its captcha page too, the one shown instead of the site (csdn.net answers some visitors with it).
 
 ### Fixed
 

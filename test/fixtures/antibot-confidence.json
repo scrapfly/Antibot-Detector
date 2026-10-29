@@ -920,6 +920,9 @@
   },
   "bs-captcha-script": {
    "url": "https://blog.csdn.net/cdn_cgi_bs_captcha/static/js/waf_captcha_embedded_bs_v6.3.0805.js"
+  },
+  "bs-captcha-path": {
+   "url": "https://www.csdn.net/cdn_cgi_bs_captcha/static/js/init_waf.js"
   }
  },
  "detect-radware": {
