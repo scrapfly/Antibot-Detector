@@ -269,6 +269,17 @@ const PROBE = {
     assert.equal(await bulk.$eval('#bulkWaitingBtn', el => el.hidden), false, 'the pages still waiting can be scanned again');
     console.log('PASS Controls: Pause finishes the current page and opens no other, Resume goes on, Stop closes the scan tab at once');
 
+    // Scan the pages still waiting: the pages already finished stay in the table and the run
+    await bulk.click('#bulkWaitingBtn');
+    const continued = await waitRun(r => r.status === 'running' && r.items.length === 5 && r.items[3].status === 'scanning', 30000);
+    assert.deepEqual(continued.items.slice(0, 3).map(i => i.status), ['done', 'done', 'done'], 'the finished pages are kept with their results');
+    assert.equal(await bulk.$$eval('#bulkRows tr', rows => rows.length), 5, 'the table shows the whole job, not only the pages scanned now');
+    await bulk.click('#bulkStopBtn');
+    await waitRun(r => r.status === 'stopped', 5000);
+    await sleep(400);
+    assert.deepEqual(await scanTabs(), [], 'Stop closes the scan tab again');
+    console.log('PASS Continue: "Scan the pages still waiting" keeps the finished pages in the table and the run');
+
     // 7. A worker restart during a run: the run reads stopped, its tab is closed
     await bulk.click('#bulkNewBtn');
     await bulk.waitForSelector('#bulkRunCard', { state: 'hidden' });

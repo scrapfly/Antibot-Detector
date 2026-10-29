@@ -260,3 +260,48 @@ test('the messages are answered for extension pages only', async () => {
   const state = await call(M.BULK_SCAN_STATE, page);
   assert.equal(state.run.status, 'done');
 });
+
+test('"Scan the pages still waiting" goes on with the stopped run: the finished pages stay in the list with their results', async () => {
+  const w = world({ scans: {
+    'https://a.example/': { results: found('Cloudflare') }, 'https://b.example/': { results: found('DataDome', 'Kasada'), delay: 30 },
+    'https://c.example/': { results: [] }, 'https://d.example/': { results: found('Akamai') } } });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/', 'https://c.example/', 'https://d.example/', 'mailto:x@y.example'] });
+  while (w.stored().items[0].status !== 'done') await tick(2);
+  await w.Runner.stop();
+  await finished(w);
+  const stopped = w.stored();
+  assert.equal(stopped.status, 'stopped');
+  assert.deepEqual(stopped.items.map(i => i.status), ['done', 'waiting', 'waiting', 'waiting', 'skipped']);
+
+  // The page sends the waiting addresses too, but the run's own state is what counts
+  const again = await w.Runner.start({ entries: ['https://not-in-the-run.example/'], continueRun: true });
+  assert.equal(again.ok, true);
+  await finished(w);
+  const run = w.stored();
+  assert.equal(run.status, 'done');
+  assert.deepEqual(run.items.map(i => [i.url, i.status]), [
+    ['https://a.example/', 'done'], ['mailto:x@y.example', 'skipped'],
+    ['https://b.example/', 'done'], ['https://c.example/', 'done'], ['https://d.example/', 'done']
+  ], 'the finished and the skipped pages first, then the ones scanned now');
+  assert.deepEqual(plain(run.items[0].detections.map(d => d.name)), ['Cloudflare'], 'a finished page keeps its result');
+  assert.deepEqual(plain(w.ctx.BulkScan.counts(run)), { total: 5, waiting: 0, scanning: 0, done: 4, failed: 0, skipped: 1, found: 3 });
+  assert.equal(w.log.created.filter(c => c.url === 'https://a.example/').length, 1, 'a page that was done is not scanned again');
+  assert.ok(!w.log.created.some(c => c.url === 'https://not-in-the-run.example/'), 'only what the run left waiting is scanned');
+});
+
+test('a start without continueRun still replaces the run, and a run that is not over or has nothing waiting cannot be continued', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] }, 'https://c.example/': { results: [] } } });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  // Nothing waits: continueRun falls back to the entries it was sent
+  const fresh = await w.Runner.start({ entries: ['https://c.example/'], continueRun: true });
+  assert.equal(fresh.ok, true);
+  await finished(w);
+  assert.deepEqual(w.stored().items.map(i => i.url), ['https://c.example/'], 'nothing to carry over: a plain new run');
+  // Without the flag the earlier results are replaced, as before
+  await w.Runner.start({ entries: ['https://a.example/'] });
+  await finished(w);
+  assert.deepEqual(w.stored().items.map(i => i.url), ['https://a.example/']);
+});
+

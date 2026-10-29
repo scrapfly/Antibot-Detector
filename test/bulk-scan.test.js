@@ -267,3 +267,26 @@ test('file names carry the person\'s own day', () => {
   assert.equal(BulkScan.fileName('json', '2026-10-26'), 'scrapfly-bulk-scan-2026-10-26.json');
   assert.equal(BulkScan.fileName('exe', 'not a day'), 'scrapfly-bulk-scan-export.json');
 });
+
+test('continuing a stopped run: the waiting addresses to scan, the finished pages kept, the counts of the first paste carried', () => {
+  const run = BulkScan.createRun({ items: [
+    { url: 'https://a.example/', status: 'waiting' }, { url: 'https://b.example/', status: 'waiting' }, { url: 'mailto:x', status: 'skipped', reason: 'scheme' }
+  ], duplicates: 2, overCap: 3, skippedOver: 1 });
+  BulkScan.begin(run, 0);
+  BulkScan.finish(run, 0, { detections: [{ name: 'Akamai' }], difficulty: 'High', finalUrl: 'https://a.example/home' });
+  assert.equal(BulkScan.continuation(run), null, 'a run that is still going is not continued');
+  BulkScan.stop(run);
+  const resumed = BulkScan.continuation(run);
+  assert.deepEqual(plain(resumed.entries), ['https://b.example/']);
+  assert.deepEqual(plain(resumed.kept.map(item => [item.url, item.status])), [['https://a.example/', 'done'], ['mailto:x', 'skipped']]);
+  assert.equal(resumed.kept[0].finalUrl, 'https://a.example/home', 'a finished page keeps all it had');
+  const next = BulkScan.carryOver(BulkScan.createRun(BulkScan.prepare(resumed.entries), {}), resumed);
+  assert.deepEqual(plain(next.items.map(item => item.status)), ['done', 'skipped', 'waiting']);
+  assert.deepEqual([next.duplicates, next.overCap, next.skippedOver], [2, 3, 1]);
+  assert.deepEqual(plain(BulkScan.counts(next)), { total: 3, waiting: 1, scanning: 0, done: 1, failed: 0, skipped: 1, found: 1 });
+  resumed.kept[0].status = 'changed';
+  assert.equal(run.items[0].status, 'done', 'the kept pages are copies');
+  assert.equal(BulkScan.continuation({ status: 'done', items: [{ url: 'https://a.example/', status: 'done' }] }), null, 'nothing waits');
+  assert.equal(BulkScan.continuation(null), null);
+});
+

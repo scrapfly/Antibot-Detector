@@ -81,8 +81,9 @@ const BulkScanRunner = {
     },
 
     /**
-     * A new run.
-     * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, cap?: number}} request
+     * A new run. With `continueRun`, a run that was stopped goes on: its waiting pages are scanned and the pages it
+     * already finished stay in the list with their results (the run's own state is the source, not the page's copy).
+     * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, cap?: number, continueRun?: boolean}} request
      * @returns {Promise<{ok: boolean, run?: object, error?: 'busy'|'off'|'empty'|'no_window'}>}
      */
     start(request = {}) {
@@ -96,9 +97,11 @@ const BulkScanRunner = {
         await this.ready();
         if (BulkScan.isActive(this._run)) return { ok: false, error: 'busy' };
         if (!await this.extensionOn()) return { ok: false, error: 'off' };
-        const entries = Array.isArray(request.entries) ? request.entries.slice(0, 5000) : [];
+        const resumed = request.continueRun === true ? BulkScan.continuation(this._run) : null;
+        const entries = resumed ? resumed.entries : (Array.isArray(request.entries) ? request.entries.slice(0, 5000) : []);
         const prepared = BulkScan.prepare(entries, { cap: request.cap, isExcluded: await this.scopeTest() });
         const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap });
+        if (resumed) BulkScan.carryOver(run, resumed);
         if (BulkScan.nextWaiting(run) === -1) {
             // Nothing to scan: the list is shown with its reasons, and the run is over before it began
             BulkScan.complete(run);

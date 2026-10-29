@@ -13,6 +13,8 @@
  *                    the run's states: running → paused → running, then done or stopped; recover() is what a service
  *                    worker that starts again does with a run it finds in session storage (nobody is scanning it any
  *                    more: it is stopped, never left "running")
+ *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
+ *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
  *   build(), fileName()   the CSV and JSON exports
  */
@@ -332,6 +334,33 @@
     return true;
   }
 
+  /**
+   * What "Scan the pages still waiting" takes from a run that is over: the addresses still waiting, and the pages that
+   * already have their outcome (done, failed or skipped), which stay in the list with their results.
+   * @returns {{entries: string[], kept: object[], duplicates: number, overCap: number, skippedOver: number}|null} null when
+   *   the run is still going or nothing waits
+   */
+  function continuation(run) {
+    if (!run || typeof run !== 'object' || !Array.isArray(run.items) || isActive(run)) return null;
+    const entries = run.items.filter(item => item.status === 'waiting').map(item => item.url);
+    if (!entries.length) return null;
+    return {
+      entries,
+      kept: run.items.filter(item => item.status !== 'waiting' && item.status !== 'scanning').map(item => ({ ...item })),
+      duplicates: run.duplicates || 0, overCap: run.overCap || 0, skippedOver: run.skippedOver || 0
+    };
+  }
+
+  /** Put the kept pages before the ones a new run scans, with the counts of what the first paste left out. */
+  function carryOver(run, resumed) {
+    if (!run || !resumed) return run;
+    run.items = [...resumed.kept, ...run.items];
+    run.duplicates = resumed.duplicates;
+    run.overCap = (resumed.overCap || 0) + (run.overCap || 0);
+    run.skippedOver = (resumed.skippedOver || 0) + (run.skippedOver || 0);
+    return run;
+  }
+
   /** A run found by a service worker that has just started: whatever it says, nothing scans it any more. */
   function recover(run, now = Date.now()) {
     if (!run || typeof run !== 'object' || !Array.isArray(run.items)) return null;
@@ -430,7 +459,7 @@
   const api = {
     MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, ITEM_STATUSES, RUN_STATUSES, REASONS, FORMATS,
     capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, prepare,
-    createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover,
+    createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
     summarize, build, fileName
   };
   root.BulkScan = api;

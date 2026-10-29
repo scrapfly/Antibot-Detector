@@ -55,7 +55,7 @@
     'WEBHOOK_RETRY',            // Recent deliveries → Retry: send a failed delivery again now ({ id })
     'COOKIE_TIMELINE_GET',      // Advanced → Check Cookies: the protection cookie timeline of a page's site ({ url })
     // Bulk scan (sections/bulk/): the run lives in the worker, the page starts and steers it (extension pages only)
-    'BULK_SCAN_START',          // { entries, timeoutSec, cap }: a new run of these addresses
+    'BULK_SCAN_START',          // { entries, timeoutSec, cap, continueRun? }: a new run of these addresses (continueRun: the stopped run goes on)
     'BULK_SCAN_PAUSE',          // finish the page being scanned, then wait
     'BULK_SCAN_RESUME',
     'BULK_SCAN_STOP',           // close the scan tab now; the pages not scanned stay waiting

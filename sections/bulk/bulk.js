@@ -150,7 +150,7 @@
     return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback;
   }
 
-  async function start(entriesOverride) {
+  async function start(entriesOverride, extra = {}) {
     if (state.starting || BulkScan.isActive(state.run)) return;
     const cap = numberField('bulkCap', 1, BulkScan.MAX_URLS, BulkScan.MAX_URLS);
     const timeoutSec = numberField('bulkTimeout', BulkScan.TIMEOUT_S.min, BulkScan.TIMEOUT_S.max, BulkScan.TIMEOUT_S.default);
@@ -161,7 +161,7 @@
     try {
       const entries = entriesOverride || await entriesOf(byId('bulkInput').value, cap);
       if (!entries.length) { notice(tr('bulkNothingToScan', 'There is no address to scan in this list.'), 'warn'); return; }
-      const response = await send(M.BULK_SCAN_START, { entries, cap, timeoutSec });
+      const response = await send(M.BULK_SCAN_START, { entries, cap, timeoutSec, ...extra });
       if (response.run) state.run = response.run;
       if (response.status !== 'ok') {
         const errors = {
@@ -401,7 +401,8 @@
     });
     byId('bulkWaitingBtn').addEventListener('click', () => {
       if (!state.run) return;
-      start(state.run.items.filter(item => item.status === 'waiting').map(item => item.url));
+      // The pages already finished stay in the table and the exports: the worker carries them into the new run
+      start(state.run.items.filter(item => item.status === 'waiting').map(item => item.url), { continueRun: true });
     });
     byId('bulkExportCsvBtn').addEventListener('click', () => exportRun('csv'));
     byId('bulkExportJsonBtn').addEventListener('click', () => exportRun('json'));
