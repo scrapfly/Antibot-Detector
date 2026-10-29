@@ -44,12 +44,13 @@
   const looksLikeAddress = (cell) => /^[a-z][a-z0-9+.-]*:/i.test(cell) || /^[^\s/:?#]+\.[^\s/:?#]+(:\d+)?([/?#]|$)/.test(cell);
 
   /**
-   * A row's cells: commas, semicolons and tabs separate them, except inside double quotes (a CSV quotes a cell that
-   * holds a comma, and Bulk scan's own export does).
+   * Reads one line the way a CSV does: commas, semicolons and tabs separate cells, except inside double quotes (a CSV
+   * quotes a cell that holds a comma, and Bulk scan's own export does). `open` says a quoted cell is still open at the
+   * end of the line (it goes on in the next one).
    * @param {string} line
-   * @returns {string[]}
+   * @returns {{cells: string[], open: boolean}}
    */
-  function cellsOf(line) {
+  function scanLine(line) {
     const cells = [];
     let cell = '';
     let quoted = false;
@@ -65,7 +66,23 @@
       cell += ch;
     }
     cells.push(cell);
-    return cells.map(unquote);
+    return { cells: cells.map(unquote), open: quoted };
+  }
+  const cellsOf = (line) => scanLine(line).cells;
+
+  // A quoted cell may hold a line break (a spreadsheet name or note): its lines are one row. A quote that is never
+  // closed within a few lines is not a quoted cell, so a stray quote cannot swallow the list below it
+  const MAX_QUOTED_LINES = 4;
+  function logicalLines(text) {
+    const raw = String(text || '').replace(/^\uFEFF/, '').split(/\r\n|\r|\n/);
+    const out = [];
+    for (let i = 0; i < raw.length; i++) {
+      let joined = raw[i];
+      let last = i;
+      while (scanLine(joined).open && last + 1 < raw.length && last - i < MAX_QUOTED_LINES - 1) joined += ` ${raw[++last]}`;
+      if (last > i && !scanLine(joined).open) { out.push(joined); i = last; } else out.push(raw[i]);
+    }
+    return out;
   }
 
   /**
@@ -104,8 +121,7 @@
    * @returns {string[]}
    */
   function linesOf(text) {
-    const lines = String(text || '').replace(/^\uFEFF/, '').split(/\r\n|\r|\n/)
-      .map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
+    const lines = logicalLines(text).map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
     const table = lines.some(line => line.includes('\t'))
       || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); });
     const out = [];

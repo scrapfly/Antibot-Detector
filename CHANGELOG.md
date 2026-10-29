@@ -23,7 +23,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: Save refuses an invalid regex in a payload pattern's URL pattern.
 - Settings → Restore: rules of a backup that this version cannot take are named instead of dropped without a word.
 - Settings: a webhook address saved by an older version no longer blocks an unrelated Save, an import or a restore.
-- Bulk scan: quoted cells with commas (as its own CSV export writes them) and several addresses on one line are read right; commas inside an address (a Wikipedia title, ?ids=1,2,3) are kept.
+- Bulk scan: quoted cells with commas or line breaks (as spreadsheets and its own CSV export write them) and several addresses on one line are read right; commas inside an address (a Wikipedia title, ?ids=1,2,3) are kept.
 - Bulk scan: a page an address redirects to is always scanned in full, even when a result for it is cached.
 - Watchlist: a check that lands on a skipped site is reported as skipped at once, not as failed after 45 seconds.
 - Detection: a page you stay on after a download, a cancelled load or Back keeps its requests as evidence, and so does a prerendered page just shown.

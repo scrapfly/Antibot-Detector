@@ -24,6 +24,14 @@ test('several addresses on one line are all scanned; a comma inside an address i
   assert.deepEqual(BulkScan.linesOf('https://a.example/,Shop A\nhttps://b.example/,Shop B'), ['https://a.example/', 'https://b.example/'], 'a table without a header');
 });
 
+test('a quoted cell may hold a line break: its lines are one row, and a stray quote cannot swallow the list below it', () => {
+  assert.deepEqual(BulkScan.linesOf('https://a.example/,"Acme\nwww.acme.example, Inc"'), ['https://a.example/'], 'the note\'s second line is not a page');
+  assert.deepEqual(BulkScan.linesOf('"Shop\nName",https://a.example/\n"Other",https://b.example/'), ['https://a.example/', 'https://b.example/']);
+  assert.deepEqual(BulkScan.linesOf('"https://a.example/x\nhttps://b.example/y\nhttps://c.example/z'), ['https://a.example/x', 'https://b.example/y', 'https://c.example/z'], 'a quote never closed');
+  assert.deepEqual(BulkScan.linesOf('"https://a.example/x"\nhttps://b.example/y'), ['https://a.example/x', 'https://b.example/y']);
+  assert.deepEqual(BulkScan.linesOf('url,note\nhttps://a.example/,"line one\nline two"\nhttps://b.example/,plain'), ['https://a.example/', 'https://b.example/'], 'in a table too');
+});
+
 test('a list is read by explicit rules: a comma ends an address after a host, after a "/", before another address or before a note with a space', () => {
   const cases = [
     // a CSV with a header: commas separate cells, whatever the address holds
