@@ -134,6 +134,28 @@ test('a detector the scan did not find is added from a late request', async () =
   assert.ok(out.cache.find(d => d.detector.id === cheq.id).confidence < 100);
 });
 
+/** The evidence the engine finds in one late request, as the batch check builds it */
+async function evidenceFor(url, type) {
+  const late = await worker.detectionEngine.detectOnPage({ networkUrls: [{ url, type, method: 'GET' }] }, { includePartial: true });
+  return (Array.isArray(late) ? late : [])
+    .map(d => ({ ...d, matches: (d.matches || []).filter(m => m.type === 'url' && m.fullUrl === url), detectionMethods: ['url'] }))
+    .filter(d => d.matches.length);
+}
+
+test('two late additions at the same time keep both: the later write does not overwrite the earlier one\'s evidence', async () => {
+  await scanned();
+  const proof = await evidenceFor(PROOF, 'xmlhttprequest');
+  const jsd = await evidenceFor('https://shop.test/cdn-cgi/challenge-platform/scripts/jsd/main.js', 'script');
+  assert.ok(proof.length && jsd.length, 'both requests match a URL rule');
+  // Late responses and the one-second request batch can run together: each reads the stored result, adds its own and writes
+  await Promise.all([
+    worker.addLateEvidence(1, PAGE, '', proof, () => true, 'requests'),
+    worker.addLateEvidence(1, PAGE, '', jsd, () => true, 'responses')
+  ]);
+  assert.deepEqual(out.cache.map(d => d.detector.id).sort(), [cheq.id, cloudflare.id].sort(), 'Cloudflare is there, CHEQ is there');
+  assert.equal(out.cache.find(d => d.detector.id === cheq.id).confidence, 100, 'and CHEQ kept its proof');
+});
+
 test('a request after a navigation never touches the old page', async () => {
   await scanned();
   navigate('https://other.test/');

@@ -28,6 +28,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Bulk scan: Scan the pages still waiting keeps the pages already finished in the table and the exports, instead of starting a new list.
 - Watchlist: a check that lands on a skipped site is reported as skipped at once, not as failed after 45 seconds.
 - Detection: a page you stay on after a download, a cancelled load or Back keeps its requests as evidence, and so does a prerendered page just shown.
+- Detection: protections found after a scan by late responses and by late requests at the same time no longer overwrite each other (CHEQ's proof upgrade could be lost).
 - Webhook: a page title with a dash or non-Latin letters in a header no longer fails every delivery; a retry claimed by a worker that then stops is no longer lost.
 - Advanced: reCAPTCHA's 60-second auto-stop, or a Stop pressed while it saves, no longer saves the captured requests twice.
 
