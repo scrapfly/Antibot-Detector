@@ -1,6 +1,6 @@
 {
   "name": "scrapfly-extension",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "private": true,
   "description": "Scrapfly MV3 extension — verification scripts (no build step, no runtime dependencies).",
   "scripts": {

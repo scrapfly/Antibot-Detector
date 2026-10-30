@@ -5,6 +5,8 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.0.9] - 2026-10-30
+
 ## [3.0.8] - 2026-10-29
 
 ### Changed
