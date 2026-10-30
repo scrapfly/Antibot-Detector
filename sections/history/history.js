@@ -596,22 +596,6 @@ class History {
             toggle();
           }
         });
-
-        // The matched detections stay folded under their title until it is clicked
-        const matchTitle = card.querySelector('.history-modal-match-count');
-        if (matchTitle) {
-          const toggleMatches = () => {
-            methods.hidden = !methods.hidden;
-            matchTitle.setAttribute('aria-expanded', String(!methods.hidden));
-          };
-          matchTitle.addEventListener('click', toggleMatches);
-          matchTitle.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              toggleMatches();
-            }
-          });
-        }
       }
     });
   }
@@ -1350,8 +1334,8 @@ class History {
           ${hasMethods ? `
             <div class="history-modal-detection-details">
               ${combinationsHtml}
-              <div class="history-modal-match-count" role="button" tabindex="0" aria-expanded="false">${FormatUtils.escapeHtml(_tr('historyMatchedDetections', 'Matched detections'))}<svg class="history-modal-match-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
-              <div class="history-modal-detection-methods" hidden>
+              <div class="history-modal-match-count">${FormatUtils.escapeHtml(_tr('historyMatchedDetections', 'Matched detections'))}</div>
+              <div class="history-modal-detection-methods">
                 ${methodsHtml}
               </div>
             </div>
@@ -1553,10 +1537,13 @@ class History {
       const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
 
       return `
-        <div class="history-modal-method-item" data-copy-payload="${encodeURIComponent(copyPayload)}" title="${clickToCopy}">
-          <span class="history-modal-method-badge" style="${badgeStyle}">${methodLabel}</span>
-          <span class="history-modal-method-value">${safeDisplayValue}</span>
-          ${FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence')}
+        <div class="history-modal-method-item is-folded" data-copy-payload="${encodeURIComponent(copyPayload)}">
+          <button type="button" class="history-modal-method-head" aria-expanded="false">
+            <span class="history-modal-method-badge" style="${badgeStyle}">${methodLabel}</span>
+            ${FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence')}
+            <svg class="history-modal-method-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <span class="history-modal-method-value" title="${clickToCopy}">${safeDisplayValue}</span>
         </div>
       `;
     }).join('');
@@ -1651,7 +1638,15 @@ class History {
         setTimeout(() => item.classList.remove('copy-feedback'), 800);
       };
 
-      item.addEventListener('click', handleCopy);
+      // The row's head shows or hides the value; the value copies it
+      const head = item.querySelector('.history-modal-method-head');
+      if (head) {
+        head.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const folded = item.classList.toggle('is-folded');
+          head.setAttribute('aria-expanded', String(!folded));
+        });
+      }
       const valueNode = item.querySelector('.history-modal-method-value');
       if (valueNode) {
         valueNode.addEventListener('click', handleCopy);

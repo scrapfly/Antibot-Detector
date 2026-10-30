@@ -272,38 +272,41 @@ async function scenario(name, fn) {
 
   // ===============================================================================================
   // ===============================================================================================
-  await scenario('Detection details: the detection methods stay folded under their title until it is clicked, and fold again when the modal reopens', async () => {
+  await scenario('Detection details: the methods are listed, each row folded to its type and score until it is clicked; the value copies', async () => {
     const page = await openExtensionPage();
     await page.$eval('.tab-btn[data-tab="detection"]', el => el.click());
     await page.waitForSelector('#copyOverviewBtn', { state: 'attached', timeout: 15000 });
     // The popup also scans its own tab and clears the results when that ends: set them and open in the same turn
-    const open = () => page.evaluate(() => {
+    await page.evaluate(() => {
+      globalThis.__copied = [];
+      FormatUtils.copyToClipboard = async (text) => { globalThis.__copied.push(text); return true; };
       window.popupInstance.detection.currentResults = [{ detector: { name: 'QuickWin Probe' }, category: 'Anti-Bot', confidence: 90,
-        matches: [{ type: 'cookie', pattern: 'qw_session', value: 'qw_session=x' }, { type: 'content', pattern: 'quickwin-marker-bot', value: 'quickwin-marker-bot' }] }];
+        matches: [{ type: 'content', pattern: 'quickwin-marker-bot', value: 'quickwin-marker-bot', confidence: 20 }, { type: 'cookie', pattern: 'qw_session', value: 'qw_session=x', confidence: 100 }] }];
       window.popupInstance.detection.openDetectionModal(0);
     });
-    const state = () => page.evaluate(() => {
-      const list = document.querySelector('#detectionModalMethods');
-      return { listShown: list.offsetParent !== null, items: list.children.length, header: document.querySelector('#detectionModalMethodsHeader').getAttribute('aria-expanded'),
-        titleShown: document.querySelector('#detectionModalMethodsHeader').offsetParent !== null };
-    });
-    await open();
-    await page.waitForSelector('#detectionModalMethodsHeader', { state: 'visible' });
-    let now = await state();
-    assert.deepEqual({ titleShown: now.titleShown, listShown: now.listShown, header: now.header }, { titleShown: true, listShown: false, header: 'false' }, 'folded when the modal opens');
-    assert.ok(now.items >= 2, 'the methods are rendered, only hidden');
-    await page.$eval('#detectionModalMethodsHeader', el => el.click());
-    now = await state();
-    assert.deepEqual({ listShown: now.listShown, header: now.header }, { listShown: true, header: 'true' }, 'a click shows them');
-    await page.focus('#detectionModalMethodsHeader');
+    await page.waitForSelector('#detectionModalMethods .method-item-card', { state: 'visible' });
+    const rows = () => page.$$eval('#detectionModalMethods .method-item-card', cards => cards.map(card => ({
+      head: card.querySelector('.method-fold-head').offsetParent !== null,
+      score: !!card.querySelector('.method-fold-head .method-confidence'),
+      value: card.querySelector('.method-value-btn').offsetParent !== null,
+      expanded: card.querySelector('.method-fold-head').getAttribute('aria-expanded')
+    })));
+    assert.equal(await page.$eval('#detectionModalMethods', el => el.offsetParent !== null), true, 'the section itself is shown');
+    assert.deepEqual(await rows(), [{ head: true, score: true, value: false, expanded: 'false' }, { head: true, score: true, value: false, expanded: 'false' }], 'every row is folded');
+    await page.$$eval('#detectionModalMethods .method-fold-head', heads => heads[0].click());
+    assert.deepEqual((await rows()).map(r => [r.value, r.expanded]), [[true, 'true'], [false, 'false']], 'a click on a head shows that row only');
+    await page.$eval('#detectionModalMethods .copyable-value', el => el.click());
+    await until(async () => (await page.evaluate(() => globalThis.__copied)).includes('quickwin-marker-bot'), 5000, 'the value copy');
+    assert.equal((await rows())[0].value, true, 'copying leaves the row open');
+    await page.focus('#detectionModalMethods .method-fold-head');
     await page.keyboard.press('Enter');
-    assert.equal((await state()).listShown, false, 'Enter folds them again');
+    assert.deepEqual((await rows()).map(r => r.value), [false, false], 'Enter on the head folds it again');
     await page.keyboard.press(' ');
-    assert.equal((await state()).listShown, true, 'and Space shows them');
+    assert.equal((await rows())[0].value, true, 'and Space shows it');
     await page.$eval('#closeDetectionModal', el => el.click());
-    await open();
-    await page.waitForSelector('#detectionModalMethodsHeader', { state: 'visible' });
-    assert.equal((await state()).listShown, false, 'folded again on the next open');
+    await page.evaluate(() => window.popupInstance.detection.openDetectionModal(0));
+    await page.waitForSelector('#detectionModalMethods .method-item-card', { state: 'visible' });
+    assert.deepEqual((await rows()).map(r => r.value), [false, false], 'folded again on the next open');
     await page.close();
   });
 

@@ -1522,13 +1522,17 @@ DetectionUI.getMethodBadges = function(matches) {
       const copyText = DetectionUI.copyLabelText('value', copyValue);
       const copyable = copyValue && copyValue !== unknownValue;
 
+      // The row shows the type and the score; its value stays folded until the row is clicked
       return `
-        <div class="method-item-card method-${methodClass}" data-method-type="${methodType}">
-          <span class="method-type-badge" ${badgeStyle}>${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(matchType || 'unknown'))}</span>
+        <div class="method-item-card method-${methodClass} is-folded" data-method-type="${methodType}">
+          <button type="button" class="method-fold-head" aria-expanded="false">
+            <span class="method-type-badge" ${badgeStyle}>${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(matchType || 'unknown'))}</span>
+            ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
+            <svg class="method-fold-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
           ${copyable
             ? `<button type="button" class="method-value-btn copyable-value" dir="ltr" data-copy-value="${FormatUtils.escapeAttr(copyValue)}" data-copy-label="value" title="${FormatUtils.escapeAttr(copyText.withValue)}" aria-label="${FormatUtils.escapeAttr(copyText.action)}">${safeDisplayValue}</button>`
             : `<span class="method-value-btn" dir="ltr">${safeDisplayValue}</span>`}
-          ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
         </div>
       `;
     });

@@ -687,31 +687,37 @@ async function scenario(name, fn) {
     } finally { await page.close(); }
   });
 
-  await scenario('History details: an opened detection lists its matched detections folded until their title is clicked', async () => {
+  await scenario('History details: an opened detection lists its matched detections, each row folded to its type and score until it is clicked', async () => {
     const now = Date.now();
     await setHistory([
       { id: 'm1', url: 'https://match.example/', hostname: 'match.example', title: 'Match', timestamp: now, detections: [{ detector: { name: 'Cloudflare' }, category: 'Anti-Bot', confidence: 95, difficulty: 'Medium',
-        matches: [{ type: 'url', pattern: 'challenge-platform', confidence: 60 }, { type: 'cookie', pattern: 'cf_clearance', confidence: 90 }] }] }
+        matches: [{ type: 'url', pattern: 'challenge-platform', confidence: 60 }, { type: 'cookie', pattern: 'cf_clearance', value: 'cf_clearance=abc', confidence: 90 }] }] }
     ]);
     const page = await openExtensionPage();
     try {
       await page.$eval('#nav-history', el => el.click());
       await page.waitForSelector('.history-item');
-      await page.evaluate(() => window.popupInstance.history.showHistoryItemDetails(window.popupInstance.history.historyItems[0]));
+      await page.evaluate(() => {
+        globalThis.__copied = [];
+        FormatUtils.copyToClipboard = async (text) => { globalThis.__copied.push(text); return true; };
+        window.popupInstance.history.showHistoryItemDetails(window.popupInstance.history.historyItems[0]);
+      });
       await page.waitForSelector('#historyModalContent .history-modal-detection-card.has-methods');
-      const visible = (selector) => page.$eval(selector, el => el.offsetParent !== null);
-      const list = '#historyModalContent .history-modal-detection-methods';
-      const title = '#historyModalContent .history-modal-match-count';
       await page.$eval('#historyModalContent .history-modal-detection-header', el => el.click());
-      assert.equal(await visible(title), true, 'the title shows once the detection is opened');
-      assert.equal(await visible(list), false, 'the matched detections are folded by default');
-      assert.equal(await page.$eval(title, el => el.getAttribute('aria-expanded')), 'false');
-      await page.$eval(title, el => el.click());
-      assert.equal(await visible(list), true, 'a click on the title shows them');
-      assert.equal(await page.$$eval(`${list} > *`, els => els.length) >= 2, true, 'every match is listed');
-      assert.equal(await page.$eval(title, el => el.getAttribute('aria-expanded')), 'true');
-      await page.$eval(title, el => el.click());
-      assert.equal(await visible(list), false, 'and another folds them again');
+      const rows = () => page.$$eval('#historyModalContent .history-modal-method-item', items => items.map(item => ({
+        head: item.querySelector('.history-modal-method-head').offsetParent !== null,
+        value: item.querySelector('.history-modal-method-value').offsetParent !== null,
+        expanded: item.querySelector('.history-modal-method-head').getAttribute('aria-expanded')
+      })));
+      assert.equal(await page.$eval('#historyModalContent .history-modal-match-count', el => el.offsetParent !== null), true, 'the section title is shown');
+      assert.deepEqual(await rows(), [{ head: true, value: false, expanded: 'false' }, { head: true, value: false, expanded: 'false' }], 'every row is folded');
+      await page.$$eval('#historyModalContent .history-modal-method-head', heads => heads[1].click());
+      assert.deepEqual((await rows()).map(r => [r.value, r.expanded]), [[false, 'false'], [true, 'true']], 'a click on a head shows that row only');
+      await page.$$eval('#historyModalContent .history-modal-method-value', values => values[1].click());
+      await page.waitForFunction(() => globalThis.__copied.length === 1, null, { polling: 100, timeout: 5000 });
+      assert.match(await page.evaluate(() => globalThis.__copied[0]), /cf_clearance=abc/, 'the value copies');
+      await page.$$eval('#historyModalContent .history-modal-method-head', heads => heads[1].click());
+      assert.deepEqual((await rows()).map(r => r.value), [false, false], 'another click folds it again');
     } finally { await page.close(); }
   });
 

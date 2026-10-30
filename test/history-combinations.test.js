@@ -86,6 +86,5 @@ test('an entry saved before checklists says so once, and lists names and scores'
   const html = historyWith(context, { 'detect-recaptcha': definition }).renderDetectionDetails(stored);
   assert.strictEqual((html.match(/saved before conditions were kept/g) || []).length, 1);
   for (const name of ['First', 'Second', 'Third']) assert.ok(html.includes(name), name);
-  assert.match(html, /class="history-modal-match-count"[^>]*aria-expanded="false">Matched detections</);
-  assert.match(html, /class="history-modal-detection-methods" hidden>/, 'the matched detections start folded');
+  assert.match(html, /class="history-modal-match-count">Matched detections</);
 });

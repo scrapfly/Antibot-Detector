@@ -929,10 +929,6 @@
   text-decoration: none !important;
 }
 
-#detectionModalMethods[hidden] {
-  display: none;
-}
-
 #detectionModalMethods {
   display: flex;
   flex-direction: column;
@@ -1165,27 +1161,6 @@
   background: var(--border);
 }
 
-/* The methods' title folds them: click it to show the list */
-.detection-modal-section--methods .detection-modal-section-header[role="button"] {
-  cursor: pointer;
-}
-
-.detection-modal-section--methods .detection-modal-section-header[role="button"]:hover h4,
-.detection-modal-section--methods .detection-modal-section-header[role="button"]:focus-visible h4 {
-  color: var(--text-primary);
-}
-
-.detection-modal-section-chevron {
-  order: 1;
-  flex-shrink: 0;
-  color: var(--accent-light);
-  transition: transform 0.2s ease;
-}
-
-.detection-modal-section-header[aria-expanded="true"] .detection-modal-section-chevron {
-  transform: rotate(180deg);
-}
-
 .detection-modal-methods-list {
   display: flex;
   flex-direction: column;
@@ -1229,10 +1204,10 @@
   display: grid;
   justify-content: stretch;
   margin: 0;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "chip pill"
-    "value value";
+    "head"
+    "value";
   align-items: center;
   gap: 6px;
   padding: 6px 7px 7px;
@@ -1241,6 +1216,57 @@
   border-radius: 7px;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* The row's head: type chip, score and a chevron; it is the button that shows or hides the value */
+.method-fold-head {
+  grid-area: head;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 5px;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.method-fold-head:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.method-fold-head .method-type-badge {
+  margin-inline-end: auto;
+}
+
+.method-fold-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.method-fold-head:hover .method-fold-chevron,
+.method-fold-head:focus-visible .method-fold-chevron {
+  color: var(--accent-light);
+}
+
+.method-fold-head[aria-expanded="true"] .method-fold-chevron {
+  transform: rotate(180deg);
+}
+
+.method-item-card.is-folded > .method-value-btn {
+  display: none;
+}
+
+/* Without its value row, no empty row (and its gap) is left under the head */
+.detection-modal-methods-list .method-item-card.is-folded {
+  grid-template-areas: "head";
 }
 
 .method-type-badge {

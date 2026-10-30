@@ -1214,37 +1214,14 @@
   gap: 5px;
 }
 
-.history-modal-detection-methods[hidden] {
-  display: none;
-}
-
-/* The matched detections' title folds them: click it to show the list */
-.history-modal-match-count[role="button"] {
-  cursor: pointer;
-}
-
-.history-modal-match-count[role="button"]:hover,
-.history-modal-match-count[role="button"]:focus-visible {
-  color: var(--text-primary);
-}
-
-.history-modal-match-chevron {
-  order: 1;
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.history-modal-match-count[aria-expanded="true"] .history-modal-match-chevron {
-  transform: rotate(180deg);
-}
 
 /* Method row: chip and confidence on top, the value full width below */
 .history-modal-method-item {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "chip pill"
-    "value value";
+    "head"
+    "value";
   align-items: center;
   gap: 5px;
   padding: 6px 7px 7px;
@@ -1252,9 +1229,59 @@
   border: 1px solid var(--g-3d3d3d);
   border-radius: 7px;
   transition: border-color 0.15s ease, background 0.15s ease;
-  cursor: pointer;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* The row's head (type chip, score, chevron) shows or hides the value; the value copies it */
+.history-modal-method-head {
+  grid-area: head;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 5px;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.history-modal-method-head:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.history-modal-method-head .history-modal-method-badge {
+  margin-inline-end: auto;
+}
+
+.history-modal-method-chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.history-modal-method-head:hover .history-modal-method-chevron,
+.history-modal-method-head:focus-visible .history-modal-method-chevron {
+  color: var(--accent-light);
+}
+
+.history-modal-method-head[aria-expanded="true"] .history-modal-method-chevron {
+  transform: rotate(180deg);
+}
+
+.history-modal-method-item.is-folded > .history-modal-method-value {
+  display: none;
+}
+
+/* Without its value row, no empty row (and its gap) is left under the head */
+.history-modal-method-item.is-folded {
+  grid-template-areas: "head";
 }
 
 .history-modal-method-item:hover {
@@ -1279,6 +1306,7 @@
 }
 
 .history-modal-method-value {
+  cursor: pointer;
   grid-area: value;
   min-width: 0;
   max-width: 100%;
