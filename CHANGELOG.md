@@ -7,6 +7,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.0.9] - 2026-10-30
 
+### Fixed
+
+- Anubis and PerimeterX (_pxhd) cookies are recognised again: their value rules needed more than the 100 characters the extension reads of a cookie.
+- Detection: a cookie rule that checks a value now looks at every cookie of that name, not only the first one.
+- Detection: a site on another port (localhost:3000 and localhost:8080) no longer shares a cached result with the first one.
+- Detection: a cached "match or not" answer can no longer be served to a different text or pattern.
+
 ## [3.0.8] - 2026-10-29
 
 ### Changed

@@ -342,3 +342,49 @@ test('detect-yundun: the captcha page a blocked visitor is shown is identified, 
   const noCookie = detect(d, pageFor(d, ['bs-captcha-path', 'server-waf-header']));
   assert.ok(!noCookie.detected || noCookie.confidence < 80, `the path with a generic header scores ${noCookie.confidence}`);
 });
+
+
+// Both collectors cut a cookie value to COOKIE_VALUE_MAX_LENGTH (100) before any rule sees it: a value rule that needs
+// more than that never matched a real cookie (the JWT's second dot of Anubis' token, the colon of _pxhd past character 91)
+test('cookie value rules still match a real, long value after the collectors cut it to 100 characters', () => {
+  const cut = (value) => value.substring(0, 100);
+  const anubis = definitions['detect-anubis'];
+  const jwt = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.' + 'eyJjaGFsbGVuZ2UiOiIwMTIzNDU2Nzg5YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZiIsIm5vbmNlIjoxMjM0NSwiaWF0IjoxNzYxODIwMDAwfQ'.repeat(2) + '.c2lnbmF0dXJl';
+  assert.ok(jwt.length > 150 && jwt.indexOf('.', 40) > 100, 'a token whose second dot is past the cut');
+  const anubisPage = pageFor(anubis, ['anubis-auth-cookie']).page;
+  anubisPage.allCookies = [{ name: 'techaro.lol-anubis-auth', value: cut(jwt) }];
+  assert.equal(detect(anubis, { page: anubisPage }).confidence, 100, 'Anubis auth cookie, cut');
+  const notJwt = pageFor(anubis, ['anubis-auth-cookie']).page;
+  notJwt.allCookies = [{ name: 'techaro.lol-anubis-auth', value: 'eyJhbGciOiJFZERTQSJ9.sample.jwt' }];
+  assert.ok(!detect(anubis, { page: notJwt }).detected || detect(anubis, { page: notJwt }).confidence < 100, 'a payload that is not JSON is not the token');
+  const px = definitions['detect-perimeterx'];
+  const base64 = (n) => 'A1b2C3d4'.repeat(Math.ceil(n / 8)).slice(0, n);
+  for (const first of [70, 95, 110, 120]) {
+    const page = pageFor(px, ['pxhd-cookie']).page;
+    page.allCookies = [{ name: '_pxhd', value: cut(`${base64(first)}:${base64(24)}`) }];
+    assert.ok(detect(px, { page }).detected, `_pxhd with a ${first}-character first part, cut`);
+  }
+  const shortValue = pageFor(px, ['pxhd-cookie']).page;
+  shortValue.allCookies = [{ name: '_pxhd', value: base64(30) }];
+  assert.ok(!detect(px, { page: shortValue }).detected, 'a short value is not _pxhd');
+});
+
+
+test('a cookie value rule is tested against every cookie of that name, and the one that matched is the one reported', () => {
+  // The same name from two domains or paths (chrome.cookies.getAll returns both): the order must not decide
+  const detector = { id: 'detect-test-dup', name: 'Dup', category: 'antibot', version: '2.0.0', enabled: true, minExtensionVersion: '2.8',
+    detection: { cookie: [{ id: 'abck', name: '^_abck$', nameRegex: true, value: '~0~', confidence: 80, nameScope: 'request', valueScope: 'request' }] } };
+  const run = (cookies) => {
+    const engine = new Engine();
+    engine.setDetectors({ antibot: { [detector.id]: detector } });
+    return engine.runDetector(detector, { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: cookies, responseCookies: [], networkUrls: [], payloads: [], responses: [] });
+  };
+  const bad = { name: '_abck', value: 'abc~-1~def', domain: '.example.test' };
+  const good = { name: '_abck', value: 'abc~0~def', domain: 'www.example.test' };
+  for (const order of [[bad, good], [good, bad]]) {
+    const result = run(order);
+    assert.ok(result.detected, 'found, whichever comes first');
+    assert.deepEqual([...new Set(result.matches.map(m => m.value))], ['_abck=abc~0~def'], 'the cookie that matched is the evidence');
+  }
+  assert.ok(!run([bad]).detected, 'a value that does not match is still not found');
+});

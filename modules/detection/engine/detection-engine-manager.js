@@ -812,11 +812,13 @@ class DetectionEngineManager {
             : [...cookies, ...(responseCookies || [])];
         // IMPORTANT: We do not treat localStorage/sessionStorage entries as cookies.
 
-            // Pre-build Maps for O(1) value lookup by name
+            // Pre-build Maps for O(1) value lookup by name: every cookie of a name (the same name can come from several
+            // domains or paths, and from the request and the response), not only the first
             const buildCookieMap = (cookieArray) => {
                 const map = new Map();
                 for (const c of cookieArray) {
-                    if (!map.has(c.name)) map.set(c.name, c);
+                    if (!map.has(c.name)) map.set(c.name, []);
+                    map.get(c.name).push(c);
                 }
                 return map;
             };
@@ -869,11 +871,14 @@ class DetectionEngineManager {
                         const matched = this.matchCookieName(cookie.name, cookiePattern.name, nameMatchOptions);
 
                         if (matched) {
-                            // If value pattern specified, use Map for O(1) lookup
+                            // If value pattern specified, use Map for O(1) lookup: the value of any cookie of that name
                             if (cookiePattern.value) {
-                                const cookieInValueScope = valueMap.get(cookie.name);
-                                if (cookieInValueScope) {
-                                    return this.matchPattern(cookieInValueScope.value || '', cookiePattern.value, valueMatchOptions);
+                                // The same source for name and value: the value of this very cookie (so a duplicate that does not match
+                                // is not the one reported)
+                                if (valueScope === nameScope) return this.matchPattern(cookie.value || '', cookiePattern.value, valueMatchOptions);
+                                const cookiesInValueScope = valueMap.get(cookie.name);
+                                if (cookiesInValueScope) {
+                                    return cookiesInValueScope.some(c => this.matchPattern(c.value || '', cookiePattern.value, valueMatchOptions));
                                 }
                                 return false;
                             }
@@ -1630,7 +1635,8 @@ class DetectionEngineManager {
                     continue;
                 }
                 const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
-                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname) && sameHooks(stored) && !hidden(stored)) {
+                // The same site, so also the same port (www and the bare host share a result, localhost:3000 and :8080 do not)
+                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname) && UrlUtils.portOf(url) === UrlUtils.portOf(stored.url) && sameHooks(stored) && !hidden(stored)) {
                     if (!hostnameFallback ||
                         getStoredDetectionCount(stored) > getStoredDetectionCount(hostnameFallback) ||
                         (getStoredDetectionCount(stored) === getStoredDetectionCount(hostnameFallback) && stored.timestamp > hostnameFallback.timestamp)) {

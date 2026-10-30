@@ -124,12 +124,13 @@ class UrlUtils {
           break;
 
         case 'path':
-          normalizedUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.pathname}`;
+          // host, not hostname: a port that is not the scheme's own is another site (localhost:3000, localhost:8080)
+          normalizedUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
           break;
 
         case 'domain':
         default:
-          normalizedUrl = `${urlObj.protocol}//${urlObj.hostname}`;
+          normalizedUrl = `${urlObj.protocol}//${urlObj.host}`;
           effectiveScope = 'domain';
           break;
       }
@@ -181,6 +182,11 @@ class UrlUtils {
       return '';
     }
     return hostname.toLowerCase().replace(/\.$/, '').trim();
+  }
+
+  /** The port a URL names, '' for none or the scheme's own (URL.port), and for anything that is not a URL. */
+  static portOf(url) {
+    try { return new URL(String(url || '')).port; } catch (e) { return ''; }
   }
 
   /**

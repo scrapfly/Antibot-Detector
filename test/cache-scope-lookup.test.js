@@ -85,3 +85,18 @@ test('a Bulk scan tab scans every page fresh; a watchlist check and any other ta
   assert.strictEqual(Engine.scansFresh(8), false, 'watchlist check (quiet)');
   assert.strictEqual(Engine.scansFresh(9), false, 'a person\'s tab');
 });
+
+test('a port that is not the scheme\'s own is another site: its own key, and no hostname fallback across ports', async () => {
+  const { UrlUtils } = engineWith('domain', {});
+  for (const scope of ['domain', 'path']) {
+    assert.notStrictEqual(UrlUtils.hashUrl('http://localhost:3000/app', scope), UrlUtils.hashUrl('http://localhost:8080/app', scope), `${scope}: two dev servers`);
+    assert.strictEqual(UrlUtils.hashUrl('https://a.example.com:443/x', scope), UrlUtils.hashUrl('https://a.example.com/x', scope), `${scope}: the scheme's own port is none`);
+  }
+  const storage = store(UrlUtils, [['http://localhost:3000/app', 'domain']]);
+  const { Engine } = engineWith('domain', storage);
+  assert.strictEqual((await Engine.getStoredDetection('http://localhost:3000/other')).url, 'http://localhost:3000/app', 'the same port: the site\'s result');
+  assert.strictEqual(await Engine.getStoredDetection('http://localhost:8080/app'), null, 'another port: a scan of its own, not the other server\'s result');
+  const www = store(UrlUtils, [['https://www.shop.example/', 'domain']]);
+  assert.ok(await engineWith('domain', www).Engine.getStoredDetection('https://shop.example/'), 'www and the bare host still share one result');
+});
+

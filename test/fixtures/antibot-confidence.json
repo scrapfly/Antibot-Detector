@@ -629,7 +629,7 @@
   "anubis-auth-cookie": {
    "cookie": [
     "techaro.lol-anubis-auth",
-    "eyJhbGciOiJFZERTQSJ9.sample.jwt"
+    "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhY3Rpb24iOiJBTExPVyJ9.c2lnbmF0dXJl"
    ]
   },
   "anubis-endpoint-resource": {

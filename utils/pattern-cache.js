@@ -18,6 +18,16 @@ function simpleHash(str) {
     return hash.toString(36); // Base36 for shorter keys
 }
 
+/** A second, unrelated 32-bit hash (FNV-1a): a text's cache key holds both, so one collision is not enough */
+function fnv1aHash(str) {
+    let hash = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        hash = Math.imul(hash, 0x01000193);
+    }
+    return (hash >>> 0).toString(36);
+}
+
 /**
  * A rough reading of a regex source for the ReDoS check: atoms with the characters they can start with and
  * their quantifier, groups with their branches. Anything it does not understand reads as "any character",
@@ -303,7 +313,9 @@ class PatternCache {
      * Generate cache key from pattern and options
      */
     getCacheKey(pattern, options = {}) {
-        return `${pattern}|${options.regex}|${options.wholeWord}|${options.caseSensitive}`;
+        // The pattern's length first: a pattern holding "|" cannot read as a shorter pattern and its options
+        const text = String(pattern);
+        return `${text.length}:${text}|${options.regex}|${options.wholeWord}|${options.caseSensitive}`;
     }
 
     /**
@@ -355,8 +367,9 @@ class PatternCache {
      */
     textKeyFor(text) {
         if (text.length > PatternCache.MATCH_CACHE_MAX_TEXT) return null;
-        // Hash full text instead of truncating (prevents collisions)
-        return text.length > 100 ? simpleHash(text) : text;
+        // A long text is keyed by its length and two hashes of all of it (not truncated); the leading control character
+        // keeps that key apart from a short text that happens to look like it
+        return text.length > 100 ? `\u0001${text.length}:${simpleHash(text)}.${fnv1aHash(text)}` : text;
     }
 
     /**
@@ -365,7 +378,7 @@ class PatternCache {
     getCachedMatch(text, pattern, options, textKey) {
         const textHash = textKey !== undefined ? textKey : this.textKeyFor(text);
         if (textHash === null) return { found: false };
-        const matchKey = `${textHash}|${this.getCacheKey(pattern, options)}`;
+        const matchKey = `${textHash === text ? 's' : 'h'}${textHash.length}:${textHash}|${this.getCacheKey(pattern, options)}`; // the kind of key and its length first: where the text ends is never a guess
 
         if (this.matchCache.has(matchKey)) {
             const cached = this.matchCache.get(matchKey);
@@ -384,7 +397,7 @@ class PatternCache {
     cacheMatch(text, pattern, options, result, textKey) {
         const textHash = textKey !== undefined ? textKey : this.textKeyFor(text);
         if (textHash === null) return;
-        const matchKey = `${textHash}|${this.getCacheKey(pattern, options)}`;
+        const matchKey = `${textHash === text ? 's' : 'h'}${textHash.length}:${textHash}|${this.getCacheKey(pattern, options)}`; // the kind of key and its length first: where the text ends is never a guess
         this.matchCache.set(matchKey, { result, timestamp: Date.now() });
         this.insertionOrder.push(matchKey);
         this.evictIfNeeded();
