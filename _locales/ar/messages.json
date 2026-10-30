@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "تم استيراد الكواشف، باستثناء: {0} (غير صالحة في هذا الإصدار)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "لم تُستبدل القواعد الرسمية المثبتة بالفعل: {0}"
+  },
   "detectorExportedFmt": {
     "message": "تم تصدير {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "يجب أن يكون حجم ملف الأيقونة أقل من 100 كيلوبايت"
+  },
+  "iconPickerNotAnImage": {
+    "message": "اختر ملف صورة (PNG أو JPEG أو GIF أو WebP أو SVG)"
   },
   "iconPickerNoResults": {
     "message": "لا توجد أيقونات مطابقة لبحثك"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "يجب أن تكون المراقبة متوقفة أو يومية أو أسبوعية"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "يحتوي أحد الإعدادات على قيمة لا تقدمها قائمته: {0}"
   },
   "toolbarTitleOff": {
     "message": "الكشف معطّل"

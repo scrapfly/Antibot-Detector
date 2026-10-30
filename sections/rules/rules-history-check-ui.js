@@ -18,8 +18,9 @@ Rules.prototype.runHistoryCheck = async function() {
   const combinations = this.buildCombinationsForSave(detection, { validate: false }).combinations || [];
   const nameInput = document.querySelector('#detectorNameInput');
   const rule = {
-    id: this.currentEditDetector.id || this.currentEditDetector.detectorId || '',
-    name: (nameInput && nameInput.value.trim()) || this.currentEditDetector.name || '',
+    // The rule's own id (what History saved its detections under): renaming it in the form must not make it another rule
+    id: this.currentEditDetector.detector?.id || this.currentEditDetector.detectorName || '',
+    name: (nameInput && nameInput.value.trim()) || this.currentEditDetector.detector?.name || '',
     detection,
     combinations
   };

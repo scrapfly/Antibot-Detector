@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "検出器をインポートしました（次を除く: {0}。このバージョンでは無効です）"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "インストール済みの公式ルールは置き換えられませんでした: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} をエクスポートしました"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "アイコンファイルは 100 KB 未満にしてください"
+  },
+  "iconPickerNotAnImage": {
+    "message": "画像ファイル（PNG、JPEG、GIF、WebP、SVG）を選択してください"
   },
   "iconPickerNoResults": {
     "message": "一致するアイコンがありません"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "設定に、その一覧にない値が含まれています: {0}"
   },
   "toolbarTitleOff": {
     "message": "検出はオフになっています"

@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "已导入检测器，以下除外：{0}（在此版本中无效）"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "已安装的官方规则未被替换：{0}"
+  },
   "detectorExportedFmt": {
     "message": "已导出 {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "图标文件必须小于 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "请选择图片文件（PNG、JPEG、GIF、WebP 或 SVG）"
   },
   "iconPickerNoResults": {
     "message": "没有匹配的图标"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "监视列表必须为关闭、每天或每周"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "某项设置的值不在其列表提供的选项中：{0}"
   },
   "toolbarTitleOff": {
     "message": "检测已关闭"

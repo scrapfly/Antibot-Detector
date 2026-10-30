@@ -18,8 +18,8 @@ Rules.prototype.liveTestRule = function() {
   const nameInput = document.querySelector('#detectorNameInput');
   const category = document.querySelector('#detectorCategorySelect');
   return {
-    id: (this.currentEditDetector && (this.currentEditDetector.id || this.currentEditDetector.detectorId)) || 'rule-test',
-    name: (nameInput && nameInput.value.trim()) || (this.currentEditDetector && this.currentEditDetector.name) || '',
+    id: (this.currentEditDetector && (this.currentEditDetector.detector?.id || this.currentEditDetector.detectorName)) || 'rule-test',
+    name: (nameInput && nameInput.value.trim()) || (this.currentEditDetector && this.currentEditDetector.detector?.name) || '',
     category: (category && category.value) || (this.currentEditDetector && this.currentEditDetector.category) || 'antibot',
     detection,
     combinations

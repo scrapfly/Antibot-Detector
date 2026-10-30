@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Đã nhập bộ phát hiện, trừ: {0} (không hợp lệ ở phiên bản này)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Các quy tắc chính thức đã cài đặt không bị thay thế: {0}"
+  },
   "detectorExportedFmt": {
     "message": "Đã xuất {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Tệp biểu tượng phải nhỏ hơn 100KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Chọn tệp hình ảnh (PNG, JPEG, GIF, WebP hoặc SVG)"
   },
   "iconPickerNoResults": {
     "message": "Không có biểu tượng nào khớp với tìm kiếm của bạn"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Chức năng theo dõi phải là tắt, hằng ngày hoặc hằng tuần"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Một cài đặt có giá trị mà danh sách của nó không cung cấp: {0}"
   },
   "toolbarTitleOff": {
     "message": "Đã tắt phát hiện"

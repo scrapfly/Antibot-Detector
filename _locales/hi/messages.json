@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "डिटेक्टर इंपोर्ट किए गए, इनके सिवा: {0} (इस संस्करण में मान्य नहीं)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "पहले से इंस्टॉल आधिकारिक नियम बदले नहीं गए: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} निर्यात किया गया"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "आइकन फ़ाइल 100 KB से छोटी होनी चाहिए"
+  },
+  "iconPickerNotAnImage": {
+    "message": "कोई इमेज फ़ाइल चुनें (PNG, JPEG, GIF, WebP या SVG)"
   },
   "iconPickerNoResults": {
     "message": "आपकी खोज से कोई आइकन मेल नहीं खाता"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "नज़र रखना बंद, रोज़ाना या साप्ताहिक होना चाहिए"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "किसी सेटिंग में ऐसा मान है जो उसकी सूची में नहीं है: {0}"
   },
   "toolbarTitleOff": {
     "message": "जांच बंद है"

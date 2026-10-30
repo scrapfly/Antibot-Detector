@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "탐지기를 가져왔습니다. 제외: {0} (이 버전에서는 유효하지 않음)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "이미 설치된 공식 규칙은 교체되지 않았습니다: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} 내보냄"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "아이콘 파일은 100KB 미만이어야 합니다"
+  },
+  "iconPickerNotAnImage": {
+    "message": "이미지 파일(PNG, JPEG, GIF, WebP 또는 SVG)을 선택하세요"
   },
   "iconPickerNoResults": {
     "message": "일치하는 아이콘이 없습니다"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "감시 목록은 끄기, 매일, 매주 중 하나여야 합니다"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "설정에 목록에 없는 값이 있습니다: {0}"
   },
   "toolbarTitleOff": {
     "message": "탐지가 꺼져 있습니다"

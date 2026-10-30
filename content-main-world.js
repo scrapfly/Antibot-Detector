@@ -177,7 +177,7 @@
       isNonNegativeNumber(p.BRIDGE_TOKEN.MAX_LENGTH) && typeof p.BRIDGE_TOKEN.PATTERN === 'string' &&
       !!p.LOG && !!p.LOG.LEVELS && !!p.LOG.SOURCES && !!p.LOG.PREFIXES &&
       !!p.MAIN_WORLD && typeof p.MAIN_WORLD.HOOKS_SCRIPT === 'string' && !!p.MAIN_WORLD.PATH_SEPARATOR &&
-      typeof p.MAIN_WORLD.PATH_SEPARATOR === 'string' && typeof p.MAIN_WORLD.BIND_SHIM_MARKER === 'string' &&
+      typeof p.MAIN_WORLD.PATH_SEPARATOR === 'string' &&
       typeof p.MAIN_WORLD.ILLEGAL_INVOCATION_FALLBACK === 'string' &&
       typeof p.MAIN_WORLD.JS_API_CONSOLE_LABEL === 'string';
   }
@@ -332,10 +332,15 @@
 
   // The MAIN-world helpers load before this file (same manifest entry, pinned by
   // test/bridge-protocol-guard.test.js). Their globals are page-visible, so take
-  // the references now, before any page script could replace or delete them.
+  // the references now, before any page script could replace or delete them, and
+  // take the globals off the page.
   const windowPropertyTracker = window.__WindowPropertyTracker || null;
   const hookResilienceManager = window.__HookResilienceManager || null;
   const conditionLanguage = window.ScrapflyWindowConditionLanguage || null;
+  // The page has no use for them, and their presence tells it which extension it is running next to.
+  try { delete window.__WindowPropertyTracker; } catch (e) { /* stays where it is */ }
+  try { delete window.__HookResilienceManager; } catch (e) { /* stays where it is */ }
+  try { delete window.ScrapflyWindowConditionLanguage; } catch (e) { /* stays where it is */ }
 
   // Hooks monitoring state (module scope for disable monitoring)
   let installedHooks = new Map(); // Map: hook.target -> {obj, propertyName, originalDescriptor, detectors (Map), wrapper, fallbackContext}
@@ -388,6 +393,8 @@
 
   // Shims that could not be installed, reported with the first debug-mode install
   const bindShimFailures = [];
+  // Which functions are our shims, kept here: a marker property on the function would show on the page
+  const ourBindShims = new WeakSet();
 
   const createBindShim = (original, instance, propertyName) => {
     // A method definition, like the native member: same name, no own
@@ -404,7 +411,7 @@
       }
     };
 
-    Object.defineProperty(shim, MAIN_WORLD.BIND_SHIM_MARKER, { value: true });
+    ourBindShims.add(shim);
     Object.defineProperties(shim, {
       name: { value: original.name, writable: false, enumerable: false, configurable: true },
       length: { value: original.length, writable: false, enumerable: false, configurable: true }
@@ -425,7 +432,7 @@
         // Prefer prototype patch (affects all instances)
         if (proto) {
           const desc = Object.getOwnPropertyDescriptor(proto, propertyName);
-          if (desc && typeof desc.value === 'function' && !desc.value[MAIN_WORLD.BIND_SHIM_MARKER]) {
+          if (desc && typeof desc.value === 'function' && !ourBindShims.has(desc.value)) {
             const shim = createBindShim(desc.value, instance, propertyName);
             try {
               Object.defineProperty(proto, propertyName, {
@@ -442,7 +449,7 @@
         }
 
         // Fallback: instance patch (if prototype is locked)
-        if (instance && typeof instance[propertyName] === 'function' && !instance[propertyName][MAIN_WORLD.BIND_SHIM_MARKER]) {
+        if (instance && typeof instance[propertyName] === 'function' && !ourBindShims.has(instance[propertyName])) {
           const shim = createBindShim(instance[propertyName], instance, propertyName);
           try {
             // Prefer direct assignment (works for many DOM instances)
@@ -817,8 +824,8 @@
       completionTimeout = null;
     }
 
-    // Reset page ready state
-    pageReadySignalReceived = false;
+    // The page stays ready once it was: its load signal comes once, and a rescan of a page whose load
+    // event is still pending would otherwise wait for a signal that never repeats
     pageReadyCallbacks.length = 0;
 
     // Reset uninstall stats
@@ -909,8 +916,17 @@
    *   the entry then stays in installedHooks and the hook stays active until unload
    */
   function restoreHook(hookTarget, hookData) {
-    const { obj, propertyName, originalDescriptor } = hookData;
+    const { obj, propertyName, originalDescriptor, wrapper } = hookData;
     try {
+      if (wrapper) {
+        // A page that wrapped the property after us holds our wrapper inside its own;
+        // putting the original back would remove its wrapper, so ours stays in the chain.
+        const current = Object.getOwnPropertyDescriptor(obj, propertyName);
+        if (!current || (current.value !== wrapper && current.get !== wrapper)) {
+          logWarn(`[Hooks MAIN] ${hookTarget} was replaced after the hook; leaving it as it is`);
+          return false;
+        }
+      }
       Object.defineProperty(obj, propertyName, originalDescriptor);
       installedHooks.delete(hookTarget);
       return true;

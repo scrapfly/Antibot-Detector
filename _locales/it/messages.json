@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Rilevatori importati, tranne: {0} (non validi in questa versione)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Le regole ufficiali già installate non sono state sostituite: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} esportato"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Il file dell’icona deve essere inferiore a 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Scegli un file immagine (PNG, JPEG, GIF, WebP o SVG)"
   },
   "iconPickerNoResults": {
     "message": "Nessuna icona corrisponde alla tua ricerca"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Un'impostazione ha un valore che il suo elenco non offre: {0}"
   },
   "toolbarTitleOff": {
     "message": "Il rilevamento è disattivato"

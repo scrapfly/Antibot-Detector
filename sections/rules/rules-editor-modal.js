@@ -26,11 +26,28 @@ Rules.prototype.setCurrentDetectorIconSourceClass = function(sourceType = 'defau
     iconImg.classList.add('fingerprint-icon-image--default');
   };
 
+/**
+ * Select the rule's category. One the list does not offer (an imported file's own bucket) gets an option of its own: a
+ * select with no matching option reports '' and the rule would be saved under no category at all.
+ */
+Rules.prototype.showCategoryInSelect = function(select, category) {
+  for (const extra of Array.from(select.querySelectorAll('option[data-custom-category]'))) extra.remove();
+  if (category && !Array.from(select.options).some(option => option.value === category)) {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = typeof this.getCategoryLabel === 'function' ? this.getCategoryLabel(category) : category;
+    option.setAttribute('data-custom-category', '');
+    select.appendChild(option);
+  }
+  select.value = category;
+};
+
 Rules.prototype.openEditModal = function(detector, category, detectorName, isNew = false) {
     const modal = document.querySelector('#editRuleModal');
 
     if (!modal) return;
     this.ruleEditorEdited = false;
+    this._issuedPatternIds = new Set(); // the pattern ids this editor session has handed out (nextPatternId)
 
     // Ensure detector has detection property before storing
     const detectorWithDetection = {
@@ -271,7 +288,7 @@ Rules.prototype.populateModalData = function(detector) {
 
     if (categorySelect) {
       Logger.debug('UI', 'Setting category:', category); // Debug log
-      categorySelect.value = category;
+      this.showCategoryInSelect(categorySelect, category);
     }
     // Category-dependent hints in the editor (JS hooks: Fingerprint rules only)
     document.querySelector('#editRuleModal')?.setAttribute('data-category', String(category).toLowerCase());

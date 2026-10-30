@@ -413,6 +413,9 @@ function demCreateHookBatcher(chrome) {
 
     return {
         addHook: function(hookData) {
+            // A report without its detector and target would stop every later flush at the dedupe key
+            const detection = hookData && hookData.detection;
+            if (!detection || typeof detection.detectorId !== 'string' || typeof detection.hook?.target !== 'string') return;
             hookBatch.push(hookData);
 
             // Force flush if oversized

@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "นำเข้าตัวตรวจจับแล้ว ยกเว้น: {0} (ใช้ไม่ได้ในเวอร์ชันนี้)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "กฎอย่างเป็นทางการที่ติดตั้งอยู่แล้วไม่ถูกแทนที่: {0}"
+  },
   "detectorExportedFmt": {
     "message": "ส่งออก {0} แล้ว"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "ขนาดไฟล์ไอคอนต้องน้อยกว่า 100KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "เลือกไฟล์รูปภาพ (PNG, JPEG, GIF, WebP หรือ SVG)"
   },
   "iconPickerNoResults": {
     "message": "ไม่มีไอคอนที่ตรงกับการค้นหา"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "การติดตามต้องเป็นปิด รายวัน หรือรายสัปดาห์"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "การตั้งค่ามีค่าที่รายการของมันไม่มี: {0}"
   },
   "toolbarTitleOff": {
     "message": "ปิดการตรวจจับอยู่"

@@ -1111,20 +1111,25 @@ class UpdateManager {
         const hours = Math.floor(diff / 3600000);
         const days = Math.floor(diff / 86400000);
 
+        // The UI language's own plural forms (Intl): "2 дня назад", not "2 дней назад" built from one message for every number.
+        // Without Intl or a language (tests, the worker before the translations load) the messages below are used.
+        const relative = (value, unit) => (typeof FormatUtils !== 'undefined' && typeof FormatUtils.formatRelative === 'function'
+            ? FormatUtils.formatRelative(-value, unit, 'long') : null);
+
         if (minutes < 1) return _get('timeJustNow', 'Just now');
         if (minutes < 60) {
-            return minutes === 1
+            return relative(minutes, 'minute') || (minutes === 1
                 ? _get('timeOneMinuteAgo', '1 minute ago')
-                : _fmt('timeMinutesAgoLongFmt', `${minutes} minutes ago`, minutes);
+                : _fmt('timeMinutesAgoLongFmt', `${minutes} minutes ago`, minutes));
         }
         if (hours < 24) {
-            return hours === 1
+            return relative(hours, 'hour') || (hours === 1
                 ? _get('timeOneHourAgo', '1 hour ago')
-                : _fmt('timeHoursAgoLongFmt', `${hours} hours ago`, hours);
+                : _fmt('timeHoursAgoLongFmt', `${hours} hours ago`, hours));
         }
-        return days === 1
+        return relative(days, 'day') || (days === 1
             ? _get('timeOneDayAgo', '1 day ago')
-            : _fmt('timeDaysAgoLongFmt', `${days} days ago`, days);
+            : _fmt('timeDaysAgoLongFmt', `${days} days ago`, days));
     }
 }
 

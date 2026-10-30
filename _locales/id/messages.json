@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Detektor diimpor, kecuali: {0} (tidak valid di versi ini)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Aturan resmi yang sudah terpasang tidak diganti: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} diekspor"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Ukuran file ikon harus kurang dari 100KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Pilih file gambar (PNG, JPEG, GIF, WebP, atau SVG)"
   },
   "iconPickerNoResults": {
     "message": "Tidak ada ikon yang cocok dengan pencarian Anda"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Pemantauan harus nonaktif, setiap hari, atau setiap minggu"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Sebuah pengaturan memiliki nilai yang tidak ada di daftarnya: {0}"
   },
   "toolbarTitleOff": {
     "message": "Deteksi dimatikan"

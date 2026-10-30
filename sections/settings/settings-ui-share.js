@@ -60,10 +60,13 @@ SettingsUI.readShareFromUI = function() {
 };
 
 // Errors for SettingsUI.validateSettings: only the selected service is checked
-SettingsUI.validateShareSettings = function(share, text) {
+// `saved` is the share block as it is stored: an address saved by an older version (when the check was looser) does not
+// block an unrelated Save, an import or a restore, which merge over it; only an address being written or chosen is checked
+SettingsUI.validateShareSettings = function(share, text, saved) {
   const errors = [];
   if (!share || typeof ShareProviders === 'undefined') return errors;
-  if (share.provider === 'custom' && share.customUrl &&
+  const touched = !saved || share.customUrl !== saved.customUrl || share.provider !== saved.provider;
+  if (touched && share.provider === 'custom' && share.customUrl &&
       !ShareProviders.isCustomUrlAllowed(share.customUrl, SettingsRuntime._isWebhookUrlSafe)) {
     errors.push(text('settingsUiErrShareCustomUrl', 'Custom upload server: use an HTTPS address on a public host'));
   }

@@ -54,6 +54,11 @@ Rules.prototype.handleImport = async function(event) {
       } else {
         NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
       }
+      // Official rules are not replaced by a file: the ones whose content differs are named, so an edit is not lost unseen
+      const kept = this.detectorManager.lastImportKept || [];
+      if (kept.length) {
+        NotificationHelper.warning(_fmt('detectorsImportedKeptFmt', `Official rules already installed were not replaced: ${kept.join(', ')}`, kept.join(', ')));
+      }
       this.displayRules();
     } else {
       NotificationHelper.error(_tr('failedImportDetectors', 'Failed to import detectors. Check the file format.'));
@@ -618,10 +623,12 @@ Rules.prototype.handleSearch = function(query) {
     const searchTerm = query.toLowerCase().trim();
     this.filteredDetectors = this.allDetectors.filter(({ detector, category }) => {
       // Search in detector name, category, description only
+      // (the category as the card shows it, "Anti-Bot" or its translation, as well as the key)
       const searchableText = [
         detector.displayName,
         detector.name,
         category,
+        typeof this.getCategoryLabel === 'function' ? this.getCategoryLabel(category) : '',
         detector.description
       ].filter(Boolean).join(' ').toLowerCase();
 

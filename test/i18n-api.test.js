@@ -17,9 +17,10 @@ const load = (language) => {
   return context.I18n;
 };
 
-test('dir() is rtl for the right-to-left languages, whatever the region, and ltr for every other language', () => {
-  for (const tag of ['ar', 'ar-EG', 'ar_SA', 'he', 'fa-IR', 'ur']) assert.strictEqual(load(tag).dir(), 'rtl', tag);
-  for (const tag of ['en', 'es', 'zh-TW', 'zh_CN', 'th', 'hi', 'pt_BR', 'arn']) assert.strictEqual(load(tag).dir(), 'ltr', tag);
+test('dir() is rtl for a right-to-left language the extension ships (Arabic), whatever the region, and ltr for every other language', () => {
+  for (const tag of ['ar', 'ar-EG', 'ar_SA']) assert.strictEqual(load(tag).dir(), 'rtl', tag);
+  // Hebrew, Persian and Urdu browsers are served the English texts, which read left to right
+  for (const tag of ['he', 'fa-IR', 'ur', 'en', 'es', 'zh-TW', 'zh_CN', 'th', 'hi', 'pt_BR', 'arn']) assert.strictEqual(load(tag).dir(), 'ltr', tag);
   const override = load('en');
   override._overrideLocale = 'ar';
   assert.strictEqual(override.dir(), 'rtl', 'the language chosen in Settings wins over the browser language');
@@ -87,3 +88,12 @@ test('every I18n method or field the extension scripts use exists', () => {
   const missing = [...used].filter(([name]) => !name.startsWith('_') && !(name in I18n)).map(([name, files]) => `I18n.${name} (${[...files].join(', ')})`);
   assert.deepStrictEqual(missing, []);
 });
+
+test('format() fills each {N} once: a value that holds "{1}" is not substituted again, and a missing argument stays', () => {
+  const context = vm.createContext({ chrome: { i18n: { getUILanguage: () => 'en', getMessage: (key) => ({ rule: '{0} saved at {1}', pair: '{0} and {2}' }[key] || '') } }, console });
+  vm.runInContext(read('modules/core/i18n.js') + '\nthis.I18n = I18n;', context);
+  const I18n = context.I18n;
+  assert.strictEqual(I18n.format('rule', 'My {1} rule', '10:00'), 'My {1} rule saved at 10:00', 'the name keeps its braces');
+  assert.strictEqual(I18n.format('pair', 'a'), 'a and {2}', 'an argument that was not given stays as written');
+});
+

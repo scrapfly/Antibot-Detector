@@ -97,7 +97,8 @@ class FormatUtils {
       ? I18n.format(key, ...args)
       : null;
     if (msg) return msg;
-    return args.reduce((text, arg, i) => text.split('{' + i + '}').join(String(arg)), String(fallback));
+    // One pass: a value that itself holds "{1}" is not substituted again
+    return String(fallback).replace(/\{(\d+)\}/g, (placeholder, index) => (Number(index) < args.length ? String(args[Number(index)]) : placeholder));
   }
 
   /**

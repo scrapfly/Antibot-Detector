@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Detektoren importiert, außer: {0} (in dieser Version nicht gültig)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Bereits installierte offizielle Regeln wurden nicht ersetzt: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} exportiert"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Die Symboldatei muss kleiner als 100 KB sein"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Wähle eine Bilddatei (PNG, JPEG, GIF, WebP oder SVG)"
   },
   "iconPickerNoResults": {
     "message": "Keine Symbole für deine Suche"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Die Überwachung muss aus, täglich oder wöchentlich sein"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Eine Einstellung hat einen Wert, den ihre Liste nicht anbietet: {0}"
   },
   "toolbarTitleOff": {
     "message": "Erkennung ist ausgeschaltet"

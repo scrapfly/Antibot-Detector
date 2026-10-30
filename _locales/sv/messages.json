@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Detektorer importerade, utom: {0} (inte giltiga i den här versionen)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Redan installerade officiella regler ersattes inte: {0}"
+  },
   "detectorExportedFmt": {
     "message": "Exporterade {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Ikonfilen måste vara mindre än 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Välj en bildfil (PNG, JPEG, GIF, WebP eller SVG)"
   },
   "iconPickerNoResults": {
     "message": "Inga ikoner matchar din sökning"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Bevakningen måste vara av, dagligen eller veckovis"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "En inställning har ett värde som dess lista inte erbjuder: {0}"
   },
   "toolbarTitleOff": {
     "message": "Upptäckt är avstängd"

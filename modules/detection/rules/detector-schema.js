@@ -42,6 +42,10 @@ class DetectorSchema {
         return children.every(child => this.validCombination(child, ids, depth + 1));
     }
 
+    static RULE_FLAGS = Object.freeze(['nameRegex', 'nameWholeWord', 'nameCaseSensitive', 'valueRegex', 'valueWholeWord', 'valueCaseSensitive',
+        'textRegex', 'textWholeWord', 'textCaseSensitive', 'selectorRegex', 'selectorWholeWord', 'selectorCaseSensitive',
+        'urlRegex', 'urlCaseSensitive', 'standalone', 'checkScripts', 'optional']);
+
     static RULE_TEXT_FIELDS = Object.freeze(['name', 'value', 'text', 'selector', 'path', 'target', 'urlPattern', 'description',
         'textScope', 'scope', 'condition', 'nameScope', 'valueScope', 'body', 'windowPath']);
 
@@ -54,6 +58,8 @@ class DetectorSchema {
         }
         // A logo is a file name, an address or an emoji, never markup
         if (/[<>"'`]/.test(detector.icon || '') || /[<>"'`\s]/.test(detector.customIcon || '')) return null;
+        // An uploaded icon is a data address of at most 100 KB (the picker's limit, a third more as base64)
+        if ((detector.customIcon || '').length > 140000) return null;
         if (detector.enabled !== undefined && typeof detector.enabled !== 'boolean') return null;
         if (!this.compatible(detector, extensionVersion)) return null;
         const ids = new Set();
@@ -71,6 +77,10 @@ class DetectorSchema {
                     if (rule[field] !== undefined && typeof rule[field] !== 'string') return null;
                 }
                 if (rule.methods !== undefined && (!Array.isArray(rule.methods) || rule.methods.some(m => typeof m !== 'string'))) return null;
+                // The on/off options are booleans (the engine reads them as `=== true`); the editor draws them into markup
+                for (const flag of this.RULE_FLAGS) {
+                    if (rule[flag] !== undefined && typeof rule[flag] !== 'boolean') return null;
+                }
                 const id = rule.id || `${method}-${index + 1}`;
                 if (ids.has(id)) return null;
                 ids.add(id);

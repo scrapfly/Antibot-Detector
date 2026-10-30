@@ -77,7 +77,7 @@ const DETECTORS = {
 async function installFor(hostname, detection, options) {
   const { Engine } = engineContext();
   const events = [];
-  await Engine.installHooksOrchestrator({ location: { hostname }, dispatchEvent(event) { events.push(event); } }, {
+  await Engine.installHooksOrchestrator({ location: { hostname, href: `https://${hostname}/` }, dispatchEvent(event) { events.push(event); } }, {
     storage: { local: { async get() { return { scrapfly_detectors: { detectors: DETECTORS }, scrapfly_settings: { detection } }; } } }
   }, options);
   assert.equal(events.length, 1);
@@ -93,6 +93,27 @@ test('a site without JS hooks gets an install with no hooks and no response capt
     assert.equal(off.windowProperties.length, 1, `${host}: the window checks only read the page's globals`);
     assert.equal(off.windowProperties[0].detectorId, 'detect-fp');
     assert.equal(off.fingerprintEnabled, true);
+  }
+});
+
+test('a site left out of scanning gets an install with no hooks, no response capture and no window checks', async () => {
+  const skipped = [
+    ['shop.example.com', { scanMode: 'blocklist', blacklistedDomains: ['shop.example.com'] }],
+    ['other.test', { scanMode: 'allowlist', allowedDomains: ['example.com'] }]
+  ];
+  for (const [host, detection] of skipped) {
+    const install = await installFor(host, detection);
+    assert.deepEqual(install.hookDefinitions, [], host);
+    assert.equal(install.hooksOff, true, host);
+    assert.ok(!('responseCapture' in install), host);
+    assert.deepEqual(install.windowProperties, [], `${host}: nothing of the page is checked`);
+  }
+  // The chosen site and a site off the blocklist are installed as usual
+  for (const [host, detection] of [['example.com', { scanMode: 'allowlist', allowedDomains: ['example.com'] }], ['www.example.com', { scanMode: 'blocklist', blacklistedDomains: ['shop.example.com'] }]]) {
+    const install = await installFor(host, detection);
+    assert.equal(install.hookDefinitions.length, 1, host);
+    assert.ok(!('hooksOff' in install), host);
+    assert.equal(install.windowProperties.length, 1, host);
   }
 });
 

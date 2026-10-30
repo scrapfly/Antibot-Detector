@@ -138,3 +138,16 @@ test('merge brings in the valid rules of a file and names the ones it leaves out
   assert.equal(await replaced.importDetectors(file, false), false);
   assert.deepEqual(replaced.detectors, before, 'nothing deleted');
 });
+
+test('an import names the official rules it left as installed because the file holds other content, and stays silent when it is the same', async () => {
+  const edited = manager();
+  const changed = definition('detect-official', { author: 'Scrapfly', name: 'Official', detection: { cookie: [{ name: 'edited_cookie' }] } });
+  assert.equal(await edited.importDetectors({ antibot: { 'detect-official': changed } }, true), true);
+  assert.deepEqual(edited.lastImportKept, ['Official'], 'the edit is not applied, and the person is told');
+  assert.notEqual(edited.detectors.antibot['detect-official'].detection.cookie[0].name, 'edited_cookie', 'official rules are still never overwritten');
+  const same = manager();
+  const installed = plain(same.detectors.antibot['detect-official']);
+  assert.equal(await same.importDetectors({ antibot: { 'detect-official': { ...installed, enabled: false } } }, true), true);
+  assert.deepEqual(same.lastImportKept, [], 'the same rule (only enabled differs) is not reported');
+});
+

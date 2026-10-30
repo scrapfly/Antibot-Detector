@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Zaimportowano detektory, z wyjątkiem: {0} (nieprawidłowe w tej wersji)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Już zainstalowane reguły oficjalne nie zostały zastąpione: {0}"
+  },
   "detectorExportedFmt": {
     "message": "Wyeksportowano: {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Rozmiar pliku ikony musi być mniejszy niż 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Wybierz plik obrazu (PNG, JPEG, GIF, WebP lub SVG)"
   },
   "iconPickerNoResults": {
     "message": "Żadna ikona nie pasuje do wyszukiwania"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Ustawienie ma wartość, której nie ma na jego liście: {0}"
   },
   "toolbarTitleOff": {
     "message": "Wykrywanie jest wyłączone"

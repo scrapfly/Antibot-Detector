@@ -125,12 +125,10 @@ class I18n {
      * "Showing 1-20 of 51"). Returns `null` when the key isn't found.
      */
     static format(key, ...args) {
-        let msg = I18n.get(key);
+        const msg = I18n.get(key);
         if (msg === null) return null;
-        for (let i = 0; i < args.length; i++) {
-            msg = msg.split('{' + i + '}').join(String(args[i]));
-        }
-        return msg;
+        // One pass: a value that itself holds "{1}" (a rule name, an address) is not substituted again
+        return msg.replace(/\{(\d+)\}/g, (placeholder, index) => (Number(index) < args.length ? String(args[Number(index)]) : placeholder));
     }
 
     /**
@@ -150,9 +148,16 @@ class I18n {
         return String(raw).replace('_', '-');
     }
 
-    /** Reading direction of the language the UI is shown in: 'rtl' for Arabic (and Hebrew, Persian, Urdu), 'ltr' otherwise. */
+    /**
+     * The right-to-left languages the extension ships (_locales/). Direction follows the text that is shown: a browser in
+     * Hebrew, Persian or Urdu is served the English texts, which read left to right. Add a language here when it ships.
+     */
+    static RTL_LANGUAGES = Object.freeze(['ar']);
+
+    /** Reading direction of the language the UI is shown in: 'rtl' for Arabic, 'ltr' otherwise. */
     static dir() {
-        return /^(ar|he|fa|ur)\b/i.test(I18n.locale()) ? 'rtl' : 'ltr';
+        const language = I18n.locale().split('-')[0].toLowerCase();
+        return I18n.RTL_LANGUAGES.includes(language) ? 'rtl' : 'ltr';
     }
 
     /**

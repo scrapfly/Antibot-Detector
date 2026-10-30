@@ -176,3 +176,21 @@ test('an import starts from the saved settings: a change staged in the form but 
   assert.equal(saved.candidate.debugMode, true);
   assert.equal(saved.candidate.detection, undefined, 'the staged "only these sites" with an empty list is not saved');
 });
+
+test('a cache time an older version allowed (48 hours) is saved as the form shows it, so an export of it restores', async () => {
+  const { context, ui, form } = uiHarness();
+  context.FormatUtils = require('../utils/format-utils.js');
+  if (!context.FormatUtils || typeof context.FormatUtils.normalizeCacheDuration !== 'function') context.FormatUtils = globalThis.FormatUtils;
+  context.StorageManager = { readSettingsStrict: async () => ({ detection: { cacheDuration: 48, cacheUnit: 'hours' } }) };
+  context.chrome.storage = { local: { get: async () => ({}) } };
+  ui.setLanguagePickerValue = () => {};
+  assert.equal(await ui.loadSettings.call(form), true);
+  assert.deepEqual(plain({ duration: form.settingsBaseline.detection.cacheDuration, unit: form.settingsBaseline.detection.cacheUnit }), { duration: 2, unit: 'days' },
+    'the saved copy is what the form shows');
+  assert.deepEqual(plain({ duration: form.settings.detection.cacheDuration, unit: form.settings.detection.cacheUnit }), { duration: 2, unit: 'days' });
+  // A time that already fits is left alone
+  context.StorageManager = { readSettingsStrict: async () => ({ detection: { cacheDuration: 7, cacheUnit: 'days' } }) };
+  await ui.loadSettings.call(form);
+  assert.deepEqual(plain({ duration: form.settingsBaseline.detection.cacheDuration, unit: form.settingsBaseline.detection.cacheUnit }), { duration: 7, unit: 'days' });
+});
+

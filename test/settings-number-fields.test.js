@@ -39,3 +39,19 @@ test('an emptied log size keeps the saved one', () => {
   assert.match(source, /const maxLogs = Number\.isFinite\(rawMaxLogs\) \? rawMaxLogs : \(parseInt\(this\.settings\.logCollectorMaxLogs, 10\) \|\| 5000\);/);
   assert.match(source, /settings\.logCollectorMaxLogs = Math\.min\(Math\.max\(maxLogs, 100\), 5000\);/);
 });
+
+test('a value a setting\'s list does not offer is refused when it is new, and tolerated when it is what is saved', () => {
+  const SettingsUI = load();
+  const check = (settings, baseline = {}) => SettingsUI.validateSettings.call({ settingsBaseline: baseline }, settings);
+  // A hand-edited file: 72 hours is not one of the choices, the select would show blank and the next Save read NaN
+  const bad = check({ updates: { checkIntervalHours: 72 } });
+  assert.equal(bad.isValid, false);
+  assert.match(bad.errors.join(' '), /updates\.checkIntervalHours/);
+  assert.equal(check({ updates: { checkIntervalHours: 168 }, history: { exportFormat: 'csv', historyBackup: 'weekly' }, duplicatePrevention: { duplicateUnit: 'days', duplicateScope: 'path', duplicateAction: 'update' }, detection: { cacheScope: 'full' } }).isValid, true, 'every offered value is fine');
+  for (const [group, key, value] of [['history', 'exportFormat', 'pdf'], ['history', 'historyBackup', 'hourly'], ['duplicatePrevention', 'duplicateUnit', 'weeks'], ['duplicatePrevention', 'duplicateScope', 'site'], ['detection', 'cacheScope', 'host']]) {
+    assert.equal(check({ [group]: { [key]: value } }).isValid, false, `${group}.${key} = ${value}`);
+  }
+  // The value is already what is saved (an older version allowed it): an unrelated Save, an import and a restore go through
+  assert.equal(check({ updates: { checkIntervalHours: 72 } }, { updates: { checkIntervalHours: 72 } }).isValid, true);
+});
+

@@ -169,8 +169,6 @@
             PATH_SEPARATOR: '.',
             // Page DevTools console label in front of each JS API event name
             JS_API_CONSOLE_LABEL: '[Scrapfly JS API] ',
-            // Own property marking a function as our bind shim (never shimmed twice)
-            BIND_SHIM_MARKER: '__scrapflyBindShim',
             // The engine's text for a member called on a foreign `this`, used only if
             // the MAIN world cannot read it from the browser itself
             ILLEGAL_INVOCATION_FALLBACK: 'Illegal invocation'

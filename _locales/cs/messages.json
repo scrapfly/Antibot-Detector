@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Detektory importovány, kromě: {0} (v této verzi nejsou platné)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Již nainstalovaná oficiální pravidla nebyla nahrazena: {0}"
+  },
   "detectorExportedFmt": {
     "message": "Exportováno: {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Soubor ikony musí být menší než 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Vyberte soubor s obrázkem (PNG, JPEG, GIF, WebP nebo SVG)"
   },
   "iconPickerNoResults": {
     "message": "Hledání neodpovídají žádné ikony"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Sledování musí být vypnuté, denní nebo týdenní"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Nastavení má hodnotu, kterou jeho seznam nenabízí: {0}"
   },
   "toolbarTitleOff": {
     "message": "Detekce je vypnutá"

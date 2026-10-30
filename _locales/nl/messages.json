@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Detectors geïmporteerd, behalve: {0} (niet geldig in deze versie)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Al geïnstalleerde officiële regels zijn niet vervangen: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} geëxporteerd"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Het pictogrambestand moet kleiner zijn dan 100 kB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Kies een afbeeldingsbestand (PNG, JPEG, GIF, WebP of SVG)"
   },
   "iconPickerNoResults": {
     "message": "Geen pictogrammen komen overeen met je zoekopdracht"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "De volglijst moet uit, dagelijks of wekelijks staan"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Een instelling heeft een waarde die haar lijst niet aanbiedt: {0}"
   },
   "toolbarTitleOff": {
     "message": "Detectie is uitgeschakeld"

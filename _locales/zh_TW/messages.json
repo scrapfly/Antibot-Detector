@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "已匯入偵測器，以下除外：{0}（在此版本中無效）"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "已安裝的官方規則未被取代：{0}"
+  },
   "detectorExportedFmt": {
     "message": "已匯出 {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "圖示檔案必須小於 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "請選擇圖片檔案（PNG、JPEG、GIF、WebP 或 SVG）"
   },
   "iconPickerNoResults": {
     "message": "沒有符合搜尋的圖示"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "監看功能必須是關閉、每天或每週"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "某項設定的值不在其清單提供的選項中：{0}"
   },
   "toolbarTitleOff": {
     "message": "偵測已關閉"

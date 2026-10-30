@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Detectores importados, excepto: {0} (no son válidos en esta versión)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Las reglas oficiales ya instaladas no se reemplazaron: {0}"
+  },
   "detectorExportedFmt": {
     "message": "{0} exportado"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "El archivo del icono debe pesar menos de 100 KB"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Elige un archivo de imagen (PNG, JPEG, GIF, WebP o SVG)"
   },
   "iconPickerNoResults": {
     "message": "Ningún icono coincide con tu búsqueda"
@@ -6321,6 +6327,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "La lista de vigilancia debe estar desactivada, ser diaria o semanal"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Un ajuste tiene un valor que su lista no ofrece: {0}"
   },
   "toolbarTitleOff": {
     "message": "La detección está desactivada"

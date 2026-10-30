@@ -190,8 +190,11 @@ class DetectionEngineManager {
             // and no response capture; the MAIN world takes its early recorders off the page and its frames, along with
             // the frame accessors (only the bind shims stay, which keep the page's own calls working). The window checks
             // stay: they only read the page's globals
-            const hooksOff = ScanScope.hooksOff(actualSettings.detection, window.location?.hostname);
-            if (hooksOff) Logger.debug('DETECTION', 'JS hooks are off on this site');
+            // A site the person left out of scanning is never scanned, so nothing of the page is watched there either
+            const skipped = ScanScope.isExcluded(window.location?.href, actualSettings.detection);
+            const hooksOff = skipped || ScanScope.hooksOff(actualSettings.detection, window.location?.hostname);
+            if (skipped) Logger.debug('DETECTION', 'This site is not scanned, so the page is left alone');
+            else if (hooksOff) Logger.debug('DETECTION', 'JS hooks are off on this site');
 
             const detectorsData = result.scrapfly_detectors;
 
@@ -247,7 +250,7 @@ class DetectionEngineManager {
 
             dispatchInstallHooks({
                 hookDefinitions: hooksOff ? [] : hookDefinitions,
-                windowProperties,
+                windowProperties: skipped ? [] : windowProperties,
                 debugMode,
                 debugVerbose,
                 logCollectorEnabled,

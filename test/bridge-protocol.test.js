@@ -107,7 +107,7 @@ test('MAIN-world identity, log labels and report values are unchanged', () => {
   });
   assert.deepStrictEqual({ ...P.MAIN_WORLD }, {
     HOOKS_SCRIPT: 'content-main-world.js', PATH_SEPARATOR: '.', JS_API_CONSOLE_LABEL: '[Scrapfly JS API] ',
-    BIND_SHIM_MARKER: '__scrapflyBindShim', ILLEGAL_INVOCATION_FALLBACK: 'Illegal invocation'
+    ILLEGAL_INVOCATION_FALLBACK: 'Illegal invocation'
   });
 });
 

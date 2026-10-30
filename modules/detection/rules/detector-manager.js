@@ -994,6 +994,9 @@ class DetectorManager {
         const incoming = DetectorManager.schema.admitImport(data, extensionVersion, { partial: merge });
         // The rules of the file left out (not valid here), for the message that names them
         this.lastImportSkipped = incoming && Array.isArray(incoming.skipped) ? incoming.skipped.slice() : [];
+        // The official rules the file holds with other content than the installed ones: an import never replaces them, and
+        // the message names them (an edited official rule exported from its card and imported again keeps its old content)
+        this.lastImportKept = [];
         if (!incoming) return false;
 
         // Construct a candidate without touching live rules. An invalid record
@@ -1011,6 +1014,9 @@ class DetectorManager {
                 .find(record => record.id === detector.id);
             if (existing && DetectionUtils.isOfficialDetector(existing)) {
                 if (enabledProvided) existing.enabled = detector.enabled;
+                // What a person edits: the name, the patterns and the combinations (a file's copy is normalised, the installed one is not)
+                const edited = (rule) => DetectorManager.ruleContent({ id: rule.id, name: rule.name, detection: rule.detection, combinations: rule.combinations });
+                if (edited(existing) !== edited(detector)) this.lastImportKept.push(detector.name || detector.id);
                 continue;
             }
             for (const records of Object.values(candidate)) delete records[detector.id];

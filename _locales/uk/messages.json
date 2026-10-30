@@ -1087,6 +1087,9 @@
   "detectorsImportedSkippedFmt": {
     "message": "Детектори імпортовано, крім: {0} (недійсні в цій версії)"
   },
+  "detectorsImportedKeptFmt": {
+    "message": "Уже встановлені офіційні правила не замінено: {0}"
+  },
   "detectorExportedFmt": {
     "message": "Експортовано: {0}"
   },
@@ -3458,6 +3461,9 @@
   },
   "iconPickerFileTooLarge": {
     "message": "Файл піктограми має бути меншим за 100 КБ"
+  },
+  "iconPickerNotAnImage": {
+    "message": "Виберіть файл зображення (PNG, JPEG, GIF, WebP або SVG)"
   },
   "iconPickerNoResults": {
     "message": "Немає піктограм за вашим запитом"
@@ -6319,6 +6325,9 @@
   },
   "settingsUiErrHistoryWatch": {
     "message": "Стеження має бути вимкнене або виконуватися щодня чи щотижня"
+  },
+  "settingsUiErrChoiceFmt": {
+    "message": "Налаштування має значення, якого немає в його списку: {0}"
   },
   "toolbarTitleOff": {
     "message": "Виявлення вимкнено"

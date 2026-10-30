@@ -283,6 +283,11 @@ Rules.prototype.uploadCustomIcon = function() {
   input.onchange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      // accept="image/*" only suggests: a picker set to "All files" hands over anything
+      if (!['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'].includes(file.type)) {
+        NotificationHelper.error((typeof I18n !== 'undefined' && I18n.get('iconPickerNotAnImage')) || 'Choose an image file (PNG, JPEG, GIF, WebP or SVG)');
+        return;
+      }
       // Check file size (limit to 100KB)
       if (file.size > 100 * 1024) {
         NotificationHelper.error((typeof I18n !== 'undefined' && I18n.get('iconPickerFileTooLarge')) || 'Icon file size must be less than 100KB');

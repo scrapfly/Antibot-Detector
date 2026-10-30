@@ -146,7 +146,7 @@ test('the engine-sent bind shims are active right after the bootstrap', () => {
   assert.strictEqual(page.run('const g1 = navigator.getBattery; g1()'), 'battery');
   assert.strictEqual(page.run('const g2 = navigator.mediaDevices.enumerateDevices; g2()'), 'devices');
   assert.strictEqual(page.run('navigator.getBattery.call(navigator)'), 'battery');
-  assert.strictEqual(page.run('Navigator.prototype.getBattery')[P.MAIN_WORLD.BIND_SHIM_MARKER], true);
+  assert.strictEqual(page.run('Object.getOwnPropertyNames(Navigator.prototype.getBattery).sort().join()'), 'length,name');
   // Looks like the native member: name, length, no prototype, not constructible
   assert.strictEqual(page.run('Navigator.prototype.getBattery.name'), 'getBattery');
   assert.strictEqual(page.run('MediaDevices.prototype.enumerateDevices.name'), 'enumerateDevices');
@@ -234,6 +234,27 @@ test('a failed method call leaves its hook installed until a successful call', (
   assert.strictEqual(page.run('Probe.prototype.method'), page.run('original'));
   assert.strictEqual(page.run('probe.method()'), page.run('result'));
   assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1);
+});
+
+test('a page wrapper put over a hook is not removed when the hook is done', () => {
+  const page = bootstrapped();
+  page.run(`
+    window.Probe = class Probe { method() { return 'native'; } };
+    window.probe = new Probe();
+  `);
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+    detector('method', ['Probe.prototype.method'])
+  ] }));
+  page.run(`
+    const ours = Probe.prototype.method;
+    window.pageWrapper = function (...args) { return ours.apply(this, args); };
+    Probe.prototype.method = pageWrapper;
+  `);
+  assert.strictEqual(page.run('probe.method()'), 'native');
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1, 'the call through the page wrapper is reported');
+  assert.strictEqual(page.run('Probe.prototype.method'), page.run('pageWrapper'), 'the page wrapper stays');
+  assert.strictEqual(page.run('probe.method()'), 'native');
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1, 'reported once');
 });
 
 test('a failed getter call leaves its hook installed until a successful read', () => {
@@ -329,8 +350,7 @@ test('the page cannot swap the condition grammar or evaluator after the bootstra
   const forged = bootstrapDetail('f'.repeat(32));
   forged.conditionGrammar.EXACT.exists = 'FALSY';
   page.bootstrap(forged);
-  page.run(`ScrapflyWindowConditionLanguage.configure(${JSON.stringify(forged.conditionGrammar)});
-    window.ScrapflyWindowConditionLanguage = { evaluate: () => false, DEFAULT_CONDITION: 'x' };
+  page.run(`window.ScrapflyWindowConditionLanguage = { evaluate: () => false, DEFAULT_CONDITION: 'x' };
     window.present = 1;`);
   page.install(installDetail(TOKEN, { overrides: FAST, windowProperties: [
     { path: 'present', condition: 'exists', detectorId: 'w', detectorName: 'W', category: 'antibot', confidence: 80 }
@@ -340,6 +360,18 @@ test('the page cannot swap the condition grammar or evaluator after the bootstra
   const detected = page.ofType(T.WINDOW_DETECTIONS).flatMap(m => m.detections);
   assert.strictEqual(detected.length, 1);
   assert.strictEqual(detected[0].property.condition, 'exists');
+});
+
+test('the helpers the MAIN world holds are not left as globals on the page, and still work', async () => {
+  const page = bootstrapped();
+  assert.strictEqual(page.run(`['__WindowPropertyTracker', '__HookResilienceManager', 'ScrapflyWindowConditionLanguage']
+    .filter(name => name in window).join()`), '');
+  page.run('window.present = 1');
+  page.install(installDetail(TOKEN, { overrides: FAST, windowProperties: [
+    { path: 'present', condition: 'exists', detectorId: 'w', detectorName: 'W', category: 'antibot', confidence: 80 }
+  ] }));
+  await sleep(250);
+  assert.strictEqual(page.ofType(T.WINDOW_DETECTIONS).flatMap(m => m.detections).length, 1);
 });
 
 // The page's own observer-only getEntriesByType call must not make the browser
@@ -442,7 +474,7 @@ test('a malformed early-hooks spec installs no recorders', () => {
   page.bootstrap(detail);
   assert.strictEqual(page.run(getter), original);
   // The bind shims still install
-  assert.strictEqual(page.run('Navigator.prototype.getBattery')[P.MAIN_WORLD.BIND_SHIM_MARKER], true);
+  assert.strictEqual(page.run('const g3 = navigator.getBattery; g3()'), 'battery');
 });
 
 // A fake same-origin child window, reached through a frame element's contentWindow
@@ -681,6 +713,20 @@ test('a hook that fires while the page loads does not complete the monitoring be
   const [done] = page.ofType(T.JS_HOOKS_COMPLETE);
   assert.ok(done, 'completes once the page is ready');
   assert.strictEqual(done.completionReason, P.COMPLETION_REASONS.HOOKS.ACTIVITY_TIMEOUT);
+});
+
+test('a rescan on a page whose load never finished still starts, because the page was already ready once', async () => {
+  const page = bootstrapped();
+  page.run('document.readyState = "interactive"');
+  page.toMain({ type: T.PAGE_READY, [P.FIELDS.TOKEN]: TOKEN });
+  const definitions = [detector('a', ['Navigator.prototype.getBattery'])];
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: definitions }));
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: definitions }));
+  assert.strictEqual(page.run('navigator.getBattery()'), 'battery');
+  await sleep(700);
+  const done = page.ofType(T.JS_HOOKS_COMPLETE);
+  assert.ok(done.length >= 1, 'the rescan completes instead of waiting for a load that will not come again');
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1);
 });
 
 test('a page that wraps dispatchEvent or replaces CustomEvent after the bootstrap never sees a report or the token', () => {

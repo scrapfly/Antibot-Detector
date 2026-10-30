@@ -25,6 +25,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Copy buttons: a second click during "Copied!" no longer leaves the button on "Copied!".
 - Rules → Update: a bundled update the installed rule has caught up with no longer keeps the badge.
 - Scrapfly code: curl sends a value with a + (a CSS selector such as .price+.currency) encoded, so the API does not read it as a space.
+- Rules editor: a custom category stays in its list and is never saved empty; stray spaces are trimmed from names and values; a new pattern never reuses a saved id.
+- Rules editor: a flag written as text in a rule file no longer counts as on; Rules search finds a rule by category; history check and live test work after a rename.
+- Rules: importing says which official rules were kept because the file's copy differs; a rule icon that is not an image, or is too large to store, is refused.
+- Settings: a browser in Hebrew, Persian or Urdu, languages without a translation, no longer gets the English text mirrored right to left; relative times read right in every language.
+- Settings: Save checks a share address only when you changed it; a cache time saved by an older version loads again; an unknown dropdown value is refused with a message.
+- JS hooks: a page's own wrapper over a watched function is kept when the extension steps aside; a rescan on a page whose load never finishes now completes.
+- Sites left out of scanning get no JS hooks or window checks at all, so the page runs untouched.
 
 ### Security
 
@@ -33,6 +40,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Advanced → hCaptcha: the extension asks for a configuration address the page names only when it is https on a public host name.
 - Changing settings, clearing the cache and the vendor capture tools answer the extension's own pages only, never a web page's context.
 - Scrapfly code: a detector name with a Unicode line separator can no longer end a comment and run as code in a Node.js snippet.
+- Rules import: a flag in an imported rule file can no longer break out of the editor's markup.
+- The extension's helper objects and function marker are no longer visible to the page, so a site cannot detect the extension from them.
 
 ## [3.0.8] - 2026-10-29
 

@@ -165,20 +165,20 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             let valueRegex = false, valueWholeWord = false, valueCaseSensitive = false;
 
             if (methodType === 'header' || methodType === 'cookie') {
-              nameRegex = method.nameRegex || false;
-              nameWholeWord = method.nameWholeWord || false;
-              nameCaseSensitive = method.nameCaseSensitive || false;
-              valueRegex = method.valueRegex || false;
-              valueWholeWord = method.valueWholeWord || false;
-              valueCaseSensitive = method.valueCaseSensitive || false;
+              nameRegex = method.nameRegex === true;
+              nameWholeWord = method.nameWholeWord === true;
+              nameCaseSensitive = method.nameCaseSensitive === true;
+              valueRegex = method.valueRegex === true;
+              valueWholeWord = method.valueWholeWord === true;
+              valueCaseSensitive = method.valueCaseSensitive === true;
             } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
-              nameRegex = method.textRegex || false;
-              nameWholeWord = method.textWholeWord || false;
-              nameCaseSensitive = method.textCaseSensitive || false;
+              nameRegex = method.textRegex === true;
+              nameWholeWord = method.textWholeWord === true;
+              nameCaseSensitive = method.textCaseSensitive === true;
             } else if (methodType === 'dom') {
-              nameRegex = method.selectorRegex || false;
-              nameWholeWord = method.selectorWholeWord || false;
-              nameCaseSensitive = method.selectorCaseSensitive || false;
+              nameRegex = method.selectorRegex === true;
+              nameWholeWord = method.selectorWholeWord === true;
+              nameCaseSensitive = method.selectorCaseSensitive === true;
             }
             const checkScripts = method.checkScripts === true || method.scope === 'scripts';
 
@@ -203,8 +203,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
 
             if (methodType === 'payload') {
               payloadUrlPattern = method.urlPattern || '';
-              payloadUrlRegex = method.urlRegex || false;
-              payloadUrlCaseSensitive = method.urlCaseSensitive || false;
+              payloadUrlRegex = method.urlRegex === true;
+              payloadUrlCaseSensitive = method.urlCaseSensitive === true;
               if (Array.isArray(method.methods) && method.methods.length > 0) {
                 payloadMethods = method.methods.join(',');
               }
@@ -992,13 +992,24 @@ Rules.prototype.addNewMethodSection = function() {
 // Data Collection & Saving
 // ============================================
 
-// First unused `<method>-<n>` id among the rows of the editor
+// First unused `<method>-<n>` id: not among the rows of the editor, not one of the stored rule's patterns (a row deleted
+// in this editor leaves its id to the stored rule, whose fields, such as "read the response body", a new row of that id
+// would inherit on Save) and not one issued since the editor opened
 Rules.prototype.nextPatternId = function(methodType) {
     const used = new Set([...document.querySelectorAll('#detectionMethodsContainer .method-item[data-pattern-id]')]
       .map(item => item.dataset.patternId));
+    const stored = this.currentEditDetector?.isNew ? null : this.currentEditDetector?.original;
+    const patterns = stored?.detection?.[methodType];
+    if (Array.isArray(patterns)) {
+      patterns.forEach((rule, index) => used.add(((typeof DetectionCombinations !== 'undefined') && DetectionCombinations.idOf(stored, rule))
+        || `${methodType}-${index + 1}`));
+    }
+    for (const id of this._issuedPatternIds || []) used.add(id);
     let n = 1;
     while (used.has(`${methodType}-${n}`)) n++;
-    return `${methodType}-${n}`;
+    const id = `${methodType}-${n}`;
+    (this._issuedPatternIds = this._issuedPatternIds || new Set()).add(id);
+    return id;
   };
 
 // Rule fields the editor form shows and writes, per method type. Anything
@@ -1070,33 +1081,36 @@ Rules.prototype._collectDetectionFromForm = function() {
         const hasName = nameInput && nameInput.value.trim();
 
         if (hasName) {
+          // A pasted name or value carries a stray space or line break the engine would match literally: it never fires
+          const nameText = nameInput.value.trim();
+          const valueText = (valueInput && valueInput.value ? valueInput.value : '').trim();
           let methodData = {
             confidence: parseInt(item.dataset.confidence || '100'),
           };
 
           if (methodType === 'header' || methodType === 'cookie') {
-            methodData.name = nameInput.value;
-            if (valueInput?.value) {
-              methodData.value = valueInput.value;
+            methodData.name = nameText;
+            if (valueText) {
+              methodData.value = valueText;
             }
           } else if (methodType === 'url' || methodType === 'content' || methodType === 'payload') {
-            methodData.text = nameInput.value;
-            if (valueInput?.value) {
-              methodData.description = valueInput.value;
+            methodData.text = nameText;
+            if (valueText) {
+              methodData.description = valueText;
             }
           } else if (methodType === 'dom') {
-            methodData.selector = nameInput.value;
-            if (valueInput?.value) {
-              methodData.description = valueInput.value;
+            methodData.selector = nameText;
+            if (valueText) {
+              methodData.description = valueText;
             }
           } else if (methodType === 'js_hooks') {
-            methodData.target = nameInput.value;
-            if (valueInput?.value) {
-              methodData.description = valueInput.value;
+            methodData.target = nameText;
+            if (valueText) {
+              methodData.description = valueText;
             }
           } else if (methodType === 'window') {
-            methodData.path = nameInput.value;
-            methodData.condition = valueInput?.value || 'exists';
+            methodData.path = nameText;
+            methodData.condition = valueText || 'exists';
           }
 
           if (methodType === 'header' || methodType === 'cookie') {
@@ -1255,7 +1269,8 @@ Rules.prototype.saveRule = async function() {
       draft.detector.displayName = detectorName;
     }
 
-    if (categorySelect) {
+    // An empty value is a select with no option for the rule's category: the rule stays where it is
+    if (categorySelect && categorySelect.value) {
       draft.detector.category = categorySelect.value;
       draft.category = categorySelect.value;
     }
