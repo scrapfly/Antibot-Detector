@@ -35,8 +35,7 @@
     U.setText('headline' + name + 'Sub', view.sub || '');
   }
   const previousPages = (d, name) => {
-    const row = d.compare && d.compare.usable ? d.compare.prevIndex.get(name.toLowerCase()) : null;
-    return row ? row.pages : 0;
+    return d.compare && d.compare.usable ? HistoryStats.previousPages(d.compare.prevIndex, name) : 0;
   };
   function renderHeadlines(app) {
     const { d } = app, s = d.stats, t = s.totals;
@@ -127,7 +126,7 @@
   function renderProtections(app) {
     const { d } = app, s = d.stats, t = s.totals, usable = d.compare && d.compare.usable;
     const rows = s.detectorMetrics.slice(0, 8).map(row => {
-      const before = usable ? (d.compare.prevIndex.get(row.name.toLowerCase()) || { pages: 0 }).pages : 0;
+      const before = usable ? HistoryStats.previousPages(d.compare.prevIndex, row.name) : 0;
       const delta = usable ? U.deltaView(HistoryStats.delta(row.pages, before), before) : null;
       return { label: row.name, value: row.pages, color: U.ink(row.category), meta: { text: U.categoryLabel(row.category), color: U.ink(row.category) },
         share: share(t.entries ? row.pages / t.entries : 0), delta: U.rankDelta(delta), tip: U.protectionTip(row) };

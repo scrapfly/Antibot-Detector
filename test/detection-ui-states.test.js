@@ -190,3 +190,26 @@ test('results, empty and loading states recover after a domain is unblocked', as
     assert.equal(visible(next === 'results' ? 'detectionResults' : `${next}State`), 'flex');
   }
 });
+
+test('the empty, disabled and blocked states tell Advanced the results are gone, so it offers no tools for them', () => {
+  for (const state of ['showEmptyState', 'showDisabledState']) {
+    const ctx = freshContext();
+    const told = [];
+    ctx.advancedSection = { onDetectionDataReady: (results) => told.push(results) };
+    ctx.tellAdvancedResultsGone = function() { this.advancedSection.onDetectionDataReady([]); };
+    ctx.currentResults = [{ detector: { name: 'Akamai Bot Manager' } }];
+    ctx[state]({ outcome: 'unscanned' });
+    assert.deepEqual(ctx.currentResults, [], state);
+    assert.deepEqual(told, [[]], `${state}: Advanced is told there is nothing`);
+  }
+});
+
+test('Detection.tellAdvancedResultsGone empties Advanced\'s copy, and does nothing without an Advanced section', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const source = fs.readFileSync(path.join(__dirname, '..', 'sections/detection/detection.js'), 'utf8');
+  assert.match(source, /tellAdvancedResultsGone\(\) \{\s*if \(this\.advancedSection && typeof this\.advancedSection\.onDetectionDataReady === 'function'\) this\.advancedSection\.onDetectionDataReady\(\[\]\);/);
+  const adv = fs.readFileSync(path.join(__dirname, '..', 'sections/advanced/advanced-runtime.js'), 'utf8');
+  assert.match(adv, /this\.cachedDetectionResults = results \|\| \[\];/, 'an empty list replaces the cache, so getCurrentDetections falls through to the empty Detection tab');
+});
+

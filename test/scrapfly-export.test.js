@@ -451,3 +451,24 @@ test('headers are never saved: they can carry cookies or tokens', () => {
     delete global.localStorage;
   }
 });
+
+test('a detector name with a Unicode line break cannot end a // comment and run as code', () => {
+  const names = ['Foo\u2028console.log("INJECTED")', 'Bar\u2029x', 'Baz\u0085y'];
+  const comment = ScrapflyExport.detectedComment(names, '//');
+  assert.ok(!/[\r\n\u0085\u2028\u2029]/.test(comment), 'one line');
+  assert.ok(comment.startsWith('// Detected: Foo console.log("INJECTED")'), 'the name is still readable');
+  for (const language of ['node', 'python', 'curl']) {
+    const code = ScrapflyExport.snippet(language, URL_PLAIN, names);
+    const first = code.split(/\r\n|\r|\n/).find(line => line.includes('Detected'));
+    assert.ok(first && !/[\u0085\u2028\u2029]/.test(first), `${language}: the comment line holds no line separator`);
+  }
+});
+
+test('curl: a value with a "+" is URL-encoded, because the API reads a bare "+" as a space', () => {
+  const code = ScrapflyExport.snippet('curl', URL_PLAIN, [], { waitForSelector: '.price+.currency' });
+  assert.ok(/--data-urlencode '?wait_for_selector=\.price\+\.currency'?/.test(code), code);
+  assert.ok(!/ -d wait_for_selector=/.test(code), 'not sent as -d');
+  const plain = ScrapflyExport.snippet('curl', URL_PLAIN, [], { waitForSelector: '.price' });
+  assert.ok(/ -d wait_for_selector=\.price/.test(plain), 'a plain value stays a bare -d');
+});
+

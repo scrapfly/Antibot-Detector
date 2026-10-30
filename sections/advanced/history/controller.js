@@ -218,8 +218,9 @@ Advanced.prototype.applyFilters = function(captures, currentSite, { siteOnly = f
     let filtered = [...captures];
 
     // Site filter
-    if (this.captureFilters.site === 'current' && currentSite) {
-      filtered = filtered.filter(c => c.site === currentSite);
+    if (this.captureFilters.site === 'current') {
+      // No current site (no tab, or a page without a host: about:blank, a file) is an empty list, not every capture
+      filtered = typeof currentSite === 'string' ? filtered.filter(c => (c.site || '') === currentSite) : [];
     } else if (this.captureFilters.site !== 'all' && this.captureFilters.site !== 'current') {
       filtered = filtered.filter(c => c.site === this.captureFilters.site);
     }

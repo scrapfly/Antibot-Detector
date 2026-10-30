@@ -433,3 +433,18 @@ test('reCAPTCHA auto-stop marks the capture stopped before it awaits the save, a
     assert.match(source, /stateStop\.stopping = true;/);
 });
 
+test('hCaptcha: the worker fetches a checksiteconfig address the page named only when it is https on a public name', async () => {
+    const f = fixture(), context = f.context;
+    vm.runInContext(read('background/advanced/vendors/hcaptcha/interceptor.js'), context);
+    const fetched = [];
+    context.fetch = async (url, options) => { fetched.push([url, options]); return { json: async () => ({ features: { custom_theme: true } }) }; };
+    const refused = ['http://192.168.1.1/cgi-bin/x/checksiteconfig?v=1', 'https://192.168.1.1/checksiteconfig', 'https://[::1]/checksiteconfig',
+        'https://localhost/checksiteconfig', 'https://nas.local/checksiteconfig', 'https://intranet/checksiteconfig', 'https://user:pw@hcaptcha.example.com/checksiteconfig',
+        'ftp://hcaptcha.example.com/checksiteconfig', 'not a url'];
+    for (const url of refused) assert.equal(await context.hcaptchaFetchFeatures(url), false, url);
+    assert.deepEqual(fetched, [], 'nothing was requested for any of them');
+    assert.equal(await context.hcaptchaFetchFeatures('https://hcaptcha.shop.example/checksiteconfig?v=1&host=a&sitekey=b'), true, 'a public https name, an Enterprise custom endpoint');
+    assert.equal(fetched.length, 1);
+    assert.deepEqual({ ...fetched[0][1] }, { credentials: 'omit', redirect: 'error', referrerPolicy: 'no-referrer' }, 'no cookies, no redirect followed');
+});
+

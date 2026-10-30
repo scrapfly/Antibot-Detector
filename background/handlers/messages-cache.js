@@ -159,8 +159,8 @@ function registerCacheHandlers(registry, context) {
         clearTabDetectionCache(request, sendResponse);
         return true; // Async response
     };
-    registry[WorkerMessages.DETECTION_CLEAR_CACHE] = handle_clear_detection_cache;
-    registry[WorkerMessages.HISTORY_CLEAR_CACHE] = handle_clear_detection_cache;
+    registry[WorkerMessages.DETECTION_CLEAR_CACHE] = MessageSender.extensionPagesOnly(handle_clear_detection_cache);
+    registry[WorkerMessages.HISTORY_CLEAR_CACHE] = MessageSender.extensionPagesOnly(handle_clear_detection_cache);
 
     // Settings → Data → Storage → Clear: every saved result; tabs that showed a cached one scan again next time
     const handle_clear_all_detection_cache = function({ sendResponse }) {
@@ -170,6 +170,6 @@ function registerCacheHandlers(registry, context) {
         })();
         return true; // Async response
     };
-    registry[WorkerMessages.DETECTION_CLEAR_ALL_CACHE] = handle_clear_all_detection_cache;
+    registry[WorkerMessages.DETECTION_CLEAR_ALL_CACHE] = MessageSender.extensionPagesOnly(handle_clear_all_detection_cache);
 
 }

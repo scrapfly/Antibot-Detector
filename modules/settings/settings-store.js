@@ -113,10 +113,11 @@
 
     function registerHandlers(registry) {
         StorageManager.settingsWriter = mutate;
-        registry[root.ScrapflyBridgeProtocol.MESSAGE_TYPES.SETTINGS_MUTATE] = ({ request, sendResponse }) => {
+        // Extension pages only: it can set the webhook address or reset every setting
+        registry[root.ScrapflyBridgeProtocol.MESSAGE_TYPES.SETTINGS_MUTATE] = root.MessageSender.extensionPagesOnly(({ request, sendResponse }) => {
             mutate(request.mutation).then(sendResponse, () => sendResponse({ success: false, error: 'Settings could not be saved' }));
             return true;
-        };
+        });
     }
     StorageManager.settingsWriter = mutate;
     root.SettingsStore = { mutate, registerHandlers };

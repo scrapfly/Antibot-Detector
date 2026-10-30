@@ -13,6 +13,21 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: a cookie rule that checks a value now looks at every cookie of that name, not only the first one.
 - Detection: a site on another port (localhost:3000 and localhost:8080) no longer shares a cached result with the first one.
 - Detection: a cached "match or not" answer can no longer be served to a different text or pattern.
+- Clear cache removes every result a reload could be served from (the www and bare-host entries, the page and site entries), so a cleared page is scanned again.
+- Rules: a pattern with three or more wildcards in a row (a*a*a*b) is refused, as it could freeze scanning.
+- Statistics: the change since the previous period is right for HUMAN (PerimeterX); the Domains search and "Show the domains with X" cover every protection of a domain, not the first eight.
+- Advanced: no tools are offered for detections the Detection tab dropped (Clear cache, a blocked site, the extension off); Current site is empty on a page without a host.
+- Copy buttons: a second click during "Copied!" no longer leaves the button on "Copied!".
+- Rules → Update: a bundled update the installed rule has caught up with no longer keeps the badge.
+- Scrapfly code: curl sends a value with a + (a CSS selector such as .price+.currency) encoded, so the API does not read it as a space.
+
+### Security
+
+- Copy → Python (requests): the cookies go to the page's own host only, not to a host the page redirects to, and non-ASCII values arrive intact.
+- Copy and share: a path parameter (;jsessionid=…) and an email address in the page's address are left out.
+- Advanced → hCaptcha: the extension asks for a configuration address the page names only when it is https on a public host name.
+- Changing settings, clearing the cache and the vendor capture tools answer the extension's own pages only, never a web page's context.
+- Scrapfly code: a detector name with a Unicode line separator can no longer end a comment and run as code in a Node.js snippet.
 
 ## [3.0.8] - 2026-10-29
 

@@ -16,7 +16,7 @@
   const NOTE = 'Note: protection cookies are tied to this browser session and expire, and a plain HTTP client does not reproduce the browser\'s TLS/HTTP2 fingerprint.';
 
   // Text for a comment line: a value can never end the comment early
-  const oneLine = (value) => String(value == null ? '' : value).replace(/[\r\n\u2028\u2029]+/g, ' ').trim();
+  const oneLine = (value) => String(value == null ? '' : value).replace(/[\r\n\u0085\u2028\u2029]+/g, ' ').trim();
 
   /** Accept-Language as Chrome builds it from navigator.languages: "en-US,en;q=0.9,es;q=0.8" */
   function acceptLanguage(languages) {
@@ -144,8 +144,11 @@
         lines.push(`    ${q(c.name)}: ${q(c.value)},${note}`);
       }
       lines.push('}');
+      // One Cookie header in UTF-8, as the browser sends it (cookies=cookies would send every cookie to any host a
+      // redirect leads to, and requests encodes it as Latin-1). requests drops a Cookie header when it follows a redirect
+      lines.push('headers["Cookie"] = "; ".join(f"{name}={value}" for name, value in cookies.items()).encode("utf-8")');
     }
-    lines.push('', `response = requests.get(url, headers=headers${p.cookies.length ? ', cookies=cookies' : ''}, timeout=30)`,
+    lines.push('', 'response = requests.get(url, headers=headers, timeout=30)',
       'print(response.status_code)', 'print(response.text[:500])');
     return lines.join('\n') + '\n';
   }

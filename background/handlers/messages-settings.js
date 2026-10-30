@@ -27,7 +27,7 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Async response
     };
-    registry[WorkerMessages.EXTENSION_TOGGLE_CHANGED] = handle_extension_toggle_changed;
+    registry[WorkerMessages.EXTENSION_TOGGLE_CHANGED] = MessageSender.extensionPagesOnly(handle_extension_toggle_changed);
 
     const handle_sync_category_colors = function({ request, sender, sendResponse, context }) {
         void context;
@@ -44,7 +44,7 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry[WorkerMessages.SYNC_CATEGORY_COLORS] = handle_sync_category_colors;
+    registry[WorkerMessages.SYNC_CATEGORY_COLORS] = MessageSender.extensionPagesOnly(handle_sync_category_colors);
 
     // The record of recent webhook deliveries is written here only: the Settings page asks for the Test line and for Clear
     registry[WorkerMessages.WEBHOOK_LOG_ENTRY] = function({ request, sender, sendResponse }) {
@@ -82,7 +82,7 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry[WorkerMessages.SETTINGS_UPDATED] = handle_settings_updated;
+    registry[WorkerMessages.SETTINGS_UPDATED] = MessageSender.extensionPagesOnly(handle_settings_updated);
 
     const handle_cache_scope_changed = function({ request, sender, sendResponse, context }) {
         void context;
@@ -138,7 +138,7 @@ function registerSettingsHandlers(registry, context) {
 
         return true; // Async response
     };
-    registry[WorkerMessages.CACHE_SCOPE_CHANGED] = handle_cache_scope_changed;
+    registry[WorkerMessages.CACHE_SCOPE_CHANGED] = MessageSender.extensionPagesOnly(handle_cache_scope_changed);
 
     const handle_reload_detectors = function({ request, sender, sendResponse, context }) {
         void context;
@@ -163,6 +163,6 @@ function registerSettingsHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry[WorkerMessages.RELOAD_DETECTORS] = handle_reload_detectors;
+    registry[WorkerMessages.RELOAD_DETECTORS] = MessageSender.extensionPagesOnly(handle_reload_detectors);
 
 }

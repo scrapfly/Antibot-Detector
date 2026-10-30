@@ -130,8 +130,14 @@ class UpdateManager {
             // The pending list is exactly this check's result: an empty check
             // must not leave the badge showing updates from an older one.
             // Bundled updates (queued on extension update) are not on GitHub,
-            // so they stay until applied or dismissed.
-            const bundledPending = (await this.getPendingUpdates()).filter(u => u.source === 'bundled');
+            // so they stay until applied or dismissed, unless the local rule has caught up with them since
+            // (applied through another route, or replaced by a newer official version): then it is no update.
+            const storedForBundled = await this.loadStoredDetectors();
+            const bundledPending = (await this.getPendingUpdates()).filter(u => u.source === 'bundled')
+                .map(u => this.describeUpdate(u.category, u.id,
+                    { version: u.remoteVersion, name: u.name, minExtensionVersion: u.minExtensionVersion },
+                    this.findStored(storedForBundled, u.category, u.id)?.detector, 'bundled'))
+                .filter(Boolean);
             await this.setPendingUpdates(this.mergeUpdateLists(bundledPending, updates));
 
             Logger.storage(`UpdateManager: ${release.tag}: ${updates.length} compatible updates, ${incompatibleUpdates.length} incompatible, ${failed.length} not downloaded`);

@@ -15,7 +15,8 @@ ScrapflyExport.detectedComment = function(names, prefix) {
   const shown = list.slice(0, ScrapflyExport.MAX_NAMES).join(', ');
   const more = list.length > ScrapflyExport.MAX_NAMES ? ` and ${list.length - ScrapflyExport.MAX_NAMES} more` : '';
   // A name never ends the comment early: no line breaks inside it
-  return `${prefix} Detected: ${shown}${more}`.replace(/[\r\n]+/g, ' ');
+  // (U+2028, U+2029 and U+0085 end a // comment in JavaScript as a line break does)
+  return `${prefix} Detected: ${shown}${more}`.replace(/[\r\n\u0085\u2028\u2029]+/g, ' ');
 };
 
 const scrapflyLines = (...lines) => lines.filter(line => line !== null).join('\n');
@@ -48,6 +49,8 @@ const sfxRustJson = (value) => JSON.stringify(value).replace(/\\u([0-9a-fA-F]{4}
 const sfxPascal = (snake) => String(snake).split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
 // A shell word that needs no quotes stays bare (us, win11, en-US,fr)
 const sfxShellArg = (value) => (/^[A-Za-z0-9_.,:\/+-]+$/.test(String(value)) ? String(value) : scrapflyQuote.shell(value));
+// ... but for curl -d the API decodes a "+" as a space (a + b), so a value with one goes through --data-urlencode
+const sfxCurlWord = (value) => (/^[A-Za-z0-9_.,:\/-]+$/.test(String(value)) ? String(value) : null);
 const SFX_GO_FORMAT = { clean_html: 'FormatCleanHTML', json: 'FormatJSON', markdown: 'FormatMarkdown', text: 'FormatText' };
 const SFX_RUST_FORMAT = { clean_html: 'CleanHtml', json: 'Json', markdown: 'Markdown', text: 'Text' };
 const SFX_GO_POOL = { public_residential_pool: 'PublicResidentialPool', public_datacenter_pool: 'PublicDataCenterPool' };
@@ -153,12 +156,12 @@ ScrapflyExport.snippet = function(language, url, names = [], options = {}) {
         else if (type === 'format') args.push(`  -d format=${value}${formatOptions ? `:${formatOptions.value.join(',')}` : ''}`);
         else if (type === 'fmtopts') continue;
         else if (type === 'flags') args.push(`  -d ${api}=${value.join(',')}`);
-        else if (type === 'list') args.push(sfxShellArg(value.join(',')) === value.join(',') ? `  -d ${api}=${value.join(',')}` : `  --data-urlencode ${q.shell(`${api}=${value.join(',')}`)}`);
+        else if (type === 'list') args.push(sfxCurlWord(value.join(',')) === value.join(',') ? `  -d ${api}=${value.join(',')}` : `  --data-urlencode ${q.shell(`${api}=${value.join(',')}`)}`);
         else if (type === 'headers' || type === 'screens') value.forEach(([k, x]) => args.push(`  --data-urlencode ${q.shell(`${api}[${type === 'headers' ? k.toLowerCase() : k}]=${x}`)}`));
         else if (type === 'js') args.push(`  -d js=${ScrapflyExport.base64Url(value)}`);
         else if (type === 'scenario') args.push(`  -d js_scenario=${ScrapflyExport.base64Url(JSON.stringify(value))}`);
         else if (type === 'template') args.push(`  --data-urlencode ${q.shell(`${api}=persistent:${value}`)}`);
-        else if (sfxShellArg(value) === String(value)) args.push(`  -d ${api}=${value}`);
+        else if (sfxCurlWord(value) === String(value)) args.push(`  -d ${api}=${value}`);
         else args.push(`  --data-urlencode ${q.shell(`${api}=${value}`)}`);
       }
       return scrapflyLines(detected('#'), args.join(' \\\n'));

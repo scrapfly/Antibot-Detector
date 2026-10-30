@@ -217,6 +217,7 @@ class Detection {
 
     // Clear current results display
     this.currentResults = [];
+    this.tellAdvancedResultsGone();
 
     // Clear pagination
     if (this.paginationManager) {
@@ -295,6 +296,10 @@ class Detection {
 
   showAnalyzingState(...args) {
     return DetectionUI.showAnalyzingState.apply(this, args);
+  }
+  /** Advanced keeps a copy of the results: it must not go on offering tools for ones this tab no longer shows. */
+  tellAdvancedResultsGone() {
+    if (this.advancedSection && typeof this.advancedSection.onDetectionDataReady === 'function') this.advancedSection.onDetectionDataReady([]);
   }
   showEmptyState(...args) {
     return DetectionUI.showEmptyState.apply(this, args);

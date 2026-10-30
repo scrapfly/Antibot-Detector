@@ -123,7 +123,7 @@
     if (prevWindow && prevWindow.usable) {
       const prevIndex = HistoryStats.protectionIndex(prevWindow.items), curIndex = HistoryStats.protectionIndex(selected);
       compare = { usable: true, prev: HistoryStats.summary(prevWindow.items), prevIndex, curIndex,
-        movers: HistoryStats.movers(curIndex, prevIndex, { exclude: new Set(firstSeen.protections.map(row => row.name.toLowerCase())) }) };
+        movers: HistoryStats.movers(curIndex, prevIndex, { exclude: new Set(firstSeen.protections.map(row => Categories.protectionKey(row.name))) }) };
     }
     const counts = HistoryStats.categoryCounts(selectedAll);
     let clipped = false;

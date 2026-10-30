@@ -204,7 +204,7 @@ function registerAdvancedCaptureHandlers(registry, context) {
     }
 
     registry[messageTypes.ADVANCED_PAGE_NOTICE] = ({ request, sender, sendResponse }) => {
-        if (sender?.tab || !Number.isInteger(request.tabId)) {
+        if (!MessageSender.isExtensionPage(sender) || !Number.isInteger(request.tabId)) {
             sendResponse({ status: 'error', error: 'Invalid Advanced notice request' });
             return false;
         }
@@ -285,7 +285,8 @@ function registerAdvancedCaptureHandlers(registry, context) {
     const pendingCaptureStarts = new Map();
     groupedHandlers.forEach(({ handler, messageKeys }) => {
         messageKeys.forEach((messageKey) => {
-            registry[messageKey] = args => {
+            // The vendor tools' start, stop and analysis messages come from the Advanced tab, never from a web page's context
+            registry[messageKey] = MessageSender.extensionPagesOnly(args => {
                 const { request, sendResponse } = args;
                 const vendorId = messageKey.split('_')[0].toLowerCase();
                 if (!messageKey.endsWith('_START_CAPTURE') || !captureStores[vendorId]) {
@@ -343,7 +344,7 @@ function registerAdvancedCaptureHandlers(registry, context) {
                     sendResponse({ status: 'error', error: error.message });
                     return false;
                 }
-            };
+            });
         });
     });
 }

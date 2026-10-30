@@ -25,7 +25,7 @@ function harness(settings = {}) {
   const context = () => {
     const c = vm.createContext({
       chrome: { storage: { local: storage }, runtime: { sendMessage: message => new Promise(resolve => registry[message.type]({ request: clone(message), sendResponse: result => resolve(clone(result)) })) } },
-      Logger: { error() {}, debug() {} },
+      Logger: { error() {}, debug() {} }, MessageSender: require('../modules/core/message-sender.js'),
       ScrapflyBridgeProtocol: { MESSAGE_TYPES: { SETTINGS_MUTATE: 'SETTINGS_MUTATE' } }
     });
     for (const file of ['modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/core/storage-manager.js']) vm.runInContext(read(file), c);

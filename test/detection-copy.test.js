@@ -112,3 +112,14 @@ test('a share upload leaves out a token in the address path too (reset, invite, 
   assert.equal(clean('https://shop.example/products/running-shoes-for-women/'), 'https://shop.example/products/running-shoes-for-women/', 'words stay');
   assert.equal(clean('https://news.example/2026/10/28/story'), 'https://news.example/2026/10/28/story', 'short numbers stay');
 });
+
+test('a share upload and a paste leave out a path parameter (;jsessionid=…) and an email address in the path', () => {
+  const { DetectionActions } = load();
+  const clean = (url) => DetectionActions._sanitizeUrlForPaste(url);
+  assert.equal(clean('https://shop.example/cart;jsessionid=9F8A7B6C5D4E3F2A1B0C9D8E7F6A5B4C?x=1'), 'https://shop.example/cart');
+  assert.equal(clean('https://shop.example/a;x=1/b;y=2/c'), 'https://shop.example/a/b/c', 'in every segment');
+  assert.equal(clean('https://app.example/u/jane.doe@gmail.com/orders'), 'https://app.example/u/:email/orders');
+  assert.equal(clean('https://app.example/u/jane.doe%40gmail.com/orders'), 'https://app.example/u/:email/orders', 'encoded too');
+  assert.equal(clean('https://shop.example/products/shoes'), 'https://shop.example/products/shoes', 'ordinary paths stay');
+});
+

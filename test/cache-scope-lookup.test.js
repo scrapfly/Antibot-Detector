@@ -100,3 +100,21 @@ test('a port that is not the scheme\'s own is another site: its own key, and no 
   assert.ok(await engineWith('domain', www).Engine.getStoredDetection('https://shop.example/'), 'www and the bare host still share one result');
 });
 
+test('Clear cache removes every entry a lookup of that page could be answered from, not only one key', async () => {
+  const { UrlUtils } = engineWith('domain', {});
+  const storage = store(UrlUtils, [['https://www.example.com/', 'domain'], ['https://example.com/', 'domain'], ['https://other.example.org/', 'domain'], ['http://localhost:3000/', 'domain']]);
+  storage[UrlUtils.hashUrl('https://example.com/page', 'path')] = entry('https://example.com/page', 'path');
+  const { Engine, context } = engineWith('domain', storage);
+  context.Utils.getCacheScope = async () => 'domain';
+  const answers = [];
+  await Engine.handleClearDetectionCache({ url: 'https://example.com/page' }, (response) => answers.push(response.status));
+  assert.deepEqual(answers, ['cleared']);
+  assert.strictEqual(await Engine.getStoredDetection('https://example.com/page'), null, 'a reload is not served from the www or path entry');
+  assert.strictEqual(await Engine.getStoredDetection('https://www.example.com/'), null);
+  assert.ok(await Engine.getStoredDetection('https://other.example.org/'), 'another site keeps its result');
+  assert.ok(await Engine.getStoredDetection('http://localhost:3000/'), 'and so does another port');
+  const again = [];
+  await Engine.handleClearDetectionCache({ url: 'https://example.com/page' }, (response) => again.push(response.status));
+  assert.deepEqual(again, ['not_found'], 'nothing left to clear');
+});
+

@@ -2238,11 +2238,28 @@ class DetectionEngineManager {
             try {
                 const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
                 const storage = result[DetectionEngineManager.STORAGE_KEY] || {};
-                if (storage[urlHash]) {
-                    delete storage[urlHash];
-                    await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
-                    cleared = true;
+                // Everything getStoredDetection could answer this page with: its own key under each scope it tries (a
+                // "Domain" lookup also reads the path and exact-address keys) and, under the "Domain" scope, the entry of
+                // the same site under its other spelling (www.example.com / example.com) on the same port. Clearing only
+                // the one key left a reload served from another entry, so "cleared" meant nothing.
+                const keys = new Set();
+                const scopeOrder = ['domain', 'path', 'full'];
+                for (const scope of scopeOrder.slice(scopeOrder.indexOf(cacheScope))) keys.add(UrlUtils.hashUrl(request.url, scope));
+                if (cacheScope === 'domain') {
+                    const hostname = UrlUtils.getHostnameFromUrl(request.url);
+                    for (const [key, stored] of Object.entries(storage)) {
+                        if (!stored) continue;
+                        const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
+                        if (UrlUtils.hostnamesMatch(hostname, storedHostname) && UrlUtils.portOf(request.url) === UrlUtils.portOf(stored.url)) keys.add(key);
+                    }
                 }
+                for (const key of keys) {
+                    if (storage[key]) {
+                        delete storage[key];
+                        cleared = true;
+                    }
+                }
+                if (cleared) await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
             } finally {
                 releaseStorageLock();
             }

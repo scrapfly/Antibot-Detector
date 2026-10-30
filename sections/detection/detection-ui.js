@@ -341,6 +341,7 @@ DetectionUI.showEmptyState = function(options = {}) {
 
     // Clear stale state to prevent re-rendering old data on tab switch
     this.currentResults = [];
+    if (typeof this.tellAdvancedResultsGone === 'function') this.tellAdvancedResultsGone();
     this.cacheMetadata = null;
 
     // Reset clear cache button to default state
@@ -389,6 +390,7 @@ DetectionUI.showDisabledState = function(isBlacklisted = !!this.blacklistedDomai
     this.wasInterrupted = false; // Reset flag when showing disabled state
     this.isShowingResults = false;
     this.currentResults = [];
+    if (typeof this.tellAdvancedResultsGone === 'function') this.tellAdvancedResultsGone();
     this.cacheMetadata = null;
     this.displayOptions = {};
     this.closeDetectionModal();

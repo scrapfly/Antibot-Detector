@@ -10,6 +10,7 @@ global.Logger = { error() {}, debug() {}, warn() {} };
 require('../modules/core/domain-list.js');
 require('../modules/core/scan-scope.js');
 require('../modules/core/storage-manager.js');
+require('../modules/core/message-sender.js');
 require('../modules/settings/settings-store.js');
 global.ScrapflyBridgeProtocol = { MESSAGE_TYPES: { SETTINGS_MUTATE: 'SETTINGS_MUTATE' } };
 global.SettingsStore.registerHandlers({});

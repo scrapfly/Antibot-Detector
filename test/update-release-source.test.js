@@ -227,3 +227,16 @@ test('the summary: installed names, up to date only when nothing else, the exten
   const keyed = UM.resultMessages({ ...base, installed: [{ name: 'F5' }] }, { t: (key, _fallback, ...args) => `${key}(${args.join('|')})` });
   assert.deepStrictEqual(plain(keyed), [{ type: 'success', text: 'updateResultInstalledFmt(v2.8.4|F5)' }], 'texts come from locale keys');
 });
+
+test('a bundled pending update the local rule has caught up with is dropped by the next successful check; one still newer stays', async () => {
+  const bundled = (id, remoteVersion) => ({ id, category: 'antibot', name: id, localVersion: '1.0.0', remoteVersion, minExtensionVersion: '2.8', isNew: false, userModified: false, source: 'bundled' });
+  const local = installedWith({ scrapfly_pending_updates: [bundled('detect-akamai', '1.5.0'), bundled('detect-cloudflare', '3.0.0')] },
+    ['detect-akamai', '2.0.0'], ['detect-cloudflare', '2.0.0']);
+  const { UM } = load(local, { latest: 'v2.9.0', releases: { 'v2.9.0': release({ 'detect-akamai': official('detect-akamai', '2.0.0'), 'detect-cloudflare': official('detect-cloudflare', '2.0.0') }) } });
+  const result = await UM.checkAndInstall();
+  assert.strictEqual(result.error, null);
+  assert.deepStrictEqual(plain((await UM.getPendingUpdates()).map(u => [u.id, u.remoteVersion, u.localVersion])), [['detect-cloudflare', '3.0.0', '2.0.0']],
+    'Akamai 1.5.0 is older than the installed 2.0.0: no update, no badge; Cloudflare 3.0.0 still is one (and knows the version it would replace)');
+  assert.strictEqual(await UM.getPendingUpdatesCount(), 1);
+});
+

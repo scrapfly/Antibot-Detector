@@ -23,6 +23,7 @@ importScripts(
     './utils/utils.js',
     './utils/pattern-cache.js',
     './modules/core/storage-manager.js',
+    './modules/core/message-sender.js',
     './modules/settings/settings-store.js',
     './modules/core/log-collector.js',
     // Detection engine
@@ -41,7 +42,6 @@ importScripts(
     './modules/ui/notification-manager.js',
     './modules/detection/rules/update-manager.js',
     './background/worker-keepalive-manager.js',
-    './modules/core/message-sender.js',
     './modules/core/history-store.js',
     './modules/core/history-policy.js',
     './modules/core/history-export.js',

@@ -457,10 +457,13 @@ const HistoryStats = {
     domainChanges.sort((a, b) => b.timestamp - a.timestamp || a.hostname.localeCompare(b.hostname));
     const decidedOut = (b) => ({ detections: b.detections, avgConfidence: average(b.sum, b.count) });
     const byOrder = (a, b) => CATEGORY_ORDER.indexOf(a.category) - CATEGORY_ORDER.indexOf(b.category) || a.name.localeCompare(b.name);
-    const domainMetrics = Array.from(domains.values(), (d) => ({ hostname: d.hostname, visits: d.visits, detections: d.detections, uniqueDetectors: d.names.size, avgConfidence: average(d.sum, d.count),
+    // Every protection of the domain, for the search and the "domains with X" filter: `stack` keeps eight for display. Not
+    // enumerable, so the export (JSON.stringify) and any copy of the row do not carry it
+    const withAllNames = (row, d) => Object.defineProperty(row, 'allNames', { value: Array.from(d.names.values(), (item) => item.name), enumerable: false });
+    const domainMetrics = Array.from(domains.values(), (d) => withAllNames({ hostname: d.hostname, visits: d.visits, detections: d.detections, uniqueDetectors: d.names.size, avgConfidence: average(d.sum, d.count),
       difficulty: levelOfRank[d.rank], hasCaptcha: d.hasCaptcha,
       stack: Array.from(d.names.values()).sort(byOrder).slice(0, 8).map(({ name, category }) => ({ name, category })), stackTotal: d.names.size, maxStack: d.maxStack,
-      firstTimestamp: d.firstTs, lastTimestamp: d.lastTs })).sort(byCount('visits'));
+      firstTimestamp: d.firstTs, lastTimestamp: d.lastTs }, d)).sort(byCount('visits'));
     // Protections found often but rarely with strong evidence: text mentions or unused scripts rather than a challenge
     const unconfirmed = detectorMetrics.filter((row) => {
       const scored = row.strong + row.moderate + row.weak;
@@ -660,6 +663,19 @@ const HistoryStats = {
       }
     }
     return index;
+  },
+  /** The names of every protection a domain row holds (`stack` is only the first eight). */
+  domainProtectionNames(row) {
+    if (!HistoryStats.isRecord(row)) return [];
+    return Array.isArray(row.allNames) ? row.allNames : (Array.isArray(row.stack) ? row.stack.map((item) => item.name) : []);
+  },
+  /**
+   * The pages a protection had in the previous period (0 when it had none), from a protectionIndex() map: that map is
+   * keyed by Categories.protectionKey(), so a protection that went by two names (HUMAN (PerimeterX), PerimeterX) is one row.
+   */
+  previousPages(prevIndex, name) {
+    const row = prevIndex instanceof Map ? prevIndex.get(Categories.protectionKey(name)) : null;
+    return row ? row.pages : 0;
   },
   /**
    * Change between two values, as a neutral kind. Below DELTA_SMALL_BASE the previous value is too

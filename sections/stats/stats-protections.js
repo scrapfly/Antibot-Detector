@@ -27,7 +27,7 @@
   function protectionRows(app) {
     const { state, d } = app, usable = d.compare && d.compare.usable;
     const rows = d.stats.detectorMetrics.map(row => {
-      const before = usable ? (d.compare.prevIndex.get(row.name.toLowerCase()) || { pages: 0 }).pages : 0;
+      const before = usable ? HistoryStats.previousPages(d.compare.prevIndex, row.name) : 0;
       return { ...row, before, diff: usable ? row.pages - before : 0 };
     });
     // "Biggest change" needs a previous period: offer it only when there is one
@@ -84,7 +84,7 @@
   const filtersActive = f => !!(f.query || f.protection || f.difficulty.size || f.captcha || f.changed);
   function domainIndex(app) {
     const d = app.d;
-    if (!d.domainIndex) d.domainIndex = d.stats.domainMetrics.map(row => (row.hostname + '\n' + row.stack.map(item => item.name).join('\n')).toLowerCase());
+    if (!d.domainIndex) d.domainIndex = d.stats.domainMetrics.map(row => (row.hostname + '\n' + HistoryStats.domainProtectionNames(row).join('\n')).toLowerCase());
     return d.domainIndex;
   }
   /** Rows matching the search, with the counts each chip would give against that search. */
@@ -94,7 +94,7 @@
     // rule whose name contains it, is not listed); anything typed in the search box is a text search again
     const protection = (state.domain.protection || '').toLowerCase();
     const rows = protection
-      ? d.stats.domainMetrics.filter(row => row.stack.some(item => String(item.name).toLowerCase() === protection))
+      ? d.stats.domainMetrics.filter(row => HistoryStats.domainProtectionNames(row).some(name => String(name).toLowerCase() === protection))
       : d.stats.domainMetrics.filter((row, i) => !query || index[i].includes(query));
     const changed = new Set(d.changes.hostnames);
     return { rows, changed, counts: { High: rows.filter(r => r.difficulty === 'High').length, Medium: rows.filter(r => r.difficulty === 'Medium').length,

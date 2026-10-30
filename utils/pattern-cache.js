@@ -34,6 +34,8 @@ function fnv1aHash(str) {
  * which only makes the check stricter.
  */
 const REDOS_ASCII = 128;
+// This many unbounded repeats in a row over the same characters read as polynomial backtracking
+const REDOS_MAX_ADJACENT_REPEATS = 3;
 
 function redosSet(all = false) {
     return { ascii: new Array(REDOS_ASCII).fill(all), other: all };
@@ -241,9 +243,20 @@ function redosParse(source) {
  */
 function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
     for (const branch of branches) {
+        // Adjacent unbounded atoms that can match the same characters split a run of them any way they like: n^k
+        // steps for k of them (a*a*a*a*b, .*.*.*x). Two are quadratic and common (.*.*); three or more are refused.
+        let run = 0;
         for (let index = 0; index < branch.atoms.length; index++) {
             const atom = branch.atoms[index];
             const unbounded = atom.quant === 'unbounded';
+            if (unbounded && atom.kind !== 'zero') {
+                const before = index > 0 ? branch.atoms[index - 1] : null;
+                const joined = before && before.quant === 'unbounded' && before.kind !== 'zero' && redosOverlap(before.first, atom.first);
+                run = joined ? run + 1 : 1;
+                if (run >= REDOS_MAX_ADJACENT_REPEATS) return true;
+            } else {
+                run = 0;
+            }
             const rest = branch.atoms.slice(index + 1)
                 .filter(next => next.kind !== 'zero' && !next.nullable)
                 .map(next => next.first)

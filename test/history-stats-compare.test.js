@@ -215,3 +215,42 @@ test('hardestDomains puts the hardest first and keeps the same row objects', () 
   assert.equal(rows.length, 10, 'the input is not reordered');
   assert.equal(rows[0].hostname, 'b.com');
 });
+
+test('a protection that went by two names is one row of the previous period: HUMAN (PerimeterX) is not "new" when it was there before', () => {
+  const human = det('HUMAN (PerimeterX)');
+  const previous = Array.from({ length: 5 }, (_, i) => page(`p${i}.com`, [human], NOW - 40 * DAY));
+  const current = Array.from({ length: 5 }, (_, i) => page(`c${i}.com`, [human], NOW - DAY));
+  const prevIndex = HistoryStats.protectionIndex(previous), curIndex = HistoryStats.protectionIndex(current);
+  assert.equal(HistoryStats.previousPages(prevIndex, 'HUMAN (PerimeterX)'), 5, 'looked up by the protection\'s key, not its lower-cased name');
+  assert.equal(HistoryStats.previousPages(prevIndex, 'PerimeterX'), 5, 'under either name');
+  assert.equal(HistoryStats.previousPages(prevIndex, 'Cloudflare'), 0);
+  assert.equal(HistoryStats.previousPages(null, 'x'), 0);
+  assert.equal(HistoryStats.delta(curIndex.get('perimeterx').pages, HistoryStats.previousPages(prevIndex, 'HUMAN (PerimeterX)')).kind, 'flat', '5 pages against 5');
+});
+
+test('the Statistics tabs look the previous period up through that helper, not by a lower-cased name', () => {
+  const fs = require('node:fs');
+  for (const file of ['stats-protections.js', 'stats-overview.js', 'stats.js']) {
+    const code = fs.readFileSync(path.join(__dirname, '..', 'sections/stats', file), 'utf8');
+    assert.ok(!/prevIndex\.get\([^)]*toLowerCase/.test(code), `${file}: no lower-cased lookup in the index`);
+    assert.ok(!/exclude: new Set\([^)]*toLowerCase/.test(code), `${file}: the first-seen set uses the same key`);
+  }
+});
+
+test('a domain row keeps every protection for the search and the filter, though its stack shows eight; exports do not carry the list', () => {
+  const names = ['Cloudflare', 'reCAPTCHA', ...Array.from({ length: 10 }, (_, i) => `Fingerprint ${i}`)];
+  const rows = Array.from({ length: 3 }, (_, i) => page(`d${i}.com`, names.map((name, n) => det(name, n < 2 ? 'antibot' : 'fingerprint'))));
+  const stats = HistoryStats.compute(rows, { now: NOW });
+  const row = stats.domainMetrics[0];
+  assert.equal(row.stack.length, 8, 'the display is capped');
+  assert.equal(row.stackTotal, 12);
+  const all = HistoryStats.domainProtectionNames(row);
+  assert.equal(all.length, 12, 'every protection is searchable');
+  assert.ok(all.includes('Fingerprint 9'), 'also one past the eighth');
+  assert.ok(!row.stack.some(item => item.name === 'Fingerprint 9'), 'which the stack does not show');
+  assert.ok(!('allNames' in JSON.parse(JSON.stringify(row))), 'JSON.stringify leaves the list out');
+  assert.deepEqual(Object.keys(row).includes('allNames'), false, 'not enumerable');
+  assert.deepEqual(HistoryStats.domainProtectionNames({ stack: [{ name: 'A' }] }), ['A'], 'a row without the list falls back to its stack');
+  assert.deepEqual(HistoryStats.domainProtectionNames(null), []);
+});
+

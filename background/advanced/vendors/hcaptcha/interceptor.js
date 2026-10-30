@@ -103,9 +103,24 @@ function hcaptchaInspectRequest(details, target) {
 // come back even for an unregistered key, so "any feature" is not an Enterprise sign.
 const HCAPTCHA_ENTERPRISE_FEATURES = ['custom_theme'];
 
+/**
+ * Whether the worker may ask for this checksiteconfig address. The address comes from a request the PAGE made (paths
+ * only, so Enterprise custom endpoints count): a page could name a host of the person's network, and the worker's request
+ * is not held back by CORS. Only an https address on a public name is fetched, never an IP literal or a local name.
+ */
+function hcaptchaCanFetch(configUrl) {
+    let parsed;
+    try { parsed = new URL(configUrl); } catch (_) { return false; }
+    if (parsed.protocol !== 'https:' || parsed.username || parsed.password) return false;
+    const host = parsed.hostname.toLowerCase();
+    if (!host.includes('.') || host.startsWith('[') || /^\d+\.\d+\.\d+\.\d+$/.test(host)) return false;
+    return !(host === 'localhost' || /\.(localhost|local|internal|lan|home|corp|intranet)$/.test(host));
+}
+
 /** Whether a checksiteconfig response lists an Enterprise-only feature. */
 async function hcaptchaFetchFeatures(configUrl) {
-    const response = await fetch(configUrl);
+    if (!hcaptchaCanFetch(configUrl)) return false;
+    const response = await fetch(configUrl, { credentials: 'omit', redirect: 'error', referrerPolicy: 'no-referrer' });
     const data = await response.json();
     return hcaptchaHasEnterpriseFeature(data);
 }
