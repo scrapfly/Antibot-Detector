@@ -1283,7 +1283,11 @@
     // The real hooks resolve the APIs next: take the early recorders off first
     restoreEarlyRecorders();
     // JS hooks off on this site (Settings → Detection): nothing stays wrapped, in the page or in its frames
-    if (event.detail?.hooksOff === true) retireFrameInstrumentation();
+    if (event.detail?.hooksOff === true) {
+      retireFrameInstrumentation();
+      // Responses an earlier install asked for are no longer read (what is already wrapped stays, and passes through)
+      responseCapture = null;
+    }
     // Independent of the hook cycle and of cache hits: these responses often
     // come long after the scan (a challenge when a message is sent), and the
     // worker adds what they show to the page's result when they do

@@ -136,6 +136,18 @@ test('nothing is wrapped when no pattern applies to the site, or the spec is mal
   }
 });
 
+test('a later install for a site with the JS hooks off stops reading the responses an earlier one asked for', async () => {
+  const { page } = pageWith({ [PREPARE]: { body: prepareBody } });
+  install(page, specFor('chatgpt.com'));
+  const off = installDetail(TOKEN);
+  off.hooksOff = true;
+  page.install(off);
+  const text = await page.run(`fetch('/backend-api/sentinel/chat-requirements/prepare', { method: 'post', body: '{"p":"x"}' }).then(r => r.text())`);
+  assert.equal(text, prepareBody, 'the page still gets the whole body');
+  await sleep(10);
+  assert.deepEqual(page.ofType(T.RESPONSE_BODY), []);
+});
+
 test('XMLHttpRequest responses are read on loadend for matching URLs', async () => {
   const challenge = 'https://chat.deepseek.com/api/v0/chat/create_pow_challenge';
   const body = JSON.stringify({ code: 0, data: { biz_data: { challenge: { algorithm: 'DeepSeekHashV1', difficulty: 144000, target_path: '/api/v0/chat/completion' } } } });
