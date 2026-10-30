@@ -7,6 +7,14 @@ const SettingsUI = (typeof self !== 'undefined' && self.SettingsUI) ? self.Setti
 // Card heads that are a title (not a switch): the card folds under them
 SettingsUI.CARD_HEAD_SELECTOR = ':scope > .settings-card-head, :scope > .settings-row--head, :scope > .settings-stats-head, :scope > .data-card-head';
 
+// A card marked with this attribute starts open (and opens again each time Settings does)
+SettingsUI.OPEN_BY_DEFAULT_ATTRIBUTE = 'data-open-by-default';
+
+SettingsUI.foldCard = function(card, head, folded) {
+    card.classList.toggle('is-collapsed', folded);
+    if (head) head.setAttribute('aria-expanded', String(!folded));
+};
+
 /**
  * Cards topped by a title start folded, showing only that title; clicking it
  * (or Enter / Space) opens the card. Cards topped by a switch are left as
@@ -19,10 +27,10 @@ SettingsUI.setupCollapsibleCards = function(root) {
       if (card.classList.contains('is-collapsible')) return;
       const head = card.querySelector(SettingsUI.CARD_HEAD_SELECTOR);
       if (!head || head.querySelector('input, select, textarea, button')) return;
-      card.classList.add('is-collapsible', 'is-collapsed');
+      card.classList.add('is-collapsible');
+      SettingsUI.foldCard(card, head, !card.hasAttribute(SettingsUI.OPEN_BY_DEFAULT_ATTRIBUTE));
       head.setAttribute('role', 'button');
       head.tabIndex = 0;
-      head.setAttribute('aria-expanded', 'false');
       head.insertAdjacentHTML('beforeend', chevron);
       const toggle = () => {
         const open = card.classList.toggle('is-collapsed') === false;
@@ -37,13 +45,12 @@ SettingsUI.setupCollapsibleCards = function(root) {
     });
 };
 
-/** Every folding card closed again (each time Settings opens) */
+/** Every folding card back to where it starts (each time Settings opens): folded, unless it opens by default */
 SettingsUI.collapseCards = function(root) {
     if (!root) return;
     SettingsUI.setupCollapsibleCards(root);
     root.querySelectorAll('.settings-card.is-collapsible').forEach((card) => {
-      card.classList.add('is-collapsed');
-      card.querySelector(SettingsUI.CARD_HEAD_SELECTOR)?.setAttribute('aria-expanded', 'false');
+      SettingsUI.foldCard(card, card.querySelector(SettingsUI.CARD_HEAD_SELECTOR), !card.hasAttribute(SettingsUI.OPEN_BY_DEFAULT_ATTRIBUTE));
     });
 };
 

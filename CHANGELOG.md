@@ -12,6 +12,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection → Copy: Node.js (fetch), a script that requests the page again with this browser's headers and cookies, naming the protection cookies; redirects are not followed, so the cookies stay on the page's host.
 - Bulk scan: Scan the failed pages again, for a finished or stopped run with pages that timed out or failed to load; the rest of the run stays in the table and the exports.
 
+### Changed
+
+- Settings → Data: History statistics is open when Settings opens, so Open statistics is one click away; Storage and Backup stay folded.
+
 ### Fixed
 
 - Anubis and PerimeterX (_pxhd) cookies are recognised again: their value rules needed more than the 100 characters the extension reads of a cookie.

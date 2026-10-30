@@ -64,6 +64,31 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
     };
     const get = (keys) => W((list) => chrome.storage.local.get(list), keys);
 
+    // ---- History statistics -----------------------------------------------------------------------------------
+    // The Data tab opens with its first card open (the button to the statistics page) and the others folded
+    if (!only || 'statistics'.includes(only)) {
+      await openData();
+      const state = () => page.evaluate(() => ({
+        stats: !document.querySelector('.settings-card--stats').classList.contains('is-collapsed'),
+        button: document.querySelector('#openHistoryStatsBtn').offsetParent !== null,
+        expanded: document.querySelector('.settings-card--stats .settings-stats-head').getAttribute('aria-expanded'),
+        others: [...document.querySelectorAll('[data-tab-content="data"] .settings-card--data')].map(card => card.classList.contains('is-collapsed'))
+      }));
+      let now = await state();
+      assert.deepEqual({ stats: now.stats, button: now.button, expanded: now.expanded }, { stats: true, button: true, expanded: 'true' }, 'History statistics is open with the tab');
+      assert.ok(now.others.length >= 2 && now.others.every(Boolean), 'Storage and Backup start folded');
+      await click('.settings-card--stats .settings-stats-head');
+      now = await state();
+      assert.equal(now.stats, false, 'a click folds it');
+      assert.equal(now.button, false, 'and hides the button');
+      await click('#closeSettingsModal');
+      await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
+      await openData();
+      now = await state();
+      assert.equal(now.stats, true, 'open again the next time Settings opens');
+      console.log('PASS History statistics is open by default on the Data tab, folds on a click, and is open again when Settings reopens');
+    }
+
     // ---- Storage ----------------------------------------------------------------------------------------------
     if (!only || 'storage'.includes(only)) {
       const now = Date.now();
