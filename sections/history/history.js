@@ -587,7 +587,6 @@ class History {
         // Toggle expand/collapse on header click or Enter / Space
         const toggle = () => {
           const isExpanded = card.classList.toggle('expanded');
-          methods.style.display = isExpanded ? 'flex' : 'none';
           header.setAttribute('aria-expanded', String(isExpanded));
         };
         header.addEventListener('click', toggle);
@@ -598,8 +597,21 @@ class History {
           }
         });
 
-        // Initially hide methods
-        methods.style.display = 'none';
+        // The matched detections stay folded under their title until it is clicked
+        const matchTitle = card.querySelector('.history-modal-match-count');
+        if (matchTitle) {
+          const toggleMatches = () => {
+            methods.hidden = !methods.hidden;
+            matchTitle.setAttribute('aria-expanded', String(!methods.hidden));
+          };
+          matchTitle.addEventListener('click', toggleMatches);
+          matchTitle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleMatches();
+            }
+          });
+        }
       }
     });
   }
@@ -1338,8 +1350,8 @@ class History {
           ${hasMethods ? `
             <div class="history-modal-detection-details">
               ${combinationsHtml}
-              <div class="history-modal-match-count">${FormatUtils.escapeHtml(_tr('historyMatchedDetections', 'Matched detections'))}</div>
-              <div class="history-modal-detection-methods">
+              <div class="history-modal-match-count" role="button" tabindex="0" aria-expanded="false">${FormatUtils.escapeHtml(_tr('historyMatchedDetections', 'Matched detections'))}<svg class="history-modal-match-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></div>
+              <div class="history-modal-detection-methods" hidden>
                 ${methodsHtml}
               </div>
             </div>

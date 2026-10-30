@@ -1214,6 +1214,30 @@
   gap: 5px;
 }
 
+.history-modal-detection-methods[hidden] {
+  display: none;
+}
+
+/* The matched detections' title folds them: click it to show the list */
+.history-modal-match-count[role="button"] {
+  cursor: pointer;
+}
+
+.history-modal-match-count[role="button"]:hover,
+.history-modal-match-count[role="button"]:focus-visible {
+  color: var(--text-primary);
+}
+
+.history-modal-match-chevron {
+  order: 1;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.history-modal-match-count[aria-expanded="true"] .history-modal-match-chevron {
+  transform: rotate(180deg);
+}
+
 /* Method row: chip and confidence on top, the value full width below */
 .history-modal-method-item {
   display: grid;

@@ -687,6 +687,34 @@ async function scenario(name, fn) {
     } finally { await page.close(); }
   });
 
+  await scenario('History details: an opened detection lists its matched detections folded until their title is clicked', async () => {
+    const now = Date.now();
+    await setHistory([
+      { id: 'm1', url: 'https://match.example/', hostname: 'match.example', title: 'Match', timestamp: now, detections: [{ detector: { name: 'Cloudflare' }, category: 'Anti-Bot', confidence: 95, difficulty: 'Medium',
+        matches: [{ type: 'url', pattern: 'challenge-platform', confidence: 60 }, { type: 'cookie', pattern: 'cf_clearance', confidence: 90 }] }] }
+    ]);
+    const page = await openExtensionPage();
+    try {
+      await page.$eval('#nav-history', el => el.click());
+      await page.waitForSelector('.history-item');
+      await page.evaluate(() => window.popupInstance.history.showHistoryItemDetails(window.popupInstance.history.historyItems[0]));
+      await page.waitForSelector('#historyModalContent .history-modal-detection-card.has-methods');
+      const visible = (selector) => page.$eval(selector, el => el.offsetParent !== null);
+      const list = '#historyModalContent .history-modal-detection-methods';
+      const title = '#historyModalContent .history-modal-match-count';
+      await page.$eval('#historyModalContent .history-modal-detection-header', el => el.click());
+      assert.equal(await visible(title), true, 'the title shows once the detection is opened');
+      assert.equal(await visible(list), false, 'the matched detections are folded by default');
+      assert.equal(await page.$eval(title, el => el.getAttribute('aria-expanded')), 'false');
+      await page.$eval(title, el => el.click());
+      assert.equal(await visible(list), true, 'a click on the title shows them');
+      assert.equal(await page.$$eval(`${list} > *`, els => els.length) >= 2, true, 'every match is listed');
+      assert.equal(await page.$eval(title, el => el.getAttribute('aria-expanded')), 'true');
+      await page.$eval(title, el => el.click());
+      assert.equal(await visible(list), false, 'and another folds them again');
+    } finally { await page.close(); }
+  });
+
   await scenario('Pinned entries survive auto-delete and the entry limit; unpinned ones go', async () => {
     const now = Date.now();
     const old = (id, ageDays, extra = {}) => ({ id, url: `https://${id}.example/`, hostname: `${id}.example`, title: id, timestamp: now - ageDays * DAY, detections: [{ detector: { name: 'X' }, category: 'Anti-Bot', confidence: 90 }], ...extra });
