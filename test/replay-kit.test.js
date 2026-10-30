@@ -150,3 +150,53 @@ test('a name with a line break cannot end a comment early', () => {
     assert.ok(!/^import os/m.test(code));
   }
 });
+
+test('Node.js: a fetch script with the browser headers, the protection named beside its cookie, and nothing but http(s) pages', () => {
+  const code = ReplayKit.node(input);
+  assert.ok(code.startsWith('// Replays https://shop.example/cart?'), 'comment header, the fragment is never sent');
+  assert.ok(!code.includes('#frag'));
+  assert.ok(code.includes('// Detected: Cloudflare, DataDome'));
+  assert.ok(code.includes('TLS/HTTP2 fingerprint'));
+  assert.ok(code.includes('// Protection cookies: __cf_bm (Cloudflare), cf_clearance (Cloudflare)'));
+  assert.ok(/"__cf_bm=[^\n]*",  \/\/ Cloudflare$/m.test(code), 'the protection is named beside its cookie');
+  assert.ok(!/"datadome=/.test(code), 'a protection cookie the page does not hold is not invented');
+  assert.ok(code.includes('redirect: "manual"'), 'redirects are not followed');
+  assert.strictEqual(ReplayKit.node({ ...input, url: '' }), '');
+  assert.strictEqual(ReplayKit.node({ ...input, url: 'mailto:x@y.example' }), '');
+});
+
+// The script is run by node itself against two local servers: the page's, which redirects to another host, and that other
+// host. Cookies reach the first, never the second, and a non-ASCII value arrives as UTF-8, as a browser sends it.
+test('Node.js: the cookies go to the page\'s own host only, a redirect is not followed, and non-ASCII values arrive as UTF-8', async () => {
+  const http = require('node:http');
+  const seen = { first: null, second: null, headers: null };
+  const second = http.createServer((req, res) => { seen.second = req.headers.cookie || null; res.end('second'); });
+  await new Promise(resolve => second.listen(0, '127.0.0.1', resolve));
+  const first = http.createServer((req, res) => {
+    seen.first = Buffer.from(req.headers.cookie || '', 'latin1').toString('utf8');
+    seen.headers = req.headers;
+    res.writeHead(302, { Location: `http://localhost:${second.address().port}/` });
+    res.end();
+  });
+  await new Promise(resolve => first.listen(0, '127.0.0.1', resolve));
+  try {
+    const code = ReplayKit.node({ url: `http://127.0.0.1:${first.address().port}/`, cookies: [{ name: 'sessionid', value: 'SECRET' }, { name: 'city', value: 'ñandú' }, { name: 'lang', value: '日本' }],
+      headers: [['User-Agent', 'Replay/1'], ['Accept-Language', 'es-ES,es;q=0.9']] });
+    const run = await new Promise(resolve => {
+      const child = require('node:child_process').spawn(process.execPath, ['-'], { env: process.env });
+      let stdout = '', stderr = '';
+      child.stdout.on('data', chunk => { stdout += chunk; });
+      child.stderr.on('data', chunk => { stderr += chunk; });
+      child.on('close', status => resolve({ status, stdout, stderr }));
+      child.stdin.end(code);
+    });
+    assert.strictEqual(run.status, 0, run.stderr);
+    assert.strictEqual(run.stdout.split('\n')[0], '302', 'the redirect is reported, not followed');
+    assert.strictEqual(seen.first, 'sessionid=SECRET; city=ñandú; lang=日本', 'the page\'s host gets every cookie, as UTF-8');
+    assert.strictEqual(seen.second, null, 'the host the page redirected to gets none');
+    assert.strictEqual(seen.headers['user-agent'], 'Replay/1');
+  } finally {
+    first.close(); second.close();
+  }
+});
+

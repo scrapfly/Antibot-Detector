@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "打开一个网页即可将其复制为代码"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "扫描仍在等待的页面"
+  },
+  "bulkScanFailedAgain": {
+    "message": "重新扫描失败的页面"
   },
   "bulkNewList": {
     "message": "新列表"

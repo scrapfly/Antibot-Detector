@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "開啟網頁即可將其複製為程式碼"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "掃描仍在等待的網頁"
+  },
+  "bulkScanFailedAgain": {
+    "message": "重新掃描失敗的網頁"
   },
   "bulkNewList": {
     "message": "新清單"

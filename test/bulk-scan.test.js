@@ -290,3 +290,24 @@ test('continuing a stopped run: the waiting addresses to scan, the finished page
   assert.equal(BulkScan.continuation(null), null);
 });
 
+test('scanning the failed pages again: failed (and waiting) addresses are scanned, done and skipped pages are kept', () => {
+  const run = BulkScan.createRun({ items: [
+    { url: 'https://a.example/', status: 'waiting' }, { url: 'https://b.example/', status: 'waiting' }, { url: 'https://c.example/', status: 'waiting' },
+    { url: 'mailto:x', status: 'skipped', reason: 'scheme' }
+  ] });
+  BulkScan.begin(run, 0); BulkScan.finish(run, 0, { detections: [{ name: 'Akamai' }], difficulty: 'High' });
+  BulkScan.begin(run, 1); BulkScan.fail(run, 1, 'timeout');
+  BulkScan.stop(run);
+  assert.deepEqual(plain(BulkScan.continuation(run).entries), ['https://c.example/'], 'by default only what waits');
+  const again = BulkScan.continuation(run, { includeFailed: true });
+  assert.deepEqual(plain(again.entries), ['https://b.example/', 'https://c.example/'], 'the failed page and the waiting one');
+  assert.deepEqual(plain(again.kept.map(item => [item.url, item.status])), [['https://a.example/', 'done'], ['mailto:x', 'skipped']]);
+  const done = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'waiting' }, { url: 'https://b.example/', status: 'waiting' }] });
+  BulkScan.begin(done, 0); BulkScan.finish(done, 0, {});
+  BulkScan.begin(done, 1); BulkScan.fail(done, 1, 'load');
+  BulkScan.complete(done);
+  assert.equal(done.status, 'done');
+  assert.deepEqual(plain(BulkScan.continuation(done, { includeFailed: true }).entries), ['https://b.example/'], 'a finished run with a failure can be retried');
+  assert.equal(BulkScan.continuation(done), null, 'but nothing waits');
+});
+

@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "Откройте веб-страницу, чтобы скопировать её как код"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "Сканировать страницы, которые ещё ждут"
+  },
+  "bulkScanFailedAgain": {
+    "message": "Повторно сканировать страницы со сбоем"
   },
   "bulkNewList": {
     "message": "Новый список"

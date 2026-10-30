@@ -335,18 +335,21 @@
   }
 
   /**
-   * What "Scan the pages still waiting" takes from a run that is over: the addresses still waiting, and the pages that
-   * already have their outcome (done, failed or skipped), which stay in the list with their results.
+   * What "Scan the pages still waiting" (and "Scan the failed pages again") takes from a run that is over: the addresses
+   * to scan, and the pages that already have their outcome (done, skipped, and failed unless they are scanned again),
+   * which stay in the list with their results.
    * @returns {{entries: string[], kept: object[], duplicates: number, overCap: number, skippedOver: number}|null} null when
    *   the run is still going or nothing waits
    */
-  function continuation(run) {
+  function continuation(run, options = {}) {
     if (!run || typeof run !== 'object' || !Array.isArray(run.items) || isActive(run)) return null;
-    const entries = run.items.filter(item => item.status === 'waiting').map(item => item.url);
+    // Waiting pages, and with `includeFailed` the pages that failed (timeout, load error) too: scanned again
+    const again = (item) => item.status === 'waiting' || (options.includeFailed === true && item.status === 'failed');
+    const entries = run.items.filter(again).map(item => item.url);
     if (!entries.length) return null;
     return {
       entries,
-      kept: run.items.filter(item => item.status !== 'waiting' && item.status !== 'scanning').map(item => ({ ...item })),
+      kept: run.items.filter(item => !again(item) && item.status !== 'scanning').map(item => ({ ...item })),
       duplicates: run.duplicates || 0, overCap: run.overCap || 0, skippedOver: run.skippedOver || 0
     };
   }

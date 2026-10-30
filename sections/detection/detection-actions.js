@@ -550,9 +550,9 @@ DetectionActions.replayInput = async function(pageUrl) {
     };
 };
 
-/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'json', or the replay kit's 'curl' and 'python'. */
+/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'json', or the replay kit's 'curl', 'python' and 'node'. */
 DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
-    if (kind === 'curl' || kind === 'python') {
+    if (kind === 'curl' || kind === 'python' || kind === 'node') {
       const input = await DetectionActions.replayInput.call(this, pageUrl);
       const code = ReplayKit[kind](input);
       if (!code) {

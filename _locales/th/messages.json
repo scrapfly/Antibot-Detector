@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "เปิดหน้าเว็บเพื่อคัดลอกเป็นโค้ด"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "สแกนหน้าที่ยังรออยู่"
+  },
+  "bulkScanFailedAgain": {
+    "message": "สแกนหน้าที่ไม่สำเร็จอีกครั้ง"
   },
   "bulkNewList": {
     "message": "รายการใหม่"

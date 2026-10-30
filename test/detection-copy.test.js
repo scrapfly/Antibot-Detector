@@ -68,16 +68,16 @@ test('an empty page copies a heading and the summary, without a table', () => {
   assert.doesNotThrow(() => DetectionActions.buildDetectionsMarkdown(null));
 });
 
-test('the Detection tab offers the five formats in a menu wired to copyDetectionsAs', () => {
+test('the Detection tab offers its six formats in a menu wired to copyDetectionsAs', () => {
   const html = fs.readFileSync(path.join(root, 'sections/detection/detection.html'), 'utf8');
   assert.ok(/id="copyOverviewBtn"[^>]*aria-haspopup="menu"/.test(html));
   const formats = [...html.matchAll(/data-copy-format="([a-z]+)"/g)].map(m => m[1]);
-  assert.deepStrictEqual(formats, ['overview', 'markdown', 'json', 'curl', 'python']);
+  assert.deepStrictEqual(formats, ['overview', 'markdown', 'json', 'curl', 'python', 'node']);
   const js = fs.readFileSync(path.join(root, 'sections/detection/detection.js'), 'utf8');
   assert.ok(js.includes('DetectionActions.copyDetectionsAs.call(this, item.dataset.copyFormat'));
 });
 
-test('curl and Python copy the replay kit\'s code, with the page\'s cookies read for the active tab', async () => {
+test('curl, Python and Node.js copy the replay kit\'s code, with the page\'s cookies read for the active tab', async () => {
   const copied = [];
   const asked = [];
   const context = vm.createContext({
@@ -95,12 +95,15 @@ test('curl and Python copy the replay kit\'s code, with the page\'s cookies read
   const { DetectionActions } = context;
   await DetectionActions.copyDetectionsAs.call(view, 'curl', 'https://shop.example/cart#x');
   await DetectionActions.copyDetectionsAs.call(view, 'python', 'https://shop.example/cart#x');
+  await DetectionActions.copyDetectionsAs.call(view, 'node', 'https://shop.example/cart#x');
   assert.deepStrictEqual(asked[0], ['https://shop.example/cart', 7]);
   assert.ok(copied[0].includes("curl -g 'https://shop.example/cart'") && copied[0].includes("-b '__cf_bm=v'") && copied[0].includes("-H 'User-Agent: UA/1'"), copied[0]);
   assert.ok(copied[0].includes('# Protection cookies: __cf_bm (Cloudflare)'));
   assert.ok(copied[1].includes('import requests') && copied[1].includes('"__cf_bm": "v",  # Cloudflare'), copied[1]);
+  assert.ok(copied[2].includes('fetch(url') && copied[2].includes('"__cf_bm=v",  // Cloudflare'), copied[2]);
   assert.strictEqual(await DetectionActions.copyDetectionsAs.call(view, 'curl', 'about:blank'), '', 'no web page, nothing copied');
-  assert.strictEqual(copied.length, 2);
+  assert.strictEqual(await DetectionActions.copyDetectionsAs.call(view, 'node', 'about:blank'), '');
+  assert.strictEqual(copied.length, 3);
 });
 
 test('a share upload leaves out a token in the address path too (reset, invite, magic-link pages); readable segments stay', () => {

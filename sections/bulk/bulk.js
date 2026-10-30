@@ -309,6 +309,7 @@
     byId('bulkNewBtn').hidden = !run || active;
     const counts = run ? BulkScan.counts(run) : null;
     byId('bulkWaitingBtn').hidden = !(run && run.status === 'stopped' && counts.waiting > 0);
+    byId('bulkRetryFailedBtn').hidden = !(run && (run.status === 'stopped' || run.status === 'done') && counts.failed > 0);
     const exportable = !!(run && run.items.length);
     byId('bulkExportCsvBtn').disabled = !exportable;
     byId('bulkExportJsonBtn').disabled = !exportable;
@@ -403,6 +404,11 @@
       if (!state.run) return;
       // The pages already finished stay in the table and the exports: the worker carries them into the new run
       start(state.run.items.filter(item => item.status === 'waiting').map(item => item.url), { continueRun: true });
+    });
+    byId('bulkRetryFailedBtn').addEventListener('click', () => {
+      if (!state.run) return;
+      // The pages that failed (and any still waiting) are scanned again; the others stay in the table and the exports
+      start(state.run.items.filter(item => item.status === 'failed' || item.status === 'waiting').map(item => item.url), { continueRun: true, retryFailed: true });
     });
     byId('bulkExportCsvBtn').addEventListener('click', () => exportRun('csv'));
     byId('bulkExportJsonBtn').addEventListener('click', () => exportRun('json'));

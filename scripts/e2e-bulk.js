@@ -215,7 +215,9 @@ const PROBE = {
     assert.match(row(at('/clean?n=2', 'localhost'))[2], /Skipped\s*Skipped by Settings → Detection → Sites to scan/);
     assert.match(row(at('/hang'))[2], /Failed\s*No result within the time limit/);
     assert.match(await bulk.$eval('#bulkRunNotes', el => el.textContent), /Duplicates removed: 1/);
-    console.log('PASS Table: protections with confidence, statuses and reasons in words');
+    assert.equal(await bulk.$eval('#bulkRetryFailedBtn', el => el.hidden), false, 'a finished run with failed pages offers to scan them again');
+    assert.equal(await bulk.$eval('#bulkWaitingBtn', el => el.hidden), true, 'and nothing waits');
+    console.log('PASS Table: protections with confidence, statuses and reasons in words, and the failed pages can be scanned again');
 
     // 4. History: the protected pages are recorded by the scan pipeline
     const history = await W(async () => (await HistoryStore.read(chrome.storage.local)).map(e => e.url));

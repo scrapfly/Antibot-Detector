@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "Buka halaman web untuk menyalinnya sebagai kode"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "Pindai halaman yang masih menunggu"
+  },
+  "bulkScanFailedAgain": {
+    "message": "Pindai ulang halaman yang gagal"
   },
   "bulkNewList": {
     "message": "Daftar baru"

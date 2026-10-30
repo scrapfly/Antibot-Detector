@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "Öppna en webbsida för att kopiera den som kod"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "Skanna sidorna som fortfarande väntar"
+  },
+  "bulkScanFailedAgain": {
+    "message": "Skanna om sidorna som misslyckades"
   },
   "bulkNewList": {
     "message": "Ny lista"

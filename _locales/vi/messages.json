@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "Mở một trang web để sao chép nó dưới dạng mã"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "Quét các trang vẫn đang chờ"
+  },
+  "bulkScanFailedAgain": {
+    "message": "Quét lại các trang thất bại"
   },
   "bulkNewList": {
     "message": "Danh sách mới"

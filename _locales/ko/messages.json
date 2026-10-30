@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "코드로 복사하려면 웹 페이지를 여세요"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "아직 대기 중인 페이지 스캔"
+  },
+  "bulkScanFailedAgain": {
+    "message": "실패한 페이지 다시 스캔"
   },
   "bulkNewList": {
     "message": "새 목록"

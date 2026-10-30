@@ -6846,6 +6846,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "Open a web page to copy it as code"
   },
@@ -7355,7 +7358,11 @@
   },
   "bulkScanWaiting": {
     "message": "Scan the pages still waiting",
-    "description": "Bulk scan: start a new run with the pages a stopped run did not scan"
+    "description": "Bulk scan: scan the pages a stopped run did not scan; the pages already finished stay in the table"
+  },
+  "bulkScanFailedAgain": {
+    "message": "Scan the failed pages again",
+    "description": "Bulk scan: scan again the pages of a finished run that failed (a timeout or a load error); the rest of the run stays in the table"
   },
   "bulkNewList": {
     "message": "New list",

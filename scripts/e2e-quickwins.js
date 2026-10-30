@@ -266,7 +266,7 @@ async function scenario(name, fn) {
     await page.keyboard.press('Escape');
     assert.equal(await menuShown(), false, 'Escape closes the menu');
     const labels = await page.$$eval('#copyOverviewMenu [data-copy-format]', els => els.map(el => el.textContent.trim()));
-    assert.deepEqual(labels, ['Summary (as uploaded)', 'Markdown table', 'JSON', 'curl command', 'Python (requests)']);
+    assert.deepEqual(labels, ['Summary (as uploaded)', 'Markdown table', 'JSON', 'curl command', 'Python (requests)', 'Node.js (fetch)']);
     await page.close();
   });
 

@@ -153,5 +153,33 @@
     return lines.join('\n') + '\n';
   }
 
-  root.ReplayKit = Object.freeze({ NOTE, acceptLanguage, clientHints, browserHeaders, protectionCookies, pageUrl, curl, python });
+  /** A Node.js script using the built-in fetch (Node 18+); '' without a web page */
+  function node(input) {
+    const p = prepare(input);
+    if (!p.url || !quote) return '';
+    const q = quote.json;
+    const lines = [...header(p, '//'), '', `const url = ${q(p.url)};`, 'const headers = {'];
+    for (const [name, value] of p.headers) lines.push(`  ${q(name)}: ${q(value)},`);
+    lines.push('};');
+    if (p.cookies.length) {
+      lines.push('const cookies = [');
+      for (const c of p.cookies) {
+        const owners = p.owners.get(c.name);
+        const note = owners ? `  // ${owners.length ? owners.join(', ') : 'protection'}` : '';
+        lines.push(`  ${q(`${c.name}=${c.value}`)},${note}`);
+      }
+      lines.push('].join("; ");',
+        '// As the browser sends them, UTF-8 bytes (fetch takes only Latin-1 text for a header value)',
+        'headers.Cookie = Buffer.from(cookies, "utf8").toString("latin1");');
+    }
+    lines.push('', '(async () => {',
+      '  // Redirects are not followed: the cookies are only ever sent to this host',
+      '  const response = await fetch(url, { headers, redirect: "manual", signal: AbortSignal.timeout(30000) });',
+      '  console.log(response.status);',
+      '  console.log((await response.text()).slice(0, 500));',
+      '})();');
+    return lines.join('\n') + '\n';
+  }
+
+  root.ReplayKit = Object.freeze({ NOTE, acceptLanguage, clientHints, browserHeaders, protectionCookies, pageUrl, curl, python, node });
 })(typeof window !== 'undefined' ? window : globalThis);

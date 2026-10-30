@@ -6347,6 +6347,9 @@
   "detectionCopyMenuPython": {
     "message": "Python (requests)"
   },
+  "detectionCopyMenuNode": {
+    "message": "Node.js (fetch)"
+  },
   "detectionReplayNoPage": {
     "message": "Otevřete webovou stránku, abyste ji mohli zkopírovat jako kód"
   },
@@ -6730,6 +6733,9 @@
   },
   "bulkScanWaiting": {
     "message": "Skenovat stránky, které stále čekají"
+  },
+  "bulkScanFailedAgain": {
+    "message": "Znovu skenovat stránky, které selhaly"
   },
   "bulkNewList": {
     "message": "Nový seznam"

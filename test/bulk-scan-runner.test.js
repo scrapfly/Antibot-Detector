@@ -305,3 +305,27 @@ test('a start without continueRun still replaces the run, and a run that is not 
   assert.deepEqual(w.stored().items.map(i => i.url), ['https://a.example/']);
 });
 
+test('"Scan the failed pages again" scans the pages that failed, keeps the finished ones with their results, and leaves the done pages alone', async () => {
+  const scans = { 'https://a.example/': { results: found('Cloudflare') }, 'https://b.example/': { loadError: 'net::ERR_CONNECTION_RESET' }, 'https://c.example/': { results: [] } };
+  const w = world({ scans });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/', 'https://c.example/'] });
+  await finished(w);
+  assert.deepEqual(w.stored().items.map(i => [i.url, i.status]), [['https://a.example/', 'done'], ['https://b.example/', 'failed'], ['https://c.example/', 'done']]);
+  assert.equal(w.stored().status, 'done');
+  const createdBefore = w.log.created.length;
+  scans['https://b.example/'] = { results: found('DataDome') }; // the site answers this time
+  const again = await w.Runner.start({ entries: [], continueRun: true, retryFailed: true });
+  assert.equal(again.ok, true);
+  await finished(w);
+  const run = w.stored();
+  assert.deepEqual(run.items.map(i => [i.url, i.status]), [['https://a.example/', 'done'], ['https://c.example/', 'done'], ['https://b.example/', 'done']], 'the finished pages first, the retried one after');
+  assert.deepEqual(plain(run.items[0].detections.map(d => d.name)), ['Cloudflare'], 'a finished page keeps its result');
+  assert.deepEqual(plain(run.items[2].detections.map(d => d.name)), ['DataDome']);
+  assert.deepEqual(w.log.created.slice(createdBefore).map(c => c.url), ['https://b.example/'], 'only the failed page was opened again');
+  // Without retryFailed the same request only continues what waits: nothing, so it is a plain new run of its entries
+  const plainStart = await w.Runner.start({ entries: ['https://c.example/'], continueRun: true });
+  assert.equal(plainStart.ok, true);
+  await finished(w);
+  assert.deepEqual(w.stored().items.map(i => i.url), ['https://c.example/']);
+});
+
