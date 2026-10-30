@@ -929,6 +929,10 @@
   text-decoration: none !important;
 }
 
+#detectionModalMethods[hidden] {
+  display: none;
+}
+
 #detectionModalMethods {
   display: flex;
   flex-direction: column;
@@ -1159,6 +1163,27 @@
   flex: 1;
   height: 1px;
   background: var(--border);
+}
+
+/* The methods' title folds them: click it to show the list */
+.detection-modal-section--methods .detection-modal-section-header[role="button"] {
+  cursor: pointer;
+}
+
+.detection-modal-section--methods .detection-modal-section-header[role="button"]:hover h4,
+.detection-modal-section--methods .detection-modal-section-header[role="button"]:focus-visible h4 {
+  color: var(--text-primary);
+}
+
+.detection-modal-section-chevron {
+  order: 1;
+  flex-shrink: 0;
+  color: var(--accent-light);
+  transition: transform 0.2s ease;
+}
+
+.detection-modal-section-header[aria-expanded="true"] .detection-modal-section-chevron {
+  transform: rotate(180deg);
 }
 
 .detection-modal-methods-list {

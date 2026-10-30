@@ -114,6 +114,7 @@ DetectionModals.initializeModalElements = function() {
       difficulty: modal.querySelector('#detectionModalDifficulty'),
       description: modal.querySelector('#detectionModalDescription'),
       methods: modal.querySelector('#detectionModalMethods'),
+      methodsHeader: modal.querySelector('#detectionModalMethodsHeader'),
       combinationsSection: modal.querySelector('#detectionModalCombinationsSection'),
       combinations: modal.querySelector('#detectionModalCombinations')
     };
@@ -124,6 +125,17 @@ DetectionModals.initializeModalElements = function() {
     if (this.modalElements.methods) {
       this.modalElements.methods.addEventListener('click', (e) => DetectionUI.handleCopyableValueClick.call(this, e));
       this.modalElements.methods.addEventListener('keydown', (e) => DetectionUI.handleCopyableValueKeyDown.call(this, e));
+    }
+
+    // The detection methods stay folded under their title until it is clicked (folded again each time the modal opens)
+    if (this.modalElements.methodsHeader) {
+      const toggleMethods = () => DetectionModals.setMethodsFolded.call(this, !this.modalElements.methods.hidden);
+      this.modalElements.methodsHeader.addEventListener('click', toggleMethods);
+      this.modalElements.methodsHeader.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        toggleMethods();
+      });
     }
 
     if (overlay) {
@@ -168,6 +180,7 @@ DetectionModals.openDetectionModal = function(index) {
     }
 
     this.activeModalIndex = index;
+    DetectionModals.setMethodsFolded.call(this, true);
     this.renderDetectionModalContent(detection);
 
     this.modalElements.modal.style.display = 'flex';
@@ -179,6 +192,14 @@ DetectionModals.openDetectionModal = function(index) {
     if (dialog && typeof ModalFocus !== 'undefined' && !this.releaseModalFocus) {
       this.releaseModalFocus = ModalFocus.activate(dialog, { onClose: () => this.closeDetectionModal(), initialFocus: this.modalElements.closeBtn || undefined });
     }
+};
+
+/** Fold or unfold the detection methods under their title */
+DetectionModals.setMethodsFolded = function(folded) {
+    const { methods, methodsHeader } = this.modalElements || {};
+    if (!methods) return;
+    methods.hidden = folded;
+    if (methodsHeader) methodsHeader.setAttribute('aria-expanded', String(!folded));
 };
 
 DetectionModals.closeDetectionModal = function() {

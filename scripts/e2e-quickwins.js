@@ -271,6 +271,42 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  // ===============================================================================================
+  await scenario('Detection details: the detection methods stay folded under their title until it is clicked, and fold again when the modal reopens', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="detection"]', el => el.click());
+    await page.waitForSelector('#copyOverviewBtn', { state: 'attached', timeout: 15000 });
+    // The popup also scans its own tab and clears the results when that ends: set them and open in the same turn
+    const open = () => page.evaluate(() => {
+      window.popupInstance.detection.currentResults = [{ detector: { name: 'QuickWin Probe' }, category: 'Anti-Bot', confidence: 90,
+        matches: [{ type: 'cookie', pattern: 'qw_session', value: 'qw_session=x' }, { type: 'content', pattern: 'quickwin-marker-bot', value: 'quickwin-marker-bot' }] }];
+      window.popupInstance.detection.openDetectionModal(0);
+    });
+    const state = () => page.evaluate(() => {
+      const list = document.querySelector('#detectionModalMethods');
+      return { listShown: list.offsetParent !== null, items: list.children.length, header: document.querySelector('#detectionModalMethodsHeader').getAttribute('aria-expanded'),
+        titleShown: document.querySelector('#detectionModalMethodsHeader').offsetParent !== null };
+    });
+    await open();
+    await page.waitForSelector('#detectionModalMethodsHeader', { state: 'visible' });
+    let now = await state();
+    assert.deepEqual({ titleShown: now.titleShown, listShown: now.listShown, header: now.header }, { titleShown: true, listShown: false, header: 'false' }, 'folded when the modal opens');
+    assert.ok(now.items >= 2, 'the methods are rendered, only hidden');
+    await page.$eval('#detectionModalMethodsHeader', el => el.click());
+    now = await state();
+    assert.deepEqual({ listShown: now.listShown, header: now.header }, { listShown: true, header: 'true' }, 'a click shows them');
+    await page.focus('#detectionModalMethodsHeader');
+    await page.keyboard.press('Enter');
+    assert.equal((await state()).listShown, false, 'Enter folds them again');
+    await page.keyboard.press(' ');
+    assert.equal((await state()).listShown, true, 'and Space shows them');
+    await page.$eval('#closeDetectionModal', el => el.click());
+    await open();
+    await page.waitForSelector('#detectionModalMethodsHeader', { state: 'visible' });
+    assert.equal((await state()).listShown, false, 'folded again on the next open');
+    await page.close();
+  });
+
   await scenario('rescan shortcut: Settings names the keys, and the command clears the result and reloads the page', async () => {
     const commands = await W(() => chrome.commands.getAll());
     const rescan = commands.find(c => c.name === 'rescan-tab');

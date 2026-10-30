@@ -15,7 +15,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Settings → Data: History statistics is open when Settings opens, so Open statistics is one click away; Storage and Backup stay folded.
-- History details: Matched detections stay folded under their title until you click it, so an opened detection shows its combinations first.
+- Detection and History details: the detection methods (Matched detections in History) stay folded under their title until you click it, so combinations show first.
 
 ### Fixed
 
