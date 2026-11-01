@@ -59,7 +59,7 @@ test('a list is read by explicit rules: a comma ends an address after a host, af
 });
 
 test('a pasted list or a .txt/.csv gives one address per line, the first address-like cell of a CSV row', () => {
-  const text = '﻿https://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
+  const text = '\uFEFFhttps://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
     'url,title\nhttps://d.example/,Shop\nname;https://e.example/x;notes\nplain words\n';
   assert.deepEqual(BulkScan.linesOf(text), ['https://a.example/', 'b.example/path', 'https://c.example/?q=1', 'https://d.example/', 'https://e.example/x', 'plain words']);
   // A comma or semicolon in an address of a plain list belongs to it
