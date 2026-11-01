@@ -1234,7 +1234,7 @@ async function scenario(name, fn) {
       for (const theme of ['dark', 'light']) {
         await page.evaluate((t) => { if (t === 'light') document.documentElement.setAttribute('data-theme', 'light'); else document.documentElement.removeAttribute('data-theme'); }, theme);
         const { out, accentRgb } = await tickLook();
-        assert.ok(out.length >= 2 && out.every(box => box.appearance === 'none' && box.size[0] === 16 && box.size[1] === 16), `${theme}: ${JSON.stringify(out)}`);
+        assert.ok(out.length >= 2 && out.every(box => box.appearance === 'none' && box.size[0] === 18 && box.size[1] === 18), `${theme}: ${JSON.stringify(out)}`);
         assert.equal(out[0].bg, accentRgb, `${theme}: a ticked box fills with the accent`);
         assert.notEqual(out[1].bg, accentRgb, `${theme}: an unticked box stays empty`);
       }
