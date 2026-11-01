@@ -1372,7 +1372,8 @@ async function scenario(name, fn) {
     const all = await waitDownloads(csvBefore + 1);
     const csv = all.find(d => /\.csv$/.test(d.name));
     assert.ok(csv, 'a CSV backup was written');
-    assert.equal(fs.readFileSync(csv.file, 'utf8').split('\r\n')[0], 'url,hostname,title,protection,category,confidence,difficulty,pinned,note');
+    // The file starts with the byte-order mark, so Excel reads it as UTF-8
+    assert.equal(fs.readFileSync(csv.file, 'utf8').split('\r\n')[0], '\uFEFFurl,hostname,title,protection,category,confidence,difficulty,pinned,note');
     await resetSettings();
   });
 
