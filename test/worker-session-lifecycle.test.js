@@ -466,3 +466,21 @@ test('page evidence stronger than the hooks raises the merged confidence of a de
   assert.deepEqual(stored[0].matches.map(m => m.type), ['js_hooks', 'cookie']);
   assert.deepEqual([...stored[0].detectionMethods].sort(), ['cookie', 'js_hooks']);
 });
+
+test('a hash router that moves the page to "/#/home" before the scan starts keeps the evidence its document already reported', () => {
+  const h = harness();
+  h.ctx.URL = URL;
+  vm.runInContext(read('background/handlers/messages-detection.js'), h.ctx, { filename: 'messages-detection.js' });
+  const early = h.ctx.DetectionSessionStore.getOrCreate(7, 'https://app.test/');
+  early.hooksData.set('detect-canvas', { detector: { id: 'detect-canvas' } });
+  const begun = h.ctx.DetectionSessionStore.begin(7, 'https://app.test/#/home');
+  assert.equal(begun, early, 'the same page: its state is not recreated empty');
+  assert.equal(begun.hooksData.size, 1);
+  assert.equal(h.ctx.detectionStates.get(7), early);
+
+  // Another path or query is another page, as before
+  const other = h.ctx.DetectionSessionStore.begin(7, 'https://app.test/other');
+  assert.notEqual(other, early);
+  assert.equal(other.hooksData.size, 0);
+  assert.equal(early.interrupted, true);
+});

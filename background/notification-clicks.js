@@ -38,8 +38,16 @@
             return (chromeApi.storage && chromeApi.storage.session) || null;
         },
 
-        /** Remember the page a change notification is about. */
-        async remember(id, url, chromeApi = root.chrome) {
+        _queue: Promise.resolve(),
+
+        /** Remember the page a change notification is about. One at a time: two alerts together would each read the list before the other wrote it. */
+        remember(id, url, chromeApi = root.chrome) {
+            const run = this._queue.then(() => this._remember(id, url, chromeApi));
+            this._queue = run.catch(() => {});
+            return run;
+        },
+
+        async _remember(id, url, chromeApi) {
             if (!id || !this.isOpenable(url)) return;
             const area = await this._area(chromeApi);
             if (!area) return;

@@ -154,24 +154,22 @@
    *   text: verbatim + <DETECTIONS> as JSON; json: strings JSON-escaped + <DETECTIONS> as JSON
    */
   function substitute(template, ctx, mode = 'text') {
-    let out = String(template || '');
-    for (const v of VARIABLES) {
-      if (!out.includes(v.token)) continue;
-      let replacement;
+    // One pass over the template: a value put in (a page title is the page's own text) is never read as a token itself, so
+    // a title like "<DETECTIONS>" stays text instead of becoming raw JSON inside a quoted string
+    const byToken = new Map(VARIABLES.map(v => [v.token, v]));
+    const tokens = new RegExp(VARIABLES.map(v => v.token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+    return String(template || '').replace(tokens, (token) => {
+      const v = byToken.get(token);
       if (v.kind === 'json') {
-        if (mode === 'url' || mode === 'header') continue;
-        replacement = JSON.stringify(Array.isArray(ctx.detections) ? ctx.detections : []);
-      } else if (v.kind === 'number') {
-        replacement = String(Number(ctx[v.key]) || 0);
-      } else {
-        const raw = ctx[v.key] == null ? '' : String(ctx[v.key]);
-        if (mode === 'url') replacement = encodeURIComponent(raw);
-        else if (mode === 'json') replacement = jsonEscape(raw);
-        else replacement = raw;
+        if (mode === 'url' || mode === 'header') return token;
+        return JSON.stringify(Array.isArray(ctx.detections) ? ctx.detections : []);
       }
-      out = out.split(v.token).join(replacement);
-    }
-    return out;
+      if (v.kind === 'number') return String(Number(ctx[v.key]) || 0);
+      const raw = ctx[v.key] == null ? '' : String(ctx[v.key]);
+      if (mode === 'url') return encodeURIComponent(raw);
+      if (mode === 'json') return jsonEscape(raw);
+      return raw;
+    });
   }
 
   function defaultPayload(ctx) {

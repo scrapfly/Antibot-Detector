@@ -191,6 +191,8 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
 
 /** The alarm: every held delivery whose automatic retry is due, one after the other. */
 SettingsRuntime.runDueWebhookRetries = async function() {
+    // The extension is switched off: it sends nothing (a held delivery waits, and goes with its hour if it stays off)
+    if (typeof isExtensionEnabled === 'function' && !(await isExtensionEnabled())) return;
     const settings = await Utils.getSettings().catch(() => ({}));
     if ((settings.webhook || {}).webhookRetry === false) {
         // Switched off: nothing more is retried, and nothing is kept for it

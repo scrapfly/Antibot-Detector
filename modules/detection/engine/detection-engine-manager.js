@@ -2101,13 +2101,16 @@ class DetectionEngineManager {
             if (Settings && typeof Settings.sendWebhookIfEnabled === 'function' && storedData.detectionResults && storedData.detectionResults.length > 0) {
                 const tab = await chrome.tabs.get(tabId).catch(() => null);
                 if (!await isCurrentDocument()) return ignored;
-                // A private-window page is never sent anywhere (History leaves it out too)
-                if (!(tab && tab.incognito === true)) await Settings.sendWebhookIfEnabled({
+                // A private-window page is never sent anywhere (History leaves it out too). The delivery runs on its own, as after
+                // a scan: a slow server (up to 10 s) must not hold the History entry of this page until the person has moved on
+                if (!(tab && tab.incognito === true)) Promise.resolve(Settings.sendWebhookIfEnabled({
                     url: pageUrl,
                     hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                     title: (tab && tab.title) || 'Untitled',
                     favicon: UrlUtils.normalizeFaviconForStorage(tab && tab.favIconUrl, pageUrl)
-                }, storedData.detectionResults, { trigger: 'cache' });
+                }, storedData.detectionResults, { trigger: 'cache' })).catch((error) => {
+                    Logger.warn('NETWORK', 'The webhook step failed', error);
+                });
             }
 
             // Check if we should save to history on cache hit

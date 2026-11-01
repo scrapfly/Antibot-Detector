@@ -40,9 +40,32 @@
         node[parts[parts.length - 1]] = value;
     }
 
+    // Flat legacy fields of an older install copied to where they live now (a nested value that exists wins)
+    function liftLegacy(settings) {
+        settings.detection = isObject(settings.detection) ? settings.detection : {};
+        for (const key of ['cacheDuration', 'cacheUnit', 'cacheScope', 'blacklistedDomains', 'hooksConfig']) {
+            if (settings.detection[key] === undefined && settings[key] !== undefined) settings.detection[key] = settings[key];
+        }
+        if (settings.detection.cacheDuration === undefined && settings.cacheHours !== undefined) {
+            settings.detection.cacheDuration = settings.cacheHours;
+            settings.detection.cacheUnit = 'hours';
+        }
+    }
+
     async function apply(mutation) {
-        const previous = await StorageManager.readSettingsStrict();
+        let previous;
+        try {
+            previous = await StorageManager.readSettingsStrict();
+        } catch (error) {
+            // Stored settings that cannot be read (not JSON, not an object) are what Reset is for: it replaces them with the
+            // defaults. Any other change, and a storage that failed to answer, still refuse rather than write over what is there
+            const unreadable = error instanceof SyntaxError || (error && error.message === 'Stored settings are invalid');
+            if (mutation.operation !== 'reset' || !unreadable) throw error;
+            previous = {};
+        }
         let settings = clone(previous);
+        // Before the change: pausing a site on an install that still has the old flat list must keep that list
+        if (mutation.operation === 'domain' || mutation.operation === 'allow' || mutation.operation === 'patch') liftLegacy(settings);
         if (mutation.operation === 'merge') {
             if (!isObject(mutation.baseline) || !isObject(mutation.candidate)) throw new Error('Invalid settings change');
             settings = StorageManager.mergeSettingsChanges(mutation.baseline, mutation.candidate, settings);
@@ -81,14 +104,7 @@
             throw new Error('Unknown settings change');
         }
         // Only discard flat legacy fields after preserving their nested values.
-        settings.detection = isObject(settings.detection) ? settings.detection : {};
-        for (const key of ['cacheDuration', 'cacheUnit', 'cacheScope', 'blacklistedDomains', 'hooksConfig']) {
-            if (settings.detection[key] === undefined && settings[key] !== undefined) settings.detection[key] = settings[key];
-        }
-        if (settings.detection.cacheDuration === undefined && settings.cacheHours !== undefined) {
-            settings.detection.cacheDuration = settings.cacheHours;
-            settings.detection.cacheUnit = 'hours';
-        }
+        liftLegacy(settings);
         for (const key of legacyKeys) delete settings[key];
         const values = {
             scrapfly_settings: JSON.stringify({ timestamp: new Date().toISOString(), settings })

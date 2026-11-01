@@ -60,7 +60,12 @@ async function initialize(reason = 'startup', previousVersion = null) {
         } else {
             for (const tab of tabs) {
                 if (activeDetections.has(tab.id) || detectionStates.has(tab.id)) continue;
-                chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
+                // A worker that restarts has empty maps while the toolbar still shows each page's result: only what cannot be
+                // right any more (the OFF badge, a scan spinner) is cleared, never a result
+                const shown = await chrome.action.getBadgeText({ tabId: tab.id }).catch(() => '');
+                if (shown === BADGE.TEXT.DISABLED || isLoadingBadgeText(shown)) {
+                    chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
+                }
             }
         }
 

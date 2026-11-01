@@ -464,3 +464,14 @@ test('the background sender signs every text body, drops custom headers named li
   assert.strictEqual(new Headers(calls[0].options.headers).get(WB.SIGNATURE_HEADER), null);
   assert.strictEqual(calls[0].options.headers['X-Other'], 'v');
 });
+
+test('substitution is one pass: a page title that spells a token stays text, so the JSON stays valid', () => {
+  const ctx = ctxWith(DETS, { title: 'Docs: the <DETECTIONS> token, and <SITEURL>' });
+  const out = WB.substitute('{"title":"<TITLE>","detections":<DETECTIONS>,"url":"<SITEURL>"}', ctx, 'json');
+  const parsed = JSON.parse(out);
+  assert.strictEqual(parsed.title, 'Docs: the <DETECTIONS> token, and <SITEURL>', 'the title is the page\'s text, token or not');
+  assert.strictEqual(parsed.url, ctx.url);
+  assert.strictEqual(parsed.detections.length, DETS.length);
+  assert.strictEqual(WB.substitute('<HOSTNAME>/<TITLE>', { ...ctx, title: '<HOSTNAME>' }, 'text'), 'shop.example/<HOSTNAME>', 'text mode too');
+  assert.strictEqual(WB.substitute('x=<DETECTIONS>&u=<SITEURL>', ctx, 'url'), `x=<DETECTIONS>&u=${encodeURIComponent(ctx.url)}`, 'a URL still leaves the JSON token alone');
+});
