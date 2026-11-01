@@ -694,3 +694,62 @@ test('a scan that finds nothing and undoes the last mark was a blip: the mark go
   assert.ok(!('changed' in w.items()[0]), 'and the mark of a protection that was gone the next scan is removed');
 });
 
+
+test('an update by "path" or "domain" never moves a pinned, watched or noted entry to another address', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'path', duplicateDuration: 1, duplicateUnit: 'days', duplicateAction: 'update' };
+  await w.save('https://shop.com/search?q=a', [antibot('Cloudflare')], s);
+  const stored = JSON.parse(w.store.scrapfly_history);
+  Object.assign(stored.items[0], { pinned: true, watch: true, note: 'my checkout test' });
+  w.store.scrapfly_history = JSON.stringify(stored);
+  w.advance(10 * 60000);
+  await w.save('https://shop.com/search?q=b', [antibot('Cloudflare')], s);
+  const items = w.items();
+  assert.strictEqual(items.length, 2, 'the other address is a new entry');
+  const marked = items.find(item => item.url === 'https://shop.com/search?q=a');
+  assert.ok(marked && marked.pinned === true && marked.watch === true && marked.note === 'my checkout test', 'the marked entry is still that page, with its marks');
+  assert.ok(!('pinned' in items.find(item => item.url === 'https://shop.com/search?q=b')), 'and the new one carries none of them');
+
+  // The same address still updates it, and a plain entry is still updated by the scope it was recorded under
+  w.advance(10 * 60000);
+  await w.save('https://shop.com/search?q=a', [antibot('Cloudflare'), captcha('Turnstile')], { ...s, duplicateScope: 'full_url' });
+  assert.strictEqual(w.items().length, 2);
+  assert.strictEqual(w.items()[0].detections.length, 2);
+  assert.strictEqual(w.items()[0].note, 'my checkout test');
+  const d = makeWorld();
+  const domain = { ...s, duplicateScope: 'domain' };
+  await d.save('https://plain.com/home', [antibot('Cloudflare')], domain);
+  d.advance(60000);
+  await d.save('https://plain.com/other', [antibot('Cloudflare')], domain);
+  assert.strictEqual(d.items().length, 1, 'an entry with no marks is updated in place, as chosen');
+});
+
+test('the "domain" scope tells ports apart, as the cache does (localhost:3000 and localhost:8080 are two sites)', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'domain', duplicateDuration: 1, duplicateUnit: 'days', duplicateAction: 'skip' };
+  assert.strictEqual(await w.save('http://localhost:3000/', [antibot('Cloudflare')], s), true);
+  assert.strictEqual(await w.save('http://localhost:8080/', [antibot('Cloudflare')], s), true, 'another port is another site');
+  assert.strictEqual(await w.save('http://localhost:3000/other', [antibot('Cloudflare')], s), false, 'the same port is a duplicate');
+  assert.strictEqual(w.items().length, 2);
+});
+
+test('two saves of one tab in the same millisecond get two ids, so a delete or a pin reaches one', async () => {
+  const w = makeWorld();
+  await w.save('https://a.example/', [antibot('Cloudflare')]);
+  await w.save('https://b.example/', [antibot('Akamai')]);
+  const ids = w.items().map(item => item.id);
+  assert.strictEqual(new Set(ids).size, 2, ids.join(' '));
+});
+
+test('an entry dated far ahead (a clock that was wrong) is no recent visit, so a page is recorded again', async () => {
+  const w = makeWorld();
+  const s = { preventDuplicates: true, duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'days', duplicateAction: 'skip' };
+  await w.save('https://clock.example/', [antibot('Cloudflare')], s);
+  const stored = JSON.parse(w.store.scrapfly_history);
+  stored.items[0].timestamp = START + 400 * 24 * HOUR;
+  w.store.scrapfly_history = JSON.stringify(stored);
+  w.advance(2 * HOUR);
+  assert.strictEqual(await w.save('https://clock.example/', [antibot('Cloudflare')], s), true, 'not blocked for the year it takes the clock to reach that entry');
+  assert.strictEqual(w.items().length, 2);
+  assert.strictEqual(await w.sw.HistoryRecorder.shouldSaveToHistory('https://clock.example/', s, w.sw.chrome), false, 'while a real recent one still blocks');
+});

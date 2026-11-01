@@ -132,7 +132,7 @@ const HistoryWatch = {
                 await record();
                 return totals;
             }
-            const windowId = await this.normalWindowId();
+            let windowId = await this.normalWindowId();
             if (windowId === null) {
                 // No window to open a tab in (the browser runs in the background): try again at the next check
                 totals.ok = false;
@@ -141,6 +141,11 @@ const HistoryWatch = {
             }
             for (let i = 0; i < watched.length; i++) {
                 if (i > 0) await this.sleep(this.JITTER_MS[0] + Math.random() * (this.JITTER_MS[1] - this.JITTER_MS[0]));
+                // The worker's keepalive drops an operation after two minutes (a leaked one would pin it awake for good), and a
+                // check of many pages takes longer: each page renews it, and looks for a window again (the one used may be closed)
+                if (typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager) workerKeepaliveManager.startOperation('history-watch', { reason: 'history_watch' });
+                const currentWindow = i > 0 ? await this.normalWindowId() : windowId;
+                if (currentWindow !== null) windowId = currentWindow;
                 const outcome = await this._checkOne(watched[i], settings, windowId);
                 // A check that did not get an answer (failed, redirected, unsteady, skipped) still counts as tried
                 if (outcome !== 'changed' && outcome !== 'unchanged' && typeof HistoryRecorder.noteWatchAttempt === 'function') {
@@ -228,7 +233,9 @@ const HistoryWatch = {
         const period = this.periodOf(mode);
         if (catchUp && period && chrome.alarms) {
             const last = await this.lastState();
-            if (!last || !Number.isFinite(last.at) || Date.now() - last.at >= period * 60000) {
+            // A check that found no window to open its tab in is tried again at the next start (an hour later at the earliest)
+            const noWindow = !!last && last.error === 'no_window' && Date.now() - last.at >= 3600000;
+            if (!last || !Number.isFinite(last.at) || Date.now() - last.at >= period * 60000 || noWindow) {
                 chrome.alarms.create(this.SOON_ALARM_NAME, { delayInMinutes: this.STARTUP_DELAY_MINUTES });
             }
         }

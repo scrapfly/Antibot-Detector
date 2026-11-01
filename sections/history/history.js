@@ -89,6 +89,8 @@ class History {
    * @param {'merge'|'replace'} mode
    */
   async saveHistoryToStorage(items = this.historyItems, mode = 'replace') {
+    // Settings → Data restores a backup without History ever having been opened: its limit would still be 0 (unlimited)
+    await this.refreshHistoryLimit();
     await this.sendHistoryChange({
       type: HistoryStore.Messages.REPLACE_ITEMS,
       items,
@@ -104,6 +106,8 @@ class History {
    */
   renderHistory() {
     if (this.historyItems.length === 0) {
+      // Nothing left to select (the last entry was deleted): Select mode ends, which draws this same empty state
+      if (this.selectMode) { this.exitSelectMode(); return; }
       this.showEmptyState();
       return;
     }
@@ -1065,9 +1069,11 @@ class History {
    * @param {object} historyItem - History item to export
    */
   exportHistoryItem(historyItem) {
+    // `items` is what Import and Settings → Restore read (a one-entry list); `item` stays for anything that read the old file
     const exportData = {
       version: '1.0',
       timestamp: new Date().toISOString(),
+      items: [historyItem],
       item: historyItem
     };
 
@@ -1890,7 +1896,7 @@ class History {
       return;
     }
     const built = HistoryExport.build(items, { format: format.value, includeTimestamps: saved.includeTimestamps !== false });
-    const blob = new Blob([built.text], { type: built.type });
+    const blob = new Blob([built.fileText], { type: built.type });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -1939,9 +1945,12 @@ class History {
       // apply it to the stored list so entries saved meanwhile are kept.
       // The preview stays local: a save that fails leaves the list, its search and its filters as they were.
       // After a save, the list is the stored one (loadHistoryFromStorage).
-      const before = this.historyItems.length;
+      // The limit is the one in Settings now: History may never have been opened in this popup (Settings → Data imports too)
+      await this.refreshHistoryLimit();
       const preview = HistoryStore.applyImport(this.historyItems, data.items, mode, this.historyLimit);
-      const added = Math.max(0, preview.length - before);
+      // New entries that survive the limit: the list's length does not say (a full list drops one old entry for each new one)
+      const known = new Set(this.historyItems.map(item => item && item.id));
+      const added = preview.filter(item => !known.has(item.id)).length;
       await this.saveHistoryToStorage(data.items, mode);
 
       if (mode === 'merge') {
@@ -1965,21 +1974,27 @@ class History {
    * Initialize history section with event listeners
    */
   async initialize() {
-    if (!this.initialized) {
-      try {
-        await this.refreshHistoryLimit();
-      } catch (error) {
-        Logger.warn('UI', '[History] History limit read failed, defaulting to unlimited', error);
-        this.historyLimit = 0; // 0 = unlimited
-      }
+    if (this.initialized) return;
+    // One run at a time: a scan's "new detection" refresh and a click on the tab can both ask while the markup loads, and a second
+    // load of the markup would replace the page the first run just wired
+    if (!this._initializing) {
+      this._initializing = (async () => {
+        try {
+          await this.refreshHistoryLimit();
+        } catch (error) {
+          Logger.warn('UI', '[History] History limit read failed, defaulting to unlimited', error);
+          this.historyLimit = 0; // 0 = unlimited
+        }
 
-      await this.refreshDetectionSort();
-      await this.loadHTML();
-      this.setupPagination();
-      this.setupEventListeners();
-      this.registerSettingsListener();
-      this.initialized = true;
+        await this.refreshDetectionSort();
+        await this.loadHTML();
+        this.setupPagination();
+        this.setupEventListeners();
+        this.registerSettingsListener();
+        this.initialized = true;
+      })().finally(() => { this._initializing = null; });
     }
+    return this._initializing;
   }
 
   async refreshHistoryLimit() {
@@ -2009,16 +2024,38 @@ class History {
     this.syncScanModeMenu();
   }
 
+  /** The stored History changed (a scan, the watchlist, a Bulk run): redraw once, a moment after the last write. */
+  scheduleStoredRefresh() {
+    if (!this.initialized) return;
+    clearTimeout(this._storedRefreshTimer);
+    this._storedRefreshTimer = setTimeout(() => {
+      this._storedRefreshTimer = null;
+      this.loadHistoryFromStorage()
+        .then(() => this.renderHistory())
+        .catch(error => Logger.warn('UI', '[History] Refresh after a stored change failed', error));
+    }, 300);
+  }
+
   registerSettingsListener() {
     if (this._settingsListenerAttached) return;
     this._settingsListenerAttached = true;
     // Settings is in this popup: its own SETTINGS_UPDATED message never comes
     // back here, so a new order is picked up from storage
     chrome.storage.onChanged.addListener((changes, area) => {
-      if (area !== 'local' || !changes.scrapfly_settings) return;
+      if (area !== 'local') return;
+      // The worker saves a scan's entry after it tells the popup about the scan, and the watchlist updates entries in place:
+      // the list follows what is stored, so it is never behind what the worker did
+      if (changes[HistoryStore.STORAGE_KEY]) this.scheduleStoredRefresh();
+      if (!changes.scrapfly_settings) return;
       const before = JSON.stringify(this.detectionSort || null);
+      const limitBefore = this.historyLimit;
       this.refreshDetectionSort()
-        .then(() => { if (JSON.stringify(this.detectionSort) !== before) this.renderHistory(); })
+        .then(() => this.refreshHistoryLimit())
+        .then(async () => {
+          // A new limit shows at once, as the worker's trimming is not the only thing that decides what the list holds
+          if (this.historyLimit !== limitBefore) await this.loadHistoryFromStorage();
+          if (this.historyLimit !== limitBefore || JSON.stringify(this.detectionSort) !== before) this.renderHistory();
+        })
         .catch(error => Logger.warn('UI', '[History] Re-sort after settings change failed', error));
     });
     chrome.runtime.onMessage.addListener((message) => {

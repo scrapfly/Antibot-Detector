@@ -7,6 +7,30 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.0] - 2026-11-01
 
+### Fixed
+
+- Toolbar badge: a page keeps its number when the browser restarts the extension's background part, instead of going blank until you switch tabs.
+- Switching the extension off stops scans already running (no result over OFF, no History entry, no webhook); held webhook retries wait.
+- A page that moves from "/" to "/#/home" while it is scanned keeps the hook and window results found so far.
+- Webhook: a page title that spells a template word (such as DETECTIONS) no longer breaks the body.
+- Webhook: "Send on every page load" no longer holds back the page's History entry when the server is slow.
+- History: a single entry exported from its "..." menu can be imported again, in History and in Settings → Restore.
+- History: the list updates when a scan finishes or the watchlist changes an entry while it is open; a new limit saved in Settings shows at once.
+- History: opening the tab at the moment a scan finishes no longer leaves it without search, filters or menu.
+- History: "Merged N new history items" is right when the limit is reached; importing from Settings → Data respects the limit even if History was never opened.
+- History: with Prevent duplicates set to Update, a pinned, watched or noted entry is no longer moved to another address; localhost:3000 and localhost:8080 count as two sites.
+- History: CSV files open correctly in Excel, an entry with an impossible date no longer stops an export, and search finds sites typed with letters (bücher.de).
+- History: a failed scheduled backup, or a watch check with no window open, is tried again at the next browser start instead of a whole period later.
+- History: a long watch check no longer loses its keepalive halfway; two alerts at the same moment each open their own page.
+- History: Select mode ends when the last entry is deleted and cannot start on an empty list.
+- Bulk scan: a comma or semicolon ending a line is no longer part of the address, and https://a.com/? and https://a.com/ are scanned once.
+- Settings: Custom webhook method is saved as shown; a blank number in a switched-off option no longer blocks Save; "Settings saved" follows the notifications switch you just changed.
+- Settings: pausing a site on an install with the oldest settings layout keeps the sites it already skipped; Reset repairs settings that cannot be read.
+
+### Security
+
+- History import: a file can no longer store megabytes in one entry's note, title or address, or a date no browser can hold.
+
 ## [3.0.9] - 2026-10-30
 
 ### Added

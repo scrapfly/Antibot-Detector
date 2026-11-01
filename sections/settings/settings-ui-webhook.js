@@ -25,6 +25,9 @@ SettingsUI.setupWebhookMethodRadios = function() {
 
         if (e.target.value === 'CUSTOM') {
           if (customContainer) customContainer.style.display = 'block';
+          // The method Save stores is the hidden field's: a custom method typed earlier is what the box shows again
+          const typed = customInput ? customInput.value.trim().toUpperCase() : '';
+          if (typed && webhookMethodInput) webhookMethodInput.value = typed;
           if (customInput) customInput.focus();
         } else {
           if (customContainer) customContainer.style.display = 'none';

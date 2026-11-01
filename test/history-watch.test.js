@@ -318,7 +318,8 @@ test('a check keeps the worker awake while it runs, and a watch tab a stopped wo
     remove: async (key) => { delete session[key]; }
   };
   await w.Watch.run('manual');
-  assert.deepEqual(ops, [['start', 'history-watch'], ['end', 'history-watch']], 'awake for the whole check, released after');
+  // The keepalive operation is dropped after two minutes, so each page's check renews it
+  assert.deepEqual(ops, [['start', 'history-watch'], ['start', 'history-watch'], ['end', 'history-watch']], 'awake for the whole check (renewed for the page), released after');
   assert.deepEqual(session[w.Watch.OPEN_TABS_KEY], [], 'the tab it opened was closed and forgotten');
   // A worker stopped in the middle of a check: its tab is still listed, and the next start closes it
   session[w.Watch.OPEN_TABS_KEY] = [4242];
@@ -329,3 +330,28 @@ test('a check keeps the worker awake while it runs, and a watch tab a stopped wo
   assert.equal(session[w.Watch.OPEN_TABS_KEY], undefined);
 });
 
+
+test('a check that found no window is caught up an hour later at the next start, not a whole period later', async () => {
+  const w = world();
+  w.ctx.chrome.alarms.get = async (name) => w.log.alarms.get(name);
+  await w.Watch.sync(false);
+  w.store[w.Watch.STATE_KEY] = { at: Date.now() - 600000, error: 'no_window' };
+  await w.Watch.sync(true);
+  assert.ok(!w.log.alarms.has(w.Watch.SOON_ALARM_NAME), 'ten minutes after: not yet');
+  w.store[w.Watch.STATE_KEY] = { at: Date.now() - 2 * 3600000, error: 'no_window' };
+  await w.Watch.sync(true);
+  assert.ok(w.log.alarms.has(w.Watch.SOON_ALARM_NAME), 'two hours after: scheduled');
+  w.log.alarms.delete(w.Watch.SOON_ALARM_NAME);
+  w.store[w.Watch.STATE_KEY] = { at: Date.now() - 2 * 3600000, ok: true };
+  await w.Watch.sync(true);
+  assert.ok(!w.log.alarms.has(w.Watch.SOON_ALARM_NAME), 'a check that ran is still not due for a day');
+});
+
+test('every page of a long check renews the worker keepalive, which is dropped after two minutes', async () => {
+  const w = world({ items: [entry('a', 'https://a.example/'), entry('b', 'https://b.example/'), entry('c', 'https://c.example/')] });
+  const ops = [];
+  w.ctx.workerKeepaliveManager = { startOperation: (id) => ops.push('start'), endOperation: (id) => ops.push('end') };
+  const result = await w.Watch.run('manual');
+  assert.equal(result.checked, 3);
+  assert.deepEqual(ops, ['start', 'start', 'start', 'start', 'end'], 'one for the check, one renewal per page, released after');
+});

@@ -91,7 +91,7 @@ SettingsUI.exportHistoryCsv = async function() {
       // The same file as History → Export → CSV: one row per protection, with its confidence, pin and note
       const saved = await Utils.getHistorySettings();
       const built = HistoryExport.build(items, { format: 'csv', includeTimestamps: saved.includeTimestamps !== false });
-      SettingsUI._downloadFile(built.text, HistoryExport.fileName(built.format), built.type);
+      SettingsUI._downloadFile(built.fileText, HistoryExport.fileName(built.format), built.type);
       NotificationHelper.success(items.length === 1
         ? ((t && t.get('notificationHistoryExportedOne')) || 'Exported 1 history item')
         : _fmt('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));

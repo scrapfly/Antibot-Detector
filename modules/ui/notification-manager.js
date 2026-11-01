@@ -862,6 +862,15 @@ const NotificationHelper = {
   }
 };
 
+// A saved, imported, restored or reset setting counts at once: the cached answer would keep the old one for up to 30 seconds
+try {
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes.scrapfly_settings) NotificationHelper._notificationCache.value = null;
+    });
+  }
+} catch (_) { /* the cache simply expires on its own */ }
+
 if (typeof window !== 'undefined') {
   window.NotificationManager = notificationManager;
   window.NotificationHelper = NotificationHelper;

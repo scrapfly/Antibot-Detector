@@ -311,3 +311,14 @@ test('scanning the failed pages again: failed (and waiting) addresses are scanne
   assert.equal(BulkScan.continuation(done), null, 'but nothing waits');
 });
 
+
+test('a comma or semicolon that ends a line is not part of the address, and an empty query is no query', () => {
+  assert.deepEqual(BulkScan.linesOf('https://a.example/x,\nhttps://b.example/y;\nhttps://c.example/?ids=1,2,3'),
+    ['https://a.example/x', 'https://b.example/y', 'https://c.example/?ids=1,2,3'], 'only the one with nothing after it ends the address');
+  assert.deepEqual(BulkScan.normalize('https://a.example/?'), { url: 'https://a.example/' });
+  assert.deepEqual(BulkScan.normalize('https://a.example/x?#top'), { url: 'https://a.example/x' });
+  const prepared = BulkScan.prepare(['https://a.example', 'https://a.example/', 'a.example', 'https://A.EXAMPLE/#x', 'https://a.example/?']);
+  assert.equal(prepared.items.length, 1, 'five spellings of one page are scanned once');
+  assert.equal(prepared.duplicates, 4);
+  assert.deepEqual(BulkScan.normalize('https://a.example/?q=1'), { url: 'https://a.example/?q=1' }, 'a real query stays');
+});

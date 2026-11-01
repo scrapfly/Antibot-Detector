@@ -191,3 +191,22 @@ test('damaged entries (from an old build or an edited file) never break an expor
   const marks = [{ id: 'a', changed: true }, { id: 'b', changed: { added: [], removed: [] } }, { id: 'c', changed: { added: 'DataDome' } }];
   assert.deepStrictEqual(E.filter(marks, { changedOnly: true }, NOW).map(i => i.id), ['c']);
 });
+
+test('a date no Date can hold does not stop an export, and a CSV file starts with the byte-order mark', () => {
+  const broken = { id: 'x', url: 'https://x.example/', hostname: 'x.example', title: 'Café – 東京', timestamp: 1e20, detections: [det('Cloudflare', 'Anti-Bot', 90)] };
+  for (const format of ['csv', 'txt', 'md']) {
+    const built = E.build([broken, ...items], { format, includeTimestamps: true });
+    assert.ok(built.text.includes('x.example'), `${format}: the entry is written`);
+    assert.ok(built.text.includes('shop.example.com'), `${format}: and the others after it`);
+  }
+  const csv = E.build([broken], { format: 'csv', includeTimestamps: true });
+  assert.ok(!csv.text.startsWith('﻿'), 'text is the table itself');
+  assert.ok(csv.fileText.startsWith('﻿url,hostname,title,timestamp,'), 'the file starts with the mark, so a spreadsheet reads UTF-8');
+  assert.strictEqual(E.build([broken], { format: 'json' }).fileText, E.build([broken], { format: 'json' }).text, 'other formats are written as they are');
+});
+
+test('the "site contains" filter finds a Unicode host by the letters, too', () => {
+  const stored = [{ id: 'u', url: 'https://xn--bcher-kva.de/', hostname: 'xn--bcher-kva.de', timestamp: NOW, detections: [] }, ...items];
+  assert.deepStrictEqual(E.filter(stored, { domain: 'bücher.de' }, NOW).map(i => i.id), ['u']);
+  assert.deepStrictEqual(E.filter(stored, { domain: 'xn--bcher' }, NOW).map(i => i.id), ['u'], 'the stored spelling still works');
+});

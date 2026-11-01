@@ -191,3 +191,23 @@ test('saving Settings fits History to the size in force at once; other runs leav
     delete global.chrome;
   }
 });
+
+test('a settings change inside the debounce is not lost to a scan write right after it', async () => {
+  const seen = [];
+  const run = HistoryRetention.run;
+  const wait = HistoryRetention.DEBOUNCE_MS;
+  HistoryRetention.run = async (reason) => { seen.push(reason); return 0; };
+  HistoryRetention.DEBOUNCE_MS = 5;
+  try {
+    HistoryRetention.schedule('settings_saved');
+    HistoryRetention.schedule('history_write');
+    await new Promise(resolve => setTimeout(resolve, 40));
+    assert.deepStrictEqual(seen, ['settings_saved'], 'one run, with the reason that compacts the stored list');
+    HistoryRetention.schedule('history_write');
+    await new Promise(resolve => setTimeout(resolve, 40));
+    assert.deepStrictEqual(seen, ['settings_saved', 'history_write'], 'the next burst is its own');
+  } finally {
+    HistoryRetention.run = run;
+    HistoryRetention.DEBOUNCE_MS = wait;
+  }
+});

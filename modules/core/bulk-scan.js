@@ -105,6 +105,7 @@
       const token = after.split(/[,;]/)[0];
       const ends = !/[/?#]/.test(before.replace(/^\s*[a-z][a-z0-9+.-]*:\/\//i, ''))
         || /\/$/.test(before)
+        || !after.trim() // nothing follows: a list pasted as "https://a.com/x," ends there, the comma is not part of the address
         || /^\s*[a-z][a-z0-9+.-]*:\/\//i.test(after)
         || (/^\s/.test(token) && looksLikeAddress(token.trim()))
         || /\s/.test(token.trim());
@@ -152,6 +153,8 @@
     if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return { error: 'scheme' };
     if (!parsed.hostname) return { error: 'invalid' };
     parsed.hash = '';
+    // "https://a.com/?" is "https://a.com/": an empty query is no query, so the page is not scanned twice
+    if (!parsed.search) parsed.search = '';
     return { url: parsed.href };
   }
 

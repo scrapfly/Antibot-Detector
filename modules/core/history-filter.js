@@ -41,6 +41,15 @@
     };
   }
 
+  /** A typed host with letters (bücher.de) as the browser stores it (xn--bcher-kva.de); '' when it has none or is not a host. */
+  const asciiHost = (text) => {
+    if (!/[^\x00-\x7f]/.test(text)) return '';
+    try {
+      const host = new URL(`http://${text}`).hostname;
+      return host && host !== text ? host : '';
+    } catch (_) { return ''; }
+  };
+
   const isActive = (chips) => {
     const value = normalizeChips(chips);
     return value.pinned || value.changed || value.categories.length > 0;
@@ -71,7 +80,9 @@
       item.note,
       ...detections.map(d => nameOf(d))
     ];
-    return haystack.some(part => String(part || '').toLowerCase().includes(query));
+    // Stored addresses are ASCII (bücher.de is xn--bcher-kva.de): a search typed with letters finds them too
+    const needles = [query, asciiHost(query)].filter(Boolean);
+    return haystack.some(part => needles.some(needle => String(part || '').toLowerCase().includes(needle)));
   }
 
   function filter(items, options = {}) {
