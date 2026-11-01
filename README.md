@@ -300,7 +300,9 @@ npm run check:rule-i18n   # every rule text is translated in detectors/i18n/
 npm test                  # unit tests on Node's built-in test runner
 ```
 
-The browser tests load the real extension in Chromium. They are not part of `verify`, and they need Playwright (`npm i --no-save playwright && npx playwright install chromium`):
+The browser tests load the real extension in Chromium. They are not part of `verify`, and they need Playwright. `npm run e2e:setup` prepares it once, outside the repository (in `~/.cache/antibot-e2e`): it installs Playwright, finds a Chromium that matches it (linking another cached revision under the expected name rather than downloading again), starts Chromium through a wrapper that adds `--disable-gpu` on Windows Subsystem for Linux, where it otherwise draws no frames, and checks that a frame is drawn. By hand, `npm i --no-save playwright && npx playwright install chromium` also works.
+
+`npm run e2e:all` runs every suite below one at a time, with a time limit each, a log for each and a summary (`-- --only history,data`, `--skip languages`, `--bail`, `--timeout <minutes>`, `--repo <another checkout>`). Run nothing else heavy meanwhile: the suites are timing-sensitive, and the unit tests running beside one have made scenarios fail for no reason of their own.
 
 ```bash
 npm run e2e:methods    # every detection method, from URL to JavaScript hooks
@@ -314,6 +316,7 @@ npm run e2e:hooks      # Settings → Detection → Sites without JS hooks: hook
 npm run e2e:rule-texts  # Rules editor texts in Spanish: one plain box, replaced when changed, untouched when left alone
 npm run e2e:quickwins  # 3.0.3: toolbar hover text, the copy menu, the rescan shortcut, notification clicks, History open and rescan, Duplicate rule, Markdown exports
 npm run e2e:languages  # every language through the real popup, settings and statistics pages
+npm run e2e:controls   # every checkbox, radio and dropdown on screen is drawn by the interface, none is the browser's default look
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json
 ```
 

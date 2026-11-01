@@ -30,6 +30,9 @@
     "e2e:rule-texts": "node scripts/e2e-rule-texts.js",
     "e2e:quickwins": "node scripts/e2e-quickwins.js",
     "e2e:v304": "node scripts/e2e-v304.js",
+    "e2e:controls": "node scripts/e2e-controls.js",
+    "e2e:setup": "node scripts/e2e-setup.js",
+    "e2e:all": "node scripts/e2e-all.js",
     "e2e:live": "node scripts/e2e-live.js"
   }
 }
