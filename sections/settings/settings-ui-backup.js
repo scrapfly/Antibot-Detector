@@ -51,6 +51,7 @@ SettingsUI.chooseRestore = async function(parsed) {
         if (!present) continue;
         const box = document.createElement('input');
         box.type = 'checkbox';
+        box.className = 'ui-checkbox';
         box.checked = true;
         box.dataset.part = id;
         checks[id] = box;

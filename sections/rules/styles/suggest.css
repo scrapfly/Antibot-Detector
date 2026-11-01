@@ -183,32 +183,12 @@
   background: var(--rh-card-hover);
 }
 
-/* A tick box drawn like the rest of the interface (as History's), not the browser's square */
-.sr-check {
-  appearance: none;
-  -webkit-appearance: none;
-  flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  background: transparent center / 11px no-repeat;
-  border: 1px solid var(--g-5c5c5c);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+/* Its box is the shared .ui-checkbox (modules/styles/common.css); the row shows the hover and the focus */
+.sr-row:hover .sr-check:not(:checked):not(:disabled) {
+  border-color: var(--accent-light);
 }
 
-.sr-row:hover .sr-check {
-  border-color: var(--accent);
-}
-
-.sr-check:checked {
-  background-color: var(--accent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
-  border-color: var(--accent);
-}
-
-.sr-check:focus-visible {
+.sr-row .sr-check:focus-visible {
   outline: none;
 }
 

@@ -183,7 +183,7 @@ test('a row of the list escapes cookie names, script addresses and rule names in
   assert.match(many, /title="Script addresses containing this: 20"/, 'the hover text says how many scripts, it does not list them');
   assert.match(many, /×20/);
   const inRule = rules.suggestRowHtml({ id: 'cookie:z', kind: 'cookie', value: 'z', text: 'z', prefix: false, sources: ['z'], matchedBy: [] }, 2, true);
-  assert.match(inRule, /class="sr-check" data-index="2" disabled/, 'what the rule already has is not offered again');
+  assert.match(inRule, /class="sr-check ui-checkbox" data-index="2" disabled/, 'what the rule already has is not offered again');
   assert.match(inRule, /in this rule/);
 });
 

@@ -1393,3 +1393,64 @@ option:checked .opt-icon {
   direction: ltr;
   text-align: right;
 }
+
+/* The tick box of the interface (class "ui-checkbox": History's Select mode, the dialogs, the rule suggestions). Drawn from the
+   theme's colours, because the browser's own is a plain white square, glaring on a dark card. The tick is an image (the same one
+   everywhere), so the box needs no extra element. */
+.ui-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid color-mix(in srgb, var(--text-secondary) 70%, transparent);
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--text-primary) 5%, transparent) center / 12px no-repeat;
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.ui-checkbox:hover:not(:disabled) {
+  border-color: var(--accent-light);
+  background-color: var(--accent-soft);
+}
+
+.ui-checkbox:checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
+}
+
+.ui-checkbox:checked:hover:not(:disabled) {
+  border-color: var(--accent-hover);
+  background-color: var(--accent-hover);
+}
+
+.ui-checkbox:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.ui-checkbox:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-checkbox {
+    transition: none;
+  }
+}
+
+/* A forced-colours theme (Windows high contrast) paints its own, and shows the state of the browser's box */
+@media (forced-colors: active) {
+  .ui-checkbox {
+    appearance: auto;
+    -webkit-appearance: auto;
+    width: 16px;
+    height: 16px;
+    background-image: none;
+  }
+}

@@ -426,7 +426,7 @@ ScrapflyExport.optionsHtml = function(options, tr) {
       case 'multi':
         return row(field, `${head(field)}
         <div class="scrapfly-export-multi" role="group" aria-labelledby="${id}" data-option="${field.key}">
-          ${field.values.map(value => `<label class="scrapfly-export-chk"><input type="checkbox" value="${attr(value)}"${v.includes(value) ? ' checked' : ''}><span>${esc(valueLabel(field, value))}</span></label>`).join('')}
+          ${field.values.map(value => `<label class="scrapfly-export-chk"><input type="checkbox" class="ui-checkbox" value="${attr(value)}"${v.includes(value) ? ' checked' : ''}><span>${esc(valueLabel(field, value))}</span></label>`).join('')}
         </div>`, true);
       default:
         return '';

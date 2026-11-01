@@ -261,7 +261,7 @@ class History {
       return `
         <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${FormatUtils.escapeAttr(item.id)}" role="group" tabindex="0" aria-label="${attrTitle}">
           <div class="history-item-top">
-            ${selecting ? `<input type="checkbox" class="history-select-input" aria-label="${selectLabel}"${selected ? ' checked' : ''}>` : ''}
+            ${selecting ? `<input type="checkbox" class="history-select-input ui-checkbox" aria-label="${selectLabel}"${selected ? ' checked' : ''}>` : ''}
             <span class="history-favicon-tile">
               <img src="${FormatUtils.escapeAttr(faviconSrc)}" alt="" class="history-favicon" data-fallback="${UrlUtils.getDefaultFaviconUrl()}">
             </span>
@@ -1836,6 +1836,7 @@ class History {
       row.className = 'history-dialog-check';
       const box = document.createElement('input');
       box.type = 'checkbox';
+      box.className = 'ui-checkbox';
       box.checked = checked;
       const text = document.createElement('span');
       text.textContent = FormatUtils.t(labelKey, labelFallback);

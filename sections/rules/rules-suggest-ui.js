@@ -233,7 +233,7 @@ Rules.prototype.suggestRowHtml = function(candidate, index, inRule) {
   }
   return `
           <label class="sr-row${candidate.matchedBy.length ? ' is-known' : ''}${inRule ? ' is-in-rule' : ''}" title="${attr(hover)}" data-filter="${attr(String(candidate.value).toLowerCase())}">
-            <input type="checkbox" class="sr-check" data-index="${attr(String(index))}"${inRule ? ' disabled' : ''}>
+            <input type="checkbox" class="sr-check ui-checkbox" data-index="${attr(String(index))}"${inRule ? ' disabled' : ''}>
             <span class="sr-name" dir="ltr">${esc(candidate.value)}</span>
             ${tag}
           </label>`;

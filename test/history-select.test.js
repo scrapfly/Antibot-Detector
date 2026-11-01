@@ -179,7 +179,7 @@ test('the worker message exists, and the cards, the bar and the menu item are in
   const popup = fs.readFileSync(path.join(root, 'popup.html'), 'utf8');
   assert.ok(popup.indexOf('sections/history/history.js') < popup.indexOf('sections/history/history-select.js'));
   const history = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
-  assert.ok(history.includes('class="history-select-input"') && history.includes('this.onSelectClick(e, historyId)'));
+  assert.ok(history.includes('class="history-select-input ui-checkbox"') && history.includes('this.onSelectClick(e, historyId)'));
 });
 
 test('Clear All while selecting ends Select mode, so no "N selected" bar is left with nothing to act on', async () => {

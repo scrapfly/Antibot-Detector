@@ -1583,40 +1583,7 @@
   cursor: pointer;
 }
 
-/* A tick box drawn like the rest of the interface instead of the browser's white square */
-.history-dialog-check input {
-  appearance: none;
-  -webkit-appearance: none;
-  flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  background: transparent center / 11px no-repeat;
-  border: 1px solid var(--g-4b4b4b);
-  border-radius: 4px;
-  cursor: pointer;
-  transition: border-color 0.15s, background-color 0.15s;
-}
-
-.history-dialog-check input:hover {
-  border-color: var(--accent);
-}
-
-.history-dialog-check input:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.history-dialog-check input:checked {
-  background-color: var(--accent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12.5l5 5L20 6.5'/%3E%3C/svg%3E");
-  border-color: var(--accent);
-}
-
-.history-dialog-check input:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
+/* Its box is the shared .ui-checkbox (modules/styles/common.css) */
 
 .history-dialog-count {
   font-size: 11.5px;
@@ -1751,18 +1718,16 @@
   color: var(--danger-light);
 }
 
-.history-select-input {
-  flex: 0 0 auto;
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-
+/* The checkbox of a card in Select mode is the shared .ui-checkbox (modules/styles/common.css) */
 .history-item.is-selected {
   border-color: var(--accent);
   box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+/* A selected card is tinted too, not only outlined (after the hover rule above, so a hovered selected card keeps it) */
+#historyTab .history-item.is-selected {
+  background-color: color-mix(in srgb, var(--accent) 10%, var(--bg-secondary));
+  border-color: var(--accent);
 }
 
 /* In Select mode a click selects, so the card's own buttons step aside */
