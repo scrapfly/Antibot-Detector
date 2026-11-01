@@ -891,7 +891,7 @@ class History {
     };
 
     const select = document.createElement('select');
-    select.className = 'select-field history-dialog-input';
+    select.className = 'select-field history-dialog-input ui-select';
     // Each option is a translated sentence (date, count, path): its direction is the language's, not forced left to right
     select.setAttribute('dir', 'auto');
     for (const candidate of candidates) {
@@ -1821,7 +1821,7 @@ class History {
     };
     const select = (options, value) => {
       const el = document.createElement('select');
-      el.className = 'select-field history-dialog-input';
+      el.className = 'select-field history-dialog-input ui-select';
       for (const [optionValue, text] of options) {
         const option = document.createElement('option');
         option.value = String(optionValue);

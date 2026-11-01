@@ -1454,3 +1454,81 @@ option:checked .opt-icon {
     background-image: none;
   }
 }
+
+/* The round choice of the interface (class "ui-radio": the restore dialog's Merge / Replace): the tick box's look, as a circle with a dot. */
+.ui-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 1.5px solid color-mix(in srgb, var(--text-secondary) 70%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.ui-radio:hover:not(:disabled) {
+  border-color: var(--accent-light);
+  background-color: var(--accent-soft);
+}
+
+.ui-radio:checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  background-image: radial-gradient(circle, #fff 0 34%, transparent 38%);
+}
+
+.ui-radio:checked:hover:not(:disabled) {
+  border-color: var(--accent-hover);
+  background-color: var(--accent-hover);
+}
+
+.ui-radio:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.ui-radio:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-radio {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ui-radio {
+    appearance: auto;
+    -webkit-appearance: auto;
+    width: 16px;
+    height: 16px;
+    background-image: none;
+  }
+}
+
+/* A dropdown that shows it is one (class "ui-select"): the arrow the other selects of the interface draw, since the native one is
+   hidden above ("DROPDOWN LISTS"). The arrow's colour follows the theme: one image for each. */
+select.ui-select {
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23b3b3b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  cursor: pointer;
+}
+
+:root[data-theme="light"] select.ui-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23595d66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+[dir="rtl"] select.ui-select {
+  padding-right: 10px;
+  padding-left: 30px;
+  background-position: left 11px center;
+}

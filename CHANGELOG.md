@@ -17,6 +17,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Tick boxes share one look everywhere (History's Select mode, the export, restore and reset dialogs, Scrapfly options, rule suggestions) instead of the browser's white square; a selected History card is tinted.
+- The restore dialog's Merge / Replace buttons match, and the dropdowns of History's export and compare dialogs show an arrow like every other one.
 
 ### Fixed
 

@@ -3,8 +3,9 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-// The tick box of the interface is one style (.ui-checkbox, modules/styles/common.css): History's Select mode, the dialogs and the rule
-// suggestions all use it, so none of them is the browser's plain white square on a dark card.
+// The choice controls of the interface are one style each (modules/styles/common.css): .ui-checkbox (History's Select mode, the dialogs,
+// the rule suggestions), .ui-radio (the restore dialog) and .ui-select (the dropdowns of History's dialogs), so none of them is the
+// browser's plain white square, round button or arrow-less box on a dark card.
 
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -55,4 +56,41 @@ test('the looks it replaced are gone, and the rows that frame a box keep their o
   assert.ok(!/^\.sr-check\s*\{/m.test(suggest), 'the suggestion box is the shared one');
   assert.match(suggest, /\.sr-row \.sr-check:focus-visible \{\s*outline: none;/, 'its row shows the focus ring instead');
   assert.ok(!/accent-color/.test(read('modules/integrations/scrapfly/dialog.css')), 'no browser-coloured box is left in the Scrapfly dialog');
+});
+
+test('the shared radio draws a circle with a dot, and the dropdown an arrow that follows the theme', () => {
+  const css = read('modules/styles/common.css');
+  const block = (selector) => {
+    const at = css.indexOf(`${selector} {`);
+    assert.ok(at >= 0, `${selector} is defined`);
+    return css.slice(at, css.indexOf('}', at));
+  };
+  assert.match(block('.ui-radio'), /appearance: none;/);
+  assert.match(block('.ui-radio'), /border-radius: 50%;/);
+  assert.match(block('.ui-radio:checked'), /radial-gradient\(circle, #fff/, 'the dot');
+  assert.match(block('.ui-radio:checked'), /var\(--accent\)/);
+  assert.match(block('.ui-radio:focus-visible'), /outline: 2px solid/);
+  assert.match(block('.ui-radio:disabled'), /not-allowed/);
+  assert.match(css, /@media \(forced-colors: active\)\s*\{\s*\.ui-radio\s*\{\s*appearance: auto;/);
+  assert.match(block('select.ui-select'), /data:image\/svg\+xml/, 'an arrow is drawn: common.css hides the native one');
+  assert.match(block('select.ui-select'), /padding-right: 30px;/, 'the text never runs under it');
+  assert.notEqual(block('select.ui-select').match(/stroke='(%23[0-9a-f]{6})'/i)[1], block(':root[data-theme="light"] select.ui-select').match(/stroke='(%23[0-9a-f]{6})'/i)[1], 'one colour for each theme');
+  assert.match(block('[dir="rtl"] select.ui-select'), /padding-left: 30px;/, 'and it moves to the other side in a right-to-left language');
+});
+
+test('every radio and dropdown the interface builds uses them', () => {
+  const files = ['sections/history/history.js', 'sections/settings/settings-ui-backup.js', 'sections/settings/settings-ui-presets.js',
+    'modules/integrations/scrapfly/dialog.js', 'sections/rules/rules-suggest-ui.js', 'sections/settings/settings-ui.js', 'sections/bulk/bulk.js'];
+  let radios = 0;
+  let selects = 0;
+  for (const file of files) {
+    const lines = read(file).split('\n');
+    lines.forEach((line, index) => {
+      const near = lines.slice(index, index + 3).join('\n');
+      if (/\.type = 'radio'/.test(line)) { radios++; assert.match(near, /ui-radio/, `${file}:${index + 1} builds a radio without the shared class`); }
+      if (/createElement\('select'\)/.test(line)) { selects++; assert.match(near, /ui-select/, `${file}:${index + 1} builds a dropdown without the shared arrow`); }
+    });
+  }
+  assert.equal(radios, 1, 'the restore dialog\'s Merge / Replace');
+  assert.equal(selects, 2, 'the export and the compare dialogs of History');
 });
