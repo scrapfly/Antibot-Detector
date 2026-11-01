@@ -818,6 +818,17 @@ class History {
   }
 
   /**
+   * "Copy as Markdown": this entry as the heading and the table History exports, for a ticket or a chat. Like the export, it
+   * names the protections only (no cookie or header value) and gives the address without its query and fragment.
+   * @param {object} historyItem - History entry
+   */
+  async copyHistoryItemMarkdown(historyItem) {
+    const saved = await Utils.getHistorySettings().catch(() => ({}));
+    const built = HistoryExport.build([historyItem], { format: 'md', includeTimestamps: saved.includeTimestamps !== false });
+    await FormatUtils.copyToClipboard(built.text);
+  }
+
+  /**
    * What "Copy entry" writes for one match: what was matched, never its value.
    * A cookie or header keeps its name, an address loses its query and hash, a
    * payload keeps its rule pattern: those values carry live tokens
@@ -2174,6 +2185,8 @@ class History {
           this.compareHistoryItem(item);
         } else if (action === 'copy') {
           this.copyHistoryItem(item);
+        } else if (action === 'copy-markdown') {
+          this.copyHistoryItemMarkdown(item);
         } else if (action === 'pin') {
           this.togglePin(item);
         } else if (action === 'watch') {

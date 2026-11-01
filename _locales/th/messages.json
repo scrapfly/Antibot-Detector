@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "วางที่อยู่หรืออัปโหลดไฟล์ แล้วเลือกเริ่ม"
+  },
+  "webhookPresetPlaceholder": {
+    "message": "เริ่มจากเทมเพลต…"
+  },
+  "webhookPresetPlain": {
+    "message": "ข้อความธรรมดาหนึ่งบรรทัด"
+  },
+  "webhookVarDetectionNames": {
+    "message": "การป้องกันที่ตรวจพบพร้อมระดับความเชื่อมั่น คั่นด้วยจุลภาค"
+  },
+  "historyCopyMarkdown": {
+    "message": "คัดลอกเป็น Markdown"
   }
 }

@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Dán địa chỉ hoặc tải lên một tệp, rồi chọn Bắt đầu."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Bắt đầu từ một mẫu…"
+  },
+  "webhookPresetPlain": {
+    "message": "Một dòng văn bản thuần"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Các biện pháp bảo vệ được phát hiện kèm độ tin cậy, phân tách bằng dấu phẩy"
+  },
+  "historyCopyMarkdown": {
+    "message": "Sao chép dạng Markdown"
   }
 }

@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Plak adressen of upload een bestand en kies dan Starten."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Begin met een sjabloon…"
+  },
+  "webhookPresetPlain": {
+    "message": "Regel platte tekst"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Gedetecteerde beveiligingen met hun zekerheid, gescheiden door komma's"
+  },
+  "historyCopyMarkdown": {
+    "message": "Kopiëren als Markdown"
   }
 }

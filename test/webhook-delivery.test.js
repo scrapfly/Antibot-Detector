@@ -162,3 +162,17 @@ test('a saved secret is used trimmed; one that is blank or not text sends unsign
     assert.equal(new Headers(h.calls[0].options.headers).get('X-Scrapfly-Webhook-Signature'), null, String(secret));
   }
 });
+
+test('the presets send their message: the page, its protections with their confidence, and the address', async () => {
+  const sent = [];
+  for (const preset of WebhookBody.PRESETS) {
+    const h = harness({ ...ON, webhookContentType: preset.contentType, webhookPayload: preset.template });
+    await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+    sent.push([preset.id, h.calls[0].options.headers['Content-Type'], h.calls[0].options.body]);
+  }
+  assert.deepEqual(sent.map(s => [s[0], s[1]]), [['slack', 'application/json'], ['discord', 'application/json'], ['plain', 'text/plain']]);
+  const line = 'shop.example: Cloudflare 90%, Canvas 30%';
+  assert.equal(JSON.parse(sent[0][2]).text, `${line}\nhttps://shop.example/cart?id=1`);
+  assert.equal(JSON.parse(sent[1][2]).content, `**shop.example**: Cloudflare 90%, Canvas 30%\nhttps://shop.example/cart?id=1`);
+  assert.equal(sent[2][2], `${line} (https://shop.example/cart?id=1)`);
+});

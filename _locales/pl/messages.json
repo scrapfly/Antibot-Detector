@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Wklej adresy lub wczytaj plik, a potem wybierz Rozpocznij."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Zacznij od szablonu…"
+  },
+  "webhookPresetPlain": {
+    "message": "Linia zwykłego tekstu"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Wykryte zabezpieczenia z ich pewnością, rozdzielone przecinkami"
+  },
+  "historyCopyMarkdown": {
+    "message": "Kopiuj jako Markdown"
   }
 }

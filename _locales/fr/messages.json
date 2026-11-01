@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Collez des adresses ou importez un fichier, puis choisissez Démarrer."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Partir d'un modèle…"
+  },
+  "webhookPresetPlain": {
+    "message": "Ligne de texte brut"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Protections détectées avec leur confiance, séparées par des virgules"
+  },
+  "historyCopyMarkdown": {
+    "message": "Copier en Markdown"
   }
 }

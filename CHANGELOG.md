@@ -7,6 +7,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.0] - 2026-11-01
 
+### Added
+
+- Webhook: "Start from a preset" (Slack, Mattermost or Google Chat, Discord, a plain text line) fills in the Content-Type and a chat message template.
+- Webhook: the new template variable `<DETECTION_NAMES>` lists the protections with their confidence on one line.
+- History: "Copy as Markdown" in an entry's "..." menu, for tickets and chats.
+- Bulk scan: Export Markdown, and the CSV export now opens correctly in Excel.
+
 ### Fixed
 
 - Toolbar badge: a page keeps its number when the browser restarts the extension's background part, instead of going blank until you switch tabs.

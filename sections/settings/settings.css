@@ -1692,6 +1692,12 @@ input[type="file"] {
   box-shadow: 0 0 0 2px var(--settings-card-bg), 0 0 0 4px var(--accent-light);
 }
 
+#settingsModal .webhook-preset {
+  width: auto;
+  max-width: 100%;
+  margin: 8px 0 0;
+}
+
 #settingsModal .webhook-var-chips {
   display: flex;
   flex-wrap: wrap;

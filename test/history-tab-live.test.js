@@ -173,3 +173,33 @@ test('the last entry deleted in Select mode ends it, and an empty History cannot
   h.view.enterSelectMode();
   assert.equal(h.view.selectMode, true);
 });
+
+test('"Copy as Markdown" copies the entry as the heading and table History exports: protections by name, no query, no values', async () => {
+  const h = load({ settings: { includeTimestamps: true } });
+  const copied = [];
+  h.context.FormatUtils.copyToClipboard = async (text) => { copied.push(text); return true; };
+  const item = entry('shop', Date.UTC(2026, 9, 19, 12), {
+    url: 'https://shop.example/cart?session=SECRET#top', title: 'Shop | Cart', note: 'check later', pinned: true,
+    detections: [{ detector: { name: 'Cloudflare' }, category: 'antibot', confidence: 90, matches: [{ type: 'cookie', value: 'cf_clearance=SECRET_VALUE' }] }]
+  });
+  await h.view.copyHistoryItemMarkdown(item);
+  assert.equal(copied.length, 1);
+  assert.deepEqual(copied[0].split('\n'), [
+    '# Scrapfly Antibot Detector: History', '',
+    '| Page | Address | Date | Protections | Pinned | Note |', '| --- | --- | --- | --- | --- | --- |',
+    '| Shop \\| Cart | https://shop.example/cart | 2026-10-19T12:00:00.000Z | Cloudflare (antibot, 90%) | yes | check later |', '']);
+  assert.ok(!copied[0].includes('SECRET'), 'neither the query nor a cookie value');
+
+  // The timestamps follow the History setting, as in the export
+  const plain = load({ settings: { includeTimestamps: false } });
+  plain.context.FormatUtils.copyToClipboard = async (text) => { copied.push(text); return true; };
+  await plain.view.copyHistoryItemMarkdown(item);
+  assert.match(copied[1], /\| Page \| Address \| Protections \| Pinned \| Note \|/);
+});
+
+test('the entry menu offers it, wired to its own action', () => {
+  const html = fs.readFileSync(path.join(root, 'sections/history/history.html'), 'utf8');
+  assert.match(html, /data-action="copy-markdown"[\s\S]{0,400}data-i18n="historyCopyMarkdown"/);
+  const source = fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8');
+  assert.match(source, /action === 'copy-markdown'\) \{\s*this\.copyHistoryItemMarkdown\(item\)/);
+});

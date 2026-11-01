@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Vložte adresy nebo nahrajte soubor a pak zvolte Spustit."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Začít ze šablony…"
+  },
+  "webhookPresetPlain": {
+    "message": "Řádek prostého textu"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Zjištěné ochrany s jejich jistotou, oddělené čárkami"
+  },
+  "historyCopyMarkdown": {
+    "message": "Kopírovat jako Markdown"
   }
 }

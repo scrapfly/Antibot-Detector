@@ -200,8 +200,8 @@ test('a date no Date can hold does not stop an export, and a CSV file starts wit
     assert.ok(built.text.includes('shop.example.com'), `${format}: and the others after it`);
   }
   const csv = E.build([broken], { format: 'csv', includeTimestamps: true });
-  assert.ok(!csv.text.startsWith('﻿'), 'text is the table itself');
-  assert.ok(csv.fileText.startsWith('﻿url,hostname,title,timestamp,'), 'the file starts with the mark, so a spreadsheet reads UTF-8');
+  assert.ok(!csv.text.startsWith('\uFEFF'), 'text is the table itself');
+  assert.ok(csv.fileText.startsWith('\uFEFFurl,hostname,title,timestamp,'), 'the file starts with the mark, so a spreadsheet reads UTF-8');
   assert.strictEqual(E.build([broken], { format: 'json' }).fileText, E.build([broken], { format: 'json' }).text, 'other formats are written as they are');
 });
 

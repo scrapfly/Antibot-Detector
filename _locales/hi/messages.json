@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "पते चिपकाएँ या फ़ाइल अपलोड करें, फिर शुरू करें चुनें।"
+  },
+  "webhookPresetPlaceholder": {
+    "message": "टेम्पलेट से शुरू करें…"
+  },
+  "webhookPresetPlain": {
+    "message": "सादा टेक्स्ट की एक पंक्ति"
+  },
+  "webhookVarDetectionNames": {
+    "message": "पता लगाई गई सुरक्षाएँ उनके भरोसे के स्तर सहित, अल्पविराम से अलग"
+  },
+  "historyCopyMarkdown": {
+    "message": "Markdown के रूप में कॉपी करें"
   }
 }

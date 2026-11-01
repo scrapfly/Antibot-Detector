@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "粘贴地址或上传文件，然后选择开始。"
+  },
+  "webhookPresetPlaceholder": {
+    "message": "从预设开始…"
+  },
+  "webhookPresetPlain": {
+    "message": "纯文本行"
+  },
+  "webhookVarDetectionNames": {
+    "message": "检测到的防护及其置信度，以逗号分隔"
+  },
+  "historyCopyMarkdown": {
+    "message": "复制为 Markdown"
   }
 }

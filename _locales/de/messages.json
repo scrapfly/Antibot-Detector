@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Fügen Sie Adressen ein oder laden Sie eine Datei hoch und wählen Sie dann Starten."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Mit einer Vorlage beginnen…"
+  },
+  "webhookPresetPlain": {
+    "message": "Einfache Textzeile"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Erkannte Schutzmaßnahmen mit ihrer Konfidenz, durch Kommas getrennt"
+  },
+  "historyCopyMarkdown": {
+    "message": "Als Markdown kopieren"
   }
 }

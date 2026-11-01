@@ -227,22 +227,29 @@ const PROBE = {
 
     // 5. Exports
     const day = await bulk.evaluate(() => FormatUtils.localDay(Date.now()));
-    for (const [button, ext] of [['#bulkExportCsvBtn', 'csv'], ['#bulkExportJsonBtn', 'json']]) {
+    for (const [button, ext] of [['#bulkExportCsvBtn', 'csv'], ['#bulkExportJsonBtn', 'json'], ['#bulkExportMarkdownBtn', 'md']]) {
       const pending = bulk.waitForEvent('download');
       await bulk.click(button);
       const download = await pending;
       assert.equal(download.suggestedFilename(), `scrapfly-bulk-scan-${day}.${ext}`);
       const text = fs.readFileSync(await download.path(), 'utf8');
       if (ext === 'csv') {
-        assert.match(text, /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
+        // The file starts with the byte-order mark, so Excel reads it as UTF-8
+        assert.equal(text.charCodeAt(0), 0xFEFF, 'a CSV starts with the byte-order mark');
+        assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
         assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,`));
+      } else if (ext === 'md') {
+        assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
+        assert.match(text, new RegExp(`\\| ${at('/protected').replace(/[.?/]/g, '\\$&')} \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
+        assert.ok(!text.includes('?n=1'), 'the query, where tokens live, is left out');
+        assert.equal(text.charCodeAt(0), 35, 'a Markdown file has no byte-order mark');
       } else {
         const data = JSON.parse(text);
         assert.equal(data.type, 'bulk-scan');
         assert.equal(data.pages.length, 9);
       }
     }
-    console.log('PASS Exports: CSV and JSON named for the local day');
+    console.log('PASS Exports: CSV (with the byte-order mark), JSON and Markdown named for the local day');
 
     // 6. Pause, Resume, Stop
     await bulk.click('#bulkNewBtn');

@@ -16,7 +16,7 @@
  *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
  *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
- *   build(), fileName()   the CSV and JSON exports
+ *   build(), fileName()   the CSV, JSON and Markdown exports
  */
 (function(root) {
   'use strict';
@@ -30,8 +30,8 @@
   const RUN_STATUSES = Object.freeze(['running', 'paused', 'stopped', 'done']);
   /** Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. */
   const REASONS = Object.freeze(['invalid', 'scheme', 'scope', 'sitemap', 'timeout', 'load', 'error', 'off']);
-  const FORMATS = Object.freeze(['csv', 'json']);
-  const TYPES = Object.freeze({ csv: 'text/csv', json: 'application/json' });
+  const FORMATS = Object.freeze(['csv', 'json', 'md']);
+  const TYPES = Object.freeze({ csv: 'text/csv', json: 'application/json', md: 'text/markdown' });
 
   const clampInt = (value, min, max, fallback) => {
     const n = parseInt(value, 10);
@@ -444,15 +444,42 @@
     }, null, 2);
   }
 
+  /** A Markdown table cell: what would format the text or end the cell is escaped, a line break becomes a space. */
+  const mdCell = (value) => String(value == null ? '' : value).replace(/[\\`*_[\]<>|~]/g, (c) => `\\${c}`).replace(/[\r\n]+/g, ' ').trim();
+  /** The page's address without its query and fragment, as every other copy for tickets and chats gives it (tokens live there). */
+  function addressOf(url) {
+    const text = String(url || '');
+    try { const u = new URL(text); return `${u.origin}${u.pathname}`; } catch (_) { return text.split('#')[0].split('?')[0]; }
+  }
+
+  /** A heading, a line of counts and one row per page, for a ticket or a chat. */
+  function buildMarkdown(run) {
+    const c = counts(run);
+    const parts = [`${c.total} pages`, c.done && `${c.done} scanned`, c.failed && `${c.failed} failed`, c.skipped && `${c.skipped} skipped`,
+      c.waiting && `${c.waiting} waiting`, c.scanning && `${c.scanning} scanning`].filter(Boolean);
+    const lines = ['# Scrapfly Antibot Detector: Bulk scan', '', `${parts.join(', ')}; ${c.found} with protections`, '',
+      '| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |'];
+    for (const item of (run && run.items) || []) {
+      const found = (Array.isArray(item.detections) ? item.detections : [])
+        .map(d => `${d.name} (${d.category}${Number.isFinite(d.confidence) ? `, ${d.confidence}%` : ''})`);
+      const status = item.reason ? `${item.status}: ${item.reason}` : item.status;
+      lines.push(`| ${[addressOf(item.url), status, item.difficulty || '', found.length ? found.join('; ') : '-'].map(mdCell).join(' | ')} |`);
+    }
+    return `${lines.join('\n')}\n`;
+  }
+
   /**
    * @param {object} run
-   * @param {{format?: 'csv'|'json', now?: number}} [options]
-   * @returns {{text: string, type: string, extension: string}}
+   * @param {{format?: 'csv'|'json'|'md', now?: number}} [options]
+   * @returns {{text: string, fileText: string, type: string, extension: string}}
+   *   fileText is what goes in a file: text, with the byte-order mark a CSV needs for a spreadsheet to read UTF-8
    */
   function build(run, options = {}) {
     const format = FORMATS.includes(options.format) ? options.format : 'json';
-    const text = format === 'csv' ? buildCsv(run) : buildJson(run, Number.isFinite(options.now) ? options.now : Date.now());
-    return { text, type: TYPES[format], extension: format };
+    const text = format === 'csv' ? buildCsv(run)
+      : format === 'md' ? buildMarkdown(run)
+      : buildJson(run, Number.isFinite(options.now) ? options.now : Date.now());
+    return { text, fileText: format === 'csv' ? `\uFEFF${text}` : text, type: TYPES[format], extension: format };
   }
 
   /** scrapfly-bulk-scan-2026-10-26.csv (the day is the person's own: FormatUtils.localDay). */

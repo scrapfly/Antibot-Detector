@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "アドレスを貼り付けるかファイルをアップロードして、開始を選んでください。"
+  },
+  "webhookPresetPlaceholder": {
+    "message": "テンプレートから始める…"
+  },
+  "webhookPresetPlain": {
+    "message": "プレーンテキスト1行"
+  },
+  "webhookVarDetectionNames": {
+    "message": "検出された保護と信頼度(カンマ区切り)"
+  },
+  "historyCopyMarkdown": {
+    "message": "Markdownとしてコピー"
   }
 }

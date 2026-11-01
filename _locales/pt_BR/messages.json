@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Cole endereços ou envie um arquivo e depois escolha Iniciar."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Começar com um modelo…"
+  },
+  "webhookPresetPlain": {
+    "message": "Linha de texto simples"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Proteções detectadas com sua confiança, separadas por vírgulas"
+  },
+  "historyCopyMarkdown": {
+    "message": "Copiar como Markdown"
   }
 }
