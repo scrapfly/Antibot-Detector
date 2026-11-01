@@ -14,6 +14,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: "Copy as Markdown" in an entry's "..." menu, for tickets and chats.
 - Bulk scan: Export Markdown, and the CSV export now opens correctly in Excel.
 
+### Changed
+
+- Tick boxes share one look everywhere (History's Select mode, the export, restore and reset dialogs, Scrapfly options, rule suggestions) instead of the browser's white square; a selected History card is tinted.
+
 ### Fixed
 
 - Toolbar badge: a page keeps its number when the browser restarts the extension's background part, instead of going blank until you switch tabs.
