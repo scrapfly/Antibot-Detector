@@ -469,7 +469,7 @@ const CATCH = `(() => {
         fieldText: getComputedStyle(t).color, varColour: v && getComputedStyle(v).color, plainColour: getComputedStyle(m).color };
     });
     let look = await drawn();
-    assert.deepEqual(look.vars, await admin.evaluate(() => WebhookBody.VARIABLES.map(v => v.token)), 'every variable of the default template is coloured');
+    assert.deepEqual(look.vars, await admin.evaluate(() => WebhookBody.VARIABLES.map(v => v.token).filter(token => WebhookBody.DEFAULT_TEMPLATE.includes(token))), 'every variable of the default template is coloured');
     assert.ok(look.same && look.heights[0] === look.heights[1] && look.widths[0] === look.widths[1], JSON.stringify(look));
     assert.equal(look.fieldText, 'rgba(0, 0, 0, 0)', 'the field hides its own letters');
     assert.notEqual(look.varColour, look.plainColour, 'a variable has its own colour');
@@ -542,7 +542,7 @@ const CATCH = `(() => {
     await clearRecord();
     await scan(at('127.0.0.1', '/both', '?preset=1'), 1);
     const [presetCall] = await calls();
-    assert.equal(presetCall.headers['Content-Type'], 'text/plain');
+    assert.equal(presetCall.headers['content-type'], 'text/plain');
     assert.equal(presetCall.body, `127.0.0.1: Webhook Antibot Probe 92%, Webhook Captcha Probe 85% (${at('127.0.0.1', '/both', '?preset=1')})`, 'the page, its protections with their confidence and the address');
     await patch(admin, { webhook: webhook({ enableWebhook: false }) });
     console.log('PASS Presets: the list, Discord and plain text fill the Content-Type and the template, Save keeps them, and a real scan sends the message with <DETECTION_NAMES>');
