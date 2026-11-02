@@ -233,3 +233,33 @@ test('UPDATE_ITEM refuses an eleventh watched page, and lets a watched one be se
     delete global.chrome;
   }
 });
+
+test('an import cuts what one entry can hold and keeps dates the exports can write; the worker counts only the new entries', async () => {
+  const hostile = entry('big', { note: `${'n'.repeat(5000)}\n  end`, title: 't'.repeat(2000), url: `https://big.com/${'p'.repeat(20000)}`, timestamp: 1e20 });
+  const clean = HistoryStore.applyImport([], [hostile, entry('odd', { note: { not: 'text' }, title: 7, timestamp: 'never' })], 'replace', 0);
+  const big = clean.find(item => item.id === 'big');
+  assert.ok(big.note.length <= 300 && !big.note.includes('\n'), 'a note is one short line, as when typed in History');
+  assert.strictEqual(big.title.length, 500);
+  assert.strictEqual(big.url.length, 8192);
+  assert.strictEqual(big.timestamp, 0, 'a date outside what a Date holds is no date');
+  const odd = clean.find(item => item.id === 'odd');
+  assert.ok(!('note' in odd) && !('title' in odd), 'values of the wrong type are dropped');
+  assert.strictEqual(odd.timestamp, 0);
+
+  // The worker's answer: merging 2 new entries into a full list of 3 (limit 3) adds 2, though the list is still 3 long
+  const storage = memory(JSON.stringify({ items: [entry('o1', { timestamp: 10 }), entry('o2', { timestamp: 20 }), entry('o3', { timestamp: 30 })] }));
+  const registry = {};
+  HistoryStore.registerHandlers(registry, storage);
+  const page = { url: 'chrome-extension://abc/popup.html', id: 'abc' };
+  const prevChrome = global.chrome;
+  global.chrome = { runtime: { id: 'abc', getURL: (p) => `chrome-extension://abc/${p}` } };
+  try {
+    const r = await call(registry, HistoryStore.Messages.REPLACE_ITEMS, { items: [entry('n1', { timestamp: 100 }), entry('n2', { timestamp: 200 }), entry('o1', { timestamp: 10 })], mode: 'merge', limit: 3 }, page);
+    assert.strictEqual(r.status, 'ok', JSON.stringify(r));
+    assert.strictEqual(r.count, 3);
+    assert.strictEqual(r.added, 2, 'two entries are new; the one already stored is not');
+    assert.deepStrictEqual(read(storage).items.map(i => i.id), ['n2', 'n1', 'o3']);
+  } finally {
+    if (prevChrome === undefined) delete global.chrome; else global.chrome = prevChrome;
+  }
+});

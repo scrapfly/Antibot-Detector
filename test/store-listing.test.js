@@ -37,7 +37,7 @@ test('the English listing has the structure every language copies: one intro, tw
 });
 
 test('a listing is plain UTF-8 text with LF endings: no BOM, tabs, Markdown, capitals or stray blank lines', () => {
-    assert.ok(has(listing((text) => `﻿${text}`), 'byte order mark'));
+    assert.ok(has(listing((text) => `\uFEFF${text}`), 'byte order mark'));
     assert.ok(has(listing((text) => text.replace(/\n/g, '\r\n')), 'Windows line endings'));
     assert.ok(has(listing((text) => text.replace('What you see', 'What\tyou see')), 'tab'));
     assert.ok(has(listing((text) => text.replace('Free to use.', 'Free to use. ')), 'spaces at the end of a line'));

@@ -141,7 +141,7 @@ The protections found on the current page, each with its confidence, its difficu
 
 ### History
 
-Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, import a JSON export, and export it as JSON, CSV, plain text or Markdown, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up), add a note, open the page or scan it again now from its **⋯** menu. Clicking a "Protections changed" notification opens that page. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
+Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, import a JSON export, and export it as JSON, CSV, plain text or Markdown, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up), add a note, open the page, scan it again now or copy it as Markdown from its **⋯** menu. Clicking a "Protections changed" notification opens that page. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
 
 ### Rules
 
@@ -210,7 +210,7 @@ Because these events reach the page itself, any website you visit can listen for
 
 ### Webhooks
 
-When a scan finds protections, the extension can send the results to your own endpoint. Choose the HTTP method, add headers and write the body as a template with variables such as `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<CATEGORIES>` and `<TIMESTAMP>`. Webhooks only go to HTTPS addresses on public hosts, are off by default, and include a **Test** button. Set them up in Settings → Detection → Webhook Integration.
+When a scan finds protections, the extension can send the results to your own endpoint. Choose the HTTP method, add headers and write the body as a template with variables such as `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (the protections with their confidence, on one line), `<CATEGORIES>` and `<TIMESTAMP>`. **Start from a preset** (Slack, Mattermost or Google Chat, Discord, or a plain text line) fills in the Content-Type and a ready-made chat message. Webhooks only go to HTTPS addresses on public hosts, are off by default, and include a **Test** button. Set them up in Settings → Detection → Webhook Integration.
 
 **Recent deliveries and retries.** Settings → Detection → Webhook lists the last 20 attempts (the page, the status, how long it took; never an address, header or payload). A delivery that fails can be sent again with **Retry**, and with **Retry failed deliveries** on (the default) the extension also retries by itself after 1, 5 and 15 minutes when there was no answer or the server answered 408, 425, 429 or 5xx; a refusal such as 401, 403 or 404 waits for your Retry. To do that, the page data of a failed delivery is kept in memory for an hour (at most 20), never on disk, and gone when the browser closes; a retry builds the request again from your current webhook settings, so a corrected address or secret is used and no header or secret is stored with it.
 
@@ -300,7 +300,9 @@ npm run check:rule-i18n   # every rule text is translated in detectors/i18n/
 npm test                  # unit tests on Node's built-in test runner
 ```
 
-The browser tests load the real extension in Chromium. They are not part of `verify`, and they need Playwright (`npm i --no-save playwright && npx playwright install chromium`):
+The browser tests load the real extension in Chromium. They are not part of `verify`, and they need Playwright. `npm run e2e:setup` prepares it once, outside the repository (in `~/.cache/antibot-e2e`): it installs Playwright, finds a Chromium that matches it (linking another cached revision under the expected name rather than downloading again), starts Chromium through a wrapper that adds `--disable-gpu` on Windows Subsystem for Linux, where it otherwise draws no frames, and checks that a frame is drawn. By hand, `npm i --no-save playwright && npx playwright install chromium` also works.
+
+`npm run e2e:all` runs every suite below one at a time, with a time limit each, a log for each and a summary (`-- --only history,data`, `--skip languages`, `--bail`, `--timeout <minutes>`, `--repo <another checkout>`). Run nothing else heavy meanwhile: the suites are timing-sensitive, and the unit tests running beside one have made scenarios fail for no reason of their own.
 
 ```bash
 npm run e2e:methods    # every detection method, from URL to JavaScript hooks
@@ -314,6 +316,7 @@ npm run e2e:hooks      # Settings → Detection → Sites without JS hooks: hook
 npm run e2e:rule-texts  # Rules editor texts in Spanish: one plain box, replaced when changed, untouched when left alone
 npm run e2e:quickwins  # 3.0.3: toolbar hover text, the copy menu, the rescan shortcut, notification clicks, History open and rescan, Duplicate rule, Markdown exports
 npm run e2e:languages  # every language through the real popup, settings and statistics pages
+npm run e2e:controls   # every checkbox, radio and dropdown on screen is drawn by the interface, none is the browser's default look
 npm run e2e:live       # detectors against the real sites in scripts/live-sites.json
 ```
 

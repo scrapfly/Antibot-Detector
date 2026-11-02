@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "주소를 붙여 넣거나 파일을 업로드한 다음 시작을 선택하세요."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "템플릿으로 시작…"
+  },
+  "webhookPresetPlain": {
+    "message": "일반 텍스트 한 줄"
+  },
+  "webhookVarDetectionNames": {
+    "message": "탐지된 보호 기능과 신뢰도(쉼표로 구분)"
+  },
+  "historyCopyMarkdown": {
+    "message": "Markdown으로 복사"
   }
 }

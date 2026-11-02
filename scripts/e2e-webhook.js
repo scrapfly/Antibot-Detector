@@ -469,7 +469,7 @@ const CATCH = `(() => {
         fieldText: getComputedStyle(t).color, varColour: v && getComputedStyle(v).color, plainColour: getComputedStyle(m).color };
     });
     let look = await drawn();
-    assert.deepEqual(look.vars, await admin.evaluate(() => WebhookBody.VARIABLES.map(v => v.token)), 'every variable of the default template is coloured');
+    assert.deepEqual(look.vars, await admin.evaluate(() => WebhookBody.VARIABLES.map(v => v.token).filter(token => WebhookBody.DEFAULT_TEMPLATE.includes(token))), 'every variable of the default template is coloured');
     assert.ok(look.same && look.heights[0] === look.heights[1] && look.widths[0] === look.widths[1], JSON.stringify(look));
     assert.equal(look.fieldText, 'rgba(0, 0, 0, 0)', 'the field hides its own letters');
     assert.notEqual(look.varColour, look.plainColour, 'a variable has its own colour');
@@ -515,6 +515,37 @@ const CATCH = `(() => {
     await admin.$eval('#cancelSettingsBtn', el => el.click());
     await patch(admin, { webhook: webhook({ enableWebhook: false }) });
     console.log('PASS Template: Validate JSON (valid, invalid with the line selected, empty), the variables in colour line up and scroll with the field, the chips work by keyboard, both themes');
+
+    // Presets: "Start from a preset" fills the Content-Type and the template (staged: nothing is saved until Save), and a real scan sends that message
+    await patch(admin, { webhook: webhook({ enableWebhook: true, webhookPayload: '' }) });
+    await sleep(800);
+    await openSettings();
+    assert.deepEqual(await admin.$$eval('#webhookPreset option', list => list.map(o => [o.value, o.textContent])),
+      [['', 'Start from a preset…'], ['slack', 'Slack, Mattermost, Google Chat'], ['discord', 'Discord'], ['plain', 'Plain text line']], 'the list of presets');
+    const presetTemplate = (id) => admin.evaluate((preset) => WebhookBody.PRESETS.find(p => p.id === preset).template, id);
+    await admin.selectOption('#webhookPreset', 'discord');
+    assert.equal(await admin.$eval('#webhookPreset', el => el.value), '', 'the list is back on its first line');
+    assert.equal(await admin.$eval('#webhookContentType', el => el.value), 'application/json');
+    assert.equal(await admin.$eval('#webhookPayload', el => el.value), await presetTemplate('discord'));
+    assert.equal(await admin.$eval('#webhookPayloadStatus', el => el.classList.contains('is-invalid')), false, 'a preset is valid JSON');
+    await admin.selectOption('#webhookPreset', 'plain');
+    assert.equal(await admin.$eval('#webhookContentType', el => el.value), 'text/plain');
+    assert.equal(await admin.$eval('#webhookPayload', el => el.value), await presetTemplate('plain'));
+    assert.equal(await admin.$eval('#webhookPayloadValidateBtn', el => el.hidden), true, 'Validate JSON is for a JSON body only');
+    assert.equal((await stored(admin)).webhook.webhookPayload, '', 'nothing is saved until Save');
+    await admin.evaluate(() => window.popupInstance.settings.handleSaveSettings());
+    await sleep(1500);
+    const savedPreset = (await stored(admin)).webhook;
+    assert.deepEqual([savedPreset.webhookContentType, savedPreset.webhookPayload], ['text/plain', await presetTemplate('plain')], 'Save keeps both');
+    await admin.$eval('#cancelSettingsBtn', el => el.click());
+    await resetCalls();
+    await clearRecord();
+    await scan(at('127.0.0.1', '/both', '?preset=1'), 1);
+    const [presetCall] = await calls();
+    assert.equal(presetCall.headers['content-type'], 'text/plain');
+    assert.equal(presetCall.body, `127.0.0.1: Webhook Antibot Probe 92%, Webhook Captcha Probe 85% (${at('127.0.0.1', '/both', '?preset=1')})`, 'the page, its protections with their confidence and the address');
+    await patch(admin, { webhook: webhook({ enableWebhook: false }) });
+    console.log('PASS Presets: the list, Discord and plain text fill the Content-Type and the template, Save keeps them, and a real scan sends the message with <DETECTION_NAMES>');
 
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
     console.log('RESULT ALL PASS, no page errors');

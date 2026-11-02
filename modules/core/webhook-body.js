@@ -51,8 +51,28 @@
     { token: '<DETECTIONS>', key: 'detections', kind: 'json', descKey: 'webhookVarDetections', desc: 'Detections as a JSON array', sample: null },
     { token: '<TIMESTAMP>', key: 'timestamp', kind: 'string', descKey: 'webhookVarTimestamp', desc: 'Time of the detection (ISO 8601)', sample: '2026-01-01T12:00:00.000Z' },
     { token: '<DETECTION_COUNT>', key: 'detectionCount', kind: 'number', descKey: 'webhookVarDetectionCount', desc: 'Number of detections', sample: 1 },
-    { token: '<CATEGORIES>', key: 'categories', kind: 'string', descKey: 'webhookVarCategories', desc: 'Detected categories, comma-separated', sample: 'antibot' }
+    { token: '<CATEGORIES>', key: 'categories', kind: 'string', descKey: 'webhookVarCategories', desc: 'Detected categories, comma-separated', sample: 'antibot' },
+    { token: '<DETECTION_NAMES>', key: 'detectionNames', kind: 'string', descKey: 'webhookVarDetectionNames', desc: 'Detected protections with their confidence, comma-separated', sample: 'Cloudflare Bot Management 85%' }
   ]);
+
+  /**
+   * "Cloudflare Bot Management 85%, reCAPTCHA 90%": the protections of a page with their confidence, strongest first. One
+   * readable line for a chat message, where the whole <DETECTIONS> array would not be.
+   * @param {Array<object>} detections
+   * @returns {string}
+   */
+  function detectionNames(detections) {
+    return (Array.isArray(detections) ? detections : [])
+      .filter(d => d && typeof d === 'object')
+      .map(d => ({
+        name: String((d.detector && typeof d.detector === 'object' && d.detector.name) || d.name || (typeof d.detector === 'string' && d.detector) || '').trim(),
+        confidence: Number(d.confidence)
+      }))
+      .filter(d => d.name)
+      .sort((a, b) => (b.confidence || 0) - (a.confidence || 0) || a.name.localeCompare(b.name))
+      .map(d => (Number.isFinite(d.confidence) ? `${d.name} ${Math.round(d.confidence)}%` : d.name))
+      .join(', ');
+  }
 
   // One detection exactly as the engine emits it (runDetector + detectOnPage),
   // so the Settings test payload matches what a naturally triggered event
@@ -87,6 +107,19 @@
   ]);
 
   const DEFAULT_TEMPLATE = '{"url": "<SITEURL>", "hostname": "<HOSTNAME>", "title": "<TITLE>", "favicon": "<FAVICON>", "detections": <DETECTIONS>, "timestamp": "<TIMESTAMP>", "count": <DETECTION_COUNT>, "categories": "<CATEGORIES>"}';
+
+  // ------------------------------------------------------------------ presets
+  // Templates to start from (Settings → Detection → Webhook → "Start from a preset"): a Content-Type and a template. Chat
+  // services take one short message, which <DETECTION_NAMES> makes readable. A brand name is shown as it is; `labelKey` is
+  // the locale key of a label that is translated. Choosing one fills the two fields: nothing is saved until Save.
+  const PRESETS = Object.freeze([
+    Object.freeze({ id: 'slack', label: 'Slack, Mattermost, Google Chat', contentType: 'application/json',
+      template: '{"text": "<HOSTNAME>: <DETECTION_NAMES>\\n<SITEURL>"}' }),
+    Object.freeze({ id: 'discord', label: 'Discord', contentType: 'application/json',
+      template: '{"content": "**<HOSTNAME>**: <DETECTION_NAMES>\\n<SITEURL>"}' }),
+    Object.freeze({ id: 'plain', labelKey: 'webhookPresetPlain', label: 'Plain text line', contentType: 'text/plain',
+      template: '<HOSTNAME>: <DETECTION_NAMES> (<SITEURL>)' })
+  ]);
 
   // ------------------------------------------------------------ content types
   const CUSTOM = 'custom';
@@ -139,6 +172,7 @@
       detector: { ...d.detector }
     }));
     ctx.detectionCount = ctx.detections.length;
+    ctx.detectionNames = detectionNames(ctx.detections);
     return ctx;
   }
 
@@ -154,24 +188,22 @@
    *   text: verbatim + <DETECTIONS> as JSON; json: strings JSON-escaped + <DETECTIONS> as JSON
    */
   function substitute(template, ctx, mode = 'text') {
-    let out = String(template || '');
-    for (const v of VARIABLES) {
-      if (!out.includes(v.token)) continue;
-      let replacement;
+    // One pass over the template: a value put in (a page title is the page's own text) is never read as a token itself, so
+    // a title like "<DETECTIONS>" stays text instead of becoming raw JSON inside a quoted string
+    const byToken = new Map(VARIABLES.map(v => [v.token, v]));
+    const tokens = new RegExp(VARIABLES.map(v => v.token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+    return String(template || '').replace(tokens, (token) => {
+      const v = byToken.get(token);
       if (v.kind === 'json') {
-        if (mode === 'url' || mode === 'header') continue;
-        replacement = JSON.stringify(Array.isArray(ctx.detections) ? ctx.detections : []);
-      } else if (v.kind === 'number') {
-        replacement = String(Number(ctx[v.key]) || 0);
-      } else {
-        const raw = ctx[v.key] == null ? '' : String(ctx[v.key]);
-        if (mode === 'url') replacement = encodeURIComponent(raw);
-        else if (mode === 'json') replacement = jsonEscape(raw);
-        else replacement = raw;
+        if (mode === 'url' || mode === 'header') return token;
+        return JSON.stringify(Array.isArray(ctx.detections) ? ctx.detections : []);
       }
-      out = out.split(v.token).join(replacement);
-    }
-    return out;
+      if (v.kind === 'number') return String(Number(ctx[v.key]) || 0);
+      const raw = ctx[v.key] == null ? '' : String(ctx[v.key]);
+      if (mode === 'url') return encodeURIComponent(raw);
+      if (mode === 'json') return jsonEscape(raw);
+      return raw;
+    });
   }
 
   function defaultPayload(ctx) {
@@ -514,6 +546,8 @@
     VARIABLES,
     SAMPLE_DETECTIONS,
     DEFAULT_TEMPLATE,
+    PRESETS,
+    detectionNames,
     CONTENT_TYPES,
     CUSTOM,
     isValidContentType,

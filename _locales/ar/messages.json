@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "الصق العناوين أو ارفع ملفًا، ثم اختر بدء."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "ابدأ من قالب…"
+  },
+  "webhookPresetPlain": {
+    "message": "سطر نص عادي"
+  },
+  "webhookVarDetectionNames": {
+    "message": "الحمايات المكتشفة مع نسبة الثقة، مفصولة بفواصل"
+  },
+  "historyCopyMarkdown": {
+    "message": "نسخ بصيغة Markdown"
   }
 }

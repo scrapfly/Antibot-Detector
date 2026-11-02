@@ -55,3 +55,17 @@ test('a value a setting\'s list does not offer is refused when it is new, and to
   assert.equal(check({ updates: { checkIntervalHours: 72 } }, { updates: { checkIntervalHours: 72 } }).isValid, true);
 });
 
+
+test('a blank number whose option is off keeps the saved value; with the option on it stays blank, so Save refuses it', () => {
+  const SettingsUI = load();
+  assert.equal(SettingsUI.keepWhenOff(NaN, false, '30', 1), 30, 'a hidden field never blocks Save with a message about itself');
+  assert.equal(SettingsUI.keepWhenOff(NaN, false, undefined, 1), 1, 'nothing saved: the default');
+  assert.ok(Number.isNaN(SettingsUI.keepWhenOff(NaN, true, '30', 1)), 'a visible, blank field is still the person\'s to fill');
+  assert.equal(SettingsUI.keepWhenOff(5, false, '30', 1), 5, 'a number is a number');
+  const source = fs.readFileSync(path.join(root, 'sections/settings/settings-ui.js'), 'utf8');
+  assert.match(source, /SettingsUI\.keepWhenOff\(parseInt\(document\.querySelector\('#duplicateDuration'\)/);
+  assert.match(source, /SettingsUI\.keepWhenOff\(parseInt\(document\.querySelector\('#historyAutoDeleteDays'\)/);
+  // And the validation still says what is wrong when the option is on
+  assert.equal(SettingsUI.validateSettings.call({}, { duplicatePrevention: { duplicateDuration: SettingsUI.keepWhenOff(NaN, true, '2', 1) } }).isValid, false);
+  assert.equal(SettingsUI.validateSettings.call({}, { duplicatePrevention: { duplicateDuration: SettingsUI.keepWhenOff(NaN, false, '2', 1) } }).isValid, true);
+});

@@ -283,3 +283,20 @@ test('an automatic retry arms the next alarm before it sends, and a new worker a
   assert.equal(next.alarms.get('scrapfly-webhook-retry').when, next.clock.t + MIN, 'the held delivery has its alarm again');
 });
 
+
+test('a held delivery is not retried while the extension is switched off, and goes on when it is back on', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 502 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  h.reply(() => ({ ok: true, status: 200 }));
+  h.advance(MIN + 1000);
+  let enabled = false;
+  h.context.isExtensionEnabled = async () => enabled;
+  await h.runtime.runDueWebhookRetries();
+  assert.equal(h.calls.length, 1, 'off: nothing is sent');
+  assert.equal(Object.keys(h.held()).length, 1, 'and the delivery is still held');
+  enabled = true;
+  await h.runtime.runDueWebhookRetries();
+  assert.equal(h.calls.length, 2, 'on: the retry runs');
+  assert.deepEqual(h.held(), {});
+});

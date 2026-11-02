@@ -29,6 +29,8 @@
   const SIZES_MB = Object.freeze([6, 12, 25]);
   const MAX_BYTES = SIZES_MB[0] * 1024 * 1024;
   const MAX_VALUE_LENGTH = 300;
+  const MAX_TITLE_LENGTH = 500;
+  const MAX_URL_LENGTH = 8192;
   // Found rows kept per detection for the combination checklist (ids are ~22 characters)
   const MAX_COMBO_FOUND = 32;
   const MAX_ID_LENGTH = 80;
@@ -411,9 +413,11 @@
   }
 
   const isPlainObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
+  // A date the browser can hold: an edited file or a clock far off must not make an entry the exports cannot write
+  const MAX_TIME = 8.64e15;
   const timeOf = (item) => {
     const t = typeof item.timestamp === 'number' ? item.timestamp : Date.parse(item.timestamp);
-    return Number.isFinite(t) ? t : 0;
+    return Number.isFinite(t) && Math.abs(t) <= MAX_TIME ? t : 0;
   };
 
   /**
@@ -435,6 +439,11 @@
       delete entry.watch;
       delete entry.watchedAt;
       if (entry.changed !== undefined && !isPlainObject(entry.changed)) delete entry.changed;
+      // The same bounds as a note typed in History and a page History records: a file cannot park megabytes in one entry
+      if (typeof entry.note === 'string') entry.note = cleanAnnotation({ note: entry.note }).note; else delete entry.note;
+      if (typeof entry.title === 'string') entry.title = entry.title.slice(0, MAX_TITLE_LENGTH); else delete entry.title;
+      if (typeof entry.url === 'string') entry.url = entry.url.slice(0, MAX_URL_LENGTH);
+      if (!timeOf(entry)) entry.timestamp = 0;
       out.push(entry);
     });
     return out;
@@ -477,7 +486,9 @@
       }
       return respond(sendResponse, mutate(items => {
         const next = applyImport(items, request.items, request.mode, request.limit);
-        return { items: next, result: { added: next.length - (request.mode === 'merge' ? items.length : 0) } };
+        // The entries that were not stored before: the list's length says less once the limit cuts old ones
+        const known = new Set(request.mode === 'merge' ? items.map(item => item && item.id) : []);
+        return { items: next, result: { added: next.filter(item => !known.has(item.id)).length } };
       }, store()));
     });
 

@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Вставьте адреса или загрузите файл, затем нажмите «Запустить»."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Начать с шаблона…"
+  },
+  "webhookPresetPlain": {
+    "message": "Строка простого текста"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Обнаруженные защиты с уровнем уверенности через запятую"
+  },
+  "historyCopyMarkdown": {
+    "message": "Копировать как Markdown"
   }
 }

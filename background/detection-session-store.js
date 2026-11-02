@@ -64,9 +64,17 @@ class DetectionSessionStore {
         return true;
     }
 
+    /** The same page: equal addresses, or equal but for the fragment (see normalizeDetectionMessageUrl). */
+    static sameAddress(a, b) {
+        if (a === b) return true;
+        return typeof normalizeDetectionMessageUrl === 'function' && normalizeDetectionMessageUrl(a) === normalizeDetectionMessageUrl(b);
+    }
+
     static getOrCreate(tabId, url) {
         let state = detectionStates.get(tabId);
-        if (state && (state.url !== url || state.interrupted)) {
+        // A hash router that moves a page from "/" to "/#/home" before the scan starts is the same page: the hook and window
+        // evidence its document already reported stays, instead of being thrown away with a state recreated empty
+        if (state && (!this.sameAddress(state.url, url) || state.interrupted)) {
             this.cancel(tabId, 'url_changed', state);
             state = null;
         }

@@ -33,7 +33,8 @@ class HistoryRecorder {
       || normalizeHostname(rawUrl ? UrlUtils.getHostnameFromUrl(rawUrl) : '');
 
     if (duplicateScope === 'domain') {
-      const hostnameKey = parsedUrl ? normalizeHostname(parsedUrl.hostname) : fallbackHostname;
+      // The port is part of the site (localhost:3000 and localhost:8080 are two): "host" leaves out only a default one
+      const hostnameKey = parsedUrl ? normalizeHostname(parsedUrl.host) : fallbackHostname;
       return hostnameKey || null;
     }
 
@@ -74,7 +75,8 @@ class HistoryRecorder {
         : Number(item.timestamp);
       const itemTimestamp = Number.isFinite(rawTimestamp) ? rawTimestamp : 0;
 
-      if (itemTimestamp < cutoffTime) {
+      // (an entry dated more than a day ahead is no recent visit: see findDuplicateIndex)
+      if (itemTimestamp < cutoffTime || itemTimestamp > Date.now() + 86400000) {
         return false;
       }
 
@@ -173,7 +175,10 @@ class HistoryRecorder {
     return history.findIndex((item) => {
       if (!item) return false;
       const raw = typeof item.timestamp === 'string' ? new Date(item.timestamp).getTime() : Number(item.timestamp);
-      if ((Number.isFinite(raw) ? raw : 0) < cutoffTime) return false;
+      const at = Number.isFinite(raw) ? raw : 0;
+      // An entry dated well ahead (a clock that was wrong for a while, an edited file) is no recent visit: it would
+      // otherwise count as one for the whole time it takes the clock to reach it
+      if (at < cutoffTime || at > Date.now() + 86400000) return false;
       return this.normalizeDuplicateKey(item.url, item.hostname, scope) === key;
     });
   }
@@ -239,6 +244,13 @@ class HistoryRecorder {
         if (duplicateKey) {
           const cutoffTime = now - FormatUtils.convertToMilliseconds(duplicateDuration, duplicateUnit);
           duplicateAt = this.findDuplicateIndex(history, duplicateKey, cutoffTime, duplicateScope);
+          // A pin, a watch or a note says something about one page: an update by "path" or "domain" would move that entry to
+          // another address (and the watchlist would visit the new one). Such an entry is only updated by a scan of its own address
+          if (duplicateAt !== -1 && settings.duplicateAction === 'update') {
+            const hit = history[duplicateAt];
+            const marked = hit && (hit.pinned === true || hit.watch === true || (typeof hit.note === 'string' && hit.note.trim() !== ''));
+            if (marked && this.normalizeDuplicateKey(hit.url, hit.hostname, 'full_url') !== this.normalizeDuplicateKey(entryUrl, entryHostname, 'full_url')) duplicateAt = -1;
+          }
           if (duplicateAt !== -1 && settings.duplicateAction !== 'update') {
             Logger.debug('UI', `History: Skipping duplicate history save within ${duplicateDuration} ${duplicateUnit} (scope: ${duplicateScope}, source: ${source}): ${duplicateKey}`);
             return undefined;
@@ -361,7 +373,10 @@ class HistoryRecorder {
           if (pinsItself && kept.pinned !== true && kept.unpinned !== true) { updated.pinned = true; updated.autoPinned = true; }
           next = [updated, ...history.filter((_, i) => i !== duplicateAt)];
         } else {
-          next = [Object.assign({ id: `detection_${now}_${tabId}` }, fresh, pinsItself ? { pinned: true, autoPinned: true } : {}, neverAgain ? { unpinned: true } : {}), ...history];
+          // Two saves of one tab in the same millisecond must not share an id: a delete or a pin would reach both
+          let newId = `detection_${now}_${tabId}`;
+          while (history.some(item => item && item.id === newId)) newId += '_';
+          next = [Object.assign({ id: newId }, fresh, pinsItself ? { pinned: true, autoPinned: true } : {}, neverAgain ? { unpinned: true } : {}), ...history];
         }
 
         // Newest first, then the rolling window limit (pinned entries never count against it)
@@ -455,7 +470,8 @@ class HistoryRecorder {
     const parts = [];
     if (alert.added.length) parts.push(text('historyChangeAlertAddedFmt', 'Added: {0}', alert.added.join(', ')));
     if (alert.removed.length) parts.push(text('historyChangeAlertRemovedFmt', 'Removed: {0}', alert.removed.join(', ')));
-    const id = `scrapfly-history-change-${Date.now()}`;
+    // (a counter after the time: two alerts in the same millisecond are two notifications, each with its own page to open)
+    const id = `scrapfly-history-change-${Date.now()}-${(HistoryRecorder._alertCount = (HistoryRecorder._alertCount || 0) + 1)}`;
     // A click opens the page (background/notification-clicks.js)
     if (typeof NotificationClicks !== 'undefined') await NotificationClicks.remember(id, alert.url, chrome).catch(() => {});
     chrome.notifications.create(id, {

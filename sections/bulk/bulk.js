@@ -313,6 +313,7 @@
     const exportable = !!(run && run.items.length);
     byId('bulkExportCsvBtn').disabled = !exportable;
     byId('bulkExportJsonBtn').disabled = !exportable;
+    byId('bulkExportMarkdownBtn').disabled = !exportable;
   }
 
   function render() {
@@ -349,7 +350,7 @@
   function exportRun(format) {
     if (!state.run) return;
     const out = BulkScan.build(state.run, { format });
-    const blob = new Blob([out.text], { type: `${out.type};charset=utf-8` });
+    const blob = new Blob([out.fileText], { type: `${out.type};charset=utf-8` });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -412,6 +413,7 @@
     });
     byId('bulkExportCsvBtn').addEventListener('click', () => exportRun('csv'));
     byId('bulkExportJsonBtn').addEventListener('click', () => exportRun('json'));
+    byId('bulkExportMarkdownBtn').addEventListener('click', () => exportRun('md'));
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area === 'session' && changes[STATE_KEY]) {
         state.run = changes[STATE_KEY].newValue || null;

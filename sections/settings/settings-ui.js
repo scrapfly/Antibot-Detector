@@ -247,6 +247,8 @@ SettingsUI.saveSettings = async function(options = {}) {
       }
       notifyWorker(WorkerMessages.SETTINGS_UPDATED);
       notifyWorker(WorkerMessages.SYNC_CATEGORY_COLORS);
+      // The saved toast follows the switch just saved, not the answer cached up to 30 seconds ago
+      if (NotificationHelper._notificationCache) NotificationHelper._notificationCache.value = null;
       if (options.notify !== false) NotificationHelper.success(((typeof I18n !== 'undefined') && I18n.get('settingsSavedToast')) || 'Settings saved');
       return true;
     } catch (error) {
@@ -300,7 +302,8 @@ SettingsUI.updateSettingsUI = function() {
       logCountMax.textContent = safeMax;
     }
 
-    if (this.settings.logCollectorEnabled ?? false) {
+    // Only while Settings is open: this also runs when the popup starts, and nothing would stop a counter nobody sees
+    if ((this.settings.logCollectorEnabled ?? false) && this.isModalVisible) {
       this.startLogCountUpdate();
     }
 
@@ -634,7 +637,7 @@ SettingsUI.getSettingsFromUI = function() {
     settings.history = {
       historyLimit: parseInt(document.querySelector('#historyLimit')?.value ?? this.settings.history?.historyLimit ?? 0),
       historyAutoDelete: document.querySelector('#historyAutoDelete')?.checked ?? this.settings.history?.historyAutoDelete ?? false,
-      historyAutoDeleteDays: parseInt(document.querySelector('#historyAutoDeleteDays')?.value ?? this.settings.history?.historyAutoDeleteDays ?? 30),
+      historyAutoDeleteDays: SettingsUI.keepWhenOff(parseInt(document.querySelector('#historyAutoDeleteDays')?.value ?? this.settings.history?.historyAutoDeleteDays ?? 30), document.querySelector('#historyAutoDelete')?.checked ?? this.settings.history?.historyAutoDelete ?? false, this.settings.history?.historyAutoDeleteDays, 30),
       exportFormat: document.querySelector('#exportFormat')?.value ?? this.settings.history?.exportFormat ?? 'json',
       includeTimestamps: document.querySelector('#includeTimestamps')?.checked ?? this.settings.history?.includeTimestamps ?? true,
       historyBypassCache: document.querySelector('#historyBypassCache')?.checked ?? this.settings.history?.historyBypassCache ?? false,
@@ -658,7 +661,7 @@ SettingsUI.getSettingsFromUI = function() {
     settings.duplicatePrevention = {
       preventDuplicates: document.querySelector('#preventDuplicates')?.checked ?? this.settings.duplicatePrevention?.preventDuplicates ?? false,
       duplicateScope: document.querySelector('#duplicateScope')?.value ?? this.settings.duplicatePrevention?.duplicateScope ?? 'full_url',
-      duplicateDuration: parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1),
+      duplicateDuration: SettingsUI.keepWhenOff(parseInt(document.querySelector('#duplicateDuration')?.value ?? this.settings.duplicatePrevention?.duplicateDuration ?? 1), document.querySelector('#preventDuplicates')?.checked ?? this.settings.duplicatePrevention?.preventDuplicates ?? false, this.settings.duplicatePrevention?.duplicateDuration, 1),
       duplicateUnit: document.querySelector('#duplicateUnit')?.value ?? this.settings.duplicatePrevention?.duplicateUnit ?? 'hours',
       duplicateAction: document.querySelector('#duplicateAction')?.value ?? this.settings.duplicatePrevention?.duplicateAction ?? 'skip'
     };
@@ -673,6 +676,16 @@ SettingsUI.getSettingsFromUI = function() {
     };
 
     return settings;
+};
+
+/**
+ * A blank number field (NaN) whose option is switched off keeps the saved value: the field is hidden then, and Save
+ * would refuse it with a message about a box nobody can see. With the option on, NaN stays and Save says what is wrong.
+ */
+SettingsUI.keepWhenOff = function(value, optionOn, saved, fallback) {
+  if (Number.isFinite(value) || optionOn) return value;
+  const kept = parseInt(saved, 10);
+  return Number.isFinite(kept) ? kept : fallback;
 };
 
 SettingsUI.validateSettings = function(settings) {

@@ -35,6 +35,15 @@
     const names = (value) => (Array.isArray(value) ? value : (typeof value === 'string' && value.trim() ? [value] : [])).filter(n => typeof n === 'string' && n.trim());
     return !!change && typeof change === 'object' && (names(change.added).length > 0 || names(change.removed).length > 0);
   };
+  /** A typed host with letters (bücher.de) as the browser stores it (xn--bcher-kva.de); '' when it has none or is not a host. */
+  const asciiHost = (text) => {
+    if (!/[^\x00-\x7f]/.test(text)) return '';
+    try {
+      const host = new URL(`http://${text}`).hostname;
+      return host && host !== text ? host : '';
+    } catch (_) { return ''; }
+  };
+
   const timeOf = (item) => {
     const ts = item && item.timestamp;
     const n = typeof ts === 'number' ? ts : Date.parse(ts);
@@ -52,12 +61,14 @@
     const days = parseInt(filters.days, 10);
     const cutoff = days > 0 ? now - days * DAY_MS : null;
     const domain = String(filters.domain || '').trim().toLowerCase();
+    // History stores addresses as the browser writes them (bücher.de is xn--bcher-kva.de): the box finds both spellings
+    const domainNeedles = domain ? [domain, asciiHost(domain)].filter(Boolean) : [];
     return list.filter((item) => {
       if (!item || typeof item !== 'object') return false;
       if (filters.pinnedOnly === true && item.pinned !== true) return false;
       if (filters.changedOnly === true && !isChangedEntry(item)) return false; // marked Changed by its latest scan
       if (cutoff !== null && timeOf(item) < cutoff) return false;
-      if (domain && !`${item.hostname || ''} ${item.url || ''}`.toLowerCase().includes(domain)) return false;
+      if (domain && !domainNeedles.some(needle => `${item.hostname || ''} ${item.url || ''}`.toLowerCase().includes(needle))) return false;
       if (category && !detectionsOf(item).some(d => categoryKey(d) === category)) return false;
       return true;
     });
@@ -70,7 +81,12 @@
     return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
   };
 
-  const isoOf = (item) => { const t = timeOf(item); return t ? new Date(t).toISOString() : ''; };
+  const isoOf = (item) => {
+    const t = timeOf(item);
+    const date = t ? new Date(t) : null;
+    // A date outside what a Date holds (a hand-edited file) is left empty: one such entry must not stop the whole export
+    return date && !Number.isNaN(date.getTime()) ? date.toISOString() : '';
+  };
 
   function buildCsv(items, includeTimestamps) {
     const header = ['url', 'hostname', 'title', ...(includeTimestamps ? ['timestamp'] : []), 'protection', 'category', 'confidence', 'difficulty', 'pinned', 'note'];
@@ -123,7 +139,8 @@
   /**
    * @param {Array<object>} items
    * @param {{format?: string, includeTimestamps?: boolean, now?: number}} [options]
-   * @returns {{text: string, type: string, extension: string, format: string}}
+   * @returns {{text: string, fileText: string, type: string, extension: string, format: string}}
+   *   fileText is what goes in a file: text, with the byte-order mark a CSV needs for a spreadsheet to read UTF-8
    */
   function build(items, options = {}) {
     const list = Array.isArray(items) ? items : [];
@@ -134,7 +151,8 @@
     else if (format === 'txt') text = buildText(list, includeTimestamps);
     else if (format === 'md') text = buildMarkdown(list, includeTimestamps);
     else text = JSON.stringify({ version: '1.0', timestamp: new Date(options.now || Date.now()).toISOString(), itemsCount: list.length, items: list }, null, 2);
-    return { text, type: TYPES[format], extension: format, format };
+    // Excel on Windows reads a CSV without the mark as ANSI: a title like "Café – 東京" arrives as garbage
+    return { text, fileText: format === 'csv' ? `\uFEFF${text}` : text, type: TYPES[format], extension: format, format };
   }
 
   const byteLength = (text) => (typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(text).length : text.length);

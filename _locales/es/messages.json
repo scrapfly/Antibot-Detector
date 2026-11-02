@@ -6855,5 +6855,17 @@
   },
   "bulkEmpty": {
     "message": "Pega direcciones o sube un archivo y luego elige Iniciar."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Empezar con una plantilla…"
+  },
+  "webhookPresetPlain": {
+    "message": "Línea de texto sin formato"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Protecciones detectadas con su confianza, separadas por comas"
+  },
+  "historyCopyMarkdown": {
+    "message": "Copiar como Markdown"
   }
 }

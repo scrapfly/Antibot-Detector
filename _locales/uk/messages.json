@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Вставте адреси або завантажте файл, потім натисніть «Запустити»."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Почати із шаблону…"
+  },
+  "webhookPresetPlain": {
+    "message": "Рядок простого тексту"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Виявлені захисти з рівнем упевненості через кому"
+  },
+  "historyCopyMarkdown": {
+    "message": "Копіювати як Markdown"
   }
 }

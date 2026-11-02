@@ -16,6 +16,8 @@ History.prototype.selectedItems = function() {
 /** Select mode on: checkboxes on every card and the bar with the actions. */
 History.prototype.enterSelectMode = function() {
   if (this.selectMode) return;
+  // An empty History has nothing to pick
+  if (!(this.historyItems || []).length) return;
   this.selectMode = true;
   this.selectedIds = new Set();
   this.closeMenus();
@@ -161,7 +163,7 @@ History.prototype.bulkExport = async function() {
   if (!items.length) return;
   const saved = await Utils.getHistorySettings().catch(() => ({}));
   const built = HistoryExport.build(items, { format: saved.exportFormat, includeTimestamps: saved.includeTimestamps !== false });
-  const url = URL.createObjectURL(new Blob([built.text], { type: built.type }));
+  const url = URL.createObjectURL(new Blob([built.fileText], { type: built.type }));
   const link = document.createElement('a');
   link.href = url;
   link.download = HistoryExport.fileName(built.format);

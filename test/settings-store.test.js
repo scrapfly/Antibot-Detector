@@ -159,3 +159,25 @@ test('sites of the "only scan these sites" list are added and removed in the wor
   for (const [domain, allowed] of [['', true], ['  ', false], [5, true], ['x.example', 'yes']]) assert.equal(await h.client().setDomainAllowed(domain, allowed), false, JSON.stringify([domain, allowed]));
   assert.equal(h.state.writes, writes, 'an invalid change writes nothing');
 });
+
+test('pausing a site keeps the flat blacklistedDomains list of an install that still has the old shape', async () => {
+  const h = harness({ blacklistedDomains: ['bank.example', 'mail.example'] });
+  assert.equal(await h.client().setDomainExcluded('news.example', true), true);
+  assert.deepEqual(h.settings().detection.blacklistedDomains, ['bank.example', 'mail.example', 'news.example'], 'the old skips are still skipped');
+  assert.ok(!('blacklistedDomains' in h.settings()), 'and the flat copy is gone');
+});
+
+test('a reset repairs stored settings that cannot be read, but a storage that does not answer still refuses it', async () => {
+  const defaults = { debugMode: false, detection: { cacheDuration: 7 } };
+  const h = harness({ debugMode: true });
+  h.state.stored.scrapfly_settings = '{broken';
+  assert.equal(await h.client().updateSettings(s => { s.debugMode = false; }), false, 'any other change still refuses');
+  assert.equal((await h.client().resetSettings(defaults, ['webhook.webhookUrl'])).success, true, 'a reset is how a person gets out of it');
+  assert.deepEqual(h.settings(), defaults);
+
+  const busy = harness({ debugMode: true });
+  busy.state.failRead = true;
+  await assert.rejects(busy.client().resetSettings(defaults, ['webhook.webhookUrl']), /could not be saved/, 'a failed read is not "nothing to keep"');
+  busy.state.failRead = false;
+  assert.equal(busy.settings().debugMode, true, 'nothing was written');
+});

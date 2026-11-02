@@ -25,6 +25,9 @@ SettingsUI.setupWebhookMethodRadios = function() {
 
         if (e.target.value === 'CUSTOM') {
           if (customContainer) customContainer.style.display = 'block';
+          // The method Save stores is the hidden field's: a custom method typed earlier is what the box shows again
+          const typed = customInput ? customInput.value.trim().toUpperCase() : '';
+          if (typed && webhookMethodInput) webhookMethodInput.value = typed;
           if (customInput) customInput.focus();
         } else {
           if (customContainer) customContainer.style.display = 'none';
@@ -486,8 +489,20 @@ SettingsUI.setupWebhookPayloadUI = function() {
       }).join('');
     }
 
+    // "Start from a preset": the choices are WebhookBody.PRESETS
+    const presetSelect = document.querySelector('#webhookPreset');
+    if (presetSelect && presetSelect.options.length <= 1) {
+      for (const preset of WebhookBody.PRESETS) {
+        const option = document.createElement('option');
+        option.value = preset.id;
+        option.textContent = preset.labelKey ? SettingsUI._whTr(preset.labelKey, preset.label) : preset.label;
+        presetSelect.appendChild(option);
+      }
+    }
+
     if (textarea.dataset.bound !== 'true') {
       textarea.dataset.bound = 'true';
+      if (presetSelect) presetSelect.addEventListener('change', () => SettingsUI.applyWebhookPreset.call(this, presetSelect.value));
       textarea.addEventListener('input', () => SettingsUI.refreshWebhookPayloadValidation.call(this));
       textarea.addEventListener('scroll', () => {
         const mirror = document.querySelector('#webhookPayloadMirror');
@@ -522,6 +537,28 @@ SettingsUI.setupWebhookPayloadUI = function() {
     }
 
     SettingsUI.refreshWebhookPayloadValidation.call(this);
+};
+
+/**
+ * "Start from a preset": its Content-Type and its template fill the two fields. Nothing is saved until Save (closing Settings
+ * discards it, like any other edit). The select goes back to its first line, so it is an action and never shows a stale choice.
+ */
+SettingsUI.applyWebhookPreset = function(id) {
+    const select = document.querySelector('#webhookPreset');
+    if (select) select.value = '';
+    const preset = WebhookBody.PRESETS.find(entry => entry.id === id);
+    if (!preset) return;
+    const typeSelect = document.querySelector('#webhookContentType');
+    const textarea = document.querySelector('#webhookPayload');
+    if (typeSelect) {
+      typeSelect.value = preset.contentType;
+      SettingsUI._fireFieldEvents(typeSelect);
+    }
+    if (textarea) {
+      textarea.value = preset.template;
+      SettingsUI._fireFieldEvents(textarea);
+      textarea.focus();
+    }
 };
 
 SettingsUI._fireFieldEvents = function(field) {

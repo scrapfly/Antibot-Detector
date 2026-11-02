@@ -35,6 +35,7 @@ const HistoryRetention = {
     DEBOUNCE_MS: 1500,
 
     _timer: null,
+    _reason: null,
     _initialized: false,
 
     /**
@@ -217,9 +218,13 @@ const HistoryRetention = {
     /** Debounced run for bursts of storage writes. */
     schedule(reason) {
         if (this._timer) clearTimeout(this._timer);
+        // Settings saved inside the pause stays the reason: a scan's write right after must not drop the compaction it asked for
+        this._reason = this._reason === 'settings_saved' ? 'settings_saved' : reason;
         this._timer = setTimeout(() => {
             this._timer = null;
-            this.run(reason).catch((error) => this._warn('[HistoryRetention] Run failed:', error));
+            const why = this._reason;
+            this._reason = null;
+            this.run(why).catch((error) => this._warn('[HistoryRetention] Run failed:', error));
         }, this.DEBOUNCE_MS);
     },
 

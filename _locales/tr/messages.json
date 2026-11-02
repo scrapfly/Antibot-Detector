@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Adresleri yapıştırın veya bir dosya yükleyin, ardından Başlat’ı seçin."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Bir şablonla başla…"
+  },
+  "webhookPresetPlain": {
+    "message": "Düz metin satırı"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Algılanan korumalar ve güven oranları, virgülle ayrılmış"
+  },
+  "historyCopyMarkdown": {
+    "message": "Markdown olarak kopyala"
   }
 }

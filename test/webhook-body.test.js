@@ -84,7 +84,7 @@ test('every variable is substituted, and the list is the single definition', () 
   const out = WB.substitute(all, ctx, 'text');
   for (const v of WB.VARIABLES) assert.ok(!out.includes(v.token), v.token);
   assert.deepStrictEqual(WB.VARIABLES.map(v => v.token),
-    ['<SITEURL>', '<HOSTNAME>', '<TITLE>', '<FAVICON>', '<DETECTIONS>', '<TIMESTAMP>', '<DETECTION_COUNT>', '<CATEGORIES>']);
+    ['<SITEURL>', '<HOSTNAME>', '<TITLE>', '<FAVICON>', '<DETECTIONS>', '<TIMESTAMP>', '<DETECTION_COUNT>', '<CATEGORIES>', '<DETECTION_NAMES>']);
 });
 
 test('template validation reports the line of a JSON error after substitution', () => {
@@ -463,4 +463,47 @@ test('the background sender signs every text body, drops custom headers named li
   await runtime.sendWebhookIfEnabled({ url: 'https://shop.example/p' }, DETS);
   assert.strictEqual(new Headers(calls[0].options.headers).get(WB.SIGNATURE_HEADER), null);
   assert.strictEqual(calls[0].options.headers['X-Other'], 'v');
+});
+
+test('substitution is one pass: a page title that spells a token stays text, so the JSON stays valid', () => {
+  const ctx = ctxWith(DETS, { title: 'Docs: the <DETECTIONS> token, and <SITEURL>' });
+  const out = WB.substitute('{"title":"<TITLE>","detections":<DETECTIONS>,"url":"<SITEURL>"}', ctx, 'json');
+  const parsed = JSON.parse(out);
+  assert.strictEqual(parsed.title, 'Docs: the <DETECTIONS> token, and <SITEURL>', 'the title is the page\'s text, token or not');
+  assert.strictEqual(parsed.url, ctx.url);
+  assert.strictEqual(parsed.detections.length, DETS.length);
+  assert.strictEqual(WB.substitute('<HOSTNAME>/<TITLE>', { ...ctx, title: '<HOSTNAME>' }, 'text'), 'shop.example/<HOSTNAME>', 'text mode too');
+  assert.strictEqual(WB.substitute('x=<DETECTIONS>&u=<SITEURL>', ctx, 'url'), `x=<DETECTIONS>&u=${encodeURIComponent(ctx.url)}`, 'a URL still leaves the JSON token alone');
+});
+
+test('<DETECTION_NAMES> is one readable line: the protections with their confidence, strongest first', () => {
+  assert.strictEqual(WB.detectionNames([{ detector: { name: 'reCAPTCHA' }, confidence: 80.4 }, { detector: { name: 'Cloudflare' }, confidence: 95 }, { detector: { name: 'Beta' }, confidence: 80.4 }]),
+    'Cloudflare 95%, Beta 80%, reCAPTCHA 80%', 'by confidence, then by name');
+  assert.strictEqual(WB.detectionNames([{ name: 'Flat name', confidence: 'x' }, { detector: 'Plain' }, null, 7, { detector: {} }]), 'Flat name, Plain', 'no confidence, no percent; nameless and junk entries are skipped');
+  assert.strictEqual(WB.detectionNames(undefined), '');
+  assert.ok(WB.VARIABLES.some(v => v.token === '<DETECTION_NAMES>' && v.key === 'detectionNames' && v.descKey === 'webhookVarDetectionNames'));
+  assert.strictEqual(WB.sampleContext().detectionNames, 'Cloudflare Bot Management 85%', 'the Test button sends the sample\'s own names');
+  const ctx = ctxWith([{ detector: { name: 'He said "hi"\nagain' }, confidence: 90 }], { detectionNames: WB.detectionNames([{ detector: { name: 'He said "hi"\nagain' }, confidence: 90 }]) });
+  assert.strictEqual(JSON.parse(WB.substitute('{"t": "<DETECTION_NAMES>"}', ctx, 'json')).t, 'He said "hi"\nagain 90%', 'JSON-escaped like every text variable');
+});
+
+test('every preset is a usable start: known variables, a listed Content-Type, valid JSON where it is JSON', () => {
+  assert.deepStrictEqual(WB.PRESETS.map(p => p.id), ['slack', 'discord', 'plain']);
+  const tokens = new Set(WB.VARIABLES.map(v => v.token));
+  const types = new Set(WB.CONTENT_TYPES.map(t => t.value));
+  const ctx = WB.sampleContext();
+  for (const preset of WB.PRESETS) {
+    assert.ok(preset.label, preset.id);
+    assert.ok(types.has(preset.contentType), `${preset.id}: ${preset.contentType} is one of the listed types`);
+    for (const token of preset.template.match(/<[A-Z_]+>/g)) assert.ok(tokens.has(token), `${preset.id}: ${token}`);
+    const built = WB.build(preset.contentType, preset.template, ctx);
+    assert.ok(built.body.includes('Cloudflare Bot Management 85%'), preset.id);
+    assert.ok(built.body.includes(ctx.hostname), preset.id);
+    assert.ok(built.body.includes(ctx.url), preset.id);
+    if (preset.contentType === 'application/json') assert.match(JSON.parse(built.body).text || JSON.parse(built.body).content, /\n/, `${preset.id}: the address is on its own line`);
+  }
+  assert.strictEqual(WB.PRESETS.find(p => p.id === 'plain').labelKey, 'webhookPresetPlain', 'a label that is words is translated; a brand name is not');
+  assert.ok(!('labelKey' in WB.PRESETS.find(p => p.id === 'slack')));
+  const en = JSON.parse(require('node:fs').readFileSync(path.join(__dirname, '..', '_locales/en/messages.json'), 'utf8'));
+  for (const key of ['webhookPresetPlaceholder', 'webhookPresetPlain', 'webhookVarDetectionNames']) assert.ok(en[key], key);
 });

@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Tempel alamat atau unggah file, lalu pilih Mulai."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Mulai dari templat…"
+  },
+  "webhookPresetPlain": {
+    "message": "Baris teks biasa"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Perlindungan yang terdeteksi beserta tingkat keyakinannya, dipisahkan koma"
+  },
+  "historyCopyMarkdown": {
+    "message": "Salin sebagai Markdown"
   }
 }

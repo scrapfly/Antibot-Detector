@@ -207,6 +207,7 @@ SettingsRuntime._buildWebhookContext = function(pageData, detectionResults) {
         timestamp: new Date().toISOString(),
         detectionCount: detectionResults.length,
         categories: [...new Set(detectionResults.map(d => d.category))].join(','),
+        detectionNames: WebhookBody.detectionNames(detectionResults),
         detections: detectionResults
     };
 };

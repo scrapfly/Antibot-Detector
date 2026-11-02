@@ -59,7 +59,7 @@ test('a list is read by explicit rules: a comma ends an address after a host, af
 });
 
 test('a pasted list or a .txt/.csv gives one address per line, the first address-like cell of a CSV row', () => {
-  const text = '﻿https://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
+  const text = '\uFEFFhttps://a.example/\r\n\n# a comment\nb.example/path\n  "https://c.example/?q=1"  \n' +
     'url,title\nhttps://d.example/,Shop\nname;https://e.example/x;notes\nplain words\n';
   assert.deepEqual(BulkScan.linesOf(text), ['https://a.example/', 'b.example/path', 'https://c.example/?q=1', 'https://d.example/', 'https://e.example/x', 'plain words']);
   // A comma or semicolon in an address of a plain list belongs to it
@@ -311,3 +311,50 @@ test('scanning the failed pages again: failed (and waiting) addresses are scanne
   assert.equal(BulkScan.continuation(done), null, 'but nothing waits');
 });
 
+
+test('a comma or semicolon that ends a line is not part of the address, and an empty query is no query', () => {
+  assert.deepEqual(BulkScan.linesOf('https://a.example/x,\nhttps://b.example/y;\nhttps://c.example/?ids=1,2,3'),
+    ['https://a.example/x', 'https://b.example/y', 'https://c.example/?ids=1,2,3'], 'only the one with nothing after it ends the address');
+  assert.deepEqual(BulkScan.normalize('https://a.example/?'), { url: 'https://a.example/' });
+  assert.deepEqual(BulkScan.normalize('https://a.example/x?#top'), { url: 'https://a.example/x' });
+  const prepared = BulkScan.prepare(['https://a.example', 'https://a.example/', 'a.example', 'https://A.EXAMPLE/#x', 'https://a.example/?']);
+  assert.equal(prepared.items.length, 1, 'five spellings of one page are scanned once');
+  assert.equal(prepared.duplicates, 4);
+  assert.deepEqual(BulkScan.normalize('https://a.example/?q=1'), { url: 'https://a.example/?q=1' }, 'a real query stays');
+});
+
+test('the Markdown export is a heading, the counts and one row per page: names only, addresses without query or fragment, cells escaped', () => {
+  const run = BulkScan.createRun({ items: ['https://a.example/p?token=SECRET#x', 'https://b.example/', 'https://c.example/', 'https://d.example/'].map(url => ({ url, status: 'waiting' })) }, { now: 1 });
+  run.items[0].status = 'done';
+  run.items[0].difficulty = 'Medium';
+  run.items[0].detections = [{ name: 'Cloudflare', category: 'antibot', confidence: 95 }, { name: 're_CAPTCHA | v3', category: 'captcha', confidence: 80 }];
+  run.items[1].status = 'failed';
+  run.items[1].reason = 'timeout';
+  run.items[2].status = 'done';
+  run.items[2].detections = [];
+  const built = BulkScan.build(run, { format: 'md' });
+  assert.equal(built.type, 'text/markdown');
+  assert.equal(built.extension, 'md');
+  assert.equal(built.fileText, built.text, 'a Markdown file has no byte-order mark');
+  assert.deepEqual(built.text.split('\n'), [
+    '# Scrapfly Antibot Detector: Bulk scan', '',
+    '4 pages, 2 scanned, 1 failed, 1 waiting; 1 with protections', '',
+    '| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |',
+    '| https://a.example/p | done | Medium | Cloudflare (antibot, 95%); re\\_CAPTCHA \\| v3 (captcha, 80%) |',
+    '| https://b.example/ | failed: timeout |  | - |',
+    '| https://c.example/ | done |  | - |',
+    '| https://d.example/ | waiting |  | - |', '']);
+  assert.ok(!built.text.includes('SECRET'), 'the query, where tokens live, is left out');
+  assert.equal(BulkScan.fileName('md', '2026-11-01'), 'scrapfly-bulk-scan-2026-11-01.md');
+  assert.ok(BulkScan.FORMATS.includes('md'));
+  assert.equal(BulkScan.build(null, { format: 'md' }).text.split('\n')[2], '0 pages; 0 with protections', 'no run: an empty table');
+});
+
+test('a CSV file starts with the byte-order mark so a spreadsheet reads UTF-8, and the other formats are written as they are', () => {
+  const run = BulkScan.createRun(BulkScan.prepare(['https://a.example/']), { now: 1 });
+  const csv = BulkScan.build(run, { format: 'csv' });
+  assert.ok(!csv.text.startsWith('\uFEFF'));
+  assert.ok(csv.fileText.startsWith('\uFEFFurl,status,'));
+  const json = BulkScan.build(run, { format: 'json', now: 5 });
+  assert.equal(json.fileText, json.text);
+});

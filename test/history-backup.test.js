@@ -104,7 +104,8 @@ test('run uses the export format and the timestamp choice from Settings', async 
     assert.strictEqual(w.downloads[0].filename, 'Scrapfly/scrapfly-history-2026-10-19.csv');
     const file = decode(w.downloads[0].url);
     assert.strictEqual(file.type, 'text/csv');
-    assert.ok(file.text.startsWith('url,hostname,title,protection,'), file.text.split('\r\n')[0]);
+    // A CSV file starts with the byte-order mark, so Excel reads it as UTF-8 (a title like "Café – 東京" is not garbage)
+    assert.ok(file.text.startsWith('\uFEFFurl,hostname,title,protection,'), file.text.split('\r\n')[0]);
     assert.strictEqual(w.store.scrapfly_history_backup.format, 'csv');
   } finally { cleanup(); }
 });
@@ -289,5 +290,23 @@ test('BACKUP_NOW reports a failure to the page that asked', async () => {
     const answer = await new Promise(resolve => registry[HistoryBackup.Messages.BACKUP_NOW]({ sender: { url: 'chrome-extension://abc/popup.html' }, sendResponse: resolve }));
     assert.strictEqual(answer.status, 'error');
     assert.strictEqual(answer.error, 'disk full');
+  } finally { cleanup(); }
+});
+
+test('a backup that failed is tried again at the next start, an hour later at the earliest, and a failed retry waits for the next period', async () => {
+  const w = world();
+  try {
+    await withNow(async () => {
+      w.store.scrapfly_history_backup = { at: NOW - 10 * 60000, ok: false, error: 'Download blocked', trigger: 'alarm' };
+      await fresh().sync(true);
+      assert.strictEqual(w.downloads.length, 0, 'ten minutes after the failure: not yet');
+      w.store.scrapfly_history_backup = { at: NOW - 2 * 3600000, ok: false, error: 'Download blocked', trigger: 'alarm' };
+      await fresh().sync(true);
+      assert.strictEqual(w.downloads.length, 1, 'two hours after: the period would have counted it as done');
+      assert.strictEqual(w.store.scrapfly_history_backup.trigger, 'startup');
+      w.store.scrapfly_history_backup = { at: NOW - 2 * 3600000, ok: false, error: 'Download blocked', trigger: 'startup' };
+      await fresh().sync(true);
+      assert.strictEqual(w.downloads.length, 1, 'a retry that failed is not retried at every start');
+    });
   } finally { cleanup(); }
 });

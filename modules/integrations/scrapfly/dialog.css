@@ -488,7 +488,6 @@
 
 .scrapfly-export-chk input {
   margin: 0;
-  accent-color: var(--accent);
 }
 
 .scrapfly-export-chk:has(input:checked) {

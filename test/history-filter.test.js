@@ -105,3 +105,11 @@ test('a Changed record left in another shape (one name as text, junk) still coun
   assert.strictEqual(F.isChanged({ changed: { added: 5 } }), false);
   assert.strictEqual(F.isChanged({ changed: 'yes' }), false);
 });
+
+test('a search typed with letters finds the address the browser stores as ASCII (bücher.de is xn--bcher-kva.de)', () => {
+  const stored = item('u', 'https://xn--bcher-kva.de/shop', [det('Cloudflare', 'Anti-Bot')]);
+  assert.deepStrictEqual(ids(F.filter([stored, ...items], { query: 'bücher.de' })), ['u']);
+  assert.deepStrictEqual(ids(F.filter([stored, ...items], { query: 'BÜCHER.de/shop' })), ['u'], 'case and path');
+  assert.deepStrictEqual(ids(F.filter(items, { query: 'bücher.de' })), [], 'and nothing else matches it');
+  assert.deepStrictEqual(ids(F.filter([item('t', 'https://a.example/', [], { title: 'Café menu' })], { query: 'café menu' })), ['t'], 'a phrase with spaces still matches as text');
+});

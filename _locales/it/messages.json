@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Incolla degli indirizzi o carica un file, poi scegli Avvia."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Parti da un modello…"
+  },
+  "webhookPresetPlain": {
+    "message": "Riga di testo semplice"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Protezioni rilevate con la loro affidabilità, separate da virgole"
+  },
+  "historyCopyMarkdown": {
+    "message": "Copia come Markdown"
   }
 }

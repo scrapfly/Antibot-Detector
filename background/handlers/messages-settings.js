@@ -13,6 +13,15 @@ function registerSettingsHandlers(registry, context) {
             try {
                 const enabled = request.enabled;
                 Logger.background(`[Background] Extension toggle changed to: ${enabled ? 'ENABLED' : 'DISABLED'}`);
+                if (enabled === false) {
+                    // A scan under way must not finish into an extension that is off: it would paint its result over the OFF
+                    // badge, save the page in History and send it to the webhook. Cancelled before the badges are written
+                    const scanning = new Set([...detectionStates.keys(), ...activeDetections.keys()]);
+                    for (const tabId of scanning) {
+                        DetectionSessionStore.cancel(tabId, 'disabled');
+                        if (typeof stopBadgeSpinner === 'function') stopBadgeSpinner(tabId);
+                    }
+                }
                 await Settings.handleEnableToggle(enabled, {
                     DetectionEngineManager,
                     CategoryManager,

@@ -329,6 +329,8 @@ const server = http.createServer((req, res) => {
   remotePublish('antibot', 'detect-incapsula', '9.0.0');
   publishRelease('v-e2e-7');
   await popup.goto(`chrome-extension://${extId}/popup.html`);
+  // As in openRules: a click before the popup has started is lost, and Settings would never open
+  await popup.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline, null, { polling: 250, timeout: 15000 });
   await popup.click('#settingsBtn');
   await popup.waitForSelector('#checkUpdatesNowBtn', { state: 'visible', timeout: 10000 });
   await clearToasts();

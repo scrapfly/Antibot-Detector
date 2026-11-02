@@ -856,6 +856,10 @@
                   </span>
                   <span class="setting-description" data-i18n="settingsPayloadTemplateDesc">Body sent with each webhook. Click a variable to insert it.</span>
                 </div>
+                <!-- Presets come from WebhookBody.PRESETS (settings-ui-webhook.js): choosing one fills the Content-Type and the template -->
+                <select id="webhookPreset" class="select-field webhook-preset" aria-label="Start from a preset" data-i18n-aria-label="webhookPresetPlaceholder">
+                  <option value="" data-i18n="webhookPresetPlaceholder">Start from a preset…</option>
+                </select>
                 <!-- Chips come from WebhookBody.VARIABLES (settings-ui-webhook.js) -->
                 <div id="webhookVariableChips" class="webhook-var-chips" role="toolbar" aria-label="Insert variable" data-i18n-aria-label="webhookVarsInsertLabel"></div>
                 <!-- The mirror draws the template again with the variables in colour (settings-ui-webhook.js); the textarea in front keeps typing, caret and selection -->

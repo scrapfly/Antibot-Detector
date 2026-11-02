@@ -365,7 +365,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('History: Open page, Scan again now, Copy entry without values, Markdown in the export dialog', async () => {
+  await scenario('History: Open page, Scan again now, Copy entry without values, Copy as Markdown, Markdown in the export dialog', async () => {
     const name = `hist-${uniq()}`;
     const { page: site, url } = await scanned(name);
     await site.close();
@@ -409,6 +409,13 @@ async function scenario(name, fn) {
     const text = await until(() => page.evaluate(() => globalThis.__copied[0]), 5000, 'the copied entry');
     assert.ok(text.includes('QuickWin Probe'), text);
     assert.ok(!text.includes('SECRETCOOKIE'), 'Copy entry copied a cookie value');
+    // Copy as Markdown: the heading and one table row, the protections by name, no cookie value and no query
+    await menu('copy-markdown');
+    const markdown = await until(() => page.evaluate(() => globalThis.__copied[1]), 5000, 'the Markdown copy');
+    assert.ok(markdown.startsWith('# Scrapfly Antibot Detector: History\n\n| Page | Address |'), markdown);
+    assert.ok(markdown.includes('QuickWin Probe'), markdown);
+    assert.ok(!markdown.includes('SECRETCOOKIE'), 'Copy as Markdown copied a cookie value');
+    assert.ok(!markdown.includes('/p?n='), 'and the address has no query');
     // The export dialog offers Markdown
     await page.$eval('#historyMenuBtn', el => el.click()).catch(() => {});
     const formats = await page.evaluate(() => HistoryExport.FORMATS.slice());

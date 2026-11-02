@@ -434,3 +434,18 @@ test('a prerendered page just shown starts without what the tab captured for the
     { documentId: 'doc-current', tab: { id: 7 } }, h.dependencies);
   assert.deepEqual(forgotten, [7], 'a normal load was cleared by its own main-frame request already');
 });
+
+test('PAGE_LOAD saves a cached page to History even when the webhook server never answers', async () => {
+  const h = pageLoadHarness();
+  h.dependencies.Settings = { sendWebhookIfEnabled: () => new Promise(() => {}) };
+  const result = await Promise.race([h.run(), new Promise(resolve => setTimeout(() => resolve('held by the webhook'), 500))]);
+  assert.notEqual(result, 'held by the webhook', 'the delivery runs on its own');
+  assert.equal(h.effects.filter(effect => effect.kind === 'history').length, 1, 'the entry is written before the person has moved on');
+});
+
+test('PAGE_LOAD survives a webhook step that throws', async () => {
+  const h = pageLoadHarness();
+  h.dependencies.Settings = { sendWebhookIfEnabled: async () => { throw new Error('unreachable'); } };
+  await h.run();
+  assert.equal(h.effects.filter(effect => effect.kind === 'history').length, 1);
+});

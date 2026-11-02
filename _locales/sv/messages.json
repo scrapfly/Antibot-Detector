@@ -6853,5 +6853,17 @@
   },
   "bulkEmpty": {
     "message": "Klistra in adresser eller ladda upp en fil och välj sedan Starta."
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Börja från en mall…"
+  },
+  "webhookPresetPlain": {
+    "message": "Rad med oformaterad text"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Identifierade skydd med deras säkerhet, kommaseparerade"
+  },
+  "historyCopyMarkdown": {
+    "message": "Kopiera som Markdown"
   }
 }

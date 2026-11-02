@@ -51,6 +51,7 @@ SettingsUI.chooseRestore = async function(parsed) {
         if (!present) continue;
         const box = document.createElement('input');
         box.type = 'checkbox';
+        box.className = 'ui-checkbox';
         box.checked = true;
         box.dataset.part = id;
         checks[id] = box;
@@ -67,6 +68,7 @@ SettingsUI.chooseRestore = async function(parsed) {
         for (const [value, label] of [['merge', text('restoreModeMerge', 'Merge with what you have')], ['replace', text('restoreModeReplace', 'Replace what you have')]]) {
             const radio = document.createElement('input');
             radio.type = 'radio';
+            radio.className = 'ui-radio';
             radio.name = 'restoreMode';
             radio.value = value;
             radio.checked = value === 'merge';

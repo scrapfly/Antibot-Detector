@@ -7518,5 +7518,20 @@
   "bulkEmpty": {
     "message": "Paste addresses or upload a file, then choose Start.",
     "description": "Bulk scan: empty state"
+  },
+  "webhookPresetPlaceholder": {
+    "message": "Start from a preset…",
+    "description": "Settings → Detection → Webhook: first line of the list that fills the Content-Type and the template from a ready-made one (Slack, Discord, plain text); also its accessible name"
+  },
+  "webhookPresetPlain": {
+    "message": "Plain text line",
+    "description": "Settings → Detection → Webhook preset: the template is one line of plain text"
+  },
+  "webhookVarDetectionNames": {
+    "message": "Detected protections with their confidence, comma-separated"
+  },
+  "historyCopyMarkdown": {
+    "message": "Copy as Markdown",
+    "description": "History entry menu: copies this entry as a Markdown heading and table, for tickets and chats"
   }
 }

@@ -19,6 +19,7 @@ const HistoryBackup = {
     PERIOD_MINUTES: { daily: 1440, weekly: 10080, monthly: 43200 },
     MAX_PART_BYTES: 900000,
     FOLDER: 'Scrapfly',
+    RETRY_AFTER_FAILURE_MS: 3600000,
     STATE_KEY: 'scrapfly_history_backup',
     Messages: Object.freeze({ BACKUP_NOW: 'HISTORY_BACKUP_NOW' }),
 
@@ -68,7 +69,7 @@ const HistoryBackup = {
             for (let i = 0; i < parts.length; i++) {
                 const built = HistoryExport.build(parts[i], options);
                 await chrome.downloads.download({
-                    url: this.toDataUrl(built.text, built.type),
+                    url: this.toDataUrl(built.fileText, built.type),
                     filename: `${this.FOLDER}/${HistoryExport.fileName(built.format, now, parts.length > 1 ? i + 1 : 0)}`,
                     saveAs: false,
                     conflictAction: 'uniquify'
@@ -123,7 +124,10 @@ const HistoryBackup = {
         const period = this.periodOf(historyBackup);
         if (catchUp && period) {
             const last = await this.lastState();
-            if (!last || !Number.isFinite(last.at) || Date.now() - last.at >= period * 60000) await this.run('startup');
+            // A backup that failed (downloads blocked) is tried again once, an hour later at the earliest: counting it as done
+            // would leave the whole period without one. A failed retry (trigger "startup") waits for the next period
+            const retry = !!last && last.ok === false && last.trigger !== 'startup' && Date.now() - last.at >= this.RETRY_AFTER_FAILURE_MS;
+            if (!last || !Number.isFinite(last.at) || Date.now() - last.at >= period * 60000 || retry) await this.run('startup');
         }
     },
 

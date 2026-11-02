@@ -103,3 +103,13 @@ test('popup.html?tab=&settings= picks a known tab and Settings sub-tab, nothing 
   assert.strictEqual(route('?search=' + 'x'.repeat(500)).search.length, 200);
   assert.strictEqual(route('?search=%20%20').search, null);
 });
+
+test('two alerts at the same moment are both remembered, so each click opens its own page', async () => {
+  const chrome = fakeChrome();
+  await Promise.all([
+    NotificationClicks.remember('scrapfly-history-change-1-1', 'https://a.example/', chrome),
+    NotificationClicks.remember('scrapfly-history-change-1-2', 'https://b.example/', chrome)
+  ]);
+  assert.deepStrictEqual(await NotificationClicks.targetFor('scrapfly-history-change-1-1', chrome), { url: 'https://a.example/' });
+  assert.deepStrictEqual(await NotificationClicks.targetFor('scrapfly-history-change-1-2', chrome), { url: 'https://b.example/' });
+});
