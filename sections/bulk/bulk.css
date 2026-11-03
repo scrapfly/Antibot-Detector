@@ -9,7 +9,7 @@
 :root { color-scheme: dark; }
 :root[data-theme="light"] { color-scheme: light; }
 html { width: auto; min-height: 100%; height: auto; overflow: auto; }
-:root:is(:lang(ar), :lang(he), :lang(fa), :lang(ur)) { direction: rtl; }
+:root:lang(ar) { direction: rtl; }
 
 body.bulk-page {
   --bulk-max: 1200px;

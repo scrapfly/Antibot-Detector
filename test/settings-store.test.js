@@ -167,6 +167,15 @@ test('pausing a site keeps the flat blacklistedDomains list of an install that s
   assert.ok(!('blacklistedDomains' in h.settings()), 'and the flat copy is gone');
 });
 
+test('a reset keeps the paused sites of an install that still has the flat blacklistedDomains list', async () => {
+  const h = harness({ debugMode: true, blacklistedDomains: ['bank.example', 'mail.example'] });
+  const defaults = { debugMode: false, detection: { cacheDuration: 7, blacklistedDomains: [] } };
+  assert.equal((await h.client().resetSettings(defaults, ['detection.blacklistedDomains'])).success, true);
+  assert.deepEqual(h.settings().detection.blacklistedDomains, ['bank.example', 'mail.example'], 'the old skips are still skipped');
+  assert.equal(h.settings().debugMode, false, 'everything else went back to the defaults');
+  assert.ok(!('blacklistedDomains' in h.settings()), 'and the flat copy is gone');
+});
+
 test('a reset repairs stored settings that cannot be read, but a storage that does not answer still refuses it', async () => {
   const defaults = { debugMode: false, detection: { cacheDuration: 7 } };
   const h = harness({ debugMode: true });

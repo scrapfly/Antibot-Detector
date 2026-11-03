@@ -21,7 +21,8 @@ SettingsRuntime.loadToggleState = async function(toggle) {
 SettingsRuntime.loadAndApplyDefaultTab = async function(switchTabCallback) {
     try {
       const settings = await Utils.getSettings();
-      const defaultTab = settings.defaultTab || 'detection';
+      // An imported or restored file can say anything: a name that is not a tab would leave the popup empty
+      const defaultTab = ['detection', 'history', 'rules', 'advanced'].includes(settings.defaultTab) ? settings.defaultTab : 'detection';
       switchTabCallback(defaultTab);
     } catch (error) {
       Logger.error('UI', 'Failed to load default tab:', error);

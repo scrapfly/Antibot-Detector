@@ -583,6 +583,67 @@ async function scenario(name, fn) {
     } finally { await page.close(); }
   });
 
+  await scenario('History "…" menus by keyboard: focus goes into the menu, arrows move, Escape and Tab come back to the button', async () => {
+    const now = Date.now();
+    await setHistory([
+      { id: 'k1', url: 'https://one.example/', hostname: 'one.example', title: 'One', timestamp: now, detections: [{ detector: { name: 'Cloudflare' }, category: 'Anti-Bot', confidence: 95, difficulty: 'Medium' }] },
+      { id: 'k2', url: 'https://two.example/', hostname: 'two.example', title: 'Two', timestamp: now - 1000, detections: [{ detector: { name: 'hCaptcha' }, category: 'CAPTCHA', confidence: 80, difficulty: 'Low' }] }
+    ]);
+    const page = await openExtensionPage();
+    try {
+      await page.$eval('#nav-history', el => el.click());
+      await page.waitForSelector('.history-item');
+      const active = () => page.evaluate(() => { const el = document.activeElement; return el ? { cls: el.className, action: el.dataset && el.dataset.action || '', id: el.id || '', inMenu: !!el.closest('.history-menu') } : null; });
+      const menuOf = async (selector) => {
+        // The keyboard route: focus the button, press Enter
+        await page.$eval(selector, el => el.focus());
+        await page.keyboard.press('Enter');
+        await page.waitForSelector('.history-menu:not([hidden])');
+      };
+
+      // The per-entry menu
+      await menuOf('.history-item .history-more-btn');
+      const first = await active();
+      assert.equal(first.inMenu, true, 'the focus went into the menu: ' + JSON.stringify(first));
+      const count = await page.$$eval('#historyItemMenu .history-menu-item', els => els.filter(el => !el.hidden && !el.disabled).length);
+      assert.ok(count >= 4, 'the menu has entries: ' + count);
+      await page.keyboard.press('ArrowDown');
+      const second = await active();
+      assert.equal(second.inMenu, true);
+      assert.notEqual(second.action, first.action, 'ArrowDown moved to the next entry');
+      await page.keyboard.press('ArrowUp');
+      assert.equal((await active()).action, first.action, 'ArrowUp came back');
+      await page.keyboard.press('ArrowUp');
+      assert.equal((await active()).inMenu, true, 'ArrowUp from the first goes round to the last');
+      assert.notEqual((await active()).action, first.action);
+      await page.keyboard.press('Home');
+      assert.equal((await active()).action, first.action, 'Home is the first entry');
+      await page.keyboard.press('End');
+      assert.notEqual((await active()).action, first.action, 'End is the last entry');
+
+      // Escape closes it and the focus is on the button again, not lost
+      await page.keyboard.press('Escape');
+      await page.waitForSelector('#historyItemMenu', { state: 'hidden' });
+      const back = await active();
+      assert.ok(/history-more-btn/.test(back.cls), 'the focus is back on the "…" button: ' + JSON.stringify(back));
+      assert.equal(await page.$eval('.history-item .history-more-btn', el => el.getAttribute('aria-expanded')), 'false');
+
+      // Tab leaves the menu: it closes, and the focus is not left on something that disappeared
+      await page.keyboard.press('Enter');
+      await page.waitForSelector('#historyItemMenu:not([hidden])');
+      await page.keyboard.press('Tab');
+      await page.waitForSelector('#historyItemMenu', { state: 'hidden' });
+      assert.equal((await active()).inMenu, false, 'the focus is outside the closed menu');
+
+      // The toolbar menu, the same way
+      await menuOf('#historyMenuBtn');
+      assert.equal((await active()).inMenu, true, 'toolbar menu: the focus went in');
+      await page.keyboard.press('Escape');
+      await page.waitForSelector('#historyMenu', { state: 'hidden' });
+      assert.equal((await active()).id, 'historyMenuBtn', 'the focus is back on the toolbar button');
+    } finally { await page.close(); }
+  });
+
   await scenario('History tab: the search finds notes, the filter chips combine, and no matches offers a way back', async () => {
     const now = Date.now();
     const det = (name, category, confidence) => ({ detector: { name }, category, confidence, difficulty: 'Medium' });

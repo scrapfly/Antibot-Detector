@@ -79,7 +79,7 @@
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   box-sizing: border-box;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }

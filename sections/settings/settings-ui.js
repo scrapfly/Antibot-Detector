@@ -218,7 +218,8 @@ SettingsUI.setToggleControlledVisibility = function(toggleEl, targets = []) {
 
 SettingsUI.saveSettings = async function(options = {}) {
     try {
-      if (!this.settingsBaseline) throw new Error('Load settings before saving');
+      // A reset replaces what is stored, so it needs no loaded copy: it is how settings that cannot be read are repaired
+      if (!options.reset && !this.settingsBaseline) throw new Error('Load settings before saving');
       const committed = options.reset
         ? await StorageManager.resetSettings(options.reset.defaults, options.reset.keep)
         : await StorageManager.commitSettings({

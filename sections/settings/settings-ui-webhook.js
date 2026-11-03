@@ -715,6 +715,7 @@ SettingsUI.webhookExampleContext = async function() {
         if (detections.length) {
           ctx.detections = detections;
           ctx.detectionCount = detections.length;
+          ctx.detectionNames = WebhookBody.detectionNames(detections);
           ctx.categories = [...new Set(detections.map(d => d.category).filter(Boolean))].join(',');
         }
       }

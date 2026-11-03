@@ -245,6 +245,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
             </div>
             <label class="toggle-switch-small" data-stop-propagation="true">
               <input type="checkbox" class="detector-toggle"
+                     aria-label="${FormatUtils.escapeAttr(detectorName)}"
                      data-detector="${FormatUtils.escapeAttr(detectorName)}"
                      data-category="${FormatUtils.escapeAttr(category)}"
                      ${detector.enabled !== false ? 'checked' : ''}>

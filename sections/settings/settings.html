@@ -51,12 +51,12 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg class="settings-icon-bell" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M14,21A2,2 0 0,1 12,23A2,2 0 0,1 10,21"/></svg>
-                  <span data-i18n="settingsCardNotifications">Notifications</span>
+                  <span id="notificationsEnabledLabel" data-i18n="settingsCardNotifications">Notifications</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsCardNotificationsDesc">Show alerts when security systems are detected</p>
               </div>
               <label class="switch switch-sm">
-                <input type="checkbox" id="notificationsEnabled">
+                <input type="checkbox" id="notificationsEnabled" aria-labelledby="notificationsEnabledLabel">
                 <span class="slider"></span>
               </label>
             </div>
@@ -119,12 +119,12 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14,12H10V10H14M14,16H10V14H14M20,8H17.19C16.74,7.22 16.12,6.55 15.37,6.04L17,4.41L15.59,3L13.42,5.17C12.96,5.06 12.5,5 12,5C11.5,5 11.04,5.06 10.59,5.17L8.41,3L7,4.41L8.62,6.04C7.88,6.55 7.26,7.22 6.81,8H4V10H6.09C6.04,10.33 6,10.66 6,11V12H4V14H6V15C6,15.34 6.04,15.67 6.09,16H4V18H6.81C7.85,19.79 9.78,21 12,21C14.22,21 16.15,19.79 17.19,18H20V16H17.91C17.96,15.67 18,15.34 18,15V14H20V12H18V11C18,10.66 17.96,10.33 17.91,10H20V8M16,15A4,4 0 0,1 12,19A4,4 0 0,1 8,15V11A4,4 0 0,1 12,7A4,4 0 0,1 16,11V15Z"/></svg>
-                  <span data-i18n="settingsCardDebug">Debug Mode</span>
+                  <span id="debugModeGeneralLabel" data-i18n="settingsCardDebug">Debug Mode</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsCardDebugDesc">Writes one readable report per scanned page to the extension's console.</p>
               </div>
               <label class="switch switch-sm">
-                <input type="checkbox" id="debugModeGeneral">
+                <input type="checkbox" id="debugModeGeneral" aria-labelledby="debugModeGeneralLabel">
                 <span class="slider"></span>
               </label>
             </div>
@@ -139,28 +139,28 @@
               </div>
               <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label debug-option-label">
-                  <span data-i18n="settingsRowVerboseLogs">Verbose logs</span>
+                  <span id="debugVerboseLabel" data-i18n="settingsRowVerboseLogs">Verbose logs</span>
                   <span class="debug-option-desc" data-i18n="settingsRowVerboseLogsTip">Also log every rule, hook and message, not just one report per page</span>
                 </span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="debugVerbose">
+                  <input type="checkbox" id="debugVerbose" aria-labelledby="debugVerboseLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label debug-option-label">
-                  <span data-i18n="settingsRowLogCollector">Log Collector</span>
+                  <span id="logCollectorEnabledLabel" data-i18n="settingsRowLogCollector">Log Collector</span>
                   <span class="debug-option-desc" data-i18n="settingsRowLogCollectorDesc">Keep the logs here instead of the console, to export them as JSON or text</span>
                 </span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="logCollectorEnabled">
+                  <input type="checkbox" id="logCollectorEnabled" aria-labelledby="logCollectorEnabledLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div id="logCollectorControls" style="display: none;">
                 <div class="setting-row setting-row--inline">
-                  <span class="setting-row-label" data-i18n="settingsRowMaxLogs">Max Logs</span>
-                  <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="5000" step="100" value="5000">
+                  <span id="logCollectorMaxLogsLabel" class="setting-row-label" data-i18n="settingsRowMaxLogs">Max Logs</span>
+                  <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="5000" step="100" value="5000" aria-labelledby="logCollectorMaxLogsLabel">
                 </div>
                 <div class="setting-row setting-row--inline">
                   <span class="setting-row-label" data-i18n="settingsRowCollected">Collected</span>
@@ -193,19 +193,19 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"/></svg>
-                  <span data-i18n="settingsCardAutoUpdate">Auto-check for Updates</span>
+                  <span id="autoUpdateLabel" data-i18n="settingsCardAutoUpdate">Auto-check for Updates</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsCardAutoUpdateDesc">Automatically check for new detector definitions</p>
               </div>
               <label class="switch switch-sm">
-                <input type="checkbox" id="autoUpdate">
+                <input type="checkbox" id="autoUpdate" aria-labelledby="autoUpdateLabel">
                 <span class="slider"></span>
               </label>
             </div>
             <div class="settings-card-body" id="updateIntervalGroup">
               <div class="setting-row setting-row--inline">
-                <span class="setting-row-label" data-i18n="settingsRowCheckInterval">Check Interval</span>
-                <select id="checkIntervalHours" class="select-field">
+                <span id="checkIntervalHoursLabel" class="setting-row-label" data-i18n="settingsRowCheckInterval">Check Interval</span>
+                <select id="checkIntervalHours" class="select-field" aria-labelledby="checkIntervalHoursLabel">
                   <option value="6" data-i18n="interval6Hours">6 hours</option>
                   <option value="12" data-i18n="interval12Hours">12 hours</option>
                   <option value="24" data-i18n="interval24Hours">24 hours</option>
@@ -252,23 +252,23 @@
 
           <div class="settings-card settings-card--colors">
             <div class="color-row">
-              <span class="color-row-label" data-i18n="settingsBadgeColorLow">Low</span>
+              <span id="colorBadgeLowLabel" class="color-row-label" data-i18n="settingsBadgeColorLow">Low</span>
               <div class="color-picker-container">
-                <input type="color" id="colorBadgeLow" class="color-field" value="#22c55e">
+                <input type="color" id="colorBadgeLow" class="color-field" value="#22c55e" aria-labelledby="colorBadgeLowLabel">
                 <span class="color-hex-display" id="hexBadgeLow">#22c55e</span>
               </div>
             </div>
             <div class="color-row">
-              <span class="color-row-label" data-i18n="settingsBadgeColorMedium">Medium</span>
+              <span id="colorBadgeMediumLabel" class="color-row-label" data-i18n="settingsBadgeColorMedium">Medium</span>
               <div class="color-picker-container">
-                <input type="color" id="colorBadgeMedium" class="color-field" value="#f59e0b">
+                <input type="color" id="colorBadgeMedium" class="color-field" value="#f59e0b" aria-labelledby="colorBadgeMediumLabel">
                 <span class="color-hex-display" id="hexBadgeMedium">#f59e0b</span>
               </div>
             </div>
             <div class="color-row">
-              <span class="color-row-label" data-i18n="settingsBadgeColorHigh">High</span>
+              <span id="colorBadgeHighLabel" class="color-row-label" data-i18n="settingsBadgeColorHigh">High</span>
               <div class="color-picker-container">
-                <input type="color" id="colorBadgeHigh" class="color-field" value="#ef4444">
+                <input type="color" id="colorBadgeHigh" class="color-field" value="#ef4444" aria-labelledby="colorBadgeHighLabel">
                 <span class="color-hex-display" id="hexBadgeHigh">#ef4444</span>
               </div>
             </div>
@@ -282,23 +282,23 @@
           </div>
           <div class="settings-card settings-card--colors">
             <div class="color-row">
-              <span class="color-row-badge color-row-badge--category" data-color-for="colorAntibot" data-i18n="categoryAntibot">Anti-bot</span>
+              <span id="colorAntibotLabel" class="color-row-badge color-row-badge--category" data-color-for="colorAntibot" data-i18n="categoryAntibot">Anti-bot</span>
               <div class="color-picker-container">
-                <input type="color" id="colorAntibot" class="color-field" value="#FF5733">
+                <input type="color" id="colorAntibot" class="color-field" value="#FF5733" aria-labelledby="colorAntibotLabel">
                 <span class="color-hex-display" id="hexAntibot">#FF5733</span>
               </div>
             </div>
             <div class="color-row">
-              <span class="color-row-badge color-row-badge--category" data-color-for="colorCaptcha" data-i18n="categoryCaptcha">Captcha</span>
+              <span id="colorCaptchaLabel" class="color-row-badge color-row-badge--category" data-color-for="colorCaptcha" data-i18n="categoryCaptcha">Captcha</span>
               <div class="color-picker-container">
-                <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF">
+                <input type="color" id="colorCaptcha" class="color-field" value="#33C3FF" aria-labelledby="colorCaptchaLabel">
                 <span class="color-hex-display" id="hexCaptcha">#33C3FF</span>
               </div>
             </div>
             <div class="color-row">
-              <span class="color-row-badge color-row-badge--category" data-color-for="colorFingerprint" data-i18n="categoryFingerprint">Fingerprint</span>
+              <span id="colorFingerprintLabel" class="color-row-badge color-row-badge--category" data-color-for="colorFingerprint" data-i18n="categoryFingerprint">Fingerprint</span>
               <div class="color-picker-container">
-                <input type="color" id="colorFingerprint" class="color-field" value="#3b82f6">
+                <input type="color" id="colorFingerprint" class="color-field" value="#3b82f6" aria-labelledby="colorFingerprintLabel">
                 <span class="color-hex-display" id="hexFingerprint">#3b82f6</span>
               </div>
             </div>
@@ -328,23 +328,23 @@
             <div class="color-page" data-page="1">
               <div class="settings-card settings-card--colors">
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagDOM" data-i18n="methodLabelDom">Dom</span>
+                  <span id="colorTagDOMLabel" class="color-row-badge" data-color-for="colorTagDOM" data-i18n="methodLabelDom">Dom</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF">
+                    <input type="color" id="colorTagDOM" class="color-field" value="#8D33FF" aria-labelledby="colorTagDOMLabel">
                     <span class="color-hex-display" id="hexTagDOM">#8D33FF</span>
                   </div>
                 </div>
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagHeaders" data-i18n="methodLabelHeader">Headers</span>
+                  <span id="colorTagHeadersLabel" class="color-row-badge" data-color-for="colorTagHeaders" data-i18n="methodLabelHeader">Headers</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8">
+                    <input type="color" id="colorTagHeaders" class="color-field" value="#FF33A8" aria-labelledby="colorTagHeadersLabel">
                     <span class="color-hex-display" id="hexTagHeaders">#FF33A8</span>
                   </div>
                 </div>
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagCookies" data-i18n="methodLabelCookie">Cookies</span>
+                  <span id="colorTagCookiesLabel" class="color-row-badge" data-color-for="colorTagCookies" data-i18n="methodLabelCookie">Cookies</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagCookies" class="color-field" value="#FFC133">
+                    <input type="color" id="colorTagCookies" class="color-field" value="#FFC133" aria-labelledby="colorTagCookiesLabel">
                     <span class="color-hex-display" id="hexTagCookies">#FFC133</span>
                   </div>
                 </div>
@@ -355,23 +355,23 @@
             <div class="color-page" data-page="2" style="display: none;">
               <div class="settings-card settings-card--colors">
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagContent" data-i18n="methodLabelContent">Content</span>
+                  <span id="colorTagContentLabel" class="color-row-badge" data-color-for="colorTagContent" data-i18n="methodLabelContent">Content</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagContent" class="color-field" value="#33FFF3">
+                    <input type="color" id="colorTagContent" class="color-field" value="#33FFF3" aria-labelledby="colorTagContentLabel">
                     <span class="color-hex-display" id="hexTagContent">#33FFF3</span>
                   </div>
                 </div>
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagURLs" data-i18n="methodLabelUrl">Url</span>
+                  <span id="colorTagURLsLabel" class="color-row-badge" data-color-for="colorTagURLs" data-i18n="methodLabelUrl">Url</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4">
+                    <input type="color" id="colorTagURLs" class="color-field" value="#00BCD4" aria-labelledby="colorTagURLsLabel">
                     <span class="color-hex-display" id="hexTagURLs">#00BCD4</span>
                   </div>
                 </div>
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagJSHooks" data-i18n="methodLabelJsHooks">JS hooks</span>
+                  <span id="colorTagJSHooksLabel" class="color-row-badge" data-color-for="colorTagJSHooks" data-i18n="methodLabelJsHooks">JS hooks</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF">
+                    <input type="color" id="colorTagJSHooks" class="color-field" value="#00E5FF" aria-labelledby="colorTagJSHooksLabel">
                     <span class="color-hex-display" id="hexTagJSHooks">#00E5FF</span>
                   </div>
                 </div>
@@ -382,16 +382,16 @@
             <div class="color-page" data-page="3" style="display: none;">
               <div class="settings-card settings-card--colors">
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagWindow" data-i18n="methodLabelWindow">Window</span>
+                  <span id="colorTagWindowLabel" class="color-row-badge" data-color-for="colorTagWindow" data-i18n="methodLabelWindow">Window</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50">
+                    <input type="color" id="colorTagWindow" class="color-field" value="#4CAF50" aria-labelledby="colorTagWindowLabel">
                     <span class="color-hex-display" id="hexTagWindow">#4CAF50</span>
                   </div>
                 </div>
                 <div class="color-row">
-                  <span class="color-row-badge" data-color-for="colorTagPayload" data-i18n="methodLabelPayload">Payload</span>
+                  <span id="colorTagPayloadLabel" class="color-row-badge" data-color-for="colorTagPayload" data-i18n="methodLabelPayload">Payload</span>
                   <div class="color-picker-container">
-                    <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0">
+                    <input type="color" id="colorTagPayload" class="color-field" value="#9C27B0" aria-labelledby="colorTagPayloadLabel">
                     <span class="color-hex-display" id="hexTagPayload">#9C27B0</span>
                   </div>
                 </div>
@@ -415,10 +415,10 @@
             </div>
             <div class="settings-card-body">
               <div class="setting-row">
-                <label class="setting-row-label" for="cacheDuration" data-i18n="cacheDuration">Cache Duration</label>
+                <label id="cacheUnitLabel" class="setting-row-label" for="cacheDuration" data-i18n="cacheDuration">Cache Duration</label>
                 <div class="setting-row-controls">
                   <input type="number" id="cacheDuration" class="input-field input-field--short" min="1" max="30" value="7">
-                  <select id="cacheUnit" class="select-field">
+                  <select id="cacheUnit" class="select-field" aria-labelledby="cacheUnitLabel">
                     <option value="minutes" data-i18n="timeUnitMinutes">Minutes</option>
                     <option value="hours" data-i18n="timeUnitHours">Hours</option>
                     <option value="days" selected data-i18n="timeUnitDays">Days</option>
@@ -503,10 +503,10 @@
             </div>
             <div class="settings-card-body">
               <div class="setting-row">
-                <label class="setting-row-label" for="captureRetentionDuration" data-i18n="settingsCaptureRetention">Keep tool captures for</label>
+                <label id="captureRetentionUnitLabel" class="setting-row-label" for="captureRetentionDuration" data-i18n="settingsCaptureRetention">Keep tool captures for</label>
                 <div class="setting-row-controls">
                   <input type="number" id="captureRetentionDuration" class="input-field input-field--short" min="1" max="10080" value="30">
-                  <select id="captureRetentionUnit" class="select-field">
+                  <select id="captureRetentionUnit" class="select-field" aria-labelledby="captureRetentionUnitLabel">
                     <option value="minutes" data-i18n="timeUnitMinutes">Minutes</option>
                     <option value="hours" data-i18n="timeUnitHours">Hours</option>
                     <option value="days" data-i18n="timeUnitDays">Days</option>
@@ -602,12 +602,12 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14H13V16H11V14M11,8H13V12H11V8Z"/></svg>
-                  <span data-i18n="settingsEnableJsApi">Enable JS API Events</span>
+                  <span id="enableJsApiLabel" data-i18n="settingsEnableJsApi">Enable JS API Events</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="jsApiEventsDesc">Dispatch custom events to page window</p>
               </div>
               <label class="switch switch-sm">
-                <input type="checkbox" id="enableJsApi">
+                <input type="checkbox" id="enableJsApi" aria-labelledby="enableJsApiLabel">
                 <span class="slider"></span>
               </label>
             </div>
@@ -697,27 +697,27 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16,18C16,18.55 16.45,19 17,19H21V17H17C16.45,17 16,17.45 16,18M13,18C13,18.55 13.45,19 14,19H14.18C14.61,17.84 15.71,17 17,17H21V13H17C14.24,13 12,15.24 12,18C12,18.55 12.45,19 13,19M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H11.11C11.04,20.67 11,20.34 11,20C11,19.66 11.04,19.33 11.11,19H5V5H19V11.11C19.33,11.04 19.66,11 20,11C20.34,11 20.67,11.04 21,11.11V5C21,3.9 20.1,3 19,3M17,7H7V9H17V7M14,11H7V13H14V11Z"/></svg>
-                  <span data-i18n="settingsEnableWebhook">Enable Webhook</span>
+                  <span id="enableWebhookLabel" data-i18n="settingsEnableWebhook">Enable Webhook</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsEnableWebhookDesc">Send HTTP requests on detection</p>
               </div>
               <label class="switch switch-sm">
-                <input type="checkbox" id="enableWebhook">
+                <input type="checkbox" id="enableWebhook" aria-labelledby="enableWebhookLabel">
                 <span class="slider"></span>
               </label>
             </div>
             <div class="settings-card-body" id="webhookOnCacheGroup">
               <div class="setting-row setting-row--inline setting-row--toggle">
-                <span class="setting-row-label" data-i18n="settingsBypassCache">Send on every page load (bypass cache)</span>
+                <span id="webhookOnCacheLabel" class="setting-row-label" data-i18n="settingsBypassCache">Send on every page load (bypass cache)</span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="webhookOnCache">
+                  <input type="checkbox" id="webhookOnCache" aria-labelledby="webhookOnCacheLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="setting-row setting-row--inline setting-row--toggle">
-                <span class="setting-row-label" data-i18n="settingsWebhookRetry">Retry failed deliveries</span>
+                <span id="webhookRetryLabel" class="setting-row-label" data-i18n="settingsWebhookRetry">Retry failed deliveries</span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="webhookRetry" aria-describedby="webhookRetryHint">
+                  <input type="checkbox" id="webhookRetry" aria-describedby="webhookRetryHint" aria-labelledby="webhookRetryLabel">
                   <span class="slider"></span>
                 </label>
               </div>
@@ -784,10 +784,10 @@
 
               <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
-                  <span data-i18n="settingsWebhookUrl">Webhook URL</span>
+                  <span id="webhookUrlLabel" data-i18n="settingsWebhookUrl">Webhook URL</span>
                   <span class="setting-description" id="webhookUrlDescription" data-i18n="settingsWebhookUrlDesc">Complete endpoint URL (https://api.example.com/webhook)</span>
                 </label>
-                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook">
+                <input type="url" id="webhookUrl" class="input-field" placeholder="https://api.example.com/webhook" aria-labelledby="webhookUrlLabel">
                 <div class="webhook-url-hint" id="webhookUrlHint" style="display: none;">
                   <strong data-i18n="settingsAvailableVariables">Available variables:</strong>
                   <code>&lt;SITEURL&gt;</code>, <code>&lt;HOSTNAME&gt;</code>, <code>&lt;TIMESTAMP&gt;</code>, <code>&lt;DETECTION_COUNT&gt;</code>, <code>&lt;CATEGORIES&gt;</code>
@@ -799,11 +799,11 @@
 
               <div class="setting-group setting-group--stacked" id="webhookContentTypeGroup">
                 <label class="setting-label">
-                  <span data-i18n="settingsContentType">Content-Type</span>
+                  <span id="webhookContentTypeLabel" data-i18n="settingsContentType">Content-Type</span>
                   <span class="setting-description" data-i18n="settingsContentTypeDesc">HTTP content type header</span>
                 </label>
                 <!-- Options come from WebhookBody.CONTENT_TYPES (settings-ui-webhook.js) -->
-                <select id="webhookContentType" class="select-field" aria-describedby="webhookContentTypeHint">
+                <select id="webhookContentType" class="select-field" aria-describedby="webhookContentTypeHint" aria-labelledby="webhookContentTypeLabel">
                   <option value="application/json" selected>application/json</option>
                 </select>
                 <div id="webhookCustomContentTypeContainer" class="webhook-custom-ct" hidden>
@@ -1084,10 +1084,10 @@
                 <input type="number" id="historyLimit" class="input-field" min="0" max="10000" value="0">
               </div>
               <div class="setting-row setting-row--switch-below">
-                <span class="setting-row-label" data-i18n="settingsHistoryAutoDelete">Auto-delete</span>
+                <span id="historyAutoDeleteLabel" class="setting-row-label" data-i18n="settingsHistoryAutoDelete">Auto-delete</span>
                 <p class="setting-row-desc" data-i18n="settingsHistoryAutoDeleteDesc">Periodically removes old history entries.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyAutoDelete">
+                  <input type="checkbox" id="historyAutoDelete" aria-labelledby="historyAutoDeleteLabel">
                   <span class="slider"></span>
                 </label>
               </div>
@@ -1116,24 +1116,24 @@
                 </select>
               </div>
               <div class="setting-row setting-row--inline setting-row--toggle">
-                <span class="setting-row-label" data-i18n="settingsIncludeTimestamps">Include Timestamps</span>
+                <span id="includeTimestampsLabel" class="setting-row-label" data-i18n="settingsIncludeTimestamps">Include Timestamps</span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="includeTimestamps" checked>
+                  <input type="checkbox" id="includeTimestamps" checked aria-labelledby="includeTimestampsLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="setting-row setting-row--inline setting-row--toggle">
-                <span class="setting-row-label" data-i18n="settingsSaveOnCacheHits">Save on Cache Hits</span>
+                <span id="historyBypassCacheLabel" class="setting-row-label" data-i18n="settingsSaveOnCacheHits">Save on Cache Hits</span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyBypassCache">
+                  <input type="checkbox" id="historyBypassCache" aria-labelledby="historyBypassCacheLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="setting-row setting-row--switch-below">
-                <span class="setting-row-label" data-i18n="settingsHistoryClearOnClose">Clear History when the browser closes</span>
+                <span id="historyClearOnCloseLabel" class="setting-row-label" data-i18n="settingsHistoryClearOnClose">Clear History when the browser closes</span>
                 <p class="setting-row-desc" data-i18n="settingsHistoryClearOnCloseDesc">Removes saved pages when the last window closes, or at the next start. Pinned pages stay.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyClearOnClose">
+                  <input type="checkbox" id="historyClearOnClose" aria-labelledby="historyClearOnCloseLabel">
                   <span class="slider"></span>
                 </label>
               </div>
@@ -1161,26 +1161,26 @@
             </div>
             <div class="settings-card-body">
               <div class="setting-row setting-row--switch-below">
-                <span class="setting-row-label" data-i18n="settingsHistoryEnabled">Save pages to History</span>
+                <span id="historyEnabledLabel" class="setting-row-label" data-i18n="settingsHistoryEnabled">Save pages to History</span>
                 <p class="setting-row-desc" data-i18n="settingsHistoryEnabledDesc">Turn off to browse without recording. Detection keeps working.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyEnabled" checked>
+                  <input type="checkbox" id="historyEnabled" checked aria-labelledby="historyEnabledLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="setting-row setting-row--switch-below">
-                <span class="setting-row-label" data-i18n="settingsHistorySkipIncognito">Skip incognito windows</span>
+                <span id="historySkipIncognitoLabel" class="setting-row-label" data-i18n="settingsHistorySkipIncognito">Skip incognito windows</span>
                 <p class="setting-row-desc" data-i18n="settingsHistorySkipIncognitoDesc">Pages from incognito windows are never saved.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historySkipIncognito" checked>
+                  <input type="checkbox" id="historySkipIncognito" checked aria-labelledby="historySkipIncognitoLabel">
                   <span class="slider"></span>
                 </label>
               </div>
               <div class="setting-row setting-row--switch-below">
-                <span class="setting-row-label" data-i18n="settingsHistorySkipFingerprintOnly">Skip fingerprinting-only pages</span>
+                <span id="historySkipFingerprintOnlyLabel" class="setting-row-label" data-i18n="settingsHistorySkipFingerprintOnly">Skip fingerprinting-only pages</span>
                 <p class="setting-row-desc" data-i18n="settingsHistorySkipFingerprintOnlyDesc">Don't save a page when fingerprinting is the only thing found.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historySkipFingerprintOnly">
+                  <input type="checkbox" id="historySkipFingerprintOnly" aria-labelledby="historySkipFingerprintOnlyLabel">
                   <span class="slider"></span>
                 </label>
               </div>
@@ -1205,9 +1205,9 @@
           <div class="settings-card">
             <div class="settings-card-body">
               <div class="setting-row setting-row--inline setting-row--toggle">
-                <span class="setting-row-label" data-i18n="settingsHistoryAutoPinHard">Pages with a hard protection</span>
+                <span id="historyAutoPinHardLabel" class="setting-row-label" data-i18n="settingsHistoryAutoPinHard">Pages with a hard protection</span>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyAutoPinHard">
+                  <input type="checkbox" id="historyAutoPinHard" aria-labelledby="historyAutoPinHardLabel">
                   <span class="slider"></span>
                 </label>
               </div>
@@ -1258,12 +1258,12 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
-                  <span data-i18n="settingsEnableDuplicatePrevention">Enable Duplicate Prevention</span>
+                  <span id="preventDuplicatesLabel" data-i18n="settingsEnableDuplicatePrevention">Enable Duplicate Prevention</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsDuplicatePreventionDesc">Block duplicate history entries within a time window</p>
               </div>
               <label class="switch switch-sm">
-                <input type="checkbox" id="preventDuplicates">
+                <input type="checkbox" id="preventDuplicates" aria-labelledby="preventDuplicatesLabel">
                 <span class="slider"></span>
               </label>
             </div>
@@ -1278,10 +1278,10 @@
                 </select>
               </div>
               <div class="setting-row">
-                <label class="setting-row-label" for="duplicateDuration" data-i18n="settingsTimeWindow">Time Window</label>
+                <label id="duplicateUnitLabel" class="setting-row-label" for="duplicateDuration" data-i18n="settingsTimeWindow">Time Window</label>
                 <div class="setting-row-controls">
                   <input type="number" id="duplicateDuration" class="input-field input-field--short" min="1" max="999" value="1">
-                  <select id="duplicateUnit" class="select-field">
+                  <select id="duplicateUnit" class="select-field" aria-labelledby="duplicateUnitLabel">
                     <option value="minutes" data-i18n="settingsTimeMinutes">Minutes</option>
                     <option value="hours" data-i18n="settingsTimeHours">Hours</option>
                     <option value="days" data-i18n="settingsTimeDays">Days</option>

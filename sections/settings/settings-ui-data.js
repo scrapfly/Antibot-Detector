@@ -97,7 +97,7 @@ SettingsUI.exportHistoryCsv = async function() {
         : _fmt('notificationHistoryExportedFmt', `Exported ${items.length} history items`, items.length));
     } catch (error) {
       Logger.error('UI', 'Failed to export history:', error);
-      NotificationHelper.error(_fmt('notificationImportHistoryFailedFmt', 'Failed to export history: ' + error.message, error.message));
+      NotificationHelper.error((t && t.get('statsExportFailed')) || 'Could not export the data. Please try again.');
     }
 };
 

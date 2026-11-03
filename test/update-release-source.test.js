@@ -240,3 +240,38 @@ test('a bundled pending update the local rule has caught up with is dropped by t
   assert.strictEqual(await UM.getPendingUpdatesCount(), 1);
 });
 
+
+test('an extension update drops, from the "waiting for a newer extension" list, what the new version can install', async () => {
+  // Statistics and the diagnostics report read that list as stored; the Rules tab filters it. After an update the stored
+  // list is cleaned once, so none of the three still says "waiting" for a rule the extension now supports
+  const local = { scrapfly_incompatible_updates: [
+    { id: 'detect-a', name: 'A', remoteVersion: '1.1', minExtensionVersion: '3.1.1' },
+    { id: 'detect-b', name: 'B', remoteVersion: '1.1', minExtensionVersion: '3.2.0' },
+    { id: 'detect-c', name: 'C', remoteVersion: '1.1' }
+  ] };
+  const { UM } = load(local, { latest: 'v3.1.1', releases: {} }, { version: '3.1.1' });
+  assert.strictEqual(await UM.pruneIncompatibleUpdates(), 2);
+  assert.deepStrictEqual(plain(local.scrapfly_incompatible_updates.map(u => u.id)), ['detect-b'], 'only the one that still needs 3.2.0 waits');
+  assert.strictEqual(await UM.pruneIncompatibleUpdates(), 0, 'a second time finds nothing to drop');
+});
+
+test('when nothing is left to wait for, the stored list is removed, and a missing or odd list is left alone', async () => {
+  const local = { scrapfly_incompatible_updates: [{ id: 'detect-a', name: 'A', remoteVersion: '1.1', minExtensionVersion: '3.0' }] };
+  const { UM } = load(local, { latest: 'v3.1.1', releases: {} }, { version: '3.1.1' });
+  assert.strictEqual(await UM.pruneIncompatibleUpdates(), 1);
+  assert.ok(!('scrapfly_incompatible_updates' in local), 'the key goes, as when a check finds nothing waiting');
+
+  const empty = {};
+  assert.strictEqual(await load(empty, { latest: 'v3.1.1', releases: {} }, { version: '3.1.1' }).UM.pruneIncompatibleUpdates(), 0);
+  assert.deepStrictEqual(empty, {}, 'nothing stored: nothing written');
+  const odd = { scrapfly_incompatible_updates: 'not a list' };
+  assert.strictEqual(await load(odd, { latest: 'v3.1.1', releases: {} }, { version: '3.1.1' }).UM.pruneIncompatibleUpdates(), 0);
+  assert.strictEqual(odd.scrapfly_incompatible_updates, 'not a list');
+});
+
+test('the worker cleans that list when the extension is installed or updated, before the next check is scheduled', () => {
+  const init = fs.readFileSync(path.join(root, 'background/init.js'), 'utf8');
+  const handler = init.slice(init.indexOf('chrome.runtime.onInstalled.addListener'));
+  assert.ok(handler.indexOf('pruneIncompatibleUpdates') > 0, 'the install handler prunes it');
+  assert.ok(handler.indexOf('pruneIncompatibleUpdates') < handler.indexOf('UpdateManager.scheduleCheck()'), 'before a check can write a new one');
+});

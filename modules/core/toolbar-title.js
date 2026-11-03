@@ -8,7 +8,7 @@
     'use strict';
 
     const ToolbarTitle = {
-        /** manifest.json action.default_title: shown before a scan and after a reset */
+        /** The English extension name: manifest.json action.default_title is its translation (__MSG_extensionName__), shown before a scan and after a reset */
         DEFAULT: 'Scrapfly: anti-bot detector',
         PREFIX: 'Scrapfly',
         SHOWN: 3,
@@ -56,6 +56,13 @@
             return `${this.PREFIX}: ${body}`;
         },
 
+        /** The title before a scan: the extension's name in the interface language (the manifest's own is that name in the browser's), English without it. */
+        defaultTitle() {
+            const I18n = root.I18n;
+            const name = I18n && typeof I18n.get === 'function' ? I18n.get('extensionName') : null;
+            return typeof name === 'string' && name.trim() ? name.trim() : this.DEFAULT;
+        },
+
         /** The worker's translator: I18n when it is loaded, the English fallback otherwise. */
         workerTr() {
             const I18n = root.I18n;
@@ -85,7 +92,7 @@
             if (!chromeApi || !chromeApi.action || typeof chromeApi.action.setTitle !== 'function') return;
             this._turns.set(tabId, (this._turns.get(tabId) || 0) + 1);
             if (this._turns.size > 500) this._turns.clear();
-            try { await chromeApi.action.setTitle({ tabId, title: this.DEFAULT }); } catch (_) { /* closed tab */ }
+            try { await chromeApi.action.setTitle({ tabId, title: this.defaultTitle() }); } catch (_) { /* closed tab */ }
         }
     };
 

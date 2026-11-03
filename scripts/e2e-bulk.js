@@ -240,7 +240,7 @@ const PROBE = {
         assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,`));
       } else if (ext === 'md') {
         assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
-        assert.match(text, new RegExp(`\\| ${at('/protected').replace(/[.?/]/g, '\\$&')} \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
+        assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
         assert.ok(!text.includes('?n=1'), 'the query, where tokens live, is left out');
         assert.equal(text.charCodeAt(0), 35, 'a Markdown file has no byte-order mark');
       } else {
@@ -265,7 +265,11 @@ const PROBE = {
     assert.deepEqual(paused.items.map(i => i.status), ['done', 'waiting', 'waiting', 'waiting', 'waiting'], 'paused: the page being scanned finished, no other opened');
     assert.deepEqual(await scanTabs(), []);
     assert.equal(await bulk.$eval('#bulkResumeBtn', el => el.hidden), false);
+    // The button that was pressed went away: the keyboard is on the one that took its place, not back at the top of the page
+    const focusIs = (id) => bulk.waitForFunction((want) => document.activeElement && document.activeElement.id === want, id, { polling: 250, timeout: 8000 });
+    await focusIs('bulkResumeBtn');
     await bulk.click('#bulkResumeBtn');
+    await focusIs('bulkPauseBtn');
     await waitRun(r => r.items[3].status === 'scanning', 30000);
     assert.equal((await scanTabs()).length, 1, 'the never-answering page is open');
     const stoppedAt = Date.now();
@@ -275,6 +279,7 @@ const PROBE = {
     assert.deepEqual(await scanTabs(), [], 'Stop closes the scan tab at once');
     assert.ok(Date.now() - stoppedAt < 5000);
     assert.deepEqual(stopped.items.map(i => i.status), ['done', 'done', 'done', 'waiting', 'waiting']);
+    await focusIs('bulkNewBtn');
     assert.equal(await bulk.$eval('#bulkWaitingBtn', el => el.hidden), false, 'the pages still waiting can be scanned again');
     console.log('PASS Controls: Pause finishes the current page and opens no other, Resume goes on, Stop closes the scan tab at once');
 

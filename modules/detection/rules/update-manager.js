@@ -60,6 +60,24 @@ class UpdateManager {
     }
 
     /**
+     * Drops, from the stored "waiting for a newer extension" list, the entries the running extension now satisfies. The Rules tab
+     * filters that list when it reads it; Statistics and the diagnostics report read it as stored, so it is cleaned once, when the
+     * extension is updated.
+     * @returns {Promise<number>} How many entries were dropped
+     */
+    static async pruneIncompatibleUpdates() {
+        const key = this.STORAGE_KEYS.INCOMPATIBLE_UPDATES;
+        const result = await chrome.storage.local.get(key);
+        const stored = result[key];
+        if (!Array.isArray(stored)) return 0;
+        const waiting = stored.filter(update => !this.isCompatibleWithExtension(update));
+        if (waiting.length === stored.length) return 0;
+        if (waiting.length) await chrome.storage.local.set({ [key]: waiting });
+        else await chrome.storage.local.remove(key);
+        return stored.length - waiting.length;
+    }
+
+    /**
      * Check for detector updates in the latest GitHub release
      * @param {boolean} force - Force check regardless of interval
      * @returns {Promise<{available: boolean, updates: Array, incompatibleUpdates: Array, incompatibleCount: number,

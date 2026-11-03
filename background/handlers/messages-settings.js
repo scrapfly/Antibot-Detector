@@ -27,6 +27,9 @@ function registerSettingsHandlers(registry, context) {
                     CategoryManager,
                     categoryManager
                 });
+                // A held webhook delivery whose retry alarm went off while the extension was off is retried by nothing else:
+                // arm the next alarm now that it can send again
+                if (enabled !== false && typeof SettingsRuntime !== 'undefined') await SettingsRuntime._scheduleWebhookRetries();
 
                 sendResponse({ status: 'success' });
             } catch (error) {

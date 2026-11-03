@@ -1374,6 +1374,13 @@
   opacity: 1;
 }
 
+/* outline: none above: the keyboard focus is shown on the track */
+.confidence-slider:focus-visible {
+  opacity: 1;
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
 .confidence-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -1469,6 +1476,12 @@
   width: 0;
   height: 0;
   position: absolute;
+}
+
+/* The input is invisible: the keyboard focus is shown on the switch, as in Settings */
+.toggle-input:focus-visible + .toggle-slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .toggle-slider {
@@ -1778,6 +1791,11 @@
   user-select: none;
   min-width: 0;
   box-sizing: border-box;
+}
+
+/* The input is invisible (it covers the badge): the keyboard focus is shown on the badge */
+.http-method-badge:has(input:focus-visible) {
+  box-shadow: 0 0 0 2px var(--accent-light);
 }
 
 .http-method-badge input[type="checkbox"],

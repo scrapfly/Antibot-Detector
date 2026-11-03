@@ -448,6 +448,34 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       console.log('PASS Reset returns the settings to their defaults and keeps site lists, connections, language, theme and rules, unless the connections are removed');
     }
 
+    // ---- Settings that cannot be read -------------------------------------------------------------------------------
+    // Reset is the way out of them. The page has no loaded copy of the settings then, and used to refuse to save anything, a reset
+    // included: "Reset repairs settings that cannot be read" held in the worker, not from the button
+    if (!only || 'unreadable'.includes(only) || 'reset'.includes(only)) {
+      await boot();
+      await W(() => chrome.storage.local.set({ scrapfly_settings: '{broken' }));
+      await page.goto(`chrome-extension://${extensionId}/popup.html`);
+      await page.waitForFunction(() => window.popupInstance?.settings && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
+      await openData();
+      assert.equal(await page.evaluate(() => !window.popupInstance.settings.settingsBaseline), true, 'the page could not load the settings (the situation under test)');
+      await click('#resetSettingsBtn');
+      await page.waitForSelector('.notification-confirm #resetConnections');
+      await confirmDialog();
+      await page.waitForFunction(() => !!window.popupInstance.settings.settingsBaseline, null, { polling: 250, timeout: 10000 });
+      const repaired = await page.evaluate(() => StorageManager.readSettingsStrict());
+      assert.equal(typeof repaired, 'object', 'the stored settings can be read again');
+      assert.equal(repaired.debugMode, false, 'they are the defaults');
+      assert.deepEqual([repaired.detection.cacheDuration, repaired.detection.cacheUnit], [7, 'days']);
+      // The "could not load settings" toast from opening the page may still be showing; the reset itself says nothing went wrong
+      const english = JSON.parse(fs.readFileSync(path.join(REPO, '_locales', 'en', 'messages.json'), 'utf8'));
+      const toasts = await page.$$eval('.notification-toast', els => els.map(el => el.textContent));
+      assert.ok(!toasts.some(text => text.includes(english.settingsWriteFailedToast.message)), `the reset was refused: ${JSON.stringify(toasts)}`);
+      // And an ordinary save works again from there
+      await page.evaluate(async () => { if (!await StorageManager.patchSettings({ debugMode: true })) throw new Error('fixture failed'); });
+      assert.equal((await page.evaluate(() => StorageManager.readSettingsStrict())).debugMode, true);
+      console.log('PASS Reset repairs stored settings that cannot be read, from the button, and the settings save again');
+    }
+
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
     console.log(`RESULT ALL PASS${only ? ` (only ${only})` : ''}, no page errors`);
   } finally {

@@ -150,7 +150,7 @@
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
   z-index: 9999;
   overflow: hidden;
-  text-align: left;
+  text-align: start;
   opacity: 0;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s;
 }
