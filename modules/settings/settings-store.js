@@ -64,8 +64,9 @@
             previous = {};
         }
         let settings = clone(previous);
-        // Before the change: pausing a site on an install that still has the old flat list must keep that list
-        if (mutation.operation === 'domain' || mutation.operation === 'allow' || mutation.operation === 'patch') liftLegacy(settings);
+        // Before the change: pausing a site on an install that still has the old flat list must keep that list, and so must a
+        // reset (it keeps the paused sites by their place in the nested settings)
+        if (['domain', 'allow', 'patch', 'reset'].includes(mutation.operation)) liftLegacy(settings);
         if (mutation.operation === 'merge') {
             if (!isObject(mutation.baseline) || !isObject(mutation.candidate)) throw new Error('Invalid settings change');
             settings = StorageManager.mergeSettingsChanges(mutation.baseline, mutation.candidate, settings);

@@ -100,6 +100,10 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         } catch (error) {
             Logger.warn('BACKGROUND', '[init] Could not merge bundled detectors:', error);
         }
+        // What the previous version was waiting for may be in this one (Statistics reads the list as stored)
+        try { await UpdateManager.pruneIncompatibleUpdates(); } catch (error) {
+            Logger.warn('BACKGROUND', '[init] Could not clean the waiting-for-extension list:', error);
+        }
         // Check for detector updates after installation/update
         UpdateManager.scheduleCheck();
     }

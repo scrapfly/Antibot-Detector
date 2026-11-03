@@ -48,10 +48,13 @@ test('apply() sets the tab title and survives a closed tab or a browser without 
   assert.deepStrictEqual(calls.at(-1), { tabId: 7, title: ToolbarTitle.DEFAULT });
 });
 
-test('the default is the manifest title, and the keys exist in English', () => {
+test('the default is the extension name, in the manifest as in the worker, and the keys exist in English', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8'));
-  assert.strictEqual(ToolbarTitle.DEFAULT, manifest.action.default_title);
+  // The manifest's title is the translated name (the browser picks the language); the worker's reset says the same in the language
+  // of the interface, with the English name as the last resort
+  assert.strictEqual(manifest.action.default_title, '__MSG_extensionName__');
   const en = JSON.parse(fs.readFileSync(path.join(root, '_locales/en/messages.json'), 'utf8'));
+  assert.strictEqual(ToolbarTitle.DEFAULT, en.extensionName.message);
   for (const key of ['toolbarTitleOff', 'toolbarTitleSkipped', 'toolbarTitleClean', 'toolbarTitleMoreFmt']) assert.ok(en[key], key);
 });
 
@@ -89,4 +92,23 @@ test('an apply that waited for the texts and was overtaken by a newer scan sets 
   } finally {
     globalThis.I18n = saved;
   }
+});
+
+test('after a reset the hover text is the extension name in the interface language, not English in every language', async () => {
+  const saved = globalThis.I18n;
+  const titles = [];
+  const chrome = { action: { async setTitle(opts) { titles.push(opts.title); } } };
+  try {
+    globalThis.I18n = { get: (key) => (key === 'extensionName' ? 'Scrapfly: Anti-Bot-Detektor' : null) };
+    await ToolbarTitle.reset(chrome, 5);
+    globalThis.I18n = { get: () => null }; // the name is not loaded yet
+    await ToolbarTitle.reset(chrome, 5);
+    globalThis.I18n = { get: () => '   ' };
+    await ToolbarTitle.reset(chrome, 5);
+    delete globalThis.I18n; // no translator in this context at all
+    await ToolbarTitle.reset(chrome, 5);
+  } finally {
+    globalThis.I18n = saved;
+  }
+  assert.deepStrictEqual(titles, ['Scrapfly: Anti-Bot-Detektor', ToolbarTitle.DEFAULT, ToolbarTitle.DEFAULT, ToolbarTitle.DEFAULT]);
 });

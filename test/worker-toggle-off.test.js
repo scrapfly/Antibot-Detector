@@ -21,7 +21,9 @@ function harness() {
     DetectionSessionStore: { cancel: (tabId, reason) => { order.push(`cancel:${tabId}:${reason}`); return true; } },
     stopBadgeSpinner: (tabId) => spinners.push(tabId),
     DetectionEngineManager: {}, CategoryManager: {}, categoryManager: {}, detectorManager: {},
-    Settings: { handleEnableToggle: async (enabled) => { order.push(`toggle:${enabled}`); } }
+    Settings: { handleEnableToggle: async (enabled) => { order.push(`toggle:${enabled}`); } },
+    // The held webhook deliveries' alarm: re-armed when the extension is switched back on
+    SettingsRuntime: { _scheduleWebhookRetries: async () => { order.push('webhook-retries'); } }
   };
   vm.createContext(context);
   vm.runInContext(read('background/handlers/messages-settings.js'), context, { filename: 'messages-settings.js' });
@@ -45,10 +47,18 @@ test('switching off cancels every scan and its spinner, before the OFF badges ar
   assert.deepEqual(h.spinners.sort(), [3, 4, 9]);
 });
 
-test('switching on cancels nothing', async () => {
+test('switching on cancels nothing, and re-arms the alarm of the held webhook deliveries', async () => {
   const h = harness();
   h.context.detectionStates.set(3, {});
   await h.send(true);
-  assert.deepEqual(h.order, ['toggle:true']);
+  // The alarm that retries a held delivery is one-shot: it went off while the extension was off (and sent nothing), so without
+  // this a delivery held for an hour waits out the hour even though the extension is on again after ten minutes
+  assert.deepEqual(h.order, ['toggle:true', 'webhook-retries']);
   assert.deepEqual(h.spinners, []);
+});
+
+test('switching off does not arm the retry alarm', async () => {
+  const h = harness();
+  await h.send(false);
+  assert.ok(!h.order.includes('webhook-retries'));
 });
