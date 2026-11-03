@@ -125,13 +125,23 @@
     try { const u = new URL(text); return `${u.origin}${u.pathname}`; } catch (_) { return text.split('#')[0].split('?')[0]; }
   }
 
+  /**
+   * The address cell, as an autolink: an underscore or a tilde in a path needs no backslash, and an escaped one ends the link where
+   * the backslash is (or shows it, in a chat that does not render Markdown). Anything that is not a plain http(s) address is
+   * escaped like any other text.
+   */
+  function mdAddress(url) {
+    const address = addressOf(url);
+    return /^https?:\/\/[^\s<>]+$/i.test(address) ? `<${address.replace(/\|/g, '\\|')}>` : mdCell(address);
+  }
+
   function buildMarkdown(items, includeTimestamps) {
     const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note'];
     const lines = ['# Scrapfly Antibot Detector: History', '', `| ${header.join(' | ')} |`, `| ${header.map(() => '---').join(' | ')} |`];
     for (const item of items.filter(i => i && typeof i === 'object')) {
       const found = detectionsOf(item).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
-      lines.push(`| ${[item.title || item.hostname || '', addressOf(item.url), ...(includeTimestamps ? [isoOf(item)] : []),
-        found.length ? found.join('; ') : '-', item.pinned === true ? 'yes' : '', item.note || ''].map(mdCell).join(' | ')} |`);
+      lines.push(`| ${[mdCell(item.title || item.hostname || ''), mdAddress(item.url), ...(includeTimestamps ? [mdCell(isoOf(item))] : []),
+        mdCell(found.length ? found.join('; ') : '-'), mdCell(item.pinned === true ? 'yes' : ''), mdCell(item.note || '')].join(' | ')} |`);
     }
     return `${lines.join('\n')}\n`;
   }

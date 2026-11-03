@@ -340,10 +340,12 @@ test('the Markdown export is a heading, the counts and one row per page: names o
     '# Scrapfly Antibot Detector: Bulk scan', '',
     '4 pages, 2 scanned, 1 failed, 1 waiting; 1 with protections', '',
     '| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |',
-    '| https://a.example/p | done | Medium | Cloudflare (antibot, 95%); re\\_CAPTCHA \\| v3 (captcha, 80%) |',
-    '| https://b.example/ | failed: timeout |  | - |',
-    '| https://c.example/ | done |  | - |',
-    '| https://d.example/ | waiting |  | - |', '']);
+    '| <https://a.example/p> | done | Medium | Cloudflare (antibot, 95%); re\\_CAPTCHA \\| v3 (captcha, 80%) |',
+    '| <https://b.example/> | failed: timeout |  | - |',
+    '| <https://c.example/> | done |  | - |',
+    '| <https://d.example/> | waiting |  | - |', '']);
+  assert.ok(BulkScan.build(BulkScan.createRun({ items: [{ url: 'https://a.example/x_y/~z', status: 'waiting' }] }, { now: 1 }), { format: 'md' }).text
+    .includes('| <https://a.example/x_y/~z> | waiting |'), 'an underscore in a path has no backslash: the address is a link');
   assert.ok(!built.text.includes('SECRET'), 'the query, where tokens live, is left out');
   assert.equal(BulkScan.fileName('md', '2026-11-01'), 'scrapfly-bulk-scan-2026-11-01.md');
   assert.ok(BulkScan.FORMATS.includes('md'));

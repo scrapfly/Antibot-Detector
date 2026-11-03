@@ -452,6 +452,12 @@
     try { const u = new URL(text); return `${u.origin}${u.pathname}`; } catch (_) { return text.split('#')[0].split('?')[0]; }
   }
 
+  /** The address cell, as an autolink (see HistoryExport): no backslash in a path with an underscore; other text is escaped. */
+  function mdAddress(url) {
+    const address = addressOf(url);
+    return /^https?:\/\/[^\s<>]+$/i.test(address) ? `<${address.replace(/\|/g, '\\|')}>` : mdCell(address);
+  }
+
   /** A heading, a line of counts and one row per page, for a ticket or a chat. */
   function buildMarkdown(run) {
     const c = counts(run);
@@ -463,7 +469,7 @@
       const found = (Array.isArray(item.detections) ? item.detections : [])
         .map(d => `${d.name} (${d.category}${Number.isFinite(d.confidence) ? `, ${d.confidence}%` : ''})`);
       const status = item.reason ? `${item.status}: ${item.reason}` : item.status;
-      lines.push(`| ${[addressOf(item.url), status, item.difficulty || '', found.length ? found.join('; ') : '-'].map(mdCell).join(' | ')} |`);
+      lines.push(`| ${[mdAddress(item.url), mdCell(status), mdCell(item.difficulty || ''), mdCell(found.length ? found.join('; ') : '-')].join(' | ')} |`);
     }
     return `${lines.join('\n')}\n`;
   }

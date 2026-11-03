@@ -150,7 +150,7 @@ test('Markdown export: a table with one escaped row per page, dated when timesta
   assert.strictEqual(out.type, 'text/markdown');
   assert.strictEqual(out.extension, 'md');
   assert.ok(out.text.includes('| Page | Address | Date | Protections | Pinned | Note |'));
-  assert.ok(out.text.includes('| A \\| B | https://a.example/x | 2027-01-15T08:00:00.000Z | Cloudflare (Anti-Bot, 95%) | yes | line1 line2 |'));
+  assert.ok(out.text.includes('| A \\| B | <https://a.example/x> | 2027-01-15T08:00:00.000Z | Cloudflare (Anti-Bot, 95%) | yes | line1 line2 |'));
   assert.ok(!HistoryExportMd.build(items, { format: 'md', includeTimestamps: false }).text.includes('Date'));
   assert.strictEqual(HistoryExportMd.fileName('md', 0), 'scrapfly-history-1970-01-01.md');
 });
@@ -161,6 +161,17 @@ test('Markdown export: a page title cannot become an image, a link, HTML or a ne
   const row = text.split('\n')[4];
   assert.ok(row.includes('!\\[x\\](https://t.example/p.gif) \\<img src=x\\> \\[l\\](u) \\*b\\* \\`c\\`'), row);
   assert.strictEqual((row.match(/(?<!\\)\|/g) || []).length, 7, 'six cells, no extra column');
+});
+
+test('Markdown export: an address is written as a link, so an underscore or a tilde in the path has no backslash in it', () => {
+  const row = (url) => E.build([{ url, title: 't', detections: [] }], { format: 'md', includeTimestamps: false }).text.split('\n')[4];
+  assert.strictEqual(row('https://shop.example/a_b/~c?x=1#y'), '| t | <https://shop.example/a_b/~c> | - |  |  |',
+    'escaped, an underscore ends a link where the backslash is, or shows the backslash in a chat that does not render Markdown');
+  assert.ok(row('https://shop.example/a|b').includes('<https://shop.example/a\\|b>'), 'a pipe in the path cannot end the cell');
+  // Anything that is not a plain http(s) address stays text, escaped like the rest
+  assert.ok(row('not a url_ | x').includes('| not a url\\_ \\| x |'), row('not a url_ | x'));
+  assert.ok(!row('javascript:alert(1)').includes('<javascript'), 'only http(s) addresses become links');
+  assert.strictEqual(row('https://a.example/<b>'), '| t | <https://a.example/%3Cb%3E> | - |  |  |', 'the address parser encodes angle brackets: none can end the link');
 });
 
 test('the Markdown export gives each address without its query or fragment, like every other copy for tickets', () => {
