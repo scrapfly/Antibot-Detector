@@ -7,6 +7,26 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.1] - 2026-11-03
 
+### Changed
+
+- History and Bulk scan Markdown: addresses are links, so a path with an underscore or a tilde no longer shows a backslash.
+- The toolbar icon's hover text is the extension's name in your language, not English.
+- Keyboard and screen readers: History and Rules "..." menus open on their first item and move with the arrow keys; Escape returns to the button.
+- Keyboard and screen readers: every switch, colour picker and dropdown in Settings and Rules has a name, and copy, save and error messages are announced.
+
+### Fixed
+
+- Webhook: a delivery held while the extension was switched off is sent again once it is switched back on, instead of waiting out its hour.
+- Settings → Data → Reset now works when the stored settings cannot be read; the button refused to run in 3.1.0.
+- Reset keeps the paused sites of an install that still has the oldest settings layout.
+- History: the dropdowns of the Export and Compare dialogs keep long options clear of the arrow.
+- Statistics and the diagnostics report no longer list a rule as "waiting for a newer extension" after the extension updated to a version that supports it.
+- A settings file or backup with an unknown default tab no longer leaves the popup empty.
+- A failed History CSV export said it failed to import; the webhook help showed a stale example for `<DETECTION_NAMES>`.
+- Hebrew, Persian and Urdu browsers: Statistics and Bulk scan are no longer mirrored right to left around English text.
+- Arabic: dialog and menu text lines up with the reading direction; Arabic and Hindi letters are no longer spaced apart.
+- Keyboard focus shows on the Rules switches, method boxes and confidence slider, and moves on in Bulk scan when Pause, Resume or Stop goes away.
+
 ## [3.1.0] - 2026-11-01
 
 ### Added
