@@ -351,7 +351,7 @@
   border: 1px solid var(--rh-border);
   border-radius: 8px;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
   transition: border-color 0.12s ease, background-color 0.12s ease;
 }
 

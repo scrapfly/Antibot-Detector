@@ -222,7 +222,7 @@
   color: var(--g-e0e0e0);
   font-size: 12px;
   font-weight: 500;
-  text-align: left;
+  text-align: start;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -1572,6 +1572,16 @@
   min-height: 64px;
   resize: vertical;
   line-height: 1.45;
+}
+
+/* The rule above is more specific than select.ui-select (common.css): the dropdowns keep the room for their arrow */
+.history-dialog-form select.history-dialog-input {
+  padding-right: 30px;
+}
+
+[dir="rtl"] .history-dialog-form select.history-dialog-input {
+  padding-right: 10px;
+  padding-left: 30px;
 }
 
 .history-dialog-check {

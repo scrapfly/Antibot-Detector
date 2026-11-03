@@ -17,7 +17,7 @@
 :root { color-scheme: dark; }
 html { width: auto; min-height: 100%; height: auto; overflow: auto; scroll-padding-block-start: 68px; }
 /* I18n.applyDocumentLang sets dir="rtl"; the language tag covers the moment before it runs */
-:root:is(:lang(ar), :lang(he), :lang(fa), :lang(ur)) { direction: rtl; }
+:root:lang(ar) { direction: rtl; }
 
 /* --------------------------------------------------------------------------
    1. Tokens
@@ -209,7 +209,7 @@ body.stats-page :is(.stats-table-wrap, .stats-section-nav, .stats-chart, .stats-
 .stats-nav-wrap.can-scroll-start { --fade-start: var(--fade); }
 .stats-nav-wrap.can-scroll-end { --fade-end: var(--fade); }
 /* The fade follows reading direction: scroll-start is the right edge in Arabic */
-:root:is(:lang(ar), :lang(he), :lang(fa), :lang(ur), [dir="rtl"]) .stats-nav-wrap,
+:root:is(:lang(ar), [dir="rtl"]) .stats-nav-wrap,
 .stats-nav-wrap:dir(rtl) { --fade-dir: 270deg; }
 .stats-section-nav {
   display: flex; flex: 1 1 auto; align-items: stretch; gap: var(--sp-1);

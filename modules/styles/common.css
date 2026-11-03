@@ -503,6 +503,11 @@
   font-family: var(--font-sans);
 }
 
+/* Arabic and Devanagari join their letters: no letter-spacing (Statistics and Bulk scan do the same for their pages) */
+:root:is(:lang(ar), :lang(hi)) * {
+  letter-spacing: 0 !important;
+}
+
 /* ============================================
    GLOBAL RESET
    ============================================ */
@@ -1516,6 +1521,8 @@ option:checked .opt-icon {
 /* A dropdown that shows it is one (class "ui-select"): the arrow the other selects of the interface draw, since the native one is
    hidden above ("DROPDOWN LISTS"). The arrow's colour follows the theme: one image for each. */
 select.ui-select {
+  appearance: none;
+  -webkit-appearance: none;
   padding-right: 30px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23b3b3b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
