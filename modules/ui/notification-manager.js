@@ -44,6 +44,9 @@ class NotificationManager {
     this.container = document.createElement('div');
     this.container.id = 'notification-container';
     this.container.className = 'notification-container';
+    // A screen reader says what appears here: a copy, a save or an error is otherwise a box that fades after a few seconds
+    this.container.setAttribute('role', 'status');
+    this.container.setAttribute('aria-live', 'polite');
     document.body.appendChild(this.container);
 
     // Add styles if not already added
@@ -127,6 +130,8 @@ class NotificationManager {
     toast.id = toastId;
     toast.className = `notification-toast notification-${safeType} notification-${safePosition}${settings.micro ? ' notification-micro' : ''}`;
     toast.setAttribute('data-show', 'false');
+    // An error interrupts; the rest wait for the reader to finish
+    if (safeType === 'error') toast.setAttribute('role', 'alert');
 
     const content = document.createElement('div');
     content.className = 'notification-toast-content';

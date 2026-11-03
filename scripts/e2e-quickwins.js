@@ -426,6 +426,44 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('Rules "…" menu by keyboard: the focus goes into the menu, arrows move, Escape and Tab come back to the button', async () => {
+    const page = await openExtensionPage();
+    try {
+      await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+      await page.waitForSelector('#rulesSearch', { state: 'visible' });
+      await page.fill('#rulesSearch', 'QuickWin');
+      const card = `.detector-card[data-detector-id="${PROBE.id}"]`;
+      await page.waitForSelector(card, { state: 'attached', timeout: 15000 });
+      const trigger = `${card} .rules-menu-trigger`;
+      const active = () => page.evaluate(() => { const el = document.activeElement; return el ? { cls: el.className, text: (el.textContent || '').trim(), inMenu: !!el.closest('.rules-menu-list') } : null; });
+      await page.$eval(trigger, el => el.focus());
+      await page.keyboard.press('Enter');
+      await page.waitForSelector(`${card} .rules-menu.open`);
+      const first = await active();
+      assert.equal(first.inMenu, true, 'the focus went into the menu: ' + JSON.stringify(first));
+      assert.ok(/rules-menu-item/.test(first.cls), first.cls);
+      await page.keyboard.press('ArrowDown');
+      const second = await active();
+      assert.equal(second.inMenu, true);
+      assert.notEqual(second.text, first.text, 'ArrowDown moved to the next entry');
+      await page.keyboard.press('Home');
+      assert.equal((await active()).text, first.text, 'Home is the first entry');
+      await page.keyboard.press('End');
+      assert.notEqual((await active()).text, first.text, 'End is the last entry');
+      await page.keyboard.press('Escape');
+      await page.waitForSelector(`${card} .rules-menu.open`, { state: 'detached' });
+      assert.ok(/rules-menu-trigger/.test((await active()).cls), 'Escape put the focus back on the "…" button');
+      assert.equal(await page.$eval(trigger, el => el.getAttribute('aria-expanded')), 'false');
+      // Tab leaves the menu: it closes and the focus is not left on something that went away
+      await page.keyboard.press('Enter');
+      await page.waitForSelector(`${card} .rules-menu.open`);
+      await page.keyboard.press('Tab');
+      await page.waitForSelector(`${card} .rules-menu.open`, { state: 'detached' });
+      assert.equal((await active()).inMenu, false, 'the focus is outside the closed menu');
+    } finally { await page.close(); }
+  });
+
+  // ===============================================================================================
   await scenario('Duplicate rule: the editor opens on "<name> (copy)", Save adds it, the original stays', async () => {
     const page = await openExtensionPage();
     await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Every checkbox, radio button and dropdown the person can see, in the real extension (unpacked in Chromium): none of them is
- * the browser's own default look (a white square or round button on a dark card, a dropdown with no arrow).
+ * the browser's own default look (a white square or round button on a dark card, a dropdown with no arrow), and every form control
+ * has a name a screen reader can say (a switch that reads "checkbox, not checked" is a control nobody can use).
  *
  * It opens each tab, each Settings page (every card unfolded), History's Select mode and its dialogs (export, compare), the Settings
  * dialogs (reset, restore a backup), the Scrapfly dialog, the Statistics page and Bulk scan, and in each reads the computed style of
@@ -11,6 +12,7 @@
  *   Dropdown          it draws an arrow (a background image), or is a customizable select with a button of its own
  *   Shared look       the Select-mode checkbox, the restore dialog's radio and the History dialog's dropdown carry .ui-checkbox,
  *                     .ui-radio and .ui-select, and a ticked box is filled with the accent colour
+ *   Name              every visible control has one: aria-labelledby, aria-label, a label with text, a title or a placeholder
  *   Coverage          each area really held the controls it should (a broken way in must not scan nothing and pass)
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium (npm run e2e:setup).
@@ -33,13 +35,23 @@ const REPO = path.resolve(args.find(a => !a.startsWith('--')) || path.join(__dir
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 // What is on screen: one record per control, read in the page
-const SCAN = () => [...document.querySelectorAll('input[type="checkbox"],input[type="radio"],select')].map((el) => {
+const SCAN = () => [...document.querySelectorAll('input:not([type="hidden"]):not([type="file"]),select,textarea')].map((el) => {
+  const text = (node) => (node && node.textContent ? node.textContent : '').replace(/\s+/g, ' ').trim();
+  // The accessible name, in the order the browser looks: aria-labelledby, aria-label, a label, then title and placeholder
+  const name = (el.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean).map(id => text(document.getElementById(id))).join(' ').trim()
+    || (el.getAttribute('aria-label') || '').trim() || [...(el.labels || [])].map(text).join(' ').trim()
+    || (el.getAttribute('title') || el.getAttribute('placeholder') || '').trim();
   const s = getComputedStyle(el);
   const r = el.getBoundingClientRect();
   const visible = r.width > 2 && r.height > 2 && s.visibility !== 'hidden' && s.display !== 'none' && Number(s.opacity) > 0.05;
+  // A switch's input is invisible (zero size or no opacity) and its label draws it: it is on screen when what holds it is
+  const host = el.closest('label') || el.parentElement;
+  const hostBox = host ? host.getBoundingClientRect() : { width: 0, height: 0 };
+  const hostStyle = host ? getComputedStyle(host) : null;
+  const shown = visible || (!!host && s.display !== 'none' && hostBox.width > 2 && hostBox.height > 2 && hostStyle.visibility !== 'hidden' && hostStyle.display !== 'none');
   return {
-    kind: el.tagName === 'SELECT' ? 'select' : el.type, id: el.id || '', cls: typeof el.className === 'string' ? el.className : '',
-    appearance: s.appearance, width: Math.round(r.width), visible, arrow: s.backgroundImage !== 'none', ownButton: el.tagName === 'SELECT' && !!el.querySelector(':scope > button'),
+    kind: el.tagName === 'SELECT' ? 'select' : el.tagName === 'TEXTAREA' ? 'textarea' : el.type, id: el.id || '', name, cls: typeof el.className === 'string' ? el.className : '',
+    appearance: s.appearance, width: Math.round(r.width), visible, shown, arrow: s.backgroundImage !== 'none', ownButton: el.tagName === 'SELECT' && !!el.querySelector(':scope > button'),
     multiple: el.tagName === 'SELECT' && el.multiple, checked: !!el.checked, background: s.backgroundColor
   };
 });
@@ -73,7 +85,12 @@ const SCAN = () => [...document.querySelectorAll('input[type="checkbox"],input[t
 
     // area -> the visible controls found there
     const areas = new Map();
-    const scan = async (area, p = page) => { areas.set(area, (await p.evaluate(SCAN)).filter(control => control.visible)); };
+    const shownAreas = new Map(); // the same, with the invisible inputs of switches whose label is on screen (for the names)
+    const scan = async (area, p = page) => {
+      const found = await p.evaluate(SCAN);
+      areas.set(area, found.filter(control => control.visible));
+      shownAreas.set(area, found.filter(control => control.shown));
+    };
     const closeDialogs = async () => { await page.keyboard.press('Escape'); await sleep(300); await page.keyboard.press('Escape'); await sleep(300); };
 
     for (const tab of ['detection', 'history', 'rules', 'advanced']) {
@@ -155,6 +172,12 @@ const SCAN = () => [...document.querySelectorAll('input[type="checkbox"],input[t
       assert.ok(boxes.some(control => control.checked && control.background === accent), `no ticked box in ${accent}: ${JSON.stringify(boxes.map(b => [b.checked, b.background]))}`);
       assert.ok(boxes.some(control => !control.checked && control.background !== accent), 'an empty box must not look ticked');
       assert.ok(boxes.every(control => control.width === 18), `${boxes.map(b => b.width)}`);
+    });
+    check('every control on screen has a name a screen reader can say', () => {
+      const everything = [...shownAreas.entries()].flatMap(([area, list]) => list.map(control => ({ area, ...control })));
+      assert.deepEqual(everything.filter(control => !control.name).map(describe), []);
+      assert.ok(everything.length >= 120, `controls seen: ${everything.length}`);
+      assert.ok(everything.filter(control => control.kind === 'checkbox' && !control.visible).length >= 20, 'the switches (invisible inputs) were seen too');
     });
     check('each area held the controls it should (a scan of nothing would pass the checks above)', () => {
       assert.ok(pages.length >= 4, `Settings pages: ${pages}`);

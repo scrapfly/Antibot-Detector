@@ -306,15 +306,15 @@
 
             <div class="rgb-controls">
               <div class="rgb-input-group">
-                <label>R</label>
+                <label for="rInput">R</label>
                 <input type="number" id="rInput" min="0" max="255" class="rgb-input">
               </div>
               <div class="rgb-input-group">
-                <label>G</label>
+                <label for="gInput">G</label>
                 <input type="number" id="gInput" min="0" max="255" class="rgb-input">
               </div>
               <div class="rgb-input-group">
-                <label>B</label>
+                <label for="bInput">B</label>
                 <input type="number" id="bInput" min="0" max="255" class="rgb-input">
               </div>
             </div>
@@ -365,12 +365,12 @@
           </div>
           <div class="modal-card-body">
             <div class="confidence-display">
-              <span class="confidence-label" data-i18n="ruleConfidencePrefix">Detection confidence:</span>
+              <span class="confidence-label" id="confidenceSliderLabel" data-i18n="ruleConfidencePrefix">Detection confidence:</span>
               <span id="confidenceValue" class="confidence-value">100</span>
               <span class="confidence-percent">%</span>
             </div>
             <div class="confidence-slider-container">
-              <input type="range" id="confidenceSlider" class="confidence-slider" min="0" max="100" value="100">
+              <input type="range" id="confidenceSlider" class="confidence-slider" min="0" max="100" value="100" aria-labelledby="confidenceSliderLabel">
               <div class="confidence-marks">
                 <span>0</span>
                 <span>25</span>
@@ -396,11 +396,11 @@
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesOnlyCheckScripts">Only check scripts</span>
+                  <span id="checkScriptsLabel" class="setting-label" data-i18n="rulesOnlyCheckScripts">Only check scripts</span>
                   <p class="option-hint" data-i18n="rulesOnlyCheckScriptsHint">Restrict search to JavaScript code and script URLs only</p>
                 </div>
                 <label class="toggle-switch" for="checkScripts">
-                  <input type="checkbox" id="checkScripts" class="toggle-input">
+                  <input type="checkbox" id="checkScripts" class="toggle-input" aria-labelledby="checkScriptsLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
@@ -425,7 +425,7 @@
                   <span class="setting-label" id="nameScopeLabel" data-i18n="rulesNameScopeLabel">Name Scope</span>
                   <p class="option-hint" data-i18n="rulesNameScopeHint">Where to check for name/field matches</p>
                 </div>
-                <select id="nameScope" class="scope-select">
+                <select id="nameScope" class="scope-select" aria-labelledby="nameScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="request" data-i18n="rulesScopeRequest"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="opt-label">Request</span></option>
                   <option value="response" data-i18n="rulesScopeResponse"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7L7 17M16 17H7V8"/></svg><span class="opt-label">Response</span></option>
@@ -434,10 +434,10 @@
               </div>
               <div class="setting-option" id="valueScopeRow">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesValueScopeLabel">Value Scope</span>
+                  <span id="valueScopeLabel" class="setting-label" data-i18n="rulesValueScopeLabel">Value Scope</span>
                   <p class="option-hint" data-i18n="rulesValueScopeHint">Where to check for value matches</p>
                 </div>
-                <select id="valueScope" class="scope-select">
+                <select id="valueScope" class="scope-select" aria-labelledby="valueScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="request" data-i18n="rulesScopeRequest"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="opt-label">Request</span></option>
                   <option value="response" data-i18n="rulesScopeResponse"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7L7 17M16 17H7V8"/></svg><span class="opt-label">Response</span></option>
@@ -462,10 +462,10 @@
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesUrlScopeLabel">URL Scope</span>
+                  <span id="textScopeLabel" class="setting-label" data-i18n="rulesUrlScopeLabel">URL Scope</span>
                   <p class="option-hint" data-i18n="rulesUiUrlScopeHint">Page = current URL | Scripts = page + scripts | All = all requests</p>
                 </div>
-                <select id="textScope" class="scope-select">
+                <select id="textScope" class="scope-select" aria-labelledby="textScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="page_only" data-i18n="rulesUrlScopePageOnly"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span class="opt-label">Page</span></option>
                   <option value="page_and_scripts" data-i18n="rulesUrlScopeScripts"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg><span class="opt-label">Scripts</span></option>
@@ -509,11 +509,11 @@
             <!-- URL Regex Toggle -->
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label" data-i18n="rulesUrlRegex">URL Regular Expression (Regex)</span>
+                <span id="payloadUrlRegexLabel" class="setting-label" data-i18n="rulesUrlRegex">URL Regular Expression (Regex)</span>
                 <p class="option-hint" data-i18n="ptHintRegex">A pattern such as ^bm_ or \d+, without / around it</p>
               </div>
               <label class="toggle-switch" for="payloadUrlRegex">
-                <input type="checkbox" id="payloadUrlRegex" class="toggle-input">
+                <input type="checkbox" id="payloadUrlRegex" class="toggle-input" aria-labelledby="payloadUrlRegexLabel">
                 <span class="toggle-slider"></span>
               </label>
             </div>
@@ -521,11 +521,11 @@
             <!-- URL Case Sensitive Toggle -->
             <div class="setting-option">
               <div class="option-content">
-                <span class="setting-label" data-i18n="rulesUrlCaseSensitive">URL Case Sensitive</span>
+                <span id="payloadUrlCaseSensitiveLabel" class="setting-label" data-i18n="rulesUrlCaseSensitive">URL Case Sensitive</span>
                 <p class="option-hint" data-i18n="ptHintCase">Akamai no longer matches akamai</p>
               </div>
               <label class="toggle-switch" for="payloadUrlCaseSensitive">
-                <input type="checkbox" id="payloadUrlCaseSensitive" class="toggle-input">
+                <input type="checkbox" id="payloadUrlCaseSensitive" class="toggle-input" aria-labelledby="payloadUrlCaseSensitiveLabel">
                 <span class="toggle-slider"></span>
               </label>
             </div>
@@ -650,31 +650,31 @@
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
+                  <span id="nameRegexLabel" class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
                   <p class="option-hint" data-i18n="ptHintRegex">A pattern such as ^bm_ or \d+, without / around it</p>
                 </div>
                 <label class="toggle-switch" for="nameRegex">
-                  <input type="checkbox" id="nameRegex" class="toggle-input">
+                  <input type="checkbox" id="nameRegex" class="toggle-input" aria-labelledby="nameRegexLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
+                  <span id="nameWholeWordLabel" class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
                   <p class="option-hint" data-i18n="ptHintWholeWord">Skips matches inside a longer word: _abck, not test_abck</p>
                 </div>
                 <label class="toggle-switch" for="nameWholeWord">
-                  <input type="checkbox" id="nameWholeWord" class="toggle-input">
+                  <input type="checkbox" id="nameWholeWord" class="toggle-input" aria-labelledby="nameWholeWordLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
+                  <span id="nameCaseSensitiveLabel" class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
                   <p class="option-hint" data-i18n="ptHintCase">Akamai no longer matches akamai</p>
                 </div>
                 <label class="toggle-switch" for="nameCaseSensitive">
-                  <input type="checkbox" id="nameCaseSensitive" class="toggle-input">
+                  <input type="checkbox" id="nameCaseSensitive" class="toggle-input" aria-labelledby="nameCaseSensitiveLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
@@ -701,31 +701,31 @@
             <div class="settings-options">
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
+                  <span id="valueRegexLabel" class="setting-label" data-i18n="rulesPatternRegex">Regular Expression (Regex)</span>
                   <p class="option-hint" data-i18n="ptHintRegex">A pattern such as ^bm_ or \d+, without / around it</p>
                 </div>
                 <label class="toggle-switch" for="valueRegex">
-                  <input type="checkbox" id="valueRegex" class="toggle-input">
+                  <input type="checkbox" id="valueRegex" class="toggle-input" aria-labelledby="valueRegexLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
+                  <span id="valueWholeWordLabel" class="setting-label" data-i18n="rulesPatternWholeWord">Whole Word</span>
                   <p class="option-hint" data-i18n="ptHintWholeWord">Skips matches inside a longer word: _abck, not test_abck</p>
                 </div>
                 <label class="toggle-switch" for="valueWholeWord">
-                  <input type="checkbox" id="valueWholeWord" class="toggle-input">
+                  <input type="checkbox" id="valueWholeWord" class="toggle-input" aria-labelledby="valueWholeWordLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>
               <div class="setting-option">
                 <div class="option-content">
-                  <span class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
+                  <span id="valueCaseSensitiveLabel" class="setting-label" data-i18n="rulesPatternCaseSensitive">Case Sensitive</span>
                   <p class="option-hint" data-i18n="ptHintCase">Akamai no longer matches akamai</p>
                 </div>
                 <label class="toggle-switch" for="valueCaseSensitive">
-                  <input type="checkbox" id="valueCaseSensitive" class="toggle-input">
+                  <input type="checkbox" id="valueCaseSensitive" class="toggle-input" aria-labelledby="valueCaseSensitiveLabel">
                   <span class="toggle-slider"></span>
                 </label>
               </div>

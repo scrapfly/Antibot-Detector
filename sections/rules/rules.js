@@ -173,9 +173,7 @@ class Rules {
       this.closeMenus();
     }, true);
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') this.closeMenus();
-    });
+    document.addEventListener('keydown', (e) => this.handleMenuKey(e));
 
     // A fixed-position menu would drift away from its trigger on scroll
     const rulesList = document.querySelector('#rulesList');
@@ -203,17 +201,55 @@ class Rules {
 
     list.style.top = `${openUp ? rect.top - gap - listHeight : rect.bottom + gap}px`;
     list.style.left = `${Math.max(8, rect.right - list.offsetWidth)}px`;
+    // The keyboard goes into the menu (arrow keys move, Escape comes back to the button), as in the Detection tab's Copy menu
+    const first = this.menuItems(list)[0];
+    if (first) first.focus({ preventScroll: true });
+  }
+
+  /** The entries of an open menu the keyboard can reach. */
+  menuItems(list) {
+    return Array.from(list.querySelectorAll('.rules-menu-item')).filter(el => !el.hidden && !el.disabled);
   }
 
   /**
-   * Close every open rules menu
+   * Arrow keys, Home and End inside the open menu; Tab leaves it (the focus goes back to its button first, so the next Tab stop
+   * is the one after the button); Escape closes it from anywhere.
+   * @param {KeyboardEvent} event
    */
-  closeMenus() {
+  handleMenuKey(event) {
+    const open = document.querySelector('#rulesTab .rules-menu.open');
+    if (!open) return;
+    if (event.key === 'Escape') { this.closeMenus(true); return; }
+    const list = open.querySelector('.rules-menu-list');
+    if (!list || !list.contains(document.activeElement)) return;
+    if (event.key === 'Tab') { this.closeMenus(true); return; }
+    const items = this.menuItems(list);
+    if (!items.length) return;
+    const at = items.indexOf(document.activeElement);
+    if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      items[event.key === 'Home' ? 0 : items.length - 1].focus();
+    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      items[(at + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+    }
+  }
+
+  /**
+   * Close every open rules menu. The focus returns to the button of the menu it was in (or of the one that was open, when asked),
+   * so it is not left on an element that just disappeared.
+   * @param {boolean} [returnFocus] - Move the focus to the button even if it was elsewhere
+   */
+  closeMenus(returnFocus = false) {
+    let focusTarget = null;
     document.querySelectorAll('#rulesTab .rules-menu.open').forEach(menu => {
-      menu.classList.remove('open');
       const trigger = menu.querySelector('.rules-menu-trigger');
+      if (returnFocus === true || menu.contains(document.activeElement)) focusTarget = trigger;
+      menu.classList.remove('open');
       if (trigger) trigger.setAttribute('aria-expanded', 'false');
     });
+    // preventScroll: a list that scrolled (which closes the menu) is not scrolled back to the button
+    if (focusTarget && typeof focusTarget.focus === 'function') focusTarget.focus({ preventScroll: true });
   }
 
   /**

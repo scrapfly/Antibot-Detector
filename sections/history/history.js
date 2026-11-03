@@ -2210,9 +2210,7 @@ class History {
     document.addEventListener('click', (e) => {
       if (this._openMenu && !this._openMenu.menu.contains(e.target)) this.closeMenus();
     });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') this.closeMenus();
-    });
+    document.addEventListener('keydown', (e) => this.handleMenuKey(e));
     const historyList = document.querySelector('#historyList');
     if (historyList) {
       historyList.addEventListener('scroll', () => this.closeMenus(), { passive: true });
@@ -2302,18 +2300,54 @@ class History {
     anchor.setAttribute('aria-expanded', 'true');
     anchor.classList.add('active');
     this._openMenu = { menu, anchor };
+    // The keyboard goes into the menu (arrow keys move, Escape comes back to the button), as in the Detection tab's Copy menu
+    const first = this.menuItems(menu)[0];
+    if (first) first.focus();
+  }
+
+  /** The entries of an open "…" menu the keyboard can reach. */
+  menuItems(menu) {
+    return Array.from(menu.querySelectorAll('.history-menu-item')).filter(el => !el.hidden && !el.disabled);
   }
 
   /**
-   * Close whichever "…" menu is open
+   * Arrow keys, Home and End inside the open "…" menu; Tab leaves it (the focus goes back to its button first, so the next
+   * Tab stop is the one after the button).
+   * @param {KeyboardEvent} event
    */
-  closeMenus() {
+  handleMenuKey(event) {
+    if (!this._openMenu) return;
+    const { menu } = this._openMenu;
+    if (event.key === 'Escape') { this.closeMenus(true); return; }
+    if (!menu.contains(document.activeElement)) return;
+    if (event.key === 'Tab') { this.closeMenus(true); return; }
+    const items = this.menuItems(menu);
+    if (!items.length) return;
+    const at = items.indexOf(document.activeElement);
+    if (event.key === 'Home' || event.key === 'End') {
+      event.preventDefault();
+      items[event.key === 'Home' ? 0 : items.length - 1].focus();
+    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      items[(at + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
+    }
+  }
+
+  /**
+   * Close whichever "…" menu is open. The focus returns to its button when it was inside the menu (or when asked), so it is not
+   * left on an element that just disappeared.
+   * @param {boolean} [returnFocus] - Move the focus to the button even if it was elsewhere
+   */
+  closeMenus(returnFocus = false) {
     if (!this._openMenu) return;
     const { menu, anchor } = this._openMenu;
+    const hadFocus = menu.contains(document.activeElement);
     menu.hidden = true;
     anchor.setAttribute('aria-expanded', 'false');
     anchor.classList.remove('active');
     this._openMenu = null;
+    // preventScroll: a list that scrolled (which closes the menu) is not scrolled back to the button
+    if ((returnFocus === true || hadFocus) && typeof anchor.focus === 'function') anchor.focus({ preventScroll: true });
   }
 
 
