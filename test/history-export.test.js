@@ -213,7 +213,9 @@ test('a date no Date can hold does not stop an export, and a CSV file starts wit
   const csv = E.build([broken], { format: 'csv', includeTimestamps: true });
   assert.ok(!csv.text.startsWith('\uFEFF'), 'text is the table itself');
   assert.ok(csv.fileText.startsWith('\uFEFFurl,hostname,title,timestamp,'), 'the file starts with the mark, so a spreadsheet reads UTF-8');
-  assert.strictEqual(E.build([broken], { format: 'json' }).fileText, E.build([broken], { format: 'json' }).text, 'other formats are written as they are');
+  // The JSON names the moment it was made, to the millisecond: one build, so the two texts are compared of the same moment
+  const json = E.build([broken], { format: 'json' });
+  assert.strictEqual(json.fileText, json.text, 'other formats are written as they are');
 });
 
 test('the "site contains" filter finds a Unicode host by the letters, too', () => {
