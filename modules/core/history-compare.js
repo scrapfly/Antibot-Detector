@@ -66,7 +66,8 @@
     const key = pageKey(entry);
     if (!key || !Array.isArray(items)) return [];
     return items
-      .filter((item) => item && item !== entry && item.id !== (entry && entry.id) && pageKey(item) === key)
+      // A scan served from the cache may hold another page's result (the recorder never compares them): it is no scan of this page
+      .filter((item) => item && item !== entry && item.id !== (entry && entry.id) && item.fromCache !== true && pageKey(item) === key)
       .sort((a, b) => timeOf(b) - timeOf(a));
   }
 

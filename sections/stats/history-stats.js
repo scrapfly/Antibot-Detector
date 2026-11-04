@@ -770,7 +770,10 @@ const HistoryStats = {
       if (!hostname) continue;
       let path = typeof item.url === 'string' ? paths.get(item.url) : '';
       if (path === undefined) { path = HistoryStats.pageKey(item); paths.set(item.url, path); }
-      const groupKey = hostname + '\n' + path;
+      // A port is another site (localhost:3000 and localhost:8080 are two apps), as History itself counts them
+      let port = '';
+      if (typeof item.url === 'string') { try { port = new URL(item.url).port; } catch (_) { port = ''; } }
+      const groupKey = hostname + (port ? `:${port}` : '') + '\n' + path;
       let group = groups.get(groupKey);
       if (!group) { group = { hostname, path, visits: [] }; groups.set(groupKey, group); }
       const names = new Map(), seen = new Set();

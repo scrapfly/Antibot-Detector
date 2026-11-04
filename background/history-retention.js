@@ -85,10 +85,11 @@ const HistoryRetention = {
      */
     getTimestamp(item) {
         const ts = item && item.timestamp;
-        if (typeof ts === 'number' && Number.isFinite(ts)) return ts;
+        // No date (0, what an import writes for an unreadable one) is not a very old date: the entry is kept
+        if (typeof ts === 'number' && Number.isFinite(ts)) return ts > 0 ? ts : null;
         if (typeof ts === 'string' && ts.trim() !== '') {
             const numeric = Number(ts);
-            if (Number.isFinite(numeric)) return numeric;
+            if (Number.isFinite(numeric)) return numeric > 0 ? numeric : null;
             const parsed = Date.parse(ts);
             return Number.isFinite(parsed) ? parsed : null;
         }
