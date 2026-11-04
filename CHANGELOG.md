@@ -7,6 +7,33 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.2] - 2026-11-04
 
+### Changed
+
+- Keyboard and screen readers: Rules dialogs keep Tab inside the open dialog and give the focus back when it closes; Settings tabs and the Advanced Tools / History switch are tab lists you move along with the arrow keys.
+- Dimmed text is easier to read: lighter in the dark theme, a little darker in the light one.
+- Chrome 111 or newer is required (the scripts that watch the page need it).
+- Copy diagnostics also hides sites written with a path and IPv6 addresses.
+
+### Fixed
+
+- History import: a file with no history entries in it can no longer replace, and so empty, your history; the dialog counts the entries it can import.
+- Rules → Duplicate: the copy of a rule lost settings the editor does not show, such as a payload rule that reads the response.
+- A rule saved or installed after a page loaded now matches that page on a manual scan, without reloading it.
+- Detection details cut a matched address at the "?" for rules whose pattern starts with https://; the whole address shows again.
+- Clicking the Rules or Advanced tab twice while it loads no longer sets it up twice (the Rules buttons could stop responding).
+- Payload rules that share a description each match; text with a dotted capital I (Turkish) no longer shifts the matched text; a combination that stops holding after a late request scores back down.
+- Rules: a custom rule with a quote in its id can be switched on and off; category colours written as #abc show their tint.
+- Skipped sites: "bank.example." and list entries written with capitals, a port or a whole address are skipped like the plain host.
+- Bulk scan: a list of thousands of addresses on one line is read at once, and runs longer than two minutes keep the browser's background part awake.
+- A long toast with a spinner is no longer dropped when two other messages appear.
+
+### Security
+
+- Webhook and custom share addresses: "localhost." and "10.0.0.1." (with a final dot), and names such as .lan, .home.arpa and .corp, are refused as local.
+- A rule file can no longer make the popup load an icon from a web address; the icon is left out when the rule is imported.
+- The log collector, a tab's detection result and a manual scan answer extension pages only, never a page's own script.
+- A cookie name with "*" in a rule, or a regex repeated a fixed number of times around a repeat, can no longer make a hostile page freeze the extension; host-name patterns that are safe are accepted.
+
 ## [3.1.1] - 2026-11-03
 
 ### Changed
