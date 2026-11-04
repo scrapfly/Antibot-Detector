@@ -187,18 +187,18 @@ const SEED = [
     assert.ok(/ · 4 found$/.test(options[0]) && /· 2 found · \/cart\?ref=mail$/.test(options[1]), options.join(' / '));
     assert.equal(await page.$eval('.notification-confirm .history-compare select', el => el.selectedIndex), 0, 'the previous scan is picked first');
     let text = await dialog();
-    assert.ok(/ADDED \(1\).*DataDome · Anti-bot · 80%/.test(text), text);
-    assert.ok(/REMOVED \(1\).*Akamai · Anti-bot · 85%/.test(text), text);
-    assert.ok(/CHANGED \(1\).*Cloudflare · Anti-bot · 70% → 95% \(\+25\) · New evidence: Headers/.test(text), text);
-    assert.ok(/UNCHANGED \(2\)/.test(text) && /Turnstile/.test(text), text);
+    assert.ok(/Added \(1\).*DataDome · Anti-bot · 80%/.test(text), text);
+    assert.ok(/Removed \(1\).*Akamai · Anti-bot · 85%/.test(text), text);
+    assert.ok(/Changed \(1\).*Cloudflare · Anti-bot · 70% → 95% \(\+25\) · New evidence: Headers/.test(text), text);
+    assert.ok(/Unchanged \(2\)/.test(text) && /Turnstile/.test(text), text);
 
     if (shotsDir) { await sleep(700); fs.mkdirSync(shotsDir, { recursive: true }); await page.screenshot({ path: path.join(shotsDir, 'compare-dialog.png') }); }
     // The older scan: Cloudflare 70 → 95 and the new evidence, Akamai gone is not in it
     await page.selectOption('.notification-confirm .history-compare select', { index: 1 });
-    await until(async () => /ADDED \(2\)/.test(await dialog()), 5000, 'the second comparison');
+    await until(async () => /Added \(2\)/.test(await dialog()), 5000, 'the second comparison');
     text = await dialog();
     assert.ok(text.includes('DataDome · Anti-bot · 80%') && text.includes('Canvas Fingerprint · Fingerprint · 30%'), text);
-    assert.ok(/CHANGED \(1\).*Cloudflare/.test(text) && !/REMOVED/.test(text), text);
+    assert.ok(/Changed \(1\).*Cloudflare/.test(text) && !/Removed \(/.test(text), text);
 
     // Copy as Markdown
     await page.$eval('.notification-confirm .notification-btn-confirm', el => el.click());
