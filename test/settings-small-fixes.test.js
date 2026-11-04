@@ -141,3 +141,16 @@ test('the preset list is built from WebhookBody.PRESETS, with brand names as the
   view.setupWebhookPayloadUI();
   assert.equal(options.length, 4, 'populating the form again does not list them twice');
 });
+
+test('the toast limit drops the oldest toast that goes away by itself, not a spinner that stays until it is closed, nor the newest', () => {
+  const context = vm.createContext({ console, Date, Promise, Map, Set, setTimeout, clearTimeout, Logger: new Proxy({}, { get: () => () => {} }),
+    Utils: { getSettings: async () => ({}) }, chrome: { storage: { onChanged: { addListener() {} } } }, window: {}, document: { querySelector: () => null, addEventListener() {}, body: {} } });
+  context.self = context;
+  vm.runInContext(read('modules/ui/notification-manager.js') + '\n;globalThis.ToastLimit = NotificationManager;', context);
+  const drop = (...kinds) => context.ToastLimit.toastToDrop(kinds.map(kind => ({ timeoutId: kind === 'auto' ? 7 : null })));
+  assert.equal(drop('auto', 'auto', 'auto'), 0, 'the oldest');
+  assert.equal(drop('spinner', 'auto', 'auto'), 1, 'the spinner stays, the next oldest goes');
+  assert.equal(drop('spinner', 'spinner', 'auto'), 0, 'nothing else but the newest: the oldest goes');
+  assert.equal(drop('auto', 'spinner', 'auto'), 0);
+  assert.equal(drop('spinner', 'auto'), 0);
+});

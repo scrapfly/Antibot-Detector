@@ -267,7 +267,7 @@
   /* Text Colors */
   --text-primary: #ffffff;
   --text-secondary: #b3b3b3;
-  --text-muted: #666666;
+  --text-muted: #9a9a9a; /* 4.9:1 on --bg-secondary (was #666666, 2.4:1) */
 
   /* Accent & Status Colors */
   --accent: #3b82f6;
@@ -405,7 +405,7 @@
   --bg-tertiary: #e9ecef;
   --text-primary: #091e42;
   --text-secondary: #595d66;
-  --text-muted: #6c757d;
+  --text-muted: #656d76; /* 4.7:1 on --bg-secondary (was #6c757d, 4.45:1) */
   --accent: #1a73c7;
   --accent-hover: #155ea3;
   --accent-light: #1a73c7;
