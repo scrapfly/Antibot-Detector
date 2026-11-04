@@ -43,7 +43,7 @@ const server = http.createServer((req, res) => {
     loads[name] = (loads[name] || 0) + 1;
     const marked = url.searchParams.get('m') !== '0';
     res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store', 'set-cookie': `qw_session=SECRETCOOKIE${name}; Path=/` });
-    return res.end(`<!doctype html><html><head><title>Quick ${name}</title></head><body>${marked ? `<p>${MARKER}</p>` : ''}<p>probe page</p></body></html>`);
+    return res.end(`<!doctype html><html><head><title>Quick ${name}</title></head><body>${marked ? `<p>${MARKER}</p>` : ''}<p>probe page</p>${url.searchParams.get('dom') === '1' ? '<span class="qw-promo" data-qw="1">promo</span>' : ''}</body></html>`);
   }
   res.writeHead(404); res.end();
 });
@@ -484,6 +484,249 @@ async function scenario(name, fn) {
     assert.notEqual(rules.copies[0].id, PROBE.id);
     assert.deepEqual(Object.keys(rules.copies[0].detection).sort(), ['content', 'cookies']);
     assert.equal(rules.original.name, 'QuickWin Probe');
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Duplicate rule: the copy of a shipped rule keeps what the editor does not show (a payload rule that reads the response)', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await page.waitForSelector('#rulesSearch', { state: 'visible' });
+    await page.fill('#rulesSearch', 'Turnstile');
+    const card = '.detector-card[data-detector-id="detect-turnstile"]';
+    await page.waitForSelector(card, { state: 'attached', timeout: 15000 });
+    await page.$eval(`${card} .duplicate-detector-btn`, el => el.click());
+    await page.waitForSelector('#saveRuleEdit', { state: 'visible' });
+    await page.$eval('#saveRuleEdit', el => el.click());
+    const found = await until(() => page.evaluate(() => {
+      const all = window.popupInstance.detectorManager.detectors.captcha || {};
+      const copy = Object.values(all).find(d => /\(copy\)$/.test(d.name || '') && /turnstile/i.test(d.name));
+      return copy ? { payload: copy.detection.payload || [], original: all['detect-turnstile'].detection.payload || [] } : null;
+    }), 10000, 'the saved copy of Turnstile');
+    assert.ok(found.original.some(rule => rule.body === 'response'), 'the shipped rule reads a response body');
+    assert.deepEqual(found.payload.map(rule => [rule.id, rule.body]), found.original.map(rule => [rule.id, rule.body]), 'every payload rule keeps its body setting');
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('a DOM rule added after a page loaded matches that page on a manual scan, without reloading it', async () => {
+    const { page, url } = await scanned(`late-rule-${uniq()}`, '&dom=1');
+    const tabId = await tabIdOf(url);
+    const admin = await openExtensionPage();
+    await admin.evaluate(async (rule) => {
+      await window.popupInstance.detectorManager.addDetector('antibot', rule.id, rule);
+      await new Promise(r => chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => r()));
+    }, {
+      id: 'detect-qwdom', name: 'QuickWin DOM Probe', author: 'Probe', enabled: true, category: 'Anti-Bot', difficulty: 'Medium',
+      version: '1.0.0', lastUpdated: '2026-11-04', icon: 'custom.png', description: 'A rule saved after the page loaded',
+      detection: { dom: [{ id: 'qw-dom', selector: 'span.qw-promo[data-qw]', confidence: 90, standalone: true, description: 'promo span' }] }
+    });
+    try {
+      assert.ok(!/QuickWin DOM Probe/.test(await titleOf(tabId)), 'the page was scanned before the rule existed');
+      // What the popup's Refresh sends; the tab is not reloaded
+      await admin.evaluate((id) => new Promise(r => chrome.runtime.sendMessage({ type: 'REQUEST_DETECTION', tabId: id }, () => r())), tabId);
+      const title = await until(async () => { const t = await titleOf(tabId); return /QuickWin DOM Probe/.test(t) ? t : null; }, 20000, 'the new rule on the hover text');
+      assert.match(title, /QuickWin DOM Probe/);
+    } finally {
+      await admin.evaluate(async () => { await window.popupInstance.detectorManager.deleteDetector?.('antibot', 'detect-qwdom'); });
+      await admin.close();
+      await page.close();
+    }
+  });
+
+  // ===============================================================================================
+  await scenario('Settings tabs: a tab list, the open tab is selected and in the Tab order, arrows and Home/End move and open', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('#settingsBtn', el => el.click());
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
+    const state = () => page.evaluate(() => ({
+      list: document.querySelector('.settings-tabs').getAttribute('role'),
+      tabs: [...document.querySelectorAll('.settings-tab-btn')].map(b => [b.dataset.settingsTab, b.getAttribute('role'), b.getAttribute('aria-selected'), b.tabIndex]),
+      shown: [...document.querySelectorAll('.settings-tab-content')].filter(p => p.classList.contains('active')).map(p => p.id),
+      focused: document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.settingsTab : null
+    }));
+    let now = await state();
+    assert.equal(now.list, 'tablist');
+    assert.deepEqual(now.tabs, [['general', 'tab', 'true', 0], ['detection', 'tab', 'false', -1], ['history', 'tab', 'false', -1], ['data', 'tab', 'false', -1]]);
+    await page.focus('.settings-tab-btn[data-settings-tab="general"]');
+    await page.keyboard.press('ArrowRight');
+    now = await state();
+    assert.equal(now.focused, 'detection');
+    assert.deepEqual(now.tabs.map(t => t[2]), ['false', 'true', 'false', 'false']);
+    assert.deepEqual(now.shown, ['settingsPanel-detection']);
+    await page.keyboard.press('End');
+    assert.equal((await state()).focused, 'data');
+    await page.keyboard.press('ArrowRight');
+    now = await state();
+    assert.equal(now.focused, 'general', 'it wraps around');
+    assert.deepEqual(now.shown, ['settingsPanel-general']);
+    await page.keyboard.press('ArrowLeft');
+    assert.equal((await state()).focused, 'data');
+    await page.keyboard.press('Home');
+    now = await state();
+    assert.equal(now.focused, 'general');
+    assert.deepEqual(now.tabs.map(t => t[3]), [0, -1, -1, -1]);
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Rules dialogs keep keyboard focus: Tab wraps inside the editor and the icon picker above it, closing returns to the opener', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await page.waitForSelector('#rulesSearch', { state: 'visible' });
+    await page.fill('#rulesSearch', 'QuickWin');
+    const card = `.detector-card[data-detector-id="${PROBE.id}"]`;
+    await page.waitForSelector(card, { state: 'attached', timeout: 15000 });
+    await page.focus(`${card} .edit-btn`);
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('#editRuleModal .rule-modal-content', { state: 'visible' });
+    const where = (dialog) => page.evaluate((selector) => {
+      const root = document.querySelector(selector);
+      const items = [...root.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.hidden && el.getClientRects().length > 0);
+      return { inside: root.contains(document.activeElement), first: document.activeElement === items[0], last: document.activeElement === items[items.length - 1], count: items.length };
+    }, dialog);
+    // The focus starts inside the dialog
+    await until(async () => (await where('#editRuleModal .rule-modal-content')).inside, 5000, 'the focus inside the editor');
+    let now = await where('#editRuleModal .rule-modal-content');
+    assert.ok(now.count > 5, `the editor has controls (${now.count})`);
+    // Shift+Tab from the first control goes to the last one, and Tab from the last to the first
+    assert.ok(now.first, 'it starts on the first control');
+    await page.keyboard.press('Shift+Tab');
+    now = await where('#editRuleModal .rule-modal-content');
+    assert.ok(now.inside && now.last, 'Shift+Tab from the first lands on the last, inside the editor');
+    await page.keyboard.press('Tab');
+    now = await where('#editRuleModal .rule-modal-content');
+    assert.ok(now.inside && now.first, 'Tab from the last lands on the first');
+    for (let i = 0; i < 12; i++) await page.keyboard.press('Tab');
+    assert.ok((await where('#editRuleModal .rule-modal-content')).inside, 'twelve Tabs later it is still inside');
+
+    // A dialog above it takes the focus, and giving it up returns to the button that opened it
+    await page.focus('#openIconPickerBtn');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('.icon-picker-modal .rule-modal-content', { state: 'visible' });
+    await until(async () => (await where('.icon-picker-modal .rule-modal-content')).inside, 5000, 'the focus inside the icon picker');
+    for (let i = 0; i < 40; i++) await page.keyboard.press('Tab');
+    assert.ok((await where('.icon-picker-modal .rule-modal-content')).inside, 'forty Tabs later it is still inside the icon picker');
+    await page.keyboard.press('Escape');
+    await page.waitForSelector('.icon-picker-modal', { state: 'detached' });
+    await until(async () => page.evaluate(() => document.activeElement && document.activeElement.id === 'openIconPickerBtn'), 5000, 'the focus back on the icon button');
+    assert.ok((await where('#editRuleModal .rule-modal-content')).inside, 'back in the editor');
+
+    // Closing the editor returns the focus to the card's edit button
+    await page.$eval('#cancelRuleEdit', el => el.click());
+    await page.waitForSelector('#editRuleModal', { state: 'hidden' });
+    await until(async () => page.evaluate((id) => document.activeElement && document.activeElement.classList.contains('edit-btn') && document.activeElement.dataset.detectorId === id, PROBE.id), 5000, 'the focus back on the edit button');
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Detection details: a combination lists its signals as folded rows like the Detection methods; a click shows the value', async () => {
+    const page = await openExtensionPage();
+    // The Navigator fingerprint's "browser profile": language preferences together with the user agent or the platform
+    const shown = await page.evaluate(async () => {
+      const manager = window.popupInstance.detectorManager;
+      const def = Object.values(manager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      if (!def) return { error: 'no detect-navigator-fingerprint' };
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform')]);
+      const detection = { detector: { id: def.id, name: def.name, icon: def.icon, difficulty: 'Low', category: 'fingerprint' }, name: def.name, category: 'fingerprint',
+        confidence: scored.confidence, difficulty: 'Low', matches: scored.matches, combinations: scored.combinations };
+      await window.popupInstance.detection.displayResults([detection], { url: 'https://shop.example.test/', cacheMetadata: { scope: 'domain', expiry: Date.now() + 86400000, timestamp: Date.now() } });
+      return { combos: scored.combinations.map(c => c.id) };
+    });
+    assert.ok(!shown.error, shown.error);
+    assert.ok(shown.combos.includes('navigator-browser-profile'), JSON.stringify(shown));
+    await page.$eval('.detection-card', el => el.click());
+    await page.waitForSelector('#detectionModalCombinations .match-combo[data-combo-id="navigator-browser-profile"]', { state: 'visible' });
+    const card = '#detectionModalCombinations .match-combo[data-combo-id="navigator-browser-profile"]';
+    await page.$eval(`${card} .match-combo-toggle`, el => el.click());
+    await page.waitForSelector(`${card} .method-item-card`, { state: 'visible' });
+    const rows = () => page.$$eval(`${card} .method-item-card`, list => list.map(row => ({
+      folded: row.classList.contains('is-folded'), expanded: row.querySelector('.method-fold-head').getAttribute('aria-expanded'),
+      type: row.querySelector('.method-type-badge').textContent.trim(), score: (row.querySelector('.method-confidence') || {}).textContent.trim(),
+      value: row.querySelector('.method-value-btn').textContent.trim(), valueShown: getComputedStyle(row.querySelector('.method-value-btn')).display !== 'none',
+      note: (row.querySelector('.method-value-note') || {}).textContent || ''
+    })));
+    let list = await rows();
+    assert.equal(list.length, 3, 'the language preferences, the user agent and the platform');
+    assert.ok(list.every(row => row.folded && row.expanded === 'false' && !row.valueShown), 'every row starts folded');
+    assert.ok(list.every(row => row.type === 'JavaScript hooks' && /^\d+%$/.test(row.score)), JSON.stringify(list));
+    assert.deepEqual(list.map(row => row.value).sort(), ['Navigator.prototype.languages', 'Navigator.prototype.platform', 'Navigator.prototype.userAgent']);
+    assert.ok(list.some(row => row.note === 'Reads browser user agent string'), 'what a signal means stays under its value');
+    assert.equal(await page.$(`${card} .match-combo-lead, ${card} .match-combo-rows`), null, 'no checklist');
+    // A click on the row's head shows the value in the code box; a second click folds it again
+    await page.$eval(`${card} .method-item-card .method-fold-head`, el => el.click());
+    list = await rows();
+    assert.ok(!list[0].folded && list[0].expanded === 'true' && list[0].valueShown, 'the first row is open');
+    assert.ok(list.slice(1).every(row => row.folded), 'the others stay folded');
+    if (process.env.QW_SHOTS) { await sleep(700); await page.screenshot({ path: `${process.env.QW_SHOTS}/combination-rows.png` }); }
+    await page.$eval(`${card} .method-item-card .method-fold-head`, el => el.click());
+    assert.ok((await rows())[0].folded, 'folded again');
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('History details: a saved combination lists its signals as folded rows too', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="history"]', el => el.click());
+    await page.waitForSelector('#historyDetailModal', { state: 'attached', timeout: 15000 });
+    const opened = await page.evaluate(async () => {
+      const manager = window.popupInstance.detectorManager;
+      const def = Object.values(manager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform')]);
+      // What the worker stores after a scan: the slim entry
+      const entry = HistoryStore.slimEntry({ id: 'qw-combo', url: 'https://shop.example.test/', hostname: 'shop.example.test', title: 'Shop', timestamp: Date.now(), detections: [{
+        detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches }] });
+      window.popupInstance.history.showHistoryItemDetails(entry);
+      return scored.combinations.map(c => c.id);
+    });
+    assert.ok(opened.includes('navigator-browser-profile'), JSON.stringify(opened));
+    const card = '#historyDetailModal .match-combo[data-combo-id="navigator-browser-profile"]';
+    await page.waitForSelector('#historyDetailModal .history-modal-detection-header', { state: 'visible' });
+    await page.$eval('#historyDetailModal .history-modal-detection-header', el => el.click());
+    await page.waitForSelector(card, { state: 'visible' });
+    await page.$eval(`${card} .match-combo-toggle`, el => el.click());
+    await page.waitForSelector(`${card} .history-modal-method-item`, { state: 'visible' });
+    const rows = () => page.$$eval(`${card} .history-modal-method-item`, list => list.map(row => ({
+      folded: row.classList.contains('is-folded'), expanded: row.querySelector('.history-modal-method-head').getAttribute('aria-expanded'),
+      type: row.querySelector('.history-modal-method-badge').textContent.trim(), score: (row.querySelector('.history-modal-method-confidence') || {}).textContent.trim(),
+      value: row.querySelector('.history-modal-method-value').textContent.trim(), valueShown: getComputedStyle(row.querySelector('.history-modal-method-value')).display !== 'none'
+    })));
+    let list = await rows();
+    assert.equal(list.length, 3);
+    assert.ok(list.every(row => row.folded && row.expanded === 'false' && !row.valueShown && row.type === 'JavaScript hooks' && /^\d+%$/.test(row.score)), JSON.stringify(list));
+    await page.$eval(`${card} .history-modal-method-item .history-modal-method-head`, el => el.click());
+    list = await rows();
+    assert.ok(!list[0].folded && list[0].valueShown && /^Navigator\.prototype\./.test(list[0].value), JSON.stringify(list[0]));
+    assert.ok(list.slice(1).every(row => row.folded), 'the others stay folded');
+    if (process.env.QW_SHOTS) await page.screenshot({ path: `${process.env.QW_SHOTS}/combination-rows-history.png` });
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('History card: the combinations that fired are counted right after the fingerprint total', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="history"]', el => el.click());
+    await page.waitForSelector('#historyList', { state: 'attached', timeout: 15000 });
+    const made = await page.evaluate(async () => {
+      const def = Object.values(window.popupInstance.detectorManager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform'), hook('navigator-cpu'), hook('navigator-memory')]);
+      const entry = HistoryStore.slimEntry({ id: 'qw-card', url: 'https://shop.example.test/', hostname: 'shop.example.test', title: 'Shop', timestamp: Date.now(), detections: [
+        { detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches },
+        { detector: { id: 'detect-cloudflare', name: 'Cloudflare' }, name: 'Cloudflare', category: 'antibot', confidence: 100, matches: [] }] });
+      window.popupInstance.history.renderHistoryPage([entry]);
+      return scored.combinations.length;
+    });
+    assert.ok(made >= 2, `combinations that fired: ${made}`);
+    await page.waitForSelector('#historyList .history-item .history-summary', { state: 'visible' });
+    const chips = await page.$$eval('#historyList .history-item .history-cat-count', list => list.map(chip => ({ tip: chip.getAttribute('data-tip').split('\n')[0], value: chip.querySelector('.history-cat-value').textContent, zero: chip.classList.contains('is-zero'), svg: !!chip.querySelector('svg') })));
+    assert.deepEqual(chips.map(chip => chip.tip.replace(/:.*/, '')), ['Anti-bot', 'Captcha', 'Fingerprint', 'Matched combinations'], JSON.stringify(chips));
+    assert.equal(chips[3].value, String(made));
+    assert.ok(!chips[3].zero && chips.every(chip => chip.svg));
+    if (process.env.QW_SHOTS) await page.screenshot({ path: `${process.env.QW_SHOTS}/history-card-combinations.png`, clip: { x: 0, y: 100, width: 420, height: 160 } });
     await page.close();
   });
 

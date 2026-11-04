@@ -165,7 +165,7 @@ test('XMLHttpRequest responses are read on loadend for matching URLs', async () 
 
 const Logger = new Proxy({}, { get: (_, key) => key === 'debugMode' ? false : key === 'hostOf' ? (url) => new URL(url).hostname
   : key === 'error' ? (...args) => { throw new Error(args.join(' ')); } : () => {} });
-const worker = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
+const worker = vm.createContext({ MessageSender: require('../modules/core/message-sender.js'), WorkerMessages: require('../modules/core/worker-messages.js'), 
   Logger, CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options.detail; } },
   setTimeout, clearTimeout, URL
 });

@@ -307,7 +307,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry[WorkerMessages.GET_DETECTION_DATA] = handle_get_detection_data;
+    registry[WorkerMessages.GET_DETECTION_DATA] = MessageSender.extensionPagesOnly(handle_get_detection_data);
 
     const handle_request_detection = function({ request, sender, sendResponse, context }) {
         void context;
@@ -337,7 +337,7 @@ function registerDetectionHandlers(registry, context) {
         })();
         return true; // Will respond asynchronously
     };
-    registry[WorkerMessages.REQUEST_DETECTION] = handle_request_detection;
+    registry[WorkerMessages.REQUEST_DETECTION] = MessageSender.extensionPagesOnly(handle_request_detection);
 
     const handle_js_hook_detection_batch = function({ request, sender, sendResponse, context }) {
         void context;

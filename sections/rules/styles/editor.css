@@ -263,7 +263,7 @@
   border-radius: 6px;
   color: var(--text-primary);
   font-size: 14px;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   box-sizing: border-box;
 }
 
@@ -403,7 +403,7 @@
 .confidence-value,
 .confidence-percent {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   color: var(--accent);
 }
@@ -571,7 +571,7 @@
   border: 2px solid var(--border);
   border-radius: 8px;
   text-align: center;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
   background: var(--bg-secondary);
 }
 
@@ -728,7 +728,7 @@
   border-radius: 8px;
   cursor: pointer;
   border: 2px solid transparent;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   position: relative;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   outline: none;
@@ -921,12 +921,12 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.06);
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   flex-shrink: 0;
 }
 
@@ -938,7 +938,7 @@
 
 .method-title {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
   letter-spacing: 1px;
   border: none;
@@ -1017,7 +1017,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 .method-pagination-btn:hover:not(:disabled) {
@@ -1112,7 +1112,7 @@
   color: var(--text-muted);
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
   margin-top: 4px;
 }
 
@@ -1165,7 +1165,7 @@
 .indicator-badge {
   display: inline-block;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
   padding: 1px 3px;
   border-radius: 3px;
@@ -1232,7 +1232,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1276,7 +1276,7 @@
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .add-method-btn:hover,
@@ -1287,8 +1287,8 @@
 }
 
 .add-section-btn {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(59, 130, 246, 0.1) 100%);
-  border: 2px dashed var(--accent);
+  background: var(--bg-secondary);
+  border: 1px dashed var(--accent);
   color: var(--accent);
   font-size: 13px;
   font-weight: 600;
@@ -1314,7 +1314,7 @@
   font-size: 11px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .add-value-btn:hover {
@@ -1391,7 +1391,7 @@
   border-radius: 50%;
   border: 2px solid var(--accent);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .confidence-slider::-webkit-slider-thumb:hover {
@@ -1407,7 +1407,7 @@
   border-radius: 50%;
   border: 2px solid var(--accent);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .confidence-slider::-moz-range-thumb:hover {
@@ -1494,7 +1494,7 @@
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 20px;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .toggle-slider:before {
@@ -1507,7 +1507,7 @@
   transform: translateY(-50%);
   background: var(--text-muted);
   border-radius: 50%;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .toggle-input:checked + .toggle-slider {
@@ -1726,7 +1726,7 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -1749,7 +1749,7 @@
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   min-width: 120px;
   appearance: none;
   -webkit-appearance: none;
@@ -1787,7 +1787,7 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   min-width: 0;
   box-sizing: border-box;
@@ -1819,7 +1819,7 @@
   font-size: 11px;
   font-weight: 600;
   color: var(--text-secondary);
-  transition: all 0.25s;
+  transition: color 0.25s, background-color 0.25s, border-color 0.25s, box-shadow 0.25s, opacity 0.25s, transform 0.25s;
   pointer-events: none;
   line-height: 1;
 }
@@ -1981,17 +1981,13 @@
   background: var(--danger);
   color: white;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 600;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   z-index: 1;
-}
-
-.check-updates-btn.has-updates .updates-badge {
-  animation: pulse 2s infinite;
 }
 
 /* Author Display in Detector Card */
@@ -2030,7 +2026,7 @@
   color: var(--text-primary);
   font-size: 11px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -2063,7 +2059,7 @@
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .condition-dropdown-trigger:hover {
@@ -2116,11 +2112,9 @@
 
 .condition-group-label {
   padding: 8px 12px 4px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .condition-option {

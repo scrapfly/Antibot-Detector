@@ -266,10 +266,14 @@
   height: 14px;
 }
 
-/* Header actions: tinted squares that lift 1px on hover and press to 95%
-   (press rule in common.css). One tone each: upload green, clear amber,
-   copy purple, Scrapfly blue, blacklist red. */
+/* Header actions: quiet squares on the surface ramp, pressed to 95% (press rule in common.css). Only the Scrapfly action carries the
+   accent; the one that blocks a site turns red when it is hovered. */
 .url-action-btn {
+  --act-bg: var(--bg-tertiary);
+  --act-bg-hover: var(--bg-tertiary);
+  --act-border: var(--border);
+  --act-fg: var(--text-secondary);
+  --act-fg-hover: var(--text-primary);
   border: 1px solid var(--act-border);
   background: var(--act-bg);
   color: var(--act-fg);
@@ -277,44 +281,18 @@
 
 .url-action-btn:hover:not(:disabled) {
   background: var(--act-bg-hover);
+  border-color: var(--text-muted);
   color: var(--act-fg-hover);
-  transform: translateY(-1px);
 }
 
 .url-action-btn:active:not(:disabled) {
   transform: translateY(0) scale(0.95);
 }
 
-.url-action-btn.upload-paste-btn {
-  --act-bg: rgba(16, 185, 129, 0.2);
-  --act-bg-hover: rgba(16, 185, 129, 0.32);
-  --act-border: rgba(16, 185, 129, 0.35);
-  --act-fg: var(--success-light);
-  --act-fg-hover: var(--p-6ee7b7);
-}
-
-.url-action-btn.clear-cache-btn {
-  --act-bg: rgba(245, 158, 11, 0.2);
-  --act-bg-hover: rgba(245, 158, 11, 0.32);
-  --act-border: rgba(245, 158, 11, 0.35);
-  --act-fg: var(--p-fcd34d);
-  --act-fg-hover: var(--p-fde68a);
-}
-
-.url-action-btn.copy-overview-btn {
-  --act-bg: rgba(139, 92, 246, 0.2);
-  --act-bg-hover: rgba(139, 92, 246, 0.32);
-  --act-border: rgba(139, 92, 246, 0.35);
-  --act-fg: var(--purple-light);
-  --act-fg-hover: var(--p-ddd6fe);
-}
-
-.url-action-btn.blacklist-btn {
-  --act-bg: rgba(239, 68, 68, 0.2);
-  --act-bg-hover: rgba(239, 68, 68, 0.32);
-  --act-border: rgba(239, 68, 68, 0.35);
-  --act-fg: var(--danger-light);
-  --act-fg-hover: var(--danger-lightest);
+.url-action-btn.blacklist-btn:hover:not(:disabled) {
+  --act-bg-hover: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.45);
+  --act-fg-hover: var(--danger-light);
 }
 
 /* Scrape with Scrapfly: the Scrapfly logo on blue */
@@ -417,9 +395,9 @@
   border: none;
   border-radius: 7px;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   white-space: nowrap;
   color: white;
   flex: 1;
@@ -528,11 +506,10 @@
 }
 
 .stat-label-inline {
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 13px;
   color: var(--g-e0e0e0);
-  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -540,7 +517,7 @@
 
 .stat-value-inline {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   line-height: 16px;
   white-space: nowrap;
@@ -630,10 +607,8 @@
   gap: 6px;
   margin: 2px 2px 6px;
   color: var(--text-secondary);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .detection-item:not(:first-child) .detection-group-head {
@@ -786,9 +761,7 @@
   padding: 1px 7px;
   border: 1px solid currentColor;
   border-radius: 999px;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 11px;
   line-height: 14px;
 }
 
@@ -890,7 +863,7 @@
   border: none;
   cursor: pointer;
   color: var(--text-muted);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   border-radius: 4px;
 }
 
@@ -1055,7 +1028,7 @@
 .detection-modal-title-info h3 {
   margin: 0;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 18px;
   color: var(--text-primary);
   white-space: nowrap;
@@ -1138,10 +1111,8 @@
   gap: 7px;
   margin: 0;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 16px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
   color: var(--accent-light);
 }
 
@@ -1323,7 +1294,7 @@
   font-size: 10px;
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .method-badge:hover {
@@ -1541,12 +1512,10 @@
 }
 
 .step-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-secondary);
   flex: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
 }
 
 /* Completed state - check finished */
@@ -1680,7 +1649,7 @@
 
 .state-card--bare .state-card-title {
   font-size: 17px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 22px;
   margin-bottom: 12px;
 }
@@ -1918,26 +1887,23 @@
   max-width: 540px;
   width: 100%;
   padding: 28px 24px;
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
-  animation: fadeInUp 0.5s ease;
 }
 
 .empty-state-icon {
   width: 72px;
   height: 72px;
-  border-radius: 18px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(59, 130, 246, 0.55));
-  border: 1px solid rgba(59, 130, 246, 0.6);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
 }
 
 .empty-state-icon svg {
@@ -1947,40 +1913,10 @@
 .empty-state-title {
   margin: 0;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   letter-spacing: -0.5px;
   line-height: 1.2;
-}
-
-.empty-state-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hover) 50%, var(--accent) 100%);
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0% { opacity: 0.5; }
-  50% { opacity: 0.9; }
-  100% { opacity: 0.5; }
-}
-
-.empty-state-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 220px;
-  height: 220px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  border-radius: 50%;
-  transform: translate(50%, 50%);
 }
 
 /* Matched combinations (modules/ui/combination-checklist.js), in Detection
@@ -2037,10 +1973,31 @@
   flex-shrink: 0;
 }
 
-/* Folded by default: the head (name, confidence, arrow) opens the found rows */
+/* Folded by default: the head opens the found rows. The Rules editor's combination row: the chevron, the name and the score on one
+   line, what it takes to fire under the name */
 .match-combo.is-collapsible > .match-combo-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "chevron name score"
+    ". when when";
   align-items: center;
+  column-gap: 8px;
+  row-gap: 3px;
   cursor: pointer;
+}
+
+.match-combo.is-collapsible > .match-combo-head > .match-combo-chevron { grid-area: chevron; }
+.match-combo.is-collapsible > .match-combo-head > .match-combo-name { grid-area: name; }
+.match-combo.is-collapsible > .match-combo-head > .match-combo-confidence { grid-area: score; }
+
+.match-combo-when {
+  grid-area: when;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
 }
 
 .match-combo-toggle {
@@ -2072,8 +2029,14 @@
   transition: transform 0.15s ease;
 }
 
-.match-combo.is-collapsible:not(.is-collapsed) .match-combo-chevron {
-  transform: rotate(180deg);
+/* Points along the reading direction while folded, down when open */
+[dir="rtl"] .match-combo-chevron {
+  transform: scaleX(-1);
+}
+
+.match-combo.is-collapsible:not(.is-collapsed) .match-combo-chevron,
+[dir="rtl"] .match-combo.is-collapsible:not(.is-collapsed) .match-combo-chevron {
+  transform: rotate(90deg);
 }
 
 .match-combo.is-collapsible > .match-combo-head:hover .match-combo-chevron {
@@ -2146,6 +2109,52 @@
   font-size: 10.5px;
   font-weight: 600;
   color: var(--text-secondary);
+}
+
+/* What a combination found: the same rows as the Detection methods (type, score, chevron; the value when opened), folded to start.
+   A row may carry what the signal means in words under its value */
+.match-combo-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.detection-modal-methods-list .method-item-card.has-note {
+  grid-template-areas:
+    "head"
+    "value"
+    "note";
+}
+
+.detection-modal-methods-list .method-item-card.has-note.is-folded {
+  grid-template-areas: "head";
+}
+
+.method-value-note {
+  grid-area: note;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.method-item-card.is-folded > .method-value-note {
+  display: none;
+}
+
+/* A "must not be found" signal: its row says so where the score would be */
+.method-not-present {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.method-item-card.is-absent .method-type-badge {
+  opacity: 0.75;
 }
 
 .match-combo-unavailable {

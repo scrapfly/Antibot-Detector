@@ -199,13 +199,24 @@ class NotificationManager {
 
     this.toasts.push({ id: toastId, element: toast, message: messageText, type: safeType, timeoutId });
 
-    // Remove oldest toast if exceeded max
+    // Remove a toast if exceeded max
     if (this.toasts.length > this.maxToasts) {
-      const oldest = this.toasts.shift();
-      this.removeToast(oldest.id);
+      const [dropped] = this.toasts.splice(NotificationManager.toastToDrop(this.toasts), 1);
+      this.removeToast(dropped.id);
     }
 
     return toastId;
+  }
+
+  /**
+   * Which toast leaves when there are more than the limit: the oldest that goes away by itself. One that stays until it is
+   * closed (the spinner of a long job) and the newest one stay, unless there is nothing else to drop.
+   * @param {Array<{timeoutId: *}>} toasts - oldest first
+   * @returns {number} index in `toasts`
+   */
+  static toastToDrop(toasts) {
+    const index = toasts.findIndex((toast, position) => position < toasts.length - 1 && toast.timeoutId);
+    return index === -1 ? 0 : index;
   }
 
   /**

@@ -705,7 +705,7 @@
     "message": "Powered by"
   },
   "categoryColors": {
-    "message": "CATEGORY COLORS"
+    "message": "Category colors"
   },
   "methodSuffixPatterns": {
     "message": "patterns"
@@ -1619,16 +1619,16 @@
     "message": "Block this domain"
   },
   "detectionStatSite": {
-    "message": "SITE"
+    "message": "Site"
   },
   "detectionStatDetections": {
-    "message": "DETECTIONS"
+    "message": "Detections"
   },
   "detectionStatConfidence": {
-    "message": "CONFIDENCE"
+    "message": "Confidence"
   },
   "detectionStatDifficulty": {
-    "message": "DIFFICULTY"
+    "message": "Difficulty"
   },
   "detectionSearchPlaceholder": {
     "message": "Search detections..."
@@ -4990,7 +4990,7 @@
     "message": "{0} · {1}"
   },
   "detectionStatCache": {
-    "message": "CACHE"
+    "message": "Cache"
   },
   "detectionTipCache": {
     "message": "Which pages reuse these cached results, and for how long."

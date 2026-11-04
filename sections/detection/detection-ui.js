@@ -1442,6 +1442,59 @@ DetectionUI.getCategoryBadges = function(detection, { copyable = true } = {}) {
     return badges.join('');
 };
 
+/**
+ * One method row of the Detection details: the type chip, the score and a chevron (the head, which shows or hides the value),
+ * then the value in a code box that copies. The combinations' signals are drawn with it too.
+ * @param {{matchType: string, confidence: ?number, displayValue: string, copyValue?: string, unknownValue?: string,
+ *   caption?: string, absent?: boolean}} spec - caption: what the signal means, under the value; absent: a "must not be found" signal
+ */
+DetectionUI.methodRowHtml = function(spec) {
+      const t = (typeof I18n !== 'undefined') ? I18n : null;
+      const unknownValue = spec.unknownValue || (t && t.get('detectionUiUnknownValue')) || 'unknown';
+      const matchType = String(spec.matchType || '').toLowerCase();
+      const methodType = (matchType || 'unknown').replace(/_/g, ' ').toUpperCase();
+      const displayValue = spec.displayValue === undefined || spec.displayValue === null || spec.displayValue === '' ? unknownValue : spec.displayValue;
+      const copyValue = spec.copyValue === undefined ? displayValue : spec.copyValue;
+
+      // Get tag color from CategoryManager using original matchType (preserves underscores)
+      const tagColor = this.detectorManager.categoryManager.getTagColor(matchType);
+
+      // Use muted/transparent background with colored text
+      const effectiveColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
+      const rgb = FormatUtils.hexToRgb(effectiveColor);
+      const badgeStyle = rgb
+        ? `style="background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${effectiveColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);"`
+        : `style="background: ${effectiveColor}; color: white; border: none;"`;
+
+      // Normalize method type for CSS class using original matchType (preserves underscores/hyphens)
+      // Replace underscores with hyphens for CSS compatibility, then handle plural to singular
+      const methodClass = matchType.replace(/_/g, '-').replace(/s$/, ''); // js_hooks -> js-hooks, cookies -> cookie
+
+      const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
+      // The value is a button: a click (or Enter) copies the whole of it, like the site address above
+      const copyText = DetectionUI.copyLabelText('value', copyValue);
+      const copyable = copyValue && copyValue !== unknownValue;
+      const score = spec.absent
+        ? `<span class="method-confidence method-not-present">${FormatUtils.escapeHtml((t && t.get('combinationNotPresent')) || 'Not present')}</span>`
+        : (Number.isFinite(Number(spec.confidence)) && spec.confidence !== null ? FormatUtils.confidenceHtml(spec.confidence, 'method-confidence') : '');
+      const note = spec.caption ? `<span class="method-value-note" dir="auto">${FormatUtils.escapeHtml(spec.caption)}</span>` : '';
+
+      // The row shows the type and the score; its value stays folded until the row is clicked
+      return `
+        <div class="method-item-card method-${methodClass} is-folded${spec.absent ? ' is-absent' : ''}${note ? ' has-note' : ''}" data-method-type="${methodType}">
+          <button type="button" class="method-fold-head" aria-expanded="false">
+            <span class="method-type-badge" ${badgeStyle}>${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(matchType || 'unknown'))}</span>
+            ${score}
+            <svg class="method-fold-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          ${copyable
+            ? `<button type="button" class="method-value-btn copyable-value" dir="ltr" data-copy-value="${FormatUtils.escapeAttr(copyValue)}" data-copy-label="value" title="${FormatUtils.escapeAttr(copyText.withValue)}" aria-label="${FormatUtils.escapeAttr(copyText.action)}">${safeDisplayValue}</button>`
+            : `<span class="method-value-btn" dir="ltr">${safeDisplayValue}</span>`}
+          ${note}
+        </div>
+      `;
+};
+
 DetectionUI.getMethodBadges = function(matches) {
     if (!matches || matches.length === 0) {
       const unknownMethod = (typeof I18n !== 'undefined' && I18n.get('detectionUiUnknownMethod')) || 'Unknown method';
@@ -1453,8 +1506,6 @@ DetectionUI.getMethodBadges = function(matches) {
 
     // Show all methods as individual cards
     const badges = matches.map((match, index) => {
-      let methodType = (match.type || 'unknown').toLowerCase();
-      methodType = methodType.replace(/_/g, ' ').toUpperCase();
       const confidence = match.confidence || 0;
 
       // Format the display value based on type
@@ -1503,38 +1554,7 @@ DetectionUI.getMethodBadges = function(matches) {
           copyValue = displayValue;
       }
 
-      // Get tag color from CategoryManager using original matchType (preserves underscores)
-      const tagColor = this.detectorManager.categoryManager.getTagColor(matchType);
-
-      // Use muted/transparent background with colored text
-      const effectiveColor = (tagColor && tagColor !== '#666666') ? tagColor : '#666666';
-      const rgb = FormatUtils.hexToRgb(effectiveColor);
-      const badgeStyle = rgb
-        ? `style="background: rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15); color: ${effectiveColor}; border: 1px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3);"`
-        : `style="background: ${effectiveColor}; color: white; border: none;"`;
-
-      // Normalize method type for CSS class using original matchType (preserves underscores/hyphens)
-      // Replace underscores with hyphens for CSS compatibility, then handle plural to singular
-      const methodClass = matchType.replace(/_/g, '-').replace(/s$/, ''); // js_hooks -> js-hooks, cookies -> cookie
-
-      const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
-      // The value is a button: a click (or Enter) copies the whole of it, like the site address above
-      const copyText = DetectionUI.copyLabelText('value', copyValue);
-      const copyable = copyValue && copyValue !== unknownValue;
-
-      // The row shows the type and the score; its value stays folded until the row is clicked
-      return `
-        <div class="method-item-card method-${methodClass} is-folded" data-method-type="${methodType}">
-          <button type="button" class="method-fold-head" aria-expanded="false">
-            <span class="method-type-badge" ${badgeStyle}>${FormatUtils.escapeHtml(DetectionUI.getMethodLabel(matchType || 'unknown'))}</span>
-            ${FormatUtils.confidenceHtml(confidence, 'method-confidence')}
-            <svg class="method-fold-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-          </button>
-          ${copyable
-            ? `<button type="button" class="method-value-btn copyable-value" dir="ltr" data-copy-value="${FormatUtils.escapeAttr(copyValue)}" data-copy-label="value" title="${FormatUtils.escapeAttr(copyText.withValue)}" aria-label="${FormatUtils.escapeAttr(copyText.action)}">${safeDisplayValue}</button>`
-            : `<span class="method-value-btn" dir="ltr">${safeDisplayValue}</span>`}
-        </div>
-      `;
+      return DetectionUI.methodRowHtml.call(this, { matchType, confidence, displayValue, copyValue, unknownValue });
     });
 
     return badges.join('');

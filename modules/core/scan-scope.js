@@ -1,7 +1,8 @@
 /**
  * Which pages the extension scans (Settings → Detection → Sites), and where it watches the page's API calls. Two modes:
  *
- *   blocklist  every site except the skipped ones (the default): a skipped site is an exact host
+ *   blocklist  every site except the skipped ones (the default): a skipped site is an exact host (a final dot, capitals,
+ *              a port or a whole address in the list are read as the host)
  *   allowlist  only the chosen sites: a site and its subdomains
  *
  * Pure (no browser APIs), so the popup, the service worker, the content script and the tests share it. A page that is
@@ -34,8 +35,9 @@
       if (!/^https?:$/.test(parsed.protocol)) return false;
       return !root.DomainList.matches(parsed.hostname, d.allowedDomains);
     }
-    const blocked = Array.isArray(d.blacklistedDomains) ? d.blacklistedDomains : [];
-    return blocked.includes(parsed.hostname);
+    // "bank.example." is the same site as "bank.example", and an imported list may hold "Bank.Example" or a whole address
+    const host = parsed.hostname.replace(/\.+$/, '');
+    return root.DomainList.normalize(Array.isArray(d.blacklistedDomains) ? d.blacklistedDomains : []).includes(host);
   }
 
   /** Is `hostname` a site (or a subdomain of one) where JS hooks are off? @param {object} [detection] the detection settings */

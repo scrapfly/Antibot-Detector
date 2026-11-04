@@ -20,7 +20,7 @@ const sandbox = () => {
 
 test('Pinned and Changed have an icon, an unknown name has none, and the set cannot be changed', () => {
   const FormatUtils = sandbox();
-  for (const name of ['pin', 'changed']) {
+  for (const name of ['pin', 'changed', 'combination']) {
     const svg = FormatUtils.uiIconSvg(name);
     assert.match(svg, /^<svg [^>]*viewBox="0 0 24 24"/, name);
     assert.match(svg, /aria-hidden="true"/, `${name} is decoration: its chip names it`);

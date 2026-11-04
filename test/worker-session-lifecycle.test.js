@@ -12,6 +12,7 @@ function harness() {
   const timers = new Map();
   const calls = { badge: [], popup: [], page: [], history: [], ended: [], started: [] };
   const context = {
+    MessageSender: require('../modules/core/message-sender.js'),
     WorkerMessages: require('../modules/core/worker-messages.js'),
     Map, Set, Date, Promise, AbortController, console,
     Constants: { FINALIZATION_CHECK_DELAY: 10, MIN_DETECTION_TIME: 0, BATCH_SETTLE_TIME: 0, SAFETY_TIMEOUT: 50,

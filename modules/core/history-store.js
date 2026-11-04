@@ -140,6 +140,11 @@
     const key = ['fullUrl', 'value', 'name', 'selector', 'pattern']
       .find(name => match[name] !== undefined && match[name] !== null && match[name] !== '');
     if (key) out[key] = clip(match[key]);
+    // A url or payload match is named by the rule's pattern in Statistics → Evidence ("the same rule on five pages") and in Copy
+    // entry; the address or the value shown is not that rule, so the pattern is kept next to it, short
+    if ((out.type === 'url' || out.type === 'payload') && key !== 'pattern' && typeof match.pattern === 'string' && match.pattern) {
+      out.pattern = match.pattern.length > 160 ? `${match.pattern.slice(0, 160)}…` : match.pattern;
+    }
     if (Number.isFinite(match.confidence)) out.confidence = match.confidence;
     return out;
   }
@@ -416,7 +421,9 @@
   // A date the browser can hold: an edited file or a clock far off must not make an entry the exports cannot write
   const MAX_TIME = 8.64e15;
   const timeOf = (item) => {
-    const t = typeof item.timestamp === 'number' ? item.timestamp : Date.parse(item.timestamp);
+    // A number, a date text, or the milliseconds as text ("1730000000000", as a spreadsheet or a script may write them)
+    const raw = item.timestamp;
+    const t = typeof raw === 'number' ? raw : (typeof raw === 'string' && /^\d{10,16}$/.test(raw.trim()) ? Number(raw.trim()) : Date.parse(raw));
     return Number.isFinite(t) && Math.abs(t) <= MAX_TIME ? t : 0;
   };
 
@@ -482,6 +489,11 @@
     registry[Messages.REPLACE_ITEMS] = guard(({ request, sendResponse }) => {
       if (!Array.isArray(request.items)) {
         sendResponse({ status: 'error', error: 'items must be an array' });
+        return true;
+      }
+      // A file of things that are not entries ([1, 2, null]) would otherwise replace the whole history with nothing
+      if (request.mode === 'replace' && request.items.length && !cleanImported(request.items).length) {
+        sendResponse({ status: 'error', error: 'The file has no history entries' });
         return true;
       }
       return respond(sendResponse, mutate(items => {
@@ -578,7 +590,7 @@
   }
 
   const HistoryStore = {
-    STORAGE_KEY, MAX_BYTES, SIZES_MB, budgetFor, hasUnlimitedStorage, Messages, parse, serialize, read, mutate, applyImport, registerHandlers,
+    STORAGE_KEY, MAX_BYTES, SIZES_MB, budgetFor, hasUnlimitedStorage, Messages, parse, serialize, read, mutate, applyImport, cleanImported, registerHandlers,
     slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, setBudget, applyLimit, cleanAnnotation, annotate, usage
   };
 

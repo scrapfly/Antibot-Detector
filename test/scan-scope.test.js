@@ -89,3 +89,21 @@ test('a site name with letters beyond ASCII is kept in punycode, as the browser 
   assert.strictEqual(DomainList.matches('shop.xn--bcher-kva.de', ['bücher.de']), true, 'a subdomain of the typed name');
   assert.deepStrictEqual(DomainList.normalize('ok.com'), ['ok.com']);
 });
+
+test('blocklist: a final dot, capitals, a port or a whole address in the list name the same host', () => {
+  assert.strictEqual(ScanScope.isExcluded('https://bank.example./login', blocklist('bank.example')), true, 'the page host ends with a dot');
+  assert.strictEqual(ScanScope.isExcluded('https://bank.example/login', blocklist('Bank.Example')), true);
+  assert.strictEqual(ScanScope.isExcluded('https://bank.example/login', blocklist('https://bank.example/')), true);
+  assert.strictEqual(ScanScope.isExcluded('https://bank.example:8443/login', blocklist('bank.example:8443')), true);
+  assert.strictEqual(ScanScope.isExcluded('https://bank.example/login', blocklist('bank.example.')), true);
+  assert.strictEqual(ScanScope.isExcluded('https://www.bank.example/', blocklist('bank.example')), false, 'still the exact host');
+  assert.strictEqual(ScanScope.isExcluded('https://bank.example/', blocklist()), false);
+});
+
+test('a list of many thousands of sites is read at once (no repeated search of what is already kept)', () => {
+  const many = Array.from({ length: 30000 }, (_, i) => `site${i % 15000}.example`);
+  const started = Date.now();
+  assert.strictEqual(DomainList.normalize(many).length, 15000, 'duplicates are dropped');
+  assert.ok(Date.now() - started < 1500, `took ${Date.now() - started} ms`);
+  assert.strictEqual(DomainList.matches('www.site14999.example', many), true);
+});

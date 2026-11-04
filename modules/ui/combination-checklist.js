@@ -166,9 +166,12 @@
       const method = defined?.method || C.methodOf(match?.type) || '';
       const text = defined ? patternText(defined.method, defined.pattern) : oneLine(match?.pattern || '');
       const description = ruleText(oneLine(defined?.pattern?.description || match?.description || ''), defined?.pattern?.descriptionI18n);
+      // What the rule scores by itself (a match may carry the raised score of a combination: baseConfidence is its own)
+      const own = [defined?.pattern?.confidence, match?.baseConfidence, match?.confidence].map(Number).find(Number.isFinite);
       return {
         kind: 'pattern', id, method, negative, found, met: negative ? !found : found,
-        description, text: text || id, value: found ? matchedValue(match) : ''
+        description, text: text || id, value: found ? matchedValue(match) : '',
+        confidence: own === undefined ? null : own
       };
     }
     return null;
@@ -204,12 +207,27 @@
     return { found, absent };
   }
 
+  /**
+   * When the combination fires, in the words the Rules editor uses ("Fires when all 2 conditions are met."), from its conditions.
+   * Empty when the card has no conditions to read (the rule changed after the scan).
+   */
+  function firesWhen(tree) {
+    if (!tree) return '';
+    const count = tree.kind === 'group' ? tree.items.length : 1;
+    if (!count) return '';
+    if (count === 1) return tr('combinationSentenceOne', 'Fires when this condition is met.');
+    if (tree.mode === 'any') return fmt('combinationSentenceAnyFmt', 'Fires when any one of these {0} conditions is met.', count);
+    if (tree.mode === 'of') return fmt('combinationSentenceAtLeastFmt', 'Fires when at least {0} of these {1} conditions are met.', tree.atLeast, count);
+    return fmt('combinationSentenceAllFmt', 'Fires when all {0} conditions are met.', count);
+  }
+
   function unavailableText() {
     return tr('combinationDetailsUnavailable', 'This rule changed or was removed after the scan, so only its name and score are shown.');
   }
 
   // Icon for the mark: the ✓ character renders as √ in some UI fonts
-  const CHEVRON_ICON = '<svg class="match-combo-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  // Pointing along the reading direction while folded, down when open (as in the Rules editor's combinations)
+  const CHEVRON_ICON = '<svg class="match-combo-chevron" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   const FOUND_ICON = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M3.2 8.4l3 3 6.6-6.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /** One found signal: its description (or raw text), with method and raw pattern in the tip. */
@@ -230,9 +248,29 @@
   }
 
   /**
+   * One found (or must-be-absent) signal as the fields of a method row, the look of the Detection methods list: its type, its own
+   * score, the value (the pattern as written, or what the page showed) and, when the rule has one, what it means in words.
+   */
+  function signalSpec(item, options, negative) {
+    const label = (options.methodLabel && options.methodLabel(item.method)) || item.method;
+    const isMethod = item.kind === 'method';
+    const value = isMethod ? fmt('combinationAnyOfMethodFmt', 'Any {0} pattern', label) : (item.value || item.text || item.id || '');
+    return {
+      method: item.method,
+      confidence: isMethod ? null : item.confidence,
+      value,
+      // The meaning of the signal in plain words, as the checklist showed it
+      caption: !isMethod && item.description && item.description !== value ? item.description : '',
+      absent: !!negative
+    };
+  }
+
+  /**
    * HTML for the cards.
    * @param {Array<object>} cards - from build()
-   * @param {object} [options] - { methodLabel(method), confidenceHtml(value, cls, tip), idPrefix }
+   * @param {object} [options] - { methodLabel(method), confidenceHtml(value, cls, tip), idPrefix,
+   *   signalHtml(spec) -> html of one signal as a method row (spec: method, confidence, value, caption, absent), signalsClass }
+   *   Without signalHtml the signals are drawn as a checklist.
    */
   function renderHtml(cards, options = {}) {
     let counter = 0;
@@ -250,9 +288,16 @@
         body = `<p class="match-combo-unavailable" dir="auto">${esc(unavailableText(card))}</p>`;
       } else {
         const { found, absent } = foundRows(card.tree);
-        const leadId = nextId();
-        body = `<p class="match-combo-lead" id="${leadId}" dir="auto">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
+        if (typeof options.signalHtml === 'function') {
+          // The signals as rows like the Detection methods: type, score and a chevron, the value shown when a row is opened
+          const rows = [...found.map(item => options.signalHtml(signalSpec(item, options, false))),
+            ...absent.map(item => options.signalHtml(signalSpec(item, options, true)))].join('');
+          body = `<div class="match-combo-signals${options.signalsClass ? ` ${esc(options.signalsClass)}` : ''}" role="group" aria-label="${esc(tr('combinationFoundTogether', 'Found together on this page:'))}">${rows}</div>`;
+        } else {
+          const leadId = nextId();
+          body = `<p class="match-combo-lead" id="${leadId}" dir="auto">${esc(tr('combinationFoundTogether', 'Found together on this page:'))}</p>
           <ul class="match-combo-rows" aria-labelledby="${leadId}">${found.map(item => rowHtml(item, options, false)).join('')}${absent.map(item => rowHtml(item, options, true)).join('')}</ul>`;
+        }
       }
       // Folded by default: the name and confidence show, the head opens the rest
       if (!body) {
@@ -263,10 +308,13 @@
         return `<article class="match-combo${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}</article>`;
       }
       const bodyId = `${nextId()}-body`;
+      // The chevron, the name and the score on one line, what it takes to fire under the name: the Rules editor's row
+      const when = firesWhen(card.tree);
       const head = `<div class="match-combo-head">
+          ${CHEVRON_ICON}
           <h5 class="match-combo-name" dir="auto"><button type="button" class="match-combo-toggle" aria-expanded="false" aria-controls="${bodyId}">${esc(card.name)}</button></h5>
           ${confidence(card.confidence, card)}
-          ${CHEVRON_ICON}
+          ${when ? `<p class="match-combo-when" dir="auto">${esc(when)}</p>` : ''}
         </div>`;
       return `<article class="match-combo is-collapsible is-collapsed${card.setsScore ? ' sets-score' : ''}" data-combo-id="${esc(card.id)}">${head}<div class="match-combo-body" id="${bodyId}" hidden>${body}</div></article>`;
     }).join('');
@@ -290,7 +338,7 @@
     });
   }
 
-  const api = Object.freeze({ build, renderHtml, foundRows, patternText, toggle });
+  const api = Object.freeze({ build, renderHtml, foundRows, patternText, firesWhen, toggle });
   root.CombinationChecklist = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

@@ -702,7 +702,7 @@
     "message": "Destekleyen:"
   },
   "categoryColors": {
-    "message": "KATEGORİ RENKLERİ"
+    "message": "Kategori renkleri"
   },
   "methodSuffixPatterns": {
     "message": "desen"
@@ -1607,16 +1607,16 @@
     "message": "Bu alan adını engelle"
   },
   "detectionStatSite": {
-    "message": "SİTE"
+    "message": "Site"
   },
   "detectionStatDetections": {
-    "message": "TESPİTLER"
+    "message": "Tespitler"
   },
   "detectionStatConfidence": {
-    "message": "GÜVEN"
+    "message": "Güven"
   },
   "detectionStatDifficulty": {
-    "message": "ZORLUK"
+    "message": "Zorluk"
   },
   "detectionSearchPlaceholder": {
     "message": "Tespit ara..."
@@ -4727,7 +4727,7 @@
     "message": "{0} · {1}"
   },
   "detectionStatCache": {
-    "message": "ÖNBELLEK"
+    "message": "Önbellek"
   },
   "detectionTipCache": {
     "message": "Bu önbelleğe alınmış sonuçları hangi sayfaların ve ne kadar süreyle yeniden kullandığı."

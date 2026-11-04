@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
+  "minimum_chrome_version": "111",
 
   "content_security_policy": {
     "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'none'; base-uri 'none'; form-action 'none'; object-src 'self'"

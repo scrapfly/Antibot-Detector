@@ -93,7 +93,12 @@ test('a list is scanned one page at a time in inactive tabs of a normal window, 
   ]);
   assert.deepEqual(plain(run.items[0].detections.map(d => [d.name, d.category])), [['Cloudflare', 'antibot'], ['DataDome', 'antibot']]);
   assert.equal(run.items[0].difficulty, 'High');
-  assert.deepEqual(w.log.keepalive, [['start', 'bulk-scan'], ['end', 'bulk-scan']], 'the worker is kept awake for the run only');
+  // Started with the run and renewed for every page (the worker's keepalive drops an operation after two minutes), ended once
+  const kept = w.log.keepalive;
+  assert.deepEqual(kept.at(-1), ['end', 'bulk-scan'], 'the worker is kept awake for the run only');
+  assert.equal(kept.filter(([what]) => what === 'end').length, 1);
+  assert.ok(kept.filter(([what]) => what === 'start').length >= w.log.created.length, 'every page renews it');
+  assert.ok(kept.slice(0, -1).every(([what, id]) => what === 'start' && id === 'bulk-scan'));
   assert.deepEqual(w.session[w.Tabs.OPEN_TABS_KEY], [], 'no scan tab left listed');
 });
 

@@ -26,7 +26,7 @@
   border-color: var(--settings-border);
   border-radius: 7px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 #settingsModal .settings-row--language .language-picker-flag-slot {

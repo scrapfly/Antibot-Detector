@@ -410,8 +410,46 @@ class History {
         + `<span class="category-icon" style="color:${colour}" aria-hidden="true">${FormatUtils.categoryIconSvg(key)}</span>`
         + `<span class="history-cat-value">${inCategory.length}</span></span>`;
     });
+    // The combinations that fired on the page, beside the fingerprint total (the hover names each, highest first)
+    const comboChip = this.renderCombinationCount(sorted);
+    const at = order.indexOf('fingerprint');
+    if (at === -1) parts.push(comboChip); else parts.splice(at + 1, 0, comboChip);
     // A click goes to the card, which opens the details with each protection
     return `<span class="history-summary">${parts.join('')}</span>`;
+  }
+
+  /**
+   * How many combinations fired across a page's detections, as a chip like the category totals: dimmed at zero, the hover listing
+   * each by name and score. A saved entry keeps a combination's name only when its rule cannot be found, so the name is read
+   * from the rule as it is now.
+   * @param {Array} detections
+   * @returns {string} HTML
+   */
+  renderCombinationCount(detections) {
+    const fired = [];
+    for (const detection of Array.isArray(detections) ? detections : []) {
+      for (const combo of (detection && Array.isArray(detection.combinations) ? detection.combinations : [])) {
+        if (combo && typeof combo === 'object') fired.push({ detection, combo });
+      }
+    }
+    const nameOf = ({ detection, combo }, index) => {
+      let name = combo.name;
+      const detectorId = detection.detector && typeof detection.detector === 'object' ? detection.detector.id : '';
+      if (!name && detectorId && typeof this.detectorManager?.findDetectorById === 'function') {
+        const rule = this.detectorManager.findDetectorById(detectorId);
+        const defined = rule && Array.isArray(rule.combinations) ? rule.combinations.find(item => item && item.id === combo.id) : null;
+        name = defined && defined.name;
+      }
+      return FormatUtils.ruleText(name) || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', index + 1);
+    };
+    const ranked = fired.map((entry, index) => ({ label: nameOf(entry, index), value: Math.round(Number(entry.combo.confidence) || 0) }))
+      .sort((a, b) => b.value - a.value);
+    const rows = ranked.slice(0, 8).map(row => ({ label: row.label, value: `${row.value}%`, tone: FormatUtils.confidenceTone(row.value) }));
+    if (ranked.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', ranked.length - 8) });
+    const label = FormatUtils.t('detectionModalCombinations', 'Matched combinations');
+    return `<span class="history-cat-count history-combo-count${fired.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(`${label}: ${fired.length}`, '', rows)}>`
+      + `<span class="category-icon" aria-hidden="true">${FormatUtils.uiIconSvg('combination')}</span>`
+      + `<span class="history-cat-value">${fired.length}</span></span>`;
   }
 
   /**
@@ -1395,7 +1433,10 @@ class History {
     return {
       idPrefix,
       methodLabel: (m) => this.getMethodLabel(m),
-      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
+      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip),
+      // What a combination found, drawn as the detection methods are: a row per signal, folded, the value when opened
+      signalHtml: (spec) => this.historyMethodRowHtml({ type: spec.method, confidence: spec.confidence, displayValue: spec.value, caption: spec.caption, absent: spec.absent }),
+      signalsClass: 'history-modal-signals'
     };
   }
 
@@ -1501,12 +1542,9 @@ class History {
       return `<div class="history-modal-no-methods">${FormatUtils.escapeHtml(noMethods)}</div>`;
     }
     const unknownValue = FormatUtils.t('detectionUiUnknownValue', 'unknown');
-    const clickToCopy = FormatUtils.escapeAttr(FormatUtils.t('advCommonClickToCopy', 'Click to copy'));
 
     return matches.map(match => {
       const originalType = match.type || 'unknown';
-      const methodType = originalType.replace(/_/g, ' ').toUpperCase();
-      const methodLabel = FormatUtils.escapeHtml(this.getMethodLabel(originalType.toLowerCase()));
       const confidence = match.confidence || 0;
 
       // Determine display value based on method type
@@ -1535,35 +1573,57 @@ class History {
           displayValue = match.value || match.name || match.selector || match.pattern || unknownValue;
       }
 
-      // Get tag color (use originalType to preserve underscores for lookup)
-      let tagColor = '#666666';
-      if (this.detectorManager?.categoryManager) {
-        tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
-      }
-      const tagRgb = FormatUtils.hexToRgb(tagColor);
-      const badgeStyle = tagRgb
-        ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.3);`
-        : `background: ${tagColor}; color: white;`;
+      return this.historyMethodRowHtml({ type: originalType, confidence, displayValue });
+    }).join('');
+  }
 
-      const copyPayload = JSON.stringify({
-        rawValue: displayValue,
-        methodType,
-        confidence
-      });
+  /**
+   * One method row of the History details: the type chip, the score and a chevron (the head, which shows or hides the value), then
+   * the value, which copies. The combinations' signals are drawn with it too.
+   * @param {{type: string, confidence: ?number, displayValue: string, caption?: string, absent?: boolean}} spec
+   */
+  historyMethodRowHtml(spec) {
+    const originalType = spec.type || 'unknown';
+    const methodType = originalType.replace(/_/g, ' ').toUpperCase();
+    const methodLabel = FormatUtils.escapeHtml(this.getMethodLabel(originalType.toLowerCase()));
+    const clickToCopy = FormatUtils.escapeAttr(FormatUtils.t('advCommonClickToCopy', 'Click to copy'));
+    const unknownValue = FormatUtils.t('detectionUiUnknownValue', 'unknown');
+    const displayValue = spec.displayValue === undefined || spec.displayValue === null || spec.displayValue === '' ? unknownValue : spec.displayValue;
+    const confidence = spec.confidence === undefined ? 0 : spec.confidence;
 
-      const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
+    // Get tag color (use originalType to preserve underscores for lookup)
+    let tagColor = '#666666';
+    if (this.detectorManager?.categoryManager) {
+      tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
+    }
+    const tagRgb = FormatUtils.hexToRgb(tagColor);
+    const badgeStyle = tagRgb
+      ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.3);`
+      : `background: ${tagColor}; color: white;`;
 
-      return `
-        <div class="history-modal-method-item is-folded" data-copy-payload="${encodeURIComponent(copyPayload)}">
+    const copyPayload = JSON.stringify({
+      rawValue: displayValue,
+      methodType,
+      confidence
+    });
+
+    const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
+    const score = spec.absent
+      ? `<span class="history-modal-method-confidence history-modal-method-not-present">${FormatUtils.escapeHtml(FormatUtils.t('combinationNotPresent', 'Not present'))}</span>`
+      : (confidence === null ? '' : FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence'));
+    const note = spec.caption ? `<span class="history-modal-method-note" dir="auto">${FormatUtils.escapeHtml(spec.caption)}</span>` : '';
+
+    return `
+        <div class="history-modal-method-item is-folded${spec.absent ? ' is-absent' : ''}${note ? ' has-note' : ''}" data-copy-payload="${encodeURIComponent(copyPayload)}">
           <button type="button" class="history-modal-method-head" aria-expanded="false">
             <span class="history-modal-method-badge" style="${badgeStyle}">${methodLabel}</span>
-            ${FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence')}
+            ${score}
             <svg class="history-modal-method-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
           <span class="history-modal-method-value" title="${clickToCopy}">${safeDisplayValue}</span>
+          ${note}
         </div>
       `;
-    }).join('');
   }
 
   /**
@@ -1940,10 +2000,15 @@ class History {
       if (!data.items || !Array.isArray(data.items)) {
         throw new Error(FormatUtils.t('historyUiInvalidFileFormat', 'Invalid history file format'));
       }
+      // What History can import: a list of numbers or nulls is not a history, and Replace would delete the real one for it
+      const usable = HistoryStore.cleanImported(data.items).length;
+      if (data.items.length && !usable) {
+        throw new Error(FormatUtils.t('historyUiInvalidFileFormat', 'Invalid history file format'));
+      }
 
       const mode = await NotificationHelper.chooseImportMode({
         title: _tr('importHistoryTitle', 'Import History'),
-        message: _fmt('importHistoryModeMessageFmt', `Import ${data.items.length} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, data.items.length, this.historyItems.length),
+        message: _fmt('importHistoryModeMessageFmt', `Import ${usable} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, usable, this.historyItems.length),
         replaceText: _tr('replaceOption', 'Replace')
       });
 

@@ -75,7 +75,7 @@
   }
 
   /** A spreadsheet runs text that starts with = + - @ as a formula: the apostrophe keeps it text. */
-  const guardCell = (value) => (/^[=+\-@\t\r]/.test(value) ? `'${value}` : value);
+  const guardCell = (value) => (/^(?:\s*[=+\-@]|[\t\r])/.test(value) ? `'${value}` : value);
   const csvCell = (value) => {
     const text = guardCell(String(value == null ? '' : value));
     return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;

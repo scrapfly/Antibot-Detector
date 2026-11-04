@@ -5,6 +5,44 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.2] - 2026-11-04
+
+### Changed
+
+- Keyboard and screen readers: Rules dialogs keep Tab inside the open dialog and give the focus back when it closes; Settings tabs and the Advanced Tools / History switch are tab lists you move along with the arrow keys.
+- Matched combinations (Detection and History details): the card says when it fires, and the signals found together are folded rows like Detection methods: type, score, and the value when opened.
+- History cards count the combinations that fired, right after the fingerprint total; the hover names each with its score.
+- A quieter interface in Scrapfly's style: labels in sentence case instead of tracked capitals, neutral header buttons, flat cards without gradients or glows, lighter text weights and no decorative motion.
+- Dimmed text is easier to read: lighter in the dark theme, a little darker in the light one.
+- Chrome 111 or newer is required (the scripts that watch the page need it).
+- Copy diagnostics also hides sites written with a path and IPv6 addresses.
+
+### Fixed
+
+- History import: a file with no history entries in it can no longer replace, and so empty, your history; the dialog counts the entries it can import.
+- Rules → Duplicate: the copy of a rule lost settings the editor does not show, such as a payload rule that reads the response.
+- A rule saved or installed after a page loaded now matches that page on a manual scan, without reloading it.
+- Detection details cut a matched address at the "?" for rules whose pattern starts with https://; the whole address shows again.
+- Clicking the Rules or Advanced tab twice while it loads no longer sets it up twice (the Rules buttons could stop responding).
+- Payload rules that share a description each match; text with a dotted capital I (Turkish) no longer shifts the matched text; a combination that stops holding after a late request scores back down.
+- Rules: a custom rule with a quote in its id can be switched on and off; category colours written as #abc show their tint.
+- Skipped sites: "bank.example." and list entries written with capitals, a port or a whole address are skipped like the plain host.
+- Bulk scan: a list of thousands of addresses on one line is read at once, and runs longer than two minutes keep the browser's background part awake.
+- A long toast with a spinner is no longer dropped when two other messages appear.
+- Advanced → Imperva: a finished capture shows in the tool's own list and clears with it; the Captures tab lists Imperva once; starting again no longer gets stopped by the old timer.
+- Advanced: results of tools such as Check Cookies are no longer drawn as captures with fields they do not have; Shape export code no longer carries another site's addresses.
+- Advanced: captures and analyses keep the browser's background part awake until they end; Extract Sensor no longer saves every request address of the page in History.
+- History: Statistics → Evidence names a signal by its rule again, not by each address; Compare no longer offers scans served from the cache; Auto-delete keeps an entry whose date cannot be read.
+- Statistics: two ports of one host (localhost:3000 and :8080) are no longer read as one page changing its protection; History CSV guards a formula after leading spaces.
+- Amazon: a form field named metadata1 alone is no longer reported as Amazon Bot Protection; Turnstile, DeepSeek and OpenAI rules that read responses are only offered to extensions that can run them.
+
+### Security
+
+- Webhook and custom share addresses: "localhost." and "10.0.0.1." (with a final dot), and names such as .lan, .home.arpa and .corp, are refused as local.
+- A rule file can no longer make the popup load an icon from a web address; the icon is left out when the rule is imported.
+- The log collector, a tab's detection result and a manual scan answer extension pages only, never a page's own script.
+- A cookie name with "*" in a rule, or a regex repeated a fixed number of times around a repeat, can no longer make a hostile page freeze the extension; host-name patterns that are safe are accepted.
+
 ## [3.1.1] - 2026-11-03
 
 ### Changed
@@ -911,6 +949,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.9...v3.1.0
 [3.0.9]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.8...v3.0.9

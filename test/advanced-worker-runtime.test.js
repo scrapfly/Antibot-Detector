@@ -448,3 +448,53 @@ test('hCaptcha: the worker fetches a checksiteconfig address the page named only
     assert.deepEqual({ ...fetched[0][1] }, { credentials: 'omit', redirect: 'error', referrerPolicy: 'no-referrer' }, 'no cookies, no redirect followed');
 });
 
+
+// The worker saved Imperva's captures under "incapsula" while the panel and the vendor registry read "imperva": a capture never showed
+// in its own panel, and the Captures tab listed the vendor twice
+test('Imperva captures live in one bucket: an old "incapsula" bucket joins "imperva", and either name reaches it', async () => {
+    const f = fixture({
+        incapsula: [{ id: 'old-capture', timestamp: 30, type: 'incapsula', url: 'https://shop.test/', hostname: 'shop.test', data: { requiresReese84: true } }],
+        imperva: [{ id: 'tool-result', timestamp: 20, type: 'imperva', hostname: 'shop.test', data: { tool: 'cookies', schemaVersion: 1 } }]
+    });
+    const store = f.context.AdvancedHistoryStore;
+    const history = await store.load();
+    assert.deepEqual(Array.from(Object.keys(history)).sort(), ['imperva'], 'no second bucket');
+    assert.deepEqual(Array.from(history.imperva, item => item.id), ['old-capture', 'tool-result'], 'newest first, both kept');
+    assert.ok(history.imperva.every(item => item.type === 'imperva'));
+    // A save under the old name lands in the current bucket, and either name reads it
+    await store.appendCapture('incapsula', { id: 'new-capture', data: { requiresUtmvc: true } });
+    assert.deepEqual(Array.from(f.saved().imperva, item => item.id), ['new-capture', 'old-capture', 'tool-result']);
+    assert.ok(!('incapsula' in f.saved()), 'the old bucket is not written back');
+    assert.equal((await store.getModule('imperva')).length, 3);
+    assert.equal((await store.getModule('incapsula')).length, 3);
+    // Clearing the tool clears both the captures and the results
+    await store.deleteCapture('incapsula', 'old-capture');
+    assert.deepEqual(Array.from(await store.getModule('imperva'), item => item.id), ['new-capture', 'tool-result']);
+    await store.clear('incapsula');
+    assert.equal((await store.getModule('imperva')).length, 0);
+});
+
+test('an old bucket and the current one in the same stored history are merged without repeating an entry', async () => {
+    const f = fixture({
+        imperva: [{ id: 'same', timestamp: 10, data: { n: 1 } }, { id: 'b', timestamp: 5, data: {} }],
+        incapsula: [{ id: 'same', timestamp: 10, data: { n: 1 } }, { id: 'c', timestamp: 40, data: {} }]
+    });
+    const history = await f.context.AdvancedHistoryStore.load();
+    assert.deepEqual(Array.from(history.imperva, item => item.id), ['c', 'same', 'b']);
+});
+
+test('a capture job keeps the worker awake until it finishes, however it ends', async () => {
+    const f = fixture();
+    const log = [];
+    f.context.workerKeepaliveManager = { startOperation: (id, info) => log.push(['start', id, info.reason]), endOperation: id => log.push(['end', id]) };
+    const { job } = f.context.AdvancedJobManager.begin({ tabId: 7, vendorId: 'akamai', operation: 'capture', timeoutMs: 60000 });
+    assert.deepEqual(log, [['start', 'advanced:7:akamai:capture', 'advanced_job']]);
+    job.finish('completed');
+    assert.deepEqual(log.at(-1), ['end', 'advanced:7:akamai:capture']);
+    // A tab closed mid-job ends it the same way
+    const second = f.context.AdvancedJobManager.begin({ tabId: 8, vendorId: 'recaptcha', operation: 'capture' });
+    f.context.chrome.tabs.onRemoved.emit(8);
+    assert.equal(second.job.finished, true);
+    assert.deepEqual(log.at(-1), ['end', 'advanced:8:recaptcha:capture']);
+    assert.equal(log.filter(entry => entry[0] === 'start').length, log.filter(entry => entry[0] === 'end').length, 'every start has its end');
+});

@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 global.Logger = new Proxy({}, { get: () => () => {} });
 global.DetectionUtils = require('../utils/detection-utils.js');
-global.chrome = { runtime: { getManifest: () => ({ version: '2.8.6' }) } };
+global.chrome = { runtime: { getManifest: () => ({ version: '2.8.8' }) } }; // the first engine that reads response bodies: some packaged rules need it
 const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 const plain = value => JSON.parse(JSON.stringify(value));
 let writes;
@@ -151,3 +151,19 @@ test('an import names the official rules it left as installed because the file h
   assert.deepEqual(same.lastImportKept, [], 'the same rule (only enabled differs) is not reported');
 });
 
+
+test('a rule file cannot make the popup fetch an address: a web address as its uploaded icon is dropped, a data image stays', async () => {
+  const dm = manager();
+  const png = 'data:image/png;base64,iVBORw0KGgo=';
+  const imported = {
+    antibot: {
+      'detect-remote': definition('detect-remote', { customIcon: 'https://tracker.example/pixel.gif?u=1' }),
+      'detect-data': definition('detect-data', { customIcon: png }),
+      'detect-other': definition('detect-other', { customIcon: 'javascript:alert(1)' })
+    }
+  };
+  assert.equal(await dm.importDetectors(imported, false), true, 'the rules themselves are imported');
+  assert.equal(dm.getDetector('antibot', 'detect-remote').customIcon, undefined);
+  assert.equal(dm.getDetector('antibot', 'detect-other').customIcon, undefined);
+  assert.equal(dm.getDetector('antibot', 'detect-data').customIcon, png);
+});

@@ -116,10 +116,8 @@
   gap: 7px;
   margin: 0 0 10px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 16px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
   color: var(--accent-light);
 }
 
@@ -261,7 +259,7 @@
   border: 1px solid rgba(59, 130, 246, 0.45);
   color: var(--accent-light);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .advanced-info-step-content {
@@ -414,7 +412,7 @@
   cursor: pointer;
   font-size: 11px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   white-space: nowrap;
 }
 
@@ -467,13 +465,12 @@
   word-break: break-all;
   overflow-x: auto;
   border: 1px solid var(--border);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .advanced-modal-code-block:hover {
   background: var(--bg-secondary);
   border-color: var(--accent);
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
 }
 
 /* Info Row - Two column layout for label:value pairs */
@@ -514,7 +511,7 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -523,8 +520,6 @@
 
 .advanced-modal-btn-primary:hover {
   background: var(--accent-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .advanced-modal-btn-primary:active {
@@ -552,7 +547,7 @@
   cursor: pointer;
   font-size: 11px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   flex-shrink: 0;
 }
 
@@ -573,7 +568,7 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   white-space: nowrap;
 }
 
@@ -592,7 +587,7 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   margin-bottom: 12px;
 }
 
@@ -652,7 +647,7 @@
   font-weight: 600;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   background: rgba(148, 163, 184, 0.18);
   color: var(--g-d1d5db);
   flex: 1;
@@ -670,7 +665,7 @@
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%2394a3b8' d='M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -724,7 +719,7 @@
   border-radius: 10px;
   color: var(--g-e2e8f0);
   font-size: 12px;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .capture-search-input::placeholder {
@@ -769,35 +764,33 @@
 .capture-module-badge {
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 11px;
+  font-weight: 600;
   color: white;
 }
 
 .capture-module-badge.recaptcha {
-  background: linear-gradient(135deg, #4285F4 0%, #34A853 100%);
+  background: #4285F4;
 }
 
 .capture-module-badge.akamai {
-  background: linear-gradient(135deg, #0096D6 0%, #00C0F3 100%);
+  background: #0096D6;
 }
 
 .capture-module-badge.incapsula {
-  background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%);
+  background: #FF6B35;
 }
 
 .capture-module-badge.shapesecurity {
-  background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  background: #8B5CF6;
 }
 
 .capture-module-badge.aws-waf {
-  background: linear-gradient(135deg, #FF9900 0%, #FFAD33 100%);
+  background: #FF9900;
 }
 
 .capture-module-badge.cloudflare {
-  background: linear-gradient(135deg, #F38020 0%, #FAAD3F 100%);
+  background: #F38020;
 }
 
 .capture-site-badge {
@@ -876,7 +869,7 @@
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1002,7 +995,7 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   margin-top: 8px;
 }
 
@@ -1060,12 +1053,11 @@
 
 /* Unified Filters Card (History Tab) */
 .filters-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.52) 0%, rgba(15, 23, 42, 0.65) 100%);
-  border: 1px solid rgba(96, 165, 250, 0.22);
-  border-radius: 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 10px 24px rgba(2, 6, 23, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  margin-bottom: 16px;
 }
 
 /* Active Filter Banner - Enhanced */
@@ -1074,11 +1066,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(30, 64, 175, 0.2) 0%, rgba(15, 23, 42, 0.35) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.35);
-  border-radius: 12px;
-  margin-bottom: 14px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 16px;
   font-size: 12px;
-  color: #cbd5e1;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
 }

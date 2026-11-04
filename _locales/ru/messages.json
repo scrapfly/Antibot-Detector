@@ -702,7 +702,7 @@
     "message": "Работает на"
   },
   "categoryColors": {
-    "message": "ЦВЕТА КАТЕГОРИЙ"
+    "message": "Цвета категорий"
   },
   "methodSuffixPatterns": {
     "message": "шаблонов"
@@ -1607,16 +1607,16 @@
     "message": "Заблокировать этот домен"
   },
   "detectionStatSite": {
-    "message": "САЙТ"
+    "message": "Сайт"
   },
   "detectionStatDetections": {
-    "message": "НАЙДЕНО"
+    "message": "Найдено"
   },
   "detectionStatConfidence": {
-    "message": "УВЕРЕННОСТЬ"
+    "message": "Уверенность"
   },
   "detectionStatDifficulty": {
-    "message": "СЛОЖНОСТЬ"
+    "message": "Сложность"
   },
   "detectionSearchPlaceholder": {
     "message": "Поиск обнаружений..."
@@ -4727,7 +4727,7 @@
     "message": "{0} · {1}"
   },
   "detectionStatCache": {
-    "message": "КЭШ"
+    "message": "Кэш"
   },
   "detectionTipCache": {
     "message": "Какие страницы повторно используют эти кэшированные результаты и как долго."

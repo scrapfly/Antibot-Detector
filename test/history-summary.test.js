@@ -34,9 +34,9 @@ test('the card shows one total per category, anti-bot first, with icons and a ti
   const history = loadHistory();
   const html = history.renderHistorySummary(detections);
   const counts = [...html.matchAll(/class="history-cat-count[^"]*" data-tip="([^"]*)"/g)].map(m => m[1]);
-  assert.deepStrictEqual(counts, ['Anti-bot: 1', 'Captcha: 0', 'Fingerprint: 2']);
+  assert.deepStrictEqual(counts, ['Anti-bot: 1', 'Captcha: 0', 'Fingerprint: 2', 'Matched combinations: 0']);
   assert.match(html, /history-cat-count is-zero/, 'an empty category is dimmed, not hidden');
-  assert.strictEqual((html.match(/<svg/g) || []).length, 3, 'three category icons');
+  assert.strictEqual((html.match(/<svg/g) || []).length, 4, 'three category icons and the combinations');
   assert.ok(!/<button|data-action/.test(html), 'not its own button: a click opens the card details');
   assert.ok(!html.includes('more-detections'), 'no "+N"');
   assert.match(html, /Canvas Fingerprint/, 'the tip lists the protections of the category');
@@ -47,10 +47,46 @@ test('Settings → Show first decides the order of the totals', () => {
   history.detectionSort = { categoryOrder: ['fingerprint', 'antibot', 'captcha'] };
   const html = history.renderHistorySummary(detections);
   const counts = [...html.matchAll(/data-tip="([^":]*):/g)].map(m => m[1]);
-  assert.deepStrictEqual(counts, ['Fingerprint', 'Anti-bot', 'Captcha']);
+  assert.deepStrictEqual(counts, ['Fingerprint', 'Matched combinations', 'Anti-bot', 'Captcha'], 'the combinations stay beside the fingerprint');
 });
 
 test('no detections: the card keeps its "No detections" label', () => {
   const history = loadHistory();
   assert.match(history.renderHistorySummary([]), /history-detection-tag/);
+});
+
+// The combinations that fired on the page, beside the fingerprint total
+test('the card counts the combinations that fired, right after the fingerprint total, and names each in the hover', () => {
+  const history = loadHistory();
+  history.detectorManager = { getDetectorByName: () => null, getCategoryInfo: () => null,
+    findDetectorById: (id) => (id === 'detect-nav' ? { id, combinations: [{ id: 'profile', name: 'Browser profile' }] } : null) };
+  const withCombos = [
+    { detector: { id: 'detect-nav', name: 'Navigator Fingerprint' }, category: 'Fingerprint', confidence: 30,
+      combinations: [{ id: 'profile', confidence: 30 }, { id: 'device', name: 'Device profile', confidence: 60 }] },
+    { detector: { name: 'Canvas Fingerprint' }, category: 'Fingerprint', confidence: 20, combinations: [{ id: 'x', confidence: 10 }] },
+    { detector: { name: 'Cloudflare' }, category: 'Anti-Bot', confidence: 85 }
+  ];
+  const html = history.renderHistorySummary(withCombos);
+  const chips = [...html.matchAll(/class="history-cat-count([^"]*)" data-tip="([^"]*)"/g)].map(m => [m[2], /is-zero/.test(m[1])]);
+  assert.deepStrictEqual(chips, [['Anti-bot: 1', false], ['Captcha: 0', true], ['Fingerprint: 2', false], ['Matched combinations: 3', false]]);
+  const chip = html.slice(html.indexOf('history-combo-count'));
+  assert.match(chip, /<span class="history-cat-value">3<\/span>/);
+  // Highest first; a name the saved entry does not hold comes from the rule as it is now; an unnamed rule is numbered
+  const order = ['Device profile', 'Browser profile', 'Combination 3'].map(name => chip.indexOf(name));
+  assert.ok(order.every(at => at > 0) && order[0] < order[1] && order[1] < order[2], JSON.stringify(order));
+  assert.match(chip, /60%/);
+});
+
+test('with no combination the total is there, dimmed like an empty category; with no detections only "No detections" shows', () => {
+  const history = loadHistory();
+  const html = history.renderHistorySummary(detections);
+  assert.match(html, /history-cat-count history-combo-count is-zero" [^>]*data-tip="Matched combinations: 0"/);
+  assert.ok(!/history-combo-count/.test(history.renderHistorySummary([])));
+});
+
+test('the combinations total follows the fingerprint wherever Settings puts it, and ends the row when there is no fingerprint slot', () => {
+  const history = loadHistory();
+  history.detectionSort = { categoryOrder: ['antibot', 'fingerprint', 'captcha'] };
+  const tips = [...history.renderHistorySummary(detections).matchAll(/data-tip="([^":]*):/g)].map(m => m[1]);
+  assert.deepStrictEqual(tips, ['Anti-bot', 'Fingerprint', 'Matched combinations', 'Captcha']);
 });

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
+  "lastUpdated": "2026-11-04",
+  "version": "2.1.1",
   "minExtensionVersion": "2.8",
   "website": "https://www.amazon.com/",
   "icon": "amazon_official.png",
@@ -17,6 +17,7 @@
         "id": "metadata1-field",
         "selector": "input[name=\"metadata1\"]",
         "confidence": 80,
+        "standalone": false,
         "description": "Hidden metadata1 field of the sign-in form, which carries the encrypted FWCIM fingerprint"
       }
     ],

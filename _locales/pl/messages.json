@@ -702,7 +702,7 @@
     "message": "Obsługiwane przez"
   },
   "categoryColors": {
-    "message": "KOLORY KATEGORII"
+    "message": "Kolory kategorii"
   },
   "methodSuffixPatterns": {
     "message": "wzorce"
@@ -1607,16 +1607,16 @@
     "message": "Zablokuj tę domenę"
   },
   "detectionStatSite": {
-    "message": "WITRYNA"
+    "message": "Witryna"
   },
   "detectionStatDetections": {
-    "message": "WYKRYCIA"
+    "message": "Wykrycia"
   },
   "detectionStatConfidence": {
-    "message": "PEWNOŚĆ"
+    "message": "Pewność"
   },
   "detectionStatDifficulty": {
-    "message": "TRUDNOŚĆ"
+    "message": "Trudność"
   },
   "detectionSearchPlaceholder": {
     "message": "Szukaj wykryć..."
@@ -4727,7 +4727,7 @@
     "message": "{0} · {1}"
   },
   "detectionStatCache": {
-    "message": "CACHE"
+    "message": "Cache"
   },
   "detectionTipCache": {
     "message": "Które strony ponownie używają tych wyników z pamięci podręcznej i jak długo."

@@ -83,7 +83,7 @@
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .rules-toolbar .rules-add-btn {
@@ -170,7 +170,7 @@
   border-radius: 7px;
   color: var(--g-e0e0e0);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .rules-more-btn:hover,
@@ -263,7 +263,7 @@
   font-weight: 600;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   background: rgba(148, 163, 184, 0.18);
   color: var(--g-d1d5db);
 }
@@ -324,7 +324,7 @@
   height: auto;
   width: 100%;
   box-sizing: border-box;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   position: relative;
   overflow: visible;
   flex-shrink: 0;
@@ -587,7 +587,7 @@
   padding: 5px;
   color: var(--danger);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -628,7 +628,7 @@
   right: 0;
   bottom: 0;
   background-color: var(--bg-tertiary);
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   border-radius: 22px;
   border: 1px solid var(--border);
 }
@@ -642,7 +642,7 @@
   top: 50%;
   transform: translateY(-50%);
   background-color: var(--text-muted);
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   border-radius: 50%;
 }
 

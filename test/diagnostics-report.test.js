@@ -121,3 +121,12 @@ test('site names with any ending and short name=value secrets are redacted; code
   assert.strictEqual(r('TypeError at chrome.storage.local.get in history-store.js'), 'TypeError at chrome.storage.local.get in history-store.js');
   assert.strictEqual(r('HistoryStore.read failed (version 3.0.4)'), 'HistoryStore.read failed (version 3.0.4)');
 });
+
+test('a site written with a path and no scheme, and an IPv6 address, are redacted; clock times and file paths stay', () => {
+  const r = D.redact;
+  assert.strictEqual(r('Scan failed for shop.example/checkout?id=1'), 'Scan failed for <url>');
+  assert.strictEqual(r('open www.mybank.travel/account/12 failed'), 'open <url> failed');
+  assert.strictEqual(r('Cannot reach 2001:db8::1 or ::1 or 2001:db8:85a3:0:0:8a2e:370:7334'), 'Cannot reach <ip> or <ip> or <ip>');
+  assert.strictEqual(r('at 12:30:45 then 09:05'), 'at 12:30:45 then 09:05', 'a time is not an address');
+  assert.strictEqual(r('modules/core/storage-manager.js and sections/rules/rules.js'), 'modules/core/storage-manager.js and sections/rules/rules.js');
+});

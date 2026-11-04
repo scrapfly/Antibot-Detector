@@ -163,9 +163,10 @@ SettingsRuntime._isWebhookUrlSafe = function(rawUrl) {
     try { parsed = new URL(rawUrl); } catch { return false; }
     if (parsed.protocol !== 'https:' || parsed.username || parsed.password) return false;
 
-    const host = parsed.hostname.toLowerCase();
+    // "localhost." and "10.0.0.1." reach the same machine as the names without the final dot
+    const host = parsed.hostname.toLowerCase().replace(/\.+$/, '');
     if (!host.includes('.') && !host.startsWith('[')) return false;
-    if (host === 'localhost' || /\.(localhost|local|internal)$/.test(host)) return false;
+    if (host === 'localhost' || /\.(localhost|local|internal|lan|localdomain|intranet|corp)$/.test(host) || host === 'home.arpa' || host.endsWith('.home.arpa')) return false;
 
     if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
         const o = host.split('.').map(Number);

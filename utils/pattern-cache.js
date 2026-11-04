@@ -154,6 +154,10 @@ function redosParse(source) {
             const min = Number(m[1]);
             const unbounded = m[2] !== undefined && m[3] === '';
             atom.quant = unbounded ? 'unbounded' : 'bounded';
+            // {10} and {1,10} run the group's rounds one after another as + does, only for a bounded number of them: (a+){10}b
+            // takes as long as (a+)+b on a text of the same kind
+            const most = unbounded ? Infinity : (m[2] !== undefined ? Number(m[3]) : min);
+            if (most >= 2) atom.rounds = true;
             if (min === 0) atom.nullable = true;
         } else {
             return;
@@ -274,7 +278,7 @@ function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
                     }
                 }
             }
-            const inner = unbounded && atom.kind === 'group'
+            const inner = (unbounded || atom.rounds) && atom.kind === 'group'
                 ? { rest: [], boundary: atom.first }
                 : { rest, boundary: scope.boundary };
             if (redosTreeIsEvil(atom.branches, inner)) return true;
@@ -295,15 +299,14 @@ function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
 function isLikelyEvilRegex(pattern) {
     if (typeof pattern !== 'string') return false;
     if (pattern.length > 1000) return true;
-    // group containing + * or {n,} immediately followed by another + or *
-    if (/\([^()]*[+*][^()]*\)\s*[+*]/.test(pattern)) return true;
-    if (/\([^()]*\{\d+,\}[^()]*\)\s*[+*]/.test(pattern)) return true;
     try {
-        if (redosTreeIsEvil(redosParse(pattern))) return true;
+        // The reading of the pattern decides: it tells ([a-z0-9]+\.)+ (the dot splits the text one way only) from (a+)+
+        return redosTreeIsEvil(redosParse(pattern));
     } catch (_) {
-        // A source the reading does not follow: the checks above decide (an invalid one never compiles)
+        // A source the reading does not follow (an invalid one never compiles): the cruder checks decide, and prefer to refuse.
+        // A group containing + * or {n,} immediately followed by another + or *
+        return /\([^()]*[+*][^()]*\)\s*[+*]/.test(pattern) || /\([^()]*\{\d+,\}[^()]*\)\s*[+*]/.test(pattern);
     }
-    return false;
 }
 
 /**

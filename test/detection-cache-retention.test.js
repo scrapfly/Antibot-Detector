@@ -151,3 +151,16 @@ test('the retention run removes private pages only when no private window is ope
   await run(new Error('no windows API'));
   assert.deepStrictEqual(calls.map(c => c.dropPrivate), [false, true, false]);
 });
+
+test('a stored match keeps what its rule scores by itself, so scoring again after a late request can go back to it', async () => {
+  const { Engine, store } = loadEngine({});
+  await Engine.storeDetection('https://new.example/', { url: 'https://new.example/', hostname: 'new.example' },
+    [{ id: 'x', confidence: 90, category: 'Anti-Bot', detector: { id: 'x', name: 'X' }, matches: [
+      { type: 'url', pattern: 'a', value: 'a', confidence: 90, baseConfidence: 30, patternId: 'u1' },
+      { type: 'url', pattern: 'b', value: 'b', confidence: 40, patternId: 'u2' }
+    ] }]);
+  const saved = Object.values(store.scrapfly_detection_storage)[0].detectionResults[0].matches;
+  assert.strictEqual(saved[0].baseConfidence, 30);
+  assert.strictEqual(saved[0].confidence, 90);
+  assert.ok(!('baseConfidence' in saved[1]), 'a match no combination raised has none');
+});

@@ -702,7 +702,7 @@
     "message": "Didukung oleh"
   },
   "categoryColors": {
-    "message": "WARNA KATEGORI"
+    "message": "Warna kategori"
   },
   "methodSuffixPatterns": {
     "message": "pola"
@@ -1607,16 +1607,16 @@
     "message": "Blokir domain ini"
   },
   "detectionStatSite": {
-    "message": "SITUS"
+    "message": "Situs"
   },
   "detectionStatDetections": {
-    "message": "DETEKSI"
+    "message": "Deteksi"
   },
   "detectionStatConfidence": {
-    "message": "KEPERCAYAAN"
+    "message": "Kepercayaan"
   },
   "detectionStatDifficulty": {
-    "message": "KESULITAN"
+    "message": "Kesulitan"
   },
   "detectionSearchPlaceholder": {
     "message": "Cari deteksi..."
@@ -4727,7 +4727,7 @@
     "message": "{0} · {1}"
   },
   "detectionStatCache": {
-    "message": "CACHE"
+    "message": "Cache"
   },
   "detectionTipCache": {
     "message": "Halaman mana yang menggunakan ulang hasil cache ini, dan untuk berapa lama."

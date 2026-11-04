@@ -21,6 +21,9 @@
     // They are kept in memory only (chrome.storage.session), shown with the others, and never written to storage.local.
     const PRIVATE_KEY = 'session_advanced_private';
     const DEFAULT_HISTORY_LIMIT = 100;
+    // Older names of a tool's bucket: the worker saved Imperva's captures as "incapsula" while its panel reads "imperva"
+    const LEGACY_MODULES = Object.freeze({ incapsula: 'imperva' });
+    const bucketOf = (moduleId) => LEGACY_MODULES[moduleId] || moduleId;
     let queue = Promise.resolve();
     function serialize(operation) {
         const pending = queue.then(operation);
@@ -131,15 +134,17 @@
         }
 
         const normalizedHistory = {};
-        Object.entries(history).forEach(([moduleId, entries]) => {
+        Object.entries(history).forEach(([storedId, entries]) => {
             if (!Array.isArray(entries)) {
                 changed = true;
                 return;
             }
 
+            // An old bucket name joins its current one (the entries keep their order and their ids)
+            const moduleId = bucketOf(storedId);
             const normalizedEntries = [];
             entries.forEach((entry) => {
-                const normalized = normalizeCapture(moduleId, entry);
+                const normalized = normalizeCapture(moduleId, moduleId === storedId ? entry : { ...entry, type: moduleId });
                 if (normalized) {
                     normalizedEntries.push(normalized);
                 } else {
@@ -147,6 +152,21 @@
                 }
             });
 
+            if (moduleId !== storedId) {
+                changed = true;
+                const known = new Set((normalizedHistory[moduleId] || []).map(item => item.id));
+                normalizedHistory[moduleId] = [...(normalizedHistory[moduleId] || []), ...normalizedEntries.filter(item => !known.has(item.id))]
+                    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                return;
+            }
+            // The current bucket met after an old name that joined it: merged the same way
+            if (normalizedHistory[moduleId]) {
+                const known = new Set(normalizedHistory[moduleId].map(item => item.id));
+                normalizedHistory[moduleId] = [...normalizedHistory[moduleId], ...normalizedEntries.filter(item => !known.has(item.id))]
+                    .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                changed = true;
+                return;
+            }
             normalizedHistory[moduleId] = normalizedEntries;
         });
 
@@ -244,10 +264,11 @@
         return (entries || []).filter((entry) => !entry.expiresAt || entry.expiresAt > now);
     }
 
-    async function appendCapture(moduleId, capture, options = {}) {
-        if (!moduleId) {
+    async function appendCapture(requestedId, capture, options = {}) {
+        if (!requestedId) {
             throw new Error('appendCapture requires moduleId');
         }
+        const moduleId = bucketOf(requestedId);
 
         const {
             limit = DEFAULT_HISTORY_LIMIT
@@ -287,7 +308,8 @@
         return normalized;
     }
 
-    async function getModule(moduleId, options = {}) {
+    async function getModule(requestedId, options = {}) {
+        const moduleId = bucketOf(requestedId);
         const {
             includeExpired = false,
             hostname = null
@@ -313,7 +335,8 @@
         return entries;
     }
 
-    async function deleteCapture(moduleId, captureId) {
+    async function deleteCapture(requestedId, captureId) {
+        const moduleId = bucketOf(requestedId);
         const history = await load();
         const existing = Array.isArray(history[moduleId]) ? history[moduleId] : [];
         history[moduleId] = existing.filter((entry) => entry.id !== captureId);
@@ -321,8 +344,9 @@
         return history[moduleId];
     }
 
-    async function clear(moduleId = null) {
-        if (moduleId) {
+    async function clear(requestedId = null) {
+        if (requestedId) {
+            const moduleId = bucketOf(requestedId);
             const history = await load();
             delete history[moduleId];
             await save(history);

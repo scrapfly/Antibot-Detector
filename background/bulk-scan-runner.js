@@ -120,7 +120,7 @@ const BulkScanRunner = {
         if (this._loop) return;
         const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
         // A run takes minutes: Chrome stops an idle worker after about 30 s, which would end the run and leave its tab
-        if (keepalive) keepalive.startOperation(this.KEEPALIVE_ID, { reason: 'bulk_scan' });
+        this._renewKeepalive();
         const looped = this._run;
         this._loop = this._runLoop().catch((error) => {
             if (typeof Logger !== 'undefined' && Logger.warn) Logger.warn('BACKGROUND', '[BulkScan] Run failed:', error);
@@ -135,10 +135,20 @@ const BulkScanRunner = {
         });
     },
 
+    /**
+     * The keepalive drops an operation after two minutes (a leaked one would pin the worker awake for good): every page of
+     * the run renews it, as the watchlist's check does, so a long list is not left to an idle worker.
+     */
+    _renewKeepalive() {
+        const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
+        if (keepalive) keepalive.startOperation(this.KEEPALIVE_ID, { reason: 'bulk_scan' });
+    },
+
     async _runLoop() {
         const run = this._run;
         let first = true;
         while (this._run === run) {
+            this._renewKeepalive();
             if (run.status === 'paused') {
                 await new Promise(resolve => { this._wake = resolve; });
                 this._wake = null;

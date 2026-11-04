@@ -65,7 +65,10 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
       isNew: isNew,
       // The rule as it was before this edit: becomes the official snapshot
       // when an official detector is edited
-      original: isNew || typeof DetectorManager === 'undefined' ? null : DetectorManager.cleanDetectorCopy(detector)
+      original: isNew || typeof DetectorManager === 'undefined' ? null : DetectorManager.cleanDetectorCopy(detector),
+      // A new rule opens empty, a copy (Duplicate) or a suggestion with the rules it starts from: the fields of those that the
+      // form does not show (a response-body payload, a hook's "enabled", a content rule's scope) stay with each rule on Save
+      startingRules: isNew ? JSON.parse(JSON.stringify(detectorWithDetection)) : null
     };
 
     // Set dynamic title based on whether it's a new detector

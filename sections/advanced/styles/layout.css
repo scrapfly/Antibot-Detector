@@ -97,7 +97,7 @@
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 11.6px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   position: relative;
@@ -146,7 +146,7 @@
   color: #fff;
   border-radius: 10px;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   min-width: 18px;
   text-align: center;
   line-height: 1.2;
@@ -219,7 +219,7 @@
   margin: 0 0 8px;
   color: var(--text-primary);
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 24px;
   overflow-wrap: anywhere;
 }
@@ -413,7 +413,7 @@
   font-weight: 600;
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   background: rgba(148, 163, 184, 0.18);
   color: var(--g-d1d5db);
   flex: 1;
@@ -444,7 +444,7 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   min-height: 90px;
 }
 
@@ -491,7 +491,7 @@
   border: 1px solid var(--border);
   background: var(--bg-tertiary);
   color: var(--accent);
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .advanced-tool-icon--blue {
@@ -573,7 +573,7 @@
   border: 1px solid var(--border);
   background: var(--bg-tertiary);
   color: var(--text-secondary);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .tool-icon-blue {
@@ -605,7 +605,6 @@
 }
 
 .recaptcha-tool-btn:hover .tool-icon-container {
-  transform: scale(1.03);
   box-shadow: none;
 }
 
@@ -654,7 +653,7 @@
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -667,7 +666,6 @@
   background: var(--accent);
   border-color: var(--accent);
   color: #ffffff;
-  transform: scale(1.02);
 }
 
 .copy-parsing-code:active,
@@ -740,7 +738,7 @@
   color: var(--text-secondary);
   font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -826,12 +824,12 @@
 
 /* Capture Card - Compact Design */
 .capture-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.6) 100%);
-  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -844,20 +842,13 @@
   bottom: 10px;
   left: 0;
   width: 3px;
-  background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+  background: var(--accent);
   border-radius: 0 4px 4px 0;
 }
 
 .capture-card:hover {
-  border-color: rgba(96, 165, 250, 0.55);
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.74) 100%);
-  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.42), 0 0 0 1px rgba(59, 130, 246, 0.08);
-  transform: translateY(-2px);
-}
-
-.capture-card:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 10px rgba(2, 6, 23, 0.35);
+  border-color: var(--text-muted);
+  background: var(--bg-tertiary);
 }
 
 /* Card Top Section */
@@ -939,9 +930,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 600;
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -950,7 +941,6 @@
   background: var(--accent);
   border-color: var(--accent);
   color: white;
-  transform: scale(1.1);
 }
 
 /* Site Key Container */
@@ -1055,7 +1045,7 @@
   border-radius: 3px;
   color: var(--accent);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -1066,6 +1056,6 @@
 }
 
 .total-pages {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent);
 }

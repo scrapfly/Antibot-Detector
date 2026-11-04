@@ -29,6 +29,14 @@
             if (job.finished) { fn(); return; }
             cleanups.add(fn);
         };
+        // A capture or an analysis waits for the page, up to a minute or more: the worker is kept awake for it, as for a scan or a
+        // watch check, or it could be stopped in the middle and the job (its listeners and its timers) lost
+        const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
+        if (keepalive) {
+            const keepaliveId = `advanced:${key}`;
+            keepalive.startOperation(keepaliveId, { tabId: options.tabId, reason: 'advanced_job' });
+            cleanups.add(() => keepalive.endOperation(keepaliveId));
+        }
         job.setTimer = (fn, delay) => {
             const timer = setTimeout(() => { cleanups.delete(dispose); if (!job.finished) fn(); }, delay);
             const dispose = () => clearTimeout(timer);

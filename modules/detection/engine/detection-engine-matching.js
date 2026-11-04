@@ -1,5 +1,22 @@
 // Pattern matching helpers for DetectionEngineManager
 
+/** Does `text` match `pattern`, where "*" stands for any run of characters (none included)? Linear in the text. */
+function demWildcardMatch(text, pattern) {
+    const parts = pattern.split('*');
+    const first = parts[0];
+    const last = parts[parts.length - 1];
+    if (text.length < first.length + last.length || !text.startsWith(first) || !text.endsWith(last)) return false;
+    let position = first.length;
+    const end = text.length - last.length;
+    for (let i = 1; i < parts.length - 1; i++) {
+        if (!parts[i]) continue;
+        const found = text.indexOf(parts[i], position);
+        if (found === -1 || found + parts[i].length > end) return false;
+        position = found + parts[i].length;
+    }
+    return true;
+}
+
 function demMatchCookieName(name, pattern, options = {}) {
     const {
         regex = false,
@@ -18,15 +35,10 @@ function demMatchCookieName(name, pattern, options = {}) {
     const nameToCompare = caseSensitive ? name : name.toLowerCase();
     const patternToCompare = caseSensitive ? pattern : pattern.toLowerCase();
 
-    // Support simple wildcard patterns (e.g., "awswaf*")
+    // Support simple wildcard patterns (e.g., "awswaf*"). Walked piece by piece: a regex of ".*" runs (*a*a*a*b) takes
+    // exponential time on a hostile cookie name that almost matches
     if (patternToCompare.includes('*')) {
-        const escaped = patternToCompare.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regexPattern = `^${escaped.replace(/\\\*/g, '.*')}$`;
-        try {
-            return new RegExp(regexPattern).test(nameToCompare);
-        } catch (e) {
-            return false;
-        }
+        return demWildcardMatch(nameToCompare, patternToCompare);
     }
 
     // Default to prefix match (safer than substring for cookie names)
@@ -125,7 +137,10 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
             // Substring matching
             const index = textToSearch.indexOf(patternToMatch);
             if (index !== -1) {
-                return text.substring(index, index + pattern.length);
+                if (textToSearch.length === text.length) return text.substring(index, index + pattern.length);
+                // Lowercasing changed the text's length (İ becomes two characters): the index is of the other string
+                const original = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), caseSensitive ? '' : 'i').exec(text);
+                return original ? original[0] : patternToMatch;
             }
         }
     } catch (error) {

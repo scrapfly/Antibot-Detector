@@ -263,3 +263,27 @@ test('an import cuts what one entry can hold and keeps dates the exports can wri
     if (prevChrome === undefined) delete global.chrome; else global.chrome = prevChrome;
   }
 });
+
+test('a Replace of a file with no history entries in it keeps the stored history, and the count is of the entries that can be imported', async () => {
+  const stored = JSON.stringify({ items: [entry('keep1', { pinned: true }), entry('keep2')] });
+  const storage = memory(stored);
+  const registry = {};
+  HistoryStore.registerHandlers(registry, storage);
+  const page = { url: 'chrome-extension://abc/popup.html', id: 'abc' };
+  const prevChrome = global.chrome;
+  global.chrome = { runtime: { id: 'abc', getURL: (p) => `chrome-extension://abc/${p}` } };
+  try {
+    for (const items of [[1, 2, 3], [null], ['x', [], 7]]) {
+      const r = await call(registry, HistoryStore.Messages.REPLACE_ITEMS, { items, mode: 'replace', limit: 0 }, page);
+      assert.strictEqual(r.status, 'error', JSON.stringify(items));
+    }
+    assert.deepStrictEqual(read(storage).items.map(i => i.id), ['keep1', 'keep2'], 'nothing was replaced');
+    // Merging them adds nothing and changes nothing; an empty list is still a Replace that empties (the person chose it)
+    assert.strictEqual((await call(registry, HistoryStore.Messages.REPLACE_ITEMS, { items: [1, null], mode: 'merge', limit: 0 }, page)).status, 'ok');
+    assert.strictEqual((await call(registry, HistoryStore.Messages.REPLACE_ITEMS, { items: [], mode: 'replace', limit: 0 }, page)).status, 'ok');
+    assert.deepStrictEqual(read(storage).items, []);
+  } finally {
+    if (prevChrome === undefined) delete global.chrome; else global.chrome = prevChrome;
+  }
+  assert.strictEqual(HistoryStore.cleanImported([entry('a'), 1, null, entry('b'), 'x']).length, 2, 'the dialog counts entries, not array slots');
+});

@@ -450,7 +450,7 @@
 .history-difficulty-pill {
   flex-shrink: 0;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 14px;
   white-space: nowrap;
 }
@@ -529,7 +529,7 @@
   padding: 0 7px;
   border-radius: 6px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   border: 1px solid var(--g-444444) !important;
   white-space: nowrap;
   overflow: hidden;
@@ -551,7 +551,7 @@
   align-items: center;
   gap: 3px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
 }
@@ -567,6 +567,11 @@
 
 .history-cat-count.is-zero {
   opacity: 0.4;
+}
+
+/* The combinations total, beside the fingerprint's: the accent colour, not a category's */
+.history-combo-count .category-icon {
+  color: var(--accent-light);
 }
 
 .history-detection-tag.more-detections {
@@ -648,7 +653,7 @@
   gap: 3px;
   font-size: 11px;
   line-height: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
 }
@@ -839,11 +844,9 @@
 }
 
 .hm-metric-label {
-  font-size: 9.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 12px;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
@@ -853,7 +856,7 @@
 .hm-metric-value {
   margin-top: 3px;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 20px;
   color: var(--text-primary);
   white-space: nowrap;
@@ -935,7 +938,7 @@
 
 .hm-legend-item b {
   color: var(--text-primary);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .hm-dot {
@@ -1094,11 +1097,9 @@
 /* Category: small text tag next to the name; method chips below stay outlined */
 .history-modal-badge {
   flex-shrink: 0;
-  font-size: 9.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 12px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
   color: var(--cat);
 }
 
@@ -1182,11 +1183,9 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 14px;
-  letter-spacing: 0.6px;
-  text-transform: uppercase;
   color: var(--accent-light);
 }
 
@@ -1208,7 +1207,8 @@
   background: var(--border);
 }
 
-.history-modal-detection-methods {
+.history-modal-detection-methods,
+.history-modal-signals {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -1344,6 +1344,43 @@
   justify-self: end;
 }
 
+/* A combination's signals are these rows too; a row may carry what the signal means in words under its value */
+.history-modal-method-item.has-note {
+  grid-template-areas:
+    "head"
+    "value"
+    "note";
+}
+
+.history-modal-method-item.has-note.is-folded {
+  grid-template-areas: "head";
+}
+
+.history-modal-method-note {
+  grid-area: note;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.history-modal-method-item.is-folded > .history-modal-method-note {
+  display: none;
+}
+
+/* A "must not be found" signal: its row says so where the score would be */
+.history-modal-method-not-present {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.history-modal-method-item.is-absent .history-modal-method-badge {
+  opacity: 0.75;
+}
+
 .history-modal-empty,
 .history-modal-no-methods {
   text-align: center;
@@ -1409,12 +1446,15 @@
   min-width: 0;
 }
 
-.history-stat-label {
-  font-size: 10px;
-  line-height: 13px;
-  font-weight: 700;
-  color: var(--g-e0e0e0);
+.history-stat-label::first-letter {
   text-transform: uppercase;
+}
+
+.history-stat-label {
+  font-size: 11px;
+  line-height: 13px;
+  font-weight: 600;
+  color: var(--g-e0e0e0);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1424,7 +1464,7 @@
   margin-top: -1px;
   font-size: 12.5px;
   line-height: 16px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -1523,7 +1563,7 @@
   background: rgba(245, 158, 11, 0.12);
   color: var(--warning-light);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 15px;
   white-space: nowrap;
 }
@@ -1627,9 +1667,7 @@
 .history-compare-group h4 {
   margin: 0 0 4px;
   font-size: 11.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  font-weight: 600;
 }
 
 .history-compare-group ul {

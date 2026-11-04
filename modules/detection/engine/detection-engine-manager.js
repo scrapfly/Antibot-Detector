@@ -1009,7 +1009,8 @@ class DetectionEngineManager {
             for (const payloadItem of pageData.payloads) {
                 for (const payloadPattern of requestPayloadRules) {
                     // Skip already-matched patterns
-                    const patternKey = payloadPattern.description || payloadPattern.text;
+                    // By rule: two rules may share a description (a copied row), and each must match on its own
+                    const patternKey = payloadPattern.id || payloadPattern.description || payloadPattern.text;
                     if (matchedPatterns.has(patternKey)) {
                         continue;
                     }
@@ -1824,7 +1825,10 @@ class DetectionEngineManager {
                         description: m.description,
                         fullUrl: m.fullUrl,
                         // Which rule matched: lets the detail view and checks trace a match to its rule
-                        ...(m.patternId ? { patternId: m.patternId } : {})
+                        ...(m.patternId ? { patternId: m.patternId } : {}),
+                        // What the rule scores by itself, when a combination raised it: scoring again after a late request
+                        // (a combination that no longer holds) goes back to this, not to the raised value
+                        ...(m.baseConfidence !== undefined ? { baseConfidence: m.baseConfidence } : {})
                     })) || []
                 };
             });

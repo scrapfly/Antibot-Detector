@@ -298,11 +298,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   line-height: 14px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--rh-text-muted);
 }
 
@@ -743,7 +741,7 @@
 
 .rh-status::before {
   content: '✓';
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .rh-status.is-invalid {

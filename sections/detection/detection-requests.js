@@ -300,8 +300,10 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
                   return { ...match, value: match.fullUrl || match.pattern };
                 }
                 // Case 2: Value contains full URL (old format: https://...)
-                // Need to extract matched part from full URL using pattern
-                else if (match.value.includes('://') && match.pattern) {
+                // Need to extract matched part from full URL using pattern.
+                // Only a result with no fullUrl is in the old format: a current one carries the whole address in fullUrl, and its
+                // value is the matched part, which may itself contain "://" (a pattern that starts with ^https?://)
+                else if (!match.fullUrl && match.value.includes('://') && match.pattern) {
                   try {
                     // Try to extract the matched substring from the full URL
                     const regex = new RegExp(match.pattern, 'gi');

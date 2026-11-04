@@ -1,8 +1,12 @@
-/** Focus ownership for nested popup dialogs. Call the returned release on close. */
+/**
+ * Focus ownership for nested popup dialogs. Call the returned release on close.
+ * returnFocus: what gets the focus back on close, for a dialog that moved the focus itself before this was called (a search box
+ * focused as it opens): the default is the element focused now.
+ */
 (function(root) {
     const stack = [];
-    function activate(dialog, { onClose, initialFocus } = {}) {
-        const previous = document.activeElement;
+    function activate(dialog, { onClose, initialFocus, returnFocus } = {}) {
+        const previous = returnFocus || document.activeElement;
         const entry = { dialog };
         stack.push(entry);
         const focusables = () => Array.from(dialog.querySelectorAll(

@@ -309,6 +309,16 @@ test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   }
 });
 
+// Any page can have an input called metadata1; with Amazon's FWCIM script or command it is the sign-in form's fingerprint field
+test('detect-amazon: a field named metadata1 alone is not Amazon, with its FWCIM script it is', () => {
+  const d = definitions['detect-amazon'];
+  const field = { tagName: 'input', attributes: { type: 'hidden', name: 'metadata1' }, selector: 'input', id: '', class: '', src: undefined };
+  const base = { url: 'https://example.test/', headers: {}, allCookies: [], networkUrls: [], content: [], dom: [field] };
+  assert.equal(detect(d, { page: base }).confidence, 0, 'the field alone');
+  const withScript = pageFor(d, ['metadata1-field', 'fwcim-assets-script']);
+  assert.ok(detect(d, withScript).confidence >= 100, 'the field and the FWCIM script');
+});
+
 test('one vendor\'s full signal set does not identify another vendor', () => {
   for (const source of Object.values(definitions)) {
     const ids = patterns(source).map(r => r.id);

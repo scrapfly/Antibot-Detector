@@ -25,8 +25,12 @@
     [/\b(?:https?|wss?|ftp|file|data|blob|chrome-extension|moz-extension|chrome):\/\/?[^\s"'<>)\]]*/gi, '<url>'],
     [/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi, '<email>'],
     [/\bBearer\s+[A-Za-z0-9._~+/=-]{8,}/gi, 'Bearer <token>'],
+    // A site written with a path and no scheme (shop.example/checkout, www.mybank.travel/account); an API chain is not one
+    [/(?<![\w.])(?!(?:chrome|browser|self|window|document|this|globalthis|navigator|location|console|math|json|object|array|promise)\.)(?:[a-z0-9-]+\.)+[a-z]{2,24}\/[^\s"'<>)\]]*/gi, '<url>'],
     [new RegExp(`\\b(?:[a-z0-9-]+\\.)+(?:${TLDS})\\b(?![\\w/-])`, 'gi'), '<site>'],
     [/\b\d{1,3}(?:\.\d{1,3}){3}\b/g, '<ip>'],
+    // An IPv6 address: the full form, or one with "::" (a clock time such as 12:30:45 has neither)
+    [/(?<![\w:])(?:(?:[0-9a-f]{1,4}:){7}[0-9a-f]{1,4}|(?:[0-9a-f]{1,4}:){1,7}:(?:[0-9a-f]{1,4}(?::[0-9a-f]{1,4}){0,6})?|::(?:[0-9a-f]{1,4}(?::[0-9a-f]{1,4}){0,6}))(?![\w:])/gi, '<ip>'],
     [/\b[A-Za-z0-9_-]{24,}\b/g, '<token>'],
     // Any other lowercase dotted name is a site too (shop.games, mybank.travel, bank.museum: new endings keep coming),
     // except code and files: an API chain (chrome.storage.local.get) or a file name (history-store.js)

@@ -178,3 +178,48 @@ test('a folded combination opens and closes from its head', () => {
   assert.equal(button.attrs['aria-expanded'], 'false');
   assert.ok(classes.has('is-collapsed'));
 });
+
+// The Rules editor's row: the chevron, the name and the score on one line, what it takes to fire under the name; the signals are
+// rows of the Detection methods list (the page supplies the row)
+test('a combination card says when it fires, in the words of the Rules editor', () => {
+  const result = scored();
+  const cards = CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: result.confidence });
+  const sentence = (id) => CC.firesWhen(cards.find(card => card.id === id).tree);
+  assert.strictEqual(sentence('pair'), 'Fires when all 2 conditions are met.');
+  assert.strictEqual(sentence('api'), 'Fires when all 3 conditions are met.');
+  assert.strictEqual(sentence('auto'), 'Fires when at least 2 of these 3 conditions are met.');
+  assert.strictEqual(CC.firesWhen({ kind: 'group', mode: 'any', items: [{}, {}, {}] }), 'Fires when any one of these 3 conditions is met.');
+  assert.strictEqual(CC.firesWhen({ kind: 'pattern' }), 'Fires when this condition is met.');
+  assert.strictEqual(CC.firesWhen(null), '', 'a card with no conditions to read says nothing');
+});
+
+test('the card head is the chevron, the name, the score, then the sentence; a card with no conditions has no sentence', () => {
+  const result = scored();
+  const cards = CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: result.confidence });
+  const html = CC.renderHtml(cards, { methodLabel: label });
+  const head = html.split('<article')[1].split('<div class="match-combo-body"')[0];
+  assert.ok(head.indexOf('match-combo-chevron') < head.indexOf('match-combo-toggle'), 'the chevron comes first');
+  assert.ok(head.indexOf('match-combo-toggle') < head.indexOf('match-combo-confidence'), 'then the name, then the score');
+  assert.ok(head.indexOf('match-combo-confidence') < head.indexOf('match-combo-when'), 'the sentence last');
+  assert.match(html, /<p class="match-combo-when" dir="auto">Fires when all 3 conditions are met\.<\/p>/);
+  const gone = CC.renderHtml(CC.build({ combinations: [{ id: 'old', name: 'Old', confidence: 40 }], definition: null }), { methodLabel: label });
+  assert.ok(!/match-combo-when/.test(gone));
+});
+
+test('signalHtml draws each found signal as a row of its own: its type, its own score, the value, what it means', () => {
+  const result = scored();
+  const cards = CC.build({ combinations: result.combinations, definition, matches, detectionConfidence: result.confidence });
+  const specs = [];
+  const html = CC.renderHtml(cards.filter(card => card.id === 'api'), {
+    methodLabel: label,
+    signalHtml: (spec) => { specs.push(spec); return `<div class="row">${spec.method}</div>`; },
+    signalsClass: 'extra'
+  });
+  assert.deepStrictEqual(specs.map(spec => [spec.method, spec.confidence, spec.value, spec.caption, spec.absent]), [
+    ['url', 50, 'https://cdn.x/sdk.js?v=2', 'Official SDK script', false],
+    ['dom', 40, '.x-widget[data-key]=', 'Widget with a site key', false],
+    ['window', 10, 'x.render', 'Render API', false]
+  ]);
+  assert.match(html, /<div class="match-combo-signals extra" role="group" aria-label="Found together on this page:">/);
+  assert.ok(!/match-combo-rows|match-combo-lead/.test(html), 'no checklist');
+});
