@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - Keyboard and screen readers: Rules dialogs keep Tab inside the open dialog and give the focus back when it closes; Settings tabs and the Advanced Tools / History switch are tab lists you move along with the arrow keys.
+- Matched combinations (Detection and History details): the card says when it fires, and the signals found together are folded rows like Detection methods: type, score, and the value when opened.
 - Dimmed text is easier to read: lighter in the dark theme, a little darker in the light one.
 - Chrome 111 or newer is required (the scripts that watch the page need it).
 - Copy diagnostics also hides sites written with a path and IPv6 addresses.
@@ -26,6 +27,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Skipped sites: "bank.example." and list entries written with capitals, a port or a whole address are skipped like the plain host.
 - Bulk scan: a list of thousands of addresses on one line is read at once, and runs longer than two minutes keep the browser's background part awake.
 - A long toast with a spinner is no longer dropped when two other messages appear.
+- Advanced → Imperva: a finished capture shows in the tool's own list and clears with it; the Captures tab lists Imperva once; starting again no longer gets stopped by the old timer.
+- Advanced: results of tools such as Check Cookies are no longer drawn as captures with fields they do not have; Shape export code no longer carries another site's addresses.
+- Advanced: captures and analyses keep the browser's background part awake until they end; Extract Sensor no longer saves every request address of the page in History.
+- History: Statistics → Evidence names a signal by its rule again, not by each address; Compare no longer offers scans served from the cache; Auto-delete keeps an entry whose date cannot be read.
+- Statistics: two ports of one host (localhost:3000 and :8080) are no longer read as one page changing its protection; History CSV guards a formula after leading spaces.
+- Amazon: a form field named metadata1 alone is no longer reported as Amazon Bot Protection; Turnstile, DeepSeek and OpenAI rules that read responses are only offered to extensions that can run them.
 
 ### Security
 
