@@ -569,6 +569,11 @@
   opacity: 0.4;
 }
 
+/* The combinations total, beside the fingerprint's: the accent colour, not a category's */
+.history-combo-count .category-icon {
+  color: var(--accent-light);
+}
+
 .history-detection-tag.more-detections {
   min-width: 26px;
   cursor: pointer;

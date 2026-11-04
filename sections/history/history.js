@@ -410,8 +410,46 @@ class History {
         + `<span class="category-icon" style="color:${colour}" aria-hidden="true">${FormatUtils.categoryIconSvg(key)}</span>`
         + `<span class="history-cat-value">${inCategory.length}</span></span>`;
     });
+    // The combinations that fired on the page, beside the fingerprint total (the hover names each, highest first)
+    const comboChip = this.renderCombinationCount(sorted);
+    const at = order.indexOf('fingerprint');
+    if (at === -1) parts.push(comboChip); else parts.splice(at + 1, 0, comboChip);
     // A click goes to the card, which opens the details with each protection
     return `<span class="history-summary">${parts.join('')}</span>`;
+  }
+
+  /**
+   * How many combinations fired across a page's detections, as a chip like the category totals: dimmed at zero, the hover listing
+   * each by name and score. A saved entry keeps a combination's name only when its rule cannot be found, so the name is read
+   * from the rule as it is now.
+   * @param {Array} detections
+   * @returns {string} HTML
+   */
+  renderCombinationCount(detections) {
+    const fired = [];
+    for (const detection of Array.isArray(detections) ? detections : []) {
+      for (const combo of (detection && Array.isArray(detection.combinations) ? detection.combinations : [])) {
+        if (combo && typeof combo === 'object') fired.push({ detection, combo });
+      }
+    }
+    const nameOf = ({ detection, combo }, index) => {
+      let name = combo.name;
+      const detectorId = detection.detector && typeof detection.detector === 'object' ? detection.detector.id : '';
+      if (!name && detectorId && typeof this.detectorManager?.findDetectorById === 'function') {
+        const rule = this.detectorManager.findDetectorById(detectorId);
+        const defined = rule && Array.isArray(rule.combinations) ? rule.combinations.find(item => item && item.id === combo.id) : null;
+        name = defined && defined.name;
+      }
+      return FormatUtils.ruleText(name) || FormatUtils.t('combinationDefaultNameFmt', 'Combination {0}', index + 1);
+    };
+    const ranked = fired.map((entry, index) => ({ label: nameOf(entry, index), value: Math.round(Number(entry.combo.confidence) || 0) }))
+      .sort((a, b) => b.value - a.value);
+    const rows = ranked.slice(0, 8).map(row => ({ label: row.label, value: `${row.value}%`, tone: FormatUtils.confidenceTone(row.value) }));
+    if (ranked.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', ranked.length - 8) });
+    const label = FormatUtils.t('detectionModalCombinations', 'Matched combinations');
+    return `<span class="history-cat-count history-combo-count${fired.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(`${label}: ${fired.length}`, '', rows)}>`
+      + `<span class="category-icon" aria-hidden="true">${FormatUtils.uiIconSvg('combination')}</span>`
+      + `<span class="history-cat-value">${fired.length}</span></span>`;
   }
 
   /**

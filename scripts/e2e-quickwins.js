@@ -706,6 +706,31 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('History card: the combinations that fired are counted right after the fingerprint total', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="history"]', el => el.click());
+    await page.waitForSelector('#historyList', { state: 'attached', timeout: 15000 });
+    const made = await page.evaluate(async () => {
+      const def = Object.values(window.popupInstance.detectorManager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform'), hook('navigator-cpu'), hook('navigator-memory')]);
+      const entry = HistoryStore.slimEntry({ id: 'qw-card', url: 'https://shop.example.test/', hostname: 'shop.example.test', title: 'Shop', timestamp: Date.now(), detections: [
+        { detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches },
+        { detector: { id: 'detect-cloudflare', name: 'Cloudflare' }, name: 'Cloudflare', category: 'antibot', confidence: 100, matches: [] }] });
+      window.popupInstance.history.renderHistoryPage([entry]);
+      return scored.combinations.length;
+    });
+    assert.ok(made >= 2, `combinations that fired: ${made}`);
+    await page.waitForSelector('#historyList .history-item .history-summary', { state: 'visible' });
+    const chips = await page.$$eval('#historyList .history-item .history-cat-count', list => list.map(chip => ({ tip: chip.getAttribute('data-tip').split('\n')[0], value: chip.querySelector('.history-cat-value').textContent, zero: chip.classList.contains('is-zero'), svg: !!chip.querySelector('svg') })));
+    assert.deepEqual(chips.map(chip => chip.tip.replace(/:.*/, '')), ['Anti-bot', 'Captcha', 'Fingerprint', 'Matched combinations'], JSON.stringify(chips));
+    assert.equal(chips[3].value, String(made));
+    assert.ok(!chips[3].zero && chips.every(chip => chip.svg));
+    if (process.env.QW_SHOTS) await page.screenshot({ path: `${process.env.QW_SHOTS}/history-card-combinations.png`, clip: { x: 0, y: 100, width: 420, height: 160 } });
+    await page.close();
+  });
+
+  // ===============================================================================================
   await scenario('Statistics → Export → Markdown downloads a report', async () => {
     const page = await openExtensionPage('sections/stats/stats.html');
     await page.evaluate(() => {

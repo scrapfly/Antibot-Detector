@@ -11,6 +11,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Keyboard and screen readers: Rules dialogs keep Tab inside the open dialog and give the focus back when it closes; Settings tabs and the Advanced Tools / History switch are tab lists you move along with the arrow keys.
 - Matched combinations (Detection and History details): the card says when it fires, and the signals found together are folded rows like Detection methods: type, score, and the value when opened.
+- History cards count the combinations that fired, right after the fingerprint total; the hover names each with its score.
 - Dimmed text is easier to read: lighter in the dark theme, a little darker in the light one.
 - Chrome 111 or newer is required (the scripts that watch the page need it).
 - Copy diagnostics also hides sites written with a path and IPv6 addresses.
