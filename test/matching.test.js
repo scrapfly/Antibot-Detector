@@ -5,7 +5,7 @@ globalThis.Constants = globalThis.Constants || { PATTERN_CACHE_MAX_SIZE: 500, MA
 globalThis.Logger = globalThis.Logger || { warn() {}, debug() {}, get debugMode() { return false; } };
 
 const { PatternCache } = require('../utils/pattern-cache.js');
-const { demMatchPattern, demMatchPatternWithCapture } = require('../modules/detection/engine/detection-engine-matching.js');
+const { demMatchPattern, demMatchPatternWithCapture, demMatchCookieName } = require('../modules/detection/engine/detection-engine-matching.js');
 
 // demMatchPattern reads DetectionEngineManager.patternCache and `this`; give it a
 // fresh cache per call so the 5-min result cache can't mask the comparison.
@@ -52,4 +52,40 @@ test('case-insensitive regex keeps uppercase escape classes', () => {
   assert.strictEqual(demMatchPattern.call(freshThis(), 'ABC', '^abc$', opts), true, 'still case-insensitive');
   assert.strictEqual(demMatchPatternWithCapture.call(freshThis(), 'Token-XYZ', 'token\\W\\w+', opts), 'Token-XYZ');
   assert.strictEqual(demMatchPatternWithCapture.call(freshThis(), 'TOKEN9', 'token\\W', opts), null);
+});
+
+// A cookie name with "*" stands for any run of characters. It used to become a regex of ".*" runs, which a cookie name that almost
+// matches (a hostile page sets them) made take exponential time in the service worker.
+test('wildcard cookie names: * is any run of characters, nothing else is special', () => {
+  const hit = (name, pattern, options) => demMatchCookieName.call(freshThis(), name, pattern, options);
+  assert.strictEqual(hit('awswaf_session', 'awswaf*'), true);
+  assert.strictEqual(hit('x-awswaf', '*awswaf'), true);
+  assert.strictEqual(hit('a1b22c', 'a*b*c'), true);
+  assert.strictEqual(hit('abc', 'a*b*c'), true, 'the stars may match nothing');
+  assert.strictEqual(hit('ac', 'a*b*c'), false);
+  assert.strictEqual(hit('ab', 'ab*b'), false, 'the pieces cannot overlap');
+  assert.strictEqual(hit('abb', 'ab*b'), true);
+  assert.strictEqual(hit('x.y', 'x.y*'), true, 'a dot is a dot');
+  assert.strictEqual(hit('xzy', 'x.y*'), false);
+  assert.strictEqual(hit('AWSWAF_x', 'awswaf*'), true, 'case-insensitive unless asked');
+  assert.strictEqual(hit('AWSWAF_x', 'awswaf*', { caseSensitive: true }), false);
+  assert.strictEqual(hit('abc', '*'), true);
+});
+
+test('a wildcard cookie name that almost matches is answered at once', () => {
+  const started = Date.now();
+  const name = 'a'.repeat(5000);
+  assert.strictEqual(demMatchCookieName.call(freshThis(), name, '*a*a*a*a*a*a*a*a*b'), false);
+  assert.strictEqual(demMatchCookieName.call(freshThis(), name, 'a*a*a*a*a*a*a*a*b'), false);
+  assert.ok(Date.now() - started < 500, `took ${Date.now() - started} ms`);
+});
+
+// "İ" (a dotted capital I, in Turkish text) is two characters in lower case: the place found in the lower-case copy is not the
+// place in the page's own text
+test('the matched text is cut from the page text although lowercasing changed its length', () => {
+  const body = 'İSTANBUL İZMİR İSTANBUL {"proofofwork":{"required":true}}';
+  const value = demMatchPatternWithCapture.call(freshThis(), body, '"proofofwork"', {});
+  assert.strictEqual(value, '"proofofwork"');
+  assert.strictEqual(demMatchPatternWithCapture.call(freshThis(), 'İİİ PoW', 'pow', {}), 'PoW');
+  assert.strictEqual(demMatchPatternWithCapture.call(freshThis(), 'plain ASCII Token', 'token', {}), 'Token');
 });

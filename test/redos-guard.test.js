@@ -47,3 +47,22 @@ test('every official detector regex passes the guard', () => {
   assert.ok(found.length > 100, `only ${found.length} regexes found`);
   for (const [file, pattern] of found) assert.equal(isLikelyEvilRegex(pattern), false, `${file}: ${pattern}`);
 });
+
+// A group repeated a fixed number of times runs its rounds one after another as + does: (a+){10}b takes as long as (a+)+b
+test('a bounded repeat of a group that holds an unbounded repeat that runs into the next round is rejected', () => {
+  for (const pattern of ['(a+){10}b', '^(\\w+\\s?){1,30}$', '(\\w+\\s?){1,10}$', '(.+?){8}x', '(\\d+){2,}', '(?:a*){3}$']) {
+    assert.equal(isLikelyEvilRegex(pattern), true, pattern);
+  }
+});
+
+test('a name or a path made of repeated pieces that a dot or a slash splits one way is accepted, bounded or not', () => {
+  for (const pattern of ['([a-z0-9]+\\.)+example\\.com', '^(?:[a-z0-9-]+\\.)+[a-z]{2,}$', '(?:\\w+/)+index\\.js', '(?:ab){3}', '(\\d{1,3}\\.){3}\\d{1,3}',
+    '(foo|bar){2}', '^(?:[a-z0-9-]+\\.){2,5}com$', '(?:\\w+-){2}\\w+']) {
+    assert.equal(isLikelyEvilRegex(pattern), false, pattern);
+  }
+});
+
+test('a pattern the reading cannot follow is judged by the cruder checks, which still refuse (a+)+', () => {
+  assert.equal(isLikelyEvilRegex('(?<name>a+)+(?'), true);
+  assert.equal(isLikelyEvilRegex('(?<=x)(a+)+'), true);
+});

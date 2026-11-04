@@ -232,6 +232,17 @@ async function notifyPageLoad(triggerSource) {
     });
 }
 
+/** The worker's current rules, for the next collection; the list this page loaded with stays when they cannot be read. */
+async function refreshDetectors() {
+    try {
+        const response = await safeSendMessage({ type: WorkerMessages.GET_DETECTORS });
+        const rules = response && response.detectors;
+        if (rules && typeof rules === 'object' && Object.keys(rules).length && detectionEngine) detectionEngine.setDetectors(rules);
+    } catch (error) {
+        Logger.debug('CONTENT', 'Could not refresh the rules before the scan', error);
+    }
+}
+
 /**
  * Collect page data and send to background (called when cache miss)
  * Delegates to Utils.collectAndSendData()
@@ -444,7 +455,9 @@ function setupDetectionTriggers() {
                         }
                     }, 500);
                 } else {
-                    collectAndSendData();
+                    // The rules may have changed since this page loaded (saved or updated in the popup): what a collection
+                    // gathers depends on them (which DOM selectors and attributes), so a manual scan reads the current list first
+                    refreshDetectors().finally(collectAndSendData);
                 }
 
                 sendResponse({ status: 'detection_started' });
