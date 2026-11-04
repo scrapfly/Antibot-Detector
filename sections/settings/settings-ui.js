@@ -101,12 +101,16 @@ SettingsUI.switchTab = function(tabName) {
     const allTabButtons = document.querySelectorAll('.settings-tab-btn');
     let activeBtn = null;
     allTabButtons.forEach(btn => {
-      if (btn.getAttribute('data-settings-tab') === tabName) {
+      const selected = btn.getAttribute('data-settings-tab') === tabName;
+      if (selected) {
         btn.classList.add('active');
         activeBtn = btn;
       } else {
         btn.classList.remove('active');
       }
+      // What a screen reader says (which tab is open) and which one Tab reaches: the open one, the arrows move among the rest
+      btn.setAttribute('aria-selected', String(selected));
+      btn.tabIndex = selected ? 0 : -1;
     });
 
     if (activeBtn) {
@@ -889,6 +893,18 @@ SettingsUI.setupEventListeners = function() {
       button.addEventListener('click', () => {
         const tabName = button.getAttribute('data-settings-tab');
         this.switchTab(tabName);
+      });
+      // Arrow keys, Home and End move along the tabs and open the one reached, as the popup's own tabs do
+      button.addEventListener('keydown', (event) => {
+        const buttons = Array.from(tabButtons);
+        const forward = getComputedStyle(button).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const step = event.key === forward ? 1 : ['ArrowLeft', 'ArrowRight'].includes(event.key) ? -1 : 0;
+        if (!step && !['Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const target = event.key === 'Home' ? buttons[0] : event.key === 'End' ? buttons[buttons.length - 1]
+          : buttons[(buttons.indexOf(button) + step + buttons.length) % buttons.length];
+        target.focus();
+        this.switchTab(target.getAttribute('data-settings-tab'));
       });
     });
 

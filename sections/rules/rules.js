@@ -35,6 +35,7 @@ class Rules {
         this.setupPagination();
         this.initializeColorManager();
         this.setupEventListeners();
+        if (typeof this.setupDialogFocus === 'function') this.setupDialogFocus();
         this.initialized = true;
       })().finally(() => { this._initializing = null; });
     }

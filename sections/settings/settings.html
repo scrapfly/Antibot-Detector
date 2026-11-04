@@ -3,33 +3,33 @@
 <div class="base-modal-content">
     <div class="modal-header">
       <div class="header-content">
-        <h2 data-i18n="settingsTitle">Settings</h2>
+        <h2 id="settingsTitle" data-i18n="settingsTitle">Settings</h2>
         <p class="modal-subtitle" data-i18n="settingsSubtitle">Configure your extension preferences</p>
       </div>
       <button type="button" id="closeSettingsModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
 
     <!-- Tab Navigation: four equal buttons, icon above label -->
-    <div class="settings-tabs">
-      <button class="settings-tab-btn active" data-settings-tab="general">
+    <div class="settings-tabs" role="tablist" aria-labelledby="settingsTitle">
+      <button class="settings-tab-btn active" data-settings-tab="general" id="settingsTab-general" role="tab" aria-controls="settingsPanel-general" aria-selected="true" tabindex="0">
         <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.430,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.730L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabGeneral">General</span>
       </button>
-      <button class="settings-tab-btn" data-settings-tab="detection">
+      <button class="settings-tab-btn" data-settings-tab="detection" id="settingsTab-detection" role="tab" aria-controls="settingsPanel-detection" aria-selected="false" tabindex="-1">
         <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10M10,22C9.75,22 9.54,21.82 9.5,21.58L9.13,18.93C8.5,18.68 7.96,18.34 7.44,17.94L4.95,18.95C4.73,19.03 4.46,18.95 4.34,18.73L2.34,15.27C2.21,15.05 2.27,14.78 2.46,14.63L4.57,12.97L4.5,12L4.57,11L2.46,9.37C2.27,9.22 2.21,8.95 2.34,8.73L4.34,5.27C4.46,5.05 4.73,4.96 4.95,5.05L7.44,6.05C7.96,5.66 8.5,5.32 9.13,5.07L9.5,2.42C9.54,2.18 9.75,2 10,2H14C14.25,2 14.46,2.18 14.5,2.42L14.87,5.07C15.5,5.32 16.04,5.66 16.56,6.05L19.05,5.05C19.27,4.96 19.54,5.05 19.66,5.27L21.66,8.73C21.79,8.95 21.73,9.22 21.54,9.37L19.43,11L19.5,12L19.43,13L21.54,14.63C21.73,14.78 21.79,15.05 21.66,15.27L19.66,18.73C19.54,18.95 19.27,19.04 19.05,18.95L16.56,17.95C16.04,18.34 15.5,18.68 14.87,18.93L14.5,21.58C14.46,21.82 14.25,22 14,22H10M11.25,4L10.88,6.61C9.68,6.86 8.62,7.5 7.85,8.39L5.44,7.35L4.69,8.65L6.8,10.2C6.4,11.37 6.4,12.64 6.8,13.8L4.68,15.36L5.43,16.66L7.86,15.62C8.63,16.5 9.68,17.14 10.87,17.38L11.24,20H12.76L13.13,17.39C14.32,17.14 15.37,16.5 16.14,15.62L18.57,16.66L19.32,15.36L17.2,13.81C17.6,12.64 17.6,11.37 17.2,10.2L19.31,8.65L18.56,7.35L16.15,8.39C15.38,7.5 14.32,6.86 13.12,6.62L12.75,4H11.25Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabDetection">Detection</span>
       </button>
-      <button class="settings-tab-btn" data-settings-tab="history">
+      <button class="settings-tab-btn" data-settings-tab="history" id="settingsTab-history" role="tab" aria-controls="settingsPanel-history" aria-selected="false" tabindex="-1">
         <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.270,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" fill="currentColor"/>
         </svg>
         <span data-i18n="settingsTabHistory">History</span>
       </button>
-      <button class="settings-tab-btn" data-settings-tab="data">
+      <button class="settings-tab-btn" data-settings-tab="data" id="settingsTab-data" role="tab" aria-controls="settingsPanel-data" aria-selected="false" tabindex="-1">
         <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z" fill="currentColor"/>
         </svg>
@@ -39,7 +39,7 @@
 
     <div class="modal-body">
       <!-- General Settings Tab -->
-      <div class="settings-tab-content active" data-tab-content="general">
+      <div class="settings-tab-content active" data-tab-content="general" id="settingsPanel-general" role="tabpanel" aria-labelledby="settingsTab-general">
 
         <!-- Core Settings: one card, one divider row per setting -->
         <div class="settings-card-group">
@@ -403,7 +403,7 @@
       </div>
 
       <!-- Detection Settings Tab -->
-      <div class="settings-tab-content" data-tab-content="detection">
+      <div class="settings-tab-content" data-tab-content="detection" id="settingsPanel-detection" role="tabpanel" aria-labelledby="settingsTab-detection">
         <!-- Cache Configuration Group -->
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="cacheConfiguration">Cache Configuration</div>
@@ -1068,7 +1068,7 @@
       </div>
 
       <!-- History Settings Tab -->
-      <div class="settings-tab-content" data-tab-content="history">
+      <div class="settings-tab-content" data-tab-content="history" id="settingsPanel-history" role="tabpanel" aria-labelledby="settingsTab-history">
         <!-- History Configuration Group -->
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="settingsCardHistoryConfig">History Configuration</div>
@@ -1348,7 +1348,7 @@
       </div>
 
       <!-- Data Management Tab -->
-      <div class="settings-tab-content" data-tab-content="data">
+      <div class="settings-tab-content" data-tab-content="data" id="settingsPanel-data" role="tabpanel" aria-labelledby="settingsTab-data">
         <!-- History Statistics: opens the local statistics page -->
         <div class="settings-card-group">
           <div class="settings-card settings-card--stats" data-open-by-default>

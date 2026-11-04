@@ -535,6 +535,92 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('Settings tabs: a tab list, the open tab is selected and in the Tab order, arrows and Home/End move and open', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('#settingsBtn', el => el.click());
+    await page.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
+    const state = () => page.evaluate(() => ({
+      list: document.querySelector('.settings-tabs').getAttribute('role'),
+      tabs: [...document.querySelectorAll('.settings-tab-btn')].map(b => [b.dataset.settingsTab, b.getAttribute('role'), b.getAttribute('aria-selected'), b.tabIndex]),
+      shown: [...document.querySelectorAll('.settings-tab-content')].filter(p => p.classList.contains('active')).map(p => p.id),
+      focused: document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.settingsTab : null
+    }));
+    let now = await state();
+    assert.equal(now.list, 'tablist');
+    assert.deepEqual(now.tabs, [['general', 'tab', 'true', 0], ['detection', 'tab', 'false', -1], ['history', 'tab', 'false', -1], ['data', 'tab', 'false', -1]]);
+    await page.focus('.settings-tab-btn[data-settings-tab="general"]');
+    await page.keyboard.press('ArrowRight');
+    now = await state();
+    assert.equal(now.focused, 'detection');
+    assert.deepEqual(now.tabs.map(t => t[2]), ['false', 'true', 'false', 'false']);
+    assert.deepEqual(now.shown, ['settingsPanel-detection']);
+    await page.keyboard.press('End');
+    assert.equal((await state()).focused, 'data');
+    await page.keyboard.press('ArrowRight');
+    now = await state();
+    assert.equal(now.focused, 'general', 'it wraps around');
+    assert.deepEqual(now.shown, ['settingsPanel-general']);
+    await page.keyboard.press('ArrowLeft');
+    assert.equal((await state()).focused, 'data');
+    await page.keyboard.press('Home');
+    now = await state();
+    assert.equal(now.focused, 'general');
+    assert.deepEqual(now.tabs.map(t => t[3]), [0, -1, -1, -1]);
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Rules dialogs keep keyboard focus: Tab wraps inside the editor and the icon picker above it, closing returns to the opener', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await page.waitForSelector('#rulesSearch', { state: 'visible' });
+    await page.fill('#rulesSearch', 'QuickWin');
+    const card = `.detector-card[data-detector-id="${PROBE.id}"]`;
+    await page.waitForSelector(card, { state: 'attached', timeout: 15000 });
+    await page.focus(`${card} .edit-btn`);
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('#editRuleModal .rule-modal-content', { state: 'visible' });
+    const where = (dialog) => page.evaluate((selector) => {
+      const root = document.querySelector(selector);
+      const items = [...root.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.hidden && el.getClientRects().length > 0);
+      return { inside: root.contains(document.activeElement), first: document.activeElement === items[0], last: document.activeElement === items[items.length - 1], count: items.length };
+    }, dialog);
+    // The focus starts inside the dialog
+    await until(async () => (await where('#editRuleModal .rule-modal-content')).inside, 5000, 'the focus inside the editor');
+    let now = await where('#editRuleModal .rule-modal-content');
+    assert.ok(now.count > 5, `the editor has controls (${now.count})`);
+    // Shift+Tab from the first control goes to the last one, and Tab from the last to the first
+    assert.ok(now.first, 'it starts on the first control');
+    await page.keyboard.press('Shift+Tab');
+    now = await where('#editRuleModal .rule-modal-content');
+    assert.ok(now.inside && now.last, 'Shift+Tab from the first lands on the last, inside the editor');
+    await page.keyboard.press('Tab');
+    now = await where('#editRuleModal .rule-modal-content');
+    assert.ok(now.inside && now.first, 'Tab from the last lands on the first');
+    for (let i = 0; i < 12; i++) await page.keyboard.press('Tab');
+    assert.ok((await where('#editRuleModal .rule-modal-content')).inside, 'twelve Tabs later it is still inside');
+
+    // A dialog above it takes the focus, and giving it up returns to the button that opened it
+    await page.focus('#openIconPickerBtn');
+    await page.keyboard.press('Enter');
+    await page.waitForSelector('.icon-picker-modal .rule-modal-content', { state: 'visible' });
+    await until(async () => (await where('.icon-picker-modal .rule-modal-content')).inside, 5000, 'the focus inside the icon picker');
+    for (let i = 0; i < 40; i++) await page.keyboard.press('Tab');
+    assert.ok((await where('.icon-picker-modal .rule-modal-content')).inside, 'forty Tabs later it is still inside the icon picker');
+    await page.keyboard.press('Escape');
+    await page.waitForSelector('.icon-picker-modal', { state: 'detached' });
+    await until(async () => page.evaluate(() => document.activeElement && document.activeElement.id === 'openIconPickerBtn'), 5000, 'the focus back on the icon button');
+    assert.ok((await where('#editRuleModal .rule-modal-content')).inside, 'back in the editor');
+
+    // Closing the editor returns the focus to the card's edit button
+    await page.$eval('#cancelRuleEdit', el => el.click());
+    await page.waitForSelector('#editRuleModal', { state: 'hidden' });
+    await until(async () => page.evaluate((id) => document.activeElement && document.activeElement.classList.contains('edit-btn') && document.activeElement.dataset.detectorId === id, PROBE.id), 5000, 'the focus back on the edit button');
+    await page.close();
+  });
+
+  // ===============================================================================================
   await scenario('Statistics → Export → Markdown downloads a report', async () => {
     const page = await openExtensionPage('sections/stats/stats.html');
     await page.evaluate(() => {

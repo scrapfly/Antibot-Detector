@@ -288,6 +288,19 @@ Advanced.prototype.setupSubTabListeners = function() {
     if (captureTab) {
       captureTab.addEventListener('click', () => this.switchAdvancedTab('captures'));
     }
+
+    // Arrow keys, Home and End move between the two tabs and open the one reached, as the popup's own tabs do
+    [toolsTab, captureTab].filter(Boolean).forEach((tab, index, tabs) => {
+      tab.addEventListener('keydown', (event) => {
+        const forward = getComputedStyle(tab).direction === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+        const step = event.key === forward ? 1 : ['ArrowLeft', 'ArrowRight'].includes(event.key) ? -1 : 0;
+        if (!step && !['Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        const target = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[tabs.length - 1] : tabs[(index + step + tabs.length) % tabs.length];
+        target.focus();
+        this.switchAdvancedTab(target.dataset.tab);
+      });
+    });
   };
 
 
@@ -300,12 +313,13 @@ Advanced.prototype.switchAdvancedTab = async function(tabName) {
 
     // Update tab buttons
     const allTabs = document.querySelectorAll('.advanced-sub-tab');
-    allTabs.forEach(tab => tab.classList.remove('active'));
-
-    const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
-    if (activeTab) {
-      activeTab.classList.add('active');
-    }
+    allTabs.forEach(tab => {
+      const selected = tab.dataset.tab === tabName;
+      tab.classList.toggle('active', selected);
+      // What a screen reader says (which tab is open) and which one Tab reaches
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
 
     // Update tab panels
     const allPanels = document.querySelectorAll('.advanced-tab-panel');
