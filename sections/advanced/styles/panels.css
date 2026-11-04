@@ -193,7 +193,7 @@
   object-fit: contain;
 }
 
-.compact-detection-name { font-size: 15px; font-weight: 700; line-height: 1.25; color: var(--text-primary); overflow-wrap: anywhere; }
+.compact-detection-name { font-size: 15px; font-weight: 600; line-height: 1.25; color: var(--text-primary); overflow-wrap: anywhere; }
 .compact-change-btn {
   display: inline-flex;
   align-items: center;

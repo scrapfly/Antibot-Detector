@@ -135,10 +135,8 @@
 }
 
 .scrapfly-export-detected-label {
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--text-muted);
 }
 
@@ -344,7 +342,7 @@
   border-radius: 22px;
   background-color: var(--bg-tertiary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .scrapfly-export-switch::before {
@@ -357,7 +355,7 @@
   border-radius: 50%;
   background-color: var(--text-muted);
   transform: translateY(-50%);
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .scrapfly-export-switch:checked {
@@ -559,7 +557,7 @@
   background: var(--accent);
   color: #fff;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 16px;
   text-align: center;
 }
@@ -735,7 +733,7 @@
   background: rgba(59, 130, 246, 0.18);
   color: var(--p-bfdbfe);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .scrapfly-export-step-label {

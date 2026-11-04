@@ -347,8 +347,9 @@ body.stats-page :is(.stats-table-wrap, .stats-section-nav, .stats-chart, .stats-
   padding: var(--sp-4) var(--sp-5); border: 1px solid var(--s-hair); border-radius: var(--r-card);
   background: var(--s-card); box-shadow: var(--s-shadow);
 }
-.stats-kpi[data-tone="accent"] { --tone: var(--accent); }
-.stats-kpi[data-tone="warning"] { --tone: var(--warning); }
+/* Overview cards are neutral; the strip and the line take a colour only where it names a category (Evidence) */
+.stats-kpi[data-tone="accent"] { --tone: var(--text-muted); }
+.stats-kpi[data-tone="warning"] { --tone: var(--text-muted); }
 .stats-kpi[data-tone="antibot"] { --tone: var(--ink-antibot); }
 .stats-kpi[data-tone="captcha"] { --tone: var(--ink-captcha); }
 .stats-kpi::before {
@@ -450,7 +451,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
 /* Renderers the page no longer calls (donut, matrix) stay in the library with a basic skin */
 .stats-donut-layout { display: grid; grid-template-columns: minmax(160px, 216px) minmax(0, 1fr); align-items: center; gap: var(--sp-5); }
 .stats-donut { inline-size: 100%; max-inline-size: 216px; margin-inline: auto; }
-.stats-donut-value, .stats-donut-center-value { fill: var(--text-primary); font-size: var(--fs-7); font-weight: 700; font-variant-numeric: tabular-nums; }
+.stats-donut-value, .stats-donut-center-value { fill: var(--text-primary); font-size: var(--fs-7); font-weight: 600; font-variant-numeric: tabular-nums; }
 .stats-donut-center-label { fill: var(--text-secondary); font-size: var(--fs-2); }
 .stats-matrix-cell { font-variant-numeric: tabular-nums; }
 .stats-none { padding-block: var(--sp-3); color: var(--text-secondary); font-size: var(--fs-3); }

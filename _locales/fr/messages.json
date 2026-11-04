@@ -702,7 +702,7 @@
     "message": "Propulsé par"
   },
   "categoryColors": {
-    "message": "COULEURS DES CATÉGORIES"
+    "message": "Couleurs des catégories"
   },
   "methodSuffixPatterns": {
     "message": "motifs"
@@ -1607,16 +1607,16 @@
     "message": "Bloquer ce domaine"
   },
   "detectionStatSite": {
-    "message": "SITE"
+    "message": "Site"
   },
   "detectionStatDetections": {
-    "message": "DÉTECTIONS"
+    "message": "Détections"
   },
   "detectionStatConfidence": {
-    "message": "CONFIANCE"
+    "message": "Confiance"
   },
   "detectionStatDifficulty": {
-    "message": "DIFFICULTÉ"
+    "message": "Difficulté"
   },
   "detectionSearchPlaceholder": {
     "message": "Rechercher des détections..."
@@ -4727,7 +4727,7 @@
     "message": "{0} · {1}"
   },
   "detectionStatCache": {
-    "message": "CACHE"
+    "message": "Cache"
   },
   "detectionTipCache": {
     "message": "Quelles pages réutilisent ces résultats en cache, et pour combien de temps."

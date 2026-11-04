@@ -71,22 +71,23 @@
     U.setText('kpiEntries', num(t.entries));
     U.fillDelta(byId('kpiEntriesDelta'), prev ? delta(sum.pages, prev.pages) : null);
     U.setText('kpiEntriesSub', fmt('statsKpiPagesSubFmt', 'Active days: {0}', num(t.activeDays)));
-    spark('kpiEntriesSpark', 'entries', 'var(--accent)');
+    // The four lines share one muted tone: the cards are numbers, and a colour here would name nothing
+    spark('kpiEntriesSpark', 'entries', 'var(--text-muted)');
     U.setText('kpiDomains', num(t.uniqueDomains));
     U.fillDelta(byId('kpiDomainsDelta'), prev ? delta(sum.domains, prev.domains) : null);
     U.setText('kpiDomainsSub', fmt('statsKpiDomainsSubFmt', '{0} with detections ({1})', num(sum.domainsWithDetections), share(sum.domains ? sum.domainsWithDetections / sum.domains : 0)));
-    spark('kpiDomainsSpark', 'uniqueDomains', 'var(--accent)');
+    spark('kpiDomainsSpark', 'uniqueDomains', 'var(--text-muted)');
     U.setText('kpiLayered', num(sum.layeredDomains));
     U.fillDelta(byId('kpiLayeredDelta'), prev ? delta(sum.layeredDomains, prev.layeredDomains) : null);
     U.setText('kpiLayeredSub', fmt('statsKpiLayeredSubFmt', '{0} with a CAPTCHA', num(sum.captchaDomains)));
-    spark('kpiLayeredSpark', 'layeredDomains', 'var(--warning)');
+    spark('kpiLayeredSpark', 'layeredDomains', 'var(--text-muted)');
     U.setText('kpiDetectors', num(t.uniqueDetectors));
     U.fillDelta(byId('kpiDetectorsDelta'), prev ? delta(sum.protections, prev.protections) : null);
     const extra = [];
     if (d.ranged && d.newProtections.length) extra.push(fmt('statsKpiProtectionsNewFmt', '{0} new this period', num(d.newProtections.length)));
     if (app.state.rules.length) extra.push(fmt('statsKpiProtectionsRulesFmt', 'of {0} rules', num(app.state.rules.length)));
     U.setText('kpiDetectorsSub', extra.join(' · '));
-    spark('kpiDetectorsSpark', 'protections', 'var(--ink-antibot)');
+    spark('kpiDetectorsSpark', 'protections', 'var(--text-muted)');
     renderKpiTips(app);
   }
   /** Hover tips on the four cards: what each number counts, with a breakdown. */

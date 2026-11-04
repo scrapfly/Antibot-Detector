@@ -666,7 +666,7 @@ code, kbd, pre, samp {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .state-card-blacklist-btn.visible {
@@ -690,7 +690,7 @@ code, kbd, pre, samp {
   font-weight: 600;
   letter-spacing: 0.3px;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 /* Detection Method Badges */
@@ -753,7 +753,7 @@ code, kbd, pre, samp {
   padding: 2px 6px;
   border-radius: 8px;
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 600;
   min-width: 28px;
   text-align: center;
 }
@@ -840,7 +840,7 @@ code, kbd, pre, samp {
 }
 
 .total-pages {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--accent);
 }
 
@@ -855,7 +855,7 @@ code, kbd, pre, samp {
   border-radius: 6px;
   color: var(--g-e0e0e0);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -897,7 +897,7 @@ code, kbd, pre, samp {
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .secondary-btn:hover {
@@ -1043,7 +1043,7 @@ input:checked + .slider:before {
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 14px;
   white-space: nowrap;
   color: var(--tone, var(--text-primary));
@@ -1185,7 +1185,7 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ui-tip-label {
@@ -1231,7 +1231,7 @@ input:checked + .slider:before {
 
 .ui-tip-row-value {
   flex-shrink: 0;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }

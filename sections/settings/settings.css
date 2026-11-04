@@ -220,7 +220,7 @@
   border-radius: 4px;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -279,7 +279,7 @@
   border-radius: 4px;
   cursor: pointer;
   color: var(--text-secondary);
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -408,7 +408,7 @@ input[type="file"] {
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   max-width: 100%;
   justify-content: center;
   box-sizing: border-box;
@@ -421,17 +421,15 @@ input[type="file"] {
 }
 
 .action-btn-warning {
-  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
+  background: var(--warning-dark);
   color: white;
   border-color: transparent;
 }
 
 .action-btn-warning:hover {
-  background: linear-gradient(135deg, var(--warning-dark) 0%, #b45309 100%);
+  background: #b45309;
   color: white;
   border-color: transparent;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
 /* Global box-sizing now in common.css */
@@ -609,7 +607,7 @@ input[type="file"] {
   padding: 6px 10px;
   background: transparent;
   border: none;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   user-select: none;
 }
 
@@ -948,7 +946,7 @@ input[type="file"] {
   border-radius: 7px;
   color: var(--settings-text);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 13px;
   white-space: nowrap;
   cursor: pointer;
@@ -1059,11 +1057,9 @@ input[type="file"] {
   align-items: center;
   gap: 8px;
   margin: 10px 0 6px 1.5px;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 14px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
   color: var(--settings-text);
 }
 
@@ -1442,7 +1438,7 @@ input[type="file"] {
 
 #settingsModal .action-btn-warning {
   margin-top: 8px;
-  background: linear-gradient(135deg, var(--warning) 0%, var(--warning-dark) 100%);
+  background: var(--warning-dark);
   border-color: transparent;
   color: #ffffff;
 }
@@ -1672,7 +1668,7 @@ input[type="file"] {
   border-radius: 6px;
   color: var(--settings-text);
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s, color 0.15s;
@@ -2095,7 +2091,7 @@ input[type="file"] {
 
 #settingsModal .settings-stats-title {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 17px;
   color: #ffffff;
 }
@@ -2118,7 +2114,7 @@ input[type="file"] {
   border-color: var(--settings-border);
   border-radius: 7px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--settings-text);
 }
 
@@ -2162,7 +2158,7 @@ input[type="file"] {
 
 #settingsModal .data-card-title {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 28px;
   color: #ffffff;
 }
@@ -2228,7 +2224,7 @@ input[type="file"] {
 #settingsModal .data-item-title {
   margin: -1px 0 0 1px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 15px;
   color: #ffffff;
 }
@@ -2255,7 +2251,7 @@ input[type="file"] {
   border-radius: 4px;
   background: rgba(59, 130, 246, 0.07);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 19px;
   letter-spacing: 0;
   color: var(--settings-text-dim);
@@ -2286,7 +2282,7 @@ input[type="file"] {
   height: 40px;
   border-radius: 7px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
@@ -2437,7 +2433,7 @@ input[type="file"] {
 #settingsModal .powered-by a {
   color: var(--accent);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -2900,7 +2896,7 @@ input[type="file"] {
   background: var(--g-3a3a3a);
   color: var(--settings-text);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 600;
   flex-shrink: 0;
 }
 

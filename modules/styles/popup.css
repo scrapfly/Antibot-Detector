@@ -139,7 +139,7 @@ body {
   right: 0;
   bottom: 0;
   background-color: var(--bg-tertiary);
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   border-radius: 18px;
   border: 1px solid var(--border);
 }
@@ -153,7 +153,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   background-color: var(--text-muted);
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
   border-radius: 50%;
 }
 
@@ -175,7 +175,7 @@ body {
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .settings-btn svg {
@@ -215,7 +215,7 @@ body {
   font-weight: 600;
   letter-spacing: -0.2px;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 /* Labels sit 1px up and 1px towards the icon, as in the 2.8 screenshots */
@@ -442,7 +442,7 @@ body {
   border-radius: 6px;
   padding: 8px 8px 26px 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .history-item:hover {
@@ -555,7 +555,7 @@ body {
   padding: 6px;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
 .copy-value:hover {
