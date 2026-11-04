@@ -360,3 +360,13 @@ test('a CSV file starts with the byte-order mark so a spreadsheet reads UTF-8, a
   const json = BulkScan.build(run, { format: 'json', now: 5 });
   assert.equal(json.fileText, json.text);
 });
+
+test('a list of thousands of addresses on one line is read in one pass, with the same result as one per line', () => {
+  const addresses = Array.from({ length: 20000 }, (_, i) => `https://site${i}.example/page?ids=1,2,3`);
+  const started = Date.now();
+  const parsed = BulkScan.linesOf(addresses.join(', '));
+  const took = Date.now() - started;
+  assert.deepStrictEqual(parsed, addresses);
+  assert.ok(took < 1500, `took ${took} ms`);
+  assert.deepStrictEqual(BulkScan.linesOf(addresses.slice(0, 50).join('\n')), addresses.slice(0, 50));
+});

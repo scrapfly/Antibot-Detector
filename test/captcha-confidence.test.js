@@ -41,7 +41,7 @@ const isProof = (detector, rule) => PROOF.has(`${detector.id}/${rule.id}`);
 // CAPTCHA) and Turnstile (Cloudflare's own managed-challenge page requests the
 // same api.js and widget frame, so nothing here is the widget's alone)
 const CAPPED = { 'detect-aliexpress': 60, 'detect-turnstile': 95 };
-const context = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
+const context = vm.createContext({ MessageSender: require('../modules/core/message-sender.js'), WorkerMessages: require('../modules/core/worker-messages.js'), 
   Constants: { DEFAULT_MATCH_CONFIDENCE: 80, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000,
     PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },
   Logger: new Proxy({}, { get: (_, key) => key === 'debugMode' ? false :

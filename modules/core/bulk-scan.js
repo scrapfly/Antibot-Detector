@@ -98,18 +98,32 @@
   function partsOf(line) {
     const parts = [];
     let start = 0;
+    // Where the address that starts at `start` first has a "/", "?" or "#" (after its scheme): found once per address, so a
+    // list of thousands on one line is read in one pass and not searched again from each comma
+    let pathAt = null;
+    const pathChar = /[/?#]/g;
+    const addressAhead = /\s*[a-z][a-z0-9+.-]*:\/\//iy;
     for (let i = 0; i < line.length; i++) {
       if (line[i] !== ',' && line[i] !== ';') continue;
-      const before = line.slice(start, i);
-      const after = line.slice(i + 1);
-      const token = after.split(/[,;]/)[0];
-      const ends = !/[/?#]/.test(before.replace(/^\s*[a-z][a-z0-9+.-]*:\/\//i, ''))
-        || /\/$/.test(before)
-        || !after.trim() // nothing follows: a list pasted as "https://a.com/x," ends there, the comma is not part of the address
-        || /^\s*[a-z][a-z0-9+.-]*:\/\//i.test(after)
+      if (pathAt === null) {
+        const scheme = /^\s*[a-z][a-z0-9+.-]*:\/\//i.exec(line.slice(start, start + 64));
+        pathChar.lastIndex = start + (scheme ? scheme[0].length : 0);
+        const found = pathChar.exec(line);
+        pathAt = found ? found.index : Infinity;
+      }
+      let next = i + 1;
+      while (next < line.length && line[next] !== ',' && line[next] !== ';') next++;
+      const token = line.slice(i + 1, next);
+      let blank = i + 1;
+      while (blank < line.length && /\s/.test(line[blank])) blank++;
+      addressAhead.lastIndex = i + 1;
+      const ends = pathAt >= i
+        || (i > start && line[i - 1] === '/')
+        || blank >= line.length // nothing follows: a list pasted as "https://a.com/x," ends there, the comma is not part of the address
+        || addressAhead.test(line)
         || (/^\s/.test(token) && looksLikeAddress(token.trim()))
         || /\s/.test(token.trim());
-      if (ends) { parts.push(before); start = i + 1; }
+      if (ends) { parts.push(line.slice(start, i)); start = i + 1; pathAt = null; }
     }
     parts.push(line.slice(start));
     return parts.map(unquote);

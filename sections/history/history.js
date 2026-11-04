@@ -1940,10 +1940,15 @@ class History {
       if (!data.items || !Array.isArray(data.items)) {
         throw new Error(FormatUtils.t('historyUiInvalidFileFormat', 'Invalid history file format'));
       }
+      // What History can import: a list of numbers or nulls is not a history, and Replace would delete the real one for it
+      const usable = HistoryStore.cleanImported(data.items).length;
+      if (data.items.length && !usable) {
+        throw new Error(FormatUtils.t('historyUiInvalidFileFormat', 'Invalid history file format'));
+      }
 
       const mode = await NotificationHelper.chooseImportMode({
         title: _tr('importHistoryTitle', 'Import History'),
-        message: _fmt('importHistoryModeMessageFmt', `Import ${data.items.length} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, data.items.length, this.historyItems.length),
+        message: _fmt('importHistoryModeMessageFmt', `Import ${usable} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, usable, this.historyItems.length),
         replaceText: _tr('replaceOption', 'Replace')
       });
 

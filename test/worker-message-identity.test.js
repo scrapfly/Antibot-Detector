@@ -13,6 +13,7 @@ function harness() {
   const timers = new Map();
   const current = { url: 'https://example.test/', documentId: 'doc-current' };
   const context = {
+    MessageSender: require('../modules/core/message-sender.js'),
     WorkerMessages: require('../modules/core/worker-messages.js'),
     URL, Map, Set, Date, Promise, AbortController, console,
     Logger: new Proxy({}, { get: () => () => {} }),
@@ -386,9 +387,18 @@ for (const cached of [null, { detectionResults: [] }]) test(`GET_DETECTION_DATA 
   const state = h.begin();
   state.failed = true;
   h.ctx.activeDetections.delete(7);
-  const response = await h.message('GET_DETECTION_DATA', { tabId: 7 })();
+  const response = await h.message('GET_DETECTION_DATA', { tabId: 7 }, null)();
   assert.equal(response.status, 'error');
   assert.equal(response.data, null);
+});
+
+// The popup asks for a tab's result and starts a scan; a content script inside a web page does neither, for any tab
+for (const type of ['GET_DETECTION_DATA', 'REQUEST_DETECTION']) test(`${type} answers extension pages only`, async () => {
+  const h = harness();
+  h.ctx.currentActiveTab = 7;
+  const response = await h.message(type, { tabId: 7 }, h.sender('https://shop.example/'))();
+  assert.equal(response.status, 'error');
+  assert.match(response.error, /extension pages only/);
 });
 
 test('a page that changes its own address keeps its scan, now under the new address', async () => {

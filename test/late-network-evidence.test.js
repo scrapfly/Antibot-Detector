@@ -38,7 +38,7 @@ async function runTimers() {
 
 const Logger = new Proxy({}, { get: (_, key) => key === 'debugMode' ? false : key === 'hostOf' ? (url) => new URL(url).hostname
   : key === 'error' ? (...args) => { throw new Error(args.join(' ')); } : () => {} });
-const worker = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), Logger, URL,
+const worker = vm.createContext({ MessageSender: require('../modules/core/message-sender.js'), WorkerMessages: require('../modules/core/worker-messages.js'), Logger, URL,
   setTimeout: fakeSetTimeout, clearTimeout: fakeClearTimeout });
 worker.window = worker;
 for (const file of ['modules/core/constants.js', 'utils/pattern-cache.js', 'modules/core/bridge-protocol.js', 'modules/core/categories.js', 'modules/core/hooks-config.js',

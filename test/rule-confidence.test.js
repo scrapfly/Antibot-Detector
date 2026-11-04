@@ -13,6 +13,7 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const DEFAULT = 80;
 const context = vm.createContext({
+  MessageSender: require('../modules/core/message-sender.js'),
   WorkerMessages: require('../modules/core/worker-messages.js'),
   Constants: { DEFAULT_MATCH_CONFIDENCE: DEFAULT, DEFAULT_DOM_CONFIDENCE: 85, ANALYSIS_CACHE_TTL: 300000,
     PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 },

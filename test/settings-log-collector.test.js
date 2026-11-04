@@ -9,7 +9,7 @@ const read = name => fs.readFileSync(path.join(__dirname, '..', name), 'utf8');
 function harness() {
   const state = { settings: { logCollectorEnabled: false, logCollectorMaxLogs: 5000 }, fail: false, writes: 0, removed: [], listeners: [] };
   const noop = () => {};
-  const ctx = vm.createContext({ WorkerMessages: require('../modules/core/worker-messages.js'), 
+  const ctx = vm.createContext({ MessageSender: require('../modules/core/message-sender.js'), WorkerMessages: require('../modules/core/worker-messages.js'), 
     Constants: { LOG_COLLECTOR_MAX_LOGS: 5000, LOG_COLLECTOR_MAX_PERSISTED: 500, LOG_COLLECTOR_RATE_LIMIT: 100 },
     Logger: { error: noop, debug: noop, warn: noop },
     console: { log: noop, warn: noop, error: noop, info: noop, debug: noop },
@@ -69,4 +69,16 @@ test('log command acknowledgments reflect completed persistence', async () => {
   h.state.fail = false;
   assert.equal((await request('LOG_COLLECTOR_ENABLE')).status, 'success');
   assert.equal(h.collector.enabled, true);
+});
+
+test('the log collector answers extension pages only: a content script cannot switch it, clear it or write its export', () => {
+  const h = harness();
+  const fromPage = { url: 'https://shop.example/', tab: { id: 3, url: 'https://shop.example/' } };
+  for (const type of ['LOG_COLLECTOR_ENABLE', 'LOG_COLLECTOR_DISABLE', 'LOG_COLLECTOR_CLEAR', 'LOG_COLLECTOR_EXPORT_JSON', 'LOG_COLLECTOR_EXPORT_TEXT', 'LOG_COLLECTOR_GET_COUNT', 'LOG_COLLECTOR_SET_MAX_LOGS']) {
+    let answer;
+    h.registry[type]({ request: { maxLogs: 250 }, sender: fromPage, sendResponse: (value) => { answer = value; } });
+    assert.equal(answer && answer.status, 'error', type);
+    assert.match(answer.error, /extension pages only/, type);
+  }
+  assert.equal(h.state.writes, 0, 'nothing was saved');
 });

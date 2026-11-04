@@ -484,6 +484,11 @@
         sendResponse({ status: 'error', error: 'items must be an array' });
         return true;
       }
+      // A file of things that are not entries ([1, 2, null]) would otherwise replace the whole history with nothing
+      if (request.mode === 'replace' && request.items.length && !cleanImported(request.items).length) {
+        sendResponse({ status: 'error', error: 'The file has no history entries' });
+        return true;
+      }
       return respond(sendResponse, mutate(items => {
         const next = applyImport(items, request.items, request.mode, request.limit);
         // The entries that were not stored before: the list's length says less once the limit cuts old ones
@@ -578,7 +583,7 @@
   }
 
   const HistoryStore = {
-    STORAGE_KEY, MAX_BYTES, SIZES_MB, budgetFor, hasUnlimitedStorage, Messages, parse, serialize, read, mutate, applyImport, registerHandlers,
+    STORAGE_KEY, MAX_BYTES, SIZES_MB, budgetFor, hasUnlimitedStorage, Messages, parse, serialize, read, mutate, applyImport, cleanImported, registerHandlers,
     slimEntry, fitToBudget, isQuotaError, compact, setQuotaRelief, setBudget, applyLimit, cleanAnnotation, annotate, usage
   };
 

@@ -14,6 +14,7 @@
   function normalize(input) {
     const raw = Array.isArray(input) ? input.map(String) : String(input == null ? '' : input).split(/[\s,;]+/);
     const out = [];
+    const seen = new Set(); // a long list (an import of thousands) must not make every page load wait
     for (const entry of raw) {
       let host = entry.trim().toLowerCase();
       if (!host) continue;
@@ -22,7 +23,7 @@
       if (host && /[^\x00-\x7f]/.test(host)) {
         try { host = new URL(`http://${host}`).hostname; } catch (_) { continue; }
       }
-      if (host && /^[a-z0-9._-]+$/.test(host) && !out.includes(host)) out.push(host);
+      if (host && /^[a-z0-9._-]+$/.test(host) && !seen.has(host)) { seen.add(host); out.push(host); }
     }
     return out;
   }
