@@ -132,6 +132,17 @@ DetectionModals.initializeModalElements = function() {
       this.modalElements.methods.addEventListener('click', (e) => DetectionUI.handleCopyableValueClick.call(this, e));
       this.modalElements.methods.addEventListener('keydown', (e) => DetectionUI.handleCopyableValueKeyDown.call(this, e));
     }
+    // The signals of a combination are rows like these: the head shows or hides the value, the value copies
+    if (this.modalElements.combinations) {
+      this.modalElements.combinations.addEventListener('click', (e) => {
+        const head = e.target instanceof Element ? e.target.closest('.method-fold-head') : null;
+        if (!head) return;
+        const folded = head.closest('.method-item-card').classList.toggle('is-folded');
+        head.setAttribute('aria-expanded', String(!folded));
+      });
+      this.modalElements.combinations.addEventListener('click', (e) => DetectionUI.handleCopyableValueClick.call(this, e));
+      this.modalElements.combinations.addEventListener('keydown', (e) => DetectionUI.handleCopyableValueKeyDown.call(this, e));
+    }
 
     if (overlay) {
       overlay.addEventListener('click', closeHandler);
@@ -352,7 +363,14 @@ DetectionModals.checklistOptions = function(idPrefix) {
     return {
       idPrefix,
       methodLabel: (m) => (typeof DetectionUI !== 'undefined' ? DetectionUI.getMethodLabel(m) : m),
-      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
+      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip),
+      // What a combination found, drawn as the Detection methods are: a row per signal, folded, the value when opened
+      ...(typeof DetectionUI !== 'undefined' && typeof DetectionUI.methodRowHtml === 'function' ? {
+        signalHtml: (spec) => DetectionUI.methodRowHtml.call(this, {
+          matchType: spec.method, confidence: spec.confidence, displayValue: spec.value, caption: spec.caption, absent: spec.absent
+        }),
+        signalsClass: 'detection-modal-methods-list'
+      } : {})
     };
 };
 

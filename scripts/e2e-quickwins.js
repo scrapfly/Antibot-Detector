@@ -621,6 +621,91 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('Detection details: a combination lists its signals as folded rows like the Detection methods; a click shows the value', async () => {
+    const page = await openExtensionPage();
+    // The Navigator fingerprint's "browser profile": language preferences together with the user agent or the platform
+    const shown = await page.evaluate(async () => {
+      const manager = window.popupInstance.detectorManager;
+      const def = Object.values(manager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      if (!def) return { error: 'no detect-navigator-fingerprint' };
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform')]);
+      const detection = { detector: { id: def.id, name: def.name, icon: def.icon, difficulty: 'Low', category: 'fingerprint' }, name: def.name, category: 'fingerprint',
+        confidence: scored.confidence, difficulty: 'Low', matches: scored.matches, combinations: scored.combinations };
+      await window.popupInstance.detection.displayResults([detection], { url: 'https://shop.example.test/', cacheMetadata: { scope: 'domain', expiry: Date.now() + 86400000, timestamp: Date.now() } });
+      return { combos: scored.combinations.map(c => c.id) };
+    });
+    assert.ok(!shown.error, shown.error);
+    assert.ok(shown.combos.includes('navigator-browser-profile'), JSON.stringify(shown));
+    await page.$eval('.detection-card', el => el.click());
+    await page.waitForSelector('#detectionModalCombinations .match-combo[data-combo-id="navigator-browser-profile"]', { state: 'visible' });
+    const card = '#detectionModalCombinations .match-combo[data-combo-id="navigator-browser-profile"]';
+    await page.$eval(`${card} .match-combo-toggle`, el => el.click());
+    await page.waitForSelector(`${card} .method-item-card`, { state: 'visible' });
+    const rows = () => page.$$eval(`${card} .method-item-card`, list => list.map(row => ({
+      folded: row.classList.contains('is-folded'), expanded: row.querySelector('.method-fold-head').getAttribute('aria-expanded'),
+      type: row.querySelector('.method-type-badge').textContent.trim(), score: (row.querySelector('.method-confidence') || {}).textContent.trim(),
+      value: row.querySelector('.method-value-btn').textContent.trim(), valueShown: getComputedStyle(row.querySelector('.method-value-btn')).display !== 'none',
+      note: (row.querySelector('.method-value-note') || {}).textContent || ''
+    })));
+    let list = await rows();
+    assert.equal(list.length, 3, 'the language preferences, the user agent and the platform');
+    assert.ok(list.every(row => row.folded && row.expanded === 'false' && !row.valueShown), 'every row starts folded');
+    assert.ok(list.every(row => row.type === 'JavaScript hooks' && /^\d+%$/.test(row.score)), JSON.stringify(list));
+    assert.deepEqual(list.map(row => row.value).sort(), ['Navigator.prototype.languages', 'Navigator.prototype.platform', 'Navigator.prototype.userAgent']);
+    assert.ok(list.some(row => row.note === 'Reads browser user agent string'), 'what a signal means stays under its value');
+    assert.equal(await page.$(`${card} .match-combo-lead, ${card} .match-combo-rows`), null, 'no checklist');
+    // A click on the row's head shows the value in the code box; a second click folds it again
+    await page.$eval(`${card} .method-item-card .method-fold-head`, el => el.click());
+    list = await rows();
+    assert.ok(!list[0].folded && list[0].expanded === 'true' && list[0].valueShown, 'the first row is open');
+    assert.ok(list.slice(1).every(row => row.folded), 'the others stay folded');
+    if (process.env.QW_SHOTS) { await sleep(700); await page.screenshot({ path: `${process.env.QW_SHOTS}/combination-rows.png` }); }
+    await page.$eval(`${card} .method-item-card .method-fold-head`, el => el.click());
+    assert.ok((await rows())[0].folded, 'folded again');
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('History details: a saved combination lists its signals as folded rows too', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="history"]', el => el.click());
+    await page.waitForSelector('#historyDetailModal', { state: 'attached', timeout: 15000 });
+    const opened = await page.evaluate(async () => {
+      const manager = window.popupInstance.detectorManager;
+      const def = Object.values(manager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform')]);
+      // What the worker stores after a scan: the slim entry
+      const entry = HistoryStore.slimEntry({ id: 'qw-combo', url: 'https://shop.example.test/', hostname: 'shop.example.test', title: 'Shop', timestamp: Date.now(), detections: [{
+        detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches }] });
+      window.popupInstance.history.showHistoryItemDetails(entry);
+      return scored.combinations.map(c => c.id);
+    });
+    assert.ok(opened.includes('navigator-browser-profile'), JSON.stringify(opened));
+    const card = '#historyDetailModal .match-combo[data-combo-id="navigator-browser-profile"]';
+    await page.waitForSelector('#historyDetailModal .history-modal-detection-header', { state: 'visible' });
+    await page.$eval('#historyDetailModal .history-modal-detection-header', el => el.click());
+    await page.waitForSelector(card, { state: 'visible' });
+    await page.$eval(`${card} .match-combo-toggle`, el => el.click());
+    await page.waitForSelector(`${card} .history-modal-method-item`, { state: 'visible' });
+    const rows = () => page.$$eval(`${card} .history-modal-method-item`, list => list.map(row => ({
+      folded: row.classList.contains('is-folded'), expanded: row.querySelector('.history-modal-method-head').getAttribute('aria-expanded'),
+      type: row.querySelector('.history-modal-method-badge').textContent.trim(), score: (row.querySelector('.history-modal-method-confidence') || {}).textContent.trim(),
+      value: row.querySelector('.history-modal-method-value').textContent.trim(), valueShown: getComputedStyle(row.querySelector('.history-modal-method-value')).display !== 'none'
+    })));
+    let list = await rows();
+    assert.equal(list.length, 3);
+    assert.ok(list.every(row => row.folded && row.expanded === 'false' && !row.valueShown && row.type === 'JavaScript hooks' && /^\d+%$/.test(row.score)), JSON.stringify(list));
+    await page.$eval(`${card} .history-modal-method-item .history-modal-method-head`, el => el.click());
+    list = await rows();
+    assert.ok(!list[0].folded && list[0].valueShown && /^Navigator\.prototype\./.test(list[0].value), JSON.stringify(list[0]));
+    assert.ok(list.slice(1).every(row => row.folded), 'the others stay folded');
+    if (process.env.QW_SHOTS) await page.screenshot({ path: `${process.env.QW_SHOTS}/combination-rows-history.png` });
+    await page.close();
+  });
+
+  // ===============================================================================================
   await scenario('Statistics → Export → Markdown downloads a report', async () => {
     const page = await openExtensionPage('sections/stats/stats.html');
     await page.evaluate(() => {

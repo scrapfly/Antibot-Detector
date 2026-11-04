@@ -1208,7 +1208,8 @@
   background: var(--border);
 }
 
-.history-modal-detection-methods {
+.history-modal-detection-methods,
+.history-modal-signals {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -1342,6 +1343,43 @@
 .history-modal-method-confidence {
   grid-area: pill;
   justify-self: end;
+}
+
+/* A combination's signals are these rows too; a row may carry what the signal means in words under its value */
+.history-modal-method-item.has-note {
+  grid-template-areas:
+    "head"
+    "value"
+    "note";
+}
+
+.history-modal-method-item.has-note.is-folded {
+  grid-template-areas: "head";
+}
+
+.history-modal-method-note {
+  grid-area: note;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.history-modal-method-item.is-folded > .history-modal-method-note {
+  display: none;
+}
+
+/* A "must not be found" signal: its row says so where the score would be */
+.history-modal-method-not-present {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.history-modal-method-item.is-absent .history-modal-method-badge {
+  opacity: 0.75;
 }
 
 .history-modal-empty,

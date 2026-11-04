@@ -2037,10 +2037,31 @@
   flex-shrink: 0;
 }
 
-/* Folded by default: the head (name, confidence, arrow) opens the found rows */
+/* Folded by default: the head opens the found rows. The Rules editor's combination row: the chevron, the name and the score on one
+   line, what it takes to fire under the name */
 .match-combo.is-collapsible > .match-combo-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "chevron name score"
+    ". when when";
   align-items: center;
+  column-gap: 8px;
+  row-gap: 3px;
   cursor: pointer;
+}
+
+.match-combo.is-collapsible > .match-combo-head > .match-combo-chevron { grid-area: chevron; }
+.match-combo.is-collapsible > .match-combo-head > .match-combo-name { grid-area: name; }
+.match-combo.is-collapsible > .match-combo-head > .match-combo-confidence { grid-area: score; }
+
+.match-combo-when {
+  grid-area: when;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
 }
 
 .match-combo-toggle {
@@ -2072,8 +2093,14 @@
   transition: transform 0.15s ease;
 }
 
-.match-combo.is-collapsible:not(.is-collapsed) .match-combo-chevron {
-  transform: rotate(180deg);
+/* Points along the reading direction while folded, down when open */
+[dir="rtl"] .match-combo-chevron {
+  transform: scaleX(-1);
+}
+
+.match-combo.is-collapsible:not(.is-collapsed) .match-combo-chevron,
+[dir="rtl"] .match-combo.is-collapsible:not(.is-collapsed) .match-combo-chevron {
+  transform: rotate(90deg);
 }
 
 .match-combo.is-collapsible > .match-combo-head:hover .match-combo-chevron {
@@ -2146,6 +2173,52 @@
   font-size: 10.5px;
   font-weight: 600;
   color: var(--text-secondary);
+}
+
+/* What a combination found: the same rows as the Detection methods (type, score, chevron; the value when opened), folded to start.
+   A row may carry what the signal means in words under its value */
+.match-combo-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.detection-modal-methods-list .method-item-card.has-note {
+  grid-template-areas:
+    "head"
+    "value"
+    "note";
+}
+
+.detection-modal-methods-list .method-item-card.has-note.is-folded {
+  grid-template-areas: "head";
+}
+
+.method-value-note {
+  grid-area: note;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.method-item-card.is-folded > .method-value-note {
+  display: none;
+}
+
+/* A "must not be found" signal: its row says so where the score would be */
+.method-not-present {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.method-item-card.is-absent .method-type-badge {
+  opacity: 0.75;
 }
 
 .match-combo-unavailable {

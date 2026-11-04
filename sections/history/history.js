@@ -1395,7 +1395,10 @@ class History {
     return {
       idPrefix,
       methodLabel: (m) => this.getMethodLabel(m),
-      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip)
+      confidenceHtml: (value, cls, tip) => FormatUtils.confidenceHtml(value, cls, tip),
+      // What a combination found, drawn as the detection methods are: a row per signal, folded, the value when opened
+      signalHtml: (spec) => this.historyMethodRowHtml({ type: spec.method, confidence: spec.confidence, displayValue: spec.value, caption: spec.caption, absent: spec.absent }),
+      signalsClass: 'history-modal-signals'
     };
   }
 
@@ -1501,12 +1504,9 @@ class History {
       return `<div class="history-modal-no-methods">${FormatUtils.escapeHtml(noMethods)}</div>`;
     }
     const unknownValue = FormatUtils.t('detectionUiUnknownValue', 'unknown');
-    const clickToCopy = FormatUtils.escapeAttr(FormatUtils.t('advCommonClickToCopy', 'Click to copy'));
 
     return matches.map(match => {
       const originalType = match.type || 'unknown';
-      const methodType = originalType.replace(/_/g, ' ').toUpperCase();
-      const methodLabel = FormatUtils.escapeHtml(this.getMethodLabel(originalType.toLowerCase()));
       const confidence = match.confidence || 0;
 
       // Determine display value based on method type
@@ -1535,35 +1535,57 @@ class History {
           displayValue = match.value || match.name || match.selector || match.pattern || unknownValue;
       }
 
-      // Get tag color (use originalType to preserve underscores for lookup)
-      let tagColor = '#666666';
-      if (this.detectorManager?.categoryManager) {
-        tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
-      }
-      const tagRgb = FormatUtils.hexToRgb(tagColor);
-      const badgeStyle = tagRgb
-        ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.3);`
-        : `background: ${tagColor}; color: white;`;
+      return this.historyMethodRowHtml({ type: originalType, confidence, displayValue });
+    }).join('');
+  }
 
-      const copyPayload = JSON.stringify({
-        rawValue: displayValue,
-        methodType,
-        confidence
-      });
+  /**
+   * One method row of the History details: the type chip, the score and a chevron (the head, which shows or hides the value), then
+   * the value, which copies. The combinations' signals are drawn with it too.
+   * @param {{type: string, confidence: ?number, displayValue: string, caption?: string, absent?: boolean}} spec
+   */
+  historyMethodRowHtml(spec) {
+    const originalType = spec.type || 'unknown';
+    const methodType = originalType.replace(/_/g, ' ').toUpperCase();
+    const methodLabel = FormatUtils.escapeHtml(this.getMethodLabel(originalType.toLowerCase()));
+    const clickToCopy = FormatUtils.escapeAttr(FormatUtils.t('advCommonClickToCopy', 'Click to copy'));
+    const unknownValue = FormatUtils.t('detectionUiUnknownValue', 'unknown');
+    const displayValue = spec.displayValue === undefined || spec.displayValue === null || spec.displayValue === '' ? unknownValue : spec.displayValue;
+    const confidence = spec.confidence === undefined ? 0 : spec.confidence;
 
-      const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
+    // Get tag color (use originalType to preserve underscores for lookup)
+    let tagColor = '#666666';
+    if (this.detectorManager?.categoryManager) {
+      tagColor = this.detectorManager.categoryManager.getTagColor(originalType.toLowerCase()) || '#666666';
+    }
+    const tagRgb = FormatUtils.hexToRgb(tagColor);
+    const badgeStyle = tagRgb
+      ? `background: rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.15); color: ${tagColor}; border: 1px solid rgba(${tagRgb.r}, ${tagRgb.g}, ${tagRgb.b}, 0.3);`
+      : `background: ${tagColor}; color: white;`;
 
-      return `
-        <div class="history-modal-method-item is-folded" data-copy-payload="${encodeURIComponent(copyPayload)}">
+    const copyPayload = JSON.stringify({
+      rawValue: displayValue,
+      methodType,
+      confidence
+    });
+
+    const safeDisplayValue = FormatUtils.escapeHtml(displayValue);
+    const score = spec.absent
+      ? `<span class="history-modal-method-confidence history-modal-method-not-present">${FormatUtils.escapeHtml(FormatUtils.t('combinationNotPresent', 'Not present'))}</span>`
+      : (confidence === null ? '' : FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence'));
+    const note = spec.caption ? `<span class="history-modal-method-note" dir="auto">${FormatUtils.escapeHtml(spec.caption)}</span>` : '';
+
+    return `
+        <div class="history-modal-method-item is-folded${spec.absent ? ' is-absent' : ''}${note ? ' has-note' : ''}" data-copy-payload="${encodeURIComponent(copyPayload)}">
           <button type="button" class="history-modal-method-head" aria-expanded="false">
             <span class="history-modal-method-badge" style="${badgeStyle}">${methodLabel}</span>
-            ${FormatUtils.confidenceHtml(confidence, 'history-modal-method-confidence')}
+            ${score}
             <svg class="history-modal-method-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
           <span class="history-modal-method-value" title="${clickToCopy}">${safeDisplayValue}</span>
+          ${note}
         </div>
       `;
-    }).join('');
   }
 
   /**

@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 // History details show each matched combination as the same checklist as
-// Detection, rebuilt from the slim entry and the rule as it is now.
+// Detection, rebuilt from the slim entry and the rule as it is now: its signals are rows like the methods list.
 
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -62,7 +62,11 @@ test('a saved scan shows its checklist in History details, above the methods', (
   assert.ok(combos > 0 && combos < methods, 'checklist above the methods');
   assert.match(html, /Official SDK, configured widget and compatible API/);
   assert.ok(!html.includes('Sets the detection score'));
-  assert.strictEqual((html.match(/aria-label="Found"><svg/g) || []).length, 3, 'SDK, widget and the render API');
+  // The signals are folded rows like the methods list: type, score, chevron, the value when opened
+  const shown = html.slice(combos, methods);
+  assert.strictEqual((shown.match(/<button type="button" class="history-modal-method-head" aria-expanded="false">/g) || []).length, 3, 'SDK, widget and the render API');
+  assert.match(shown, /<span class="history-modal-method-note" dir="auto">Official SDK script<\/span>/);
+  assert.ok(!/match-combo-rows|match-combo-lead/.test(shown), 'no checklist');
   assert.ok(!html.includes('Execute API'), 'the alternative that was not needed is not listed');
   assert.ok(!/match-combo-copy/.test(html), 'no Copy button');
 });
