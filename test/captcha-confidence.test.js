@@ -216,7 +216,8 @@ test('all twenty-two definitions have explicit IDs, conservative standalone evid
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-10-(?:0[3-9]|1[0-7]|26)$/, detector.id);
+    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine)
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-04)$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);

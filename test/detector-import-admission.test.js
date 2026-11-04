@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 global.Logger = new Proxy({}, { get: () => () => {} });
 global.DetectionUtils = require('../utils/detection-utils.js');
-global.chrome = { runtime: { getManifest: () => ({ version: '2.8.6' }) } };
+global.chrome = { runtime: { getManifest: () => ({ version: '2.8.8' }) } }; // the first engine that reads response bodies: some packaged rules need it
 const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 const plain = value => JSON.parse(JSON.stringify(value));
 let writes;

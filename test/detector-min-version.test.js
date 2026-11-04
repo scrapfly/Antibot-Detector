@@ -58,3 +58,19 @@ test('this build accepts every detector it ships', () => {
     }
   }
 });
+
+// A payload rule with "body": "response" reads the response of its address, which the engine can do from 2.8.8 (response capture).
+// An older build takes it for a request-body rule: it never matches, and the detector looks installed and does nothing.
+test('a detector with a payload rule that reads the response requires 2.8.8', () => {
+  let found = 0;
+  for (const [category, entry] of Object.entries(index)) {
+    for (const id of entry.detectors || []) {
+      const detector = JSON.parse(fs.readFileSync(path.join(root, 'detectors', category, `${id}.json`), 'utf8'));
+      const reads = ((detector.detection || {}).payload || []).some(rule => rule && rule.body === 'response');
+      if (!reads) continue;
+      found++;
+      assert.ok(atLeast(detector.minExtensionVersion, '2.8.8'), `${id}: minExtensionVersion ${detector.minExtensionVersion} < 2.8.8`);
+    }
+  }
+  assert.ok(found >= 3, `detectors that read a response: ${found}`);
+});
