@@ -2,7 +2,15 @@
 ShapeSecurityAdvanced.prototype.generateParsingCode = function(scripts, options) {
         const { hasInitJs, hasVendor2, hasSeeds, scriptType = 'all' } = options;
 
-        // Generate cache key from script pattern characteristics
+        const initScripts = scripts.filter(s => s.isInitJs);
+        const vendor2Scripts = scripts.filter(s => s.url.includes('vendor2.js'));
+        const seedScripts = scripts.filter(s => s.hasSeed);
+        const sampleInitUrl = initScripts[0]?.url || 'https://example.com/path/init.js';
+        const sampleVendor2Url = vendor2Scripts[0]?.url || 'https://example.com/vendor/static/vendor2.js';
+        const sampleSeedUrl = seedScripts[0]?.url || 'https://example.com/vendor/static/vendor2.js?seed=xxxxx';
+
+        // Generate cache key from script pattern characteristics. The templates embed the sample addresses, so they are part of the
+        // key: another site's analysis with the same number of scripts must not get the first site's addresses
         const cacheKey = JSON.stringify({
             scriptType,
             hasInitJs,
@@ -13,7 +21,8 @@ ShapeSecurityAdvanced.prototype.generateParsingCode = function(scripts, options)
                 init: scripts.some(s => s.isInitJs),
                 seed: scripts.some(s => s.hasSeed),
                 vendor2: scripts.some(s => s.url.includes('vendor2.js'))
-            }
+            },
+            samples: [sampleInitUrl, sampleVendor2Url, sampleSeedUrl]
         });
 
         // Return cached templates if available
@@ -21,12 +30,6 @@ ShapeSecurityAdvanced.prototype.generateParsingCode = function(scripts, options)
             return ShapeSecurityAdvanced.codeTemplateCache.get(cacheKey);
         }
 
-        const initScripts = scripts.filter(s => s.isInitJs);
-        const vendor2Scripts = scripts.filter(s => s.url.includes('vendor2.js'));
-        const seedScripts = scripts.filter(s => s.hasSeed);
-        const sampleInitUrl = initScripts[0]?.url || 'https://example.com/path/init.js';
-        const sampleVendor2Url = vendor2Scripts[0]?.url || 'https://example.com/vendor/static/vendor2.js';
-        const sampleSeedUrl = seedScripts[0]?.url || 'https://example.com/vendor/static/vendor2.js?seed=xxxxx';
         // Page values go into the code as string literals with quotes and backslashes escaped: inside a bare '...'
         // a quote in the address ended the string. JSON.stringify gives a literal JavaScript, Python, Go and C# read;
         // PHP gets a single-quoted one (a double-quoted PHP string would expand a $ in the address).

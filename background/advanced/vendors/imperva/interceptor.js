@@ -52,6 +52,10 @@ function impervaStartCapture(tabId, captureUrl) {
         setupImpervaInterceptor();
     }
 
+    // The state about to be replaced still has its 60 s stop: it would stop the new capture
+    const replaced = impervaCaptureStateRef.get(tabId);
+    if (replaced && replaced.timeout) clearTimeout(replaced.timeout);
+
     impervaCaptureStateRef.set(tabId, {
         tabId: tabId,
         timestamp: Date.now(),
@@ -137,8 +141,9 @@ function impervaStartExtraction(tabId, url) {
         Logger.network('[IMPERVA-EXTRACT] A capture is running on this tab; extraction refused');
         return { status: 'capture_running' };
     }
-    // A previous extraction on this tab is replaced: drop its load listener
+    // A previous extraction on this tab is replaced: drop its load listener and its 60 s stop (it would stop this one)
     if (existing && typeof existing.removeLoadListener === 'function') existing.removeLoadListener();
+    if (existing && existing.timeout) clearTimeout(existing.timeout);
 
     if (!impervaInterceptionListener) {
         setupImpervaInterceptor();
@@ -554,7 +559,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
 
         // Save to history using helper
         const newCapture = await saveToHistory(tabId, captureData, {
-            type: 'incapsula',
+            type: 'imperva',
             expiryMinutes: 30
         });
         Logger.network('[IMPERVA-CAPTURE] Successfully saved capture to history:', newCapture.id);

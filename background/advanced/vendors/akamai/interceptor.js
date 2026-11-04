@@ -579,8 +579,14 @@ function setupAkamaiInterceptor() {
                 };
             }
 
-            // Track unique endpoints
-            state.extractedData.endpoints.add(originalUrl);
+            // Track the Akamai endpoints the page posts to, by path: the result is saved to History, so it must not hold every
+            // request of a busy page (with the tokens and ids in their queries)
+            if (details.method === 'POST' && (url.includes('/akam/') || url.includes('.well-known/sbsd')) && state.extractedData.endpoints.size < 20) {
+                try {
+                    const posted = new URL(originalUrl);
+                    state.extractedData.endpoints.add(posted.origin + posted.pathname);
+                } catch (_) { /* not an address */ }
+            }
 
             // Check for SBSD endpoint
             if (url.includes('.well-known/sbsd')) {

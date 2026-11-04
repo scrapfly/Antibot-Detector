@@ -304,3 +304,18 @@ test('code generators join shared focus ownership above a kit dialog', () => {
   assert.equal(document.listeners.keydown.length, 0);
   assert.equal(document.listeners.focusin.length, 0);
 });
+
+// The templates embed the analysed site's script address: the cache must not hand one site's address to another site's analysis
+test('Shape export code: two analyses with the same shape but different script addresses get their own addresses', () => {
+  const shape = vendorFixture('shapesecurity').module;
+  const options = { hasInitJs: false, hasSeeds: true, scriptType: 'all' };
+  const first = shape.generateParsingCode([{ url: 'https://one.example/vendor/static/vendor2.js?seed=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', hasSeed: true, categories: [] }], options);
+  const second = shape.generateParsingCode([{ url: 'https://two.example/other/static/vendor2.js?seed=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', hasSeed: true, categories: [] }], options);
+  assert.ok(first.javascript.includes('https://one.example/'), 'the first site');
+  assert.ok(second.javascript.includes('https://two.example/'), 'the second site');
+  assert.ok(!second.javascript.includes('one.example'), 'not the first site\'s address');
+  assert.ok(!second.python.includes('one.example') && !second.php.includes('one.example'));
+  // The same analysis again is the cached one
+  const again = shape.generateParsingCode([{ url: 'https://two.example/other/static/vendor2.js?seed=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', hasSeed: true, categories: [] }], options);
+  assert.strictEqual(again, second);
+});

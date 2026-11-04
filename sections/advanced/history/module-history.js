@@ -26,7 +26,7 @@ class AdvancedModuleHistory {
             // Show first 3 items (pagination will handle the rest)
             const itemsToRender = history.slice(0, 3);
             Logger.debug('UI', `[${this.moduleName}] Rendering first ${itemsToRender.length} items of ${history.length} total`);
-            historyItems = this.renderCaptureHistoryItems(itemsToRender);
+            historyItems = this.renderCaptureRows(itemsToRender);
         }
 
         return `
@@ -97,6 +97,18 @@ class AdvancedModuleHistory {
         `;
     }
 
+    /**
+     * The rows of the list. A saved tool result (Check Cookies, Extract Site Key...) is not a capture: the vendor's capture card
+     * would read fields it does not have (an ABCK level, a reCAPTCHA version, a site key), so a result gets the plain card.
+     */
+    renderCaptureRows(items) {
+        return (Array.isArray(items) ? items : []).map((item) => {
+            const data = item && (item.data || item.captureData);
+            const render = data && data.tool ? AdvancedModuleHistory.prototype.renderCaptureHistoryItems : this.renderCaptureHistoryItems;
+            return render.call(this, [item]);
+        }).join('');
+    }
+
     renderCaptureHistoryItems(items) {
         // Default simple rendering - override in child classes
         return items.map((item) => {
@@ -106,6 +118,9 @@ class AdvancedModuleHistory {
             const id = attr(String(item.id || timestamp || ''));
             const timeAgo = this.getTimeAgo(timestamp);
             const faviconUrl = attr(UrlUtils.resolveDisplayFavicon(item.favicon, item.url || hostname));
+            // Which tool made a saved result, as the Captures tab tags it
+            const data = item.data || item.captureData;
+            const tag = data && data.tool && typeof Advanced !== 'undefined' && typeof Advanced.captureToolTag === 'function' ? Advanced.captureToolTag(item) : '';
 
             return `
                 <div class="capture-card" data-capture-id="${id}">
@@ -116,6 +131,7 @@ class AdvancedModuleHistory {
                                 <span class="capture-hostname">${esc(hostname)}</span>
                                 <span class="capture-time">${esc(timeAgo)}</span>
                             </div>
+                            ${tag ? `<div class="capture-type-row"><span class="capture-type-label">${esc(tag)}</span></div>` : ''}
                         </div>
                         <button class="capture-expand" data-capture-id="${id}">
                             <span class="expand-arrow">›</span>
@@ -226,7 +242,7 @@ class AdvancedModuleHistory {
             return;
         }
 
-        listContainer.innerHTML = this.renderCaptureHistoryItems(items);
+        listContainer.innerHTML = this.renderCaptureRows(items);
 
         // Re-setup event listeners for the new page
         this.setupExpandListeners();
@@ -385,7 +401,7 @@ class AdvancedModuleHistory {
 }
 // History elements that already have their listeners
 AdvancedModuleHistory.boundElements = new WeakSet();
-for (const name of ['loadCaptureHistory', 'renderCaptureHistoryHTML', 'renderEmptyCaptureState', 'renderCaptureHistoryItems', 'setupCaptureHistoryListeners', 'setupExpandListeners', 'setupCaptureHistoryPagination', 'renderCaptureHistoryPage', 'recordStructuredResult', 'renderToolResultContent', 'saveToolResult', 'renderCaptureDetailsContent', 'displayCaptureDetailsModal', 'toggleCaptureDetails', 'showConfirmationModal', 'clearCaptureHistory', 'renderCapturedDataSection', 'getTimeAgo']) {
+for (const name of ['loadCaptureHistory', 'renderCaptureHistoryHTML', 'renderEmptyCaptureState', 'renderCaptureHistoryItems', 'renderCaptureRows', 'setupCaptureHistoryListeners', 'setupExpandListeners', 'setupCaptureHistoryPagination', 'renderCaptureHistoryPage', 'recordStructuredResult', 'renderToolResultContent', 'saveToolResult', 'renderCaptureDetailsContent', 'displayCaptureDetailsModal', 'toggleCaptureDetails', 'showConfirmationModal', 'clearCaptureHistory', 'renderCapturedDataSection', 'getTimeAgo']) {
     Object.defineProperty(BaseAdvancedModule.prototype, name, Object.getOwnPropertyDescriptor(AdvancedModuleHistory.prototype, name));
 }
 })();
