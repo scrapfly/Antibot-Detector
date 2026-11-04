@@ -992,13 +992,23 @@ Rules.prototype.addNewMethodSection = function() {
 // Data Collection & Saving
 // ============================================
 
+/**
+ * The rule whose patterns the editor's rows came from: the stored rule when editing one, the copy or suggestion the editor
+ * was opened on when that is new (null for a rule started from nothing).
+ */
+Rules.prototype.storedDetectorForRules = function() {
+  const edit = this.currentEditDetector;
+  if (!edit) return null;
+  return edit.isNew ? (edit.startingRules || null) : (edit.original || null);
+};
+
 // First unused `<method>-<n>` id: not among the rows of the editor, not one of the stored rule's patterns (a row deleted
 // in this editor leaves its id to the stored rule, whose fields, such as "read the response body", a new row of that id
 // would inherit on Save) and not one issued since the editor opened
 Rules.prototype.nextPatternId = function(methodType) {
     const used = new Set([...document.querySelectorAll('#detectionMethodsContainer .method-item[data-pattern-id]')]
       .map(item => item.dataset.patternId));
-    const stored = this.currentEditDetector?.isNew ? null : this.currentEditDetector?.original;
+    const stored = this.storedDetectorForRules();
     const patterns = stored?.detection?.[methodType];
     if (Array.isArray(patterns)) {
       patterns.forEach((rule, index) => used.add(((typeof DetectionCombinations !== 'undefined') && DetectionCombinations.idOf(stored, rule))
@@ -1052,7 +1062,7 @@ Rules.prototype._collectDetectionFromForm = function() {
     if (!methodsContainer) return {};
 
     // Stored rules by the same id the rows carry (data-pattern-id)
-    const storedDetector = this.currentEditDetector?.isNew ? null : this.currentEditDetector?.original;
+    const storedDetector = this.storedDetectorForRules();
     const storedRule = (methodType, patternId) => {
       const rules = storedDetector?.detection?.[methodType];
       if (!Array.isArray(rules) || !patternId) return null;

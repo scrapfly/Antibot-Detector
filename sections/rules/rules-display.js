@@ -147,10 +147,12 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
     const formattedLastUpdated = this.formatLastUpdated(detector.lastUpdated);
     const categoryLabel = this.getCategoryLabel(category);
 
-    const catHex = categoryColor.replace('#', '');
-    const catR = parseInt(catHex.substring(0, 2), 16);
-    const catG = parseInt(catHex.substring(2, 4), 16);
-    const catB = parseInt(catHex.substring(4, 6), 16);
+    // A colour from an imported settings file may be #abc, #abcd or #rrggbbaa: the badge's tint reads the red, green and blue of any
+    const catHex = String(categoryColor).replace('#', '').replace(/^([a-f\d])([a-f\d])([a-f\d])[a-f\d]?$/i, '$1$1$2$2$3$3').slice(0, 6);
+    const catRgb = FormatUtils.hexToRgb(catHex) || { r: 59, g: 130, b: 246 };
+    const catR = catRgb.r;
+    const catG = catRgb.g;
+    const catB = catRgb.b;
 
     const categoryBadge = `<span class="method-tag category-tag" style="background: rgba(${catR}, ${catG}, ${catB}, 0.2); color: ${categoryColor}; border: 1px solid rgba(${catR}, ${catG}, ${catB}, 0.48);">${FormatUtils.escapeHtml(categoryLabel)}</span>`;
 

@@ -27,12 +27,19 @@ class Advanced {
    * Initialize advanced section
    */
   async initialize() {
-    await this.loadHTML();
-    // The History badge follows every change to the saved captures
-    if (typeof this.setupCaptureHistoryWatcher === 'function') this.setupCaptureHistoryWatcher();
-    // Once: the template and the document-level listeners are set up here, the tab's content is drawn per open
-    this.initialized = true;
-    Logger.debug('UI', 'Advanced section initialized');
+    if (this.initialized) return;
+    // The tab clicked twice while the template loads must not set the watcher up twice
+    if (!this._initializing) {
+      this._initializing = (async () => {
+        await this.loadHTML();
+        // The History badge follows every change to the saved captures
+        if (typeof this.setupCaptureHistoryWatcher === 'function') this.setupCaptureHistoryWatcher();
+        // Once: the template and the document-level listeners are set up here, the tab's content is drawn per open
+        this.initialized = true;
+        Logger.debug('UI', 'Advanced section initialized');
+      })().finally(() => { this._initializing = null; });
+    }
+    return this._initializing;
   }
 
 

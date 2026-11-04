@@ -24,15 +24,21 @@ class Rules {
    * Initialize rules section
    */
   async initialize() {
-    if (!this.initialized) {
-      await this.loadHTML();
-      // Keep WINDOW condition dropdowns aligned with the shared condition language (no duplicated lists).
-      this.refreshWindowConditionWizardDropdown();
-      this.setupPagination();
-      this.initializeColorManager();
-      this.setupEventListeners();
-      this.initialized = true;
+    if (this.initialized) return;
+    // A second call while the first is still loading the tab's markup (the tab clicked twice) waits for it: a second load
+    // would replace the markup the first one set its listeners on
+    if (!this._initializing) {
+      this._initializing = (async () => {
+        await this.loadHTML();
+        // Keep WINDOW condition dropdowns aligned with the shared condition language (no duplicated lists).
+        this.refreshWindowConditionWizardDropdown();
+        this.setupPagination();
+        this.initializeColorManager();
+        this.setupEventListeners();
+        this.initialized = true;
+      })().finally(() => { this._initializing = null; });
     }
+    return this._initializing;
   }
 
   /**
@@ -287,7 +293,7 @@ class Rules {
         Logger.ui(`Detector ${detectorName} ${enabled ? 'enabled' : 'disabled'}`);
 
         // Update the visual appearance immediately
-        const detectorCard = document.querySelector(`[data-detector-id="${detectorName}"][data-category="${category}"]`);
+        const detectorCard = document.querySelector(`[data-detector-id="${CSS.escape(detectorName)}"][data-category="${CSS.escape(category)}"]`);
         if (detectorCard) {
           if (enabled) {
             detectorCard.classList.remove('detector-disabled');

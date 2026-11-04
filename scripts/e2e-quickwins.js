@@ -43,7 +43,7 @@ const server = http.createServer((req, res) => {
     loads[name] = (loads[name] || 0) + 1;
     const marked = url.searchParams.get('m') !== '0';
     res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store', 'set-cookie': `qw_session=SECRETCOOKIE${name}; Path=/` });
-    return res.end(`<!doctype html><html><head><title>Quick ${name}</title></head><body>${marked ? `<p>${MARKER}</p>` : ''}<p>probe page</p></body></html>`);
+    return res.end(`<!doctype html><html><head><title>Quick ${name}</title></head><body>${marked ? `<p>${MARKER}</p>` : ''}<p>probe page</p>${url.searchParams.get('dom') === '1' ? '<span class="qw-promo" data-qw="1">promo</span>' : ''}</body></html>`);
   }
   res.writeHead(404); res.end();
 });
@@ -485,6 +485,53 @@ async function scenario(name, fn) {
     assert.deepEqual(Object.keys(rules.copies[0].detection).sort(), ['content', 'cookies']);
     assert.equal(rules.original.name, 'QuickWin Probe');
     await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Duplicate rule: the copy of a shipped rule keeps what the editor does not show (a payload rule that reads the response)', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await page.waitForSelector('#rulesSearch', { state: 'visible' });
+    await page.fill('#rulesSearch', 'Turnstile');
+    const card = '.detector-card[data-detector-id="detect-turnstile"]';
+    await page.waitForSelector(card, { state: 'attached', timeout: 15000 });
+    await page.$eval(`${card} .duplicate-detector-btn`, el => el.click());
+    await page.waitForSelector('#saveRuleEdit', { state: 'visible' });
+    await page.$eval('#saveRuleEdit', el => el.click());
+    const found = await until(() => page.evaluate(() => {
+      const all = window.popupInstance.detectorManager.detectors.captcha || {};
+      const copy = Object.values(all).find(d => /\(copy\)$/.test(d.name || '') && /turnstile/i.test(d.name));
+      return copy ? { payload: copy.detection.payload || [], original: all['detect-turnstile'].detection.payload || [] } : null;
+    }), 10000, 'the saved copy of Turnstile');
+    assert.ok(found.original.some(rule => rule.body === 'response'), 'the shipped rule reads a response body');
+    assert.deepEqual(found.payload.map(rule => [rule.id, rule.body]), found.original.map(rule => [rule.id, rule.body]), 'every payload rule keeps its body setting');
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('a DOM rule added after a page loaded matches that page on a manual scan, without reloading it', async () => {
+    const { page, url } = await scanned(`late-rule-${uniq()}`, '&dom=1');
+    const tabId = await tabIdOf(url);
+    const admin = await openExtensionPage();
+    await admin.evaluate(async (rule) => {
+      await window.popupInstance.detectorManager.addDetector('antibot', rule.id, rule);
+      await new Promise(r => chrome.runtime.sendMessage({ type: 'RELOAD_DETECTORS' }, () => r()));
+    }, {
+      id: 'detect-qwdom', name: 'QuickWin DOM Probe', author: 'Probe', enabled: true, category: 'Anti-Bot', difficulty: 'Medium',
+      version: '1.0.0', lastUpdated: '2026-11-04', icon: 'custom.png', description: 'A rule saved after the page loaded',
+      detection: { dom: [{ id: 'qw-dom', selector: 'span.qw-promo[data-qw]', confidence: 90, standalone: true, description: 'promo span' }] }
+    });
+    try {
+      assert.ok(!/QuickWin DOM Probe/.test(await titleOf(tabId)), 'the page was scanned before the rule existed');
+      // What the popup's Refresh sends; the tab is not reloaded
+      await admin.evaluate((id) => new Promise(r => chrome.runtime.sendMessage({ type: 'REQUEST_DETECTION', tabId: id }, () => r())), tabId);
+      const title = await until(async () => { const t = await titleOf(tabId); return /QuickWin DOM Probe/.test(t) ? t : null; }, 20000, 'the new rule on the hover text');
+      assert.match(title, /QuickWin DOM Probe/);
+    } finally {
+      await admin.evaluate(async () => { await window.popupInstance.detectorManager.deleteDetector?.('antibot', 'detect-qwdom'); });
+      await admin.close();
+      await page.close();
+    }
   });
 
   // ===============================================================================================

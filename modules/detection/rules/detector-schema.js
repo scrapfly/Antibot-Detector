@@ -100,7 +100,12 @@ class DetectorSchema {
                 if (combination.confidence !== undefined && (!Number.isFinite(combination.confidence) || combination.confidence < 0 || combination.confidence > 100)) return null;
             }
         }
-        return this.normalize(JSON.parse(JSON.stringify(detector)), { categoryName, detectorName, source: 'import' });
+        const copy = JSON.parse(JSON.stringify(detector));
+        // The picker only ever makes a data address. A rule file that names a web address for its uploaded icon would make the
+        // popup fetch it each time the rule is shown (the person's address, and that the rule is in use, reach the file's
+        // author): the rule is imported without that icon and shows the default one
+        if (copy.customIcon && !/^data:image\//i.test(copy.customIcon)) delete copy.customIcon;
+        return this.normalize(copy, { categoryName, detectorName, source: 'import' });
     }
 
     /** All-or-nothing admission for current exports and legacy bare maps. */
