@@ -98,10 +98,6 @@ Rules.comboProblem = function(tree, top = true) {
   }
   return '';
 };
-/** Kept for callers of the old name: a tree is valid when it has no problem. */
-Rules.comboValidTree = function(tree) {
-  return !Rules.comboProblem(tree);
-};
 /** The text of a stored pattern, as the editor row shows it ("name = value" for cookies and headers). */
 Rules.comboPatternText = function(method, pattern) {
   if (!pattern || typeof pattern !== 'object') return '';
@@ -253,7 +249,6 @@ Rules.prototype.setComboPatternDescription = function(id, text, source) {
   document.querySelectorAll('#combinationsContainer .combo-item-desc[data-combo-field="description"]').forEach(el => {
     if (el !== source && el.dataset.pattern === id) {
       // Another copy of the same description: shows the new text as typed
-      delete el.dataset.i18nSource; delete el.dataset.i18nShown; delete el.dataset.i18nShowing;
       el.textContent = value;
     }
   });

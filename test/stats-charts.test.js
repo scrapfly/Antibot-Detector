@@ -26,8 +26,8 @@ function finite(n) {
     if (['viewBox', 'd', 'x', 'y', 'cx', 'cy', 'r', 'rx', 'width', 'height', 'x1', 'x2', 'y1', 'y2', 'opacity', 'fill-opacity', 'stroke-dasharray', 'stroke-dashoffset', 'data-w'].includes(k)) assert.ok(!/NaN|Infinity|undefined/.test(v), `${k}: ${v}`);
   }
 }
-const KEYS = ['bars', 'line', 'stacked', 'donut', 'heatmap', 'calendar', 'matrix', 'scatter', 'rank', 'segments', 'sparkline', 'niceScale'];
-test('exports the twelve methods globally and through Node, heatmap is the calendar', () => {
+const KEYS = ['bars', 'stacked', 'heatmap', 'calendar', 'rank', 'segments', 'sparkline', 'niceScale'];
+test('exports the eight methods globally and through Node, heatmap is the calendar', () => {
   assert.equal(globalThis.StatsCharts, charts);
   assert.deepEqual(Object.keys(charts), KEYS);
   assert.equal(charts.heatmap, charts.calendar);
@@ -37,7 +37,7 @@ test('every renderer replaces content and handles empty arrays with caller text'
     let hidden = 0;
     const n = host(); n.appendChild(doc.createElement('old'));
     const withHide = { ...opts, hideTooltip: () => hidden++ };
-    if (key === 'matrix') charts[key](n, [], {}, withHide); else charts[key](n, [], withHide);
+    charts[key](n, [], withHide);
     assert.equal(find(n, 'old').length, 0, key);
     assert.equal(all(n).find(e => e.attrs.class === 'stats-none').textContent, opts.emptyLabel, key);
     assert.ok(hidden >= 1, `${key} hides the tooltip`);
@@ -62,68 +62,11 @@ test('bars use measured width, minimum 260, zero width for zero and safe labels'
     finite(n);
   }
 });
-test('line splits null gaps including fills and keeps actual zero points', () => {
-  const n = host(260);
-  charts.line(n, [{ label: 'a', value: 0 }, { label: 'gap', value: null }, { label: 'b', value: 70 }], { ...opts, fixedMax: 100, fill: true });
-  assert.equal(find(n, 'path').length, 4);
-  assert.equal(hits(n).length, 2);
-  assert.equal(hits(n)[0].attrs.cy, '202');
-  assert.equal(hits(n)[1].attrs.cy, String(202 - .7 * 186));
-  assert.ok(find(n, 'path').filter(p => p.attrs.fill === 'none').every(p => !p.attrs.d.includes('L')));
-  finite(n);
-});
-test('line singleton, all-null and nonfinite values have finite geometry', () => {
-  for (const points of [[{ label: 'a', value: 0 }], [{ label: 'a', value: null }], [{ label: 'a', value: Infinity }]]) {
-    const n = host(); charts.line(n, points, opts); finite(n);
-    assert.equal(hits(n).length, points[0].value === 0 ? 1 : 0);
-  }
-});
 test('stacked ignores missing and zero series without fabricating segments', () => {
   const n = host(260);
   charts.stacked(n, [{ label: 'row', values: { a: 2 } }, { label: 'empty', values: {} }], { ...opts, series: [{ key: 'a', label: 'A', color: '#abc' }, { key: 'b', label: 'B', color: '#def' }] });
   assert.equal(hits(n).length, 1);
   assert.equal(hits(n)[0].attrs.fill, '#abc');
-  finite(n);
-});
-test('donut preserves formatted center and emits all legend classes with true shares', () => {
-  const n = host();
-  charts.donut(n, [{ label: 'A', value: 3, color: '#abc' }, { label: 'B', value: 1, color: '#def' }], { ...opts, centerValue: '1,234.50%', centerLabel: 'Given label' });
-  assert.ok(find(n, 'text').some(e => e.textContent === '1,234.50%'));
-  assert.deepEqual(all(n).filter(e => e.attrs.class === 'stats-legend-share').map(e => e.textContent), ['75.0%', '25.0%']);
-  assert.equal(hits(n).length, 2);
-  finite(n);
-  charts.donut(n, [{ label: 'zero', value: 0 }], opts);
-  assert.equal(hits(n).length, 0);
-  assert.equal(all(n).find(e => e.attrs.class === 'stats-legend-share').textContent, '0.0%');
-  finite(n);
-});
-test('donut remains square in wide hosts and retains full long center text in titles', () => {
-  const n = host(566), centerValue = '12345678901234567890', centerLabel = 'A long translated center description';
-  charts.donut(n, [{ label: 'A', value: 1 }], { ...opts, centerValue, centerLabel });
-  assert.equal(find(n, 'svg')[0].attrs.viewBox, '0 0 220 220');
-  assert.equal(find(n, 'circle')[0].attrs.cx, '110');
-  const value = all(n).find(e => (e.attrs.class || '').includes('stats-donut-center-value'));
-  const caption = all(n).find(e => (e.attrs.class || '').includes('stats-donut-center-label'));
-  assert.equal(value.attrs['font-size'], '24');
-  assert.equal(caption.attrs['font-size'], '12');
-  assert.equal(value.children[0].textContent, centerValue);
-  assert.equal(caption.children[0].textContent, centerLabel);
-  assert.ok(value.textContent.endsWith('…'));
-  finite(n);
-});
-test('matrix renders zero missing entries and uses supplied key ordering', () => {
-  const n = host(720);
-  charts.matrix(n, [{ key: 'b', label: 'B' }, { key: 'a', label: 'A' }], { b: { a: 4 } }, opts);
-  assert.equal(hits(n).length, 4);
-  assert.deepEqual(hits(n).map(e => e.attrs['aria-label']), ['B / B: 0', 'B / A: 4', 'A / B: 0', 'A / A: 0']);
-  assert.equal(find(n, 'svg')[0].attrs.viewBox.split(' ')[2], '720');
-  finite(n);
-});
-test('scatter rejects invalid coordinates and accepts singleton zero and negative axes', () => {
-  const n = host(260);
-  charts.scatter(n, [{ label: 'origin', x: 0, y: 0, radius: 0 }, { label: 'negative', x: -5, y: -10, radius: Infinity }, { label: 'invalid', x: NaN, y: 2 }], { ...opts, xLabel: 'X', yLabel: 'Y' });
-  assert.equal(hits(n).length, 2);
-  assert.ok(find(n, 'text').some(e => e.textContent === '-10.0'));
   finite(n);
 });
 test('bars fixedMax retains confidence proportions in both orientations', () => {
@@ -162,20 +105,6 @@ test('paged stacked preserves whole-range scales', () => {
     finite(n);
   }
 });
-test('paged scatter honors external maxima without clipping observed points', () => {
-  const n = host(326);
-  charts.scatter(n, [{ label: 'page', x: 2, y: 4 }], { ...opts, xMax: 10, yMax: 20 });
-  assert.equal(Number(hits(n)[0].attrs.cx), 42 + .2 * (326 - 58));
-  assert.equal(Number(hits(n)[0].attrs.cy), 202 - .2 * 186);
-  charts.scatter(n, [{ label: 'page', x: 12, y: 24 }], { ...opts, xMax: 10, yMax: 20 });
-  assert.equal(Number(hits(n)[0].attrs.cx), 310);
-  assert.equal(Number(hits(n)[0].attrs.cy), 16);
-  for (const invalid of [0, -1, NaN, Infinity]) {
-    charts.scatter(n, [{ label: 'page', x: 2, y: 4 }], { ...opts, xMax: invalid, yMax: invalid });
-    assert.equal(Number(hits(n)[0].attrs.cx), 310);
-    finite(n);
-  }
-});
 test('tooltips use caller lines and roving focus does not intercept Tab', () => {
   const n = host(); let shown, hidden = 0;
   charts.bars(n, [{ label: 'A', value: 1, tip: ['provided', '<safe>'] }, { label: 'B', value: 2 }], { ...opts, onTooltip: (event, lines) => { shown = { event, lines }; }, hideTooltip: () => hidden++ });
@@ -199,13 +128,9 @@ test('hex colours stay attributes, var() and color-mix() become style declaratio
   const runs = [
     n => charts.bars(n, [{ label: 'a', value: 2, color: css }], { ...opts, vertical: true }),
     n => charts.bars(n, [{ label: 'a', value: 2, color: css }], opts),
-    n => charts.line(n, [{ label: 'a', value: 1 }, { label: 'b', value: 3 }], { ...opts, color: css, fill: true }),
     n => charts.stacked(n, [{ label: 'a', values: { a: 1, b: 2 } }], { ...opts, vertical: true, series }),
     n => charts.stacked(n, [{ label: 'a', values: { a: 1, b: 2 } }], { ...opts, series }),
-    n => charts.donut(n, [{ label: 'a', value: 1, color: css }, { label: 'b', value: 2, color: mixed }], opts),
     n => charts.calendar(n, [{ date: '2026-01-01', value: 1 }], { ...opts, color: css }),
-    n => charts.matrix(n, [{ key: 'a', label: 'A', color: css }], { a: { a: 1 } }, opts),
-    n => charts.scatter(n, [{ label: 'a', x: 1, y: 1 }], { ...opts, color: css }),
     n => charts.segments(n, [{ label: 'a', value: 1, color: css }], opts)
   ];
   const isCss = value => /^(var|color-mix)\(/.test(value || '');
@@ -230,7 +155,7 @@ test('svg summary becomes a desc referenced by aria-describedby, and is absent o
   assert.equal(svg.attrs['aria-describedby'], desc.attrs.id);
   assert.deepEqual(svg.children.slice(0, 2).map(e => e.tagName), ['title', 'desc']);
   const second = host();
-  charts.line(second, [{ label: 'a', value: 1 }], { ...opts, summary: 'x' });
+  charts.bars(second, [{ label: 'a', value: 1 }], { ...opts, summary: 'x' });
   assert.notEqual(find(second, 'desc')[0].attrs.id, desc.attrs.id);
   charts.bars(n, [{ label: 'a', value: 1 }], opts);
   assert.equal(find(n, 'desc').length, 0);
@@ -264,7 +189,7 @@ test('grid ticks: auto max is niceScaled, fixedMax is literal, formatTick and in
   charts.bars(n, [{ label: 'a', value: 0.4 }], { ...opts, vertical: true, integer: false });
   assert.deepEqual(ticksOf(n), ['0', '0.1', '0.2', '0.3', '0.4']);
   n = host();
-  charts.line(n, [{ label: 'a', value: 50 }, { label: 'b', value: 90 }], { ...opts, formatTick: v => `${v}%` });
+  charts.bars(n, [{ label: 'a', value: 50 }, { label: 'b', value: 90 }], { ...opts, vertical: true, formatTick: v => `${v}%` });
   assert.deepEqual(ticksOf(n), ['0%', '25%', '50%', '75%', '100%']);
   n = host();
   charts.stacked(n, [{ label: 'a', values: { a: 3 } }], { ...opts, vertical: true, series: [{ key: 'a', label: 'A' }] });
@@ -299,7 +224,7 @@ test('tooltip lines may be { label, value, color } objects, passed through untou
 test('hit nodes carry the label in aria-label only: no per-node title child', () => {
   const n = host();
   charts.bars(n, [{ label: 'a', value: 1 }], { ...opts, vertical: true });
-  charts.line(n, [{ label: 'a', value: 1 }], opts);
+  charts.bars(n, [{ label: 'a', value: 1 }], opts);
   for (const h of hits(n)) assert.ok(h.children.every(c => c.tagName !== 'title'), h.attrs['aria-label']);
   assert.equal(find(n, 'svg')[0].children[0].tagName, 'title');
 });
@@ -845,21 +770,6 @@ test('sparkline averages more than 60 values down to at most 60 buckets', () => 
   finite(huge);
 });
 
-// ---- donut extras (optional parts of the contract) -------------------------------------------------------------
-test('donut: keepZero false hides zero legend rows, two or more slices get a 2px gap', () => {
-  const n = host();
-  charts.donut(n, [{ label: 'A', value: 3 }, { label: 'Z', value: 0 }, { label: 'B', value: 1 }], { ...opts, keepZero: false });
-  assert.deepEqual(cls(n, 'stats-legend-label').map(e => e.textContent), ['A', 'B']);
-  const circumference = 2 * Math.PI * 74;
-  const arcs = hits(n).map(h => Number(h.attrs['stroke-dasharray'].split(' ')[0]));
-  assert.ok(Math.abs(arcs[0] - (.75 * circumference - 2)) < 1e-9);
-  assert.ok(Math.abs(arcs[1] - (.25 * circumference - 2)) < 1e-9);
-  const single = host();
-  charts.donut(single, [{ label: 'A', value: 5 }], opts);
-  assert.equal(hits(single)[0].attrs['stroke-dasharray'].split(' ')[0], String(circumference));
-  finite(n);
-});
-
 // ---- cross-cutting: finite geometry for hostile and sparse input -----------------------------------------------
 test('every renderer keeps finite geometry for singleton, zero-only, sparse and hostile input', () => {
   for (const value of [0, NaN, Infinity, -Infinity, -5, null, undefined, '7']) {
@@ -867,9 +777,7 @@ test('every renderer keeps finite geometry for singleton, zero-only, sparse and 
     const checks = [
       n => charts.bars(n, point, { ...opts, vertical: true, average: { window: 3 }, highlight: 'max', valueLabels: true }),
       n => charts.bars(n, point, opts),
-      n => charts.line(n, point, opts),
       n => charts.stacked(n, [{ label: 'a', values: { a: value } }], { ...opts, vertical: true, series: [{ key: 'a', label: 'A' }] }),
-      n => charts.donut(n, point, opts),
       n => charts.calendar(n, [{ date: '2026-01-01', value }], opts),
       n => charts.segments(n, [{ label: 'a', value }, { label: 'b', value: 1 }], opts),
       n => charts.rank(n, point, opts),

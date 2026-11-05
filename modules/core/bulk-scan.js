@@ -31,8 +31,6 @@
   const TIMEOUT_S = Object.freeze({ min: 10, max: 120, default: 45 });
   const MAX_SKIPPED_LISTED = 200;  // skipped lines listed in the table; the rest are counted
   const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
-  const ITEM_STATUSES = Object.freeze(['waiting', 'scanning', 'done', 'failed', 'skipped']);
-  const RUN_STATUSES = Object.freeze(['running', 'paused', 'stopped', 'done']);
   /** Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. */
   const REASONS = Object.freeze(['invalid', 'scheme', 'scope', 'sitemap', 'timeout', 'load', 'error', 'off']);
   const FORMATS = Object.freeze(['csv', 'json', 'md']);
@@ -581,7 +579,7 @@
   }
 
   const api = {
-    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, ITEM_STATUSES, RUN_STATUSES, REASONS, FORMATS,
+    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
     capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
     summarize, protectionTotals, build, fileName
