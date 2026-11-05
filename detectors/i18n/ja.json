@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Netacea の緩和 Cookie (ブラウザー内またはサーバーが設定、既定の名前)",
   "Captcha verification with the mitigation cookie": "CAPTCHA 検証と緩和 Cookie",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM のクライアント側チャレンジ Cookie (既定のプレフィックス TSPD_101、例: TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "ASM の Cookie とそのクライアント側チャレンジ Cookie"
+  "ASM cookie with its client-side challenge cookie": "ASM の Cookie とそのクライアント側チャレンジ Cookie",
+  "Custom detector": "カスタム検出器",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: 不審な訪問者に表示される SG-CAPTCHA のプルーフオブワーク型チャレンジページ。/.well-known/sgcaptcha/ 配下で sg-captcha レスポンスヘッダーとともに返される",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge。SiteGround の Anti-Bot AI がチャレンジを返した",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "/.well-known/sgcaptcha/ 配下の SG-CAPTCHA チャレンジページと回答エンドポイント",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "ページのスクリプト内の SG-CAPTCHA チャレンジ定数 (sgchallenge, sgsubmit_url)",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA チャレンジページ上の sg-captcha ヘッダー",
+  "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha ヘッダーとページのスクリプト内のチャレンジ定数",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA チャレンジページとページのスクリプト内のその定数"
 }

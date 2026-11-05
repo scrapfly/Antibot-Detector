@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Netacea 緩解 Cookie，位於瀏覽器中或由伺服器設定（預設名稱）",
   "Captcha verification with the mitigation cookie": "驗證碼驗證及緩解 Cookie",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM 用戶端挑戰 Cookie（預設前綴 TSPD_101，例如 TSPD_101_DID）",
-  "ASM cookie with its client-side challenge cookie": "ASM Cookie 及其用戶端挑戰 Cookie"
+  "ASM cookie with its client-side challenge cookie": "ASM Cookie 及其用戶端挑戰 Cookie",
+  "Custom detector": "自訂偵測器",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI：向被標記的訪客顯示的 SG-CAPTCHA 工作量證明挑戰頁面，位於 /.well-known/sgcaptcha/ 下，並附帶 sg-captcha 回應標頭",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge，表示 SiteGround 的 Anti-Bot AI 回傳了挑戰",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "位於 /.well-known/sgcaptcha/ 下的 SG-CAPTCHA 挑戰頁面和應答端點",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "網頁指令碼中的 SG-CAPTCHA 挑戰常數（sgchallenge、sgsubmit_url）",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 挑戰頁面上的 sg-captcha 標頭",
+  "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 標頭與網頁指令碼中的挑戰常數",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑戰頁面與網頁指令碼中的相應常數"
 }

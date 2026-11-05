@@ -1492,5 +1492,19 @@
   "riskified-riskx-setsid": {
    "runtimeType": "function"
   }
+ },
+ "detect-siteground-captcha": {
+  "sg-captcha-header": {
+   "header": [
+    "sg-captcha",
+    "challenge"
+   ]
+  },
+  "sgcaptcha-script-constants": {
+   "source": "const sgsubmit_url=\"/.well-known/sgcaptcha/?r=/\";const sgfallback_url=\"/.well-known/captcha/?y=err&r=/\";"
+  },
+  "sgcaptcha-wellknown-path": {
+   "url": "https://www.siteground.es/.well-known/sgcaptcha/?r=/"
+  }
  }
 }

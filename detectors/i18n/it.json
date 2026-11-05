@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie di mitigazione di Netacea, nel browser o impostato dal server (nome predefinito)",
   "Captcha verification with the mitigation cookie": "Verifica del captcha con il cookie di mitigazione",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie della sfida lato client di BIG-IP ASM (prefisso predefinito TSPD_101, ad es. TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "Cookie ASM con il relativo cookie della sfida lato client"
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM con il relativo cookie della sfida lato client",
+  "Custom detector": "Rilevatore personalizzato",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: la pagina di challenge proof-of-work SG-CAPTCHA mostrata ai visitatori segnalati, servita in /.well-known/sgcaptcha/ con un header di risposta sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, l'Anti-Bot AI di SiteGround ha servito la sua challenge",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "Pagina di challenge ed endpoint di risposta di SG-CAPTCHA in /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Costanti della challenge SG-CAPTCHA (sgchallenge, sgsubmit_url) negli script della pagina",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha sulla pagina di challenge SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha con le costanti della challenge negli script della pagina",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Pagina di challenge SG-CAPTCHA con le sue costanti negli script della pagina"
 }

@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie mitigasi Netacea, di browser atau diatur oleh server (nama default)",
   "Captcha verification with the mitigation cookie": "Verifikasi CAPTCHA beserta cookie mitigasi",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie challenge sisi klien BIG-IP ASM (prefiks default TSPD_101, mis. TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "Cookie ASM beserta cookie challenge sisi kliennya"
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM beserta cookie challenge sisi kliennya",
+  "Custom detector": "Detektor kustom",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: halaman challenge proof-of-work SG-CAPTCHA yang ditampilkan kepada pengunjung yang ditandai, disajikan di bawah /.well-known/sgcaptcha/ dengan header respons sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, Anti-Bot AI milik SiteGround menyajikan challenge-nya",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "Halaman challenge dan endpoint jawaban SG-CAPTCHA di bawah /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Konstanta challenge SG-CAPTCHA (sgchallenge, sgsubmit_url) di script halaman",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha pada halaman challenge SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha beserta konstanta challenge di script halaman",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Halaman challenge SG-CAPTCHA beserta konstantanya di script halaman"
 }
