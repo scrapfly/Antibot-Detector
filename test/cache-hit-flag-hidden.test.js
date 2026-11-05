@@ -106,5 +106,14 @@ test('no extension script spells the flag, and the protocol no longer lists it a
   assert.ok(!/window\[GLOBALS\.CACHE_HIT/.test(main), 'the MAIN world keeps the flag in a variable');
   const content = fs.readFileSync(path.join(root, 'content.js'), 'utf8');
   assert.ok(!/window\[CACHE_HIT/.test(content) && !content.includes('GLOBALS.CACHE_HIT'), 'the content script keeps its own');
-  assert.match(content, /handleHookMessage\(\{ source: window, data \}, chrome, hookBatcher, \{ cacheHit: cacheHitEarlyExit \}\)/, 'and hands it to the engine');
+  // And hands it to the engine: the variable the cache-hit branch sets (whatever it is called) is the cacheHit of the state object
+  // that is the last argument of each handleHookMessage call, however the call is spaced
+  const code = content.split('\n').filter(line => !/^\s*\/\//.test(line)).join('\n'); // without the comment lines
+  const setOnHit = /cacheCheckResponse\?\.cacheHit\)\s*\{[\s\S]*?\b([A-Za-z_$][\w$]*)\s*=\s*true\s*;/.exec(code);
+  assert.ok(setOnHit, 'the cache-hit branch of the early check sets the content script\'s own flag');
+  const calls = [...code.matchAll(/\.handleHookMessage\(([^;]*)\)\s*;/g)].map(m => m[1]);
+  assert.ok(calls.length > 0, 'the content script forwards the MAIN world\'s hook messages to the engine');
+  for (const args of calls) {
+    assert.match(args, new RegExp(`,\\s*\\{\\s*cacheHit\\s*:\\s*${setOnHit[1]}\\s*\\}\\s*$`), `${args.trim()}: the last argument carries the flag`);
+  }
 });

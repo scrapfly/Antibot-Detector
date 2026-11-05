@@ -120,12 +120,18 @@ test('the MAIN world scripts write only the documented names to the page\'s wind
     'GLOBALS.LAST_DETECTION', // the public JS API (opt-in)
     'api.fetch'               // the response capture wraps fetch in place (a member the page already has)
   ];
+  // A write is = or any compound form (+=, -=, ||=, ??= ...), ++ or -- on either side, and the object-level calls; a comparison
+  // (==, ===, <=, >=, !=) or an arrow (=>) is not one
+  const TARGET = String.raw`(?<![\w$.])(?:window|globalThis|self|root)(?:\.([A-Za-z_$][\w$]*)|\[([^\]]+)\])`;
+  const ASSIGNED = String.raw`\s*(?:(?:\*\*|<<|>>>|>>|&&|\|\||\?\?|[-+*\/%&|^])?=(?![=>])|\+\+|--)`;
+  const INCREMENTED = String.raw`(?:\+\+|--)\s*`;
   const writes = [];
   for (const file of MAIN_WORLD_FILES) {
     // Comment lines left out: a comment may show how a page would use the JS API (window.onDetection = ...)
     const code = fs.readFileSync(path.join(root, file), 'utf8').split('\n').filter(line => !/^\s*(\/\/|\/?\*)/.test(line)).join('\n');
-    for (const m of code.matchAll(/\b(?:window|globalThis|self|root)(?:\.([A-Za-z_$][\w$]*)|\[([^\]]+)\])\s*=(?!=)/g)) writes.push(`${file}: ${m[1] || m[2]}`);
-    for (const m of code.matchAll(/Object\.(?:defineProperty|defineProperties|assign)\(\s*(?:window|globalThis|self)\s*,\s*([^,)]+)/g)) writes.push(`${file}: ${m[1].trim()}`);
+    for (const m of code.matchAll(new RegExp(TARGET + ASSIGNED, 'g'))) writes.push(`${file}: ${m[1] || m[2]}`);
+    for (const m of code.matchAll(new RegExp(INCREMENTED + TARGET, 'g'))) writes.push(`${file}: ${m[1] || m[2]}`);
+    for (const m of code.matchAll(/(?:Object\.(?:defineProperty|defineProperties|assign)|Reflect\.(?:set|defineProperty))\(\s*(?:window|globalThis|self)\s*,\s*([^,)]+)/g)) writes.push(`${file}: ${m[1].trim()}`);
   }
   assert.ok(writes.length >= 5, 'the guard finds the writes');
   const unknown = writes.filter(w => !ALLOWED.includes(w.split(': ')[1]));
