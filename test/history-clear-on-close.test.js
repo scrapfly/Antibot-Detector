@@ -126,3 +126,36 @@ test('at browser start nothing is cleared when the setting is off', async () => 
     assert.deepStrictEqual(ids(w.store), ['a', 'p', 'b']);
   } finally { delete global.chrome; }
 });
+
+// Settings that cannot be read do not say "clear on close": nothing is cleared when the last window closes, or at the next start
+const unreadable = ['{oops', 'null', '42', JSON.stringify({ settings: 'junk' })];
+
+test('with settings that cannot be read, closing the last window clears nothing', async () => {
+  for (const settings of unreadable) {
+    const w = world({ windows: [] });
+    w.store.scrapfly_settings = settings;
+    try {
+      assert.strictEqual(await HistoryRetention.onWindowRemoved(), 0, settings);
+      assert.deepStrictEqual(ids(w.store), ['a', 'p', 'b'], settings);
+    } finally { delete global.chrome; }
+  }
+});
+
+test('with a settings read that fails, neither the last window closing nor the next browser start clears History', async () => {
+  const w = world({ windows: [] });
+  const get = global.chrome.storage.local.get;
+  global.chrome.storage.local.get = async (keys) => {
+    if ([].concat(keys).includes('scrapfly_settings')) throw new Error('storage is unavailable');
+    return get(keys);
+  };
+  try {
+    const retention = fresh();
+    retention.init();
+    await settle();
+    assert.strictEqual(await HistoryRetention.onWindowRemoved(), 0);
+    w.listeners.windowRemoved[0](5);
+    w.listeners.startup[0]();
+    await settle();
+    assert.deepStrictEqual(ids(w.store), ['a', 'p', 'b']);
+  } finally { delete global.chrome; }
+});
