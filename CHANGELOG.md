@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.4] - 2026-11-05
 
+### Changed
+
+- After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
+
 ### Fixed
 
 - Imperva: captures and saved request bodies cover only Imperva's own requests on the page's site, and at most 20 challenge addresses and payloads are kept.
