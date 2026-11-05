@@ -32,6 +32,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: a detector you add yourself shows its description in your language instead of English.
 - Akamai Extract Sensor no longer deletes the _abck cookie before it is ready, so a failed start leaves the cookie alone.
 - Imperva tools keep request bodies only from Imperva's own requests, and list each endpoint once, without its query, at most 20.
+- Imperva: Analyze Scripts lists script addresses with the page's own http or https and port, instead of always https without a port.
+- Shape Security: a capture that ends while the popup is open now resets Start Capturing and shows the capture at once.
+- Shape Security: Stop Capturing with nothing captured no longer saves an empty capture.
 - Websites can no longer read, or overwrite, two internal markers the extension kept on their window object (one showed a page came from the cache).
 - A page answered from the saved result no longer risks a scan that never finishes when the extension's window checks were still running.
 
