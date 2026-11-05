@@ -26,6 +26,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Editing, switching off, importing or updating rules now clears the saved results, so the next visit is scanned with the new rules instead of showing old cards for days.
 - Detection: changing the cache scope in Settings no longer leaves the tab blank until the popup is reopened; the page's saved results show again.
+- Detection: coming back to the tab with a search or a filter on keeps the list filtered instead of showing every result.
+- Detection: Brave, Opera and Vivaldi pages and the Chrome Web Store are now reported as pages that cannot be scanned.
+- Rules: a rule you just switched off shows under the Disabled chip, and its switch stays off when you page through the list.
 - Detectors that look for scripts in a page's head or inline (Queue-it, CHEQ, Anubis, Ruishu) now match; these checks never worked before.
 - History: Scan again now and Clear cache clear the saved result even when the cache scope setting changed after the entry was recorded.
 - History is no longer cut to the default size or entry limit when Settings cannot be read; your own limits apply again once they can.
