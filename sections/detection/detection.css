@@ -530,7 +530,7 @@
 #detectionResults .detection-search {
   position: relative;
   margin: 0 0 8px;
-  padding: 6px 11px 9px;
+  padding: 6px 11px 7px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-top: none;
@@ -572,7 +572,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 6px 0 0;
+  margin: 4px 0 0;
 }
 
 /* There are results, but the search and the chips match none: a line and the way back */
@@ -601,16 +601,22 @@
 .results-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   overflow-y: auto;
   /* Filled pages scroll by their last card: reserve the scrollbar so cards keep
      one width (and height) whether or not the page scrolls */
   scrollbar-gutter: stable;
-  /* No side inset: cards line up with the summary block and search box */
-  padding: 10px 0 8px;
+  /* No side inset: cards line up with the summary block and search box. The first card sits close under the summary card:
+     the chip row in it takes room that a first page of two cards needs */
+  padding: 4px 0 8px;
   margin-bottom: 0;
   flex: 1 1 auto;
   min-height: 0;
+}
+
+/* An empty list, with the no-matches line under it, keeps that line where it was (the summary card above it lost 4px) */
+.results-list:empty {
+  padding-top: 14px;
 }
 
 .results-list.expanded-results {
@@ -636,14 +642,10 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin: 2px 2px 6px;
+  margin: 2px 2px 4px;
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 600;
-}
-
-.detection-item:not(:first-child) .detection-group-head {
-  margin-top: 6px;
 }
 
 /* Category icon (shield, checkbox, fingerprint) in the category colour */
@@ -706,10 +708,16 @@
   padding: 15px 13px 16px;
 }
 
-/* A page that starts a second category has two headers: its cards keep the
-   tighter padding so both still fit above the pagination without scrolling */
+/* A page of two cards under category headers keeps its cards tighter, and a page that starts a second category has two
+   headers: tighter still, so both cards still fit above the pagination without scrolling. (The chip row under the search takes
+   28px of the page: the spacing round the list and these cards gives it back. A page of one card, and the highest-confidence
+   order, which has no headers, have the room and keep their cards as they were.) */
+.results-list:has(> .detection-item + .detection-item):has(.detection-group-head) .card-header {
+  padding-block: 11px 12px;
+}
+
 .results-list:has(> .detection-item + .detection-item .detection-group-head) .card-header {
-  padding-block: 8px 9px;
+  padding-block: 6px 7px;
 }
 
 .card-icon-section {
