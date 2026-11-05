@@ -485,6 +485,11 @@ async function akamaiStartExtraction(tabId) {
                 extractedData: null,
                 timeout: null
             };
+            // An extraction already running on this tab is replaced: its 30 s stop would end this one
+            if (existing) {
+                if (typeof clearCaptureTimeout === 'function') clearCaptureTimeout(existing);
+                else if (existing.timeout) clearTimeout(existing.timeout);
+            }
             akamaiCaptureStateRef.set(tabId, extraction);
             if (typeof setCaptureTimeout === 'function') {
                 setCaptureTimeout(akamaiCaptureStateRef, tabId, 30000, () => {
@@ -813,12 +818,14 @@ function setupAkamaiInterceptor() {
                         Logger.network('[AKAMAI-EXTRACT] Popup not open (this is normal):', err.message);
                     });
 
-                    // Clear the capture state
+                    // Clear the capture state, and the request listener on every page with it when no tab needs it any more (an
+                    // extraction has no capture job whose end would do it)
                     if (typeof removeCaptureState === 'function') {
                         removeCaptureState(akamaiCaptureStateRef, details.tabId);
                     } else {
                         akamaiCaptureStateRef.delete(details.tabId);
                     }
+                    akamaiRemoveListenerIfIdle();
                     Logger.network('[AKAMAI-EXTRACT] ========== EXTRACTION COMPLETE ==========');
                 }
                 return;

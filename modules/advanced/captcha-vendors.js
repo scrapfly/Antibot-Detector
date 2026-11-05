@@ -8,7 +8,8 @@
  *   optional `path` regex on the pathname; `type` is the chip shown.
  * siteKey: Extract Site Key. `key` validates every value found; `label` is the
  *   vendor's own name for it; `rules` say where to look (see sitekey-probe.js):
- *   attr (an element attribute), url (a script, frame or request URL, then a
+ *   attr (an element attribute: its whole value, or the capture group of a
+ *   `pattern` inside it), url (a script, frame or request URL, then a
  *   query param or a capture group), inline (a capture group in an inline
  *   script, after a cheap `hint` check), global (MAIN world, only when nothing
  *   else found a key) and fact (a page fact such as the widget version).
@@ -16,6 +17,10 @@
  * (no combinators), so the tests can check them without a browser.
  */
 (function (global) {
+    // ALTCHA Cloud's challenge address as the widget's attribute carries it (the documented embed): https on altcha.org or one of
+    // its subdomains, the challenge route, and the key as apiKey=. Anchored, with bounded repeats
+    const ALTCHA_CLOUD_CHALLENGE = /^https:\/\/(?:[a-z0-9-]{1,63}\.){0,4}altcha\.org\/(?:api\/)?v1\/challenge\?(?:[^#&]{0,200}&){0,10}apiKey=(key_[A-Za-z0-9_-]{6,80})(?:[&#]|$)/i;
+
     const list = [
         {
             vendorId: 'prosopo', detectorId: 'prosopo', className: 'ProsopoAdvanced',
@@ -262,10 +267,13 @@
                 key: /^key_[A-Za-z0-9_-]{6,80}$/,
                 rules: [
                     // Only ALTCHA Cloud and Sentinel have a key: a self-hosted widget points at its own site's challenge
-                    // route, with none. The widget's challenge (or challengeurl) attribute holds the whole address, and
-                    // attribute rules take whole values, so the key is read from the request instead: it is listed once
-                    // the widget has asked for its challenge. Sentinel runs on its owner's host, so any host qualifies;
-                    // the route and the key's own shape (key_...) keep it to ALTCHA's
+                    // route, with none. The documented Cloud embed carries it in the widget's challengeurl (or challenge)
+                    // attribute, https on altcha.org, so it is found before the widget asks for it; the key's own shape
+                    // (key_...) and the route keep it to ALTCHA's
+                    { type: 'attr', selector: 'altcha-widget[challengeurl]', attr: 'challengeurl', source: 'widget', pattern: ALTCHA_CLOUD_CHALLENGE },
+                    { type: 'attr', selector: 'altcha-widget[challenge]', attr: 'challenge', source: 'widget', pattern: ALTCHA_CLOUD_CHALLENGE },
+                    // Otherwise the key is read from the request the widget makes for its challenge, listed once it has asked.
+                    // Sentinel runs on its owner's host, so any host qualifies there
                     { type: 'url', url: /^https:\/\/[^/?#]+\/(?:api\/)?v1\/challenge(?:[/?#]|$)/, param: 'apiKey' }
                 ]
             }

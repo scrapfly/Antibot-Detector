@@ -88,6 +88,13 @@ test('the first load of the ALTCHA late page carries only its widget markup, whi
   assert.deepEqual(Fixtures.stubsOf(spec), {}, 'nothing of its own for the server to answer');
 });
 
+test('the ALTCHA Cloud embed page names its key only in the widget\'s attribute, asks for nothing, and is detected above 50%', () => {
+  const spec = Fixtures.VARIANTS.find(item => item.id === 'altcha-cloud');
+  assert.deepEqual(spec.requests, [], 'no request for the key to be read from');
+  assert.match(spec.dom[0].attrs.challengeurl, /^https:\/\/eu\.altcha\.org\/api\/v1\/challenge\?apiKey=key_[A-Za-z0-9]+$/);
+  assert.ok(scores(spec)['detect-altcha'] > 50, JSON.stringify(scores(spec)));
+});
+
 test('Analyze Scripts lists, for each page, exactly the addresses the suite expects with the classification it expects', () => {
   const classifiers = { awswaf: 'awsWafClassifyUrl', cloudflare: 'cloudflareClassifyUrl', datadome: 'datadomeClassifyUrl', funcaptcha: 'funcaptchaClassifyUrl',
     hcaptcha: 'hcaptchaClassifyUrl', turnstile: 'turnstileClassifyUrl' };

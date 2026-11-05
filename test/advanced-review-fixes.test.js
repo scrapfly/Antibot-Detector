@@ -323,7 +323,7 @@ test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, 
     t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
     t.request('https://www.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.5', { method: 'POST', requestBody: impervaBody('{"solution":"x"}') });
     const { payloads, challengeUrls } = t.state().extractedData;
-    assert.deepEqual(Array.from(payloads, item => item.url), ['https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', 'https://www.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.5']);
+    assert.deepEqual(Array.from(payloads, item => item.url), ['https://shop.example/Disk-Lack-Be-Take-Dried', 'https://www.shop.example/_Incapsula_Resource'], 'by origin and path: the query holds tokens and ids');
     assert.equal(payloads[0].payload, reeseBody);
     assert.deepEqual(Array.from(payloads[0].keywords), ['old_token', 'performance', 'solution']);
     assert.equal(challengeUrls.length, 2);
@@ -545,4 +545,289 @@ test('one capture with an address that does not parse no longer empties Advanced
     assert.equal(site(''), 'unknown');
     assert.equal(site(undefined), 'unknown');
     assert.doesNotMatch(read('sections/advanced/history/controller.js'), /new URL\(capture\.url\)/, 'every capture list uses the guarded form');
+});
+
+// ---- The independent review of the Advanced slice: listeners that outlive an extraction, what counts as Imperva's own, Shape's timers ----
+
+/** background/tab-events.js, with the stores its tab-closed handler reads, in the same worker context as the interceptors. */
+function tabEvents(f, stores = {}) {
+    Object.assign(f.context, {
+        DetectionSessionStore: { cancel() {} }, stopBadgeSpinner() {}, workerKeepaliveManager: null,
+        headersStore: new Map(), requestHeadersStore: new Map(), responseCookiesStore: new Map(), payloadStore: new Map(), networkUrlsStore: new Map(),
+        tabsUsingCache: new Set(), detectionStates: new Map(), activeDetections: new Map(), interruptedDetections: new Map(),
+        finalizationDebounce: new Map(), batchProcessingFlags: new Map(),
+        reCaptchaCaptureState: new Map(), funcaptchaCaptureState: new Map(), hcaptchaCaptureState: new Map(),
+        akamaiCaptureState: stores.akamai || new Map(), impervaCaptureState: stores.imperva || new Map(),
+        shapesecurityCaptureState: stores.shape || new Map(), shapeSecurityExtractionState: new Map(),
+        BADGE: { TEXT: { EMPTY: '', DISABLED: 'OFF' }, COLORS: { DISABLED: '#888' } }
+    });
+    f.context.chrome.action = { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {}, getBadgeText: async () => '' };
+    f.context.chrome.tabs.onActivated = event();
+    vm.runInContext(read('background/tab-events.js') + ';setupTabListeners()', f.context);
+    return { closeTab: tabId => f.context.chrome.tabs.onRemoved.emit(tabId) };
+}
+
+const akamaiSensorRequest = tabId => ({ tabId, method: 'POST', type: 'xmlhttprequest', url: 'https://shop.example/akam/11/pixel_9a8b7c?token=secret',
+    requestBody: { raw: [{ bytes: new TextEncoder().encode('3;0;1;0;4733506;sensor-e2e') }] } });
+const pending = (f, delay) => Array.from(f.timers.values()).filter(timer => timer.delay === delay).length;
+
+test('Akamai: an Extract Sensor that gets its sensor ends with the request listener, unless another tab still waits for its own', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: async () => {} };
+    const onBeforeRequest = f.context.chrome.webRequest.onBeforeRequest;
+    await akamaiExtract(context, 6);
+    await akamaiExtract(context, 9);
+    assert.equal(onBeforeRequest.listeners.size, 1, 'one listener serves both tabs');
+    const [listener] = Array.from(onBeforeRequest.listeners);
+    listener(akamaiSensorRequest(6));
+    await flush();
+    assert.equal(f.messages.filter(message => message.type === 'AKAMAI_EXTRACTION_RESULT').length, 1, 'the sensor reaches the popup');
+    assert.equal(states.has(6), false);
+    assert.equal(onBeforeRequest.listeners.size, 1, 'the other tab still waits for its sensor');
+    listener(akamaiSensorRequest(9));
+    await flush();
+    assert.deepEqual([states.size, onBeforeRequest.listeners.size, context.akamaiInterceptionListener], [0, 0, null], 'states, request listeners, the listener variable');
+});
+
+test('Akamai: a tab closed during Extract Sensor takes the request listener and the 30 s stop with it', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [], remove: async () => {} };
+    const tabs = tabEvents(f, { akamai: states });
+    await akamaiExtract(context, 9);
+    assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size, pending(f, 30000)], [1, 1, 1], 'armed');
+    tabs.closeTab(9);
+    assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size, pending(f, 30000)], [0, 0, 0], 'states, request listeners, pending stops');
+    assert.equal(context.akamaiInterceptionListener, null);
+});
+
+test('Akamai: a second Extract Sensor on the same tab replaces the first one\'s 30 s stop, which would end the second early', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [], remove: async () => {} };
+    await akamaiExtract(context, 6);
+    const first = states.get(6);
+    await akamaiExtract(context, 6);
+    assert.notEqual(states.get(6), first, 'the second extraction replaced the first');
+    assert.equal(pending(f, 30000), 1, 'only the second one\'s stop is pending');
+    await f.tick(30000);
+    assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size], [0, 0], 'the second one\'s own stop ends it');
+});
+
+test('Imperva: an Analyze Scripts that a challenge POST completes ends with the request listener', async () => {
+    const t = impervaTab('extract');
+    t.context.checkCookies = async () => [];
+    const { onBeforeRequest } = t.f.context.chrome.webRequest;
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.equal(onBeforeRequest.listeners.size, 1);
+    await t.f.tick(2000);
+    assert.equal(t.f.messages.filter(message => message.type === 'IMPERVA_EXTRACTION_COMPLETED').length, 1, 'the result reaches the popup');
+    assert.deepEqual([t.states.size, onBeforeRequest.listeners.size, t.context.impervaInterceptionListener, t.f.context.chrome.webNavigation.onCompleted.listeners.size],
+        [0, 0, null, 0], 'states, request listeners, the listener variable, page-load listeners');
+});
+
+test('Imperva: a tab closed during Analyze Scripts takes both listeners and the 60 s stop with it', () => {
+    const t = impervaTab('extract');
+    const tabs = tabEvents(t.f, { imperva: t.states });
+    const { onBeforeRequest } = t.f.context.chrome.webRequest;
+    assert.deepEqual([t.states.size, onBeforeRequest.listeners.size, t.f.context.chrome.webNavigation.onCompleted.listeners.size, pending(t.f, 60000)], [1, 1, 1, 1], 'armed');
+    tabs.closeTab(7);
+    assert.deepEqual([t.states.size, onBeforeRequest.listeners.size, t.f.context.chrome.webNavigation.onCompleted.listeners.size, pending(t.f, 60000)], [0, 0, 0, 0],
+        'states, request listeners, page-load listeners, pending stops');
+    assert.equal(t.context.impervaInterceptionListener, null);
+});
+
+test('Imperva: the tab leaving the page during Analyze Scripts takes both listeners with the extraction', () => {
+    const t = impervaTab('extract');
+    const { onBeforeRequest } = t.f.context.chrome.webRequest;
+    t.context.impervaHandleCaptureTabUpdate(7, { url: 'https://shop.example/elsewhere' }, { url: 'https://shop.example/elsewhere' });
+    assert.deepEqual([t.states.size, onBeforeRequest.listeners.size, t.f.context.chrome.webNavigation.onCompleted.listeners.size], [0, 0, 0]);
+});
+
+test('Imperva: what counts as Imperva\'s own request: its endpoints by path component on the page\'s site, Reese84\'s sensor on the page\'s host', () => {
+    const f = fixture(), context = f.load('imperva');
+    const cases = [
+        // [own, request, page, what it is]
+        [true, 'https://www.shop.example/Dont-Ride-The-Express?d=www.shop.example', 'https://www.shop.example/cart', 'Reese84\'s sensor on the page\'s host'],
+        [true, 'https://shop.example/Dont-Ride-The-Express?d=shop.example', 'https://www.shop.example/cart', 'the same host with or without www'],
+        [false, 'https://api.shop.example/ab-cd?d=api.shop.example', 'https://www.shop.example/cart', 'a sensor on another host of the site: Reese84 posts to the page\'s own'],
+        [false, 'https://tracker.example/collect?d=tracker.example', 'https://shop.example/', 'a third party that copies ?d='],
+        [false, 'https://evil.co.uk/x?d=evil.co.uk', 'https://www.shop.co.uk/', 'another site under the same country code'],
+        [true, 'https://www.shop.co.uk/abc-def?d=www.shop.co.uk', 'https://www.shop.co.uk/', 'a co.uk page\'s own sensor'],
+        [true, 'http://10.1.2.3:8080/abc?d=10.1.2.3', 'http://10.1.2.3:8080/', 'an IP page\'s own sensor'],
+        [false, 'http://99.9.2.3/abc?d=99.9.2.3', 'http://10.1.2.3:8080/', 'another IP with the same last two octets'],
+        [true, 'https://shop.example/rum/collect?d=shop.example', 'https://shop.example/', 'a first-party request that names the host in ?d= (by its address alone it cannot be told from the sensor)'],
+        [true, 'https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1', 'https://shop.example/', 'UTMVC\'s endpoint on the page\'s host'],
+        [true, 'https://static.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1', 'https://www.shop.example/', 'its endpoint on a subdomain of the page\'s site'],
+        [true, 'https://cdn.shop.co.uk/_Incapsula_Resource', 'https://www.shop.co.uk/', 'a co.uk site\'s own subdomain'],
+        [true, 'https://shop.example/v1/interrogation', 'https://shop.example/', 'an interrogation route'],
+        [true, 'https://shop.example/interrogation/start', 'https://shop.example/', 'an interrogation route with a path under it'],
+        [false, 'https://shop.example/api/interrogations', 'https://shop.example/', 'a route that only starts like it'],
+        [false, 'https://shop.example/interrogation-rooms/create', 'https://shop.example/', 'a route that only starts like it'],
+        [false, 'https://shop.example/x/_Incapsula_Resource.js', 'https://shop.example/', 'not the path component Imperva uses'],
+        [false, 'https://collector.other.example/_Incapsula_Resource?SWKMTFSR=1', 'https://shop.example/', 'Imperva sits on the page\'s own site, not on another'],
+        [false, 'https://collector.other.example/x/_Incapsula_Resource.js', 'https://shop.example/', 'another site, and not the path component'],
+        [false, 'https://evil.co.uk/_Incapsula_Resource', 'https://www.shop.co.uk/', 'another site under the same country code'],
+        [false, 'http://99.9.2.3/_Incapsula_Resource', 'http://10.1.2.3:8080/', 'another IP'],
+        [false, 'https://rum.example/beacon?u=https%3A%2F%2Fshop.example%2F_Incapsula_Resource', 'https://shop.example/', 'the path only in the query'],
+        [false, 'not an address', 'https://shop.example/', 'not an address'],
+        [false, 'https://shop.example/_Incapsula_Resource', 'not an address', 'no page to compare with']
+    ];
+    for (const [own, url, page, what] of cases) assert.equal(context.impervaIsOwnRequest(url, page), own, `${what}: ${url} on ${page}`);
+});
+
+test('Imperva: a capture lists an endpoint only for Imperva\'s own request, and addresses that only carry the words start nothing', async () => {
+    const t = impervaTab('capture');
+    t.request('https://rum.example/beacon?u=https%3A%2F%2Fshop.example%2F_Incapsula_Resource');
+    t.request('https://search.example/find?q=%2Finterrogation%2Ftips');
+    t.request('https://collector.other.example/x/_Incapsula_Resource.js');
+    t.request('https://collector.other.example/_Incapsula_Resource?SWKMTFSR=1');
+    t.request('https://shop.example/api/interrogations');
+    assert.deepEqual([Array.from(t.state().incapResourceUrls), Array.from(t.state().interrogationUrls)], [[], []], 'no list holds an address that is not Imperva\'s');
+    // So there is nothing the check after a reload could take for data: no capture is completed or saved from those addresses
+    const saved = [];
+    t.context.saveToHistory = async (tabId, data) => { saved.push(data); return { id: 'saved' }; };
+    t.context.checkCookies = async () => [];
+    t.context.checkAndCompleteCapture(7);
+    await t.f.tick(5000);
+    assert.equal(saved.length, 0);
+    // Imperva's own are listed once each, without their queries
+    t.request('https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1', { type: 'script' });
+    t.request('https://static.shop.example/v1/interrogation?id=7');
+    assert.deepEqual(Array.from(t.state().incapResourceUrls), ['https://shop.example/_Incapsula_Resource']);
+    assert.deepEqual(Array.from(t.state().interrogationUrls), ['https://static.shop.example/v1/interrogation']);
+});
+
+test('Imperva: Analyze Scripts keeps each challenge address once and at most 20 of each list, by path, with no query', () => {
+    const body = tag => `{"solution":"${tag}-${'x'.repeat(20000)}"}`;
+    // 500 different bodies posted to one address: one address, 20 bodies
+    const one = impervaTab('extract');
+    for (let i = 0; i < 500; i++) one.request(`https://shop.example/Aa-Bb?d=shop.example&n=${i}`, { method: 'POST', requestBody: impervaBody(body(i)) });
+    const data = one.state().extractedData;
+    assert.equal(data.challengeUrls.length, 1, 'one address once');
+    assert.equal(data.payloads.length, 20, 'at most 20 bodies');
+    assert.ok(data.payloads.every(item => item.url === 'https://shop.example/Aa-Bb'), 'by origin and path');
+    assert.ok(data.payloads.reduce((sum, item) => sum + item.payload.length, 0) <= 20 * 8192, 'bounded in size: 20 bodies of at most 8192 characters');
+    // 100 addresses: at most 20, none with a query
+    const many = impervaTab('extract');
+    for (let i = 0; i < 100; i++) many.request(`https://shop.example/Aa-Bb-${i}?d=shop.example&token=t${i}`, { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.equal(many.state().extractedData.challengeUrls.length, 20);
+    assert.equal(many.state().extractedData.payloads.length, 20);
+    assert.ok(many.state().extractedData.challengeUrls.every(item => !item.url.includes('?') && !item.url.includes('token')), 'no query kept');
+    // The same body posted over and over is one body; what each post said about the address is kept together
+    const same = impervaTab('extract');
+    for (let i = 0; i < 50; i++) same.request('https://shop.example/Aa-Bb?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.equal(same.state().extractedData.payloads.length, 1);
+    const merged = impervaTab('extract');
+    merged.request('https://shop.example/Aa-Bb?d=shop.example', { method: 'POST', requestBody: impervaBody('{"old_token":null}') });
+    merged.request('https://shop.example/Aa-Bb?d=shop.example', { method: 'POST', requestBody: impervaBody('{"solution":1}') });
+    assert.deepEqual(Array.from(merged.state().extractedData.challengeUrls, item => Array.from(item.keywords)), [['old_token', 'solution']]);
+});
+
+// Shape Security's timers belong to its capture: the 5 s version check, the 60 s stop and the page notice end with it
+const shapeDelays = f => Array.from(f.timers.values()).map(timer => timer.delay).sort((a, b) => b - a);
+const shapeText = value => (value && typeof value === 'object' && 'fallback' in value ? value.fallback : value);
+async function startShape(f, context, states, tabId = 7) {
+    await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_START_CAPTURE', tabId }, resolve, states, new Map()));
+    const { job } = f.context.AdvancedJobManager.begin({ tabId, vendorId: 'shapesecurity', operation: 'capture', url: 'https://shop.example/login' });
+    f.context.AdvancedJobManager.bindCaptureState(states.get(tabId), job);
+    return job;
+}
+const shapeStop = (context, tabId = 7) => new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_STOP_CAPTURE', tabId }, resolve));
+const pageLoaded = (f, tabId = 7) => {
+    f.context.chrome.webNavigation.onCommitted.emit({ tabId, frameId: 0 });
+    f.context.chrome.webNavigation.onCompleted.emit({ tabId, frameId: 0 });
+};
+
+test('Shape Security: Stop within the 5 s after the page loads ends the version check too: nothing pending, nothing put on the page', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    pageLoaded(f);
+    assert.deepEqual(shapeDelays(f), [60000, 5000], 'the 60 s stop and the 5 s version check');
+    assert.equal((await shapeStop(context)).status, 'stopped');
+    assert.deepEqual(shapeDelays(f), [], 'neither is left pending');
+    f.notices.length = 0;
+    await f.tick(5000);
+    assert.deepEqual(f.notices, [], 'no "Monitoring Active" notice for a capture that is over');
+    assert.equal(states.has(7), false);
+});
+
+test('Shape Security: a Stop that lands while the version check waits for the page does not put the capture\'s state back', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    pageLoaded(f);
+    // The page is busy: the version probe's answer is held
+    let answerProbe;
+    f.context.chrome.scripting.executeScript = details => (details && details.world === 'MAIN' ? new Promise(resolve => { answerProbe = () => resolve([{ result: false }]); }) : Promise.resolve([{ result: false }]));
+    await f.tick(5000);
+    assert.equal((await shapeStop(context)).status, 'stopped');
+    assert.equal(states.size, 0);
+    f.notices.length = 0;
+    answerProbe();
+    await flush();
+    assert.equal(states.size, 0, 'the stopped capture\'s state stays gone');
+    const state = await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_GET_CAPTURE_STATE', tabId: 7 }, resolve));
+    assert.equal(state.isCapturing, false);
+    assert.deepEqual(f.notices, [], 'and nothing is shown for it');
+    // The next Start is not refused, and registers its listeners
+    const again = await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_START_CAPTURE', tabId: 7 }, resolve, states, new Map()));
+    assert.equal(again.status, 'started');
+    assert.deepEqual([f.context.chrome.webRequest.onResponseStarted.listeners.size, f.context.chrome.webRequest.onBeforeSendHeaders.listeners.size], [1, 1]);
+});
+
+test('Shape Security: with the capture still running, the 5 s check reads the version and puts the monitoring notice up', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    pageLoaded(f);
+    f.context.chrome.scripting.executeScript = async details => [{ result: Boolean(details && details.world === 'MAIN') }];
+    f.notices.length = 0;
+    await f.tick(5000);
+    assert.equal(states.get(7).version, 'v1', 'window.__xr_bmobdb is there');
+    assert.deepEqual(f.notices.map(notice => [notice.type, shapeText(notice.title)]), [['capture', 'Monitoring Active ({0})']]);
+});
+
+test('Shape Security: the 60 s running out with nothing captured saves nothing and still tells the popup, with what the other tools send on a timeout', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    const job = await startShape(f, context, states);
+    await context.autoStopCapture(7, 'timeout');
+    await flush();
+    assert.equal(f.saves.length, 0, 'no empty entry in History');
+    const done = f.messages.filter(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED');
+    assert.equal(done.length, 1, 'the popup is told the capture ended');
+    assert.deepEqual({ reason: done[0].reason, captureData: done[0].captureData, requestId: done[0].requestId, tabId: done[0].tabId }, { reason: 'timeout', captureData: null, requestId: job.requestId, tabId: 7 });
+    assert.equal(states.has(7), false);
+    assert.equal(job.status, 'completed');
+    assert.deepEqual(f.notices.map(notice => notice.type), ['warning'], 'the page is told it timed out, not that a capture completed');
+    // With the cookie seen the timeout keeps what there is, as before
+    await startShape(f, context, states, 8);
+    f.context.chrome.webRequest.onResponseStarted.emit({ tabId: 8, responseHeaders: [{ name: 'set-cookie', value: 'AbCdEfGh=xyz; Max-Age=1577847600; Path=/' }] });
+    await context.autoStopCapture(8, 'timeout');
+    await flush();
+    assert.equal(f.saves.length, 1);
+    assert.equal(f.saves[0].cookie.name, 'AbCdEfGh');
+});
+
+test('Shape Security: the completion message says how many were captured and never the cookie\'s or the headers\' values', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    f.context.chrome.webRequest.onResponseStarted.emit({ tabId: 7, responseHeaders: [{ name: 'set-cookie', value: 'AbCdEfGh=SECRETVALUE; Max-Age=1577847600; Path=/' }] });
+    states.get(7).version = 'v1';
+    states.get(7).headers.push({ name: 'X-AbCd1234-a', value: 'HEADERVALUE', timestamp: 1 });
+    await context.autoStopCapture(7, 'complete');
+    await flush();
+    const done = f.messages.find(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED');
+    assert.ok(done, 'the popup is told');
+    assert.deepEqual(JSON.parse(JSON.stringify(done.captureData)), { cookies: 1, headers: 1 });
+    assert.equal(done.reason, 'complete');
+    assert.doesNotMatch(JSON.stringify(done), /SECRETVALUE|HEADERVALUE|AbCdEfGh|X-AbCd1234/, 'neither a value nor a name');
+    assert.equal(f.saves[0].cookie.value, 'SECRETVALUE', 'they are in History, where they are the point of the capture');
 });

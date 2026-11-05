@@ -207,7 +207,7 @@ test('Shape Security: a capture that ends by itself tells the open popup, with i
   const message = done[0].message;
   assert.deepEqual({ tabId: message.tabId, vendorId: message.vendorId, operation: message.operation, requestId: message.requestId, reason: message.reason },
     { tabId: 7, vendorId: 'shapesecurity', operation: 'capture', requestId: 'job-7', reason: 'complete' }, 'the popup matches its Stop card to the capture by the job\'s request id');
-  assert.equal(message.captureData.cookie.name, 'AbCd1234');
+  assert.deepEqual(message.captureData, { cookies: 1, headers: 0 }, 'how many were captured, never their values');
   assert.deepEqual({ saved: done[0].saved, stateGone: done[0].stateGone }, { saved: 1, stateGone: true }, 'told after the save and after the state is gone, so a state query on receipt says it is not capturing');
 
   // A second trigger of the same capture (another header, the timer) tells nobody again
@@ -253,4 +253,48 @@ test('Imperva: the Analyze Scripts window gives the page\'s own address, scheme 
   // A result with no address of its own, or one that is not a web page: the host over https
   assert.deepEqual(addresses({ hostname: 'shop.example', scriptUrls: scripts('') }), expected('https://shop.example', 'shop.example'));
   assert.deepEqual(addresses({ url: 'about:blank', hostname: 'shop.example', scriptUrls: scripts('') }), expected('https://shop.example', 'shop.example'));
+});
+
+// Akamai's Start Capturing deleted the _abck cookie before the worker had armed the capture: a start that failed had already cost the
+// person the cookie. Arm first, delete last
+function akamaiPopup({ answer, removeFails = false }) {
+  const events = [];
+  const context = { console, window: { close: () => events.push('popup closed') }, setTimeout: fn => fn(),
+    Logger: { debug() {}, error() {}, network() {} },
+    NotificationHelper: { error: text => events.push(`error: ${text}`), info() {}, success() {} },
+    AkamaiAdvanced: function() {}, AdvancedMessageTypes: { ADVANCED_PAGE_NOTICE: 'ADVANCED_PAGE_NOTICE' },
+    chrome: { cookies: { getAll: async () => [{ name: '_abck', value: 'v' }, { name: 'bm_sz', value: 'b' }],
+      remove: async query => { if (removeFails) throw new Error('cookie store busy'); events.push(`cookie deleted: ${query.name}`); } } } };
+  context.AkamaiAdvanced.tr = (key, fallback) => fallback;
+  context.AkamaiAdvanced.fmt = (key, fallback) => fallback;
+  vm.createContext(context);
+  vm.runInContext(read('utils/page-cookies.js'), context);
+  vm.runInContext(read('sections/advanced/base-advanced-module.js'), context);
+  vm.runInContext(read('sections/advanced/vendors/akamai/lifecycle.js'), context);
+  const module = Object.create(context.window.BaseAdvancedModule.prototype);
+  Object.assign(module, { moduleName: 'akamai', tabInfo: { id: 5, url: 'https://shop.example/' }, isCapturing: false, captureStateRevision: 0 });
+  module.beforeCapture = context.AkamaiAdvanced.prototype.beforeCapture;
+  // Akamai's own hook where it has one; otherwise the base class's, which only closes the popup
+  if (context.AkamaiAdvanced.prototype.afterCaptureStart) module.afterCaptureStart = context.AkamaiAdvanced.prototype.afterCaptureStart;
+  module.updateCaptureButtonState = () => {};
+  module.sendMessage = async message => {
+    events.push(`sent ${message.type}`);
+    if (message.type === 'AKAMAI_GET_CAPTURE_STATE') return { isCapturing: false };
+    if (answer instanceof Error) throw answer;
+    return answer;
+  };
+  return { module, events };
+}
+
+test('Akamai: Start Capturing deletes _abck only once the worker has confirmed the capture is armed, and not when it did not', async () => {
+  const run = async options => { const { module, events } = akamaiPopup(options); await module.startCapturing(); return events; };
+  const asked = ['sent AKAMAI_GET_CAPTURE_STATE', 'sent AKAMAI_START_CAPTURE'];
+  assert.deepEqual(await run({ answer: { status: 'started', requestId: 'r1' } }), [...asked, 'cookie deleted: _abck', 'popup closed'], 'armed first, the cookie last, then the popup closes');
+  assert.deepEqual(await run({ answer: { status: 'already_capturing', requestId: 'r1' } }), [...asked, 'cookie deleted: _abck', 'popup closed'], 'armed already');
+  // Nothing is armed: the cookie is left alone
+  assert.deepEqual(await run({ answer: { status: 'error', error: 'worker busy' } }), [...asked, 'error: Failed to start capture: worker busy'], 'a start the worker refused');
+  assert.deepEqual(await run({ answer: new Error('no worker') }), [...asked, 'error: Failed to start capture: no worker'], 'a start that threw');
+  assert.deepEqual(await run({ answer: undefined }), asked, 'no answer');
+  // A cookie that cannot be deleted does not undo an armed capture, and the popup still closes
+  assert.deepEqual(await run({ answer: { status: 'started' }, removeFails: true }), [...asked, 'popup closed']);
 });
