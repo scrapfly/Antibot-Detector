@@ -805,6 +805,46 @@ async function impervaFromLoadedPage(tabId) {
     return { data, found: first.size > 0 };
 }
 
+// What a capture keeps is bounded: it is saved to History, and a busy page sends hundreds of other requests (with tokens and
+// ids in their queries), some with bodies of any size. The endpoint lists keep each path once, at most this many; a stored
+// POST body is cut at this many characters
+var IMPERVA_MAX_ENDPOINTS = 20;
+var IMPERVA_MAX_PAYLOAD_CHARS = 8192;
+// Imperva's own endpoints, by path: UTMVC's _Incapsula_Resource and the /interrogation routes
+var IMPERVA_ENDPOINT_PATH = /_incapsula_resource|\/interrogation/i;
+
+/**
+ * Whether a request is Imperva's own: one of its endpoints (by path, on any host), or Reese84's sensor, which the protected
+ * page posts to its own site with the site's name in the query (?d=<host>, as the result window shows it). A body that only
+ * says "performance", "solution" or "interrogation" is not enough: forms, beacons and analytics of any other address do too.
+ * @param {string} url - the request
+ * @param {string} pageUrl - the page the capture watches
+ */
+function impervaIsOwnRequest(url, pageUrl) {
+    try {
+        const request = new URL(url);
+        if (IMPERVA_ENDPOINT_PATH.test(request.pathname)) return true;
+        const named = String(request.searchParams.get('d') || '').toLowerCase();
+        const host = request.hostname.toLowerCase();
+        if (!named || (host !== named && !host.endsWith('.' + named))) return false;
+        // The sensor is first-party: the same site as the page (the same rule Analyze Scripts uses on the loaded page)
+        const site = new URL(pageUrl).hostname.toLowerCase().split('.').slice(-2).join('.');
+        return host === site || host.endsWith('.' + site);
+    } catch (_) {
+        return false;
+    }
+}
+
+/** Add an endpoint to a capture's list by path (no query), once, until the list is full. */
+function impervaRememberEndpoint(list, url) {
+    if (!Array.isArray(list) || list.length >= IMPERVA_MAX_ENDPOINTS) return;
+    try {
+        const parsed = new URL(url);
+        const endpoint = parsed.origin + parsed.pathname;
+        if (!list.includes(endpoint)) list.push(endpoint);
+    } catch (_) { /* not an address */ }
+}
+
 /**
  * Setup network request interceptor for Imperva endpoints
  */
@@ -837,19 +877,21 @@ function setupImpervaInterceptor() {
         // Check for _Incapsula_Resource pattern
         if (urlCheck.found && urlCheck.matches.some(u => u.includes('_Incapsula_Resource') || u.includes('_incapsula_resource'))) {
             Logger.network('[IMPERVA-CAPTURE] Incapsula Resource URL detected:', originalUrl);
-            state.incapResourceUrls.push(originalUrl);
+            impervaRememberEndpoint(state.incapResourceUrls, originalUrl);
             impervaCaptureStateRef.set(details.tabId, state);
         }
 
         // Check for interrogation URLs
         if (urlCheck.found && urlCheck.matches.some(u => u.includes('interrogation'))) {
             Logger.network('[IMPERVA-CAPTURE] Interrogation URL detected:', originalUrl);
-            state.interrogationUrls.push(originalUrl);
+            impervaRememberEndpoint(state.interrogationUrls, originalUrl);
             impervaCaptureStateRef.set(details.tabId, state);
         }
 
-        // Check request body for "interrogation" keyword
-        if (details.method === 'POST' && details.requestBody) {
+        // Check request body for "interrogation" keyword. Only Imperva's own requests are read: the word, "performance" and
+        // "solution" are in the forms, beacons and analytics bodies of any other address too, and a body kept from one of
+        // those would be somebody else's data
+        if (details.method === 'POST' && details.requestBody && impervaIsOwnRequest(originalUrl, state.captureUrl)) {
             try {
                 let rawBody = null;
 
@@ -862,7 +904,7 @@ function setupImpervaInterceptor() {
 
                 if (rawBody && rawBody.toLowerCase().includes('interrogation')) {
                     Logger.network('[IMPERVA-CAPTURE] Interrogation URL detected:', originalUrl);
-                    state.interrogationUrls.push(originalUrl);
+                    impervaRememberEndpoint(state.interrogationUrls, originalUrl);
                     impervaCaptureStateRef.set(details.tabId, state);
                 }
 
@@ -896,9 +938,13 @@ function setupImpervaInterceptor() {
                             timestamp: Date.now()
                         });
 
+                        // The body is cut at a fixed size, and says so with the size it had
+                        const stored = rawBody.length > IMPERVA_MAX_PAYLOAD_CHARS ? rawBody.slice(0, IMPERVA_MAX_PAYLOAD_CHARS) : rawBody;
                         state.extractedData.payloads.push({
                             url: originalUrl,
-                            payload: rawBody,
+                            payload: stored,
+                            length: rawBody.length,
+                            truncated: stored.length < rawBody.length,
                             keywords: foundKeywords,
                             timestamp: Date.now()
                         });

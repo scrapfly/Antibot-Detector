@@ -239,6 +239,104 @@ test('Akamai: stopping the last capture removes the request listener (removeList
     assert.equal(context.akamaiInterceptionListener, null);
 });
 
+// Imperva's request listener keeps what it reads only from Imperva's own requests (the _Incapsula_Resource and /interrogation
+// endpoints, and Reese84's sensor, posted to the protected site with ?d=<host>), once per path, and bounded: a capture is saved
+// to History, and a page sends many other requests whose bodies and queries are not Imperva's to keep
+const impervaBody = text => ({ raw: [{ bytes: new TextEncoder().encode(text) }] });
+const reeseBody = '{"solution":{"interrogation":{"p":"AAAA","st":1,"sr":2},"version":"stable"},"old_token":null,"error":null,"performance":{"interval":8}}';
+
+function impervaTab(mode) {
+    const f = fixture(), context = f.load('imperva');
+    const states = new Map();
+    context.impervaInitializeInterceptor(states);
+    if (mode === 'extract') {
+        context.impervaStartExtraction(7, 'https://shop.example/login');
+    } else {
+        context.impervaStartCapture(7, 'https://shop.example/login');
+        states.get(7).waitingForReload = false;
+    }
+    const [listener] = Array.from(f.context.chrome.webRequest.onBeforeRequest.listeners);
+    return { f, context, states, state: () => states.get(7),
+        request: (url, extra = {}) => listener({ tabId: 7, method: 'GET', type: 'xmlhttprequest', url, ...extra }) };
+}
+
+test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, however the body reads', () => {
+    const t = impervaTab('extract');
+    // A beacon of another site, a form of the page, a third party that copies the ?d= naming, a form post: none is Imperva's
+    t.request('https://analytics.other.example/collect', { method: 'POST', requestBody: impervaBody('{"event":"performance","solution":"x"}') });
+    t.request('https://shop.example/api/comments', { method: 'POST', requestBody: impervaBody('my solution and its performance') });
+    t.request('https://tracker.example/collect?d=tracker.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    t.request('https://rum.example/beacon?u=https%3A%2F%2Fshop.example%2F_Incapsula_Resource', { method: 'POST', requestBody: impervaBody('{"performance":{"entries":[]}}') });
+    t.request('https://shop.example/checkout', { method: 'POST', requestBody: { formData: { note: ['old_token'] } } });
+    assert.deepEqual(Array.from(t.state().extractedData.payloads), [], 'no body of another address is kept');
+    assert.deepEqual(Array.from(t.state().extractedData.challengeUrls), []);
+    assert.equal(Array.from(t.f.timers.values()).filter(timer => timer.delay === 2000).length, 0, 'and none of them ends the analysis early');
+
+    // Imperva's own: Reese84's sensor posted to the page's site with ?d=, and the _Incapsula_Resource endpoint
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    t.request('https://www.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.5', { method: 'POST', requestBody: impervaBody('{"solution":"x"}') });
+    const { payloads, challengeUrls } = t.state().extractedData;
+    assert.deepEqual(Array.from(payloads, item => item.url), ['https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', 'https://www.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.5']);
+    assert.equal(payloads[0].payload, reeseBody);
+    assert.deepEqual(Array.from(payloads[0].keywords), ['old_token', 'performance', 'solution']);
+    assert.equal(challengeUrls.length, 2);
+    assert.equal(Array.from(t.f.timers.values()).filter(timer => timer.delay === 2000).length, 2, 'an Imperva challenge still completes the analysis shortly after');
+});
+
+test('Imperva: a stored POST body is cut at a fixed size and says so', () => {
+    const t = impervaTab('extract');
+    const big = `{"solution":"${'x'.repeat(100000)}"}`;
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(big) });
+    const [stored] = t.state().extractedData.payloads;
+    assert.equal(stored.payload.length, 8192);
+    assert.equal(stored.payload, big.slice(0, 8192));
+    assert.equal(stored.truncated, true);
+    assert.equal(stored.length, big.length, 'the original size is kept');
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.equal(t.state().extractedData.payloads[1].truncated, false);
+});
+
+test('Imperva: Analyze Scripts keeps the script URLs with their queries, which the result window parses', () => {
+    const t = impervaTab('extract');
+    t.request('https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1234', { type: 'script' });
+    t.request('https://shop.example/Thine-Wert/987', { type: 'script' });
+    assert.deepEqual(Array.from(t.state().extractedData.scriptUrls), ['https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1234', 'https://shop.example/Thine-Wert/987']);
+});
+
+test('Imperva: a body that says "interrogation" adds an interrogation URL only on an Imperva request, by path', () => {
+    const t = impervaTab('capture');
+    t.request('https://analytics.other.example/collect', { method: 'POST', requestBody: impervaBody('{"note":"interrogation"}') });
+    t.request('https://shop.example/api/comments', { method: 'POST', requestBody: impervaBody('the interrogation room') });
+    assert.deepEqual(Array.from(t.state().interrogationUrls), [], 'no address that merely carries the word');
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example&x=secret-token', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example&x=another-token', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.deepEqual(Array.from(t.state().interrogationUrls), ['https://shop.example/Disk-Lack-Be-Take-Dried'], 'Reese84\'s sensor, once, without its query');
+});
+
+test('Imperva: the endpoint lists a capture saves hold each path once, without its query, at most 20', async () => {
+    const t = impervaTab('capture');
+    for (let i = 0; i < 100; i++) {
+        t.request(`https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.${i}`, { type: 'script' });
+        t.request(`https://shop.example/v${i}/interrogation?id=${i}`);
+    }
+    t.request('https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.0', { type: 'script' });
+    t.request('https://shop.example/v0/interrogation?id=0');
+    assert.deepEqual(Array.from(t.state().incapResourceUrls), ['https://shop.example/_Incapsula_Resource'], 'one endpoint however often it is asked');
+    assert.equal(t.state().interrogationUrls.length, 20);
+    assert.equal(new Set(t.state().interrogationUrls).size, 20, 'no repeats');
+    assert.ok(t.state().interrogationUrls.every(url => !url.includes('?')), 'no query kept');
+    assert.deepEqual(Array.from(t.state().interrogationUrls.slice(0, 2)), ['https://shop.example/v0/interrogation', 'https://shop.example/v1/interrogation']);
+
+    // What History receives is that
+    const saved = [];
+    t.context.checkCookies = async () => [];
+    t.context.saveToHistory = async (tabId, data) => { saved.push(data); return { id: 'saved' }; };
+    await t.context.handleImpervaCaptureCompleted(7, t.state());
+    assert.equal(saved.length, 1);
+    assert.deepEqual(Array.from(saved[0].incapResourceUrls), ['https://shop.example/_Incapsula_Resource']);
+    assert.equal(saved[0].interrogationUrls.length, 20);
+});
+
 test('FunCaptcha: a stop with nothing running answers with the status the popup accepts', async () => {
     const f = fixture(), context = f.load('funcaptcha');
     context.funcaptchaInitializeInterceptor(new Map());
