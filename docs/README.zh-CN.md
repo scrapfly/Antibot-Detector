@@ -149,7 +149,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### 高级
 
-针对页面所用防护措施的实操工具。某项防护的检测置信度超过 50% 时，就会获得对应的工具；你可以在**设置 → 检测 → 高级工具**中修改这一阈值。如果页面上没有符合条件的防护，该标签页会说明情况，给出这个最低值（或指出低于阈值的那项防护），并列出支持的 25 种防护措施。
+针对页面所用防护措施的实操工具。某项防护的检测置信度超过 50% 时，就会获得对应的工具；你可以在**设置 → 检测 → 高级工具**中修改这一阈值。如果页面上没有符合条件的防护，该标签页会说明情况，给出这个最低值（或指出低于阈值的那项防护），并列出支持的 27 种防护措施。
 
 | 防护措施 | 工具 |
 | --- | --- |
@@ -164,7 +164,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 | hCaptcha | 提取 SiteKey · 检查版本 · 分析脚本 · 开始捕获 |
 | Incapsula (Imperva) | 检查 Cookie · 分析脚本 · 开始捕获 |
 | Shape Security | 检查版本 · 检查 Cookie · 分析脚本 · 开始捕获 |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | 提取 SiteKey · 分析脚本 |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | 提取 SiteKey · 分析脚本 |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | 分析脚本 |
 
 结果和捕获内容会在**高级 → 历史记录**中保留 30 分钟，你可以按站点、厂商和工具筛选，重新打开并导出它们。

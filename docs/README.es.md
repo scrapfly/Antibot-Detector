@@ -149,7 +149,7 @@ Todos los detectores, los integrados y los tuyos. Activa o desactiva cada uno, a
 
 ### Avanzado
 
-Herramientas prácticas para las protecciones que usa una página. Una protección obtiene sus herramientas cuando se detecta con más del 50 % de confianza; puedes cambiar ese límite en **Ajustes → Detección → Herramientas avanzadas**. Cuando nada en la página lo alcanza, la pestaña lo dice, indica ese mínimo (o nombra la protección encontrada por debajo) y muestra las 25 protecciones compatibles.
+Herramientas prácticas para las protecciones que usa una página. Una protección obtiene sus herramientas cuando se detecta con más del 50 % de confianza; puedes cambiar ese límite en **Ajustes → Detección → Herramientas avanzadas**. Cuando nada en la página lo alcanza, la pestaña lo dice, indica ese mínimo (o nombra la protección encontrada por debajo) y muestra las 27 protecciones compatibles.
 
 | Protección | Herramientas |
 | --- | --- |
@@ -164,7 +164,7 @@ Herramientas prácticas para las protecciones que usa una página. Una protecci�
 | hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
 | Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
 | Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 Los resultados y las capturas se guardan 30 minutos en **Avanzado → Historial**, donde puedes filtrarlos por sitio, proveedor y herramienta, abrirlos de nuevo y exportarlos.

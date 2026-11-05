@@ -20,7 +20,7 @@ const en = JSON.parse(read('_locales/en/messages.json'));
 test('every vendor matches its detector, logo, locale text and message type', () => {
   const ids = new Set();
   const messages = (() => { const context = { window: {} }; vm.createContext(context); vm.runInContext(read('modules/core/message-types.js'), context); return context.window.AdvancedMessageTypes; })();
-  assert.equal(Vendors.list.length, 14);
+  assert.equal(Vendors.list.length, 16);
   for (const vendor of Vendors.list) {
     assert.match(vendor.vendorId, /^[a-z][a-z0-9]*$/, 'message prefixes map back to the vendor id');
     assert.ok(!ids.has(vendor.vendorId), `${vendor.vendorId} is unique`);
@@ -107,13 +107,28 @@ const urls = {
   capy: { 'https://jp.api.capy.me/puzzle/get_js/?k=PUZZLE_Abcdefghijklmnopqrstuvwxyz': 'sdk', 'https://jp.api.capy.me/puzzle/get_image/?k=1': 'puzzle' },
   binance: { 'https://bin.bnbstatic.com/static/js/se/captcha/v1/captcha.min.js': 'sdk', 'https://www.binance.com/bapi/composite/v1/public/antibot/getCaptcha': 'antibot api' },
   basilisk: { 'https://basiliskcaptcha.com/challenge/check-site?key=1': 'check-site', 'https://basiliskcaptcha.com/widget.js': 'basilisk' },
-  aliexpress: { 'https://www.aliexpress.com//punish?x5secdata=abc': 'punish page', 'https://g.alicdn.com/bsop-static/sufei-punish/1.1.3/build/punishpage.min.js': 'punish script' }
+  aliexpress: { 'https://www.aliexpress.com//punish?x5secdata=abc': 'punish page', 'https://g.alicdn.com/bsop-static/sufei-punish/1.1.3/build/punishpage.min.js': 'punish script' },
+  lemin: { 'https://api.leminnow.com/captcha/v1/cropped/CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b/js': 'sdk' },
+  altcha: {
+    'https://cdn.jsdelivr.net/npm/altcha@1.2.0/dist/altcha.min.js': 'widget',
+    'https://cdn.jsdelivr.net/npm/altcha/dist/altcha.js': 'widget',
+    'https://cdn.jsdelivr.net/gh/altcha-org/altcha@v1.0.0/dist/altcha.min.js': 'widget',
+    'https://unpkg.com/altcha@1.2.0/dist/altcha.min.js': 'widget',
+    'https://eu.altcha.org/v1/challenge?apiKey=key_abcdef1234567890': 'challenge',
+    'https://sentinel.altcha.org/api/v1/challenge?apiKey=key_abcdef1234567890': 'challenge'
+  }
 };
 const lookAlikes = ['https://js.prosopo.io.evil.example/js/procaptcha.bundle.js', 'https://evil.example/js.prosopo.io/js/x.js', 'https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js',
   'https://g.alicdn.com/some/other/lib.js', 'https://www.binance.com/en/markets', 'https://captcha.eu.evil.example/sdk.js', 'ftp://js.prosopo.io/js/x.js', 'not a url',
   // Vendors' own websites share the captcha's hosts or domains
   'https://www.captcha.eu/wp-includes/js/jquery/jquery.min.js', 'https://www.captcha.eu/challenger-page/',
-  'https://prosopo.io/assets/scripts/formValidation.js', 'https://www.mtcaptcha.com/wp-includes/js/jquery/jquery.min.js', 'https://www.capy.me/static/js/app.js'];
+  'https://prosopo.io/assets/scripts/formValidation.js', 'https://www.mtcaptcha.com/wp-includes/js/jquery/jquery.min.js', 'https://www.capy.me/static/js/app.js',
+  // Lemin's own website and look-alike hosts; ALTCHA's docs site, its server library and look-alike hosts
+  'https://www.leminnow.com/', 'https://leminnow.com/assets/app.js', 'https://api.leminnow.com/other/v1/app.js',
+  'https://api.leminnow.com.evil.example/captcha/v1/cropped/CROPPED_abcd1234/js',
+  'https://altcha.org/', 'https://altcha.org/docs/v2/widget-integration/', 'https://altcha.org/assets/app.js', 'https://www.altcha.org/docs/',
+  'https://cdn.jsdelivr.net/npm/altcha-lib@1.0.0/dist/index.js', 'https://cdn.jsdelivr.net/gh/altcha-org/altcha-wordpress@1.0.0/dist/app.js',
+  'https://eu.altcha.org.evil.example/v1/challenge?apiKey=key_abcdef1234567890', 'https://eu.altcha.org/v1/challenges'];
 
 for (const vendor of Vendors.list) {
   test(`${vendor.vendorId}: Analyze Scripts lists its own requests and nothing else`, () => {
@@ -173,7 +188,14 @@ const embeds = {
     elements: [{ tag: 'script', text: "initSMCaptcha({ organization: 'AbCdEfGhIjKlMnOp', product: 'popup' }, cb);" }] },
     'AbCdEfGhIjKlMnOp', {}, { appId: 'default', product: 'popup' }],
   capy: [{ elements: [{ tag: 'script', attrs: { src: 'https://jp.api.capy.me/puzzle/get_js/?k=PUZZLE_Abcdefghijklmnopqrstuvwxyz' } },
-    { tag: 'input', attrs: { name: 'capy_captchakey', value: 'PUZZLE_Abcdefghijklmnopqrstuvwxyz' } }] }, 'PUZZLE_Abcdefghijklmnopqrstuvwxyz']
+    { tag: 'input', attrs: { name: 'capy_captchakey', value: 'PUZZLE_Abcdefghijklmnopqrstuvwxyz' } }] }, 'PUZZLE_Abcdefghijklmnopqrstuvwxyz'],
+  // The vendor's documented embed: the container and the script, whose address carries the id
+  lemin: [{ elements: [{ tag: 'div', attrs: { id: 'lemin-cropped-captcha' } },
+    { tag: 'script', attrs: { src: 'https://api.leminnow.com/captcha/v1/cropped/CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b/js' } }] },
+    'CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b'],
+  // ALTCHA Cloud: the key is in the address the widget fetches its challenge from, which Resource Timing lists once it has
+  altcha: [{ elements: [{ tag: 'altcha-widget', attrs: { challenge: 'https://eu.altcha.org/v1/challenge?apiKey=key_abcdef1234567890' } }],
+    resources: ['https://eu.altcha.org/v1/challenge?apiKey=key_abcdef1234567890'] }, 'key_abcdef1234567890']
 };
 
 for (const vendor of Vendors.list.filter(item => item.siteKey)) {
@@ -280,6 +302,88 @@ test('Captcha.eu: the key comes from the SDK\'s own requests, and its website\'s
     [{ sitekey: 'pub_1234567890abcdef', source: 'global' }]);
 });
 
+test('Lemin: the key comes from the widget script\'s address, and the detector reads the same address', () => {
+  const vendor = Vendors.byVendorId.lemin;
+  assert.ok(vendor, 'Lemin has Advanced tools');
+  assert.equal(vendor.siteKey.label, 'captchaId');
+  const rule = JSON.parse(read('detectors/captcha/detect-lemin.json')).detection.url.find(item => item.id === 'lemin-captcha-script');
+  const detected = new RegExp(rule.text, 'i');
+  const [urlRule] = vendor.siteKey.rules;
+  const id = 'CROPPED_3dfdd5c_d1872b526b794d83ba3b365eb15a200b';
+  for (const [url, found] of [
+    [`https://api.leminnow.com/captcha/v1/cropped/${id}/js`, id],
+    [`https://api.leminnow.com/captcha/v1/cropped/${id}/js?v=2`, id],
+    [`https://api.leminnow.com/captcha/v1/cropped/${id}/js#x`, id],
+    [`https://api.leminnow.com/captcha/v1/cropped/${id}/jsx`, null],
+    [`https://api.leminnow.com/captcha/v1/cropped/${id}/verify`, null],
+    [`http://api.leminnow.com/captcha/v1/cropped/${id}/js`, null],
+    ['https://api.leminnow.com/captcha/v1/cropped/abcd1234/js', null],
+    ['https://api.leminnow.com/captcha/v1/cropped/CROPPED_ab/js', null],
+    [`https://cdn.example/https://api.leminnow.com/captcha/v1/cropped/${id}/js`, null]
+  ]) {
+    assert.equal(detected.test(url), found !== null, `the detector on ${url}`);
+    const match = urlRule.url.exec(url);
+    assert.equal(match ? match[1] : null, found, `the key rule on ${url}`);
+  }
+  assert.ok(vendor.siteKey.key.test(id));
+  assert.ok(!vendor.siteKey.key.test('lemin-cropped-captcha'), 'the container id is not a key');
+});
+
+test('ALTCHA: a key only where the widget asks ALTCHA Cloud or Sentinel for its challenge; a self-hosted widget has none', () => {
+  const vendor = Vendors.byVendorId.altcha;
+  assert.ok(vendor, 'ALTCHA has Advanced tools');
+  assert.equal(vendor.siteKey.label, 'apiKey');
+  const args = Vendors.probeArgs(vendor);
+  const keysFor = page => plain(Probe.merge([{ result: run(Probe.probe, frame(page), args) }], args).keys.map(entry => entry.sitekey));
+  const challenge = apiKey => `https://eu.altcha.org/v1/challenge?apiKey=${apiKey}`;
+  // ALTCHA Cloud, its /api/ route, and a Sentinel on its owner's own host (the docs' https://sentinel.example.com/v1/challenge?apiKey=key_...)
+  assert.deepEqual(keysFor({ resources: [challenge('key_abcdef1234567890')] }), ['key_abcdef1234567890']);
+  assert.deepEqual(keysFor({ resources: ['https://sentinel.altcha.org/api/v1/challenge?apiKey=key_abcdef1234567890'] }), ['key_abcdef1234567890']);
+  assert.deepEqual(keysFor({ resources: ['https://sentinel.shop.example/v1/challenge?apiKey=key_AbC-123_xyz789&origin=x'] }), ['key_AbC-123_xyz789']);
+  // A self-hosted widget points at its own site's challenge route, which carries no key; and what is not a key is not reported
+  assert.deepEqual(keysFor({ elements: [{ tag: 'altcha-widget', attrs: { challengeurl: '/api/altcha/challenge' } }], resources: ['https://shop.example/api/altcha/challenge'] }), []);
+  assert.deepEqual(keysFor({ resources: ['https://eu.altcha.org/v1/challenge'] }), [], 'no apiKey');
+  assert.deepEqual(keysFor({ resources: [challenge('abcdef1234567890')] }), [], 'not a key_ value');
+  assert.deepEqual(keysFor({ resources: [challenge('key_ab')] }), [], 'too short');
+  assert.deepEqual(keysFor({ resources: ['https://shop.example/v1/verify?apiKey=key_abcdef1234567890'] }), [], 'another route');
+  // The detector's own Cloud address always yields its key
+  const cloud = new RegExp(JSON.parse(read('detectors/captcha/detect-altcha.json')).detection.url.find(item => item.id === 'altcha-cloud-challenge').text, 'i');
+  for (const url of [challenge('key_abcdef1234567890'), 'https://sentinel.altcha.org/api/v1/challenge?apiKey=key_abcdef1234567890']) {
+    assert.ok(cloud.test(url), url);
+    assert.deepEqual(keysFor({ resources: [url] }), ['key_abcdef1234567890'], url);
+  }
+});
+
+// The count the no-tools screen shows: one logo per supported protection
+function supportedProtectionCount() {
+  const FormatUtils = require('../utils/format-utils');
+  const context = { window: {}, document: {}, console, FormatUtils, Logger: { ui() {}, debug() {}, error() {} } };
+  context.globalThis = context;
+  vm.createContext(context);
+  for (const file of ['modules/core/categories.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'sections/advanced/advanced.js', 'sections/advanced/advanced-tools.js']) {
+    vm.runInContext(read(file), context);
+  }
+  return context.window.Advanced.supportedProtectionGroups().reduce((sum, group) => sum + group.items.length, 0);
+}
+
+test('every README lists each data-driven CAPTCHA vendor in the row of its tools and says how many protections Advanced supports', () => {
+  const total = supportedProtectionCount();
+  const names = row => row.split('|')[1].split(',').map(name => name.trim()).sort();
+  const byTools = hasKey => Vendors.list.filter(vendor => Boolean(vendor.siteKey) === hasKey).map(vendor => vendor.productName).sort();
+  for (const file of ['README.md', 'docs/README.es.md', 'docs/README.ru.md', 'docs/README.zh-CN.md']) {
+    const lines = read(file).replace(/\r\n/g, '\n').split('\n');
+    const rows = lines.filter(line => line.startsWith('| ') && !line.startsWith('| ---'));
+    // The vendors with a site key share one row, the ones with only Analyze Scripts another; the names are written as the detectors write them
+    assert.deepEqual(names(rows.find(row => names(row).includes('Prosopo Procaptcha'))), byTools(true), `${file}: Extract SiteKey · Analyze Scripts`);
+    assert.deepEqual(names(rows.find(row => names(row).includes('Binance Captcha'))), byTools(false), `${file}: Analyze Scripts`);
+    // The sentence above the table gives the number of logos the no-tools screen shows
+    let at = lines.findIndex(line => line.startsWith('| ') && line.includes('Akamai Bot Manager'));
+    while (lines[at - 1].startsWith('|')) at--;
+    while (lines[at - 1].trim() === '') at--;
+    assert.match(lines[at - 1], new RegExp(`(?:^|\\D)${total}(?:\\D|$)`), `${file}: the paragraph above the table says ${total} protections`);
+  }
+});
+
 test('the worker routes every vendor\'s Analyze Scripts and reports only that vendor\'s requests', async () => {
   const event = () => { const listeners = new Set(); return { listeners, addListener: l => listeners.add(l), removeListener: l => listeners.delete(l),
     emit(...args) { for (const listener of Array.from(listeners)) listener(...args); } }; };
@@ -331,14 +435,14 @@ test('the no-tools screen groups supported protections by category, with logos a
   for (const file of ['advanced.js', 'advanced-tools.js']) vm.runInContext(read(`sections/advanced/${file}`), context);
   const Advanced = context.window.Advanced;
   const groups = Advanced.supportedProtectionGroups();
-  assert.deepEqual(plain(groups.map(group => [group.key, group.items.length])), [['antibot', 6], ['captcha', 19]]);
+  assert.deepEqual(plain(groups.map(group => [group.key, group.items.length])), [['antibot', 6], ['captcha', 21]]);
   for (const group of groups) for (const item of group.items) {
     assert.ok(fs.existsSync(path.join(root, 'detectors/icons', item.logo)), item.logo);
     // The dark theme's copy without the white square: node scripts/generate-dark-logos.js
     assert.ok(fs.existsSync(path.join(root, 'assets/logos-dark', item.logo)), `assets/logos-dark/${item.logo}: run scripts/generate-dark-logos.js`);
   }
   const html = Advanced.prototype.renderNoToolsState.call({ detectorManager: null }, (key, fallback) => fallback);
-  assert.equal((html.match(/class="advanced-supported-logo[" ]/g) || []).length, 25);
+  assert.equal((html.match(/class="advanced-supported-logo[" ]/g) || []).length, 27);
   assert.equal((html.match(/class="advanced-supported-group"/g) || []).length, 2);
   assert.doesNotMatch(html, /advanced-supported-chip/);
   assert.match(html, /title="Friendly Captcha"><img class="advanced-supported-logo-dark" src="assets\/logos-dark\/friendlycaptcha_official\.png"[^>]*><img class="advanced-supported-logo-light" src="detectors\/icons\/friendlycaptcha_official\.png"/,

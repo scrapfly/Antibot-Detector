@@ -160,6 +160,73 @@ test('Akamai: Extract Sensor refuses during a capture, initializes after a worke
     assert.deepEqual(f.reloads, [], 'the worker no longer reloads: the popup does, once');
 });
 
+// Extract Sensor deletes the _abck cookie so the page sends a fresh sensor: the request listener and the extraction state
+// are armed first and the cookie goes last, so nothing that fails along the way costs the person the cookie for nothing
+const akamaiExtract = (context, tabId = 6) => new Promise(resolve => context.akamaiHandleMessage({ type: 'AKAMAI_EXTRACT_SENSOR', tabId }, resolve));
+
+test('Akamai: Extract Sensor arms the request listener and the extraction before it deletes the _abck cookie', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    const seen = [];
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }],
+        remove: async (url, cookie) => { seen.push({ cookie: cookie.name, armed: states.get(6)?.extractMode === true, listeners: f.context.chrome.webRequest.onBeforeRequest.listeners.size }); } };
+    const started = await akamaiExtract(context);
+    assert.equal(started.status, 'success');
+    assert.deepEqual(seen, [{ cookie: '_abck', armed: true, listeners: 1 }], 'the state and the request listener exist before the cookie is deleted');
+    assert.equal(states.get(6).extractMode, true, 'the extraction stays armed for the reload');
+});
+
+test('Akamai: an Extract Sensor that cannot arm (addListener throws) deletes no cookie, leaves nothing armed and can be retried', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map(), removed = [];
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: async (url, cookie) => { removed.push(cookie.name); } };
+    const onBeforeRequest = f.context.chrome.webRequest.onBeforeRequest, addListener = onBeforeRequest.addListener;
+    onBeforeRequest.addListener = () => { throw new Error('addListener failed'); };
+    const refused = await akamaiExtract(context);
+    assert.equal(refused.status, 'error');
+    assert.match(refused.error, /addListener failed/);
+    assert.deepEqual(removed, [], 'the cookie is still there');
+    assert.equal(states.size, 0, 'no extraction state left waiting for a reload that will not come');
+    // The retry registers the listener: the failed arming did not leave a variable that only claims to be registered
+    onBeforeRequest.addListener = addListener;
+    assert.equal((await akamaiExtract(context)).status, 'success');
+    assert.equal(onBeforeRequest.listeners.size, 1);
+    assert.deepEqual(removed, ['_abck']);
+});
+
+test('Akamai: an Extract Sensor whose cookie delete fails disarms again: no state, no listener, no pending stop', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: async () => { throw new Error('cookie store busy'); } };
+    const failed = await akamaiExtract(context);
+    assert.equal(failed.status, 'error');
+    assert.match(failed.error, /cookie store busy/);
+    assert.equal(states.size, 0, 'the extraction state is removed');
+    assert.equal(f.context.chrome.webRequest.onBeforeRequest.listeners.size, 0, 'the request listener is removed');
+    assert.equal(context.akamaiInterceptionListener, null);
+    assert.equal(Array.from(f.timers.values()).filter(timer => timer.delay === 30000).length, 0, 'the 30 s stop is cleared');
+});
+
+test('Akamai: a failed Extract Sensor delete does not remove a capture the person started in the meantime', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    let failDelete;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: () => new Promise((resolve, reject) => { failDelete = reject; }) };
+    const pending = akamaiExtract(context);
+    await flush();
+    context.akamaiStartCapture(6, 'https://shop.example/login');
+    const capture = states.get(6);
+    assert.equal(capture.extractMode, undefined, 'a capture replaced the extraction');
+    failDelete(new Error('cookie store busy'));
+    assert.equal((await pending).status, 'error');
+    assert.equal(states.get(6), capture, 'the capture the person started is not removed by the failed extraction');
+    assert.equal(f.context.chrome.webRequest.onBeforeRequest.listeners.size, 1, 'its request listener stays');
+});
+
 test('Akamai: stopping the last capture removes the request listener (removeListener keeps its receiver)', async () => {
     const f = fixture(), context = f.load('akamai');
     const states = new Map();
@@ -170,6 +237,105 @@ test('Akamai: stopping the last capture removes the request listener (removeList
     assert.doesNotThrow(() => context.akamaiStopCapture(9));
     assert.equal(onBeforeRequest.listeners.size, 0);
     assert.equal(context.akamaiInterceptionListener, null);
+});
+
+// Imperva's request listener keeps what it reads only from Imperva's own requests (the _Incapsula_Resource and /interrogation
+// endpoints, and Reese84's sensor, posted to the protected site with ?d=<host>), once per path, and bounded: a capture is saved
+// to History, and a page sends many other requests whose bodies and queries are not Imperva's to keep
+const impervaBody = text => ({ raw: [{ bytes: new TextEncoder().encode(text) }] });
+const reeseBody = '{"solution":{"interrogation":{"p":"AAAA","st":1,"sr":2},"version":"stable"},"old_token":null,"error":null,"performance":{"interval":8}}';
+
+function impervaTab(mode) {
+    const f = fixture(), context = f.load('imperva');
+    const states = new Map();
+    context.impervaInitializeInterceptor(states);
+    if (mode === 'extract') {
+        context.impervaStartExtraction(7, 'https://shop.example/login');
+    } else {
+        context.impervaStartCapture(7, 'https://shop.example/login');
+        states.get(7).waitingForReload = false;
+    }
+    const [listener] = Array.from(f.context.chrome.webRequest.onBeforeRequest.listeners);
+    return { f, context, states, state: () => states.get(7),
+        request: (url, extra = {}) => listener({ tabId: 7, method: 'GET', type: 'xmlhttprequest', url, ...extra }) };
+}
+
+test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, however the body reads', () => {
+    const t = impervaTab('extract');
+    // Another site's beacon, a form of the page, a third party that copies the ?d= naming, a beacon that only mentions an Imperva
+    // address in its query, a form post: none is Imperva's
+    t.request('https://analytics.other.example/collect', { method: 'POST', requestBody: impervaBody('{"event":"performance","solution":"x"}') });
+    t.request('https://shop.example/api/comments', { method: 'POST', requestBody: impervaBody('my solution and its performance') });
+    t.request('https://tracker.example/collect?d=tracker.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    t.request('https://rum.example/beacon?u=https%3A%2F%2Fshop.example%2F_Incapsula_Resource', { method: 'POST', requestBody: impervaBody('{"performance":{"entries":[]}}') });
+    t.request('https://shop.example/checkout', { method: 'POST', requestBody: { formData: { note: ['old_token'] } } });
+    assert.deepEqual(Array.from(t.state().extractedData.payloads), [], 'no body of another address is kept');
+    assert.deepEqual(Array.from(t.state().extractedData.challengeUrls), []);
+    assert.equal(Array.from(t.f.timers.values()).filter(timer => timer.delay === 2000).length, 0, 'and none of them ends the analysis early');
+
+    // Imperva's own: Reese84's sensor posted to the page's site with ?d=, and the _Incapsula_Resource endpoint
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    t.request('https://www.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.5', { method: 'POST', requestBody: impervaBody('{"solution":"x"}') });
+    const { payloads, challengeUrls } = t.state().extractedData;
+    assert.deepEqual(Array.from(payloads, item => item.url), ['https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', 'https://www.shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.5']);
+    assert.equal(payloads[0].payload, reeseBody);
+    assert.deepEqual(Array.from(payloads[0].keywords), ['old_token', 'performance', 'solution']);
+    assert.equal(challengeUrls.length, 2);
+    assert.equal(Array.from(t.f.timers.values()).filter(timer => timer.delay === 2000).length, 2, 'an Imperva challenge still completes the analysis shortly after');
+});
+
+test('Imperva: a stored POST body is cut at a fixed size and says so', () => {
+    const t = impervaTab('extract');
+    const big = `{"solution":"${'x'.repeat(100000)}"}`;
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(big) });
+    const [stored] = t.state().extractedData.payloads;
+    assert.equal(stored.payload.length, 8192);
+    assert.equal(stored.payload, big.slice(0, 8192));
+    assert.equal(stored.truncated, true);
+    assert.equal(stored.length, big.length, 'the original size is kept');
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.equal(t.state().extractedData.payloads[1].truncated, false);
+});
+
+test('Imperva: Analyze Scripts keeps the script URLs with their queries, which the result window parses', () => {
+    const t = impervaTab('extract');
+    t.request('https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1234', { type: 'script' });
+    t.request('https://shop.example/Thine-Wert/987', { type: 'script' });
+    assert.deepEqual(Array.from(t.state().extractedData.scriptUrls), ['https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1234', 'https://shop.example/Thine-Wert/987']);
+});
+
+test('Imperva: a body that says "interrogation" adds an interrogation URL only on an Imperva request, by path', () => {
+    const t = impervaTab('capture');
+    t.request('https://analytics.other.example/collect', { method: 'POST', requestBody: impervaBody('{"note":"interrogation"}') });
+    t.request('https://shop.example/api/comments', { method: 'POST', requestBody: impervaBody('the interrogation room') });
+    assert.deepEqual(Array.from(t.state().interrogationUrls), [], 'no address that merely carries the word');
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example&x=secret-token', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    t.request('https://shop.example/Disk-Lack-Be-Take-Dried?d=shop.example&x=another-token', { method: 'POST', requestBody: impervaBody(reeseBody) });
+    assert.deepEqual(Array.from(t.state().interrogationUrls), ['https://shop.example/Disk-Lack-Be-Take-Dried'], 'Reese84\'s sensor, once, without its query');
+});
+
+test('Imperva: the endpoint lists a capture saves hold each path once, without its query, at most 20', async () => {
+    const t = impervaTab('capture');
+    for (let i = 0; i < 100; i++) {
+        t.request(`https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.${i}`, { type: 'script' });
+        t.request(`https://shop.example/v${i}/interrogation?id=${i}`);
+    }
+    t.request('https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.0', { type: 'script' });
+    t.request('https://shop.example/v0/interrogation?id=0');
+    assert.deepEqual(Array.from(t.state().incapResourceUrls), ['https://shop.example/_Incapsula_Resource'], 'one endpoint however often it is asked');
+    assert.equal(t.state().interrogationUrls.length, 20);
+    assert.equal(new Set(t.state().interrogationUrls).size, 20, 'no repeats');
+    assert.ok(t.state().interrogationUrls.every(url => !url.includes('?')), 'no query kept');
+    assert.deepEqual(Array.from(t.state().interrogationUrls.slice(0, 2)), ['https://shop.example/v0/interrogation', 'https://shop.example/v1/interrogation']);
+
+    // What History receives is that
+    const saved = [];
+    t.context.checkCookies = async () => [];
+    t.context.saveToHistory = async (tabId, data) => { saved.push(data); return { id: 'saved' }; };
+    await t.context.handleImpervaCaptureCompleted(7, t.state());
+    assert.equal(saved.length, 1);
+    assert.deepEqual(Array.from(saved[0].incapResourceUrls), ['https://shop.example/_Incapsula_Resource']);
+    assert.equal(saved[0].interrogationUrls.length, 20);
 });
 
 test('FunCaptcha: a stop with nothing running answers with the status the popup accepts', async () => {
