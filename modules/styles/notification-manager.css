@@ -131,7 +131,6 @@
 }
 
 .notification-confirm {
-  --confirm-tone: var(--accent);
   --confirm-tone-text: var(--accent-light);
   --confirm-tone-bg: rgba(59, 130, 246, 0.12);
   --confirm-tone-border: rgba(59, 130, 246, 0.32);
@@ -161,14 +160,12 @@
 }
 
 .notification-confirm--warning {
-  --confirm-tone: var(--warning);
   --confirm-tone-text: var(--warning-light);
   --confirm-tone-bg: rgba(245, 158, 11, 0.12);
   --confirm-tone-border: rgba(245, 158, 11, 0.34);
 }
 
 .notification-confirm--danger {
-  --confirm-tone: var(--danger);
   --confirm-tone-text: var(--danger-light);
   --confirm-tone-bg: rgba(239, 68, 68, 0.12);
   --confirm-tone-border: rgba(239, 68, 68, 0.34);

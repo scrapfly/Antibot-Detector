@@ -310,14 +310,6 @@ body {
   color: var(--text-muted);
 }
 
-.loading-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  animation: pulse 2s ease-in-out infinite;
-}
-
 
 /* Empty State */
 .empty-state {
@@ -353,10 +345,6 @@ body {
   padding: 40px 20px;
 }
 
-.empty-state--centered .empty-state-card {
-  margin: 0;
-}
-
 /* pagination-count styles now in common.css */
 
 /* Detection Results */
@@ -364,12 +352,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.detection-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 /* Stats Grid */
@@ -397,31 +379,6 @@ body {
 .search-input::placeholder {
   color: var(--text-muted);
   font-size: 10px;
-}
-
-.detection-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.detection-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.detection-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-}
-
-.detection-details h4 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 4px;
 }
 
 /* History list/card base — also used by the Advanced tab's capture history;

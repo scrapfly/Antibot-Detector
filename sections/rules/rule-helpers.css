@@ -318,20 +318,6 @@
   color: var(--rh-text-muted);
 }
 
-.rh-subtitle {
-  margin: 0 1px 5px;
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 14px;
-  color: var(--rh-text-dim);
-}
-
-.rh-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 /* ---------- Rows ---------- */
 .rh-list {
   display: flex;
@@ -517,13 +503,6 @@
   color: var(--warning-light);
 }
 
-.rh-prose p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--rh-text);
-}
-
 .rh-modal code:not(.rh-code) {
   padding: 0 4px;
   background: var(--rh-code-bg);
@@ -606,12 +585,6 @@
   display: none;
 }
 
-.rh-dock-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 8px;
-}
-
 .rh-field {
   min-width: 0;
 }
@@ -685,14 +658,6 @@
 
 .rh-code .tok-cond {
   color: var(--warning-light);
-}
-
-/* One-line explanation above the search (window helper) */
-.rh-intro {
-  margin: 0 1px 8px;
-  font-size: 11.5px;
-  line-height: 15px;
-  color: var(--rh-text-dim);
 }
 
 /* The rule in plain words: "Matches pages where window.x exists on the page" */

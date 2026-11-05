@@ -279,7 +279,6 @@
   --accent-soft-border: rgba(59, 130, 246, 0.32);
   --success: #10b981;
   --success-light: #34d399;
-  --success-dark: #059669;
   --warning: #f59e0b;
   --warning-light: #fbbf24;
   --warning-dark: #d97706;
@@ -289,17 +288,12 @@
   --danger-lightest: #fecaca;
   --purple: #8b5cf6;
   --purple-light: #a78bfa;
-  --teal: #14b8a6;
   --teal-light: #2dd4bf;
   --green: #22c55e;
-  --green-dark: #16a34a;
 
   /* Border Colors */
   --border: #4b4b4b;
   --border-light: #525252;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
 
   /* Badge Colors - Detection Methods */
   --badge-dom: #2196F3;
@@ -310,10 +304,6 @@
   --badge-window: #6b7280;
   --badge-js-hooks: #8b5cf6;
   --badge-payload: #6b7280;
-
-  /* Badge Colors - Categories */
-  --badge-captcha: #33C3FF;
-  --badge-fingerprint: #3b82f6;
 }
 
 /* Pastel text colours (readable on dark), as tokens; darker shades in the light theme */
@@ -321,10 +311,8 @@
   --p-4ade80: #4ade80;
   --p-60a5fa: #60a5fa;
   --p-67e8f9: #67e8f9;
-  --p-6ee7b7: #6ee7b7;
   --p-93c5fd: #93c5fd;
   --p-a5f3fc: #a5f3fc;
-  --p-a78bfa: #a78bfa;
   --p-bbf7d0: #bbf7d0;
   --p-bfdbfe: #bfdbfe;
   --p-dbeafe: #dbeafe;
@@ -388,10 +376,8 @@
   --p-4ade80: #1f7a3a;
   --p-60a5fa: #1a73c7;
   --p-67e8f9: #0e7490;
-  --p-6ee7b7: #1f7a3a;
   --p-93c5fd: #1a73c7;
   --p-a5f3fc: #0e7490;
-  --p-a78bfa: #6f42c1;
   --p-bbf7d0: #1f7a3a;
   --p-bfdbfe: #1a73c7;
   --p-dbeafe: #1a73c7;
@@ -412,7 +398,6 @@
   --accent-dark: #0f4c87;
   --success: #2da44e;
   --success-light: #2da44e;
-  --success-dark: #1f7a3a;
   --warning: #d9650b;
   --warning-light: #c2570a;
   --warning-dark: #a84a08;
@@ -422,13 +407,10 @@
   --danger-lightest: #f8d7da;
   --purple: #6f42c1;
   --purple-light: #6f42c1;
-  --teal: #0d9488;
   --teal-light: #0d9488;
   --green: #2da44e;
-  --green-dark: #1f7a3a;
   --border: #dee2e6;
   --border-light: #e9ecef;
-  --shadow-sm: 0 1px 2px rgba(9, 30, 66, 0.08);
   --modal-btn-quiet-text: #495057;
   --modal-btn-quiet-border: rgba(9, 30, 66, 0.16);
   --modal-btn-quiet-border-hover: rgba(9, 30, 66, 0.3);

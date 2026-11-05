@@ -43,7 +43,6 @@
 /* Chips coloured by Settings → colours (inline text colour): the pale
    colours that read on dark are darkened so they read on white */
 :root[data-theme="light"] .badge,
-:root[data-theme="light"] .method-chip,
 :root[data-theme="light"] .combo-chip,
 :root[data-theme="light"] .method-type-badge,
 :root[data-theme="light"] .history-modal-method-badge,

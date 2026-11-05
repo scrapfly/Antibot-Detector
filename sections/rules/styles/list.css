@@ -294,24 +294,6 @@
   background: rgba(239, 68, 68, 0.15);
 }
 
-/* Import/Export/Clear Button Styles (also used by the History tab) */
-.import-btn-small, .export-btn-small, .clear-btn-small {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-  background: rgba(148, 163, 184, 0.18);
-  color: var(--g-d1d5db);
-}
-
 /* Rules List Container */
 .rules-list {
   display: flex;
