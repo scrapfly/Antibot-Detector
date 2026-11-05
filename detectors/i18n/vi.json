@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "Xác minh CAPTCHA cùng cookie giảm thiểu",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie thử thách phía client của BIG-IP ASM (tiền tố mặc định TSPD_101, ví dụ TSPD_101_DID)",
   "ASM cookie with its client-side challenge cookie": "Cookie ASM cùng cookie thử thách phía client của nó",
-  "Custom detector": "Trình phát hiện tùy chỉnh"
+  "Custom detector": "Trình phát hiện tùy chỉnh",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: trang thử thách proof-of-work SG-CAPTCHA hiển thị cho khách truy cập bị gắn cờ, được phục vụ dưới /.well-known/sgcaptcha/ cùng header phản hồi sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, Anti-Bot AI của SiteGround đã trả về thử thách của nó",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "Trang thử thách và endpoint trả lời của SG-CAPTCHA dưới /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Hằng số thử thách của SG-CAPTCHA (sgchallenge, sgsubmit_url) trong script của trang",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha trên trang thử thách SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha cùng các hằng số thử thách trong script của trang",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Trang thử thách SG-CAPTCHA cùng các hằng số của nó trong script của trang"
 }

@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "Верифікація CAPTCHA з cookie захисту",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie клієнтської перевірки BIG-IP ASM (типовий префікс TSPD_101, наприклад TSPD_101_DID)",
   "ASM cookie with its client-side challenge cookie": "Cookie ASM з його cookie клієнтської перевірки",
-  "Custom detector": "Власний детектор"
+  "Custom detector": "Власний детектор",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: сторінка перевірки SG-CAPTCHA на основі proof-of-work, яку показують підозрілим відвідувачам; віддається у /.well-known/sgcaptcha/ із заголовком відповіді sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, Anti-Bot AI від SiteGround показав свою перевірку",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "Сторінка перевірки та кінцева точка відповіді SG-CAPTCHA у /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Константи перевірки SG-CAPTCHA (sgchallenge, sgsubmit_url) у скриптах сторінки",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Заголовок sg-captcha на сторінці перевірки SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "Заголовок sg-captcha з константами перевірки у скриптах сторінки",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Сторінка перевірки SG-CAPTCHA з її константами у скриптах сторінки"
 }

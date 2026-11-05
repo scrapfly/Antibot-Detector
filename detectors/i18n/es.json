@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "Verificación de captcha con la cookie de mitigación",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie del desafío del lado del cliente de BIG-IP ASM (prefijo por defecto TSPD_101, p. ej. TSPD_101_DID)",
   "ASM cookie with its client-side challenge cookie": "Cookie de ASM con su cookie de desafío del lado del cliente",
-  "Custom detector": "Detector personalizado"
+  "Custom detector": "Detector personalizado",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: la página de desafío proof-of-work SG-CAPTCHA que se muestra a los visitantes marcados, servida bajo /.well-known/sgcaptcha/ con una cabecera de respuesta sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, el Anti-Bot AI de SiteGround sirvió su desafío",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "Página de desafío y endpoint de respuesta de SG-CAPTCHA bajo /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Constantes del desafío de SG-CAPTCHA (sgchallenge, sgsubmit_url) en los scripts de la página",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Cabecera sg-captcha en la página de desafío de SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "Cabecera sg-captcha con las constantes del desafío en los scripts de la página",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Página de desafío de SG-CAPTCHA con sus constantes en los scripts de la página"
 }

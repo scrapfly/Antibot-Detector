@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector — бесплатное расширение для Chrome, которое показывает, как сайт защищается от автоматизированного трафика. Просто пользуйтесь браузером как обычно: число на значке расширения показывает, сколько защит использует страница, а во всплывающем окне каждая из них указана с уровнем уверенности, сложностью и сигналами, которые её выдали.
 
-Сразу после установки расширение распознаёт 85 технологий: 42 системы анти-бот, 22 CAPTCHA и 21 технику снятия отпечатков браузера. Каждый детектор — это обычный JSON-файл, который можно прочитать, изменить или дополнить. Новые правила выходят с каждым релизом этого репозитория, поэтому **Правила → Обновить** может установить их ещё до того, как Chrome обновит само расширение.
+Сразу после установки расширение распознаёт 86 технологий: 43 системы анти-бот, 22 CAPTCHA и 21 технику снятия отпечатков браузера. Каждый детектор — это обычный JSON-файл, который можно прочитать, изменить или дополнить. Новые правила выходят с каждым релизом этого репозитория, поэтому **Правила → Обновить** может установить их ещё до того, как Chrome обновит само расширение.
 
 Мы сделали его в [Scrapfly](https://scrapfly.io), потому что любой проект по сбору данных начинается с одного вопроса: что защищает эту страницу? Расширение так же полезно, чтобы посмотреть, как защита от ботов на вашем собственном сайте выглядит снаружи, и для исследований в области безопасности.
 
@@ -103,10 +103,10 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 Ниже перечислены детекторы, которые поставляются с расширением. Любой из них можно отключить, отредактировать или добавить свой на вкладке **Правила**.
 
 <details>
-<summary><b>Системы анти-бот (42)</b></summary>
+<summary><b>Системы анти-бот (43)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 

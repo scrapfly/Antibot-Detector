@@ -1,0 +1,99 @@
+{
+  "id": "detect-siteground-captcha",
+  "name": "SiteGround SG-CAPTCHA",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-11-05",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.siteground.com/blog/new-anti-bot-ai/",
+  "icon": "custom.png",
+  "description": "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header",
+  "detection": {
+    "header": [
+      {
+        "id": "sg-captcha-header",
+        "name": "^sg-captcha$",
+        "nameRegex": true,
+        "value": "^challenge$",
+        "valueRegex": true,
+        "confidence": 100,
+        "description": "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge",
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "url": [
+      {
+        "id": "sgcaptcha-wellknown-path",
+        "confidence": 100,
+        "description": "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/",
+        "text": "^https?://[^/?#]+/\\.well-known/sgcaptcha/(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "content": [
+      {
+        "id": "sgcaptcha-script-constants",
+        "confidence": 30,
+        "description": "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts",
+        "text": "\\bsg(?:challenge|submit_url)\\b",
+        "textRegex": true,
+        "textCaseSensitive": true,
+        "scope": "scripts",
+        "checkScripts": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "sgcaptcha-challenge-page",
+      "name": "sg-captcha header on the SG-CAPTCHA challenge page",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "sg-captcha-header"
+          },
+          {
+            "pattern": "sgcaptcha-wellknown-path"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sgcaptcha-header-script",
+      "name": "sg-captcha header with the challenge constants in the page's scripts",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "sg-captcha-header"
+          },
+          {
+            "pattern": "sgcaptcha-script-constants"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sgcaptcha-page-script",
+      "name": "SG-CAPTCHA challenge page with its constants in the page's scripts",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "pattern": "sgcaptcha-wellknown-path"
+          },
+          {
+            "pattern": "sgcaptcha-script-constants"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -133,7 +133,8 @@ const PROOF = new Set([
   'detect-castle/castle-monitor', 'detect-seon/seon-agent-script', 'detect-seon/seon-legacy-agent-script', 'detect-seon/seon-dns-resolve',
   'detect-fastly/fastly-challenge-script', 'detect-fastly/fastly-detection-script', 'detect-fastly/fastly-challenge-start-cookie',
   'detect-fastly/fastly-challenge-complete-cookie', 'detect-fastly/fastly-detection-cookie', 'detect-kount/kount-collector-sdk',
-  'detect-kount/kount-collector-endpoint', 'detect-riskified/riskified-beacon-script', 'detect-riskified/riskified-collector'
+  'detect-kount/kount-collector-endpoint', 'detect-riskified/riskified-beacon-script', 'detect-riskified/riskified-collector',
+  'detect-siteground-captcha/sg-captcha-header', 'detect-siteground-captcha/sgcaptcha-wellknown-path'
 ]);
 // Detectors whose top tier stays below 100: legacy vendors (Ocule, Meetrics)
 // and edges that prove a CDN rather than protection (Azure Front Door, Yundun);
@@ -141,13 +142,13 @@ const PROOF = new Set([
 const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('forty-two anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+test('forty-three anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
     'detect-azurefrontdoor', 'detect-botguard', 'detect-castle', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
     'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-hunt', 'detect-incapsula',
     'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-kount', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
     'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-riskified', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
-    'detect-sift', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
+    'detect-sift', 'detect-siteground-captcha', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
     const raw = antibot[d.id].__raw;
     assert.equal(raw.split('\n').length - 1, (raw.match(/\r\n/g) || []).length, `${d.id}: CRLF throughout`);
@@ -298,7 +299,11 @@ const benign = {
   // Fastly's CDN cookies and a bare /_fs-ch- path; Kount's and Riskified's marketing hosts and first-party lookalikes
   'detect-fastly': { cookies: ['_fs_session', 'fs_ch_st', '_fs_ch_st_'], urls: ['https://example.test/_fs-ch-/challenge.js', 'https://www.fastly.com/products/bot-management'] },
   'detect-kount': { urls: ['https://kount.com/', 'https://example.test/collect/sdk?m=123456'], sources: ['var kaxsdcx = 1;'] },
-  'detect-riskified': { urls: ['https://www.riskified.com/', 'https://example.test/?shop=shop.example.com&sid=abc'] }
+  'detect-riskified': { urls: ['https://www.riskified.com/', 'https://example.test/?shop=shop.example.com&sid=abc'] },
+  // A SiteGround-hosted page that challenges nobody (vocationalmedia.com, 2026-11-05: only the platform's headers), the classic
+  // captcha path the challenge page falls back to, and names that merely start like the challenge's constants
+  'detect-siteground-captcha': { headers: { server: 'nginx', 'x-httpd-modphp': '1', 'host-header': '6b7412fb82ca5edfd0917e3957f05d89', 'x-proxy-cache': 'MISS', 'x-proxy-cache-info': '0 NC:000000 UP:' },
+    urls: ['https://www.siteground.com/', 'https://example.test/.well-known/captcha/?r=/', 'https://example.test/sgcaptcha/'], sources: ['var sgchallenges = 1; window.sgsubmit = 2;'] }
 };
 test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   for (const [id, b] of Object.entries(benign)) {
@@ -351,6 +356,39 @@ test('detect-yundun: the captcha page a blocked visitor is shown is identified, 
   assert.ok(!scriptsOnly.detected || scriptsOnly.confidence === 0, 'a path alone is not a detection');
   const noCookie = detect(d, pageFor(d, ['bs-captcha-path', 'server-waf-header']));
   assert.ok(!noCookie.detected || noCookie.confidence < 80, `the path with a generic header scores ${noCookie.confidence}`);
+});
+
+
+// The challenge page SiteGround serves, as received on 2026-11-05 from one GET each of https://www.siteground.es/.well-known/sgcaptcha/ and
+// https://vocationalmedia.com/.well-known/sgcaptcha/ (both hosted on SiteGround): the response headers, and the page's inline script
+// (the challenge token is cut). Documented elsewhere: an intercepted request is answered 202 with the same header and a meta refresh to this path.
+test('detect-siteground-captcha: the challenge page SiteGround serves is identified; its hosting headers and the classic captcha path alone are not', () => {
+  const d = definitions['detect-siteground-captcha'];
+  const headers = { server: 'nginx', 'content-type': 'text/html', vary: 'Accept-Encoding', 'sg-captcha': 'challenge', 'x-robots-tag': 'noindex',
+    expires: 'Thu, 01 Jan 1970 00:00:01 GMT', 'cache-control': 'no-store,no-cache,max-age=0', 'host-header': '8441280b0c35cbc1147f8ba998a563a7', 'x-proxy-cache-info': 'DT:1' };
+  const home = 'https://www.siteground.es/';
+  const challengeUrl = 'https://www.siteground.es/.well-known/sgcaptcha/?r=/';
+  const script = 'const sgchallenge="21:1793868422:7ab7936f:ffad8c23974f425c09561b5609c72e4a3410ef4177d002616c22846d666815e0:";\n' +
+    'const sgsubmit_url="/.well-known/sgcaptcha/?r=/";const sgfallback_url="/.well-known/captcha/?y=err&r=/";';
+  const page = (extra) => ({ url: home, headers: {}, allCookies: [], networkUrls: [], content: [], dom: [], ...extra });
+  const nav = [{ url: 'https://www.siteground.es/.well-known/sgcaptcha/', type: 'main_frame', method: 'GET' }];
+  const inline = [{ type: 'inline', content: script }];
+
+  const challenge = detect(d, { page: page({ url: challengeUrl, headers, networkUrls: nav, content: inline }) });
+  assert.equal(challenge.confidence, 100, 'the whole challenge response');
+  assert.deepEqual(Array.from(challenge.combinations, c => c.id).sort(), ['sgcaptcha-challenge-page', 'sgcaptcha-header-script', 'sgcaptcha-page-script']);
+  assert.equal(detect(d, { page: page({ headers }) }).confidence, 100, 'the header alone, on the address that was asked for: a name only SiteGround coined');
+  assert.equal(detect(d, { page: page({ url: challengeUrl }) }).confidence, 100, 'the challenge path as the page\'s own address: it is the vendor\'s own');
+  assert.equal(detect(d, { page: page({ networkUrls: nav }) }).confidence, 100, 'the challenge path as a request the page made');
+  const constants = detect(d, { page: page({ content: inline }) });
+  assert.ok(constants.confidence > 0 && constants.confidence <= 30, `the page's script alone scores ${constants.confidence}`);
+
+  // The header is the proof only with the value the challenge carries
+  assert.equal(detect(d, { page: page({ headers: { ...headers, 'sg-captcha': 'pass' } }) }).confidence, 0, 'another value');
+  // What a SiteGround-hosted page that challenges nobody sends, and the classic captcha the challenge falls back to
+  const hosting = { server: 'nginx', 'x-httpd-modphp': '1', 'host-header': '6b7412fb82ca5edfd0917e3957f05d89', 'x-proxy-cache': 'MISS', 'x-proxy-cache-info': '0 NC:000000 UP:' };
+  assert.equal(detect(d, { page: page({ headers: hosting }) }).confidence, 0, 'hosting alone');
+  assert.equal(detect(d, { page: page({ networkUrls: [{ url: 'https://www.siteground.es/.well-known/captcha/?r=/', type: 'main_frame' }] }) }).confidence, 0, 'the fallback path alone');
 });
 
 

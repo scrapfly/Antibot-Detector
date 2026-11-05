@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "Önleme çerezi ile birlikte CAPTCHA doğrulaması",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM istemci tarafı doğrulama sınaması çerezi (varsayılan önek TSPD_101, ör. TSPD_101_DID)",
   "ASM cookie with its client-side challenge cookie": "İstemci tarafı doğrulama sınaması çerezi ile birlikte ASM çerezi",
-  "Custom detector": "Özel dedektör"
+  "Custom detector": "Özel dedektör",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: şüpheli ziyaretçilere gösterilen, /.well-known/sgcaptcha/ altında sg-captcha yanıt üstbilgisiyle sunulan SG-CAPTCHA iş kanıtı (proof-of-work) doğrulama sınaması sayfası",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, SiteGround'un Anti-Bot AI sistemi kendi doğrulama sınamasını sundu",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "/.well-known/sgcaptcha/ altındaki SG-CAPTCHA doğrulama sınaması sayfası ve yanıt uç noktası",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Sayfanın komut dosyalarındaki SG-CAPTCHA sınama sabitleri (sgchallenge, sgsubmit_url)",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA doğrulama sınaması sayfasındaki sg-captcha üstbilgisi",
+  "sg-captcha header with the challenge constants in the page's scripts": "Sayfanın komut dosyalarındaki sınama sabitleriyle birlikte sg-captcha üstbilgisi",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Sayfanın komut dosyalarındaki sabitleriyle birlikte SG-CAPTCHA doğrulama sınaması sayfası"
 }

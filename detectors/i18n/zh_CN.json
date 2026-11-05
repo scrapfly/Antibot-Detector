@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "验证码验证及缓解 Cookie",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM 客户端挑战 Cookie（默认前缀 TSPD_101，例如 TSPD_101_DID）",
   "ASM cookie with its client-side challenge cookie": "ASM Cookie 及其客户端挑战 Cookie",
-  "Custom detector": "自定义检测器"
+  "Custom detector": "自定义检测器",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI：向被标记的访问者显示的 SG-CAPTCHA 工作量证明挑战页，位于 /.well-known/sgcaptcha/ 下，并附带 sg-captcha 响应标头",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge，表示 SiteGround 的 Anti-Bot AI 返回了挑战",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "位于 /.well-known/sgcaptcha/ 下的 SG-CAPTCHA 挑战页和应答端点",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "页面脚本中的 SG-CAPTCHA 挑战常量（sgchallenge、sgsubmit_url）",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 挑战页上的 sg-captcha 标头",
+  "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 标头与页面脚本中的挑战常量",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑战页与页面脚本中的相应常量"
 }

@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "캡차 검증과 완화 쿠키",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM 클라이언트 측 챌린지 쿠키 (기본 접두사 TSPD_101, 예: TSPD_101_DID)",
   "ASM cookie with its client-side challenge cookie": "ASM 쿠키와 해당 클라이언트 측 챌린지 쿠키",
-  "Custom detector": "사용자 지정 감지기"
+  "Custom detector": "사용자 지정 감지기",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: 의심스러운 방문자에게 표시되는 SG-CAPTCHA 작업 증명(proof-of-work) 챌린지 페이지로, /.well-known/sgcaptcha/ 아래에서 sg-captcha 응답 헤더와 함께 제공됨",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, SiteGround의 Anti-Bot AI가 챌린지를 제공함",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "/.well-known/sgcaptcha/ 아래의 SG-CAPTCHA 챌린지 페이지와 응답 엔드포인트",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "페이지 스크립트의 SG-CAPTCHA 챌린지 상수 (sgchallenge, sgsubmit_url)",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 챌린지 페이지의 sg-captcha 헤더",
+  "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 헤더와 페이지 스크립트 내 챌린지 상수",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 챌린지 페이지와 페이지 스크립트 내 해당 상수"
 }

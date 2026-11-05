@@ -1105,5 +1105,12 @@
   "Captcha verification with the mitigation cookie": "Ověření CAPTCHA s cookie zmírnění",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie výzvy na straně klienta BIG-IP ASM (výchozí předpona TSPD_101, např. TSPD_101_DID)",
   "ASM cookie with its client-side challenge cookie": "Cookie ASM s cookie výzvy na straně klienta",
-  "Custom detector": "Vlastní detektor"
+  "Custom detector": "Vlastní detektor",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: stránka s výzvou SG-CAPTCHA založená na proof-of-work, zobrazovaná podezřelým návštěvníkům, dostupná pod /.well-known/sgcaptcha/ a odeslaná s odpovědní hlavičkou sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, Anti-Bot AI služby SiteGround zobrazila svou výzvu",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "Stránka s výzvou SG-CAPTCHA a koncový bod pro odpověď pod /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Konstanty výzvy SG-CAPTCHA (sgchallenge, sgsubmit_url) ve skriptech stránky",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Hlavička sg-captcha na stránce s výzvou SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "Hlavička sg-captcha s konstantami výzvy ve skriptech stránky",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Stránka s výzvou SG-CAPTCHA s jejími konstantami ve skriptech stránky"
 }

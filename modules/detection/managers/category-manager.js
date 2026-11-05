@@ -69,7 +69,8 @@ class CategoryManager {
                     'detect-seon',
                     'detect-fastly',
                     'detect-kount',
-                    'detect-riskified'
+                    'detect-riskified',
+                    'detect-siteground-captcha'
                 ]
             },
             captcha: {
