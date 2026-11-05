@@ -238,3 +238,81 @@ test('an address typed with letters still finds the ASCII one, and an accent-fre
   assert.deepStrictEqual(ids(F.filter([punycode, plain], { query: 'bucher.de' })), ['v'], 'typed without the umlaut it cannot reach the punycode spelling');
   assert.deepStrictEqual(ids(F.filter([punycode, plain], { query: 'xn--bcher' })), ['u'], 'and the punycode itself is still searchable');
 });
+
+// ---- Accents are folded on Latin and Greek letters only: the marks of other scripts are part of the letter
+
+// An address with no letters in it, so that only the title decides
+const titled = (title) => item('t', '', [], { title });
+const finds = (text, query) => F.matches(titled(text), { query });
+
+// [text, query]: what the person types must NOT find this text, because the mark makes another letter or word
+const KEPT_APART = [
+  // Japanese: a voiced mark (dakuten) or a half-voiced one (handakuten) makes another kana
+  ['かぎ', 'かき'], ['がき', 'かき'], ['ほん', 'ぼん'], ['ぼん', 'ほん'], ['ぽん', 'ほん'], ['てん', 'でん'], ['カタ', 'ガタ'], ['サ', 'ザ'],
+  // Hindi: a vowel sign (matra) makes another syllable, or another word
+  ['कंपनी का होम पेज', 'की'], ['की बोर्ड', 'का'], ['कोड', 'की'], ['सीमा', 'सम'], ['समय', 'सीमा'],
+  // Thai: vowel and tone marks
+  ['ท่า', 'ที่'], ['ทุก', 'ที่'], ['ปู', 'ปี'], ['ปี', 'ปู'],
+  // Korean: NFD splits a syllable into its letters, so 가 would be found inside 각 and 하 inside 한
+  ['한국어', '하'], ['각나다', '가'], ['간식', '가'], ['학교', '하'], ['함께', '하'],
+  // Russian and Ukrainian: й is not и, ё is not е, ї is not і
+  ['мой дом', 'мои'], ['мои дела', 'мой'], ['Ёлка', 'елка'], ['всё', 'все'], ['ї', 'і']
+];
+
+// [text, query]: found, as written, and the accents of Latin and Greek letters
+const FOUND = [
+  ['かき', 'かき'], ['がき', 'がき'], ['ガタ', 'ガタ'], ['ほん', 'ほ'], ['ぼん', 'ぼ'],
+  ['सीमा', 'सीमा'], ['कंपनी का होम पेज', 'का'], ['कंपनी', 'कं'],
+  ['ที่นี่', 'ที่'], ['ที่นี่', 'ท'], ['ปี', 'ปี'],
+  ['한국어', '한'], ['한국어', '한국'], ['가나다', '가'], ['각오', '각'],
+  ['мой дом', 'мой'], ['Ёлка', 'ёлка'], ['всё', 'всё'], ['ї', 'ї'],
+  ['Café menu', 'cafe'], ['cafe', 'CAFÉ'], ['Señor', 'senor'], ['Göteborg', 'goteborg'], ['Düsseldorf', 'dusseldorf'], ['Ålesund', 'alesund'],
+  ['Việt Nam', 'viet nam'], ['viet nam', 'VIỆT'], ['Diyarbakır', 'diyarbakir'], ['İstanbul', 'istanbul'], ['ISPARTA', 'ısparta'],
+  ['οδός', 'οδος'], ['Ελλάδα', 'ελλαδα'], ['ἄνθρωπος', 'ανθρωπος'], ['ΐ', 'ι']
+];
+
+test('a mark that is part of a kana, a Hindi, Thai or Korean letter, or of й, ё and ї, makes another letter: it is not folded away', () => {
+  for (const [text, query] of KEPT_APART) assert.strictEqual(finds(text, query), false, `${query} must not find ${text}`);
+});
+
+test('what is typed as written finds its text in those scripts, and Latin and Greek accents still fold, on both sides', () => {
+  for (const [text, query] of FOUND) assert.strictEqual(finds(text, query), true, `${query} must find ${text}`);
+});
+
+test('one fold for the query and for the text: a spelling made of base letters and marks finds the composed one, and the other way round', () => {
+  const spellings = ['Café', 'Việt', 'İstanbul', 'ΐ', 'かが', 'क़ी', 'ที่', '한국', 'мой', 'ё', 'ї', 'ǅ', 'Å'];
+  for (const text of spellings) {
+    for (const [a, b] of [[text, text], [text.normalize('NFD'), text], [text, text.normalize('NFD')], [text.normalize('NFC'), text.normalize('NFD')]]) {
+      assert.strictEqual(finds(a, b), true, `${JSON.stringify(b)} finds ${JSON.stringify(a)}`);
+    }
+  }
+  assert.strictEqual(finds('한', '한'), true, 'Hangul letters written one by one are the syllable');
+  assert.strictEqual(finds('한', '한'), true);
+  assert.strictEqual(finds('がき', 'がき'), true, 'a kana and its voiced mark written apart are the voiced kana');
+  assert.strictEqual(finds('й', 'й'), true);
+  assert.strictEqual(finds('й', 'и'), false, 'and й is still not и');
+});
+
+test('odd text never throws or stalls: lone surrogates, a huge string of only combining marks, marks in every place', () => {
+  const marks = '́'.repeat(200000);
+  const started = Date.now();
+  const titles = ['a\ud800b', '\udc00', '\ud800́é', marks, `${marks}a`, `a${marks}`, `e${'̣́̈'.repeat(3000)}`, 'é'.repeat(100000)];
+  for (const title of titles) {
+    for (const query of ['a', '\ud800', '\udc00x', '́', marks, 'é', 'e', ' ', '́á']) {
+      assert.doesNotThrow(() => F.matches(titled(title), { query }), `${title.length} characters, query ${JSON.stringify(query.slice(0, 8))}`);
+    }
+  }
+  assert.ok(Date.now() - started < 8000, `${Date.now() - started} ms`);
+  assert.strictEqual(finds('a\ud800b', '\ud800'), true, 'a lone surrogate is a character like another');
+});
+
+test('a query with no letter in it (only combining marks, with or without spaces) matches nothing, whatever the text holds', () => {
+  const marks = '́'.repeat(200000);
+  // A stress mark on a Cyrillic vowel stays in the text: it must not be found by a query that is only the mark
+  const pages = [titled('сло́во'), titled('ло́'), titled(marks), titled('Café'), item('u', 'https://a.example/', [], { title: '́' })];
+  for (const query of ['́', '́̀', ' ́ ', '́ ́', marks]) {
+    assert.deepStrictEqual(ids(F.filter(pages, { query })), [], JSON.stringify(query.slice(0, 6)));
+  }
+  assert.deepStrictEqual(ids(F.filter(pages, { query: '   ' })).length, pages.length, 'an empty search still keeps everything');
+  assert.strictEqual(finds('сло́во', 'ло́'), true, 'a mark with its letter is searched as written');
+});

@@ -9,8 +9,9 @@
  *   matches()            one entry against the search text and the chips
  *   filter()             the entries that match, in their order
  *
- * The search looks in the address, the title, the note and the names of the protections, ignoring case and accents
- * ("cafe" finds "Café", "Café" finds "cafe"). The chips
+ * The search looks in the address, the title, the note and the names of the protections, ignoring case and the accents of
+ * Latin and Greek letters ("cafe" finds "Café", "Café" finds "cafe"); the marks of other scripts are part of the letter and
+ * stay (か is not が, का is not की, 가 is not 각, и is not й). The chips
  * combine with AND: Pinned, Changed, Combinations and the categories must all hold, and several
  * categories together mean "any of them" (Anti-bot and CAPTCHA keep the pages that have either).
  * Combinations keeps the pages where at least one combination fired.
@@ -73,15 +74,22 @@
     } catch (_) { return ''; }
   };
 
+  // The marks that follow a Latin or a Greek letter: the accents (é, ñ, ö, ệ, ά). A mark after a letter of another script is part of it:
+  // the dakuten of か/が, the vowel signs of Hindi and Thai, the й, ё and ї of Cyrillic. The lookbehind is the whole rule
+  const ACCENTS = /(?<=[\p{Script=Latin}\p{Script=Greek}])\p{M}+/gu;
+
   /**
-   * Text as the search compares it: no accents and no capitals, so "cafe" finds "Café" and "Café" finds "cafe". NFD takes an
-   * accented letter apart and \p{M} is what is left of the accent (a dotted İ is an I and a dot, so it meets i). The Turkish
-   * dotless ı has no accent to take off: it is read as i, so a keyboard without it still finds "Diyarbakır". Plain ASCII
-   * skips the work. toLowerCase and not toLocaleLowerCase: the browser's language must not turn I into ı.
+   * Text as the search compares it: no capitals, and no accents on Latin and Greek letters, so "cafe" finds "Café" and "Café"
+   * finds "cafe". NFD takes a letter and its marks apart, ACCENTS removes the marks that follow a Latin or Greek letter (a
+   * dotted İ is an I and a dot, so it meets i), and NFC puts the rest back together: that is what keeps 가 apart from 각 (NFD
+   * splits a Hangul syllable into its letters, and 가 would be found inside 각), か from が and и from й. The Turkish dotless ı
+   * has no accent to take off: it is read as i, so a keyboard without it still finds "Diyarbakır". Plain ASCII skips the work.
+   * toLowerCase and not toLocaleLowerCase: the browser's language must not turn I into ı. The query and the text go through
+   * this one function.
    */
   const fold = (text) => {
     const value = String(text == null ? '' : text);
-    return (/[^\x00-\x7f]/.test(value) ? value.normalize('NFD').replace(/\p{M}+/gu, '').replace(/\u0131/g, 'i') : value).toLowerCase();
+    return (/[^\x00-\x7f]/.test(value) ? value.normalize('NFD').replace(ACCENTS, '').normalize('NFC').replace(/\u0131/g, 'i') : value).toLowerCase();
   };
 
   const isActive = (chips) => {
@@ -109,6 +117,10 @@
 
     const typed = String(options.query || '').trim();
     if (!typed) return true;
+    const folded = fold(typed).trim();
+    // A query with no letter in it (only combining marks) has nothing to look for: it matches nothing, where an empty needle would
+    // match every entry, and a mark that stays in the text (a stress mark on a Cyrillic vowel) must not be found by itself
+    if (!/[^\s\p{M}]/u.test(folded)) return false;
     const haystack = [
       item.url,
       item.title,
@@ -116,9 +128,8 @@
       ...detections.map(d => nameOf(d))
     ];
     // Stored addresses are ASCII (bücher.de is xn--bcher-kva.de): a search typed with letters finds them too, so the typed
-    // host (not the folded text, which has lost its letters) is the second needle. A query that is only accents folds to
-    // nothing: it matches nothing, where an empty needle would match every entry
-    const needles = [fold(typed).trim(), asciiHost(typed.toLowerCase())].filter(Boolean);
+    // host (not the folded text, which has lost its accents) is the second needle
+    const needles = [folded, asciiHost(typed.toLowerCase())].filter(Boolean);
     return haystack.some((part) => {
       const text = fold(part || '');
       return needles.some(needle => text.includes(needle));
