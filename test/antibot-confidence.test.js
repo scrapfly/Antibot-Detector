@@ -361,7 +361,7 @@ test('detect-yundun: the captcha page a blocked visitor is shown is identified, 
 
 // The challenge page SiteGround serves, as received on 2026-11-05 from one GET each of https://www.siteground.es/.well-known/sgcaptcha/ and
 // https://vocationalmedia.com/.well-known/sgcaptcha/ (both hosted on SiteGround): the response headers, and the page's inline script
-// (the challenge token is cut). Documented elsewhere: an intercepted request is answered 202 with the same header and a meta refresh to this path.
+// as received (the challenge token is time-limited and means nothing later). Documented elsewhere: an intercepted request is answered 202 with the same header and a meta refresh to this path.
 test('detect-siteground-captcha: the challenge page SiteGround serves is identified; its hosting headers and the classic captcha path alone are not', () => {
   const d = definitions['detect-siteground-captcha'];
   const headers = { server: 'nginx', 'content-type': 'text/html', vary: 'Accept-Encoding', 'sg-captcha': 'challenge', 'x-robots-tag': 'noindex',
