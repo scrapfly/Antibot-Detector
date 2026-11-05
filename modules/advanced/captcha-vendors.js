@@ -233,6 +233,44 @@
             }
         },
         {
+            vendorId: 'lemin', detectorId: 'lemin', className: 'LeminCaptchaAdvanced',
+            productName: 'Lemin Cropped Captcha', logo: 'lemin_official.png', infoKey: 'advancedInfoCaptchaKeyDesc',
+            // api.leminnow.com serves the widget; leminnow.com is the vendor's own website, so no catch-all rule here
+            scripts: [
+                { hosts: ['api.leminnow.com'], path: /^\/captcha\/v1\/cropped\//, type: 'sdk' }
+            ],
+            siteKey: {
+                label: 'captchaId',
+                key: /^CROPPED_[A-Za-z0-9_-]{4,64}$/,
+                rules: [
+                    // The widget script's address carries the id: .../captcha/v1/cropped/<CROPPED_...>/js (the detector's own rule)
+                    { type: 'url', url: /^https:\/\/api\.leminnow\.com\/captcha\/v1\/cropped\/(CROPPED_[A-Za-z0-9_-]{4,64})\/js(?:[?#]|$)/ }
+                ]
+            }
+        },
+        {
+            vendorId: 'altcha', detectorId: 'altcha', className: 'AltchaAdvanced',
+            productName: 'ALTCHA', logo: 'altcha_official.png', infoKey: 'advancedInfoCaptchaKeyDesc',
+            // altcha.org is also the vendor's own website (its docs): only the widget package on the public CDNs and the
+            // challenge route of ALTCHA Cloud (<region>.altcha.org/v1/challenge, or /api/v1/challenge) are listed
+            scripts: [
+                { hosts: ['cdn.jsdelivr.net', 'unpkg.com'], path: /^\/(?:npm\/|gh\/altcha-org\/)?altcha(?:@[^/]{1,40})?\//, type: 'widget' },
+                { domains: ['altcha.org'], path: /^\/(?:api\/)?v1\/challenge(?:\/|$)/, type: 'challenge' }
+            ],
+            siteKey: {
+                label: 'apiKey',
+                key: /^key_[A-Za-z0-9_-]{6,80}$/,
+                rules: [
+                    // Only ALTCHA Cloud and Sentinel have a key: a self-hosted widget points at its own site's challenge
+                    // route, with none. The widget's challenge (v3) or challengeurl (v1, v2) attribute holds the whole
+                    // address, and attribute rules take whole values, so the key is read from the request instead: it is
+                    // listed once the widget has asked for its challenge. Sentinel runs on its owner's host, so any host
+                    // qualifies; the route and the key's own shape (key_...) keep it to ALTCHA's
+                    { type: 'url', url: /^https:\/\/[^/?#]+\/(?:api\/)?v1\/challenge(?:[/?#]|$)/, param: 'apiKey' }
+                ]
+            }
+        },
+        {
             vendorId: 'binance', detectorId: 'binance-captcha', className: 'BinanceCaptchaAdvanced',
             productName: 'Binance Captcha', logo: 'binance_official.png', infoKey: 'advancedInfoCaptchaScriptsDesc',
             scripts: [

@@ -151,7 +151,7 @@ All detectors, built-in and your own. Turn each one on or off, open the editor t
 
 ### Advanced
 
-Hands-on tools for the protections a page uses. A protection gets its tools when it is detected above 50% confidence; you can change that limit in Settings → Detection → Advanced tools. When nothing on the page qualifies, the tab says so, gives that minimum (or names the protection found below it) and shows the 25 supported protections.
+Hands-on tools for the protections a page uses. A protection gets its tools when it is detected above 50% confidence; you can change that limit in Settings → Detection → Advanced tools. When nothing on the page qualifies, the tab says so, gives that minimum (or names the protection found below it) and shows the 27 supported protections.
 
 | Protection | Tools |
 | --- | --- |
@@ -166,7 +166,7 @@ Hands-on tools for the protections a page uses. A protection gets its tools when
 | hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
 | Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
 | Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 Results and captures are kept for 30 minutes in **Advanced → History**, where you can filter them by site, vendor and tool, open them again and export them.

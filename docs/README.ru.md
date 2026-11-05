@@ -149,7 +149,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### Дополнительно
 
-Практические инструменты для защит, которые использует страница. Защита получает свои инструменты, когда она обнаружена с уверенностью выше 50%; этот порог меняется в **Настройки → Обнаружение → Расширенные инструменты**. Если на странице ничего не подходит, вкладка сообщает об этом, указывает порог (или называет защиту, найденную ниже него) и показывает 25 поддерживаемых защит.
+Практические инструменты для защит, которые использует страница. Защита получает свои инструменты, когда она обнаружена с уверенностью выше 50%; этот порог меняется в **Настройки → Обнаружение → Расширенные инструменты**. Если на странице ничего не подходит, вкладка сообщает об этом, указывает порог (или называет защиту, найденную ниже него) и показывает 27 поддерживаемых защит.
 
 | Защита | Инструменты |
 | --- | --- |
@@ -164,7 +164,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 | hCaptcha | Извлечь SiteKey · Проверить версию · Анализ скриптов · Начать захват |
 | Incapsula (Imperva) | Проверить куки · Анализ скриптов · Начать захват |
 | Shape Security | Проверить версию · Проверить куки · Анализ скриптов · Начать захват |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Извлечь SiteKey · Анализ скриптов |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Извлечь SiteKey · Анализ скриптов |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Анализ скриптов |
 
 Результаты и захваты хранятся 30 минут в **Дополнительно → История**, где их можно фильтровать по сайту, вендору и инструменту, открывать снова и экспортировать.
