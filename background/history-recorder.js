@@ -488,10 +488,13 @@ class HistoryRecorder {
    * it may use is nearly full (or has just removed entries), and again only after it has been emptied below 70%.
    * @param {number} bytes size of the stored history after this save
    * @param {number} dropped entries the size limit removed in this save
-   * @param {number} [budget] the size limit this save was written under (6 MB when not given)
+   * @param {number} [budget] the size limit this save was written under (6 MB when not given; Infinity when it could not be
+   *   told because the settings cannot be read, see HistoryStore.currentBudget)
    */
   static async checkStorage(bytes, dropped, chrome, budget) {
     if (!Number.isFinite(bytes) || typeof HistoryStore === 'undefined') return;
+    // An unknown limit says nothing: a share of Infinity is 0%, which must not count as "emptied below 70%" and reset the warning
+    if (budget === Infinity) return;
     const key = 'scrapfly_history_storage_notice';
     const ratio = bytes / (budget > 0 ? budget : HistoryStore.MAX_BYTES);
     const state = (await chrome.storage.local.get(key))[key] || {};
