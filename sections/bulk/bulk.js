@@ -93,13 +93,20 @@
     try {
       const response = await fetch(url, { signal: controller.signal, credentials: 'omit', cache: 'no-store', redirect: 'follow' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      // A sitemap that sent the browser to another site (www aside) was read from there: what it lists is not this site's own list
+      if (response.url && !BulkScan.sameSite(url, response.url)) throw new Error('The sitemap moved to another site');
       return await response.text();
     } finally {
       clearTimeout(timer);
     }
   }
 
-  /** The pages a sitemap lists (a sitemap index is followed), or null when it cannot be read. */
+  /**
+   * The pages a sitemap lists (a sitemap index is followed), or null when it cannot be read. A sitemap speaks for its own site
+   * only (BulkScan.sameSite): a page of another host is left out and a sitemap of another host is never fetched, because each
+   * page is opened in a tab with the person's cookies and a public sitemap must not send the browser to this machine, the local
+   * network or another site. Addresses the person pastes are not filtered (entriesOf).
+   */
   async function expandSitemap(url, budget) {
     const queue = [url];
     const seen = new Set();
@@ -116,9 +123,9 @@
       if (!parsed.kind) continue;
       readAny = true;
       if (parsed.kind === 'sitemapindex') {
-        for (const loc of parsed.locs) { const n = BulkScan.normalize(loc); if (n.url) queue.push(n.url); }
+        for (const loc of parsed.locs) { const n = BulkScan.normalize(loc); if (n.url && BulkScan.sameSite(url, n.url)) queue.push(n.url); }
       } else {
-        pages.push(...parsed.locs.slice(0, budget - pages.length));
+        pages.push(...parsed.locs.filter(loc => BulkScan.sameSite(url, loc)).slice(0, budget - pages.length));
       }
     }
     return readAny ? pages : null;

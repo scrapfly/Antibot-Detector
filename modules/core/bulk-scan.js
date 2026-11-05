@@ -9,6 +9,8 @@
  *                    the cap; what is left out is listed as skipped with the reason (duplicates and the pages over the
  *                    cap are only counted)
  *   isSitemap(), parseSitemap()   a sitemap address, and the <loc> entries of a sitemap or a sitemap index
+ *   sameSite()       whether an address a sitemap lists is on the sitemap's own site: a sitemap speaks for its own host
+ *                    only (the page keeps every other address out, and never follows a sitemap of another site)
  *   createRun(), begin(), finish(), fail(), skip(), pause(), resume(), stop(), complete(), recover()
  *                    the run's states: running → paused → running, then done or stopped; recover() is what a service
  *                    worker that starts again does with a run it finds in session storage (nobody is scanning it any
@@ -199,6 +201,36 @@
       if (value) locs.push(value);
     }
     return { kind, locs };
+  }
+
+  /**
+   * The site an address belongs to: its host in lower case, without a leading "www." (the scheme, the port, the path and
+   * the query do not matter). '' when it is not an address that is scanned (not http or https, no host, not an address).
+   * It reads the address as normalize() does, which is what the worker scans.
+   * @param {string} address
+   * @returns {string}
+   */
+  function siteOf(address) {
+    const normal = normalize(address);
+    if (!normal.url) return '';
+    let host = new URL(normal.url).hostname.toLowerCase().replace(/\.$/, '');
+    // "www." is the same site as the host under it, but only when something is under it (www.com is a host)
+    if (host.startsWith('www.') && host.indexOf('.', 4) !== -1) host = host.slice(4);
+    return host;
+  }
+
+  /**
+   * Whether an address listed in a sitemap is on the sitemap's own site. A sitemap speaks for its own site only: each page
+   * of a run is a real visit with the person's cookies, so a public sitemap must not send the browser to 127.0.0.1, a
+   * router, a cloud metadata address or someone else's site. example.com and www.example.com are one site; the port and the
+   * scheme may differ, the host may not. Addresses the person pastes never go through this (a local test page is a real use).
+   * @param {string} sitemapUrl  the address of the sitemap
+   * @param {string} loc  an entry of it (a page, or a sitemap of an index)
+   * @returns {boolean}
+   */
+  function sameSite(sitemapUrl, loc) {
+    const site = siteOf(sitemapUrl);
+    return site !== '' && site === siteOf(loc);
   }
 
   /**
@@ -511,7 +543,7 @@
 
   const api = {
     MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, ITEM_STATUSES, RUN_STATUSES, REASONS, FORMATS,
-    capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, prepare,
+    capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
     summarize, build, fileName
   };

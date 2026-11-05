@@ -370,3 +370,41 @@ test('a list of thousands of addresses on one line is read in one pass, with the
   assert.ok(took < 1500, `took ${took} ms`);
   assert.deepStrictEqual(BulkScan.linesOf(addresses.slice(0, 50).join('\n')), addresses.slice(0, 50));
 });
+
+test('sameSite: a sitemap speaks for its own host; www, the port and the scheme do not matter, another host never does', () => {
+  const site = 'https://example.com/sitemap.xml';
+  const own = ['https://example.com/', 'https://www.example.com/a', 'http://example.com:8080/b?x=1#top', 'HTTPS://EXAMPLE.COM/C', 'https://example.com./dot', 'example.com/bare', 'www.example.com'];
+  for (const loc of own) assert.equal(BulkScan.sameSite(site, loc), true, loc);
+  const other = [
+    'http://127.0.0.1/', 'http://127.0.0.1:8080/x', 'http://localhost/', 'http://[::1]/', 'http://192.168.1.5/', 'http://10.0.0.1/', 'http://169.254.169.254/latest/meta-data/',
+    'https://other.example/', 'https://shop.example.com/', 'https://example.com.evil.example/', 'https://evil.example/?u=https://example.com/', 'https://example.com@evil.example/',
+    'https://evil.example\\@example.com/x', 'https://evilexample.com/', 'https://notwww.example.com/',
+    'ftp://example.com/file', 'file:///etc/passwd', 'javascript:alert(1)', 'mailto:a@example.com', 'chrome://settings', '', '   ', null, undefined, 'not an address', '/relative', '//example.com/x'
+  ];
+  for (const loc of other) assert.equal(BulkScan.sameSite(site, loc), false, String(loc));
+  // the other way round, and an address of the machine itself is its own site
+  assert.equal(BulkScan.sameSite('https://www.example.com/s.xml', 'https://example.com/a'), true);
+  assert.equal(BulkScan.sameSite('https://127.0.0.1:8443/sitemap.xml', 'http://127.0.0.1/x'), true, 'a local sitemap lists local pages of its own host');
+  assert.equal(BulkScan.sameSite('https://127.0.0.1/sitemap.xml', 'http://localhost/x'), false, 'two names of one machine are two hosts');
+  assert.equal(BulkScan.sameSite('https://[::1]/sitemap.xml', 'http://[::1]:3000/x'), true);
+  // a sitemap with no usable address of its own speaks for nobody: two empty sites are not the same site
+  for (const bad of ['', null, undefined, 'not a url', 'ftp://example.com/s.xml']) assert.equal(BulkScan.sameSite(bad, bad), false, String(bad));
+  assert.equal(BulkScan.sameSite('', 'https://example.com/'), false);
+  // "www." is only dropped from a host that has a name under it
+  assert.equal(BulkScan.sameSite('https://www.com/s.xml', 'https://com/x'), false);
+  assert.equal(BulkScan.sameSite('https://www.example.com/s.xml', 'https://www.example.org/x'), false);
+});
+
+test('sameSite judges the address that will be scanned: the one prepare() makes of the text', () => {
+  const site = 'https://example.com/sitemap.xml';
+  for (const loc of ['https://example.com/a', 'https://www.example.com/a b', ' https://example.com/tab\there ', 'example.com:8443/x', 'https://example.com/%2F..%2Fa']) {
+    const normal = BulkScan.normalize(loc);
+    assert.equal(BulkScan.sameSite(site, loc), true, loc);
+    assert.equal(BulkScan.prepare([loc]).items[0].url, normal.url, 'what is checked is what is scanned');
+  }
+  // an address kept off by the check is never one prepare() would have scanned as another host's page
+  for (const loc of ['http://127.0.0.1/a', 'http://169.254.169.254/', 'https://example.com.evil.example/a']) {
+    assert.equal(BulkScan.sameSite(site, loc), false, loc);
+    assert.notEqual(new URL(BulkScan.normalize(loc).url).hostname.replace(/^www\./, ''), 'example.com');
+  }
+});
