@@ -5,8 +5,7 @@
   gap: 8px;
 }
 
-.advanced-tool-card,
-.recaptcha-tool-btn {
+.advanced-tool-card {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -26,31 +25,27 @@
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
-.advanced-tool-card:hover:not(:disabled),
-.recaptcha-tool-btn:hover:not(:disabled) {
+.advanced-tool-card:hover:not(:disabled) {
   background: var(--g-313131);
   border-color: var(--accent);
   transform: none;
   box-shadow: none;
 }
 
-.advanced-tool-card:focus-visible,
-.recaptcha-tool-btn:focus-visible {
+.advanced-tool-card:focus-visible {
   outline: 2px solid var(--accent-light);
   outline-offset: 2px;
   border-color: var(--accent);
   box-shadow: none;
 }
 
-.advanced-tool-card:active:not(:disabled),
-.recaptcha-tool-btn:active:not(:disabled) {
+.advanced-tool-card:active:not(:disabled) {
   transform: none;
   background: var(--bg-secondary);
 }
 
 .advanced-tool-icon,
-.advanced-tool-card:hover .advanced-tool-icon,
-.recaptcha-tool-btn .tool-icon-container {
+.advanced-tool-card:hover .advanced-tool-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -83,8 +78,7 @@
   gap: 3px;
 }
 
-.advanced-tool-label,
-.recaptcha-tool-btn .tool-btn-label {
+.advanced-tool-label {
   display: block;
   min-width: 0;
   color: var(--text-primary);
@@ -141,8 +135,7 @@
 .advanced-tool-card[data-tool-kind="capture"] .advanced-tool-indicator { color: var(--text-primary); }
 
 .advanced-tool-card.capturing,
-.advanced-tool-card[data-tool-kind="capture"].capturing,
-.recaptcha-tool-btn.capturing {
+.advanced-tool-card[data-tool-kind="capture"].capturing {
   animation: none;
   background: rgba(239, 68, 68, 0.08);
   border-color: rgba(239, 68, 68, 0.45);
