@@ -31,7 +31,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: a detector you add yourself shows its description in your language instead of English.
 - Akamai Extract Sensor no longer deletes the _abck cookie before it is ready, so a failed start leaves the cookie alone.
 - Imperva tools keep request bodies only from Imperva's own requests, and list each endpoint once, without its query, at most 20.
-- Web pages can no longer read a flag the extension left on the page saying it was loaded from the cache.
+- Websites can no longer read, or overwrite, two internal markers the extension kept on their window object (one showed a page came from the cache).
+- A page answered from the saved result no longer risks a scan that never finishes when the extension's window checks were still running.
 
 ### Security
 
