@@ -13,6 +13,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Shape Security: stopping a capture right after the page loads no longer leaves a stale Monitoring Active notice or blocks the next Start.
 - Shape Security: a capture that runs out of time with nothing captured no longer saves an empty entry.
 - Akamai: starting Extract Sensor twice on one tab no longer lets the first run's timer end the second early.
+- Detection: Scan again now says the extension must be reloaded when its background part is out of date, instead of only "Scan failed".
 - Advanced: ALTCHA Extract Site Key now finds the key of an ALTCHA Cloud widget before its challenge has loaded.
 
 ## [3.1.3] - 2026-11-05

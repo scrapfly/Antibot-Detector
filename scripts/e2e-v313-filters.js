@@ -357,6 +357,36 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('Scan again against a worker that does not know the message (older than the popup) says to reload the extension and reloads nothing', async () => {
+    const { page: site, tab, name } = await scanned(`outdated-${uniq()}`, ALL);
+    const popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    const hint = "The extension's background part is out of date. Reload the extension on the extensions page and try again.";
+    // The worker as it was before this button: the router answers { status: 'unknown' } to a message with no handler. The popup's
+    // files are read fresh on every open and the worker only when the extension is reloaded, so this is what a person sees after
+    // updating the files without reloading
+    await W(() => { delete __messageHandlerRegistry[WorkerMessages.RESCAN_TAB]; });
+    try {
+      const before = loads[name];
+      await popup.$eval('#rescanBtn', el => el.click());
+      await until(async () => (await toasts(popup)).includes(hint), 8000, 'the toast that says to reload the extension');
+      await sleep(1200);
+      assert.equal(loads[name], before, 'the page was not reloaded');
+      assert.deepEqual(await popup.evaluate(() => [window.popupInstance.detection.isRescanning, document.querySelector('#rescanBtn').disabled]), [false, false], 'free to try again');
+      assert.equal(await popup.evaluate(() => window.popupInstance.detection.isShowingResults), true, 'the results stay');
+    } finally {
+      await W(() => { Commands.registerHandlers(__messageHandlerRegistry); });
+    }
+    // with the handler back (the extension reloaded), the same button rescans
+    await popup.evaluate(() => document.querySelectorAll('.notification-toast').forEach(el => el.remove()));
+    const again = loads[name];
+    await popup.$eval('#rescanBtn', el => el.click());
+    await until(() => loads[name] > again, 10000, 'the page sent again');
+    await popup.close();
+    await site.close();
+  });
+
+  // ===============================================================================================
   await scenario('Detection chips: one per category filter the list, combine with the search, say when nothing is left, and clear again', async () => {
     const { page: site, tab } = await scanned(`chips-${uniq()}`, ALL);
     const popup = await popupFor(tab);

@@ -124,7 +124,10 @@ DetectionActions.RESCAN_NOTICES = Object.freeze({
     skipped: ['toolbarTitleSkipped', 'This site is not scanned'],
     off: ['toolbarTitleOff', 'Detection is switched off'],
     no_tab: ['unableGetCurrentPage', 'Unable to get current page'],
-    failed: ['detectionFailedTitle', 'Scan failed']
+    failed: ['detectionFailedTitle', 'Scan failed'],
+    // The worker does not know the message: it still runs the code from before the update (the popup's files are read fresh on
+    // every open, the worker only when the extension is reloaded). The wording History and Settings use for the same case
+    outdated: ['workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."]
 });
 
 /** Both Scan again buttons off while the worker answers (the toolbar one and the one on the dead-end card). */
@@ -163,7 +166,8 @@ DetectionActions.rescan = async function() {
       let outcome = 'no_tab';
       if (tab && typeof tab.id === 'number') {
         const answer = await chrome.runtime.sendMessage({ type: WorkerMessages.RESCAN_TAB, tabId: tab.id });
-        outcome = answer && answer.status === 'ok' && typeof answer.outcome === 'string' ? answer.outcome : 'failed';
+        if (answer && answer.status === 'unknown') outcome = 'outdated';
+        else outcome = answer && answer.status === 'ok' && typeof answer.outcome === 'string' ? answer.outcome : 'failed';
       }
       if (outcome === 'reloaded') {
         DetectionActions.showRescanning.call(this, tab);
