@@ -331,6 +331,9 @@ class Detection {
   async clearCache(...args) {
     return await DetectionActions.clearCache.apply(this, args);
   }
+  async rescan(...args) {
+    return await DetectionActions.rescan.apply(this, args);
+  }
   async uploadDetectionsToPaste(...args) {
     return await DetectionActions.uploadDetectionsToPaste.apply(this, args);
   }
@@ -570,6 +573,12 @@ class Detection {
       clearCacheBtn.addEventListener('click', () => {
         this.clearCache();
       });
+    }
+
+    // Scan again: next to Clear cache, and on the states that say the page has no completed scan
+    for (const selector of ['#rescanBtn', '#emptyRescanBtn']) {
+      const rescanBtn = document.querySelector(selector);
+      if (rescanBtn) rescanBtn.addEventListener('click', () => { this.rescan(); });
     }
 
     // Setup copy overview button

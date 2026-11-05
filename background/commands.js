@@ -7,6 +7,7 @@
  *   so cookies, headers and the JS hooks are collected from the start.
  *   Nothing happens while the extension is off, on a page it cannot scan, or
  *   on a site that is not scanned (skipped, or not among the chosen sites).
+ * - WorkerMessages.RESCAN_TAB is the Detection tab's Scan again button: the same rescan, for the tab the popup shows.
  * - _execute_action opens the popup; Chrome handles it.
  */
 (function(root) {
@@ -38,6 +39,35 @@
                 if (root.Logger && root.Logger.warn) root.Logger.warn('BACKGROUND', '[Commands] Rescan failed:', error && error.message);
                 return 'failed';
             }
+        },
+
+        /**
+         * The Detection tab's Scan again button (WorkerMessages.RESCAN_TAB, { tabId }): the shortcut's rescan, for the tab the
+         * popup shows. The popup names the tab (the active one of its own window): a worker has no window, so "the active tab"
+         * is never asked here, and a tab that is gone, or no tab id at all, is 'no_tab' and not another tab in its place.
+         * For the extension's own pages only. Answers { status: 'ok', outcome }, outcome being one of rescan()'s.
+         * @param {object} registry - the worker's message handlers (router-registry.js)
+         */
+        registerHandlers(registry, deps = {}) {
+            const chromeApi = deps.chrome || root.chrome;
+            const messages = deps.WorkerMessages || root.WorkerMessages;
+            const sender = deps.MessageSender || root.MessageSender;
+            const handle = ({ request, sendResponse }) => {
+                (async () => {
+                    let outcome = 'no_tab';
+                    try {
+                        const id = request && request.tabId;
+                        const tab = Number.isInteger(id) && id >= 0 ? await chromeApi.tabs.get(id).catch(() => null) : null;
+                        if (tab) outcome = await this.rescan(tab, deps);
+                    } catch (error) {
+                        if (root.Logger && root.Logger.warn) root.Logger.warn('BACKGROUND', '[Commands] Scan again failed:', error && error.message);
+                        outcome = 'failed';
+                    }
+                    sendResponse({ status: 'ok', outcome });
+                })();
+                return true; // answers asynchronously
+            };
+            registry[messages.RESCAN_TAB] = sender.extensionPagesOnly(handle, chromeApi && chromeApi.runtime);
         },
 
         /** Registered in the worker's first turn (initializeServices). */

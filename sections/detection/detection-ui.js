@@ -365,6 +365,11 @@ DetectionUI.showEmptyState = function(options = {}) {
 
     DetectionUI.applyEmptyStateCopy.call(this, options);
 
+    // A page with no completed scan (none yet, failed, interrupted) can be scanned again in one click; a page that cannot
+    // be scanned, and a scan that found nothing, have nothing to offer
+    const rescanBtn = document.querySelector('#emptyRescanBtn');
+    if (rescanBtn) rescanBtn.hidden = !(options.noCache && options.outcome !== 'unsupported');
+
     if (emptyStateFooter) {
       emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
     }

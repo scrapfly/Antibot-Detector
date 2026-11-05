@@ -114,6 +114,72 @@ DetectionActions.resetClearCacheButton = function() {
     }
 };
 
+/**
+ * What the popup says when a Scan again could not start, by the worker's outcome (background/commands.js rescan()): existing
+ * wording, [message key, English text]. An error toast, which is shown even with notifications off: the person asked for a
+ * scan and must be told why none began. 'reloaded' is not here: the page is on its way and the scanning screen says so.
+ */
+DetectionActions.RESCAN_NOTICES = Object.freeze({
+    unsupported: ['detectionUnsupportedTitle', 'This page cannot be scanned'],
+    skipped: ['toolbarTitleSkipped', 'This site is not scanned'],
+    off: ['toolbarTitleOff', 'Detection is switched off'],
+    no_tab: ['unableGetCurrentPage', 'Unable to get current page'],
+    failed: ['detectionFailedTitle', 'Scan failed']
+});
+
+/** Both Scan again buttons off while the worker answers (the toolbar one and the one on the dead-end card). */
+DetectionActions.setRescanBusy = function(busy) {
+    document.querySelectorAll('#rescanBtn, #emptyRescanBtn').forEach((button) => { button.disabled = busy; });
+};
+
+/** The page is reloading to be scanned from the start: no result of the old scan stays, and the scanning screen shows until the new one arrives. */
+DetectionActions.showRescanning = function(tab) {
+    this.viewedTabId = tab.id;
+    this.viewedTabUrl = tab.url || '';
+    this.currentResults = [];
+    this.cacheMetadata = null;
+    this.isShowingResults = false;
+    this.wasInterrupted = false;
+    this.loadingRepolls = 0;
+    this.loadingIdleAsks = 0;
+    if (typeof this.closeDetectionModal === 'function') this.closeDetectionModal();
+    if (typeof this.tellAdvancedResultsGone === 'function') this.tellAdvancedResultsGone();
+    this.showAnalyzingState();
+};
+
+/**
+ * Scan again (the button next to Clear cache, and the one on the states that say the page has no completed scan): the worker
+ * clears the page's saved result and reloads the tab, as the Alt+Shift+S shortcut does. Only the active tab of this popup's
+ * own window is asked for. On 'reloaded' the scanning screen shows until the new result arrives (the popup's own listeners
+ * and timeouts settle it, as after any scan); any other outcome is a toast that says why nothing happened.
+ */
+DetectionActions.rescan = async function() {
+    // A second click while the first is on its way would reload the page twice
+    if (this.isRescanning) return;
+    this.isRescanning = true;
+    DetectionActions.setRescanBusy(true);
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      let outcome = 'no_tab';
+      if (tab && typeof tab.id === 'number') {
+        const answer = await chrome.runtime.sendMessage({ type: WorkerMessages.RESCAN_TAB, tabId: tab.id });
+        outcome = answer && answer.status === 'ok' && typeof answer.outcome === 'string' ? answer.outcome : 'failed';
+      }
+      if (outcome === 'reloaded') {
+        DetectionActions.showRescanning.call(this, tab);
+        return;
+      }
+      const [key, fallback] = DetectionActions.RESCAN_NOTICES[outcome] || DetectionActions.RESCAN_NOTICES.failed;
+      NotificationHelper.error(detectionActionsTr(key, fallback));
+    } catch (error) {
+      Logger.error('UI', 'Failed to scan again:', error);
+      NotificationHelper.error(detectionActionsTr('detectionFailedTitle', 'Scan failed'));
+    } finally {
+      this.isRescanning = false;
+      DetectionActions.setRescanBusy(false);
+    }
+};
+
 DetectionActions.addToBlacklist = async function() {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
