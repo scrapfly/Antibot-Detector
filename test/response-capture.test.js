@@ -270,6 +270,18 @@ test('with no saved result left (the rules changed meanwhile) a late response is
   }
 });
 
+test('with no saved result and no scan of the page remembered, a late response is not saved alone as the page\'s whole result', async () => {
+  // A page served from the cache, a new document or a restarted worker remembers no scan; its saved result is gone when the rules
+  // changed: the evidence has nothing to be added to, and saved alone it would be served for days with no scan
+  const out = fresh({ cached: null });
+  worker.forgetFinishedPage(1); // no scan of this page is remembered
+  send({ url: PREPARE, method: 'POST', status: 200, body: compacted(prepareBody) });
+  await sleep(450);
+  assert.equal(out.stored, null, 'nothing is saved');
+  assert.equal(out.badge, null, 'the badge is left alone');
+  assert.deepEqual(out.messages.filter(m => m.type === 'NEW_DETECTION_DATA'), [], 'no popup update');
+});
+
 test('a skipped site keeps nothing from its responses: no cache entry, no badge, no popup update', async () => {
   const out = fresh({ cached: null });
   worker.Utils.isUrlBlacklisted = async () => true;

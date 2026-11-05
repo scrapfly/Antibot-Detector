@@ -134,13 +134,24 @@ test('a detector the scan did not find is added from a late request', async () =
   assert.ok(out.cache.find(d => d.detector.id === cheq.id).confidence < 100);
 });
 
-test('a scan is saved with the time it began, and so is what a late request adds to it (a result found before a rules change is not kept)', async () => {
+test('a scan is saved with the time it began; what a late request adds to its saved result is not dated (that result is of the current rules)', async () => {
   await scanned(4242);
   assert.equal(out.pageData.scanStartedAt, 4242, 'the scan\'s own save');
   await request(PROOF);
   await runTimers();
   assert.equal(out.stores, 1);
-  assert.equal(out.pageData.scanStartedAt, 4242, 'the late evidence is merged into results of the same scan');
+  assert.equal(out.pageData.scanStartedAt, undefined, 'merged into the saved result: dated with the scan it came from, a newer result would be saved as stale');
+});
+
+test('when the saved result is gone (the rules changed) a late request\'s evidence joins the scan\'s own results, dated with its start', async () => {
+  await scanned(4242);
+  out.cache = null; // the rules changed: no saved result is served any more
+  await request(PROOF);
+  await runTimers();
+  assert.equal(out.stores, 1);
+  assert.equal(out.pageData.scanStartedAt, 4242, 'a result that began before the change is never served');
+  const found = out.cache.find(d => d.detector.id === cheq.id);
+  assert.ok(found.matches.some(m => m.type === 'cookie') && found.matches.some(m => m.type === 'url' && m.fullUrl === PROOF), 'the scan\'s evidence and the late one');
 });
 
 /** The evidence the engine finds in one late request, as the batch check builds it */
