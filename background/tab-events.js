@@ -83,6 +83,8 @@ function setupTabListeners() {
             Logger.debug('BACKGROUND', `[TabCleanup] Tab ${tabId} closed during Akamai capture, cleaning up`);
             clearCaptureTimeout(akamaiCaptureState.get(tabId));
             akamaiCaptureState.delete(tabId);
+            // An extraction has no capture job whose end would remove the request listener on every page: it goes with the last tab
+            if (typeof akamaiRemoveListenerIfIdle === 'function') akamaiRemoveListenerIfIdle();
         }
 
         if (impervaCaptureState.has(tabId)) {

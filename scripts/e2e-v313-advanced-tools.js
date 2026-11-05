@@ -748,6 +748,8 @@ async function main() {
   /** A capture: Start (the card turns into Stop, the popup would close), the reload that feeds it, the entry in History. */
   async function startCapture(t, spec) {
     const id = `${spec.id}StartCapture`;
+    // This start's own close: whatever a tool does after the worker's answer (Akamai deletes its cookie) is over when the popup closes
+    await t.popup.evaluate(() => { window.__closed = 0; });
     await t.click(id);
     await wait(t.popup, card => document.querySelector(`#${card}`).getAttribute('aria-pressed') === 'true', id, 20000);
     assert.equal(await t.popup.$eval(`#${id} .advanced-tool-label`, el => el.textContent.trim()), 'Stop Capturing');
@@ -860,7 +862,6 @@ async function main() {
       await t.saved('altcha', before);
     }]
   ], { variant: 'altcha-late', ...ctxSetup(altcha) });
-
   // =================================================================================================================================
   // Part B: the tools with their own module
   // =================================================================================================================================
@@ -906,6 +907,22 @@ async function main() {
     }],
     capturedDataAction(akamai),
     stopAction(akamai),
+    ['Start Capturing deletes the _abck cookie only once the worker has armed the capture', async t => {
+      const cookie = () => W(async url => (await chrome.cookies.get({ url, name: '_abck' }))?.value ?? null, t.url);
+      // The Stop scenario before this one left the cookie deleted (nothing reloaded the page): the page gives it on each load
+      await t.reloadPage();
+      await until(cookie, 10000, 'the page to set _abck');
+      await startCapture(t, akamai);
+      // The cookie goes once the worker has answered: by the time it is gone, the capture is armed
+      await until(async () => (await cookie()) === null, 5000, 'the cookie to be deleted after the start');
+      const state = await t.popup.evaluate(tabId => chrome.runtime.sendMessage({ type: 'AKAMAI_GET_CAPTURE_STATE', tabId }), t.tab.id);
+      assert.equal(state.isCapturing, true, 'the capture is armed by the time the cookie is gone');
+      // Stop: nothing is saved, and the page gives the cookie back on its next load
+      await t.click('akamaiStartCapture');
+      await stopLabelBack(t, akamai);
+      await t.reloadPage();
+      await until(cookie, 10000, 'the reload to set _abck again');
+    }],
     scrapflyAction(akamai)
   ]);
 

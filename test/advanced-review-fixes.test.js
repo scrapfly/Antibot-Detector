@@ -546,3 +546,75 @@ test('one capture with an address that does not parse no longer empties Advanced
     assert.equal(site(undefined), 'unknown');
     assert.doesNotMatch(read('sections/advanced/history/controller.js'), /new URL\(capture\.url\)/, 'every capture list uses the guarded form');
 });
+
+// ---- The independent review of the Advanced slice: listeners that outlive an extraction, what counts as Imperva's own, Shape's timers ----
+
+/** background/tab-events.js, with the stores its tab-closed handler reads, in the same worker context as the interceptors. */
+function tabEvents(f, stores = {}) {
+    Object.assign(f.context, {
+        DetectionSessionStore: { cancel() {} }, stopBadgeSpinner() {}, workerKeepaliveManager: null,
+        headersStore: new Map(), requestHeadersStore: new Map(), responseCookiesStore: new Map(), payloadStore: new Map(), networkUrlsStore: new Map(),
+        tabsUsingCache: new Set(), detectionStates: new Map(), activeDetections: new Map(), interruptedDetections: new Map(),
+        finalizationDebounce: new Map(), batchProcessingFlags: new Map(),
+        reCaptchaCaptureState: new Map(), funcaptchaCaptureState: new Map(), hcaptchaCaptureState: new Map(),
+        akamaiCaptureState: stores.akamai || new Map(), impervaCaptureState: stores.imperva || new Map(),
+        shapesecurityCaptureState: stores.shape || new Map(), shapeSecurityExtractionState: new Map(),
+        BADGE: { TEXT: { EMPTY: '', DISABLED: 'OFF' }, COLORS: { DISABLED: '#888' } }
+    });
+    f.context.chrome.action = { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {}, getBadgeText: async () => '' };
+    f.context.chrome.tabs.onActivated = event();
+    vm.runInContext(read('background/tab-events.js') + ';setupTabListeners()', f.context);
+    return { closeTab: tabId => f.context.chrome.tabs.onRemoved.emit(tabId) };
+}
+
+const akamaiSensorRequest = tabId => ({ tabId, method: 'POST', type: 'xmlhttprequest', url: 'https://shop.example/akam/11/pixel_9a8b7c?token=secret',
+    requestBody: { raw: [{ bytes: new TextEncoder().encode('3;0;1;0;4733506;sensor-e2e') }] } });
+const pending = (f, delay) => Array.from(f.timers.values()).filter(timer => timer.delay === delay).length;
+
+test('Akamai: an Extract Sensor that gets its sensor ends with the request listener, unless another tab still waits for its own', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: async () => {} };
+    const onBeforeRequest = f.context.chrome.webRequest.onBeforeRequest;
+    await akamaiExtract(context, 6);
+    await akamaiExtract(context, 9);
+    assert.equal(onBeforeRequest.listeners.size, 1, 'one listener serves both tabs');
+    const [listener] = Array.from(onBeforeRequest.listeners);
+    listener(akamaiSensorRequest(6));
+    await flush();
+    assert.equal(f.messages.filter(message => message.type === 'AKAMAI_EXTRACTION_RESULT').length, 1, 'the sensor reaches the popup');
+    assert.equal(states.has(6), false);
+    assert.equal(onBeforeRequest.listeners.size, 1, 'the other tab still waits for its sensor');
+    listener(akamaiSensorRequest(9));
+    await flush();
+    assert.deepEqual([states.size, onBeforeRequest.listeners.size, context.akamaiInterceptionListener], [0, 0, null], 'states, request listeners, the listener variable');
+});
+
+test('Akamai: a tab closed during Extract Sensor takes the request listener and the 30 s stop with it', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [], remove: async () => {} };
+    const tabs = tabEvents(f, { akamai: states });
+    await akamaiExtract(context, 9);
+    assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size, pending(f, 30000)], [1, 1, 1], 'armed');
+    tabs.closeTab(9);
+    assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size, pending(f, 30000)], [0, 0, 0], 'states, request listeners, pending stops');
+    assert.equal(context.akamaiInterceptionListener, null);
+});
+
+test('Akamai: a second Extract Sensor on the same tab replaces the first one\'s 30 s stop, which would end the second early', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [], remove: async () => {} };
+    await akamaiExtract(context, 6);
+    const first = states.get(6);
+    await akamaiExtract(context, 6);
+    assert.notEqual(states.get(6), first, 'the second extraction replaced the first');
+    assert.equal(pending(f, 30000), 1, 'only the second one\'s stop is pending');
+    await f.tick(30000);
+    assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size], [0, 0], 'the second one\'s own stop ends it');
+});
+
