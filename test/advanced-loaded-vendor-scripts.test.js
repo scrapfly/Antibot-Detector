@@ -13,14 +13,14 @@ const plain = value => JSON.parse(JSON.stringify(value));
 
 // ---- Worker: each vendor's loaded-page reader ------------------------------------------------------------------
 
-function worker({ frames = [], recorded = [], cookies = [], scriptingFails = false } = {}) {
+function worker({ frames = [], recorded = [], cookies = [], scriptingFails = false, url = 'https://www.shop.test/login' } = {}) {
   const calls = [];
   const context = vm.createContext({
     console, URL, TextDecoder, Date, Map, Set,
     Logger: { network() {}, debug() {}, error() {} },
     networkUrlsStore: new Map([[9, recorded]]),
     chrome: {
-      tabs: { get: async id => ({ id, url: 'https://www.shop.test/login' }), reload: async id => { calls.push(['reload', id]); } },
+      tabs: { get: async id => ({ id, url }), reload: async id => { calls.push(['reload', id]); } },
       scripting: {
         async executeScript(options) {
           calls.push(['executeScript', options]);
@@ -94,6 +94,30 @@ test('Imperva: Reese84 and UTMVC scripts from the loaded page, first in the list
   assert.equal(data.cookies.incap_ses.length, 1);
   assert.deepEqual(plain(data.payloads), [], 'challenge payloads are only seen while a reload is watched');
   assert.equal(f.calls.some(([kind]) => kind === 'reload'), false);
+});
+
+test('Imperva: the loaded page is read for the page\'s own site, not for every site that shares its last two labels', async () => {
+  // A page under a country code: evil.co.uk is another site, static.shop.co.uk and the page's own host are not
+  const co = worker({ url: 'https://www.shop.co.uk/login', frames: [[
+    ['https://evil.co.uk/Thine-Wert/987', 'script'],
+    ['https://evil.co.uk/_Incapsula_Resource?SWKMTFSR=1&e=0.1', 'script'],
+    ['https://static.shop.co.uk/Ifainesse-Thine/1234567890', 'script'],
+    ['https://www.shop.co.uk/_Incapsula_Resource?SWKMTFSR=1&e=0.2', 'script'],
+    ['https://www.shop.co.uk/x/_Incapsula_Resource.js', 'script']
+  ]] });
+  const result = await co.context.impervaFromLoadedPage(9);
+  assert.deepEqual(plain(result.data.scriptUrls), [
+    'https://static.shop.co.uk/Ifainesse-Thine/1234567890',
+    'https://www.shop.co.uk/_Incapsula_Resource?SWKMTFSR=1&e=0.2',
+    'https://www.shop.co.uk/x/_Incapsula_Resource.js'
+  ], 'the page\'s own site only: another .co.uk site\'s scripts are left out, even with Imperva\'s path');
+  // A page on an IP: another IP that shares its last two octets is another site
+  const ip = worker({ url: 'http://10.1.2.3:8080/', frames: [[['http://99.9.2.3/Thine-Wert/987', 'script'], ['http://10.1.2.3:8080/Thine-Wert/987', 'script']]] });
+  assert.deepEqual(plain((await ip.context.impervaFromLoadedPage(9)).data.scriptUrls), ['http://10.1.2.3:8080/Thine-Wert/987']);
+  // Imperva's endpoint on another site is not this page's Imperva
+  const other = worker({ frames: [[['https://cdn.other.test/_Incapsula_Resource?SWKMTFSR=1&e=0.1', 'script']]] });
+  const none = await other.context.impervaFromLoadedPage(9);
+  assert.deepEqual([none.found, plain(none.data.scriptUrls)], [false, []]);
 });
 
 test('Imperva: a page with no Imperva script listed is not found (the reload flow runs); unscriptable pages use what the worker recorded', async () => {

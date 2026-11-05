@@ -89,8 +89,12 @@ function setupTabListeners() {
 
         if (impervaCaptureState.has(tabId)) {
             Logger.debug('BACKGROUND', `[TabCleanup] Tab ${tabId} closed during Imperva capture, cleaning up`);
-            clearCaptureTimeout(impervaCaptureState.get(tabId));
+            const impervaState = impervaCaptureState.get(tabId);
+            clearCaptureTimeout(impervaState);
+            if (impervaState && typeof impervaState.removeLoadListener === 'function') impervaState.removeLoadListener();
             impervaCaptureState.delete(tabId);
+            // The same for an Analyze Scripts run: its request listener and its page-load listener go with the tab
+            if (typeof impervaRemoveListenerIfIdle === 'function') impervaRemoveListenerIfIdle();
         }
 
         if (shapesecurityCaptureState.has(tabId)) {
