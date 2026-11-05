@@ -95,8 +95,10 @@ function demExtractDOM() {
     extraAttributes.delete('value');
     const attributesFor = element => this.getElementAttributes(element, extraAttributes);
 
+    // From the document element, not the body: the <head> holds scripts that DOM rules name (the Queue-it connector tag, CHEQ's
+    // ClickTrue and JSONP tags, the Anubis challenge module, the Ruishu marker), and a walk that starts at the body never sees them
     const walker = document.createTreeWalker(
-        document.body || document.documentElement,
+        document.documentElement || document.body,
         NodeFilter.SHOW_ELEMENT,
         {
             acceptNode: function(node) {
@@ -218,6 +220,15 @@ function demExtractDOM() {
                         src: src,
                         attributes: attributesFor(element)
                     });
+                } else {
+                    // An inline script: its attributes (script[r="m"]) but never its text
+                    const attributes = attributesFor(element);
+                    if (Object.keys(attributes).length > 0) {
+                        domData.push({
+                            selector: 'script',
+                            attributes
+                        });
+                    }
                 }
                 break;
             }
