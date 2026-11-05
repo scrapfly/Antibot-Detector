@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "搜尋偵測器..."
   },
+  "rulesFiltersLabel": {
+    "message": "篩選規則"
+  },
   "paginationPrev": {
     "message": "上一頁"
   },

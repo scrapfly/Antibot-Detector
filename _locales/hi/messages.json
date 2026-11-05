@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "डिटेक्टर खोजें..."
   },
+  "rulesFiltersLabel": {
+    "message": "नियम फ़िल्टर करें"
+  },
   "paginationPrev": {
     "message": "पिछला पृष्ठ"
   },

@@ -611,62 +611,43 @@ Rules.prototype.handleAddDetector = function() {
 // ============================================
 
 /**
- * Handle search functionality
+ * Handle search functionality: the search text and the filter chips together (RulesFilter). The search looks in the name,
+ * the category, the description and the method types only, not in the patterns (false positives), and puts the rule whose
+ * name is the search first: "Cap" also matches every CAPTCHA by its category and would put Cap on a later page.
  * @param {string} query - Search query
  */
 Rules.prototype.handleSearch = function(query) {
-  if (!query.trim()) {
-    this.filteredDetectors = [...this.allDetectors];
-  } else {
-    // Simple search focused on name, category, and description only
-    // Avoid searching detection pattern content to prevent false positives
-    const searchTerm = query.toLowerCase().trim();
-    this.filteredDetectors = this.allDetectors.filter(({ detector, category }) => {
-      // Search in detector name, category, description only
-      // (the category as the card shows it, "Anti-Bot" or its translation, as well as the key)
-      const searchableText = [
-        detector.displayName,
-        detector.name,
-        category,
-        typeof this.getCategoryLabel === 'function' ? this.getCategoryLabel(category) : '',
-        detector.description
-      ].filter(Boolean).join(' ').toLowerCase();
-
-      // Check for basic text match first
-      if (searchableText.includes(searchTerm)) {
-        return true;
-      }
-
-      // Also allow searching by detection method TYPE names (COOKIE, HEADER, DOM, etc.)
-      if (detector.detection) {
-        const methodTypes = Object.keys(detector.detection)
-          .filter(key => Array.isArray(detector.detection[key]) && detector.detection[key].length > 0)
-          .map(key => key.toUpperCase().replace(/_/g, ' '))
-          .join(' ')
-          .toLowerCase();
-
-        if (methodTypes.includes(searchTerm)) {
-          return true;
-        }
-      }
-
-      return false;
-    });
-    // The rule whose name is the search comes first, then names that start with it, then names that contain it:
-    // "Cap" also matches every CAPTCHA by its category and would put Cap on a later page
-    const rank = ({ detector }) => {
-      const names = [detector.displayName, detector.name].filter(Boolean).map(name => String(name).toLowerCase());
-      if (names.some(name => name === searchTerm)) return 0;
-      if (names.some(name => name.startsWith(searchTerm))) return 1;
-      return names.some(name => name.includes(searchTerm)) ? 2 : 3;
-    };
-    this.filteredDetectors = this.filteredDetectors.map((entry, index) => ({ entry, index, rank: rank(entry) }))
-      .sort((a, b) => a.rank - b.rank || a.index - b.index)
-      .map(({ entry }) => entry);
-  }
+  this.filteredDetectors = RulesFilter.filter(this.allDetectors, {
+    query,
+    chips: this.activeChips,
+    // The same readers the card uses for its tip and its Edited tag
+    isOfficial: ({ detectorName, detector }) => this.isOfficialRule(detectorName, detector),
+    isEdited: ({ detector }) => this.isEditedRule(detector),
+    // The category as the card shows it ("Anti-Bot" or its translation), as well as the key
+    categoryLabelOf: ({ category }) => (typeof this.getCategoryLabel === 'function' ? this.getCategoryLabel(category) : '')
+  });
 
   // Update pagination with filtered results
   if (this.paginationManager) {
     this.paginationManager.setItems(this.filteredDetectors);
   }
+  if (typeof this.syncFilterUi === 'function') this.syncFilterUi();
+};
+
+/**
+ * Turn a chip on or off (a category, Custom, Edited or Disabled) and show what it leaves, with the search typed in the box.
+ * @param {string} key - 'antibot', 'captcha', 'fingerprint', 'custom', 'edited' or 'disabled'
+ */
+Rules.prototype.toggleFilterChip = function(key) {
+  if (!RulesFilter.isChip(key)) return;
+  this.activeChips = RulesFilter.toggle(this.activeChips, key);
+  this.handleSearch(document.querySelector('#rulesSearch')?.value || '');
+};
+
+/** Back to every rule: every chip off and the search emptied. */
+Rules.prototype.clearFilters = function() {
+  this.activeChips = RulesFilter.normalizeChips();
+  const input = document.querySelector('#rulesSearch');
+  if (input) input.value = '';
+  this.handleSearch('');
 };

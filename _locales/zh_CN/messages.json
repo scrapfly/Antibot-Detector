@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "搜索检测器..."
   },
+  "rulesFiltersLabel": {
+    "message": "筛选规则"
+  },
   "paginationPrev": {
     "message": "上一页"
   },

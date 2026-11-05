@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Tìm trình phát hiện..."
   },
+  "rulesFiltersLabel": {
+    "message": "Lọc quy tắc"
+  },
   "paginationPrev": {
     "message": "Trang trước"
   },

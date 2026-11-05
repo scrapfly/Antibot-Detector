@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Cari detektor..."
   },
+  "rulesFiltersLabel": {
+    "message": "Filter aturan"
+  },
   "paginationPrev": {
     "message": "Halaman sebelumnya"
   },

@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Hledat detektory..."
   },
+  "rulesFiltersLabel": {
+    "message": "Filtrovat pravidla"
+  },
   "paginationPrev": {
     "message": "Předchozí stránka"
   },

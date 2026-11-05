@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "탐지기 검색..."
   },
+  "rulesFiltersLabel": {
+    "message": "규칙 필터"
+  },
   "paginationPrev": {
     "message": "이전 페이지"
   },

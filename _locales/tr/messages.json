@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Dedektörlerde ara..."
   },
+  "rulesFiltersLabel": {
+    "message": "Kuralları filtrele"
+  },
   "paginationPrev": {
     "message": "Önceki sayfa"
   },

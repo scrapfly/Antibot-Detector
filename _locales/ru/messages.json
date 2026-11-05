@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Поиск детекторов..."
   },
+  "rulesFiltersLabel": {
+    "message": "Фильтр правил"
+  },
   "paginationPrev": {
     "message": "Предыдущая страница"
   },

@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "検出器を検索..."
   },
+  "rulesFiltersLabel": {
+    "message": "ルールをフィルター"
+  },
   "paginationPrev": {
     "message": "前のページ"
   },

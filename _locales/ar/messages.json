@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "البحث في الكواشف..."
   },
+  "rulesFiltersLabel": {
+    "message": "تصفية القواعد"
+  },
   "paginationPrev": {
     "message": "الصفحة السابقة"
   },

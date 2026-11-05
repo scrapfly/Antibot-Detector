@@ -380,6 +380,10 @@
   "searchDetectors": {
     "message": "Search detectors..."
   },
+  "rulesFiltersLabel": {
+    "message": "Filter rules",
+    "description": "Accessible name of the row of filter chips under the Rules search"
+  },
   "paginationPrev": {
     "message": "Previous page"
   },

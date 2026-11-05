@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "ค้นหาตัวตรวจจับ..."
   },
+  "rulesFiltersLabel": {
+    "message": "กรองกฎ"
+  },
   "paginationPrev": {
     "message": "หน้าก่อนหน้า"
   },
