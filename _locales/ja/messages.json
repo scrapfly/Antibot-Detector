@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "このページが読み込んだ保護スクリプトを表示する"
   },
-  "advToolReloadScriptsHint": {
-    "message": "ページを再読み込みして保護スクリプトを解析する"
-  },
-  "advToolResetScriptsHint": {
-    "message": "保護用 Cookie をリセットして再読み込みし、スクリプトを解析する"
-  },
   "advToolReloadVersionHint": {
     "message": "ページを再読み込みして保護機能のバージョンを検出する"
   },
@@ -126,18 +120,6 @@
     "message": "この操作を完了できませんでした: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "グラフの前のページ"
-  },
-  "statsChartNext": {
-    "message": "グラフの次のページ"
-  },
-  "statsChartPage": {
-    "message": "{1}ページ中{0}ページ"
-  },
-  "statsChartShowing": {
-    "message": "全{2}件中{0}–{1}件を表示"
-  },
   "statsSectionsLabel": {
     "message": "統計セクション"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "保存された履歴を確認するには、より長い期間を選択してください。"
   },
-  "statsDetectionRate": {
-    "message": "検出のある記録"
-  },
-  "statsActiveDays": {
-    "message": "アクティブな日数"
-  },
   "statsAverageConfidence": {
     "message": "平均信頼度"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "直近の{0}日間を表示しています。合計とエクスポートには、選択した期間全体が含まれます。"
   },
-  "statsProtectionRanking": {
-    "message": "保護機能のランキング"
-  },
-  "statsCategoryTrend": {
-    "message": "カテゴリの推移"
-  },
-  "statsCategoryOverlap": {
-    "message": "同時に検出されたカテゴリ"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "両方のカテゴリを含む履歴記録の数です。対角線上のセルは、そのカテゴリを含む記録を示します。"
-  },
   "statsProtectionDetails": {
     "message": "すべての保護機能"
-  },
-  "statsDomainRanking": {
-    "message": "ドメインのランキング"
-  },
-  "statsDomainMap": {
-    "message": "訪問と検出"
-  },
-  "statsDomainMapHint": {
-    "message": "各点はドメインを表します。点が大きいほど、異なる保護機能が多くあります。"
   },
   "statsDomainDetails": {
     "message": "すべてのドメイン"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "ドメインの並べ替え"
   },
-  "statsSortVisits": {
-    "message": "訪問数が多い順"
-  },
-  "statsSortDetections": {
-    "message": "検出数が多い順"
-  },
   "statsSortConfidence": {
     "message": "信頼度が高い順"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "信頼度の分布"
-  },
-  "statsConfidenceTrend": {
-    "message": "信頼度の推移"
-  },
-  "statsCategoryConfidence": {
-    "message": "カテゴリ別の信頼度"
   },
   "statsConfidenceNote": {
     "message": "信頼度は、保存された検出の証拠の強さを表すものであり、フィンガープリンティングや実行中のチャレンジの存在を証明するものではありません。"
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "検索に一致するドメインはありません。"
-  },
-  "statsSelectionNote": {
-    "message": "グラフとエクスポートには選択した期間を使用します。履歴記録は保存された検出を表しており、ブラウザでのすべての訪問を表すものではありません。"
   },
   "extensionName": {
     "message": "Scrapfly:アンチボット検出器"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "検出を有効または無効にする"
-  },
-  "noDetectionsFound": {
-    "message": "検出が見つかりません"
   },
   "detectionScanningTitle": {
     "message": "このページをスキャン中"
@@ -376,6 +313,9 @@
   },
   "searchDetectors": {
     "message": "検出器を検索..."
+  },
+  "rulesFiltersLabel": {
+    "message": "ルールをフィルター"
   },
   "paginationPrev": {
     "message": "前のページ"
@@ -590,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "検索"
   },
-  "advancedBtnExport": {
-    "message": "エクスポート"
-  },
   "advancedBtnExportTitle": {
     "message": "キャプチャをエクスポート"
-  },
-  "advancedBtnClearAll": {
-    "message": "すべてクリア"
   },
   "advancedBtnClearAllTitle": {
     "message": "すべてのキャプチャをクリア"
@@ -1021,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "{0}のこの検出を削除してもよろしいですか?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "設定の読み込みに失敗しました。デフォルト値を使用します。"
-  },
   "settingsSavedToast": {
     "message": "設定を保存しました"
   },
@@ -1045,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0}は既にブラックリストに登録されています"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0}をブラックリストに追加しました"
-  },
   "failedAddDomainFmt": {
     "message": "ドメインの追加に失敗しました: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0}をブラックリストから削除しました"
   },
   "invalidSettingsFmt": {
     "message": "無効な設定: {0}"
@@ -1195,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "更新の適用エラー"
   },
-  "failedCheckForUpdates": {
-    "message": "更新の確認に失敗しました"
-  },
   "errorCheckingForUpdates": {
     "message": "更新の確認エラー"
   },
@@ -1263,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "完全なエンドポイントURL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "利用可能な変数:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "例: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1513,9 +1429,6 @@
   "settingsDataSettingsRow": {
     "message": "設定"
   },
-  "settingsDataSettingsRowDesc": {
-    "message": "拡張機能の設定をエクスポートまたはインポート"
-  },
   "settingsDataHistoryRow": {
     "message": "検出履歴"
   },
@@ -1620,6 +1533,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "検出を検索..."
+  },
+  "detectionFiltersLabel": {
+    "message": "検出をフィルター"
   },
   "detectionPaginationPage": {
     "message": "ページ"
@@ -1980,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "設定をインポートしました"
   },
-  "settingsImportFailedToast": {
-    "message": "設定をインポートできませんでした: 無効なファイルです"
-  },
   "statsPrivacyNote": {
     "message": "検出履歴からローカルで計算されます。データがブラウザの外に出ることはありません。"
-  },
-  "statsSubtitleFmt": {
-    "message": "{0} 件の履歴からローカルで計算。データはブラウザの外に出ません。"
   },
   "statsRangeLabel": {
     "message": "期間"
@@ -2010,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "検出のあるページが履歴に保存されると、ここに統計が表示されます。"
   },
-  "statsEntries": {
-    "message": "履歴エントリ"
-  },
   "statsUniqueDomains": {
     "message": "ユニークドメイン"
   },
   "statsDetections": {
     "message": "検出数"
   },
-  "statsDistinctDetectors": {
-    "message": "保護システムの種類"
-  },
   "statsOverTime": {
     "message": "検出数の推移"
   },
-  "statsTopProtections": {
-    "message": "最も多く検出された保護"
-  },
-  "statsTopDomains": {
-    "message": "上位ドメイン"
-  },
-  "statsByCategory": {
-    "message": "カテゴリ別"
-  },
-  "statsByDifficulty": {
-    "message": "難易度別"
-  },
-  "statsPagesUnit": {
-    "message": "ページ"
-  },
-  "statsVisitsUnit": {
-    "message": "訪問"
-  },
-  "statsDetectionsUnit": {
-    "message": "検出"
-  },
   "statsCategoryOther": {
     "message": "その他"
-  },
-  "statsDifficultyNone": {
-    "message": "検出なし"
   },
   "statsNoData": {
     "message": "この期間のデータはありません"
@@ -2058,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "{0} ページ"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} ドメイン"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} 回訪問"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} 件の検出"
-  },
   "historyCategoryShareFmt": {
     "message": "{1} 件中 {0} 件 · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} 件"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "検出あり {0} 件"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "ドメインあたり {0} 回"
-  },
-  "statsPerEntryFmt": {
-    "message": "1件あたり {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "平均信頼度 {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "{0} 件の検出 · {1} 日間"
@@ -2685,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "キャプチャ日時"
   },
-  "advCommonScript": {
-    "message": "スクリプト"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2751,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "保護レベル:"
   },
-  "advCommonCookiesFound": {
-    "message": "見つかったCookie:"
-  },
   "advCommonSiteKey": {
     "message": "サイトキー"
   },
@@ -2790,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "requests と BeautifulSoup を使う Python スクリプト"
   },
-  "advCodeDescPython": {
-    "message": "requests ライブラリを使う Python スクリプト"
-  },
   "advCodeDescNodeCheerio": {
     "message": "axios と cheerio を使う Node.js スクリプト"
-  },
-  "advCodeDescNode": {
-    "message": "axios を使う Node.js スクリプト"
   },
   "advCodeDescPhpDom": {
     "message": "cURL と DOMDocument を使う PHP スクリプト"
   },
-  "advCodeDescPhp": {
-    "message": "cURL を使う PHP スクリプト"
-  },
   "advCodeDescCsharpHap": {
     "message": "HttpClient と HtmlAgilityPack を使う C#"
   },
-  "advCodeDescCsharp": {
-    "message": "HttpClient を使う C#"
-  },
   "advCodeDescGoQuery": {
     "message": "net/http と goquery を使う Go"
-  },
-  "advCodeDescGo": {
-    "message": "net/http を使う Go"
   },
   "pageNoticeCaptureActive": {
     "message": "キャプチャ中"
@@ -3063,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA クライアント"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "クライアントID: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "クリップボードにコピーしました!"
   },
@@ -3165,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "seed 付きスクリプト:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js スクリプト"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js スクリプト"
-  },
-  "advShapeSeedScript": {
-    "message": "seed 付きスクリプト"
   },
   "advShapeSeedScripts": {
     "message": "seed 付きスクリプト"
@@ -4014,23 +3840,11 @@
   "tipScopePath": {
     "message": "クエリに関係なく、このパスで結果を再利用します。"
   },
-  "tipStatsActiveDays": {
-    "message": "1 ページ以上保存された日数。"
-  },
-  "tipStatsDetections": {
-    "message": "保存されたすべてのページで見つかった保護機能（重複を含む）。"
-  },
   "tipStatsDetectors": {
     "message": "確認された保護機能の種類（各 1 回として計数）。"
   },
   "tipStatsDomains": {
     "message": "保存されたページのうち異なるサイトの数。"
-  },
-  "tipStatsEntries": {
-    "message": "この期間に履歴へ保存されたページ。"
-  },
-  "tipStatsRateFmt": {
-    "message": "{1} 件中 {0} 件"
   },
   "tipPatterns": {
     "message": "パターン"
@@ -4525,38 +4339,11 @@
     "message": "Scrapfly でスクレイピングするには Web ページを開いてください",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} 件のキャプチャ"
-  },
-  "statsFirstSeen": {
-    "message": "この期間の新規"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "この期間に初めて保存された保護 {0} 件、ドメイン {1} 件。"
-  },
-  "statsFirstSeenAllTip": {
-    "message": "新規を見るには 7・30・90 日を選択してください。"
-  },
-  "statsMostProtectedDomain": {
-    "message": "最も保護されたドメイン"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{1} 回の訪問で {0} 種類の保護。"
-  },
-  "statsFoundTogether": {
-    "message": "同時に見つかった保護"
-  },
   "statsMethods": {
     "message": "検出方法"
   },
   "statsMatchesUnit": {
     "message": "一致"
-  },
-  "statsMethodsByCategory": {
-    "message": "カテゴリ別の方法"
-  },
-  "statsWeakEvidence": {
-    "message": "最も弱い根拠"
   },
   "statsSignalColumn": {
     "message": "シグナル"
@@ -4573,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "組み合わせ"
   },
-  "statsDecidedBy": {
-    "message": "検出の判定方法"
-  },
-  "statsCombinationGain": {
-    "message": "判定別の信頼度"
-  },
   "statsCombinationColumn": {
     "message": "組み合わせ"
   },
@@ -4587,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "この期間に組み合わせで判定された検出はありません。"
-  },
-  "statsRulesMostActive": {
-    "message": "最も活発なルール"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} パターン"
   },
   "statsRulesPatternsByMethod": {
     "message": "方法別のパターン"
@@ -4636,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "新しい拡張機能を待機中"
   },
-  "statsToolsByVendor": {
-    "message": "ベンダー別キャプチャ"
-  },
   "statsToolsCapture": {
     "message": "キャプチャ"
-  },
-  "statsToolsByTool": {
-    "message": "よく使うツール"
-  },
-  "statsToolsOverTime": {
-    "message": "キャプチャの推移"
   },
   "statsChangeColumn": {
     "message": "変化"
@@ -4660,9 +4426,6 @@
   "statsNoChanges": {
     "message": "この期間に保存された訪問の間で保護が変わったドメインはありません。"
   },
-  "statsNothingNew": {
-    "message": "新規なし: すべての保護はこの期間より前から履歴にありました。"
-  },
   "statsSectionSignals": {
     "message": "シグナル"
   },
@@ -4675,17 +4438,8 @@
   "statsSectionTools": {
     "message": "ツール"
   },
-  "statsDomainChangesHint": {
-    "message": "保存された 2 回の訪問の間で検出された保護が変わったドメイン。"
-  },
-  "statsFirstSeenHint": {
-    "message": "この期間に初めて保存された保護とドメイン。"
-  },
   "statsSignalsNote": {
     "message": "保存された各検出が一致した根拠の種類: Cookie とヘッダーの名前、URL、ページ要素、スクリプト、JavaScript フック。"
-  },
-  "statsWeakEvidenceHint": {
-    "message": "一致したパターンの平均信頼度が最も低い保護。ルールにより強いパターンが必要かもしれません。"
   },
   "statsCombinationsNote": {
     "message": "組み合わせは、複数のパターンが一緒に見つかった場合にのみ保護を検出します。"
@@ -4696,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "ルール"
   },
-  "statsRulesModified": {
-    "message": "編集した公式"
-  },
   "statsRulesDisabled": {
     "message": "無効"
   },
   "statsRulesNeverMatchedHint": {
     "message": "この期間に保存されたページで何も検出しなかった有効なルール。"
   },
-  "statsRulesMissingHint": {
-    "message": "説明は検出の詳細、履歴、組み合わせに表示されます。ルールエディタで追加してください。"
-  },
   "statsToolsNote": {
     "message": "このデバイスに保存された Advanced のキャプチャとツールの結果。"
-  },
-  "statsCapturesUnit": {
-    "message": "キャプチャ"
   },
   "detectionCardSureFmt": {
     "message": "確度 {0}%"
@@ -5139,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "この期間のページ数が少ない ({0}): 比較やランキングは誤解を招くおそれがあります。"
-  },
-  "statsLoading": {
-    "message": "統計を読み込んでいます..."
   },
   "statsEmptyShowAll": {
     "message": "すべての履歴を表示"
@@ -5791,6 +5533,9 @@
   },
   "historyFilterPinned": {
     "message": "ピン留め済み"
+  },
+  "historyFilterCombinations": {
+    "message": "組み合わせ"
   },
   "historyNoResults": {
     "message": "検索条件またはフィルターに一致するエントリはありません。"
@@ -6814,6 +6559,9 @@
   },
   "bulkCountsFmt": {
     "message": "完了: {0} · 保護あり: {1} · 失敗: {2} · スキップ: {3}"
+  },
+  "bulkMostSeenFmt": {
+    "message": "最も多く確認された保護: {0}"
   },
   "bulkStoppedRestart": {
     "message": "実行中に拡張機能が再起動したため、停止しました。まだ待機中だったページはスキャンされていません。"

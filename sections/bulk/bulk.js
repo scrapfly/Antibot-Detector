@@ -36,6 +36,8 @@
     scheme: ['bulkReasonScheme', 'Only http and https pages are scanned'],
     scope: ['bulkReasonScope', 'Skipped by Settings → Detection → Sites to scan'],
     sitemap: ['bulkReasonSitemap', 'The sitemap could not be read. Only https sitemaps can be read.'],
+    // No string of its own: the generic "could not be read" of the upload says what the person needs here (the https hint would not be true)
+    moved: ['bulkErrFile', 'The file could not be read.'],
     timeout: ['bulkReasonTimeout', 'No result within the time limit'],
     load: ['bulkReasonLoad', 'The page did not load'],
     error: ['bulkReasonError', 'The scan failed'],
@@ -93,35 +95,45 @@
     try {
       const response = await fetch(url, { signal: controller.signal, credentials: 'omit', cache: 'no-store', redirect: 'follow' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      // A sitemap that sent the browser to another site (www aside) was read from there: what it lists is not this site's own list
+      if (response.url && !BulkScan.sameSite(url, response.url)) throw Object.assign(new Error('The sitemap moved to another site'), { moved: true });
       return await response.text();
     } finally {
       clearTimeout(timer);
     }
   }
 
-  /** The pages a sitemap lists (a sitemap index is followed), or null when it cannot be read. */
+  /**
+   * The pages a sitemap lists (a sitemap index is followed): { pages }, or { reason } when it could not be read: 'moved' when it
+   * ended on another site, 'sitemap' for any other cause. A sitemap speaks for its own site only (BulkScan.sameSite): a listed
+   * address of another host is left out and a sitemap listed for another host is never fetched, because each page is opened in a
+   * tab with the person's cookies and a public sitemap does not get to list this machine, the local network or another site.
+   * That is judged on the address as listed (the worker opens it and follows its redirects). Addresses the person pastes are not
+   * filtered (entriesOf).
+   */
   async function expandSitemap(url, budget) {
     const queue = [url];
     const seen = new Set();
     const pages = [];
     let files = 0;
     let readAny = false;
+    let moved = false;
     while (queue.length && files < SITEMAP_MAX_FILES && pages.length < budget) {
       const next = queue.shift();
       if (seen.has(next)) continue;
       seen.add(next);
       files++;
       let parsed;
-      try { parsed = BulkScan.parseSitemap(await fetchText(next)); } catch (_) { continue; }
+      try { parsed = BulkScan.parseSitemap(await fetchText(next)); } catch (error) { if (error && error.moved) moved = true; continue; }
       if (!parsed.kind) continue;
       readAny = true;
       if (parsed.kind === 'sitemapindex') {
-        for (const loc of parsed.locs) { const n = BulkScan.normalize(loc); if (n.url) queue.push(n.url); }
+        for (const loc of parsed.locs) { const n = BulkScan.normalize(loc); if (n.url && BulkScan.sameSite(url, n.url)) queue.push(n.url); }
       } else {
-        pages.push(...parsed.locs.slice(0, budget - pages.length));
+        pages.push(...parsed.locs.filter(loc => BulkScan.sameSite(url, loc)).slice(0, budget - pages.length));
       }
     }
-    return readAny ? pages : null;
+    return readAny ? { pages } : { reason: moved ? 'moved' : 'sitemap' };
   }
 
   /** The list as the worker takes it: addresses, and sitemaps replaced by their pages (or listed as unreadable). */
@@ -135,9 +147,9 @@
       if (entries.length >= SITEMAP_MAX_URLS) break;
       const n = BulkScan.normalize(line);
       if (n.url && BulkScan.isSitemap(n.url)) {
-        const pages = await expandSitemap(n.url, budget);
-        if (pages) entries.push(...pages);
-        else entries.push({ url: n.url, reason: 'sitemap' });
+        const read = await expandSitemap(n.url, budget);
+        if (read.pages) entries.push(...read.pages);
+        else entries.push({ url: n.url, reason: read.reason });
       } else {
         entries.push(line);
       }
@@ -340,6 +352,13 @@
     byId('bulkRunStatus').textContent = `${label(RUN_TEXT[run.status], run.status)} · ${fmt('bulkProgressFmt', '{0} of {1} finished', number(finishedCount), number(toScan))}`;
     byId('bulkRunCounts').textContent = fmt('bulkCountsFmt', 'Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}',
       number(counts.done), number(counts.found), number(counts.failed), number(counts.skipped));
+    // The protections found on the most pages: names and numbers, so the label is all there is to translate. Each is isolated
+    // (FSI ... PDI) so a Latin name keeps its own direction inside an Arabic line
+    const seen = BulkScan.protectionTotals(run).slice(0, BulkScan.MOST_SEEN);
+    byId('bulkRunMostSeen').textContent = seen.length
+      ? fmt('bulkMostSeenFmt', 'Most seen: {0}', seen.map(row => `\u2068${row.name} (${number(row.pages)})\u2069`).join(' · '))
+      : '';
+    byId('bulkRunMostSeen').hidden = !seen.length;
     const reason = run.status === 'stopped' && run.reason && run.reason !== 'user' ? label(STOP_TEXT[run.reason], '') : '';
     byId('bulkRunReason').textContent = reason;
     byId('bulkRunReason').hidden = !reason;

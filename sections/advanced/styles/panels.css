@@ -145,21 +145,6 @@
   display: none;
 }
 
-/* Filters Actions Row */
-.filters-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-/* Responsive adjustments for workflow UI */
-@media (max-width: 400px) {
-  .filters-row {
-    flex-direction: column;
-    gap: 8px;
-  }
-}
-
 /* Loaded tools keep one compact vendor row above their actions. */
 .captcha-tools-section.compact-mode .advanced-tools-heading,
 .captcha-tools-section.compact-mode .advanced-launch-list { display: none; }

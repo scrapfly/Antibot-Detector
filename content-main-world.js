@@ -22,7 +22,7 @@
   // labels (LOG); tuning (caps, timings) comes with every install event instead.
   let PROTOCOL = null;
   let EVENTS, FIELDS, MESSAGE_TYPES, HOOK_FAILURE_REASONS, GLOBALS, HOOKS_REASONS, WINDOW_REASONS;
-  let LOG, MAIN_WORLD, PATH_SEPARATOR;
+  let LOG, MAIN_WORLD, PATH_SEPARATOR, CONTROL_REASONS;
   let ALLOWED_ISOLATED_MESSAGE_TYPES = new Set();
   // The browser's text for a member called on a foreign `this`: the only error
   // our wrappers retry or silence. Read from the browser itself while this file
@@ -211,11 +211,11 @@
     WINDOW_REASONS = PROTOCOL.COMPLETION_REASONS.WINDOW;
     ({ LOG, MAIN_WORLD } = PROTOCOL);
     PATH_SEPARATOR = MAIN_WORLD.PATH_SEPARATOR;
+    CONTROL_REASONS = PROTOCOL.CONTROL_REASONS || {};
     illegalInvocationMessage = derivedIllegalInvocationMessage || MAIN_WORLD.ILLEGAL_INVOCATION_FALLBACK;
     // Before the first wrapper exists, and kept for the page's lifetime (hooks
     // off included: the bind shims stay)
     patchFunctionToString(window);
-    HOOK_SUPPRESSION_DEPTH_KEY = GLOBALS.HOOK_SUPPRESSION_DEPTH;
     ALLOWED_ISOLATED_MESSAGE_TYPES = new Set(PROTOCOL.TO_MAIN_TYPES);
     if (hookResilienceManager) {
       hookResilienceManager.setProtocol(PROTOCOL);
@@ -255,11 +255,45 @@
     adoptBootstrap(event.detail);
   }, true);
 
-  // Suppress hook reporting during extension-driven property reads (key from GLOBALS)
-  let HOOK_SUPPRESSION_DEPTH_KEY = null;
+  // Hook reporting is suppressed during the extension's own reads of page properties (the window checks): reading a path can
+  // run a page getter, and a hooked API read that way is not a call by the page. The depth is a variable of this script, never
+  // a property of window: the page shares that object, so a count kept there shows the extension to any page script, and the
+  // page could write it to silence every hook. The tracker gets `hookSuppression` in its initialize() options (the channel
+  // that already hands it the protocol and the config), so both ends use this one variable.
+  let hookSuppressionDepth = 0;
+  const hookSuppression = Object.freeze({
+    /** Runs `read` with hook reporting suppressed; the depth is restored when it returns or throws (nested runs too). */
+    run(read) {
+      const previous = hookSuppressionDepth;
+      hookSuppressionDepth = previous + 1;
+      try {
+        return read();
+      } finally {
+        hookSuppressionDepth = previous;
+      }
+    }
+  });
 
   function isHookReportingSuppressed() {
-    return (window[HOOK_SUPPRESSION_DEPTH_KEY] || 0) > 0;
+    return hookSuppressionDepth > 0;
+  }
+
+  // The load is answered from the saved result. Window checks that are already running stop (what they find is dropped, and
+  // every read of a path runs the page's own getters), and the worker is told as when the checks are skipped at their start,
+  // with the cache_hit reason it ignores: any other completion of a page with no scan under way opens a scan that never
+  // finishes. Nothing is sent when they are not polling: not started yet (the skip at their start tells the worker) or over
+  // (they told it themselves). The two ways the answer arrives share this: the early check's CACHE_HIT message and the
+  // worker's page-load check, which sends DISABLE_MONITORING with the cache_hit reason when it finds the result later.
+  function stopWindowChecksForCacheHit() {
+    if (!windowPropertyTracker || !windowPropertyTracker.isPolling) return;
+    windowPropertyTracker.stop();
+    postBridgeMessage({
+      type: MESSAGE_TYPES.WINDOW_PROPS_COMPLETE,
+      url: window.location.href,
+      timestamp: Date.now(),
+      detectedCount: 0,
+      reason: WINDOW_REASONS.CACHE_HIT
+    });
   }
 
   let logRateWindowStart = Date.now();
@@ -797,12 +831,17 @@
     failedTargets: []
   };
 
+  // This load was answered from the saved result (confirmed async by the ISOLATED world through the bridge): no hooks, no
+  // window checks. A variable of this script, never a property of window: the page shares that object, and a flag on it tells
+  // any page script that the extension is installed and that this load came from the cache (and survives clearing cookies).
+  let cacheHitEarlyExit = false;
+
   /**
    * Check if cache hit flag is set (helper to reduce duplication)
    * @returns {boolean} True if should exit due to cache hit
    */
   function shouldSkipDueToCacheHit() {
-    return window[GLOBALS.CACHE_HIT_EARLY_EXIT] === true;
+    return cacheHitEarlyExit === true;
   }
 
   /**
@@ -999,7 +1038,9 @@
     // Handle cache hit notification from ISOLATED world
     if (data && data.type === MESSAGE_TYPES.CACHE_HIT) {
       logDebug('[MAIN WORLD] Cache hit notification received - setting flag to stop hook reporting');
-      window[GLOBALS.CACHE_HIT_EARLY_EXIT] = true;
+      cacheHitEarlyExit = true;
+      // Window checks that began before the answer came (a page that loads faster than the cache check) stop here
+      stopWindowChecksForCacheHit();
       return;
     }
 
@@ -1019,6 +1060,9 @@
       if (cacheHitUninstallStats.failures > 0) {
         logWarn(`Cache hit cleanup: ${cacheHitUninstallStats.failures} hooks could not be removed`);
       }
+
+      // The worker found the saved result after the early check missed it: the window checks stop as well
+      if (CONTROL_REASONS.CACHE_HIT !== undefined && data.reason === CONTROL_REASONS.CACHE_HIT) stopWindowChecksForCacheHit();
     }
 
     // Stop window property polling after detection completes (late results won't update anything)
@@ -1279,7 +1323,7 @@
     }
     // A re-arm starts a new detection after a cached load: the cache-hit flag
     // that load set must not keep this install from hooking and checking
-    if (event.detail?.rearm === true) window[GLOBALS.CACHE_HIT_EARLY_EXIT] = false;
+    if (event.detail?.rearm === true) cacheHitEarlyExit = false;
     // The real hooks resolve the APIs next: take the early recorders off first
     restoreEarlyRecorders();
     // JS hooks off on this site (Settings → Detection): nothing stays wrapped, in the page or in its frames
@@ -1379,6 +1423,7 @@
         windowPropertyTracker.initialize(windowProperties, {
           protocol: PROTOCOL,
           conditionLanguage,
+          hookSuppression,
           config: activeHooksConfig,
           debugMode: debugMode && debugVerbose,
           postMessageToIsolated: postBridgeMessage,
@@ -1845,10 +1890,6 @@
       }
     }
 
-    // CRITICAL TIMING: Record when hook installation completes
-    // Avoid performance.now(): Performance.prototype.now is a JS_HOOKS target.
-    const hooksInstalledTime = Date.now();
-
     logDebug(`Hooks installed: ${installed.size} targets (${successCount} ok, ${expectedFailed.length} optional APIs missing${failed.length ? `, ${failed.length} failed` : ''})${hasHooksConfig ? `; watching up to ${activeHooksConfig.MAX_DETECTION_MS}ms, idle ${activeHooksConfig.ACTIVITY_TIMEOUT_MS}ms, min ${minMonitorMs}ms` : ''}`);
     if (failed.length > 0) {
       logWarn(`Hooks failed (${failed.length}): ${failed.join(', ')}`, failureReasons);
@@ -1895,8 +1936,6 @@
   // Runs once, from the first bootstrap event (still before any page script)
   function startBridge() {
     installErrorFilters();
-    // Cache hit confirmed async by ISOLATED world/background via bridge message
-    window[GLOBALS.CACHE_HIT_EARLY_EXIT] = false;
     window.addEventListener(EVENTS.ISOLATED_TO_MAIN, onIsolatedMessage, true);
     window.addEventListener(EVENTS.INSTALL_HOOKS, onInstallHooks, { capture: true });
   }

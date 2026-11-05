@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Visa skyddsskripten som den här sidan läste in"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Läs in sidan igen för att analysera skyddets skript"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Återställ skyddets cookies och läs in sidan igen för att analysera skript"
-  },
   "advToolReloadVersionHint": {
     "message": "Läs in sidan igen för att identifiera skyddets version"
   },
@@ -126,18 +120,6 @@
     "message": "Det gick inte att slutföra åtgärden: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Föregående diagramsida"
-  },
-  "statsChartNext": {
-    "message": "Nästa diagramsida"
-  },
-  "statsChartPage": {
-    "message": "Sida {0} av {1}"
-  },
-  "statsChartShowing": {
-    "message": "Visar {0}–{1} av {2}"
-  },
   "statsSectionsLabel": {
     "message": "Statistikavsnitt"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Välj ett längre datumintervall för att utforska din sparade historik."
   },
-  "statsDetectionRate": {
-    "message": "Poster med upptäckter"
-  },
-  "statsActiveDays": {
-    "message": "Aktiva dagar"
-  },
   "statsAverageConfidence": {
     "message": "Genomsnittlig säkerhet"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "De senaste {0} dagarna visas. Summor och exporter omfattar hela det valda intervallet."
   },
-  "statsProtectionRanking": {
-    "message": "Rangordning av skydd"
-  },
-  "statsCategoryTrend": {
-    "message": "Kategorier över tid"
-  },
-  "statsCategoryOverlap": {
-    "message": "Kategorier som hittats tillsammans"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Antal historikposter med båda kategorierna. Diagonala rutor visar poster med den kategorin."
-  },
   "statsProtectionDetails": {
     "message": "Alla skydd"
-  },
-  "statsDomainRanking": {
-    "message": "Rangordning av domäner"
-  },
-  "statsDomainMap": {
-    "message": "Besök och upptäckter"
-  },
-  "statsDomainMapHint": {
-    "message": "Varje punkt är en domän. Större punkter har fler olika skydd."
   },
   "statsDomainDetails": {
     "message": "Alla domäner"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Sortera domäner"
   },
-  "statsSortVisits": {
-    "message": "Flest besök"
-  },
-  "statsSortDetections": {
-    "message": "Flest upptäckter"
-  },
   "statsSortConfidence": {
     "message": "Högst säkerhet"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Fördelning av säkerhet"
-  },
-  "statsConfidenceTrend": {
-    "message": "Säkerhet över tid"
-  },
-  "statsCategoryConfidence": {
-    "message": "Säkerhet per kategori"
   },
   "statsConfidenceNote": {
     "message": "Säkerhet anger hur starka de sparade beläggen för en upptäckt är, inte bevis för fingerprinting eller en aktiv utmaning."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Inga domäner matchar din sökning."
-  },
-  "statsSelectionNote": {
-    "message": "Diagram och exporter använder det valda datumintervallet. Historikposter motsvarar sparade upptäckter, inte alla webbläsarbesök."
   },
   "extensionName": {
     "message": "Scrapfly: anti-bot-detektor"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Aktivera eller inaktivera upptäckt"
-  },
-  "noDetectionsFound": {
-    "message": "Inga upptäckter hittades"
   },
   "detectionScanningTitle": {
     "message": "Skannar sidan"
@@ -376,6 +313,9 @@
   },
   "searchDetectors": {
     "message": "Sök detektorer..."
+  },
+  "rulesFiltersLabel": {
+    "message": "Filtrera regler"
   },
   "paginationPrev": {
     "message": "Föregående sida"
@@ -590,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Sök"
   },
-  "advancedBtnExport": {
-    "message": "Exportera"
-  },
   "advancedBtnExportTitle": {
     "message": "Exportera insamlingar"
-  },
-  "advancedBtnClearAll": {
-    "message": "Rensa allt"
   },
   "advancedBtnClearAllTitle": {
     "message": "Rensa alla insamlingar"
@@ -1021,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Vill du verkligen ta bort den här upptäckten från {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Det gick inte att läsa in inställningarna. Standardvärden används."
-  },
   "settingsSavedToast": {
     "message": "Inställningarna sparades"
   },
@@ -1045,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} finns redan på svartlistan"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} lades till på svartlistan"
-  },
   "failedAddDomainFmt": {
     "message": "Det gick inte att lägga till domänen: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} togs bort från svartlistan"
   },
   "invalidSettingsFmt": {
     "message": "Ogiltiga inställningar: {0}"
@@ -1195,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Fel när uppdateringarna skulle tillämpas"
   },
-  "failedCheckForUpdates": {
-    "message": "Det gick inte att söka efter uppdateringar"
-  },
   "errorCheckingForUpdates": {
     "message": "Fel vid sökning efter uppdateringar"
   },
@@ -1263,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Fullständig endpoint-URL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Tillgängliga variabler:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Exempel: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1513,9 +1429,6 @@
   "settingsDataSettingsRow": {
     "message": "Inställningar"
   },
-  "settingsDataSettingsRowDesc": {
-    "message": "Exportera eller importera tilläggets inställningar"
-  },
   "settingsDataHistoryRow": {
     "message": "Upptäcktshistorik"
   },
@@ -1620,6 +1533,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Sök upptäckter..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Filtrera upptäckter"
   },
   "detectionPaginationPage": {
     "message": "Sida"
@@ -1980,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Inställningarna importerades"
   },
-  "settingsImportFailedToast": {
-    "message": "Det gick inte att importera inställningarna: ogiltig fil"
-  },
   "statsPrivacyNote": {
     "message": "Beräknas lokalt från din upptäcktshistorik. Inget lämnar din webbläsare."
-  },
-  "statsSubtitleFmt": {
-    "message": "Beräknas lokalt från historikposter: {0}. Inget lämnar din webbläsare."
   },
   "statsRangeLabel": {
     "message": "Tidsintervall"
@@ -2010,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Statistik visas här när sidor med upptäckter sparas i historiken."
   },
-  "statsEntries": {
-    "message": "Historikposter"
-  },
   "statsUniqueDomains": {
     "message": "Unika domäner"
   },
   "statsDetections": {
     "message": "Upptäckter"
   },
-  "statsDistinctDetectors": {
-    "message": "Olika skydd"
-  },
   "statsOverTime": {
     "message": "Upptäckter över tid"
   },
-  "statsTopProtections": {
-    "message": "Mest upptäckta skydd"
-  },
-  "statsTopDomains": {
-    "message": "Toppdomäner"
-  },
-  "statsByCategory": {
-    "message": "Per kategori"
-  },
-  "statsByDifficulty": {
-    "message": "Per svårighet"
-  },
-  "statsPagesUnit": {
-    "message": "sidor"
-  },
-  "statsVisitsUnit": {
-    "message": "besök"
-  },
-  "statsDetectionsUnit": {
-    "message": "upptäckter"
-  },
   "statsCategoryOther": {
     "message": "Övrigt"
-  },
-  "statsDifficultyNone": {
-    "message": "Inga upptäckter"
   },
   "statsNoData": {
     "message": "Inga data i det här intervallet"
@@ -2058,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Sidor: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "Domäner: {0}"
-  },
-  "statsTipVisitsFmt": {
-    "message": "Besök: {0}"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "Upptäckter: {0}"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} av {1} upptäckter · {2} %"
-  },
-  "statsTipEntriesFmt": {
-    "message": "Poster: {0}"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} med upptäckter"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} besök per domän"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} per post"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "{0} % genomsnittlig säkerhet"
   },
   "statsTimelineMetaFmt": {
     "message": "Upptäckter: {0} · Dagar: {1}"
@@ -2685,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Insamlad"
   },
-  "advCommonScript": {
-    "message": "Skript"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2751,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Skyddsnivå:"
   },
-  "advCommonCookiesFound": {
-    "message": "Hittade cookies:"
-  },
   "advCommonSiteKey": {
     "message": "Webbplatsnyckel"
   },
@@ -2790,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Python-skript med requests och BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Python-skript med biblioteket requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Node.js-skript med axios och cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Node.js-skript med axios"
   },
   "advCodeDescPhpDom": {
     "message": "PHP-skript med cURL och DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "PHP-skript med cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# med HttpClient och HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# med HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go med net/http och goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go med net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Insamling aktiv"
@@ -3063,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA-klienter"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "Klient-ID: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Kopierat till urklipp!"
   },
@@ -3165,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Seed-skript:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js-skript"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js-skript"
-  },
-  "advShapeSeedScript": {
-    "message": "Seed-skript"
   },
   "advShapeSeedScripts": {
     "message": "Seed-skript"
@@ -4014,23 +3840,11 @@
   "tipScopePath": {
     "message": "Resultaten återanvänds för exakt den här sökvägen, oavsett frågesträng."
   },
-  "tipStatsActiveDays": {
-    "message": "Dagar med minst en sparad sida."
-  },
-  "tipStatsDetections": {
-    "message": "Skydd som hittats på alla sparade sidor, upprepningar inräknade."
-  },
   "tipStatsDetectors": {
     "message": "Olika skydd som setts, vart och ett räknat en gång."
   },
   "tipStatsDomains": {
     "message": "Olika webbplatser bland de sparade sidorna."
-  },
-  "tipStatsEntries": {
-    "message": "Sidor som sparats i Historik i det här intervallet."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0} av {1} poster"
   },
   "tipPatterns": {
     "message": "Mönster"
@@ -4525,38 +4339,11 @@
     "message": "Öppna en webbsida för att skrapa den med Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "Insamlingar: {0}"
-  },
-  "statsFirstSeen": {
-    "message": "Nytt under perioden"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "Sparade för första gången i det här intervallet. Skydd: {0}, domäner: {1}."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Välj 7, 30 eller 90 dagar för att se vad som är nytt."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Mest skyddade domän"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} olika skydd under {1} besök."
-  },
-  "statsFoundTogether": {
-    "message": "Skydd som hittats tillsammans"
-  },
   "statsMethods": {
     "message": "Upptäcktsmetoder"
   },
   "statsMatchesUnit": {
     "message": "träffar"
-  },
-  "statsMethodsByCategory": {
-    "message": "Metoder per kategori"
-  },
-  "statsWeakEvidence": {
-    "message": "Svagaste belägg"
   },
   "statsSignalColumn": {
     "message": "Signal"
@@ -4573,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Kombination"
   },
-  "statsDecidedBy": {
-    "message": "Hur upptäckterna avgjordes"
-  },
-  "statsCombinationGain": {
-    "message": "Säkerhet per avgörande"
-  },
   "statsCombinationColumn": {
     "message": "Kombination"
   },
@@ -4587,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Ingen upptäckt i det här intervallet avgjordes av en kombination."
-  },
-  "statsRulesMostActive": {
-    "message": "Mest aktiva regler"
-  },
-  "statsTipPatternsFmt": {
-    "message": "Mönster: {0}"
   },
   "statsRulesPatternsByMethod": {
     "message": "Mönster per metod"
@@ -4636,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Väntar på ett nyare tillägg"
   },
-  "statsToolsByVendor": {
-    "message": "Insamlingar per leverantör"
-  },
   "statsToolsCapture": {
     "message": "Insamling"
-  },
-  "statsToolsByTool": {
-    "message": "Mest använda verktyg"
-  },
-  "statsToolsOverTime": {
-    "message": "Insamlingar över tid"
   },
   "statsChangeColumn": {
     "message": "Ändring"
@@ -4660,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Ingen domän ändrade sina skydd mellan sparade besök i det här intervallet."
   },
-  "statsNothingNew": {
-    "message": "Inget nytt: alla skydd här fanns redan i Historik före det här intervallet."
-  },
   "statsSectionSignals": {
     "message": "Signaler"
   },
@@ -4675,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Verktyg"
   },
-  "statsDomainChangesHint": {
-    "message": "Domäner vars upptäckta skydd ändrades mellan två sparade besök."
-  },
-  "statsFirstSeenHint": {
-    "message": "Skydd och domäner som sparades för första gången i det här intervallet."
-  },
   "statsSignalsNote": {
     "message": "Vilken typ av belägg varje sparad upptäckt matchade: cookie- och headernamn, URL:er, sidelement, skript och JavaScript-hooks."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Skydd vars matchade mönster har lägst genomsnittlig säkerhet. Deras regler kan behöva ett starkare mönster."
   },
   "statsCombinationsNote": {
     "message": "En kombination upptäcker ett skydd bara när flera mönster hittas tillsammans."
@@ -4696,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Regler"
   },
-  "statsRulesModified": {
-    "message": "Redigerade officiella"
-  },
   "statsRulesDisabled": {
     "message": "Inaktiverade"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Aktiverade regler som inte hittade något på de sidor som sparats i det här intervallet."
   },
-  "statsRulesMissingHint": {
-    "message": "Beskrivningar visas i upptäcktsdetaljer, Historik och kombinationer. Lägg till dem i regelredigeraren."
-  },
   "statsToolsNote": {
     "message": "Avancerade insamlingar och verktygsresultat som sparats på den här enheten."
-  },
-  "statsCapturesUnit": {
-    "message": "insamlingar"
   },
   "detectionCardSureFmt": {
     "message": "{0} % säker"
@@ -5139,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Få sidor i det här intervallet ({0}): jämförelser och rangordningar kan vara missvisande."
-  },
-  "statsLoading": {
-    "message": "Läser in statistik..."
   },
   "statsEmptyShowAll": {
     "message": "Visa all historik"
@@ -5791,6 +5533,9 @@
   },
   "historyFilterPinned": {
     "message": "Fäst"
+  },
+  "historyFilterCombinations": {
+    "message": "Kombinationer"
   },
   "historyNoResults": {
     "message": "Inga poster matchar din sökning eller dina filter."
@@ -6814,6 +6559,9 @@
   },
   "bulkCountsFmt": {
     "message": "Klara: {0} · Med skydd: {1} · Misslyckade: {2} · Överhoppade: {3}"
+  },
+  "bulkMostSeenFmt": {
+    "message": "Oftast sedda: {0}"
   },
   "bulkStoppedRestart": {
     "message": "Tillägget startade om under körningen, så den stoppades. Sidorna som fortfarande väntade skannades inte."

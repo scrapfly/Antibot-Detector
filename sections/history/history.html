@@ -15,7 +15,7 @@
     <input type="file" id="importHistoryFile" accept=".json" style="display: none;">
   </div>
 
-  <!-- Filter chips under the search: Pinned, Changed and the categories (combined with AND, categories with OR) -->
+  <!-- Filter chips under the search: Pinned, Changed, Combinations and the categories (combined with AND, categories with OR) -->
   <div id="historyFilters" class="history-filters" role="group" aria-label="Filter history" data-i18n-aria-label="historyFiltersLabel" hidden>
     <button type="button" class="history-filter-chip" data-filter="pinned" aria-pressed="false">
       <span class="history-filter-icon" data-ui-icon="pin" aria-hidden="true"></span>
@@ -36,6 +36,10 @@
     <button type="button" class="history-filter-chip" data-filter="fingerprint" data-category="fingerprint" aria-pressed="false">
       <span class="history-filter-icon category-icon" aria-hidden="true"></span>
       <span data-i18n="categoryFingerprint">Fingerprint</span>
+    </button>
+    <button type="button" class="history-filter-chip" data-filter="combinations" aria-pressed="false">
+      <span class="history-filter-icon" data-ui-icon="combination" aria-hidden="true"></span>
+      <span data-i18n="historyFilterCombinations">Combinations</span>
     </button>
   </div>
 

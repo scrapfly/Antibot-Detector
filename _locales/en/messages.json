@@ -45,12 +45,6 @@
     "message": "Show the protection scripts this page loaded",
     "description": "Advanced → Analyze Scripts tool card: what it does (it lists the scripts of the protection the page loaded; only a page with none is reloaded)"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Reload the page to analyze protection scripts"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Reset protection cookies and reload to analyze scripts"
-  },
   "advToolReloadVersionHint": {
     "message": "Reload the page to detect the protection version"
   },
@@ -127,18 +121,6 @@
     "message": "Could not complete this action: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Previous chart page"
-  },
-  "statsChartNext": {
-    "message": "Next chart page"
-  },
-  "statsChartPage": {
-    "message": "Page {0} of {1}"
-  },
-  "statsChartShowing": {
-    "message": "Showing {0}–{1} of {2}"
-  },
   "statsSectionsLabel": {
     "message": "Statistics sections"
   },
@@ -184,12 +166,6 @@
   "statsRangeEmptyDesc": {
     "message": "Choose a longer date range to explore your saved history."
   },
-  "statsDetectionRate": {
-    "message": "Entries with detections"
-  },
-  "statsActiveDays": {
-    "message": "Active days"
-  },
   "statsAverageConfidence": {
     "message": "Average confidence"
   },
@@ -214,29 +190,8 @@
   "statsTimelineLimitFmt": {
     "message": "The latest {0} days are shown. Totals and exports include the entire selected range."
   },
-  "statsProtectionRanking": {
-    "message": "Protection ranking"
-  },
-  "statsCategoryTrend": {
-    "message": "Categories over time"
-  },
-  "statsCategoryOverlap": {
-    "message": "Categories found together"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Number of history entries with both categories. Diagonal cells show entries with that category."
-  },
   "statsProtectionDetails": {
     "message": "All protections"
-  },
-  "statsDomainRanking": {
-    "message": "Domain ranking"
-  },
-  "statsDomainMap": {
-    "message": "Visits and detections"
-  },
-  "statsDomainMapHint": {
-    "message": "Each point is a domain. Larger points have more distinct protections."
   },
   "statsDomainDetails": {
     "message": "All domains"
@@ -247,12 +202,6 @@
   "statsDomainSortLabel": {
     "message": "Sort domains"
   },
-  "statsSortVisits": {
-    "message": "Most visits"
-  },
-  "statsSortDetections": {
-    "message": "Most detections"
-  },
   "statsSortConfidence": {
     "message": "Highest confidence"
   },
@@ -261,12 +210,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Confidence distribution"
-  },
-  "statsConfidenceTrend": {
-    "message": "Confidence over time"
-  },
-  "statsCategoryConfidence": {
-    "message": "Confidence by category"
   },
   "statsConfidenceNote": {
     "message": "Confidence describes the strength of saved detection evidence, not proof of fingerprinting or an active challenge."
@@ -291,9 +234,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "No domains match your search."
-  },
-  "statsSelectionNote": {
-    "message": "Charts and exports use the selected date range. History entries represent saved detections, not every browser visit."
   },
   "extensionName": {
     "message": "Scrapfly: anti-bot detector",
@@ -328,9 +268,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Enable or disable detection"
-  },
-  "noDetectionsFound": {
-    "message": "No detections found"
   },
   "detectionScanningTitle": {
     "message": "Scanning this page"
@@ -379,6 +316,10 @@
   },
   "searchDetectors": {
     "message": "Search detectors..."
+  },
+  "rulesFiltersLabel": {
+    "message": "Filter rules",
+    "description": "Accessible name of the row of filter chips under the Rules search"
   },
   "paginationPrev": {
     "message": "Previous page"
@@ -593,14 +534,8 @@
   "advancedFilterSearch": {
     "message": "Search"
   },
-  "advancedBtnExport": {
-    "message": "Export"
-  },
   "advancedBtnExportTitle": {
     "message": "Export captures"
-  },
-  "advancedBtnClearAll": {
-    "message": "Clear All"
   },
   "advancedBtnClearAllTitle": {
     "message": "Clear all captures"
@@ -1027,9 +962,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Are you sure you want to delete this detection from {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Failed to load settings. Using defaults."
-  },
   "settingsSavedToast": {
     "message": "Settings saved"
   },
@@ -1051,14 +983,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} is already blacklisted"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "Added {0} to blacklist"
-  },
   "failedAddDomainFmt": {
     "message": "Failed to add domain: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "Removed {0} from blacklist"
   },
   "invalidSettingsFmt": {
     "message": "Invalid settings: {0}"
@@ -1205,9 +1131,6 @@
   "errorApplyingUpdates": {
     "message": "Error applying updates"
   },
-  "failedCheckForUpdates": {
-    "message": "Failed to check for updates"
-  },
   "errorCheckingForUpdates": {
     "message": "Error checking for updates"
   },
@@ -1273,12 +1196,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Complete endpoint URL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Available variables:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Example: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1525,9 +1442,6 @@
   "settingsDataSettingsRow": {
     "message": "Settings"
   },
-  "settingsDataSettingsRowDesc": {
-    "message": "Export or import extension settings"
-  },
   "settingsDataHistoryRow": {
     "message": "Detection History"
   },
@@ -1632,6 +1546,10 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Search detections..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Filter detections",
+    "description": "Accessible name of the row of filter chips under the Detection search"
   },
   "detectionPaginationPage": {
     "message": "Page"
@@ -1992,14 +1910,8 @@
   "settingsImportedToast": {
     "message": "Settings imported"
   },
-  "settingsImportFailedToast": {
-    "message": "Failed to import settings: invalid file"
-  },
   "statsPrivacyNote": {
     "message": "Computed locally from your detection history. Nothing leaves your browser."
-  },
-  "statsSubtitleFmt": {
-    "message": "Computed locally from {0} history entries. Nothing leaves your browser."
   },
   "statsRangeLabel": {
     "message": "Time range"
@@ -2022,47 +1934,17 @@
   "statsEmptyDesc": {
     "message": "Statistics appear here once pages with detections are saved to the history."
   },
-  "statsEntries": {
-    "message": "History entries"
-  },
   "statsUniqueDomains": {
     "message": "Unique domains"
   },
   "statsDetections": {
     "message": "Detections"
   },
-  "statsDistinctDetectors": {
-    "message": "Distinct protections"
-  },
   "statsOverTime": {
     "message": "Detections over time"
   },
-  "statsTopProtections": {
-    "message": "Most detected protections"
-  },
-  "statsTopDomains": {
-    "message": "Top domains"
-  },
-  "statsByCategory": {
-    "message": "By category"
-  },
-  "statsByDifficulty": {
-    "message": "By difficulty"
-  },
-  "statsPagesUnit": {
-    "message": "pages"
-  },
-  "statsVisitsUnit": {
-    "message": "visits"
-  },
-  "statsDetectionsUnit": {
-    "message": "detections"
-  },
   "statsCategoryOther": {
     "message": "Other"
-  },
-  "statsDifficultyNone": {
-    "message": "No detections"
   },
   "statsNoData": {
     "message": "No data in this range"
@@ -2070,32 +1952,8 @@
   "statsTipPagesFmt": {
     "message": "Pages: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} domains"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} visits"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} detections"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} of {1} detections · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} entries"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} with detections"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} visits per domain"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} per entry"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "{0}% average confidence"
   },
   "statsTimelineMetaFmt": {
     "message": "Detections: {0} · Days: {1}"
@@ -2700,10 +2558,6 @@
     "message": "Captured",
     "description": "Label before the capture date"
   },
-  "advCommonScript": {
-    "message": "Script",
-    "description": "Label of a script entry"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2777,9 +2631,6 @@
   "advCommonProtectionLevel": {
     "message": "Protection Level:"
   },
-  "advCommonCookiesFound": {
-    "message": "Cookies Found:"
-  },
   "advCommonSiteKey": {
     "message": "Site Key"
   },
@@ -2822,32 +2673,17 @@
   "advCodeDescPythonBs": {
     "message": "Python script with requests and BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Python script with requests library"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Node.js script with axios and cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Node.js script with axios"
   },
   "advCodeDescPhpDom": {
     "message": "PHP script with cURL and DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "PHP script with cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# with HttpClient and HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# with HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go with net/http and goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go with net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Capture Active",
@@ -3150,10 +2986,6 @@
     "message": "reCAPTCHA Clients",
     "description": "Section heading: reCAPTCHA widget instances found on the page"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "Client ID: {0}",
-    "description": "{0} = numeric client id"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Copied to clipboard!"
   },
@@ -3280,17 +3112,9 @@
     "message": "Seed Scripts:",
     "description": "Count label. Scripts loaded with a seed= parameter."
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js Script",
-    "description": "Heading above one script URL. Keep \"Init.js\" (file name)."
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js Scripts",
     "description": "Heading above several script URLs. Keep \"Init.js\" (file name)."
-  },
-  "advShapeSeedScript": {
-    "message": "Seed Script",
-    "description": "Heading above one script URL loaded with a seed= parameter"
   },
   "advShapeSeedScripts": {
     "message": "Seed Scripts",
@@ -4276,23 +4100,11 @@
   "tipScopePath": {
     "message": "Results are reused for this exact path, whatever the query."
   },
-  "tipStatsActiveDays": {
-    "message": "Days with at least one saved page."
-  },
-  "tipStatsDetections": {
-    "message": "Protections found across all saved pages, counting repeats."
-  },
   "tipStatsDetectors": {
     "message": "Different protections seen, each counted once."
   },
   "tipStatsDomains": {
     "message": "Different sites among the saved pages."
-  },
-  "tipStatsEntries": {
-    "message": "Pages saved to History in this range."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0} of {1} entries"
   },
   "tipPatterns": {
     "message": "Patterns"
@@ -4788,38 +4600,11 @@
     "message": "Open a web page to scrape it with Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} captures"
-  },
-  "statsFirstSeen": {
-    "message": "New this period"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "{0} protections and {1} domains saved for the first time in this range."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Choose 7, 30 or 90 days to see what is new."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Most protected domain"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} distinct protections over {1} visits."
-  },
-  "statsFoundTogether": {
-    "message": "Protections found together"
-  },
   "statsMethods": {
     "message": "Detection methods"
   },
   "statsMatchesUnit": {
     "message": "matches"
-  },
-  "statsMethodsByCategory": {
-    "message": "Methods by category"
-  },
-  "statsWeakEvidence": {
-    "message": "Weakest evidence"
   },
   "statsSignalColumn": {
     "message": "Signal"
@@ -4836,12 +4621,6 @@
   "statsDecidedCombination": {
     "message": "Combination"
   },
-  "statsDecidedBy": {
-    "message": "How detections were decided"
-  },
-  "statsCombinationGain": {
-    "message": "Confidence by decision"
-  },
   "statsCombinationColumn": {
     "message": "Combination"
   },
@@ -4850,12 +4629,6 @@
   },
   "statsNoCombinations": {
     "message": "No detection in this range was decided by a combination."
-  },
-  "statsRulesMostActive": {
-    "message": "Most active rules"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} patterns"
   },
   "statsRulesPatternsByMethod": {
     "message": "Patterns by method"
@@ -4899,17 +4672,8 @@
   "statsRulesWaiting": {
     "message": "Waiting for a newer extension"
   },
-  "statsToolsByVendor": {
-    "message": "Captures by vendor"
-  },
   "statsToolsCapture": {
     "message": "Capture"
-  },
-  "statsToolsByTool": {
-    "message": "Most used tools"
-  },
-  "statsToolsOverTime": {
-    "message": "Captures over time"
   },
   "statsChangeColumn": {
     "message": "Change"
@@ -4923,9 +4687,6 @@
   "statsNoChanges": {
     "message": "No domain changed its protections between saved visits in this range."
   },
-  "statsNothingNew": {
-    "message": "Nothing new: every protection here was already in History before this range."
-  },
   "statsSectionSignals": {
     "message": "Signals"
   },
@@ -4938,17 +4699,8 @@
   "statsSectionTools": {
     "message": "Tools"
   },
-  "statsDomainChangesHint": {
-    "message": "Domains whose detected protections changed between two saved visits."
-  },
-  "statsFirstSeenHint": {
-    "message": "Protections and domains saved for the first time in this range."
-  },
   "statsSignalsNote": {
     "message": "The kind of evidence each saved detection matched: cookie and header names, URLs, page elements, scripts and JavaScript hooks."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Protections whose matched patterns have the lowest average confidence. Their rules may need a stronger pattern."
   },
   "statsCombinationsNote": {
     "message": "A combination detects a protection only when several patterns are found together."
@@ -4959,23 +4711,14 @@
   "statsRulesTotal": {
     "message": "Rules"
   },
-  "statsRulesModified": {
-    "message": "Edited official"
-  },
   "statsRulesDisabled": {
     "message": "Disabled"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Enabled rules that found nothing on the pages saved in this range."
   },
-  "statsRulesMissingHint": {
-    "message": "Descriptions show in detection details, History and combinations. Add them in the rule editor."
-  },
   "statsToolsNote": {
     "message": "Advanced captures and tool results saved on this device."
-  },
-  "statsCapturesUnit": {
-    "message": "captures"
   },
   "detectionCardSureFmt": {
     "message": "{0}% sure"
@@ -5402,9 +5145,6 @@
   },
   "statsLowDataFmt": {
     "message": "Few pages in this range ({0}): comparisons and rankings may mislead."
-  },
-  "statsLoading": {
-    "message": "Loading statistics..."
   },
   "statsEmptyShowAll": {
     "message": "Show all history"
@@ -6106,6 +5846,10 @@
   "historyFilterPinned": {
     "message": "Pinned",
     "description": "Filter chip under the History search: show only pinned pages (an adjective, like the Changed chip)"
+  },
+  "historyFilterCombinations": {
+    "message": "Combinations",
+    "description": "Filter chip under the History search: show only pages where a combination matched (a noun, like the Anti-bot and Captcha chips)"
   },
   "historyNoResults": {
     "message": "No entries match your search or filters.",
@@ -7466,6 +7210,10 @@
   "bulkCountsFmt": {
     "message": "Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}",
     "description": "Bulk scan: totals of the run"
+  },
+  "bulkMostSeenFmt": {
+    "message": "Most seen: {0}",
+    "description": "Bulk scan: the protections found on the most pages, under the totals ({0} = up to five names, each with the number of pages it was found on)"
   },
   "bulkStoppedRestart": {
     "message": "The extension restarted during the run, so it stopped. The pages still waiting were not scanned.",

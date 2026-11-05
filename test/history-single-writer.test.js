@@ -41,6 +41,7 @@ function makeWorld() {
   sw.chrome = { storage: { local: storage }, runtime: { getURL: p => `chrome-extension://abc/${p}` }, tabs: { get: async () => ({ title: 'T', url: 'https://x' }) } };
   sw.self = sw; sw.globalThis = sw;
   vm.createContext(sw);
+  vm.runInContext(read('modules/core/storage-manager.js'), sw); // the worker loads it before the retention: its strict settings reader
   vm.runInContext(read('modules/core/message-sender.js'), sw);
   vm.runInContext(read('modules/core/history-store.js'), sw);
   vm.runInContext(read('background/history-recorder.js') + '\n;globalThis.HistoryRecorder = HistoryRecorder;', sw);

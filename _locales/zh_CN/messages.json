@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "显示此页面加载的防护脚本"
   },
-  "advToolReloadScriptsHint": {
-    "message": "重新加载页面以分析防护脚本"
-  },
-  "advToolResetScriptsHint": {
-    "message": "重置防护 Cookie 并重新加载页面以分析脚本"
-  },
   "advToolReloadVersionHint": {
     "message": "重新加载页面以检测防护版本"
   },
@@ -126,18 +120,6 @@
     "message": "无法完成此操作：{0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "图表上一页"
-  },
-  "statsChartNext": {
-    "message": "图表下一页"
-  },
-  "statsChartPage": {
-    "message": "第 {0} 页，共 {1} 页"
-  },
-  "statsChartShowing": {
-    "message": "显示第 {0}–{1} 项，共 {2} 项"
-  },
   "statsSectionsLabel": {
     "message": "统计分区"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "请选择更长的日期范围，以查看已保存的历史记录。"
   },
-  "statsDetectionRate": {
-    "message": "包含检测结果的记录"
-  },
-  "statsActiveDays": {
-    "message": "活跃天数"
-  },
   "statsAverageConfidence": {
     "message": "平均置信度"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "显示最近 {0} 天。汇总和导出包含所选时间范围内的全部记录。"
   },
-  "statsProtectionRanking": {
-    "message": "防护措施排名"
-  },
-  "statsCategoryTrend": {
-    "message": "类别随时间的变化"
-  },
-  "statsCategoryOverlap": {
-    "message": "同时检测到的类别"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "同时包含两个类别的历史记录数量。对角线单元格显示包含该类别的记录。"
-  },
   "statsProtectionDetails": {
     "message": "所有防护措施"
-  },
-  "statsDomainRanking": {
-    "message": "域名排名"
-  },
-  "statsDomainMap": {
-    "message": "访问与检测"
-  },
-  "statsDomainMapHint": {
-    "message": "每个点代表一个域名。点越大，表示不同的防护措施越多。"
   },
   "statsDomainDetails": {
     "message": "所有域名"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "域名排序"
   },
-  "statsSortVisits": {
-    "message": "访问最多"
-  },
-  "statsSortDetections": {
-    "message": "检测最多"
-  },
   "statsSortConfidence": {
     "message": "置信度最高"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "置信度分布"
-  },
-  "statsConfidenceTrend": {
-    "message": "置信度随时间的变化"
-  },
-  "statsCategoryConfidence": {
-    "message": "各类别的置信度"
   },
   "statsConfidenceNote": {
     "message": "置信度描述已保存检测证据的强度，并不能证明存在指纹识别或正在进行的验证挑战。"
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "没有与搜索条件匹配的域名。"
-  },
-  "statsSelectionNote": {
-    "message": "图表和导出使用所选日期范围。历史记录代表已保存的检测结果，而非每一次浏览器访问。"
   },
   "extensionName": {
     "message": "Scrapfly:反机器人检测器"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "启用或禁用检测"
-  },
-  "noDetectionsFound": {
-    "message": "未发现检测"
   },
   "detectionScanningTitle": {
     "message": "正在扫描此页面"
@@ -376,6 +313,9 @@
   },
   "searchDetectors": {
     "message": "搜索检测器..."
+  },
+  "rulesFiltersLabel": {
+    "message": "筛选规则"
   },
   "paginationPrev": {
     "message": "上一页"
@@ -590,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "搜索"
   },
-  "advancedBtnExport": {
-    "message": "导出"
-  },
   "advancedBtnExportTitle": {
     "message": "导出捕获"
-  },
-  "advancedBtnClearAll": {
-    "message": "全部清除"
   },
   "advancedBtnClearAllTitle": {
     "message": "清除所有捕获"
@@ -1021,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "确定要删除来自 {0} 的此检测记录吗?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "加载设置失败。正在使用默认值。"
-  },
   "settingsSavedToast": {
     "message": "设置已保存"
   },
@@ -1045,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} 已在黑名单中"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "已将 {0} 添加到黑名单"
-  },
   "failedAddDomainFmt": {
     "message": "添加域名失败:{0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "已将 {0} 从黑名单中移除"
   },
   "invalidSettingsFmt": {
     "message": "设置无效:{0}"
@@ -1195,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "应用更新时出错"
   },
-  "failedCheckForUpdates": {
-    "message": "检查更新失败"
-  },
   "errorCheckingForUpdates": {
     "message": "检查更新时出错"
   },
@@ -1263,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "完整的端点 URL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "可用变量:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "示例:https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1513,9 +1429,6 @@
   "settingsDataSettingsRow": {
     "message": "设置"
   },
-  "settingsDataSettingsRowDesc": {
-    "message": "导出或导入扩展设置"
-  },
   "settingsDataHistoryRow": {
     "message": "检测历史"
   },
@@ -1620,6 +1533,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "搜索检测结果..."
+  },
+  "detectionFiltersLabel": {
+    "message": "筛选检测结果"
   },
   "detectionPaginationPage": {
     "message": "第"
@@ -1980,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "设置已导入"
   },
-  "settingsImportFailedToast": {
-    "message": "导入设置失败：文件无效"
-  },
   "statsPrivacyNote": {
     "message": "根据检测历史在本地计算，数据不会离开浏览器。"
-  },
-  "statsSubtitleFmt": {
-    "message": "根据 {0} 条历史记录在本地计算，数据不会离开浏览器。"
   },
   "statsRangeLabel": {
     "message": "时间范围"
@@ -2010,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "将含有检测结果的页面保存到历史后，统计数据会显示在这里。"
   },
-  "statsEntries": {
-    "message": "历史条目"
-  },
   "statsUniqueDomains": {
     "message": "唯一域名"
   },
   "statsDetections": {
     "message": "检测"
   },
-  "statsDistinctDetectors": {
-    "message": "不同的防护系统"
-  },
   "statsOverTime": {
     "message": "检测随时间变化"
   },
-  "statsTopProtections": {
-    "message": "检测最多的防护系统"
-  },
-  "statsTopDomains": {
-    "message": "热门域名"
-  },
-  "statsByCategory": {
-    "message": "按类别"
-  },
-  "statsByDifficulty": {
-    "message": "按难度"
-  },
-  "statsPagesUnit": {
-    "message": "页面"
-  },
-  "statsVisitsUnit": {
-    "message": "访问"
-  },
-  "statsDetectionsUnit": {
-    "message": "检测"
-  },
   "statsCategoryOther": {
     "message": "其他"
-  },
-  "statsDifficultyNone": {
-    "message": "无检测"
   },
   "statsNoData": {
     "message": "此时间范围内没有数据"
@@ -2058,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "{0} 个页面"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} 个域名"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} 次访问"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} 次检测"
-  },
   "historyCategoryShareFmt": {
     "message": "{1} 项中的 {0} 项 · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} 条记录"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} 条含检测"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "每个域名 {0} 次访问"
-  },
-  "statsPerEntryFmt": {
-    "message": "每条 {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "平均置信度 {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "{0} 次检测 · {1} 天"
@@ -2685,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "捕获时间"
   },
-  "advCommonScript": {
-    "message": "脚本"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2751,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "保护级别:"
   },
-  "advCommonCookiesFound": {
-    "message": "找到的 Cookie:"
-  },
   "advCommonSiteKey": {
     "message": "站点密钥"
   },
@@ -2790,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "使用 requests 和 BeautifulSoup 的 Python 脚本"
   },
-  "advCodeDescPython": {
-    "message": "使用 requests 库的 Python 脚本"
-  },
   "advCodeDescNodeCheerio": {
     "message": "使用 axios 和 cheerio 的 Node.js 脚本"
-  },
-  "advCodeDescNode": {
-    "message": "使用 axios 的 Node.js 脚本"
   },
   "advCodeDescPhpDom": {
     "message": "使用 cURL 和 DOMDocument 的 PHP 脚本"
   },
-  "advCodeDescPhp": {
-    "message": "使用 cURL 的 PHP 脚本"
-  },
   "advCodeDescCsharpHap": {
     "message": "使用 HttpClient 和 HtmlAgilityPack 的 C#"
   },
-  "advCodeDescCsharp": {
-    "message": "使用 HttpClient 的 C#"
-  },
   "advCodeDescGoQuery": {
     "message": "使用 net/http 和 goquery 的 Go"
-  },
-  "advCodeDescGo": {
-    "message": "使用 net/http 的 Go"
   },
   "pageNoticeCaptureActive": {
     "message": "正在捕获"
@@ -3063,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA 客户端"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "客户端 ID:{0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "已复制到剪贴板!"
   },
@@ -3165,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "带 seed 的脚本:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js 脚本"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js 脚本"
-  },
-  "advShapeSeedScript": {
-    "message": "带 seed 的脚本"
   },
   "advShapeSeedScripts": {
     "message": "带 seed 的脚本"
@@ -4014,23 +3840,11 @@
   "tipScopePath": {
     "message": "无论查询参数如何，此路径都会复用结果。"
   },
-  "tipStatsActiveDays": {
-    "message": "至少保存了一个页面的天数。"
-  },
-  "tipStatsDetections": {
-    "message": "所有已保存页面中发现的防护（含重复）。"
-  },
   "tipStatsDetectors": {
     "message": "出现过的不同防护，每种只计一次。"
   },
   "tipStatsDomains": {
     "message": "已保存页面中的不同网站。"
-  },
-  "tipStatsEntries": {
-    "message": "此时间范围内保存到历史记录的页面。"
-  },
-  "tipStatsRateFmt": {
-    "message": "{1} 条中的 {0} 条"
   },
   "tipPatterns": {
     "message": "模式"
@@ -4525,38 +4339,11 @@
     "message": "请先打开一个网页，再用 Scrapfly 抓取",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} 次捕获"
-  },
-  "statsFirstSeen": {
-    "message": "本期新增"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "本时间段首次保存了 {0} 个防护和 {1} 个域名。"
-  },
-  "statsFirstSeenAllTip": {
-    "message": "选择 7、30 或 90 天以查看新增内容。"
-  },
-  "statsMostProtectedDomain": {
-    "message": "防护最多的域名"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{1} 次访问中出现 {0} 种防护。"
-  },
-  "statsFoundTogether": {
-    "message": "同时出现的防护"
-  },
   "statsMethods": {
     "message": "检测方法"
   },
   "statsMatchesUnit": {
     "message": "匹配"
-  },
-  "statsMethodsByCategory": {
-    "message": "按类别的方法"
-  },
-  "statsWeakEvidence": {
-    "message": "最弱的证据"
   },
   "statsSignalColumn": {
     "message": "信号"
@@ -4573,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "组合"
   },
-  "statsDecidedBy": {
-    "message": "检测的判定方式"
-  },
-  "statsCombinationGain": {
-    "message": "按判定方式的置信度"
-  },
   "statsCombinationColumn": {
     "message": "组合"
   },
@@ -4587,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "本时间段没有由组合判定的检测。"
-  },
-  "statsRulesMostActive": {
-    "message": "最活跃的规则"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} 个模式"
   },
   "statsRulesPatternsByMethod": {
     "message": "按方法的模式"
@@ -4636,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "等待更新的扩展"
   },
-  "statsToolsByVendor": {
-    "message": "按厂商的捕获"
-  },
   "statsToolsCapture": {
     "message": "捕获"
-  },
-  "statsToolsByTool": {
-    "message": "最常用的工具"
-  },
-  "statsToolsOverTime": {
-    "message": "捕获趋势"
   },
   "statsChangeColumn": {
     "message": "变化"
@@ -4660,9 +4426,6 @@
   "statsNoChanges": {
     "message": "本时间段内没有域名在已保存的访问之间改变防护。"
   },
-  "statsNothingNew": {
-    "message": "没有新增：所有防护在本时间段之前已在历史记录中。"
-  },
   "statsSectionSignals": {
     "message": "信号"
   },
@@ -4675,17 +4438,8 @@
   "statsSectionTools": {
     "message": "工具"
   },
-  "statsDomainChangesHint": {
-    "message": "在两次已保存的访问之间检测到的防护发生变化的域名。"
-  },
-  "statsFirstSeenHint": {
-    "message": "本时间段首次保存的防护和域名。"
-  },
   "statsSignalsNote": {
     "message": "每次已保存检测所匹配的证据类型：Cookie 和请求头名称、URL、页面元素、脚本和 JavaScript 钩子。"
-  },
-  "statsWeakEvidenceHint": {
-    "message": "匹配模式平均置信度最低的防护。它们的规则可能需要更强的模式。"
   },
   "statsCombinationsNote": {
     "message": "只有同时发现多个模式时，组合才会检测到防护。"
@@ -4696,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "规则"
   },
-  "statsRulesModified": {
-    "message": "已编辑的官方规则"
-  },
   "statsRulesDisabled": {
     "message": "已停用"
   },
   "statsRulesNeverMatchedHint": {
     "message": "在本时间段保存的页面上没有任何发现的已启用规则。"
   },
-  "statsRulesMissingHint": {
-    "message": "描述会显示在检测详情、历史记录和组合中。请在规则编辑器中添加。"
-  },
   "statsToolsNote": {
     "message": "保存在此设备上的高级捕获和工具结果。"
-  },
-  "statsCapturesUnit": {
-    "message": "捕获"
   },
   "detectionCardSureFmt": {
     "message": "{0}% 确定"
@@ -5139,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "此时间范围内的页面很少（{0}）：比较和排名可能有误导性。"
-  },
-  "statsLoading": {
-    "message": "正在加载统计数据..."
   },
   "statsEmptyShowAll": {
     "message": "显示全部历史记录"
@@ -5791,6 +5533,9 @@
   },
   "historyFilterPinned": {
     "message": "已固定"
+  },
+  "historyFilterCombinations": {
+    "message": "组合"
   },
   "historyNoResults": {
     "message": "没有符合搜索或筛选条件的记录。"
@@ -6814,6 +6559,9 @@
   },
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防护：{1} · 失败：{2} · 已跳过：{3}"
+  },
+  "bulkMostSeenFmt": {
+    "message": "最常出现：{0}"
   },
   "bulkStoppedRestart": {
     "message": "运行期间扩展已重新启动，因此运行已停止。仍在等待的页面未被扫描。"

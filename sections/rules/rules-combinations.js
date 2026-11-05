@@ -98,10 +98,6 @@ Rules.comboProblem = function(tree, top = true) {
   }
   return '';
 };
-/** Kept for callers of the old name: a tree is valid when it has no problem. */
-Rules.comboValidTree = function(tree) {
-  return !Rules.comboProblem(tree);
-};
 /** The text of a stored pattern, as the editor row shows it ("name = value" for cookies and headers). */
 Rules.comboPatternText = function(method, pattern) {
   if (!pattern || typeof pattern !== 'object') return '';
@@ -253,7 +249,6 @@ Rules.prototype.setComboPatternDescription = function(id, text, source) {
   document.querySelectorAll('#combinationsContainer .combo-item-desc[data-combo-field="description"]').forEach(el => {
     if (el !== source && el.dataset.pattern === id) {
       // Another copy of the same description: shows the new text as typed
-      delete el.dataset.i18nSource; delete el.dataset.i18nShown; delete el.dataset.i18nShowing;
       el.textContent = value;
     }
   });
@@ -311,7 +306,7 @@ Rules.prototype.addComboItems = function(combo, values, path = '') {
     this.comboReferencedOptions(combo).forEach(p => this.setComboPatternStrict(p.id, true));
   }
 };
-// A rule text in the UI language (rules-translations-ui.js): there it is edited as that language's translation
+// A rule text as the interface language shows it (Rules.shownText, in rules-text-fields.js)
 const comboLocale = () => (typeof Rules.uiLocale === 'function' ? Rules.uiLocale() : null);
 const comboLocalized = (text, map) => {
   const locale = comboLocale();

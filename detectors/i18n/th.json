@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "คุกกี้ mitigation ของ Netacea ในเบราว์เซอร์หรือที่เซิร์ฟเวอร์ตั้งค่า (ชื่อเริ่มต้น)",
   "Captcha verification with the mitigation cookie": "การยืนยัน captcha ร่วมกับคุกกี้ mitigation",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "คุกกี้ challenge ฝั่งไคลเอนต์ของ BIG-IP ASM (คำนำหน้าเริ่มต้น TSPD_101 เช่น TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "คุกกี้ ASM ร่วมกับคุกกี้ challenge ฝั่งไคลเอนต์ของมัน"
+  "ASM cookie with its client-side challenge cookie": "คุกกี้ ASM ร่วมกับคุกกี้ challenge ฝั่งไคลเอนต์ของมัน",
+  "Custom detector": "ตัวตรวจจับแบบกำหนดเอง",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: หน้า challenge แบบ proof-of-work ของ SG-CAPTCHA ที่แสดงให้ผู้เข้าชมที่น่าสงสัยเห็น ให้บริการภายใต้ /.well-known/sgcaptcha/ พร้อมเฮดเดอร์การตอบกลับ sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge หมายถึง Anti-Bot AI ของ SiteGround แสดง challenge ของมัน",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "หน้า challenge และ endpoint คำตอบของ SG-CAPTCHA ภายใต้ /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "ค่าคงที่ challenge ของ SG-CAPTCHA (sgchallenge, sgsubmit_url) ในสคริปต์ของหน้า",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "เฮดเดอร์ sg-captcha บนหน้า challenge ของ SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "เฮดเดอร์ sg-captcha พร้อมค่าคงที่ challenge ในสคริปต์ของหน้า",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "หน้า challenge ของ SG-CAPTCHA พร้อมค่าคงที่ของมันในสคริปต์ของหน้า"
 }

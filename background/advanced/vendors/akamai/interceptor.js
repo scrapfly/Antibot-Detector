@@ -460,64 +460,83 @@ async function akamaiStartExtraction(tabId) {
             return { status: 'capture_running' };
         }
 
-        // Delete _abck cookies for the current site
-        Logger.network('[AKAMAI-EXTRACT] Step 2: Getting cookies for:', tab.url);
-        const cookies = await PageCookies.getAll({ url: tab.url, name: '_abck' }, tab.id);
-        Logger.network('[AKAMAI-EXTRACT] Found', cookies.length, '_abck cookies');
+        // Arm first, delete last: the request listener, the extraction state and its 30 s stop exist before any cookie
+        // goes, so a failure while arming costs the person nothing, and one while deleting disarms what was armed
+        let extraction = null;
+        try {
+            // Enable extraction mode in interceptor
+            Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step 2: Enabling extraction mode');
 
-        for (const cookie of cookies) {
-            await PageCookies.remove(tab.url, cookie);
-            Logger.network('[AKAMAI-EXTRACT] Deleted cookie:', cookie.name);
-        }
-        Logger.network('[AKAMAI-EXTRACT] All _abck cookies deleted');
+            // First, ensure the interceptor is set up
+            if (!akamaiInterceptionListener) {
+                Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting up Akamai interceptor');
+                setupAkamaiInterceptor();
+            }
 
-        // Enable extraction mode in interceptor
-        Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Step 3: Enabling extraction mode');
-
-        // First, ensure the interceptor is set up
-        if (!akamaiInterceptionListener) {
-            Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting up Akamai interceptor');
-            setupAkamaiInterceptor();
-        }
-
-        // Set up extraction mode in the capture state
-        Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting extraction mode in capture state');
-        akamaiCaptureStateRef.set(tabId, {
-            active: true,
-            extractMode: true,
-            startTime: Date.now(),
-            tabUrl: tab.url,
-            results: null,
-            waitingForReload: false,  // Don't wait for reload in extraction mode
-            extractedData: null,
-            timeout: null
-        });
-        if (typeof setCaptureTimeout === 'function') {
-            setCaptureTimeout(akamaiCaptureStateRef, tabId, 30000, () => {
-                const state = akamaiCaptureStateRef.get(tabId);
-                if (state && state.extractMode) {
-                    if (typeof removeCaptureState === 'function') {
-                        removeCaptureState(akamaiCaptureStateRef, tabId);
-                    } else {
-                        akamaiCaptureStateRef.delete(tabId);
+            // Set up extraction mode in the capture state
+            Logger.debug('NETWORK', '[AKAMAI-EXTRACT] Setting extraction mode in capture state');
+            extraction = {
+                active: true,
+                extractMode: true,
+                startTime: Date.now(),
+                tabUrl: tab.url,
+                results: null,
+                waitingForReload: false,  // Don't wait for reload in extraction mode
+                extractedData: null,
+                timeout: null
+            };
+            akamaiCaptureStateRef.set(tabId, extraction);
+            if (typeof setCaptureTimeout === 'function') {
+                setCaptureTimeout(akamaiCaptureStateRef, tabId, 30000, () => {
+                    const state = akamaiCaptureStateRef.get(tabId);
+                    if (state && state.extractMode) {
+                        if (typeof removeCaptureState === 'function') {
+                            removeCaptureState(akamaiCaptureStateRef, tabId);
+                        } else {
+                            akamaiCaptureStateRef.delete(tabId);
+                        }
+                        akamaiRemoveListenerIfIdle();
+                        Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                     }
-                    akamaiRemoveListenerIfIdle();
-                    Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
-                }
-            });
-        } else {
-            const state = akamaiCaptureStateRef.get(tabId);
-            state.timeout = setTimeout(() => {
-                const currentState = akamaiCaptureStateRef.get(tabId);
-                if (currentState && currentState.extractMode) {
+                });
+            } else {
+                const state = akamaiCaptureStateRef.get(tabId);
+                state.timeout = setTimeout(() => {
+                    const currentState = akamaiCaptureStateRef.get(tabId);
+                    if (currentState && currentState.extractMode) {
+                        akamaiCaptureStateRef.delete(tabId);
+                        akamaiRemoveListenerIfIdle();
+                        Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
+                    }
+                }, 30000);
+                akamaiCaptureStateRef.set(tabId, state);
+            }
+            Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
+
+            // Delete _abck cookies for the current site, last: the page sends a fresh sensor when the popup reloads it
+            Logger.network('[AKAMAI-EXTRACT] Step 3: Getting cookies for:', tab.url);
+            const cookies = await PageCookies.getAll({ url: tab.url, name: '_abck' }, tab.id);
+            Logger.network('[AKAMAI-EXTRACT] Found', cookies.length, '_abck cookies');
+
+            for (const cookie of cookies) {
+                await PageCookies.remove(tab.url, cookie);
+                Logger.network('[AKAMAI-EXTRACT] Deleted cookie:', cookie.name);
+            }
+            Logger.network('[AKAMAI-EXTRACT] All _abck cookies deleted');
+        } catch (error) {
+            // Disarm: nothing may wait for a reload that will not come. A capture the person started on this tab in
+            // the meantime replaced the extraction's state and is left alone
+            if (extraction && akamaiCaptureStateRef.get(tabId) === extraction) {
+                if (typeof removeCaptureState === 'function') {
+                    removeCaptureState(akamaiCaptureStateRef, tabId);
+                } else {
+                    if (extraction.timeout) clearTimeout(extraction.timeout);
                     akamaiCaptureStateRef.delete(tabId);
-                    akamaiRemoveListenerIfIdle();
-                    Logger.network('[AKAMAI-EXTRACT] Auto-stopped after 30s timeout');
                 }
-            }, 30000);
-            akamaiCaptureStateRef.set(tabId, state);
+            }
+            akamaiRemoveListenerIfIdle();
+            throw error;
         }
-        Logger.network('[AKAMAI-EXTRACT] Extraction mode enabled for tab:', tabId);
 
         // The popup reloads the page once it has this answer (one reload, not two)
 
@@ -870,14 +889,20 @@ function setupAkamaiInterceptor() {
     };
 
     // Register listener for POST requests to Akamai endpoints
-    chrome.webRequest.onBeforeRequest.addListener(
-        akamaiInterceptionListener,
-        {
-            urls: ["<all_urls>"],
-            types: ["xmlhttprequest", "other"]
-        },
-        ["requestBody"]
-    );
+    try {
+        chrome.webRequest.onBeforeRequest.addListener(
+            akamaiInterceptionListener,
+            {
+                urls: ["<all_urls>"],
+                types: ["xmlhttprequest", "other"]
+            },
+            ["requestBody"]
+        );
+    } catch (error) {
+        // Not registered: the variable must not say it is, or no later start would ever register it
+        akamaiInterceptionListener = null;
+        throw error;
+    }
 
     Logger.network('[AKAMAI-CAPTURE] Request interceptor ready');
 }

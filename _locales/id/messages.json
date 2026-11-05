@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Tampilkan script perlindungan yang dimuat halaman ini"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Muat ulang halaman untuk menganalisis script proteksi"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Setel ulang cookie proteksi dan muat ulang untuk menganalisis script"
-  },
   "advToolReloadVersionHint": {
     "message": "Muat ulang halaman untuk mendeteksi versi proteksi"
   },
@@ -126,18 +120,6 @@
     "message": "Tidak dapat menyelesaikan tindakan ini: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Halaman grafik sebelumnya"
-  },
-  "statsChartNext": {
-    "message": "Halaman grafik berikutnya"
-  },
-  "statsChartPage": {
-    "message": "Halaman {0} dari {1}"
-  },
-  "statsChartShowing": {
-    "message": "{0}–{1} dari {2}"
-  },
   "statsSectionsLabel": {
     "message": "Bagian statistik"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Pilih rentang tanggal yang lebih panjang untuk menjelajahi riwayat tersimpan Anda."
   },
-  "statsDetectionRate": {
-    "message": "Entri dengan deteksi"
-  },
-  "statsActiveDays": {
-    "message": "Hari aktif"
-  },
   "statsAverageConfidence": {
     "message": "Rata-rata kepercayaan"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Menampilkan {0} hari terakhir. Total dan ekspor mencakup seluruh rentang yang dipilih."
   },
-  "statsProtectionRanking": {
-    "message": "Peringkat proteksi"
-  },
-  "statsCategoryTrend": {
-    "message": "Kategori dari waktu ke waktu"
-  },
-  "statsCategoryOverlap": {
-    "message": "Kategori yang ditemukan bersamaan"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Jumlah entri riwayat dengan kedua kategori. Sel diagonal menampilkan entri dengan kategori tersebut."
-  },
   "statsProtectionDetails": {
     "message": "Semua proteksi"
-  },
-  "statsDomainRanking": {
-    "message": "Peringkat domain"
-  },
-  "statsDomainMap": {
-    "message": "Kunjungan dan deteksi"
-  },
-  "statsDomainMapHint": {
-    "message": "Setiap titik adalah satu domain. Titik yang lebih besar memiliki lebih banyak proteksi berbeda."
   },
   "statsDomainDetails": {
     "message": "Semua domain"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Urutkan domain"
   },
-  "statsSortVisits": {
-    "message": "Kunjungan terbanyak"
-  },
-  "statsSortDetections": {
-    "message": "Deteksi terbanyak"
-  },
   "statsSortConfidence": {
     "message": "Kepercayaan tertinggi"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Distribusi kepercayaan"
-  },
-  "statsConfidenceTrend": {
-    "message": "Kepercayaan dari waktu ke waktu"
-  },
-  "statsCategoryConfidence": {
-    "message": "Kepercayaan per kategori"
   },
   "statsConfidenceNote": {
     "message": "Kepercayaan menggambarkan kekuatan bukti deteksi yang tersimpan, bukan bukti adanya fingerprinting atau challenge aktif."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Tidak ada domain yang cocok dengan pencarian Anda."
-  },
-  "statsSelectionNote": {
-    "message": "Grafik dan ekspor menggunakan rentang tanggal yang dipilih. Entri riwayat mewakili deteksi yang tersimpan, bukan setiap kunjungan browser."
   },
   "extensionName": {
     "message": "Scrapfly: detektor anti-bot"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Aktifkan atau nonaktifkan deteksi"
-  },
-  "noDetectionsFound": {
-    "message": "Tidak ada deteksi yang ditemukan"
   },
   "detectionScanningTitle": {
     "message": "Memindai halaman ini"
@@ -376,6 +313,9 @@
   },
   "searchDetectors": {
     "message": "Cari detektor..."
+  },
+  "rulesFiltersLabel": {
+    "message": "Filter aturan"
   },
   "paginationPrev": {
     "message": "Halaman sebelumnya"
@@ -590,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Cari"
   },
-  "advancedBtnExport": {
-    "message": "Ekspor"
-  },
   "advancedBtnExportTitle": {
     "message": "Ekspor rekaman"
-  },
-  "advancedBtnClearAll": {
-    "message": "Hapus semua"
   },
   "advancedBtnClearAllTitle": {
     "message": "Hapus semua rekaman"
@@ -1021,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Yakin ingin menghapus deteksi ini dari {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Gagal memuat pengaturan. Menggunakan nilai default."
-  },
   "settingsSavedToast": {
     "message": "Pengaturan disimpan"
   },
@@ -1045,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} sudah ada di daftar hitam"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} ditambahkan ke daftar hitam"
-  },
   "failedAddDomainFmt": {
     "message": "Gagal menambahkan domain: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} dihapus dari daftar hitam"
   },
   "invalidSettingsFmt": {
     "message": "Pengaturan tidak valid: {0}"
@@ -1195,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Kesalahan saat menerapkan pembaruan"
   },
-  "failedCheckForUpdates": {
-    "message": "Gagal memeriksa pembaruan"
-  },
   "errorCheckingForUpdates": {
     "message": "Kesalahan saat memeriksa pembaruan"
   },
@@ -1263,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "URL endpoint lengkap (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Variabel yang tersedia:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Contoh: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1513,9 +1429,6 @@
   "settingsDataSettingsRow": {
     "message": "Pengaturan"
   },
-  "settingsDataSettingsRowDesc": {
-    "message": "Ekspor atau impor pengaturan ekstensi"
-  },
   "settingsDataHistoryRow": {
     "message": "Riwayat deteksi"
   },
@@ -1620,6 +1533,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Cari deteksi..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Filter deteksi"
   },
   "detectionPaginationPage": {
     "message": "Halaman"
@@ -1980,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Pengaturan diimpor"
   },
-  "settingsImportFailedToast": {
-    "message": "Gagal mengimpor pengaturan: file tidak valid"
-  },
   "statsPrivacyNote": {
     "message": "Dihitung secara lokal dari riwayat deteksi Anda. Tidak ada yang keluar dari browser Anda."
-  },
-  "statsSubtitleFmt": {
-    "message": "Dihitung secara lokal dari {0} entri riwayat. Tidak ada yang keluar dari browser Anda."
   },
   "statsRangeLabel": {
     "message": "Rentang waktu"
@@ -2010,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Statistik muncul di sini setelah halaman dengan deteksi disimpan ke riwayat."
   },
-  "statsEntries": {
-    "message": "Entri riwayat"
-  },
   "statsUniqueDomains": {
     "message": "Domain unik"
   },
   "statsDetections": {
     "message": "Deteksi"
   },
-  "statsDistinctDetectors": {
-    "message": "Proteksi berbeda"
-  },
   "statsOverTime": {
     "message": "Deteksi dari waktu ke waktu"
   },
-  "statsTopProtections": {
-    "message": "Proteksi yang paling sering terdeteksi"
-  },
-  "statsTopDomains": {
-    "message": "Domain teratas"
-  },
-  "statsByCategory": {
-    "message": "Menurut kategori"
-  },
-  "statsByDifficulty": {
-    "message": "Menurut kesulitan"
-  },
-  "statsPagesUnit": {
-    "message": "halaman"
-  },
-  "statsVisitsUnit": {
-    "message": "kunjungan"
-  },
-  "statsDetectionsUnit": {
-    "message": "deteksi"
-  },
   "statsCategoryOther": {
     "message": "Lainnya"
-  },
-  "statsDifficultyNone": {
-    "message": "Tidak ada deteksi"
   },
   "statsNoData": {
     "message": "Tidak ada data dalam rentang ini"
@@ -2058,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Halaman: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} domain"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} kunjungan"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} deteksi"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} dari {1} deteksi · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} entri"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} dengan deteksi"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} kunjungan per domain"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} per entri"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "Rata-rata kepercayaan {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Deteksi: {0} · Hari: {1}"
@@ -2685,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Direkam"
   },
-  "advCommonScript": {
-    "message": "Script"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2751,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Tingkat proteksi:"
   },
-  "advCommonCookiesFound": {
-    "message": "Cookie ditemukan:"
-  },
   "advCommonSiteKey": {
     "message": "Site key"
   },
@@ -2790,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Script Python dengan requests dan BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Script Python dengan library requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Script Node.js dengan axios dan cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Script Node.js dengan axios"
   },
   "advCodeDescPhpDom": {
     "message": "Script PHP dengan cURL dan DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Script PHP dengan cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# dengan HttpClient dan HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# dengan HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go dengan net/http dan goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go dengan net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Perekaman aktif"
@@ -3063,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Klien reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "Client ID: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Disalin ke papan klip!"
   },
@@ -3165,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Script seed:"
   },
-  "advShapeInitJsScript": {
-    "message": "Script Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Script Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Script seed"
   },
   "advShapeSeedScripts": {
     "message": "Script seed"
@@ -4014,23 +3840,11 @@
   "tipScopePath": {
     "message": "Hasil digunakan ulang untuk path persis ini, apa pun query-nya."
   },
-  "tipStatsActiveDays": {
-    "message": "Hari dengan setidaknya satu halaman tersimpan."
-  },
-  "tipStatsDetections": {
-    "message": "Proteksi yang ditemukan di semua halaman tersimpan, termasuk yang berulang."
-  },
   "tipStatsDetectors": {
     "message": "Proteksi berbeda yang terlihat, masing-masing dihitung sekali."
   },
   "tipStatsDomains": {
     "message": "Situs berbeda di antara halaman tersimpan."
-  },
-  "tipStatsEntries": {
-    "message": "Halaman yang disimpan ke Riwayat dalam rentang ini."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0} dari {1} entri"
   },
   "tipPatterns": {
     "message": "Pola"
@@ -4525,38 +4339,11 @@
     "message": "Buka halaman web untuk melakukan scraping dengan Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} rekaman"
-  },
-  "statsFirstSeen": {
-    "message": "Baru periode ini"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "{0} proteksi dan {1} domain disimpan untuk pertama kalinya dalam rentang ini."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Pilih 7, 30, atau 90 hari untuk melihat apa yang baru."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Domain paling terlindungi"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} proteksi berbeda dalam {1} kunjungan."
-  },
-  "statsFoundTogether": {
-    "message": "Proteksi yang ditemukan bersamaan"
-  },
   "statsMethods": {
     "message": "Metode deteksi"
   },
   "statsMatchesUnit": {
     "message": "kecocokan"
-  },
-  "statsMethodsByCategory": {
-    "message": "Metode per kategori"
-  },
-  "statsWeakEvidence": {
-    "message": "Bukti terlemah"
   },
   "statsSignalColumn": {
     "message": "Sinyal"
@@ -4573,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Kombinasi"
   },
-  "statsDecidedBy": {
-    "message": "Cara deteksi diputuskan"
-  },
-  "statsCombinationGain": {
-    "message": "Kepercayaan menurut keputusan"
-  },
   "statsCombinationColumn": {
     "message": "Kombinasi"
   },
@@ -4587,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Tidak ada deteksi dalam rentang ini yang diputuskan oleh kombinasi."
-  },
-  "statsRulesMostActive": {
-    "message": "Aturan paling aktif"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} pola"
   },
   "statsRulesPatternsByMethod": {
     "message": "Pola menurut metode"
@@ -4636,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Menunggu ekstensi yang lebih baru"
   },
-  "statsToolsByVendor": {
-    "message": "Rekaman menurut vendor"
-  },
   "statsToolsCapture": {
     "message": "Rekaman"
-  },
-  "statsToolsByTool": {
-    "message": "Alat yang paling sering digunakan"
-  },
-  "statsToolsOverTime": {
-    "message": "Rekaman dari waktu ke waktu"
   },
   "statsChangeColumn": {
     "message": "Perubahan"
@@ -4660,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Tidak ada domain yang mengubah proteksinya di antara kunjungan tersimpan dalam rentang ini."
   },
-  "statsNothingNew": {
-    "message": "Tidak ada yang baru: setiap proteksi di sini sudah ada di Riwayat sebelum rentang ini."
-  },
   "statsSectionSignals": {
     "message": "Sinyal"
   },
@@ -4675,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Alat"
   },
-  "statsDomainChangesHint": {
-    "message": "Domain yang proteksi terdeteksinya berubah di antara dua kunjungan tersimpan."
-  },
-  "statsFirstSeenHint": {
-    "message": "Proteksi dan domain yang disimpan untuk pertama kalinya dalam rentang ini."
-  },
   "statsSignalsNote": {
     "message": "Jenis bukti yang cocok pada setiap deteksi tersimpan: nama cookie dan header, URL, elemen halaman, script, dan hook JavaScript."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Proteksi yang pola cocoknya memiliki rata-rata kepercayaan terendah. Aturannya mungkin memerlukan pola yang lebih kuat."
   },
   "statsCombinationsNote": {
     "message": "Kombinasi mendeteksi proteksi hanya jika beberapa pola ditemukan bersamaan."
@@ -4696,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Aturan"
   },
-  "statsRulesModified": {
-    "message": "Resmi yang diedit"
-  },
   "statsRulesDisabled": {
     "message": "Nonaktif"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Aturan aktif yang tidak menemukan apa pun pada halaman tersimpan dalam rentang ini."
   },
-  "statsRulesMissingHint": {
-    "message": "Deskripsi ditampilkan di detail deteksi, Riwayat, dan kombinasi. Tambahkan di editor aturan."
-  },
   "statsToolsNote": {
     "message": "Rekaman lanjutan dan hasil alat yang disimpan di perangkat ini."
-  },
-  "statsCapturesUnit": {
-    "message": "rekaman"
   },
   "detectionCardSureFmt": {
     "message": "{0}% yakin"
@@ -5139,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Sedikit halaman dalam rentang ini ({0}): perbandingan dan peringkat bisa menyesatkan."
-  },
-  "statsLoading": {
-    "message": "Memuat statistik..."
   },
   "statsEmptyShowAll": {
     "message": "Tampilkan semua riwayat"
@@ -5791,6 +5533,9 @@
   },
   "historyFilterPinned": {
     "message": "Disematkan"
+  },
+  "historyFilterCombinations": {
+    "message": "Kombinasi"
   },
   "historyNoResults": {
     "message": "Tidak ada entri yang cocok dengan pencarian atau filter Anda."
@@ -6814,6 +6559,9 @@
   },
   "bulkCountsFmt": {
     "message": "Selesai: {0} · Dengan perlindungan: {1} · Gagal: {2} · Dilewati: {3}"
+  },
+  "bulkMostSeenFmt": {
+    "message": "Paling sering terlihat: {0}"
   },
   "bulkStoppedRestart": {
     "message": "Ekstensi dimulai ulang selama putaran, jadi putaran dihentikan. Halaman yang masih menunggu tidak dipindai."

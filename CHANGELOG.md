@@ -5,6 +5,47 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.3] - 2026-11-05
+
+### Added
+
+- History: a Combinations filter next to the category filters keeps the pages where a combination matched.
+- Detection: a Scan again button, next to Clear cache and on pages with no completed scan, reloads and rescans the page in one click.
+- Detection: Anti-bot, Captcha and Fingerprint filter chips under the search narrow the results, together with the search.
+- Rules: filter chips for the three categories, Custom, Edited and Disabled narrow the list, together with the search.
+- Bulk scan: a "Most seen" line under the totals names the protections found on the most pages; the Markdown and JSON exports include it.
+- Advanced: Lemin Cropped Captcha and ALTCHA get Extract Site Key and Analyze Scripts (ALTCHA's key only on Cloud and Sentinel); 27 protections now have tools.
+- Rules → Update: a new anti-bot detector, SiteGround SG-CAPTCHA, the proof-of-work challenge SiteGround shows to flagged visitors.
+
+### Changed
+
+- History search ignores accents in Latin and Greek text, so "cafe" finds "Café" and the other way round.
+- Detection and Rules: a search or filter with no match now says so and offers Clear filters, instead of leaving an empty list.
+
+### Fixed
+
+- Editing, switching off, importing or updating rules now clears the saved results, so the next visit is scanned with the new rules instead of showing old cards for days.
+- Detection: changing the cache scope in Settings no longer leaves the tab blank until the popup is reopened; the page's saved results show again.
+- Detection: coming back to the tab with a search or a filter on keeps the list filtered instead of showing every result.
+- Detection: Brave, Opera and Vivaldi pages and the Chrome Web Store are now reported as pages that cannot be scanned.
+- Rules: a rule you just switched off shows under the Disabled chip, and its switch stays off when you page through the list.
+- Detectors that look for scripts in a page's head or inline (Queue-it, CHEQ, Anubis, Ruishu) now match; these checks never worked before.
+- History: Scan again now and Clear cache clear the saved result even when the cache scope setting changed after the entry was recorded.
+- History is no longer cut to the default size or entry limit while Settings cannot be read; it is capped at 25 MB until then.
+- Rules: a detector you add yourself shows its description in your language instead of English.
+- Akamai Extract Sensor no longer deletes the _abck cookie before it is ready, so a failed start leaves the cookie alone.
+- Imperva tools keep request bodies only from Imperva's own requests, and list each endpoint once, without its query, at most 20.
+- Imperva: Analyze Scripts lists script addresses with the page's own http or https and port, instead of always https without a port.
+- Shape Security: a capture that ends while the popup is open now resets Start Capturing and shows the capture at once.
+- Shape Security: Stop Capturing with nothing captured no longer saves an empty capture.
+- Websites can no longer read, or overwrite, two internal markers the extension kept on their window object (one showed a page came from the cache).
+- A page answered from the saved result no longer risks a scan that never finishes when the extension's window checks were still running.
+
+### Security
+
+- Bulk scan: a sitemap only adds pages of its own site (www included); listed addresses on other hosts, local ones included, are no longer opened.
+- Bulk scan: a sitemap that redirects to another site is not read, and its row says the file could not be read.
+
 ## [3.1.2] - 2026-11-04
 
 ### Changed
@@ -949,6 +990,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.2...v3.1.3
 [3.1.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/scrapfly/Antibot-Detector/compare/v3.0.9...v3.1.0

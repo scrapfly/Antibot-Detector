@@ -90,6 +90,11 @@ function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavig
   }
   Object.assign(context, interfaces, globals);
 
+  // What the page's global object holds before any extension script runs (names and symbols, read inside the page)
+  const ownKeys = () => JSON.parse(vm.runInContext(
+    'JSON.stringify({ names: Object.getOwnPropertyNames(window), symbols: Object.getOwnPropertySymbols(window).map(String) })', context));
+  const baseline = ownKeys();
+
   for (const file of MAIN_FILES) {
     vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: path.join(root, file) });
   }
@@ -107,7 +112,12 @@ function createPage({ href = 'https://example.test/', illegal = ILLEGAL, noNavig
     toMain: (detail) => dispatch(P.EVENTS.ISOLATED_TO_MAIN, detail),
     // The engine's argSubstitution for a hook, structured-cloned like the install detail
     engineArgSubstitution: (hook) => JSON.parse(JSON.stringify(engine.demHookArgSubstitution(hook))),
-    run: (code) => vm.runInContext(code, context)
+    run: (code) => vm.runInContext(code, context),
+    // What the MAIN-world scripts have left on the page's global object since before they loaded: own names and symbols
+    footprint: () => {
+      const now = ownKeys();
+      return { names: now.names.filter(name => !baseline.names.includes(name)), symbols: now.symbols.filter(symbol => !baseline.symbols.includes(symbol)) };
+    }
   };
 }
 

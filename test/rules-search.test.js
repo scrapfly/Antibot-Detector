@@ -10,6 +10,8 @@ const vm = require('node:vm');
 
 const context = vm.createContext({ console, window: {}, document: { querySelector: () => null, addEventListener() {} } });
 vm.runInContext('class Rules {} this.Rules = Rules;', context);
+// The search itself is RulesFilter's (modules/core/rules-filter.js, which reads the categories)
+for (const file of ['modules/core/categories.js', 'modules/core/rules-filter.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
 vm.runInContext(fs.readFileSync(path.join(__dirname, '../sections/rules/rules-handlers.js'), 'utf8'), context);
 
 test('the rule named like the search comes first, then names starting with it, then the other matches in their order', () => {

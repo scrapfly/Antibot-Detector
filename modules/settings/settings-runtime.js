@@ -191,9 +191,6 @@ SettingsRuntime._isWebhookUrlSafe = function(rawUrl) {
     return true;
 };
 
-// Even the path can carry a webhook token. Never log a destination.
-SettingsRuntime._redactUrlForLog = function() { return '[configured webhook]'; };
-
 // Builds the template-substitution context for webhook URL/headers/body.
 SettingsRuntime._buildWebhookContext = function(pageData, detectionResults) {
     const url = pageData.url || '';

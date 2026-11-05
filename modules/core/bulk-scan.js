@@ -9,6 +9,9 @@
  *                    the cap; what is left out is listed as skipped with the reason (duplicates and the pages over the
  *                    cap are only counted)
  *   isSitemap(), parseSitemap()   a sitemap address, and the <loc> entries of a sitemap or a sitemap index
+ *   sameSite()       whether an address a sitemap lists is on the sitemap's own site: a sitemap speaks for its own host
+ *                    only (the page keeps every other listed address out, and never fetches a sitemap listed for another
+ *                    host). It judges the address as listed: the worker opens it and follows its redirects
  *   createRun(), begin(), finish(), fail(), skip(), pause(), resume(), stop(), complete(), recover()
  *                    the run's states: running → paused → running, then done or stopped; recover() is what a service
  *                    worker that starts again does with a run it finds in session storage (nobody is scanning it any
@@ -16,6 +19,8 @@
  *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
  *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
+ *   protectionTotals()   how many scanned pages each protection was found on: the "Most seen" line of the page, and a line
+ *                    of the Markdown export and a field of the JSON export (the CSV is one row per protection, as it was)
  *   build(), fileName()   the CSV, JSON and Markdown exports
  */
 (function(root) {
@@ -26,10 +31,12 @@
   const MAX_URLS = 200;            // pages per run, at most
   const TIMEOUT_S = Object.freeze({ min: 10, max: 120, default: 45 });
   const MAX_SKIPPED_LISTED = 200;  // skipped lines listed in the table; the rest are counted
-  const ITEM_STATUSES = Object.freeze(['waiting', 'scanning', 'done', 'failed', 'skipped']);
-  const RUN_STATUSES = Object.freeze(['running', 'paused', 'stopped', 'done']);
-  /** Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. */
-  const REASONS = Object.freeze(['invalid', 'scheme', 'scope', 'sitemap', 'timeout', 'load', 'error', 'off']);
+  const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
+  /**
+   * Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. 'sitemap': the sitemap could
+   * not be read (not fetched, not a sitemap); 'moved': the sitemap was fetched but ended on another site, so it was not read.
+   */
+  const REASONS = Object.freeze(['invalid', 'scheme', 'scope', 'sitemap', 'moved', 'timeout', 'load', 'error', 'off']);
   const FORMATS = Object.freeze(['csv', 'json', 'md']);
   const TYPES = Object.freeze({ csv: 'text/csv', json: 'application/json', md: 'text/markdown' });
 
@@ -199,6 +206,39 @@
       if (value) locs.push(value);
     }
     return { kind, locs };
+  }
+
+  /**
+   * The site an address belongs to: its host in lower case, without a leading "www." (the scheme, the port, the path and
+   * the query do not matter). '' when it is not an address that is scanned (not http or https, no host, not an address).
+   * It reads the address as normalize() does, which is what the worker scans.
+   * @param {string} address
+   * @returns {string}
+   */
+  function siteOf(address) {
+    const normal = normalize(address);
+    if (!normal.url) return '';
+    let host = new URL(normal.url).hostname.toLowerCase().replace(/\.$/, '');
+    // "www." is the same site as the host under it, but only when something is under it (www.com is a host)
+    if (host.startsWith('www.') && host.indexOf('.', 4) !== -1) host = host.slice(4);
+    return host;
+  }
+
+  /**
+   * Whether an address listed in a sitemap is on the sitemap's own site. A sitemap speaks for its own site only: each page of
+   * a run is a real visit with the person's cookies, so a public sitemap does not get to list 127.0.0.1, a router, a cloud
+   * metadata address or someone else's site. example.com and www.example.com are one site; the port and the scheme may differ,
+   * the host may not. Addresses the person pastes never go through this (a local test page is a real use).
+   * What is judged is the address as listed. It is not a promise about where the visit ends: the worker opens the listed
+   * address and follows its redirects, so a hostile host can still redirect one of its own listed addresses to another host
+   * (the person's own Sites to scan list is the only check after that).
+   * @param {string} sitemapUrl  the address of the sitemap
+   * @param {string} loc  an entry of it (a page, or a sitemap of an index)
+   * @returns {boolean}
+   */
+  function sameSite(sitemapUrl, loc) {
+    const site = siteOf(sitemapUrl);
+    return site !== '' && site === siteOf(loc);
   }
 
   /**
@@ -412,6 +452,38 @@
     return { detections, difficulty };
   }
 
+  /**
+   * How many of the pages that were scanned each protection was found on, most first and then by name. A page counts once
+   * for a protection however many of its detections name it. A page that failed, was skipped, waits or is being scanned has
+   * no result and counts for nothing. A protection that went by two names (or a spelling of one) is one row, as History groups
+   * them (Categories.protectionKey), under the name it was first found with.
+   * @param {object} run
+   * @returns {Array<{name: string, category: string, pages: number}>}
+   */
+  function protectionTotals(run) {
+    const rows = new Map();
+    for (const item of (run && Array.isArray(run.items) ? run.items : [])) {
+      if (!item || item.status !== 'done' || !Array.isArray(item.detections)) continue;
+      const onPage = new Set();
+      for (const d of item.detections) {
+        if (!d || typeof d !== 'object') continue;
+        const name = detectionName(d);
+        // "?" is what summarize() writes for a detection that has no name
+        if (!name || name === '?') continue;
+        const key = Categories ? Categories.protectionKey(name) : name.toLowerCase();
+        if (onPage.has(key)) continue;
+        onPage.add(key);
+        const row = rows.get(key);
+        if (row) row.pages++;
+        else rows.set(key, { key, name, category: Categories ? Categories.keyOf(d) : String(d.category || ''), pages: 1 });
+      }
+    }
+    // By the key, not the shown name: the same order on every machine and in every language
+    return [...rows.values()]
+      .sort((a, b) => b.pages - a.pages || (a.key < b.key ? -1 : (a.key > b.key ? 1 : 0)))
+      .map(({ name, category, pages }) => ({ name, category, pages }));
+  }
+
   /* ---------- Exports ---------- */
 
   /** A spreadsheet runs text that starts with = + - @ as a formula: the apostrophe keeps it text. */
@@ -444,7 +516,8 @@
       exportedAt: new Date(now).toISOString(),
       run: run ? {
         status: run.status, reason: run.reason || null, startedAt: iso(run.startedAt) || null, finishedAt: iso(run.finishedAt) || null,
-        timeoutSec: run.timeoutSec, duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run)
+        timeoutSec: run.timeoutSec, duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run),
+        protectionTotals: protectionTotals(run)
       } : null,
       pages: items.map(item => ({
         url: item.url,
@@ -477,8 +550,11 @@
     const c = counts(run);
     const parts = [`${c.total} pages`, c.done && `${c.done} scanned`, c.failed && `${c.failed} failed`, c.skipped && `${c.skipped} skipped`,
       c.waiting && `${c.waiting} waiting`, c.scanning && `${c.scanning} scanning`].filter(Boolean);
-    const lines = ['# Scrapfly Antibot Detector: Bulk scan', '', `${parts.join(', ')}; ${c.found} with protections`, '',
-      '| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |'];
+    const lines = ['# Scrapfly Antibot Detector: Bulk scan', '', `${parts.join(', ')}; ${c.found} with protections`, ''];
+    // The protections found on the most pages, when any was found
+    const seen = protectionTotals(run).slice(0, MOST_SEEN);
+    if (seen.length) lines.push(`Most seen: ${seen.map(row => `${mdCell(row.name)} (${row.pages} page${row.pages === 1 ? '' : 's'})`).join(', ')}`, '');
+    lines.push('| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |');
     for (const item of (run && run.items) || []) {
       const found = (Array.isArray(item.detections) ? item.detections : [])
         .map(d => `${d.name} (${d.category}${Number.isFinite(d.confidence) ? `, ${d.confidence}%` : ''})`);
@@ -510,10 +586,10 @@
   }
 
   const api = {
-    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, ITEM_STATUSES, RUN_STATUSES, REASONS, FORMATS,
-    capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, prepare,
+    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
+    capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
-    summarize, build, fileName
+    summarize, protectionTotals, build, fileName
   };
   root.BulkScan = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BulkScan = api;

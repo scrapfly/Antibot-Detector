@@ -627,8 +627,7 @@ class ScrapflyPopup {
         return;
       }
       if (currentSection && currentSection.initialized) {
-        const shouldSkipRefresh = tabName !== 'detection'
-          || (this.detection.htmlLoaded && !this.detection.cacheCleared);
+        const shouldSkipRefresh = tabName !== 'detection' || this.detection.htmlLoaded;
         if (shouldSkipRefresh) {
           return;
         }
@@ -717,30 +716,24 @@ class ScrapflyPopup {
             this.detection.setupEventListeners();
           }
 
-          // Check if cache was cleared while tab was hidden
-          if (this.detection.cacheCleared) {
-            this.detection.cacheCleared = false;
-            this.detection.currentResults = [];
-            this.detection.showEmptyState();
-          } else {
-            // Show "Analyzing…" instantly so the body is never blank during the
-            // async cache/detection lookup.
-            if (!this.detection.isShowingResults) {
-              this.detection.showAnalyzingState();
-            }
-            // Display existing cached data without triggering fresh detection
-            await this.checkAndDisplayExistingDetection(requestId);
+          // Show "Analyzing…" instantly so the body is never blank during the
+          // async cache/detection lookup.
+          if (!this.detection.isShowingResults) {
+            this.detection.showAnalyzingState();
+          }
+          // Display existing cached data without triggering fresh detection
+          await this.checkAndDisplayExistingDetection(requestId);
 
-            if (!this.isDetectionViewRequestCurrent(requestId)) {
-              break;
-            }
+          if (!this.isDetectionViewRequestCurrent(requestId)) {
+            break;
+          }
 
-            // Re-attach click handlers for valid results (if any remain after cache check)
-            // This is needed because DOM elements may have been recreated
-            if (this.detection.currentResults && this.detection.currentResults.length > 0) {
-              if (this.detection.paginationManager) {
-                this.detection.paginationManager.setItems(this.detection.currentResults);
-              }
+          // Re-attach click handlers for valid results (if any remain after cache check)
+          // This is needed because DOM elements may have been recreated
+          if (this.detection.currentResults && this.detection.currentResults.length > 0) {
+            // The list as the search and the chips leave it, not the whole list for a moment
+            if (this.detection.paginationManager) {
+              DetectionUI.applyFilters.call(this.detection);
             }
           }
         }

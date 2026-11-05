@@ -111,11 +111,6 @@
   color: var(--accent-light);
 }
 
-.modal-card-header .card-icon.icon-color {
-  background: rgba(168, 85, 247, 0.15);
-  color: var(--p-a78bfa);
-}
-
 .modal-card-header .card-icon.icon-search {
   background: rgba(34, 197, 94, 0.15);
   color: var(--p-4ade80);
@@ -181,14 +176,6 @@
 
 .modal-card-body-methods {
   padding: 12px;
-}
-
-/* Card Description Text */
-.card-description {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin: 0 0 12px 0;
-  line-height: 1.5;
 }
 
 /* Option Hint Text */
@@ -677,14 +664,6 @@
 
 .icon-picker-upload-btn svg {
   flex-shrink: 0;
-}
-
-/* Icon Selector */
-.icon-selector {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
 }
 
 .current-icon {
@@ -1988,53 +1967,6 @@
   justify-content: center;
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   z-index: 1;
-}
-
-/* Author Display in Detector Card */
-.detector-author {
-  font-size: 11px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin: 0;
-}
-
-/* Read-only Author Input Field Styling */
-.readonly-field {
-  background-color: var(--bg-tertiary);
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Adjust action buttons grid for 5 columns */
-.action-buttons {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-/* ============================================
-   Window Condition Select Dropdown
-   ============================================ */
-
-/* Inline condition select in method items */
-.condition-select {
-  flex: 1;
-  padding: 6px 24px 6px 8px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 5px;
-  color: var(--text-primary);
-  font-size: 11px;
-  cursor: pointer;
-  transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 6px center;
-  min-width: 120px;
-  max-width: 140px;
 }
 
 /* ============================================

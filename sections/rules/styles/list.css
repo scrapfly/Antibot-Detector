@@ -116,6 +116,50 @@
   flex-shrink: 0;
 }
 
+/* Filter chips under the search. The chips are History's (.history-filter-chip, in history.css, which the popup links too); only the
+   row is restated here, as History's is scoped to its own tab. */
+.rules-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -4px 0 0;
+}
+
+.rules-filters[hidden] {
+  display: none;
+}
+
+/* The icon of an edited rule is amber, like its tag on the card; a switched-off rule's is quiet */
+.rules-filters .history-filter-chip[data-filter="edited"] {
+  --chip-color: var(--warning-light);
+}
+
+.rules-filters .history-filter-chip[data-filter="disabled"] {
+  --chip-color: var(--text-muted);
+}
+
+/* There are rules, but the search and the chips match none: a line and the way back */
+.rules-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.rules-no-results[hidden] {
+  display: none;
+}
+
+.rules-no-results p {
+  margin: 0;
+  max-width: 300px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
 /* Rule updates waiting for a newer extension, under the toolbar */
 .rules-ext-notice {
   display: flex;
@@ -248,24 +292,6 @@
 
 .rules-menu-item.delete-btn:hover {
   background: rgba(239, 68, 68, 0.15);
-}
-
-/* Import/Export/Clear Button Styles (also used by the History tab) */
-.import-btn-small, .export-btn-small, .clear-btn-small {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-  background: rgba(148, 163, 184, 0.18);
-  color: var(--g-d1d5db);
 }
 
 /* Rules List Container */

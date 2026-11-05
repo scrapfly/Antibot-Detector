@@ -211,3 +211,112 @@ test('a settings change inside the debounce is not lost to a scan write right af
     HistoryRetention.DEBOUNCE_MS = wait;
   }
 });
+
+// ---- Settings that cannot be read are not "no settings": nothing is trimmed with the defaults
+
+/** A History of `count` entries and a chrome.storage.local that answers for the settings as the test says: a stored value (or none), or a failed read. */
+function settingsWorld({ count = 1500, settings, failSettingsRead = false } = {}) {
+  const store = { scrapfly_history: JSON.stringify({ items: Array.from({ length: count }, (_, i) => entry(`e${i}`, 0)), lastUpdated: 1 }) };
+  if (settings !== undefined) store.scrapfly_settings = settings;
+  const writes = [];
+  global.chrome = { storage: { local: {
+    get: async (keys) => {
+      if (failSettingsRead && [].concat(keys).includes('scrapfly_settings')) throw new Error('storage is unavailable');
+      return Object.fromEntries([].concat(keys).filter((k) => k in store).map((k) => [k, store[k]]));
+    },
+    set: async (obj) => { writes.push(Object.keys(obj)); Object.assign(store, obj); }
+  } } };
+  return { writes, kept: () => JSON.parse(store.scrapfly_history).items.length };
+}
+const limitOf = (limit) => JSON.stringify({ settings: { history: { historyLimit: limit } } });
+
+test('settings that cannot be read remove nothing: 1,500 entries under a saved limit of 2,000 are all kept', async () => {
+  const unreadable = [
+    ['text that is not JSON', '{oops'],
+    ['JSON that is not an object', '42'],
+    ['null', 'null'],
+    ['a list', '[1,2]'],
+    ['a wrapper with no settings in it', JSON.stringify({ settings: 'junk' })],
+    ['a number where the settings go', 5]
+  ];
+  for (const [what, settings] of unreadable) {
+    const w = settingsWorld({ settings });
+    try {
+      assert.strictEqual(await HistoryRetention.run('history_write'), 0, `${what}: removes nothing`);
+      assert.strictEqual(w.kept(), 1500, `${what}: every entry is still there`);
+      assert.deepStrictEqual(w.writes, [], `${what}: nothing is written`);
+    } finally {
+      delete global.chrome;
+    }
+  }
+});
+
+test('a settings read that fails removes nothing and does not throw, for a settings save and for a plain run alike', async () => {
+  for (const reason of ['settings_saved', 'history_write', 'alarm', 'startup']) {
+    const w = settingsWorld({ settings: limitOf(2000), failSettingsRead: true });
+    try {
+      assert.strictEqual(await HistoryRetention.run(reason), 0, reason);
+      assert.strictEqual(w.kept(), 1500, reason);
+      assert.deepStrictEqual(w.writes, [], `${reason}: nothing is written`);
+    } finally {
+      delete global.chrome;
+    }
+  }
+});
+
+test('settings that read fine are applied as before: the limit the person chose, and the 1,000-entry cap when none was saved', async () => {
+  const cases = [
+    ['a saved limit of 2,000 keeps 1,500', limitOf(2000), 0, 1500],
+    ['a saved limit of 1,200 takes 300', limitOf(1200), 300, 1200],
+    ['no limit (0) is the 1,000-entry cap', limitOf(0), 500, 1000],
+    ['settings that were never saved are a normal read: the cap applies', undefined, 500, 1000]
+  ];
+  for (const [what, settings, removed, left] of cases) {
+    const w = settingsWorld({ settings });
+    try {
+      assert.strictEqual(await HistoryRetention.run('history_write'), removed, what);
+      assert.strictEqual(w.kept(), left, what);
+    } finally {
+      delete global.chrome;
+    }
+  }
+});
+
+test('the first run after settings become readable again trims to what the person chose', async () => {
+  const w = settingsWorld({ settings: '{oops' });
+  try {
+    assert.strictEqual(await HistoryRetention.run('history_write'), 0, 'unreadable: skipped');
+    global.chrome.storage.local.set({ scrapfly_settings: limitOf(1200) });
+    assert.strictEqual(await HistoryRetention.run('settings_saved'), 300, 'readable: the person\'s limit');
+    assert.strictEqual(w.kept(), 1200);
+  } finally {
+    delete global.chrome;
+  }
+});
+
+// ---- Unreadable settings are told apart from a retention that cannot work at all
+
+test('a missing StorageManager is a bug that surfaces, not settings that "cannot be read"', async () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const vm = require('node:vm');
+  // The worker's context without StorageManager (the worker loads it before the retention) and without require
+  const ctx = vm.createContext({ console, chrome: { storage: { local: { get: async () => ({}), set: async () => {} } } } });
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'background', 'history-retention.js'), 'utf8').replace(/^const HistoryRetention/m, 'globalThis.HistoryRetention'), ctx);
+  await assert.rejects(() => ctx.HistoryRetention.readConfig(), (error) => /require is not defined|StorageManager/.test(error.message),
+    'the run fails loudly (schedule() warns "Run failed"), where a null would pass for "the person\'s settings are unreadable" and skip every run for good');
+  await assert.rejects(() => ctx.HistoryRetention.run('history_write'), /require is not defined|StorageManager/);
+
+  // With StorageManager there, a failed or unparseable read is still the null that skips the run
+  const settings = (read) => ({ get: read, set: async () => {} });
+  const withManager = (read) => {
+    const world = vm.createContext({ console, chrome: { storage: { local: settings(read) } } });
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'modules', 'core', 'storage-manager.js'), 'utf8'), world);
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'background', 'history-retention.js'), 'utf8').replace(/^const HistoryRetention/m, 'globalThis.HistoryRetention'), world);
+    return world.HistoryRetention;
+  };
+  assert.strictEqual(await withManager(async () => { throw new Error('storage is unavailable'); }).readConfig(), null);
+  assert.strictEqual(await withManager(async () => ({ scrapfly_settings: '{oops' })).readConfig(), null);
+  const config = await withManager(async () => ({ scrapfly_settings: JSON.stringify({ settings: { history: { historyLimit: 50 } } }) })).readConfig();
+  assert.strictEqual(config.limit, 50);
+});

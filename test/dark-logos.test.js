@@ -84,7 +84,7 @@ test('Detection and History show the dark copy of a brand logo through one helpe
   // The dark copy never sits on the white plate
   const css = ['sections/detection/detection.css', 'sections/history/history.css'].map(f => fs.readFileSync(path.join(root, f), 'utf8')).join('\n');
   for (const selector of ['.card-icon-section img.brand-logo-dark', '.detection-modal-icon img.brand-logo-dark',
-    '.history-detection-tag.icon-badge .detection-icon.brand-logo-dark', '.history-modal-detection-icon .modal-detector-icon.brand-logo-dark']) {
+    '.history-modal-detection-icon .modal-detector-icon.brand-logo-dark']) {
     const rule = css.match(new RegExp(selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' \\{([^}]*)\\}'));
     assert.ok(rule, selector);
     assert.doesNotMatch(rule[1], /#fff|white/, selector);

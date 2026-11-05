@@ -99,7 +99,7 @@ function pageScripts() {
     .filter(src => (!src.startsWith('../') || SHARED_SCRIPTS.includes(src)) && !stubbed.includes(src))
     .map(src => path.posix.normalize('sections/stats/' + src));
 }
-const RENDERERS = ['bars', 'line', 'stacked', 'donut', 'heatmap', 'calendar', 'matrix', 'scatter', 'rank', 'segments', 'sparkline'];
+const RENDERERS = ['bars', 'stacked', 'heatmap', 'calendar', 'rank', 'segments', 'sparkline'];
 
 /**
  * options: { preferences (extra storage), download (fn), now, language }

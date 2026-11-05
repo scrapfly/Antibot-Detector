@@ -63,6 +63,7 @@ test('existing input handler still filters and clearing restores all results', (
   assert.match(source, /searchInput\.addEventListener\('input', \(e\) => \{\s*this\.handleSearch\(e\.target\.value\)/);
   const sandbox = vm.createContext({ self: {} });
   vm.runInContext(read('modules/core/categories.js'), sandbox);
+  vm.runInContext(read('modules/core/detection-filter.js'), sandbox);
   vm.runInContext(read('utils/format-utils.js'), sandbox);
   sandbox.FormatUtils = sandbox.self.FormatUtils;
   vm.runInContext(read('utils/detection-utils.js'), sandbox);

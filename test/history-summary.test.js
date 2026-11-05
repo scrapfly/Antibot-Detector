@@ -16,7 +16,7 @@ function loadHistory() {
   context.self = context;
   context.window = context;
   for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'modules/detection/detection-combinations.js', 'modules/ui/combination-checklist.js',
-    'modules/core/history-store.js', 'sections/history/history.js']) {
+    'modules/core/history-store.js', 'modules/core/history-filter.js', 'sections/history/history.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const history = Object.create(context.History.prototype);
@@ -75,6 +75,23 @@ test('the card counts the combinations that fired, right after the fingerprint t
   const order = ['Device profile', 'Browser profile', 'Combination 3'].map(name => chip.indexOf(name));
   assert.ok(order.every(at => at > 0) && order[0] < order[1] && order[1] < order[2], JSON.stringify(order));
   assert.match(chip, /60%/);
+});
+
+test('the Combinations chip and the card count read the same combinations: a page is kept exactly when its card says one or more', () => {
+  const history = loadHistory();
+  const pages = [
+    [{ detector: { name: 'A' }, category: 'Fingerprint', combinations: [{ id: 'x', confidence: 10 }] }],
+    [{ detector: { name: 'B' }, category: 'Anti-Bot', combinations: [] }, { detector: { name: 'C' }, category: 'Fingerprint', combinations: [{ id: 'y' }, { id: 'z' }] }],
+    [{ detector: { name: 'D' }, category: 'Anti-Bot', combinations: null }],
+    [{ detector: { name: 'E' }, category: 'Captcha', combinations: [null, 'x', 7] }],
+    []
+  ];
+  const Filter = require('../modules/core/history-filter.js');
+  for (const detections of pages) {
+    const shown = Number((history.renderHistorySummary(detections).match(/data-tip="Matched combinations: (\d+)"/) || [])[1] || 0);
+    assert.strictEqual(shown, Filter.firedCombinations(detections).length, 'the same count');
+    assert.strictEqual(Filter.hasCombinations({ detections }), shown > 0, 'kept by the chip exactly when the card shows one or more');
+  }
 });
 
 test('with no combination the total is there, dimmed like an empty category; with no detections only "No detections" shows', () => {

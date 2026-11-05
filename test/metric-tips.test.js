@@ -150,7 +150,7 @@ test('every new tip string exists in all 12 locales with the same placeholders',
   const locales = fs.readdirSync(path.join(root, '_locales'));
   const en = JSON.parse(fs.readFileSync(path.join(root, '_locales/en/messages.json'), 'utf8'));
   const keys = Object.keys(en).filter(k => /^tip[A-Z]/.test(k));
-  assert.ok(keys.length >= 30);
+  assert.ok(keys.length >= 25, 'the pattern finds the tip strings (29 after the unused ones were removed in 3.1.3)');
   for (const locale of locales) {
     const messages = JSON.parse(fs.readFileSync(path.join(root, '_locales', locale, 'messages.json'), 'utf8'));
     for (const key of keys) {

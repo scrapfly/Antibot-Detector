@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Netacea मिटिगेशन कुकी, ब्राउज़र में या सर्वर द्वारा सेट (डिफ़ॉल्ट नाम)",
   "Captcha verification with the mitigation cookie": "मिटिगेशन कुकी के साथ कैप्चा सत्यापन",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM क्लाइंट-साइड चैलेंज कुकी (डिफ़ॉल्ट प्रीफ़िक्स TSPD_101, जैसे TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "अपनी क्लाइंट-साइड चैलेंज कुकी के साथ ASM कुकी"
+  "ASM cookie with its client-side challenge cookie": "अपनी क्लाइंट-साइड चैलेंज कुकी के साथ ASM कुकी",
+  "Custom detector": "कस्टम डिटेक्टर",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: संदिग्ध विज़िटरों को दिखाया जाने वाला SG-CAPTCHA proof-of-work चैलेंज पेज, जो /.well-known/sgcaptcha/ के अंतर्गत sg-captcha रिस्पॉन्स हेडर के साथ परोसा जाता है",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, यानी SiteGround के Anti-Bot AI ने अपना चैलेंज दिखाया",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "/.well-known/sgcaptcha/ के अंतर्गत SG-CAPTCHA चैलेंज पेज और उत्तर एंडपॉइंट",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "पेज की स्क्रिप्ट में SG-CAPTCHA चैलेंज कॉन्स्टेंट (sgchallenge, sgsubmit_url)",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA चैलेंज पेज पर sg-captcha हेडर",
+  "sg-captcha header with the challenge constants in the page's scripts": "पेज की स्क्रिप्ट में चैलेंज कॉन्स्टेंट के साथ sg-captcha हेडर",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "पेज की स्क्रिप्ट में अपने कॉन्स्टेंट के साथ SG-CAPTCHA चैलेंज पेज"
 }

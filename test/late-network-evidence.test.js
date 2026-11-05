@@ -78,13 +78,13 @@ const request = (url, type = 'xmlhttprequest', tabId = 1) => requestListener.fn(
 const navigate = (url, tabId = 1) => navigationListener.fn({ tabId, url, type: 'main_frame', requestId: `nav${++nextTimer}` });
 
 Engine.getStoredDetection = async () => out.cache && { detectionResults: JSON.parse(JSON.stringify(out.cache)), favicon: null };
-Engine.storeDetection = async (url, pageData, results) => { out.stores++; out.cache = JSON.parse(JSON.stringify(results)); return { url, timestamp: 1, expiry: 2, cacheScope: 'url' }; };
+Engine.storeDetection = async (url, pageData, results) => { out.stores++; out.pageData = pageData; out.cache = JSON.parse(JSON.stringify(results)); return { url, timestamp: 1, expiry: 2, cacheScope: 'url' }; };
 worker.setBadgeForDetections = async (tabId, url, results) => { out.badge = results.map(d => `${d.detector.id}:${d.confidence}`); };
 const detectOnPage = worker.detectionEngine.detectOnPage;
 worker.detectionEngine.detectOnPage = function (...args) { out.matched++; return detectOnPage.apply(this, args); };
 
-/** A finished scan of PAGE in tab 1 that saw CHEQ's visitor cookie only */
-async function scanned() {
+/** A finished scan of PAGE in tab 1 that saw CHEQ's visitor cookie only (`startTime`: when its scan began) */
+async function scanned(startTime) {
   held.clear();
   for (const store of ['detectionStates', 'networkUrlsStore', 'payloadStore', 'responseStore']) worker[store].clear();
   navigate(PAGE);
@@ -92,7 +92,7 @@ async function scanned() {
   const fromCookie = worker.detectionEngine.runDetector(cheq, { url: PAGE, dom: [], allCookies: [{ name: '_cq_duid', value: 'abc' }] });
   assert.ok(fromCookie.detected && fromCookie.confidence < 100, `the cookie alone is below proof (${fromCookie.confidence})`);
   const state = { url: PAGE, documentId: 'doc-1', hooksData: new Map(), completedMethods: new Set(['cookies', 'headers', 'url', 'dom', 'payload']),
-    mainData: [{ ...fromCookie, category: 'antibot', detector: { id: cheq.id, name: cheq.name } }] };
+    mainData: [{ ...fromCookie, category: 'antibot', detector: { id: cheq.id, name: cheq.name } }], ...(startTime ? { startTime } : {}) };
   worker.detectionStates.set(1, state);
   await worker.finalizeDetection(1, state);
   assert.equal(worker.detectionStates.has(1), false, 'the scan finished');
@@ -132,6 +132,26 @@ test('a detector the scan did not find is added from a late request', async () =
   const ids = out.cache.map(d => d.detector.id).sort();
   assert.deepEqual(ids, [cheq.id, cloudflare.id].sort(), 'Cloudflare added, CHEQ kept as the scan found it');
   assert.ok(out.cache.find(d => d.detector.id === cheq.id).confidence < 100);
+});
+
+test('a scan is saved with the time it began; what a late request adds to its saved result is not dated (that result is of the current rules)', async () => {
+  await scanned(4242);
+  assert.equal(out.pageData.scanStartedAt, 4242, 'the scan\'s own save');
+  await request(PROOF);
+  await runTimers();
+  assert.equal(out.stores, 1);
+  assert.equal(out.pageData.scanStartedAt, undefined, 'merged into the saved result: dated with the scan it came from, a newer result would be saved as stale');
+});
+
+test('when the saved result is gone (the rules changed) a late request\'s evidence joins the scan\'s own results, dated with its start', async () => {
+  await scanned(4242);
+  out.cache = null; // the rules changed: no saved result is served any more
+  await request(PROOF);
+  await runTimers();
+  assert.equal(out.stores, 1);
+  assert.equal(out.pageData.scanStartedAt, 4242, 'a result that began before the change is never served');
+  const found = out.cache.find(d => d.detector.id === cheq.id);
+  assert.ok(found.matches.some(m => m.type === 'cookie') && found.matches.some(m => m.type === 'url' && m.fullUrl === PROOF), 'the scan\'s evidence and the late one');
 });
 
 /** The evidence the engine finds in one late request, as the batch check builds it */

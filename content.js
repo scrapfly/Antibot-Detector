@@ -13,12 +13,14 @@ var spaObserver = spaObserver || null; // SPA URL-change observer (module-scoped
 var spaUrlChangeTimeout = spaUrlChangeTimeout || null;
 var detectionFinalized = detectionFinalized || false; // Flag to suppress late events after onDetection
 var hooksMonitoringComplete = hooksMonitoringComplete || false;
+// This load was answered from the saved result: no hooks, no scan. This world's own variable; the MAIN world keeps its own,
+// and neither is a property the page's window could show (the page shares the MAIN world's window object)
+var cacheHitEarlyExit = cacheHitEarlyExit || false;
 var pageShownAfterPrerender = pageShownAfterPrerender || false; // the page was prerendered and has just been shown
 
 // Bridge protocol: modules/core/bridge-protocol.js (loaded first in this content script)
 const SCRAPFLY_PROTOCOL = globalThis.ScrapflyBridgeProtocol;
 const BRIDGE_TYPES = SCRAPFLY_PROTOCOL.MESSAGE_TYPES;
-const CACHE_HIT_FLAG = SCRAPFLY_PROTOCOL.GLOBALS.CACHE_HIT_EARLY_EXIT; // this world's own flag, same name as MAIN's
 const SCRAPFLY_BRIDGE_TOKEN_FIELD = SCRAPFLY_PROTOCOL.FIELDS.TOKEN;
 const SCRAPFLY_BRIDGE_INIT_EVENT = SCRAPFLY_PROTOCOL.EVENTS.BRIDGE_INIT;
 const SCRAPFLY_ISOLATED_TO_MAIN_EVENT = SCRAPFLY_PROTOCOL.EVENTS.ISOLATED_TO_MAIN;
@@ -100,13 +102,13 @@ async function installJSHooks(options = {}) {
 }
 
 async function rearmHooksForNewDetectionIfNeeded() {
-    if (!detectionFinalized && !hooksMonitoringComplete && window[CACHE_HIT_FLAG] !== true) {
+    if (!detectionFinalized && !hooksMonitoringComplete && cacheHitEarlyExit !== true) {
         return;
     }
 
     detectionFinalized = false;
     hooksMonitoringComplete = false;
-    window[CACHE_HIT_FLAG] = false;
+    cacheHitEarlyExit = false;
     initializeMainWorldBridge();
     try {
         // rearm: the MAIN world keeps its own cache-hit flag (set by the cached
@@ -675,7 +677,7 @@ async function initialize() {
             Logger.content(`Cached result for ${Logger.hostOf(window.location.href)}: no scan needed`);
 
             // Set flag to prevent hook installation (ISOLATED world)
-            window[CACHE_HIT_FLAG] = true;
+            cacheHitEarlyExit = true;
 
             // Notify MAIN world about cache hit so hooks stop firing
             sendToMainWorld({
@@ -916,7 +918,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     }
 
     // handleHookMessage manages completion with retry
-    DetectionEngineManager.handleHookMessage({ source: window, data }, chrome, hookBatcher);
+    DetectionEngineManager.handleHookMessage({ source: window, data }, chrome, hookBatcher, { cacheHit: cacheHitEarlyExit });
 }, true);
 
 // Install hooks at document_start before page scripts; no async operations before installJSHooks()
@@ -933,7 +935,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     // IMPORTANT: Always install hooks at document_start for correctness.
     // Cache hits are handled asynchronously (background discards batches + disables monitoring),
     // and relying on sessionStorage can go stale (manual cache clear, settings changes).
-    window[CACHE_HIT_FLAG] = false;
+    cacheHitEarlyExit = false;
     initializeMainWorldBridge();
 
     // Install hooks immediately without async storage checks (cache/enabled checked after)

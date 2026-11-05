@@ -173,13 +173,12 @@
             // the MAIN world cannot read it from the browser itself
             ILLEGAL_INVOCATION_FALLBACK: 'Illegal invocation'
         },
-        // Global state keys shared between scripts. In the MAIN world these are
-        // page-visible, exactly as before this module existed (no new ones).
+        // The extension's page-visible globals: the MAIN world shares its global object with the page, so each one is
+        // readable by any page script. Only the public JS API has one (it exists on the page only when the person turns
+        // the JS API on). State the scripts share (the cache-hit flag, the count that keeps the window checks' own reads
+        // from being reported as the page's hook calls) lives in variables of the scripts that use it, never here;
+        // test/bridge-protocol-guard.test.js and test/main-world-footprint.test.js fail when a name comes back.
         GLOBALS: {
-            // Re-entrancy counter: extension-driven property reads must not report hooks
-            HOOK_SUPPRESSION_DEPTH: '__scrapflyHookSuppressionDepth',
-            // Set on cache hit; the ISOLATED world keeps its own flag under the same name
-            CACHE_HIT_EARLY_EXIT: '__scrapflyCacheHitEarlyExit',
             // Public JS API: last onDetection payload, for synchronous page reads
             LAST_DETECTION: '__scrapflyLastDetection'
         }

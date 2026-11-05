@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector es una extensión gratuita de Chrome que muestra cómo se protege un sitio web del tráfico automatizado. Navega como siempre: el número del icono de la barra de herramientas indica cuántas protecciones usa la página, y el popup las enumera con su confianza, su dificultad y las señales que las delataron.
 
-Reconoce 85 tecnologías de serie: 42 sistemas anti-bot, 22 CAPTCHAs y 21 técnicas de fingerprinting del navegador. Cada detector es un archivo JSON sencillo que puedes leer, cambiar o ampliar, y las reglas nuevas llegan con cada versión de este repositorio, así que **Reglas → Actualizar** puede instalarlas antes de que Chrome actualice la propia extensión.
+Reconoce 86 tecnologías de serie: 43 sistemas anti-bot, 22 CAPTCHAs y 21 técnicas de fingerprinting del navegador. Cada detector es un archivo JSON sencillo que puedes leer, cambiar o ampliar, y las reglas nuevas llegan con cada versión de este repositorio, así que **Reglas → Actualizar** puede instalarlas antes de que Chrome actualice la propia extensión.
 
 La creamos en [Scrapfly](https://scrapfly.io) porque todo proyecto de scraping empieza con la misma pregunta: ¿qué protege esta página? Es igual de útil para ver cómo se ve desde fuera la protección anti-bot de tu propio sitio, o para investigación de seguridad.
 
@@ -96,17 +96,17 @@ Cuando una página carga, la extensión reúne lo que la página revela de sí m
 
 **Fingerprinting.** Los interceptores de API se instalan antes de que se ejecuten los scripts de la propia página, y también cubren los iframes del mismo origen, donde a menudo se esconde el código de fingerprinting. Por defecto vigilan al menos 4 segundos, después hasta que la página lleva 2 segundos en calma, y 8 segundos como máximo.
 
-**Caché.** Un resultado se reutiliza durante 7 días por defecto, así que al volver a una página se muestra al instante. En **Ajustes → Detección** puedes cambiar la duración y si un resultado lo comparte todo el dominio, las páginas con la misma ruta o solo la URL exacta. **Vaciar caché** en la pestaña Detección olvida el resultado guardado, así que la página se analiza de nuevo la próxima vez que cargue.
+**Caché.** Un resultado se reutiliza durante 7 días por defecto, así que al volver a una página se muestra al instante. En **Ajustes → Detección** puedes cambiar la duración y si un resultado lo comparte todo el dominio, las páginas con la misma ruta o solo la URL exacta. **Vaciar caché** en la pestaña Detección olvida el resultado guardado, así que la página se analiza de nuevo la próxima vez que cargue. Editar, desactivar, importar o actualizar reglas también vacía los resultados guardados, así que cada página se analiza de nuevo con las reglas nuevas en su próxima visita.
 
 ## Qué detecta
 
 Estas listas son los detectores que vienen con la extensión. Puedes desactivar cualquiera, editarlo o añadir los tuyos en la pestaña Reglas.
 
 <details>
-<summary><b>Sistemas anti-bot (42)</b></summary>
+<summary><b>Sistemas anti-bot (43)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
@@ -130,7 +130,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### Detección
 
-Las protecciones encontradas en la página actual, cada una con su confianza, su dificultad y los métodos que coincidieron. Haz clic en una tarjeta para ver las señales exactas que hay detrás. Al pasar el ratón por el icono de la barra de herramientas se nombran sin abrir el popup, y **Alt+Shift+S** (Control+Shift+S en Mac; cámbialo en los atajos de teclado del navegador) vuelve a analizar la página actual. Los botones de arriba permiten:
+Las protecciones encontradas en la página actual, cada una con su confianza, su dificultad y los métodos que coincidieron. Haz clic en una tarjeta para ver las señales exactas que hay detrás, o usa los chips bajo el cuadro de búsqueda para mostrar solo los resultados de Anti-bot, Captcha o Fingerprint. Al pasar el ratón por el icono de la barra de herramientas se nombran sin abrir el popup. **Volver a analizar ahora**, junto a la dirección de la página, y **Alt+Shift+S** (Control+Shift+S en Mac; cámbialo en los atajos de teclado del navegador) vuelven a analizar la página actual. Los botones de arriba permiten:
 
 - **Subir detecciones** para obtener un enlace para compartir (dpaste.com por defecto; consulta [Enlaces para compartir](#enlaces-para-compartir))
 - **Vaciar caché**, para que la página se analice de nuevo en su próxima carga
@@ -139,17 +139,17 @@ Las protecciones encontradas en la página actual, cada una con su confianza, su
 
 ### Historial
 
-Cada página que tuvo detecciones, con sus protecciones y su dificultad. Busca en él, abre una entrada para ver sus detalles, importa una exportación JSON y expórtalo como JSON, CSV, texto plano o Markdown, eligiendo antes las protecciones, el periodo, el sitio y las páginas fijadas. Desde el menú **⋯** de una entrada puedes fijarla (se conserva cuando se limpia el Historial), añadir una nota, abrir la página, analizarla de nuevo ahora o copiarla como Markdown. Al hacer clic en una notificación de protecciones cambiadas se abre esa página. La marca **Cambiada** señala una página cuyas protecciones difieren de su último análisis. **Ajustes → Datos → Abrir estadísticas** abre una página de estadísticas (actividad, protecciones, dominios, confianza, señales, combinaciones, reglas y herramientas avanzadas) calculada en local a partir de tu historial.
+Cada página que tuvo detecciones, con sus protecciones y su dificultad. Busca en él (los acentos se ignoran), redúcelo con los chips bajo el cuadro de búsqueda (Fijadas, Cambiada, una categoría o Combinaciones, las páginas donde coincidió una combinación de señales), abre una entrada para ver sus detalles, importa una exportación JSON y expórtalo como JSON, CSV, texto plano o Markdown, eligiendo antes las protecciones, el periodo, el sitio y las páginas fijadas. Desde el menú **⋯** de una entrada puedes fijarla (se conserva cuando se limpia el Historial), añadir una nota, abrir la página, analizarla de nuevo ahora o copiarla como Markdown. Al hacer clic en una notificación de protecciones cambiadas se abre esa página. La marca **Cambiada** señala una página cuyas protecciones difieren de su último análisis. **Ajustes → Datos → Abrir estadísticas** abre una página de estadísticas (actividad, protecciones, dominios, confianza, señales, combinaciones, reglas y herramientas avanzadas) calculada en local a partir de tu historial.
 
 ### Reglas
 
-Todos los detectores, los integrados y los tuyos. Activa o desactiva cada uno, abre el editor para cambiar sus patrones o añade un detector propio con **Añadir**. El menú **Más acciones** (⋯) importa y exporta detectores en JSON. Cada patrón tiene sus propios ajustes: dónde buscar (la página, los scripts o todas las peticiones; petición o respuesta para cookies y cabeceras), si es una expresión regular, palabra completa o distingue mayúsculas, y su confianza. El editor también gestiona las combinaciones y el icono del detector, y un asistente de regex permite probar un patrón con un texto de ejemplo. **Comprobar con el Historial** muestra en cuántas de tus páginas guardadas coincide cada patrón y cada combinación, y **Probar en esta página** ejecuta la regla tal como está ahora (cambios sin guardar incluidos) en la página donde está abierto el popup: qué encuentra allí cada patrón de cookie, URL, contenido y DOM, y si la regla y sus combinaciones coinciden. Los patrones de cabeceras, interceptores de JS, ventana y carga útil solo puede responderlos un análisis real, así que la prueba los indica como tales en vez de como «sin coincidencia». No se guarda ni se envía nada.
+Todos los detectores, los integrados y los tuyos; los chips bajo el cuadro de búsqueda reducen la lista a una categoría o a los detectores personalizados, editados o desactivados. Activa o desactiva cada uno, abre el editor para cambiar sus patrones o añade un detector propio con **Añadir**. El menú **Más acciones** (⋯) importa y exporta detectores en JSON. Cada patrón tiene sus propios ajustes: dónde buscar (la página, los scripts o todas las peticiones; petición o respuesta para cookies y cabeceras), si es una expresión regular, palabra completa o distingue mayúsculas, y su confianza. El editor también gestiona las combinaciones y el icono del detector, y un asistente de regex permite probar un patrón con un texto de ejemplo. **Comprobar con el Historial** muestra en cuántas de tus páginas guardadas coincide cada patrón y cada combinación, y **Probar en esta página** ejecuta la regla tal como está ahora (cambios sin guardar incluidos) en la página donde está abierto el popup: qué encuentra allí cada patrón de cookie, URL, contenido y DOM, y si la regla y sus combinaciones coinciden. Los patrones de cabeceras, interceptores de JS, ventana y carga útil solo puede responderlos un análisis real, así que la prueba los indica como tales en vez de como «sin coincidencia». No se guarda ni se envía nada.
 
 **Actualizar** descarga los detectores oficiales de la última versión de este repositorio. Un detector integrado que hayas editado nunca se sustituye sin preguntar: eliges entre tu versión y la nueva. Si borras un detector integrado, **Restaurar detectores oficiales** en el mismo menú lo recupera. Las actualizaciones de detectores también pueden programarse (**Ajustes → General**).
 
 ### Avanzado
 
-Herramientas prácticas para las protecciones que usa una página. Una protección obtiene sus herramientas cuando se detecta con más del 50 % de confianza; puedes cambiar ese límite en **Ajustes → Detección → Herramientas avanzadas**. Cuando nada en la página lo alcanza, la pestaña lo dice, indica ese mínimo (o nombra la protección encontrada por debajo) y muestra las 25 protecciones compatibles.
+Herramientas prácticas para las protecciones que usa una página. Una protección obtiene sus herramientas cuando se detecta con más del 50 % de confianza; puedes cambiar ese límite en **Ajustes → Detección → Herramientas avanzadas**. Cuando nada en la página lo alcanza, la pestaña lo dice, indica ese mínimo (o nombra la protección encontrada por debajo) y muestra las 27 protecciones compatibles.
 
 | Protección | Herramientas |
 | --- | --- |
@@ -164,7 +164,7 @@ Herramientas prácticas para las protecciones que usa una página. Una protecci�
 | hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
 | Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
 | Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 Los resultados y las capturas se guardan 30 minutos en **Avanzado → Historial**, donde puedes filtrarlos por sitio, proveedor y herramienta, abrirlos de nuevo y exportarlos.

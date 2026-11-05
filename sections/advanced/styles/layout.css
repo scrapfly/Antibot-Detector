@@ -377,52 +377,11 @@
 
 .advanced-retention-note svg { flex-shrink: 0; width: 13px; height: 13px; margin-top: 1px; }
 
-.detection-icon {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  border-radius: 4px;
-}
-
-.detection-icon-placeholder {
-  font-size: 16px;
-}
-
-.detection-name {
-  color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 500;
-}
-
 .detection-actions {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
   width: 100%;
-}
-
-/* Shared button styles for Tools tab - Scoped to Advanced tab only */
-#advancedTab .import-btn-small, #advancedTab .export-btn-small-tools, #advancedTab .clear-btn-small-tools {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  padding: 0 10px;
-  border-radius: 7px;
-  font-size: 11px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-  background: rgba(148, 163, 184, 0.18);
-  color: var(--g-d1d5db);
-  flex: 1;
-}
-
-.detection-tools-panel {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
 }
 
 /* Advanced tools grid (the shared renderer) */
@@ -432,8 +391,7 @@
   gap: 12px;
 }
 
-.advanced-tool-card,
-.recaptcha-tool-btn {
+.advanced-tool-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -448,34 +406,29 @@
   min-height: 90px;
 }
 
-.advanced-tool-card:hover,
-.recaptcha-tool-btn:hover {
+.advanced-tool-card:hover {
   background: var(--bg-tertiary);
   border-color: var(--border-light);
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.advanced-tool-card:active,
-.recaptcha-tool-btn:active {
+.advanced-tool-card:active {
   transform: translateY(0);
 }
 
-.advanced-tool-card.capturing,
-.recaptcha-tool-btn.capturing {
+.advanced-tool-card.capturing {
   background: rgba(239, 68, 68, 0.12);
   border-color: rgba(239, 68, 68, 0.35);
   animation: pulse 2s infinite;
 }
 
 .advanced-tool-card.capturing .advanced-tool-label,
-.advanced-tool-card.capturing .tool-btn-label,
-.recaptcha-tool-btn.capturing .tool-btn-label {
+.advanced-tool-card.capturing .tool-btn-label {
   color: var(--danger-light);
 }
 
-.advanced-tool-card.capturing .advanced-tool-icon,
-.recaptcha-tool-btn.capturing .tool-icon-container {
+.advanced-tool-card.capturing .advanced-tool-icon {
   background: rgba(239, 68, 68, 0.2) !important;
   border-color: rgba(239, 68, 68, 0.4) !important;
   color: var(--danger-lightest) !important;
@@ -512,12 +465,6 @@
   color: var(--purple-light);
 }
 
-.advanced-tool-icon--red {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: var(--danger-light);
-}
-
 .advanced-tool-card:hover .advanced-tool-icon {
   border-color: var(--border-light);
   background: var(--bg-secondary);
@@ -540,12 +487,6 @@
   background: rgba(139, 92, 246, 0.2);
   border-color: rgba(139, 92, 246, 0.45);
   color: var(--purple-light);
-}
-
-.advanced-tool-card:hover .advanced-tool-icon--red {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.45);
-  color: var(--danger-light);
 }
 
 .advanced-tool-icon svg {
@@ -576,36 +517,14 @@
   transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
-.tool-icon-blue {
-  background: rgba(59, 130, 246, 0.14);
-  border-color: rgba(59, 130, 246, 0.35);
-  color: var(--accent-light);
-}
-
-.tool-icon-green {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(16, 185, 129, 0.35);
-  color: var(--success-light);
-}
-
 .tool-icon-purple {
   background: rgba(139, 92, 246, 0.12);
   border-color: rgba(139, 92, 246, 0.35);
   color: var(--purple-light);
 }
 
-.tool-icon-red {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.35);
-  color: var(--danger-light);
-}
-
 .tool-icon-container svg {
   color: currentColor;
-}
-
-.recaptcha-tool-btn:hover .tool-icon-container {
-  box-shadow: none;
 }
 
 .advanced-tool-label,
@@ -618,22 +537,11 @@
 }
 
 @media (max-width: 400px) {
-  .advanced-tool-grid,
-  .advanced-tool-grid--2,
-  .advanced-tool-grid--3,
-  .recaptcha-tools-grid {
+  .advanced-tool-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-
-/* Analysis Results */
-.analysis-results {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
@@ -641,11 +549,7 @@
 }
 
 /* Copy button styling - matches History section design */
-.copy-parsing-code,
-.copy-code-btn,
-.copy-script-url,
-.copy-seed,
-.copy-all-scripts {
+.copy-parsing-code {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 7px;
@@ -661,23 +565,14 @@
   gap: 6px;
 }
 
-.copy-parsing-code:hover,
-.copy-code-btn:hover {
+.copy-parsing-code:hover {
   background: var(--accent);
   border-color: var(--accent);
   color: #ffffff;
 }
 
-.copy-parsing-code:active,
-.copy-code-btn:active {
+.copy-parsing-code:active {
   transform: scale(0.98);
-}
-
-/* Version Info Modal */
-.version-info {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 /* ========================================
@@ -748,18 +643,6 @@
   background: rgba(239, 68, 68, 0.12);
   border-color: rgba(239, 68, 68, 0.45);
   color: var(--danger-light);
-}
-
-.empty-icon {
-  font-size: 64px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.empty-hint {
-  font-size: 12px;
-  color: var(--text-secondary);
-  opacity: 0.7;
 }
 
 /* Professional Empty Capture State */
@@ -963,22 +846,9 @@
   white-space: nowrap;
 }
 
-/* History Item Details */
-.capture-history-section .history-item-details {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  animation: slideDown 0.3s ease-out;
-}
-
 
 /* Responsive Design - Details section */
 @media (max-width: 500px) {
-  .capture-history-section .details-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
   .capture-card {
     padding: 10px;
   }

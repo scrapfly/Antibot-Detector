@@ -14,9 +14,10 @@
  *   Restart      the service worker is stopped during a run: when it starts again the run reads "stopped" (not stuck
  *                "running") and the scan tab it left is closed
  *
- * One local server answers on 127.0.0.1 and localhost (the skipped site). A probe rule (a marker in the page) makes a
- * page "protected". The sitemap is served at https://sitemap.test/ by Playwright's router: an extension page may only
- * fetch https addresses (its connect-src), so the local http server cannot serve it.
+ * One local server answers on 127.0.0.1, localhost (the skipped site) and sitemap.test (mapped to 127.0.0.1 by the browser).
+ * A probe rule (a marker in the page) makes a page "protected". The sitemap is served at https://sitemap.test/ by
+ * Playwright's router: an extension page may only fetch https addresses (its connect-src), so the local http server cannot
+ * serve it. A sitemap only lists pages of its own site, so its pages are on sitemap.test too (http, with the server's port).
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -69,7 +70,7 @@ const PROBE = {
   try {
     context = await chromium.launchPersistentContext(profile, {
       headless: true, channel: 'chromium', viewport: { width: 1100, height: 800 }, acceptDownloads: true, downloadsPath: downloads,
-      args: [`--disable-extensions-except=${REPO}`, `--load-extension=${REPO}`]
+      args: [`--disable-extensions-except=${REPO}`, `--load-extension=${REPO}`, '--host-resolver-rules=MAP sitemap.test 127.0.0.1']
     });
     let worker = context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');
     const extensionId = new URL(worker.url()).host;
@@ -92,7 +93,7 @@ const PROBE = {
         return route.fulfill({ status: 200, contentType: 'application/xml', body: '<?xml version="1.0"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>https://sitemap.test/pages.xml</loc></sitemap></sitemapindex>' });
       }
       if (u.pathname === '/pages.xml') {
-        return route.fulfill({ status: 200, contentType: 'application/xml', body: `<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${at('/clean?from=sitemap')}</loc></url><url><loc>${at('/protected?from=sitemap&amp;x=1')}</loc></url></urlset>` });
+        return route.fulfill({ status: 200, contentType: 'application/xml', body: `<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${at('/clean?from=sitemap', 'sitemap.test')}</loc></url><url><loc>${at('/protected?from=sitemap&amp;x=1', 'sitemap.test')}</loc></url></urlset>` });
       }
       return route.fulfill({ status: 404, body: 'no' });
     });
@@ -199,8 +200,8 @@ const PROBE = {
     assert.deepEqual(outcome(at('/redirect')), ['skipped', 'scope'], 'ended on a skipped site');
     assert.deepEqual(outcome('http://does-not-exist.invalid/'), ['failed', 'load']);
     assert.deepEqual(outcome(at('/hang')), ['failed', 'timeout']);
-    assert.deepEqual(outcome(at('/clean?from=sitemap')), ['done', '']);
-    assert.deepEqual(outcome(at('/protected?from=sitemap&x=1')), ['done', '']);
+    assert.deepEqual(outcome(at('/clean?from=sitemap', 'sitemap.test')), ['done', '']);
+    assert.deepEqual(outcome(at('/protected?from=sitemap&x=1', 'sitemap.test')), ['done', '']);
     assert.equal(done.duplicates, 1);
     assert.equal(done.items.length, 9, '9 lines, a duplicate out, the sitemap replaced by its 2 pages');
     console.log('PASS A run: one inactive background tab at a time, the active tab untouched, every line done, failed or skipped with its reason');
@@ -239,7 +240,7 @@ const PROBE = {
         assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
         assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,`));
       } else if (ext === 'md') {
-        assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
+        assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\nMost seen: Bulk Probe \(2 pages\)\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
         assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
         assert.ok(!text.includes('?n=1'), 'the query, where tokens live, is left out');
         assert.equal(text.charCodeAt(0), 35, 'a Markdown file has no byte-order mark');

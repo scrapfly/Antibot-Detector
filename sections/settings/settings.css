@@ -312,13 +312,6 @@
   min-height: 150px;
 }
 
-.data-actions {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 16px;
-}
-
 /* File Input */
 input[type="file"] {
   display: none;
@@ -364,35 +357,6 @@ input[type="file"] {
   .modal-body {
     padding: 16px;
   }
-
-  .data-actions {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Utility Classes */
-.settings-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid var(--accent);
-  border-radius: 6px;
-  margin-bottom: 16px;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-}
-
-/* Badge for counts */
-.count-badge {
-  padding: 2px 6px;
-  background: var(--bg-tertiary);
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-left: 8px;
 }
 
 /* Action Button - used in blacklist */
@@ -523,32 +487,6 @@ input[type="file"] {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
-}
-
-.webhook-url-hint {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 12px;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--text-primary);
-}
-
-.webhook-url-hint strong {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-}
-
-.webhook-url-hint code {
-  background: var(--bg-primary);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--accent);
-  margin: 0 2px;
 }
 
 .duplicate-info-box {
@@ -2061,12 +1999,6 @@ input[type="file"] {
   font-size: 12px;
   text-align: center;
   color: var(--text-muted);
-}
-
-#settingsModal .webhook-url-hint-example {
-  margin-top: 6px;
-  font-size: 11px;
-  opacity: 0.8;
 }
 
 #settingsModal .duplicate-info-box {

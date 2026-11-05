@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector 是一款免费的 Chrome 扩展程序，用来查看网站如何防范自动化流量。照常浏览即可：工具栏图标上的数字告诉你当前页面用了多少种防护，弹出窗口则逐一列出每项防护的置信度、难度以及暴露它的信号。
 
-它开箱即可识别 85 种技术：42 套反机器人系统、22 种验证码和 21 种浏览器指纹识别技术。每个检测器都是一个普通的 JSON 文件，你可以阅读、修改或扩展它；新规则会随本仓库的每次发布一起推出，因此在 Chrome 更新扩展本身之前，**规则 → 更新**就能把它们装好。
+它开箱即可识别 86 种技术：43 套反机器人系统、22 种验证码和 21 种浏览器指纹识别技术。每个检测器都是一个普通的 JSON 文件，你可以阅读、修改或扩展它；新规则会随本仓库的每次发布一起推出，因此在 Chrome 更新扩展本身之前，**规则 → 更新**就能把它们装好。
 
 我们在 [Scrapfly](https://scrapfly.io) 开发这款工具，是因为每个爬虫项目都从同一个问题开始：这个页面由什么在保护？它同样适合从外部检查你自己网站的机器人防护效果，或用于安全研究。
 
@@ -96,17 +96,17 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 
 **指纹识别。** API 钩子在页面自身脚本运行之前就已就位，同源 iframe 也在覆盖范围内，而指纹识别代码常常藏在那里。默认情况下，钩子至少监视 4 秒，之后持续到页面安静 2 秒为止，最长 8 秒。
 
-**缓存。** 结果默认复用 7 天，因此再次访问页面时会立即显示。你可以在**设置 → 检测**中修改时长，以及结果是由整个域名共享、由相同路径的页面共享，还是只对应完全相同的 URL。**检测**标签页上的**清除缓存**会丢弃已存储的结果，页面下次加载时将重新扫描。
+**缓存。** 结果默认复用 7 天，因此再次访问页面时会立即显示。你可以在**设置 → 检测**中修改时长，以及结果是由整个域名共享、由相同路径的页面共享，还是只对应完全相同的 URL。**检测**标签页上的**清除缓存**会丢弃已存储的结果，页面下次加载时将重新扫描。编辑、关闭、导入或更新规则也会清除已存储的结果，因此每个页面在下次访问时都会用新规则重新扫描。
 
 ## 检测范围
 
 下面列出的是扩展自带的检测器。你可以在**规则**标签页中关闭其中任何一个、编辑它们，或添加你自己的检测器。
 
 <details>
-<summary><b>反机器人系统（42）</b></summary>
+<summary><b>反机器人系统（43）</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
@@ -130,7 +130,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### 检测
 
-当前页面上发现的防护措施，每项都附有置信度、难度和匹配到的方法。点击卡片可以查看背后的具体信号。将鼠标悬停在工具栏图标上，无需打开弹出窗口就能看到它们的名称；按 **Alt+Shift+S**（Mac 上为 Control+Shift+S，可在浏览器的快捷键设置中修改）可重新扫描当前页面。顶部的按钮可以：
+当前页面上发现的防护措施，每项都附有置信度、难度和匹配到的方法。点击卡片可以查看背后的具体信号，也可以用搜索框下方的筛选标签只显示反机器人、验证码或指纹识别的结果。将鼠标悬停在工具栏图标上，无需打开弹出窗口就能看到它们的名称；页面地址旁的**立即重新扫描**按钮，或按 **Alt+Shift+S**（Mac 上为 Control+Shift+S，可在浏览器的快捷键设置中修改），可重新扫描当前页面。顶部的按钮可以：
 
 - **上传检测结果**，获取可分享的链接（默认使用 dpaste.com；见[分享链接](#分享链接)）
 - **清除缓存**，让页面在下次加载时重新扫描
@@ -139,17 +139,17 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### 历史记录
 
-所有有检测结果的页面，连同其防护措施和难度。你可以搜索、打开条目查看详情、导入 JSON 导出文件，也可以先选好防护措施、时间段、站点和已固定页面，再导出为 JSON、CSV、纯文本或 Markdown。通过条目的 **⋯** 菜单可以固定条目（清理历史记录时会保留）、添加备注、打开页面、立即重新扫描，或复制为 Markdown。点击“防护措施已变化”通知会打开对应页面。**有变化**标记表示该页面的防护措施与上次扫描时不同。**设置 → 数据 → 打开统计**会打开一个统计页面（活动、防护措施、域名、置信度、信号、组合、规则和高级工具），数据完全在本地根据你的历史记录计算。
+所有有检测结果的页面，连同其防护措施和难度。你可以搜索（忽略重音符号）、用搜索框下方的筛选标签缩小范围（已固定、有变化、某个类别，或“组合”：命中了信号组合的页面）、打开条目查看详情、导入 JSON 导出文件，也可以先选好防护措施、时间段、站点和已固定页面，再导出为 JSON、CSV、纯文本或 Markdown。通过条目的 **⋯** 菜单可以固定条目（清理历史记录时会保留）、添加备注、打开页面、立即重新扫描，或复制为 Markdown。点击“防护措施已变化”通知会打开对应页面。**有变化**标记表示该页面的防护措施与上次扫描时不同。**设置 → 数据 → 打开统计**会打开一个统计页面（活动、防护措施、域名、置信度、信号、组合、规则和高级工具），数据完全在本地根据你的历史记录计算。
 
 ### 规则
 
-所有检测器，包括内置的和你自己的。你可以逐个开启或关闭，打开编辑器修改其模式，或用**添加**新建自己的检测器。**更多操作**菜单（⋯）可以以 JSON 格式导入和导出检测器。每个模式都有自己的设置：在哪里查找（页面、脚本或所有请求；对 Cookie 和请求头而言是请求还是响应）、是否为正则表达式、是否全词匹配或区分大小写，以及置信度。编辑器还能处理组合和检测器图标，自带的正则助手可以用示例文本测试模式。**用历史记录检查**会显示每个模式和组合在你已保存的页面中命中了多少个；**在此页面上测试**则在弹出窗口所在的页面上运行规则的当前状态（包括未保存的修改）：每个 Cookie、URL、内容和 DOM 模式在页面上找到了什么，以及规则及其组合是否匹配。请求头、JS 钩子、窗口和负载模式只有真实扫描才能给出结果，因此测试会将它们单独列出，而不是标为“未匹配”。整个过程不会保存或发送任何内容。
+所有检测器，包括内置的和你自己的；搜索框下方的筛选标签可以把列表缩小到某个类别，或自定义、已编辑、已停用的检测器。你可以逐个开启或关闭，打开编辑器修改其模式，或用**添加**新建自己的检测器。**更多操作**菜单（⋯）可以以 JSON 格式导入和导出检测器。每个模式都有自己的设置：在哪里查找（页面、脚本或所有请求；对 Cookie 和请求头而言是请求还是响应）、是否为正则表达式、是否全词匹配或区分大小写，以及置信度。编辑器还能处理组合和检测器图标，自带的正则助手可以用示例文本测试模式。**用历史记录检查**会显示每个模式和组合在你已保存的页面中命中了多少个；**在此页面上测试**则在弹出窗口所在的页面上运行规则的当前状态（包括未保存的修改）：每个 Cookie、URL、内容和 DOM 模式在页面上找到了什么，以及规则及其组合是否匹配。请求头、JS 钩子、窗口和负载模式只有真实扫描才能给出结果，因此测试会将它们单独列出，而不是标为“未匹配”。整个过程不会保存或发送任何内容。
 
 **更新**会下载本仓库最新发布版中的官方检测器。你编辑过的内置检测器绝不会在未经询问的情况下被替换：由你在自己的版本和新版本之间选择。如果你删除了某个内置检测器，同一菜单中的**恢复官方检测器**可以把它找回来。检测器更新也可以按计划自动运行（**设置 → 常规**）。
 
 ### 高级
 
-针对页面所用防护措施的实操工具。某项防护的检测置信度超过 50% 时，就会获得对应的工具；你可以在**设置 → 检测 → 高级工具**中修改这一阈值。如果页面上没有符合条件的防护，该标签页会说明情况，给出这个最低值（或指出低于阈值的那项防护），并列出支持的 25 种防护措施。
+针对页面所用防护措施的实操工具。某项防护的检测置信度超过 50% 时，就会获得对应的工具；你可以在**设置 → 检测 → 高级工具**中修改这一阈值。如果页面上没有符合条件的防护，该标签页会说明情况，给出这个最低值（或指出低于阈值的那项防护），并列出支持的 27 种防护措施。
 
 | 防护措施 | 工具 |
 | --- | --- |
@@ -164,7 +164,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 | hCaptcha | 提取 SiteKey · 检查版本 · 分析脚本 · 开始捕获 |
 | Incapsula (Imperva) | 检查 Cookie · 分析脚本 · 开始捕获 |
 | Shape Security | 检查版本 · 检查 Cookie · 分析脚本 · 开始捕获 |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | 提取 SiteKey · 分析脚本 |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | 提取 SiteKey · 分析脚本 |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | 分析脚本 |
 
 结果和捕获内容会在**高级 → 历史记录**中保留 30 分钟，你可以按站点、厂商和工具筛选，重新打开并导出它们。

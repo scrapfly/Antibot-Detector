@@ -5,7 +5,7 @@ class History {
     this.historyItems = [];
     this.searchQuery = '';
     // The filter chips under the search (HistoryFilter): kept while the popup is open
-    this.activeChips = { pinned: false, changed: false, categories: [] };
+    this.activeChips = HistoryFilter.normalizeChips();
     this.initialized = false;
     this.listenersAttached = false;
     this.paginationManager = null;
@@ -153,7 +153,7 @@ class History {
     row.hidden = this.historyItems.length === 0;
     row.querySelectorAll('.history-filter-chip').forEach((chip) => {
       const key = chip.dataset.filter;
-      const on = key === 'pinned' || key === 'changed' ? this.activeChips[key] === true : this.activeChips.categories.includes(key);
+      const on = HistoryFilter.FLAGS.includes(key) ? this.activeChips[key] === true : this.activeChips.categories.includes(key);
       chip.setAttribute('aria-pressed', on ? 'true' : 'false');
       const own = chip.querySelector('[data-ui-icon]');
       if (own && !own.firstChild) own.innerHTML = FormatUtils.uiIconSvg(own.dataset.uiIcon);
@@ -166,12 +166,12 @@ class History {
   }
 
   /**
-   * Turn a chip on or off (Pinned, Changed or a category) and show what it leaves.
-   * @param {string} key - 'pinned', 'changed', 'antibot' or 'captcha'
+   * Turn a chip on or off (Pinned, Changed, Combinations or a category) and show what it leaves.
+   * @param {string} key - 'pinned', 'changed', 'combinations', 'antibot', 'captcha' or 'fingerprint'
    */
   toggleFilterChip(key) {
     const chips = this.activeChips;
-    if (key === 'pinned' || key === 'changed') {
+    if (HistoryFilter.FLAGS.includes(key)) {
       chips[key] = !chips[key];
     } else if (HistoryFilter.CATEGORIES.includes(key)) {
       chips.categories = chips.categories.includes(key) ? chips.categories.filter(k => k !== key) : [...chips.categories, key];
@@ -183,7 +183,7 @@ class History {
 
   /** Back to the whole History: every chip off and the search emptied. */
   clearFilters() {
-    this.activeChips = { pinned: false, changed: false, categories: [] };
+    this.activeChips = HistoryFilter.normalizeChips();
     this.searchQuery = '';
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) searchInput.value = '';
@@ -426,12 +426,8 @@ class History {
    * @returns {string} HTML
    */
   renderCombinationCount(detections) {
-    const fired = [];
-    for (const detection of Array.isArray(detections) ? detections : []) {
-      for (const combo of (detection && Array.isArray(detection.combinations) ? detection.combinations : [])) {
-        if (combo && typeof combo === 'object') fired.push({ detection, combo });
-      }
-    }
+    // The same list the Combinations chip filters on, so the count and the filter cannot disagree
+    const fired = HistoryFilter.firedCombinations(detections);
     const nameOf = ({ detection, combo }, index) => {
       let name = combo.name;
       const detectorId = detection.detector && typeof detection.detector === 'object' ? detection.detector.id : '';

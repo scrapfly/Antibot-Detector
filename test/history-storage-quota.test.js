@@ -402,8 +402,19 @@ test('a write is cut to the size in force: the registered one, 6 MB without one,
 
     HistoryStore.setBudget(async () => 1000);
     assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB, 'a provider cannot go below the smallest size');
+    // A provider that fails could not say how much the person allows: the largest size anyone can have chosen applies (25 MB with the
+    // unlimitedStorage permission, 6 MB without it), never a cut to the default and never no ceiling at all
     HistoryStore.setBudget(async () => { throw new Error('settings unreadable'); });
-    assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB, 'a provider that fails costs nothing');
+    const withoutPermission = await HistoryStore.mutate(() => items, memoryStorage());
+    assert.strictEqual(withoutPermission.budget, 6 * MB, 'a build without the permission: its largest size is 6 MB');
+    global.chrome = { runtime: { getManifest: () => ({ permissions: ['storage', 'unlimitedStorage'] }) } };
+    try {
+      const unknown = await HistoryStore.mutate(() => items, memoryStorage());
+      assert.strictEqual(unknown.budget, 25 * MB, 'with it: 25 MB');
+      assert.strictEqual(unknown.dropped, big.dropped, 'cut as the 25 MB size cuts, not as 6 MB does');
+    } finally {
+      delete global.chrome;
+    }
     HistoryStore.setBudget(async () => 'nonsense');
     assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB);
   } finally {
@@ -471,4 +482,78 @@ test('Copy entry names what matched and never copies a cookie, header, query or 
   }
   assert.strictEqual(context.History.copyLabel(null), '');
   assert.strictEqual(context.History.copyLabel({ type: 'header', name: '^x-a$' }), '^x-a$');
+});
+
+// ---- While the size the person chose cannot be read: the largest size is the ceiling, and the failure is told once
+
+// About 1.6 KB each
+const plainEntry = (i) => ({ id: `p${i}`, url: `https://site${i}.example/`, hostname: `site${i}.example`, title: `Site ${i}`, timestamp: 2_000_000_000_000 - i * 60_000, detections: [], note: 'n'.repeat(1400) });
+const unlimited = () => ({ runtime: { getManifest: () => ({ permissions: ['storage', 'unlimitedStorage'] }) } });
+
+test('while the size cannot be read, History between 6 and 25 MB is not trimmed, and History over 25 MB is cut to 25 MB', async () => {
+  global.chrome = unlimited();
+  try {
+    HistoryStore.setBudget(async () => { throw new Error('settings unreadable'); });
+    // A person who chose 12 or 25 MB keeps what they have
+    const middle = await HistoryStore.mutate(() => Array.from({ length: 7000 }, (_, i) => plainEntry(i)), memoryStorage());
+    assert.ok(middle.bytes > 6 * MB && middle.bytes < 25 * MB, `${middle.bytes} bytes`);
+    assert.strictEqual(middle.dropped, 0, 'nothing is trimmed');
+    assert.strictEqual(middle.items.length, 7000);
+
+    // Over the ceiling (a History an older build or a restore left: a write alone cannot make it): cut to the ceiling, oldest first.
+    // The record of what was cut adds a few bytes after the size is budgeted: a kilobyte of room in the bounds
+    const over = () => {
+      const storage = memoryStorage();
+      storage.store[HistoryStore.STORAGE_KEY] = JSON.stringify({ items: Array.from({ length: 17500 }, (_, i) => plainEntry(i)) });
+      assert.ok(storage.store[HistoryStore.STORAGE_KEY].length > 25 * MB);
+      return storage;
+    };
+    const storage = over();
+    const cut = await HistoryStore.mutate((items) => [plainEntry(-1), ...items], storage);
+    assert.ok(cut.dropped > 0 && cut.bytes <= 25 * MB + 1024, `${cut.dropped} dropped, ${cut.bytes} bytes`);
+    assert.ok(cut.bytes > 24 * MB, 'down to the ceiling and no further');
+    assert.strictEqual(cut.items[0].id, 'p-1', 'the newest entry is kept');
+    assert.strictEqual(HistoryStore.parse(storage.store[HistoryStore.STORAGE_KEY]).items[0].id, 'p-1');
+    // The compaction at a worker start does the same
+    const other = over();
+    const compacted = await HistoryStore.compact(other);
+    assert.strictEqual(compacted.changed, true);
+    assert.ok(compacted.dropped > 0 && compacted.after <= 25 * MB + 1024 && compacted.after > 24 * MB, `${compacted.dropped} dropped, ${compacted.after} bytes`);
+  } finally {
+    delete global.chrome;
+    HistoryStore.setBudget(null);
+  }
+});
+
+test('a size that cannot be read is told once per failure, as the kind of error and never its text; a new failure is told again', async () => {
+  const told = [];
+  global.Logger = { warn: (...args) => told.push(args) };
+  const secret = 'S3CR3T-WEBHOOK-VALUE';
+  const fail = () => { throw new SyntaxError(`Unexpected token 'S', "{${secret}" is not valid JSON`); };
+  const write = () => HistoryStore.mutate(() => [plainEntry(0)], memoryStorage());
+  try {
+    HistoryStore.setBudget(async () => fail());
+    await write(); await write(); await write();
+    assert.strictEqual(told.length, 1, 'one line for three saves');
+    assert.ok(JSON.stringify(told).includes('SyntaxError'), 'it says what kind of failure');
+    assert.ok(!JSON.stringify(told).includes(secret), 'and never the text the error quotes');
+    assert.strictEqual(told[0][0], 'BACKGROUND');
+
+    HistoryStore.setBudget(async () => 12 * MB);
+    await write();
+    assert.strictEqual(told.length, 1, 'a size that reads is not a failure');
+    HistoryStore.setBudget(async () => fail());
+    await write(); await write();
+    assert.strictEqual(told.length, 2, 'unreadable again: told again, once');
+
+    // No logger to tell it to: the write still goes on
+    HistoryStore.setBudget(async () => 12 * MB);
+    await write();
+    delete global.Logger;
+    HistoryStore.setBudget(async () => fail());
+    assert.strictEqual((await write()).changed, true);
+  } finally {
+    delete global.Logger;
+    HistoryStore.setBudget(null);
+  }
 });

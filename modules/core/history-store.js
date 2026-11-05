@@ -61,19 +61,47 @@
     return (hasUnlimited === true ? size : SIZES_MB[0]) * 1024 * 1024;
   }
 
-  // Optional async function the worker registers to say how much History may take now (the person's size and the permission)
+  // Optional async function the worker registers to say how much History may take now (the person's size and the permission).
+  // It throws when it cannot tell (the settings cannot be read): see currentBudget
   let budgetProvider = null;
+  // Whether the failure of the provider has been told in the current stretch of failures: one line, not one per save
+  let budgetFailureTold = false;
   function setBudget(provider) {
     budgetProvider = typeof provider === 'function' ? provider : null;
+    budgetFailureTold = false;
   }
-  /** The limit for a write: never below 6 MB, 6 MB when there is no provider or it fails. */
+
+  function tellBudgetFailure(error) {
+    if (budgetFailureTold) return;
+    budgetFailureTold = true;
+    const logger = root.Logger;
+    // Only the kind of failure: the message of a JSON error quotes the stored settings, where a webhook secret may be
+    if (logger && typeof logger.warn === 'function') {
+      logger.warn('BACKGROUND', '[HistoryStore] The History size could not be read from the settings: the largest size applies until it can:', error && error.name);
+    }
+  }
+
+  /**
+   * The limit for a write: never below 6 MB, and 6 MB when no provider is registered. A provider that fails could not say how
+   * much the person allows (the settings cannot be read, and only Reset repairs a stored value that is not JSON). The largest
+   * size anyone can have chosen applies then (25 MB, or 6 MB in a build without unlimitedStorage: budgetFor decides): it never
+   * cuts below a size the person chose, as 6 MB would for a person who chose 12 or 25, and History still has a ceiling. Nothing
+   * else would: unlimitedStorage means the browser's quota does not end a write. The failure is told once per stretch of
+   * failures (tellBudgetFailure), and the size is applied again by the next write once the settings read.
+   */
   async function currentBudget() {
     if (!budgetProvider) return MAX_BYTES;
     try {
       const bytes = Number(await budgetProvider());
+      budgetFailureTold = false;
       return Number.isFinite(bytes) && bytes > MAX_BYTES ? bytes : MAX_BYTES;
-    } catch (_) {
-      return MAX_BYTES;
+    } catch (error) {
+      tellBudgetFailure(error);
+      try {
+        return budgetFor(Math.max(...SIZES_MB), hasUnlimitedStorage());
+      } catch (_) {
+        return MAX_BYTES;
+      }
     }
   }
 

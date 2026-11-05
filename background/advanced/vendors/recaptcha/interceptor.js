@@ -586,7 +586,6 @@ async function processCaptureData(state) {
             const invisible = message.field_06 || '';
             const field17 = message.field_17 || '';
 
-            const isInvisibleFromMessage = invisible.includes('fi');
             const hasSession = field17 && field17.toLowerCase() === 'session';
 
             // Determine required cookie based on session mode

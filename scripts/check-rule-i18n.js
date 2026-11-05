@@ -21,6 +21,9 @@ const dictDir = arg('--dir') ? path.resolve(arg('--dir')) : path.join(root, 'det
 // Every UI language but English: the _locales folders
 const LOCALES = arg('--locale') ? [arg('--locale')] : fs.readdirSync(path.join(root, '_locales')).filter(l => l !== 'en').sort();
 const clean = (v) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
+// The description a person's own detector is stored with (Rules → Add, "New rule from this page"). No bundled rule has
+// it, but every dictionary must translate it (test/rule-i18n-custom-detector.test.js): --stale must not call it unused
+const USER_MADE = new Set(['Custom detector']);
 
 /** English text → where it is used ("Akamai Bot Manager: pattern cookie-1") */
 function ruleTexts() {
@@ -53,7 +56,7 @@ function main() {
     for (const text of texts.keys()) {
       if (!clean(dict[text])) (missing.get(text) || missing.set(text, []).get(text)).push(locale);
     }
-    stale[locale] = Object.keys(dict).filter(k => !texts.has(clean(k)));
+    stale[locale] = Object.keys(dict).filter(k => !texts.has(clean(k)) && !USER_MADE.has(clean(k)));
     // A translation keeps technical literals as written, uses the language's own letters and script
     let scripted = 0;
     for (const [text, where] of texts) {

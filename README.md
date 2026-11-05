@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector is a free Chrome extension that shows how a website protects itself from automated traffic. Browse as you normally would: the number on the toolbar icon tells you how many protections the page uses, and the popup lists each one with its confidence, its difficulty and the signals that gave it away.
 
-It recognizes 85 technologies out of the box: 42 anti-bot systems, 22 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
+It recognizes 86 technologies out of the box: 43 anti-bot systems, 22 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
 
 We built it at [Scrapfly](https://scrapfly.io) because every scraping project starts with the same question: what is protecting this page? It is just as useful for checking how your own site's bot protection looks from the outside, or for security research.
 
@@ -98,17 +98,17 @@ When a page loads, the extension gathers what the page reveals about itself and 
 
 **Fingerprinting.** The API hooks are in place before the page's own scripts run, and they also cover same-origin iframes, where fingerprinting code often hides. By default they watch for at least 4 seconds, then until the page has been quiet for 2 seconds, and for 8 seconds at most.
 
-**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads.
+**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads. Editing, switching off, importing or updating rules also clears the stored results, so every page is scanned again with the new rules on its next visit.
 
 ## What it detects
 
 The lists below are the detectors that ship with the extension. You can switch any of them off, edit them or add your own in the Rules tab.
 
 <details>
-<summary><b>Anti-bot systems (42)</b></summary>
+<summary><b>Anti-bot systems (43)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
@@ -132,7 +132,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### Detection
 
-The protections found on the current page, each with its confidence, its difficulty and the methods that matched. Click a card to see the exact signals behind it. Hovering the toolbar icon names them without opening the popup, and **Alt+Shift+S** (Control+Shift+S on Mac; change it in the browser's shortcut settings) scans the current page again. The buttons at the top let you:
+The protections found on the current page, each with its confidence, its difficulty and the methods that matched. Click a card to see the exact signals behind it, or use the chips under the search box to show only Anti-bot, Captcha or Fingerprint results. Hovering the toolbar icon names them without opening the popup. **Scan again now**, next to the page address, and **Alt+Shift+S** (Control+Shift+S on Mac; change it in the browser's shortcut settings) scan the current page again. The buttons at the top let you:
 
 - **Upload detections** to get a shareable link (dpaste.com by default; see [Share links](#share-links))
 - **Clear Cache**, so the page is scanned again on its next load
@@ -141,17 +141,17 @@ The protections found on the current page, each with its confidence, its difficu
 
 ### History
 
-Every page that had detections, with its protections and difficulty. Search it, open an entry for its details, import a JSON export, and export it as JSON, CSV, plain text or Markdown, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up), add a note, open the page, scan it again now or copy it as Markdown from its **⋯** menu. Clicking a "Protections changed" notification opens that page. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
+Every page that had detections, with its protections and difficulty. Search it (accents are ignored), narrow it with the chips under the search box (Pinned, Changed, a category or Combinations, the pages where a combination of signals matched), open an entry for its details, import a JSON export, and export it as JSON, CSV, plain text or Markdown, choosing the protections, period, site and pinned pages first. Pin an entry (it is kept when History is cleaned up), add a note, open the page, scan it again now or copy it as Markdown from its **⋯** menu. Clicking a "Protections changed" notification opens that page. A **Changed** badge marks a page whose protections differ from its last scan. Settings → Data → **Open statistics** opens a statistics page (activity, protections, domains, confidence, signals, combinations, rules and Advanced tools) computed locally from your history.
 
 ### Rules
 
-All detectors, built-in and your own. Turn each one on or off, open the editor to change its patterns, or add a detector of your own with **Add**. The **More actions** menu (⋯) imports and exports detectors as JSON. Every pattern has its own settings: where to look (the page, scripts or all requests; request or response for cookies and headers), whether it is a regular expression, whole word or case sensitive, and its confidence. The editor also handles combinations and the detector's icon, and a regex helper lets you test a pattern against sample text. **Check against History** shows on how many of your saved pages each pattern and combination matches, and **Test on this page** runs the rule as it is now (unsaved edits included) on the page the popup is open on: what each cookie, URL, content and DOM pattern finds there, and whether the rule and its combinations match. Header, JS hook, window and payload patterns can only be answered by a real scan, so the test lists them as such instead of as "no match". Nothing is saved or sent.
+All detectors, built-in and your own; the chips under the search box narrow the list to a category, or to custom, edited or disabled detectors. Turn each one on or off, open the editor to change its patterns, or add a detector of your own with **Add**. The **More actions** menu (⋯) imports and exports detectors as JSON. Every pattern has its own settings: where to look (the page, scripts or all requests; request or response for cookies and headers), whether it is a regular expression, whole word or case sensitive, and its confidence. The editor also handles combinations and the detector's icon, and a regex helper lets you test a pattern against sample text. **Check against History** shows on how many of your saved pages each pattern and combination matches, and **Test on this page** runs the rule as it is now (unsaved edits included) on the page the popup is open on: what each cookie, URL, content and DOM pattern finds there, and whether the rule and its combinations match. Header, JS hook, window and payload patterns can only be answered by a real scan, so the test lists them as such instead of as "no match". Nothing is saved or sent.
 
 **Update** downloads the official detectors of this repository's latest release. A built-in detector you have edited is never replaced without asking: you choose between your version and the new one. If you delete a built-in detector, **Restore official detectors** in the same menu brings it back. Detector updates can also run on a schedule (Settings → General).
 
 ### Advanced
 
-Hands-on tools for the protections a page uses. A protection gets its tools when it is detected above 50% confidence; you can change that limit in Settings → Detection → Advanced tools. When nothing on the page qualifies, the tab says so, gives that minimum (or names the protection found below it) and shows the 25 supported protections.
+Hands-on tools for the protections a page uses. A protection gets its tools when it is detected above 50% confidence; you can change that limit in Settings → Detection → Advanced tools. When nothing on the page qualifies, the tab says so, gives that minimum (or names the protection found below it) and shows the 27 supported protections.
 
 | Protection | Tools |
 | --- | --- |
@@ -166,7 +166,7 @@ Hands-on tools for the protections a page uses. A protection gets its tools when
 | hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
 | Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
 | Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 Results and captures are kept for 30 minutes in **Advanced → History**, where you can filter them by site, vendor and tool, open them again and export them.
@@ -334,7 +334,7 @@ A language is a folder of translations plus a few registrations, and the checks 
 
 1. Create `_locales/<code>/messages.json` with every key of `_locales/en/messages.json` (`{ "key": { "message": "..." } }`, `{0}` placeholders and code in `` `backticks` `` unchanged), using a [code Chrome accepts](https://developer.chrome.com/docs/extensions/reference/api/i18n#locales) (`pt_BR`, `zh_TW`, `uk`...).
 2. Create `detectors/i18n/<code>.json` with the translation of every rule text (`node scripts/check-rule-i18n.js --missing` lists them). Cookie, header and path names stay as written.
-3. Add the language to the picker (`sections/settings/settings-ui-language.js`, in its own name), its flag (`utils/url-utils.js`), the lists in `modules/core/rule-i18n.js`, `modules/detection/rules/update-manager.js`, `modules/settings/settings-store.js` and `sections/rules/rules-translations-ui.js`. `test/locale-registry.test.js` names the one you forgot.
+3. Add the language to the picker (`sections/settings/settings-ui-language.js`, in its own name), its flag (`utils/url-utils.js`), the lists in `modules/core/rule-i18n.js`, `modules/detection/rules/update-manager.js` and `modules/settings/settings-store.js`. `test/locale-registry.test.js` names the one you forgot.
 4. Write its Chrome Web Store listing: `store/listing/<code>.txt` (the description, translated from `en.txt`), `store/captions/<code>.json` (the copy printed on the images) and the five images from `node scripts/generate-store-screenshots.js --lang <code>`. `npm run check:store-listing` and `npm run check:store-images` name what is missing or wrong; [`store/README.md`](store/README.md) has the rules and the commands.
 5. Run `npm run verify`, then `npm run e2e:languages -- --only <code> --shots /tmp/shots` and look at the screenshots: it reports text still in English, raw `{0}` placeholders and labels cut off.
 

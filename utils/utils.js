@@ -79,7 +79,15 @@ class Utils {
       'view-source:',
       'data:',
       'blob:',
-      'file://'
+      'file://',
+      // Other Chromium browsers' own pages, and the Chrome Web Store: the browser lets no extension run there
+      'brave://',
+      'opera://',
+      'vivaldi://',
+      'chrome-search://',
+      'chrome-untrusted://',
+      'https://chromewebstore.google.com/',
+      'https://chrome.google.com/webstore'
     ];
 
     return !restrictedPrefixes.some(prefix => url.startsWith(prefix));

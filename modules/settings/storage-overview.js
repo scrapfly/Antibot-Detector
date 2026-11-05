@@ -26,7 +26,7 @@
       keys: ['scrapfly_history', 'scrapfly_history_backup', 'scrapfly_history_storage_notice', 'scrapfly_history_watch'] },
     { id: 'rules', labelKey: 'storageRules', label: 'Rules and categories', clear: null,
       keys: ['scrapfly_detectors', 'scrapfly_categories', 'scrapfly_rule_i18n', 'scrapfly_remote_official_ids', 'scrapfly_deleted_official_detectors',
-        'scrapfly_last_update_check'] },
+        'scrapfly_last_update_check', 'scrapfly_rules_rev'] },
     // What Rules → Update left waiting: updates for a newer extension, and failed ones (found again by the next check)
     { id: 'updates', labelKey: 'storageUpdates', label: 'Pending rule updates', clear: 'updates',
       keys: ['scrapfly_pending_updates', 'scrapfly_incompatible_updates', 'scrapfly_update_errors'] },

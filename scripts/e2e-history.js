@@ -667,13 +667,13 @@ async function scenario(name, fn) {
 
       await showsExactly(['f1', 'f2', 'f3', 'f4'], 'everything at first');
       assert.equal(await page.$eval('#historyFilters', el => el.hidden), false, 'the chips show once History has entries');
-      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha', 'Fingerprint']);
+      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha', 'Fingerprint', 'Combinations']);
       assert.equal(await page.$$eval('#historyFilters .category-icon svg', els => els.length), 3, 'the category chips carry their icons');
       assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => {
         const icon = el.querySelector('.history-filter-icon svg');
         const box = icon && icon.getBoundingClientRect();
         return [el.dataset.filter, !!icon && box.width > 0 && box.height > 0];
-      })), [['pinned', true], ['changed', true], ['antibot', true], ['captcha', true], ['fingerprint', true]], 'every chip, Pinned and Changed too, shows an icon');
+      })), [['pinned', true], ['changed', true], ['antibot', true], ['captcha', true], ['fingerprint', true], ['combinations', true]], 'every chip, Pinned, Changed and Combinations too, shows an icon');
 
       // The search looks in notes too
       await page.fill('#historySearch', 'RESIDENTIAL');
@@ -730,7 +730,7 @@ async function scenario(name, fn) {
       await page.click('#historyClearFilters');
       await showsExactly(['f1', 'f2', 'f3', 'f4'], 'Clear filters');
       assert.equal(await page.$eval('#historySearch', el => el.value), '');
-      for (const name of ['pinned', 'changed', 'antibot', 'captcha', 'fingerprint']) assert.equal(await pressed(name), 'false', `${name} is off`);
+      for (const name of ['pinned', 'changed', 'antibot', 'captcha', 'fingerprint', 'combinations']) assert.equal(await pressed(name), 'false', `${name} is off`);
       assert.equal(await page.$eval('#historyNoResults', el => el.hidden), true);
 
       // The chips stay while the tab is left and opened again

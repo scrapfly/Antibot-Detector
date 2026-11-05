@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "ملف تعريف الارتباط للتخفيف من Netacea، في المتصفح أو يضبطه الخادم (الاسم الافتراضي)",
   "Captcha verification with the mitigation cookie": "التحقق من captcha مع ملف تعريف الارتباط للتخفيف",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "ملف تعريف الارتباط لتحدي جانب العميل في BIG-IP ASM (البادئة الافتراضية TSPD_101، مثل TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "ملف تعريف الارتباط لـ ASM مع ملف تعريف الارتباط لتحدي جانب العميل الخاص به"
+  "ASM cookie with its client-side challenge cookie": "ملف تعريف الارتباط لـ ASM مع ملف تعريف الارتباط لتحدي جانب العميل الخاص به",
+  "Custom detector": "كاشف مخصص",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: صفحة تحدي إثبات العمل SG-CAPTCHA المعروضة على الزوار المشتبه بهم، وتُقدَّم ضمن /.well-known/sgcaptcha/ مع ترويسة استجابة sg-captcha",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge، أي أن Anti-Bot AI من SiteGround قدّم تحديه",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "صفحة تحدي SG-CAPTCHA ونقطة نهاية الإجابة ضمن /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "ثوابت تحدي SG-CAPTCHA (sgchallenge، sgsubmit_url) في سكربتات الصفحة",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "ترويسة sg-captcha في صفحة تحدي SG-CAPTCHA",
+  "sg-captcha header with the challenge constants in the page's scripts": "ترويسة sg-captcha مع ثوابت التحدي في سكربتات الصفحة",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "صفحة تحدي SG-CAPTCHA مع ثوابتها في سكربتات الصفحة"
 }

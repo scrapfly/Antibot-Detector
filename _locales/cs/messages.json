@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Zobrazit ochranné skripty, které tato stránka načetla"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Načtěte stránku znovu pro analýzu skriptů ochrany"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Resetovat cookies ochrany a načíst stránku znovu pro analýzu skriptů"
-  },
   "advToolReloadVersionHint": {
     "message": "Načtěte stránku znovu pro zjištění verze ochrany"
   },
@@ -126,18 +120,6 @@
     "message": "Tuto akci se nepodařilo dokončit: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Předchozí stránka grafu"
-  },
-  "statsChartNext": {
-    "message": "Další stránka grafu"
-  },
-  "statsChartPage": {
-    "message": "Stránka {0} z {1}"
-  },
-  "statsChartShowing": {
-    "message": "Zobrazeno {0}–{1} z {2}"
-  },
   "statsSectionsLabel": {
     "message": "Sekce statistik"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Vyberte delší časové období a prozkoumejte uloženou historii."
   },
-  "statsDetectionRate": {
-    "message": "Položky s detekcemi"
-  },
-  "statsActiveDays": {
-    "message": "Aktivní dny"
-  },
   "statsAverageConfidence": {
     "message": "Průměrná spolehlivost"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Zobrazeno je posledních dní: {0}. Součty a exporty zahrnují celé vybrané období."
   },
-  "statsProtectionRanking": {
-    "message": "Žebříček ochran"
-  },
-  "statsCategoryTrend": {
-    "message": "Kategorie v čase"
-  },
-  "statsCategoryOverlap": {
-    "message": "Kategorie nalezené společně"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Počet položek historie s oběma kategoriemi. Buňky na úhlopříčce ukazují položky s danou kategorií."
-  },
   "statsProtectionDetails": {
     "message": "Všechny ochrany"
-  },
-  "statsDomainRanking": {
-    "message": "Žebříček domén"
-  },
-  "statsDomainMap": {
-    "message": "Návštěvy a detekce"
-  },
-  "statsDomainMapHint": {
-    "message": "Každý bod je jedna doména. Větší body mají více různých ochran."
   },
   "statsDomainDetails": {
     "message": "Všechny domény"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Seřadit domény"
   },
-  "statsSortVisits": {
-    "message": "Nejvíce návštěv"
-  },
-  "statsSortDetections": {
-    "message": "Nejvíce detekcí"
-  },
   "statsSortConfidence": {
     "message": "Nejvyšší spolehlivost"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Rozložení spolehlivosti"
-  },
-  "statsConfidenceTrend": {
-    "message": "Spolehlivost v čase"
-  },
-  "statsCategoryConfidence": {
-    "message": "Spolehlivost podle kategorie"
   },
   "statsConfidenceNote": {
     "message": "Spolehlivost vyjadřuje sílu uložených důkazů detekce, nikoli důkaz fingerprintingu nebo aktivní výzvy."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Vašemu hledání neodpovídají žádné domény."
-  },
-  "statsSelectionNote": {
-    "message": "Grafy a exporty používají vybrané časové období. Položky historie představují uložené detekce, nikoli každou návštěvu v prohlížeči."
   },
   "extensionName": {
     "message": "Scrapfly: detektor anti-bot"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Zapnout nebo vypnout detekci"
-  },
-  "noDetectionsFound": {
-    "message": "Nebyly nalezeny žádné detekce"
   },
   "detectionScanningTitle": {
     "message": "Skenování této stránky"
@@ -376,6 +313,9 @@
   },
   "searchDetectors": {
     "message": "Hledat detektory..."
+  },
+  "rulesFiltersLabel": {
+    "message": "Filtrovat pravidla"
   },
   "paginationPrev": {
     "message": "Předchozí stránka"
@@ -590,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Hledat"
   },
-  "advancedBtnExport": {
-    "message": "Exportovat"
-  },
   "advancedBtnExportTitle": {
     "message": "Exportovat zachycení"
-  },
-  "advancedBtnClearAll": {
-    "message": "Vymazat vše"
   },
   "advancedBtnClearAllTitle": {
     "message": "Vymazat všechna zachycení"
@@ -1021,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Opravdu chcete smazat tuto detekci z {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Nastavení se nepodařilo načíst. Používají se výchozí hodnoty."
-  },
   "settingsSavedToast": {
     "message": "Nastavení uloženo"
   },
@@ -1045,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "Doména už je na seznamu blokovaných: {0}"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "Na seznam blokovaných přidáno: {0}"
-  },
   "failedAddDomainFmt": {
     "message": "Doménu se nepodařilo přidat: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "Ze seznamu blokovaných odebráno: {0}"
   },
   "invalidSettingsFmt": {
     "message": "Neplatné nastavení: {0}"
@@ -1195,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Chyba při použití aktualizací"
   },
-  "failedCheckForUpdates": {
-    "message": "Aktualizace se nepodařilo zkontrolovat"
-  },
   "errorCheckingForUpdates": {
     "message": "Chyba při kontrole aktualizací"
   },
@@ -1263,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Úplná URL koncového bodu (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Dostupné proměnné:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Příklad: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1513,9 +1429,6 @@
   "settingsDataSettingsRow": {
     "message": "Nastavení"
   },
-  "settingsDataSettingsRowDesc": {
-    "message": "Exportovat nebo importovat nastavení rozšíření"
-  },
   "settingsDataHistoryRow": {
     "message": "Historie detekcí"
   },
@@ -1620,6 +1533,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Hledat detekce..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Filtrovat detekce"
   },
   "detectionPaginationPage": {
     "message": "Stránka"
@@ -1980,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Nastavení importováno"
   },
-  "settingsImportFailedToast": {
-    "message": "Nastavení se nepodařilo importovat: neplatný soubor"
-  },
   "statsPrivacyNote": {
     "message": "Vypočítáno místně z historie detekcí. Nic neopouští váš prohlížeč."
-  },
-  "statsSubtitleFmt": {
-    "message": "Vypočítáno místně z položek historie: {0}. Nic neopouští váš prohlížeč."
   },
   "statsRangeLabel": {
     "message": "Časové období"
@@ -2010,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Statistiky se tu zobrazí, jakmile se do historie uloží stránky s detekcemi."
   },
-  "statsEntries": {
-    "message": "Položky historie"
-  },
   "statsUniqueDomains": {
     "message": "Jedinečné domény"
   },
   "statsDetections": {
     "message": "Detekce"
   },
-  "statsDistinctDetectors": {
-    "message": "Různé ochrany"
-  },
   "statsOverTime": {
     "message": "Detekce v čase"
   },
-  "statsTopProtections": {
-    "message": "Nejčastěji detekované ochrany"
-  },
-  "statsTopDomains": {
-    "message": "Nejčastější domény"
-  },
-  "statsByCategory": {
-    "message": "Podle kategorie"
-  },
-  "statsByDifficulty": {
-    "message": "Podle obtížnosti"
-  },
-  "statsPagesUnit": {
-    "message": "stránek"
-  },
-  "statsVisitsUnit": {
-    "message": "návštěv"
-  },
-  "statsDetectionsUnit": {
-    "message": "detekcí"
-  },
   "statsCategoryOther": {
     "message": "Jiné"
-  },
-  "statsDifficultyNone": {
-    "message": "Žádné detekce"
   },
   "statsNoData": {
     "message": "V tomto období nejsou žádná data"
@@ -2058,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Stránky: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "Domény: {0}"
-  },
-  "statsTipVisitsFmt": {
-    "message": "Návštěvy: {0}"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "Detekce: {0}"
-  },
   "historyCategoryShareFmt": {
     "message": "Detekce: {0} z {1} · {2} %"
-  },
-  "statsTipEntriesFmt": {
-    "message": "Položky: {0}"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "S detekcemi: {0}"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "Návštěv na doménu: {0}"
-  },
-  "statsPerEntryFmt": {
-    "message": "Na položku: {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "Průměrná spolehlivost: {0} %"
   },
   "statsTimelineMetaFmt": {
     "message": "Detekce: {0} · Dny: {1}"
@@ -2685,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Zachyceno"
   },
-  "advCommonScript": {
-    "message": "Skript"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2751,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Úroveň ochrany:"
   },
-  "advCommonCookiesFound": {
-    "message": "Nalezené cookies:"
-  },
   "advCommonSiteKey": {
     "message": "Klíč webu"
   },
@@ -2790,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Skript Pythonu s requests a BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Skript Pythonu s knihovnou requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Skript Node.js s axios a cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Skript Node.js s axios"
   },
   "advCodeDescPhpDom": {
     "message": "Skript PHP s cURL a DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Skript PHP s cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# s HttpClient a HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# s HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go s net/http a goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go s net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Zachytávání aktivní"
@@ -3063,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Klienti reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "ID klienta: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Zkopírováno do schránky!"
   },
@@ -3165,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Skripty Seed:"
   },
-  "advShapeInitJsScript": {
-    "message": "Skript Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Skripty Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Skript Seed"
   },
   "advShapeSeedScripts": {
     "message": "Skripty Seed"
@@ -4014,23 +3840,11 @@
   "tipScopePath": {
     "message": "Výsledky se znovu použijí pro tuto přesnou cestu bez ohledu na dotaz."
   },
-  "tipStatsActiveDays": {
-    "message": "Dny s alespoň jednou uloženou stránkou."
-  },
-  "tipStatsDetections": {
-    "message": "Ochrany nalezené na všech uložených stránkách včetně opakování."
-  },
   "tipStatsDetectors": {
     "message": "Různé zjištěné ochrany, každá započtena jednou."
   },
   "tipStatsDomains": {
     "message": "Různé weby mezi uloženými stránkami."
-  },
-  "tipStatsEntries": {
-    "message": "Stránky uložené do Historie v tomto období."
-  },
-  "tipStatsRateFmt": {
-    "message": "Položky: {0} z {1}"
   },
   "tipPatterns": {
     "message": "Vzory"
@@ -4525,38 +4339,11 @@
     "message": "Otevřete webovou stránku a scrapujte ji pomocí Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "Zachycení: {0}"
-  },
-  "statsFirstSeen": {
-    "message": "Nové v tomto období"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "Poprvé uloženo v tomto období: ochrany ({0}) a domény ({1})."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Zvolte 7, 30 nebo 90 dní a uvidíte, co je nové."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Nejchráněnější doména"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "Různé ochrany: {0}, návštěvy: {1}."
-  },
-  "statsFoundTogether": {
-    "message": "Společně nalezené ochrany"
-  },
   "statsMethods": {
     "message": "Metody detekce"
   },
   "statsMatchesUnit": {
     "message": "shod"
-  },
-  "statsMethodsByCategory": {
-    "message": "Metody podle kategorie"
-  },
-  "statsWeakEvidence": {
-    "message": "Nejslabší důkazy"
   },
   "statsSignalColumn": {
     "message": "Signál"
@@ -4573,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Kombinace"
   },
-  "statsDecidedBy": {
-    "message": "Jak se o detekcích rozhodlo"
-  },
-  "statsCombinationGain": {
-    "message": "Spolehlivost podle rozhodnutí"
-  },
   "statsCombinationColumn": {
     "message": "Kombinace"
   },
@@ -4587,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "O žádné detekci v tomto období nerozhodla kombinace."
-  },
-  "statsRulesMostActive": {
-    "message": "Nejaktivnější pravidla"
-  },
-  "statsTipPatternsFmt": {
-    "message": "Vzory: {0}"
   },
   "statsRulesPatternsByMethod": {
     "message": "Vzory podle metody"
@@ -4636,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Čeká na novější rozšíření"
   },
-  "statsToolsByVendor": {
-    "message": "Zachycení podle dodavatele"
-  },
   "statsToolsCapture": {
     "message": "Zachycení"
-  },
-  "statsToolsByTool": {
-    "message": "Nejpoužívanější nástroje"
-  },
-  "statsToolsOverTime": {
-    "message": "Zachycení v čase"
   },
   "statsChangeColumn": {
     "message": "Změna"
@@ -4660,9 +4426,6 @@
   "statsNoChanges": {
     "message": "V tomto období žádná doména nezměnila své ochrany mezi uloženými návštěvami."
   },
-  "statsNothingNew": {
-    "message": "Nic nového: každá ochrana zde už byla v Historii před tímto obdobím."
-  },
   "statsSectionSignals": {
     "message": "Signály"
   },
@@ -4675,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Nástroje"
   },
-  "statsDomainChangesHint": {
-    "message": "Domény, jejichž zjištěné ochrany se změnily mezi dvěma uloženými návštěvami."
-  },
-  "statsFirstSeenHint": {
-    "message": "Ochrany a domény uložené v tomto období poprvé."
-  },
   "statsSignalsNote": {
     "message": "Druh důkazů, kterým každá uložená detekce odpovídala: názvy cookies a hlaviček, URL, prvky stránky, skripty a hooky JavaScriptu."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Ochrany, jejichž odpovídající vzory mají nejnižší průměrnou spolehlivost. Jejich pravidla mohou potřebovat silnější vzor."
   },
   "statsCombinationsNote": {
     "message": "Kombinace detekuje ochranu, jen když se společně najde několik vzorů."
@@ -4696,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Pravidla"
   },
-  "statsRulesModified": {
-    "message": "Upravená oficiální"
-  },
   "statsRulesDisabled": {
     "message": "Vypnutá"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Zapnutá pravidla, která na stránkách uložených v tomto období nic nenašla."
   },
-  "statsRulesMissingHint": {
-    "message": "Popisy se zobrazují v podrobnostech detekce, v Historii a v kombinacích. Přidejte je v editoru pravidel."
-  },
   "statsToolsNote": {
     "message": "Rozšířená zachycení a výsledky nástrojů uložené v tomto zařízení."
-  },
-  "statsCapturesUnit": {
-    "message": "zachycení"
   },
   "detectionCardSureFmt": {
     "message": "Jistota {0} %"
@@ -5139,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "V tomto období je málo stránek ({0}): srovnání a žebříčky mohou být zavádějící."
-  },
-  "statsLoading": {
-    "message": "Načítání statistik..."
   },
   "statsEmptyShowAll": {
     "message": "Zobrazit celou historii"
@@ -5791,6 +5533,9 @@
   },
   "historyFilterPinned": {
     "message": "Připnuté"
+  },
+  "historyFilterCombinations": {
+    "message": "Kombinace"
   },
   "historyNoResults": {
     "message": "Hledání ani filtrům neodpovídá žádná položka."
@@ -6814,6 +6559,9 @@
   },
   "bulkCountsFmt": {
     "message": "Hotovo: {0} · S ochranou: {1} · Selhalo: {2} · Přeskočeno: {3}"
+  },
+  "bulkMostSeenFmt": {
+    "message": "Nejčastěji zjištěno: {0}"
   },
   "bulkStoppedRestart": {
     "message": "Rozšíření se během běhu restartovalo, proto se zastavil. Stránky, které stále čekaly, se nenaskenovaly."

@@ -13,7 +13,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 function load() {
   const context = vm.createContext({ console, self: {}, encodeURIComponent, decodeURIComponent });
   context.self = context;
-  for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'sections/detection/detection-ui.js']) {
+  for (const file of ['modules/core/categories.js', 'modules/core/detection-filter.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'sections/detection/detection-ui.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const ui = context.DetectionUI;

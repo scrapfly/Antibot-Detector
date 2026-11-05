@@ -1104,5 +1104,13 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Mitigatiecookie van Netacea, in de browser of door de server gezet (standaardnaam)",
   "Captcha verification with the mitigation cookie": "Captchaverificatie met de mitigatiecookie",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie van de client-side challenge van BIG-IP ASM (standaardvoorvoegsel TSPD_101, bijv. TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "ASM-cookie met de bijbehorende cookie van de client-side challenge"
+  "ASM cookie with its client-side challenge cookie": "ASM-cookie met de bijbehorende cookie van de client-side challenge",
+  "Custom detector": "Aangepaste detector",
+  "SiteGround Anti-Bot AI: the SG-CAPTCHA proof-of-work challenge page shown to flagged visitors, served under /.well-known/sgcaptcha/ with an sg-captcha response header": "SiteGround Anti-Bot AI: de SG-CAPTCHA-challengepagina met proof-of-work die aan gemarkeerde bezoekers wordt getoond, geserveerd onder /.well-known/sgcaptcha/ met een sg-captcha-responsheader",
+  "sg-captcha: challenge, SiteGround's Anti-Bot AI served its challenge": "sg-captcha: challenge, de Anti-Bot AI van SiteGround heeft zijn challenge geserveerd",
+  "SG-CAPTCHA challenge page and answer endpoint under /.well-known/sgcaptcha/": "SG-CAPTCHA-challengepagina en antwoordendpoint onder /.well-known/sgcaptcha/",
+  "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "SG-CAPTCHA-challengeconstanten (sgchallenge, sgsubmit_url) in de scripts van de pagina",
+  "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha op de SG-CAPTCHA-challengepagina",
+  "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha met de challengeconstanten in de scripts van de pagina",
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA-challengepagina met de bijbehorende constanten in de scripts van de pagina"
 }
