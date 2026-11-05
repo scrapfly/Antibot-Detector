@@ -819,20 +819,30 @@ class UpdateManager {
     /**
      * Make the running detection use what is now in storage. In the service
      * worker this reloads its DetectorManager directly (a worker cannot
-     * message itself); elsewhere it asks the worker to reload.
+     * message itself); elsewhere it asks the worker to reload. Either way the
+     * worker also stamps the change, so no result saved with the old rules is
+     * served again (DetectionEngineManager.bumpRulesRevision).
      */
     static async notifyDetectorsChanged() {
         try {
             const inWorker = typeof window === 'undefined';
             // eslint-disable-next-line no-undef
             if (inWorker && typeof detectorManager !== 'undefined' && detectorManager) {
-                if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
-                    DetectionEngineManager.patternCache.clear();
+                try {
+                    if (typeof DetectionEngineManager !== 'undefined' && DetectionEngineManager.patternCache) {
+                        DetectionEngineManager.patternCache.clear();
+                    }
+                    // eslint-disable-next-line no-undef
+                    detectorManager.initialized = false;
+                    // eslint-disable-next-line no-undef
+                    await detectorManager.initialize();
+                } finally {
+                    // After the reload (a scan that begins later runs on the new rules), also when it failed: the rules in
+                    // storage changed either way
+                    if (typeof DetectionEngineManager !== 'undefined' && typeof DetectionEngineManager.bumpRulesRevision === 'function') {
+                        await DetectionEngineManager.bumpRulesRevision();
+                    }
                 }
-                // eslint-disable-next-line no-undef
-                detectorManager.initialized = false;
-                // eslint-disable-next-line no-undef
-                await detectorManager.initialize();
                 return;
             }
             if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.sendMessage === 'function') {

@@ -156,6 +156,14 @@ function registerSettingsHandlers(registry, context) {
         void context;
 
         (async () => {
+            // Every saved scan result was found with the rules that just changed. The change is stamped once the detectors
+            // are reloaded (a scan that begins after it runs on the new rules; one that began earlier is not kept) and
+            // before the answer, so the caller's next scan never meets an old result. Never throws.
+            const stampRuleChange = async () => {
+                if (typeof DetectionEngineManager !== 'undefined' && typeof DetectionEngineManager.bumpRulesRevision === 'function') {
+                    await DetectionEngineManager.bumpRulesRevision();
+                }
+            };
             try {
 
                 // Clear pattern cache so rule changes take effect immediately
@@ -167,9 +175,11 @@ function registerSettingsHandlers(registry, context) {
                 detectorManager.initialized = false;
                 await detectorManager.initialize();
                 Logger.background('Detectors reloaded from storage');
+                await stampRuleChange();
                 sendResponse({ status: 'reloaded', detectorCount: detectorManager.getDetectorCount() });
             } catch (error) {
                 Logger.error('BACKGROUND', 'Scrapfly Background: Error reloading detectors:', error);
+                await stampRuleChange();
                 sendResponse({ status: 'error', error: error.message });
             }
         })();

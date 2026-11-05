@@ -200,7 +200,7 @@ function fresh({ tabUrl = 'https://chatgpt.com/', cached = null } = {}) {
   worker.chrome = { runtime: { sendMessage: async (m) => { out.messages.push(m); } }, tabs: { get: async () => ({ id: 1, url: tabUrl }), sendMessage: async () => {} } };
   worker.setBadgeForDetections = async (tabId, url, results) => { out.badge = results.map(d => d.detector.id); };
   Engine.getStoredDetection = async () => cached;
-  Engine.storeDetection = async (url, pageData, results) => { out.stored = results; return { url, timestamp: 1, expiry: 2, cacheScope: 'domain' }; };
+  Engine.storeDetection = async (url, pageData, results) => { out.stored = results; out.pageData = pageData; return { url, timestamp: 1, expiry: 2, cacheScope: 'domain' }; };
   return out;
 }
 const send = (request, sender = { tab: { id: 1, url: 'https://chatgpt.com/' }, frameId: 0, url: 'https://chatgpt.com/' }) =>
@@ -252,6 +252,22 @@ test('after the scan, a response adds its detector to the cached result, the bad
   send({ url: PREPARE, method: 'POST', status: 200, body: compacted(prepareBody) });
   await sleep(450);
   assert.equal(out.stored, null, 'no rewrite when nothing is new');
+});
+
+test('with no saved result left (the rules changed meanwhile) a late response is added to what the page\'s scan found, not saved as the whole result', async () => {
+  const scanFound = [{ detector: { id: cloudflare.id, name: cloudflare.name }, id: cloudflare.id, category: 'antibot', confidence: 100,
+    matches: [{ type: 'url', pattern: 'x', value: 'https://chatgpt.com/cdn-cgi/challenge-platform/scripts/jsd/main.js', confidence: 100, patternId: 'bot-management-script' }] }];
+  const out = fresh({ cached: null });
+  worker.rememberFinishedPage(1, { url: 'https://chatgpt.com/', startTime: 777 }, scanFound);
+  try {
+    send({ url: PREPARE, method: 'POST', status: 200, body: compacted(prepareBody) });
+    await sleep(450);
+    assert.ok(out.stored, 'stored');
+    assert.deepEqual([...out.stored.map(d => d.detector.id)].sort(), [cloudflare.id, sentinel.id, turnstile.id].sort(), 'the scan\'s own detections stay, the response\'s are added');
+    assert.equal(out.pageData.scanStartedAt, 777, 'saved as a result of that scan');
+  } finally {
+    worker.forgetFinishedPage(1);
+  }
 });
 
 test('a skipped site keeps nothing from its responses: no cache entry, no badge, no popup update', async () => {
