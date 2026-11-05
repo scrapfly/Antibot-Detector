@@ -207,7 +207,7 @@ test('Shape Security: a capture that ends by itself tells the open popup, with i
   const message = done[0].message;
   assert.deepEqual({ tabId: message.tabId, vendorId: message.vendorId, operation: message.operation, requestId: message.requestId, reason: message.reason },
     { tabId: 7, vendorId: 'shapesecurity', operation: 'capture', requestId: 'job-7', reason: 'complete' }, 'the popup matches its Stop card to the capture by the job\'s request id');
-  assert.equal(message.captureData.cookie.name, 'AbCd1234');
+  assert.deepEqual(message.captureData, { cookies: 1, headers: 0 }, 'how many were captured, never their values');
   assert.deepEqual({ saved: done[0].saved, stateGone: done[0].stateGone }, { saved: 1, stateGone: true }, 'told after the save and after the state is gone, so a state query on receipt says it is not capturing');
 
   // A second trigger of the same capture (another header, the timer) tells nobody again

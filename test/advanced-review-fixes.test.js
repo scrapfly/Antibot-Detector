@@ -728,3 +728,106 @@ test('Imperva: Analyze Scripts keeps each challenge address once and at most 20 
     assert.deepEqual(Array.from(merged.state().extractedData.challengeUrls, item => Array.from(item.keywords)), [['old_token', 'solution']]);
 });
 
+// Shape Security's timers belong to its capture: the 5 s version check, the 60 s stop and the page notice end with it
+const shapeDelays = f => Array.from(f.timers.values()).map(timer => timer.delay).sort((a, b) => b - a);
+const shapeText = value => (value && typeof value === 'object' && 'fallback' in value ? value.fallback : value);
+async function startShape(f, context, states, tabId = 7) {
+    await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_START_CAPTURE', tabId }, resolve, states, new Map()));
+    const { job } = f.context.AdvancedJobManager.begin({ tabId, vendorId: 'shapesecurity', operation: 'capture', url: 'https://shop.example/login' });
+    f.context.AdvancedJobManager.bindCaptureState(states.get(tabId), job);
+    return job;
+}
+const shapeStop = (context, tabId = 7) => new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_STOP_CAPTURE', tabId }, resolve));
+const pageLoaded = (f, tabId = 7) => {
+    f.context.chrome.webNavigation.onCommitted.emit({ tabId, frameId: 0 });
+    f.context.chrome.webNavigation.onCompleted.emit({ tabId, frameId: 0 });
+};
+
+test('Shape Security: Stop within the 5 s after the page loads ends the version check too: nothing pending, nothing put on the page', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    pageLoaded(f);
+    assert.deepEqual(shapeDelays(f), [60000, 5000], 'the 60 s stop and the 5 s version check');
+    assert.equal((await shapeStop(context)).status, 'stopped');
+    assert.deepEqual(shapeDelays(f), [], 'neither is left pending');
+    f.notices.length = 0;
+    await f.tick(5000);
+    assert.deepEqual(f.notices, [], 'no "Monitoring Active" notice for a capture that is over');
+    assert.equal(states.has(7), false);
+});
+
+test('Shape Security: a Stop that lands while the version check waits for the page does not put the capture\'s state back', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    pageLoaded(f);
+    // The page is busy: the version probe's answer is held
+    let answerProbe;
+    f.context.chrome.scripting.executeScript = details => (details && details.world === 'MAIN' ? new Promise(resolve => { answerProbe = () => resolve([{ result: false }]); }) : Promise.resolve([{ result: false }]));
+    await f.tick(5000);
+    assert.equal((await shapeStop(context)).status, 'stopped');
+    assert.equal(states.size, 0);
+    f.notices.length = 0;
+    answerProbe();
+    await flush();
+    assert.equal(states.size, 0, 'the stopped capture\'s state stays gone');
+    const state = await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_GET_CAPTURE_STATE', tabId: 7 }, resolve));
+    assert.equal(state.isCapturing, false);
+    assert.deepEqual(f.notices, [], 'and nothing is shown for it');
+    // The next Start is not refused, and registers its listeners
+    const again = await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_START_CAPTURE', tabId: 7 }, resolve, states, new Map()));
+    assert.equal(again.status, 'started');
+    assert.deepEqual([f.context.chrome.webRequest.onResponseStarted.listeners.size, f.context.chrome.webRequest.onBeforeSendHeaders.listeners.size], [1, 1]);
+});
+
+test('Shape Security: with the capture still running, the 5 s check reads the version and puts the monitoring notice up', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    pageLoaded(f);
+    f.context.chrome.scripting.executeScript = async details => [{ result: Boolean(details && details.world === 'MAIN') }];
+    f.notices.length = 0;
+    await f.tick(5000);
+    assert.equal(states.get(7).version, 'v1', 'window.__xr_bmobdb is there');
+    assert.deepEqual(f.notices.map(notice => [notice.type, shapeText(notice.title)]), [['capture', 'Monitoring Active ({0})']]);
+});
+
+test('Shape Security: the 60 s running out with nothing captured saves nothing and still tells the popup, with what the other tools send on a timeout', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    const job = await startShape(f, context, states);
+    await context.autoStopCapture(7, 'timeout');
+    await flush();
+    assert.equal(f.saves.length, 0, 'no empty entry in History');
+    const done = f.messages.filter(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED');
+    assert.equal(done.length, 1, 'the popup is told the capture ended');
+    assert.deepEqual({ reason: done[0].reason, captureData: done[0].captureData, requestId: done[0].requestId, tabId: done[0].tabId }, { reason: 'timeout', captureData: null, requestId: job.requestId, tabId: 7 });
+    assert.equal(states.has(7), false);
+    assert.equal(job.status, 'completed');
+    assert.deepEqual(f.notices.map(notice => notice.type), ['warning'], 'the page is told it timed out, not that a capture completed');
+    // With the cookie seen the timeout keeps what there is, as before
+    await startShape(f, context, states, 8);
+    f.context.chrome.webRequest.onResponseStarted.emit({ tabId: 8, responseHeaders: [{ name: 'set-cookie', value: 'AbCdEfGh=xyz; Max-Age=1577847600; Path=/' }] });
+    await context.autoStopCapture(8, 'timeout');
+    await flush();
+    assert.equal(f.saves.length, 1);
+    assert.equal(f.saves[0].cookie.name, 'AbCdEfGh');
+});
+
+test('Shape Security: the completion message says how many were captured and never the cookie\'s or the headers\' values', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    await startShape(f, context, states);
+    f.context.chrome.webRequest.onResponseStarted.emit({ tabId: 7, responseHeaders: [{ name: 'set-cookie', value: 'AbCdEfGh=SECRETVALUE; Max-Age=1577847600; Path=/' }] });
+    states.get(7).version = 'v1';
+    states.get(7).headers.push({ name: 'X-AbCd1234-a', value: 'HEADERVALUE', timestamp: 1 });
+    await context.autoStopCapture(7, 'complete');
+    await flush();
+    const done = f.messages.find(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED');
+    assert.ok(done, 'the popup is told');
+    assert.deepEqual(JSON.parse(JSON.stringify(done.captureData)), { cookies: 1, headers: 1 });
+    assert.equal(done.reason, 'complete');
+    assert.doesNotMatch(JSON.stringify(done), /SECRETVALUE|HEADERVALUE|AbCdEfGh|X-AbCd1234/, 'neither a value nor a name');
+    assert.equal(f.saves[0].cookie.value, 'SECRETVALUE', 'they are in History, where they are the point of the capture');
+});
