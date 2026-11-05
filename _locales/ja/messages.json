@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "完了: {0} · 保護あり: {1} · 失敗: {2} · スキップ: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "最も多く確認された保護: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "実行中に拡張機能が再起動したため、停止しました。まだ待機中だったページはスキャンされていません。"
   },

@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Klara: {0} · Med skydd: {1} · Misslyckade: {2} · Överhoppade: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Oftast sedda: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Tillägget startade om under körningen, så den stoppades. Sidorna som fortfarande väntade skannades inte."
   },

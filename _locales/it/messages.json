@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Fatte: {0} · Con protezioni: {1} · Non riuscite: {2} · Saltate: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Più viste: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "L’estensione si è riavviata durante l’esecuzione, che quindi si è interrotta. Le pagine ancora in attesa non sono state analizzate."
   },

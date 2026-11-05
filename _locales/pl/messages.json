@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Gotowe: {0} · Z zabezpieczeniami: {1} · Nieudane: {2} · Pominięte: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Najczęściej zaobserwowane: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Rozszerzenie uruchomiło się ponownie w trakcie przebiegu, więc został zatrzymany. Strony, które nadal czekały, nie zostały zeskanowane."
   },

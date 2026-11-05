@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防護：{1} · 失敗：{2} · 已略過：{3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "最常出現：{0}"
+  },
   "bulkStoppedRestart": {
     "message": "執行期間擴充功能重新啟動，因此執行已停止。仍在等待的網頁未被掃描。"
   },

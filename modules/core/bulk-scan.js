@@ -18,6 +18,8 @@
  *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
  *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
+ *   protectionTotals()   how many scanned pages each protection was found on: the "Most seen" line of the page, and a line
+ *                    of the Markdown export and a field of the JSON export (the CSV is one row per protection, as it was)
  *   build(), fileName()   the CSV, JSON and Markdown exports
  */
 (function(root) {
@@ -28,6 +30,7 @@
   const MAX_URLS = 200;            // pages per run, at most
   const TIMEOUT_S = Object.freeze({ min: 10, max: 120, default: 45 });
   const MAX_SKIPPED_LISTED = 200;  // skipped lines listed in the table; the rest are counted
+  const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
   const ITEM_STATUSES = Object.freeze(['waiting', 'scanning', 'done', 'failed', 'skipped']);
   const RUN_STATUSES = Object.freeze(['running', 'paused', 'stopped', 'done']);
   /** Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. */
@@ -444,6 +447,38 @@
     return { detections, difficulty };
   }
 
+  /**
+   * How many of the pages that were scanned each protection was found on, most first and then by name. A page counts once
+   * for a protection however many of its detections name it. A page that failed, was skipped, waits or is being scanned has
+   * no result and counts for nothing. A protection that went by two names (or a spelling of one) is one row, as History groups
+   * them (Categories.protectionKey), under the name it was first found with.
+   * @param {object} run
+   * @returns {Array<{name: string, category: string, pages: number}>}
+   */
+  function protectionTotals(run) {
+    const rows = new Map();
+    for (const item of (run && Array.isArray(run.items) ? run.items : [])) {
+      if (!item || item.status !== 'done' || !Array.isArray(item.detections)) continue;
+      const onPage = new Set();
+      for (const d of item.detections) {
+        if (!d || typeof d !== 'object') continue;
+        const name = detectionName(d);
+        // "?" is what summarize() writes for a detection that has no name
+        if (!name || name === '?') continue;
+        const key = Categories ? Categories.protectionKey(name) : name.toLowerCase();
+        if (onPage.has(key)) continue;
+        onPage.add(key);
+        const row = rows.get(key);
+        if (row) row.pages++;
+        else rows.set(key, { key, name, category: Categories ? Categories.keyOf(d) : String(d.category || ''), pages: 1 });
+      }
+    }
+    // By the key, not the shown name: the same order on every machine and in every language
+    return [...rows.values()]
+      .sort((a, b) => b.pages - a.pages || (a.key < b.key ? -1 : (a.key > b.key ? 1 : 0)))
+      .map(({ name, category, pages }) => ({ name, category, pages }));
+  }
+
   /* ---------- Exports ---------- */
 
   /** A spreadsheet runs text that starts with = + - @ as a formula: the apostrophe keeps it text. */
@@ -476,7 +511,8 @@
       exportedAt: new Date(now).toISOString(),
       run: run ? {
         status: run.status, reason: run.reason || null, startedAt: iso(run.startedAt) || null, finishedAt: iso(run.finishedAt) || null,
-        timeoutSec: run.timeoutSec, duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run)
+        timeoutSec: run.timeoutSec, duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run),
+        protectionTotals: protectionTotals(run)
       } : null,
       pages: items.map(item => ({
         url: item.url,
@@ -509,8 +545,11 @@
     const c = counts(run);
     const parts = [`${c.total} pages`, c.done && `${c.done} scanned`, c.failed && `${c.failed} failed`, c.skipped && `${c.skipped} skipped`,
       c.waiting && `${c.waiting} waiting`, c.scanning && `${c.scanning} scanning`].filter(Boolean);
-    const lines = ['# Scrapfly Antibot Detector: Bulk scan', '', `${parts.join(', ')}; ${c.found} with protections`, '',
-      '| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |'];
+    const lines = ['# Scrapfly Antibot Detector: Bulk scan', '', `${parts.join(', ')}; ${c.found} with protections`, ''];
+    // The protections found on the most pages, when any was found
+    const seen = protectionTotals(run).slice(0, MOST_SEEN);
+    if (seen.length) lines.push(`Most seen: ${seen.map(row => `${mdCell(row.name)} (${row.pages} page${row.pages === 1 ? '' : 's'})`).join(', ')}`, '');
+    lines.push('| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |');
     for (const item of (run && run.items) || []) {
       const found = (Array.isArray(item.detections) ? item.detections : [])
         .map(d => `${d.name} (${d.category}${Number.isFinite(d.confidence) ? `, ${d.confidence}%` : ''})`);
@@ -542,10 +581,10 @@
   }
 
   const api = {
-    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, ITEM_STATUSES, RUN_STATUSES, REASONS, FORMATS,
+    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, ITEM_STATUSES, RUN_STATUSES, REASONS, FORMATS,
     capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
-    summarize, build, fileName
+    summarize, protectionTotals, build, fileName
   };
   root.BulkScan = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BulkScan = api;

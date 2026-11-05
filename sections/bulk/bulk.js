@@ -347,6 +347,13 @@
     byId('bulkRunStatus').textContent = `${label(RUN_TEXT[run.status], run.status)} · ${fmt('bulkProgressFmt', '{0} of {1} finished', number(finishedCount), number(toScan))}`;
     byId('bulkRunCounts').textContent = fmt('bulkCountsFmt', 'Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}',
       number(counts.done), number(counts.found), number(counts.failed), number(counts.skipped));
+    // The protections found on the most pages: names and numbers, so the label is all there is to translate. Each is isolated
+    // (FSI ... PDI) so a Latin name keeps its own direction inside an Arabic line
+    const seen = BulkScan.protectionTotals(run).slice(0, BulkScan.MOST_SEEN);
+    byId('bulkRunMostSeen').textContent = seen.length
+      ? fmt('bulkMostSeenFmt', 'Most seen: {0}', seen.map(row => `\u2068${row.name} (${number(row.pages)})\u2069`).join(' · '))
+      : '';
+    byId('bulkRunMostSeen').hidden = !seen.length;
     const reason = run.status === 'stopped' && run.reason && run.reason !== 'user' ? label(STOP_TEXT[run.reason], '') : '';
     byId('bulkRunReason').textContent = reason;
     byId('bulkRunReason').hidden = !reason;

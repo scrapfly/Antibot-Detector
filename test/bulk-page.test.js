@@ -154,3 +154,60 @@ test('a sitemap on a local address lists local pages of its own host only', asyn
   await page.open();
   assert.deepEqual(await page.start(local), ['https://localhost/a', 'http://localhost:8080/b']);
 });
+
+// ---- The "Most seen" line under the totals
+
+const BulkScan = require('../modules/core/bulk-scan.js');
+const FSI = '⁨';
+const PDI = '⁩';
+const NAMES = ['Cloudflare', 'reCAPTCHA', 'Akamai', 'DataDome', 'PerimeterX', 'Canvas', 'Audio'];
+/** Seven scanned pages; the first name is on all seven, the second on six, and so on down to the last on one. */
+function seenRun() {
+  const run = BulkScan.createRun({ items: NAMES.map((_, i) => ({ url: `https://p${i}.example/`, status: 'waiting' })) }, { now: 1 });
+  run.items.forEach((item, i) => {
+    item.status = 'done';
+    item.detections = NAMES.slice(0, NAMES.length - i).map(name => ({ name, category: 'antibot', confidence: 90 }));
+  });
+  return plain(run);
+}
+const cleanRun = () => plain(BulkScan.createRun({ items: ['https://a.example/', 'https://b.example/'].map(url => ({ url, status: 'done', detections: [] })) }, { now: 1 }));
+
+test('the Most seen line names the protections found on the most pages, top five with their counts, under the totals', async () => {
+  const page = pageWorld({ run: seenRun() });
+  await page.open();
+  const line = page.byId('bulkRunMostSeen');
+  assert.equal(line.hidden, false);
+  assert.equal(line.textContent, `Most seen: ${['Cloudflare (7)', 'reCAPTCHA (6)', 'Akamai (5)', 'DataDome (4)', 'PerimeterX (3)'].map(item => `${FSI}${item}${PDI}`).join(' · ')}`);
+  assert.equal(page.byId('bulkRunCounts').textContent, 'Done: 7 · With protections: 7 · Failed: 0 · Skipped: 0', 'the totals are what they were');
+});
+
+test('the line follows the run as it changes, and is hidden when nothing was found', async () => {
+  const page = pageWorld({ run: cleanRun() });
+  await page.open();
+  assert.equal(page.byId('bulkRunMostSeen').hidden, true, 'scanned pages with no protection: nothing to say');
+  assert.equal(page.byId('bulkRunMostSeen').textContent, '');
+  assert.equal(page.byId('bulkRunCounts').textContent, 'Done: 2 · With protections: 0 · Failed: 0 · Skipped: 0');
+
+  page.update(seenRun());
+  assert.equal(page.byId('bulkRunMostSeen').hidden, false);
+  assert.match(page.byId('bulkRunMostSeen').textContent, /^Most seen: /);
+
+  const oneProtection = plain(BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'done', detections: [{ name: 'Cloudflare', category: 'antibot', confidence: 90 }] }, { url: 'https://b.example/', status: 'failed', reason: 'load' }] }, { now: 1 }));
+  page.update(oneProtection);
+  assert.equal(page.byId('bulkRunMostSeen').textContent, `Most seen: ${FSI}Cloudflare (1)${PDI}`, 'fewer than five: all of them');
+
+  page.update(cleanRun());
+  assert.equal(page.byId('bulkRunMostSeen').hidden, true);
+  assert.equal(page.byId('bulkRunMostSeen').textContent, '');
+});
+
+test('the page has the line (hidden until a protection is found) right under the totals, and every language has its label', () => {
+  const html = read('sections/bulk/bulk.html');
+  assert.match(html, /<p class="bulk-muted" id="bulkRunCounts"><\/p>\s*<p class="bulk-muted" id="bulkRunMostSeen" hidden><\/p>/);
+  assert.equal(en.bulkMostSeenFmt.message, 'Most seen: {0}');
+  assert.ok(en.bulkMostSeenFmt.description.includes('{0}'));
+  for (const code of fs.readdirSync(path.join(root, '_locales'))) {
+    const messages = JSON.parse(read(`_locales/${code}/messages.json`));
+    assert.ok(messages.bulkMostSeenFmt && messages.bulkMostSeenFmt.message.includes('{0}'), `${code} has the label with its {0}`);
+  }
+});

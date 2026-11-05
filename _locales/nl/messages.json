@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Klaar: {0} · Met beveiliging: {1} · Mislukt: {2} · Overgeslagen: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Meest gezien: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "De extensie is tijdens de ronde opnieuw gestart, dus is die gestopt. De pagina's die nog wachtten zijn niet gescand."
   },

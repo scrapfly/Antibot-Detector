@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防护：{1} · 失败：{2} · 已跳过：{3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "最常出现：{0}"
+  },
   "bulkStoppedRestart": {
     "message": "运行期间扩展已重新启动，因此运行已停止。仍在等待的页面未被扫描。"
   },

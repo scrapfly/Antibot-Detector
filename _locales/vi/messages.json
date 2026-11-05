@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Xong: {0} · Có bảo vệ: {1} · Thất bại: {2} · Bỏ qua: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Thấy nhiều nhất: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Tiện ích đã khởi động lại trong lúc chạy nên lượt chạy đã dừng. Các trang vẫn đang chờ chưa được quét."
   },

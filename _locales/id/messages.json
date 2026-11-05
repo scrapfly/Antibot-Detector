@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Selesai: {0} · Dengan perlindungan: {1} · Gagal: {2} · Dilewati: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Paling sering terlihat: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Ekstensi dimulai ulang selama putaran, jadi putaran dihentikan. Halaman yang masih menunggu tidak dipindai."
   },

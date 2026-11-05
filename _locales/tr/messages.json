@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Biten: {0} · Korumalı: {1} · Başarısız: {2} · Atlanan: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "En çok görülen: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Uzantı çalıştırma sırasında yeniden başladığı için çalıştırma durdu. Hâlâ bekleyen sayfalar taranmadı."
   },
