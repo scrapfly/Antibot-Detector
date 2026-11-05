@@ -375,21 +375,22 @@ test('storage warning: once when History nears its limit, again only after it wa
   assert.strictEqual(w.notes.length, 2, 'warns again after dropping under 70%');
 });
 
-test('storage warning: an unknown size limit (the settings cannot be read) neither warns nor resets an earlier warning', async () => {
+test('storage warning: a limit that is not a number says nothing: it neither warns nor resets an earlier warning', async () => {
   const w = makeWorld();
   const R = w.sw.HistoryRecorder;
   const max = w.sw.HistoryStore.MAX_BYTES;
   await R.checkStorage(max * 0.95, 0, w.sw.chrome);
   assert.strictEqual(w.notes.length, 1);
   assert.strictEqual(w.store.scrapfly_history_storage_notice.warned, true);
-  // HistoryStore.currentBudget answers Infinity while the settings cannot be read: a share of that is 0%, which is not "emptied"
+  // HistoryStore.currentBudget never answers Infinity now (while the settings cannot be read it answers the largest size), but a share of
+  // Infinity would be 0%, which is not "emptied"
   await R.checkStorage(max * 0.95, 0, w.sw.chrome, Infinity);
   assert.strictEqual(w.store.scrapfly_history_storage_notice.warned, true, 'the earlier warning stays recorded');
   await R.checkStorage(max * 0.95, 0, w.sw.chrome);
   assert.strictEqual(w.notes.length, 1, 'so the same nearly-full History does not warn a second time once the settings read again');
   const fresh = makeWorld();
   await fresh.sw.HistoryRecorder.checkStorage(max * 5, 0, fresh.sw.chrome, Infinity);
-  assert.strictEqual(fresh.notes.length, 0, 'nor does an unknown limit warn on its own');
+  assert.strictEqual(fresh.notes.length, 0, 'nor does such a limit warn on its own');
 });
 
 test('storage warning: entries removed by the size limit warn at once', async () => {

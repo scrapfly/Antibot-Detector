@@ -17,8 +17,8 @@
  * Every write also stays under the size History may take (HistoryStore.write: 6 MB, or the size the person chose),
  * and on start a history saved by an older build is compacted once.
  * Settings that cannot be read (the storage does not answer, or what is stored is not JSON or not an object) are not
- * "no settings": the rules above and the size run on nothing until they read again (readConfig; HistoryStore.currentBudget
- * for the size), where the defaults would take entries the person asked to keep.
+ * "no settings": the rules above do nothing until they read again (readConfig), and the size is the largest anyone can have
+ * chosen (HistoryStore.currentBudget), where the defaults would take entries the person asked to keep.
  *
  * Runs on service-worker start, whenever settings or history are written, and
  * every PERIOD_MINUTES through chrome.alarms (manifest has the `alarms`
@@ -173,13 +173,17 @@ const HistoryRetention = {
      * @returns {Promise<{autoDelete: boolean, days: number, fingerprintDays: number, limit: number, clearOnClose: boolean}|null>}
      */
     async readConfig() {
+        // Outside the try: a StorageManager that is not there is a bug the run must show, not settings that cannot be read
+        const manager = this.storageManager();
+        let settings;
         try {
-            return this.getConfig(await this.storageManager().readSettingsStrict());
+            settings = await manager.readSettingsStrict();
         } catch (error) {
             // Only the kind of failure: the message of a JSON error quotes the stored text
             this._warn('[HistoryRetention] The settings could not be read, so nothing is trimmed:', error && error.name);
             return null;
         }
+        return this.getConfig(settings);
     },
 
     /**
