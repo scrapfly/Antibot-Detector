@@ -183,8 +183,12 @@ function hasResponseMatch(detection) {
 
 /**
  * After the scan: the detectors whose response rules match now (with the
- * requests the tab made since) are added to the page's stored result, and the
- * badge and an open popup are updated. Nothing else in the result changes.
+ * requests the tab made since) are added to the page's saved result, or, when
+ * that is gone, to what this page's scan found while the worker still
+ * remembers it; then the badge and an open popup are updated. Nothing else in
+ * the result changes. With neither there is nothing to add them to: nothing is
+ * saved (the evidence alone would stand for the whole page), and the next visit
+ * scans the page.
  */
 async function applyLateResponses(tabId) {
     if (typeof detectionEngine === 'undefined' || !detectionEngine || detectionStates.has(tabId)) return;
@@ -208,8 +212,8 @@ async function applyLateResponses(tabId) {
     const evidence = (Array.isArray(late) ? late : []).filter(hasResponseMatch);
     if (evidence.length === 0 || detectionStates.has(tabId)) return;
 
-    // Added to what the page's scan found while that is still known: with no saved result left (the rules changed meanwhile),
-    // the evidence alone would be saved as the page's whole result
+    // What the page's scan found, while the worker still remembers that scan (a page served from the cache, a new document or a
+    // restarted worker has none): the base when the saved result is gone, as it is once the rules changed
     const finished = finishedPages.get(tabId);
     const known = finished && urlWithoutHash(finished.url) === urlWithoutHash(pageUrl) ? finished : null;
     await addLateEvidence(tabId, pageUrl, tab.favIconUrl, evidence, () => !detectionStates.has(tabId), 'responses',
@@ -220,9 +224,9 @@ async function applyLateResponses(tabId) {
  * Add detections found after the scan to the page's stored result (merged with
  * what it holds, combinations scored again), then update the badge and an open
  * popup. History and the webhook keep what the scan gave them.
- * @param {Array} [fallback] the scan's own results, used when the cache has no entry
+ * @param {Array} [fallback] the scan's own results, used when the cache has no entry; with neither, nothing is saved
  * @param {number} [scanStartedAt] when that scan began (ms), so a result found before the rules changed is not served
- * @returns {Promise<Array|null>} the page's new results, or null when nothing changed
+ * @returns {Promise<Array|null>} the page's new results, or null when nothing changed or there was nothing to add to
  */
 function addLateEvidence(...args) {
     // One at a time: each reads the stored result, adds its evidence and writes it back, so two running together (late
@@ -240,6 +244,10 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
     if (!stillValid()) return null;
     const stored = await DetectionEngineManager.getStoredDetection(pageUrl, { privateWindow });
     if (!stillValid()) return null;
+    // No saved result (it expired, was cleared, or the rules changed since) and no scan of this page remembered: there is nothing to
+    // add the evidence to. Saved alone it would be the page's whole result, found with the current rules and served for days with
+    // no scan. Nothing is saved; the next visit scans the page.
+    if (!stored && !Array.isArray(fallback)) return null;
     const byId = new Map();
     const base = Array.isArray(stored?.detectionResults) ? stored.detectionResults : (Array.isArray(fallback) ? fallback : []);
     for (const detection of base) {
@@ -256,8 +264,9 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
         url: pageUrl,
         hostname: UrlUtils.getHostnameFromUrl(pageUrl),
         favicon: stored?.favicon || tabFavicon,
-        // The scan the results began with (a saved result found before the rules changed is not served: see storeDetection)
-        ...(Number.isFinite(scanStartedAt) ? { scanStartedAt } : {}),
+        // When the scan the base results came from began (a result found before the rules changed is not served: see storeDetection).
+        // A saved result is of the current rules, and what is added to it is found with them: nothing to date
+        ...(!stored && Number.isFinite(scanStartedAt) ? { scanStartedAt } : {}),
         ...(privateWindow || stored?.privateWindow === true ? { privateWindow: true } : {})
     }, finalResults);
     if (!stillValid()) return null;

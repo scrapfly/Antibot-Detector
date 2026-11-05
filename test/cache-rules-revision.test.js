@@ -166,13 +166,13 @@ test('a scan that began before the rules changed is not served afterwards', asyn
   assert.deepStrictEqual(ids(await Engine.getStoredDetection('https://bank.example/')), ['akamai'], 'a scan that began after the change is');
 });
 
-test('each change takes a revision above the last, also for two at once and for a clock that went back', async () => {
+test('each change takes a revision above the last, also for two at once and for a clock set back a little', async () => {
   let clock = 1000000;
   const { Engine, store } = load({ now: () => clock });
   const first = await Engine.bumpRulesRevision();
   assert.strictEqual(first, 1000000);
   assert.strictEqual(store.scrapfly_rules_rev, first);
-  clock = 5; // the system clock was set back
+  clock -= 30 * 1000; // the system clock was set back by half a minute: still within what counts as one clock
   const second = await Engine.bumpRulesRevision();
   assert.ok(second > first, `${second} should be above ${first}`);
   const both = await Promise.all([Engine.bumpRulesRevision(), Engine.bumpRulesRevision()]);
@@ -180,11 +180,81 @@ test('each change takes a revision above the last, also for two at once and for 
   assert.strictEqual(store.scrapfly_rules_rev, both[1]);
 });
 
-test('both places every rule change ends in stamp the revision', () => {
-  const handler = read('background/handlers/messages-settings.js').match(/const handle_reload_detectors = function[\s\S]*?\n    };\n/);
-  assert.ok(handler, 'handle_reload_detectors not found');
-  assert.match(handler[0], /DetectionEngineManager\.bumpRulesRevision\(\)/);
-  const notify = read('modules/detection/rules/update-manager.js').match(/static async notifyDetectorsChanged\(\) \{[\s\S]*?\n    \}\n/);
-  assert.ok(notify, 'notifyDetectorsChanged not found');
-  assert.match(notify[0], /DetectionEngineManager\.bumpRulesRevision\(\)/);
+test('a clock that was ahead when the rules changed and was then corrected does not switch caching off: scans after the correction are served', async () => {
+  const hour = 3600 * 1000;
+  let clock = Date.UTC(2026, 10, 5, 12, 0, 0);
+  const real = clock;
+  const { Engine } = load({ now: () => clock });
+  clock = real + 24 * hour; // the system clock is a day ahead (wrong) when the person edits a rule
+  assert.strictEqual(await Engine.bumpRulesRevision(), real + 24 * hour);
+  clock = real + hour; // the clock is corrected: the revision now lies a day ahead of it
+  for (const host of ['a.example', 'b.example', 'c.example']) {
+    // A scan that begins now is after the change, however far ahead the revision's time lies: it is served
+    await Engine.storeDetection(`https://${host}/`, { ...page(host), scanStartedAt: clock }, found());
+    assert.deepStrictEqual(ids(await Engine.getStoredDetection(`https://${host}/`)), ['cloudflare'], `${host} is served after the correction`);
+    clock += 60 * 1000;
+  }
+});
+
+test('after the clock is corrected the next change starts again from the clock; what was saved under the revision from the wrong clock is not served', async () => {
+  const hour = 3600 * 1000;
+  let clock = Date.UTC(2026, 10, 5, 12, 0, 0);
+  const real = clock;
+  const { Engine, store } = load({ now: () => clock });
+  clock = real + 24 * hour;
+  const ahead = await Engine.bumpRulesRevision();
+  await Engine.storeDetection('https://old.example/', { ...page('old.example'), scanStartedAt: clock }, found());
+  assert.deepStrictEqual(ids(await Engine.getStoredDetection('https://old.example/')), ['cloudflare']);
+  clock = real + hour; // corrected
+  const next = await Engine.bumpRulesRevision();
+  assert.strictEqual(next, real + hour, 'from the clock, not a day above the wrong one');
+  assert.ok(next < ahead && store.scrapfly_rules_rev === next);
+  assert.strictEqual(await Engine.getStoredDetection('https://old.example/'), null, 'another revision: not served');
+  await Engine.storeDetection('https://new.example/', { ...page('new.example'), scanStartedAt: clock + 1 }, found('akamai'));
+  assert.deepStrictEqual(ids(await Engine.getStoredDetection('https://new.example/')), ['akamai']);
+  // Two changes in the same millisecond are still two
+  const [x, y] = [await Engine.bumpRulesRevision(), await Engine.bumpRulesRevision()];
+  assert.ok(x > next && y > x, `${next} < ${x} < ${y}`);
+});
+
+test('a scan that began before a change does not take the place of a result another tab saved under the new rules', async () => {
+  let clock = Date.UTC(2026, 10, 7, 12, 0, 0);
+  const { Engine } = load({ now: () => clock });
+  const aStart = clock; // tab A's scan begins, on the old rules
+  clock += 1000;
+  await Engine.bumpRulesRevision(); // the rules change
+  clock += 1000;
+  const bStart = clock; // tab B loads the page: its scan is of the new rules and finishes first
+  clock += 3000;
+  await Engine.storeDetection('https://shop.example/', { ...page('shop.example'), scanStartedAt: bStart }, found('datadome'));
+  assert.deepStrictEqual(ids(await Engine.getStoredDetection('https://shop.example/')), ['datadome']);
+  clock += 2000; // tab A's stale scan finishes last
+  const stale = await Engine.storeDetection('https://shop.example/', { ...page('shop.example'), scanStartedAt: aStart }, found('cloudflare'));
+  assert.deepStrictEqual(ids(await Engine.getStoredDetection('https://shop.example/')), ['datadome'], 'the result that is served stays');
+  assert.strictEqual(stale.detectionCount, 1, 'the scan itself still reports what it found');
+  // With no newer result to keep, a scan that began before the change is still saved as stale, never served
+  await Engine.storeDetection('https://other.example/', { ...page('other.example'), scanStartedAt: aStart }, found('cloudflare'));
+  assert.strictEqual(await Engine.getStoredDetection('https://other.example/'), null);
+});
+
+test('the worker\'s RELOAD_DETECTORS handler stamps the change, also when the reload fails', async () => {
+  const { reloadDetectors, store, ctx } = load();
+  assert.ok(!('scrapfly_rules_rev' in store), 'nothing stamped yet');
+  assert.strictEqual((await reloadDetectors()).status, 'reloaded');
+  const first = store.scrapfly_rules_rev;
+  assert.ok(first > 0, 'a reload that worked stamps the change');
+  ctx.detectorManager.initialize = async () => { throw new Error('the rules cannot be read'); };
+  assert.strictEqual((await reloadDetectors()).status, 'error');
+  assert.ok(store.scrapfly_rules_rev > first, 'a reload that failed stamps it too: the rules in storage changed either way');
+});
+
+test('Rules → Update in the worker (notifyDetectorsChanged) stamps the change, also when the reload fails', async () => {
+  const { UpdateManager, store, ctx } = load();
+  assert.ok(!('scrapfly_rules_rev' in store), 'nothing stamped yet');
+  await UpdateManager.notifyDetectorsChanged();
+  const first = store.scrapfly_rules_rev;
+  assert.ok(first > 0, 'a reload that worked stamps the change');
+  ctx.detectorManager.initialize = async () => { throw new Error('the rules cannot be read'); };
+  await UpdateManager.notifyDetectorsChanged(); // the failure is logged, never thrown at the caller
+  assert.ok(store.scrapfly_rules_rev > first, 'a reload that failed stamps it too');
 });

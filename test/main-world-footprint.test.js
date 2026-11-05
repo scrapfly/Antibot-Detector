@@ -94,6 +94,54 @@ test('a cache hit that arrives while the window checks are running stops them: t
   stop(page);
 });
 
+// The worker's page-load check finds the saved result when the early check missed it (another tab saved the page in between): it
+// sends DISABLE_MONITORING with the cache_hit reason (content.js forwards the worker's CACHE_HIT_DISABLE_MONITORING, the only sender).
+// Window checks that are running then stop, as for the early check's CACHE_HIT, and tell the worker with the reason it ignores: any
+// other completion (max_duration, all_terminal) of a page with no scan under way opens a state nothing finalizes.
+const WATCHED = 'window.reads = 0; Object.defineProperty(window, "watched", { configurable: true, get() { window.reads += 1; } });';
+const disableMonitoring = (page, reason) => page.toMain({ type: T.DISABLE_MONITORING, ...(reason ? { reason } : {}), url: 'https://example.test/', [P.FIELDS.TOKEN]: TOKEN });
+
+test('DISABLE_MONITORING with the cache_hit reason stops the window checks that are running: no more reads, one completion with that reason', async () => {
+  const page = installed({ before: WATCHED, windowProperties: [windowProperty('watched')] });
+  await until(() => page.run('window.reads') > 0);
+  disableMonitoring(page, P.CONTROL_REASONS.CACHE_HIT);
+  const readsAtTheSignal = page.run('window.reads');
+  await sleep(900); // the path is read again every 250 to 300 ms while it stays unmet
+  assert.equal(page.run('window.reads'), readsAtTheSignal, 'no read after the signal');
+  assert.deepEqual(page.ofType(T.WINDOW_PROPS_COMPLETE).map(m => m.reason), [P.COMPLETION_REASONS.WINDOW.CACHE_HIT], 'the worker is told once, with the reason it ignores');
+  disableMonitoring(page, P.CONTROL_REASONS.CACHE_HIT); // a second signal finds nothing running
+  assert.equal(page.ofType(T.WINDOW_PROPS_COMPLETE).length, 1, 'and not twice');
+  stop(page);
+});
+
+test('DISABLE_MONITORING with the cache_hit reason says nothing when the window checks are not running', async () => {
+  // Never started: nothing to check
+  const idle = installed({ hooks: [hook('h', ['Navigator.prototype.userAgent'])] });
+  const sent = idle.ofType(T.WINDOW_PROPS_COMPLETE).length;
+  disableMonitoring(idle, P.CONTROL_REASONS.CACHE_HIT);
+  assert.equal(idle.ofType(T.WINDOW_PROPS_COMPLETE).length, sent, 'no window checks, nothing to stop');
+  stop(idle);
+  // Already stopped: the worker was told when they ended
+  const over = installed({ before: WATCHED, windowProperties: [windowProperty('watched')] });
+  await until(() => over.run('window.reads') > 0);
+  over.toMain({ type: T.STOP_WINDOW_POLLING, [P.FIELDS.TOKEN]: TOKEN });
+  disableMonitoring(over, P.CONTROL_REASONS.CACHE_HIT);
+  assert.deepEqual(over.ofType(T.WINDOW_PROPS_COMPLETE), [], 'the checks were over before the signal');
+  stop(over);
+});
+
+test('DISABLE_MONITORING for any other reason leaves the window checks running', async () => {
+  for (const reason of [undefined, P.CONTROL_REASONS.DETECTION_COMPLETE]) {
+    const page = installed({ before: WATCHED, windowProperties: [windowProperty('watched')] });
+    await until(() => page.run('window.reads') > 0);
+    disableMonitoring(page, reason);
+    const readsAtTheSignal = page.run('window.reads');
+    await until(() => page.run('window.reads') > readsAtTheSignal, 2000);
+    assert.deepEqual(page.ofType(T.WINDOW_PROPS_COMPLETE), [], `reason ${reason}: they go on, and nothing is reported yet`);
+    stop(page);
+  }
+});
+
 test('a cache hit, a re-arm and the JS API event add to the page\'s window only the documented public global', async () => {
   const page = createPage();
   const detail = bootstrapDetail(TOKEN);

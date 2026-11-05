@@ -21,6 +21,8 @@ class DetectionEngineManager {
     static STORAGE_KEY = 'scrapfly_detection_storage';
     // When the rules last changed (see bumpRulesRevision): a saved result is served only under the revision it was found with
     static RULES_REV_KEY = 'scrapfly_rules_rev';
+    // A revision this far ahead of the clock was stamped by a clock that has since been set back (see bumpRulesRevision)
+    static RULES_REV_CLOCK_SKEW_MS = 60 * 1000;
     static patternCache = new PatternCache(500);
 
     constructor() {
@@ -1558,16 +1560,20 @@ class DetectionEngineManager {
      * saved result was found with the rules of its time. The change is stamped as a revision, which storeDetection writes
      * into each result it saves and the lookups compare: a result of another revision is not served again, so the next
      * visit of a page is scanned with the new rules instead of showing, until the cache expires, the card of a rule that
-     * was edited or switched off. The revision is a time that never repeats and never goes down, also for two changes at
-     * once or a clock that was set back.
+     * was edited or switched off. The revision is a time: two changes at once still take two values, each above the last.
+     * One stamped by a clock that was ahead and has since been set back lies ahead of the clock (storeDetection ignores it
+     * when it dates a scan, or every scan would look older than the rules until real time caught up), and the next change
+     * starts again from the clock; any other revision is a different one, so what was saved under it is not served.
      * @returns {Promise<number|null>} the new revision, or null when it could not be written (results then age out as before)
      */
     static async bumpRulesRevision() {
         const releaseStorageLock = await acquireDetectionStorageLock();
         try {
             const key = DetectionEngineManager.RULES_REV_KEY;
-            const current = DetectionEngineManager.rulesRevisionOf((await chrome.storage.local.get([key]))[key]);
-            const next = Math.max(Date.now(), current + 1);
+            const now = Date.now();
+            const stored = DetectionEngineManager.rulesRevisionOf((await chrome.storage.local.get([key]))[key]);
+            const current = stored > now + DetectionEngineManager.RULES_REV_CLOCK_SKEW_MS ? 0 : stored;
+            const next = Math.max(now, current + 1);
             await chrome.storage.local.set({ [key]: next });
             return next;
         } catch (error) {
@@ -1768,8 +1774,10 @@ class DetectionEngineManager {
             const rulesRev = DetectionEngineManager.rulesRevisionOf(result[DetectionEngineManager.RULES_REV_KEY]);
             const sameRules = (stored) => DetectionEngineManager.rulesRevisionOf(stored && stored.rulesRev) === rulesRev;
             // A scan that began before the rules changed ran, at least partly, on the old ones: it is saved as revision 0,
-            // which no later lookup accepts (the page is scanned again on its next visit)
-            const savedRev = Number.isFinite(pageData.scanStartedAt) && pageData.scanStartedAt < rulesRev ? 0 : rulesRev;
+            // which no later lookup accepts (the page is scanned again on its next visit). A revision that lies ahead of the
+            // clock (stamped while the clock was ahead, then set back) dates nothing: a scan that begins now is after it
+            const straddled = Number.isFinite(pageData.scanStartedAt) && rulesRev <= Date.now() && pageData.scanStartedAt < rulesRev;
+            const savedRev = straddled ? 0 : rulesRev;
             let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             if (typeof storage === 'string') {
                 try {
@@ -1908,6 +1916,13 @@ class DetectionEngineManager {
                 // Removed when no private window is left (DetectionCacheRetention)
                 ...(pageData.privateWindow === true ? { privateWindow: true } : {})
             };
+
+            // A scan that began before the change must not take the place of a result another scan saved under the new rules (a tab
+            // that loaded the page after the change): that one is served, this one never is
+            if (straddled && existingIsValid) {
+                Logger.debug('CACHE', `Kept the newer result of ${url}; this scan began before the rules changed`);
+                return storedData;
+            }
 
             storage[urlHash] = storedData;
             // Same write drops the results found with rules that have changed since (they are never served again), the
