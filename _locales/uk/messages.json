@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Показати захисні скрипти, які завантажила ця сторінка"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Перезавантажте сторінку, щоб проаналізувати скрипти захисту"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Скинути cookie захисту й перезавантажити, щоб проаналізувати скрипти"
-  },
   "advToolReloadVersionHint": {
     "message": "Перезавантажте сторінку, щоб визначити версію захисту"
   },
@@ -126,18 +120,6 @@
     "message": "Не вдалося виконати цю дію: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Попередня сторінка діаграми"
-  },
-  "statsChartNext": {
-    "message": "Наступна сторінка діаграми"
-  },
-  "statsChartPage": {
-    "message": "Сторінка {0} з {1}"
-  },
-  "statsChartShowing": {
-    "message": "Показано {0}–{1} з {2}"
-  },
   "statsSectionsLabel": {
     "message": "Розділи статистики"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Виберіть довший діапазон дат, щоб переглянути збережену історію."
   },
-  "statsDetectionRate": {
-    "message": "Записи з виявленнями"
-  },
-  "statsActiveDays": {
-    "message": "Активні дні"
-  },
   "statsAverageConfidence": {
     "message": "Середня впевненість"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Показано останні дні: {0}. Підсумки та експорт охоплюють увесь вибраний діапазон."
   },
-  "statsProtectionRanking": {
-    "message": "Рейтинг захисту"
-  },
-  "statsCategoryTrend": {
-    "message": "Категорії в часі"
-  },
-  "statsCategoryOverlap": {
-    "message": "Категорії, виявлені разом"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Кількість записів історії з обома категоріями. Діагональні клітинки показують записи з цією категорією."
-  },
   "statsProtectionDetails": {
     "message": "Увесь захист"
-  },
-  "statsDomainRanking": {
-    "message": "Рейтинг доменів"
-  },
-  "statsDomainMap": {
-    "message": "Відвідування та виявлення"
-  },
-  "statsDomainMapHint": {
-    "message": "Кожна точка — домен. Більші точки мають більше різних видів захисту."
   },
   "statsDomainDetails": {
     "message": "Усі домени"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Сортувати домени"
   },
-  "statsSortVisits": {
-    "message": "Найбільше відвідувань"
-  },
-  "statsSortDetections": {
-    "message": "Найбільше виявлень"
-  },
   "statsSortConfidence": {
     "message": "Найвища впевненість"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Розподіл впевненості"
-  },
-  "statsConfidenceTrend": {
-    "message": "Впевненість у часі"
-  },
-  "statsCategoryConfidence": {
-    "message": "Впевненість за категоріями"
   },
   "statsConfidenceNote": {
     "message": "Впевненість показує силу збережених доказів виявлення, а не доказ зняття відбитків чи активної перевірки."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Жоден домен не відповідає пошуку."
-  },
-  "statsSelectionNote": {
-    "message": "Діаграми та експорт використовують вибраний діапазон дат. Записи історії — це збережені виявлення, а не кожне відвідування в браузері."
   },
   "extensionName": {
     "message": "Scrapfly: детектор антиботів"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Увімкнути або вимкнути виявлення"
-  },
-  "noDetectionsFound": {
-    "message": "Виявлень не знайдено"
   },
   "detectionScanningTitle": {
     "message": "Сканування цієї сторінки"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Пошук"
   },
-  "advancedBtnExport": {
-    "message": "Експорт"
-  },
   "advancedBtnExportTitle": {
     "message": "Експортувати захоплення"
-  },
-  "advancedBtnClearAll": {
-    "message": "Очистити все"
   },
   "advancedBtnClearAllTitle": {
     "message": "Очистити всі захоплення"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Ви впевнені, що хочете видалити це виявлення для {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Не вдалося завантажити налаштування. Використовуються значення за замовчуванням."
-  },
   "settingsSavedToast": {
     "message": "Налаштування збережено"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} уже в чорному списку"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} додано до чорного списку"
-  },
   "failedAddDomainFmt": {
     "message": "Не вдалося додати домен: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} видалено з чорного списку"
   },
   "invalidSettingsFmt": {
     "message": "Недійсні налаштування: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Помилка застосування оновлень"
   },
-  "failedCheckForUpdates": {
-    "message": "Не вдалося перевірити оновлення"
-  },
   "errorCheckingForUpdates": {
     "message": "Помилка під час перевірки оновлень"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Повний URL кінцевої точки (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Доступні змінні:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Приклад: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Налаштування"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Експорт або імпорт налаштувань розширення"
   },
   "settingsDataHistoryRow": {
     "message": "Історія виявлень"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Налаштування імпортовано"
   },
-  "settingsImportFailedToast": {
-    "message": "Не вдалося імпортувати налаштування: недійсний файл"
-  },
   "statsPrivacyNote": {
     "message": "Обчислено локально за вашою історією виявлень. Дані не залишають ваш браузер."
-  },
-  "statsSubtitleFmt": {
-    "message": "Обчислено локально за записами історії: {0}. Дані не залишають ваш браузер."
   },
   "statsRangeLabel": {
     "message": "Період"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Статистика з’явиться тут, коли сторінки з виявленнями буде збережено в історії."
   },
-  "statsEntries": {
-    "message": "Записи історії"
-  },
   "statsUniqueDomains": {
     "message": "Унікальні домени"
   },
   "statsDetections": {
     "message": "Виявлення"
   },
-  "statsDistinctDetectors": {
-    "message": "Різні системи захисту"
-  },
   "statsOverTime": {
     "message": "Виявлення за часом"
   },
-  "statsTopProtections": {
-    "message": "Найчастіше виявлені системи захисту"
-  },
-  "statsTopDomains": {
-    "message": "Основні домени"
-  },
-  "statsByCategory": {
-    "message": "За категоріями"
-  },
-  "statsByDifficulty": {
-    "message": "За складністю"
-  },
-  "statsPagesUnit": {
-    "message": "сторінок"
-  },
-  "statsVisitsUnit": {
-    "message": "відвідувань"
-  },
-  "statsDetectionsUnit": {
-    "message": "виявлень"
-  },
   "statsCategoryOther": {
     "message": "Інше"
-  },
-  "statsDifficultyNone": {
-    "message": "Без виявлень"
   },
   "statsNoData": {
     "message": "Немає даних за цей період"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Сторінок: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "Доменів: {0}"
-  },
-  "statsTipVisitsFmt": {
-    "message": "Відвідувань: {0}"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "Виявлень: {0}"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} із {1} виявлень · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "Записів: {0}"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "З виявленнями: {0}"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "Відвідувань на домен: {0}"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} на запис"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "Середня впевненість: {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Виявлень: {0} · Днів: {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Захоплено"
   },
-  "advCommonScript": {
-    "message": "Скрипт"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Рівень захисту:"
   },
-  "advCommonCookiesFound": {
-    "message": "Знайдено cookie:"
-  },
   "advCommonSiteKey": {
     "message": "Ключ сайту"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Скрипт Python із requests і BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Скрипт Python із бібліотекою requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Скрипт Node.js з axios і cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Скрипт Node.js з axios"
   },
   "advCodeDescPhpDom": {
     "message": "Скрипт PHP з cURL і DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Скрипт PHP з cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# з HttpClient і HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# з HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go з net/http і goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go з net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Захоплення активне"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Клієнти reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "ID клієнта: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Скопійовано в буфер обміну!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Скрипти з seed:"
   },
-  "advShapeInitJsScript": {
-    "message": "Скрипт Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Скрипти Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Скрипт із seed"
   },
   "advShapeSeedScripts": {
     "message": "Скрипти з seed"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "Результати повторно використовуються для цього точного шляху за будь-якого запиту."
   },
-  "tipStatsActiveDays": {
-    "message": "Дні, коли збережено хоча б одну сторінку."
-  },
-  "tipStatsDetections": {
-    "message": "Системи захисту, виявлені на всіх збережених сторінках, з повторами."
-  },
   "tipStatsDetectors": {
     "message": "Різні виявлені системи захисту, кожна враховується один раз."
   },
   "tipStatsDomains": {
     "message": "Різні сайти серед збережених сторінок."
-  },
-  "tipStatsEntries": {
-    "message": "Сторінки, збережені в Історії за цей період."
-  },
-  "tipStatsRateFmt": {
-    "message": "Записи: {0} із {1}"
   },
   "tipPatterns": {
     "message": "Шаблони"
@@ -4531,38 +4339,11 @@
     "message": "Відкрийте веб-сторінку, щоб виконати її скрапінг через Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "Захоплень: {0}"
-  },
-  "statsFirstSeen": {
-    "message": "Нове за період"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "Уперше збережено в цьому діапазоні: систем захисту — {0}, доменів — {1}."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Виберіть 7, 30 або 90 днів, щоб побачити нове."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Найзахищеніший домен"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "Різних систем захисту: {0}, відвідувань: {1}."
-  },
-  "statsFoundTogether": {
-    "message": "Системи захисту, виявлені разом"
-  },
   "statsMethods": {
     "message": "Методи виявлення"
   },
   "statsMatchesUnit": {
     "message": "збігів"
-  },
-  "statsMethodsByCategory": {
-    "message": "Методи за категоріями"
-  },
-  "statsWeakEvidence": {
-    "message": "Найслабші докази"
   },
   "statsSignalColumn": {
     "message": "Сигнал"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Комбінація"
   },
-  "statsDecidedBy": {
-    "message": "Як ухвалювалися рішення про виявлення"
-  },
-  "statsCombinationGain": {
-    "message": "Впевненість за типом рішення"
-  },
   "statsCombinationColumn": {
     "message": "Комбінація"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Жодне виявлення за цей період не було ухвалене комбінацією."
-  },
-  "statsRulesMostActive": {
-    "message": "Найактивніші правила"
-  },
-  "statsTipPatternsFmt": {
-    "message": "Шаблонів: {0}"
   },
   "statsRulesPatternsByMethod": {
     "message": "Шаблони за методами"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Очікує новішого розширення"
   },
-  "statsToolsByVendor": {
-    "message": "Захоплення за постачальниками"
-  },
   "statsToolsCapture": {
     "message": "Захоплення"
-  },
-  "statsToolsByTool": {
-    "message": "Найуживаніші інструменти"
-  },
-  "statsToolsOverTime": {
-    "message": "Захоплення в часі"
   },
   "statsChangeColumn": {
     "message": "Зміна"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Жоден домен не змінив систем захисту між збереженими відвідуваннями за цей період."
   },
-  "statsNothingNew": {
-    "message": "Нічого нового: усі системи захисту тут уже були в Історії до цього періоду."
-  },
   "statsSectionSignals": {
     "message": "Сигнали"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Інструменти"
   },
-  "statsDomainChangesHint": {
-    "message": "Домени, у яких виявлені системи захисту змінилися між двома збереженими відвідуваннями."
-  },
-  "statsFirstSeenHint": {
-    "message": "Системи захисту та домени, збережені вперше за цей період."
-  },
   "statsSignalsNote": {
     "message": "Які докази знайшло кожне збережене виявлення: назви cookie та заголовків, URL, елементи сторінки, скрипти й хуки JavaScript."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Системи захисту, чиї знайдені шаблони мають найнижчу середню впевненість. Їхнім правилам може знадобитися сильніший шаблон."
   },
   "statsCombinationsNote": {
     "message": "Комбінація виявляє систему захисту, лише коли кілька шаблонів знайдено разом."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Правила"
   },
-  "statsRulesModified": {
-    "message": "Змінені офіційні"
-  },
   "statsRulesDisabled": {
     "message": "Вимкнені"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Увімкнені правила, які нічого не знайшли на сторінках, збережених за цей період."
   },
-  "statsRulesMissingHint": {
-    "message": "Описи показуються в подробицях виявлення, в Історії та в комбінаціях. Додайте їх у редакторі правил."
-  },
   "statsToolsNote": {
     "message": "Розширені захоплення та результати інструментів, збережені на цьому пристрої."
-  },
-  "statsCapturesUnit": {
-    "message": "захоплень"
   },
   "detectionCardSureFmt": {
     "message": "Впевненість {0}%"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Мало сторінок за цей період ({0}): порівняння та рейтинги можуть вводити в оману."
-  },
-  "statsLoading": {
-    "message": "Завантаження статистики..."
   },
   "statsEmptyShowAll": {
     "message": "Показати всю історію"

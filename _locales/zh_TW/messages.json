@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "顯示此頁面載入的防護指令碼"
   },
-  "advToolReloadScriptsHint": {
-    "message": "重新載入網頁以分析防護指令碼"
-  },
-  "advToolResetScriptsHint": {
-    "message": "重設防護 Cookie 並重新載入，以分析指令碼"
-  },
   "advToolReloadVersionHint": {
     "message": "重新載入網頁以偵測防護版本"
   },
@@ -126,18 +120,6 @@
     "message": "無法完成此操作：{0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "圖表上一頁"
-  },
-  "statsChartNext": {
-    "message": "圖表下一頁"
-  },
-  "statsChartPage": {
-    "message": "第 {0} 頁，共 {1} 頁"
-  },
-  "statsChartShowing": {
-    "message": "顯示第 {0}–{1} 項，共 {2} 項"
-  },
   "statsSectionsLabel": {
     "message": "統計資料區段"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "請選擇較長的日期範圍，以查看已儲存的歷史記錄。"
   },
-  "statsDetectionRate": {
-    "message": "含偵測結果的記錄"
-  },
-  "statsActiveDays": {
-    "message": "活躍天數"
-  },
   "statsAverageConfidence": {
     "message": "平均信賴度"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "顯示最近 {0} 天。總計和匯出內容包含所選範圍內的全部記錄。"
   },
-  "statsProtectionRanking": {
-    "message": "防護排名"
-  },
-  "statsCategoryTrend": {
-    "message": "類別隨時間的變化"
-  },
-  "statsCategoryOverlap": {
-    "message": "同時偵測到的類別"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "同時包含兩個類別的歷史記錄數量。對角線儲存格顯示包含該類別的記錄。"
-  },
   "statsProtectionDetails": {
     "message": "所有防護"
-  },
-  "statsDomainRanking": {
-    "message": "網域排名"
-  },
-  "statsDomainMap": {
-    "message": "造訪與偵測"
-  },
-  "statsDomainMapHint": {
-    "message": "每個點代表一個網域。點越大，表示不同的防護越多。"
   },
   "statsDomainDetails": {
     "message": "所有網域"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "網域排序"
   },
-  "statsSortVisits": {
-    "message": "造訪最多"
-  },
-  "statsSortDetections": {
-    "message": "偵測最多"
-  },
   "statsSortConfidence": {
     "message": "信賴度最高"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "信賴度分布"
-  },
-  "statsConfidenceTrend": {
-    "message": "信賴度隨時間的變化"
-  },
-  "statsCategoryConfidence": {
-    "message": "各類別的信賴度"
   },
   "statsConfidenceNote": {
     "message": "信賴度代表已儲存偵測證據的強度，並不能證明存在指紋辨識或進行中的挑戰。"
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "沒有符合搜尋條件的網域。"
-  },
-  "statsSelectionNote": {
-    "message": "圖表和匯出內容採用所選的日期範圍。歷史記錄代表已儲存的偵測結果，而非每一次瀏覽器造訪。"
   },
   "extensionName": {
     "message": "Scrapfly：反機器人偵測器"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "啟用或停用偵測"
-  },
-  "noDetectionsFound": {
-    "message": "找不到偵測結果"
   },
   "detectionScanningTitle": {
     "message": "正在掃描此網頁"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "搜尋"
   },
-  "advancedBtnExport": {
-    "message": "匯出"
-  },
   "advancedBtnExportTitle": {
     "message": "匯出擷取項目"
-  },
-  "advancedBtnClearAll": {
-    "message": "全部清除"
   },
   "advancedBtnClearAllTitle": {
     "message": "清除所有擷取項目"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "確定要刪除來自 {0} 的這筆偵測記錄嗎？"
   },
-  "failedLoadSettingsDefault": {
-    "message": "無法載入設定。改用預設值。"
-  },
   "settingsSavedToast": {
     "message": "設定已儲存"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} 已在黑名單中"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "已將 {0} 加入黑名單"
-  },
   "failedAddDomainFmt": {
     "message": "無法新增網域：{0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "已將 {0} 從黑名單中移除"
   },
   "invalidSettingsFmt": {
     "message": "設定無效：{0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "套用更新時發生錯誤"
   },
-  "failedCheckForUpdates": {
-    "message": "無法檢查更新"
-  },
   "errorCheckingForUpdates": {
     "message": "檢查更新時發生錯誤"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "完整的端點 URL（https://api.example.com/webhook）"
-  },
-  "settingsAvailableVariables": {
-    "message": "可用變數："
-  },
-  "settingsWebhookUrlExample": {
-    "message": "範例：https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "設定"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "匯出或匯入擴充功能設定"
   },
   "settingsDataHistoryRow": {
     "message": "偵測歷史記錄"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "設定已匯入"
   },
-  "settingsImportFailedToast": {
-    "message": "無法匯入設定：檔案無效"
-  },
   "statsPrivacyNote": {
     "message": "根據您的偵測歷史記錄在本機計算。資料不會離開您的瀏覽器。"
-  },
-  "statsSubtitleFmt": {
-    "message": "根據 {0} 筆歷史記錄在本機計算。資料不會離開您的瀏覽器。"
   },
   "statsRangeLabel": {
     "message": "時間範圍"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "含有偵測結果的網頁儲存到歷史記錄後，統計資料就會顯示在這裡。"
   },
-  "statsEntries": {
-    "message": "歷史記錄項目"
-  },
   "statsUniqueDomains": {
     "message": "不重複網域"
   },
   "statsDetections": {
     "message": "偵測數"
   },
-  "statsDistinctDetectors": {
-    "message": "不同的防護"
-  },
   "statsOverTime": {
     "message": "偵測數隨時間的變化"
   },
-  "statsTopProtections": {
-    "message": "偵測次數最多的防護"
-  },
-  "statsTopDomains": {
-    "message": "熱門網域"
-  },
-  "statsByCategory": {
-    "message": "依類別"
-  },
-  "statsByDifficulty": {
-    "message": "依難度"
-  },
-  "statsPagesUnit": {
-    "message": "網頁"
-  },
-  "statsVisitsUnit": {
-    "message": "造訪"
-  },
-  "statsDetectionsUnit": {
-    "message": "偵測"
-  },
   "statsCategoryOther": {
     "message": "其他"
-  },
-  "statsDifficultyNone": {
-    "message": "無偵測結果"
   },
   "statsNoData": {
     "message": "此範圍內沒有資料"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "網頁：{0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} 個網域"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} 次造訪"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} 次偵測"
-  },
   "historyCategoryShareFmt": {
     "message": "{1} 次偵測中的 {0} 次 · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} 筆記錄"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} 筆含偵測結果"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "每個網域 {0} 次造訪"
-  },
-  "statsPerEntryFmt": {
-    "message": "每筆 {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "平均信賴度 {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "偵測：{0} · 天數：{1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "擷取時間"
   },
-  "advCommonScript": {
-    "message": "指令碼"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "防護等級："
   },
-  "advCommonCookiesFound": {
-    "message": "找到的 Cookie："
-  },
   "advCommonSiteKey": {
     "message": "網站金鑰"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "使用 requests 和 BeautifulSoup 的 Python 指令碼"
   },
-  "advCodeDescPython": {
-    "message": "使用 requests 程式庫的 Python 指令碼"
-  },
   "advCodeDescNodeCheerio": {
     "message": "使用 axios 和 cheerio 的 Node.js 指令碼"
-  },
-  "advCodeDescNode": {
-    "message": "使用 axios 的 Node.js 指令碼"
   },
   "advCodeDescPhpDom": {
     "message": "使用 cURL 和 DOMDocument 的 PHP 指令碼"
   },
-  "advCodeDescPhp": {
-    "message": "使用 cURL 的 PHP 指令碼"
-  },
   "advCodeDescCsharpHap": {
     "message": "使用 HttpClient 和 HtmlAgilityPack 的 C#"
   },
-  "advCodeDescCsharp": {
-    "message": "使用 HttpClient 的 C#"
-  },
   "advCodeDescGoQuery": {
     "message": "使用 net/http 和 goquery 的 Go"
-  },
-  "advCodeDescGo": {
-    "message": "使用 net/http 的 Go"
   },
   "pageNoticeCaptureActive": {
     "message": "擷取進行中"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA 用戶端"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "用戶端 ID：{0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "已複製到剪貼簿！"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "帶 seed 的指令碼："
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js 指令碼"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js 指令碼"
-  },
-  "advShapeSeedScript": {
-    "message": "帶 seed 的指令碼"
   },
   "advShapeSeedScripts": {
     "message": "帶 seed 的指令碼"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "結果會重複用於這個完全相同的路徑，不論查詢為何。"
   },
-  "tipStatsActiveDays": {
-    "message": "至少儲存過一個網頁的天數。"
-  },
-  "tipStatsDetections": {
-    "message": "所有已儲存網頁中發現的防護，重複項目也計入。"
-  },
   "tipStatsDetectors": {
     "message": "出現過的不同防護，每種只計算一次。"
   },
   "tipStatsDomains": {
     "message": "已儲存網頁中的不同網站。"
-  },
-  "tipStatsEntries": {
-    "message": "此範圍內儲存到歷史記錄的網頁。"
-  },
-  "tipStatsRateFmt": {
-    "message": "{1} 筆記錄中的 {0} 筆"
   },
   "tipPatterns": {
     "message": "模式"
@@ -4531,38 +4339,11 @@
     "message": "請開啟網頁，再用 Scrapfly 爬取",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} 次擷取"
-  },
-  "statsFirstSeen": {
-    "message": "本期新增"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "在此範圍內，有 {0} 項防護和 {1} 個網域是首次儲存。"
-  },
-  "statsFirstSeenAllTip": {
-    "message": "選擇 7、30 或 90 天即可查看新增項目。"
-  },
-  "statsMostProtectedDomain": {
-    "message": "防護最多的網域"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "在 {1} 次造訪中出現 {0} 種不同的防護。"
-  },
-  "statsFoundTogether": {
-    "message": "同時出現的防護"
-  },
   "statsMethods": {
     "message": "偵測方法"
   },
   "statsMatchesUnit": {
     "message": "符合項目"
-  },
-  "statsMethodsByCategory": {
-    "message": "依類別的方法"
-  },
-  "statsWeakEvidence": {
-    "message": "最弱的證據"
   },
   "statsSignalColumn": {
     "message": "訊號"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "組合"
   },
-  "statsDecidedBy": {
-    "message": "偵測的判定方式"
-  },
-  "statsCombinationGain": {
-    "message": "依判定方式的信賴度"
-  },
   "statsCombinationColumn": {
     "message": "組合"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "此範圍內沒有任何偵測是由組合判定的。"
-  },
-  "statsRulesMostActive": {
-    "message": "最活躍的規則"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} 個模式"
   },
   "statsRulesPatternsByMethod": {
     "message": "依方法的模式"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "等待較新的擴充功能"
   },
-  "statsToolsByVendor": {
-    "message": "依供應商的擷取項目"
-  },
   "statsToolsCapture": {
     "message": "擷取"
-  },
-  "statsToolsByTool": {
-    "message": "最常用的工具"
-  },
-  "statsToolsOverTime": {
-    "message": "擷取數隨時間的變化"
   },
   "statsChangeColumn": {
     "message": "變化"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "此範圍內沒有任何網域在已儲存的造訪之間改變防護。"
   },
-  "statsNothingNew": {
-    "message": "沒有新增項目：這裡的每項防護在此範圍之前就已在歷史記錄中。"
-  },
   "statsSectionSignals": {
     "message": "訊號"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "工具"
   },
-  "statsDomainChangesHint": {
-    "message": "偵測到的防護在兩次已儲存的造訪之間發生變化的網域。"
-  },
-  "statsFirstSeenHint": {
-    "message": "在此範圍內首次儲存的防護和網域。"
-  },
   "statsSignalsNote": {
     "message": "每次已儲存的偵測所符合的證據類型：Cookie 和標頭名稱、URL、網頁元素、指令碼和 JavaScript 掛鉤。"
-  },
-  "statsWeakEvidenceHint": {
-    "message": "符合的模式平均信賴度最低的防護。它們的規則可能需要更強的模式。"
   },
   "statsCombinationsNote": {
     "message": "只有在同時找到多個模式時，組合才會偵測到防護。"
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "規則"
   },
-  "statsRulesModified": {
-    "message": "已編輯的官方規則"
-  },
   "statsRulesDisabled": {
     "message": "已停用"
   },
   "statsRulesNeverMatchedHint": {
     "message": "在此範圍內儲存的網頁上沒有任何發現的已啟用規則。"
   },
-  "statsRulesMissingHint": {
-    "message": "說明會顯示在偵測詳細資料、歷史記錄和組合中。請在規則編輯器中新增。"
-  },
   "statsToolsNote": {
     "message": "儲存在此裝置上的進階擷取項目和工具結果。"
-  },
-  "statsCapturesUnit": {
-    "message": "擷取"
   },
   "detectionCardSureFmt": {
     "message": "{0}% 確定"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "此範圍內的網頁很少（{0}）：比較和排名可能會造成誤導。"
-  },
-  "statsLoading": {
-    "message": "正在載入統計資料..."
   },
   "statsEmptyShowAll": {
     "message": "顯示所有歷史記錄"

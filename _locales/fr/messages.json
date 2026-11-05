@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Afficher les scripts de protection chargés par cette page"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Recharger la page pour analyser les scripts de protection"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Réinitialiser les cookies de protection et recharger pour analyser les scripts"
-  },
   "advToolReloadVersionHint": {
     "message": "Recharger la page pour détecter la version de la protection"
   },
@@ -126,18 +120,6 @@
     "message": "Impossible de terminer cette action : {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Page précédente du graphique"
-  },
-  "statsChartNext": {
-    "message": "Page suivante du graphique"
-  },
-  "statsChartPage": {
-    "message": "Page {0} sur {1}"
-  },
-  "statsChartShowing": {
-    "message": "Affichage de {0}–{1} sur {2}"
-  },
   "statsSectionsLabel": {
     "message": "Sections des statistiques"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Choisissez une période plus longue pour explorer votre historique enregistré."
   },
-  "statsDetectionRate": {
-    "message": "Entrées avec détections"
-  },
-  "statsActiveDays": {
-    "message": "Jours actifs"
-  },
   "statsAverageConfidence": {
     "message": "Confiance moyenne"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Les {0} derniers jours sont affichés. Les totaux et les exports couvrent toute la période sélectionnée."
   },
-  "statsProtectionRanking": {
-    "message": "Classement des protections"
-  },
-  "statsCategoryTrend": {
-    "message": "Évolution des catégories"
-  },
-  "statsCategoryOverlap": {
-    "message": "Catégories détectées ensemble"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Nombre d’entrées de l’historique avec les deux catégories. Les cellules diagonales indiquent les entrées avec cette catégorie."
-  },
   "statsProtectionDetails": {
     "message": "Toutes les protections"
-  },
-  "statsDomainRanking": {
-    "message": "Classement des domaines"
-  },
-  "statsDomainMap": {
-    "message": "Visites et détections"
-  },
-  "statsDomainMapHint": {
-    "message": "Chaque point représente un domaine. Les points plus grands ont davantage de protections distinctes."
   },
   "statsDomainDetails": {
     "message": "Tous les domaines"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Trier les domaines"
   },
-  "statsSortVisits": {
-    "message": "Le plus de visites"
-  },
-  "statsSortDetections": {
-    "message": "Le plus de détections"
-  },
   "statsSortConfidence": {
     "message": "Confiance la plus élevée"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Distribution de la confiance"
-  },
-  "statsConfidenceTrend": {
-    "message": "Évolution de la confiance"
-  },
-  "statsCategoryConfidence": {
-    "message": "Confiance par catégorie"
   },
   "statsConfidenceNote": {
     "message": "La confiance décrit la solidité des indices de détection enregistrés, sans prouver la présence de fingerprinting ou d’un défi actif."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Aucun domaine ne correspond à votre recherche."
-  },
-  "statsSelectionNote": {
-    "message": "Les graphiques et les exports utilisent la période sélectionnée. Les entrées de l’historique représentent les détections enregistrées, pas chaque visite dans le navigateur."
   },
   "extensionName": {
     "message": "Scrapfly : détecteur anti-bot"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Activer ou désactiver la détection"
-  },
-  "noDetectionsFound": {
-    "message": "Aucune détection"
   },
   "detectionScanningTitle": {
     "message": "Recherche de protections"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Rechercher"
   },
-  "advancedBtnExport": {
-    "message": "Exporter"
-  },
   "advancedBtnExportTitle": {
     "message": "Exporter les captures"
-  },
-  "advancedBtnClearAll": {
-    "message": "Tout effacer"
   },
   "advancedBtnClearAllTitle": {
     "message": "Effacer toutes les captures"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Êtes-vous sûr de vouloir supprimer cette détection de {0} ?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Échec du chargement des paramètres. Utilisation des valeurs par défaut."
-  },
   "settingsSavedToast": {
     "message": "Paramètres enregistrés"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} est déjà sur la liste noire"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} ajouté à la liste noire"
-  },
   "failedAddDomainFmt": {
     "message": "Échec de l'ajout du domaine : {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} retiré de la liste noire"
   },
   "invalidSettingsFmt": {
     "message": "Paramètres invalides : {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Erreur lors de l'application des mises à jour"
   },
-  "failedCheckForUpdates": {
-    "message": "Échec de la vérification des mises à jour"
-  },
   "errorCheckingForUpdates": {
     "message": "Erreur lors de la vérification des mises à jour"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "URL complète du point de terminaison (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Variables disponibles :"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Exemple : https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Paramètres"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Exporter ou importer les paramètres de l'extension"
   },
   "settingsDataHistoryRow": {
     "message": "Historique de détection"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Paramètres importés"
   },
-  "settingsImportFailedToast": {
-    "message": "Échec de l’importation des paramètres : fichier non valide"
-  },
   "statsPrivacyNote": {
     "message": "Calculées localement à partir de l’historique des détections. Rien ne quitte votre navigateur."
-  },
-  "statsSubtitleFmt": {
-    "message": "Calculées localement à partir de {0} entrées de l’historique. Rien ne quitte votre navigateur."
   },
   "statsRangeLabel": {
     "message": "Période"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Les statistiques apparaîtront ici dès que des pages avec détections seront enregistrées dans l’historique."
   },
-  "statsEntries": {
-    "message": "Entrées de l’historique"
-  },
   "statsUniqueDomains": {
     "message": "Domaines uniques"
   },
   "statsDetections": {
     "message": "Détections"
   },
-  "statsDistinctDetectors": {
-    "message": "Protections distinctes"
-  },
   "statsOverTime": {
     "message": "Détections dans le temps"
   },
-  "statsTopProtections": {
-    "message": "Protections les plus détectées"
-  },
-  "statsTopDomains": {
-    "message": "Principaux domaines"
-  },
-  "statsByCategory": {
-    "message": "Par catégorie"
-  },
-  "statsByDifficulty": {
-    "message": "Par difficulté"
-  },
-  "statsPagesUnit": {
-    "message": "pages"
-  },
-  "statsVisitsUnit": {
-    "message": "visites"
-  },
-  "statsDetectionsUnit": {
-    "message": "détections"
-  },
   "statsCategoryOther": {
     "message": "Autres"
-  },
-  "statsDifficultyNone": {
-    "message": "Aucune détection"
   },
   "statsNoData": {
     "message": "Aucune donnée sur cette période"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Pages : {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} domaines"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} visites"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} détections"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} sur {1} détections · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} entrées"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} avec détections"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} visites par domaine"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} par entrée"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "{0} % de confiance moyenne"
   },
   "statsTimelineMetaFmt": {
     "message": "Détections : {0} · Jours : {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Capturé"
   },
-  "advCommonScript": {
-    "message": "Script"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Niveau de protection :"
   },
-  "advCommonCookiesFound": {
-    "message": "Cookies trouvés :"
-  },
   "advCommonSiteKey": {
     "message": "Clé de site"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Script Python avec requests et BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Script Python avec la bibliothèque requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Script Node.js avec axios et cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Script Node.js avec axios"
   },
   "advCodeDescPhpDom": {
     "message": "Script PHP avec cURL et DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Script PHP avec cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# avec HttpClient et HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# avec HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go avec net/http et goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go avec net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Capture active"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Clients reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "ID client : {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Copié dans le presse-papiers !"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Scripts avec seed :"
   },
-  "advShapeInitJsScript": {
-    "message": "Script Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Scripts Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Script avec seed"
   },
   "advShapeSeedScripts": {
     "message": "Scripts avec seed"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "Les résultats sont réutilisés pour ce chemin exact, quelle que soit la requête."
   },
-  "tipStatsActiveDays": {
-    "message": "Jours avec au moins une page enregistrée."
-  },
-  "tipStatsDetections": {
-    "message": "Protections trouvées sur toutes les pages enregistrées, répétitions comprises."
-  },
   "tipStatsDetectors": {
     "message": "Protections différentes vues, chacune comptée une fois."
   },
   "tipStatsDomains": {
     "message": "Sites différents parmi les pages enregistrées."
-  },
-  "tipStatsEntries": {
-    "message": "Pages enregistrées dans l'historique sur cette période."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0} sur {1} entrées"
   },
   "tipPatterns": {
     "message": "Motifs"
@@ -4531,38 +4339,11 @@
     "message": "Ouvrez une page web pour la scraper avec Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} captures"
-  },
-  "statsFirstSeen": {
-    "message": "Nouveau sur la période"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "{0} protections et {1} domaines enregistrés pour la première fois sur cette période."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Choisissez 7, 30 ou 90 jours pour voir les nouveautés."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Domaine le plus protégé"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} protections distinctes sur {1} visites."
-  },
-  "statsFoundTogether": {
-    "message": "Protections trouvées ensemble"
-  },
   "statsMethods": {
     "message": "Méthodes de détection"
   },
   "statsMatchesUnit": {
     "message": "correspondances"
-  },
-  "statsMethodsByCategory": {
-    "message": "Méthodes par catégorie"
-  },
-  "statsWeakEvidence": {
-    "message": "Preuves les plus faibles"
   },
   "statsSignalColumn": {
     "message": "Signal"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Combinaison"
   },
-  "statsDecidedBy": {
-    "message": "Comment les détections ont été décidées"
-  },
-  "statsCombinationGain": {
-    "message": "Confiance selon la décision"
-  },
   "statsCombinationColumn": {
     "message": "Combinaison"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Aucune détection de cette période n'a été décidée par une combinaison."
-  },
-  "statsRulesMostActive": {
-    "message": "Règles les plus actives"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} motifs"
   },
   "statsRulesPatternsByMethod": {
     "message": "Motifs par méthode"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "En attente d'une extension plus récente"
   },
-  "statsToolsByVendor": {
-    "message": "Captures par fournisseur"
-  },
   "statsToolsCapture": {
     "message": "Capture"
-  },
-  "statsToolsByTool": {
-    "message": "Outils les plus utilisés"
-  },
-  "statsToolsOverTime": {
-    "message": "Captures dans le temps"
   },
   "statsChangeColumn": {
     "message": "Changement"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Aucun domaine n'a changé de protections entre deux visites enregistrées sur cette période."
   },
-  "statsNothingNew": {
-    "message": "Rien de nouveau : chaque protection était déjà dans l'Historique avant cette période."
-  },
   "statsSectionSignals": {
     "message": "Signaux"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Outils"
   },
-  "statsDomainChangesHint": {
-    "message": "Domaines dont les protections détectées ont changé entre deux visites enregistrées."
-  },
-  "statsFirstSeenHint": {
-    "message": "Protections et domaines enregistrés pour la première fois sur cette période."
-  },
   "statsSignalsNote": {
     "message": "Le type de preuve trouvé par chaque détection enregistrée : noms de cookies et d'en-têtes, URL, éléments de la page, scripts et hooks JavaScript."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Protections dont les motifs trouvés ont la confiance moyenne la plus basse. Leurs règles ont peut-être besoin d'un motif plus fort."
   },
   "statsCombinationsNote": {
     "message": "Une combinaison ne détecte une protection que lorsque plusieurs motifs sont trouvés ensemble."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Règles"
   },
-  "statsRulesModified": {
-    "message": "Officielles modifiées"
-  },
   "statsRulesDisabled": {
     "message": "Désactivées"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Règles actives qui n'ont rien trouvé sur les pages enregistrées sur cette période."
   },
-  "statsRulesMissingHint": {
-    "message": "Les descriptions apparaissent dans les détails de détection, l'Historique et les combinaisons. Ajoutez-les dans l'éditeur de règles."
-  },
   "statsToolsNote": {
     "message": "Captures avancées et résultats d'outils enregistrés sur cet appareil."
-  },
-  "statsCapturesUnit": {
-    "message": "captures"
   },
   "detectionCardSureFmt": {
     "message": "Sûr à {0}%"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Peu de pages sur cette période ({0}) : les comparaisons et classements peuvent être trompeurs."
-  },
-  "statsLoading": {
-    "message": "Chargement des statistiques..."
   },
   "statsEmptyShowAll": {
     "message": "Afficher tout l’historique"

@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Hiển thị các script bảo vệ mà trang này đã tải"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Tải lại trang để phân tích các script bảo vệ"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Đặt lại cookie bảo vệ và tải lại để phân tích script"
-  },
   "advToolReloadVersionHint": {
     "message": "Tải lại trang để phát hiện phiên bản biện pháp bảo vệ"
   },
@@ -126,18 +120,6 @@
     "message": "Không thể hoàn tất thao tác này: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Trang biểu đồ trước"
-  },
-  "statsChartNext": {
-    "message": "Trang biểu đồ tiếp theo"
-  },
-  "statsChartPage": {
-    "message": "Trang {0}/{1}"
-  },
-  "statsChartShowing": {
-    "message": "Hiển thị {0}–{1} trong {2}"
-  },
   "statsSectionsLabel": {
     "message": "Các phần thống kê"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Hãy chọn khoảng thời gian dài hơn để xem lịch sử đã lưu."
   },
-  "statsDetectionRate": {
-    "message": "Mục có phát hiện"
-  },
-  "statsActiveDays": {
-    "message": "Ngày hoạt động"
-  },
   "statsAverageConfidence": {
     "message": "Độ tin cậy trung bình"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Hiển thị {0} ngày gần nhất. Tổng số và tệp xuất bao gồm toàn bộ khoảng thời gian đã chọn."
   },
-  "statsProtectionRanking": {
-    "message": "Xếp hạng biện pháp bảo vệ"
-  },
-  "statsCategoryTrend": {
-    "message": "Danh mục theo thời gian"
-  },
-  "statsCategoryOverlap": {
-    "message": "Danh mục xuất hiện cùng nhau"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Số mục lịch sử có cả hai danh mục. Ô nằm trên đường chéo cho biết số mục có danh mục đó."
-  },
   "statsProtectionDetails": {
     "message": "Tất cả biện pháp bảo vệ"
-  },
-  "statsDomainRanking": {
-    "message": "Xếp hạng tên miền"
-  },
-  "statsDomainMap": {
-    "message": "Lượt truy cập và phát hiện"
-  },
-  "statsDomainMapHint": {
-    "message": "Mỗi điểm là một tên miền. Điểm càng lớn thì càng có nhiều biện pháp bảo vệ khác nhau."
   },
   "statsDomainDetails": {
     "message": "Tất cả tên miền"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Sắp xếp tên miền"
   },
-  "statsSortVisits": {
-    "message": "Nhiều lượt truy cập nhất"
-  },
-  "statsSortDetections": {
-    "message": "Nhiều phát hiện nhất"
-  },
   "statsSortConfidence": {
     "message": "Độ tin cậy cao nhất"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Phân bố độ tin cậy"
-  },
-  "statsConfidenceTrend": {
-    "message": "Độ tin cậy theo thời gian"
-  },
-  "statsCategoryConfidence": {
-    "message": "Độ tin cậy theo danh mục"
   },
   "statsConfidenceNote": {
     "message": "Độ tin cậy thể hiện mức độ mạnh của bằng chứng phát hiện đã lưu, không phải bằng chứng xác nhận có thu thập dấu vân tay hay thử thách đang hoạt động."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Không có tên miền nào khớp với tìm kiếm của bạn."
-  },
-  "statsSelectionNote": {
-    "message": "Biểu đồ và tệp xuất dùng khoảng thời gian đã chọn. Mục lịch sử là các phát hiện đã lưu, không phải mọi lượt truy cập của trình duyệt."
   },
   "extensionName": {
     "message": "Scrapfly: trình phát hiện anti-bot"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Bật hoặc tắt tính năng phát hiện"
-  },
-  "noDetectionsFound": {
-    "message": "Không tìm thấy phát hiện nào"
   },
   "detectionScanningTitle": {
     "message": "Đang quét trang này"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Tìm kiếm"
   },
-  "advancedBtnExport": {
-    "message": "Xuất"
-  },
   "advancedBtnExportTitle": {
     "message": "Xuất bản ghi"
-  },
-  "advancedBtnClearAll": {
-    "message": "Xóa tất cả"
   },
   "advancedBtnClearAllTitle": {
     "message": "Xóa tất cả bản ghi"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Bạn có chắc muốn xóa phát hiện này khỏi {0} không?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Không thể tải cài đặt. Đang dùng giá trị mặc định."
-  },
   "settingsSavedToast": {
     "message": "Đã lưu cài đặt"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} đã có trong danh sách chặn"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "Đã thêm {0} vào danh sách chặn"
-  },
   "failedAddDomainFmt": {
     "message": "Không thể thêm tên miền: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "Đã xóa {0} khỏi danh sách chặn"
   },
   "invalidSettingsFmt": {
     "message": "Cài đặt không hợp lệ: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Lỗi khi áp dụng bản cập nhật"
   },
-  "failedCheckForUpdates": {
-    "message": "Không thể kiểm tra bản cập nhật"
-  },
   "errorCheckingForUpdates": {
     "message": "Lỗi khi kiểm tra bản cập nhật"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "URL endpoint đầy đủ (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Biến khả dụng:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Ví dụ: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Cài đặt"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Xuất hoặc nhập cài đặt của tiện ích"
   },
   "settingsDataHistoryRow": {
     "message": "Lịch sử phát hiện"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Đã nhập cài đặt"
   },
-  "settingsImportFailedToast": {
-    "message": "Không thể nhập cài đặt: tệp không hợp lệ"
-  },
   "statsPrivacyNote": {
     "message": "Được tính cục bộ từ lịch sử phát hiện của bạn. Không có dữ liệu nào rời khỏi trình duyệt của bạn."
-  },
-  "statsSubtitleFmt": {
-    "message": "Được tính cục bộ từ {0} mục lịch sử. Không có dữ liệu nào rời khỏi trình duyệt của bạn."
   },
   "statsRangeLabel": {
     "message": "Khoảng thời gian"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Thống kê sẽ xuất hiện tại đây khi các trang có phát hiện được lưu vào lịch sử."
   },
-  "statsEntries": {
-    "message": "Mục lịch sử"
-  },
   "statsUniqueDomains": {
     "message": "Tên miền duy nhất"
   },
   "statsDetections": {
     "message": "Phát hiện"
   },
-  "statsDistinctDetectors": {
-    "message": "Biện pháp bảo vệ riêng biệt"
-  },
   "statsOverTime": {
     "message": "Phát hiện theo thời gian"
   },
-  "statsTopProtections": {
-    "message": "Biện pháp bảo vệ được phát hiện nhiều nhất"
-  },
-  "statsTopDomains": {
-    "message": "Tên miền hàng đầu"
-  },
-  "statsByCategory": {
-    "message": "Theo danh mục"
-  },
-  "statsByDifficulty": {
-    "message": "Theo độ khó"
-  },
-  "statsPagesUnit": {
-    "message": "trang"
-  },
-  "statsVisitsUnit": {
-    "message": "lượt truy cập"
-  },
-  "statsDetectionsUnit": {
-    "message": "phát hiện"
-  },
   "statsCategoryOther": {
     "message": "Khác"
-  },
-  "statsDifficultyNone": {
-    "message": "Không có phát hiện"
   },
   "statsNoData": {
     "message": "Không có dữ liệu trong khoảng này"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Trang: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} tên miền"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} lượt truy cập"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} phát hiện"
-  },
   "historyCategoryShareFmt": {
     "message": "{0}/{1} phát hiện · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} mục"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} có phát hiện"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} lượt truy cập mỗi tên miền"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} mỗi mục"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "Độ tin cậy trung bình {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Phát hiện: {0} · Ngày: {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Đã ghi"
   },
-  "advCommonScript": {
-    "message": "Script"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Mức bảo vệ:"
   },
-  "advCommonCookiesFound": {
-    "message": "Cookie tìm thấy:"
-  },
   "advCommonSiteKey": {
     "message": "Site key"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Script Python dùng requests và BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Script Python dùng thư viện requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Script Node.js dùng axios và cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Script Node.js dùng axios"
   },
   "advCodeDescPhpDom": {
     "message": "Script PHP dùng cURL và DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Script PHP dùng cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# dùng HttpClient và HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# dùng HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go dùng net/http và goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go dùng net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Đang ghi dữ liệu"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Client reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "ID client: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Đã sao chép vào bảng nhớ tạm!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Script seed:"
   },
-  "advShapeInitJsScript": {
-    "message": "Script Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Script Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Script seed"
   },
   "advShapeSeedScripts": {
     "message": "Script seed"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "Kết quả được dùng lại cho đúng đường dẫn này, bất kể chuỗi truy vấn."
   },
-  "tipStatsActiveDays": {
-    "message": "Số ngày có ít nhất một trang đã lưu."
-  },
-  "tipStatsDetections": {
-    "message": "Các biện pháp bảo vệ tìm thấy trên mọi trang đã lưu, tính cả lần lặp lại."
-  },
   "tipStatsDetectors": {
     "message": "Các biện pháp bảo vệ khác nhau đã thấy, mỗi loại tính một lần."
   },
   "tipStatsDomains": {
     "message": "Số trang web khác nhau trong các trang đã lưu."
-  },
-  "tipStatsEntries": {
-    "message": "Các trang được lưu vào Lịch sử trong khoảng này."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0}/{1} mục"
   },
   "tipPatterns": {
     "message": "Mẫu"
@@ -4531,38 +4339,11 @@
     "message": "Hãy mở một trang web để scrape bằng Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} bản ghi"
-  },
-  "statsFirstSeen": {
-    "message": "Mới trong kỳ này"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "{0} biện pháp bảo vệ và {1} tên miền được lưu lần đầu trong khoảng này."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Chọn 7, 30 hoặc 90 ngày để xem điều gì mới."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Tên miền được bảo vệ nhiều nhất"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} biện pháp bảo vệ riêng biệt trong {1} lượt truy cập."
-  },
-  "statsFoundTogether": {
-    "message": "Biện pháp bảo vệ xuất hiện cùng nhau"
-  },
   "statsMethods": {
     "message": "Phương thức phát hiện"
   },
   "statsMatchesUnit": {
     "message": "lượt khớp"
-  },
-  "statsMethodsByCategory": {
-    "message": "Phương thức theo danh mục"
-  },
-  "statsWeakEvidence": {
-    "message": "Bằng chứng yếu nhất"
   },
   "statsSignalColumn": {
     "message": "Tín hiệu"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Tổ hợp"
   },
-  "statsDecidedBy": {
-    "message": "Cách các phát hiện được quyết định"
-  },
-  "statsCombinationGain": {
-    "message": "Độ tin cậy theo quyết định"
-  },
   "statsCombinationColumn": {
     "message": "Tổ hợp"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Không có phát hiện nào trong khoảng này được quyết định bởi tổ hợp."
-  },
-  "statsRulesMostActive": {
-    "message": "Quy tắc hoạt động nhiều nhất"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} mẫu"
   },
   "statsRulesPatternsByMethod": {
     "message": "Mẫu theo phương thức"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Đang chờ tiện ích mới hơn"
   },
-  "statsToolsByVendor": {
-    "message": "Bản ghi theo nhà cung cấp"
-  },
   "statsToolsCapture": {
     "message": "Bản ghi"
-  },
-  "statsToolsByTool": {
-    "message": "Công cụ dùng nhiều nhất"
-  },
-  "statsToolsOverTime": {
-    "message": "Bản ghi theo thời gian"
   },
   "statsChangeColumn": {
     "message": "Thay đổi"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Không có tên miền nào thay đổi biện pháp bảo vệ giữa các lần truy cập đã lưu trong khoảng này."
   },
-  "statsNothingNew": {
-    "message": "Không có gì mới: mọi biện pháp bảo vệ ở đây đã có trong Lịch sử trước khoảng này."
-  },
   "statsSectionSignals": {
     "message": "Tín hiệu"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Công cụ"
   },
-  "statsDomainChangesHint": {
-    "message": "Các tên miền có biện pháp bảo vệ được phát hiện thay đổi giữa hai lần truy cập đã lưu."
-  },
-  "statsFirstSeenHint": {
-    "message": "Biện pháp bảo vệ và tên miền được lưu lần đầu trong khoảng này."
-  },
   "statsSignalsNote": {
     "message": "Loại bằng chứng mà mỗi phát hiện đã lưu khớp: tên cookie và header, URL, phần tử trang, script và JavaScript hook."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Các biện pháp bảo vệ có mẫu khớp với độ tin cậy trung bình thấp nhất. Quy tắc của chúng có thể cần một mẫu mạnh hơn."
   },
   "statsCombinationsNote": {
     "message": "Tổ hợp chỉ phát hiện một biện pháp bảo vệ khi nhiều mẫu được tìm thấy cùng nhau."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Quy tắc"
   },
-  "statsRulesModified": {
-    "message": "Chính thức đã chỉnh sửa"
-  },
   "statsRulesDisabled": {
     "message": "Đã tắt"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Các quy tắc đã bật không tìm thấy gì trên các trang đã lưu trong khoảng này."
   },
-  "statsRulesMissingHint": {
-    "message": "Mô tả hiển thị trong chi tiết phát hiện, Lịch sử và tổ hợp. Thêm chúng trong trình chỉnh sửa quy tắc."
-  },
   "statsToolsNote": {
     "message": "Bản ghi nâng cao và kết quả công cụ được lưu trên thiết bị này."
-  },
-  "statsCapturesUnit": {
-    "message": "bản ghi"
   },
   "detectionCardSureFmt": {
     "message": "Chắc chắn {0}%"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Có ít trang trong khoảng này ({0}): các phép so sánh và xếp hạng có thể gây hiểu lầm."
-  },
-  "statsLoading": {
-    "message": "Đang tải thống kê..."
   },
   "statsEmptyShowAll": {
     "message": "Hiện toàn bộ lịch sử"

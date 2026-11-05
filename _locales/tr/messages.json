@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Bu sayfanın yüklediği koruma script'lerini göster"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Koruma komut dosyalarını analiz etmek için sayfayı yeniden yükleyin"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Komut dosyalarını analiz etmek için koruma çerezlerini sıfırlayın ve sayfayı yeniden yükleyin"
-  },
   "advToolReloadVersionHint": {
     "message": "Koruma sürümünü tespit etmek için sayfayı yeniden yükleyin"
   },
@@ -126,18 +120,6 @@
     "message": "Bu işlem tamamlanamadı: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Önceki grafik sayfası"
-  },
-  "statsChartNext": {
-    "message": "Sonraki grafik sayfası"
-  },
-  "statsChartPage": {
-    "message": "Sayfa {0} / {1}"
-  },
-  "statsChartShowing": {
-    "message": "{2} içinden {0}–{1} gösteriliyor"
-  },
   "statsSectionsLabel": {
     "message": "İstatistik bölümleri"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Kayıtlı geçmişinizi incelemek için daha uzun bir tarih aralığı seçin."
   },
-  "statsDetectionRate": {
-    "message": "Tespit içeren girdiler"
-  },
-  "statsActiveDays": {
-    "message": "Etkin günler"
-  },
   "statsAverageConfidence": {
     "message": "Ortalama güven"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Son {0} gün gösteriliyor. Toplamlar ve dışa aktarmalar seçili aralığın tamamını kapsar."
   },
-  "statsProtectionRanking": {
-    "message": "Koruma sıralaması"
-  },
-  "statsCategoryTrend": {
-    "message": "Zaman içinde kategoriler"
-  },
-  "statsCategoryOverlap": {
-    "message": "Birlikte bulunan kategoriler"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Her iki kategoriyi de içeren geçmiş girdilerinin sayısı. Köşegen hücreler, o kategorideki girdileri gösterir."
-  },
   "statsProtectionDetails": {
     "message": "Tüm korumalar"
-  },
-  "statsDomainRanking": {
-    "message": "Alan adı sıralaması"
-  },
-  "statsDomainMap": {
-    "message": "Ziyaretler ve tespitler"
-  },
-  "statsDomainMapHint": {
-    "message": "Her nokta bir alan adıdır. Daha büyük noktalar, daha fazla farklı koruma içerir."
   },
   "statsDomainDetails": {
     "message": "Tüm alan adları"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Alan adlarını sırala"
   },
-  "statsSortVisits": {
-    "message": "En çok ziyaret"
-  },
-  "statsSortDetections": {
-    "message": "En çok tespit"
-  },
   "statsSortConfidence": {
     "message": "En yüksek güven"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Güven dağılımı"
-  },
-  "statsConfidenceTrend": {
-    "message": "Zaman içinde güven"
-  },
-  "statsCategoryConfidence": {
-    "message": "Kategoriye göre güven"
   },
   "statsConfidenceNote": {
     "message": "Güven, kayıtlı tespit kanıtının gücünü ifade eder; parmak izi oluşturmanın veya etkin bir doğrulama sınamasının kanıtı değildir."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Aramanızla eşleşen alan adı yok."
-  },
-  "statsSelectionNote": {
-    "message": "Grafikler ve dışa aktarmalar seçili tarih aralığını kullanır. Geçmiş girdileri kayıtlı tespitleri temsil eder, her tarayıcı ziyaretini değil."
   },
   "extensionName": {
     "message": "Scrapfly: anti-bot dedektörü"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Tespiti etkinleştir veya devre dışı bırak"
-  },
-  "noDetectionsFound": {
-    "message": "Tespit bulunamadı"
   },
   "detectionScanningTitle": {
     "message": "Bu sayfa taranıyor"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Ara"
   },
-  "advancedBtnExport": {
-    "message": "Dışa aktar"
-  },
   "advancedBtnExportTitle": {
     "message": "Yakalamaları dışa aktar"
-  },
-  "advancedBtnClearAll": {
-    "message": "Tümünü temizle"
   },
   "advancedBtnClearAllTitle": {
     "message": "Tüm yakalamaları temizle"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "{0} sitesindeki bu tespiti silmek istediğinizden emin misiniz?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Ayarlar yüklenemedi. Varsayılanlar kullanılıyor."
-  },
   "settingsSavedToast": {
     "message": "Ayarlar kaydedildi"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} zaten kara listede"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} kara listeye eklendi"
-  },
   "failedAddDomainFmt": {
     "message": "Alan adı eklenemedi: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} kara listeden kaldırıldı"
   },
   "invalidSettingsFmt": {
     "message": "Geçersiz ayarlar: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Güncellemeler uygulanırken hata oluştu"
   },
-  "failedCheckForUpdates": {
-    "message": "Güncellemeler kontrol edilemedi"
-  },
   "errorCheckingForUpdates": {
     "message": "Güncellemeler kontrol edilirken hata oluştu"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Tam uç nokta URL'si (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Kullanılabilir değişkenler:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Örnek: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Ayarlar"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Uzantı ayarlarını dışa veya içe aktarın"
   },
   "settingsDataHistoryRow": {
     "message": "Tespit geçmişi"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Ayarlar içe aktarıldı"
   },
-  "settingsImportFailedToast": {
-    "message": "Ayarlar içe aktarılamadı: geçersiz dosya"
-  },
   "statsPrivacyNote": {
     "message": "Tespit geçmişinizden yerel olarak hesaplanır. Hiçbir şey tarayıcınızdan çıkmaz."
-  },
-  "statsSubtitleFmt": {
-    "message": "{0} geçmiş girdisinden yerel olarak hesaplanır. Hiçbir şey tarayıcınızdan çıkmaz."
   },
   "statsRangeLabel": {
     "message": "Zaman aralığı"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Tespit içeren sayfalar geçmişe kaydedildiğinde istatistikler burada görünür."
   },
-  "statsEntries": {
-    "message": "Geçmiş girdileri"
-  },
   "statsUniqueDomains": {
     "message": "Benzersiz alan adları"
   },
   "statsDetections": {
     "message": "Tespitler"
   },
-  "statsDistinctDetectors": {
-    "message": "Farklı korumalar"
-  },
   "statsOverTime": {
     "message": "Zaman içinde tespitler"
   },
-  "statsTopProtections": {
-    "message": "En çok tespit edilen korumalar"
-  },
-  "statsTopDomains": {
-    "message": "Önde gelen alan adları"
-  },
-  "statsByCategory": {
-    "message": "Kategoriye göre"
-  },
-  "statsByDifficulty": {
-    "message": "Zorluğa göre"
-  },
-  "statsPagesUnit": {
-    "message": "sayfa"
-  },
-  "statsVisitsUnit": {
-    "message": "ziyaret"
-  },
-  "statsDetectionsUnit": {
-    "message": "tespit"
-  },
   "statsCategoryOther": {
     "message": "Diğer"
-  },
-  "statsDifficultyNone": {
-    "message": "Tespit yok"
   },
   "statsNoData": {
     "message": "Bu aralıkta veri yok"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Sayfa: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} alan adı"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} ziyaret"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} tespit"
-  },
   "historyCategoryShareFmt": {
     "message": "{1} tespitin {0} tanesi · %{2}"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} girdi"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} tespit içeren"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "Alan adı başına {0} ziyaret"
-  },
-  "statsPerEntryFmt": {
-    "message": "Girdi başına {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "Ortalama güven: %{0}"
   },
   "statsTimelineMetaFmt": {
     "message": "Tespitler: {0} · Günler: {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Yakalandı"
   },
-  "advCommonScript": {
-    "message": "Komut dosyası"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Koruma düzeyi:"
   },
-  "advCommonCookiesFound": {
-    "message": "Bulunan çerezler:"
-  },
   "advCommonSiteKey": {
     "message": "Site anahtarı"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "requests ve BeautifulSoup kullanan Python komut dosyası"
   },
-  "advCodeDescPython": {
-    "message": "requests kitaplığını kullanan Python komut dosyası"
-  },
   "advCodeDescNodeCheerio": {
     "message": "axios ve cheerio kullanan Node.js komut dosyası"
-  },
-  "advCodeDescNode": {
-    "message": "axios kullanan Node.js komut dosyası"
   },
   "advCodeDescPhpDom": {
     "message": "cURL ve DOMDocument kullanan PHP komut dosyası"
   },
-  "advCodeDescPhp": {
-    "message": "cURL kullanan PHP komut dosyası"
-  },
   "advCodeDescCsharpHap": {
     "message": "HttpClient ve HtmlAgilityPack kullanan C#"
   },
-  "advCodeDescCsharp": {
-    "message": "HttpClient kullanan C#"
-  },
   "advCodeDescGoQuery": {
     "message": "net/http ve goquery kullanan Go"
-  },
-  "advCodeDescGo": {
-    "message": "net/http kullanan Go"
   },
   "pageNoticeCaptureActive": {
     "message": "Yakalama etkin"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA istemcileri"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "İstemci kimliği: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Panoya kopyalandı!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Seed komut dosyaları:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js komut dosyası"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js komut dosyaları"
-  },
-  "advShapeSeedScript": {
-    "message": "Seed komut dosyası"
   },
   "advShapeSeedScripts": {
     "message": "Seed komut dosyaları"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "Sonuçlar, sorgu ne olursa olsun bu tam yol için yeniden kullanılır."
   },
-  "tipStatsActiveDays": {
-    "message": "En az bir kayıtlı sayfası olan günler."
-  },
-  "tipStatsDetections": {
-    "message": "Tüm kayıtlı sayfalarda bulunan korumalar, tekrarlar dahil."
-  },
   "tipStatsDetectors": {
     "message": "Görülen farklı korumalar, her biri bir kez sayılır."
   },
   "tipStatsDomains": {
     "message": "Kayıtlı sayfalar arasındaki farklı siteler."
-  },
-  "tipStatsEntries": {
-    "message": "Bu aralıkta Geçmiş'e kaydedilen sayfalar."
-  },
-  "tipStatsRateFmt": {
-    "message": "{1} girdinin {0} tanesi"
   },
   "tipPatterns": {
     "message": "Desenler"
@@ -4531,38 +4339,11 @@
     "message": "Scrapfly ile scrape etmek için bir web sayfası açın",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} yakalama"
-  },
-  "statsFirstSeen": {
-    "message": "Bu dönemde yeni"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "Bu aralıkta ilk kez kaydedilen {0} koruma ve {1} alan adı."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Nelerin yeni olduğunu görmek için 7, 30 veya 90 gün seçin."
-  },
-  "statsMostProtectedDomain": {
-    "message": "En korumalı alan adı"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{1} ziyarette {0} farklı koruma."
-  },
-  "statsFoundTogether": {
-    "message": "Birlikte bulunan korumalar"
-  },
   "statsMethods": {
     "message": "Tespit yöntemleri"
   },
   "statsMatchesUnit": {
     "message": "eşleşme"
-  },
-  "statsMethodsByCategory": {
-    "message": "Kategoriye göre yöntemler"
-  },
-  "statsWeakEvidence": {
-    "message": "En zayıf kanıt"
   },
   "statsSignalColumn": {
     "message": "Sinyal"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Kombinasyon"
   },
-  "statsDecidedBy": {
-    "message": "Tespitlerin nasıl belirlendiği"
-  },
-  "statsCombinationGain": {
-    "message": "Karara göre güven"
-  },
   "statsCombinationColumn": {
     "message": "Kombinasyon"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Bu aralıkta hiçbir tespit bir kombinasyonla belirlenmedi."
-  },
-  "statsRulesMostActive": {
-    "message": "En etkin kurallar"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} desen"
   },
   "statsRulesPatternsByMethod": {
     "message": "Yönteme göre desenler"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Daha yeni bir uzantı bekleniyor"
   },
-  "statsToolsByVendor": {
-    "message": "Sağlayıcıya göre yakalamalar"
-  },
   "statsToolsCapture": {
     "message": "Yakalama"
-  },
-  "statsToolsByTool": {
-    "message": "En çok kullanılan araçlar"
-  },
-  "statsToolsOverTime": {
-    "message": "Zaman içinde yakalamalar"
   },
   "statsChangeColumn": {
     "message": "Değişiklik"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Bu aralıktaki kayıtlı ziyaretler arasında hiçbir alan adı korumalarını değiştirmedi."
   },
-  "statsNothingNew": {
-    "message": "Yeni bir şey yok: buradaki her koruma bu aralıktan önce de Geçmiş'teydi."
-  },
   "statsSectionSignals": {
     "message": "Sinyaller"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Araçlar"
   },
-  "statsDomainChangesHint": {
-    "message": "Tespit edilen korumaları iki kayıtlı ziyaret arasında değişen alan adları."
-  },
-  "statsFirstSeenHint": {
-    "message": "Bu aralıkta ilk kez kaydedilen korumalar ve alan adları."
-  },
   "statsSignalsNote": {
     "message": "Kayıtlı her tespitin eşleştiği kanıt türü: çerez ve üstbilgi adları, URL'ler, sayfa öğeleri, komut dosyaları ve JavaScript hook'ları."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Eşleşen desenlerinin ortalama güveni en düşük olan korumalar. Kurallarının daha güçlü bir desene ihtiyacı olabilir."
   },
   "statsCombinationsNote": {
     "message": "Bir kombinasyon, bir korumayı yalnızca birkaç desen birlikte bulunduğunda tespit eder."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Kurallar"
   },
-  "statsRulesModified": {
-    "message": "Düzenlenen resmi"
-  },
   "statsRulesDisabled": {
     "message": "Devre dışı"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Bu aralıkta kaydedilen sayfalarda hiçbir şey bulamayan etkin kurallar."
   },
-  "statsRulesMissingHint": {
-    "message": "Açıklamalar tespit ayrıntılarında, Geçmiş'te ve kombinasyonlarda görünür. Kural düzenleyicisinde ekleyin."
-  },
   "statsToolsNote": {
     "message": "Bu cihazda kayıtlı gelişmiş yakalamalar ve araç sonuçları."
-  },
-  "statsCapturesUnit": {
-    "message": "yakalama"
   },
   "detectionCardSureFmt": {
     "message": "%{0} emin"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Bu aralıkta az sayıda sayfa var ({0}): karşılaştırmalar ve sıralamalar yanıltıcı olabilir."
-  },
-  "statsLoading": {
-    "message": "İstatistikler yükleniyor..."
   },
   "statsEmptyShowAll": {
     "message": "Tüm geçmişi göster"

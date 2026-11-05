@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "इस पेज द्वारा लोड की गई सुरक्षा स्क्रिप्ट दिखाएँ"
   },
-  "advToolReloadScriptsHint": {
-    "message": "सुरक्षा स्क्रिप्ट का विश्लेषण करने के लिए पेज फिर से लोड करें"
-  },
-  "advToolResetScriptsHint": {
-    "message": "स्क्रिप्ट का विश्लेषण करने के लिए सुरक्षा कुकीज़ रीसेट करें और पेज फिर से लोड करें"
-  },
   "advToolReloadVersionHint": {
     "message": "सुरक्षा का संस्करण पहचानने के लिए पेज फिर से लोड करें"
   },
@@ -126,18 +120,6 @@
     "message": "यह कार्रवाई पूरी नहीं हो सकी: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "चार्ट का पिछला पेज"
-  },
-  "statsChartNext": {
-    "message": "चार्ट का अगला पेज"
-  },
-  "statsChartPage": {
-    "message": "{1} में से पेज {0}"
-  },
-  "statsChartShowing": {
-    "message": "{2} में से {0}–{1} दिखाए जा रहे हैं"
-  },
   "statsSectionsLabel": {
     "message": "आँकड़ों के अनुभाग"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "अपना सहेजा गया इतिहास देखने के लिए लंबी तारीख सीमा चुनें।"
   },
-  "statsDetectionRate": {
-    "message": "पहचान वाली प्रविष्टियाँ"
-  },
-  "statsActiveDays": {
-    "message": "सक्रिय दिन"
-  },
   "statsAverageConfidence": {
     "message": "औसत विश्वसनीयता"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "पिछले {0} दिन दिखाए गए हैं। कुल आँकड़ों और निर्यात में पूरी चुनी गई अवधि शामिल है।"
   },
-  "statsProtectionRanking": {
-    "message": "सुरक्षा उपायों की रैंकिंग"
-  },
-  "statsCategoryTrend": {
-    "message": "समय के साथ श्रेणियाँ"
-  },
-  "statsCategoryOverlap": {
-    "message": "एक साथ मिली श्रेणियाँ"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "दोनों श्रेणियों वाली इतिहास प्रविष्टियों की संख्या। विकर्ण खानों में उस श्रेणी वाली प्रविष्टियाँ दिखती हैं।"
-  },
   "statsProtectionDetails": {
     "message": "सभी सुरक्षा उपाय"
-  },
-  "statsDomainRanking": {
-    "message": "डोमेन की रैंकिंग"
-  },
-  "statsDomainMap": {
-    "message": "विज़िट और पहचान"
-  },
-  "statsDomainMapHint": {
-    "message": "हर बिंदु एक डोमेन है। बड़े बिंदुओं में अधिक अलग-अलग सुरक्षा उपाय हैं।"
   },
   "statsDomainDetails": {
     "message": "सभी डोमेन"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "डोमेन क्रमबद्ध करें"
   },
-  "statsSortVisits": {
-    "message": "सबसे अधिक विज़िट"
-  },
-  "statsSortDetections": {
-    "message": "सबसे अधिक पहचान"
-  },
   "statsSortConfidence": {
     "message": "सबसे अधिक विश्वसनीयता"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "विश्वसनीयता का वितरण"
-  },
-  "statsConfidenceTrend": {
-    "message": "समय के साथ विश्वसनीयता"
-  },
-  "statsCategoryConfidence": {
-    "message": "श्रेणी के अनुसार विश्वसनीयता"
   },
   "statsConfidenceNote": {
     "message": "विश्वसनीयता सहेजे गए पहचान साक्ष्यों की मजबूती बताती है, यह फिंगरप्रिंटिंग या किसी सक्रिय चुनौती का प्रमाण नहीं है।"
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता।"
-  },
-  "statsSelectionNote": {
-    "message": "चार्ट और निर्यात चुनी गई तारीख सीमा का उपयोग करते हैं। इतिहास की प्रविष्टियाँ सहेजी गई पहचानों को दर्शाती हैं, ब्राउज़र की हर विज़िट को नहीं।"
   },
   "extensionName": {
     "message": "Scrapfly: एंटी-बॉट डिटेक्टर"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "जांच सक्षम या अक्षम करें"
-  },
-  "noDetectionsFound": {
-    "message": "कोई जांच नहीं मिली"
   },
   "detectionScanningTitle": {
     "message": "इस पृष्ठ की जाँच जारी है"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "खोजें"
   },
-  "advancedBtnExport": {
-    "message": "निर्यात"
-  },
   "advancedBtnExportTitle": {
     "message": "कैप्चर निर्यात करें"
-  },
-  "advancedBtnClearAll": {
-    "message": "सभी साफ़ करें"
   },
   "advancedBtnClearAllTitle": {
     "message": "सभी कैप्चर साफ़ करें"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "क्या आप वाकई {0} से इस डिटेक्शन को हटाना चाहते हैं?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "सेटिंग्स लोड करने में विफल। डिफ़ॉल्ट का उपयोग किया जा रहा है।"
-  },
   "settingsSavedToast": {
     "message": "सेटिंग्स सहेजी गईं"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} पहले से ब्लैकलिस्टेड है"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} को ब्लैकलिस्ट में जोड़ा गया"
-  },
   "failedAddDomainFmt": {
     "message": "डोमेन जोड़ने में विफल: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} को ब्लैकलिस्ट से हटाया गया"
   },
   "invalidSettingsFmt": {
     "message": "अमान्य सेटिंग्स: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "अपडेट लागू करने में त्रुटि"
   },
-  "failedCheckForUpdates": {
-    "message": "अपडेट की जाँच करने में विफल"
-  },
   "errorCheckingForUpdates": {
     "message": "अपडेट की जाँच में त्रुटि"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "पूर्ण एंडपॉइंट URL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "उपलब्ध वेरिएबल:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "उदाहरण: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "सेटिंग्स"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "एक्सटेंशन सेटिंग्स एक्सपोर्ट या इम्पोर्ट करें"
   },
   "settingsDataHistoryRow": {
     "message": "डिटेक्शन इतिहास"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "सेटिंग्स आयात की गईं"
   },
-  "settingsImportFailedToast": {
-    "message": "सेटिंग्स आयात नहीं हो सकीं: अमान्य फ़ाइल"
-  },
   "statsPrivacyNote": {
     "message": "आपके डिटेक्शन इतिहास से स्थानीय रूप से गणना की गई। कुछ भी आपके ब्राउज़र से बाहर नहीं जाता।"
-  },
-  "statsSubtitleFmt": {
-    "message": "{0} इतिहास प्रविष्टियों से स्थानीय रूप से गणना की गई। कुछ भी आपके ब्राउज़र से बाहर नहीं जाता।"
   },
   "statsRangeLabel": {
     "message": "समय सीमा"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "डिटेक्शन वाले पेज इतिहास में सहेजे जाने पर आँकड़े यहाँ दिखेंगे।"
   },
-  "statsEntries": {
-    "message": "इतिहास प्रविष्टियाँ"
-  },
   "statsUniqueDomains": {
     "message": "अद्वितीय डोमेन"
   },
   "statsDetections": {
     "message": "डिटेक्शन"
   },
-  "statsDistinctDetectors": {
-    "message": "विभिन्न सुरक्षा"
-  },
   "statsOverTime": {
     "message": "समय के साथ डिटेक्शन"
   },
-  "statsTopProtections": {
-    "message": "सबसे अधिक पहचानी गई सुरक्षा"
-  },
-  "statsTopDomains": {
-    "message": "शीर्ष डोमेन"
-  },
-  "statsByCategory": {
-    "message": "श्रेणी के अनुसार"
-  },
-  "statsByDifficulty": {
-    "message": "कठिनाई के अनुसार"
-  },
-  "statsPagesUnit": {
-    "message": "पेज"
-  },
-  "statsVisitsUnit": {
-    "message": "विज़िट"
-  },
-  "statsDetectionsUnit": {
-    "message": "डिटेक्शन"
-  },
   "statsCategoryOther": {
     "message": "अन्य"
-  },
-  "statsDifficultyNone": {
-    "message": "कोई डिटेक्शन नहीं"
   },
   "statsNoData": {
     "message": "इस अवधि में कोई डेटा नहीं"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "{0} पेज"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} डोमेन"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} विज़िट"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} डिटेक्शन"
-  },
   "historyCategoryShareFmt": {
     "message": "{1} में से {0} डिटेक्शन · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} प्रविष्टियाँ"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} डिटेक्शन सहित"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "प्रति डोमेन {0} विज़िट"
-  },
-  "statsPerEntryFmt": {
-    "message": "प्रति प्रविष्टि {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "{0}% औसत विश्वास"
   },
   "statsTimelineMetaFmt": {
     "message": "{0} डिटेक्शन · {1} दिन"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "कैप्चर किया गया"
   },
-  "advCommonScript": {
-    "message": "स्क्रिप्ट"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "सुरक्षा स्तर:"
   },
-  "advCommonCookiesFound": {
-    "message": "मिली कुकी:"
-  },
   "advCommonSiteKey": {
     "message": "साइट कुंजी"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "requests और BeautifulSoup वाली Python स्क्रिप्ट"
   },
-  "advCodeDescPython": {
-    "message": "requests लाइब्रेरी वाली Python स्क्रिप्ट"
-  },
   "advCodeDescNodeCheerio": {
     "message": "axios और cheerio वाली Node.js स्क्रिप्ट"
-  },
-  "advCodeDescNode": {
-    "message": "axios वाली Node.js स्क्रिप्ट"
   },
   "advCodeDescPhpDom": {
     "message": "cURL और DOMDocument वाली PHP स्क्रिप्ट"
   },
-  "advCodeDescPhp": {
-    "message": "cURL वाली PHP स्क्रिप्ट"
-  },
   "advCodeDescCsharpHap": {
     "message": "HttpClient और HtmlAgilityPack वाला C#"
   },
-  "advCodeDescCsharp": {
-    "message": "HttpClient वाला C#"
-  },
   "advCodeDescGoQuery": {
     "message": "net/http और goquery वाला Go"
-  },
-  "advCodeDescGo": {
-    "message": "net/http वाला Go"
   },
   "pageNoticeCaptureActive": {
     "message": "कैप्चर सक्रिय है"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA क्लाइंट"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "क्लाइंट ID: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "क्लिपबोर्ड पर कॉपी हो गया!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "seed वाली स्क्रिप्ट:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js स्क्रिप्ट"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js स्क्रिप्ट"
-  },
-  "advShapeSeedScript": {
-    "message": "seed वाली स्क्रिप्ट"
   },
   "advShapeSeedScripts": {
     "message": "seed वाली स्क्रिप्ट"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "परिणाम इसी पथ के लिए दोबारा उपयोग होते हैं, क्वेरी कोई भी हो।"
   },
-  "tipStatsActiveDays": {
-    "message": "वे दिन जिनमें कम से कम एक पेज सहेजा गया।"
-  },
-  "tipStatsDetections": {
-    "message": "सभी सहेजे गए पेजों पर मिली सुरक्षा, दोहराव सहित।"
-  },
   "tipStatsDetectors": {
     "message": "देखी गई अलग-अलग सुरक्षा, हर एक एक बार गिनी गई।"
   },
   "tipStatsDomains": {
     "message": "सहेजे गए पेजों में अलग-अलग साइटें।"
-  },
-  "tipStatsEntries": {
-    "message": "इस अवधि में इतिहास में सहेजे गए पेज।"
-  },
-  "tipStatsRateFmt": {
-    "message": "{1} में से {0} प्रविष्टियाँ"
   },
   "tipPatterns": {
     "message": "पैटर्न"
@@ -4531,38 +4339,11 @@
     "message": "Scrapfly से स्क्रैप करने के लिए कोई वेब पेज खोलें",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} कैप्चर"
-  },
-  "statsFirstSeen": {
-    "message": "इस अवधि में नया"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "इस अवधि में पहली बार सहेजे गए {0} सुरक्षा और {1} डोमेन।"
-  },
-  "statsFirstSeenAllTip": {
-    "message": "नया देखने के लिए 7, 30 या 90 दिन चुनें।"
-  },
-  "statsMostProtectedDomain": {
-    "message": "सबसे अधिक सुरक्षित डोमेन"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{1} विज़िट में {0} अलग सुरक्षा।"
-  },
-  "statsFoundTogether": {
-    "message": "साथ में मिली सुरक्षाएँ"
-  },
   "statsMethods": {
     "message": "पहचान के तरीके"
   },
   "statsMatchesUnit": {
     "message": "मिलान"
-  },
-  "statsMethodsByCategory": {
-    "message": "श्रेणी के अनुसार तरीके"
-  },
-  "statsWeakEvidence": {
-    "message": "सबसे कमज़ोर सबूत"
   },
   "statsSignalColumn": {
     "message": "संकेत"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "संयोजन"
   },
-  "statsDecidedBy": {
-    "message": "पहचान कैसे तय हुई"
-  },
-  "statsCombinationGain": {
-    "message": "निर्णय के अनुसार विश्वास"
-  },
   "statsCombinationColumn": {
     "message": "संयोजन"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "इस अवधि में कोई पहचान संयोजन से तय नहीं हुई।"
-  },
-  "statsRulesMostActive": {
-    "message": "सबसे सक्रिय नियम"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} पैटर्न"
   },
   "statsRulesPatternsByMethod": {
     "message": "तरीके के अनुसार पैटर्न"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "नए एक्सटेंशन की प्रतीक्षा"
   },
-  "statsToolsByVendor": {
-    "message": "विक्रेता के अनुसार कैप्चर"
-  },
   "statsToolsCapture": {
     "message": "कैप्चर"
-  },
-  "statsToolsByTool": {
-    "message": "सबसे ज़्यादा उपयोग किए गए टूल"
-  },
-  "statsToolsOverTime": {
-    "message": "समय के साथ कैप्चर"
   },
   "statsChangeColumn": {
     "message": "बदलाव"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "इस अवधि में किसी डोमेन ने सहेजी गई विज़िट के बीच अपनी सुरक्षा नहीं बदली।"
   },
-  "statsNothingNew": {
-    "message": "कुछ नया नहीं: हर सुरक्षा इस अवधि से पहले ही इतिहास में थी।"
-  },
   "statsSectionSignals": {
     "message": "संकेत"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "टूल"
   },
-  "statsDomainChangesHint": {
-    "message": "वे डोमेन जिनकी पहचानी गई सुरक्षा दो सहेजी गई विज़िट के बीच बदली।"
-  },
-  "statsFirstSeenHint": {
-    "message": "इस अवधि में पहली बार सहेजी गई सुरक्षाएँ और डोमेन।"
-  },
   "statsSignalsNote": {
     "message": "हर सहेजी गई पहचान ने किस तरह का सबूत मिलाया: कुकी और हेडर नाम, URL, पेज तत्व, स्क्रिप्ट और JavaScript हुक।"
-  },
-  "statsWeakEvidenceHint": {
-    "message": "वे सुरक्षाएँ जिनके मिले पैटर्न का औसत विश्वास सबसे कम है। उनके नियमों को मज़बूत पैटर्न की ज़रूरत हो सकती है।"
   },
   "statsCombinationsNote": {
     "message": "संयोजन किसी सुरक्षा को तभी पहचानता है जब कई पैटर्न साथ में मिलें।"
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "नियम"
   },
-  "statsRulesModified": {
-    "message": "संपादित आधिकारिक"
-  },
   "statsRulesDisabled": {
     "message": "अक्षम"
   },
   "statsRulesNeverMatchedHint": {
     "message": "सक्षम नियम जिन्होंने इस अवधि में सहेजे गए पेजों पर कुछ नहीं पाया।"
   },
-  "statsRulesMissingHint": {
-    "message": "विवरण पहचान विवरण, इतिहास और संयोजनों में दिखते हैं। उन्हें नियम संपादक में जोड़ें।"
-  },
   "statsToolsNote": {
     "message": "इस डिवाइस पर सहेजे गए उन्नत कैप्चर और टूल परिणाम।"
-  },
-  "statsCapturesUnit": {
-    "message": "कैप्चर"
   },
   "detectionCardSureFmt": {
     "message": "{0}% निश्चित"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "इस अवधि में पेज कम हैं ({0}): तुलना और रैंकिंग भ्रामक हो सकती हैं।"
-  },
-  "statsLoading": {
-    "message": "आँकड़े लोड हो रहे हैं..."
   },
   "statsEmptyShowAll": {
     "message": "पूरा इतिहास दिखाएँ"

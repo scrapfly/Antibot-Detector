@@ -10,11 +10,14 @@
  *
  * Exit 0 when all requested checks pass; exit 1 otherwise.
  *
- * The --unused scan is intentionally conservative: it substring-matches each
- * key against the entire source corpus (js/html/json/css/md outside _locales),
- * so a key referenced from a literal map, an HTML data-i18n attribute, a JS
- * I18n.get/tr call, the CHANGELOG, or a tooling script all count as "used."
- * It under-reports rather than over-reports, so a flagged key is safe to drop.
+ * The --unused scan matches each key as a whole token (no letter or digit
+ * right before or after it) against the entire source corpus (js/html/json/
+ * css/md outside _locales), so a key referenced from a literal map, an HTML
+ * data-i18n attribute, a JS I18n.get/tr call, a test, the CHANGELOG, or a
+ * tooling script all count as "used." A key that only sits inside a longer
+ * name does not: advCodeDescPython is not used by advCodeDescPythonBs. A key
+ * that is built at run time ('stats' + name) is not seen either, so check the
+ * code for such a name before dropping a flagged key.
  */
 
 const fs = require('fs');
@@ -98,7 +101,14 @@ if (wantUnused) {
         .map((f) => fs.readFileSync(f, 'utf8'))
         .join('\n');
 
-    const unused = [...canonicalKeys].filter((key) => !corpus.includes(key)).sort();
+    // Every run of letters and digits in the corpus: for a key made of those (all of ours), "used" is one lookup
+    const tokens = new Set(corpus.match(/[A-Za-z0-9]+/g));
+    const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const isUsed = (key) => (/^[A-Za-z0-9]+$/.test(key)
+        ? tokens.has(key)
+        : new RegExp(`(?<![A-Za-z0-9])${escapeRegExp(key)}(?![A-Za-z0-9])`).test(corpus));
+
+    const unused = [...canonicalKeys].filter((key) => !isUsed(key)).sort();
 
     console.log(`\nUnused-key scan: ${canonicalKeys.size - unused.length}/${canonicalKeys.size} keys referenced.`);
     if (unused.length) {
