@@ -731,8 +731,9 @@ class ScrapflyPopup {
           // Re-attach click handlers for valid results (if any remain after cache check)
           // This is needed because DOM elements may have been recreated
           if (this.detection.currentResults && this.detection.currentResults.length > 0) {
+            // The list as the search and the chips leave it, not the whole list for a moment
             if (this.detection.paginationManager) {
-              this.detection.paginationManager.setItems(this.detection.currentResults);
+              DetectionUI.applyFilters.call(this.detection);
             }
           }
         }
