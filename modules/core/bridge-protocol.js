@@ -174,12 +174,11 @@
             ILLEGAL_INVOCATION_FALLBACK: 'Illegal invocation'
         },
         // Global state keys shared between scripts. In the MAIN world these are
-        // page-visible, exactly as before this module existed (no new ones).
+        // page-visible, exactly as before this module existed (no new ones: the
+        // "this load was a cache hit" flag is a variable in each world, test/cache-hit-flag-hidden.test.js).
         GLOBALS: {
             // Re-entrancy counter: extension-driven property reads must not report hooks
             HOOK_SUPPRESSION_DEPTH: '__scrapflyHookSuppressionDepth',
-            // Set on cache hit; the ISOLATED world keeps its own flag under the same name
-            CACHE_HIT_EARLY_EXIT: '__scrapflyCacheHitEarlyExit',
             // Public JS API: last onDetection payload, for synchronous page reads
             LAST_DETECTION: '__scrapflyLastDetection'
         }

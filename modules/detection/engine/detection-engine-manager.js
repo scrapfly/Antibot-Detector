@@ -1499,7 +1499,7 @@ class DetectionEngineManager {
     static createHookBatcher(chrome) {
         return demCreateHookBatcher.apply(this, arguments);
     }
-    static handleHookMessage(event, chrome, hookBatcher) {
+    static handleHookMessage(event, chrome, hookBatcher, state) {
         return demHandleHookMessage.apply(this, arguments);
     }
 
