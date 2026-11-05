@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "감지 검색..."
   },
+  "detectionFiltersLabel": {
+    "message": "감지 필터"
+  },
   "detectionPaginationPage": {
     "message": "페이지"
   },

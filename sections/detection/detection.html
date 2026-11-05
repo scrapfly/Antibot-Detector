@@ -204,11 +204,32 @@
       <!-- Search sits in the summary card, under the stats -->
       <div class="search-container detection-search">
         <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
+        <!-- Filter chips under the search: one per category (any of the chosen ones, combined with the search with AND) -->
+        <div id="detectionFilters" class="detection-filters" role="group" aria-label="Filter detections" data-i18n-aria-label="detectionFiltersLabel">
+          <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">
+            <span class="history-filter-icon category-icon" aria-hidden="true"></span>
+            <span data-i18n="categoryAntibot">Anti-bot</span>
+          </button>
+          <button type="button" class="history-filter-chip" data-filter="captcha" data-category="captcha" aria-pressed="false">
+            <span class="history-filter-icon category-icon" aria-hidden="true"></span>
+            <span data-i18n="categoryCaptcha">Captcha</span>
+          </button>
+          <button type="button" class="history-filter-chip" data-filter="fingerprint" data-category="fingerprint" aria-pressed="false">
+            <span class="history-filter-icon category-icon" aria-hidden="true"></span>
+            <span data-i18n="categoryFingerprint">Fingerprint</span>
+          </button>
+        </div>
       </div>
 
     </div>
 
     <div id="resultsList" class="results-list"></div>
+
+    <!-- There are results, but the search and the chips match none -->
+    <div id="detectionNoResults" class="detection-no-results" hidden>
+      <p data-i18n="historyNoResults">No entries match your search or filters.</p>
+      <button type="button" id="detectionClearFilters" class="history-clear-filters" data-i18n="historyClearFilters">Clear filters</button>
+    </div>
 
     <div id="detectionPagination" class="pagination">
       <div class="pagination-info">Showing 1-10 of 0</div>

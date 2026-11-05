@@ -531,8 +531,8 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Update stats
     this.updateStats(detections);
 
-    // Filter items if search query exists
-    let itemsToShow = this.searchQuery
+    // Filter items if there is a search or a chip is on
+    let itemsToShow = DetectionUI.isFiltering.call(this)
       ? this.getFilteredResults()
       : detections;
 
@@ -547,6 +547,8 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     if (this.paginationManager) {
       this.paginationManager.setItems(itemsToShow, { keepPage: samePage });
     }
+    // The chips keep their state across scans: show it, and the way back if what they leave is nothing
+    DetectionUI.syncFilterUi.call(this, itemsToShow.length);
     if (openKey) DetectionUI.refreshOpenDetectionModal.call(this, openKey);
 
     // Show overview if there are detections
@@ -1565,19 +1567,27 @@ DetectionUI.getMethodBadges = function(matches) {
     return badges.join('');
 };
 
+/** Whether the search box or a category chip narrows the list. */
+DetectionUI.isFiltering = function() {
+    return !!this.searchQuery || (!!this.activeChips && DetectionFilter.isActive(this.activeChips));
+};
+
+/**
+ * What the search and the category chips leave (DetectionFilter): the whole list as it is when neither narrows it, else the
+ * results that match both, in the Settings order.
+ */
 DetectionUI.getFilteredResults = function() {
-    if (!this.searchQuery) return this.currentResults;
+    if (!DetectionUI.isFiltering.call(this)) return this.currentResults;
 
-    const filtered = this.currentResults.filter(detection => {
-      const name = FormatUtils.detectorName(detection).toLowerCase();
-      const category = (detection.category || '').toLowerCase();
-      // Search finds the description in English and in the UI language
-      const english = detection.detector?.description || '';
-      const description = `${english} ${FormatUtils.ruleText(english)}`.toLowerCase();
-
-      return name.includes(this.searchQuery) ||
-             category.includes(this.searchQuery) ||
-             description.includes(this.searchQuery);
+    const filtered = DetectionFilter.filter(this.currentResults, {
+      query: this.searchQuery,
+      chips: this.activeChips,
+      categoryOf: detection => Categories.keyOf(detection),
+      // The search finds the name, the category and the description, in English and in the UI language
+      textsOf: (detection) => {
+        const english = detection.detector?.description || '';
+        return [FormatUtils.detectorName(detection), detection.category || '', english, FormatUtils.ruleText(english)];
+      }
     });
 
     // Sort filtered results by category priority
@@ -1602,20 +1612,72 @@ DetectionUI.setResultsFiltering = function(on) {
 
 DetectionUI.handleSearch = function(query) {
     this.searchQuery = query.toLowerCase().trim();
+    DetectionUI.applyFilters.call(this);
+};
 
-    // Filtered, or the whole list again when the search is cleared: both in
-    // the Settings order (clearing showed the results unsorted, fingerprints first)
-    const itemsToShow = this.searchQuery
+/**
+ * The search or a chip changed: lay the list out again with what they leave, or the whole list when they leave nothing out
+ * (both in the Settings order: clearing showed the results unsorted, fingerprints first), and show the chips' state and,
+ * when nothing is left, the way back.
+ */
+DetectionUI.applyFilters = function() {
+    const itemsToShow = DetectionUI.isFiltering.call(this)
       ? this.getFilteredResults()
       : this.sortDetectionsByCategory(this.currentResults || []);
 
-    // Each keystroke redraws the cards: without the fade-in, or they flash while typing
+    // Each keystroke or click redraws the cards: without the fade-in, or they flash
     DetectionUI.setResultsFiltering(true);
 
     // Update pagination with filtered results
     if (this.paginationManager) {
       this.paginationManager.setItems(itemsToShow);
     }
+    DetectionUI.syncFilterUi.call(this, itemsToShow.length);
+};
+
+/** Turn a category chip on or off and show what the list keeps. @param {string} key - 'antibot', 'captcha' or 'fingerprint' */
+DetectionUI.toggleFilterChip = function(key) {
+    if (!DetectionFilter.CATEGORIES.includes(key)) return;
+    this.activeChips = DetectionFilter.toggle(this.activeChips, key);
+    DetectionUI.applyFilters.call(this);
+};
+
+/** Back to every result: every chip off and the search emptied. */
+DetectionUI.clearFilters = function() {
+    this.activeChips = DetectionFilter.normalizeChips();
+    this.searchQuery = '';
+    const input = typeof document !== 'undefined' ? document.querySelector('#detectionSearch') : null;
+    if (input) input.value = '';
+    DetectionUI.applyFilters.call(this);
+};
+
+/**
+ * Each chip shows whether it is on, and carries its category icon in the colour chosen in Settings. Nothing to do before the
+ * tab's markup exists.
+ */
+DetectionUI.syncFilterChips = function() {
+    if (typeof document === 'undefined') return;
+    const row = document.querySelector('#detectionFilters');
+    if (!row) return;
+    const on = DetectionFilter.normalizeChips(this.activeChips).categories;
+    row.querySelectorAll('.history-filter-chip').forEach((chip) => {
+      const key = chip.dataset.filter;
+      chip.setAttribute('aria-pressed', on.includes(key) ? 'true' : 'false');
+      const holder = chip.querySelector('.category-icon');
+      if (holder && !holder.firstChild) holder.innerHTML = FormatUtils.categoryIconSvg(key);
+      chip.style.setProperty('--chip-color', DetectionUI.categoryColor.call(this, key));
+    });
+};
+
+/**
+ * The chips' state, and the message with Clear filters when the search and the chips leave nothing of results that exist.
+ * @param {number} shown - how many results the list keeps
+ */
+DetectionUI.syncFilterUi = function(shown) {
+    DetectionUI.syncFilterChips.call(this);
+    if (typeof document === 'undefined') return;
+    const none = document.querySelector('#detectionNoResults');
+    if (none) none.hidden = !(shown === 0 && Array.isArray(this.currentResults) && this.currentResults.length > 0);
 };
 
 DetectionUI.getDetectorIcon = function(detection) {

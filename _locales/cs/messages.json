@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Hledat detekce..."
   },
+  "detectionFiltersLabel": {
+    "message": "Filtrovat detekce"
+  },
   "detectionPaginationPage": {
     "message": "Stránka"
   },

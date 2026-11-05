@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Pesquisar detecções..."
   },
+  "detectionFiltersLabel": {
+    "message": "Filtrar detecções"
+  },
   "detectionPaginationPage": {
     "message": "Página"
   },

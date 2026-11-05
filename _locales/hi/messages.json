@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "डिटेक्शन खोजें..."
   },
+  "detectionFiltersLabel": {
+    "message": "डिटेक्शन फ़िल्टर करें"
+  },
   "detectionPaginationPage": {
     "message": "पृष्ठ"
   },

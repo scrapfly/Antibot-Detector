@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Cari deteksi..."
   },
+  "detectionFiltersLabel": {
+    "message": "Filter deteksi"
+  },
   "detectionPaginationPage": {
     "message": "Halaman"
   },

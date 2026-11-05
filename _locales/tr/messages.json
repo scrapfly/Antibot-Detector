@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Tespit ara..."
   },
+  "detectionFiltersLabel": {
+    "message": "Tespitleri filtrele"
+  },
   "detectionPaginationPage": {
     "message": "Sayfa"
   },

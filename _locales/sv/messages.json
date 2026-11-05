@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Sök upptäckter..."
   },
+  "detectionFiltersLabel": {
+    "message": "Filtrera upptäckter"
+  },
   "detectionPaginationPage": {
     "message": "Sida"
   },

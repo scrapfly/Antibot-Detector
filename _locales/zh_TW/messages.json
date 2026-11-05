@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "搜尋偵測結果..."
   },
+  "detectionFiltersLabel": {
+    "message": "篩選偵測結果"
+  },
   "detectionPaginationPage": {
     "message": "頁"
   },

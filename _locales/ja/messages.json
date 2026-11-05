@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "検出を検索..."
   },
+  "detectionFiltersLabel": {
+    "message": "検出をフィルター"
+  },
   "detectionPaginationPage": {
     "message": "ページ"
   },

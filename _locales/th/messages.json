@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "ค้นหาการตรวจจับ..."
   },
+  "detectionFiltersLabel": {
+    "message": "กรองการตรวจจับ"
+  },
   "detectionPaginationPage": {
     "message": "หน้า"
   },

@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Tìm phát hiện..."
   },
+  "detectionFiltersLabel": {
+    "message": "Lọc phát hiện"
+  },
   "detectionPaginationPage": {
     "message": "Trang"
   },

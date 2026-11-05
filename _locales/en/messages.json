@@ -1633,6 +1633,10 @@
   "detectionSearchPlaceholder": {
     "message": "Search detections..."
   },
+  "detectionFiltersLabel": {
+    "message": "Filter detections",
+    "description": "Accessible name of the row of filter chips under the Detection search"
+  },
   "detectionPaginationPage": {
     "message": "Page"
   },

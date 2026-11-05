@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "البحث في الاكتشافات..."
   },
+  "detectionFiltersLabel": {
+    "message": "تصفية الاكتشافات"
+  },
   "detectionPaginationPage": {
     "message": "صفحة"
   },

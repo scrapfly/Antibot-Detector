@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "搜索检测结果..."
   },
+  "detectionFiltersLabel": {
+    "message": "筛选检测结果"
+  },
   "detectionPaginationPage": {
     "message": "第"
   },

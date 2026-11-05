@@ -1621,6 +1621,9 @@
   "detectionSearchPlaceholder": {
     "message": "Поиск обнаружений..."
   },
+  "detectionFiltersLabel": {
+    "message": "Фильтр обнаружений"
+  },
   "detectionPaginationPage": {
     "message": "Страница"
   },
