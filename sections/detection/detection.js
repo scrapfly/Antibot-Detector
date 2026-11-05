@@ -26,7 +26,6 @@ class Detection {
     this.blacklistedDomain = null;
     this.viewedTabId = null;
     this.viewedTabUrl = null;
-    this.cacheCleared = false; // popup.js shows the empty card on the next visit when set; nothing sets it now: refreshAfterCacheChange redraws at once
     this.advancedSection = null; // Reference to Advanced section for cross-component notifications
     this.uiStates = (typeof DetectionUIStates !== 'undefined')
       ? DetectionUIStates

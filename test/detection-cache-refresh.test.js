@@ -51,7 +51,7 @@ function tab({ active = [{ id: 12, url: 'https://shop.example/cart' }], answer =
   const Detection = context.window.Detection;
   const detection = Object.create(Detection.prototype);
   Object.assign(detection, {
-    isExtensionEnabled: true, debugMode: false, currentResults: stored.slice(), isShowingResults: true, cacheCleared: false, justClearedCache: false,
+    isExtensionEnabled: true, debugMode: false, currentResults: stored.slice(), isShowingResults: true, justClearedCache: false,
     searchQuery: 'cloud', activeChips: { categories: ['antibot'] },
     detectionEngine: { setDetectors() {} }, detectorManager: { getAllDetectors: () => ({}) },
     updateCacheInfo() { log.updated = (log.updated || 0) + 1; },
@@ -82,12 +82,11 @@ test('the page\'s cached results are drawn again, the way any other view of them
   assert.equal(log.updated, 1, 'the Cache tile follows the scope');
 });
 
-test('what the person set up stays: the search, the chips, and no flag that makes the next visit show the clean "Nothing Detected" card', async () => {
+test('what the person set up stays: the search and the chips', async () => {
   const { detection } = tab();
   await detection.refreshAfterCacheChange();
   assert.equal(detection.searchQuery, 'cloud');
   assert.deepEqual(JSON.parse(JSON.stringify(detection.activeChips)), { categories: ['antibot'] });
-  assert.equal(detection.cacheCleared, false, 'popup.js shows the empty card on the next visit to the tab when this is set');
 });
 
 test('a page the cache has nothing for under the new scope shows the no-completed-scan card and the cleared mark, not a blank tab', async () => {
@@ -98,7 +97,6 @@ test('a page the cache has nothing for under the new scope shows the no-complete
   assert.deepEqual(log.badges.map(b => b[0]), ['color', 'text', 'background']);
   assert.deepEqual(log.badges.find(b => b[0] === 'text'), ['text', 12, 'CLR']);
   assert.equal(results.innerHTML, MARKUP, 'the markup is there for the next scan to draw into');
-  assert.equal(detection.cacheCleared, false);
 });
 
 test('a worker that does not answer is the same card, and a tab that cannot be read changes nothing', async () => {
