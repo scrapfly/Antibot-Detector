@@ -338,6 +338,32 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
 }
 
 /**
+ * Take the capture's timer and notice off the page (what the capture put there when it started).
+ * @param {number} tabId - Tab ID
+ */
+async function shapeSecurityClearPageNotice(tabId) {
+    try {
+        await chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: () => {
+                if (window.scrapflyTimerInterval) {
+                    clearInterval(window.scrapflyTimerInterval);
+                    window.scrapflyTimerInterval = null;
+                }
+                if (window.__scrapflyNoticeTick) {
+                    clearInterval(window.__scrapflyNoticeTick);
+                    window.__scrapflyNoticeTick = null;
+                }
+                // Remove notification (shared notice and legacy ones)
+                document.querySelectorAll('#scrapfly-page-notice, [id^="scrapfly-capture-notification"]').forEach(n => n.remove());
+            }
+        });
+    } catch (err) {
+        Logger.error('NETWORK', '[ShapeSecurity] Failed to clear timer:', err);
+    }
+}
+
+/**
  * Auto-stop capture when both cookie and headers are captured
  * @param {number} tabId - Tab ID
  * @param {string} reason - Reason for auto-stop ('complete' or 'timeout')
@@ -356,6 +382,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
     // so a second trigger (another header, the cookie, the timer) must not save it again.
     if (captureState.stopping) return;
     captureState.stopping = true;
+    // The job that owns this capture, read now because the state goes away after the save: the popup, if it is open, matches its
+    // Stop card to the capture by this request id
+    const completionIdentity = (typeof AdvancedJobManager !== 'undefined')
+        ? AdvancedJobManager.captureIdentity(captureState, tabId, 'shapesecurity')
+        : { tabId, vendorId: 'shapesecurity', operation: 'capture' };
 
     // Clear timeout if exists
     if (typeof clearCaptureTimeout === 'function') {
@@ -381,25 +412,7 @@ async function autoStopCapture(tabId, reason = 'complete') {
     }
 
     // Clear timer in page
-    try {
-        await chrome.scripting.executeScript({
-            target: { tabId: tabId },
-            func: () => {
-                if (window.scrapflyTimerInterval) {
-                    clearInterval(window.scrapflyTimerInterval);
-                    window.scrapflyTimerInterval = null;
-                }
-                if (window.__scrapflyNoticeTick) {
-                    clearInterval(window.__scrapflyNoticeTick);
-                    window.__scrapflyNoticeTick = null;
-                }
-                // Remove notification (shared notice and legacy ones)
-                document.querySelectorAll('#scrapfly-page-notice, [id^="scrapfly-capture-notification"]').forEach(n => n.remove());
-            }
-        });
-    } catch (err) {
-        Logger.error('NETWORK', '[ShapeSecurity] Failed to clear timer:', err);
-    }
+    await shapeSecurityClearPageNotice(tabId);
 
     // Save captured data to history
     const capturedData = {
@@ -421,6 +434,15 @@ async function autoStopCapture(tabId, reason = 'complete') {
         } else {
             shapesecurityCaptureStateRef.delete(tabId);
         }
+
+        // Tell the popup, if it is open: its Stop card goes back to Start Capturing, and its capture lists and badge show this
+        // capture (the others of the capture tools do the same when theirs ends)
+        const completion = { type: AdvancedMessageTypes.SHAPESECURITY_CAPTURE_COMPLETED, captureData: capturedData, reason };
+        chrome.runtime.sendMessage(typeof AdvancedJobManager !== 'undefined'
+            ? AdvancedJobManager.completionMessage(completionIdentity, completion)
+            : { ...completion, ...completionIdentity }).catch(() => {
+            Logger.network('[ShapeSecurity] Popup not open, message not sent (this is normal)');
+        });
 
         // Show completion notification
         if (showNotification) {
@@ -482,6 +504,19 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
         return;
     }
     captureState.stopping = true;
+
+    // Nothing captured (no cookie, no header): there is nothing to keep. Stopping ends the capture without saving an empty entry or
+    // announcing a completed one, as it does for the other capture tools
+    if (!captureState.cookie && captureState.headers.length === 0) {
+        Logger.network('[ShapeSecurity] Stopped with nothing captured: nothing saved');
+        if (typeof removeCaptureState === 'function') {
+            removeCaptureState(shapesecurityCaptureStateRef, tabId);
+        } else {
+            shapesecurityCaptureStateRef.delete(tabId);
+        }
+        shapeSecurityClearPageNotice(tabId).then(() => sendResponse({ status: 'stopped', data: null }));
+        return true;
+    }
 
     // Remove listeners
     if (captureState.setCookieListener) {

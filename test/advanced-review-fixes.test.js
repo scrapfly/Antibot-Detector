@@ -45,7 +45,7 @@ function fixture() {
     };
     context.self = context;
     vm.createContext(context);
-    for (const file of ['modules/core/capture-retention.js', 'modules/advanced/vendor-registry.js', 'modules/advanced/result-model.js',
+    for (const file of ['modules/core/message-types.js', 'modules/core/capture-retention.js', 'modules/advanced/vendor-registry.js', 'modules/advanced/result-model.js',
         'background/advanced/history-store.js', 'background/advanced/page-notice.js',
         'background/advanced/collector-utils.js', 'background/advanced/job-manager.js', 'background/advanced/script-analysis.js']) {
         vm.runInContext(read(file), context, { filename: file });
@@ -70,6 +70,9 @@ test('Shape Security: one request carrying all six headers saves the capture onc
     const f = fixture(), context = f.load('shapesecurity');
     const states = new Map();
     await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_START_CAPTURE', tabId: 7 }, resolve, states, new Map()));
+    // The capture's job, as the message router opens it for every capture tool
+    const { job } = f.context.AdvancedJobManager.begin({ tabId: 7, vendorId: 'shapesecurity', operation: 'capture', url: 'https://shop.example/login' });
+    f.context.AdvancedJobManager.bindCaptureState(states.get(7), job);
     f.context.chrome.webRequest.onResponseStarted.emit({ tabId: 7, responseHeaders: [{ name: 'set-cookie', value: 'AbCdEfGh=xyz; Max-Age=1577847600; Path=/' }] });
     states.get(7).version = 'v2';
     const headers = ['a', 'b', 'c', 'd', 'f', 'z'].map(letter => ({ name: `X-AbCd1234-${letter}`, value: 'v' }));
@@ -85,6 +88,49 @@ test('Shape Security: one request carrying all six headers saves the capture onc
     assert.equal(stop.status, 'not_capturing');
     assert.equal(f.notices.filter(notice => notice.type === 'success').length, 1, 'one completion notice');
     assert.equal(states.has(7), false);
+    // The open popup is told once, by the job's request id, and the job is over
+    const done = f.messages.filter(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED');
+    assert.equal(done.length, 1, 'one completion message');
+    assert.deepEqual({ tabId: done[0].tabId, vendorId: done[0].vendorId, requestId: done[0].requestId }, { tabId: 7, vendorId: 'shapesecurity', requestId: job.requestId });
+    assert.equal(job.status, 'completed');
+});
+
+test('Shape Security: Stop Capturing on a capture that has seen nothing ends it and saves nothing; one that has the cookie keeps it', async () => {
+    const f = fixture(), context = f.load('shapesecurity');
+    const states = new Map();
+    let pageNoticesCleared = 0;
+    f.context.chrome.scripting.executeScript = async () => { pageNoticesCleared++; return [{ result: false }]; };
+    const start = async tabId => {
+        await new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_START_CAPTURE', tabId }, resolve, states, new Map()));
+        const { job } = f.context.AdvancedJobManager.begin({ tabId, vendorId: 'shapesecurity', operation: 'capture', url: 'https://shop.example/login' });
+        f.context.AdvancedJobManager.bindCaptureState(states.get(tabId), job);
+        return job;
+    };
+    const stop = tabId => new Promise(resolve => context.shapeSecurityHandleMessage({ type: 'SHAPESECURITY_STOP_CAPTURE', tabId }, resolve));
+
+    // Nothing seen: the capture ends, nothing is saved or announced as completed, the page's notice is taken off
+    const empty = await start(7);
+    const answer = await stop(7);
+    await flush();
+    assert.equal(answer.status, 'stopped');
+    assert.equal(f.saves.length, 0, 'no empty entry in History');
+    assert.equal(f.notices.filter(notice => notice.type === 'success').length, 0, 'no "Capture Completed"');
+    assert.equal(f.messages.filter(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED').length, 0, 'the popup that pressed Stop is told by the answer, not by a completion');
+    assert.equal(states.has(7), false);
+    assert.equal(empty.status, 'completed', 'the capture\'s job is over');
+    assert.equal(f.context.chrome.webRequest.onResponseStarted.listeners.size, 0, 'its listeners are gone');
+    assert.ok(pageNoticesCleared >= 1, 'the capture notice is taken off the page');
+    assert.equal((await stop(7)).status, 'not_capturing', 'a second Stop finds nothing to stop');
+
+    // A cookie seen, then Stop: what was captured is kept, as before
+    await start(8);
+    f.context.chrome.webRequest.onResponseStarted.emit({ tabId: 8, responseHeaders: [{ name: 'set-cookie', value: 'AbCdEfGh=xyz; Max-Age=1577847600; Path=/' }] });
+    const kept = await stop(8);
+    await flush();
+    assert.equal(kept.status, 'stopped');
+    assert.equal(f.saves.length, 1);
+    assert.equal(f.saves[0].cookie.name, 'AbCdEfGh');
+    assert.equal(f.notices.filter(notice => notice.type === 'success').length, 1);
 });
 
 test('Jobs: the page rewriting its own query or hash does not cancel; another page does', () => {

@@ -138,7 +138,12 @@ ImpervaAdvanced.prototype.displayExtractionResults = function(extractedData) {
         const scriptPaths = this.parseScriptPaths(data);
         const hasScriptPaths = scriptPaths.utmvcScriptPath || scriptPaths.reeseScriptPath;
         const parsingCodes = hasScriptPaths ? this.generateParsingCode(data, scriptPaths) : null;
-        const origin = data.hostname ? 'https://' + data.hostname : '';
+        // The page's own address, scheme and port included (an http page, a host on a port); only a result with no address of its own
+        // gets the host over https
+        const pageOrigin = (() => {
+            try { const page = new URL(data.url); return /^https?:$/.test(page.protocol) ? page.origin : ''; } catch (_) { return ''; }
+        })();
+        const origin = pageOrigin || (data.hostname ? 'https://' + data.hostname : '');
         const scripts = [];
         if (scriptPaths.reeseScriptPath) scripts.push({ type: 'Reese84', url: origin + scriptPaths.reeseScriptPath });
         if (scriptPaths.utmvcScriptPath) scripts.push({ type: 'UTMVC', url: origin + scriptPaths.utmvcScriptPath });

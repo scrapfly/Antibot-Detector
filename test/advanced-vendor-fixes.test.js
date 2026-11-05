@@ -168,3 +168,89 @@ test('Akamai: Start Capture checks for a running capture before deleting _abck',
   assert.equal(await module.beforeCapture(), false);
   assert.deepEqual(plain(calls), [['state', 'AKAMAI_GET_CAPTURE_STATE'], ['stop']], 'stopping a capture keeps the cookie');
 });
+
+// Found by the browser suite of every Advanced tool (scripts/e2e-v313-advanced-tools.js)
+test('Shape Security: a capture that ends by itself tells the open popup, with its job\'s request id, after it is saved and its state is gone', async () => {
+  const sent = [];
+  const saved = [];
+  const states = new Map();
+  const helpers = {
+    getCaptureState: (ref, tabId) => ref.get(tabId),
+    removeCaptureState: (ref, tabId) => { ref.delete(tabId); },
+    clearCaptureTimeout() {},
+    saveToHistory: async (tabId, data, options) => { saved.push({ tabId, data: plain(data), options: plain(options) }); return { id: 'capture-1' }; },
+    showNotification: async () => {}
+  };
+  const context = worker('shapesecurity', {
+    BaseInterceptorHelpers: helpers, self: { BaseInterceptorHelpers: helpers }, pageText: (key, fallback) => fallback,
+    AdvancedJobManager: {
+      captureIdentity: (state, tabId, vendorId) => ({ tabId, vendorId, operation: 'capture', requestId: `job-${tabId}` }),
+      completionMessage: (identity, payload) => ({ ...payload, tabId: identity.tabId, vendorId: identity.vendorId, operation: identity.operation, requestId: identity.requestId })
+    },
+    chrome: {
+      runtime: { sendMessage: async message => { sent.push({ message: plain(message), saved: saved.length, stateGone: !states.has(message.tabId) }); }, onMessage: { addListener() {} } },
+      scripting: { executeScript: async () => [] },
+      webRequest: { onResponseStarted: { removeListener() {} }, onBeforeSendHeaders: { removeListener() {} } },
+      webNavigation: { onCommitted: { removeListener() {} }, onCompleted: { removeListener() {} } }
+    }
+  });
+  context.window = context;
+  vm.runInContext(read('modules/core/message-types.js'), context);
+  context.shapeSecurityInitializeInterceptor(states, new Map());
+  const capture = (tabId, version) => states.set(tabId, { active: true, startTime: Date.now() - 2000, headers: [], cookie: { name: 'AbCd1234', value: 'x' }, version });
+
+  capture(7, 'v1');
+  await context.autoStopCapture(7, 'complete');
+  assert.equal(saved.length, 1, 'the capture is saved');
+  const done = sent.filter(item => item.message.type === 'SHAPESECURITY_CAPTURE_COMPLETED');
+  assert.equal(done.length, 1, 'the popup is told once');
+  const message = done[0].message;
+  assert.deepEqual({ tabId: message.tabId, vendorId: message.vendorId, operation: message.operation, requestId: message.requestId, reason: message.reason },
+    { tabId: 7, vendorId: 'shapesecurity', operation: 'capture', requestId: 'job-7', reason: 'complete' }, 'the popup matches its Stop card to the capture by the job\'s request id');
+  assert.equal(message.captureData.cookie.name, 'AbCd1234');
+  assert.deepEqual({ saved: done[0].saved, stateGone: done[0].stateGone }, { saved: 1, stateGone: true }, 'told after the save and after the state is gone, so a state query on receipt says it is not capturing');
+
+  // A second trigger of the same capture (another header, the timer) tells nobody again
+  await context.autoStopCapture(7, 'timeout');
+  assert.equal(sent.filter(item => item.message.type === 'SHAPESECURITY_CAPTURE_COMPLETED').length, 1);
+
+  // The time running out ends a capture the same way, and says so
+  capture(8, 'v2');
+  await context.autoStopCapture(8, 'timeout');
+  const timed = sent.filter(item => item.message.type === 'SHAPESECURITY_CAPTURE_COMPLETED' && item.message.tabId === 8);
+  assert.equal(timed.length, 1);
+  assert.equal(timed[0].message.reason, 'timeout');
+  assert.equal(timed[0].message.requestId, 'job-8');
+});
+
+test('Imperva: the Analyze Scripts window gives the page\'s own address, scheme and port included, and the host over https only without one', () => {
+  const opened = [];
+  const K = { kitFacts: items => `FACTS ${JSON.stringify(items)}`, kitCard: body => `CARD ${body}`, kitField: (label, value) => `FIELD ${value};`, kitChip: text => `CHIP ${text}`,
+    kitNote: text => `NOTE ${text}`, toolIcon: () => '' };
+  const context = { window: {}, console, URL, Logger: { network() {}, error() {}, debug() {} }, BaseAdvancedModule: K, ImpervaAdvanced: class {},
+    NotificationHelper: { success() {}, info() {}, error() {} }, AdvancedUtils: { notifications: { analyzeScripts: { success: () => '' } } } };
+  context.ImpervaAdvanced.tr = (key, fallback) => fallback;
+  context.ImpervaAdvanced.fmt = (key, fallback) => fallback;
+  vm.createContext(context);
+  vm.runInContext(read('sections/advanced/vendors/imperva/actions.js'), context);
+  vm.runInContext(read('sections/advanced/vendors/imperva/view.js'), context);
+  const module = new context.ImpervaAdvanced();
+  module.recordStructuredResult = () => {};
+  module.generateParsingCode = () => null;
+  module.openKitModal = options => opened.push(options);
+  const addresses = data => {
+    module.displayExtractionResults(data);
+    return [...opened.pop().body.matchAll(/FIELD ([^;]*);/g)].map(match => match[1]);
+  };
+  const scripts = origin => [`${origin}/Thine-Wert/987`, `${origin}/_Incapsula_Resource?SWKMTFSR=1&e=0.1234`];
+  const expected = (origin, host) => [`${origin}/Thine-Wert/987`, `${origin}/Thine-Wert/987?d=${host}`, `${origin}/_Incapsula_Resource?SWKMTFSR=1&e=0.1234`];
+
+  // An http page, and a host on a port: neither is https on 443
+  assert.deepEqual(addresses({ url: 'http://127.0.0.1:8080/page', hostname: '127.0.0.1', scriptUrls: scripts('http://127.0.0.1:8080') }), expected('http://127.0.0.1:8080', '127.0.0.1'));
+  assert.deepEqual(addresses({ url: 'https://shop.example:8443/cart', hostname: 'shop.example', scriptUrls: scripts('https://shop.example:8443') }), expected('https://shop.example:8443', 'shop.example'));
+  // A site that runs Imperva as everyone does: https on the default port, as before
+  assert.deepEqual(addresses({ url: 'https://shop.example/cart', hostname: 'shop.example', scriptUrls: scripts('https://shop.example') }), expected('https://shop.example', 'shop.example'));
+  // A result with no address of its own, or one that is not a web page: the host over https
+  assert.deepEqual(addresses({ hostname: 'shop.example', scriptUrls: scripts('') }), expected('https://shop.example', 'shop.example'));
+  assert.deepEqual(addresses({ url: 'about:blank', hostname: 'shop.example', scriptUrls: scripts('') }), expected('https://shop.example', 'shop.example'));
+});
