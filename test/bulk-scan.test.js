@@ -403,7 +403,8 @@ test('sameSite judges the address that will be scanned: the one prepare() makes 
     assert.equal(BulkScan.sameSite(site, loc), true, loc);
     assert.equal(BulkScan.prepare([loc]).items[0].url, normal.url, 'what is checked is what is scanned');
   }
-  // an address kept off by the check is never one prepare() would have scanned as another host's page
+  // a listed address the check keeps off is not one prepare() would scan as a page of this site (what is judged is the address as listed: the
+  // worker opens it and follows its redirects)
   for (const loc of ['http://127.0.0.1/a', 'http://169.254.169.254/', 'https://example.com.evil.example/a']) {
     assert.equal(BulkScan.sameSite(site, loc), false, loc);
     assert.notEqual(new URL(BulkScan.normalize(loc).url).hostname.replace(/^www\./, ''), 'example.com');
@@ -501,4 +502,15 @@ test('the CSV export is as before: a header and a row per protection (or per pag
   assert.equal(lines[1], 'https://a.example/,done,,,,Cloudflare,antibot,90,2026-11-05T10:00:00.000Z');
   assert.ok(!/most seen|protectionTotals/i.test(lines.join('\n')));
   assert.equal(BulkScan.build(run, { format: 'csv' }).text, BulkScan.build(JSON.parse(JSON.stringify(run)), { format: 'csv' }).text, 'a run read back from storage gives the same file');
+});
+
+test('a sitemap that moved to another site is a reason of its own, and prepare keeps the reasons it knows', () => {
+  assert.ok(BulkScan.REASONS.includes('moved'));
+  const prepared = BulkScan.prepare([
+    { url: 'https://moved.example/sitemap.xml', reason: 'moved' }, { url: 'https://down.example/sitemap.xml', reason: 'sitemap' }, { url: 'https://odd.example/s.xml', reason: 'nonsense' }]);
+  assert.deepEqual(plain(prepared.items.map(item => [item.status, item.reason])), [['skipped', 'moved'], ['skipped', 'sitemap'], ['skipped', 'invalid']]);
+  const run = BulkScan.createRun(prepared);
+  const csv = BulkScan.build(run, { format: 'csv' }).text.split('\r\n');
+  assert.equal(csv[1], 'https://moved.example/sitemap.xml,skipped,moved,,,,,,', 'the exports say why, in the same words');
+  assert.ok(BulkScan.build(run, { format: 'md' }).text.includes('skipped: moved'));
 });

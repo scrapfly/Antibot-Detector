@@ -82,6 +82,12 @@ function pageWorld({ sitemaps = {}, run = null } = {}) {
   const byId = (id) => document.getElementById(id);
   return {
     byId, sent, fetched, ctx,
+    /** The table as drawn: for each row its address, its status and the words under the status (the reason). */
+    rows: () => ((byId('bulkRows').children[0] || { children: [] }).children).map(row => ({
+      address: row.children[1].children[0].textContent,
+      status: row.children[2].children[0].textContent,
+      reason: row.children[2].children[1] ? row.children[2].children[1].textContent : ''
+    })),
     async open() { await ready(); },
     /** Paste the text and choose Start; resolves with the entries the page handed to the worker (null when it handed none). */
     async start(text) {
@@ -98,7 +104,8 @@ function pageWorld({ sitemaps = {}, run = null } = {}) {
 const SITE = 'https://public.example/sitemap.xml';
 
 // What a public sitemap may list besides its own pages: the machine the browser runs on, the local network, a cloud
-// metadata address, another site, and addresses made to look like the site
+// metadata address, another site, and addresses made to look like the site. What is judged is the address as listed: the
+// worker opens it and follows its redirects (only the person's Sites to scan list is checked afterwards)
 const OFF_SITE = [
   'http://127.0.0.1/admin', 'http://127.0.0.1:8080/', 'http://localhost/', 'http://[::1]/', 'http://192.168.1.5/router',
   'http://169.254.169.254/latest/meta-data/', 'https://other.example/page', 'https://shop.public.example/',
@@ -107,16 +114,16 @@ const OFF_SITE = [
 ];
 const OWN = ['https://public.example/', 'https://public.example/products?id=1', 'https://www.public.example/about', 'http://public.example:8080/legacy'];
 
-test('a public sitemap only contributes the pages of its own site: not this machine, not the local network, not another host', async () => {
+test('a public sitemap only contributes its listed addresses of its own site: not this machine, not the local network, not another host', async () => {
   const page = pageWorld({ sitemaps: { [SITE]: urlset(OWN[0], OFF_SITE[0], OFF_SITE[1], OFF_SITE[2], OFF_SITE[3], OWN[1], OFF_SITE[4], OFF_SITE[5], OFF_SITE[6],
     OWN[2], OFF_SITE[7], OFF_SITE[8], OFF_SITE[9], OFF_SITE[10], OWN[3], 'ftp://public.example/file', 'file:///etc/passwd', 'javascript:alert(1)') } });
   await page.open();
   const entries = await page.start(SITE);
-  assert.deepEqual(entries, OWN, 'its own pages (the www spelling, another port or scheme on the same host) and nothing else, in order');
+  assert.deepEqual(entries, OWN, 'its own listed addresses (the www spelling, another port or scheme on the same host) and nothing else, in order');
   for (const address of OFF_SITE) assert.ok(!entries.includes(address), address);
 });
 
-test('a sitemap index is followed only to sitemaps of its own site: another host is never even asked', async () => {
+test('a sitemap index is followed only to listed sitemaps of its own site: a sitemap listed for another host is never fetched', async () => {
   const index = 'https://public.example/index.xml';
   const page = pageWorld({ sitemaps: {
     [index]: sitemapIndex('https://public.example/pages.xml', 'https://other.example/evil.xml', 'http://127.0.0.1/s.xml', 'https://www.public.example/more.xml', 'http://192.168.1.5/sitemap.xml'),
@@ -127,13 +134,13 @@ test('a sitemap index is followed only to sitemaps of its own site: another host
   await page.open();
   const entries = await page.start(index);
   assert.deepEqual(entries, ['https://public.example/a', 'https://www.public.example/b']);
-  assert.deepEqual(page.fetched, [index, 'https://public.example/pages.xml', 'https://www.public.example/more.xml'], 'only the site\'s own sitemaps are fetched');
+  assert.deepEqual(page.fetched, [index, 'https://public.example/pages.xml', 'https://www.public.example/more.xml'], 'only the sitemaps listed for the site\'s own host are fetched');
 });
 
 test('a sitemap that sends the browser to another site is not read: what it lists is not the site\'s own list', async () => {
   const moved = pageWorld({ sitemaps: { [SITE]: { url: 'https://evil.example/sitemap.xml', body: urlset('https://public.example/x', 'https://evil.example/y') } } });
   await moved.open();
-  assert.deepEqual(await moved.start(SITE), [{ url: SITE, reason: 'sitemap' }], 'listed as a sitemap that could not be read');
+  assert.deepEqual(await moved.start(SITE), [{ url: SITE, reason: 'moved' }], 'listed as a sitemap that was not read, with a reason of its own');
 
   const sameSite = pageWorld({ sitemaps: { [SITE]: { url: 'https://www.public.example/sitemap.xml', body: urlset('https://public.example/x') } } });
   await sameSite.open();
@@ -210,4 +217,37 @@ test('the page has the line (hidden until a protection is found) right under the
     const messages = JSON.parse(read(`_locales/${code}/messages.json`));
     assert.ok(messages.bulkMostSeenFmt && messages.bulkMostSeenFmt.message.includes('{0}'), `${code} has the label with its {0}`);
   }
+});
+
+// ---- What the table says about a sitemap that was not read
+
+const skippedRun = (...rows) => plain(BulkScan.createRun({ items: rows.map(([url, reason]) => ({ url, status: 'skipped', reason })) }, { now: 1 }));
+
+test('a sitemap that moved to another site says the file could not be read, not that only https sitemaps can be; one that failed to load keeps its own words', async () => {
+  const page = pageWorld({ run: skippedRun(['https://moved.example/sitemap.xml', 'moved'], ['https://down.example/sitemap.xml', 'sitemap'], ['ftp://x.example/', 'scheme']) });
+  await page.open();
+  assert.deepEqual(page.rows(), [
+    { address: 'https://moved.example/sitemap.xml', status: 'Skipped', reason: 'The file could not be read.' },
+    { address: 'https://down.example/sitemap.xml', status: 'Skipped', reason: 'The sitemap could not be read. Only https sitemaps can be read.' },
+    { address: 'ftp://x.example/', status: 'Skipped', reason: 'Only http and https pages are scanned' }
+  ]);
+  assert.ok(!page.rows()[0].reason.includes('https'), 'the https hint is for a sitemap that was not fetched, not for one that was refused');
+});
+
+test('the reason a sitemap line gets follows what happened to it: moved to another site, or not read', async () => {
+  const run = async (sitemaps) => { const page = pageWorld({ sitemaps }); await page.open(); return page.start(SITE); };
+  assert.deepEqual(await run({ [SITE]: { url: 'https://evil.example/sitemap.xml', body: urlset('https://public.example/x') } }), [{ url: SITE, reason: 'moved' }]);
+  assert.deepEqual(await run({}), [{ url: SITE, reason: 'sitemap' }], 'a sitemap the browser could not fetch');
+  assert.deepEqual(await run({ [SITE]: { status: 404, body: 'no' } }), [{ url: SITE, reason: 'sitemap' }], 'an error from the site');
+  assert.deepEqual(await run({ [SITE]: '<html><body>not a sitemap</body></html>' }), [{ url: SITE, reason: 'sitemap' }], 'something that is not a sitemap');
+  assert.deepEqual(await run({ [SITE]: { url: 'https://www.public.example/sitemap.xml', body: urlset('https://public.example/x') } }), ['https://public.example/x'], 'the www spelling of the same site is read');
+  // A sitemap index whose child moved: the pages of the other children are kept, and no row for the one left out
+  const index = 'https://public.example/index.xml';
+  const page = pageWorld({ sitemaps: {
+    [index]: sitemapIndex('https://public.example/a.xml', 'https://public.example/b.xml'),
+    'https://public.example/a.xml': { url: 'https://evil.example/a.xml', body: urlset('https://public.example/from-a') },
+    'https://public.example/b.xml': urlset('https://public.example/from-b')
+  } });
+  await page.open();
+  assert.deepEqual(await page.start(index), ['https://public.example/from-b']);
 });
