@@ -118,3 +118,46 @@ test('Clear cache removes every entry a lookup of that page could be answered fr
   assert.deepEqual(again, ['not_found'], 'nothing left to clear');
 });
 
+
+// History's "Scan again now" and "Clear cache" send the scope the entry was recorded under, which can differ from the
+// setting now: an entry recorded under "Path" while the setting is "Domain" cleared only the path and full keys, answered
+// not_found, and the result saved under the Domain key kept answering the reload.
+test('Clear cache covers the broader of the scope it is asked for and the current setting', async () => {
+  const page = 'https://www.site.test/shop/item?x=1';
+  const ORDER = ['domain', 'path', 'full'];
+  const covers = (scope) => ORDER.slice(ORDER.indexOf(scope));
+  const broader = (a, b) => ORDER[Math.min(ORDER.indexOf(a), ORDER.indexOf(b))];
+  for (const setting of ORDER) {
+    for (const asked of [...ORDER, 'url', undefined, 'bogus']) {
+      const { UrlUtils } = engineWith(setting, {});
+      const storage = {};
+      for (const scope of ORDER) storage[UrlUtils.hashUrl(page, scope)] = entry(page, scope);
+      storage.other = entry('https://www.site.test/other', 'path'); // another page of the same site
+      storage.elsewhere = entry('https://other.test/', 'domain'); // another site
+      const { Engine } = engineWith(setting, storage);
+      const answers = [];
+      await Engine.handleClearDetectionCache({ url: page, cacheScope: asked }, (response) => answers.push(response.status));
+      const requested = asked === 'url' ? 'full' : ORDER.includes(asked) ? asked : null;
+      const expected = covers(requested ? broader(requested, setting) : setting);
+      const label = `asked "${asked}", setting "${setting}"`;
+      assert.deepEqual(answers, ['cleared'], label);
+      for (const scope of ORDER) {
+        assert.equal(UrlUtils.hashUrl(page, scope) in storage, !expected.includes(scope), `${label}: the ${scope} entry`);
+      }
+      assert.equal('other' in storage, !expected.includes('domain'), `${label}: another page of the site goes only with the whole domain`);
+      assert.ok('elsewhere' in storage, `${label}: another site keeps its result`);
+    }
+  }
+});
+
+test('an entry recorded as "path" and re-saved under the Domain key is cleared by History\'s path-scoped request, and the reload is a miss', async () => {
+  const page = 'https://site.test/shop/item';
+  const { UrlUtils } = engineWith('domain', {});
+  const storage = store(UrlUtils, [[page, 'domain']]);
+  const { Engine } = engineWith('domain', storage);
+  assert.ok(await Engine.getStoredDetection(page), 'the Domain-key result answers the page');
+  const answers = [];
+  await Engine.handleClearDetectionCache({ url: page, cacheScope: 'path' }, (response) => answers.push(response.status));
+  assert.deepEqual(answers, ['cleared'], 'not "already cleared"');
+  assert.equal(await Engine.getStoredDetection(page), null, 'the page is scanned again');
+});

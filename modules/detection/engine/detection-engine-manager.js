@@ -2289,9 +2289,18 @@ class DetectionEngineManager {
                 Logger.warn('DETECTION', `[handleClearDetectionCache] Invalid cache scope "${requestedScopeRaw}", falling back to settings scope`);
             }
 
-            const cacheScope = allowedScopes.includes(requestedScope)
-                ? requestedScope
-                : await Utils.getCacheScope();
+            // The scope a caller names is the one the result was recorded under (History sends its entry's), which can differ
+            // from the setting now: a result recorded under "Path" while the setting is "Domain" is answered from the Domain
+            // key, so a clear of the Path keys alone answered not_found and the reload was still served from the cache. The
+            // clear covers the broader of the two: whatever the next visit of this page could be answered with goes.
+            let settingScope = null;
+            try {
+                settingScope = await Utils.getCacheScope();
+            } catch (error) {
+                Logger.warn('DETECTION', '[handleClearDetectionCache] The cache scope setting is unreadable; clearing for the scope asked', error);
+            }
+            // allowedScopes lists them from the broadest down
+            const cacheScope = allowedScopes.find(scope => scope === requestedScope || scope === settingScope) || 'domain';
             const urlHash = UrlUtils.hashUrl(request.url, cacheScope);
 
             // Same lock as storeDetection / pruneStoredDetections: without it a store
