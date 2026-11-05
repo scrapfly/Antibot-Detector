@@ -43,7 +43,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Security
 
-- Bulk scan: a sitemap only adds pages of its own site (www included); addresses on other hosts, local ones included, are no longer scanned.
+- Bulk scan: a sitemap only adds pages of its own site (www included); listed addresses on other hosts, local ones included, are no longer opened.
 
 ## [3.1.2] - 2026-11-04
 
