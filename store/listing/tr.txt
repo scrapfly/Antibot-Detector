@@ -3,7 +3,7 @@ Her sitenin botlara karşı nasıl korunduğunu görün. Scrapfly anti-bot dedek
 Neler görürsünüz
 • Araç çubuğu simgesinde bir sayı: sayfanın kaç koruma kullandığı.
 • Koruma başına bir kart: güven düzeyi, zorluk derecesi ve onu ele veren sinyaller (URL'ler, çerezler, üstbilgiler, sayfa kodu, sayfa öğeleri, tarayıcı API çağrıları ve istek gövdeleri).
-• 70 dedektör dahil: 30 anti-bot sistemi, 19 CAPTCHA ve 21 parmak izi tekniği. Her biri okuyabileceğiniz, düzenleyebileceğiniz veya genişletebileceğiniz sade bir JSON dosyasıdır.
+• 86 dedektör dahil: 43 anti-bot sistemi, 22 CAPTCHA ve 21 parmak izi tekniği. Her biri okuyabileceğiniz, düzenleyebileceğiniz veya genişletebileceğiniz sade bir JSON dosyasıdır.
 
 Açılır pencerede
 • Tespit: geçerli sayfanın neler kullandığı, her eşleşmenin dayandığı kanıtlarla birlikte.

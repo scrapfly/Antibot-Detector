@@ -3,7 +3,7 @@ Scopri come qualsiasi sito web si difende dai bot. Il rilevatore anti-bot Scrapf
 Cosa vedi
 • Un numero sull’icona nella barra degli strumenti: quante protezioni usa la pagina.
 • Una scheda per ogni protezione, con la sua affidabilità, la sua difficoltà e i segnali che l’hanno rivelata: URL, cookie, intestazioni, codice della pagina, elementi della pagina, chiamate alle API del browser e corpi delle richieste.
-• 70 rilevatori inclusi: 30 sistemi anti-bot, 19 CAPTCHA e 21 tecniche di fingerprinting. Ognuno è un semplice file JSON che puoi leggere, modificare o estendere.
+• 86 rilevatori inclusi: 43 sistemi anti-bot, 22 CAPTCHA e 21 tecniche di fingerprinting. Ognuno è un semplice file JSON che puoi leggere, modificare o estendere.
 
 Nel popup
 • Rilevamento: cosa usa la pagina corrente, con le prove a sostegno di ogni corrispondenza.

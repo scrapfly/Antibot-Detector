@@ -3,7 +3,7 @@ Mira cómo se defiende cualquier sitio web de los bots. El detector anti-bot de 
 Lo que ves
 • Un número en el icono de la barra de herramientas: cuántas protecciones usa la página.
 • Una tarjeta por protección, con su nivel de confianza, su dificultad y las señales que la delataron: URLs, cookies, cabeceras, código y elementos de la página, llamadas a la API del navegador y cuerpos de peticiones.
-• Incluye 70 detectores: 30 sistemas anti-bot, 19 CAPTCHAs y 21 técnicas de fingerprinting. Cada uno es un archivo JSON sencillo que puedes leer, editar o ampliar.
+• Incluye 86 detectores: 43 sistemas anti-bot, 22 CAPTCHAs y 21 técnicas de fingerprinting. Cada uno es un archivo JSON sencillo que puedes leer, editar o ampliar.
 
 Dentro del popup
 • Detección: lo que usa la página actual, con la evidencia que respalda cada coincidencia.
