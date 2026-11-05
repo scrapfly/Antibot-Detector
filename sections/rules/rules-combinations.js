@@ -311,7 +311,7 @@ Rules.prototype.addComboItems = function(combo, values, path = '') {
     this.comboReferencedOptions(combo).forEach(p => this.setComboPatternStrict(p.id, true));
   }
 };
-// A rule text in the UI language (rules-translations-ui.js): there it is edited as that language's translation
+// A rule text as the interface language shows it (Rules.shownText, in rules-text-fields.js)
 const comboLocale = () => (typeof Rules.uiLocale === 'function' ? Rules.uiLocale() : null);
 const comboLocalized = (text, map) => {
   const locale = comboLocale();
