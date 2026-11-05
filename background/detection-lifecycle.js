@@ -208,7 +208,12 @@ async function applyLateResponses(tabId) {
     const evidence = (Array.isArray(late) ? late : []).filter(hasResponseMatch);
     if (evidence.length === 0 || detectionStates.has(tabId)) return;
 
-    await addLateEvidence(tabId, pageUrl, tab.favIconUrl, evidence, () => !detectionStates.has(tabId), 'responses');
+    // Added to what the page's scan found while that is still known: with no saved result left (the rules changed meanwhile),
+    // the evidence alone would be saved as the page's whole result
+    const finished = finishedPages.get(tabId);
+    const known = finished && urlWithoutHash(finished.url) === urlWithoutHash(pageUrl) ? finished : null;
+    await addLateEvidence(tabId, pageUrl, tab.favIconUrl, evidence, () => !detectionStates.has(tabId), 'responses',
+        known ? known.results : undefined, known && known.state ? known.state.startTime : undefined);
 }
 
 /**
@@ -216,6 +221,7 @@ async function applyLateResponses(tabId) {
  * what it holds, combinations scored again), then update the badge and an open
  * popup. History and the webhook keep what the scan gave them.
  * @param {Array} [fallback] the scan's own results, used when the cache has no entry
+ * @param {number} [scanStartedAt] when that scan began (ms), so a result found before the rules changed is not served
  * @returns {Promise<Array|null>} the page's new results, or null when nothing changed
  */
 function addLateEvidence(...args) {
@@ -227,7 +233,7 @@ function addLateEvidence(...args) {
 }
 let lateEvidenceQueue = Promise.resolve();
 
-async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillValid, source, fallback) {
+async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillValid, source, fallback, scanStartedAt) {
     // The entry keeps its private-window mark when it is written again, so it still goes when the private session ends
     const privateWindow = typeof HistoryRecorder !== 'undefined' && typeof HistoryRecorder.isIncognitoTab === 'function'
         && await HistoryRecorder.isIncognitoTab(tabId, chrome).catch(() => false);
@@ -250,6 +256,8 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
         url: pageUrl,
         hostname: UrlUtils.getHostnameFromUrl(pageUrl),
         favicon: stored?.favicon || tabFavicon,
+        // The scan the results began with (a saved result found before the rules changed is not served: see storeDetection)
+        ...(Number.isFinite(scanStartedAt) ? { scanStartedAt } : {}),
         ...(privateWindow || stored?.privateWindow === true ? { privateWindow: true } : {})
     }, finalResults);
     if (!stillValid()) return null;
@@ -372,7 +380,7 @@ async function applyLateNetworkUrls(tabId, page) {
     page.added += matchedUrls.size;
     if (page.added >= LATE_NETWORK_MAX_MATCHES) page.pending.length = 0;
 
-    const results = await addLateEvidence(tabId, page.url, tab.favIconUrl, evidence, ours, 'requests', page.results);
+    const results = await addLateEvidence(tabId, page.url, tab.favIconUrl, evidence, ours, 'requests', page.results, page.state && page.state.startTime);
     if (results) page.results = results;
 }
 
@@ -440,6 +448,8 @@ async function finalizeDetection(tabId, state) {
         url: state.url,
         hostname: UrlUtils.getHostnameFromUrl(state.url),
         favicon: normalizedFavicon,
+        // When the scan began: one that began before the rules last changed is not kept as the page's saved result
+        scanStartedAt: state.startTime,
         ...(privateWindow ? { privateWindow: true } : {}),
         // A Bulk scan reports what the page shows now: a clean scan never takes an older result's place
         ...(scanTab && !quietTab ? { fresh: true } : {})

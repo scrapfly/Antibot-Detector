@@ -797,12 +797,17 @@
     failedTargets: []
   };
 
+  // This load was answered from the saved result (confirmed async by the ISOLATED world through the bridge): no hooks, no
+  // window checks. A variable of this script, never a property of window: the page shares that object, and a flag on it tells
+  // any page script that the extension is installed and that this load came from the cache (and survives clearing cookies).
+  let cacheHitEarlyExit = false;
+
   /**
    * Check if cache hit flag is set (helper to reduce duplication)
    * @returns {boolean} True if should exit due to cache hit
    */
   function shouldSkipDueToCacheHit() {
-    return window[GLOBALS.CACHE_HIT_EARLY_EXIT] === true;
+    return cacheHitEarlyExit === true;
   }
 
   /**
@@ -999,7 +1004,7 @@
     // Handle cache hit notification from ISOLATED world
     if (data && data.type === MESSAGE_TYPES.CACHE_HIT) {
       logDebug('[MAIN WORLD] Cache hit notification received - setting flag to stop hook reporting');
-      window[GLOBALS.CACHE_HIT_EARLY_EXIT] = true;
+      cacheHitEarlyExit = true;
       return;
     }
 
@@ -1279,7 +1284,7 @@
     }
     // A re-arm starts a new detection after a cached load: the cache-hit flag
     // that load set must not keep this install from hooking and checking
-    if (event.detail?.rearm === true) window[GLOBALS.CACHE_HIT_EARLY_EXIT] = false;
+    if (event.detail?.rearm === true) cacheHitEarlyExit = false;
     // The real hooks resolve the APIs next: take the early recorders off first
     restoreEarlyRecorders();
     // JS hooks off on this site (Settings → Detection): nothing stays wrapped, in the page or in its frames
@@ -1895,8 +1900,6 @@
   // Runs once, from the first bootstrap event (still before any page script)
   function startBridge() {
     installErrorFilters();
-    // Cache hit confirmed async by ISOLATED world/background via bridge message
-    window[GLOBALS.CACHE_HIT_EARLY_EXIT] = false;
     window.addEventListener(EVENTS.ISOLATED_TO_MAIN, onIsolatedMessage, true);
     window.addEventListener(EVENTS.INSTALL_HOOKS, onInstallHooks, { capture: true });
   }

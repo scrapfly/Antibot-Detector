@@ -2,7 +2,6 @@
 
 // Bridge protocol: modules/core/bridge-protocol.js (loaded before this file in every context)
 const DEH_TYPES = globalThis.ScrapflyBridgeProtocol.MESSAGE_TYPES;
-const DEH_CACHE_HIT_FLAG = globalThis.ScrapflyBridgeProtocol.GLOBALS.CACHE_HIT_EARLY_EXIT;
 
 // Usual live instance of a Web API interface, used by the MAIN world as `this`
 // when page code calls a hooked method or getter unbound
@@ -446,15 +445,23 @@ function demCreateHookBatcher(chrome) {
 }
 
 
-function demHandleHookMessage(event, chrome, hookBatcher) {
+/**
+ * @param {{source: object, data: object}} event - a message from the MAIN world
+ * @param {object} chrome
+ * @param {object} hookBatcher
+ * @param {{cacheHit?: boolean}} [state] - the content script's own state: cacheHit says this load was answered from the
+ *   saved result, so its hook and window reports are dropped (never read from the global object: that is a world's own)
+ */
+function demHandleHookMessage(event, chrome, hookBatcher, state) {
     // Only accept messages from same origin
     if (event.source !== window) return false;
+    const cacheHit = !!state && state.cacheHit === true;
 
     const data = event.data;
 
     if (data && data.type === DEH_TYPES.JS_HOOK_DETECTION) {
         // Defensive check
-        if (window[DEH_CACHE_HIT_FLAG]) {
+        if (cacheHit) {
             Logger.debug('CONTENT', '[handleHookMessage] Hook detection received despite cache hit, ignoring');
             return true;
         }
@@ -469,7 +476,7 @@ function demHandleHookMessage(event, chrome, hookBatcher) {
 
     if (data && data.type === DEH_TYPES.WINDOW_DETECTIONS) {
         // Defensive check
-        if (window[DEH_CACHE_HIT_FLAG]) {
+        if (cacheHit) {
             Logger.debug('CONTENT', '[handleHookMessage] Window detections received despite cache hit, ignoring');
             return true;
         }

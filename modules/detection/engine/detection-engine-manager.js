@@ -19,6 +19,8 @@ class DetectionEngineManager {
     // Tuning config last sent to the MAIN world (null until the first install)
     static lastHooksConfig = null;
     static STORAGE_KEY = 'scrapfly_detection_storage';
+    // When the rules last changed (see bumpRulesRevision): a saved result is served only under the revision it was found with
+    static RULES_REV_KEY = 'scrapfly_rules_rev';
     static patternCache = new PatternCache(500);
 
     constructor() {
@@ -1497,7 +1499,7 @@ class DetectionEngineManager {
     static createHookBatcher(chrome) {
         return demCreateHookBatcher.apply(this, arguments);
     }
-    static handleHookMessage(event, chrome, hookBatcher) {
+    static handleHookMessage(event, chrome, hookBatcher, state) {
         return demHandleHookMessage.apply(this, arguments);
     }
 
@@ -1545,6 +1547,37 @@ class DetectionEngineManager {
         }
     }
 
+    /** A rules revision as a number; results saved before the stamp existed have none and count as revision 0. */
+    static rulesRevisionOf(value) {
+        const revision = Number(value);
+        return Number.isFinite(revision) && revision > 0 ? revision : 0;
+    }
+
+    /**
+     * The rules changed (a rule saved, switched on or off, imported, reset, restored from a backup or updated): every
+     * saved result was found with the rules of its time. The change is stamped as a revision, which storeDetection writes
+     * into each result it saves and the lookups compare: a result of another revision is not served again, so the next
+     * visit of a page is scanned with the new rules instead of showing, until the cache expires, the card of a rule that
+     * was edited or switched off. The revision is a time that never repeats and never goes down, also for two changes at
+     * once or a clock that was set back.
+     * @returns {Promise<number|null>} the new revision, or null when it could not be written (results then age out as before)
+     */
+    static async bumpRulesRevision() {
+        const releaseStorageLock = await acquireDetectionStorageLock();
+        try {
+            const key = DetectionEngineManager.RULES_REV_KEY;
+            const current = DetectionEngineManager.rulesRevisionOf((await chrome.storage.local.get([key]))[key]);
+            const next = Math.max(Date.now(), current + 1);
+            await chrome.storage.local.set({ [key]: next });
+            return next;
+        } catch (error) {
+            Logger.warn('STORAGE', '[bumpRulesRevision] The rule change could not be stamped; saved results age out as before', error);
+            return null;
+        } finally {
+            releaseStorageLock();
+        }
+    }
+
     /**
      * Look up cached detection data by URL hash
      * @param {string} url - Page URL
@@ -1562,7 +1595,10 @@ class DetectionEngineManager {
             const hooksOff = await DetectionEngineManager.hooksOffFor(url);
             // Only a result found under the same hooks setting answers; the other one is not removed, it ages out
             const sameHooks = (stored) => (stored.hooksOff === true) === hooksOff;
-            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY, DetectionEngineManager.RULES_REV_KEY]);
+            // Only a result found with the rules as they are now answers; one of older rules goes with the next write
+            const rulesRev = DetectionEngineManager.rulesRevisionOf(result[DetectionEngineManager.RULES_REV_KEY]);
+            const sameRules = (stored) => DetectionEngineManager.rulesRevisionOf(stored && stored.rulesRev) === rulesRev;
             let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             if (typeof storage === 'string') {
                 try {
@@ -1593,6 +1629,10 @@ class DetectionEngineManager {
 
                 if (!sameHooks(stored)) {
                     Logger.debug('CACHE', `Skipped (found with JS hooks ${hooksOff ? 'on' : 'off'}): ${url}`);
+                    return null;
+                }
+                if (!sameRules(stored)) {
+                    Logger.debug('CACHE', `Skipped (found before the rules changed): ${url}`);
                     return null;
                 }
                 if (hidden(stored)) return null;
@@ -1640,7 +1680,7 @@ class DetectionEngineManager {
                 }
                 const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
                 // The same site, so also the same port (www and the bare host share a result, localhost:3000 and :8080 do not)
-                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname) && UrlUtils.portOf(url) === UrlUtils.portOf(stored.url) && sameHooks(stored) && !hidden(stored)) {
+                if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname) && UrlUtils.portOf(url) === UrlUtils.portOf(stored.url) && sameHooks(stored) && sameRules(stored) && !hidden(stored)) {
                     if (!hostnameFallback ||
                         getStoredDetectionCount(stored) > getStoredDetectionCount(hostnameFallback) ||
                         (getStoredDetectionCount(stored) === getStoredDetectionCount(hostnameFallback) && stored.timestamp > hostnameFallback.timestamp)) {
@@ -1722,7 +1762,14 @@ class DetectionEngineManager {
             // A result found without the hooks is marked, and never stands in for one found with them (or the other way)
             const hooksOff = await DetectionEngineManager.hooksOffFor(url);
             const sameHooks = (stored) => (stored.hooksOff === true) === hooksOff;
-            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY, DetectionEngineManager.RULES_REV_KEY]);
+            // A result is saved with the rules revision it was found under, and one of an older revision is never served
+            // or kept in place of a new scan (a rule that was edited or switched off would keep showing its card)
+            const rulesRev = DetectionEngineManager.rulesRevisionOf(result[DetectionEngineManager.RULES_REV_KEY]);
+            const sameRules = (stored) => DetectionEngineManager.rulesRevisionOf(stored && stored.rulesRev) === rulesRev;
+            // A scan that began before the rules changed ran, at least partly, on the old ones: it is saved as revision 0,
+            // which no later lookup accepts (the page is scanned again on its next visit)
+            const savedRev = Number.isFinite(pageData.scanStartedAt) && pageData.scanStartedAt < rulesRev ? 0 : rulesRev;
             let storage = result[DetectionEngineManager.STORAGE_KEY] || {};
             if (typeof storage === 'string') {
                 try {
@@ -1739,7 +1786,7 @@ class DetectionEngineManager {
             const existingStoredData = storage[urlHash];
             const existingIsValid = existingStoredData &&
                 (!existingStoredData.cacheScope || existingStoredData.cacheScope === cacheScope) &&
-                Date.now() < existingStoredData.expiry && sameHooks(existingStoredData);
+                Date.now() < existingStoredData.expiry && sameHooks(existingStoredData) && sameRules(existingStoredData);
             const getStoredDetectionCount = (stored) => (
                 stored?.detectionCount ?? (Array.isArray(stored?.detectionResults) ? stored.detectionResults.length : 0)
             );
@@ -1754,7 +1801,7 @@ class DetectionEngineManager {
             if (detectionResults.length === 0 && !existingPositiveData && !fresh) {
                 const requestedHostname = UrlUtils.getHostnameFromUrl(url);
                 for (const stored of Object.values(storage)) {
-                    if (!stored || Date.now() >= stored.expiry || getStoredDetectionCount(stored) <= 0 || !sameHooks(stored) || !samePrivacy(stored)) {
+                    if (!stored || Date.now() >= stored.expiry || getStoredDetectionCount(stored) <= 0 || !sameHooks(stored) || !sameRules(stored) || !samePrivacy(stored)) {
                         continue;
                     }
 
@@ -1856,12 +1903,18 @@ class DetectionEngineManager {
                 fromStorage: false,
                 cacheScope: cacheScope,
                 ...(hooksOff ? { hooksOff: true } : {}),
+                // Absent means revision 0, as in what 3.1.2 saved
+                ...(savedRev > 0 ? { rulesRev: savedRev } : {}),
                 // Removed when no private window is left (DetectionCacheRetention)
                 ...(pageData.privateWindow === true ? { privateWindow: true } : {})
             };
 
             storage[urlHash] = storedData;
-            // Same write drops expired entries and applies the entry cap
+            // Same write drops the results found with rules that have changed since (they are never served again), the
+            // expired entries and applies the entry cap
+            for (const key of Object.keys(storage)) {
+                if (key !== urlHash && !sameRules(storage[key])) delete storage[key];
+            }
             const pruned = DetectionEngineManager.pruneStorageObject(storage);
             await DetectionEngineManager.writeCacheWithinQuota(pruned.storage);
 
@@ -2236,9 +2289,18 @@ class DetectionEngineManager {
                 Logger.warn('DETECTION', `[handleClearDetectionCache] Invalid cache scope "${requestedScopeRaw}", falling back to settings scope`);
             }
 
-            const cacheScope = allowedScopes.includes(requestedScope)
-                ? requestedScope
-                : await Utils.getCacheScope();
+            // The scope a caller names is the one the result was recorded under (History sends its entry's), which can differ
+            // from the setting now: a result recorded under "Path" while the setting is "Domain" is answered from the Domain
+            // key, so a clear of the Path keys alone answered not_found and the reload was still served from the cache. The
+            // clear covers the broader of the two: whatever the next visit of this page could be answered with goes.
+            let settingScope = null;
+            try {
+                settingScope = await Utils.getCacheScope();
+            } catch (error) {
+                Logger.warn('DETECTION', '[handleClearDetectionCache] The cache scope setting is unreadable; clearing for the scope asked', error);
+            }
+            // allowedScopes lists them from the broadest down
+            const cacheScope = allowedScopes.find(scope => scope === requestedScope || scope === settingScope) || 'domain';
             const urlHash = UrlUtils.hashUrl(request.url, cacheScope);
 
             // Same lock as storeDetection / pruneStoredDetections: without it a store

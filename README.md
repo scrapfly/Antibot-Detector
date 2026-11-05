@@ -98,7 +98,7 @@ When a page loads, the extension gathers what the page reveals about itself and 
 
 **Fingerprinting.** The API hooks are in place before the page's own scripts run, and they also cover same-origin iframes, where fingerprinting code often hides. By default they watch for at least 4 seconds, then until the page has been quiet for 2 seconds, and for 8 seconds at most.
 
-**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads.
+**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads. Editing, switching off, importing or updating rules also clears the stored results, so every page is scanned again with the new rules on its next visit.
 
 ## What it detects
 

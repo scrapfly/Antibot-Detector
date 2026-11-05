@@ -96,7 +96,7 @@ Cuando una página carga, la extensión reúne lo que la página revela de sí m
 
 **Fingerprinting.** Los interceptores de API se instalan antes de que se ejecuten los scripts de la propia página, y también cubren los iframes del mismo origen, donde a menudo se esconde el código de fingerprinting. Por defecto vigilan al menos 4 segundos, después hasta que la página lleva 2 segundos en calma, y 8 segundos como máximo.
 
-**Caché.** Un resultado se reutiliza durante 7 días por defecto, así que al volver a una página se muestra al instante. En **Ajustes → Detección** puedes cambiar la duración y si un resultado lo comparte todo el dominio, las páginas con la misma ruta o solo la URL exacta. **Vaciar caché** en la pestaña Detección olvida el resultado guardado, así que la página se analiza de nuevo la próxima vez que cargue.
+**Caché.** Un resultado se reutiliza durante 7 días por defecto, así que al volver a una página se muestra al instante. En **Ajustes → Detección** puedes cambiar la duración y si un resultado lo comparte todo el dominio, las páginas con la misma ruta o solo la URL exacta. **Vaciar caché** en la pestaña Detección olvida el resultado guardado, así que la página se analiza de nuevo la próxima vez que cargue. Editar, desactivar, importar o actualizar reglas también vacía los resultados guardados, así que cada página se analiza de nuevo con las reglas nuevas en su próxima visita.
 
 ## Qué detecta
 
