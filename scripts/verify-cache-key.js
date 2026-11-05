@@ -1,92 +1,25 @@
 #!/usr/bin/env node
 /**
- * Debug helper: print computed cache keys vs keys in scrapfly_detection_storage.
+ * Debug helper: print the cache keys of an address, to compare them with the keys in scrapfly_detection_storage.
  *
  * Usage:
  *   node scripts/verify-cache-key.js "https://www.google.com/recaptcha/api2/demo"
  *   node scripts/verify-cache-key.js "https://web.whatsapp.com/" path
+ *   node scripts/verify-cache-key.js "http://localhost:3000/a" all
  *
- * Second argument is optional cache scope: domain | path | full (default: domain).
+ * Second argument is optional cache scope: domain | path | full | all (default: domain; all prints the three).
+ * The keys come from the extension's own UrlUtils.hashUrl (utils/url-utils.js): a port that is not the scheme's own is part
+ * of the site, so localhost:3000 and localhost:8080 print different keys.
  * Does not read Chrome storage — only prints hashes for comparison in DevTools.
  */
 
-const path = require('path');
-
-// Minimal inline hash (matches utils/url-utils.js UrlUtils.hashUrl)
-class URLHashCache {
-    constructor(maxSize) {
-        this.cache = new Map();
-        this.maxSize = maxSize;
-    }
-    has(k) { return this.cache.has(k); }
-    get(k) { return this.cache.get(k); }
-    set(k, v) {
-        if (this.cache.size >= this.maxSize) {
-            const first = this.cache.keys().next().value;
-            this.cache.delete(first);
-        }
-        this.cache.set(k, v);
-    }
-}
-
-class UrlUtils {
-    static urlHashCache = new URLHashCache(1000);
-
-    static hashUrl(url, scope = 'domain') {
-        const cacheKey = `${scope}:${url}`;
-        if (UrlUtils.urlHashCache.has(cacheKey)) {
-            return UrlUtils.urlHashCache.get(cacheKey);
-        }
-
-        let normalizedUrl;
-        let effectiveScope = scope;
-
-        try {
-            const urlObj = new URL(url);
-            switch (scope) {
-                case 'full':
-                    normalizedUrl = url;
-                    break;
-                case 'path':
-                    normalizedUrl = `${urlObj.protocol}//${urlObj.hostname}${urlObj.pathname}`;
-                    break;
-                case 'domain':
-                default:
-                    normalizedUrl = `${urlObj.protocol}//${urlObj.hostname}`;
-                    effectiveScope = 'domain';
-                    break;
-            }
-        } catch (e) {
-            normalizedUrl = url;
-        }
-
-        let h1 = 5381;
-        let h2 = 0;
-        for (let i = 0; i < normalizedUrl.length; i++) {
-            const char = normalizedUrl.charCodeAt(i);
-            h1 = (((h1 << 5) + h1) + char) | 0;
-            h2 = (char + (h2 << 6) + (h2 << 16) - h2) | 0;
-        }
-
-        const hashString = `${effectiveScope}_${(h1 >>> 0).toString(36)}_${(h2 >>> 0).toString(36)}`;
-        UrlUtils.urlHashCache.set(cacheKey, hashString);
-        return hashString;
-    }
-
-    static getHostnameFromUrl(url) {
-        try {
-            return new URL(url).hostname;
-        } catch (e) {
-            return url;
-        }
-    }
-}
+const UrlUtils = require('../utils/url-utils.js');
 
 const url = process.argv[2];
 const scopeArg = process.argv[3] || 'domain';
 
 if (!url) {
-    console.error('Usage: node scripts/verify-cache-key.js <url> [domain|path|full]');
+    console.error('Usage: node scripts/verify-cache-key.js <url> [domain|path|full|all]');
     process.exit(1);
 }
 
@@ -97,13 +30,13 @@ console.log('Hostname:', UrlUtils.getHostnameFromUrl(url));
 console.log('');
 
 for (const scope of scopes) {
-    const key = UrlUtils.hashUrl(url, scope);
     console.log(`scope=${scope}`);
-    console.log(`  primaryKey: ${key}`);
+    console.log(`  primaryKey: ${UrlUtils.hashUrl(url, scope)}`);
 }
 
 console.log('');
 console.log('In chrome://extensions → Service worker → Application → Storage →');
 console.log('  scrapfly_detection_storage — compare keys above to stored object keys.');
-console.log('If primary misses but a domain_* key exists for the same hostname,');
-console.log('the extension should serve it via hostname_fallback (Debug: matchSource).');
+console.log('A page is looked up under the key of the Cache Scope set in Settings, then under the keys of the more specific');
+console.log('scopes (domain, path, full). Under the Domain scope a saved result of the same site (same host and port, with or');
+console.log('without www) also answers when no key matches; Debug mode logs that as "Hit (hostname fallback)".');

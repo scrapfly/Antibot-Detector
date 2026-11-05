@@ -584,54 +584,6 @@
   color: var(--text-primary);
 }
 
-.history-detection-tag.icon-badge {
-  width: 26px;
-  min-width: 26px;
-  padding: 0;
-  overflow: visible;
-}
-
-.history-detection-tag.icon-badge:hover {
-  border-color: var(--border-light) !important;
-}
-
-/* Official vendor logos fill a white rounded plate */
-.history-detection-tag.icon-badge .detection-icon {
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  box-sizing: border-box;
-  object-fit: contain;
-  background: #fff;
-  border-radius: 4px;
-}
-
-/* Dark theme: the brand logo's dark copy, without the white plate */
-.history-detection-tag.icon-badge .detection-icon.brand-logo-dark {
-  background: none;
-}
-
-/* Scrapfly fallback mark for detectors without a vendor logo */
-.history-detection-tag.icon-badge .detection-icon--default {
-  background: transparent;
-  border-radius: 0;
-}
-
-.history-detection-tag.icon-badge .detection-icon-svg {
-  width: 100%;
-  height: 100%;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.history-detection-tag.icon-badge .fingerprint-icon svg,
-.history-detection-tag.icon-badge .history-fingerprint-image {
-  width: 15px;
-  height: 15px;
-}
-
 /* Detections count, average confidence and difficulty, in the subline after the domain */
 .history-metrics {
   display: inline-flex;
@@ -1476,19 +1428,16 @@
 }
 
 /* Difficulty value uses the same colors as the Detection tab (DetectionUtils.getDifficultyInfo) */
-.history-stat-difficulty .history-stat-value.tone-red,
 #difficultyLevel.tone-red,
 #detectionModalDifficulty.tone-red {
   color: var(--danger);
 }
 
-.history-stat-difficulty .history-stat-value.tone-amber,
 #difficultyLevel.tone-amber,
 #detectionModalDifficulty.tone-amber {
   color: var(--warning);
 }
 
-.history-stat-difficulty .history-stat-value.tone-green,
 #difficultyLevel.tone-green,
 #detectionModalDifficulty.tone-green {
   color: var(--green);

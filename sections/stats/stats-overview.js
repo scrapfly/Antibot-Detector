@@ -4,7 +4,6 @@
   const U = StatsUI;
   const { byId, tr, fmt, num, share, element } = U;
   const V = root.StatsViews = root.StatsViews || {};
-  const HEADLINES = ['Top', 'Hardest', 'Newest', 'Riser'];
 
   function renderBanner(app) {
     const { state, d } = app;

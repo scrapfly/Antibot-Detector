@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "De beveiligingsscripts tonen die deze pagina heeft geladen"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Laad de pagina opnieuw om beveiligingsscripts te analyseren"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Reset beveiligingscookies en laad opnieuw om scripts te analyseren"
-  },
   "advToolReloadVersionHint": {
     "message": "Laad de pagina opnieuw om de versie van de beveiliging te detecteren"
   },
@@ -126,18 +120,6 @@
     "message": "Kan deze actie niet voltooien: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Vorige grafiekpagina"
-  },
-  "statsChartNext": {
-    "message": "Volgende grafiekpagina"
-  },
-  "statsChartPage": {
-    "message": "Pagina {0} van {1}"
-  },
-  "statsChartShowing": {
-    "message": "{0}–{1} van {2}"
-  },
   "statsSectionsLabel": {
     "message": "Statistiekonderdelen"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Kies een langere periode om je opgeslagen geschiedenis te bekijken."
   },
-  "statsDetectionRate": {
-    "message": "Items met detecties"
-  },
-  "statsActiveDays": {
-    "message": "Actieve dagen"
-  },
   "statsAverageConfidence": {
     "message": "Gemiddelde zekerheid"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "De laatste {0} dagen worden getoond. Totalen en exports omvatten het hele geselecteerde bereik."
   },
-  "statsProtectionRanking": {
-    "message": "Ranglijst van beveiligingen"
-  },
-  "statsCategoryTrend": {
-    "message": "Categorieën in de tijd"
-  },
-  "statsCategoryOverlap": {
-    "message": "Categorieën die samen voorkomen"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Aantal geschiedenisitems met beide categorieën. Diagonale cellen tonen items met die categorie."
-  },
   "statsProtectionDetails": {
     "message": "Alle beveiligingen"
-  },
-  "statsDomainRanking": {
-    "message": "Ranglijst van domeinen"
-  },
-  "statsDomainMap": {
-    "message": "Bezoeken en detecties"
-  },
-  "statsDomainMapHint": {
-    "message": "Elk punt is een domein. Grotere punten hebben meer verschillende beveiligingen."
   },
   "statsDomainDetails": {
     "message": "Alle domeinen"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Domeinen sorteren"
   },
-  "statsSortVisits": {
-    "message": "Meeste bezoeken"
-  },
-  "statsSortDetections": {
-    "message": "Meeste detecties"
-  },
   "statsSortConfidence": {
     "message": "Hoogste zekerheid"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Verdeling van zekerheid"
-  },
-  "statsConfidenceTrend": {
-    "message": "Zekerheid in de tijd"
-  },
-  "statsCategoryConfidence": {
-    "message": "Zekerheid per categorie"
   },
   "statsConfidenceNote": {
     "message": "Zekerheid geeft de sterkte van het opgeslagen detectiebewijs aan, geen bewijs van fingerprinting of een actieve challenge."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Geen domeinen komen overeen met je zoekopdracht."
-  },
-  "statsSelectionNote": {
-    "message": "Grafieken en exports gebruiken het geselecteerde bereik. Geschiedenisitems zijn opgeslagen detecties, niet elk browserbezoek."
   },
   "extensionName": {
     "message": "Scrapfly: anti-botdetector"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Detectie in- of uitschakelen"
-  },
-  "noDetectionsFound": {
-    "message": "Geen detecties gevonden"
   },
   "detectionScanningTitle": {
     "message": "Deze pagina wordt gescand"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Zoeken"
   },
-  "advancedBtnExport": {
-    "message": "Exporteren"
-  },
   "advancedBtnExportTitle": {
     "message": "Opnamen exporteren"
-  },
-  "advancedBtnClearAll": {
-    "message": "Alles wissen"
   },
   "advancedBtnClearAllTitle": {
     "message": "Alle opnamen wissen"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Weet je zeker dat je deze detectie van {0} wilt verwijderen?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Kan de instellingen niet laden. Standaardwaarden worden gebruikt."
-  },
   "settingsSavedToast": {
     "message": "Instellingen opgeslagen"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} staat al op de blokkeerlijst"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} toegevoegd aan blokkeerlijst"
-  },
   "failedAddDomainFmt": {
     "message": "Domein toevoegen mislukt: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} verwijderd van de blokkeerlijst"
   },
   "invalidSettingsFmt": {
     "message": "Ongeldige instellingen: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Fout bij het toepassen van updates"
   },
-  "failedCheckForUpdates": {
-    "message": "Controleren op updates mislukt"
-  },
   "errorCheckingForUpdates": {
     "message": "Fout bij het controleren op updates"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Volledige endpoint-URL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Beschikbare variabelen:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Voorbeeld: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Instellingen"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Exporteer of importeer extensie-instellingen"
   },
   "settingsDataHistoryRow": {
     "message": "Detectiegeschiedenis"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Instellingen geïmporteerd"
   },
-  "settingsImportFailedToast": {
-    "message": "Instellingen importeren mislukt: ongeldig bestand"
-  },
   "statsPrivacyNote": {
     "message": "Lokaal berekend op basis van je detectiegeschiedenis. Er verlaat niets je browser."
-  },
-  "statsSubtitleFmt": {
-    "message": "Lokaal berekend op basis van geschiedenisitems ({0}). Er verlaat niets je browser."
   },
   "statsRangeLabel": {
     "message": "Periode"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Statistieken verschijnen hier zodra pagina's met detecties in de geschiedenis worden opgeslagen."
   },
-  "statsEntries": {
-    "message": "Geschiedenisitems"
-  },
   "statsUniqueDomains": {
     "message": "Unieke domeinen"
   },
   "statsDetections": {
     "message": "Detecties"
   },
-  "statsDistinctDetectors": {
-    "message": "Verschillende beveiligingen"
-  },
   "statsOverTime": {
     "message": "Detecties in de tijd"
   },
-  "statsTopProtections": {
-    "message": "Meest gedetecteerde beveiligingen"
-  },
-  "statsTopDomains": {
-    "message": "Topdomeinen"
-  },
-  "statsByCategory": {
-    "message": "Per categorie"
-  },
-  "statsByDifficulty": {
-    "message": "Per moeilijkheid"
-  },
-  "statsPagesUnit": {
-    "message": "pagina's"
-  },
-  "statsVisitsUnit": {
-    "message": "bezoeken"
-  },
-  "statsDetectionsUnit": {
-    "message": "detecties"
-  },
   "statsCategoryOther": {
     "message": "Overig"
-  },
-  "statsDifficultyNone": {
-    "message": "Geen detecties"
   },
   "statsNoData": {
     "message": "Geen gegevens in dit bereik"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Pagina's: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "Domeinen: {0}"
-  },
-  "statsTipVisitsFmt": {
-    "message": "Bezoeken: {0}"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "Detecties: {0}"
-  },
   "historyCategoryShareFmt": {
     "message": "Detecties: {0} van {1} · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "Items: {0}"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "Met detecties: {0}"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "Bezoeken per domein: {0}"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} per item"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "{0}% gemiddelde zekerheid"
   },
   "statsTimelineMetaFmt": {
     "message": "Detecties: {0} · Dagen: {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Opgenomen"
   },
-  "advCommonScript": {
-    "message": "Script"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Beveiligingsniveau:"
   },
-  "advCommonCookiesFound": {
-    "message": "Gevonden cookies:"
-  },
   "advCommonSiteKey": {
     "message": "Sitesleutel"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Python-script met requests en BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Python-script met de requests-bibliotheek"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Node.js-script met axios en cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Node.js-script met axios"
   },
   "advCodeDescPhpDom": {
     "message": "PHP-script met cURL en DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "PHP-script met cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# met HttpClient en HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# met HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go met net/http en goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go met net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Opname actief"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA-clients"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "Client-ID: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Gekopieerd naar klembord!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Seed-scripts:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js-script"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js-scripts"
-  },
-  "advShapeSeedScript": {
-    "message": "Seed-script"
   },
   "advShapeSeedScripts": {
     "message": "Seed-scripts"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "Resultaten worden hergebruikt voor exact dit pad, ongeacht de query."
   },
-  "tipStatsActiveDays": {
-    "message": "Dagen met minstens één opgeslagen pagina."
-  },
-  "tipStatsDetections": {
-    "message": "Beveiligingen die zijn gevonden op alle opgeslagen pagina's, herhalingen meegeteld."
-  },
   "tipStatsDetectors": {
     "message": "Verschillende beveiligingen die zijn gezien, elk één keer geteld."
   },
   "tipStatsDomains": {
     "message": "Verschillende sites onder de opgeslagen pagina's."
-  },
-  "tipStatsEntries": {
-    "message": "Pagina's die in dit bereik in Geschiedenis zijn opgeslagen."
-  },
-  "tipStatsRateFmt": {
-    "message": "Items: {0} van {1}"
   },
   "tipPatterns": {
     "message": "Patronen"
@@ -4531,38 +4339,11 @@
     "message": "Open een webpagina om deze met Scrapfly te scrapen",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "Opnamen: {0}"
-  },
-  "statsFirstSeen": {
-    "message": "Nieuw in deze periode"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "Voor het eerst opgeslagen in dit bereik. Beveiligingen: {0}, domeinen: {1}."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Kies 7, 30 of 90 dagen om te zien wat nieuw is."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Best beveiligde domein"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "Verschillende beveiligingen: {0}. Bezoeken: {1}."
-  },
-  "statsFoundTogether": {
-    "message": "Samen gevonden beveiligingen"
-  },
   "statsMethods": {
     "message": "Detectiemethoden"
   },
   "statsMatchesUnit": {
     "message": "treffers"
-  },
-  "statsMethodsByCategory": {
-    "message": "Methoden per categorie"
-  },
-  "statsWeakEvidence": {
-    "message": "Zwakste bewijs"
   },
   "statsSignalColumn": {
     "message": "Signaal"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Combinatie"
   },
-  "statsDecidedBy": {
-    "message": "Hoe detecties zijn bepaald"
-  },
-  "statsCombinationGain": {
-    "message": "Zekerheid per beslissing"
-  },
   "statsCombinationColumn": {
     "message": "Combinatie"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Geen enkele detectie in dit bereik is door een combinatie bepaald."
-  },
-  "statsRulesMostActive": {
-    "message": "Meest actieve regels"
-  },
-  "statsTipPatternsFmt": {
-    "message": "Patronen: {0}"
   },
   "statsRulesPatternsByMethod": {
     "message": "Patronen per methode"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Wacht op een nieuwere extensie"
   },
-  "statsToolsByVendor": {
-    "message": "Opnamen per leverancier"
-  },
   "statsToolsCapture": {
     "message": "Opname"
-  },
-  "statsToolsByTool": {
-    "message": "Meest gebruikte tools"
-  },
-  "statsToolsOverTime": {
-    "message": "Opnamen in de tijd"
   },
   "statsChangeColumn": {
     "message": "Wijziging"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Geen enkel domein heeft in dit bereik zijn beveiligingen gewijzigd tussen opgeslagen bezoeken."
   },
-  "statsNothingNew": {
-    "message": "Niets nieuws: elke beveiliging hier stond al in Geschiedenis vóór dit bereik."
-  },
   "statsSectionSignals": {
     "message": "Signalen"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Tools"
   },
-  "statsDomainChangesHint": {
-    "message": "Domeinen waarvan de gedetecteerde beveiligingen tussen twee opgeslagen bezoeken zijn gewijzigd."
-  },
-  "statsFirstSeenHint": {
-    "message": "Beveiligingen en domeinen die voor het eerst in dit bereik zijn opgeslagen."
-  },
   "statsSignalsNote": {
     "message": "Het soort bewijs waarmee elke opgeslagen detectie overeenkwam: cookie- en headernamen, URL's, pagina-elementen, scripts en JavaScript-hooks."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Beveiligingen waarvan de overeenkomende patronen de laagste gemiddelde zekerheid hebben. Hun regels hebben mogelijk een sterker patroon nodig."
   },
   "statsCombinationsNote": {
     "message": "Een combinatie detecteert een beveiliging alleen wanneer meerdere patronen samen worden gevonden."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Regels"
   },
-  "statsRulesModified": {
-    "message": "Bewerkt (officieel)"
-  },
   "statsRulesDisabled": {
     "message": "Uitgeschakeld"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Ingeschakelde regels die niets hebben gevonden op de pagina's die in dit bereik zijn opgeslagen."
   },
-  "statsRulesMissingHint": {
-    "message": "Beschrijvingen verschijnen in detectiedetails, Geschiedenis en combinaties. Voeg ze toe in de regeleditor."
-  },
   "statsToolsNote": {
     "message": "Geavanceerde opnamen en toolresultaten die op dit apparaat zijn opgeslagen."
-  },
-  "statsCapturesUnit": {
-    "message": "opnamen"
   },
   "detectionCardSureFmt": {
     "message": "{0}% zeker"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Weinig pagina's in dit bereik ({0}): vergelijkingen en ranglijsten kunnen misleidend zijn."
-  },
-  "statsLoading": {
-    "message": "Statistieken laden..."
   },
   "statsEmptyShowAll": {
     "message": "Alle geschiedenis tonen"

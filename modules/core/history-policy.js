@@ -20,8 +20,6 @@
   const normalizeDomains = DomainList.normalize;
   const matchesDomain = DomainList.matches;
 
-  const CHANGE_ALERT_MODES = ['off', 'pinned', 'all'];
-  const BACKUP_FREQUENCIES = ['off', 'daily', 'weekly', 'monthly'];
   // Pinned entries are exempt from the limit, from retention and from the size budget, so the pages that pin
   // themselves are capped: past it a page is recorded unpinned
   const MAX_AUTO_PINS = 50;
@@ -107,11 +105,6 @@
     return { added, removed, changed: added.length > 0 || removed.length > 0 };
   }
 
-  /** Protections found for sure (CHANGE_SURE or more): a scan without any cannot take one away from the page's record. */
-  function hasSureProtection(detections) {
-    return (Array.isArray(detections) ? detections : []).some(d => nameOf(d) && !isFingerprint(d) && scoreOf(d) >= CHANGE_SURE);
-  }
-
   /**
    * Does this page pin itself (Settings → History → Pin pages automatically)? Yes when a detection that reaches the
    * minimum confidence is
@@ -159,9 +152,9 @@
   }
 
   const api = {
-    CHANGE_ALERT_MODES, BACKUP_FREQUENCIES, MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE, WATCH_MODES, MAX_WATCHED, watchModeOf, watchedOf,
+    MAX_AUTO_PINS, AUTO_PIN_MIN_CONFIDENCE, WATCH_MODES, MAX_WATCHED, watchModeOf, watchedOf,
     clampInt, normalizeDomains, matchesDomain, strongest, isFingerprintOnly, evaluate,
-    diffProtections, hasSureProtection, CHANGE_SURE, CHANGE_MAYBE, BLIP_WINDOW_MS, shouldAutoPin, countAutoPins
+    diffProtections, CHANGE_SURE, CHANGE_MAYBE, BLIP_WINDOW_MS, shouldAutoPin, countAutoPins
   };
   root.HistoryPolicy = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

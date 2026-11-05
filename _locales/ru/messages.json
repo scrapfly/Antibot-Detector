@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Показать защитные скрипты, загруженные этой страницей"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Перезагрузить страницу для анализа скриптов защиты"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Сбросить файлы cookie защиты и перезагрузить страницу для анализа скриптов"
-  },
   "advToolReloadVersionHint": {
     "message": "Перезагрузить страницу для определения версии защиты"
   },
@@ -126,18 +120,6 @@
     "message": "Не удалось выполнить это действие: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Предыдущая страница графика"
-  },
-  "statsChartNext": {
-    "message": "Следующая страница графика"
-  },
-  "statsChartPage": {
-    "message": "Страница {0} из {1}"
-  },
-  "statsChartShowing": {
-    "message": "Показано {0}–{1} из {2}"
-  },
   "statsSectionsLabel": {
     "message": "Разделы статистики"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Выберите более длительный период, чтобы просмотреть сохранённую историю."
   },
-  "statsDetectionRate": {
-    "message": "Записи с обнаружениями"
-  },
-  "statsActiveDays": {
-    "message": "Активные дни"
-  },
   "statsAverageConfidence": {
     "message": "Средняя достоверность"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Показаны последние {0} дней. Итоги и экспорт включают весь выбранный период."
   },
-  "statsProtectionRanking": {
-    "message": "Рейтинг защит"
-  },
-  "statsCategoryTrend": {
-    "message": "Категории во времени"
-  },
-  "statsCategoryOverlap": {
-    "message": "Категории, обнаруженные вместе"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Число записей истории с обеими категориями. Ячейки по диагонали показывают записи с данной категорией."
-  },
   "statsProtectionDetails": {
     "message": "Все защиты"
-  },
-  "statsDomainRanking": {
-    "message": "Рейтинг доменов"
-  },
-  "statsDomainMap": {
-    "message": "Посещения и обнаружения"
-  },
-  "statsDomainMapHint": {
-    "message": "Каждая точка обозначает домен. У более крупных точек больше различных защит."
   },
   "statsDomainDetails": {
     "message": "Все домены"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Сортировка доменов"
   },
-  "statsSortVisits": {
-    "message": "Больше посещений"
-  },
-  "statsSortDetections": {
-    "message": "Больше обнаружений"
-  },
   "statsSortConfidence": {
     "message": "Наивысшая достоверность"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Распределение достоверности"
-  },
-  "statsConfidenceTrend": {
-    "message": "Достоверность во времени"
-  },
-  "statsCategoryConfidence": {
-    "message": "Достоверность по категориям"
   },
   "statsConfidenceNote": {
     "message": "Достоверность описывает убедительность сохранённых признаков обнаружения, но не доказывает наличие цифрового отпечатка или активной проверки."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Нет доменов, соответствующих вашему запросу."
-  },
-  "statsSelectionNote": {
-    "message": "Графики и экспорт используют выбранный период. Записи истории отражают сохранённые обнаружения, а не каждое посещение в браузере."
   },
   "extensionName": {
     "message": "Scrapfly: детектор анти-бот"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Включить или отключить обнаружение"
-  },
-  "noDetectionsFound": {
-    "message": "Обнаружений не найдено"
   },
   "detectionScanningTitle": {
     "message": "Сканирование страницы"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Поиск"
   },
-  "advancedBtnExport": {
-    "message": "Экспорт"
-  },
   "advancedBtnExportTitle": {
     "message": "Экспортировать захваты"
-  },
-  "advancedBtnClearAll": {
-    "message": "Очистить всё"
   },
   "advancedBtnClearAllTitle": {
     "message": "Очистить все захваты"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Вы уверены, что хотите удалить это обнаружение от {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Не удалось загрузить настройки. Используются значения по умолчанию."
-  },
   "settingsSavedToast": {
     "message": "Настройки сохранены"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} уже в чёрном списке"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} добавлен в чёрный список"
-  },
   "failedAddDomainFmt": {
     "message": "Не удалось добавить домен: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} удалён из чёрного списка"
   },
   "invalidSettingsFmt": {
     "message": "Недопустимые настройки: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Ошибка применения обновлений"
   },
-  "failedCheckForUpdates": {
-    "message": "Не удалось проверить обновления"
-  },
   "errorCheckingForUpdates": {
     "message": "Ошибка при проверке обновлений"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "Полный URL конечной точки (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Доступные переменные:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Пример: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Настройки"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Экспорт или импорт настроек расширения"
   },
   "settingsDataHistoryRow": {
     "message": "История обнаружений"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Настройки импортированы"
   },
-  "settingsImportFailedToast": {
-    "message": "Не удалось импортировать настройки: неверный файл"
-  },
   "statsPrivacyNote": {
     "message": "Рассчитано локально по истории обнаружений. Данные не покидают браузер."
-  },
-  "statsSubtitleFmt": {
-    "message": "Рассчитано локально по {0} записям истории. Данные не покидают браузер."
   },
   "statsRangeLabel": {
     "message": "Период"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Статистика появится здесь, когда страницы с обнаружениями будут сохранены в историю."
   },
-  "statsEntries": {
-    "message": "Записи истории"
-  },
   "statsUniqueDomains": {
     "message": "Уникальные домены"
   },
   "statsDetections": {
     "message": "Обнаружения"
   },
-  "statsDistinctDetectors": {
-    "message": "Разные системы защиты"
-  },
   "statsOverTime": {
     "message": "Обнаружения по времени"
   },
-  "statsTopProtections": {
-    "message": "Самые частые системы защиты"
-  },
-  "statsTopDomains": {
-    "message": "Основные домены"
-  },
-  "statsByCategory": {
-    "message": "По категориям"
-  },
-  "statsByDifficulty": {
-    "message": "По сложности"
-  },
-  "statsPagesUnit": {
-    "message": "страницы"
-  },
-  "statsVisitsUnit": {
-    "message": "посещения"
-  },
-  "statsDetectionsUnit": {
-    "message": "обнаружения"
-  },
   "statsCategoryOther": {
     "message": "Другое"
-  },
-  "statsDifficultyNone": {
-    "message": "Без обнаружений"
   },
   "statsNoData": {
     "message": "Нет данных за этот период"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Страниц: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "Доменов: {0}"
-  },
-  "statsTipVisitsFmt": {
-    "message": "Посещений: {0}"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "Обнаружений: {0}"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} из {1} обнаружений · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "Записей: {0}"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "С обнаружениями: {0}"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} посещ. на домен"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} на запись"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "Средняя уверенность {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Обнаружений: {0} · дней: {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Захвачено"
   },
-  "advCommonScript": {
-    "message": "Скрипт"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Уровень защиты:"
   },
-  "advCommonCookiesFound": {
-    "message": "Найдено cookie:"
-  },
   "advCommonSiteKey": {
     "message": "Ключ сайта"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Скрипт на Python с requests и BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Скрипт на Python с библиотекой requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Скрипт на Node.js с axios и cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Скрипт на Node.js с axios"
   },
   "advCodeDescPhpDom": {
     "message": "Скрипт на PHP с cURL и DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Скрипт на PHP с cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# с HttpClient и HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# с HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go с net/http и goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go с net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Захват активен"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Клиенты reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "ID клиента: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Скопировано в буфер обмена!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Скрипты с seed:"
   },
-  "advShapeInitJsScript": {
-    "message": "Скрипт Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Скрипты Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Скрипт с seed"
   },
   "advShapeSeedScripts": {
     "message": "Скрипты с seed"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "Результаты используются для этого пути при любом запросе."
   },
-  "tipStatsActiveDays": {
-    "message": "Дни, когда сохранена хотя бы одна страница."
-  },
-  "tipStatsDetections": {
-    "message": "Защиты, найденные на всех сохранённых страницах, с повторами."
-  },
   "tipStatsDetectors": {
     "message": "Разные встреченные защиты, каждая учитывается один раз."
   },
   "tipStatsDomains": {
     "message": "Разные сайты среди сохранённых страниц."
-  },
-  "tipStatsEntries": {
-    "message": "Страницы, сохранённые в истории за этот период."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0} из {1} записей"
   },
   "tipPatterns": {
     "message": "Шаблоны"
@@ -4531,38 +4339,11 @@
     "message": "Откройте веб-страницу, чтобы скрапить её через Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "Записей: {0}"
-  },
-  "statsFirstSeen": {
-    "message": "Новое за период"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "Впервые сохранено за этот период: защит — {0}, доменов — {1}."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Выберите 7, 30 или 90 дней, чтобы увидеть новое."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Самый защищённый домен"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} разных защит за {1} посещений."
-  },
-  "statsFoundTogether": {
-    "message": "Защиты, найденные вместе"
-  },
   "statsMethods": {
     "message": "Методы обнаружения"
   },
   "statsMatchesUnit": {
     "message": "совпадения"
-  },
-  "statsMethodsByCategory": {
-    "message": "Методы по категориям"
-  },
-  "statsWeakEvidence": {
-    "message": "Самые слабые признаки"
   },
   "statsSignalColumn": {
     "message": "Сигнал"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Комбинация"
   },
-  "statsDecidedBy": {
-    "message": "Как принимались решения об обнаружении"
-  },
-  "statsCombinationGain": {
-    "message": "Уверенность по типу решения"
-  },
   "statsCombinationColumn": {
     "message": "Комбинация"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Ни одно обнаружение за этот период не было решено комбинацией."
-  },
-  "statsRulesMostActive": {
-    "message": "Самые активные правила"
-  },
-  "statsTipPatternsFmt": {
-    "message": "Шаблонов: {0}"
   },
   "statsRulesPatternsByMethod": {
     "message": "Шаблоны по методам"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "Ожидает более новое расширение"
   },
-  "statsToolsByVendor": {
-    "message": "Записи по поставщикам"
-  },
   "statsToolsCapture": {
     "message": "Запись"
-  },
-  "statsToolsByTool": {
-    "message": "Самые используемые инструменты"
-  },
-  "statsToolsOverTime": {
-    "message": "Записи по времени"
   },
   "statsChangeColumn": {
     "message": "Изменение"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Ни один домен не изменил защиты между сохранёнными посещениями за этот период."
   },
-  "statsNothingNew": {
-    "message": "Ничего нового: все защиты уже были в Истории до этого периода."
-  },
   "statsSectionSignals": {
     "message": "Сигналы"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Инструменты"
   },
-  "statsDomainChangesHint": {
-    "message": "Домены, у которых обнаруженные защиты изменились между двумя сохранёнными посещениями."
-  },
-  "statsFirstSeenHint": {
-    "message": "Защиты и домены, впервые сохранённые за этот период."
-  },
   "statsSignalsNote": {
     "message": "Какие признаки нашло каждое сохранённое обнаружение: имена cookie и заголовков, URL, элементы страницы, скрипты и JavaScript-хуки."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Защиты, у найденных шаблонов которых самая низкая средняя уверенность. Их правилам может понадобиться более сильный шаблон."
   },
   "statsCombinationsNote": {
     "message": "Комбинация обнаруживает защиту, только когда несколько шаблонов найдены вместе."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Правила"
   },
-  "statsRulesModified": {
-    "message": "Изменённые официальные"
-  },
   "statsRulesDisabled": {
     "message": "Отключённые"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Включённые правила, которые ничего не нашли на страницах, сохранённых за этот период."
   },
-  "statsRulesMissingHint": {
-    "message": "Описания показываются в деталях обнаружения, Истории и комбинациях. Добавьте их в редакторе правил."
-  },
   "statsToolsNote": {
     "message": "Расширенные записи и результаты инструментов, сохранённые на этом устройстве."
-  },
-  "statsCapturesUnit": {
-    "message": "записи"
   },
   "detectionCardSureFmt": {
     "message": "Уверенность {0}%"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Мало страниц за этот период ({0}): сравнения и рейтинги могут вводить в заблуждение."
-  },
-  "statsLoading": {
-    "message": "Загрузка статистики..."
   },
   "statsEmptyShowAll": {
     "message": "Показать всю историю"

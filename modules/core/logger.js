@@ -263,11 +263,6 @@ class Logger {
     return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(), 3)}`;
   }
 
-  /** Back-compat: callers that want a cheap, cloneable copy of a value */
-  static sanitize(value) {
-    return Logger.formatValue(value, 0);
-  }
-
   // ==========================================================================
   // Flow control
   // ==========================================================================
@@ -466,7 +461,6 @@ class Logger {
   static error(category, message, data = null) { Logger._log(category, Logger.LEVELS.ERROR, message, data); }
   /** Verbose tier: Debug mode + Verbose logs */
   static debug(category, message, data = null) { Logger._log(category, Logger.LEVELS.DEBUG, message, data); }
-  static verbose(category, message, data = null) { Logger._log(category, Logger.LEVELS.DEBUG, message, data); }
 }
 
 if (typeof globalThis !== 'undefined') globalThis.Logger = Logger;

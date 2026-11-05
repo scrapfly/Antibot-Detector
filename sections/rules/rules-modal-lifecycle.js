@@ -55,9 +55,4 @@ class RulesModalLifecycle {
       if (el) el.addEventListener('click', () => this.close());
     }
   }
-
-  setupOpenListener(btnSelector) {
-    const btn = document.querySelector(btnSelector);
-    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); this.open(); });
-  }
 }

@@ -333,15 +333,6 @@
   function hideTooltipOutside(target) {
     if (tooltipAnchor && !(target && typeof tooltipAnchor.contains === 'function' && tooltipAnchor.contains(target))) hideTooltip();
   }
-  /** A tooltip on a plain node (not a chart hit); also a keyboard stop. */
-  function bindTooltip(node, lines) {
-    node.tabIndex = 0;
-    node.setAttribute('aria-label', lines.map(line => line && typeof line === 'object' ? line.label + ': ' + line.value : String(line)).join(', '));
-    node.addEventListener('pointermove', event => showTooltip(event, lines));
-    node.addEventListener('focus', event => showTooltip(event, lines));
-    node.addEventListener('pointerleave', hideTooltip);
-    node.addEventListener('blur', hideTooltip);
-  }
   const chartOptions = (title, extra = {}) => ({ title, emptyLabel: tr('statsNoData', 'No data in this range'),
     formatNumber: num, color: 'var(--s-series)', onTooltip: showTooltip, hideTooltip, ...extra });
   /** The line of a protection: category, pages, domains and confidence. */
@@ -354,5 +345,5 @@
   root.StatsUI = { byId, tr, fmt, locale, num, percent, share, signed, days, list, confidence, dateText, dayDate, dayLabel, rangeText, daysAgo, relative,
     hourLabel, weekdayLabel, monthLabel, element, setText, setVar, ink, mixInk, CATEGORY_KEYS, DIFFICULTY_COLORS, activeCategories, categoryLabel, difficultyLabel,
     methodLabel, dot, categoryMark, setBrandIcons, brandMark, chip, categoryBadge, methodBadge, pill, stack, none, deltaView, fillDelta, deltaBadge, rankDelta, databar, setTip, table,
-    tableCount, hideTooltip, hideTooltipOutside, showTooltip, bindTooltip, chartOptions, protectionTip };
+    tableCount, hideTooltip, hideTooltipOutside, showTooltip, chartOptions, protectionTip };
 })(typeof globalThis !== 'undefined' ? globalThis : this);

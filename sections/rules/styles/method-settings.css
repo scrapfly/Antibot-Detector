@@ -580,7 +580,6 @@
 }
 
 /* ---------- Method Settings modal content ---------- */
-#methodSettingsModal .card-description,
 #methodSettingsModal .option-hint {
   color: var(--re-text-dim);
 }
@@ -757,16 +756,6 @@
 
 .rules-menu-item.delete-btn.is-disabled:hover {
   background: none;
-}
-
-.rules-menu-note {
-  max-width: 190px;
-  margin: 0;
-  padding: 2px 10px 6px;
-  color: var(--text-muted);
-  font-size: 11px;
-  line-height: 1.35;
-  white-space: normal;
 }
 
 /* Editor: author validation (reserved "Scrapfly" name on a custom rule) */

@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "Mostra gli script di protezione caricati da questa pagina"
   },
-  "advToolReloadScriptsHint": {
-    "message": "Ricarica la pagina per analizzare gli script di protezione"
-  },
-  "advToolResetScriptsHint": {
-    "message": "Reimposta i cookie di protezione e ricarica per analizzare gli script"
-  },
   "advToolReloadVersionHint": {
     "message": "Ricarica la pagina per rilevare la versione della protezione"
   },
@@ -126,18 +120,6 @@
     "message": "Impossibile completare questa azione: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "Pagina precedente del grafico"
-  },
-  "statsChartNext": {
-    "message": "Pagina successiva del grafico"
-  },
-  "statsChartPage": {
-    "message": "Pagina {0} di {1}"
-  },
-  "statsChartShowing": {
-    "message": "Visualizzazione di {0}–{1} su {2}"
-  },
   "statsSectionsLabel": {
     "message": "Sezioni delle statistiche"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "Scegli un intervallo di date più ampio per esplorare la cronologia salvata."
   },
-  "statsDetectionRate": {
-    "message": "Voci con rilevamenti"
-  },
-  "statsActiveDays": {
-    "message": "Giorni attivi"
-  },
   "statsAverageConfidence": {
     "message": "Confidenza media"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "Sono mostrati gli ultimi {0} giorni. I totali e le esportazioni includono l’intero intervallo selezionato."
   },
-  "statsProtectionRanking": {
-    "message": "Classifica delle protezioni"
-  },
-  "statsCategoryTrend": {
-    "message": "Categorie nel tempo"
-  },
-  "statsCategoryOverlap": {
-    "message": "Categorie rilevate insieme"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "Numero di voci della cronologia con entrambe le categorie. Le celle diagonali mostrano le voci con quella categoria."
-  },
   "statsProtectionDetails": {
     "message": "Tutte le protezioni"
-  },
-  "statsDomainRanking": {
-    "message": "Classifica dei domini"
-  },
-  "statsDomainMap": {
-    "message": "Visite e rilevamenti"
-  },
-  "statsDomainMapHint": {
-    "message": "Ogni punto è un dominio. I punti più grandi hanno più protezioni distinte."
   },
   "statsDomainDetails": {
     "message": "Tutti i domini"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "Ordina domini"
   },
-  "statsSortVisits": {
-    "message": "Più visite"
-  },
-  "statsSortDetections": {
-    "message": "Più rilevamenti"
-  },
   "statsSortConfidence": {
     "message": "Confidenza più alta"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "Distribuzione della confidenza"
-  },
-  "statsConfidenceTrend": {
-    "message": "Confidenza nel tempo"
-  },
-  "statsCategoryConfidence": {
-    "message": "Confidenza per categoria"
   },
   "statsConfidenceNote": {
     "message": "La confidenza descrive la solidità degli indizi di rilevamento salvati, ma non dimostra la presenza di fingerprinting o di una verifica attiva."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "Nessun dominio corrisponde alla ricerca."
-  },
-  "statsSelectionNote": {
-    "message": "I grafici e le esportazioni usano l’intervallo di date selezionato. Le voci della cronologia rappresentano i rilevamenti salvati, non ogni visita nel browser."
   },
   "extensionName": {
     "message": "Scrapfly: rilevatore anti-bot"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "Abilita o disabilita il rilevamento"
-  },
-  "noDetectionsFound": {
-    "message": "Nessun rilevamento"
   },
   "detectionScanningTitle": {
     "message": "Ricerca delle protezioni"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "Cerca"
   },
-  "advancedBtnExport": {
-    "message": "Esporta"
-  },
   "advancedBtnExportTitle": {
     "message": "Esporta acquisizioni"
-  },
-  "advancedBtnClearAll": {
-    "message": "Cancella tutto"
   },
   "advancedBtnClearAllTitle": {
     "message": "Cancella tutte le acquisizioni"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "Vuoi davvero eliminare questo rilevamento da {0}?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "Impossibile caricare le impostazioni. Verranno usate quelle predefinite."
-  },
   "settingsSavedToast": {
     "message": "Impostazioni salvate"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0} è già in blacklist"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0} aggiunto alla blacklist"
-  },
   "failedAddDomainFmt": {
     "message": "Impossibile aggiungere il dominio: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "{0} rimosso dalla blacklist"
   },
   "invalidSettingsFmt": {
     "message": "Impostazioni non valide: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "Errore nell'applicazione degli aggiornamenti"
   },
-  "failedCheckForUpdates": {
-    "message": "Impossibile verificare gli aggiornamenti"
-  },
   "errorCheckingForUpdates": {
     "message": "Errore durante la verifica degli aggiornamenti"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "URL completo dell'endpoint (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "Variabili disponibili:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "Esempio: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "Impostazioni"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "Esporta o importa le impostazioni dell'estensione"
   },
   "settingsDataHistoryRow": {
     "message": "Cronologia rilevamenti"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "Impostazioni importate"
   },
-  "settingsImportFailedToast": {
-    "message": "Impossibile importare le impostazioni: file non valido"
-  },
   "statsPrivacyNote": {
     "message": "Calcolate localmente dalla cronologia dei rilevamenti. Nulla lascia il browser."
-  },
-  "statsSubtitleFmt": {
-    "message": "Calcolate localmente da {0} voci della cronologia. Nulla lascia il browser."
   },
   "statsRangeLabel": {
     "message": "Periodo"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "Le statistiche appariranno qui quando pagine con rilevamenti verranno salvate nella cronologia."
   },
-  "statsEntries": {
-    "message": "Voci della cronologia"
-  },
   "statsUniqueDomains": {
     "message": "Domini unici"
   },
   "statsDetections": {
     "message": "Rilevamenti"
   },
-  "statsDistinctDetectors": {
-    "message": "Protezioni distinte"
-  },
   "statsOverTime": {
     "message": "Rilevamenti nel tempo"
   },
-  "statsTopProtections": {
-    "message": "Protezioni più rilevate"
-  },
-  "statsTopDomains": {
-    "message": "Domini principali"
-  },
-  "statsByCategory": {
-    "message": "Per categoria"
-  },
-  "statsByDifficulty": {
-    "message": "Per difficoltà"
-  },
-  "statsPagesUnit": {
-    "message": "pagine"
-  },
-  "statsVisitsUnit": {
-    "message": "visite"
-  },
-  "statsDetectionsUnit": {
-    "message": "rilevamenti"
-  },
   "statsCategoryOther": {
     "message": "Altro"
-  },
-  "statsDifficultyNone": {
-    "message": "Nessun rilevamento"
   },
   "statsNoData": {
     "message": "Nessun dato in questo periodo"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "Pagine: {0}"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0} domini"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0} visite"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0} rilevamenti"
-  },
   "historyCategoryShareFmt": {
     "message": "{0} di {1} rilevamenti · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0} voci"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "{0} con rilevamenti"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "{0} visite per dominio"
-  },
-  "statsPerEntryFmt": {
-    "message": "{0} per voce"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "{0}% di affidabilità media"
   },
   "statsTimelineMetaFmt": {
     "message": "Rilevamenti: {0} · Giorni: {1}"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "Acquisito"
   },
-  "advCommonScript": {
-    "message": "Script"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "Livello di protezione:"
   },
-  "advCommonCookiesFound": {
-    "message": "Cookie trovati:"
-  },
   "advCommonSiteKey": {
     "message": "Chiave del sito"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "Script Python con requests e BeautifulSoup"
   },
-  "advCodeDescPython": {
-    "message": "Script Python con la libreria requests"
-  },
   "advCodeDescNodeCheerio": {
     "message": "Script Node.js con axios e cheerio"
-  },
-  "advCodeDescNode": {
-    "message": "Script Node.js con axios"
   },
   "advCodeDescPhpDom": {
     "message": "Script PHP con cURL e DOMDocument"
   },
-  "advCodeDescPhp": {
-    "message": "Script PHP con cURL"
-  },
   "advCodeDescCsharpHap": {
     "message": "C# con HttpClient e HtmlAgilityPack"
   },
-  "advCodeDescCsharp": {
-    "message": "C# con HttpClient"
-  },
   "advCodeDescGoQuery": {
     "message": "Go con net/http e goquery"
-  },
-  "advCodeDescGo": {
-    "message": "Go con net/http"
   },
   "pageNoticeCaptureActive": {
     "message": "Acquisizione attiva"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "Client reCAPTCHA"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "ID client: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "Copiato negli appunti!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "Script con seed:"
   },
-  "advShapeInitJsScript": {
-    "message": "Script Init.js"
-  },
   "advShapeInitJsScripts": {
     "message": "Script Init.js"
-  },
-  "advShapeSeedScript": {
-    "message": "Script con seed"
   },
   "advShapeSeedScripts": {
     "message": "Script con seed"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "I risultati vengono riutilizzati per questo percorso esatto, qualunque sia la query."
   },
-  "tipStatsActiveDays": {
-    "message": "Giorni con almeno una pagina salvata."
-  },
-  "tipStatsDetections": {
-    "message": "Protezioni trovate in tutte le pagine salvate, ripetizioni comprese."
-  },
   "tipStatsDetectors": {
     "message": "Protezioni diverse viste, ognuna contata una volta."
   },
   "tipStatsDomains": {
     "message": "Siti diversi tra le pagine salvate."
-  },
-  "tipStatsEntries": {
-    "message": "Pagine salvate nella cronologia in questo intervallo."
-  },
-  "tipStatsRateFmt": {
-    "message": "{0} di {1} voci"
   },
   "tipPatterns": {
     "message": "Pattern"
@@ -4531,38 +4339,11 @@
     "message": "Apri una pagina web per estrarla con Scrapfly",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "{0} acquisizioni"
-  },
-  "statsFirstSeen": {
-    "message": "Nuovo in questo periodo"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "{0} protezioni e {1} domini salvati per la prima volta in questo intervallo."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "Scegli 7, 30 o 90 giorni per vedere le novità."
-  },
-  "statsMostProtectedDomain": {
-    "message": "Dominio più protetto"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "{0} protezioni diverse in {1} visite."
-  },
-  "statsFoundTogether": {
-    "message": "Protezioni trovate insieme"
-  },
   "statsMethods": {
     "message": "Metodi di rilevamento"
   },
   "statsMatchesUnit": {
     "message": "corrispondenze"
-  },
-  "statsMethodsByCategory": {
-    "message": "Metodi per categoria"
-  },
-  "statsWeakEvidence": {
-    "message": "Prove più deboli"
   },
   "statsSignalColumn": {
     "message": "Segnale"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "Combinazione"
   },
-  "statsDecidedBy": {
-    "message": "Come sono stati decisi i rilevamenti"
-  },
-  "statsCombinationGain": {
-    "message": "Affidabilità per decisione"
-  },
   "statsCombinationColumn": {
     "message": "Combinazione"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "Nessun rilevamento in questo intervallo è stato deciso da una combinazione."
-  },
-  "statsRulesMostActive": {
-    "message": "Regole più attive"
-  },
-  "statsTipPatternsFmt": {
-    "message": "{0} pattern"
   },
   "statsRulesPatternsByMethod": {
     "message": "Pattern per metodo"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "In attesa di un'estensione più recente"
   },
-  "statsToolsByVendor": {
-    "message": "Acquisizioni per fornitore"
-  },
   "statsToolsCapture": {
     "message": "Acquisizione"
-  },
-  "statsToolsByTool": {
-    "message": "Strumenti più usati"
-  },
-  "statsToolsOverTime": {
-    "message": "Acquisizioni nel tempo"
   },
   "statsChangeColumn": {
     "message": "Modifica"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "Nessun dominio ha cambiato protezioni tra le visite salvate in questo intervallo."
   },
-  "statsNothingNew": {
-    "message": "Niente di nuovo: ogni protezione era già nella Cronologia prima di questo intervallo."
-  },
   "statsSectionSignals": {
     "message": "Segnali"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "Strumenti"
   },
-  "statsDomainChangesHint": {
-    "message": "Domini le cui protezioni rilevate sono cambiate tra due visite salvate."
-  },
-  "statsFirstSeenHint": {
-    "message": "Protezioni e domini salvati per la prima volta in questo intervallo."
-  },
   "statsSignalsNote": {
     "message": "Il tipo di prova trovato da ogni rilevamento salvato: nomi di cookie e header, URL, elementi della pagina, script e hook JavaScript."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "Protezioni i cui pattern trovati hanno l'affidabilità media più bassa. Le loro regole potrebbero aver bisogno di un pattern più forte."
   },
   "statsCombinationsNote": {
     "message": "Una combinazione rileva una protezione solo quando più pattern vengono trovati insieme."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "Regole"
   },
-  "statsRulesModified": {
-    "message": "Ufficiali modificate"
-  },
   "statsRulesDisabled": {
     "message": "Disattivate"
   },
   "statsRulesNeverMatchedHint": {
     "message": "Regole attive che non hanno trovato nulla nelle pagine salvate in questo intervallo."
   },
-  "statsRulesMissingHint": {
-    "message": "Le descrizioni appaiono nei dettagli del rilevamento, nella Cronologia e nelle combinazioni. Aggiungile nell'editor delle regole."
-  },
   "statsToolsNote": {
     "message": "Acquisizioni avanzate e risultati degli strumenti salvati su questo dispositivo."
-  },
-  "statsCapturesUnit": {
-    "message": "acquisizioni"
   },
   "detectionCardSureFmt": {
     "message": "Sicuro al {0}%"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "Poche pagine in questo periodo ({0}): confronti e classifiche possono essere fuorvianti."
-  },
-  "statsLoading": {
-    "message": "Caricamento delle statistiche..."
   },
   "statsEmptyShowAll": {
     "message": "Mostra tutta la cronologia"

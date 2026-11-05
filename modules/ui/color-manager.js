@@ -301,7 +301,6 @@ class ColorManager {
         this.drawColorCanvas(colorCtx, this.currentHue);
 
         // Update color at current position
-        const colorRect = colorCanvas.getBoundingClientRect();
         const colorX = parseInt(colorCursor.style.left) || 120;
         const colorY = parseInt(colorCursor.style.top) || 80;
         const saturation = colorX / 240;

@@ -17,9 +17,7 @@ async function initialize(reason = 'startup', previousVersion = null) {
         if (!workerKeepaliveManager) workerKeepaliveManager = new WorkerKeepaliveManager();
 
         // Startup and event handlers share the same initialization promise.
-        const initStartTime = Date.now();
         await ensureDetectorManagerInitialized();
-        const initDuration = Date.now() - initStartTime;
 
         let detectorCount = detectorManager.getDetectorCount();
         let hasDetectors = detectorCount > 0;

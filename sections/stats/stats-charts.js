@@ -11,7 +11,7 @@
  * segments                    proportion bar + legend; parts { label, value, color, tip? }; o.keepZero, formatShare, showLegend
  * sparkline                   values[]; o.color becomes --tone
  * niceScale(max, { integer }) -> { max, step } with four equal intervals
- * line, donut, matrix, scatter, and the horizontal bars/stacked are unchanged apart from colours and tick rounding.
+ * The horizontal bars/stacked are unchanged apart from colours and tick rounding.
  */
 (function(root) {
   'use strict';
@@ -242,35 +242,6 @@
       label(c.svg, left + available + 5, y + 16, fmt(o, number(p.value)));
     });
   }
-  function line(host, points = [], o = {}) {
-    const c = start(host, points, o);
-    if (!c) return;
-    const { max } = grid(c, Math.max(0, ...points.map(p => positive(p.value))), o);
-    const x = i => 42 + (c.width - 58) * (points.length === 1 ? .5 : i / (points.length - 1));
-    const y = v => 202 - (max ? Math.min(max, positive(v)) / max : 0) * 186;
-    let segment = [];
-    function flush() {
-      if (!segment.length) return;
-      const d = segment.map((p, i) => `${i ? 'L' : 'M'}${p[0]} ${p[1]}`).join(' ');
-      if (o.fill) {
-        const area = node(c.svg, 'path', { d: `${d} L${segment[segment.length - 1][0]} 202 L${segment[0][0]} 202 Z`, opacity: .15 });
-        paint(area, 'fill', o.color || DEFAULT_COLOR);
-      }
-      const stroke = node(c.svg, 'path', { d, fill: 'none', 'stroke-width': 2 });
-      paint(stroke, 'stroke', o.color || DEFAULT_COLOR);
-      segment = [];
-    }
-    points.forEach((p, i) => { if (p.value == null || !Number.isFinite(p.value)) flush(); else segment.push([x(i), y(p.value)]); });
-    flush();
-    const step = Math.max(1, Math.ceil(points.length / Math.max(1, Math.floor((c.width - 58) / 80))));
-    points.forEach((p, i) => {
-      if (i % step === 0) label(c.svg, x(i), 226, shortened(p.label, 12), i === 0 ? 'start' : 'middle');
-      if (p.value == null || !Number.isFinite(p.value)) return;
-      const n = node(c.svg, 'circle', { cx: x(i), cy: y(p.value), r: 5 });
-      paint(n, 'fill', p.color || o.color || DEFAULT_COLOR);
-      hit(c, n, p.label, [fmt(o, p.value)], p.tip, o);
-    });
-  }
   function stacked(host, rows = [], o = {}) {
     const series = o.series || [];
     const c = start(host, rows, o, o.vertical ? 240 : Math.max(100, rows.length * 34 + 20));
@@ -313,49 +284,6 @@
         }
         x += width;
       });
-    });
-  }
-  function donut(host, parts = [], o = {}) {
-    host.replaceChildren();
-    const layout = node(host, 'div', { class: 'stats-donut-layout' }, undefined, false);
-    const area = node(layout, 'div', { class: 'stats-donut' }, undefined, false);
-    const c = start(area, parts, o, 220);
-    if (!c) return;
-    c.width = 220;
-    c.svg.setAttribute('viewBox', '0 0 220 220');
-    const total = parts.reduce((sum, p) => sum + positive(p.value), 0), cx = c.width / 2, cy = 110, r = 74, circumference = 2 * Math.PI * r;
-    node(c.svg, 'circle', { cx, cy, r, fill: 'none', stroke: 'currentColor', opacity: .1, 'stroke-width': 26 });
-    // Two or more slices get a 2px gap so neighbours of similar colour stay distinguishable.
-    const gap = parts.filter(p => positive(p.value) > 0).length > 1 ? 2 : 0;
-    let offset = 0;
-    parts.forEach(p => {
-      const value = positive(p.value), share = total ? value / total : 0;
-      if (value > 0) {
-        const arc = Math.max(0, share * circumference - gap);
-        const n = node(c.svg, 'circle', { cx, cy, r, fill: 'none', 'stroke-width': 26, 'stroke-dasharray': `${arc} ${circumference}`, 'stroke-dashoffset': -(offset * circumference + gap / 2), transform: `rotate(-90 ${cx} ${cy})` });
-        paint(n, 'stroke', p.color || o.color || DEFAULT_COLOR);
-        hit(c, n, p.label, [fmt(o, value)], p.tip, o);
-      }
-      offset += share;
-    });
-    const center = label(c.svg, cx, cy, shortened(o.centerValue, 11), 'middle');
-    center.setAttribute('class', 'stats-axis-label stats-donut-center-value');
-    center.setAttribute('font-size', 24);
-    center.children[0].textContent = text(o.centerValue);
-    const caption = label(c.svg, cx, cy + 22, shortened(o.centerLabel, 20), 'middle');
-    caption.setAttribute('class', 'stats-axis-label stats-donut-center-label');
-    caption.setAttribute('font-size', 12);
-    caption.children[0].textContent = text(o.centerLabel);
-    const legend = node(layout, 'div', { class: 'stats-legend' }, undefined, false);
-    parts.forEach(p => {
-      // Zero rows stay by default; a caller that passes keepZero: false gets a legend of what is actually drawn.
-      if (o.keepZero === false && !(positive(p.value) > 0)) return;
-      const item = node(legend, 'div', { class: 'stats-legend-item' }, undefined, false);
-      const swatch = node(item, 'span', { class: 'stats-legend-swatch', 'aria-hidden': 'true' }, undefined, false);
-      swatch.style.backgroundColor = p.color || o.color || DEFAULT_COLOR;
-      node(item, 'span', { class: 'stats-legend-label' }, p.label, false);
-      node(item, 'span', { class: 'stats-legend-value' }, fmt(o, number(p.value)), false);
-      node(item, 'span', { class: 'stats-legend-share' }, fmt(o, total ? positive(p.value) / total * 100 : 0, 1) + '%', false);
     });
   }
 
@@ -496,56 +424,6 @@
     node(legend, 'span', {}, o.legendMore, false);
   }
 
-  function matrix(host, labels = [], values = {}, o = {}) {
-    const left = 100, cell = 42;
-    const c = start(host, labels, o, left + labels.length * cell + 10);
-    if (!c) return;
-    const width = Math.max(c.width, left + labels.length * cell + 10);
-    c.svg.setAttribute('class', 'stats-chart-svg stats-matrix');
-    c.svg.setAttribute('viewBox', `0 0 ${width} ${c.height}`);
-    c.svg.setAttribute('width', width);
-    host.style.overflowX = 'auto';
-    const max = Math.max(0, ...labels.flatMap(a => labels.map(b => positive((values[a.key] || {})[b.key]))));
-    labels.forEach((a, i) => {
-      label(c.svg, left - 6, left + i * cell + 26, shortened(a.label, 13), 'end');
-      const top = label(c.svg, left + i * cell + 24, left - 8, shortened(a.label, 13));
-      top.setAttribute('transform', `rotate(-45 ${left + i * cell + 24} ${left - 8})`);
-      labels.forEach((b, j) => {
-        const value = positive((values[a.key] || {})[b.key]);
-        const g = node(c.svg, 'g');
-        const rect = node(g, 'rect', { x: left + j * cell, y: left + i * cell, width: cell - 3, height: cell - 3, rx: 3, 'fill-opacity': max && value ? .2 + .8 * value / max : .06 });
-        paint(rect, 'fill', a.color || o.color || DEFAULT_COLOR);
-        label(g, left + j * cell + 19, left + i * cell + 25, fmt(o, value), 'middle');
-        hit(c, g, `${text(a.label)} / ${text(b.label)}`, [fmt(o, value)], null, o);
-        g.setAttribute('class', 'stats-hit stats-matrix-cell');
-      });
-    });
-  }
-  function scatter(host, points = [], o = {}) {
-    const c = start(host, points, o, 260);
-    if (!c) return;
-    const valid = points.filter(p => Number.isFinite(p.x) && Number.isFinite(p.y));
-    const xmin = Math.min(0, ...valid.map(p => p.x)), xmax = Math.max(0, Number.isFinite(o.xMax) && o.xMax > 0 ? o.xMax : 0, ...valid.map(p => p.x));
-    const ymin = Math.min(0, ...valid.map(p => p.y)), dataMax = Math.max(0, ...valid.map(p => p.y));
-    const external = Number.isFinite(o.yMax) && o.yMax > 0 ? o.yMax : 0;
-    // Without negative values the y axis gets round ticks like the other charts; an external maximum is kept literally.
-    const ymax = ymin < 0 ? Math.max(dataMax, external) : (external >= dataMax && external > 0 ? external : niceScale(Math.max(dataMax, external), { integer: o.integer !== false }).max);
-    for (let i = 0; i <= 4; i++) {
-      const y = 202 - i * 186 / 4, v = ymin + (ymax - ymin) * i / 4;
-      node(c.svg, 'line', { x1: 42, x2: c.width - 16, y1: y, y2: y, class: 'stats-gridline', stroke: 'currentColor', opacity: .12 });
-      label(c.svg, 36, y + 4, o.formatTick ? String(o.formatTick(v)) : fmt(o, v, ymin < 0 ? 1 : Number.isInteger(v) ? 0 : 1), 'end');
-    }
-    label(c.svg, c.width / 2, 252, o.xLabel, 'middle');
-    label(c.svg, 44, 12, o.yLabel);
-    label(c.svg, 42, 226, fmt(o, xmin));
-    label(c.svg, c.width - 16, 226, fmt(o, xmax), 'end');
-    valid.forEach(p => {
-      const n = node(c.svg, 'circle', { cx: 42 + (xmax === xmin ? .5 : (p.x - xmin) / (xmax - xmin)) * (c.width - 58), cy: 202 - (ymax === ymin ? 0 : (p.y - ymin) / (ymax - ymin)) * 186, r: Math.max(3, Math.min(18, positive(p.radius) || 4)), opacity: .75 });
-      paint(n, 'fill', o.color || DEFAULT_COLOR);
-      hit(c, n, p.label, [text(o.xLabel) + ': ' + fmt(o, p.x), text(o.yLabel) + ': ' + fmt(o, p.y)], p.tip, o);
-    });
-  }
-
   const ARROWS = { up: '▲', down: '▼', flat: '=', new: '' };
   function deltaBadge(parent, delta) {
     const kind = Object.prototype.hasOwnProperty.call(ARROWS, delta.kind) ? delta.kind : 'flat';
@@ -671,7 +549,7 @@
     node(svg, 'path', { class: 'stats-spark-line', d, fill: 'none' }).setAttribute('vector-effect', 'non-scaling-stroke');
   }
 
-  const api = { bars, line, stacked, donut, heatmap: calendar, calendar, matrix, scatter, rank, segments, sparkline, niceScale };
+  const api = { bars, stacked, heatmap: calendar, calendar, rank, segments, sparkline, niceScale };
   root.StatsCharts = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

@@ -44,12 +44,6 @@
   "advToolScriptsHint": {
     "message": "이 페이지가 불러온 보호 스크립트 보기"
   },
-  "advToolReloadScriptsHint": {
-    "message": "페이지를 새로고침하여 보호 스크립트 분석"
-  },
-  "advToolResetScriptsHint": {
-    "message": "보호 쿠키를 초기화하고 새로고침하여 스크립트 분석"
-  },
   "advToolReloadVersionHint": {
     "message": "페이지를 새로고침하여 보호 기능 버전 감지"
   },
@@ -126,18 +120,6 @@
     "message": "이 작업을 완료하지 못했습니다: {0}",
     "description": "Advanced tool action failure. {0} = error details"
   },
-  "statsChartPrevious": {
-    "message": "차트 이전 페이지"
-  },
-  "statsChartNext": {
-    "message": "차트 다음 페이지"
-  },
-  "statsChartPage": {
-    "message": "전체 {1}페이지 중 {0}페이지"
-  },
-  "statsChartShowing": {
-    "message": "전체 {2}개 중 {0}–{1}개 표시"
-  },
   "statsSectionsLabel": {
     "message": "통계 섹션"
   },
@@ -183,12 +165,6 @@
   "statsRangeEmptyDesc": {
     "message": "저장된 기록을 살펴보려면 더 긴 기간을 선택하세요."
   },
-  "statsDetectionRate": {
-    "message": "탐지가 있는 항목"
-  },
-  "statsActiveDays": {
-    "message": "활동 일수"
-  },
   "statsAverageConfidence": {
     "message": "평균 신뢰도"
   },
@@ -213,29 +189,8 @@
   "statsTimelineLimitFmt": {
     "message": "최근 {0}일이 표시됩니다. 합계와 내보내기에는 선택한 전체 기간이 포함됩니다."
   },
-  "statsProtectionRanking": {
-    "message": "보호 기능 순위"
-  },
-  "statsCategoryTrend": {
-    "message": "시간에 따른 카테고리 변화"
-  },
-  "statsCategoryOverlap": {
-    "message": "함께 탐지된 카테고리"
-  },
-  "statsCategoryOverlapHint": {
-    "message": "두 카테고리를 모두 포함하는 기록 항목 수입니다. 대각선 셀은 해당 카테고리가 있는 항목을 보여줍니다."
-  },
   "statsProtectionDetails": {
     "message": "모든 보호 기능"
-  },
-  "statsDomainRanking": {
-    "message": "도메인 순위"
-  },
-  "statsDomainMap": {
-    "message": "방문 및 탐지"
-  },
-  "statsDomainMapHint": {
-    "message": "각 점은 도메인을 나타냅니다. 점이 클수록 서로 다른 보호 기능이 많습니다."
   },
   "statsDomainDetails": {
     "message": "모든 도메인"
@@ -246,12 +201,6 @@
   "statsDomainSortLabel": {
     "message": "도메인 정렬"
   },
-  "statsSortVisits": {
-    "message": "방문 많은 순"
-  },
-  "statsSortDetections": {
-    "message": "탐지 많은 순"
-  },
   "statsSortConfidence": {
     "message": "신뢰도 높은 순"
   },
@@ -260,12 +209,6 @@
   },
   "statsConfidenceDistribution": {
     "message": "신뢰도 분포"
-  },
-  "statsConfidenceTrend": {
-    "message": "시간에 따른 신뢰도 변화"
-  },
-  "statsCategoryConfidence": {
-    "message": "카테고리별 신뢰도"
   },
   "statsConfidenceNote": {
     "message": "신뢰도는 저장된 탐지 근거의 강도를 나타내며, 핑거프린팅이나 진행 중인 챌린지의 존재를 입증하지는 않습니다."
@@ -290,9 +233,6 @@
   },
   "statsNoMatchingDomains": {
     "message": "검색과 일치하는 도메인이 없습니다."
-  },
-  "statsSelectionNote": {
-    "message": "차트와 내보내기는 선택한 기간을 사용합니다. 기록 항목은 저장된 탐지를 나타내며, 모든 브라우저 방문을 나타내지는 않습니다."
   },
   "extensionName": {
     "message": "Scrapfly: 안티봇 탐지기"
@@ -325,9 +265,6 @@
   },
   "enableOrDisableDetection": {
     "message": "탐지 활성화 또는 비활성화"
-  },
-  "noDetectionsFound": {
-    "message": "탐지된 항목 없음"
   },
   "detectionScanningTitle": {
     "message": "페이지 검사 중"
@@ -593,14 +530,8 @@
   "advancedFilterSearch": {
     "message": "검색"
   },
-  "advancedBtnExport": {
-    "message": "내보내기"
-  },
   "advancedBtnExportTitle": {
     "message": "캡처 내보내기"
-  },
-  "advancedBtnClearAll": {
-    "message": "모두 지우기"
   },
   "advancedBtnClearAllTitle": {
     "message": "모든 캡처 지우기"
@@ -1024,9 +955,6 @@
   "dialogDeleteHistoryMessageFmt": {
     "message": "{0}의 이 감지를 삭제하시겠습니까?"
   },
-  "failedLoadSettingsDefault": {
-    "message": "설정을 불러오지 못했습니다. 기본값을 사용합니다."
-  },
   "settingsSavedToast": {
     "message": "설정이 저장되었습니다"
   },
@@ -1048,14 +976,8 @@
   "domainAlreadyBlacklistedFmt": {
     "message": "{0}은(는) 이미 블랙리스트에 있습니다"
   },
-  "addedDomainToBlacklistFmt": {
-    "message": "{0}을(를) 블랙리스트에 추가했습니다"
-  },
   "failedAddDomainFmt": {
     "message": "도메인을 추가하지 못했습니다: {0}"
-  },
-  "removedDomainFromBlacklistFmt": {
-    "message": "블랙리스트에서 {0}을(를) 제거했습니다"
   },
   "invalidSettingsFmt": {
     "message": "유효하지 않은 설정: {0}"
@@ -1198,9 +1120,6 @@
   "errorApplyingUpdates": {
     "message": "업데이트를 적용하는 중 오류가 발생했습니다"
   },
-  "failedCheckForUpdates": {
-    "message": "업데이트 확인에 실패했습니다"
-  },
   "errorCheckingForUpdates": {
     "message": "업데이트를 확인하는 중 오류가 발생했습니다"
   },
@@ -1266,12 +1185,6 @@
   },
   "settingsWebhookUrlDesc": {
     "message": "전체 엔드포인트 URL (https://api.example.com/webhook)"
-  },
-  "settingsAvailableVariables": {
-    "message": "사용 가능한 변수:"
-  },
-  "settingsWebhookUrlExample": {
-    "message": "예: https://api.example.com/webhook?url=<SITEURL>&count=<DETECTION_COUNT>&time=<TIMESTAMP>"
   },
   "settingsContentType": {
     "message": "Content-Type"
@@ -1515,9 +1428,6 @@
   },
   "settingsDataSettingsRow": {
     "message": "설정"
-  },
-  "settingsDataSettingsRowDesc": {
-    "message": "확장 프로그램 설정을 내보내거나 가져오기"
   },
   "settingsDataHistoryRow": {
     "message": "탐지 기록"
@@ -1986,14 +1896,8 @@
   "settingsImportedToast": {
     "message": "설정을 가져왔습니다"
   },
-  "settingsImportFailedToast": {
-    "message": "설정을 가져오지 못했습니다: 잘못된 파일"
-  },
   "statsPrivacyNote": {
     "message": "탐지 기록에서 로컬로 계산됩니다. 브라우저 밖으로 전송되지 않습니다."
-  },
-  "statsSubtitleFmt": {
-    "message": "기록 항목 {0}개에서 로컬로 계산됨. 브라우저 밖으로 전송되지 않습니다."
   },
   "statsRangeLabel": {
     "message": "기간"
@@ -2016,47 +1920,17 @@
   "statsEmptyDesc": {
     "message": "탐지된 페이지가 기록에 저장되면 여기에 통계가 표시됩니다."
   },
-  "statsEntries": {
-    "message": "기록 항목"
-  },
   "statsUniqueDomains": {
     "message": "고유 도메인"
   },
   "statsDetections": {
     "message": "탐지"
   },
-  "statsDistinctDetectors": {
-    "message": "고유 보호 시스템"
-  },
   "statsOverTime": {
     "message": "시간별 탐지"
   },
-  "statsTopProtections": {
-    "message": "가장 많이 탐지된 보호 시스템"
-  },
-  "statsTopDomains": {
-    "message": "상위 도메인"
-  },
-  "statsByCategory": {
-    "message": "카테고리별"
-  },
-  "statsByDifficulty": {
-    "message": "난이도별"
-  },
-  "statsPagesUnit": {
-    "message": "페이지"
-  },
-  "statsVisitsUnit": {
-    "message": "방문"
-  },
-  "statsDetectionsUnit": {
-    "message": "탐지"
-  },
   "statsCategoryOther": {
     "message": "기타"
-  },
-  "statsDifficultyNone": {
-    "message": "탐지 없음"
   },
   "statsNoData": {
     "message": "이 기간에 데이터가 없습니다"
@@ -2064,32 +1938,8 @@
   "statsTipPagesFmt": {
     "message": "{0}개 페이지"
   },
-  "statsTipDomainsFmt": {
-    "message": "{0}개 도메인"
-  },
-  "statsTipVisitsFmt": {
-    "message": "{0}회 방문"
-  },
-  "statsTipDetectionsFmt": {
-    "message": "{0}개 탐지"
-  },
   "historyCategoryShareFmt": {
     "message": "{1}개 중 {0}개 · {2}%"
-  },
-  "statsTipEntriesFmt": {
-    "message": "{0}개 항목"
-  },
-  "statsWithDetectionsFmt": {
-    "message": "탐지 있음 {0}개"
-  },
-  "statsVisitsPerDomainFmt": {
-    "message": "도메인당 {0}회 방문"
-  },
-  "statsPerEntryFmt": {
-    "message": "항목당 {0}"
-  },
-  "statsAvgConfidenceFmt": {
-    "message": "평균 신뢰도 {0}%"
   },
   "statsTimelineMetaFmt": {
     "message": "{0}개 탐지 · {1}일"
@@ -2691,9 +2541,6 @@
   "advCommonCaptured": {
     "message": "캡처 시각"
   },
-  "advCommonScript": {
-    "message": "스크립트"
-  },
   "advCommonUrl": {
     "message": "URL"
   },
@@ -2757,9 +2604,6 @@
   "advCommonProtectionLevel": {
     "message": "보호 수준:"
   },
-  "advCommonCookiesFound": {
-    "message": "찾은 쿠키:"
-  },
   "advCommonSiteKey": {
     "message": "사이트 키"
   },
@@ -2796,32 +2640,17 @@
   "advCodeDescPythonBs": {
     "message": "requests와 BeautifulSoup을 사용하는 Python 스크립트"
   },
-  "advCodeDescPython": {
-    "message": "requests 라이브러리를 사용하는 Python 스크립트"
-  },
   "advCodeDescNodeCheerio": {
     "message": "axios와 cheerio를 사용하는 Node.js 스크립트"
-  },
-  "advCodeDescNode": {
-    "message": "axios를 사용하는 Node.js 스크립트"
   },
   "advCodeDescPhpDom": {
     "message": "cURL과 DOMDocument를 사용하는 PHP 스크립트"
   },
-  "advCodeDescPhp": {
-    "message": "cURL을 사용하는 PHP 스크립트"
-  },
   "advCodeDescCsharpHap": {
     "message": "HttpClient와 HtmlAgilityPack을 사용하는 C#"
   },
-  "advCodeDescCsharp": {
-    "message": "HttpClient를 사용하는 C#"
-  },
   "advCodeDescGoQuery": {
     "message": "net/http와 goquery를 사용하는 Go"
-  },
-  "advCodeDescGo": {
-    "message": "net/http를 사용하는 Go"
   },
   "pageNoticeCaptureActive": {
     "message": "캡처 진행 중"
@@ -3069,9 +2898,6 @@
   "advRecaptchaClientsTitle": {
     "message": "reCAPTCHA 클라이언트"
   },
-  "advRecaptchaClientIdFmt": {
-    "message": "클라이언트 ID: {0}"
-  },
   "advRecaptchaCopiedToClipboard": {
     "message": "클립보드에 복사되었습니다!"
   },
@@ -3171,14 +2997,8 @@
   "advShapeSeedScriptsLabel": {
     "message": "seed 스크립트:"
   },
-  "advShapeInitJsScript": {
-    "message": "Init.js 스크립트"
-  },
   "advShapeInitJsScripts": {
     "message": "Init.js 스크립트"
-  },
-  "advShapeSeedScript": {
-    "message": "seed 스크립트"
   },
   "advShapeSeedScripts": {
     "message": "seed 스크립트"
@@ -4020,23 +3840,11 @@
   "tipScopePath": {
     "message": "쿼리와 관계없이 이 경로에서 결과를 재사용합니다."
   },
-  "tipStatsActiveDays": {
-    "message": "페이지가 하나 이상 저장된 날입니다."
-  },
-  "tipStatsDetections": {
-    "message": "저장된 모든 페이지에서 찾은 보호 기능(중복 포함)입니다."
-  },
   "tipStatsDetectors": {
     "message": "확인된 서로 다른 보호 기능(각각 한 번씩 계산)입니다."
   },
   "tipStatsDomains": {
     "message": "저장된 페이지 중 서로 다른 사이트입니다."
-  },
-  "tipStatsEntries": {
-    "message": "이 기간에 기록에 저장된 페이지입니다."
-  },
-  "tipStatsRateFmt": {
-    "message": "{1}개 중 {0}개 항목"
   },
   "tipPatterns": {
     "message": "패턴"
@@ -4531,38 +4339,11 @@
     "message": "Scrapfly로 스크래핑하려면 웹 페이지를 여세요",
     "description": "Toast when the tab is not a web page"
   },
-  "statsTipCapturesFmt": {
-    "message": "캡처 {0}개"
-  },
-  "statsFirstSeen": {
-    "message": "이 기간의 새 항목"
-  },
-  "statsFirstSeenTipFmt": {
-    "message": "이 기간에 처음 저장된 보호 {0}개, 도메인 {1}개."
-  },
-  "statsFirstSeenAllTip": {
-    "message": "새 항목을 보려면 7, 30, 90일을 선택하세요."
-  },
-  "statsMostProtectedDomain": {
-    "message": "가장 많이 보호된 도메인"
-  },
-  "statsMostProtectedTipFmt": {
-    "message": "방문 {1}회에서 서로 다른 보호 {0}개."
-  },
-  "statsFoundTogether": {
-    "message": "함께 발견된 보호"
-  },
   "statsMethods": {
     "message": "탐지 방법"
   },
   "statsMatchesUnit": {
     "message": "일치"
-  },
-  "statsMethodsByCategory": {
-    "message": "카테고리별 방법"
-  },
-  "statsWeakEvidence": {
-    "message": "가장 약한 근거"
   },
   "statsSignalColumn": {
     "message": "신호"
@@ -4579,12 +4360,6 @@
   "statsDecidedCombination": {
     "message": "조합"
   },
-  "statsDecidedBy": {
-    "message": "탐지 판정 방식"
-  },
-  "statsCombinationGain": {
-    "message": "판정별 신뢰도"
-  },
   "statsCombinationColumn": {
     "message": "조합"
   },
@@ -4593,12 +4368,6 @@
   },
   "statsNoCombinations": {
     "message": "이 기간에 조합으로 판정된 탐지가 없습니다."
-  },
-  "statsRulesMostActive": {
-    "message": "가장 활발한 규칙"
-  },
-  "statsTipPatternsFmt": {
-    "message": "패턴 {0}개"
   },
   "statsRulesPatternsByMethod": {
     "message": "방법별 패턴"
@@ -4642,17 +4411,8 @@
   "statsRulesWaiting": {
     "message": "새 확장 프로그램 대기 중"
   },
-  "statsToolsByVendor": {
-    "message": "공급업체별 캡처"
-  },
   "statsToolsCapture": {
     "message": "캡처"
-  },
-  "statsToolsByTool": {
-    "message": "가장 많이 쓴 도구"
-  },
-  "statsToolsOverTime": {
-    "message": "시간별 캡처"
   },
   "statsChangeColumn": {
     "message": "변경"
@@ -4666,9 +4426,6 @@
   "statsNoChanges": {
     "message": "이 기간에 저장된 방문 사이에 보호가 바뀐 도메인이 없습니다."
   },
-  "statsNothingNew": {
-    "message": "새 항목 없음: 모든 보호가 이 기간 전에 이미 기록에 있었습니다."
-  },
   "statsSectionSignals": {
     "message": "신호"
   },
@@ -4681,17 +4438,8 @@
   "statsSectionTools": {
     "message": "도구"
   },
-  "statsDomainChangesHint": {
-    "message": "저장된 두 방문 사이에 탐지된 보호가 바뀐 도메인."
-  },
-  "statsFirstSeenHint": {
-    "message": "이 기간에 처음 저장된 보호와 도메인."
-  },
   "statsSignalsNote": {
     "message": "저장된 각 탐지가 일치한 근거의 종류: 쿠키와 헤더 이름, URL, 페이지 요소, 스크립트, JavaScript 훅."
-  },
-  "statsWeakEvidenceHint": {
-    "message": "일치한 패턴의 평균 신뢰도가 가장 낮은 보호입니다. 해당 규칙에 더 강한 패턴이 필요할 수 있습니다."
   },
   "statsCombinationsNote": {
     "message": "조합은 여러 패턴이 함께 발견될 때만 보호를 탐지합니다."
@@ -4702,23 +4450,14 @@
   "statsRulesTotal": {
     "message": "규칙"
   },
-  "statsRulesModified": {
-    "message": "수정한 공식 규칙"
-  },
   "statsRulesDisabled": {
     "message": "비활성화"
   },
   "statsRulesNeverMatchedHint": {
     "message": "이 기간에 저장된 페이지에서 아무것도 발견하지 못한 활성 규칙."
   },
-  "statsRulesMissingHint": {
-    "message": "설명은 탐지 세부 정보, 기록, 조합에 표시됩니다. 규칙 편집기에서 추가하세요."
-  },
   "statsToolsNote": {
     "message": "이 기기에 저장된 고급 캡처와 도구 결과."
-  },
-  "statsCapturesUnit": {
-    "message": "캡처"
   },
   "detectionCardSureFmt": {
     "message": "확신도 {0}%"
@@ -5145,9 +4884,6 @@
   },
   "statsLowDataFmt": {
     "message": "이 기간의 페이지가 적습니다({0}). 비교와 순위가 오해를 부를 수 있습니다."
-  },
-  "statsLoading": {
-    "message": "통계를 불러오는 중..."
   },
   "statsEmptyShowAll": {
     "message": "전체 기록 표시"
