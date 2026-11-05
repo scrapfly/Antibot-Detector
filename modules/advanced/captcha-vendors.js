@@ -356,7 +356,6 @@
     };
 
     const byVendorId = Object.fromEntries(list.map(vendor => [vendor.vendorId, vendor]));
-    const byDetectorId = Object.fromEntries(list.map(vendor => [vendor.detectorId, vendor]));
 
     const hostMatches = (rule, host) => (rule.hosts || []).includes(host)
         || (rule.domains || []).some(domain => host === domain || host.endsWith('.' + domain));
@@ -400,7 +399,7 @@
         };
     }
 
-    const api = Object.freeze({ list: Object.freeze(list), byVendorId, byDetectorId, classify, probeArgs, siteKeyOnly: Object.freeze(siteKeyOnly) });
+    const api = Object.freeze({ list: Object.freeze(list), byVendorId, classify, probeArgs, siteKeyOnly: Object.freeze(siteKeyOnly) });
     global.AdvancedCaptchaVendors = api;
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
