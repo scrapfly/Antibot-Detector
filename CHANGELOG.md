@@ -5,6 +5,16 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.4] - 2026-11-05
+
+### Fixed
+
+- Imperva tools list and keep only requests to Imperva's own endpoints on the page's site, with saved challenge addresses and payloads limited to 20.
+- Shape Security: stopping a capture right after the page loads no longer leaves a stale Monitoring Active notice or blocks the next Start.
+- Shape Security: a capture that runs out of time with nothing captured no longer saves an empty entry.
+- Akamai: starting Extract Sensor twice on one tab no longer lets the first run's timer end the second early.
+- Advanced: ALTCHA Extract Site Key now finds the key of an ALTCHA Cloud widget before its challenge has loaded.
+
 ## [3.1.3] - 2026-11-05
 
 ### Added
@@ -990,6 +1000,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.3...v3.1.4
 [3.1.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.2...v3.1.3
 [3.1.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.0...v3.1.1
