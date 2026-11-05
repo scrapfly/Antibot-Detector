@@ -9,7 +9,8 @@
  *   matches()            one entry against the search text and the chips
  *   filter()             the entries that match, in their order
  *
- * The search looks in the address, the title, the note and the names of the protections. The chips
+ * The search looks in the address, the title, the note and the names of the protections, ignoring case and accents
+ * ("cafe" finds "Café", "Café" finds "cafe"). The chips
  * combine with AND: Pinned, Changed, Combinations and the categories must all hold, and several
  * categories together mean "any of them" (Anti-bot and CAPTCHA keep the pages that have either).
  * Combinations keeps the pages where at least one combination fired.
@@ -72,6 +73,17 @@
     } catch (_) { return ''; }
   };
 
+  /**
+   * Text as the search compares it: no accents and no capitals, so "cafe" finds "Café" and "Café" finds "cafe". NFD takes an
+   * accented letter apart and \p{M} is what is left of the accent (a dotted İ is an I and a dot, so it meets i). The Turkish
+   * dotless ı has no accent to take off: it is read as i, so a keyboard without it still finds "Diyarbakır". Plain ASCII
+   * skips the work. toLowerCase and not toLocaleLowerCase: the browser's language must not turn I into ı.
+   */
+  const fold = (text) => {
+    const value = String(text == null ? '' : text);
+    return (/[^\x00-\x7f]/.test(value) ? value.normalize('NFD').replace(/\p{M}+/gu, '').replace(/\u0131/g, 'i') : value).toLowerCase();
+  };
+
   const isActive = (chips) => {
     const value = normalizeChips(chips);
     return FLAGS.some(flag => value[flag]) || value.categories.length > 0;
@@ -95,17 +107,22 @@
     if (chips.combinations && !hasCombinations(item)) return false;
     if (chips.categories.length && !detections.some(d => chips.categories.includes(categoryOf(d)))) return false;
 
-    const query = String(options.query || '').toLowerCase().trim();
-    if (!query) return true;
+    const typed = String(options.query || '').trim();
+    if (!typed) return true;
     const haystack = [
       item.url,
       item.title,
       item.note,
       ...detections.map(d => nameOf(d))
     ];
-    // Stored addresses are ASCII (bücher.de is xn--bcher-kva.de): a search typed with letters finds them too
-    const needles = [query, asciiHost(query)].filter(Boolean);
-    return haystack.some(part => needles.some(needle => String(part || '').toLowerCase().includes(needle)));
+    // Stored addresses are ASCII (bücher.de is xn--bcher-kva.de): a search typed with letters finds them too, so the typed
+    // host (not the folded text, which has lost its letters) is the second needle. A query that is only accents folds to
+    // nothing: it matches nothing, where an empty needle would match every entry
+    const needles = [fold(typed).trim(), asciiHost(typed.toLowerCase())].filter(Boolean);
+    return haystack.some((part) => {
+      const text = fold(part || '');
+      return needles.some(needle => text.includes(needle));
+    });
   }
 
   function filter(items, options = {}) {
