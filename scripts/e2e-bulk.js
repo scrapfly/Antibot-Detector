@@ -240,7 +240,7 @@ const PROBE = {
         assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
         assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,`));
       } else if (ext === 'md') {
-        assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
+        assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\nMost seen: Bulk Probe \(2 pages\)\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
         assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
         assert.ok(!text.includes('?n=1'), 'the query, where tokens live, is left out');
         assert.equal(text.charCodeAt(0), 35, 'a Markdown file has no byte-order mark');

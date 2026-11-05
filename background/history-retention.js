@@ -159,7 +159,7 @@ const HistoryRetention = {
     },
 
     /** StorageManager (a global in the worker, required under Node tests): its strict reader throws where getSettings answers {}. */
-    storage() {
+    storageManager() {
         if (typeof StorageManager === 'undefined') require('../modules/core/storage-manager.js');
         return StorageManager;
     },
@@ -174,7 +174,7 @@ const HistoryRetention = {
      */
     async readConfig() {
         try {
-            return this.getConfig(await this.storage().readSettingsStrict());
+            return this.getConfig(await this.storageManager().readSettingsStrict());
         } catch (error) {
             // Only the kind of failure: the message of a JSON error quotes the stored text
             this._warn('[HistoryRetention] The settings could not be read, so nothing is trimmed:', error && error.name);
