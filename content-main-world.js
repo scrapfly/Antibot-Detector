@@ -22,7 +22,7 @@
   // labels (LOG); tuning (caps, timings) comes with every install event instead.
   let PROTOCOL = null;
   let EVENTS, FIELDS, MESSAGE_TYPES, HOOK_FAILURE_REASONS, GLOBALS, HOOKS_REASONS, WINDOW_REASONS;
-  let LOG, MAIN_WORLD, PATH_SEPARATOR;
+  let LOG, MAIN_WORLD, PATH_SEPARATOR, CONTROL_REASONS;
   let ALLOWED_ISOLATED_MESSAGE_TYPES = new Set();
   // The browser's text for a member called on a foreign `this`: the only error
   // our wrappers retry or silence. Read from the browser itself while this file
@@ -211,6 +211,7 @@
     WINDOW_REASONS = PROTOCOL.COMPLETION_REASONS.WINDOW;
     ({ LOG, MAIN_WORLD } = PROTOCOL);
     PATH_SEPARATOR = MAIN_WORLD.PATH_SEPARATOR;
+    CONTROL_REASONS = PROTOCOL.CONTROL_REASONS || {};
     illegalInvocationMessage = derivedIllegalInvocationMessage || MAIN_WORLD.ILLEGAL_INVOCATION_FALLBACK;
     // Before the first wrapper exists, and kept for the page's lifetime (hooks
     // off included: the bind shims stay)
@@ -275,6 +276,24 @@
 
   function isHookReportingSuppressed() {
     return hookSuppressionDepth > 0;
+  }
+
+  // The load is answered from the saved result. Window checks that are already running stop (what they find is dropped, and
+  // every read of a path runs the page's own getters), and the worker is told as when the checks are skipped at their start,
+  // with the cache_hit reason it ignores: any other completion of a page with no scan under way opens a scan that never
+  // finishes. Nothing is sent when they are not polling: not started yet (the skip at their start tells the worker) or over
+  // (they told it themselves). The two ways the answer arrives share this: the early check's CACHE_HIT message and the
+  // worker's page-load check, which sends DISABLE_MONITORING with the cache_hit reason when it finds the result later.
+  function stopWindowChecksForCacheHit() {
+    if (!windowPropertyTracker || !windowPropertyTracker.isPolling) return;
+    windowPropertyTracker.stop();
+    postBridgeMessage({
+      type: MESSAGE_TYPES.WINDOW_PROPS_COMPLETE,
+      url: window.location.href,
+      timestamp: Date.now(),
+      detectedCount: 0,
+      reason: WINDOW_REASONS.CACHE_HIT
+    });
   }
 
   let logRateWindowStart = Date.now();
@@ -1020,18 +1039,8 @@
     if (data && data.type === MESSAGE_TYPES.CACHE_HIT) {
       logDebug('[MAIN WORLD] Cache hit notification received - setting flag to stop hook reporting');
       cacheHitEarlyExit = true;
-      // Window checks that began before the answer came (a page that loads faster than the cache check) stop here: what they
-      // find is dropped, and every read of a path runs the page's own getters. The worker is told as when the checks are skipped.
-      if (windowPropertyTracker && windowPropertyTracker.isPolling) {
-        windowPropertyTracker.stop();
-        postBridgeMessage({
-          type: MESSAGE_TYPES.WINDOW_PROPS_COMPLETE,
-          url: window.location.href,
-          timestamp: Date.now(),
-          detectedCount: 0,
-          reason: WINDOW_REASONS.CACHE_HIT
-        });
-      }
+      // Window checks that began before the answer came (a page that loads faster than the cache check) stop here
+      stopWindowChecksForCacheHit();
       return;
     }
 
@@ -1051,6 +1060,9 @@
       if (cacheHitUninstallStats.failures > 0) {
         logWarn(`Cache hit cleanup: ${cacheHitUninstallStats.failures} hooks could not be removed`);
       }
+
+      // The worker found the saved result after the early check missed it: the window checks stop as well
+      if (CONTROL_REASONS.CACHE_HIT !== undefined && data.reason === CONTROL_REASONS.CACHE_HIT) stopWindowChecksForCacheHit();
     }
 
     // Stop window property polling after detection completes (late results won't update anything)
