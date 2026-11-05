@@ -42,6 +42,7 @@ const ARKOSE_KEY = '476068BF-9607-4799-B53D-966BE98E2B81';
 const TURNSTILE_KEY = '1x00000000000000000000AA';
 const GEETEST_ID = 'ec6ba5a1c9c2e5d46d0a09d7f0d1a8f1';
 const ALTCHA_KEY = 'key_AbC-123_xyz789';
+const ALTCHA_CLOUD_KEY = 'key_CloudEmbed0123456789';
 const SHAPE_SEED = 'AMACZQihAQAAI5_7SIGNL66-PTUUnAvyzPFZTpfj5iQVtZuYN2dfrszHMGw-';
 const AKAMAI_SENSOR = '3;0;1;0;4733506;sensor-e2e-0123456789';
 const CF_BM = 'k9cCU2HrMT2qW8nXb.V4Jm3Lp0RzYtQe7sHfGaIdCw1-1759600000.0255423-1.0.1.1-Zx3nQ7vLm2Pq9Rt4Yw8Kc1Hb6Jd5Fg0Sa_Ve2Nu7Mi4Ol9Pk3Tr8Wq1Xz6Cy5Bv0An.Df4Gh7Jk2Lz9Xc3Vb6Nm1Qw8Er5Ty0Ui4Op7As2Sd';
@@ -359,6 +360,9 @@ const VARIANTS = [
   { ...byId('cloudflare'), id: 'cloudflare-late', title: 'Cloudflare late probe', late: true },
   // The same for a CAPTCHA described as data: its widget markup alone detects it (60%), the script and the requests come with the second load
   { ...byId('altcha'), id: 'altcha-late', title: 'ALTCHA late probe', late: true },
+  // ALTCHA's documented Cloud embed: the key is in the widget's challengeurl attribute, and the widget has not asked for its challenge
+  { ...byId('altcha'), id: 'altcha-cloud', title: 'ALTCHA Cloud embed probe', requests: [],
+    dom: [{ tag: 'altcha-widget', attrs: { challengeurl: `https://eu.altcha.org/api/v1/challenge?apiKey=${ALTCHA_CLOUD_KEY}` } }] },
   { id: 'plain', title: 'Plain page', dom: [{ tag: 'p', attrs: {}, text: 'Nothing here is protected' }] },
   // A page that only names a vendor (10%): below the minimum, so no tools
   { id: 'weak', title: 'Weak signal', inline: ['var vendor = "grecaptcha";'] },
@@ -862,6 +866,12 @@ async function main() {
       await t.saved('altcha', before);
     }]
   ], { variant: 'altcha-late', ...ctxSetup(altcha) });
+
+  // The documented Cloud embed names its key in the widget's own attribute: Extract Site Key finds it before any challenge request exists
+  await protection(altcha, [
+    siteKeyAction(altcha, 'altchaExtractSiteKey', { title: 'ALTCHA site key', key: ALTCHA_CLOUD_KEY })
+  ], { variant: 'altcha-cloud', ...ctxSetup(altcha) });
+
   // =================================================================================================================================
   // Part B: the tools with their own module
   // =================================================================================================================================

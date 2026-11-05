@@ -90,7 +90,14 @@ AdvancedSiteKeyProbe.probe = function(args) {
         document.querySelectorAll(rule.selector).forEach(el => {
           const extra = {};
           Object.keys(rule.fields || {}).forEach(name => { extra[name] = el.getAttribute(rule.fields[name]) || ''; });
-          add(rule.attr === 'value' ? (el.value || el.getAttribute('value')) : el.getAttribute(rule.attr), rule.source || 'widget', extra);
+          const raw = rule.attr === 'value' ? (el.value || el.getAttribute('value')) : el.getAttribute(rule.attr);
+          // A rule with a pattern takes the key from inside the value (a challenge address carrying it); without one, the whole value
+          let value = raw;
+          if (pattern) {
+            const found = typeof raw === 'string' ? pattern.exec(raw) : null;
+            value = found && found[1] !== undefined ? found[1] : null;
+          }
+          add(value, rule.source || 'widget', extra);
         });
       } else if (rule.type === 'url') {
         for (const url of urls) add(fromUrl(url, rule, urlPattern), rule.source || 'request');
