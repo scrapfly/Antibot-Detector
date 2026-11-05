@@ -26,7 +26,7 @@ class Detection {
     this.blacklistedDomain = null;
     this.viewedTabId = null;
     this.viewedTabUrl = null;
-    this.cacheCleared = false; // Refresh when tab becomes visible
+    this.cacheCleared = false; // popup.js shows the empty card on the next visit when set; nothing sets it now: refreshAfterCacheChange redraws at once
     this.advancedSection = null; // Reference to Advanced section for cross-component notifications
     this.uiStates = (typeof DetectionUIStates !== 'undefined')
       ? DetectionUIStates
@@ -213,86 +213,54 @@ class Detection {
   hideLoadingState(...args) {
     return DetectionUI.hideLoadingState.apply(this, args);
   }
-  /** The cache scope changed or the cache was cleared: drop the shown results and show what the cache has now. */
+  /**
+   * The cache scope changed or the cache was cleared (Settings, or another extension page): show what the cache has for the page
+   * now, drawn as any other view of it is: its results, or the card that says it has no completed scan. The tab's own markup
+   * (summary card, search, chips, list, pagination) is what those are drawn into, so it is never emptied here: that left the
+   * results with nowhere to go and the tab blank until the popup was opened again. Resolves once the tab shows the answer.
+   */
   async refreshAfterCacheChange() {
     Logger.debug('UI', '[Detection] Cache scope changed - checking for cached data with new scope');
-
-    // Clear current results display
-    this.currentResults = [];
-    this.tellAdvancedResultsGone();
-
-    // Clear pagination
-    if (this.paginationManager) {
-      this.paginationManager.setItems([]);
-    }
-
-    // Clear result cards from DOM
-    const detectionResults = document.querySelector('#detectionResults');
-    if (detectionResults) {
-      detectionResults.innerHTML = '';
-    }
-
-    // Set flags to prevent auto-detection
-    this.justClearedCache = true;
-    this.cacheCleared = true;
 
     // Update cache info display to reflect new cache scope from settings
     this.updateCacheInfo();
 
-    // Check if there's cached detection data for the new scope
+    // Nothing for this page under the new scope: the card that says so, and the gray "cleared" mark on the toolbar icon
+    const showNoCompletedScan = async (tabId) => {
+      Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
+      this.justClearedCache = true;
+      this.showEmptyState({ outcome: 'unscanned' });
+      if (typeof tabId !== 'number') return;
+      try {
+        await setBadgeTextColor(tabId, false, BADGE.COLORS.CLEARED);
+        await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId });
+        await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEARED, tabId });
+      } catch (e) { /* Tab may be closed */ }
+    };
+
+    let tabId = null;
     try {
-      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (!tabs[0]) return;
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab) return;
+      tabId = tab.id;
 
       // Request detection data with new cache scope
-      chrome.runtime.sendMessage(
-        { type: WorkerMessages.GET_DETECTION_DATA, tabId: tabs[0].id },
-        async (response) => {
-          if (chrome.runtime.lastError) {
-            Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
-            this.showEmptyState({ outcome: 'unscanned' });
-            // Set badge to CLR (cleared)
-            try {
-              await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
-              await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
-              await chrome.action.setBadgeBackgroundColor({
-                color: BADGE.COLORS.CLEARED,
-                tabId: tabs[0].id
-              });
-            } catch (e) { /* Tab may be closed */ }
-            return;
-          }
-
-          if (response && response.data) {
-            // Found cached data for new scope - display it
-            Logger.debug('UI', '[Detection] Found cached data for new scope - displaying');
-
-            // Use ScrapflyPopup's processDetectionData to display results
-            if (window.popupInstance) {
-              await window.popupInstance.processDetectionData(response.data);
-            } else {
-              // Fallback: display directly
-              await this.displayResults(response.data.detections);
-            }
-          } else {
-            // No cached data for new scope - show empty state
-            Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
-            this.showEmptyState({ outcome: 'unscanned' });
-            // Set badge to CLR (cleared)
-            try {
-              await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
-              await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tabs[0].id });
-              await chrome.action.setBadgeBackgroundColor({
-                color: BADGE.COLORS.CLEARED,
-                tabId: tabs[0].id
-              });
-            } catch (e) { /* Tab may be closed */ }
-          }
-        }
-      );
+      const response = await chrome.runtime.sendMessage({ type: WorkerMessages.GET_DETECTION_DATA, tabId });
+      if (response && response.data) {
+        // Found cached data for new scope - display it, as every other view of a cached result does
+        Logger.debug('UI', '[Detection] Found cached data for new scope - displaying');
+        await Detection.processDetectionData({
+          detection: this,
+          detectionEngine: this.detectionEngine,
+          detectorManager: this.detectorManager,
+          history: this.history
+        }, response.data);
+      } else {
+        await showNoCompletedScan(tabId);
+      }
     } catch (error) {
       if (this.debugMode) Logger.debug('UI', '[Detection] Error checking for cached data:', error);
-      this.showEmptyState({ outcome: 'unscanned' });
+      await showNoCompletedScan(tabId);
     }
   }
 
