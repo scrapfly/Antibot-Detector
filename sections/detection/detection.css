@@ -608,7 +608,7 @@
   scrollbar-gutter: stable;
   /* No side inset: cards line up with the summary block and search box. The first card sits close under the summary card:
      the chip row in it takes room that a first page of two cards needs */
-  padding: 4px 0 8px;
+  padding: 2px 0 8px;
   margin-bottom: 0;
   flex: 1 1 auto;
   min-height: 0;
