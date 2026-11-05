@@ -387,6 +387,40 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('The popup says so when it opens if the background worker is older than its files; a current worker is not named', async () => {
+    const hint = "The extension's background part is out of date. Reload the extension on the extensions page and try again.";
+    const { page: site, tab } = await scanned(`staleopen-${uniq()}`, ALL);
+    // a current worker: nothing is said
+    let popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    await sleep(1500);
+    assert.equal((await toasts(popup)).includes(hint), false, 'a current worker is not named');
+    await popup.close();
+    await W(() => { globalThis.__fingerprintHandler = __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT]; });
+    try {
+      // a worker from before the check does not know the question
+      await W(() => { delete __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT]; });
+      popup = await popupFor(tab);
+      await until(async () => (await toasts(popup)).includes(hint), 8000, 'the toast on a worker that does not know the question');
+      await popup.close();
+      // a worker that runs another list of messages
+      await W(() => { __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT] = ({ sendResponse }) => { sendResponse({ status: 'ok', fingerprint: '00000000-1' }); return false; }; });
+      popup = await popupFor(tab);
+      await until(async () => (await toasts(popup)).includes(hint), 8000, 'the toast on a worker with another list of messages');
+      await popup.close();
+    } finally {
+      await W(() => { __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT] = globalThis.__fingerprintHandler; });
+    }
+    // the worker is current again: the next popup says nothing
+    popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    await sleep(1500);
+    assert.equal((await toasts(popup)).includes(hint), false, 'current again');
+    await popup.close();
+    await site.close();
+  });
+
+  // ===============================================================================================
   await scenario('Detection chips: one per category filter the list, combine with the search, say when nothing is left, and clear again', async () => {
     const { page: site, tab } = await scanned(`chips-${uniq()}`, ALL);
     const popup = await popupFor(tab);

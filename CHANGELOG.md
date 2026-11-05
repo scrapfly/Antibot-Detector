@@ -10,6 +10,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Changed
 
 - After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
+- The popup says the extension must be reloaded, as soon as it opens, when its background part is out of date.
 
 ### Fixed
 

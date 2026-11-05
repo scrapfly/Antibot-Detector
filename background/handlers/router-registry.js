@@ -42,6 +42,13 @@ function buildMessageHandlerRegistry(context) {
     if (typeof BulkScanRunner !== 'undefined') {
         BulkScanRunner.registerHandlers(registry);
     }
+    // Is the popup talking to a worker as new as its own files? It compares this fingerprint with its own (worker-version.js)
+    if (typeof WorkerVersion !== 'undefined') {
+        registry[WorkerMessages.WORKER_FINGERPRINT] = ({ sendResponse }) => {
+            sendResponse(WorkerVersion.answer(WorkerMessages));
+            return false;
+        };
+    }
     // Detection tab → Scan again: the rescan shortcut's work, for the tab the popup shows
     if (typeof Commands !== 'undefined') {
         Commands.registerHandlers(registry);

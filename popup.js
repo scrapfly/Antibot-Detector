@@ -21,6 +21,23 @@ class ScrapflyPopup {
     this.detectionViewRequestId = 0;
   }
 
+  /**
+   * Once per popup: say so when the background worker runs older code than these files (an unpacked extension edited without
+   * a reload): its buttons then fail with no hint of why. See modules/core/worker-version.js.
+   */
+  async warnIfWorkerOutdated() {
+    if (this.workerChecked) return;
+    this.workerChecked = true;
+    try {
+      const outdated = await WorkerVersion.isOutdated((message) => chrome.runtime.sendMessage(message), WorkerMessages);
+      if (outdated === true) {
+        NotificationHelper.error(FormatUtils.t('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
+      }
+    } catch (error) {
+      Logger.debug('UI', 'Could not check the background worker:', error);
+    }
+  }
+
   async initialize() {
     try {
       if (typeof Logger !== 'undefined') {
@@ -28,6 +45,8 @@ class ScrapflyPopup {
       }
 
       NotificationHelper.initialize();
+      // Not waited for: the answer only matters when it says the worker is older than these files
+      this.warnIfWorkerOutdated();
 
       // Set version from manifest
       const manifest = chrome.runtime.getManifest();

@@ -2,6 +2,7 @@
 importScripts(
     // Core utilities
     './modules/core/worker-messages.js',
+    './modules/core/worker-version.js',
     './modules/core/logger.js',
     './modules/core/i18n.js',
     './modules/core/rule-i18n.js',
