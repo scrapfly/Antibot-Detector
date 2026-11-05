@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Hotovo: {0} · S ochranou: {1} · Selhalo: {2} · Přeskočeno: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Nejčastěji zjištěno: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Rozšíření se během běhu restartovalo, proto se zastavil. Stránky, které stále čekaly, se nenaskenovaly."
   },

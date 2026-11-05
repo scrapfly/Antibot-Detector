@@ -403,7 +403,10 @@ test('a write is cut to the size in force: the registered one, 6 MB without one,
     HistoryStore.setBudget(async () => 1000);
     assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB, 'a provider cannot go below the smallest size');
     HistoryStore.setBudget(async () => { throw new Error('settings unreadable'); });
-    assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB, 'a provider that fails costs nothing');
+    const unknown = await HistoryStore.mutate(() => items, memoryStorage());
+    assert.strictEqual(unknown.dropped, 0, 'a provider that fails cannot say how much the person allows: nothing is cut for size');
+    assert.strictEqual(unknown.budget, Infinity);
+    assert.strictEqual(unknown.items.length, items.length);
     HistoryStore.setBudget(async () => 'nonsense');
     assert.strictEqual((await HistoryStore.mutate(() => items, memoryStorage())).budget, 6 * MB);
   } finally {

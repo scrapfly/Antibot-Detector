@@ -7471,6 +7471,10 @@
     "message": "Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}",
     "description": "Bulk scan: totals of the run"
   },
+  "bulkMostSeenFmt": {
+    "message": "Most seen: {0}",
+    "description": "Bulk scan: the protections found on the most pages, under the totals ({0} = up to five names, each with the number of pages it was found on)"
+  },
   "bulkStoppedRestart": {
     "message": "The extension restarted during the run, so it stopped. The pages still waiting were not scanned.",
     "description": "Bulk scan: why the run stopped"

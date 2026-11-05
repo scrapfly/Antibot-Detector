@@ -339,6 +339,7 @@ test('the Markdown export is a heading, the counts and one row per page: names o
   assert.deepEqual(built.text.split('\n'), [
     '# Scrapfly Antibot Detector: Bulk scan', '',
     '4 pages, 2 scanned, 1 failed, 1 waiting; 1 with protections', '',
+    'Most seen: Cloudflare (1 page), re\\_CAPTCHA \\| v3 (1 page)', '',
     '| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |',
     '| <https://a.example/p> | done | Medium | Cloudflare (antibot, 95%); re\\_CAPTCHA \\| v3 (captcha, 80%) |',
     '| <https://b.example/> | failed: timeout |  | - |',
@@ -369,4 +370,135 @@ test('a list of thousands of addresses on one line is read in one pass, with the
   assert.deepStrictEqual(parsed, addresses);
   assert.ok(took < 1500, `took ${took} ms`);
   assert.deepStrictEqual(BulkScan.linesOf(addresses.slice(0, 50).join('\n')), addresses.slice(0, 50));
+});
+
+test('sameSite: a sitemap speaks for its own host; www, the port and the scheme do not matter, another host never does', () => {
+  const site = 'https://example.com/sitemap.xml';
+  const own = ['https://example.com/', 'https://www.example.com/a', 'http://example.com:8080/b?x=1#top', 'HTTPS://EXAMPLE.COM/C', 'https://example.com./dot', 'example.com/bare', 'www.example.com'];
+  for (const loc of own) assert.equal(BulkScan.sameSite(site, loc), true, loc);
+  const other = [
+    'http://127.0.0.1/', 'http://127.0.0.1:8080/x', 'http://localhost/', 'http://[::1]/', 'http://192.168.1.5/', 'http://10.0.0.1/', 'http://169.254.169.254/latest/meta-data/',
+    'https://other.example/', 'https://shop.example.com/', 'https://example.com.evil.example/', 'https://evil.example/?u=https://example.com/', 'https://example.com@evil.example/',
+    'https://evil.example\\@example.com/x', 'https://evilexample.com/', 'https://notwww.example.com/',
+    'ftp://example.com/file', 'file:///etc/passwd', 'javascript:alert(1)', 'mailto:a@example.com', 'chrome://settings', '', '   ', null, undefined, 'not an address', '/relative', '//example.com/x'
+  ];
+  for (const loc of other) assert.equal(BulkScan.sameSite(site, loc), false, String(loc));
+  // the other way round, and an address of the machine itself is its own site
+  assert.equal(BulkScan.sameSite('https://www.example.com/s.xml', 'https://example.com/a'), true);
+  assert.equal(BulkScan.sameSite('https://127.0.0.1:8443/sitemap.xml', 'http://127.0.0.1/x'), true, 'a local sitemap lists local pages of its own host');
+  assert.equal(BulkScan.sameSite('https://127.0.0.1/sitemap.xml', 'http://localhost/x'), false, 'two names of one machine are two hosts');
+  assert.equal(BulkScan.sameSite('https://[::1]/sitemap.xml', 'http://[::1]:3000/x'), true);
+  // a sitemap with no usable address of its own speaks for nobody: two empty sites are not the same site
+  for (const bad of ['', null, undefined, 'not a url', 'ftp://example.com/s.xml']) assert.equal(BulkScan.sameSite(bad, bad), false, String(bad));
+  assert.equal(BulkScan.sameSite('', 'https://example.com/'), false);
+  // "www." is only dropped from a host that has a name under it
+  assert.equal(BulkScan.sameSite('https://www.com/s.xml', 'https://com/x'), false);
+  assert.equal(BulkScan.sameSite('https://www.example.com/s.xml', 'https://www.example.org/x'), false);
+});
+
+test('sameSite judges the address that will be scanned: the one prepare() makes of the text', () => {
+  const site = 'https://example.com/sitemap.xml';
+  for (const loc of ['https://example.com/a', 'https://www.example.com/a b', ' https://example.com/tab\there ', 'example.com:8443/x', 'https://example.com/%2F..%2Fa']) {
+    const normal = BulkScan.normalize(loc);
+    assert.equal(BulkScan.sameSite(site, loc), true, loc);
+    assert.equal(BulkScan.prepare([loc]).items[0].url, normal.url, 'what is checked is what is scanned');
+  }
+  // an address kept off by the check is never one prepare() would have scanned as another host's page
+  for (const loc of ['http://127.0.0.1/a', 'http://169.254.169.254/', 'https://example.com.evil.example/a']) {
+    assert.equal(BulkScan.sameSite(site, loc), false, loc);
+    assert.notEqual(new URL(BulkScan.normalize(loc).url).hostname.replace(/^www\./, ''), 'example.com');
+  }
+});
+
+// ---- The protections seen on the most pages ("Most seen")
+
+const found = (name, category = 'antibot', confidence = 90) => ({ name, category, confidence });
+/** Seven pages: four protected in different ways, one clean, one failed (carrying a detection it cannot have), one skipped. */
+function totalsRun() {
+  const run = BulkScan.createRun({ items: 'abcdefg'.split('').map(n => ({ url: `https://${n}.example/`, status: 'waiting' })) }, { now: 1 });
+  const done = (index, detections) => { run.items[index].status = 'done'; run.items[index].detections = detections; run.items[index].finishedAt = Date.UTC(2026, 10, 5, 10); };
+  done(0, [found('Cloudflare'), found('reCAPTCHA', 'captcha'), found('Canvas', 'fingerprint', 40)]);
+  done(1, [found('Cloudflare'), found('Akamai')]);
+  done(2, [found('Cloudflare'), found('Cloudflare', 'captcha')]);
+  done(3, [found('Akamai'), found('reCAPTCHA', 'captcha')]);
+  done(4, []);
+  Object.assign(run.items[5], { status: 'failed', reason: 'timeout', detections: [found('DataDome')] });
+  Object.assign(run.items[6], { status: 'skipped', reason: 'scope' });
+  return run;
+}
+const TOTALS = [
+  { name: 'Cloudflare', category: 'antibot', pages: 3 },
+  { name: 'Akamai', category: 'antibot', pages: 2 },
+  { name: 'reCAPTCHA', category: 'captcha', pages: 2 },
+  { name: 'Canvas', category: 'fingerprint', pages: 1 }
+];
+
+test('protectionTotals: how many scanned pages each protection was found on, most first, then by name', () => {
+  assert.deepEqual(plain(BulkScan.protectionTotals(totalsRun())), TOTALS);
+});
+
+test('protectionTotals counts a page once per protection, and counts only pages that were scanned', () => {
+  const totals = Object.fromEntries(BulkScan.protectionTotals(totalsRun()).map(row => [row.name, row.pages]));
+  assert.equal(totals.Cloudflare, 3, 'the page that names it twice (in two categories) is one page');
+  assert.equal(totals.DataDome, undefined, 'a failed page has no result');
+  const notScanned = BulkScan.createRun({ items: [
+    { url: 'https://a.example/', status: 'waiting', detections: [found('X')] }, { url: 'https://b.example/', status: 'scanning', detections: [found('X')] },
+    { url: 'https://c.example/', status: 'skipped', detections: [found('X')] }] });
+  assert.deepEqual(BulkScan.protectionTotals(notScanned), [], 'neither does a page still waiting, being scanned or skipped');
+  const names = BulkScan.createRun({ items: ['Cloudflare', 'cloudflare', 'PerimeterX', 'HUMAN (PerimeterX)'].map((name, i) => ({ url: `https://p${i}.example/`, status: 'done', detections: [found(name)] })) });
+  assert.deepEqual(BulkScan.protectionTotals(names).map(row => [row.name, row.pages]), [['Cloudflare', 2], ['PerimeterX', 2]],
+    'the spellings of a name, and the names one protection has had, are one row (as History groups them), under the first spelling met');
+});
+
+test('protectionTotals has a stable order: the same count is sorted by name, whatever order the pages came in', () => {
+  const names = (...list) => BulkScan.protectionTotals(BulkScan.createRun({ items: list.map((name, i) => ({ url: `https://p${i}.example/`, status: 'done', detections: [found(name)] })) })).map(row => row.name);
+  assert.deepEqual(names('Zeta', 'Alpha', 'Mid'), ['Alpha', 'Mid', 'Zeta']);
+  assert.deepEqual(names('Mid', 'Zeta', 'Alpha'), ['Alpha', 'Mid', 'Zeta']);
+  assert.deepEqual(names('zeta', 'Alpha', 'beta'), ['Alpha', 'beta', 'zeta'], 'case does not decide');
+  const twice = BulkScan.createRun({ items: ['Zeta', 'Zeta', 'Alpha', 'Beta'].map((name, i) => ({ url: `https://p${i}.example/`, status: 'done', detections: [found(name)] })) });
+  assert.deepEqual(BulkScan.protectionTotals(twice).map(row => [row.name, row.pages]), [['Zeta', 2], ['Alpha', 1], ['Beta', 1]], 'more pages first, then by name');
+});
+
+test('protectionTotals reads whatever shape a run has: no run, no pages, nameless detections, junk', () => {
+  for (const nothing of [null, undefined, {}, { items: null }, { items: [] }, { items: [null, 7, 'x'] }]) assert.deepEqual(BulkScan.protectionTotals(nothing), [], JSON.stringify(nothing));
+  const odd = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'done',
+    detections: [null, 3, {}, { name: '' }, { name: '?' }, { name: '  ' }, { detector: { name: 'Legacy' }, category: 'Anti-Bot' }, 'text', found('Real')] }] });
+  assert.deepEqual(plain(BulkScan.protectionTotals(odd)), [{ name: 'Legacy', category: 'antibot', pages: 1 }, { name: 'Real', category: 'antibot', pages: 1 }],
+    'a name is needed (a "?" is the placeholder of a detection without one); the older shape is read: the name under detector, the category as the detector file writes it');
+  assert.equal(BulkScan.MOST_SEEN, 5, 'the page and the Markdown export show the top five');
+});
+
+test('the Markdown export says which protections were seen on the most pages, in a line under the counts, and leaves it out when none was found', () => {
+  const lines = BulkScan.build(totalsRun(), { format: 'md' }).text.split('\n');
+  assert.equal(lines[2], '7 pages, 5 scanned, 1 failed, 1 skipped; 4 with protections');
+  assert.equal(lines[3], '');
+  assert.equal(lines[4], 'Most seen: Cloudflare (3 pages), Akamai (2 pages), reCAPTCHA (2 pages), Canvas (1 page)');
+  assert.equal(lines[5], '');
+  assert.equal(lines[6], '| Page | Status | Difficulty | Protections |');
+  const many = BulkScan.createRun({ items: 'abcdefgh'.split('').map((n, i) => ({ url: `https://${n}.example/`, status: 'done', detections: [found(`P${i}`)] })) });
+  assert.equal(BulkScan.build(many, { format: 'md' }).text.split('\n')[4], 'Most seen: P0 (1 page), P1 (1 page), P2 (1 page), P3 (1 page), P4 (1 page)', 'the top five; the JSON has them all');
+  const none = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'done', detections: [] }, { url: 'https://b.example/', status: 'failed' }] });
+  assert.ok(!BulkScan.build(none, { format: 'md' }).text.includes('Most seen'));
+  assert.ok(!BulkScan.build(null, { format: 'md' }).text.includes('Most seen'));
+});
+
+test('the JSON export carries every protection with the number of pages it was found on, and an empty list when none was found', () => {
+  const data = JSON.parse(BulkScan.build(totalsRun(), { format: 'json', now: 1 }).text);
+  assert.deepEqual(data.run.protectionTotals, TOTALS);
+  assert.deepEqual(data.run.counts, { total: 7, waiting: 0, scanning: 0, done: 5, failed: 1, skipped: 1, found: 4 }, 'what was there stays');
+  assert.deepEqual(JSON.parse(BulkScan.build(sampleRun(), { format: 'json', now: 1 }).text).run.protectionTotals, []);
+  assert.equal(JSON.parse(BulkScan.build(null, { format: 'json', now: 1 }).text).run, null, 'no run: still null');
+  const many = BulkScan.createRun({ items: 'abcdefgh'.split('').map((n, i) => ({ url: `https://${n}.example/`, status: 'done', detections: [found(`P${i}`)] })) });
+  assert.equal(JSON.parse(BulkScan.build(many, { format: 'json', now: 1 }).text).run.protectionTotals.length, 8, 'all of them, not the top five');
+});
+
+test('the CSV export is as before: a header and a row per protection (or per page without one), no totals', () => {
+  const run = totalsRun();
+  const lines = BulkScan.build(run, { format: 'csv' }).text.trimEnd().split('\r\n');
+  assert.equal(lines[0], 'url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at');
+  const rows = run.items.reduce((count, item) => count + Math.max(1, (item.detections || []).length), 0);
+  assert.equal(lines.length, 1 + rows, 'nothing else is added');
+  assert.equal(lines[1], 'https://a.example/,done,,,,Cloudflare,antibot,90,2026-11-05T10:00:00.000Z');
+  assert.ok(!/most seen|protectionTotals/i.test(lines.join('\n')));
+  assert.equal(BulkScan.build(run, { format: 'csv' }).text, BulkScan.build(JSON.parse(JSON.stringify(run)), { format: 'csv' }).text, 'a run read back from storage gives the same file');
 });

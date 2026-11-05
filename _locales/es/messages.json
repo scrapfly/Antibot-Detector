@@ -6820,6 +6820,9 @@
   "bulkCountsFmt": {
     "message": "Hechas: {0} · Con protecciones: {1} · Con error: {2} · Omitidas: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Más vistas: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "La extensión se reinició durante la ejecución, así que se detuvo. Las páginas pendientes no se analizaron."
   },

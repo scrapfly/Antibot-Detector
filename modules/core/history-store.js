@@ -61,19 +61,25 @@
     return (hasUnlimited === true ? size : SIZES_MB[0]) * 1024 * 1024;
   }
 
-  // Optional async function the worker registers to say how much History may take now (the person's size and the permission)
+  // Optional async function the worker registers to say how much History may take now (the person's size and the permission).
+  // It throws when it cannot tell (the settings cannot be read): see currentBudget
   let budgetProvider = null;
   function setBudget(provider) {
     budgetProvider = typeof provider === 'function' ? provider : null;
   }
-  /** The limit for a write: never below 6 MB, 6 MB when there is no provider or it fails. */
+  /**
+   * The limit for a write: never below 6 MB, and 6 MB when no provider is registered. A provider that fails could not say
+   * how much the person allows, so nothing is cut for size (Infinity): cutting to 6 MB then would take the older entries
+   * of a person who chose 12 or 25 MB. The size is applied again by the next write once the settings read. The browser's own
+   * quota still ends a write that cannot fit (see write).
+   */
   async function currentBudget() {
     if (!budgetProvider) return MAX_BYTES;
     try {
       const bytes = Number(await budgetProvider());
       return Number.isFinite(bytes) && bytes > MAX_BYTES ? bytes : MAX_BYTES;
     } catch (_) {
-      return MAX_BYTES;
+      return Infinity;
     }
   }
 

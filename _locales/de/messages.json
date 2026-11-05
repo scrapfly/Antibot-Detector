@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "Fertig: {0} · Mit Schutz: {1} · Fehlgeschlagen: {2} · Übersprungen: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "Am häufigsten gesehen: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "Die Erweiterung wurde während des Durchlaufs neu gestartet, daher wurde er gestoppt. Die noch wartenden Seiten wurden nicht gescannt."
   },

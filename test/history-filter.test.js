@@ -156,3 +156,85 @@ test('a search typed with letters finds the address the browser stores as ASCII 
   assert.deepStrictEqual(ids(F.filter(items, { query: 'bücher.de' })), [], 'and nothing else matches it');
   assert.deepStrictEqual(ids(F.filter([item('t', 'https://a.example/', [], { title: 'Café menu' })], { query: 'café menu' })), ['t'], 'a phrase with spaces still matches as text');
 });
+
+// ---- The search ignores accents: "cafe" finds "Café", "Café" finds "cafe"
+
+const accented = [
+  item('t', 'https://a.example/', [], { title: 'Café menu' }),
+  item('n', 'https://b.example/', [], { note: 'Señor Gómez, Göteborg' }),
+  item('p', 'https://c.example/', [], { title: 'plain cafe and senor' }),
+  item('d', 'https://d.example/', [det('Düsseldorf Shield', 'Anti-Bot')]),
+  item('x', 'https://e.example/', [], { title: 'Nothing to see' })
+];
+
+test('the search ignores accents on either side: "cafe" finds "Café menu", "Café" finds "cafe", "senor" finds a note "Señor"', () => {
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'cafe' })), ['t', 'p'], 'no accent finds the accent');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'café' })), ['t', 'p'], 'the accent finds no accent');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'CAFÉ' })), ['t', 'p'], 'case too');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'senor' })), ['n', 'p'], 'a note');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'señor gomez' })), ['n'], 'some letters with the accent and some without');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'goteborg' })), ['n']);
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'dusseldorf' })), ['d'], 'the name of a protection');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'Düsseldorf Shield' })), ['d']);
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'nothing' })), ['x'], 'a plain word still matches as before');
+  assert.deepStrictEqual(ids(F.filter(accented, { query: 'cafe', chips: { pinned: true } })), [], 'and the chips still combine with it');
+});
+
+test('a letter typed or saved as a base letter plus its accent (decomposed) matches the composed one', () => {
+  const decomposed = item('u', 'https://u.example/', [], { title: 'Café decomposed' });
+  const composed = item('c', 'https://c.example/', [], { title: 'Café composed' });
+  for (const query of ['cafe', 'café', 'café']) {
+    assert.deepStrictEqual(ids(F.filter([decomposed, composed], { query })), ['u', 'c'], JSON.stringify(query));
+  }
+});
+
+test('Turkish i does not break the search: no error, İ and i meet, and a dotless ı is read as i', () => {
+  const pages = [
+    item('a', 'https://a.example/', [], { title: 'İstanbul rehberi' }),
+    item('b', 'https://b.example/', [], { title: 'Diyarbakır' }),
+    item('c', 'https://c.example/', [], { title: 'ISPARTA' })
+  ];
+  for (const query of ['İSTANBUL', 'istanbul', 'İstanbul', 'Istanbul', 'ıstanbul', 'diyarbakır', 'DIYARBAKIR', 'diyarbakir', 'Isparta', 'ısparta']) {
+    assert.doesNotThrow(() => F.filter(pages, { query }), query);
+  }
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'istanbul' })), ['a']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'İstanbul' })), ['a']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'İSTANBUL' })), ['a']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'diyarbakir' })), ['b']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'Diyarbakır' })), ['b']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'isparta' })), ['c']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'ısparta' })), ['c']);
+});
+
+test('a query of only combining marks (or marks and spaces) matches nothing: it is not an empty search that matches everything', () => {
+  const marked = [...accented, item('m', 'https://m.example/', [], { title: 'Café' })];
+  for (const query of ['́', '́̀', ' ́ ', '́ ́']) {
+    assert.deepStrictEqual(ids(F.filter(marked, { query })), [], JSON.stringify(query));
+    assert.strictEqual(F.matches(marked[0], { query }), false, JSON.stringify(query));
+  }
+  assert.deepStrictEqual(ids(F.filter(marked, { query: '   ' })), ['t', 'n', 'p', 'd', 'x', 'm'], 'an empty search still keeps everything');
+});
+
+test('letters that carry no accent, other scripts and symbols are searched as they are, and odd input never throws', () => {
+  const pages = [
+    item('j', 'https://j.example/', [], { title: '日本語のページ' }),
+    item('r', 'https://r.example/', [], { title: 'Привіт, світе' }),
+    item('e', 'https://e.example/', [], { title: 'Ålesund 🚀 straße' })
+  ];
+  assert.deepStrictEqual(ids(F.filter(pages, { query: '日本' })), ['j']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'привіт' })), ['r']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'alesund' })), ['e']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: '🚀' })), ['e']);
+  assert.deepStrictEqual(ids(F.filter(pages, { query: 'straße' })), ['e']);
+  for (const junk of [null, undefined, 0, false, {}, [], '\ud800', 'a\u0000b']) assert.doesNotThrow(() => F.filter(pages, { query: junk }), String(junk));
+  assert.doesNotThrow(() => F.matches({ url: null, title: 7, note: {}, detections: [null, { name: null }] }, { query: 'x' }));
+});
+
+test('an address typed with letters still finds the ASCII one, and an accent-free address matches its accented spelling', () => {
+  const punycode = item('u', 'https://xn--bcher-kva.de/shop', [det('Cloudflare', 'Anti-Bot')]);
+  const plain = item('v', 'https://bucher.de/', []);
+  assert.deepStrictEqual(ids(F.filter([punycode, plain, ...items], { query: 'bücher.de' })), ['u', 'v'], 'the stored address, and the same letters without the umlaut');
+  assert.deepStrictEqual(ids(F.filter([punycode, plain, ...items], { query: 'BÜCHER.DE/shop' })), ['u'], 'case and path: only the stored address has a /shop');
+  assert.deepStrictEqual(ids(F.filter([punycode, plain], { query: 'bucher.de' })), ['v'], 'typed without the umlaut it cannot reach the punycode spelling');
+  assert.deepStrictEqual(ids(F.filter([punycode, plain], { query: 'xn--bcher' })), ['u'], 'and the punycode itself is still searchable');
+});

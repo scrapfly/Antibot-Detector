@@ -6818,6 +6818,9 @@
   "bulkCountsFmt": {
     "message": "완료: {0} · 보호 있음: {1} · 실패: {2} · 건너뜀: {3}"
   },
+  "bulkMostSeenFmt": {
+    "message": "가장 많이 확인된 항목: {0}"
+  },
   "bulkStoppedRestart": {
     "message": "실행 중에 확장 프로그램이 다시 시작되어 중지되었습니다. 아직 대기 중이던 페이지는 스캔되지 않았습니다."
   },

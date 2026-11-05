@@ -16,6 +16,9 @@
  * HistoryStore): the user chose to keep them.
  * Every write also stays under the size History may take (HistoryStore.write: 6 MB, or the size the person chose),
  * and on start a history saved by an older build is compacted once.
+ * Settings that cannot be read (the storage does not answer, or what is stored is not JSON or not an object) are not
+ * "no settings": the rules above and the size run on nothing until they read again (readConfig; HistoryStore.currentBudget
+ * for the size), where the defaults would take entries the person asked to keep.
  *
  * Runs on service-worker start, whenever settings or history are written, and
  * every PERIOD_MINUTES through chrome.alarms (manifest has the `alarms`
@@ -155,28 +158,28 @@ const HistoryRetention = {
         return require('../modules/core/history-store.js').parse(raw);
     },
 
-    parseSettings(raw) {
-        let value = raw;
-        if (typeof value === 'string') {
-            try {
-                value = JSON.parse(value);
-            } catch (_) {
-                return {};
-            }
-        }
-        if (value && value.settings && typeof value.settings === 'object') return value.settings;
-        return value && typeof value === 'object' ? value : {};
+    /** StorageManager (a global in the worker, required under Node tests): its strict reader throws where getSettings answers {}. */
+    storageManager() {
+        if (typeof StorageManager === 'undefined') require('../modules/core/storage-manager.js');
+        return StorageManager;
     },
 
     /**
-     * Read settings + history, prune, and write back only when something changed.
-     * @param {string} reason - Trigger name, for logging
-     * @returns {Promise<number>} Number of removed entries
+     * The retention config from the stored settings, or null when the settings cannot be read (the storage did not answer,
+     * or what is stored is not JSON or not an object). That is not "no settings": the defaults (the 1,000-entry cap,
+     * auto-delete and clear on close off) are not what the person chose, and trimming with them would take entries they
+     * asked to keep. Every caller skips on null; the next run tries again. Settings that were never saved read as {}: the
+     * defaults are right then.
+     * @returns {Promise<{autoDelete: boolean, days: number, fingerprintDays: number, limit: number, clearOnClose: boolean}|null>}
      */
-    /** The retention config from the stored settings. */
     async readConfig() {
-        const stored = await chrome.storage.local.get(['scrapfly_settings']);
-        return this.getConfig(this.parseSettings(stored.scrapfly_settings));
+        try {
+            return this.getConfig(await this.storageManager().readSettingsStrict());
+        } catch (error) {
+            // Only the kind of failure: the message of a JSON error quotes the stored text
+            this._warn('[HistoryRetention] The settings could not be read, so nothing is trimmed:', error && error.name);
+            return null;
+        }
     },
 
     /**
@@ -195,13 +198,20 @@ const HistoryRetention = {
     /** The last normal window closed: clear History if Settings says so. */
     async onWindowRemoved() {
         const config = await this.readConfig();
-        if (!config.clearOnClose || !chrome.windows || !chrome.windows.getAll) return 0;
+        if (!config || !config.clearOnClose || !chrome.windows || !chrome.windows.getAll) return 0;
         const windows = await chrome.windows.getAll({ windowTypes: ['normal'] });
         return windows.length === 0 ? this.clearUnpinned('last window closed') : 0;
     },
 
+    /**
+     * Read settings + history, prune, and write back only when something changed. Nothing happens while the settings
+     * cannot be read (see readConfig).
+     * @param {string} reason - Trigger name, for logging
+     * @returns {Promise<number>} Number of removed entries
+     */
     async run(reason = 'manual') {
         const config = await this.readConfig();
+        if (!config) return 0;
         // A saved History size may be below what is stored: fit it now, not at the next save
         if (reason === 'settings_saved') await this.compactStored();
 
@@ -274,7 +284,7 @@ const HistoryRetention = {
         if (chrome.runtime && chrome.runtime.onStartup) {
             chrome.runtime.onStartup.addListener(() => {
                 this.readConfig()
-                    .then((config) => (config.clearOnClose ? this.clearUnpinned('browser start') : 0))
+                    .then((config) => (config && config.clearOnClose ? this.clearUnpinned('browser start') : 0))
                     .catch((error) => this._warn('[HistoryRetention] Clear on start failed:', error));
             });
         }
