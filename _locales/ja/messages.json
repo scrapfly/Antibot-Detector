@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "ピン留め済み"
   },
+  "historyFilterCombinations": {
+    "message": "組み合わせ"
+  },
   "historyNoResults": {
     "message": "検索条件またはフィルターに一致するエントリはありません。"
   },

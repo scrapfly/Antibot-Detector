@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Fissata"
   },
+  "historyFilterCombinations": {
+    "message": "Combinazioni"
+  },
   "historyNoResults": {
     "message": "Nessuna voce corrisponde alla ricerca o ai filtri."
   },

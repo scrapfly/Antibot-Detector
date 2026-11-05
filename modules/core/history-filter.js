@@ -2,14 +2,17 @@
  * History tab: which entries the search box and the filter chips leave on the list.
  * Pure (no browser APIs), so the popup and the tests share it.
  *
- *   isChanged()   an entry whose protections differ from its earlier scan (what the Changed badge shows)
- *   isActive()    whether any chip is on
- *   matches()     one entry against the search text and the chips
- *   filter()      the entries that match, in their order
+ *   isChanged()          an entry whose protections differ from its earlier scan (what the Changed badge shows)
+ *   firedCombinations()  the combinations that fired on a page (what the card counts after the fingerprint total)
+ *   hasCombinations()    whether an entry has any
+ *   isActive()           whether any chip is on
+ *   matches()            one entry against the search text and the chips
+ *   filter()             the entries that match, in their order
  *
  * The search looks in the address, the title, the note and the names of the protections. The chips
- * combine with AND: Pinned, Changed and the categories must all hold, and several categories
- * together mean "any of them" (Anti-bot and CAPTCHA keep the pages that have either).
+ * combine with AND: Pinned, Changed, Combinations and the categories must all hold, and several
+ * categories together mean "any of them" (Anti-bot and CAPTCHA keep the pages that have either).
+ * Combinations keeps the pages where at least one combination fired.
  */
 (function(root) {
   'use strict';
@@ -18,6 +21,8 @@
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
 
   const CATEGORIES = Categories.KEYS;
+  // The on/off chips; the category chips are a list of their own
+  const FLAGS = ['pinned', 'changed', 'combinations'];
 
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
   const categoryKey = (d) => Categories.keyOf(d);
@@ -31,12 +36,29 @@
     return !!change && typeof change === 'object' && (changeNames(change.added).length > 0 || changeNames(change.removed).length > 0);
   };
 
-  /** The chips as the popup keeps them, whatever was passed: booleans and known categories only. */
+  /**
+   * The combinations that fired on a page, one { detection, combo } each: the objects in a detection's `combinations` list,
+   * whatever else an old build or an import left there. The card's count and the Combinations chip both read this.
+   */
+  function firedCombinations(detections) {
+    const fired = [];
+    for (const detection of Array.isArray(detections) ? detections : []) {
+      for (const combo of (detection && Array.isArray(detection.combinations) ? detection.combinations : [])) {
+        if (combo && typeof combo === 'object') fired.push({ detection, combo });
+      }
+    }
+    return fired;
+  }
+
+  const hasCombinations = (item) => !!item && firedCombinations(item.detections).length > 0;
+
+  /** The chips as the popup keeps them, whatever was passed (nothing gives every chip off): booleans and known categories only. */
   function normalizeChips(chips) {
     const value = chips || {};
     return {
       pinned: value.pinned === true,
       changed: value.changed === true,
+      combinations: value.combinations === true,
       categories: [...new Set((Array.isArray(value.categories) ? value.categories : []).filter(key => CATEGORIES.includes(key)))]
     };
   }
@@ -52,12 +74,12 @@
 
   const isActive = (chips) => {
     const value = normalizeChips(chips);
-    return value.pinned || value.changed || value.categories.length > 0;
+    return FLAGS.some(flag => value[flag]) || value.categories.length > 0;
   };
 
   /**
    * @param {object} item  a History entry
-   * @param {{query?: string, chips?: {pinned?: boolean, changed?: boolean, categories?: string[]},
+   * @param {{query?: string, chips?: {pinned?: boolean, changed?: boolean, combinations?: boolean, categories?: string[]},
    *          nameOf?: function, categoryOf?: function}} [options]
    *   nameOf and categoryOf read a detection's display name and category key (the popup passes its own)
    */
@@ -70,6 +92,7 @@
 
     if (chips.pinned && item.pinned !== true) return false;
     if (chips.changed && !isChanged(item)) return false;
+    if (chips.combinations && !hasCombinations(item)) return false;
     if (chips.categories.length && !detections.some(d => chips.categories.includes(categoryOf(d)))) return false;
 
     const query = String(options.query || '').toLowerCase().trim();
@@ -91,7 +114,7 @@
     return list.filter(item => matches(item, options));
   }
 
-  const api = { CATEGORIES, changeNames, isChanged, isActive, normalizeChips, matches, filter };
+  const api = { CATEGORIES, FLAGS, changeNames, isChanged, firedCombinations, hasCombinations, isActive, normalizeChips, matches, filter };
   root.HistoryFilter = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

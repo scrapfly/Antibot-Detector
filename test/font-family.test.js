@@ -5,6 +5,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 
 const root = path.join(__dirname, '..');
@@ -104,29 +105,28 @@ test('no shipped CSS/HTML/JS declares a font other than the Plex tokens or inher
 });
 
 test('the guard catches each way of bypassing the tokens', () => {
-  const tmp = path.join(root, 'modules', 'styles', '__font_guard_probe__.css');
-  fs.writeFileSync(tmp, [
-    '.a { font-family: Arial, sans-serif; }',
-    '.b { font: 12px monospace; }',
-    '.c { font-family: var(--font-sans) !important; }',
-    '.d { font: inherit; }',
-    '.e { font: 600 11px/1 var(--font-sans); }',
-    '@font-face { font-family: \'Comic Sans\'; src: url(x.woff2); }'
-  ].join('\n'));
+  // The probes live in a folder of their own, never in the tree: other tests walk the tree in parallel and read every file
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'font-guard-'));
   try {
-    const found = findViolations(tmp).map(v => v.replace(/^.*?:\d+ /, ''));
-    assert.deepStrictEqual(found, ['font-family: Arial, sans-serif', "font-family: 'Comic Sans'", 'font: 12px monospace']);
+    const tmp = path.join(scratch, '__font_guard_probe__.css');
+    fs.writeFileSync(tmp, [
+      '.a { font-family: Arial, sans-serif; }',
+      '.b { font: 12px monospace; }',
+      '.c { font-family: var(--font-sans) !important; }',
+      '.d { font: inherit; }',
+      '.e { font: 600 11px/1 var(--font-sans); }',
+      '@font-face { font-family: \'Comic Sans\'; src: url(x.woff2); }'
+    ].join('\n'));
+    const foundCss = findViolations(tmp).map(v => v.replace(/^.*?:\d+ /, ''));
+    assert.deepStrictEqual(foundCss, ['font-family: Arial, sans-serif', "font-family: 'Comic Sans'", 'font: 12px monospace']);
+
+    const js = 'el.style.fontFamily = "Georgia"; x.style.font = "10px serif"; y.style.fontFamily = "var(--font-mono)";';
+    const tmpJs = path.join(scratch, '__font_guard_probe__.js');
+    fs.writeFileSync(tmpJs, js);
+    const foundJs = findViolations(tmpJs).map(v => v.replace(/^.*?:\d+ /, ''));
+    assert.deepStrictEqual(foundJs, ['fontFamily = Georgia', 'style.font = "10px serif"']);
   } finally {
-    fs.unlinkSync(tmp);
-  }
-  const js = 'el.style.fontFamily = "Georgia"; x.style.font = "10px serif"; y.style.fontFamily = "var(--font-mono)";';
-  const tmpJs = path.join(root, 'modules', 'ui', '__font_guard_probe__.js');
-  fs.writeFileSync(tmpJs, js);
-  try {
-    const found = findViolations(tmpJs).map(v => v.replace(/^.*?:\d+ /, ''));
-    assert.deepStrictEqual(found, ['fontFamily = Georgia', 'style.font = "10px serif"']);
-  } finally {
-    fs.unlinkSync(tmpJs);
+    fs.rmSync(scratch, { recursive: true, force: true });
   }
 });
 

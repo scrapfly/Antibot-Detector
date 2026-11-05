@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Vastgezet"
   },
+  "historyFilterCombinations": {
+    "message": "Combinaties"
+  },
   "historyNoResults": {
     "message": "Geen items komen overeen met je zoekopdracht of filters."
   },

@@ -731,6 +731,50 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('History filter: the Combinations chip keeps only the pages where a combination fired; Clear filters turns it off', async () => {
+    const page = await openExtensionPage();
+    await page.$eval('.tab-btn[data-tab="history"]', el => el.click());
+    await page.waitForSelector('#historyList', { state: 'attached', timeout: 15000 });
+    const made = await page.evaluate(async () => {
+      const def = Object.values(window.popupInstance.detectorManager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform'), hook('navigator-cpu'), hook('navigator-memory')]);
+      const withCombos = HistoryStore.slimEntry({ id: 'qw-chip-a', url: 'https://combos.example.test/', hostname: 'combos.example.test', title: 'With combinations', timestamp: Date.now(), detections: [
+        { detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches }] });
+      const plain = HistoryStore.slimEntry({ id: 'qw-chip-b', url: 'https://plain.example.test/', hostname: 'plain.example.test', title: 'Plain', timestamp: Date.now() - 1000, detections: [
+        { detector: { id: 'detect-cloudflare', name: 'Cloudflare' }, name: 'Cloudflare', category: 'antibot', confidence: 100, matches: [] }] });
+      const history = window.popupInstance.history;
+      history.historyItems = [withCombos, plain];
+      history.renderHistory();
+      return scored.combinations.length;
+    });
+    assert.ok(made >= 1, `combinations that fired: ${made}`);
+    await page.waitForSelector('#historyFilters:not([hidden])', { timeout: 15000 });
+    const shown = () => page.$$eval('#historyList .history-item', list => list.map(card => (card.textContent.includes('combos.example.test') ? 'combos' : card.textContent.includes('plain.example.test') ? 'plain' : '?')));
+    const chip = '#historyFilters .history-filter-chip[data-filter="combinations"]';
+    const pressed = () => page.$eval(chip, el => el.getAttribute('aria-pressed'));
+    await page.waitForFunction(() => document.querySelectorAll('#historyList .history-item').length === 2, null, { polling: 250, timeout: 10000 });
+    assert.deepEqual(await shown(), ['combos', 'plain']);
+    assert.equal(await pressed(), 'false', 'off to start with');
+    assert.ok(await page.$eval(`${chip} svg`, el => !!el), 'the chip carries the same icon as the card count');
+    assert.match(await page.$eval(chip, el => el.textContent.trim()), /Combinations/);
+    assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', list => list.map(el => el.dataset.filter)), ['pinned', 'changed', 'antibot', 'captcha', 'fingerprint', 'combinations']);
+    await page.$eval(chip, el => el.click());
+    await page.waitForFunction(() => document.querySelectorAll('#historyList .history-item').length === 1, null, { polling: 250, timeout: 10000 });
+    assert.deepEqual(await shown(), ['combos'], 'only the page where a combination fired');
+    assert.equal(await pressed(), 'true');
+    if (process.env.QW_SHOTS) await (await page.$('#historyFilters')).screenshot({ path: `${process.env.QW_SHOTS}/history-combinations-chip.png` });
+    // With a category that page does not have, nothing is left and the message offers the way back
+    await page.$eval('#historyFilters .history-filter-chip[data-filter="captcha"]', el => el.click());
+    await page.waitForSelector('#historyNoResults:not([hidden])', { timeout: 10000 });
+    await page.$eval('#historyClearFilters', el => el.click());
+    await page.waitForFunction(() => document.querySelectorAll('#historyList .history-item').length === 2, null, { polling: 250, timeout: 10000 });
+    assert.equal(await pressed(), 'false', 'Clear filters turns the chip off');
+    assert.equal(await page.$eval('#historyFilters .history-filter-chip[data-filter="captcha"]', el => el.getAttribute('aria-pressed')), 'false');
+    await page.close();
+  });
+
+  // ===============================================================================================
   await scenario('Statistics → Export → Markdown downloads a report', async () => {
     const page = await openExtensionPage('sections/stats/stats.html');
     await page.evaluate(() => {

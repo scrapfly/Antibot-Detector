@@ -6107,6 +6107,10 @@
     "message": "Pinned",
     "description": "Filter chip under the History search: show only pinned pages (an adjective, like the Changed chip)"
   },
+  "historyFilterCombinations": {
+    "message": "Combinations",
+    "description": "Filter chip under the History search: show only pages where a combination matched (a noun, like the Anti-bot and Captcha chips)"
+  },
   "historyNoResults": {
     "message": "No entries match your search or filters.",
     "description": "Shown in History when the search and the filter chips leave no entry"

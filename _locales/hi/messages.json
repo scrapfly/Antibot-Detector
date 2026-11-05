@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "पिन किए गए"
   },
+  "historyFilterCombinations": {
+    "message": "संयोजन"
+  },
   "historyNoResults": {
     "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
   },

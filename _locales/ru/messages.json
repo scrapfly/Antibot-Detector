@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Закреплённые"
   },
+  "historyFilterCombinations": {
+    "message": "Комбинации"
+  },
   "historyNoResults": {
     "message": "Нет записей, подходящих под поиск или фильтры."
   },

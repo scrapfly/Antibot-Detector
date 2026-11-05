@@ -32,18 +32,19 @@ test('Pinned and Changed have an icon, an unknown name has none, and the set can
   assert.ok(Object.isFrozen(FormatUtils.UI_ICONS));
 });
 
-test('every chip of the History row has an icon: Pinned and Changed name theirs, a category carries its own', () => {
+test('every chip of the History row has an icon: Pinned, Changed and Combinations name theirs, a category carries its own', () => {
   const FormatUtils = sandbox();
   const html = read('sections/history/history.html');
   const row = html.slice(html.indexOf('id="historyFilters"'), html.indexOf('<!-- Toolbar'));
   const chips = [...row.matchAll(/<button[^>]*data-filter="([a-z]+)"[^>]*>([\s\S]*?)<\/button>/g)].map(match => ({ filter: match[1], inner: match[2] }));
-  assert.deepEqual(chips.map(chip => chip.filter), ['pinned', 'changed', ...Categories.KEYS]);
+  assert.deepEqual(chips.map(chip => chip.filter), ['pinned', 'changed', ...Categories.KEYS, 'combinations']);
   for (const chip of chips) {
     const named = (chip.inner.match(/data-ui-icon="([a-z]+)"/) || [])[1];
     if (Categories.KEYS.includes(chip.filter)) assert.match(chip.inner, /class="history-filter-icon category-icon"/, `${chip.filter} has the category icon holder`);
     else assert.ok(FormatUtils.uiIconSvg(named), `${chip.filter} names an icon that exists`);
   }
-  assert.deepEqual(chips.filter(chip => /data-ui-icon/.test(chip.inner)).map(chip => chip.filter), ['pinned', 'changed']);
+  assert.deepEqual(chips.filter(chip => /data-ui-icon/.test(chip.inner)).map(chip => chip.filter), ['pinned', 'changed', 'combinations']);
+  assert.strictEqual((chips.find(chip => chip.filter === 'combinations').inner.match(/data-ui-icon="([a-z]+)"/) || [])[1], 'combination', 'the icon of the card\'s combinations count');
 });
 
 test('the checkboxes of the webhook categories have an icon each, in the app\'s category order', () => {

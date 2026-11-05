@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "已固定"
   },
+  "historyFilterCombinations": {
+    "message": "组合"
+  },
   "historyNoResults": {
     "message": "没有符合搜索或筛选条件的记录。"
   },

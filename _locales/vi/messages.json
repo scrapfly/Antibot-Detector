@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Đã ghim"
   },
+  "historyFilterCombinations": {
+    "message": "Tổ hợp"
+  },
   "historyNoResults": {
     "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
   },

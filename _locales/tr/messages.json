@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Sabitlenenler"
   },
+  "historyFilterCombinations": {
+    "message": "Kombinasyonlar"
+  },
   "historyNoResults": {
     "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
   },

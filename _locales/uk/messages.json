@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Закріплені"
   },
+  "historyFilterCombinations": {
+    "message": "Комбінації"
+  },
   "historyNoResults": {
     "message": "Немає записів, що відповідають пошуку чи фільтрам."
   },

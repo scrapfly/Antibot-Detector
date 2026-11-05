@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "Fäst"
   },
+  "historyFilterCombinations": {
+    "message": "Kombinationer"
+  },
   "historyNoResults": {
     "message": "Inga poster matchar din sökning eller dina filter."
   },

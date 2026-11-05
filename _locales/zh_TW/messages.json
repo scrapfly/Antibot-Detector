@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "已釘選"
   },
+  "historyFilterCombinations": {
+    "message": "組合"
+  },
   "historyNoResults": {
     "message": "沒有符合搜尋或篩選條件的項目。"
   },

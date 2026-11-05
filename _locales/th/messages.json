@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "ปักหมุดแล้ว"
   },
+  "historyFilterCombinations": {
+    "message": "ชุดค่าผสม"
+  },
   "historyNoResults": {
     "message": "ไม่มีรายการที่ตรงกับการค้นหาหรือตัวกรอง"
   },

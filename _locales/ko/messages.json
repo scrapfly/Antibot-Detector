@@ -5792,6 +5792,9 @@
   "historyFilterPinned": {
     "message": "고정됨"
   },
+  "historyFilterCombinations": {
+    "message": "조합"
+  },
   "historyNoResults": {
     "message": "검색어나 필터와 일치하는 항목이 없습니다."
   },
