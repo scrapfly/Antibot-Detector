@@ -160,6 +160,73 @@ test('Akamai: Extract Sensor refuses during a capture, initializes after a worke
     assert.deepEqual(f.reloads, [], 'the worker no longer reloads: the popup does, once');
 });
 
+// Extract Sensor deletes the _abck cookie so the page sends a fresh sensor: the request listener and the extraction state
+// are armed first and the cookie goes last, so nothing that fails along the way costs the person the cookie for nothing
+const akamaiExtract = (context, tabId = 6) => new Promise(resolve => context.akamaiHandleMessage({ type: 'AKAMAI_EXTRACT_SENSOR', tabId }, resolve));
+
+test('Akamai: Extract Sensor arms the request listener and the extraction before it deletes the _abck cookie', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    const seen = [];
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }],
+        remove: async (url, cookie) => { seen.push({ cookie: cookie.name, armed: states.get(6)?.extractMode === true, listeners: f.context.chrome.webRequest.onBeforeRequest.listeners.size }); } };
+    const started = await akamaiExtract(context);
+    assert.equal(started.status, 'success');
+    assert.deepEqual(seen, [{ cookie: '_abck', armed: true, listeners: 1 }], 'the state and the request listener exist before the cookie is deleted');
+    assert.equal(states.get(6).extractMode, true, 'the extraction stays armed for the reload');
+});
+
+test('Akamai: an Extract Sensor that cannot arm (addListener throws) deletes no cookie, leaves nothing armed and can be retried', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map(), removed = [];
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: async (url, cookie) => { removed.push(cookie.name); } };
+    const onBeforeRequest = f.context.chrome.webRequest.onBeforeRequest, addListener = onBeforeRequest.addListener;
+    onBeforeRequest.addListener = () => { throw new Error('addListener failed'); };
+    const refused = await akamaiExtract(context);
+    assert.equal(refused.status, 'error');
+    assert.match(refused.error, /addListener failed/);
+    assert.deepEqual(removed, [], 'the cookie is still there');
+    assert.equal(states.size, 0, 'no extraction state left waiting for a reload that will not come');
+    // The retry registers the listener: the failed arming did not leave a variable that only claims to be registered
+    onBeforeRequest.addListener = addListener;
+    assert.equal((await akamaiExtract(context)).status, 'success');
+    assert.equal(onBeforeRequest.listeners.size, 1);
+    assert.deepEqual(removed, ['_abck']);
+});
+
+test('Akamai: an Extract Sensor whose cookie delete fails disarms again: no state, no listener, no pending stop', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: async () => { throw new Error('cookie store busy'); } };
+    const failed = await akamaiExtract(context);
+    assert.equal(failed.status, 'error');
+    assert.match(failed.error, /cookie store busy/);
+    assert.equal(states.size, 0, 'the extraction state is removed');
+    assert.equal(f.context.chrome.webRequest.onBeforeRequest.listeners.size, 0, 'the request listener is removed');
+    assert.equal(context.akamaiInterceptionListener, null);
+    assert.equal(Array.from(f.timers.values()).filter(timer => timer.delay === 30000).length, 0, 'the 30 s stop is cleared');
+});
+
+test('Akamai: a failed Extract Sensor delete does not remove a capture the person started in the meantime', async () => {
+    const f = fixture(), context = f.load('akamai');
+    const states = new Map();
+    context.akamaiCaptureState = states;
+    let failDelete;
+    context.PageCookies = { getAll: async () => [{ name: '_abck' }], remove: () => new Promise((resolve, reject) => { failDelete = reject; }) };
+    const pending = akamaiExtract(context);
+    await flush();
+    context.akamaiStartCapture(6, 'https://shop.example/login');
+    const capture = states.get(6);
+    assert.equal(capture.extractMode, undefined, 'a capture replaced the extraction');
+    failDelete(new Error('cookie store busy'));
+    assert.equal((await pending).status, 'error');
+    assert.equal(states.get(6), capture, 'the capture the person started is not removed by the failed extraction');
+    assert.equal(f.context.chrome.webRequest.onBeforeRequest.listeners.size, 1, 'its request listener stays');
+});
+
 test('Akamai: stopping the last capture removes the request listener (removeListener keeps its receiver)', async () => {
     const f = fixture(), context = f.load('akamai');
     const states = new Map();
