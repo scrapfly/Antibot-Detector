@@ -380,6 +380,10 @@
   "searchDetectors": {
     "message": "Search detectors..."
   },
+  "rulesFiltersLabel": {
+    "message": "Filter rules",
+    "description": "Accessible name of the row of filter chips under the Rules search"
+  },
   "paginationPrev": {
     "message": "Previous page"
   },
@@ -1632,6 +1636,10 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Search detections..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Filter detections",
+    "description": "Accessible name of the row of filter chips under the Detection search"
   },
   "detectionPaginationPage": {
     "message": "Page"

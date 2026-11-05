@@ -96,3 +96,71 @@ test('Settings shows the shortcut the browser has, or "not set"', () => {
   assert.strictEqual(shortcutText([{ name: 'rescan-tab', shortcut: '' }], 'rescan-tab'), 'not set');
   assert.strictEqual(shortcutText(null, 'rescan-tab'), 'not set');
 });
+
+// ---- The Detection tab's Scan again button: the shortcut's rescan, asked by the popup for the tab it shows ----
+const WorkerMessages = require('../modules/core/worker-messages.js');
+const MessageSender = require('../modules/core/message-sender.js');
+
+/** The worker's handler for the popup's Scan again message, with a fake browser and the same fakes as `deps`. */
+function rescanHandler(options = {}) {
+  const d = deps(options);
+  const tabs = options.tabs || { 4: tab, 9: { id: 9, url: 'https://other.example/' } };
+  d.chrome.tabs.get = async (id) => { if (!tabs[id]) throw new Error(`No tab with id: ${id}`); return tabs[id]; };
+  d.chrome.runtime = { getURL: (suffix = '') => `chrome-extension://abc/${suffix}` };
+  const registry = {};
+  Commands.registerHandlers(registry, d);
+  const ask = (request, sender = { url: 'chrome-extension://abc/popup.html' }) => new Promise((resolve) => {
+    const result = registry[WorkerMessages.RESCAN_TAB]({ request, sender, sendResponse: resolve });
+    // a handler that never answers (and does not keep the channel open) would hang the test: fail it instead
+    if (result !== true) setTimeout(() => resolve('no answer'), 50);
+  });
+  return { ...d, registry, ask };
+}
+
+test('the Scan again message rescans the tab the popup names, not the active one, and answers with the outcome', async () => {
+  const h = rescanHandler({ active: { id: 9, url: 'https://other.example/' } });
+  assert.strictEqual(typeof h.registry[WorkerMessages.RESCAN_TAB], 'function', 'a handler is registered under WorkerMessages.RESCAN_TAB');
+  assert.deepStrictEqual(await h.ask({ type: WorkerMessages.RESCAN_TAB, tabId: 4 }), { status: 'ok', outcome: 'reloaded' });
+  assert.deepStrictEqual(h.calls.cleared, [{ url: 'https://shop.example/cart', tabId: 4 }]);
+  assert.deepStrictEqual(h.calls.reloaded, [4], 'only tab 4 reloaded: the active tab 9 was left alone');
+});
+
+test('the Scan again message says why nothing happened: off, a skipped site, a page it cannot scan, no tab', async () => {
+  for (const [options, outcome] of [[{ enabled: false }, 'off'], [{ skipped: true }, 'skipped'], [{ valid: false }, 'unsupported']]) {
+    const h = rescanHandler(options);
+    assert.deepStrictEqual(await h.ask({ tabId: 4 }), { status: 'ok', outcome });
+    assert.deepStrictEqual(h.calls.reloaded, [], `${outcome}: nothing reloaded`);
+    assert.deepStrictEqual(h.calls.cleared, [], `${outcome}: nothing cleared`);
+  }
+  // A tab that closed since the popup looked, a message without a tab and a tab id that is not a number: never the active tab instead
+  const h = rescanHandler({ active: { id: 9, url: 'https://other.example/' } });
+  for (const request of [{ tabId: 77 }, {}, { tabId: '4' }, { tabId: null }, { tabId: -1 }]) {
+    assert.deepStrictEqual(await h.ask(request), { status: 'ok', outcome: 'no_tab' }, JSON.stringify(request));
+  }
+  assert.deepStrictEqual(h.calls.reloaded, [], 'the active tab was not rescanned in its place');
+  assert.deepStrictEqual(h.calls.cleared, []);
+});
+
+test('the Scan again message is for the extension\'s own pages: a content script in a web page is refused', async () => {
+  const h = rescanHandler();
+  const answer = await h.ask({ tabId: 4 }, { tab: { id: 4 }, url: 'https://evil.example/page' });
+  assert.strictEqual(answer.status, 'error');
+  assert.deepStrictEqual(h.calls.reloaded, []);
+  assert.deepStrictEqual(h.calls.cleared, []);
+});
+
+test('a failing reload is an answer, not an exception; a worker error still answers', async () => {
+  assert.deepStrictEqual(await rescanHandler({ reloadFails: true }).ask({ tabId: 4 }), { status: 'ok', outcome: 'failed' });
+  const h = rescanHandler();
+  h.chrome.tabs.get = async () => { throw new TypeError('boom'); };
+  assert.deepStrictEqual(await h.ask({ tabId: 4 }), { status: 'ok', outcome: 'no_tab' }, 'a tab that cannot be read is no tab');
+});
+
+test('the worker\'s router registers the Scan again handler, and the rescan stays one function for the shortcut and the button', () => {
+  const context = vm.createContext({ Commands, console });
+  vm.runInContext(fs.readFileSync(path.join(root, 'background/handlers/router-registry.js'), 'utf8'), context);
+  const registry = context.buildMessageHandlerRegistry({});
+  assert.strictEqual(typeof registry[WorkerMessages.RESCAN_TAB], 'function');
+  const source = fs.readFileSync(path.join(root, 'background/commands.js'), 'utf8');
+  assert.strictEqual((source.match(/async rescan\(/g) || []).length, 1, 'one rescan implementation');
+});

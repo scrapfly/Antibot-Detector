@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Detectors zoeken..."
   },
+  "rulesFiltersLabel": {
+    "message": "Regels filteren"
+  },
   "paginationPrev": {
     "message": "Vorige pagina"
   },
@@ -1620,6 +1623,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Detecties zoeken..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Detecties filteren"
   },
   "detectionPaginationPage": {
     "message": "Pagina"

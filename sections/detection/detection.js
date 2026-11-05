@@ -4,6 +4,8 @@ class Detection {
     this.detectionEngine = detectionEngine;
     this.currentResults = [];
     this.searchQuery = '';
+    // The category chips under the search (DetectionFilter): kept while the popup is open
+    this.activeChips = DetectionFilter.normalizeChips();
     // Settings → Detection → Category order
     this.categoryOrder = [...Categories.KEYS];
     this.sortBy = 'category';
@@ -331,6 +333,9 @@ class Detection {
   async clearCache(...args) {
     return await DetectionActions.clearCache.apply(this, args);
   }
+  async rescan(...args) {
+    return await DetectionActions.rescan.apply(this, args);
+  }
   async uploadDetectionsToPaste(...args) {
     return await DetectionActions.uploadDetectionsToPaste.apply(this, args);
   }
@@ -385,6 +390,12 @@ class Detection {
   getFilteredResults(...args) {
     return DetectionUI.getFilteredResults.apply(this, args);
   }
+  toggleFilterChip(...args) {
+    return DetectionUI.toggleFilterChip.apply(this, args);
+  }
+  clearFilters(...args) {
+    return DetectionUI.clearFilters.apply(this, args);
+  }
   /**
    * Use the saved sort (Settings → Detection → Show first); with `rerender`,
    * re-sort the visible list when it changed.
@@ -396,7 +407,7 @@ class Detection {
     this.sortBy = next.sortBy;
     this.categoryOrder = next.categoryOrder;
     if (rerender && changed && this.paginationManager && this.currentResults?.length) {
-      const items = this.searchQuery ? this.getFilteredResults() : this.sortDetectionsByCategory(this.currentResults);
+      const items = DetectionUI.isFiltering.call(this) ? this.getFilteredResults() : this.sortDetectionsByCategory(this.currentResults);
       this.paginationManager.setItems(items);
     }
   }
@@ -544,6 +555,17 @@ class Detection {
       });
     }
 
+    // The category chips, and the "Clear filters" button of the no-matches message
+    const filterRow = document.querySelector('#detectionFilters');
+    if (filterRow) {
+      filterRow.addEventListener('click', (e) => {
+        const chip = e.target.closest('.history-filter-chip');
+        if (chip) this.toggleFilterChip(chip.dataset.filter);
+      });
+    }
+    const clearFiltersBtn = document.querySelector('#detectionClearFilters');
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', () => this.clearFilters());
+
     const detectionResults = document.querySelector('#detectionResults');
     if (detectionResults && detectionResults.dataset.copyValueHandlerBound !== 'true') {
       detectionResults.dataset.copyValueHandlerBound = 'true';
@@ -570,6 +592,12 @@ class Detection {
       clearCacheBtn.addEventListener('click', () => {
         this.clearCache();
       });
+    }
+
+    // Scan again: next to Clear cache, and on the states that say the page has no completed scan
+    for (const selector of ['#rescanBtn', '#emptyRescanBtn']) {
+      const rescanBtn = document.querySelector(selector);
+      if (rescanBtn) rescanBtn.addEventListener('click', () => { this.rescan(); });
     }
 
     // Setup copy overview button

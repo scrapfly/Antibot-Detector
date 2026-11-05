@@ -27,6 +27,7 @@
     'CACHE_HIT_EARLY_EXIT',     // the content script stopped early because of a cached result
     'REQUEST_DETECTION',        // the popup (or the worker's own tab events) asks for a scan of a tab
     'GET_DETECTION_DATA',       // the popup asks for a tab's result
+    'RESCAN_TAB',               // the Detection tab's Scan again: clear the tab's saved result and reload it ({ tabId }); the answer's `outcome` says what happened
     // The worker to the content script (the page's JS API events, and a requested scan)
     'REQUEST_PAGE_DATA',
     'RUN_DETECTION',

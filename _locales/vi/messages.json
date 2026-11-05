@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Tìm trình phát hiện..."
   },
+  "rulesFiltersLabel": {
+    "message": "Lọc quy tắc"
+  },
   "paginationPrev": {
     "message": "Trang trước"
   },
@@ -1620,6 +1623,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Tìm phát hiện..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Lọc phát hiện"
   },
   "detectionPaginationPage": {
     "message": "Trang"

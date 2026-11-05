@@ -18,6 +18,8 @@ class Rules {
     this.colorManager = null;
     this.allDetectors = [];
     this.filteredDetectors = [];
+    // The filter chips under the search (RulesFilter): kept while the popup is open
+    this.activeChips = RulesFilter.normalizeChips();
   }
 
   /**
@@ -89,6 +91,17 @@ class Rules {
         this.handleSearch(e.target.value);
       });
     }
+
+    // Filter chips, and the "Clear filters" button of the no-matches message
+    const filterRow = document.querySelector('#rulesFilters');
+    if (filterRow) {
+      filterRow.addEventListener('click', (e) => {
+        const chip = e.target.closest('.history-filter-chip');
+        if (chip) this.toggleFilterChip(chip.dataset.filter);
+      });
+    }
+    const clearFiltersBtn = document.querySelector('#rulesClearFilters');
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', () => this.clearFilters());
 
     // Button event listeners
     this.setupButtonListeners();

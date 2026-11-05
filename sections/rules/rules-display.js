@@ -43,6 +43,9 @@ Rules.prototype.displayRules = async function() {
     if (rulesList) {
       rulesList.innerHTML = '';
     }
+    this.allDetectors = [];
+    this.filteredDetectors = [];
+    this.syncFilterUi(0);
     return;
   }
 
@@ -101,9 +104,9 @@ Rules.prototype.displayRules = async function() {
     return aName.localeCompare(bName);
   });
 
-  // Keep the text in the search box applied after a delete / restore / clear
+  // Keep the text in the search box and the chips applied after a delete / restore / clear
   const query = document.querySelector('#rulesSearch')?.value || '';
-  if (query.trim() && typeof this.handleSearch === 'function') {
+  if ((query.trim() || RulesFilter.isActive(this.activeChips)) && typeof this.handleSearch === 'function') {
     this.handleSearch(query);
     return;
   }
@@ -113,6 +116,50 @@ Rules.prototype.displayRules = async function() {
   if (this.paginationManager) {
     this.paginationManager.setItems(this.filteredDetectors);
   }
+  this.syncFilterUi();
+};
+
+/**
+ * Where a rule comes from, decided once for the card (its tip and its Edited tag) and for the Custom and Edited chips, so
+ * a chip keeps exactly the cards that show the mark.
+ *   an official rule: one Scrapfly ships (a bundled id with the reserved author); anything else is custom
+ *   an edited rule: an official rule the person changed, not only translated
+ */
+Rules.prototype.isOfficialRule = function(detectorName, detector) {
+  const author = typeof detector.author === 'string' ? detector.author.trim() : '';
+  return typeof DetectionUtils !== 'undefined' && !!DetectionUtils.isOfficialDetector
+    && DetectionUtils.isOfficialDetector({ id: detector.id || detectorName, author });
+};
+
+Rules.prototype.isEditedRule = function(detector) {
+  return typeof DetectorManager !== 'undefined' && typeof DetectorManager.isUserEdited === 'function'
+    ? DetectorManager.isUserEdited(detector) : !!(detector.userModified && detector.officialSnapshot);
+};
+
+/**
+ * The chip row and the no-matches message follow the list: the row hides while there are no rules, each chip shows whether it
+ * is on, a category chip carries its category icon in the colour chosen in Settings, and the message with Clear filters
+ * shows when the search and the chips leave nothing of rules that exist.
+ * @param {number} [total] - how many rules there are (default: the ones the list holds)
+ */
+Rules.prototype.syncFilterUi = function(total = Array.isArray(this.allDetectors) ? this.allDetectors.length : 0) {
+  const row = document.querySelector('#rulesFilters');
+  if (row) {
+    row.hidden = total === 0;
+    const chips = RulesFilter.normalizeChips(this.activeChips);
+    row.querySelectorAll('.history-filter-chip').forEach((chip) => {
+      const key = chip.dataset.filter;
+      const on = RulesFilter.FLAGS.includes(key) ? chips[key] === true : chips.categories.includes(key);
+      chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (!chip.dataset.category) return;
+      const holder = chip.querySelector('.category-icon');
+      if (holder && !holder.firstChild) holder.innerHTML = FormatUtils.categoryIconSvg(key);
+      const colour = this.categoryManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
+      if (colour) chip.style.setProperty('--chip-color', colour);
+    });
+  }
+  const none = document.querySelector('#rulesNoResults');
+  if (none) none.hidden = !(total > 0 && Array.isArray(this.filteredDetectors) && this.filteredDetectors.length === 0);
 };
 
 // ============================================
@@ -161,8 +208,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
     const versionAuthor = FormatUtils.escapeHtml(detector.version || '1.0') +
       (authorText ? ` | ${FormatUtils.escapeHtml(authorText)}` : '');
     // Hover tips on the footer: version/author with official or custom, and the full update date
-    const official = typeof DetectionUtils !== 'undefined' && DetectionUtils.isOfficialDetector
-      && DetectionUtils.isOfficialDetector({ id: detector.id || detectorName, author: authorText });
+    const official = this.isOfficialRule(detectorName, detector);
     const methodLists = Object.values(detector.detection || {}).filter(rules => Array.isArray(rules) && rules.length > 0);
     const patternCount = methodLists.reduce((sum, rules) => sum + rules.length, 0);
     const comboCount = Array.isArray(detector.combinations) ? detector.combinations.length : 0;
@@ -178,8 +224,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
       detector.lastUpdated ? String(detector.lastUpdated).slice(0, 10) : '');
     // An official rule the user changed (not only translated): marked on the
     // card, and the menu can put the official version back
-    const edited = typeof DetectorManager !== 'undefined' && typeof DetectorManager.isUserEdited === 'function'
-      ? DetectorManager.isUserEdited(detector) : !!(detector.userModified && detector.officialSnapshot);
+    const edited = this.isEditedRule(detector);
     const editedBadge = edited
       ? `<span class="method-tag rule-edited-tag" ${FormatUtils.tipAttrs(_tr('ruleEditedTag', 'Edited'), _tr('tipRuleEdited', 'You edited this official rule. Updates ask before replacing your changes.'))}>${FormatUtils.escapeHtml(_tr('ruleEditedTag', 'Edited'))}</span>`
       : '';

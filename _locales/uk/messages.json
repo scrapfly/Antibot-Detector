@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Пошук детекторів..."
   },
+  "rulesFiltersLabel": {
+    "message": "Фільтр правил"
+  },
   "paginationPrev": {
     "message": "Попередня сторінка"
   },
@@ -1620,6 +1623,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Пошук виявлень..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Фільтр виявлень"
   },
   "detectionPaginationPage": {
     "message": "Сторінка"

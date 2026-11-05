@@ -83,3 +83,13 @@ test('every script that uses WorkerMessages runs in a context that loads it firs
     }
   }
 });
+
+test('the Detection tab\'s Scan again message is in the registry, sent by the popup by name and answered by the worker\'s Commands', () => {
+  assert.equal(WorkerMessages.RESCAN_TAB, 'RESCAN_TAB');
+  const popup = fs.readFileSync(path.join(ROOT, 'sections/detection/detection-actions.js'), 'utf8');
+  const worker = fs.readFileSync(path.join(ROOT, 'background/commands.js'), 'utf8');
+  assert.match(popup, /type: WorkerMessages\.RESCAN_TAB/, 'the popup sends it by name');
+  assert.match(worker, /registry\[messages\.RESCAN_TAB\]/, 'the worker answers it by name');
+  // the page that sends it and the handler that answers it load the registry first (the generic test above checks every user)
+  assert.ok(fs.readFileSync(path.join(ROOT, 'popup.html'), 'utf8').includes('modules/core/worker-messages.js'));
+});

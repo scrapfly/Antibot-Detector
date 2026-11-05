@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "डिटेक्टर खोजें..."
   },
+  "rulesFiltersLabel": {
+    "message": "नियम फ़िल्टर करें"
+  },
   "paginationPrev": {
     "message": "पिछला पृष्ठ"
   },
@@ -1620,6 +1623,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "डिटेक्शन खोजें..."
+  },
+  "detectionFiltersLabel": {
+    "message": "डिटेक्शन फ़िल्टर करें"
   },
   "detectionPaginationPage": {
     "message": "पृष्ठ"

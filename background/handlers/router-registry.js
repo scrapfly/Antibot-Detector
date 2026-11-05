@@ -42,6 +42,10 @@ function buildMessageHandlerRegistry(context) {
     if (typeof BulkScanRunner !== 'undefined') {
         BulkScanRunner.registerHandlers(registry);
     }
+    // Detection tab → Scan again: the rescan shortcut's work, for the tab the popup shows
+    if (typeof Commands !== 'undefined') {
+        Commands.registerHandlers(registry);
+    }
 
     return registry;
 }

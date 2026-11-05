@@ -124,7 +124,7 @@ test('an imported rule whose options are not booleans is refused, and the editor
 test('the Rules search finds a rule by the category the card shows, translated or not', () => {
   const ctx = { Rules: function() {}, console, Logger: { debug() {}, error() {} }, FormatUtils: { escapeHtml: (t) => t } };
   vm.createContext(ctx);
-  vm.runInContext(fs.readFileSync(path.join(root, 'sections/rules/rules-handlers.js'), 'utf8'), ctx);
+  for (const file of ['modules/core/categories.js', 'modules/core/rules-filter.js', 'sections/rules/rules-handlers.js']) vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), ctx);
   const rules = Object.create(ctx.Rules.prototype);
   rules.getCategoryLabel = (category) => ({ antibot: 'Anti-Bot', captcha: 'CAPTCHA' }[category] || category);
   rules.allDetectors = [

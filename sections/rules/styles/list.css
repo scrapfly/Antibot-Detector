@@ -116,6 +116,50 @@
   flex-shrink: 0;
 }
 
+/* Filter chips under the search. The chips are History's (.history-filter-chip, in history.css, which the popup links too); only the
+   row is restated here, as History's is scoped to its own tab. */
+.rules-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: -4px 0 0;
+}
+
+.rules-filters[hidden] {
+  display: none;
+}
+
+/* The icon of an edited rule is amber, like its tag on the card; a switched-off rule's is quiet */
+.rules-filters .history-filter-chip[data-filter="edited"] {
+  --chip-color: var(--warning-light);
+}
+
+.rules-filters .history-filter-chip[data-filter="disabled"] {
+  --chip-color: var(--text-muted);
+}
+
+/* There are rules, but the search and the chips match none: a line and the way back */
+.rules-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.rules-no-results[hidden] {
+  display: none;
+}
+
+.rules-no-results p {
+  margin: 0;
+  max-width: 300px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
 /* Rule updates waiting for a newer extension, under the toolbar */
 .rules-ext-notice {
   display: flex;

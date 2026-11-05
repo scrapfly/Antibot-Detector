@@ -566,6 +566,37 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
 }
 
+/* Filter chips under the search, in the summary card's last strip. The chips are History's (.history-filter-chip, in history.css,
+   which the popup links too); only the row is restated here, as History's is scoped to its own tab. */
+#detectionResults .detection-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 0;
+}
+
+/* There are results, but the search and the chips match none: a line and the way back */
+.detection-no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 16px;
+  text-align: center;
+}
+
+.detection-no-results[hidden] {
+  display: none;
+}
+
+.detection-no-results p {
+  margin: 0;
+  max-width: 300px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
 /* Results List */
 .results-list {
   display: flex;

@@ -377,6 +377,9 @@
   "searchDetectors": {
     "message": "Cerca rilevatori..."
   },
+  "rulesFiltersLabel": {
+    "message": "Filtra le regole"
+  },
   "paginationPrev": {
     "message": "Pagina precedente"
   },
@@ -1620,6 +1623,9 @@
   },
   "detectionSearchPlaceholder": {
     "message": "Cerca rilevamenti..."
+  },
+  "detectionFiltersLabel": {
+    "message": "Filtra i rilevamenti"
   },
   "detectionPaginationPage": {
     "message": "Pagina"
