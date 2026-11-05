@@ -525,32 +525,6 @@ input[type="file"] {
   border-radius: 8px;
 }
 
-.webhook-url-hint {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 12px;
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--text-primary);
-}
-
-.webhook-url-hint strong {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--text-primary);
-}
-
-.webhook-url-hint code {
-  background: var(--bg-primary);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--accent);
-  margin: 0 2px;
-}
-
 .duplicate-info-box {
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
@@ -2061,12 +2035,6 @@ input[type="file"] {
   font-size: 12px;
   text-align: center;
   color: var(--text-muted);
-}
-
-#settingsModal .webhook-url-hint-example {
-  margin-top: 6px;
-  font-size: 11px;
-  opacity: 0.8;
 }
 
 #settingsModal .duplicate-info-box {
