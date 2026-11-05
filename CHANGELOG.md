@@ -10,6 +10,32 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Added
 
 - History: a Combinations filter next to the category filters keeps the pages where a combination matched.
+- Detection: a Scan again button, next to Clear cache and on pages with no completed scan, reloads and rescans the page in one click.
+- Detection: Anti-bot, Captcha and Fingerprint filter chips under the search narrow the results, together with the search.
+- Rules: filter chips for the three categories, Custom, Edited and Disabled narrow the list, together with the search.
+- Bulk scan: a "Most seen" line under the totals names the protections found on the most pages; the Markdown and JSON exports include it.
+- Advanced: Lemin Cropped Captcha and ALTCHA get Extract Site Key and Analyze Scripts (ALTCHA's key only on Cloud and Sentinel); 27 protections now have tools.
+- Rules → Update: a new anti-bot detector, SiteGround SG-CAPTCHA, the proof-of-work challenge SiteGround shows to flagged visitors.
+
+### Changed
+
+- History search ignores accents, so "cafe" finds "Café" and the other way round.
+- Detection and Rules: a search or filter with no match now says so and offers Clear filters, instead of leaving an empty list.
+
+### Fixed
+
+- Editing, switching off, importing or updating rules now clears the saved results, so the next visit is scanned with the new rules instead of showing old cards for days.
+- Detectors that look for scripts in a page's head or inline (Queue-it, CHEQ, Anubis, Ruishu) now match; these checks never worked before.
+- History: Scan again now and Clear cache clear the saved result even when the cache scope setting changed after the entry was recorded.
+- History is no longer cut to the default size or entry limit when Settings cannot be read; your own limits apply again once they can.
+- Rules: a detector you add yourself shows its description in your language instead of English.
+- Akamai Extract Sensor no longer deletes the _abck cookie before it is ready, so a failed start leaves the cookie alone.
+- Imperva tools keep request bodies only from Imperva's own requests, and list each endpoint once, without its query, at most 20.
+- Web pages can no longer read a flag the extension left on the page saying it was loaded from the cache.
+
+### Security
+
+- Bulk scan: a sitemap only adds pages of its own site (www included); addresses on other hosts, local ones included, are no longer scanned.
 
 ## [3.1.2] - 2026-11-04
 
