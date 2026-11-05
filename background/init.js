@@ -134,8 +134,8 @@ HistoryStore.setQuotaRelief(() => DetectionEngineManager.shedStoredDetections())
 
 // How much History may take: the size the person chose in Settings (6 MB without the unlimitedStorage permission). The settings
 // are read strictly: Utils.getHistorySettings answers the defaults when they cannot be read, and the default 6 MB would cut the
-// older entries of a person who chose 12 or 25. Unreadable settings throw here, and a write then cuts nothing for size
-// (HistoryStore.currentBudget).
+// older entries of a person who chose 12 or 25. Unreadable settings throw here, and a write then cuts only to the largest size
+// anyone can have chosen (HistoryStore.currentBudget), and says so once.
 HistoryStore.setBudget(async () => {
     const settings = await StorageManager.readSettingsStrict();
     const history = settings.history && typeof settings.history === 'object' ? settings.history : {};

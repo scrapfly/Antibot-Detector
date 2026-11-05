@@ -293,3 +293,30 @@ test('the first run after settings become readable again trims to what the perso
     delete global.chrome;
   }
 });
+
+// ---- Unreadable settings are told apart from a retention that cannot work at all
+
+test('a missing StorageManager is a bug that surfaces, not settings that "cannot be read"', async () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const vm = require('node:vm');
+  // The worker's context without StorageManager (the worker loads it before the retention) and without require
+  const ctx = vm.createContext({ console, chrome: { storage: { local: { get: async () => ({}), set: async () => {} } } } });
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'background', 'history-retention.js'), 'utf8').replace(/^const HistoryRetention/m, 'globalThis.HistoryRetention'), ctx);
+  await assert.rejects(() => ctx.HistoryRetention.readConfig(), (error) => /require is not defined|StorageManager/.test(error.message),
+    'the run fails loudly (schedule() warns "Run failed"), where a null would pass for "the person\'s settings are unreadable" and skip every run for good');
+  await assert.rejects(() => ctx.HistoryRetention.run('history_write'), /require is not defined|StorageManager/);
+
+  // With StorageManager there, a failed or unparseable read is still the null that skips the run
+  const settings = (read) => ({ get: read, set: async () => {} });
+  const withManager = (read) => {
+    const world = vm.createContext({ console, chrome: { storage: { local: settings(read) } } });
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'modules', 'core', 'storage-manager.js'), 'utf8'), world);
+    vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'background', 'history-retention.js'), 'utf8').replace(/^const HistoryRetention/m, 'globalThis.HistoryRetention'), world);
+    return world.HistoryRetention;
+  };
+  assert.strictEqual(await withManager(async () => { throw new Error('storage is unavailable'); }).readConfig(), null);
+  assert.strictEqual(await withManager(async () => ({ scrapfly_settings: '{oops' })).readConfig(), null);
+  const config = await withManager(async () => ({ scrapfly_settings: JSON.stringify({ settings: { history: { historyLimit: 50 } } }) })).readConfig();
+  assert.strictEqual(config.limit, 50);
+});

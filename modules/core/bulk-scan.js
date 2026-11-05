@@ -10,7 +10,8 @@
  *                    cap are only counted)
  *   isSitemap(), parseSitemap()   a sitemap address, and the <loc> entries of a sitemap or a sitemap index
  *   sameSite()       whether an address a sitemap lists is on the sitemap's own site: a sitemap speaks for its own host
- *                    only (the page keeps every other address out, and never follows a sitemap of another site)
+ *                    only (the page keeps every other listed address out, and never fetches a sitemap listed for another
+ *                    host). It judges the address as listed: the worker opens it and follows its redirects
  *   createRun(), begin(), finish(), fail(), skip(), pause(), resume(), stop(), complete(), recover()
  *                    the run's states: running → paused → running, then done or stopped; recover() is what a service
  *                    worker that starts again does with a run it finds in session storage (nobody is scanning it any
@@ -31,8 +32,11 @@
   const TIMEOUT_S = Object.freeze({ min: 10, max: 120, default: 45 });
   const MAX_SKIPPED_LISTED = 200;  // skipped lines listed in the table; the rest are counted
   const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
-  /** Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. */
-  const REASONS = Object.freeze(['invalid', 'scheme', 'scope', 'sitemap', 'timeout', 'load', 'error', 'off']);
+  /**
+   * Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. 'sitemap': the sitemap could
+   * not be read (not fetched, not a sitemap); 'moved': the sitemap was fetched but ended on another site, so it was not read.
+   */
+  const REASONS = Object.freeze(['invalid', 'scheme', 'scope', 'sitemap', 'moved', 'timeout', 'load', 'error', 'off']);
   const FORMATS = Object.freeze(['csv', 'json', 'md']);
   const TYPES = Object.freeze({ csv: 'text/csv', json: 'application/json', md: 'text/markdown' });
 
@@ -221,10 +225,13 @@
   }
 
   /**
-   * Whether an address listed in a sitemap is on the sitemap's own site. A sitemap speaks for its own site only: each page
-   * of a run is a real visit with the person's cookies, so a public sitemap must not send the browser to 127.0.0.1, a
-   * router, a cloud metadata address or someone else's site. example.com and www.example.com are one site; the port and the
-   * scheme may differ, the host may not. Addresses the person pastes never go through this (a local test page is a real use).
+   * Whether an address listed in a sitemap is on the sitemap's own site. A sitemap speaks for its own site only: each page of
+   * a run is a real visit with the person's cookies, so a public sitemap does not get to list 127.0.0.1, a router, a cloud
+   * metadata address or someone else's site. example.com and www.example.com are one site; the port and the scheme may differ,
+   * the host may not. Addresses the person pastes never go through this (a local test page is a real use).
+   * What is judged is the address as listed. It is not a promise about where the visit ends: the worker opens the listed
+   * address and follows its redirects, so a hostile host can still redirect one of its own listed addresses to another host
+   * (the person's own Sites to scan list is the only check after that).
    * @param {string} sitemapUrl  the address of the sitemap
    * @param {string} loc  an entry of it (a page, or a sitemap of an index)
    * @returns {boolean}

@@ -127,22 +127,17 @@ test('at browser start nothing is cleared when the setting is off', async () => 
   } finally { delete global.chrome; }
 });
 
-// Settings that cannot be read do not say "clear on close": nothing is cleared when the last window closes, or at the next start
-const unreadable = ['{oops', 'null', '42', JSON.stringify({ settings: 'junk' })];
+// Clear on close needs its setting. Saved as on, but not readable at that moment (the storage did not answer), nothing is cleared and
+// nothing throws: the close is not retried, and the next start reads the setting again. Stored text that is not settings reads as the
+// defaults before and after (clear on close off), so it clears nothing either way: it only shows that the unreadable cases agree.
+test('clear on close: with the setting on and readable the last window clears; when it cannot be read at that moment nothing is cleared and nothing throws', async () => {
+  const readable = world({ windows: [] });
+  try {
+    assert.strictEqual(await HistoryRetention.onWindowRemoved(), 2, 'the setting is on and readable: the control');
+    assert.deepStrictEqual(ids(readable.store), ['p']);
+  } finally { delete global.chrome; }
 
-test('with settings that cannot be read, closing the last window clears nothing', async () => {
-  for (const settings of unreadable) {
-    const w = world({ windows: [] });
-    w.store.scrapfly_settings = settings;
-    try {
-      assert.strictEqual(await HistoryRetention.onWindowRemoved(), 0, settings);
-      assert.deepStrictEqual(ids(w.store), ['a', 'p', 'b'], settings);
-    } finally { delete global.chrome; }
-  }
-});
-
-test('with a settings read that fails, neither the last window closing nor the next browser start clears History', async () => {
-  const w = world({ windows: [] });
+  const failing = world({ windows: [] });
   const get = global.chrome.storage.local.get;
   global.chrome.storage.local.get = async (keys) => {
     if ([].concat(keys).includes('scrapfly_settings')) throw new Error('storage is unavailable');
@@ -152,10 +147,19 @@ test('with a settings read that fails, neither the last window closing nor the n
     const retention = fresh();
     retention.init();
     await settle();
-    assert.strictEqual(await HistoryRetention.onWindowRemoved(), 0);
-    w.listeners.windowRemoved[0](5);
-    w.listeners.startup[0]();
+    assert.strictEqual(await HistoryRetention.onWindowRemoved(), 0, 'the close: skipped, not a rejection');
+    failing.listeners.windowRemoved[0](5);
+    failing.listeners.startup[0]();
     await settle();
-    assert.deepStrictEqual(ids(w.store), ['a', 'p', 'b']);
+    assert.deepStrictEqual(ids(failing.store), ['a', 'p', 'b'], 'neither the close nor the next start cleared anything');
   } finally { delete global.chrome; }
+
+  for (const settings of ['{oops', 'null', '42', JSON.stringify({ settings: 'junk' })]) {
+    const garbage = world({ windows: [] });
+    garbage.store.scrapfly_settings = settings;
+    try {
+      assert.strictEqual(await HistoryRetention.onWindowRemoved(), 0, settings);
+      assert.deepStrictEqual(ids(garbage.store), ['a', 'p', 'b'], settings);
+    } finally { delete global.chrome; }
+  }
 });

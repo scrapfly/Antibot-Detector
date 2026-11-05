@@ -2,17 +2,22 @@
 /**
  * 3.1.3 Bulk scan and History retention, end to end, in the real extension (unpacked in Chromium):
  *
- *   Sitemap     a public sitemap only contributes the pages of its own site: its own pages (and the www spelling of its
- *               host) are scanned, while 127.0.0.1, localhost, another host, a private address and a cloud metadata
- *               address it lists are never visited, a sitemap of another host is never fetched, and a sitemap that
- *               sends the browser to another site is not read. Addresses pasted into the list stay as they are.
+ *   Sitemap     a public sitemap only contributes the listed addresses of its own site: its own pages (and the www spelling
+ *               of its host) are scanned, while the 127.0.0.1, localhost, other-host, private and cloud metadata addresses
+ *               it lists are not opened, and a sitemap listed for another host is never fetched. A sitemap the site answers
+ *               with an error is listed as one that could not be read, and the table has words for a sitemap that ended on
+ *               another site. Addresses pasted into the list stay as they are. What is judged is the address as listed: a
+ *               redirect from a listed address is not followed up.
+ *               Not here: a sitemap that REDIRECTS to another site. Playwright's router cannot make a fetch follow a redirect
+ *               (the fetch fails with "Failed to fetch" and the router never sees the target), so that path is covered by
+ *               test/bulk-page.test.js, whose fetch answers with the address the redirect ended on.
  *   Most seen   the protections found on the most pages are named under the totals (hidden when nothing was found), the
  *               Markdown export has a line for them, the JSON export a field, and the CSV is as it was.
  *   Settings    while the stored settings cannot be read, History is not trimmed (not to the 1,000-entry cap, not to the
  *               6 MB default size) and nothing is cleared; once they read again the person's limits apply.
  *
  * One local server answers on 127.0.0.1, localhost and, through the browser's host mapping, sitemap.test,
- * www.sitemap.test and other.test. Every request is logged by its Host header: a page that must never be visited is
+ * www.sitemap.test and other.test. Every request is logged by its Host header: a listed address that must not be opened is
  * /offsite-probe. The sitemaps are served over https by Playwright's router (an extension page may only fetch https
  * addresses: its connect-src).
  *
@@ -87,7 +92,7 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
     await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
     // The sitemaps, over https (the router answers the extension page's fetch)
-    const fetched = { other: 0, redirectedTo: 0 };
+    const fetched = { other: 0 };
     await context.route('https://sitemap.test/**', (route) => {
       const u = new URL(route.request().url());
       if (u.pathname === '/index.xml') {
@@ -105,12 +110,8 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
       fetched.other++;
       return route.fulfill({ status: 200, contentType: 'application/xml', body: urlset(at('/offsite-probe?from=other-sitemap', 'other.test')) });
     });
-    // A sitemap that sends the browser to another site; what it ends on lists a page of the first site too
-    await context.route('https://moved.test/**', (route) => route.fulfill({ status: 302, headers: { location: 'https://evil-final.test/sitemap.xml' }, body: '' }));
-    await context.route('https://evil-final.test/**', (route) => {
-      fetched.redirectedTo++;
-      return route.fulfill({ status: 200, contentType: 'application/xml', body: urlset('https://moved.test/from-redirect', at('/offsite-probe?from=redirect')) });
-    });
+    // A sitemap the site answers with an error
+    await context.route('https://down.test/**', (route) => route.fulfill({ status: 404, body: 'no' }));
 
     // Setup: the probe rule, nothing skipped, History on, English
     const admin = await context.newPage();
@@ -149,8 +150,8 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
       return fs.readFileSync(await (await pending).path(), 'utf8');
     };
 
-    // 1. A public sitemap only contributes the pages of its own site
-    const list = [at('/clean?pasted=1'), at('/offsite-probe?pasted=1', 'localhost'), 'https://sitemap.test/index.xml', 'https://moved.test/sitemap.xml'];
+    // 1. A public sitemap only contributes the listed addresses of its own site
+    const list = [at('/clean?pasted=1'), at('/offsite-probe?pasted=1', 'localhost'), 'https://sitemap.test/index.xml', 'https://down.test/sitemap.xml'];
     await bulk.fill('#bulkInput', list.join('\n'));
     await bulk.fill('#bulkTimeout', '15');
     await bulk.click('#bulkStartBtn');
@@ -162,14 +163,19 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
       [at('/protected?p=2', 'sitemap.test'), 'done', ''],
       [at('/clean?p=3', 'sitemap.test'), 'done', ''],
       [at('/clean?p=www', 'www.sitemap.test'), 'done', ''],
-      ['https://moved.test/sitemap.xml', 'skipped', 'sitemap']
-    ], 'the pasted lines (a local address too), the sitemap\'s own pages and the www spelling, and the sitemap that moved listed as one that could not be read');
+      ['https://down.test/sitemap.xml', 'skipped', 'sitemap']
+    ], 'the pasted lines (a local address too), the sitemap\'s own pages and the www spelling, and the sitemap that failed listed as one that could not be read');
     const visited = hits.filter(h => h.includes('/offsite-probe'));
-    assert.deepEqual(visited, [`localhost:${port}/offsite-probe?pasted=1`], 'the only off-site page visited is the one the person pasted');
+    assert.deepEqual(visited, [`localhost:${port}/offsite-probe?pasted=1`], 'no listed off-site address was opened: the only one is what the person pasted');
     assert.ok(hits.includes(`sitemap.test:${port}/protected?p=1`) && hits.includes(`www.sitemap.test:${port}/clean?p=www`), 'control: the sitemap\'s own pages were visited');
-    assert.equal(fetched.other, 0, 'a sitemap of another host is never fetched');
-    assert.ok(!finished.items.some(i => /192\.168|169\.254|\[::1\]|other\.test|from-redirect|evil-index/.test(i.url)), 'nothing the sitemaps listed for another host is in the run');
-    console.log('PASS Sitemap: only the site\'s own pages are scanned; 127.0.0.1, localhost, another host, a private and a metadata address are never visited; another host\'s sitemap is never fetched; a sitemap that moved to another site is not read; pasted lines stay');
+    assert.equal(fetched.other, 0, 'a sitemap listed for another host is never fetched');
+    assert.ok(!finished.items.some(i => /192\.168|169\.254|\[::1\]|other\.test|evil-index/.test(i.url)), 'nothing the sitemaps listed for another host is in the run');
+    // The table says why, in words
+    await bulk.waitForFunction(() => /Finished/.test(document.querySelector('#bulkRunStatus').textContent), null, { polling: 250, timeout: 10000 });
+    const tableRows = await bulk.$$eval('#bulkRows tr', trs => trs.map(tr => [...tr.children].map(td => td.textContent.trim())));
+    const downRow = tableRows.find(r => r[1].startsWith('https://down.test/sitemap.xml'));
+    assert.match(downRow[2], /^Skipped\s*The sitemap could not be read\. Only https sitemaps can be read\.$/);
+    console.log('PASS Sitemap: only the listed addresses of the site itself are scanned; the 127.0.0.1, localhost, other-host, private and metadata addresses a sitemap lists are not opened; a sitemap listed for another host is never fetched; a sitemap the site answers with an error is listed as one that could not be read; pasted lines stay');
 
     // 2. Most seen
     const seen = await bulk.$eval('#bulkRunMostSeen', el => ({ hidden: el.hidden, text: el.textContent, after: el.previousElementSibling && el.previousElementSibling.id }));
@@ -197,6 +203,23 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
     assert.ok(!(await download('#bulkExportMarkdownBtn')).includes('Most seen'));
     assert.deepEqual(JSON.parse(await download('#bulkExportJsonBtn')).run.protectionTotals, []);
     console.log('PASS Most seen: scanned pages with no protection leave the line hidden and out of the exports');
+
+    // The words for a sitemap that ended on another site, drawn by the real page from a run state as the worker writes it (the reason is
+    // 'moved'; a redirect itself cannot be made to happen in this browser, see the header)
+    await bulk.click('#bulkNewBtn');
+    await bulk.waitForSelector('#bulkRunCard', { state: 'hidden' });
+    await bulk.evaluate(() => chrome.storage.session.set({ session_bulk_scan: {
+      id: 'bulk_seeded', status: 'done', reason: null, startedAt: 1, finishedAt: 2, timeoutSec: 45, cap: 200, duplicates: 0, overCap: 0, skippedOver: 0,
+      items: [{ url: 'https://moved.test/sitemap.xml', status: 'skipped', reason: 'moved', finishedAt: 2 }, { url: 'https://down.test/sitemap.xml', status: 'skipped', reason: 'sitemap', finishedAt: 2 }]
+    } }));
+    await bulk.waitForFunction(() => document.querySelectorAll('#bulkRows tr').length === 2, null, { polling: 250, timeout: 10000 });
+    const seededRows = await bulk.$$eval('#bulkRows tr', trs => trs.map(tr => [...tr.children].map(td => td.textContent.trim())));
+    assert.match(seededRows[0][2], /^Skipped\s*The file could not be read\.$/, 'a sitemap that ended on another site');
+    assert.ok(!seededRows[0][2].includes('https sitemaps'), 'not the hint for a sitemap that was not fetched');
+    assert.match(seededRows[1][2], /^Skipped\s*The sitemap could not be read\. Only https sitemaps can be read\.$/, 'and one that could not be fetched keeps its own');
+    console.log('PASS Sitemap: a sitemap that ended on another site says the file could not be read, not that only https sitemaps can be');
+    await bulk.click('#bulkNewBtn');
+    await bulk.waitForSelector('#bulkRunCard', { state: 'hidden' });
 
     // 3. History is not trimmed while the settings cannot be read
     const MB = 1024 * 1024;
