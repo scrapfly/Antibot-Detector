@@ -330,6 +330,23 @@ test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, 
     assert.equal(Array.from(t.f.timers.values()).filter(timer => timer.delay === 2000).length, 2, 'an Imperva challenge still completes the analysis shortly after');
 });
 
+test('Imperva: Start Capturing over a running Analyze Scripts takes its page-load listener with it, and a later one starts with a single listener', () => {
+    const f = fixture(), context = f.load('imperva');
+    const states = new Map();
+    context.impervaInitializeInterceptor(states);
+    const onCompleted = f.context.chrome.webNavigation.onCompleted;
+    context.impervaStartExtraction(7, 'https://shop.example/login');
+    assert.equal(onCompleted.listeners.size, 1, 'the analysis waits for the page to load');
+    // the capture replaces the analysis of the tab: nothing of the analysis may go on listening
+    context.impervaStartCapture(7, 'https://shop.example/login');
+    assert.equal(onCompleted.listeners.size, 0, 'the replaced analysis leaves no page-load listener behind');
+    assert.equal(states.get(7).extractMode, undefined, 'the tab holds the capture now');
+    // and another analysis after the capture is one analysis: one listener, so one reload ends it once
+    states.delete(7);
+    context.impervaStartExtraction(7, 'https://shop.example/login');
+    assert.equal(onCompleted.listeners.size, 1, 'a single page-load listener');
+});
+
 test('Imperva: a stored POST body is cut at a fixed size and says so', () => {
     const t = impervaTab('extract');
     const big = `{"solution":"${'x'.repeat(100000)}"}`;

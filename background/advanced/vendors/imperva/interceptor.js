@@ -51,8 +51,10 @@ function impervaStartCapture(tabId, captureUrl) {
         setupImpervaInterceptor();
     }
 
-    // The state about to be replaced still has its 60 s stop: it would stop the new capture
+    // The state about to be replaced still has its 60 s stop (it would stop the new capture) and, for an Analyze Scripts run, its
+    // page-load listener (it would end the next run of the tab twice)
     const replaced = impervaCaptureStateRef.get(tabId);
+    if (replaced && typeof replaced.removeLoadListener === 'function') replaced.removeLoadListener();
     if (replaced && replaced.timeout) clearTimeout(replaced.timeout);
 
     impervaCaptureStateRef.set(tabId, {

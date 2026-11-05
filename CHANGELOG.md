@@ -15,6 +15,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Imperva: captures and saved request bodies cover only Imperva's own requests on the page's site, and at most 20 challenge addresses and payloads are kept.
+- Imperva: Start Capturing over a running Analyze Scripts no longer leaves a listener that shows the next result twice.
 - Shape Security: stopping a capture right after the page loads no longer leaves a stale Monitoring Active notice or blocks the next Start.
 - Shape Security: a capture that runs out of time with nothing captured no longer saves an empty entry, and the page says it timed out.
 - Akamai: starting Extract Sensor twice on one tab no longer lets the first run's timer end the second early.
