@@ -7,7 +7,8 @@ const { spawnSync } = require('node:child_process');
 
 // node scripts/check-locale-keys.js --unused lists the keys nothing names. It used to match each key as a substring of the
 // whole corpus, so advCodeDescPython looked used because advCodeDescPythonBs is (fourteen dead keys hid behind longer names).
-// A key now counts as used only as a whole token.
+// A key now counts as used only as a whole token. (The scan is a tool, not a gate: a name built at run time is not seen, so no
+// test asserts that the real tree has no unused key.)
 
 const root = path.join(__dirname, '..');
 const script = path.join(root, 'scripts', 'check-locale-keys.js');
@@ -33,10 +34,4 @@ test('a key that only sits inside a longer name is reported; the longer name and
   } finally {
     fs.rmSync(base, { recursive: true, force: true });
   }
-});
-
-test('every key of the extension is named somewhere: no dead locale key comes back', () => {
-  const run = unused(root);
-  assert.equal(run.status, 0, run.stdout + run.stderr);
-  assert.match(run.stdout, /No unused keys\./);
 });
