@@ -9,6 +9,8 @@
  *   F-6  Clear cache      History's request names the scope the entry was recorded under (Path); the result was saved under
  *                         the Domain key: the request clears it and the next visit is scanned
  *   F-8  DOM rules        a rule on a script in the <head> and one on an inline script's attribute match a real page
+ *   F-9b Page footprint   the page's window, document and events with the extension against the same page in a Chromium
+ *                         without it, on a scanned load and on a cache hit; the JS API adds its documented global only when on
  *
  * A local site serves the pages and throwaway user rules (added through the Rules code, as the popup does) recognise them, so
  * the scans are real.
@@ -37,6 +39,67 @@ const FLAG = '__scrapflyCacheHitEarlyExit';
 // ---- Local site ---------------------------------------------------------------------------------
 const MARKER = 'v313-engine-marker-bot';
 const loads = {}; // page name -> how many times the server sent it
+
+/**
+ * A page that records, from its own first script (before anything else of the page runs), what it can see of the extension: its
+ * window's own names and symbols at start, on load and later (while the hooks and the window checks run, and after), the bridge
+ * events it could hear, the extension's public JS API events, the frames an error thrown through a wrapped member shows (a gap that is
+ * reported, not asserted: the wrappers' own frames name the extension's script), and its document's own
+ * names, root attributes and element count. The same page is loaded with and without the extension and the records are compared.
+ */
+const auditPage = (name) => `<!doctype html><html><head><title>Audit ${name}</title>
+<script>
+(function () {
+  var snap = function () { return { names: Object.getOwnPropertyNames(window), symbols: Object.getOwnPropertySymbols(window).map(String) }; };
+  var heard = [];
+  ['scrapfly-bridge-init', 'scrapfly-isolated-bridge-message', 'scrapfly-main-bridge-message', 'scrapfly-install-hooks'].forEach(function (type) {
+    window.addEventListener(type, function () { heard.push(type); }, true);
+    window.addEventListener(type, function () { heard.push(type + ' (bubble)'); });
+    document.addEventListener(type, function () { heard.push(type + ' (document)'); }, true);
+  });
+  var api = [];
+  ['ready', 'onStart', 'onProgress', 'onDetection', 'onError', 'onHooksComplete', 'onWindowPropsComplete'].forEach(function (n) {
+    window.addEventListener('scrapfly:' + n, function () { api.push(n); });
+  });
+  // An error thrown by a hooked member (a getter called on a foreign object) shows the frames of the script that wraps it
+  var frames = function () {
+    var found = [];
+    var probes = [function () { HTMLCanvasElement.prototype.toDataURL.call({}); }, function () { Function.prototype.toString.call({}); }];
+    ['userAgent', 'platform', 'hardwareConcurrency', 'deviceMemory', 'languages'].forEach(function (key) {
+      var descriptor = Object.getOwnPropertyDescriptor(Navigator.prototype, key);
+      if (descriptor && descriptor.get) probes.push(function () { descriptor.get.call({}); });
+    });
+    probes.forEach(function (probe) {
+      try { probe(); } catch (e) {
+        var lines = String(e && e.stack).split('\\n').filter(function (line) { return line.indexOf('chrome-extension://') !== -1; });
+        if (lines.length) found.push(lines[0].trim());
+      }
+    });
+    return found;
+  };
+  // A getter the page defines on a path the extension's window checks poll (bmak, Akamai's) runs when they read it, and its own
+  // error stack shows who is reading
+  var getterFrames = [];
+  Object.defineProperty(window, 'bmak', { configurable: true, get: function () {
+    var lines = String(new Error().stack).split('\\n').filter(function (line) { return line.indexOf('chrome-extension://') !== -1; });
+    if (lines.length) getterFrames.push(lines[0].trim());
+  } });
+  var audit = { times: { start: snap() }, heard: heard, api: api, frames: { start: frames() }, getterFrames: getterFrames };
+  window.addEventListener('load', function () { audit.times.load = snap(); });
+  [1500, 4000, 9000].forEach(function (ms) {
+    setTimeout(function () {
+      audit.times['t' + ms] = snap();
+      if (ms === 1500) audit.frames.t1500 = frames();
+      if (ms === 9000) {
+        audit.getterReads = getterFrames.length;
+        audit.doc = { names: Object.getOwnPropertyNames(document), symbols: Object.getOwnPropertySymbols(document).map(String),
+          htmlAttrs: document.documentElement.getAttributeNames(), elements: document.getElementsByTagName('*').length };
+      }
+    }, ms);
+  });
+  window.__audit = audit;
+})();
+</script></head><body><p>${MARKER}</p></body></html>`;
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
   const name = url.searchParams.get('n') || 'page';
@@ -53,6 +116,11 @@ const server = http.createServer((req, res) => {
 <script src="/empty.js" data-queueit-c="e2ecustomer"></script>
 <script type="text/javascript" r="m">window.__engineInline = 'INLINE-SECRET-TEXT';</script>
 </head><body><p>scripts in the head</p></body></html>`);
+  }
+  if (url.pathname === '/audit') {
+    loads[name] = (loads[name] || 0) + 1;
+    res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
+    return res.end(auditPage(name));
   }
   if (url.pathname === '/empty.js') {
     res.writeHead(200, { 'content-type': 'application/javascript', 'cache-control': 'no-store' });
@@ -307,6 +375,110 @@ async function scenario(name, fn) {
     assert.ok(!JSON.stringify(entry).includes('INLINE-SECRET-TEXT'), 'nothing of the inline script\'s text is saved with the result');
     console.log(`      detectors on the head page: ${JSON.stringify(detectorIds(entry))}`);
     await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('F-9b the page\'s window, document and events hold the same with the extension as without it, on a scan and on a cache hit; the JS API adds its documented global only when on', async () => {
+    const pagePath = `/audit?n=audit-${uniq()}`;
+    const collect = async (page) => {
+      await page.waitForFunction(() => window.__audit && window.__audit.times && window.__audit.times.t9000 && window.__audit.doc, null, { polling: 250, timeout: 40000 });
+      return page.evaluate(() => JSON.parse(JSON.stringify(window.__audit)));
+    };
+    /** The names the page holds in one load and not in the other, per moment: { "names:x": ["start", "t1500"] } */
+    const footprint = (withExt, without) => {
+      const added = {};
+      const removed = {};
+      for (const label of Object.keys(without.times)) {
+        for (const kind of ['names', 'symbols']) {
+          const w = withExt.times[label][kind];
+          const o = without.times[label][kind];
+          for (const n of w) if (!o.includes(n)) (added[`${kind}:${n}`] = added[`${kind}:${n}`] || []).push(label);
+          for (const n of o) if (!w.includes(n)) (removed[`${kind}:${n}`] = removed[`${kind}:${n}`] || []).push(label);
+        }
+      }
+      for (const kind of ['names', 'symbols']) {
+        for (const n of withExt.doc[kind]) if (!without.doc[kind].includes(n)) (added[`document ${kind}:${n}`] = []).push('doc');
+        for (const n of without.doc[kind]) if (!withExt.doc[kind].includes(n)) (removed[`document ${kind}:${n}`] = []).push('doc');
+      }
+      if (JSON.stringify(withExt.doc.htmlAttrs) !== JSON.stringify(without.doc.htmlAttrs)) added['html attributes'] = [JSON.stringify(withExt.doc.htmlAttrs), JSON.stringify(without.doc.htmlAttrs)];
+      if (withExt.doc.elements !== without.doc.elements) added['element count'] = [withExt.doc.elements, without.doc.elements];
+      return { added, removed };
+    };
+
+    // Without the extension: the same page loaded twice in a Chromium that has none (the second load tells the noise of the comparison)
+    const plain = await chromium.launch({ headless: true, channel: 'chromium' });
+    let plainFirst;
+    let plainSecond;
+    try {
+      const context = await plain.newContext({ viewport: { width: 420, height: 650 } });
+      const first = await context.newPage();
+      await first.goto(`${origin}${pagePath}`);
+      plainFirst = await collect(first);
+      await first.close();
+      const second = await context.newPage();
+      await second.goto(`${origin}${pagePath}`);
+      plainSecond = await collect(second);
+      await second.close();
+    } finally {
+      await plain.close();
+    }
+    const noise = footprint(plainFirst, plainSecond);
+    const noisy = new Set([...Object.keys(noise.added), ...Object.keys(noise.removed)]);
+    const against = (loaded, baseline) => {
+      const d = footprint(loaded, baseline);
+      for (const key of noisy) { delete d.added[key]; delete d.removed[key]; }
+      return d;
+    };
+
+    // With the extension: a scanned load, then the same page answered from the saved result
+    const { page, url } = await scanned(pagePath);
+    const tabId = await tabIdOf(url);
+    const scan = await collect(page);
+    await revisit(page, url);
+    await until(() => answeredFromCache(tabId), 15000, 'the early cache check to answer');
+    const hit = await collect(page);
+    await page.close();
+
+    const report = (label, loaded, diff) => console.log(`      ${label}: only with the extension ${JSON.stringify(diff.added)}; only without it ${JSON.stringify(diff.removed)}; bridge events heard ${JSON.stringify(loaded.heard)}; JS API events ${JSON.stringify(loaded.api)}; error frames ${JSON.stringify(loaded.frames)}`);
+    console.log(`      noise between two loads without the extension: ${JSON.stringify(noise)}`);
+    const scanDiff = against(scan, plainFirst);
+    const hitDiff = against(hit, plainSecond);
+    report('scanned load', scan, scanDiff);
+    report('cache hit   ', hit, hitDiff);
+    // A gap, not a pass: an error thrown through a wrapped member carries the wrapper's frame, which names the extension's script
+    console.log(`      KNOWN GAP (reported, not asserted): frames naming the extension's script in the stack of an error thrown through a wrapped member: scanned load ${JSON.stringify(Object.fromEntries(Object.entries(scan.frames).map(([k, v]) => [k, v.length])))}, cache hit ${JSON.stringify(Object.fromEntries(Object.entries(hit.frames).map(([k, v]) => [k, v.length])))}; without the extension ${JSON.stringify(plainFirst.frames)}`);
+    console.log(`      KNOWN GAP (by design): a getter the page defines on a path the window checks poll sees the extension's frames in its own stack: scanned load ${scan.getterReads} reads, first frame ${JSON.stringify(scan.getterFrames[0])}; cache hit ${hit.getterReads} reads; without the extension ${plainFirst.getterReads}`);
+    for (const [label, diff, loaded] of [['scanned load', scanDiff, scan], ['cache hit', hitDiff, hit]]) {
+      assert.deepEqual(diff.added, {}, `${label}: nothing is on the page's window or document that is not there without the extension`);
+      assert.deepEqual(diff.removed, {}, `${label}: nothing is missing from it`);
+      assert.deepEqual(loaded.heard, [], `${label}: the page hears no bridge event`);
+      assert.deepEqual(loaded.api, [], `${label}: the JS API is off, so the page gets none of its events`);
+    }
+
+    // The JS API (opt-in) hands the page its events and the last detection; the page then holds that one global more
+    assert.ok(await patchSettings({ jsApi: { enableJsApi: true } }), 'the JS API is on');
+    try {
+      await W(() => new Promise(resolve => DetectionEngineManager.handleClearAllDetectionCache(resolve)));
+      const withApi = await scanned(pagePath);
+      const apiTab = await tabIdOf(withApi.url);
+      const apiScan = await collect(withApi.page);
+      await revisit(withApi.page, withApi.url);
+      await until(() => answeredFromCache(apiTab), 15000, 'the early cache check to answer');
+      const apiHit = await collect(withApi.page);
+      await withApi.page.close();
+      const apiScanDiff = against(apiScan, plainFirst);
+      const apiHitDiff = against(apiHit, plainSecond);
+      report('JS API on, scanned load', apiScan, apiScanDiff);
+      report('JS API on, cache hit   ', apiHit, apiHitDiff);
+      for (const [label, diff, loaded] of [['scanned load', apiScanDiff, apiScan], ['cache hit', apiHitDiff, apiHit]]) {
+        assert.deepEqual(Object.keys(diff.added), ['names:__scrapflyLastDetection'], `${label} with the JS API on: its one documented global`);
+        assert.deepEqual(diff.removed, {}, label);
+        assert.deepEqual(loaded.heard, [], `${label}: the bridge events stay out of the page's hearing`);
+        assert.ok(loaded.api.length > 0, `${label}: the JS API events reach the page (${JSON.stringify(loaded.api)})`);
+      }
+    } finally {
+      assert.ok(await patchSettings({ jsApi: { enableJsApi: false } }), 'the JS API is off again');
+    }
   });
 
   // ---- Report -------------------------------------------------------------------------------------

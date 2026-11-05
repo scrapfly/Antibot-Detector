@@ -78,9 +78,9 @@ test('wire values are unchanged from 2.8', () => {
   assert.deepStrictEqual({ ...P.COMPLETION_REASONS.HOOKS }, {
     ACTIVITY_TIMEOUT: 'activity_timeout', MAX_TIMEOUT: 'max_timeout', NO_HOOKS: 'no_hooks', CACHE_HIT: 'cache_hit'
   });
-  // The cache-hit flag is not here: it was a page-visible global until 3.1.3 (test/cache-hit-flag-hidden.test.js)
+  // The page-visible globals of the extension: the public JS API's, and no other. The cache-hit flag and the hook-suppression
+  // count were two more until 3.1.3 (test/cache-hit-flag-hidden.test.js, test/main-world-footprint.test.js)
   assert.deepStrictEqual({ ...P.GLOBALS }, {
-    HOOK_SUPPRESSION_DEPTH: '__scrapflyHookSuppressionDepth',
     LAST_DETECTION: '__scrapflyLastDetection'
   });
 });

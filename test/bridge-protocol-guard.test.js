@@ -111,6 +111,32 @@ test('the MAIN world bootstraps from EVENTS.BRIDGE_INIT and never loads the prot
   }
 });
 
+// The MAIN world shares its global object with the page: anything it writes there, any page script reads. Writes are limited to
+// what is listed here, and a name that is not listed (a counter, a flag, a handle) fails this test. The three helpers are
+// set when their file loads and taken off the page again by content-main-world.js (test/main-world-hooks.test.js).
+test('the MAIN world scripts write only the documented names to the page\'s window', () => {
+  const ALLOWED = [
+    '__HookResilienceManager', '__WindowPropertyTracker', 'ScrapflyWindowConditionLanguage', // handed over at load, then deleted
+    'GLOBALS.LAST_DETECTION', // the public JS API (opt-in)
+    'api.fetch'               // the response capture wraps fetch in place (a member the page already has)
+  ];
+  const writes = [];
+  for (const file of MAIN_WORLD_FILES) {
+    // Comment lines left out: a comment may show how a page would use the JS API (window.onDetection = ...)
+    const code = fs.readFileSync(path.join(root, file), 'utf8').split('\n').filter(line => !/^\s*(\/\/|\/?\*)/.test(line)).join('\n');
+    for (const m of code.matchAll(/\b(?:window|globalThis|self|root)(?:\.([A-Za-z_$][\w$]*)|\[([^\]]+)\])\s*=(?!=)/g)) writes.push(`${file}: ${m[1] || m[2]}`);
+    for (const m of code.matchAll(/Object\.(?:defineProperty|defineProperties|assign)\(\s*(?:window|globalThis|self)\s*,\s*([^,)]+)/g)) writes.push(`${file}: ${m[1].trim()}`);
+  }
+  assert.ok(writes.length >= 5, 'the guard finds the writes');
+  const unknown = writes.filter(w => !ALLOWED.includes(w.split(': ')[1]));
+  assert.deepEqual(unknown, []);
+  // Names this extension used to leave on the page, now variables of the scripts that use them
+  for (const name of ['__scrapflyCacheHitEarlyExit', '__scrapflyHookSuppressionDepth']) {
+    const spelled = extensionScripts().filter(f => fs.readFileSync(path.join(root, f), 'utf8').includes(name));
+    assert.deepEqual(spelled, [], `${name} must not come back`);
+  }
+});
+
 test('content.js hands the engine-built bootstrap detail to the MAIN world', () => {
   const src = fs.readFileSync(path.join(root, 'content.js'), 'utf8');
   assert.match(src, /new CustomEvent\(SCRAPFLY_BRIDGE_INIT_EVENT, \{\s*detail: demMainWorldBootstrapDetail\(scrapflyBridgeToken\)/);
