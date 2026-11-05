@@ -262,10 +262,10 @@
                 key: /^key_[A-Za-z0-9_-]{6,80}$/,
                 rules: [
                     // Only ALTCHA Cloud and Sentinel have a key: a self-hosted widget points at its own site's challenge
-                    // route, with none. The widget's challenge (v3) or challengeurl (v1, v2) attribute holds the whole
-                    // address, and attribute rules take whole values, so the key is read from the request instead: it is
-                    // listed once the widget has asked for its challenge. Sentinel runs on its owner's host, so any host
-                    // qualifies; the route and the key's own shape (key_...) keep it to ALTCHA's
+                    // route, with none. The widget's challenge (or challengeurl) attribute holds the whole address, and
+                    // attribute rules take whole values, so the key is read from the request instead: it is listed once
+                    // the widget has asked for its challenge. Sentinel runs on its owner's host, so any host qualifies;
+                    // the route and the key's own shape (key_...) keep it to ALTCHA's
                     { type: 'url', url: /^https:\/\/[^/?#]+\/(?:api\/)?v1\/challenge(?:[/?#]|$)/, param: 'apiKey' }
                 ]
             }

@@ -262,7 +262,8 @@ function impervaTab(mode) {
 
 test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, however the body reads', () => {
     const t = impervaTab('extract');
-    // A beacon of another site, a form of the page, a third party that copies the ?d= naming, a form post: none is Imperva's
+    // Another site's beacon, a form of the page, a third party that copies the ?d= naming, a beacon that only mentions an Imperva
+    // address in its query, a form post: none is Imperva's
     t.request('https://analytics.other.example/collect', { method: 'POST', requestBody: impervaBody('{"event":"performance","solution":"x"}') });
     t.request('https://shop.example/api/comments', { method: 'POST', requestBody: impervaBody('my solution and its performance') });
     t.request('https://tracker.example/collect?d=tracker.example', { method: 'POST', requestBody: impervaBody(reeseBody) });
