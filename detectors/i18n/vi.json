@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie giảm thiểu của Netacea, trong trình duyệt hoặc do máy chủ đặt (tên mặc định)",
   "Captcha verification with the mitigation cookie": "Xác minh CAPTCHA cùng cookie giảm thiểu",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie thử thách phía client của BIG-IP ASM (tiền tố mặc định TSPD_101, ví dụ TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "Cookie ASM cùng cookie thử thách phía client của nó"
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM cùng cookie thử thách phía client của nó",
+  "Custom detector": "Trình phát hiện tùy chỉnh"
 }

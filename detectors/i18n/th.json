@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "คุกกี้ mitigation ของ Netacea ในเบราว์เซอร์หรือที่เซิร์ฟเวอร์ตั้งค่า (ชื่อเริ่มต้น)",
   "Captcha verification with the mitigation cookie": "การยืนยัน captcha ร่วมกับคุกกี้ mitigation",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "คุกกี้ challenge ฝั่งไคลเอนต์ของ BIG-IP ASM (คำนำหน้าเริ่มต้น TSPD_101 เช่น TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "คุกกี้ ASM ร่วมกับคุกกี้ challenge ฝั่งไคลเอนต์ของมัน"
+  "ASM cookie with its client-side challenge cookie": "คุกกี้ ASM ร่วมกับคุกกี้ challenge ฝั่งไคลเอนต์ของมัน",
+  "Custom detector": "ตัวตรวจจับแบบกำหนดเอง"
 }

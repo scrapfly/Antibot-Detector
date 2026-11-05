@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie захисту Netacea, у браузері або встановлений сервером (типова назва)",
   "Captcha verification with the mitigation cookie": "Верифікація CAPTCHA з cookie захисту",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie клієнтської перевірки BIG-IP ASM (типовий префікс TSPD_101, наприклад TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "Cookie ASM з його cookie клієнтської перевірки"
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM з його cookie клієнтської перевірки",
+  "Custom detector": "Власний детектор"
 }

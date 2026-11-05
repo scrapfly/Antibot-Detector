@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie mitigasi Netacea, di browser atau diatur oleh server (nama default)",
   "Captcha verification with the mitigation cookie": "Verifikasi CAPTCHA beserta cookie mitigasi",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie challenge sisi klien BIG-IP ASM (prefiks default TSPD_101, mis. TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "Cookie ASM beserta cookie challenge sisi kliennya"
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM beserta cookie challenge sisi kliennya",
+  "Custom detector": "Detektor kustom"
 }

@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "ملف تعريف الارتباط للتخفيف من Netacea، في المتصفح أو يضبطه الخادم (الاسم الافتراضي)",
   "Captcha verification with the mitigation cookie": "التحقق من captcha مع ملف تعريف الارتباط للتخفيف",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "ملف تعريف الارتباط لتحدي جانب العميل في BIG-IP ASM (البادئة الافتراضية TSPD_101، مثل TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "ملف تعريف الارتباط لـ ASM مع ملف تعريف الارتباط لتحدي جانب العميل الخاص به"
+  "ASM cookie with its client-side challenge cookie": "ملف تعريف الارتباط لـ ASM مع ملف تعريف الارتباط لتحدي جانب العميل الخاص به",
+  "Custom detector": "كاشف مخصص"
 }

@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "브라우저에 있거나 서버가 설정한 Netacea 완화 쿠키 (기본 이름)",
   "Captcha verification with the mitigation cookie": "캡차 검증과 완화 쿠키",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM 클라이언트 측 챌린지 쿠키 (기본 접두사 TSPD_101, 예: TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "ASM 쿠키와 해당 클라이언트 측 챌린지 쿠키"
+  "ASM cookie with its client-side challenge cookie": "ASM 쿠키와 해당 클라이언트 측 챌린지 쿠키",
+  "Custom detector": "사용자 지정 감지기"
 }

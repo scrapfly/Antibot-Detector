@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Cookie zmírnění Netacea, v prohlížeči nebo nastavená serverem (výchozí název)",
   "Captcha verification with the mitigation cookie": "Ověření CAPTCHA s cookie zmírnění",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "Cookie výzvy na straně klienta BIG-IP ASM (výchozí předpona TSPD_101, např. TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "Cookie ASM s cookie výzvy na straně klienta"
+  "ASM cookie with its client-side challenge cookie": "Cookie ASM s cookie výzvy na straně klienta",
+  "Custom detector": "Vlastní detektor"
 }

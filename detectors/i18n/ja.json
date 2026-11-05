@@ -1104,5 +1104,6 @@
   "Netacea mitigation cookie, in the browser or set by the server (default name)": "Netacea の緩和 Cookie (ブラウザー内またはサーバーが設定、既定の名前)",
   "Captcha verification with the mitigation cookie": "CAPTCHA 検証と緩和 Cookie",
   "BIG-IP ASM client-side challenge cookie (TSPD_101 default prefix, e.g. TSPD_101_DID)": "BIG-IP ASM のクライアント側チャレンジ Cookie (既定のプレフィックス TSPD_101、例: TSPD_101_DID)",
-  "ASM cookie with its client-side challenge cookie": "ASM の Cookie とそのクライアント側チャレンジ Cookie"
+  "ASM cookie with its client-side challenge cookie": "ASM の Cookie とそのクライアント側チャレンジ Cookie",
+  "Custom detector": "カスタム検出器"
 }
