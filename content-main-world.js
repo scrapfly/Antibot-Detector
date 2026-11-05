@@ -1878,10 +1878,6 @@
       }
     }
 
-    // CRITICAL TIMING: Record when hook installation completes
-    // Avoid performance.now(): Performance.prototype.now is a JS_HOOKS target.
-    const hooksInstalledTime = Date.now();
-
     logDebug(`Hooks installed: ${installed.size} targets (${successCount} ok, ${expectedFailed.length} optional APIs missing${failed.length ? `, ${failed.length} failed` : ''})${hasHooksConfig ? `; watching up to ${activeHooksConfig.MAX_DETECTION_MS}ms, idle ${activeHooksConfig.ACTIVITY_TIMEOUT_MS}ms, min ${minMonitorMs}ms` : ''}`);
     if (failed.length > 0) {
       logWarn(`Hooks failed (${failed.length}): ${failed.join(', ')}`, failureReasons);
