@@ -129,7 +129,7 @@
       // Debug mode
       this.debugMode = false;
 
-      // Bridge protocol (message types, reasons, shared global keys, log labels,
+      // Bridge protocol (message types, reasons, log labels,
       // report placeholders, path syntax), handed over by content-main-world.js in initialize()
       this.protocol = null;
       // Tuning config (modules/core/hooks-config.js), also from initialize()
@@ -137,6 +137,9 @@
       // Condition evaluator (window-condition-language.js), captured by
       // content-main-world.js before any page script, also from initialize()
       this.conditionLanguage = null;
+      // Hook-reporting suppression of content-main-world.js (an object with run(read)): its reads of page properties are not
+      // page calls. Handed over by initialize(); the count lives in that script, never on window
+      this.hookSuppression = null;
 
       // Polling phases (ordered) + retry policies, built from the config passed to initialize()
       this.pollingPhases = null;
@@ -161,6 +164,7 @@
       this.pollingPhases = null;
       this.retryConfig = null;
       this.config = null;
+      this.hookSuppression = null;
     }
 
     /**
@@ -179,6 +183,7 @@
       this.protocol = options.protocol || null;
       this.config = options.config || null;
       this.conditionLanguage = options.conditionLanguage || null;
+      this.hookSuppression = options.hookSuppression || null;
       if (options.config) {
         this.pollingPhases = phasesFromConfig(options.config);
         this.retryConfig = retryFromConfig(options.config);
@@ -355,41 +360,46 @@
      */
     _navigateToProperty(path) {
       const parts = path.split(this.protocol.MAIN_WORLD.PATH_SEPARATOR);
+      // Reading a page property can run a page getter: while it does, hook reporting is suppressed, so a hooked API read
+      // this way is not taken for a call by the page. The depth belongs to content-main-world.js, which hands over `run`
+      // in initialize() and restores the depth when the walk ends, however it ends. It is a variable there, never a
+      // property of window: the page shares that object.
+      const suppression = this.hookSuppression;
+      return suppression && typeof suppression.run === 'function'
+        ? suppression.run(() => this._walkPath(parts))
+        : this._walkPath(parts);
+    }
+
+    /**
+     * Walk a property path from window (the reads _navigateToProperty suppresses hook reporting for)
+     * @param {string[]} parts - The path split at its separator
+     * @returns {{lookup: string, value?: any, error?: string}}
+     */
+    _walkPath(parts) {
       let obj = window;
-      // Suppression depth shared with content-main-world.js
-      const HOOK_SUPPRESSION_DEPTH_KEY = this.protocol.GLOBALS.HOOK_SUPPRESSION_DEPTH;
 
-      const prevSuppressionDepth = typeof window[HOOK_SUPPRESSION_DEPTH_KEY] === 'number'
-        ? window[HOOK_SUPPRESSION_DEPTH_KEY]
-        : 0;
-      window[HOOK_SUPPRESSION_DEPTH_KEY] = prevSuppressionDepth + 1;
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
 
-      try {
-        for (let i = 0; i < parts.length; i++) {
-          const part = parts[i];
-
-          if (obj == null) {
-            return { lookup: Lookup.PARENT_NULL };
-          }
-
-          try {
-            // Check if property exists
-            if (!(part in obj)) {
-              const isLast = i === parts.length - 1;
-              return { lookup: isLast ? Lookup.PROPERTY_ABSENT : Lookup.PATH_NOT_FOUND };
-            }
-
-            // Access the property (might throw for getters)
-            obj = obj[part];
-          } catch (e) {
-            return { lookup: Lookup.GETTER_ERROR, error: e.message };
-          }
+        if (obj == null) {
+          return { lookup: Lookup.PARENT_NULL };
         }
 
-        return { lookup: Lookup.FOUND, value: obj };
-      } finally {
-        window[HOOK_SUPPRESSION_DEPTH_KEY] = prevSuppressionDepth;
+        try {
+          // Check if property exists
+          if (!(part in obj)) {
+            const isLast = i === parts.length - 1;
+            return { lookup: isLast ? Lookup.PROPERTY_ABSENT : Lookup.PATH_NOT_FOUND };
+          }
+
+          // Access the property (might throw for getters)
+          obj = obj[part];
+        } catch (e) {
+          return { lookup: Lookup.GETTER_ERROR, error: e.message };
+        }
       }
+
+      return { lookup: Lookup.FOUND, value: obj };
     }
 
     /**

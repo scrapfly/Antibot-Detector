@@ -100,7 +100,7 @@ test('no extension script spells the flag, and the protocol no longer lists it a
   };
   walk(root);
   assert.deepEqual(offenders, []);
-  assert.deepEqual(Object.keys(P.GLOBALS).sort(), ['HOOK_SUPPRESSION_DEPTH', 'LAST_DETECTION']);
+  assert.deepEqual(Object.keys(P.GLOBALS).sort(), ['LAST_DETECTION']);
 
   const main = fs.readFileSync(path.join(root, 'content-main-world.js'), 'utf8');
   assert.ok(!/window\[GLOBALS\.CACHE_HIT/.test(main), 'the MAIN world keeps the flag in a variable');

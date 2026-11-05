@@ -215,7 +215,6 @@
     // Before the first wrapper exists, and kept for the page's lifetime (hooks
     // off included: the bind shims stay)
     patchFunctionToString(window);
-    HOOK_SUPPRESSION_DEPTH_KEY = GLOBALS.HOOK_SUPPRESSION_DEPTH;
     ALLOWED_ISOLATED_MESSAGE_TYPES = new Set(PROTOCOL.TO_MAIN_TYPES);
     if (hookResilienceManager) {
       hookResilienceManager.setProtocol(PROTOCOL);
@@ -255,11 +254,27 @@
     adoptBootstrap(event.detail);
   }, true);
 
-  // Suppress hook reporting during extension-driven property reads (key from GLOBALS)
-  let HOOK_SUPPRESSION_DEPTH_KEY = null;
+  // Hook reporting is suppressed during the extension's own reads of page properties (the window checks): reading a path can
+  // run a page getter, and a hooked API read that way is not a call by the page. The depth is a variable of this script, never
+  // a property of window: the page shares that object, so a count kept there shows the extension to any page script, and the
+  // page could write it to silence every hook. The tracker gets `hookSuppression` in its initialize() options (the channel
+  // that already hands it the protocol and the config), so both ends use this one variable.
+  let hookSuppressionDepth = 0;
+  const hookSuppression = Object.freeze({
+    /** Runs `read` with hook reporting suppressed; the depth is restored when it returns or throws (nested runs too). */
+    run(read) {
+      const previous = hookSuppressionDepth;
+      hookSuppressionDepth = previous + 1;
+      try {
+        return read();
+      } finally {
+        hookSuppressionDepth = previous;
+      }
+    }
+  });
 
   function isHookReportingSuppressed() {
-    return (window[HOOK_SUPPRESSION_DEPTH_KEY] || 0) > 0;
+    return hookSuppressionDepth > 0;
   }
 
   let logRateWindowStart = Date.now();
@@ -1005,6 +1020,18 @@
     if (data && data.type === MESSAGE_TYPES.CACHE_HIT) {
       logDebug('[MAIN WORLD] Cache hit notification received - setting flag to stop hook reporting');
       cacheHitEarlyExit = true;
+      // Window checks that began before the answer came (a page that loads faster than the cache check) stop here: what they
+      // find is dropped, and every read of a path runs the page's own getters. The worker is told as when the checks are skipped.
+      if (windowPropertyTracker && windowPropertyTracker.isPolling) {
+        windowPropertyTracker.stop();
+        postBridgeMessage({
+          type: MESSAGE_TYPES.WINDOW_PROPS_COMPLETE,
+          url: window.location.href,
+          timestamp: Date.now(),
+          detectedCount: 0,
+          reason: WINDOW_REASONS.CACHE_HIT
+        });
+      }
       return;
     }
 
@@ -1384,6 +1411,7 @@
         windowPropertyTracker.initialize(windowProperties, {
           protocol: PROTOCOL,
           conditionLanguage,
+          hookSuppression,
           config: activeHooksConfig,
           debugMode: debugMode && debugVerbose,
           postMessageToIsolated: postBridgeMessage,
