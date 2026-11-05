@@ -51,7 +51,7 @@ test('the extension still skips the work on a cache hit, and a re-arm scans agai
   assert.equal(page.run(`${JSON.stringify(FLAG)} in window`), false, 'also after the re-arm');
 });
 
-test('a hook report that arrives despite a cache hit is dropped by the content script, whichever way it learned of the hit', async () => {
+test('the content script drops hook and window reports after a cache hit from the state it passes the engine, never from a global', async () => {
   const ctx = vm.createContext({
     WorkerMessages: require('../modules/core/worker-messages.js'),
     Logger: { debug() {}, detection() {}, error() {}, warn() {}, info() {} },
