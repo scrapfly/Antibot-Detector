@@ -19,7 +19,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Changed
 
-- History search ignores accents, so "cafe" finds "Café" and the other way round.
+- History search ignores accents in Latin and Greek text, so "cafe" finds "Café" and the other way round.
 - Detection and Rules: a search or filter with no match now says so and offers Clear filters, instead of leaving an empty list.
 
 ### Fixed
@@ -31,7 +31,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: a rule you just switched off shows under the Disabled chip, and its switch stays off when you page through the list.
 - Detectors that look for scripts in a page's head or inline (Queue-it, CHEQ, Anubis, Ruishu) now match; these checks never worked before.
 - History: Scan again now and Clear cache clear the saved result even when the cache scope setting changed after the entry was recorded.
-- History is no longer cut to the default size or entry limit when Settings cannot be read; your own limits apply again once they can.
+- History is no longer cut to the default size or entry limit while Settings cannot be read; it is capped at 25 MB until then.
 - Rules: a detector you add yourself shows its description in your language instead of English.
 - Akamai Extract Sensor no longer deletes the _abck cookie before it is ready, so a failed start leaves the cookie alone.
 - Imperva tools keep request bodies only from Imperva's own requests, and list each endpoint once, without its query, at most 20.
@@ -44,6 +44,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Security
 
 - Bulk scan: a sitemap only adds pages of its own site (www included); listed addresses on other hosts, local ones included, are no longer opened.
+- Bulk scan: a sitemap that redirects to another site is not read, and its row says the file could not be read.
 
 ## [3.1.2] - 2026-11-04
 
