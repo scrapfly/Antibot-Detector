@@ -288,12 +288,23 @@ class Rules {
     });
   }
 
+  /**
+   * The list keeps its own copy of every rule (displayRules copies each one), and the Disabled chip and any card drawn again
+   * (another page of the list, a new search) read that copy: it follows the switch, as the rule in the detector manager does.
+   */
+  syncListedEnabled(category, detectorName, enabled) {
+    for (const entry of this.allDetectors || []) {
+      if (entry && entry.detector && entry.category === category && entry.detectorName === detectorName) entry.detector.enabled = enabled;
+    }
+  }
+
   async updateDetectorEnabledState(category, detectorName, enabled) {
     const detector = this.detectorManager.getDetector(category, detectorName);
     try {
       if (detector) {
         // Update enabled state
         detector.enabled = enabled;
+        this.syncListedEnabled(category, detectorName, enabled);
 
         // Save to storage
         await this.detectorManager.saveDetectorsToStorage();
@@ -319,7 +330,10 @@ class Rules {
     } catch (error) {
       Logger.error('UI', 'Failed to update detector enabled state:', error);
       // Not saved: the switch and the rule go back, so what the card shows is what reopening it shows
-      if (detector) detector.enabled = !enabled;
+      if (detector) {
+        detector.enabled = !enabled;
+        this.syncListedEnabled(category, detectorName, !enabled);
+      }
       const toggle = document.querySelector(`.detector-toggle[data-detector="${CSS.escape(detectorName)}"][data-category="${CSS.escape(category)}"]`);
       if (toggle) toggle.checked = !enabled;
       const message = (typeof I18n !== 'undefined' && I18n.get('rulesToggleSaveFailed')) || 'Could not save the change. Try again.';
