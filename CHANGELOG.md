@@ -14,6 +14,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, and long Unchanged lists folded.
 - Settings: the Privacy preset also turns off automatic update checks, so it contacts nothing.
 - Settings: Back up everything keeps official rules you switched off and your theme, and Restore says what a backup never holds.
+- Rules: a regular expression in a rule you write or import reads only the first 100,000 characters of a page, script or request body.
 
 ### Fixed
 
@@ -34,6 +35,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - A new scan result no longer makes the popup reload your whole History, which slowed large Histories.
 - Settings asks before discarding unsaved changes on Esc, ✕ or a click outside, and an invalid value opens its tab and highlights the field.
 - Counts read correctly for one item and in Russian and Arabic, and retention and sizes follow your language.
+- Rules: a rule you write or import can no longer freeze scanning with a slow regular expression; Import refuses such rules and very large files and names what it skips.
+- Rules help: DOM rules search the page head, and requests made after the scan count for URL rules, in all 22 languages.
 
 ## [3.1.3] - 2026-11-05
 
