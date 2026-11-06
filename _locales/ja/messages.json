@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "正規表現として指定されたパターンが無効か、スキャンを止めてしまう可能性があります。修正するか、その行の Regex をオフにしてください。"
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "検出方法の種類を入力してください (例: HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },

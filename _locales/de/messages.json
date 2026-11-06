@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Ein als regulärer Ausdruck markiertes Muster ist ungültig oder könnte die Prüfung blockieren. Korrigiere es oder schalte Regex für diese Zeile aus."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Art der Erkennungsmethode eingeben (z. B. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },

@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Wzorzec oznaczony jako wyrażenie regularne jest nieprawidłowy lub może zablokować skanowanie. Popraw go albo wyłącz Regex w tym wierszu."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Wpisz typ metody wykrywania (np. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },

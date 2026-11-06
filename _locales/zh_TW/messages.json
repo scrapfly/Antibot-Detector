@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "標記為正規表示式的模式無效，或可能讓掃描卡住。請修正，或關閉該列的 Regex。"
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "輸入偵測方法類型（例如 HEADERS、CONTENT、URLs）："
-  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },

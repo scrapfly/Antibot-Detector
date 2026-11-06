@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Een patroon dat als reguliere expressie is gemarkeerd, is ongeldig of kan het scannen laten vastlopen. Pas het aan of zet Regex voor die rij uit."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Voer het type detectiemethode in (bijv. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },

@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Шаблон, отмеченный как регулярное выражение, недопустим или может заблокировать проверку. Исправьте его или отключите Regex в этой строке."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Введите тип метода обнаружения (напр. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Метод"
   },

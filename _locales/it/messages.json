@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Un pattern indicato come espressione regolare non è valido o potrebbe bloccare l’analisi. Correggilo o disattiva Regex per quella riga."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Inserisci il tipo di metodo di rilevamento (es. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Metodo"
   },

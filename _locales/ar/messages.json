@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "نمط مُعلَّم كتعبير نمطي غير صالح أو قد يُجمّد الفحص. صحّحه أو أوقف Regex لهذا الصف."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "أدخل نوع طريقة الكشف (مثل HEADERS أو CONTENT أو URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "الطريقة"
   },

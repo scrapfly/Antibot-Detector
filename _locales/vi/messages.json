@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Một mẫu được đánh dấu là biểu thức chính quy không hợp lệ hoặc có thể làm treo quá trình quét. Hãy sửa lại hoặc tắt Regex cho hàng đó."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Nhập loại phương thức phát hiện (ví dụ: HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Phương thức"
   },

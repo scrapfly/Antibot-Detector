@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "标记为正则表达式的模式无效，或可能导致扫描卡住。请修正，或关闭该行的 Regex。"
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "输入检测方法类型（例如 HEADERS、CONTENT、URLs）："
-  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },

@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Vzor označený jako regulární výraz je neplatný nebo by mohl zablokovat kontrolu. Opravte ho, nebo pro tento řádek vypněte Regex."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Zadejte typ metody detekce (např. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },

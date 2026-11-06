@@ -3387,9 +3387,6 @@
   "rulesUiInvalidRegex": {
     "message": "Pola yang ditandai sebagai ekspresi reguler tidak valid atau dapat membekukan pemindaian. Perbaiki, atau matikan Regex untuk baris itu."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Masukkan tipe metode deteksi (mis., HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Metode"
   },
