@@ -1,5 +1,22 @@
 // Detection analysis helpers for DetectionEngineManager
 
+/**
+ * The rules of one method that are on. A rule's own `enabled: false` leaves it out (JS hooks and response capture honour it,
+ * and so do matching and collection).
+ * @param {object} detection - a detector's `detection`
+ * @param {string} method - 'cookie', 'content', 'dom', ...
+ * @returns {object[]}
+ */
+function demEnabledRules(detection, method) {
+    const rules = detection && detection[method];
+    return Array.isArray(rules) ? rules.filter(rule => rule && rule.enabled !== false) : [];
+}
+
+/** A content rule limited to scripts reads script source only; any other also reads the page text and the stylesheets (runDetector tests it the same way). */
+function demContentRuleIsScripts(rule) {
+    return rule.scope === 'scripts' || rule.checkScripts === true;
+}
+
 function demAnalyzeUsedMethods() {
     const now = Date.now();
     if (this.analyzedMethodsCache && (now - this.analyzedMethodsCacheTime) < this.ANALYSIS_CACHE_TTL) {
@@ -32,16 +49,22 @@ function demAnalyzeUsedMethods() {
 
     for (const [category, categoryDetectors] of Object.entries(this.detectors)) {
         for (const [detectorId, detector] of Object.entries(categoryDetectors)) {
+            // A detector that is off uses nothing (demNeedsExternalContent and demPrecomputePriorities skip it too)
+            if (detector.enabled === false) continue;
             const detection = detector.detection || {};
+            const used = (method) => demEnabledRules(detection, method).length > 0;
 
-            if (detection.cookie && detection.cookie.length > 0) usedMethods.cookie = true;
-            if (detection.header && detection.header.length > 0) usedMethods.header = true;
-            if (detection.content && detection.content.length > 0) usedMethods.content = true;
-            if (detection.dom && detection.dom.length > 0) usedMethods.dom = true;
-            if (detection.url && detection.url.length > 0) usedMethods.url = true;
-            if (detection.window && detection.window.length > 0) usedMethods.window = true;
-            if (detection.js_hooks && detection.js_hooks.length > 0) usedMethods.js_hooks = true;
-            if (detection.payload && detection.payload.length > 0) usedMethods.payload = true;
+            if (used('cookie')) usedMethods.cookie = true;
+            if (used('header')) usedMethods.header = true;
+            if (used('content')) usedMethods.content = true;
+            if (used('dom')) usedMethods.dom = true;
+            if (used('url')) usedMethods.url = true;
+            if (used('window')) usedMethods.window = true;
+            if (used('js_hooks')) usedMethods.js_hooks = true;
+            if (used('payload')) usedMethods.payload = true;
+            // A URL rule that reads the addresses of the page's scripts (page and scripts, or all) reads them from the list the
+            // content collection builds
+            if (demEnabledRules(detection, 'url').some(rule => ['page_and_scripts', 'all'].includes(rule.textScope || 'all'))) usedMethods.content = true;
         }
     }
 
@@ -53,21 +76,33 @@ function demAnalyzeUsedMethods() {
 }
 
 
+/** Whether the page's external scripts are fetched: any content rule that is on reads their source, scoped to scripts or not. */
 function demNeedsExternalContent() {
     if (!this.detectors) return false;
 
     for (const categoryDetectors of Object.values(this.detectors)) {
         for (const detector of Object.values(categoryDetectors)) {
             if (detector.enabled === false) continue;
+            if (demEnabledRules(detector.detection, 'content').length > 0) return true;
+        }
+    }
 
-            const contentPatterns = detector.detection?.content;
-            if (contentPatterns && Array.isArray(contentPatterns)) {
-                for (const pattern of contentPatterns) {
-                    if (pattern.checkScripts === true || !pattern.checkScripts) {
-                        return true;
-                    }
-                }
-            }
+    return false;
+}
+
+/**
+ * Whether any content rule that is on reads the page text and the stylesheets' text: one that is not limited to scripts (a
+ * "Page content" rule, the editor's default). All 144 bundled content rules are limited to scripts and read neither, so a scan
+ * does not fetch the stylesheets' text or serialise the page's HTML for them. With no detectors loaded everything is collected,
+ * as demAnalyzeUsedMethods does.
+ */
+function demNeedsPageBodies() {
+    if (!this.detectors) return true;
+
+    for (const categoryDetectors of Object.values(this.detectors)) {
+        for (const detector of Object.values(categoryDetectors)) {
+            if (detector.enabled === false) continue;
+            if (demEnabledRules(detector.detection, 'content').some(rule => !demContentRuleIsScripts(rule))) return true;
         }
     }
 

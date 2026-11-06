@@ -291,6 +291,9 @@ class DetectionEngineManager {
     needsExternalContent() {
         return demNeedsExternalContent.apply(this, arguments);
     }
+    needsPageBodies() {
+        return demNeedsPageBodies.apply(this, arguments);
+    }
     extractCookies() {
         return demExtractCookies.apply(this, arguments);
     }
@@ -329,6 +332,9 @@ class DetectionEngineManager {
 
         // Check needed data types
         const needsExternal = this.needsExternalContent();
+        // The page's text (and, in extractExternalContent, the stylesheets' text) is read only by a content rule that is not
+        // limited to scripts; every bundled content rule is
+        const needsBodies = this.needsPageBodies();
 
         let externalContent = [];
         if (needsExternal) {
@@ -435,7 +441,7 @@ class DetectionEngineManager {
             Logger.debug('DETECTION', 'Skipped DOM: no detector uses DOM rules');
         }
 
-        if (usedMethods.content) {
+        if (needsBodies) {
             Object.defineProperty(pageData, 'pageHTML', {
                 get() {
                     if (cachedPageHTML === null) {
@@ -448,7 +454,7 @@ class DetectionEngineManager {
                 enumerable: true
             });
         } else {
-            Logger.debug('DETECTION', 'Skipped HTML: no detector uses content rules');
+            Logger.debug('DETECTION', 'Skipped HTML: no content rule reads the page text');
         }
 
         this.detectionData = pageData;
@@ -481,7 +487,11 @@ class DetectionEngineManager {
         const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
         const cssUrls = Array.from(linkElements).map(l => l.href).filter(Boolean);
 
-        const allUrls = Array.from(new Set([...scriptUrls, ...cssUrls]));
+        // A stylesheet's text is read only by a content rule that is not limited to scripts. URL rules read its address, so the
+        // address stays in the list either way: listed with no text, it is not downloaded
+        const readsStyles = this.needsPageBodies();
+        const listedOnly = readsStyles ? [] : Array.from(new Set(cssUrls.filter(url => !scriptUrlSet.has(url))));
+        const allUrls = Array.from(new Set([...scriptUrls, ...(readsStyles ? cssUrls : [])]));
 
         const CONCURRENCY_LIMIT = 6;
         const MAX_CONTENT_SIZE = 5 * 1024 * 1024;
@@ -555,6 +565,11 @@ class DetectionEngineManager {
         // One line per page: blocked or failed fetches are normal (CORS, ad blockers)
         Logger.debug('DETECTION', `Fetched ${resources.length}/${allUrls.length} scripts and styles in ${fetchTime}ms`,
             failures.length ? { failed: failures } : null);
+
+        if (listedOnly.length > 0) {
+            Logger.debug('DETECTION', `Listed ${listedOnly.length} stylesheets without their text: no content rule reads it`);
+            for (const url of listedOnly) resources.push({ url, type: 'css', content: '', size: 0 });
+        }
 
         return resources;
     }
