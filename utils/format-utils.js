@@ -619,7 +619,8 @@ class FormatUtils {
     else if (ranked.length && ranked[0].level === difficulty) reasons.push(FormatUtils.t('tipDifficultyHardestFmt', 'Set by {0}', ranked[0].name));
     else if (difficulty !== 'Low' && list.length > 2) reasons.push(FormatUtils.t('tipDifficultyManyFmt', 'Raised by {0} protections together', list.length));
     const detail = reasons[0] || FormatUtils.t('detectionTipDifficulty', 'Estimated difficulty of bypassing the detected protections.');
-    return { title: title || `${FormatUtils.t('statDifficulty', 'Difficulty')}: ${levelName(difficulty)}`, detail, rows };
+    // "Difficulty: High" is the language's own text, not a label and an English colon: French spaces it, Chinese has its own
+    return { title: title || FormatUtils.t('clipboardDifficultyFmt', 'Difficulty: {0}', levelName(difficulty)), detail, rows };
   }
 
   /**
