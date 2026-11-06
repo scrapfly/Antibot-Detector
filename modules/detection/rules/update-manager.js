@@ -411,8 +411,19 @@ class UpdateManager {
     static async loadStoredDetectors() {
         // Storage format (stringified JSON): { detectors: { antibot: {...}, captcha: {...} }, totalCount: N }
         const result = await chrome.storage.local.get('scrapfly_detectors');
-        const storageData = await StorageManager.normalizeStoredValue('scrapfly_detectors', result.scrapfly_detectors) || {};
-        return JSON.parse(JSON.stringify(storageData.detectors || {}));
+        const stored = result.scrapfly_detectors;
+        let container = stored;
+        if (typeof stored === 'string') {
+            try { container = JSON.parse(stored); } catch (_) { container = null; }
+        }
+        // Never saved is no rules yet. Saved but not readable (text that is not JSON, no rules in it) is not: what the callers save
+        // after this read would replace every stored rule with the few they changed
+        if (stored != null && !(container && container.detectors && typeof container.detectors === 'object' && !Array.isArray(container.detectors))) {
+            throw new Error('The stored rules cannot be read');
+        }
+        // Rules saved as JSON text by older builds are written back as an object
+        if (typeof stored === 'string') await StorageManager.normalizeStoredValue('scrapfly_detectors', stored);
+        return JSON.parse(JSON.stringify((container && container.detectors) || {}));
     }
 
     static async saveStoredDetectors(detectors) {

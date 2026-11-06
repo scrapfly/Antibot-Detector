@@ -143,12 +143,19 @@ class CategoryManager {
             // Load from storage first (preserves custom colors)
             const storageLoaded = await this.loadFromStorage();
 
-            if (!storageLoaded) {
-                await this.loadCategoriesFromIndex();
-                await this.saveToStorage();
-            } else {
+            if (storageLoaded) {
                 // Merge new tags from index.json not yet in storage
                 await this.mergeNewTagsFromIndex();
+            } else if (this.storageState === 'unreadable') {
+                // The storage did not answer, so what is saved (the colours) is not known: nothing is written over it. The shipped
+                // categories serve, and the next initialize() reads again
+                if (Object.keys(this.categories).length === 0) await this.loadCategoriesFromIndex();
+                return;
+            } else {
+                // Nothing saved yet, or a saved value that is not categories: they hold only the shipped index and the colours in
+                // Settings, which are put back below
+                await this.loadCategoriesFromIndex();
+                await this.saveToStorage();
             }
 
             await this.syncColorsFromSettings();
@@ -236,20 +243,29 @@ class CategoryManager {
         }
     }
 
+    /**
+     * Load the saved categories; true when they were applied. When it answers false, `storageState` says why: 'absent' (never
+     * saved), 'damaged' (saved, but not categories) or 'unreadable' (the storage did not answer): only that last one must not
+     * be followed by a save of the shipped ones.
+     */
     async loadFromStorage() {
+        this.storageState = 'unreadable';
         try {
-            const categoriesData = await StorageManager.loadFromStorage(
-                'scrapfly_categories',
-                'scrapfly_categories.json',
-                null // Load full wrapper (timestamp + categories)
-            );
+            const { values, states } = await StorageManager.batchReadStrict([{
+                primary: 'scrapfly_categories',
+                legacy: 'scrapfly_categories.json',
+                dataProperty: null // Load full wrapper (timestamp + categories)
+            }]);
+            const categoriesData = values.scrapfly_categories;
 
             if (categoriesData && categoriesData.categories && typeof categoriesData.categories === 'object') {
                 this.categories = categoriesData.categories;
                 this.initialized = Object.keys(this.categories).length > 0;
+                this.storageState = 'loaded';
                 return true;
             }
 
+            this.storageState = states.scrapfly_categories === 'absent' ? 'absent' : 'damaged';
             return false;
         } catch (error) {
             Logger.error('DETECTOR', 'Failed to load categories from storage', error);

@@ -290,8 +290,22 @@ class DetectorManager {
             await this.loadOfficialDetectorIds();
 
             const storageLoaded = await this.loadFromStorage();
+            if (this.storageState !== 'unreadable') this.unreadableTold = false;
 
             if (!storageLoaded || this.getDetectorCount() === 0) {
+                // Only a storage with no rules (a first install) is filled from the shipped files and saved. Rules that cannot be
+                // read (the storage did not answer, or the stored value is damaged) are not "no rules": saving the shipped ones
+                // over them would take the custom rules, the edits to official ones, the switched-off detectors and the
+                // translations. The worker keeps the rules it has (the shipped ones while it has none), writes nothing, and
+                // leaves itself uninitialized, so the next initialize() reads again.
+                if (this.storageState === 'unreadable') {
+                    if (this.getDetectorCount() === 0) await this.loadDetectorsFromIndex();
+                    if (!this.unreadableTold) {
+                        this.unreadableTold = true;
+                        Logger.warn('DETECTOR', 'The stored rules cannot be read, so the rules in memory are used and nothing is saved until they can be', this.unreadableWhy);
+                    }
+                    return;
+                }
                 await this.loadDetectorsFromIndex();
                 await this.saveDetectorsToStorage();
             }
@@ -458,35 +472,61 @@ class DetectorManager {
     }
 
 
-    // Load from Chrome storage; returns true if data was loaded
-
+    /**
+     * Load the rules from Chrome storage; true when stored rules were applied. When it answers false, `storageState` says why:
+     *   'absent'      nothing is stored (a first install): the caller fills the rules from the shipped files
+     *   'empty'       stored, but with no rule in it: the same
+     *   'unreadable'  the storage did not answer, or the stored value is damaged (`unreadableWhy` says which): the caller keeps
+     *                 the rules it has and writes nothing, whatever it is missing
+     *   'loaded'      applied (also after the repair of rules saved as text, which reloads the shipped ones)
+     * An unexpected error is 'unreadable' too: it is never a reason to save over what is stored.
+     */
     async loadFromStorage() {
+        this.storageState = 'unreadable';
+        this.unreadableWhy = 'unexpected error';
         try {
-            const loadedData = await StorageManager.batchLoadStorage([
-                {
-                    primary: 'scrapfly_categories',
-                    legacy: 'scrapfly_categories.json',
-                    dataProperty: null
-                },
-                {
-                    primary: 'scrapfly_detectors',
-                    legacy: 'scrapfly_detectors.json',
-                    dataProperty: null
-                }
-            ]);
+            let loaded;
+            try {
+                loaded = await StorageManager.batchReadStrict([
+                    {
+                        primary: 'scrapfly_categories',
+                        legacy: 'scrapfly_categories.json',
+                        dataProperty: null
+                    },
+                    {
+                        primary: 'scrapfly_detectors',
+                        legacy: 'scrapfly_detectors.json',
+                        dataProperty: null
+                    }
+                ]);
+            } catch (error) {
+                this.unreadableWhy = `the storage did not answer (${error && error.name})`;
+                return false;
+            }
+            const loadedData = loaded.values;
 
             const categoriesData = loadedData['scrapfly_categories'];
-            if (categoriesData) {
+            if (categoriesData && categoriesData.categories && typeof categoriesData.categories === 'object') {
                 const categoryCount = Object.keys(categoriesData.categories || {}).length;
                 this.categoryManager.categories = categoriesData.categories;
                 this.categoryManager.initialized = categoryCount > 0;
             }
 
+            if (loaded.states['scrapfly_detectors'] === 'absent') {
+                this.storageState = 'absent';
+                return false;
+            }
             const detectorsData = loadedData['scrapfly_detectors'];
 
+            if (!detectorsData) {
+                this.unreadableWhy = 'the stored value is not JSON or not an object';
+                return false;
+            }
+
             if (detectorsData) {
-                if (!detectorsData.detectors || typeof detectorsData.detectors !== 'object') {
-                    Logger.error('DETECTOR', 'Invalid storage format - detectors property missing or wrong type', { detectorsData });
+                if (!detectorsData.detectors || typeof detectorsData.detectors !== 'object' || Array.isArray(detectorsData.detectors)) {
+                    Logger.error('DETECTOR', 'Invalid storage format - detectors property missing or wrong type');
+                    this.unreadableWhy = 'the stored value has no rules in it';
                     return false;
                 }
 
@@ -560,6 +600,7 @@ class DetectorManager {
                 if (hasCorruption) {
                     await this.loadDetectorsFromIndex();
                     await this.saveDetectorsToStorage();
+                    this.storageState = 'loaded';
                     return true;
                 }
 
@@ -567,6 +608,7 @@ class DetectorManager {
 
                 const detectorCount = this.getDetectorCount();
                 if (detectorCount === 0) {
+                    this.storageState = 'empty';
                     return false; // Force reload from JSON
                 }
 
@@ -574,6 +616,7 @@ class DetectorManager {
                     await this.saveDetectorsToStorage();
                 }
 
+                this.storageState = 'loaded';
                 return true;
             }
 
