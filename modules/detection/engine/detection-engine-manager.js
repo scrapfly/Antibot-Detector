@@ -2279,9 +2279,12 @@ class DetectionEngineManager {
             if (Settings && typeof Settings.sendWebhookIfEnabled === 'function' && storedData.detectionResults && storedData.detectionResults.length > 0) {
                 const tab = await chrome.tabs.get(tabId).catch(() => null);
                 if (!await isCurrentDocument()) return ignored;
-                // A private-window page is never sent anywhere (History leaves it out too). The delivery runs on its own, as after
-                // a scan: a slow server (up to 10 s) must not hold the History entry of this page until the person has moved on
-                if (!(tab && tab.incognito === true)) Promise.resolve(Settings.sendWebhookIfEnabled({
+                // A private-window page is never sent anywhere (History leaves it out too). The sender of the message says which
+                // kind of window it is; the tab says it too, and when neither can (the tab cannot be read and the sender does not
+                // say) the page may be private. The delivery runs on its own, as after a scan: a slow server (up to 10 s) must
+                // not hold the History entry of this page until the person has moved on
+                const privateWindow = sender.tab?.incognito === true || (tab ? tab.incognito === true : sender.tab?.incognito !== false);
+                if (!privateWindow) Promise.resolve(Settings.sendWebhookIfEnabled({
                     url: pageUrl,
                     hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                     title: (tab && tab.title) || 'Untitled',
