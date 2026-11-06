@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "A parte em segundo plano da extensão está desatualizada. Recarregue a extensão na página de extensões e tente de novo."
   },
+  "settingsUnreadableHint": {
+    "message": "Não foi possível ler as configurações salvas, então o histórico e a análise em massa estão pausados. Para repará-las, use Configurações → Dados → Redefinir."
+  },
   "historyFiltersLabel": {
     "message": "Filtrar o histórico"
   },

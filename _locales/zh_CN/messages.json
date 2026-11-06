@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "扩展程序的后台部分已过期。请在扩展程序页面重新加载该扩展程序，然后重试。"
   },
+  "settingsUnreadableHint": {
+    "message": "无法读取已保存的设置，因此历史记录和批量扫描已暂停。请在 设置 → 数据 → 重置 中修复。"
+  },
   "historyFiltersLabel": {
     "message": "筛选历史记录"
   },

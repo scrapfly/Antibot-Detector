@@ -13,7 +13,7 @@ test('text under a rule\'s detection is dropped on load; the custom rules stay',
   const stored = { detectors: { antibot: { 'detect-mine': { id: 'detect-mine', name: 'Mine', author: 'Me', version: '1.0',
     detection: { cookie: [{ name: 'mine_cookie' }], note: 'hi', future: [{ x: 1 }] } } } } };
   let reloadedShipped = false;
-  global.StorageManager = { batchLoadStorage: async () => ({ scrapfly_detectors: JSON.parse(JSON.stringify(stored)) }), saveToStorage: async () => true };
+  global.StorageManager = { batchReadStrict: async () => ({ values: { scrapfly_detectors: JSON.parse(JSON.stringify(stored)) }, states: { scrapfly_detectors: 'ok' } }), saveToStorage: async () => true };
   const dm = new DetectorManager({ initialized: true });
   dm.loadDetectorsFromIndex = async () => { reloadedShipped = true; };
   dm.saveDetectorsToStorage = async () => true;
@@ -29,7 +29,7 @@ test('text under a rule\'s detection is dropped on load; the custom rules stay',
 test('a known method stored as text is still the old damage, and is repaired from the shipped rules', async () => {
   const stored = { detectors: { antibot: { 'detect-mine': { id: 'detect-mine', name: 'Mine', detection: { cookie: '[{"name":"x"}]' } } } } };
   let reloadedShipped = false;
-  global.StorageManager = { batchLoadStorage: async () => ({ scrapfly_detectors: stored }), saveToStorage: async () => true };
+  global.StorageManager = { batchReadStrict: async () => ({ values: { scrapfly_detectors: stored }, states: { scrapfly_detectors: 'ok' } }), saveToStorage: async () => true };
   const dm = new DetectorManager({ initialized: true });
   dm.loadDetectorsFromIndex = async () => { reloadedShipped = true; };
   dm.saveDetectorsToStorage = async () => true;

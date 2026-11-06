@@ -67,12 +67,22 @@ const BulkScanRunner = {
         return this._run;
     },
 
-    /** The "Sites to scan" setting, as a test of one address. */
+    /**
+     * The "Sites to scan" setting, as a test of one address. Settings that cannot be read do not say which sites the person left
+     * out (or chose): the test then skips every address, never none.
+     */
     async scopeTest() {
         const settings = await Utils.getSettings();
+        if (settings && settings.settingsUnreadable === true) return () => true;
         const legacy = settings && settings.blacklistedDomains ? { blacklistedDomains: settings.blacklistedDomains } : {};
         const detection = { ...legacy, ...((settings && settings.detection) || {}) };
         return (url) => ScanScope.isExcluded(url, detection);
+    },
+
+    /** Do the settings, which hold the sites to scan, fail to read now? */
+    async settingsUnreadable() {
+        const settings = await Utils.getSettings();
+        return !!settings && settings.settingsUnreadable === true;
     },
 
     async extensionOn() {
@@ -97,6 +107,7 @@ const BulkScanRunner = {
         await this.ready();
         if (BulkScan.isActive(this._run)) return { ok: false, error: 'busy' };
         if (!await this.extensionOn()) return { ok: false, error: 'off' };
+        if (await this.settingsUnreadable()) return { ok: false, error: 'settings' };
         const resumed = request.continueRun === true ? BulkScan.continuation(this._run, { includeFailed: request.retryFailed === true }) : null;
         const entries = resumed ? resumed.entries : (Array.isArray(request.entries) ? request.entries.slice(0, 5000) : []);
         const prepared = BulkScan.prepare(entries, { cap: request.cap, isExcluded: await this.scopeTest() });
@@ -176,6 +187,12 @@ const BulkScanRunner = {
         this._token = token;
         if (!await this.extensionOn()) {
             BulkScan.stop(run, 'off');
+            await this.save();
+            return;
+        }
+        // The settings stopped reading during the run: no page is opened on a guess (the pages left wait, and Scan the waiting pages goes on once they read)
+        if (await this.settingsUnreadable()) {
+            BulkScan.stop(run, 'error');
             await this.save();
             return;
         }

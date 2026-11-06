@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "La parte in background dell'estensione non è aggiornata. Ricarica l'estensione nella pagina delle estensioni e riprova."
   },
+  "settingsUnreadableHint": {
+    "message": "Non è stato possibile leggere le impostazioni salvate, quindi la cronologia e l’analisi in blocco sono in pausa. Per ripararle, usa Impostazioni → Dati → Reimposta."
+  },
   "historyFiltersLabel": {
     "message": "Filtra la cronologia"
   },

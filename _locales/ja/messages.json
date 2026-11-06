@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "拡張機能のバックグラウンド部分が古くなっています。拡張機能のページで拡張機能を再読み込みして、もう一度お試しください。"
   },
+  "settingsUnreadableHint": {
+    "message": "保存された設定を読み込めなかったため、履歴と一括スキャンは一時停止中です。設定 → データ → リセット で修復してください。"
+  },
   "historyFiltersLabel": {
     "message": "履歴をフィルター"
   },

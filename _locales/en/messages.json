@@ -5838,6 +5838,10 @@
     "message": "The extension's background part is out of date. Reload the extension on the extensions page and try again.",
     "description": "Shown when the popup talks to a background worker that still runs an older version of the extension (after an update without reloading it)"
   },
+  "settingsUnreadableHint": {
+    "message": "The stored settings could not be read, so History and Bulk scan are paused. To repair them, use Settings → Data → Reset.",
+    "description": "Toast when the popup opens and the stored settings cannot be read (the storage did not answer, or the text stored is not JSON): History and Bulk scan are paused until Settings → Data → Reset repairs them"
+  },
   "historyFiltersLabel": {
     "message": "Filter history",
     "description": "Accessible name of the row of filter chips under the History search"

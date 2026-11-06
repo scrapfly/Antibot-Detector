@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Phần chạy nền của tiện ích đã cũ. Hãy tải lại tiện ích trên trang tiện ích rồi thử lại."
   },
+  "settingsUnreadableHint": {
+    "message": "Không thể đọc các cài đặt đã lưu, nên Lịch sử và Quét hàng loạt đang tạm dừng. Để khắc phục, hãy dùng Cài đặt → Dữ liệu → Đặt lại."
+  },
   "historyFiltersLabel": {
     "message": "Lọc lịch sử"
   },

@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Součást rozšíření běžící na pozadí je zastaralá. Znovu načtěte rozšíření na stránce rozšíření a zkuste to znovu."
   },
+  "settingsUnreadableHint": {
+    "message": "Uložená nastavení se nepodařilo přečíst, proto jsou historie a hromadné skenování pozastaveny. Opravíte je v Nastavení → Data → Resetovat."
+  },
   "historyFiltersLabel": {
     "message": "Filtrovat historii"
   },

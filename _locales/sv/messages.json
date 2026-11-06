@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Tilläggets bakgrundsdel är föråldrad. Ladda om tillägget på tilläggssidan och försök igen."
   },
+  "settingsUnreadableHint": {
+    "message": "De sparade inställningarna kunde inte läsas, så historiken och massskanningen är pausade. Åtgärda det med Inställningar → Data → Återställ."
+  },
   "historyFiltersLabel": {
     "message": "Filtrera historik"
   },

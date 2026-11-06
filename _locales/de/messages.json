@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Der Hintergrundteil der Erweiterung ist veraltet. Lade die Erweiterung auf der Erweiterungsseite neu und versuche es erneut."
   },
+  "settingsUnreadableHint": {
+    "message": "Die gespeicherten Einstellungen konnten nicht gelesen werden, deshalb sind Verlauf und Massenscan pausiert. Zum Reparieren verwende Einstellungen → Daten → Zurücksetzen."
+  },
   "historyFiltersLabel": {
     "message": "Verlauf filtern"
   },

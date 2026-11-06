@@ -27,7 +27,8 @@ class StorageManager {
                 return JSON.parse(rawData);
             } catch (error) {
                 const keyLabel = key ? ` (${key})` : '';
-                Logger.error('STORAGE', `Failed to parse stored JSON${keyLabel}`, error);
+                // Only the kind of error: a JSON error quotes the start of the text, and settings may hold a webhook secret
+                Logger.error('STORAGE', `Failed to parse stored JSON${keyLabel}`, error && error.name);
                 return null;
             }
         }
@@ -77,16 +78,45 @@ class StorageManager {
     }
 
     /**
-     * Load normalized extension settings.
+     * What getSettings answers when it could not read the stored settings: {} that says so. The mark is not enumerable, so no copy,
+     * spread or JSON text of it carries it on.
+     * @returns {Object}
+     */
+    static unreadableSettings() {
+        const settings = {};
+        Object.defineProperty(settings, 'settingsUnreadable', { value: true });
+        return settings;
+    }
+
+    /**
+     * Did this answer come from settings that could not be read (rather than from settings that were never saved)?
+     * @param {Object} settings - What getSettings, Utils.getSettings or Utils.getHistorySettings answered
+     * @returns {boolean}
+     */
+    static settingsUnreadable(settings) {
+        return !!settings && typeof settings === 'object' && settings.settingsUnreadable === true;
+    }
+
+    /**
+     * Load normalized extension settings. Never throws. Settings that cannot be read (the storage does not answer, or what is
+     * stored is not JSON or not an object: only Settings → Data → Reset repairs that) answer {} marked unreadable. {} is also what
+     * settings that were never saved read as, and the defaults are right then. For what the person turned off (History, a skipped
+     * site, a schedule) they are not: a decision of that kind asks settingsUnreadable() first and stays off, or reads with
+     * readSettingsStrict.
      * @returns {Promise<Object>} Settings object
      */
     static async getSettings() {
         try {
-            const result = await chrome.storage.local.get(['scrapfly_settings']) || {};
-            return StorageManager.normalizeSettings(result.scrapfly_settings);
+            const settings = await StorageManager.readSettingsStrict();
+            StorageManager._settingsTold = false;
+            return settings;
         } catch (error) {
-            Logger.error('STORAGE', 'Failed to load settings', error);
-            return {};
+            // One line per failure, and only the kind of error: a JSON error quotes the stored text, which may hold a webhook secret
+            if (!StorageManager._settingsTold) {
+                StorageManager._settingsTold = true;
+                Logger.warn('STORAGE', 'The stored settings cannot be read, so what depends on them stays off until they can be', error && error.name);
+            }
+            return StorageManager.unreadableSettings();
         }
     }
 
@@ -290,8 +320,9 @@ class StorageManager {
     }
 
     /**
-     * Batch load multiple storage keys in a single Chrome storage call
-     * Faster than sequential loads by using a single Chrome storage call
+     * Batch load multiple storage keys in a single Chrome storage call. Answers {} when anything goes wrong, so "nothing is stored
+     * yet" and "the storage did not answer" look the same: fine for a caller that only reads, wrong for one that saves its own
+     * values after it (they would replace what it could not read). That caller uses batchReadStrict.
      *
      * @param {Array<Object>} keyConfigs - Array of key configurations
      * @param {string} keyConfigs[].primary - Primary storage key
@@ -309,94 +340,75 @@ class StorageManager {
      */
     static async batchLoadStorage(keyConfigs) {
         try {
-            // Collect all keys to load (primary + legacy)
-            const allKeys = [];
-            const keyMap = {}; // Maps legacy keys back to their primary keys
-
-            for (const config of keyConfigs) {
-                allKeys.push(config.primary);
-                keyMap[config.primary] = config;
-
-                if (config.legacy) {
-                    allKeys.push(config.legacy);
-                    keyMap[config.legacy] = config;
-                }
-            }
-
-            // Single Chrome storage call for all keys
-            const result = await chrome.storage.local.get(allKeys) || {};
-
-            // Process each key config
-            const loadedData = {};
-            const migrationsNeeded = [];
-
-            for (const config of keyConfigs) {
-                let rawData = null;
-                let needsMigration = false;
-
-                // Try primary key first
-                if (result[config.primary]) {
-                    rawData = result[config.primary];
-                }
-                // Fallback to legacy key
-                else if (config.legacy && result[config.legacy]) {
-                    rawData = result[config.legacy];
-                    needsMigration = true;
-                }
-
-                if (rawData) {
-                    // Parse JSON if it's a string (centralized)
-                    const parsedData = StorageManager.parseStoredValue(rawData, config.primary);
-                    if (!parsedData) {
-                        loadedData[config.primary] = null;
-                        continue;
-                    }
-
-                    // Extract specific property if requested
-                    if (config.dataProperty && parsedData[config.dataProperty] !== undefined) {
-                        loadedData[config.primary] = parsedData[config.dataProperty];
-                    } else {
-                        loadedData[config.primary] = parsedData;
-                    }
-
-                    // Track migrations needed
-                    if (needsMigration || typeof rawData === 'string') {
-                        migrationsNeeded.push({
-                            from: config.legacy,
-                            to: config.primary,
-                            data: parsedData,
-                            normalize: typeof rawData === 'string'
-                        });
-                    }
-                } else {
-                    loadedData[config.primary] = null;
-                }
-            }
-
-            // Perform all migrations in one batch operation
-            if (migrationsNeeded.length > 0) {
-                const updates = {};
-                const removals = [];
-
-                for (const migration of migrationsNeeded) {
-                    Logger.storage('Migrating storage key', { from: migration.from, to: migration.to, normalize: migration.normalize });
-                    updates[migration.to] = migration.data;
-                    if (migration.from) {
-                        removals.push(migration.from);
-                    }
-                }
-
-                await chrome.storage.local.set(updates);
-                await chrome.storage.local.remove(removals);
-            }
-
-            Logger.debug('STORAGE', `Batch read ${keyConfigs.length} keys`);
-            return loadedData;
-
+            return (await StorageManager.batchReadStrict(keyConfigs)).values;
         } catch (error) {
             Logger.error('STORAGE', 'Failed to batch load from storage', error);
             return {};
         }
+    }
+
+    /**
+     * Read several stored values in one call and say what each one is, so that a failure is never mistaken for "nothing stored".
+     * A read the storage rejects throws. `states` says, per primary key:
+     *   'ok'       stored, and an object (or the JSON text of one): its value is in `values`
+     *   'absent'   never saved: `values` holds null
+     *   'damaged'  stored, but not JSON or not an object: `values` holds null, and what is stored is left as it is
+     * A value stored as JSON text, and one found under a legacy key, are written back under the primary key as an object, best
+     * effort: a write that fails costs nothing that was read.
+     *
+     * @param {Array<{primary: string, legacy?: string, dataProperty?: string}>} keyConfigs
+     * @returns {Promise<{values: Object, states: Object<string, 'ok'|'absent'|'damaged'>}>}
+     */
+    static async batchReadStrict(keyConfigs) {
+        const keys = [];
+        for (const config of keyConfigs) {
+            keys.push(config.primary);
+            if (config.legacy) keys.push(config.legacy);
+        }
+        const result = (await chrome.storage.local.get(keys)) || {};
+        const present = (key) => !!key && result[key] !== undefined && result[key] !== null;
+
+        const values = {};
+        const states = {};
+        const updates = {};
+        const removals = [];
+        for (const config of keyConfigs) {
+            const source = present(config.primary) ? config.primary : (present(config.legacy) ? config.legacy : null);
+            if (!source) {
+                values[config.primary] = null;
+                states[config.primary] = 'absent';
+                continue;
+            }
+            const raw = result[source];
+            let parsed = raw;
+            if (typeof raw === 'string') {
+                try { parsed = JSON.parse(raw); } catch (_) { parsed = null; }
+            }
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                values[config.primary] = null;
+                states[config.primary] = 'damaged';
+                continue;
+            }
+            values[config.primary] = config.dataProperty && parsed[config.dataProperty] !== undefined ? parsed[config.dataProperty] : parsed;
+            states[config.primary] = 'ok';
+            if (source !== config.primary || typeof raw === 'string') {
+                updates[config.primary] = parsed;
+                if (source !== config.primary) removals.push(source);
+            }
+        }
+
+        if (Object.keys(updates).length > 0) {
+            try {
+                Logger.storage('Migrating storage keys', { to: Object.keys(updates), removed: removals });
+                await chrome.storage.local.set(updates);
+                if (removals.length > 0) await chrome.storage.local.remove(removals);
+            } catch (error) {
+                Logger.warn('STORAGE', 'Could not write stored values back as objects', error && error.name);
+            }
+        }
+
+        Logger.debug('STORAGE', `Batch read ${keyConfigs.length} keys`);
+        return { values, states };
     }
 
     /**

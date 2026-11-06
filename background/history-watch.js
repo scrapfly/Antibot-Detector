@@ -127,6 +127,9 @@ const HistoryWatch = {
             }
             const settings = await Utils.getHistorySettings();
             if (settings.historyEnabled === false) return { ...totals, ok: false, error: 'paused' };
+            // Settings that cannot be read do not say whether History is paused or which sites it ignores: no page is visited, and
+            // nothing is recorded of this check, so the next one is not held back by it
+            if (settings.settingsUnreadable === true) return { ...totals, ok: false, error: 'unreadable_settings' };
             const watched = HistoryPolicy.watchedOf(await HistoryStore.read(chrome.storage.local));
             if (!watched.length) {
                 await record();
@@ -175,7 +178,7 @@ const HistoryWatch = {
     async _checkOne(entry, settings, windowId) {
         let host = '';
         try { host = new URL(entry.url).hostname; } catch (_) { return 'skipped'; }
-        if (await Utils.isUrlBlacklisted(entry.url)) return 'skipped';
+        if (await Utils.isUrlBlacklisted(entry.url, { failClosed: true })) return 'skipped';
         if (HistoryPolicy.matchesDomain(host, settings.historyExcludedDomains)) return 'skipped';
 
         const first = await this.scan(entry.url, windowId);
@@ -228,6 +231,9 @@ const HistoryWatch = {
     /** The mode now in Settings, applied to the alarm; a check that came due while the browser was closed is scheduled once. */
     async sync(catchUp = false) {
         const settings = await Utils.getHistorySettings();
+        // Settings that cannot be read are not "watching off": both alarms stay as they are (clearing them would last until the next
+        // worker start or settings change)
+        if (settings.settingsUnreadable === true) return;
         const mode = HistoryPolicy.watchModeOf(settings);
         await this.syncAlarm(mode);
         const period = this.periodOf(mode);
@@ -236,7 +242,11 @@ const HistoryWatch = {
             // A check that found no window to open its tab in is tried again at the next start (an hour later at the earliest)
             const noWindow = !!last && last.error === 'no_window' && Date.now() - last.at >= 3600000;
             if (!last || !Number.isFinite(last.at) || Date.now() - last.at >= period * 60000 || noWindow) {
-                chrome.alarms.create(this.SOON_ALARM_NAME, { delayInMinutes: this.STARTUP_DELAY_MINUTES });
+                // Every worker start asks, and creating the alarm again moves it two minutes ahead: while a check is overdue and the worker
+                // keeps waking (each wake queues behind History writes), the catch-up would never come. Only one that is not set is created
+                let pending = null;
+                try { pending = await chrome.alarms.get(this.SOON_ALARM_NAME); } catch (_) { /* cannot tell: set it */ }
+                if (!pending) chrome.alarms.create(this.SOON_ALARM_NAME, { delayInMinutes: this.STARTUP_DELAY_MINUTES });
             }
         }
     },
