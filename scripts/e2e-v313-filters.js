@@ -12,9 +12,9 @@
  *   Look              both rows in the dark and the light theme, inside their card and header, no sideways scrolling
  *   First pages       a first page of results (one category header, two, three categories, two results, the highest-confidence
  *                     order) needs no scrolling: the last card ends above the pagination bar, chip row included
- *   Cache scope       Settings → Detection → Cache scope, saved with results showing: the Detection tab is drawn again (results,
- *                     search, chips); a page the new scope has no result for shows the no-completed-scan card, and the next scan
- *                     lands in the same tab
+ *   Cache scope       Settings → Detection → Cache scope, saved with results showing: the results saved under the old scope go
+ *                     (3.1.4), so the page shows the no-completed-scan card with the tab's markup kept, and the next scan lands
+ *                     in the same tab (results, search, chips)
  *
  * A local site shows one marker per protection and probe detectors recognize them, so the scans are real.
  * The popup is opened as a page; its active tab is the local site's (chrome.tabs.query is told so), as in the other suites.
@@ -748,27 +748,40 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Settings → Cache scope: saved with results showing, the Detection tab is drawn again (results, search, chips); with no result under the new scope it shows the no-completed-scan card and the next scan lands in the same tab', async () => {
+  await scenario('Settings → Cache scope: saved with results showing, the results of the old scope go: the no-completed-scan card in the same tab, the next scan lands there (results, search, chips), in both directions', async () => {
     const chips = '#detectionFilters .history-filter-chip';
     const chip = (key) => `${chips}[data-filter="${key}"]`;
     const names = (page) => page.$$eval('#resultsList .detector-name', els => els.map(el => el.textContent.trim()));
     try {
-      // 1. The saved result is found under the new scope as well (Domain also reads the entry saved under the exact address)
+      // 1. 3.1.4: a scope change drops the results saved under the old scope (back under Domain, a page is never served another
+      //    page's Full URL result), so the page shows the no-completed-scan card in the same tab, its markup kept; Scan again
+      //    draws the new results there, and the search and the chips work on them
+      // (No Domain result of this local site is left from an earlier scenario: it would answer every page of it)
+      const clean = await popupFor(null);
+      await clean.evaluate(() => new Promise(r => chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_ALL_CACHE' }, () => r())));
+      await clean.close();
       assert.ok(await patchSettings({ detection: { cacheScope: 'full' } }));
       const first = await scanned(`scope-${uniq()}`, ALL);
       const popup = await popupFor(first.tab);
       await resultsShown(popup, 3);
       await popup.waitForFunction(() => document.querySelector('#detectionFilters .history-filter-chip svg'), null, { polling: 250, timeout: 10000 });
+      const fullStamp = await cacheStamp(first.url);
+      await saveCacheScope(popup, 'domain');
+      await until(() => popup.evaluate(() => { const empty = document.querySelector('#emptyState'); return !!empty && empty.style.display === 'flex'; }), 15000, 'the no-completed-scan card: the Full URL result is gone under Domain');
+      assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'No completed scan');
+      assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'none', 'no stale results under the card');
+      assert.deepEqual(await markupOf(popup), { list: true, search: true, chips: 3, pagination: true }, 'the tab\'s markup is still there');
+      const before1 = loads[first.name];
+      await popup.$eval('#emptyRescanBtn', el => el.click());
+      await until(() => loads[first.name] > before1, 10000, 'the page sent again');
+      await until(async () => { const stamp = await cacheStamp(first.url); return stamp && stamp !== fullStamp; }, 25000, 'a scan saved under Domain');
+      await untilDrawn(popup, async () => (await listed(popup)).length === 3, 30000, 'the new results drawn in the same tab');
+      assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'flex');
+      assert.equal(await popup.$eval('#detectionFilters', el => el.getBoundingClientRect().width > 0), true, 'and the chip row is on screen');
+      // The search and the chips work on them
       await popup.$eval(chip('captcha'), el => el.click());
       await until(async () => (await listed(popup)).length === 1, 5000, 'the Captcha chip');
-      await saveCacheScope(popup, 'domain');
-      await untilDrawn(popup, async () => (await names(popup)).length === 1, 15000, 'the Captcha result drawn again after the new scope was saved');
-      assert.deepEqual(await markupOf(popup), { list: true, search: true, chips: 3, pagination: true }, 'the tab\'s markup is still there');
-      assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'flex');
-      assert.deepEqual(await names(popup), ['V313 Captcha Probe'], 'the results are drawn again, under the chip that was on');
-      assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:true', 'fingerprint:false'], 'the chip kept its state');
-      assert.equal(await popup.$eval('#detectionFilters', el => el.getBoundingClientRect().width > 0), true, 'and the row is on screen');
-      // The search and the chips still work on them
+      assert.deepEqual(await listed(popup), ['V313 Captcha Probe']);
       await popup.$eval(chip('captcha'), el => el.click());
       await until(async () => (await listed(popup)).length === 3, 5000, 'the Captcha chip off again');
       await popup.fill('#detectionSearch', 'fingerprint');
