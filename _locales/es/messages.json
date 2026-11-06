@@ -5529,7 +5529,10 @@
     "message": "La parte en segundo plano de la extensión está desactualizada. Recarga la extensión en la página de extensiones e inténtalo de nuevo."
   },
   "settingsUnreadableHint": {
-    "message": "No se pudieron leer los ajustes guardados, así que el historial y el análisis masivo están en pausa. Para repararlos, usa Ajustes → Datos → Restablecer."
+    "message": "No se pudieron leer los ajustes guardados, así que el análisis de páginas, el historial y el análisis masivo están en pausa. Para repararlos, usa Ajustes → Datos → Restablecer."
+  },
+  "rulesUnreadableHint": {
+    "message": "No se pudieron leer las reglas guardadas: se usan las reglas integradas y los cambios en las reglas no se guardan. Para reemplazar las reglas guardadas, importa un archivo de reglas en la pestaña Reglas y elige Reemplazar todo."
   },
   "historyFiltersLabel": {
     "message": "Filtrar el historial"

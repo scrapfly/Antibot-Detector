@@ -198,7 +198,7 @@ async function applyLateResponses(tabId) {
     if (!pageUrl || detectionStates.has(tabId)) return;
     // A skipped site, or one left out in "only these sites" mode, keeps nothing from its responses either: no cache
     // entry, no badge count, no popup update (the page-load check refused its scan for the same reason)
-    if (await Utils.isUrlBlacklisted(pageUrl)) return;
+    if (await Utils.isUrlBlacklisted(pageUrl, { failClosed: true })) return;
     if (detectionStates.has(tabId)) return;
     const responses = responsesForPage(tabId, pageUrl);
     if (responses.length === 0) return;
@@ -367,7 +367,7 @@ async function applyLateNetworkUrls(tabId, page) {
         if (finishedPages.get(tabId) !== page) return;
         if (!frame || (frame.documentId && frame.documentId !== page.documentId)) { forgetFinishedPage(tabId); return; }
     }
-    if (await Utils.isUrlBlacklisted(page.url)) return;
+    if (await Utils.isUrlBlacklisted(page.url, { failClosed: true })) return;
     if (!ours()) return;
 
     // Only the late requests go in, so only URL rules can match (the page address and the rest were matched by the scan)
@@ -439,7 +439,8 @@ async function finalizeDetection(tabId, state) {
     const scanTab = typeof BackgroundTabScan !== 'undefined' && BackgroundTabScan.isScanTab(tabId);
     const quietTab = scanTab && BackgroundTabScan.isQuiet(tabId);
     // A watch check that ended on such a site keeps nothing either (the check is told: it counts as skipped)
-    if (await Utils.isUrlBlacklisted(state.url)) {
+    // (settings that cannot be read count as a skipped site: their skip lists are not known)
+    if (await Utils.isUrlBlacklisted(state.url, { failClosed: true })) {
         if (!DetectionSessionStore.isCurrent(tabId, state)) return;
         Logger.detection(`${Logger.hostOf(state.url)}: excluded domain, scan results not kept`);
         if (scanTab) BackgroundTabScan.scanFinished(tabId, state.url, [], { excluded: true });

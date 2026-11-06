@@ -103,6 +103,12 @@ function registerSettingsHandlers(registry, context) {
         UrlUtils.clearUrlHashCache();
         (async () => {
             try {
+                // The results saved under the old scope go: under "Domain", one saved for a single page would answer the whole site
+                try {
+                    await DetectionEngineManager.dropOtherScopes(await Utils.getCacheScope());
+                } catch (error) {
+                    Logger.warn('BACKGROUND', '[Background] Could not drop the results saved under the old cache scope', error);
+                }
                 const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
                 if (tabs && tabs[0]) {
                     const tab = tabs[0];

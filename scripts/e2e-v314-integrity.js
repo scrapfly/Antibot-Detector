@@ -65,7 +65,7 @@ const PROBE = {
 const EDITED_NOTE = 'Edited by the person (v314 integrity)';
 const SAD_SETTINGS = 'S3CR3T-WEBHOOK-VALUE is not json';
 const SAD_RULES = 'S3CR3T-RULE-TEXT is not json';
-const HINT = 'The stored settings could not be read, so History and Bulk scan are paused. To repair them, use Settings → Data → Reset.';
+const HINT = 'The stored settings could not be read, so scanning, History and Bulk scan are paused. To repair them, use Settings → Data → Reset.';
 
 // ---- Harness ---------------------------------------------------------------------------------------
 const results = [];

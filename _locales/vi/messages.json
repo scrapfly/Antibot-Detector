@@ -5529,7 +5529,10 @@
     "message": "Phần chạy nền của tiện ích đã cũ. Hãy tải lại tiện ích trên trang tiện ích rồi thử lại."
   },
   "settingsUnreadableHint": {
-    "message": "Không thể đọc các cài đặt đã lưu, nên Lịch sử và Quét hàng loạt đang tạm dừng. Để khắc phục, hãy dùng Cài đặt → Dữ liệu → Đặt lại."
+    "message": "Không thể đọc các cài đặt đã lưu, nên việc quét, Lịch sử và Quét hàng loạt đang tạm dừng. Để khắc phục, hãy dùng Cài đặt → Dữ liệu → Đặt lại."
+  },
+  "rulesUnreadableHint": {
+    "message": "Không thể đọc các quy tắc đã lưu: đang dùng các quy tắc tích hợp sẵn và các thay đổi quy tắc sẽ không được lưu. Để thay thế các quy tắc đã lưu, hãy nhập một tệp quy tắc trong thẻ Quy tắc và chọn Thay thế tất cả."
   },
   "historyFiltersLabel": {
     "message": "Lọc lịch sử"

@@ -5,6 +5,9 @@
 async function ensureDetectorManagerInitialized() {
     if (detectorInitializationPromise) return detectorInitializationPromise;
     if (detectorManager?.initialized) return detectorManager;
+    // Stored rules that could not be read a moment ago are not read again on every message (about 400 KB each time): the rules
+    // in memory serve until the wait ends, or at once after the key is written (DetectorManager.watchStorage ends the wait)
+    if (detectorManager && typeof detectorManager.readMustWait === 'function' && detectorManager.readMustWait()) return detectorManager;
     if (!categoryManager) categoryManager = new CategoryManager();
     if (!detectorManager) detectorManager = new DetectorManager(categoryManager);
     const manager = detectorManager;

@@ -5529,7 +5529,10 @@
     "message": "Der Hintergrundteil der Erweiterung ist veraltet. Lade die Erweiterung auf der Erweiterungsseite neu und versuche es erneut."
   },
   "settingsUnreadableHint": {
-    "message": "Die gespeicherten Einstellungen konnten nicht gelesen werden, deshalb sind Verlauf und Massenscan pausiert. Zum Reparieren verwende Einstellungen → Daten → Zurücksetzen."
+    "message": "Die gespeicherten Einstellungen konnten nicht gelesen werden, deshalb sind das Scannen, der Verlauf und der Massenscan pausiert. Zum Reparieren verwende Einstellungen → Daten → Zurücksetzen."
+  },
+  "rulesUnreadableHint": {
+    "message": "Die gespeicherten Regeln konnten nicht gelesen werden: Die integrierten Regeln werden verwendet und Änderungen an Regeln werden nicht gespeichert. Um die gespeicherten Regeln zu ersetzen, importiere im Tab Regeln eine Regeldatei und wähle Alle ersetzen."
   },
   "historyFiltersLabel": {
     "message": "Verlauf filtern"

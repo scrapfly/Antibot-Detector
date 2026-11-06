@@ -80,6 +80,20 @@ const RuleTestRuntime = {
     },
 
     /**
+     * The saved rule the editor's copy is of (null for a new one). Its shipped copy, never the editor's, says which regexes read
+     * all of a text longer than PatternCache.REGEX_TEXT_LIMIT: an official regex the person did not change, as in a scan.
+     */
+    async storedRuleFor(rule) {
+        try {
+            if (typeof ensureDetectorManagerInitialized !== 'function') return null;
+            const manager = await ensureDetectorManagerInitialized();
+            return (manager && typeof manager.findDetectorById === 'function' && manager.findDetectorById(rule.id)) || null;
+        } catch (_) {
+            return null; // the rules cannot be loaded: every regex reads the first characters
+        }
+    },
+
+    /**
      * @param {{detector: object, tabId?: number}} request
      * @returns {Promise<object>} { status: 'ok', host, rows, untested, verdict, page } or { status: 'unsupported' | 'unreachable' | 'error' }
      */
@@ -96,8 +110,9 @@ const RuleTestRuntime = {
         }
         const pageData = await this.assemble(tab, data);
         const engine = new DetectionEngineManager();
-        const counts = RuleTest.probes(rule).map(({ method, index, probe }) => ({ method, index, count: engine.runDetector(probe, pageData).matches.length }));
-        const whole = engine.runDetector(rule, pageData);
+        const run = { officialCopy: await this.storedRuleFor(rule) };
+        const counts = RuleTest.probes(rule).map(({ method, index, probe }) => ({ method, index, count: engine.runDetector(probe, pageData, run).matches.length }));
+        const whole = engine.runDetector(rule, pageData, run);
         const answer = RuleTest.answer(rule, counts, { confidence: whole.confidence, partial: whole.partial, combinations: whole.combinations });
         let host = '';
         try { host = new URL(tab.url).hostname; } catch (_) { /* leave empty */ }

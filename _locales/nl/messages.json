@@ -5529,7 +5529,10 @@
     "message": "Het achtergronddeel van de extensie is verouderd. Laad de extensie opnieuw op de extensiepagina en probeer het nog eens."
   },
   "settingsUnreadableHint": {
-    "message": "De opgeslagen instellingen konden niet worden gelezen, dus de geschiedenis en Bulkscan zijn gepauzeerd. Herstel ze via Instellingen → Gegevens → Resetten."
+    "message": "De opgeslagen instellingen konden niet worden gelezen, dus het scannen, de geschiedenis en Bulkscan zijn gepauzeerd. Herstel ze via Instellingen → Gegevens → Resetten."
+  },
+  "rulesUnreadableHint": {
+    "message": "De opgeslagen regels konden niet worden gelezen: de ingebouwde regels worden gebruikt en wijzigingen aan regels worden niet opgeslagen. Om de opgeslagen regels te vervangen, importeer je een regelbestand op het tabblad Regels en kies je Alles vervangen."
   },
   "historyFiltersLabel": {
     "message": "Geschiedenis filteren"

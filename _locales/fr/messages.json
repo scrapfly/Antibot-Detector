@@ -5529,7 +5529,10 @@
     "message": "La partie en arrière-plan de l'extension n'est pas à jour. Rechargez l'extension sur la page des extensions, puis réessayez."
   },
   "settingsUnreadableHint": {
-    "message": "Impossible de lire les paramètres enregistrés : l’historique et l’analyse groupée sont en pause. Pour les réparer, utilisez Paramètres → Données → Réinitialiser."
+    "message": "Impossible de lire les paramètres enregistrés : l’analyse des pages, l’historique et l’analyse groupée sont en pause. Pour les réparer, utilisez Paramètres → Données → Réinitialiser."
+  },
+  "rulesUnreadableHint": {
+    "message": "Impossible de lire les règles enregistrées : les règles intégrées sont utilisées et les modifications des règles ne sont pas enregistrées. Pour remplacer les règles enregistrées, importez un fichier de règles dans l’onglet Règles et choisissez Tout remplacer."
   },
   "historyFiltersLabel": {
     "message": "Filtrer l’historique"

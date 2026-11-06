@@ -5529,7 +5529,10 @@
     "message": "Součást rozšíření běžící na pozadí je zastaralá. Znovu načtěte rozšíření na stránce rozšíření a zkuste to znovu."
   },
   "settingsUnreadableHint": {
-    "message": "Uložená nastavení se nepodařilo přečíst, proto jsou historie a hromadné skenování pozastaveny. Opravíte je v Nastavení → Data → Resetovat."
+    "message": "Uložená nastavení se nepodařilo přečíst, proto je pozastaveno skenování stránek, historie i hromadné skenování. Opravíte je v Nastavení → Data → Resetovat."
+  },
+  "rulesUnreadableHint": {
+    "message": "Uložená pravidla se nepodařilo přečíst: používají se vestavěná pravidla a změny pravidel se neukládají. Chcete-li uložená pravidla nahradit, importujte soubor pravidel na kartě Pravidla a zvolte Nahradit vše."
   },
   "historyFiltersLabel": {
     "message": "Filtrovat historii"

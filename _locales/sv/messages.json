@@ -5529,7 +5529,10 @@
     "message": "Tilläggets bakgrundsdel är föråldrad. Ladda om tillägget på tilläggssidan och försök igen."
   },
   "settingsUnreadableHint": {
-    "message": "De sparade inställningarna kunde inte läsas, så historiken och massskanningen är pausade. Åtgärda det med Inställningar → Data → Återställ."
+    "message": "De sparade inställningarna kunde inte läsas, så skanningen, historiken och massskanningen är pausade. Åtgärda det med Inställningar → Data → Återställ."
+  },
+  "rulesUnreadableHint": {
+    "message": "De sparade reglerna kunde inte läsas: de inbyggda reglerna används och ändringar av regler sparas inte. Om du vill ersätta de sparade reglerna importerar du en regelfil på fliken Regler och väljer Ersätt allt."
   },
   "historyFiltersLabel": {
     "message": "Filtrera historik"

@@ -5529,7 +5529,10 @@
     "message": "A parte em segundo plano da extensão está desatualizada. Recarregue a extensão na página de extensões e tente de novo."
   },
   "settingsUnreadableHint": {
-    "message": "Não foi possível ler as configurações salvas, então o histórico e a análise em massa estão pausados. Para repará-las, use Configurações → Dados → Redefinir."
+    "message": "Não foi possível ler as configurações salvas, então a análise de páginas, o histórico e a análise em massa estão pausados. Para repará-las, use Configurações → Dados → Redefinir."
+  },
+  "rulesUnreadableHint": {
+    "message": "Não foi possível ler as regras salvas: as regras integradas estão em uso e as alterações nas regras não são salvas. Para substituir as regras salvas, importe um arquivo de regras na aba Regras e escolha Substituir tudo."
   },
   "historyFiltersLabel": {
     "message": "Filtrar o histórico"
