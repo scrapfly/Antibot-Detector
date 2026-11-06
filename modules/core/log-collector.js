@@ -2,6 +2,11 @@
  * LogCollector - Stores logs in memory and allows export
  * Uses circular buffer to prevent memory overflow
  *
+ * A collected line is kept in memory, written to storage.local (up to MAX_PERSISTED_LOGS, where it outlives the browser) and
+ * exported, and it names the pages it is about ("shop.example: cached result reused"). The name of a site the person keeps
+ * out of records is left out of every line: the sites History is told not to record, the skipped sites (Settings →
+ * Detection → Sites), and the pages open in a private window (their tabs are watched here, by site). The line stays.
+ *
  * Usage:
  *   window.LogCollector.enable()  // Start collecting logs
  *   window.LogCollector.exportAsJSON()  // Export as JSON file
@@ -32,6 +37,11 @@ class LogCollector {
         this.initPromise = null;
         this.rateWindowStart = Date.now();
         this.rateCount = 0;
+        // Sites no line may name: kept out by the saved settings, and open in a private window (tab id -> site)
+        this.keptOutHosts = [];
+        this.privateTabs = new Map();
+        this._hiddenPattern = null;
+        this._watchPrivateTabs();
         // Initialize and load from storage
         this.initPromise = this.initializeFromStorage();
         if (typeof chrome !== 'undefined' && chrome.storage?.onChanged) {
@@ -102,6 +112,7 @@ class LogCollector {
 
     /** Apply a saved snapshot without starting another settings write. */
     applySettings(settings = {}) {
+        this._keepOut(settings);
         const enabled = settings.logCollectorEnabled === true;
         if (enabled !== this.enabled) {
             if (enabled) this.enable({ persist: false });
@@ -111,6 +122,53 @@ class LogCollector {
         if (maxLogs !== this.maxLogs) this.setMaxLogs(maxLogs, { persist: false });
         if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') Utils.applyDebugMode(settings);
         else globalThis.logCollectorEnabled = enabled;
+    }
+
+    /** The sites the person keeps out of records, from the saved settings: History's ignored sites and, in its mode, the skipped sites. */
+    _keepOut(settings) {
+        const list = (value) => (Array.isArray(value) ? value.filter(item => typeof item === 'string') : []);
+        const history = (settings && settings.history) || {};
+        const detection = (settings && settings.detection) || {};
+        const skipped = detection.scanMode === 'allowlist' ? []
+            : list(detection.blacklistedDomains !== undefined ? detection.blacklistedDomains : settings && settings.blacklistedDomains);
+        this.keptOutHosts = typeof DomainList !== 'undefined' ? DomainList.normalize([...list(history.historyExcludedDomains), ...skipped]) : [];
+        this._hiddenPattern = null;
+    }
+
+    /** The tabs open in private windows, by site: a page there is kept nowhere else either, so no line may name it. */
+    _watchPrivateTabs() {
+        const tabs = typeof chrome !== 'undefined' ? chrome.tabs : null;
+        if (!tabs || !tabs.onCreated || !tabs.onUpdated || !tabs.onRemoved) return;
+        const see = (tab) => {
+            if (!tab || !Number.isInteger(tab.id)) return;
+            let host = '';
+            try { host = tab.incognito === true && tab.url ? new URL(tab.url).hostname.toLowerCase() : ''; } catch (e) { host = ''; }
+            if (host) this.privateTabs.set(tab.id, host); else this.privateTabs.delete(tab.id);
+            this._hiddenPattern = null;
+        };
+        tabs.onCreated.addListener(see);
+        tabs.onUpdated.addListener((tabId, change, tab) => { if (change && change.url !== undefined) see(tab); });
+        tabs.onRemoved.addListener((tabId) => { if (this.privateTabs.delete(tabId)) this._hiddenPattern = null; });
+        if (typeof tabs.query === 'function') {
+            // The tabs that were open when the worker started
+            Promise.resolve().then(() => tabs.query({})).then((open) => (open || []).forEach(see)).catch(() => {});
+        }
+    }
+
+    /** The test for the name of a hidden site (or of a subdomain of one), or false when there is none. Built again after a change. */
+    _compileHidden() {
+        const hosts = [...new Set([...this.keptOutHosts, ...this.privateTabs.values()])];
+        if (!hosts.length) return false;
+        const alternatives = hosts.map(host => host.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+        // Not inside a longer name (notbank.example, bank.example.org, bank.example.js)
+        return new RegExp(`(?<![a-z0-9-])(?:[a-z0-9-]+\\.)*(?:${alternatives})(?![a-z0-9-]|\\.[a-z0-9])`, 'gi');
+    }
+
+    /** `text` with the name of every hidden site (and of its subdomains) replaced by LogCollector.HIDDEN_SITE. */
+    _maskHosts(text) {
+        if (typeof text !== 'string') return text;
+        if (this._hiddenPattern === null) this._hiddenPattern = this._compileHidden();
+        return this._hiddenPattern ? text.replace(this._hiddenPattern, LogCollector.HIDDEN_SITE) : text;
     }
 
     _writeEntry(entry) {
@@ -181,6 +239,7 @@ class LogCollector {
 
                         const parsedSettings = this._parseSettingsStorageValue(result[this.settingsKey]);
                         const settings = parsedSettings.settings || {};
+                        this._keepOut(settings);
                         const hasLegacyEnabled = Object.prototype.hasOwnProperty.call(result, this.legacyEnabledStateKey);
                         const hasLegacyMax = Object.prototype.hasOwnProperty.call(result, this.legacyMaxLogsKey);
 
@@ -194,7 +253,8 @@ class LogCollector {
                         }
 
                         // Restore logs after maxLogs is known so ring buffer indices stay consistent.
-                        this._resetFromArray(storedLogs);
+                        // Lines an earlier run stored name the sites that are kept out now too: left out here as well
+                        this._resetFromArray(storedLogs.map(entry => (entry && typeof entry.message === 'string' ? { ...entry, message: this._maskHosts(entry.message) } : entry)));
 
                         // Restore enabled state and auto-resume collection if needed
                         let wasEnabled = false;
@@ -484,7 +544,7 @@ class LogCollector {
             timestamp: now,
             relativeTime: now - this.startTime,
             level: level,
-            message: this.truncateString(this.formatArgs(args), 2000)
+            message: this.truncateString(this._maskHosts(this.formatArgs(args)), 2000)
         };
 
         // Ring buffer - O(1) append, bounded memory
@@ -647,6 +707,9 @@ class LogCollector {
         return true;
     }
 }
+
+// What stands in a line where a site that is kept out of records was named
+LogCollector.HIDDEN_SITE = '[hidden site]';
 
 // Create singleton instance
 const logCollector = new LogCollector(5000); // Store last 5000 logs
