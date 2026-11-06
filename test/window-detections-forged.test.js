@@ -14,8 +14,16 @@ const read = (file) => fs.readFileSync(path.join(__dirname, '..', file), 'utf8')
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
 const DETECTORS = {
-  antibot: { 'detect-cloudflare': { id: 'detect-cloudflare', name: 'Cloudflare', category: 'Anti-Bot', icon: 'cloudflare.png', description: 'CDN', author: 'Scrapfly', difficulty: 'Medium' } },
-  captcha: { 'detect-recaptcha': { id: 'detect-recaptcha', name: 'reCAPTCHA', category: 'CAPTCHA', icon: 'recaptcha.png', difficulty: 'High' } }
+  antibot: { 'detect-cloudflare': { id: 'detect-cloudflare', name: 'Cloudflare', category: 'Anti-Bot', icon: 'cloudflare.png', description: 'CDN', author: 'Scrapfly', difficulty: 'Medium',
+    detection: { window: [
+      { id: 'w-cf', path: 'window.__cf', condition: 'exists', confidence: 90, description: 'a global' },
+      { id: 'w-a', path: 'window.a', confidence: 60, description: 'first' },
+      { id: 'w-b', path: 'window.b', confidence: 100, description: 'second' },
+      { id: 'w-none', path: 'window.noConfidence', description: 'no confidence of its own' },
+      { id: 'w-off', path: 'window.off', confidence: 95, enabled: false }
+    ] } } },
+  captcha: { 'detect-recaptcha': { id: 'detect-recaptcha', name: 'reCAPTCHA', category: 'CAPTCHA', icon: 'recaptcha.png', difficulty: 'High',
+    detection: { window: [{ id: 'w-g', path: 'window.grecaptcha', confidence: 70 }] } } }
 };
 
 function harness({ ready = true } = {}) {
@@ -93,14 +101,41 @@ test('the detector is found under its own category when the message names anothe
   assert.deepEqual(cards.map(c => [c.detector.id, c.detector.name, c.category]), [['detect-cloudflare', 'Cloudflare', 'antibot'], ['detect-recaptcha', 'reCAPTCHA', 'captcha']]);
 });
 
-test('a confidence is a finite number from 0 to 100, whatever the message says', async () => {
-  const cases = [[1e9, 100], [101, 100], [100, 100], [55.5, 55.5], [0, 0], [-40, 0], [NaN, 0], [Infinity, 0], [-Infinity, 0], ['99', 0], [null, 0], [undefined, 0], [{ valueOf: () => 80 }, 0], [[70], 0]];
-  for (const [sent, expected] of cases) {
+test('the confidence, description and condition are the rule\'s own, whatever the message says', async () => {
+  const sent = [1e9, 101, 100, 55.5, 0, -40, NaN, Infinity, -Infinity, '99', null, undefined, { valueOf: () => 80 }, [70]];
+  for (const confidence of sent) {
     const h = harness();
-    const [card] = await h.send([real({ property: property({ confidence: sent }) })]);
-    assert.ok(card, String(sent));
-    assert.equal(card.confidence, expected, `${String(sent)} → ${expected}`);
-    assert.equal(card.matches[0].confidence, expected, `its match too: ${String(sent)}`);
+    const [card] = await h.send([real({ property: property({ confidence, description: '<b>made up</b>', condition: 'typeof string' }) })]);
+    assert.ok(card, String(confidence));
+    assert.equal(card.confidence, 90, `${String(confidence)}: the rule says 90`);
+    assert.deepEqual([card.matches[0].confidence, card.matches[0].description, card.matches[0].condition], [90, 'a global', 'exists']);
+  }
+  // A rule with no confidence of its own counts the default the install gives it, never what the page sends
+  const h = harness();
+  const [card] = await h.send([real({ property: property({ path: 'window.noConfidence', confidence: 100 }) })]);
+  assert.equal(card.confidence, 80);
+  assert.equal(card.matches[0].condition, 'truthy', 'no condition of its own: the default one');
+});
+
+test('a path the detector has no window rule for makes no card and no match, and neither does a rule switched off', async () => {
+  const h = harness();
+  const cards = await h.send([
+    real({ property: property({ path: 'window.madeUp', confidence: 100 }) }),
+    real({ property: property({ path: 'window.off' }) }),
+    real({ property: property({ path: 'window.grecaptcha' }) }), // another detector's path
+    real({ property: property({ path: 42 }) })
+  ]);
+  assert.deepEqual(cards, []);
+  assert.equal(h.state.warnings.length, 4, 'each one is told');
+  const [card] = await h.send([real({ property: property({ path: 'window.madeUp' }) }), real()]);
+  assert.deepEqual(card.matches.map(m => m.pattern), ['window.__cf'], 'beside a real one, only the real one is kept');
+});
+
+test('what the page says it found is only the name of a type', async () => {
+  for (const [sent, kept] of [['object', 'object'], ['null', 'null'], ['function', 'function'], ['<img src=x>', undefined], [{}, undefined], [7, undefined]]) {
+    const h = harness();
+    const [card] = await h.send([real({ property: property({ actualType: sent }) })]);
+    assert.equal(card.matches[0].actualType, kept, String(sent));
   }
 });
 
