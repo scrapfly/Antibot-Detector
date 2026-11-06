@@ -43,7 +43,8 @@ const INCOMPATIBLE = 'scrapfly_incompatible_updates';
 // ---- Harness ---------------------------------------------------------------------------------------
 const results = [];
 async function scenario(name, fn) {
-  if (only && !name.toLowerCase().includes(only.toLowerCase())) return;
+  // --only=a|b runs the scenarios whose name contains any of the words
+  if (only && !only.toLowerCase().split('|').some(word => name.toLowerCase().includes(word))) return;
   const started = Date.now();
   try {
     await fn();
@@ -431,8 +432,13 @@ async function scenario(name, fn) {
       const base = Date.now();
       for (const [id, tool] of modules) {
         for (let i = 0; i < 3; i++) {
-          await AdvancedHistoryStore.appendCapture(id, { id: `e2e-${id}-${i}`, timestamp: base - (n++) * 1000, url: `http://127.0.0.1/p/${id}-${i}`, hostname: '127.0.0.1',
-            data: { schemaVersion: 1, tool, vendorId: id, label: tool, result: { kind: 'seed', n } } }, { expiryMinutes: 30 });
+          const capture = { id: `e2e-${id}-${i}`, timestamp: base - (n++) * 1000, url: `http://127.0.0.1/p/${id}-${i}`, hostname: '127.0.0.1',
+            data: { schemaVersion: 1, tool, vendorId: id, label: tool, result: { kind: 'seed', n } } };
+          // The worker's own answer, not the popup facade's: when the seed fails, the reason is printed as it came back
+          const answer = await new Promise(resolve => chrome.runtime.sendMessage(
+            { type: AdvancedMessageTypes.ADVANCED_HISTORY, method: 'appendCapture', args: [id, capture, { expiryMinutes: 30 }] },
+            response => resolve({ response, lastError: chrome.runtime.lastError ? chrome.runtime.lastError.message : null })));
+          if (!answer.response || answer.response.status !== 'ok') throw new Error(`seeding ${capture.id}: ${JSON.stringify(answer)}`);
         }
       }
     }, MODULES);
@@ -508,7 +514,8 @@ async function scenario(name, fn) {
       return { row: { x: r.x, y: r.y, w: r.width, h: r.height }, open: { x: open.x, w: open.width, h: open.height }, actions: { x: actions.x, w: actions.width }, rtl: getComputedStyle(row).direction === 'rtl' };
     });
     assert.ok(geometry.open.w > geometry.row.w * 0.6, `the open button fills what the actions leave: ${JSON.stringify(geometry)}`);
-    assert.ok(geometry.open.h >= 40, 'about the row\'s height');
+    // The row keeps 8px of padding above and below its content: the button fills the content box, and a click on the padding is the row's
+    assert.ok(geometry.open.h >= geometry.row.h - 20, `about the row's height: ${JSON.stringify(geometry)}`);
     for (const [name, x] of [['the logo', geometry.row.x + 18], ['the text', geometry.row.x + 120], ['the row\'s right edge', geometry.row.x + geometry.row.w - 2]]) {
       await popup.mouse.click(x, geometry.row.y + geometry.row.h / 2);
       await popup.waitForSelector('.adv-kit-overlay .adv-kit-title', { timeout: 10000 }).catch(() => { throw new Error(`a click on ${name} did not open the capture`); });
@@ -696,6 +703,9 @@ async function scenario(name, fn) {
       assert.match(await ar.$eval('#captureGrid .cap-row', row => row.getAttribute('aria-label')), /127\.0\.0\.1/);
       await shot(ar, 'capture-rows-rtl');
       // The dialog in Arabic: named by its own (translated) title
+      // Back to the Tools panel: the "?" button is in it, and the Captures panel shown above hides it
+      await ar.evaluate(() => window.popupInstance.advanced.switchAdvancedTab('tools'));
+      await ar.waitForFunction(() => document.querySelector('#toolsPanel').classList.contains('active'), null, { polling: 200, timeout: 10000 });
       await showTools(ar);
       await ar.focus('#showAdvancedHelp');
       await ar.keyboard.press('Enter');
@@ -723,10 +733,13 @@ async function scenario(name, fn) {
     await popup.$eval('#rulesList .detector-card[data-detector-id="detect-cloudflare"] .edit-btn', el => el.click());
     await popup.waitForFunction(() => getComputedStyle(document.querySelector('#editRuleModal')).display !== 'none', null, { polling: 200, timeout: 10000 });
     await popup.$eval('#detectionMethodsCard .modal-card-header--toggle', el => el.click());
-    await popup.waitForSelector('#detectionMethodsContainer .method-section .add-method-btn', { state: 'visible', timeout: 10000 });
+    // Every method section starts collapsed: open the first one, whose Add pattern button is then on screen
+    await popup.waitForSelector('#detectionMethodsContainer .method-section .method-header-left', { state: 'visible', timeout: 10000 });
+    await popup.$eval('#detectionMethodsContainer .method-section .method-header-left', el => el.click());
+    await popup.waitForSelector('#detectionMethodsContainer .method-section:not(.collapsed) .add-method-btn', { state: 'visible', timeout: 10000 });
     assert.equal(await popup.$$eval('#editRuleModal .add-section-btn', els => els.length), 0, 'no add-section button');
     const before = await popup.$$eval('#detectionMethodsContainer .method-item', els => els.length);
-    await popup.$eval('#detectionMethodsContainer .method-section .add-method-btn', el => el.click());
+    await popup.$eval('#detectionMethodsContainer .method-section:not(.collapsed) .add-method-btn', el => el.click());
     await until(async () => (await popup.$$eval('#detectionMethodsContainer .method-item', els => els.length)) === before + 1, 5000, 'the new pattern row');
     assert.equal(await popup.evaluate(() => typeof window.popupInstance.rules.addNewMethodSection), 'undefined', 'the removed function is gone');
     await popup.$eval('#cancelRuleEdit', el => el.click());
