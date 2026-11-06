@@ -22,6 +22,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Akamai: Start Capturing deletes the _abck cookie only once the capture is armed, so a failed start leaves the cookie alone.
 - Detection: Scan again now says the extension must be reloaded when its background part is out of date, instead of only "Scan failed".
 - Advanced: ALTCHA Extract Site Key now finds the key of an ALTCHA Cloud widget before its challenge has loaded.
+- Webhook: a delivery waiting to be retried is dropped when your filters or skipped sites no longer allow it, and recent deliveries never name sites History ignores.
+- Log Collector: sites History ignores, skipped sites and private-window pages appear as "[hidden site]" in collected and exported logs.
+- Check Cookies no longer records sites kept out of scans, and saved Advanced captures are limited to about 4 MB in total.
+- Turning a page in Detection, History or Rules starts at the top, and the page box returns to the current page when you leave it.
+- Detection: Clear cache says what happened and never stays disabled, and Upload says the link is copied only when it was.
+- Detection: screen readers announce search results and how a scan ended, and tips use each language's own "Label: value" form.
+- A new scan result no longer makes the popup reload your whole History, which slowed large Histories.
 
 ## [3.1.3] - 2026-11-05
 
