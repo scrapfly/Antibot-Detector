@@ -48,6 +48,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History details: each detection header is named after its detection, matched values copy from the keyboard, and confidence and difficulty tips follow your language.
 - Messages no longer push each other off the screen: each stays its full time, and hovering or focusing one pauses it.
 - Arabic: messages, the language list, Advanced How it works steps and Rules help bullets follow right-to-left layout, and change arrows point the right way.
+- Rules: the Update badge follows Settings → Data → Clear and Check now, and after deleting or resetting a rule the list keeps its page and keyboard focus.
+- Rules: screen readers announce how many rules the search and filters leave, or that none match.
+- Advanced: saved captures' Copy and Delete are reachable with a screen reader, and the Help dialog keeps keyboard focus inside it.
 
 ## [3.1.3] - 2026-11-05
 
