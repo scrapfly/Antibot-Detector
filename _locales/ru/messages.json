@@ -782,7 +782,7 @@
     "message": "1 шаблон"
   },
   "methodPatternsFmt": {
-    "message": "{0} шаблонов"
+    "message": "Шаблонов: {0}"
   },
   "methodAddPattern": {
     "message": "Добавить шаблон"
@@ -875,7 +875,7 @@
     "message": "Обнаружений не найдено"
   },
   "historyMatchCountFmt": {
-    "message": "{0} совпадений"
+    "message": "Совпадений: {0}"
   },
   "historyOneMatch": {
     "message": "1 совпадение"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Копировать как Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Автопроверка обновлений выключена"
+  },
+  "restoreNotIncludedNote": {
+    "message": "В копию не входят данные вебхука и обмена, а также список отслеживаемых страниц Истории."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Изменения настроек ещё не сохранены. Сохранить их перед закрытием?"
   }
 }

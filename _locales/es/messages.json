@@ -1061,7 +1061,7 @@
     "message": "Captura eliminada"
   },
   "capturesExportedFmt": {
-    "message": "Se exportaron {0} capturas"
+    "message": "Capturas exportadas: {0}"
   },
   "allCapturesCleared": {
     "message": "Todas las capturas borradas"
@@ -5757,7 +5757,7 @@
     "message": "Tus reglas ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Historial ({0} entradas)"
+    "message": "Historial (entradas: {0})"
   },
   "restoreModeLabel": {
     "message": "Reglas e historial"
@@ -6615,5 +6615,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Copiar como Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "La comprobación automática de actualizaciones está desactivada"
+  },
+  "restoreNotIncludedNote": {
+    "message": "No forman parte de la copia: los datos del webhook y de compartir, ni qué páginas del historial se vigilan."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de cerrar?"
   }
 }

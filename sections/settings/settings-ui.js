@@ -61,13 +61,13 @@ SettingsUI.showSettings = function() {
       settingsModal.classList.add('is-open');
       this.isModalVisible = true;
       this.loadSettings();
-      // Keyboard: focus moves into Settings, Tab stays in it (and in the dialogs it opens), Escape closes it and
-      // focus goes back to the settings button
+      // Keyboard: focus moves into Settings, Tab stays in it (and in the dialogs it opens), Escape closes it (asking first
+      // when there are changes that are not saved) and focus goes back to the settings button
       const content = settingsModal.querySelector('.base-modal-content');
       if (content && typeof ModalFocus !== 'undefined' && !this.releaseSettingsFocus) {
         content.setAttribute('role', 'dialog');
         content.setAttribute('aria-modal', 'true');
-        this.releaseSettingsFocus = ModalFocus.activate(content, { onClose: () => this.hideSettings() });
+        this.releaseSettingsFocus = ModalFocus.activate(content, { onClose: () => SettingsUI.requestHideSettings.call(this) });
       }
       requestAnimationFrame(() => {
         const activeBtn = document.querySelector('.settings-tab-btn.active');
@@ -86,6 +86,8 @@ SettingsUI.hideSettings = function() {
     }
     // The log counter is read every 2 s only while Settings shows it; opening Settings starts it again
     if (typeof this.stopLogCountUpdate === 'function') this.stopLogCountUpdate();
+    // A field a failed Save marked is not marked again the next time Settings opens
+    SettingsUI.clearInvalidMarks();
     if (this.settingsBaseline) this.settings = JSON.parse(JSON.stringify(this.settingsBaseline));
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
@@ -95,6 +97,48 @@ SettingsUI.hideSettings = function() {
     const release = this.releaseSettingsFocus;
     this.releaseSettingsFocus = null;
     if (release) release();
+};
+
+/**
+ * ✕, Escape and a click outside Settings are easy to make by accident: with changes that are not saved they ask first (Save,
+ * Discard, or Cancel to stay in Settings), as the rule editor does. The Cancel button says it already, so it closes at once.
+ * @returns {Promise<boolean>} whether Settings closed
+ */
+SettingsUI.requestHideSettings = async function() {
+    if (this._settingsCloseAsking) return false;
+    const unsaved = !!this.settingsBaseline && typeof SettingsUI.hasUnsavedChanges === 'function' && SettingsUI.hasUnsavedChanges(this);
+    if (!unsaved || typeof NotificationHelper === 'undefined' || typeof NotificationHelper.choose !== 'function') {
+      this.hideSettings();
+      return true;
+    }
+    const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
+    this._settingsCloseAsking = true;
+    let answer;
+    try {
+      answer = await NotificationHelper.choose({
+        title: tr('settingsLanguageUnsavedTitle', 'Unsaved settings'),
+        message: tr('settingsUnsavedCloseMessage', 'Your changes to the settings are not saved yet. Save them before closing?'),
+        cancelText: tr('btnCancel', 'Cancel'),
+        tone: 'warning',
+        actions: [
+          { value: 'discard', text: tr('ruleEditorDiscardConfirm', 'Discard') },
+          { value: 'save', text: tr('btnSave', 'Save'), primary: true }
+        ],
+        defaultValue: 'save'
+      });
+    } finally {
+      this._settingsCloseAsking = false;
+    }
+    if (answer === 'discard') {
+      this.hideSettings();
+      return true;
+    }
+    if (answer === 'save') {
+      // A value that is not valid keeps Settings open at its field (handleSaveSettings shows where)
+      await this.handleSaveSettings();
+      return !this.isModalVisible;
+    }
+    return false;
 };
 
 SettingsUI.switchTab = function(tabName) {
@@ -693,8 +737,18 @@ SettingsUI.keepWhenOff = function(value, optionOn, saved, fallback) {
   return Number.isFinite(kept) ? kept : fallback;
 };
 
+/**
+ * What is wrong with the settings a Save would write.
+ * @returns {{isValid: boolean, errors: string[], fields: string[]}} `fields`: the selector of the control each message is about,
+ *   once each, in the order of the messages (a message about a list of sites has none), for the Save to show where
+ */
 SettingsUI.validateSettings = function(settings) {
     const errors = [];
+    const fields = [];
+    const fail = (field, message) => {
+      errors.push(message);
+      if (field && !fields.includes(field)) fields.push(field);
+    };
     // Messages surface in the "Invalid settings: …" toast, so they follow the UI language
     const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
     const UNIT_LABEL_KEYS = {
@@ -708,7 +762,7 @@ SettingsUI.validateSettings = function(settings) {
     if (settings.history && settings.history.historyLimit !== undefined) {
       // An emptied number field reads as NaN, which no range comparison catches
       if (!Number.isInteger(settings.history.historyLimit) || settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
-        errors.push(text('settingsUiErrHistoryLimit', 'History limit must be between 0 (unlimited) and 10000'));
+        fail('#historyLimit', text('settingsUiErrHistoryLimit', 'History limit must be between 0 (unlimited) and 10000'));
       }
     }
 
@@ -718,50 +772,50 @@ SettingsUI.validateSettings = function(settings) {
       if (!Number.isInteger(cacheDuration) || cacheDuration < 1 || cacheDuration > max) {
         const unitEntry = UNIT_LABEL_KEYS[cacheUnit];
         const unitLabel = unitEntry ? text(unitEntry[0], unitEntry[1]) : String(cacheUnit);
-        errors.push(text('settingsUiErrCacheDurationFmt', 'Cache duration must be between 1 and {0} {1}', max, unitLabel));
+        fail('#cacheDuration', text('settingsUiErrCacheDurationFmt', 'Cache duration must be between 1 and {0} {1}', max, unitLabel));
       }
     }
 
     if (settings.history && settings.history.historyMinConfidence !== undefined) {
       const confidence = settings.history.historyMinConfidence;
       if (!Number.isInteger(confidence) || confidence < 0 || confidence > 100) {
-        errors.push(text('settingsUiErrMinConfidence', 'Minimum confidence must be between 0 and 100'));
+        fail('#historyMinConfidence', text('settingsUiErrMinConfidence', 'Minimum confidence must be between 0 and 100'));
       }
     }
 
     if (settings.history && settings.history.historyAutoPinMinConfidence !== undefined) {
       const confidence = settings.history.historyAutoPinMinConfidence;
       if (!Number.isInteger(confidence) || confidence < 0 || confidence > 100) {
-        errors.push(text('settingsUiErrAutoPinConfidence', 'Pin confidence must be between 0 and 100'));
+        fail('#historyAutoPinMinConfidence', text('settingsUiErrAutoPinConfidence', 'Pin confidence must be between 0 and 100'));
       }
     }
 
     if (settings.history && settings.history.historyMaxMB !== undefined && !HistoryStore.SIZES_MB.includes(settings.history.historyMaxMB)) {
-      errors.push(text('settingsUiErrHistorySizeFmt', 'History size must be one of {0} MB', HistoryStore.SIZES_MB.join(', ')));
+      fail('#historyMaxMB', text('settingsUiErrHistorySizeFmt', 'History size must be one of {0} MB', HistoryStore.SIZES_MB.join(', ')));
     }
 
     if (settings.history && settings.history.historyWatch !== undefined && !HistoryPolicy.WATCH_MODES.includes(settings.history.historyWatch)) {
-      errors.push(text('settingsUiErrHistoryWatch', 'The watchlist must be off, daily or weekly'));
+      fail('#historyWatch', text('settingsUiErrHistoryWatch', 'The watchlist must be off, daily or weekly'));
     }
 
     if (settings.history && settings.history.historyFingerprintDays !== undefined) {
       const days = settings.history.historyFingerprintDays;
       if (!Number.isInteger(days) || days < 0 || days > 3650) {
-        errors.push(text('settingsUiErrFingerprintDays', 'Fingerprinting-only pages must be kept between 0 and 3650 days'));
+        fail('#historyFingerprintDays', text('settingsUiErrFingerprintDays', 'Fingerprinting-only pages must be kept between 0 and 3650 days'));
       }
     }
 
     if (settings.history && settings.history.historyAutoDeleteDays !== undefined) {
       const days = settings.history.historyAutoDeleteDays;
       if (!Number.isFinite(days) || days < 1 || days > 3650) {
-        errors.push(text('settingsUiErrAutoDeleteDays', 'Auto-delete days must be between 1 and 3650'));
+        fail('#historyAutoDeleteDays', text('settingsUiErrAutoDeleteDays', 'Auto-delete days must be between 1 and 3650'));
       }
     }
 
     if (settings.detection && settings.detection.advancedToolsMinConfidence !== undefined) {
       const value = settings.detection.advancedToolsMinConfidence;
       if (!Number.isInteger(value) || value < 0 || value > 99) {
-        errors.push(text('settingsUiErrAdvancedToolsMinConfidence', 'Advanced tools confidence must be between 0 and 99'));
+        fail('#advancedToolsMinConfidence', text('settingsUiErrAdvancedToolsMinConfidence', 'Advanced tools confidence must be between 0 and 99'));
       }
     }
 
@@ -775,41 +829,45 @@ SettingsUI.validateSettings = function(settings) {
       || (settings.webhook && settings.webhook.enableWebhook === true && savedWebhook.enableWebhook !== true);
     if (webhookUrl && webhookTouched && typeof SettingsRuntime !== 'undefined' && typeof SettingsRuntime._isWebhookUrlSafe === 'function'
         && !SettingsRuntime._isWebhookUrlSafe(webhookUrl.replace(/<[A-Z_]+>/g, 'x'))) {
-      errors.push(text('settingsUiErrWebhookUrl', 'Webhook URL: use an HTTPS address on a public host'));
+      fail('#webhookUrl', text('settingsUiErrWebhookUrl', 'Webhook URL: use an HTTPS address on a public host'));
     }
 
     if (typeof SettingsUI.validateShareSettings === 'function') {
-      errors.push(...SettingsUI.validateShareSettings(settings.share, text, this && this.settingsBaseline && this.settingsBaseline.share));
+      // That validator answers with messages only: the one about the JSON template is the template's, any other the address's
+      const jsonMessage = text('settingsUiErrShareCustomJson', 'Custom upload server: the JSON template is not valid JSON');
+      for (const message of SettingsUI.validateShareSettings(settings.share, text, this && this.settingsBaseline && this.settingsBaseline.share)) {
+        fail(message === jsonMessage ? '#shareCustomJsonTemplate' : '#shareCustomUrl', message);
+      }
     }
 
     // A signing secret no server could check (accents, emoji, invisible characters, over 512): the message never repeats it
     if (settings.webhook && settings.webhook.webhookSecret !== undefined && typeof WebhookBody !== 'undefined'
       && !WebhookBody.isValidSecret(settings.webhook.webhookSecret)) {
-      errors.push(text('webhookSecretInvalid', 'Signing secret: use up to 512 ASCII characters (no accents or emoji)'));
+      fail('#webhookSecret', text('webhookSecretInvalid', 'Signing secret: use up to 512 ASCII characters (no accents or emoji)'));
     }
 
     // Settings a list of choices feeds: a value the list does not offer (a hand-edited file) shows as a blank select and is
     // read back as nothing on the next Save. Only a value that differs from the saved one is checked, so a stored value an
     // older version allowed does not block an unrelated Save
     const savedSettings = (this && this.settingsBaseline) || {};
-    const CHOICES = [['updates', 'checkIntervalHours', [6, 12, 24, 48, 168]], ['history', 'exportFormat', ['json', 'csv', 'txt', 'md']],
-      ['history', 'historyBackup', ['off', 'daily', 'weekly', 'monthly']], ['duplicatePrevention', 'duplicateUnit', ['minutes', 'hours', 'days']],
-      ['duplicatePrevention', 'duplicateScope', ['full_url', 'domain', 'path']], ['duplicatePrevention', 'duplicateAction', ['skip', 'update']],
-      ['detection', 'cacheScope', ['domain', 'path', 'full']]];
-    for (const [group, key, allowed] of CHOICES) {
+    const CHOICES = [['updates', 'checkIntervalHours', [6, 12, 24, 48, 168], '#checkIntervalHours'], ['history', 'exportFormat', ['json', 'csv', 'txt', 'md'], '#exportFormat'],
+      ['history', 'historyBackup', ['off', 'daily', 'weekly', 'monthly'], '#historyBackup'], ['duplicatePrevention', 'duplicateUnit', ['minutes', 'hours', 'days'], '#duplicateUnit'],
+      ['duplicatePrevention', 'duplicateScope', ['full_url', 'domain', 'path'], '#duplicateScope'], ['duplicatePrevention', 'duplicateAction', ['skip', 'update'], '#duplicateAction'],
+      ['detection', 'cacheScope', ['domain', 'path', 'full'], '#cacheScope']];
+    for (const [group, key, allowed, field] of CHOICES) {
       const value = settings[group] && settings[group][key];
       if (value !== undefined && value !== (savedSettings[group] || {})[key] && !allowed.includes(value)) {
-        errors.push(text('settingsUiErrChoiceFmt', `A setting has a value its list does not offer: ${group}.${key}`, `${group}.${key}`));
+        fail(field, text('settingsUiErrChoiceFmt', `A setting has a value its list does not offer: ${group}.${key}`, `${group}.${key}`));
       }
     }
 
     if (settings.detection && settings.detection.scanMode !== undefined && !ScanScope.MODES.includes(settings.detection.scanMode)) {
-      errors.push(text('settingsUiErrScanMode', 'Sites to scan must be every site except the skipped ones, or only the chosen sites'));
+      fail('#scanMode', text('settingsUiErrScanMode', 'Sites to scan must be every site except the skipped ones, or only the chosen sites'));
     }
     for (const key of ScanScope.SITE_LIST_KEYS) {
       const list = settings.detection && settings.detection[key];
       if (list !== undefined && !(Array.isArray(list) && list.every(site => typeof site === 'string'))) {
-        errors.push(text('settingsUiErrSiteList', 'A list of sites must hold site names only'));
+        fail(null, text('settingsUiErrSiteList', 'A list of sites must hold site names only'));
         break;
       }
     }
@@ -817,14 +875,64 @@ SettingsUI.validateSettings = function(settings) {
     if (settings.duplicatePrevention && settings.duplicatePrevention.duplicateDuration !== undefined) {
       const duration = settings.duplicatePrevention.duplicateDuration;
       if (!Number.isInteger(duration) || duration < 1 || duration > 999) {
-        errors.push(text('settingsUiErrDuplicateDuration', 'Duplicate duration must be between 1 and 999'));
+        fail('#duplicateDuration', text('settingsUiErrDuplicateDuration', 'Duplicate duration must be between 1 and 999'));
       }
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
+      fields
     };
+};
+
+// The controls a failed Save marked (aria-invalid) and has not seen edited since
+SettingsUI._invalidMarked = [];
+
+/** Takes the marks of a failed Save off: when the field is edited, on the next Save, and when Settings closes. */
+SettingsUI.clearInvalidMarks = function() {
+    for (const element of SettingsUI._invalidMarked.splice(0)) {
+      if (element.dataset && element.dataset.saveInvalid) {
+        delete element.dataset.saveInvalid;
+        element.removeAttribute('aria-invalid');
+      }
+    }
+};
+
+/**
+ * A Save that found a value that is not valid shows where, besides the message: every invalid field is marked (aria-invalid)
+ * until it is edited, and the first one is brought into view, its tab opened, its card unfolded (cards start folded) and the
+ * focus on it. A field that marks itself (the signing secret) keeps doing that and is only focused.
+ * @param {string[]} [fields] selectors, as validateSettings names them
+ */
+SettingsUI.revealInvalidFields = function(fields) {
+    SettingsUI.clearInvalidMarks();
+    const elements = (Array.isArray(fields) ? fields : []).map(selector => document.querySelector(selector)).filter(Boolean);
+    if (!elements.length) return;
+    for (const element of elements) {
+      if (element.getAttribute('aria-invalid') === 'true') continue;
+      element.setAttribute('aria-invalid', 'true');
+      element.dataset.saveInvalid = '1';
+      SettingsUI._invalidMarked.push(element);
+      const edited = () => {
+        if (element.dataset.saveInvalid) {
+          delete element.dataset.saveInvalid;
+          element.removeAttribute('aria-invalid');
+        }
+      };
+      element.addEventListener('input', edited, { once: true });
+      element.addEventListener('change', edited, { once: true });
+    }
+    const first = elements[0];
+    const tab = first.closest('.settings-tab-content');
+    if (tab && typeof this.switchTab === 'function') this.switchTab(tab.getAttribute('data-tab-content'));
+    for (let depth = 0; depth < 5; depth++) {
+      const card = first.closest('.settings-card.is-collapsed');
+      if (!card) break;
+      SettingsUI.foldCard(card, card.querySelector(SettingsUI.CARD_HEAD_SELECTOR), false);
+    }
+    first.focus({ preventScroll: true });
+    first.scrollIntoView({ block: 'center' });
 };
 
 SettingsUI.setupEventListeners = function() {
@@ -862,9 +970,10 @@ SettingsUI.setupEventListeners = function() {
       settingsBtn.addEventListener('click', () => this.showSettings());
     }
 
+    // ✕, a click outside and Escape ask before dropping changes that are not saved; Cancel is the person saying so already
     const closeSettingsBtn = document.querySelector('#closeSettingsModal');
     if (closeSettingsBtn) {
-      closeSettingsBtn.addEventListener('click', () => this.hideSettings());
+      closeSettingsBtn.addEventListener('click', () => SettingsUI.requestHideSettings.call(this));
     }
 
     const saveSettingsBtn = document.querySelector('#saveSettingsBtn');
@@ -912,14 +1021,14 @@ SettingsUI.setupEventListeners = function() {
     if (settingsModal) {
       settingsModal.addEventListener('click', (e) => {
         if (e.target === settingsModal || e.target.classList.contains('base-modal-backdrop')) {
-          this.hideSettings();
+          SettingsUI.requestHideSettings.call(this);
         }
       });
     }
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.isModalVisible) {
-        this.hideSettings();
+        SettingsUI.requestHideSettings.call(this);
       }
     });
 
@@ -1463,9 +1572,20 @@ SettingsUI.readNameList = function(selector, fallback) {
   return box.value.split(/\r?\n/).map(line => line.replace(/\s+/g, ' ').trim()).filter(name => name && !seen.has(name.toLowerCase()) && seen.add(name.toLowerCase())).slice(0, 100);
 };
 
-/** Bytes as MB with one decimal ("2.1 MB"), KB below that. */
+/** Bytes as MB with one decimal ("2.1 MB", "2,1 MB" in German), KB below that: the decimal mark follows the interface language. */
 SettingsUI.formatStorageSize = function(bytes) {
-  return bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  const megabytes = bytes >= 1048576;
+  const value = megabytes ? bytes / 1048576 : Math.max(1, Math.round(bytes / 1024));
+  const digits = megabytes ? 1 : 0;
+  let number = value.toFixed(digits);
+  const locale = typeof FormatUtils !== 'undefined' && typeof FormatUtils.uiLocale === 'function' ? FormatUtils.uiLocale() : null;
+  if (locale && typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
+    try {
+      // Latin digits, as the counts beside it, and no thousands separator, which would read as a decimal mark in another language
+      number = new Intl.NumberFormat(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false, numberingSystem: 'latn' }).format(value);
+    } catch (_) { /* the plain number */ }
+  }
+  return `${number} ${megabytes ? 'MB' : 'KB'}`;
 };
 
 /** Does the background worker run the code this page was loaded with (it answers the History ping)? */

@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown으로 복사"
+  },
+  "presetAutoUpdateOff": {
+    "message": "자동 업데이트 확인이 꺼져 있습니다"
+  },
+  "restoreNotIncludedNote": {
+    "message": "백업에 포함되지 않는 항목: 웹훅 및 공유 정보, 그리고 기록에서 감시 중인 페이지."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "설정 변경 사항이 아직 저장되지 않았습니다. 닫기 전에 저장할까요?"
   }
 }

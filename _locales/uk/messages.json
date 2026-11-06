@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Копіювати як Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Автоперевірку оновлень вимкнено"
+  },
+  "restoreNotIncludedNote": {
+    "message": "До копії не входять дані вебхука та спільного доступу, а також перелік відстежуваних сторінок Історії."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Зміни налаштувань ще не збережено. Зберегти їх перед закриттям?"
   }
 }

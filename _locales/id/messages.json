@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Salin sebagai Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Pemeriksaan pembaruan otomatis nonaktif"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Tidak termasuk dalam cadangan: detail webhook dan berbagi, serta halaman Riwayat mana yang dipantau."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Perubahan pengaturan Anda belum disimpan. Simpan sebelum menutup?"
   }
 }

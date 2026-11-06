@@ -19,6 +19,8 @@ SettingsUI.handleSaveSettings = async function() {
       NotificationHelper.error(
         _fmt('invalidSettingsFmt', 'Invalid settings: ' + validation.errors.join(', '), validation.errors.join(', '))
       );
+      // And show where: the tab and card of the first invalid field, the focus, aria-invalid
+      SettingsUI.revealInvalidFields.call(this, validation.fields);
       return;
     }
 

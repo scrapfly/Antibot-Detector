@@ -1061,7 +1061,7 @@
     "message": "कैप्चर हटा दिया गया"
   },
   "capturesExportedFmt": {
-    "message": "{0} कैप्चर एक्सपोर्ट किए गए"
+    "message": "एक्सपोर्ट किए गए कैप्चर: {0}"
   },
   "allCapturesCleared": {
     "message": "सभी कैप्चर साफ़ कर दिए गए"
@@ -5757,7 +5757,7 @@
     "message": "आपके नियम ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "इतिहास ({0} प्रविष्टियाँ)"
+    "message": "इतिहास (प्रविष्टियाँ: {0})"
   },
   "restoreModeLabel": {
     "message": "नियम और इतिहास"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown के रूप में कॉपी करें"
+  },
+  "presetAutoUpdateOff": {
+    "message": "स्वचालित अद्यतन जांच बंद है"
+  },
+  "restoreNotIncludedNote": {
+    "message": "बैकअप में शामिल नहीं: Webhook और शेयरिंग का ब्योरा, और इतिहास के किन पेजों पर नज़र रखी जा रही है।"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या बंद करने से पहले उन्हें सहेजें?"
   }
 }

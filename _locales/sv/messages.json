@@ -5757,7 +5757,7 @@
     "message": "Dina regler ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Historik ({0} poster)"
+    "message": "Historik (poster: {0})"
   },
   "restoreModeLabel": {
     "message": "Regler och historik"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopiera som Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Automatisk sökning efter uppdateringar är av"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Ingår inte i en säkerhetskopia: uppgifter om webhook och delning samt vilka sidor i Historik som bevakas."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan du stänger?"
   }
 }

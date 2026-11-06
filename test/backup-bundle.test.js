@@ -39,13 +39,47 @@ test('a backup holds settings, the person\'s own rules and History, and nothing 
   assert.deepStrictEqual(Object.keys(bundle.settings.share || {}), ['provider'], 'sharing keeps only the provider choice');
 });
 
-test('customOnly() keeps the rules a restore would apply and drops the official ones', () => {
+test('a backup carries the theme, as it carries the language: it is a setting the person chose, kept apart from the settings object', () => {
+  const bundle = B.build({ ...parts, theme: 'light' });
+  assert.strictEqual(bundle.theme, 'light');
+  assert.strictEqual(B.parse(JSON.stringify(bundle)).bundle.theme, 'light');
+  assert.ok(!('theme' in B.build(parts)), 'no theme given: none written (an older popup, a test)');
+  assert.ok(!('theme' in JSON.parse(JSON.stringify(B.build({ ...parts, theme: 5 })))), 'only text is a theme');
+  // A file with a theme but nothing else is still empty: the theme alone is not a reason to offer a restore
+  assert.strictEqual(B.parse(JSON.stringify({ format: 'scrapfly-backup', version: 1, theme: 'dark' })).reason, 'empty');
+  // And a file from before the theme parses as it always did
+  const older = { ...B.build(parts) };
+  delete older.theme;
+  assert.strictEqual(B.parse(JSON.stringify(older)).ok, true);
+});
+
+test('customOnly() keeps the rules a restore would apply: the person\'s own, and the official ones they switched off', () => {
   const custom = B.customOnly(exported, d => d.id === 'detect-akamai');
   assert.deepStrictEqual(Object.keys(custom.detectors), ['antibot', 'captcha']);
-  assert.deepStrictEqual(Object.keys(custom.detectors.antibot), ['detect-mine']);
+  assert.deepStrictEqual(Object.keys(custom.detectors.antibot), ['detect-mine'], 'an official rule that is on is not in the file: a restore never changes it');
   assert.strictEqual(custom.version, '1.0');
   assert.deepStrictEqual(B.customOnly(undefined, () => false).detectors, {});
   assert.deepStrictEqual(B.customOnly({ detectors: { x: 5, y: { a: null } } }, () => false).detectors, {});
+});
+
+test('an official rule the person switched off stays in the file: a restore takes its on/off state back', () => {
+  const isOfficial = (d) => d.author === 'Scrapfly';
+  const off = { id: 'detect-cloudflare', author: 'Scrapfly', name: 'Cloudflare', enabled: false };
+  const on = { id: 'detect-akamai', author: 'Scrapfly', name: 'Akamai', enabled: true };
+  const unmarked = { id: 'detect-datadome', author: 'Scrapfly', name: 'DataDome' };
+  const mineOff = { id: 'detect-mine', author: 'Me', name: 'Mine', enabled: false };
+  const file = { version: '1.0', exportedAt: 'x', detectors: { antibot: { 'detect-cloudflare': off, 'detect-akamai': on, 'detect-datadome': unmarked, 'detect-mine': mineOff } } };
+  const kept = B.customOnly(file, isOfficial);
+  assert.deepStrictEqual(Object.keys(kept.detectors.antibot), ['detect-cloudflare', 'detect-mine'], 'switched-off official and the person\'s own, nothing else');
+  assert.strictEqual(kept.detectors.antibot['detect-cloudflare'].enabled, false);
+  assert.deepStrictEqual(kept.detectors.antibot['detect-cloudflare'], off, 'the record as the importer reads it');
+  // Only a switch that is explicitly off counts: "off" is not "missing", "null" or a string
+  const odd = { detectors: { antibot: { a: { id: 'a', author: 'Scrapfly', enabled: null }, b: { id: 'b', author: 'Scrapfly', enabled: 'false' }, c: { id: 'c', author: 'Scrapfly', enabled: 0 } } } };
+  assert.deepStrictEqual(B.customOnly(odd, isOfficial).detectors, {});
+  // It counts as a rule of the file (the restore dialog says how many the file applies)
+  const bundle = B.build({ ...parts, detectors: kept });
+  assert.strictEqual(B.summarize(bundle).rules, 2);
+  assert.strictEqual(B.parse(JSON.stringify(bundle)).ok, true);
 });
 
 test('parse() accepts a backup and says what it holds', () => {

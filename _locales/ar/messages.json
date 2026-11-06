@@ -782,7 +782,7 @@
     "message": "نمط واحد"
   },
   "methodPatternsFmt": {
-    "message": "{0} أنماط"
+    "message": "الأنماط: {0}"
   },
   "methodAddPattern": {
     "message": "إضافة نمط"
@@ -875,7 +875,7 @@
     "message": "لم يُعثر على أي اكتشافات"
   },
   "historyMatchCountFmt": {
-    "message": "{0} تطابقات"
+    "message": "التطابقات: {0}"
   },
   "historyOneMatch": {
     "message": "تطابق واحد"
@@ -6444,7 +6444,7 @@
     "message": "تركيبة واحدة"
   },
   "combinationsCountFmt": {
-    "message": "{0} تركيبات"
+    "message": "التركيبات: {0}"
   },
   "historyBulkScan": {
     "message": "الفحص الجماعي"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "نسخ بصيغة Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "التحقق التلقائي من التحديثات معطّل"
+  },
+  "restoreNotIncludedNote": {
+    "message": "لا تتضمن النسخة الاحتياطية تفاصيل الـ webhook والمشاركة، ولا الصفحات التي تخضع للمراقبة في السجل."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل الإغلاق؟"
   }
 }

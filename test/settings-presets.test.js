@@ -51,6 +51,27 @@ test('pending() lists only what would change, counting a missing setting as its 
   assert.deepStrictEqual(ids('nothing', {}), []);
 });
 
+test('Privacy also turns off the automatic update check: it contacts GitHub, and the preset says it sends nothing out', () => {
+  const change = SettingsPresets.PRESETS.privacy.changes.find(item => item.path === 'updates.autoUpdate');
+  assert.ok(change, 'the update check is one of the changes');
+  assert.strictEqual(change.value, false);
+  assert.strictEqual(change.key, 'presetAutoUpdateOff');
+  assert.strictEqual(change.label, 'Automatic update checks are off');
+  const paths = (settings) => SettingsPresets.pending('privacy', settings, defaults).map(item => item.path);
+  // Listed and applied only when the check is on now (it is off by default, like the webhook)
+  assert.ok(paths({ updates: { autoUpdate: true } }).includes('updates.autoUpdate'));
+  assert.ok(!paths({}).includes('updates.autoUpdate'));
+  assert.ok(!paths({ updates: { autoUpdate: false } }).includes('updates.autoUpdate'));
+  assert.deepStrictEqual(SettingsPresets.patchOf('privacy', { updates: { autoUpdate: true, checkIntervalHours: 24 } }, defaults).updates, { autoUpdate: false },
+    'only the switch changes: how often it would check is left as it is');
+  // The preset names nothing else that reaches out to the network on its own: the watchlist is idle while History is paused,
+  // which this preset does
+  assert.ok(!SettingsPresets.PRESETS.privacy.changes.some(item => item.path === 'history.historyWatch'));
+  assert.ok(SettingsPresets.PRESETS.privacy.changes.some(item => item.path === 'history.historyEnabled' && item.value === false));
+  // And the developer preset leaves updates alone
+  assert.ok(!SettingsPresets.PRESETS.developer.changes.some(item => item.path.startsWith('updates.')));
+});
+
 test('patchOf() is the nested object of the pending changes', () => {
   assert.deepStrictEqual(SettingsPresets.patchOf('developer', { debugMode: true, jsApi: { enableJsApi: true } }, defaults),
     { debugVerbose: true, logCollectorEnabled: true });

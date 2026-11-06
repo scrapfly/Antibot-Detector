@@ -1061,7 +1061,7 @@
     "message": "Aufzeichnung gelöscht"
   },
   "capturesExportedFmt": {
-    "message": "{0} Aufzeichnungen exportiert"
+    "message": "Exportierte Aufzeichnungen: {0}"
   },
   "allCapturesCleared": {
     "message": "Alle Aufzeichnungen gelöscht"
@@ -5757,7 +5757,7 @@
     "message": "Deine Regeln ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Verlauf ({0} Einträge)"
+    "message": "Verlauf (Einträge: {0})"
   },
   "restoreModeLabel": {
     "message": "Regeln und Verlauf"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Als Markdown kopieren"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Die automatische Suche nach Updates ist aus"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Nicht Teil einer Sicherung: Angaben zu Webhook und Teilen sowie welche Seiten im Verlauf überwacht werden."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Deine Änderungen an den Einstellungen sind noch nicht gespeichert. Vor dem Schließen speichern?"
   }
 }

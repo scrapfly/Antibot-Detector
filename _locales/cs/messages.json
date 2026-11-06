@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopírovat jako Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Automatická kontrola aktualizací je vypnutá"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Součástí zálohy nejsou údaje webhooku a sdílení ani to, které stránky Historie se sledují."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Změny nastavení ještě nejsou uloženy. Uložit je před zavřením?"
   }
 }

@@ -5757,7 +5757,7 @@
     "message": "Je regels ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Geschiedenis ({0} items)"
+    "message": "Geschiedenis (items: {0})"
   },
   "restoreModeLabel": {
     "message": "Regels en geschiedenis"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopiëren als Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Automatisch controleren op updates staat uit"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Niet in een back-up: webhook- en deelgegevens, en welke pagina's in Geschiedenis worden gevolgd."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Je wijzigingen in de instellingen zijn nog niet opgeslagen. Opslaan voordat je sluit?"
   }
 }

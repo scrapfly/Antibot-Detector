@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "复制为 Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "自动检查更新已关闭"
+  },
+  "restoreNotIncludedNote": {
+    "message": "备份不包含：Webhook 和分享信息，以及历史记录中被监视的页面。"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "对设置的更改尚未保存。要在关闭前保存吗？"
   }
 }

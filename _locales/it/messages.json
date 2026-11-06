@@ -1061,7 +1061,7 @@
     "message": "Cattura eliminata"
   },
   "capturesExportedFmt": {
-    "message": "Esportate {0} catture"
+    "message": "Catture esportate: {0}"
   },
   "allCapturesCleared": {
     "message": "Tutte le catture eliminate"
@@ -5757,7 +5757,7 @@
     "message": "Le tue regole ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Cronologia ({0} voci)"
+    "message": "Cronologia (voci: {0})"
   },
   "restoreModeLabel": {
     "message": "Regole e cronologia"
@@ -6613,5 +6613,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Copia come Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Il controllo automatico degli aggiornamenti è disattivato"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Non fanno parte di un backup: i dati del webhook e della condivisione, e quali pagine della cronologia sono monitorate."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Le modifiche alle impostazioni non sono ancora state salvate. Salvarle prima di chiudere?"
   }
 }
