@@ -45,26 +45,50 @@ function demMatchCookieName(name, pattern, options = {}) {
     return nameToCompare.startsWith(patternToCompare);
 }
 
+const DEM_REGEX_FIELDS = [['nameRegex', 'name'], ['valueRegex', 'value'], ['textRegex', 'text'], ['selectorRegex', 'selector'], ['urlRegex', 'urlPattern']];
+
 /**
- * Whether `pattern` is a regular expression of an official rule as Scrapfly ships it: the rule's own copy, or, for a rule
- * the person edited, the shipped copy it keeps (a regex the person wrote or changed is not shipped). Read only for a text
- * longer than PatternCache.REGEX_TEXT_LIMIT, so the walk over the rules costs nothing next to the match.
+ * The copy of an official rule as Scrapfly ships it: the rule itself, or, for a rule the person edited, the shipped copy it
+ * keeps. Null for any other rule, and for an edited one that keeps no shipped copy (an older build's edit): its regexes may
+ * all be the person's.
+ */
+function demShippedCopy(detector) {
+    if (!detector || typeof detector !== 'object' || typeof DetectionUtils === 'undefined' || typeof DetectionUtils.isOfficialDetector !== 'function') return null;
+    if (!DetectionUtils.isOfficialDetector(detector)) return null;
+    if (detector.userModified) return detector.officialSnapshot && typeof detector.officialSnapshot === 'object' ? detector.officialSnapshot : null;
+    return detector;
+}
+
+/** The regular expressions (their source text) the shipped copy of `detector` declares, as a Set; empty for any other rule. */
+function demShippedRegexes(detector) {
+    const found = new Set();
+    const shipped = demShippedCopy(detector);
+    const detection = shipped && shipped.detection;
+    if (!detection || typeof detection !== 'object') return found;
+    for (const rules of Object.values(detection)) {
+        if (!Array.isArray(rules)) continue;
+        for (const rule of rules) {
+            if (!rule || typeof rule !== 'object') continue;
+            for (const [flag, field] of DEM_REGEX_FIELDS) {
+                if (rule[flag] === true && typeof rule[field] === 'string') found.add(rule[field]);
+            }
+        }
+    }
+    return found;
+}
+
+/**
+ * Whether `pattern` is a regular expression an official rule of `detectors` ships (see demShippedCopy). Asked only when no
+ * rule is being run (runDetector says which rule it runs, and only that rule's shipped copy counts there), for a text
+ * longer than PatternCache.REGEX_TEXT_LIMIT.
  * @param {object} detectors - The engine's detectors, by category
  * @param {string} pattern
  */
 function demShipsRegex(detectors, pattern) {
-    if (!detectors || typeof detectors !== 'object' || typeof DetectionUtils === 'undefined' || typeof DetectionUtils.isOfficialDetector !== 'function') return false;
-    const fields = [['nameRegex', 'name'], ['valueRegex', 'value'], ['textRegex', 'text'], ['selectorRegex', 'selector'], ['urlRegex', 'urlPattern']];
+    if (!detectors || typeof detectors !== 'object') return false;
     for (const category of Object.values(detectors)) {
         for (const detector of Object.values(category || {})) {
-            if (!DetectionUtils.isOfficialDetector(detector)) continue;
-            const shipped = detector.userModified && detector.officialSnapshot ? detector.officialSnapshot : detector;
-            for (const rules of Object.values((shipped && shipped.detection) || {})) {
-                if (!Array.isArray(rules)) continue;
-                for (const rule of rules) {
-                    if (rule && fields.some(([flag, field]) => rule[flag] === true && rule[field] === pattern)) return true;
-                }
-            }
+            if (demShippedRegexes(detector).has(pattern)) return true;
         }
     }
     return false;
@@ -73,11 +97,15 @@ function demShipsRegex(detectors, pattern) {
 /**
  * The text a regular expression reads: all of it for a regex an official rule ships, and the first
  * PatternCache.REGEX_TEXT_LIMIT characters for any other (one a person wrote or imported, that can be slow in a way no
- * check of its source tells: `.*` between two literals over a minified bundle). `this` is the engine, which knows the rules.
+ * check of its source tells: `.*` between two literals over a minified bundle). `this` is the engine: while runDetector runs a
+ * rule, `shippedRegexes` holds that rule's shipped regexes, which decide; otherwise the engine's rules do.
  */
 function demTextForRegex(text, pattern) {
     const cut = DetectionEngineManager.patternCache.textForRegex(text);
-    return cut === text || demShipsRegex(this && this.detectors, pattern) ? text : cut;
+    if (cut === text) return text;
+    const shipped = this && this.shippedRegexes;
+    if (shipped instanceof Set) return shipped.has(pattern) ? text : cut;
+    return demShipsRegex(this && this.detectors, pattern) ? text : cut;
 }
 
 function demMatchPattern(text, pattern, options = {}, preparedLower) {
@@ -289,6 +317,6 @@ function demMatchDOMGroups(groups, element) {
 
 // Node test export (no-op in the browser, where `module` is undefined).
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { demMatchPattern, demMatchPatternWithCapture, demMatchCookieName, demEscapeRegExp,
+    module.exports = { demMatchPattern, demMatchPatternWithCapture, demMatchCookieName, demEscapeRegExp, demShippedRegexes,
         demParseDOMSelector, demMatchDOMSelector, demMatchDOMGroups };
 }

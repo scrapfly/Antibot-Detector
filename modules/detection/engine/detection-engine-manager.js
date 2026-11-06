@@ -709,8 +709,22 @@ class DetectionEngineManager {
      *   their number after its text, instead of one match per element. A scan asks for it (detectOnPage): a result is saved
      *   with the cache, History and the webhook, and `a[href]` on a page of 5,000 links was 5,000 identical matches. The
      *   default keeps one match per element, which is what Rules → Test counts ("{0} found") through matches.length.
+     *   officialCopy: the stored rule whose shipped copy says which regexes read all of a long text (Rules → Test runs the
+     *   editor's unsaved copy, whose own marks say nothing); the detector itself by default
      */
     runDetector(detector, pageData, options = {}) {
+        // A regex reads all of a text longer than PatternCache.REGEX_TEXT_LIMIT only when this rule's shipped copy has it
+        const outer = this.shippedRegexes;
+        const officialCopy = Object.prototype.hasOwnProperty.call(options, 'officialCopy') ? options.officialCopy : detector;
+        this.shippedRegexes = typeof demShippedRegexes === 'function' ? demShippedRegexes(officialCopy) : new Set();
+        try {
+            return this.runDetectorRules(detector, pageData, options);
+        } finally {
+            this.shippedRegexes = outer;
+        }
+    }
+
+    runDetectorRules(detector, pageData, options = {}) {
         const { url, content = [], dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
         const matches = [];
 
@@ -1790,6 +1804,9 @@ class DetectionEngineManager {
                     expiredKeys.push(key);
                     continue;
                 }
+                // Only a result saved under "Domain" stands for its site: one saved under "Path" or "Full URL" (before the scope
+                // went back to "Domain") is one page's, and another page of the site is scanned instead
+                if (stored.cacheScope !== 'domain') continue;
                 const storedHostname = stored.hostname || UrlUtils.getHostnameFromUrl(stored.url || '');
                 // The same site, so also the same port (www and the bare host share a result, localhost:3000 and :8080 do not)
                 if (UrlUtils.hostnamesMatch(requestedHostname, storedHostname) && UrlUtils.portOf(url) === UrlUtils.portOf(stored.url) && sameHooks(stored) && sameRules(stored) && !hidden(stored)) {
@@ -2151,6 +2168,34 @@ class DetectionEngineManager {
                 await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: pruned.storage });
             }
             return { expired: pruned.expired, evicted: pruned.evicted, privateRemoved: pruned.privateRemoved || 0 };
+        } finally {
+            releaseStorageLock();
+        }
+    }
+
+    /**
+     * After the cache scope changed (Settings → Data): the results saved under any other scope go, under the storage lock,
+     * so no page is answered with what was found for another page under the old setting. Writes only when one went.
+     * @param {string} scope - The scope now in force ('domain', 'path' or 'full')
+     * @returns {Promise<number>} How many results went
+     */
+    static async dropOtherScopes(scope) {
+        if (!['domain', 'path', 'full'].includes(scope)) return 0;
+        const releaseStorageLock = await acquireDetectionStorageLock();
+        try {
+            const result = await chrome.storage.local.get([DetectionEngineManager.STORAGE_KEY]);
+            const storage = result[DetectionEngineManager.STORAGE_KEY];
+            // Text that is not JSON is left for the next write, as pruneStoredDetections leaves it
+            if (!storage || typeof storage !== 'object' || Array.isArray(storage)) return 0;
+            let dropped = 0;
+            for (const [key, stored] of Object.entries(storage)) {
+                if (!stored || stored.cacheScope !== scope) {
+                    delete storage[key];
+                    dropped++;
+                }
+            }
+            if (dropped > 0) await chrome.storage.local.set({ [DetectionEngineManager.STORAGE_KEY]: storage });
+            return dropped;
         } finally {
             releaseStorageLock();
         }
