@@ -252,7 +252,7 @@ DetectionRequests.requestCurrentTabDetection = async function(context) {
 };
 
 DetectionRequests.processDetectionData = async function(context, detectionData) {
-    const { detection, detectionEngine, detectorManager, history } = context;
+    const { detection, detectionEngine, detectorManager } = context;
 
     if (detection.debugMode) {
       Logger.debug('UI', '[DEBUG processDetectionData] Called with:', {
@@ -364,12 +364,6 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
 
       if (detection.debugMode) {
         Logger.debug('UI', '[DEBUG processDetectionData] displayResults() completed');
-      }
-
-      // Update history if we have detections
-      if (detections.length > 0 && history && typeof history.loadHistory === 'function') {
-        if (this.debugMode) Logger.debug('UI', 'Detection: Updating history');
-        await history.loadHistory();
       }
     } catch (error) {
       Logger.error('UI', 'Detection: Failed to process detection data:', error);
