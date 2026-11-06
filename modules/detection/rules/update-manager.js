@@ -1078,6 +1078,12 @@ class UpdateManager {
     static async scheduleCheck() {
         try {
             const settings = await Utils.getSettings();
+            // Settings that cannot be read are not "automatic updates off": the alarm stays, and so do the updates waiting for a
+            // decision (an off switch drops the ones from GitHub). The next start schedules again
+            if (settings.settingsUnreadable === true) {
+                Logger.background('Settings unreadable, the update check is left as it is');
+                return;
+            }
             if (settings.updates?.autoUpdate) {
                 setTimeout(async () => {
                     try {

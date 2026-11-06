@@ -11,6 +11,7 @@ const vm = require('node:vm');
  *   store      what is stored (values are cloned on the way in and out, as the browser does)
  *   files      repository files to run in the context, in order
  *   globals    added to the context (they win over the defaults below)
+ *   chrome     more of the chrome API (alarms, tabs, notifications...), next to storage and runtime.getURL
  *   index      the shipped detectors/index.json that fetch answers (the real one by default)
  *
  * Returns { ctx, store, state, writes, warnings, fetched, run(file) }:
@@ -22,7 +23,7 @@ const root = path.join(__dirname, '..', '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
-function storageWorld({ store = {}, files = [], globals = {}, index = null } = {}) {
+function storageWorld({ store = {}, files = [], globals = {}, chrome = {}, index = null } = {}) {
   const state = { failGet: null };
   const writes = [];
   const warnings = [];
@@ -42,7 +43,7 @@ function storageWorld({ store = {}, files = [], globals = {}, index = null } = {
   const ctx = vm.createContext({
     console, URL, Date, JSON, Math, Set, Map, Promise, setTimeout, clearTimeout, AbortController,
     Logger: logger,
-    chrome: { storage: { local, onChanged: { addListener() {} } }, runtime: { getURL: (p) => p } },
+    chrome: { storage: { local, onChanged: { addListener() {} } }, runtime: { getURL: (p) => p }, ...chrome },
     fetch: async (url) => {
       fetched.push(url);
       if (url === 'detectors/index.json') return { ok: true, json: async () => plain(index || JSON.parse(read('detectors/index.json'))) };

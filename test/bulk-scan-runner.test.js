@@ -334,3 +334,45 @@ test('"Scan the failed pages again" scans the pages that failed, keeps the finis
   assert.deepEqual(w.stored().items.map(i => i.url), ['https://c.example/']);
 });
 
+// ---- Settings that cannot be read
+
+// (what Utils.getSettings answers then: {} that carries a mark no copy or JSON text keeps)
+const unreadable = () => Object.defineProperty({}, 'settingsUnreadable', { value: true });
+
+test('settings that cannot be read: a run does not start, no page is opened, and nothing is listed as skipped for a reason that is not true', async () => {
+  const w = world({ settings: { blacklistedDomains: ['skip.example'] }, scans: { 'https://a.example/': { results: [] } } });
+  w.ctx.Utils.getSettings = async () => unreadable();
+  const started = await w.Runner.start({ entries: ['https://a.example/', 'https://skip.example/'] });
+  assert.deepEqual(plain(started), { ok: false, error: 'settings' });
+  assert.equal(w.log.created.length, 0, 'no tab');
+  assert.equal(w.stored(), undefined, 'no run was saved');
+  assert.equal(await w.Runner.state(), null);
+  // The scope itself lets nothing through, for any caller that asks it
+  const scope = await w.Runner.scopeTest();
+  assert.equal(scope('https://a.example/'), true);
+  assert.equal(scope('https://anything.example/'), true);
+
+  // Readable again: the same list runs, and the skipped site is skipped for its real reason
+  w.ctx.Utils.getSettings = async () => ({ detection: { scanMode: 'blocklist', blacklistedDomains: ['skip.example'], allowedDomains: [] } });
+  assert.equal((await w.Runner.start({ entries: ['https://a.example/', 'https://skip.example/'] })).ok, true);
+  await finished(w);
+  assert.deepEqual(w.stored().items.map(i => [i.url, i.status, i.reason || '']), [['https://a.example/', 'done', ''], ['https://skip.example/', 'skipped', 'scope']]);
+});
+
+test('settings that stop reading during a run stop it before the next page is opened; the pages left wait and can be scanned later', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] }, 'https://c.example/': { results: [] } } });
+  const readable = w.ctx.Utils.getSettings;
+  w.ctx.Utils.getSettings = async () => (w.log.created.length >= 1 ? unreadable() : readable());
+  assert.equal((await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/', 'https://c.example/'] })).ok, true);
+  await finished(w);
+  assert.deepEqual(w.log.created.map(c => c.url), ['https://a.example/'], 'only the page that was already open');
+  const run = w.stored();
+  assert.deepEqual([run.status, run.reason], ['stopped', 'error']);
+  assert.deepEqual(run.items.map(i => i.status), ['done', 'waiting', 'waiting']);
+  assert.equal(w.log.open.size, 0, 'its tab is closed');
+
+  w.ctx.Utils.getSettings = readable;
+  assert.equal((await w.Runner.start({ continueRun: true })).ok, true);
+  await finished(w);
+  assert.deepEqual(w.stored().items.map(i => i.status), ['done', 'done', 'done'], 'Scan the waiting pages goes on from where it stopped');
+});
