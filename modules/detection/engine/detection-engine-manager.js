@@ -639,10 +639,12 @@ class DetectionEngineManager {
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
         if (detector.detection?.url) {
-            // Use Set for O(1) duplicate checking instead of O(n) .some()
-            const addedUrlPatterns = new Set();
-
             for (const urlPattern of detector.detection.url) {
+                // A rule switched off with its own `enabled: false` is not read (hooks and response capture honour it too)
+                if (urlPattern.enabled === false) continue;
+                // One match per rule, wherever its address was seen first. The slot belongs to the rule: two rules with the
+                // same text (a copy with another confidence) each get theirs, so the outcome never depends on where it was seen
+                let ruleMatched = false;
                 const matchOptions = {
                     regex: urlPattern.textRegex === true,
                     wholeWord: urlPattern.textWholeWord === true,
@@ -656,7 +658,7 @@ class DetectionEngineManager {
                 // Match against full URL including query parameters for "contains" matching
                 const urlMatch = this.matchPatternWithCapture(url, urlPattern.text, matchOptions);
                 if (urlMatch) {
-                    addedUrlPatterns.add(urlPattern.text);
+                    ruleMatched = true;
                     matches.push({
                         type: 'url',
                         pattern: urlPattern.text,
@@ -672,10 +674,10 @@ class DetectionEngineManager {
                 if ((textScope === 'page_and_scripts' || textScope === 'all') && content && content.length > 0) {
                     for (const script of content) {
                         const scriptSrc = script.src || '';
-                        if (scriptSrc && !addedUrlPatterns.has(urlPattern.text)) {
+                        if (scriptSrc && !ruleMatched) {
                             const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.text, matchOptions);
                             if (scriptMatch) {
-                                addedUrlPatterns.add(urlPattern.text);
+                                ruleMatched = true;
                                 matches.push({
                                     type: 'url',
                                     pattern: urlPattern.text,
@@ -694,10 +696,10 @@ class DetectionEngineManager {
                 if (textScope === 'all' && externalContent && externalContent.length > 0) {
                     for (const resource of externalContent) {
                         const resourceUrl = resource.url || '';
-                        if (resourceUrl && !addedUrlPatterns.has(urlPattern.text)) {
+                        if (resourceUrl && !ruleMatched) {
                             const resourceMatch = this.matchPatternWithCapture(resourceUrl, urlPattern.text, matchOptions);
                             if (resourceMatch) {
-                                addedUrlPatterns.add(urlPattern.text);
+                                ruleMatched = true;
                                 matches.push({
                                     type: 'url',
                                     pattern: urlPattern.text,
@@ -715,10 +717,10 @@ class DetectionEngineManager {
                 // Check ALL network request URLs if scope is 'all' (NEW: captures XHR, fetch, etc.)
                 if (textScope === 'all' && pageData.networkUrls && pageData.networkUrls.length > 0) {
                     for (const networkUrl of pageData.networkUrls) {
-                        if (addedUrlPatterns.has(urlPattern.text)) break; // Already found, skip remaining URLs
+                        if (ruleMatched) break; // Already found, skip remaining URLs
                         const networkMatch = this.matchPatternWithCapture(networkUrl.url, urlPattern.text, matchOptions);
                         if (networkMatch) {
-                            addedUrlPatterns.add(urlPattern.text);
+                            ruleMatched = true;
                             matches.push({
                                 type: 'url',
                                 pattern: urlPattern.text,
