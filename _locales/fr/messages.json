@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Ne font pas partie d’une sauvegarde : les informations du webhook et du partage, et les pages de l’historique surveillées."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant de fermer ?"
   }
 }

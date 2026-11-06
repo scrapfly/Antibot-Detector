@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "バックアップに含まれないもの: Webhook と共有の情報、および履歴のどのページを監視しているか。"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "設定の変更はまだ保存されていません。閉じる前に保存しますか？"
   }
 }

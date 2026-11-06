@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Ingår inte i en säkerhetskopia: uppgifter om webhook och delning samt vilka sidor i Historik som bevakas."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan du stänger?"
   }
 }

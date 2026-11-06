@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Không nằm trong bản sao lưu: thông tin webhook và chia sẻ, cùng các trang trong Lịch sử đang được theo dõi."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi đóng?"
   }
 }

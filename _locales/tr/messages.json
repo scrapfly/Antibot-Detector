@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Yedeğe dahil değildir: Webhook ve paylaşım bilgileri ile Geçmiş'te hangi sayfaların izlendiği."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Kapatmadan önce kaydedilsin mi?"
   }
 }

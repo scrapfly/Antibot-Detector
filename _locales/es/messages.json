@@ -6621,5 +6621,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "No forman parte de la copia: los datos del webhook y de compartir, ni qué páginas del historial se vigilan."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de cerrar?"
   }
 }

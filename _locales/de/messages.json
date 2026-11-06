@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Nicht Teil einer Sicherung: Angaben zu Webhook und Teilen sowie welche Seiten im Verlauf überwacht werden."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Deine Änderungen an den Einstellungen sind noch nicht gespeichert. Vor dem Schließen speichern?"
   }
 }

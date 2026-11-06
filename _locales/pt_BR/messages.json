@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Não fazem parte do backup: os dados do webhook e de compartilhamento, e quais páginas do histórico são monitoradas."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "As alterações nas configurações ainda não foram salvas. Salvar antes de fechar?"
   }
 }

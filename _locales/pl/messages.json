@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "Kopia nie zawiera danych webhooka i udostępniania ani informacji, które strony Historii są obserwowane."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Zmiany w ustawieniach nie zostały jeszcze zapisane. Zapisać je przed zamknięciem?"
   }
 }

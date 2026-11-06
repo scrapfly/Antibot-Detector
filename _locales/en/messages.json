@@ -7289,5 +7289,9 @@
   "restoreNotIncludedNote": {
     "message": "Not part of a backup: webhook and sharing details, and which History pages are watched.",
     "description": "Restore dialog: a note under the choices about what a backup never holds (the webhook and sharing connections, and which History pages are on the watchlist)"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Your changes to the settings are not saved yet. Save them before closing?",
+    "description": "Settings: the question asked when Settings is closed (✕, Escape or a click outside it) with changes that are not saved. The buttons are Cancel, Discard and Save"
   }
 }

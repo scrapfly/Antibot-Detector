@@ -6619,5 +6619,8 @@
   },
   "restoreNotIncludedNote": {
     "message": "備份不包含：Webhook 和分享的詳細資料，以及「歷史記錄」中被監看的網頁。"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "對設定的變更尚未儲存。要在關閉前儲存嗎？"
   }
 }
