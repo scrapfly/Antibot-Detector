@@ -20,7 +20,7 @@ function harness() {
       commitSettings: async () => { calls.commit++; return { success: true, settings: {}, previous: {} }; }
     },
     SettingsTransfer: { diagnostics: () => ({}) },
-    NotificationHelper: { success: (text) => calls.toasts.push(['ok', text]), error: (text) => calls.toasts.push(['error', text]), _notificationCache: null },
+    NotificationHelper: { success: (text) => calls.toasts.push(['ok', text]), error: (text) => calls.toasts.push(['error', text]) },
     WorkerMessages: new Proxy({}, { get: (_, name) => String(name) }),
     UrlUtils: { clearUrlHashCache() {} },
     chrome: { runtime: { sendMessage: () => Promise.resolve() } }
@@ -39,6 +39,13 @@ test('a reset saves although the settings could not be loaded, and the page then
   assert.deepEqual(page.settings, defaults);
   assert.deepEqual(page.settingsBaseline, defaults, 'later saves are measured from the repaired settings');
   assert.deepEqual(calls.toasts, [], 'no error toast');
+});
+
+test('saving does not reach for a cache of the notifications switch that is gone (toasts no longer read that switch)', () => {
+  // NotificationHelper had a 30-second cache of Settings → Notifications; it was removed, and Save still cleared it
+  assert.doesNotMatch(source, /_notificationCache/);
+  const manager = fs.readFileSync(path.join(__dirname, '..', 'modules/ui/notification-manager.js'), 'utf8');
+  assert.doesNotMatch(manager, /_notificationCache/, 'nothing defines it either');
 });
 
 test('any other save still needs the settings to have been loaded', async () => {
