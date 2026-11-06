@@ -10,7 +10,7 @@
  *   changeText()   one changed protection as a line: "70% → 95% (+25) · New evidence: Cookies"
  *   toMarkdown()   the result as a Markdown report for a ticket or a chat
  *   view()         what the dialog draws, as plain data: four counts, and the groups of rows with the text of each
- *   shortDateTime(), rangeDates(), whereText()   the dialog's dates (no seconds) and the other scan's page path
+ *   shortDateTime(), rangeDates(), optionDates(), whereText()   the dialog's dates (no seconds) and the other scan's page path
  *
  * Detections are matched by name (case-insensitive), like HistoryPolicy.diffProtections; unlike it,
  * fingerprinting is included, since this is a look at everything the two scans found.
@@ -222,6 +222,20 @@
     return a === b ? [format.long(first), format.long(second)] : [a, b];
   }
 
+  /**
+   * The dates of the "Compare with" list: without seconds, except for scans whose line would read the same as another's (two scans
+   * in one minute with the same count), which keep them so the person can tell them apart.
+   * @param {Array<{time: number, count: number}>} scans - In the list's order
+   * @param {{short: Function, long: Function}} format - short(ms) and long(ms) write a date
+   * @returns {string[]} One date per scan
+   */
+  function optionDates(scans, format) {
+    const lines = scans.map((scan) => `${format.short(scan.time)}\u0000${scan.count}`);
+    const seen = new Map();
+    for (const line of lines) seen.set(line, (seen.get(line) || 0) + 1);
+    return scans.map((scan, index) => (seen.get(lines[index]) > 1 ? format.long(scan.time) : format.short(scan.time)));
+  }
+
   /** The address of a scan without its origin: path, query and fragment ("/cart?ref=mail"); '' when it cannot be read. */
   function pagePath(url) {
     try {
@@ -279,7 +293,7 @@
     return { identical: result.identical, chips, groups };
   }
 
-  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, methodsOf, timeOf, shortDateTime, rangeDates, pagePath, whereText, view };
+  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
   root.HistoryCompare = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

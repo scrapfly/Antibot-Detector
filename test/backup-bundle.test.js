@@ -82,10 +82,30 @@ test('an official rule the person switched off stays in the file: a restore take
   assert.strictEqual(B.parse(JSON.stringify(bundle)).ok, true);
 });
 
+test('"Your rules ({0})" counts the person\'s own rules, not the official ones they switched off that the file also carries', () => {
+  const isOfficial = (d) => d.author === 'Scrapfly';
+  const file = { detectors: { antibot: {
+    'detect-cloudflare': { id: 'detect-cloudflare', author: 'Scrapfly', name: 'Cloudflare', enabled: false },
+    'detect-akamai': { id: 'detect-akamai', author: 'Scrapfly', name: 'Akamai', enabled: false },
+    'detect-mine': { id: 'detect-mine', author: 'Me', name: 'Mine' }
+  } } };
+  const bundle = B.build({ ...parts, detectors: B.customOnly(file, isOfficial) });
+  const summary = B.summarize(bundle, isOfficial);
+  assert.strictEqual(summary.rules, 1, 'one rule of the person\'s own');
+  assert.strictEqual(summary.ruleRecords, 3, 'the file still has a rules part to restore: two switches and the rule');
+  assert.strictEqual(B.parse(JSON.stringify(bundle), isOfficial).summary.rules, 1, 'parse() gives the same count');
+  // Only switched-off official rules, nothing else: the backup is not empty, and it holds none of the person's own rules
+  const switchesOnly = { format: 'scrapfly-backup', version: 1, detectors: { version: '1.0', detectors: { antibot: { 'detect-akamai': file.detectors.antibot['detect-akamai'] } } } };
+  const parsed = B.parse(JSON.stringify(switchesOnly), isOfficial);
+  assert.strictEqual(parsed.ok, true, 'a rules part of switches only is something to restore');
+  assert.strictEqual(parsed.summary.rules, 0);
+  assert.strictEqual(parsed.summary.ruleRecords, 1);
+});
+
 test('parse() accepts a backup and says what it holds', () => {
   const result = B.parse(JSON.stringify(B.build(parts)));
   assert.strictEqual(result.ok, true);
-  assert.deepStrictEqual(result.summary, { settings: true, rules: 2, history: 2 });
+  assert.deepStrictEqual(result.summary, { settings: true, rules: 2, ruleRecords: 2, history: 2 });
   assert.strictEqual(result.bundle.history.items[0].note, 'check it');
 });
 
@@ -109,7 +129,7 @@ test('a backup that holds only some of the parts still restores those', () => {
   const only = { format: 'scrapfly-backup', version: 1, history: { items } };
   const parsed = B.parse(JSON.stringify(only));
   assert.strictEqual(parsed.ok, true);
-  assert.deepStrictEqual(parsed.summary, { settings: false, rules: 0, history: 2 });
+  assert.deepStrictEqual(parsed.summary, { settings: false, rules: 0, ruleRecords: 0, history: 2 });
 });
 
 test('legacyKind() recognises the older exports so Restore can hand them to their importers', () => {
@@ -123,7 +143,7 @@ test('legacyKind() recognises the older exports so Restore can hand them to thei
 
 test('the file name carries the date, and build() needs SettingsTransfer', () => {
   assert.strictEqual(B.fileName(NOW), 'scrapfly-backup-2026-10-20.json');
-  assert.deepStrictEqual(B.summarize(null), { settings: false, rules: 0, history: 0 });
+  assert.deepStrictEqual(B.summarize(null), { settings: false, rules: 0, ruleRecords: 0, history: 0 });
   const saved = globalThis.SettingsTransfer;
   globalThis.SettingsTransfer = undefined;
   assert.throws(() => B.build(parts), /SettingsTransfer is not loaded/);

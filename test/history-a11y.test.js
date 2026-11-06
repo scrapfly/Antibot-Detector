@@ -505,3 +505,136 @@ test('in English nothing changes: the tips read as before', () => {
   assert.match(html, /data-tip="Confidence: 90%"/);
   assert.match(html, /data-tip="Difficulty: Medium"/);
 });
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 3.1.4 review: the focus when the list is drawn again under a dialog, while the person scrolls, or in batches; the compare dialog
+// ---------------------------------------------------------------------------------------------------------------------------------
+/** Every focus() on a card or its "…" button, with the options it was given. */
+function spyFocus(h) {
+  const calls = [];
+  const all = h.page.list.querySelectorAll.bind(h.page.list);
+  const spy = (el) => {
+    if (!el || el._spied) return;
+    const own = el.focus;
+    el.focus = function (options) { calls.push(options); own.call(this, options); };
+    el._spied = true;
+  };
+  h.page.list.querySelectorAll = (selector) => { const cards = all(selector); cards.forEach(card => { spy(card); spy(card.more); }); return cards; };
+  return calls;
+}
+
+test('a redraw gives the focus back without scrolling the page to the card (a background write while the person scrolls)', () => {
+  const h = drawn(load(), ['a', 'b', 'c']);
+  const calls = spyFocus(h);
+  h.page.focus(h.page.list.cards[2]);
+  h.view.renderHistory();
+  assert.deepEqual(where(h), { id: 'c', control: 'card' });
+  assert.equal(calls.length, 1);
+  assert.deepEqual({ ...calls[0] }, { preventScroll: true }, 'the page stays where the wheel put it');
+});
+
+test('a note or a delete whose dialog still holds the focus while it closes gives the entry its focus back', async () => {
+  const h = drawn(load(), ['a', 'b', 'c']);
+  // The browser leaves the focus on the dialog's button until the dialog is taken out of the page
+  const closing = { dataset: {}, isConnected: true, closest: (selector) => (selector === '.notification-confirm:not([data-open])' ? {} : null) };
+  h.page.focus(closing);
+  h.view.sendHistoryChange = async () => ({ status: 'ok' });
+  h.view.loadHistoryFromStorage = async () => {};
+  await h.view.annotateItem(h.view.historyItems[2], { note: 'x' });
+  assert.deepEqual(where(h), { id: 'c', control: 'menu' });
+  // A dialog that is still open keeps it
+  const open = { dataset: {}, isConnected: true, closest: () => null };
+  h.page.focus(open);
+  await h.view.annotateItem(h.view.historyItems[1], { note: 'y' });
+  assert.equal(h.page.active, open);
+});
+
+test('a long page drawn in batches does not pull the focus back from the search the person went to meanwhile', () => {
+  const h = load();
+  const frames = [];
+  h.context.requestAnimationFrame = (fn) => { frames.push(fn); return frames.length; };
+  h.page.list.insertAdjacentHTML = function (_, html) {
+    const keep = this.cards;
+    this.innerHTML = this.html + html;
+    // Cards already drawn stay the same elements
+    this.cards = [...keep, ...this.cards.slice(keep.length)];
+  };
+  const items = Array.from({ length: 45 }, (_, i) => entry(`e${i}`, { timestamp: 1700000000000 - i }));
+  h.view.historyItems = items;
+  h.view.renderHistoryPage(items.slice(0, 5));
+  h.page.focus(h.page.list.cards[1]);
+  h.view.renderHistoryPage(items);
+  const search = h.page.doc.elements['#historySearch'];
+  h.page.focus(search);
+  while (frames.length) frames.shift()();
+  assert.equal(h.page.list.cards.length, 45, 'every card was drawn');
+  assert.equal(h.page.active, search, 'the search keeps the focus');
+  // Nobody moved: the focus goes back to the card once the last batch is drawn
+  h.page.focus(h.page.list.cards[1]);
+  h.view.renderHistoryPage(items);
+  while (frames.length) frames.shift()();
+  assert.deepEqual(where(h), { id: 'e1', control: 'card' });
+});
+
+/** Elements enough for the compare dialog to be built: classes, attributes, children and text. */
+function withElements(h) {
+  class El {
+    constructor(tag) { Object.assign(this, { tagName: tag.toUpperCase(), children: [], attrs: {}, dataset: {}, style: { setProperty() {} }, className: '', hidden: false, _text: '', isConnected: true }); }
+    set textContent(value) { this._text = String(value); this.children = []; }
+    get textContent() { return this._text + this.children.map(c => c.textContent).join(''); }
+    set innerHTML(value) { this._html = value; }
+    setAttribute(k, v) { this.attrs[k] = String(v); }
+    getAttribute(k) { return k in this.attrs ? this.attrs[k] : null; }
+    removeAttribute(k) { delete this.attrs[k]; }
+    append(...nodes) { this.children.push(...nodes); }
+    appendChild(node) { this.children.push(node); return node; }
+    replaceChildren(...nodes) { this.children = nodes; }
+    addEventListener() {}
+    get classList() { const el = this; return { toggle() {}, contains: (c) => el.className.split(/\s+/).includes(c) }; }
+    all() { return this.children.flatMap(c => [c, ...c.all()]); }
+    find(cls) { return this.all().find(el => el.className.split(/\s+/).includes(cls)); }
+    focus() { h.page.focus(this); }
+  }
+  h.page.doc.createElement = (tag) => new El(tag);
+  h.context.addEventListener = () => {};
+  h.context.removeEventListener = () => {};
+  vm.runInContext(read('modules/core/history-compare.js'), h.context, { filename: 'history-compare.js' });
+}
+
+test('Compare: two scans in the same minute with the same count read differently; a long result is a named stop for the keyboard', async () => {
+  const h = load();
+  withElements(h);
+  const scan = (id, at) => entry(id, { url: 'https://shop.example/page', hostname: 'shop.example', timestamp: at });
+  const T = Date.UTC(2026, 9, 20, 9, 30, 10);
+  h.view.historyItems = [scan('now', T + 3600000), scan('x', T), scan('y', T + 20000)];
+  let dialog = null;
+  h.context.NotificationHelper.form = async (options) => { dialog = options; return false; };
+  await h.view.compareHistoryItem(h.view.historyItems[0]);
+  const options = dialog.content.find('select-field').children.map(option => option.textContent);
+  assert.equal(options.length, 2);
+  assert.notEqual(options[0], options[1], `the two lines read differently: ${options.join(' | ')}`);
+  const result = dialog.content.find('history-compare-result');
+  assert.equal(result.tabIndex, 0, 'Tab reaches the result, so the arrows scroll it');
+  assert.equal(result.getAttribute('role'), 'region');
+  assert.equal(result.getAttribute('aria-label'), 'Compare scans', 'named like the dialog');
+  // The dialog's Tab trap counts it as a stop
+  const manager = read('modules/ui/notification-manager.js');
+  const selector = manager.match(/const focusables = \(\) => Array\.from\(dialog\.querySelectorAll\('([^']+)'\)\)/)[1];
+  assert.ok(selector.split(',').map(s => s.trim()).includes('[tabindex="0"]'), selector);
+});
+
+test('Compare: closing the dialog over a list drawn again under it puts the focus on the entry, not on the page', async () => {
+  const h = drawn(load(), ['a', 'b', 'c']);
+  withElements(h);
+  h.view.historyItems = h.view.historyItems.map(item => ({ ...item, url: 'https://shop.example/page', hostname: 'shop.example' }));
+  h.view.renderHistory();
+  const closing = { dataset: {}, isConnected: true, closest: (selector) => (selector === '.notification-confirm:not([data-open])' ? {} : null) };
+  h.context.NotificationHelper.form = async () => {
+    // A scan was saved while the dialog was open: every card is new, and the "…" button it came from is gone
+    h.page.focus(closing);
+    h.view.renderHistory();
+    return false;
+  };
+  await h.view.compareHistoryItem(h.view.historyItems[1]);
+  assert.deepEqual(where(h), { id: 'b', control: 'card' });
+});

@@ -215,12 +215,12 @@ test('while the pointer is on a toast, or the keyboard is in it, its time waits;
   await h.say('success', 'Settings saved');
   h.advance(2000);
   const toast = h.el('Settings saved');
-  toast.fire('mouseenter');
+  toast.fire('pointermove');
   const bar = toast.querySelector('.notification-progress-bar');
   assert.ok(Math.abs(parseFloat(bar.style.width) - 100 / 3) < 0.5, `the bar stops at a third: ${bar.style.width}`);
   h.advance(60000);
   assert.deepEqual(h.visible(), ['Settings saved'], 'a minute later it is still there');
-  toast.fire('mouseleave');
+  toast.fire('pointerleave');
   h.advance(990);
   assert.deepEqual(h.visible(), ['Settings saved'], 'the second that was left runs on');
   h.advance(10 + FADE);
@@ -230,15 +230,42 @@ test('while the pointer is on a toast, or the keyboard is in it, its time waits;
   await h.say('warning', 'Could not download: A', { duration: 8000 });
   const warning = h.el('Could not download: A');
   warning.fire('focusin');
-  warning.fire('mouseenter');
+  warning.fire('pointermove');
   h.advance(30000);
   assert.deepEqual(h.visible(), ['Could not download: A']);
-  warning.fire('mouseleave');
+  warning.fire('pointerleave');
   h.advance(30000);
   assert.deepEqual(h.visible(), ['Could not download: A'], 'focus still holds it');
   warning.fire('focusout');
   h.advance(8000 + FADE);
   assert.deepEqual(h.inDom(), []);
+});
+
+test('a toast that appears under a pointer that does not move is not held: only a pointer that moves on it holds its time', async () => {
+  const h = load();
+  await h.say('success', 'Settings saved');
+  const toast = h.el('Settings saved');
+  // The browser says "enter" when a toast is drawn under a still pointer: that is not the person pointing at it
+  toast.fire('mouseenter');
+  toast.fire('pointerenter');
+  toast.fire('mouseover');
+  h.advance(3000 + FADE);
+  assert.deepEqual(h.inDom(), [], 'it went away on time');
+});
+
+test('a micro toast ("Copied") shows at once, even with two longer notes on the screen and more waiting', async () => {
+  const h = load();
+  await h.say('warning', 'Could not download: A', { duration: 8000 });
+  await h.say('warning', 'Could not download: B', { duration: 8000 });
+  await h.say('info', 'Waiting note', { duration: 8000 });
+  await h.say('micro', 'Copied');
+  assert.ok(h.visible().includes('Copied'), `on screen at once: ${h.visible().join(' | ')}`);
+  assert.ok(!h.visible().includes('Waiting note'), 'the longer note still waits for its place');
+  h.advance(1500 + FADE);
+  assert.ok(!h.inDom().includes('Copied'), 'gone after its moment');
+  assert.deepEqual(h.visible(), ['Could not download: A', 'Could not download: B'], 'the micro toast took no place from the others');
+  h.advance(8000);
+  assert.ok(h.inDom().includes('Waiting note'), 'the note that waited shows when a place is free');
 });
 
 test('the same text again starts its time over; a toast that is already leaving is not given a second life', async () => {

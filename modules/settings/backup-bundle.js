@@ -44,8 +44,10 @@
     return { version: (exported && exported.version) || '1.0', exportedAt: (exported && exported.exportedAt) || undefined, detectors };
   }
 
-  const ruleCount = (detectors) => (isObject(detectors) && isObject(detectors.detectors)
-    ? Object.values(detectors.detectors).reduce((sum, records) => sum + (isObject(records) ? Object.keys(records).length : 0), 0) : 0);
+  /** How many rule records the file's rules part holds (`keep(detector)` says which to count; all of them when not given). */
+  const ruleCount = (detectors, keep) => (isObject(detectors) && isObject(detectors.detectors)
+    ? Object.values(detectors.detectors).reduce((sum, records) => sum + (isObject(records)
+      ? Object.values(records).filter(detector => !keep || (isObject(detector) && keep(detector))).length : 0), 0) : 0);
 
   /**
    * @param {{extensionVersion: string, now?: number, settings: object, languageOverride?: string, theme?: string, detectors: object, historyItems: Array}} parts
@@ -67,17 +69,29 @@
     };
   }
 
-  function summarize(bundle) {
+  /**
+   * What a backup holds. `rules` counts the person's own rules (what "Your rules ({0})" says); since 3.1.4 the file also carries
+   * the official rules they switched off, which `ruleRecords` counts with them (whether there is a rules part to restore at all).
+   * @param {object} bundle
+   * @param {Function} [isOfficial] - isOfficial(detector); without it every record counts as the person's own
+   */
+  function summarize(bundle, isOfficial) {
     const b = isObject(bundle) ? bundle : {};
+    const official = typeof isOfficial === 'function' ? isOfficial : () => false;
     return {
       settings: isObject(b.settings) && Object.keys(b.settings).length > 0,
-      rules: ruleCount(b.detectors),
+      rules: ruleCount(b.detectors, detector => !official(detector)),
+      ruleRecords: ruleCount(b.detectors),
       history: Array.isArray(b.history && b.history.items) ? b.history.items.length : 0
     };
   }
 
-  /** @returns {{ok: true, bundle: object, summary: object}|{ok: false, reason: 'json'|'format'|'newer'|'invalid'|'empty'}} */
-  function parse(text) {
+  /**
+   * @param {string} text
+   * @param {Function} [isOfficial] - For the summary (summarize)
+   * @returns {{ok: true, bundle: object, summary: object}|{ok: false, reason: 'json'|'format'|'newer'|'invalid'|'empty'}}
+   */
+  function parse(text, isOfficial) {
     let data;
     try { data = JSON.parse(text); } catch (_) { return { ok: false, reason: 'json' }; }
     if (!isObject(data) || data.format !== FORMAT) return { ok: false, reason: 'format' };
@@ -86,8 +100,8 @@
     if (data.settings !== undefined && !isObject(data.settings)) return { ok: false, reason: 'invalid' };
     if (data.detectors !== undefined && !(isObject(data.detectors) && (data.detectors.detectors === undefined || isObject(data.detectors.detectors)))) return { ok: false, reason: 'invalid' };
     if (data.history !== undefined && !(isObject(data.history) && Array.isArray(data.history.items))) return { ok: false, reason: 'invalid' };
-    const summary = summarize(data);
-    if (!summary.settings && !summary.rules && !summary.history) return { ok: false, reason: 'empty' };
+    const summary = summarize(data, isOfficial);
+    if (!summary.settings && !summary.ruleRecords && !summary.history) return { ok: false, reason: 'empty' };
     return { ok: true, bundle: data, summary };
   }
 

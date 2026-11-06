@@ -296,8 +296,6 @@ SettingsUI.saveSettings = async function(options = {}) {
       }
       notifyWorker(WorkerMessages.SETTINGS_UPDATED);
       notifyWorker(WorkerMessages.SYNC_CATEGORY_COLORS);
-      // The saved toast follows the switch just saved, not the answer cached up to 30 seconds ago
-      if (NotificationHelper._notificationCache) NotificationHelper._notificationCache.value = null;
       if (options.notify !== false) NotificationHelper.success(((typeof I18n !== 'undefined') && I18n.get('settingsSavedToast')) || 'Settings saved');
       return true;
     } catch (error) {

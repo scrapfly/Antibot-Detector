@@ -8,13 +8,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ## [3.1.4] - 2026-11-05
 
 ### Added
-- The popup says when stored settings cannot be read and points to Settings → Data → Reset.
+- The popup says when stored settings or rules cannot be read: scanning pauses until Settings → Data → Reset, and rule changes are not saved over unreadable rules.
 
 ### Changed
 
 - After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
 - The popup says the extension must be reloaded, as soon as it opens, when its background part is out of date.
-- History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, and long Unchanged lists folded.
+- History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, long Unchanged lists folded, and seconds shown for scans in the same minute.
 - Settings: the Privacy preset also turns off automatic update checks, so it contacts nothing.
 - Settings: Back up everything keeps official rules you switched off and your theme, and Restore says what a backup never holds.
 - Rules: a regular expression in a rule you write or import reads only the first 100,000 characters of a page, script or request body.
@@ -44,12 +44,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules help: DOM rules search the page head, and requests made after the scan count for URL rules, in all 22 languages.
 - Rules: two URL rules with the same address both match with their own confidence, and a single pattern switched off no longer matches anything.
 - With the extension switched off, nothing of it stays on the page or in its frames.
-- When the settings cannot be read, no page is scanned and nothing is sent, instead of acting as if everything were allowed.
+- When the settings cannot be read, no page is scanned and nothing is sent or kept, instead of acting as if everything were allowed.
 - Webhook: a private-window page is not sent even when its tab cannot be read.
-- History: after pinning, adding a note or deleting, the keyboard stays on that entry or moves to the next one.
+- History: after pinning, adding a note or deleting, the keyboard stays on that entry or the next one, also when a dialog closes, without scrolling the list away.
 - History: screen readers hear what each number on a card means, search results are announced, and cards take fewer Tab presses (Scrape with Scrapfly is also in the … menu).
 - History details: each detection header is named after its detection, matched values copy from the keyboard, and confidence and difficulty tips follow your language.
-- Messages no longer push each other off the screen: each stays its full time, and hovering or focusing one pauses it.
+- Messages no longer push each other off the screen: each stays its full time, hovering or focusing one pauses it, and "Copied" shows at once.
 - Arabic: messages, the language list, Advanced How it works steps and Rules help bullets follow right-to-left layout, and change arrows point the right way.
 - Rules: the Update badge follows Settings → Data → Clear and Check now, and after deleting or resetting a rule the list keeps its page and keyboard focus.
 - Rules: screen readers announce how many rules the search and filters leave, or that none match.
@@ -57,6 +57,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Custom rules, edits to official rules and switched-off detectors are no longer replaced by the shipped rules when stored rules cannot be read.
 - When settings cannot be read, History records nothing, Bulk scan does not start, and backup, watchlist and update schedules stay as they were.
 - An overdue watchlist check is no longer pushed back each time the background worker wakes.
+- Restore: "Your rules" counts only your own rules, and Advanced says when saved captures cannot load because the extension needs a reload.
+- Switching the cache scope back to Domain no longer shows other pages' old results.
+- Rules → Test finds official patterns deep in long scripts, as a scan does, and page-reported window detections use the rule's own confidence and description.
 
 ## [3.1.3] - 2026-11-05
 

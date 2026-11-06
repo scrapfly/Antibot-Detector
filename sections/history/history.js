@@ -221,27 +221,39 @@ class History {
   takeFocusHint() {
     const hint = this._focusHint;
     this._focusHint = null;
-    const active = document.activeElement;
-    if (!hint || (active && active !== document.body) || Date.now() >= hint.until) return null;
+    if (!hint || !History.focusLost() || Date.now() >= hint.until) return null;
     const list = document.querySelector('#historyList');
     const cards = list ? Array.from(list.querySelectorAll('.history-item')) : [];
     return { id: hint.id, control: hint.control, at: Math.max(0, cards.findIndex(card => card.dataset.historyId === hint.id)) };
   }
 
   /**
+   * The keyboard is on no control the person can use: on the page itself, on an element no longer in it, or still inside a dialog
+   * that is closing (the browser leaves the focus on its button until the dialog is taken out of the page).
+   * @returns {boolean}
+   */
+  static focusLost() {
+    const active = document.activeElement;
+    if (!active || active === document.body || active.isConnected === false) return true;
+    return typeof active.closest === 'function' && !!active.closest('.notification-confirm:not([data-open])');
+  }
+
+  /**
    * Give the keyboard back after the list was drawn again: the control it was on, on the same entry's new card; when the entry
    * is gone (deleted, or a chip no longer keeps it), the card that took its place, the one before it when it was the last of the
-   * page, or the search when the page has no card left.
+   * page, or the search when the page has no card left. Only while the focus is lost: a long page is drawn in batches, and the
+   * person may have gone to the search meanwhile. The page does not scroll to the card (a write in the background redraws the
+   * list while the person scrolls with the wheel, away from the card that has the focus).
    * @param {?{id: string, at: number, control: string}} saved - From listFocusState or takeFocusHint
    */
   restoreListFocus(saved) {
-    if (!saved) return;
+    if (!saved || !History.focusLost()) return;
     const list = document.querySelector('#historyList');
     const cards = list ? Array.from(list.querySelectorAll('.history-item')) : [];
     const same = cards.find(card => card.dataset.historyId === saved.id);
     const card = same || cards[Math.min(Math.max(saved.at, 0), cards.length - 1)];
     const target = card ? ((same && saved.control && card.querySelector(saved.control)) || card) : document.querySelector('#historySearch');
-    if (target && typeof target.focus === 'function') target.focus();
+    if (target && typeof target.focus === 'function') target.focus({ preventScroll: true });
   }
 
   /**
@@ -252,7 +264,7 @@ class History {
    */
   refocusEntry(id, closed = null) {
     const active = document.activeElement;
-    if (active && active !== document.body && !(closed && closed.contains(active))) return;
+    if (!History.focusLost() && !(closed && active && closed.contains(active))) return;
     const list = document.querySelector('#historyList');
     const card = list ? Array.from(list.querySelectorAll('.history-item')).find(el => el.dataset.historyId === id) : null;
     if (card) card.focus({ preventScroll: true });
@@ -1102,11 +1114,13 @@ class History {
     const select = make('select', 'select-field history-dialog-input ui-select');
     // Each option is a translated sentence (date, count): its direction is the language's, not forced left to right
     select.setAttribute('dir', 'auto');
-    for (const candidate of candidates) {
-      const option = make('option', '', t('historyCompareOptionFmt', '{0} · {1} found', shortDate(HistoryCompare.timeOf(candidate)), countOf(candidate)));
+    // Two scans in the same minute with the same count would read the same: those keep their seconds
+    const optionDates = HistoryCompare.optionDates(candidates.map(candidate => ({ time: HistoryCompare.timeOf(candidate), count: countOf(candidate) })), { short: shortDate, long: dateText });
+    candidates.forEach((candidate, index) => {
+      const option = make('option', '', t('historyCompareOptionFmt', '{0} · {1} found', optionDates[index], countOf(candidate)));
       option.value = candidate.id;
       select.appendChild(option);
-    }
+    });
     const first = HistoryCompare.pickDefault(candidates, item);
     select.value = first ? first.id : candidates[0].id;
 
@@ -1124,6 +1138,10 @@ class History {
     const summary = make('ul', 'history-compare-summary');
     summary.setAttribute('role', 'list');
     const result = make('div', 'history-compare-result');
+    // It scrolls when the result is long: the keyboard reaches it (Tab, then the arrows), and a screen reader names it
+    result.tabIndex = 0;
+    result.setAttribute('role', 'region');
+    result.setAttribute('aria-label', t('historyCompareTitle', 'Compare scans'));
     const form = make('div', 'history-dialog-form history-compare');
     form.append(pick, range, summary, result);
 
@@ -1238,6 +1256,9 @@ class History {
     } finally {
       window.removeEventListener('keydown', keepEnterOnToggle, true);
     }
+    // The list may have been drawn again under the dialog (a scan saved): the "…" button it came from is gone, and the focus
+    // would fall to the page
+    this.refocusEntry(item.id);
     if (copy && current) {
       await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
         host: item.hostname || this.getDomainFromUrl(item.url), address: String(item.url || '').replace(/[?#].*$/s, ''),

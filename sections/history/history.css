@@ -1734,6 +1734,14 @@
   margin: -2px;
 }
 
+/* The result takes the keyboard when it is long (Tab, then the arrows scroll it): the same ring as the other controls, drawn
+   inside so the dialog's body does not cut it off */
+.history-compare-result:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
 .history-compare-group {
   display: flex;
   flex-direction: column;
