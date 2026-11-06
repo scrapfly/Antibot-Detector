@@ -38,6 +38,23 @@ class ScrapflyPopup {
     }
   }
 
+  /**
+   * Once per popup: say so when the stored settings cannot be read (the storage did not answer, or what is stored is not JSON or
+   * not an object). History, Bulk scan and what the worker schedules stay off while that lasts, and Settings → Data → Reset is
+   * what repairs it.
+   */
+  async warnIfSettingsUnreadable() {
+    if (this.settingsChecked) return;
+    this.settingsChecked = true;
+    try {
+      await StorageManager.readSettingsStrict();
+    } catch (error) {
+      // Only the kind of error: a JSON error quotes the stored text, which may hold a webhook secret
+      Logger.warn('UI', 'The stored settings cannot be read:', error && error.name);
+      NotificationHelper.error(FormatUtils.t('settingsUnreadableHint', 'The stored settings could not be read, so History and Bulk scan are paused. To repair them, use Settings → Data → Reset.'));
+    }
+  }
+
   async initialize() {
     try {
       if (typeof Logger !== 'undefined') {
@@ -47,6 +64,7 @@ class ScrapflyPopup {
       NotificationHelper.initialize();
       // Not waited for: the answer only matters when it says the worker is older than these files
       this.warnIfWorkerOutdated();
+      this.warnIfSettingsUnreadable();
 
       // Set version from manifest
       const manifest = chrome.runtime.getManifest();

@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "La partie en arrière-plan de l'extension n'est pas à jour. Rechargez l'extension sur la page des extensions, puis réessayez."
   },
+  "settingsUnreadableHint": {
+    "message": "Impossible de lire les paramètres enregistrés : l’historique et l’analyse groupée sont en pause. Pour les réparer, utilisez Paramètres → Données → Réinitialiser."
+  },
   "historyFiltersLabel": {
     "message": "Filtrer l’historique"
   },

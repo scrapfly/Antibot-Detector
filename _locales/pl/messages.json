@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Część rozszerzenia działająca w tle jest nieaktualna. Załaduj rozszerzenie ponownie na stronie rozszerzeń i spróbuj jeszcze raz."
   },
+  "settingsUnreadableHint": {
+    "message": "Nie udało się odczytać zapisanych ustawień, więc historia i skanowanie zbiorcze są wstrzymane. Aby je naprawić, użyj opcji Ustawienia → Dane → Resetuj."
+  },
   "historyFiltersLabel": {
     "message": "Filtruj historię"
   },

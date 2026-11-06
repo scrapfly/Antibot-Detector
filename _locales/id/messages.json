@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Bagian latar belakang ekstensi sudah usang. Muat ulang ekstensi di halaman ekstensi, lalu coba lagi."
   },
+  "settingsUnreadableHint": {
+    "message": "Pengaturan yang tersimpan tidak dapat dibaca, jadi Riwayat dan Pindai massal dijeda. Untuk memperbaikinya, gunakan Pengaturan → Data → Setel ulang."
+  },
   "historyFiltersLabel": {
     "message": "Filter riwayat"
   },

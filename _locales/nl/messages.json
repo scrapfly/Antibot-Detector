@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Het achtergronddeel van de extensie is verouderd. Laad de extensie opnieuw op de extensiepagina en probeer het nog eens."
   },
+  "settingsUnreadableHint": {
+    "message": "De opgeslagen instellingen konden niet worden gelezen, dus de geschiedenis en Bulkscan zijn gepauzeerd. Herstel ze via Instellingen → Gegevens → Resetten."
+  },
   "historyFiltersLabel": {
     "message": "Geschiedenis filteren"
   },

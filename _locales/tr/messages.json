@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "Uzantının arka plan bölümü güncel değil. Uzantıyı uzantılar sayfasından yeniden yükleyin ve tekrar deneyin."
   },
+  "settingsUnreadableHint": {
+    "message": "Kayıtlı ayarlar okunamadı, bu yüzden geçmiş ve toplu tarama duraklatıldı. Onarmak için Ayarlar → Veri → Sıfırla yolunu kullanın."
+  },
   "historyFiltersLabel": {
     "message": "Geçmişi filtrele"
   },

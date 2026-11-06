@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "擴充功能的背景部分已過期。請在擴充功能頁面重新載入該擴充功能，然後再試一次。"
   },
+  "settingsUnreadableHint": {
+    "message": "無法讀取已儲存的設定，因此歷史記錄和批次掃描已暫停。請前往「設定」→「資料」→「重設」進行修復。"
+  },
   "historyFiltersLabel": {
     "message": "篩選歷史記錄"
   },

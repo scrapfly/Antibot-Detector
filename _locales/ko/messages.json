@@ -5528,6 +5528,9 @@
   "workerOutdatedHint": {
     "message": "확장 프로그램의 백그라운드 부분이 오래되었습니다. 확장 프로그램 페이지에서 확장 프로그램을 새로고침한 후 다시 시도하세요."
   },
+  "settingsUnreadableHint": {
+    "message": "저장된 설정을 읽을 수 없어 기록과 일괄 스캔이 일시 중지되었습니다. 설정 → 데이터 → 초기화에서 복구하세요."
+  },
   "historyFiltersLabel": {
     "message": "기록 필터"
   },
