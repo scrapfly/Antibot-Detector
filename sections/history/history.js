@@ -244,10 +244,15 @@ class History {
     if (target && typeof target.focus === 'function') target.focus();
   }
 
-  /** The focus is on no element (the details window closed over a list that was drawn again): put it on this entry's card. */
-  refocusEntry(id) {
+  /**
+   * The focus is on no element, or still on a control of the window just hidden (the browser leaves it there for a moment), after
+   * the details window closed over a list that was drawn again: put it on this entry's card.
+   * @param {string} id - The entry's id
+   * @param {?Element} [closed] - The window that was closed
+   */
+  refocusEntry(id, closed = null) {
     const active = document.activeElement;
-    if (active && active !== document.body) return;
+    if (active && active !== document.body && !(closed && closed.contains(active))) return;
     const list = document.querySelector('#historyList');
     const card = list ? Array.from(list.querySelectorAll('.history-item')).find(el => el.dataset.historyId === id) : null;
     if (card) card.focus({ preventScroll: true });
@@ -1798,7 +1803,7 @@ class History {
       document.body.style.overflow = 'auto';
       // A scan saved while the window was open draws the list again: the card it was opened from is gone, and with it the place
       // the focus returns to
-      this.refocusEntry(this._modalItemId);
+      this.refocusEntry(this._modalItemId, modal);
     };
 
     if (closeBtn) {

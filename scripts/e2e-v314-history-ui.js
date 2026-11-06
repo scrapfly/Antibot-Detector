@@ -239,7 +239,8 @@ const RICH = [
         await page.click('#historyItemMenu [data-action="delete"]');
         await page.waitForSelector('.notification-confirm .notification-btn-confirm');
         await page.click('.notification-confirm .notification-btn-confirm');
-        await until(async () => !(await cardIds(page)).includes(id), 15000, `${id} gone`);
+        // The last one leaves the empty state, which hides the list without emptying it
+        await until(async () => !(await cardIds(page)).includes(id) || await page.$eval('#historyEmpty', el => getComputedStyle(el).display !== 'none'), 15000, `${id} gone`);
         await page.waitForSelector('.notification-confirm', { state: 'detached', timeout: 8000 });
       }
       assert.equal((await focusAt(page)).kind, 'search', 'History is empty: the search');

@@ -239,6 +239,21 @@ test('the list was drawn again while the "…" menu was open (a scan saved): clo
   assert.deepEqual(where(h), { id: 'b', control: 'menu' }, 'the same entry\'s new "…" button, not a button that is gone');
 });
 
+test('the details window closed over a list drawn again: the focus leaves the hidden window for the entry\'s new card', () => {
+  const h = drawn(load(), ['a', 'b']);
+  const value = { dataset: {} };
+  const modal = { contains: (other) => other === value };
+  // The browser leaves the focus on the value button of the window it just hid
+  h.page.focus(value);
+  h.view.refocusEntry('b', modal);
+  assert.deepEqual(where(h), { id: 'b', control: 'card' });
+  // The focus somewhere else (the person moved on): left alone
+  const search = h.page.doc.elements['#historySearch'];
+  h.page.focus(search);
+  h.view.refocusEntry('a', modal);
+  assert.equal(h.page.active, search);
+});
+
 test('the last entry deleted: the list is hidden, so the focus goes to the search; Clear filters (its own button goes away) does the same', () => {
   const h = drawn(load(), ['a']);
   h.page.focus(h.page.list.cards[0].more);
