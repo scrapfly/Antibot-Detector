@@ -58,6 +58,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - When settings cannot be read, History records nothing, Bulk scan does not start, and backup, watchlist and update schedules stay as they were.
 - An overdue watchlist check is no longer pushed back each time the background worker wakes.
 - Restore: "Your rules" counts only your own rules, and Advanced says when saved captures cannot load because the extension needs a reload.
+- Switching the cache scope back to Domain no longer shows other pages' old results.
+- Rules → Test finds official patterns deep in long scripts, as a scan does, and page-reported window detections use the rule's own confidence and description.
 
 ## [3.1.3] - 2026-11-05
 
