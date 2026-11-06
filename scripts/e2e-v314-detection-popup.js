@@ -302,6 +302,10 @@ async function scenario(name, fn) {
         };
       });
       assert.deepEqual(region, { role: 'status', live: 'polite', atomic: 'true', display: 'block', visibility: 'visible', clipped: true, inCard: false, directChild: true });
+      // It takes no room: a first page of three results (two cards) still needs no scrolling, as without it
+      await popup.waitForFunction(() => document.querySelector('#detectionFilters .history-filter-chip svg'), null, { polling: 250, timeout: 10000 });
+      await sleep(500); // the cards fade in
+      assert.equal(await room(popup), 0, 'the first page fits the popup');
       assert.equal(await footer(popup), 'Showing 1-2 of 3');
       assert.equal(await said(popup), 'Showing 1-2 of 3', 'the results are read out as the footer shows them');
 
