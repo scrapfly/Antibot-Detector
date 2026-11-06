@@ -2376,7 +2376,7 @@
     "message": "Font, media and stylesheet requests are not recorded."
   },
   "mhUrlLimit2": {
-    "message": "Only requests made before the scan count; the scan runs once the page has loaded."
+    "message": "The scan runs once the page has loaded; requests made after it still count when the URL scope is All."
   },
   "mhHeaderIntro": {
     "message": "Checks the headers of the page's own request and response, not those of scripts, XHR calls or frames."
@@ -2433,7 +2433,7 @@
     "message": "Code inside frames or workers, or loaded after the scan, is not searched."
   },
   "mhDomIntro": {
-    "message": "Looks for an element in the page body with a CSS selector, once the page has loaded."
+    "message": "Looks for an element in the page (head and body) with a CSS selector, once the page has loaded."
   },
   "mhDomHow1": {
     "message": "A tag, `.class`, `#id` or `[attribute]`, alone or combined: `.g-recaptcha[data-sitekey]`."
@@ -2448,7 +2448,7 @@
     "message": "Not supported, so the rule never matches: spaces or `>` between parts, `:pseudo-classes` and escapes."
   },
   "mhDomLimit2": {
-    "message": "The head, frames and shadow roots are not searched. The `value` attribute is not read; other attributes are compared on their first 100 characters."
+    "message": "Frames and shadow roots are not searched. The `value` attribute is not read; other attributes are compared on their first 100 characters."
   },
   "mhWindowIntro": {
     "message": "Checks a JavaScript global the page defines, such as `grecaptcha.render`."
@@ -2481,7 +2481,7 @@
     "message": "Calls count during the first seconds after the page loads (8 seconds at most)."
   },
   "mhJsHooksLimit2": {
-    "message": "Calls in workers or frames are not seen, except built-in targets in same-site frames."
+    "message": "Calls in workers or frames are not seen, except built-in targets in same-origin frames."
   },
   "mhPayloadIntro": {
     "message": "Searches the bodies of the POST, PUT, PATCH and DELETE requests the page sends, from any frame."
@@ -2497,6 +2497,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket messages are not read."
+  },
+  "mhRegexTextLimit": {
+    "message": "In rules you write or import, Regex reads only the first 100,000 characters of a text (a page, a script, a request body). Plain text, Whole word and Scrapfly's own rules read all of it."
   },
   "domCardTitle": {
     "message": "CSS selector"

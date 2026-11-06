@@ -2362,7 +2362,7 @@
     "message": "Požadavky na písma, média a šablony stylů se nezaznamenávají."
   },
   "mhUrlLimit2": {
-    "message": "Počítají se jen požadavky provedené před skenováním; skenování proběhne po načtení stránky."
+    "message": "Skenování proběhne po načtení stránky; počítají se i požadavky provedené později, pokud je rozsah URL Vše."
   },
   "mhHeaderIntro": {
     "message": "Kontroluje hlavičky vlastního požadavku a odpovědi stránky, nikoli hlavičky skriptů, volání XHR nebo rámců."
@@ -2419,7 +2419,7 @@
     "message": "Kód uvnitř rámců nebo workerů ani kód načtený po skenování se neprohledává."
   },
   "mhDomIntro": {
-    "message": "Po načtení stránky hledá v těle stránky element pomocí selektoru CSS."
+    "message": "Po načtení stránky hledá na stránce (head i body) element pomocí selektoru CSS."
   },
   "mhDomHow1": {
     "message": "Značka, `.class`, `#id` nebo `[attribute]`, samostatně nebo v kombinaci: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Nepodporováno, takže pravidlo nikdy neodpovídá: mezery nebo `>` mezi částmi, `:pseudo-classes` a escape sekvence."
   },
   "mhDomLimit2": {
-    "message": "Neprohledává se head, rámce ani shadow rooty. Atribut `value` se nečte; ostatní atributy se porovnávají podle prvních 100 znaků."
+    "message": "Neprohledávají se rámce ani shadow rooty. Atribut `value` se nečte; ostatní atributy se porovnávají podle prvních 100 znaků."
   },
   "mhWindowIntro": {
     "message": "Kontroluje globální proměnnou JavaScriptu definovanou stránkou, například `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Volání se počítají během prvních sekund po načtení stránky (nejvýše 8 sekund)."
   },
   "mhJsHooksLimit2": {
-    "message": "Volání ve workerech nebo rámcích nejsou vidět, kromě vestavěných cílů v rámcích ze stejného webu."
+    "message": "Volání ve workerech nebo rámcích nejsou vidět, kromě vestavěných cílů v rámcích ze stejného původu."
   },
   "mhPayloadIntro": {
     "message": "Prohledává těla požadavků POST, PUT, PATCH a DELETE, které stránka odesílá z libovolného rámce."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "Zprávy WebSocket se nečtou."
+  },
+  "mhRegexTextLimit": {
+    "message": "V pravidlech, která napíšete nebo importujete, čte Regex jen prvních 100 000 znaků textu (stránky, skriptu, těla požadavku). Prostý text, Celé slovo a vlastní pravidla Scrapfly čtou vše."
   },
   "domCardTitle": {
     "message": "Selektor CSS"

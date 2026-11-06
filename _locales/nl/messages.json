@@ -2362,7 +2362,7 @@
     "message": "Verzoeken voor lettertypen, media en stylesheets worden niet geregistreerd."
   },
   "mhUrlLimit2": {
-    "message": "Alleen verzoeken die vóór de scan zijn gedaan, tellen mee; de scan draait zodra de pagina is geladen."
+    "message": "De scan draait zodra de pagina is geladen; verzoeken die daarna worden gedaan tellen ook mee als het URL-bereik Alles is."
   },
   "mhHeaderIntro": {
     "message": "Controleert de headers van het eigen verzoek en de eigen respons van de pagina, niet die van scripts, XHR-aanroepen of frames."
@@ -2419,7 +2419,7 @@
     "message": "Code in frames of workers, of geladen na de scan, wordt niet doorzocht."
   },
   "mhDomIntro": {
-    "message": "Zoekt met een CSS-selector naar een element in de body van de pagina, zodra de pagina is geladen."
+    "message": "Zoekt met een CSS-selector naar een element op de pagina (head en body), zodra de pagina is geladen."
   },
   "mhDomHow1": {
     "message": "Een tag, `.class`, `#id` of `[attribute]`, alleen of gecombineerd: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Niet ondersteund, dus de regel komt nooit overeen: spaties of `>` tussen delen, `:pseudo-classes` en escapes."
   },
   "mhDomLimit2": {
-    "message": "De head, frames en shadow roots worden niet doorzocht. Het attribuut `value` wordt niet gelezen; andere attributen worden vergeleken op hun eerste 100 tekens."
+    "message": "Frames en shadow roots worden niet doorzocht. Het attribuut `value` wordt niet gelezen; andere attributen worden vergeleken op hun eerste 100 tekens."
   },
   "mhWindowIntro": {
     "message": "Controleert een globale JavaScript-variabele die de pagina definieert, zoals `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Aanroepen tellen mee tijdens de eerste seconden nadat de pagina is geladen (maximaal 8 seconden)."
   },
   "mhJsHooksLimit2": {
-    "message": "Aanroepen in workers of frames worden niet gezien, behalve ingebouwde doelen in frames van dezelfde site."
+    "message": "Aanroepen in workers of frames worden niet gezien, behalve ingebouwde doelen in frames van dezelfde origin."
   },
   "mhPayloadIntro": {
     "message": "Doorzoekt de bodies van de POST-, PUT-, PATCH- en DELETE-verzoeken die de pagina verzendt, vanuit elk frame."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket-berichten worden niet gelezen."
+  },
+  "mhRegexTextLimit": {
+    "message": "In regels die je zelf schrijft of importeert, leest Regex alleen de eerste 100.000 tekens van een tekst (een pagina, een script, de body van een verzoek). Gewone tekst, Heel woord en de eigen regels van Scrapfly lezen alles."
   },
   "domCardTitle": {
     "message": "CSS-selector"

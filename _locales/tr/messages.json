@@ -2362,7 +2362,7 @@
     "message": "Yazı tipi, medya ve stil sayfası istekleri kaydedilmez."
   },
   "mhUrlLimit2": {
-    "message": "Yalnızca taramadan önce yapılan istekler sayılır; tarama, sayfa yüklendikten sonra çalışır."
+    "message": "Tarama, sayfa yüklendikten sonra çalışır; URL kapsamı Tümü olduğunda sonrasında yapılan istekler de sayılır."
   },
   "mhHeaderIntro": {
     "message": "Sayfanın kendi isteğinin ve yanıtının üstbilgilerini kontrol eder; komut dosyalarının, XHR çağrılarının veya çerçevelerin üstbilgilerini değil."
@@ -2419,7 +2419,7 @@
     "message": "Çerçevelerin veya worker'ların içindeki ya da taramadan sonra yüklenen kod aranmaz."
   },
   "mhDomIntro": {
-    "message": "Sayfa yüklendikten sonra, sayfa gövdesinde bir CSS seçiciyle öğe arar."
+    "message": "Sayfa yüklendikten sonra, sayfada (head ve body) bir CSS seçiciyle öğe arar."
   },
   "mhDomHow1": {
     "message": "Bir etiket, `.class`, `#id` veya `[attribute]`; tek başına veya birleştirilmiş: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Desteklenmez, bu yüzden kural hiçbir zaman eşleşmez: parçalar arasındaki boşluklar veya `>`, `:pseudo-classes` ve kaçış dizileri."
   },
   "mhDomLimit2": {
-    "message": "Head, çerçeveler ve shadow root'lar aranmaz. `value` özniteliği okunmaz; diğer öznitelikler ilk 100 karakterleri üzerinden karşılaştırılır."
+    "message": "Çerçeveler ve shadow root'lar aranmaz. `value` özniteliği okunmaz; diğer öznitelikler ilk 100 karakterleri üzerinden karşılaştırılır."
   },
   "mhWindowIntro": {
     "message": "Sayfanın tanımladığı bir JavaScript global değişkenini kontrol eder, ör. `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Çağrılar, sayfa yüklendikten sonraki ilk saniyelerde sayılır (en fazla 8 saniye)."
   },
   "mhJsHooksLimit2": {
-    "message": "Worker'lardaki veya çerçevelerdeki çağrılar görülmez; aynı site çerçevelerindeki yerleşik hedefler hariç."
+    "message": "Worker'lardaki veya çerçevelerdeki çağrılar görülmez; aynı kaynaktaki çerçevelerdeki yerleşik hedefler hariç."
   },
   "mhPayloadIntro": {
     "message": "Sayfanın herhangi bir çerçeveden gönderdiği POST, PUT, PATCH ve DELETE isteklerinin gövdelerinde arar."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket mesajları okunmaz."
+  },
+  "mhRegexTextLimit": {
+    "message": "Yazdığınız veya içe aktardığınız kurallarda Regex, bir metnin yalnızca ilk 100.000 karakterini okur (bir sayfa, bir komut dosyası, bir isteğin gövdesi). Düz metin, Tam sözcük ve Scrapfly'nin kendi kuralları metnin tamamını okur."
   },
   "domCardTitle": {
     "message": "CSS seçici"

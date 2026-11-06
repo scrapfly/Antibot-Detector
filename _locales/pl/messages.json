@@ -2362,7 +2362,7 @@
     "message": "Żądania czcionek, multimediów i arkuszy stylów nie są rejestrowane."
   },
   "mhUrlLimit2": {
-    "message": "Liczą się tylko żądania wysłane przed skanowaniem; skanowanie uruchamia się po załadowaniu strony."
+    "message": "Skanowanie uruchamia się po załadowaniu strony; liczą się też żądania wysłane później, jeśli zakres URL to Wszystko."
   },
   "mhHeaderIntro": {
     "message": "Sprawdza nagłówki własnego żądania i odpowiedzi strony, a nie nagłówki skryptów, wywołań XHR ani ramek."
@@ -2419,7 +2419,7 @@
     "message": "Kod w ramkach lub workerach albo wczytany po skanowaniu nie jest przeszukiwany."
   },
   "mhDomIntro": {
-    "message": "Szuka elementu w treści strony za pomocą selektora CSS, po załadowaniu strony."
+    "message": "Szuka elementu na stronie (head i body) za pomocą selektora CSS, po załadowaniu strony."
   },
   "mhDomHow1": {
     "message": "Znacznik, `.klasa`, `#id` lub `[atrybut]`, osobno lub połączone: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Nieobsługiwane, więc reguła nigdy nie pasuje: spacje lub `>` między częściami, `:pseudoklasy` i znaki ucieczki."
   },
   "mhDomLimit2": {
-    "message": "Head, ramki i shadow root nie są przeszukiwane. Atrybut `value` nie jest odczytywany; inne atrybuty są porównywane na podstawie pierwszych 100 znaków."
+    "message": "Ramki i shadow root nie są przeszukiwane. Atrybut `value` nie jest odczytywany; inne atrybuty są porównywane na podstawie pierwszych 100 znaków."
   },
   "mhWindowIntro": {
     "message": "Sprawdza obiekt globalny JavaScript zdefiniowany przez stronę, taki jak `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Wywołania są liczone w pierwszych sekundach po załadowaniu strony (maksymalnie 8 sekund)."
   },
   "mhJsHooksLimit2": {
-    "message": "Wywołania w workerach lub ramkach nie są widoczne, z wyjątkiem wbudowanych celów w ramkach z tej samej witryny."
+    "message": "Wywołania w workerach lub ramkach nie są widoczne, z wyjątkiem wbudowanych celów w ramkach z tego samego źródła."
   },
   "mhPayloadIntro": {
     "message": "Przeszukuje treści żądań POST, PUT, PATCH i DELETE wysyłanych przez stronę z dowolnej ramki."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "Komunikaty WebSocket nie są odczytywane."
+  },
+  "mhRegexTextLimit": {
+    "message": "W regułach, które piszesz lub importujesz, Regex odczytuje tylko pierwsze 100 000 znaków tekstu (strony, skryptu, treści żądania). Zwykły tekst, Całe słowo i własne reguły Scrapfly odczytują go w całości."
   },
   "domCardTitle": {
     "message": "Selektor CSS"

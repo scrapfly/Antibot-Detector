@@ -2362,7 +2362,7 @@
     "message": "Les requêtes de polices, de médias et de feuilles de style ne sont pas enregistrées."
   },
   "mhUrlLimit2": {
-    "message": "Seules les requêtes faites avant l’analyse comptent ; l’analyse se lance une fois la page chargée."
+    "message": "L’analyse se lance une fois la page chargée ; les requêtes faites après comptent aussi quand la portée de l’URL est Toutes."
   },
   "mhHeaderIntro": {
     "message": "Vérifie les en-têtes de la requête et de la réponse de la page elle-même, pas ceux des scripts, des appels XHR ou des frames."
@@ -2419,7 +2419,7 @@
     "message": "Le code dans des frames ou des workers, ou chargé après l’analyse, n’est pas parcouru."
   },
   "mhDomIntro": {
-    "message": "Cherche un élément dans le body de la page avec un sélecteur CSS, une fois la page chargée."
+    "message": "Cherche un élément dans la page (head et body) avec un sélecteur CSS, une fois la page chargée."
   },
   "mhDomHow1": {
     "message": "Une balise, `.classe`, `#id` ou `[attribut]`, seul ou combiné : `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Non pris en charge, la règle ne correspond alors jamais : espaces ou `>` entre les parties, `:pseudo-classes` et échappements."
   },
   "mhDomLimit2": {
-    "message": "Le head, les frames et les shadow roots ne sont pas parcourus. L’attribut `value` n’est pas lu ; les autres sont comparés sur leurs 100 premiers caractères."
+    "message": "Les frames et les shadow roots ne sont pas parcourus. L’attribut `value` n’est pas lu ; les autres sont comparés sur leurs 100 premiers caractères."
   },
   "mhWindowIntro": {
     "message": "Vérifie une variable globale JavaScript définie par la page, comme `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Les appels comptent pendant les premières secondes après le chargement de la page (8 secondes au plus)."
   },
   "mhJsHooksLimit2": {
-    "message": "Les appels dans les workers ou les frames ne sont pas vus, sauf les cibles intégrées dans les frames du même site."
+    "message": "Les appels dans les workers ou les frames ne sont pas vus, sauf les cibles intégrées dans les frames de même origine."
   },
   "mhPayloadIntro": {
     "message": "Cherche dans le corps des requêtes POST, PUT, PATCH et DELETE envoyées par la page, depuis n’importe quelle frame."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "Les messages WebSocket ne sont pas lus."
+  },
+  "mhRegexTextLimit": {
+    "message": "Dans les règles que vous écrivez ou importez, Regex ne lit que les 100 000 premiers caractères d’un texte (une page, un script, le corps d’une requête). Le texte simple, Mot entier et les règles propres à Scrapfly le lisent en entier."
   },
   "domCardTitle": {
     "message": "Sélecteur CSS"

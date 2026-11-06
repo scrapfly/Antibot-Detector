@@ -2362,7 +2362,7 @@
     "message": "Yêu cầu phông chữ, đa phương tiện và stylesheet không được ghi lại."
   },
   "mhUrlLimit2": {
-    "message": "Chỉ các yêu cầu được thực hiện trước lần quét mới được tính; quá trình quét chạy sau khi trang đã tải xong."
+    "message": "Quá trình quét chạy sau khi trang đã tải xong; các yêu cầu được thực hiện sau đó vẫn được tính khi phạm vi URL là Tất cả."
   },
   "mhHeaderIntro": {
     "message": "Kiểm tra header của yêu cầu và phản hồi của chính trang, không phải của script, lệnh gọi XHR hay khung."
@@ -2419,7 +2419,7 @@
     "message": "Mã bên trong khung hoặc worker, hoặc được tải sau lần quét, không được tìm kiếm."
   },
   "mhDomIntro": {
-    "message": "Tìm một phần tử trong phần body của trang bằng selector CSS, sau khi trang đã tải xong."
+    "message": "Tìm một phần tử trong trang (cả head và body) bằng selector CSS, sau khi trang đã tải xong."
   },
   "mhDomHow1": {
     "message": "Một thẻ, `.class`, `#id` hoặc `[attribute]`, riêng lẻ hoặc kết hợp: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Không được hỗ trợ, nên quy tắc không bao giờ khớp: khoảng trắng hoặc `>` giữa các phần, `:pseudo-classes` và ký tự thoát."
   },
   "mhDomLimit2": {
-    "message": "Phần head, khung và shadow root không được tìm kiếm. Thuộc tính `value` không được đọc; các thuộc tính khác được so sánh theo 100 ký tự đầu tiên."
+    "message": "Khung và shadow root không được tìm kiếm. Thuộc tính `value` không được đọc; các thuộc tính khác được so sánh theo 100 ký tự đầu tiên."
   },
   "mhWindowIntro": {
     "message": "Kiểm tra một biến toàn cục JavaScript mà trang định nghĩa, như `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Các lệnh gọi được tính trong vài giây đầu sau khi trang tải (tối đa 8 giây)."
   },
   "mhJsHooksLimit2": {
-    "message": "Các lệnh gọi trong worker hoặc khung không được nhìn thấy, trừ các đích tích hợp sẵn trong khung cùng trang web."
+    "message": "Các lệnh gọi trong worker hoặc khung không được nhìn thấy, trừ các đích tích hợp sẵn trong khung cùng nguồn gốc."
   },
   "mhPayloadIntro": {
     "message": "Tìm trong nội dung của các yêu cầu POST, PUT, PATCH và DELETE mà trang gửi, từ bất kỳ khung nào."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "Thông điệp WebSocket không được đọc."
+  },
+  "mhRegexTextLimit": {
+    "message": "Trong các quy tắc bạn tự viết hoặc nhập, Regex chỉ đọc 100.000 ký tự đầu tiên của một văn bản (một trang, một script, nội dung một yêu cầu). Văn bản thuần, Toàn bộ từ và các quy tắc của Scrapfly đọc toàn bộ."
   },
   "domCardTitle": {
     "message": "Selector CSS"
