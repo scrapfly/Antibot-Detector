@@ -152,7 +152,7 @@
           return manager ? manager.getAllDetectors() : {};
         },
         enabled: async () => (typeof root.isExtensionEnabled === 'function' ? root.isExtensionEnabled() : true),
-        skipped: async (url) => (root.Utils && typeof root.Utils.isUrlBlacklisted === 'function' ? root.Utils.isUrlBlacklisted(url) : false),
+        skipped: async (url) => (root.Utils && typeof root.Utils.isUrlBlacklisted === 'function' ? root.Utils.isUrlBlacklisted(url, { failClosed: true }) : false),
         randomSalt: () => Array.from(root.crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('')
       });
       chrome.cookies.onChanged.addListener((changeInfo) => { this.recorder.handle(changeInfo); });
