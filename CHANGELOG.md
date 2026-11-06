@@ -38,7 +38,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: two URL rules with the same address both match with their own confidence, and a single pattern switched off no longer matches anything.
 - Rules → Test finds official patterns deep in long scripts, as a scan does, and page-reported window detections use the rule's own confidence and description.
 - Rules help: DOM rules search the page head, and requests made after the scan count for URL rules, in all 22 languages.
-- Switching the cache scope back to Domain no longer shows other pages' old results.
+- Changing the cache scope drops results saved under the old one, so pages are scanned again instead of showing another page's old result.
 - With the extension switched off, nothing of it stays on the page or in its frames.
 - An overdue watchlist check is no longer pushed back each time the background worker wakes.
 - A new scan result no longer makes the popup reload your whole History, which slowed large Histories.
