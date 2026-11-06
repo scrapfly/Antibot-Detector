@@ -502,8 +502,7 @@ class ScrapflyPopup {
     await Detection.processDetectionData({
       detection: this.detection,
       detectionEngine: this.detectionEngine,
-      detectorManager: this.detectorManager,
-      history: this.history
+      detectorManager: this.detectorManager
     }, detectionData);
   }
 
@@ -553,11 +552,6 @@ class ScrapflyPopup {
               }
             }
           });
-          
-          // Always refresh history when new detection data is available
-          if (this.history && typeof this.history.displayHistory === 'function') {
-            this.history.displayHistory();
-          }
           break;
 
         case WorkerMessages.EXTENSION_TOGGLE_CHANGED: {
