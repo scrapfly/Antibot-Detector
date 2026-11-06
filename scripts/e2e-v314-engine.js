@@ -243,7 +243,7 @@ async function scenario(name, fn) {
     assert.ok(found, 'the probe is on the page\'s result');
     const dom = found.matches.filter(m => m.type === 'dom');
     assert.equal(dom.length, 1, `${dom.length} DOM matches in the saved result`);
-    assert.equal(dom[0].selector, 'a[href]');
+    // A saved match keeps type, pattern, value and confidence (not the selector): the value starts with it
     assert.equal(dom[0].value, `a[href]= ${TIMES}${LINKS}`);
     assert.equal(found.confidence, 60);
     console.log(`      the saved detection is ${JSON.stringify(found).length} bytes`);
@@ -261,7 +261,8 @@ async function scenario(name, fn) {
     const { page, url } = await scanned(`/s3?n=e11-${uniq()}`);
     const found = detectionOf(await entryFor(url), OFF.id);
     assert.ok(found, 'the rules that are on found the page');
-    const seen = found.matches.map(m => `${m.type}:${m.pattern || m.selector}`).sort();
+    // A saved DOM match has no pattern: its value is "<selector>=<text>"
+    const seen = found.matches.map(m => `${m.type}:${m.pattern || String(m.value).split('=')[0]}`).sort();
     assert.deepEqual(seen, ['content:E11-ON-INLINE', 'dom:div#e11-on', 'url:/e11-on.js']);
     assert.equal(found.confidence, 55, 'the rules that are off do not score');
     await page.close();
@@ -288,9 +289,10 @@ async function scenario(name, fn) {
     assert.equal(cssHits[b], 2, `the stylesheet was requested ${cssHits[b]} times: the page's and the scan's`);
     const found = detectionOf(await entryFor(second.url), PAGE_TEXT.id);
     assert.ok(found, 'the page-content rule found the page');
-    const where = Object.fromEntries(found.matches.map(m => [m.pattern, m.foundIn]));
-    assert.match(where[CSS_MARKER] || '', /\/style\.css/, 'the marker that is only in the stylesheet');
-    assert.equal(where[BODY_MARKER], 'page content', 'the marker that is only in the page text');
+    // A saved match does not keep where it was found; each marker is in one place only
+    const patterns = found.matches.filter(m => m.type === 'content').map(m => m.pattern);
+    assert.ok(patterns.includes(CSS_MARKER), 'the marker that is only in the stylesheet');
+    assert.ok(patterns.includes(BODY_MARKER), 'the marker that is only in the page text');
     await second.page.close();
   });
 
@@ -328,7 +330,8 @@ async function scenario(name, fn) {
   // ===============================================================================================
   await scenario('F1 settings stored as text that is not JSON: the page is not scanned; readable again, it is', async () => {
     const original = await W(async () => (await chrome.storage.local.get('scrapfly_settings')).scrapfly_settings);
-    assert.ok(original && typeof original === 'object', 'the settings are saved as an object');
+    // SettingsStore saves them as JSON text (a wrapper with the settings and a timestamp)
+    assert.ok(typeof original === 'string' && JSON.parse(original).settings, 'the settings are saved and readable');
     const first = `${origin}/f1?n=f1-${uniq()}`;
     let broken;
     await W(() => chrome.storage.local.set({ scrapfly_settings: '{"detection": {"blacklistedDomains": ["127.0.0.1"' }));
