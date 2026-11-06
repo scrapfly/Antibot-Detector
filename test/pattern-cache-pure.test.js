@@ -4,7 +4,7 @@ const assert = require('node:assert');
 globalThis.Logger = globalThis.Logger || { warn() {}, debug() {} };
 globalThis.Constants = globalThis.Constants || { PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 };
 
-const { isLikelyEvilRegex, simpleHash } = require('../utils/pattern-cache.js');
+const { isLikelyEvilRegex, isRunnableRegex, simpleHash } = require('../utils/pattern-cache.js');
 
 test('isLikelyEvilRegex flags catastrophic-backtracking patterns', () => {
   assert.strictEqual(isLikelyEvilRegex('(a+)+'), true);
@@ -53,4 +53,12 @@ test('every regular expression the shipped detectors carry passes the ReDoS chec
   }
   assert.ok(checked > 100, `the scan found the regexes (${checked})`);
   assert.deepStrictEqual(flagged, []);
+});
+
+// The test the rule editor's Save and a rule file's import share: the engine compiles it and the guard lets it run
+test('isRunnableRegex is true for a regex that compiles and passes the guard, and false for the rest', () => {
+  for (const pattern of ['cf_clearance', '^https://js\\.example\\.com/', 'function.*zzz', '(?:\\d{1,3}\\.){3}\\d{1,3}']) assert.strictEqual(isRunnableRegex(pattern), true, pattern);
+  for (const pattern of ['(', '[abc', 'a{2,1}', '(?<n']) assert.strictEqual(isRunnableRegex(pattern), false, `does not compile: ${pattern}`);
+  for (const pattern of ['(a+)+$', '(a|a?){30}b', '(\\d{1,3}){1,14}x', 'a'.repeat(1500)]) assert.strictEqual(isRunnableRegex(pattern), false, `refused by the guard: ${pattern.slice(0, 20)}`);
+  for (const value of [undefined, null, 5, {}, []]) assert.strictEqual(isRunnableRegex(value), false);
 });
