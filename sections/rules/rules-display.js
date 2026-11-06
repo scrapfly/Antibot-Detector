@@ -160,6 +160,27 @@ Rules.prototype.syncFilterUi = function(total = Array.isArray(this.allDetectors)
   }
   const none = document.querySelector('#rulesNoResults');
   if (none) none.hidden = !(total > 0 && Array.isArray(this.filteredDetectors) && this.filteredDetectors.length === 0);
+  this.syncResultsStatus();
+};
+
+/**
+ * Say, to a screen reader, what the search, the chips and the pager leave: the pager's own line ("Showing 1-2 of 5") while there are
+ * rules to list, the no-results line when there are rules and none match, nothing when there are no rules (the empty state speaks for
+ * itself). A list drawn again is silent to a screen reader, and a block that is shown with its text (the no-results one) is not
+ * announced, so the words go to a status region that is always in the page. Written only when they change, so the same list drawn
+ * again says nothing again.
+ */
+Rules.prototype.syncResultsStatus = function() {
+  const status = document.querySelector('#rulesResultsStatus');
+  if (!status) return;
+  const total = Array.isArray(this.allDetectors) ? this.allDetectors.length : 0;
+  const nothing = total > 0 && Array.isArray(this.filteredDetectors) && this.filteredDetectors.length === 0;
+  const words = (selector) => {
+    const element = document.querySelector(selector);
+    return element && typeof element.textContent === 'string' ? element.textContent.trim() : '';
+  };
+  const text = total === 0 ? '' : words(nothing ? '#rulesNoResults p' : '#rulesPagination .pagination-info');
+  if (status.textContent !== text) status.textContent = text;
 };
 
 // ============================================

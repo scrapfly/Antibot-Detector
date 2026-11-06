@@ -70,6 +70,8 @@ class Rules {
       itemsPerPage: 2,
       onPageChange: (page, items) => {
         this.renderDetectorsPage(items);
+        // A page flip changes the pager's line: the status region says it too (a screen reader hears nothing of a redrawn list)
+        this.syncResultsStatus();
       }
     });
   }
