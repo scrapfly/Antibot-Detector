@@ -7,15 +7,19 @@
  *                           save): the custom rule, the edit to an official rule and the switched-off flag stay in the worker,
  *                           scans keep detecting the custom rule, and the stored rules are not written (they were rewritten from
  *                           the shipped files before); the next scan after the storage answers again loads them
- *   Settings                the stored settings are text that is not JSON: a paused History stays paused (the page is scanned, and
- *                           nothing is recorded), the backup and watchlist alarms are not cleared, Bulk scan does not start, the text
- *                           is not rewritten, and the popup says so, once, with the repair (Settings → Data → Reset). After the
- *                           reset the defaults apply and History records again
+ *   Settings                the stored settings are text that is not JSON: no page is scanned (what the person chose about sites
+ *                           cannot be read), so nothing is saved or recorded and a paused History stays paused, the backup and
+ *                           watchlist alarms are not cleared, Bulk scan does not start, the text is not rewritten, and the popup
+ *                           says so, once, with the repair (Settings → Data → Reset). After the reset the defaults apply, pages are
+ *                           scanned and History records again
  *   Rules, cold worker      the stored rules are text that is not JSON when the worker starts again: the text stays as it is (it was
  *                           replaced by the shipped rules), scans go on with the shipped rules, and the rules come back at the next
  *                           scan once the stored value is repaired
- *   Both, worker restarted  the lot at once: rules and settings damaged, the worker stopped and started again: the pause is respected
- *                           by the new worker, nothing stored is changed, and restoring the saved values brings the custom rule back
+ *   Both, worker restarted  the lot at once: rules and settings damaged, the worker stopped and started again: the new worker scans
+ *                           nothing, records nothing and changes nothing stored, and restoring the saved values brings the custom
+ *                           rule back with History still paused
+ *
+ * A scenario that fails puts back what it damaged (in a finally), so the ones after it start from readable settings and rules.
  *
  * A local site shows the marker of a probe rule, and one page a Friendly Captcha widget (a shipped rule) so that a worker that has only
  * the shipped rules still finds something to record. The popup is opened as a page, as in the other suites.
@@ -172,6 +176,17 @@ async function scenario(name, fn) {
     const saved = await until(() => savedScan(url), 25000, `the saved result of ${url}`);
     return { page, url, saved };
   }
+  /** Visit a page while the settings cannot be read: no scan starts, so after a while it still has no saved result. */
+  async function notScanned(name, query = '', { other = false } = {}) {
+    const base = other === 2 ? origin2 : other ? origin.replace('127.0.0.1', 'localhost') : origin;
+    const url = `${base}/p?n=${name}${query}`;
+    const page = await ctx.newPage();
+    page.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
+    await page.goto(url, { waitUntil: 'load' }).catch(() => {});
+    await sleep(6000);
+    assert.equal(await savedScan(url), null, `${url} was not scanned: no result is saved`);
+    return { page, url };
+  }
   async function popupFor(file = 'popup.html') {
     const page = await ctx.newPage();
     page.on('pageerror', (e) => pageErrors.push(`${file}: ${e.message}`));
@@ -310,14 +325,14 @@ async function scenario(name, fn) {
 
     // The stored settings become text that is not JSON
     await setStored({ scrapfly_settings: SAD_SETTINGS });
+    try {
     await sleep(1500);
     assert.deepEqual(Object.keys(await alarmsNow()).filter(name => name.startsWith('scrapfly-history')).sort(), ['scrapfly-history-backup', 'scrapfly-history-watch'], 'the alarms were not cleared as if switched off');
 
-    const damaged = await scanned(`history-damaged-${uniq()}`, '&m=1', { other: true });
-    assert.ok(damaged.saved.names.includes(PROBE.name), 'the page is scanned');
+    // Fail closed: what the person chose about sites (skipped ones, chosen ones) cannot be read, so no page is scanned
+    const damaged = await notScanned(`history-damaged-${uniq()}`, '&m=1', { other: true });
     await damaged.page.close();
-    await sleep(2500);
-    assert.equal((await historyUrls()).length, base + 1, 'but History is paused, and was not recorded to because its pause could not be read');
+    assert.equal((await historyUrls()).length, base + 1, 'nothing is recorded: History stays as the person paused it');
     assert.equal(await rawStored('scrapfly_settings'), SAD_SETTINGS, 'the stored text was not rewritten');
 
     // Bulk scan opens nothing on a guess
@@ -353,12 +368,17 @@ async function scenario(name, fn) {
     await sleep(1500);
     assert.deepEqual(await toasts(clean), [], 'no notice once the settings read');
     await clean.close();
+    } finally {
+      // A failure above must not leave the next scenarios with settings that cannot be read
+      if (await rawStored('scrapfly_settings') === SAD_SETTINGS) await setStored({ scrapfly_settings: settingsText });
+    }
   });
 
   // ===============================================================================================
   await scenario('Rules, cold worker: stored rules that are not JSON stay as they are; scans use the shipped rules; the repair is picked up at the next scan', async () => {
     const adminPage = await popupFor();
     await setStored({ scrapfly_detectors: SAD_RULES });
+    try {
     await sleep(500);
     await restartWorker(adminPage);
     const { page, saved } = await scanned(`rules-cold-${uniq()}`, '&m=1&frc=1');
@@ -377,6 +397,9 @@ async function scenario(name, fn) {
     await sleep(1500);
     assert.deepEqual(await rawStored('scrapfly_detectors'), rulesSnapshot, 'nothing was written over them');
     await back.close();
+    } finally {
+      if (await rawStored('scrapfly_detectors') === SAD_RULES) await setStored({ scrapfly_detectors: rulesSnapshot });
+    }
   });
 
   // ===============================================================================================
@@ -393,17 +416,16 @@ async function scenario(name, fn) {
     const historyBefore = (await historyUrls()).length;
     const adminPage = await popupFor();
     await setStored({ scrapfly_settings: SAD_SETTINGS, scrapfly_detectors: SAD_RULES });
+    try {
     await sleep(500);
     await restartWorker(adminPage);
 
-    // A page a shipped rule finds (the custom rule is not there to be found)
-    const { page, saved } = await scanned(`both-${uniq()}`, '&frc=1', { other: 2 });
-    assert.ok(saved.names.some(name => /Friendly/i.test(String(name))), `the new worker detects with the shipped rules: ${JSON.stringify(saved.names)}`);
-    assert.ok(await workerRunning(adminPage), 'a new worker scanned the page');
+    // A page a shipped rule would find: the new worker cannot read the settings, so it scans nothing on a guess
+    const { page } = await notScanned(`both-${uniq()}`, '&frc=1', { other: 2 });
+    assert.ok(await workerRunning(adminPage), 'a new worker started for the page');
     await adminPage.close();
     await page.close();
-    await sleep(2500);
-    assert.equal((await historyUrls()).length, historyBefore, 'nothing was recorded: History was paused and the new worker could not read that, so it did not guess');
+    assert.equal((await historyUrls()).length, historyBefore, 'nothing was recorded');
     assert.equal(await rawStored('scrapfly_settings'), SAD_SETTINGS);
     assert.equal(await rawStored('scrapfly_detectors'), SAD_RULES);
 
@@ -415,6 +437,10 @@ async function scenario(name, fn) {
     await sleep(2500);
     assert.equal((await historyUrls()).length, historyBefore, 'and History is still paused: the choice survived');
     assert.equal(await W(() => StorageManager.readSettingsStrict().then(s => s.history.historyEnabled)), false);
+    } finally {
+      if (await rawStored('scrapfly_settings') === SAD_SETTINGS) await setStored({ scrapfly_settings: settingsText });
+      if (await rawStored('scrapfly_detectors') === SAD_RULES) await setStored({ scrapfly_detectors: rulesSnapshot });
+    }
   });
 
   // ---- Report ----------------------------------------------------------------------------------------
