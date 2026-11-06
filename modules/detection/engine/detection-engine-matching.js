@@ -45,6 +45,41 @@ function demMatchCookieName(name, pattern, options = {}) {
     return nameToCompare.startsWith(patternToCompare);
 }
 
+/**
+ * Whether `pattern` is a regular expression of an official rule as Scrapfly ships it: the rule's own copy, or, for a rule
+ * the person edited, the shipped copy it keeps (a regex the person wrote or changed is not shipped). Read only for a text
+ * longer than PatternCache.REGEX_TEXT_LIMIT, so the walk over the rules costs nothing next to the match.
+ * @param {object} detectors - The engine's detectors, by category
+ * @param {string} pattern
+ */
+function demShipsRegex(detectors, pattern) {
+    if (!detectors || typeof detectors !== 'object' || typeof DetectionUtils === 'undefined' || typeof DetectionUtils.isOfficialDetector !== 'function') return false;
+    const fields = [['nameRegex', 'name'], ['valueRegex', 'value'], ['textRegex', 'text'], ['selectorRegex', 'selector'], ['urlRegex', 'urlPattern']];
+    for (const category of Object.values(detectors)) {
+        for (const detector of Object.values(category || {})) {
+            if (!DetectionUtils.isOfficialDetector(detector)) continue;
+            const shipped = detector.userModified && detector.officialSnapshot ? detector.officialSnapshot : detector;
+            for (const rules of Object.values((shipped && shipped.detection) || {})) {
+                if (!Array.isArray(rules)) continue;
+                for (const rule of rules) {
+                    if (rule && fields.some(([flag, field]) => rule[flag] === true && rule[field] === pattern)) return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * The text a regular expression reads: all of it for a regex an official rule ships, and the first
+ * PatternCache.REGEX_TEXT_LIMIT characters for any other (one a person wrote or imported, that can be slow in a way no
+ * check of its source tells: `.*` between two literals over a minified bundle). `this` is the engine, which knows the rules.
+ */
+function demTextForRegex(text, pattern) {
+    const cut = DetectionEngineManager.patternCache.textForRegex(text);
+    return cut === text || demShipsRegex(this && this.detectors, pattern) ? text : cut;
+}
+
 function demMatchPattern(text, pattern, options = {}, preparedLower) {
     const {
         regex = false,
@@ -78,7 +113,7 @@ function demMatchPattern(text, pattern, options = {}, preparedLower) {
         const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(pattern, { regex: true, caseSensitive });
         if (compiledRegex) {
             try {
-                result = compiledRegex.test(textToSearch);
+                result = compiledRegex.test(demTextForRegex.call(this, textToSearch, pattern));
             } catch (e) {
                 Logger.warn('DETECTION', 'Invalid regex pattern:', patternToMatch, e);
                 result = false;
@@ -124,7 +159,7 @@ function demMatchPatternWithCapture(text, pattern, options = {}) {
             // Unlowercased pattern: the compiled regex carries the case flag
             const compiledRegex = DetectionEngineManager.patternCache.getCompiledPattern(pattern, { regex: true, caseSensitive });
             if (!compiledRegex) return null;
-            const result = text.match(compiledRegex);
+            const result = demTextForRegex.call(this, text, pattern).match(compiledRegex);
             return (result && result.length) ? result[0] : null;
         }
         else if (wholeWord) {

@@ -1010,7 +1010,7 @@
     "message": "Detektor diimpor"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detektor diimpor, kecuali: {0} (tidak valid di versi ini)"
+    "message": "Detektor diimpor, kecuali: {0} (tidak valid di versi ini, atau sebuah pola dapat membekukan pemindaian)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Aturan resmi yang sudah terpasang tidak diganti: {0}"
@@ -2362,7 +2362,7 @@
     "message": "Permintaan font, media, dan stylesheet tidak dicatat."
   },
   "mhUrlLimit2": {
-    "message": "Hanya permintaan yang dibuat sebelum pemindaian yang dihitung; pemindaian berjalan setelah halaman dimuat."
+    "message": "Pemindaian berjalan setelah halaman dimuat; permintaan yang dibuat setelahnya juga dihitung jika cakupan URL-nya Semua."
   },
   "mhHeaderIntro": {
     "message": "Memeriksa header dari permintaan dan respons halaman itu sendiri, bukan milik script, panggilan XHR, atau frame."
@@ -2419,7 +2419,7 @@
     "message": "Kode di dalam frame atau worker, atau yang dimuat setelah pemindaian, tidak dicari."
   },
   "mhDomIntro": {
-    "message": "Mencari elemen di body halaman dengan selector CSS, setelah halaman dimuat."
+    "message": "Mencari elemen di halaman (head dan body) dengan selector CSS, setelah halaman dimuat."
   },
   "mhDomHow1": {
     "message": "Sebuah tag, `.class`, `#id`, atau `[attribute]`, sendiri atau digabungkan: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Tidak didukung, sehingga aturan tidak pernah cocok: spasi atau `>` di antara bagian, `:pseudo-classes`, dan escape."
   },
   "mhDomLimit2": {
-    "message": "Head, frame, dan shadow root tidak dicari. Atribut `value` tidak dibaca; atribut lain dibandingkan pada 100 karakter pertamanya."
+    "message": "Frame dan shadow root tidak dicari. Atribut `value` tidak dibaca; atribut lain dibandingkan pada 100 karakter pertamanya."
   },
   "mhWindowIntro": {
     "message": "Memeriksa variabel global JavaScript yang didefinisikan halaman, seperti `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Panggilan dihitung selama beberapa detik pertama setelah halaman dimuat (maksimal 8 detik)."
   },
   "mhJsHooksLimit2": {
-    "message": "Panggilan di worker atau frame tidak terlihat, kecuali target bawaan di frame situs yang sama."
+    "message": "Panggilan di worker atau frame tidak terlihat, kecuali target bawaan di frame dengan origin yang sama."
   },
   "mhPayloadIntro": {
     "message": "Mencari di body permintaan POST, PUT, PATCH, dan DELETE yang dikirim halaman, dari frame mana pun."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "Pesan WebSocket tidak dibaca."
+  },
+  "mhRegexTextLimit": {
+    "message": "Pada aturan yang Anda tulis atau impor, Regex hanya membaca 100.000 karakter pertama dari sebuah teks (halaman, script, atau isi permintaan). Teks biasa, Kata utuh, dan aturan milik Scrapfly membacanya seluruhnya."
   },
   "domCardTitle": {
     "message": "Selector CSS"

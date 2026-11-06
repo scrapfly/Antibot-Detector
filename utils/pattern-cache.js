@@ -36,6 +36,10 @@ function fnv1aHash(str) {
 const REDOS_ASCII = 128;
 // This many unbounded repeats in a row over the same characters read as polynomial backtracking
 const REDOS_MAX_ADJACENT_REPEATS = 3;
+// A group repeated a limited number of times that can split the same text in more than one way: the rounds of all such groups
+// in a pattern are added up (nested ones multiply) and may come to this many. (a|a?){4}b is 81 ways at every position of a
+// text, 36 ms over 100,000 characters; (a|a?){6}b takes 300 ms there, (a|a?){16}b is 3^16 ways to read 16 characters
+const REDOS_MAX_AMBIGUOUS_ROUNDS = 4;
 
 function redosSet(all = false) {
     return { ascii: new Array(REDOS_ASCII).fill(all), other: all };
@@ -103,6 +107,8 @@ function redosParse(source) {
         // pos is after '['
         const set = redosSet();
         let negated = false;
+        // Whether the set is exactly the characters the class lists (an escape the reading does not follow counts as any character)
+        let exact = true;
         if (source[pos] === '^') { negated = true; pos++; }
         while (pos < source.length && source[pos] !== ']') {
             let code = null;
@@ -110,9 +116,9 @@ function redosParse(source) {
                 pos++;
                 const c = source[pos];
                 const cls = c !== undefined ? redosClassEscape(c) : null;
-                if (cls) { pos++; redosUnion(set, cls); continue; }
+                if (cls) { pos++; redosUnion(set, cls); if (c === 'D' || c === 'W' || c === 'S') exact = false; continue; }
                 if (c in REDOS_CONTROL_ESCAPES) { pos++; code = REDOS_CONTROL_ESCAPES[c]; }
-                else if (c !== undefined && /[xucpPb]/.test(c)) { pos++; redosUnion(set, redosSet(true)); continue; }
+                else if (c !== undefined && /[xucpPb]/.test(c)) { pos++; redosUnion(set, redosSet(true)); exact = false; continue; }
                 else if (c === undefined) throw new Error('trailing backslash');
                 else { pos++; code = c.charCodeAt(0); }
             } else {
@@ -124,7 +130,7 @@ function redosParse(source) {
                 let to;
                 if (source[pos] === '\\') {
                     const c = source[pos + 1];
-                    if (c === undefined || redosClassEscape(c) || /[xucpP]/.test(c)) { pos += 2; redosUnion(set, redosSet(true)); continue; }
+                    if (c === undefined || redosClassEscape(c) || /[xucpP]/.test(c)) { pos += 2; redosUnion(set, redosSet(true)); exact = false; continue; }
                     to = c in REDOS_CONTROL_ESCAPES ? REDOS_CONTROL_ESCAPES[c] : c.charCodeAt(0);
                     pos += 2;
                 } else {
@@ -138,7 +144,14 @@ function redosParse(source) {
         }
         if (source[pos] !== ']') throw new Error('unclosed class');
         pos++;
-        return negated ? redosSet(true) : set;
+        if (!negated) return set;
+        // [^&] is every character but &: a round that ends at & splits the text one way, which "any character" would hide. Only
+        // for a class of characters with no case (punctuation, digits, spaces): a letter overlaps both of its cases in the set
+        // (the patterns are mostly compiled case-insensitively), and the leftover of that would be too small. Anything else stays "any".
+        if (!exact || set.ascii.some((listed, code) => listed && /[A-Za-z]/.test(String.fromCharCode(code)))) return redosSet(true);
+        const left = redosSet(true);
+        for (let code = 0; code < REDOS_ASCII; code++) if (set.ascii[code]) left.ascii[code] = false;
+        return left;
     }
 
     function parseQuantifier(atom) {
@@ -147,6 +160,8 @@ function redosParse(source) {
             pos++;
             atom.quant = c === '?' ? 'optional' : 'unbounded';
             atom.nullable = atom.nullable || c !== '+';
+            atom.min = c === '+' ? 1 : 0;
+            atom.most = c === '?' ? 1 : Infinity;
         } else if (c === '{') {
             const m = /^\{(\d+)(,(\d*))?\}/.exec(source.slice(pos));
             if (!m) return; // a literal brace
@@ -157,6 +172,8 @@ function redosParse(source) {
             // {10} and {1,10} run the group's rounds one after another as + does, only for a bounded number of them: (a+){10}b
             // takes as long as (a+)+b on a text of the same kind
             const most = unbounded ? Infinity : (m[2] !== undefined ? Number(m[3]) : min);
+            atom.min = min;
+            atom.most = most;
             if (most >= 2) atom.rounds = true;
             if (min === 0) atom.nullable = true;
         } else {
@@ -236,16 +253,42 @@ function redosParse(source) {
     return branches;
 }
 
+/** Can the atom match more than one length? Any repeat but a fixed {n}: a?, \d{1,3}, a*. */
+function redosVariable(atom) {
+    return atom.most !== undefined && atom.most > atom.min;
+}
+
+/**
+ * A repeated group that can split the same text in more than one way. An unbounded one backtracks exponentially:
+ * refused at once. A bounded one has a limited number of rounds, and a few ways over a few rounds are cheap, so its
+ * rounds are added up for the whole pattern (the rounds of the groups it sits in multiply them) and the pattern is
+ * refused over REDOS_MAX_AMBIGUOUS_ROUNDS.
+ * @param {{most: number, weight: number, counted: boolean}} group - the repeated group: its most rounds, the rounds of the groups around it
+ * @param {{used: number}} budget - the rounds counted so far in this pattern
+ * @returns {boolean} true when the pattern is to be refused
+ */
+function redosAmbiguity(group, budget) {
+    if (group.most === Infinity) return true;
+    if (!group.counted) {
+        group.counted = true;
+        budget.used += group.most * group.weight;
+    }
+    return budget.used > REDOS_MAX_AMBIGUOUS_ROUNDS;
+}
+
 /**
  * Whether a repeated group in the tree can match the same text in many ways (exponential backtracking):
- * - a repeated choice whose branches can start alike, or match nothing: (a|aa)+, (\w|\d)+, (a|)+
- * - a repeat inside a repeat that can run into the next round: (a+)+, (a+a)+, (\d*)*. One that a required
- *   character it cannot match ends, as in host names (?:[a-z0-9-]*[a-z0-9]\.)*, splits the text one way only.
+ * - a repeated choice whose branches can start alike, or match nothing: (a|aa)+, (\w|\d)+, (a|)+, (a|a?){16}
+ * - a repeat inside a repeat that can run into the next round: (a+)+, (a+a)+, (\d*)*, and the same with a repeat of
+ *   limited length, (\d{1,3}){1,14}, (a?){20}. One that a required character it cannot match ends, as in host names
+ *   (?:[a-z0-9-]*[a-z0-9]\.)* or addresses (\d{1,3}\.){3}, splits the text one way only.
+ * Over an unbounded repeat either is refused at once; over a bounded one the rounds are counted (redosAmbiguity).
  * @param {Array} branches - redosParse() output
- * @param {{rest: Array, boundary: ?Object}} [scope] - the required character sets after this point in the
- *        round of the nearest repeated group, and what that group's next round starts with
+ * @param {{rest: Array, boundary: ?Object, group: ?Object, weight: number, budget: {used: number}}} [scope] - the required
+ *        character sets after this point in the round of the nearest repeated group, what that group's next round starts
+ *        with, that group (redosAmbiguity), the rounds of the groups around this point, and the pattern's rounds so far
  */
-function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
+function redosTreeIsEvil(branches, scope = { rest: [], boundary: null, group: null, weight: 1, budget: { used: 0 } }) {
     for (const branch of branches) {
         // Adjacent unbounded atoms that can match the same characters split a run of them any way they like: n^k
         // steps for k of them (a*a*a*a*b, .*.*.*x). Two are quadratic and common (.*.*); three or more are refused.
@@ -265,22 +308,26 @@ function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
                 .filter(next => next.kind !== 'zero' && !next.nullable)
                 .map(next => next.first)
                 .concat(scope.rest);
-            if (unbounded && scope.boundary && atom.kind !== 'zero') {
+            if (scope.boundary && atom.kind !== 'zero' && redosVariable(atom)) {
                 const separated = rest.some(set => !redosOverlap(set, atom.first));
-                if (!separated && redosOverlap(atom.first, scope.boundary)) return true;
+                if (!separated && redosOverlap(atom.first, scope.boundary) && (unbounded || redosAmbiguity(scope.group, scope.budget))) return true;
             }
             if (!atom.branches) continue;
-            if (unbounded && atom.kind === 'group' && atom.branches.length > 1) {
-                if (atom.branches.some(b => b.nullable)) return true;
-                for (let i = 0; i < atom.branches.length; i++) {
-                    for (let j = i + 1; j < atom.branches.length; j++) {
-                        if (redosOverlap(atom.branches[i].first, atom.branches[j].first)) return true;
+            const repeated = atom.kind === 'group' && (unbounded || atom.rounds);
+            // This group as the repeated group of the checks inside it: how many rounds it has, and how many the groups around it
+            const own = repeated ? { most: atom.most, weight: scope.weight, counted: false } : null;
+            if (repeated && atom.branches.length > 1) {
+                let alike = atom.branches.some(b => b.nullable);
+                for (let i = 0; i < atom.branches.length && !alike; i++) {
+                    for (let j = i + 1; j < atom.branches.length && !alike; j++) {
+                        alike = redosOverlap(atom.branches[i].first, atom.branches[j].first);
                     }
                 }
+                if (alike && redosAmbiguity(own, scope.budget)) return true;
             }
-            const inner = (unbounded || atom.rounds) && atom.kind === 'group'
-                ? { rest: [], boundary: atom.first }
-                : { rest, boundary: scope.boundary };
+            const inner = repeated
+                ? { rest: [], boundary: atom.first, group: own, weight: scope.weight * atom.most, budget: scope.budget }
+                : { rest, boundary: scope.boundary, group: scope.group, weight: scope.weight, budget: scope.budget };
             if (redosTreeIsEvil(atom.branches, inner)) return true;
         }
     }
@@ -292,7 +339,10 @@ function redosTreeIsEvil(branches, scope = { rest: [], boundary: null }) {
  * backtracking. Conservative: prefers false positives (over-rejection) to a
  * hung extension. Catches `(a+)+`, `(a*)*`, `(\d+)+`, `(a{2,})+`, nested ones
  * such as `((a+)+b)+`, and repeated choices whose branches overlap, such as
- * `(a|aa)+` and `(\w|\d)+` (redosTreeIsEvil).
+ * `(a|aa)+` and `(\w|\d)+`; and the same inside a group repeated a number of
+ * times, `(a|a?){16}` and `(\d{1,3}){1,14}` (redosTreeIsEvil).
+ * It does not mind a single wildcard between literals (`function.*zzz`): that one is slow only on a very long
+ * text, which PatternCache.REGEX_TEXT_LIMIT bounds for rules that are not official.
  * @param {string} pattern - User-supplied regex source
  * @returns {boolean} true if the pattern looks dangerous
  */
@@ -307,6 +357,19 @@ function isLikelyEvilRegex(pattern) {
         // A group containing + * or {n,} immediately followed by another + or *
         return /\([^()]*[+*][^()]*\)\s*[+*]/.test(pattern) || /\([^()]*\{\d+,\}[^()]*\)\s*[+*]/.test(pattern);
     }
+}
+
+/**
+ * A regular expression the detection engine compiles and runs: it is valid, and the check above does not refuse it. The
+ * rule editor's Save and a rule file's import both ask this, so a rule that is saved is one that matches and one that
+ * is imported is one that matches.
+ * @param {string} pattern - Regex source
+ * @returns {boolean}
+ */
+function isRunnableRegex(pattern) {
+    if (typeof pattern !== 'string') return false;
+    try { new RegExp(pattern); } catch (_) { return false; }
+    return !isLikelyEvilRegex(pattern);
 }
 
 /**
@@ -374,6 +437,17 @@ class PatternCache {
         this.evictIfNeeded();
 
         return compiledRegex;
+    }
+
+    /**
+     * The part of a text that a rule's own regular expression reads: its first REGEX_TEXT_LIMIT characters. A repeat such as
+     * `.*` between two literals takes time that grows with the square of a single-line text (a minified bundle), and a
+     * synchronous match in the worker cannot be stopped. Rules shipped by Scrapfly read the whole text (the caller says which).
+     * @param {string} text
+     * @returns {string}
+     */
+    textForRegex(text) {
+        return text.length > PatternCache.REGEX_TEXT_LIMIT ? text.slice(0, PatternCache.REGEX_TEXT_LIMIT) : text;
     }
 
     /**
@@ -449,5 +523,9 @@ class PatternCache {
 // Texts longer than this (in characters) are matched without the result cache
 PatternCache.MATCH_CACHE_MAX_TEXT = 4096;
 
+// A regular expression of a rule that is not an official one reads this many characters of a text at most (see textForRegex):
+// `function.*zzz` over one 100,000-character line takes about 130 ms, over 250,000 about 0.8 s, and over a 3 MB bundle a minute or more
+PatternCache.REGEX_TEXT_LIMIT = 100000;
+
 // Node test export (no-op in the browser, where `module` is undefined).
-if (typeof module !== 'undefined' && module.exports) { module.exports = { PatternCache, isLikelyEvilRegex, simpleHash }; }
+if (typeof module !== 'undefined' && module.exports) { module.exports = { PatternCache, isLikelyEvilRegex, isRunnableRegex, simpleHash }; }

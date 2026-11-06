@@ -3,8 +3,23 @@
 if (typeof Categories === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
   globalThis.Categories = require('../../core/categories.js');
 }
+// The test the rule editor's Save applies to a regex (utils/pattern-cache.js, loaded before this in the popup and the worker)
+if (typeof isRunnableRegex === 'undefined' && typeof module !== 'undefined' && typeof require === 'function') {
+  globalThis.isRunnableRegex = require('../../../utils/pattern-cache.js').isRunnableRegex;
+}
 class DetectorSchema {
     static METHODS = ['cookie', 'header', 'content', 'dom', 'url', 'window', 'js_hooks', 'payload'];
+
+    // What a rules file may hold. It is read whole and its patterns run on every page, so a file past these is not a rules file.
+    // They sit far above what the editor writes and what ships (86 rules in 403 KB, at most 19 patterns in one rule and 670
+    // characters in one text), so an export of every rule and a backup import back
+    static IMPORT_LIMITS = Object.freeze({
+        fileBytes: 10 * 1024 * 1024, // the size of the file (Rules -> Import checks it before reading it)
+        detectors: 1000,             // rules in a file
+        patternsPerDetector: 500,    // cookie, header, URL ... patterns in one rule
+        patterns: 10000,             // patterns in a file
+        textLength: 10000            // characters in a pattern or any other text of a pattern
+    });
     static isRecord(value) {
         return value !== null && typeof value === 'object' && !Array.isArray(value);
     }
@@ -15,6 +30,18 @@ class DetectorSchema {
 
     static validVersion(version) {
         return typeof version === 'string' && /^\d+(?:\.\d+){0,3}$/.test(version);
+    }
+
+    /** A regex the detection engine can run: the rule editor's Save and an import ask the same thing (isRunnableRegex). */
+    static runnableRegex(pattern) {
+        if (typeof isRunnableRegex === 'function') return isRunnableRegex(pattern);
+        try { new RegExp(pattern); return true; } catch (_) { return false; }
+    }
+
+    /** How many patterns (cookie, header, URL ... rows) a rule holds. */
+    static patternCount(detector) {
+        const methods = this.isRecord(detector) && this.isRecord(detector.detection) ? detector.detection : {};
+        return this.METHODS.reduce((total, method) => total + (Array.isArray(methods[method]) ? methods[method].length : 0), 0);
     }
 
     static compatible(detector, extensionVersion) {
@@ -64,6 +91,7 @@ class DetectorSchema {
         if (!this.compatible(detector, extensionVersion)) return null;
         const ids = new Set();
         const fields = { cookie: 'name', header: 'name', url: 'text', content: 'text', payload: 'text', dom: 'selector', window: 'path', js_hooks: 'target' };
+        if (this.patternCount(detector) > this.IMPORT_LIMITS.patternsPerDetector) return null;
         for (const method of this.METHODS) {
             const rules = detector.detection[method];
             if (rules === undefined) continue;
@@ -74,7 +102,7 @@ class DetectorSchema {
                 if (rule.id !== undefined && !this.safeKey(rule.id)) return null;
                 // The engine calls string methods on these: a number or an object would stop every scan
                 for (const field of this.RULE_TEXT_FIELDS) {
-                    if (rule[field] !== undefined && typeof rule[field] !== 'string') return null;
+                    if (rule[field] !== undefined && (typeof rule[field] !== 'string' || rule[field].length > this.IMPORT_LIMITS.textLength)) return null;
                 }
                 if (rule.methods !== undefined && (!Array.isArray(rule.methods) || rule.methods.some(m => typeof m !== 'string'))) return null;
                 // The on/off options are booleans (the engine reads them as `=== true`); the editor draws them into markup
@@ -89,7 +117,9 @@ class DetectorSchema {
                     const pattern = field === 'url' ? rule.urlPattern : rule[field];
                     if (pattern === undefined || pattern === '') continue;
                     if (typeof pattern !== 'string') return null;
-                    try { new RegExp(pattern); } catch (_) { return null; }
+                    // What the editor's Save applies: one that does not compile, or that the ReDoS guard refuses, never matches
+                    // at run time, so the rule is not imported
+                    if (!this.runnableRegex(pattern)) return null;
                 }
             }
         }
@@ -115,12 +145,18 @@ class DetectorSchema {
         if (!this.isRecord(source)) return null;
         const incoming = [];
         const ids = new Set();
-        // Merge (partial): one rule that is not valid here (an invalid regex, one that needs a newer extension, a
-        // duplicate) is left out and named, the others still come in. Replace All deletes the person's own rules
-        // first, so there the whole file has to be valid. A file with no valid rule at all is refused
+        // Merge (partial): one rule that is not valid here (a regex that does not compile or that the ReDoS guard refuses, one
+        // that needs a newer extension, a duplicate, a text or a rule over the limits) is left out and named, the others
+        // still come in. Replace All deletes the person's own rules first, so there the
+        // whole file has to be valid. A file with no valid rule at all is refused, and so is one over the limits as a whole
+        // (too many rules, too many patterns): it is not a rules file, and the names of a thousand rules are no message
         const skipped = [];
+        let detectors = 0;
+        let patterns = 0;
         for (const [category, records] of Object.entries(source)) {
             if (!this.safeKey(category) || !this.isRecord(records)) return null;
+            detectors += Object.keys(records).length;
+            if (detectors > this.IMPORT_LIMITS.detectors) return null;
             for (const [key, detector] of Object.entries(records)) {
                 const normalized = this.admit(detector, { categoryName: category, detectorName: key, extensionVersion });
                 if (!normalized || ids.has(normalized.id)) {
@@ -129,6 +165,8 @@ class DetectorSchema {
                     skipped.push(name.slice(0, 80));
                     continue;
                 }
+                patterns += this.patternCount(normalized);
+                if (patterns > this.IMPORT_LIMITS.patterns) return null;
                 ids.add(normalized.id);
                 incoming.push({ category, detector: normalized, enabledProvided: typeof detector.enabled === 'boolean' });
             }

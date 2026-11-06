@@ -1010,7 +1010,7 @@
     "message": "Detectores importados"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detectores importados, exceto: {0} (não são válidos nesta versão)"
+    "message": "Detectores importados, exceto: {0} (não são válidos nesta versão, ou um padrão pode travar a análise)"
   },
   "detectorsImportedKeptFmt": {
     "message": "As regras oficiais já instaladas não foram substituídas: {0}"
@@ -2362,7 +2362,7 @@
     "message": "Requisições de fontes, mídia e folhas de estilo não são registradas."
   },
   "mhUrlLimit2": {
-    "message": "Só contam as requisições feitas antes da varredura, que roda quando a página termina de carregar."
+    "message": "A varredura roda quando a página termina de carregar; as requisições feitas depois também contam se o escopo da URL for Todos."
   },
   "mhHeaderIntro": {
     "message": "Verifica os cabeçalhos da requisição e da resposta da própria página, não os de scripts, chamadas XHR ou frames."
@@ -2419,7 +2419,7 @@
     "message": "Código dentro de frames ou workers, ou carregado depois da varredura, não é buscado."
   },
   "mhDomIntro": {
-    "message": "Procura um elemento no body da página com um seletor CSS, quando a página termina de carregar."
+    "message": "Procura um elemento na página (head e body) com um seletor CSS, quando a página termina de carregar."
   },
   "mhDomHow1": {
     "message": "Uma tag, `.classe`, `#id` ou `[atributo]`, sozinho ou combinado: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Não suportados, e a regra nunca corresponde: espaços ou `>` entre as partes, `:pseudo-classes` e escapes."
   },
   "mhDomLimit2": {
-    "message": "O head, os frames e os shadow roots não são buscados. O atributo `value` não é lido; os outros são comparados nos primeiros 100 caracteres."
+    "message": "Os frames e os shadow roots não são buscados. O atributo `value` não é lido; os outros são comparados nos primeiros 100 caracteres."
   },
   "mhWindowIntro": {
     "message": "Verifica uma variável global de JavaScript que a página define, como `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "As chamadas contam nos primeiros segundos depois que a página carrega (no máximo 8 segundos)."
   },
   "mhJsHooksLimit2": {
-    "message": "Chamadas em workers ou frames não são vistas, exceto os alvos embutidos em frames do mesmo site."
+    "message": "Chamadas em workers ou frames não são vistas, exceto os alvos embutidos em frames da mesma origem."
   },
   "mhPayloadIntro": {
     "message": "Busca no corpo das requisições POST, PUT, PATCH e DELETE que a página envia, de qualquer frame."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "Mensagens de WebSocket não são lidas."
+  },
+  "mhRegexTextLimit": {
+    "message": "Nas regras que você escreve ou importa, Regex lê só os primeiros 100.000 caracteres de um texto (uma página, um script, o corpo de uma requisição). Texto comum, Palavra inteira e as regras da Scrapfly leem o texto inteiro."
   },
   "domCardTitle": {
     "message": "Seletor CSS"

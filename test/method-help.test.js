@@ -64,3 +64,47 @@ test('the facts that were wrong before stay corrected', () => {
   assert.equal(METHOD_HELP.js_hooks.warning, undefined, 'hooks are installed for every category, so no Fingerprint-only warning');
   assert.match(all('js_hooks'), /Navigator\.prototype\.webdriver`, not `navigator\.webdriver/);
 });
+
+// The facts that went stale when the engine moved on. Each help sentence is pinned to the code it describes, so the next change
+// to the engine fails here and says which sentence to fix (and every locale carries it: npm run check:locale)
+const all = (method) => [METHOD_HELP[method].intro, ...METHOD_HELP[method].how, ...METHOD_HELP[method].limits].map(([, t]) => t).join(' ');
+const source = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+
+test('the DOM help says the head is searched: the walk starts at the document element, not at the body', () => {
+  assert.match(source('modules/detection/engine/detection-engine-extractors.js'), /createTreeWalker\(\s*document\.documentElement/, 'the engine walks from the document element');
+  const dom = all('dom');
+  assert.match(METHOD_HELP.dom.intro[1], /head and body/);
+  assert.doesNotMatch(dom, /page body/i, 'the intro no longer says the page body');
+  assert.doesNotMatch(dom, /head[^.]*not searched/i, 'the head is not in the list of what is not searched');
+  assert.match(dom, /Frames and shadow roots are not searched/, 'frames and shadow roots still are not (the content scripts run in the top frame only)');
+  assert.match(source('manifest.json'), /"all_frames": false/);
+});
+
+test('the URL help says requests made after the scan still count, for URL scope All', () => {
+  assert.match(source('background/detection-lifecycle.js'), /function applyLateNetworkUrls/, 'the worker checks late requests');
+  const url = all('url');
+  assert.doesNotMatch(url, /Only requests made before the scan count/);
+  assert.match(url, /requests made after it still count when the URL scope is All/);
+});
+
+test('the JS hooks help says same-origin frames: the hooks reach the frames the page can read, which are not all of the same site', () => {
+  assert.match(source('content-main-world.js'), /Cross-origin windows throw on access and are skipped/);
+  assert.match(all('js_hooks'), /built-in targets in same-origin frames/);
+  assert.doesNotMatch(all('js_hooks'), /same-site/);
+});
+
+test('the sheets of the methods that read pages, scripts and bodies say what a regex reads of a long text, with the real limit', () => {
+  globalThis.Constants = globalThis.Constants || { PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 };
+  globalThis.Logger = globalThis.Logger || { warn() {}, debug() {} };
+  const { PatternCache } = require('../utils/pattern-cache.js');
+  const shown = PatternCache.REGEX_TEXT_LIMIT.toLocaleString('en-US');
+  for (const method of ['content', 'payload']) {
+    const limit = METHOD_HELP[method].limits.find(([key]) => key === 'mhRegexTextLimit');
+    assert.ok(limit, `${method}: the text limit of a regex is on its sheet`);
+    assert.ok(limit[1].includes(`first ${shown} characters`), `${method}: says ${shown}`);
+    assert.match(limit[1], /Plain text, Whole word and Scrapfly's own rules read all of it/);
+  }
+  for (const method of ['url', 'header', 'cookie', 'dom', 'window', 'js_hooks']) {
+    assert.ok(!METHOD_HELP[method].limits.some(([key]) => key === 'mhRegexTextLimit'), `${method}: its texts are short`);
+  }
+});

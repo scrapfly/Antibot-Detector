@@ -1010,7 +1010,7 @@
     "message": "Detektorer importerade"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detektorer importerade, utom: {0} (inte giltiga i den här versionen)"
+    "message": "Detektorer importerade, utom: {0} (inte giltiga i den här versionen, eller så kan ett mönster låsa genomsökningen)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Redan installerade officiella regler ersattes inte: {0}"
@@ -2362,7 +2362,7 @@
     "message": "Begäranden om typsnitt, media och formatmallar registreras inte."
   },
   "mhUrlLimit2": {
-    "message": "Endast begäranden som görs före skanningen räknas; skanningen körs när sidan har lästs in."
+    "message": "Skanningen körs när sidan har lästs in; begäranden som görs efter den räknas också om URL-omfånget är Alla."
   },
   "mhHeaderIntro": {
     "message": "Kontrollerar headers i sidans egen begäran och eget svar, inte de från skript, XHR-anrop eller ramar."
@@ -2419,7 +2419,7 @@
     "message": "Kod i ramar eller workers, eller som läses in efter skanningen, genomsöks inte."
   },
   "mhDomIntro": {
-    "message": "Letar efter ett element i sidans body med en CSS-selektor, när sidan har lästs in."
+    "message": "Letar efter ett element på sidan (head och body) med en CSS-selektor, när sidan har lästs in."
   },
   "mhDomHow1": {
     "message": "En tagg, `.class`, `#id` eller `[attribute]`, ensam eller kombinerad: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Stöds inte, så regeln matchar aldrig: mellanslag eller `>` mellan delar, `:pseudo-classes` och escape-sekvenser."
   },
   "mhDomLimit2": {
-    "message": "Head, ramar och shadow roots genomsöks inte. Attributet `value` läses inte; andra attribut jämförs på sina första 100 tecken."
+    "message": "Ramar och shadow roots genomsöks inte. Attributet `value` läses inte; andra attribut jämförs på sina första 100 tecken."
   },
   "mhWindowIntro": {
     "message": "Kontrollerar en JavaScript-global som sidan definierar, till exempel `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Anrop räknas under de första sekunderna efter att sidan har lästs in (högst 8 sekunder)."
   },
   "mhJsHooksLimit2": {
-    "message": "Anrop i workers eller ramar syns inte, förutom inbyggda mål i ramar på samma webbplats."
+    "message": "Anrop i workers eller ramar syns inte, förutom inbyggda mål i ramar med samma ursprung."
   },
   "mhPayloadIntro": {
     "message": "Söker i innehållet i de POST-, PUT-, PATCH- och DELETE-begäranden som sidan skickar, från vilken ram som helst."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket-meddelanden läses inte."
+  },
+  "mhRegexTextLimit": {
+    "message": "I regler som du skriver eller importerar läser Regex bara de första 100 000 tecknen av en text (en sida, ett skript, innehållet i en begäran). Vanlig text, Helt ord och Scrapflys egna regler läser allt."
   },
   "domCardTitle": {
     "message": "CSS-selektor"
