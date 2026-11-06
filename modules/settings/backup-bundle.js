@@ -8,8 +8,10 @@
  *   parse()        the file's text as a checked object, or why it is not one of ours
  *   summarize()    what a backup holds: whether it has settings, how many rules, how many History entries
  *   legacyKind()   what an older single-purpose export is (a History file, a rules file, a settings file)
- *   customOnly()   a rules export reduced to what a restore applies: the person's own rules, and the official ones they switched
- *                  off (a restore never overwrites an official rule, but it takes its on/off state from the file)
+ *   customOnly()   a rules export reduced to what a restore applies: the person's own rules, and for each official one they
+ *                  switched off a stub, {id, enabled: false} (a restore never overwrites an official rule, but it takes its on/off
+ *                  state from the file; a full record could be one an older build's importer refuses, and fail the rules part)
+ *   isStateStub()  whether a record is such a stub
  *   fileName()     scrapfly-backup-2026-10-20.json
  *
  * Restoring applies settings, then rules, then History, each on its own: one that fails does not undo the others.
@@ -25,20 +27,27 @@
 
   const isObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
 
+  /** A switched-off official rule as the file holds it: its id and `enabled: false`, nothing else. Never a rule of its own. */
+  const isStateStub = (record) => isObject(record) && typeof record.id === 'string' && record.enabled === false
+    && Object.keys(record).every(key => key === 'id' || key === 'enabled');
+
   /**
    * The detectors of a rules export that a restore can apply (`isOfficial(detector)` says which are official): the person's own
-   * rules, and the official rules they switched off. The importer never replaces an official rule, so one that is on needs no
-   * record; but it takes the on/off state of an official rule from the file, so one that is off has to be in it.
+   * rules, and a stub ({id, enabled: false}) for each official rule they switched off. The importer never replaces an official
+   * rule, so one that is on needs nothing; but it takes the on/off state of an official rule from the file, so one that is off
+   * has to be named in it. Only by id: the full record is Scrapfly's, and an older build whose schema refuses it would refuse
+   * the whole rules part of a Replace restore.
    */
   function customOnly(exported, isOfficial) {
     const source = isObject(exported) && isObject(exported.detectors) ? exported.detectors : {};
     const detectors = {};
     for (const [category, records] of Object.entries(source)) {
       for (const [id, detector] of Object.entries(isObject(records) ? records : {})) {
-        if (isObject(detector) && (!isOfficial(detector) || detector.enabled === false)) {
-          if (!detectors[category]) detectors[category] = {};
-          detectors[category][id] = detector;
-        }
+        if (!isObject(detector)) continue;
+        const official = isOfficial(detector);
+        if (official && detector.enabled !== false) continue;
+        if (!detectors[category]) detectors[category] = {};
+        detectors[category][id] = official ? { id: typeof detector.id === 'string' && detector.id ? detector.id : id, enabled: false } : detector;
       }
     }
     return { version: (exported && exported.version) || '1.0', exportedAt: (exported && exported.exportedAt) || undefined, detectors };
@@ -70,8 +79,9 @@
   }
 
   /**
-   * What a backup holds. `rules` counts the person's own rules (what "Your rules ({0})" says); since 3.1.4 the file also carries
-   * the official rules they switched off, which `ruleRecords` counts with them (whether there is a rules part to restore at all).
+   * What a backup holds. `rules` counts the person's own rules (what "Your rules ({0})" says); since 3.1.4 the file also names
+   * the official rules they switched off (stubs, or full records in a 3.1.4 development build's file), which `ruleRecords` counts
+   * with them (whether there is a rules part to restore at all).
    * @param {object} bundle
    * @param {Function} [isOfficial] - isOfficial(detector); without it every record counts as the person's own
    */
@@ -80,7 +90,7 @@
     const official = typeof isOfficial === 'function' ? isOfficial : () => false;
     return {
       settings: isObject(b.settings) && Object.keys(b.settings).length > 0,
-      rules: ruleCount(b.detectors, detector => !official(detector)),
+      rules: ruleCount(b.detectors, detector => !isStateStub(detector) && !official(detector)),
       ruleRecords: ruleCount(b.detectors),
       history: Array.isArray(b.history && b.history.items) ? b.history.items.length : 0
     };
@@ -118,7 +128,7 @@
     return `scrapfly-backup-${localDay(now)}.json`;
   }
 
-  const api = { FORMAT, VERSION, build, parse, summarize, legacyKind, customOnly, fileName };
+  const api = { FORMAT, VERSION, build, parse, summarize, legacyKind, customOnly, isStateStub, fileName };
   root.BackupBundle = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BackupBundle = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

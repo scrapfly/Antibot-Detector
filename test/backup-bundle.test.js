@@ -72,13 +72,14 @@ test('an official rule the person switched off stays in the file: a restore take
   const kept = B.customOnly(file, isOfficial);
   assert.deepStrictEqual(Object.keys(kept.detectors.antibot), ['detect-cloudflare', 'detect-mine'], 'switched-off official and the person\'s own, nothing else');
   assert.strictEqual(kept.detectors.antibot['detect-cloudflare'].enabled, false);
-  assert.deepStrictEqual(kept.detectors.antibot['detect-cloudflare'], off, 'the record as the importer reads it');
+  assert.deepStrictEqual(kept.detectors.antibot['detect-cloudflare'], { id: 'detect-cloudflare', enabled: false }, 'by id only: the importer takes the switch, never the record');
   // Only a switch that is explicitly off counts: "off" is not "missing", "null" or a string
   const odd = { detectors: { antibot: { a: { id: 'a', author: 'Scrapfly', enabled: null }, b: { id: 'b', author: 'Scrapfly', enabled: 'false' }, c: { id: 'c', author: 'Scrapfly', enabled: 0 } } } };
   assert.deepStrictEqual(B.customOnly(odd, isOfficial).detectors, {});
-  // It counts as a rule of the file (the restore dialog says how many the file applies)
+  // It is part of the file's rules, not one of the person's own (the restore dialog says how many of those the file holds)
   const bundle = B.build({ ...parts, detectors: kept });
-  assert.strictEqual(B.summarize(bundle).rules, 2);
+  assert.strictEqual(B.summarize(bundle).rules, 1);
+  assert.strictEqual(B.summarize(bundle).ruleRecords, 2);
   assert.strictEqual(B.parse(JSON.stringify(bundle)).ok, true);
 });
 
