@@ -144,8 +144,25 @@ class DetectionEngineManager {
                 detail: safeDetail
             }));
         };
+        // An install with nothing to hook still goes out, so the MAIN world completes and never waits for one. It carries
+        // hooksOff: that is what makes the MAIN world take what the bootstrap put on the page (the early recorders, the frame
+        // accessors, the recorders put into frames and the document-wide observer) off again; it retires them for no other install
+        const dispatchNothingToHook = (detail) => dispatchInstallHooks({ hookDefinitions: [], windowProperties: [], hooksOff: true, ...detail });
+        // The settings, read strictly (a value that is not JSON or not an object is an error here, not "no settings") at the
+        // same time as the read below: this runs at document_start, and a second round trip after it would delay the hooks
+        const strictSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.readSettingsStrict === 'function'
+            ? StorageManager.readSettingsStrict().then(settings => ({ settings }), error => ({ error }))
+            : null;
         try {
-            const result = await chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_settings', 'scrapfly_enabled']);
+            let result;
+            try {
+                result = await chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_settings', 'scrapfly_enabled']);
+            } catch (error) {
+                // What the person chose (the extension on or off, sites left out, sites without hooks) cannot be known: no hooks
+                DetectionEngineManager.noteSettingsUnreadable(error);
+                dispatchNothingToHook({ debugMode: false, logCollectorEnabled: false, enableJsApi: false, fingerprintEnabled: true });
+                return;
+            }
             const normalizeHook = (hook) => {
                 if (!hook || hook.enabled === false || typeof hook.target !== 'string') {
                     return null;
@@ -167,9 +184,7 @@ class DetectionEngineManager {
             // Extension disabled - skip hook installation entirely
             // Dispatch empty event so MAIN world sends completion signals and doesn't hang
             if (result.scrapfly_enabled === false) {
-                dispatchInstallHooks({
-                    hookDefinitions: [],
-                    windowProperties: [],
+                dispatchNothingToHook({
                     debugMode: false,
                     logCollectorEnabled: false,
                     enableJsApi: false,
@@ -178,9 +193,22 @@ class DetectionEngineManager {
                 return;
             }
 
-            const actualSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
-                ? StorageManager.normalizeSettings(result.scrapfly_settings)
-                : {};
+            let actualSettings;
+            if (strictSettings) {
+                const read = await strictSettings;
+                if (read.error) {
+                    // Settings that cannot be read say nothing about skipped sites or sites without hooks: hooks are installed nowhere
+                    DetectionEngineManager.noteSettingsUnreadable(read.error);
+                    dispatchNothingToHook({ debugMode: false, logCollectorEnabled: false, enableJsApi: false, fingerprintEnabled: true });
+                    return;
+                }
+                DetectionEngineManager.noteSettingsReadable();
+                actualSettings = read.settings;
+            } else {
+                actualSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
+                    ? StorageManager.normalizeSettings(result.scrapfly_settings)
+                    : {};
+            }
             // This content script's own Logger flags come from the same read
             if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
                 Utils.applyDebugMode(actualSettings);
@@ -270,14 +298,55 @@ class DetectionEngineManager {
                 Logger.error('DETECTION', '[installHooksOrchestrator] Failed:', error);
             }
             // Still dispatch empty event so MAIN world doesn't hang
-            dispatchInstallHooks({
-                hookDefinitions: [],
-                windowProperties: [],
+            dispatchNothingToHook({
                 debugMode: false,
                 logCollectorEnabled: false,
                 enableJsApi: false,
                 fingerprintEnabled: true
             });
+        }
+    }
+
+    // Set once unreadable settings have been logged and no read has worked since: one line per failure, not one per page
+    static _settingsUnreadableLogged = false;
+
+    /**
+     * The extension's settings (or its on/off switch) could not be read: said once. Only the error's name is logged: a parse
+     * error's message quotes the stored text.
+     */
+    static noteSettingsUnreadable(error) {
+        if (DetectionEngineManager._settingsUnreadableLogged) return;
+        DetectionEngineManager._settingsUnreadableLogged = true;
+        const name = error && typeof error.name === 'string' && error.name ? error.name : 'Error';
+        if (typeof Logger !== 'undefined') {
+            Logger.warn('DETECTION', `The extension settings cannot be read (${name}): no hooks are installed and no page is scanned until they can`);
+        }
+    }
+
+    /** A read worked: the next failure is a new one and is said again. */
+    static noteSettingsReadable() {
+        DetectionEngineManager._settingsUnreadableLogged = false;
+    }
+
+    /**
+     * Whether pages are scanned: the extension's switch, and the settings that hold the person's skip lists. A read that fails
+     * tells nothing about either, so the worker scans nothing on a guess (it used to log the failure and scan: a switched-off
+     * extension, or a site left out of scanning, was scanned because the setting that says so could not be read).
+     * @param {object} chrome - the chrome API
+     * @returns {Promise<{ok: boolean, enabled?: boolean}>} ok false: the state could not be read
+     */
+    static async readScanState(chrome) {
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result && result.scrapfly_enabled === false) return { ok: true, enabled: false };
+            if (typeof StorageManager !== 'undefined' && typeof StorageManager.readSettingsStrict === 'function') {
+                await StorageManager.readSettingsStrict();
+            }
+            DetectionEngineManager.noteSettingsReadable();
+            return { ok: true, enabled: true };
+        } catch (error) {
+            DetectionEngineManager.noteSettingsUnreadable(error);
+            return { ok: false };
         }
     }
 
