@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "Automatisk sökning efter uppdateringar är av"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Ingår inte i en säkerhetskopia: uppgifter om webhook och delning samt vilka sidor i Historik som bevakas."
   }
 }

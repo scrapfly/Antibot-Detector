@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "Tự động kiểm tra bản cập nhật đã tắt"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Không nằm trong bản sao lưu: thông tin webhook và chia sẻ, cùng các trang trong Lịch sử đang được theo dõi."
   }
 }

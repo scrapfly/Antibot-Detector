@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "자동 업데이트 확인이 꺼져 있습니다"
+  },
+  "restoreNotIncludedNote": {
+    "message": "백업에 포함되지 않는 항목: 웹훅 및 공유 정보, 그리고 기록에서 감시 중인 페이지."
   }
 }

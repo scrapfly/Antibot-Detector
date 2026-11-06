@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "Automatyczne sprawdzanie aktualizacji jest wyłączone"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Kopia nie zawiera danych webhooka i udostępniania ani informacji, które strony Historii są obserwowane."
   }
 }

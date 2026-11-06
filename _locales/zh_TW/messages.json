@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "自動檢查更新已關閉"
+  },
+  "restoreNotIncludedNote": {
+    "message": "備份不包含：Webhook 和分享的詳細資料，以及「歷史記錄」中被監看的網頁。"
   }
 }

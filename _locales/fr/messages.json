@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "La vérification automatique des mises à jour est désactivée"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Ne font pas partie d’une sauvegarde : les informations du webhook et du partage, et les pages de l’historique surveillées."
   }
 }

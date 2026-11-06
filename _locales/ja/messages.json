@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "自動更新確認はオフです"
+  },
+  "restoreNotIncludedNote": {
+    "message": "バックアップに含まれないもの: Webhook と共有の情報、および履歴のどのページを監視しているか。"
   }
 }

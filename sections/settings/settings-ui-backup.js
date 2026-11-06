@@ -13,6 +13,7 @@ SettingsUI.backUpEverything = async function() {
             // What is saved, never a draft that was not (Save it first to include it)
             settings: this.settingsBaseline || this.settings,
             languageOverride: stored.scrapfly_language_override || 'auto',
+            theme: typeof ScrapflyTheme !== 'undefined' ? ScrapflyTheme.get() : undefined,
             detectors: BackupBundle.customOnly(detectorManager.exportDetectors(), detector => DetectionUtils.isOfficialDetector(detector)),
             historyItems: await SettingsUI._readStoredHistoryItems()
         });
@@ -76,6 +77,13 @@ SettingsUI.chooseRestore = async function(parsed) {
             row(radio, label);
         }
     }
+    // What a backup never holds, said where the person chooses what comes back (the webhook and sharing details are
+    // connections; the watchlist is a choice made on this machine, so an imported page is never put on it)
+    const note = document.createElement('p');
+    note.className = 'notification-confirm-message';
+    note.style.cssText = 'margin-top:14px;font-size:11.5px;line-height:1.5;color:var(--text-muted)';
+    note.textContent = text('restoreNotIncludedNote', 'Not part of a backup: webhook and sharing details, and which History pages are watched.');
+    content.append(note);
     const confirmed = await NotificationHelper.form({
         title: text('restoreTitle', 'Restore a backup'), content, type: 'info',
         confirmText: text('restoreConfirm', 'Restore'), cancelText: text('btnCancel', 'Cancel')
@@ -89,7 +97,8 @@ SettingsUI.chooseRestore = async function(parsed) {
 
 /**
  * Settings, then rules, then History. A part that fails does not undo the ones before it. A language that comes with the
- * settings is saved with them but shown last: showing it reloads the popup, which would cut the other parts short.
+ * settings is saved with them but shown last: showing it reloads the popup, which would cut the other parts short. The theme
+ * comes with the settings too (it needs no reload).
  * @returns {{done: string[], failed: string[], language: string|null, skipped: string[]}} `skipped`: rules of the backup this
  *   version could not take (merge imports the valid ones), to be named to the person
  */
@@ -114,6 +123,12 @@ SettingsUI.applyBackup = async function(bundle, choice) {
             const saved = await this.saveSettings({ notify: false, notifyError: false, candidate, languageOverride: knownLanguage ? bundle.languageOverride : undefined });
             if (!saved) throw new Error('The settings could not be saved');
             this.updateSettingsUI();
+            // The theme is a choice kept apart from the settings and applies at once: only one of ours, and only another one
+            if (typeof ScrapflyTheme !== 'undefined' && ScrapflyTheme.VALUES.includes(bundle.theme) && bundle.theme !== ScrapflyTheme.get()) {
+                await ScrapflyTheme.set(bundle.theme);
+                const themeChoice = document.querySelector('#themeChoice');
+                if (themeChoice) themeChoice.value = bundle.theme;
+            }
             if (knownLanguage && bundle.languageOverride !== languageBefore) language = bundle.languageOverride;
         });
     }

@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "Il controllo automatico degli aggiornamenti è disattivato"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Non fanno parte di un backup: i dati del webhook e della condivisione, e quali pagine della cronologia sono monitorate."
   }
 }

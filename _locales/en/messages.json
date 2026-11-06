@@ -7285,5 +7285,9 @@
   "presetAutoUpdateOff": {
     "message": "Automatic update checks are off",
     "description": "A line in the list of what the Privacy preset changes"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Not part of a backup: webhook and sharing details, and which History pages are watched.",
+    "description": "Restore dialog: a note under the choices about what a backup never holds (the webhook and sharing connections, and which History pages are on the watchlist)"
   }
 }

@@ -2,13 +2,14 @@
  * Settings → Data → Backup and restore: the one file that holds settings, the person's own rules and History.
  * Pure (no browser APIs): the page reads the three parts and applies them again, and this module writes and checks
  * the file. The settings part goes through SettingsTransfer.portable, so a webhook address, a header or a sharing
- * key can never be in it.
+ * key can never be in it. The language and the theme travel beside it: they are choices kept apart from the settings.
  *
  *   build()        the file's object from the parts
  *   parse()        the file's text as a checked object, or why it is not one of ours
  *   summarize()    what a backup holds: whether it has settings, how many rules, how many History entries
  *   legacyKind()   what an older single-purpose export is (a History file, a rules file, a settings file)
- *   customOnly()   a rules export without the official detectors, which a restore would never overwrite anyway
+ *   customOnly()   a rules export reduced to what a restore applies: the person's own rules, and the official ones they switched
+ *                  off (a restore never overwrites an official rule, but it takes its on/off state from the file)
  *   fileName()     scrapfly-backup-2026-10-20.json
  *
  * Restoring applies settings, then rules, then History, each on its own: one that fails does not undo the others.
@@ -24,13 +25,17 @@
 
   const isObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
 
-  /** The detectors of a rules export that are not official (`isOfficial(detector)` says which are). */
+  /**
+   * The detectors of a rules export that a restore can apply (`isOfficial(detector)` says which are official): the person's own
+   * rules, and the official rules they switched off. The importer never replaces an official rule, so one that is on needs no
+   * record; but it takes the on/off state of an official rule from the file, so one that is off has to be in it.
+   */
   function customOnly(exported, isOfficial) {
     const source = isObject(exported) && isObject(exported.detectors) ? exported.detectors : {};
     const detectors = {};
     for (const [category, records] of Object.entries(source)) {
       for (const [id, detector] of Object.entries(isObject(records) ? records : {})) {
-        if (isObject(detector) && !isOfficial(detector)) {
+        if (isObject(detector) && (!isOfficial(detector) || detector.enabled === false)) {
           if (!detectors[category]) detectors[category] = {};
           detectors[category][id] = detector;
         }
@@ -43,7 +48,7 @@
     ? Object.values(detectors.detectors).reduce((sum, records) => sum + (isObject(records) ? Object.keys(records).length : 0), 0) : 0);
 
   /**
-   * @param {{extensionVersion: string, now?: number, settings: object, languageOverride?: string, detectors: object, historyItems: Array}} parts
+   * @param {{extensionVersion: string, now?: number, settings: object, languageOverride?: string, theme?: string, detectors: object, historyItems: Array}} parts
    */
   function build(parts) {
     const portable = root.SettingsTransfer && root.SettingsTransfer.portable;
@@ -55,6 +60,8 @@
       createdAt: new Date(Number.isFinite(parts.now) ? parts.now : Date.now()).toISOString(),
       settings: portable(parts.settings || {}),
       languageOverride: typeof parts.languageOverride === 'string' ? parts.languageOverride : 'auto',
+      // Only when the page knows it (the popup does): the restore applies it only if it is one of its themes
+      ...(typeof parts.theme === 'string' && parts.theme ? { theme: parts.theme } : {}),
       detectors: isObject(parts.detectors) ? parts.detectors : { version: '1.0', detectors: {} },
       history: { items: Array.isArray(parts.historyItems) ? parts.historyItems : [] }
     };

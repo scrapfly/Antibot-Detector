@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "Automatická kontrola aktualizací je vypnutá"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Součástí zálohy nejsou údaje webhooku a sdílení ani to, které stránky Historie se sledují."
   }
 }

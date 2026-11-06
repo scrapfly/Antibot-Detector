@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "Die automatische Suche nach Updates ist aus"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Nicht Teil einer Sicherung: Angaben zu Webhook und Teilen sowie welche Seiten im Verlauf überwacht werden."
   }
 }

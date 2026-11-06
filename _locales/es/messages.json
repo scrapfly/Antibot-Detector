@@ -6618,5 +6618,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "La comprobación automática de actualizaciones está desactivada"
+  },
+  "restoreNotIncludedNote": {
+    "message": "No forman parte de la copia: los datos del webhook y de compartir, ni qué páginas del historial se vigilan."
   }
 }

@@ -6616,5 +6616,8 @@
   },
   "presetAutoUpdateOff": {
     "message": "स्वचालित अद्यतन जांच बंद है"
+  },
+  "restoreNotIncludedNote": {
+    "message": "बैकअप में शामिल नहीं: Webhook और शेयरिंग का ब्योरा, और इतिहास के किन पेजों पर नज़र रखी जा रही है।"
   }
 }
