@@ -7,6 +7,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.4] - 2026-11-05
 
+### Added
+- The popup says when stored settings cannot be read and points to Settings → Data → Reset.
+
 ### Changed
 
 - After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
@@ -51,6 +54,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: the Update badge follows Settings → Data → Clear and Check now, and after deleting or resetting a rule the list keeps its page and keyboard focus.
 - Rules: screen readers announce how many rules the search and filters leave, or that none match.
 - Advanced: saved captures' Copy and Delete are reachable with a screen reader, and the Help dialog keeps keyboard focus inside it.
+- Custom rules, edits to official rules and switched-off detectors are no longer replaced by the shipped rules when stored rules cannot be read.
+- When settings cannot be read, History records nothing, Bulk scan does not start, and backup, watchlist and update schedules stay as they were.
+- An overdue watchlist check is no longer pushed back each time the background worker wakes.
 
 ## [3.1.3] - 2026-11-05
 
