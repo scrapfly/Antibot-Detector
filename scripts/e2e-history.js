@@ -1010,7 +1010,7 @@ async function scenario(name, fn) {
       assert.deepEqual(await page.$$eval('#historyMaxMB option', els => els.map(el => el.textContent)), ['6 MB', '12 MB', '25 MB']);
       await page.waitForFunction(() => /of 12\.0 MB used/.test(document.querySelector('#historyMeterText').textContent), null, { polling: 250, timeout: 8000 })
         .catch(async (error) => { throw new Error(`the History meter says "${await page.$eval('#historyMeterText', el => el.textContent)}" (${error.message.split('\n')[0]})`); });
-      assert.match(await page.$eval('#historyMeterText', el => el.textContent), /^\d+\.\d MB of 12\.0 MB used · 2200 entries$/);
+      assert.match(await page.$eval('#historyMeterText', el => el.textContent), /^\d+\.\d MB of 12\.0 MB used · entries: 2200$/);
 
       await click('.settings-tab-btn[data-settings-tab="data"]');
       await page.waitForFunction(() => /used, no limit/.test(document.querySelector('#storageTotalText').textContent), null, { polling: 250, timeout: 8000 })

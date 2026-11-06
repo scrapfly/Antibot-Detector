@@ -5757,7 +5757,7 @@
     "message": "Dina regler ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Historik ({0} poster)"
+    "message": "Historik (poster: {0})"
   },
   "restoreModeLabel": {
     "message": "Regler och historik"

@@ -782,7 +782,7 @@
     "message": "1 шаблон"
   },
   "methodPatternsFmt": {
-    "message": "{0} шаблонов"
+    "message": "Шаблонов: {0}"
   },
   "methodAddPattern": {
     "message": "Добавить шаблон"
@@ -875,7 +875,7 @@
     "message": "Обнаружений не найдено"
   },
   "historyMatchCountFmt": {
-    "message": "{0} совпадений"
+    "message": "Совпадений: {0}"
   },
   "historyOneMatch": {
     "message": "1 совпадение"

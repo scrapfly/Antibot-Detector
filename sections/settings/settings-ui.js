@@ -1572,9 +1572,20 @@ SettingsUI.readNameList = function(selector, fallback) {
   return box.value.split(/\r?\n/).map(line => line.replace(/\s+/g, ' ').trim()).filter(name => name && !seen.has(name.toLowerCase()) && seen.add(name.toLowerCase())).slice(0, 100);
 };
 
-/** Bytes as MB with one decimal ("2.1 MB"), KB below that. */
+/** Bytes as MB with one decimal ("2.1 MB", "2,1 MB" in German), KB below that: the decimal mark follows the interface language. */
 SettingsUI.formatStorageSize = function(bytes) {
-  return bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  const megabytes = bytes >= 1048576;
+  const value = megabytes ? bytes / 1048576 : Math.max(1, Math.round(bytes / 1024));
+  const digits = megabytes ? 1 : 0;
+  let number = value.toFixed(digits);
+  const locale = typeof FormatUtils !== 'undefined' && typeof FormatUtils.uiLocale === 'function' ? FormatUtils.uiLocale() : null;
+  if (locale && typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
+    try {
+      // Latin digits, as the counts beside it, and no thousands separator, which would read as a decimal mark in another language
+      number = new Intl.NumberFormat(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: false, numberingSystem: 'latn' }).format(value);
+    } catch (_) { /* the plain number */ }
+  }
+  return `${number} ${megabytes ? 'MB' : 'KB'}`;
 };
 
 /** Does the background worker run the code this page was loaded with (it answers the History ping)? */

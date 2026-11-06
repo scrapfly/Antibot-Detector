@@ -1061,7 +1061,7 @@
     "message": "Capture supprimée"
   },
   "capturesExportedFmt": {
-    "message": "{0} captures exportées"
+    "message": "Captures exportées : {0}"
   },
   "allCapturesCleared": {
     "message": "Toutes les captures ont été supprimées"
@@ -5757,7 +5757,7 @@
     "message": "Vos règles ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Historique ({0} entrées)"
+    "message": "Historique (entrées : {0})"
   },
   "restoreModeLabel": {
     "message": "Règles et historique"

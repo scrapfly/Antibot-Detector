@@ -7,7 +7,8 @@
  *   DEFAULT_MINUTES, MIN_MINUTES, MAX_MINUTES   30 minutes, 1 minute, one week
  *   minutesOf()   the saved value as whole minutes: anything that is not a usable number (or is below one
  *                 minute) is the default, a value above a week is a week
- *   label()       "15 minutes", "1 hour", "3 days" as Settings words it, translated through tr(key, fallback)
+ *   label()       "15 minutes", "1 hour", "3 days" as Settings words it: the common choices through tr(key, fallback), any other
+ *                 value counted in the language of the interface ("1 minute", "2 дня")
  */
 (function(root) {
   'use strict';
@@ -16,7 +17,7 @@
   const MIN_MINUTES = 1;
   const MAX_MINUTES = 10080;
 
-  // The common choices have their own wording (Settings → Keep tool captures for); any other value is "<n> <unit>"
+  // The common choices have their own wording (Settings → Keep tool captures for); any other value is counted in its unit
   const KNOWN = Object.freeze({
     15: ['settingsCaptureRetention15m', '15 minutes'], 30: ['settingsCaptureRetention30m', '30 minutes'],
     60: ['settingsCaptureRetention1h', '1 hour'], 180: ['settingsCaptureRetention3h', '3 hours'],
@@ -29,12 +30,32 @@
     return Math.min(MAX_MINUTES, minutes);
   }
 
+  /** The language of the interface as an Intl tag ("ru", "pt-BR"), or '' when none is loaded (Node, the worker). */
+  function uiLocale() {
+    try {
+      if (typeof I18n !== 'undefined' && I18n && typeof I18n.locale === 'function') return String(I18n.locale() || '').replace('_', '-');
+    } catch (_) { /* none */ }
+    return '';
+  }
+
+  /**
+   * "2 days", "2 дня", "دقيقتان": Intl knows how each language counts, which a translated unit word glued to the number does
+   * not ("1 minutes", "2 дней"). Without a language (Node, the worker), or one Intl rejects, it is the English word as it was.
+   */
+  function counted(count, unit, word) {
+    const locale = uiLocale();
+    if (locale && typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
+      try { return new Intl.NumberFormat(locale, { style: 'unit', unit, unitDisplay: 'long' }).format(count); } catch (_) { /* the word below */ }
+    }
+    return `${count} ${word.toLowerCase()}`;
+  }
+
   function label(minutes, tr) {
     const known = KNOWN[minutes];
     if (known) return tr(known[0], known[1]);
-    if (minutes % 1440 === 0) return `${minutes / 1440} ${tr('timeUnitDays', 'Days').toLowerCase()}`;
-    if (minutes % 60 === 0) return `${minutes / 60} ${tr('timeUnitHours', 'Hours').toLowerCase()}`;
-    return `${minutes} ${tr('timeUnitMinutes', 'Minutes').toLowerCase()}`;
+    if (minutes % 1440 === 0) return counted(minutes / 1440, 'day', tr('timeUnitDays', 'Days'));
+    if (minutes % 60 === 0) return counted(minutes / 60, 'hour', tr('timeUnitHours', 'Hours'));
+    return counted(minutes, 'minute', tr('timeUnitMinutes', 'Minutes'));
   }
 
   const api = { DEFAULT_MINUTES, MIN_MINUTES, MAX_MINUTES, minutesOf, label };

@@ -1071,7 +1071,7 @@
     "message": "Capture deleted"
   },
   "capturesExportedFmt": {
-    "message": "Exported {0} captures"
+    "message": "Captures exported: {0}"
   },
   "allCapturesCleared": {
     "message": "All captures cleared"
@@ -5647,7 +5647,7 @@
     "description": "Label of a usage bar"
   },
   "settingsHistoryStorageUsedFmt": {
-    "message": "{0} of {1} used · {2} entries",
+    "message": "{0} of {1} used · entries: {2}",
     "description": "{0} = size used (2.1 MB), {1} = size limit (6 MB), {2} = number of saved pages"
   },
   "settingsHistoryStoragePinnedFmt": {
@@ -5661,7 +5661,7 @@
     "message": "Almost full: the oldest entries will be removed to make room. Export or pin what you want to keep."
   },
   "settingsHistoryStorageTrimmedFmt": {
-    "message": "{0} oldest entries were removed to stay within the limit, the last time on {1}.",
+    "message": "Oldest entries removed to stay within the limit: {0}. Last time: {1}.",
     "description": "{0} = number removed so far, {1} = date and time"
   },
   "settingsHistoryBackup": {
@@ -5691,14 +5691,14 @@
     "description": "Button"
   },
   "settingsHistoryBackupLastFmt": {
-    "message": "Last backup: {0} ({1} entries)",
+    "message": "Last backup: {0} (entries: {1})",
     "description": "{0} = date and time, {1} = number of entries"
   },
   "settingsHistoryBackupNever": {
     "message": "No backup yet."
   },
   "settingsHistoryBackupDoneFmt": {
-    "message": "Backed up {0} entries",
+    "message": "Backup done. Entries: {0}",
     "description": "Toast. {0} = number of entries"
   },
   "settingsHistoryBackupEmpty": {
@@ -6144,7 +6144,7 @@
     "description": "Checkbox in the restore dialog: restore the person's own detection rules. {0} is how many"
   },
   "restorePartHistoryFmt": {
-    "message": "History ({0} entries)",
+    "message": "History (entries: {0})",
     "description": "Checkbox in the restore dialog: restore the History. {0} is how many entries"
   },
   "restoreModeLabel": {

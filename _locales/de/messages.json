@@ -1061,7 +1061,7 @@
     "message": "Aufzeichnung gelöscht"
   },
   "capturesExportedFmt": {
-    "message": "{0} Aufzeichnungen exportiert"
+    "message": "Exportierte Aufzeichnungen: {0}"
   },
   "allCapturesCleared": {
     "message": "Alle Aufzeichnungen gelöscht"
@@ -5757,7 +5757,7 @@
     "message": "Deine Regeln ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Verlauf ({0} Einträge)"
+    "message": "Verlauf (Einträge: {0})"
   },
   "restoreModeLabel": {
     "message": "Regeln und Verlauf"

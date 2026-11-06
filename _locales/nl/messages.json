@@ -5757,7 +5757,7 @@
     "message": "Je regels ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Geschiedenis ({0} items)"
+    "message": "Geschiedenis (items: {0})"
   },
   "restoreModeLabel": {
     "message": "Regels en geschiedenis"

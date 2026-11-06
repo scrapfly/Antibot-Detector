@@ -1061,7 +1061,7 @@
     "message": "Cattura eliminata"
   },
   "capturesExportedFmt": {
-    "message": "Esportate {0} catture"
+    "message": "Catture esportate: {0}"
   },
   "allCapturesCleared": {
     "message": "Tutte le catture eliminate"
@@ -5757,7 +5757,7 @@
     "message": "Le tue regole ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Cronologia ({0} voci)"
+    "message": "Cronologia (voci: {0})"
   },
   "restoreModeLabel": {
     "message": "Regole e cronologia"
