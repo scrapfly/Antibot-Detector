@@ -8,7 +8,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ## [3.1.4] - 2026-11-05
 
 ### Added
-- The popup says when stored settings cannot be read and points to Settings → Data → Reset.
+- The popup says when stored settings or rules cannot be read: scanning pauses until Settings → Data → Reset, and rule changes are not saved over unreadable rules.
 
 ### Changed
 
@@ -44,7 +44,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules help: DOM rules search the page head, and requests made after the scan count for URL rules, in all 22 languages.
 - Rules: two URL rules with the same address both match with their own confidence, and a single pattern switched off no longer matches anything.
 - With the extension switched off, nothing of it stays on the page or in its frames.
-- When the settings cannot be read, no page is scanned and nothing is sent, instead of acting as if everything were allowed.
+- When the settings cannot be read, no page is scanned and nothing is sent or kept, instead of acting as if everything were allowed.
 - Webhook: a private-window page is not sent even when its tab cannot be read.
 - History: after pinning, adding a note or deleting, the keyboard stays on that entry or the next one, also when a dialog closes, without scrolling the list away.
 - History: screen readers hear what each number on a card means, search results are announced, and cards take fewer Tab presses (Scrape with Scrapfly is also in the … menu).
