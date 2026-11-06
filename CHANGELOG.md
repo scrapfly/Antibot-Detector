@@ -11,6 +11,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
 - The popup says the extension must be reloaded, as soon as it opens, when its background part is out of date.
+- History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, and long Unchanged lists folded.
 
 ### Fixed
 
