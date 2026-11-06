@@ -45,7 +45,8 @@ SettingsUI.chooseRestore = async function(parsed) {
     const checks = {};
     const parts = [
         ['settings', summary.settings, text('restorePartSettings', 'Settings')],
-        ['rules', summary.rules > 0, text('restorePartRulesFmt', 'Your rules ({0})', summary.rules)],
+        // The count is of the person's own rules; a file whose rules part holds only official rules switched off still offers it
+        ['rules', (summary.ruleRecords ?? summary.rules) > 0, text('restorePartRulesFmt', 'Your rules ({0})', summary.rules)],
         ['history', summary.history > 0, text('restorePartHistoryFmt', 'History ({0} entries)', summary.history)]
     ];
     for (const [id, present, label] of parts) {
@@ -173,7 +174,7 @@ SettingsUI.restoreBackupFile = async function(event) {
             await SettingsUI.importSettingsFile.call(this, event);
             return;
         }
-        const parsed = BackupBundle.parse(content);
+        const parsed = BackupBundle.parse(content, detector => DetectionUtils.isOfficialDetector(detector));
         if (!parsed.ok) {
             NotificationHelper.error(parsed.reason === 'newer'
                 ? text('restoreNewer', 'This backup was made by a newer version of the extension. Update the extension and try again.')

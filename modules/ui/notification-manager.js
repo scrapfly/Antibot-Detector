@@ -83,7 +83,7 @@ class NotificationManager {
   /**
    * Show a toast notification. It stays for `options.duration` (0 = until it is closed), but the time stands still while the
    * pointer is over it or the keyboard is in it. With two toasts on the screen already, a new one waits for a place instead of
-   * pushing an older one out before it could be read.
+   * pushing an older one out before it could be read; a micro toast does not wait (it answers a click and lasts a moment).
    * @param {string} message - Notification message
    * @param {string} type - Notification type (success, error, warning, info)
    * @param {Object} options - Additional options
@@ -131,7 +131,8 @@ class NotificationManager {
       position: this.normalizePosition(settings.position),
       settings
     };
-    if (settings.duration > 0 && this.timedOnScreen() >= this.maxToasts) {
+    // A micro toast ("Copied") answers the click just made and is gone in a moment: it never waits behind longer notes
+    if (settings.duration > 0 && !settings.micro && this.timedOnScreen() >= this.maxToasts) {
       this.waiting.push(entry);
       this.trimWaiting();
       return entry.id;
@@ -211,9 +212,18 @@ class NotificationManager {
       closeBtn.addEventListener('click', () => this.removeToast(toastId));
     }
 
-    // The time stands still while the pointer is over the toast or the keyboard is in it (its close button)
-    toast.addEventListener('mouseenter', () => { record.hovered = true; this.pauseCountdown(record); });
-    toast.addEventListener('mouseleave', () => { record.hovered = false; this.resumeCountdown(record); });
+    // The time stands still while the pointer is over the toast or the keyboard is in it (its close button). Over it means the
+    // pointer moved on it: a toast that appears under a pointer that stays still (the browser says "enter" then) is not held
+    toast.addEventListener('pointermove', () => {
+      if (record.hovered) return;
+      record.hovered = true;
+      this.pauseCountdown(record);
+    });
+    toast.addEventListener('pointerleave', () => {
+      if (!record.hovered) return;
+      record.hovered = false;
+      this.resumeCountdown(record);
+    });
     toast.addEventListener('focusin', () => { record.focused = true; this.pauseCountdown(record); });
     toast.addEventListener('focusout', () => { record.focused = false; this.resumeCountdown(record); });
 
@@ -648,7 +658,8 @@ class NotificationManager {
       focusStart();
 
       let settled = false;
-      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])'));
+      // A part of the content that scrolls and takes the keyboard (tabindex="0", a long compare result) is a stop as well
+      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]'));
 
       const onKeyDown = (event) => {
         // Only the top-most dialog reacts
