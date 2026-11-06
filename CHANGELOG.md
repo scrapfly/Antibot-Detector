@@ -42,6 +42,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - With the extension switched off, nothing of it stays on the page or in its frames.
 - When the settings cannot be read, no page is scanned and nothing is sent, instead of acting as if everything were allowed.
 - Webhook: a private-window page is not sent even when its tab cannot be read.
+- History: after pinning, adding a note or deleting, the keyboard stays on that entry or moves to the next one.
+- History: screen readers hear what each number on a card means, search results are announced, and cards take fewer Tab presses (Scrape with Scrapfly is also in the … menu).
+- History details: each detection header is named after its detection, matched values copy from the keyboard, and confidence and difficulty tips follow your language.
 
 ## [3.1.3] - 2026-11-05
 
