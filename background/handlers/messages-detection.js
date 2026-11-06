@@ -506,9 +506,15 @@ function registerDetectionHandlers(registry, context) {
                     return;
                 }
 
+                // The detectors decide what a card says (below), so a worker that has just started has them first, as for the hook batch
+                if (typeof ensureDetectorManagerInitialized === 'function') {
+                    await ensureDetectorManagerInitialized();
+                    if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
+                }
+
                 if (detections.length > 0) {
                     Logger.debug('SCAN', `Tab ${tabId}: ${detections.length} window properties`,
-                        detections.map(det => `${det.detectorName}: window.${det.property?.path}`));
+                        detections.map(det => `${det?.detectorName}: window.${det?.property?.path}`));
                 }
 
                 // Validate state
@@ -527,37 +533,51 @@ function registerDetectionHandlers(registry, context) {
                 }
 
                 for (const detection of detections) {
-                    if (!detection || !detection.detectorId) {
+                    const property = detection && detection.property;
+                    if (!detection || !detection.detectorId || !property || typeof property !== 'object') {
                         Logger.warn('BACKGROUND', '[WINDOW_DETECTIONS] Skipping invalid detection:', detection);
                         continue;
                     }
 
+                    // The page's world can speak for the content script: the detector must be one the worker has, and its name and
+                    // category are its own, never what the message says (the hook batch skips unknown detectors the same way)
+                    let categoryKey = Categories.normalize(detection.category);
+                    let fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
+                    if (!fullDetector) {
+                        fullDetector = detectorManager.findDetectorById(detection.detectorId);
+                        categoryKey = fullDetector ? Categories.normalize(fullDetector.category) : '';
+                    }
+                    if (!fullDetector) {
+                        Logger.warn('BACKGROUND', `[WINDOW_DETECTIONS] Detector ${detection.detectorId} not found, skipping`);
+                        continue;
+                    }
+                    // A rule's confidence is a number from 0 to 100; anything else counts for nothing
+                    const confidence = Number.isFinite(property.confidence) ? Math.min(100, Math.max(0, property.confidence)) : 0;
+
                     let detectionObj = state.mainData.find(d => d && (d.detector?.id === detection.detectorId || d.id === detection.detectorId));
                     if (!detectionObj) {
-                        const categoryKey = Categories.normalize(detection.category);
-                        const fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
                         const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
-                            ? DetectionUtils.normalizeDifficulty(fullDetector?.difficulty)
+                            ? DetectionUtils.normalizeDifficulty(fullDetector.difficulty)
                             : null;
                         const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
-                            ? DetectionUtils.defaultDifficultyForCategory(detection.category || fullDetector?.category)
+                            ? DetectionUtils.defaultDifficultyForCategory(fullDetector.category || categoryKey)
                             : 'Medium';
                         const difficulty = normalizedDifficulty || defaultDifficulty;
 
                         detectionObj = {
                             detected: true,
-                            confidence: detection.property.confidence,
+                            confidence,
                             difficulty: difficulty,
                             matches: [],
                             detectionMethods: [],
-                            category: detection.category,
+                            category: categoryKey,
                             detector: {
-                                id: detection.detectorId,
-                                name: detection.detectorName,
-                                icon: fullDetector?.icon,
-                                color: fullDetector?.color,
-                                description: fullDetector?.description,
-                                author: fullDetector?.author,
+                                id: fullDetector.id || detection.detectorId,
+                                name: fullDetector.name || String(detection.detectorId),
+                                icon: fullDetector.icon,
+                                color: fullDetector.color,
+                                description: fullDetector.description,
+                                author: fullDetector.author,
                                 difficulty: difficulty
                             }
                         };
@@ -566,11 +586,11 @@ function registerDetectionHandlers(registry, context) {
 
                     const newMatch = {
                         type: 'window',
-                        pattern: detection.property.path,
-                        confidence: detection.property.confidence,
-                        description: detection.property.description,
-                        actualType: detection.property.actualType,
-                        condition: detection.property.condition
+                        pattern: property.path,
+                        confidence,
+                        description: property.description,
+                        actualType: property.actualType,
+                        condition: property.condition
                     };
 
                     const isDuplicate = detectionObj.matches.some(m =>

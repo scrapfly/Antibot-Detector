@@ -21,6 +21,10 @@
     // They are kept in memory only (chrome.storage.session), shown with the others, and never written to storage.local.
     const PRIVATE_KEY = 'session_advanced_private';
     const DEFAULT_HISTORY_LIMIT = 100;
+    // How much the captures may take in all, as JSON, in storage.local and in memory together. They hold cookie values, headers and
+    // request bodies, every append reads and writes the whole record, and with the unlimitedStorage permission no quota error ever
+    // stops them: past this the oldest captures, of any tool, go first (never the one just taken)
+    const MAX_BYTES = 4 * 1024 * 1024;
     // Older names of a tool's bucket: the worker saved Imperva's captures as "incapsula" while its panel reads "imperva"
     const LEGACY_MODULES = Object.freeze({ incapsula: 'imperva' });
     const bucketOf = (moduleId) => LEGACY_MODULES[moduleId] || moduleId;
@@ -264,6 +268,28 @@
         return (entries || []).filter((entry) => !entry.expiresAt || entry.expiresAt > now);
     }
 
+    /** Drops the oldest captures (of any tool) until the record fits MAX_BYTES; `keepId` is the capture just taken. */
+    function trimToBytes(history, keepId, maxBytes = MAX_BYTES) {
+        const slimmed = {};
+        for (const [moduleId, entries] of Object.entries(history)) slimmed[moduleId] = slimAll(entries);
+        let total = JSON.stringify(slimmed).length;
+        if (total <= maxBytes) return 0;
+        const all = [];
+        for (const entries of Object.values(history)) {
+            for (const entry of entries) all.push({ entry, size: JSON.stringify(slim(entry)).length + 1 });
+        }
+        all.sort((a, b) => toFiniteTimestamp(a.entry.timestamp, 0) - toFiniteTimestamp(b.entry.timestamp, 0));
+        const dropped = new Set();
+        for (const { entry, size } of all) {
+            if (total <= maxBytes) break;
+            if (entry.id === keepId) continue;
+            dropped.add(entry);
+            total -= size;
+        }
+        for (const moduleId of Object.keys(history)) history[moduleId] = history[moduleId].filter(entry => !dropped.has(entry));
+        return dropped.size;
+    }
+
     async function appendCapture(requestedId, capture, options = {}) {
         if (!requestedId) {
             throw new Error('appendCapture requires moduleId');
@@ -303,6 +329,7 @@
         if (duplicate) return duplicate;
         existing.unshift(normalized);
         history[moduleId] = existing.slice(0, historyLimit);
+        trimToBytes(history, normalized.id);
 
         await save(history);
         return normalized;
@@ -374,6 +401,7 @@
         STORAGE_KEY,
         PRIVATE_KEY,
         DEFAULT_HISTORY_LIMIT,
+        MAX_BYTES,
         canKeepPrivate,
         migrate: migrateToCanonical,
         load: (...args) => serialize(() => load(...args)),

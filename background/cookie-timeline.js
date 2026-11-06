@@ -6,7 +6,8 @@
  * The record is chrome.storage.session (memory, cleared when the browser closes): never storage.local, History,
  * backups or diagnostics. It holds names, events, times, expiries and a salted six-character marker of each value,
  * never a value. Private windows (any store but the regular one) are not recorded, nor anything while the extension
- * is switched off. The rules (what to record, the caps) are modules/core/cookie-timeline.js.
+ * is switched off, nor a site the person keeps out of scans (Settings → Detection → Sites: a skipped site, or one that is
+ * not among "only these sites"). The rules (what to record, the caps) are modules/core/cookie-timeline.js.
  */
 (function(root) {
   'use strict';
@@ -19,6 +20,7 @@
    *   subtle     crypto.subtle (digest)
    *   detectors  async () => the loaded detectors, by category
    *   enabled    async () => false while the extension is switched off
+   *   skipped    async (url) => true for a site the person keeps out of scans (Utils.isUrlBlacklisted)
    *   now        () => ms
    *   randomSalt () => a random string (once per browser session)
    *   limits     the caps (CookieTimeline.LIMITS by default)
@@ -26,7 +28,7 @@
    */
   function createRecorder(deps) {
     const {
-      storage, subtle, detectors, enabled = async () => true, now = () => Date.now(),
+      storage, subtle, detectors, enabled = async () => true, skipped = async () => false, now = () => Date.now(),
       randomSalt, limits = CT().LIMITS, writeDelay = 250
     } = deps;
     let state = null;
@@ -74,6 +76,9 @@
       if (String(cookie.storeId ?? CT().DEFAULT_STORE_ID) !== CT().DEFAULT_STORE_ID) return null; // private windows
       if (!(await enabled())) return null;
       if (!(await matcher())(cookie.name)) return null;
+      // A site the person keeps out of scans leaves nothing here: the cookie's own host, as the address a page there would have
+      const host = String(cookie.domain || '').replace(/^\./, '');
+      if (host && await skipped(`https://${host}/`)) return null;
       const site = CT().siteOf(cookie.domain);
       if (!site) return null;
       const current = await load();
@@ -147,6 +152,7 @@
           return manager ? manager.getAllDetectors() : {};
         },
         enabled: async () => (typeof root.isExtensionEnabled === 'function' ? root.isExtensionEnabled() : true),
+        skipped: async (url) => (root.Utils && typeof root.Utils.isUrlBlacklisted === 'function' ? root.Utils.isUrlBlacklisted(url) : false),
         randomSalt: () => Array.from(root.crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('')
       });
       chrome.cookies.onChanged.addListener((changeInfo) => { this.recorder.handle(changeInfo); });
