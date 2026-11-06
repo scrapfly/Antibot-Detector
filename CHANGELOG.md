@@ -12,6 +12,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
 - The popup says the extension must be reloaded, as soon as it opens, when its background part is out of date.
 - History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, and long Unchanged lists folded.
+- Settings: the Privacy preset also turns off automatic update checks, so it contacts nothing.
+- Settings: Back up everything keeps official rules you switched off and your theme, and Restore says what a backup never holds.
 
 ### Fixed
 
@@ -30,6 +32,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: Clear cache says what happened and never stays disabled, and Upload says the link is copied only when it was.
 - Detection: screen readers announce search results and how a scan ended, and tips use each language's own "Label: value" form.
 - A new scan result no longer makes the popup reload your whole History, which slowed large Histories.
+- Settings asks before discarding unsaved changes on Esc, ✕ or a click outside, and an invalid value opens its tab and highlights the field.
+- Counts read correctly for one item and in Russian and Arabic, and retention and sizes follow your language.
 
 ## [3.1.3] - 2026-11-05
 
