@@ -3390,9 +3390,6 @@
   "rulesUiInvalidRegex": {
     "message": "Um padrão marcado como expressão regular não é válido ou pode travar a análise. Corrija-o ou desative Regex nessa linha."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Digite o tipo de método de detecção (ex.: HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Método"
   },

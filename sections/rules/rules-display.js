@@ -16,8 +16,10 @@
 
 /**
  * Display rules (main entry point)
+ * @param {{keepPage?: boolean}} [options] - keepPage: the same list drawn again after something changed in it (a rule deleted or
+ *   reset): stay on the page that was shown (the last one if it is gone) instead of going back to page 1
  */
-Rules.prototype.displayRules = async function() {
+Rules.prototype.displayRules = async function({ keepPage = false } = {}) {
   Logger.debug('UI', 'displayRules called');
 
   if (!this.initialized) {
@@ -107,14 +109,14 @@ Rules.prototype.displayRules = async function() {
   // Keep the text in the search box and the chips applied after a delete / restore / clear
   const query = document.querySelector('#rulesSearch')?.value || '';
   if ((query.trim() || RulesFilter.isActive(this.activeChips)) && typeof this.handleSearch === 'function') {
-    this.handleSearch(query);
+    this.handleSearch(query, { keepPage });
     return;
   }
 
   this.filteredDetectors = [...this.allDetectors];
 
   if (this.paginationManager) {
-    this.paginationManager.setItems(this.filteredDetectors);
+    this.paginationManager.setItems(this.filteredDetectors, { keepPage });
   }
   this.syncFilterUi();
 };
@@ -160,6 +162,63 @@ Rules.prototype.syncFilterUi = function(total = Array.isArray(this.allDetectors)
   }
   const none = document.querySelector('#rulesNoResults');
   if (none) none.hidden = !(total > 0 && Array.isArray(this.filteredDetectors) && this.filteredDetectors.length === 0);
+  this.syncResultsStatus();
+};
+
+/**
+ * Say, to a screen reader, what the search, the chips and the pager leave: the pager's own line ("Showing 1-2 of 5") while there are
+ * rules to list, the no-results line when there are rules and none match, nothing when there are no rules (the empty state speaks for
+ * itself). A list drawn again is silent to a screen reader, and a block that is shown with its text (the no-results one) is not
+ * announced, so the words go to a status region that is always in the page. Written only when they change, so the same list drawn
+ * again says nothing again.
+ */
+Rules.prototype.syncResultsStatus = function() {
+  const status = document.querySelector('#rulesResultsStatus');
+  if (!status) return;
+  const total = Array.isArray(this.allDetectors) ? this.allDetectors.length : 0;
+  const nothing = total > 0 && Array.isArray(this.filteredDetectors) && this.filteredDetectors.length === 0;
+  const words = (selector) => {
+    const element = document.querySelector(selector);
+    return element && typeof element.textContent === 'string' ? element.textContent.trim() : '';
+  };
+  const text = total === 0 ? '' : words(nothing ? '#rulesNoResults p' : '#rulesPagination .pagination-info');
+  if (status.textContent !== text) status.textContent = text;
+};
+
+/**
+ * Where a card is in the list as drawn now, read before the list is drawn again (delete, reset to official), for restoreListFocus.
+ * @param {string} category
+ * @param {string} detectorName - the rule's id
+ * @returns {{category: string, detectorName: string, index: number, page: number}}
+ */
+Rules.prototype.listPlaceOf = function(category, detectorName) {
+  const cards = Array.from(document.querySelectorAll('#rulesList .detector-card'));
+  const index = cards.findIndex(card => card.dataset.category === category && card.dataset.detectorId === detectorName);
+  return { category, detectorName, index: Math.max(index, 0), page: this.paginationManager ? this.paginationManager.currentPage : 1 };
+};
+
+/**
+ * Put the focus back after the list was drawn again: the button that had it went with the old cards, and the next Tab would start at
+ * the top of the popup. It goes to the "More actions" button of the same rule if it is still listed (reset to official), else of the
+ * card that took its place (the one before it when it was the last of the page), else, with no card left, to the way out of an empty
+ * list: Clear filters when the search or the chips emptied it, Add when there are no rules at all. Nothing moves if the person
+ * already put the focus somewhere else.
+ * @param {{category: string, detectorName: string, index: number, page: number}} place - from listPlaceOf
+ */
+Rules.prototype.restoreListFocus = function(place) {
+  const active = document.activeElement;
+  const list = document.querySelector('#rulesList');
+  if (active && active !== document.body && !(list && list.contains(active))) return;
+  const cards = Array.from(document.querySelectorAll('#rulesList .detector-card'));
+  const same = place && cards.find(card => card.dataset.category === place.category && card.dataset.detectorId === place.detectorName);
+  // The only card of the last page was deleted: the page went with it, and the card before it is the last of the page shown now
+  const pageGone = !!(place && this.paginationManager && this.paginationManager.currentPage < place.page);
+  const card = same || cards[pageGone ? cards.length - 1 : Math.min(place ? place.index : 0, cards.length - 1)];
+  const noResults = document.querySelector('#rulesNoResults');
+  const target = card
+    ? card.querySelector('.rules-menu-trigger')
+    : (noResults && !noResults.hidden && document.querySelector('#rulesClearFilters')) || document.querySelector('#addDetectorBtn');
+  if (target && typeof target.focus === 'function') target.focus();
 };
 
 // ============================================

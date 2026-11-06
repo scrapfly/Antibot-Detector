@@ -3390,9 +3390,6 @@
   "rulesUiInvalidRegex": {
     "message": "Un motif marqué comme expression régulière n’est pas valide ou pourrait bloquer l’analyse. Corrigez-le ou désactivez Regex pour cette ligne."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Saisissez le type de méthode de détection (ex. HEADERS, CONTENT, URLs) :"
-  },
   "rulesUiMethodFallback": {
     "message": "Méthode"
   },

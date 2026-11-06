@@ -3603,10 +3603,6 @@
     "message": "A pattern marked as a regular expression is not valid, or could freeze scanning. Fix it, or turn Regex off for that row.",
     "description": "Rules editor → Save refused: a row marked as a regex does not compile or could backtrack catastrophically"
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Enter detection method type (e.g., HEADERS, CONTENT, URLs):",
-    "description": "Browser prompt; keep HEADERS, CONTENT, URLs unchanged (they are typed as-is)"
-  },
   "rulesUiMethodFallback": {
     "message": "Method",
     "description": "Generic name of a detection method when its type is unknown"

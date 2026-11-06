@@ -93,11 +93,17 @@ Advanced.prototype.renderCaptureChips = function(captures) {
     const toolChips = kinds.size > 1
       ? Object.keys(Advanced.TOOL_KINDS).filter(kind => kinds.has(kind)).map(kind => chip('tool', kind, _advHistoryTr(...Advanced.TOOL_KINDS[kind])))
       : [];
+    // The chips are drawn again with every list. One pressed from the keyboard has the focus: it is found again by what it stands for,
+    // so the focus does not fall to the page
+    const held = document.activeElement && row.contains(document.activeElement) && document.activeElement.dataset && document.activeElement.dataset.filterGroup
+      ? { group: document.activeElement.dataset.filterGroup, value: document.activeElement.dataset.filterValue } : null;
     // Vendors on one line, tools on the next
     const group = chips => (chips.length ? `<div class="cap-chips-group">${chips.join('')}</div>` : '');
     row.innerHTML = group(vendorChips) + group(toolChips);
     row.hidden = vendorChips.length + toolChips.length === 0;
     row.querySelectorAll('img[data-fallback]').forEach(img => img.addEventListener('error', function() { this.src = this.dataset.fallback; }, { once: true }));
+    const again = held && Array.from(row.querySelectorAll('.cap-chip')).find(chip => chip.dataset.filterGroup === held.group && chip.dataset.filterValue === held.value);
+    if (again) again.focus({ preventScroll: true });
   };
 
 
@@ -167,7 +173,9 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
     const allSites = this.captureFilters?.site === 'all';
 
     // One row per capture: the vendor's logo, what was done (the tool) and by which vendor, then where (the page:
-    // its path on the current site, host and path across sites), when and how much; copy and delete on the right
+    // its path on the current site, host and path across sites), when and how much; copy and delete on the right.
+    // The row is a labelled group of three real buttons: the one that opens the capture holds the logo and the text (the whole
+    // left of the row), then Copy and Delete. A role="button" row with buttons inside would hide them from a screen reader.
     grid.innerHTML = captures.map(capture => {
       const moduleName = capture.moduleName || capture.moduleId || unknownLabel;
       const toolTag = Advanced.captureToolTag(capture);
@@ -188,19 +196,22 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
       const mark = logo
         ? Advanced.captureLogoHtml(logo, 22)
         : `<img src="${attr(favicon)}" alt="" width="22" height="22" data-fallback="${attr(UrlUtils.getDefaultFaviconUrl())}">`;
+      const summary = `${toolTag} · ${moduleName} · ${host}`;
       return `
-        <div class="capture-card cap-row" data-module-id="${attr(capture.moduleId)}" data-capture-id="${attr(capture.id)}" tabindex="0" role="button" aria-label="${attr(`${viewLabel}: ${toolTag} · ${moduleName} · ${host}`)}">
-          <span class="cap-row-mark" aria-hidden="true">${mark}</span>
-          <span class="cap-row-main">
-            <span class="cap-row-title"><span class="cap-row-tool">${esc(toolTag)}</span><span class="cap-row-vendor">${esc(moduleName)}</span></span>
-            <span class="cap-row-sub">
-              <span class="cap-row-place" title="${attr(capture.url || host)}">${esc(place)}</span>
-              <span class="cap-row-dot" aria-hidden="true">·</span>
-              <span class="cap-row-time"${absoluteTime ? ` title="${attr(absoluteTime)}"` : ''}>${esc(AdvancedUtils.getTimeAgo(capture.timestamp))}</span>
-              <span class="cap-row-dot" aria-hidden="true">·</span>
-              <span class="cap-row-size">${esc(size)}</span>
+        <div class="capture-card cap-row" role="group" aria-label="${attr(summary)}" data-module-id="${attr(capture.moduleId)}" data-capture-id="${attr(capture.id)}">
+          <button type="button" class="cap-row-open" aria-label="${attr(`${viewLabel}: ${summary}`)}">
+            <span class="cap-row-mark" aria-hidden="true">${mark}</span>
+            <span class="cap-row-main">
+              <span class="cap-row-title"><span class="cap-row-tool">${esc(toolTag)}</span><span class="cap-row-vendor">${esc(moduleName)}</span></span>
+              <span class="cap-row-sub">
+                <span class="cap-row-place" title="${attr(capture.url || host)}">${esc(place)}</span>
+                <span class="cap-row-dot" aria-hidden="true">·</span>
+                <span class="cap-row-time"${absoluteTime ? ` title="${attr(absoluteTime)}"` : ''}>${esc(AdvancedUtils.getTimeAgo(capture.timestamp))}</span>
+                <span class="cap-row-dot" aria-hidden="true">·</span>
+                <span class="cap-row-size">${esc(size)}</span>
+              </span>
             </span>
-          </span>
+          </button>
           <span class="cap-row-actions">
             <button type="button" class="capture-action-btn cap-row-btn" data-action="copy" title="${attr(copyLabel)}" aria-label="${attr(copyLabel)}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
@@ -221,6 +232,39 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
     });
 
     this.setupCaptureCardListeners(grid);
+  };
+
+
+  /**
+   * Where a capture's row is in the list as drawn now, read before the list is drawn again (a delete), for restoreCaptureFocus.
+   * @param {string} captureId
+   * @returns {{index: number}}
+   */
+Advanced.prototype.captureRowPlace = function(captureId) {
+    const rows = Array.from(document.querySelectorAll('#captureGrid .capture-card'));
+    return { index: Math.max(rows.findIndex(row => row.getAttribute('data-capture-id') === captureId), 0) };
+  };
+
+
+  /**
+   * Put the focus back after the list was drawn again: the button that had it went with the old rows, and the next Tab would start
+   * at the top of the popup. It goes to the open button of the row that took the place of the deleted one (the one before it when
+   * it was the last): not to a Delete button, so a second Enter cannot delete the next capture too. With no row left: Reset all
+   * filters when the filters hide the rest, Open tools when nothing is saved. Nothing moves if the person already put the focus
+   * somewhere else.
+   * @param {{index: number}} place - from captureRowPlace
+   */
+Advanced.prototype.restoreCaptureFocus = function(place) {
+    const active = document.activeElement;
+    const grid = document.querySelector('#captureGrid');
+    if (active && active !== document.body && !(grid && grid.contains(active))) return;
+    const rows = Array.from(document.querySelectorAll('#captureGrid .capture-card'));
+    const row = rows[Math.min(place ? place.index : 0, rows.length - 1)];
+    const panel = document.querySelector('#capturesPanel');
+    const target = row
+      ? row.querySelector('.cap-row-open')
+      : document.querySelector('#resetAllFiltersBtn') || (panel && panel.classList.contains('is-empty') ? document.querySelector('#captureOpenToolsBtn') : null);
+    if (target && typeof target.focus === 'function') target.focus();
   };
 
 

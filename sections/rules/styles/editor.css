@@ -1239,9 +1239,8 @@
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* Add Method/Section Buttons */
-.add-method-btn,
-.add-section-btn {
+/* Add Method Button */
+.add-method-btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1258,25 +1257,9 @@
   transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
 }
 
-.add-method-btn:hover,
-.add-section-btn:hover {
+.add-method-btn:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
-  color: white;
-}
-
-.add-section-btn {
-  background: var(--bg-secondary);
-  border: 1px dashed var(--accent);
-  color: var(--accent);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 12px 16px;
-  margin-top: 16px;
-}
-
-.add-section-btn:hover {
-  background: var(--accent);
   color: white;
 }
 

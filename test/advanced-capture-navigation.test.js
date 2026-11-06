@@ -153,7 +153,7 @@ test('real generic renderer remains viable without a vendor class or current det
   assert.deepEqual(f.errors, []);
 });
 
-test('card pointer and keyboard navigation isolate copy and delete actions', async () => {
+test('a click on a card opens it, whatever part of it: its open button turns Enter and Space into that click, and copy and delete keep theirs', async () => {
   const f = fixture(), calls = [];
   const node = () => ({ listeners: {}, addEventListener(type, fn) { this.listeners[type] = fn; } });
   const copy = node(), remove = node(), card = node();
@@ -163,15 +163,15 @@ test('card pointer and keyboard navigation isolate copy and delete actions', asy
   f.advanced.copyCaptureData = (...args) => calls.push(['copy', ...args]);
   f.advanced.deleteSingleCapture = (...args) => calls.push(['delete', ...args]);
   f.advanced.setupCaptureCardListeners({ querySelectorAll: () => [card] });
+  // The row holds a real button for the open action (a role="button" row with buttons inside hides them from a screen reader), so
+  // it is not a control itself: no key handler, and the one a key on the button causes is the click
+  assert.deepEqual(Object.keys(card.listeners), ['click']);
   card.listeners.click({ target: { closest: () => null } });
-  let prevented = 0;
-  for (const key of ['Enter', ' ']) card.listeners.keydown({ key, target: card, preventDefault() { prevented++; } });
-  card.listeners.keydown({ key: 'Enter', target: copy, preventDefault() { throw Error('nested action intercepted'); } });
+  card.listeners.click({ target: { closest: selector => (selector === '.capture-action-btn' ? null : {}) } });
   card.listeners.click({ target: { closest: () => copy } });
   await copy.listeners.click({ stopPropagation() {} });
   await remove.listeners.click({ stopPropagation() {} });
-  assert.equal(prevented, 2);
-  assert.deepEqual(calls.map(call => call[0]), ['view', 'view', 'view', 'copy', 'delete']);
+  assert.deepEqual(calls.map(call => call[0]), ['view', 'view', 'copy', 'delete']);
   assert.ok(calls.every(call => call[1] === 'akamai' && call[2] === 'saved'));
 });
 

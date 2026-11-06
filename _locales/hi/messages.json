@@ -3390,9 +3390,6 @@
   "rulesUiInvalidRegex": {
     "message": "रेगुलर एक्सप्रेशन के रूप में चिह्नित एक पैटर्न अमान्य है या स्कैन को रोक सकता है। उसे ठीक करें या उस पंक्ति के लिए Regex बंद करें।"
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "पहचान विधि का प्रकार दर्ज करें (जैसे HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "विधि"
   },

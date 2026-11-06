@@ -286,12 +286,6 @@ Rules.prototype.setupMethodSettingsModal = function() {
         this.addNewMethodItem(button);
       }
 
-      // Handle add section button
-      if (e.target.closest('.add-section-btn')) {
-        e.stopPropagation();
-        this.addNewMethodSection();
-      }
-
       // Handle method header click (toggle collapse)
       if (e.target.closest('.method-header')) {
         const header = e.target.closest('.method-header');

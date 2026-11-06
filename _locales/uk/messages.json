@@ -3390,9 +3390,6 @@
   "rulesUiInvalidRegex": {
     "message": "Шаблон, позначений як регулярний вираз, недійсний або може заблокувати перевірку. Виправте його або вимкніть Regex у цьому рядку."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Введіть тип методу виявлення (напр. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Метод"
   },

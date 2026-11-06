@@ -3390,9 +3390,6 @@
   "rulesUiInvalidRegex": {
     "message": "Normal ifade olarak işaretlenen bir desen geçersiz veya taramayı kilitleyebilir. Düzeltin ya da o satırda Regex'i kapatın."
   },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Tespit yöntemi türünü girin (ör. HEADERS, CONTENT, URLs):"
-  },
   "rulesUiMethodFallback": {
     "message": "Yöntem"
   },
