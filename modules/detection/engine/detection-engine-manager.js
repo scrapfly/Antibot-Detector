@@ -631,7 +631,16 @@ class DetectionEngineManager {
         return typeof DetectionCombinations !== 'undefined' && DetectionCombinations.applies(detector);
     }
 
-    runDetector(detector, pageData) {
+    /**
+     * Match one detector against the collected page.
+     * @param {object} detector
+     * @param {object} pageData
+     * @param {{groupElements?: boolean}} options - groupElements: a DOM rule that names several elements gives one match, with
+     *   their number after its text, instead of one match per element. A scan asks for it (detectOnPage): a result is saved
+     *   with the cache, History and the webhook, and `a[href]` on a page of 5,000 links was 5,000 identical matches. The
+     *   default keeps one match per element, which is what Rules → Test counts ("{0} found") through matches.length.
+     */
+    runDetector(detector, pageData, options = {}) {
         const { url, content = [], dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
         const matches = [];
 
@@ -1278,17 +1287,24 @@ class DetectionEngineManager {
         // Check DOM patterns
         if (detector.detection?.dom && dom.length > 0) {
             for (const domPattern of detector.detection.dom) {
+                if (domPattern.enabled === false) continue;
                 const selector = demParseDOMSelector(domPattern.selector);
                 const matchingElements = dom.filter(element => demMatchDOMGroups(selector, element));
+                if (matchingElements.length === 0) continue;
 
-                // Add all matching DOM elements to results
-                for (const matchingElement of matchingElements) {
+                // A scan keeps one match for the rule: the first element's text, then the number of elements as a suffix that needs
+                // no translation (a multiplication sign and the count; History keeps it with the value). The default is one match
+                // per matching element (see the options above)
+                const grouped = options && options.groupElements === true && matchingElements.length > 1;
+                const listed = grouped ? matchingElements.slice(0, 1) : matchingElements;
+                const suffix = grouped ? ` \u00d7${matchingElements.length}` : '';
+                for (const matchingElement of listed) {
                     const elementText = matchingElement.text || matchingElement.textContent || matchingElement.innerText || '';
                     const truncatedText = elementText.length > 50 ? elementText.substring(0, 50) + '...' : elementText;
                     matches.push({
                         type: 'dom',
                         selector: domPattern.selector,
-                        value: `${domPattern.selector}=${truncatedText}`,
+                        value: `${domPattern.selector}=${truncatedText}${suffix}`,
                         confidence: DetectionEngineManager.ruleConfidence(domPattern, Constants.DEFAULT_DOM_CONFIDENCE),
                         patternId: DetectionEngineManager.patternIdOf(detector, domPattern),
                         description: domPattern.description
@@ -1404,7 +1420,7 @@ class DetectionEngineManager {
                 sliceStart = Date.now();
             }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,
