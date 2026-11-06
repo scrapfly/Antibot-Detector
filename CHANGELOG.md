@@ -15,6 +15,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings: the Privacy preset also turns off automatic update checks, so it contacts nothing.
 - Settings: Back up everything keeps official rules you switched off and your theme, and Restore says what a backup never holds.
 - Rules: a regular expression in a rule you write or import reads only the first 100,000 characters of a page, script or request body.
+- Scans no longer download stylesheets again or copy the page's HTML when no rule reads them, and a page-element rule saves one match with its count.
 
 ### Fixed
 
@@ -37,6 +38,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Counts read correctly for one item and in Russian and Arabic, and retention and sizes follow your language.
 - Rules: a rule you write or import can no longer freeze scanning with a slow regular expression; Import refuses such rules and very large files and names what it skips.
 - Rules help: DOM rules search the page head, and requests made after the scan count for URL rules, in all 22 languages.
+- Rules: two URL rules with the same address both match with their own confidence, and a single pattern switched off no longer matches anything.
+- With the extension switched off, nothing of it stays on the page or in its frames.
+- When the settings cannot be read, no page is scanned and nothing is sent, instead of acting as if everything were allowed.
+- Webhook: a private-window page is not sent even when its tab cannot be read.
 
 ## [3.1.3] - 2026-11-05
 
