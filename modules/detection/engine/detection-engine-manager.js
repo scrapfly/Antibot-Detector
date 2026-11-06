@@ -144,8 +144,25 @@ class DetectionEngineManager {
                 detail: safeDetail
             }));
         };
+        // An install with nothing to hook still goes out, so the MAIN world completes and never waits for one. It carries
+        // hooksOff: that is what makes the MAIN world take what the bootstrap put on the page (the early recorders, the frame
+        // accessors, the recorders put into frames and the document-wide observer) off again; it retires them for no other install
+        const dispatchNothingToHook = (detail) => dispatchInstallHooks({ hookDefinitions: [], windowProperties: [], hooksOff: true, ...detail });
+        // The settings, read strictly (a value that is not JSON or not an object is an error here, not "no settings") at the
+        // same time as the read below: this runs at document_start, and a second round trip after it would delay the hooks
+        const strictSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.readSettingsStrict === 'function'
+            ? StorageManager.readSettingsStrict().then(settings => ({ settings }), error => ({ error }))
+            : null;
         try {
-            const result = await chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_settings', 'scrapfly_enabled']);
+            let result;
+            try {
+                result = await chrome.storage.local.get(['scrapfly_detectors', 'scrapfly_settings', 'scrapfly_enabled']);
+            } catch (error) {
+                // What the person chose (the extension on or off, sites left out, sites without hooks) cannot be known: no hooks
+                DetectionEngineManager.noteSettingsUnreadable(error);
+                dispatchNothingToHook({ debugMode: false, logCollectorEnabled: false, enableJsApi: false, fingerprintEnabled: true });
+                return;
+            }
             const normalizeHook = (hook) => {
                 if (!hook || hook.enabled === false || typeof hook.target !== 'string') {
                     return null;
@@ -167,9 +184,7 @@ class DetectionEngineManager {
             // Extension disabled - skip hook installation entirely
             // Dispatch empty event so MAIN world sends completion signals and doesn't hang
             if (result.scrapfly_enabled === false) {
-                dispatchInstallHooks({
-                    hookDefinitions: [],
-                    windowProperties: [],
+                dispatchNothingToHook({
                     debugMode: false,
                     logCollectorEnabled: false,
                     enableJsApi: false,
@@ -178,9 +193,22 @@ class DetectionEngineManager {
                 return;
             }
 
-            const actualSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
-                ? StorageManager.normalizeSettings(result.scrapfly_settings)
-                : {};
+            let actualSettings;
+            if (strictSettings) {
+                const read = await strictSettings;
+                if (read.error) {
+                    // Settings that cannot be read say nothing about skipped sites or sites without hooks: hooks are installed nowhere
+                    DetectionEngineManager.noteSettingsUnreadable(read.error);
+                    dispatchNothingToHook({ debugMode: false, logCollectorEnabled: false, enableJsApi: false, fingerprintEnabled: true });
+                    return;
+                }
+                DetectionEngineManager.noteSettingsReadable();
+                actualSettings = read.settings;
+            } else {
+                actualSettings = typeof StorageManager !== 'undefined' && typeof StorageManager.normalizeSettings === 'function'
+                    ? StorageManager.normalizeSettings(result.scrapfly_settings)
+                    : {};
+            }
             // This content script's own Logger flags come from the same read
             if (typeof Utils !== 'undefined' && typeof Utils.applyDebugMode === 'function') {
                 Utils.applyDebugMode(actualSettings);
@@ -241,6 +269,7 @@ class DetectionEngineManager {
                     if (!detector.detection?.window || detector.detection.window.length === 0) continue;
 
                     for (const prop of detector.detection.window) {
+                        if (prop.enabled === false) continue;
                         windowProperties.push({
                             ...prop,
                             confidence: DetectionEngineManager.ruleConfidence(prop),
@@ -269,14 +298,55 @@ class DetectionEngineManager {
                 Logger.error('DETECTION', '[installHooksOrchestrator] Failed:', error);
             }
             // Still dispatch empty event so MAIN world doesn't hang
-            dispatchInstallHooks({
-                hookDefinitions: [],
-                windowProperties: [],
+            dispatchNothingToHook({
                 debugMode: false,
                 logCollectorEnabled: false,
                 enableJsApi: false,
                 fingerprintEnabled: true
             });
+        }
+    }
+
+    // Set once unreadable settings have been logged and no read has worked since: one line per failure, not one per page
+    static _settingsUnreadableLogged = false;
+
+    /**
+     * The extension's settings (or its on/off switch) could not be read: said once. Only the error's name is logged: a parse
+     * error's message quotes the stored text.
+     */
+    static noteSettingsUnreadable(error) {
+        if (DetectionEngineManager._settingsUnreadableLogged) return;
+        DetectionEngineManager._settingsUnreadableLogged = true;
+        const name = error && typeof error.name === 'string' && error.name ? error.name : 'Error';
+        if (typeof Logger !== 'undefined') {
+            Logger.warn('DETECTION', `The extension settings cannot be read (${name}): no hooks are installed and no page is scanned until they can`);
+        }
+    }
+
+    /** A read worked: the next failure is a new one and is said again. */
+    static noteSettingsReadable() {
+        DetectionEngineManager._settingsUnreadableLogged = false;
+    }
+
+    /**
+     * Whether pages are scanned: the extension's switch, and the settings that hold the person's skip lists. A read that fails
+     * tells nothing about either, so the worker scans nothing on a guess (it used to log the failure and scan: a switched-off
+     * extension, or a site left out of scanning, was scanned because the setting that says so could not be read).
+     * @param {object} chrome - the chrome API
+     * @returns {Promise<{ok: boolean, enabled?: boolean}>} ok false: the state could not be read
+     */
+    static async readScanState(chrome) {
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_enabled']);
+            if (result && result.scrapfly_enabled === false) return { ok: true, enabled: false };
+            if (typeof StorageManager !== 'undefined' && typeof StorageManager.readSettingsStrict === 'function') {
+                await StorageManager.readSettingsStrict();
+            }
+            DetectionEngineManager.noteSettingsReadable();
+            return { ok: true, enabled: true };
+        } catch (error) {
+            DetectionEngineManager.noteSettingsUnreadable(error);
+            return { ok: false };
         }
     }
 
@@ -290,6 +360,9 @@ class DetectionEngineManager {
     }
     needsExternalContent() {
         return demNeedsExternalContent.apply(this, arguments);
+    }
+    needsPageBodies() {
+        return demNeedsPageBodies.apply(this, arguments);
     }
     extractCookies() {
         return demExtractCookies.apply(this, arguments);
@@ -329,6 +402,9 @@ class DetectionEngineManager {
 
         // Check needed data types
         const needsExternal = this.needsExternalContent();
+        // The page's text (and, in extractExternalContent, the stylesheets' text) is read only by a content rule that is not
+        // limited to scripts; every bundled content rule is
+        const needsBodies = this.needsPageBodies();
 
         let externalContent = [];
         if (needsExternal) {
@@ -435,7 +511,7 @@ class DetectionEngineManager {
             Logger.debug('DETECTION', 'Skipped DOM: no detector uses DOM rules');
         }
 
-        if (usedMethods.content) {
+        if (needsBodies) {
             Object.defineProperty(pageData, 'pageHTML', {
                 get() {
                     if (cachedPageHTML === null) {
@@ -448,7 +524,7 @@ class DetectionEngineManager {
                 enumerable: true
             });
         } else {
-            Logger.debug('DETECTION', 'Skipped HTML: no detector uses content rules');
+            Logger.debug('DETECTION', 'Skipped HTML: no content rule reads the page text');
         }
 
         this.detectionData = pageData;
@@ -481,7 +557,11 @@ class DetectionEngineManager {
         const linkElements = document.querySelectorAll('link[rel="stylesheet"]');
         const cssUrls = Array.from(linkElements).map(l => l.href).filter(Boolean);
 
-        const allUrls = Array.from(new Set([...scriptUrls, ...cssUrls]));
+        // A stylesheet's text is read only by a content rule that is not limited to scripts. URL rules read its address, so the
+        // address stays in the list either way: listed with no text, it is not downloaded
+        const readsStyles = this.needsPageBodies();
+        const listedOnly = readsStyles ? [] : Array.from(new Set(cssUrls.filter(url => !scriptUrlSet.has(url))));
+        const allUrls = Array.from(new Set([...scriptUrls, ...(readsStyles ? cssUrls : [])]));
 
         const CONCURRENCY_LIMIT = 6;
         const MAX_CONTENT_SIZE = 5 * 1024 * 1024;
@@ -556,6 +636,11 @@ class DetectionEngineManager {
         Logger.debug('DETECTION', `Fetched ${resources.length}/${allUrls.length} scripts and styles in ${fetchTime}ms`,
             failures.length ? { failed: failures } : null);
 
+        if (listedOnly.length > 0) {
+            Logger.debug('DETECTION', `Listed ${listedOnly.length} stylesheets without their text: no content rule reads it`);
+            for (const url of listedOnly) resources.push({ url, type: 'css', content: '', size: 0 });
+        }
+
         return resources;
     }
 
@@ -616,7 +701,16 @@ class DetectionEngineManager {
         return typeof DetectionCombinations !== 'undefined' && DetectionCombinations.applies(detector);
     }
 
-    runDetector(detector, pageData) {
+    /**
+     * Match one detector against the collected page.
+     * @param {object} detector
+     * @param {object} pageData
+     * @param {{groupElements?: boolean}} options - groupElements: a DOM rule that names several elements gives one match, with
+     *   their number after its text, instead of one match per element. A scan asks for it (detectOnPage): a result is saved
+     *   with the cache, History and the webhook, and `a[href]` on a page of 5,000 links was 5,000 identical matches. The
+     *   default keeps one match per element, which is what Rules → Test counts ("{0} found") through matches.length.
+     */
+    runDetector(detector, pageData, options = {}) {
         const { url, content = [], dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
         const matches = [];
 
@@ -624,10 +718,12 @@ class DetectionEngineManager {
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
         if (detector.detection?.url) {
-            // Use Set for O(1) duplicate checking instead of O(n) .some()
-            const addedUrlPatterns = new Set();
-
             for (const urlPattern of detector.detection.url) {
+                // A rule switched off with its own `enabled: false` is not read (hooks and response capture honour it too)
+                if (urlPattern.enabled === false) continue;
+                // One match per rule, wherever its address was seen first. The slot belongs to the rule: two rules with the
+                // same text (a copy with another confidence) each get theirs, so the outcome never depends on where it was seen
+                let ruleMatched = false;
                 const matchOptions = {
                     regex: urlPattern.textRegex === true,
                     wholeWord: urlPattern.textWholeWord === true,
@@ -641,7 +737,7 @@ class DetectionEngineManager {
                 // Match against full URL including query parameters for "contains" matching
                 const urlMatch = this.matchPatternWithCapture(url, urlPattern.text, matchOptions);
                 if (urlMatch) {
-                    addedUrlPatterns.add(urlPattern.text);
+                    ruleMatched = true;
                     matches.push({
                         type: 'url',
                         pattern: urlPattern.text,
@@ -657,10 +753,10 @@ class DetectionEngineManager {
                 if ((textScope === 'page_and_scripts' || textScope === 'all') && content && content.length > 0) {
                     for (const script of content) {
                         const scriptSrc = script.src || '';
-                        if (scriptSrc && !addedUrlPatterns.has(urlPattern.text)) {
+                        if (scriptSrc && !ruleMatched) {
                             const scriptMatch = this.matchPatternWithCapture(scriptSrc, urlPattern.text, matchOptions);
                             if (scriptMatch) {
-                                addedUrlPatterns.add(urlPattern.text);
+                                ruleMatched = true;
                                 matches.push({
                                     type: 'url',
                                     pattern: urlPattern.text,
@@ -679,10 +775,10 @@ class DetectionEngineManager {
                 if (textScope === 'all' && externalContent && externalContent.length > 0) {
                     for (const resource of externalContent) {
                         const resourceUrl = resource.url || '';
-                        if (resourceUrl && !addedUrlPatterns.has(urlPattern.text)) {
+                        if (resourceUrl && !ruleMatched) {
                             const resourceMatch = this.matchPatternWithCapture(resourceUrl, urlPattern.text, matchOptions);
                             if (resourceMatch) {
-                                addedUrlPatterns.add(urlPattern.text);
+                                ruleMatched = true;
                                 matches.push({
                                     type: 'url',
                                     pattern: urlPattern.text,
@@ -700,10 +796,10 @@ class DetectionEngineManager {
                 // Check ALL network request URLs if scope is 'all' (NEW: captures XHR, fetch, etc.)
                 if (textScope === 'all' && pageData.networkUrls && pageData.networkUrls.length > 0) {
                     for (const networkUrl of pageData.networkUrls) {
-                        if (addedUrlPatterns.has(urlPattern.text)) break; // Already found, skip remaining URLs
+                        if (ruleMatched) break; // Already found, skip remaining URLs
                         const networkMatch = this.matchPatternWithCapture(networkUrl.url, urlPattern.text, matchOptions);
                         if (networkMatch) {
-                            addedUrlPatterns.add(urlPattern.text);
+                            ruleMatched = true;
                             matches.push({
                                 type: 'url',
                                 pattern: urlPattern.text,
@@ -729,6 +825,7 @@ class DetectionEngineManager {
             // every content pattern instead of re-lowercasing per pattern.
             const pageHTMLLower = pageHTML.toLowerCase();
             for (const contentPattern of contentPatterns) {
+                if (contentPattern.enabled === false) continue;
                 const patternText = contentPattern.text || '';
 
                 const matchOptions = {
@@ -851,6 +948,7 @@ class DetectionEngineManager {
             };
 
             for (const cookiePattern of detector.detection.cookie) {
+                if (cookiePattern.enabled === false) continue;
                 const nameMatchOptions = {
                     regex: cookiePattern.nameRegex === true,
                     wholeWord: cookiePattern.nameWholeWord === true,
@@ -931,6 +1029,7 @@ class DetectionEngineManager {
         // Check headers patterns
         if (detector.detection?.header && (Object.keys(headers).length > 0 || (pageData.requestHeaders && Object.keys(pageData.requestHeaders).length > 0))) {
             for (const headerPattern of detector.detection.header) {
+                if (headerPattern.enabled === false) continue;
                 const nameMatchOptions = {
                     regex: headerPattern.nameRegex === true,
                     wholeWord: headerPattern.nameWholeWord === true,
@@ -1000,7 +1099,7 @@ class DetectionEngineManager {
 
         // Payload rules read request bodies; a rule with body: "response" reads
         // instead the response bodies captured for its urlPattern (below)
-        const allPayloadRules = Array.isArray(detector.detection?.payload) ? detector.detection.payload : [];
+        const allPayloadRules = (Array.isArray(detector.detection?.payload) ? detector.detection.payload : []).filter(rule => rule && rule.enabled !== false);
         const requestPayloadRules = allPayloadRules.filter(rule => rule && rule.body !== 'response');
 
         // Check payload patterns - handle both single payload and multiple payloads array
@@ -1261,17 +1360,24 @@ class DetectionEngineManager {
         // Check DOM patterns
         if (detector.detection?.dom && dom.length > 0) {
             for (const domPattern of detector.detection.dom) {
+                if (domPattern.enabled === false) continue;
                 const selector = demParseDOMSelector(domPattern.selector);
                 const matchingElements = dom.filter(element => demMatchDOMGroups(selector, element));
+                if (matchingElements.length === 0) continue;
 
-                // Add all matching DOM elements to results
-                for (const matchingElement of matchingElements) {
+                // A scan keeps one match for the rule: the first element's text, then the number of elements as a suffix that needs
+                // no translation (a multiplication sign and the count; History keeps it with the value). The default is one match
+                // per matching element (see the options above)
+                const grouped = options && options.groupElements === true && matchingElements.length > 1;
+                const listed = grouped ? matchingElements.slice(0, 1) : matchingElements;
+                const suffix = grouped ? ` \u00d7${matchingElements.length}` : '';
+                for (const matchingElement of listed) {
                     const elementText = matchingElement.text || matchingElement.textContent || matchingElement.innerText || '';
                     const truncatedText = elementText.length > 50 ? elementText.substring(0, 50) + '...' : elementText;
                     matches.push({
                         type: 'dom',
                         selector: domPattern.selector,
-                        value: `${domPattern.selector}=${truncatedText}`,
+                        value: `${domPattern.selector}=${truncatedText}${suffix}`,
                         confidence: DetectionEngineManager.ruleConfidence(domPattern, Constants.DEFAULT_DOM_CONFIDENCE),
                         patternId: DetectionEngineManager.patternIdOf(detector, domPattern),
                         description: domPattern.description
@@ -1387,7 +1493,7 @@ class DetectionEngineManager {
                 sliceStart = Date.now();
             }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,
@@ -2081,21 +2187,20 @@ class DetectionEngineManager {
             forgetTabRequests(tabId);
         }
 
-        // Check if extension is enabled
-        try {
-            const result = await chrome.storage.local.get(['scrapfly_enabled']);
-            if (!await isCurrentDocument()) return ignored;
-            if (result.scrapfly_enabled === false) {
-                Logger.debug('SCAN', 'Extension paused, page not scanned');
-                setPausedIcon(tabId, false);
-                chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
-                setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED);
-                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
-                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'off');
-                return;
-            }
-        } catch (error) {
-            Logger.warn('DETECTION', '[handlePageLoad] Enabled state check failed', error);
+        // Check if extension is enabled. A state that cannot be read is not "on": the extension may be switched off, or this
+        // site left out of scanning, and it is the setting that says so that failed to read. Nothing is scanned, and the
+        // toolbar says nothing it does not know
+        const scanState = await DetectionEngineManager.readScanState(chrome);
+        if (!await isCurrentDocument()) return ignored;
+        if (!scanState.ok) return;
+        if (!scanState.enabled) {
+            Logger.debug('SCAN', 'Extension paused, page not scanned');
+            setPausedIcon(tabId, false);
+            chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
+            setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED);
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
+            if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'off');
+            return;
         }
 
         // Check if URL is blacklisted
@@ -2173,9 +2278,12 @@ class DetectionEngineManager {
             if (Settings && typeof Settings.sendWebhookIfEnabled === 'function' && storedData.detectionResults && storedData.detectionResults.length > 0) {
                 const tab = await chrome.tabs.get(tabId).catch(() => null);
                 if (!await isCurrentDocument()) return ignored;
-                // A private-window page is never sent anywhere (History leaves it out too). The delivery runs on its own, as after
-                // a scan: a slow server (up to 10 s) must not hold the History entry of this page until the person has moved on
-                if (!(tab && tab.incognito === true)) Promise.resolve(Settings.sendWebhookIfEnabled({
+                // A private-window page is never sent anywhere (History leaves it out too). The sender of the message says which
+                // kind of window it is; the tab says it too, and when neither can (the tab cannot be read and the sender does not
+                // say) the page may be private. The delivery runs on its own, as after a scan: a slow server (up to 10 s) must
+                // not hold the History entry of this page until the person has moved on
+                const privateWindow = sender.tab?.incognito === true || (tab ? tab.incognito === true : sender.tab?.incognito !== false);
+                if (!privateWindow) Promise.resolve(Settings.sendWebhookIfEnabled({
                     url: pageUrl,
                     hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                     title: (tab && tab.title) || 'Untitled',
@@ -2394,14 +2502,15 @@ class DetectionEngineManager {
             if (pendingMarker && activeDetections?.get(tabId) === pendingMarker) activeDetections.delete(tabId);
         };
 
-        try {
-            const result = await chrome.storage.local.get(['scrapfly_enabled']);
-            if (result.scrapfly_enabled === false) {
-                sendResponse({ status: 'error', error: 'Extension is disabled' });
-                return true;
-            }
-        } catch (error) {
-            Logger.warn('DETECTION', '[requestDetection] Enabled state check failed', error);
+        // The same gate as a page load: a state that cannot be read starts no scan
+        const scanState = await DetectionEngineManager.readScanState(chrome);
+        if (!scanState.ok) {
+            sendResponse({ status: 'error', error: 'Settings could not be read' });
+            return true;
+        }
+        if (!scanState.enabled) {
+            sendResponse({ status: 'error', error: 'Extension is disabled' });
+            return true;
         }
         if (!ownsSlot()) { skipSuperseded(); return true; }
 
