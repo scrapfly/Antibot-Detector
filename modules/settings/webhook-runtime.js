@@ -2,7 +2,12 @@
  * The webhook, on the sending side (the service worker): whether a page is sent, the send, and the record of what
  * happened. Extends SettingsRuntime: settings-runtime.js builds and sends one request (the Settings page uses it for
  * Test too); this file decides whether a page is sent at all and keeps the log of recent deliveries.
- * Requires settings-runtime.js, modules/core/webhook-filter.js, modules/core/webhook-log.js and modules/core/webhook-retry.js.
+ * Requires settings-runtime.js, modules/core/domain-list.js, modules/core/webhook-filter.js, modules/core/webhook-log.js and
+ * modules/core/webhook-retry.js.
+ *
+ * The log is kept in storage.local, where it outlives the browser, and it names pages: a line names none that History is told
+ * to keep out (History paused, or an ignored site), and the worker forgets the whole log where it forgets History's own record
+ * (background/history-retention.js: Clear on close, History emptied).
  */
 
 SettingsRuntime.WEBHOOK_LOG_KEY = 'scrapfly_webhook_log';
@@ -29,6 +34,25 @@ SettingsRuntime.clearWebhookLog = function() {
     return webhookLogQueue;
 };
 
+/**
+ * The saved settings, or null when they cannot be read (the storage did not answer, or what is stored is not settings).
+ * Utils.getSettings answers {} then, and {} is "the webhook is off": a held delivery must not be let go for that.
+ */
+SettingsRuntime._readSettings = async function() {
+    try {
+        if (typeof StorageManager !== 'undefined' && typeof StorageManager.readSettingsStrict === 'function') return await StorageManager.readSettingsStrict();
+        return await Utils.getSettings();
+    } catch (_) {
+        return null;
+    }
+};
+
+/** Is this page one that History is told to keep out (History paused, or an ignored site or a subdomain of one)? */
+SettingsRuntime._historyKeepsOut = function(settings, hostname) {
+    const history = (settings && settings.history) || {};
+    return history.historyEnabled === false || DomainList.matches(hostname, history.historyExcludedDomains);
+};
+
 // A failed delivery's page data, in memory only (storage.session: gone when the browser closes), so it can be retried:
 // modules/core/webhook-retry.js says for how long, how many, and when. Never the address, headers or secret.
 SettingsRuntime.WEBHOOK_HELD_KEY = 'session_webhook_held';
@@ -51,14 +75,14 @@ SettingsRuntime._changeHeld = function(change) {
     return webhookHeldQueue.catch(() => ({}));
 };
 
-/** The alarm follows the earliest automatic retry that is due. */
-SettingsRuntime._scheduleWebhookRetries = async function() {
+/** The alarm follows the earliest automatic retry that is due (not sooner than `wait` ms from now). */
+SettingsRuntime._scheduleWebhookRetries = async function(wait = 1000) {
     if (!chrome.alarms) return;
     try {
         const held = await SettingsRuntime._changeHeld(() => undefined);
         const next = WebhookRetry.nextDue(held, Date.now());
         if (next === null) await chrome.alarms.clear(SettingsRuntime.WEBHOOK_RETRY_ALARM);
-        else chrome.alarms.create(SettingsRuntime.WEBHOOK_RETRY_ALARM, { when: Math.max(next, Date.now() + 1000) });
+        else chrome.alarms.create(SettingsRuntime.WEBHOOK_RETRY_ALARM, { when: Math.max(next, Date.now() + wait) });
     } catch (_) { /* the retries are a convenience: a failed alarm never affects a delivery */ }
 };
 
@@ -84,9 +108,11 @@ SettingsRuntime._webhookAttemptEntry = function(page, result, trigger, extra = {
 /**
  * A delivery that failed: its page data is held for a retry (when Retry failed deliveries is on and storage.session
  * exists), and the next automatic retry is planned.
+ * @param {object} [held] the delivery as it was held, when this is a retry of it (it keeps what it was triggered by)
+ * @param {'scan'|'cache'} [trigger] what sent the page (a first attempt)
  * @returns {Promise<{id?: string, retryAt?: number}>} what the log line should carry
  */
-SettingsRuntime._holdFailedWebhook = async function(webhook, ctx, result, held) {
+SettingsRuntime._holdFailedWebhook = async function(webhook, ctx, result, held, trigger) {
     if (!(chrome.storage && chrome.storage.session)) return {};
     if (webhook.webhookRetry === false) {
         // Retries were switched off after this delivery was held: it is let go, or its old due time would fire again and again
@@ -97,7 +123,8 @@ SettingsRuntime._holdFailedWebhook = async function(webhook, ctx, result, held) 
     const id = held && held.id ? held.id : WebhookRetry.newId(now);
     const attempts = held ? held.attempts + 1 : 1;
     const due = WebhookRetry.schedule(attempts, now, true, WebhookRetry.isTransient(result));
-    await SettingsRuntime._changeHeld((all) => WebhookRetry.hold(all, { id, ctx, first: held ? held.first : result.started, attempts, due }, now));
+    const kept = held && held.trigger ? held.trigger : trigger;
+    await SettingsRuntime._changeHeld((all) => WebhookRetry.hold(all, { id, ctx, first: held ? held.first : result.started, attempts, due, trigger: kept }, now));
     await SettingsRuntime._scheduleWebhookRetries();
     return { id, ...(due ? { retryAt: due } : {}), attempt: attempts };
 };
@@ -117,15 +144,18 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
         if (!webhook.enableWebhook || !webhook.webhookUrl) return;
         if (trigger === 'cache' && webhook.webhookOnCache !== true) return;
         const ctx = SettingsRuntime._buildWebhookContext(pageData, detectionResults);
-        const page = ctx.hostname;
-        const decision = WebhookFilter.evaluate(detectionResults, page, WebhookFilter.settingsOf(webhook));
+        const keptOut = SettingsRuntime._historyKeepsOut(settings, ctx.hostname);
+        // What a line of the log may call the page: nothing, for a page History keeps out
+        const page = keptOut ? '' : ctx.hostname;
+        const decision = WebhookFilter.evaluate(detectionResults, ctx.hostname, WebhookFilter.settingsOf(webhook));
         if (!decision.send) {
-            await SettingsRuntime.recordWebhookDelivery({ t: Date.now(), page, outcome: 'skipped', reason: decision.reason, trigger });
+            // A page that was not sent is a line about where the person goes and nothing else: none for a page History keeps out
+            if (!keptOut) await SettingsRuntime.recordWebhookDelivery({ t: Date.now(), page, outcome: 'skipped', reason: decision.reason, trigger });
             return;
         }
         const result = await SettingsRuntime._deliverWebhook(webhook, ctx);
         // Held before it is recorded, so a Retry button never points at a delivery that is not held yet
-        const extra = result.ok ? {} : await SettingsRuntime._holdFailedWebhook(webhook, ctx, result).catch(() => ({}));
+        const extra = result.ok ? {} : await SettingsRuntime._holdFailedWebhook(webhook, ctx, result, undefined, trigger).catch(() => ({}));
         await SettingsRuntime.recordWebhookDelivery(SettingsRuntime._webhookAttemptEntry(page, result, trigger, extra));
         if (result.ok) Logger.network('Webhook sent successfully', { status: result.status });
         else if (result.error) Logger.error('NETWORK', 'Webhook could not be sent');
@@ -143,10 +173,29 @@ SettingsRuntime.sendWebhookIfEnabled = async function(pageData, detectionResults
  */
 /** How long a retry in flight keeps its delivery for itself (longer than any answer takes). */
 SettingsRuntime.WEBHOOK_RETRY_CLAIM_MS = 60 * 1000;
+/** How long the alarm waits to look again when the settings could not be read. */
+SettingsRuntime.WEBHOOK_UNREADABLE_RETRY_MS = 60 * 1000;
+
+/**
+ * Why a held delivery is not sent any more, or null when it still goes out. The person may have narrowed "Send only when",
+ * skipped the site, or turned off "Send on every page load" (for a page held for a cached result) while it waited.
+ * @returns {Promise<null|{reason?: 'site'|'category'|'confidence', hidden?: boolean}>} reason: the filter's, for the record;
+ *          hidden: the site is skipped, so no line names it
+ */
+SettingsRuntime._noLongerSent = async function(webhook, item) {
+    const ctx = item.ctx;
+    if (item.trigger === 'cache' && webhook.webhookOnCache !== true) return {};
+    const decision = WebhookFilter.evaluate(ctx.detections, ctx.hostname, WebhookFilter.settingsOf(webhook));
+    if (!decision.send) return { reason: decision.reason };
+    if (await Utils.isUrlBlacklisted(ctx.url)) return { hidden: true };
+    return null;
+};
 
 SettingsRuntime.retryWebhook = async function(id, options = {}) {
     const manual = options.manual === true;
-    const settings = await Utils.getSettings();
+    const settings = await SettingsRuntime._readSettings();
+    // Settings that cannot be read are not "the webhook is off": nothing is sent and nothing is let go, the delivery stays held
+    if (!settings) return { status: 'failed' };
     const webhook = settings.webhook || {};
     if (!webhook.enableWebhook || !webhook.webhookUrl) {
         let known = false;
@@ -172,11 +221,22 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
     });
     if (busy) return { status: 'busy' };
     if (!item) return { status: 'gone' };
+    // What the person changed while it was held still applies: a page the webhook would not send now is let go, not sent
+    const why = await SettingsRuntime._noLongerSent(webhook, item);
+    if (why) {
+        await SettingsRuntime._changeHeld((all) => { delete all[id]; return all; });
+        const hostname = item.ctx.hostname || '';
+        if (!why.hidden && !SettingsRuntime._historyKeepsOut(settings, hostname)) {
+            await SettingsRuntime.recordWebhookDelivery({ t: Date.now(), page: hostname, outcome: 'skipped', trigger: 'retry', attempt: item.attempts + 1, ...(why.reason ? { reason: why.reason } : {}) });
+        }
+        await SettingsRuntime._scheduleWebhookRetries();
+        return { status: 'gone' };
+    }
     // The alarm that started an automatic retry has fired: arm the next one for when the claim runs out, so a worker
     // stopped while sending is not the end of this delivery
     await SettingsRuntime._scheduleWebhookRetries();
     const result = await SettingsRuntime._deliverWebhook(webhook, item.ctx);
-    const page = item.ctx.hostname || '';
+    const page = SettingsRuntime._historyKeepsOut(settings, item.ctx.hostname || '') ? '' : (item.ctx.hostname || '');
     let extra = { attempt: item.attempts + 1 };
     if (result.ok) {
         await SettingsRuntime._changeHeld((all) => { delete all[id]; return all; });
@@ -193,7 +253,12 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
 SettingsRuntime.runDueWebhookRetries = async function() {
     // The extension is switched off: it sends nothing (a held delivery waits, and goes with its hour if it stays off)
     if (typeof isExtensionEnabled === 'function' && !(await isExtensionEnabled())) return;
-    const settings = await Utils.getSettings().catch(() => ({}));
+    const settings = await SettingsRuntime._readSettings();
+    if (!settings) {
+        // The settings cannot be read, which is not "everything is off": the held deliveries wait, and the alarm looks again in a minute
+        await SettingsRuntime._scheduleWebhookRetries(SettingsRuntime.WEBHOOK_UNREADABLE_RETRY_MS);
+        return;
+    }
     if ((settings.webhook || {}).webhookRetry === false) {
         // Switched off: nothing more is retried, and nothing is kept for it
         await SettingsRuntime._changeHeld(() => ({}));
