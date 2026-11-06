@@ -1074,13 +1074,23 @@ class DetectorManager {
      * or the bare category map). Official detectors are never removed or
      * overwritten by an import - only their enabled state is taken from the
      * file. "Replace all" (merge = false) removes the custom detectors only.
+     * A stub, {id, enabled: false} (what a backup holds for an official rule the person switched off), only switches an
+     * installed official rule of that id; any other stub is ignored, and a stub never makes a rule.
      * @param {object} data
      * @param {boolean} merge
+     * @param {{officialStates?: boolean}} [options] - officialStates: the file is a backup (Settings → Data → Restore), whose
+     *   official records are only on/off states: a full one (a 3.1.4 development build wrote those) is read as a stub, so a
+     *   record this build's schema refuses does not fail the restore
      * @returns {Promise<boolean>} Success status
      */
-    async importDetectors(data, merge = true) {
+    async importDetectors(data, merge = true, { officialStates = false } = {}) {
         const extensionVersion = typeof chrome !== 'undefined' ? chrome.runtime?.getManifest?.().version : null;
-        const incoming = DetectorManager.schema.admitImport(data, extensionVersion, { partial: merge });
+        const { rules, states } = DetectorManager.splitOfficialStates(data, { officialStates });
+        // A file of switches only has no rule to admit; anything else goes through the schema as before
+        const incoming = rules === null ? null
+            : (states.length > 0 && DetectorManager.recordCount(rules) === 0
+                ? Object.assign([], { skipped: [] })
+                : DetectorManager.schema.admitImport(rules, extensionVersion, { partial: merge }));
         // The rules of the file left out (not valid here), for the message that names them
         this.lastImportSkipped = incoming && Array.isArray(incoming.skipped) ? incoming.skipped.slice() : [];
         // The official rules the file holds with other content than the installed ones: an import never replaces them, and
@@ -1120,9 +1130,55 @@ class DetectorManager {
             if (author === 'scrapfly' && DetectionUtils._officialDetectorIds && DetectionUtils._officialDetectorIds.has(imported.id)) delete imported.author;
             candidate[category][detector.id] = DetectorManager.applyDetectorFixups(imported);
         }
+        // The switches: an installed official rule of that id takes the state, nothing else does
+        for (const { id, enabled } of states) {
+            const target = Object.values(candidate).flatMap(records => Object.values(records || {}))
+                .find(record => record && record.id === id && DetectionUtils.isOfficialDetector(record));
+            if (target) target.enabled = enabled;
+        }
         // Replace All is the person's own choice to replace the rules: it also repairs rules that cannot be read
         await this.saveDetectorsToStorage(candidate, { repair: !merge });
         return true;
+    }
+
+    /** How many records a rules file (the {detectors} wrapper or the bare category map) holds. */
+    static recordCount(data) {
+        const source = data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, 'detectors') ? data.detectors : data;
+        if (!source || typeof source !== 'object') return 0;
+        return Object.values(source).reduce((sum, records) => sum + (records && typeof records === 'object' ? Object.keys(records).length : 0), 0);
+    }
+
+    /**
+     * A rules file split into its rules and its on/off states of official rules. A state is a stub ({id, enabled: false}, what a
+     * backup holds for an official rule switched off), or, with `officialStates`, any record under an official id that claims
+     * Scrapfly as its author (a 3.1.4 development build's backup held the whole record). `rules` is a copy of the file without
+     * them, in the file's own shape, or null when the file is not a rules file.
+     * @returns {{rules: (object|null), states: Array<{id: string, enabled: boolean}>}}
+     */
+    static splitOfficialStates(data, { officialStates = false } = {}) {
+        const isRecord = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
+        if (!isRecord(data)) return { rules: null, states: [] };
+        const wrapped = Object.prototype.hasOwnProperty.call(data, 'detectors');
+        const source = wrapped ? data.detectors : data;
+        if (!isRecord(source)) return { rules: null, states: [] };
+        const stub = (record) => isRecord(record) && typeof record.id === 'string' && record.enabled === false
+            && Object.keys(record).every(key => key === 'id' || key === 'enabled');
+        const official = (record) => officialStates && isRecord(record) && typeof record.id === 'string'
+            && DetectionUtils.isReservedAuthor(record.author) && DetectionUtils._officialDetectorIds.has(record.id);
+        const states = [];
+        const kept = {};
+        for (const [category, records] of Object.entries(source)) {
+            if (!isRecord(records)) { kept[category] = records; continue; }
+            kept[category] = {};
+            for (const [key, record] of Object.entries(records)) {
+                if (stub(record) || official(record)) {
+                    if (typeof record.enabled === 'boolean') states.push({ id: record.id, enabled: record.enabled });
+                } else {
+                    kept[category][key] = record;
+                }
+            }
+        }
+        return { rules: wrapped ? { ...data, detectors: kept } : kept, states };
     }
 
     /**

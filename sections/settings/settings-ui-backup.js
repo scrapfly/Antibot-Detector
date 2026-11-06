@@ -136,7 +136,7 @@ SettingsUI.applyBackup = async function(bundle, choice) {
     if (choice.parts.rules) {
         await run('rules', async () => {
             const detectorManager = window.popupInstance && window.popupInstance.detectorManager;
-            if (!detectorManager || !await detectorManager.importDetectors(bundle.detectors, choice.mode === 'merge')) throw new Error('The rules could not be imported');
+            if (!detectorManager || !await detectorManager.importDetectors(bundle.detectors, choice.mode === 'merge', { officialStates: true })) throw new Error('The rules could not be imported');
             skipped = Array.isArray(detectorManager.lastImportSkipped) ? detectorManager.lastImportSkipped.slice() : [];
             chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
         });
