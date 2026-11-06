@@ -289,7 +289,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     assert.equal(bundle.theme, 'light', 'the theme is in the file');
     assert.deepEqual(Object.keys(bundle.detectors.detectors), ['antibot']);
     assert.deepEqual(Object.keys(bundle.detectors.detectors.antibot), ['detect-akamai'], 'the official rule that is off is in the file, the other 85 are not');
-    assert.equal(bundle.detectors.detectors.antibot['detect-akamai'].enabled, false);
+    assert.deepEqual(bundle.detectors.detectors.antibot['detect-akamai'], { id: 'detect-akamai', enabled: false }, 'named by id only, never the whole record');
     for (const secret of ['SYNTHETIC', 'hooks.example']) assert.ok(!fileText.includes(secret), `the backup leaks ${secret}`);
     console.log('PASS Back up writes the official rule that is switched off and the theme, and no connection detail');
 
@@ -303,7 +303,8 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     await restoreFrom(fileText);
     await page.waitForSelector('.notification-confirm input[data-part]');
     const restoreAsk = await questionText();
-    assert.ok(restoreAsk.includes('Your rules (1)'), restoreAsk);
+    // The file names one official rule switched off ({id, enabled: false}) and no rule of the person's own: "Your rules" counts those only
+    assert.ok(restoreAsk.includes('Your rules (0)'), restoreAsk);
     assert.ok(restoreAsk.includes('Not part of a backup: webhook and sharing details, and which History pages are watched.'), restoreAsk);
     await sleep(400);
     await snap('restore-note-dark');
