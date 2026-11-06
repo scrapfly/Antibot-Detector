@@ -16,7 +16,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - The popup says the extension must be reloaded, as soon as it opens, when its background part is out of date.
 - History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, long Unchanged lists folded, and seconds shown for scans in the same minute.
 - Settings: the Privacy preset also turns off automatic update checks, so it contacts nothing.
-- Settings: Back up everything keeps official rules you switched off and your theme, and Restore says what a backup never holds.
+- Settings: Back up everything keeps which official rules you switched off and your theme, safe to restore on another version, and Restore says what a backup never holds.
 - Rules: a regular expression in a rule you write or import reads only the first 100,000 characters of a page, script or request body.
 - Scans no longer download stylesheets again or copy the page's HTML when no rule reads them, and a page-element rule saves one match with its count.
 - Copy, export, delete and save always confirm with a message; the Notifications switch now only silences detection alerts.
