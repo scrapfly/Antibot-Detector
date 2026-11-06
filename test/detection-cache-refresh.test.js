@@ -51,7 +51,7 @@ function tab({ active = [{ id: 12, url: 'https://shop.example/cart' }], answer =
   const Detection = context.window.Detection;
   const detection = Object.create(Detection.prototype);
   Object.assign(detection, {
-    isExtensionEnabled: true, debugMode: false, currentResults: stored.slice(), isShowingResults: true, justClearedCache: false,
+    isExtensionEnabled: true, debugMode: false, currentResults: stored.slice(), isShowingResults: true,
     searchQuery: 'cloud', activeChips: { categories: ['antibot'] },
     detectionEngine: { setDetectors() {} }, detectorManager: { getAllDetectors: () => ({}) },
     updateCacheInfo() { log.updated = (log.updated || 0) + 1; },

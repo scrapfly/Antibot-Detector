@@ -1010,7 +1010,7 @@
     "message": "ディテクターをインポートしました"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "検出器をインポートしました（次を除く: {0}。このバージョンでは無効です）"
+    "message": "検出器をインポートしました（次を除く: {0}。このバージョンでは無効、またはパターンがスキャンを止める可能性があります）"
   },
   "detectorsImportedKeptFmt": {
     "message": "インストール済みの公式ルールは置き換えられませんでした: {0}"
@@ -2362,7 +2362,7 @@
     "message": "フォント、メディア、スタイルシートのリクエストは記録されません。"
   },
   "mhUrlLimit2": {
-    "message": "スキャン前に行われたリクエストだけが対象です。スキャンはページの読み込み後に行われます。"
+    "message": "スキャンはページの読み込み後に行われます。スキャン後に行われたリクエストも、URL スコープが「すべて」なら対象です。"
   },
   "mhHeaderIntro": {
     "message": "ページ自身のリクエストとレスポンスのヘッダーを調べます。スクリプト、XHR、フレームのヘッダーは対象外です。"
@@ -2419,7 +2419,7 @@
     "message": "フレームやワーカー内のコード、スキャン後に読み込まれたコードは検索されません。"
   },
   "mhDomIntro": {
-    "message": "ページの読み込み後、CSS セレクターで body 内の要素を探します。"
+    "message": "ページの読み込み後、CSS セレクターでページ (head と body) 内の要素を探します。"
   },
   "mhDomHow1": {
     "message": "タグ、`.class`、`#id`、`[attribute]` を単独または組み合わせて使います: `.g-recaptcha[data-sitekey]`"
@@ -2434,7 +2434,7 @@
     "message": "次はサポートされず、ルールは一致しません: パーツ間の空白や `>`、`:疑似クラス`、エスケープ。"
   },
   "mhDomLimit2": {
-    "message": "head、フレーム、shadow root は検索されません。`value` 属性は読まれず、その他の属性は先頭 100 文字で比較されます。"
+    "message": "フレームと shadow root は検索されません。`value` 属性は読まれず、その他の属性は先頭 100 文字で比較されます。"
   },
   "mhWindowIntro": {
     "message": "ページが定義する JavaScript のグローバル変数 (例: `grecaptcha.render`) を調べます。"
@@ -2467,7 +2467,7 @@
     "message": "ページの読み込み後、最初の数秒間 (最大 8 秒) の呼び出しが対象です。"
   },
   "mhJsHooksLimit2": {
-    "message": "ワーカーやフレーム内の呼び出しは見えません (同じサイトのフレームにある組み込み対象を除く)。"
+    "message": "ワーカーやフレーム内の呼び出しは見えません (同じオリジンのフレームにある組み込み対象を除く)。"
   },
   "mhPayloadIntro": {
     "message": "ページが送信する POST、PUT、PATCH、DELETE リクエストの本文を、どのフレームからでも検索します。"
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket のメッセージは読まれません。"
+  },
+  "mhRegexTextLimit": {
+    "message": "自分で作成またはインポートしたルールでは、Regex はテキスト (ページ、スクリプト、リクエスト本文) の先頭 100,000 文字だけを読みます。通常のテキスト、「単語単位」、Scrapfly 自身のルールはすべてを読みます。"
   },
   "domCardTitle": {
     "message": "CSS セレクター"
@@ -3386,9 +3389,6 @@
   },
   "rulesUiInvalidRegex": {
     "message": "正規表現として指定されたパターンが無効か、スキャンを止めてしまう可能性があります。修正するか、その行の Regex をオフにしてください。"
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "検出方法の種類を入力してください (例: HEADERS, CONTENT, URLs):"
   },
   "rulesUiMethodFallback": {
     "message": "方法"
@@ -5528,6 +5528,12 @@
   "workerOutdatedHint": {
     "message": "拡張機能のバックグラウンド部分が古くなっています。拡張機能のページで拡張機能を再読み込みして、もう一度お試しください。"
   },
+  "settingsUnreadableHint": {
+    "message": "保存された設定を読み込めなかったため、スキャン、履歴、一括スキャンは一時停止中です。設定 → データ → リセット で修復してください。"
+  },
+  "rulesUnreadableHint": {
+    "message": "保存されたルールを読み込めませんでした。組み込みのルールを使用中で、ルールの変更は保存されません。保存されたルールを置き換えるには、ルール タブでルールファイルをインポートし、すべて置換 を選んでください。"
+  },
   "historyFiltersLabel": {
     "message": "履歴をフィルター"
   },
@@ -6613,5 +6619,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdownとしてコピー"
+  },
+  "presetAutoUpdateOff": {
+    "message": "自動更新確認はオフです"
+  },
+  "restoreNotIncludedNote": {
+    "message": "バックアップに含まれないもの: Webhook と共有の情報、および履歴のどのページを監視しているか。"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "設定の変更はまだ保存されていません。閉じる前に保存しますか？"
   }
 }

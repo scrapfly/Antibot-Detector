@@ -13,6 +13,7 @@ SettingsUI.backUpEverything = async function() {
             // What is saved, never a draft that was not (Save it first to include it)
             settings: this.settingsBaseline || this.settings,
             languageOverride: stored.scrapfly_language_override || 'auto',
+            theme: typeof ScrapflyTheme !== 'undefined' ? ScrapflyTheme.get() : undefined,
             detectors: BackupBundle.customOnly(detectorManager.exportDetectors(), detector => DetectionUtils.isOfficialDetector(detector)),
             historyItems: await SettingsUI._readStoredHistoryItems()
         });
@@ -44,7 +45,8 @@ SettingsUI.chooseRestore = async function(parsed) {
     const checks = {};
     const parts = [
         ['settings', summary.settings, text('restorePartSettings', 'Settings')],
-        ['rules', summary.rules > 0, text('restorePartRulesFmt', 'Your rules ({0})', summary.rules)],
+        // The count is of the person's own rules; a file whose rules part holds only official rules switched off still offers it
+        ['rules', (summary.ruleRecords ?? summary.rules) > 0, text('restorePartRulesFmt', 'Your rules ({0})', summary.rules)],
         ['history', summary.history > 0, text('restorePartHistoryFmt', 'History ({0} entries)', summary.history)]
     ];
     for (const [id, present, label] of parts) {
@@ -76,6 +78,13 @@ SettingsUI.chooseRestore = async function(parsed) {
             row(radio, label);
         }
     }
+    // What a backup never holds, said where the person chooses what comes back (the webhook and sharing details are
+    // connections; the watchlist is a choice made on this machine, so an imported page is never put on it)
+    const note = document.createElement('p');
+    note.className = 'notification-confirm-message';
+    note.style.cssText = 'margin-top:14px;font-size:11.5px;line-height:1.5;color:var(--text-muted)';
+    note.textContent = text('restoreNotIncludedNote', 'Not part of a backup: webhook and sharing details, and which History pages are watched.');
+    content.append(note);
     const confirmed = await NotificationHelper.form({
         title: text('restoreTitle', 'Restore a backup'), content, type: 'info',
         confirmText: text('restoreConfirm', 'Restore'), cancelText: text('btnCancel', 'Cancel')
@@ -89,7 +98,8 @@ SettingsUI.chooseRestore = async function(parsed) {
 
 /**
  * Settings, then rules, then History. A part that fails does not undo the ones before it. A language that comes with the
- * settings is saved with them but shown last: showing it reloads the popup, which would cut the other parts short.
+ * settings is saved with them but shown last: showing it reloads the popup, which would cut the other parts short. The theme
+ * comes with the settings too (it needs no reload).
  * @returns {{done: string[], failed: string[], language: string|null, skipped: string[]}} `skipped`: rules of the backup this
  *   version could not take (merge imports the valid ones), to be named to the person
  */
@@ -114,13 +124,19 @@ SettingsUI.applyBackup = async function(bundle, choice) {
             const saved = await this.saveSettings({ notify: false, notifyError: false, candidate, languageOverride: knownLanguage ? bundle.languageOverride : undefined });
             if (!saved) throw new Error('The settings could not be saved');
             this.updateSettingsUI();
+            // The theme is a choice kept apart from the settings and applies at once: only one of ours, and only another one
+            if (typeof ScrapflyTheme !== 'undefined' && ScrapflyTheme.VALUES.includes(bundle.theme) && bundle.theme !== ScrapflyTheme.get()) {
+                await ScrapflyTheme.set(bundle.theme);
+                const themeChoice = document.querySelector('#themeChoice');
+                if (themeChoice) themeChoice.value = bundle.theme;
+            }
             if (knownLanguage && bundle.languageOverride !== languageBefore) language = bundle.languageOverride;
         });
     }
     if (choice.parts.rules) {
         await run('rules', async () => {
             const detectorManager = window.popupInstance && window.popupInstance.detectorManager;
-            if (!detectorManager || !await detectorManager.importDetectors(bundle.detectors, choice.mode === 'merge')) throw new Error('The rules could not be imported');
+            if (!detectorManager || !await detectorManager.importDetectors(bundle.detectors, choice.mode === 'merge', { officialStates: true })) throw new Error('The rules could not be imported');
             skipped = Array.isArray(detectorManager.lastImportSkipped) ? detectorManager.lastImportSkipped.slice() : [];
             chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
         });
@@ -158,7 +174,7 @@ SettingsUI.restoreBackupFile = async function(event) {
             await SettingsUI.importSettingsFile.call(this, event);
             return;
         }
-        const parsed = BackupBundle.parse(content);
+        const parsed = BackupBundle.parse(content, detector => DetectionUtils.isOfficialDetector(detector));
         if (!parsed.ok) {
             NotificationHelper.error(parsed.reason === 'newer'
                 ? text('restoreNewer', 'This backup was made by a newer version of the extension. Update the extension and try again.')

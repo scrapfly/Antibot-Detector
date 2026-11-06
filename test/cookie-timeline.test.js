@@ -40,11 +40,11 @@ function fakeStorage() {
   };
 }
 
-function recorder({ detectors = bundledDetectors(), limits, enabled } = {}) {
+function recorder({ detectors = bundledDetectors(), limits, enabled, skipped } = {}) {
   let clock = 1_000_000;
   const storage = fakeStorage();
   const rec = CookieTimelineRecorder.createRecorder({
-    storage, subtle: globalThis.crypto.subtle, detectors: async () => detectors, enabled,
+    storage, subtle: globalThis.crypto.subtle, detectors: async () => detectors, enabled, skipped,
     now: () => clock, randomSalt: () => 'salt-1', limits, writeDelay: 0
   });
   return { rec, storage, tick: (ms) => { clock += ms; }, now: () => clock };
@@ -128,6 +128,52 @@ test('private windows and a switched-off extension are not recorded', async () =
   const off = recorder({ enabled: async () => false });
   assert.equal(await off.rec.handle(change('cf_clearance', 'x')), null);
   assert.deepEqual((await rec.get('https://shop.example.com')).cookies, {});
+});
+
+test('cookies of a site the person skips (or leaves out of "only these sites") are not recorded, and the others still are', async () => {
+  const asked = [];
+  const skipped = async (url) => { asked.push(url); return new URL(url).hostname === 'bank.example'; };
+  const { rec, storage } = recorder({ skipped });
+  assert.equal(await rec.handle(change('_abck', 'AAAA~0~', { domain: '.bank.example' })), null, 'a cookie of the whole site');
+  assert.equal(await rec.handle(change('_abck', 'AAAA~0~', { domain: 'bank.example' })), null, 'a host-only cookie');
+  assert.equal(await rec.handle(change('cf_clearance', 'BBBB', { domain: '.bank.example', removed: true, cause: 'explicit' })), null, 'a removal too');
+  assert.equal(await rec.handle(change('cf_clearance', 'CCCC', { domain: '.shop.example.com' })), 'set', 'another site is recorded');
+  assert.deepEqual((await rec.get('https://bank.example/')).cookies, {}, 'nothing of the skipped site is kept');
+  assert.equal((await rec.get('https://shop.example.com/')).site, 'example.com');
+  assert.equal(Object.keys(byName((await rec.get('https://shop.example.com/')).cookies)).join(), 'cf_clearance');
+  await rec.flush();
+  assert.ok(!JSON.stringify(storage.data).includes('bank.example'), 'not even the name of the site is stored');
+  // The address asked about is the cookie's own host over https, without the dot of a domain cookie
+  assert.deepEqual(asked, ['https://bank.example/', 'https://bank.example/', 'https://bank.example/', 'https://shop.example.com/']);
+  // A name that does not count is never looked up: no settings read for every cookie of every site
+  asked.length = 0;
+  assert.equal(await rec.handle(change('_ga', 'GA1.2.3', { domain: '.shop.example.com' })), null);
+  assert.deepEqual(asked, []);
+});
+
+test('the worker asks the saved site lists: Utils.isUrlBlacklisted decides, through the recorder init() builds', async () => {
+  const had = Object.fromEntries(['chrome', 'Utils', 'ensureDetectorManagerInitialized'].map(key => [key, globalThis[key]]));
+  const hadRecorder = CookieTimelineRecorder.recorder;
+  let onChanged;
+  const storage = fakeStorage();
+  globalThis.chrome = { cookies: { onChanged: { addListener: (fn) => { onChanged = fn; } } }, storage: { session: storage } };
+  globalThis.Utils = { isUrlBlacklisted: async (url) => new URL(url).hostname === 'bank.example' };
+  globalThis.ensureDetectorManagerInitialized = async () => ({ getAllDetectors: () => bundledDetectors(), addChangeListener() {} });
+  CookieTimelineRecorder._initialized = false;
+  try {
+    CookieTimelineRecorder.init();
+    assert.equal(typeof onChanged, 'function', 'the listener is registered');
+    onChanged(change('_abck', 'AAAA~0~', { domain: '.bank.example' }));
+    onChanged(change('_abck', 'BBBB~0~', { domain: '.shop.example.com' }));
+    const bank = await CookieTimelineRecorder.recorder.get('https://bank.example/');
+    const shop = await CookieTimelineRecorder.recorder.get('https://shop.example.com/');
+    assert.deepEqual(bank.cookies, {}, 'a skipped site is not recorded');
+    assert.equal(Object.keys(shop.cookies).length, 1, 'any other site is');
+  } finally {
+    CookieTimelineRecorder._initialized = false;
+    CookieTimelineRecorder.recorder = hadRecorder;
+    for (const [key, value] of Object.entries(had)) { if (value === undefined) delete globalThis[key]; else globalThis[key] = value; }
+  }
 });
 
 test('caps: events per cookie, cookies per site, and the least recently active site gives way', async () => {

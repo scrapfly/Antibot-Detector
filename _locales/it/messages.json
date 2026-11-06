@@ -1010,7 +1010,7 @@
     "message": "Detector importati"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Rilevatori importati, tranne: {0} (non validi in questa versione)"
+    "message": "Rilevatori importati, tranne: {0} (non validi in questa versione, o un pattern potrebbe bloccare l’analisi)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Le regole ufficiali già installate non sono state sostituite: {0}"
@@ -1061,7 +1061,7 @@
     "message": "Cattura eliminata"
   },
   "capturesExportedFmt": {
-    "message": "Esportate {0} catture"
+    "message": "Catture esportate: {0}"
   },
   "allCapturesCleared": {
     "message": "Tutte le catture eliminate"
@@ -2362,7 +2362,7 @@
     "message": "Le richieste di font, media e fogli di stile non vengono registrate."
   },
   "mhUrlLimit2": {
-    "message": "Contano solo le richieste fatte prima della scansione, che parte quando la pagina è caricata."
+    "message": "La scansione parte quando la pagina è caricata; contano anche le richieste fatte dopo, se l’ambito URL è Tutti."
   },
   "mhHeaderIntro": {
     "message": "Controlla le intestazioni della richiesta e della risposta della pagina stessa, non quelle di script, chiamate XHR o frame."
@@ -2419,7 +2419,7 @@
     "message": "Il codice dentro frame o worker, o caricato dopo la scansione, non viene cercato."
   },
   "mhDomIntro": {
-    "message": "Cerca un elemento nel body della pagina con un selettore CSS, quando la pagina è caricata."
+    "message": "Cerca un elemento nella pagina (head e body) con un selettore CSS, quando la pagina è caricata."
   },
   "mhDomHow1": {
     "message": "Un tag, `.classe`, `#id` o `[attributo]`, da solo o combinato: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Non supportati, e la regola non corrisponde mai: spazi o `>` tra le parti, `:pseudo-classi` ed escape."
   },
   "mhDomLimit2": {
-    "message": "Head, frame e shadow root non vengono cercati. L’attributo `value` non viene letto; gli altri sono confrontati sui primi 100 caratteri."
+    "message": "Frame e shadow root non vengono cercati. L’attributo `value` non viene letto; gli altri sono confrontati sui primi 100 caratteri."
   },
   "mhWindowIntro": {
     "message": "Controlla una variabile globale JavaScript definita dalla pagina, come `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Le chiamate contano nei primi secondi dopo il caricamento della pagina (al massimo 8 secondi)."
   },
   "mhJsHooksLimit2": {
-    "message": "Le chiamate in worker o frame non vengono viste, tranne i target integrati nei frame dello stesso sito."
+    "message": "Le chiamate in worker o frame non vengono viste, tranne i target integrati nei frame della stessa origine."
   },
   "mhPayloadIntro": {
     "message": "Cerca nel corpo delle richieste POST, PUT, PATCH e DELETE inviate dalla pagina, da qualsiasi frame."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "I messaggi WebSocket non vengono letti."
+  },
+  "mhRegexTextLimit": {
+    "message": "Nelle regole che scrivi o importi, Regex legge solo i primi 100.000 caratteri di un testo (una pagina, uno script, il corpo di una richiesta). Il testo normale, Parola intera e le regole di Scrapfly lo leggono per intero."
   },
   "domCardTitle": {
     "message": "Selettore CSS"
@@ -3386,9 +3389,6 @@
   },
   "rulesUiInvalidRegex": {
     "message": "Un pattern indicato come espressione regolare non è valido o potrebbe bloccare l’analisi. Correggilo o disattiva Regex per quella riga."
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Inserisci il tipo di metodo di rilevamento (es. HEADERS, CONTENT, URLs):"
   },
   "rulesUiMethodFallback": {
     "message": "Metodo"
@@ -5528,6 +5528,12 @@
   "workerOutdatedHint": {
     "message": "La parte in background dell'estensione non è aggiornata. Ricarica l'estensione nella pagina delle estensioni e riprova."
   },
+  "settingsUnreadableHint": {
+    "message": "Non è stato possibile leggere le impostazioni salvate, quindi l’analisi delle pagine, la cronologia e l’analisi in blocco sono in pausa. Per ripararle, usa Impostazioni → Dati → Reimposta."
+  },
+  "rulesUnreadableHint": {
+    "message": "Non è stato possibile leggere le regole salvate: sono in uso le regole integrate e le modifiche alle regole non vengono salvate. Per sostituire le regole salvate, importa un file di regole nella scheda Regole e scegli Sostituisci tutto."
+  },
   "historyFiltersLabel": {
     "message": "Filtra la cronologia"
   },
@@ -5757,7 +5763,7 @@
     "message": "Le tue regole ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Cronologia ({0} voci)"
+    "message": "Cronologia (voci: {0})"
   },
   "restoreModeLabel": {
     "message": "Regole e cronologia"
@@ -6613,5 +6619,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Copia come Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Il controllo automatico degli aggiornamenti è disattivato"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Non fanno parte di un backup: i dati del webhook e della condivisione, e quali pagine della cronologia sono monitorate."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Le modifiche alle impostazioni non sono ancora state salvate. Salvarle prima di chiudere?"
   }
 }

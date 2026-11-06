@@ -22,7 +22,6 @@ const detectionActionsFormat = (key, fallback, ...args) => {
 
 DetectionActions.clearCache = async function() {
     const clearCacheBtn = document.querySelector('#clearCacheBtn');
-    let originalText = '';
 
     try {
       const confirmed = await NotificationHelper.confirm({
@@ -37,43 +36,36 @@ DetectionActions.clearCache = async function() {
 
       if (!confirmed) return;
 
-      if (clearCacheBtn) {
-        const textSpan = clearCacheBtn.querySelector('span');
-        if (textSpan) {
-          originalText = textSpan.textContent;
-          textSpan.textContent = detectionActionsTr('clearingMsg', 'Clearing...');
-        }
-        clearCacheBtn.disabled = true;
-      }
+      if (clearCacheBtn) clearCacheBtn.disabled = true;
 
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tabs[0]) {
-        if (clearCacheBtn && originalText) {
-          const textSpan = clearCacheBtn.querySelector('span');
-          if (textSpan) {
-            textSpan.textContent = originalText;
-          }
-          clearCacheBtn.disabled = false;
-        }
+        NotificationHelper.error(detectionActionsTr('unableGetCurrentPage', 'Unable to get current page'));
         return;
       }
 
       const url = tabs[0].url;
 
-      await chrome.runtime.sendMessage({
+      const answer = await chrome.runtime.sendMessage({
         type: WorkerMessages.DETECTION_CLEAR_CACHE,
         url: url,
         tabId: tabs[0].id
       });
 
-      if (clearCacheBtn) {
-        const textSpan = clearCacheBtn.querySelector('span');
-        if (textSpan) {
-          textSpan.textContent = detectionActionsTr('clearedSuccessMsg', '✓ Cleared!');
-        }
+      // What the worker says decides what the person is told: 'cleared' removed the saved result, 'not_found' found none (the
+      // worker still drops the tab's scan and marks it cleared, so the page ends the same way); anything else changed nothing
+      const status = answer && answer.status;
+      if (status !== 'cleared' && status !== 'not_found') {
+        NotificationHelper.error(status === 'unknown'
+          ? detectionActionsTr('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again.")
+          : detectionActionsTr('failedToClearCacheToast', 'Failed to clear cache'));
+        return;
       }
-
-      NotificationHelper.success(detectionActionsTr('cacheClearedToast', 'Cache cleared'));
+      if (status === 'cleared') {
+        NotificationHelper.success(detectionActionsTr('cacheClearedToast', 'Cache cleared'));
+      } else {
+        NotificationHelper.info(detectionActionsTr('notificationCacheAlreadyCleared', 'Cache already cleared'));
+      }
 
       try {
         await setBadgeTextColor(tabs[0].id, false, BADGE.COLORS.CLEARED);
@@ -87,31 +79,19 @@ DetectionActions.clearCache = async function() {
       }
 
       this.currentResults = [];
-      this.justClearedCache = true;
       this.showEmptyState({ outcome: 'unscanned' });
     } catch (error) {
       Logger.error('UI', 'Failed to clear cache:', error);
       NotificationHelper.error(detectionActionsTr('failedToClearCacheToast', 'Failed to clear cache'));
-
-      if (clearCacheBtn && originalText) {
-        const textSpan = clearCacheBtn.querySelector('span');
-        if (textSpan) {
-          textSpan.textContent = originalText;
-        }
-        clearCacheBtn.disabled = false;
-      }
+    } finally {
+      // However it ended: the card (when it was cleared) hides the button, and a failure leaves it usable
+      DetectionActions.resetClearCacheButton.call(this);
     }
 };
 
 DetectionActions.resetClearCacheButton = function() {
     const clearCacheBtn = document.querySelector('#clearCacheBtn');
-    if (clearCacheBtn) {
-      const textSpan = clearCacheBtn.querySelector('span');
-      if (textSpan) {
-        textSpan.textContent = detectionActionsTr('detectionTitleClearCache', 'Clear Cache');
-      }
-      clearCacheBtn.disabled = false;
-    }
+    if (clearCacheBtn) clearCacheBtn.disabled = false;
 };
 
 /**
@@ -124,7 +104,10 @@ DetectionActions.RESCAN_NOTICES = Object.freeze({
     skipped: ['toolbarTitleSkipped', 'This site is not scanned'],
     off: ['toolbarTitleOff', 'Detection is switched off'],
     no_tab: ['unableGetCurrentPage', 'Unable to get current page'],
-    failed: ['detectionFailedTitle', 'Scan failed']
+    failed: ['detectionFailedTitle', 'Scan failed'],
+    // The worker does not know the message: it still runs the code from before the update (the popup's files are read fresh on
+    // every open, the worker only when the extension is reloaded). The wording History and Settings use for the same case
+    outdated: ['workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."]
 });
 
 /** Both Scan again buttons off while the worker answers (the toolbar one and the one on the dead-end card). */
@@ -163,7 +146,8 @@ DetectionActions.rescan = async function() {
       let outcome = 'no_tab';
       if (tab && typeof tab.id === 'number') {
         const answer = await chrome.runtime.sendMessage({ type: WorkerMessages.RESCAN_TAB, tabId: tab.id });
-        outcome = answer && answer.status === 'ok' && typeof answer.outcome === 'string' ? answer.outcome : 'failed';
+        if (answer && answer.status === 'unknown') outcome = 'outdated';
+        else outcome = answer && answer.status === 'ok' && typeof answer.outcome === 'string' ? answer.outcome : 'failed';
       }
       if (outcome === 'reloaded') {
         DetectionActions.showRescanning.call(this, tab);
@@ -278,6 +262,7 @@ DetectionActions.showBlacklistState = function(domain) {
     this.displayOptions = {};
     this.hideLoadingState();
     this.closeDetectionModal();
+    if (typeof DetectionUI !== 'undefined') DetectionUI.announce('');
     if (this.uiStateMachine) {
       this.uiStateMachine.setState(this.uiStates.DISABLED, { isBlacklisted: true, domain });
     }
@@ -729,11 +714,16 @@ DetectionActions.uploadDetectionsToPaste = async function() {
         isUrlSafe: typeof SettingsRuntime !== 'undefined' ? SettingsRuntime._isWebhookUrlSafe : null
       });
 
-      await FormatUtils.copyToClipboard(pasteUrl, {
+      const copied = await FormatUtils.copyToClipboard(pasteUrl, {
         notify: false,
         useMicroToast: false
       });
-      NotificationHelper.success(detectionActionsTr('pasteUploadSuccessToast', 'Link copied to clipboard'));
+      // The upload worked either way and its tab opens below; only the copy can have failed
+      if (copied) {
+        NotificationHelper.success(detectionActionsTr('pasteUploadSuccessToast', 'Link copied to clipboard'));
+      } else {
+        NotificationHelper.error(detectionActionsTr('clipboardCopyFailed', 'Failed to copy to clipboard'));
+      }
 
       try {
         await chrome.tabs.create({ url: pasteUrl });

@@ -66,18 +66,30 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
             return false; // Cancel this capture start
         }
 
-        // Delete _abck cookie to force sensor_data regeneration
-        try {
-            await chrome.cookies.remove({
-                url: this.tabInfo.url,
-                name: '_abck'
-            });
-            Logger.network('[Akamai] _abck cookie deleted successfully');
-        } catch (err) {
-            Logger.network('[Akamai] Could not delete _abck cookie:', err);
-        }
+        // Proceed with capture. The _abck cookie is still there: it goes only once the worker has armed the capture (afterCaptureStart),
+        // so a start that fails or is refused costs the person nothing
+        return true;
+    };
 
-        return true; // Proceed with capture
+    /**
+     * Hook: the worker has answered Start Capturing. Only when it confirms the capture is armed is the _abck cookie deleted, to force
+     * sensor_data regeneration on the reload: arm first, delete last. A start that failed leaves the cookie alone.
+     * Override from BaseAdvancedModule
+     */
+AkamaiAdvanced.prototype.afterCaptureStart = async function(response) {
+        if (response && (response.status === 'started' || response.status === 'already_capturing')) {
+            try {
+                await chrome.cookies.remove({
+                    url: this.tabInfo.url,
+                    name: '_abck'
+                });
+                Logger.network('[Akamai] _abck cookie deleted successfully');
+            } catch (err) {
+                Logger.network('[Akamai] Could not delete _abck cookie:', err);
+            }
+        }
+        // Then what every capture tool does: close the popup so the person can reload the page
+        return BaseAdvancedModule.prototype.afterCaptureStart.call(this, response);
     };
 
 

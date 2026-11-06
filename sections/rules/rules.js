@@ -70,6 +70,8 @@ class Rules {
       itemsPerPage: 2,
       onPageChange: (page, items) => {
         this.renderDetectorsPage(items);
+        // A page flip changes the pager's line: the status region says it too (a screen reader hears nothing of a redrawn list)
+        this.syncResultsStatus();
       }
     });
   }
@@ -78,6 +80,8 @@ class Rules {
    * Setup event listeners
    */
   setupEventListeners() {
+    // Before the guard below: the popup sets the tab up again on every visit, and a tab that was left (cleanup) watches again
+    this.watchPendingUpdates();
     if (this.eventListenersSetup) {
       return;
     }
@@ -169,9 +173,34 @@ class Rules {
     if (checkUpdatesBtn) {
       checkUpdatesBtn.addEventListener('click', () => this.handleCheckUpdates());
     }
+  }
 
-    // Check for pending updates on load (shows badge if any)
-    this.checkPendingUpdates();
+  /**
+   * Keep the Update badge and the notice for rule updates that wait for a newer extension in step with what is stored. Settings →
+   * Data → Clear (pending rule updates) and Settings → Check now write those keys while this tab is open behind the dialog, and
+   * the badge and the notice were only read when the tab was first drawn. Also reads them now: the first time, and when the tab is
+   * shown again after a cleanup (a change made while it was away was not seen).
+   */
+  watchPendingUpdates() {
+    if (this._pendingUpdatesWatcher || typeof chrome === 'undefined' || !chrome.storage?.onChanged?.addListener) return;
+    const keys = typeof UpdateManager !== 'undefined'
+      ? [UpdateManager.STORAGE_KEYS.PENDING_UPDATES, UpdateManager.STORAGE_KEYS.INCOMPATIBLE_UPDATES]
+      : [];
+    this._pendingUpdatesWatcher = (changes, area) => {
+      if (area === 'local' && changes && keys.some(key => key in changes)) void this.checkPendingUpdates();
+    };
+    chrome.storage.onChanged.addListener(this._pendingUpdatesWatcher);
+    void this.checkPendingUpdates();
+  }
+
+  /**
+   * The popup calls this on the section it leaves for another tab: nothing watches storage while the Rules tab is not shown.
+   * setupEventListeners() starts it again when the tab comes back.
+   */
+  cleanup() {
+    if (!this._pendingUpdatesWatcher) return;
+    chrome.storage.onChanged.removeListener(this._pendingUpdatesWatcher);
+    this._pendingUpdatesWatcher = null;
   }
 
   /**

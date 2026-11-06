@@ -284,16 +284,11 @@ Advanced.prototype.setupCaptureCardListeners = function(grid) {
       const moduleId = card.getAttribute('data-module-id');
       const captureId = card.getAttribute('data-capture-id');
 
-      // Main card click - opens modal when clicking anywhere on the card
+      // Main card click - opens modal when clicking anywhere on the card. The row is not a control itself: its open button is, and
+      // Enter or Space on a button is a click on it, which comes up to here
       card.addEventListener('click', (e) => {
         // Don't trigger if clicking on action buttons
         if (!e.target.closest('.capture-action-btn')) {
-          this.viewCaptureDetails(moduleId, captureId);
-        }
-      });
-      card.addEventListener('keydown', (e) => {
-        if ((e.key === 'Enter' || e.key === ' ') && e.target === card) {
-          e.preventDefault();
           this.viewCaptureDetails(moduleId, captureId);
         }
       });
@@ -439,11 +434,14 @@ Advanced.prototype.deleteSingleCapture = async function(moduleId, captureId) {
     const _tDC = (typeof I18n !== 'undefined') ? I18n : null;
     const _trDC = (key, fallback) => (_tDC && _tDC.get(key)) || fallback;
     try {
+      const place = this.captureRowPlace(captureId);
       await AdvancedHistoryStore.deleteCapture(moduleId, captureId);
 
       NotificationHelper.success(_trDC('captureDeleted', 'Capture deleted'));
 
       await this.renderUnifiedCaptureHistory();
+      // The Delete button went with the old rows: the focus goes to the row that took the place of the deleted one
+      this.restoreCaptureFocus(place);
       await this.updateCaptureCountBadge();
     } catch (error) {
       Logger.error('UI', '[Advanced] Error deleting capture:', error);

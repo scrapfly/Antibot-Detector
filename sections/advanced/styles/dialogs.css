@@ -242,7 +242,7 @@
   position: absolute;
   top: 26px;
   bottom: -10px;
-  left: 11px;
+  inset-inline-start: 11px;
   width: 2px;
   background: rgba(59, 130, 246, 0.25);
 }

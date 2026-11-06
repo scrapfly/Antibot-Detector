@@ -5,6 +5,54 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.4] - 2026-11-06
+
+### Added
+
+- The popup says when stored settings or rules cannot be read: scanning pauses until Settings → Data → Reset, and rule changes are not saved over unreadable rules.
+
+### Changed
+
+- After an update, saved results are cleared, so pages are scanned again with the new version instead of showing what the old one found.
+- The popup says the extension must be reloaded, as soon as it opens, when its background part is out of date.
+- History: Compare scans is easier to read, with a one-line scan list, the page path under it, four counts at a glance, aligned scores with a +/− badge, long Unchanged lists folded, and seconds shown for scans in the same minute.
+- Settings: the Privacy preset also turns off automatic update checks, so it contacts nothing.
+- Settings: Back up everything keeps which official rules you switched off and your theme, safe to restore on another version, and Restore says what a backup never holds.
+- Rules: a regular expression in a rule you write or import reads only the first 100,000 characters of a page, script or request body.
+- Scans no longer download stylesheets again or copy the page's HTML when no rule reads them, and a page-element rule saves one match with its count.
+- Copy, export, delete and save always confirm with a message; the Notifications switch now only silences detection alerts.
+
+### Fixed
+
+- Imperva: captures cover only Imperva's own requests on the page's site, at most 20 challenge addresses and payloads are kept, and Start Capturing over Analyze Scripts no longer doubles results.
+- Shape Security: stopping a capture early no longer leaves a stale notice or blocks the next Start, and a timeout with nothing captured saves no empty entry.
+- Akamai: a second Extract Sensor run is no longer ended by the first one's timer, and Start Capturing deletes the _abck cookie only once armed.
+- Advanced: ALTCHA Extract Site Key finds the key of an ALTCHA Cloud widget before its challenge has loaded.
+- Detection: Scan again says the extension must be reloaded when its background part is out of date, instead of only "Scan failed".
+- Custom rules, edits to official rules and switched-off detectors are no longer replaced by the shipped rules when stored rules cannot be read.
+- When settings cannot be read, no page is scanned and nothing is sent or kept, History and Bulk scan stay paused, and backup, watchlist and update schedules stay as they were.
+- Webhook: a delivery waiting to be retried is dropped when your filters or skipped sites no longer allow it, private-window pages are never sent, and recent deliveries never name sites History ignores.
+- Log Collector: sites History ignores, skipped sites and private-window pages appear as "[hidden site]" in collected and exported logs.
+- Check Cookies no longer records sites kept out of scans, and saved Advanced captures are limited to about 4 MB in total.
+- Rules: a rule you write or import can no longer freeze scanning with a slow regular expression; Import refuses such rules and very large files and names what it skips.
+- Rules: two URL rules with the same address both match with their own confidence, and a single pattern switched off no longer matches anything.
+- Rules → Test finds official patterns deep in long scripts, as a scan does, and page-reported window detections use the rule's own confidence and description.
+- Rules help: DOM rules search the page head, and requests made after the scan count for URL rules, in all 22 languages.
+- Changing the cache scope drops results saved under the old one, so pages are scanned again instead of showing another page's old result.
+- With the extension switched off, nothing of it stays on the page or in its frames.
+- An overdue watchlist check is no longer pushed back each time the background worker wakes.
+- A new scan result no longer makes the popup reload your whole History, which slowed large Histories.
+- Turning a page in Detection, History or Rules starts at the top, and the page box returns to the current page when you leave it.
+- Detection: Clear cache says what happened and never stays disabled, and Upload says the link is copied only when it was.
+- History and Rules: after pinning, noting, deleting or resetting, keyboard focus stays on that entry or the next one, without scrolling the list away.
+- Screen readers: Detection, History and Rules announce search results and scan outcomes, History cards take fewer Tab presses (Scrape with Scrapfly is also in the … menu) and name their numbers, and Advanced captures and Help work from the keyboard.
+- Tips and counts use each language's own "Label: value" form and plurals, including Russian and Arabic, and retention and sizes follow your language.
+- Settings asks before discarding unsaved changes on Esc, ✕ or a click outside, and an invalid value opens its tab and highlights the field.
+- Messages no longer push each other off the screen: each stays its full time, hovering or focusing one pauses it, and "Copied" shows at once.
+- Arabic: messages, the language list, Advanced How it works steps and Rules help bullets follow right-to-left layout, and change arrows point the right way.
+- Rules: the Update badge follows Settings → Data → Clear and Check now without reopening the popup.
+- Restore: "Your rules" counts only your own rules, and Advanced says when saved captures cannot load because the extension needs a reload.
+
 ## [3.1.3] - 2026-11-05
 
 ### Added
@@ -990,6 +1038,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.3...v3.1.4
 [3.1.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.2...v3.1.3
 [3.1.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.0...v3.1.1

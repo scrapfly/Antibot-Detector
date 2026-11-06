@@ -84,9 +84,10 @@ function demExtractDOM() {
 
     // Use NodeFilter to skip irrelevant elements (20-30% faster)
     const relevantTags = new Set(['iframe', 'form', 'div', 'meta', 'script', 'noscript', 'canvas']);
+    // A rule that is off (its own `enabled: false`) records nothing: matching skips it, so its nodes would only be carried along
     const configuredSelectors = Object.values(this.detectors || {}).flatMap(category =>
         Object.values(category).filter(detector => detector.enabled !== false).flatMap(detector =>
-            (detector.detection?.dom || []).map(rule => demParseDOMSelector(rule.selector)).filter(Boolean)));
+            (detector.detection?.dom || []).filter(rule => rule && rule.enabled !== false).map(rule => demParseDOMSelector(rule.selector)).filter(Boolean)));
     const configuredGroups = configuredSelectors.flat();
     const groupsByTag = new Map();
     const extraAttributes = new Set(configuredGroups.flatMap(group =>

@@ -1010,7 +1010,7 @@
     "message": "Detektoren importiert"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detektoren importiert, außer: {0} (in dieser Version nicht gültig)"
+    "message": "Detektoren importiert, außer: {0} (in dieser Version nicht gültig, oder ein Muster könnte die Prüfung blockieren)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Bereits installierte offizielle Regeln wurden nicht ersetzt: {0}"
@@ -1061,7 +1061,7 @@
     "message": "Aufzeichnung gelöscht"
   },
   "capturesExportedFmt": {
-    "message": "{0} Aufzeichnungen exportiert"
+    "message": "Exportierte Aufzeichnungen: {0}"
   },
   "allCapturesCleared": {
     "message": "Alle Aufzeichnungen gelöscht"
@@ -2362,7 +2362,7 @@
     "message": "Anfragen für Schriftarten, Medien und Stylesheets werden nicht aufgezeichnet."
   },
   "mhUrlLimit2": {
-    "message": "Nur Anfragen vor dem Scan zählen; der Scan läuft, sobald die Seite geladen ist."
+    "message": "Der Scan läuft, sobald die Seite geladen ist; Anfragen danach zählen ebenfalls, wenn der URL-Bereich Alle ist."
   },
   "mhHeaderIntro": {
     "message": "Prüft die Header der eigenen Anfrage und Antwort der Seite, nicht die von Skripten, XHR-Aufrufen oder Frames."
@@ -2419,7 +2419,7 @@
     "message": "Code in Frames oder Workern und nach dem Scan geladener Code werden nicht durchsucht."
   },
   "mhDomIntro": {
-    "message": "Sucht mit einem CSS-Selektor nach einem Element im Body der Seite, sobald die Seite geladen ist."
+    "message": "Sucht mit einem CSS-Selektor nach einem Element auf der Seite (Head und Body), sobald die Seite geladen ist."
   },
   "mhDomHow1": {
     "message": "Ein Tag, `.klasse`, `#id` oder `[attribut]`, einzeln oder kombiniert: `.g-recaptcha[data-sitekey]`."
@@ -2434,7 +2434,7 @@
     "message": "Nicht unterstützt, die Regel passt dann nie: Leerzeichen oder `>` zwischen Teilen, `:Pseudoklassen` und Escapes."
   },
   "mhDomLimit2": {
-    "message": "Head, Frames und Shadow Roots werden nicht durchsucht. Das Attribut `value` wird nicht gelesen; andere Attribute werden anhand ihrer ersten 100 Zeichen verglichen."
+    "message": "Frames und Shadow Roots werden nicht durchsucht. Das Attribut `value` wird nicht gelesen; andere Attribute werden anhand ihrer ersten 100 Zeichen verglichen."
   },
   "mhWindowIntro": {
     "message": "Prüft eine globale JavaScript-Variable, die die Seite definiert, etwa `grecaptcha.render`."
@@ -2467,7 +2467,7 @@
     "message": "Aufrufe zählen in den ersten Sekunden nach dem Laden der Seite (höchstens 8 Sekunden)."
   },
   "mhJsHooksLimit2": {
-    "message": "Aufrufe in Workern oder Frames werden nicht gesehen, außer eingebauten Zielen in Frames derselben Website."
+    "message": "Aufrufe in Workern oder Frames werden nicht gesehen, außer eingebauten Zielen in Frames desselben Ursprungs."
   },
   "mhPayloadIntro": {
     "message": "Durchsucht den Inhalt der POST-, PUT-, PATCH- und DELETE-Anfragen, die die Seite sendet, aus jedem Frame."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket-Nachrichten werden nicht gelesen."
+  },
+  "mhRegexTextLimit": {
+    "message": "In Regeln, die du schreibst oder importierst, liest Regex nur die ersten 100.000 Zeichen eines Textes (eine Seite, ein Skript, der Inhalt einer Anfrage). Normaler Text, „Ganzes Wort“ und die eigenen Regeln von Scrapfly lesen ihn vollständig."
   },
   "domCardTitle": {
     "message": "CSS-Selektor"
@@ -3386,9 +3389,6 @@
   },
   "rulesUiInvalidRegex": {
     "message": "Ein als regulärer Ausdruck markiertes Muster ist ungültig oder könnte die Prüfung blockieren. Korrigiere es oder schalte Regex für diese Zeile aus."
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Art der Erkennungsmethode eingeben (z. B. HEADERS, CONTENT, URLs):"
   },
   "rulesUiMethodFallback": {
     "message": "Methode"
@@ -5528,6 +5528,12 @@
   "workerOutdatedHint": {
     "message": "Der Hintergrundteil der Erweiterung ist veraltet. Lade die Erweiterung auf der Erweiterungsseite neu und versuche es erneut."
   },
+  "settingsUnreadableHint": {
+    "message": "Die gespeicherten Einstellungen konnten nicht gelesen werden, deshalb sind das Scannen, der Verlauf und der Massenscan pausiert. Zum Reparieren verwende Einstellungen → Daten → Zurücksetzen."
+  },
+  "rulesUnreadableHint": {
+    "message": "Die gespeicherten Regeln konnten nicht gelesen werden: Die integrierten Regeln werden verwendet und Änderungen an Regeln werden nicht gespeichert. Um die gespeicherten Regeln zu ersetzen, importiere im Tab Regeln eine Regeldatei und wähle Alle ersetzen."
+  },
   "historyFiltersLabel": {
     "message": "Verlauf filtern"
   },
@@ -5757,7 +5763,7 @@
     "message": "Deine Regeln ({0})"
   },
   "restorePartHistoryFmt": {
-    "message": "Verlauf ({0} Einträge)"
+    "message": "Verlauf (Einträge: {0})"
   },
   "restoreModeLabel": {
     "message": "Regeln und Verlauf"
@@ -6613,5 +6619,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Als Markdown kopieren"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Die automatische Suche nach Updates ist aus"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Nicht Teil einer Sicherung: Angaben zu Webhook und Teilen sowie welche Seiten im Verlauf überwacht werden."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Deine Änderungen an den Einstellungen sind noch nicht gespeichert. Vor dem Schließen speichern?"
   }
 }

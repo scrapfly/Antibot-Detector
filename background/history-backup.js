@@ -90,7 +90,7 @@ const HistoryBackup = {
 
     async notifyFailure() {
         const settings = await Utils.getSettings();
-        if (settings.notificationsEnabled === false || !chrome.notifications || !chrome.notifications.create) return;
+        if (settings.notificationsEnabled === false || settings.settingsUnreadable === true || !chrome.notifications || !chrome.notifications.create) return;
         if (typeof I18n !== 'undefined' && I18n.ready) await I18n.ready();
         chrome.notifications.create('scrapfly-history-backup-failed', {
             type: 'basic',
@@ -119,7 +119,11 @@ const HistoryBackup = {
 
     /** The frequency now in Settings, applied to the alarm; a backup that came due while the browser was closed runs once. */
     async sync(catchUp = false) {
-        const { historyBackup } = await Utils.getHistorySettings();
+        const settings = await Utils.getHistorySettings();
+        // Settings that cannot be read are not "backups off": the alarm stays as it is (clearing it would last until the next worker
+        // start or settings change), and no catch-up runs from a default
+        if (settings.settingsUnreadable === true) return;
+        const { historyBackup } = settings;
         await this.syncAlarm(historyBackup);
         const period = this.periodOf(historyBackup);
         if (catchUp && period) {

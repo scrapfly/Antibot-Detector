@@ -9,6 +9,8 @@
  *                  between two entries, the earlier scan first whatever order they were given in
  *   changeText()   one changed protection as a line: "70% → 95% (+25) · New evidence: Cookies"
  *   toMarkdown()   the result as a Markdown report for a ticket or a chat
+ *   view()         what the dialog draws, as plain data: four counts, and the groups of rows with the text of each
+ *   shortDateTime(), rangeDates(), optionDates(), whereText()   the dialog's dates (no seconds) and the other scan's page path
  *
  * Detections are matched by name (case-insensitive), like HistoryPolicy.diffProtections; unlike it,
  * fingerprinting is included, since this is a look at everything the two scans found.
@@ -129,6 +131,17 @@
 
   const plain = (key, fallback, ...args) => String(fallback).replace(/\{(\d)\}/g, (_, i) => args[Number(i)]);
 
+  /** A difference of confidence with its sign: +25, −30 (a real minus sign). */
+  const signed = (delta) => `${delta > 0 ? '+' : '−'}${Math.abs(delta)}`;
+
+  /** What changed in the evidence of one changed protection, a line for each side. */
+  function evidenceLines(row, t, label) {
+    const lines = [];
+    if (row.methodsAdded.length) lines.push(t('historyCompareEvidenceAddedFmt', 'New evidence: {0}', row.methodsAdded.map(label).join(', ')));
+    if (row.methodsRemoved.length) lines.push(t('historyCompareEvidenceRemovedFmt', 'Evidence gone: {0}', row.methodsRemoved.map(label).join(', ')));
+    return lines;
+  }
+
   /**
    * One changed protection as a line.
    * @param {object} row - an item of compare().changed
@@ -138,12 +151,8 @@
     const t = options.t || plain;
     const label = options.methodLabel || ((type) => type);
     const parts = [];
-    if (row.delta !== null && row.delta !== 0) {
-      const signed = `${row.delta > 0 ? '+' : '−'}${Math.abs(row.delta)}`;
-      parts.push(t('historyCompareChangeFmt', '{0}% → {1}% ({2})', row.from, row.to, signed));
-    }
-    if (row.methodsAdded.length) parts.push(t('historyCompareEvidenceAddedFmt', 'New evidence: {0}', row.methodsAdded.map(label).join(', ')));
-    if (row.methodsRemoved.length) parts.push(t('historyCompareEvidenceRemovedFmt', 'Evidence gone: {0}', row.methodsRemoved.map(label).join(', ')));
+    if (row.delta !== null && row.delta !== 0) parts.push(t('historyCompareChangeFmt', '{0}% → {1}% ({2})', row.from, row.to, signed(row.delta)));
+    parts.push(...evidenceLines(row, t, label));
     return parts.join(' · ');
   }
 
@@ -175,7 +184,116 @@
     return lines.join('\n');
   }
 
-  const api = { CATEGORY_ORDER, pageKey, others, pickDefault, compare, changeText, toMarkdown, methodsOf };
+  // ---- The dialog: what it shows, as plain data -----------------------------------------------------------------------
+
+  /** Unchanged folds when it holds more protections than this (and the two scans are not identical). */
+  const COLLAPSE_AFTER = 3;
+  const KINDS = [['added', 'historyCompareAdded', 'Added'], ['removed', 'historyCompareRemoved', 'Removed'], ['changed', 'historyCompareChanged', 'Changed'], ['same', 'historyCompareUnchanged', 'Unchanged']];
+
+  /**
+   * The date and time of a scan without its seconds ("Oct 15, 2026, 4:28 PM"), for the dialog's list and range line.
+   * @param {number|string|Date} value
+   * @param {string|null} [locale] - a BCP 47 tag; none or one Intl does not know: the browser's own
+   * @param {string} [timeZone] - for the tests; the person's own by default
+   */
+  function shortDateTime(value, locale, timeZone) {
+    const date = value instanceof Date ? value : new Date(value);
+    const options = { dateStyle: 'medium', timeStyle: 'short' };
+    if (timeZone) options.timeZone = timeZone;
+    try {
+      return new Intl.DateTimeFormat(locale || undefined, options).format(date);
+    } catch (_) { /* a language tag Intl does not know, or no date: the browser's own language next */ }
+    try {
+      return new Intl.DateTimeFormat(undefined, options).format(date);
+    } catch (_) {
+      return date.toLocaleString();
+    }
+  }
+
+  /**
+   * The two dates of the range line: without seconds, unless that would show the same text twice (two scans in one minute).
+   * @param {{earlier: {timestamp: number}, later: {timestamp: number}}} result - compare()
+   * @param {{short: Function, long: Function}} format - short(ms) and long(ms) write a date
+   * @returns {string[]} [earlier, later]
+   */
+  function rangeDates(result, format) {
+    const first = result.earlier.timestamp, second = result.later.timestamp;
+    const a = format.short(first), b = format.short(second);
+    return a === b ? [format.long(first), format.long(second)] : [a, b];
+  }
+
+  /**
+   * The dates of the "Compare with" list: without seconds, except for scans whose line would read the same as another's (two scans
+   * in one minute with the same count), which keep them so the person can tell them apart.
+   * @param {Array<{time: number, count: number}>} scans - In the list's order
+   * @param {{short: Function, long: Function}} format - short(ms) and long(ms) write a date
+   * @returns {string[]} One date per scan
+   */
+  function optionDates(scans, format) {
+    const lines = scans.map((scan) => `${format.short(scan.time)}\u0000${scan.count}`);
+    const seen = new Map();
+    for (const line of lines) seen.set(line, (seen.get(line) || 0) + 1);
+    return scans.map((scan, index) => (seen.get(lines[index]) > 1 ? format.long(scan.time) : format.short(scan.time)));
+  }
+
+  /** The address of a scan without its origin: path, query and fragment ("/cart?ref=mail"); '' when it cannot be read. */
+  function pagePath(url) {
+    try {
+      const parsed = new URL(String(url || '').trim());
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch (_) {
+      return '';
+    }
+  }
+
+  /**
+   * What the dialog says about the scan picked to compare with: its page path, but only when its address is not the entry's own.
+   * (Every scan listed is of the same page, so what can differ is the query and the fragment.)
+   */
+  function whereText(entry, other) {
+    const there = pagePath(other && other.url);
+    return there && there !== pagePath(entry && entry.url) ? there : '';
+  }
+
+  /**
+   * Everything the dialog draws for a comparison, as plain data (the dialog only turns it into elements).
+   *   chips    one per kind, in the order added, removed, changed, unchanged: { kind, label, count } (a count of 0 is kept: it is dimmed)
+   *   groups   the kinds that have rows: { kind, label, count, title: "Changed (1)", open, collapsible, rows }
+   *            open: Unchanged is folded when it is long (COLLAPSE_AFTER), unless the two scans are identical; the others are always open
+   *   row      { name, category, confidence, from, to, delta, deltaText, tone, notes }
+   *            confidence: the score shown (a changed protection's later one), null when it has none
+   *            from, to, delta, deltaText ("+25", "−30"), tone ("up" | "down"): only when a changed protection's score moved, else null / '' / ''
+   *            notes: "New evidence: Cookies · Evidence gone: Headers" for a changed protection, else ''
+   * @param {object} result - compare()
+   * @param {{t?: Function, methodLabel?: Function}} [options] - as for changeText()
+   */
+  function view(result, options = {}) {
+    const t = options.t || plain;
+    const label = options.methodLabel || ((type) => type);
+    const plainRow = (row) => ({ name: row.name, category: row.category, confidence: row.confidence, from: null, to: null, delta: null, deltaText: '', tone: '', notes: '' });
+    const changedRow = (row) => {
+      const moved = row.delta !== null && row.delta !== 0;
+      return {
+        name: row.name, category: row.category, confidence: row.to,
+        from: moved ? row.from : null, to: moved ? row.to : null, delta: moved ? row.delta : null,
+        deltaText: moved ? signed(row.delta) : '', tone: moved ? (row.delta > 0 ? 'up' : 'down') : '',
+        notes: evidenceLines(row, t, label).join(' · ')
+      };
+    };
+    const lists = { added: result.added, removed: result.removed, changed: result.changed, same: result.same };
+    const chips = KINDS.map(([kind, key, fallback]) => ({ kind, label: t(key, fallback), count: lists[kind].length }));
+    const groups = KINDS.filter(([kind]) => lists[kind].length).map(([kind, key, fallback]) => {
+      const text = t(key, fallback);
+      const rows = lists[kind].map(kind === 'changed' ? changedRow : plainRow);
+      return {
+        kind, label: text, count: rows.length, title: `${text} (${rows.length})`,
+        open: kind !== 'same' || result.identical || rows.length <= COLLAPSE_AFTER, collapsible: kind === 'same', rows
+      };
+    });
+    return { identical: result.identical, chips, groups };
+  }
+
+  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
   root.HistoryCompare = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

@@ -69,6 +69,21 @@ function skippedForCachedPage(document, reason) {
     return cacheHit || sameDocument;
 }
 
+// The names typeof answers, and 'null': all a window match says of the value the page holds
+const WINDOW_VALUE_TYPES = ['string', 'number', 'boolean', 'object', 'function', 'undefined', 'symbol', 'bigint', 'null'];
+
+/**
+ * The detector's own window rule a WINDOW_DETECTIONS property stands for, by its path; null when it has none (a path the page
+ * made up, or a rule switched off). Two rules on one path: the one with the condition reported, else the first.
+ */
+function windowRuleFor(detector, property) {
+    const rules = Array.isArray(detector?.detection?.window) ? detector.detection.window : [];
+    const path = property && typeof property.path === 'string' ? property.path : null;
+    if (path === null) return null;
+    const candidates = rules.filter(rule => rule && typeof rule === 'object' && rule.enabled !== false && rule.path === path);
+    return candidates.find(rule => rule.condition === property.condition) || candidates[0] || null;
+}
+
 /**
  * registerDetectionHandlers registration.
  * Extracted from message-router switch cases for maintainability.
@@ -506,9 +521,15 @@ function registerDetectionHandlers(registry, context) {
                     return;
                 }
 
+                // The detectors decide what a card says (below), so a worker that has just started has them first, as for the hook batch
+                if (typeof ensureDetectorManagerInitialized === 'function') {
+                    await ensureDetectorManagerInitialized();
+                    if (!await resolveDetectionMessageDocument(sender, url) || !DetectionSessionStore.isCurrent(tabId, state)) return;
+                }
+
                 if (detections.length > 0) {
                     Logger.debug('SCAN', `Tab ${tabId}: ${detections.length} window properties`,
-                        detections.map(det => `${det.detectorName}: window.${det.property?.path}`));
+                        detections.map(det => `${det?.detectorName}: window.${det?.property?.path}`));
                 }
 
                 // Validate state
@@ -527,37 +548,59 @@ function registerDetectionHandlers(registry, context) {
                 }
 
                 for (const detection of detections) {
-                    if (!detection || !detection.detectorId) {
+                    const property = detection && detection.property;
+                    if (!detection || !detection.detectorId || !property || typeof property !== 'object') {
                         Logger.warn('BACKGROUND', '[WINDOW_DETECTIONS] Skipping invalid detection:', detection);
                         continue;
                     }
 
+                    // The page's world can speak for the content script: the detector must be one the worker has, and its name and
+                    // category are its own, never what the message says (the hook batch skips unknown detectors the same way)
+                    let categoryKey = Categories.normalize(detection.category);
+                    let fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
+                    if (!fullDetector) {
+                        fullDetector = detectorManager.findDetectorById(detection.detectorId);
+                        categoryKey = fullDetector ? Categories.normalize(fullDetector.category) : '';
+                    }
+                    if (!fullDetector) {
+                        Logger.warn('BACKGROUND', `[WINDOW_DETECTIONS] Detector ${detection.detectorId} not found, skipping`);
+                        continue;
+                    }
+                    // The property must be one of the detector's own window rules (the ones the MAIN world was given), and what
+                    // the match says (its confidence, description and condition) is the rule's: the page names only the path
+                    const rule = windowRuleFor(fullDetector, property);
+                    if (!rule) {
+                        Logger.warn('BACKGROUND', `[WINDOW_DETECTIONS] ${detection.detectorId} has no window rule for that property, skipping`);
+                        continue;
+                    }
+                    // A rule's confidence is a number from 0 to 100 (the default when the rule gives none, as the install gives it)
+                    const ruleConfidence = Number.isFinite(rule.confidence) ? rule.confidence : Constants.DEFAULT_MATCH_CONFIDENCE;
+                    const confidence = Number.isFinite(ruleConfidence) ? Math.min(100, Math.max(0, ruleConfidence)) : 0;
+
                     let detectionObj = state.mainData.find(d => d && (d.detector?.id === detection.detectorId || d.id === detection.detectorId));
                     if (!detectionObj) {
-                        const categoryKey = Categories.normalize(detection.category);
-                        const fullDetector = detectorManager.getDetector(categoryKey, detection.detectorId);
                         const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
-                            ? DetectionUtils.normalizeDifficulty(fullDetector?.difficulty)
+                            ? DetectionUtils.normalizeDifficulty(fullDetector.difficulty)
                             : null;
                         const defaultDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.defaultDifficultyForCategory === 'function')
-                            ? DetectionUtils.defaultDifficultyForCategory(detection.category || fullDetector?.category)
+                            ? DetectionUtils.defaultDifficultyForCategory(fullDetector.category || categoryKey)
                             : 'Medium';
                         const difficulty = normalizedDifficulty || defaultDifficulty;
 
                         detectionObj = {
                             detected: true,
-                            confidence: detection.property.confidence,
+                            confidence,
                             difficulty: difficulty,
                             matches: [],
                             detectionMethods: [],
-                            category: detection.category,
+                            category: categoryKey,
                             detector: {
-                                id: detection.detectorId,
-                                name: detection.detectorName,
-                                icon: fullDetector?.icon,
-                                color: fullDetector?.color,
-                                description: fullDetector?.description,
-                                author: fullDetector?.author,
+                                id: fullDetector.id || detection.detectorId,
+                                name: fullDetector.name || String(detection.detectorId),
+                                icon: fullDetector.icon,
+                                color: fullDetector.color,
+                                description: fullDetector.description,
+                                author: fullDetector.author,
                                 difficulty: difficulty
                             }
                         };
@@ -566,11 +609,12 @@ function registerDetectionHandlers(registry, context) {
 
                     const newMatch = {
                         type: 'window',
-                        pattern: detection.property.path,
-                        confidence: detection.property.confidence,
-                        description: detection.property.description,
-                        actualType: detection.property.actualType,
-                        condition: detection.property.condition
+                        pattern: rule.path,
+                        confidence,
+                        description: typeof rule.description === 'string' ? rule.description : undefined,
+                        // What the page found there: only the name of a JavaScript type
+                        actualType: WINDOW_VALUE_TYPES.includes(property.actualType) ? property.actualType : undefined,
+                        condition: typeof rule.condition === 'string' && rule.condition ? rule.condition : 'truthy'
                     };
 
                     const isDuplicate = detectionObj.matches.some(m =>

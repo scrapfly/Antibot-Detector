@@ -13,6 +13,10 @@
  * Dependencies: rules.js, rules-modal-lifecycle.js, helpers/helper-kit.js
  */
 
+// What a regex reads of a long text: PatternCache.REGEX_TEXT_LIMIT characters (utils/pattern-cache.js), in the rules the person
+// wrote or imported. Said on the sheets of the methods that read pages, scripts and bodies
+const REGEX_TEXT_LIMIT_HELP = ['mhRegexTextLimit', 'In rules you write or import, Regex reads only the first 100,000 characters of a text (a page, a script, a request body). Plain text, Whole word and Scrapfly\'s own rules read all of it.'];
+
 const METHOD_HELP = {
   url: {
     intro: ['mhUrlIntro', 'Checks the page address and the URLs the page requests: scripts, XHR and fetch calls, images, frames and pings.'],
@@ -23,7 +27,7 @@ const METHOD_HELP = {
     ],
     limits: [
       ['mhUrlLimit1', 'Font, media and stylesheet requests are not recorded.'],
-      ['mhUrlLimit2', 'Only requests made before the scan count; the scan runs once the page has loaded.']
+      ['mhUrlLimit2', 'The scan runs once the page has loaded; requests made after it still count when the URL scope is All.']
     ],
     examples: [['detect-datadome', 'datadome-tag'], ['detect-hcaptcha', 'hcaptcha-api-resource'],
       ['detect-botguard', 'botguard-interpreter'], ['detect-recaptcha', 'google-sdk']]
@@ -65,13 +69,14 @@ const METHOD_HELP = {
     ],
     limits: [
       ['mhContentLimit1', 'Files the site does not let other origins read (CORS), or over 5 MB, are skipped.'],
-      ['mhContentLimit2', 'Code inside frames or workers, or loaded after the scan, is not searched.']
+      ['mhContentLimit2', 'Code inside frames or workers, or loaded after the scan, is not searched.'],
+      REGEX_TEXT_LIMIT_HELP
     ],
     examples: [['detect-cloudflare', 'chl-opt-reference'], ['detect-akamai', 'bmak-reference'],
       ['detect-datadome', 'ddjskey-reference'], ['detect-kasada', 'kpsdk-reference']]
   },
   dom: {
-    intro: ['mhDomIntro', 'Looks for an element in the page body with a CSS selector, once the page has loaded.'],
+    intro: ['mhDomIntro', 'Looks for an element in the page (head and body) with a CSS selector, once the page has loaded.'],
     howTitle: ['mhWriteTitle', 'What you can write'],
     how: [
       ['mhDomHow1', 'A tag, `.class`, `#id` or `[attribute]`, alone or combined: `.g-recaptcha[data-sitekey]`.'],
@@ -80,7 +85,7 @@ const METHOD_HELP = {
     ],
     limits: [
       ['mhDomLimit1', 'Not supported, so the rule never matches: spaces or `>` between parts, `:pseudo-classes` and escapes.'],
-      ['mhDomLimit2', 'The head, frames and shadow roots are not searched. The `value` attribute is not read; other attributes are compared on their first 100 characters.']
+      ['mhDomLimit2', 'Frames and shadow roots are not searched. The `value` attribute is not read; other attributes are compared on their first 100 characters.']
     ],
     examples: [['detect-recaptcha', 'configured-widget'], ['detect-hcaptcha', 'hcaptcha-configured-widget'],
       ['detect-turnstile', 'turnstile-response-field'], ['detect-aliyunwaf', 'block-traceid-tips']]
@@ -109,7 +114,7 @@ const METHOD_HELP = {
     ],
     limits: [
       ['mhJsHooksLimit1', 'Calls count during the first seconds after the page loads (8 seconds at most).'],
-      ['mhJsHooksLimit2', 'Calls in workers or frames are not seen, except built-in targets in same-site frames.']
+      ['mhJsHooksLimit2', 'Calls in workers or frames are not seen, except built-in targets in same-origin frames.']
     ],
     examples: [['detect-canvas-fingerprint', 'canvas-export'], ['detect-webgl-fingerprint', 'webgl-parameters'],
       ['detect-audio-fingerprint', 'audio-offline-render'], ['detect-navigator-fingerprint', 'navigator-automation']]
@@ -122,7 +127,8 @@ const METHOD_HELP = {
     ],
     limits: [
       ['mhPayloadLimit1', 'Only requests sent before the scan count, up to 50 per page.'],
-      ['mhPayloadLimit2', 'WebSocket messages are not read.']
+      ['mhPayloadLimit2', 'WebSocket messages are not read.'],
+      REGEX_TEXT_LIMIT_HELP
     ],
     examples: [['detect-akamai', 'sensor-data-payload'], ['detect-akamai', 'pixel-payload'], ['detect-akamai', 'sbsd-payload']]
   }

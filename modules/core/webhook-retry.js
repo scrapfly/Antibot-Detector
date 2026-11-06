@@ -18,8 +18,10 @@
  *   dueIds()        the held deliveries whose automatic retry is due
  *   nextDue()       the earliest due time (for the alarm), or null
  *
- * A held delivery: { id, ctx, first, attempts, due } where ctx is the page data the request is built from,
- * first when it first failed, attempts how many were made, due when its next automatic retry runs (null: none).
+ * A held delivery: { id, ctx, first, attempts, due, trigger } where ctx is the page data the request is built from,
+ * first when it first failed, attempts how many were made, due when its next automatic retry runs (null: none),
+ * trigger what sent the page in the first place ('scan', or 'cache' for a page whose result came from the cache): a retry
+ * checks again that the webhook would still send it, and a cached page needs "Send on every page load" to stay on.
  */
 (function(root) {
   'use strict';
@@ -71,9 +73,12 @@
     return out;
   }
 
+  const TRIGGERS = Object.freeze(['scan', 'cache']);
+
   function hold(held, item, now) {
     const out = prune(held, now);
-    out[item.id] = { id: item.id, ctx: item.ctx, first: item.first, attempts: item.attempts, due: item.due === undefined ? null : item.due };
+    out[item.id] = { id: item.id, ctx: item.ctx, first: item.first, attempts: item.attempts, due: item.due === undefined ? null : item.due,
+      ...(TRIGGERS.includes(item.trigger) ? { trigger: item.trigger } : {}) };
     const ids = Object.keys(out);
     if (ids.length > MAX_HELD) {
       ids.sort((a, b) => out[a].first - out[b].first); // the oldest go

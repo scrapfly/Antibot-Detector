@@ -56,6 +56,17 @@ test('every rule is safe to run in a page: anchored paths, no g/y flags, compoun
     const args = Vendors.probeArgs(vendor);
     assert.deepEqual(JSON.parse(JSON.stringify(args)), args, `${vendor.vendorId}: probe arguments survive structured cloning`);
   }
+  // The inputs above never start with https://, so an anchored URL rule fails at its first character and is not tested at all.
+  // These get past the anchor and are then as hostile as the rule's own shape allows: long host labels, many dots and hyphens, long
+  // paths and queries, a route and a key prefix repeated, and the vendors' own ids (Lemin's CROPPED_..., ALTCHA's key_ and apiKey=)
+  const N = 100000;
+  const hostile = [
+    `https://${'a'.repeat(N)}!`, `https://${'a.'.repeat(N / 2)}!`, `https://${'a-'.repeat(N / 2)}!`, `https://${'a.'.repeat(N / 2)}altcha.org/v1/challenge?apiKey=key_abcdef!`,
+    `https://x.example/${'a/'.repeat(N / 2)}!`, `https://x.example/${'v1/challenge/'.repeat(N / 13)}!`, `https://x.example/api/v1/challenge?${'a&'.repeat(N / 2)}!`,
+    `https://x.example/api/v1/challenge?${'apiKey='.repeat(N / 7)}!`, `https://eu.altcha.org/api/v1/challenge?${'a'.repeat(N)}!`, `https://eu.altcha.org/api/v1/challenge?apiKey=key_${'a'.repeat(N)}!`,
+    `key_${'a'.repeat(N)}!`, 'key_'.repeat(N / 4) + '!', `https://x.example/?${'key_'.repeat(N / 4)}!`,
+    `CROPPED_${'a'.repeat(N)}!`, `https://api.leminnow.com/captcha/v1/cropped/CROPPED_${'a'.repeat(N)}!`, `https://api.leminnow.com/captcha/v1/cropped/CROPPED_${'a'.repeat(N)}/js!`
+  ];
   for (const regex of regexes) {
     assert.doesNotMatch(regex.flags, /[gy]/, String(regex));
     for (const filler of ['a', '5', 'x ', '"', ':']) {
@@ -63,6 +74,11 @@ test('every rule is safe to run in a page: anchored paths, no g/y flags, compoun
       const started = Date.now();
       regex.test(input);
       assert.ok(Date.now() - started < 50, `${regex} runs in bounded time`);
+    }
+    for (const input of hostile) {
+      const started = Date.now();
+      regex.test(input);
+      assert.ok(Date.now() - started < 50, `${regex} runs in bounded time on ${input.slice(0, 60)}...`);
     }
   }
 });
@@ -352,6 +368,51 @@ test('ALTCHA: a key only where the widget asks ALTCHA Cloud or Sentinel for its 
     assert.ok(cloud.test(url), url);
     assert.deepEqual(keysFor({ resources: [url] }), ['key_abcdef1234567890'], url);
   }
+});
+
+test('ALTCHA: the documented Cloud embed gives its key from the widget\'s attribute, before the widget has asked for its challenge', () => {
+  const args = Vendors.probeArgs(Vendors.byVendorId.altcha);
+  const keysFor = page => plain(Probe.merge([{ result: run(Probe.probe, frame(page), args) }], args).keys.map(entry => entry.sitekey));
+  const script = 'https://cdn.jsdelivr.net/npm/altcha@1.2.0/dist/altcha.min.js';
+  const widget = attrs => ({ elements: [{ tag: 'altcha-widget', attrs }, { tag: 'script', attrs: { src: script } }], resources: [script] });
+  const cloud = 'https://eu.altcha.org/api/v1/challenge?apiKey=key_AbC123xyz789';
+  assert.deepEqual(keysFor(widget({ challengeurl: cloud })), ['key_AbC123xyz789'], 'no request yet');
+  assert.deepEqual(keysFor(widget({ challenge: cloud })), ['key_AbC123xyz789'], 'the older attribute name');
+  for (const url of ['https://altcha.org/v1/challenge?apiKey=key_AbC123xyz789', 'https://eu-west.altcha.org/v1/challenge?apiKey=key_AbC123xyz789',
+    'https://eu.altcha.org/api/v1/challenge?hmac=1&apiKey=key_AbC123xyz789&origin=x', 'https://EU.ALTCHA.ORG/v1/challenge?apiKey=key_AbC123xyz789#top']) {
+    assert.deepEqual(keysFor(widget({ challengeurl: url })), ['key_AbC123xyz789'], url);
+  }
+  assert.deepEqual(keysFor({ ...widget({ challengeurl: cloud }), resources: [script, cloud] }), ['key_AbC123xyz789'], 'the attribute and the request are one key');
+  // Not from the attribute: a Sentinel on its owner's host (its key shows once the widget has asked, as before), and anything that is
+  // not ALTCHA Cloud's address with a key in apiKey=
+  for (const [url, why] of [
+    ['https://sentinel.shop.example/v1/challenge?apiKey=key_AbC123xyz789', 'a Sentinel on its owner\'s host'],
+    ['http://eu.altcha.org/api/v1/challenge?apiKey=key_AbC123xyz789', 'not https'],
+    ['https://altcha.org.evil.example/v1/challenge?apiKey=key_AbC123xyz789', 'not altcha.org'],
+    ['https://evil-altcha.org/v1/challenge?apiKey=key_AbC123xyz789', 'not altcha.org'],
+    ['https://eu.altcha.org@evil.example/v1/challenge?apiKey=key_AbC123xyz789', 'another host behind credentials'],
+    ['https://eu.altcha.org/v1/verify?apiKey=key_AbC123xyz789', 'another route'],
+    ['https://eu.altcha.org/api/v1/challenge', 'no key'],
+    ['https://eu.altcha.org/api/v1/challenge?apiKey=abcdef1234567890', 'not a key_ value'],
+    ['https://eu.altcha.org/api/v1/challenge?apiKey=key_ab', 'too short'],
+    ['https://eu.altcha.org/api/v1/challenge?x=apiKey=key_AbC123xyz789', 'not the apiKey parameter'],
+    ['/api/altcha/challenge', 'a self-hosted widget: its own route, no key']
+  ]) {
+    assert.deepEqual(keysFor(widget({ challengeurl: url })), [], `${why}: ${url}`);
+  }
+  assert.deepEqual(keysFor({ ...widget({ challengeurl: 'https://sentinel.shop.example/v1/challenge?apiKey=key_AbC123xyz789' }), resources: [script, 'https://sentinel.shop.example/v1/challenge?apiKey=key_AbC123xyz789'] }),
+    ['key_AbC123xyz789'], 'and the Sentinel\'s key is found once the widget has asked');
+});
+
+test('an attribute rule without a pattern still takes the whole value: the other vendors read their widgets as before', () => {
+  for (const vendor of Vendors.list) {
+    for (const rule of vendor.siteKey ? vendor.siteKey.rules : []) {
+      if (rule.type === 'attr' && vendor.vendorId !== 'altcha') assert.equal(rule.pattern, undefined, `${vendor.vendorId}: ${rule.selector}`);
+    }
+  }
+  const args = Vendors.probeArgs(Vendors.byVendorId.prosopo);
+  const keys = Probe.merge([{ result: run(Probe.probe, frame({ elements: [{ tag: 'div', attrs: { class: 'procaptcha', 'data-sitekey': '5C7bfXYwachNuvmasEFtWi9BMS41uBvo6KpYHVSQmad4nWzw' } }] }), args) }], args);
+  assert.deepEqual(plain(keys.keys.map(entry => entry.sitekey)), ['5C7bfXYwachNuvmasEFtWi9BMS41uBvo6KpYHVSQmad4nWzw']);
 });
 
 // The count the no-tools screen shows: one logo per supported protection

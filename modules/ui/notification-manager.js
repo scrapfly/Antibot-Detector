@@ -3,11 +3,25 @@
  * Handles toast notifications, confirmation dialogs, and badge notifications
  */
 class NotificationManager {
+  /** How long an error stays when its caller does not say (the others use Constants.NOTIFICATION_DURATION) */
+  static ERROR_DURATION_MS = 5000;
+
   constructor() {
+    // On the screen, oldest first. One that is fading out stays here until it is gone, and keeps its place until then
     this.toasts = [];
+    // Toasts that go away by themselves and wait for a place, oldest first
+    this.waiting = [];
     this.initialized = false;
     this.container = null;
+    // Toasts that go away by themselves on the screen at once. A spinner, which stays until it is closed, is not counted
     this.maxToasts = 2;
+    // A longer waiting line (a loop that toasts every item) gives up its oldest notes, so nothing shows minutes late
+    this.maxWaiting = 8;
+  }
+
+  /** A time in milliseconds that a caller asked for: a number from 0 up (0 = until it is closed). Anything else is "not given". */
+  static durationOf(value, fallback) {
+    return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : fallback;
   }
 
   normalizeText(value) {
@@ -67,7 +81,9 @@ class NotificationManager {
   }
 
   /**
-   * Show a toast notification
+   * Show a toast notification. It stays for `options.duration` (0 = until it is closed), but the time stands still while the
+   * pointer is over it or the keyboard is in it. With two toasts on the screen already, a new one waits for a place instead of
+   * pushing an older one out before it could be read; a micro toast does not wait (it answers a click and lasts a moment).
    * @param {string} message - Notification message
    * @param {string} type - Notification type (success, error, warning, info)
    * @param {Object} options - Additional options
@@ -75,6 +91,8 @@ class NotificationManager {
    */
   showToast(message, type = 'info', options = {}) {
     if (!this.initialized) this.initialize();
+    // Places that are free go to the toasts that waited, before this one asks for one
+    this.showWaiting();
 
     const defaults = {
       duration: Constants.NOTIFICATION_DURATION,
@@ -87,43 +105,48 @@ class NotificationManager {
     };
 
     const settings = { ...defaults, ...options };
+    // A duration that is not a number (undefined, a text) is "not given": the default, never "stays until it is closed"
+    settings.duration = NotificationManager.durationOf(settings.duration, defaults.duration);
     const safeType = this.normalizeType(type);
-    const safePosition = this.normalizePosition(settings.position);
     const messageText = this.normalizeText(message);
 
-    // Check for existing toast with same message and type - reset timer instead of creating new
-    const existingToast = this.toasts.find(t => t.message === messageText && t.type === safeType);
-    if (existingToast && existingToast.element && document.contains(existingToast.element)) {
-      // Clear existing timeout
-      if (existingToast.timeoutId) {
-        clearTimeout(existingToast.timeoutId);
-      }
-
-      // Reset progress bar animation
-      if (settings.showProgress) {
-        const progressBar = existingToast.element.querySelector('.notification-progress-bar');
-        if (progressBar) {
-          progressBar.style.transition = 'none';
-          progressBar.style.width = '100%';
-          progressBar.offsetHeight; // Force reflow before re-animating
-          progressBar.style.transition = `width ${settings.duration}ms linear`;
-          requestAnimationFrame(() => {
-            progressBar.style.width = '0%';
-          });
-        }
-      }
-
-      // Set new timeout
+    // The same message and type again starts its time over instead of stacking a copy. One that is already leaving is not
+    // reused: it would be gone a moment later, and take the new message with it
+    const showing = this.toasts.find(t => !t.leaving && t.message === messageText && t.type === safeType);
+    if (showing) {
       if (settings.duration > 0) {
-        existingToast.timeoutId = setTimeout(() => this.removeToast(existingToast.id), settings.duration);
+        showing.persistent = false;
+        this.startCountdown(showing, settings.duration);
       }
-
-      return existingToast.id;
+      return showing.id;
     }
+    const waiting = this.waiting.find(w => w.message === messageText && w.type === safeType);
+    if (waiting) return waiting.id;
 
-    // Unique even for toasts shown in the same millisecond (ids drive removal)
-    const toastId = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-    let timeoutId = null;
+    const entry = {
+      // Unique even for toasts shown in the same millisecond (ids drive removal)
+      id: `toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      message: messageText,
+      type: safeType,
+      position: this.normalizePosition(settings.position),
+      settings
+    };
+    // A micro toast ("Copied") answers the click just made and is gone in a moment: it never waits behind longer notes
+    if (settings.duration > 0 && !settings.micro && this.timedOnScreen() >= this.maxToasts) {
+      this.waiting.push(entry);
+      this.trimWaiting();
+      return entry.id;
+    }
+    this.mountToast(entry);
+    return entry.id;
+  }
+
+  /**
+   * Build a toast, put it on the screen and start its countdown (a toast that stays until it is closed has none).
+   * @param {Object} entry - From showToast()
+   */
+  mountToast(entry) {
+    const { id: toastId, message: messageText, type: safeType, position: safePosition, settings } = entry;
 
     // Create toast element
     const toast = document.createElement('div');
@@ -176,70 +199,148 @@ class NotificationManager {
       toast.setAttribute('data-show', 'true');
     });
 
+    const record = {
+      id: toastId, element: toast, message: messageText, type: safeType,
+      persistent: !(settings.duration > 0), duration: settings.duration, remaining: settings.duration,
+      startedAt: 0, timeoutId: null, hovered: false, focused: false, leaving: false
+    };
+    this.toasts.push(record);
+
     // Setup close button
     if (settings.closeable) {
       const closeBtn = toast.querySelector('.notification-close');
       closeBtn.addEventListener('click', () => this.removeToast(toastId));
     }
 
+    // The time stands still while the pointer is over the toast or the keyboard is in it (its close button). Over it means the
+    // pointer moved on it: a toast that appears under a pointer that stays still (the browser says "enter" then) is not held
+    toast.addEventListener('pointermove', () => {
+      if (record.hovered) return;
+      record.hovered = true;
+      this.pauseCountdown(record);
+    });
+    toast.addEventListener('pointerleave', () => {
+      if (!record.hovered) return;
+      record.hovered = false;
+      this.resumeCountdown(record);
+    });
+    toast.addEventListener('focusin', () => { record.focused = true; this.pauseCountdown(record); });
+    toast.addEventListener('focusout', () => { record.focused = false; this.resumeCountdown(record); });
+
     // Setup auto-dismiss
-    if (settings.duration > 0) {
-      // Animate progress bar
-      if (settings.showProgress) {
-        const progressBar = toast.querySelector('.notification-progress-bar');
-        progressBar.style.transition = `width ${settings.duration}ms linear`;
-        requestAnimationFrame(() => {
-          progressBar.style.width = '0%';
-        });
-      }
+    if (!record.persistent) this.startCountdown(record, settings.duration);
+  }
 
-      // Remove after duration
-      timeoutId = setTimeout(() => this.removeToast(toastId), settings.duration);
-    }
+  /** How many toasts that go away by themselves are on the screen (one fading out still holds its place until it is gone). */
+  timedOnScreen() {
+    return this.toasts.filter(toast => !toast.persistent).length;
+  }
 
-    this.toasts.push({ id: toastId, element: toast, message: messageText, type: safeType, timeoutId });
+  /** The pointer is over the toast or the keyboard is in it: its time waits. */
+  isHeld(record) {
+    return record.hovered || record.focused;
+  }
 
-    // Remove a toast if exceeded max
-    if (this.toasts.length > this.maxToasts) {
-      const [dropped] = this.toasts.splice(NotificationManager.toastToDrop(this.toasts), 1);
-      this.removeToast(dropped.id);
-    }
+  /** (Re)start a toast's countdown with a whole `ms`. */
+  startCountdown(record, ms) {
+    clearTimeout(record.timeoutId);
+    record.timeoutId = null;
+    record.duration = ms;
+    record.remaining = ms;
+    // Starting over while it is held: the line fills up again and waits
+    if (this.isHeld(record)) this.setProgress(record, 100, 0);
+    else this.runCountdown(record);
+  }
 
-    return toastId;
+  /** Let what is left of the time run; the line runs down in step with it. */
+  runCountdown(record) {
+    if (record.persistent || record.leaving || record.timeoutId) return;
+    record.startedAt = Date.now();
+    record.timeoutId = setTimeout(() => this.removeToast(record.id), record.remaining);
+    this.setProgress(record, record.duration > 0 ? (record.remaining / record.duration) * 100 : 0, record.remaining);
+  }
+
+  /** Stop the clock and keep what is left (the line stops where it is). */
+  pauseCountdown(record) {
+    if (!record.timeoutId) return;
+    clearTimeout(record.timeoutId);
+    record.timeoutId = null;
+    record.remaining = Math.max(0, record.remaining - (Date.now() - record.startedAt));
+    this.setProgress(record, record.duration > 0 ? (record.remaining / record.duration) * 100 : 0, 0);
+  }
+
+  /** The pointer and the keyboard have both left: the rest of the time runs again. */
+  resumeCountdown(record) {
+    if (!this.isHeld(record)) this.runCountdown(record);
   }
 
   /**
-   * Which toast leaves when there are more than the limit: the oldest that goes away by itself. One that stays until it is
-   * closed (the spinner of a long job) and the newest one stay, unless there is nothing else to drop.
-   * @param {Array<{timeoutId: *}>} toasts - oldest first
-   * @returns {number} index in `toasts`
+   * Put a toast's countdown line at `percent` and, with `ms`, let it run down to nothing in that time.
+   * @param {Object} record
+   * @param {number} percent
+   * @param {number} ms
    */
-  static toastToDrop(toasts) {
-    const index = toasts.findIndex((toast, position) => position < toasts.length - 1 && toast.timeoutId);
-    return index === -1 ? 0 : index;
+  setProgress(record, percent, ms) {
+    const bar = record.element.querySelector('.notification-progress-bar');
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.width = `${percent}%`;
+    if (!(ms > 0)) return;
+    bar.offsetHeight; // Force reflow so the transition starts from the width just set
+    bar.style.transition = `width ${ms}ms linear`;
+    requestAnimationFrame(() => {
+      bar.style.width = '0%';
+    });
+  }
+
+  /** A toast that other code took out of the page (a test clearing the screen) must not keep a place. */
+  forgetRemoved() {
+    const gone = this.toasts.filter(toast => !document.contains(toast.element));
+    if (!gone.length) return;
+    for (const toast of gone) clearTimeout(toast.timeoutId);
+    this.toasts = this.toasts.filter(toast => !gone.includes(toast));
+  }
+
+  /** Give the places that are free to the toasts that waited, oldest first. */
+  showWaiting() {
+    this.forgetRemoved();
+    while (this.waiting.length && this.timedOnScreen() < this.maxToasts) {
+      this.mountToast(this.waiting.shift());
+    }
+  }
+
+  /** Keep the waiting line short: the oldest note that is not an error is given up first. */
+  trimWaiting() {
+    while (this.waiting.length > this.maxWaiting) {
+      const index = this.waiting.findIndex(entry => entry.type !== 'error');
+      this.waiting.splice(index === -1 ? 0 : index, 1);
+    }
   }
 
   /**
-   * Remove a toast notification
+   * Remove a toast notification (one that still waits for a place never shows)
    * @param {string} toastId - Toast ID to remove
    */
   removeToast(toastId) {
-    const toast = document.getElementById(toastId);
-    if (!toast) return;
-
-    // Clear timeout if exists
-    const toastData = this.toasts.find(t => t.id === toastId);
-    if (toastData && toastData.timeoutId) {
-      clearTimeout(toastData.timeoutId);
+    const queued = this.waiting.findIndex(entry => entry.id === toastId);
+    if (queued !== -1) {
+      this.waiting.splice(queued, 1);
+      return;
     }
+    const record = this.toasts.find(toast => toast.id === toastId);
+    if (!record || record.leaving) return;
+    record.leaving = true;
+    clearTimeout(record.timeoutId);
+    record.timeoutId = null;
 
     // Animate out
-    toast.setAttribute('data-show', 'false');
+    record.element.setAttribute('data-show', 'false');
 
-    // Remove from DOM after animation
+    // Remove from DOM after animation; the place it held goes to the toast that waited longest
     setTimeout(() => {
-      toast.remove();
-      this.toasts = this.toasts.filter(t => t.id !== toastId);
+      record.element.remove();
+      this.toasts = this.toasts.filter(toast => toast !== record);
+      this.showWaiting();
     }, Constants.NOTIFICATION_FADE_MS);
   }
 
@@ -253,12 +354,13 @@ class NotificationManager {
   }
 
   /**
-   * Show error toast
+   * Show error toast. It stays 5 seconds unless the caller asks for another time (the update check asks for 8).
    * @param {string} message - Error message
    * @param {Object} options - Additional options
    */
   error(message, options = {}) {
-    return this.showToast(message, 'error', { ...options, duration: 5000 });
+    const duration = NotificationManager.durationOf(options.duration, NotificationManager.ERROR_DURATION_MS);
+    return this.showToast(message, 'error', { ...options, duration });
   }
 
   /**
@@ -556,7 +658,8 @@ class NotificationManager {
       focusStart();
 
       let settled = false;
-      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])'));
+      // A part of the content that scrolls and takes the keyboard (tabindex="0", a long compare result) is a stop as well
+      const focusables = () => Array.from(dialog.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]'));
 
       const onKeyDown = (event) => {
         // Only the top-most dialog reacts
@@ -690,50 +793,25 @@ class NotificationManager {
 // Create singleton instance
 const notificationManager = new NotificationManager();
 
+/**
+ * A toast is feedback: when one cannot be drawn, the problem is logged and the action it reports carries on (the caller's own
+ * error handling must not take a toast for the failure of the copy, the save or the export).
+ */
+function showToastSafely(kind, ...args) {
+  try {
+    return notificationManager[kind](...args);
+  } catch (error) {
+    Logger.error('UI', `A ${kind} notification could not be shown`, error);
+    return undefined;
+  }
+}
+
+/**
+ * What the pages call. A toast answers something the person just did: a copy, a save, a delete, an export, a choice, an
+ * error. It always shows. Settings → Notifications switches off the alerts about detections (the browser's own
+ * notifications, which the service worker sends and checks the setting for), not the answer to a click.
+ */
 const NotificationHelper = {
-  _notificationCache: {
-    value: null,
-    timestamp: 0,
-    ttl: 30000 // 30 seconds
-  },
-
-  /**
-   * Check if notifications are enabled in settings
-   * Returns cached result if within TTL (30s), reducing storage I/O
-   * @returns {Promise<boolean>}
-   */
-  async areNotificationsEnabled() {
-    try {
-      // Check cache first
-      const now = Date.now();
-      const cacheAge = now - this._notificationCache.timestamp;
-
-      if (this._notificationCache.value !== null && cacheAge < this._notificationCache.ttl) {
-        return this._notificationCache.value;
-      }
-
-      if (typeof Utils !== 'undefined' && typeof Utils.getSettings === 'function') {
-        const settings = await Utils.getSettings();
-        const enabled = settings.notificationsEnabled !== false;
-
-        // Cache the result
-        this._notificationCache.value = enabled;
-        this._notificationCache.timestamp = now;
-
-        return enabled;
-      }
-
-      // Cache the default result
-      this._notificationCache.value = true;
-      this._notificationCache.timestamp = now;
-
-      return true; // Default to enabled
-    } catch (error) {
-      Logger.error('STORAGE', 'Failed to check notification settings', error);
-      return true; // Default to enabled on error
-    }
-  },
-
   /**
    * Safe confirm dialog (always shown, regardless of notification settings)
    */
@@ -799,22 +877,16 @@ const NotificationHelper = {
   },
 
   /**
-   * Safe success notification (respects notification settings)
+   * Safe success notification
    */
-  async success(message, options) {
-    const enabled = await this.areNotificationsEnabled();
-    if (!enabled) return;
-
-    if (notificationManager && typeof notificationManager.success === 'function') {
-      return notificationManager.success(message, options);
-    }
+  success(message, options) {
+    return showToastSafely('success', message, options);
   },
 
   /**
-   * Safe error notification (always shown, even if notifications disabled)
+   * Safe error notification (an error is shown for 5 seconds unless `options.duration` says otherwise)
    */
   error(message, options) {
-    // Errors are always shown for user safety
     if (notificationManager && typeof notificationManager.error === 'function') {
       return notificationManager.error(message, options);
     }
@@ -822,40 +894,25 @@ const NotificationHelper = {
   },
 
   /**
-   * Safe info notification (respects notification settings)
+   * Safe info notification
    */
-  async info(message, options) {
-    const enabled = await this.areNotificationsEnabled();
-    if (!enabled) return;
-
-    if (notificationManager && typeof notificationManager.info === 'function') {
-      return notificationManager.info(message, options);
-    }
+  info(message, options) {
+    return showToastSafely('info', message, options);
   },
 
   /**
-   * Safe warning notification (respects notification settings)
+   * Safe warning notification
    */
-  async warning(message, options) {
-    const enabled = await this.areNotificationsEnabled();
-    if (!enabled) return;
-
-    if (notificationManager && typeof notificationManager.warning === 'function') {
-      return notificationManager.warning(message, options);
-    }
+  warning(message, options) {
+    return showToastSafely('warning', message, options);
   },
 
   /**
-   * Safe micro notification (respects notification settings)
+   * Safe micro notification
    * Compact, fast toast for quick feedback like copy confirmations
    */
-  async micro(message, type = 'success') {
-    const enabled = await this.areNotificationsEnabled();
-    if (!enabled) return;
-
-    if (notificationManager && typeof notificationManager.micro === 'function') {
-      return notificationManager.micro(message, type);
-    }
+  micro(message, type = 'success') {
+    return showToastSafely('micro', message, type);
   },
 
   /**
@@ -877,15 +934,6 @@ const NotificationHelper = {
     }
   }
 };
-
-// A saved, imported, restored or reset setting counts at once: the cached answer would keep the old one for up to 30 seconds
-try {
-  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.onChanged) {
-    chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === 'local' && changes.scrapfly_settings) NotificationHelper._notificationCache.value = null;
-    });
-  }
-} catch (_) { /* the cache simply expires on its own */ }
 
 if (typeof window !== 'undefined') {
   window.NotificationManager = notificationManager;

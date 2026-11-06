@@ -1010,7 +1010,7 @@
     "message": "감지기를 가져왔습니다"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "탐지기를 가져왔습니다. 제외: {0} (이 버전에서는 유효하지 않음)"
+    "message": "탐지기를 가져왔습니다. 제외: {0} (이 버전에서는 유효하지 않거나 패턴이 스캔을 멈추게 할 수 있음)"
   },
   "detectorsImportedKeptFmt": {
     "message": "이미 설치된 공식 규칙은 교체되지 않았습니다: {0}"
@@ -2362,7 +2362,7 @@
     "message": "글꼴, 미디어, 스타일시트 요청은 기록되지 않습니다."
   },
   "mhUrlLimit2": {
-    "message": "스캔 전에 발생한 요청만 대상입니다. 스캔은 페이지가 로드된 후 실행됩니다."
+    "message": "스캔은 페이지가 로드된 후 실행됩니다. URL 범위가 모두이면 스캔 후에 발생한 요청도 포함됩니다."
   },
   "mhHeaderIntro": {
     "message": "페이지 자체의 요청과 응답 헤더를 확인합니다. 스크립트, XHR 호출, 프레임의 헤더는 제외됩니다."
@@ -2419,7 +2419,7 @@
     "message": "프레임이나 워커 안의 코드, 스캔 후에 불러온 코드는 검색하지 않습니다."
   },
   "mhDomIntro": {
-    "message": "페이지가 로드된 후 CSS 선택자로 페이지 body의 요소를 찾습니다."
+    "message": "페이지가 로드된 후 CSS 선택자로 페이지(head와 body)의 요소를 찾습니다."
   },
   "mhDomHow1": {
     "message": "태그, `.class`, `#id`, `[attribute]`를 단독으로 또는 조합해서 씁니다: `.g-recaptcha[data-sitekey]`"
@@ -2434,7 +2434,7 @@
     "message": "지원되지 않아 규칙이 절대 일치하지 않는 것: 부분 사이의 공백이나 `>`, `:의사 클래스`, 이스케이프."
   },
   "mhDomLimit2": {
-    "message": "head, 프레임, shadow root는 검색하지 않습니다. `value` 속성은 읽지 않으며, 다른 속성은 처음 100자로 비교합니다."
+    "message": "프레임과 shadow root는 검색하지 않습니다. `value` 속성은 읽지 않으며, 다른 속성은 처음 100자로 비교합니다."
   },
   "mhWindowIntro": {
     "message": "페이지가 정의하는 JavaScript 전역 변수(예: `grecaptcha.render`)를 확인합니다."
@@ -2467,7 +2467,7 @@
     "message": "페이지가 로드된 후 처음 몇 초(최대 8초) 동안의 호출만 집계됩니다."
   },
   "mhJsHooksLimit2": {
-    "message": "워커나 프레임 안의 호출은 보이지 않습니다(같은 사이트 프레임의 기본 제공 대상은 예외)."
+    "message": "워커나 프레임 안의 호출은 보이지 않습니다(같은 출처 프레임의 기본 제공 대상은 예외)."
   },
   "mhPayloadIntro": {
     "message": "페이지가 보내는 POST, PUT, PATCH, DELETE 요청의 본문을 모든 프레임에서 검색합니다."
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket 메시지는 읽지 않습니다."
+  },
+  "mhRegexTextLimit": {
+    "message": "직접 작성하거나 가져온 규칙에서 Regex는 텍스트(페이지, 스크립트, 요청 본문)의 처음 100,000자만 읽습니다. 일반 텍스트, 전체 단어, Scrapfly의 자체 규칙은 전체를 읽습니다."
   },
   "domCardTitle": {
     "message": "CSS 선택자"
@@ -3386,9 +3389,6 @@
   },
   "rulesUiInvalidRegex": {
     "message": "정규식으로 표시된 패턴이 올바르지 않거나 스캔을 멈추게 할 수 있습니다. 수정하거나 해당 행의 Regex를 끄세요."
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "탐지 방법 유형을 입력하세요 (예: HEADERS, CONTENT, URLs):"
   },
   "rulesUiMethodFallback": {
     "message": "방법"
@@ -5528,6 +5528,12 @@
   "workerOutdatedHint": {
     "message": "확장 프로그램의 백그라운드 부분이 오래되었습니다. 확장 프로그램 페이지에서 확장 프로그램을 새로고침한 후 다시 시도하세요."
   },
+  "settingsUnreadableHint": {
+    "message": "저장된 설정을 읽을 수 없어 스캔, 기록, 일괄 스캔이 일시 중지되었습니다. 설정 → 데이터 → 초기화에서 복구하세요."
+  },
+  "rulesUnreadableHint": {
+    "message": "저장된 규칙을 읽을 수 없습니다. 기본 제공 규칙을 사용 중이며 규칙 변경 사항은 저장되지 않습니다. 저장된 규칙을 교체하려면 규칙 탭에서 규칙 파일을 가져오고 모두 교체를 선택하세요."
+  },
   "historyFiltersLabel": {
     "message": "기록 필터"
   },
@@ -6613,5 +6619,14 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown으로 복사"
+  },
+  "presetAutoUpdateOff": {
+    "message": "자동 업데이트 확인이 꺼져 있습니다"
+  },
+  "restoreNotIncludedNote": {
+    "message": "백업에 포함되지 않는 항목: 웹훅 및 공유 정보, 그리고 기록에서 감시 중인 페이지."
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "설정 변경 사항이 아직 저장되지 않았습니다. 닫기 전에 저장할까요?"
   }
 }

@@ -120,11 +120,14 @@ class History {
     // Select mode: what a search or a chip hides is unselected, so an action never reaches an entry nobody sees
     if (this.selectMode) this.pruneSelection(itemsToShow);
 
+    let filterChanged = false;
     if (this.paginationManager) {
       // Pinning, a note, watching, deleting or a new scan redraw the same search: the list stays on its page.
       // A new search or chip starts on page 1.
       const filterKey = JSON.stringify([this.searchQuery || '', this.activeChips || null]);
       const keepPage = this._renderedFilterKey === filterKey;
+      // A new search or chip is news for a screen reader; a pin, a note or a new scan that redraws the same one is not
+      filterChanged = this._renderedFilterKey !== undefined && !keepPage;
       this._renderedFilterKey = filterKey;
       this.paginationManager.setItems(itemsToShow, { keepPage });
     }
@@ -141,6 +144,147 @@ class History {
     if (historyPagination && itemsToShow.length > 0) {
       historyPagination.style.display = 'flex';
     }
+    if (filterChanged) this.announceResults(noResults);
+  }
+
+  /**
+   * What a search or a chip left, for a screen reader: the count the pagination shows, or that nothing matches. The visible
+   * "no matches" block is hidden when there is nothing to show, and a region that is hidden says nothing, so this goes through
+   * a region that is always in the page.
+   * @param {boolean} noResults
+   */
+  announceResults(noResults) {
+    const info = document.querySelector('#historyPagination .pagination-info');
+    const text = noResults
+      ? FormatUtils.t('historyNoResults', 'No entries match your search or filters.')
+      : String((info && info.textContent) || '').trim();
+    if (text) this.announce('#historyStatus', text);
+  }
+
+  /**
+   * Say a line through one of the page's live regions (a screen reader reads a region when its text changes). The region is
+   * emptied at once, so the same words are news again; the text comes after a short wait, so a line typed over is said once;
+   * and it goes again a few seconds later, so the region never keeps what stopped being true.
+   * @param {string} selector - The region
+   * @param {string} text
+   * @param {number} [wait] - Milliseconds before the text is set
+   */
+  announce(selector, text, wait = 400) {
+    const region = document.querySelector(selector);
+    if (!region) return;
+    this._announcing = this._announcing || {};
+    const timers = this._announcing[selector] = this._announcing[selector] || {};
+    clearTimeout(timers.say);
+    clearTimeout(timers.clear);
+    region.textContent = '';
+    timers.say = setTimeout(() => {
+      region.textContent = text;
+      timers.clear = setTimeout(() => { region.textContent = ''; }, 6000);
+    }, wait);
+  }
+
+  /**
+   * Where the keyboard is in the list (the entry, its place on the page and which of its controls): drawing the list again
+   * replaces every card, the focused one with them, and the focus falls to the page, so the next Tab starts at the top of the tab.
+   * @returns {?{id: string, at: number, control: string}} Selector of the control, '' for the card itself; null when the focus is not in the list
+   */
+  listFocusState() {
+    const list = document.querySelector('#historyList');
+    const active = document.activeElement;
+    if (!list || !active || !list.contains(active)) return null;
+    const card = active.closest ? active.closest('.history-item') : null;
+    if (!card) return null;
+    let control = '';
+    if (active !== card) {
+      if (active.dataset && active.dataset.action) control = `[data-action="${active.dataset.action}"]`;
+      else if (active.classList && active.classList.contains('history-select-input')) control = '.history-select-input';
+    }
+    return { id: card.dataset.historyId, at: Array.from(list.querySelectorAll('.history-item')).indexOf(card), control };
+  }
+
+  /**
+   * An action on an entry (a pin, a note, a delete) is about to draw the list again. Its dialog may have taken the focus away
+   * and the card it was on may have been drawn again meanwhile: if the focus is on no element when the list is drawn, it goes to
+   * this entry's "…" button, or to the card that took the entry's place when it is gone.
+   * @param {string} id - The entry's id
+   */
+  hintListFocus(id) {
+    this._focusHint = { id, control: '[data-action="menu"]', until: Date.now() + 5000 };
+  }
+
+  /**
+   * The hint of hintListFocus, once: only while the focus is on no element at all (the person may have gone to the search
+   * since) and soon after it was given. Where the entry's card is now (the list still holds it, or its replacement when the
+   * list was drawn again meanwhile) is read here, before the list is replaced.
+   * @returns {?{id: string, at: number, control: string}}
+   */
+  takeFocusHint() {
+    const hint = this._focusHint;
+    this._focusHint = null;
+    if (!hint || !History.focusLost() || Date.now() >= hint.until) return null;
+    const list = document.querySelector('#historyList');
+    const cards = list ? Array.from(list.querySelectorAll('.history-item')) : [];
+    return { id: hint.id, control: hint.control, at: Math.max(0, cards.findIndex(card => card.dataset.historyId === hint.id)) };
+  }
+
+  /**
+   * The keyboard is on no control the person can use: on the page itself, on an element no longer in it, or still inside a dialog
+   * that is closing (the browser leaves the focus on its button until the dialog is taken out of the page).
+   * @returns {boolean}
+   */
+  static focusLost() {
+    const active = document.activeElement;
+    if (!active || active === document.body || active.isConnected === false) return true;
+    return typeof active.closest === 'function' && !!active.closest('.notification-confirm:not([data-open])');
+  }
+
+  /**
+   * Give the keyboard back after the list was drawn again: the control it was on, on the same entry's new card; when the entry
+   * is gone (deleted, or a chip no longer keeps it), the card that took its place, the one before it when it was the last of the
+   * page, or the search when the page has no card left. Only while the focus is lost: a long page is drawn in batches, and the
+   * person may have gone to the search meanwhile. The page does not scroll to the card (a write in the background redraws the
+   * list while the person scrolls with the wheel, away from the card that has the focus).
+   * @param {?{id: string, at: number, control: string}} saved - From listFocusState or takeFocusHint
+   */
+  restoreListFocus(saved) {
+    if (!saved || !History.focusLost()) return;
+    const list = document.querySelector('#historyList');
+    const cards = list ? Array.from(list.querySelectorAll('.history-item')) : [];
+    const same = cards.find(card => card.dataset.historyId === saved.id);
+    const card = same || cards[Math.min(Math.max(saved.at, 0), cards.length - 1)];
+    const target = card ? ((same && saved.control && card.querySelector(saved.control)) || card) : document.querySelector('#historySearch');
+    if (target && typeof target.focus === 'function') target.focus({ preventScroll: true });
+  }
+
+  /**
+   * The focus is on no element, or still on a control of the window just hidden (the browser leaves it there for a moment), after
+   * the details window closed over a list that was drawn again: put it on this entry's card.
+   * @param {string} id - The entry's id
+   * @param {?Element} [closed] - The window that was closed
+   */
+  refocusEntry(id, closed = null) {
+    const active = document.activeElement;
+    if (!History.focusLost() && !(closed && active && closed.contains(active))) return;
+    const list = document.querySelector('#historyList');
+    const card = list ? Array.from(list.querySelectorAll('.history-item')).find(el => el.dataset.historyId === id) : null;
+    if (card) card.focus({ preventScroll: true });
+  }
+
+  /** The Scrapfly dialog for an entry: its address and what was found on it (the card's button and the "…" menu both open it). */
+  openScrapfly(item) {
+    if (typeof ScrapflyExport === 'undefined') return;
+    ScrapflyExport.open({ url: item.url, detections: this.withDetectorIcons(item.detections || []) });
+  }
+
+  /**
+   * Name an element for a screen reader as one image ("Confidence: 85%"): its own text is only a number. The helpers that draw
+   * the confidence and the difficulty return the markup of one element; the name goes on it, unless it has a role already.
+   * @param {string} html - One element, <span ...>...</span>
+   * @param {string} name
+   * @returns {string}
+   */
+  static withName(html, name) {
+    return html.replace(/^<span\b(?![^>]*\brole=)([^>]*)>/, (_, attrs) => `<span${attrs} role="img" aria-label="${FormatUtils.escapeAttr(name)}">`);
   }
 
   /**
@@ -183,11 +327,15 @@ class History {
 
   /** Back to the whole History: every chip off and the search emptied. */
   clearFilters() {
+    // The button that asks for this is in the message the redraw hides: the focus goes to the search, not to the page
+    const message = document.querySelector('#historyNoResults');
+    const hadFocus = !!message && message.contains(document.activeElement);
     this.activeChips = HistoryFilter.normalizeChips();
     this.searchQuery = '';
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) searchInput.value = '';
     this.renderHistory();
+    if (hadFocus && searchInput) searchInput.focus();
   }
 
   /**
@@ -202,6 +350,11 @@ class History {
     }
 
     historyList.style.display = 'block';
+
+    // Every card is about to be replaced, the focused one with them: where the keyboard is goes to the new card (finalizeRender).
+    // A hint given by an action is used up by this redraw, whether the focus needed it or not
+    const hint = this.takeFocusHint();
+    const keyboardAt = this.listFocusState() || hint;
 
     const t = (typeof I18n !== 'undefined') ? I18n : null;
     const _tr = (key, fallback) => (t && t.get(key)) || fallback;
@@ -229,6 +382,7 @@ class History {
       return `<span class="history-changed-badge" ${FormatUtils.tipAttrs(_tr('historyChangedBadge', 'Changed'), when, rows)}>${FormatUtils.escapeHtml(_tr('historyChangedBadge', 'Changed'))}</span>`;
     };
 
+    let cardCount = 0;
     const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
       // getDomainFromUrl answers 'Unknown' (English, also used in filenames) without a URL
@@ -249,9 +403,16 @@ class History {
       const cardDetections = item.detections || [];
       const hasCardDetections = summary.totalDetections > 0;
       // Breakdown tips, the same ones the detail modal shows
+      // "Confidence: 85%" as the language writes it (French puts a space before the colon): the same texts the details window uses
+      const confidenceTitle = FormatUtils.t('clipboardConfidenceFmt', 'Confidence: {0}%', summary.avgConfidence);
+      const difficultyTitle = FormatUtils.t('clipboardDifficultyFmt', 'Difficulty: {0}', summary.difficultyDisplay);
       const detectionsTip = hasCardDetections ? FormatUtils.detectionsTip(cardDetections, summary.labels.detections) : null;
-      const confidenceTip = hasCardDetections ? FormatUtils.confidenceTip(cardDetections, `${summary.labels.confidence}: ${summary.avgConfidence}%`) : null;
-      const difficultyTip = hasCardDetections ? FormatUtils.difficultyTip(cardDetections, summary.difficulty, `${summary.labels.difficulty}: ${summary.difficultyDisplay}`) : null;
+      const confidenceTip = hasCardDetections ? FormatUtils.confidenceTip(cardDetections, confidenceTitle) : null;
+      const difficultyTip = hasCardDetections ? FormatUtils.difficultyTip(cardDetections, summary.difficulty, difficultyTitle) : null;
+      // What a screen reader says for each number: the tips are only on hover (their targets cannot take the focus)
+      const detectionsName = FormatUtils.escapeAttr(`${summary.labels.detections}: ${summary.totalDetections}`);
+      // The title, "…" and Scrapfly are named for their card: twenty buttons that all say "More actions" tell one from another by it
+      const cardNumber = ++cardCount;
 
       // Select mode (history-select.js): a checkbox first on the card, the card marked when it is selected
       const selecting = this.selectMode === true;
@@ -269,7 +430,7 @@ class History {
               <div class="history-title-row">
                 ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
                 ${item.watch === true ? `<span class="history-watch" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
-                <div class="history-title" title="${attrTitle}">${safeTitle}</div>
+                <div class="history-title" title="${attrTitle}" id="history-title-${cardNumber}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>
               <div class="history-subline">
@@ -278,8 +439,8 @@ class History {
               </div>
               ${item.note ? `<div class="history-note" title="${FormatUtils.escapeAttr(item.note)}">${FormatUtils.escapeHtml(item.note)}</div>` : ''}
             </div>
-            ${scrapflyLogo && ScrapflyExport.targetUrl(item.url) ? `<button class="history-item-action-btn history-scrapfly-btn" data-action="scrapfly" title="${scrapflyLabel}" aria-label="${scrapflyLabel}">${scrapflyLogo}</button>` : ''}
-            <button class="history-item-action-btn history-more-btn" data-action="menu" title="${moreLabel}" aria-label="${moreLabel}" aria-haspopup="menu" aria-expanded="false">
+            ${scrapflyLogo && ScrapflyExport.targetUrl(item.url) ? `<button class="history-item-action-btn history-scrapfly-btn" id="history-scrapfly-${cardNumber}" data-action="scrapfly" tabindex="-1" title="${scrapflyLabel}" aria-label="${scrapflyLabel}" aria-labelledby="history-scrapfly-${cardNumber} history-title-${cardNumber}">${scrapflyLogo}</button>` : ''}
+            <button class="history-item-action-btn history-more-btn" id="history-more-${cardNumber}" data-action="menu" title="${moreLabel}" aria-label="${moreLabel}" aria-labelledby="history-more-${cardNumber} history-title-${cardNumber}" aria-haspopup="menu" aria-expanded="false">
               <svg width="14" height="4" viewBox="0 0 14 4" aria-hidden="true">
                 <circle cx="1.8" cy="2" r="1.2" fill="currentColor"/>
                 <circle cx="7" cy="2" r="1.2" fill="currentColor"/>
@@ -291,12 +452,12 @@ class History {
             <span class="history-metrics">
               <span class="history-metric" ${detectionsTip
                 ? FormatUtils.tipAttrs(detectionsTip.title, detectionsTip.detail, detectionsTip.rows)
-                : `data-tip="${FormatUtils.escapeAttr(summary.labels.detections)}"`}>
+                : `data-tip="${FormatUtils.escapeAttr(summary.labels.detections)}"`} role="img" aria-label="${detectionsName}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6z"/></svg>
                 <span class="history-metric-value">${summary.totalDetections}</span>
               </span>
-              ${FormatUtils.confidenceHtml(summary.avgConfidence, 'history-metric', confidenceTip)}
-              ${FormatUtils.difficultyHtml(summary.difficulty, summary.difficultyDisplay, 'history-difficulty-pill', difficultyTip)}
+              ${History.withName(FormatUtils.confidenceHtml(summary.avgConfidence, 'history-metric', confidenceTip), confidenceTitle)}
+              ${History.withName(FormatUtils.difficultyHtml(summary.difficulty, summary.difficultyDisplay, 'history-difficulty-pill', difficultyTip), difficultyTitle)}
             </span>
             <div class="history-detections">
               ${this.renderHistorySummary(cardDetections)}
@@ -333,6 +494,7 @@ class History {
       // Add click handlers for history items
       this.setupHistoryItemHandlers();
       this.setupOverflowBadgeHandlers();
+      this.restoreListFocus(keyboardAt);
     };
 
     this._historyRenderToken = (this._historyRenderToken || 0) + 1;
@@ -406,7 +568,8 @@ class History {
         return { label: FormatUtils.detectorName(d) || FormatUtils.t('timeUnknown', 'Unknown'), value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
       });
       if (inCategory.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', inCategory.length - 8) });
-      return `<span class="history-cat-count${inCategory.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(`${FormatUtils.categoryLabel(key)}: ${inCategory.length}`, '', rows)}>`
+      const chipTitle = `${FormatUtils.categoryLabel(key)}: ${inCategory.length}`;
+      return `<span class="history-cat-count${inCategory.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(chipTitle, '', rows)} role="img" aria-label="${FormatUtils.escapeAttr(chipTitle)}">`
         + `<span class="category-icon" style="color:${colour}" aria-hidden="true">${FormatUtils.categoryIconSvg(key)}</span>`
         + `<span class="history-cat-value">${inCategory.length}</span></span>`;
     });
@@ -443,7 +606,8 @@ class History {
     const rows = ranked.slice(0, 8).map(row => ({ label: row.label, value: `${row.value}%`, tone: FormatUtils.confidenceTone(row.value) }));
     if (ranked.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', ranked.length - 8) });
     const label = FormatUtils.t('detectionModalCombinations', 'Matched combinations');
-    return `<span class="history-cat-count history-combo-count${fired.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(`${label}: ${fired.length}`, '', rows)}>`
+    const chipTitle = `${label}: ${fired.length}`;
+    return `<span class="history-cat-count history-combo-count${fired.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(chipTitle, '', rows)} role="img" aria-label="${FormatUtils.escapeAttr(chipTitle)}">`
       + `<span class="category-icon" aria-hidden="true">${FormatUtils.uiIconSvg('combination')}</span>`
       + `<span class="history-cat-value">${fired.length}</span></span>`;
   }
@@ -539,8 +703,8 @@ class History {
       </div>`;
     const hasDetections = s.totalDetections > 0;
     const detectionsTip = hasDetections ? FormatUtils.detectionsTip(detections, s.labels.detections) : null;
-    const confidenceTip = hasDetections ? FormatUtils.confidenceTip(detections, `${s.labels.confidence}: ${s.avgConfidence}%`) : null;
-    const difficultyTip = hasDetections ? FormatUtils.difficultyTip(detections, s.difficulty, `${s.labels.difficulty}: ${s.difficultyDisplay}`) : null;
+    const confidenceTip = hasDetections ? FormatUtils.confidenceTip(detections, FormatUtils.t('clipboardConfidenceFmt', 'Confidence: {0}%', s.avgConfidence)) : null;
+    const difficultyTip = hasDetections ? FormatUtils.difficultyTip(detections, s.difficulty, FormatUtils.t('clipboardDifficultyFmt', 'Difficulty: {0}', s.difficultyDisplay)) : null;
 
     const segments = [
       { key: 'antibot', label: FormatUtils.t('categoryAntibot', 'Anti-bot') },
@@ -648,6 +812,13 @@ class History {
     const historyFilters = document.querySelector('#historyFilters');
     const historyNoResults = document.querySelector('#historyNoResults');
 
+    // The last entry was deleted or History was cleared: the card with the focus is about to be hidden
+    const hint = this.takeFocusHint();
+    if (historyList && (hint || historyList.contains(document.activeElement))) {
+      const search = document.querySelector('#historySearch');
+      if (search) search.focus();
+    }
+
     if (historyList) historyList.style.display = 'none';
     if (historyEmpty) historyEmpty.style.display = 'flex';
     if (historyPagination) historyPagination.style.display = 'none';
@@ -737,7 +908,7 @@ class History {
           this.copyHistoryItem(item);
         } else if (action === 'scrapfly') {
           this.closeMenus();
-          ScrapflyExport.open({ url: item.url, detections: this.withDetectorIcons(item.detections || []) });
+          this.openScrapfly(item);
         } else if (action === 'menu') {
           const menu = document.querySelector('#historyItemMenu');
           if (this._openMenu && this._openMenu.anchor === e.currentTarget) {
@@ -905,6 +1076,8 @@ class History {
   /**
    * History → … → Compare with…: a dialog with the entry's other saved scans of the same page to pick from, and what
    * changed between the two (HistoryCompare): protections added, removed, changed in confidence or evidence, unchanged.
+   * A scan in the list is one short line (date without seconds, count); when it is of another address its page path shows
+   * under the list. Four counts sum the result up, then the protections in groups; Unchanged is folded when it is long.
    * "Copy as Markdown" copies that report; Close leaves.
    * @param {object} item - History entry
    * @returns {Promise<boolean>} false when the page has no other scan
@@ -918,83 +1091,174 @@ class History {
     }
     const categoryLabel = (key) => FormatUtils.categoryLabel(key);
     const methodLabel = (type) => this.getMethodLabel(String(type).toLowerCase());
+    // The report and the hover texts keep the seconds; the list and the range line show a date without them
     const dateText = (ms) => FormatUtils.formatDateTime(ms);
-    const where = (entry) => {
-      if (entry.url === item.url) return '';
-      try { const u = new URL(entry.url); return ` · ${(u.pathname + u.search).slice(0, 40)}`; } catch (_) { return ''; }
+    const shortDate = (ms) => HistoryCompare.shortDateTime(ms, FormatUtils.uiLocale());
+    const countOf = (candidate) => (candidate.detections || []).length;
+    const colourOf = (key) => this.detectorManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
+    const make = (tag, className, text) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
     };
+    const hover = (node, text) => {
+      if (text) { FormatUtils.setTip(node, text); return; }
+      node.removeAttribute('title');
+      node.removeAttribute('data-tip');
+    };
+    const uid = `history-compare-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    const CHEVRON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
-    const select = document.createElement('select');
-    select.className = 'select-field history-dialog-input ui-select';
-    // Each option is a translated sentence (date, count, path): its direction is the language's, not forced left to right
+    // The scans to pick from, one short line each: a long one would wrap inside the closed dropdown
+    const select = make('select', 'select-field history-dialog-input ui-select');
+    // Each option is a translated sentence (date, count): its direction is the language's, not forced left to right
     select.setAttribute('dir', 'auto');
-    for (const candidate of candidates) {
-      const option = document.createElement('option');
+    // Two scans in the same minute with the same count would read the same: those keep their seconds
+    const optionDates = HistoryCompare.optionDates(candidates.map(candidate => ({ time: HistoryCompare.timeOf(candidate), count: countOf(candidate) })), { short: shortDate, long: dateText });
+    candidates.forEach((candidate, index) => {
+      const option = make('option', '', t('historyCompareOptionFmt', '{0} · {1} found', optionDates[index], countOf(candidate)));
       option.value = candidate.id;
-      option.textContent = t('historyCompareOptionFmt', '{0} · {1} found', dateText(candidate.timestamp), (candidate.detections || []).length) + where(candidate);
       select.appendChild(option);
-    }
+    });
     const first = HistoryCompare.pickDefault(candidates, item);
     select.value = first ? first.id : candidates[0].id;
 
-    const field = document.createElement('label');
-    field.className = 'history-dialog-field';
-    const label = document.createElement('span');
-    label.className = 'history-dialog-label';
-    label.textContent = t('historyCompareWith', 'Compare with');
-    field.append(label, select);
-    const range = document.createElement('div');
-    range.className = 'history-dialog-count';
+    const field = make('label', 'history-dialog-field');
+    field.append(make('span', 'history-dialog-label', t('historyCompareWith', 'Compare with')), select);
+    // Under the list, when the other scan is of another address (another query or fragment): its page path, the whole address on hover
+    const where = make('div', 'history-compare-where');
+    where.id = `${uid}-where`;
+    where.setAttribute('dir', 'ltr');
+    where.hidden = true;
+    const pick = make('div', 'history-compare-pick');
+    pick.append(field, where);
+    const range = make('div', 'history-dialog-count history-compare-range');
     range.setAttribute('role', 'status');
-    const result = document.createElement('div');
-    result.className = 'history-compare-result';
-    const form = document.createElement('div');
-    form.className = 'history-dialog-form history-compare';
-    form.append(field, range, result);
+    const summary = make('ul', 'history-compare-summary');
+    summary.setAttribute('role', 'list');
+    const result = make('div', 'history-compare-result');
+    // It scrolls when the result is long: the keyboard reaches it (Tab, then the arrows), and a screen reader names it
+    result.tabIndex = 0;
+    result.setAttribute('role', 'region');
+    result.setAttribute('aria-label', t('historyCompareTitle', 'Compare scans'));
+    const form = make('div', 'history-dialog-form history-compare');
+    form.append(pick, range, summary, result);
 
     let current = null;
-    const group = (kind, key, fallback, rows, render) => {
-      if (!rows.length) return;
-      const section = document.createElement('section');
-      section.className = `history-compare-group history-compare-${kind}`;
-      const heading = document.createElement('h4');
-      heading.textContent = `${t(key, fallback)} (${rows.length})`;
-      const list = document.createElement('ul');
-      for (const row of rows) {
-        const li = document.createElement('li');
-        li.textContent = render(row);
-        list.appendChild(li);
+    let unchangedOpen = null; // what the person chose for Unchanged (true = open), kept when another scan is picked
+
+    // The four counts: a kind with none stays, dimmed, so the result reads at a glance
+    const renderChip = (chip) => {
+      const tile = make('li', `history-compare-chip is-${chip.kind}${chip.count ? '' : ' is-zero'}`);
+      tile.append(make('span', 'history-compare-chip-label', chip.label), make('span', 'history-compare-chip-count', String(chip.count)));
+      return tile;
+    };
+    // A protection: the category's icon (its name stays for a screen reader), the name, the score; a changed one shows the
+    // move with its difference, and the change of evidence on a line under the name
+    const renderRow = (row) => {
+      const line = make('li', 'history-compare-row');
+      const icon = make('span', 'category-icon');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.title = categoryLabel(row.category);
+      icon.innerHTML = FormatUtils.categoryIconSvg(row.category);
+      const colour = colourOf(row.category);
+      if (colour) icon.style.color = colour;
+      // A name is the person's own text (a custom rule): it takes its own direction
+      const name = make('span', 'history-compare-name');
+      const text = make('span', '', row.name);
+      text.setAttribute('dir', 'auto');
+      name.appendChild(text);
+      line.append(icon, name, make('span', 'history-compare-cat', categoryLabel(row.category)));
+      if (row.from !== null) {
+        const move = make('span', 'history-compare-conf is-moved');
+        move.append(make('span', 'history-compare-from', `${row.from}%`), make('span', 'history-compare-arrow', '→'), make('span', 'history-compare-to', `${row.to}%`));
+        if (row.deltaText) move.appendChild(make('span', `history-compare-delta is-${row.tone}`, row.deltaText));
+        line.appendChild(move);
+      } else if (row.confidence !== null) {
+        line.appendChild(make('span', 'history-compare-conf', `${row.confidence}%`));
+      }
+      if (row.notes) line.appendChild(make('span', 'history-compare-notes', row.notes));
+      return line;
+    };
+    const renderGroup = (group, identical) => {
+      const section = make('section', `history-compare-group history-compare-${group.kind}`);
+      const heading = make('h4', 'history-compare-heading');
+      const list = make('ul', 'history-compare-list');
+      list.setAttribute('role', 'list');
+      for (const row of group.rows) list.appendChild(renderRow(row));
+      if (group.collapsible) {
+        // A long Unchanged is folded: its heading is a real button, so the keyboard and a screen reader can open it
+        const toggle = make('button', 'history-compare-toggle');
+        toggle.setAttribute('type', 'button');
+        list.id = `${uid}-${group.kind}`;
+        toggle.setAttribute('aria-controls', list.id);
+        const chevron = make('span', 'history-compare-chevron');
+        chevron.setAttribute('aria-hidden', 'true');
+        chevron.innerHTML = CHEVRON;
+        toggle.append(chevron, make('span', 'history-compare-toggle-text', group.title));
+        const setOpen = (open) => {
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          list.hidden = !open;
+          section.classList.toggle('is-open', open);
+        };
+        toggle.addEventListener('click', () => {
+          unchangedOpen = toggle.getAttribute('aria-expanded') !== 'true';
+          setOpen(unchangedOpen);
+        });
+        // Two identical scans have nothing but Unchanged to show: it is open
+        setOpen(identical || (unchangedOpen === null ? group.open : unchangedOpen));
+        heading.appendChild(toggle);
+      } else {
+        heading.textContent = group.title;
       }
       section.append(heading, list);
-      result.appendChild(section);
+      return section;
     };
-    const describe = (row) => `${row.name} · ${categoryLabel(row.category)}${row.confidence === null ? '' : ` · ${row.confidence}%`}`;
     const refresh = () => {
-      const other = candidates.find(c => c.id === select.value);
+      const other = candidates.find((c) => c.id === select.value) || candidates[0];
       current = HistoryCompare.compare(item, other);
-      range.textContent = t('historyCompareRangeFmt', 'From {0} to {1}', dateText(current.earlier.timestamp), dateText(current.later.timestamp));
+      const model = HistoryCompare.view(current, { t, methodLabel });
+      const rangeText = (from, to) => t('historyCompareRangeFmt', 'From {0} to {1}', from, to);
+      range.textContent = rangeText(...HistoryCompare.rangeDates(current, { short: shortDate, long: dateText }));
+      // Hover texts go through the shared tooltip (data-tip): a plain title would be adopted once and then go stale.
+      // The list has none: it has the focus when the dialog opens, and a tip would cover the dialog straight away
+      hover(range, rangeText(dateText(current.earlier.timestamp), dateText(current.later.timestamp)));
+      const place = HistoryCompare.whereText(item, other);
+      where.hidden = !place;
+      where.textContent = place;
+      hover(where, place ? String(other.url) : '');
+      if (place) select.setAttribute('aria-describedby', where.id); else select.removeAttribute('aria-describedby');
+      summary.replaceChildren(...model.chips.map(renderChip));
       result.replaceChildren();
-      if (current.identical) {
-        const same = document.createElement('p');
-        same.className = 'history-compare-identical';
-        same.textContent = t('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.');
-        result.appendChild(same);
-      }
-      group('added', 'historyCompareAdded', 'Added', current.added, describe);
-      group('removed', 'historyCompareRemoved', 'Removed', current.removed, describe);
-      group('changed', 'historyCompareChanged', 'Changed', current.changed, (row) => `${row.name} · ${categoryLabel(row.category)} · ${HistoryCompare.changeText(row, { t, methodLabel })}`);
-      group('same', 'historyCompareUnchanged', 'Unchanged', current.same, describe);
+      result.scrollTop = 0;
+      if (model.identical) result.appendChild(make('p', 'history-compare-identical', t('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.')));
+      for (const group of model.groups) result.appendChild(renderGroup(group, model.identical));
     };
     select.addEventListener('change', refresh);
     refresh();
 
-    const copy = await NotificationHelper.form({
-      title: t('historyCompareTitle', 'Compare scans'),
-      confirmText: t('historyCompareCopy', 'Copy as Markdown'),
-      cancelText: t('btnClose', 'Close'),
-      content: form,
-      focus: select
-    });
+    // The dialog answers Enter by closing with "Copy as Markdown": Enter on the Unchanged button is that button's own
+    const keepEnterOnToggle = (event) => {
+      const active = document.activeElement;
+      if (event.key === 'Enter' && active && active.classList && active.classList.contains('history-compare-toggle')) event.stopImmediatePropagation();
+    };
+    window.addEventListener('keydown', keepEnterOnToggle, true);
+    let copy;
+    try {
+      copy = await NotificationHelper.form({
+        title: t('historyCompareTitle', 'Compare scans'),
+        confirmText: t('historyCompareCopy', 'Copy as Markdown'),
+        cancelText: t('btnClose', 'Close'),
+        content: form,
+        focus: select
+      });
+    } finally {
+      window.removeEventListener('keydown', keepEnterOnToggle, true);
+    }
+    // The list may have been drawn again under the dialog (a scan saved): the "…" button it came from is gone, and the focus
+    // would fall to the page
+    this.refocusEntry(item.id);
     if (copy && current) {
       await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
         host: item.hostname || this.getDomainFromUrl(item.url), address: String(item.url || '').replace(/[?#].*$/s, ''),
@@ -1287,6 +1551,7 @@ class History {
       // saved since the popup opened show up instead of being overwritten.
       await this.sendHistoryChange({ type: HistoryStore.Messages.DELETE_ITEMS, ids: [historyItem.id] });
       await this.loadHistoryFromStorage();
+      this.hintListFocus(historyItem.id);
       this.renderHistory();
 
       NotificationHelper.success(_tr('notificationHistoryItemDeleted', 'History item deleted'));
@@ -1360,11 +1625,14 @@ class History {
       const combinationsHtml = this.renderHistoryCombinations(detection, detectorObj, index);
       const matchCount = detection.matches?.length || 0;
       const methodTypeBadges = this.renderMethodTypeBadges(detection.matches || []);
-      const expandLabel = FormatUtils.escapeAttr(_tr('detectionModalDetectionMethods', 'Detection methods'));
+      // The header is a button that shows the methods: its name is the detection (a fixed "Detection methods" on each of five
+      // cards is five identical buttons), with what the card shows beside the name
+      const headerLabel = FormatUtils.escapeAttr([name, translatedCategory, `${confidence}%`].filter(Boolean).join(', '));
+      const detailsId = `history-det-${index}`;
 
       return `
         <div class="history-modal-detection-card cat-${catClass} ${hasMethods ? 'has-methods' : ''}" data-detection-index="${index}">
-          <div class="history-modal-detection-header"${hasMethods ? ` role="button" tabindex="0" aria-expanded="false" aria-label="${expandLabel}"` : ''}>
+          <div class="history-modal-detection-header"${hasMethods ? ` role="button" tabindex="0" aria-expanded="false" aria-controls="${detailsId}" aria-label="${headerLabel}"` : ''}>
             <div class="history-modal-detection-icon icon-${catClass}">${detectorIconHtml}</div>
             <div class="history-modal-detection-content">
               <div class="history-modal-detection-title">
@@ -1383,7 +1651,7 @@ class History {
             </div>
           </div>
           ${hasMethods ? `
-            <div class="history-modal-detection-details">
+            <div class="history-modal-detection-details" id="${detailsId}">
               ${combinationsHtml}
               <div class="history-modal-match-count">${FormatUtils.escapeHtml(_tr('historyMatchedDetections', 'Matched detections'))}</div>
               <div class="history-modal-detection-methods">
@@ -1585,6 +1853,8 @@ class History {
     const clickToCopy = FormatUtils.escapeAttr(FormatUtils.t('advCommonClickToCopy', 'Click to copy'));
     const unknownValue = FormatUtils.t('detectionUiUnknownValue', 'unknown');
     const displayValue = spec.displayValue === undefined || spec.displayValue === null || spec.displayValue === '' ? unknownValue : spec.displayValue;
+    // The Detection tab's name for the same button: the action, then the value it copies
+    const copyName = FormatUtils.escapeAttr(FormatUtils.t('detectionUiCopyValueFmt', 'Copy value: {0}', displayValue));
     const confidence = spec.confidence === undefined ? 0 : spec.confidence;
 
     // Get tag color (use originalType to preserve underscores for lookup)
@@ -1616,7 +1886,7 @@ class History {
             ${score}
             <svg class="history-modal-method-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <span class="history-modal-method-value" title="${clickToCopy}">${safeDisplayValue}</span>
+          <button type="button" class="history-modal-method-value" title="${clickToCopy}" aria-label="${copyName}">${safeDisplayValue}</button>
           ${note}
         </div>
       `;
@@ -1636,6 +1906,9 @@ class History {
       this.releaseModalFocus = null;
       if (modal) modal.style.display = 'none';
       document.body.style.overflow = 'auto';
+      // A scan saved while the window was open draws the list again: the card it was opened from is gone, and with it the place
+      // the focus returns to
+      this.refocusEntry(this._modalItemId, modal);
     };
 
     if (closeBtn) {
@@ -1703,8 +1976,12 @@ class History {
         const textToCopy = `[${payload.methodType || 'METHOD'}] ${value}`;
         // Default toast / inline texts of copyToClipboard are already localised
         // Feedback goes on the value field only, so the row keeps its size
-        FormatUtils.copyToClipboard(textToCopy, {
+        Promise.resolve(FormatUtils.copyToClipboard(textToCopy, {
           element: item.querySelector('.history-modal-method-value') || item
+        })).then((copied) => {
+          // The inline "Copied!" replaces the value for a moment and the toast is left out when there is an element to show it
+          // on: for a screen reader the window says it, inside the window (what is outside a modal dialog is hidden from it)
+          if (copied) this.announce('#historyModalStatus', FormatUtils.t('copiedNotification', 'Copied'), 50);
         });
 
         item.classList.add('copy-feedback');
@@ -1764,6 +2041,9 @@ class History {
     label('pin', item.pinned === true ? 'historyUnpin' : 'historyPin', item.pinned === true ? 'Unpin' : 'Pin');
     label('watch', item.watch === true ? 'historyUnwatch' : 'historyWatch', item.watch === true ? 'Stop watching' : 'Watch for changes');
     label('note', item.note ? 'historyEditNote' : 'historyAddNote', item.note ? 'Edit note' : 'Add note');
+    // Scrapfly needs a web page to scrape
+    const scrapfly = menu.querySelector('[data-action="scrapfly"]');
+    if (scrapfly) scrapfly.hidden = !(typeof ScrapflyExport !== 'undefined' && ScrapflyExport.targetUrl(item.url));
     // Compare needs another saved scan of the same page
     const compare = menu.querySelector('[data-action="compare"]');
     if (compare) {
@@ -1782,6 +2062,7 @@ class History {
     const response = await this.sendHistoryChange({ type: HistoryStore.Messages.UPDATE_ITEM, id: item.id, patch });
     // Show it now; a pinned entry's age and the limit no longer apply to it, so the list is read again
     await this.loadHistoryFromStorage();
+    this.hintListFocus(item.id);
     this.renderHistory();
     return response;
   }
@@ -2245,6 +2526,8 @@ class History {
           this.rescanHistoryItem(item);
         } else if (action === 'compare') {
           this.compareHistoryItem(item);
+        } else if (action === 'scrapfly') {
+          this.openScrapfly(item);
         } else if (action === 'copy') {
           this.copyHistoryItem(item);
         } else if (action === 'copy-markdown') {
@@ -2407,8 +2690,16 @@ class History {
     anchor.setAttribute('aria-expanded', 'false');
     anchor.classList.remove('active');
     this._openMenu = null;
+    // A redraw while the menu was open (a scan saved, a stored change) replaced the entry's "…" button: its new one takes the
+    // focus, since a button that is gone cannot
+    let target = anchor;
+    if (anchor.isConnected === false && menu.id === 'historyItemMenu') {
+      const list = document.querySelector('#historyList');
+      const card = list ? Array.from(list.querySelectorAll('.history-item')).find(el => el.dataset.historyId === this._menuItemId) : null;
+      target = (card && card.querySelector('[data-action="menu"]')) || anchor;
+    }
     // preventScroll: a list that scrolled (which closes the menu) is not scrolled back to the button
-    if ((returnFocus === true || hadFocus) && typeof anchor.focus === 'function') anchor.focus({ preventScroll: true });
+    if ((returnFocus === true || hadFocus) && typeof target.focus === 'function') target.focus({ preventScroll: true });
   }
 
 

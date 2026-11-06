@@ -162,6 +162,29 @@ test('no active tab, a worker that fails and an answer nobody understands are al
   }
 });
 
+test('a worker that does not know the message (it is older than the popup) says so, in the existing wording, and nothing reloads', async () => {
+  // The popup's files are read fresh on every open; the worker only when the extension is reloaded. A worker from before this
+  // button answers { status: 'unknown' } to RESCAN_TAB: "Scan failed" would not tell the person what to do.
+  const hint = "The extension's background part is out of date. Reload the extension on the extensions page and try again.";
+  const en = JSON.parse(read('_locales/en/messages.json'));
+  assert.equal(en.workerOutdatedHint.message, hint, 'the wording History and Settings already use');
+
+  const h = actions({ answer: { status: 'unknown' } });
+  await h.A.rescan.call(h.detection);
+  assert.deepEqual(plain(h.log.toasts), [hint]);
+  assert.deepEqual(plain(h.detection.events), [], 'no scanning screen: nothing was reloaded');
+  assert.equal(h.detection.currentResults.length, 1, 'the results stay');
+  assert.equal(h.detection.isRescanning, false, 'free to try again once the extension is reloaded');
+  assert.deepEqual(plain([h.buttons['#rescanBtn'].disabled, h.buttons['#emptyRescanBtn'].disabled]), [false, false]);
+
+  // every other kind of failure keeps its own, plainer words
+  for (const answer of [{ status: 'error', error: 'Available to extension pages only' }, { status: 'ok' }, { status: 'ok', outcome: 'failed' }]) {
+    const other = actions({ answer });
+    await other.A.rescan.call(other.detection);
+    assert.deepEqual(plain(other.log.toasts), ['Scan failed'], JSON.stringify(answer));
+  }
+});
+
 test('a second click while the first is on its way does nothing; both buttons are off meanwhile and back on after', async () => {
   let release;
   const gate = new Promise(resolve => { release = resolve; });

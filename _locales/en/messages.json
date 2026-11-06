@@ -1018,8 +1018,8 @@
     "message": "Detectors imported"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detectors imported, except: {0} (not valid in this version)",
-    "description": "Rules → Import (merge): the rules of the file that could not be imported, by name ({0} = their names)"
+    "message": "Detectors imported, except: {0} (not valid in this version, or a pattern could freeze scanning)",
+    "description": "Rules → Import (merge): the rules of the file that could not be imported, by name ({0} = their names, the first ten, then …): not valid in this version (a pattern that does not compile, too long or too many of them) or a regex that could freeze scanning"
   },
   "detectorsImportedKeptFmt": {
     "message": "Official rules already installed were not replaced: {0}",
@@ -1071,7 +1071,7 @@
     "message": "Capture deleted"
   },
   "capturesExportedFmt": {
-    "message": "Exported {0} captures"
+    "message": "Captures exported: {0}"
   },
   "allCapturesCleared": {
     "message": "All captures cleared"
@@ -2376,7 +2376,7 @@
     "message": "Font, media and stylesheet requests are not recorded."
   },
   "mhUrlLimit2": {
-    "message": "Only requests made before the scan count; the scan runs once the page has loaded."
+    "message": "The scan runs once the page has loaded; requests made after it still count when the URL scope is All."
   },
   "mhHeaderIntro": {
     "message": "Checks the headers of the page's own request and response, not those of scripts, XHR calls or frames."
@@ -2433,7 +2433,7 @@
     "message": "Code inside frames or workers, or loaded after the scan, is not searched."
   },
   "mhDomIntro": {
-    "message": "Looks for an element in the page body with a CSS selector, once the page has loaded."
+    "message": "Looks for an element in the page (head and body) with a CSS selector, once the page has loaded."
   },
   "mhDomHow1": {
     "message": "A tag, `.class`, `#id` or `[attribute]`, alone or combined: `.g-recaptcha[data-sitekey]`."
@@ -2448,7 +2448,7 @@
     "message": "Not supported, so the rule never matches: spaces or `>` between parts, `:pseudo-classes` and escapes."
   },
   "mhDomLimit2": {
-    "message": "The head, frames and shadow roots are not searched. The `value` attribute is not read; other attributes are compared on their first 100 characters."
+    "message": "Frames and shadow roots are not searched. The `value` attribute is not read; other attributes are compared on their first 100 characters."
   },
   "mhWindowIntro": {
     "message": "Checks a JavaScript global the page defines, such as `grecaptcha.render`."
@@ -2481,7 +2481,7 @@
     "message": "Calls count during the first seconds after the page loads (8 seconds at most)."
   },
   "mhJsHooksLimit2": {
-    "message": "Calls in workers or frames are not seen, except built-in targets in same-site frames."
+    "message": "Calls in workers or frames are not seen, except built-in targets in same-origin frames."
   },
   "mhPayloadIntro": {
     "message": "Searches the bodies of the POST, PUT, PATCH and DELETE requests the page sends, from any frame."
@@ -2497,6 +2497,9 @@
   },
   "mhPayloadLimit2": {
     "message": "WebSocket messages are not read."
+  },
+  "mhRegexTextLimit": {
+    "message": "In rules you write or import, Regex reads only the first 100,000 characters of a text (a page, a script, a request body). Plain text, Whole word and Scrapfly's own rules read all of it."
   },
   "domCardTitle": {
     "message": "CSS selector"
@@ -3599,10 +3602,6 @@
   "rulesUiInvalidRegex": {
     "message": "A pattern marked as a regular expression is not valid, or could freeze scanning. Fix it, or turn Regex off for that row.",
     "description": "Rules editor → Save refused: a row marked as a regex does not compile or could backtrack catastrophically"
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "Enter detection method type (e.g., HEADERS, CONTENT, URLs):",
-    "description": "Browser prompt; keep HEADERS, CONTENT, URLs unchanged (they are typed as-is)"
   },
   "rulesUiMethodFallback": {
     "message": "Method",
@@ -5647,7 +5646,7 @@
     "description": "Label of a usage bar"
   },
   "settingsHistoryStorageUsedFmt": {
-    "message": "{0} of {1} used · {2} entries",
+    "message": "{0} of {1} used · entries: {2}",
     "description": "{0} = size used (2.1 MB), {1} = size limit (6 MB), {2} = number of saved pages"
   },
   "settingsHistoryStoragePinnedFmt": {
@@ -5661,7 +5660,7 @@
     "message": "Almost full: the oldest entries will be removed to make room. Export or pin what you want to keep."
   },
   "settingsHistoryStorageTrimmedFmt": {
-    "message": "{0} oldest entries were removed to stay within the limit, the last time on {1}.",
+    "message": "Oldest entries removed to stay within the limit: {0}. Last time: {1}.",
     "description": "{0} = number removed so far, {1} = date and time"
   },
   "settingsHistoryBackup": {
@@ -5691,14 +5690,14 @@
     "description": "Button"
   },
   "settingsHistoryBackupLastFmt": {
-    "message": "Last backup: {0} ({1} entries)",
+    "message": "Last backup: {0} (entries: {1})",
     "description": "{0} = date and time, {1} = number of entries"
   },
   "settingsHistoryBackupNever": {
     "message": "No backup yet."
   },
   "settingsHistoryBackupDoneFmt": {
-    "message": "Backed up {0} entries",
+    "message": "Backup done. Entries: {0}",
     "description": "Toast. {0} = number of entries"
   },
   "settingsHistoryBackupEmpty": {
@@ -5838,6 +5837,14 @@
   "workerOutdatedHint": {
     "message": "The extension's background part is out of date. Reload the extension on the extensions page and try again.",
     "description": "Shown when the popup talks to a background worker that still runs an older version of the extension (after an update without reloading it)"
+  },
+  "settingsUnreadableHint": {
+    "message": "The stored settings could not be read, so scanning, History and Bulk scan are paused. To repair them, use Settings → Data → Reset.",
+    "description": "Toast when the popup opens and the stored settings cannot be read (the storage did not answer, or the text stored is not JSON): scanning, History and Bulk scan are paused until Settings → Data → Reset repairs them"
+  },
+  "rulesUnreadableHint": {
+    "message": "The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace All.",
+    "description": "Toast when the popup opens and the stored rules cannot be read (the storage did not answer, or what is stored is damaged): the built-in rules are used and no rule change is saved, until an import with Replace All (replaceAllOption) in the Rules tab replaces the stored rules"
   },
   "historyFiltersLabel": {
     "message": "Filter history",
@@ -6144,7 +6151,7 @@
     "description": "Checkbox in the restore dialog: restore the person's own detection rules. {0} is how many"
   },
   "restorePartHistoryFmt": {
-    "message": "History ({0} entries)",
+    "message": "History (entries: {0})",
     "description": "Checkbox in the restore dialog: restore the History. {0} is how many entries"
   },
   "restoreModeLabel": {
@@ -7281,5 +7288,17 @@
   "historyCopyMarkdown": {
     "message": "Copy as Markdown",
     "description": "History entry menu: copies this entry as a Markdown heading and table, for tickets and chats"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Automatic update checks are off",
+    "description": "A line in the list of what the Privacy preset changes"
+  },
+  "restoreNotIncludedNote": {
+    "message": "Not part of a backup: webhook and sharing details, and which History pages are watched.",
+    "description": "Restore dialog: a note under the choices about what a backup never holds (the webhook and sharing connections, and which History pages are on the watchlist)"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "Your changes to the settings are not saved yet. Save them before closing?",
+    "description": "Settings: the question asked when Settings is closed (✕, Escape or a click outside it) with changes that are not saved. The buttons are Cancel, Discard and Save"
   }
 }

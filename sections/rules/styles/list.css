@@ -138,6 +138,20 @@
   --chip-color: var(--text-muted);
 }
 
+/* What the search and the chips leave, said to a screen reader: out of the layout and the eye, not hidden from the reader */
+.rules-results-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* There are rules, but the search and the chips match none: a line and the way back */
 .rules-no-results {
   display: flex;

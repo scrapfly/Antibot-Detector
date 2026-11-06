@@ -198,6 +198,13 @@ class HistoryRecorder {
       // Slow lookups first, outside the write queue
       const settings = historySettings || await Utils.getHistorySettings();
 
+      // Settings that could not be read are not "History is on": whether the person paused it, ignored this site or keeps private
+      // windows out is in them, and the defaults would record the page. Nothing is recorded until they can be read
+      if (settings.settingsUnreadable === true) {
+        Logger.debug('UI', `[History] Not saved (settings unreadable, source: ${source})`);
+        return false;
+      }
+
       // What History records at all: paused, incognito, ignored sites, fingerprint-only, minimum confidence
       const hostnameForPolicy = pageData.hostname || UrlUtils.getHostnameFromUrl(pageData.url || '');
       const incognito = settings.historySkipIncognito !== false && await this.isIncognitoTab(tabId, chrome);
@@ -464,7 +471,8 @@ class HistoryRecorder {
   static async notifyChange(alert, chrome) {
     if (!alert || !chrome?.notifications?.create) return;
     const settings = await Utils.getSettings();
-    if (settings.notificationsEnabled === false) return;
+    // (settings that cannot be read do not say whether the person switched notifications off)
+    if (settings.notificationsEnabled === false || settings.settingsUnreadable === true) return;
     if (typeof I18n !== 'undefined' && I18n.ready) await I18n.ready();
     const text = (key, fallback, ...args) => (typeof I18n !== 'undefined' && I18n.format(key, ...args)) || fallback.replace(/\{(\d)\}/g, (_, i) => args[Number(i)]);
     const parts = [];
@@ -505,7 +513,7 @@ class HistoryRecorder {
     if ((ratio >= 0.9 || dropped > 0) && !state.warned) {
       await chrome.storage.local.set({ [key]: { warned: true, at: Date.now() } });
       const settings = await Utils.getSettings();
-      if (settings.notificationsEnabled === false || !chrome.notifications?.create) return;
+      if (settings.notificationsEnabled === false || settings.settingsUnreadable === true || !chrome.notifications?.create) return;
       if (typeof I18n !== 'undefined' && I18n.ready) await I18n.ready();
       const text = (k, fallback) => (typeof I18n !== 'undefined' && I18n.get(k)) || fallback;
       chrome.notifications.create('scrapfly-history-storage', {

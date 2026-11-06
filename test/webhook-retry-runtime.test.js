@@ -31,7 +31,7 @@ function harness(initial, { session = true } = {}) {
     WebhookBody, URL, URLSearchParams, FormData, console, Date: FakeDate, JSON, Math, Promise,
     Logger: { network() {}, warn() {}, error() {}, ui() {}, debug() {} },
     UrlUtils: { getFaviconUrl: (h) => `https://icons.example/${h}.png` },
-    Utils: { getSettings: async () => ({ webhook }) },
+    Utils: { getSettings: async () => ({ webhook }), isUrlBlacklisted: async () => false },
     chrome: {
       storage: { local: area(local), ...(session ? { session: area(sessionStore) } : {}) },
       alarms: { create: (name, info) => alarms.set(name, info), clear: async (name) => alarms.delete(name) }

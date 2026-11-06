@@ -12,9 +12,9 @@
  *   Look              both rows in the dark and the light theme, inside their card and header, no sideways scrolling
  *   First pages       a first page of results (one category header, two, three categories, two results, the highest-confidence
  *                     order) needs no scrolling: the last card ends above the pagination bar, chip row included
- *   Cache scope       Settings → Detection → Cache scope, saved with results showing: the Detection tab is drawn again (results,
- *                     search, chips); a page the new scope has no result for shows the no-completed-scan card, and the next scan
- *                     lands in the same tab
+ *   Cache scope       Settings → Detection → Cache scope, saved with results showing: the results saved under the old scope go
+ *                     (3.1.4), so the page shows the no-completed-scan card with the tab's markup kept, and the next scan lands
+ *                     in the same tab (results, search, chips)
  *
  * A local site shows one marker per protection and probe detectors recognize them, so the scans are real.
  * The popup is opened as a page; its active tab is the local site's (chrome.tabs.query is told so), as in the other suites.
@@ -357,6 +357,70 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('Scan again against a worker that does not know the message (older than the popup) says to reload the extension and reloads nothing', async () => {
+    const { page: site, tab, name } = await scanned(`outdated-${uniq()}`, ALL);
+    const popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    const hint = "The extension's background part is out of date. Reload the extension on the extensions page and try again.";
+    // The worker as it was before this button: the router answers { status: 'unknown' } to a message with no handler. The popup's
+    // files are read fresh on every open and the worker only when the extension is reloaded, so this is what a person sees after
+    // updating the files without reloading
+    await W(() => { delete __messageHandlerRegistry[WorkerMessages.RESCAN_TAB]; });
+    try {
+      const before = loads[name];
+      await popup.$eval('#rescanBtn', el => el.click());
+      await until(async () => (await toasts(popup)).includes(hint), 8000, 'the toast that says to reload the extension');
+      await sleep(1200);
+      assert.equal(loads[name], before, 'the page was not reloaded');
+      assert.deepEqual(await popup.evaluate(() => [window.popupInstance.detection.isRescanning, document.querySelector('#rescanBtn').disabled]), [false, false], 'free to try again');
+      assert.equal(await popup.evaluate(() => window.popupInstance.detection.isShowingResults), true, 'the results stay');
+    } finally {
+      await W(() => { Commands.registerHandlers(__messageHandlerRegistry); });
+    }
+    // with the handler back (the extension reloaded), the same button rescans
+    await popup.evaluate(() => document.querySelectorAll('.notification-toast').forEach(el => el.remove()));
+    const again = loads[name];
+    await popup.$eval('#rescanBtn', el => el.click());
+    await until(() => loads[name] > again, 10000, 'the page sent again');
+    await popup.close();
+    await site.close();
+  });
+
+  // ===============================================================================================
+  await scenario('The popup says so when it opens if the background worker is older than its files; a current worker is not named', async () => {
+    const hint = "The extension's background part is out of date. Reload the extension on the extensions page and try again.";
+    const { page: site, tab } = await scanned(`staleopen-${uniq()}`, ALL);
+    // a current worker: nothing is said
+    let popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    await sleep(1500);
+    assert.equal((await toasts(popup)).includes(hint), false, 'a current worker is not named');
+    await popup.close();
+    await W(() => { globalThis.__fingerprintHandler = __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT]; });
+    try {
+      // a worker from before the check does not know the question
+      await W(() => { delete __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT]; });
+      popup = await popupFor(tab);
+      await until(async () => (await toasts(popup)).includes(hint), 8000, 'the toast on a worker that does not know the question');
+      await popup.close();
+      // a worker that runs another list of messages
+      await W(() => { __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT] = ({ sendResponse }) => { sendResponse({ status: 'ok', fingerprint: '00000000-1' }); return false; }; });
+      popup = await popupFor(tab);
+      await until(async () => (await toasts(popup)).includes(hint), 8000, 'the toast on a worker with another list of messages');
+      await popup.close();
+    } finally {
+      await W(() => { __messageHandlerRegistry[WorkerMessages.WORKER_FINGERPRINT] = globalThis.__fingerprintHandler; });
+    }
+    // the worker is current again: the next popup says nothing
+    popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    await sleep(1500);
+    assert.equal((await toasts(popup)).includes(hint), false, 'current again');
+    await popup.close();
+    await site.close();
+  });
+
+  // ===============================================================================================
   await scenario('Detection chips: one per category filter the list, combine with the search, say when nothing is left, and clear again', async () => {
     const { page: site, tab } = await scanned(`chips-${uniq()}`, ALL);
     const popup = await popupFor(tab);
@@ -684,27 +748,40 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Settings → Cache scope: saved with results showing, the Detection tab is drawn again (results, search, chips); with no result under the new scope it shows the no-completed-scan card and the next scan lands in the same tab', async () => {
+  await scenario('Settings → Cache scope: saved with results showing, the results of the old scope go: the no-completed-scan card in the same tab, the next scan lands there (results, search, chips), in both directions', async () => {
     const chips = '#detectionFilters .history-filter-chip';
     const chip = (key) => `${chips}[data-filter="${key}"]`;
     const names = (page) => page.$$eval('#resultsList .detector-name', els => els.map(el => el.textContent.trim()));
     try {
-      // 1. The saved result is found under the new scope as well (Domain also reads the entry saved under the exact address)
+      // 1. 3.1.4: a scope change drops the results saved under the old scope (back under Domain, a page is never served another
+      //    page's Full URL result), so the page shows the no-completed-scan card in the same tab, its markup kept; Scan again
+      //    draws the new results there, and the search and the chips work on them
+      // (No Domain result of this local site is left from an earlier scenario: it would answer every page of it)
+      const clean = await popupFor(null);
+      await clean.evaluate(() => new Promise(r => chrome.runtime.sendMessage({ type: 'DETECTION_CLEAR_ALL_CACHE' }, () => r())));
+      await clean.close();
       assert.ok(await patchSettings({ detection: { cacheScope: 'full' } }));
       const first = await scanned(`scope-${uniq()}`, ALL);
       const popup = await popupFor(first.tab);
       await resultsShown(popup, 3);
       await popup.waitForFunction(() => document.querySelector('#detectionFilters .history-filter-chip svg'), null, { polling: 250, timeout: 10000 });
+      const fullStamp = await cacheStamp(first.url);
+      await saveCacheScope(popup, 'domain');
+      await until(() => popup.evaluate(() => { const empty = document.querySelector('#emptyState'); return !!empty && empty.style.display === 'flex'; }), 15000, 'the no-completed-scan card: the Full URL result is gone under Domain');
+      assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'No completed scan');
+      assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'none', 'no stale results under the card');
+      assert.deepEqual(await markupOf(popup), { list: true, search: true, chips: 3, pagination: true }, 'the tab\'s markup is still there');
+      const before1 = loads[first.name];
+      await popup.$eval('#emptyRescanBtn', el => el.click());
+      await until(() => loads[first.name] > before1, 10000, 'the page sent again');
+      await until(async () => { const stamp = await cacheStamp(first.url); return stamp && stamp !== fullStamp; }, 25000, 'a scan saved under Domain');
+      await untilDrawn(popup, async () => (await listed(popup)).length === 3, 30000, 'the new results drawn in the same tab');
+      assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'flex');
+      assert.equal(await popup.$eval('#detectionFilters', el => el.getBoundingClientRect().width > 0), true, 'and the chip row is on screen');
+      // The search and the chips work on them
       await popup.$eval(chip('captcha'), el => el.click());
       await until(async () => (await listed(popup)).length === 1, 5000, 'the Captcha chip');
-      await saveCacheScope(popup, 'domain');
-      await untilDrawn(popup, async () => (await names(popup)).length === 1, 15000, 'the Captcha result drawn again after the new scope was saved');
-      assert.deepEqual(await markupOf(popup), { list: true, search: true, chips: 3, pagination: true }, 'the tab\'s markup is still there');
-      assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'flex');
-      assert.deepEqual(await names(popup), ['V313 Captcha Probe'], 'the results are drawn again, under the chip that was on');
-      assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:true', 'fingerprint:false'], 'the chip kept its state');
-      assert.equal(await popup.$eval('#detectionFilters', el => el.getBoundingClientRect().width > 0), true, 'and the row is on screen');
-      // The search and the chips still work on them
+      assert.deepEqual(await listed(popup), ['V313 Captcha Probe']);
       await popup.$eval(chip('captcha'), el => el.click());
       await until(async () => (await listed(popup)).length === 3, 5000, 'the Captcha chip off again');
       await popup.fill('#detectionSearch', 'fingerprint');

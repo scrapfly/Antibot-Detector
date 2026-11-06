@@ -181,10 +181,22 @@ const SEED = [
     assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.disabled), false);
     await page.$eval('#historyItemMenu [data-action="compare"]', el => el.click());
     await page.waitForSelector('.notification-confirm .history-compare', { timeout: 8000 });
-    const dialog = () => page.$eval('.notification-confirm .history-compare', el => el.innerText.replace(/\n+/g, ' | '));
+    // 3.1.4: the result is rows of cells (icon, name, category, score, evidence): read each row as "name · category · score · evidence"
+    const dialog = () => page.$eval('.notification-confirm .history-compare-result', root => [...root.querySelectorAll('.history-compare-group')].map((group) => {
+      const cell = (row, name) => { const node = row.querySelector(`.history-compare-${name}`); return node ? node.textContent.trim() : ''; };
+      const rows = [...group.querySelectorAll('.history-compare-row')].map((row) => {
+        const moved = row.querySelector('.history-compare-conf.is-moved');
+        const score = moved ? `${cell(moved, 'from')} → ${cell(moved, 'to')}${cell(moved, 'delta') ? ` (${cell(moved, 'delta')})` : ''}` : cell(row, 'conf');
+        return [cell(row, 'name'), cell(row, 'cat'), score, cell(row, 'notes')].filter(Boolean).join(' · ');
+      });
+      return [group.querySelector('.history-compare-heading').textContent.trim(), ...rows].join(' | ');
+    }).join(' | '));
+    const where = () => page.$eval('.notification-confirm .history-compare-where', el => (el.hidden ? '' : el.textContent.trim()));
+    // 3.1.4: an option is one short line (date, count); the other scan's page path sits under the list when its address differs
     const options = await page.$$eval('.notification-confirm .history-compare select option', els => els.map(el => el.textContent));
     assert.equal(options.length, 2, options.join(' / '));
-    assert.ok(/ · 4 found$/.test(options[0]) && /· 2 found · \/cart\?ref=mail$/.test(options[1]), options.join(' / '));
+    assert.ok(/ · 4 found$/.test(options[0]) && / · 2 found$/.test(options[1]), options.join(' / '));
+    assert.equal(await where(), '', 'no path line for a scan of the same address');
     assert.equal(await page.$eval('.notification-confirm .history-compare select', el => el.selectedIndex), 0, 'the previous scan is picked first');
     let text = await dialog();
     assert.ok(/Added \(1\).*DataDome · Anti-bot · 80%/.test(text), text);
@@ -196,6 +208,7 @@ const SEED = [
     // The older scan: Cloudflare 70 → 95 and the new evidence, Akamai gone is not in it
     await page.selectOption('.notification-confirm .history-compare select', { index: 1 });
     await until(async () => /Added \(2\)/.test(await dialog()), 5000, 'the second comparison');
+    assert.equal(await where(), '/cart?ref=mail', 'the older scan\'s page path under the list');
     text = await dialog();
     assert.ok(text.includes('DataDome · Anti-bot · 80%') && text.includes('Canvas Fingerprint · Fingerprint · 30%'), text);
     assert.ok(/Changed \(1\).*Cloudflare/.test(text) && !/Removed \(/.test(text), text);

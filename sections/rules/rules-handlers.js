@@ -27,6 +27,13 @@ Rules.prototype.handleImport = async function(event) {
   const _tr = (key, fallback) => (t && t.get(key)) || fallback;
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
 
+  // A rules file is a few hundred KB (the packaged rules are 400 KB). One far larger is not a rules file, and it is read whole
+  if (typeof DetectorSchema !== 'undefined' && file.size > DetectorSchema.IMPORT_LIMITS.fileBytes) {
+    NotificationHelper.error(_tr('failedImportDetectors', 'Failed to import detectors. Check the file format.'));
+    event.target.value = '';
+    return;
+  }
+
   try {
     const text = await file.text();
     const data = JSON.parse(text);
@@ -50,7 +57,9 @@ Rules.prototype.handleImport = async function(event) {
       });
       const skipped = this.detectorManager.lastImportSkipped || [];
       if (skipped.length) {
-        NotificationHelper.warning(_fmt('detectorsImportedSkippedFmt', `Detectors imported, except: ${skipped.join(', ')} (not valid in this version)`, skipped.join(', ')));
+        // The rules left out, by name: the first ten (a file can hold a thousand)
+        const names = skipped.length > 10 ? `${skipped.slice(0, 10).join(', ')}, …` : skipped.join(', ');
+        NotificationHelper.warning(_fmt('detectorsImportedSkippedFmt', `Detectors imported, except: ${names} (not valid in this version, or a pattern could freeze scanning)`, names));
       } else {
         NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
       }
@@ -330,7 +339,10 @@ Rules.prototype.handleResetToOfficial = async function(category, detectorName, d
     await this.detectorManager.saveDetectorsToStorage();
     chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
     NotificationHelper.success(_tr('ruleResetToOfficial', 'Rule restored to the official version'));
-    await this.displayRules();
+    // The same page of the list, and the focus goes back to the rule: the menu item that was pressed went with the old card
+    const place = this.listPlaceOf(category, detectorName);
+    await this.displayRules({ keepPage: true });
+    this.restoreListFocus(place);
   } catch (error) {
     Logger.error('UI', 'Failed to reset detector to official:', error);
     NotificationHelper.error(_tr('errorApplyingUpdates', 'Error applying updates'));
@@ -554,7 +566,10 @@ Rules.prototype.handleDeleteDetector = async function(category, detectorName, di
 
       NotificationHelper.success(_fmt('detectorDeletedFmt', `Deleted "${displayName}"`, displayName));
 
-      this.displayRules();
+      // The same page of the list, and the focus goes to the card that took its place: the Delete button went with the old card
+      const place = this.listPlaceOf(category, detectorName);
+      await this.displayRules({ keepPage: true });
+      this.restoreListFocus(place);
     } else {
       NotificationHelper.error(_tr('detectorNotFound', 'Detector not found'));
     }
@@ -615,8 +630,9 @@ Rules.prototype.handleAddDetector = function() {
  * the category, the description and the method types only, not in the patterns (false positives), and puts the rule whose
  * name is the search first: "Cap" also matches every CAPTCHA by its category and would put Cap on a later page.
  * @param {string} query - Search query
+ * @param {{keepPage?: boolean}} [options] - keepPage: the list drawn again after a delete or a reset stays on its page; a new search starts on page 1
  */
-Rules.prototype.handleSearch = function(query) {
+Rules.prototype.handleSearch = function(query, { keepPage = false } = {}) {
   this.filteredDetectors = RulesFilter.filter(this.allDetectors, {
     query,
     chips: this.activeChips,
@@ -629,7 +645,7 @@ Rules.prototype.handleSearch = function(query) {
 
   // Update pagination with filtered results
   if (this.paginationManager) {
-    this.paginationManager.setItems(this.filteredDetectors);
+    this.paginationManager.setItems(this.filteredDetectors, { keepPage });
   }
   if (typeof this.syncFilterUi === 'function') this.syncFilterUi();
 };

@@ -1010,7 +1010,7 @@
     "message": "偵測器已匯入"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "已匯入偵測器，以下除外：{0}（在此版本中無效）"
+    "message": "已匯入偵測器，以下除外：{0}（在此版本中無效，或某個模式可能讓掃描卡住）"
   },
   "detectorsImportedKeptFmt": {
     "message": "已安裝的官方規則未被取代：{0}"
@@ -2362,7 +2362,7 @@
     "message": "不會記錄字型、媒體和樣式表要求。"
   },
   "mhUrlLimit2": {
-    "message": "只計入掃描前發出的要求；掃描會在網頁載入完成後執行。"
+    "message": "掃描會在網頁載入完成後執行；URL 範圍為「全部」時，掃描之後發出的要求也會計入。"
   },
   "mhHeaderIntro": {
     "message": "檢查網頁本身要求和回應的標頭，不包含指令碼、XHR 呼叫或框架的標頭。"
@@ -2419,7 +2419,7 @@
     "message": "不會搜尋框架或 Worker 內的程式碼，也不會搜尋掃描後才載入的程式碼。"
   },
   "mhDomIntro": {
-    "message": "網頁載入完成後，用 CSS 選取器在網頁 body 中尋找元素。"
+    "message": "網頁載入完成後，用 CSS 選取器在網頁（head 和 body）中尋找元素。"
   },
   "mhDomHow1": {
     "message": "標籤、`.class`、`#id` 或 `[attribute]`，可單獨或組合使用：`.g-recaptcha[data-sitekey]`。"
@@ -2434,7 +2434,7 @@
     "message": "不支援以下寫法，因此規則永遠不會符合：各部分之間的空格或 `>`、`:pseudo-classes` 和逸出字元。"
   },
   "mhDomLimit2": {
-    "message": "不會搜尋 head、框架和 shadow root。不會讀取 `value` 屬性；其他屬性只比較前 100 個字元。"
+    "message": "不會搜尋框架和 shadow root。不會讀取 `value` 屬性；其他屬性只比較前 100 個字元。"
   },
   "mhWindowIntro": {
     "message": "檢查網頁定義的 JavaScript 全域變數，例如 `grecaptcha.render`。"
@@ -2467,7 +2467,7 @@
     "message": "只計入網頁載入後前幾秒內的呼叫（最多 8 秒）。"
   },
   "mhJsHooksLimit2": {
-    "message": "看不到 Worker 或框架中的呼叫，同站框架中的內建目標除外。"
+    "message": "看不到 Worker 或框架中的呼叫，同源框架中的內建目標除外。"
   },
   "mhPayloadIntro": {
     "message": "搜尋網頁從任何框架傳送的 POST、PUT、PATCH 和 DELETE 要求的內文。"
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "不會讀取 WebSocket 訊息。"
+  },
+  "mhRegexTextLimit": {
+    "message": "在你自己撰寫或匯入的規則中，Regex 只會讀取文字（網頁、指令碼、要求內文）的前 100,000 個字元。純文字、「全字比對」和 Scrapfly 自家的規則則會讀取全部內容。"
   },
   "domCardTitle": {
     "message": "CSS 選取器"
@@ -3386,9 +3389,6 @@
   },
   "rulesUiInvalidRegex": {
     "message": "標記為正規表示式的模式無效，或可能讓掃描卡住。請修正，或關閉該列的 Regex。"
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "輸入偵測方法類型（例如 HEADERS、CONTENT、URLs）："
   },
   "rulesUiMethodFallback": {
     "message": "方法"
@@ -5528,6 +5528,12 @@
   "workerOutdatedHint": {
     "message": "擴充功能的背景部分已過期。請在擴充功能頁面重新載入該擴充功能，然後再試一次。"
   },
+  "settingsUnreadableHint": {
+    "message": "無法讀取已儲存的設定，因此掃描、歷史記錄和批次掃描已暫停。請前往「設定」→「資料」→「重設」進行修復。"
+  },
+  "rulesUnreadableHint": {
+    "message": "無法讀取已儲存的規則：目前使用內建規則，對規則的變更不會儲存。若要取代已儲存的規則，請在「規則」分頁中匯入規則檔案並選擇「全部取代」。"
+  },
   "historyFiltersLabel": {
     "message": "篩選歷史記錄"
   },
@@ -6613,5 +6619,14 @@
   },
   "historyCopyMarkdown": {
     "message": "複製為 Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "自動檢查更新已關閉"
+  },
+  "restoreNotIncludedNote": {
+    "message": "備份不包含：Webhook 和分享的詳細資料，以及「歷史記錄」中被監看的網頁。"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "對設定的變更尚未儲存。要在關閉前儲存嗎？"
   }
 }

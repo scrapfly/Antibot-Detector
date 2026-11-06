@@ -1010,7 +1010,7 @@ async function scenario(name, fn) {
       assert.deepEqual(await page.$$eval('#historyMaxMB option', els => els.map(el => el.textContent)), ['6 MB', '12 MB', '25 MB']);
       await page.waitForFunction(() => /of 12\.0 MB used/.test(document.querySelector('#historyMeterText').textContent), null, { polling: 250, timeout: 8000 })
         .catch(async (error) => { throw new Error(`the History meter says "${await page.$eval('#historyMeterText', el => el.textContent)}" (${error.message.split('\n')[0]})`); });
-      assert.match(await page.$eval('#historyMeterText', el => el.textContent), /^\d+\.\d MB of 12\.0 MB used · 2200 entries$/);
+      assert.match(await page.$eval('#historyMeterText', el => el.textContent), /^\d+\.\d MB of 12\.0 MB used · entries: 2200$/);
 
       await click('.settings-tab-btn[data-settings-tab="data"]');
       await page.waitForFunction(() => /used, no limit/.test(document.querySelector('#storageTotalText').textContent), null, { polling: 250, timeout: 8000 })
@@ -1550,7 +1550,8 @@ async function scenario(name, fn) {
     await clearNotes();
     let page = await openHistorySettings();
     try {
-      await page.waitForFunction(() => /57 entries/.test(document.querySelector('#historyMeterText')?.textContent || ''), null, { polling: 250, timeout: 8000 });
+      // 3.1.4: the count goes after a label ("entries: 57"), so it reads right for one and for every plural class
+      await page.waitForFunction(() => /entries: 57\b/.test(document.querySelector('#historyMeterText')?.textContent || ''), null, { polling: 250, timeout: 8000 });
       const meter = await page.evaluate(() => ({ text: document.querySelector('#historyMeterText').textContent, warn: document.querySelector('#historyMeter').classList.contains('is-warn'), now: document.querySelector('#historyMeter').getAttribute('aria-valuenow'), note: document.querySelector('#historyMeterNote').textContent, noteHidden: document.querySelector('#historyMeterNote').hidden }));
       assert.match(meter.text, /MB of .*used/);
       assert.ok(Number(meter.now) >= 90, `meter at ${meter.now}%`);

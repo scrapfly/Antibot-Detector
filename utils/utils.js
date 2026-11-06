@@ -312,7 +312,9 @@ class Utils {
 
   /**
    * Get settings from storage with proper format handling
-   * @returns {Promise<object>} Settings object (never null, returns {} on error)
+   * @returns {Promise<object>} Settings object (never null, returns {} on error). {} that stands for settings that could not be read
+   *   (not for settings never saved) is marked: StorageManager.settingsUnreadable(settings). Whoever decides something the person
+   *   turned off from these (History, a skipped site, a schedule) must ask, and stay off.
    */
   static async getSettings() {
     try {
@@ -332,11 +334,14 @@ class Utils {
       Utils.applyDebugMode(settings);
       return settings;
     } catch (error) {
-      Logger.error('UTIL', 'Failed to load settings:', error);
+      // Only the kind of error: a JSON error quotes the stored text, and settings may hold a webhook secret
+      Logger.error('UTIL', 'Failed to load settings:', error && error.name);
     }
 
     Utils.applyDebugMode({ debugMode: false });
-    return {};
+    const unreadable = {};
+    Object.defineProperty(unreadable, 'settingsUnreadable', { value: true });
+    return unreadable;
   }
 
   /**
@@ -397,7 +402,10 @@ class Utils {
       // The size History may take (HistoryStore.budgetFor reads it; larger than 6 MB needs the unlimitedStorage permission)
       historyMaxMB: historySettings.historyMaxMB,
       // The watchlist (HistoryPolicy.watchModeOf reads it: off, daily or weekly)
-      historyWatch: historySettings.historyWatch
+      historyWatch: historySettings.historyWatch,
+      // The settings could not be read, so everything above is a default and not what the person chose. A reader that only draws
+      // from it ignores this; one that decides something (records a page, opens a page, moves an alarm) must stay off
+      ...(settings.settingsUnreadable === true ? { settingsUnreadable: true } : {})
     };
   }
 
@@ -405,18 +413,23 @@ class Utils {
    * Is this page left unscanned because of Settings → Detection → Sites? (The name is from when the only mode was a
    * list of skipped sites; the other mode is a list of the only sites to scan: see ScanScope.)
    * @param {string} url - URL to check
+   * @param {{failClosed?: boolean}} [options] - failClosed: when the settings cannot be read the answer is "skipped", where it is
+   *   "not skipped" by default. What keeps a result (the cache, History, the webhook) asks it that way: the skipped sites and the
+   *   chosen sites are in the settings, and defaults would keep a page the person left out. What only draws a state (the popup,
+   *   the badge) keeps the default, so that it does not say "paused" about every site.
    * @returns {Promise<boolean>} True if the page is skipped
    */
-  static async isUrlBlacklisted(url) {
+  static async isUrlBlacklisted(url, { failClosed = false } = {}) {
     if (!url) return false;
 
     try {
       const settings = await this.getSettings();
+      if (failClosed && settings && settings.settingsUnreadable === true) return true;
       const legacy = settings.blacklistedDomains ? { blacklistedDomains: settings.blacklistedDomains } : {};
       return ScanScope.isExcluded(url, { ...legacy, ...settings.detection });
     } catch (error) {
       Logger.error('UTIL', 'Error checking blacklist:', error);
-      return false;
+      return failClosed;
     }
   }
 

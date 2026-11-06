@@ -92,11 +92,23 @@ chrome.runtime.onInstalled.addListener(async (details) => {
         await initialize(details.reason, details.previousVersion);
         // Storage is only seeded from the bundled detectors on first install:
         // bring this build's new and updated detectors to existing installs
+        let rulesMoved = false;
         try {
             const merged = await UpdateManager.mergeBundledDetectors();
-            if (merged.installed > 0 || merged.rerated > 0 || merged.unmarked > 0) await UpdateManager.notifyDetectorsChanged();
+            if (merged.installed > 0 || merged.rerated > 0 || merged.unmarked > 0) {
+                await UpdateManager.notifyDetectorsChanged();
+                rulesMoved = true;
+            }
         } catch (error) {
             Logger.warn('BACKGROUND', '[init] Could not merge bundled detectors:', error);
+        }
+        // A build can change what a scan finds (the engine, the extractors, the hooks) without any detector changing, and a saved
+        // result is served for days: the results the previous build saved are not served by this one, so each page is scanned again
+        // with the new code the next time it is opened. A detector change above has done that already
+        if (details.reason === 'update' && !rulesMoved) {
+            try { await DetectionEngineManager.bumpRulesRevision(); } catch (error) {
+                Logger.warn('BACKGROUND', '[init] Could not clear the saved results after the update:', error);
+            }
         }
         // What the previous version was waiting for may be in this one (Statistics reads the list as stored)
         try { await UpdateManager.pruneIncompatibleUpdates(); } catch (error) {

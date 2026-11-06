@@ -4,8 +4,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Small Settings behaviours: the webhook's custom method, the "notifications on" answer that follows a save, and the log
-// counter that only runs while Settings is open.
+// Small Settings behaviours: the webhook's custom method, the log counter that only runs while Settings is open, and the
+// webhook presets. (The toast tests that were here moved to toast-feedback.test.js with the toast rules they pinned.)
 
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -50,33 +50,6 @@ test('a custom webhook method typed earlier is what Save stores when Custom is c
   post.fire('change');
   customRadio.fire('change');
   assert.equal(method.value, 'POST', 'an empty box changes nothing');
-});
-
-test('"notifications enabled" is read again after the setting changes, not up to 30 seconds later', async () => {
-  let enabled = false;
-  let reads = 0;
-  const storageListeners = [];
-  const context = vm.createContext({
-    console, Date, Promise, Map, Set, setTimeout, clearTimeout,
-    Logger: new Proxy({}, { get: () => () => {} }),
-    Utils: { getSettings: async () => { reads++; return { notificationsEnabled: enabled }; } },
-    chrome: { storage: { onChanged: { addListener: (fn) => storageListeners.push(fn) } } },
-    window: {}, document: { querySelector: () => null, addEventListener() {}, body: {} }
-  });
-  context.self = context;
-  vm.runInContext(read('modules/ui/notification-manager.js') + '\n;globalThis.NotificationHelper = NotificationHelper;', context);
-  const helper = context.NotificationHelper;
-  assert.equal(await helper.areNotificationsEnabled(), false);
-  enabled = true;
-  assert.equal(await helper.areNotificationsEnabled(), false, 'cached within its 30 seconds');
-  assert.equal(storageListeners.length, 1);
-  storageListeners[0]({ scrapfly_language_override: {} }, 'local');
-  assert.equal(await helper.areNotificationsEnabled(), false, 'other keys do not clear it');
-  storageListeners[0]({ scrapfly_settings: {} }, 'sync');
-  assert.equal(await helper.areNotificationsEnabled(), false, 'nor other areas');
-  storageListeners[0]({ scrapfly_settings: {} }, 'local');
-  assert.equal(await helper.areNotificationsEnabled(), true, 'a saved, imported or reset setting counts at once');
-  assert.equal(reads, 2);
 });
 
 test('the log counter starts only while Settings is open (pinned in the source: populating the form needs the whole page)', () => {
@@ -140,17 +113,4 @@ test('the preset list is built from WebhookBody.PRESETS, with brand names as the
   assert.deepEqual(options.slice(1).map(o => [o.value, o.textContent]), [['slack', 'Slack, Mattermost, Google Chat'], ['discord', 'Discord'], ['plain', 'Línea de texto']]);
   view.setupWebhookPayloadUI();
   assert.equal(options.length, 4, 'populating the form again does not list them twice');
-});
-
-test('the toast limit drops the oldest toast that goes away by itself, not a spinner that stays until it is closed, nor the newest', () => {
-  const context = vm.createContext({ console, Date, Promise, Map, Set, setTimeout, clearTimeout, Logger: new Proxy({}, { get: () => () => {} }),
-    Utils: { getSettings: async () => ({}) }, chrome: { storage: { onChanged: { addListener() {} } } }, window: {}, document: { querySelector: () => null, addEventListener() {}, body: {} } });
-  context.self = context;
-  vm.runInContext(read('modules/ui/notification-manager.js') + '\n;globalThis.ToastLimit = NotificationManager;', context);
-  const drop = (...kinds) => context.ToastLimit.toastToDrop(kinds.map(kind => ({ timeoutId: kind === 'auto' ? 7 : null })));
-  assert.equal(drop('auto', 'auto', 'auto'), 0, 'the oldest');
-  assert.equal(drop('spinner', 'auto', 'auto'), 1, 'the spinner stays, the next oldest goes');
-  assert.equal(drop('spinner', 'spinner', 'auto'), 0, 'nothing else but the newest: the oldest goes');
-  assert.equal(drop('auto', 'spinner', 'auto'), 0);
-  assert.equal(drop('spinner', 'auto'), 0);
 });

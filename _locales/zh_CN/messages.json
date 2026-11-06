@@ -1010,7 +1010,7 @@
     "message": "检测器已导入"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "已导入检测器，以下除外：{0}（在此版本中无效）"
+    "message": "已导入检测器，以下除外：{0}（在此版本中无效，或某个模式可能导致扫描卡住）"
   },
   "detectorsImportedKeptFmt": {
     "message": "已安装的官方规则未被替换：{0}"
@@ -2362,7 +2362,7 @@
     "message": "不记录字体、媒体和样式表请求。"
   },
   "mhUrlLimit2": {
-    "message": "只计入扫描前发出的请求；扫描在页面加载完成后运行。"
+    "message": "扫描在页面加载完成后运行；URL 范围为“全部”时，扫描之后发出的请求也会计入。"
   },
   "mhHeaderIntro": {
     "message": "检查页面自身请求和响应的标头，不包括脚本、XHR 调用或框架的标头。"
@@ -2419,7 +2419,7 @@
     "message": "不搜索框架或 Worker 中的代码，也不搜索扫描后加载的代码。"
   },
   "mhDomIntro": {
-    "message": "页面加载完成后，用 CSS 选择器在页面 body 中查找元素。"
+    "message": "页面加载完成后，用 CSS 选择器在页面（head 和 body）中查找元素。"
   },
   "mhDomHow1": {
     "message": "标签、`.class`、`#id` 或 `[attribute]`，单独或组合使用：`.g-recaptcha[data-sitekey]`。"
@@ -2434,7 +2434,7 @@
     "message": "不支持以下写法，规则将永远不会匹配：各部分之间的空格或 `>`、`:伪类`以及转义。"
   },
   "mhDomLimit2": {
-    "message": "不搜索 head、框架和 shadow root。不读取 `value` 属性；其他属性按前 100 个字符比较。"
+    "message": "不搜索框架和 shadow root。不读取 `value` 属性；其他属性按前 100 个字符比较。"
   },
   "mhWindowIntro": {
     "message": "检查页面定义的 JavaScript 全局变量，例如 `grecaptcha.render`。"
@@ -2467,7 +2467,7 @@
     "message": "只计入页面加载后最初几秒内的调用（最多 8 秒）。"
   },
   "mhJsHooksLimit2": {
-    "message": "看不到 Worker 或框架中的调用，同站框架中的内置目标除外。"
+    "message": "看不到 Worker 或框架中的调用，同源框架中的内置目标除外。"
   },
   "mhPayloadIntro": {
     "message": "搜索页面从任意框架发出的 POST、PUT、PATCH 和 DELETE 请求的正文。"
@@ -2483,6 +2483,9 @@
   },
   "mhPayloadLimit2": {
     "message": "不读取 WebSocket 消息。"
+  },
+  "mhRegexTextLimit": {
+    "message": "在你自己编写或导入的规则中，Regex 只读取文本（页面、脚本、请求正文）的前 100,000 个字符。普通文本、“全字匹配”和 Scrapfly 自带的规则会读取全部内容。"
   },
   "domCardTitle": {
     "message": "CSS 选择器"
@@ -3386,9 +3389,6 @@
   },
   "rulesUiInvalidRegex": {
     "message": "标记为正则表达式的模式无效，或可能导致扫描卡住。请修正，或关闭该行的 Regex。"
-  },
-  "rulesUiEnterMethodTypePrompt": {
-    "message": "输入检测方法类型（例如 HEADERS、CONTENT、URLs）："
   },
   "rulesUiMethodFallback": {
     "message": "方法"
@@ -5528,6 +5528,12 @@
   "workerOutdatedHint": {
     "message": "扩展程序的后台部分已过期。请在扩展程序页面重新加载该扩展程序，然后重试。"
   },
+  "settingsUnreadableHint": {
+    "message": "无法读取已保存的设置，因此扫描、历史记录和批量扫描已暂停。请在 设置 → 数据 → 重置 中修复。"
+  },
+  "rulesUnreadableHint": {
+    "message": "无法读取已保存的规则：正在使用内置规则，对规则的更改不会保存。要替换已保存的规则，请在“规则”标签页中导入规则文件并选择“全部替换”。"
+  },
   "historyFiltersLabel": {
     "message": "筛选历史记录"
   },
@@ -6613,5 +6619,14 @@
   },
   "historyCopyMarkdown": {
     "message": "复制为 Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "自动检查更新已关闭"
+  },
+  "restoreNotIncludedNote": {
+    "message": "备份不包含：Webhook 和分享信息，以及历史记录中被监视的页面。"
+  },
+  "settingsUnsavedCloseMessage": {
+    "message": "对设置的更改尚未保存。要在关闭前保存吗？"
   }
 }

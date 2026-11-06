@@ -243,11 +243,20 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     // Set up listener for when page is fully loaded
     const loadCompleteListener = (details) => {
         if (details.tabId === tabId && details.frameId === 0) {
+            // The check below belongs to this capture. It is over once its state is gone, replaced by another capture's, or
+            // stopping: a version written or a notice shown after that would be for a capture that no longer exists
+            const ownState = shapesecurityCaptureStateRef.get(tabId);
+            const alive = () => {
+                const current = shapesecurityCaptureStateRef.get(tabId);
+                return !!current && current === ownState && !current.stopping;
+            };
 
-            // Check window.__xr_bmobdb directly in page context
-            setTimeout(async () => {
-                const captureState = shapesecurityCaptureStateRef.get(tabId);
-                if (captureState && captureState.version === 'unknown') {
+            // Check window.__xr_bmobdb directly in page context. The timer is kept in the state (timeout), which every end of the
+            // capture clears together with the 60 s one
+            const versionTimer = setTimeout(async () => {
+                if (!alive()) return;
+                const captureState = ownState;
+                if (captureState.version === 'unknown') {
                     try {
                         // Inject script to check window.__xr_bmobdb in page context
                         const [result] = await chrome.scripting.executeScript({
@@ -257,6 +266,8 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                                 return typeof window.__xr_bmobdb !== 'undefined';
                             }
                         });
+                        // The capture may have ended while the page answered: its state must not be put back
+                        if (!alive()) return;
 
                         const exists = result && result.result;
                         const version = exists ? 'v1' : 'v2';
@@ -279,12 +290,14 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                         }
                     } catch (error) {
                         Logger.error('NETWORK', '[ShapeSecurity] Error detecting version:', error);
+                        if (!alive()) return;
                         captureState.version = 'v2'; // Default to V2 on error
                         shapesecurityCaptureStateRef.set(tabId, captureState);
                     }
                 }
 
                 // Show notification
+                if (!alive()) return;
                 const currentState = shapesecurityCaptureStateRef.get(tabId);
                 const version = currentState?.version || 'v2';
 
@@ -308,6 +321,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                     }
                 }
             }, 5000); // Wait 5 seconds for version detection
+            if (ownState) ownState.timeout = versionTimer;
 
             // Remove both listeners after monitoring notification shown
             chrome.webNavigation.onCommitted.removeListener(navigationListener);
@@ -388,11 +402,12 @@ async function autoStopCapture(tabId, reason = 'complete') {
         ? AdvancedJobManager.captureIdentity(captureState, tabId, 'shapesecurity')
         : { tabId, vendorId: 'shapesecurity', operation: 'capture' };
 
-    // Clear timeout if exists
+    // Clear the 60 s stop and the 5 s version check (state.timeout)
     if (typeof clearCaptureTimeout === 'function') {
         clearCaptureTimeout(captureState);
-    } else if (captureState.captureTimeout) {
-        clearTimeout(captureState.captureTimeout);
+    } else {
+        if (captureState.captureTimeout) clearTimeout(captureState.captureTimeout);
+        if (captureState.timeout) clearTimeout(captureState.timeout);
     }
 
     // Remove webRequest listeners
@@ -424,9 +439,16 @@ async function autoStopCapture(tabId, reason = 'complete') {
 
     Logger.network('[ShapeSecurity] Captured data:', capturedData);
 
+    // The 60 s can run out with nothing seen: there is nothing to keep then, as when Stop Capturing is pressed at that point
+    const nothingCaptured = !capturedData.cookie && capturedData.headers.length === 0;
+
     try {
-        await BaseInterceptorHelpers.saveToHistory(tabId, capturedData, { type: 'shapesecurity', expiryMinutes: 30 });
-        Logger.network('[ShapeSecurity] Capture data saved to history');
+        if (nothingCaptured) {
+            Logger.network('[ShapeSecurity] Nothing captured: nothing saved');
+        } else {
+            await BaseInterceptorHelpers.saveToHistory(tabId, capturedData, { type: 'shapesecurity', expiryMinutes: 30 });
+            Logger.network('[ShapeSecurity] Capture data saved to history');
+        }
 
         // Delete capture state
         if (typeof removeCaptureState === 'function') {
@@ -436,8 +458,13 @@ async function autoStopCapture(tabId, reason = 'complete') {
         }
 
         // Tell the popup, if it is open: its Stop card goes back to Start Capturing, and its capture lists and badge show this
-        // capture (the others of the capture tools do the same when theirs ends)
-        const completion = { type: AdvancedMessageTypes.SHAPESECURITY_CAPTURE_COMPLETED, captureData: capturedData, reason };
+        // capture (the others of the capture tools do the same when theirs ends). How many were seen, never the cookie's or the
+        // headers' values: they are in History, and this goes to every extension page
+        const completion = {
+            type: AdvancedMessageTypes.SHAPESECURITY_CAPTURE_COMPLETED,
+            captureData: nothingCaptured ? null : { cookies: capturedData.cookie ? 1 : 0, headers: capturedData.headers.length },
+            reason
+        };
         chrome.runtime.sendMessage(typeof AdvancedJobManager !== 'undefined'
             ? AdvancedJobManager.completionMessage(completionIdentity, completion)
             : { ...completion, ...completionIdentity }).catch(() => {
@@ -463,10 +490,11 @@ async function autoStopCapture(tabId, reason = 'complete') {
                 }
             }
 
+            // A capture that saw nothing is a timeout, not a completed capture
             await showNotification(tabId, {
                 module: 'Shape Security',
-                type: 'success',
-                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                type: nothingCaptured ? 'warning' : 'success',
+                title: nothingCaptured ? pageText('advFuncaptchaCaptureTimeout', 'Capture Timeout') : pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
                 message: message,
                 duration: 5000
             }).catch(err => {
@@ -504,6 +532,13 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
         return;
     }
     captureState.stopping = true;
+    // The 60 s stop and the 5 s version check are over with the capture
+    if (typeof clearCaptureTimeout === 'function') {
+        clearCaptureTimeout(captureState);
+    } else {
+        if (captureState.captureTimeout) clearTimeout(captureState.captureTimeout);
+        if (captureState.timeout) clearTimeout(captureState.timeout);
+    }
 
     // Nothing captured (no cookie, no header): there is nothing to keep. Stopping ends the capture without saving an empty entry or
     // announcing a completed one, as it does for the other capture tools

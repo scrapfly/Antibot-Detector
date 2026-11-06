@@ -17,6 +17,29 @@ DetectionUI.showUnavailableState = function() {
     return false;
 };
 
+/**
+ * What a screen reader is told about the tab: how many results the list keeps, how a scan ended. It goes into #detectionStatus,
+ * a live region that is always in the page (the state cards are display:none most of the time, and a live region that appears
+ * together with its text is not reliably read). The text it already holds is not set again; a new scan starts from '' so an
+ * outcome that repeats is heard again.
+ */
+DetectionUI.announce = function(text) {
+    if (typeof document === 'undefined') return;
+    const region = document.querySelector('#detectionStatus');
+    const next = String(text || '');
+    if (region && region.textContent !== next) region.textContent = next;
+};
+
+/** The list's count as the footer shows it ("Showing 1-2 of 3"), or the line that says the search and the chips leave nothing. */
+DetectionUI.announceList = function() {
+    const pager = this.paginationManager;
+    if (!pager || !Array.isArray(this.currentResults) || !this.currentResults.length) return;
+    const info = document.querySelector('#detectionPagination .pagination-info');
+    DetectionUI.announce(pager.filteredItems.length
+      ? (info ? info.textContent : '')
+      : FormatUtils.t('historyNoResults', 'No entries match your search or filters.'));
+};
+
 /** Category icons on the scanning screen ("Anti-bot · Captcha · Fingerprint"), in each category's colour. */
 DetectionUI.paintScanIcons = function() {
     if (typeof document === 'undefined' || typeof FormatUtils === 'undefined') return;
@@ -30,6 +53,7 @@ DetectionUI.paintScanIcons = function() {
 DetectionUI.showLoadingState = function(message = 'Analyzing page…') {
     if (DetectionUI.showUnavailableState.call(this)) return;
     DetectionUI.paintScanIcons.call(this);
+    DetectionUI.announce('');
     this.isShowingResults = false;
     if (this.uiStateMachine) {
       if (this.uiStateMachine.getState() !== this.uiStates.ANALYZING) {
@@ -123,8 +147,7 @@ DetectionUI.handleLoadingTimeout = function() {
                   {
                     detection: this,
                     detectionEngine: this.detectionEngine,
-                    detectorManager: this.detectorManager,
-                    history: this.history
+                    detectorManager: this.detectorManager
                   },
                   response.data
                 );
@@ -364,6 +387,9 @@ DetectionUI.showEmptyState = function(options = {}) {
     }
 
     DetectionUI.applyEmptyStateCopy.call(this, options);
+    // The card's title is how the scan ended: Nothing Detected, Scan failed, No completed scan...
+    const cardTitle = emptyState?.querySelector('.state-card-title');
+    DetectionUI.announce(cardTitle ? cardTitle.textContent : '');
 
     // A page with no completed scan (none yet, failed, interrupted) can be scanned again in one click; a page that cannot
     // be scanned, and a scan that found nothing, have nothing to offer
@@ -401,6 +427,7 @@ DetectionUI.showDisabledState = function(isBlacklisted = !!this.blacklistedDomai
     this.closeDetectionModal();
     this.hideLoadingState();
     this.clearLoadingTimeout(); // Clear timeout when showing disabled state
+    DetectionUI.announce('');
     const disabledState = document.querySelector('#disabledState');
     const blacklistWarning = document.querySelector('#blacklistWarning');
     const emptyState = document.querySelector('#emptyState');
@@ -642,8 +669,9 @@ DetectionUI.updateStats = function(detections) {
     if (totalDetections > 0) {
       const t = (key, fallback) => (typeof I18n !== 'undefined' ? I18n.tr(key, fallback) : fallback);
       const detectionsTip = FormatUtils.detectionsTip(detections, t('statDetections', 'Detections'));
-      const confidenceTip = FormatUtils.confidenceTip(detections, `${t('statConfidence', 'Confidence')}: ${avgConfidence}%`);
-      const difficultyTip = FormatUtils.difficultyTip(detections, difficulty, `${t('statDifficulty', 'Difficulty')}: ${difficultyText}`);
+      // "Label: value" is written by the translators (French puts a space before the colon): the keys the details dialog uses
+      const confidenceTip = FormatUtils.confidenceTip(detections, FormatUtils.t('clipboardConfidenceFmt', 'Confidence: {0}%', avgConfidence));
+      const difficultyTip = FormatUtils.difficultyTip(detections, difficulty, FormatUtils.t('clipboardDifficultyFmt', 'Difficulty: {0}', difficultyText));
       FormatUtils.setTip(tile(detectionsCount), detectionsTip.title, detectionsTip.detail, detectionsTip.rows);
       FormatUtils.setTip(tile(overallConfidence), confidenceTip.title, confidenceTip.detail, confidenceTip.rows);
       FormatUtils.setTip(tile(difficultyLevel), difficultyTip.title, difficultyTip.detail, difficultyTip.rows);
@@ -1024,7 +1052,7 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
           tone: FormatUtils.confidenceTone(match.baseConfidence ?? match.confidence)
         }));
     const confidenceTip = {
-      title: `${FormatUtils.t('statConfidence', 'Confidence')}: ${Math.round(confidence)}%`,
+      title: FormatUtils.t('clipboardConfidenceFmt', 'Confidence: {0}%', Math.round(confidence)),
       detail: combos.length
         ? FormatUtils.t('tipConfidenceFromCombinations', 'From the matched combinations')
         : (matchList.length === 1
@@ -1034,7 +1062,7 @@ DetectionUI.buildDetectionCardHtml = function(detection, index, isSingleResult =
     };
     const ownDifficulty = DetectionUtils.normalizeDifficulty(detection.difficulty || detection.detector?.difficulty);
     const difficultyTip = {
-      title: `${FormatUtils.t('statDifficulty', 'Difficulty')}: ${difficultyText}`,
+      title: FormatUtils.t('clipboardDifficultyFmt', 'Difficulty: {0}', difficultyText),
       detail: ownDifficulty
         ? FormatUtils.t('tipDifficultyFromRule', 'Set by this detector')
         : FormatUtils.t('tipDifficultyFromCategoryFmt', 'Default for {0}', FormatUtils.categoryLabel(FormatUtils.categoryKey(detection)))

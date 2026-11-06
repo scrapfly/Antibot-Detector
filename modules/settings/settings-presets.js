@@ -26,6 +26,8 @@
         { path: 'history.historyBackup', value: 'off', key: 'presetBackupOff', label: 'Automatic History backups are off' },
         { path: 'history.historyClearOnClose', value: true, key: 'presetClearOnClose', label: 'History is cleared when the browser closes' },
         { path: 'webhook.enableWebhook', value: false, key: 'presetWebhookOff', label: 'The webhook is off' },
+        // The check fetches the release from GitHub: that is a request out, so "sends nothing out" has to turn it off too
+        { path: 'updates.autoUpdate', value: false, key: 'presetAutoUpdateOff', label: 'Automatic update checks are off' },
         { path: 'notificationsEnabled', value: false, key: 'presetNotificationsOff', label: 'Notifications are off' },
         { path: 'jsApi.enableJsApi', value: false, key: 'presetJsApiOff', label: 'The JS API is off' },
         { path: 'debugMode', value: false, key: 'presetDebugOff', label: 'Debug mode is off' },

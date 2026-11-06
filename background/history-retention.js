@@ -15,7 +15,10 @@
  * Pinned entries are exempt from all four (and from the size limit in
  * HistoryStore): the user chose to keep them.
  * Every write also stays under the size History may take (HistoryStore.write: 6 MB, or the size the person chose),
- * and on start a history saved by an older build is compacted once.
+ * and on start a history saved by an older build is compacted: once per browser session and per version (every write
+ * keeps it compact, and the compaction reads, parses and writes all of it), not at every service-worker start.
+ * The webhook's record of recent deliveries names pages, so it goes where History's own record goes: with Clear on close,
+ * and when History is emptied (forgetDeliveries).
  * Settings that cannot be read (the storage does not answer, or what is stored is not JSON or not an object) are not
  * "no settings": the rules above do nothing until they read again (readConfig), and the size is the largest anyone can have
  * chosen (HistoryStore.currentBudget), where the defaults would take entries the person asked to keep.
@@ -36,6 +39,8 @@ const HistoryRetention = {
     MAX_FINGERPRINT_DAYS: 3650,
     DAY_MS: 24 * 60 * 60 * 1000,
     DEBOUNCE_MS: 1500,
+    // In memory only (chrome.storage.session): "this version compacted the stored History in this browser session"
+    COMPACTED_KEY: 'session_history_compacted',
 
     _timer: null,
     _reason: null,
@@ -195,6 +200,8 @@ const HistoryRetention = {
             const kept = items.filter(item => item && item.pinned === true);
             return kept.length === items.length ? { result: 0 } : { items: kept, result: items.length - kept.length };
         }, chrome.storage.local);
+        // The record of webhook deliveries names pages too: it goes with History's, even when History had nothing left to clear
+        await this.forgetDeliveries();
         if (removed > 0) this._log(`[HistoryRetention] Cleared ${removed} history entries (${reason})`);
         return removed;
     },
@@ -267,6 +274,7 @@ const HistoryRetention = {
 
         chrome.storage.onChanged.addListener((changes, namespace) => {
             if (namespace !== 'local') return;
+            if (changes.scrapfly_history && this.isEmptied(changes.scrapfly_history.newValue)) this.forgetDeliveries();
             if (changes.scrapfly_settings) this.schedule('settings_saved');
             else if (changes.scrapfly_history && changes.scrapfly_history.newValue !== undefined) this.schedule('history_write');
         });
@@ -295,13 +303,13 @@ const HistoryRetention = {
 
         // History saved by older builds (pretty-printed, full detection data)
         // can fill the 10 MB storage quota on its own; shrink it first
-        this.compactStored()
+        this.compactOnStart()
             .catch((error) => this._warn('[HistoryRetention] Compaction failed:', error))
             .then(() => this.run('startup'))
             .catch((error) => this._warn('[HistoryRetention] Run failed:', error));
     },
 
-    /** Rewrite stored history compactly when it is not already. */
+    /** Rewrite stored history compactly when it is not already, and note that this version did it in this browser session. */
     async compactStored() {
         if (typeof HistoryStore === 'undefined' || !HistoryStore.compact) return null;
         const result = await HistoryStore.compact(chrome.storage.local);
@@ -310,7 +318,68 @@ const HistoryRetention = {
             this._log(`[HistoryRetention] Compacted history ${mb(result.before)} MB -> ${mb(result.after)} MB`
                 + (result.dropped ? `, ${result.dropped} oldest entries over the size limit removed` : ''));
         }
+        await this.markCompacted();
         return result;
+    },
+
+    /**
+     * The compaction of a service-worker start. A worker starts many times a day, and the compaction reads, parses and
+     * re-serializes the whole History; every write (HistoryStore.write: slim entries, compact JSON, cut to the size limit)
+     * already leaves it compact, so it has work only for a History an older build wrote: once per version, and once per
+     * browser session (the mark is in memory). Saving the settings compacts anyway (run('settings_saved')): the size limit
+     * may have been lowered. Without session storage, or with an unreadable mark, it runs as it always did.
+     */
+    async compactOnStart() {
+        if (await this.compactedAlready()) return null;
+        return this.compactStored();
+    },
+
+    _version() {
+        try { return String(chrome.runtime.getManifest().version || ''); } catch (_) { return ''; }
+    },
+
+    _memory() {
+        return typeof chrome !== 'undefined' && chrome.storage && chrome.storage.session ? chrome.storage.session : null;
+    },
+
+    async compactedAlready() {
+        const area = this._memory();
+        const version = this._version();
+        if (!area || !version) return false;
+        try {
+            const mark = (await area.get(this.COMPACTED_KEY))[this.COMPACTED_KEY];
+            return !!mark && mark.version === version;
+        } catch (_) {
+            return false;
+        }
+    },
+
+    async markCompacted() {
+        const area = this._memory();
+        const version = this._version();
+        if (!area || !version) return;
+        try { await area.set({ [this.COMPACTED_KEY]: { version } }); } catch (_) { /* a mark that cannot be kept only means the next start compacts */ }
+    },
+
+    /**
+     * The webhook's record of recent deliveries (storage.local, where it outlives the browser) names pages, so it goes where
+     * History's own record goes. Never fails: History is cleared whether or not the record can be.
+     */
+    forgetDeliveries() {
+        if (typeof SettingsRuntime === 'undefined' || typeof SettingsRuntime.clearWebhookLog !== 'function') return Promise.resolve();
+        try { return Promise.resolve(SettingsRuntime.clearWebhookLog()).catch(() => {}); } catch (_) { return Promise.resolve(); }
+    },
+
+    /** Was History written with no entry in it, or removed? A History with entries is bigger than 200 characters and is not parsed. */
+    isEmptied(value) {
+        if (value === undefined) return true;
+        let stored = value;
+        if (typeof stored === 'string') {
+            if (stored.length >= 200) return false;
+            try { stored = JSON.parse(stored); } catch (_) { return false; }
+        }
+        const items = Array.isArray(stored) ? stored : (stored && stored.items);
+        return Array.isArray(items) && items.length === 0;
     },
 
     _log(message) {
