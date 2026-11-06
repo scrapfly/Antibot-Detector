@@ -6613,5 +6613,8 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown के रूप में कॉपी करें"
+  },
+  "presetAutoUpdateOff": {
+    "message": "स्वचालित अद्यतन जांच बंद है"
   }
 }

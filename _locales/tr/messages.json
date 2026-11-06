@@ -6613,5 +6613,8 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown olarak kopyala"
+  },
+  "presetAutoUpdateOff": {
+    "message": "Güncellemelerin otomatik kontrolü kapalı"
   }
 }

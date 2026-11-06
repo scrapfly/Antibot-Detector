@@ -6613,5 +6613,8 @@
   },
   "historyCopyMarkdown": {
     "message": "Copiar como Markdown"
+  },
+  "presetAutoUpdateOff": {
+    "message": "A verificação automática de atualizações está desativada"
   }
 }
