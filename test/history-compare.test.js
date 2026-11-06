@@ -156,6 +156,15 @@ test('rangeDates(): the two dates of the range line, with their seconds only whe
   assert.deepEqual(C.rangeDates({ earlier: { timestamp: 1000 }, later: { timestamp: 5000 } }, { short, long }), ['long 1', 'long 5'], 'two scans in one minute: the seconds tell them apart');
 });
 
+test('optionDates(): the "Compare with" list keeps the seconds only for scans whose line would read the same as another\'s', () => {
+  const short = (ms) => `short ${Math.floor(ms / 60000)}`;
+  const long = (ms) => `long ${ms / 1000}`;
+  const scans = [{ time: 1000, count: 2 }, { time: 5000, count: 2 }, { time: 9000, count: 3 }, { time: 61000, count: 2 }];
+  assert.deepEqual(C.optionDates(scans, { short, long }), ['long 1', 'long 5', 'short 0', 'short 1'],
+    'two scans in one minute with the same count get their seconds; the same minute with another count, or another minute, does not');
+  assert.deepEqual(C.optionDates([], { short, long }), []);
+});
+
 test('view(): the four counts, and a group for each kind that has rows, in the order added, removed, changed, unchanged', () => {
   const r = compared(
     [det('Akamai', 'Anti-Bot', 85, ['cookie']), det('Cloudflare', 'Anti-Bot', 70, ['cookie']), det('Turnstile', 'CAPTCHA', 90, ['url']), det('Canvas Fingerprint', 'Fingerprint', 30)],
@@ -256,7 +265,8 @@ function compareDialog(items, entryToCompare) {
   const listeners = [];
   const copied = [];
   const infos = [];
-  const document = { createElement: (tag) => new Dom(tag), activeElement: null };
+  // The list is not part of these tests: closing the dialog finds no card to give the focus back to
+  const document = { createElement: (tag) => new Dom(tag), activeElement: null, querySelector: () => null };
   const window = {
     addEventListener: (type, fn, capture) => listeners.push({ type, fn, capture }),
     removeEventListener: (type, fn) => { const at = listeners.findIndex((l) => l.type === type && l.fn === fn); if (at !== -1) listeners.splice(at, 1); }
