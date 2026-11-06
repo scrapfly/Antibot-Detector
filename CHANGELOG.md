@@ -16,6 +16,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings: Back up everything keeps official rules you switched off and your theme, and Restore says what a backup never holds.
 - Rules: a regular expression in a rule you write or import reads only the first 100,000 characters of a page, script or request body.
 - Scans no longer download stylesheets again or copy the page's HTML when no rule reads them, and a page-element rule saves one match with its count.
+- Copy, export, delete and save always confirm with a message; the Notifications switch now only silences detection alerts.
 
 ### Fixed
 
@@ -45,6 +46,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: after pinning, adding a note or deleting, the keyboard stays on that entry or moves to the next one.
 - History: screen readers hear what each number on a card means, search results are announced, and cards take fewer Tab presses (Scrape with Scrapfly is also in the … menu).
 - History details: each detection header is named after its detection, matched values copy from the keyboard, and confidence and difficulty tips follow your language.
+- Messages no longer push each other off the screen: each stays its full time, and hovering or focusing one pauses it.
+- Arabic: messages, the language list, Advanced How it works steps and Rules help bullets follow right-to-left layout, and change arrows point the right way.
 
 ## [3.1.3] - 2026-11-05
 
