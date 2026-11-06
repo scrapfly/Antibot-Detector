@@ -1550,7 +1550,8 @@ async function scenario(name, fn) {
     await clearNotes();
     let page = await openHistorySettings();
     try {
-      await page.waitForFunction(() => /57 entries/.test(document.querySelector('#historyMeterText')?.textContent || ''), null, { polling: 250, timeout: 8000 });
+      // 3.1.4: the count goes after a label ("entries: 57"), so it reads right for one and for every plural class
+      await page.waitForFunction(() => /entries: 57\b/.test(document.querySelector('#historyMeterText')?.textContent || ''), null, { polling: 250, timeout: 8000 });
       const meter = await page.evaluate(() => ({ text: document.querySelector('#historyMeterText').textContent, warn: document.querySelector('#historyMeter').classList.contains('is-warn'), now: document.querySelector('#historyMeter').getAttribute('aria-valuenow'), note: document.querySelector('#historyMeterNote').textContent, noteHidden: document.querySelector('#historyMeterNote').hidden }));
       assert.match(meter.text, /MB of .*used/);
       assert.ok(Number(meter.now) >= 90, `meter at ${meter.now}%`);
