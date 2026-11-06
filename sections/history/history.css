@@ -1603,51 +1603,311 @@
   color: var(--g-e0e0e0);
 }
 
-/* Compare scans dialog */
-.history-compare-result {
+/* Compare scans dialog: the scan to compare with, four counts, then the protections in groups. Only the groups scroll. */
+.notification-confirm-body:has(> .history-compare) {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-  padding-inline-end: 2px;
 }
 
-.history-compare-group h4 {
-  margin: 0 0 4px;
-  font-size: 11.5px;
-  font-weight: 600;
+.history-compare {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
 }
 
-.history-compare-group ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.history-compare-pick {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
+  min-width: 0;
 }
 
-.history-compare-group li {
-  font-size: 12px;
+/* One line: a long date is cut with an ellipsis, the whole text is the list's hover text */
+.history-compare .history-dialog-input {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The other scan's page path, shown when its address differs from this entry's: an address, so left to right and in the mono face.
+   Two lines at most, cut with an ellipsis: what tells two scans of one page apart is the query at its end */
+.history-compare-where {
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  /* A path is not words: break anywhere so both lines are full. A right-aligned (Arabic) second line that is not full
+     loses its ellipsis in Chrome */
+  word-break: break-all;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--text-secondary);
+}
+
+.history-compare-where[hidden] {
+  display: none;
+}
+
+[dir="rtl"] .history-compare-where {
+  text-align: right;
+}
+
+.history-compare-range {
   line-height: 1.4;
-  color: var(--text-primary);
-  padding-inline-start: 10px;
-  border-inline-start: 2px solid var(--text-secondary);
   overflow-wrap: anywhere;
 }
 
-.history-compare-added h4 { color: var(--success-light); }
-.history-compare-added li { border-color: var(--success-light); }
-.history-compare-removed h4 { color: var(--danger-light); }
-.history-compare-removed li { border-color: var(--danger-light); }
-.history-compare-changed h4 { color: var(--warning-light); }
-.history-compare-changed li { border-color: var(--warning-light); }
-.history-compare-same h4 { color: var(--text-secondary); }
+/* Four counts, the number in the colour of its group; a kind with none is dimmed. Not buttons: they filter nothing,
+   so they are filled tiles, not the bordered pills of the filter chips */
+.history-compare-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history-compare-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: var(--g-262626);
+  border: 1px solid var(--g-404040);
+  border-radius: 999px;
+}
+
+.history-compare-chip.is-zero {
+  opacity: 0.45;
+}
+
+.history-compare-chip-count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.history-compare-chip.is-added .history-compare-chip-count { color: var(--p-4ade80); }
+.history-compare-chip.is-removed .history-compare-chip-count { color: var(--p-fca5a5); }
+.history-compare-chip.is-changed .history-compare-chip-count { color: var(--p-fcd34d); }
+
+.history-compare-result {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* room for a focus ring inside the scrolling area, taken back so the groups line up with the rest */
+  padding: 2px;
+  margin: -2px;
+}
+
+.history-compare-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-compare-heading {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+/* Text colours that read on both themes (darker shades in the light one) */
+.history-compare-added .history-compare-heading { color: var(--p-4ade80); }
+.history-compare-removed .history-compare-heading { color: var(--p-fca5a5); }
+.history-compare-changed .history-compare-heading { color: var(--p-fcd34d); }
+.history-compare-same .history-compare-heading { color: var(--text-secondary); }
+
+/* Unchanged's heading is a button (it folds when long); it looks like the other headings */
+.history-compare-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.history-compare-toggle:hover {
+  color: var(--text-primary);
+}
+
+.history-compare-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+.history-compare-chevron {
+  display: inline-flex;
+  flex: none;
+}
+
+/* Points along the reading direction while folded, down when open */
+[dir="rtl"] .history-compare-chevron {
+  transform: scaleX(-1);
+}
+
+.history-compare-same.is-open .history-compare-chevron,
+[dir="rtl"] .history-compare-same.is-open .history-compare-chevron {
+  transform: rotate(90deg);
+}
+
+.history-compare-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  background: var(--g-262626);
+  border: 1px solid var(--g-404040);
+  border-radius: 8px;
+}
+
+.history-compare-list[hidden] {
+  display: none;
+}
+
+/* A row: the category's icon | the name | the score; a changed protection's evidence goes on a second line under the name */
+.history-compare-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  column-gap: 8px;
+  row-gap: 1px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-primary);
+}
+
+.history-compare-row + .history-compare-row {
+  border-top: 1px solid var(--g-3a3a3a);
+}
+
+.history-compare-row .category-icon {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  margin-top: 2px;
+}
+
+.history-compare-row .category-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.history-compare-name {
+  grid-area: 1 / 2;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* The category's name, for a screen reader: its icon says it to everyone else */
+.history-compare-cat {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Scores line up: tabular figures, flush with the end of the row */
+.history-compare-conf {
+  grid-area: 1 / 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-height: 18px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.history-compare-from,
+.history-compare-to {
+  min-width: 32px;
+  text-align: end;
+}
+
+.history-compare-to {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+[dir="rtl"] .history-compare-arrow {
+  transform: scaleX(-1);
+}
+
+/* A score that did not move in a group where others did: it keeps the room of the difference, so the scores stay in a column */
+.history-compare-changed .history-compare-conf:not(.is-moved) {
+  margin-inline-end: 38px;
+}
+
+/* The difference: its sign and direction say it, the colour only helps */
+.history-compare-delta {
+  box-sizing: border-box;
+  min-width: 34px;
+  direction: ltr;
+  unicode-bidi: isolate;
+  padding: 0 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+}
+
+.history-compare-delta.is-up {
+  color: var(--p-4ade80);
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(52, 211, 153, 0.34);
+}
+
+.history-compare-delta.is-down {
+  color: var(--p-fca5a5);
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.34);
+}
+
+.history-compare-notes {
+  grid-area: 2 / 2 / auto / -1;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
 
 .history-compare-identical {
   margin: 0;
   font-size: 12px;
+  line-height: 1.45;
   color: var(--text-secondary);
 }
 

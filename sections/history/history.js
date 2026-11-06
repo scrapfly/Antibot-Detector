@@ -905,6 +905,8 @@ class History {
   /**
    * History → … → Compare with…: a dialog with the entry's other saved scans of the same page to pick from, and what
    * changed between the two (HistoryCompare): protections added, removed, changed in confidence or evidence, unchanged.
+   * A scan in the list is one short line (date without seconds, count); when it is of another address its page path shows
+   * under the list. Four counts sum the result up, then the protections in groups; Unchanged is folded when it is long.
    * "Copy as Markdown" copies that report; Close leaves.
    * @param {object} item - History entry
    * @returns {Promise<boolean>} false when the page has no other scan
@@ -918,83 +920,165 @@ class History {
     }
     const categoryLabel = (key) => FormatUtils.categoryLabel(key);
     const methodLabel = (type) => this.getMethodLabel(String(type).toLowerCase());
+    // The report and the hover texts keep the seconds; the list and the range line show a date without them
     const dateText = (ms) => FormatUtils.formatDateTime(ms);
-    const where = (entry) => {
-      if (entry.url === item.url) return '';
-      try { const u = new URL(entry.url); return ` · ${(u.pathname + u.search).slice(0, 40)}`; } catch (_) { return ''; }
+    const shortDate = (ms) => HistoryCompare.shortDateTime(ms, FormatUtils.uiLocale());
+    const countOf = (candidate) => (candidate.detections || []).length;
+    const colourOf = (key) => this.detectorManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
+    const make = (tag, className, text) => {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
     };
+    const hover = (node, text) => {
+      if (text) { FormatUtils.setTip(node, text); return; }
+      node.removeAttribute('title');
+      node.removeAttribute('data-tip');
+    };
+    const uid = `history-compare-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+    const CHEVRON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
-    const select = document.createElement('select');
-    select.className = 'select-field history-dialog-input ui-select';
-    // Each option is a translated sentence (date, count, path): its direction is the language's, not forced left to right
+    // The scans to pick from, one short line each: a long one would wrap inside the closed dropdown
+    const select = make('select', 'select-field history-dialog-input ui-select');
+    // Each option is a translated sentence (date, count): its direction is the language's, not forced left to right
     select.setAttribute('dir', 'auto');
     for (const candidate of candidates) {
-      const option = document.createElement('option');
+      const option = make('option', '', t('historyCompareOptionFmt', '{0} · {1} found', shortDate(HistoryCompare.timeOf(candidate)), countOf(candidate)));
       option.value = candidate.id;
-      option.textContent = t('historyCompareOptionFmt', '{0} · {1} found', dateText(candidate.timestamp), (candidate.detections || []).length) + where(candidate);
       select.appendChild(option);
     }
     const first = HistoryCompare.pickDefault(candidates, item);
     select.value = first ? first.id : candidates[0].id;
 
-    const field = document.createElement('label');
-    field.className = 'history-dialog-field';
-    const label = document.createElement('span');
-    label.className = 'history-dialog-label';
-    label.textContent = t('historyCompareWith', 'Compare with');
-    field.append(label, select);
-    const range = document.createElement('div');
-    range.className = 'history-dialog-count';
+    const field = make('label', 'history-dialog-field');
+    field.append(make('span', 'history-dialog-label', t('historyCompareWith', 'Compare with')), select);
+    // Under the list, when the other scan is of another address (another query or fragment): its page path, the whole address on hover
+    const where = make('div', 'history-compare-where');
+    where.id = `${uid}-where`;
+    where.setAttribute('dir', 'ltr');
+    where.hidden = true;
+    const pick = make('div', 'history-compare-pick');
+    pick.append(field, where);
+    const range = make('div', 'history-dialog-count history-compare-range');
     range.setAttribute('role', 'status');
-    const result = document.createElement('div');
-    result.className = 'history-compare-result';
-    const form = document.createElement('div');
-    form.className = 'history-dialog-form history-compare';
-    form.append(field, range, result);
+    const summary = make('ul', 'history-compare-summary');
+    summary.setAttribute('role', 'list');
+    const result = make('div', 'history-compare-result');
+    const form = make('div', 'history-dialog-form history-compare');
+    form.append(pick, range, summary, result);
 
     let current = null;
-    const group = (kind, key, fallback, rows, render) => {
-      if (!rows.length) return;
-      const section = document.createElement('section');
-      section.className = `history-compare-group history-compare-${kind}`;
-      const heading = document.createElement('h4');
-      heading.textContent = `${t(key, fallback)} (${rows.length})`;
-      const list = document.createElement('ul');
-      for (const row of rows) {
-        const li = document.createElement('li');
-        li.textContent = render(row);
-        list.appendChild(li);
+    let unchangedOpen = null; // what the person chose for Unchanged (true = open), kept when another scan is picked
+
+    // The four counts: a kind with none stays, dimmed, so the result reads at a glance
+    const renderChip = (chip) => {
+      const tile = make('li', `history-compare-chip is-${chip.kind}${chip.count ? '' : ' is-zero'}`);
+      tile.append(make('span', 'history-compare-chip-label', chip.label), make('span', 'history-compare-chip-count', String(chip.count)));
+      return tile;
+    };
+    // A protection: the category's icon (its name stays for a screen reader), the name, the score; a changed one shows the
+    // move with its difference, and the change of evidence on a line under the name
+    const renderRow = (row) => {
+      const line = make('li', 'history-compare-row');
+      const icon = make('span', 'category-icon');
+      icon.setAttribute('aria-hidden', 'true');
+      icon.title = categoryLabel(row.category);
+      icon.innerHTML = FormatUtils.categoryIconSvg(row.category);
+      const colour = colourOf(row.category);
+      if (colour) icon.style.color = colour;
+      // A name is the person's own text (a custom rule): it takes its own direction
+      const name = make('span', 'history-compare-name');
+      const text = make('span', '', row.name);
+      text.setAttribute('dir', 'auto');
+      name.appendChild(text);
+      line.append(icon, name, make('span', 'history-compare-cat', categoryLabel(row.category)));
+      if (row.from !== null) {
+        const move = make('span', 'history-compare-conf is-moved');
+        move.append(make('span', 'history-compare-from', `${row.from}%`), make('span', 'history-compare-arrow', '→'), make('span', 'history-compare-to', `${row.to}%`));
+        if (row.deltaText) move.appendChild(make('span', `history-compare-delta is-${row.tone}`, row.deltaText));
+        line.appendChild(move);
+      } else if (row.confidence !== null) {
+        line.appendChild(make('span', 'history-compare-conf', `${row.confidence}%`));
+      }
+      if (row.notes) line.appendChild(make('span', 'history-compare-notes', row.notes));
+      return line;
+    };
+    const renderGroup = (group, identical) => {
+      const section = make('section', `history-compare-group history-compare-${group.kind}`);
+      const heading = make('h4', 'history-compare-heading');
+      const list = make('ul', 'history-compare-list');
+      list.setAttribute('role', 'list');
+      for (const row of group.rows) list.appendChild(renderRow(row));
+      if (group.collapsible) {
+        // A long Unchanged is folded: its heading is a real button, so the keyboard and a screen reader can open it
+        const toggle = make('button', 'history-compare-toggle');
+        toggle.setAttribute('type', 'button');
+        list.id = `${uid}-${group.kind}`;
+        toggle.setAttribute('aria-controls', list.id);
+        const chevron = make('span', 'history-compare-chevron');
+        chevron.setAttribute('aria-hidden', 'true');
+        chevron.innerHTML = CHEVRON;
+        toggle.append(chevron, make('span', 'history-compare-toggle-text', group.title));
+        const setOpen = (open) => {
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          list.hidden = !open;
+          section.classList.toggle('is-open', open);
+        };
+        toggle.addEventListener('click', () => {
+          unchangedOpen = toggle.getAttribute('aria-expanded') !== 'true';
+          setOpen(unchangedOpen);
+        });
+        // Two identical scans have nothing but Unchanged to show: it is open
+        setOpen(identical || (unchangedOpen === null ? group.open : unchangedOpen));
+        heading.appendChild(toggle);
+      } else {
+        heading.textContent = group.title;
       }
       section.append(heading, list);
-      result.appendChild(section);
+      return section;
     };
-    const describe = (row) => `${row.name} · ${categoryLabel(row.category)}${row.confidence === null ? '' : ` · ${row.confidence}%`}`;
     const refresh = () => {
-      const other = candidates.find(c => c.id === select.value);
+      const other = candidates.find((c) => c.id === select.value) || candidates[0];
       current = HistoryCompare.compare(item, other);
-      range.textContent = t('historyCompareRangeFmt', 'From {0} to {1}', dateText(current.earlier.timestamp), dateText(current.later.timestamp));
+      const model = HistoryCompare.view(current, { t, methodLabel });
+      const rangeText = (from, to) => t('historyCompareRangeFmt', 'From {0} to {1}', from, to);
+      range.textContent = rangeText(...HistoryCompare.rangeDates(current, { short: shortDate, long: dateText }));
+      // Hover texts go through the shared tooltip (data-tip): a plain title would be adopted once and then go stale.
+      // The list has none: it has the focus when the dialog opens, and a tip would cover the dialog straight away
+      hover(range, rangeText(dateText(current.earlier.timestamp), dateText(current.later.timestamp)));
+      const place = HistoryCompare.whereText(item, other);
+      where.hidden = !place;
+      where.textContent = place;
+      hover(where, place ? String(other.url) : '');
+      if (place) select.setAttribute('aria-describedby', where.id); else select.removeAttribute('aria-describedby');
+      summary.replaceChildren(...model.chips.map(renderChip));
       result.replaceChildren();
-      if (current.identical) {
-        const same = document.createElement('p');
-        same.className = 'history-compare-identical';
-        same.textContent = t('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.');
-        result.appendChild(same);
-      }
-      group('added', 'historyCompareAdded', 'Added', current.added, describe);
-      group('removed', 'historyCompareRemoved', 'Removed', current.removed, describe);
-      group('changed', 'historyCompareChanged', 'Changed', current.changed, (row) => `${row.name} · ${categoryLabel(row.category)} · ${HistoryCompare.changeText(row, { t, methodLabel })}`);
-      group('same', 'historyCompareUnchanged', 'Unchanged', current.same, describe);
+      result.scrollTop = 0;
+      if (model.identical) result.appendChild(make('p', 'history-compare-identical', t('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.')));
+      for (const group of model.groups) result.appendChild(renderGroup(group, model.identical));
     };
     select.addEventListener('change', refresh);
     refresh();
 
-    const copy = await NotificationHelper.form({
-      title: t('historyCompareTitle', 'Compare scans'),
-      confirmText: t('historyCompareCopy', 'Copy as Markdown'),
-      cancelText: t('btnClose', 'Close'),
-      content: form,
-      focus: select
-    });
+    // The dialog answers Enter by closing with "Copy as Markdown": Enter on the Unchanged button is that button's own
+    const keepEnterOnToggle = (event) => {
+      const active = document.activeElement;
+      if (event.key === 'Enter' && active && active.classList && active.classList.contains('history-compare-toggle')) event.stopImmediatePropagation();
+    };
+    window.addEventListener('keydown', keepEnterOnToggle, true);
+    let copy;
+    try {
+      copy = await NotificationHelper.form({
+        title: t('historyCompareTitle', 'Compare scans'),
+        confirmText: t('historyCompareCopy', 'Copy as Markdown'),
+        cancelText: t('btnClose', 'Close'),
+        content: form,
+        focus: select
+      });
+    } finally {
+      window.removeEventListener('keydown', keepEnterOnToggle, true);
+    }
     if (copy && current) {
       await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
         host: item.hostname || this.getDomainFromUrl(item.url), address: String(item.url || '').replace(/[?#].*$/s, ''),
