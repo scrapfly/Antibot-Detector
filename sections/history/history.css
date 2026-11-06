@@ -13,6 +13,20 @@
   padding-bottom: 0;
 }
 
+/* Read by a screen reader only: the live regions (what a search leaves, that a value was copied) */
+#historyTab .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* History Header: full-width search + square "…" menu button */
 #historyTab .history-header {
   flex-shrink: 0;
@@ -205,7 +219,8 @@
   gap: 1px;
 }
 
-.history-menu[hidden] {
+.history-menu[hidden],
+.history-menu-item[hidden] {
   display: none;
 }
 
@@ -1257,18 +1272,22 @@
   text-overflow: ellipsis;
 }
 
+/* A button (Tab reaches it, Enter and Space copy), drawn as the box it was when it was a span: 24px with its border */
 .history-modal-method-value {
   cursor: pointer;
   grid-area: value;
+  box-sizing: border-box;
   min-width: 0;
+  width: 100%;
   max-width: 100%;
-  height: 22px;
-  padding: 0 6px;
+  height: 24px;
+  padding: 0 6px 2px;
   margin: 0;
   display: block;
   line-height: 20px;
   font-family: var(--font-mono);
   font-size: 11px;
+  text-align: start;
   color: var(--g-e0e0e0);
   background: var(--bg-primary);
   border: 1px solid var(--g-3d3d3d);
@@ -1276,6 +1295,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.history-modal-method-value:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .history-modal-method-item.copy-feedback {
