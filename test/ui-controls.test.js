@@ -88,7 +88,7 @@ test('every radio and dropdown the interface builds uses them', () => {
     lines.forEach((line, index) => {
       const near = lines.slice(index, index + 3).join('\n');
       if (/\.type = 'radio'/.test(line)) { radios++; assert.match(near, /ui-radio/, `${file}:${index + 1} builds a radio without the shared class`); }
-      if (/createElement\('select'\)/.test(line)) { selects++; assert.match(near, /ui-select/, `${file}:${index + 1} builds a dropdown without the shared arrow`); }
+      if (/createElement\('select'\)|make\('select'/.test(line)) { selects++; assert.match(near, /ui-select/, `${file}:${index + 1} builds a dropdown without the shared arrow`); }
     });
   }
   assert.equal(radios, 1, 'the restore dialog\'s Merge / Replace');
