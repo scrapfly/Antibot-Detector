@@ -4,6 +4,8 @@ class DetectorManager {
     static DELETED_OFFICIAL_KEY = 'scrapfly_deleted_official_detectors';
     // Official detector IDs installed by Rules → Update that this build does not bundle
     static REMOTE_OFFICIAL_KEY = 'scrapfly_remote_official_ids';
+    // While the stored rules cannot be read, the worker reads them again at most this often (each read is about 400 KB)
+    static UNREADABLE_RETRY_MS = 2000;
     constructor(categoryManager) {
         this.categoryManager = categoryManager || new CategoryManager();
         this.detectors = {};
@@ -34,7 +36,10 @@ class DetectorManager {
     watchStorage() {
         if (typeof chrome === 'undefined' || !chrome.storage?.onChanged?.addListener) return;
         chrome.storage.onChanged.addListener((changes, area) => {
-            if (area !== 'local' || !changes.scrapfly_detectors || !this.initialized) return;
+            if (area !== 'local' || !changes.scrapfly_detectors) return;
+            // Rules that could not be read and have just been written (repaired, or the storage answers again): the next
+            // initialize() reads them at once instead of waiting out readRetryAt
+            if (!this.initialized) { this.readRetryAt = 0; return; }
             const value = typeof StorageManager !== 'undefined'
                 ? StorageManager.parseStoredValue(changes.scrapfly_detectors.newValue, 'scrapfly_detectors')
                 : changes.scrapfly_detectors.newValue;
@@ -94,6 +99,14 @@ class DetectorManager {
      */
     static markUserEdited(edited, original) {
         if (!edited || !original) return edited;
+        if (original.userModified && !original.officialSnapshot) {
+            // Edited by an older build that kept no official copy: the copy before this edit is the person's too, so it is
+            // never kept as the official one (Reset would restore it, and its regexes would count as shipped ones)
+            delete edited.officialSnapshot;
+            edited.version = original.version;
+            edited.userModified = true;
+            return edited;
+        }
         edited.officialSnapshot = original.userModified && original.officialSnapshot
             ? original.officialSnapshot
             : DetectorManager.cleanDetectorCopy(original);
@@ -299,6 +312,8 @@ class DetectorManager {
                 // translations. The worker keeps the rules it has (the shipped ones while it has none), writes nothing, and
                 // leaves itself uninitialized, so the next initialize() reads again.
                 if (this.storageState === 'unreadable') {
+                    // ensureDetectorManagerInitialized() waits this long before it reads the rules again (a change of the key ends the wait)
+                    this.readRetryAt = Date.now() + DetectorManager.UNREADABLE_RETRY_MS;
                     if (this.getDetectorCount() === 0) await this.loadDetectorsFromIndex();
                     if (!this.unreadableTold) {
                         this.unreadableTold = true;
@@ -435,7 +450,32 @@ class DetectorManager {
      * Save all detector data to Chrome storage as 'scrapfly_detectors'
      * Uses StorageManager for consistent save patterns
      */
-    async saveDetectorsToStorage(detectors = this.detectors) {
+    /**
+     * Whether a read of the rules must wait (ensureDetectorManagerInitialized): the stored rules could not be read a moment ago
+     * and nothing has written them since.
+     */
+    readMustWait(now = Date.now()) {
+        return !this.initialized && this.storageState === 'unreadable' && Number.isFinite(this.readRetryAt) && now < this.readRetryAt;
+    }
+
+    /**
+     * Throws while the stored rules cannot be read: the rules in memory are the shipped ones (or the ones read before), so a
+     * save would write them over the person's custom rules, edits, switched-off rules and translations.
+     */
+    refuseWhileUnreadable() {
+        if (this.storageState !== 'unreadable') return;
+        const error = new Error('The stored rules cannot be read, so the rules are not saved');
+        error.code = 'rules_unreadable';
+        throw error;
+    }
+
+    /**
+     * @param {object} [detectors] - The rules to save (all of them)
+     * @param {{repair?: boolean}} [options] - repair: the person chose to replace the rules (an import with Replace All), so
+     *   the save goes ahead even while the stored rules cannot be read, and they can be read again after it
+     */
+    async saveDetectorsToStorage(detectors = this.detectors, { repair = false } = {}) {
+        if (!repair) this.refuseWhileUnreadable();
         try {
             // Deep clone detectors to avoid mutating the original
             const cleanDetectors = JSON.parse(JSON.stringify(detectors));
@@ -462,6 +502,7 @@ class DetectorManager {
             if (!success) {
                 throw new Error('StorageManager.saveToStorage returned false');
             }
+            if (repair && this.storageState === 'unreadable') this.storageState = 'loaded';
             this.detectors = detectors;
             this.notifyChange();
             return true;
@@ -510,6 +551,7 @@ class DetectorManager {
                 const categoryCount = Object.keys(categoriesData.categories || {}).length;
                 this.categoryManager.categories = categoriesData.categories;
                 this.categoryManager.initialized = categoryCount > 0;
+                this.categoryManager.storageState = 'loaded';
             }
 
             if (loaded.states['scrapfly_detectors'] === 'absent') {
@@ -599,7 +641,8 @@ class DetectorManager {
 
                 if (hasCorruption) {
                     await this.loadDetectorsFromIndex();
-                    await this.saveDetectorsToStorage();
+                    // (the stored value was read: this repair is not a save over rules that could not be)
+                    await this.saveDetectorsToStorage(this.detectors, { repair: true });
                     this.storageState = 'loaded';
                     return true;
                 }
@@ -613,7 +656,7 @@ class DetectorManager {
                 }
 
                 if (needsResave) {
-                    await this.saveDetectorsToStorage();
+                    await this.saveDetectorsToStorage(this.detectors, { repair: true });
                 }
 
                 this.storageState = 'loaded';
@@ -817,6 +860,7 @@ class DetectorManager {
      * @returns {Promise<{deleted: boolean, official: boolean, reason: (null|'not_found')}>}
      */
     async deleteDetector(category, detectorName) {
+        this.refuseWhileUnreadable();
         const detector = this.detectors[category]?.[detectorName];
         if (!detector) {
             return { deleted: false, official: false, reason: 'not_found' };
@@ -924,6 +968,7 @@ class DetectorManager {
      *   failed: string[], updateOnly: string[]}>}
      */
     async restoreOfficialDetectors(found, { fetchReleased = null } = {}) {
+        this.refuseWhileUnreadable();
         const { missing, updateOnly } = found || await this.getMissingOfficialDetectors();
         const restored = [];
         const failed = [];
@@ -979,6 +1024,7 @@ class DetectorManager {
      * @returns {Promise<number>} Number of detectors removed
      */
     async clearCustomDetectors() {
+        this.refuseWhileUnreadable();
         let removed = 0;
         for (const categoryDetectors of Object.values(this.detectors)) {
             for (const [key, detector] of Object.entries(categoryDetectors || {})) {
@@ -1074,7 +1120,8 @@ class DetectorManager {
             if (author === 'scrapfly' && DetectionUtils._officialDetectorIds && DetectionUtils._officialDetectorIds.has(imported.id)) delete imported.author;
             candidate[category][detector.id] = DetectorManager.applyDetectorFixups(imported);
         }
-        await this.saveDetectorsToStorage(candidate);
+        // Replace All is the person's own choice to replace the rules: it also repairs rules that cannot be read
+        await this.saveDetectorsToStorage(candidate, { repair: !merge });
         return true;
     }
 

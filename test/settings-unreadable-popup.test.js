@@ -76,3 +76,10 @@ test('the text exists in every language, names the same repair as the English on
     if (locale !== 'en') assert.notEqual(entry.message, english.message, `${locale} is translated`);
   }
 });
+
+test('the text says that no page is scanned either, not only that History and Bulk scan are paused', () => {
+  // While the settings cannot be read the worker installs no hooks and scans no page (DetectionEngineManager.noteSettingsUnreadable)
+  const english = JSON.parse(read('_locales/en/messages.json'))[KEY];
+  assert.match(english.message, /\bscanning, History and Bulk scan are paused\b/);
+  assert.match(read('modules/detection/engine/detection-engine-manager.js'), /no page is scanned until they can/, 'what the text describes');
+});

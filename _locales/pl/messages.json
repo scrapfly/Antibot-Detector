@@ -5529,7 +5529,10 @@
     "message": "Część rozszerzenia działająca w tle jest nieaktualna. Załaduj rozszerzenie ponownie na stronie rozszerzeń i spróbuj jeszcze raz."
   },
   "settingsUnreadableHint": {
-    "message": "Nie udało się odczytać zapisanych ustawień, więc historia i skanowanie zbiorcze są wstrzymane. Aby je naprawić, użyj opcji Ustawienia → Dane → Resetuj."
+    "message": "Nie udało się odczytać zapisanych ustawień, więc skanowanie stron, historia i skanowanie zbiorcze są wstrzymane. Aby je naprawić, użyj opcji Ustawienia → Dane → Resetuj."
+  },
+  "rulesUnreadableHint": {
+    "message": "Nie udało się odczytać zapisanych reguł: używane są reguły wbudowane, a zmiany reguł nie są zapisywane. Aby zastąpić zapisane reguły, zaimportuj plik reguł na karcie Reguły i wybierz Zamień wszystko."
   },
   "historyFiltersLabel": {
     "message": "Filtruj historię"

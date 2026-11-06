@@ -5529,7 +5529,10 @@
     "message": "La parte in background dell'estensione non è aggiornata. Ricarica l'estensione nella pagina delle estensioni e riprova."
   },
   "settingsUnreadableHint": {
-    "message": "Non è stato possibile leggere le impostazioni salvate, quindi la cronologia e l’analisi in blocco sono in pausa. Per ripararle, usa Impostazioni → Dati → Reimposta."
+    "message": "Non è stato possibile leggere le impostazioni salvate, quindi l’analisi delle pagine, la cronologia e l’analisi in blocco sono in pausa. Per ripararle, usa Impostazioni → Dati → Reimposta."
+  },
+  "rulesUnreadableHint": {
+    "message": "Non è stato possibile leggere le regole salvate: sono in uso le regole integrate e le modifiche alle regole non vengono salvate. Per sostituire le regole salvate, importa un file di regole nella scheda Regole e scegli Sostituisci tutto."
   },
   "historyFiltersLabel": {
     "message": "Filtra la cronologia"

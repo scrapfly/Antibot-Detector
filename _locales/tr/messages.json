@@ -5529,7 +5529,10 @@
     "message": "Uzantının arka plan bölümü güncel değil. Uzantıyı uzantılar sayfasından yeniden yükleyin ve tekrar deneyin."
   },
   "settingsUnreadableHint": {
-    "message": "Kayıtlı ayarlar okunamadı, bu yüzden geçmiş ve toplu tarama duraklatıldı. Onarmak için Ayarlar → Veri → Sıfırla yolunu kullanın."
+    "message": "Kayıtlı ayarlar okunamadı, bu yüzden sayfa taraması, geçmiş ve toplu tarama duraklatıldı. Onarmak için Ayarlar → Veri → Sıfırla yolunu kullanın."
+  },
+  "rulesUnreadableHint": {
+    "message": "Kayıtlı kurallar okunamadı: yerleşik kurallar kullanılıyor ve kural değişiklikleri kaydedilmiyor. Kayıtlı kuralları değiştirmek için Kurallar sekmesinde bir kural dosyası içe aktarın ve Tümünü değiştir'i seçin."
   },
   "historyFiltersLabel": {
     "message": "Geçmişi filtrele"

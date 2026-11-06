@@ -5529,7 +5529,10 @@
     "message": "Bagian latar belakang ekstensi sudah usang. Muat ulang ekstensi di halaman ekstensi, lalu coba lagi."
   },
   "settingsUnreadableHint": {
-    "message": "Pengaturan yang tersimpan tidak dapat dibaca, jadi Riwayat dan Pindai massal dijeda. Untuk memperbaikinya, gunakan Pengaturan → Data → Setel ulang."
+    "message": "Pengaturan yang tersimpan tidak dapat dibaca, jadi pemindaian, Riwayat, dan Pindai massal dijeda. Untuk memperbaikinya, gunakan Pengaturan → Data → Setel ulang."
+  },
+  "rulesUnreadableHint": {
+    "message": "Aturan yang tersimpan tidak dapat dibaca: aturan bawaan digunakan dan perubahan aturan tidak disimpan. Untuk mengganti aturan yang tersimpan, impor file aturan di tab Aturan lalu pilih Ganti semua."
   },
   "historyFiltersLabel": {
     "message": "Filter riwayat"

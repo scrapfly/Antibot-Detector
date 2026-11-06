@@ -40,7 +40,7 @@ class ScrapflyPopup {
 
   /**
    * Once per popup: say so when the stored settings cannot be read (the storage did not answer, or what is stored is not JSON or
-   * not an object). History, Bulk scan and what the worker schedules stay off while that lasts, and Settings → Data → Reset is
+   * not an object). Scanning, History, Bulk scan and what the worker schedules stay off while that lasts, and Settings → Data → Reset is
    * what repairs it.
    */
   async warnIfSettingsUnreadable() {
@@ -51,8 +51,19 @@ class ScrapflyPopup {
     } catch (error) {
       // Only the kind of error: a JSON error quotes the stored text, which may hold a webhook secret
       Logger.warn('UI', 'The stored settings cannot be read:', error && error.name);
-      NotificationHelper.error(FormatUtils.t('settingsUnreadableHint', 'The stored settings could not be read, so History and Bulk scan are paused. To repair them, use Settings → Data → Reset.'));
+      NotificationHelper.error(FormatUtils.t('settingsUnreadableHint', 'The stored settings could not be read, so scanning, History and Bulk scan are paused. To repair them, use Settings → Data → Reset.'));
     }
+  }
+
+  /**
+   * Once per popup: say so when the stored rules cannot be read. The rules shown are the built-in ones (or the ones read
+   * before), and no change to them is saved: a save would write them over the person's own. Importing rules with Replace All
+   * is what replaces them.
+   */
+  warnIfRulesUnreadable() {
+    if (this.rulesChecked || !this.detectorManager || this.detectorManager.storageState !== 'unreadable') return;
+    this.rulesChecked = true;
+    NotificationHelper.error(FormatUtils.t('rulesUnreadableHint', 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace All.'));
   }
 
   async initialize() {
@@ -79,6 +90,7 @@ class ScrapflyPopup {
       if (!this.detectorManager.initialized) {
         await this.detectorManager.initialize();
       }
+      this.warnIfRulesUnreadable();
       // Rule texts in the UI language: the shipped file, then translations saved in rules
       if (typeof RuleI18n !== 'undefined') {
         await RuleI18n.load();

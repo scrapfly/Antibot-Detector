@@ -225,6 +225,12 @@ class CategoryManager {
     }
 
     async saveToStorage() {
+        // The saved categories (their colours) could not be read: what is in memory is the shipped index, never saved over them
+        if (this.storageState === 'unreadable') {
+            const error = new Error('The stored categories cannot be read, so they are not saved');
+            error.code = 'categories_unreadable';
+            throw error;
+        }
         try {
             const success = await StorageManager.saveToStorage('scrapfly_categories', {
                 categories: this.categories,
