@@ -93,11 +93,17 @@ Advanced.prototype.renderCaptureChips = function(captures) {
     const toolChips = kinds.size > 1
       ? Object.keys(Advanced.TOOL_KINDS).filter(kind => kinds.has(kind)).map(kind => chip('tool', kind, _advHistoryTr(...Advanced.TOOL_KINDS[kind])))
       : [];
+    // The chips are drawn again with every list. One pressed from the keyboard has the focus: it is found again by what it stands for,
+    // so the focus does not fall to the page
+    const held = document.activeElement && row.contains(document.activeElement) && document.activeElement.dataset && document.activeElement.dataset.filterGroup
+      ? { group: document.activeElement.dataset.filterGroup, value: document.activeElement.dataset.filterValue } : null;
     // Vendors on one line, tools on the next
     const group = chips => (chips.length ? `<div class="cap-chips-group">${chips.join('')}</div>` : '');
     row.innerHTML = group(vendorChips) + group(toolChips);
     row.hidden = vendorChips.length + toolChips.length === 0;
     row.querySelectorAll('img[data-fallback]').forEach(img => img.addEventListener('error', function() { this.src = this.dataset.fallback; }, { once: true }));
+    const again = held && Array.from(row.querySelectorAll('.cap-chip')).find(chip => chip.dataset.filterGroup === held.group && chip.dataset.filterValue === held.value);
+    if (again) again.focus({ preventScroll: true });
   };
 
 
@@ -226,6 +232,39 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
     });
 
     this.setupCaptureCardListeners(grid);
+  };
+
+
+  /**
+   * Where a capture's row is in the list as drawn now, read before the list is drawn again (a delete), for restoreCaptureFocus.
+   * @param {string} captureId
+   * @returns {{index: number}}
+   */
+Advanced.prototype.captureRowPlace = function(captureId) {
+    const rows = Array.from(document.querySelectorAll('#captureGrid .capture-card'));
+    return { index: Math.max(rows.findIndex(row => row.getAttribute('data-capture-id') === captureId), 0) };
+  };
+
+
+  /**
+   * Put the focus back after the list was drawn again: the button that had it went with the old rows, and the next Tab would start
+   * at the top of the popup. It goes to the open button of the row that took the place of the deleted one (the one before it when
+   * it was the last): not to a Delete button, so a second Enter cannot delete the next capture too. With no row left: Reset all
+   * filters when the filters hide the rest, Open tools when nothing is saved. Nothing moves if the person already put the focus
+   * somewhere else.
+   * @param {{index: number}} place - from captureRowPlace
+   */
+Advanced.prototype.restoreCaptureFocus = function(place) {
+    const active = document.activeElement;
+    const grid = document.querySelector('#captureGrid');
+    if (active && active !== document.body && !(grid && grid.contains(active))) return;
+    const rows = Array.from(document.querySelectorAll('#captureGrid .capture-card'));
+    const row = rows[Math.min(place ? place.index : 0, rows.length - 1)];
+    const panel = document.querySelector('#capturesPanel');
+    const target = row
+      ? row.querySelector('.cap-row-open')
+      : document.querySelector('#resetAllFiltersBtn') || (panel && panel.classList.contains('is-empty') ? document.querySelector('#captureOpenToolsBtn') : null);
+    if (target && typeof target.focus === 'function') target.focus();
   };
 
 

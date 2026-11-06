@@ -434,11 +434,14 @@ Advanced.prototype.deleteSingleCapture = async function(moduleId, captureId) {
     const _tDC = (typeof I18n !== 'undefined') ? I18n : null;
     const _trDC = (key, fallback) => (_tDC && _tDC.get(key)) || fallback;
     try {
+      const place = this.captureRowPlace(captureId);
       await AdvancedHistoryStore.deleteCapture(moduleId, captureId);
 
       NotificationHelper.success(_trDC('captureDeleted', 'Capture deleted'));
 
       await this.renderUnifiedCaptureHistory();
+      // The Delete button went with the old rows: the focus goes to the row that took the place of the deleted one
+      this.restoreCaptureFocus(place);
       await this.updateCaptureCountBadge();
     } catch (error) {
       Logger.error('UI', '[Advanced] Error deleting capture:', error);
