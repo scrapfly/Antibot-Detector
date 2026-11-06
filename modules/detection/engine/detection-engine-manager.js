@@ -2187,21 +2187,20 @@ class DetectionEngineManager {
             forgetTabRequests(tabId);
         }
 
-        // Check if extension is enabled
-        try {
-            const result = await chrome.storage.local.get(['scrapfly_enabled']);
-            if (!await isCurrentDocument()) return ignored;
-            if (result.scrapfly_enabled === false) {
-                Logger.debug('SCAN', 'Extension paused, page not scanned');
-                setPausedIcon(tabId, false);
-                chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
-                setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED);
-                chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
-                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'off');
-                return;
-            }
-        } catch (error) {
-            Logger.warn('DETECTION', '[handlePageLoad] Enabled state check failed', error);
+        // Check if extension is enabled. A state that cannot be read is not "on": the extension may be switched off, or this
+        // site left out of scanning, and it is the setting that says so that failed to read. Nothing is scanned, and the
+        // toolbar says nothing it does not know
+        const scanState = await DetectionEngineManager.readScanState(chrome);
+        if (!await isCurrentDocument()) return ignored;
+        if (!scanState.ok) return;
+        if (!scanState.enabled) {
+            Logger.debug('SCAN', 'Extension paused, page not scanned');
+            setPausedIcon(tabId, false);
+            chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch(() => {});
+            setBadgeTextColor(tabId, false, BADGE.COLORS.DISABLED);
+            chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.DISABLED, tabId: tabId }).catch(() => {});
+            if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'off');
+            return;
         }
 
         // Check if URL is blacklisted
@@ -2503,14 +2502,15 @@ class DetectionEngineManager {
             if (pendingMarker && activeDetections?.get(tabId) === pendingMarker) activeDetections.delete(tabId);
         };
 
-        try {
-            const result = await chrome.storage.local.get(['scrapfly_enabled']);
-            if (result.scrapfly_enabled === false) {
-                sendResponse({ status: 'error', error: 'Extension is disabled' });
-                return true;
-            }
-        } catch (error) {
-            Logger.warn('DETECTION', '[requestDetection] Enabled state check failed', error);
+        // The same gate as a page load: a state that cannot be read starts no scan
+        const scanState = await DetectionEngineManager.readScanState(chrome);
+        if (!scanState.ok) {
+            sendResponse({ status: 'error', error: 'Settings could not be read' });
+            return true;
+        }
+        if (!scanState.enabled) {
+            sendResponse({ status: 'error', error: 'Extension is disabled' });
+            return true;
         }
         if (!ownsSlot()) { skipSuperseded(); return true; }
 
