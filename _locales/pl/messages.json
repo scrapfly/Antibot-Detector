@@ -1010,7 +1010,7 @@
     "message": "Zaimportowano detektory"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Zaimportowano detektory, z wyjątkiem: {0} (nieprawidłowe w tej wersji)"
+    "message": "Zaimportowano detektory, z wyjątkiem: {0} (nieprawidłowe w tej wersji lub wzorzec mógłby zablokować skanowanie)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Już zainstalowane reguły oficjalne nie zostały zastąpione: {0}"

@@ -1018,8 +1018,8 @@
     "message": "Detectors imported"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detectors imported, except: {0} (not valid in this version)",
-    "description": "Rules → Import (merge): the rules of the file that could not be imported, by name ({0} = their names)"
+    "message": "Detectors imported, except: {0} (not valid in this version, or a pattern could freeze scanning)",
+    "description": "Rules → Import (merge): the rules of the file that could not be imported, by name ({0} = their names, the first ten, then …): not valid in this version (a pattern that does not compile, too long or too many of them) or a regex that could freeze scanning"
   },
   "detectorsImportedKeptFmt": {
     "message": "Official rules already installed were not replaced: {0}",

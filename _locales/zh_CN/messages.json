@@ -1010,7 +1010,7 @@
     "message": "检测器已导入"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "已导入检测器，以下除外：{0}（在此版本中无效）"
+    "message": "已导入检测器，以下除外：{0}（在此版本中无效，或某个模式可能导致扫描卡住）"
   },
   "detectorsImportedKeptFmt": {
     "message": "已安装的官方规则未被替换：{0}"

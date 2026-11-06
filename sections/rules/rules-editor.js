@@ -613,8 +613,9 @@ Rules.prototype.updateAllAddPatternButtonStates = function() {
     });
   };
 
-/** A regular expression the detection engine compiles and runs (utils/pattern-cache.js refuses the dangerous ones). */
+/** A regular expression the detection engine compiles and runs (utils/pattern-cache.js refuses the dangerous ones): the test a rules file's import applies too. */
 Rules.isRunnableRegex = function(pattern) {
+  if (typeof isRunnableRegex === 'function') return isRunnableRegex(pattern);
   try { new RegExp(pattern); } catch (_) { return false; }
   return typeof isLikelyEvilRegex !== 'function' || !isLikelyEvilRegex(pattern);
 };

@@ -1010,7 +1010,7 @@
     "message": "Detector importati"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Rilevatori importati, tranne: {0} (non validi in questa versione)"
+    "message": "Rilevatori importati, tranne: {0} (non validi in questa versione, o un pattern potrebbe bloccare l’analisi)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Le regole ufficiali già installate non sono state sostituite: {0}"

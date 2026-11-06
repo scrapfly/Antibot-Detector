@@ -1010,7 +1010,7 @@
     "message": "Đã nhập trình phát hiện"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Đã nhập bộ phát hiện, trừ: {0} (không hợp lệ ở phiên bản này)"
+    "message": "Đã nhập bộ phát hiện, trừ: {0} (không hợp lệ ở phiên bản này, hoặc một mẫu có thể làm treo quá trình quét)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Các quy tắc chính thức đã cài đặt không bị thay thế: {0}"

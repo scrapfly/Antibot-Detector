@@ -1010,7 +1010,7 @@
     "message": "Detectors geïmporteerd"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detectors geïmporteerd, behalve: {0} (niet geldig in deze versie)"
+    "message": "Detectors geïmporteerd, behalve: {0} (niet geldig in deze versie, of een patroon kan het scannen laten vastlopen)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Al geïnstalleerde officiële regels zijn niet vervangen: {0}"

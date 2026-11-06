@@ -1010,7 +1010,7 @@
     "message": "Detektory importovány"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detektory importovány, kromě: {0} (v této verzi nejsou platné)"
+    "message": "Detektory importovány, kromě: {0} (v této verzi nejsou platné, nebo by vzor mohl zablokovat kontrolu)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Již nainstalovaná oficiální pravidla nebyla nahrazena: {0}"

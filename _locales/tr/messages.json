@@ -1010,7 +1010,7 @@
     "message": "Dedektörler içe aktarıldı"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Dedektörler içe aktarıldı, şunlar hariç: {0} (bu sürümde geçerli değil)"
+    "message": "Dedektörler içe aktarıldı, şunlar hariç: {0} (bu sürümde geçerli değil veya bir desen taramayı kilitleyebilir)"
   },
   "detectorsImportedKeptFmt": {
     "message": "Zaten yüklü resmî kurallar değiştirilmedi: {0}"

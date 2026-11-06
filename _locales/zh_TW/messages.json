@@ -1010,7 +1010,7 @@
     "message": "偵測器已匯入"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "已匯入偵測器，以下除外：{0}（在此版本中無效）"
+    "message": "已匯入偵測器，以下除外：{0}（在此版本中無效，或某個模式可能讓掃描卡住）"
   },
   "detectorsImportedKeptFmt": {
     "message": "已安裝的官方規則未被取代：{0}"

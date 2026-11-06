@@ -1010,7 +1010,7 @@
     "message": "Detectores importados"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "Detectores importados, exceto: {0} (não são válidos nesta versão)"
+    "message": "Detectores importados, exceto: {0} (não são válidos nesta versão, ou um padrão pode travar a análise)"
   },
   "detectorsImportedKeptFmt": {
     "message": "As regras oficiais já instaladas não foram substituídas: {0}"

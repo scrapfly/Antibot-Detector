@@ -1010,7 +1010,7 @@
     "message": "감지기를 가져왔습니다"
   },
   "detectorsImportedSkippedFmt": {
-    "message": "탐지기를 가져왔습니다. 제외: {0} (이 버전에서는 유효하지 않음)"
+    "message": "탐지기를 가져왔습니다. 제외: {0} (이 버전에서는 유효하지 않거나 패턴이 스캔을 멈추게 할 수 있음)"
   },
   "detectorsImportedKeptFmt": {
     "message": "이미 설치된 공식 규칙은 교체되지 않았습니다: {0}"

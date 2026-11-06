@@ -27,6 +27,13 @@ Rules.prototype.handleImport = async function(event) {
   const _tr = (key, fallback) => (t && t.get(key)) || fallback;
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
 
+  // A rules file is a few hundred KB (the packaged rules are 400 KB). One far larger is not a rules file, and it is read whole
+  if (typeof DetectorSchema !== 'undefined' && file.size > DetectorSchema.IMPORT_LIMITS.fileBytes) {
+    NotificationHelper.error(_tr('failedImportDetectors', 'Failed to import detectors. Check the file format.'));
+    event.target.value = '';
+    return;
+  }
+
   try {
     const text = await file.text();
     const data = JSON.parse(text);
@@ -50,7 +57,9 @@ Rules.prototype.handleImport = async function(event) {
       });
       const skipped = this.detectorManager.lastImportSkipped || [];
       if (skipped.length) {
-        NotificationHelper.warning(_fmt('detectorsImportedSkippedFmt', `Detectors imported, except: ${skipped.join(', ')} (not valid in this version)`, skipped.join(', ')));
+        // The rules left out, by name: the first ten (a file can hold a thousand)
+        const names = skipped.length > 10 ? `${skipped.slice(0, 10).join(', ')}, …` : skipped.join(', ');
+        NotificationHelper.warning(_fmt('detectorsImportedSkippedFmt', `Detectors imported, except: ${names} (not valid in this version, or a pattern could freeze scanning)`, names));
       } else {
         NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
       }
