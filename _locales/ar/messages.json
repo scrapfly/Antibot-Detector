@@ -4940,7 +4940,7 @@
     "message": "الأكثر ارتفاعًا"
   },
   "statsHeadlineRiserSubFmt": {
-    "message": "الصفحات {0} → {1} مقارنةً بالفترة السابقة"
+    "message": "الصفحات {0} ← {1} مقارنةً بالفترة السابقة"
   },
   "statsHeadlineNeedsCompare": {
     "message": "يحتاج إلى فترة سابقة"
@@ -6207,7 +6207,7 @@
     "message": "وجد هذان الفحصان وسائل الحماية نفسها، بدرجة الثقة نفسها والأدلة نفسها."
   },
   "historyCompareChangeFmt": {
-    "message": "{0}% → {1}% ({2})"
+    "message": "{0}% ← {1}% (‎{2})"
   },
   "historyCompareEvidenceAddedFmt": {
     "message": "أدلة جديدة: {0}"
@@ -6525,7 +6525,7 @@
     "message": "لا تُفحص إلا صفحات http وhttps"
   },
   "bulkReasonScope": {
-    "message": "تم التخطي بسبب الإعدادات → الكشف → المواقع المراد فحصها"
+    "message": "تم التخطي بسبب الإعدادات ← الكشف ← المواقع المراد فحصها"
   },
   "bulkReasonSitemap": {
     "message": "تعذّرت قراءة خريطة الموقع. لا يمكن قراءة إلا خرائط المواقع عبر https."

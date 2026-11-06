@@ -522,7 +522,7 @@
 
 .rh-bullets li {
   position: relative;
-  padding-left: 12px;
+  padding-inline-start: 12px;
   font-size: 11.5px;
   line-height: 16px;
   color: var(--rh-text-dim);
@@ -531,7 +531,7 @@
 .rh-bullets li::before {
   content: '';
   position: absolute;
-  left: 1px;
+  inset-inline-start: 1px;
   top: 6px;
   width: 4px;
   height: 4px;

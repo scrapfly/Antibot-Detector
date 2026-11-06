@@ -1,10 +1,10 @@
 /* NotificationManager Styles */
 
-/* Container for all notifications */
+/* Container for all notifications: at the end of the line (the right, or the left in a right-to-left language) */
 .notification-container {
   position: fixed;
   top: 10px;
-  right: 10px;
+  inset-inline-end: 10px;
   z-index: 10000;
   pointer-events: none;
   display: flex;
@@ -13,8 +13,8 @@
   max-width: 400px;
 }
 
-/* Toast: a flat 2.8 bar. Text, close button and a 3px type line on the
-   left; no icon tile, gradient or blur. The bottom line counts down. */
+/* Toast: a flat 2.8 bar. Text, close button and a 3px type line at the
+   start of the line; no icon tile, gradient or blur. The bottom line counts down. */
 .notification-toast {
   --toast-tone: var(--accent);
   position: relative;
@@ -29,10 +29,15 @@
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Right to left: the stack is at the left, so the toasts come in from there (before the shown rule: same weight, later wins) */
+[dir="rtl"] .notification-toast {
+  transform: translateX(-120%);
+}
+
 .notification-toast::before {
   content: '';
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 0;
   bottom: 0;
   width: 3px;
@@ -47,7 +52,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 6px 8px 13px;
+  padding-block: 8px;
+  /* 13px at the start, past the type line; 6px at the end, around the close button */
+  padding-inline: 13px 6px;
   position: relative;
 }
 
@@ -80,7 +87,7 @@
 
 /* Close control is the shared .btn-close.btn-close--sm (common.css) */
 .notification-close {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* Countdown line */
@@ -345,7 +352,8 @@
 }
 
 .notification-micro .notification-toast-content {
-  padding: 7px 10px 7px 12px;
+  padding-block: 7px;
+  padding-inline: 12px 10px;
 }
 
 /* Responsive Design */

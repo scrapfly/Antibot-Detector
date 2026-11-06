@@ -14,14 +14,16 @@
   flex: 0 0 158px;
   width: 158px;
   top: 1px;
-  margin-right: -1px;
+  margin-inline-end: -1px;
 }
 
 #settingsModal .settings-row--language .language-picker-trigger {
   gap: 8px;
   min-height: 0;
   height: 36px;
-  padding: 0 10px 0 9px;
+  padding-block: 0;
+  /* the flag side is 9px, the arrow side 10px, whichever way the row reads */
+  padding-inline: 9px 10px;
   background: var(--g-3d3d3d);
   border-color: var(--settings-border);
   border-radius: 7px;
@@ -41,7 +43,7 @@
 }
 
 #settingsModal .settings-row--language .language-picker-label {
-  padding-right: 0;
+  padding-inline-end: 0;
 }
 
 #settingsModal .settings-row--language .language-picker-chevron {
@@ -52,9 +54,11 @@
   color: var(--settings-text);
 }
 
+/* 200px against the picker's 158px: flush with the picker's outer edge, the end of the line, and growing toward the text of
+   the row. Anchored to the physical right it ran 42px past the picker's left edge in Arabic, out of the dialog */
 #settingsModal .settings-row--language .language-picker-menu {
-  left: auto;
-  right: 0;
+  inset-inline-start: auto;
+  inset-inline-end: 0;
   width: 200px;
   max-width: none;
 }
@@ -133,7 +137,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding-right: 4px;
+  padding-inline-end: 4px;
 }
 
 .language-picker-chevron {
