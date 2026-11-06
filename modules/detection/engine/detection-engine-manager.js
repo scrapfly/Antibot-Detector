@@ -241,6 +241,7 @@ class DetectionEngineManager {
                     if (!detector.detection?.window || detector.detection.window.length === 0) continue;
 
                     for (const prop of detector.detection.window) {
+                        if (prop.enabled === false) continue;
                         windowProperties.push({
                             ...prop,
                             confidence: DetectionEngineManager.ruleConfidence(prop),
@@ -755,6 +756,7 @@ class DetectionEngineManager {
             // every content pattern instead of re-lowercasing per pattern.
             const pageHTMLLower = pageHTML.toLowerCase();
             for (const contentPattern of contentPatterns) {
+                if (contentPattern.enabled === false) continue;
                 const patternText = contentPattern.text || '';
 
                 const matchOptions = {
@@ -877,6 +879,7 @@ class DetectionEngineManager {
             };
 
             for (const cookiePattern of detector.detection.cookie) {
+                if (cookiePattern.enabled === false) continue;
                 const nameMatchOptions = {
                     regex: cookiePattern.nameRegex === true,
                     wholeWord: cookiePattern.nameWholeWord === true,
@@ -957,6 +960,7 @@ class DetectionEngineManager {
         // Check headers patterns
         if (detector.detection?.header && (Object.keys(headers).length > 0 || (pageData.requestHeaders && Object.keys(pageData.requestHeaders).length > 0))) {
             for (const headerPattern of detector.detection.header) {
+                if (headerPattern.enabled === false) continue;
                 const nameMatchOptions = {
                     regex: headerPattern.nameRegex === true,
                     wholeWord: headerPattern.nameWholeWord === true,
@@ -1026,7 +1030,7 @@ class DetectionEngineManager {
 
         // Payload rules read request bodies; a rule with body: "response" reads
         // instead the response bodies captured for its urlPattern (below)
-        const allPayloadRules = Array.isArray(detector.detection?.payload) ? detector.detection.payload : [];
+        const allPayloadRules = (Array.isArray(detector.detection?.payload) ? detector.detection.payload : []).filter(rule => rule && rule.enabled !== false);
         const requestPayloadRules = allPayloadRules.filter(rule => rule && rule.body !== 'response');
 
         // Check payload patterns - handle both single payload and multiple payloads array
