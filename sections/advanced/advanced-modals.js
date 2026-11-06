@@ -16,6 +16,15 @@ Advanced.prototype.openAdvancedInfoModal = function() {
       this.fillAdvancedInfoCaptchas(modal);
       modal.style.display = 'flex';
       // CSS fadeIn animation handles the fade-in effect automatically
+      // Keyboard: the focus moves into the dialog, Tab stays in it, Escape closes it, and closing gives the focus back to the "?"
+      // button that opened it (the helper every other popup dialog uses)
+      const dialog = modal.querySelector('.advanced-info-container');
+      if (dialog && typeof ModalFocus !== 'undefined' && !this.releaseInfoFocus) {
+        this.releaseInfoFocus = ModalFocus.activate(dialog, {
+          onClose: () => this.closeAdvancedInfoModal(),
+          initialFocus: modal.querySelector('#closeAdvancedInfoModal') || undefined
+        });
+      }
     }
   };
 
@@ -62,6 +71,10 @@ Advanced.prototype.closeAdvancedInfoModal = function() {
       // Reset opacity for next open (CSS fadeIn animation handles the fade in)
       modal.style.opacity = '1';
     }
+    // After the dialog is hidden, so the focus goes back to a button that is shown
+    const release = this.releaseInfoFocus;
+    this.releaseInfoFocus = null;
+    if (release) release();
   };
 
 
@@ -90,13 +103,5 @@ Advanced.prototype.setupAdvancedInfoModalListeners = function() {
       });
     }
 
-    // ESC key to close
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const modal = document.querySelector('#advancedInfoModal');
-        if (modal && modal.style.display === 'flex') {
-          this.closeAdvancedInfoModal();
-        }
-      }
-    });
+    // Escape closes it through the focus helper (openAdvancedInfoModal), which also keeps Tab inside
   };

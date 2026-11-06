@@ -118,9 +118,9 @@
 <!-- Advanced Info Modal -->
 <div id="advancedInfoModal" class="advanced-info-modal" style="display: none;">
   <div class="advanced-info-overlay"></div>
-  <div class="advanced-info-container">
+  <div class="advanced-info-container" role="dialog" aria-modal="true" aria-labelledby="advancedInfoTitle">
     <div class="advanced-info-header">
-      <h3 data-i18n="advancedModalTitle">Advanced Detection Tools</h3>
+      <h3 id="advancedInfoTitle" data-i18n="advancedModalTitle">Advanced Detection Tools</h3>
       <button type="button" id="closeAdvancedInfoModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
     <div class="advanced-info-body">

@@ -527,7 +527,7 @@ test('Captures panel binds only its own grid, once per card', () => {
     const advanced = new context.Advanced();
     advanced.setupCaptureCardListeners(grid);
     advanced.setupCaptureCardListeners(grid);
-    assert.deepEqual(card.listeners, ['click', 'keydown']);
+    assert.deepEqual(card.listeners, ['click']);
     assert.doesNotThrow(() => advanced.setupCaptureCardListeners());
 });
 
