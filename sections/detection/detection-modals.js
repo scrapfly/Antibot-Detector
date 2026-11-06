@@ -1,46 +1,15 @@
 /**
- * Detection modal/copy methods.
+ * Detection details dialog methods.
  * Dependencies: `Detection` class must be loaded first.
  */
 const DetectionModals = (typeof self !== 'undefined' && self.DetectionModals) ? self.DetectionModals : {};
 
 // Localised text with {0} placeholders (English fallback when i18n is not loaded)
 const _dmText = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
-const _dmUnknown = () => _dmText('timeUnknown', 'Unknown');
 // Difficulty is computed as Low/Medium/High; show it in the UI language
 const _dmDifficulty = (value) => {
     const key = { Low: 'difficultyLow', Medium: 'difficultyMedium', High: 'difficultyHigh' }[value];
     return key ? _dmText(key, value) : value;
-};
-
-DetectionModals.copyDetection = function(indexOrDetection, triggerElement = null) {
-    const detection = typeof indexOrDetection === 'object'
-      ? indexOrDetection
-      : this.getDetectionByIndex(indexOrDetection);
-
-    if (!detection) {
-      return;
-    }
-    const methods = detection.matches?.map(m => `${m.type}: ${m.pattern || m.name || m.selector}`).join(', ');
-    const detailsText = [
-      _dmText('clipboardSecuritySystemFmt', 'Security System: {0}', detection.detector?.name || _dmUnknown()),
-      _dmText('clipboardCategoryFmt', 'Category: {0}', detection.category || _dmUnknown()),
-      _dmText('clipboardConfidenceFmt', 'Confidence: {0}%', detection.confidence || 0),
-      _dmText('clipboardDetectionMethodsFmt', 'Detection Methods: {0}', methods || _dmUnknown())
-    ].join('\n');
-
-    // Default toast / inline texts of copyToClipboard are already localised
-    FormatUtils.copyToClipboard(detailsText, {
-      element: triggerElement
-    });
-};
-
-// Copies exactly what "Upload detections" uploads: the Scrapfly banner and
-// the JSON summary (URL without its query string, no cookie or header values)
-DetectionModals.copyDetectionOverview = async function() {
-    const pageUrl = await DetectionActions.currentPageUrl();
-    const { content } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
-    await FormatUtils.copyToClipboard(content.trim());
 };
 
 /**
@@ -97,13 +66,11 @@ DetectionModals.initializeModalElements = function() {
 
     const overlay = modal.querySelector('.detection-modal-overlay');
     const closeBtn = modal.querySelector('#closeDetectionModal');
-    const copyBtn = modal.querySelector('#copyDetectionModal');
 
     this.modalElements = {
       modal,
       overlay,
       closeBtn,
-      copyBtn,
       icon: modal.querySelector('#detectionModalIcon'),
       name: modal.querySelector('#detectionModalName'),
       categories: modal.querySelector('#detectionModalCategories'),
@@ -150,15 +117,6 @@ DetectionModals.initializeModalElements = function() {
 
     if (closeBtn) {
       closeBtn.addEventListener('click', closeHandler);
-    }
-
-    if (copyBtn) {
-      copyBtn.addEventListener('click', () => {
-        if (this.activeModalIndex !== null) {
-          const detection = this.getDetectionByIndex(this.activeModalIndex);
-          this.copyDetection(detection, copyBtn);
-        }
-      });
     }
 
     if (!this.handleModalKeyDown) {

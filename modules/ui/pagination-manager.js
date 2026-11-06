@@ -89,7 +89,27 @@ class PaginationManager {
     if (page >= 1 && page <= totalPages) {
       this.currentPage = page;
       this.render(); // calls onPageChange: once per page change, not twice
+      this.scrollToTop();
     }
+  }
+
+  /**
+   * A page the person turned to starts at its top. The footers of Detection, History and Rules are stuck to the bottom of the
+   * popup's one scrollport (popup-scroll.css): they stay where they are while the list above them is replaced, so without this
+   * the new page was drawn at the old offset, its first entries above the viewport. A pager that is not such a footer (one
+   * inside a dialog) scrolls on its own, and the page behind the dialog keeps its place.
+   */
+  scrollToTop() {
+    const container = document.querySelector(`#${this.containerId}`);
+    const main = container && typeof container.closest === 'function' ? container.closest('#app > .main') : null;
+    if (main && typeof getComputedStyle === 'function' && getComputedStyle(container).position === 'sticky') {
+      main.scrollTop = 0;
+    }
+  }
+
+  /** What the page box shows: the page on screen, 0 when there is nothing to page. */
+  pageBoxValue() {
+    return this.filteredItems.length > 0 ? this.currentPage : 0;
   }
 
   /**
@@ -127,7 +147,7 @@ class PaginationManager {
     const paginationInfo = container.querySelector('.pagination-info');
 
     if (pageInput) {
-      pageInput.value = totalItems > 0 ? this.currentPage : 0;
+      pageInput.value = this.pageBoxValue();
       pageInput.disabled = totalItems === 0;
     }
     if (totalPagesSpan) {
@@ -168,14 +188,20 @@ class PaginationManager {
     // Add event listener for page input
     if (pageInput && !pageInput.hasAttribute('data-listener')) {
       pageInput.setAttribute('data-listener', 'true');
+      // The box always shows the page on screen: a number that is not a page (Enter on 99), or text left in it when the person
+      // tabs away, goes back to the current page instead of staying there as if it had been accepted
+      const showCurrentPage = () => { pageInput.value = this.pageBoxValue(); };
       pageInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
           const page = parseInt(e.target.value);
           if (page >= 1 && page <= this.getTotalPages()) {
             this.goToPage(page);
+          } else {
+            showCurrentPage();
           }
         }
       });
+      pageInput.addEventListener('blur', showCurrentPage);
     }
 
     // Searchable lists can retain a stable footer when a query has no matches.

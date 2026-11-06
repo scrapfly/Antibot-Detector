@@ -111,74 +111,6 @@ class Detection {
         }
       }
 
-      // Listen for detection completion
-      if (message.type === WorkerMessages.NEW_DETECTION_DATA) {
-        if (!this.isExtensionEnabled) {
-          return false;
-        }
-        if (this.viewedTabId !== null && message.tabId !== this.viewedTabId) {
-          return false;
-        }
-        if (window.popupInstance) {
-          return false;
-        }
-        if (this.debugMode) Logger.debug('UI', '[Detection] Received detection completion for tab:', message.tabId);
-
-        // Guard: Don't auto-refresh if we just cleared cache and are showing empty state
-        if (this.justClearedCache) {
-          Logger.debug('UI', '[Detection] Ignoring NEW_DETECTION_DATA - showing empty state after cache clear');
-          // Reset the flag after 5.5 seconds to allow future updates (after re-detection starts)
-          if (!this.clearCacheResetTimer) {
-            this.clearCacheResetTimer = setTimeout(() => {
-              this.justClearedCache = false;
-              this.clearCacheResetTimer = null;
-            }, 5500);
-          }
-          return;
-        }
-
-        // Clear loading timeout and stop progress animation
-        this.clearLoadingTimeout();
-
-        // Request the completed detection data and display it
-        chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-          if (tabs[0] && tabs[0].id === message.tabId) {
-            if (this.debugMode) Logger.debug('UI', '[Detection] Fetching completed detection data');
-
-            chrome.runtime.sendMessage(
-              { type: WorkerMessages.GET_DETECTION_DATA, tabId: message.tabId },
-              async (response) => {
-                if (chrome.runtime.lastError) {
-                  Logger.error('UI', '[Detection] Error fetching completed data:', chrome.runtime.lastError);
-                  if (!this.isShowingResults || this.currentResults.length === 0) {
-                    this.showEmptyState({ outcome: 'failed' });
-                  }
-                  return;
-                }
-
-                if (response && response.data) {
-                  // Process and display the completed detection
-                  await Detection.processDetectionData(
-                    {
-                      detection: this,
-                      detectionEngine: this.detectionEngine,
-                      detectorManager: this.detectorManager,
-                      history: this.history
-                    },
-                    response.data
-                  );
-                } else {
-                  if (this.debugMode) Logger.debug('UI', '[Detection] No data in completion response');
-                  if (!this.isShowingResults || this.currentResults.length === 0) {
-                    this.showEmptyState({ outcome: 'unscanned' });
-                  }
-                }
-              }
-            );
-          }
-        });
-      }
-
       // Cache scope changed or cache cleared elsewhere (a runtime message never reaches the page that sent it:
       // Settings, in this popup, calls refreshAfterCacheChange itself)
       if (message.type === WorkerMessages.DETECTION_CLEAR_CACHE) {
@@ -227,7 +159,6 @@ class Detection {
     // Nothing for this page under the new scope: the card that says so, and the gray "cleared" mark on the toolbar icon
     const showNoCompletedScan = async (tabId) => {
       Logger.debug('UI', '[Detection] No cached data for new scope - showing empty state');
-      this.justClearedCache = true;
       this.showEmptyState({ outcome: 'unscanned' });
       if (typeof tabId !== 'number') return;
       try {
@@ -251,8 +182,7 @@ class Detection {
         await Detection.processDetectionData({
           detection: this,
           detectionEngine: this.detectionEngine,
-          detectorManager: this.detectorManager,
-          history: this.history
+          detectorManager: this.detectorManager
         }, response.data);
       } else {
         await showNoCompletedScan(tabId);
@@ -329,12 +259,6 @@ class Detection {
   }
   getMethodBadges(...args) {
     return DetectionUI.getMethodBadges.apply(this, args);
-  }
-  copyDetection(...args) {
-    return DetectionModals.copyDetection.apply(this, args);
-  }
-  async copyDetectionOverview(...args) {
-    return await DetectionModals.copyDetectionOverview.apply(this, args);
   }
   getDetectionByIndex(...args) {
     return DetectionModals.getDetectionByIndex.apply(this, args);
@@ -432,7 +356,7 @@ class Detection {
         } catch (_) { /* keep the current order */ }
       });
 
-      // Expose copy function globally for onclick handlers
+      // Settings reads the current results from it (the webhook test)
       window.scrapflyDetection = this;
     })();
 
@@ -455,6 +379,7 @@ class Detection {
       showWhenEmpty: true,
       onPageChange: (page, items) => {
         this.renderDetectionsPage(items);
+        DetectionUI.announceList.call(this);
       }
     });
   }
@@ -703,8 +628,8 @@ class Detection {
       });
     }
 
-    // Re-pack the pages whenever the list's height changes
-    DetectionUI.observeResultsListSize.call(this);
+    // Pages fitted to the height (a pager with a page sizer) are re-packed whenever it changes; the fixed two cards a page need nothing
+    if (this.paginationManager && this.paginationManager.pageSizer) DetectionUI.observeResultsListSize.call(this);
 
     // NOTE: Message listeners are now set up in setupMessageListeners() called from constructor
     // This ensures they're active even before tab initialization
