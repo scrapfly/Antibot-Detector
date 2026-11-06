@@ -371,7 +371,7 @@ const RICH = [
       assert.match(await page.evaluate(() => document.activeElement.textContent), /Copied/, 'the visible feedback is as before');
       await sleep(250);
       assert.equal(await page.$eval('#historyModalStatus', el => el.textContent), 'Copied', 'and the window says it aloud');
-      assert.equal(await page.evaluate(() => document.activeElement.className), 'history-modal-method-value', 'the focus stays on the button');
+      assert.equal(await page.evaluate(() => document.activeElement.classList.contains('history-modal-method-value')), true, 'the focus stays on the button');
       // Space copies too, and is said again
       await sleep(1800);
       await page.keyboard.press(' ');

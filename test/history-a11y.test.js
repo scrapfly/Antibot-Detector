@@ -223,6 +223,22 @@ test('a redraw that nobody asked for (a scan saved, the watchlist) keeps the foc
   assert.equal(h.page.active, h.page.doc.elements['#historySearch']);
 });
 
+test('the list was drawn again while the "…" menu was open (a scan saved): closing it gives the focus to the entry\'s new button', async () => {
+  const h = drawn(load(), ['a', 'b', 'c']);
+  const old = h.page.list.cards[1].more;
+  const menu = { id: 'historyItemMenu', hidden: false, contains: (other) => other === menu.entry, entry: { dataset: { action: 'pin' } } };
+  old.setAttribute = () => {}; old.classList = { remove() {} };
+  h.view._openMenu = { menu, anchor: old };
+  h.view._menuItemId = 'b';
+  // The keyboard is on a menu entry; a redraw replaces every card, the menu's button with them
+  h.page.focus(menu.entry);
+  h.view.renderHistory();
+  old.isConnected = false;
+  old.focus = () => {}; // the browser: a button that is no longer in the page does not take the focus
+  h.view.closeMenus(true);
+  assert.deepEqual(where(h), { id: 'b', control: 'menu' }, 'the same entry\'s new "…" button, not a button that is gone');
+});
+
 test('the last entry deleted: the list is hidden, so the focus goes to the search; Clear filters (its own button goes away) does the same', () => {
   const h = drawn(load(), ['a']);
   h.page.focus(h.page.list.cards[0].more);

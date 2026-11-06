@@ -2580,8 +2580,16 @@ class History {
     anchor.setAttribute('aria-expanded', 'false');
     anchor.classList.remove('active');
     this._openMenu = null;
+    // A redraw while the menu was open (a scan saved, a stored change) replaced the entry's "…" button: its new one takes the
+    // focus, since a button that is gone cannot
+    let target = anchor;
+    if (anchor.isConnected === false && menu.id === 'historyItemMenu') {
+      const list = document.querySelector('#historyList');
+      const card = list ? Array.from(list.querySelectorAll('.history-item')).find(el => el.dataset.historyId === this._menuItemId) : null;
+      target = (card && card.querySelector('[data-action="menu"]')) || anchor;
+    }
     // preventScroll: a list that scrolled (which closes the menu) is not scrolled back to the button
-    if ((returnFocus === true || hadFocus) && typeof anchor.focus === 'function') anchor.focus({ preventScroll: true });
+    if ((returnFocus === true || hadFocus) && typeof target.focus === 'function') target.focus({ preventScroll: true });
   }
 
 
