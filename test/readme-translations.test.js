@@ -13,7 +13,12 @@ const root = path.join(__dirname, '..');
 const LANGUAGES = [
   { file: 'docs/README.zh-CN.md', name: '简体中文' },
   { file: 'docs/README.es.md', name: 'Español' },
-  { file: 'docs/README.ru.md', name: 'Русский' }
+  { file: 'docs/README.ru.md', name: 'Русский' },
+  { file: 'docs/README.ja.md', name: '日本語' },
+  { file: 'docs/README.pt-BR.md', name: 'Português (Brasil)' },
+  { file: 'docs/README.de.md', name: 'Deutsch' },
+  { file: 'docs/README.fr.md', name: 'Français' },
+  { file: 'docs/README.ko.md', name: '한국어' }
 ];
 const read = file => fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n');
 
