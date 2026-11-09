@@ -252,7 +252,12 @@ SettingsRuntime.retryWebhook = async function(id, options = {}) {
 /** The alarm: every held delivery whose automatic retry is due, one after the other. */
 SettingsRuntime.runDueWebhookRetries = async function() {
     // The extension is switched off: it sends nothing (a held delivery waits, and goes with its hour if it stays off)
-    if (typeof isExtensionEnabled === 'function' && !(await isExtensionEnabled())) return;
+    if (typeof isExtensionEnabled === 'function' && !(await isExtensionEnabled())) {
+        // The alarm that brought us here is a one-shot and has fired: without a new one, switching the extension back on
+        // within the hour would leave the held deliveries with no alarm until the worker next starts
+        await SettingsRuntime._scheduleWebhookRetries(SettingsRuntime.WEBHOOK_UNREADABLE_RETRY_MS);
+        return;
+    }
     const settings = await SettingsRuntime._readSettings();
     if (!settings) {
         // The settings cannot be read, which is not "everything is off": the held deliveries wait, and the alarm looks again in a minute
