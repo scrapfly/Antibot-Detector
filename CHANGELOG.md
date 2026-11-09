@@ -16,6 +16,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Fixed
 
 - Settings: importing a settings file or restoring a backup far bigger than the extension ever writes is now refused instead of freezing the popup.
+- Detection: with a search or filter on, Copy, Upload and the code exports now include only the detections shown.
+- Detection: Clear filters no longer drops keyboard focus; it moves to the search box.
+- Detection: holding Enter or Space on a result no longer opens and instantly closes its details.
+- Arabic: the Detection page arrows and scan icons now sit on the correct side.
 
 ## [3.1.5] - 2026-11-09
 

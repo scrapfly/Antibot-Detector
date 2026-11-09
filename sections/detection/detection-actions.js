@@ -480,6 +480,20 @@ DetectionActions._looksLikeSecret = function(segment) {
 };
 
 /**
+ * The detections the list shows: what the search and the chips leave, or every result when neither narrows it. Copies,
+ * uploads and the replay kit take this, so an export holds what the person sees.
+ */
+DetectionActions.shownResults = function() {
+    const all = Array.isArray(this.currentResults) ? this.currentResults : [];
+    if (typeof DetectionUI !== 'undefined' && typeof DetectionUI.isFiltering === 'function'
+      && typeof this.getFilteredResults === 'function' && DetectionUI.isFiltering.call(this)) {
+      const shown = this.getFilteredResults();
+      return Array.isArray(shown) ? shown : all;
+    }
+    return all;
+};
+
+/**
  * Build the paste body: the Scrapfly banner, a blank line, then the
  * detections serialized as pretty JSON. Emits only non-sensitive metadata —
  * never raw cookie/header values (those live in match.value).
@@ -487,7 +501,7 @@ DetectionActions._looksLikeSecret = function(segment) {
  * @returns {{ content: string, count: number }}
  */
 DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
-    const detections = Array.isArray(this.currentResults) ? this.currentResults : [];
+    const detections = DetectionActions.shownResults.call(this);
 
     // The page the user is on, not the cached entry's URL: under the Domain
     // cache scope every page of a site shares the first scanned page's entry
@@ -597,7 +611,7 @@ DetectionActions.replayInput = async function(pageUrl) {
       url: pageUrl,
       cookies,
       headers: ReplayKit.browserHeaders(typeof navigator !== 'undefined' ? navigator : {}),
-      detections: Array.isArray(this.currentResults) ? this.currentResults : []
+      detections: DetectionActions.shownResults.call(this)
     };
 };
 
@@ -674,7 +688,7 @@ DetectionActions.describeShareExpiry = function(expiry) {
 DetectionActions.uploadDetectionsToPaste = async function() {
     const btn = document.querySelector('#uploadPasteBtn');
 
-    if (!Array.isArray(this.currentResults) || this.currentResults.length === 0) {
+    if (DetectionActions.shownResults.call(this).length === 0) {
       NotificationHelper.warning(detectionActionsTr('pasteNoDetectionsToast', 'No detections to upload'));
       return;
     }
