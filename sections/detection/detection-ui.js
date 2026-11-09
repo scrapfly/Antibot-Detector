@@ -1610,6 +1610,7 @@ DetectionUI.getFilteredResults = function() {
     const filtered = DetectionFilter.filter(this.currentResults, {
       query: this.searchQuery,
       chips: this.activeChips,
+      firedOf: detection => HistoryFilter.firedCombinations([detection]),
       categoryOf: detection => Categories.keyOf(detection),
       // The search finds the name, the category and the description, in English and in the UI language
       textsOf: (detection) => {
@@ -1665,7 +1666,7 @@ DetectionUI.applyFilters = function() {
 
 /** Turn a category chip on or off and show what the list keeps. @param {string} key - 'antibot', 'captcha' or 'fingerprint' */
 DetectionUI.toggleFilterChip = function(key) {
-    if (!DetectionFilter.CATEGORIES.includes(key)) return;
+    if (!DetectionFilter.CATEGORIES.includes(key) && !DetectionFilter.FLAGS.includes(key)) return;
     this.activeChips = DetectionFilter.toggle(this.activeChips, key);
     DetectionUI.applyFilters.call(this);
 };
@@ -1687,10 +1688,13 @@ DetectionUI.syncFilterChips = function() {
     if (typeof document === 'undefined') return;
     const row = document.querySelector('#detectionFilters');
     if (!row) return;
-    const on = DetectionFilter.normalizeChips(this.activeChips).categories;
+    const chips = DetectionFilter.normalizeChips(this.activeChips);
     row.querySelectorAll('.history-filter-chip').forEach((chip) => {
       const key = chip.dataset.filter;
-      chip.setAttribute('aria-pressed', on.includes(key) ? 'true' : 'false');
+      chip.setAttribute('aria-pressed', (DetectionFilter.FLAGS.includes(key) ? chips[key] : chips.categories.includes(key)) ? 'true' : 'false');
+      const own = chip.querySelector('[data-ui-icon]');
+      if (own && !own.firstChild) own.innerHTML = FormatUtils.uiIconSvg(own.dataset.uiIcon);
+      if (!chip.dataset.category) return;
       const holder = chip.querySelector('.category-icon');
       if (holder && !holder.firstChild) holder.innerHTML = FormatUtils.categoryIconSvg(key);
       chip.style.setProperty('--chip-color', DetectionUI.categoryColor.call(this, key));
