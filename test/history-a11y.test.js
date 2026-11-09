@@ -87,7 +87,7 @@ function load({ messages = ENGLISH } = {}) {
   });
   context.self = context; context.window = context; context.globalThis = context;
   for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'modules/core/history-store.js',
-    'modules/core/history-filter.js', 'sections/history/history.js']) {
+    'modules/core/history-filter.js', 'modules/core/history-sort.js', 'sections/history/history.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   context.FormatUtils.copyToClipboard = async (text, options) => { calls.copies.push({ text, options }); return true; };
