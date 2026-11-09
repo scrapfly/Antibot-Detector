@@ -134,14 +134,44 @@
   outline-offset: 1px;
 }
 
-/* The sort dropdown sits at the end of the chip row, the size of a chip */
-#historyTab .history-sort {
+/* The sort dropdown sits at the end of the chip row, drawn like a chip: the same pill, height and border, as wide as its text */
+#historyTab .history-filters select.history-sort {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
   margin-inline-start: auto;
   height: 24px;
   min-height: 0;
-  padding-block: 0;
+  padding: 0 26px 0 10px;
+  font-family: inherit;
   font-size: 11px;
   font-weight: 600;
+  line-height: 1;
+  color: var(--text-secondary);
+  background-color: transparent;
+  background-position: right 9px center;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 999px;
+  box-shadow: none;
+  text-overflow: ellipsis;
+}
+
+#historyTab .history-filters select.history-sort:hover {
+  color: var(--text-primary);
+}
+
+#historyTab .history-filters select.history-sort:focus {
+  box-shadow: none;
+}
+
+#historyTab .history-filters select.history-sort:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+[dir="rtl"] #historyTab .history-filters select.history-sort {
+  padding: 0 10px 0 26px;
+  background-position: left 9px center;
 }
 
 /* On = an accent border and tint, a full icon: never colour alone */
