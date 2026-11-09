@@ -164,8 +164,12 @@ DetectionCacheRetention.init();
 
 
 chrome.runtime.onStartup.addListener(async () => {
-    await initialize('startup');
-    UpdateManager.scheduleCheck();
+    try {
+        await initialize('startup');
+        UpdateManager.scheduleCheck();
+    } catch (error) {
+        Logger.warn('BACKGROUND', '[init] Start-up failed:', error);
+    }
 });
 
 // Initialize when service worker starts/restarts from idle
