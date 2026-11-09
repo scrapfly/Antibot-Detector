@@ -1,3 +1,5 @@
+**English** | [Español](es/netacea.md) | [Русский](ru/netacea.md) | [简体中文](zh-CN/netacea.md) | [日本語](ja/netacea.md) | [Português (Brasil)](pt-BR/netacea.md) | [Deutsch](de/netacea.md) | [Français](fr/netacea.md) | [한국어](ko/netacea.md)
+
 # Netacea bot protection: how to detect it (and what it means for scraping)
 
 Netacea is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Netacea bypass, trying to detect Netacea on a site, or investigating web scraping blocked by Netacea, the first step is the same: confirm that Netacea is really what answers your requests. This page lists the 3 public signals that the Scrapfly Antibot Detector extension uses to recognise Netacea bot detection, how strongly each one points to it, and what that usually means for an automated client.

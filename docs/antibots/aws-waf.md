@@ -1,3 +1,5 @@
+**English** | [Español](es/aws-waf.md) | [Русский](ru/aws-waf.md) | [简体中文](zh-CN/aws-waf.md) | [日本語](ja/aws-waf.md) | [Português (Brasil)](pt-BR/aws-waf.md) | [Deutsch](de/aws-waf.md) | [Français](fr/aws-waf.md) | [한국어](ko/aws-waf.md)
+
 # AWS WAF bot protection: how to detect it (and what it means for scraping)
 
 AWS WAF is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a AWS WAF bypass, trying to detect AWS WAF on a site, or investigating web scraping blocked by AWS WAF, the first step is the same: confirm that AWS WAF is really what answers your requests. This page lists the 12 public signals that the Scrapfly Antibot Detector extension uses to recognise AWS WAF bot detection, how strongly each one points to it, and what that usually means for an automated client.

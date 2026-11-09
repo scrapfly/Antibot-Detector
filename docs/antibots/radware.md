@@ -1,3 +1,5 @@
+**English** | [Español](es/radware.md) | [Русский](ru/radware.md) | [简体中文](zh-CN/radware.md) | [日本語](ja/radware.md) | [Português (Brasil)](pt-BR/radware.md) | [Deutsch](de/radware.md) | [Français](fr/radware.md) | [한국어](ko/radware.md)
+
 # Radware Bot Manager bot protection: how to detect it (and what it means for scraping)
 
 Radware Bot Manager is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Radware Bot Manager bypass, trying to detect Radware Bot Manager on a site, or investigating web scraping blocked by Radware Bot Manager, the first step is the same: confirm that Radware Bot Manager is really what answers your requests. This page lists the 10 public signals that the Scrapfly Antibot Detector extension uses to recognise Radware Bot Manager bot detection, how strongly each one points to it, and what that usually means for an automated client.

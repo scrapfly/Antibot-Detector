@@ -1,3 +1,5 @@
+**English** | [Español](es/akamai.md) | [Русский](ru/akamai.md) | [简体中文](zh-CN/akamai.md) | [日本語](ja/akamai.md) | [Português (Brasil)](pt-BR/akamai.md) | [Deutsch](de/akamai.md) | [Français](fr/akamai.md) | [한국어](ko/akamai.md)
+
 # Akamai Bot Manager bot protection: how to detect it (and what it means for scraping)
 
 Akamai Bot Manager is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Akamai Bot Manager bypass, trying to detect Akamai Bot Manager on a site, or investigating web scraping blocked by Akamai Bot Manager, the first step is the same: confirm that Akamai Bot Manager is really what answers your requests. This page lists the 19 public signals that the Scrapfly Antibot Detector extension uses to recognise Akamai Bot Manager bot detection, how strongly each one points to it, and what that usually means for an automated client.

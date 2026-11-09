@@ -102,7 +102,7 @@ Quando uma página carrega, a extensão reúne o que ela revela sobre si mesma e
 
 Estas listas são os detectores que acompanham a extensão. Você pode desativar qualquer um, editá-lo ou adicionar os seus na aba Regras.
 
-Cada sistema antibot tem a sua própria página, com os cookies, cabeçalhos e scripts que o denunciam: [páginas de detecção antibot](antibots/README.md).
+Cada sistema antibot tem a sua própria página, com os cookies, cabeçalhos e scripts que o denunciam: [páginas de detecção antibot](antibots/pt-BR/README.md).
 
 <details>
 <summary><b>Sistemas anti-bot (43)</b></summary>

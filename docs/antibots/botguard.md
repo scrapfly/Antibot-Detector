@@ -1,3 +1,5 @@
+**English** | [Español](es/botguard.md) | [Русский](ru/botguard.md) | [简体中文](zh-CN/botguard.md) | [日本語](ja/botguard.md) | [Português (Brasil)](pt-BR/botguard.md) | [Deutsch](de/botguard.md) | [Français](fr/botguard.md) | [한국어](ko/botguard.md)
+
 # Google BotGuard bot protection: how to detect it (and what it means for scraping)
 
 Google BotGuard is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Google BotGuard bypass, trying to detect Google BotGuard on a site, or investigating web scraping blocked by Google BotGuard, the first step is the same: confirm that Google BotGuard is really what answers your requests. This page lists the 7 public signals that the Scrapfly Antibot Detector extension uses to recognise Google BotGuard bot detection, how strongly each one points to it, and what that usually means for an automated client.

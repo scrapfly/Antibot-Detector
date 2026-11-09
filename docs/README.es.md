@@ -102,7 +102,7 @@ Cuando una página carga, la extensión reúne lo que la página revela de sí m
 
 Estas listas son los detectores que vienen con la extensión. Puedes desactivar cualquiera, editarlo o añadir los tuyos en la pestaña Reglas.
 
-Cada sistema anti-bot tiene su propia página, con las cookies, cabeceras y scripts que lo delatan: [páginas de detección anti-bot](antibots/README.md).
+Cada sistema anti-bot tiene su propia página, con las cookies, cabeceras y scripts que lo delatan: [páginas de detección anti-bot](antibots/es/README.md).
 
 <details>
 <summary><b>Sistemas anti-bot (43)</b></summary>

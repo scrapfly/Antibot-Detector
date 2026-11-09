@@ -1,3 +1,5 @@
+**English** | [Español](es/yundun.md) | [Русский](ru/yundun.md) | [简体中文](zh-CN/yundun.md) | [日本語](ja/yundun.md) | [Português (Brasil)](pt-BR/yundun.md) | [Deutsch](de/yundun.md) | [Français](fr/yundun.md) | [한국어](ko/yundun.md)
+
 # Yundun Cloud WAF bot protection: how to detect it (and what it means for scraping)
 
 Yundun Cloud WAF is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Yundun Cloud WAF bypass, trying to detect Yundun Cloud WAF on a site, or investigating web scraping blocked by Yundun Cloud WAF, the first step is the same: confirm that Yundun Cloud WAF is really what answers your requests. This page lists the 11 public signals that the Scrapfly Antibot Detector extension uses to recognise Yundun Cloud WAF bot detection, how strongly each one points to it, and what that usually means for an automated client.

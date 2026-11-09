@@ -1,3 +1,5 @@
+**English** | [Español](es/castle.md) | [Русский](ru/castle.md) | [简体中文](zh-CN/castle.md) | [日本語](ja/castle.md) | [Português (Brasil)](pt-BR/castle.md) | [Deutsch](de/castle.md) | [Français](fr/castle.md) | [한국어](ko/castle.md)
+
 # Castle bot protection: how to detect it (and what it means for scraping)
 
 Castle is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Castle bypass, trying to detect Castle on a site, or investigating web scraping blocked by Castle, the first step is the same: confirm that Castle is really what answers your requests. This page lists the 6 public signals that the Scrapfly Antibot Detector extension uses to recognise Castle bot detection, how strongly each one points to it, and what that usually means for an automated client.

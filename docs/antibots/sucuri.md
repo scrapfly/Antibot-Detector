@@ -1,3 +1,5 @@
+**English** | [Español](es/sucuri.md) | [Русский](ru/sucuri.md) | [简体中文](zh-CN/sucuri.md) | [日本語](ja/sucuri.md) | [Português (Brasil)](pt-BR/sucuri.md) | [Deutsch](de/sucuri.md) | [Français](fr/sucuri.md) | [한국어](ko/sucuri.md)
+
 # Sucuri WAF bot protection: how to detect it (and what it means for scraping)
 
 Sucuri WAF is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Sucuri WAF bypass, trying to detect Sucuri WAF on a site, or investigating web scraping blocked by Sucuri WAF, the first step is the same: confirm that Sucuri WAF is really what answers your requests. This page lists the 8 public signals that the Scrapfly Antibot Detector extension uses to recognise Sucuri WAF bot detection, how strongly each one points to it, and what that usually means for an automated client.

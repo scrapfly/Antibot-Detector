@@ -1,3 +1,5 @@
+**English** | [Español](es/aliyunwaf.md) | [Русский](ru/aliyunwaf.md) | [简体中文](zh-CN/aliyunwaf.md) | [日本語](ja/aliyunwaf.md) | [Português (Brasil)](pt-BR/aliyunwaf.md) | [Deutsch](de/aliyunwaf.md) | [Français](fr/aliyunwaf.md) | [한국어](ko/aliyunwaf.md)
+
 # Alibaba Cloud WAF bot protection: how to detect it (and what it means for scraping)
 
 Alibaba Cloud WAF is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Alibaba Cloud WAF bypass, trying to detect Alibaba Cloud WAF on a site, or investigating web scraping blocked by Alibaba Cloud WAF, the first step is the same: confirm that Alibaba Cloud WAF is really what answers your requests. This page lists the 8 public signals that the Scrapfly Antibot Detector extension uses to recognise Alibaba Cloud WAF bot detection, how strongly each one points to it, and what that usually means for an automated client.

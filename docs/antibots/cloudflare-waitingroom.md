@@ -1,3 +1,5 @@
+**English** | [Español](es/cloudflare-waitingroom.md) | [Русский](ru/cloudflare-waitingroom.md) | [简体中文](zh-CN/cloudflare-waitingroom.md) | [日本語](ja/cloudflare-waitingroom.md) | [Português (Brasil)](pt-BR/cloudflare-waitingroom.md) | [Deutsch](de/cloudflare-waitingroom.md) | [Français](fr/cloudflare-waitingroom.md) | [한국어](ko/cloudflare-waitingroom.md)
+
 # Cloudflare Waiting Room bot protection: how to detect it (and what it means for scraping)
 
 Cloudflare Waiting Room is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Cloudflare Waiting Room bypass, trying to detect Cloudflare Waiting Room on a site, or investigating web scraping blocked by Cloudflare Waiting Room, the first step is the same: confirm that Cloudflare Waiting Room is really what answers your requests. This page lists the 3 public signals that the Scrapfly Antibot Detector extension uses to recognise Cloudflare Waiting Room bot detection, how strongly each one points to it, and what that usually means for an automated client.

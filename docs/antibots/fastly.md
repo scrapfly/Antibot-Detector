@@ -1,3 +1,5 @@
+**English** | [Español](es/fastly.md) | [Русский](ru/fastly.md) | [简体中文](zh-CN/fastly.md) | [日本語](ja/fastly.md) | [Português (Brasil)](pt-BR/fastly.md) | [Deutsch](de/fastly.md) | [Français](fr/fastly.md) | [한국어](ko/fastly.md)
+
 # Fastly Bot Management bot protection: how to detect it (and what it means for scraping)
 
 Fastly Bot Management is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Fastly Bot Management bypass, trying to detect Fastly Bot Management on a site, or investigating web scraping blocked by Fastly Bot Management, the first step is the same: confirm that Fastly Bot Management is really what answers your requests. This page lists the 6 public signals that the Scrapfly Antibot Detector extension uses to recognise Fastly Bot Management bot detection, how strongly each one points to it, and what that usually means for an automated client.

@@ -102,7 +102,7 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 
 下面列出的是扩展自带的检测器。你可以在**规则**标签页中关闭其中任何一个、编辑它们，或添加你自己的检测器。
 
-每个反爬系统都有单独的页面，列出暴露它的 Cookie、请求头和脚本：[反爬系统检测页面](antibots/README.md)。
+每个反爬系统都有单独的页面，列出暴露它的 Cookie、请求头和脚本：[反爬系统检测页面](antibots/zh-CN/README.md)。
 
 <details>
 <summary><b>反机器人系统（43）</b></summary>

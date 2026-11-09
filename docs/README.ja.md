@@ -102,7 +102,7 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 
 これらのリストは拡張機能に同梱されている検出器です。どれでも無効にしたり編集したりでき、ルールタブで独自のものを追加することもできます。
 
-各アンチボットシステムには専用ページがあり、見分けるための Cookie、ヘッダー、スクリプトを載せています：[アンチボット検出ページ](antibots/README.md)。
+各アンチボットシステムには専用ページがあり、見分けるための Cookie、ヘッダー、スクリプトを載せています：[アンチボット検出ページ](antibots/ja/README.md)。
 
 <details>
 <summary><b>アンチボットシステム（43）</b></summary>

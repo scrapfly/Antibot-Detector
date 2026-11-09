@@ -1,3 +1,5 @@
+**English** | [Español](es/ocule.md) | [Русский](ru/ocule.md) | [简体中文](zh-CN/ocule.md) | [日本語](ja/ocule.md) | [Português (Brasil)](pt-BR/ocule.md) | [Deutsch](de/ocule.md) | [Français](fr/ocule.md) | [한국어](ko/ocule.md)
+
 # Ocule bot protection: how to detect it (and what it means for scraping)
 
 Ocule is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Ocule bypass, trying to detect Ocule on a site, or investigating web scraping blocked by Ocule, the first step is the same: confirm that Ocule is really what answers your requests. This page lists the 3 public signals that the Scrapfly Antibot Detector extension uses to recognise Ocule bot detection, how strongly each one points to it, and what that usually means for an automated client.

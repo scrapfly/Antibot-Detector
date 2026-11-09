@@ -1,3 +1,5 @@
+**English** | [Español](es/queueit.md) | [Русский](ru/queueit.md) | [简体中文](zh-CN/queueit.md) | [日本語](ja/queueit.md) | [Português (Brasil)](pt-BR/queueit.md) | [Deutsch](de/queueit.md) | [Français](fr/queueit.md) | [한국어](ko/queueit.md)
+
 # Queue-it bot protection: how to detect it (and what it means for scraping)
 
 Queue-it is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Queue-it bypass, trying to detect Queue-it on a site, or investigating web scraping blocked by Queue-it, the first step is the same: confirm that Queue-it is really what answers your requests. This page lists the 9 public signals that the Scrapfly Antibot Detector extension uses to recognise Queue-it bot detection, how strongly each one points to it, and what that usually means for an automated client.

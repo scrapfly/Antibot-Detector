@@ -1,3 +1,5 @@
+**English** | [Español](es/kasada.md) | [Русский](ru/kasada.md) | [简体中文](zh-CN/kasada.md) | [日本語](ja/kasada.md) | [Português (Brasil)](pt-BR/kasada.md) | [Deutsch](de/kasada.md) | [Français](fr/kasada.md) | [한국어](ko/kasada.md)
+
 # Kasada bot protection: how to detect it (and what it means for scraping)
 
 Kasada is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Kasada bypass, trying to detect Kasada on a site, or investigating web scraping blocked by Kasada, the first step is the same: confirm that Kasada is really what answers your requests. This page lists the 8 public signals that the Scrapfly Antibot Detector extension uses to recognise Kasada bot detection, how strongly each one points to it, and what that usually means for an automated client.

@@ -1,3 +1,5 @@
+**English** | [Español](es/openai-sentinel.md) | [Русский](ru/openai-sentinel.md) | [简体中文](zh-CN/openai-sentinel.md) | [日本語](ja/openai-sentinel.md) | [Português (Brasil)](pt-BR/openai-sentinel.md) | [Deutsch](de/openai-sentinel.md) | [Français](fr/openai-sentinel.md) | [한국어](ko/openai-sentinel.md)
+
 # OpenAI Sentinel bot protection: how to detect it (and what it means for scraping)
 
 OpenAI Sentinel is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a OpenAI Sentinel bypass, trying to detect OpenAI Sentinel on a site, or investigating web scraping blocked by OpenAI Sentinel, the first step is the same: confirm that OpenAI Sentinel is really what answers your requests. This page lists the 11 public signals that the Scrapfly Antibot Detector extension uses to recognise OpenAI Sentinel bot detection, how strongly each one points to it, and what that usually means for an automated client.

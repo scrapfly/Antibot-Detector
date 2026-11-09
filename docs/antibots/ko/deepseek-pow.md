@@ -1,0 +1,61 @@
+[English](../deepseek-pow.md) | [Español](../es/deepseek-pow.md) | [Русский](../ru/deepseek-pow.md) | [简体中文](../zh-CN/deepseek-pow.md) | [日本語](../ja/deepseek-pow.md) | [Português (Brasil)](../pt-BR/deepseek-pow.md) | [Deutsch](../de/deepseek-pow.md) | [Français](../fr/deepseek-pow.md) | **한국어**
+
+# DeepSeek PoW 봇 차단: 감지 방법과 웹 스크래핑에 미치는 영향
+
+DeepSeek PoW은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. DeepSeek PoW 우회 방법을 찾고 있거나, 사이트에서 DeepSeek PoW을(를) 감지하려 하거나, DeepSeek PoW이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 DeepSeek PoW인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 DeepSeek PoW 봇 탐지를 식별하는 데 쓰는 공개 신호 5개와 각 신호가 얼마나 강하게 DeepSeek PoW을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
+
+## 개요
+
+DeepSeek의 채팅 웹 앱은 채팅 요청을 받기 전에 브라우저가 작업 증명(proof-of-work) 챌린지를 풀도록 요구합니다. 다른 사이트에 판매하는 제품이 아니라 서비스 자체의 보호 기능입니다.
+
+공식 사이트: [https://chat.deepseek.com/](https://chat.deepseek.com/)
+
+## 사이트가 DeepSeek PoW을(를) 사용하는지 확인하는 방법
+
+이 신호들은 `detect-deepseek-pow`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.1.1, 최종 업데이트 2026-11-04)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+
+### 스크립트 및 요청 URL
+
+페이지가 불러오는 스크립트, 프레임, 요청의 주소입니다. 전체 주소를 대상으로 매칭하는 패턴입니다.
+
+| 신호 | 신뢰도 | 의미 |
+| --- | --- | --- |
+| `^https://chat\.deepseek\.com/api/v\d{1,2}/chat/create_pow_challenge(?:[?#]\|$)` | 100% | Proof-of-work challenge request (/api/v0/chat/create_pow_challenge) |
+| `^https://(?:fe-static\|chat)\.deepseek\.com/(?:chat/)?static/sha3_wasm_bg\.[0-9a-f]{6,16}\.wasm(?:[?#]\|$)` | 100% | DeepSeekHashV1 WebAssembly solver (sha3_wasm_bg.<hash>.wasm) |
+| `^https://chat\.deepseek\.com/api/v\d{1,2}/chat/completion(?:[?#]\|$)` | 40% (보조 근거로만 사용) | Chat completion request, the path the proof of work is issued for |
+
+### 요청 및 응답 페이로드
+
+페이지가 일치하는 주소로 보내거나 그 주소에서 받는 데이터입니다.
+
+| 신호 | 신뢰도 | 의미 |
+| --- | --- | --- |
+| `URL ^https://chat\.deepseek\.com/api/v\d{1,2}/chat/create_pow_challenge ; body "target_path"\s*:\s*"/api/` | 100% | Challenge request naming the path it protects (target_path) |
+| `URL ^https://chat\.deepseek\.com/api/v\d{1,2}/chat/create_pow_challenge ; response "algorithm"\s*:\s*"DeepSeekHashV1"` | 100% | Challenge response with the DeepSeekHashV1 proof-of-work algorithm |
+
+### 조합
+
+일부 신호는 함께 나타날 때 단독일 때보다 점수가 높습니다. 확장 프로그램은 이러한 조합도 함께 보고합니다.
+
+| 조합 | 신뢰도 | 필요 조건 |
+| --- | --- | --- |
+| Challenge requested and answered with a DeepSeekHashV1 challenge | 100% | Proof-of-work challenge request (/api/v0/chat/create_pow_challenge) 그리고 Challenge response with the DeepSeekHashV1 proof-of-work algorithm |
+| Proof-of-work challenge requested for a protected path | 100% | Proof-of-work challenge request (/api/v0/chat/create_pow_challenge) 그리고 Challenge request naming the path it protects (target_path) |
+| WebAssembly solver loaded and a challenge requested | 100% | DeepSeekHashV1 WebAssembly solver (sha3_wasm_bg.<hash>.wasm) 그리고 Proof-of-work challenge request (/api/v0/chat/create_pow_challenge) |
+| WebAssembly solver loaded and a protected chat request sent | 90% | DeepSeekHashV1 WebAssembly solver (sha3_wasm_bg.<hash>.wasm) 그리고 Chat completion request, the path the proof of work is issued for |
+
+## 난이도
+
+**보통.** 보통은 확장 프로그램이 이 보호 기술을 실질적인 장애물로 평가한다는 뜻입니다. 브라우저, 요청 세부 정보 또는 둘 다에 대한 검사가 있을 것으로 예상되며, 이 검사는 시간이 지나면서 바뀔 수 있습니다.
+
+이 등급은 확장 프로그램 자체의 경험칙이며 공급업체의 공식 입장이 아닙니다. 사이트의 설정에 따라 같은 제품이라도 더 쉽거나 더 어려울 수 있습니다.
+
+## 웹 스크래핑에 미치는 영향
+
+DeepSeek PoW이(가) 있으면 실제 브라우저 세션처럼 일관되게 보이지 않는 요청은 챌린지를 받거나, 지연되거나, 거부될 수 있으며, 원하던 콘텐츠 대신 챌린지 또는 차단 페이지가 응답으로 올 수 있습니다. 정확히 어떤 일이 일어나는지는 사이트 운영자가 제품을 어떻게 설정했는지에 달려 있으며, 이는 사이트마다 다를 수 있고 예고 없이 바뀔 수도 있습니다. 탐지 결과는 실제로 받는 응답을 확인해 보라는 신호로 받아들이고, 차단이 보장된다는 뜻으로 받아들이지 마세요.
+
+DeepSeek PoW이(가) 보호하는 페이지를 우회 방법을 직접 유지하지 않고 스크래핑하려면 Scrapfly의 [Anti Scraping Protection 문서](https://scrapfly.io/docs/scrape-api/anti-scraping-protection)와(과) [Scrape API](https://scrapfly.io/docs/scrape-api/getting-started)를 참고하세요. 허용된 범위 안에서만 스크래핑하고, 사이트의 이용 약관과 robots 규칙을 존중하세요.
+
+## 확장 프로그램으로 감지하기
+
+Chrome용 무료 [Scrapfly Anti-bot Detector](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca)을(를) 설치하고 해당 페이지에 접속하면, 팝업에 DeepSeek PoW이(가) 신뢰도, 난이도, 일치한 정확한 신호와 함께 표시됩니다. 자세한 내용은 [프로젝트 README](../../README.ko.md)에서 확인하거나 [확장 프로그램이 감지하는 모든 안티봇 보호 기술](README.md)을(를) 참고하세요.

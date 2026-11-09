@@ -1,3 +1,5 @@
+**English** | [Español](es/anubis.md) | [Русский](ru/anubis.md) | [简体中文](zh-CN/anubis.md) | [日本語](ja/anubis.md) | [Português (Brasil)](pt-BR/anubis.md) | [Deutsch](de/anubis.md) | [Français](fr/anubis.md) | [한국어](ko/anubis.md)
+
 # Anubis bot protection: how to detect it (and what it means for scraping)
 
 Anubis is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Anubis bypass, trying to detect Anubis on a site, or investigating web scraping blocked by Anubis, the first step is the same: confirm that Anubis is really what answers your requests. This page lists the 6 public signals that the Scrapfly Antibot Detector extension uses to recognise Anubis bot detection, how strongly each one points to it, and what that usually means for an automated client.

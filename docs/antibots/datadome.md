@@ -1,3 +1,5 @@
+**English** | [Español](es/datadome.md) | [Русский](ru/datadome.md) | [简体中文](zh-CN/datadome.md) | [日本語](ja/datadome.md) | [Português (Brasil)](pt-BR/datadome.md) | [Deutsch](de/datadome.md) | [Français](fr/datadome.md) | [한국어](ko/datadome.md)
+
 # DataDome bot protection: how to detect it (and what it means for scraping)
 
 DataDome is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a DataDome bypass, trying to detect DataDome on a site, or investigating web scraping blocked by DataDome, the first step is the same: confirm that DataDome is really what answers your requests. This page lists the 11 public signals that the Scrapfly Antibot Detector extension uses to recognise DataDome bot detection, how strongly each one points to it, and what that usually means for an automated client.

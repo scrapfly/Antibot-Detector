@@ -1,3 +1,5 @@
+**English** | [Español](es/riskified.md) | [Русский](ru/riskified.md) | [简体中文](zh-CN/riskified.md) | [日本語](ja/riskified.md) | [Português (Brasil)](pt-BR/riskified.md) | [Deutsch](de/riskified.md) | [Français](fr/riskified.md) | [한국어](ko/riskified.md)
+
 # Riskified bot protection: how to detect it (and what it means for scraping)
 
 Riskified is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Riskified bypass, trying to detect Riskified on a site, or investigating web scraping blocked by Riskified, the first step is the same: confirm that Riskified is really what answers your requests. This page lists the 4 public signals that the Scrapfly Antibot Detector extension uses to recognise Riskified bot detection, how strongly each one points to it, and what that usually means for an automated client.

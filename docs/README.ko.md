@@ -102,7 +102,7 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 
 이 목록은 확장 프로그램에 포함된 탐지기입니다. 규칙 탭에서 각각을 비활성화하거나 편집하고, 직접 만든 탐지기를 추가할 수 있습니다.
 
-각 안티봇 시스템마다 이를 알아볼 수 있는 쿠키, 헤더, 스크립트를 담은 전용 페이지가 있습니다: [안티봇 감지 페이지](antibots/README.md).
+각 안티봇 시스템마다 이를 알아볼 수 있는 쿠키, 헤더, 스크립트를 담은 전용 페이지가 있습니다: [안티봇 감지 페이지](antibots/ko/README.md).
 
 <details>
 <summary><b>안티봇 시스템 (43)</b></summary>

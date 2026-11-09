@@ -1,3 +1,5 @@
+**English** | [Español](es/wordfence.md) | [Русский](ru/wordfence.md) | [简体中文](zh-CN/wordfence.md) | [日本語](ja/wordfence.md) | [Português (Brasil)](pt-BR/wordfence.md) | [Deutsch](de/wordfence.md) | [Français](fr/wordfence.md) | [한국어](ko/wordfence.md)
+
 # Wordfence bot protection: how to detect it (and what it means for scraping)
 
 Wordfence is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Wordfence bypass, trying to detect Wordfence on a site, or investigating web scraping blocked by Wordfence, the first step is the same: confirm that Wordfence is really what answers your requests. This page lists the 19 public signals that the Scrapfly Antibot Detector extension uses to recognise Wordfence bot detection, how strongly each one points to it, and what that usually means for an automated client.

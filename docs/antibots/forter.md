@@ -1,3 +1,5 @@
+**English** | [Español](es/forter.md) | [Русский](ru/forter.md) | [简体中文](zh-CN/forter.md) | [日本語](ja/forter.md) | [Português (Brasil)](pt-BR/forter.md) | [Deutsch](de/forter.md) | [Français](fr/forter.md) | [한국어](ko/forter.md)
+
 # Forter bot protection: how to detect it (and what it means for scraping)
 
 Forter is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Forter bypass, trying to detect Forter on a site, or investigating web scraping blocked by Forter, the first step is the same: confirm that Forter is really what answers your requests. This page lists the 7 public signals that the Scrapfly Antibot Detector extension uses to recognise Forter bot detection, how strongly each one points to it, and what that usually means for an automated client.
