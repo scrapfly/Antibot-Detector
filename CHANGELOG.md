@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.5] - 2026-11-09
 
+### Added
+
+- AWS WAF: also detected when a page uses its CAPTCHA script.
+
 ### Fixed
 
 - Single-page sites that change page right after loading now get the new page scanned instead of skipped.
