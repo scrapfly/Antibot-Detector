@@ -104,6 +104,8 @@ When a page loads, the extension gathers what the page reveals about itself and 
 
 The lists below are the detectors that ship with the extension. You can switch any of them off, edit them or add your own in the Rules tab.
 
+Every anti-bot system has its own page, with the cookies, headers and scripts that give it away: [anti-bot detection pages](docs/antibots/README.md).
+
 <details>
 <summary><b>Anti-bot systems (43)</b></summary>
 <br>

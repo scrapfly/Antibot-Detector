@@ -102,6 +102,8 @@ Wenn eine Seite lädt, sammelt die Erweiterung, was die Seite über sich verrät
 
 Diese Listen sind die Detektoren, die mit der Erweiterung ausgeliefert werden. Sie können jeden deaktivieren, bearbeiten oder im Tab Regeln eigene hinzufügen.
 
+Jedes Anti-Bot-System hat eine eigene Seite mit den Cookies, Headern und Skripten, die es verraten: [Seiten zur Anti-Bot-Erkennung](antibots/README.md).
+
 <details>
 <summary><b>Anti-Bot-Systeme (43)</b></summary>
 <br>
