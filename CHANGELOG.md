@@ -9,6 +9,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Detection: the notice asking you to set up a custom server for uploads now appears in your interface language instead of English.
+- Statistics → Rules: a rule renamed after History saved its pages, such as HUMAN Security, no longer shows as never found.
+- Turning the extension off or on is picked up at once instead of occasionally lagging for a few seconds.
+- A failed webhook delivery waiting for retry is still retried if you switch the extension back on within the hour.
 - Bulk scan: a paused run left paused for a few minutes can still be resumed instead of ending as stopped.
 - History: an entry with no known date no longer shows 1 January 1970 in its hover text, details or copied text.
 
