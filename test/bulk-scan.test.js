@@ -190,17 +190,24 @@ test('pause and resume; a paused run starts no page; stop puts the page being sc
   assert.equal(BulkScan.complete(run), false);
 });
 
-test('worker restart: a run found running or paused is marked stopped, never left running; a finished one is kept', () => {
-  for (const status of ['running', 'paused']) {
-    const run = sampleRun();
-    BulkScan.begin(run, 0);
-    if (status === 'paused') BulkScan.pause(run);
-    const recovered = BulkScan.recover(JSON.parse(JSON.stringify(run)), 7000);
-    assert.equal(recovered.status, 'stopped', status);
-    assert.equal(recovered.reason, 'restart');
-    assert.equal(recovered.items[0].status, 'waiting');
-    assert.equal(recovered.items.some(item => item.status === 'scanning'), false);
-  }
+test('worker restart: a run found running is marked stopped, never left running; a paused one stays paused; a finished one is kept', () => {
+  const run = sampleRun();
+  BulkScan.begin(run, 0);
+  const recovered = BulkScan.recover(JSON.parse(JSON.stringify(run)), 7000);
+  assert.equal(recovered.status, 'stopped');
+  assert.equal(recovered.reason, 'restart');
+  assert.equal(recovered.items[0].status, 'waiting');
+  assert.equal(recovered.items.some(item => item.status === 'scanning'), false);
+  // Chrome stops an idle worker, and a pause is idle: the person's Resume still has to work after it
+  const paused = sampleRun();
+  BulkScan.begin(paused, 0);
+  BulkScan.pause(paused);
+  const kept = BulkScan.recover(JSON.parse(JSON.stringify(paused)), 7000);
+  assert.equal(kept.status, 'paused');
+  assert.equal(kept.reason, null);
+  assert.equal(kept.items[0].status, 'waiting', 'nothing scans it now: the page being scanned waits again');
+  assert.equal(kept.items.some(item => item.status === 'scanning'), false);
+  assert.equal(BulkScan.resume(kept), true);
   const done = sampleRun();
   done.status = 'done';
   assert.equal(BulkScan.recover(done).status, 'done');

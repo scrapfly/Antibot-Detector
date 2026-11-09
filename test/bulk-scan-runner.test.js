@@ -216,6 +216,24 @@ test('a worker that starts again marks a running run stopped (not stuck) and clo
   await finished(second);
 });
 
+test('a worker that starts again keeps a paused run paused, and Resume scans the rest', async () => {
+  const session = {};
+  const first = world({ session, scans: { 'https://a.example/': { results: [] } } });
+  await first.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await first.Runner.pause();
+  await tick(20);
+  assert.equal(session[first.Runner.STATE_KEY].status, 'paused');
+  // Chrome stops the idle worker while the run is paused: its loop is gone, session storage stays
+  const second = world({ session, scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] } } });
+  const run = await second.Runner.state();
+  assert.equal(run.status, 'paused');
+  assert.equal(await second.Runner.resume(), true, 'Resume still works');
+  await finished(second);
+  assert.equal(second.stored().status, 'done');
+  assert.deepEqual(second.stored().items.map(i => i.status), ['done', 'done']);
+  first.Runner._run = null;
+});
+
 test('start refuses a second run, a switched-off extension and a browser with no window; a list with nothing to scan is done at once', async () => {
   const w = world({ scans: { 'https://a.example/': { silent: true } } });
   await w.Runner.start({ entries: ['https://a.example/'] });

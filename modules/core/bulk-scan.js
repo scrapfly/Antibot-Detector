@@ -15,7 +15,7 @@
  *   createRun(), begin(), finish(), fail(), skip(), pause(), resume(), stop(), complete(), recover()
  *                    the run's states: running → paused → running, then done or stopped; recover() is what a service
  *                    worker that starts again does with a run it finds in session storage (nobody is scanning it any
- *                    more: it is stopped, never left "running")
+ *                    more: a running one is stopped, never left "running"; a paused one stays paused)
  *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
  *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
@@ -421,10 +421,18 @@
     return run;
   }
 
-  /** A run found by a service worker that has just started: whatever it says, nothing scans it any more. */
+  /**
+   * A run found by a service worker that has just started: nothing scans it any more. A running one is stopped; a paused one
+   * stays paused (Chrome stops an idle worker, and a pause is idle: Resume starts its loop again), its page that was being
+   * scanned waiting again.
+   */
   function recover(run, now = Date.now()) {
     if (!run || typeof run !== 'object' || !Array.isArray(run.items)) return null;
-    if (isActive(run)) stop(run, 'restart', now);
+    if (run.status === 'paused') {
+      for (const item of run.items) {
+        if (item.status === 'scanning') { item.status = 'waiting'; delete item.startedAt; }
+      }
+    } else if (isActive(run)) stop(run, 'restart', now);
     return run;
   }
 
