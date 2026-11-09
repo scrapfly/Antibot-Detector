@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "1.3.0",
+  "lastUpdated": "2026-11-09",
+  "version": "1.3.1",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API",
   "icon": "media_fingerprint.png",
@@ -16,9 +16,7 @@
       { "id": "media-battery", "description": "Requests battery information", "enabled": true, "confidence": 15, "target": "Navigator.prototype.getBattery", "standalone": true },
       { "id": "media-speech", "description": "Enumerates speech synthesis voices", "enabled": true, "confidence": 20, "target": "SpeechSynthesis.prototype.getVoices", "standalone": true },
       { "id": "media-mimes", "description": "Reads supported MIME type count", "enabled": true, "confidence": 15, "target": "MimeTypeArray.prototype.length", "standalone": true },
-      { "id": "media-mime-description", "description": "Reads MIME type descriptions", "enabled": false, "confidence": 20, "target": "MimeType.prototype.description", "standalone": false },
       { "id": "media-plugins", "description": "Reads browser plugin count", "enabled": true, "confidence": 15, "target": "PluginArray.prototype.length", "standalone": true },
-      { "id": "media-plugin-description", "description": "Reads plugin descriptions", "enabled": false, "confidence": 20, "target": "Plugin.prototype.description", "standalone": false },
       { "id": "media-codecs", "description": "Checks media codec support", "enabled": true, "confidence": 10, "target": "HTMLMediaElement.prototype.canPlayType", "standalone": true }
     ],
     "content": [
