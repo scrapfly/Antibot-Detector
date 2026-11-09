@@ -137,7 +137,8 @@
 /* The sort dropdown sits at the end of the chip row, drawn like a chip: the same pill, height and border, as wide as its text */
 #historyTab .history-filters select.history-sort {
   flex: 0 0 auto;
-  width: auto;
+  width: 136px; /* beside the last chips on their row, not a row of its own; a longer word is cut with an ellipsis */
+  min-width: 0;
   max-width: 100%;
   margin-inline-start: auto;
   height: 24px;
