@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
+  "lastUpdated": "2026-11-09",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://aws.amazon.com/waf/",
   "icon": "aws_official.png",
@@ -115,6 +115,13 @@
         "condition": "typeof object",
         "confidence": 70,
         "description": "Challenge page bootstrap object (gokuProps)"
+      },
+      {
+        "id": "aws-waf-captcha-object",
+        "path": "AwsWafCaptcha",
+        "condition": "typeof object",
+        "confidence": 75,
+        "description": "AWS WAF Integration SDK object"
       },
       {
         "id": "cookie-domain-list",

@@ -6499,6 +6499,30 @@
   "bulkScanFailedAgain": {
     "message": "Volver a analizar las páginas con error"
   },
+  "bulkFilterLabel": {
+    "message": "Mostrar",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Todas las páginas",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Con protecciones",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Sin protecciones detectadas",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Con error u omitidas",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Mostrando {0} de {1} páginas. Las exportaciones incluyen solo estas.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "Nueva lista"
   },

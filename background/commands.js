@@ -74,7 +74,10 @@
         register(chromeApi = root.chrome) {
             if (!chromeApi || !chromeApi.commands || !chromeApi.commands.onCommand) return false;
             chromeApi.commands.onCommand.addListener((command, tab) => {
-                if (command === this.RESCAN) this.rescan(tab);
+                if (command !== this.RESCAN) return;
+                Promise.resolve(this.rescan(tab)).catch((error) => {
+                    if (root.Logger && root.Logger.warn) root.Logger.warn('BACKGROUND', '[Commands] Rescan failed:', error && error.message);
+                });
             });
             return true;
         }

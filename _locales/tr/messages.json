@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "Başarısız olan sayfaları yeniden tara"
   },
+  "bulkFilterLabel": {
+    "message": "Göster",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Tüm sayfalar",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Korumalı",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Koruma bulunamadı",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Başarısız veya atlanan",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{1} sayfadan {0} tanesi gösteriliyor. Dışa aktarmalar yalnızca bunları içerir.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "Yeni liste"
   },

@@ -229,7 +229,7 @@
 
 .cap-search svg {
   position: absolute;
-  left: 10px;
+  inset-inline-start: 10px;
   width: 14px;
   height: 14px;
   color: var(--text-secondary);
@@ -239,7 +239,8 @@
 .cap-search-input {
   width: 100%;
   height: 32px;
-  padding: 0 10px 0 30px;
+  padding-block: 0;
+  padding-inline: 30px 10px;
   font-family: inherit;
   font-size: 11.5px;
   color: var(--text-primary);

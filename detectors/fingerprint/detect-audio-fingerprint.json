@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-11-09",
+  "version": "1.2.1",
   "minExtensionVersion": "2.8",
   "website": "https://webaudio.github.io/web-audio-api/",
   "icon": "audio_fingerprint.png",
@@ -36,14 +36,6 @@
         "target": "BaseAudioContext.prototype.createOscillator",
         "id": "audio-oscillator",
         "standalone": true
-      },
-      {
-        "description": "Connects audio nodes",
-        "enabled": false,
-        "confidence": 5,
-        "target": "AudioNode.prototype.connect",
-        "id": "audio-connect",
-        "standalone": false
       },
       {
         "description": "Creates a dynamics compressor; also used for ordinary audio effects",

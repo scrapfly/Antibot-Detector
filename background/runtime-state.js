@@ -59,6 +59,9 @@ async function isExtensionEnabled() {
         return cachedEnabledState.value;
     }
     const result = await chrome.storage.local.get(['scrapfly_enabled']);
+    // The cache was refreshed while this read was in flight (the switch changed: storage.onChanged below): that value is
+    // newer than what this read returned, and must not be overwritten by it
+    if (cachedEnabledState.timestamp >= now) return cachedEnabledState.value;
     cachedEnabledState = {
         value: result.scrapfly_enabled !== false,
         timestamp: now

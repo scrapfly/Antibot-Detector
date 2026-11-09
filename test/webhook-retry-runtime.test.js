@@ -300,3 +300,15 @@ test('a held delivery is not retried while the extension is switched off, and go
   assert.equal(h.calls.length, 2, 'on: the retry runs');
   assert.deepEqual(h.held(), {});
 });
+
+test('the alarm of a held delivery is set again when it fires while the extension is off, so switching it back on still retries', async () => {
+  const h = harness(ON);
+  h.reply(() => ({ ok: false, status: 502 }));
+  await h.runtime.sendWebhookIfEnabled(PAGE, FOUND);
+  h.advance(MIN + 1000);
+  h.context.isExtensionEnabled = async () => false;
+  h.alarms.delete('scrapfly-webhook-retry'); // a one-shot alarm is gone once it has fired
+  await h.runtime.runDueWebhookRetries();
+  assert.equal(Object.keys(h.held()).length, 1, 'still held');
+  assert.ok(h.alarms.has('scrapfly-webhook-retry'), 'and an alarm will look again');
+});

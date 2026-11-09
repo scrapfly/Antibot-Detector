@@ -5,6 +5,26 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.5] - 2026-11-09
+
+### Added
+
+- Bulk scan: a Show menu in the results filters pages by protections found, none found, or failed; exports include only the pages shown.
+- AWS WAF: also detected when a page uses its CAPTCHA script.
+
+### Fixed
+
+- Single-page sites that change page right after loading now get the new page scanned instead of skipped.
+- Settings: buttons that are busy or have nothing to do, like Check now or Back up now, now look disabled instead of highlighting on hover.
+- Arabic: the Captures search icon and the duplicate rule bullet list now sit on the correct side.
+- History: Clear on browser close now runs when only private windows remain open.
+- Detection: the notice asking you to set up a custom server for uploads now appears in your interface language instead of English.
+- Statistics → Rules: a rule renamed after History saved its pages, such as HUMAN Security, no longer shows as never found.
+- Turning the extension off or on is picked up at once instead of occasionally lagging for a few seconds.
+- A failed webhook delivery waiting for retry is still retried if you switch the extension back on within the hour.
+- Bulk scan: a paused run left paused for a few minutes can still be resumed instead of ending as stopped.
+- History: an entry with no known date no longer shows 1 January 1970 in its hover text, details or copied text.
+
 ## [3.1.4] - 2026-11-06
 
 ### Added
@@ -1038,6 +1058,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.5]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.4...v3.1.5
 [3.1.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.3...v3.1.4
 [3.1.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.2...v3.1.3
 [3.1.2]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.1...v3.1.2

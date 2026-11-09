@@ -211,7 +211,8 @@ const HistoryRetention = {
         const config = await this.readConfig();
         if (!config || !config.clearOnClose || !chrome.windows || !chrome.windows.getAll) return 0;
         const windows = await chrome.windows.getAll({ windowTypes: ['normal'] });
-        return windows.length === 0 ? this.clearUnpinned('last window closed') : 0;
+        // A private window left open is not a window the person is browsing History in: it does not hold the clear back
+        return windows.filter((win) => !(win && win.incognito === true)).length === 0 ? this.clearUnpinned('last window closed') : 0;
     },
 
     /**
