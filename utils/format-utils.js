@@ -171,6 +171,17 @@ class FormatUtils {
   }
 
   /**
+   * formatDateTime for a saved date that may be missing: History stores 0 for an entry with no readable date, which is not
+   * 1 January 1970. Nothing (an empty text) for 0, a negative number or an unreadable value.
+   * @param {number|Date|string} value
+   * @returns {string}
+   */
+  static formatKnownDateTime(value) {
+    const ms = value instanceof Date ? value.getTime() : (typeof value === 'number' ? value : NaN);
+    return Number.isFinite(ms) && ms > 0 ? FormatUtils.formatDateTime(ms) : '';
+  }
+
+  /**
    * Format timestamp as "X time ago" (e.g., "3h ago", "2d ago"), in the UI
    * language via Intl.RelativeTimeFormat when available.
    * @param {number} timestamp - Unix timestamp in milliseconds
