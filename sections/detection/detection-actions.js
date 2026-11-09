@@ -683,7 +683,7 @@ DetectionActions.uploadDetectionsToPaste = async function() {
     } catch (e) {
       shareSettings = {};
     }
-    const target = ShareProviders.describe(shareSettings);
+    const target = ShareProviders.describe(shareSettings, (key, fallback) => FormatUtils.t(key, fallback));
     if (target.missing) {
       NotificationHelper.warning(FormatUtils.t('pasteNeedsSetupFmt',
         `Set up ${target.name} in Settings → Detection → Share uploads first`, target.name));
