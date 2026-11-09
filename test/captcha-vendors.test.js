@@ -431,7 +431,7 @@ test('every README lists each data-driven CAPTCHA vendor in the row of its tools
   const total = supportedProtectionCount();
   const names = row => row.split('|')[1].split(',').map(name => name.trim()).sort();
   const byTools = hasKey => Vendors.list.filter(vendor => Boolean(vendor.siteKey) === hasKey).map(vendor => vendor.productName).sort();
-  for (const file of ['README.md', 'docs/README.es.md', 'docs/README.ru.md', 'docs/README.zh-CN.md']) {
+  for (const file of ['README.md', 'docs/README.es.md', 'docs/README.ru.md', 'docs/README.zh-CN.md', 'docs/README.ja.md', 'docs/README.pt-BR.md', 'docs/README.de.md', 'docs/README.fr.md', 'docs/README.ko.md']) {
     const lines = read(file).replace(/\r\n/g, '\n').split('\n');
     const rows = lines.filter(line => line.startsWith('| ') && !line.startsWith('| ---'));
     // The vendors with a site key share one row, the ones with only Analyze Scripts another; the names are written as the detectors write them
