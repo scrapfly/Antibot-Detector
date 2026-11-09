@@ -2377,7 +2377,8 @@ class DetectionEngineManager {
 
         // Coalesce this document's notifications, never a new page or reload
         // that happens to reuse the tab within the throttle interval.
-        const requestKey = `${tabId}:${sender.documentId || pageUrl}`;
+        // A route change of a single-page app is a new page of the same document: it is coalesced by its address
+        const requestKey = `${tabId}:${sender.documentId || pageUrl}${triggerSource === 'url_change' ? `:${pageUrl}` : ''}`;
         if (Utils.shouldSkipDetection(requestKey, Constants.REQUEST_SKIP_THRESHOLD, recentDetectionRequests)) {
             Logger.debug('SCAN', `Duplicate request for tab ${tabId} ignored`);
             return;
