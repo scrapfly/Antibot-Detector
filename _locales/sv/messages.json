@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Ett mönster markerat som reguljärt uttryck är ogiltigt eller kan låsa genomsökningen. Rätta det eller stäng av Regex för den raden."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Sparad. Den här regeln har samma mönster flera gånger; de extra kopiorna kan tas bort."
+  },
   "rulesUiMethodFallback": {
     "message": "Metod"
   },

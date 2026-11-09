@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Een patroon dat als reguliere expressie is gemarkeerd, is ongeldig of kan het scannen laten vastlopen. Pas het aan of zet Regex voor die rij uit."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Opgeslagen. Deze regel bevat hetzelfde patroon meerdere keren; de extra kopieën kunnen worden verwijderd."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },

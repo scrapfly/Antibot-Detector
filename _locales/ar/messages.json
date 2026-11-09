@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "نمط مُعلَّم كتعبير نمطي غير صالح أو قد يُجمّد الفحص. صحّحه أو أوقف Regex لهذا الصف."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "تم الحفظ. تحتوي هذه القاعدة على النمط نفسه أكثر من مرة؛ يمكن حذف النسخ الزائدة."
+  },
   "rulesUiMethodFallback": {
     "message": "الطريقة"
   },

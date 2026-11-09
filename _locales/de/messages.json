@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Ein als regulärer Ausdruck markiertes Muster ist ungültig oder könnte die Prüfung blockieren. Korrigiere es oder schalte Regex für diese Zeile aus."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Gespeichert. Diese Regel enthält dasselbe Muster mehrfach; die überzähligen Kopien lassen sich löschen."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },

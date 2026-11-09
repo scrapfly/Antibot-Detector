@@ -45,6 +45,7 @@ SettingsUI.importSettingsFile = async function(event) {
     const t = (typeof I18n !== 'undefined') ? I18n : null;
     const _tr = (key, fallback) => (t && t.get(key)) || fallback;
     try {
+      if (file.size > SettingsTransfer.MAX_SETTINGS_FILE_BYTES) throw new Error('Settings file too large');
       const data = JSON.parse(await file.text());
       const imported = data && typeof data.settings === 'object' && data.settings !== null ? data.settings : data;
       if (!imported || typeof imported !== 'object' || Array.isArray(imported)) {

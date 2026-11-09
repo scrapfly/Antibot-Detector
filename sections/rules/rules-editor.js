@@ -1082,6 +1082,23 @@ Rules.prototype.updateDetectorBadgeColor = function(detectorName, color) {
     this.categoryManager.saveToStorage();
   };
 
+/** How many patterns of a rule's detection repeat another of the same kind (same text, options and scope; the id and confidence do not count). */
+Rules.countDuplicatePatterns = function(detection) {
+  let duplicates = 0;
+  for (const rules of Object.values(detection || {})) {
+    if (!Array.isArray(rules)) continue;
+    const seen = new Set();
+    for (const rule of rules) {
+      if (!rule || typeof rule !== 'object') continue;
+      const { id, confidence, standalone, ...rest } = rule;
+      const key = JSON.stringify(Object.keys(rest).sort().map(name => [name, rest[name]]));
+      if (seen.has(key)) duplicates++;
+      else seen.add(key);
+    }
+  }
+  return duplicates;
+};
+
 Rules.prototype.saveRule = async function() {
     if (!this.currentEditDetector || this.savingRule) return false;
 
@@ -1305,5 +1322,9 @@ Rules.prototype.saveRule = async function() {
     }
     this.closeEditModal();
     this.displayRules();
+    if (Rules.countDuplicatePatterns(draft.detector.detection) > 0 && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {
+      NotificationHelper.warning((typeof I18n !== 'undefined' && I18n.get('rulesUiDuplicatePatterns'))
+        || 'Saved. This rule has the same pattern more than once; the extra copies can be deleted.');
+    }
     return true;
   };

@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Một mẫu được đánh dấu là biểu thức chính quy không hợp lệ hoặc có thể làm treo quá trình quét. Hãy sửa lại hoặc tắt Regex cho hàng đó."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Đã lưu. Quy tắc này có cùng một mẫu nhiều lần; có thể xóa các bản sao thừa."
+  },
   "rulesUiMethodFallback": {
     "message": "Phương thức"
   },

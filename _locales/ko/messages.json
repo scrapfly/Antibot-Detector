@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "정규식으로 표시된 패턴이 올바르지 않거나 스캔을 멈추게 할 수 있습니다. 수정하거나 해당 행의 Regex를 끄세요."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "저장했습니다. 이 규칙에 같은 패턴이 여러 번 있습니다. 중복된 항목은 삭제할 수 있습니다."
+  },
   "rulesUiMethodFallback": {
     "message": "방법"
   },

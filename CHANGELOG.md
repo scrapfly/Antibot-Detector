@@ -5,6 +5,16 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.6] - Unreleased
+
+### Added
+
+- Rules: saving a rule that holds the same pattern more than once now says so, so the extra copies can be deleted.
+
+### Fixed
+
+- Settings: importing a settings file or restoring a backup far bigger than the extension ever writes is now refused instead of freezing the popup.
+
 ## [3.1.5] - 2026-11-09
 
 ### Added

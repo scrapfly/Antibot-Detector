@@ -3603,6 +3603,10 @@
     "message": "A pattern marked as a regular expression is not valid, or could freeze scanning. Fix it, or turn Regex off for that row.",
     "description": "Rules editor → Save refused: a row marked as a regex does not compile or could backtrack catastrophically"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Saved. This rule has the same pattern more than once; the extra copies can be deleted.",
+    "description": "Rules editor: shown after a rule is saved when it holds the same pattern more than once"
+  },
   "rulesUiMethodFallback": {
     "message": "Method",
     "description": "Generic name of a detection method when its type is unknown"

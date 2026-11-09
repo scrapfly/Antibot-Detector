@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Wzorzec oznaczony jako wyrażenie regularne jest nieprawidłowy lub może zablokować skanowanie. Popraw go albo wyłącz Regex w tym wierszu."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Zapisano. Ta reguła zawiera ten sam wzorzec więcej niż raz; nadmiarowe kopie można usunąć."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },
