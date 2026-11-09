@@ -6662,6 +6662,9 @@
   "historyCopyMarkdown": {
     "message": "Kopiera som Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Kopiera som en rad"
+  },
   "presetAutoUpdateOff": {
     "message": "Automatisk sökning efter uppdateringar är av"
   },

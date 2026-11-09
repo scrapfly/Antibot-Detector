@@ -87,14 +87,14 @@ function load({ messages = ENGLISH } = {}) {
   });
   context.self = context; context.window = context; context.globalThis = context;
   for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'modules/core/history-store.js',
-    'modules/core/history-filter.js', 'modules/core/history-sort.js', 'sections/history/history.js']) {
+    'modules/core/history-filter.js', 'modules/core/history-sort.js', 'modules/core/detection-summary.js', 'sections/history/history.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   context.FormatUtils.copyToClipboard = async (text, options) => { calls.copies.push({ text, options }); return true; };
   const view = Object.create(context.History.prototype);
   Object.assign(view, {
     detectorManager: { getDetectorByName: () => null, getCategoryInfo: () => null, categoryManager: { getTagColor: () => '#666666' } },
-    historyItems: [], searchQuery: '', activeChips: context.HistoryFilter.normalizeChips(), historyLimit: 0, selectMode: false
+    historyItems: [], searchQuery: '', activeChips: context.HistoryFilter.normalizeChips(), historyLimit: 0, selectMode: false, sortKey: 'recent'
   });
   // What the pagination does: write the "Showing 1-20 of 57" line and draw the page
   view.paginationManager = {
@@ -637,4 +637,72 @@ test('Compare: closing the dialog over a list drawn again under it puts the focu
   };
   await h.view.compareHistoryItem(h.view.historyItems[1]);
   assert.deepEqual(where(h), { id: 'b', control: 'card' });
+});
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+// 3.1.6: pinned and watched say so; Copy as one line; the sort and the chips come back
+// ---------------------------------------------------------------------------------------------------------------------------------
+test('a pinned or watched card says so for a screen reader: the pin and the eye are named, not only a hover tip', () => {
+  const h = load();
+  h.view.historyItems = [entry('a', { pinned: true, watch: true, watchedAt: 0 })];
+  h.view.renderHistory();
+  const html = h.page.list.html;
+  const pin = tags(html, 'span').find(attrs => /\bhistory-pin\b/.test(attrs.class));
+  const watch = tags(html, 'span').find(attrs => /\bhistory-watch\b/.test(attrs.class));
+  assert.deepEqual([pin.role, pin['aria-label']], ['img', 'Pinned: kept when History is cleaned up']);
+  assert.deepEqual([watch.role, watch['aria-label']], ['img', 'Watching for changes']);
+});
+
+test('Copy as one line: the entry as "host: Name 85%", from the same summary the Detection tab copies', async () => {
+  const h = load();
+  const item = entry('shop', { url: 'https://shop.example/cart?token=secret#x', detections: [det('Cloudflare', 'Anti-Bot', 85), det('reCAPTCHA', 'CAPTCHA', 70.4)] });
+  await h.view.copyHistoryItemOneLine(item);
+  assert.deepEqual(h.calls.copies.map(c => c.text), ['shop.example: Cloudflare 85%, reCAPTCHA 70%']);
+  await h.view.copyHistoryItemOneLine(entry('none', { detections: [] }));
+  assert.equal(h.calls.copies[1].text, 'none.example: -');
+});
+
+test('the entry menu offers Copy as one line, wired to its own action', () => {
+  assert.match(read('sections/history/history.html'), /data-action="copy-oneline"[\s\S]{0,400}data-i18n="historyCopyOneLine"/);
+  assert.match(read('sections/history/history.js'), /action === 'copy-oneline'\) \{\s*this\.copyHistoryItemOneLine\(item\)/);
+});
+
+/** A localStorage that remembers, or one that throws (private window, blocked site data). */
+const storage = (data = {}, broken = false) => ({
+  data,
+  getItem(key) { if (broken) throw new Error('blocked'); return Object.hasOwn(data, key) ? data[key] : null; },
+  setItem(key, value) { if (broken) throw new Error('blocked'); data[key] = String(value); }
+});
+
+test('the sort and the filter chips are kept for the next time the popup opens', () => {
+  const h = load();
+  h.context.localStorage = storage();
+  h.view.historyItems = [entry('a', { pinned: true }), entry('b')];
+  h.view.toggleFilterChip('pinned');
+  h.view.toggleFilterChip('captcha');
+  h.view.sortKey = 'host';
+  h.view.saveViewPrefs();
+  assert.equal(h.context.localStorage.data.historySortKey, 'host');
+  const next = load();
+  next.context.localStorage = h.context.localStorage;
+  next.view.restoreViewPrefs();
+  assert.equal(next.view.sortKey, 'host');
+  assert.deepEqual(JSON.parse(JSON.stringify(next.view.activeChips)), { pinned: true, changed: false, combinations: false, categories: ['captcha'] });
+  next.view.clearFilters();
+  assert.equal(JSON.parse(next.context.localStorage.data.historyFilterChips).pinned, false, 'Clear filters is remembered too');
+});
+
+test('a stored sort or chip nobody knows, or a storage that throws, leaves the defaults', () => {
+  const junk = load();
+  junk.context.localStorage = storage({ historySortKey: 'sideways', historyFilterChips: '{not json' });
+  junk.view.restoreViewPrefs();
+  assert.equal(junk.view.sortKey, 'recent');
+  assert.equal(junk.view.activeChips.pinned, false);
+  const blocked = load();
+  blocked.context.localStorage = storage({}, true);
+  blocked.view.restoreViewPrefs();
+  assert.doesNotThrow(() => blocked.view.saveViewPrefs());
+  assert.equal(blocked.view.sortKey, 'recent');
+  const none = load();
+  assert.doesNotThrow(() => none.view.restoreViewPrefs(), 'no localStorage at all');
 });

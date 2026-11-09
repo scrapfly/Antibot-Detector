@@ -6662,6 +6662,9 @@
   "historyCopyMarkdown": {
     "message": "Копировать как Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Копировать одной строкой"
+  },
   "presetAutoUpdateOff": {
     "message": "Автопроверка обновлений выключена"
   },

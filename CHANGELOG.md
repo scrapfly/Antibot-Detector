@@ -9,12 +9,14 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
-- History: the sort order you pick is remembered the next time the popup opens.
+- History: the sort order and filter chips you chose are still there the next time you open the popup.
 - History: press / to jump to the search box.
+- History: a "Copy as one line" action in each entry menu copies the page and its protections as a single line.
 - Rules: saving a rule that holds the same pattern more than once now says so, so the extra copies can be deleted.
 
 ### Fixed
 
+- History: a pinned or watched page now says so to screen readers, not only on hover.
 - Settings: importing a settings file or restoring a backup far bigger than the extension ever writes is now refused instead of freezing the popup.
 - Detection: with a search or filter on, Copy, Upload and the code exports now include only the detections shown.
 - Detection: Clear filters no longer drops keyboard focus; it moves to the search box.

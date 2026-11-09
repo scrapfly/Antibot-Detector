@@ -6662,6 +6662,9 @@
   "historyCopyMarkdown": {
     "message": "複製為 Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "複製為單行"
+  },
   "presetAutoUpdateOff": {
     "message": "自動檢查更新已關閉"
   },

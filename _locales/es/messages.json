@@ -6664,6 +6664,9 @@
   "historyCopyMarkdown": {
     "message": "Copiar como Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Copiar como una línea"
+  },
   "presetAutoUpdateOff": {
     "message": "La comprobación automática de actualizaciones está desactivada"
   },

@@ -6662,6 +6662,9 @@
   "historyCopyMarkdown": {
     "message": "Kopírovat jako Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Kopírovat jako jeden řádek"
+  },
   "presetAutoUpdateOff": {
     "message": "Automatická kontrola aktualizací je vypnutá"
   },

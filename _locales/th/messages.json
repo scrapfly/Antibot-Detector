@@ -6662,6 +6662,9 @@
   "historyCopyMarkdown": {
     "message": "คัดลอกเป็น Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "คัดลอกเป็นบรรทัดเดียว"
+  },
   "presetAutoUpdateOff": {
     "message": "การตรวจสอบการอัปเดตอัตโนมัติปิดอยู่"
   },

@@ -6662,6 +6662,9 @@
   "historyCopyMarkdown": {
     "message": "Sao chép dạng Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Sao chép thành một dòng"
+  },
   "presetAutoUpdateOff": {
     "message": "Tự động kiểm tra bản cập nhật đã tắt"
   },
