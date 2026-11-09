@@ -866,6 +866,8 @@ class DetectorManager {
             return { deleted: false, official: false, reason: 'not_found' };
         }
         const official = DetectionUtils.isOfficialDetector(detector);
+        // The list of deletions is read before anything changes: one that cannot be read is never written over
+        if (official) await DetectorManager.getDeletedOfficialIds({ strict: true });
         delete this.detectors[category][detectorName];
         await this.saveDetectorsToStorage();
         if (official) {
@@ -875,18 +877,19 @@ class DetectorManager {
     }
 
     /** IDs of official detectors the user deleted (kept out of updates). */
-    static async getDeletedOfficialIds() {
+    static async getDeletedOfficialIds({ strict = false } = {}) {
         try {
             const stored = await chrome.storage.local.get(DetectorManager.DELETED_OFFICIAL_KEY);
             const list = stored[DetectorManager.DELETED_OFFICIAL_KEY];
             return Array.isArray(list) ? list.filter(id => typeof id === 'string') : [];
-        } catch (_) {
+        } catch (error) {
+            if (strict) throw error; // a list that cannot be read is not an empty one: nobody writes over it
             return [];
         }
     }
 
     static async markOfficialDeleted(id, deleted) {
-        const ids = new Set(await DetectorManager.getDeletedOfficialIds());
+        const ids = new Set(await DetectorManager.getDeletedOfficialIds({ strict: true }));
         if (deleted) ids.add(id); else ids.delete(id);
         await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: [...ids] });
     }
@@ -1005,8 +1008,9 @@ class DetectorManager {
         }
         // Deletions that did not come back stay recorded, so a later restore
         // retries them and Update does not offer them meanwhile
-        const deleted = await DetectorManager.getDeletedOfficialIds();
-        await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: failed.filter(id => deleted.includes(id)) });
+        // A list that cannot be read is left as it is, not replaced by the few that failed here
+        const deleted = await DetectorManager.getDeletedOfficialIds({ strict: true }).catch(() => null);
+        if (deleted) await chrome.storage.local.set({ [DetectorManager.DELETED_OFFICIAL_KEY]: failed.filter(id => deleted.includes(id)) });
         if (fromReleaseOnly.length > 0) {
             // Not packaged: official only through the list Update keeps
             const stored = await chrome.storage.local.get(DetectorManager.REMOTE_OFFICIAL_KEY);

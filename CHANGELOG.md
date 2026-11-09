@@ -5,6 +5,13 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.6] - 2026-11-09
+
+### Fixed
+
+- Rules: deleting or restoring official rules while the list of deleted rules cannot be read no longer forgets earlier deletions, so Update will not bring them back.
+- A failed webhook delivery waiting for retry is no longer sent if the list of skipped sites cannot be read.
+
 ## [3.1.5] - 2026-11-09
 
 ### Added
