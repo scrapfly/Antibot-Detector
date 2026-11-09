@@ -9,6 +9,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- History: sort the list by newest, oldest, most protections or site name from a new dropdown beside the filter chips.
+- Detection: Copy → One line copies the page and its protections as a single line, for chats and tickets.
 - Detection: a Combinations chip next to the category chips shows only the detections where a combination fired.
 - Bulk scan: a Show menu in the results filters pages by protections found, none found, or failed; exports include only the pages shown.
 - AWS WAF: also detected when a page uses its CAPTCHA script.
