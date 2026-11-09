@@ -8,6 +8,7 @@ class History {
     this.activeChips = HistoryFilter.normalizeChips();
     // The list's order (HistorySort): kept while the popup is open
     this.sortKey = 'recent';
+    try { const saved = localStorage.getItem('historySortKey'); if (HistorySort.isKey(saved)) this.sortKey = saved; } catch (_) { /* storage blocked: the default order */ }
     this.initialized = false;
     this.listenersAttached = false;
     this.paginationManager = null;
@@ -2479,6 +2480,17 @@ class History {
     // Setup search functionality
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) {
+      // "/" jumps to the search box while the History tab is open and nothing is being typed
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
+        const t = e.target;
+        if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+        const tab = document.querySelector('#historyTab');
+        if (!tab || tab.style.display === 'none' || document.querySelector('.modal.show, .modal-overlay.show')) return;
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      });
       searchInput.addEventListener('input', (e) => {
         this.handleSearch(e.target.value);
       });
@@ -2494,8 +2506,10 @@ class History {
     }
     const sortSelect = document.querySelector('#historySort');
     if (sortSelect) {
+      if (HistorySort.isKey(this.sortKey)) sortSelect.value = this.sortKey;
       sortSelect.addEventListener('change', () => {
         this.sortKey = HistorySort.isKey(sortSelect.value) ? sortSelect.value : 'recent';
+        try { localStorage.setItem('historySortKey', this.sortKey); } catch (_) { /* per-viewer convenience only */ }
         this.renderHistory();
       });
     }
