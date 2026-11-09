@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "对设置的更改尚未保存。要在关闭前保存吗？"
+  },
+  "historySortLabel": {
+    "message": "排序历史记录"
+  },
+  "historySortRecent": {
+    "message": "最新优先"
+  },
+  "historySortOldest": {
+    "message": "最早优先"
+  },
+  "historySortDetections": {
+    "message": "防护最多"
+  },
+  "historySortHost": {
+    "message": "网站 A 到 Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "单行"
   }
 }

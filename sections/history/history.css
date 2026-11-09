@@ -134,6 +134,16 @@
   outline-offset: 1px;
 }
 
+/* The sort dropdown sits at the end of the chip row, the size of a chip */
+#historyTab .history-sort {
+  margin-inline-start: auto;
+  height: 24px;
+  min-height: 0;
+  padding-block: 0;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 /* On = an accent border and tint, a full icon: never colour alone */
 .history-filter-chip[aria-pressed="true"] {
   color: var(--text-primary);

@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل الإغلاق؟"
+  },
+  "historySortLabel": {
+    "message": "ترتيب السجل"
+  },
+  "historySortRecent": {
+    "message": "الأحدث أولاً"
+  },
+  "historySortOldest": {
+    "message": "الأقدم أولاً"
+  },
+  "historySortDetections": {
+    "message": "الأكثر حمايات"
+  },
+  "historySortHost": {
+    "message": "الموقع من أ إلى ي"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "سطر واحد"
   }
 }

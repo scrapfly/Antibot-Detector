@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Зміни налаштувань ще не збережено. Зберегти їх перед закриттям?"
+  },
+  "historySortLabel": {
+    "message": "Сортування історії"
+  },
+  "historySortRecent": {
+    "message": "Спочатку нові"
+  },
+  "historySortOldest": {
+    "message": "Спочатку старі"
+  },
+  "historySortDetections": {
+    "message": "Найбільше захистів"
+  },
+  "historySortHost": {
+    "message": "Сайт від А до Я"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Один рядок"
   }
 }

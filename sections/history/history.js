@@ -6,6 +6,8 @@ class History {
     this.searchQuery = '';
     // The filter chips under the search (HistoryFilter): kept while the popup is open
     this.activeChips = HistoryFilter.normalizeChips();
+    // The list's order (HistorySort): kept while the popup is open
+    this.sortKey = 'recent';
     this.initialized = false;
     this.listenersAttached = false;
     this.paginationManager = null;
@@ -124,7 +126,7 @@ class History {
     if (this.paginationManager) {
       // Pinning, a note, watching, deleting or a new scan redraw the same search: the list stays on its page.
       // A new search or chip starts on page 1.
-      const filterKey = JSON.stringify([this.searchQuery || '', this.activeChips || null]);
+      const filterKey = JSON.stringify([this.searchQuery || '', this.activeChips || null, this.sortKey]);
       const keepPage = this._renderedFilterKey === filterKey;
       // A new search or chip is news for a screen reader; a pin, a note or a new scan that redraws the same one is not
       filterChanged = this._renderedFilterKey !== undefined && !keepPage;
@@ -864,12 +866,13 @@ class History {
    * @returns {Array} Filtered history items
    */
   getFilteredItems() {
-    return HistoryFilter.filter(this.historyItems, {
+    const shown = HistoryFilter.filter(this.historyItems, {
       query: this.searchQuery,
       chips: this.activeChips,
       nameOf: detection => FormatUtils.detectorName(detection),
       categoryOf: detection => FormatUtils.categoryKey(detection)
     });
+    return HistorySort.sort(shown, this.sortKey);
   }
 
   /**
@@ -2487,6 +2490,13 @@ class History {
       filterRow.addEventListener('click', (e) => {
         const chip = e.target.closest('.history-filter-chip');
         if (chip) this.toggleFilterChip(chip.dataset.filter);
+      });
+    }
+    const sortSelect = document.querySelector('#historySort');
+    if (sortSelect) {
+      sortSelect.addEventListener('change', () => {
+        this.sortKey = HistorySort.isKey(sortSelect.value) ? sortSelect.value : 'recent';
+        this.renderHistory();
       });
     }
     const clearFiltersBtn = document.querySelector('#historyClearFilters');

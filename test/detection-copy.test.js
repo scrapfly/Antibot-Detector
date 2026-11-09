@@ -68,11 +68,11 @@ test('an empty page copies a heading and the summary, without a table', () => {
   assert.doesNotThrow(() => DetectionActions.buildDetectionsMarkdown(null));
 });
 
-test('the Detection tab offers its six formats in a menu wired to copyDetectionsAs', () => {
+test('the Detection tab offers its seven formats in a menu wired to copyDetectionsAs', () => {
   const html = fs.readFileSync(path.join(root, 'sections/detection/detection.html'), 'utf8');
   assert.ok(/id="copyOverviewBtn"[^>]*aria-haspopup="menu"/.test(html));
   const formats = [...html.matchAll(/data-copy-format="([a-z]+)"/g)].map(m => m[1]);
-  assert.deepStrictEqual(formats, ['overview', 'markdown', 'json', 'curl', 'python', 'node']);
+  assert.deepStrictEqual(formats, ['overview', 'markdown', 'oneline', 'json', 'curl', 'python', 'node']);
   const js = fs.readFileSync(path.join(root, 'sections/detection/detection.js'), 'utf8');
   assert.ok(js.includes('DetectionActions.copyDetectionsAs.call(this, item.dataset.copyFormat'));
 });

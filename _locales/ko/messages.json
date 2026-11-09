@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "설정 변경 사항이 아직 저장되지 않았습니다. 닫기 전에 저장할까요?"
+  },
+  "historySortLabel": {
+    "message": "기록 정렬"
+  },
+  "historySortRecent": {
+    "message": "최신순"
+  },
+  "historySortOldest": {
+    "message": "오래된 순"
+  },
+  "historySortDetections": {
+    "message": "보호 기능 많은 순"
+  },
+  "historySortHost": {
+    "message": "사이트 가나다순"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "한 줄"
   }
 }

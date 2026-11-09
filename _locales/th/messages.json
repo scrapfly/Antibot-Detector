@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "การเปลี่ยนแปลงการตั้งค่ายังไม่ได้บันทึก บันทึกก่อนปิดไหม"
+  },
+  "historySortLabel": {
+    "message": "เรียงลำดับประวัติ"
+  },
+  "historySortRecent": {
+    "message": "ใหม่สุดก่อน"
+  },
+  "historySortOldest": {
+    "message": "เก่าสุดก่อน"
+  },
+  "historySortDetections": {
+    "message": "การป้องกันมากที่สุด"
+  },
+  "historySortHost": {
+    "message": "ไซต์ ก ถึง ฮ"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "หนึ่งบรรทัด"
   }
 }
