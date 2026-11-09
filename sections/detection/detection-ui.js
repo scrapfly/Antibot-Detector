@@ -1259,7 +1259,8 @@ DetectionUI.renderDetectionsPage = function(detections) {
         });
         // Keyboard: Enter or Space opens the card like a click (keys on its own buttons stay theirs)
         card.addEventListener('keydown', (e) => {
-          if (e.target !== card || (e.key !== 'Enter' && e.key !== ' ')) return;
+          // A held key repeats: the repeats would land on the dialog's close button and shut it again
+          if (e.target !== card || e.repeat || (e.key !== 'Enter' && e.key !== ' ')) return;
           e.preventDefault();
           card.click();
         });
@@ -1677,7 +1678,11 @@ DetectionUI.clearFilters = function() {
     this.searchQuery = '';
     const input = typeof document !== 'undefined' ? document.querySelector('#detectionSearch') : null;
     if (input) input.value = '';
+    // The button that was just pressed is hidden by the redraw: the keyboard would be left on nothing, so it goes to the search box
+    const clearButton = typeof document !== 'undefined' ? document.querySelector('#detectionClearFilters') : null;
+    const hadFocus = !!clearButton && document.activeElement === clearButton;
     DetectionUI.applyFilters.call(this);
+    if (hadFocus && input && typeof input.focus === 'function') input.focus();
 };
 
 /**

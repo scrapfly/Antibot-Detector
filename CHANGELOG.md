@@ -5,6 +5,15 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.6] - 2026-11-09
+
+### Fixed
+
+- Detection: with a search or filter on, Copy, Upload and the code exports now include only the detections shown.
+- Detection: Clear filters no longer drops keyboard focus; it moves to the search box.
+- Detection: holding Enter or Space on a result no longer opens and instantly closes its details.
+- Arabic: the Detection page arrows and scan icons now sit on the correct side.
+
 ## [3.1.5] - 2026-11-09
 
 ### Added
