@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Detection: a Combinations chip next to the category chips shows only the detections where a combination fired.
 - Bulk scan: a Show menu in the results filters pages by protections found, none found, or failed; exports include only the pages shown.
 - AWS WAF: also detected when a page uses its CAPTCHA script.
 
