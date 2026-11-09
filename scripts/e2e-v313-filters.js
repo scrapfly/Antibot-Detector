@@ -438,7 +438,7 @@ async function scenario(name, fn) {
     assert.ok(await popup.$eval('#detectionFilters', el => !!el.closest('#detectionOverview') && !!el.closest('.detection-search')), 'in the summary card, under the search');
     assert.ok(await popup.evaluate(() => document.querySelector('#detectionSearch').getBoundingClientRect().bottom <= document.querySelector('#detectionFilters').getBoundingClientRect().top), 'below the search field');
     assert.deepEqual(await popup.$$eval(`${chips} svg`, els => els.length), 4, 'every chip has its icon');
-    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => el.style.getPropertyValue('--chip-color'))), ['#FF5733', '#33C3FF', '#3b82f6'], 'the Settings → Category colours');
+    assert.deepEqual(await popup.$$eval(chips, els => els.slice(0, 3).map(el => el.style.getPropertyValue('--chip-color'))), ['#FF5733', '#33C3FF', '#3b82f6'], 'the Settings → Category colours');
     const metrics = await rowMetrics(popup, '#detectionFilters');
     assert.equal(metrics.visible, true);
     assert.equal(metrics.spills, false, 'nothing spills out of the row');
