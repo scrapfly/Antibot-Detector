@@ -433,7 +433,7 @@ async function scenario(name, fn) {
     // The row: a labelled group under the search, in the summary card, one chip per category in the category order
     assert.equal(await popup.$eval('#detectionFilters', el => el.getAttribute('aria-label')), 'Filter detections');
     assert.equal(await popup.$eval('#detectionFilters', el => el.getAttribute('role')), 'group');
-    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => el.textContent.trim())), ['Anti-bot', 'Captcha', 'Fingerprint']);
+    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => el.textContent.trim())), ['Anti-bot', 'Captcha', 'Fingerprint', 'Combinations']);
     assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:false'], 'off to start with');
     assert.ok(await popup.$eval('#detectionFilters', el => !!el.closest('#detectionOverview') && !!el.closest('.detection-search')), 'in the summary card, under the search');
     assert.ok(await popup.evaluate(() => document.querySelector('#detectionSearch').getBoundingClientRect().bottom <= document.querySelector('#detectionFilters').getBoundingClientRect().top), 'below the search field');
