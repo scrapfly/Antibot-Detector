@@ -9,6 +9,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Settings: buttons that are busy or have nothing to do, like Check now or Back up now, now look disabled instead of highlighting on hover.
+- Arabic: the Captures search icon and the duplicate rule bullet list now sit on the correct side.
+- History: Clear on browser close now runs when only private windows remain open.
 - Detection: the notice asking you to set up a custom server for uploads now appears in your interface language instead of English.
 - Statistics → Rules: a rule renamed after History saved its pages, such as HUMAN Security, no longer shows as never found.
 - Turning the extension off or on is picked up at once instead of occasionally lagging for a few seconds.
