@@ -591,6 +591,7 @@
 /* Four chips (the three categories and Combinations) must fit the popup's width on one row: a second row would push the first
    page of results under the pagination bar. Tighter than History's, which has room to wrap. */
 #detectionResults .detection-filters {
+  flex-wrap: nowrap;
   gap: 4px;
 }
 
@@ -598,6 +599,13 @@
   padding: 0 7px;
   gap: 4px;
   min-width: 0;
+  flex: 0 1 auto;
+}
+
+#detectionResults .detection-filters .history-filter-chip > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* There are results, but the search and the chips match none: a line and the way back */
