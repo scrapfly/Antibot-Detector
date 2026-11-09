@@ -1,3 +1,5 @@
+**English** | [Español](es/meetrics.md) | [Русский](ru/meetrics.md) | [简体中文](zh-CN/meetrics.md) | [日本語](ja/meetrics.md) | [Português (Brasil)](pt-BR/meetrics.md) | [Deutsch](de/meetrics.md) | [Français](fr/meetrics.md) | [한국어](ko/meetrics.md)
+
 # Meetrics Check bot protection: how to detect it (and what it means for scraping)
 
 Meetrics Check is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Meetrics Check bypass, trying to detect Meetrics Check on a site, or investigating web scraping blocked by Meetrics Check, the first step is the same: confirm that Meetrics Check is really what answers your requests. This page lists the 4 public signals that the Scrapfly Antibot Detector extension uses to recognise Meetrics Check bot detection, how strongly each one points to it, and what that usually means for an automated client.

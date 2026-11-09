@@ -1,3 +1,5 @@
+**English** | [Español](es/hunt.md) | [Русский](ru/hunt.md) | [简体中文](zh-CN/hunt.md) | [日本語](ja/hunt.md) | [Português (Brasil)](pt-BR/hunt.md) | [Deutsch](de/hunt.md) | [Français](fr/hunt.md) | [한국어](ko/hunt.md)
+
 # Hunt bot protection: how to detect it (and what it means for scraping)
 
 Hunt is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Hunt bypass, trying to detect Hunt on a site, or investigating web scraping blocked by Hunt, the first step is the same: confirm that Hunt is really what answers your requests. This page lists the 4 public signals that the Scrapfly Antibot Detector extension uses to recognise Hunt bot detection, how strongly each one points to it, and what that usually means for an automated client.

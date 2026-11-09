@@ -1,3 +1,5 @@
+**English** | [Español](es/vercel.md) | [Русский](ru/vercel.md) | [简体中文](zh-CN/vercel.md) | [日本語](ja/vercel.md) | [Português (Brasil)](pt-BR/vercel.md) | [Deutsch](de/vercel.md) | [Français](fr/vercel.md) | [한국어](ko/vercel.md)
+
 # Vercel Firewall bot protection: how to detect it (and what it means for scraping)
 
 Vercel Firewall is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Vercel Firewall bypass, trying to detect Vercel Firewall on a site, or investigating web scraping blocked by Vercel Firewall, the first step is the same: confirm that Vercel Firewall is really what answers your requests. This page lists the 9 public signals that the Scrapfly Antibot Detector extension uses to recognise Vercel Firewall bot detection, how strongly each one points to it, and what that usually means for an automated client.

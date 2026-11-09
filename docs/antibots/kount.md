@@ -1,3 +1,5 @@
+**English** | [Español](es/kount.md) | [Русский](ru/kount.md) | [简体中文](zh-CN/kount.md) | [日本語](ja/kount.md) | [Português (Brasil)](pt-BR/kount.md) | [Deutsch](de/kount.md) | [Français](fr/kount.md) | [한국어](ko/kount.md)
+
 # Kount bot protection: how to detect it (and what it means for scraping)
 
 Kount is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Kount bypass, trying to detect Kount on a site, or investigating web scraping blocked by Kount, the first step is the same: confirm that Kount is really what answers your requests. This page lists the 4 public signals that the Scrapfly Antibot Detector extension uses to recognise Kount bot detection, how strongly each one points to it, and what that usually means for an automated client.

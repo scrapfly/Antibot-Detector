@@ -1,3 +1,5 @@
+**English** | [Español](es/incapsula.md) | [Русский](ru/incapsula.md) | [简体中文](zh-CN/incapsula.md) | [日本語](ja/incapsula.md) | [Português (Brasil)](pt-BR/incapsula.md) | [Deutsch](de/incapsula.md) | [Français](fr/incapsula.md) | [한국어](ko/incapsula.md)
+
 # Incapsula (Imperva) bot protection: how to detect it (and what it means for scraping)
 
 Incapsula (Imperva) is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Incapsula (Imperva) bypass, trying to detect Incapsula (Imperva) on a site, or investigating web scraping blocked by Incapsula (Imperva), the first step is the same: confirm that Incapsula (Imperva) is really what answers your requests. This page lists the 10 public signals that the Scrapfly Antibot Detector extension uses to recognise Incapsula (Imperva) bot detection, how strongly each one points to it, and what that usually means for an automated client.

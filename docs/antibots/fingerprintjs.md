@@ -1,3 +1,5 @@
+**English** | [Español](es/fingerprintjs.md) | [Русский](ru/fingerprintjs.md) | [简体中文](zh-CN/fingerprintjs.md) | [日本語](ja/fingerprintjs.md) | [Português (Brasil)](pt-BR/fingerprintjs.md) | [Deutsch](de/fingerprintjs.md) | [Français](fr/fingerprintjs.md) | [한국어](ko/fingerprintjs.md)
+
 # FingerprintJS bot protection: how to detect it (and what it means for scraping)
 
 FingerprintJS is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a FingerprintJS bypass, trying to detect FingerprintJS on a site, or investigating web scraping blocked by FingerprintJS, the first step is the same: confirm that FingerprintJS is really what answers your requests. This page lists the 13 public signals that the Scrapfly Antibot Detector extension uses to recognise FingerprintJS bot detection, how strongly each one points to it, and what that usually means for an automated client.

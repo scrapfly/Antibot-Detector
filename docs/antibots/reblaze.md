@@ -1,3 +1,5 @@
+**English** | [Español](es/reblaze.md) | [Русский](ru/reblaze.md) | [简体中文](zh-CN/reblaze.md) | [日本語](ja/reblaze.md) | [Português (Brasil)](pt-BR/reblaze.md) | [Deutsch](de/reblaze.md) | [Français](fr/reblaze.md) | [한국어](ko/reblaze.md)
+
 # Reblaze bot protection: how to detect it (and what it means for scraping)
 
 Reblaze is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Reblaze bypass, trying to detect Reblaze on a site, or investigating web scraping blocked by Reblaze, the first step is the same: confirm that Reblaze is really what answers your requests. This page lists the 7 public signals that the Scrapfly Antibot Detector extension uses to recognise Reblaze bot detection, how strongly each one points to it, and what that usually means for an automated client.

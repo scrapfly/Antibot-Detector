@@ -1,3 +1,5 @@
+**English** | [Español](es/cloudflare.md) | [Русский](ru/cloudflare.md) | [简体中文](zh-CN/cloudflare.md) | [日本語](ja/cloudflare.md) | [Português (Brasil)](pt-BR/cloudflare.md) | [Deutsch](de/cloudflare.md) | [Français](fr/cloudflare.md) | [한국어](ko/cloudflare.md)
+
 # Cloudflare Bot Management bot protection: how to detect it (and what it means for scraping)
 
 Cloudflare Bot Management is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Cloudflare Bot Management bypass, trying to detect Cloudflare Bot Management on a site, or investigating web scraping blocked by Cloudflare Bot Management, the first step is the same: confirm that Cloudflare Bot Management is really what answers your requests. This page lists the 11 public signals that the Scrapfly Antibot Detector extension uses to recognise Cloudflare Bot Management bot detection, how strongly each one points to it, and what that usually means for an automated client.

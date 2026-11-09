@@ -1,3 +1,5 @@
+**English** | [Español](es/cheq.md) | [Русский](ru/cheq.md) | [简体中文](zh-CN/cheq.md) | [日本語](ja/cheq.md) | [Português (Brasil)](pt-BR/cheq.md) | [Deutsch](de/cheq.md) | [Français](fr/cheq.md) | [한국어](ko/cheq.md)
+
 # Cheq bot protection: how to detect it (and what it means for scraping)
 
 Cheq is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Cheq bypass, trying to detect Cheq on a site, or investigating web scraping blocked by Cheq, the first step is the same: confirm that Cheq is really what answers your requests. This page lists the 12 public signals that the Scrapfly Antibot Detector extension uses to recognise Cheq bot detection, how strongly each one points to it, and what that usually means for an automated client.

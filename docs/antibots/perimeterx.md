@@ -1,3 +1,5 @@
+**English** | [Español](es/perimeterx.md) | [Русский](ru/perimeterx.md) | [简体中文](zh-CN/perimeterx.md) | [日本語](ja/perimeterx.md) | [Português (Brasil)](pt-BR/perimeterx.md) | [Deutsch](de/perimeterx.md) | [Français](fr/perimeterx.md) | [한국어](ko/perimeterx.md)
+
 # HUMAN (PerimeterX) bot protection: how to detect it (and what it means for scraping)
 
 HUMAN (PerimeterX) is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a HUMAN (PerimeterX) bypass, trying to detect HUMAN (PerimeterX) on a site, or investigating web scraping blocked by HUMAN (PerimeterX), the first step is the same: confirm that HUMAN (PerimeterX) is really what answers your requests. This page lists the 12 public signals that the Scrapfly Antibot Detector extension uses to recognise HUMAN (PerimeterX) bot detection, how strongly each one points to it, and what that usually means for an automated client.

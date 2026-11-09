@@ -1,3 +1,5 @@
+**English** | [Español](es/README.md) | [Русский](ru/README.md) | [简体中文](zh-CN/README.md) | [日本語](ja/README.md) | [Português (Brasil)](pt-BR/README.md) | [Deutsch](de/README.md) | [Français](fr/README.md) | [한국어](ko/README.md)
+
 # Anti-bot protections the Antibot Detector recognises
 
 One page for each of the 43 anti-bot detectors in the [Scrapfly Anti-bot Detector](../../README.md) extension: what the protection is, the public signals that reveal it, how hard it is rated, and what it usually means for web scraping. Pages are generated from the detection rules in `detectors/antibot/`. To get past anti-bot systems at scale, see Scrapfly's [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection).

@@ -1,3 +1,5 @@
+**English** | [Español](es/siteground-captcha.md) | [Русский](ru/siteground-captcha.md) | [简体中文](zh-CN/siteground-captcha.md) | [日本語](ja/siteground-captcha.md) | [Português (Brasil)](pt-BR/siteground-captcha.md) | [Deutsch](de/siteground-captcha.md) | [Français](fr/siteground-captcha.md) | [한국어](ko/siteground-captcha.md)
+
 # SiteGround SG-CAPTCHA bot protection: how to detect it (and what it means for scraping)
 
 SiteGround SG-CAPTCHA is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a SiteGround SG-CAPTCHA bypass, trying to detect SiteGround SG-CAPTCHA on a site, or investigating web scraping blocked by SiteGround SG-CAPTCHA, the first step is the same: confirm that SiteGround SG-CAPTCHA is really what answers your requests. This page lists the 3 public signals that the Scrapfly Antibot Detector extension uses to recognise SiteGround SG-CAPTCHA bot detection, how strongly each one points to it, and what that usually means for an automated client.

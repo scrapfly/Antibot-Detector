@@ -1,3 +1,5 @@
+**English** | [Español](es/jiasule.md) | [Русский](ru/jiasule.md) | [简体中文](zh-CN/jiasule.md) | [日本語](ja/jiasule.md) | [Português (Brasil)](pt-BR/jiasule.md) | [Deutsch](de/jiasule.md) | [Français](fr/jiasule.md) | [한국어](ko/jiasule.md)
+
 # Jiasule (Chuangyu Shield) bot protection: how to detect it (and what it means for scraping)
 
 Jiasule (Chuangyu Shield) is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Jiasule (Chuangyu Shield) bypass, trying to detect Jiasule (Chuangyu Shield) on a site, or investigating web scraping blocked by Jiasule (Chuangyu Shield), the first step is the same: confirm that Jiasule (Chuangyu Shield) is really what answers your requests. This page lists the 7 public signals that the Scrapfly Antibot Detector extension uses to recognise Jiasule (Chuangyu Shield) bot detection, how strongly each one points to it, and what that usually means for an automated client.

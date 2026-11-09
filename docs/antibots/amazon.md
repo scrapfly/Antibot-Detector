@@ -1,3 +1,5 @@
+**English** | [Español](es/amazon.md) | [Русский](ru/amazon.md) | [简体中文](zh-CN/amazon.md) | [日本語](ja/amazon.md) | [Português (Brasil)](pt-BR/amazon.md) | [Deutsch](de/amazon.md) | [Français](fr/amazon.md) | [한국어](ko/amazon.md)
+
 # Amazon Bot Protection bot protection: how to detect it (and what it means for scraping)
 
 Amazon Bot Protection is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Amazon Bot Protection bypass, trying to detect Amazon Bot Protection on a site, or investigating web scraping blocked by Amazon Bot Protection, the first step is the same: confirm that Amazon Bot Protection is really what answers your requests. This page lists the 3 public signals that the Scrapfly Antibot Detector extension uses to recognise Amazon Bot Protection bot detection, how strongly each one points to it, and what that usually means for an automated client.

@@ -1,3 +1,5 @@
+**English** | [Español](es/ruishu.md) | [Русский](ru/ruishu.md) | [简体中文](zh-CN/ruishu.md) | [日本語](ja/ruishu.md) | [Português (Brasil)](pt-BR/ruishu.md) | [Deutsch](de/ruishu.md) | [Français](fr/ruishu.md) | [한국어](ko/ruishu.md)
+
 # Ruishu bot protection: how to detect it (and what it means for scraping)
 
 Ruishu is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Ruishu bypass, trying to detect Ruishu on a site, or investigating web scraping blocked by Ruishu, the first step is the same: confirm that Ruishu is really what answers your requests. This page lists the 6 public signals that the Scrapfly Antibot Detector extension uses to recognise Ruishu bot detection, how strongly each one points to it, and what that usually means for an automated client.

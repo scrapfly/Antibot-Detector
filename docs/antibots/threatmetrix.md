@@ -1,3 +1,5 @@
+**English** | [Español](es/threatmetrix.md) | [Русский](ru/threatmetrix.md) | [简体中文](zh-CN/threatmetrix.md) | [日本語](ja/threatmetrix.md) | [Português (Brasil)](pt-BR/threatmetrix.md) | [Deutsch](de/threatmetrix.md) | [Français](fr/threatmetrix.md) | [한국어](ko/threatmetrix.md)
+
 # ThreatMetrix bot protection: how to detect it (and what it means for scraping)
 
 ThreatMetrix is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a ThreatMetrix bypass, trying to detect ThreatMetrix on a site, or investigating web scraping blocked by ThreatMetrix, the first step is the same: confirm that ThreatMetrix is really what answers your requests. This page lists the 6 public signals that the Scrapfly Antibot Detector extension uses to recognise ThreatMetrix bot detection, how strongly each one points to it, and what that usually means for an automated client.

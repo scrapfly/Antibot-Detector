@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Writes docs/antibots/<slug>.md for every detector in detectors/antibot and docs/antibots/README.md (the index), from the
- * detector JSON plus the hand-written blurbs in scripts/lib/antibot-blurbs.json. Run it after changing an anti-bot detector:
+ * Writes docs/antibots/<slug>.md (English) and docs/antibots/<code>/<slug>.md for the other README languages, for every detector in
+ * detectors/antibot, plus each language's README.md index, from the detector JSON, the string tables in
+ * scripts/lib/antibot-pages-i18n/<code>.json and the hand-written blurbs in scripts/lib/antibot-blurbs/<code>.json. Run it after changing an anti-bot detector:
  *   node scripts/generate-antibot-pages.js          write the pages
  *   node scripts/generate-antibot-pages.js --check  write nothing, exit 1 if a page is missing, stale or orphaned
  * test/antibot-pages.test.js runs the same comparison.
@@ -10,32 +11,46 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
-const { buildPage, buildIndex, slugOf } = require('./lib/antibot-pages');
+const { buildPage, buildIndex, slugOf, LANGS } = require('./lib/antibot-pages');
 
 const ROOT = path.join(__dirname, '..');
-const DETECTORS = path.join(ROOT, 'detectors', 'antibot');
 const OUT = path.join(ROOT, 'docs', 'antibots');
+const LIB = path.join(__dirname, 'lib');
 
-/** Every expected file: { 'slug.md': text, 'README.md': text }. */
+/** Every expected file, keyed by path under docs/antibots: 'slug.md', 'README.md', 'es/slug.md', 'es/README.md', ... */
 function generate(root = ROOT) {
   const dir = path.join(root, 'detectors', 'antibot');
-  const blurbs = JSON.parse(fs.readFileSync(path.join(__dirname, 'lib', 'antibot-blurbs.json'), 'utf8'));
+  const detectors = fs.readdirSync(dir).filter(f => /^detect-.+\.json$/.test(f)).sort()
+    .map(file => JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8').replace(/^\uFEFF/, '')));
+  const entries = detectors.map(d => ({ id: d.id, name: d.name, difficulty: d.difficulty }));
   const files = {};
-  const entries = [];
-  for (const file of fs.readdirSync(dir).filter(f => /^detect-.+\.json$/.test(f)).sort()) {
-    const detector = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8').replace(/^\uFEFF/, ''));
-    const slug = slugOf(detector.id);
-    files[`${slug}.md`] = buildPage(detector, blurbs[slug] || '');
-    entries.push({ id: detector.id, name: detector.name, difficulty: detector.difficulty });
+  for (const { code } of LANGS) {
+    const strings = JSON.parse(fs.readFileSync(path.join(LIB, 'antibot-pages-i18n', `${code}.json`), 'utf8'));
+    const blurbs = JSON.parse(fs.readFileSync(path.join(LIB, 'antibot-blurbs', `${code}.json`), 'utf8'));
+    const prefix = code === 'en' ? '' : `${code}/`;
+    for (const detector of detectors) {
+      files[`${prefix}${slugOf(detector.id)}.md`] = buildPage(detector, blurbs[slugOf(detector.id)] || '', strings, code);
+    }
+    files[`${prefix}README.md`] = buildIndex(entries, strings, code);
   }
-  files['README.md'] = buildIndex(entries);
   return files;
+}
+
+/** Every .md under dir, as paths relative to it with forward slashes. */
+function listMarkdown(dir, base = '') {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (entry.isDirectory()) out.push(...listMarkdown(path.join(dir, entry.name), `${base}${entry.name}/`));
+    else if (entry.name.endsWith('.md')) out.push(`${base}${entry.name}`);
+  }
+  return out;
 }
 
 function main() {
   const check = process.argv.includes('--check');
   const files = generate();
-  const existing = fs.existsSync(OUT) ? fs.readdirSync(OUT).filter(f => f.endsWith('.md')) : [];
+  const existing = listMarkdown(OUT);
   const problems = [];
   for (const [name, text] of Object.entries(files)) {
     const file = path.join(OUT, name);
@@ -43,7 +58,7 @@ function main() {
     if (current === text) continue;
     problems.push(name);
     if (!check) {
-      fs.mkdirSync(OUT, { recursive: true });
+      fs.mkdirSync(path.dirname(file), { recursive: true });
       fs.writeFileSync(file, text, 'utf8');
     }
   }
@@ -61,4 +76,4 @@ function main() {
 
 if (require.main === module) main();
 
-module.exports = { generate };
+module.exports = { generate, listMarkdown };

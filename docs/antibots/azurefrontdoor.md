@@ -1,3 +1,5 @@
+**English** | [Español](es/azurefrontdoor.md) | [Русский](ru/azurefrontdoor.md) | [简体中文](zh-CN/azurefrontdoor.md) | [日本語](ja/azurefrontdoor.md) | [Português (Brasil)](pt-BR/azurefrontdoor.md) | [Deutsch](de/azurefrontdoor.md) | [Français](fr/azurefrontdoor.md) | [한국어](ko/azurefrontdoor.md)
+
 # Azure Front Door bot protection: how to detect it (and what it means for scraping)
 
 Azure Front Door is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Azure Front Door bypass, trying to detect Azure Front Door on a site, or investigating web scraping blocked by Azure Front Door, the first step is the same: confirm that Azure Front Door is really what answers your requests. This page lists the 4 public signals that the Scrapfly Antibot Detector extension uses to recognise Azure Front Door bot detection, how strongly each one points to it, and what that usually means for an automated client.

@@ -1,3 +1,5 @@
+**English** | [Español](es/sift.md) | [Русский](ru/sift.md) | [简体中文](zh-CN/sift.md) | [日本語](ja/sift.md) | [Português (Brasil)](pt-BR/sift.md) | [Deutsch](de/sift.md) | [Français](fr/sift.md) | [한국어](ko/sift.md)
+
 # Sift bot protection: how to detect it (and what it means for scraping)
 
 Sift is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Sift bypass, trying to detect Sift on a site, or investigating web scraping blocked by Sift, the first step is the same: confirm that Sift is really what answers your requests. This page lists the 6 public signals that the Scrapfly Antibot Detector extension uses to recognise Sift bot detection, how strongly each one points to it, and what that usually means for an automated client.

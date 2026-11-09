@@ -1,3 +1,5 @@
+**English** | [Español](es/deepseek-pow.md) | [Русский](ru/deepseek-pow.md) | [简体中文](zh-CN/deepseek-pow.md) | [日本語](ja/deepseek-pow.md) | [Português (Brasil)](pt-BR/deepseek-pow.md) | [Deutsch](de/deepseek-pow.md) | [Français](fr/deepseek-pow.md) | [한국어](ko/deepseek-pow.md)
+
 # DeepSeek PoW bot protection: how to detect it (and what it means for scraping)
 
 DeepSeek PoW is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a DeepSeek PoW bypass, trying to detect DeepSeek PoW on a site, or investigating web scraping blocked by DeepSeek PoW, the first step is the same: confirm that DeepSeek PoW is really what answers your requests. This page lists the 5 public signals that the Scrapfly Antibot Detector extension uses to recognise DeepSeek PoW bot detection, how strongly each one points to it, and what that usually means for an automated client.

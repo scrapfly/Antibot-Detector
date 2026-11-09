@@ -10,11 +10,41 @@ const STORE_URL = 'https://chromewebstore.google.com/detail/scrapfly-anti-bot-de
 const ASP_URL = 'https://scrapfly.io/docs/scrape-api/anti-scraping-protection';
 const SCRAPE_API_URL = 'https://scrapfly.io/docs/scrape-api/getting-started';
 
-const DIFFICULTY_TEXT = {
-  Low: 'Low means the extension rates this protection as a light obstacle: it usually only filters simple clients, and a real browser or a well-formed browser-like request often gets through.',
-  Medium: 'Medium means the extension rates this protection as a real obstacle: expect checks on the browser, on request details, or on both, and expect them to change over time.',
-  High: 'High means the extension rates this protection as among the hardest to get past: it typically combines client-side checks with behavioural or server-side scoring.'
-};
+const EN = require('./antibot-pages-i18n/en.json');
+
+/** Languages of the pages, English first: code, native name, README file name. English pages live in docs/antibots/, the rest in docs/antibots/<code>/. */
+const LANGS = [
+  { code: 'en', name: 'English', readme: 'README.md' },
+  { code: 'es', name: 'Espa\u00f1ol', readme: 'README.es.md' },
+  { code: 'ru', name: '\u0420\u0443\u0441\u0441\u043a\u0438\u0439', readme: 'README.ru.md' },
+  { code: 'zh-CN', name: '\u7b80\u4f53\u4e2d\u6587', readme: 'README.zh-CN.md' },
+  { code: 'ja', name: '\u65e5\u672c\u8a9e', readme: 'README.ja.md' },
+  { code: 'pt-BR', name: 'Portugu\u00eas (Brasil)', readme: 'README.pt-BR.md' },
+  { code: 'de', name: 'Deutsch', readme: 'README.de.md' },
+  { code: 'fr', name: 'Fran\u00e7ais', readme: 'README.fr.md' },
+  { code: 'ko', name: '\ud55c\uad6d\uc5b4', readme: 'README.ko.md' }
+];
+
+/** Fills {name} placeholders. */
+function fmt(template, values) {
+  return String(template).replace(/\{(\w+)\}/g, (m, k) => (k in values ? values[k] : m));
+}
+
+/** Language switcher: the current language in bold, the others linked to the same page ('' = the index). */
+function switcher(lang, page) {
+  const file = page ? `${page}.md` : 'README.md';
+  return LANGS.map(l => {
+    if (l.code === lang) return `**${l.name}**`;
+    const dir = l.code === 'en' ? (lang === 'en' ? '' : '../') : (lang === 'en' ? `${l.code}/` : `../${l.code}/`);
+    return `[${l.name}](${dir}${file})`;
+  }).join(' | ');
+}
+
+/** Link to the project README in the language's own copy, from the page's folder. */
+function readmeHref(lang) {
+  const l = LANGS.find(x => x.code === lang) || LANGS[0];
+  return lang === 'en' ? '../../README.md' : `../../${l.readme}`;
+}
 
 /** "detect-aws-waf" -> "aws-waf" */
 function slugOf(id) {
@@ -34,16 +64,13 @@ function code(text) {
   return `${fence}${padded}${fence}`.replace(/\|/g, '\\|');
 }
 
-function percent(rule) {
-  return `${rule.confidence}%${rule.standalone === false ? ' (corroboration only)' : ''}`;
-}
-
-function row(kind, signal, rule) {
-  return { kind, signal, confidence: percent(rule), meaning: rule.description || '' };
+function percent(rule, t) {
+  return `${rule.confidence}%${rule.standalone === false ? ` (${t.corroborationOnly})` : ''}`;
 }
 
 /** The public signals of a detector, grouped by kind, in a fixed order. */
-function signalsOf(detector) {
+function signalsOf(detector, t = EN) {
+  const row = (kind, signal, rule) => ({ kind, signal, confidence: percent(rule, t), meaning: rule.description || '' });
   const d = detector.detection || {};
   const out = { cookie: [], header: [], url: [], content: [], window: [], dom: [], payload: [] };
   for (const r of d.cookie || []) {
@@ -65,38 +92,30 @@ function signalsOf(detector) {
   return out;
 }
 
-const SECTIONS = [
-  ['cookie', 'Cookies', 'Cookie names (and values, where one is matched) set on the page. Patterns are regular expressions unless they are plain words.'],
-  ['header', 'Response headers', 'HTTP response headers the page or its requests return.'],
-  ['url', 'Script and request URLs', 'Addresses of scripts, frames and requests the page loads. These are patterns matched against the full address.'],
-  ['content', 'Page and script content', 'Text found inside the page or its scripts.'],
-  ['window', 'JavaScript globals (window)', 'Properties the page\'s own JavaScript context exposes on `window`.'],
-  ['dom', 'DOM elements', 'Elements matched by CSS selector.'],
-  ['payload', 'Request and response payloads', 'Data the page sends to, or receives from, a matching address.']
-];
+const SECTIONS = ['cookie', 'header', 'url', 'content', 'window', 'dom', 'payload'];
 
-function table(rows) {
-  const lines = ['| Signal | Confidence | What it indicates |', '| --- | --- | --- |'];
+function table(rows, t) {
+  const lines = [`| ${t.tableSignal} | ${t.tableConfidence} | ${t.tableMeaning} |`, '| --- | --- | --- |'];
   for (const r of rows) lines.push(`| ${code(r.signal)} | ${cell(r.confidence)} | ${cell(r.meaning)} |`);
   return lines.join('\n');
 }
 
 /** A combination's "when" as one readable sentence, using the rules' own descriptions. */
-function whenText(when, names) {
+function whenText(when, names, t = EN) {
   if (!when) return '';
   if (when.pattern) return names[when.pattern] || when.pattern;
-  if (when.all) return when.all.map(w => wrap(w, names)).join(' and ');
-  if (when.any) return when.any.map(w => wrap(w, names)).join(' or ');
-  if (when.atLeast) return `at least ${when.atLeast} of: ${(when.of || []).map(w => wrap(w, names)).join('; ')}`;
+  if (when.all) return when.all.map(w => wrap(w, names, t)).join(t.joinAnd);
+  if (when.any) return when.any.map(w => wrap(w, names, t)).join(t.joinOr);
+  if (when.atLeast) return fmt(t.atLeast, { n: when.atLeast, list: (when.of || []).map(w => wrap(w, names, t)).join('; ') });
   return '';
 }
 
-function wrap(when, names) {
-  const text = whenText(when, names);
+function wrap(when, names, t) {
+  const text = whenText(when, names, t);
   return when && (when.all || when.any || when.atLeast) ? `(${text})` : text;
 }
 
-function combinationsOf(detector) {
+function combinationsOf(detector, t = EN) {
   const names = {};
   for (const list of Object.values(detector.detection || {})) {
     for (const r of list) if (r.id) names[r.id] = r.description || r.id;
@@ -104,118 +123,110 @@ function combinationsOf(detector) {
   return (detector.combinations || []).map(c => ({
     name: c.name || c.id,
     confidence: `${c.confidence}%`,
-    when: whenText(c.when, names)
+    when: whenText(c.when, names, t)
   }));
 }
 
-/** One page. `blurb` is the hand-written "what it is" text (or '' for the generic one). */
-function buildPage(detector, blurb) {
+/**
+ * One page. `blurb` is the hand-written "what it is" text (or '' for the generic one), `t` the language's string table
+ * (English by default) and `lang` its code (for the switcher and the README link).
+ */
+function buildPage(detector, blurb, t = EN, lang = 'en') {
   const name = detector.name;
-  const signals = signalsOf(detector);
+  const signals = signalsOf(detector, t);
   const total = Object.values(signals).reduce((n, list) => n + list.length, 0);
-  const difficulty = detector.difficulty || 'Medium';
+  const difficulty = ['Low', 'Medium', 'High'].includes(detector.difficulty) ? detector.difficulty : 'Medium';
   const out = [];
 
-  out.push(`# ${name} bot protection: how to detect it (and what it means for scraping)`);
+  out.push(switcher(lang, slugOf(detector.id)));
   out.push('');
-  out.push(
-    `${name} is a bot protection or anti-abuse layer that some websites put in front of their pages. ` +
-    `If you are looking for a ${name} bypass, trying to detect ${name} on a site, or investigating web scraping blocked by ${name}, ` +
-    `the first step is the same: confirm that ${name} is really what answers your requests. ` +
-    `This page lists the ${total} public signals that the Scrapfly Antibot Detector extension uses to recognise ${name} bot detection, ` +
-    `how strongly each one points to it, and what that usually means for an automated client.`
-  );
+  out.push(`# ${fmt(t.title, { name })}`);
   out.push('');
-  out.push('## What it is');
+  out.push(fmt(t.intro, { name, total }));
   out.push('');
-  out.push(blurb || String(detector.description || `${name} is an anti-bot product`).replace(/\.?$/, '.'));
+  out.push(`## ${t.headingWhat}`);
+  out.push('');
+  out.push(blurb || (detector.description ? String(detector.description).replace(/\.?$/, '.') : fmt(t.fallbackBlurb, { name })));
   out.push('');
   if (detector.website) {
-    out.push(`Official site: [${detector.website}](${detector.website})`);
+    out.push(`${t.officialSite}: [${detector.website}](${detector.website})`);
     out.push('');
   }
 
-  out.push(`## How to tell a site uses ${name}`);
+  out.push(`## ${fmt(t.headingHow, { name })}`);
   out.push('');
-  out.push(
-    'These signals are generated from the extension\'s own detection rules for ' +
-    `\`${detector.id}\` (rule version ${detector.version || 'n/a'}, last updated ${detector.lastUpdated || 'n/a'}). ` +
-    'A signal is only an indication: confidence is how sure the extension is when that one signal is seen. ' +
-    'Signals marked "corroboration only" never count on their own, because other products can produce them too.'
-  );
-  for (const [key, title, intro] of SECTIONS) {
+  out.push(fmt(t.howIntro, { id: detector.id, version: detector.version || t.notAvailable, updated: detector.lastUpdated || t.notAvailable }));
+  for (const key of SECTIONS) {
     if (!signals[key].length) continue;
+    const Key = key[0].toUpperCase() + key.slice(1);
     out.push('');
-    out.push(`### ${title}`);
+    out.push(`### ${t[`section${Key}`]}`);
     out.push('');
-    out.push(intro);
+    out.push(t[`section${Key}Intro`]);
     out.push('');
-    out.push(table(signals[key]));
+    out.push(table(signals[key], t));
   }
-  const combos = combinationsOf(detector);
+  const combos = combinationsOf(detector, t);
   if (combos.length) {
     out.push('');
-    out.push('### Combinations');
+    out.push(`### ${t.headingCombinations}`);
     out.push('');
-    out.push('Some signals score higher together than alone. These combinations are what the extension also reports.');
+    out.push(t.combinationsIntro);
     out.push('');
-    out.push('| Combination | Confidence | Needs |');
+    out.push(`| ${t.tableCombination} | ${t.tableConfidence} | ${t.tableNeeds} |`);
     out.push('| --- | --- | --- |');
     for (const c of combos) out.push(`| ${cell(c.name)} | ${cell(c.confidence)} | ${cell(c.when)} |`);
   }
   out.push('');
 
-  out.push('## Difficulty');
+  out.push(`## ${t.headingDifficulty}`);
   out.push('');
-  out.push(`**${difficulty}.** ${DIFFICULTY_TEXT[difficulty] || DIFFICULTY_TEXT.Medium}`);
+  out.push(`**${t[`difficulty${difficulty}`]}.** ${t[`difficultyText${difficulty}`]}`);
   out.push('');
-  out.push('The rating is the extension\'s own rule of thumb, not a statement by the vendor, and a site\'s configuration can make the same product easier or harder.');
-  out.push('');
-
-  out.push('## What it means for scraping');
-  out.push('');
-  out.push(
-    `If ${name} is present, a request that does not look like a real, consistent browser session may be challenged, ` +
-    'delayed or refused, and the response can be a challenge or block page instead of the content you wanted. ' +
-    'What exactly happens depends on how the site owner configured the product, which can differ from one site to the next ' +
-    'and can change without notice. Treat a detection as a reason to look at the response you actually receive, not as a guarantee of a block.'
-  );
-  out.push('');
-  out.push(
-    `To scrape pages protected by ${name} without maintaining the workarounds yourself, see Scrapfly's ` +
-    `[Anti Scraping Protection documentation](${ASP_URL}) and the [Scrape API](${SCRAPE_API_URL}). ` +
-    'Only scrape what you are allowed to, and respect the site\'s terms and robots rules.'
-  );
+  out.push(t.difficultyNote);
   out.push('');
 
-  out.push('## Detect it with the extension');
+  out.push(`## ${t.headingScraping}`);
   out.push('');
-  out.push(
-    `Install the free [Scrapfly Anti-bot Detector](${STORE_URL}) for Chrome, browse to the page, and the popup lists ${name} ` +
-    'with its confidence, its difficulty and the exact signals that matched. ' +
-    'Read more in the [project README](../../README.md), or see [all anti-bot protections the extension detects](README.md).'
-  );
+  out.push(fmt(t.scrapingMeaning, { name }));
+  out.push('');
+  out.push(fmt(t.scrapingScrapfly, { name, aspLink: `[${t.linkAsp}](${ASP_URL})`, apiLink: `[${t.linkApi}](${SCRAPE_API_URL})` }));
+  out.push('');
+
+  out.push(`## ${t.headingDetect}`);
+  out.push('');
+  out.push(fmt(t.detectText, {
+    name,
+    storeLink: `[${t.linkStore}](${STORE_URL})`,
+    readmeLink: `[${t.linkReadme}](${readmeHref(lang)})`,
+    allLink: `[${t.linkAll}](README.md)`
+  }));
   out.push('');
   return out.join('\n');
 }
 
 /** The index page: one row per anti-bot detector. `entries` = [{ id, name, difficulty }]. */
-function buildIndex(entries) {
+function buildIndex(entries, t = EN, lang = 'en') {
   const sorted = entries.slice().sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
   const out = [];
-  out.push('# Anti-bot protections the Antibot Detector recognises');
+  out.push(switcher(lang, ''));
   out.push('');
-  out.push(
-    `One page for each of the ${sorted.length} anti-bot detectors in the [Scrapfly Anti-bot Detector](../../README.md) extension: ` +
-    'what the protection is, the public signals that reveal it, how hard it is rated, and what it usually means for web scraping. ' +
-    `Pages are generated from the detection rules in \`detectors/antibot/\`. To get past anti-bot systems at scale, see Scrapfly's [Anti Scraping Protection](${ASP_URL}).`
-  );
+  out.push(`# ${t.indexTitle}`);
   out.push('');
-  out.push('| Protection | Difficulty | Page |');
+  out.push(fmt(t.indexIntro, {
+    count: sorted.length,
+    extLink: `[${t.linkStore}](${readmeHref(lang)})`,
+    aspLink: `[${t.linkAspShort}](${ASP_URL})`
+  }));
+  out.push('');
+  out.push(`| ${t.indexProtection} | ${t.indexDifficulty} | ${t.indexPage} |`);
   out.push('| --- | --- | --- |');
-  for (const e of sorted) out.push(`| ${cell(e.name)} | ${cell(e.difficulty || 'Medium')} | [${cell(e.name)}](${slugOf(e.id)}.md) |`);
+  for (const e of sorted) {
+    const d = ['Low', 'Medium', 'High'].includes(e.difficulty) ? e.difficulty : 'Medium';
+    out.push(`| ${cell(e.name)} | ${cell(t[`difficulty${d}`])} | [${cell(e.name)}](${slugOf(e.id)}.md) |`);
+  }
   out.push('');
   return out.join('\n');
 }
 
-module.exports = { slugOf, cell, code, signalsOf, combinationsOf, buildPage, buildIndex, DIFFICULTY_TEXT, STORE_URL, ASP_URL, SCRAPE_API_URL };
+module.exports = { slugOf, cell, code, fmt, signalsOf, combinationsOf, buildPage, buildIndex, switcher, readmeHref, LANGS, STORE_URL, ASP_URL, SCRAPE_API_URL };

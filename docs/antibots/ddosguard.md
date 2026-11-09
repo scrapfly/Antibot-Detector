@@ -1,3 +1,5 @@
+**English** | [Español](es/ddosguard.md) | [Русский](ru/ddosguard.md) | [简体中文](zh-CN/ddosguard.md) | [日本語](ja/ddosguard.md) | [Português (Brasil)](pt-BR/ddosguard.md) | [Deutsch](de/ddosguard.md) | [Français](fr/ddosguard.md) | [한국어](ko/ddosguard.md)
+
 # DDoS-Guard bot protection: how to detect it (and what it means for scraping)
 
 DDoS-Guard is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a DDoS-Guard bypass, trying to detect DDoS-Guard on a site, or investigating web scraping blocked by DDoS-Guard, the first step is the same: confirm that DDoS-Guard is really what answers your requests. This page lists the 4 public signals that the Scrapfly Antibot Detector extension uses to recognise DDoS-Guard bot detection, how strongly each one points to it, and what that usually means for an automated client.

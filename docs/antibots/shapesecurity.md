@@ -1,3 +1,5 @@
+**English** | [Español](es/shapesecurity.md) | [Русский](ru/shapesecurity.md) | [简体中文](zh-CN/shapesecurity.md) | [日本語](ja/shapesecurity.md) | [Português (Brasil)](pt-BR/shapesecurity.md) | [Deutsch](de/shapesecurity.md) | [Français](fr/shapesecurity.md) | [한국어](ko/shapesecurity.md)
+
 # Shape Security bot protection: how to detect it (and what it means for scraping)
 
 Shape Security is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Shape Security bypass, trying to detect Shape Security on a site, or investigating web scraping blocked by Shape Security, the first step is the same: confirm that Shape Security is really what answers your requests. This page lists the 5 public signals that the Scrapfly Antibot Detector extension uses to recognise Shape Security bot detection, how strongly each one points to it, and what that usually means for an automated client.

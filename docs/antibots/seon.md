@@ -1,3 +1,5 @@
+**English** | [Español](es/seon.md) | [Русский](ru/seon.md) | [简体中文](zh-CN/seon.md) | [日本語](ja/seon.md) | [Português (Brasil)](pt-BR/seon.md) | [Deutsch](de/seon.md) | [Français](fr/seon.md) | [한국어](ko/seon.md)
+
 # SEON bot protection: how to detect it (and what it means for scraping)
 
 SEON is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a SEON bypass, trying to detect SEON on a site, or investigating web scraping blocked by SEON, the first step is the same: confirm that SEON is really what answers your requests. This page lists the 7 public signals that the Scrapfly Antibot Detector extension uses to recognise SEON bot detection, how strongly each one points to it, and what that usually means for an automated client.

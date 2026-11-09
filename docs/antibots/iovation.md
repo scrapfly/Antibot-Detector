@@ -1,3 +1,5 @@
+**English** | [Español](es/iovation.md) | [Русский](ru/iovation.md) | [简体中文](zh-CN/iovation.md) | [日本語](ja/iovation.md) | [Português (Brasil)](pt-BR/iovation.md) | [Deutsch](de/iovation.md) | [Français](fr/iovation.md) | [한국어](ko/iovation.md)
+
 # iovation (TransUnion TruValidate) bot protection: how to detect it (and what it means for scraping)
 
 iovation (TransUnion TruValidate) is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a iovation (TransUnion TruValidate) bypass, trying to detect iovation (TransUnion TruValidate) on a site, or investigating web scraping blocked by iovation (TransUnion TruValidate), the first step is the same: confirm that iovation (TransUnion TruValidate) is really what answers your requests. This page lists the 9 public signals that the Scrapfly Antibot Detector extension uses to recognise iovation (TransUnion TruValidate) bot detection, how strongly each one points to it, and what that usually means for an automated client.
