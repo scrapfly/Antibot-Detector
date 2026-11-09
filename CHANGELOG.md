@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Single-page sites that change page right after loading now get the new page scanned instead of skipped.
 - Settings: buttons that are busy or have nothing to do, like Check now or Back up now, now look disabled instead of highlighting on hover.
 - Arabic: the Captures search icon and the duplicate rule bullet list now sit on the correct side.
 - History: Clear on browser close now runs when only private windows remain open.
