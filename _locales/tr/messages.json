@@ -6659,6 +6659,9 @@
   "historyCopyMarkdown": {
     "message": "Markdown olarak kopyala"
   },
+  "historyCopyOneLine": {
+    "message": "Tek satır olarak kopyala"
+  },
   "presetAutoUpdateOff": {
     "message": "Güncellemelerin otomatik kontrolü kapalı"
   },

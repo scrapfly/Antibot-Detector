@@ -6659,6 +6659,9 @@
   "historyCopyMarkdown": {
     "message": "Markdown으로 복사"
   },
+  "historyCopyOneLine": {
+    "message": "한 줄로 복사"
+  },
   "presetAutoUpdateOff": {
     "message": "자동 업데이트 확인이 꺼져 있습니다"
   },

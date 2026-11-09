@@ -6659,6 +6659,9 @@
   "historyCopyMarkdown": {
     "message": "Kopiëren als Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Kopiëren als één regel"
+  },
   "presetAutoUpdateOff": {
     "message": "Automatisch controleren op updates staat uit"
   },

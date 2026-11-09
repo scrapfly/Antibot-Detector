@@ -6659,6 +6659,9 @@
   "historyCopyMarkdown": {
     "message": "نسخ بصيغة Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "نسخ كسطر واحد"
+  },
   "presetAutoUpdateOff": {
     "message": "التحقق التلقائي من التحديثات معطّل"
   },

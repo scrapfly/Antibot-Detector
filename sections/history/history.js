@@ -6,12 +6,32 @@ class History {
     this.searchQuery = '';
     // The filter chips under the search (HistoryFilter): kept while the popup is open
     this.activeChips = HistoryFilter.normalizeChips();
-    // The list's order (HistorySort): kept while the popup is open
+    // The list's order (HistorySort)
     this.sortKey = 'recent';
+    // Both come back the next time the popup opens
+    this.restoreViewPrefs();
     this.initialized = false;
     this.listenersAttached = false;
     this.paginationManager = null;
     this.historyLimit = 0; // 0 = unlimited (matches settings default)
+  }
+
+  /** The sort key and the filter chips the person left on, from the browser's own storage (a per-person convenience: nothing there is fine). */
+  restoreViewPrefs() {
+    try {
+      const key = localStorage.getItem('historySortKey');
+      if (HistorySort.isKey(key)) this.sortKey = key;
+      const chips = JSON.parse(localStorage.getItem('historyFilterChips') || 'null');
+      if (chips && typeof chips === 'object') this.activeChips = HistoryFilter.normalizeChips(chips);
+    } catch (_) { /* storage blocked or unreadable: the defaults stand */ }
+  }
+
+  /** Remember the sort key and the chips for the next time the popup opens. */
+  saveViewPrefs() {
+    try {
+      localStorage.setItem('historySortKey', this.sortKey);
+      localStorage.setItem('historyFilterChips', JSON.stringify(this.activeChips));
+    } catch (_) { /* storage blocked or full: the choice lasts until the popup closes */ }
   }
 
   /**
@@ -324,6 +344,7 @@ class History {
     } else {
       return;
     }
+    this.saveViewPrefs();
     this.renderHistory();
   }
 
@@ -336,6 +357,7 @@ class History {
     this.searchQuery = '';
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) searchInput.value = '';
+    this.saveViewPrefs();
     this.renderHistory();
     if (hadFocus && searchInput) searchInput.focus();
   }
@@ -432,8 +454,8 @@ class History {
             </span>
             <div class="history-item-content">
               <div class="history-title-row">
-                ${item.pinned === true ? `<span class="history-pin" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
-                ${item.watch === true ? `<span class="history-watch" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
+                ${item.pinned === true ? `<span class="history-pin" role="img" aria-label="${FormatUtils.escapeAttr(item.autoPinned === true ? autoPinnedTip : pinnedTip)}" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
+                ${item.watch === true ? `<span class="history-watch" role="img" aria-label="${FormatUtils.escapeAttr(watchTip)}" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
                 <div class="history-title" title="${attrTitle}" id="history-title-${cardNumber}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>
@@ -1036,6 +1058,20 @@ class History {
     const saved = await Utils.getHistorySettings().catch(() => ({}));
     const built = HistoryExport.build([historyItem], { format: 'md', includeTimestamps: saved.includeTimestamps !== false });
     await FormatUtils.copyToClipboard(built.text);
+  }
+
+  /**
+   * "Copy as one line": this entry as "host: Cloudflare 95%, reCAPTCHA 70%", for a chat or a ticket. The same line the Detection
+   * tab's Copy menu writes, so it holds no cookie or header value and no query string.
+   * @param {object} historyItem - History entry
+   */
+  async copyHistoryItemOneLine(historyItem) {
+    const detections = (Array.isArray(historyItem.detections) ? historyItem.detections : []).map(d => ({
+      name: (d && d.detector && d.detector.name) || (d && d.name) || '',
+      confidence: d && d.confidence
+    }));
+    const host = this.getDomainFromUrl(historyItem.url || historyItem.hostname || '');
+    await FormatUtils.copyToClipboard(DetectionSummary.oneLine({ host, detections }));
   }
 
   /**
@@ -2494,8 +2530,11 @@ class History {
     }
     const sortSelect = document.querySelector('#historySort');
     if (sortSelect) {
+      // The order kept from the last time the popup was open
+      if (HistorySort.isKey(this.sortKey)) sortSelect.value = this.sortKey;
       sortSelect.addEventListener('change', () => {
         this.sortKey = HistorySort.isKey(sortSelect.value) ? sortSelect.value : 'recent';
+        this.saveViewPrefs();
         this.renderHistory();
       });
     }
@@ -2544,6 +2583,8 @@ class History {
           this.copyHistoryItem(item);
         } else if (action === 'copy-markdown') {
           this.copyHistoryItemMarkdown(item);
+        } else if (action === 'copy-oneline') {
+          this.copyHistoryItemOneLine(item);
         } else if (action === 'pin') {
           this.togglePin(item);
         } else if (action === 'watch') {

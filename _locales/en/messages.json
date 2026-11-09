@@ -7333,6 +7333,10 @@
     "message": "Copy as Markdown",
     "description": "History entry menu: copies this entry as a Markdown heading and table, for tickets and chats"
   },
+  "historyCopyOneLine": {
+    "message": "Copy as one line",
+    "description": "History entry menu: copies this entry as one line of text (page and protections), for chats and tickets"
+  },
   "presetAutoUpdateOff": {
     "message": "Automatic update checks are off",
     "description": "A line in the list of what the Privacy preset changes"

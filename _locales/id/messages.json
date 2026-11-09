@@ -6659,6 +6659,9 @@
   "historyCopyMarkdown": {
     "message": "Salin sebagai Markdown"
   },
+  "historyCopyOneLine": {
+    "message": "Salin sebagai satu baris"
+  },
   "presetAutoUpdateOff": {
     "message": "Pemeriksaan pembaruan otomatis nonaktif"
   },
