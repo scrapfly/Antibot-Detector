@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Rules: with a search or filter on, the menu can export, turn on or turn off only the rules shown.
 - History: sort the list by newest, oldest, most protections or site name from a new dropdown beside the filter chips.
 - Detection: Copy → One line copies the page and its protections as a single line, for chats and tickets.
 - Detection: a Combinations chip next to the category chips shows only the detections where a combination fired.

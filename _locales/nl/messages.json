@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "De test kon niet worden uitgevoerd."
   },
+  "rulesExportShownFmt": {
+    "message": "Getoonde regels exporteren ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Getoonde regels inschakelen ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Getoonde regels uitschakelen ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Regels ingeschakeld: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Regels uitgeschakeld: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Kan de wijziging niet opslaan. Probeer het opnieuw."
   },

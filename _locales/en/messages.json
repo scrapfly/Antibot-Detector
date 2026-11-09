@@ -7014,6 +7014,26 @@
     "message": "The test could not run.",
     "description": "Test on this page: a failure with no more precise message"
   },
+  "rulesExportShownFmt": {
+    "message": "Export shown rules ({0})",
+    "description": "Rules menu: export only the rules the search and filters leave. {0} = how many"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Turn on shown rules ({0})",
+    "description": "Rules menu: switch on every rule the search and filters leave. {0} = how many that are off"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Turn off shown rules ({0})",
+    "description": "Rules menu: switch off every rule the search and filters leave. {0} = how many that are on"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Rules turned on: {0}",
+    "description": "Rules: notice after switching on the rules shown. {0} = how many"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Rules turned off: {0}",
+    "description": "Rules: notice after switching off the rules shown. {0} = how many"
+  },
   "rulesToggleSaveFailed": {
     "message": "Could not save the change. Try again.",
     "description": "Rules: a rule's on/off switch could not be saved, so it went back to how it was"

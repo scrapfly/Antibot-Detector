@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Не вдалося запустити перевірку."
   },
+  "rulesExportShownFmt": {
+    "message": "Експортувати показані правила ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Увімкнути показані правила ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Вимкнути показані правила ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Правил увімкнено: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Правил вимкнено: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Не вдалося зберегти зміну. Повторіть спробу."
   },

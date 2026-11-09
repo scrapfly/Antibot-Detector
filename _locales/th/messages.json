@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "เรียกใช้การทดสอบไม่ได้"
   },
+  "rulesExportShownFmt": {
+    "message": "ส่งออกกฎที่แสดงอยู่ ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "เปิดใช้กฎที่แสดงอยู่ ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "ปิดใช้กฎที่แสดงอยู่ ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "เปิดใช้กฎแล้ว: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "ปิดใช้กฎแล้ว: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "บันทึกการเปลี่ยนแปลงไม่สำเร็จ ลองอีกครั้ง"
   },

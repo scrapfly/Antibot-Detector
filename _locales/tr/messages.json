@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Test çalıştırılamadı."
   },
+  "rulesExportShownFmt": {
+    "message": "Gösterilen kuralları dışa aktar ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Gösterilen kuralları aç ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Gösterilen kuralları kapat ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Açılan kurallar: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Kapatılan kurallar: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Değişiklik kaydedilemedi. Yeniden deneyin."
   },
