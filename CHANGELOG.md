@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Bulk scan: a paused run left paused for a few minutes can still be resumed instead of ending as stopped.
 - History: an entry with no known date no longer shows 1 January 1970 in its hover text, details or copied text.
 
 ## [3.1.4] - 2026-11-06
