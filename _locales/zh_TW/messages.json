@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "重新掃描失敗的網頁"
   },
+  "bulkFilterLabel": {
+    "message": "顯示",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "所有網頁",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "有防護",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "未發現防護",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "失敗或已略過",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "正在顯示 {1} 個網頁中的 {0} 個。匯出僅包含這些網頁。",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "新清單"
   },

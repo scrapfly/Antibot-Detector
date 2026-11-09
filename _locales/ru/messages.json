@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "Повторно сканировать страницы со сбоем"
   },
+  "bulkFilterLabel": {
+    "message": "Показать",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Все страницы",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "С защитой",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Защита не найдена",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Со сбоем или пропущенные",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Показано страниц: {0} из {1}. В экспорт попадут только они.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "Новый список"
   },

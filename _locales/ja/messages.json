@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "失敗したページを再スキャン"
   },
+  "bulkFilterLabel": {
+    "message": "表示",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "すべてのページ",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "保護あり",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "保護は見つかりませんでした",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "失敗またはスキップ",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{1} ページ中 {0} ページを表示中。エクスポートにはこれらのみ含まれます。",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "新しいリスト"
   },

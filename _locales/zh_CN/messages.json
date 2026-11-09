@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "重新扫描失败的页面"
   },
+  "bulkFilterLabel": {
+    "message": "显示",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "所有页面",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "有防护",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "未发现防护",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "失败或已跳过",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "正在显示 {1} 个页面中的 {0} 个。导出仅包含这些页面。",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "新列表"
   },
