@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Zmiany w ustawieniach nie zostały jeszcze zapisane. Zapisać je przed zamknięciem?"
+  },
+  "historySortLabel": {
+    "message": "Sortuj historię"
+  },
+  "historySortRecent": {
+    "message": "Najnowsze najpierw"
+  },
+  "historySortOldest": {
+    "message": "Najstarsze najpierw"
+  },
+  "historySortDetections": {
+    "message": "Najwięcej zabezpieczeń"
+  },
+  "historySortHost": {
+    "message": "Witryna od A do Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Jedna linia"
   }
 }

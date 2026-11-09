@@ -7324,5 +7324,29 @@
   "settingsUnsavedCloseMessage": {
     "message": "Your changes to the settings are not saved yet. Save them before closing?",
     "description": "Settings: the question asked when Settings is closed (✕, Escape or a click outside it) with changes that are not saved. The buttons are Cancel, Discard and Save"
+  },
+  "historySortLabel": {
+    "message": "Sort history",
+    "description": "Accessible name of the sort dropdown at the end of the History chip row"
+  },
+  "historySortRecent": {
+    "message": "Newest first",
+    "description": "Sort option in History: the order History keeps, newest scan first"
+  },
+  "historySortOldest": {
+    "message": "Oldest first",
+    "description": "Sort option in History: oldest scan first"
+  },
+  "historySortDetections": {
+    "message": "Most protections",
+    "description": "Sort option in History: pages with the most protections found first"
+  },
+  "historySortHost": {
+    "message": "Site A to Z",
+    "description": "Sort option in History: by site name, A to Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "One line",
+    "description": "Detection tab Copy menu item: the scan as a single line of text, like \"shop.example: Cloudflare 95%\""
   }
 }

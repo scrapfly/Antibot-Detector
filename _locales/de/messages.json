@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Deine Änderungen an den Einstellungen sind noch nicht gespeichert. Vor dem Schließen speichern?"
+  },
+  "historySortLabel": {
+    "message": "Verlauf sortieren"
+  },
+  "historySortRecent": {
+    "message": "Neueste zuerst"
+  },
+  "historySortOldest": {
+    "message": "Älteste zuerst"
+  },
+  "historySortDetections": {
+    "message": "Meiste Schutzmaßnahmen"
+  },
+  "historySortHost": {
+    "message": "Website A bis Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Eine Zeile"
   }
 }

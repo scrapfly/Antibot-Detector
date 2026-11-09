@@ -6654,5 +6654,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de cerrar?"
+  },
+  "historySortLabel": {
+    "message": "Ordenar historial"
+  },
+  "historySortRecent": {
+    "message": "Más recientes primero"
+  },
+  "historySortOldest": {
+    "message": "Más antiguos primero"
+  },
+  "historySortDetections": {
+    "message": "Más protecciones"
+  },
+  "historySortHost": {
+    "message": "Sitio de A a Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Una línea"
   }
 }

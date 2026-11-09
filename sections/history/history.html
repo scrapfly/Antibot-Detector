@@ -44,6 +44,12 @@
       <span class="history-filter-icon" data-ui-icon="combination" aria-hidden="true"></span>
       <span data-i18n="historyFilterCombinations">Combinations</span>
     </button>
+    <select id="historySort" class="select-field ui-select history-sort" aria-label="Sort history" data-i18n-aria-label="historySortLabel">
+      <option value="recent" data-i18n="historySortRecent">Newest first</option>
+      <option value="oldest" data-i18n="historySortOldest">Oldest first</option>
+      <option value="detections" data-i18n="historySortDetections">Most protections</option>
+      <option value="host" data-i18n="historySortHost">Site A to Z</option>
+    </select>
   </div>
 
   <!-- Toolbar "…" menu: whole-history actions (import / export / clear) -->

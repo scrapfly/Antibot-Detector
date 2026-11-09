@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Perubahan pengaturan Anda belum disimpan. Simpan sebelum menutup?"
+  },
+  "historySortLabel": {
+    "message": "Urutkan riwayat"
+  },
+  "historySortRecent": {
+    "message": "Terbaru dulu"
+  },
+  "historySortOldest": {
+    "message": "Terlama dulu"
+  },
+  "historySortDetections": {
+    "message": "Perlindungan terbanyak"
+  },
+  "historySortHost": {
+    "message": "Situs A ke Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Satu baris"
   }
 }

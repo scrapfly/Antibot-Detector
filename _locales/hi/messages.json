@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या बंद करने से पहले उन्हें सहेजें?"
+  },
+  "historySortLabel": {
+    "message": "इतिहास को क्रमबद्ध करें"
+  },
+  "historySortRecent": {
+    "message": "सबसे नया पहले"
+  },
+  "historySortOldest": {
+    "message": "सबसे पुराना पहले"
+  },
+  "historySortDetections": {
+    "message": "सबसे ज़्यादा सुरक्षाएँ"
+  },
+  "historySortHost": {
+    "message": "साइट A से Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "एक पंक्ति"
   }
 }

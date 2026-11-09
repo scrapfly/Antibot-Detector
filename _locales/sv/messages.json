@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan du stänger?"
+  },
+  "historySortLabel": {
+    "message": "Sortera historik"
+  },
+  "historySortRecent": {
+    "message": "Nyast först"
+  },
+  "historySortOldest": {
+    "message": "Äldst först"
+  },
+  "historySortDetections": {
+    "message": "Flest skydd"
+  },
+  "historySortHost": {
+    "message": "Webbplats A till Ö"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "En rad"
   }
 }

@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Kapatmadan önce kaydedilsin mi?"
+  },
+  "historySortLabel": {
+    "message": "Geçmişi sırala"
+  },
+  "historySortRecent": {
+    "message": "Önce en yeni"
+  },
+  "historySortOldest": {
+    "message": "Önce en eski"
+  },
+  "historySortDetections": {
+    "message": "En çok koruma"
+  },
+  "historySortHost": {
+    "message": "Site A’dan Z’ye"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Tek satır"
   }
 }

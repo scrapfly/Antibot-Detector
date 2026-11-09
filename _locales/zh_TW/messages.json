@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "對設定的變更尚未儲存。要在關閉前儲存嗎？"
+  },
+  "historySortLabel": {
+    "message": "排序歷史記錄"
+  },
+  "historySortRecent": {
+    "message": "最新優先"
+  },
+  "historySortOldest": {
+    "message": "最早優先"
+  },
+  "historySortDetections": {
+    "message": "防護最多"
+  },
+  "historySortHost": {
+    "message": "網站 A 到 Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "單行"
   }
 }

@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Изменения настроек ещё не сохранены. Сохранить их перед закрытием?"
+  },
+  "historySortLabel": {
+    "message": "Сортировка истории"
+  },
+  "historySortRecent": {
+    "message": "Сначала новые"
+  },
+  "historySortOldest": {
+    "message": "Сначала старые"
+  },
+  "historySortDetections": {
+    "message": "Больше всего защит"
+  },
+  "historySortHost": {
+    "message": "Сайт от А до Я"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Одна строка"
   }
 }

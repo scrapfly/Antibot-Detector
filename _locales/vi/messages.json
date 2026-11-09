@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi đóng?"
+  },
+  "historySortLabel": {
+    "message": "Sắp xếp lịch sử"
+  },
+  "historySortRecent": {
+    "message": "Mới nhất trước"
+  },
+  "historySortOldest": {
+    "message": "Cũ nhất trước"
+  },
+  "historySortDetections": {
+    "message": "Nhiều biện pháp bảo vệ nhất"
+  },
+  "historySortHost": {
+    "message": "Trang web A đến Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Một dòng"
   }
 }

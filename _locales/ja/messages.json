@@ -6652,5 +6652,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "設定の変更はまだ保存されていません。閉じる前に保存しますか？"
+  },
+  "historySortLabel": {
+    "message": "履歴の並べ替え"
+  },
+  "historySortRecent": {
+    "message": "新しい順"
+  },
+  "historySortOldest": {
+    "message": "古い順"
+  },
+  "historySortDetections": {
+    "message": "検出数が多い順"
+  },
+  "historySortHost": {
+    "message": "サイト名順"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "1行"
   }
 }
