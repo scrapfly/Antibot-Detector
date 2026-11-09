@@ -23,7 +23,7 @@ function generate(root = ROOT) {
   const files = {};
   const entries = [];
   for (const file of fs.readdirSync(dir).filter(f => /^detect-.+\.json$/.test(f)).sort()) {
-    const detector = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8').replace(/^﻿/, ''));
+    const detector = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8').replace(/^\uFEFF/, ''));
     const slug = slugOf(detector.id);
     files[`${slug}.md`] = buildPage(detector, blurbs[slug] || '');
     entries.push({ id: detector.id, name: detector.name, difficulty: detector.difficulty });
