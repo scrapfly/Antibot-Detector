@@ -63,9 +63,10 @@ temp/
 *.crx
 *.pem
 
-# Documentation (the translated READMEs are kept)
+# Documentation (the translated READMEs and the anti-bot pages are kept)
 docs/*
 !docs/README.*.md
+!docs/antibots/
 *.pdf
 
 # Internal planning docs (not shipped, not needed in the repo)
