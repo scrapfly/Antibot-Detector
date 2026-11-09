@@ -257,12 +257,14 @@ ShareProviders.isLinkAllowed = function(providerId, link) {
 
 /**
  * What the confirm dialog says: destination name and expiry description.
+ * @param {object} rawSettings settings.share
+ * @param {function(string, string): string} [translate] translate(key, fallback), for the generic custom-server name
  * @returns {{ id: string, name: string, expiry: object, missing: string|null }}
  */
-ShareProviders.describe = function(rawSettings) {
+ShareProviders.describe = function(rawSettings, translate) {
   const s = ShareProviders.normalize(rawSettings);
   const provider = ShareProviders.PROVIDERS[s.provider];
-  let name = provider.name;
+  let name = s.provider === 'custom' && typeof translate === 'function' ? translate('shareProviderCustom', provider.name) : provider.name;
   if (s.provider === 'custom' && s.customUrl) {
     try {
       name = new URL(s.customUrl.replace(/<[A-Z_]+>/g, 'x')).host;

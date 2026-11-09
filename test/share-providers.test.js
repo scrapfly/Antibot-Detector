@@ -165,3 +165,11 @@ test('GitHub: a refused token and a token without the Gists permission are told 
   await assert.rejects(ShareProviders.upload(CONTENT, settings, fakeFetch({ status: 404 })), (e) => e.code === 'permission');
   await assert.rejects(ShareProviders.upload(CONTENT, settings, fakeFetch({ status: 500 })), (e) => e.code === 'http');
 });
+
+test('the generic custom server name comes from the translator, a real host wins', () => {
+  const tr = (key, fallback) => (key === 'shareProviderCustom' ? 'Servidor propio' : fallback);
+  assert.strictEqual(ShareProviders.describe({ provider: 'custom' }).name, 'Custom server');
+  assert.strictEqual(ShareProviders.describe({ provider: 'custom' }, tr).name, 'Servidor propio');
+  assert.strictEqual(ShareProviders.describe({ provider: 'custom', customUrl: 'https://paste.example.com/api' }, tr).name, 'paste.example.com');
+  assert.strictEqual(ShareProviders.describe({ provider: 'paste_rs' }, tr).name, ShareProviders.PROVIDERS.paste_rs.name);
+});
