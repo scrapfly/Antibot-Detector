@@ -65,12 +65,8 @@ test('every script that reads a shared global module loads after it, in the popu
     Categories: 'modules/core/categories.js', CaptureRetention: 'modules/core/capture-retention.js', DomainList: 'modules/core/domain-list.js', ScanScope: 'modules/core/scan-scope.js',
     WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js', CookieTimeline: 'modules/core/cookie-timeline.js',
     WorkerMessages: 'modules/core/worker-messages.js', WorkerVersion: 'modules/core/worker-version.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js',
-<<<<<<< HEAD
     DetectionSummary: 'modules/core/detection-summary.js', HistorySort: 'modules/core/history-sort.js',
-    DetectionFilter: 'modules/core/detection-filter.js', RulesFilter: 'modules/core/rules-filter.js',
-=======
     DetectionFilter: 'modules/core/detection-filter.js', RulesFilter: 'modules/core/rules-filter.js', RulesBulk: 'modules/core/rules-bulk.js',
->>>>>>> worktree-agent-a6089725af32ebea1
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js',
     RuleSuggest: 'modules/core/rule-suggest.js',
