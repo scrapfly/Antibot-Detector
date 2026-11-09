@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Normal ifade olarak işaretlenen bir desen geçersiz veya taramayı kilitleyebilir. Düzeltin ya da o satırda Regex'i kapatın."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Kaydedildi. Bu kuralda aynı desen birden fazla kez var; fazla kopyalar silinebilir."
+  },
   "rulesUiMethodFallback": {
     "message": "Yöntem"
   },

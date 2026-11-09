@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Vzor označený jako regulární výraz je neplatný nebo by mohl zablokovat kontrolu. Opravte ho, nebo pro tento řádek vypněte Regex."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Uloženo. Toto pravidlo obsahuje stejný vzor vícekrát; přebytečné kopie lze smazat."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },

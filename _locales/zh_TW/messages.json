@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "標記為正規表示式的模式無效，或可能讓掃描卡住。請修正，或關閉該列的 Regex。"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "已儲存。此規則中同一模式出現了多次；可以刪除多餘的副本。"
+  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },

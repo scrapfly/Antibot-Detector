@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Pola yang ditandai sebagai ekspresi reguler tidak valid atau dapat membekukan pemindaian. Perbaiki, atau matikan Regex untuk baris itu."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Tersimpan. Aturan ini memiliki pola yang sama lebih dari sekali; salinan tambahannya bisa dihapus."
+  },
   "rulesUiMethodFallback": {
     "message": "Metode"
   },

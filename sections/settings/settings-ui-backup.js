@@ -159,6 +159,7 @@ SettingsUI.restoreBackupFile = async function(event) {
     if (!file) return;
     const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
     try {
+        if (file.size > SettingsTransfer.MAX_BACKUP_FILE_BYTES) throw new Error('Backup file too large');
         const content = await file.text();
         let data = null;
         try { data = JSON.parse(content); } catch (_) { /* parse() reports it */ }

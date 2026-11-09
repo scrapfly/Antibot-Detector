@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Un patrón marcado como expresión regular no es válido o podría bloquear el análisis. Corrígelo o desactiva Regex en esa fila."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Guardada. Esta regla tiene el mismo patrón más de una vez; las copias sobrantes se pueden eliminar."
+  },
   "rulesUiMethodFallback": {
     "message": "Método"
   },

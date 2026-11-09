@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "正規表現として指定されたパターンが無効か、スキャンを止めてしまう可能性があります。修正するか、その行の Regex をオフにしてください。"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "保存しました。このルールには同じパターンが複数あります。余分なコピーは削除できます。"
+  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },
