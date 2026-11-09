@@ -41,7 +41,7 @@ test('category chips mean "any of these", in the order of the results', () => {
 });
 
 test('a result with a category of its own is kept while no chip is on, and left out once one is', () => {
-  assert.ok(names(F().filter(results, { chips: { categories: [] } })).includes('Acme Shield'));
+  assert.ok(names(F().filter(results, { chips: { combinations: false, categories: [] } })).includes('Acme Shield'));
   for (const key of Categories.KEYS) assert.ok(!names(F().filter(results, { chips: { categories: [key] } })).includes('Acme Shield'), key);
 });
 
@@ -73,9 +73,9 @@ test('the popup can pass its own readers: the name, the texts to search and the 
 
 test('chips are normalised: unknown categories and non-lists are ignored, duplicates collapse; isActive and toggle', () => {
   const f = F();
-  assert.deepEqual(f.normalizeChips(undefined), { categories: [] });
-  assert.deepEqual(f.normalizeChips({ categories: 'captcha' }), { categories: [] });
-  assert.deepEqual(f.normalizeChips({ categories: ['captcha', 'captcha', 'other', 7, null, 'Captcha'] }), { categories: ['captcha'] });
+  assert.deepEqual(f.normalizeChips(undefined), { combinations: false, categories: [] });
+  assert.deepEqual(f.normalizeChips({ categories: 'captcha' }), { combinations: false, categories: [] });
+  assert.deepEqual(f.normalizeChips({ categories: ['captcha', 'captcha', 'other', 7, null, 'Captcha'] }), { combinations: false, categories: ['captcha'] });
   assert.equal(f.isActive(undefined), false);
   assert.equal(f.isActive({}), false);
   assert.equal(f.isActive({ categories: ['other'] }), false, 'a name that is not a chip is not a chip');
@@ -84,13 +84,49 @@ test('chips are normalised: unknown categories and non-lists are ignored, duplic
 
   const start = f.normalizeChips();
   const one = f.toggle(start, 'captcha');
-  assert.deepEqual(one, { categories: ['captcha'] });
-  assert.deepEqual(start, { categories: [] }, 'the chips it was given are left alone');
-  assert.deepEqual(f.toggle(one, 'antibot'), { categories: ['captcha', 'antibot'] });
-  assert.deepEqual(f.toggle(f.toggle(one, 'antibot'), 'captcha'), { categories: ['antibot'] }, 'a second click turns it off');
-  assert.deepEqual(f.toggle(one, 'captcha'), { categories: [] });
-  assert.deepEqual(f.toggle(one, 'not-a-category'), { categories: ['captcha'] }, 'an unknown key changes nothing');
-  assert.deepEqual(f.toggle(undefined, 'fingerprint'), { categories: ['fingerprint'] });
+  assert.deepEqual(one, { combinations: false, categories: ['captcha'] });
+  assert.deepEqual(start, { combinations: false, categories: [] }, 'the chips it was given are left alone');
+  assert.deepEqual(f.toggle(one, 'antibot'), { combinations: false, categories: ['captcha', 'antibot'] });
+  assert.deepEqual(f.toggle(f.toggle(one, 'antibot'), 'captcha'), { combinations: false, categories: ['antibot'] }, 'a second click turns it off');
+  assert.deepEqual(f.toggle(one, 'captcha'), { combinations: false, categories: [] });
+  assert.deepEqual(f.toggle(one, 'not-a-category'), { combinations: false, categories: ['captcha'] }, 'an unknown key changes nothing');
+  assert.deepEqual(f.toggle(undefined, 'fingerprint'), { combinations: false, categories: ['fingerprint'] });
+});
+
+test('Combinations keeps the results where a combination fired, with the same reading as History, and ANDs with the rest', () => {
+  const f = F();
+  const H = require('../modules/core/history-filter.js');
+  const fired = (name, category, combinations) => det(name, category, { combinations });
+  const list = [
+    fired('Cloudflare', 'Anti-Bot', [{ id: 'c1', name: 'Turnstile + cookie', confidence: 90 }]),
+    fired('DataDome', 'Anti-Bot', []),
+    fired('reCAPTCHA', 'CAPTCHA', [{ id: 'r1' }, { id: 'r2' }]),
+    fired('Canvas Fingerprint', 'Fingerprint', 'junk'),
+    fired('Navigator Fingerprint', 'Fingerprint', [null, 'x', 7]),
+    det('Acme Shield', 'Acme custom category', { combinations: [{ id: 'a' }] })
+  ];
+  const on = { combinations: true };
+  assert.deepEqual(names(f.filter(list, { chips: on })), ['Cloudflare', 'reCAPTCHA', 'Acme Shield']);
+  assert.deepEqual(names(f.filter(list, { chips: { ...on, categories: ['antibot'] } })), ['Cloudflare'], 'with a category: AND');
+  assert.deepEqual(names(f.filter(list, { chips: { ...on, categories: ['antibot', 'captcha'] } })), ['Cloudflare', 'reCAPTCHA']);
+  assert.deepEqual(names(f.filter(list, { query: 'recaptcha', chips: on })), ['reCAPTCHA'], 'with the search: AND');
+  assert.deepEqual(names(f.filter(list, { query: 'datadome', chips: on })), [], 'the right text, no combination');
+  // the same list History's chip and card count read: the two cannot disagree
+  for (const d of list) assert.equal(f.matches(d, { chips: on }), H.firedCombinations([d]).length > 0, d.detector.name);
+  assert.equal(f.isActive(on), true);
+  assert.equal(f.isActive({ combinations: 'yes' }), false, 'only true turns it on');
+  assert.deepEqual(f.normalizeChips({ combinations: true, categories: ['captcha'] }), { combinations: true, categories: ['captcha'] });
+  assert.deepEqual(f.toggle(f.normalizeChips(), 'combinations'), { combinations: true, categories: [] });
+  assert.deepEqual(f.toggle(f.toggle(f.normalizeChips(), 'combinations'), 'combinations'), { combinations: false, categories: [] }, 'a second click turns it off');
+  assert.deepEqual(f.toggle({ combinations: true, categories: ['captcha'] }, 'antibot'), { combinations: true, categories: ['captcha', 'antibot'] }, 'a category click keeps the flag');
+  assert.deepEqual(f.FLAGS, ['combinations']);
+});
+
+test('the chip row has a Combinations chip with the card\'s icon and History\'s label', () => {
+  const html = read('sections/detection/detection.html');
+  const row = html.slice(html.indexOf('id="detectionFilters"'));
+  assert.match(row, /data-filter="combinations"[\s\S]*?data-ui-icon="combination"[\s\S]*?data-i18n="historyFilterCombinations"/);
+  assert.match(row, /data-filter="combinations"[^>]*aria-pressed="false"/);
 });
 
 test('results saved in either shape are read, and junk never throws', () => {
@@ -138,7 +174,7 @@ function sandbox() {
 function tab(extra = {}) {
   const shown = [];
   const state = {
-    currentResults: results, searchQuery: '', activeChips: { categories: [] }, sortBy: 'category', categoryOrder: [...Categories.KEYS],
+    currentResults: results, searchQuery: '', activeChips: { combinations: false, categories: [] }, sortBy: 'category', categoryOrder: [...Categories.KEYS],
     detectorManager: { getCategoryInfo: (key) => ({ antibot: { colour: '#FF5733' }, captcha: { colour: '#33C3FF' }, fingerprint: { colour: '#3b82f6' } }[key]) },
     paginationManager: { setItems(items) { shown.push(names(items)); } },
     ...extra
@@ -189,7 +225,7 @@ test('the chips show which are on (aria-pressed) and carry their category icon i
   assert.deepEqual(chips.map(chip => chip.attrs['aria-pressed']), ['false', 'true', 'false']);
   assert.ok(chips.every(chip => /^<svg /.test(chip.icon.innerHTML)), 'the category icon is drawn once, in each chip');
   assert.deepEqual(chips.map(chip => chip.style.props['--chip-color']), ['#FF5733', '#33C3FF', '#3b82f6'], 'the Settings → Category colours');
-  state.activeChips = { categories: [] };
+  state.activeChips = { combinations: false, categories: [] };
   state.detectorManager = null;
   ui.syncFilterChips.call(state);
   assert.deepEqual(chips.map(chip => chip.attrs['aria-pressed']), ['false', 'false', 'false']);
@@ -207,7 +243,7 @@ test('when the search and the chips leave nothing a message with Clear filters s
   assert.deepEqual(shown.at(-1), []);
   assert.equal(elements['#detectionNoResults'].hidden, false, 'the way back is on screen');
   ui.clearFilters.call(state);
-  assert.deepEqual(JSON.parse(JSON.stringify(state.activeChips)), { categories: [] }, 'what the sandbox built, compared as data');
+  assert.deepEqual(JSON.parse(JSON.stringify(state.activeChips)), { combinations: false, categories: [] }, 'what the sandbox built, compared as data');
   assert.equal(state.searchQuery, '');
   assert.equal(elements['#detectionSearch'].value, '', 'the search box is emptied too');
   assert.equal(shown.at(-1).length, results.length, 'every result again');
@@ -251,8 +287,8 @@ test('the row sits in the summary card under the search, is a labelled group, an
     attrs: match[1], filter: (match[1].match(/data-filter="([a-z]+)"/) || [])[1], category: (match[1].match(/data-category="([a-z]+)"/) || [])[1],
     label: (match[2].match(/data-i18n="([A-Za-z]+)"/) || [])[1], icon: /class="history-filter-icon category-icon"/.test(match[2])
   })).filter(chip => chip.filter);
-  assert.deepEqual(chips.map(chip => chip.filter), [...Categories.KEYS], 'one chip per category, in the category order');
-  for (const chip of chips) {
+  assert.deepEqual(chips.map(chip => chip.filter), [...Categories.KEYS, 'combinations'], 'one chip per category, in the category order, then Combinations');
+  for (const chip of chips.filter(chip => chip.filter !== 'combinations')) {
     assert.match(chip.attrs, /type="button"/);
     assert.match(chip.attrs, /aria-pressed="false"/, 'off to start with');
     assert.match(chip.attrs, /class="history-filter-chip"/, 'the chip look History already has');
