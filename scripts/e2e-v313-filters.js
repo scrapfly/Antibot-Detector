@@ -443,9 +443,9 @@ async function scenario(name, fn) {
     assert.equal(metrics.visible, true);
     assert.equal(metrics.spills, false, 'nothing spills out of the row');
     assert.deepEqual(metrics.chipHeights, [24], 'the chip size of History');
-    assert.equal(metrics.lines, 1, 'three chips fit on one line');
+    assert.equal(metrics.lines, 1, 'four chips fit on one line');
     // the chips are buttons a keyboard reaches, with a name
-    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => [el.tagName, el.type, !!el.textContent.trim()])), [['BUTTON', 'button', true], ['BUTTON', 'button', true], ['BUTTON', 'button', true]]);
+    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => [el.tagName, el.type, !!el.textContent.trim()])), [['BUTTON', 'button', true], ['BUTTON', 'button', true], ['BUTTON', 'button', true], ['BUTTON', 'button', true]]);
     // the whole list to start with: the three protections, two to a page
     assert.deepEqual(await listed(popup), ['V313 Bot Probe', 'V313 Captcha Probe', 'V313 Fingerprint Probe']);
     assert.deepEqual(await cardsOnPage(popup), ['V313 Bot Probe', 'V313 Captcha Probe']);
