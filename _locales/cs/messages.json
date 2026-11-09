@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Test se nepodařilo spustit."
   },
+  "rulesExportShownFmt": {
+    "message": "Exportovat zobrazená pravidla ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Zapnout zobrazená pravidla ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Vypnout zobrazená pravidla ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Zapnutá pravidla: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Vypnutá pravidla: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Změnu se nepodařilo uložit. Zkuste to znovu."
   },

@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Nie udało się uruchomić testu."
   },
+  "rulesExportShownFmt": {
+    "message": "Eksportuj widoczne reguły ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Włącz widoczne reguły ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Wyłącz widoczne reguły ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Włączone reguły: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Wyłączone reguły: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Nie udało się zapisać zmiany. Spróbuj ponownie."
   },

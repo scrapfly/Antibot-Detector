@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Không thể chạy kiểm tra."
   },
+  "rulesExportShownFmt": {
+    "message": "Xuất các quy tắc đang hiển thị ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Bật các quy tắc đang hiển thị ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Tắt các quy tắc đang hiển thị ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Đã bật quy tắc: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Đã tắt quy tắc: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Không thể lưu thay đổi. Hãy thử lại."
   },

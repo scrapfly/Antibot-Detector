@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Le test n’a pas pu s’exécuter."
   },
+  "rulesExportShownFmt": {
+    "message": "Exporter les règles affichées ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Activer les règles affichées ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Désactiver les règles affichées ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Règles activées : {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Règles désactivées : {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Impossible d’enregistrer la modification. Réessayez."
   },

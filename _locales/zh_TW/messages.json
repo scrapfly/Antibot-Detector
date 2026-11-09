@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "無法執行測試。"
   },
+  "rulesExportShownFmt": {
+    "message": "匯出顯示的規則 ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "啟用顯示的規則 ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "停用顯示的規則 ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "已啟用的規則:{0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "已停用的規則:{0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "無法儲存變更。請再試一次。"
   },

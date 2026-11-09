@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Pengujian tidak dapat dijalankan."
   },
+  "rulesExportShownFmt": {
+    "message": "Ekspor aturan yang ditampilkan ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Aktifkan aturan yang ditampilkan ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Nonaktifkan aturan yang ditampilkan ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Aturan diaktifkan: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Aturan dinonaktifkan: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Tidak dapat menyimpan perubahan. Coba lagi."
   },

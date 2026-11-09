@@ -149,6 +149,10 @@ class Rules {
       exportBtn.addEventListener('click', () => this.handleExport());
     }
 
+    // The rules shown (a search or a chip is on)
+    const shown = [['#exportShownRulesBtn', () => this.handleExportShown()], ['#enableShownRulesBtn', () => this.handleToggleShown(true)], ['#disableShownRulesBtn', () => this.handleToggleShown(false)]];
+    for (const [selector, run] of shown) document.querySelector(selector)?.addEventListener('click', run);
+
     // Clear button
     const clearBtn = document.querySelector('#clearRulesBtn');
     if (clearBtn) {
@@ -240,6 +244,7 @@ class Rules {
     const list = menu.querySelector('.rules-menu-list');
     if (!trigger || !list) return;
 
+    if (typeof this.syncShownMenu === 'function') this.syncShownMenu();
     menu.classList.add('open');
     trigger.setAttribute('aria-expanded', 'true');
 

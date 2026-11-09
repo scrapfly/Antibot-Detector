@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "जाँच नहीं चल सकी।"
   },
+  "rulesExportShownFmt": {
+    "message": "दिखाए गए नियम निर्यात करें ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "दिखाए गए नियम चालू करें ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "दिखाए गए नियम बंद करें ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "चालू किए गए नियम: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "बंद किए गए नियम: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "बदलाव सहेजा नहीं जा सका। फिर से कोशिश करें।"
   },

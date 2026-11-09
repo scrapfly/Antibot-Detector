@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "테스트를 실행할 수 없습니다."
   },
+  "rulesExportShownFmt": {
+    "message": "표시된 규칙 내보내기 ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "표시된 규칙 켜기 ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "표시된 규칙 끄기 ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "켠 규칙: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "끈 규칙: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "변경 사항을 저장하지 못했습니다. 다시 시도하세요."
   },

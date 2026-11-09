@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "テストを実行できませんでした。"
   },
+  "rulesExportShownFmt": {
+    "message": "表示中のルールをエクスポート ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "表示中のルールを有効にする ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "表示中のルールを無効にする ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "有効にしたルール: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "無効にしたルール: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "変更を保存できませんでした。もう一度お試しください。"
   },
