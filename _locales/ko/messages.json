@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "실패한 페이지 다시 스캔"
   },
+  "bulkFilterLabel": {
+    "message": "표시",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "모든 페이지",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "보호 있음",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "보호 없음",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "실패 또는 건너뜀",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{1}페이지 중 {0}페이지 표시 중. 내보내기에는 이 페이지만 포함됩니다.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "새 목록"
   },

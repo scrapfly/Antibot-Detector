@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "Quét lại các trang thất bại"
   },
+  "bulkFilterLabel": {
+    "message": "Hiển thị",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Tất cả trang",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Có bảo vệ",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Không tìm thấy bảo vệ",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Thất bại hoặc bỏ qua",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Đang hiển thị {0} trên {1} trang. Tệp xuất chỉ gồm các trang này.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "Danh sách mới"
   },

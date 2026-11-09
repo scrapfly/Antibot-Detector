@@ -72,6 +72,8 @@ body.bulk-page:is(:lang(ar), :lang(hi)) * { letter-spacing: 0 !important; }
 }
 .bulk-input:read-only { opacity: .7; }
 .bulk-input-foot, .bulk-options { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 16px; }
+.bulk-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-block: 10px; }
+.bulk-select { min-inline-size: 190px; min-block-size: 34px; }
 .bulk-field { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--text-secondary); }
 .bulk-number {
   inline-size: 120px; min-block-size: 34px; padding: 4px 8px;

@@ -6497,6 +6497,30 @@
   "bulkScanFailedAgain": {
     "message": "De mislukte pagina's opnieuw scannen"
   },
+  "bulkFilterLabel": {
+    "message": "Tonen",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Alle pagina's",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Met beveiliging",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Geen beveiliging gevonden",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Mislukt of overgeslagen",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{0} van {1} pagina's getoond. Exports bevatten alleen deze.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
+  },
   "bulkNewList": {
     "message": "Nieuwe lijst"
   },
