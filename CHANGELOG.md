@@ -20,6 +20,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: Clear filters no longer drops keyboard focus; it moves to the search box.
 - Detection: holding Enter or Space on a result no longer opens and instantly closes its details.
 - Arabic: the Detection page arrows and scan icons now sit on the correct side.
+- Rules: deleting or restoring official rules while the list of deleted rules cannot be read no longer forgets earlier deletions, so Update will not bring them back.
+- A failed webhook delivery waiting for retry is no longer sent if the list of skipped sites cannot be read.
 
 ## [3.1.5] - 2026-11-09
 

@@ -25,6 +25,7 @@ function harness(initial, { history = {} } = {}) {
   let webhook = { ...initial };
   let historySettings = { ...history };
   let unreadable = false;
+  let listFails = false;
   const skipped = new Set();
   let respond = () => ({ ok: true, status: 200 });
   class FakeDate extends Date { constructor(...args) { if (args.length) super(...args); else super(clock.t); } static now() { return clock.t; } }
@@ -41,7 +42,8 @@ function harness(initial, { history = {} } = {}) {
     // What the worker has: Utils.getSettings answers {} when the settings cannot be read, StorageManager.readSettingsStrict throws
     Utils: {
       getSettings: async () => (unreadable ? {} : settingsNow()),
-      isUrlBlacklisted: async (url) => skipped.has(new URL(url).hostname)
+      // Like Utils.isUrlBlacklisted: a read of the skip list that fails answers "skipped" for a caller that asks to fail closed
+      isUrlBlacklisted: async (url, options = {}) => (listFails ? options.failClosed === true : skipped.has(new URL(url).hostname))
     },
     StorageManager: { readSettingsStrict: async () => { if (unreadable) throw new Error('Stored settings are invalid'); return settingsNow(); } },
     chrome: {
@@ -62,6 +64,7 @@ function harness(initial, { history = {} } = {}) {
     setHistory: (next) => { historySettings = { ...historySettings, ...next }; },
     skip: (host) => skipped.add(host),
     unreadable: (value) => { unreadable = value; },
+    listFails: (value) => { listFails = value; },
     reply: (fn) => { respond = fn; },
     advance: (ms) => { clock.t += ms; }
   };
@@ -305,4 +308,13 @@ test('a page that is let go at a retry is not named when History keeps it out', 
   assert.equal(h.calls.length, 1);
   assert.equal(h.log().length, 1, 'no new line');
   assert.ok(!JSON.stringify(h.log()).includes('shop.example'));
+});
+
+test('a held delivery is not sent when the list of skipped sites cannot be read at the retry', async () => {
+  const h = harness(ON);
+  await failedAndHeld(h);
+  h.listFails(true);
+  h.advance(MIN + 1000);
+  await h.runtime.runDueWebhookRetries();
+  assert.equal(h.calls.length, 1, 'nothing more is sent');
 });
