@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Testet kunde inte köras."
   },
+  "rulesExportShownFmt": {
+    "message": "Exportera visade regler ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Aktivera visade regler ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Inaktivera visade regler ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Aktiverade regler: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Inaktiverade regler: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Det gick inte att spara ändringen. Försök igen."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "Skanna om sidorna som misslyckades"
+  },
+  "bulkFilterLabel": {
+    "message": "Visa",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Alla sidor",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Med skydd",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Inget skydd hittades",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Misslyckade eller överhoppade",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Visar {0} av {1} sidor. Exporter innehåller bara dessa.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Ny lista"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan du stänger?"
+  },
+  "historySortLabel": {
+    "message": "Sortera historik"
+  },
+  "historySortRecent": {
+    "message": "Nyast först"
+  },
+  "historySortOldest": {
+    "message": "Äldst först"
+  },
+  "historySortDetections": {
+    "message": "Flest skydd"
+  },
+  "historySortHost": {
+    "message": "Webbplats A till Ö"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "En rad"
   }
 }

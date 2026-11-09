@@ -601,7 +601,7 @@ DetectionActions.replayInput = async function(pageUrl) {
     };
 };
 
-/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'json', or the replay kit's 'curl', 'python' and 'node'. */
+/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'oneline', 'json', or the replay kit's 'curl', 'python' and 'node'. */
 DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
     if (kind === 'curl' || kind === 'python' || kind === 'node') {
       const input = await DetectionActions.replayInput.call(this, pageUrl);
@@ -616,7 +616,9 @@ DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
     const { content, payload } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
     const text = kind === 'markdown'
       ? DetectionActions.buildDetectionsMarkdown(payload)
-      : kind === 'json'
+      : kind === 'oneline'
+        ? DetectionSummary.oneLine(payload)
+        : kind === 'json'
         ? `${JSON.stringify(payload, null, 2)}\n`
         : content;
     await FormatUtils.copyToClipboard(text.trim());
@@ -683,7 +685,7 @@ DetectionActions.uploadDetectionsToPaste = async function() {
     } catch (e) {
       shareSettings = {};
     }
-    const target = ShareProviders.describe(shareSettings);
+    const target = ShareProviders.describe(shareSettings, (key, fallback) => FormatUtils.t(key, fallback));
     if (target.missing) {
       NotificationHelper.warning(FormatUtils.t('pasteNeedsSetupFmt',
         `Set up ${target.name} in Settings → Detection → Share uploads first`, target.name));

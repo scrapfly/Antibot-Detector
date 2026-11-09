@@ -76,7 +76,7 @@ function pageWorld({ sitemaps = {}, run = null } = {}) {
     }
   });
   ctx.self = ctx;
-  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/bulk-scan.js', 'sections/bulk/bulk.js']) {
+  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-filter.js', 'sections/bulk/bulk.js']) {
     vm.runInContext(read(file), ctx, { filename: file });
   }
   const byId = (id) => document.getElementById(id);

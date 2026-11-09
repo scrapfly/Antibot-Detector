@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Test se nepodařilo spustit."
   },
+  "rulesExportShownFmt": {
+    "message": "Exportovat zobrazená pravidla ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Zapnout zobrazená pravidla ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Vypnout zobrazená pravidla ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Zapnutá pravidla: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Vypnutá pravidla: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Změnu se nepodařilo uložit. Zkuste to znovu."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "Znovu skenovat stránky, které selhaly"
+  },
+  "bulkFilterLabel": {
+    "message": "Zobrazit",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Všechny stránky",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "S ochranou",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Bez nalezené ochrany",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Selhaly nebo přeskočeny",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Zobrazeno {0} z {1} stránek. Exporty obsahují jen tyto.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Nový seznam"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Změny nastavení ještě nejsou uloženy. Uložit je před zavřením?"
+  },
+  "historySortLabel": {
+    "message": "Řazení historie"
+  },
+  "historySortRecent": {
+    "message": "Nejnovější první"
+  },
+  "historySortOldest": {
+    "message": "Nejstarší první"
+  },
+  "historySortDetections": {
+    "message": "Nejvíce ochran"
+  },
+  "historySortHost": {
+    "message": "Web A až Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Jeden řádek"
   }
 }

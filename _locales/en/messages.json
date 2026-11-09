@@ -7014,6 +7014,26 @@
     "message": "The test could not run.",
     "description": "Test on this page: a failure with no more precise message"
   },
+  "rulesExportShownFmt": {
+    "message": "Export shown rules ({0})",
+    "description": "Rules menu: export only the rules the search and filters leave. {0} = how many"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Turn on shown rules ({0})",
+    "description": "Rules menu: switch on every rule the search and filters leave. {0} = how many that are off"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Turn off shown rules ({0})",
+    "description": "Rules menu: switch off every rule the search and filters leave. {0} = how many that are on"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Rules turned on: {0}",
+    "description": "Rules: notice after switching on the rules shown. {0} = how many"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Rules turned off: {0}",
+    "description": "Rules: notice after switching off the rules shown. {0} = how many"
+  },
   "rulesToggleSaveFailed": {
     "message": "Could not save the change. Try again.",
     "description": "Rules: a rule's on/off switch could not be saved, so it went back to how it was"
@@ -7125,6 +7145,30 @@
   "bulkScanFailedAgain": {
     "message": "Scan the failed pages again",
     "description": "Bulk scan: scan again the pages of a finished run that failed (a timeout or a load error); the rest of the run stays in the table"
+  },
+  "bulkFilterLabel": {
+    "message": "Show",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "All pages",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "With protections",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "No protection found",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Failed or skipped",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Showing {0} of {1} pages. Exports include only these.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "New list",
@@ -7300,5 +7344,29 @@
   "settingsUnsavedCloseMessage": {
     "message": "Your changes to the settings are not saved yet. Save them before closing?",
     "description": "Settings: the question asked when Settings is closed (✕, Escape or a click outside it) with changes that are not saved. The buttons are Cancel, Discard and Save"
+  },
+  "historySortLabel": {
+    "message": "Sort history",
+    "description": "Accessible name of the sort dropdown at the end of the History chip row"
+  },
+  "historySortRecent": {
+    "message": "Newest first",
+    "description": "Sort option in History: the order History keeps, newest scan first"
+  },
+  "historySortOldest": {
+    "message": "Oldest first",
+    "description": "Sort option in History: oldest scan first"
+  },
+  "historySortDetections": {
+    "message": "Most protections",
+    "description": "Sort option in History: pages with the most protections found first"
+  },
+  "historySortHost": {
+    "message": "Site A to Z",
+    "description": "Sort option in History: by site name, A to Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "One line",
+    "description": "Detection tab Copy menu item: the scan as a single line of text, like \"shop.example: Cloudflare 95%\""
   }
 }

@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "जाँच नहीं चल सकी।"
   },
+  "rulesExportShownFmt": {
+    "message": "दिखाए गए नियम निर्यात करें ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "दिखाए गए नियम चालू करें ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "दिखाए गए नियम बंद करें ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "चालू किए गए नियम: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "बंद किए गए नियम: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "बदलाव सहेजा नहीं जा सका। फिर से कोशिश करें।"
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "विफल पेज दोबारा स्कैन करें"
+  },
+  "bulkFilterLabel": {
+    "message": "दिखाएँ",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "सभी पेज",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "सुरक्षा वाले",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "कोई सुरक्षा नहीं मिली",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "विफल या छोड़े गए",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{1} में से {0} पेज दिख रहे हैं। एक्सपोर्ट में केवल यही शामिल होंगे।",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "नई सूची"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या बंद करने से पहले उन्हें सहेजें?"
+  },
+  "historySortLabel": {
+    "message": "इतिहास को क्रमबद्ध करें"
+  },
+  "historySortRecent": {
+    "message": "सबसे नया पहले"
+  },
+  "historySortOldest": {
+    "message": "सबसे पुराना पहले"
+  },
+  "historySortDetections": {
+    "message": "सबसे ज़्यादा सुरक्षाएँ"
+  },
+  "historySortHost": {
+    "message": "साइट A से Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "एक पंक्ति"
   }
 }

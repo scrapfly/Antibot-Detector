@@ -2,6 +2,8 @@
 const RuleStats = {
   /** Pattern list key and the field that names a pattern, per detection method. */
   METHOD_FIELDS: { cookie: 'name', header: 'name', url: 'text', content: 'text', dom: 'selector', window: 'path', js_hooks: 'target', payload: 'text' },
+  /** The key a protection is matched by across its names (HistoryStats saves entries under Categories.protectionKey). */
+  nameKey(name) { return typeof Categories !== 'undefined' && Categories.protectionKey ? Categories.protectionKey(name) : String(name || '').trim().toLowerCase(); },
   isRecord(value) { return !!value && typeof value === 'object' && !Array.isArray(value); },
   /** Flat list of stored rules: { id, name, category, detector }. Accepts the stored wrapper, a JSON string or { detectors }. */
   parseDetectors(raw) {
@@ -55,11 +57,11 @@ const RuleStats = {
     const pagesById = new Map(), pagesByName = new Map();
     for (const row of metrics) {
       if (row.id) pagesById.set(row.id, row);
-      if (row.name) pagesByName.set(String(row.name).toLowerCase(), row);
+      if (row.name) pagesByName.set(RuleStats.nameKey(row.name), row);
     }
-    const found = (rule) => pagesById.get(rule.id) || pagesByName.get(rule.name.toLowerCase()) || null;
+    const found = (rule) => pagesById.get(rule.id) || pagesByName.get(RuleStats.nameKey(rule.name)) || null;
     const seen = RuleStats.isRecord(options.seen) ? options.seen : {};
-    const wasSeen = (rule) => (seen.byId instanceof Map && seen.byId.has(rule.id)) || (seen.byName instanceof Map && seen.byName.has(rule.name.toLowerCase()));
+    const wasSeen = (rule) => (seen.byId instanceof Map && seen.byId.has(rule.id)) || (seen.byName instanceof Map && seen.byName.has(RuleStats.nameKey(rule.name)));
     const historyEntries = typeof options.historyEntries === 'number' && Number.isFinite(options.historyEntries) ? options.historyEntries : 0;
     const minHistory = typeof options.minHistory === 'number' && Number.isFinite(options.minHistory) ? options.minHistory : 50;
     const totals = { total: list.length, official: 0, custom: 0, modified: 0, disabled: 0, withCombinations: 0, patterns: 0, described: 0, enabled: 0, matched: 0, attention: 0, waiting: 0 };

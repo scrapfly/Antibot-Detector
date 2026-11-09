@@ -188,6 +188,15 @@ class Utils {
                         2000;
 
     if (!detectionEngine.shouldRunDetection(debounceTime)) {
+      // A route change soon after a scan is held until the window ends, not dropped: its page would never be scanned
+      if (triggerSource === 'url_change') {
+        const wait = Math.max(50, debounceTime - (Date.now() - (detectionEngine.lastDetectionTime || 0)) + 50);
+        if (Utils.urlChangeRetry) clearTimeout(Utils.urlChangeRetry);
+        Utils.urlChangeRetry = setTimeout(() => {
+          Utils.urlChangeRetry = null;
+          Utils.notifyPageLoad(context);
+        }, wait);
+      }
       return;
     }
 

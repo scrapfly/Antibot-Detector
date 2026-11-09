@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Test çalıştırılamadı."
   },
+  "rulesExportShownFmt": {
+    "message": "Gösterilen kuralları dışa aktar ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Gösterilen kuralları aç ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Gösterilen kuralları kapat ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Açılan kurallar: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Kapatılan kurallar: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Değişiklik kaydedilemedi. Yeniden deneyin."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "Başarısız olan sayfaları yeniden tara"
+  },
+  "bulkFilterLabel": {
+    "message": "Göster",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Tüm sayfalar",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Korumalı",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Koruma bulunamadı",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Başarısız veya atlanan",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{1} sayfadan {0} tanesi gösteriliyor. Dışa aktarmalar yalnızca bunları içerir.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Yeni liste"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Kapatmadan önce kaydedilsin mi?"
+  },
+  "historySortLabel": {
+    "message": "Geçmişi sırala"
+  },
+  "historySortRecent": {
+    "message": "Önce en yeni"
+  },
+  "historySortOldest": {
+    "message": "Önce en eski"
+  },
+  "historySortDetections": {
+    "message": "En çok koruma"
+  },
+  "historySortHost": {
+    "message": "Site A’dan Z’ye"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Tek satır"
   }
 }

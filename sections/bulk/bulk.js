@@ -58,7 +58,7 @@
   const DIFFICULTY_TEXT = { Low: ['difficultyLow', 'Low'], Medium: ['difficultyMedium', 'Medium'], High: ['difficultyHigh', 'High'] };
   const label = (pair, fallbackKey) => (pair ? tr(pair[0], pair[1]) : fallbackKey || '');
 
-  const state = { run: null, starting: false, colors: { ...Categories.DEFAULT_COLORS }, historyEnabled: true };
+  const state = { run: null, filter: 'all', starting: false, colors: { ...Categories.DEFAULT_COLORS }, historyEnabled: true };
 
   /* ---------- Talking to the worker ---------- */
 
@@ -295,6 +295,7 @@
     const body = byId('bulkRows');
     const fragment = document.createDocumentFragment();
     run.items.forEach((item, index) => {
+      if (!BulkFilter.matches(item, state.filter)) return;
       const row = document.createElement('tr');
       row.className = `bulk-row bulk-row--${item.status}`;
       const num = document.createElement('td');
@@ -323,7 +324,7 @@
     const counts = run ? BulkScan.counts(run) : null;
     byId('bulkWaitingBtn').hidden = !(run && run.status === 'stopped' && counts.waiting > 0);
     byId('bulkRetryFailedBtn').hidden = !(run && (run.status === 'stopped' || run.status === 'done') && counts.failed > 0);
-    const exportable = !!(run && run.items.length);
+    const exportable = !!(run && run.items.some(item => BulkFilter.matches(item, state.filter)));
     byId('bulkExportCsvBtn').disabled = !exportable;
     byId('bulkExportJsonBtn').disabled = !exportable;
     byId('bulkExportMarkdownBtn').disabled = !exportable;
@@ -369,13 +370,16 @@
     byId('bulkRunNotes').textContent = notes.join(' · ');
     byId('bulkRunNotes').hidden = !notes.length;
     renderRows(run);
+    const shown = run.items.filter(item => BulkFilter.matches(item, state.filter)).length;
+    byId('bulkFilterNote').textContent = state.filter === 'all' ? ''
+      : fmt('bulkShowingFmt', 'Showing {0} of {1} pages. Exports include only these.', number(shown), number(run.items.length));
   }
 
   /* ---------- Exports ---------- */
 
   function exportRun(format) {
     if (!state.run) return;
-    const out = BulkScan.build(state.run, { format });
+    const out = BulkScan.build(BulkFilter.apply(state.run, state.filter), { format });
     const blob = new Blob([out.fileText], { type: `${out.type};charset=utf-8` });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -437,6 +441,7 @@
       // The pages that failed (and any still waiting) are scanned again; the others stay in the table and the exports
       start(state.run.items.filter(item => item.status === 'failed' || item.status === 'waiting').map(item => item.url), { continueRun: true, retryFailed: true });
     });
+    byId('bulkFilter').addEventListener('change', (event) => { state.filter = BulkFilter.normalize(event.target.value); if (state.run) render(); });
     byId('bulkExportCsvBtn').addEventListener('click', () => exportRun('csv'));
     byId('bulkExportJsonBtn').addEventListener('click', () => exportRun('json'));
     byId('bulkExportMarkdownBtn').addEventListener('click', () => exportRun('md'));

@@ -14,7 +14,7 @@
 
 [**添加到 Chrome**](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca) · [产品页面](https://scrapfly.io/products/antibot-detector) · [更新内容](../CHANGELOG.md) · [llms.txt](../llms.txt) · [报告问题](https://github.com/scrapfly/Antibot-Detector/issues)
 
-[English](../README.md) · **简体中文** · [Español](README.es.md) · [Русский](README.ru.md)
+[English](../README.md) · **简体中文** · [Español](README.es.md) · [Русский](README.ru.md) · [日本語](README.ja.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
 </div>
 
@@ -101,6 +101,8 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 ## 检测范围
 
 下面列出的是扩展自带的检测器。你可以在**规则**标签页中关闭其中任何一个、编辑它们，或添加你自己的检测器。
+
+每个反爬系统都有单独的页面，列出暴露它的 Cookie、请求头和脚本：[反爬系统检测页面](antibots/zh-CN/README.md)。
 
 <details>
 <summary><b>反机器人系统（43）</b></summary>

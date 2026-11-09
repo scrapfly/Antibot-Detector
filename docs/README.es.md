@@ -14,7 +14,7 @@
 
 [**Añadir a Chrome**](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca) · [Página del producto](https://scrapfly.io/products/antibot-detector) · [Novedades](../CHANGELOG.md) · [llms.txt](../llms.txt) · [Informar de un problema](https://github.com/scrapfly/Antibot-Detector/issues)
 
-[English](../README.md) · [简体中文](README.zh-CN.md) · **Español** · [Русский](README.ru.md)
+[English](../README.md) · [简体中文](README.zh-CN.md) · **Español** · [Русский](README.ru.md) · [日本語](README.ja.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
 </div>
 
@@ -101,6 +101,8 @@ Cuando una página carga, la extensión reúne lo que la página revela de sí m
 ## Qué detecta
 
 Estas listas son los detectores que vienen con la extensión. Puedes desactivar cualquiera, editarlo o añadir los tuyos en la pestaña Reglas.
+
+Cada sistema anti-bot tiene su propia página, con las cookies, cabeceras y scripts que lo delatan: [páginas de detección anti-bot](antibots/es/README.md).
 
 <details>
 <summary><b>Sistemas anti-bot (43)</b></summary>

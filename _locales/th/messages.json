@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "เรียกใช้การทดสอบไม่ได้"
   },
+  "rulesExportShownFmt": {
+    "message": "ส่งออกกฎที่แสดงอยู่ ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "เปิดใช้กฎที่แสดงอยู่ ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "ปิดใช้กฎที่แสดงอยู่ ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "เปิดใช้กฎแล้ว: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "ปิดใช้กฎแล้ว: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "บันทึกการเปลี่ยนแปลงไม่สำเร็จ ลองอีกครั้ง"
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "สแกนหน้าที่ไม่สำเร็จอีกครั้ง"
+  },
+  "bulkFilterLabel": {
+    "message": "แสดง",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "ทุกหน้า",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "มีการป้องกัน",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "ไม่พบการป้องกัน",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "ไม่สำเร็จหรือข้าม",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "แสดง {0} จาก {1} หน้า การส่งออกจะรวมเฉพาะหน้าเหล่านี้",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "รายการใหม่"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "การเปลี่ยนแปลงการตั้งค่ายังไม่ได้บันทึก บันทึกก่อนปิดไหม"
+  },
+  "historySortLabel": {
+    "message": "เรียงลำดับประวัติ"
+  },
+  "historySortRecent": {
+    "message": "ใหม่สุดก่อน"
+  },
+  "historySortOldest": {
+    "message": "เก่าสุดก่อน"
+  },
+  "historySortDetections": {
+    "message": "การป้องกันมากที่สุด"
+  },
+  "historySortHost": {
+    "message": "ไซต์ ก ถึง ฮ"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "หนึ่งบรรทัด"
   }
 }

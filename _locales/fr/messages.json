@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Le test n’a pas pu s’exécuter."
   },
+  "rulesExportShownFmt": {
+    "message": "Exporter les règles affichées ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Activer les règles affichées ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Désactiver les règles affichées ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Règles activées : {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Règles désactivées : {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Impossible d’enregistrer la modification. Réessayez."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "Analyser à nouveau les pages en échec"
+  },
+  "bulkFilterLabel": {
+    "message": "Afficher",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Toutes les pages",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Avec protections",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Aucune protection détectée",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "En échec ou ignorées",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{0} pages sur {1} affichées. Les exports ne contiennent que celles-ci.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Nouvelle liste"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant de fermer ?"
+  },
+  "historySortLabel": {
+    "message": "Trier l’historique"
+  },
+  "historySortRecent": {
+    "message": "Plus récents d’abord"
+  },
+  "historySortOldest": {
+    "message": "Plus anciens d’abord"
+  },
+  "historySortDetections": {
+    "message": "Plus de protections"
+  },
+  "historySortHost": {
+    "message": "Site de A à Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Une ligne"
   }
 }

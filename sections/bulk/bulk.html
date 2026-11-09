@@ -74,6 +74,16 @@
       <p class="bulk-muted" id="bulkRunMostSeen" hidden></p>
       <p class="bulk-notice bulk-notice--warn" id="bulkRunReason" hidden></p>
       <p class="bulk-muted" id="bulkRunNotes" hidden></p>
+      <div class="bulk-filter" id="bulkFilterRow">
+        <label class="bulk-field-label" for="bulkFilter" data-i18n="bulkFilterLabel">Show</label>
+        <select id="bulkFilter" class="select-field ui-select bulk-select">
+          <option value="all" data-i18n="bulkFilterAll">All pages</option>
+          <option value="found" data-i18n="bulkFilterFound">With protections</option>
+          <option value="clear" data-i18n="bulkFilterClear">No protection found</option>
+          <option value="problem" data-i18n="bulkFilterProblem">Failed or skipped</option>
+        </select>
+        <span class="bulk-muted" id="bulkFilterNote" aria-live="polite"></span>
+      </div>
       <div class="bulk-table-wrap">
         <table class="bulk-table">
           <thead>
@@ -102,6 +112,7 @@
   <script src="../../modules/core/categories.js"></script>
   <script src="../../utils/format-utils.js"></script>
   <script src="../../modules/core/bulk-scan.js"></script>
+  <script src="../../modules/core/bulk-filter.js"></script>
   <script src="bulk.js"></script>
 </body>
 </html>

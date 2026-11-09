@@ -14,7 +14,7 @@
 
 [**Установить в Chrome**](https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca) · [Страница продукта](https://scrapfly.io/products/antibot-detector) · [Что нового](../CHANGELOG.md) · [llms.txt](../llms.txt) · [Сообщить о проблеме](https://github.com/scrapfly/Antibot-Detector/issues)
 
-[English](../README.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md) · **Русский**
+[English](../README.md) · [简体中文](README.zh-CN.md) · [Español](README.es.md) · **Русский** · [日本語](README.ja.md) · [Português (Brasil)](README.pt-BR.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [한국어](README.ko.md)
 
 </div>
 
@@ -101,6 +101,8 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 ## Что распознаёт расширение
 
 Ниже перечислены детекторы, которые поставляются с расширением. Любой из них можно отключить, отредактировать или добавить свой на вкладке **Правила**.
+
+У каждой анти-бот системы есть своя страница с cookie, заголовками и скриптами, по которым её видно: [страницы об анти-бот системах](antibots/ru/README.md).
 
 <details>
 <summary><b>Системы анти-бот (43)</b></summary>

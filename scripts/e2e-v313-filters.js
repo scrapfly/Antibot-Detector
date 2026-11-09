@@ -433,19 +433,19 @@ async function scenario(name, fn) {
     // The row: a labelled group under the search, in the summary card, one chip per category in the category order
     assert.equal(await popup.$eval('#detectionFilters', el => el.getAttribute('aria-label')), 'Filter detections');
     assert.equal(await popup.$eval('#detectionFilters', el => el.getAttribute('role')), 'group');
-    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => el.textContent.trim())), ['Anti-bot', 'Captcha', 'Fingerprint']);
-    assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:false'], 'off to start with');
+    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => el.textContent.trim())), ['Anti-bot', 'Captcha', 'Fingerprint', 'Combinations']);
+    assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:false', 'combinations:false'], 'off to start with');
     assert.ok(await popup.$eval('#detectionFilters', el => !!el.closest('#detectionOverview') && !!el.closest('.detection-search')), 'in the summary card, under the search');
     assert.ok(await popup.evaluate(() => document.querySelector('#detectionSearch').getBoundingClientRect().bottom <= document.querySelector('#detectionFilters').getBoundingClientRect().top), 'below the search field');
-    assert.deepEqual(await popup.$$eval(`${chips} svg`, els => els.length), 3, 'every chip has its icon');
-    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => el.style.getPropertyValue('--chip-color'))), ['#FF5733', '#33C3FF', '#3b82f6'], 'the Settings → Category colours');
+    assert.deepEqual(await popup.$$eval(`${chips} svg`, els => els.length), 4, 'every chip has its icon');
+    assert.deepEqual(await popup.$$eval(chips, els => els.slice(0, 3).map(el => el.style.getPropertyValue('--chip-color'))), ['#FF5733', '#33C3FF', '#3b82f6'], 'the Settings → Category colours');
     const metrics = await rowMetrics(popup, '#detectionFilters');
     assert.equal(metrics.visible, true);
     assert.equal(metrics.spills, false, 'nothing spills out of the row');
     assert.deepEqual(metrics.chipHeights, [24], 'the chip size of History');
-    assert.equal(metrics.lines, 1, 'three chips fit on one line');
+    assert.equal(metrics.lines, 1, 'four chips fit on one line');
     // the chips are buttons a keyboard reaches, with a name
-    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => [el.tagName, el.type, !!el.textContent.trim()])), [['BUTTON', 'button', true], ['BUTTON', 'button', true], ['BUTTON', 'button', true]]);
+    assert.deepEqual(await popup.$$eval(chips, els => els.map(el => [el.tagName, el.type, !!el.textContent.trim()])), [['BUTTON', 'button', true], ['BUTTON', 'button', true], ['BUTTON', 'button', true], ['BUTTON', 'button', true]]);
     // the whole list to start with: the three protections, two to a page
     assert.deepEqual(await listed(popup), ['V313 Bot Probe', 'V313 Captcha Probe', 'V313 Fingerprint Probe']);
     assert.deepEqual(await cardsOnPage(popup), ['V313 Bot Probe', 'V313 Captcha Probe']);
@@ -464,7 +464,7 @@ async function scenario(name, fn) {
     await until(async () => (await listed(popup)).length === 1, 5000, 'the fingerprint filter');
     assert.deepEqual(await listed(popup), ['V313 Fingerprint Probe']);
     assert.deepEqual(await cardsOnPage(popup), ['V313 Fingerprint Probe']);
-    assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:true']);
+    assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:true', 'combinations:false']);
     assert.match(await popup.$eval('#detectionPagination .pagination-info', el => el.textContent.replace(/\s+/g, ' ').trim()), /1-1 of 1/);
     // (a page in the background does not run CSS transitions: read the colour with them off)
     const border = (key) => popup.$eval(chip(key), el => { el.style.transition = 'none'; return getComputedStyle(el).borderTopColor; });
@@ -484,7 +484,7 @@ async function scenario(name, fn) {
     await shot(popup, 'detection-no-match-dark');
     await popup.$eval('#detectionClearFilters', el => el.click());
     await until(async () => (await listed(popup)).length === 3, 5000, 'Clear filters');
-    assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:false'], 'every chip is off again');
+    assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:false', 'combinations:false'], 'every chip is off again');
     assert.equal(await popup.$eval('#detectionSearch', el => el.value), '', 'and the search is empty');
     assert.equal(await popup.$eval('#detectionNoResults', el => el.hidden), true);
     // The search alone still works, and a chip turned on after it keeps it
@@ -528,7 +528,7 @@ async function scenario(name, fn) {
     await until(() => loads[name] > before, 10000, 'the page sent again');
     await until(async () => (await cacheStamp(url)) > first, 25000, 'a fresh saved result');
     await resultsShown(popup, 3);
-    assert.deepEqual(await pressed(popup, '#detectionFilters .history-filter-chip'), ['antibot:false', 'captcha:true', 'fingerprint:false'], 'the chip is still on after the new scan');
+    assert.deepEqual(await pressed(popup, '#detectionFilters .history-filter-chip'), ['antibot:false', 'captcha:true', 'fingerprint:false', 'combinations:false'], 'the chip is still on after the new scan');
     assert.deepEqual(await listed(popup), ['V313 Captcha Probe'], 'and the new results are filtered by it');
     assert.deepEqual(await cardsOnPage(popup), ['V313 Captcha Probe']);
     await popup.close();
@@ -770,7 +770,7 @@ async function scenario(name, fn) {
       await until(() => popup.evaluate(() => { const empty = document.querySelector('#emptyState'); return !!empty && empty.style.display === 'flex'; }), 15000, 'the no-completed-scan card: the Full URL result is gone under Domain');
       assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'No completed scan');
       assert.equal(await popup.$eval('#detectionResults', el => getComputedStyle(el).display), 'none', 'no stale results under the card');
-      assert.deepEqual(await markupOf(popup), { list: true, search: true, chips: 3, pagination: true }, 'the tab\'s markup is still there');
+      assert.deepEqual(await markupOf(popup), { list: true, search: true, chips: 4, pagination: true }, 'the tab\'s markup is still there');
       const before1 = loads[first.name];
       await popup.$eval('#emptyRescanBtn', el => el.click());
       await until(() => loads[first.name] > before1, 10000, 'the page sent again');
@@ -811,7 +811,7 @@ async function scenario(name, fn) {
       await until(() => popup2.evaluate(() => { const empty = document.querySelector('#emptyState'); return !!empty && empty.style.display === 'flex'; }), 15000, 'the no-completed-scan card after the new scope was saved');
       assert.equal(await popup2.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'No completed scan');
       assert.equal(await popup2.$eval('#emptyRescanBtn', el => !el.hidden && el.offsetParent !== null), true, 'with Scan again');
-      assert.deepEqual(await markupOf(popup2), { list: true, search: true, chips: 3, pagination: true }, 'the markup is there for the next scan to draw into');
+      assert.deepEqual(await markupOf(popup2), { list: true, search: true, chips: 4, pagination: true }, 'the markup is there for the next scan to draw into');
       await shot(popup2, 'detection-cache-scope-no-scan-dark');
       const before = loads[second.name];
       await popup2.$eval('#emptyRescanBtn', el => el.click());
@@ -819,7 +819,7 @@ async function scenario(name, fn) {
       await until(async () => (await cacheStamp(second.url)) > saved, 25000, 'a scan saved under the new scope');
       await untilDrawn(popup2, async () => (await names(popup2)).length === 2, 30000, 'the new results drawn in the same tab');
       assert.deepEqual(await names(popup2), ['V313 Bot Probe', 'V313 Captcha Probe'], 'the new results are drawn in the same tab');
-      assert.deepEqual(await markupOf(popup2), { list: true, search: true, chips: 3, pagination: true });
+      assert.deepEqual(await markupOf(popup2), { list: true, search: true, chips: 4, pagination: true });
       assert.equal(await popup2.$eval('#detectionFilters', el => el.getBoundingClientRect().width > 0), true, 'the chips are on screen again');
       assert.equal(await popup2.$eval('#detectionSearch', el => el.getBoundingClientRect().width > 0), true, 'and so is the search');
       await shot(popup2, 'detection-cache-scope-new-scan-dark');
@@ -842,7 +842,7 @@ async function scenario(name, fn) {
         await resultsShown(popup, 3);
         await popup.waitForFunction(() => document.querySelector('#detectionFilters .history-filter-chip svg'), null, { polling: 250, timeout: 10000 });
         assert.equal(await popup.$eval('#detectionFilters', el => el.getAttribute('aria-label')), say('detectionFiltersLabel'), `${locale}: the row's name`);
-        assert.deepEqual(await popup.$$eval('#detectionFilters .history-filter-chip', els => els.map(el => el.textContent.trim())), [say('categoryAntibot'), say('categoryCaptcha'), say('categoryFingerprint')], `${locale}: the chips`);
+        assert.deepEqual(await popup.$$eval('#detectionFilters .history-filter-chip', els => els.map(el => el.textContent.trim())), [say('categoryAntibot'), say('categoryCaptcha'), say('categoryFingerprint'), say('historyFilterCombinations')], `${locale}: the chips`);
         assert.equal(await popup.$eval('#rescanBtn', el => el.getAttribute('title')), say('historyScanAgain'), `${locale}: the toolbar button`);
         assert.equal(await popup.$eval('#rescanBtn', el => el.getAttribute('aria-label')), say('historyScanAgain'));
         // The first page still fits above the pagination in a language with other letter shapes and line heights: Spanish needs

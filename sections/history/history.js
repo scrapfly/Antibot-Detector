@@ -6,6 +6,8 @@ class History {
     this.searchQuery = '';
     // The filter chips under the search (HistoryFilter): kept while the popup is open
     this.activeChips = HistoryFilter.normalizeChips();
+    // The list's order (HistorySort): kept while the popup is open
+    this.sortKey = 'recent';
     this.initialized = false;
     this.listenersAttached = false;
     this.paginationManager = null;
@@ -124,7 +126,7 @@ class History {
     if (this.paginationManager) {
       // Pinning, a note, watching, deleting or a new scan redraw the same search: the list stays on its page.
       // A new search or chip starts on page 1.
-      const filterKey = JSON.stringify([this.searchQuery || '', this.activeChips || null]);
+      const filterKey = JSON.stringify([this.searchQuery || '', this.activeChips || null, this.sortKey]);
       const keepPage = this._renderedFilterKey === filterKey;
       // A new search or chip is news for a screen reader; a pin, a note or a new scan that redraws the same one is not
       filterChanged = this._renderedFilterKey !== undefined && !keepPage;
@@ -385,6 +387,8 @@ class History {
     let cardCount = 0;
     const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
+      // Nothing for an entry with no readable date (its card says Unknown): not 1 January 1970
+      const savedAt = FormatUtils.formatKnownDateTime(item.timestamp);
       // getDomainFromUrl answers 'Unknown' (English, also used in filenames) without a URL
       const domain = item.url ? this.getDomainFromUrl(item.url) : unknownLabel;
       // Page title on top, domain underneath; entries saved without a real title fall back to the domain
@@ -462,7 +466,7 @@ class History {
             <div class="history-detections">
               ${this.renderHistorySummary(cardDetections)}
             </div>
-            <span class="history-timestamp" data-tip="${FormatUtils.escapeAttr(FormatUtils.formatDateTime(item.timestamp))}">${FormatUtils.escapeHtml(timeAgo)}</span>
+            <span class="history-timestamp"${savedAt ? ` data-tip="${FormatUtils.escapeAttr(savedAt)}"` : ''}>${FormatUtils.escapeHtml(timeAgo)}</span>
           </div>
         </div>
       `;
@@ -862,12 +866,13 @@ class History {
    * @returns {Array} Filtered history items
    */
   getFilteredItems() {
-    return HistoryFilter.filter(this.historyItems, {
+    const shown = HistoryFilter.filter(this.historyItems, {
       query: this.searchQuery,
       chips: this.activeChips,
       nameOf: detection => FormatUtils.detectorName(detection),
       categoryOf: detection => FormatUtils.categoryKey(detection)
     });
+    return HistorySort.sort(shown, this.sortKey);
   }
 
   /**
@@ -986,7 +991,7 @@ class History {
     }
     if (timestamp) {
       const timeAgo = this.getTimeAgo(new Date(historyItem.timestamp));
-      const fullDate = FormatUtils.formatDateTime(historyItem.timestamp);
+      const fullDate = FormatUtils.formatKnownDateTime(historyItem.timestamp);
       timestamp.textContent = timeAgo;
       timestamp.title = fullDate;
     }
@@ -1345,7 +1350,7 @@ class History {
     // The address without its query and fragment: they can hold session tokens (like the Detection tab's copies)
     let text = L('clipboardUrlFmt', 'URL: {0}', String(historyItem.url || '').replace(/[?#].*$/s, '')) + '\n';
     text += L('clipboardTitleFmt', 'Title: {0}', title) + '\n';
-    text += L('clipboardTimestampFmt', 'Timestamp: {0}', FormatUtils.formatDateTime(historyItem.timestamp)) + '\n';
+    text += L('clipboardTimestampFmt', 'Timestamp: {0}', FormatUtils.formatKnownDateTime(historyItem.timestamp) || FormatUtils.t('timeUnknown', 'Unknown')) + '\n';
     text += '\n' + L('clipboardDetectionsListFmt', 'Detections ({0}):', historyItem.detections?.length || 0) + '\n';
     text += '─'.repeat(50) + '\n\n';
 
@@ -2485,6 +2490,13 @@ class History {
       filterRow.addEventListener('click', (e) => {
         const chip = e.target.closest('.history-filter-chip');
         if (chip) this.toggleFilterChip(chip.dataset.filter);
+      });
+    }
+    const sortSelect = document.querySelector('#historySort');
+    if (sortSelect) {
+      sortSelect.addEventListener('change', () => {
+        this.sortKey = HistorySort.isKey(sortSelect.value) ? sortSelect.value : 'recent';
+        this.renderHistory();
       });
     }
     const clearFiltersBtn = document.querySelector('#historyClearFilters');

@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "无法运行测试。"
   },
+  "rulesExportShownFmt": {
+    "message": "导出显示的规则 ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "启用显示的规则 ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "停用显示的规则 ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "已启用的规则:{0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "已停用的规则:{0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "无法保存更改。请重试。"
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "重新扫描失败的页面"
+  },
+  "bulkFilterLabel": {
+    "message": "显示",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "所有页面",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "有防护",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "未发现防护",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "失败或已跳过",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "正在显示 {1} 个页面中的 {0} 个。导出仅包含这些页面。",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "新列表"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "对设置的更改尚未保存。要在关闭前保存吗？"
+  },
+  "historySortLabel": {
+    "message": "排序历史记录"
+  },
+  "historySortRecent": {
+    "message": "最新优先"
+  },
+  "historySortOldest": {
+    "message": "最早优先"
+  },
+  "historySortDetections": {
+    "message": "防护最多"
+  },
+  "historySortHost": {
+    "message": "网站 A 到 Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "单行"
   }
 }

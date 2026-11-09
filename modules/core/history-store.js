@@ -388,10 +388,20 @@
           continue;
         }
         if (kept.length <= 1) throw error;
+        // About half goes, the oldest unpinned entries first: a pinned entry is exempt from every other limit, so it only
+        // goes once nothing unpinned is left
         const half = Math.ceil(kept.length / 2);
-        dropped += kept.length - half;
-        kept = kept.slice(0, half);
-        parts = parts.slice(0, half);
+        let remove = kept.length - half;
+        const drop = new Set();
+        for (let i = kept.length - 1; i >= 1 && remove > 0; i--) {
+          if (!(kept[i] && kept[i].pinned === true)) { drop.add(i); remove--; }
+        }
+        for (let i = kept.length - 1; i >= 1 && remove > 0; i--) {
+          if (!drop.has(i)) { drop.add(i); remove--; }
+        }
+        dropped += drop.size;
+        parts = parts.filter((_, i) => !drop.has(i));
+        kept = kept.filter((_, i) => !drop.has(i));
       }
     }
   }
@@ -478,7 +488,8 @@
       if (typeof entry.note === 'string') entry.note = cleanAnnotation({ note: entry.note }).note; else delete entry.note;
       if (typeof entry.title === 'string') entry.title = entry.title.slice(0, MAX_TITLE_LENGTH); else delete entry.title;
       if (typeof entry.url === 'string') entry.url = entry.url.slice(0, MAX_URL_LENGTH);
-      if (!timeOf(entry)) entry.timestamp = 0;
+      // A date as milliseconds in text becomes the number: the exports and the views read a number or a date text only
+      if (!timeOf(entry)) entry.timestamp = 0; else if (typeof entry.timestamp === 'string' && /^\d{10,16}$/.test(entry.timestamp.trim())) entry.timestamp = timeOf(entry);
       out.push(entry);
     });
     return out;

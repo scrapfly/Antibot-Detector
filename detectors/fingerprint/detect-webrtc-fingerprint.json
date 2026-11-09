@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-03",
-  "version": "1.2.0",
+  "lastUpdated": "2026-11-09",
+  "version": "1.2.1",
   "minExtensionVersion": "2.8",
   "icon": "webrtc_fingerprint.png",
   "description": "WebRTC setup, device enumeration and candidate address access; communication use remains possible",
@@ -15,8 +15,7 @@
       { "id": "webrtc-channel", "description": "Creates a WebRTC data channel", "enabled": true, "confidence": 10, "target": "RTCPeerConnection.prototype.createDataChannel", "standalone": true },
       { "id": "webrtc-devices", "description": "Enumerates media devices", "enabled": true, "confidence": 20, "target": "MediaDevices.prototype.enumerateDevices", "standalone": true },
       { "id": "webrtc-offer", "description": "Creates an SDP offer, including ordinary peer connection setup", "enabled": true, "confidence": 10, "target": "RTCPeerConnection.prototype.createOffer", "standalone": true },
-      { "id": "webrtc-address", "description": "Reads an ICE candidate address", "enabled": true, "confidence": 25, "target": "RTCIceCandidate.prototype.address", "standalone": true },
-      { "id": "webrtc-candidate-listener", "description": "Monitors ICE candidate events", "enabled": false, "confidence": 10, "target": "RTCPeerConnection.prototype.onicecandidate", "standalone": false }
+      { "id": "webrtc-address", "description": "Reads an ICE candidate address", "enabled": true, "confidence": 25, "target": "RTCIceCandidate.prototype.address", "standalone": true }
     ],
     "content": [
       { "id": "webrtc-peer-script", "text": "RTCPeerConnection", "description": "Script reference to peer connections; execution unconfirmed", "confidence": 10, "standalone": true, "scope": "scripts", "checkScripts": true, "textRegex": false, "textWholeWord": true, "textCaseSensitive": true },

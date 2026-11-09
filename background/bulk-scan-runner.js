@@ -8,7 +8,7 @@
  * History settings: paused, ignored sites, duplicates) and the webhook. Nothing here writes History.
  *
  * A worker that stops in the middle of a run (Chrome restarts it, the extension is updated) loses the loop: when it
- * starts again, the run it finds in session storage is marked stopped (BulkScan.recover), never left "running", and
+ * starts again, the run it finds in session storage is marked stopped (BulkScan.recover), never left "running" (a paused run stays paused: Resume starts a loop again), and
  * the scan tab it left open is closed (BackgroundTabScan.closeLeftoverTabs).
  */
 const BulkScanRunner = {

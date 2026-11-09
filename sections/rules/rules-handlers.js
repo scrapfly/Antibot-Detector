@@ -667,3 +667,68 @@ Rules.prototype.clearFilters = function() {
   if (input) input.value = '';
   this.handleSearch('');
 };
+
+// ============================================
+// Acting on the rules shown (a search or a chip is on)
+// ============================================
+
+/** Whether the search box or a chip narrows the list. */
+Rules.prototype.isFiltered = function() {
+  const query = document.querySelector('#rulesSearch')?.value || '';
+  return !!query.trim() || RulesFilter.isActive(this.activeChips);
+};
+
+/**
+ * Export, Turn on and Turn off for the rules shown: each item appears only while a search or a chip is on and it would act on at
+ * least one rule (Turn on needs a rule that is off). Written when the menu opens, so it follows the switches turned meanwhile.
+ */
+Rules.prototype.syncShownMenu = function() {
+  const counts = RulesBulk.counts(this.filteredDetectors, this.isFiltered());
+  const items = [['#exportShownRulesBtn', counts.export], ['#enableShownRulesBtn', counts.on], ['#disableShownRulesBtn', counts.off]];
+  for (const [selector, count] of items) {
+    const button = document.querySelector(selector);
+    if (!button) continue;
+    button.hidden = count === 0;
+    const label = button.querySelector('.rules-shown-label');
+    if (label && count > 0) label.textContent = I18n.format(label.dataset.key, count);
+  }
+};
+
+/** Export only the rules shown, in the file Import reads. */
+Rules.prototype.handleExportShown = function() {
+  const entries = (this.filteredDetectors || []).map(entry => ({
+    category: entry.category,
+    detectorName: entry.detectorName,
+    detector: this.detectorManager.getDetector(entry.category, entry.detectorName) || entry.detector
+  }));
+  const blob = new Blob([JSON.stringify(RulesBulk.exportOf(entries), null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `scrapfly-detectors-shown-${FormatUtils.localDay(Date.now())}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+/**
+ * Switch every rule shown on or off with one save and one reload of the worker's rules. A save that fails puts every rule back.
+ * @param {boolean} enable
+ */
+Rules.prototype.handleToggleShown = async function(enable) {
+  const targets = RulesBulk.toChange(this.filteredDetectors, enable);
+  if (!targets.length) return;
+  const stored = targets.map(entry => this.detectorManager.getDetector(entry.category, entry.detectorName)).filter(Boolean);
+  try {
+    for (const detector of stored) detector.enabled = enable;
+    await this.detectorManager.saveDetectorsToStorage();
+    chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => void chrome.runtime.lastError);
+    for (const entry of targets) this.syncListedEnabled(entry.category, entry.detectorName, enable);
+    NotificationHelper.success(I18n.format(enable ? 'rulesShownOnDoneFmt' : 'rulesShownOffDoneFmt', targets.length));
+  } catch (error) {
+    Logger.error('UI', 'Failed to switch the rules shown:', error);
+    for (const detector of stored) detector.enabled = !enable;
+    NotificationHelper.error(I18n.get('rulesToggleSaveFailed') || 'Could not save the change. Try again.');
+  }
+  // Drawn again on the same page: the cards show the new switches
+  this.displayRules({ keepPage: true });
+};

@@ -116,6 +116,9 @@
   "goku-props-object": {
    "runtimeType": "object"
   },
+  "aws-waf-captcha-object": {
+   "runtimeType": "object"
+  },
   "goku-props-reference": {
    "source": "window.gokuProps = {\"key\":\"AQIDAHjc\",\"iv\":\"CgAEaj\",\"context\":\"x\"};"
   },

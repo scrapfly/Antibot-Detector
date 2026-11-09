@@ -132,7 +132,13 @@ function setupTabListeners() {
                 }
             }
         }
-        if (changeInfo.status === 'loading' && !await isExtensionEnabled()) {
+        // A storage failure must not become an unhandled rejection: treat the extension as enabled and go on
+        const disabledNow = changeInfo.status === 'loading'
+            && !await isExtensionEnabled().catch((error) => {
+                Logger.debug('BACKGROUND', `[TabUpdate] Could not read the enabled state for tab ${tabId}:`, error && error.message);
+                return true;
+            });
+        if (disabledNow) {
             Logger.debug('BACKGROUND', `[TabUpdate] Extension is disabled - setting OFF badge for tab ${tabId}`);
             chrome.action.setBadgeText({ text: BADGE.TEXT.DISABLED, tabId: tabId }).catch((error) => {
                 Logger.debug('BACKGROUND', `[TabUpdate] Failed to set disabled badge for tab ${tabId}:`, error.message);
@@ -228,7 +234,7 @@ function setupTabListeners() {
                 return;
             }
 
-            if (!await isExtensionEnabled()) {
+            if (!await isExtensionEnabled().catch(() => true)) {
                 currentActiveTab = newTabId;
                 return;
             }

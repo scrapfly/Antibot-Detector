@@ -513,7 +513,7 @@ input[type="file"] {
 
 .duplicate-info-box ul {
   margin: 8px 0;
-  padding-left: 20px;
+  padding-inline-start: 20px;
 }
 
 .duplicate-info-box li {
@@ -1352,10 +1352,16 @@ input[type="file"] {
   font-weight: 600;
 }
 
-#settingsModal .action-btn:hover {
+#settingsModal .action-btn:hover:not(:disabled) {
   background: var(--g-353535);
   border-color: var(--accent);
   color: var(--text-primary);
+}
+
+/* A button that is busy or has nothing to do looks inert: no hover highlight, dimmed */
+#settingsModal .action-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 #settingsModal .action-btn-block {

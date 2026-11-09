@@ -278,6 +278,10 @@
   cursor: pointer;
 }
 
+.rules-menu-item[hidden] {
+  display: none;
+}
+
 .rules-menu-item svg {
   flex-shrink: 0;
   color: var(--text-secondary);

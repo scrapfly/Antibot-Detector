@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "無法執行測試。"
   },
+  "rulesExportShownFmt": {
+    "message": "匯出顯示的規則 ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "啟用顯示的規則 ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "停用顯示的規則 ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "已啟用的規則:{0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "已停用的規則:{0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "無法儲存變更。請再試一次。"
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "重新掃描失敗的網頁"
+  },
+  "bulkFilterLabel": {
+    "message": "顯示",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "所有網頁",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "有防護",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "未發現防護",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "失敗或已略過",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "正在顯示 {1} 個網頁中的 {0} 個。匯出僅包含這些網頁。",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "新清單"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "對設定的變更尚未儲存。要在關閉前儲存嗎？"
+  },
+  "historySortLabel": {
+    "message": "排序歷史記錄"
+  },
+  "historySortRecent": {
+    "message": "最新優先"
+  },
+  "historySortOldest": {
+    "message": "最早優先"
+  },
+  "historySortDetections": {
+    "message": "防護最多"
+  },
+  "historySortHost": {
+    "message": "網站 A 到 Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "單行"
   }
 }

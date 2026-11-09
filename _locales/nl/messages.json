@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "De test kon niet worden uitgevoerd."
   },
+  "rulesExportShownFmt": {
+    "message": "Getoonde regels exporteren ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Getoonde regels inschakelen ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Getoonde regels uitschakelen ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Regels ingeschakeld: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Regels uitgeschakeld: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Kan de wijziging niet opslaan. Probeer het opnieuw."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "De mislukte pagina's opnieuw scannen"
+  },
+  "bulkFilterLabel": {
+    "message": "Tonen",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Alle pagina's",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Met beveiliging",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Geen beveiliging gevonden",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Mislukt of overgeslagen",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "{0} van {1} pagina's getoond. Exports bevatten alleen deze.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Nieuwe lijst"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Je wijzigingen in de instellingen zijn nog niet opgeslagen. Opslaan voordat je sluit?"
+  },
+  "historySortLabel": {
+    "message": "Geschiedenis sorteren"
+  },
+  "historySortRecent": {
+    "message": "Nieuwste eerst"
+  },
+  "historySortOldest": {
+    "message": "Oudste eerst"
+  },
+  "historySortDetections": {
+    "message": "Meeste beveiligingen"
+  },
+  "historySortHost": {
+    "message": "Site A tot Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Eén regel"
   }
 }

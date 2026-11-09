@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Nie udało się uruchomić testu."
   },
+  "rulesExportShownFmt": {
+    "message": "Eksportuj widoczne reguły ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Włącz widoczne reguły ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Wyłącz widoczne reguły ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Włączone reguły: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Wyłączone reguły: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Nie udało się zapisać zmiany. Spróbuj ponownie."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "Skanuj ponownie strony, które się nie powiodły"
+  },
+  "bulkFilterLabel": {
+    "message": "Pokaż",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Wszystkie strony",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Z zabezpieczeniami",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Bez wykrytych zabezpieczeń",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Nieudane lub pominięte",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Pokazano {0} z {1} stron. Eksporty zawierają tylko te strony.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Nowa lista"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Zmiany w ustawieniach nie zostały jeszcze zapisane. Zapisać je przed zamknięciem?"
+  },
+  "historySortLabel": {
+    "message": "Sortuj historię"
+  },
+  "historySortRecent": {
+    "message": "Najnowsze najpierw"
+  },
+  "historySortOldest": {
+    "message": "Najstarsze najpierw"
+  },
+  "historySortDetections": {
+    "message": "Najwięcej zabezpieczeń"
+  },
+  "historySortHost": {
+    "message": "Witryna od A do Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Jedna linia"
   }
 }

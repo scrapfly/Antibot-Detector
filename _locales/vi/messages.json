@@ -6413,6 +6413,21 @@
   "ruleLiveTestError": {
     "message": "Không thể chạy kiểm tra."
   },
+  "rulesExportShownFmt": {
+    "message": "Xuất các quy tắc đang hiển thị ({0})"
+  },
+  "rulesEnableShownFmt": {
+    "message": "Bật các quy tắc đang hiển thị ({0})"
+  },
+  "rulesDisableShownFmt": {
+    "message": "Tắt các quy tắc đang hiển thị ({0})"
+  },
+  "rulesShownOnDoneFmt": {
+    "message": "Đã bật quy tắc: {0}"
+  },
+  "rulesShownOffDoneFmt": {
+    "message": "Đã tắt quy tắc: {0}"
+  },
   "rulesToggleSaveFailed": {
     "message": "Không thể lưu thay đổi. Hãy thử lại."
   },
@@ -6496,6 +6511,30 @@
   },
   "bulkScanFailedAgain": {
     "message": "Quét lại các trang thất bại"
+  },
+  "bulkFilterLabel": {
+    "message": "Hiển thị",
+    "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
+  },
+  "bulkFilterAll": {
+    "message": "Tất cả trang",
+    "description": "Bulk scan results filter: every page of the run"
+  },
+  "bulkFilterFound": {
+    "message": "Có bảo vệ",
+    "description": "Bulk scan results filter: scanned pages where at least one protection was found"
+  },
+  "bulkFilterClear": {
+    "message": "Không tìm thấy bảo vệ",
+    "description": "Bulk scan results filter: scanned pages where no protection was found"
+  },
+  "bulkFilterProblem": {
+    "message": "Thất bại hoặc bỏ qua",
+    "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkShowingFmt": {
+    "message": "Đang hiển thị {0} trên {1} trang. Tệp xuất chỉ gồm các trang này.",
+    "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
     "message": "Danh sách mới"
@@ -6628,5 +6667,23 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi đóng?"
+  },
+  "historySortLabel": {
+    "message": "Sắp xếp lịch sử"
+  },
+  "historySortRecent": {
+    "message": "Mới nhất trước"
+  },
+  "historySortOldest": {
+    "message": "Cũ nhất trước"
+  },
+  "historySortDetections": {
+    "message": "Nhiều biện pháp bảo vệ nhất"
+  },
+  "historySortHost": {
+    "message": "Trang web A đến Z"
+  },
+  "detectionCopyMenuOneLine": {
+    "message": "Một dòng"
   }
 }
