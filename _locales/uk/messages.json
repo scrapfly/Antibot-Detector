@@ -6173,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Експорт Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Не вдалося скопіювати підсумок. Спробуйте ще раз.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Підсумок скопійовано",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Копіювати підсумок",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Показати домени з {0}"
   },

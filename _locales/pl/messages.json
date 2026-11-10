@@ -6173,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Eksportuj Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Nie udało się skopiować podsumowania. Spróbuj ponownie.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Skopiowano podsumowanie",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Kopiuj podsumowanie",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Pokaż domeny z ochroną {0}"
   },

@@ -214,7 +214,7 @@
     "message": "신뢰도는 저장된 탐지 근거의 강도를 나타내며, 핑거프린팅이나 진행 중인 챌린지의 존재를 입증하지는 않습니다."
   },
   "statsConfidenceKnownFmt": {
-    "message": "탐지 {0}개에 신뢰도 값이 있으며, {1}개에는 유효한 점수가 없습니다."
+    "message": "신뢰도 값이 있는 탐지: {0}개. 유효한 점수가 없는 탐지: {1}개."
   },
   "statsProtectionColumn": {
     "message": "보호 기능"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown 내보내기"
+  },
+  "statsExportCopyFailed": {
+    "message": "요약을 복사하지 못했습니다. 다시 시도해 주세요.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "요약을 복사했습니다",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "요약 복사",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "{0}이(가) 있는 도메인 보기"

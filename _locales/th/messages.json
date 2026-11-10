@@ -214,7 +214,7 @@
     "message": "ความมั่นใจแสดงความหนักแน่นของหลักฐานการตรวจจับที่บันทึกไว้ ไม่ใช่หลักฐานยืนยันว่ามี fingerprinting หรือ challenge ที่ทำงานอยู่"
   },
   "statsConfidenceKnownFmt": {
-    "message": "การตรวจจับ {0} รายการมีค่าความมั่นใจ และ {1} รายการไม่มีคะแนนที่ถูกต้อง"
+    "message": "การตรวจจับที่มีค่าความมั่นใจ: {0} รายการ ไม่มีคะแนนที่ถูกต้อง: {1} รายการ"
   },
   "statsProtectionColumn": {
     "message": "ระบบป้องกัน"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "ส่งออก Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "ไม่สามารถคัดลอกสรุปได้ โปรดลองอีกครั้ง",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "คัดลอกสรุปแล้ว",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "คัดลอกสรุป",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "แสดงโดเมนที่มี {0}"

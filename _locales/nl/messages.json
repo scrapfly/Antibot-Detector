@@ -214,7 +214,7 @@
     "message": "Zekerheid geeft de sterkte van het opgeslagen detectiebewijs aan, geen bewijs van fingerprinting of een actieve challenge."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detecties hebben zekerheidswaarden; {1} hebben geen geldige score."
+    "message": "Detecties met zekerheidswaarde: {0}. Zonder geldige score: {1}."
   },
   "statsProtectionColumn": {
     "message": "Beveiliging"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown exporteren"
+  },
+  "statsExportCopyFailed": {
+    "message": "De samenvatting kon niet worden gekopieerd. Probeer het opnieuw.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Samenvatting gekopieerd",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Samenvatting kopiëren",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Domeinen met {0} tonen"

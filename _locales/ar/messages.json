@@ -148,7 +148,7 @@
     "message": "تحتوي الصادرات على النطاقات وملخصات الكشف، وليس ملفات تعريف الارتباط أو محتوى الصفحات أو معلمات عناوين URL."
   },
   "statsExportScopeFmt": {
-    "message": "تصدير الفترة المحددة: {0} من السجلات"
+    "message": "يغطي التصدير الفترة المحددة. السجلات: {0}"
   },
   "statsExportStartedFmt": {
     "message": "بدأ التنزيل: {0}"
@@ -214,7 +214,7 @@
     "message": "تصف الثقة قوة أدلة الكشف المحفوظة، ولا تثبت وجود بصمة رقمية أو تحدٍّ نشط."
   },
   "statsConfidenceKnownFmt": {
-    "message": "تتوفر قيم ثقة لـ {0} من عمليات الكشف؛ ولا تتوفر درجة صالحة لـ {1} منها."
+    "message": "عمليات الكشف ذات قيمة ثقة: {0}. بلا درجة صالحة: {1}."
   },
   "statsProtectionColumn": {
     "message": "الحماية"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "تصدير Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "تعذر نسخ الملخص. يرجى المحاولة مرة أخرى.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "تم نسخ الملخص",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "نسخ الملخص",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "عرض النطاقات التي فيها {0}"

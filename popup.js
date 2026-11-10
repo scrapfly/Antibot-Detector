@@ -294,6 +294,9 @@ class ScrapflyPopup {
       }
     } catch (error) {
       Logger.error('UI', 'Popup: Error handling toggle change:', error);
+      // Nothing was saved: the switch goes back to what is stored instead of showing a state that is not real
+      const toggle = document.querySelector('#enableToggle');
+      if (toggle) toggle.checked = !enabled;
       // Show error to user
       if (typeof NotificationHelper !== 'undefined') {
         NotificationHelper.error(enabled

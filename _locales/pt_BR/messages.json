@@ -214,7 +214,7 @@
     "message": "A confiança descreve a força dos indícios de detecção salvos, não comprova a presença de fingerprinting ou de um desafio ativo."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detecções têm valores de confiança; {1} não têm uma pontuação válida."
+    "message": "Detecções com valor de confiança: {0}. Sem pontuação válida: {1}."
   },
   "statsProtectionColumn": {
     "message": "Proteção"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Exportar Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "Não foi possível copiar o resumo. Tente novamente.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Resumo copiado",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copiar resumo",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Mostrar os domínios com {0}"

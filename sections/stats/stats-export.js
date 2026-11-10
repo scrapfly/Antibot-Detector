@@ -153,6 +153,10 @@
       }
       return lines.join('\n');
     },
+    /** The Markdown report as text, for the clipboard: the same content as the Markdown file. */
+    summary(items, options = {}) {
+      return StatsExport.toMarkdown(StatsExport.build(items, settings(options)));
+    },
     /** Named after the range and the LOCAL calendar day, e.g. scrapfly-history-statistics-30d-2026-10-03.csv. */
     filename(format, options = {}) {
       const { days, now } = settings(options);

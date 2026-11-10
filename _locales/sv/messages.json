@@ -6173,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Exportera Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Det gick inte att kopiera sammanfattningen. Försök igen.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Sammanfattningen kopierad",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Kopiera sammanfattning",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Visa domänerna med {0}"
   },

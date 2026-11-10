@@ -340,6 +340,15 @@
     state.exporting = true;
     updateExportButtons();
     status('');
+    if (format === 'copy') {
+      try {
+        await navigator.clipboard.writeText(StatsExport.summary(state.items, { days, now }));
+        status(tr('statsExportCopied', 'Summary copied'));
+      } catch (_) {
+        status(tr('statsExportCopyFailed', 'Could not copy the summary. Please try again.'), true);
+      } finally { state.exporting = false; updateExportButtons(); }
+      return;
+    }
     try {
       const result = await StatsExport.download(format, state.items, { days, now });
       status(fmt('statsExportStartedFmt', 'Download started: {0}', result.filename));

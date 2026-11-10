@@ -214,7 +214,7 @@
     "message": "Kepercayaan menggambarkan kekuatan bukti deteksi yang tersimpan, bukan bukti adanya fingerprinting atau challenge aktif."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} deteksi memiliki nilai kepercayaan; {1} tidak memiliki skor yang valid."
+    "message": "Deteksi dengan nilai kepercayaan: {0}. Tanpa skor yang valid: {1}."
   },
   "statsProtectionColumn": {
     "message": "Proteksi"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Ekspor Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "Tidak dapat menyalin ringkasan. Silakan coba lagi.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Ringkasan disalin",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Salin ringkasan",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Tampilkan domain dengan {0}"
