@@ -58,6 +58,7 @@
   const DIFFICULTY_TEXT = { Low: ['difficultyLow', 'Low'], Medium: ['difficultyMedium', 'Medium'], High: ['difficultyHigh', 'High'] };
   const label = (pair, fallbackKey) => (pair ? tr(pair[0], pair[1]) : fallbackKey || '');
 
+  const FILTER_KEY = 'bulkFilter';
   const state = { run: null, filter: 'all', starting: false, colors: { ...Categories.DEFAULT_COLORS }, historyEnabled: true };
 
   /* ---------- Talking to the worker ---------- */
@@ -304,6 +305,17 @@
       row.append(num, addressCell(item), statusCell(item), protectionsCell(item), difficultyCell(item));
       fragment.appendChild(row);
     });
+    if (!fragment.children.length) {
+      // A filter that shows no page: say so, instead of an empty table
+      const row = document.createElement('tr');
+      row.className = 'bulk-row bulk-row--empty';
+      const cell = document.createElement('td');
+      cell.colSpan = 5;
+      cell.className = 'bulk-muted';
+      cell.textContent = tr('bulkFilterNone', 'No page matches this filter.');
+      row.appendChild(cell);
+      fragment.appendChild(row);
+    }
     body.replaceChildren(fragment);
   }
 
@@ -328,9 +340,10 @@
     byId('bulkExportCsvBtn').disabled = !exportable;
     byId('bulkExportJsonBtn').disabled = !exportable;
     byId('bulkExportMarkdownBtn').disabled = !exportable;
+    byId('bulkCopyLinesBtn').disabled = !exportable;
     // The button that was just pressed (Pause, Resume, Stop, Scan again) went away: the keyboard goes to the one that took its place
     // instead of back to the top of the page
-    if (focused && focused !== document.body && focused.hidden === true) {
+    if (focused && focused !== document.body && (focused.hidden === true || focused.disabled === true)) {
       const next = ['bulkPauseBtn', 'bulkResumeBtn', 'bulkStopBtn', 'bulkNewBtn', 'bulkInput'].map(byId).find(el => el && !el.hidden && !el.disabled);
       if (next) next.focus();
     }
@@ -391,6 +404,19 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
+  async function copyLines() {
+    if (!state.run) return;
+    const text = BulkScan.oneLines(BulkFilter.apply(state.run, state.filter));
+    if (!text) return;
+    await FormatUtils.copyToClipboard(text, { notify: false });
+    notice(tr('copiedNotification', 'Copied'));
+  }
+
+  function restoreFilter() {
+    try { state.filter = BulkFilter.normalize(localStorage.getItem(FILTER_KEY)); } catch (_) { /* storage blocked: all pages */ }
+    byId('bulkFilter').value = state.filter;
+  }
+
   /* ---------- Wiring ---------- */
 
   async function readSettings() {
@@ -441,7 +467,11 @@
       // The pages that failed (and any still waiting) are scanned again; the others stay in the table and the exports
       start(state.run.items.filter(item => item.status === 'failed' || item.status === 'waiting').map(item => item.url), { continueRun: true, retryFailed: true });
     });
-    byId('bulkFilter').addEventListener('change', (event) => { state.filter = BulkFilter.normalize(event.target.value); if (state.run) render(); });
+    byId('bulkFilter').addEventListener('change', (event) => { state.filter = BulkFilter.normalize(event.target.value);
+      try { localStorage.setItem(FILTER_KEY, state.filter); } catch (_) { /* the choice lasts until the page closes */ }
+      if (state.run) render();
+    });
+    byId('bulkCopyLinesBtn').addEventListener('click', copyLines);
     byId('bulkExportCsvBtn').addEventListener('click', () => exportRun('csv'));
     byId('bulkExportJsonBtn').addEventListener('click', () => exportRun('json'));
     byId('bulkExportMarkdownBtn').addEventListener('click', () => exportRun('md'));
@@ -468,6 +498,7 @@
     document.documentElement.lang = I18n.locale();
     document.documentElement.dir = I18n.dir();
     wire();
+    restoreFilter();
     await readSettings();
     const response = await send(M.BULK_SCAN_STATE);
     state.run = response && response.run ? response.run : null;

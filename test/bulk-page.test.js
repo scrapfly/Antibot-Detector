@@ -21,7 +21,7 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
  *   sitemaps: address -> xml, or { body, url (where a redirect ended), status }; any other address fails like an unreachable host
  *   run: the run the worker answers to BULK_SCAN_STATE
  */
-function pageWorld({ sitemaps = {}, run = null } = {}) {
+function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [] } = {}) {
   const elements = new Map();
   const handlers = {};
   const sent = [];
@@ -45,14 +45,15 @@ function pageWorld({ sitemaps = {}, run = null } = {}) {
     addEventListener: (type, fn) => { if (type === 'DOMContentLoaded') ready = fn; },
     documentElement: {}, body: { classList: { add() {} } }, activeElement: null, title: ''
   };
+  const localStorage = { getItem: (key) => (key in local ? local[key] : null), setItem: (key, value) => { local[key] = String(value); } };
   const I18n = {
     tr: (key, fallback) => (en[key] ? en[key].message : fallback),
     format: (key, ...args) => (en[key] ? args.reduce((text, arg, i) => text.split(`{${i}}`).join(String(arg)), en[key].message) : ''),
     locale: () => 'en', dir: () => 'ltr', apply() {}, syncOverrideFromStorage: async () => {}
   };
   const ctx = vm.createContext({
-    console, URL, Intl, Date, Math, JSON, Promise, Map, Set, setTimeout, clearTimeout, AbortController, Blob, document, I18n,
-    FormatUtils: { categoryIconSvg: () => '', localDay: () => '2026-11-05' },
+    console, URL, Intl, Date, Math, JSON, Promise, Map, Set, setTimeout, clearTimeout, AbortController, Blob, document, I18n, localStorage,
+    FormatUtils: { categoryIconSvg: () => '', localDay: () => '2026-11-05', copyToClipboard: async (text) => { clipboard.push(text); } },
     StorageManager: { readRaw: async () => ({}), normalizeSettings: (value) => value || {} },
     fetch: async (url) => {
       fetched.push(url);
@@ -81,7 +82,7 @@ function pageWorld({ sitemaps = {}, run = null } = {}) {
   }
   const byId = (id) => document.getElementById(id);
   return {
-    byId, sent, fetched, ctx,
+    byId, sent, fetched, ctx, handlers, document, local, clipboard,
     /** The table as drawn: for each row its address, its status and the words under the status (the reason). */
     rows: () => ((byId('bulkRows').children[0] || { children: [] }).children).map(row => ({
       address: row.children[1].children[0].textContent,
@@ -250,4 +251,74 @@ test('the reason a sitemap line gets follows what happened to it: moved to anoth
   } });
   await page.open();
   assert.deepEqual(await page.start(index), ['https://public.example/from-b']);
+});
+
+// ---- 3.1.6: remembered filter, copy as lines, empty filter, focus ----
+
+const finished = (url, detections) => ({ url, status: 'done', detections, finishedAt: 1 });
+const runOf = (items, status = 'done') => ({ status, items, cap: 200, timeoutSec: 45 });
+
+test('the Show filter chosen last time is there when the page opens again, and an unknown stored value is ignored', async () => {
+  const items = [finished('https://a.example/', [{ name: 'Cloudflare', category: 'antibot', confidence: 90 }]), finished('https://b.example/', [])];
+  const first = pageWorld({ run: runOf(items) });
+  await first.open();
+  first.byId('bulkFilter').value = 'found';
+  first.handlers.bulkFilter.change({ target: first.byId('bulkFilter') });
+  assert.equal(first.local.bulkFilter, 'found');
+  const second = pageWorld({ run: runOf(items), local: first.local });
+  await second.open();
+  assert.equal(second.byId('bulkFilter').value, 'found');
+  assert.deepEqual(second.rows().map(row => row.address), ['https://a.example/']);
+  const odd = pageWorld({ run: runOf(items), local: { bulkFilter: 'nonsense' } });
+  await odd.open();
+  assert.equal(odd.byId('bulkFilter').value, 'all');
+  assert.equal(odd.rows().length, 2);
+});
+
+test('Copy as lines writes one line per shown page, and nothing for a filter that shows no page', async () => {
+  const items = [
+    finished('https://a.example/p?token=SECRET', [{ name: 'Cloudflare', category: 'antibot', confidence: 90 }]),
+    finished('https://b.example/', []),
+    { url: 'https://c.example/', status: 'failed', reason: 'timeout' }
+  ];
+  const page = pageWorld({ run: runOf(items), local: { bulkFilter: 'found' } });
+  await page.open();
+  await page.handlers.bulkCopyLinesBtn.click();
+  assert.deepEqual(page.clipboard, ['https://a.example/p: Cloudflare 90%']);
+  page.byId('bulkFilter').value = 'all';
+  page.handlers.bulkFilter.change({ target: page.byId('bulkFilter') });
+  await page.handlers.bulkCopyLinesBtn.click();
+  assert.equal(page.clipboard[1], 'https://a.example/p: Cloudflare 90%\nhttps://b.example/: -\nhttps://c.example/: failed (timeout)');
+});
+
+test('a filter that matches no page says so in the table instead of leaving it blank', async () => {
+  const page = pageWorld({ run: runOf([finished('https://b.example/', [])]) });
+  await page.open();
+  page.byId('bulkFilter').value = 'found';
+  page.handlers.bulkFilter.change({ target: page.byId('bulkFilter') });
+  const rows = page.byId('bulkRows').children[0].children; // the fake body holds the fragment
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].children[0].textContent, en.bulkFilterNone.message);
+  assert.equal(rows[0].children[0].colSpan, 5);
+});
+
+test('keyboard focus moves to Pause when Start, which was just pressed, becomes disabled', async () => {
+  const page = pageWorld({});
+  await page.open();
+  const running = runOf([{ url: 'https://a.example/', status: 'scanning' }], 'running');
+  page.document.activeElement = page.byId('bulkStartBtn');
+  page.byId('bulkPauseBtn').focus = () => { page.document.activeElement = page.byId('bulkPauseBtn'); };
+  page.update(running);
+  assert.equal(page.byId('bulkStartBtn').disabled, true);
+  assert.equal(page.document.activeElement, page.byId('bulkPauseBtn'));
+});
+
+test('the results table has a name for screen readers and the page has the new buttons and strings in every language', () => {
+  const html = read('sections/bulk/bulk.html');
+  assert.match(html, /<table class="bulk-table"[^>]*aria-labelledby="bulkResultsTitle"/);
+  assert.match(html, /id="bulkCopyLinesBtn"[^>]*data-i18n="bulkCopyLines"/);
+  for (const code of fs.readdirSync(path.join(root, '_locales'))) {
+    const messages = JSON.parse(read(`_locales/${code}/messages.json`));
+    for (const key of ['bulkCopyLines', 'bulkFilterNone']) assert.ok(messages[key] && messages[key].message, `${code}: ${key}`);
+  }
 });

@@ -6535,6 +6535,12 @@
     "message": "失敗またはスキップ",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "行としてコピー"
+  },
+  "bulkFilterNone": {
+    "message": "このフィルターに一致するページはありません。"
+  },
   "bulkShowingFmt": {
     "message": "{1} ページ中 {0} ページを表示中。エクスポートにはこれらのみ含まれます。",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

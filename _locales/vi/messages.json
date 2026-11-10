@@ -6535,6 +6535,12 @@
     "message": "Thất bại hoặc bỏ qua",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Sao chép theo dòng"
+  },
+  "bulkFilterNone": {
+    "message": "Không có trang nào khớp với bộ lọc này."
+  },
   "bulkShowingFmt": {
     "message": "Đang hiển thị {0} trên {1} trang. Tệp xuất chỉ gồm các trang này.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

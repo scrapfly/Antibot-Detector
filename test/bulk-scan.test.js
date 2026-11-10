@@ -521,3 +521,16 @@ test('a sitemap that moved to another site is a reason of its own, and prepare k
   assert.equal(csv[1], 'https://moved.example/sitemap.xml,skipped,moved,,,,,,', 'the exports say why, in the same words');
   assert.ok(BulkScan.build(run, { format: 'md' }).text.includes('skipped: moved'));
 });
+
+test('oneLines gives one line per page: address without query, protections with confidence, a dash when none, the status when not scanned', () => {
+  const run = { items: [
+    { url: 'https://a.example/p?token=SECRET#x', status: 'done', detections: [{ name: 'Cloudflare', confidence: 90.4 }, { name: 'reCAPTCHA' }] },
+    { url: 'https://b.example/', status: 'done', detections: [] },
+    { url: 'https://c.example/', status: 'failed', reason: 'load' },
+    { url: 'https://d.example/', status: 'waiting' }
+  ] };
+  assert.equal(BulkScan.oneLines(run), [
+    'https://a.example/p: Cloudflare 90%, reCAPTCHA', 'https://b.example/: -', 'https://c.example/: failed (load)', 'https://d.example/: waiting'].join('\n'));
+  assert.equal(BulkScan.oneLines({ items: [] }), '');
+  assert.equal(BulkScan.oneLines(null), '');
+});

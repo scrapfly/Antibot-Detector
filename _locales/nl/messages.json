@@ -6535,6 +6535,12 @@
     "message": "Mislukt of overgeslagen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Kopiëren als regels"
+  },
+  "bulkFilterNone": {
+    "message": "Geen pagina komt overeen met dit filter."
+  },
   "bulkShowingFmt": {
     "message": "{0} van {1} pagina's getoond. Exports bevatten alleen deze.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
