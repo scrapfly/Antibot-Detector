@@ -215,7 +215,7 @@
     "message": "Confidence describes the strength of saved detection evidence, not proof of fingerprinting or an active challenge."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detections have confidence values; {1} have no valid score."
+    "message": "Detections with a confidence value: {0}. Without a valid score: {1}."
   },
   "statsProtectionColumn": {
     "message": "Protection"
@@ -6693,6 +6693,18 @@
   "statsExportMarkdown": {
     "message": "Export Markdown",
     "description": "Statistics → Export menu: downloads the statistics as a Markdown report (totals, protections, sites)"
+  },
+  "statsExportCopyFailed": {
+    "message": "Could not copy the summary. Please try again.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Summary copied",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copy summary",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Show the domains with {0}",

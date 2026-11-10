@@ -214,7 +214,7 @@
     "message": "信賴度代表已儲存偵測證據的強度，並不能證明存在指紋辨識或進行中的挑戰。"
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} 項偵測有信賴度值；{1} 項沒有有效分數。"
+    "message": "有信賴度值的偵測：{0} 項。沒有有效分數：{1} 項。"
   },
   "statsProtectionColumn": {
     "message": "防護"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "匯出 Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "無法複製摘要，請再試一次。",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "摘要已複製",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "複製摘要",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "顯示含有 {0} 的網域"

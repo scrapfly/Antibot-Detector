@@ -214,7 +214,7 @@
     "message": "信頼度は、保存された検出の証拠の強さを表すものであり、フィンガープリンティングや実行中のチャレンジの存在を証明するものではありません。"
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0}件の検出に信頼度の値があります。{1}件には有効なスコアがありません。"
+    "message": "信頼度の値がある検出：{0}件。有効なスコアがない検出：{1}件。"
   },
   "statsProtectionColumn": {
     "message": "保護機能"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Markdownをエクスポート"
+  },
+  "statsExportCopyFailed": {
+    "message": "サマリーをコピーできませんでした。もう一度お試しください。",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "サマリーをコピーしました",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "サマリーをコピー",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "{0} があるドメインを表示"

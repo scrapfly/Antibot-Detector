@@ -214,7 +214,7 @@
     "message": "置信度描述已保存检测证据的强度，并不能证明存在指纹识别或正在进行的验证挑战。"
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} 项检测有置信度值；{1} 项没有有效评分。"
+    "message": "有置信度值的检测：{0} 项。没有有效评分：{1} 项。"
   },
   "statsProtectionColumn": {
     "message": "防护措施"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "导出 Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "无法复制摘要，请重试。",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "摘要已复制",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "复制摘要",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "显示含有 {0} 的域名"

@@ -214,7 +214,7 @@
     "message": "La confidenza descrive la solidità degli indizi di rilevamento salvati, ma non dimostra la presenza di fingerprinting o di una verifica attiva."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} rilevamenti hanno valori di confidenza; {1} non hanno un punteggio valido."
+    "message": "Rilevamenti con valore di confidenza: {0}. Senza punteggio valido: {1}."
   },
   "statsProtectionColumn": {
     "message": "Protezione"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Esporta Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "Impossibile copiare il riepilogo. Riprova.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Riepilogo copiato",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copia riepilogo",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Mostra i domini con {0}"

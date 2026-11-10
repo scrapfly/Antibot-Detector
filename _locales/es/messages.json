@@ -214,7 +214,7 @@
     "message": "La confianza describe la solidez de los indicios de detección guardados, no demuestra que haya identificación por huella digital ni un desafío activo."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detecciones tienen valores de confianza; {1} no tienen una puntuación válida."
+    "message": "Detecciones con valor de confianza: {0}. Sin puntuación válida: {1}."
   },
   "statsProtectionColumn": {
     "message": "Protección"
@@ -6174,6 +6174,18 @@
   },
   "statsExportMarkdown": {
     "message": "Exportar Markdown"
+  },
+  "statsExportCopyFailed": {
+    "message": "No se pudo copiar el resumen. Inténtalo de nuevo.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Resumen copiado",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copiar resumen",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Mostrar los dominios con {0}"

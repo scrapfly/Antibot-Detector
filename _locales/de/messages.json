@@ -214,7 +214,7 @@
     "message": "Die Konfidenz beschreibt die Stärke der gespeicherten Erkennungshinweise, ist aber kein Beweis für Fingerprinting oder eine aktive Prüfung."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} Erkennungen haben Konfidenzwerte; {1} haben keinen gültigen Wert."
+    "message": "Erkennungen mit Konfidenzwert: {0}. Ohne gültigen Wert: {1}."
   },
   "statsProtectionColumn": {
     "message": "Schutzmaßnahme"
@@ -6172,6 +6172,18 @@
   },
   "statsExportMarkdown": {
     "message": "Markdown exportieren"
+  },
+  "statsExportCopyFailed": {
+    "message": "Die Zusammenfassung konnte nicht kopiert werden. Bitte erneut versuchen.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Zusammenfassung kopiert",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Zusammenfassung kopieren",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
   },
   "statsShowDomainsWithFmt": {
     "message": "Domains mit {0} anzeigen"

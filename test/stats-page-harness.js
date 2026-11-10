@@ -176,7 +176,9 @@ async function createPage(items, options = {}) {
       tr: (key, fallback) => messages[key] ? messages[key].message : fallback,
       format: (key, ...args) => messages[key] ? args.reduce((s, arg, i) => s.split('{' + i + '}').join(String(arg)), messages[key].message) : null },
     StatsCharts: stubs,
-    StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); } } });
+    navigator: options.clipboard ? { clipboard: { writeText: options.clipboard } } : undefined,
+    StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); },
+      summary: (items, o) => 'SUMMARY ' + items.length + ' ' + o.days } });
   const local = pageScripts().filter(f => f.startsWith('sections/stats/') && !/history-stats|rule-stats|tools-stats/.test(f));
   for (const file of ['modules/core/storage-manager.js', 'modules/core/categories.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
     vm.runInContext(read(file), context, { filename: file });

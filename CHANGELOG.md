@@ -13,6 +13,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: press / to jump to the search box.
 - History: a "Copy as one line" action in each entry menu copies the page and its protections as a single line.
 - Rules: saving a rule that holds the same pattern more than once now says so, so the extra copies can be deleted.
+- Statistics: Export → Copy summary puts a short Markdown report of the shown range on the clipboard.
 
 ### Fixed
 
@@ -24,6 +25,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Arabic: the Detection page arrows and scan icons now sit on the correct side.
 - Rules: deleting or restoring official rules while the list of deleted rules cannot be read no longer forgets earlier deletions, so Update will not bring them back.
 - A failed webhook delivery waiting for retry is no longer sent if the list of skipped sites cannot be read.
+- Statistics: the confidence and export counts no longer read as "1 detections" or a wrong plural in languages that inflect by number.
+- The on/off switch in the popup goes back to its stored position when saving fails, instead of showing a state that was not saved.
 
 ## [3.1.5] - 2026-11-09
 
